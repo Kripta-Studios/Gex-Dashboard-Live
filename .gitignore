@@ -7,3 +7,6 @@ server_log.txt
 *.env
 *.swp
 fourier/
+bot_logging.txt
+servidor_logs.txt
+cat_json.py
