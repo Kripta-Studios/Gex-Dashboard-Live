@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GEX Dashboard Pro - Login</title>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+	<div class="zen-controls-bottom">
+		<button class="zen-float-btn" onclick="realignAllCharts()">CENTER ALL</button>
+	    <button class="zen-float-btn" onclick="takeSnapshot()">📸</button>
+	    <button class="zen-float-btn" onclick="toggleZenMode()">EXIT ZEN MODE</button>
+	</div>
+    <div id="login-screen">
+        <div class="login-card">
+            <div class="login-title">GEX DASHBOARD</div>
+            
+            <div class="login-input-group">
+                <label class="login-label">Email</label>
+                <input type="email" id="login-email" class="login-input" placeholder="user@flowgreeks.com">
+            </div>
+
+            <div class="login-input-group">
+                <label class="login-label">Password</label>
+                <input type="password" id="login-pass" class="login-input" placeholder="••••••••">
+            </div>
+
+            <div id="login-error" class="login-error"></div>
+
+            <button class="login-btn" onclick="checkLogin()">AUTHENTICATE</button>
+        </div>
+    </div>
+
+    <div id="app-wrapper" style="display: none;">
+    <div class="global-time-monitor">
+        <div class="market-item">
+            <span class="market-label" id="data-time-label">LIVE DATA</span>
+            <span class="market-price" id="last-data-time">--:--</span>
+        </div>
+        <div class="separator"></div>
+        <div class="market-item">
+            <span class="market-label">NY TIME</span>
+            <span class="market-price" id="ny-time">--:--</span>
+        </div>
+    </div>
+
+    <div class="tab-container" id="tab-container">
+        <button class="new-tab-btn" onclick="addNewTab()">+</button>
+    </div>
+        <div class="main-content">
+            <div class="top-bar">
+                <div class="control-panel">
+					<input type="date" id="fourier-date" style="width: 110px; font-weight:700;" title="Date for Fourier Analysis">
+					
+					<button onclick="handleLoadFourier()" style="background: var(--accent-red); color: white;">FOURIER</button>
+					<button id="btn-ib" onclick="handleLoadIB()" style="background: #FFD700; color: black; display: none; font-weight:bold; margin-left:5px;">IB</button>
+                    <input type="text" id="ticker" value="SPX" placeholder="Ticker" list="ticker-list" oninput="updateExpSuggestions()" style="width: 70px; font-weight:700;">
+                    <datalist id="ticker-list">
+                        <option value="SPX"><option value="QQQ"><option value="SPY"><option value="IWM"><option value="VIX">
+                        <option value="AAPL"><option value="AMZN"><option value="MSFT"><option value="GOOGL"><option value="META">
+                        <option value="NVDA"><option value="AMD"><option value="TSLA"><option value="NFLX"><option value="PLTR">
+                        <option value="HOOD"><option value="MSTR"><option value="HIMS"><option value="UNH"><option value="GLD">
+                        <option value="SLV">
+                    </datalist>
+
+                    <input type="text" id="exp" value="0dte" placeholder="Exp" list="exp-list" style="width: 60px; font-weight:700;">
+                    <datalist id="exp-list"></datalist>
+
+                    <select id="greek-select" style="font-weight:700;">
+                        <option value="gamma">Gamma</option>
+                        <option value="delta">Delta</option>
+                        <option value="vanna">Vanna</option>
+                        <option value="charm">Charm</option>
+                        <option value="zomma">Zomma</option>
+                        <option value="dgex">Dgex</option>
+                    </select>
+
+                    <button onclick="handleLoadData()">LOAD</button>
+                    <button class="btn-add" onclick="handleAddChart()">+</button>
+                    
+                    <select onchange="changePalette(this.value)" style="width:80px;" title="Theme">
+                        <option value="default">Default</option>
+                        <option value="palette-alt">Blue/Org</option>
+                    </select>
+	
+    				<button class="btn-icon" onclick="realignAllCharts()" title="Realign All to Spot">CENTER ALL</button>                
+                    <button class="btn-icon" onclick="takeSnapshot()" title="Save Image">📸</button>
+                    <button class="btn-icon" onclick="toggleZenMode()" title="Zen Mode">🧘</button>
+					<button class="btn-icon" onclick="popoutCurrentLayout()" title="Pop out Layout">⇱</button>
+                    <button onclick="saveAllLayouts()" style="background:#333; color:#ccc;">SAVE</button>
+
+                    <label class="checkbox-wrapper">
+                        <input type="checkbox" id="auto-refresh" onchange="toggleAutoRefresh()" checked>
+                        AUTO
+                        <span id="timer-indicator" style="width: 6px; height: 6px; background: var(--accent-green); border-radius: 50%; display: none;"></span>
+                    </label>
+                </div>
+
+                <div class="control-panel market-monitor">
+                    <div class="market-item">
+                        <div style="display:flex; justify-content:space-between;">
+                            <span class="market-label">SPX SPOT</span>
+                        </div>
+                        <div class="price-group">
+                            <span class="market-price" id="spot-spx">----.--</span>
+                            <span class="market-change" id="change-spx"></span>
+                        </div>
+                    </div>
+                    <div style="width: 1px; height: 30px; background: var(--border);"></div>
+                    <div class="market-item">
+                        <span class="market-label">VIX SPOT</span>
+                        <div class="price-group">
+                            <span class="market-price" id="spot-vix">--.--</span>
+                            <span class="market-change" id="change-vix"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="charts-wrapper" ondragover="handleWrapperDragOver(event)">
+                <div style="width:100%; text-align:center; padding-top:100px; color:var(--text-dim); font-size: 14px;">
+                    No charts loaded.
+                </div>
+            </div>
+            
+            <div id="time-machine-panel">
+                <button style="background:transparent; border:none; color:var(--text-dim); cursor:pointer;" onclick="playHistory()">▶</button>
+				<button id="btn-history-load" onclick="loadHistoryNow()" style="margin: 0 5px; background: var(--accent-blue); border: none; color: white; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; cursor: pointer;" title="Load Data for Selected Time">GO</button>
+				<button onclick="goLive()" style="margin: 0 10px; background: var(--panel-bg); border: 1px solid var(--accent-green); color: var(--accent-green); font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; cursor: pointer;">GO LIVE</button>
+                <div style="font-size:9px; color:var(--text-dim); width:60px;">HISTORY</div>
+                <input type="range" id="history-slider" min="0" max="100" value="100" oninput="scrubHistory(this.value)">
+                <div style="text-align:right; width:80px;">
+                    <div style="font-size:9px; color:var(--text-dim);">DATA TIME</div>
+                    <div id="history-time" style="font-family:'Roboto Mono'; font-weight:700; color:var(--accent-green); font-size:12px;">LIVE</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div> <script src="script.js"></script>
+</body>
+</html>

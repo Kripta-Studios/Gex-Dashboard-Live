@@ -1,0 +1,9 @@
+ib_charts/
+__pycache__/
+pickles/
+plots/
+json_data/
+server_log.txt
+*.env
+*.swp
+fourier/
