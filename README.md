@@ -1,2 +1,2 @@
-# Option-Greeks-Plotting-Discord-Bot
-Only Discord bot with loop, without web
+# Gex Dashboard Live
+Combination of a Discord Bot and a website.
