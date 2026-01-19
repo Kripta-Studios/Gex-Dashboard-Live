@@ -1184,8 +1184,46 @@ def get_options_data(ticker, expir, greek_filter):
         for q in quotes:
             if t_san in q.get("symbol"): spot = float(q.get("last"))
             if q.get("symbol") == get_SOFR_ticker(): sofr = float(q.get("last"))
-        
+
         yield_val = (100 - sofr)/100
+
+        if "SPX" in ticker:
+	        utc_now = datetime.datetime.now(datetime.timezone.utc)
+	        now_ny = utc_now - datetime.timedelta(hours=4) # Ojo: esto es fijo a UTC-4, mejor usar pytz si es posible, pero vale por ahora
+	        hora_ny = now_ny.time()
+
+	        rth_start = datetime.time(9, 30)
+	        rth_end = datetime.time(16, 15) # SPX cierra a las 16:00, pero precios se asientan hasta 16:15
+	        # Si estamos en horario regular (RTH), usamos el spot directo
+	        if rth_start <= hora_ny <= rth_end:
+	            precio_spot_final = spot
+	        else:
+	            # Estamos en ETH (Overnight). Necesitamos el futuro /ES obligatoriamente
+	            print("Calculando SPX nocturno basado en futuro /ES...")
+	            
+	            # Forzamos la búsqueda del futuro actual (ej: /ESH6)
+	            ticker_future = get_future_ticker("/ES") 
+	            tickerList2 = [ticker_future]
+	            
+	            try:
+	                _, tickers_quotes2 = await tasty_data(session, equities_ticker=tickerList2)
+	                es_price = 0
+	                for quote2 in tickers_quotes2:
+	                    if quote2.get("symbol") == ticker_future:
+	                        es_price = float(quote2.get("last"))
+	                
+	                if es_price > 0:
+	                    precio_spot_final = calcular_spx_media(es_price, yield_val)
+	                    print(f"Precio Futuro (/ES): {es_price} -> SPX Calculado: {precio_spot_final:.2f}")
+	                else:
+	                    # Fallback si no encontramos precio del futuro
+	                    print("No se pudo obtener precio del futuro, usando último spot conocido.")
+	                    precio_spot_final = spot
+	            except Exception as e:
+	                print(f"Error obteniendo datos del futuro: {e}")
+	                precio_spot_final = spot
+
+        	spot = precio_spot_final
 
         # --- FILTRADO CORRECTO PARA EVITAR ERROR 'record_not_found' ---
         t_list_clean = [t for t in t_list if "SR3" not in t]
