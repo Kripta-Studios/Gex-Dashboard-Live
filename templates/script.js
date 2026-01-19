@@ -1718,7 +1718,7 @@ function renderChartJs(canvas, jsonData) {
     const filteredData = jsonData.filter(d => {
         // d.datetime viene como "YYYY-MM-DD HH:MM:SS"
         const timePart = d.datetime.split(' ')[1]; 
-        return timePart >= "08:00:00" && timePart <= "16:15:00";
+        return timePart >= "03:00:00" && timePart <= "16:15:00";
     });
 
     if (filteredData.length === 0) return;
