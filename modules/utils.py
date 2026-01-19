@@ -213,7 +213,12 @@ def format_data(gr_list, today_ddt):
     # Crear DataFrame
     option_data = pd.DataFrame(grouped.values(), columns=columns)
     # Calcular DTE (sin zona horaria)
-    expiration_dates = pd.to_datetime(option_data["expiration_date"].dt.tz_localize(None)).values.astype("datetime64[D]")
+    # 1. Primero forzamos la conversión a datetime por si viene como texto
+    option_data["expiration_date"] = pd.to_datetime(option_data["expiration_date"])
+    
+    # 2. Ahora que seguro es fecha, podemos usar .dt
+    expiration_dates = option_data["expiration_date"].dt.tz_localize(None).values.astype("datetime64[D]")
+    
     busday_counts = np.busday_count(today_ddt.date(), expiration_dates)
     option_data["time_till_exp"] = np.where(busday_counts == 0, 1 / 252, busday_counts / 252)
 

@@ -277,7 +277,6 @@ class FourierBot(discord.Client):
             except Exception as e:
                 print(f"[ERROR LOOP] {e}")
             
-            await asyncio.sleep(30)
 
     def process_tickers_sync(self):
         now = datetime.now()
@@ -309,7 +308,8 @@ class FourierBot(discord.Client):
                             )
                             SENT_CACHE[ticker] = last_mtime
                             print(f"[UPDATE] {ticker}: Procesado y enviado.")
-            
+                    else:
+                        print("JSON data file has not changed for", ticker)            
             except Exception as e:
                 print(f"[ERROR TICKER] {ticker}: {e}")
 
