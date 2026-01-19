@@ -70,12 +70,11 @@ def get_spot_history(ticker, expiry, date_str):
     pattern = os.path.join(DATA_FOLDER_PATH, f"*{ticker}*{expiry}*ExposureData*{date_str}*.json")
     files = glob.glob(pattern)
     files.sort()
-    
     data = []
     for filepath in files:
         try:
             if os.path.getsize(filepath) == 0: continue
-            
+                        
             filename = os.path.basename(filepath)
             match = re.search(r'_(\d{8})_(\d{6})\.json', filename)
             if not match: continue
@@ -92,9 +91,11 @@ def get_spot_history(ticker, expiry, date_str):
             with open(filepath, 'r') as f:
                 content = json.load(f)
                 spot = content.get('spot_price', 0)
-            
+
             if spot > 0:
                 data.append({'datetime': dt_ny, 'spot': spot})
+            else:
+                print("Spot is zero:", spot, "in", ticker, "exp", exp)
         except: continue
             
     return pd.DataFrame(data), files[-1] if files else None
@@ -176,7 +177,7 @@ def generate_ib_chart(ticker, df, levels, date_str):
         with open(json_filename, 'w') as f:
             json.dump(json_data, f, indent=4)
             
-        # print(f"[JSON] Guardado datos para {ticker}") # Opcional: Debug
+        #print(f"[JSON] Guardado datos para {ticker}") # Opcional: Debug
         
     except Exception as e:
         print(f"[ERROR JSON] No se pudo guardar JSON para {ticker}: {e}")
@@ -320,7 +321,7 @@ class IBBot(discord.Client):
     def process_tickers(self):
         now = datetime.now()
         today_str = now.strftime("%Y%m%d")
-        
+        print(f"--- Iniciando ciclo de procesamiento IB {datetime.now().strftime('%H:%M:%S')} ---", flush=True)
         if SERVER_TZ:
             now_server = datetime.now(SERVER_TZ)
             
