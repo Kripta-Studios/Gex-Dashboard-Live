@@ -169,7 +169,7 @@ async function init() {
           
           // Si el parámetro 'date' en la URL es 'LIVE' o coincide con hoy, activamos el loop
           if (!dateStr || dateStr === 'LIVE' || dateStr === todayStr) {
-              setInterval(loadSpecial, 60000);
+              setInterval(loadSpecial, 30000);
           }
           
           return;
@@ -292,7 +292,7 @@ async function init() {
       await loadEntireLayout();
 
       // Auto-refresh cada 60s
-      setInterval(loadEntireLayout, 60000);
+      setInterval(loadEntireLayout, 30000);
       
       return;
   
@@ -1092,7 +1092,7 @@ function toggleAutoRefresh() {
   if (chk.checked) {
     ind.style.display = "block";
     if (!refreshIntervalId)
-      refreshIntervalId = setInterval(refreshDashboard, 60000);
+      refreshIntervalId = setInterval(refreshDashboard, 30000);
   } else {
     ind.style.display = "none";
     if (refreshIntervalId) {
