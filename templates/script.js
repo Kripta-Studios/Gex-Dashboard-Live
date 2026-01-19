@@ -1714,22 +1714,67 @@ function createFourierPanel(chartObj, index) {
 
 
 function renderChartJs(canvas, jsonData) {
-    // --- 1. FILTRO HORARIO (Igual que IB: 08:00 - 16:15) ---
+    // --- 1. FILTRO HORARIO (Igual que IB: 03:00 - 16:15) ---
     const filteredData = jsonData.filter(d => {
-        // d.datetime viene como "YYYY-MM-DD HH:MM:SS"
         const timePart = d.datetime.split(' ')[1]; 
         return timePart >= "03:00:00" && timePart <= "16:15:00";
     });
 
     if (filteredData.length === 0) return;
 
-    // --- 2. PREPARAR DATOS FILTRADOS ---
+    // --- 2. PREPARAR DATOS ---
     const labels = filteredData.map(d => {
         const datePart = d.datetime.split(' ')[1]; 
         return datePart ? datePart.substring(0, 5) : d.datetime;
     });
     const spotData = filteredData.map(d => d.spot_fft);
     const ivData = filteredData.map(d => d.iv_fft);
+
+    // --- 3. LÓGICA PARA DETECTAR GIROS (DOTS) ---
+    // Retorna arrays de estilos para cada punto del gráfico
+    const getTurnStyles = (dataArr) => {
+        const radii = [];
+        const colors = [];
+        const borders = [];
+
+        for (let i = 0; i < dataArr.length; i++) {
+            // Ignoramos el primer y último punto porque no tienen vecinos completos
+            if (i === 0 || i === dataArr.length - 1) {
+                radii.push(0);
+                colors.push('transparent');
+                borders.push('transparent');
+                continue;
+            }
+
+            const prev = dataArr[i - 1];
+            const curr = dataArr[i];
+            const next = dataArr[i + 1];
+
+            // PICO (Va de arriba a abajo) -> ROJO
+            if (curr > prev && curr > next) {
+                radii.push(4);          // Tamaño del punto
+                colors.push('#FF0000'); // Rojo
+                borders.push('#FFFFFF'); // Borde blanco para contraste
+            }
+            // VALLE (Va de abajo a arriba) -> VERDE
+            else if (curr < prev && curr < next) {
+                radii.push(4);          // Tamaño del punto
+                colors.push('#00FF00'); // Verde Lime
+                borders.push('#FFFFFF'); // Borde blanco
+            }
+            // SIN CAMBIO DE DIRECCIÓN -> OCULTO
+            else {
+                radii.push(0);
+                colors.push('transparent');
+                borders.push('transparent');
+            }
+        }
+        return { radii, colors, borders };
+    };
+
+    // Calculamos estilos para ambas líneas
+    const spotStyles = getTurnStyles(spotData);
+    const ivStyles = getTurnStyles(ivData);
 
     new Chart(canvas, {
         type: 'line',
@@ -1742,9 +1787,14 @@ function renderChartJs(canvas, jsonData) {
                     borderColor: 'cyan',
                     backgroundColor: 'cyan',
                     borderWidth: 2,
-                    pointRadius: 0,
                     yAxisID: 'y',
-                    tension: 0.4
+                    tension: 0.4,
+                    // --- ESTILOS DINÁMICOS SPOT ---
+                    pointRadius: spotStyles.radii,
+                    pointBackgroundColor: spotStyles.colors,
+                    pointBorderColor: spotStyles.borders,
+                    pointBorderWidth: 1,
+                    pointHitRadius: 10 // Facilita el hover aunque el punto sea pequeño
                 },
                 {
                     label: 'ATM IV',
@@ -1752,22 +1802,32 @@ function renderChartJs(canvas, jsonData) {
                     borderColor: 'magenta',
                     backgroundColor: 'magenta',
                     borderWidth: 2,
-                    pointRadius: 0,
                     yAxisID: 'y1',
-                    tension: 0.4
+                    tension: 0.4,
+                    // --- ESTILOS DINÁMICOS IV ---
+                    pointRadius: ivStyles.radii,
+                    pointBackgroundColor: ivStyles.colors,
+                    pointBorderColor: ivStyles.borders,
+                    pointBorderWidth: 1,
+                    pointHitRadius: 10
                 }
             ]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            animation: false, // Desactivar animación para rendimiento
+            animation: false,
             interaction: {
                 mode: 'index',
                 intersect: false,
             },
             plugins: {
-                legend: { labels: { color: 'white' } }
+                legend: { labels: { color: 'white' } },
+                tooltip: {
+                    enabled: true,
+                    mode: 'index',
+                    intersect: false
+                }
             },
             scales: {
                 x: {
@@ -1792,7 +1852,6 @@ function renderChartJs(canvas, jsonData) {
         }
     });
 }
-
 // 4. ACTUALIZAR refreshDashboard PARA RECARGAR FOURIER
 // (Modifica tu función refreshDashboard existente o añade esto dentro)
 
