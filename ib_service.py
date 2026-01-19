@@ -316,7 +316,7 @@ class IBBot(discord.Client):
                 await self.loop.run_in_executor(None, self.process_tickers)
             except Exception as e:
                 print(f"[ERROR LOOP] {e}")
-            await asyncio.sleep(60)
+            await asyncio.sleep(20)
 
     def process_tickers(self):
         now = datetime.now()
