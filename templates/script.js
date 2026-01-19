@@ -1136,6 +1136,7 @@ async function refreshDashboard() {
             }
         });
 
+		updateMarketSpots();
         updateNYTime();
         renderAllCharts(); // Renderizar todo de golpe
         
