@@ -175,6 +175,23 @@ def analyze_save_and_plot(ticker, df, date_str):
 
     df = df.sort_values('datetime').reset_index(drop=True)
     
+    # 1. Definimos el rango de horas deseado
+    start_time = dt_time(3, 0)   # 03:00 AM
+    end_time = dt_time(17, 0)    # 17:00 PM
+
+    # 2. Filtramos el DataFrame
+    # Como 'datetime' ya está en zona NY (gracias a process_single_file),
+    # simplemente comparamos la parte de la hora (.time())
+    df = df[df['datetime'].apply(lambda x: start_time <= x.time() <= end_time)]
+
+    # 3. Comprobación de seguridad
+    # Si después de filtrar no quedan datos (ej. son las 2 AM o no ha abierto mercado), salimos.
+    if df.empty or len(df) < 5:
+        return None
+        
+    # Reiniciamos el índice para que los cálculos de Fourier no fallen
+    df = df.reset_index(drop=True)
+
     # Fourier calculations
     df['spot_fft'] = apply_fourier_filter(df['spot'], threshold=FOURIER_THRESHOLD_PRICE)
     df['iv_fft'] = apply_fourier_filter(df['atm_put_iv'], threshold=FOURIER_THRESHOLD_IV)
