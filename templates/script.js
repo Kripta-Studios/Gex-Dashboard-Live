@@ -2062,6 +2062,38 @@ function renderIBChartJs(canvas, jsonData) {
     new Chart(canvas, {
         type: 'line',
         data: { labels, datasets },
+		plugins: [{
+            id: 'floatingLabels',
+            afterDatasetsDraw(chart, args, options) {
+                const { ctx, chartArea: { left, right, top, bottom }, scales: { x, y } } = chart;
+
+                chart.data.datasets.forEach((dataset, i) => {
+                    // 1. Ignoramos la línea de precio principal (para no etiquetarla)
+                    //    y datasets sin etiqueta o sin datos.
+                    if (dataset.label === 'Price' || !dataset.label || !dataset.data.length) return;
+
+                    // 2. Obtenemos el valor Y. Como son líneas horizontales, el valor es el mismo en data[0].
+                    //    Si fuera una línea curva, necesitaríamos lógica diferente, pero para niveles funciona así.
+                    const value = dataset.data[0];
+                    const yPixel = y.getPixelForValue(value);
+
+                    // 3. Verificamos que la línea esté visible dentro del área del gráfico
+                    if (yPixel < top || yPixel > bottom) return;
+
+                    // 4. Dibujamos el texto
+                    ctx.save();
+                    ctx.fillStyle = dataset.borderColor; // Usamos el mismo color de la línea
+                    ctx.font = 'bold 10px sans-serif';
+                    ctx.textAlign = 'right';
+                    ctx.textBaseline = 'bottom';
+                    
+                    // Posición: A la derecha del todo (eje Y), un poco hacia arriba (yPixel - 4)
+                    ctx.fillText(dataset.label, right - 5, yPixel - 4);
+                    
+                    ctx.restore();
+                });
+            }
+        }],
         options: {
             responsive: true,
             maintainAspectRatio: false,
