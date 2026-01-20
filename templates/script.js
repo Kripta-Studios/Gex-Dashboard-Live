@@ -2099,21 +2099,32 @@ function renderIBChartJs(canvas, jsonData) {
             maintainAspectRatio: false,
             animation: false,
             interaction: {
-                mode: 'index',
+                mode: 'nearest',
+                axis: 'y',
                 intersect: false,
             },
             plugins: {
                 legend: { display: false },
                 tooltip: {
                     enabled: true,
-		    displayColors: false,
+		    		displayColors: false,
                     callbacks: {
-			title: function(context) {
-				return context[0].dataset.label;
-			},
+						title: function(context) {
+							return context[0].dataset.label;
+						},
                         label: function(context) {
-                    		return `Price: ${context.parsed.y.toFixed(2)}`;
-                	}
+                           // Obtenemos el nombre de la línea (Ej: "Max Gamma", "Price", "IB High")
+                           let label = context.dataset.label || '';
+
+                           if (label) {
+                               label += ': ';
+                           }
+                           if (context.parsed.y !== null) {
+                               label += context.parsed.y.toFixed(2);
+                           }
+                           // Resultado: "Max Gamma: 5800.00" en vez de "Price: 5800.00"
+                           return label;
+                       }
                     }
                 }
             },
