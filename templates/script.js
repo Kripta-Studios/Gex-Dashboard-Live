@@ -2026,8 +2026,8 @@ function renderIBChartJs(canvas, jsonData) {
     
     if (jsonData.levels) {
 		// Calculamos los límites del rango (1% arriba y abajo)
-        const upperLimit = currentPrice * 1.01;
-        const lowerLimit = currentPrice * 0.99;
+        const upperLimit = currentPrice * 1.02;
+        const lowerLimit = currentPrice * 0.98;
 
         Object.keys(jsonData.levels).forEach(k => {
             const levelPrice = jsonData.levels[k];
