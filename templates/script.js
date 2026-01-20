@@ -2113,16 +2113,13 @@ function renderIBChartJs(canvas, jsonData) {
 							return context[0].dataset.label;
 						},
                         label: function(context) {
-                           // Obtenemos el nombre de la línea (Ej: "Max Gamma", "Price", "IB High")
                            let label = context.dataset.label || '';
-
                            if (label) {
                                label += ': ';
                            }
                            if (context.parsed.y !== null) {
                                label += context.parsed.y.toFixed(2);
                            }
-                           // Resultado: "Max Gamma: 5800.00" en vez de "Price: 5800.00"
                            return label;
                        }
                     }
