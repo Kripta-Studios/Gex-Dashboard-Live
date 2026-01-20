@@ -2025,10 +2025,15 @@ function renderIBChartJs(canvas, jsonData) {
     };
     
     if (jsonData.levels) {
-        Object.keys(jsonData.levels).forEach(k => {
-            if (greekColors[k]) {
+		const upperLimit = currentPrice * 1.01;
+        const lowerLimit = currentPrice * 0.99;
+        const levelPrice = jsonData.levels[k];
+		Object.keys(jsonData.levels).forEach(k => {
+            // Condición 1: Que exista color para esa griega
+            // Condición 2: Que el precio esté dentro del rango del 1%
+            if (greekColors[k] && levelPrice >= lowerLimit && levelPrice <= upperLimit) {
                 const label = k.replace('_', ' ').toUpperCase();
-                datasets.push(makeHLine(jsonData.levels[k], greekColors[k], label, [10, 5]));
+                datasets.push(makeHLine(levelPrice, greekColors[k], label, [10, 5]));
             }
         });
     }
