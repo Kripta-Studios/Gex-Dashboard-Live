@@ -1712,12 +1712,12 @@ function createFourierPanel(chartObj, index) {
     return panel;
 }
 
-
 function renderChartJs(canvas, jsonData) {
-    // --- 1. FILTRO HORARIO (Igual que IB: 03:00 - 16:15) ---
+    // --- 1. FILTRO HORARIO (03:00 - 16:15) ---
     const filteredData = jsonData.filter(d => {
+        // Asumiendo formato "YYYY-MM-DD HH:MM:SS"
         const timePart = d.datetime.split(' ')[1]; 
-        return timePart >= "03:00:00" && timePart <= "16:15:00";
+        return timePart >= "09:20:00" && timePart <= "16:15:00";
     });
 
     if (filteredData.length === 0) return;
@@ -1727,89 +1727,92 @@ function renderChartJs(canvas, jsonData) {
         const datePart = d.datetime.split(' ')[1]; 
         return datePart ? datePart.substring(0, 5) : d.datetime;
     });
-    const spotData = filteredData.map(d => d.spot_fft);
-    const ivData = filteredData.map(d => d.iv_fft);
 
-    // --- 3. LÓGICA PARA DETECTAR GIROS (DOTS) ---
-    // Retorna arrays de estilos para cada punto del gráfico
+    // Mapeamos los datos de Fourier
+    const spotFftData = filteredData.map(d => d.spot_fft);
+    const ivFftData = filteredData.map(d => d.iv_fft);
+
+    // [NUEVO] Mapeamos el Spot Real usando la clave "spot" de tu JSON
+    const realSpotData = filteredData.map(d => d.spot); 
+
+    // --- 3. ESTILOS DE GIROS (DOTS) ---
     const getTurnStyles = (dataArr) => {
         const radii = [];
         const colors = [];
         const borders = [];
 
         for (let i = 0; i < dataArr.length; i++) {
-            // Ignoramos el primer y último punto porque no tienen vecinos completos
             if (i === 0 || i === dataArr.length - 1) {
-                radii.push(0);
-                colors.push('transparent');
-                borders.push('transparent');
+                radii.push(0); colors.push('transparent'); borders.push('transparent');
                 continue;
             }
-
             const prev = dataArr[i - 1];
             const curr = dataArr[i];
             const next = dataArr[i + 1];
 
-            // PICO (Va de arriba a abajo) -> ROJO
-            if (curr > prev && curr > next) {
-                radii.push(4);          // Tamaño del punto
-                colors.push('#FF0000'); // Rojo
-                borders.push('#FFFFFF'); // Borde blanco para contraste
-            }
-            // VALLE (Va de abajo a arriba) -> VERDE
-            else if (curr < prev && curr < next) {
-                radii.push(4);          // Tamaño del punto
-                colors.push('#00FF00'); // Verde Lime
-                borders.push('#FFFFFF'); // Borde blanco
-            }
-            // SIN CAMBIO DE DIRECCIÓN -> OCULTO
-            else {
-                radii.push(0);
-                colors.push('transparent');
-                borders.push('transparent');
+            if (curr > prev && curr > next) { // PICO
+                radii.push(4); colors.push('#FF0000'); borders.push('#FFFFFF');
+            } else if (curr < prev && curr < next) { // VALLE
+                radii.push(4); colors.push('#00FF00'); borders.push('#FFFFFF');
+            } else {
+                radii.push(0); colors.push('transparent'); borders.push('transparent');
             }
         }
         return { radii, colors, borders };
     };
 
-    // Calculamos estilos para ambas líneas
-    const spotStyles = getTurnStyles(spotData);
-    const ivStyles = getTurnStyles(ivData);
+    // Calculamos los estilos solo para las líneas Fourier
+    const spotStyles = getTurnStyles(spotFftData);
+    const ivStyles = getTurnStyles(ivFftData);
 
     new Chart(canvas, {
         type: 'line',
         data: {
             labels: labels,
             datasets: [
+                // --- DATASET 1: REAL SPOT (NUEVO) ---
                 {
-                    label: 'Spot Price',
-                    data: spotData,
+                    label: 'Real Spot',
+                    data: realSpotData,
+                    borderColor: 'rgba(255, 255, 255, 0.35)', // Blanco semitransparente
+                    borderWidth: 1,         // Línea fina
+                    borderDash: [3, 3],     // Línea punteada
+                    pointRadius: 0,         // Sin puntos
+                    tension: 0,             // Sin suavizado (mostrar el ruido real)
+                    yAxisID: 'y',           // Comparte el eje Y izquierdo con Fourier Spot
+                    order: 10               // Se dibuja al fondo (detrás de todo)
+                },
+                // --- DATASET 2: FOURIER SPOT ---
+                {
+                    label: 'Fourier Spot',
+                    data: spotFftData,
                     borderColor: 'cyan',
                     backgroundColor: 'cyan',
                     borderWidth: 2,
                     yAxisID: 'y',
-                    tension: 0.4,
-                    // --- ESTILOS DINÁMICOS SPOT ---
+                    tension: 0.4,           // Suavizado
                     pointRadius: spotStyles.radii,
                     pointBackgroundColor: spotStyles.colors,
                     pointBorderColor: spotStyles.borders,
                     pointBorderWidth: 1,
-                    pointHitRadius: 10 // Facilita el hover aunque el punto sea pequeño
+                    pointHitRadius: 10,
+                    order: 1
                 },
+                // --- DATASET 3: FOURIER IV ---
                 {
-                    label: 'ATM IV',
-                    data: ivData,
+                    label: 'ATM IV (FFT)',
+                    data: ivFftData,
                     borderColor: 'magenta',
                     backgroundColor: 'magenta',
                     borderWidth: 2,
-                    yAxisID: 'y1',
+                    yAxisID: 'y1',          // Eje Y derecho
                     tension: 0.4,
-                    // --- ESTILOS DINÁMICOS IV ---
                     pointRadius: ivStyles.radii,
                     pointBackgroundColor: ivStyles.colors,
                     pointBorderColor: ivStyles.borders,
                     pointBorderWidth: 1,
-                    pointHitRadius: 10
+                    pointHitRadius: 10,
+                    order: 2
                 }
             ]
         },
@@ -1822,11 +1825,25 @@ function renderChartJs(canvas, jsonData) {
                 intersect: false,
             },
             plugins: {
-                legend: { labels: { color: 'white' } },
+                legend: { 
+                    labels: { color: 'white' } 
+                },
                 tooltip: {
                     enabled: true,
                     mode: 'index',
-                    intersect: false
+                    intersect: false,
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                label += context.parsed.y.toFixed(2);
+                            }
+                            return label;
+                        }
+                    }
                 }
             },
             scales: {
