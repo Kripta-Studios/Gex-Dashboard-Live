@@ -1188,14 +1188,16 @@ def get_options_data(ticker, expir, greek_filter):
         yield_val = (100 - sofr)/100
 
         if "SPX" in ticker:
-	        utc_now = datetime.datetime.now(datetime.timezone.utc)
-	        now_ny = utc_now - datetime.timedelta(hours=4) # Ojo: esto es fijo a UTC-4, mejor usar pytz si es posible, pero vale por ahora
-	        hora_ny = now_ny.time()
+            ny_tz = ZoneInfo("America/New_York")
+            now_ny = datetime.datetime.now(ny_tz)
+            hora_ny = now_ny.time()
 
 	        rth_start = datetime.time(9, 30)
-	        rth_end = datetime.time(16, 15) # SPX cierra a las 16:00, pero precios se asientan hasta 16:15
+	        rth_end = datetime.time(16, 00) # SPX cierra a las 16:00, pero precios se asientan hasta 16:15
 	        # Si estamos en horario regular (RTH), usamos el spot directo
-	        if rth_start <= hora_ny <= rth_end:
+	        es_weekend = now_ny.weekday() >= 5
+	        
+	        if rth_start <= hora_ny <= rth_end and not es_weekend:
 	            precio_spot_final = spot
 	        else:
 	            # Estamos en ETH (Overnight). Necesitamos el futuro /ES obligatoriamente
