@@ -2043,8 +2043,8 @@ function renderIBChartJs(canvas, jsonData) {
     
     if (jsonData.levels) {
 		// Calculamos los límites del rango (1% arriba y abajo)
-        const upperLimit = currentPrice * 1.02;
-        const lowerLimit = currentPrice * 0.98;
+        const upperLimit = currentPrice * 1.015;
+        const lowerLimit = currentPrice * 0.985;
 
         Object.keys(jsonData.levels).forEach(k => {
             const levelPrice = jsonData.levels[k];
@@ -2108,6 +2108,12 @@ function renderIBChartJs(canvas, jsonData) {
                 tooltip: {
                     enabled: true,
 		    		displayColors: false,
+					filter: function(tooltipItem, data) {
+                        // Solo mostramos el tooltip del item que está siendo hovereado activamente.
+                        // Como usamos mode: 'nearest', Chart.js ya ha decidido cuál es el más cercano.
+                        // Sin este filtro (o con mode: 'index'), mostraría todos los datasets en esa coordenada X.
+                        return tooltipItem.datasetIndex === tooltipItem.chart.tooltip.dataPoints[0].datasetIndex;
+                    },
                     callbacks: {
 						title: function(context) {
 							return context[0].dataset.label;
