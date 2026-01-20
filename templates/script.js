@@ -2067,8 +2067,8 @@ function renderIBChartJs(canvas, jsonData) {
             maintainAspectRatio: false,
             animation: false,
             interaction: {
-                mode: 'nearest',
-                intersect: true,
+                mode: 'index',
+                intersect: false,
             },
             plugins: {
                 legend: { display: false },
