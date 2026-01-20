@@ -2025,10 +2025,13 @@ function renderIBChartJs(canvas, jsonData) {
     };
     
     if (jsonData.levels) {
-		const upperLimit = currentPrice * 1.01;
+		// Calculamos los límites del rango (1% arriba y abajo)
+        const upperLimit = currentPrice * 1.01;
         const lowerLimit = currentPrice * 0.99;
-        const levelPrice = jsonData.levels[k];
-		Object.keys(jsonData.levels).forEach(k => {
+
+        Object.keys(jsonData.levels).forEach(k => {
+            const levelPrice = jsonData.levels[k];
+
             // Condición 1: Que exista color para esa griega
             // Condición 2: Que el precio esté dentro del rango del 1%
             if (greekColors[k] && levelPrice >= lowerLimit && levelPrice <= upperLimit) {
