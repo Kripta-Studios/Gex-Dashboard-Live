@@ -1954,7 +1954,7 @@ function renderIBChartJs(canvas, jsonData) {
     // Filtramos los datos brutos antes de procesarlos.
     // El formato de 'd.time' es "HH:MM", así que la comparación de texto funciona.
     const rawSeries = jsonData.series || [];
-    const series = rawSeries.filter(d => d.time >= "08:00" && d.time <= "16:15");
+    const series = rawSeries.filter(d => d.time >= "09:20" && d.time <= "16:15");
     
     // Si después de filtrar no queda nada (o no había datos), salimos
     if (series.length === 0) return;
