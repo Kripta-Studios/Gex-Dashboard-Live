@@ -2107,7 +2107,9 @@ function renderIBChartJs(canvas, jsonData) {
                 legend: { display: false },
                 tooltip: {
                     enabled: true,
-		    		displayColors: false,
+		    		displayColors: true,
+		    		mode: 'nearest',
+		    		intersect: false,
 					filter: function(tooltipItem, data) {
                         // Solo mostramos el tooltip del item que está siendo hovereado activamente.
                         // Como usamos mode: 'nearest', Chart.js ya ha decidido cuál es el más cercano.
