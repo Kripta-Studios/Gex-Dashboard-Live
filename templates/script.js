@@ -2008,7 +2008,9 @@ function renderIBChartJs(canvas, jsonData) {
         borderDash: borderDash,
         pointRadius: 0,
         fill: false,
-        order: 10
+        order: 10,
+        pointHitRadius: 25, 
+		pointHoverRadius: 5
     });
 
     // --- B. LÍNEAS IB ---
@@ -2110,13 +2112,7 @@ function renderIBChartJs(canvas, jsonData) {
 		    		displayColors: true,
 		    		mode: 'nearest',
 		    		intersect: false,
-					filter: function(tooltipItem, data) {
-                        // Solo mostramos el tooltip del item que está siendo hovereado activamente.
-                        // Como usamos mode: 'nearest', Chart.js ya ha decidido cuál es el más cercano.
-                        // Sin este filtro (o con mode: 'index'), mostraría todos los datasets en esa coordenada X.
-                        return tooltipItem.datasetIndex === tooltipItem.chart.tooltip.dataPoints[0].datasetIndex;
-                    },
-                    callbacks: {
+		            callbacks: {
 						title: function(context) {
 							return context[0].dataset.label;
 						},
