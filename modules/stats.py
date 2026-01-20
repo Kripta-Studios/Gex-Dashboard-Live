@@ -5,7 +5,6 @@ from numba import vectorize, njit
 from numba.types import float64, UniTuple, string
 from numba.extending import get_cython_function_address
 
-
 addr = get_cython_function_address("scipy.special.cython_special", "__pyx_fuse_1erf")
 functype = ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double)
 erf_fn = functype(addr)
@@ -135,26 +134,27 @@ def calc_delta_adjusted_gex(gamma_ex, cdf_dp, T, q, opt_type):
     else:
         # Delta Put = -e^-qT * (1 - N(d1))
         unit_delta = -discount * (1.0 - cdf_dp)
-    
+
     # Multiplicamos la Gamma Exposure por el valor absoluto de la Delta
     # Si la delta es alta (ITM), el GEX se mantiene casi igual.
     # Si la delta es baja (OTM), el GEX se reduce drásticamente.
     return gamma_ex * np.abs(unit_delta)
+
 
 @njit(cache=True)
 def calc_zomma_ex(gamma_ex, dp, vol, T):
     """
     Calcula la "Zomma Exposure" (GEX ajustado por Volatilidad).
     Mide cuánto cambia el GEX ante un movimiento del 1% en la Volatilidad Implícita.
-    
+
     Zomma = Gamma * ((d1 * d2 - 1) / sigma)
     Aprovechamos que ya tenemos gamma_ex calculado.
     """
     # d2 = d1 - vol * sqrt(T)
     d2 = dp - vol * np.sqrt(T)
-    
+
     # Factor de ajuste Zomma: (d1*d2 - 1) / vol
     zomma_factor = (dp * d2 - 1.0) / vol
-    
+
     # Retorna el cambio en GEX por 1 punto de cambio en Vol
     return gamma_ex * zomma_factor

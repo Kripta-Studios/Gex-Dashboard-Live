@@ -7,10 +7,12 @@ import asyncio
 from data_plotting import get_options_data
 import re
 from sdnotify import SystemdNotifier
+
 notifier = SystemdNotifier()
 notifier.notify("READY=1")
 # Crear un event loop global para manejar las tareas asíncronas
-#loop = asyncio.get_event_loop()
+# loop = asyncio.get_event_loop()
+
 
 async def run_bot_async():
     print("[SYSTEM] Iniciando Bot de Discord...")
@@ -21,6 +23,7 @@ async def run_bot_async():
     finally:
         await bot.close()
 
+
 async def run_scheduler_async():
     print("[SYSTEM] Iniciando Scheduler...")
     try:
@@ -30,13 +33,13 @@ async def run_scheduler_async():
     except Exception as e:
         print(f"[Error] running scheduler: {e}")
 
+
 async def main():
     # Ejecutar ambas tareas en paralelo
-    await asyncio.gather(
-        run_bot_async(),
-        run_scheduler_async()
-    )
-'''
+    await asyncio.gather(run_bot_async(), run_scheduler_async())
+
+
+"""
 async def keep_alive():
     
     # Ejecutar el bot y el scheduler como tareas asíncronas
@@ -45,15 +48,14 @@ async def keep_alive():
         run_scheduler_async()
     ]
     await asyncio.gather(*tasks)
-'''
-
+"""
 
 
 if __name__ == "__main__":
     # Crear y configurar el event loop en el hilo principal
-    #loop = asyncio.get_event_loop()
+    # loop = asyncio.get_event_loop()
     try:
-        #loop.run_until_complete(keep_alive())
+        # loop.run_until_complete(keep_alive())
         asyncio.run(main())
     except Exception as e:
         print("Shutting down...", e)

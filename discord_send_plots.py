@@ -13,12 +13,13 @@ from cachetools import TTLCache
 import discord
 import asyncio
 from watchdog_notify import send_watchdog
+
 # Load environment variables
 load_dotenv()
 
 # Configuration
 TICKERS = ["SPX", "Ticker"]  # Yahoo Finance format
-#EXPIRATIONS = ["0dte", "1dte", "weekly", "opex", "monthly", "all"]
+# EXPIRATIONS = ["0dte", "1dte", "weekly", "opex", "monthly", "all"]
 EXPIRATIONS = ["0dte", "1dte", "weekly"]
 GREEKS = ["delta", "gamma", "vanna", "charm", "dgex", "zomma"]
 VISUALIZATIONS = {
@@ -26,7 +27,7 @@ VISUALIZATIONS = {
     "gamma": ["Absolute Gamma Exposure", "Gamma Exposure By Calls/Puts"],
     "vanna": ["Absolute Vanna Exposure", "Implied Volatility Average"],
     "charm": ["Absolute Charm Exposure"],
-    "dgex":  ["Absolute Dgex Exposure", "Dgex Exposure By Calls/Puts"],
+    "dgex": ["Absolute Dgex Exposure", "Dgex Exposure By Calls/Puts"],
     "zomma": ["Absolute Zomma Exposure"],
 }
 PLOT_DIR = "plots"
@@ -110,8 +111,9 @@ makedirs(PLOT_DIR, exist_ok=True)
 # Discord client (passed from bot.py)
 discord_client = None
 
-upload_lock_fast = asyncio.Semaphore(3) 
+upload_lock_fast = asyncio.Semaphore(3)
 upload_lock_slow = asyncio.Semaphore(1)
+
 
 def log(message):
     """Imprime el mensaje con la hora actual en NY"""
@@ -121,36 +123,52 @@ def log(message):
     with open("bot_logging.txt", "a", encoding="utf-8") as f:
         f.write(full_msg + "\n")
 
+
 async def process_single_request(sem, ticker, exp, greek, channel_id):
     """
     Procesa un solo ticker/exp/greek respetando el semáforo para no saturar.
     """
     async with sem:  # Limita la concurrencia
         try:
-            log(f"[*] Procesando: {ticker} {exp} {greek}...") # LOG CHIVATO
+            log(f"[*] Procesando: {ticker} {exp} {greek}...")  # LOG CHIVATO
             # print(f"Processing {ticker} {exp} {greek}...") # Debug opcional
             raw_data = await get_options_data(ticker, exp, greek)
 
             if not raw_data:
-                log(f"[VACÍO] get_options_data devolvió None para {ticker} {exp} {greek}")
+                log(
+                    f"[VACÍO] get_options_data devolvió None para {ticker} {exp} {greek}"
+                )
                 return False
-                    
+
             if isinstance(raw_data, list) and len(raw_data) >= 3:
                 hist_files = raw_data[0] or []
                 alerts = raw_data[1] or []
                 table_files = raw_data[2] or []
-                
+
                 filenames = [f for f in [hist_files, table_files] if f]
                 if not filenames:
-                    log(f"[VACÍO] No se generaron nombres de archivo para {ticker} {exp} {greek}")
+                    log(
+                        f"[VACÍO] No se generaron nombres de archivo para {ticker} {exp} {greek}"
+                    )
                 # Si el griego es None, enviamos para todos los GREEKS definidos
                 if greek is None:
                     # Nota: Esto podría optimizarse más, pero mantenemos lógica original
                     for loop_greek in GREEKS:
-                        current_loop_alerts = [a for a in alerts if loop_greek.lower() in a.lower()]
-                        await send_plot_to_discord(filenames, ticker, exp, loop_greek, channel_id, alerts=current_loop_alerts)
+                        current_loop_alerts = [
+                            a for a in alerts if loop_greek.lower() in a.lower()
+                        ]
+                        await send_plot_to_discord(
+                            filenames,
+                            ticker,
+                            exp,
+                            loop_greek,
+                            channel_id,
+                            alerts=current_loop_alerts,
+                        )
                 else:
-                    await send_plot_to_discord(filenames, ticker, exp, greek, channel_id, alerts=alerts)
+                    await send_plot_to_discord(
+                        filenames, ticker, exp, greek, channel_id, alerts=alerts
+                    )
             else:
                 log(f"[ERROR FORMATO] Datos recibidos incorrectos: {type(raw_data)}")
 
@@ -158,13 +176,16 @@ async def process_single_request(sem, ticker, exp, greek, channel_id):
         except Exception as e:
             log(f"Error processing {ticker}/{exp}/{greek}: {e}")
             import traceback
+
             traceback.print_exc()
             return False
+
 
 def set_discord_client(client):
     global discord_client
     discord_client = client
     log(f"Discord client set: {client}")
+
 
 async def send_plot_to_discord(filenames, ticker, exp, greek, channel_id, alerts=None):
     if discord_client is None:
@@ -189,7 +210,7 @@ async def send_plot_to_discord(filenames, ticker, exp, greek, channel_id, alerts
         return
     channel = discord_client.get_channel(channel_id)
     channel_key = channel
-    #print("Channel:", channel)
+    # print("Channel:", channel)
     if not channel:
         log(f"Channel ID {channel_id} on {channel_key} not found")
         return
@@ -203,7 +224,7 @@ async def send_plot_to_discord(filenames, ticker, exp, greek, channel_id, alerts
             if len(alert_msg) > 1950:
                 alert_msg = alert_msg[:1950] + "... (truncated)"
             try:
-                await channel.send(alert_msg)        
+                await channel.send(alert_msg)
             except Exception as e:
                 log(f"Failed to send alerts to {channel_key}: {e}")
 
@@ -216,14 +237,16 @@ async def send_plot_to_discord(filenames, ticker, exp, greek, channel_id, alerts
                 else:
                     log(f"File not found {file_path}")
     if not valid_files:
-        log(f"[WARN] Se procesaron datos para {ticker}/{exp}/{greek} pero no salieron archivos válidos.")
+        log(
+            f"[WARN] Se procesaron datos para {ticker}/{exp}/{greek} pero no salieron archivos válidos."
+        )
         return
 
     if exp == "0dte":
         lock_to_use = upload_lock_fast
     else:
         lock_to_use = upload_lock_slow
-    
+
     async with lock_to_use:
         try:
             log(f"[SUBIENDO] Enviando {len(valid_files)} imágenes a #{channel.name}...")
@@ -234,49 +257,60 @@ async def send_plot_to_discord(filenames, ticker, exp, greek, channel_id, alerts
             BATCH_SIZE = 4
             for i in range(0, len(valid_files), BATCH_SIZE):
                 batch_paths = valid_files[i : i + BATCH_SIZE]
-                
+
                 # Bucle de Reintentos
                 MAX_RETRIES = 3
                 for attempt in range(MAX_RETRIES):
                     try:
                         # Creamos los objetos File justo antes de enviar
                         # (Si reusamos un objeto File fallido, el puntero de lectura estaría al final y enviaría 0 bytes)
-                        discord_files_batch = [discord.File(path) for path in batch_paths]
-                        
+                        discord_files_batch = [
+                            discord.File(path) for path in batch_paths
+                        ]
+
                         await channel.send(files=discord_files_batch)
-                        break # ¡Éxito! Salimos del bucle de reintentos
+                        break  # ¡Éxito! Salimos del bucle de reintentos
                     except Exception as e:
-                        wait_time = (attempt + 1)
-                        log(f"[RETRY {attempt+1}/{MAX_RETRIES}] Error enviando a {channel.name}: {e}. Esperando {wait_time}s...")
+                        wait_time = attempt + 1
+                        log(
+                            f"[RETRY {attempt+1}/{MAX_RETRIES}] Error enviando a {channel.name}: {e}. Esperando {wait_time}s..."
+                        )
                         await asyncio.sleep(wait_time)
-                        
+
                         if attempt == MAX_RETRIES - 1:
-                            log(f"[ERROR] Se perdió el lote {i} de {greek} tras {MAX_RETRIES} intentos.")
-                               
+                            log(
+                                f"[ERROR] Se perdió el lote {i} de {greek} tras {MAX_RETRIES} intentos."
+                            )
+
             send_watchdog()
             log(f"[OK] Enviado correctamente: {ticker}/{exp}/{greek}")
-                #print(f"Sent {i} to Discord channel {channel_key}")
+            # print(f"Sent {i} to Discord channel {channel_key}")
         except Exception as e:
             mensaje = f"Failed to send {filenames} to {channel_key}"
             await channel.send(mensaje)
-            log(f"Failed to send {filenames} to {channel_key}: {type(e).__name__} - {e}")
+            log(
+                f"Failed to send {filenames} to {channel_key}: {type(e).__name__} - {e}"
+            )
 
-async def process_ticker_batch(ticker, expirations_list, specific_greek=None, channel_id=None):
+
+async def process_ticker_batch(
+    ticker, expirations_list, specific_greek=None, channel_id=None
+):
     # Obtenemos el bucle de eventos actual
     loop = asyncio.get_running_loop()
-    
+
     for exp in expirations_list:
         try:
             # print(f"[*] Procesando: {ticker} {exp} (En hilo secundario)...")
-            
+
             # --- LA MAGIA: EJECUTAR EN UN HILO APARTE ---
             # Esto evita que Matplotlib congele el bot.
             # Nota: get_options_data NO debe tener 'async' en su definición en data_plotting.py
             raw_data = await loop.run_in_executor(
-                None, # Usa el ThreadPool por defecto
-                functools.partial(get_options_data, ticker, exp, specific_greek)
+                None,  # Usa el ThreadPool por defecto
+                functools.partial(get_options_data, ticker, exp, specific_greek),
             )
-            
+
             if isinstance(raw_data, list) and len(raw_data) >= 3:
                 hist_files = raw_data[0] or []
                 alerts = raw_data[1] or []
@@ -284,45 +318,62 @@ async def process_ticker_batch(ticker, expirations_list, specific_greek=None, ch
                 filenames = [f for f in [hist_files, table_files] if f]
 
                 greeks_to_send = [specific_greek] if specific_greek else GREEKS
-                
+
                 for greek in greeks_to_send:
                     relevant_alerts = [a for a in alerts if greek.lower() in a.lower()]
                     # La subida a Discord SÍ debe ser en el hilo principal (es async)
-                    await send_plot_to_discord(filenames, ticker, exp, greek, channel_id, alerts=relevant_alerts)
-            
+                    await send_plot_to_discord(
+                        filenames,
+                        ticker,
+                        exp,
+                        greek,
+                        channel_id,
+                        alerts=relevant_alerts,
+                    )
+
             # Pausa obligatoria entre expiraciones para dejar respirar a la CPU
-            await asyncio.sleep(0.1) 
+            await asyncio.sleep(0.1)
 
         except Exception as e:
             print(f"[ERROR LOTE] Fallo en {ticker} {exp}: {e}")
             import traceback
+
             traceback.print_exc()
 
-async def request_plots(specific_ticker=None, specific_exp=None, specific_greek=None, channel_id=None):
+
+async def request_plots(
+    specific_ticker=None, specific_exp=None, specific_greek=None, channel_id=None
+):
     try:
         # 1. Configuración de concurrencia
         tasks = []
 
         # 2. Definir listas a procesar
-        tickers_to_process = [specific_ticker] if specific_ticker else ["SPX", "SPY","QQQ"] # O tu lista TICKERS global si prefieres
+        tickers_to_process = (
+            [specific_ticker] if specific_ticker else ["SPX", "SPY", "QQQ"]
+        )  # O tu lista TICKERS global si prefieres
         expirations_to_process = [specific_exp] if specific_exp else EXPIRATIONS
         # 3. Crear las tareas (Tasks)
         for ticker in tickers_to_process:
             task = asyncio.create_task(
-                process_ticker_batch(ticker, expirations_to_process, specific_greek, channel_id)
+                process_ticker_batch(
+                    ticker, expirations_to_process, specific_greek, channel_id
+                )
             )
             tasks.append(task)
-        
+
         if tasks:
             await asyncio.gather(*tasks)
-        
+
         return True
-		
+
     except Exception as e:
         log(f"ERROR en request_plots: {e}")
         import traceback
+
         traceback.print_exc()
         return False
+
 
 def cleanup_plots_daily():
     """
@@ -332,12 +383,13 @@ def cleanup_plots_daily():
     log("[MANTENIMIENTO] Iniciando limpieza diaria de plots (00:00 Hora Servidor)...")
     try:
         if os.path.exists(PLOT_DIR):
-            shutil.rmtree(PLOT_DIR) # Borra carpeta y subcarpetas
-        
-        os.makedirs(PLOT_DIR, exist_ok=True) # La recrea vacía inmediatamente
+            shutil.rmtree(PLOT_DIR)  # Borra carpeta y subcarpetas
+
+        os.makedirs(PLOT_DIR, exist_ok=True)  # La recrea vacía inmediatamente
         log("[MANTENIMIENTO] Carpeta plots reiniciada correctamente.")
     except Exception as e:
         log(f"[ERROR MANTENIMIENTO] Fallo al limpiar plots: {e}")
+
 
 def cleanup_old_json_data():
     """
@@ -346,67 +398,71 @@ def cleanup_old_json_data():
     """
     days_to_keep = 7  # Días a mantener (solo días de semana)
     folder_path = "/home/Option-Greeks-Plotting-Discord-Bot/json_data"
-    
-    log(f"[MANTENIMIENTO] Iniciando limpieza de JSONs (Antiguos >{days_to_keep}d O Fines de Semana)...")
-    
+
+    log(
+        f"[MANTENIMIENTO] Iniciando limpieza de JSONs (Antiguos >{days_to_keep}d O Fines de Semana)..."
+    )
+
     deleted_count = 0
     weekend_deleted = 0
     now = time.time()
-    cutoff = now - (days_to_keep * 86400) # Límite de tiempo para archivos antiguos
+    cutoff = now - (days_to_keep * 86400)  # Límite de tiempo para archivos antiguos
 
     try:
         if os.path.exists(folder_path):
             for filename in os.listdir(folder_path):
                 file_path = os.path.join(folder_path, filename)
-                
+
                 # Solo procesamos archivos .json
                 if filename.endswith(".json") and os.path.isfile(file_path):
                     try:
                         mtime = os.path.getmtime(file_path)
-                        
+
                         # CONDICIÓN 1: ¿Es viejo?
                         is_old = mtime < cutoff
-                        
+
                         # CONDICIÓN 2: ¿Es finde?
                         # tm_wday devuelve: 0=Lunes ... 5=Sábado, 6=Domingo
                         day_of_week = time.localtime(mtime).tm_wday
-                        is_weekend = (day_of_week == 5 or day_of_week == 6)
-                        
+                        is_weekend = day_of_week == 5 or day_of_week == 6
+
                         if is_old or is_weekend:
                             os.remove(file_path)
                             deleted_count += 1
                             if is_weekend:
                                 weekend_deleted += 1
-                                
+
                     except Exception as e:
                         log(f"[WARN] No se pudo borrar {filename}: {e}")
-            
-            log(f"[MANTENIMIENTO] Limpieza completada. Total borrados: {deleted_count} (Por ser finde: {weekend_deleted})")
+
+            log(
+                f"[MANTENIMIENTO] Limpieza completada. Total borrados: {deleted_count} (Por ser finde: {weekend_deleted})"
+            )
         else:
             log("[WARN] La carpeta json_data no existe.")
-            
+
     except Exception as e:
         log(f"[ERROR MANTENIMIENTO] Fallo crítico limpiando JSONs: {e}")
 
+
 async def start_scheduler():
-    #cleanup_directory()
+    # cleanup_directory()
     sched = BackgroundScheduler(daemon=True)
-    
+
     # --- TRABAJO RÁPIDO (0DTE) ---
     # Se ejecuta cada 2 MINUTOS. Solo procesa 0dte.
     log("[SYSTEM] Programando 0DTE cada 2 minutos...")
     sched.add_job(
         lambda: asyncio.run_coroutine_threadsafe(
-            request_plots(specific_exp="0dte"), # Solo pedimos 0dte
-            discord_client.loop
+            request_plots(specific_exp="0dte"), discord_client.loop  # Solo pedimos 0dte
         ).result(),
         CronTrigger.from_crontab(
             "*/2 3-16 * * 0-4",  # <--- CADA 2 MINUTOS
-            timezone=ZoneInfo("America/New_York")
+            timezone=ZoneInfo("America/New_York"),
         ),
         id="fast_0dte_job",
         max_instances=1,
-        coalesce=True
+        coalesce=True,
     )
 
     # --- TRABAJO LENTO (1DTE y Weekly) ---
@@ -416,36 +472,34 @@ async def start_scheduler():
     for slow_exp in ["1dte", "weekly"]:
         sched.add_job(
             lambda e=slow_exp: asyncio.run_coroutine_threadsafe(
-                request_plots(specific_exp=e), 
-                discord_client.loop
+                request_plots(specific_exp=e), discord_client.loop
             ).result(),
             CronTrigger.from_crontab(
                 "*/5 3-16 * * 0-4",  # <--- CADA 10 MINUTOS
-                timezone=ZoneInfo("America/New_York")
+                timezone=ZoneInfo("America/New_York"),
             ),
             id=f"slow_{slow_exp}_job",
             max_instances=1,
-            coalesce=True
+            coalesce=True,
         )
 
     log("[SYSTEM] Programando limpieza de plots a las 00:00 (Hora Servidor)...")
-        
+
     sched.add_job(
         cleanup_plots_daily,
-        CronTrigger(hour=0, minute=0), # <--- Sin timezone = Hora local del servidor
+        CronTrigger(hour=0, minute=0),  # <--- Sin timezone = Hora local del servidor
         id="daily_cleanup_job",
-        replace_existing=True
+        replace_existing=True,
     )
 
     log("[SYSTEM] Programando limpieza de JSONs antiguos a las 00:30...")
-        
+
     sched.add_job(
         cleanup_old_json_data,
-        CronTrigger(hour=0, minute=30), 
+        CronTrigger(hour=0, minute=30),
         id="json_cleanup_job",
-        replace_existing=True
+        replace_existing=True,
     )
-    
+
     sched.start()
     print("[SYSTEM] Scheduler Híbrido Iniciado (0DTE Rápido / Resto Normal)")
-    

@@ -29,7 +29,9 @@ def get_friday_of_this_week():
     return friday.strftime("%Y %b %d")
 
 
-@cachetools.cached(cache=TTLCache(maxsize=16, ttl=60 * 60 * 4))  # in-memory cache for 4 hrs
+@cachetools.cached(
+    cache=TTLCache(maxsize=16, ttl=60 * 60 * 4)
+)  # in-memory cache for 4 hrs
 def is_third_friday(date, tz):
     def get_third_friday_or_thursday(year, month, tz):
         _, last = monthrange(year, month)
@@ -58,8 +60,9 @@ def is_third_friday(date, tz):
             next_month = 1
             next_year += 1
         candidate, result = get_third_friday_or_thursday(next_year, next_month, tz)
-    
+
     return candidate, result
+
 
 def expir_to_datetime(expir: str):
     tz = "America/New_York"
@@ -77,7 +80,6 @@ def expir_to_datetime(expir: str):
 
     if expir == "0dte":
         # Si el mercado está abierto hoy, devolvemos hoy
-        
 
         if today_date in trading_dates:
             return today_date
@@ -112,7 +114,6 @@ def expir_to_datetime(expir: str):
         else:
             raise ValueError("Ni viernes ni jueves son días hábiles esta semana.")
 
-
     elif expir == "opex":
         date_, result = is_third_friday(today_date, tz)
         return date_.date()
@@ -123,7 +124,7 @@ def expir_to_datetime(expir: str):
     else:
         raise ValueError(f"Tipo de expiración desconocido: {expir}")
 
-        
+
 def next_open_day(date):
     tz_europe = ZoneInfo("Europe/Madrid")
     now_europe = datetime.datetime.now(tz_europe)
@@ -133,13 +134,14 @@ def next_open_day(date):
 
     _, last = monthrange(next_day.year, next_day.month)
     first = datetime.datetime(next_day.year, next_day.month, 1)
-    last = datetime.datetime(next_day.year+1, next_day.month, last)
+    last = datetime.datetime(next_day.year + 1, next_day.month, last)
     calendar = xcals.get_calendar("XNYS", start=first, end=last)
     trading_days = calendar.sessions.to_pydatetime()
     trading_dates = [d.date() for d in trading_days]
     while next_day not in trading_dates:
         next_day += datetime.timedelta(days=1)
     return next_day
+
 
 def is_parsable(date):
     try:
@@ -148,15 +150,26 @@ def is_parsable(date):
     except ValueError:
         return False
 
+
 def format_data(gr_list, today_ddt):
     import pandas as pd
     import numpy as np
     import datetime
 
     columns = [
-        "calls", "call_iv", "call_open_int", "call_delta", "call_gamma",
-        "puts", "put_iv", "put_open_int", "put_delta", "put_gamma",
-        "strike_price", "expiration_date", "time_till_exp"
+        "calls",
+        "call_iv",
+        "call_open_int",
+        "call_delta",
+        "call_gamma",
+        "puts",
+        "put_iv",
+        "put_open_int",
+        "put_delta",
+        "put_gamma",
+        "strike_price",
+        "expiration_date",
+        "time_till_exp",
     ]
 
     grouped = {}
@@ -169,12 +182,14 @@ def format_data(gr_list, today_ddt):
         ).tz_localize("America/New_York")
 
         # Usamos una base común eliminando solo la letra final C/P
-        option_code = str(option["option"]).replace(' ', '')
-        option_base = option_code[:-9] + option_code[-8:]  # elimina la C/P (ej: SPXW25071806250000)
+        option_code = str(option["option"]).replace(" ", "")
+        option_base = (
+            option_code[:-9] + option_code[-8:]
+        )  # elimina la C/P (ej: SPXW25071806250000)
 
         if "/" in option_base:
-            option_base = option_base.replace("C", '')
-            option_base = option_base.replace("P", '')
+            option_base = option_base.replace("C", "")
+            option_base = option_base.replace("P", "")
 
         key = (option_base, strike, expiration)
 
@@ -215,15 +230,23 @@ def format_data(gr_list, today_ddt):
     # Calcular DTE (sin zona horaria)
     # 1. Primero forzamos la conversión a datetime por si viene como texto
     option_data["expiration_date"] = pd.to_datetime(option_data["expiration_date"])
-    
+
     # 2. Ahora que seguro es fecha, podemos usar .dt
-    expiration_dates = option_data["expiration_date"].dt.tz_localize(None).values.astype("datetime64[D]")
-    
+    expiration_dates = (
+        option_data["expiration_date"]
+        .dt.tz_localize(None)
+        .values.astype("datetime64[D]")
+    )
+
     busday_counts = np.busday_count(today_ddt.date(), expiration_dates)
-    option_data["time_till_exp"] = np.where(busday_counts == 0, 1 / 252, busday_counts / 252)
+    option_data["time_till_exp"] = np.where(
+        busday_counts == 0, 1 / 252, busday_counts / 252
+    )
 
     # Ordenar
-    option_data = option_data.sort_values(by=["expiration_date", "strike_price"]).reset_index(drop=True)
+    option_data = option_data.sort_values(
+        by=["expiration_date", "strike_price"]
+    ).reset_index(drop=True)
 
     return option_data
 
@@ -266,7 +289,7 @@ def format_CBOE_data(data, today_ddt):
     data["expiration_date"] = data["calls"].str.extract(_exp_date_regex)
     data["expiration_date"] = pd.to_datetime(
         data["expiration_date"], format="%y%m%d"
-    ).dt.tz_localize('America/New_York') + timedelta(hours=16)
+    ).dt.tz_localize("America/New_York") + timedelta(hours=16)
 
     busday_counts = np.busday_count(
         today_ddt.date(),
@@ -281,6 +304,7 @@ def format_CBOE_data(data, today_ddt):
     )
 
     return data
+
 
 def get_strike_bounds(options_strikes: list, spot_price: float):
     all_strikes = []
@@ -311,15 +335,20 @@ def get_strike_bounds(options_strikes: list, spot_price: float):
     filtered_strikes = [s for s in all_strikes if min_allowed <= s <= max_allowed]
 
     if not filtered_strikes:
-        raise ValueError("No hay strikes dentro del rango permitido [0.5x, 1.5x] del spot.")
+        raise ValueError(
+            "No hay strikes dentro del rango permitido [0.5x, 1.5x] del spot."
+        )
 
     # Encuentra índice más cercano al spot
-    closest_idx = min(range(len(filtered_strikes)), key=lambda i: abs(filtered_strikes[i] - spot_price))
+    closest_idx = min(
+        range(len(filtered_strikes)),
+        key=lambda i: abs(filtered_strikes[i] - spot_price),
+    )
 
     # Índices con ±50 strikes, dentro de límites del array
     lower_idx = max(0, closest_idx - 50)
     upper_idx = min(len(filtered_strikes) - 1, closest_idx + 50)
-    
+
     lower_strike = filtered_strikes[lower_idx]
     upper_strike = filtered_strikes[upper_idx]
 
@@ -335,17 +364,23 @@ def get_all_unique_expirations_timestamps(options_expirations):
             expirations = data.get("expirations", [])
             for date in expirations:
                 # date es datetime.date, convertir a Timestamp con hora y zona horaria
-                ts = pd.Timestamp(year=date.year, month=date.month, day=date.day,
-                                  hour=16, minute=0, second=0, tz=ny_tz)
+                ts = pd.Timestamp(
+                    year=date.year,
+                    month=date.month,
+                    day=date.day,
+                    hour=16,
+                    minute=0,
+                    second=0,
+                    tz=ny_tz,
+                )
                 unique_dates.add(ts)
 
     # Devolver la lista ordenada
     return sorted(unique_dates)
 
+
 def get_SOFR_ticker():
-    month_codes = {
-        3: "H", 6: "M", 9: "U", 12: "Z"
-    }
+    month_codes = {3: "H", 6: "M", 9: "U", 12: "Z"}
 
     def third_wednesday(year, month):
         count = 0
@@ -398,7 +433,12 @@ def get_SOFR_ticker():
     return ticker
 
 
-def get_future_ticker(symbol: str, current_date: datetime.datetime = None, monthly: bool = None, tz: str = "America/New_York") -> str:
+def get_future_ticker(
+    symbol: str,
+    current_date: datetime.datetime = None,
+    monthly: bool = None,
+    tz: str = "America/New_York",
+) -> str:
     """
     Devuelve el ticker de futuros siguiente a la fecha actual para el símbolo dado.
     - Detecta automáticamente si el contrato es mensual o trimestral según el símbolo.
@@ -412,13 +452,22 @@ def get_future_ticker(symbol: str, current_date: datetime.datetime = None, month
 
     # Contratos con vencimientos mensuales
     monthly_contracts = {
-        'CL', 'QM', 'BZ',      # Petróleo
-        'NG', 'QG',            # Gas natural
-        'GC', 'HG', 'PL',      # Metales
-        'VX',                  # Volatilidad
-        'ZT', 'ZF', 'ZN', 'ZB',# Bonos
-        'SR3',                 # RBA
-        'BTC', 'ETH'           # Criptos
+        "CL",
+        "QM",
+        "BZ",  # Petróleo
+        "NG",
+        "QG",  # Gas natural
+        "GC",
+        "HG",
+        "PL",  # Metales
+        "VX",  # Volatilidad
+        "ZT",
+        "ZF",
+        "ZN",
+        "ZB",  # Bonos
+        "SR3",  # RBA
+        "BTC",
+        "ETH",  # Criptos
     }
 
     # Si monthly no está especificado, se detecta automáticamente
@@ -426,8 +475,18 @@ def get_future_ticker(symbol: str, current_date: datetime.datetime = None, month
         monthly = symbol in monthly_contracts
 
     month_codes = {
-        1: 'F', 2: 'G', 3: 'H', 4: 'J', 5: 'K', 6: 'M',
-        7: 'N', 8: 'Q', 9: 'U', 10: 'V', 11: 'X', 12: 'Z'
+        1: "F",
+        2: "G",
+        3: "H",
+        4: "J",
+        5: "K",
+        6: "M",
+        7: "N",
+        8: "Q",
+        9: "U",
+        10: "V",
+        11: "X",
+        12: "Z",
     }
 
     if monthly:
@@ -464,9 +523,8 @@ def get_future_ticker(symbol: str, current_date: datetime.datetime = None, month
             code = month_codes[3]  # marzo siguiente año
 
     year_code = str(year)[-1]
-    symbol = '/' + symbol
+    symbol = "/" + symbol
     return f"{symbol}{code}{year_code}"
-
 
 
 def extract_base_symbol(future_ticker: str) -> str:
@@ -476,7 +534,7 @@ def extract_base_symbol(future_ticker: str) -> str:
     Detecta automáticamente el símbolo base eliminando el código de mes y año.
     """
     # Tabla de códigos de mes de futuros
-    month_codes = {'F', 'G', 'H', 'J', 'K', 'M', 'N', 'Q', 'U', 'V', 'X', 'Z'}
+    month_codes = {"F", "G", "H", "J", "K", "M", "N", "Q", "U", "V", "X", "Z"}
 
     ticker = future_ticker.strip().upper()
 
@@ -486,10 +544,7 @@ def extract_base_symbol(future_ticker: str) -> str:
 
     # Recorrer desde el final hacia atrás para detectar patrón válido
     for i in range(len(ticker) - 2, 0, -1):
-        if ticker[i] in month_codes and ticker[i+1].isdigit():
+        if ticker[i] in month_codes and ticker[i + 1].isdigit():
             return ticker[:i]  # Devuelve todo lo anterior al mes
 
     raise ValueError(f"No se pudo extraer símbolo base de: {ticker}")
-
-
-

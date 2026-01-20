@@ -1,6 +1,9 @@
 from sdnotify import SystemdNotifier
 import syslog
+
 notifier = SystemdNotifier()
+
+
 def send_watchdog():
     """Se llama cada vez que se envía una imagen."""
     notifier.notify("WATCHDOG=1")

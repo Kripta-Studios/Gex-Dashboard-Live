@@ -9,16 +9,14 @@ from functools import partial
 
 
 def fulfill_req(ticker, session):
-    #print(ticker)
+    # print(ticker)
     api_url = (
         environ.get("API_URL")
         or f"https://cdn.cboe.com/api/global/delayed_quotes/options/{ticker.upper()}.json"
     ).strip()
     ticker = ticker.upper() if ticker[0] != "_" else ticker[1:].upper()
     d_format = "json"
-    filename = (
-        Path(f"{getcwd()}/data/json/{ticker}_quotedata.json")
-    )
+    filename = Path(f"{getcwd()}/data/json/{ticker}_quotedata.json")
     Path(filename).parent.mkdir(parents=True, exist_ok=True)
     with open(filename, "wb") as f, session.get(api_url) as r:
         for _ in range(3):  # in case of unavailable data, retry twice
@@ -38,20 +36,20 @@ def fulfill_req(ticker, session):
             else:
                 # incoming json data
                 f.write(orjson.dumps(r.json()))
-                #print("\nrequest done for", ticker, d_format)
+                # print("\nrequest done for", ticker, d_format)
                 break
 
 
 def dwn_data(select):
     pool = ThreadPool()
     tickers_pool = (environ.get("TICKERS") or "^SPX,^NDX,^RUT").strip().split(",")
-    #print(select)
+    # print(select)
     if select:  # select tickers to download
         tickers_pool = [f"^{t}" if f"^{t}" in tickers_pool else t for t in select]
     tickers_format = [
         f"_{ticker[1:]}" if ticker[0] == "^" else ticker for ticker in tickers_pool
     ]
-    #print(tickers_format)
+    # print(tickers_format)
     session = requests.Session()
     session.headers.update({"Accept": "application/json"})
     fulfill_req_with_args = partial(fulfill_req, session=session)
