@@ -2020,7 +2020,8 @@ function renderIBChartJs(canvas, jsonData) {
     // --- D. GREEKS ---
     const greekColors = {
         'max_gamma': '#00FF00', 'min_gamma': '#FF0000', 
-        'max_dgex': '#00FFFF', 'min_dgex': '#FFA500'
+        'max_dgex': '#00FFFF', 'min_dgex': '#FFA500',
+        'min_vanna': '#9400D3'
     };
     
     if (jsonData.levels) {
