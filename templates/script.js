@@ -1734,7 +1734,7 @@ function renderChartJs(canvas, jsonData) {
 
     // [NUEVO] Mapeamos el Spot Real usando la clave "spot" de tu JSON
     const realSpotData = filteredData.map(d => d.spot); 
-
+	const realIvData = filteredData.map(d => d.atm_put_iv);
     // --- 3. ESTILOS DE GIROS (DOTS) ---
     const getTurnStyles = (dataArr) => {
         const radii = [];
@@ -1782,7 +1782,19 @@ function renderChartJs(canvas, jsonData) {
                     yAxisID: 'y',           // Comparte el eje Y izquierdo con Fourier Spot
                     order: 10               // Se dibuja al fondo (detrás de todo)
                 },
-                // --- DATASET 2: FOURIER SPOT ---
+                // --- DATASET 2: REAL IV (NUEVO - Fondo) ---
+                {
+                    label: 'Real IV',
+                    data: realIvData,
+                    borderColor: 'rgba(255, 0, 255, 0.35)', // Magenta semitransparente
+                    borderWidth: 1,         
+                    borderDash: [3, 3],     
+                    pointRadius: 0,         
+                    tension: 0,             
+                    yAxisID: 'y1', // Eje derecho
+                    order: 19               
+                },
+                // --- DATASET 3: FOURIER SPOT ---
                 {
                     label: 'Fourier Spot',
                     data: spotFftData,
@@ -1798,7 +1810,7 @@ function renderChartJs(canvas, jsonData) {
                     pointHitRadius: 10,
                     order: 1
                 },
-                // --- DATASET 3: FOURIER IV ---
+                // --- DATASET 4: FOURIER IV ---
                 {
                     label: 'ATM IV (FFT)',
                     data: ivFftData,
