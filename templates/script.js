@@ -1880,7 +1880,42 @@ refreshDashboard = async function() {
     await originalRefreshDashboard();
 
     const currentTab = tabs.find(t => t.id === currentTabId);
-    if (!currentTab) return;
+    if (!currentTab || !currentTab.charts || currentTab.charts.length === 0) return;
+
+	const heatmaps = currentTab.charts.filter(c => !c.type || c.type === 'heatmap');
+	
+    if (heatmaps.length > 0) {
+        const requestList = heatmaps.map(c => ({
+            ticker: c.inputTicker,
+            exp: c.inputExp,
+            // IMPORTANTE: Añadimos la hora histórica si existe
+            time: currentHistoryTimeEST 
+        }));
+
+        // Eliminar duplicados
+        const uniqueRequests = [...new Set(requestList.map(JSON.stringify))].map(JSON.parse);
+
+        try {
+            // 2. Hacer la petición POST incluyendo el tiempo
+            const response = await fetch('/get_batch', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(uniqueRequests)
+            });
+            
+            const batchData = await response.json(); 
+
+            // 3. Distribuir datos
+            heatmaps.forEach(chart => {
+                const dataKey = `${chart.inputTicker.toUpperCase()}_${chart.inputExp.toLowerCase()}`;
+                if (batchData[dataKey]) {
+                    chart.data = batchData[dataKey];
+                }
+            });
+        } catch (e) {
+            console.error("Batch update failed", e);
+        }
+    }
 
     // 2. Lógica extra para Fourier y IB
     const specialCharts = currentTab.charts.filter(c => c.type === 'fourier' || c.type === 'ib');
