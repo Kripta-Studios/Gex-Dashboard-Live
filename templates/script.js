@@ -803,6 +803,7 @@ function generateRegimeHTML(ticker, greek, spot, netValue, spotStrikeValue) {
   }
 
   const borderColor = `var(${regimeColorVar})`;
+  const formattedSpot = spot.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
   return `
             <div class="regime-wrapper" style="border-left-color: ${borderColor};">
@@ -817,9 +818,7 @@ function generateRegimeHTML(ticker, greek, spot, netValue, spotStrikeValue) {
 
                         <div>
                             <div style="font-size: 9px; color: var(--text-dim); text-transform: uppercase;">Current Spot</div>
-                            <div style="font-size: 13px; font-weight: 700; color: white;">${spot.toFixed(
-                              2
-                            )}</div>
+                            <div style="font-size: 13px; font-weight: 700; color: white;">${formattedSpot}</div>
                         </div>
 
                         <div style="text-align: right;">
@@ -1082,9 +1081,10 @@ function alignChartToSpot(panel) {
 }
 
 function formatK(n) {
-  return Math.abs(n) < 1 ? "0" : n.toFixed(0) + "k";
+  if (Math.abs(n) < 1) return "0";
+  // toLocaleString('en-US') añade las comas automáticamente
+  return parseInt(n).toLocaleString('en-US') + "k";
 }
-
 // --- SYSTEM ---
 function toggleAutoRefresh() {
   const chk = document.getElementById("auto-refresh");
@@ -2202,3 +2202,4 @@ function handleTabDrop(e) {
 }
 
 setInterval(updateNYTime, 1000);
+
