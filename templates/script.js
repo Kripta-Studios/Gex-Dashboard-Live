@@ -2009,8 +2009,8 @@ function renderIBChartJs(canvas, jsonData) {
         pointRadius: 0,
         fill: false,
         order: 10,
-        pointHitRadius: 25, 
-		pointHoverRadius: 5
+        pointHitRadius: 1, 
+		pointHoverRadius: 1
     });
 
     // --- B. LÍNEAS IB ---
@@ -2112,6 +2112,9 @@ function renderIBChartJs(canvas, jsonData) {
 		    		displayColors: true,
 		    		mode: 'nearest',
 		    		intersect: false,
+		    		filter: function(tooltipItem, index, tooltipItems) {
+						return index === 0;
+					},
 		            callbacks: {
 						title: function(context) {
 							return context[0].dataset.label;
