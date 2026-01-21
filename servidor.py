@@ -48,13 +48,24 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
     # --- MODIFICACIÓN CLAVE: Sistema de Logs ---
     def log_message(self, format, *args):
         """
-        Sobrescribe el método por defecto para guardar logs en el archivo
-        usando la configuración de logging definida arriba.
+        Sobrescribe el método por defecto para guardar logs.
+        Detecta la IP real si se usa un Proxy Inverso (Nginx/Apache).
         """
-        client_ip = self.client_address[0]
-        # self.requestline contiene el "GET /ruta HTTP/1.1"
-        # args[0] suele ser el código de estado (200, 404, etc)
-        # format % args nos da el mensaje de estado estándar
+        # 1. Intentar obtener la IP desde la cabecera X-Forwarded-For (Estándar)
+        x_forwarded = self.headers.get("X-Forwarded-For")
+
+        # 2. Intentar obtener la IP desde X-Real-IP (Común en Nginx)
+        x_real = self.headers.get("X-Real-IP")
+
+        if x_forwarded:
+            # X-Forwarded-For puede ser una lista: "client, proxy1, proxy2"
+            # Nos quedamos con la primera, que es la del cliente real.
+            client_ip = x_forwarded.split(',')[0].strip()
+        elif x_real:
+            client_ip = x_real
+        else:
+            # Si no hay proxy, usar la IP directa de la conexión
+            client_ip = self.client_address[0]
 
         status_message = format % args
 
@@ -62,10 +73,9 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
             f"IP: {client_ip: <15} | REQ: {self.requestline} | RES: {status_message}"
         )
 
-        # Escribir en el archivo y mostrar en consola (opcional)
+        # Escribir en el archivo y mostrar en consola
         logging.info(log_entry)
-        # Si también quieres verlo en la terminal, descomenta la siguiente línea:
-        # print(f"{datetime.now()} | {log_entry}")
+        # print(f"{datetime.now()} | {log_entry
 
     # --- NUEVA FUNCIÓN: BÚSQUEDA INTELIGENTE ---
     def smart_glob(self, ticker, exp, date_str=None):
