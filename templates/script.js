@@ -918,57 +918,98 @@ function createChartPanel(chartObj, index) {
         spotVal = d.value;
       }
     });
-
-	// --- LÓGICA DE HISTORIAL CORREGIDA (createChartPanel) ---
-	    let netChangeHTML = "";
-	    let spotChangeHTML = "";
 	
-	    // 1. Si no existe historial, lo inicializamos
-	    if (!chartObj.statsHistory) {
-	        chartObj.statsHistory = {
-	            prevNet: net,       // Al inicio, previo = actual
-	            prevSpotVal: spotVal,
-	            currNet: net,
-	            currSpotVal: spotVal,
-	            prevStrikes: {}     // Nuevo: historial por strike
-	        };
-	    } 
+
+	// -----------------------------------------------------------
+	    // --- LÓGICA DE BUFFER DE TIEMPO (TIME TRAVEL) ---
+	    // -----------------------------------------------------------
 	    
-	    // 2. Comprobamos cambios (si ya existía)
-	    if (chartObj.statsHistory.currNet !== net || chartObj.statsHistory.currSpotVal !== spotVal) {
-	        // Hubo movimiento real: guardamos lo viejo
-	        chartObj.statsHistory.prevNet = chartObj.statsHistory.currNet;
-	        chartObj.statsHistory.prevSpotVal = chartObj.statsHistory.currSpotVal;
-	        
-	        // Actualizamos lo nuevo
-	        chartObj.statsHistory.currNet = net;
-	        chartObj.statsHistory.currSpotVal = spotVal;
+	    // CONFIGURACIÓN: Tiempo atrás para comparar (3.5 minutos = 210000ms)
+	    const COMPARE_DELAY_MS = 3.5 * 60 * 1000; 
+	    // Limpieza: No guardar más de 10 minutos para no llenar la RAM
+	    const MAX_BUFFER_MS = 5 * 60 * 1000; 
+	
+	    // 1. Inicializar el buffer si no existe
+	    if (!chartObj.historyBuffer) {
+	        chartObj.historyBuffer = [];
 	    }
 	
-	    // 3. ¡IMPORTANTE! Calculamos el HTML SIEMPRE (fuera del else)
-	    // Esto asegura que veas (0.00%) al cargar la página, confirmando que funciona.
-	    netChangeHTML = formatChangePct(net, chartObj.statsHistory.prevNet);
-	    spotChangeHTML = formatChangePct(spotVal, chartObj.statsHistory.prevSpotVal);
+	    // 2. Crear una "foto" (Snapshot) de los datos actuales
+	    // Convertimos las filas a un objeto { "6800": valor, "6805": valor } para acceso rápido
+	    const currentStrikesMap = {};
+	    rows.forEach(r => {
+	        currentStrikesMap[r.strike] = r.value;
+	    });
 	
-	    // 4. NUEVO: Calcular cambios por strike y encontrar top 5 por cambio nominal
+	    const snapshot = {
+	        timestamp: Date.now(),
+	        net: net,
+	        spotVal: spotVal,
+	        strikes: currentStrikesMap
+	    };
+	
+	    // 3. Añadir al historial
+	    // Solo añadimos si el último snapshot es diferente en tiempo (evitar duplicados en renders muy rápidos)
+	    const lastSnap = chartObj.historyBuffer[chartObj.historyBuffer.length - 1];
+	    if (!lastSnap || (Date.now() - lastSnap.timestamp > 1000)) {
+	        chartObj.historyBuffer.push(snapshot);
+	    }
+	
+	    // 4. Limpieza: Borrar snapshots más viejos que MAX_BUFFER_MS
+	    const cutoffTime = Date.now() - MAX_BUFFER_MS;
+	    if (chartObj.historyBuffer.length > 0 && chartObj.historyBuffer[0].timestamp < cutoffTime) {
+	        // Filtramos para quedarnos solo con lo reciente
+	        chartObj.historyBuffer = chartObj.historyBuffer.filter(s => s.timestamp > cutoffTime);
+	    }
+	
+	    // 5. ENCONTRAR EL PUNTO DE REFERENCIA (HACE 3-4 MINUTOS)
+	    const targetTime = Date.now() - COMPARE_DELAY_MS;
+	    
+	    // Algoritmo: Buscar en el buffer el snapshot cuyo timestamp esté más cerca de targetTime
+	    let refSnapshot = chartObj.historyBuffer[0]; // Por defecto el más antiguo disponible
+	    let timeMinDiff = Infinity;
+	
+	    for (const snap of chartObj.historyBuffer) {
+	        const diff = Math.abs(snap.timestamp - targetTime);
+	        
+	        // Si encontramos uno más cerca, nos lo quedamos
+	        if (diff < timeMinDiff) {
+	            timeMinDiff = diff;
+	            refSnapshot = snap;
+	        }
+	    }
+	
+	    // Nota: Al arrancar la web, el buffer estará vacío o tendrá solo el actual.
+	    // refSnapshot será igual al actual, por lo que los cambios serán 0% hasta que pasen 3 minutos.
+	
+	    // -----------------------------------------------------------
+	    // --- CÁLCULO DE DIFERENCIAS USANDO EL REFERENTE ---
+	    // -----------------------------------------------------------
+	
+	    let netChangeHTML = formatChangePct(net, refSnapshot.net);
+	    let spotChangeHTML = formatChangePct(spotVal, refSnapshot.spotVal);
+	
+	    // Calcular cambios por strike comparando con refSnapshot
 	    const strikeChanges = [];
 	    rows.forEach((row) => {
-	        const strikeKey = row.strike.toString();
-	        const prevValue = chartObj.statsHistory.prevStrikes[strikeKey];
+	        // Buscamos el valor de este strike en el pasado (hace 3-4 min)
+	        const prevValue = refSnapshot.strikes[row.strike];
 	        
 	        if (prevValue !== undefined && prevValue !== null && prevValue !== 0) {
 	            const diff = row.value - prevValue;
 	            const pct = (diff / Math.abs(prevValue)) * 100;
-	            strikeChanges.push({
-	                strike: row.strike,
-	                nominalChange: diff,  // Cambio nominal (absoluto)
-	                pct: pct,
-	                changeHTML: formatChangePct(row.value, prevValue)
-	            });
+	            
+	            // Solo procesamos si hay cambio (opcional: filtrar ruido pequeño)
+	            if (Math.abs(diff) > 1) { 
+	                strikeChanges.push({
+	                    strike: row.strike,
+	                    nominalChange: diff,
+	                    pct: pct,
+	                    // Usamos la función formatChangePct para el color/formato
+	                    changeHTML: formatChangePct(row.value, prevValue)
+	                });
+	            }
 	        }
-	        
-	        // Actualizar historial de este strike
-	        chartObj.statsHistory.prevStrikes[strikeKey] = row.value;
 	    });
 	    
 	    // Ordenar por cambio nominal (no porcentual)
@@ -979,12 +1020,12 @@ function createChartPanel(chartObj, index) {
 	    // Obtener top 5 con mayor subida nominal (más positivos)
 	    const top5Positive = strikeChanges.slice(-5).reverse();
 	    
-	    // Crear un mapa para búsqueda rápida
+	    // Crear un mapa para búsqueda rápida al renderizar
 	    const strikesToShow = new Set();
 	    top5Negative.forEach(item => strikesToShow.add(item.strike));
 	    top5Positive.forEach(item => strikesToShow.add(item.strike));
 	    
-	    // Crear un mapa de strike -> changeHTML para usar al renderizar
+	    // Crear un mapa de strike -> changeHTML
 	    const strikeChangeMap = {};
 	    strikeChanges.forEach(item => {
 	        if (strikesToShow.has(item.strike)) {
@@ -993,7 +1034,7 @@ function createChartPanel(chartObj, index) {
 	    });
 	
 	    // ----------------------------------------------------
-  
+	  
     const scalePos = Math.max(Math.abs(maxPos), 1);
     const scaleNeg = Math.max(Math.abs(maxNeg), 1);
   
