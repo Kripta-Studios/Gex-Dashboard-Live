@@ -737,229 +737,311 @@ function renderAllCharts() {
   });
 }
 
-function generateRegimeHTML(ticker, greek, spot, netValue, spotStrikeValue) {
-  let regimeText = "",
-    behaviorText = "",
-    biasText = "",
-    regimeColorVar = "--text-dim";
-  const isLocalPos = spotStrikeValue >= 0;
-  const isNetPos = netValue >= 0;
-
-  const isAligned = isLocalPos === isNetPos;
-  const alignmentText = isAligned ? "CONVERGENT" : "DIVERGENT";
-  const alignmentColor = isAligned
-    ? "var(--accent-green)"
-    : "var(--accent-red)";
-
-  if (greek === "gamma" || greek === "dgex") {
-    if (isLocalPos) {
-      regimeText = "POSITIVE (STICKY)";
-      behaviorText = "Dealer sells strength / buys weakness. Low Volatility.";
-      regimeColorVar = "--pos-high";
+function generateRegimeHTML(ticker, greek, spot, netValue, spotStrikeValue, netChangeHTML = "", spotChangeHTML = "") {
+    let regimeText = "",
+      behaviorText = "",
+      biasText = "",
+      regimeColorVar = "--text-dim";
+    const isLocalPos = spotStrikeValue >= 0;
+    const isNetPos = netValue >= 0;
+  
+    const isAligned = isLocalPos === isNetPos;
+    const alignmentText = isAligned ? "CONVERGENT" : "DIVERGENT";
+    const alignmentColor = isAligned
+      ? "var(--accent-green)"
+      : "var(--accent-red)";
+  
+    if (greek === "gamma" || greek === "dgex") {
+      if (isLocalPos) {
+        regimeText = "POSITIVE (STICKY)";
+        behaviorText = "Dealer sells strength / buys weakness. Low Volatility.";
+        regimeColorVar = "--pos-high";
+      } else {
+        regimeText = "NEGATIVE (ACCEL)";
+        behaviorText = "Dealer buys strength / sells weakness. High Volatility.";
+        regimeColorVar = "--neg-high";
+      }
+      biasText = isNetPos ? "Bullish Exposure" : "Bearish Exposure";
+    } else if (greek === "delta") {
+      if (isNetPos) {
+        regimeText = "NET LONG";
+        behaviorText = "Dealers are Long. Market needs to sell to hedge.";
+        regimeColorVar = "--pos-high";
+      } else {
+        regimeText = "NET SHORT";
+        behaviorText = "Dealers are Short. Market needs to buy to hedge.";
+        regimeColorVar = "--neg-high";
+      }
+      biasText = isLocalPos ? "Local Support" : "Local Resistance";
+    } else if (greek === "vanna") {
+      if (isLocalPos) {
+        regimeText = "POS VANNA";
+        behaviorText = "IV Drop = Buying | IV Spike = Selling.";
+        regimeColorVar = "--pos-high";
+      } else {
+        regimeText = "NEG VANNA";
+        behaviorText = "IV Drop = Selling | IV Spike = Buying.";
+        regimeColorVar = "--neg-high";
+      }
+      biasText = "Vol Impact";
+    } else if (greek === "zomma") {
+      if (isLocalPos) {
+        regimeText = "POS ZOMMA";
+        behaviorText = "Gamma increases as Vol drops (Stabilizing).";
+        regimeColorVar = "--pos-high";
+      } else {
+        regimeText = "NEG ZOMMA";
+        behaviorText = "Gamma increases as Vol rises (Destabilizing).";
+        regimeColorVar = "--neg-high";
+      }
+      biasText = "Gamma convexity";
     } else {
-      regimeText = "NEGATIVE (ACCEL)";
-      behaviorText = "Dealer buys strength / sells weakness. High Volatility.";
-      regimeColorVar = "--neg-high";
+      regimeText = isLocalPos ? "LOCAL POS" : "LOCAL NEG";
+      behaviorText = "Standard hedging mechanics apply.";
+      regimeColorVar = isLocalPos ? "--pos-high" : "--neg-high";
+      biasText = `Net: ${formatK(netValue)}`;
     }
-    biasText = isNetPos ? "Bullish Exposure" : "Bearish Exposure";
-  } else if (greek === "delta") {
-    if (isNetPos) {
-      regimeText = "NET LONG";
-      behaviorText = "Dealers are Long. Market needs to sell to hedge.";
-      regimeColorVar = "--pos-high";
-    } else {
-      regimeText = "NET SHORT";
-      behaviorText = "Dealers are Short. Market needs to buy to hedge.";
-      regimeColorVar = "--neg-high";
-    }
-    biasText = isLocalPos ? "Local Support" : "Local Resistance";
-  } else if (greek === "vanna") {
-    if (isLocalPos) {
-      regimeText = "POS VANNA";
-      behaviorText = "IV Drop = Buying | IV Spike = Selling.";
-      regimeColorVar = "--pos-high";
-    } else {
-      regimeText = "NEG VANNA";
-      behaviorText = "IV Drop = Selling | IV Spike = Buying.";
-      regimeColorVar = "--neg-high";
-    }
-    biasText = "Vol Impact";
-  } else if (greek === "zomma") {
-    if (isLocalPos) {
-      regimeText = "POS ZOMMA";
-      behaviorText = "Gamma increases as Vol drops (Stabilizing).";
-      regimeColorVar = "--pos-high";
-    } else {
-      regimeText = "NEG ZOMMA";
-      behaviorText = "Gamma increases as Vol rises (Destabilizing).";
-      regimeColorVar = "--neg-high";
-    }
-    biasText = "Gamma convexity";
-  } else {
-    regimeText = isLocalPos ? "LOCAL POS" : "LOCAL NEG";
-    behaviorText = "Standard hedging mechanics apply.";
-    regimeColorVar = isLocalPos ? "--pos-high" : "--neg-high";
-    biasText = `Net: ${formatK(netValue)}`;
-  }
-
-  const borderColor = `var(${regimeColorVar})`;
-  const formattedSpot = spot.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
-  return `
-            <div class="regime-wrapper" style="border-left-color: ${borderColor};">
-                <div class="regime-header-toggle" onclick="this.parentElement.classList.toggle('active')">
-                    <span style="color: ${borderColor};">${greek.toUpperCase()} ANALYSIS</span>
-                    <span class="regime-toggle-icon">▼</span>
-                </div>
-
-                <div class="regime-content">
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 8px;">
-
-                        <div>
-                            <div style="font-size: 9px; color: var(--text-dim); text-transform: uppercase;">Current Spot</div>
-                            <div style="font-size: 13px; font-weight: 700; color: white;">${formattedSpot}</div>
-                        </div>
-
-                        <div style="text-align: right;">
-                            <div style="font-size: 9px; color: var(--text-dim); text-transform: uppercase;">Net Exposure</div>
-                            <div style="font-size: 13px; font-weight: 700; color: var(${
-                              isNetPos ? "--pos-high" : "--neg-high"
-                            });">${formatK(netValue)}</div>
-                        </div>
-
-                        <div>
-                            <div style="font-size: 9px; color: var(--text-dim); text-transform: uppercase;">Local Strike Exp</div>
-                            <div style="font-size: 13px; font-weight: 700; color: var(${
-                              isLocalPos ? "--pos-high" : "--neg-high"
-                            });">${formatK(spotStrikeValue)}</div>
-                        </div>
-
-                        <div style="text-align: right;">
-                            <div style="font-size: 9px; color: var(--text-dim); text-transform: uppercase;">Structure</div>
-                            <div style="font-size: 11px; font-weight: 700; color: ${alignmentColor}; letter-spacing: 0.5px;">${alignmentText}</div>
-                        </div>
-                    </div>
-
-                    <div style="display: flex; flex-direction: column; gap: 4px;">
-                        <div style="display: flex; justify-content: space-between;">
-                            <span style="color: var(--text-dim);">Regime:</span>
-                            <span style="font-weight: 700; color: ${borderColor};">${regimeText}</span>
-                        </div>
-                        <div style="font-size: 10px; color: #ccc; font-style: italic; margin: 2px 0;">
-                            "${behaviorText}"
-                        </div>
-                        <div style="display: flex; justify-content: space-between; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 4px; margin-top: 2px;">
-                            <span style="color: var(--text-dim);">Market Bias:</span>
-                            <span style="font-weight: 700; color: white;">${biasText}</span>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        `;
-}
-
-function createChartPanel(chartObj, index) {
-  const { data: globalData, greek } = chartObj;
-  if (tabs[currentTabId] && tabs[currentTabId].charts[index]) {
-      tabs[currentTabId].charts[index].data = globalData; // <--- AÑADIR ESTA LÍNEA
-  }
-  const raw = globalData.option_data;
-  const colStrike = raw.columns.indexOf("strike_price");
-  const colMetric = raw.columns.findIndex(
-    (c) => c.trim() === `total_${greek}` || c.trim() === greek
-  );
-
-  if (colMetric === -1) return document.createElement("div");
-
-  const agg = {};
-  raw.data.forEach((r) => {
-    const k = parseFloat(r[colStrike]);
-    const v = (parseFloat(r[colMetric]) || 0) * 1000000;
-    agg[k] = (agg[k] || 0) + v;
-  });
-
-  let rows = Object.keys(agg).map((k) => ({
-    strike: parseFloat(k),
-    value: agg[k],
-  }));
-  rows.sort((a, b) => b.strike - a.strike);
-
-  const spot = globalData.spot_price || 0;
-  const net = rows.reduce((s, i) => s + i.value, 0);
-
-  let maxPos = -Infinity,
-    maxPosStrike = 0;
-  let maxNeg = Infinity,
-    maxNegStrike = 0;
-  let closest = null,
-    minDiff = Infinity,
-    spotVal = 0;
-
-  rows.forEach((d) => {
-    if (d.value > maxPos) {
-      maxPos = d.value;
-      maxPosStrike = d.strike;
-    }
-    if (d.value < maxNeg) {
-      maxNeg = d.value;
-      maxNegStrike = d.strike;
-    }
-    const diff = Math.abs(d.strike - spot);
-    if (diff < minDiff) {
-      minDiff = diff;
-      closest = d.strike;
-      spotVal = d.value;
-    }
-  });
-
-  const scalePos = Math.max(Math.abs(maxPos), 1);
-  const scaleNeg = Math.max(Math.abs(maxNeg), 1);
-
-  const panel = document.createElement("div");
-  panel.className = "chart-panel";
-  panel.draggable = true;
-  panel.dataset.index = index;
-  panel.addEventListener("dragstart", handleDragStart);
-  panel.addEventListener("dragend", handleDragEnd);
-
-  // Header
-  const header = document.createElement("div");
-  header.className = "chart-header";
-
-  const topRow = document.createElement("div");
-  topRow.className = "chart-title-row";
-  topRow.innerHTML = `
-              <div>
-                  <span class="chart-title">${globalData.ticker}</span>
-                  <span class="chart-subtitle">${greek}</span>
-              </div>
-              <div>
-                  <button class="btn-popout" onclick="openDetachedWindow(${index})" title="Pop out">⇱</button>
-                  <button class="btn-close" onclick="removeChart(${index})">×</button>
+  
+    const borderColor = `var(${regimeColorVar})`;
+    const formattedSpot = spot.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  
+    return `
+              <div class="regime-wrapper" style="border-left-color: ${borderColor};">
+                  <div class="regime-header-toggle" onclick="this.parentElement.classList.toggle('active')">
+                      <span style="color: ${borderColor};">${greek.toUpperCase()} ANALYSIS</span>
+                      <span class="regime-toggle-icon">▼</span>
+                  </div>
+  
+                  <div class="regime-content">
+  
+                      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 8px;">
+  
+                          <div>
+                              <div style="font-size: 9px; color: var(--text-dim); text-transform: uppercase;">Current Spot</div>
+                              <div style="font-size: 13px; font-weight: 700; color: white;">${formattedSpot}</div>
+                          </div>
+  
+                          <div style="text-align: right;">
+                              <div style="font-size: 9px; color: var(--text-dim); text-transform: uppercase;">Net Exposure</div>
+                              <div style="font-size: 13px; font-weight: 700; color: var(${
+                                isNetPos ? "--pos-high" : "--neg-high"
+                              });">
+                                ${formatK(netValue)} 
+                                ${netChangeHTML} 
+                              </div>
+                          </div>
+  
+                          <div>
+                              <div style="font-size: 9px; color: var(--text-dim); text-transform: uppercase;">Local Strike Exp</div>
+                              <div style="font-size: 13px; font-weight: 700; color: var(${
+                                isLocalPos ? "--pos-high" : "--neg-high"
+                              });">
+                                ${formatK(spotStrikeValue)} 
+                                ${spotChangeHTML} 
+                              </div>
+                          </div>
+  
+                          <div style="text-align: right;">
+                              <div style="font-size: 9px; color: var(--text-dim); text-transform: uppercase;">Structure</div>
+                              <div style="font-size: 11px; font-weight: 700; color: ${alignmentColor}; letter-spacing: 0.5px;">${alignmentText}</div>
+                          </div>
+                      </div>
+  
+                      <div style="display: flex; flex-direction: column; gap: 4px;">
+                          <div style="display: flex; justify-content: space-between;">
+                              <span style="color: var(--text-dim);">Regime:</span>
+                              <span style="font-weight: 700; color: ${borderColor};">${regimeText}</span>
+                          </div>
+                          <div style="font-size: 10px; color: #ccc; font-style: italic; margin: 2px 0;">
+                              "${behaviorText}"
+                          </div>
+                          <div style="display: flex; justify-content: space-between; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 4px; margin-top: 2px;">
+                              <span style="color: var(--text-dim);">Market Bias:</span>
+                              <span style="font-weight: 700; color: white;">${biasText}</span>
+                          </div>
+                      </div>
+  
+                  </div>
               </div>
           `;
+  }
 
-  const stats = document.createElement("div");
-  stats.className = "chart-stats";
-  stats.innerHTML = `
-            <div>Spot: <span class="stat-val" style="color:white">${spot.toFixed(
-              2
-            )}</span></div>
-            <div>MaxC: <span class="stat-val val-pos">${maxPosStrike}</span></div>
-            <div>MaxP: <span class="stat-val val-neg">${maxNegStrike}</span></div>
-        `;
+function createChartPanel(chartObj, index) {
+    // --- Lógica Dispatcher existente (Fourier/IB) ---
+    if (chartObj.type === 'fourier') return createFourierPanel(chartObj, index);
+    if (chartObj.type === 'ib') return createIBPanel(chartObj, index);
 
-  header.appendChild(topRow);
-  header.appendChild(stats);
+    // --- Inicio Lógica Heatmap ---
+    const { data: globalData, greek } = chartObj;
+
+    // Asegurar actualización de datos en el array global (ya lo tenías)
+    if (tabs[currentTabId] && tabs[currentTabId].charts[index]) {
+        tabs[currentTabId].charts[index].data = globalData;
+    }
+
+    const raw = globalData.option_data;
+    const colStrike = raw.columns.indexOf("strike_price");
+    const colMetric = raw.columns.findIndex(
+      (c) => c.trim() === `total_${greek}` || c.trim() === greek
+    );
+  
+    if (colMetric === -1) return document.createElement("div");
+  
+    const agg = {};
+    raw.data.forEach((r) => {
+      const k = parseFloat(r[colStrike]);
+      const v = (parseFloat(r[colMetric]) || 0) * 1000000;
+      agg[k] = (agg[k] || 0) + v;
+    });
+  
+    let rows = Object.keys(agg).map((k) => ({
+      strike: parseFloat(k),
+      value: agg[k],
+    }));
+    rows.sort((a, b) => b.strike - a.strike);
+  
+    const spot = globalData.spot_price || 0;
+    const net = rows.reduce((s, i) => s + i.value, 0); // Valor NETO actual
+  
+    // --- CÁLCULO DE MÁXIMOS Y VALOR LOCAL (SPOT) ---
+    let maxPos = -Infinity, maxPosStrike = 0;
+    let maxNeg = Infinity, maxNegStrike = 0;
+    let closest = null, minDiff = Infinity, spotVal = 0; // Valor LOCAL actual
+  
+    rows.forEach((d) => {
+      if (d.value > maxPos) { maxPos = d.value; maxPosStrike = d.strike; }
+      if (d.value < maxNeg) { maxNeg = d.value; maxNegStrike = d.strike; }
+      const diff = Math.abs(d.strike - spot);
+      if (diff < minDiff) {
+        minDiff = diff;
+        closest = d.strike;
+        spotVal = d.value;
+      }
+    });
+
+	// --- LÓGICA DE HISTORIAL CORREGIDA (createChartPanel) ---
+	    let netChangeHTML = "";
+	    let spotChangeHTML = "";
+	
+	    // 1. Si no existe historial, lo inicializamos
+	    if (!chartObj.statsHistory) {
+	        chartObj.statsHistory = {
+	            prevNet: net,       // Al inicio, previo = actual
+	            prevSpotVal: spotVal,
+	            currNet: net,
+	            currSpotVal: spotVal,
+	            prevStrikes: {}     // Nuevo: historial por strike
+	        };
+	    } 
+	    
+	    // 2. Comprobamos cambios (si ya existía)
+	    if (chartObj.statsHistory.currNet !== net || chartObj.statsHistory.currSpotVal !== spotVal) {
+	        // Hubo movimiento real: guardamos lo viejo
+	        chartObj.statsHistory.prevNet = chartObj.statsHistory.currNet;
+	        chartObj.statsHistory.prevSpotVal = chartObj.statsHistory.currSpotVal;
+	        
+	        // Actualizamos lo nuevo
+	        chartObj.statsHistory.currNet = net;
+	        chartObj.statsHistory.currSpotVal = spotVal;
+	    }
+	
+	    // 3. ¡IMPORTANTE! Calculamos el HTML SIEMPRE (fuera del else)
+	    // Esto asegura que veas (0.00%) al cargar la página, confirmando que funciona.
+	    netChangeHTML = formatChangePct(net, chartObj.statsHistory.prevNet);
+	    spotChangeHTML = formatChangePct(spotVal, chartObj.statsHistory.prevSpotVal);
+	
+	    // 4. NUEVO: Calcular cambios por strike y encontrar top 5 por cambio nominal
+	    const strikeChanges = [];
+	    rows.forEach((row) => {
+	        const strikeKey = row.strike.toString();
+	        const prevValue = chartObj.statsHistory.prevStrikes[strikeKey];
+	        
+	        if (prevValue !== undefined && prevValue !== null && prevValue !== 0) {
+	            const diff = row.value - prevValue;
+	            const pct = (diff / Math.abs(prevValue)) * 100;
+	            strikeChanges.push({
+	                strike: row.strike,
+	                nominalChange: diff,  // Cambio nominal (absoluto)
+	                pct: pct,
+	                changeHTML: formatChangePct(row.value, prevValue)
+	            });
+	        }
+	        
+	        // Actualizar historial de este strike
+	        chartObj.statsHistory.prevStrikes[strikeKey] = row.value;
+	    });
+	    
+	    // Ordenar por cambio nominal (no porcentual)
+	    strikeChanges.sort((a, b) => a.nominalChange - b.nominalChange);
+	    
+	    // Obtener top 5 con mayor caída nominal (más negativos)
+	    const top5Negative = strikeChanges.slice(0, 5);
+	    // Obtener top 5 con mayor subida nominal (más positivos)
+	    const top5Positive = strikeChanges.slice(-5).reverse();
+	    
+	    // Crear un mapa para búsqueda rápida
+	    const strikesToShow = new Set();
+	    top5Negative.forEach(item => strikesToShow.add(item.strike));
+	    top5Positive.forEach(item => strikesToShow.add(item.strike));
+	    
+	    // Crear un mapa de strike -> changeHTML para usar al renderizar
+	    const strikeChangeMap = {};
+	    strikeChanges.forEach(item => {
+	        if (strikesToShow.has(item.strike)) {
+	            strikeChangeMap[item.strike] = item.changeHTML;
+	        }
+	    });
+	
+	    // ----------------------------------------------------
+  
+    const scalePos = Math.max(Math.abs(maxPos), 1);
+    const scaleNeg = Math.max(Math.abs(maxNeg), 1);
+  
+    const panel = document.createElement("div");
+    // ... resto del código de creación del panel ...
+    panel.className = "chart-panel";
+    panel.draggable = true;
+    panel.dataset.index = index;
+    panel.addEventListener("dragstart", handleDragStart);
+    panel.addEventListener("dragend", handleDragEnd);
+  
+    // Header creation
+    const header = document.createElement("div");
+    header.className = "chart-header";
+  
+    const topRow = document.createElement("div");
+    topRow.className = "chart-title-row";
+    topRow.innerHTML = `
+                <div>
+                    <span class="chart-title">${globalData.ticker}</span>
+                    <span class="chart-subtitle">${greek}</span>
+                </div>
+                <div>
+                    <button class="btn-popout" onclick="openDetachedWindow(${index})" title="Pop out">⇱</button>
+                    <button class="btn-close" onclick="removeChart(${index})">×</button>
+                </div>
+            `;
+  
+    const stats = document.createElement("div");
+    stats.className = "chart-stats";
+    stats.innerHTML = `
+              <div>Spot: <span class="stat-val" style="color:white">${spot.toFixed(2)}</span></div>
+              <div>MaxC: <span class="stat-val val-pos">${maxPosStrike}</span></div>
+              <div>MaxP: <span class="stat-val val-neg">${maxNegStrike}</span></div>
+          `;
+  
+    header.appendChild(topRow);
+    header.appendChild(stats);
+
   header.innerHTML += generateRegimeHTML(
-    globalData.ticker,
-    greek,
-    spot,
-    net,
-    spotVal
-  );
+        globalData.ticker,
+        greek,
+        spot,
+        net,
+        spotVal,
+        netChangeHTML, // <--- Nuevo
+        spotChangeHTML // <--- Nuevo
+      );
   panel.appendChild(header);
 
 	if (rows.length === 0) {
@@ -1029,6 +1111,9 @@ function createChartPanel(chartObj, index) {
     else if (row.strike === maxNegStrike)
       labelStyle = "color: var(--neg-high); font-weight: 700;";
 
+    // Obtener el HTML del cambio porcentual si este strike está en el top 5
+    const changeHTML = strikeChangeMap[row.strike] || "";
+    
     div.innerHTML = `
                 <div class="y-axis-label" style="${labelStyle}">${
       row.strike
@@ -1037,7 +1122,7 @@ function createChartPanel(chartObj, index) {
                     <div class="bar-fill" style="background:${bg}"></div>
                     <span class="value-text" style="color:${txtColor}; font-weight:${weight}">${formatK(
       val
-    )}</span>
+    )}${changeHTML}</span>
                     ${
                       row.strike === maxPosStrike
                         ? '<div class="ref-line ref-max-pos"></div>'
@@ -2248,5 +2333,28 @@ function handleTabDrop(e) {
   draggedTabIndex = null;
 }
 
-setInterval(updateNYTime, 1000);
+function formatChangePct(current, previous) {
+    if (previous === null || previous === undefined) return "";
+    
+    // Si es exactamente 0, devolvemos un guion o 0% gris
+    if (previous === 0) return ""; 
 
+    const diff = current - previous;
+    const pct = (diff / Math.abs(previous)) * 100;
+    
+    let colorStyle = "var(--text-dim)"; // Gris por defecto (sin cambio)
+    let sign = "";
+    
+    if (pct > 0.001) {
+        colorStyle = "var(--accent-green)";
+        sign = "+";
+    } else if (pct < -0.001) {
+        colorStyle = "var(--accent-red)";
+        sign = ""; // El negativo ya viene en el número
+    }
+
+    // Siempre devolvemos algo, incluso si es (0.00%)
+    return `<span style="color:${colorStyle}; font-size: 10px; font-weight: normal; margin-left: 4px;">(${sign}${pct.toFixed(2)}%)</span>`;
+}
+
+setInterval(updateNYTime, 1000);
