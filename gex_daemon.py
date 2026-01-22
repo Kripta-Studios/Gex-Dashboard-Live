@@ -721,9 +721,12 @@ async def process_ticker(session, ticker, expir, greek_filter="gamma"):
 
         spot = 0
         sofr = 4.5
+        prev_close_price = 0
         for q in quotes:
             if t_san in q.get("symbol"):
                 spot = float(q.get("last"))
+                prev_close_price = float(q.get("prev_close"))
+                print("PREVE CLOSE PRICE ", prev_close_price)
             if q.get("symbol") == get_SOFR_ticker():
                 sofr = float(q.get("last"))
 
@@ -821,7 +824,7 @@ async def process_ticker(session, ticker, expir, greek_filter="gamma"):
 
         # Desempaquetar lo necesario para guardar
         # (Tu función devuelve una tupla gigante, la mantenemos)
-        full_data = exp_data + (exp_clean, t_san, low, high, 0, greek_filter)
+        full_data = exp_data + (exp_clean, t_san, low, high, prev_close_price, greek_filter)
 
         keys_map = [
             "option_data",

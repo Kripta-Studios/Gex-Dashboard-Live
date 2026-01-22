@@ -1562,9 +1562,12 @@ def get_options_data(ticker, expir, greek_filter):
 
         spot = 0
         sofr = 4.5
+        prev_close_price = 0
         for q in quotes:
             if t_san in q.get("symbol"):
                 spot = float(q.get("last"))
+                prev_close_price = float(q.get("prev_close"))
+                print("PREV CLOSE PRICE ", prev_close_price)
             if q.get("symbol") == get_SOFR_ticker():
                 sofr = float(q.get("last"))
 
@@ -1668,7 +1671,7 @@ def get_options_data(ticker, expir, greek_filter):
             yield_val,
         )
 
-        full_data = exp_data + (exp_clean, t_san, low, high, 0, greek_filter)
+        full_data = exp_data + (exp_clean, t_san, low, high, prev_close_price, greek_filter)
 
         try:
             keys_map = [
