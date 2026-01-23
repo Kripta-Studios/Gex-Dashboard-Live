@@ -130,10 +130,12 @@ async def process_single_request(sem, ticker, exp, greek, channel_id):
     """
     async with sem:  # Limita la concurrencia
         try:
+            now = time.time()
             log(f"[*] Procesando: {ticker} {exp} {greek}...")  # LOG CHIVATO
             # print(f"Processing {ticker} {exp} {greek}...") # Debug opcional
             raw_data = await get_options_data(ticker, exp, greek)
-
+            end = time.time()
+            print("get_options_data Tardo", now-end)
             if not raw_data:
                 log(
                     f"[VACÍO] get_options_data devolvió None para {ticker} {exp} {greek}"
@@ -157,6 +159,7 @@ async def process_single_request(sem, ticker, exp, greek, channel_id):
                         current_loop_alerts = [
                             a for a in alerts if loop_greek.lower() in a.lower()
                         ]
+                        now = time.time()
                         await send_plot_to_discord(
                             filenames,
                             ticker,
@@ -165,6 +168,8 @@ async def process_single_request(sem, ticker, exp, greek, channel_id):
                             channel_id,
                             alerts=current_loop_alerts,
                         )
+                        end = time.time()
+                        print("send_plot_to_discord tardo", now-end)
                 else:
                     await send_plot_to_discord(
                         filenames, ticker, exp, greek, channel_id, alerts=alerts
@@ -282,7 +287,6 @@ async def send_plot_to_discord(filenames, ticker, exp, greek, channel_id, alerts
                                 f"[ERROR] Se perdió el lote {i} de {greek} tras {MAX_RETRIES} intentos."
                             )
 
-            send_watchdog()
             log(f"[OK] Enviado correctamente: {ticker}/{exp}/{greek}")
             # print(f"Sent {i} to Discord channel {channel_key}")
         except Exception as e:
@@ -306,10 +310,14 @@ async def process_ticker_batch(
             # --- LA MAGIA: EJECUTAR EN UN HILO APARTE ---
             # Esto evita que Matplotlib congele el bot.
             # Nota: get_options_data NO debe tener 'async' en su definición en data_plotting.py
+            now = time.time()
+            print("Inicia descarga", now)
             raw_data = await loop.run_in_executor(
                 None,  # Usa el ThreadPool por defecto
                 functools.partial(get_options_data, ticker, exp, specific_greek),
             )
+            end = time.time()
+            print("Tardo la descarga", end-now)
 
             if isinstance(raw_data, list) and len(raw_data) >= 3:
                 hist_files = raw_data[0] or []
@@ -322,6 +330,8 @@ async def process_ticker_batch(
                 for greek in greeks_to_send:
                     relevant_alerts = [a for a in alerts if greek.lower() in a.lower()]
                     # La subida a Discord SÍ debe ser en el hilo principal (es async)
+                    now = time.time()
+                    print("Inicia el envío", now)
                     await send_plot_to_discord(
                         filenames,
                         ticker,
@@ -330,6 +340,8 @@ async def process_ticker_batch(
                         channel_id,
                         alerts=relevant_alerts,
                     )
+                    end = time.time()
+                    print("Tardo el send_plot_to_discord", end-now)
 
             # Pausa obligatoria entre expiraciones para dejar respirar a la CPU
             await asyncio.sleep(0.1)
