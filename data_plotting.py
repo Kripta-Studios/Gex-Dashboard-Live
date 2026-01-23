@@ -1,3 +1,4 @@
+import time
 import json
 import pandas as pd
 from pandas.tseries.offsets import BDay
@@ -25,6 +26,8 @@ from dotenv import load_dotenv
 import calendar
 import pickle
 import asyncio
+from concurrent.futures import ProcessPoolExecutor
+from functools import partial
 
 # --- CONFIGURACIÓN DE ESTILOS (TAMAÑOS AUMENTADOS Y ALTO CONTRASTE) ---
 STYLE_CONFIG = {
@@ -82,6 +85,639 @@ def apply_custom_style(ax, fig, title, xlabel, ylabel):
     )
 
 
+# ==============================================================================
+# FUNCIONES WORKER PARA PROCESSPOOL - DEBEN ESTAR EN NIVEL DE MÓDULO
+# ==============================================================================
+
+def _merge_alert_states(states_list):
+    """
+    Merge inteligente de múltiples alert_states.
+    Estrategia: El último estado válido gana (asumiendo que es el más reciente).
+    """
+    if not states_list:
+        return {}
+    
+    # Filtrar estados vacíos
+    valid_states = [s for s in states_list if s]
+    if not valid_states:
+        return {}
+    
+    # Tomar el último estado no vacío (es el más reciente)
+    # Si hay conflictos, el último worker en terminar tiene prioridad
+    merged = {}
+    for state in valid_states:
+        merged.update(state)
+    
+    return merged
+
+
+def _plot_single_table_worker(args):
+    """
+    Worker function para plotear una sola tabla en un proceso separado.
+    Recibe todos los datos serializados necesarios.
+    """
+    try:
+        (
+            pivot_table_dict,
+            ticker,
+            value,
+            today_ddt_string,
+            greek,
+            exp,
+            timestamp,
+            spot_price,
+            strikes,
+            expirations,
+            agg_by_strike_dict,
+            alert_state,
+            rising_strike,
+            falling_strike,
+            flip_val,
+            metric_name,  # NUEVO: para identificar qué pickle actualizar
+        ) = args
+
+        # Reconstruir objetos pandas desde diccionarios
+        pivot_table = pd.DataFrame(
+            pivot_table_dict["data"],
+            index=pivot_table_dict["index"],
+            columns=pivot_table_dict["columns"],
+        )
+        agg_by_strike = pd.Series(
+            agg_by_strike_dict["data"], index=agg_by_strike_dict["index"]
+        )
+
+        name = greek.capitalize()
+        PLOT_DIR = "plots"
+
+        # Colores (Originales)
+        colors_list = [
+            (0.00, (0.7, 0.0, 0.8)),
+            (0.15, (0.25, 0.0, 0.35)),
+            (0.49, (0.25, 0.0, 0.35)),
+            (0.50, (0.1, 0.1, 0.15)),
+            (0.51, (0.0, 0.4, 0.5)),
+            (0.85, (0.0, 0.4, 0.5)),
+            (1.00, (1.0, 0.9, 0.0)),
+        ]
+        custom_cmap = mcolors.LinearSegmentedColormap.from_list(
+            "custom_cmap", colors_list
+        )
+
+        alerts = []
+
+        # --- VISUALIZACIÓN TABLA (ALTA RESOLUCIÓN) ---
+        fig = Figure(figsize=(16, 32))
+        FigureCanvasAgg(fig)
+        ax = fig.add_subplot(111)
+
+        # Estilo Heatmap
+        fig.patch.set_facecolor("black")
+        ax.set_facecolor("black")
+        ax.set_title(
+            f"{ticker} {value} Heatmap, {today_ddt_string}",
+            color="white",
+            fontsize=STYLE_CONFIG["title_size"],
+            pad=30,
+        )
+        ax.set_xlabel(
+            "Expiration Date",
+            color="white",
+            fontsize=STYLE_CONFIG["label_size"],
+            labelpad=20,
+        )
+        ax.set_ylabel(
+            "Strike Price",
+            color="white",
+            fontsize=STYLE_CONFIG["label_size"],
+            labelpad=20,
+        )
+        ax.tick_params(colors="white", labelsize=STYLE_CONFIG["tick_size"])
+        for spine in ax.spines.values():
+            spine.set_edgecolor("white")
+
+        # Normalización y Plot
+        V_min = pivot_table.min().min()
+        V_max = pivot_table.max().max()
+        if V_max <= 0:
+            V_max = 1
+        if V_min >= 0:
+            V_min = -1
+
+        im = ax.imshow(
+            pivot_table.values,
+            cmap=custom_cmap,
+            aspect="auto",
+            norm=mcolors.TwoSlopeNorm(vmin=V_min * 0.85, vcenter=0, vmax=V_max * 0.85),
+        )
+
+        # Textos en celdas (Grandes)
+        for i in range(len(strikes)):
+            for j in range(len(expirations)):
+                value2text = pivot_table.values[i, j]
+                if not np.isnan(value2text):
+                    text_color = "white" if value2text <= 0 else "black"
+                    text_str = (
+                        f"$ {value2text*100000:,.2f}k"
+                        if value2text % 1 != 0
+                        else f"$ {int(value2text)*100000:,d}k"
+                    )
+                    ax.text(
+                        j,
+                        i,
+                        text_str,
+                        ha="center",
+                        va="center",
+                        color=text_color,
+                        fontsize=11,
+                    )
+
+        # Ejes
+        expiration_labels = [
+            d.strftime("%b %d") if hasattr(d, "strftime") else str(d)
+            for d in expirations
+        ]
+        ax.set_xticks(np.arange(len(expirations)))
+        ax.set_xticklabels(expiration_labels, rotation=0, ha="center")
+        ax.set_yticks(np.arange(len(strikes)))
+        ax.set_yticklabels([f"{int(s)}" for s in strikes])
+
+        # Helper índice Y
+        def get_y(val):
+            return np.abs(np.array(strikes) - val).argmin()
+
+        # 1. Spot
+        spot_idx = get_y(spot_price)
+        ax.axhline(
+            y=spot_idx,
+            color="white",
+            linestyle="--",
+            linewidth=2,
+            label=f"Spot: {spot_price:.2f}",
+        )
+
+        # 2. Max Pos/Neg con lógica de PINNED ALERT
+        max_pos = agg_by_strike.idxmax()
+        max_neg = agg_by_strike.idxmin()
+
+        # --- PINNED POSITIVE ---
+        if not pd.isna(max_pos):
+            max_pos_idx = get_y(max_pos)
+            ax.axhline(
+                y=max_pos_idx,
+                color="lime",
+                linestyle="--",
+                linewidth=2.5,
+                label=f"Max Pos: {max_pos:.0f}",
+            )
+
+            if spot_idx == max_pos_idx and exp == "0dte":
+                current_pinned = float(max_pos)
+                if current_pinned != alert_state.get("pos_pinned"):
+                    msg = f"**{ticker} {name} ALERT**: Price is pinned at Max Positive {name} Strike: {max_pos:.2f}"
+                    alerts.append(msg)
+                    alert_state["pos_pinned"] = current_pinned
+            else:
+                if "pos_pinned" in alert_state:
+                    del alert_state["pos_pinned"]
+
+        # --- PINNED NEGATIVE ---
+        if not pd.isna(max_neg):
+            max_neg_idx = get_y(max_neg)
+            ax.axhline(
+                y=max_neg_idx,
+                color="red",
+                linestyle="--",
+                linewidth=2.5,
+                label=f"Max Neg: {max_neg:.0f}",
+            )
+
+            if spot_idx == max_neg_idx and exp == "0dte":
+                current_pinned = float(max_neg)
+                if current_pinned != alert_state.get("neg_pinned"):
+                    msg = f"**{ticker} {name} ALERT**: Price is pinned at Max Negative {name} Strike: {max_neg:.2f}"
+                    alerts.append(msg)
+                    alert_state["neg_pinned"] = current_pinned
+            else:
+                if "neg_pinned" in alert_state:
+                    del alert_state["neg_pinned"]
+
+        # 3. Rising/Falling (Lineas)
+        if rising_strike:
+            ax.axhline(
+                y=get_y(rising_strike),
+                color="cyan",
+                linestyle=":",
+                linewidth=3,
+                label=f"Rising: {rising_strike:.0f}",
+            )
+        if falling_strike:
+            ax.axhline(
+                y=get_y(falling_strike),
+                color="orange",
+                linestyle=":",
+                linewidth=3,
+                label=f"Falling: {falling_strike:.0f}",
+            )
+
+        # 4. Flip
+        if flip_val:
+            ax.axhline(
+                y=get_y(flip_val),
+                color="cyan",
+                linestyle="--",
+                linewidth=2,
+                label=f"Flip: {flip_val:.2f}",
+            )
+
+        net_val = agg_by_strike.sum() * 100
+        ax.plot([], [], " ", label=f"Net {name}: {net_val:,.2f}")
+
+        # Leyenda: Fondo NEGRO, Texto BLANCO
+        legend = ax.legend(
+            loc="upper right",
+            facecolor="black",
+            edgecolor="white",
+            fontsize=STYLE_CONFIG["legend_size"],
+        )
+        for text in legend.get_texts():
+            text.set_color("white")
+
+        cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
+        cbar.set_label(
+            f"{name} Exposure",
+            color="white",
+            fontsize=STYLE_CONFIG["label_size"],
+        )
+        tick_vals = [V_min * 0.8, 0, V_max * 0.8]
+        cbar.set_ticks(tick_vals)
+        cbar.ax.set_yticklabels(
+            [f"{x:.2f}" if abs(x) < 1 else f"{int(x)}" for x in tick_vals]
+        )
+        cbar.ax.yaxis.set_tick_params(
+            color="white",
+            labelcolor="white",
+            labelsize=STYLE_CONFIG["tick_size"],
+        )
+
+        filename = f"{PLOT_DIR}/{ticker}/{exp}/{greek}/{value.replace(' ', '_')}_Heatmap/{timestamp}.png"
+        makedirs(path.dirname(filename), exist_ok=True)
+        fig.savefig(filename, bbox_inches="tight", facecolor="black", dpi=80)
+        plt.close(fig)
+
+        # NUEVO: Retornar información completa para sincronización
+        return {
+            "filename": filename,
+            "alerts": alerts,
+            "alert_state": alert_state,
+            "ticker": ticker,
+            "exp": exp,
+            "greek": greek,
+        }
+
+    except Exception as e:
+        print(f"[ERROR TABLE WORKER]: {e}")
+        import traceback
+
+        traceback.print_exc()
+        return {
+            "filename": None,
+            "alerts": [],
+            "alert_state": {},
+            "ticker": None,
+            "exp": None,
+            "greek": None,
+        }
+
+
+def _plot_single_histogram_worker(args):
+    """
+    Worker function para plotear un solo histograma en un proceso separado.
+    """
+    try:
+        (
+            df_agg_dict,
+            ticker,
+            value,
+            today_ddt_string,
+            greek,
+            exp,
+            timestamp,
+            spot_price,
+            lower_bound,
+            upper_bound,
+            step,
+            colors,
+            call_ivs_data,
+            put_ivs_data,
+            rising_strike,
+            falling_strike,
+            zero_strike,
+            prev_close_price,
+            date_condition,
+        ) = args
+
+        # Reconstruir DataFrame
+        df_agg = pd.DataFrame(
+            df_agg_dict["data"],
+            index=df_agg_dict["index"],
+            columns=df_agg_dict["columns"],
+        )
+
+        name = value.split()[1] if "Absolute" in value else value.split()[0]
+        PLOT_DIR = "plots"
+        alerts = []
+
+        # --- ETIQUETA EJE Y DINÁMICA ---
+        ylabel_text = f"{name} Exposure"
+        if name == "Gamma":
+            ylabel_text += " (gamma / 1% move)"
+        elif name == "Delta":
+            ylabel_text += " (delta / 1% move)"
+        elif name == "Vanna":
+            ylabel_text += " (vanna / 1% IV move)"
+        elif name == "Charm":
+            ylabel_text += " (charm / day)"
+        elif name == "Zomma":
+            ylabel_text += " (zomma / 1% IV move)"
+        elif name == "Dgex":
+            ylabel_text += " (dgex / 1% move)"
+
+        # --- FIGURE PRIVADO ---
+        fig = Figure(figsize=(20, 12))
+        FigureCanvasAgg(fig)
+        ax = fig.add_subplot(111)
+
+        title = f"{ticker} {value}, {today_ddt_string} for {exp}"
+        apply_custom_style(
+            ax, fig, title, "Strike" if date_condition else "Date", ylabel_text
+        )
+
+        # ==========================================================
+        # BLOQUE: ABSOLUTE EXPOSURE
+        # ==========================================================
+        if "Absolute" in value:
+            agg_by_strike = df_agg[f"total_{name.lower()}"]
+
+            # --- LÓGICA REGIME ANALYSIS ---
+            if greek == "gamma" and ticker == "SPX" and exp == "0dte":
+                net_gamma_val = agg_by_strike.sum()  # Ya está en la escala correcta
+                current_spot = spot_price
+                flip_status = "ABOVE" if current_spot > zero_strike else "BELOW"
+
+                msg = f"__** {ticker} {exp.upper()} REGIME ANALYSIS**__\n"
+                msg += f"• **Spot:** {current_spot:.2f} | **Gamma Flip:** {zero_strike:.2f} (Spot is {flip_status})\n"
+
+                if net_gamma_val > 0:
+                    regime_name = "POSITIVE GAMMA (Mean Reversion)"
+                    behavior = "Dealers buy dips & sell rips. Market is sticky."
+                    if current_spot > zero_strike:
+                        trade_idea = "**Bullish Bias:** Look to **Buy Dips**"
+                    else:
+                        trade_idea = "**Cautious:** Spot below Flip but Gamma is positive. Upside capped"
+                else:
+                    regime_name = "NEGATIVE GAMMA (Directional/Volatile)"
+                    behavior = "Dealers sell dips & buy rips. Volatility accelerates."
+                    if current_spot < zero_strike:
+                        trade_idea = "**Bearish Bias:** **SELL THE RIP**. Volatility expansion likely down"
+                    else:
+                        trade_idea = "**Breakout Watch:** Spot above Flip in Neg Gamma. Squeeze risk up"
+
+                msg += f"• **Regime:** {regime_name}\n"
+                msg += f"• **Behavior:** *{behavior}*\n"
+                msg += f"• **Trade Bias:** {trade_idea}\n"
+
+                alerts.append(msg)
+
+            max_pos = agg_by_strike.idxmax()
+            max_neg = agg_by_strike.idxmin()
+
+            ax.bar(
+                df_agg.index,
+                agg_by_strike,
+                align="edge",
+                width=step * 0.9,
+                label=f"{name} Exposure",
+                alpha=0.9,
+                color=colors["total"],
+            )
+
+            if not pd.isna(max_pos):
+                ax.axvline(
+                    x=max_pos,
+                    color="lime",
+                    linestyle="--",
+                    linewidth=2,
+                    label=f"Max Pos: {max_pos:.2f}",
+                )
+            if not pd.isna(max_neg):
+                ax.axvline(
+                    x=max_neg,
+                    color="red",
+                    linestyle="--",
+                    linewidth=2,
+                    label=f"Max Neg: {max_neg:.2f}",
+                )
+
+            if rising_strike:
+                ax.axvline(
+                    x=rising_strike,
+                    dashes=(5, 12),
+                    color="cyan",
+                    linestyle="--",
+                    linewidth=3,
+                    label=f"Rising: {rising_strike:.0f}",
+                )
+            if falling_strike:
+                ax.axvline(
+                    x=falling_strike,
+                    dashes=(5, 12),
+                    color="orange",
+                    linestyle="--",
+                    linewidth=3,
+                    label=f"Falling: {falling_strike:.0f}",
+                )
+
+            if zero_strike:
+                ax.axvline(
+                    x=zero_strike,
+                    color="yellow",
+                    linestyle="--",
+                    linewidth=2,
+                    label=f"Flip: {zero_strike:.2f}",
+                )
+
+            net_val = agg_by_strike.sum() * 100
+            ax.plot([], [], " ", label=f"Net {name}: {net_val:,.2f}")
+
+        # ==========================================================
+        # BLOQUE: CALLS / PUTS
+        # ==========================================================
+        elif "Calls/Puts" in value:
+            scale = 10**9
+
+            ax.bar(
+                df_agg.index,
+                df_agg[f"call_{name[:1].lower()}ex"] / scale,
+                align="edge",
+                width=step * 0.9,
+                label=f"Call {name}",
+                alpha=0.9,
+                color=colors["call"],
+            )
+            ax.bar(
+                df_agg.index,
+                df_agg[f"put_{name[:1].lower()}ex"] / scale,
+                align="edge",
+                width=step * 0.9,
+                label=f"Put {name}",
+                alpha=0.9,
+                color=colors["put"],
+            )
+
+            # Líneas de referencia usando datos del histogram absolute
+            agg_by_strike_ref = df_agg[f"total_{name.lower()}"]
+            max_pos = agg_by_strike_ref.idxmax()
+            max_neg = agg_by_strike_ref.idxmin()
+
+            if not pd.isna(max_pos):
+                ax.axvline(
+                    x=max_pos,
+                    color="lime",
+                    linestyle="--",
+                    linewidth=2,
+                    label=f"Max Pos: {max_pos:.2f}",
+                )
+            if not pd.isna(max_neg):
+                ax.axvline(
+                    x=max_neg,
+                    color="red",
+                    linestyle="--",
+                    linewidth=2,
+                    label=f"Max Neg: {max_neg:.2f}",
+                )
+            if rising_strike:
+                ax.axvline(
+                    x=rising_strike,
+                    dashes=(5, 12),
+                    color="cyan",
+                    linestyle="--",
+                    linewidth=3,
+                    label=f"Rising: {rising_strike:.0f}",
+                )
+            if falling_strike:
+                ax.axvline(
+                    x=falling_strike,
+                    dashes=(5, 12),
+                    color="orange",
+                    linestyle="--",
+                    linewidth=3,
+                    label=f"Falling: {falling_strike:.0f}",
+                )
+
+        # ==========================================================
+        # BLOQUE: IV AVERAGE
+        # ==========================================================
+        elif value == "Implied Volatility Average":
+            try:
+                min_len = min(len(df_agg.index), len(put_ivs_data), len(call_ivs_data))
+                if min_len > 0:
+                    x_ax = df_agg.index[:min_len]
+                    y_p = np.array(put_ivs_data[:min_len]) * 100
+                    y_c = np.array(call_ivs_data[:min_len]) * 100
+                    ax.plot(
+                        x_ax,
+                        y_p,
+                        label="Put IV",
+                        color=colors["put"],
+                        linewidth=3,
+                    )
+                    ax.fill_between(x_ax, y_p, alpha=0.3, color=colors["put"])
+                    ax.plot(
+                        x_ax,
+                        y_c,
+                        label="Call IV",
+                        color=colors["call"],
+                        linewidth=3,
+                    )
+                    ax.fill_between(x_ax, y_c, alpha=0.3, color=colors["call"])
+            except:
+                pass
+
+        if date_condition:
+            step_plot = math.log10(spot_price)
+            if step_plot < 1:
+                step_plot = 0.5
+            elif 1 <= step_plot < 2:
+                step_plot = 2
+            elif 2 <= step_plot < 2.5:
+                step_plot = 5
+            elif 2.5 <= step_plot < 3:
+                step_plot = 10
+            else:
+                step_plot = math.floor(step_plot)
+                step_plot = (10 ** (step_plot - 1)) * 0.4
+
+            lb_plot = step_plot * np.floor(float(lower_bound) / step_plot)
+            ub_plot = step_plot * np.ceil(float(upper_bound) / step_plot)
+
+            ax.axvline(
+                x=spot_price,
+                color=colors["spot_line"],
+                linestyle="--",
+                linewidth=1.5,
+                label=f"{ticker} Spot: {spot_price:,.2f}",
+            )
+            ax.set_xlim(lb_plot, ub_plot)
+            x_ticks = np.arange(lb_plot, ub_plot + step_plot, step_plot)
+            ax.set_xticks(x_ticks)
+            ax.set_xticklabels(
+                [f"{x:.2f}" if step_plot < 1 else f"{int(x)}" for x in x_ticks]
+            )
+
+        # --- LEYENDA HISTOGRAMA (Fondo NEGRO, Texto BLANCO) ---
+        legend = ax.legend(
+            loc="best",
+            facecolor="black",
+            edgecolor="white",
+            framealpha=0.9,
+            fontsize=STYLE_CONFIG["legend_size"],
+        )
+        if legend:
+            for text in legend.get_texts():
+                text.set_color("white")
+
+        value_cl = value.replace("Calls/Puts", "Calls Puts")
+        filename = f"{PLOT_DIR}/{ticker}/{exp}/{greek}/{value_cl.replace(' ', '_')}/{timestamp}.png"
+        makedirs(path.dirname(filename), exist_ok=True)
+        fig.savefig(
+            filename,
+            bbox_inches="tight",
+            facecolor=STYLE_CONFIG["color_bg"],
+            dpi=80,
+        )
+        plt.close(fig)
+
+        return {
+            "filename": filename,
+            "alerts": alerts,
+        }
+
+    except Exception as e:
+        print(f"[ERROR HISTOGRAM WORKER]: {e}")
+        import traceback
+
+        traceback.print_exc()
+        return {
+            "filename": None,
+            "alerts": [],
+        }
+
+
+# ==============================================================================
+# FUNCIONES PRINCIPALES MODIFICADAS PARA USAR PROCESSPOOL
+# ==============================================================================
+
+
 async def plot_greeks_table(
     df,
     today_ddt,
@@ -112,7 +748,7 @@ async def plot_greeks_table(
         return [], []
 
     filenames = []
-    alerts = []
+    all_alerts = []
     GREEKS = (
         [greek_filter]
         if greek_filter
@@ -127,22 +763,12 @@ async def plot_greeks_table(
         "dgex": ["Absolute Dgex Exposure"],
         "zomma": ["Absolute Zomma Exposure"],
     }
-    PLOT_DIR = "plots"
     timestamp = datetime.datetime.now(ZoneInfo("America/New_York")).strftime(
         "%Y%m%d_%H%M%S"
     )
 
-    # Colores (Originales)
-    colors_list = [
-        (0.00, (0.7, 0.0, 0.8)),
-        (0.15, (0.25, 0.0, 0.35)),
-        (0.49, (0.25, 0.0, 0.35)),
-        (0.50, (0.1, 0.1, 0.15)),
-        (0.51, (0.0, 0.4, 0.5)),
-        (0.85, (0.0, 0.4, 0.5)),
-        (1.00, (1.0, 0.9, 0.0)),
-    ]
-    custom_cmap = mcolors.LinearSegmentedColormap.from_list("custom_cmap", colors_list)
+    # Preparar trabajos para ProcessPool
+    worker_args = []
 
     for greek in GREEKS:
         for value in VISUALIZATIONS[greek]:
@@ -152,7 +778,7 @@ async def plot_greeks_table(
                 name = greek.capitalize()
                 metric = f"total_{greek.lower()}"
 
-                # --- LÓGICA DE ALERTA DE PINNED (Restaurada del Original) ---
+                # --- LÓGICA DE ALERTA DE PINNED ---
                 alert_state_path = Path(
                     f"pickles/{ticker}/{exp}/{greek}/pinned_alert_state.pkl"
                 )
@@ -218,7 +844,7 @@ async def plot_greeks_table(
                     except:
                         pass
 
-                pd.to_pickle(agg_by_strike, pickle_path)  # Guardar estado actual
+                pd.to_pickle(agg_by_strike, pickle_path)
 
                 # Flip Calc
                 zero_strikes = []
@@ -264,218 +890,95 @@ async def plot_greeks_table(
                     index=strikes, columns=expirations, fill_value=0
                 )
 
-                # --- VISUALIZACIÓN TABLA (ALTA RESOLUCIÓN) ---
-                fig = Figure(figsize=(16, 32))
-                FigureCanvasAgg(fig)
-                ax = fig.add_subplot(111)
+                # Serializar para enviar al worker
+                pivot_table_dict = {
+                    "data": pivot_table.values.tolist(),
+                    "index": pivot_table.index.tolist(),
+                    "columns": [
+                        col.isoformat() if hasattr(col, "isoformat") else str(col)
+                        for col in pivot_table.columns
+                    ],
+                }
 
-                # Estilo Heatmap
-                fig.patch.set_facecolor("black")
-                ax.set_facecolor("black")
-                ax.set_title(
-                    f"{ticker} {value} Heatmap, {today_ddt_string}",
-                    color="white",
-                    fontsize=STYLE_CONFIG["title_size"],
-                    pad=30,
-                )
-                ax.set_xlabel(
-                    "Expiration Date",
-                    color="white",
-                    fontsize=STYLE_CONFIG["label_size"],
-                    labelpad=20,
-                )
-                ax.set_ylabel(
-                    "Strike Price",
-                    color="white",
-                    fontsize=STYLE_CONFIG["label_size"],
-                    labelpad=20,
-                )
-                ax.tick_params(colors="white", labelsize=STYLE_CONFIG["tick_size"])
-                for spine in ax.spines.values():
-                    spine.set_edgecolor("white")
+                agg_by_strike_dict = {
+                    "data": agg_by_strike.values.tolist(),
+                    "index": agg_by_strike.index.tolist(),
+                }
 
-                # Normalización y Plot
-                V_min = pivot_table.min().min()
-                V_max = pivot_table.max().max()
-                if V_max <= 0:
-                    V_max = 1
-                if V_min >= 0:
-                    V_min = -1
+                # Convertir expirations a formato serializable
+                expirations_serializable = [
+                    exp_date.to_pydatetime() if hasattr(exp_date, "to_pydatetime") else exp_date
+                    for exp_date in expirations
+                ]
 
-                im = ax.imshow(
-                    pivot_table.values,
-                    cmap=custom_cmap,
-                    aspect="auto",
-                    norm=mcolors.TwoSlopeNorm(
-                        vmin=V_min * 0.85, vcenter=0, vmax=V_max * 0.85
-                    ),
-                )
-
-                # Textos en celdas (Grandes)
-                for i in range(len(strikes)):
-                    for j in range(len(expirations)):
-                        value2text = pivot_table.values[i, j]
-                        if not np.isnan(value2text):
-                            text_color = "white" if value2text <= 0 else "black"
-                            text_str = (
-                                f"$ {value2text*100000:,.2f}k"
-                                if value2text % 1 != 0
-                                else f"$ {int(value2text)*100000:,d}k"
-                            )
-                            ax.text(
-                                j,
-                                i,
-                                text_str,
-                                ha="center",
-                                va="center",
-                                color=text_color,
-                                fontsize=11,
-                            )
-
-                # Ejes
-                expiration_labels = [d.strftime("%b %d") for d in expirations]
-                ax.set_xticks(np.arange(len(expirations)))
-                ax.set_xticklabels(expiration_labels, rotation=0, ha="center")
-                ax.set_yticks(np.arange(len(strikes)))
-                ax.set_yticklabels([f"{int(s)}" for s in strikes])
-
-                # Helper índice Y
-                def get_y(val):
-                    return np.abs(np.array(strikes) - val).argmin()
-
-                # 1. Spot
-                spot_idx = get_y(spot_price)
-                ax.axhline(
-                    y=spot_idx,
-                    color="white",
-                    linestyle="--",
-                    linewidth=2,
-                    label=f"Spot: {spot_price:.2f}",
-                )
-
-                # 2. Max Pos/Neg con lógica de PINNED ALERT
-                max_pos = agg_by_strike.idxmax()
-                max_neg = agg_by_strike.idxmin()
-
-                # --- PINNED POSITIVE ---
-                if not pd.isna(max_pos):
-                    max_pos_idx = get_y(max_pos)
-                    ax.axhline(
-                        y=max_pos_idx,
-                        color="lime",
-                        linestyle="--",
-                        linewidth=2.5,
-                        label=f"Max Pos: {max_pos:.0f}",
+                worker_args.append(
+                    (
+                        pivot_table_dict,
+                        ticker,
+                        value,
+                        today_ddt_string,
+                        greek,
+                        exp,
+                        timestamp,
+                        spot_price,
+                        strikes,
+                        expirations_serializable,
+                        agg_by_strike_dict,
+                        alert_state,
+                        rising_strike,
+                        falling_strike,
+                        flip_val,
+                        metric,  # NUEVO: para identificar
                     )
-
-                    if spot_idx == max_pos_idx and exp == "0dte":
-                        current_pinned = float(max_pos)
-                        if current_pinned != alert_state.get("pos_pinned"):
-                            msg = f"**{ticker} {name} ALERT**: Price is pinned at Max Positive {name} Strike: {max_pos:.2f}"
-                            if msg not in alerts:
-                                alerts.append(msg)
-                            alert_state["pos_pinned"] = current_pinned
-                    else:
-                        if "pos_pinned" in alert_state:
-                            del alert_state["pos_pinned"]
-
-                # --- PINNED NEGATIVE ---
-                if not pd.isna(max_neg):
-                    max_neg_idx = get_y(max_neg)
-                    ax.axhline(
-                        y=max_neg_idx,
-                        color="red",
-                        linestyle="--",
-                        linewidth=2.5,
-                        label=f"Max Neg: {max_neg:.0f}",
-                    )
-
-                    if spot_idx == max_neg_idx and exp == "0dte":
-                        current_pinned = float(max_neg)
-                        if current_pinned != alert_state.get("neg_pinned"):
-                            msg = f"**{ticker} {name} ALERT**: Price is pinned at Max Negative {name} Strike: {max_neg:.2f}"
-                            if msg not in alerts:
-                                alerts.append(msg)
-                            alert_state["neg_pinned"] = current_pinned
-                    else:
-                        if "neg_pinned" in alert_state:
-                            del alert_state["neg_pinned"]
-
-                # Guardar estado de alertas
-                with open(alert_state_path, "wb") as f:
-                    pickle.dump(alert_state, f)
-
-                # 3. Rising/Falling (Lineas)
-                if rising_strike:
-                    ax.axhline(
-                        y=get_y(rising_strike),
-                        color="cyan",
-                        linestyle=":",
-                        linewidth=3,
-                        label=f"Rising: {rising_strike:.0f}",
-                    )
-                if falling_strike:
-                    ax.axhline(
-                        y=get_y(falling_strike),
-                        color="orange",
-                        linestyle=":",
-                        linewidth=3,
-                        label=f"Falling: {falling_strike:.0f}",
-                    )
-
-                # 4. Flip
-                if flip_val:
-                    ax.axhline(
-                        y=get_y(flip_val),
-                        color="cyan",
-                        linestyle="--",
-                        linewidth=2,
-                        label=f"Flip: {flip_val:.2f}",
-                    )
-
-                net_val = agg_by_strike.sum() * 100
-                ax.plot([], [], " ", label=f"Net {name}: {net_val:,.2f}")
-
-                # Leyenda: Fondo NEGRO, Texto BLANCO
-                legend = ax.legend(
-                    loc="upper right",
-                    facecolor="black",
-                    edgecolor="white",
-                    fontsize=STYLE_CONFIG["legend_size"],
                 )
-                for text in legend.get_texts():
-                    text.set_color("white")
-
-                cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
-                cbar.set_label(
-                    f"{name} Exposure",
-                    color="white",
-                    fontsize=STYLE_CONFIG["label_size"],
-                )
-                tick_vals = [V_min * 0.8, 0, V_max * 0.8]
-                cbar.set_ticks(tick_vals)
-                cbar.ax.set_yticklabels(
-                    [f"{x:.2f}" if abs(x) < 1 else f"{int(x)}" for x in tick_vals]
-                )
-                cbar.ax.yaxis.set_tick_params(
-                    color="white",
-                    labelcolor="white",
-                    labelsize=STYLE_CONFIG["tick_size"],
-                )
-
-                filename = f"{PLOT_DIR}/{ticker}/{exp}/{greek}/{value.replace(' ', '_')}_Heatmap/{timestamp}.png"
-                makedirs(path.dirname(filename), exist_ok=True)
-                fig.savefig(filename, bbox_inches="tight", facecolor="black", dpi=80)
-                plt.close(fig)
-                filenames.append(filename)
 
             except Exception as e:
-                print(f"[ERROR TABLE] {ticker}/{exp}/{greek}: {e}")
+                print(f"[ERROR TABLE PREP] {ticker}/{exp}/{greek}: {e}")
                 import traceback
 
                 traceback.print_exc()
 
-    return filenames, alerts
+    # Ejecutar en ProcessPool
+    if worker_args:
+        loop = asyncio.get_event_loop()
+        with ProcessPoolExecutor() as executor:
+            results = await loop.run_in_executor(
+                None, lambda: list(executor.map(_plot_single_table_worker, worker_args))
+            )
+
+        # NUEVO: Agrupar resultados por (ticker, exp, greek) para sincronización
+        alert_states_by_key = {}
+        
+        # Procesar resultados
+        for result in results:
+            if result["filename"]:
+                filenames.append(result["filename"])
+            if result["alerts"]:
+                all_alerts.extend(result["alerts"])
+            
+            # Agrupar alert_states por clave única
+            if result["ticker"] and result["exp"] and result["greek"]:
+                key = (result["ticker"], result["exp"], result["greek"])
+                if key not in alert_states_by_key:
+                    alert_states_by_key[key] = []
+                alert_states_by_key[key].append(result["alert_state"])
+
+        # NUEVO: Sincronizar alert_states consolidados de vuelta a disco
+        for (ticker_key, exp_key, greek_key), states_list in alert_states_by_key.items():
+            alert_state_path = Path(
+                f"pickles/{ticker_key}/{exp_key}/{greek_key}/pinned_alert_state.pkl"
+            )
+            alert_state_path.parent.mkdir(parents=True, exist_ok=True)
+            
+            # Merge inteligente de todos los estados
+            final_state = _merge_alert_states(states_list)
+            
+            # Guardar estado consolidado
+            if final_state:
+                with open(alert_state_path, "wb") as f:
+                    pickle.dump(final_state, f)
+
+    return filenames, all_alerts
 
 
 async def plot_greeks_histogram(
@@ -508,7 +1011,7 @@ async def plot_greeks_histogram(
         return None, []
 
     filenames = []
-    alerts = []
+    all_alerts = []
     GREEKS = (
         [greek_filter]
         if greek_filter
@@ -522,7 +1025,6 @@ async def plot_greeks_histogram(
         "dgex": ["Absolute Dgex Exposure"],
         "zomma": ["Absolute Zomma Exposure"],
     }
-    PLOT_DIR = "plots"
     timestamp = datetime.datetime.now(ZoneInfo("America/New_York")).strftime(
         "%Y%m%d_%H%M%S"
     )
@@ -532,6 +1034,9 @@ async def plot_greeks_histogram(
         "put": "#FF7F7F",
         "spot_line": "#C0C0C0",
     }
+
+    # Preparar trabajos para ProcessPool
+    worker_args = []
 
     for greek in GREEKS:
         for value in VISUALIZATIONS[greek]:
@@ -567,6 +1072,7 @@ async def plot_greeks_histogram(
                     df_agg = df.groupby(["expiration_date"]).sum(numeric_only=True)
                     if df_agg.empty:
                         continue
+                    step = 1  # No usado para profiles
 
                 if "Calls/Puts" in value or value == "Implied Volatility Average":
                     key = "strike" if date_condition else "exp"
@@ -577,41 +1083,17 @@ async def plot_greeks_histogram(
 
                 name = value.split()[1] if "Absolute" in value else value.split()[0]
 
-                # --- ETIQUETA EJE Y DINÁMICA ---
-                ylabel_text = f"{name} Exposure"
-                if name == "Gamma":
-                    ylabel_text += " (gamma / 1% move)"
-                elif name == "Delta":
-                    ylabel_text += " (delta / 1% move)"
-                elif name == "Vanna":
-                    ylabel_text += " (vanna / 1% IV move)"
-                elif name == "Charm":
-                    ylabel_text += " (charm / day)"
-                elif name == "Zomma":
-                    ylabel_text += " (zomma / 1% IV move)"
-                elif name == "Dgex":
-                    ylabel_text += " (dgex / 1% move)"
-                # --- FIGURE PRIVADO ---
-                fig = Figure(figsize=(20, 12))  # Más grande
-                FigureCanvasAgg(fig)
-                ax = fig.add_subplot(111)
+                # Cálculos específicos para cada tipo
+                rising_strike = None
+                falling_strike = None
+                zero_strike = 0
 
-                title = f"{ticker} {value}, {today_ddt_string} for {exp}"
-                apply_custom_style(
-                    ax, fig, title, "Strike" if date_condition else "Date", ylabel_text
-                )
-
-                # ==========================================================
-                # BLOQUE: ABSOLUTE EXPOSURE
-                # ==========================================================
-                if "Absolute" in value:
+                if "Absolute" in value or "Calls/Puts" in value:
                     agg_by_strike = df_agg[f"total_{name.lower()}"]
                     pickle_path = Path(
                         f"pickles/{ticker}/{exp}/{greek}/agg_by_strike.pkl"
                     )
                     pickle_path.parent.mkdir(parents=True, exist_ok=True)
-                    rising_strike = None
-                    falling_strike = None
 
                     # Zero Strike Calc
                     signs = np.sign(agg_by_strike.values)
@@ -642,45 +1124,11 @@ async def plot_greeks_histogram(
                             s2, v2 = agg_by_strike.index[idx2], agg_by_strike.iloc[idx2]
                             zero_strikes.append(s2 - ((s2 - s1) * v2 / (v2 - v1)))
 
-                    zero_strike = 0
                     if zero_strikes:
                         zs = np.array(zero_strikes)
                         zero_strike = zs[np.argmin(np.abs(zs - spot_price))]
 
-                    # --- LÓGICA REGIME ANALYSIS (Restaurada del Original) ---
-                    if greek == "gamma" and ticker == "SPX" and exp == "0dte":
-                        net_gamma_val = df["total_gamma"].sum()
-                        current_spot = spot_price
-                        flip_status = "ABOVE" if current_spot > zero_strike else "BELOW"
-
-                        msg = f"__** {ticker} {exp.upper()} REGIME ANALYSIS**__\n"
-                        msg += f"• **Spot:** {current_spot:.2f} | **Gamma Flip:** {zero_strike:.2f} (Spot is {flip_status})\n"
-
-                        if net_gamma_val > 0:
-                            regime_name = "POSITIVE GAMMA (Mean Reversion)"
-                            behavior = "Dealers buy dips & sell rips. Market is sticky."
-                            if current_spot > zero_strike:
-                                trade_idea = "**Bullish Bias:** Look to **Buy Dips**"
-                            else:
-                                trade_idea = "**Cautious:** Spot below Flip but Gamma is positive. Upside capped"
-                        else:
-                            regime_name = "NEGATIVE GAMMA (Directional/Volatile)"
-                            behavior = (
-                                "Dealers sell dips & buy rips. Volatility accelerates."
-                            )
-                            if current_spot < zero_strike:
-                                trade_idea = "**Bearish Bias:** **SELL THE RIP**. Volatility expansion likely down"
-                            else:
-                                trade_idea = "**Breakout Watch:** Spot above Flip in Neg Gamma. Squeeze risk up"
-
-                        msg += f"• **Regime:** {regime_name}\n"
-                        msg += f"• **Behavior:** *{behavior}*\n"
-                        msg += f"• **Trade Bias:** {trade_idea}\n"
-
-                        if msg not in alerts:
-                            alerts.append(msg)
-
-                    # --- LÓGICA SHIFTED ALERTS (Restaurada del Original) ---
+                    # --- LÓGICA SHIFTED ALERTS (Solo añadir a alertas, no plotear) ---
                     if pickle_path.exists():
                         try:
                             previous = pd.read_pickle(pickle_path)
@@ -697,8 +1145,7 @@ async def plot_greeks_histogram(
                                             < spot_price * 1.02
                                         ):
                                             msg = f"**SPX 0DTE Vanna Alert**: Max Negative Vanna shifted from {prev_min} to {curr_min}"
-                                            if msg not in alerts:
-                                                alerts.append(msg)
+                                            all_alerts.append(msg)
 
                                     if greek == "gamma":
                                         prev_max = previous.idxmax()
@@ -707,12 +1154,10 @@ async def plot_greeks_histogram(
                                         curr_min = agg_by_strike.idxmin()
                                         if prev_max != curr_max:
                                             msg = f"**SPX 0DTE Gamma Alert**: Max Positive Gamma shifted from {prev_max} to {curr_max}"
-                                            if msg not in alerts:
-                                                alerts.append(msg)
+                                            all_alerts.append(msg)
                                         if prev_min != curr_min:
                                             msg = f"**SPX 0DTE Gamma Alert**: Max Negative Gamma shifted from {prev_min} to {curr_min}"
-                                            if msg not in alerts:
-                                                alerts.append(msg)
+                                            all_alerts.append(msg)
                                 except Exception as e:
                                     print(f"Error checking shifts: {e}")
 
@@ -727,259 +1172,77 @@ async def plot_greeks_histogram(
 
                     pd.to_pickle(agg_by_strike, pickle_path)
 
-                    max_pos = agg_by_strike.idxmax()
-                    max_neg = agg_by_strike.idxmin()
+                # Serializar df_agg
+                df_agg_dict = {
+                    "data": df_agg.values.tolist(),
+                    "index": df_agg.index.tolist(),
+                    "columns": df_agg.columns.tolist(),
+                }
 
-                    ax.bar(
-                        df_agg.index,
-                        agg_by_strike,
-                        align="edge",
-                        width=step * 0.9,
-                        label=f"{name} Exposure",
-                        alpha=0.9,
-                        color=colors["total"],
+                # Convertir call_ivs_data y put_ivs_data a listas si son arrays
+                if call_ivs_data is not None:
+                    call_ivs_data = (
+                        call_ivs_data.tolist()
+                        if hasattr(call_ivs_data, "tolist")
+                        else list(call_ivs_data)
+                    )
+                if put_ivs_data is not None:
+                    put_ivs_data = (
+                        put_ivs_data.tolist()
+                        if hasattr(put_ivs_data, "tolist")
+                        else list(put_ivs_data)
                     )
 
-                    if not pd.isna(max_pos):
-                        ax.axvline(
-                            x=max_pos,
-                            color="lime",
-                            linestyle="--",
-                            linewidth=2,
-                            label=f"Max Pos: {max_pos:.2f}",
-                        )
-                    if not pd.isna(max_neg):
-                        ax.axvline(
-                            x=max_neg,
-                            color="red",
-                            linestyle="--",
-                            linewidth=2,
-                            label=f"Max Neg: {max_neg:.2f}",
-                        )
-
-                    if rising_strike:
-                        ax.axvline(
-                            x=rising_strike,
-                            dashes=(5, 12),
-                            color="cyan",
-                            linestyle="--",
-                            linewidth=3,
-                            label=f"Rising: {rising_strike:.0f}",
-                        )
-                    if falling_strike:
-                        ax.axvline(
-                            x=falling_strike,
-                            dashes=(5, 12),
-                            color="orange",
-                            linestyle="--",
-                            linewidth=3,
-                            label=f"Falling: {falling_strike:.0f}",
-                        )
-
-                    if zero_strike:
-                        ax.axvline(
-                            x=zero_strike,
-                            color="yellow",
-                            linestyle="--",
-                            linewidth=2,
-                            label=f"Flip: {zero_strike:.2f}",
-                        )
-
-                    net_val = agg_by_strike.sum() * 100
-                    ax.plot([], [], " ", label=f"Net {name}: {net_val:,.2f}")
-
-                # ==========================================================
-                # BLOQUE: CALLS / PUTS
-                # ==========================================================
-                elif "Calls/Puts" in value:
-                    scale = 10**9
-                    pickle_path = Path(
-                        f"pickles/{ticker}/{exp}/{greek}/agg_by_strike.pkl"
+                worker_args.append(
+                    (
+                        df_agg_dict,
+                        ticker,
+                        value,
+                        today_ddt_string,
+                        greek,
+                        exp,
+                        timestamp,
+                        spot_price,
+                        lower_bound,
+                        upper_bound,
+                        step,
+                        colors,
+                        call_ivs_data,
+                        put_ivs_data,
+                        rising_strike,
+                        falling_strike,
+                        zero_strike,
+                        prev_close_price,
+                        date_condition,
                     )
-                    agg_by_strike_ref = df_agg[f"total_{name.lower()}"]
-                    max_pos = agg_by_strike_ref.idxmax()
-                    max_neg = agg_by_strike_ref.idxmin()
-
-                    rising_strike = None
-                    falling_strike = None
-                    if pickle_path.exists():
-                        try:
-                            previous = pd.read_pickle(pickle_path)
-                            common = agg_by_strike_ref.index.intersection(
-                                previous.index
-                            )
-                            if not common.empty:
-                                diff = (
-                                    agg_by_strike_ref.loc[common] - previous.loc[common]
-                                )
-                                if not diff.empty and diff.abs().max() > 0:
-                                    rising_strike = diff.idxmax()
-                                    falling_strike = diff.idxmin()
-                        except:
-                            pass
-
-                    ax.bar(
-                        df_agg.index,
-                        df_agg[f"call_{name[:1].lower()}ex"] / scale,
-                        align="edge",
-                        width=step * 0.9,
-                        label=f"Call {name}",
-                        alpha=0.9,
-                        color=colors["call"],
-                    )
-                    ax.bar(
-                        df_agg.index,
-                        df_agg[f"put_{name[:1].lower()}ex"] / scale,
-                        align="edge",
-                        width=step * 0.9,
-                        label=f"Put {name}",
-                        alpha=0.9,
-                        color=colors["put"],
-                    )
-
-                    if not pd.isna(max_pos):
-                        ax.axvline(
-                            x=max_pos,
-                            color="lime",
-                            linestyle="--",
-                            linewidth=2,
-                            label=f"Max Pos: {max_pos:.2f}",
-                        )
-                    if not pd.isna(max_neg):
-                        ax.axvline(
-                            x=max_neg,
-                            color="red",
-                            linestyle="--",
-                            linewidth=2,
-                            label=f"Max Neg: {max_neg:.2f}",
-                        )
-                    if rising_strike:
-                        ax.axvline(
-                            x=rising_strike,
-                            dashes=(5, 12),
-                            color="cyan",
-                            linestyle="--",
-                            linewidth=3,
-                            label=f"Rising: {rising_strike:.0f}",
-                        )
-                    if falling_strike:
-                        ax.axvline(
-                            x=falling_strike,
-                            dashes=(5, 12),
-                            color="orange",
-                            linestyle="--",
-                            linewidth=3,
-                            label=f"Falling: {falling_strike:.0f}",
-                        )
-
-                # ==========================================================
-                # BLOQUE: IV AVERAGE
-                # ==========================================================
-                elif value == "Implied Volatility Average":
-                    try:
-                        min_len = min(
-                            len(df_agg.index), len(put_ivs_data), len(call_ivs_data)
-                        )
-                        if min_len > 0:
-                            x_ax = df_agg.index[:min_len]
-                            y_p = put_ivs_data[:min_len] * 100
-                            y_c = call_ivs_data[:min_len] * 100
-                            ax.plot(
-                                x_ax,
-                                y_p,
-                                label="Put IV",
-                                color=colors["put"],
-                                linewidth=3,
-                            )
-                            ax.fill_between(x_ax, y_p, alpha=0.3, color=colors["put"])
-                            ax.plot(
-                                x_ax,
-                                y_c,
-                                label="Call IV",
-                                color=colors["call"],
-                                linewidth=3,
-                            )
-                            ax.fill_between(x_ax, y_c, alpha=0.3, color=colors["call"])
-                    except:
-                        pass
-
-                # ==========================================================
-                # BLOQUE: PROFILE PLOTS
-                # ==========================================================
-                else:
-                    # Lógica de perfiles (si aplica)
-                    pass
-
-                if date_condition:
-                    step = math.log10(spot_price)
-                    if step < 1:
-                        step = 0.5
-                    elif 1 <= step < 2:
-                        step = 2
-                    elif 2 <= step < 2.5:
-                        step = 5
-                    elif 2.5 <= step < 3:
-                        step = 10
-                    else:
-                        step = math.floor(step)
-                        step = (10 ** (step - 1)) * 0.4
-
-                    lb_plot = step * np.floor(float(lower_bound) / step)
-                    ub_plot = step * np.ceil(float(upper_bound) / step)
-
-                    ax.axvline(
-                        x=spot_price,
-                        color=colors["spot_line"],
-                        linestyle="--",
-                        linewidth=1.5,
-                        label=f"{ticker} Spot: {spot_price:,.2f}",
-                    )
-                    ax.set_xlim(lb_plot, ub_plot)
-                    x_ticks = np.arange(lb_plot, ub_plot + step, step)
-                    ax.set_xticks(x_ticks)
-                    ax.set_xticklabels(
-                        [f"{x:.2f}" if step < 1 else f"{int(x)}" for x in x_ticks]
-                    )
-                else:
-                    ax.set_xlim(today_ddt, today_ddt + timedelta(days=31))
-
-                # --- LEYENDA HISTOGRAMA (Fondo NEGRO, Texto BLANCO) ---
-                legend = ax.legend(
-                    loc="best",
-                    facecolor="black",
-                    edgecolor="white",
-                    framealpha=0.9,
-                    fontsize=STYLE_CONFIG["legend_size"],
                 )
-                if legend:
-                    for text in legend.get_texts():
-                        text.set_color("white")
-
-                value_cl = value.replace("Calls/Puts", "Calls Puts")
-                filename = f"{PLOT_DIR}/{ticker}/{exp}/{greek}/{value_cl.replace(' ', '_')}/{timestamp}.png"
-                makedirs(path.dirname(filename), exist_ok=True)
-                fig.savefig(
-                    filename,
-                    bbox_inches="tight",
-                    facecolor=STYLE_CONFIG["color_bg"],
-                    dpi=80,
-                )
-                plt.close(fig)
-                filenames.append(filename)
-
-                if "Absolute" in value or "Calls/Puts" in value:
-                    pd.to_pickle(agg_by_strike, pickle_path)
 
             except Exception as e:
-                print(f"[ERROR HISTOGRAM] {ticker}/{exp}/{greek}/{value}: {e}")
+                print(f"[ERROR HISTOGRAM PREP] {ticker}/{exp}/{greek}/{value}: {e}")
                 import traceback
 
                 traceback.print_exc()
 
-    return filenames, alerts
+    # Ejecutar en ProcessPool
+    if worker_args:
+        loop = asyncio.get_event_loop()
+        with ProcessPoolExecutor() as executor:
+            results = await loop.run_in_executor(
+                None,
+                lambda: list(executor.map(_plot_single_histogram_worker, worker_args)),
+            )
+
+        # Procesar resultados
+        for result in results:
+            if result["filename"]:
+                filenames.append(result["filename"])
+            if result["alerts"]:
+                all_alerts.extend(result["alerts"])
+
+    return filenames, all_alerts
 
 
-# --- MISMAS FUNCIONES DE CÁLCULO DE SIEMPRE ---
+# --- MISMAS FUNCIONES DE CÁLCULO DE SIEMPRE (SIN CAMBIOS) ---
 async def calc_exposures(
     option_data,
     ticker,
@@ -1107,10 +1370,6 @@ async def calc_exposures(
         0,
     )
 
-    # ==============================================================================
-    # NUEVO: CÁLCULO DE DELTA-ADJUSTED GEX Y ZOMMA
-    # ==============================================================================
-
     call_gex_2d = option_data["call_gex"].to_numpy().reshape(1, -1)
     put_gex_2d = option_data["put_gex"].to_numpy().reshape(1, -1)
 
@@ -1141,8 +1400,6 @@ async def calc_exposures(
         stats.calc_zomma_ex(put_gex_2d, put_dp, opt_put_ivs, time_till_exp)[0],
         0,
     )
-
-    # ==============================================================================
 
     # Calculate total and scale down
     option_data["total_delta"] = (
@@ -1484,9 +1741,7 @@ def calcular_spx_media(es_price, sofr_rate):
     dividend_yield = 0.01234
     denominador = 252
 
-    hoy = datetime.datetime.utcnow() - datetime.timedelta(
-        hours=4
-    )  # Hora NY aprox (UTC-4)
+    hoy = datetime.datetime.utcnow() - datetime.timedelta(hours=4)
     hoy = hoy.date()
     year = hoy.year
     current_month = hoy.month
@@ -1548,10 +1803,12 @@ def calcular_spx_media(es_price, sofr_rate):
 def get_options_data(ticker, expir, greek_filter):
     async def _fetch_internal():
         load_dotenv()
+        t0 = time.time()
         username = getenv("TASTYTRADE_USERNAME")
         password = getenv("TASTYTRADE_PASSWORD")
         session = Session(username, password)
-
+        t1 = time.time()
+        print(f"📡 [RED] API Tastytrade Session: {t1 - t0:.4f}s")
         t_san = ticker.replace("^", "").replace(" ", "").upper()
         t_list = [get_future_ticker(t_san)] if "/" in t_san else [t_san]
         if t_san == "SPX":
@@ -1579,19 +1836,14 @@ def get_options_data(ticker, expir, greek_filter):
             hora_ny = now_ny.time()
 
             rth_start = datetime.time(9, 30)
-            rth_end = datetime.time(
-                16, 00
-            )  # SPX cierra a las 16:00, pero precios se asientan hasta 16:15
-            # Si estamos en horario regular (RTH), usamos el spot directo
+            rth_end = datetime.time(16, 00)
             es_weekend = now_ny.weekday() >= 5
 
             if rth_start <= hora_ny <= rth_end and not es_weekend:
                 precio_spot_final = spot
             else:
-                # Estamos en ETH (Overnight). Necesitamos el futuro /ES obligatoriamente
                 print("Calculando SPX nocturno basado en futuro /ES...")
 
-                # Forzamos la búsqueda del futuro actual (ej: /ESH6)
                 ticker_future = get_future_ticker("/ES")
                 tickerList2 = [ticker_future]
                 try:
@@ -1609,7 +1861,6 @@ def get_options_data(ticker, expir, greek_filter):
                             f"Precio Futuro (/ES): {es_price} -> SPX Calculado: {precio_spot_final:.2f}"
                         )
                     else:
-                        # Fallback si no encontramos precio del futuro
                         print(
                             "No se pudo obtener precio del futuro, usando último spot conocido."
                         )
@@ -1620,11 +1871,11 @@ def get_options_data(ticker, expir, greek_filter):
 
             spot = precio_spot_final
 
-        # --- FILTRADO CORRECTO PARA EVITAR ERROR 'record_not_found' ---
         t_list_clean = [t for t in t_list if "SR3" not in t]
-
+        t0 = time.time()
         exp_dates, exp_strikes = await tasty_expirations_strikes(session, t_list_clean)
-
+        t1 = time.time()
+        print(f"📡 [RED] API Tastytrade exp dates strikes: {t1 - t0:.4f}s")
         today = pd.Timestamp.now(tz="America/New_York")
         exp_clean = expir.replace(" ", "").lower()
 
@@ -1646,16 +1897,18 @@ def get_options_data(ticker, expir, greek_filter):
             start, end = end, start
 
         req = {
-            "tickers": t_list_clean,  # Usar lista limpia
+            "tickers": t_list_clean,
             "start_date": start,
             "end_date": end,
             "lower_strike": low,
             "upper_strike": high,
         }
 
+        t0 = time.time()
         gr_list, _ = await tasty_data(session, options_requested=req)
         opt_data = format_data(gr_list, today)
-
+        t1 = time.time()
+        print(f"📡 [RED] API Tastytrade options y dataframe: {t1 - t0:.4f}s")
         this_opex, _ = is_third_friday(first, "America/New_York")
         today_str = today.strftime("%Y %b %d, %I:%M %p %Z")
 
@@ -1701,12 +1954,13 @@ def get_options_data(ticker, expir, greek_filter):
                 "greek_filter",
             ]
             exp_dict = dict(zip(keys_map, full_data))
-
+            t0 = time.time()
             h_file, h_alert = await plot_greeks_histogram(*full_data)
             t_file, t_alert = await plot_greeks_table(*full_data)
             all_alerts = h_alert + t_alert
             exp_dict["alerts"] = all_alerts
-
+            t1 = time.time()
+            print(f"\t[MatPlot] Crear los pngs: {t1 - t0:.4f}s")
             def serialize(obj):
                 if isinstance(obj, pd.DataFrame):
                     return obj.to_dict(orient="split")
@@ -1724,9 +1978,11 @@ def get_options_data(ticker, expir, greek_filter):
             if not path.exists(json_dir):
                 makedirs(json_dir, exist_ok=True)
             fname = f"{t_san}_{exp_clean}_ExposureData_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+            t0 = time.time()
             with open(path.join(json_dir, fname), "w") as f:
                 json.dump(exp_dict, f, default=serialize)
-
+            t1 = time.time()
+            print(f"\t[DISK] Cargan en el json serialize: {t1 - t0:.4f}s")
             return [h_file, all_alerts, t_file]
 
         except Exception as e:
