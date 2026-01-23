@@ -487,7 +487,7 @@ async def start_scheduler():
                 request_plots(specific_exp=e), discord_client.loop
             ).result(),
             CronTrigger.from_crontab(
-                "*/5 3-16 * * 0-4",  # <--- CADA 10 MINUTOS
+                "*/9 3-16 * * 0-4",  # <--- CADA 10 MINUTOS
                 timezone=ZoneInfo("America/New_York"),
             ),
             id=f"slow_{slow_exp}_job",
