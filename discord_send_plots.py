@@ -408,7 +408,7 @@ def cleanup_old_json_data():
     1. Borra archivos con más de 'days_to_keep' de antigüedad.
     2. Borra CUALQUIER archivo creado en Sábado o Domingo (histórico o reciente).
     """
-    days_to_keep = 7  # Días a mantener (solo días de semana)
+    days_to_keep = 70  # Días a mantener (solo días de semana)
     folder_path = "/home/Option-Greeks-Plotting-Discord-Bot/json_data"
 
     log(
