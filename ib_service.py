@@ -59,6 +59,7 @@ CHANNEL_MAPPING = {
 
 DATA_FOLDER_PATH = "/home/Option-Greeks-Plotting-Discord-Bot/json_data"
 OUTPUT_DIR = "/home/Option-Greeks-Plotting-Discord-Bot/ib_charts"
+IB_BACKTEST_DIR = "/home/Option-Greeks-Plotting-Discord-Bot/ib_backtest"  # EOD backup with volume_profile
 
 # Zonas Horarias
 try:
@@ -87,6 +88,12 @@ TICKERS_TO_TRACK = [
 
 if not os.path.exists(OUTPUT_DIR):
     os.makedirs(OUTPUT_DIR)
+
+if not os.path.exists(IB_BACKTEST_DIR):
+    os.makedirs(IB_BACKTEST_DIR)
+
+# Track which dates have been saved to ib_backtest today (to avoid duplicates)
+EOD_SAVED_DATES = set()
 
 SENT_CACHE = {}
 
@@ -261,6 +268,161 @@ def extract_greeks_from_file(filepath: str) -> dict:
         return {}
 
 
+# --- 2.5 VOLUME PROFILE CALCULATION (for ib_backtest) ---
+def calculate_volume_profile(df: pd.DataFrame, num_buckets: int = 50) -> dict:
+    """
+    Calculates volume profile for the given candlestick data.
+    Returns: vpoc, vah, val, lvn_zones, total_volume, profile
+    """
+    if df.empty or "volume" not in df.columns:
+        return {}
+    
+    price_min = df["low"].min()
+    price_max = df["high"].max()
+    
+    if price_min == price_max:
+        return {}
+    
+    bucket_size = (price_max - price_min) / num_buckets
+    if bucket_size == 0:
+        return {}
+    
+    volume_by_bucket = np.zeros(num_buckets)
+    
+    for _, row in df.iterrows():
+        candle_low = row["low"]
+        candle_high = row["high"]
+        candle_volume = row["volume"]
+        
+        if candle_volume <= 0:
+            continue
+        
+        start_bucket = max(0, int((candle_low - price_min) / bucket_size))
+        end_bucket = min(num_buckets - 1, int((candle_high - price_min) / bucket_size))
+        
+        num_covered_buckets = end_bucket - start_bucket + 1
+        vol_per_bucket = candle_volume / num_covered_buckets
+        
+        for b in range(start_bucket, end_bucket + 1):
+            volume_by_bucket[b] += vol_per_bucket
+    
+    bucket_prices = [price_min + (i + 0.5) * bucket_size for i in range(num_buckets)]
+    
+    vpoc_idx = np.argmax(volume_by_bucket)
+    vpoc = bucket_prices[vpoc_idx]
+    
+    total_volume = volume_by_bucket.sum()
+    if total_volume == 0:
+        return {}
+    
+    value_area_volume = total_volume * 0.70
+    va_low_idx = vpoc_idx
+    va_high_idx = vpoc_idx
+    current_va_volume = volume_by_bucket[vpoc_idx]
+    
+    while current_va_volume < value_area_volume:
+        vol_below = volume_by_bucket[va_low_idx - 1] if va_low_idx > 0 else 0
+        vol_above = volume_by_bucket[va_high_idx + 1] if va_high_idx < num_buckets - 1 else 0
+        
+        if vol_below >= vol_above and va_low_idx > 0:
+            va_low_idx -= 1
+            current_va_volume += volume_by_bucket[va_low_idx]
+        elif va_high_idx < num_buckets - 1:
+            va_high_idx += 1
+            current_va_volume += volume_by_bucket[va_high_idx]
+        else:
+            break
+    
+    val = bucket_prices[va_low_idx] - bucket_size / 2
+    vah = bucket_prices[va_high_idx] + bucket_size / 2
+    
+    # LVN detection
+    smoothed_volume = np.convolve(volume_by_bucket, np.ones(3)/3, mode='same')
+    lvn_zones = []
+    avg_volume = total_volume / num_buckets
+    lvn_threshold = avg_volume * 0.6
+    
+    for i in range(1, num_buckets - 1):
+        if smoothed_volume[i] < smoothed_volume[i-1] and smoothed_volume[i] < smoothed_volume[i+1] and smoothed_volume[i] < avg_volume:
+            zone_low = bucket_prices[i] - bucket_size / 2
+            zone_high = bucket_prices[i] + bucket_size / 2
+            lvn_zones.append({"low": zone_low, "high": zone_high, "mid": bucket_prices[i]})
+    
+    profile = [{"price": bucket_prices[i], "volume": float(volume_by_bucket[i])} for i in range(num_buckets)]
+    
+    return {
+        "vpoc": float(vpoc),
+        "vah": float(vah),
+        "val": float(val),
+        "lvn_zones": lvn_zones,
+        "total_volume": float(total_volume),
+        "bucket_size": float(bucket_size),
+        "profile": profile
+    }
+
+
+def save_to_ib_backtest(ticker: str, df_candles: pd.DataFrame, ib_high: float, ib_low: float, 
+                        current_price: float, levels: dict, date_str: str):
+    """
+    Saves IB data to ib_backtest directory with volume_profile for historical use.
+    Called once per day after market close.
+    """
+    global EOD_SAVED_DATES
+    
+    key = f"{ticker}_{date_str}"
+    if key in EOD_SAVED_DATES:
+        return  # Already saved today
+    
+    # Calculate volume profile
+    volume_profile = calculate_volume_profile(df_candles)
+    
+    # Build series data
+    series_data = []
+    for _, row in df_candles.iterrows():
+        candle_time = row["datetime"]
+        series_data.append({
+            "time": candle_time.strftime("%H:%M"),
+            "full_date": candle_time.strftime("%Y-%m-%d %H:%M:%S"),
+            "open": float(row["open"]),
+            "high": float(row["high"]),
+            "low": float(row["low"]),
+            "price": float(row["close"]),
+            "volume": float(row["volume"]),
+        })
+    
+    ib_range = ib_high - ib_low
+    
+    json_data = {
+        "meta": {
+            "ticker": ticker,
+            "date": date_str,
+            "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "note": "EOD backup from ib_service.py with volume profile"
+        },
+        "analysis": {
+            "ib_high": float(ib_high),
+            "ib_low": float(ib_low),
+            "ib_range": float(ib_range),
+            "current_price": float(current_price),
+            "day_high": float(df_candles["high"].max()) if not df_candles.empty else 0,
+            "day_low": float(df_candles["low"].min()) if not df_candles.empty else 0,
+            "total_volume": float(df_candles["volume"].sum()) if not df_candles.empty else 0,
+        },
+        "volume_profile": volume_profile,
+        "levels": levels,  # Include Greek levels from ib_service
+        "series": series_data,
+    }
+    
+    filepath = os.path.join(IB_BACKTEST_DIR, f"ib_data_{ticker}_{date_str}.json")
+    try:
+        with open(filepath, "w") as f:
+            json.dump(json_data, f, indent=4)
+        EOD_SAVED_DATES.add(key)
+        print(f"[EOD BACKUP] Saved {ticker} to ib_backtest/")
+    except Exception as e:
+        print(f"[EOD BACKUP ERROR] {ticker}: {e}")
+
+
 # --- 3. GENERACIÓN DEL GRÁFICO IB ---
 def generate_ib_chart(ticker: str, df_candles: pd.DataFrame, greeks_files: list, date_str: str):
     """
@@ -289,7 +451,7 @@ def generate_ib_chart(ticker: str, df_candles: pd.DataFrame, greeks_files: list,
     ib_low = ib_data["low"].min()
     ib_range = ib_high - ib_low
 
-    # --- 2. CONSTRUIR SERIES SIMPLIFICADA ---
+    # --- 2. CONSTRUIR SERIES CON VOLUMEN ---
     series_data = []
     for idx, row in df.iterrows():
         candle_time = row["datetime"]
@@ -297,7 +459,11 @@ def generate_ib_chart(ticker: str, df_candles: pd.DataFrame, greeks_files: list,
         series_data.append({
             "time": candle_time.strftime("%H:%M"),
             "full_date": candle_time.strftime("%Y-%m-%d %H:%M:%S"),
+            "open": float(row["open"]),
+            "high": float(row["high"]),
+            "low": float(row["low"]),
             "price": float(row["close"]),
+            "volume": float(row["volume"]),
         })
 
     # --- 3. OBTENER NIVELES FINALES ---
@@ -329,6 +495,12 @@ def generate_ib_chart(ticker: str, df_candles: pd.DataFrame, greeks_files: list,
             json.dump(json_data, f, indent=4)
 
         print(f"[JSON] Guardado: {json_filename}")
+        
+        # --- EOD BACKUP: Save to ib_backtest after market close (16:00+ NY) ---
+        now_ny = datetime.now(NY_TZ) if NY_TZ else datetime.now()
+        if now_ny.time() >= dt_time(16, 0):
+            levels_for_backup = {k: float(v) for k, v in final_levels.items() if not pd.isna(v)}
+            save_to_ib_backtest(ticker, df, ib_high, ib_low, current_price, levels_for_backup, date_str)
 
     except Exception as e:
         print(f"[ERROR JSON] {ticker}: {e}")
@@ -481,7 +653,7 @@ class IBBot(discord.Client):
                 print(f"[ERROR LOOP] {e}")
                 import traceback
                 traceback.print_exc()
-            await asyncio.sleep(60)
+            await asyncio.sleep(20)
 
     async def process_tickers_async(self):
         now = datetime.now()
