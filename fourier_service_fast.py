@@ -344,6 +344,8 @@ class FourierBot(discord.Client):
                 await self.loop.run_in_executor(None, self.process_tickers_sync)
             except Exception as e:
                 print(f"[ERROR LOOP] {e}")
+            print("[SYSTEM] Esperando 60 segundos...")
+            await asyncio.sleep(60)
 
     def process_tickers_sync(self):
         now = datetime.now()
