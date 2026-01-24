@@ -10,3 +10,5 @@ fourier/
 bot_logging.txt
 servidor_logs.txt
 cat_json.py
+ib_backtest/
+trades/
