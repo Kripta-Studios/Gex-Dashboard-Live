@@ -5,6 +5,35 @@ let refreshIntervalId = null;
 let realSpotSPX = 0;
 let historyDebounceTimer = null;
 let currentHistoryTimeEST = null;
+
+// --- IV TREND TRACKING FOR VANNA COLORING ---
+let ivTrendByTicker = {};
+
+function updateIVTrendFromFourier(ticker, fourierData) {
+  if (!fourierData || !Array.isArray(fourierData) || fourierData.length < 5) {
+    ivTrendByTicker[ticker] = 'neutral';
+    return;
+  }
+  const recentPoints = fourierData.slice(-10);
+  const ivValues = recentPoints.map(d => d.iv_fft).filter(v => v !== null && v !== undefined);
+  if (ivValues.length < 3) {
+    ivTrendByTicker[ticker] = 'neutral';
+    return;
+  }
+  const midpoint = Math.floor(ivValues.length / 2);
+  const firstHalfAvg = ivValues.slice(0, midpoint).reduce((a, b) => a + b, 0) / midpoint;
+  const secondHalfAvg = ivValues.slice(midpoint).reduce((a, b) => a + b, 0) / (ivValues.length - midpoint);
+  const change = secondHalfAvg - firstHalfAvg;
+  if (change > 0.001) {
+    ivTrendByTicker[ticker] = 'rising';
+  } else if (change < -0.001) {
+    ivTrendByTicker[ticker] = 'falling';
+  } else {
+    ivTrendByTicker[ticker] = 'neutral';
+  }
+  console.log(`[IV Trend] ${ticker}: ${ivTrendByTicker[ticker]} (change: ${change.toFixed(4)})`);
+}
+
 // --- AUTHENTICATION & LOGIN ---
 const TARGET_EMAIL_HASH =
   "0f089be93d18d31f8ac42fc84ecd206bea41ffbde1df2a11dc1de1637822dcb7";
@@ -806,16 +835,23 @@ function generateRegimeHTML(ticker, greek, spot, netValue, spotStrikeValue, netC
     }
     biasText = isLocalPos ? "Local Support" : "Local Resistance";
   } else if (greek === "vanna") {
-    if (isLocalPos) {
-      regimeText = "POS VANNA";
-      behaviorText = "IV Drop = Buying | IV Spike = Selling.";
+    const ivTrend = ivTrendByTicker[ticker] || 'neutral';
+    const ivRising = ivTrend === 'rising';
+    const ivFalling = ivTrend === 'falling';
+    let mmBuying = (isLocalPos && ivFalling) || (!isLocalPos && ivRising);
+    let mmSelling = (isLocalPos && ivRising) || (!isLocalPos && ivFalling);
+    regimeText = isLocalPos ? "POS VANNA" : "NEG VANNA";
+    if (mmBuying) {
       regimeColorVar = "--pos-high";
-    } else {
-      regimeText = "NEG VANNA";
-      behaviorText = "IV Drop = Selling | IV Spike = Buying.";
+      behaviorText = `MM BUYING (IV ${ivTrend.toUpperCase()}) → Support`;
+    } else if (mmSelling) {
       regimeColorVar = "--neg-high";
+      behaviorText = `MM SELLING (IV ${ivTrend.toUpperCase()}) → Pressure`;
+    } else {
+      regimeColorVar = isLocalPos ? "--pos-high" : "--neg-high";
+      behaviorText = isLocalPos ? "IV Drop = Buying | IV Spike = Selling." : "IV Drop = Selling | IV Spike = Buying.";
     }
-    biasText = "Vol Impact";
+    biasText = `IV: ${ivTrend.toUpperCase()}`;
   } else if (greek === "zomma") {
     if (isLocalPos) {
       regimeText = "POS ZOMMA";
@@ -1451,6 +1487,7 @@ async function loadSavedLayouts() {
             // Cargar datos
             if (cConf.type === 'fourier') {
               d = await fetchFourierData(cConf.ticker, loadedDateStr);
+              if (d) updateIVTrendFromFourier(cConf.ticker, d);
             } else {
               d = await fetchIBData(cConf.ticker, loadedDateStr);
             }
@@ -1779,11 +1816,12 @@ async function fetchFourierData(ticker, dateStr) {
 function addFourierChartToCurrent(data, ticker, dateStr) {
   const tab = tabs.find((t) => t.id === currentTabId);
   if (tab) {
+    updateIVTrendFromFourier(ticker, data);
     tab.charts.push({
-      type: 'fourier', // Marcamos el tipo para diferenciarlo de los Heatmaps
+      type: 'fourier',
       data: data,
       inputTicker: ticker,
-      inputExp: 'fourier', // Identificador especial
+      inputExp: 'fourier',
       dateStr: dateStr
     });
   }
@@ -2164,6 +2202,7 @@ refreshDashboard = async function () {
 
         if (newData) {
           chart.data = newData;
+          if (chart.type === 'fourier') updateIVTrendFromFourier(chart.inputTicker, newData);
           needsRender = true;
         }
       }
