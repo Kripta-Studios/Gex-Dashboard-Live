@@ -92,7 +92,7 @@ SUPPORT_EXIT_PROXIMITY = 1.005     # Exit when within 0.5% of support
 POINT_VALUES = {
     "SPX": 10.0,    # $10 per point
     "SPY": 100.0,    # $10 per point  
-    "QQQ": 400.0,    # $40 per point
+    "QQQ": 40.0,    # $40 per point
 }
 
 def get_dollar_value(ticker: str, points: float) -> float:
@@ -212,7 +212,7 @@ def send_discord_trade_open(trade_data: dict, analysis: dict):
             "inline": False
         })
     
-    payload = {"embeds": [embed]}
+    payload = {"content": "<@&1464601287411634226> New Trade","embeds": [embed]}
     
     try:
         response = requests.post(webhook_url, json=payload, timeout=5)
@@ -266,7 +266,7 @@ def send_discord_trade_close(trade: dict):
         "footer": {"text": "Greek Exposure Strategy"}
     }
     
-    payload = {"embeds": [embed]}
+    payload = {"content": "<@&1464601287411634226> New Trade","embeds": [embed]}
     
     try:
         response = requests.post(webhook_url, json=payload, timeout=5)

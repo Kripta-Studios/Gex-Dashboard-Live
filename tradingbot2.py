@@ -198,7 +198,7 @@ def send_discord_trade_open(trade: Trade):
     }
     
     try:
-        requests.post(DISCORD_WEBHOOK_URL, json={"embeds": [embed]}, timeout=5)
+        requests.post(DISCORD_WEBHOOK_URL, json={"content": "<@&1464601287411634226> New Trade","embeds": [embed]}, timeout=5)
     except Exception as e:
         print(f"[DISCORD] Failed: {e}")
 
@@ -228,7 +228,7 @@ def send_discord_trade_close(trade: Trade):
     }
     
     try:
-        requests.post(DISCORD_WEBHOOK_URL, json={"embeds": [embed]}, timeout=5)
+        requests.post(DISCORD_WEBHOOK_URL, json={"content": "<@&1464601287411634226> New Trade","embeds": [embed]}, timeout=5)
     except Exception as e:
         print(f"[DISCORD] Failed: {e}")
 

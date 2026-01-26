@@ -96,7 +96,7 @@ def send_discord_trade_open(trade: "Trade"):
     }
     
     try:
-        response = requests.post(DISCORD_WEBHOOK_URL, json={"embeds": [embed]}, timeout=5)
+        response = requests.post(DISCORD_WEBHOOK_URL, json={"content": "<@&1464601287411634226> New Trade","embeds": [embed]}, timeout=5)
         if response.status_code >= 400:
             print(f"[DISCORD] Error: {response.status_code}")
     except Exception as e:
@@ -138,7 +138,7 @@ def send_discord_trade_close(trade: "Trade"):
     }
     
     try:
-        response = requests.post(DISCORD_WEBHOOK_URL, json={"embeds": [embed]}, timeout=5)
+        response = requests.post(DISCORD_WEBHOOK_URL, json={"content": "<@&1464601287411634226> New Trade","embeds": [embed]}, timeout=5)
         if response.status_code >= 400:
             print(f"[DISCORD] Error: {response.status_code}")
     except Exception as e:
@@ -190,7 +190,7 @@ class Trade:
     stop_level: float
     highest_pnl_pct: float = 0.0 
 
-POINT_VALUES = {"SPX": 10.0, "SPY": 100.0, "QQQ": 400.0}
+POINT_VALUES = {"SPX": 10.0, "SPY": 100.0, "QQQ": 40.0}
 
 # ============================================================================
 # HELPER FUNCTIONS
