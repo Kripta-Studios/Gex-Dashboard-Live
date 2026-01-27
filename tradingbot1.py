@@ -32,6 +32,18 @@ except:
 
 load_dotenv()
 
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    handlers=[
+        logging.FileHandler('tradingbot1.log'),  # Archivo
+        logging.StreamHandler()                   # Console
+    ]
+)
+logger = logging.getLogger(__name__)
+
 # ============================================================================
 # CONFIGURATION
 # ============================================================================
@@ -41,10 +53,14 @@ IB_CHARTS_DIR = "/home/Option-Greeks-Plotting-Discord-Bot/ib_charts"  # Real-tim
 IB_BACKTEST_DIR = "/home/Option-Greeks-Plotting-Discord-Bot/ib_backtest"  # Historical with volume_profile
 TRADES_OUTPUT_DIR = "./trades_live"
 
+STATE_FILE = "./state_bot1.json"
+FORCE_EXIT_TIME = dt_time(15, 55)
+LAST_ENTRY_TIME = dt_time(15, 50)
+
 TICKERS = ["SPX", "SPY", "QQQ"]
 
 # Trading hours (NYC)
-MARKET_OPEN = dt_time(9, 20)
+MARKET_OPEN = dt_time(3, 20)
 MARKET_CLOSE = dt_time(16, 20)
 IB_FORMATION_END = dt_time(10, 30)
 
@@ -200,6 +216,66 @@ def get_dollar_value(ticker: str, points: float) -> float:
     """Calculate dollar value of trade based on ticker."""
     return points * POINT_VALUES.get(ticker, 10.0)
 
+def save_active_trade(trade: Optional[Trade]):
+    """Guardar trade activo al disco inmediatamente después de abrir."""
+    if trade is None:
+        if os.path.exists(STATE_FILE):
+            os.remove(STATE_FILE)
+    else:
+        with open(STATE_FILE, 'w') as f:
+            json.dump(asdict(trade), f, indent=2)
+        logger.info(f"[PERSISTENCE] ✅ Saved: {trade.direction} {trade.ticker}")
+
+def load_active_trade() -> Optional[Trade]:
+    """Cargar trade activo al iniciar el bot."""
+    if not os.path.exists(STATE_FILE):
+        return None
+
+    try:
+        with open(STATE_FILE, 'r') as f:
+            data = json.load(f)
+
+        # --- RECONSTRUCCIÓN DE OBJETOS ---
+        
+        # 1. Entry (Obligatorio) - Nombre correcto: TradeEntry
+        if 'entry' in data and isinstance(data['entry'], dict):
+            data['entry'] = TradeEntry(**data['entry'])
+            
+        # 2. Signals (Obligatorio) - Nombre correcto: TradeSignals
+        if 'signals' in data and isinstance(data['signals'], dict):
+            data['signals'] = TradeSignals(**data['signals'])
+
+        # 3. Levels (Obligatorio) - Nombre correcto: TradeLevels
+        if 'levels' in data and isinstance(data['levels'], dict):
+            data['levels'] = TradeLevels(**data['levels'])
+
+        # 4. Confluence (Obligatorio) - Nombre correcto: Confluence
+        if 'confluence' in data and isinstance(data['confluence'], dict):
+            data['confluence'] = Confluence(**data['confluence'])
+
+        # 5. Exit (Opcional) - Nombre correcto: TradeExit
+        if data.get('exit') and isinstance(data['exit'], dict):
+            data['exit'] = TradeExit(**data['exit'])
+        else:
+            data['exit'] = None # Asegurar que sea None si no existe
+
+        # 6. PnL (Opcional) - Nombre correcto: TradePnL
+        if data.get('pnl') and isinstance(data['pnl'], dict):
+            data['pnl'] = TradePnL(**data['pnl'])
+        else:
+            data['pnl'] = None
+
+        # --- CREAR EL OBJETO MAESTRO ---
+        trade = Trade(**data)
+        
+        logger.info(f"[PERSISTENCE] ✅ RECOVERED: {trade.direction} {trade.ticker}")
+        return trade
+
+    except Exception as e:
+        logger.error(f"[PERSISTENCE] ❌ Error reconstruyendo trade: {e}")
+        # Si el archivo está corrupto o incompatible, es mejor ignorarlo 
+        # para que el bot pueda arrancar (aunque olvide el trade anterior)
+        return None
 # ============================================================================
 # DISCORD NOTIFICATIONS
 # ============================================================================
@@ -526,7 +602,7 @@ def should_exit_trade(trade: Trade, current_price: float, current_time: datetime
     else:
         pnl_pct = (entry_price - current_price) / entry_price
     
-    minutes_held = (current_time - entry_time).total_seconds() / 60
+    minutes_held = (current_time.replace(tzinfo=None) - entry_time).total_seconds() / 60
     
     # Emergency stop (always active)
     if pnl_pct < -EMERGENCY_STOP_LOSS_PCT:
@@ -603,8 +679,8 @@ async def main_loop():
     print(f"Tickers: {TICKERS}")
     print(f"Trading Hours: {MARKET_OPEN} - {MARKET_CLOSE} NYC")
     print("=" * 60)
-    
-    current_trade: Optional[Trade] = None
+    logger.info("[STARTUP] Bot starting...")
+    current_trade = load_active_trade()
     trade_counter = 0
     all_trades: List[Trade] = []
     min_vanna_states = {t: MinVannaState() for t in TICKERS}
@@ -718,7 +794,8 @@ async def main_loop():
             
             # Check confluence
             confluence = check_multi_ticker_confluence(ticker_signals)
-            
+            if current_time.time() >= FORCE_EXIT_TIME:
+                return True, "EOD Force Exit"
             # Manage existing trade
             if current_trade:
                 ticker = current_trade.ticker
@@ -754,11 +831,12 @@ async def main_loop():
                         
                         dollar_pnl = get_dollar_value(ticker, pnl_points)
                         print(f"  [CLOSED] {current_trade.direction} {ticker} @ {analysis['spot_price']:.2f} | P&L: ${dollar_pnl:+.2f} | {exit_reason}")
-                        
+                        logger.info(f"[PERSISTENCE] Closed trade to disk")
                         send_discord_trade_close(asdict(current_trade))
                         
                         last_trade_exit_time = current_time
                         current_trade = None
+                        save_active_trade(None)
             
             # Look for new entry
             if current_trade is None:
@@ -843,7 +921,8 @@ async def main_loop():
                     )
                     
                     print(f"  [OPENED] {best_signal} {best_ticker} @ {analysis['spot_price']:.2f} (conf: {best_confidence:.0%})")
-                    
+                    logger.info(f"[PERSISTENCE] Saved trade to disk")
+                    save_active_trade(current_trade)
                     send_discord_trade_open(asdict(current_trade), analysis)
             
             await asyncio.sleep(DATA_CHECK_INTERVAL_SECONDS)

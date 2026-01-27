@@ -32,6 +32,19 @@ except:
 
 load_dotenv()
 
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    handlers=[
+        logging.FileHandler('tradingbot2.log'),  # Archivo
+        logging.StreamHandler()                   # Console
+    ]
+)
+logger = logging.getLogger(__name__)
+
+
 # ============================================================================
 # CONFIGURATION
 # ============================================================================
@@ -41,10 +54,12 @@ IB_CHARTS_DIR = "/home/Option-Greeks-Plotting-Discord-Bot/ib_charts"  # Real-tim
 IB_BACKTEST_DIR = "/home/Option-Greeks-Plotting-Discord-Bot/ib_backtest"  # Historical with volume_profile
 TRADES_OUTPUT_DIR = "./trades_live2"
 
+STATE_FILE = "./state_bot2.json"
+
 TICKERS = ["SPX", "SPY", "QQQ"]
 
 # Trading hours (NYC)
-MARKET_OPEN = dt_time(9, 20)
+MARKET_OPEN = dt_time(3, 20)
 MARKET_CLOSE = dt_time(16, 20)
 FORCE_EXIT_TIME = dt_time(15, 55)
 IB_FORMATION_END = dt_time(10, 30)
@@ -162,6 +177,54 @@ def is_near(price: float, level: float, pct: float = PROXIMITY_PCT) -> bool:
         return False
     return abs(price - level) / level <= pct
 
+def save_active_trade(trade: Optional[Trade]):
+    """Guardar trade activo al disco inmediatamente después de abrir."""
+    if trade is None:
+        if os.path.exists(STATE_FILE):
+            os.remove(STATE_FILE)
+    else:
+        with open(STATE_FILE, 'w') as f:
+            json.dump(asdict(trade), f, indent=2)
+        logger.info(f"[PERSISTENCE] ✅ Saved: {trade.direction} {trade.ticker}")
+
+def load_active_trade() -> Optional[Trade]:
+    """Cargar trade activo al iniciar el bot."""
+    if not os.path.exists(STATE_FILE):
+        return None
+
+    try:
+        with open(STATE_FILE, 'r') as f:
+            data = json.load(f)
+
+        # --- RECONSTRUCCIÓN DE OBJETOS (Específico para Bot 2) ---
+
+        # 1. Entry (Obligatorio) - Nombre correcto: TradeEntry
+        if 'entry' in data and isinstance(data['entry'], dict):
+            data['entry'] = TradeEntry(**data['entry'])
+
+        # 2. Exit (Opcional) - Nombre correcto: TradeExit
+        if data.get('exit') and isinstance(data['exit'], dict):
+            data['exit'] = TradeExit(**data['exit'])
+        else:
+            data['exit'] = None
+
+        # 3. PnL (Opcional) - Nombre correcto: TradePnL
+        if data.get('pnl') and isinstance(data['pnl'], dict):
+            data['pnl'] = TradePnL(**data['pnl'])
+        else:
+            data['pnl'] = None
+
+        # --- CREAR EL OBJETO MAESTRO ---
+        # Nota: highest_pnl_pct tiene valor por defecto en la clase, 
+        # así que no fallará si no está en el JSON antiguo.
+        trade = Trade(**data)
+
+        logger.info(f"[PERSISTENCE] ✅ RECOVERED: {trade.direction} {trade.ticker}")
+        return trade
+
+    except Exception as e:
+        logger.error(f"[PERSISTENCE] ❌ Error reconstruyendo trade: {e}")
+        return None
 # ============================================================================
 # DISCORD NOTIFICATIONS
 # ============================================================================
@@ -461,8 +524,8 @@ async def main_loop():
     print(f"Tickers: {TICKERS}")
     print(f"Trading Hours: {MARKET_OPEN} - {MARKET_CLOSE} NYC")
     print("=" * 60)
-    
-    current_trade: Optional[Trade] = None
+    logger.info("[STARTUP] Bot starting...")
+    current_trade = load_active_trade()
     trade_counter = 0
     all_trades: List[Trade] = []
     market_states: Dict[str, MarketState] = {t: None for t in TICKERS}
@@ -607,8 +670,11 @@ async def main_loop():
                         
                         emoji = "✅" if val > 0 else "❌"
                         print(f"  {emoji} CLOSED {t} | {exit_reason} | ${val:+.2f}")
+                        logger.info(f"[PERSISTENCE] Closed trade to disk")
                         send_discord_trade_close(current_trade)
                         current_trade = None
+
+                        save_active_trade(None)
             
             # Look for new entry
             if current_trade is None and curr_time_time < LAST_ENTRY_TIME:
@@ -642,6 +708,8 @@ async def main_loop():
                     
                     print(f"  🔔 OPEN {direct} {t} @ {current_spots[t]:.2f}")
                     print(f"  {details}")
+                    logger.info(f"[PERSISTENCE] Saved trade to disk")
+                    save_active_trade(current_trade)
                     send_discord_trade_open(current_trade)
             
             await asyncio.sleep(DATA_CHECK_INTERVAL_SECONDS)
