@@ -1,0 +1,18 @@
+[Unit]
+Description=Option Greeks Plotting Discord Bot
+After=network.target
+
+[Service]
+Type=notify
+ExecStart=/usr/bin/python3 /home/Option-Greeks-Plotting-Discord-Bot/main.py
+WorkingDirectory=/home/Option-Greeks-Plotting-Discord-Bot
+User=root
+RuntimeMaxSec=21600
+Restart=always
+RestartSec=5
+WatchdogSec=30min
+StandardOutput=append:/root/salida.log
+StandardError=append:/root/salida.log
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,21 @@
+[Unit]
+Description=Servidor de Datos Financieros (Puerto 8609)
+After=network.target
+
+[Service]
+# Usuario que ejecutará el script (root o tu usuario normal)
+User=root
+# Directorio de trabajo (IMPORTANTE: para que encuentre la carpeta json_data)
+WorkingDirectory=/home/Option-Greeks-Plotting-Discord-Bot
+# Comando de ejecución (usa la ruta completa a python3)
+ExecStart=/usr/bin/python3 /home/Option-Greeks-Plotting-Discord-Bot/servidor.py
+
+# Reiniciar siempre si se cae
+Restart=always
+RestartSec=5
+
+# Opcional: Para que los logs de Python se vean inmediatamente en journalctl
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

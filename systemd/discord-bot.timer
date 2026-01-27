@@ -1,0 +1,10 @@
+[Unit]
+Description=Reinicia Discord Bot cada 12 horas
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=12h
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,15 @@
+[Unit]
+Description=Initial Balance Chart Service
+After=network.target
+
+[Service]
+User=root
+Group=root
+WorkingDirectory=/home/Option-Greeks-Plotting-Discord-Bot
+ExecStart=/usr/bin/python3 /home/Option-Greeks-Plotting-Discord-Bot/ib_service.py
+Restart=always
+RestartSec=5
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target
