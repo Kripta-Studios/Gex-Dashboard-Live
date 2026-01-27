@@ -704,7 +704,7 @@ async def main_loop():
                 active_levels[t] = [l for l in raw_levels if l > 0 and abs(l - spot)/spot <= MAX_LEVEL_DIST_PCT]
                 
                 print(f"  [{t}] Spot: {spot:.2f} | Gamma: {market_states[t].gamma_regime if market_states[t] else 'N/A'}")
-                logger.debug(f"[{t}] Market state: gamma={market_states[t].gamma_regime}, dgex={market_states[t].dgex_regime}, min_vanna={market_states[t].min_vanna_level:.2f if market_states[t].min_vanna_level else 'None'}")
+                logger.debug(f"[{t}] Market state: gamma={market_states[t].gamma_regime}, dgex={market_states[t].dgex_regime}, min_vanna={f'{market_states[t].min_vanna_level:.2f}' if market_states[t].min_vanna_level else 'None'}")
             
             # Manage open trade
             if current_trade:

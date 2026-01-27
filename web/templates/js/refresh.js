@@ -7,6 +7,9 @@
  * Refresh all charts in the dashboard
  */
 async function refreshDashboard() {
+    updateMarketSpots();
+    updateNYTime();
+
     const currentTab = tabs.find(t => t.id === currentTabId);
     if (!currentTab || !currentTab.charts || currentTab.charts.length === 0) return;
 
