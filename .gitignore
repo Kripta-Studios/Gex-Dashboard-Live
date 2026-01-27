@@ -12,3 +12,6 @@ servidor_logs.txt
 cat_json.py
 ib_backtest/
 trades/
+*.log
+trades_live/
+*.json
