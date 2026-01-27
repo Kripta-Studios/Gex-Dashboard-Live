@@ -69,7 +69,20 @@ function grantAccess(role) {
         if (ibBtn) ibBtn.style.display = "inline-block";
     }
 
-    init();
+    // Call init only if it's defined (script.js must be loaded first)
+    if (typeof init === 'function') {
+        init();
+    } else {
+        // Wait for init to become available
+        const waitForInit = setInterval(() => {
+            if (typeof init === 'function') {
+                clearInterval(waitForInit);
+                init();
+            }
+        }, 50);
+        // Timeout after 5 seconds
+        setTimeout(() => clearInterval(waitForInit), 5000);
+    }
 }
 
 /**
@@ -87,10 +100,13 @@ function checkSession() {
     }
 }
 
-// Initialize session check on load
-(function () {
-    checkSession();
-})();
+// Initialize session check after DOM is fully loaded
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', checkSession);
+} else {
+    // DOM already loaded, but wait a tick for other scripts
+    setTimeout(checkSession, 0);
+}
 
 // Enter key login handler
 document.getElementById("login-pass")?.addEventListener("keypress", function (e) {
