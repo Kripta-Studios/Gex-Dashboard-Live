@@ -1,18 +1,23 @@
 import time
 import functools
+import sys
+import os
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 from os import environ, makedirs
-import os
 import shutil
+
+# Add root directory to path for imports
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from dotenv import load_dotenv
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
-from data_plotting import get_options_data
+from tools.data_plotting import get_options_data
 from cachetools import TTLCache
 import discord
 import asyncio
-from watchdog_notify import send_watchdog
+from tools.watchdog_notify import send_watchdog
 
 # Load environment variables
 load_dotenv()

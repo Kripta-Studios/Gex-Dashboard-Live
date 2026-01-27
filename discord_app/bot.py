@@ -2,7 +2,12 @@ import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 import os
-from discord_send_plots import request_plots, set_discord_client
+import sys
+
+# Add parent directory to path for imports
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from discord_app.discord_send_plots import request_plots, set_discord_client
 
 load_dotenv()
 DISCORD_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
@@ -55,3 +60,4 @@ async def load(ctx, ticker: str, expiration: str, greek: str):
 
 def run_bot():
     bot.run(DISCORD_TOKEN)
+

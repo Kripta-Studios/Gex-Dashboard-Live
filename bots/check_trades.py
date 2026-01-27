@@ -17,9 +17,10 @@ except:
     import pytz
     NY_TZ = pytz.timezone("America/New_York")
 
-# Paths to state files
-STATE_BOT1 = "./state_bot1.json"
-STATE_BOT2 = "./state_bot2.json"
+# Paths to state files - relative to this script's directory
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+STATE_BOT1 = os.path.join(SCRIPT_DIR, "state_bot1.json")
+STATE_BOT2 = os.path.join(SCRIPT_DIR, "state_bot2.json")
 GREEK_DATA_DIR = "/home/Option-Greeks-Plotting-Discord-Bot/json_data"
 
 # Point values for P&L calculation

@@ -12,10 +12,15 @@ from datetime import datetime
 
 # --- CONFIGURATION ---
 PORT = 8609
-DATA_FOLDER = "json_data"
-TEMPLATE_FOLDER = "templates"
+
+# Get the project root directory (parent of services/)
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
+
+DATA_FOLDER = os.path.join(PROJECT_ROOT, "json_data")
+TEMPLATE_FOLDER = os.path.join(PROJECT_ROOT, "web", "templates")
 # Cambio solicitado: nombre del archivo de logs
-LOG_FILE = "servidor_logs.txt"
+LOG_FILE = os.path.join(PROJECT_ROOT, "servidor_logs.txt")
 MOVIE_DIRECTORY = "/home/kripta/Movies"
 MOVIE_FILENAME = "oppenheimer.mp4"
 

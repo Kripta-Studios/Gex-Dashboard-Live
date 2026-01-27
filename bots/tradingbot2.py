@@ -34,11 +34,14 @@ load_dotenv()
 
 import logging
 
+# Script directory for relative paths
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s [%(levelname)s] %(message)s',
     handlers=[
-        logging.FileHandler('tradingbot2.log'),  # Archivo
+        logging.FileHandler(os.path.join(SCRIPT_DIR, 'tradingbot2.log')),  # Archivo
         logging.StreamHandler()                   # Console
     ]
 )
@@ -52,9 +55,9 @@ logger = logging.getLogger(__name__)
 GREEK_DATA_DIR = "/home/Option-Greeks-Plotting-Discord-Bot/json_data"
 IB_CHARTS_DIR = "/home/Option-Greeks-Plotting-Discord-Bot/ib_charts"  # Real-time from ib_service.py
 IB_BACKTEST_DIR = "/home/Option-Greeks-Plotting-Discord-Bot/ib_backtest"  # Historical with volume_profile
-TRADES_OUTPUT_DIR = "./trades_live2"
+TRADES_OUTPUT_DIR = os.path.join(SCRIPT_DIR, "trades_live2")
 
-STATE_FILE = "./state_bot2.json"
+STATE_FILE = os.path.join(SCRIPT_DIR, "state_bot2.json")
 
 TICKERS = ["SPX", "SPY", "QQQ"]
 

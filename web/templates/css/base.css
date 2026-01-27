@@ -1,0 +1,73 @@
+/**
+ * Base styles and CSS variables
+ * Contains: themes, colors, typography
+ */
+
+:root {
+  /* --- FONDO Y PANELES --- */
+  --bg-color: #050505;
+  --panel-bg: #121212;
+  --text-main: #ffffff;
+  --text-dim: #a0a0a0;
+  --border: transparent;
+
+  /* --- COLORES DE INTENSIDAD (HEATMAP - DEFAULT) --- */
+  --pos-low-rgb: 0, 96, 100; /* #006064 */
+  --pos-high: #E5BE01; /* Amarillo GEX */
+  --neg-low-rgb: 74, 20, 140; /* #4a148c */
+  --neg-high: #ff00ff; /* Magenta GEX */
+
+  /* Líneas de referencia */
+  --line-spot: #ffffff;
+  --line-max-pos: #00ff00;
+  --line-max-neg: #ff0000;
+
+  /* UI Accents */
+  --accent-blue: #007bff;
+  --accent-green: #00ff00;
+  --accent-red: #ff0000;
+  --table-hover: rgba(255, 255, 255, 0.05);
+}
+
+/* --- TEMA ALTERNATIVO (AZUL / NARANJA) --- */
+body.palette-alt {
+  --pos-low-rgb: 0, 120, 215;
+  --pos-high: #00bfff; /* Cyan */
+  --neg-low-rgb: 200, 80, 0;
+  --neg-high: #ff8c00; /* Naranja */
+  --line-max-pos: #00bfff;
+  --line-max-neg: #ff8c00;
+  --accent-green: #00bfff;
+  --accent-red: #ff8c00;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  font-family: "Inter", sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100dvh;
+  padding-top: env(safe-area-inset-top);
+  overflow: hidden;
+  transition: background-color 0.3s;
+}
+
+/* --- SCROLLBAR --- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0d1117;
+}
+::-webkit-scrollbar-thumb {
+  background: #30363d;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

@@ -3,12 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>GEX Dashboard Pro - Login</title>
+    
+    <!-- External Libraries -->
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Modular CSS -->
     <link rel="stylesheet" href="styles.css">
-	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -143,6 +149,63 @@
         </div>
     </div>
 
-    </div> <script src="script.js"></script>
+    </div>
+
+    <!-- 
+    ============================================
+    MODULAR JAVASCRIPT - Load Order Matters!
+    ============================================
+    The scripts below are loaded in dependency order.
+    Each module contains specific functionality.
+    -->
+    
+    <!-- 1. State - Global variables (must be first) -->
+    <script src="js/state.js"></script>
+    
+    <!-- 2. API - Data fetching functions -->
+    <script src="js/api.js"></script>
+    
+    <!-- 3. UI - User interface helpers -->
+    <script src="js/ui.js"></script>
+    
+    <!-- 4. Tabs - Tab management -->
+    <script src="js/tabs.js"></script>
+    
+    <!-- 5. Drag & Drop - Panel reordering -->
+    <script src="js/dragdrop.js"></script>
+    
+    <!-- 6. Charts - Chart panel dispatcher -->
+    <script src="js/charts.js"></script>
+    
+    <!-- 7. Heatmap - Greek exposure heatmaps -->
+    <script src="js/heatmap.js"></script>
+    
+    <!-- 8. Fourier - Fourier analysis charts -->
+    <script src="js/fourier.js"></script>
+    
+    <!-- 9. IB - Initial Balance charts -->
+    <script src="js/ib.js"></script>
+    
+    <!-- 10. Handlers - Form handling -->
+    <script src="js/handlers.js"></script>
+    
+    <!-- 11. History - Time machine controls -->
+    <script src="js/history.js"></script>
+    
+    <!-- 12. Layout - Save/load layouts -->
+    <script src="js/layout.js"></script>
+    
+    <!-- 13. Refresh - Dashboard refresh -->
+    <script src="js/refresh.js"></script>
+    
+    <!-- 14. Windows - Detached windows -->
+    <script src="js/windows.js"></script>
+    
+    <!-- 15. Auth - Authentication -->
+    <script src="js/auth.js"></script>
+    
+    <!-- 16. Init - Application initialization (must be last) -->
+    <script src="js/init.js"></script>
+
 </body>
 </html>

@@ -1,0 +1,18 @@
+/**
+ * Main stylesheet - imports all modular CSS files
+ * 
+ * Structure:
+ * - base.css:       Variables, themes, typography
+ * - layout.css:     Main layout, tabs
+ * - components.css: Buttons, inputs, market monitor
+ * - charts.css:     Chart panels, heatmap, regime
+ * - login.css:      Login screen
+ * - modes.css:      Zen mode, detached modes
+ */
+
+@import url('./css/base.css');
+@import url('./css/layout.css');
+@import url('./css/components.css');
+@import url('./css/charts.css');
+@import url('./css/login.css');
+@import url('./css/modes.css');

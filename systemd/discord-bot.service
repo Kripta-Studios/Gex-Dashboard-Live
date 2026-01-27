@@ -4,9 +4,12 @@ After=network.target
 
 [Service]
 Type=notify
-ExecStart=/usr/bin/python3 /home/Option-Greeks-Plotting-Discord-Bot/main.py
 WorkingDirectory=/home/Option-Greeks-Plotting-Discord-Bot
 User=root
+
+# ACTUALIZADO para nueva estructura
+ExecStart=/usr/bin/python3 /home/Option-Greeks-Plotting-Discord-Bot/discord_app/main.py
+
 RuntimeMaxSec=21600
 Restart=always
 RestartSec=5

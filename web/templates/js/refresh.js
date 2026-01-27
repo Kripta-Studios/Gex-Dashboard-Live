@@ -1,0 +1,79 @@
+/**
+ * Refresh Module
+ * Dashboard refresh and data update logic
+ */
+
+/**
+ * Refresh all charts in the dashboard
+ */
+async function refreshDashboard() {
+    const currentTab = tabs.find(t => t.id === currentTabId);
+    if (!currentTab || !currentTab.charts || currentTab.charts.length === 0) return;
+
+    // Refresh heatmap charts
+    const heatmaps = currentTab.charts.filter(c => !c.type || c.type === 'heatmap');
+
+    if (heatmaps.length > 0) {
+        const requestList = heatmaps.map(c => ({
+            ticker: c.inputTicker,
+            exp: c.inputExp,
+            time: currentHistoryTimeEST
+        }));
+
+        const uniqueRequests = [...new Set(requestList.map(JSON.stringify))].map(JSON.parse);
+
+        try {
+            const response = await fetch('/get_batch', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(uniqueRequests)
+            });
+
+            const batchData = await response.json();
+
+            heatmaps.forEach(chart => {
+                const dataKey = `${chart.inputTicker.toUpperCase()}_${chart.inputExp.toLowerCase()}`;
+                if (batchData[dataKey]) {
+                    chart.data = batchData[dataKey];
+                }
+            });
+        } catch (e) {
+            console.error("Batch update failed", e);
+        }
+    }
+
+    // Refresh Fourier and IB charts
+    const specialCharts = currentTab.charts.filter(c => c.type === 'fourier' || c.type === 'ib');
+
+    if (specialCharts.length > 0) {
+        const now = new Date();
+        const yyyy = now.getFullYear();
+        const mm = String(now.getMonth() + 1).padStart(2, '0');
+        const dd = String(now.getDate()).padStart(2, '0');
+        const todayStr = `${yyyy}${mm}${dd}`;
+
+        let needsRender = false;
+
+        for (let chart of specialCharts) {
+            if (chart.dateStr === todayStr) {
+                let newData = null;
+
+                if (chart.type === 'fourier') {
+                    newData = await fetchFourierData(chart.inputTicker, chart.dateStr);
+                } else if (chart.type === 'ib') {
+                    newData = await fetchIBData(chart.inputTicker, chart.dateStr);
+                }
+
+                if (newData) {
+                    chart.data = newData;
+                    if (chart.type === 'fourier') updateIVTrendFromFourier(chart.inputTicker, newData);
+                    needsRender = true;
+                }
+            }
+        }
+    }
+
+    // Re-render all charts
+    renderAllCharts();
+    updateNYTime();
+}

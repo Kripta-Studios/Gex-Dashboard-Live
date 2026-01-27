@@ -7,23 +7,40 @@ Genera gráficos visuales de los trades ejecutados en el backtest:
 - Niveles de S/R durante cada trade
 - Perfil de volumen usado en la sesión
 
-Uso: python plot_backtest.py
+Uso: 
+    python plot_backtest.py                    # Default: backtest trades
+    python plot_backtest.py --source backtest  # Backtest trades
+    python plot_backtest.py --source bot1      # TradingBot1 live trades
+    python plot_backtest.py --source bot2      # TradingBot2 live trades
+    python plot_backtest.py --source all       # All sources combined
 """
 
 import os
+import sys
 import json
 import glob
 import re
+import argparse
 from datetime import datetime
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from matplotlib.lines import Line2D
 import numpy as np
 
+# Script directory for relative paths
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
+
 # Directorios
 IB_DATA_DIR = "/home/Option-Greeks-Plotting-Discord-Bot/ib_backtest"
-TRADES_DIR = "./trades"
-PLOTS_OUTPUT_DIR = "./plots"
+PLOTS_OUTPUT_DIR = os.path.join(SCRIPT_DIR, "plots")
+
+# Trade directories by source
+TRADES_DIRS = {
+    "backtest": os.path.join(SCRIPT_DIR, "trades"),
+    "bot1": os.path.join(PROJECT_ROOT, "bots", "trades_live"),
+    "bot2": os.path.join(PROJECT_ROOT, "bots", "trades_live2"),
+}
 
 # Tickers a procesar
 TICKERS = ["SPX", "SPY", "QQQ"]
@@ -75,29 +92,43 @@ def load_volume_profile(ticker: str, date_str: str) -> dict:
         return {}
 
 
-def load_trades_for_day(date_str: str) -> list:
-    """Carga todos los trades para un día específico."""
+def load_trades_for_day(date_str: str, trade_dirs: list) -> list:
+    """Carga todos los trades para un día específico desde múltiples directorios."""
     trades = []
     
-    pattern = os.path.join(TRADES_DIR, f"trade_*_{date_str[:8]}*.json")
-    files = glob.glob(pattern)
-    
-    # También buscar formato alternativo
-    if not files:
-        pattern = os.path.join(TRADES_DIR, "trade_*.json")
-        files = glob.glob(pattern)
-    
-    for filepath in files:
-        try:
-            with open(filepath, 'r') as f:
-                trade = json.load(f)
-            
-            # Verificar que el trade es del día correcto
-            entry_time = trade.get("entry", {}).get("time", "")
-            if date_str in entry_time.replace("-", ""):
-                trades.append(trade)
-        except Exception as e:
+    for trades_dir in trade_dirs:
+        if not os.path.exists(trades_dir):
             continue
+            
+        # Buscar trades con diferentes patrones de nombre
+        patterns = [
+            os.path.join(trades_dir, f"trade_*_{date_str[:8]}*.json"),
+            os.path.join(trades_dir, f"live_trade_*_{date_str[:4]}-{date_str[4:6]}-{date_str[6:8]}*.json"),
+            os.path.join(trades_dir, "*.json"),  # Fallback
+        ]
+        
+        files_found = set()
+        for pattern in patterns:
+            files_found.update(glob.glob(pattern))
+        
+        for filepath in files_found:
+            try:
+                with open(filepath, 'r') as f:
+                    trade = json.load(f)
+                
+                # Verificar que el trade es del día correcto
+                entry_time = trade.get("entry", {}).get("time", "")
+                if date_str in entry_time.replace("-", ""):
+                    # Añadir source info para identificar origen
+                    if "trades_live2" in trades_dir:
+                        trade["_source"] = "bot2"
+                    elif "trades_live" in trades_dir:
+                        trade["_source"] = "bot1"
+                    else:
+                        trade["_source"] = "backtest"
+                    trades.append(trade)
+            except Exception as e:
+                continue
     
     return trades
 
@@ -388,34 +419,84 @@ def get_available_dates() -> list:
 def main():
     """Punto de entrada principal."""
     
+    # Parse arguments
+    parser = argparse.ArgumentParser(
+        description="Genera gráficos visuales de trades ejecutados",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Ejemplos:
+  python plot_backtest.py                    # Usa trades del backtest
+  python plot_backtest.py --source bot1      # Usa trades de TradingBot1
+  python plot_backtest.py --source bot2      # Usa trades de TradingBot2
+  python plot_backtest.py --source all       # Combina todas las fuentes
+        """
+    )
+    parser.add_argument(
+        "--source", "-s",
+        choices=["backtest", "bot1", "bot2", "all"],
+        default="backtest",
+        help="Fuente de trades a plotear (default: backtest)"
+    )
+    parser.add_argument(
+        "--date", "-d",
+        type=str,
+        default=None,
+        help="Fecha específica a plotear (formato: YYYYMMDD)"
+    )
+    args = parser.parse_args()
+    
+    # Determinar directorios de trades según source
+    if args.source == "all":
+        trade_dirs = list(TRADES_DIRS.values())
+        source_name = "ALL SOURCES"
+    else:
+        trade_dirs = [TRADES_DIRS[args.source]]
+        source_name = args.source.upper()
+    
     # Crear directorio de output
     if not os.path.exists(PLOTS_OUTPUT_DIR):
         os.makedirs(PLOTS_OUTPUT_DIR, exist_ok=True)
     
     print("=" * 60)
-    print("BACKTEST PLOT GENERATOR")
+    print("TRADE PLOT GENERATOR")
     print("=" * 60)
+    print(f"Source: {source_name}")
+    print(f"Trade Dirs: {trade_dirs}")
     print(f"IB Data: {IB_DATA_DIR}")
-    print(f"Trades: {TRADES_DIR}")
     print(f"Output: {PLOTS_OUTPUT_DIR}")
     print("=" * 60)
     
     # Obtener fechas disponibles
-    dates = get_available_dates()
+    if args.date:
+        dates = [args.date]
+    else:
+        dates = get_available_dates()
     
     if not dates:
         print("[ERROR] No IB data found!")
         return
     
-    print(f"\nFechas encontradas: {len(dates)}")
-    print(f"Rango: {dates[0]} - {dates[-1]}")
+    print(f"\nFechas a procesar: {len(dates)}")
+    if len(dates) > 1:
+        print(f"Rango: {dates[0]} - {dates[-1]}")
+    
+    total_trades = 0
     
     for date_str in dates:
         print(f"\n[{date_str}] Procesando...")
         
-        # Cargar trades del día
-        trades = load_trades_for_day(date_str)
-        print(f"  Trades encontrados: {len(trades)}")
+        # Cargar trades del día desde los directorios seleccionados
+        trades = load_trades_for_day(date_str, trade_dirs)
+        total_trades += len(trades)
+        
+        # Mostrar breakdown por source
+        sources = {}
+        for t in trades:
+            src = t.get("_source", "unknown")
+            sources[src] = sources.get(src, 0) + 1
+        
+        source_info = ", ".join([f"{k}:{v}" for k, v in sources.items()]) if sources else "ninguno"
+        print(f"  Trades encontrados: {len(trades)} ({source_info})")
         
         for ticker in TICKERS:
             # Cargar datos de velas
@@ -425,10 +506,15 @@ def main():
                 print(f"  [{ticker}] Sin datos de velas")
                 continue
             
-            print(f"  [{ticker}] {len(candles)} velas")
+            # Filtrar trades por ticker
+            ticker_trades = [t for t in trades if t.get("ticker") == ticker]
+            if not ticker_trades:
+                continue
+                
+            print(f"  [{ticker}] {len(candles)} velas, {len(ticker_trades)} trades")
             
             # Generar gráfico de velas con trades
-            candles_output = os.path.join(PLOTS_OUTPUT_DIR, f"candles_{ticker}_{date_str}.png")
+            candles_output = os.path.join(PLOTS_OUTPUT_DIR, f"candles_{ticker}_{date_str}_{args.source}.png")
             plot_candles_with_trades(ticker, date_str, candles, trades, candles_output)
             
             # Generar perfil de volumen
@@ -438,10 +524,10 @@ def main():
                 plot_volume_profile(ticker, date_str, vp_data, vp_output)
     
     print("\n" + "=" * 60)
-    print(f"COMPLETADO - Gráficos guardados en {PLOTS_OUTPUT_DIR}")
+    print(f"COMPLETADO - {total_trades} trades procesados")
+    print(f"Gráficos guardados en {PLOTS_OUTPUT_DIR}")
     print("=" * 60)
 
 
 if __name__ == "__main__":
     main()
-

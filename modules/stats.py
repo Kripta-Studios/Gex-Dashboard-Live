@@ -158,3 +158,4 @@ def calc_zomma_ex(gamma_ex, dp, vol, T):
 
     # Retorna el cambio en GEX por 1 punto de cambio en Vol
     return gamma_ex * zomma_factor
+

@@ -1,0 +1,147 @@
+/**
+ * Special modes styles
+ * Contains: Zen mode, Detached mode, Detached layout mode
+ */
+
+/* --- ZEN MODE --- */
+body.zen-active .top-bar,
+body.zen-active #time-machine-panel {
+    display: none !important;
+}
+
+body.zen-active .main-content {
+    padding: 0;
+    height: calc(100dvh - 40px);
+}
+
+body.zen-active #charts-wrapper {
+    padding: 10px;
+}
+
+/* Floating controls for Zen Mode */
+.zen-controls-bottom {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: none;
+    gap: 10px;
+}
+
+body.zen-active .zen-controls-bottom {
+    display: flex;
+}
+
+.zen-float-btn {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border: transparent;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 12px;
+    transition: background 0.2s;
+    outline: none;
+}
+
+.zen-float-btn:hover {
+    background: #222;
+    border-color: var(--accent-blue);
+}
+
+/* --- DETACHED MODE (Single chart) --- */
+body.detached-mode {
+    background-color: var(--panel-bg);
+    overflow: hidden;
+}
+
+body.detached-mode #login-screen,
+body.detached-mode .tab-container,
+body.detached-mode .top-bar,
+body.detached-mode #time-machine-panel,
+body.detached-mode .zen-controls-bottom,
+body.detached-mode .new-tab-btn {
+    display: none !important;
+}
+
+body.detached-mode #app-wrapper {
+    display: flex !important;
+    height: 100vh;
+    padding: 0;
+}
+
+body.detached-mode .main-content {
+    padding: 0;
+    height: 100%;
+}
+
+body.detached-mode #charts-wrapper {
+    padding: 0;
+    height: 100%;
+    gap: 0;
+}
+
+body.detached-mode #charts-wrapper::after {
+    content: none;
+}
+
+body.detached-mode .chart-panel {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    border: none;
+    border-radius: 0;
+}
+
+body.detached-mode .btn-close,
+body.detached-mode .btn-popout {
+    display: none;
+}
+
+/* --- DETACHED LAYOUT MODE (Multiple charts) --- */
+body.detached-layout-mode {
+    background-color: var(--bg-color);
+}
+
+body.detached-layout-mode .top-bar,
+body.detached-layout-mode .tab-container,
+body.detached-layout-mode #time-machine-panel,
+body.detached-layout-mode .zen-controls-bottom,
+body.detached-layout-mode #login-screen,
+body.detached-layout-mode .new-tab-btn {
+    display: none !important;
+}
+
+body.detached-layout-mode #app-wrapper {
+    display: flex !important;
+    height: 100vh;
+    padding: 0;
+}
+
+body.detached-layout-mode .main-content {
+    padding: 0;
+    height: 100%;
+}
+
+body.detached-layout-mode #charts-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    width: 100vw;
+    height: 100vh;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0;
+    gap: 0;
+}
+
+body.detached-layout-mode .chart-panel {
+    flex: 1 1 auto;
+    height: 100%;
+    min-width: 350px;
+    max-width: none !important;
+    border-right: 1px solid #333;
+    border-radius: 0;
+}

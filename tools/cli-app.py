@@ -1,5 +1,11 @@
+import os
+import sys
+
+# Add parent directory to path for imports
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from modules.utils import *
-from data_plotting import *
+from tools.data_plotting import *
 import time
 import asyncio
 
@@ -42,3 +48,4 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     asyncio.run(main(args.ticker, args.expiration, args.greek))
+

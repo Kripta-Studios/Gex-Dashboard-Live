@@ -1,10 +1,16 @@
 #! /usr/bin/python3
 
+import os
+import sys
+
+# Add parent directory to path for imports
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from threading import Thread
-from bot import *
-from discord_send_plots import start_scheduler
+from discord_app.bot import bot, DISCORD_TOKEN
+from discord_app.discord_send_plots import start_scheduler
 import asyncio
-from data_plotting import get_options_data
+from tools.data_plotting import get_options_data
 import re
 from sdnotify import SystemdNotifier
 
@@ -59,3 +65,4 @@ if __name__ == "__main__":
         asyncio.run(main())
     except Exception as e:
         print("Shutting down...", e)
+

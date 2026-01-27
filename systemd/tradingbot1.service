@@ -6,8 +6,11 @@ After=network.target
 [Service]
 Type=simple
 User=root
-WorkingDirectory=/home/Option-Greeks-Plotting-Discord-Bot
-ExecStart=/usr/bin/python3 /home/Option-Greeks-Plotting-Discord-Bot/tradingbot1.py
+
+# ACTUALIZADO para nueva estructura
+WorkingDirectory=/home/Option-Greeks-Plotting-Discord-Bot/bots
+ExecStart=/usr/bin/python3 /home/Option-Greeks-Plotting-Discord-Bot/bots/tradingbot1.py
+
 Restart=always
 RestartSec=30
 Environment=PYTHONUNBUFFERED=1
