@@ -230,70 +230,151 @@ def load_active_trade() -> Optional[Trade]:
 # ============================================================================
 
 def send_discord_trade_open(trade: Trade):
-    """Sends trade OPEN notification to Discord."""
+    """Sends trade OPEN notification to Discord with detailed reasoning."""
     if not DISCORD_ENABLED or not DISCORD_WEBHOOK_URL:
         return
     
     ticker = trade.ticker
     direction = trade.direction
     entry_price = trade.entry.price
+    entry_time = trade.entry.time
     target = trade.target_level
+    reason = trade.entry.reason
+    details = trade.entry.setup_details
+    strategy = trade.strategy
     
     point_value = POINT_VALUES.get(ticker, 10.0)
     stop_price = entry_price * (1 - STOP_LOSS_FIXED) if direction == "LONG" else entry_price * (1 + STOP_LOSS_FIXED)
     risk_dollars = abs(entry_price - stop_price) * point_value
     reward_dollars = abs(target - entry_price) * point_value if target else 0
+    rr_ratio = reward_dollars / risk_dollars if risk_dollars > 0 else 0
     
     color = 0x2ECC71 if direction == "LONG" else 0xE74C3C
     emoji = "📈" if direction == "LONG" else "📉"
+    strategy_emoji = "🔄" if strategy == "REVERSAL" else "🚀"
+    
+    # Build description with strategy type
+    description_lines = [
+        f"**{DISCORD_ROLE_PING}**",
+        "",
+        f"{strategy_emoji} **Estrategia:** {strategy}",
+        f"**Trigger:** {reason}",
+        "",
+        f"**📊 Análisis Detallado:**",
+        details
+    ]
     
     embed = {
-        "title": f"{emoji} LIVE {direction} - {ticker}",
-        "description": f"**{DISCORD_ROLE_PING}**\n\n**Setup:** {trade.entry.reason}\n{trade.entry.setup_details}",
+        "title": f"{emoji} LIVE {direction} OPENED - {ticker}",
+        "description": "\n".join(description_lines),
         "color": color,
         "fields": [
             {"name": "💵 Entry", "value": f"${entry_price:.2f}", "inline": True},
             {"name": "🎯 Target", "value": f"${target:.2f}" if target else "N/A", "inline": True},
-            {"name": "🛑 Stop", "value": f"${stop_price:.2f}", "inline": True},
-            {"name": "💰 Risk/Reward", "value": f"${risk_dollars:.2f} / ${reward_dollars:.2f}", "inline": False},
+            {"name": "🛑 Stop Loss", "value": f"${stop_price:.2f} ({STOP_LOSS_FIXED*100:.1f}%)", "inline": True},
+            {"name": "⏰ Time (NYC)", "value": entry_time, "inline": True},
+            {"name": "💰 Risk", "value": f"${risk_dollars:.2f}", "inline": True},
+            {"name": "💎 Reward", "value": f"${reward_dollars:.2f}", "inline": True},
+            {"name": "📊 Risk/Reward Ratio", "value": f"1:{rr_ratio:.1f}" if rr_ratio > 0 else "N/A", "inline": True},
+            {"name": "📈 Point Value", "value": f"${point_value:.0f}/pt", "inline": True},
         ],
-        "footer": {"text": "TradingBot2 | LIVE"}
+        "footer": {"text": f"TradingBot2 | LIVE | Breakeven @ +{BREAKEVEN_TRIGGER*100:.2f}%"}
     }
     
     try:
-        requests.post(DISCORD_WEBHOOK_URL, json={"content": "<@&1464601287411634226> New Trade","embeds": [embed]}, timeout=5)
+        response = requests.post(DISCORD_WEBHOOK_URL, json={"content": "<@&1464601287411634226> New Trade","embeds": [embed]}, timeout=5)
+        if response.status_code >= 400:
+            logger.error(f"[DISCORD] Webhook error: {response.status_code}")
+        else:
+            logger.info(f"[DISCORD] Trade open notification sent for {ticker}")
     except Exception as e:
-        print(f"[DISCORD] Failed: {e}")
+        logger.error(f"[DISCORD] Failed to send open notification: {e}")
 
 def send_discord_trade_close(trade: Trade):
-    """Sends trade CLOSE notification to Discord."""
+    """Sends trade CLOSE notification to Discord with detailed P&L and context."""
     if not DISCORD_ENABLED or not DISCORD_WEBHOOK_URL or not trade.exit or not trade.pnl:
         return
     
     ticker = trade.ticker
+    direction = trade.direction
+    entry_price = trade.entry.price
+    entry_time = trade.entry.time
+    exit_price = trade.exit.price
+    exit_time = trade.exit.time
+    exit_reason = trade.exit.reason
     pnl_dollars = trade.pnl.dollars
+    pnl_points = trade.pnl.points
+    pnl_pct = trade.pnl.percent
+    max_pnl_pct = trade.highest_pnl_pct
+    
     point_value = POINT_VALUES.get(ticker, 10.0)
+    
+    # Calculate trade duration
+    duration_text = "Unknown"
+    try:
+        entry_dt = datetime.strptime(entry_time.split('.')[0], "%Y-%m-%d %H:%M:%S")
+        exit_dt = datetime.strptime(exit_time.split('.')[0], "%Y-%m-%d %H:%M:%S")
+        duration_mins = (exit_dt - entry_dt).total_seconds() / 60
+        if duration_mins >= 60:
+            hours = int(duration_mins // 60)
+            mins = int(duration_mins % 60)
+            duration_text = f"{hours}h {mins}m"
+        else:
+            duration_text = f"{int(duration_mins)}m"
+    except:
+        pass
+    
+    # Build exit reason explanation
+    exit_explanation = ""
+    if "Stop Loss" in exit_reason:
+        exit_explanation = "🛑 **Stop Loss Hit** - Precio se movió contra la posición"
+    elif "Trailing Stop" in exit_reason:
+        exit_explanation = f"📉 **Trailing Stop Hit** - Max P&L alcanzado: +{max_pnl_pct*100:.2f}%"
+    elif "Breakeven" in exit_reason:
+        exit_explanation = "⚖️ **Breakeven Hit** - Trade cerrado sin pérdida"
+    elif "Target Hit" in exit_reason:
+        exit_explanation = "🎯 **Target Hit** - Objetivo de precio alcanzado"
+    elif "Market Close" in exit_reason:
+        exit_explanation = "🔔 **Market Close** - Cierre forzado por fin de día"
+    elif "EOD" in exit_reason:
+        exit_explanation = "⏰ **EOD Force Exit** - Próximo cierre de mercado"
+    elif "Vanna" in exit_reason:
+        exit_explanation = "🧲 **Vanna Shift** - Cambio en nivel Min Vanna"
+    else:
+        exit_explanation = f"📋 {exit_reason}"
     
     color = 0x2ECC71 if pnl_dollars >= 0 else 0xE74C3C
     emoji = "✅" if pnl_dollars >= 0 else "❌"
     result = "PROFIT" if pnl_dollars >= 0 else "LOSS"
     
+    # Price movement
+    price_move = exit_price - entry_price
+    price_move_pct = (price_move / entry_price) * 100 if entry_price > 0 else 0
+    
     embed = {
-        "title": f"{emoji} LIVE {trade.direction} CLOSED - {ticker} ({result})",
-        "description": f"**{DISCORD_ROLE_PING}**\n\n**Exit:** {trade.exit.reason}",
+        "title": f"{emoji} LIVE {direction} CLOSED - {ticker} ({result})",
+        "description": f"**{DISCORD_ROLE_PING}**\n\n{exit_explanation}",
         "color": color,
         "fields": [
-            {"name": "💵 Entry", "value": f"${trade.entry.price:.2f}", "inline": True},
-            {"name": "💵 Exit", "value": f"${trade.exit.price:.2f}", "inline": True},
-            {"name": f"💰 P&L", "value": f"**${pnl_dollars:+.2f}**", "inline": True},
+            {"name": "💵 Entry", "value": f"${entry_price:.2f}", "inline": True},
+            {"name": "💵 Exit", "value": f"${exit_price:.2f}", "inline": True},
+            {"name": "📊 Move", "value": f"{price_move:+.2f} pts", "inline": True},
+            {"name": "⏱️ Duration", "value": duration_text, "inline": True},
+            {"name": "📈 Max P&L", "value": f"+{max_pnl_pct*100:.2f}%", "inline": True},
+            {"name": "📊 Final P&L", "value": f"{pnl_pct:+.2f}%", "inline": True},
+            {"name": f"💰 P&L (${point_value:.0f}/pt)", "value": f"**${pnl_dollars:+.2f}**", "inline": False},
         ],
         "footer": {"text": "TradingBot2 | LIVE"}
     }
     
     try:
-        requests.post(DISCORD_WEBHOOK_URL, json={"content": "<@&1464601287411634226> New Trade","embeds": [embed]}, timeout=5)
+        response = requests.post(DISCORD_WEBHOOK_URL, json={"content": "<@&1464601287411634226> Trade Closed","embeds": [embed]}, timeout=5)
+        if response.status_code >= 400:
+            logger.error(f"[DISCORD] Webhook error: {response.status_code}")
+        else:
+            logger.info(f"[DISCORD] Trade close notification sent for {ticker}")
     except Exception as e:
-        print(f"[DISCORD] Failed: {e}")
+        logger.error(f"[DISCORD] Failed to send close notification: {e}")
 
 # ============================================================================
 # REAL-TIME DATA LOADING
@@ -620,6 +701,7 @@ async def main_loop():
                 active_levels[t] = [l for l in raw_levels if l > 0 and abs(l - spot)/spot <= MAX_LEVEL_DIST_PCT]
                 
                 print(f"  [{t}] Spot: {spot:.2f} | Gamma: {market_states[t].gamma_regime if market_states[t] else 'N/A'}")
+                logger.debug(f"[{t}] Market state: gamma={market_states[t].gamma_regime}, dgex={market_states[t].dgex_regime}, min_vanna={market_states[t].min_vanna_level:.2f if market_states[t].min_vanna_level else 'None'}")
             
             # Manage open trade
             if current_trade:
@@ -670,7 +752,10 @@ async def main_loop():
                         
                         emoji = "✅" if val > 0 else "❌"
                         print(f"  {emoji} CLOSED {t} | {exit_reason} | ${val:+.2f}")
-                        logger.info(f"[PERSISTENCE] Closed trade to disk")
+                        logger.info(f"[TRADE CLOSED] {current_trade.direction} {t} @ {spot:.2f}")
+                        logger.info(f"  └─ Reason: {exit_reason}")
+                        logger.info(f"  └─ P&L: {pnl_pts:+.2f} pts ({curr_pnl_pct*100:+.2f}%) = ${val:+.2f}")
+                        logger.info(f"  └─ Max P&L during trade: +{current_trade.highest_pnl_pct*100:.2f}%")
                         send_discord_trade_close(current_trade)
                         current_trade = None
 
@@ -682,16 +767,26 @@ async def main_loop():
                 
                 for t in TICKERS:
                     if t not in current_spots:
+                        logger.debug(f"[{t}] No spot price available - skipping")
                         continue
                     
                     if last_exit_times[t]:
                         mins_since = (curr_time - last_exit_times[t]).total_seconds() / 60
                         if mins_since < COOLDOWN_MINUTES:
+                            remaining = COOLDOWN_MINUTES - mins_since
+                            logger.debug(f"[{t}] Cooldown: {remaining:.0f} min remaining")
                             continue
                     
                     direction, strategy, target, reason, details = generate_signal(
                         t, current_spots[t], market_states[t], active_levels.get(t, []), curr_time_time
                     )
+                    
+                    # Log signal evaluation
+                    if direction:
+                        logger.info(f"[{t}] Signal found: {direction} {strategy} target={target:.2f if target else 'None'}")
+                        logger.info(f"  └─ Reason: {reason}")
+                    else:
+                        logger.debug(f"[{t}] No signal generated")
                     
                     if direction:
                         if best_signal is None or (target is not None and best_signal[3] is None):
@@ -706,9 +801,19 @@ async def main_loop():
                         None, None, targ, STOP_LOSS_FIXED
                     )
                     
+                    # Calculate R:R for logging
+                    stop_dist = current_spots[t] * STOP_LOSS_FIXED
+                    target_dist = abs(targ - current_spots[t]) if targ else 0
+                    rr_ratio = target_dist / stop_dist if stop_dist > 0 else 0
+                    
                     print(f"  🔔 OPEN {direct} {t} @ {current_spots[t]:.2f}")
                     print(f"  {details}")
-                    logger.info(f"[PERSISTENCE] Saved trade to disk")
+                    logger.info(f"[TRADE OPENED] {direct} {t} @ {current_spots[t]:.2f}")
+                    logger.info(f"  └─ Strategy: {strat}")
+                    logger.info(f"  └─ Reason: {reas}")
+                    logger.info(f"  └─ Target: {targ:.2f if targ else 'None'}")
+                    logger.info(f"  └─ Stop: {current_spots[t]*(1-STOP_LOSS_FIXED) if direct=='LONG' else current_spots[t]*(1+STOP_LOSS_FIXED):.2f}")
+                    logger.info(f"  └─ R:R Ratio: 1:{rr_ratio:.1f}")
                     save_active_trade(current_trade)
                     send_discord_trade_open(current_trade)
             

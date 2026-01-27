@@ -281,7 +281,7 @@ def load_active_trade() -> Optional[Trade]:
 # ============================================================================
 
 def send_discord_trade_open(trade_data: dict, analysis: dict):
-    """Sends trade OPEN notification to Discord."""
+    """Sends trade OPEN notification to Discord with detailed reasoning."""
     if not DISCORD_ENABLED or not DISCORD_WEBHOOK_URL:
         return
     
@@ -291,52 +291,132 @@ def send_discord_trade_open(trade_data: dict, analysis: dict):
     entry_time = trade_data.get("entry", {}).get("time", "")
     signals = trade_data.get("signals", {})
     levels = trade_data.get("levels", {})
+    confluence = trade_data.get("confluence", {})
     
     stop_loss_price = entry_price * (1 - STOP_LOSS_PCT) if direction == "LONG" else entry_price * (1 + STOP_LOSS_PCT)
+    emergency_stop = entry_price * (1 - EMERGENCY_STOP_LOSS_PCT) if direction == "LONG" else entry_price * (1 + EMERGENCY_STOP_LOSS_PCT)
     target_price = entry_price * (1 + PROFIT_TARGET_PCT) if direction == "LONG" else entry_price * (1 - PROFIT_TARGET_PCT)
     
     point_value = POINT_VALUES.get(ticker, 10.0)
     risk_dollars = abs(entry_price - stop_loss_price) * point_value
     reward_dollars = abs(target_price - entry_price) * point_value
     
+    # Build detailed reasoning
     gamma_regime = signals.get("gamma_regime", "neutral")
-    reason_parts = []
-    if gamma_regime == "long":
-        reason_parts.append("Positive Gamma (mean-reverting)")
-    elif gamma_regime == "short":
-        reason_parts.append("Negative Gamma (momentum)")
+    vanna_signal = signals.get("vanna_signal", "neutral")
+    charm_signal = signals.get("charm_signal", "neutral")
+    min_vanna = signals.get("min_vanna_magnet")
+    dgex_magnet = signals.get("dgex_magnet")
+    resistance = signals.get("nearest_resistance")
+    support = signals.get("nearest_support")
     
-    reason_text = " • ".join(reason_parts) if reason_parts else "Greek signals aligned"
+    reason_parts = []
+    
+    # Gamma regime explanation
+    if gamma_regime == "long":
+        reason_parts.append("🟢 **Positive Gamma** → Mean-reversion environment")
+    elif gamma_regime == "short":
+        reason_parts.append("🔴 **Negative Gamma** → Momentum/trend environment")
+    else:
+        reason_parts.append("⚪ **Neutral Gamma** → Mixed environment")
+    
+    # Vanna signal
+    if vanna_signal == "bullish":
+        reason_parts.append("📈 **Vanna Bullish** → Dealer buying pressure expected")
+    elif vanna_signal == "bearish":
+        reason_parts.append("📉 **Vanna Bearish** → Dealer selling pressure expected")
+    
+    # Charm signal
+    if charm_signal == "bullish":
+        reason_parts.append("⏰ **Charm Bullish** → Time decay favors longs")
+    elif charm_signal == "bearish":
+        reason_parts.append("⏰ **Charm Bearish** → Time decay favors shorts")
+    
+    # Min Vanna magnet
+    if min_vanna and not signals.get("min_vanna_touched", False):
+        reason_parts.append(f"🧲 **Min Vanna Magnet** at ${min_vanna:.2f} (untouched)")
+    
+    # Entry reasoning based on levels
+    if direction == "LONG" and support:
+        reason_parts.append(f"💚 Near support at ${support:.2f}")
+    elif direction == "SHORT" and resistance:
+        reason_parts.append(f"💔 Near resistance at ${resistance:.2f}")
+    
+    reason_text = "\n".join(reason_parts) if reason_parts else "Multiple Greek signals aligned"
+    
+    # Build level info
+    level_info = []
+    if levels.get("ib_high_today"):
+        level_info.append(f"IB High: ${levels['ib_high_today']:.2f}")
+    if levels.get("ib_low_today"):
+        level_info.append(f"IB Low: ${levels['ib_low_today']:.2f}")
+    if resistance:
+        level_info.append(f"Resistance: ${resistance:.2f}")
+    if support:
+        level_info.append(f"Support: ${support:.2f}")
+    
+    # Confluence info
+    confluence_text = ""
+    if confluence:
+        spx = confluence.get("spx_signal", "HOLD")
+        spy = confluence.get("spy_signal", "HOLD")
+        qqq = confluence.get("qqq_signal", "HOLD")
+        aligned = confluence.get("aligned", False)
+        confluence_text = f"SPX: {spx} | SPY: {spy} | QQQ: {qqq} | {'✅ Aligned' if aligned else '⚠️ Mixed'}"
     
     color = 0x2ECC71 if direction == "LONG" else 0xE74C3C
     emoji = "📈" if direction == "LONG" else "📉"
     
     embed = {
-        "title": f"{emoji} LIVE {direction} - {ticker}",
-        "description": f"**{DISCORD_ROLE_PING}**\n\n**Reason:** {reason_text}",
+        "title": f"{emoji} LIVE {direction} OPENED - {ticker}",
+        "description": f"**{DISCORD_ROLE_PING}**\n\n**📊 Entry Reasoning:**\n{reason_text}",
         "color": color,
         "fields": [
-            {"name": "💵 Entry", "value": f"${entry_price:.2f}", "inline": True},
-            {"name": "🎯 Target", "value": f"${target_price:.2f}", "inline": True},
-            {"name": "🛑 Stop", "value": f"${stop_loss_price:.2f}", "inline": True},
-            {"name": "💰 Risk/Reward", "value": f"${risk_dollars:.2f} / ${reward_dollars:.2f}", "inline": False},
+            {"name": "💵 Entry Price", "value": f"${entry_price:.2f}", "inline": True},
+            {"name": "⏰ Time (NYC)", "value": entry_time, "inline": True},
+            {"name": "📊 Point Value", "value": f"${point_value:.0f}/pt", "inline": True},
+            {"name": "🎯 Target", "value": f"${target_price:.2f} (+{PROFIT_TARGET_PCT*100:.1f}%)", "inline": True},
+            {"name": "🛑 Stop Loss", "value": f"${stop_loss_price:.2f} (-{STOP_LOSS_PCT*100:.1f}%)", "inline": True},
+            {"name": "⚠️ Emergency", "value": f"${emergency_stop:.2f}", "inline": True},
+            {"name": "💰 Risk/Reward", "value": f"Risk: ${risk_dollars:.2f} | Reward: ${reward_dollars:.2f} | R:R = 1:{reward_dollars/risk_dollars:.1f}" if risk_dollars > 0 else "N/A", "inline": False},
         ],
-        "footer": {"text": "TradingBot1 | LIVE"}
+        "footer": {"text": f"TradingBot1 | LIVE | Min Hold: {MIN_HOLDING_TIME_MINUTES}min"}
     }
     
+    # Add levels if available
+    if level_info:
+        embed["fields"].append({
+            "name": "📍 Key Levels",
+            "value": " | ".join(level_info),
+            "inline": False
+        })
+    
+    # Add confluence if available
+    if confluence_text:
+        embed["fields"].append({
+            "name": "🔗 Multi-Ticker Confluence",
+            "value": confluence_text,
+            "inline": False
+        })
+    
     try:
-        requests.post(DISCORD_WEBHOOK_URL, json={"content": "<@&1464601287411634226> New Trade","embeds": [embed]}, timeout=5)
+        response = requests.post(DISCORD_WEBHOOK_URL, json={"content": "<@&1464601287411634226> New Trade","embeds": [embed]}, timeout=5)
+        if response.status_code >= 400:
+            logger.error(f"[DISCORD] Webhook error: {response.status_code}")
+        else:
+            logger.info(f"[DISCORD] Trade open notification sent for {ticker}")
     except Exception as e:
-        print(f"[DISCORD] Failed: {e}")
+        logger.error(f"[DISCORD] Failed to send open notification: {e}")
 
 def send_discord_trade_close(trade: dict):
-    """Sends trade CLOSE notification to Discord with P&L in dollars."""
+    """Sends trade CLOSE notification to Discord with detailed P&L and context."""
     if not DISCORD_ENABLED or not DISCORD_WEBHOOK_URL:
         return
     
     ticker = trade.get("ticker", "???")
     direction = trade.get("direction", "???")
     entry_price = trade.get("entry", {}).get("price", 0)
+    entry_time = trade.get("entry", {}).get("time", "")
     exit_price = trade.get("exit", {}).get("price", 0)
     exit_time = trade.get("exit", {}).get("time", "")
     exit_reason = trade.get("exit", {}).get("reason", "Unknown")
@@ -346,26 +426,70 @@ def send_discord_trade_close(trade: dict):
     point_value = POINT_VALUES.get(ticker, 10.0)
     pnl_dollars = pnl_points * point_value
     
-    color = 0x2ECC71 if pnl_points >= 0 else 0xE74C3C
-    emoji = "✅" if pnl_points >= 0 else "❌"
-    result = "PROFIT" if pnl_points >= 0 else "LOSS"
+    # Calculate trade duration
+    duration_text = "Unknown"
+    try:
+        entry_dt = datetime.strptime(entry_time, "%Y-%m-%d %H:%M:%S")
+        exit_dt = datetime.strptime(exit_time, "%Y-%m-%d %H:%M:%S")
+        duration_mins = (exit_dt - entry_dt).total_seconds() / 60
+        if duration_mins >= 60:
+            hours = int(duration_mins // 60)
+            mins = int(duration_mins % 60)
+            duration_text = f"{hours}h {mins}m"
+        else:
+            duration_text = f"{int(duration_mins)}m"
+    except:
+        pass
+    
+    # Build exit reason explanation
+    exit_explanation = ""
+    if "Stop Loss" in exit_reason:
+        exit_explanation = "🛑 **Stop Loss Hit** - Price moved against position beyond threshold"
+    elif "Emergency" in exit_reason:
+        exit_explanation = "⚠️ **Emergency Stop** - Catastrophic move triggered immediate exit"
+    elif "Profit Target" in exit_reason:
+        exit_explanation = "🎯 **Target Hit** - Price reached profit objective"
+    elif "Market Close" in exit_reason:
+        exit_explanation = "🔔 **Market Close** - End of day forced exit"
+    elif "Min Vanna" in exit_reason:
+        exit_explanation = "🧲 **Min Vanna Target** - Price reached vanna magnet level"
+    elif "EOD" in exit_reason:
+        exit_explanation = "⏰ **EOD Force Exit** - Approaching market close"
+    else:
+        exit_explanation = f"📋 {exit_reason}"
+    
+    color = 0x2ECC71 if pnl_dollars >= 0 else 0xE74C3C
+    emoji = "✅" if pnl_dollars >= 0 else "❌"
+    result = "PROFIT" if pnl_dollars >= 0 else "LOSS"
+    
+    # Price movement info
+    price_move = exit_price - entry_price
+    price_move_pct = (price_move / entry_price) * 100 if entry_price > 0 else 0
     
     embed = {
         "title": f"{emoji} LIVE {direction} CLOSED - {ticker} ({result})",
-        "description": f"**{DISCORD_ROLE_PING}**\n\n**Exit:** {exit_reason}",
+        "description": f"**{DISCORD_ROLE_PING}**\n\n{exit_explanation}",
         "color": color,
         "fields": [
             {"name": "💵 Entry", "value": f"${entry_price:.2f}", "inline": True},
             {"name": "💵 Exit", "value": f"${exit_price:.2f}", "inline": True},
-            {"name": f"💰 P&L", "value": f"**${pnl_dollars:+.2f}**", "inline": True},
+            {"name": "📊 Move", "value": f"{price_move:+.2f} pts ({price_move_pct:+.2f}%)", "inline": True},
+            {"name": "⏱️ Duration", "value": duration_text, "inline": True},
+            {"name": "📈 P&L Points", "value": f"{pnl_points:+.2f} pts", "inline": True},
+            {"name": "📊 P&L %", "value": f"{pnl_pct:+.2f}%", "inline": True},
+            {"name": f"💰 P&L (${point_value:.0f}/pt)", "value": f"**${pnl_dollars:+.2f}**", "inline": False},
         ],
         "footer": {"text": "TradingBot1 | LIVE"}
     }
     
     try:
-        requests.post(DISCORD_WEBHOOK_URL, json={"content": "<@&1464601287411634226> New Trade","embeds": [embed]}, timeout=5)
+        response = requests.post(DISCORD_WEBHOOK_URL, json={"content": "<@&1464601287411634226> Trade Closed","embeds": [embed]}, timeout=5)
+        if response.status_code >= 400:
+            logger.error(f"[DISCORD] Webhook error: {response.status_code}")
+        else:
+            logger.info(f"[DISCORD] Trade close notification sent for {ticker}")
     except Exception as e:
-        print(f"[DISCORD] Failed: {e}")
+        logger.error(f"[DISCORD] Failed to send close notification: {e}")
 
 # ============================================================================
 # REAL-TIME DATA LOADING
@@ -794,8 +918,39 @@ async def main_loop():
             
             # Check confluence
             confluence = check_multi_ticker_confluence(ticker_signals)
-            if current_time.time() >= FORCE_EXIT_TIME:
-                return True, "EOD Force Exit"
+            
+            # Check for EOD force exit on active trade
+            if current_time.time() >= FORCE_EXIT_TIME and current_trade:
+                ticker = current_trade.ticker
+                if ticker in ticker_analysis:
+                    analysis = ticker_analysis[ticker]
+                    current_trade.exit = TradeExit(
+                        time=current_time.strftime("%Y-%m-%d %H:%M:%S"),
+                        price=analysis["spot_price"],
+                        reason="EOD Force Exit"
+                    )
+                    
+                    if current_trade.direction == "LONG":
+                        pnl_points = analysis["spot_price"] - current_trade.entry.price
+                    else:
+                        pnl_points = current_trade.entry.price - analysis["spot_price"]
+                    
+                    pnl_pct = pnl_points / current_trade.entry.price * 100
+                    current_trade.pnl = TradePnL(points=pnl_points, percent=pnl_pct)
+                    
+                    all_trades.append(current_trade)
+                    save_trade(current_trade)
+                    
+                    dollar_pnl = get_dollar_value(ticker, pnl_points)
+                    logger.info(f"[EOD EXIT] Closed {current_trade.direction} {ticker} @ {analysis['spot_price']:.2f} | P&L: ${dollar_pnl:+.2f}")
+                    send_discord_trade_close(asdict(current_trade))
+                    
+                    current_trade = None
+                    save_active_trade(None)
+                
+                await asyncio.sleep(DATA_CHECK_INTERVAL_SECONDS)
+                continue
+            
             # Manage existing trade
             if current_trade:
                 ticker = current_trade.ticker
@@ -830,8 +985,10 @@ async def main_loop():
                         save_trade(current_trade)
                         
                         dollar_pnl = get_dollar_value(ticker, pnl_points)
+                        logger.info(f"[TRADE CLOSED] {current_trade.direction} {ticker} @ {analysis['spot_price']:.2f}")
+                        logger.info(f"  └─ Reason: {exit_reason}")
+                        logger.info(f"  └─ P&L: {pnl_points:+.2f} pts ({pnl_pct:+.2f}%) = ${dollar_pnl:+.2f}")
                         print(f"  [CLOSED] {current_trade.direction} {ticker} @ {analysis['spot_price']:.2f} | P&L: ${dollar_pnl:+.2f} | {exit_reason}")
-                        logger.info(f"[PERSISTENCE] Closed trade to disk")
                         send_discord_trade_close(asdict(current_trade))
                         
                         last_trade_exit_time = current_time
@@ -844,9 +1001,17 @@ async def main_loop():
                 if last_trade_exit_time:
                     mins_since = (current_time - last_trade_exit_time).total_seconds() / 60
                     if mins_since < COOLDOWN_AFTER_EXIT_MINUTES:
-                        print(f"  [COOLDOWN] {COOLDOWN_AFTER_EXIT_MINUTES - mins_since:.0f} min remaining")
+                        remaining = COOLDOWN_AFTER_EXIT_MINUTES - mins_since
+                        logger.debug(f"[COOLDOWN] {remaining:.0f} min remaining before next trade allowed")
+                        print(f"  [COOLDOWN] {remaining:.0f} min remaining")
                         await asyncio.sleep(DATA_CHECK_INTERVAL_SECONDS)
                         continue
+                
+                # Check if past last entry time
+                if current_time.time() >= LAST_ENTRY_TIME:
+                    logger.debug(f"[NO ENTRY] Past last entry time ({LAST_ENTRY_TIME})")
+                    await asyncio.sleep(DATA_CHECK_INTERVAL_SECONDS)
+                    continue
                 
                 # Find best entry
                 best_ticker = None
@@ -855,11 +1020,22 @@ async def main_loop():
                 
                 for ticker in TICKERS:
                     if ticker not in ticker_analysis:
+                        logger.debug(f"[{ticker}] No analysis available - skipping")
                         continue
                     
                     analysis = ticker_analysis[ticker]
                     signal = analysis["signal"]
                     confidence = analysis["confidence"]
+                    
+                    # Log why signal was rejected/accepted
+                    if signal == "HOLD":
+                        logger.debug(f"[{ticker}] Signal=HOLD - no entry")
+                    elif confidence <= MIN_CONFIDENCE_THRESHOLD:
+                        logger.debug(f"[{ticker}] Signal={signal} but confidence {confidence:.0%} <= {MIN_CONFIDENCE_THRESHOLD:.0%} threshold")
+                    elif not confluence.aligned:
+                        logger.debug(f"[{ticker}] Signal={signal} ({confidence:.0%}) but confluence not aligned")
+                    else:
+                        logger.info(f"[{ticker}] Candidate: {signal} @ {analysis['spot_price']:.2f} (conf: {confidence:.0%})")
                     
                     if signal in ["LONG", "SHORT"] and confidence > MIN_CONFIDENCE_THRESHOLD:
                         if confluence.aligned and confidence > best_confidence:
@@ -920,8 +1096,16 @@ async def main_loop():
                         confluence=confluence
                     )
                     
+                    # Detailed logging for trade open
+                    logger.info(f"[TRADE OPENED] {best_signal} {best_ticker} @ {analysis['spot_price']:.2f}")
+                    logger.info(f"  └─ Confidence: {best_confidence:.0%}")
+                    logger.info(f"  └─ Gamma Regime: {analysis['gamma_regime']}")
+                    logger.info(f"  └─ Vanna Signal: {analysis['vanna_signal']}")
+                    logger.info(f"  └─ Resistance: {analysis.get('resistance', 'N/A')}")
+                    logger.info(f"  └─ Support: {analysis.get('support', 'N/A')}")
+                    if analysis.get('min_vanna_level'):
+                        logger.info(f"  └─ Min Vanna: {analysis['min_vanna_level']:.2f} (touched: {analysis.get('min_vanna_touched', False)})")
                     print(f"  [OPENED] {best_signal} {best_ticker} @ {analysis['spot_price']:.2f} (conf: {best_confidence:.0%})")
-                    logger.info(f"[PERSISTENCE] Saved trade to disk")
                     save_active_trade(current_trade)
                     send_discord_trade_open(asdict(current_trade), analysis)
             
