@@ -786,8 +786,11 @@ async def main_loop():
                     
                     # Log signal evaluation
                     if direction:
-                        logger.info(f"[{t}] Signal found: {direction} {strategy} target={target:.2f if target else 'None'}")
+                        # --- FIX APPLIED HERE: Format the string safely first ---
+                        target_str = f"{target:.2f}" if target else "None"
+                        logger.info(f"[{t}] Signal found: {direction} {strategy} target={target_str}")
                         logger.info(f"  └─ Reason: {reason}")
+
                     else:
                         logger.debug(f"[{t}] No signal generated")
                     
@@ -814,8 +817,11 @@ async def main_loop():
                     logger.info(f"[TRADE OPENED] {direct} {t} @ {current_spots[t]:.2f}")
                     logger.info(f"  └─ Strategy: {strat}")
                     logger.info(f"  └─ Reason: {reas}")
-                    logger.info(f"  └─ Target: {targ:.2f if targ else 'None'}")
+                    targ_str = f"{targ:.2f}" if targ else "None"
+                    logger.info(f"  └─ Target: {targ_str}")
+                    
                     logger.info(f"  └─ Stop: {current_spots[t]*(1-STOP_LOSS_FIXED) if direct=='LONG' else current_spots[t]*(1+STOP_LOSS_FIXED):.2f}")
+                    logger.info(f"  └─ R:R Ratio: 1:{rr_ratio:.1f}")
                     logger.info(f"  └─ R:R Ratio: 1:{rr_ratio:.1f}")
                     save_active_trade(current_trade)
                     send_discord_trade_open(current_trade)
