@@ -9,7 +9,8 @@ import urllib.parse
 import re
 import logging
 from datetime import datetime
-
+from qiskit import QuantumCircuit
+from qiskit_aer import AerSimulator
 # --- CONFIGURATION ---
 PORT = 8609
 
@@ -27,6 +28,7 @@ MOVIE_FILENAME = "oppenheimer.mp4"
 # MEMORIA RAM GLOBAL
 LATEST_DATA_CACHE = {}
 CACHE_LOCK = threading.Lock()
+QUANTUM_SIMULATOR = AerSimulator()
 
 USERS = {
     "admin@flowgreeks.com": {"pass": "admin123", "role": "ADMIN"},
@@ -388,6 +390,51 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_error(500, str(e))
                 return
 
+        # 5. API: QUANTUM GENERATOR (Para Unity)
+        if self.path == "/generate_bit":
+            try:
+                import json
+                
+                # 1. Crear circuito cuántico (1 Qubit, 1 Bit clásico)
+                circuit = QuantumCircuit(1, 1)
+                
+                # 2. Puerta Hadamard (Superposición 50/50)
+                circuit.h(0)
+                
+                # 3. Medir el colapso
+                circuit.measure(0, 0)
+                
+                # 4. Ejecutar simulación
+                result = QUANTUM_SIMULATOR.run(circuit, shots=1, memory=True).result()
+                memory = result.get_memory(circuit)
+                quantum_bit = int(memory[0]) # Resultado: 0 o 1
+                
+                # 5. Preparar respuesta JSON
+                response = {
+                    "success": True,
+                    "value": quantum_bit,
+                    "source": "vps_quantum_server",
+                    "timestamp": datetime.now().strftime("%H:%M:%S")
+                }
+                
+                # 6. Enviar cabeceras
+                self.send_response(200)
+                self.send_header("Content-type", "application/json")
+                # Vital para que Unity (WebGL/Editor) no tenga problemas de CORS
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+                
+                # 7. Enviar cuerpo
+                self.wfile.write(json.dumps(response).encode("utf-8"))
+                
+                # Log extra para ver que Unity está conectando
+                logging.info(f"⚛️ Quantum Request from {self.client_address[0]} | Result: {quantum_bit}")
+                return
+
+            except Exception as e:
+                logging.error(f"Quantum Error: {e}")
+                self.send_error(500, str(e))
+                return
         # OTROS (Video, Seguridad)
         if self.path == "/Oppenheimer":
             full_movie_path = os.path.join(MOVIE_DIRECTORY, MOVIE_FILENAME)
