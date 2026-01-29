@@ -3,6 +3,7 @@ Description=Initial Balance Chart Service
 After=network.target
 
 [Service]
+MemoryMax=1G
 User=root
 Group=root
 WorkingDirectory=/home/Option-Greeks-Plotting-Discord-Bot

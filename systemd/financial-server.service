@@ -3,6 +3,7 @@ Description=Servidor de Datos Financieros (Puerto 8609)
 After=network.target
 
 [Service]
+MemoryMax=1G
 # Usuario que ejecutará el script (root o tu usuario normal)
 User=root
 # Directorio de trabajo (IMPORTANTE: para que encuentre la carpeta json_data)

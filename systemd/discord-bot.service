@@ -16,6 +16,6 @@ RestartSec=5
 WatchdogSec=30min
 StandardOutput=append:/root/salida.log
 StandardError=append:/root/salida.log
-
+MemoryMax=80%
 [Install]
 WantedBy=multi-user.target
