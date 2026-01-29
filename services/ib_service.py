@@ -98,96 +98,124 @@ EOD_SAVED_DATES = set()
 SENT_CACHE = {}
 
 # --- SESIÓN TASTYTRADE ---
+# --- SESIÓN TASTYTRADE ---
 _session = None
 
-def get_tastytrade_session():
-    """Crea o reutiliza una sesión de tastytrade."""
+def get_tastytrade_session(force_refresh=False):
+    """
+    Crea o reutiliza una sesión de tastytrade.
+    Si force_refresh=True, destruye la sesión anterior y crea una nueva.
+    """
     global _session
+    
+    if force_refresh and _session is not None:
+        try:
+            print("[TT] Destruyendo sesión caducada...")
+            _session.destroy()
+        except Exception:
+            pass # Ignorar errores al cerrar sesión vieja
+        _session = None
+
     if _session is None:
         if not TT_USERNAME or not TT_PASSWORD:
             raise ValueError("Falta TT_USERNAME o TT_PASSWORD en .env")
+        print("[TT] Creando nueva sesión...")
         _session = Session(TT_USERNAME, TT_PASSWORD)
         print("[TT] Sesión creada exitosamente")
+        
     return _session
-
 
 # --- 1. OBTENER CANDLES VÍA DXLINKSTREAMER ---
 async def get_candle_data_for_today(ticker: str) -> pd.DataFrame:
     """
     Descarga datos de velas de 1 minuto para el día de hoy usando DXLinkStreamer.
-    Retorna un DataFrame con columnas: datetime, open, high, low, close, volume
+    Incluye lógica de reintento automático si el token ha caducado.
     """
-    candles_list = []
-    
     # Calcular el inicio del día de trading (9:30 AM NY)
     now = datetime.now(NY_TZ) if NY_TZ else datetime.now()
     today = now.date()
-    
+
     # Si estamos antes de las 9:30, podría ser día anterior
     if now.time() < dt_time(9, 30):
         today = today - timedelta(days=1)
-    
+
     start_time = datetime.combine(today, dt_time(9, 0))
     if NY_TZ:
         start_time = start_time.replace(tzinfo=NY_TZ)
-    
-    ts = round(start_time.timestamp() * 1000)
-    
-    print(f"[CANDLE] Descargando velas 1m para {ticker} desde {start_time.strftime('%H:%M')}")
-    
-    try:
-        session = get_tastytrade_session()
-        
-        async with DXLinkStreamer(session) as streamer:
-            await streamer.subscribe_candle([ticker], "1m", start_time)
-            
-            # Timeout: esperar máximo 60 segundos para descargar todas las velas
-            last_count = 0
-            stall_checks = 0
-            try:
-                async with asyncio.timeout(60):
-                    async for candle in streamer.listen(Candle):
-                        if candle.close:
-                            # Convertir timestamp a datetime EN ZONA NY (no local del servidor)
-                            if NY_TZ:
-                                dt_candle = datetime.fromtimestamp(candle.time / 1000, tz=NY_TZ)
-                            else:
-                                dt_candle = datetime.fromtimestamp(candle.time / 1000)
-                            
-                            candles_list.append({
-                                "datetime": dt_candle,
-                                "open": float(candle.open) if candle.open else 0,
-                                "high": float(candle.high) if candle.high else 0,
-                                "low": float(candle.low) if candle.low else 0,
-                                "close": float(candle.close) if candle.close else 0,
-                                "volume": float(candle.volume) if candle.volume else 0
-                            })
-                        
-                        # Romper cuando llegamos al inicio del día (vela más antigua)
-                        if candle.time == ts:
-                            print(f"[CANDLE] {ticker}: Llegamos al inicio del día")
-                            break
-            except asyncio.TimeoutError:
-                print(f"[CANDLE] {ticker}: Timeout 60s, {len(candles_list)} velas")
-                        
-    except Exception as e:
-        print(f"[ERROR CANDLE] {ticker}: {e}")
-        import traceback
-        traceback.print_exc()
-        return pd.DataFrame()
-    
-    if not candles_list:
-        return pd.DataFrame()
-    
-    df = pd.DataFrame(candles_list)
-    df = df.sort_values("datetime").reset_index(drop=True)
-    
-    # Filtrar solo horas de trading (9:00 - 16:20)
-    df = df[df["datetime"].apply(lambda x: dt_time(9, 0) <= x.time() <= dt_time(16, 20))]
-    
-    print(f"[CANDLE] {ticker}: {len(df)} velas descargadas")
-    return df
 
+    ts = round(start_time.timestamp() * 1000)
+
+    # --- LÓGICA DE REINTENTO (MAX 3 INTENTOS) ---
+    max_retries = 3
+    for attempt in range(max_retries):
+        try:
+            # En el primer intento usamos la sesión actual. 
+            # En reintentos (attempt > 0), forzamos refresh.
+            force_refresh = (attempt > 0)
+            session = get_tastytrade_session(force_refresh=force_refresh)
+
+            print(f"[CANDLE] Descargando velas 1m para {ticker} (Intento {attempt+1})")
+            
+            candles_list = []
+            
+            # Usamos el streamer dentro del bloque try para capturar AuthException
+            async with DXLinkStreamer(session) as streamer:
+                await streamer.subscribe_candle([ticker], "1m", start_time)
+
+                # Timeout: esperar máximo 60 segundos
+                try:
+                    async with asyncio.timeout(60):
+                        async for candle in streamer.listen(Candle):
+                            if candle.close:
+                                # Convertir timestamp
+                                if NY_TZ:
+                                    dt_candle = datetime.fromtimestamp(candle.time / 1000, tz=NY_TZ)
+                                else:
+                                    dt_candle = datetime.fromtimestamp(candle.time / 1000)
+
+                                candles_list.append({
+                                    "datetime": dt_candle,
+                                    "open": float(candle.open) if candle.open else 0,
+                                    "high": float(candle.high) if candle.high else 0,
+                                    "low": float(candle.low) if candle.low else 0,
+                                    "close": float(candle.close) if candle.close else 0,
+                                    "volume": float(candle.volume) if candle.volume else 0
+                                })
+
+                            # Condición de parada: llegamos al inicio del día
+                            if candle.time == ts:
+                                break
+                except asyncio.TimeoutError:
+                    print(f"[CANDLE] {ticker}: Timeout 60s, obtenidas {len(candles_list)} velas")
+
+            # --- PROCESAMIENTO DE DATOS (Si llegamos aquí, la descarga fue exitosa) ---
+            if not candles_list:
+                return pd.DataFrame()
+
+            df = pd.DataFrame(candles_list)
+            df = df.sort_values("datetime").reset_index(drop=True)
+            # Filtrar solo horas de trading
+            df = df[df["datetime"].apply(lambda x: dt_time(9, 0) <= x.time() <= dt_time(16, 20))]
+            
+            print(f"[CANDLE] {ticker}: {len(df)} velas descargadas correctamente.")
+            return df
+
+        except Exception as e:
+            error_msg = str(e).lower()
+            # Detectar errores de autenticación o token expirado
+            if "expired" in error_msg or "auth" in error_msg or "token" in error_msg or "unauthorized" in error_msg:
+                print(f"[AUTH ERROR] Token expirado en intento {attempt+1}. Refrescando sesión...")
+                # El loop continuará y 'force_refresh' será True en la siguiente vuelta
+                continue
+            else:
+                # Si es otro error (ej. error de red grave), imprimimos y salimos para no buclear infinito
+                print(f"[ERROR CANDLE FATAL] {ticker}: {e}")
+                import traceback
+                traceback.print_exc()
+                return pd.DataFrame()
+
+    print(f"[ERROR CANDLE] {ticker}: Fallaron todos los intentos de descarga.")
+    return pd.DataFrame()
 
 # --- 2. OBTENER ARCHIVOS DE GRIEGAS ---
 def get_all_greeks_files(ticker: str, expiry: str, date_str: str) -> list:
