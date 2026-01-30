@@ -17,3 +17,4 @@ trades_live/
 *.json
 *.csv
 !requirements.txt
+futures_plots/
