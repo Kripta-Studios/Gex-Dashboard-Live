@@ -133,6 +133,27 @@ async function fetchIBData(ticker, dateStr) {
 }
 
 /**
+ * Fetch IB data with retry - waits for server to finish generating file
+ * @param {string} ticker - Ticker symbol
+ * @param {string} dateStr - Date in YYYYMMDD format
+ * @param {number} maxRetries - Max retry attempts
+ * @param {number} delay - Delay between retries in ms
+ * @returns {Promise<Object|null>} Complete IB data or null
+ */
+async function fetchIBDataWithRetry(ticker, dateStr, maxRetries = 5, delay = 2000) {
+    for (let i = 0; i < maxRetries; i++) {
+        const data = await fetchIBData(ticker, dateStr);
+        // Check if data is complete (has analysis with required fields)
+        if (data && data.analysis && data.analysis.ib_range !== undefined) {
+            return data;
+        }
+        console.log(`[IB Retry ${i + 1}/${maxRetries}] Waiting for complete IB data: ${ticker} ${dateStr}...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+    }
+    return null;
+}
+
+/**
  * Fetch with retry for unreliable data
  * @param {string} ticker - Ticker symbol
  * @param {string} exp - Expiration

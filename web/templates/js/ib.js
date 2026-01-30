@@ -19,6 +19,28 @@ function createIBPanel(chartObj, index) {
     panel.addEventListener("dragstart", handleDragStart);
     panel.addEventListener("dragend", handleDragEnd);
 
+    // Check if analysis data exists
+    if (!data || !data.analysis) {
+        const header = document.createElement("div");
+        header.className = "chart-header";
+        header.innerHTML = `
+        <div class="chart-title-row">
+          <div>
+            <span class="chart-title" style="color:#FFD700;">${inputTicker} IB & LEVELS</span>
+            <span class="chart-subtitle">${dateStr}</span>
+          </div>
+          <div>
+            <button class="btn-close" onclick="removeChart(${index})">×</button>
+          </div>
+        </div>
+        <div class="chart-stats" style="border-left: 3px solid #FF4500; display:flex; gap:10px;">
+          <span style="font-size:10px; color:#FF4500;">WAIT a few seconds. Error: No analysis data available for this ticker/date</span>
+        </div>
+      `;
+        panel.appendChild(header);
+        return panel;
+    }
+
     // Header
     const header = document.createElement("div");
     header.className = "chart-header";
@@ -300,7 +322,8 @@ async function handleLoadIB() {
     const originalText = btn.innerText;
     btn.innerText = "⏳";
 
-    const data = await fetchIBData(ticker, dateStr);
+    // Use retry mechanism to wait for server to finish generating file
+    const data = await fetchIBDataWithRetry(ticker, dateStr);
 
     btn.innerText = originalText;
 
