@@ -35,6 +35,9 @@ CHANNEL_MAPPING = {
     "GOOGL": 1462142389081870404,
     "META": 1462142431276306656,
     "NVDA": 1462142452558336052,
+    # Futures
+    "/ES": 1466750485724921990,
+    "/NQ": 1466750528037064880,
 }
 
 # --- RUTAS Y ZONAS ---
@@ -61,6 +64,8 @@ TICKERS_TO_TRACK = [
     "NVDA",
 ]
 
+FUTURES_TO_TRACK = ["/ES", "/NQ"]
+
 FOURIER_THRESHOLD_PRICE = 0.05
 FOURIER_THRESHOLD_IV = 0.08
 
@@ -68,6 +73,9 @@ if not os.path.exists(OUTPUT_DIR):
     os.makedirs(OUTPUT_DIR)
 
 SENT_CACHE = {}
+# Cache para compartir datos de IV entre índices y futuros
+# { "SPX": pd.DataFrame, "QQQ": pd.DataFrame }
+GLOBAL_IV_CACHE = {}
 
 # --- 1. PROCESAMIENTO ---
 
@@ -321,6 +329,238 @@ def analyze_save_and_plot(ticker, df, date_str):
     return png_filename
 
 
+# --- FUTURES FOURIER ---
+# Funciones para procesar futuros con Tastytrade API
+
+from tastytrade import Session, DXLinkStreamer
+from tastytrade.dxfeed import Candle
+
+TT_USERNAME = os.getenv("TASTYTRADE_USERNAME")
+TT_PASSWORD = os.getenv("TASTYTRADE_PASSWORD")
+
+_tt_session = None
+
+def get_tastytrade_session(force_refresh=False):
+    global _tt_session
+    if force_refresh and _tt_session is not None:
+        try:
+            _tt_session.destroy()
+        except:
+            pass
+        _tt_session = None
+    if _tt_session is None:
+        if not TT_USERNAME or not TT_PASSWORD:
+            return None
+        _tt_session = Session(TT_USERNAME, TT_PASSWORD)
+    return _tt_session
+
+
+def get_active_future_symbol(root_symbol: str) -> tuple:
+    month_codes = {1: 'F', 2: 'G', 3: 'H', 4: 'J', 5: 'K', 6: 'M',
+                   7: 'N', 8: 'Q', 9: 'U', 10: 'V', 11: 'X', 12: 'Z'}
+    quarterly_months = [3, 6, 9, 12]
+    
+    current_date = datetime.now(NY_TZ) if NY_TZ else datetime.now()
+    year = current_date.year
+    
+    for m in quarterly_months:
+        first_day = datetime(year, m, 1)
+        weekday = first_day.weekday()
+        delta = (4 - weekday + 7) % 7
+        third_friday = 1 + delta + 14
+        expiry = datetime(year, m, third_friday)
+        if NY_TZ:
+            expiry = expiry.replace(tzinfo=NY_TZ)
+        if current_date < expiry:
+            month_code = month_codes[m]
+            break
+    else:
+        year += 1
+        month_code = 'H'
+    
+    year_2digit = str(year)[-2:]
+    base_symbol = root_symbol.lstrip('/')
+    streamer_symbol = f"/{base_symbol}{month_code}{year_2digit}:XCME"
+    return streamer_symbol
+
+
+async def get_futures_candle_data(ticker: str) -> pd.DataFrame:
+    streamer_symbol = get_active_future_symbol(ticker)
+    
+    now = datetime.now(NY_TZ) if NY_TZ else datetime.now()
+    today = now.date()
+    if now.time() < dt_time(9, 30):
+        today = today - timedelta(days=1)
+
+    start_time = datetime.combine(today, dt_time(6, 0))
+    if NY_TZ:
+        start_time = start_time.replace(tzinfo=NY_TZ)
+    ts = round(start_time.timestamp() * 1000)
+
+    session = get_tastytrade_session()
+    if not session:
+        return pd.DataFrame()
+
+    candles_list = []
+    try:
+        async with DXLinkStreamer(session) as streamer:
+            await streamer.subscribe_candle([streamer_symbol], "1m", start_time)
+            try:
+                async with asyncio.timeout(60):
+                    async for candle in streamer.listen(Candle):
+                        if candle.close:
+                            dt_candle = datetime.fromtimestamp(candle.time / 1000, tz=NY_TZ) if NY_TZ else datetime.fromtimestamp(candle.time / 1000)
+                            candles_list.append({
+                                "datetime": dt_candle,
+                                "spot": float(candle.close),
+                                "atm_put_iv": 0.0  # Futuros no tienen IV aquí
+                            })
+                        if candle.time <= ts:
+                            break
+            except asyncio.TimeoutError:
+                pass
+    except Exception as e:
+        print(f"[FUTURES FOURIER ERROR] {ticker}: {e}")
+        return pd.DataFrame()
+    
+    if not candles_list:
+        return pd.DataFrame()
+    
+    df = pd.DataFrame(candles_list)
+    df = df.sort_values("datetime").reset_index(drop=True)
+    return df
+
+
+def analyze_futures_fourier(ticker: str, df: pd.DataFrame, date_str: str):
+    """Genera un gráfico Fourier solo de precio para futuros."""
+    if df.empty or len(df) < 5:
+        return None
+
+    df = df.sort_values("datetime").reset_index(drop=True)
+    start_time = dt_time(3, 0)
+    end_time = dt_time(17, 0)
+    df = df[df["datetime"].apply(lambda x: start_time <= x.time() <= end_time)]
+
+    if df.empty or len(df) < 5:
+        return None
+
+    df = df.reset_index(drop=True)
+    df["spot_fft"] = apply_fourier_filter(df["spot"], threshold=FOURIER_THRESHOLD_PRICE)
+    
+    # --- 1. CRUZAR DATOS IV DEL ÍNDICE ---
+    # /ES usa SPX, /NQ usa QQQ
+    underlying_map = {"/ES": "SPX", "/NQ": "QQQ"}
+    underlying_ticker = underlying_map.get(ticker)
+    
+    # Intentar obtener IV del índice cacheado
+    merged_iv = False
+    if underlying_ticker and underlying_ticker in GLOBAL_IV_CACHE:
+        try:
+            iv_df = GLOBAL_IV_CACHE[underlying_ticker]
+            if not iv_df.empty:
+                # Asegurar que ambos tienen datetime como índice para merge/asof
+                df_temp = df.copy()
+                df_temp = df_temp.sort_values("datetime")
+                
+                iv_temp = iv_df[["datetime", "atm_put_iv"]].copy()
+                iv_temp = iv_temp.sort_values("datetime")
+                
+                # Merge asof para encontrar la IV más cercana en tiempo
+                merged = pd.merge_asof(
+                    df_temp, 
+                    iv_temp, 
+                    on="datetime", 
+                    direction="nearest", 
+                    tolerance=pd.Timedelta("5min")
+                )
+                
+                # Actualizar columnas
+                if "atm_put_iv_y" in merged.columns:
+                    df["atm_put_iv"] = merged["atm_put_iv_y"].fillna(0.0)
+                elif "atm_put_iv" in merged.columns:
+                    df["atm_put_iv"] = merged["atm_put_iv"]
+                
+                merged_iv = True
+                print(f"[FUTURES IV] {ticker}: Merged IV from {underlying_ticker}")
+        except Exception as e:
+            print(f"[ERROR MERGING IV] {ticker}: {e}")
+
+    # Si no se pudo mergear, rellenar con 0
+    if not merged_iv:
+        df["atm_put_iv"] = 0.0
+
+    # Calcular Fourier de la IV mergeada
+    df["iv_fft"] = apply_fourier_filter(
+        df["atm_put_iv"], threshold=FOURIER_THRESHOLD_IV
+    )
+
+    # --- 2. JSON SAVE ---
+    
+    # --- 1. JSON SAVE ---
+    ticker_clean = ticker.replace("/", "")
+    
+    json_df = df.copy()
+    json_df["datetime"] = json_df["datetime"].apply(
+        lambda x: x.strftime("%Y-%m-%d %H:%M:%S")
+    )
+    # Ensure IV column exists even if 0, for compatibility
+    if "iv_fft" not in json_df.columns:
+        json_df["iv_fft"] = 0.0
+    if "atm_put_iv" not in json_df.columns:
+        json_df["atm_put_iv"] = 0.0
+
+    json_filename = os.path.join(OUTPUT_DIR, f"fourier_data_{ticker_clean}_{date_str}.json")
+    json_df.to_json(json_filename, orient="records", indent=4)
+
+    # --- 2. PLOT ---
+    spot_turns = detect_turns(df["spot_fft"])
+    formatted_date = datetime.strptime(date_str, "%Y%m%d").strftime("%Y-%m-%d")
+
+    plt.rcParams["font.family"] = "monospace"
+    fig, ax1 = plt.subplots(figsize=(16, 8))
+    fig.patch.set_facecolor("#080808")
+    ax1.set_facecolor("#080808")
+
+    ax1.grid(True, which="major", color="#333333", linestyle=":", linewidth=0.5)
+    ax1.set_axisbelow(True)
+
+    plt.title(
+        f"{ticker} Futures | FOURIER PRICE | {formatted_date} (NY Time)",
+        color="#e0e0e0", fontsize=14, fontweight="bold", pad=20, loc="left",
+    )
+
+    ax1.plot(df["datetime"], df["spot_fft"], color="#00F0FF", linewidth=2, label="Price Fourier")
+    ax1.set_ylabel(f"{ticker} Price", color="#00F0FF", fontsize=10, fontweight="bold")
+    ax1.tick_params(axis="y", colors="#00F0FF", labelsize=9)
+    ax1.spines["left"].set_color("#00F0FF")
+    ax1.spines["left"].set_alpha(0.5)
+
+    for idx, tipo in spot_turns:
+        x_val = df["datetime"].iloc[idx]
+        y_val = df["spot_fft"].iloc[idx]
+        ax1.axvline(x=x_val, color="#00F0FF", linestyle=":", alpha=0.2)
+        c = "#FF0000" if tipo == "PEAK" else "#00FF00"
+        ax1.scatter(x_val, y_val, color=c, s=50, zorder=10, edgecolors="white", linewidth=1)
+
+    ax1.spines["top"].set_visible(False)
+    ax1.spines["right"].set_visible(False)
+    ax1.spines["bottom"].set_color("#333333")
+
+    if NY_TZ:
+        ax1.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M", tz=NY_TZ))
+    else:
+        ax1.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
+
+    ax1.xaxis.set_major_locator(mdates.MinuteLocator(byminute=[0, 30]))
+    ax1.tick_params(axis="x", colors="#888888", rotation=0, labelsize=9)
+
+    png_filename = os.path.join(OUTPUT_DIR, f"fourier_plot_{ticker_clean}_{date_str}.png")
+    plt.savefig(png_filename, dpi=120, bbox_inches="tight", facecolor="#080808")
+    plt.close()
+
+    return png_filename
+
+
 # --- BOT ---
 
 
@@ -337,15 +577,43 @@ class FourierBot(discord.Client):
 
     async def fourier_loop(self):
         await self.wait_until_ready()
-        print(f"[SYSTEM] Iniciando Bucle Fourier. Tickers: {len(TICKERS_TO_TRACK)}")
+        print(f"[SYSTEM] Iniciando Bucle Fourier. Tickers: {len(TICKERS_TO_TRACK)} + Futures: {len(FUTURES_TO_TRACK)}")
 
         while not self.is_closed():
             try:
+                # Procesar tickers normales (sync)
                 await self.loop.run_in_executor(None, self.process_tickers_sync)
+                # Procesar futuros (async)
+                await self.process_futures_async()
             except Exception as e:
                 print(f"[ERROR LOOP] {e}")
             print("[SYSTEM] Esperando 60 segundos...")
             await asyncio.sleep(60)
+
+    async def process_futures_async(self):
+        """Procesa futuros (/ES, /NQ) con análisis Fourier."""
+        today_str = datetime.now().strftime("%Y%m%d")
+        
+        for ticker in FUTURES_TO_TRACK:
+            try:
+                df = await get_futures_candle_data(ticker)
+                
+                if df.empty:
+                    print(f"[FUTURES FOURIER SKIP] {ticker}: No hay datos")
+                    continue
+                
+                png_path = analyze_futures_fourier(ticker, df, today_str)
+                
+                if png_path and os.path.exists(png_path):
+                    # Check if changed
+                    current_mtime = os.path.getmtime(png_path)
+                    if SENT_CACHE.get(ticker) != current_mtime:
+                        await self.send_plot(ticker, png_path)
+                        SENT_CACHE[ticker] = current_mtime
+                        print(f"[FUTURES FOURIER OK] {ticker}")
+                        
+            except Exception as e:
+                print(f"[ERROR FUTURES FOURIER] {ticker}: {e}")
 
     def process_tickers_sync(self):
         now = datetime.now()
@@ -370,6 +638,10 @@ class FourierBot(discord.Client):
                     last_processed = SENT_CACHE.get(ticker)
 
                     if last_processed != last_mtime:
+                        # Guardar en cache global para uso de futuros
+                        if ticker in ["SPX", "QQQ"]:
+                            GLOBAL_IV_CACHE[ticker] = df[["datetime", "atm_put_iv"]].copy()
+                            
                         png_path = analyze_save_and_plot(ticker, df, today_str)
 
                         if png_path and os.path.exists(png_path):
@@ -379,6 +651,9 @@ class FourierBot(discord.Client):
                             SENT_CACHE[ticker] = last_mtime
                             print(f"[UPDATE] {ticker}: Procesado y enviado.")
                     else:
+                        # Aunque no haya cambiado el archivo, actualizamos la cache para que los futuros tengan datos recientes
+                        if ticker in ["SPX", "QQQ"]:
+                            GLOBAL_IV_CACHE[ticker] = df[["datetime", "atm_put_iv"]].copy()
                         print("JSON data file has not changed for", ticker)
             except Exception as e:
                 print(f"[ERROR TICKER] {ticker}: {e}")

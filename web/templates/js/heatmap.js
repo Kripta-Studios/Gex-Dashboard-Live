@@ -33,13 +33,21 @@ function createHeatmapPanel(chartObj, index) {
         agg[k] = (agg[k] || 0) + v;
     });
 
-    let rows = Object.keys(agg).map((k) => ({
-        strike: parseFloat(k),
-        value: agg[k],
-    }));
+    const multiplier = globalData.conversionRatio || 1;
+    let rows = Object.keys(agg).map((k) => {
+        let val = parseFloat(k) * multiplier;
+        // If converting (multiplier != 1), round to nearest 10 for aesthetics
+        if (multiplier !== 1) {
+            val = Math.round(val / 10) * 10;
+        }
+        return {
+            strike: val,
+            value: agg[k],
+        };
+    });
     rows.sort((a, b) => b.strike - a.strike);
 
-    const spot = globalData.spot_price || 0;
+    const spot = globalData.futureSpot || globalData.spot_price || 0;
     const net = rows.reduce((s, i) => s + i.value, 0);
 
     // Calculate max/min and spot value

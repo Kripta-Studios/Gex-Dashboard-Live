@@ -1,32 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>GEX Dashboard Pro - Login</title>
-    
+
     <!-- External Libraries -->
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+
     <!-- Modular CSS -->
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
 
-	<div class="zen-controls-bottom">
-		<button class="zen-float-btn" onclick="realignAllCharts()">CENTER ALL</button>
-	    <button class="zen-float-btn" onclick="takeSnapshot()">📸</button>
-	    <button class="zen-float-btn" onclick="toggleZenMode()">EXIT ZEN MODE</button>
-	</div>
+    <div class="zen-controls-bottom">
+        <button class="zen-float-btn" onclick="realignAllCharts()">CENTER ALL</button>
+        <button class="zen-float-btn" onclick="takeSnapshot()">📸</button>
+        <button class="zen-float-btn" onclick="toggleZenMode()">EXIT ZEN MODE</button>
+    </div>
     <div id="login-screen">
         <div class="login-card">
             <div class="login-title">GEX DASHBOARD</div>
-            
+
             <div class="login-input-group">
                 <label class="login-label">Email</label>
                 <input type="email" id="login-email" class="login-input" placeholder="user@flowgreeks.com">
@@ -44,38 +48,63 @@
     </div>
 
     <div id="app-wrapper" style="display: none;">
-    <div class="global-time-monitor">
-        <div class="market-item">
-            <span class="market-label" id="data-time-label">LIVE DATA</span>
-            <span class="market-price" id="last-data-time">--:--</span>
+        <div class="global-time-monitor">
+            <div class="market-item">
+                <span class="market-label" id="data-time-label">LIVE DATA</span>
+                <span class="market-price" id="last-data-time">--:--</span>
+            </div>
+            <div class="separator"></div>
+            <div class="market-item">
+                <span class="market-label">NY TIME</span>
+                <span class="market-price" id="ny-time">--:--</span>
+            </div>
         </div>
-        <div class="separator"></div>
-        <div class="market-item">
-            <span class="market-label">NY TIME</span>
-            <span class="market-price" id="ny-time">--:--</span>
-        </div>
-    </div>
 
-    <div class="tab-container" id="tab-container">
-        <button class="new-tab-btn" onclick="addNewTab()">+</button>
-    </div>
+        <div class="tab-container" id="tab-container">
+            <button class="new-tab-btn" onclick="addNewTab()">+</button>
+        </div>
         <div class="main-content">
             <div class="top-bar">
                 <div class="control-panel">
-					<input type="date" id="fourier-date" style="width: 110px; font-weight:700;" title="Date for Fourier Analysis">
-					
-					<button onclick="handleLoadFourier()" style="background: var(--accent-red); color: white;">FOURIER</button>
-					<button id="btn-ib" onclick="handleLoadIB()" style="background: #FFD700; color: black; display: none; font-weight:bold; margin-left:5px;">IB</button>
-                    <input type="text" id="ticker" value="SPX" placeholder="Ticker" list="ticker-list" oninput="updateExpSuggestions()" style="width: 70px; font-weight:700;">
+                    <input type="date" id="fourier-date" style="width: 110px; font-weight:700;"
+                        title="Date for Fourier Analysis">
+
+                    <button onclick="handleLoadFourier()"
+                        style="background: var(--accent-red); color: white;">FOURIER</button>
+                    <button id="btn-ib" onclick="handleLoadIB()"
+                        style="background: #FFD700; color: black; display: none; font-weight:bold; margin-left:5px;">IB</button>
+                    <input type="text" id="ticker" value="SPX" placeholder="Ticker" list="ticker-list"
+                        oninput="updateExpSuggestions()" style="width: 70px; font-weight:700;">
                     <datalist id="ticker-list">
-                        <option value="SPX"><option value="QQQ"><option value="SPY"><option value="IWM"><option value="VIX">
-                        <option value="AAPL"><option value="AMZN"><option value="MSFT"><option value="GOOGL"><option value="META">
-                        <option value="NVDA"><option value="AMD"><option value="TSLA"><option value="NFLX"><option value="PLTR">
-                        <option value="HOOD"><option value="MSTR"><option value="HIMS"><option value="UNH"><option value="GLD">
+                        <option value="SPX">
+                        <option value="QQQ">
+                        <option value="SPY">
+                        <option value="IWM">
+                        <option value="VIX">
+                        <option value="/ES">
+                        <option value="/NQ">
+                        <option value="ES">
+                        <option value="NQ">
+                        <option value="AAPL">
+                        <option value="AMZN">
+                        <option value="MSFT">
+                        <option value="GOOGL">
+                        <option value="META">
+                        <option value="NVDA">
+                        <option value="AMD">
+                        <option value="TSLA">
+                        <option value="NFLX">
+                        <option value="PLTR">
+                        <option value="HOOD">
+                        <option value="MSTR">
+                        <option value="HIMS">
+                        <option value="UNH">
+                        <option value="GLD">
                         <option value="SLV">
                     </datalist>
 
-                    <input type="text" id="exp" value="0dte" placeholder="Exp" list="exp-list" style="width: 60px; font-weight:700;">
+                    <input type="text" id="exp" value="0dte" placeholder="Exp" list="exp-list"
+                        style="width: 60px; font-weight:700;">
                     <datalist id="exp-list"></datalist>
 
                     <select id="greek-select" style="font-weight:700;">
@@ -89,22 +118,24 @@
 
                     <button onclick="handleLoadData()">LOAD</button>
                     <button class="btn-add" onclick="handleAddChart()">+</button>
-                    
+
                     <select onchange="changePalette(this.value)" style="width:80px;" title="Theme">
                         <option value="default">Default</option>
                         <option value="palette-alt">Blue/Org</option>
                     </select>
-	
-    				<button class="btn-icon" onclick="realignAllCharts()" title="Realign All to Spot">CENTER ALL</button>                
+
+                    <button class="btn-icon" onclick="realignAllCharts()" title="Realign All to Spot">CENTER
+                        ALL</button>
                     <button class="btn-icon" onclick="takeSnapshot()" title="Save Image">📸</button>
                     <button class="btn-icon" onclick="toggleZenMode()" title="Zen Mode">🧘</button>
-					<button class="btn-icon" onclick="popoutCurrentLayout()" title="Pop out Layout">⇱</button>
+                    <button class="btn-icon" onclick="popoutCurrentLayout()" title="Pop out Layout">⇱</button>
                     <button onclick="saveAllLayouts()" style="background:#333; color:#ccc;">SAVE</button>
 
                     <label class="checkbox-wrapper">
                         <input type="checkbox" id="auto-refresh" onchange="toggleAutoRefresh()" checked>
                         AUTO
-                        <span id="timer-indicator" style="width: 6px; height: 6px; background: var(--accent-green); border-radius: 50%; display: none;"></span>
+                        <span id="timer-indicator"
+                            style="width: 6px; height: 6px; background: var(--accent-green); border-radius: 50%; display: none;"></span>
                     </label>
                 </div>
 
@@ -134,16 +165,24 @@
                     No charts loaded.
                 </div>
             </div>
-            
+
             <div id="time-machine-panel">
-                <button style="background:transparent; border:none; color:var(--text-dim); cursor:pointer;" onclick="playHistory()">▶</button>
-				<button id="btn-history-load" onclick="loadHistoryNow()" style="margin: 0 5px; background: var(--accent-blue); border: none; color: white; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; cursor: pointer;" title="Load Data for Selected Time">GO</button>
-				<button onclick="goLive()" style="margin: 0 10px; background: var(--panel-bg); border: 1px solid var(--accent-green); color: var(--accent-green); font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; cursor: pointer;">GO LIVE</button>
+                <button style="background:transparent; border:none; color:var(--text-dim); cursor:pointer;"
+                    onclick="playHistory()">▶</button>
+                <button id="btn-history-load" onclick="loadHistoryNow()"
+                    style="margin: 0 5px; background: var(--accent-blue); border: none; color: white; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; cursor: pointer;"
+                    title="Load Data for Selected Time">GO</button>
+                <button onclick="goLive()"
+                    style="margin: 0 10px; background: var(--panel-bg); border: 1px solid var(--accent-green); color: var(--accent-green); font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; cursor: pointer;">GO
+                    LIVE</button>
                 <div style="font-size:9px; color:var(--text-dim); width:60px;">HISTORY</div>
-                <input type="range" id="history-slider" min="0" max="100" value="100" oninput="scrubHistory(this.value)">
+                <input type="range" id="history-slider" min="0" max="100" value="100"
+                    oninput="scrubHistory(this.value)">
                 <div style="text-align:right; width:80px;">
                     <div style="font-size:9px; color:var(--text-dim);">DATA TIME</div>
-                    <div id="history-time" style="font-family:'Roboto Mono'; font-weight:700; color:var(--accent-green); font-size:12px;">LIVE</div>
+                    <div id="history-time"
+                        style="font-family:'Roboto Mono'; font-weight:700; color:var(--accent-green); font-size:12px;">
+                        LIVE</div>
                 </div>
             </div>
         </div>
@@ -158,54 +197,55 @@
     The scripts below are loaded in dependency order.
     Each module contains specific functionality.
     -->
-    
+
     <!-- 1. State - Global variables (must be first) -->
     <script src="js/state.js"></script>
-    
+
     <!-- 2. API - Data fetching functions -->
     <script src="js/api.js"></script>
-    
+
     <!-- 3. UI - User interface helpers -->
     <script src="js/ui.js"></script>
-    
+
     <!-- 4. Tabs - Tab management -->
     <script src="js/tabs.js"></script>
-    
+
     <!-- 5. Drag & Drop - Panel reordering -->
     <script src="js/dragdrop.js"></script>
-    
+
     <!-- 6. Charts - Chart panel dispatcher -->
     <script src="js/charts.js"></script>
-    
+
     <!-- 7. Heatmap - Greek exposure heatmaps -->
     <script src="js/heatmap.js"></script>
-    
+
     <!-- 8. Fourier - Fourier analysis charts -->
     <script src="js/fourier.js"></script>
-    
+
     <!-- 9. IB - Initial Balance charts -->
     <script src="js/ib.js"></script>
-    
+
     <!-- 10. Handlers - Form handling -->
     <script src="js/handlers.js"></script>
-    
+
     <!-- 11. History - Time machine controls -->
     <script src="js/history.js"></script>
-    
+
     <!-- 12. Layout - Save/load layouts -->
     <script src="js/layout.js"></script>
-    
+
     <!-- 13. Refresh - Dashboard refresh -->
     <script src="js/refresh.js"></script>
-    
+
     <!-- 14. Windows - Detached windows -->
     <script src="js/windows.js"></script>
-    
+
     <!-- 15. Auth - Authentication -->
     <script src="js/auth.js"></script>
-    
+
     <!-- 16. Init - Application initialization (must be last) -->
     <script src="js/init.js"></script>
 
 </body>
+
 </html>

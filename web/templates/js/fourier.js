@@ -253,6 +253,11 @@ async function handleLoadFourier() {
         addFourierChartToCurrent(data, ticker, dateStr);
         renderAllCharts();
     } else {
-        alert(`No Fourier data found for ${ticker} on ${dateVal}.\nEnsure the server has generated: fourier_data_${ticker}_${dateStr}.json`);
+        // Show actual file being searched (with ticker mapping)
+        let searchTicker = ticker;
+        if (ticker === "/ES") searchTicker = "SPX";
+        else if (ticker === "/NQ") searchTicker = "QQQ";
+        alert(`No Fourier data found for ${ticker} on ${dateVal}.\nSearched: fourier_data_${searchTicker}_${dateStr}.json`);
     }
 }
+

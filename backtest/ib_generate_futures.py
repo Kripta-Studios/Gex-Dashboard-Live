@@ -79,8 +79,8 @@ def get_active_future_symbol(session, root_symbol: str) -> tuple:
         root_symbol: Símbolo raíz (ej: "/ES", "/NQ")
     
     Returns:
-        tuple: (full_symbol, candle_symbol, streamer_symbol, future_object)
-        El candle_symbol es el símbolo a usar para suscripción a velas (sin sufijo de exchange)
+        tuple: (full_symbol, streamer_symbol, future_object)
+        El streamer_symbol es el formato correcto para DXLink: /ESH26:XCME
     """
     # Códigos de meses de futuros
     month_codes = {
@@ -113,24 +113,26 @@ def get_active_future_symbol(session, root_symbol: str) -> tuple:
         year += 1
         month_code = 'H'  # Marzo
     
-    year_code = str(year)[-1]
-    full_symbol = f"{root_symbol}{month_code}{year_code}"
+    # Usar año de 2 dígitos para el símbolo CLI y el streamer
+    year_2digit = str(year)[-2:]  # e.g., "26" para 2026
+    year_1digit = str(year)[-1]   # e.g., "6" para 2026 (CLI format)
     
-    print(f"  [FUTURE] Resolviendo {root_symbol} → {full_symbol}")
+    # full_symbol es el formato CLI: /ESH6
+    full_symbol = f"{root_symbol}{month_code}{year_1digit}"
+    
+    # streamer_symbol es el formato correcto para DXLink: /ESH26:XCME
+    base_symbol = root_symbol.lstrip('/')
+    streamer_symbol = f"/{base_symbol}{month_code}{year_2digit}:XCME"
+    
+    print(f"  [FUTURE] Resolviendo {root_symbol} → {full_symbol} (streamer: {streamer_symbol})")
     
     try:
         future = Future.get(session, full_symbol)
-        streamer_symbol = future.streamer_symbol
-        # Opciones de símbolo para probar (en orden de prioridad)
-        # 1. full_symbol: /ESH6 (formato CLI)
-        # 2. streamer_symbol sin sufijo: /ESH26 
-        # 3. streamer_symbol completo: /ESH26:XCME
-        candle_symbol_nosuffix = streamer_symbol.split(":")[0] if ":" in streamer_symbol else streamer_symbol
-        print(f"  [FUTURE] full: {full_symbol}, streamer: {streamer_symbol}")
-        return full_symbol, candle_symbol_nosuffix, streamer_symbol, future
+        print(f"  [FUTURE] Contrato obtenido: {future.symbol}")
+        return full_symbol, streamer_symbol, future
     except Exception as e:
         print(f"  [ERROR] No se pudo resolver {full_symbol}: {e}")
-        return None, None, None, None
+        return None, None, None
 
 
 def get_trading_days(num_days: int) -> list:
@@ -157,112 +159,87 @@ def get_trading_days(num_days: int) -> list:
     return trading_days
 
 
-async def get_candle_data_for_date(session, full_symbol: str, candle_symbol: str, streamer_symbol: str, target_date: date) -> pd.DataFrame:
+async def get_candle_data_for_date(session, streamer_symbol: str, target_date: date) -> pd.DataFrame:
     """
     Descarga datos de velas de 1 minuto para una fecha específica usando DXLinkStreamer.
     Filtra a horas RTH (Regular Trading Hours): 9:30 AM - 4:00 PM ET
     
-    Intenta múltiples formatos de símbolo en orden:
-    1. full_symbol: /ESH6 (formato CLI)
-    2. candle_symbol: /ESH26 (streamer sin sufijo)
-    3. streamer_symbol: /ESH26:XCME (completo)
-    
     Args:
         session: Sesión de Tastytrade
-        full_symbol: Símbolo formato CLI (ej: "/ESH6")
-        candle_symbol: Símbolo sin sufijo de exchange (ej: "/ESH26")
         streamer_symbol: Símbolo completo con exchange (ej: "/ESH26:XCME")
         target_date: Fecha objetivo
     
     Retorna un DataFrame con columnas: datetime, open, high, low, close, volume
     """
-    # Generar variante con año anterior (ej: /ESH5 para 2025)
-    # Esto es útil si los datos históricos usan contratos del año pasado
-    if full_symbol[-1].isdigit():
-        prev_year_digit = str((int(full_symbol[-1]) - 1) % 10)
-        full_symbol_prev_year = full_symbol[:-1] + prev_year_digit
-    else:
-        full_symbol_prev_year = None
+    candles_list = []
     
-    # Lista de símbolos a intentar (primero el formato CLI, luego otros)
-    symbols_to_try = [full_symbol, candle_symbol, streamer_symbol]
-    if full_symbol_prev_year:
-        symbols_to_try.append(full_symbol_prev_year)
+    # Futuros: comenzar desde las 6:00 AM (pre-market de futuros)
+    # Los futuros CME abren a 6PM del día anterior y cierran a 5PM
+    start_time = datetime.combine(target_date, dt_time(6, 0))
+    end_time = datetime.combine(target_date, dt_time(17, 0))
     
-    for symbol in symbols_to_try:
-        candles_list = []
-        
-        # Futuros: comenzar desde las 6:00 AM (pre-market de futuros)
-        # Los futuros CME abren a 6PM del día anterior y cierran a 5PM
-        start_time = datetime.combine(target_date, dt_time(6, 0))
-        end_time = datetime.combine(target_date, dt_time(17, 0))
-        
-        if NY_TZ:
-            start_time = start_time.replace(tzinfo=NY_TZ)
-            end_time = end_time.replace(tzinfo=NY_TZ)
-        
-        ts_start = round(start_time.timestamp() * 1000)
-        
-        print(f"  [CANDLE] Intentando {symbol} para {target_date.strftime('%Y-%m-%d')}...")
-        
-        try:
-            async with DXLinkStreamer(session) as streamer:
-                await streamer.subscribe_candle([symbol], "1m", start_time)
-                
-                # Timeout más corto para el primer intento
-                timeout_secs = 30 if symbol == streamer_symbol else 60
-                
-                try:
-                    async with asyncio.timeout(timeout_secs):
-                        async for candle in streamer.listen(Candle):
-                            if candle.close:
-                                # Convertir timestamp a datetime en zona NY
-                                if NY_TZ:
-                                    dt_candle = datetime.fromtimestamp(candle.time / 1000, tz=NY_TZ)
-                                else:
-                                    dt_candle = datetime.fromtimestamp(candle.time / 1000)
-                                
-                                # Solo incluir velas del día objetivo
-                                if dt_candle.date() != target_date:
-                                    continue
-                                
-                                candles_list.append({
-                                    "datetime": dt_candle,
-                                    "open": float(candle.open) if candle.open else 0,
-                                    "high": float(candle.high) if candle.high else 0,
-                                    "low": float(candle.low) if candle.low else 0,
-                                    "close": float(candle.close) if candle.close else 0,
-                                    "volume": float(candle.volume) if candle.volume else 0
-                                })
+    if NY_TZ:
+        start_time = start_time.replace(tzinfo=NY_TZ)
+        end_time = end_time.replace(tzinfo=NY_TZ)
+    
+    ts_start = round(start_time.timestamp() * 1000)
+    
+    print(f"  [CANDLE] Descargando {streamer_symbol} para {target_date.strftime('%Y-%m-%d')}...")
+    
+    try:
+        async with DXLinkStreamer(session) as streamer:
+            await streamer.subscribe_candle([streamer_symbol], "1m", start_time)
+            
+            try:
+                async with asyncio.timeout(60):
+                    async for candle in streamer.listen(Candle):
+                        if candle.close:
+                            # Convertir timestamp a datetime en zona NY
+                            if NY_TZ:
+                                dt_candle = datetime.fromtimestamp(candle.time / 1000, tz=NY_TZ)
+                            else:
+                                dt_candle = datetime.fromtimestamp(candle.time / 1000)
                             
-                            # Condición de salida: llegamos al inicio del período solicitado
-                            if candle.time <= ts_start:
-                                break
-                                
-                except asyncio.TimeoutError:
-                    print(f"    [TIMEOUT] {symbol}: {len(candles_list)} velas obtenidas")
-                    
-        except Exception as e:
-            print(f"    [ERROR] {symbol}: {e}")
-            continue
-        
-        # Si obtuvimos datos, procesar y retornar
-        if candles_list:
-            print(f"    [OK] {symbol}: {len(candles_list)} velas recibidas")
-            df = pd.DataFrame(candles_list)
-            df = df.sort_values("datetime").reset_index(drop=True)
-            
-            # Filtrar solo horas RTH (9:30 - 16:00)
-            df = df[df["datetime"].apply(lambda x: dt_time(9, 30) <= x.time() <= dt_time(16, 0))]
-            
-            # Eliminar duplicados por datetime
-            df = df.drop_duplicates(subset=["datetime"], keep="last")
-            
-            print(f"    [OK] {len(df)} velas RTH procesadas")
-            return df
+                            # Solo incluir velas del día objetivo
+                            if dt_candle.date() != target_date:
+                                continue
+                            
+                            candles_list.append({
+                                "datetime": dt_candle,
+                                "open": float(candle.open) if candle.open else 0,
+                                "high": float(candle.high) if candle.high else 0,
+                                "low": float(candle.low) if candle.low else 0,
+                                "close": float(candle.close) if candle.close else 0,
+                                "volume": float(candle.volume) if candle.volume else 0
+                            })
+                        
+                        # Condición de salida: llegamos al inicio del período solicitado
+                        if candle.time <= ts_start:
+                            break
+                            
+            except asyncio.TimeoutError:
+                print(f"    [TIMEOUT] {streamer_symbol}: {len(candles_list)} velas obtenidas")
+                
+    except Exception as e:
+        print(f"    [ERROR] {streamer_symbol}: {e}")
+        return pd.DataFrame()
     
-    # Si ningún símbolo funcionó
-    print(f"    [WARN] Sin datos para ninguno de los formatos de símbolo")
+    # Procesar y retornar
+    if candles_list:
+        print(f"    [OK] {streamer_symbol}: {len(candles_list)} velas recibidas")
+        df = pd.DataFrame(candles_list)
+        df = df.sort_values("datetime").reset_index(drop=True)
+        
+        # Filtrar solo horas RTH (9:30 - 16:00)
+        df = df[df["datetime"].apply(lambda x: dt_time(9, 30) <= x.time() <= dt_time(16, 0))]
+        
+        # Eliminar duplicados por datetime
+        df = df.drop_duplicates(subset=["datetime"], keep="last")
+        
+        print(f"    [OK] {len(df)} velas RTH procesadas")
+        return df
+    
+    print(f"    [WARN] Sin datos para {streamer_symbol}")
     return pd.DataFrame()
 
 
@@ -503,11 +480,10 @@ async def process_all_futures():
     # Resolver símbolos de futuros activos
     futures_resolved = {}
     for root_symbol in FUTURES_TO_TRACK:
-        full_symbol, candle_symbol, streamer_symbol, future_obj = get_active_future_symbol(session, root_symbol)
-        if candle_symbol:
+        full_symbol, streamer_symbol, future_obj = get_active_future_symbol(session, root_symbol)
+        if streamer_symbol:
             futures_resolved[root_symbol] = {
                 "full_symbol": full_symbol,
-                "candle_symbol": candle_symbol,
                 "streamer_symbol": streamer_symbol,
                 "future": future_obj
             }
@@ -532,11 +508,9 @@ async def process_all_futures():
                     total_files += 1
                     continue
                 
-                # Descargar velas para esta fecha - intenta con múltiples formatos de símbolo
+                # Descargar velas para esta fecha
                 df_candles = await get_candle_data_for_date(
                     session,
-                    info["full_symbol"],
-                    info["candle_symbol"],
                     info["streamer_symbol"],
                     target_date
                 )

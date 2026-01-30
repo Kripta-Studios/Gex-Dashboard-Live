@@ -57,7 +57,7 @@ function createIBPanel(chartObj, index) {
 }
 
 /**
- * Render IB chart using Chart.js
+ * Render IB chart using Chart.js with candlesticks
  * @param {HTMLCanvasElement} canvas - Canvas element
  * @param {Object} jsonData - IB data object
  */
@@ -69,7 +69,14 @@ function renderIBChart(canvas, jsonData) {
     if (series.length === 0) return;
 
     const labels = series.map(d => d.time);
-    const priceData = series.map(d => d.price);
+
+    // Extract OHLC data for candlesticks
+    const ohlcData = series.map(d => ({
+        o: d.open || d.price,
+        h: d.high || d.price,
+        l: d.low || d.price,
+        c: d.price
+    }));
 
     const ibHigh = jsonData.analysis.ib_high;
     const ibLow = jsonData.analysis.ib_low;
@@ -78,15 +85,14 @@ function renderIBChart(canvas, jsonData) {
 
     const datasets = [];
 
-    // Price line
+    // Invisible price line for tooltip reference
     datasets.push({
         label: 'Price',
-        data: priceData,
-        borderColor: '#00F0FF',
-        backgroundColor: '#00F0FF',
-        borderWidth: 2,
+        data: series.map(d => d.price),
+        borderColor: 'transparent',
+        backgroundColor: 'transparent',
+        borderWidth: 0,
         pointRadius: 0,
-        tension: 0.2,
         order: 1
     });
 
@@ -144,61 +150,109 @@ function renderIBChart(canvas, jsonData) {
         });
     }
 
-    // Render chart with floating labels plugin
+    // Custom candlestick drawing plugin
+    const candlestickPlugin = {
+        id: 'candlestick',
+        beforeDatasetsDraw(chart) {
+            const { ctx, chartArea: { left, right, top, bottom }, scales: { x, y } } = chart;
+
+            const barWidth = (right - left) / labels.length * 0.6;
+
+            ohlcData.forEach((candle, i) => {
+                const xPixel = x.getPixelForValue(i);
+                const oPixel = y.getPixelForValue(candle.o);
+                const hPixel = y.getPixelForValue(candle.h);
+                const lPixel = y.getPixelForValue(candle.l);
+                const cPixel = y.getPixelForValue(candle.c);
+
+                const isBullish = candle.c >= candle.o;
+                const color = isBullish ? '#00d26a' : '#ff4757';
+
+                ctx.save();
+
+                // Draw wick
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(xPixel, hPixel);
+                ctx.lineTo(xPixel, lPixel);
+                ctx.stroke();
+
+                // Draw body
+                const bodyTop = Math.min(oPixel, cPixel);
+                const bodyHeight = Math.abs(cPixel - oPixel) || 1;
+
+                ctx.fillStyle = color;
+                ctx.fillRect(xPixel - barWidth / 2, bodyTop, barWidth, bodyHeight);
+
+                ctx.restore();
+            });
+        }
+    };
+
+    // Floating labels plugin
+    const floatingLabelsPlugin = {
+        id: 'floatingLabels',
+        afterDatasetsDraw(chart) {
+            const { ctx, chartArea: { left, right, top, bottom }, scales: { x, y } } = chart;
+
+            chart.data.datasets.forEach((dataset, i) => {
+                if (dataset.label === 'Price' || !dataset.label || !dataset.data.length) return;
+
+                const value = dataset.data[0];
+                const yPixel = y.getPixelForValue(value);
+
+                if (yPixel < top || yPixel > bottom) return;
+
+                ctx.save();
+                ctx.fillStyle = dataset.borderColor;
+                ctx.font = 'bold 10px sans-serif';
+                ctx.textAlign = 'right';
+                ctx.textBaseline = 'bottom';
+                ctx.fillText(dataset.label, right - 5, yPixel - 4);
+                ctx.restore();
+            });
+        }
+    };
+
+    // Render chart
     new Chart(canvas, {
         type: 'line',
         data: { labels, datasets },
-        plugins: [{
-            id: 'floatingLabels',
-            afterDatasetsDraw(chart, args, options) {
-                const { ctx, chartArea: { left, right, top, bottom }, scales: { x, y } } = chart;
-
-                chart.data.datasets.forEach((dataset, i) => {
-                    if (dataset.label === 'Price' || !dataset.label || !dataset.data.length) return;
-
-                    const value = dataset.data[0];
-                    const yPixel = y.getPixelForValue(value);
-
-                    if (yPixel < top || yPixel > bottom) return;
-
-                    ctx.save();
-                    ctx.fillStyle = dataset.borderColor;
-                    ctx.font = 'bold 10px sans-serif';
-                    ctx.textAlign = 'right';
-                    ctx.textBaseline = 'bottom';
-                    ctx.fillText(dataset.label, right - 5, yPixel - 4);
-                    ctx.restore();
-                });
-            }
-        }],
+        plugins: [candlestickPlugin, floatingLabelsPlugin],
         options: {
             responsive: true,
             maintainAspectRatio: false,
             animation: false,
             interaction: {
                 mode: 'nearest',
-                axis: 'y',
+                axis: 'x',
                 intersect: false,
             },
             plugins: {
                 legend: { display: false },
                 tooltip: {
                     enabled: true,
-                    displayColors: true,
-                    mode: 'nearest',
+                    displayColors: false,
+                    mode: 'index',
                     intersect: false,
-                    filter: function (tooltipItem, index, tooltipItems) {
-                        return index === 0;
-                    },
                     callbacks: {
                         title: function (context) {
-                            return context[0].dataset.label;
+                            const idx = context[0].dataIndex;
+                            return `${labels[idx]}`;
                         },
                         label: function (context) {
-                            let label = context.dataset.label || '';
-                            if (label) label += ': ';
-                            if (context.parsed.y !== null) label += context.parsed.y.toFixed(2);
-                            return label;
+                            const idx = context.dataIndex;
+                            const c = ohlcData[idx];
+                            if (context.dataset.label === 'Price') {
+                                return [
+                                    `Open: ${c.o.toFixed(2)}`,
+                                    `High: ${c.h.toFixed(2)}`,
+                                    `Low: ${c.l.toFixed(2)}`,
+                                    `Close: ${c.c.toFixed(2)}`
+                                ];
+                            }
+                            return null;
                         }
                     }
                 }
@@ -254,6 +308,8 @@ async function handleLoadIB() {
         addIBChartToCurrent(data, ticker, dateStr);
         renderAllCharts();
     } else {
-        alert(`No IB Levels data found for ${ticker}.`);
+        // Show actual file being searched (without slashes)
+        const cleanTicker = ticker.replace(/\//g, '');
+        alert(`No IB Levels data found for ${ticker}.\nSearched: ib_data_${cleanTicker}_${dateStr}.json`);
     }
 }
