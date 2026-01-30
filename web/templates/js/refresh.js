@@ -76,7 +76,36 @@ async function refreshDashboard() {
         }
     }
 
+    // Sync panel dimensions from DOM before re-rendering
+    syncPanelDimensionsFromDOM();
+
     // Re-render all charts
     renderAllCharts();
     updateNYTime();
 }
+
+/**
+ * Sync panel dimensions from DOM to chart objects
+ * This preserves user resizing during auto-refresh
+ */
+function syncPanelDimensionsFromDOM() {
+    const container = document.getElementById("charts-wrapper");
+    if (!container) return;
+
+    const rows = container.querySelectorAll(".chart-row");
+    const tab = tabs.find(t => t.id === currentTabId);
+    if (!tab) return;
+
+    rows.forEach((row, rowIndex) => {
+        const panels = row.querySelectorAll(".chart-panel");
+        panels.forEach(panel => {
+            const panelIndex = parseInt(panel.dataset.index);
+            if (!isNaN(panelIndex) && tab.charts[panelIndex]) {
+                tab.charts[panelIndex].rowIndex = rowIndex;
+                tab.charts[panelIndex].panelWidth = panel.offsetWidth;
+                tab.charts[panelIndex].panelHeight = panel.offsetHeight;
+            }
+        });
+    });
+}
+

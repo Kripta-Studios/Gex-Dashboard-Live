@@ -15,10 +15,40 @@ function renderAllCharts() {
         wrapper.innerHTML = '<div style="width:100%; text-align:center; padding-top:100px; color:var(--text-dim);">Empty Layout</div>';
         return;
     }
+
+    // Group charts by rowIndex
+    const rowsMap = new Map();
     activeCharts.forEach((chartObj, index) => {
-        const panel = createChartPanel(chartObj, index);
-        wrapper.appendChild(panel);
-        setTimeout(() => alignChartToSpot(panel), 50);
+        const rowIndex = chartObj.rowIndex || 0;
+        if (!rowsMap.has(rowIndex)) {
+            rowsMap.set(rowIndex, []);
+        }
+        rowsMap.get(rowIndex).push({ chartObj, index });
+    });
+
+    // Sort row indices and create rows
+    const sortedRowIndices = [...rowsMap.keys()].sort((a, b) => a - b);
+
+    sortedRowIndices.forEach(rowIndex => {
+        const row = document.createElement("div");
+        row.className = "chart-row";
+        row.addEventListener("dragover", handleRowDragOver);
+        wrapper.appendChild(row);
+
+        rowsMap.get(rowIndex).forEach(({ chartObj, index }) => {
+            const panel = createChartPanel(chartObj, index);
+
+            // Apply saved dimensions if available
+            if (chartObj.panelWidth) {
+                panel.style.width = chartObj.panelWidth + 'px';
+            }
+            if (chartObj.panelHeight) {
+                panel.style.height = chartObj.panelHeight + 'px';
+            }
+
+            row.appendChild(panel);
+            setTimeout(() => alignChartToSpot(panel), 50);
+        });
     });
 }
 

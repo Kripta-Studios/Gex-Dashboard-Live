@@ -1,6 +1,6 @@
 /**
  * Drag and Drop Module
- * Chart panel drag and drop reordering
+ * Chart panel drag and drop reordering with row support
  */
 
 /**
@@ -33,9 +33,12 @@ function handleDragEnd(e) {
         }
     }
 
-    // Reordering logic
+    // Clean up empty rows
+    cleanupEmptyRows();
+
+    // Reordering logic - collect panels in order from all rows with their row indices
     const container = document.getElementById("charts-wrapper");
-    const panels = container.querySelectorAll(".chart-panel");
+    const rows = container.querySelectorAll(".chart-row");
 
     if (document.body.classList.contains('detached-layout-mode')) {
         console.log("Reordenado en vista local");
@@ -44,25 +47,63 @@ function handleDragEnd(e) {
 
     const tab = tabs.find((t) => t.id === currentTabId);
     if (!tab) return;
+
     const newChartOrder = [];
-    panels.forEach((panel) => {
-        const originalIndex = parseInt(panel.dataset.index);
-        if (!isNaN(originalIndex) && tab.charts[originalIndex])
-            newChartOrder.push(tab.charts[originalIndex]);
+    rows.forEach((row, rowIndex) => {
+        const panels = row.querySelectorAll(".chart-panel");
+        panels.forEach((panel) => {
+            const originalIndex = parseInt(panel.dataset.index);
+            if (!isNaN(originalIndex) && tab.charts[originalIndex]) {
+                const chartObj = tab.charts[originalIndex];
+                chartObj.rowIndex = rowIndex;  // Update the row index
+                newChartOrder.push(chartObj);
+            }
+        });
     });
     tab.charts = newChartOrder;
-    renderAllCharts();
+
+    // Re-render to update indices but preserve row structure
+    updateChartIndices();
 }
 
 /**
- * Get the element after which to insert during drag
- * @param {HTMLElement} container - Container element
+ * Update chart panel indices without re-rendering
+ */
+function updateChartIndices() {
+    const container = document.getElementById("charts-wrapper");
+    const panels = container.querySelectorAll(".chart-panel");
+    panels.forEach((panel, newIndex) => {
+        panel.dataset.index = newIndex;
+        // Update buttons with new index
+        const closeBtn = panel.querySelector('.btn-close');
+        if (closeBtn) closeBtn.setAttribute('onclick', `removeChart(${newIndex})`);
+        const popoutBtn = panel.querySelector('.btn-popout');
+        if (popoutBtn) popoutBtn.setAttribute('onclick', `openDetachedWindow(${newIndex})`);
+    });
+}
+
+/**
+ * Clean up empty rows
+ */
+function cleanupEmptyRows() {
+    const container = document.getElementById("charts-wrapper");
+    const rows = container.querySelectorAll(".chart-row");
+    rows.forEach(row => {
+        if (row.querySelectorAll(".chart-panel").length === 0) {
+            row.remove();
+        }
+    });
+}
+
+/**
+ * Get the element after which to insert during drag within a row
+ * @param {HTMLElement} row - Row element
  * @param {number} x - Mouse X position
  * @returns {HTMLElement|null} Element to insert before
  */
-function getDragAfterElement(container, x) {
+function getDragAfterElementInRow(row, x) {
     const draggableElements = [
-        ...container.querySelectorAll(".chart-panel:not(.dragging)"),
+        ...row.querySelectorAll(".chart-panel:not(.dragging)"),
     ];
 
     return draggableElements.reduce(
@@ -81,17 +122,91 @@ function getDragAfterElement(container, x) {
 }
 
 /**
- * Handle dragover on charts wrapper
+ * Handle dragover on a chart row (horizontal positioning)
+ */
+function handleRowDragOver(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const row = e.currentTarget;
+    const draggable = document.querySelector(".dragging");
+
+    if (!draggable) return;
+
+    const afterElement = getDragAfterElementInRow(row, e.clientX);
+
+    if (afterElement == null) {
+        row.appendChild(draggable);
+    } else {
+        row.insertBefore(draggable, afterElement);
+    }
+}
+
+/**
+ * Handle dragover on charts wrapper (vertical positioning - between rows)
  */
 function handleWrapperDragOver(e) {
     e.preventDefault();
+
     const container = document.getElementById("charts-wrapper");
-    const afterElement = getDragAfterElement(container, e.clientX);
     const draggable = document.querySelector(".dragging");
-    if (draggable) {
-        if (afterElement == null) container.appendChild(draggable);
-        else container.insertBefore(draggable, afterElement);
+
+    if (!draggable) return;
+
+    const rows = [...container.querySelectorAll(".chart-row")];
+    const mouseY = e.clientY;
+
+    // Check if we're between rows or below all rows (to create new row)
+    let targetRow = null;
+    let insertBefore = false;
+
+    for (let i = 0; i < rows.length; i++) {
+        const row = rows[i];
+        const box = row.getBoundingClientRect();
+
+        // If mouse is above the middle of first row, insert new row before
+        if (i === 0 && mouseY < box.top + 30) {
+            targetRow = row;
+            insertBefore = true;
+            break;
+        }
+
+        // If mouse is below this row's bottom edge (in the gap or below), create new row after it
+        if (mouseY > box.bottom + 5) {
+            // Check if there's a next row
+            if (i === rows.length - 1) {
+                // We're below the last row - create new row at end
+                targetRow = null; // Will append at end
+                insertBefore = false;
+                break;
+            }
+            // Continue to check next row
+            continue;
+        }
+
+        // Mouse is within this row's vertical bounds - let row handle horizontal
+        return;
     }
+
+    // Create new row for the dragged element
+    const newRow = document.createElement("div");
+    newRow.className = "chart-row";
+    newRow.addEventListener("dragover", handleRowDragOver);
+
+    // Remove draggable from its current position
+    draggable.parentElement?.removeChild(draggable);
+    newRow.appendChild(draggable);
+
+    if (targetRow && insertBefore) {
+        container.insertBefore(newRow, targetRow);
+    } else if (targetRow) {
+        container.insertBefore(newRow, targetRow.nextSibling);
+    } else {
+        container.appendChild(newRow);
+    }
+
+    // Clean up old empty rows
+    cleanupEmptyRows();
 }
 
 // Attach wrapper dragover event when DOM is ready

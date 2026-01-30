@@ -18,10 +18,29 @@ function saveAllLayouts() {
         const dd = String(now.getDate()).padStart(2, '0');
         const todayStr = `${yyyy}${mm}${dd}`;
 
+        // Capture row structure and dimensions from DOM
+        const container = document.getElementById("charts-wrapper");
+        const rows = container.querySelectorAll(".chart-row");
+        const panelRowMap = new Map(); // Map panel index -> { rowIndex, width, height }
+
+        rows.forEach((row, rowIndex) => {
+            const panels = row.querySelectorAll(".chart-panel");
+            panels.forEach(panel => {
+                const panelIndex = parseInt(panel.dataset.index);
+                if (!isNaN(panelIndex)) {
+                    panelRowMap.set(panelIndex, {
+                        rowIndex: rowIndex,
+                        width: panel.offsetWidth,
+                        height: panel.offsetHeight
+                    });
+                }
+            });
+        });
+
         const cleanTabs = tabs.map((t) => ({
             id: t.id,
             name: t.name,
-            charts: t.charts.filter(c => c.inputTicker).map((c) => {
+            charts: t.charts.filter(c => c.inputTicker).map((c, idx) => {
                 let dateToSave = null;
                 if (c.type === 'fourier' || c.type === 'ib') {
                     if (c.dateStr === todayStr) {
@@ -31,12 +50,30 @@ function saveAllLayouts() {
                     }
                 }
 
+                // Get row index and dimensions from current DOM if this tab is active
+                let rowIndex = 0;
+                let panelWidth = c.panelWidth || null;
+                let panelHeight = c.panelHeight || null;
+
+                if (t.id === currentTabId && panelRowMap.has(idx)) {
+                    const info = panelRowMap.get(idx);
+                    rowIndex = info.rowIndex;
+                    panelWidth = info.width;
+                    panelHeight = info.height;
+                } else {
+                    // For non-active tabs, use stored values
+                    rowIndex = c.rowIndex || 0;
+                }
+
                 return {
                     ticker: c.inputTicker,
                     exp: c.inputExp,
                     greek: c.greek,
                     type: c.type,
-                    savedDate: dateToSave
+                    savedDate: dateToSave,
+                    rowIndex: rowIndex,
+                    panelWidth: panelWidth,
+                    panelHeight: panelHeight
                 };
             }),
         }));
@@ -51,7 +88,7 @@ function saveAllLayouts() {
         localStorage.setItem("gex_dashboard_tabs_v1", jsonStr);
 
         const totalCharts = cleanTabs.reduce((acc, t) => acc + t.charts.length, 0);
-        console.log(`[SAVE] Saved ${totalCharts} charts.`);
+        console.log(`[SAVE] Saved ${totalCharts} charts with row structure.`);
 
         const btn = document.querySelector('button[onclick="saveAllLayouts()"]');
         if (btn) {
@@ -161,7 +198,10 @@ async function loadSavedLayouts() {
                         inputTicker: cConf.ticker,
                         inputExp: cConf.exp,
                         type: cConf.type,
-                        dateStr: loadedDateStr
+                        dateStr: loadedDateStr,
+                        rowIndex: cConf.rowIndex || 0,
+                        panelWidth: cConf.panelWidth || null,
+                        panelHeight: cConf.panelHeight || null
                     };
                 });
 
