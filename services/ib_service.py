@@ -636,8 +636,8 @@ def generate_futures_ib_chart(ticker: str, df_candles: pd.DataFrame, greeks: dic
                 transform=trans, va="bottom", ha="right", path_effects=txt_outline)
 
     # CURRENT PRICE
-    ax.axhline(current_price, color="#00bfff", linestyle="-", linewidth=1.5, alpha=0.8)
-    ax.text(0.99, current_price, f"LAST: {current_price:.2f}", color="#00bfff", fontsize=10, fontweight="bold",
+    #ax.axhline(current_price, color="#00bfff", linestyle="-", linewidth=1.5, alpha=0.8)
+    #ax.text(0.99, current_price, f"LAST: {current_price:.2f}", color="#00bfff", fontsize=10, fontweight="bold",
             transform=trans, va="center", ha="right", path_effects=txt_outline,
             bbox=dict(boxstyle="round,pad=0.3", facecolor="#0a0a0a", edgecolor="#00bfff", alpha=0.8))
 
