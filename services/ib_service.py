@@ -331,7 +331,7 @@ async def get_futures_candle_data_for_today(ticker: str) -> pd.DataFrame:
 
             df = pd.DataFrame(candles_list)
             df = df.sort_values("datetime").reset_index(drop=True)
-            df = df[df["datetime"].apply(lambda x: dt_time(9, 30) <= x.time() <= dt_time(16, 0))]
+            df = df[df["datetime"].apply(lambda x: dt_time(3, 0) <= x.time() <= dt_time(17, 0))]
             
             print(f"[CANDLE FUTURES] {streamer_symbol}: {len(df)} velas RTH")
             return df
