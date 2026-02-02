@@ -86,7 +86,7 @@ function createIBPanel(chartObj, index) {
 function renderIBChart(canvas, jsonData) {
     // Filter to market hours
     const rawSeries = jsonData.series || [];
-    const series = rawSeries.filter(d => d.time >= "09:20" && d.time <= "16:15");
+    const series = rawSeries.filter(d => d.time >= "03:00" && d.time <= "17:00");
 
     if (series.length === 0) return;
 
