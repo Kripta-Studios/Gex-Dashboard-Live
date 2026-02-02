@@ -149,10 +149,10 @@ async def get_candle_data_for_today(ticker: str) -> pd.DataFrame:
     today = now.date()
 
     # Si estamos antes de las 9:30, podría ser día anterior
-    if now.time() < dt_time(9, 30):
+    if now.time() < dt_time(3, 0):
         today = today - timedelta(days=1)
 
-    start_time = datetime.combine(today, dt_time(9, 0))
+    start_time = datetime.combine(today, dt_time(3, 0))
     if NY_TZ:
         start_time = start_time.replace(tzinfo=NY_TZ)
 
@@ -208,7 +208,7 @@ async def get_candle_data_for_today(ticker: str) -> pd.DataFrame:
             df = pd.DataFrame(candles_list)
             df = df.sort_values("datetime").reset_index(drop=True)
             # Filtrar solo horas de trading
-            df = df[df["datetime"].apply(lambda x: dt_time(9, 0) <= x.time() <= dt_time(16, 20))]
+            df = df[df["datetime"].apply(lambda x: dt_time(3, 0) <= x.time() <= dt_time(17, 0))]
             
             print(f"[CANDLE] {ticker}: {len(df)} velas descargadas correctamente.")
             return df
