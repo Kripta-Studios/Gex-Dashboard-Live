@@ -62,7 +62,7 @@ STATE_FILE = os.path.join(SCRIPT_DIR, "state_bot2.json")
 TICKERS = ["SPX", "SPY", "QQQ"]
 
 # Trading hours (NYC)
-MARKET_OPEN = dt_time(3, 20)
+MARKET_OPEN = dt_time(4, 20)
 MARKET_CLOSE = dt_time(16, 20)
 FORCE_EXIT_TIME = dt_time(15, 55)
 IB_FORMATION_END = dt_time(10, 30)

@@ -63,7 +63,7 @@ LAST_ENTRY_TIME = dt_time(15, 50)
 TICKERS = ["SPX", "SPY", "QQQ"]
 
 # Trading hours (NYC)
-MARKET_OPEN = dt_time(3, 20)
+MARKET_OPEN = dt_time(4, 20)
 MARKET_CLOSE = dt_time(16, 20)
 IB_FORMATION_END = dt_time(10, 30)
 
