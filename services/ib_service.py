@@ -281,10 +281,10 @@ async def get_futures_candle_data_for_today(ticker: str) -> pd.DataFrame:
     now = datetime.now(NY_TZ) if NY_TZ else datetime.now()
     today = now.date()
 
-    if now.time() < dt_time(9, 30):
+    if now.time() < dt_time(3, 0):
         today = today - timedelta(days=1)
 
-    start_time = datetime.combine(today, dt_time(6, 0))
+    start_time = datetime.combine(today, dt_time(3, 0))
     if NY_TZ:
         start_time = start_time.replace(tzinfo=NY_TZ)
 
@@ -638,8 +638,8 @@ def generate_futures_ib_chart(ticker: str, df_candles: pd.DataFrame, greeks: dic
     # CURRENT PRICE
     #ax.axhline(current_price, color="#00bfff", linestyle="-", linewidth=1.5, alpha=0.8)
     #ax.text(0.99, current_price, f"LAST: {current_price:.2f}", color="#00bfff", fontsize=10, fontweight="bold",
-            transform=trans, va="center", ha="right", path_effects=txt_outline,
-            bbox=dict(boxstyle="round,pad=0.3", facecolor="#0a0a0a", edgecolor="#00bfff", alpha=0.8))
+    #transform=trans, va="center", ha="right", path_effects=txt_outline,
+    #bbox=dict(boxstyle="round,pad=0.3", facecolor="#0a0a0a", edgecolor="#00bfff", alpha=0.8))
 
     # AXIS CONFIG
     if times:
