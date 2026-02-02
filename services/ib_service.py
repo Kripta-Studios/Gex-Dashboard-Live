@@ -939,8 +939,8 @@ def generate_ib_chart(ticker: str, df_candles: pd.DataFrame, greeks_files: list,
 
     ib_data = df[df["datetime"].apply(lambda x: ib_start <= x.time() <= ib_end)]
     if ib_data.empty:
-        if df.iloc[-1]["datetime"].time() < ib_start:
-            return None
+        #if df.iloc[-1]["datetime"].time() < ib_start:
+        #    return None
         ib_data = df
 
     ib_high = ib_data["high"].max()
