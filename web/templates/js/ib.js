@@ -84,9 +84,22 @@ function createIBPanel(chartObj, index) {
  * @param {Object} jsonData - IB data object
  */
 function renderIBChart(canvas, jsonData) {
+	// 1. Obtener la hora actual en Nueva York
+    const now = new Date();
+    const nyTime = now.toLocaleTimeString('en-US', {
+        timeZone: 'America/New_York',
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+
+    // 2. Definir la hora de inicio dinámicamente
+    // Si en NY son las 09:30 o más tarde, cortamos desde las 09:30.
+    // Si es más temprano (pre-market), mostramos desde las 03:00.
+    const startTime = (nyTime >= "09:30") ? "09:30" : "03:00";
     // Filter to market hours
     const rawSeries = jsonData.series || [];
-    const series = rawSeries.filter(d => d.time >= "03:00" && d.time <= "17:00");
+    const series = rawSeries.filter(d => d.time >= startTime && d.time <= "17:00");
 
     if (series.length === 0) return;
 
