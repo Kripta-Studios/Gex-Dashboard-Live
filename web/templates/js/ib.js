@@ -173,8 +173,8 @@ function renderIBChart(canvas, jsonData) {
     };
 
     if (jsonData.levels) {
-        const upperLimit = currentPrice * 1.015;
-        const lowerLimit = currentPrice * 0.985;
+        const upperLimit = currentPrice * 1.01;
+        const lowerLimit = currentPrice * 0.99;
 
         Object.keys(jsonData.levels).forEach(k => {
             const levelPrice = jsonData.levels[k];
