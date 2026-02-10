@@ -13,7 +13,7 @@ from qiskit import QuantumCircuit
 from qiskit_aer import AerSimulator
 # --- CONFIGURATION ---
 PORT = 8609
-
+IP = "91.99.90.39"
 # Get the project root directory (parent of services/)
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
