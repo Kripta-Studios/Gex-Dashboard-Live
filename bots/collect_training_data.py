@@ -1,0 +1,808 @@
+"""
+Training Data Collector for TinyGrad Trading Bot
+
+Collects and preprocesses features from Greek exposure JSONs and IB data
+to create training datasets for the neural network.
+
+Usage:
+    python collect_training_data.py --output training_data.csv
+"""
+
+import sys
+import os
+import json
+import glob
+import re
+import argparse
+import numpy as np
+import pandas as pd
+from datetime import datetime, timedelta, time as dt_time
+from pathlib import Path
+
+# Add project root to path
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
+sys.path.insert(0, PROJECT_ROOT)
+
+# Load .env file if python-dotenv is available
+try:
+    from dotenv import load_dotenv
+    load_dotenv(os.path.join(PROJECT_ROOT, ".env"))
+except ImportError:
+    pass  # dotenv not installed, use environment variables directly
+
+
+def get_env_path(key: str, default: str) -> str:
+    """Get environment variable and clean up quotes/spaces."""
+    value = os.getenv(key, default)
+    # Remove surrounding quotes if present
+    if value.startswith('"') and value.endswith('"'):
+        value = value[1:-1]
+    if value.startswith("'") and value.endswith("'"):
+        value = value[1:-1]
+    return value.strip()
+
+
+# --- CONFIGURATION ---
+# Paths (Linux server paths - adjust for local testing)
+GREEK_DATA_DIR = get_env_path("GREEK_DATA_DIR", os.path.join(PROJECT_ROOT, "trading_data", "json_data"))
+IB_CHARTS_DIR = get_env_path("IB_CHARTS_DIR", os.path.join(PROJECT_ROOT, "trading_data", "ib_backtest"))
+IB_BACKTEST_DIR = get_env_path("IB_BACKTEST_DIR", os.path.join(PROJECT_ROOT, "trading_data", "ib_backtest"))
+OUTPUT_DIR = os.path.join(PROJECT_ROOT, "training_data")
+
+# For local Windows testing
+if sys.platform == "win32":
+    # Adjust paths for local testing if needed
+    pass
+
+# Tickers to process - only those used by the hybrid model
+# SPX/SPY for /ES trading, QQQ for /NQ trading
+TICKERS = [
+    "SPX",   # S&P 500 Index -> used for /ES
+    "SPY",   # S&P 500 ETF -> also used for /ES
+    "QQQ",   # Nasdaq 100 ETF -> used for /NQ
+]
+FUTURES = ["/ES", "/NQ"]
+
+# Precision threshold for "at level" detection (±0.04%)
+LEVEL_PROXIMITY_THRESHOLD = 0.0004
+
+# Minimum price move for a valid signal (±0.4%) - Stricter to avoid chop
+TARGET_MOVE_THRESHOLD = 0.004
+
+# Lookahead window for target calculation (minutes)
+LOOKAHEAD_MINUTES = 30
+
+
+def get_net_greek_exposure(data: dict, greek_name: str) -> float:
+    """Calculate net Greek exposure from the 'all' array."""
+    greek_data = data.get(greek_name, {})
+    if isinstance(greek_data, dict):
+        all_data = greek_data.get("all", [])
+        if isinstance(all_data, list) and len(all_data) > 0:
+            return float(np.sum(all_data))
+    return 0.0
+
+
+def find_max_min_greek_level(data: dict, greek_name: str):
+    """Find strikes with max/min Greek exposure."""
+    levels = data.get("levels", [])
+    greek_data = data.get(greek_name, {})
+    
+    if isinstance(greek_data, dict):
+        all_data = greek_data.get("all", [])
+    else:
+        all_data = []
+    
+    if not levels or not all_data or len(levels) != len(all_data):
+        return None, None
+    
+    levels = np.array(levels)
+    values = np.array(all_data)
+    
+    max_idx = np.argmax(values)
+    min_idx = np.argmin(values)
+    
+    return float(levels[max_idx]), float(levels[min_idx])
+
+
+def classify_gamma_regime(net_gamma: float, threshold: float = 0.1) -> int:
+    """Classify gamma regime: 0=short, 1=neutral, 2=long"""
+    if net_gamma > threshold:
+        return 2  # Long gamma
+    elif net_gamma < -threshold:
+        return 0  # Short gamma
+    return 1  # Neutral
+
+
+def is_near_level(price: float, level: float, threshold: float = LEVEL_PROXIMITY_THRESHOLD) -> bool:
+    """Check if price is within threshold of a level."""
+    if level is None or level == 0:
+        return False
+    return abs(price - level) / price <= threshold
+
+
+def calculate_fibonacci_levels(ib_high: float, ib_low: float):
+    """Calculate Fibonacci extension levels from IB range."""
+    ib_range = ib_high - ib_low
+    
+    # Extensions above IB high
+    fib_127_up = ib_low + (ib_range * 1.272)
+    fib_161_up = ib_low + (ib_range * 1.618)
+    fib_200_up = ib_low + (ib_range * 2.0)
+    
+    # Extensions below IB low
+    fib_127_dn = ib_low + (ib_range * -0.272)
+    fib_161_dn = ib_low + (ib_range * -0.618)
+    fib_200_dn = ib_low + (ib_range * -1.0)
+    
+    return {
+        "fib_127_up": fib_127_up,
+        "fib_161_up": fib_161_up,
+        "fib_200_up": fib_200_up,
+        "fib_127_dn": fib_127_dn,
+        "fib_161_dn": fib_161_dn,
+        "fib_200_dn": fib_200_dn,
+    }
+
+
+def simple_rsi(prices: list, period: int = 14) -> float:
+    """Calculate simple RSI from price list."""
+    if len(prices) < period + 1:
+        return 50.0  # Default neutral
+    
+    deltas = np.diff(prices[-period-1:])
+    gains = np.where(deltas > 0, deltas, 0)
+    losses = np.where(deltas < 0, -deltas, 0)
+    
+    avg_gain = np.mean(gains)
+    avg_loss = np.mean(losses)
+    
+    if avg_loss == 0:
+        return 100.0
+    
+    rs = avg_gain / avg_loss
+    rsi = 100 - (100 / (1 + rs))
+    return float(rsi)
+
+
+def extract_features_from_greek_file(filepath: str) -> dict:
+    """Extract features from a single Greek exposure JSON file."""
+    try:
+        with open(filepath, 'r') as f:
+            data = json.load(f)
+        
+        spot_price = float(data.get("spot_price", 0))
+        if spot_price == 0:
+            return None
+        
+        # Net Greek exposures
+        net_gamma = get_net_greek_exposure(data, "totalgamma")
+        net_vanna = get_net_greek_exposure(data, "totalvanna")
+        net_charm = get_net_greek_exposure(data, "totalcharm")
+        net_dgex = get_net_greek_exposure(data, "totaldgex")
+        net_zomma = get_net_greek_exposure(data, "totalzomma")
+        net_delta = get_net_greek_exposure(data, "totaldelta")
+        
+        # Zero crossing levels
+        zero_gamma = float(data.get("zerogamma", 0))
+        zero_delta = float(data.get("zerodelta", 0))
+        
+        # Max/min Greek strikes
+        max_gamma, min_gamma = find_max_min_greek_level(data, "totalgamma")
+        max_vanna, min_vanna = find_max_min_greek_level(data, "totalvanna")
+        max_dgex, min_dgex = find_max_min_greek_level(data, "totaldgex")
+        max_zomma, min_zomma = find_max_min_greek_level(data, "totalzomma")
+        
+        # Gamma regime classification
+        gamma_regime = classify_gamma_regime(net_gamma)
+        
+        # Greek signals (binary)
+        vanna_bullish = 1 if net_vanna > 0.1 else 0
+        charm_bullish = 1 if net_charm > 0.1 else 0
+        dgex_sticky = 1 if net_dgex > 0.1 else 0
+        zomma_stabilizing = 1 if net_zomma > 0.1 else 0
+        
+        # Price relative to key levels
+        dist_to_max_gamma = (spot_price - max_gamma) / spot_price if max_gamma else 0
+        dist_to_min_gamma = (spot_price - min_gamma) / spot_price if min_gamma else 0
+        dist_to_min_vanna = (spot_price - min_vanna) / spot_price if min_vanna else 0
+        dist_to_zero_gamma = (spot_price - zero_gamma) / spot_price if zero_gamma else 0
+        
+        # Check if near key levels
+        near_max_gamma = 1 if is_near_level(spot_price, max_gamma) else 0
+        near_min_gamma = 1 if is_near_level(spot_price, min_gamma) else 0
+        near_min_vanna = 1 if is_near_level(spot_price, min_vanna) else 0
+        near_zero_gamma = 1 if is_near_level(spot_price, zero_gamma) else 0
+        
+        # Extract timestamp from filename
+        filename = os.path.basename(filepath)
+        match = re.search(r"_(\d{8})_(\d{6})\.json", filename)
+        if match:
+            timestamp_str = f"{match.group(1)} {match.group(2)}"
+            timestamp = datetime.strptime(timestamp_str, "%Y%m%d %H%M%S")
+        else:
+            timestamp = None
+        
+        return {
+            "timestamp": timestamp,
+            "spot_price": spot_price,
+            # Net exposures (normalized by dividing by typical values)
+            "net_gamma": net_gamma,
+            "net_vanna": net_vanna,
+            "net_charm": net_charm,
+            "net_dgex": net_dgex,
+            "net_zomma": net_zomma,
+            "net_delta": net_delta,
+            # Key levels
+            "max_gamma_strike": max_gamma,
+            "min_gamma_strike": min_gamma,
+            "min_vanna_strike": min_vanna,
+            "max_dgex_strike": max_dgex,
+            "min_dgex_strike": min_dgex,
+            "zero_gamma": zero_gamma,
+            # Regime & signals
+            "gamma_regime": gamma_regime,
+            "vanna_bullish": vanna_bullish,
+            "charm_bullish": charm_bullish,
+            "dgex_sticky": dgex_sticky,
+            "zomma_stabilizing": zomma_stabilizing,
+            # Distances
+            "dist_to_max_gamma": dist_to_max_gamma,
+            "dist_to_min_gamma": dist_to_min_gamma,
+            "dist_to_min_vanna": dist_to_min_vanna,
+            "dist_to_zero_gamma": dist_to_zero_gamma,
+            # Near level flags
+            "near_max_gamma": near_max_gamma,
+            "near_min_gamma": near_min_gamma,
+            "near_min_vanna": near_min_vanna,
+            "near_zero_gamma": near_zero_gamma,
+        }
+    except Exception as e:
+        print(f"Error processing {filepath}: {e}")
+        return None
+
+
+def load_ib_data(ticker: str, date_str: str) -> dict:
+    """Load IB data for a ticker and date."""
+    # For futures like /ES, the files are saved as ES (without slash)
+    file_ticker = ticker.lstrip("/")
+    
+    # Try different date formats: YYYYMMDD and YYYY-MM-DD
+    date_formats = [date_str]
+    if len(date_str) == 8:  # YYYYMMDD
+        date_formats.append(f"{date_str[:4]}-{date_str[4:6]}-{date_str[6:8]}")
+    
+    # Try ib_backtest first (historical with volume profile)
+    filepath = None
+    for fmt in date_formats:
+        test_path = os.path.join(IB_BACKTEST_DIR, f"ib_data_{file_ticker}_{fmt}.json")
+        if os.path.exists(test_path):
+            filepath = test_path
+            break
+        test_path = os.path.join(IB_CHARTS_DIR, f"ib_data_{file_ticker}_{fmt}.json")
+        if os.path.exists(test_path):
+            filepath = test_path
+            break
+    
+    if filepath is None:
+        return None
+    
+    try:
+        with open(filepath, 'r') as f:
+            data = json.load(f)
+        
+        analysis = data.get("analysis", {})
+        volume_profile = data.get("volume_profile", {})
+        
+        return {
+            "ib_high": analysis.get("ib_high", 0),
+            "ib_low": analysis.get("ib_low", 0),
+            "ib_range": analysis.get("ib_range", 0),
+            "vpoc": volume_profile.get("vpoc", 0),
+            "vah": volume_profile.get("vah", 0),
+            "val": volume_profile.get("val", 0),
+            "total_volume": volume_profile.get("total_volume", 0),
+            "series": data.get("series", []),
+        }
+    except Exception as e:
+        print(f"Error loading IB data {filepath}: {e}")
+        return None
+
+
+# Fourier output directory (same as in fourier_service_fast.py)
+FOURIER_DIR = get_env_path("FOURIER_DIR", os.path.join(PROJECT_ROOT, "trading_data", "fourier"))
+
+
+def load_fourier_data(ticker: str, date_str: str) -> dict:
+    """Load IV data from Fourier JSON files.
+    
+    The fourier JSONs contain:
+    - atm_put_iv: ATM put implied volatility
+    - iv_fft: Fourier-filtered IV
+    - spot: Spot price
+    - spot_fft: Fourier-filtered spot price
+    """
+    # Convert date format: YYYYMMDD -> YYYYMMDD (already correct)
+    filepath = os.path.join(FOURIER_DIR, f"fourier_data_{ticker}_{date_str}.json")
+    
+    if not os.path.exists(filepath):
+        return None
+    
+    try:
+        with open(filepath, 'r') as f:
+            data = json.load(f)
+        
+        if not data or len(data) == 0:
+            return None
+        
+        # Get latest values from the time series
+        latest = data[-1] if isinstance(data, list) else data
+        
+        # Calculate IV statistics across the day
+        if isinstance(data, list):
+            iv_values = [d.get("atm_put_iv", 0) for d in data if d.get("atm_put_iv")]
+            if iv_values:
+                current_iv = float(latest.get("atm_put_iv", 0))
+                iv_mean = np.mean(iv_values)
+                iv_std = np.std(iv_values) if len(iv_values) > 1 else 0
+                iv_min = np.min(iv_values)
+                iv_max = np.max(iv_values)
+                
+                # IV zscore (how far from mean in std units)
+                iv_zscore = (current_iv - iv_mean) / iv_std if iv_std > 0 else 0
+                
+                # IV percentile (0-1)
+                iv_pct = (current_iv - iv_min) / (iv_max - iv_min) if iv_max > iv_min else 0.5
+            else:
+                current_iv = 0
+                iv_zscore = 0
+                iv_pct = 0.5
+        else:
+            current_iv = float(latest.get("atm_put_iv", 0))
+            iv_zscore = 0
+            iv_pct = 0.5
+        
+        return {
+            "atm_iv": current_iv,
+            "iv_zscore": float(iv_zscore),
+            "iv_percentile": float(iv_pct),
+            "iv_fft": float(latest.get("iv_fft", current_iv)),
+        }
+    except Exception as e:
+        print(f"Error loading Fourier data {filepath}: {e}")
+        return None
+
+
+def load_vix_data(date_str: str) -> dict:
+    """Load VIX data for correlation with IV.
+    
+    VIX is processed like a ticker but we extract specific features.
+    """
+    # Try to load VIX exposure data
+    pattern = os.path.join(GREEK_DATA_DIR, f"*VIX*0dte*ExposureData*{date_str}*.json")
+    vix_files = sorted(glob.glob(pattern))
+    
+    if not vix_files:
+        return {
+            "vix_spot": 0,
+            "vix_gamma": 0,
+            "vix_regime": 1,  # neutral
+        }
+    
+    try:
+        with open(vix_files[-1], 'r') as f:  # Latest file for the day
+            data = json.load(f)
+        
+        vix_spot = float(data.get("spot_price", 0))
+        vix_gamma = get_net_greek_exposure(data, "totalgamma")
+        
+        # VIX regime: high (>20), medium (15-20), low (<15)
+        if vix_spot > 25:
+            vix_regime = 2  # High fear
+        elif vix_spot > 18:
+            vix_regime = 1  # Elevated
+        else:
+            vix_regime = 0  # Low/Complacent
+        
+        return {
+            "vix_spot": vix_spot,
+            "vix_gamma": vix_gamma,
+            "vix_regime": vix_regime,
+        }
+    except Exception as e:
+        print(f"Error loading VIX data: {e}")
+        return {"vix_spot": 0, "vix_gamma": 0, "vix_regime": 1}
+
+
+def calculate_target_label(series: list, current_idx: int, lookahead: int = LOOKAHEAD_MINUTES) -> tuple:
+    """
+    Calculate target label based on future price movement.
+    Returns: (label, time_to_target, time_to_stop, max_favorable_move)
+        label: -1 (SHORT), 0 (HOLD), 1 (LONG)
+        time_to_target: Minutes until target (0.3%) is hit (0 if not hit)
+        time_to_stop: Minutes until stop (opposite 0.3%) is hit (0 if not hit)
+        max_favorable_move: Maximum favorable move percentage
+    """
+    if current_idx + lookahead >= len(series):
+        return (0, 0, 0, 0.0)  # Not enough future data
+    
+    current_price = series[current_idx].get("price", 0)
+    if current_price == 0:
+        return (0, 0, 0, 0.0)
+    
+    # Track timing and max moves
+    max_price = current_price
+    min_price = current_price
+    max_price_time = 0
+    min_price_time = 0
+    
+    # For LONG direction
+    time_to_target_long = 0
+    time_to_stop_long = 0
+    
+    # For SHORT direction  
+    time_to_target_short = 0
+    time_to_stop_short = 0
+    
+    target_threshold = TARGET_MOVE_THRESHOLD  # 0.3%
+    
+    for i in range(current_idx + 1, min(current_idx + lookahead + 1, len(series))):
+        price = series[i].get("price", current_price)
+        minutes_elapsed = i - current_idx
+        
+        # Track max/min prices and when they occurred
+        if price > max_price:
+            max_price = price
+            max_price_time = minutes_elapsed
+        if price < min_price:
+            min_price = price
+            min_price_time = minutes_elapsed
+        
+        up_pct = (price - current_price) / current_price
+        down_pct = (current_price - price) / current_price
+        
+        # Track first time target/stop is hit
+        if time_to_target_long == 0 and up_pct >= target_threshold:
+            time_to_target_long = minutes_elapsed
+        if time_to_stop_long == 0 and down_pct >= target_threshold:
+            time_to_stop_long = minutes_elapsed
+            
+        if time_to_target_short == 0 and down_pct >= target_threshold:
+            time_to_target_short = minutes_elapsed
+        if time_to_stop_short == 0 and up_pct >= target_threshold:
+            time_to_stop_short = minutes_elapsed
+    
+    up_move = (max_price - current_price) / current_price
+    down_move = (current_price - min_price) / current_price
+    
+    # Determine direction based on which move is larger and significant
+    if up_move >= TARGET_MOVE_THRESHOLD and up_move > down_move:
+        # LONG is better - return LONG metrics
+        return (1, time_to_target_long, time_to_stop_long, up_move)
+    elif down_move >= TARGET_MOVE_THRESHOLD and down_move > up_move:
+        # SHORT is better - return SHORT metrics
+        return (-1, time_to_target_short, time_to_stop_short, down_move)
+    
+    # HOLD - no clear direction
+    return (0, 0, 0, 0.0)
+
+
+def process_ticker_date(args: tuple) -> list:
+    """Process a single (ticker, date) pair. Designed to run in parallel.
+    
+    Args:
+        args: Tuple of (ticker, target_date, futures_greek_map)
+    Returns:
+        List of sample dictionaries for this ticker/date
+    """
+    ticker, target_date, futures_greek_map = args
+    samples = []
+    
+    # Determine Greek source ticker (for futures, use underlying)
+    greek_ticker = futures_greek_map.get(ticker, ticker)
+    date_str = target_date.strftime("%Y%m%d")
+    
+    # Load Greek files for this date (from underlying for futures)
+    pattern = os.path.join(GREEK_DATA_DIR, f"*{greek_ticker}*0dte*ExposureData*{date_str}*.json")
+    greek_files = sorted(glob.glob(pattern))
+    
+    if not greek_files:
+        return []
+    
+    # Load IB data for context
+    ib_data = load_ib_data(ticker, date_str)
+    if not ib_data:
+        return []
+    
+    ib_high = ib_data["ib_high"]
+    ib_low = ib_data["ib_low"]
+    series = ib_data["series"]
+    
+    if not series:
+        return []
+    
+    # Calculate Fibonacci levels
+    fib_levels = calculate_fibonacci_levels(ib_high, ib_low)
+    
+    # Build price lookup by time
+    price_by_time = {}
+    for i, candle in enumerate(series):
+        time_str = candle.get("time", "")
+        price_by_time[time_str] = (i, candle.get("price", 0))
+    
+    # Load IV data from Fourier (once per day)
+    fourier_data = load_fourier_data(greek_ticker, date_str)
+    if fourier_data:
+        atm_iv = fourier_data["atm_iv"]
+        iv_zscore = fourier_data["iv_zscore"]
+        iv_percentile = fourier_data["iv_percentile"]
+    else:
+        atm_iv = 0.0
+        iv_zscore = 0.0
+        iv_percentile = 0.5
+    
+    # Load VIX data (once per day)
+    vix_data = load_vix_data(date_str)
+    vix_spot = vix_data["vix_spot"]
+    vix_gamma = vix_data["vix_gamma"]
+    vix_regime = vix_data["vix_regime"]
+    
+    # Process each Greek file
+    for greek_file in greek_files:
+        features = extract_features_from_greek_file(greek_file)
+        if features is None or features["timestamp"] is None:
+            continue
+        
+        timestamp = features["timestamp"]
+        time_key = timestamp.strftime("%H:%M")
+        spot = features["spot_price"]
+        
+        # Skip pre-market
+        if timestamp.time() < dt_time(9, 30):
+            continue
+        
+        # Find corresponding price series index
+        if time_key not in price_by_time:
+            continue
+        
+        series_idx, series_price = price_by_time[time_key]
+        
+        # Calculate target label and timing
+        target_label, time_to_target, time_to_stop, max_move = calculate_target_label(series, series_idx, LOOKAHEAD_MINUTES)
+        
+        # IB context features
+        price_vs_ib_high = (spot - ib_high) / spot if spot > 0 else 0
+        price_vs_ib_low = (spot - ib_low) / spot if spot > 0 else 0
+        ib_range_pct = (ib_high - ib_low) / spot if spot > 0 else 0
+        
+        # Near IB levels
+        near_ib_high = 1 if is_near_level(spot, ib_high) else 0
+        near_ib_low = 1 if is_near_level(spot, ib_low) else 0
+        
+        # Fibonacci distances
+        dist_fib_127_up = (spot - fib_levels["fib_127_up"]) / spot
+        dist_fib_161_up = (spot - fib_levels["fib_161_up"]) / spot
+        
+        # Position in range
+        above_ib = 1 if spot > ib_high else 0
+        below_ib = 1 if spot < ib_low else 0
+        in_ib_range = 1 if ib_low <= spot <= ib_high else 0
+        
+        # Time features
+        hour_normalized = timestamp.hour / 24.0
+        minute_normalized = timestamp.minute / 60.0
+        
+        # Calculate RSI from recent prices
+        prices_before = [series[i].get("price", 0) for i in range(max(0, series_idx - 15), series_idx + 1)]
+        rsi = simple_rsi(prices_before)
+        
+        # Volume context
+        total_vol = ib_data.get("total_volume", 1)
+        current_vol = series[series_idx].get("volume", 0) if series_idx < len(series) else 0
+        vol_relative = current_vol / (total_vol / len(series)) if total_vol > 0 and len(series) > 0 else 1.0
+        
+        # Combine all features
+        sample = {
+            "ticker": ticker,
+            "date": date_str,
+            "time": time_key,
+            "timestamp": timestamp,
+            "spot_price": spot,
+            "target": target_label,
+            "time_to_target": time_to_target,
+            "time_to_stop": time_to_stop,
+            "max_move": max_move,
+            # Greek features
+            # Greek features
+            "net_gamma": features["net_gamma"],
+            "net_vanna": features["net_vanna"],
+            "net_charm": features["net_charm"],
+            "net_dgex": features["net_dgex"],
+            "net_zomma": features["net_zomma"],
+            "gamma_regime": features["gamma_regime"],
+            "vanna_bullish": features["vanna_bullish"],
+            "charm_bullish": features["charm_bullish"],
+            "dgex_sticky": features["dgex_sticky"],
+            "zomma_stabilizing": features["zomma_stabilizing"],
+            # Level distances
+            "dist_to_max_gamma": features["dist_to_max_gamma"],
+            "dist_to_min_gamma": features["dist_to_min_gamma"],
+            "dist_to_min_vanna": features["dist_to_min_vanna"],
+            "dist_to_zero_gamma": features["dist_to_zero_gamma"],
+            # Near level flags
+            "near_max_gamma": features["near_max_gamma"],
+            "near_min_gamma": features["near_min_gamma"],
+            "near_min_vanna": features["near_min_vanna"],
+            "near_zero_gamma": features["near_zero_gamma"],
+            # IB features
+            "price_vs_ib_high": price_vs_ib_high,
+            "price_vs_ib_low": price_vs_ib_low,
+            "ib_range_pct": ib_range_pct,
+            "near_ib_high": near_ib_high,
+            "near_ib_low": near_ib_low,
+            "above_ib": above_ib,
+            "below_ib": below_ib,
+            "in_ib_range": in_ib_range,
+            # Fibonacci
+            "dist_fib_127_up": dist_fib_127_up,
+            "dist_fib_161_up": dist_fib_161_up,
+            # IV features
+            "atm_iv": atm_iv / 100.0 if atm_iv > 1 else atm_iv,
+            "iv_zscore": np.clip(iv_zscore, -3, 3) / 3.0,
+            "iv_percentile": iv_percentile,
+            # VIX features
+            "vix_spot": vix_spot / 50.0 if vix_spot > 0 else 0,
+            "vix_gamma": vix_gamma,
+            "vix_regime": vix_regime / 2.0,
+            # Market context
+            "hour": hour_normalized,
+            "minute": minute_normalized,
+            "rsi": rsi / 100.0,
+            "vol_relative": min(vol_relative, 5.0) / 5.0,
+        }
+        
+        samples.append(sample)
+    
+    return samples
+
+
+def collect_training_data(tickers: list, num_days: int = 365, num_workers: int = None) -> pd.DataFrame:
+    """Collect and merge training data from all sources using parallel processing.
+    
+    Parallelizes by (ticker, date) pairs for maximum CPU utilization.
+    
+    Args:
+        tickers: List of tickers to process
+        num_days: Maximum number of trading days to process
+        num_workers: Number of parallel workers (default: CPU count)
+    """
+    from concurrent.futures import ProcessPoolExecutor, as_completed
+    import multiprocessing
+    
+    if num_workers is None:
+        num_workers = min(multiprocessing.cpu_count(), 20)  # Use up to 20 workers for Ryzen 9
+    
+    # Mapping for futures to their underlying Greek source
+    FUTURES_GREEK_MAP = {
+        "/ES": "SPX",
+        "/NQ": "QQQ",
+    }
+    
+    # Combine tickers and futures for processing
+    all_symbols = list(tickers) + FUTURES
+    
+    # Auto-detect available days by scanning the data directories
+    available_dates = set()
+    
+    # Scan Greek data directory for available dates
+    for pattern in ["*ExposureData*.json"]:
+        for filepath in glob.glob(os.path.join(GREEK_DATA_DIR, pattern)):
+            filename = os.path.basename(filepath)
+            match = re.search(r"_(\d{8})_\d{6}\.json", filename)
+            if match:
+                date_str = match.group(1)
+                try:
+                    available_dates.add(datetime.strptime(date_str, "%Y%m%d").date())
+                except:
+                    pass
+    
+    # Scan IB data directories
+    for ib_dir in [IB_BACKTEST_DIR, IB_CHARTS_DIR]:
+        if os.path.exists(ib_dir):
+            for filepath in glob.glob(os.path.join(ib_dir, "ib_data_*.json")):
+                filename = os.path.basename(filepath)
+                match = re.search(r"ib_data_[\w/]+_([\d-]+)\.json", filename)
+                if match:
+                    date_part = match.group(1)
+                    try:
+                        if "-" in date_part:
+                            available_dates.add(datetime.strptime(date_part, "%Y-%m-%d").date())
+                        else:
+                            available_dates.add(datetime.strptime(date_part, "%Y%m%d").date())
+                    except:
+                        pass
+    
+    if not available_dates:
+        print("No data files found! Check GREEK_DATA_DIR and IB_BACKTEST_DIR paths.")
+        return pd.DataFrame()
+    
+    # Sort dates and limit to num_days
+    sorted_dates = sorted(available_dates)
+    trading_days = sorted_dates[-num_days:] if len(sorted_dates) > num_days else sorted_dates
+    
+    # Create (ticker, date) task pairs for fine-grained parallelism
+    task_args = []
+    for ticker in all_symbols:
+        for target_date in trading_days:
+            task_args.append((ticker, target_date, FUTURES_GREEK_MAP))
+    
+    total_tasks = len(task_args)
+    print(f"Found {len(available_dates)} unique dates with data")
+    print(f"Processing {len(trading_days)} trading days (from {trading_days[0]} to {trading_days[-1]})")
+    print(f"Processing {len(all_symbols)} symbols × {len(trading_days)} days = {total_tasks} tasks")
+    print(f"Using {num_workers} parallel workers...\n")
+    
+    # Process in parallel with progress tracking
+    all_samples = []
+    completed = 0
+    
+    with ProcessPoolExecutor(max_workers=num_workers) as executor:
+        futures = {executor.submit(process_ticker_date, args): args for args in task_args}
+        
+        for future in as_completed(futures):
+            ticker, target_date, _ = futures[future]
+            completed += 1
+            try:
+                samples = future.result()
+                if samples:
+                    all_samples.extend(samples)
+                    # Progress update every 50 tasks
+                    if completed % 50 == 0 or completed == total_tasks:
+                        print(f"Progress: {completed}/{total_tasks} tasks ({100*completed/total_tasks:.1f}%) - {len(all_samples)} samples")
+            except Exception as e:
+                print(f"[{ticker} {target_date}] ERROR: {e}")
+    
+    df = pd.DataFrame(all_samples)
+    print(f"\nTotal samples collected: {len(df)}")
+    
+    return df
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Collect training data for PyTorch trading bot")
+    parser.add_argument("--output", default="training_data.csv", help="Output CSV filename")
+    parser.add_argument("--days", type=int, default=365, help="Max trading days to process (auto-detects available)")
+    parser.add_argument("--tickers", nargs="+", default=TICKERS, help="Tickers to process (default: all)")
+    parser.add_argument("--workers", type=int, default=None, help="Number of parallel workers (default: CPU count, max 16)")
+    args = parser.parse_args()
+    
+    # Create output directory
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    
+    # Collect data
+    df = collect_training_data(args.tickers, args.days, args.workers)
+    
+    if df.empty:
+        print("No data collected!")
+        return
+    
+    # Save to CSV
+    output_path = os.path.join(OUTPUT_DIR, args.output)
+    df.to_csv(output_path, index=False)
+    print(f"\nSaved to: {output_path}")
+    
+    # Print summary statistics
+    print("\n=== Dataset Summary ===")
+    print(f"Total samples: {len(df)}")
+    print(f"Tickers: {df['ticker'].unique().tolist()}")
+    print(f"Dates: {df['date'].nunique()} unique days")
+    print(f"\nTarget distribution:")
+    print(df['target'].value_counts().sort_index())
+    print(f"\nFeature statistics:")
+    numeric_cols = df.select_dtypes(include=[np.number]).columns
+    print(df[numeric_cols].describe().T[['mean', 'std', 'min', 'max']])
+
+
+if __name__ == "__main__":
+    main()
