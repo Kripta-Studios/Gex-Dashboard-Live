@@ -543,7 +543,7 @@ class TradingBotWrapper:
             pnl_pct = (position.entry_price - current_price) / position.entry_price
         
         point_value = POINT_VALUES.get(ticker, 100)
-        pnl_dollars = pnl_pct * position.entry_price * point_value * position.position_size
+        pnl_dollars = pnl_pct * position.entry_price * point_value
         
         # Update stats
         if pnl_pct > 0:
