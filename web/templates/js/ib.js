@@ -154,12 +154,12 @@ function renderIBChart(canvas, jsonData) {
     const ibMid = (ibHigh + ibLow) / 2;
 
     if (currentPrice >= ibMid) {
-        [1.272, 1.618, 2.0].forEach((ext, i) => {
+        [1.272, 1.618, 2.0, 2.272, 2.618, 3, 3.272, 3.618, 4].forEach((ext, i) => {
             const val = ibLow + (ibRange * ext);
             datasets.push(makeHLine(val, fibColors[i], `Fib ${ext}`, [2, 2]));
         });
     } else {
-        [-0.272, -0.618, -1.0].forEach((ext, i) => {
+        [-0.272, -0.618, -1.0, -1.272, -1.618, -2, -2.272, -2.618, -3].forEach((ext, i) => {
             const val = ibLow + (ibRange * ext);
             datasets.push(makeHLine(val, fibColors[i], `Fib ${ext}`, [2, 2]));
         });
