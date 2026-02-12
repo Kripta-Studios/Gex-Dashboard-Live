@@ -156,12 +156,12 @@ function renderIBChart(canvas, jsonData) {
     if (currentPrice >= ibMid) {
         [1.272, 1.618, 2.0, 2.272, 2.618, 3, 3.272, 3.618, 4].forEach((ext, i) => {
             const val = ibLow + (ibRange * ext);
-            datasets.push(makeHLine(val, fibColors[i], `Fib ${ext}`, [2, 2]));
+            datasets.push(makeHLine(val, fibColors[i % fibColors.length], `Fib ${ext}`, [2, 2]));
         });
     } else {
         [-0.272, -0.618, -1.0, -1.272, -1.618, -2, -2.272, -2.618, -3].forEach((ext, i) => {
             const val = ibLow + (ibRange * ext);
-            datasets.push(makeHLine(val, fibColors[i], `Fib ${ext}`, [2, 2]));
+            datasets.push(makeHLine(val, fibColors[i % fibColors.length], `Fib ${ext}`, [2, 2]));
         });
     }
 
@@ -242,9 +242,9 @@ function renderIBChart(canvas, jsonData) {
                 ctx.save();
                 ctx.fillStyle = dataset.borderColor;
                 ctx.font = 'bold 10px sans-serif';
-                ctx.textAlign = 'right';
+                ctx.textAlign = 'left';
                 ctx.textBaseline = 'bottom';
-                ctx.fillText(dataset.label, right - 5, yPixel - 4);
+                ctx.fillText(dataset.label, left + 5, yPixel - 4);
                 ctx.restore();
             });
         }
