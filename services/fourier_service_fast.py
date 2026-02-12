@@ -351,7 +351,8 @@ def get_tastytrade_session(force_refresh=False):
     if _tt_session is None:
         if not TT_USERNAME or not TT_PASSWORD:
             return None
-        _tt_session = Session(TT_USERNAME, TT_PASSWORD)
+        _tt_session = Session(provider_secret=os.getenv('TASTYTRADE_CLIENT_SECRET'),
+            refresh_token=os.getenv('TASTYTRADE_REFRESH_TOKEN'))
     return _tt_session
 
 

@@ -65,7 +65,8 @@ def get_tastytrade_session():
     if _session is None:
         if not TT_USERNAME or not TT_PASSWORD:
             raise ValueError("Falta TT_USERNAME o TT_PASSWORD en .env")
-        _session = Session(TT_USERNAME, TT_PASSWORD)
+        _session = Session(provider_secret=os.getenv('TASTYTRADE_CLIENT_SECRET'),
+            refresh_token=os.getenv('TASTYTRADE_REFRESH_TOKEN'))
         print("[TT] Sesión creada exitosamente")
     return _session
 

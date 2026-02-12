@@ -90,15 +90,14 @@ def chunks(lst, n):
 async def get_chain_async(session, ticker: str):
     if '/' in ticker:
         base = extract_base_symbol(ticker) if any(c.isdigit() for c in ticker) else ticker
-        return await asyncio.to_thread(NestedFutureOptionChain.get, session, base)
+        return await NestedFutureOptionChain.get(session, base)
     else:
-        chains = await asyncio.to_thread(NestedOptionChain.get, session, ticker)
+        chains = await NestedOptionChain.get(session, ticker)
         return chains[0] if chains else None
 
 
 async def get_market_data_async(session, equities=None, options=None):
-    return await asyncio.to_thread(get_market_data_by_type, session, equities=equities, options=options)
-
+    return await get_market_data_by_type(session, equities=equities, options=options)
 
 async def tasty_expirations_strikes(session, options_ticker: List[str]):
     """Compatible con función original."""

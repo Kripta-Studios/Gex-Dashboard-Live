@@ -508,15 +508,5 @@ async def start_scheduler():
         id="daily_cleanup_job",
         replace_existing=True,
     )
-
-    log("[SYSTEM] Programando limpieza de JSONs antiguos a las 00:30...")
-
-    sched.add_job(
-        cleanup_old_json_data,
-        CronTrigger(hour=0, minute=30),
-        id="json_cleanup_job",
-        replace_existing=True,
-    )
-
     sched.start()
     print("[SYSTEM] Scheduler Híbrido Iniciado (0DTE Rápido / Resto Normal)")

@@ -912,15 +912,17 @@ async def main_loop():
 
     print("[SYSTEM] Iniciando GEX JSON Daemon...")
 
-    session = Session(username, password)
+    session = Session(provider_secret=os.getenv('TASTYTRADE_CLIENT_SECRET'),
+        refresh_token=os.getenv('TASTYTRADE_REFRESH_TOKEN'))
 
     while True:
         start_time = datetime.now()
 
         # Validar sesión
-        if not session.validate():
+        if not await session.validate():
             print("[AUTH] Re-conectando sesión...")
-            session = Session(username, password)
+            session = Session(provider_secret=os.getenv('TASTYTRADE_CLIENT_SECRET'),
+                refresh_token=os.getenv('TASTYTRADE_REFRESH_TOKEN'))
 
         tasks = []
         for ticker in TICKERS_TO_TRACK:

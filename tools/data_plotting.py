@@ -1814,7 +1814,8 @@ def get_options_data(ticker, expir, greek_filter):
         t0 = time.time()
         username = getenv("TASTYTRADE_USERNAME")
         password = getenv("TASTYTRADE_PASSWORD")
-        session = Session(username, password)
+        session = Session(provider_secret=os.getenv('TASTYTRADE_CLIENT_SECRET'),
+            refresh_token=os.getenv('TASTYTRADE_REFRESH_TOKEN'))
         t1 = time.time()
         print(f"📡 [RED] API Tastytrade Session: {t1 - t0:.4f}s")
         t_san = ticker.replace("^", "").replace(" ", "").upper()
