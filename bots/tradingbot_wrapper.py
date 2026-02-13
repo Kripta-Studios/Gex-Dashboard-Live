@@ -52,7 +52,7 @@ os.makedirs(TRADES_DIR, exist_ok=True)
 os.makedirs(LOGS_DIR, exist_ok=True)
 
 # Trading parameters
-MIN_CONFIDENCE = 0.70  # Golden Config: 0.5
+MIN_CONFIDENCE = 0.50  # Golden Config: 0.5
 BASE_RISK_PCT = 0.01   # 1% base risk per trade
 MAX_POSITION_PCT = 0.05  # 5% maximum position size
 LOOP_INTERVAL = 30  # seconds
