@@ -21,6 +21,8 @@ import requests
 import logging
 from datetime import datetime, timedelta
 from pathlib import Path
+import pytz
+import pandas_market_calendars as mcal
 
 # Add project root to path
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -581,6 +583,27 @@ class TradingBotWrapper:
         
         with open(filepath, 'w') as f:
             json.dump(self.trade_history, f, indent=2)
+
+    def is_market_day(self) -> bool:
+        """Comprueba si hoy es fin de semana o festivo en el NYSE."""
+        # Obtener la hora actual en Nueva York
+        ny_tz = pytz.timezone('America/New_York')
+        now_ny = datetime.now(ny_tz)
+
+        # 1. Comprobar fines de semana (5 = Sábado, 6 = Domingo)
+        if now_ny.weekday() >= 5:
+            return False
+
+        # 2. Comprobar calendario del NYSE (Festivos)
+        nyse = mcal.get_calendar('NYSE')
+        # Pedimos el calendario solo para el día de hoy
+        schedule = nyse.schedule(start_date=now_ny.date(), end_date=now_ny.date())
+
+        # Si el schedule está vacío, significa que el mercado está cerrado hoy (festivo)
+        if schedule.empty:
+            return False
+
+        return True
     
     def run(self):
         """Main trading loop."""
@@ -594,6 +617,10 @@ class TradingBotWrapper:
         
         while True:
             try:
+                if not self.is_market_day():
+                    logger.info("El mercado está cerrado (Fin de semana o Festivo NYSE). Pausando el bot por 1 hora...")
+                    time.sleep(3600)  # Duerme 1 hora (3600 segundos) y vuelve a comprobar
+                    continue
                 # Process all tickers
                 for ticker in TICKERS + FUTURES_TO_TRACK:
                     self.process_ticker(ticker)
