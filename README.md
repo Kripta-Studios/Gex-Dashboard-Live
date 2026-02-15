@@ -23,7 +23,7 @@ Real-time Greek Exposure (GEX) analysis and automated trading system for options
 ## Overview
 
 This project provides a comprehensive suite for:
-- **Real-time Greek exposure calculation** (Gamma, Vanna, Charm, Delta, DGEX) across 0DTE and Weekly expirations.
+- **Real-time Greek exposure calculation** (Gamma, Vanna, Charm, Delta, DGEX, Vega, Vomma) across 0DTE and Weekly expirations.
 - **Automated trading** using a state-of-the-art **Hybrid Attention-MLP** neural network.
 - **Initial Balance (IB) analysis** with Fibonacci extensions.
 - **Discord notifications** for high-probability signals and trade management.
@@ -42,13 +42,16 @@ Gex-Dashboard-Live/
 │   ├── ib_service.py      # Initial Balance chart generator
 │   ├── servidor.py        # HTTP API server (port 8609)
 │   ├── fourier_service.py # Fourier cycle analysis
-│   └── fourier_service_fast.py
+│   ├── fourier_service_fast.py
+│   └── calc_max_pain.py   # Max Pain calculator
 │
-├── bots/                  # Live trading bots & ML Models
-│   ├── tradingbot_wrapper.py # MAIN BOT: Hybrid Attention-MLP execution
-│   ├── hybrid_model.py    # PyTorch model architecture
+├── neural/                # Hybrid Neural Network (Attention-MLP)
+│   ├── hybrid_model.py    # Model Architecture (PyTorch)
 │   ├── train_hybrid.py    # Training script
-│   ├── collect_training_data.py # Data processing
+│   └── feature_reduction.py # PCA & feature engineering
+│
+├── bots/                  # Trading Logic & Execution
+│   ├── tradingbot_wrapper.py # Main entry point (loads neural model)
 │   ├── tradingbot1.py     # (Legacy) Multi-ticker confluence strategy
 │   ├── tradingbot2.py     # (Legacy) Level reversal strategy
 │   ├── check_trades.py    # Trade status monitor
@@ -69,9 +72,14 @@ Gex-Dashboard-Live/
 │   ├── ib_backtest.py     # IB data fetcher
 │   └── plots/             # Backtest visualizations
 │
+├── scripts/               # Scripts
+│   ├── backfill_json_greeks.py # Greek exposure data
+│   └── fix_dates.py       # Fix dates in JSON files
+│
 ├── tools/                 # CLI utilities
 │   ├── cli-app.py         # Manual data plotting
-│   └── timeframe_fix.py   # Data correction tools
+│   ├── data_plotting.py   # Data plotting tools
+│   └── watchdog_notify.py # Watchdog notifications
 │
 ├── web/                   # Web dashboard
 │   └── templates/
@@ -487,7 +495,7 @@ Scripts to test strategies on historical data.
 Backtests the **Hybrid Attention-MLP** model on historical 1-minute data, simulating realistic execution with fees and slippage.
 
 ```bash
-python bots/backtest_hybrid.py
+python neural/backtest_hybrid.py --data training_data/backtest_trades.csv --threshold 0.5
 ```
 
 **Key Features:**
