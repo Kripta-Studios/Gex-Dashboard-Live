@@ -159,3 +159,58 @@ def calc_zomma_ex(gamma_ex, dp, vol, T):
     # Retorna el cambio en GEX por 1 punto de cambio en Vol
     return gamma_ex * zomma_factor
 
+
+@njit(
+    float64[:, :](
+        float64[:, :], float64[:], float64[:], float64, float64[:], float64[:, :]
+    )
+)
+def calc_vega_ex(S, vol, T, q, OI, pdf_dp):
+    """
+    Calcula la "Vega Exposure" (sensibilidad al cambio en IV).
+    Vega = S * e^(-q*T) * sqrt(T) * N'(d1)
+    Vega es la misma fórmula para calls y puts.
+    """
+    vega = S * np.exp(-q * T) * np.sqrt(T) * pdf_dp
+    return vega * OI  # Vega exposure weighted by open interest
+
+
+@njit(cache=True)
+def calc_vomma_ex(vega_ex, dp, vol, T):
+    """
+    Calcula la "Vomma Exposure" (sensibilidad de Vega al cambio en IV).
+    Mide cuánto cambia la Vega ante un movimiento del 1% en la Volatilidad Implícita.
+
+    Vomma = Vega * (d1 * d2) / sigma
+    Aprovechamos que ya tenemos vega_ex calculado.
+    
+    Args:
+        vega_ex: (N, M) array - Vega exposure matrix
+        dp: (N, M) array - d1 values  
+        vol: (M,) array - volatilities per option
+        T: (M,) array - time to expiration per option
+    
+    Returns:
+        (N, M) array - Vomma exposure matrix
+    """
+    n_prices = vega_ex.shape[0]
+    n_options = vega_ex.shape[1]
+    
+    # Crear output array
+    vomma_ex = np.zeros((n_prices, n_options), dtype=np.float64)
+    
+    # Calcular para cada opción (columna)
+    for i in range(n_options):
+        sqrt_T = np.sqrt(T[i])
+        vol_i = vol[i]
+        
+        # d2 = d1 - vol * sqrt(T)
+        d2_col = dp[:, i] - vol_i * sqrt_T
+        
+        # Factor de ajuste Vomma: (d1 * d2) / vol
+        vomma_factor = (dp[:, i] * d2_col) / vol_i
+        
+        # Aplicar a vega_ex
+        vomma_ex[:, i] = vega_ex[:, i] * vomma_factor
+    
+    return vomma_ex

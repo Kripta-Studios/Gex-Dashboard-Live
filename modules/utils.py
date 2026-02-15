@@ -162,11 +162,13 @@ def format_data(gr_list, today_ddt):
         "call_open_int",
         "call_delta",
         "call_gamma",
+        "call_vega",
         "puts",
         "put_iv",
         "put_open_int",
         "put_delta",
         "put_gamma",
+        "put_vega",
         "strike_price",
         "expiration_date",
         "time_till_exp",
@@ -203,11 +205,13 @@ def format_data(gr_list, today_ddt):
                 "call_open_int": None,
                 "call_delta": None,
                 "call_gamma": None,
+                "call_vega": None,
                 "puts": None,
                 "put_iv": None,
                 "put_open_int": None,
                 "put_delta": None,
                 "put_gamma": None,
+                "put_vega": None,
             }
 
         is_call = "C" in option["option"][6:]
@@ -218,12 +222,14 @@ def format_data(gr_list, today_ddt):
             grouped[key]["call_open_int"] = float(option.get("open_interest", 0))
             grouped[key]["call_delta"] = float(option.get("delta", 0))
             grouped[key]["call_gamma"] = float(option.get("gamma", 0))
+            grouped[key]["call_vega"] = float(option.get("vega", 0))
         else:
             grouped[key]["puts"] = option_code
             grouped[key]["put_iv"] = float(option.get("vol", 0))
             grouped[key]["put_open_int"] = float(option.get("open_interest", 0))
             grouped[key]["put_delta"] = float(option.get("delta", 0))
             grouped[key]["put_gamma"] = float(option.get("gamma", 0))
+            grouped[key]["put_vega"] = float(option.get("vega", 0))
 
     # Crear DataFrame
     option_data = pd.DataFrame(grouped.values(), columns=columns)
