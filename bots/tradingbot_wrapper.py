@@ -1,16 +1,25 @@
 """
-Trading Bot with Wrapper Integration
+Trading Bot with Wrapper Integration - OPTIMIZED CONFIGURATION
 
-Uses the TradingWrapper to make smarter decisions:
-- Checks market regime before trading
-- Calibrates model confidence
-- Sizes positions based on Kelly criterion
-- Manages trailing stops dynamically
+Based on backtest results (threshold=0.8):
+- 287 trades over 14 days
+- 71.1% win rate (204W / 83L)
+- Profit Factor: 3.44
+- Sharpe Ratio: 16.60
+- Total P&L: +1842.66
+
+KEY INSIGHTS FROM BACKTEST:
+1. ASYMMETRIC TARGETS are crucial:
+   - LONG: 1.0% target → 83.2% win rate
+   - SHORT: 0.5% target → 60.9% win rate
+2. Threshold 0.8 provides best risk-adjusted returns
+3. Cooldown 60min prevents overtrading
+4. Bayesian uncertainty filter (σ < 45min) critical
 
 This replaces the simpler tradingbot_pytorch.py logic.
 
 Usage:
-    python tradingbot_wrapper.py
+    python tradingbot_wrapper_optimized.py
 """
 
 import os
@@ -19,7 +28,7 @@ import json
 import time
 import requests
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time as dt_time
 from pathlib import Path
 import pytz
 import pandas_market_calendars as mcal
@@ -48,42 +57,63 @@ NORMALIZER_PATH = os.path.join(PROJECT_ROOT, "models", "hybrid_normalizer.npz")
 CALIBRATION_PATH = os.path.join(PROJECT_ROOT, "models", "calibration.json")
 TRADES_DIR = os.path.join(PROJECT_ROOT, "trades_wrapper")
 LOGS_DIR = os.path.join(PROJECT_ROOT, "logs")
+POSITIONS_FILE = os.path.join(PROJECT_ROOT, "trades_wrapper", "open_positions.json")  # Persistent positions
 
 # Create directories
 os.makedirs(TRADES_DIR, exist_ok=True)
 os.makedirs(LOGS_DIR, exist_ok=True)
 
-# Trading parameters
-MIN_CONFIDENCE = 0.80  # Golden Config: 0.8 (from backtest)
+# =============================================================================
+# OPTIMIZED TRADING PARAMETERS (From Backtest: 71.1% WR, PF 3.44, Sharpe 16.6)
+# =============================================================================
+
+MIN_CONFIDENCE = 0.80  # Threshold: 0.8 (287 trades over 14 days)
 BASE_RISK_PCT = 0.01   # 1% base risk per trade
 MAX_POSITION_PCT = 0.05  # 5% maximum position size
 LOOP_INTERVAL = 30  # seconds
 
-# Filters
-MIN_IV_PCT = 0.00  # Avoid chop (Golden Config: 0.0)
-MAX_TIME_MINUTES = 120 # Avoid slow moves (Golden Config: 120)
-STOP_LOSS_PCT = 0.003 # 0.3% stop loss (from backtest)
-TRADE_COOLDOWN_MINUTES = 60 # Cooldown between trades (from backtest)
+# ASYMMETRIC PROFIT TARGETS - This is the SECRET SAUCE
+# LONG targets are 2x SHORT targets because:
+# - LONG win rate: 83.2% (needs more room to run)
+# - SHORT win rate: 60.9% (tighter targets work better)
+TARGET_LONG_PCT = 0.010   # 1.0% target for LONG positions
+TARGET_SHORT_PCT = 0.005  # 0.5% target for SHORT positions
 
-# Discord Configuration (same as tradingbot1.py)
+# Risk Management
+STOP_LOSS_PCT = 0.003  # 0.3% stop loss (same for both directions)
+MAX_TIME_MINUTES = 120  # Max predicted time to target
+MAX_UNCERTAINTY_MINUTES = 45.0  # Bayesian σ exit threshold
+TRADE_COOLDOWN_MINUTES = 60  # Cooldown between trades (prevents overtrading)
+
+# Market Filters
+MIN_IV_PCT = 0.00  # Minimum IV percentile (0.0 = disabled)
+
+# Discord Configuration
 DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
 DISCORD_ROLE_PING = "<@&1464601287411634226>"
 DISCORD_ENABLED = True
 
-# Tickers
+# Tickers - ONLY the 5 tickers used in training (from backtest)
+# SPX: 91.5% win rate, +$1,123.14 P&L (59 trades) ⭐ BEST
+# SPY: 90.4% win rate, +$101.94 P&L (52 trades) ⭐ BEST
+# QQQ: 76.3% win rate, +$91.45 P&L (76 trades)
+# /ES: 41.3% win rate, +$379.61 P&L (46 trades) - Lower WR but high absolute profit
+# /NQ: 48.1% win rate, +$146.52 P&L (54 trades)
 TICKERS = [
-    "SPX", "SPY", "QQQ", "IWM", "VIX",
-    "AAPL", "NVDA", "TSLA", "AMD", "MSFT", "AMZN", "META", "GOOGL",
+    "SPX",  # Index - Best performer
+    "SPY",  # ETF tracking SPX
+    "QQQ",  # Nasdaq ETF
 ]
-FUTURES_TO_TRACK = ["/ES", "/NQ"]
+FUTURES_TO_TRACK = ["/ES", "/NQ"]  # Futures
 FUTURES_GREEKS_MAPPING = {"/ES": "SPX", "/NQ": "QQQ"}
 
-# Point values for P&L calculation
+# Point values for P&L calculation (only trained tickers)
 POINT_VALUES = {
-    "SPX": 10.0, "SPY": 100.0, "QQQ": 100.0, "IWM": 100.0, "VIX": 100.0,
-    "AAPL": 100.0, "NVDA": 100.0, "TSLA": 100.0, "AMD": 100.0,
-    "MSFT": 100.0, "AMZN": 100.0, "META": 100.0, "GOOGL": 100.0,
-    "/ES": 50.0, "/NQ": 20.0,
+    "SPX": 50.0,   # SPX options: $50 per point
+    "SPY": 100.0,  # SPY options: $100 per share (100 shares per contract)
+    "QQQ": 100.0,  # QQQ options: $100 per share
+    "/ES": 50.0,   # E-mini S&P 500: $50 per point
+    "/NQ": 20.0,   # E-mini Nasdaq: $20 per point
 }
 
 # Logging
@@ -91,7 +121,7 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler(os.path.join(LOGS_DIR, "tradingbot_wrapper.log")),
+        logging.FileHandler(os.path.join(LOGS_DIR, "tradingbot_wrapper_optimized.log")),
         logging.StreamHandler()
     ]
 )
@@ -103,7 +133,7 @@ logger = logging.getLogger(__name__)
 # =============================================================================
 
 def send_discord_trade_open(signal, timestamp=None):
-    """Sends trade OPEN notification to Discord."""
+    """Sends trade OPEN notification to Discord with optimized config info."""
     if not DISCORD_ENABLED or not DISCORD_WEBHOOK_URL:
         return
     
@@ -121,6 +151,9 @@ def send_discord_trade_open(signal, timestamp=None):
     risk_dollars = stop_distance * point_value * signal.position_size
     reward_dollars = target_distance * point_value * signal.position_size
     
+    # Show target % based on direction (ASYMMETRIC)
+    target_pct = TARGET_LONG_PCT if direction == "LONG" else TARGET_SHORT_PCT
+    
     reason_parts = []
     regime = signal.regime.value if hasattr(signal.regime, 'value') else str(signal.regime)
     
@@ -137,6 +170,11 @@ def send_discord_trade_open(signal, timestamp=None):
     
     reason_parts.append(f"🎯 **Confidence**: {signal.raw_confidence:.1%} → {signal.calibrated_confidence:.1%} (calibrated)")
     reason_parts.append(f"📏 **Position Size**: {signal.position_size:.1%}")
+    reason_parts.append(f"⚖️ **Asymmetric Target**: {target_pct:.1%} ({direction})")
+    
+    # Bayesian uncertainty info
+    if hasattr(signal, 'time_sigma_minutes') and signal.time_sigma_minutes > 0:
+        reason_parts.append(f"🔮 **Uncertainty**: σ = {signal.time_sigma_minutes:.1f}min (threshold: {MAX_UNCERTAINTY_MINUTES}min)")
     
     reason_text = "\n".join(reason_parts)
     
@@ -144,24 +182,25 @@ def send_discord_trade_open(signal, timestamp=None):
     emoji = "📈" if direction == "LONG" else "📉"
     
     embed = {
-        "title": f"{emoji} ML BOT {direction} OPENED - {ticker}",
-        "description": f"**{DISCORD_ROLE_PING}**\n\n**🤖 ML Reasoning:**\n{reason_text}",
+        "title": f"{emoji} OPTIMIZED BOT {direction} - {ticker}",
+        "description": f"**{DISCORD_ROLE_PING}**\n\n**🤖 ML Reasoning:**\n{reason_text}\n\n*Config: Threshold 0.8 | 71.1% WR | PF 3.44*",
         "color": color,
         "fields": [
             {"name": "🕒 Open Time", "value": f"{date_str} {time_str}", "inline": True},
             {"name": "💵 Entry Price", "value": f"${entry_price:.2f}", "inline": True},
             {"name": "📊 Point Value", "value": f"${point_value:.0f}/pt", "inline": True},
-            {"name": "🎯 TP1", "value": f"${signal.take_profit_1:.2f}", "inline": True},
-            {"name": "🎯 TP2", "value": f"${signal.take_profit_2:.2f}", "inline": True},
-            {"name": "🛑 Stop Loss", "value": f"${signal.stop_loss:.2f}", "inline": True},
+            {"name": f"🎯 Target ({target_pct:.1%})", "value": f"${signal.take_profit_1:.2f}", "inline": True},
+            {"name": "🎯 TP2 (Extended)", "value": f"${signal.take_profit_2:.2f}", "inline": True},
+            {"name": "🛑 Stop Loss (0.3%)", "value": f"${signal.stop_loss:.2f}", "inline": True},
             {"name": "⏱️ Max Hold", "value": f"{signal.max_hold_time} min", "inline": True},
-            {"name": "💰 Risk/Reward", "value": f"Risk: ${risk_dollars:.2f} | Reward: ${reward_dollars:.2f}" if risk_dollars > 0 else "N/A", "inline": False},
+            {"name": "💰 R:R Ratio", "value": f"{target_distance/stop_distance:.2f}:1" if stop_distance > 0 else "N/A", "inline": True},
+            {"name": "💵 Risk/Reward", "value": f"Risk: ${risk_dollars:.2f} | Reward: ${reward_dollars:.2f}" if risk_dollars > 0 else "N/A", "inline": False},
         ],
-        "footer": {"text": "TradingBotWrapper | ML Bot | LIVE"}
+        "footer": {"text": "TradingBotWrapper v2.0 | Optimized | LIVE"}
     }
     
     try:
-        response = requests.post(DISCORD_WEBHOOK_URL, json={"content": f"{DISCORD_ROLE_PING} ML Trade", "embeds": [embed]}, timeout=5)
+        response = requests.post(DISCORD_WEBHOOK_URL, json={"content": f"{DISCORD_ROLE_PING} Optimized ML Trade", "embeds": [embed]}, timeout=5)
         if response.status_code >= 400:
             logger.error(f"[DISCORD] Webhook error: {response.status_code}")
         else:
@@ -202,7 +241,7 @@ def send_discord_trade_close(position, exit_price: float, reason: str, pnl_pct: 
     elif "TIME" in reason.upper() or "HOLD" in reason.upper():
         exit_explanation = "⏰ **Max Hold Time** - Position held too long"
     elif "UNCERTAINTY" in reason.upper():
-        exit_explanation = "🌫️ **High Uncertainty** - Bayesian σ exceeded threshold"
+        exit_explanation = f"🌫️ **High Uncertainty** - Bayesian sigma > {MAX_UNCERTAINTY_MINUTES}min threshold"
     elif "CLOSE" in reason.upper() or "EOD" in reason.upper():
         exit_explanation = "🔔 **End of Day** - Forced exit before market close"
     else:
@@ -215,9 +254,12 @@ def send_discord_trade_close(position, exit_price: float, reason: str, pnl_pct: 
     price_move = exit_price - entry_price
     price_move_pct = (price_move / entry_price) * 100 if entry_price > 0 else 0
     
+    # Show which target was used
+    target_pct = TARGET_LONG_PCT if direction == "LONG" else TARGET_SHORT_PCT
+    
     embed = {
-        "title": f"{emoji} ML BOT {direction} CLOSED - {ticker} ({result})",
-        "description": f"**{DISCORD_ROLE_PING}**\n\n{exit_explanation}",
+        "title": f"{emoji} OPTIMIZED BOT {direction} CLOSED - {ticker} ({result})",
+        "description": f"**{DISCORD_ROLE_PING}**\n\n{exit_explanation}\n\n*Target: {target_pct:.1%} | Stop: {STOP_LOSS_PCT:.1%}*",
         "color": color,
         "fields": [
             {"name": "🕒 Open", "value": entry_str, "inline": True},
@@ -229,7 +271,7 @@ def send_discord_trade_close(position, exit_price: float, reason: str, pnl_pct: 
             {"name": "📊 P&L %", "value": f"{pnl_pct*100:+.2f}%", "inline": True},
             {"name": f"💰 P&L (${point_value:.0f}/pt)", "value": f"**${pnl_dollars:+.2f}**", "inline": True},
         ],
-        "footer": {"text": "TradingBotWrapper | ML Bot | LIVE"}
+        "footer": {"text": "TradingBotWrapper v2.0 | Optimized | LIVE"}
     }
     
     try:
@@ -243,7 +285,7 @@ def send_discord_trade_close(position, exit_price: float, reason: str, pnl_pct: 
 
 
 class Position:
-    """Tracks an open position."""
+    """Tracks an open position with asymmetric targets and comprehensive analytics."""
     
     def __init__(self, signal: TradeSignal):
         self.ticker = signal.ticker
@@ -252,33 +294,120 @@ class Position:
         self.entry_time = datetime.now()
         self.position_size = signal.position_size
         self.calibrated_confidence = signal.calibrated_confidence
+        self.raw_confidence = signal.raw_confidence
         self.current_stop = signal.stop_loss
         self.take_profit_1 = signal.take_profit_1
         self.take_profit_2 = signal.take_profit_2
         self.max_hold_time = signal.max_hold_time
         self.regime = signal.regime
         self.partial_exit_done = False
+        
         # Bayesian uncertainty from initial signal
         self.time_mu_minutes = signal.time_mu_minutes
         self.time_sigma_minutes = signal.time_sigma_minutes
+        
+        # Store full reasoning for post-trade analysis
+        self.entry_reasoning = signal.reasoning
+        
+        # Track price movement history (for post-analysis)
+        self.price_history = []  # List of (timestamp, price) tuples
+        self.stop_updates = []   # List of (timestamp, old_stop, new_stop) tuples
+        
+        # Greek snapshots at entry (will be populated by _open_position)
+        self.entry_greeks = {}
+        self.entry_ib_context = {}
+        
+        # Target used (for asymmetric tracking)
+        self.target_pct_used = TARGET_LONG_PCT if direction == "LONG" else TARGET_SHORT_PCT
+    
+    def add_price_update(self, price: float):
+        """Track price movement during trade lifetime."""
+        self.price_history.append({
+            "timestamp": datetime.now().isoformat(),
+            "price": price
+        })
+    
+    def add_stop_update(self, old_stop: float, new_stop: float):
+        """Track trailing stop adjustments."""
+        self.stop_updates.append({
+            "timestamp": datetime.now().isoformat(),
+            "old_stop": old_stop,
+            "new_stop": new_stop,
+            "distance_from_entry_pct": abs(new_stop - self.entry_price) / self.entry_price
+        })
     
     def to_dict(self) -> dict:
+        """Serialize position to comprehensive dictionary for JSON storage."""
         return {
+            # === BASIC TRADE INFO ===
             "ticker": self.ticker,
             "direction": self.direction,
             "entry_price": self.entry_price,
             "entry_time": self.entry_time.isoformat(),
+            
+            # === POSITION SIZING & CONFIDENCE ===
             "position_size": self.position_size,
+            "raw_confidence": self.raw_confidence,
             "calibrated_confidence": self.calibrated_confidence,
+            
+            # === TARGETS & STOPS (ASYMMETRIC) ===
+            "target_pct_used": self.target_pct_used,
+            "stop_loss_pct": STOP_LOSS_PCT,
             "current_stop": self.current_stop,
             "take_profit_1": self.take_profit_1,
             "take_profit_2": self.take_profit_2,
-            "regime": self.regime.value,
+            
+            # === BAYESIAN PREDICTIONS ===
+            "time_mu_minutes": self.time_mu_minutes,
+            "time_sigma_minutes": self.time_sigma_minutes,
+            "max_hold_time": self.max_hold_time,
+            
+            # === MARKET CONTEXT AT ENTRY ===
+            "regime": self.regime.value if hasattr(self.regime, 'value') else str(self.regime),
+            "entry_reasoning": self.entry_reasoning,
+            "entry_greeks": self.entry_greeks,
+            "entry_ib_context": self.entry_ib_context,
+            
+            # === TRADE MANAGEMENT ===
+            "partial_exit_done": self.partial_exit_done,
+            "stop_updates": self.stop_updates,
+            "price_history": self.price_history[-50:] if len(self.price_history) > 50 else self.price_history,  # Last 50 updates only
         }
+    
+    @classmethod
+    def from_dict(cls, data: dict) -> 'Position':
+        """Deserialize position from dictionary."""
+        # Create a mock signal to initialize Position
+        class MockSignal:
+            def __init__(self, d):
+                self.ticker = d["ticker"]
+                self.direction = d["direction"]
+                self.entry_price = d["entry_price"]
+                self.position_size = d["position_size"]
+                self.calibrated_confidence = d["calibrated_confidence"]
+                self.stop_loss = d["current_stop"]
+                self.take_profit_1 = d["take_profit_1"]
+                self.take_profit_2 = d["take_profit_2"]
+                self.max_hold_time = d["max_hold_time"]
+                self.time_mu_minutes = d.get("time_mu_minutes", 0.0)
+                self.time_sigma_minutes = d.get("time_sigma_minutes", 0.0)
+                
+                # Handle regime (could be string or enum)
+                regime_str = d.get("regime", "ranging")
+                try:
+                    self.regime = MarketRegime(regime_str)
+                except:
+                    self.regime = MarketRegime.RANGING
+        
+        position = cls(MockSignal(data))
+        position.entry_time = datetime.fromisoformat(data["entry_time"])
+        position.partial_exit_done = data.get("partial_exit_done", False)
+        
+        return position
 
 
 class TradingBotWrapper:
-    """Trading bot using the intelligent wrapper."""
+    """Trading bot using the intelligent wrapper with OPTIMIZED configuration."""
     
     def __init__(self):
         self.device = get_device()
@@ -297,6 +426,63 @@ class TradingBotWrapper:
         self.last_trade_time = {} # ticker -> datetime
         
         self._load_model()
+        self._load_open_positions()  # Load any positions that survived restart
+    
+    def _save_open_positions(self):
+        """Save all open positions to disk (atomic write)."""
+        try:
+            positions_data = {
+                ticker: position.to_dict() 
+                for ticker, position in self.positions.items()
+            }
+            
+            # Atomic write: write to temp file, then rename
+            temp_file = POSITIONS_FILE + ".tmp"
+            with open(temp_file, 'w') as f:
+                json.dump(positions_data, f, indent=2)
+            
+            # Atomic rename (overwrites existing file)
+            os.replace(temp_file, POSITIONS_FILE)
+            
+            logger.debug(f"Saved {len(positions_data)} open position(s) to disk")
+        except Exception as e:
+            logger.error(f"Failed to save open positions: {e}")
+    
+    def _load_open_positions(self):
+        """Load open positions from disk after restart."""
+        if not os.path.exists(POSITIONS_FILE):
+            logger.info("No saved positions found (fresh start)")
+            return
+        
+        try:
+            with open(POSITIONS_FILE, 'r') as f:
+                positions_data = json.load(f)
+            
+            if not positions_data:
+                logger.info("No open positions to restore")
+                return
+            
+            # Restore positions
+            for ticker, pos_dict in positions_data.items():
+                try:
+                    position = Position.from_dict(pos_dict)
+                    self.positions[ticker] = position
+                    
+                    # Calculate how long position has been open
+                    duration_mins = (datetime.now() - position.entry_time).total_seconds() / 60
+                    
+                    logger.info(f"[RESTORED] {ticker} {position.direction}")
+                    logger.info(f"  Entry: {position.entry_price:.2f} @ {position.entry_time.strftime('%Y-%m-%d %H:%M')}")
+                    logger.info(f"  Duration: {duration_mins:.0f} min")
+                    logger.info(f"  Stop: {position.current_stop:.2f} | TP1: {position.take_profit_1:.2f} | TP2: {position.take_profit_2:.2f}")
+                except Exception as e:
+                    logger.error(f"Failed to restore position for {ticker}: {e}")
+            
+            logger.info(f"Successfully restored {len(self.positions)} position(s) from disk")
+            
+        except Exception as e:
+            logger.error(f"Failed to load open positions: {e}")
+            # Don't crash - continue with empty positions
     
     def _load_model(self):
         """Load model and initialize wrapper."""
@@ -307,10 +493,10 @@ class TradingBotWrapper:
         
         self.model, self.normalizer = load_hybrid_model(
             MODEL_PATH, NORMALIZER_PATH, 
-            model_size="small", device=self.device
+            model_size="medium", device=self.device  # Changed from "small" to "medium"
         )
         
-        # Initialize wrapper
+        # Initialize wrapper with OPTIMIZED parameters
         calibration = CALIBRATION_PATH if os.path.exists(CALIBRATION_PATH) else None
         
         self.wrapper = TradingWrapper(
@@ -328,11 +514,26 @@ class TradingBotWrapper:
             stop_loss_pct=STOP_LOSS_PCT,
         )
         
-        logger.info("Model and wrapper loaded successfully")
+        logger.info("=" * 70)
+        logger.info("OPTIMIZED MODEL CONFIGURATION LOADED")
+        logger.info("=" * 70)
+        logger.info(f"Backtest Performance (14 days, threshold {MIN_CONFIDENCE}):")
+        logger.info(f"  • Total Trades: 287")
+        logger.info(f"  • Win Rate: 71.1% (204W / 83L)")
+        logger.info(f"  • Profit Factor: 3.44")
+        logger.info(f"  • Sharpe Ratio: 16.60")
+        logger.info(f"  • Total P&L: +$1,842.66")
+        logger.info(f"\nKey Features:")
+        logger.info(f"  • ASYMMETRIC TARGETS:")
+        logger.info(f"    - LONG: {TARGET_LONG_PCT:.1%} target (83.2% WR backtest)")
+        logger.info(f"    - SHORT: {TARGET_SHORT_PCT:.1%} target (60.9% WR backtest)")
+        logger.info(f"  • Stop Loss: {STOP_LOSS_PCT:.1%} (both directions)")
+        logger.info(f"  • Bayesian Exit: sigma > {MAX_UNCERTAINTY_MINUTES}min")
+        logger.info(f"  • Cooldown: {TRADE_COOLDOWN_MINUTES}min")
+        logger.info("=" * 70)
     
     def get_latest_greek_data(self, ticker: str) -> dict:
         """Find and load the most recent Greek data JSON."""
-        # /ES -> ES
         search_ticker = ticker.replace("/", "")
         pattern = f"{search_ticker}_0dte_ExposureData_"
         json_files = list(Path(GREEK_DATA_DIR).glob(f"{pattern}*.json"))
@@ -581,10 +782,6 @@ class TradingBotWrapper:
         if ticker in self.positions:
             self._manage_position(ticker, current_price)
         else:
-            # Load weekly data for feature extraction
-            weekly_ticker = FUTURES_GREEKS_MAPPING.get(ticker, ticker)
-            weekly_data = self.get_latest_weekly_data(weekly_ticker)
-            
             # Get signal from wrapper
             signal = self.wrapper.get_signal(ticker, features, current_price)
             
@@ -597,31 +794,88 @@ class TradingBotWrapper:
                         logger.debug(f"Skipping {ticker} trade (Cooldown: {elapsed:.0f}/{TRADE_COOLDOWN_MINUTES}m)")
                         return
 
+                # OVERRIDE WRAPPER STOPS WITH ASYMMETRIC TARGETS
+                target_pct = TARGET_LONG_PCT if signal.direction == "LONG" else TARGET_SHORT_PCT
+                
+                if signal.direction == "LONG":
+                    signal.take_profit_1 = signal.entry_price * (1 + target_pct)
+                    signal.take_profit_2 = signal.entry_price * (1 + target_pct * 1.5)  # Extended target
+                else:  # SHORT
+                    signal.take_profit_1 = signal.entry_price * (1 - target_pct)
+                    signal.take_profit_2 = signal.entry_price * (1 - target_pct * 1.5)
+
                 self._open_position(signal)
     
     def _open_position(self, signal: TradeSignal):
-        """Open a new position based on wrapper signal."""
+        """Open a new position based on wrapper signal and capture entry market conditions."""
         position = Position(signal)
+        
+        # Capture Greek snapshots at entry for post-analysis
+        greek_ticker = FUTURES_GREEKS_MAPPING.get(signal.ticker, signal.ticker)
+        greek_data = self.get_latest_greek_data(greek_ticker)
+        weekly_data = self.get_latest_weekly_data(greek_ticker)
+        ib_data = self.get_ib_data(signal.ticker)
+        
+        # Store 0DTE Greek snapshot
+        if greek_data:
+            position.entry_greeks = {
+                "net_gamma": sum(greek_data.get("totalgamma", {}).get("all", [])),
+                "net_vanna": sum(greek_data.get("totalvanna", {}).get("all", [])),
+                "net_charm": sum(greek_data.get("totalcharm", {}).get("all", [])),
+                "net_dgex": sum(greek_data.get("totaldgex", {}).get("all", [])),
+                "net_zomma": sum(greek_data.get("totalzomma", {}).get("all", [])),
+                "net_delta": sum(greek_data.get("totaldelta", {}).get("all", [])),
+                "zero_gamma": greek_data.get("zerogamma", 0),
+                "zero_delta": greek_data.get("zerodelta", 0),
+            }
+            
+            # Add weekly Greeks
+            if weekly_data:
+                position.entry_greeks["wk_net_gamma"] = sum(weekly_data.get("totalgamma", {}).get("all", []))
+                position.entry_greeks["wk_net_vanna"] = sum(weekly_data.get("totalvanna", {}).get("all", []))
+                position.entry_greeks["wk_net_dgex"] = sum(weekly_data.get("totaldgex", {}).get("all", []))
+        
+        # Store IB context
+        if ib_data and "analysis" in ib_data:
+            analysis = ib_data["analysis"]
+            position.entry_ib_context = {
+                "ib_high": analysis.get("ib_high", 0),
+                "ib_low": analysis.get("ib_low", 0),
+                "ib_range_pct": ((analysis.get("ib_high", 0) - analysis.get("ib_low", 0)) / signal.entry_price * 100) if signal.entry_price > 0 else 0,
+                "above_ib": signal.entry_price > analysis.get("ib_high", 0),
+                "below_ib": signal.entry_price < analysis.get("ib_low", 0),
+                "in_ib_range": analysis.get("ib_low", 0) <= signal.entry_price <= analysis.get("ib_high", 0),
+            }
+        
         self.positions[signal.ticker] = position
+        
+        target_pct = TARGET_LONG_PCT if signal.direction == "LONG" else TARGET_SHORT_PCT
         
         logger.info(f"[OPEN] {signal.ticker} {signal.direction}")
         logger.info(f"  Price: {signal.entry_price:.2f}")
         logger.info(f"  Confidence: {signal.raw_confidence:.1%} → {signal.calibrated_confidence:.1%}")
         logger.info(f"  Size: {signal.position_size:.1%}")
         logger.info(f"  Regime: {signal.regime.value}")
+        logger.info(f"  ASYMMETRIC Target: {target_pct:.1%}")
         logger.info(f"  Stop: {signal.stop_loss:.2f} | TP1: {signal.take_profit_1:.2f} | TP2: {signal.take_profit_2:.2f}")
+        logger.info(f"  Bayesian: μ={signal.time_mu_minutes:.1f}m, σ={signal.time_sigma_minutes:.1f}m")
         
         # Send Discord notification
         send_discord_trade_open(signal)
         
         self.daily_stats["trades"] += 1
+        
+        # PERSIST TO DISK (critical for restart recovery)
+        self._save_open_positions()
     
     def _manage_position(self, ticker: str, current_price: float):
-        """Manage an open position with real-time Bayesian uncertainty."""
+        """Manage an open position with real-time Bayesian uncertainty and tracking."""
         position = self.positions[ticker]
         
+        # Track price update
+        position.add_price_update(current_price)
+        
         # --- Real-time Bayesian inference ---
-        # Re-run model on current features to get live σ (uncertainty)
         current_uncertainty_mins = None
         try:
             greek_ticker = FUTURES_GREEKS_MAPPING.get(ticker, ticker)
@@ -641,11 +895,13 @@ class TradingBotWrapper:
                         log_sigma = time_pred.cpu().numpy()[0][1]
                         current_uncertainty_mins = float(np.exp(log_sigma) * 120.0)
                     
-                    logger.debug(f"  {ticker} Live σ = {current_uncertainty_mins:.1f} min")
+                    if current_uncertainty_mins > MAX_UNCERTAINTY_MINUTES:
+                        logger.info(f"  {ticker} HIGH UNCERTAINTY: σ={current_uncertainty_mins:.1f}m > {MAX_UNCERTAINTY_MINUTES}m threshold")
         except Exception as e:
             logger.debug(f"  {ticker} Live inference failed (using fallback): {e}")
         
         # Update trailing stop and check exit (with Bayesian uncertainty)
+        old_stop = position.current_stop
         new_stop, should_exit, exit_reason = self.wrapper.update_position(
             ticker=ticker,
             entry_price=position.entry_price,
@@ -657,21 +913,32 @@ class TradingBotWrapper:
             current_uncertainty_mins=current_uncertainty_mins,
         )
         
-        # Update stop
-        if new_stop != position.current_stop:
-            logger.debug(f"  {ticker} Stop updated: {position.current_stop:.2f} → {new_stop:.2f}")
+        # Track if position state changed (needs save)
+        state_changed = False
+        
+        # Update stop and track change
+        if new_stop != old_stop:
+            logger.debug(f"  {ticker} Stop updated: {old_stop:.2f} → {new_stop:.2f}")
             position.current_stop = new_stop
+            position.add_stop_update(old_stop, new_stop)
+            state_changed = True
         
         # Check take profit 1 (partial exit)
         if not position.partial_exit_done:
             if position.direction == "LONG" and current_price >= position.take_profit_1:
-                logger.info(f"  {ticker} TP1 hit - partial exit")
+                logger.info(f"  {ticker} TP1 ({TARGET_LONG_PCT:.1%}) hit - partial exit")
                 position.partial_exit_done = True
                 position.position_size *= 0.5  # Exit half
+                state_changed = True
             elif position.direction == "SHORT" and current_price <= position.take_profit_1:
-                logger.info(f"  {ticker} TP1 hit - partial exit")
+                logger.info(f"  {ticker} TP1 ({TARGET_SHORT_PCT:.1%}) hit - partial exit")
                 position.partial_exit_done = True
                 position.position_size *= 0.5
+                state_changed = True
+        
+        # Save position state if changed
+        if state_changed:
+            self._save_open_positions()
         
         # Check full exit
         if should_exit:
@@ -682,8 +949,9 @@ class TradingBotWrapper:
             self._close_position(ticker, current_price, "TAKE_PROFIT_2")
     
     def _close_position(self, ticker: str, current_price: float, reason: str):
-        """Close a position and record P&L."""
+        """Close a position and record comprehensive P&L and analytics."""
         position = self.positions[ticker]
+        exit_time = datetime.now()
         
         # Calculate P&L
         if position.direction == "LONG":
@@ -694,6 +962,33 @@ class TradingBotWrapper:
         point_value = POINT_VALUES.get(ticker, 100)
         pnl_dollars = pnl_pct * position.entry_price * point_value
         
+        # Calculate trade duration
+        hold_time_minutes = (exit_time - position.entry_time).total_seconds() / 60
+        
+        # Capture EXIT Greek snapshots for comparison
+        exit_greeks = {}
+        greek_ticker = FUTURES_GREEKS_MAPPING.get(ticker, ticker)
+        greek_data = self.get_latest_greek_data(greek_ticker)
+        if greek_data:
+            exit_greeks = {
+                "net_gamma": sum(greek_data.get("totalgamma", {}).get("all", [])),
+                "net_vanna": sum(greek_data.get("totalvanna", {}).get("all", [])),
+                "net_dgex": sum(greek_data.get("totaldgex", {}).get("all", [])),
+            }
+        
+        # Calculate max favorable excursion (MFE) and max adverse excursion (MAE)
+        mfe = 0.0  # Max profit during trade
+        mae = 0.0  # Max loss during trade
+        if position.price_history:
+            for update in position.price_history:
+                price = update["price"]
+                if position.direction == "LONG":
+                    move_pct = (price - position.entry_price) / position.entry_price
+                else:
+                    move_pct = (position.entry_price - price) / position.entry_price
+                mfe = max(mfe, move_pct)
+                mae = min(mae, move_pct)
+        
         # Update stats
         if pnl_pct > 0:
             self.daily_stats["wins"] += 1
@@ -701,75 +996,249 @@ class TradingBotWrapper:
             self.daily_stats["losses"] += 1
         self.daily_stats["pnl"] += pnl_dollars
         
+        target_pct = TARGET_LONG_PCT if position.direction == "LONG" else TARGET_SHORT_PCT
+        
         logger.info(f"[CLOSE] {ticker} {position.direction} | {reason}")
         logger.info(f"  Entry: {position.entry_price:.2f} → Exit: {current_price:.2f}")
+        logger.info(f"  Target: {target_pct:.1%} | Stop: {STOP_LOSS_PCT:.1%}")
         logger.info(f"  P&L: {pnl_pct:+.2%} (${pnl_dollars:+.2f})")
-        logger.info(f"  Hold time: {(datetime.now() - position.entry_time).total_seconds()/60:.1f} min")
+        logger.info(f"  Hold time: {hold_time_minutes:.1f} min | MFE: {mfe:.2%} | MAE: {mae:.2%}")
         
-        # Record trade
+        # === BUILD COMPREHENSIVE TRADE RECORD ===
         trade_record = {
+            # All position data (entry context, Greeks, IB, etc.)
             **position.to_dict(),
+            
+            # === EXIT DATA ===
             "exit_price": current_price,
-            "exit_time": datetime.now().isoformat(),
+            "exit_time": exit_time.isoformat(),
             "exit_reason": reason,
+            "exit_greeks": exit_greeks,
+            
+            # === P&L METRICS ===
             "pnl_pct": pnl_pct,
             "pnl_dollars": pnl_dollars,
+            "point_value": point_value,
+            
+            # === TIMING METRICS ===
+            "hold_time_minutes": hold_time_minutes,
+            "predicted_time_minutes": position.time_mu_minutes,
+            "time_prediction_error_minutes": hold_time_minutes - position.time_mu_minutes,
+            
+            # === RISK METRICS ===
+            "max_favorable_excursion_pct": mfe,  # How far it went in our favor
+            "max_adverse_excursion_pct": mae,    # How far it went against us
+            "risk_reward_ratio": abs(target_pct / STOP_LOSS_PCT),
+            
+            # === TRADE QUALITY METRICS ===
+            "hit_target": "TARGET" in reason or "PROFIT" in reason,
+            "hit_stop": "STOP" in reason,
+            "partial_exit_executed": position.partial_exit_done,
+            "num_stop_updates": len(position.stop_updates),
+            "num_price_updates": len(position.price_history),
+            
+            # === CONFIGURATION (for analysis) ===
+            "config": {
+                "threshold": MIN_CONFIDENCE,
+                "target_long_pct": TARGET_LONG_PCT,
+                "target_short_pct": TARGET_SHORT_PCT,
+                "stop_loss_pct": STOP_LOSS_PCT,
+                "max_uncertainty_minutes": MAX_UNCERTAINTY_MINUTES,
+                "cooldown_minutes": TRADE_COOLDOWN_MINUTES,
+            }
         }
+        
         self.trade_history.append(trade_record)
         
         # Send Discord notification
         send_discord_trade_close(position, current_price, reason, pnl_pct, pnl_dollars)
         
+        # Remove from active positions
         del self.positions[ticker]
-        self.last_trade_time[ticker] = datetime.now() # Start cooldown from CLOSE time
+        self.last_trade_time[ticker] = datetime.now()
+        
+        # PERSIST STATE: Save remaining positions and trade history
+        self._save_open_positions()  # Update disk (position now removed)
         self._save_trade_history()
     
     def _save_trade_history(self):
-        """Save trade history to file."""
+        """Save comprehensive trade history to organized JSON files."""
         today = datetime.now().strftime("%Y-%m-%d")
-        filepath = os.path.join(TRADES_DIR, f"trades_{today}.json")
         
-        with open(filepath, 'w') as f:
-            json.dump(self.trade_history, f, indent=2)
+        # Create dated subfolder for organization
+        dated_folder = os.path.join(TRADES_DIR, today.replace("-", ""))
+        os.makedirs(dated_folder, exist_ok=True)
+        
+        # Save full trade history with all details
+        trades_file = os.path.join(dated_folder, f"trades_full_{today}.json")
+        
+        # Calculate summary stats
+        if self.trade_history:
+            wins = [t for t in self.trade_history if t["pnl_pct"] > 0]
+            losses = [t for t in self.trade_history if t["pnl_pct"] < 0]
+            
+            summary = {
+                "date": today,
+                "total_trades": len(self.trade_history),
+                "wins": len(wins),
+                "losses": len(losses),
+                "win_rate": len(wins) / len(self.trade_history) if self.trade_history else 0,
+                "total_pnl_dollars": sum(t["pnl_dollars"] for t in self.trade_history),
+                "avg_win_pct": sum(t["pnl_pct"] for t in wins) / len(wins) if wins else 0,
+                "avg_loss_pct": sum(t["pnl_pct"] for t in losses) / len(losses) if losses else 0,
+                "avg_hold_time_minutes": sum(t["hold_time_minutes"] for t in self.trade_history) / len(self.trade_history),
+                "by_ticker": {},
+                "by_direction": {"LONG": {"count": 0, "wins": 0, "pnl": 0}, "SHORT": {"count": 0, "wins": 0, "pnl": 0}},
+            }
+            
+            # Aggregate by ticker
+            for trade in self.trade_history:
+                ticker = trade["ticker"]
+                direction = trade["direction"]
+                
+                if ticker not in summary["by_ticker"]:
+                    summary["by_ticker"][ticker] = {"count": 0, "wins": 0, "losses": 0, "pnl": 0}
+                
+                summary["by_ticker"][ticker]["count"] += 1
+                summary["by_ticker"][ticker]["pnl"] += trade["pnl_dollars"]
+                
+                if trade["pnl_pct"] > 0:
+                    summary["by_ticker"][ticker]["wins"] += 1
+                else:
+                    summary["by_ticker"][ticker]["losses"] += 1
+                
+                # By direction
+                summary["by_direction"][direction]["count"] += 1
+                summary["by_direction"][direction]["pnl"] += trade["pnl_dollars"]
+                if trade["pnl_pct"] > 0:
+                    summary["by_direction"][direction]["wins"] += 1
+            
+            # Calculate win rates
+            for ticker_stats in summary["by_ticker"].values():
+                if ticker_stats["count"] > 0:
+                    ticker_stats["win_rate"] = ticker_stats["wins"] / ticker_stats["count"]
+            
+            for dir_stats in summary["by_direction"].values():
+                if dir_stats["count"] > 0:
+                    dir_stats["win_rate"] = dir_stats["wins"] / dir_stats["count"]
+        else:
+            summary = {"date": today, "total_trades": 0}
+        
+        # Save comprehensive data
+        data_to_save = {
+            "summary": summary,
+            "trades": self.trade_history,
+            "generated_at": datetime.now().isoformat(),
+            "bot_version": "v2.0_optimized",
+        }
+        
+        with open(trades_file, 'w') as f:
+            json.dump(data_to_save, f, indent=2)
+        
+        # Also save summary separately for quick reference
+        summary_file = os.path.join(dated_folder, f"summary_{today}.json")
+        with open(summary_file, 'w') as f:
+            json.dump(summary, f, indent=2)
+        
+        logger.debug(f"Trade history saved: {trades_file}")
 
     def is_market_day(self) -> bool:
-        """Comprueba si hoy es fin de semana o festivo en el NYSE."""
-        # Obtener la hora actual en Nueva York
+        """Check if today is a trading day (NYSE calendar)."""
         ny_tz = pytz.timezone('America/New_York')
         now_ny = datetime.now(ny_tz)
 
-        # 1. Comprobar fines de semana (5 = Sábado, 6 = Domingo)
+        # Weekend check
         if now_ny.weekday() >= 5:
             return False
 
-        # 2. Comprobar calendario del NYSE (Festivos)
+        # Holiday check
         nyse = mcal.get_calendar('NYSE')
-        # Pedimos el calendario solo para el día de hoy
         schedule = nyse.schedule(start_date=now_ny.date(), end_date=now_ny.date())
 
-        # Si el schedule está vacío, significa que el mercado está cerrado hoy (festivo)
         if schedule.empty:
             return False
 
         return True
     
+    def is_trading_hours(self) -> tuple[bool, str]:
+        """
+        Check if current time is within trading hours (8:00 AM - 4:30 PM EST).
+        
+        Returns:
+            (bool, str): (is_tradeable, reason)
+        """
+        ny_tz = pytz.timezone('America/New_York')
+        now_ny = datetime.now(ny_tz)
+        
+        current_time = now_ny.time()
+        
+        # Trading hours: 8:00 AM - 4:30 PM EST
+        start_time = dt_time(8, 0)   # 8:00 AM
+        end_time = dt_time(16, 30)   # 4:30 PM
+        
+        if current_time < start_time:
+            minutes_until_open = ((datetime.combine(now_ny.date(), start_time) - 
+                                   datetime.combine(now_ny.date(), current_time)).total_seconds() / 60)
+            return False, f"Pre-market: {minutes_until_open:.0f} min until 8:00 AM EST"
+        
+        if current_time > end_time:
+            return False, "After-hours: Market closed at 4:30 PM EST"
+        
+        return True, "Trading hours active"
+    
     def run(self):
         """Main trading loop."""
-        logger.info("=" * 60)
-        logger.info("TRADING BOT WITH WRAPPER STARTED")
-        logger.info("=" * 60)
-        logger.info(f"Tickers: {', '.join(TICKERS + FUTURES_TO_TRACK)}")
-        logger.info(f"Min confidence: {MIN_CONFIDENCE:.0%}")
-        logger.info(f"Base risk: {BASE_RISK_PCT:.1%} | Max position: {MAX_POSITION_PCT:.1%}")
-        logger.info(f"Loop interval: {LOOP_INTERVAL}s")
+        logger.info("=" * 70)
+        logger.info("OPTIMIZED TRADING BOT STARTED (v2.0)")
+        logger.info("=" * 70)
+        logger.info(f"Configuration:")
+        logger.info(f"  • Tickers: {', '.join(TICKERS + FUTURES_TO_TRACK)}")
+        logger.info(f"  • Threshold: {MIN_CONFIDENCE:.0%}")
+        logger.info(f"  • Trading Hours: 8:00 AM - 4:30 PM EST")
+        logger.info(f"  • ASYMMETRIC Targets:")
+        logger.info(f"    - LONG: {TARGET_LONG_PCT:.1%} (backtest: 83.2% WR)")
+        logger.info(f"    - SHORT: {TARGET_SHORT_PCT:.1%} (backtest: 60.9% WR)")
+        logger.info(f"  • Stop Loss: {STOP_LOSS_PCT:.1%}")
+        logger.info(f"  • Bayesian Exit: sigma > {MAX_UNCERTAINTY_MINUTES}min")
+        logger.info(f"  • Cooldown: {TRADE_COOLDOWN_MINUTES}min")
+        logger.info(f"  • Loop Interval: {LOOP_INTERVAL}s")
+        logger.info("=" * 70)
+        
+        last_hours_log = None
         
         while True:
             try:
+                # Check if market day
                 if not self.is_market_day():
-                    logger.info("El mercado está cerrado (Fin de semana o Festivo NYSE). Pausando el bot por 1 hora...")
-                    time.sleep(3600)  # Duerme 1 hora (3600 segundos) y vuelve a comprobar
+                    logger.info("Market closed (Weekend/Holiday). Pausing for 1 hour...")
+                    time.sleep(3600)
                     continue
-                # Process all tickers
+                
+                # Check trading hours
+                in_hours, hours_reason = self.is_trading_hours()
+                
+                # Log hours status change (only once per status change)
+                if hours_reason != last_hours_log:
+                    logger.info(f"Trading Hours Status: {hours_reason}")
+                    last_hours_log = hours_reason
+                
+                if not in_hours:
+                    # Close all positions at end of day (4:30 PM)
+                    if "After-hours" in hours_reason and self.positions:
+                        logger.info("End of trading day - closing all positions")
+                        for ticker in list(self.positions.keys()):
+                            greek_ticker = FUTURES_GREEKS_MAPPING.get(ticker, ticker)
+                            greek_data = self.get_latest_greek_data(greek_ticker)
+                            if greek_data:
+                                current_price = greek_data.get("spot", greek_data.get("spot_price", 0))
+                                if current_price > 0:
+                                    self._close_position(ticker, current_price, "EOD_CLOSE")
+                    
+                    # Sleep longer outside trading hours
+                    time.sleep(60)
+                    continue
+                
+                # Process all tickers (only during trading hours)
                 for ticker in TICKERS + FUTURES_TO_TRACK:
                     self.process_ticker(ticker)
                 
@@ -778,7 +1247,7 @@ class TradingBotWrapper:
                     wins = self.daily_stats["wins"]
                     losses = self.daily_stats["losses"]
                     win_rate = wins / (wins + losses) if (wins + losses) > 0 else 0
-                    logger.debug(f"Daily: {self.daily_stats['trades']} trades, "
+                    logger.debug(f"Daily Stats: {self.daily_stats['trades']} trades, "
                                 f"WR {win_rate:.1%}, P&L ${self.daily_stats['pnl']:.2f}")
                 
                 time.sleep(LOOP_INTERVAL)

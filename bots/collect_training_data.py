@@ -79,7 +79,7 @@ LOOKAHEAD_MINUTES = 120
 # EST is UTC-5 (Winter) / EDT is UTC-4 (Summer)
 # Difference is roughly 6 hours (Madrid is ahead)
 # We need to SUBTRACT 6 hours from filename time to get EST
-TIMEZONE_OFFSET_HOURS = -6
+TIMEZONE_OFFSET_HOURS = 0
 
 
 def get_net_greek_exposure(data: dict, greek_name: str) -> float:
@@ -230,8 +230,6 @@ def extract_features_from_greek_file(filepath: str) -> dict:
             timestamp_str = f"{match.group(1)} {match.group(2)}"
             timestamp = datetime.strptime(timestamp_str, "%Y%m%d %H%M%S")
             
-            # Apply Timezone Offset (Madrid -> EST)
-            timestamp = timestamp + timedelta(hours=TIMEZONE_OFFSET_HOURS)
         else:
             timestamp = None
         

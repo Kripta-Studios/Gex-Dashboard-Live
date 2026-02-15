@@ -45,12 +45,14 @@ class TradeSimulator:
     """Simulates trades based on model predictions with cooldown to prevent overtrading."""
     
     def __init__(self, threshold: float = 0.6, position_size: float = 1.0, cooldown_minutes: int = 30, 
-                 target_pct: float = 0.003, stop_pct: float = 0.003, max_time: int = 120, min_iv_pct: float = 0.0,
+                 target_long: float = 0.010, target_short: float = 0.005, # <-- Targets separados
+                 stop_pct: float = 0.003, max_time: int = 120, min_iv_pct: float = 0.0,
                  discord_enabled: bool = False, trade_limit: int = 0, uncertainty_threshold: float = 45.0):
         self.threshold = threshold
         self.position_size = position_size
         self.cooldown_minutes = cooldown_minutes
-        self.target_pct = target_pct
+        self.target_long = target_long    # Guardamos ambos
+        self.target_short = target_short
         self.stop_pct = stop_pct
         self.max_time = max_time
         self.min_iv_pct = min_iv_pct
@@ -179,7 +181,8 @@ class TradeSimulator:
             date = row['date']
             time_str = row['time']
             current_minute = row['minutes']
-            
+            if 570 <= current_minute < 580:
+                continue
             # Cooldown check
             last_time = last_trade_time.get((ticker, date), -999)
             if current_minute - last_time < self.cooldown_minutes:
@@ -223,6 +226,12 @@ class TradeSimulator:
             actual_hold_minutes = hold_minutes
             target_hit = False
             stop_hit = False
+
+            base_target = self.target_long if direction == "LONG" else self.target_short
+            
+            smart_target = base_target
+            if sigma_minutes < 15.0: # Si la incertidumbre es muy baja, somos más ambiciosos
+                smart_target = base_target * 1.5
             
             # Load 1-minute data for this day
             minute_data = self.load_ib_data(ticker, date)
@@ -269,8 +278,8 @@ class TradeSimulator:
                                 break
                             
                             # Take Profit (High triggers it)
-                            if h >= entry_price * (1 + self.target_pct):
-                                exit_price = entry_price * (1 + self.target_pct)
+                            if h >= entry_price * (1 + smart_target):
+                                exit_price = entry_price * (1 + smart_target)
                                 target_hit = True
                                 actual_hold_minutes = m - current_minute
                                 found_exit_scan = True
@@ -286,8 +295,8 @@ class TradeSimulator:
                                 break
                                 
                             # Take Profit (Low triggers it)
-                            if l <= entry_price * (1 - self.target_pct):
-                                exit_price = entry_price * (1 - self.target_pct)
+                            if l <= entry_price * (1 - smart_target):
+                                exit_price = entry_price * (1 - smart_target)
                                 target_hit = True
                                 actual_hold_minutes = m - current_minute
                                 found_exit_scan = True
@@ -384,6 +393,9 @@ class TradeSimulator:
                 except Exception as e:
                     print(f"  [Discord Close Error] {e}")
 
+            if exit_price <= 0:
+                #print(f"⚠️ Ignorando trade inválido en {ticker} {date} {time_str} (Precio 0)")
+                continue
             # Record trade
             trades.append({
                 "date": str(date),
@@ -405,7 +417,7 @@ class TradeSimulator:
             if actual_hold_minutes == 0:
                 result_emoji = "✅" if pnl_pct > 0 else "❌"
                 reason_str = "TARGET" if target_hit else "STOP" if stop_hit else "TIME"
-                print(f"  [⚡ INSTANT] {ticker} {direction} at {date} {time_str} | Entry: {entry_price:.2f} -> Exit: {exit_price:.2f} | ({result_emoji} ${pnl_dollars:+.2f}) -> {reason_str}")
+                #print(f"  [⚡ INSTANT] {ticker} {direction} at {date} {time_str} | Entry: {entry_price:.2f} -> Exit: {exit_price:.2f} | ({result_emoji} ${pnl_dollars:+.2f}) -> {reason_str}")
             
             # Check limit
             if self.trade_limit > 0 and len(trades) >= self.trade_limit:
@@ -531,7 +543,8 @@ def main():
     parser.add_argument("--threshold", type=float, default=0.7, help="Confidence threshold for trades (0.5-0.9)")
     parser.add_argument("--cooldown", type=int, default=30, help="Minutes between trades per ticker (default: 30)")
     parser.add_argument("--position-size", type=float, default=1.0, help="Position size multiplier")
-    parser.add_argument("--target", type=float, default=0.003, help="Target profit %% (default: 0.3%%)")
+    parser.add_argument("--target_long", type=float, default=0.010, help="Target for LONG (default 1%%)")
+    parser.add_argument("--target_short", type=float, default=0.005, help="Target for SHORT (default 0.5%%)")
     parser.add_argument("--stop", type=float, default=0.003, help="Stop loss %% (default: 0.3%%)")
     parser.add_argument("--max-time", type=int, default=120, help="Max predicted time to enter trade (default: 120 min)")
     parser.add_argument("--min-iv", type=float, default=0.0, help="Min IV Percentile (0-1) to trade (default: 0)")
@@ -546,7 +559,8 @@ def main():
     print("=" * 60)
     print(f"  Configuration:")
     print(f"  • Threshold:  {args.threshold}")
-    print(f"  • Target:     {args.target:.1%}")
+    print(f"  • Target LONG: {args.target_long:.1%}")
+    print(f"  • Target SHORT:{args.target_short:.1%}")
     print(f"  • Stop Loss:  {args.stop:.1%}")
     print(f"  • Max Time:   {args.max_time} min")
     print(f"  • Min IV Pct: {args.min_iv:.2f}")
@@ -651,9 +665,9 @@ def main():
     print(f"    LONG:  {(predictions == 2).sum():,}")
     
     # Simulate trades
-    print(f"\n[4/4] Simulating trades (threshold={args.threshold}, cooldown={args.cooldown}min, target={args.target:.1%}, stop={args.stop:.1%}, max_time={args.max_time}m, min_iv={args.min_iv}, σ_max={args.uncertainty}m)...")
+    print(f"\n[4/4] Simulating trades (threshold={args.threshold}, cooldown={args.cooldown}min, target_L={args.target_long:.1%}, target_S={args.target_short:.1%}, stop={args.stop:.1%}, max_time={args.max_time}m, min_iv={args.min_iv}, σ_max={args.uncertainty}m)...")
     simulator = TradeSimulator(threshold=args.threshold, position_size=args.position_size, cooldown_minutes=args.cooldown,
-                               target_pct=args.target, stop_pct=args.stop, max_time=args.max_time, min_iv_pct=args.min_iv,
+                               target_long=args.target_long, target_short=args.target_short, stop_pct=args.stop, max_time=args.max_time, min_iv_pct=args.min_iv,
                                discord_enabled=args.discord, uncertainty_threshold=args.uncertainty)
     trades_df = simulator.simulate(df, predictions, probs, time_predictions)
     print(f"  [OK] Executed {len(trades_df):,} trades")
@@ -674,7 +688,7 @@ def main():
     
     for thresh in [0.5, 0.6, 0.7, 0.8, 0.9]:
         sim = TradeSimulator(threshold=thresh, cooldown_minutes=args.cooldown,
-                             target_pct=args.target, stop_pct=args.stop, max_time=args.max_time, min_iv_pct=args.min_iv,
+                             target_long=args.target_long, target_short=args.target_short, stop_pct=args.stop, max_time=args.max_time, min_iv_pct=args.min_iv,
                              discord_enabled=False, uncertainty_threshold=args.uncertainty)
         trades = sim.simulate(df, predictions, probs, time_predictions)
         m = calculate_metrics(trades)

@@ -86,8 +86,14 @@ class FeatureAttention(nn.Module):
         )
         
         # Output projection
-        self.output_proj = nn.Linear(embed_dim, embed_dim)
-        self.layer_norm = nn.LayerNorm(embed_dim)
+        # Esta normalización es para el paso intermedio (tamaño embed_dim)
+        self.layer_norm_inter = nn.LayerNorm(embed_dim)
+        
+        # Esta normalización es para el paso final tras la concatenación (tamaño embed_dim * 2)
+        self.layer_norm_final = nn.LayerNorm(embed_dim * 2)
+        
+        # La proyección vuelve al tamaño original para el MLP
+        self.output_proj = nn.Linear(embed_dim * 2, embed_dim)
         self.dropout = nn.Dropout(dropout)
         
         # Feature importance query (learnable)
@@ -120,27 +126,22 @@ class FeatureAttention(nn.Module):
             need_weights=True
         )
         
-        # Residual connection
-        x_embed = self.layer_norm(x_embed + self.dropout(attn_output))
+        # Usamos la normalización intermedia (128)
+        x_embed = self.layer_norm_inter(x_embed + self.dropout(attn_output))
         
-        # Compute feature importance using learnable query
-        query = self.importance_query.expand(batch_size, -1, -1)  # (batch, 1, embed_dim)
-        _, importance_weights = self.attention(
-            query, x_embed, x_embed,
-            need_weights=True
-        )
-        importance_weights = importance_weights.squeeze(1)  # (batch, features)
+        query = self.importance_query.expand(batch_size, -1, -1)
+        _, importance_weights = self.attention(query, x_embed, x_embed, need_weights=True)
+        importance_weights = importance_weights.squeeze(1)
         
-        # Weighted combination of features
-        weighted_features = (x_embed * importance_weights.unsqueeze(-1)).sum(dim=1)  # (batch, embed_dim)
+        weighted_features = (x_embed * importance_weights.unsqueeze(-1)).sum(dim=1)
+        max_features = x_embed.max(dim=1)[0]
         
-        # Also include max-pooled features for diversity
-        max_features = x_embed.max(dim=1)[0]  # (batch, embed_dim)
+        # Concatenamos (64+64=128 en micro, o 128+128=256 en small/medium)
+        concat_features = torch.cat([weighted_features, max_features], dim=-1)
         
-        # Concatenate both representations
-        output = torch.cat([weighted_features, max_features], dim=-1)  # (batch, embed_dim * 2)
-        output = self.output_proj(self.layer_norm(weighted_features)) 
-        
+        # Usamos la normalización final (tamaño doble) y proyectamos
+        output = self.output_proj(self.layer_norm_final(concat_features))
+
         if return_attention:
             return output, importance_weights
         return output
@@ -490,12 +491,16 @@ if __name__ == "__main__":
     
     device = get_device()
     
+    num_features = len(FEATURE_COLUMNS)
+    print(f"Total features detected: {num_features}")
+
     for name, config in HYBRID_CONFIGS.items():
         print(f"\n{'='*50}")
         print(f"  {name.upper()} Hybrid Model")
         print(f"{'='*50}")
         
-        model = get_hybrid_model(name, input_size=35)  # 35 features (no VIX)
+        # Usamos el tamaño real de tu array de features
+        model = get_hybrid_model(name, input_size=num_features)  
         model.to(device)
         
         # Count parameters
@@ -507,8 +512,8 @@ if __name__ == "__main__":
         print(f"  dropout:     {config['dropout']}")
         print(f"  Parameters:  {total_params:,} ({total_params/1e3:.0f}K)")
         
-        # Test forward pass
-        test_input = torch.randn(64, 38).to(device)
+        # Test forward pass (Tensor del tamaño exacto)
+        test_input = torch.randn(64, num_features).to(device)
         
         model.eval()
         with torch.no_grad():
@@ -524,24 +529,29 @@ if __name__ == "__main__":
         # Show top attended features for first sample
         top_features = attention[0].argsort(descending=True)[:5]
         print(f"  Top 5 features (sample 1): {top_features.tolist()}")
-    
+
     print("\n" + "=" * 70)
     print("All Hybrid models working!")
     print("=" * 70)
     
     # Feature importance visualization
     print("\n--- Feature Importance Example ---")
-    model = get_hybrid_model("small", input_size=38).to(device)
+    model = get_hybrid_model("small", input_size=num_features).to(device)
     model.eval()
     
     # Simulate a sample with high gamma and near IB high
-    sample = torch.zeros(1, 38).to(device)
-    sample[0, 0] = 2.0   # net_gamma high
-    sample[0, 18] = 0.5  # price_vs_ib_high
-    sample[0, 21] = 1.0  # near_ib_high
+    sample = torch.zeros(1, num_features).to(device)
+    # Buscamos los índices dinámicamente por si cambias el orden de FEATURE_COLUMNS
+    idx_gamma = FEATURE_COLUMNS.index("net_gamma")
+    idx_price_ib = FEATURE_COLUMNS.index("price_vs_ib_high")
+    idx_near_ib = FEATURE_COLUMNS.index("near_ib_high")
+    
+    sample[0, idx_gamma] = 2.0   # net_gamma high
+    sample[0, idx_price_ib] = 0.5  # price_vs_ib_high
+    sample[0, idx_near_ib] = 1.0  # near_ib_high
     
     with torch.no_grad():
-        _, attention = model(sample, return_attention=True)
+        _, _, attention = model(sample, return_attention=True)
     
     print("Feature attention for high gamma + near IB high sample:")
     for i, (feat, weight) in enumerate(zip(FEATURE_COLUMNS, attention[0].cpu().numpy())):

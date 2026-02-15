@@ -39,7 +39,7 @@ OUTPUT_DIR = "/home/Option-Greeks-Plotting-Discord-Bot/ib_backtest"
 TICKERS_TO_TRACK = ["SPX", "SPY", "QQQ", "VIX"]
 
 # Número de días hábiles hacia atrás
-DAYS_BACK = 15
+DAYS_BACK = 40
 
 # Zonas Horarias
 try:

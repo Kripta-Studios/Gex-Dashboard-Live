@@ -259,6 +259,43 @@ def plot_trades(candles_df: pd.DataFrame, trades: list, ticker: str, date_str: s
     
     plt.close()
 
+def plot_pnl_summary(trades_df: pd.DataFrame, output_path: str = None):
+    """
+    Genera un gráfico de PNL acumulado para cada ticker.
+    """
+    print(f"\n[4/4] Generando resumen de PNL por ticker...")
+    
+    plt.style.use('dark_background')
+    tickers = trades_df['ticker'].unique()
+    n_tickers = len(tickers)
+    
+    fig, axes = plt.subplots(n_tickers, 1, figsize=(12, 4 * n_tickers), sharex=False)
+    if n_tickers == 1: axes = [axes]
+    
+    for i, ticker in enumerate(tickers):
+        df_ticker = trades_df[trades_df['ticker'] == ticker].copy()
+        # Aseguramos orden cronológico para el PNL acumulado
+        df_ticker['cum_pnl'] = df_ticker['pnl'].cumsum()
+        
+        ax = axes[i]
+        color = '#00ff00' if df_ticker['cum_pnl'].iloc[-1] >= 0 else '#ff4444'
+        
+        ax.plot(range(len(df_ticker)), df_ticker['cum_pnl'], color=color, linewidth=2, label=f'PNL {ticker}')
+        ax.fill_between(range(len(df_ticker)), df_ticker['cum_pnl'], alpha=0.2, color=color)
+        
+        ax.set_title(f"PNL Acumulado: {ticker} (Final: ${df_ticker['cum_pnl'].iloc[-1]:.2f})", fontsize=14, fontweight='bold')
+        ax.axhline(0, color='white', linestyle='--', alpha=0.5)
+        ax.set_ylabel("USD ($)")
+        ax.grid(True, alpha=0.2)
+        
+    plt.tight_layout()
+    
+    if output_path:
+        plt.savefig(output_path, dpi=100, bbox_inches='tight')
+        print(f"  ✓ Resumen de PNL guardado en: {output_path}")
+    else:
+        plt.show()
+    plt.close()
 
 def main():
     parser = argparse.ArgumentParser(description="Visualize backtest trades on price charts")
@@ -349,6 +386,8 @@ def main():
         plot_trades(candles_df, day_trades, ticker, date_str, 
                    hold_minutes=args.hold, output_path=output_path)
     
+    pnl_summary_path = str(OUTPUT_DIR / "pnl_performance_summary.png") if args.save else None
+    plot_pnl_summary(trades_df, output_path=pnl_summary_path)
     print(f"\n{'=' * 60}")
     print("  VISUALIZATION COMPLETE")
     print(f"{'=' * 60}")

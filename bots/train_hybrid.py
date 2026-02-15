@@ -74,10 +74,11 @@ class LabelSmoothingCrossEntropy(nn.Module):
     Smoothing 0.1 means: 90% on true label, 10% distributed to other labels.
     """
     
-    def __init__(self, smoothing: float = 0.1, num_classes: int = 3):
+    def __init__(self, smoothing: float = 0.1, num_classes: int = 3, weights=None):
         super().__init__()
         self.smoothing = smoothing
         self.num_classes = num_classes
+        self.weights = weights
     
     def forward(self, logits: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
         confidence = 1.0 - self.smoothing
@@ -91,7 +92,12 @@ class LabelSmoothingCrossEntropy(nn.Module):
         log_probs = torch.log_softmax(logits, dim=-1)
         loss = (-smooth_labels * log_probs).sum(dim=-1).mean()
         
-        return loss
+        if self.weights is not None:
+            # Expandir pesos para cada muestra en el batch
+            batch_weights = self.weights[targets]
+            loss = loss * batch_weights
+            
+        return loss.mean()
 
 
 # --- GAUSSIAN NLL LOSS (Bayesian Time Head) ---
@@ -234,8 +240,13 @@ def train(
     if params_per_sample > 10:
         print(f"    ⚠ HIGH OVERFITTING RISK! Ratio should be < 10")
     
-    # Loss function with label smoothing
-    cls_criterion = LabelSmoothingCrossEntropy(smoothing=label_smoothing, num_classes=3)
+
+    # Class weights for imbalanced data
+    class_weights = get_class_weights(y_train).to(device)
+    
+    # Loss function with label smoothing and weights
+    cls_criterion = LabelSmoothingCrossEntropy(smoothing=label_smoothing, num_classes=3, weights=class_weights)
+
     # Regression loss: Gaussian NLL (defined above, not nn.MSELoss)
     
     # Class weights for imbalanced data

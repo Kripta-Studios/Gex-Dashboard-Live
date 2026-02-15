@@ -9,7 +9,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 # --- CONFIGURACIÓN ---
 BASE_DIR = "./trading_data"
 DRY_RUN = False  # Cambia a False para aplicar los cambios
-MAX_WORKERS = 20  # Número de hilos concurrentes
+MAX_WORKERS = 1  # Número de hilos concurrentes
 
 try:
     MADRID_TZ = ZoneInfo("Europe/Madrid")
