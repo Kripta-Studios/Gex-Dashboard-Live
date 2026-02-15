@@ -26,7 +26,7 @@ async function refreshDashboard() {
         const uniqueRequests = [...new Set(requestList.map(JSON.stringify))].map(JSON.parse);
 
         try {
-            const response = await fetch('/get_batch', {
+            const response = await authFetch('/get_batch', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(uniqueRequests)

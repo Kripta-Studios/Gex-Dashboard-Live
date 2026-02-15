@@ -71,7 +71,15 @@ LEVEL_PROXIMITY_THRESHOLD = 0.0004
 TARGET_MOVE_THRESHOLD = 0.004
 
 # Lookahead window for target calculation (minutes)
-LOOKAHEAD_MINUTES = 30
+# Lookahead window for target calculation (minutes)
+LOOKAHEAD_MINUTES = 120
+
+# Timezone Offset (Madrid to EST)
+# Madrid is UTC+1 (Winter) / UTC+2 (Summer)
+# EST is UTC-5 (Winter) / EDT is UTC-4 (Summer)
+# Difference is roughly 6 hours (Madrid is ahead)
+# We need to SUBTRACT 6 hours from filename time to get EST
+TIMEZONE_OFFSET_HOURS = -6
 
 
 def get_net_greek_exposure(data: dict, greek_name: str) -> float:
@@ -221,6 +229,9 @@ def extract_features_from_greek_file(filepath: str) -> dict:
         if match:
             timestamp_str = f"{match.group(1)} {match.group(2)}"
             timestamp = datetime.strptime(timestamp_str, "%Y%m%d %H%M%S")
+            
+            # Apply Timezone Offset (Madrid -> EST)
+            timestamp = timestamp + timedelta(hours=TIMEZONE_OFFSET_HOURS)
         else:
             timestamp = None
         
@@ -377,42 +388,57 @@ def load_fourier_data(ticker: str, date_str: str) -> dict:
 def load_vix_data(date_str: str) -> dict:
     """Load VIX data for correlation with IV.
     
-    VIX is processed like a ticker but we extract specific features.
+    VIX spot comes from IB minute bars (ib_backtest/ib_data_VIX_{date}.json).
+    VIX gamma comes from weekly options exposure (VIX_weekly_ExposureData_*.json).
     """
-    # Try to load VIX exposure data
-    pattern = os.path.join(GREEK_DATA_DIR, f"*VIX*0dte*ExposureData*{date_str}*.json")
+    defaults = {"vix_spot": 0, "vix_gamma": 0, "vix_regime": 1}
+    
+    vix_spot = 0
+    vix_gamma = 0
+    
+    # --- VIX Spot from IB minute bars ---
+    # Try both date formats: YYYYMMDD and YYYY-MM-DD
+    for fmt in [date_str, f"{date_str[:4]}-{date_str[4:6]}-{date_str[6:8]}" if len(date_str) == 8 else date_str]:
+        ib_path = os.path.join(IB_BACKTEST_DIR, f"ib_data_VIX_{fmt}.json")
+        if os.path.exists(ib_path):
+            try:
+                with open(ib_path, 'r') as f:
+                    ib_data = json.load(f)
+                series = ib_data.get("series", [])
+                if series:
+                    # Use last available price as VIX spot
+                    vix_spot = float(series[-1].get("price", series[-1].get("close", 0)))
+                break
+            except Exception as e:
+                print(f"Error loading VIX IB data: {e}")
+    
+    # --- VIX Gamma from weekly exposure data ---
+    pattern = os.path.join(GREEK_DATA_DIR, f"*VIX*weekly*ExposureData*{date_str}*.json")
     vix_files = sorted(glob.glob(pattern))
+    if vix_files:
+        try:
+            with open(vix_files[-1], 'r') as f:
+                data = json.load(f)
+            vix_gamma = get_net_greek_exposure(data, "totalgamma")
+            # If we didn't get spot from IB, try from exposure data
+            if vix_spot == 0:
+                vix_spot = float(data.get("spot_price", 0))
+        except Exception as e:
+            print(f"Error loading VIX weekly data: {e}")
     
-    if not vix_files:
-        return {
-            "vix_spot": 0,
-            "vix_gamma": 0,
-            "vix_regime": 1,  # neutral
-        }
+    # VIX regime classification
+    if vix_spot > 25:
+        vix_regime = 2  # High fear
+    elif vix_spot > 18:
+        vix_regime = 1  # Elevated
+    else:
+        vix_regime = 0  # Low/Complacent
     
-    try:
-        with open(vix_files[-1], 'r') as f:  # Latest file for the day
-            data = json.load(f)
-        
-        vix_spot = float(data.get("spot_price", 0))
-        vix_gamma = get_net_greek_exposure(data, "totalgamma")
-        
-        # VIX regime: high (>20), medium (15-20), low (<15)
-        if vix_spot > 25:
-            vix_regime = 2  # High fear
-        elif vix_spot > 18:
-            vix_regime = 1  # Elevated
-        else:
-            vix_regime = 0  # Low/Complacent
-        
-        return {
-            "vix_spot": vix_spot,
-            "vix_gamma": vix_gamma,
-            "vix_regime": vix_regime,
-        }
-    except Exception as e:
-        print(f"Error loading VIX data: {e}")
-        return {"vix_spot": 0, "vix_gamma": 0, "vix_regime": 1}
+    return {
+        "vix_spot": vix_spot,
+        "vix_gamma": vix_gamma,
+        "vix_regime": vix_regime,
+    }
 
 
 def calculate_target_label(series: list, current_idx: int, lookahead: int = LOOKAHEAD_MINUTES) -> tuple:
@@ -488,6 +514,72 @@ def calculate_target_label(series: list, current_idx: int, lookahead: int = LOOK
     return (0, 0, 0, 0.0)
 
 
+def sign_divergence(a: float, b: float) -> float:
+    """Compute sign divergence between two values.
+    Returns: 1.0 if signs differ, 0.0 if same, 0.5 if either is ~zero."""
+    if abs(a) < 0.01 or abs(b) < 0.01:
+        return 0.5  # One side is neutral
+    if (a > 0) != (b > 0):
+        return 1.0  # Divergence
+    return 0.0  # Agreement
+
+
+def load_weekly_greeks(ticker: str, date_str: str) -> dict:
+    """Load weekly options Greek data for a ticker and date.
+    
+    Returns extracted features with 'wk_' prefix, or defaults (zeros) if unavailable.
+    Uses the same JSON structure as 0DTE files.
+    """
+    defaults = {
+        "wk_net_gamma": 0.0, "wk_net_vanna": 0.0, "wk_net_charm": 0.0,
+        "wk_net_dgex": 0.0, "wk_net_zomma": 0.0, "wk_net_delta": 0.0,
+        "wk_dist_to_max_gamma": 0.0, "wk_dist_to_min_gamma": 0.0,
+        "wk_dist_to_max_dgex": 0.0, "wk_dist_to_min_dgex": 0.0,
+        "wk_gamma_regime": 0.5, "wk_vanna_bullish": 0,
+        "wk_dgex_sticky": 0, "wk_zomma_stabilizing": 0,
+    }
+    
+    pattern = os.path.join(GREEK_DATA_DIR, f"*{ticker}*weekly*ExposureData*{date_str}*.json")
+    weekly_files = sorted(glob.glob(pattern))
+    
+    if not weekly_files:
+        return defaults
+    
+    try:
+        # Use the latest weekly file for this date
+        features = extract_features_from_greek_file(weekly_files[-1])
+        if features is None:
+            return defaults
+        
+        spot = features["spot_price"]
+        
+        # DGEX key levels from weekly
+        max_dgex = features.get("max_dgex_strike")
+        min_dgex = features.get("min_dgex_strike")
+        max_gamma = features.get("max_gamma_strike")
+        min_gamma = features.get("min_gamma_strike")
+        
+        return {
+            "wk_net_gamma": features["net_gamma"],
+            "wk_net_vanna": features["net_vanna"],
+            "wk_net_charm": features["net_charm"],
+            "wk_net_dgex": features["net_dgex"],
+            "wk_net_zomma": features["net_zomma"],
+            "wk_net_delta": features.get("net_delta", 0.0),
+            "wk_dist_to_max_gamma": (spot - max_gamma) / spot if max_gamma and spot else 0.0,
+            "wk_dist_to_min_gamma": (spot - min_gamma) / spot if min_gamma and spot else 0.0,
+            "wk_dist_to_max_dgex": (spot - max_dgex) / spot if max_dgex and spot else 0.0,
+            "wk_dist_to_min_dgex": (spot - min_dgex) / spot if min_dgex and spot else 0.0,
+            "wk_gamma_regime": features["gamma_regime"] / 2.0,  # normalize 0-1
+            "wk_vanna_bullish": features["vanna_bullish"],
+            "wk_dgex_sticky": features["dgex_sticky"],
+            "wk_zomma_stabilizing": features["zomma_stabilizing"],
+        }
+    except Exception as e:
+        print(f"Error loading weekly Greeks for {ticker}/{date_str}: {e}")
+        return defaults
+
+
 def process_ticker_date(args: tuple) -> list:
     """Process a single (ticker, date) pair. Designed to run in parallel.
     
@@ -522,6 +614,9 @@ def process_ticker_date(args: tuple) -> list:
     if not series:
         return []
     
+    # Load weekly Greek data (once per day, same for all 0DTE snapshots)
+    weekly_data = load_weekly_greeks(greek_ticker, date_str)
+    
     # Calculate Fibonacci levels
     fib_levels = calculate_fibonacci_levels(ib_high, ib_low)
     
@@ -549,6 +644,7 @@ def process_ticker_date(args: tuple) -> list:
     vix_regime = vix_data["vix_regime"]
     
     # Process each Greek file
+    prev_vals = None  # Cache for temporal deltas
     for greek_file in greek_files:
         features = extract_features_from_greek_file(greek_file)
         if features is None or features["timestamp"] is None:
@@ -558,8 +654,8 @@ def process_ticker_date(args: tuple) -> list:
         time_key = timestamp.strftime("%H:%M")
         spot = features["spot_price"]
         
-        # Skip pre-market
-        if timestamp.time() < dt_time(9, 30):
+        # Skip data outside 08:00 - 17:00 EST (keep 1.5h pre-market + RTH + 1h post)
+        if timestamp.time() < dt_time(8, 0) or timestamp.time() > dt_time(17, 0):
             continue
         
         # Find corresponding price series index
@@ -613,29 +709,36 @@ def process_ticker_date(args: tuple) -> list:
             "time_to_target": time_to_target,
             "time_to_stop": time_to_stop,
             "max_move": max_move,
-            # Greek features
-            # Greek features
+            # ===== 0DTE Greek features =====
             "net_gamma": features["net_gamma"],
             "net_vanna": features["net_vanna"],
             "net_charm": features["net_charm"],
             "net_dgex": features["net_dgex"],
             "net_zomma": features["net_zomma"],
+            "net_delta": features.get("net_delta", 0.0),
             "gamma_regime": features["gamma_regime"],
             "vanna_bullish": features["vanna_bullish"],
             "charm_bullish": features["charm_bullish"],
             "dgex_sticky": features["dgex_sticky"],
             "zomma_stabilizing": features["zomma_stabilizing"],
-            # Level distances
+            # 0DTE Key level distances (now includes DGEX levels)
             "dist_to_max_gamma": features["dist_to_max_gamma"],
             "dist_to_min_gamma": features["dist_to_min_gamma"],
             "dist_to_min_vanna": features["dist_to_min_vanna"],
             "dist_to_zero_gamma": features["dist_to_zero_gamma"],
+            "dist_to_max_dgex": (spot - features.get("max_dgex_strike", spot)) / spot if spot > 0 else 0,
+            "dist_to_min_dgex": (spot - features.get("min_dgex_strike", spot)) / spot if spot > 0 else 0,
             # Near level flags
             "near_max_gamma": features["near_max_gamma"],
             "near_min_gamma": features["near_min_gamma"],
-            "near_min_vanna": features["near_min_vanna"],
-            "near_zero_gamma": features["near_zero_gamma"],
-            # IB features
+            # ===== Weekly Greek features =====
+            **weekly_data,
+            # ===== Cross-expiry divergence =====
+            "gamma_0dte_vs_wk": sign_divergence(features["net_gamma"], weekly_data["wk_net_gamma"]),
+            "vanna_0dte_vs_wk": sign_divergence(features["net_vanna"], weekly_data["wk_net_vanna"]),
+            "dgex_0dte_vs_wk": sign_divergence(features["net_dgex"], weekly_data["wk_net_dgex"]),
+            "delta_0dte_vs_wk": sign_divergence(features.get("net_delta", 0), weekly_data["wk_net_delta"]),
+            # ===== IB features =====
             "price_vs_ib_high": price_vs_ib_high,
             "price_vs_ib_low": price_vs_ib_low,
             "ib_range_pct": ib_range_pct,
@@ -656,10 +759,35 @@ def process_ticker_date(args: tuple) -> list:
             "vix_gamma": vix_gamma,
             "vix_regime": vix_regime / 2.0,
             # Market context
-            "hour": hour_normalized,
-            "minute": minute_normalized,
             "rsi": rsi / 100.0,
             "vol_relative": min(vol_relative, 5.0) / 5.0,
+            
+            # ===== ENGINEERED FEATURES =====
+            # Ratios
+            "gamma_vanna_ratio": features["net_gamma"] / (abs(features["net_vanna"]) + 1e-6),
+            "dgex_gamma_ratio": features["net_dgex"] / (abs(features["net_gamma"]) + 1e-6),
+            "charm_vanna_ratio": features["net_charm"] / (abs(features["net_vanna"]) + 1e-6),
+            "delta_gamma_ratio": features.get("net_delta", 0) / (abs(features["net_gamma"]) + 1e-6),
+            
+            # Temporal Deltas (using prev_vals)
+            "gamma_change": features["net_gamma"] - prev_vals["net_gamma"] if prev_vals else 0.0,
+            "vanna_change": features["net_vanna"] - prev_vals["net_vanna"] if prev_vals else 0.0,
+            "dgex_change": features["net_dgex"] - prev_vals["net_dgex"] if prev_vals else 0.0,
+            "delta_change": features.get("net_delta", 0) - prev_vals.get("net_delta", 0) if prev_vals else 0.0,
+            "spot_change": (spot - prev_vals["spot"]) / prev_vals["spot"] if prev_vals and prev_vals["spot"] > 0 else 0.0,
+            
+            # Cross-Features
+            "gamma_momentum": (features["net_gamma"] - prev_vals["net_gamma"]) * np.sign(features["net_gamma"]) if prev_vals else 0.0,
+            "price_vs_dgex_magnet": ((spot - prev_vals["spot"]) / prev_vals["spot"]) * np.sign((spot - features.get("max_dgex_strike", spot))/spot) if prev_vals and prev_vals["spot"] > 0 else 0.0,
+        }
+        
+        # Update previous values for next iteration
+        prev_vals = {
+            "spot": spot,
+            "net_gamma": features["net_gamma"],
+            "net_vanna": features["net_vanna"],
+            "net_dgex": features["net_dgex"],
+            "net_delta": features.get("net_delta", 0),
         }
         
         samples.append(sample)

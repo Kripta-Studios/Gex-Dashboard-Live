@@ -4,6 +4,39 @@
  */
 
 /**
+ * Handle unauthorized response — clear session and show login
+ */
+function handleUnauthorized() {
+    sessionStorage.removeItem("gex_auth_token");
+    sessionStorage.removeItem("gex_user_role");
+    const loginScreen = document.getElementById("login-screen");
+    const appWrapper = document.getElementById("app-wrapper");
+    if (loginScreen) loginScreen.style.display = "";
+    if (appWrapper) appWrapper.style.display = "none";
+}
+
+/**
+ * Authenticated fetch wrapper
+ * Injects Bearer token and handles 401 auto-logout
+ * @param {string} url - URL to fetch
+ * @param {Object} options - Fetch options (method, body, etc.)
+ * @returns {Promise<Response>} Fetch response
+ */
+async function authFetch(url, options = {}) {
+    const token = sessionStorage.getItem("gex_auth_token");
+    if (!options.headers) options.headers = {};
+    if (token) options.headers["Authorization"] = `Bearer ${token}`;
+
+    const response = await fetch(url, options);
+
+    if (response.status === 401) {
+        handleUnauthorized();
+    }
+
+    return response;
+}
+
+/**
  * Fetch Greek exposure data for a ticker/expiration
  * @param {string} ticker - Ticker symbol (SPX, QQQ, /ES, /NQ, etc.)
  * @param {string} exp - Expiration (0dte, weekly, etc.)
@@ -31,7 +64,7 @@ async function fetchChartData(ticker, exp) {
             url = `/get_history?ticker=${greekTicker}&exp=${exp}&time=${currentHistoryTimeEST}&_=${ts}`;
         }
 
-        const response = await fetch(url);
+        const response = await authFetch(url);
         if (!response.ok) return null;
 
         const data = await response.json();
@@ -60,7 +93,7 @@ async function fetchChartData(ticker, exp) {
                 const cleanTicker = originalTicker.replace(/\//g, '');
                 const ibUrl = `/ib_charts/ib_data_${cleanTicker}_${dateStr}.json?_=${ts}`; // Use same timestamp to bust cache
 
-                const ibResp = await fetch(ibUrl);
+                const ibResp = await authFetch(ibUrl);
                 if (ibResp.ok) {
                     const ibData = await ibResp.json();
                     if (ibData && ibData.analysis && ibData.analysis.current_price) {
@@ -102,7 +135,7 @@ async function fetchFourierData(ticker, dateStr) {
         const fourierTicker = ticker.replace(/\//g, '');
 
         const url = `/fourier/fourier_data_${fourierTicker}_${dateStr}.json?_=${ts}`;
-        const response = await fetch(url);
+        const response = await authFetch(url);
         if (!response.ok) return null;
         return await response.json();
     } catch (e) {
@@ -124,7 +157,7 @@ async function fetchIBData(ticker, dateStr) {
         // /ES -> ES, /NQ -> NQ
         const cleanTicker = ticker.replace(/\//g, '');
         const url = `/ib_charts/ib_data_${cleanTicker}_${dateStr}.json?_=${ts}`;
-        const response = await fetch(url);
+        const response = await authFetch(url);
         if (!response.ok) return null;
         return await response.json();
     } catch (e) {

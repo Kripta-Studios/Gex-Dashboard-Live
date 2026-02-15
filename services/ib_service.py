@@ -1186,8 +1186,15 @@ class IBBot(discord.Client):
             await asyncio.sleep(20)
 
     async def process_tickers_async(self):
-        now = datetime.now()
-        today_str = now.strftime("%Y%m%d")
+        now_ny = datetime.now(NY_TZ) if NY_TZ else datetime.now()
+        
+        # 2. Definimos el "Día de Trading". Si son antes de las 3:00 AM en NY,
+        # significa que seguimos en la sesión de trading del día anterior.
+        trading_date = now_ny.date()
+        if now_ny.time() < dt_time(3, 0):
+            trading_date = trading_date - timedelta(days=1)
+            
+        today_str = trading_date.strftime("%Y%m%d")
         print(f"--- Ciclo IB {now.strftime('%H:%M:%S')} ---", flush=True)
 
         # Procesar tickers normales (equities)

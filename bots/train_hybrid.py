@@ -94,6 +94,25 @@ class LabelSmoothingCrossEntropy(nn.Module):
         return loss
 
 
+# --- GAUSSIAN NLL LOSS (Bayesian Time Head) ---
+def gaussian_nll_loss(mu: torch.Tensor, log_sigma: torch.Tensor,
+                     target: torch.Tensor, mask: torch.Tensor) -> torch.Tensor:
+    """
+    Gaussian Negative Log-Likelihood for Bayesian time prediction.
+    
+    Args:
+        mu: (batch, 1) predicted mean
+        log_sigma: (batch, 1) predicted log standard deviation
+        target: (batch, 1) ground truth time fraction
+        mask: (batch,) binary mask (1 for signals, 0 for HOLD)
+    Returns:
+        Scalar loss
+    """
+    variance = torch.exp(2 * log_sigma) + 1e-6
+    loss = 0.5 * torch.log(variance) + 0.5 * (((target - mu) ** 2) / variance)
+    return (loss.squeeze() * mask).sum() / (mask.sum() + 1e-8)
+
+
 # --- TRAINING UTILITIES ---
 def prepare_data(df, feature_columns: list = FEATURE_COLUMNS):
     """Prepare DataFrame for training."""
@@ -102,10 +121,10 @@ def prepare_data(df, feature_columns: list = FEATURE_COLUMNS):
     features = np.nan_to_num(features, nan=0.0, posinf=5.0, neginf=-5.0)
     targets = (df['target'].values + 1).astype(np.int64)  # -1,0,1 -> 0,1,2
     
-    # Time targets (normalize 0-30 min to 0-1)
+    # Time targets: normalize to [0, 1] fraction of 120-minute lookahead
+    # No clipping — allow the Bayesian head to model the full distribution
     if 'time_to_target' in df.columns:
-        time_targets = df['time_to_target'].values.astype(np.float32) / 30.0
-        time_targets = np.clip(time_targets, 0.0, 1.0)
+        time_targets = df['time_to_target'].values.astype(np.float32) / 120.0
     else:
         print("⚠ 'time_to_target' column missing, using zeros")
         time_targets = np.zeros(len(targets), dtype=np.float32)
@@ -217,7 +236,7 @@ def train(
     
     # Loss function with label smoothing
     cls_criterion = LabelSmoothingCrossEntropy(smoothing=label_smoothing, num_classes=3)
-    reg_criterion = nn.MSELoss(reduction='none') # We'll apply mask efficiently
+    # Regression loss: Gaussian NLL (defined above, not nn.MSELoss)
     
     # Class weights for imbalanced data
     class_weights = get_class_weights(y_train).to(device)
@@ -280,19 +299,14 @@ def train(
             # Classification Loss
             loss_cls = cls_criterion(logits, batch_y)
             
-            # Regression Loss (only for signals, not HOLD)
-            # HOLD is class 1 (derived from -1, 0, 1 -> 0, 1, 2)
-            # wait, original targets are -1 (SHORT), 0 (HOLD), 1 (LONG)
-            # mapped to 0, 1, 2. So HOLD is 1.
-            loss_reg = reg_criterion(time_pred.squeeze(), batch_t)
-            
+            # Bayesian Regression Loss (Gaussian NLL)
             # Mask: 1 for SHORT/LONG, 0 for HOLD
             mask = (batch_y != 1).float()
+            mu = time_pred[:, 0:1]
+            log_sigma = time_pred[:, 1:2]
             
-            # Weighted sum of losses
-            # If no signals in batch, reg_loss is 0
             if mask.sum() > 0:
-                masked_reg_loss = (loss_reg * mask).sum() / mask.sum()
+                masked_reg_loss = gaussian_nll_loss(mu, log_sigma, batch_t.unsqueeze(1), mask)
             else:
                 masked_reg_loss = torch.tensor(0.0, device=device)
             
@@ -335,13 +349,14 @@ def train(
                 
                 # Losses
                 loss_cls = cls_criterion(logits, batch_y)
-                loss_reg = reg_criterion(time_pred.squeeze(), batch_t)
+                mu = time_pred[:, 0:1]
+                log_sigma = time_pred[:, 1:2]
                 mask = (batch_y != 1).float()
                 
                 if mask.sum() > 0:
-                    masked_reg_loss = (loss_reg * mask).sum() / mask.sum()
-                    # MAE for signals (in minutes: pred * 30 - target * 30)
-                    abs_err = torch.abs(time_pred.squeeze() - batch_t) * 30.0
+                    masked_reg_loss = gaussian_nll_loss(mu, log_sigma, batch_t.unsqueeze(1), mask)
+                    # MAE for signals (in minutes: mu * 120 - target * 120)
+                    abs_err = torch.abs(mu.squeeze() - batch_t) * 120.0
                     val_mae_sum += (abs_err * mask).sum().item()
                     val_signal_count += mask.sum().item()
                 else:
@@ -445,7 +460,7 @@ def main():
     parser.add_argument("--model", default="models/trading_hybrid.pt")
     parser.add_argument("--normalizer", default="models/hybrid_normalizer.npz")
     parser.add_argument("--model-size", choices=["micro", "small", "medium", "large"],
-                        default="small", help="Model size")
+                        default="medium", help="Model size")
     parser.add_argument("--epochs", type=int, default=200)
     parser.add_argument("--batch-size", type=int, default=128)
     parser.add_argument("--lr", type=float, default=0.001)

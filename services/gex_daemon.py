@@ -891,7 +891,8 @@ async def process_ticker(session, ticker, expir, greek_filter="gamma"):
         # Usamos timestamp en el nombre para historial, o fijo para sobrescribir (según prefieras)
         # Para tu dashboard web, probablemente prefieras sobrescribir o tener un "latest".
         # Aquí guardo con timestamp como tenías.
-        fname = f"{t_san}_{exp_clean}_ExposureData_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+ny_time = pd.Timestamp.now(tz="America/New_York")
+        fname = f"{t_san}_{exp_clean}_ExposureData_{ny_time.strftime('%Y%m%d_%H%M%S')}.json"
 
         # OP
         with open(path.join(json_dir, fname), "w") as f:

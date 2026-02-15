@@ -98,10 +98,9 @@ def process_single_file(filepath, spot_price_key="spot_price"):
             dt_server = datetime.strptime(dt_str, "%Y%m%d %H%M%S")
 
             # Conversión TZ
-            if SERVER_TZ and NY_TZ:
-                dt_server = dt_server.replace(tzinfo=SERVER_TZ)
-                dt_ny = dt_server.astimezone(NY_TZ)
-                ny_time = dt_ny.time()
+            if NY_TZ:
+                # El archivo ya viene con hora de NY gracias al parche anterior
+                dt_ny = dt_server.replace(tzinfo=NY_TZ)
             else:
                 dt_ny = dt_server  # Fallback si fallan las TZ
         else:
@@ -617,8 +616,14 @@ class FourierBot(discord.Client):
                 print(f"[ERROR FUTURES FOURIER] {ticker}: {e}")
 
     def process_tickers_sync(self):
-        now = datetime.now()
-        today_str = now.strftime("%Y%m%d")
+        now_ny = datetime.now(NY_TZ) if NY_TZ else datetime.now()
+        
+        # Lógica del día de trading (si es antes de las 3 AM NY, es el día anterior)
+        trading_date = now_ny.date()
+        if now_ny.time() < dt_time(3, 0):
+            trading_date = trading_date - timedelta(days=1)
+            
+        today_str = trading_date.strftime("%Y%m%d")
 
         for ticker in TICKERS_TO_TRACK:
             try:

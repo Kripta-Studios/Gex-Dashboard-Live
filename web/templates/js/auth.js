@@ -3,22 +3,6 @@
  * Handles login, session management, and access control
  */
 
-// Hash constants for authentication
-const TARGET_EMAIL_HASH = "0f089be93d18d31f8ac42fc84ecd206bea41ffbde1df2a11dc1de1637822dcb7";
-const TARGET_PASS_HASH = "9b068d00dba617e0e84667d11ac6eb934e8ca73f4102195095eeff8ccd3359e1";
-
-/**
- * Generate SHA-256 hash of a string
- * @param {string} message - String to hash
- * @returns {Promise<string>} Hex-encoded hash
- */
-async function sha256(message) {
-    const msgBuffer = new TextEncoder().encode(message);
-    const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
-}
-
 /**
  * Server-side authentication check
  */
@@ -45,7 +29,7 @@ async function checkLogin() {
             sessionStorage.setItem("gex_user_role", data.role);
             grantAccess(data.role);
         } else {
-            errorDiv.innerText = "Invalid credentials.";
+            errorDiv.innerText = data.message || "Invalid credentials.";
             btn.innerText = "AUTHENTICATE";
         }
     } catch (e) {
@@ -86,17 +70,45 @@ function grantAccess(role) {
 }
 
 /**
- * Check existing session on page load
+ * Check existing session on page load via server-side verification
  */
-function checkSession() {
+async function checkSession() {
     const urlParams = new URLSearchParams(window.location.search);
     const token = sessionStorage.getItem("gex_auth_token");
     const role = sessionStorage.getItem("gex_user_role");
 
-    // Valid token or detached mode (assumes valid session)
-    if (token || urlParams.get('mode') === 'detached') {
-        sessionStorage.setItem("gex_auth_token", "valid");
-        grantAccess(role);
+    // Detached mode bypass (for development/embedding)
+    if (urlParams.get('mode') === 'detached') {
+        sessionStorage.setItem("gex_auth_token", "detached");
+        grantAccess(role || "USER");
+        return;
+    }
+
+    // No stored token → stay on login screen
+    if (!token) return;
+
+    // Verify token with server
+    try {
+        const response = await fetch('/verify_token', {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            // Update role in case it changed
+            sessionStorage.setItem("gex_user_role", data.role);
+            grantAccess(data.role);
+        } else {
+            // Token is invalid/expired → clear and show login
+            sessionStorage.removeItem("gex_auth_token");
+            sessionStorage.removeItem("gex_user_role");
+        }
+    } catch (e) {
+        // Server unreachable → let user try anyway with cached role
+        console.warn("Could not verify token with server:", e);
+        if (role) {
+            grantAccess(role);
+        }
     }
 }
 

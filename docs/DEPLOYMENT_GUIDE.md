@@ -113,22 +113,16 @@ python backtest/ib_backtest.py
 
 ```bash
 # Crear estructura local
-mkdir -p ~/trading_data/{json_data,fourier,ib_backtest}
+mkdir -p ./trading_data/{json_data,fourier,ib_backtest}
 
 # Descargar Greeks (puede ser grande, últimos 30 días ~2GB)
-rsync -avz --progress \
-  usuario@servidor:/home/Option-Greeks-Plotting-Discord-Bot/json_data/ \
-  ~/trading_data/json_data/
+rsync -avz --progress kripta:/home/Option-Greeks-Plotting-Discord-Bot/json_data/ ./trading_data/json_data/
 
 # Descargar Fourier/IV
-rsync -avz --progress \
-  usuario@servidor:/home/Option-Greeks-Plotting-Discord-Bot/fourier/ \
-  ~/trading_data/fourier/
+rsync -avz --progress kripta:/home/Option-Greeks-Plotting-Discord-Bot/fourier/ ./trading_data/fourier/
 
 # Descargar IB histórico (contiene Volume Profile)
-rsync -avz --progress \
-  usuario@servidor:/home/Option-Greeks-Plotting-Discord-Bot/ib_backtest/ \
-  ~/trading_data/ib_backtest/
+rsync -avz --progress kripta:/home/Option-Greeks-Plotting-Discord-Bot/ib_backtest/ ./trading_data/ib_backtest/
 ```
 
 ### 3.3 Configurar Paths Locales
@@ -203,11 +197,7 @@ python bots/train_walkforward.py \
 Si prefieres u método más simple (hold-out validation):
 
 ```powershell
-python bots/train_hybrid.py \
-  --data training_data/training_data.csv \
-  --model-size small \
-  --epochs 200 \
-  --lr 0.001
+python bots/train_hybrid.py --data training_data/training_data.csv --model-size medium --epochs 200 --lr 0.001
 
 # Output:
 #   models/trading_hybrid.pt
@@ -229,14 +219,7 @@ Esta es la configuración validada que maximiza el Profit Factor y minimiza el D
 *   **Max Time 20**: Evita trades que el modelo predice tardarán mucho (lentos).
 
 ```powershell
-python bots/backtest_hybrid.py \
-  --model models/trading_hybrid.pt \
-  --data training_data/backtest_trades.csv \
-  --threshold 0.5 \
-  --target 0.004 \
-  --stop 0.004 \
-  --max-time 20 \
-  --min-iv 0.2
+python bots/backtest_hybrid.py --model models/trading_hybrid.pt --data training_data/backtest_trades.csv --threshold 0.5 --target 0.004 --stop 0.004 --max-time 20 --min-iv 0.2
 ```
 
 ### 5.2 Verificar Alertas (Simulación Discord)

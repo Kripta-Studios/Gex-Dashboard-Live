@@ -54,14 +54,16 @@ os.makedirs(TRADES_DIR, exist_ok=True)
 os.makedirs(LOGS_DIR, exist_ok=True)
 
 # Trading parameters
-MIN_CONFIDENCE = 0.50  # Golden Config: 0.5
+MIN_CONFIDENCE = 0.80  # Golden Config: 0.8 (from backtest)
 BASE_RISK_PCT = 0.01   # 1% base risk per trade
 MAX_POSITION_PCT = 0.05  # 5% maximum position size
 LOOP_INTERVAL = 30  # seconds
 
 # Filters
-MIN_IV_PCT = 0.20  # Avoid chop (Golden Config)
-MAX_TIME_MINUTES = 60 # Avoid slow moves (Golden Config)
+MIN_IV_PCT = 0.00  # Avoid chop (Golden Config: 0.0)
+MAX_TIME_MINUTES = 120 # Avoid slow moves (Golden Config: 120)
+STOP_LOSS_PCT = 0.003 # 0.3% stop loss (from backtest)
+TRADE_COOLDOWN_MINUTES = 60 # Cooldown between trades (from backtest)
 
 # Discord Configuration (same as tradingbot1.py)
 DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
@@ -199,6 +201,8 @@ def send_discord_trade_close(position, exit_price: float, reason: str, pnl_pct: 
         exit_explanation = "🎯 **Target Hit** - Price reached profit objective"
     elif "TIME" in reason.upper() or "HOLD" in reason.upper():
         exit_explanation = "⏰ **Max Hold Time** - Position held too long"
+    elif "UNCERTAINTY" in reason.upper():
+        exit_explanation = "🌫️ **High Uncertainty** - Bayesian σ exceeded threshold"
     elif "CLOSE" in reason.upper() or "EOD" in reason.upper():
         exit_explanation = "🔔 **End of Day** - Forced exit before market close"
     else:
@@ -254,6 +258,9 @@ class Position:
         self.max_hold_time = signal.max_hold_time
         self.regime = signal.regime
         self.partial_exit_done = False
+        # Bayesian uncertainty from initial signal
+        self.time_mu_minutes = signal.time_mu_minutes
+        self.time_sigma_minutes = signal.time_sigma_minutes
     
     def to_dict(self) -> dict:
         return {
@@ -280,12 +287,14 @@ class TradingBotWrapper:
         self.wrapper = None
         self.positions = {}  # ticker -> Position
         self.trade_history = []
+        self.prev_features = {}  # Cache for temporal deltas {ticker: features_dict}
         self.daily_stats = {
             "trades": 0,
             "wins": 0,
             "losses": 0,
             "pnl": 0.0,
         }
+        self.last_trade_time = {} # ticker -> datetime
         
         self._load_model()
     
@@ -316,6 +325,7 @@ class TradingBotWrapper:
             max_position_pct=MAX_POSITION_PCT,
             min_iv_pct=MIN_IV_PCT,
             max_time_minutes=MAX_TIME_MINUTES,
+            stop_loss_pct=STOP_LOSS_PCT,
         )
         
         logger.info("Model and wrapper loaded successfully")
@@ -357,8 +367,29 @@ class TradingBotWrapper:
         with open(ib_file, 'r') as f:
             return json.load(f)
     
-    def extract_features(self, greek_data: dict, ib_data: dict, ticker: str) -> np.ndarray:
-        """Extract features from Greek and IB data."""
+    def get_latest_weekly_data(self, ticker: str) -> dict:
+        """Find and load the most recent weekly Greek data JSON."""
+        search_ticker = ticker.replace("/", "")
+        pattern = f"{search_ticker}_weekly_ExposureData_"
+        json_files = list(Path(GREEK_DATA_DIR).glob(f"{pattern}*.json"))
+        
+        if not json_files:
+            return None
+        
+        latest_file = max(json_files, key=lambda p: p.stat().st_mtime)
+        
+        # Weekly data changes slowly, 30 min freshness is fine
+        age = time.time() - latest_file.stat().st_mtime
+        if age > 1800:  # 30 minutes
+            logger.debug(f"Weekly data for {ticker} is {age/60:.1f} min old")
+            return None
+        
+        with open(latest_file, 'r') as f:
+            return json.load(f)
+    
+    def extract_features(self, greek_data: dict, ib_data: dict, ticker: str,
+                         weekly_data: dict = None) -> np.ndarray:
+        """Extract features from 0DTE Greek, weekly Greek, and IB data."""
         features = {}
         
         # Get current price
@@ -366,8 +397,8 @@ class TradingBotWrapper:
         if current_price == 0:
             return None
         
-        # Greek exposures
-        for greek in ["totalgamma", "totalvanna", "totalcharm", "totaldgex", "totalzomma"]:
+        # 0DTE Greek exposures (6 greeks)
+        for greek in ["totalgamma", "totalvanna", "totalcharm", "totaldgex", "totalzomma", "totaldelta"]:
             data = greek_data.get(greek, {}).get("all", [])
             net_value = sum(data) if data else 0
             name = greek.replace("total", "net_")
@@ -380,10 +411,11 @@ class TradingBotWrapper:
         features["dgex_sticky"] = 1 if abs(features.get("net_dgex", 0)) > 1e6 else 0
         features["zomma_stabilizing"] = 1 if features.get("net_zomma", 0) > 0 else 0
         
-        # Key levels
+        # Key levels (0DTE)
         strikes = greek_data.get("strikes", greek_data.get("levels", []))
         gamma_data = greek_data.get("totalgamma", {}).get("all", [])
         vanna_data = greek_data.get("totalvanna", {}).get("all", [])
+        dgex_data = greek_data.get("totaldgex", {}).get("all", [])
         
         if strikes and gamma_data and len(strikes) == len(gamma_data):
             max_idx = np.argmax(gamma_data)
@@ -400,10 +432,51 @@ class TradingBotWrapper:
             min_idx = np.argmin(vanna_data)
             min_vanna_strike = strikes[min_idx]
             features["dist_to_min_vanna"] = (current_price - min_vanna_strike) / current_price
-            features["near_min_vanna"] = 1 if abs(features["dist_to_min_vanna"]) < 0.004 else 0
         
         features["dist_to_zero_gamma"] = features.get("dist_to_max_gamma", 0)
-        features["near_zero_gamma"] = features.get("near_max_gamma", 0)
+        
+        # DGEX key levels (Magnet & Accelerator)
+        if strikes and dgex_data and len(strikes) == len(dgex_data):
+            max_dgex_strike = strikes[np.argmax(dgex_data)]
+            min_dgex_strike = strikes[np.argmin(dgex_data)]
+            features["dist_to_max_dgex"] = (current_price - max_dgex_strike) / current_price
+            features["dist_to_min_dgex"] = (current_price - min_dgex_strike) / current_price
+        
+        # ===== WEEKLY GREEKS =====
+        if weekly_data:
+            for greek in ["totalgamma", "totalvanna", "totalcharm", "totaldgex", "totalzomma", "totaldelta"]:
+                wk_arr = weekly_data.get(greek, {}).get("all", [])
+                name = "wk_" + greek.replace("total", "net_")
+                features[name] = sum(wk_arr) if wk_arr else 0
+            
+            wk_strikes = weekly_data.get("strikes", weekly_data.get("levels", []))
+            wk_gamma = weekly_data.get("totalgamma", {}).get("all", [])
+            wk_dgex = weekly_data.get("totaldgex", {}).get("all", [])
+            
+            if wk_strikes and wk_gamma and len(wk_strikes) == len(wk_gamma):
+                features["wk_dist_to_max_gamma"] = (current_price - wk_strikes[np.argmax(wk_gamma)]) / current_price
+                features["wk_dist_to_min_gamma"] = (current_price - wk_strikes[np.argmin(wk_gamma)]) / current_price
+            
+            if wk_strikes and wk_dgex and len(wk_strikes) == len(wk_dgex):
+                features["wk_dist_to_max_dgex"] = (current_price - wk_strikes[np.argmax(wk_dgex)]) / current_price
+                features["wk_dist_to_min_dgex"] = (current_price - wk_strikes[np.argmin(wk_dgex)]) / current_price
+            
+            # Weekly regime signals
+            features["wk_gamma_regime"] = 0.5 if features.get("wk_net_gamma", 0) == 0 else (1.0 if features.get("wk_net_gamma", 0) > 0 else 0.0)
+            features["wk_vanna_bullish"] = 1 if features.get("wk_net_vanna", 0) > 0 else 0
+            features["wk_dgex_sticky"] = 1 if features.get("wk_net_dgex", 0) > 0 else 0
+            features["wk_zomma_stabilizing"] = 1 if features.get("wk_net_zomma", 0) > 0 else 0
+        
+        # ===== CROSS-EXPIRY DIVERGENCE =====
+        def _sign_div(a, b):
+            if abs(a) < 0.01 or abs(b) < 0.01:
+                return 0.5
+            return 1.0 if (a > 0) != (b > 0) else 0.0
+        
+        features["gamma_0dte_vs_wk"] = _sign_div(features.get("net_gamma", 0), features.get("wk_net_gamma", 0))
+        features["vanna_0dte_vs_wk"] = _sign_div(features.get("net_vanna", 0), features.get("wk_net_vanna", 0))
+        features["dgex_0dte_vs_wk"] = _sign_div(features.get("net_dgex", 0), features.get("wk_net_dgex", 0))
+        features["delta_0dte_vs_wk"] = _sign_div(features.get("net_delta", 0), features.get("wk_net_delta", 0))
         
         # IB levels
         if ib_data and "analysis" in ib_data:
@@ -435,14 +508,49 @@ class TradingBotWrapper:
         features["vix_gamma"] = 0
         features["vix_regime"] = 0.5
         
-        # Time features
-        now = datetime.now()
-        features["hour"] = now.hour / 24.0
-        features["minute"] = now.minute / 60.0
-        
         # Defaults
         features["rsi"] = 0.5
         features["vol_relative"] = 0.2
+
+        # --- ENGINEERED FEATURES ---
+        # 1. Ratios
+        epsilon = 1e-6
+        features["gamma_vanna_ratio"] = features["net_gamma"] / (abs(features["net_vanna"]) + epsilon)
+        features["dgex_gamma_ratio"] = features["net_dgex"] / (abs(features["net_gamma"]) + epsilon)
+        features["charm_vanna_ratio"] = features["net_charm"] / (abs(features["net_vanna"]) + epsilon)
+        features["delta_gamma_ratio"] = features.get("net_delta", 0) / (abs(features["net_gamma"]) + epsilon)
+
+        # 2. Temporal Deltas
+        prev = self.prev_features.get(ticker)
+        
+        if prev:
+            features["gamma_change"] = features["net_gamma"] - prev["net_gamma"]
+            features["vanna_change"] = features["net_vanna"] - prev["net_vanna"]
+            features["dgex_change"] = features["net_dgex"] - prev["net_dgex"]
+            features["delta_change"] = features.get("net_delta", 0) - prev.get("net_delta", 0)
+            features["spot_change"] = (current_price - prev["spot"]) / prev["spot"] if prev["spot"] > 0 else 0.0
+            
+            # Cross-Features
+            features["gamma_momentum"] = features["gamma_change"] * np.sign(features["net_gamma"])
+            features["price_vs_dgex_magnet"] = features["spot_change"] * np.sign((current_price - features.get("max_dgex_strike", current_price))/current_price) if current_price > 0 else 0.0
+        else:
+            # First run: no change
+            features["gamma_change"] = 0.0
+            features["vanna_change"] = 0.0
+            features["dgex_change"] = 0.0
+            features["delta_change"] = 0.0
+            features["spot_change"] = 0.0
+            features["gamma_momentum"] = 0.0
+            features["price_vs_dgex_magnet"] = 0.0
+
+        # Update cache
+        self.prev_features[ticker] = {
+            "spot": current_price,
+            "net_gamma": features["net_gamma"],
+            "net_vanna": features["net_vanna"],
+            "net_dgex": features["net_dgex"],
+            "net_delta": features.get("net_delta", 0)
+        }
         
         # Build feature vector
         feature_vector = []
@@ -461,8 +569,9 @@ class TradingBotWrapper:
         if not greek_data:
             return
         
-        # Extract features
-        features = self.extract_features(greek_data, ib_data, ticker)
+        # Extract features (0DTE + weekly)
+        weekly_data = self.get_latest_weekly_data(greek_ticker)
+        features = self.extract_features(greek_data, ib_data, ticker, weekly_data=weekly_data)
         if features is None:
             return
         
@@ -472,10 +581,22 @@ class TradingBotWrapper:
         if ticker in self.positions:
             self._manage_position(ticker, current_price)
         else:
+            # Load weekly data for feature extraction
+            weekly_ticker = FUTURES_GREEKS_MAPPING.get(ticker, ticker)
+            weekly_data = self.get_latest_weekly_data(weekly_ticker)
+            
             # Get signal from wrapper
             signal = self.wrapper.get_signal(ticker, features, current_price)
             
             if signal.direction != "HOLD" and signal.position_size > 0:
+                # Check Cooldown
+                last_time = self.last_trade_time.get(ticker)
+                if last_time:
+                    elapsed = (datetime.now() - last_time).total_seconds() / 60
+                    if elapsed < TRADE_COOLDOWN_MINUTES:
+                        logger.debug(f"Skipping {ticker} trade (Cooldown: {elapsed:.0f}/{TRADE_COOLDOWN_MINUTES}m)")
+                        return
+
                 self._open_position(signal)
     
     def _open_position(self, signal: TradeSignal):
@@ -496,10 +617,35 @@ class TradingBotWrapper:
         self.daily_stats["trades"] += 1
     
     def _manage_position(self, ticker: str, current_price: float):
-        """Manage an open position."""
+        """Manage an open position with real-time Bayesian uncertainty."""
         position = self.positions[ticker]
         
-        # Update trailing stop and check exit
+        # --- Real-time Bayesian inference ---
+        # Re-run model on current features to get live σ (uncertainty)
+        current_uncertainty_mins = None
+        try:
+            greek_ticker = FUTURES_GREEKS_MAPPING.get(ticker, ticker)
+            greek_data = self.get_latest_greek_data(greek_ticker)
+            ib_data = self.get_ib_data(ticker)
+            
+            if greek_data is not None:
+                weekly_data = self.get_latest_weekly_data(greek_ticker)
+                features = self.extract_features(greek_data, ib_data, ticker, weekly_data=weekly_data)
+                if features is not None:
+                    features_norm = self.wrapper.normalizer.transform(features.reshape(1, -1))
+                    x = torch.FloatTensor(features_norm).to(self.device)
+                    
+                    self.model.eval()
+                    with torch.no_grad():
+                        _, time_pred = self.model.predict(x)
+                        log_sigma = time_pred.cpu().numpy()[0][1]
+                        current_uncertainty_mins = float(np.exp(log_sigma) * 120.0)
+                    
+                    logger.debug(f"  {ticker} Live σ = {current_uncertainty_mins:.1f} min")
+        except Exception as e:
+            logger.debug(f"  {ticker} Live inference failed (using fallback): {e}")
+        
+        # Update trailing stop and check exit (with Bayesian uncertainty)
         new_stop, should_exit, exit_reason = self.wrapper.update_position(
             ticker=ticker,
             entry_price=position.entry_price,
@@ -507,7 +653,8 @@ class TradingBotWrapper:
             current_price=current_price,
             current_stop=position.current_stop,
             direction=position.direction,
-            max_hold_minutes=position.max_hold_time
+            max_hold_minutes=position.max_hold_time,
+            current_uncertainty_mins=current_uncertainty_mins,
         )
         
         # Update stop
@@ -574,6 +721,7 @@ class TradingBotWrapper:
         send_discord_trade_close(position, current_price, reason, pnl_pct, pnl_dollars)
         
         del self.positions[ticker]
+        self.last_trade_time[ticker] = datetime.now() # Start cooldown from CLOSE time
         self._save_trade_history()
     
     def _save_trade_history(self):

@@ -242,15 +242,14 @@ class HybridTradingModel(nn.Module):
             nn.Linear(prev_dim // 2, num_classes)
         )
         
-        # Time regression head (New!)
-        # Predicts normalized time to target (0-1)
+        # Bayesian time regression head
+        # Outputs 2 values: mu (time fraction) and log_sigma (uncertainty)
         self.time_head = nn.Sequential(
             nn.Linear(prev_dim, prev_dim // 2),
             nn.BatchNorm1d(prev_dim // 2),
             nn.GELU(),
             nn.Dropout(dropout),
-            nn.Linear(prev_dim // 2, 1),
-            nn.Sigmoid()  # Output 0-1 (fraction of lookahead window)
+            nn.Linear(prev_dim // 2, 2),  # 2 outputs: mu, log_sigma
         )
         
         # Initialize weights
@@ -270,7 +269,7 @@ class HybridTradingModel(nn.Module):
             x: (batch_size, input_size)
         Returns:
             logits: (batch_size, num_classes)
-            time_pred: (batch_size, 1) - predicted time fraction (0-1)
+            time_pred: (batch_size, 2) - [mu (0-1), log_sigma]
             attention: optional (batch_size, input_size) feature importance
         """
         # Get attention-weighted features
@@ -288,8 +287,11 @@ class HybridTradingModel(nn.Module):
         # Classification
         logits = self.classifier(hidden)
         
-        # Time Regression
-        time_pred = self.time_head(hidden)
+        # Bayesian Time Regression: mu + log_sigma
+        time_params = self.time_head(hidden)
+        mu = torch.sigmoid(time_params[:, 0:1])   # [0, 1] fraction of lookahead
+        log_sigma = time_params[:, 1:2]            # unbounded for numerical stability
+        time_pred = torch.cat([mu, log_sigma], dim=-1)  # (batch, 2)
         
         if return_attention:
             return logits, time_pred, attention_weights
@@ -402,7 +404,7 @@ def save_hybrid_model(model: HybridTradingModel, normalizer: FeatureNormalizer,
 
 
 def load_hybrid_model(model_path: str, normalizer_path: str, 
-                      model_size: str = "small", device: torch.device = None):
+                      model_size: str = "medium", device: torch.device = None):
     """Load model and normalizer."""
     if device is None:
         device = get_device()
@@ -420,16 +422,36 @@ def load_hybrid_model(model_path: str, normalizer_path: str,
     return model, normalizer
 
 
-# --- FEATURE COLUMNS (35 features - removed VIX which isn't populated) ---
+# --- FEATURE COLUMNS (57 features - 0DTE + Weekly + Divergence + Market) ---
 FEATURE_COLUMNS = [
-    # Greek exposures (5)
-    "net_gamma", "net_vanna", "net_charm", "net_dgex", "net_zomma",
-    # Greek regimes (5)
+    # ===== 0DTE GREEKS (19 features) =====
+    # Net exposures (6)
+    "net_gamma", "net_vanna", "net_charm", "net_dgex", "net_zomma", "net_delta",
+    # Regime signals (5)
     "gamma_regime", "vanna_bullish", "charm_bullish", "dgex_sticky", "zomma_stabilizing",
-    # Level distances (4)
-    "dist_to_max_gamma", "dist_to_min_gamma", "dist_to_min_vanna", "dist_to_zero_gamma",
-    # Near level flags (4)
-    "near_max_gamma", "near_min_gamma", "near_min_vanna", "near_zero_gamma",
+    # Key level distances (6) — includes DGEX magnet/accelerator
+    "dist_to_max_gamma", "dist_to_min_gamma", "dist_to_min_vanna",
+    "dist_to_zero_gamma", "dist_to_max_dgex", "dist_to_min_dgex",
+    # Near level flags (2)
+    "near_max_gamma", "near_min_gamma",
+
+    # ===== WEEKLY GREEKS (14 features) =====
+    # Net exposures (6)
+    "wk_net_gamma", "wk_net_vanna", "wk_net_charm",
+    "wk_net_dgex", "wk_net_zomma", "wk_net_delta",
+    # Key level distances (4)
+    "wk_dist_to_max_gamma", "wk_dist_to_min_gamma",
+    "wk_dist_to_max_dgex", "wk_dist_to_min_dgex",
+    # Regime signals (4)
+    "wk_gamma_regime", "wk_vanna_bullish", "wk_dgex_sticky", "wk_zomma_stabilizing",
+
+    # ===== CROSS-EXPIRY DIVERGENCE (4 features) =====
+    "gamma_0dte_vs_wk",    # sign(0dte) != sign(wk) → breakout potential
+    "vanna_0dte_vs_wk",    # flow direction mismatch
+    "dgex_0dte_vs_wk",     # stability vs instability mismatch
+    "delta_0dte_vs_wk",    # directional bias conflict
+
+    # ===== IB + MARKET CONTEXT (18 features) =====
     # IB features (8)
     "price_vs_ib_high", "price_vs_ib_low", "ib_range_pct",
     "near_ib_high", "near_ib_low", "above_ib", "below_ib", "in_ib_range",
@@ -437,8 +459,26 @@ FEATURE_COLUMNS = [
     "dist_fib_127_up", "dist_fib_161_up",
     # IV features (3)
     "atm_iv", "iv_zscore", "iv_percentile",
-    # Market context (4)
-    "hour", "minute", "rsi", "vol_relative",
+    # VIX (3)
+    "vix_spot", "vix_gamma", "vix_regime",
+    # Market context (2)
+    "rsi", "vol_relative",
+
+    # ===== ENGINEERED FEATURES (11 features) =====
+    # Ratios (4)
+    "gamma_vanna_ratio",   # net_gamma / |net_vanna|
+    "dgex_gamma_ratio",    # net_dgex / |net_gamma|
+    "charm_vanna_ratio",   # net_charm / |net_vanna|
+    "delta_gamma_ratio",   # net_delta / |net_gamma|
+    # Temporal Deltas (5)
+    "gamma_change",        # Change in net_gamma
+    "vanna_change",        # Change in net_vanna
+    "dgex_change",         # Change in net_dgex
+    "delta_change",        # Change in net_delta
+    "spot_change",         # Price momentum
+    # Cross-Features (2)
+    "gamma_momentum",      # gamma_change * sign(net_gamma)
+    "price_vs_dgex_magnet" # spot_change * sign(dist_to_max_dgex)
 ]
 
 

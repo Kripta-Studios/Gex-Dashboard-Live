@@ -1,4 +1,5 @@
-import uuid  # <--- AÑADIR ESTO
+import uuid
+import json
 import threading
 import time
 import http.server
@@ -30,11 +31,19 @@ LATEST_DATA_CACHE = {}
 CACHE_LOCK = threading.Lock()
 QUANTUM_SIMULATOR = AerSimulator()
 
+# --- AUTHENTICATION ---
 USERS = {
     "admin@flowgreeks.com": {"pass": "admin123", "role": "ADMIN"},
-    "flowgreeks@email.com": {"pass": "FlowGreeksPlotting", "role": "USER"},
+    "user1@flowgreeks.com": {"pass": "FlowGreeksPlottingUser1", "role": "USER"},
 }
-SESSIONS = {}  # Almacena tokens activos: { "token_uuid": "role" }
+SESSIONS = {}        # { token_uuid: {"email": str, "role": str} }
+EMAIL_TO_TOKEN = {}  # { email: token } — single-session enforcement
+
+# Static API keys for scripts/bots (add more as needed)
+API_KEYS = {
+    "gex_bot_2026_xyz": {"role": "BOT", "owner": "trading_bot"},
+}
+API_KEY_LOCKS = {k: threading.Lock() for k in API_KEYS}  # 1 req/key
 
 # Configure Logging
 logging.basicConfig(
@@ -51,6 +60,57 @@ class ThreadedReusableServer(socketserver.ThreadingMixIn, socketserver.TCPServer
 
 
 class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
+
+    # --- AUTH MIDDLEWARE ---
+    def _check_auth(self):
+        """Verify Bearer token or API key. Returns auth dict or None."""
+        # Option A: Bearer token (web users)
+        auth = self.headers.get("Authorization", "")
+        if auth.startswith("Bearer "):
+            token = auth[7:]
+            with CACHE_LOCK:
+                session = SESSIONS.get(token)
+            return session  # {"email": ..., "role": ...} or None
+
+        # Option B: API key (scripts)
+        api_key = self.headers.get("X-API-Key", "")
+        if api_key and api_key in API_KEYS:
+            # Try to acquire lock (non-blocking)
+            lock = API_KEY_LOCKS.get(api_key)
+            if lock and not lock.acquire(blocking=False):
+                return "RATE_LIMITED"  # Another request is active
+            return {"role": API_KEYS[api_key]["role"], "email": f"apikey:{API_KEYS[api_key]['owner']}", "_api_key": api_key}
+
+        return None
+
+    def _release_api_key(self, auth_info):
+        """Release API key lock after response is sent."""
+        if auth_info and isinstance(auth_info, dict) and "_api_key" in auth_info:
+            lock = API_KEY_LOCKS.get(auth_info["_api_key"])
+            if lock:
+                try:
+                    lock.release()
+                except RuntimeError:
+                    pass  # Already released
+
+    def _send_json(self, code, data):
+        """Helper to send JSON response."""
+        body = json.dumps(data).encode("utf-8")
+        self.send_response(code)
+        self.send_header("Content-type", "application/json")
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _require_auth(self):
+        """Check auth and send error if unauthorized. Returns auth_info or None."""
+        auth_info = self._check_auth()
+        if auth_info is None:
+            self._send_json(401, {"status": "error", "message": "Unauthorized"})
+            return None
+        if auth_info == "RATE_LIMITED":
+            self._send_json(429, {"status": "error", "message": "Too many requests for this API key"})
+            return None
+        return auth_info
 
     # --- MODIFICACIÓN CLAVE: Sistema de Logs ---
     def log_message(self, format, *args):
@@ -145,14 +205,12 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
             logging.error(f"Video Error: {e}")
 
     def do_POST(self):
-        # --- LOGIN ENDPOINT ---
+        # --- LOGIN ENDPOINT (no auth required) ---
         if self.path == "/login":
             content_len = int(self.headers.get("Content-Length", 0))
             post_body = self.rfile.read(content_len)
 
             try:
-                import json
-
                 creds = json.loads(post_body)
                 email = creds.get("email")
                 password = creds.get("password")
@@ -160,34 +218,39 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
                 user = USERS.get(email)
 
                 if user and user["pass"] == password:
-                    # Login Exitoso
                     token = str(uuid.uuid4())
                     role = user["role"]
 
                     with CACHE_LOCK:
-                        SESSIONS[token] = role
+                        # Single-session: kill old session (except ADMIN)
+                        if role != "ADMIN" and email in EMAIL_TO_TOKEN:
+                            old_token = EMAIL_TO_TOKEN[email]
+                            SESSIONS.pop(old_token, None)
+                            logging.info(f"Session kicked for {email} (new login)")
+
+                        SESSIONS[token] = {"email": email, "role": role}
+                        EMAIL_TO_TOKEN[email] = token
 
                     response = {"status": "ok", "token": token, "role": role}
-                    self.send_response(200)
+                    self._send_json(200, response)
+                    logging.info(f"Login OK: {email} ({role})")
                 else:
-                    # Login Fallido
                     response = {"status": "error", "message": "Invalid credentials"}
-                    self.send_response(401)
-
-                self.send_header("Content-type", "application/json")
-                self.end_headers()
-                self.wfile.write(json.dumps(response).encode("utf-8"))
+                    self._send_json(401, response)
+                    logging.info(f"Login FAILED: {email}")
 
             except Exception as e:
                 self.send_error(500, str(e))
             return
 
-        # --- EXISTING BATCH ENDPOINT ---
+        # --- BATCH ENDPOINT (auth required) ---
         if self.path == "/get_batch":
+            auth_info = self._require_auth()
+            if not auth_info:
+                return
+
             content_len = int(self.headers.get("Content-Length", 0))
             post_body = self.rfile.read(content_len)
-
-            import json
 
             try:
                 request_data = json.loads(post_body)
@@ -206,20 +269,28 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
                         else:
                             response_data[key] = None
 
-                self.send_response(200)
-                self.send_header("Content-type", "application/json")
-                self.end_headers()
-                self.wfile.write(json.dumps(response_data).encode("utf-8"))
+                self._send_json(200, response_data)
 
             except Exception as e:
                 self.send_error(500, str(e))
+            finally:
+                self._release_api_key(auth_info)
             return
 
     def do_GET(self):
         parsed_url = urllib.parse.urlparse(self.path)
         path_only = parsed_url.path
 
-        # 1. SERVIR HTML/CSS/JS
+        # 0. VERIFY TOKEN (no auth required — it IS the auth check)
+        if path_only == "/verify_token":
+            auth_info = self._check_auth()
+            if auth_info and isinstance(auth_info, dict):
+                self._send_json(200, {"status": "ok", "role": auth_info["role"], "email": auth_info["email"]})
+            else:
+                self._send_json(401, {"status": "error", "message": "Invalid or expired token"})
+            return
+
+        # 1. SERVIR HTML/CSS/JS (no auth required)
         if path_only == "/" or path_only == "/index.html":
             index_path = os.path.join(TEMPLATE_FOLDER, "index.html")
             if os.path.exists(index_path):
@@ -251,8 +322,11 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_error(404)
                 return
 
-        # 2. API: LISTAR ARCHIVOS
+        # 2. API: LISTAR ARCHIVOS (auth required)
         if self.path.startswith("/list_files"):
+            auth_info = self._require_auth()
+            if not auth_info:
+                return
             try:
                 query = urllib.parse.urlparse(self.path).query
                 params = urllib.parse.parse_qs(query)
@@ -278,9 +352,14 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
             except Exception as e:
                 self.send_error(500, str(e))
                 return
+            finally:
+                self._release_api_key(auth_info)
 
-        # 3. API: GET LATEST
+        # 3. API: GET LATEST (auth required)
         if self.path.startswith("/get_latest"):
+            auth_info = self._require_auth()
+            if not auth_info:
+                return
             try:
                 query = urllib.parse.urlparse(self.path).query
                 params = urllib.parse.parse_qs(query)
@@ -324,9 +403,14 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
                 print(f"Server Error: {e}")
                 self.send_error(500, str(e))
                 return
+            finally:
+                self._release_api_key(auth_info)
 
-        # 4. API: GET HISTORY
+        # 4. API: GET HISTORY (auth required)
         if self.path.startswith("/get_history"):
+            auth_info = self._require_auth()
+            if not auth_info:
+                return
             try:
                 query = urllib.parse.urlparse(self.path).query
                 params = urllib.parse.parse_qs(query)
@@ -389,6 +473,8 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
                 print(f"History Error: {e}")
                 self.send_error(500, str(e))
                 return
+            finally:
+                self._release_api_key(auth_info)
 
         # 5. API: QUANTUM GENERATOR (Para Unity)
         if self.path == "/generate_bit":

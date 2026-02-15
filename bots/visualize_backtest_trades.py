@@ -65,91 +65,194 @@ def plot_trades(candles_df: pd.DataFrame, trades: list, ticker: str, date_str: s
         return
     
     # Create time index from time strings
-    times = candles_df['time'].tolist()
+    # Normalize time strings to HH:MM for better matching
+    def normalize_time(t):
+        if pd.isna(t): return ""
+        t = str(t)
+        # Remove seconds if present
+        if t.count(':') == 2:
+            return t.rsplit(':', 1)[0]
+        return t
+
+    # Apply normalization
+    times = [normalize_time(t) for t in candles_df['time'].tolist()]
     prices = candles_df[price_col].tolist()
     
-    # Create figure
-    fig, ax = plt.subplots(figsize=(16, 8))
+    # Use dark style
+    plt.style.use('dark_background')
+    
+    # Custom colors for dark mode
+    COLOR_BG = '#1e1e1e'
+    COLOR_PRICE = '#4ecdc4'  # Cyan-ish
+    COLOR_ENTRY_LONG = '#00ff00' # Bright Green
+    COLOR_ENTRY_SHORT = '#ff00ff' # Magenta
+    COLOR_WIN = '#00ff00'
+    COLOR_LOSS = '#ff4444'
+    COLOR_GRID = '#444444'
+    
+    # Create figure with dark background
+    fig, ax = plt.subplots(figsize=(16, 8), facecolor=COLOR_BG)
+    ax.set_facecolor(COLOR_BG)
     
     # Plot price line
-    ax.plot(range(len(prices)), prices, 'b-', linewidth=1, alpha=0.7, label='Price')
+    ax.plot(range(len(prices)), prices, color=COLOR_PRICE, linewidth=1.5, alpha=0.9, label='Price')
     
     # Add time labels
     time_indices = list(range(0, len(times), max(1, len(times) // 10)))
     ax.set_xticks(time_indices)
-    ax.set_xticklabels([times[i] for i in time_indices], rotation=45)
+    ax.set_xticklabels([times[i] for i in time_indices], rotation=45, color='white')
+    ax.tick_params(axis='y', colors='white')
     
     # Plot trades
     time_to_idx = {t: i for i, t in enumerate(times)}
     
     for trade in trades:
         # Handle both old and new column names
-        trade_time = str(trade.get('entry_time', trade.get('time', '')))
+        trade_time_raw = str(trade.get('entry_time', trade.get('time', '')))
+        trade_time = normalize_time(trade_time_raw)
+        
         direction = trade['direction']
-        entry_price = trade.get('entry_price', trade.get('spot_price', 0))
-        exit_price_actual = trade.get('exit_price', entry_price)
+        # We will use the CHART price for visual alignment user requested
+        # entry_price = trade.get('entry_price', trade.get('spot_price', 0))
         pnl = trade['pnl']
+        actual_hold = trade.get('actual_hold_minutes', hold_minutes)
         
         # Find entry index
         entry_idx = time_to_idx.get(trade_time)
         if entry_idx is None:
             # Try to find closest time
-            for i, t in enumerate(times):
-                if t == trade_time:
-                    entry_idx = i
-                    break
-            if entry_idx is None:
+            # This is slow but robust
+            best_dist = 9999
+            best_idx = -1
+            
+            def time_diff(t1, t2):
+                try:
+                    h1, m1 = map(int, t1.split(':'))
+                    h2, m2 = map(int, t2.split(':'))
+                    return abs((h1*60+m1) - (h2*60+m2))
+                except:
+                    return 9999
+            
+            if len(times) > 0:
+                 # heuristic search
+                 for i, t in enumerate(times):
+                     dist = time_diff(t, trade_time)
+                     if dist < best_dist:
+                         best_dist = dist
+                         best_idx = i
+                     if dist == 0: break
+                 entry_idx = best_idx
+            
+            if entry_idx is None or entry_idx == -1:
                 continue
         
-        # Calculate exit index - find the actual time in the data
-        exit_time_str = trade.get('exit_time', '')
-        exit_idx = time_to_idx.get(exit_time_str, entry_idx + hold_minutes)
-        exit_idx = min(max(exit_idx, 0), len(prices) - 1)
-        exit_price = exit_price_actual if exit_price_actual != entry_price else prices[exit_idx]
+        # Get chart price at entry (snapping to line)
+        vis_entry_price = prices[entry_idx]
+
+        # Calculate exit index using actual hold time
+        # Assuming 1-minute candles roughly
+        # If we have actual_hold_minutes, simply add it to entry index
+        # This assumes the candle data is complete-ish which is usually fine
+        # Better: calculate target time and find index
         
-        # Entry dot (on top of the candle)
-        entry_color = 'blue' if direction == 'LONG' else 'magenta'
-        ax.scatter(entry_idx, entry_price, marker='o', s=120, c=entry_color, edgecolors='black', linewidths=1, zorder=10)
+        try:
+            h, m = map(int, times[entry_idx].split(':'))
+            entry_minutes = h * 60 + m
+            exit_minutes = entry_minutes + actual_hold
+            
+            # Find index with time >= exit_minutes
+            exit_idx = entry_idx
+            for i in range(entry_idx, len(times)):
+                th, tm = map(int, times[i].split(':'))
+                curr_min = th * 60 + tm
+                if curr_min >= exit_minutes:
+                    exit_idx = i
+                    break
+        except:
+             exit_idx = min(entry_idx + int(actual_hold), len(prices) - 1)
         
-        # Exit dot (green for win, red for loss)
-        exit_color = 'lime' if pnl > 0 else 'red' if pnl < 0 else 'gray'
-        ax.scatter(exit_idx, exit_price, marker='o', s=120, c=exit_color, edgecolors='black', linewidths=1, zorder=10)
+        # Ensure exit is at least 1 index after entry for visibility
+        if exit_idx <= entry_idx:
+            exit_idx = min(entry_idx + 1, len(prices) - 1)
+
+         # Get chart price at exit (snapping to line)
+        vis_exit_price = prices[exit_idx]
+
+        # Calculate Visual P&L based on chart prices
+        point_values = {
+            "SPX": 100.0, "/ES": 50.0, "/NQ": 20.0, "SPY": 100.0, "QQQ": 100.0
+        }
+        multiplier = point_values.get(ticker, 100.0)
         
-        # Draw line connecting entry to exit
-        ax.plot([entry_idx, exit_idx], [entry_price, exit_price],
-                linestyle='-', color=exit_color, alpha=0.5, linewidth=1.5)
+        if direction == 'LONG':
+            chart_pnl_val = (vis_exit_price - vis_entry_price) * multiplier
+        else:
+            chart_pnl_val = (vis_entry_price - vis_exit_price) * multiplier
+            
+        # Use Chart P&L for color logic (to match visual movement)
+        visual_color = COLOR_WIN if chart_pnl_val > 0 else COLOR_LOSS if chart_pnl_val < 0 else 'gray'
         
-        # Small P&L annotation above exit
-        ax.annotate(f'${pnl:+.0f}', (exit_idx, exit_price),
-                   fontsize=7, fontweight='bold', color=exit_color,
-                   ha='center', va='bottom', xytext=(0, 5), textcoords='offset points')
+        # Entry Marker
+        entry_color = COLOR_ENTRY_LONG if direction == 'LONG' else COLOR_ENTRY_SHORT
+        entry_marker = '^' if direction == 'LONG' else 'v'
+        
+        # Offset slightly for visibility
+        offset = (max(prices) - min(prices)) * 0.02
+        entry_y = vis_entry_price - offset if direction == 'LONG' else vis_entry_price + offset
+        
+        ax.scatter(entry_idx, entry_y, marker=entry_marker, s=150, c=entry_color, edgecolors='white', linewidths=1, zorder=10)
+        
+        # Exit Marker
+        ax.scatter(exit_idx, vis_exit_price, marker='x', s=100, c=visual_color, linewidths=2, zorder=10)
+        
+        # Draw dotted line connecting entry to exit
+        ax.plot([entry_idx, exit_idx], [vis_entry_price, vis_exit_price],
+                linestyle='--', color=visual_color, alpha=0.6, linewidth=1)
+        
+        # P&L annotation (Show Visual P&L and Backtest P&L if different)
+        pnl_text = f"${chart_pnl_val:+.0f}"
+        if abs(chart_pnl_val - pnl) > 10: # If discrepancy > $10
+             pnl_text += f"\n(BT: ${pnl:+.0f})"
+        
+        ax.annotate(pnl_text, (exit_idx, vis_exit_price),
+                   fontsize=9, fontweight='bold', color=visual_color,
+                   ha='left', va='center', xytext=(5, 0), textcoords='offset points')
     
     # Title and labels
     total_pnl = sum(t['pnl'] for t in trades)
     wins = sum(1 for t in trades if t['pnl'] > 0)
     losses = sum(1 for t in trades if t['pnl'] < 0)
-    title = f"{ticker} - {date_str} | {len(trades)} Trades | {wins}W / {losses}L | P&L: {total_pnl:+.0f}"
-    ax.set_title(title, fontsize=14, fontweight='bold')
-    ax.set_xlabel('Time')
-    ax.set_ylabel('Price')
-    ax.grid(True, alpha=0.3)
     
-    # Add legend for directions
+    title_text = f"{ticker} - {date_str}\nTrades: {len(trades)} | W: {wins} L: {losses} | P&L: ${total_pnl:+.2f}"
+    ax.set_title(title_text, fontsize=14, fontweight='bold', color='white', pad=20)
+    ax.set_xlabel('Time', color='white')
+    ax.set_ylabel('Price', color='white')
+    ax.grid(True, color=COLOR_GRID, alpha=0.3)
+    
+    # Remove top/right spines
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.spines['bottom'].set_color('white')
+    ax.spines['left'].set_color('white')
+    
+    # Legend
     from matplotlib.lines import Line2D
     legend_elements = [
-        Line2D([0], [0], marker='^', color='w', markerfacecolor='blue', markersize=12, label='LONG Entry'),
-        Line2D([0], [0], marker='v', color='w', markerfacecolor='purple', markersize=12, label='SHORT Entry'),
-        Line2D([0], [0], marker='x', color='w', markerfacecolor='green', markeredgecolor='green', markersize=12, label='Win Exit'),
-        Line2D([0], [0], marker='x', color='w', markerfacecolor='red', markeredgecolor='red', markersize=12, label='Loss Exit'),
+        Line2D([0], [0], marker='^', color='w', markerfacecolor=COLOR_ENTRY_LONG, markersize=10, label='LONG Entry'),
+        Line2D([0], [0], marker='v', color='w', markerfacecolor=COLOR_ENTRY_SHORT, markersize=10, label='SHORT Entry'),
+        Line2D([0], [0], marker='x', color='w', markeredgecolor=COLOR_WIN, markersize=10, linestyle='None', label='Win Exit'),
+        Line2D([0], [0], marker='x', color='w', markeredgecolor=COLOR_LOSS, markersize=10, linestyle='None', label='Loss Exit'),
     ]
-    ax.legend(handles=legend_elements, loc='upper left')
+    leg = ax.legend(handles=legend_elements, loc='upper left', facecolor='#333333', edgecolor='white')
+    for text in leg.get_texts():
+        text.set_color("white")
     
     plt.tight_layout()
     
     # Save or show
     if output_path:
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
-        plt.savefig(output_path, dpi=150, bbox_inches='tight')
+        plt.savefig(output_path, dpi=100, bbox_inches='tight', facecolor=COLOR_BG)
         print(f"  ✓ Saved chart to {output_path}")
     else:
         plt.show()

@@ -158,7 +158,7 @@ python services/ib_service.py
 
 ### servidor.py
 
-HTTP API server exposing Greek data for the web dashboard.
+HTTP API server exposing Greek data for the web dashboard, with authentication.
 
 ```bash
 python services/servidor.py
@@ -166,11 +166,109 @@ python services/servidor.py
 
 **Port:** 8609
 
-**Endpoints:**
-- `GET /data/{ticker}` - Latest Greek data
-- `GET /health` - Service health check
+**Public Endpoints (no auth):**
+- `POST /login` — Login with email/password, returns Bearer token
+- `GET /verify_token` — Check if a Bearer token is still valid
+- `GET /` — Serve web dashboard
+- `GET /generate_bit` — Quantum random bit (for Unity)
+
+**Protected Endpoints (require auth):**
+- `GET /get_latest?ticker=SPX&exp=0dte` — Latest Greek data from RAM cache
+- `GET /get_history?ticker=SPX&exp=0dte&time=0930` — Historical snapshot by time
+- `GET /list_files?ticker=SPX&exp=0dte&date=20260214` — List available JSON files
+- `POST /get_batch` — Batch fetch multiple tickers (used by dashboard refresh)
 
 ---
+
+## Authentication & API Keys
+
+The server uses a hybrid authentication system with two mechanisms:
+
+### 1. Bearer Tokens (Web Users)
+
+Tokens are **UUID4 strings** generated server-side when a user logs in via `POST /login`. They are stored in `SESSIONS` (server RAM) and sent back to the client.
+
+**How it works:**
+1. User submits email + password to `POST /login`
+2. Server validates against `USERS` dict → generates `uuid.uuid4()` token
+3. Token is stored in `SESSIONS = { token: {"email": ..., "role": ...} }`
+4. Client stores token in `sessionStorage` and sends it with every request as:
+   ```
+   Authorization: Bearer <token>
+   ```
+5. Server checks `SESSIONS[token]` on each protected request
+
+**Single-session enforcement:**
+- When a non-admin user logs in, any **previous token for that email is deleted**
+- The old session's next API request returns `401 Unauthorized` → auto-logout
+- **Admin users** are exempt — they can have multiple active sessions
+
+**Example login request:**
+```bash
+curl -X POST http://gex-dashboard.hopto.org:8609/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "user1@flowgreeks.com", "password": "FlowGreeksPlottingUser1"}'
+
+# Response: {"status": "ok", "token": "a1b2c3d4-...", "role": "USER"}
+```
+
+**Example authenticated request:**
+```bash
+curl http://gex-dashboard.hopto.org:8609/get_latest?ticker=SPX&exp=0dte \
+  -H "Authorization: Bearer a1b2c3d4-..."
+```
+
+### 2. API Keys (Scripts & Bots)
+
+API keys are **static strings** defined in `servidor.py` for automated scripts. Each key allows **one concurrent request** (rate limited via threading locks).
+
+**Adding API keys** — Edit `API_KEYS` in `services/servidor.py`:
+```python
+API_KEYS = {
+    "gex_bot_2026_xyz":  {"role": "BOT",  "owner": "trading_bot"},
+    "client_abc_secret": {"role": "USER", "owner": "client_abc"},
+}
+# IMPORTANT: Regenerate locks after changing keys
+API_KEY_LOCKS = {k: threading.Lock() for k in API_KEYS}
+```
+
+**Using an API key in a script:**
+```python
+import requests
+
+headers = {"X-API-Key": "gex_bot_2026_xyz"}
+resp = requests.get("http://your-server:8609/get_latest?ticker=SPX&exp=0dte", headers=headers)
+data = resp.json()
+```
+
+```bash
+# Or with curl:
+curl http://your-server:8609/get_latest?ticker=SPX&exp=0dte \
+  -H "X-API-Key: gex_bot_2026_xyz"
+```
+
+**Concurrency:** If two requests arrive simultaneously with the same API key, the second gets `429 Too Many Requests`. Use different keys for different scripts if you need parallel access.
+
+### Auth Summary
+
+| Method | Header | Who | Concurrency |
+|--------|--------|-----|-------------|
+| Bearer Token | `Authorization: Bearer <uuid>` | Web users | 1 session/email (admin exempt) |
+| API Key | `X-API-Key: <key>` | Scripts/bots | 1 request/key at a time |
+| None | — | — | `401 Unauthorized` |
+
+### Managing Users
+
+Web users are defined in `services/servidor.py`:
+```python
+USERS = {
+    "admin@flowgreeks.com":  {"pass": "admin123",          "role": "ADMIN"},
+    "flowgreeks@email.com":  {"pass": "FlowGreeksPlotting", "role": "USER"},
+    # Add more users here
+}
+```
+
+> **Note:** Tokens live only in server RAM (`SESSIONS` dict). Restarting the server invalidates all active sessions — users must log in again.
 
 ### fourier_service.py / fourier_service_fast.py
 

@@ -18,3 +18,5 @@ trades_live/
 *.csv
 !requirements.txt
 futures_plots/
+training_data/
+trading_data/

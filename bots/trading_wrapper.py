@@ -78,6 +78,9 @@ class TradeSignal:
     take_profit_2: float  # Full exit
     max_hold_time: int  # minutes
     reasoning: Dict[str, any] = field(default_factory=dict)
+    # Bayesian uncertainty fields
+    time_mu_minutes: float = 0.0      # Expected time to target (minutes)
+    time_sigma_minutes: float = 0.0   # Uncertainty / std dev (minutes)
     
     def to_dict(self) -> dict:
         """Convert to serializable dictionary."""
@@ -94,6 +97,8 @@ class TradeSignal:
             "take_profit_2": self.take_profit_2,
             "max_hold_time": self.max_hold_time,
             "reasoning": self.reasoning,
+            "time_mu_minutes": self.time_mu_minutes,
+            "time_sigma_minutes": self.time_sigma_minutes,
         }
 
 
@@ -166,6 +171,47 @@ class RegimeFilter:
             return data
         except Exception as e:
             logger.error(f"Error loading Greek data for {ticker}: {e}")
+            return None
+    
+    def load_latest_weekly_greeks(self, ticker: str) -> Optional[dict]:
+        """
+        Load most recent weekly Greek data from gex_daemon.py output.
+        
+        Files are located at: json_data/{TICKER}_weekly_ExposureData_{timestamp}.json
+        Weekly data changes slowly, so we use a looser freshness check.
+        """
+        ticker = ticker.replace("/", "")
+        cache_key = f"greeks_weekly_{ticker}"
+        if self._is_cache_valid(cache_key):
+            return self._cache.get(cache_key)
+        
+        pattern = f"{ticker}_weekly_ExposureData_*.json"
+        files = sorted(
+            self.greek_data_dir.glob(pattern), 
+            key=lambda p: p.stat().st_mtime, 
+            reverse=True
+        )
+        
+        if not files:
+            logger.debug(f"No weekly Greek files found for {ticker}")
+            return None
+        
+        latest = files[0]
+        age_seconds = datetime.now().timestamp() - latest.stat().st_mtime
+        
+        if age_seconds > 1800:  # Weekly data: 30 min freshness
+            logger.debug(f"Weekly Greek data for {ticker} is {age_seconds/60:.1f} min old")
+            return None
+        
+        try:
+            with open(latest, 'r') as f:
+                data = json.load(f)
+            
+            self._cache[cache_key] = data
+            self._cache_time[cache_key] = datetime.now()
+            return data
+        except Exception as e:
+            logger.error(f"Error loading weekly Greek data for {ticker}: {e}")
             return None
     
     def load_latest_fourier(self, ticker: str) -> Optional[dict]:
@@ -514,7 +560,7 @@ class TrailingStopManager:
     """
     
     def __init__(self, initial_stop_pct: float = 0.003,
-                 trailing_activation_pct: float = 0.002,
+                 trailing_activation_pct: float = 0.003,
                  trailing_distance_pct: float = 0.0015):
         """
         Args:
@@ -544,14 +590,14 @@ class TrailingStopManager:
         if direction == "LONG":
             return {
                 "stop_loss": entry_price - stop_distance,
-                "take_profit_1": entry_price + (stop_distance * 1.5),  # 1.5R
-                "take_profit_2": entry_price + (stop_distance * 2.5),  # 2.5R
+                "take_profit_1": entry_price + (stop_distance * 2.0),  # 2.0R (0.6%)
+                "take_profit_2": entry_price + (stop_distance * 3.0),  # 3.0R (0.9%)
             }
         else:  # SHORT
             return {
                 "stop_loss": entry_price + stop_distance,
-                "take_profit_1": entry_price - (stop_distance * 1.5),
-                "take_profit_2": entry_price - (stop_distance * 2.5),
+                "take_profit_1": entry_price - (stop_distance * 2.0),
+                "take_profit_2": entry_price - (stop_distance * 3.0),
             }
     
     def update_trailing_stop(self, current_price: float, entry_price: float,
@@ -581,20 +627,25 @@ class TrailingStopManager:
     
     def should_exit(self, current_price: float, entry_price: float,
                     current_stop: float, entry_time: datetime,
-                    direction: str, max_hold_minutes: int = 45) -> Tuple[bool, str]:
+                    direction: str, max_hold_minutes: int = 45,
+                    current_uncertainty_mins: float = None) -> Tuple[bool, str]:
         """
         Check if position should be exited.
         
         Returns:
             (should_exit: bool, reason: str)
         """
+        # Bayesian uncertainty exit: model says market is too chaotic
+        if current_uncertainty_mins is not None and current_uncertainty_mins > 45.0:
+            return True, "HIGH_UNCERTAINTY"
+        
         # Stop loss hit
         if direction == "LONG" and current_price <= current_stop:
             return True, "STOP_LOSS"
         elif direction == "SHORT" and current_price >= current_stop:
             return True, "STOP_LOSS"
         
-        # Time-based exit
+        # Time-based exit (safety timeout)
         hold_time = (datetime.now() - entry_time).total_seconds() / 60
         if hold_time >= max_hold_minutes:
             return True, "TIME_EXIT"
@@ -627,11 +678,13 @@ class TradingWrapper:
     def __init__(self, model, normalizer,
                  greek_dir: str, fourier_dir: str, ib_dir: str,
                  calibration_path: Optional[str] = None,
-                 min_confidence: float = 0.55,
+                 min_confidence: float = 0.80,
                  base_risk_pct: float = 0.01,
                  max_position_pct: float = 0.05,
                  min_iv_pct: float = 0.2,
-                 max_time_minutes: int = 20):
+                 max_time_minutes: int = 120,
+                 stop_loss_pct: float = 0.003,
+                 target_pct_ratio: float = 2.0):
         """
         Initialize the trading wrapper.
         
@@ -647,6 +700,8 @@ class TradingWrapper:
             max_position_pct: Maximum position size
             min_iv_pct: Minimum IV percentile to trade (avoid chop)
             max_time_minutes: Maximum predicted time to target
+            stop_loss_pct: Default stop loss percentage (e.g. 0.003 for 0.3%)
+            target_pct_ratio: Ratio of target profit to stop loss (e.g. 2.0 = 0.6% target)
         """
         self.model = model
         self.normalizer = normalizer
@@ -658,7 +713,7 @@ class TradingWrapper:
             max_position_pct=max_position_pct,
             min_confidence=min_confidence
         )
-        self.stop_manager = TrailingStopManager(initial_stop_pct=0.004, trailing_activation_pct=0.003)
+        self.stop_manager = TrailingStopManager(initial_stop_pct=stop_loss_pct, trailing_activation_pct=stop_loss_pct)
         self.min_iv_pct = min_iv_pct
         self.max_time_minutes = max_time_minutes
         
@@ -708,10 +763,15 @@ class TradingWrapper:
                 # Use predict() to get both probabilities and time prediction
                 probs_tensor, time_pred_tensor = self.model.predict(x)
                 probs = probs_tensor.cpu().numpy()[0]
-                time_pred_norm = time_pred_tensor.cpu().numpy()[0][0]
                 
-            # Convert normalized time (0-1) to minutes (assuming 30m max)
-            predicted_minutes = int(time_pred_norm * 30.0)
+                # Extract Bayesian time parameters
+                mu_norm = time_pred_tensor.cpu().numpy()[0][0]   # sigmoid output [0,1]
+                log_sigma_val = time_pred_tensor.cpu().numpy()[0][1]
+                
+            # Convert normalized time to minutes (120m lookahead)
+            predicted_minutes = int(mu_norm * 120.0)
+            time_mu_minutes = float(mu_norm * 120.0)
+            time_sigma_minutes = float(np.exp(log_sigma_val) * 120.0)
             
         except Exception as e:
             logger.error(f"Model inference error for {ticker}: {e}")
@@ -787,15 +847,15 @@ class TradingWrapper:
         # 5. Calculate stops
         stops = self.stop_manager.calculate_stops(current_price, direction)
         
-        # 6. Max hold time based on regime
+        # 6. Max hold time based on regime (extended to 120m with Bayesian exit)
         hold_times = {
-            MarketRegime.TRENDING_UP: 60,
-            MarketRegime.TRENDING_DOWN: 60,
-            MarketRegime.RANGING: 30,
-            MarketRegime.HIGH_VOL: 20,
-            MarketRegime.LOW_LIQUIDITY: 15,
+            MarketRegime.TRENDING_UP: 120,
+            MarketRegime.TRENDING_DOWN: 120,
+            MarketRegime.RANGING: 90,
+            MarketRegime.HIGH_VOL: 60,
+            MarketRegime.LOW_LIQUIDITY: 45,
         }
-        max_hold = hold_times.get(regime, 45)
+        max_hold = hold_times.get(regime, 120)
         
         # Return final signal
         final_direction = direction if position_size > 0 else "HOLD"
@@ -821,14 +881,21 @@ class TradingWrapper:
                 },
                 "tradeable_reason": reason,
                 "vol_factor": vol_factor,
-            }
+            },
+            time_mu_minutes=time_mu_minutes,
+            time_sigma_minutes=time_sigma_minutes,
         )
     
     def update_position(self, ticker: str, entry_price: float, entry_time: datetime,
                         current_price: float, current_stop: float,
-                        direction: str, max_hold_minutes: int = 45) -> Tuple[float, bool, str]:
+                        direction: str, max_hold_minutes: int = 120,
+                        current_uncertainty_mins: float = None) -> Tuple[float, bool, str]:
         """
         Update an existing position (trailing stop, exit check).
+        
+        Args:
+            current_uncertainty_mins: Bayesian σ in minutes from live inference.
+                If > 45.0, triggers HIGH_UNCERTAINTY exit.
         
         Returns:
             (new_stop, should_exit, exit_reason)
@@ -838,10 +905,11 @@ class TradingWrapper:
             current_price, entry_price, current_stop, direction
         )
         
-        # Check if should exit
+        # Check if should exit (includes Bayesian uncertainty check)
         should_exit, reason = self.stop_manager.should_exit(
             current_price, entry_price, new_stop, entry_time,
-            direction, max_hold_minutes
+            direction, max_hold_minutes,
+            current_uncertainty_mins=current_uncertainty_mins
         )
         
         return new_stop, should_exit, reason
