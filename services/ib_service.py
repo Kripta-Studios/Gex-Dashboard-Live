@@ -742,12 +742,12 @@ def extract_greeks_from_file(filepath: str) -> dict:
             return {}
 
         df = pd.DataFrame(data=raw_df["data"], columns=raw_df["columns"])
-        for col in ["strike_price", "total_gamma", "total_vanna", "total_dgex"]:
+        for col in ["strike_price", "total_gamma", "total_vanna", "total_dgex", "total_vega", "total_vomma"]:
             if col in df.columns:
                 df[col] = pd.to_numeric(df[col], errors="coerce")
 
         greeks = df.groupby("strike_price")[
-            ["total_gamma", "total_vanna", "total_dgex"]
+            ["total_gamma", "total_vanna", "total_dgex", "total_vega", "total_vomma"]
         ].sum()
 
         if greeks.empty:
@@ -759,6 +759,8 @@ def extract_greeks_from_file(filepath: str) -> dict:
             "min_vanna": float(greeks["total_vanna"].idxmin()),
             "max_dgex": float(greeks["total_dgex"].idxmax()),
             "min_dgex": float(greeks["total_dgex"].idxmin()),
+            "max_vega": float(greeks["total_vega"].idxmax()),
+            "max_vomma": float(greeks["total_vomma"].idxmax()),
         }
     except Exception as e:
         print(f"[ERROR GREEKS] {filepath}: {e}")
@@ -1108,6 +1110,8 @@ def generate_ib_chart(ticker: str, df_candles: pd.DataFrame, greeks_files: list,
         "min_vanna": "#FF00FF",
         "max_dgex": "#00FFFF",
         "min_dgex": "#FFA500",
+        "max_vega": "#FF1493",
+        "max_vomma": "#FFFFFF",
     }
 
     sorted_greeks = sorted(
@@ -1195,7 +1199,7 @@ class IBBot(discord.Client):
             trading_date = trading_date - timedelta(days=1)
             
         today_str = trading_date.strftime("%Y%m%d")
-        print(f"--- Ciclo IB {now.strftime('%H:%M:%S')} ---", flush=True)
+        print(f"--- Ciclo IB {now_ny.strftime('%H:%M:%S')} ---", flush=True)
 
         # Procesar tickers normales (equities)
         for ticker in TICKERS_TO_TRACK:

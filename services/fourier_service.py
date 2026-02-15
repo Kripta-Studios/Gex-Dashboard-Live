@@ -366,8 +366,11 @@ class FourierBot(discord.Client):
             await asyncio.sleep(60)
 
     def process_tickers_sync(self):
-        now = datetime.now()
-        today_str = now.strftime("%Y%m%d")
+        now_ny = datetime.now(NY_TZ) if NY_TZ else datetime.now()
+        trading_date = now_ny.date()
+        if now_ny.time() < dt_time(3, 0):
+            trading_date = trading_date - timedelta(days=1)
+        today_str = trading_date.strftime("%Y%m%d")
 
         for ticker in TICKERS_TO_TRACK:
             try:

@@ -49,17 +49,17 @@ async def calc_exposures(
 
     monthly_options_dates = [first_expiry, this_monthly_opex]
 
-    strike_prices = option_data["strike_price"].to_numpy()
+    strike_prices = option_data["strike_price"].to_numpy(dtype=np.float64).copy()
     expirations = option_data["expiration_date"].to_numpy()
-    time_till_exp = option_data["time_till_exp"].to_numpy()
-    opt_call_ivs = option_data["call_iv"].to_numpy()
-    opt_put_ivs = option_data["put_iv"].to_numpy()
-    call_open_interest = option_data["call_open_int"].to_numpy()
-    put_open_interest = option_data["put_open_int"].to_numpy()
+    time_till_exp = option_data["time_till_exp"].to_numpy(dtype=np.float64).copy()
+    opt_call_ivs = option_data["call_iv"].to_numpy(dtype=np.float64).copy()
+    opt_put_ivs = option_data["put_iv"].to_numpy(dtype=np.float64).copy()
+    call_open_interest = option_data["call_open_int"].to_numpy(dtype=np.float64).copy()
+    put_open_interest = option_data["put_open_int"].to_numpy(dtype=np.float64).copy()
 
     nonzero_call_cond = (time_till_exp > 0) & (opt_call_ivs > 0)
     nonzero_put_cond = (time_till_exp > 0) & (opt_put_ivs > 0)
-    np_spot_price = np.array([[spot_price]])
+    np_spot_price = np.array([[spot_price]], dtype=np.float64)
 
     call_dp, call_cdf_dp, call_pdf_dp = stats.calc_dp_cdf_pdf(
         np_spot_price,
@@ -196,6 +196,27 @@ async def calc_exposures(
     )
 
     # ==============================================================================
+    # NUEVO: CÁLCULO DE VEGA Y VOMMA EXPOSURES
+    # ==============================================================================
+
+    option_data["call_vegex"] = option_data["call_vega"].to_numpy() * call_open_interest * 100
+    option_data["put_vegex"] = option_data["put_vega"].to_numpy() * put_open_interest * 100
+
+    call_vegex_2d = option_data["call_vegex"].to_numpy().reshape(1, -1)
+    put_vegex_2d = option_data["put_vegex"].to_numpy().reshape(1, -1)
+
+    option_data["call_vommex"] = np.where(
+        nonzero_call_cond,
+        stats.calc_vomma_ex(call_vegex_2d, call_dp, opt_call_ivs, time_till_exp)[0],
+        0,
+    )
+    option_data["put_vommex"] = np.where(
+        nonzero_put_cond,
+        stats.calc_vomma_ex(put_vegex_2d, put_dp, opt_put_ivs, time_till_exp)[0],
+        0,
+    )
+
+    # ==============================================================================
 
     # Calculate total and scale down
     option_data["total_delta"] = (
@@ -217,6 +238,14 @@ async def calc_exposures(
 
     option_data["total_zomma"] = (
         option_data["call_zomma"].to_numpy() + option_data["put_zomma"].to_numpy()
+    ) / 10**9
+
+    option_data["total_vega"] = (
+        option_data["call_vegex"].to_numpy() + option_data["put_vegex"].to_numpy()
+    ) / 10**9
+
+    option_data["total_vomma"] = (
+        option_data["call_vommex"].to_numpy() + option_data["put_vommex"].to_numpy()
     ) / 10**9
 
     df_agg_strike_mean = (
@@ -270,6 +299,16 @@ async def calc_exposures(
         "ex_fri": np.array([]),
     }
     totalzomma = {
+        "all": np.array([]),
+        "ex_next": np.array([]),
+        "ex_fri": np.array([]),
+    }
+    totalvega = {
+        "all": np.array([]),
+        "ex_next": np.array([]),
+        "ex_fri": np.array([]),
+    }
+    totalvomma = {
         "all": np.array([]),
         "ex_next": np.array([]),
         "ex_fri": np.array([]),
@@ -424,12 +463,50 @@ async def calc_exposures(
         0,
     )
 
+    call_vega_ex = np.where(
+        nonzero_call_cond,
+        stats.calc_vega_ex(
+            levels,
+            opt_call_ivs,
+            time_till_exp,
+            dividend_yield,
+            call_open_interest,
+            call_pdf_dp,
+        ),
+        0,
+    )
+    put_vega_ex = np.where(
+        nonzero_put_cond,
+        stats.calc_vega_ex(
+            levels,
+            opt_put_ivs,
+            time_till_exp,
+            dividend_yield,
+            put_open_interest,
+            put_pdf_dp,
+        ),
+        0,
+    )
+
+    call_vomma_ex = np.where(
+        nonzero_call_cond,
+        stats.calc_vomma_ex(call_vega_ex, call_dp, opt_call_ivs, time_till_exp),
+        0,
+    )
+    put_vomma_ex = np.where(
+        nonzero_put_cond,
+        stats.calc_vomma_ex(put_vega_ex, put_dp, opt_put_ivs, time_till_exp),
+        0,
+    )
+
     totaldelta["all"] = (call_delta_ex.sum(axis=1) + put_delta_ex.sum(axis=1)) / 10**9
     totalgamma["all"] = (call_gamma_ex.sum(axis=1) - put_gamma_ex.sum(axis=1)) / 10**9
     totalvanna["all"] = (call_vanna_ex.sum(axis=1) - put_vanna_ex.sum(axis=1)) / 10**9
     totalcharm["all"] = (call_charm_ex.sum(axis=1) - put_charm_ex.sum(axis=1)) / 10**9
     totaldgex["all"] = (call_dgex_ex.sum(axis=1) + put_dgex_ex.sum(axis=1)) / 10**9
     totalzomma["all"] = (call_zomma_ex.sum(axis=1) + put_zomma_ex.sum(axis=1)) / 10**9
+    totalvega["all"] = (call_vega_ex.sum(axis=1) + put_vega_ex.sum(axis=1)) / 10**9
+    totalvomma["all"] = (call_vomma_ex.sum(axis=1) + put_vomma_ex.sum(axis=1)) / 10**9
 
     expirs_next_expiry = expirations == first_expiry
     expirs_up_to_monthly_opex = expirations <= this_monthly_opex
@@ -458,6 +535,14 @@ async def calc_exposures(
             np.where(expirs_next_expiry, call_zomma_ex, 0).sum(axis=1)
             + np.where(expirs_next_expiry, put_zomma_ex, 0).sum(axis=1)
         ) / 10**9
+        totalvega["ex_next"] = (
+            np.where(expirs_next_expiry, call_vega_ex, 0).sum(axis=1)
+            + np.where(expirs_next_expiry, put_vega_ex, 0).sum(axis=1)
+        ) / 10**9
+        totalvomma["ex_next"] = (
+            np.where(expirs_next_expiry, call_vomma_ex, 0).sum(axis=1)
+            + np.where(expirs_next_expiry, put_vomma_ex, 0).sum(axis=1)
+        ) / 10**9
         if expir == "all":
             totaldelta["ex_fri"] = (
                 np.where(expirs_up_to_monthly_opex, call_delta_ex, 0).sum(axis=1)
@@ -482,6 +567,14 @@ async def calc_exposures(
             totalzomma["ex_fri"] = (
                 np.where(expirs_up_to_monthly_opex, call_zomma_ex, 0).sum(axis=1)
                 + np.where(expirs_up_to_monthly_opex, put_zomma_ex, 0).sum(axis=1)
+            ) / 10**9
+            totalvega["ex_fri"] = (
+                np.where(expirs_up_to_monthly_opex, call_vega_ex, 0).sum(axis=1)
+                + np.where(expirs_up_to_monthly_opex, put_vega_ex, 0).sum(axis=1)
+            ) / 10**9
+            totalvomma["ex_fri"] = (
+                np.where(expirs_up_to_monthly_opex, call_vomma_ex, 0).sum(axis=1)
+                + np.where(expirs_up_to_monthly_opex, put_vomma_ex, 0).sum(axis=1)
             ) / 10**9
 
     zero_cross_idx = np.where(np.diff(np.sign(totaldelta["all"])))[0]
@@ -526,6 +619,8 @@ async def calc_exposures(
         totalcharm,
         totaldgex,
         totalzomma,
+        totalvega,
+        totalvomma,
         zerodelta,
         zerogamma,
         call_ivs,
@@ -849,6 +944,8 @@ async def process_ticker(session, ticker, expir, greek_filter="gamma"):
             "totalcharm",
             "totaldgex",
             "totalzomma",
+            "totalvega",
+            "totalvomma",
             "zerodelta",
             "zerogamma",
             "call_ivs",
@@ -891,7 +988,7 @@ async def process_ticker(session, ticker, expir, greek_filter="gamma"):
         # Usamos timestamp en el nombre para historial, o fijo para sobrescribir (según prefieras)
         # Para tu dashboard web, probablemente prefieras sobrescribir o tener un "latest".
         # Aquí guardo con timestamp como tenías.
-ny_time = pd.Timestamp.now(tz="America/New_York")
+        ny_time = pd.Timestamp.now(tz="America/New_York")
         fname = f"{t_san}_{exp_clean}_ExposureData_{ny_time.strftime('%Y%m%d_%H%M%S')}.json"
 
         # OP
