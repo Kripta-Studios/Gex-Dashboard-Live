@@ -26,7 +26,7 @@ load_dotenv()
 TICKERS = ["SPX", "Ticker"]  # Yahoo Finance format
 # EXPIRATIONS = ["0dte", "1dte", "weekly", "opex", "monthly", "all"]
 EXPIRATIONS = ["0dte", "1dte", "weekly"]
-GREEKS = ["delta", "gamma", "vanna", "charm", "dgex", "zomma"]
+GREEKS = ["delta", "gamma", "vanna", "charm", "dgex", "zomma", "vega", "vomma"]
 VISUALIZATIONS = {
     "delta": ["Absolute Delta Exposure", "Delta Exposure By Calls/Puts"],
     "gamma": ["Absolute Gamma Exposure", "Gamma Exposure By Calls/Puts"],
@@ -34,6 +34,8 @@ VISUALIZATIONS = {
     "charm": ["Absolute Charm Exposure"],
     "dgex": ["Absolute Dgex Exposure", "Dgex Exposure By Calls/Puts"],
     "zomma": ["Absolute Zomma Exposure"],
+    "vega": ["Absolute Vega Exposure"],
+    "vomma": ["Absolute Vomma Exposure"],
 }
 PLOT_DIR = "plots"
 TZ = "America/New_York"  # EST timezone
@@ -44,36 +46,48 @@ DISCORD_CHANNEL_IDS = {
     "SPX/0dte/charm": 1387377438589194270,
     "SPX/0dte/dgex": 1456248917258932421,
     "SPX/0dte/zomma": 1456249198726086696,
+    "SPX/0dte/vega": 1472633054714532117,
+    "SPX/0dte/vomma": 1472633270234644542,
     "SPX/1dte/delta": 1387377603031207976,
     "SPX/1dte/gamma": 1387376325399941231,
     "SPX/1dte/vanna": 1387376810559275158,
     "SPX/1dte/charm": 1387377460810744019,
     "SPX/1dte/dgex": 1456248945771675678,
     "SPX/1dte/zomma": 1456249231982596137,
+    "SPX/1dte/vega": 1472633092706668637,
+    "SPX/1dte/vomma": 1472633286915391665,
     "SPX/opex/delta": 1387377627505102909,
     "SPX/opex/gamma": 1387376441389486131,
     "SPX/opex/vanna": 1387376838757711913,
     "SPX/opex/charm": 1387377489562828952,
     "SPX/opex/dgex": 1456248999639126133,
     "SPX/opex/zomma": 1456249282951905310,
+    "SPX/opex/vega": 1472633140714405918,
+    "SPX/opex/vomma": 1472633330037035194,
     "SPX/monthly/delta": 1387377650565382234,
     "SPX/monthly/gamma": 1387376549967167569,
     "SPX/monthly/vanna": 1387376930101395528,
     "SPX/monthly/charm": 1387377520105619627,
     "SPX/monthly/dgex": 1456249040927854602,
     "SPX/monthly/zomma": 1456249572384051333,
+    "SPX/monthly/vega": 1472633181273329897,
+    "SPX/monthly/vomma": 1472633354430972064,
     "SPX/all/delta": 1387377665589116938,
     "SPX/all/gamma": 1387376590912229396,
     "SPX/all/vanna": 1387376953237180537,
     "SPX/all/charm": 1387377535570018404,
     "SPX/all/dgex": 1456249060263465000,
     "SPX/all/zomma": 1456249589496549522,
+    "SPX/all/vega": 1472633199137128609,
+    "SPX/all/vomma": 1472633407992496219,
     "SPX/weekly/delta": 1393732731413987434,
     "SPX/weekly/gamma": 1393732774296420352,
     "SPX/weekly/vanna": 1393732835923198033,
     "SPX/weekly/charm": 1393732884933906512,
     "SPX/weekly/dgex": 1456248980068368529,
     "SPX/weekly/zomma": 1456249264144388208,
+    "SPX/weekly/vega": 1472633118497312879,
+    "SPX/weekly/vomma": 1472633311322181827,
     "Ticker/0dte/delta": 1387378772805947492,
     "Ticker/0dte/gamma": 1387377700465016862,
     "Ticker/0dte/vanna": 1387378541284425828,
@@ -100,12 +114,16 @@ DISCORD_CHANNEL_IDS = {
     "SPY/0dte/vanna": 1448657151198367874,
     "SPY/0dte/zomma": 1457671485190705162,
     "SPY/0dte/dgex": 1457671508959821845,
+    "SPY/0dte/vega": 1472633954057195713,
+    "SPY/0dte/vomma": 1472634061380911285,
     "QQQ/weekly/gamma": 1405682477313429624,
     "QQQ/0dte/delta": 1462069803228332179,
     "QQQ/0dte/gamma": 1436339202663911499,
     "QQQ/0dte/vanna": 1448659272161562727,
     "QQQ/0dte/zomma": 1457671530074079304,
     "QQQ/0dte/dgex": 1457671555965386928,
+    "QQQ/0dte/vega": 1472634088719651054,
+    "QQQ/0dte/vomma": 1472634111121293537,
 }
 
 # Initialize cache

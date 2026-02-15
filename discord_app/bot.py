@@ -35,9 +35,9 @@ async def load(ctx, ticker: str, expiration: str, greek: str):
             f"Invalid expiration: {expiration}. Must be 0dte, 1dte, weekly, opex, monthly, or all."
         )
         return
-    if greek.lower() not in ["delta", "gamma", "vanna", "charm", "zomma", "dgex"]:
+    if greek.lower() not in ["delta", "gamma", "vanna", "charm", "zomma", "dgex", "vega", "vomma"]:
         await ctx.send(
-            f"Invalid Greek: {greek}. Must be delta, gamma, vanna, or charm."
+            f"Invalid Greek: {greek}. Must be delta, gamma, vanna, charm, zomma, dgex, vega, or vomma."
         )
         return
     await ctx.send(f"Generating plots for {ticker}/{expiration}/{greek.lower()}...")
