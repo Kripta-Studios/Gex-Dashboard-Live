@@ -42,7 +42,8 @@ from dotenv import load_dotenv
 import numpy as np
 import torch
 
-from hybrid_model import load_hybrid_model, get_device, FEATURE_COLUMNS
+# Neural Model imports
+from neural.hybrid_model import get_hybrid_model, FEATURE_COLUMNS, get_device, load_hybrid_model
 from trading_wrapper import TradingWrapper, TradeSignal, MarketRegime
 
 # --- CONFIGURATION ---
@@ -104,7 +105,7 @@ TICKERS = [
     "SPY",  # ETF tracking SPX
     "QQQ",  # Nasdaq ETF
 ]
-FUTURES_TO_TRACK = ["/ES", "/NQ"]  # Futures
+FUTURES_TO_TRACK = []  # Futures
 FUTURES_GREEKS_MAPPING = {"/ES": "SPX", "/NQ": "QQQ"}
 
 # Point values for P&L calculation (only trained tickers)
@@ -598,8 +599,8 @@ class TradingBotWrapper:
         if current_price == 0:
             return None
         
-        # 0DTE Greek exposures (6 greeks)
-        for greek in ["totalgamma", "totalvanna", "totalcharm", "totaldgex", "totalzomma", "totaldelta"]:
+        # 0DTE Greek exposures (8 greeks — includes Vega and Vomma)
+        for greek in ["totalgamma", "totalvanna", "totalcharm", "totaldgex", "totalzomma", "totaldelta", "totalvega", "totalvomma"]:
             data = greek_data.get(greek, {}).get("all", [])
             net_value = sum(data) if data else 0
             name = greek.replace("total", "net_")
@@ -611,6 +612,7 @@ class TradingBotWrapper:
         features["charm_bullish"] = 1 if features.get("net_charm", 0) > 0 else 0
         features["dgex_sticky"] = 1 if abs(features.get("net_dgex", 0)) > 1e6 else 0
         features["zomma_stabilizing"] = 1 if features.get("net_zomma", 0) > 0 else 0
+        features["vega_elevated"] = 1 if abs(features.get("net_vega", 0)) > 0.1 else 0
         
         # Key levels (0DTE)
         strikes = greek_data.get("strikes", greek_data.get("levels", []))
@@ -643,9 +645,30 @@ class TradingBotWrapper:
             features["dist_to_max_dgex"] = (current_price - max_dgex_strike) / current_price
             features["dist_to_min_dgex"] = (current_price - min_dgex_strike) / current_price
         
+        # Vega/Vomma key levels
+        vega_data = greek_data.get("totalvega", {}).get("all", [])
+        vomma_data = greek_data.get("totalvomma", {}).get("all", [])
+        
+        max_vega_strike = current_price
+        min_vega_strike = current_price
+        max_vomma_strike = current_price
+        min_vomma_strike = current_price
+        
+        if strikes and vega_data and len(strikes) == len(vega_data):
+            max_vega_strike = strikes[np.argmax(vega_data)]
+            min_vega_strike = strikes[np.argmin(vega_data)]
+            features["dist_to_max_vega"] = (current_price - max_vega_strike) / current_price
+            features["dist_to_min_vega"] = (current_price - min_vega_strike) / current_price
+        
+        if strikes and vomma_data and len(strikes) == len(vomma_data):
+            max_vomma_strike = strikes[np.argmax(vomma_data)]
+            min_vomma_strike = strikes[np.argmin(vomma_data)]
+            features["dist_to_max_vomma"] = (current_price - max_vomma_strike) / current_price
+            features["dist_to_min_vomma"] = (current_price - min_vomma_strike) / current_price
+        
         # ===== WEEKLY GREEKS =====
         if weekly_data:
-            for greek in ["totalgamma", "totalvanna", "totalcharm", "totaldgex", "totalzomma", "totaldelta"]:
+            for greek in ["totalgamma", "totalvanna", "totalcharm", "totaldgex", "totalzomma", "totaldelta", "totalvega", "totalvomma"]:
                 wk_arr = weekly_data.get(greek, {}).get("all", [])
                 name = "wk_" + greek.replace("total", "net_")
                 features[name] = sum(wk_arr) if wk_arr else 0
@@ -667,6 +690,13 @@ class TradingBotWrapper:
             features["wk_vanna_bullish"] = 1 if features.get("wk_net_vanna", 0) > 0 else 0
             features["wk_dgex_sticky"] = 1 if features.get("wk_net_dgex", 0) > 0 else 0
             features["wk_zomma_stabilizing"] = 1 if features.get("wk_net_zomma", 0) > 0 else 0
+            features["wk_vega_elevated"] = 1 if abs(features.get("wk_net_vega", 0)) > 0.1 else 0
+            
+            # Weekly Vega/Vomma key levels
+            wk_vega = weekly_data.get("totalvega", {}).get("all", [])
+            if wk_strikes and wk_vega and len(wk_strikes) == len(wk_vega):
+                features["wk_dist_to_max_vega"] = (current_price - wk_strikes[np.argmax(wk_vega)]) / current_price
+                features["wk_dist_to_min_vega"] = (current_price - wk_strikes[np.argmin(wk_vega)]) / current_price
         
         # ===== CROSS-EXPIRY DIVERGENCE =====
         def _sign_div(a, b):
@@ -678,6 +708,8 @@ class TradingBotWrapper:
         features["vanna_0dte_vs_wk"] = _sign_div(features.get("net_vanna", 0), features.get("wk_net_vanna", 0))
         features["dgex_0dte_vs_wk"] = _sign_div(features.get("net_dgex", 0), features.get("wk_net_dgex", 0))
         features["delta_0dte_vs_wk"] = _sign_div(features.get("net_delta", 0), features.get("wk_net_delta", 0))
+        features["vega_0dte_vs_wk"] = _sign_div(features.get("net_vega", 0), features.get("wk_net_vega", 0))
+        features["vomma_0dte_vs_wk"] = _sign_div(features.get("net_vomma", 0), features.get("wk_net_vomma", 0))
         
         # IB levels
         if ib_data and "analysis" in ib_data:
@@ -700,6 +732,37 @@ class TradingBotWrapper:
             fib_161 = ib_high + (ib_range * 0.618)
             features["dist_fib_127_up"] = (current_price - fib_127) / current_price
             features["dist_fib_161_up"] = (current_price - fib_161) / current_price
+            
+            # Extended Fibonacci (bullish + bearish)
+            fib_200_up = ib_high + (ib_range * 1.0)
+            fib_127_dn = ib_low - (ib_range * 0.272)
+            fib_161_dn = ib_low - (ib_range * 0.618)
+            fib_200_dn = ib_low - (ib_range * 1.0)
+            features["dist_fib_200_up"] = (current_price - fib_200_up) / current_price
+            features["dist_fib_127_dn"] = (current_price - fib_127_dn) / current_price
+            features["dist_fib_161_dn"] = (current_price - fib_161_dn) / current_price
+            features["dist_fib_200_dn"] = (current_price - fib_200_dn) / current_price
+            
+            # RBF Confluences
+            def _rbf(a, b, sigma=0.05):
+                if current_price == 0 or a is None or b is None or a == 0 or b == 0:
+                    return 0.0
+                d = abs(a - b) / current_price
+                v = np.exp(-d**2 / (2 * sigma**2))
+                return float(np.clip(v, 0.0, 1.0)) if np.isfinite(v) else 0.0
+            
+            max_gamma_s = features.get("_max_gamma_strike", max_gamma_strike if 'max_gamma_strike' in dir() else current_price)
+            min_gamma_s = features.get("_min_gamma_strike", min_gamma_strike if 'min_gamma_strike' in dir() else current_price)
+            
+            # IB × Greek confluences
+            features["confluence_ib_high_max_gamma"] = _rbf(ib_high, max_gamma_s)
+            features["confluence_ib_low_min_gamma"] = _rbf(ib_low, min_gamma_s)
+            features["confluence_ib_high_max_vega"] = _rbf(ib_high, max_vega_strike)
+            features["confluence_ib_low_max_dgex"] = _rbf(ib_low, max_dgex_strike if 'max_dgex_strike' in dir() else current_price)
+            # Fib × Greek confluences
+            features["confluence_fib127_bull_max_gamma"] = _rbf(fib_127, max_gamma_s)
+            features["confluence_fib161_bull_max_vega"] = _rbf(fib_161, max_vega_strike)
+            features["confluence_fib127_bear_min_gamma"] = _rbf(fib_127_dn, min_gamma_s)
         
         # IV/VIX features (defaults if not available from wrapper's regime filter)
         features["atm_iv"] = 0.2  # Default 20%
@@ -720,6 +783,8 @@ class TradingBotWrapper:
         features["dgex_gamma_ratio"] = features["net_dgex"] / (abs(features["net_gamma"]) + epsilon)
         features["charm_vanna_ratio"] = features["net_charm"] / (abs(features["net_vanna"]) + epsilon)
         features["delta_gamma_ratio"] = features.get("net_delta", 0) / (abs(features["net_gamma"]) + epsilon)
+        features["vega_gamma_ratio"] = features.get("net_vega", 0) / (abs(features["net_gamma"]) + epsilon)
+        features["vomma_vega_ratio"] = features.get("net_vomma", 0) / (abs(features.get("net_vega", 0)) + epsilon)
 
         # 2. Temporal Deltas
         prev = self.prev_features.get(ticker)
@@ -734,6 +799,9 @@ class TradingBotWrapper:
             # Cross-Features
             features["gamma_momentum"] = features["gamma_change"] * np.sign(features["net_gamma"])
             features["price_vs_dgex_magnet"] = features["spot_change"] * np.sign((current_price - features.get("max_dgex_strike", current_price))/current_price) if current_price > 0 else 0.0
+            # Vega/Vomma temporal deltas
+            features["vega_change"] = features.get("net_vega", 0) - prev.get("net_vega", 0)
+            features["vomma_change"] = features.get("net_vomma", 0) - prev.get("net_vomma", 0)
         else:
             # First run: no change
             features["gamma_change"] = 0.0
@@ -743,6 +811,8 @@ class TradingBotWrapper:
             features["spot_change"] = 0.0
             features["gamma_momentum"] = 0.0
             features["price_vs_dgex_magnet"] = 0.0
+            features["vega_change"] = 0.0
+            features["vomma_change"] = 0.0
 
         # Update cache
         self.prev_features[ticker] = {
@@ -750,7 +820,9 @@ class TradingBotWrapper:
             "net_gamma": features["net_gamma"],
             "net_vanna": features["net_vanna"],
             "net_dgex": features["net_dgex"],
-            "net_delta": features.get("net_delta", 0)
+            "net_delta": features.get("net_delta", 0),
+            "net_vega": features.get("net_vega", 0),
+            "net_vomma": features.get("net_vomma", 0),
         }
         
         # Build feature vector
