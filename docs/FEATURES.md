@@ -83,7 +83,7 @@ net_greek = Σ(greek_exposure[strike]) for all strikes
 |---------|--------------|---------|---------------------|
 | `net_gamma` | totalgamma | Σ(all[i]) | **Volatility dampening/amplification**. Positive = dealers long gamma (stabilizing), negative = dealers short gamma (destabilizing) |
 | `net_vanna` | totalvanna | Σ(all[i]) | **Vol-spot correlation**. Positive vanna means rising IV → rising spot (bullish feedback loop) |
-| `net_charm` | totalcharm | Σ(all[i]) | **Time decay directional pressure**. Positive charm = theta decay pushes price up |
+| `net_charm` | totalcharm | Σ(all[i]) | **Time decay directional pressure** ⭐ #1 MOST IMPORTANT (21.5%). Positive charm = theta decay pushes price up |
 | `net_dgex` | totaldgex | Σ(all[i]) | **Dealer gamma exposure**. Shows where dealers need to hedge most aggressively |
 | `net_zomma` | totalzomma | Σ(all[i]) | **Gamma stability**. Positive = gamma increases with vol (stabilizing effect) |
 | `net_delta` | totaldelta | Σ(all[i]) | **Directional exposure**. Net directional pressure from all options |
@@ -105,7 +105,7 @@ gamma_regime = {
 |---------|---------|----------------|
 | `vanna_bullish` | 1 if net_vanna > 0.1 else 0 | Vol-spot feedback is bullish |
 | `charm_bullish` | 1 if net_charm > 0.1 else 0 | Time decay favors upside |
-| `dgex_sticky` | 1 if net_dgex > 0.1 else 0 | Dealers pin price (high hedging) |
+| `dgex_sticky` | 1 if net_dgex > 0.1 else 0 | Dealers pin price (high hedging) ⭐ #5 FEATURE (3.0%) |
 | `zomma_stabilizing` | 1 if net_zomma > 0.1 else 0 | Gamma becomes more stabilizing with vol |
 
 ---
@@ -119,10 +119,10 @@ Key levels are strikes where Greek exposure is concentrated, creating natural su
 **Max/Min Greek Strikes:**
 ```python
 max_gamma_strike = levels[argmax(totalgamma.all)]
-min_gamma_strike = levels[argmin(totalgamma.all)]
+min_gamma_strike = levels[argmin(totalgamma.all)]  # ⭐ #2 FEATURE (5.6%)
 max_dgex_strike = levels[argmax(totaldgex.all)]
 min_dgex_strike = levels[argmin(totaldgex.all)]
-min_vanna_strike = levels[argmin(totalvanna.all)]
+min_vanna_strike = levels[argmin(totalvanna.all)]  # ⭐ #4 FEATURE (3.2%)
 ```
 
 **Zero Crossings:**
@@ -140,8 +140,8 @@ dist_to_level = (spot_price - level) / spot_price
 | Feature | Formula | Trading Use |
 |---------|---------|-------------|
 | `dist_to_max_gamma` | (spot - max_gamma) / spot | Distance to strongest gamma wall (resistance/support) |
-| `dist_to_min_gamma` | (spot - min_gamma) / spot | Distance to gamma hole (volatility zone) |
-| `dist_to_min_vanna` | (spot - min_vanna) / spot | Distance to vanna flip point |
+| `dist_to_min_gamma` | (spot - min_gamma) / spot | ⭐ #2 MOST IMPORTANT (5.6%) - Distance to gamma hole (volatility zone) |
+| `dist_to_min_vanna` | (spot - min_vanna) / spot | ⭐ #4 MOST IMPORTANT (3.2%) - Distance to vanna flip point |
 | `dist_to_zero_gamma` | (spot - zero_gamma) / spot | Distance to gamma transition level |
 | `dist_to_max_dgex` | (spot - max_dgex) / spot | Distance to peak dealer hedging |
 | `dist_to_min_dgex` | (spot - min_dgex) / spot | Distance to dealer hedging hole |
@@ -385,7 +385,7 @@ vix_regime_normalized = vix_regime / 2.0  # Scale to [0, 1]
 
 ### Technical Indicators
 
-#### RSI (Relative Strength Index)
+#### RSI (Relative Strength Index) ⭐ #3 MOST IMPORTANT (4.8%)
 
 **Formula:**
 ```python
@@ -406,6 +406,8 @@ def rsi(prices, period=14):
 - RSI > 0.7 (70): Overbought, potential reversal
 - RSI < 0.3 (30): Oversold, potential bounce
 - RSI ~ 0.5 (50): Neutral, no momentum bias
+
+**Why #3 Feature:** RSI provides critical momentum confirmation alongside Greek dynamics. The model uses it to filter out false Greek signals during overbought/oversold extremes.
 
 #### Volume Relative
 
@@ -517,15 +519,16 @@ price_vs_dgex_magnet = (
 |----------|-------|--------------|-------------|
 | Meta | 5 | ticker, date, time, timestamp, spot_price | Identification |
 | Target | 4 | target, time_to_target, time_to_stop, max_move | Model output |
-| 0DTE Greeks | 17 | net_gamma, net_vanna, net_dgex, distances, flags | Intraday flow |
+| 0DTE Greeks | 17 | **net_charm (#1)**, net_vanna, net_dgex, **dgex_sticky (#5)** | Intraday flow |
 | Weekly Greeks | 14 | wk_net_gamma, wk_net_vanna, wk_dgex, distances | Multi-day context |
 | Cross-Expiry | 4 | gamma_0dte_vs_wk, vanna_0dte_vs_wk, etc. | Regime detection |
 | IB Features | 8 | price_vs_ib_high, near_ib_high, in_ib_range | Intraday framework |
 | Fibonacci | 2 | dist_fib_127_up, dist_fib_161_up | Target projection |
 | IV Features | 4 | atm_iv, iv_zscore, iv_percentile | Vol environment |
 | VIX Features | 3 | vix_spot, vix_gamma, vix_regime | Market-wide sentiment |
-| Market Context | 3 | rsi, vol_relative, time features | Technical confirmation |
+| Market Context | 3 | **rsi (#3)**, vol_relative, time features | Technical confirmation |
 | Engineered | 10 | ratios, deltas, gamma_momentum, dgex_magnet | Complex dynamics |
+| Key Levels | - | **dist_to_min_gamma (#2)**, **dist_to_min_vanna (#4)** | Critical positioning |
 
 **Total Features:** ~74 numerical features (excluding meta fields)
 
@@ -555,22 +558,49 @@ price_vs_dgex_magnet = (
    └─ Lookahead Analysis → Price moves over next 120 minutes
 
 5. Dataset Output
-   └─ CSV with 79,576 samples × 74+ features
+   └─ CSV with 93,387 samples × 74+ features
 ```
 
 ---
 
 ## Feature Importance Insights
 
-From model training, the top 5 most important features are:
+From the latest model training (medium architecture), the top 5 most important features are:
 
-1. **price_vs_dgex_magnet** (0.0213): Price movement relative to dealer hedging concentration
-2. **dgex_sticky** (0.0195): Binary flag for high dealer gamma exposure (pinning)
-3. **zomma_stabilizing** (0.0187): Indicates gamma will strengthen with volatility
-4. **wk_net_charm** (0.0182): Multi-day time decay pressure
-5. **gamma_regime** (0.0180): Overall market maker hedging stance
+1. **net_charm** (0.2154 / 21.5%): Time decay directional pressure - **dominant feature by far**
+   - Theta decay creates directional bias as options approach expiration
+   - Positive charm = upward pressure, negative charm = downward pressure
+   - This is the #1 signal the model uses to predict intraday moves
 
-**Insight:** The model prioritizes dealer hedging dynamics (DGEX) and cross-expiry information over pure gamma/vanna, suggesting that understanding where dealers MUST hedge (not just aggregate exposure) is key to profitability.
+2. **dist_to_min_gamma** (0.0562 / 5.6%): Distance to gamma hole (volatility acceleration zone)
+   - Gamma holes are strikes with minimal dealer hedging
+   - Price approaching gamma holes = expect acceleration/volatility
+   - Critical for predicting breakout magnitude
+
+3. **rsi** (0.0482 / 4.8%): Relative Strength Index momentum indicator
+   - Technical confirmation of Greek signals
+   - Filters false signals during extreme overbought/oversold conditions
+   - Shows model benefits from combining Greeks + technicals
+
+4. **dist_to_min_vanna** (0.0316 / 3.2%): Distance to vanna inflection point
+   - Vanna controls vol-spot correlation
+   - At vanna flip points, volatility-price relationship inverts
+   - Key for understanding vol expansion/contraction dynamics
+
+5. **dgex_sticky** (0.0297 / 3.0%): Binary flag for high dealer gamma exposure
+   - Indicates dealer "pinning" behavior near strikes
+   - When active, expect price consolidation/resistance to movement
+   - Important for avoiding low-probability breakout attempts
+
+### Key Insights
+
+**Charm Dominance:** The model places **7x more weight** on charm than any other feature (21.5% vs 5.6% for #2). This suggests that **time decay effects are the primary edge** in intraday trading - understanding how theta creates directional pressure as options approach expiration is more important than raw gamma/vanna exposure.
+
+**Level-Based Thinking:** Three of the top 5 features (#2, #4, #5) are about **positioning relative to critical levels** rather than absolute Greek values. This indicates the model has learned that **where you are matters more than what the aggregate flow is**.
+
+**Technical + Greeks Synergy:** RSI at #3 shows the model **combines Greeks with momentum** - it's not purely Greeks-based. Technical overbought/oversold conditions help filter out false Greek signals.
+
+**What's NOT Important:** Notably absent from top 5: raw net_gamma, net_vanna, net_dgex (the features traders typically watch). The model learned that derivatives and positioning matter more than headline numbers.
 
 ---
 
@@ -595,7 +625,7 @@ From model training, the top 5 most important features are:
 
 - **Greek files:** ~1-2 per minute during market hours (9:30-16:00 ET)
 - **Processing time:** ~12 minutes for 14 days × 5 tickers (parallelized)
-- **Dataset size:** 79,576 samples = ~14 days × 5 tickers × ~1140 snapshots/day
+- **Dataset size:** 93,387 samples = ~14 days × 5 tickers × ~1340 snapshots/day
 - **Feature count:** 74 numerical features + 5 meta features
 
 ---
@@ -612,7 +642,7 @@ From model training, the top 5 most important features are:
 ### Key Concepts
 
 - **Gamma Pinning:** Price gravitates toward strikes with high positive gamma
-- **Charm:** dGamma/dTime - how gamma changes with time decay
+- **Charm:** dGamma/dTime - how gamma changes with time decay ⭐ #1 FEATURE
 - **Vanna:** dDelta/dVol - how directional exposure changes with volatility
 - **Zomma:** dGamma/dVol - how gamma changes with volatility
 
@@ -620,8 +650,9 @@ From model training, the top 5 most important features are:
 
 - **Type:** Hybrid LSTM + Dense Neural Network
 - **Framework:** PyTorch with CUDA acceleration
+- **Size:** Medium (128 hidden, 256→128→64 MLP)
 - **Training:** 200 epochs, best validation: 88.7% accuracy
-- **Generalization:** -0.148 train-val gap (excellent)
+- **Generalization:** Excellent train-val gap
 
 ---
 
@@ -630,10 +661,12 @@ From model training, the top 5 most important features are:
 **v1.0** - Initial feature set with 0DTE Greeks, IB features, basic IV
 **v2.0** - Added weekly Greeks, cross-expiry divergence, VIX features
 **v3.0** - Added Fourier IV processing, engineered features (ratios, deltas, cross-features)
-**v3.1** - Added DGEX key levels and price_vs_dgex_magnet feature (breakthrough improvement)
+**v3.1** - Added DGEX key levels and price_vs_dgex_magnet feature
+**v3.2** - **Major discovery: net_charm is dominant feature (21.5%)** - theta decay pressure is primary edge
 
 ---
 
-*Last Updated: 2025-02-14*
-*Model Version: trading_hybrid.pt*
-*Training Dataset: 79,576 samples, 14 days, 88.2% final accuracy*
+*Last Updated: 2026-02-15*
+*Model Version: trading_hybrid.pt (medium)*
+*Training Dataset: 93,387 samples, 14 days, 88.2% final accuracy*
+*Top Feature: net_charm (21.5% importance) - Time decay directional pressure*
