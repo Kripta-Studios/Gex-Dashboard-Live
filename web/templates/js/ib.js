@@ -84,7 +84,7 @@ function createIBPanel(chartObj, index) {
  * @param {Object} jsonData - IB data object
  */
 function renderIBChart(canvas, jsonData) {
-	// 1. Obtener la hora actual en Nueva York
+    // 1. Obtener la hora actual en Nueva York
     const now = new Date();
     const nyTime = now.toLocaleTimeString('en-US', {
         timeZone: 'America/New_York',
@@ -118,8 +118,8 @@ function renderIBChart(canvas, jsonData) {
     const currentPrice = jsonData.analysis.current_price;
 
     const ibRange = jsonData.analysis.ib_range;
-	const upperLimit = currentPrice * 1.015;
-	const lowerLimit = currentPrice * 0.985;
+    const upperLimit = currentPrice * 1.015;
+    const lowerLimit = currentPrice * 0.985;
 
     const datasets = [];
 
@@ -160,14 +160,14 @@ function renderIBChart(canvas, jsonData) {
         [1.272, 1.618, 2.0, 2.272, 2.618, 3, 3.272, 3.618, 4].forEach((ext, i) => {
             const val = ibLow + (ibRange * ext);
             if (val >= lowerLimit && val <= upperLimit) {
-            datasets.push(makeHLine(val, fibColors[i % fibColors.length], `Fib ${ext}`, [2, 2]));
+                datasets.push(makeHLine(val, fibColors[i % fibColors.length], `Fib ${ext}`, [2, 2]));
             }
         });
     } else {
         [-0.272, -0.618, -1.0, -1.272, -1.618, -2, -2.272, -2.618, -3].forEach((ext, i) => {
             const val = ibLow + (ibRange * ext);
-            if (val >= lowerLimit && val <= upperLimit) { 
-            datasets.push(makeHLine(val, fibColors[i % fibColors.length], `Fib ${ext}`, [2, 2]));
+            if (val >= lowerLimit && val <= upperLimit) {
+                datasets.push(makeHLine(val, fibColors[i % fibColors.length], `Fib ${ext}`, [2, 2]));
             }
         });
     }
@@ -176,7 +176,9 @@ function renderIBChart(canvas, jsonData) {
     const greekColors = {
         'max_gamma': '#00FF00', 'min_gamma': '#FF0000',
         'max_dgex': '#00FFFF', 'min_dgex': '#FFA500',
-        'min_vanna': '#9400D3'
+        'min_vanna': '#9400D3',
+        'max_vega': '#FF1493',
+        'max_vomma': '#FFFFFF'
     };
 
     if (jsonData.levels) {

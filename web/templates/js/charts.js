@@ -145,6 +145,16 @@ function generateRegimeHTML(ticker, greek, spot, netValue, spotStrikeValue, netC
             behaviorText = isLocalPos ? "IV Drop = Buying | IV Spike = Selling." : "IV Drop = Selling | IV Spike = Buying.";
         }
         biasText = `IV: ${ivTrend.toUpperCase()}`;
+    } else if (greek === "vega") {
+        regimeText = isNetPos ? "LONG VEGA" : "SHORT VEGA";
+        behaviorText = isNetPos ? "Profits from Volatility expansion. MM need to buy dips." : "Profits from Volatility crush. MM need to sell rips.";
+        regimeColorVar = isNetPos ? "--pos-high" : "--neg-high";
+        biasText = "Vol Sensitivity";
+    } else if (greek === "vomma") {
+        regimeText = isLocalPos ? "POS VOMMA" : "NEG VOMMA";
+        behaviorText = isLocalPos ? "Vega increases as Vol rises. Tail risk acceleration." : "Vega decreases as Vol rises. Volatility stabilization.";
+        regimeColorVar = isLocalPos ? "--pos-high" : "--neg-high";
+        biasText = "Vol Convexity";
     } else if (greek === "zomma") {
         if (isLocalPos) {
             regimeText = "POS ZOMMA";
