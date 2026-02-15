@@ -1,6 +1,8 @@
 # GEX Dashboard Live
 
-Real-time Greek Exposure (GEX) analysis and automated trading system for options markets.
+Real-time Greek Exposure (GEX) analysis and automated trading system for options markets, powered by a **Hybrid Attention-MLP** model.
+
+---
 
 ## Table of Contents
 
@@ -8,26 +10,26 @@ Real-time Greek Exposure (GEX) analysis and automated trading system for options
 - [Project Structure](#project-structure)
 - [Services](#services)
 - [Trading Bots](#trading-bots)
+- [Hybrid Model](#hybrid-model)
 - [Backtesting](#backtesting)
 - [Discord Integration](#discord-integration)
 - [Tools & Utilities](#tools--utilities)
 - [Data Directories](#data-directories)
 - [Configuration](#configuration)
 - [Deployment](#deployment)
-- [Development](#development)
 
 ---
 
 ## Overview
 
 This project provides a comprehensive suite for:
-- **Real-time Greek exposure calculation** (Gamma, Vanna, Charm, Delta, DGEX)
-- **Automated trading** based on Greek signals and market structure
-- **Initial Balance (IB) analysis** with Fibonacci extensions
-- **Discord notifications** for signals and trade alerts
-- **Backtesting framework** to validate strategies
+- **Real-time Greek exposure calculation** (Gamma, Vanna, Charm, Delta, DGEX) across 0DTE and Weekly expirations.
+- **Automated trading** using a state-of-the-art **Hybrid Attention-MLP** neural network.
+- **Initial Balance (IB) analysis** with Fibonacci extensions.
+- **Discord notifications** for high-probability signals and trade management.
+- **Backtesting framework** to validate strategies against historical data.
 
-The system processes options chain data from TastyTrade, calculates Greek exposures, identifies key levels (support/resistance, VPOC, VAH/VAL), and executes trades based on configurable strategies.
+The system processes options chain data from TastyTrade, calculates complex Greek exposures, identifies key levels (magnet/accelerator), and executes trades based on ML predictions.
 
 ---
 
@@ -42,31 +44,34 @@ Gex-Dashboard-Live/
 │   ├── fourier_service.py # Fourier cycle analysis
 │   └── fourier_service_fast.py
 │
-├── bots/                  # Live trading bots
-│   ├── tradingbot1.py     # Multi-ticker confluence strategy
-│   ├── tradingbot2.py     # Level reversal strategy
+├── bots/                  # Live trading bots & ML Models
+│   ├── tradingbot_wrapper.py # MAIN BOT: Hybrid Attention-MLP execution
+│   ├── hybrid_model.py    # PyTorch model architecture
+│   ├── train_hybrid.py    # Training script
+│   ├── collect_training_data.py # Data processing
+│   ├── tradingbot1.py     # (Legacy) Multi-ticker confluence strategy
+│   ├── tradingbot2.py     # (Legacy) Level reversal strategy
 │   ├── check_trades.py    # Trade status monitor
-│   ├── state_bot1.json    # Bot1 active trade state
-│   ├── state_bot2.json    # Bot2 active trade state
-│   ├── trades_live/       # Bot1 completed trades
-│   └── trades_live2/      # Bot2 completed trades
+│   ├── trades_wrapper/    # Active & closed trades (JSON)
+│   └── trades_live/       # Legacy trades
+│
+├── models/                # Trained models
+│   ├── trading_hybrid.pt  # PyTorch model weights
+│   └── hybrid_normalizer.npz # Feature scalers
 │
 ├── discord_app/           # Discord bot integration
 │   ├── main.py            # Discord bot entry point
 │   ├── bot.py             # Bot commands handler
-│   └── discord_send_plots.py  # Plot scheduler & sender
+│   └── discord_send_plots.py  # Plot scheduler
 │
 ├── backtest/              # Backtesting scripts
-│   ├── backtest.py        # Confluence strategy backtest
-│   ├── backtest2.py       # Reversal strategy backtest
-│   ├── ib_backtest.py     # IB data fetcher for backtesting
-│   ├── plot_backtest.py   # Trade visualization generator
-│   └── trades/            # Backtest trade outputs
+│   ├── backtest_hybrid.py # ML-based backtesting
+│   ├── ib_backtest.py     # IB data fetcher
+│   └── plots/             # Backtest visualizations
 │
 ├── tools/                 # CLI utilities
 │   ├── cli-app.py         # Manual data plotting
-│   ├── data_plotting.py   # Core plotting functions
-│   └── watchdog_notify.py # Systemd watchdog helper
+│   └── timeframe_fix.py   # Data correction tools
 │
 ├── web/                   # Web dashboard
 │   └── templates/
@@ -177,6 +182,98 @@ python services/servidor.py
 - `GET /get_history?ticker=SPX&exp=0dte&time=0930` — Historical snapshot by time
 - `GET /list_files?ticker=SPX&exp=0dte&date=20260214` — List available JSON files
 - `POST /get_batch` — Batch fetch multiple tickers (used by dashboard refresh)
+
+---
+
+## Authentication & API Keys
+
+The server uses a hybrid authentication system with two mechanisms:
+
+### 1. Bearer Tokens (Web Users)
+
+Tokens are **UUID4 strings** generated server-side when a user logs in via `POST /login`. They are stored in `SESSIONS` (server RAM) and sent back to the client.
+
+**How it works:**
+1. User submits email + password to `POST /login`
+2. Server validates against `USERS` dict → generates `uuid.uuid4()` token
+3. Token is stored in `SESSIONS = { token: {"email": ..., "role": ...} }`
+4. Client stores token in `sessionStorage` and sends it with every request as:
+   ```
+   Authorization: Bearer <token>
+   ```
+5. Server checks `SESSIONS[token]` on each protected request
+
+**Single-session enforcement:**
+- When a non-admin user logs in, any **previous token for that email is deleted**
+- The old session's next API request returns `401 Unauthorized` → auto-logout
+- **Admin users** are exempt — they can have multiple active sessions
+
+**Example login request:**
+```bash
+curl -X POST http://gex-dashboard.hopto.org:8609/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "user1@flowgreeks.com", "password": "FlowGreeksPlottingUser1"}'
+
+# Response: {"status": "ok", "token": "a1b2c3d4-...", "role": "USER"}
+```
+
+**Example authenticated request:**
+```bash
+curl http://gex-dashboard.hopto.org:8609/get_latest?ticker=SPX&exp=0dte \
+  -H "Authorization: Bearer a1b2c3d4-..."
+```
+
+### 2. API Keys (Scripts & Bots)
+
+API keys are **static strings** defined in `servidor.py` for automated scripts. Each key allows **one concurrent request** (rate limited via threading locks).
+
+**Adding API keys** — Edit `API_KEYS` in `services/servidor.py`:
+```python
+API_KEYS = {
+    "gex_bot_2026_xyz":  {"role": "BOT",  "owner": "trading_bot"},
+    "client_abc_secret": {"role": "USER", "owner": "client_abc"},
+}
+# IMPORTANT: Regenerate locks after changing keys
+API_KEY_LOCKS = {k: threading.Lock() for k in API_KEYS}
+```
+
+**Using an API key in a script:**
+```python
+import requests
+
+headers = {"X-API-Key": "gex_bot_2026_xyz"}
+resp = requests.get("http://your-server:8609/get_latest?ticker=SPX&exp=0dte", headers=headers)
+data = resp.json()
+```
+
+```bash
+# Or with curl:
+curl http://your-server:8609/get_latest?ticker=SPX&exp=0dte \
+  -H "X-API-Key: gex_bot_2026_xyz"
+```
+
+**Concurrency:** If two requests arrive simultaneously with the same API key, the second gets `429 Too Many Requests`. Use different keys for different scripts if you need parallel access.
+
+### Auth Summary
+
+| Method | Header | Who | Concurrency |
+|--------|--------|-----|-------------|
+| Bearer Token | `Authorization: Bearer <uuid>` | Web users | 1 session/email (admin exempt) |
+| API Key | `X-API-Key: <key>` | Scripts/bots | 1 request/key at a time |
+| None | — | — | `401 Unauthorized` |
+
+### Managing Users
+
+Web users are defined in `services/servidor.py`:
+```python
+USERS = {
+    "admin@flowgreeks.com":  {"pass": "admin123",          "role": "ADMIN"},
+    "flowgreeks@email.com":  {"pass": "FlowGreeksPlotting", "role": "USER"},
+    # Add more users here
+}
+```
+
+> **Note:** Tokens live only in server RAM (`SESSIONS` dict). Restarting the server invalidates all active sessions — users must log in again.
 
 ---
 
@@ -384,6 +481,20 @@ python bots/check_trades.py
 ## Backtesting
 
 Scripts to test strategies on historical data.
+
+### backtest_hybrid.py (PRIMARY)
+
+Backtests the **Hybrid Attention-MLP** model on historical 1-minute data, simulating realistic execution with fees and slippage.
+
+```bash
+python bots/backtest_hybrid.py
+```
+
+**Key Features:**
+- Uses actual 1-minute OHLC candles (IB Data) for accurate execution simulation
+- Comprehensive metrics: Sharpe, Profit Factor, Max Drawdown
+- Detailed logs: `logs/backtest_hybrid.log`
+- Feature Importance analysis for winning vs losing trades
 
 ### backtest.py
 
@@ -620,6 +731,19 @@ sudo systemctl enable gex_daemon ib discord-bot tradingbot1 tradingbot2
 
 # Start services
 sudo systemctl start gex_daemon ib discord-bot tradingbot1 tradingbot2
+```
+
+### 4. Monitor Services
+
+```bash
+# Check status
+sudo systemctl status tradingbot1
+
+# View logs
+sudo journalctl -u tradingbot1 -f
+
+# Restart a service
+sudo systemctl restart tradingbot1
 ```
 
 ### 4. Monitor Services
