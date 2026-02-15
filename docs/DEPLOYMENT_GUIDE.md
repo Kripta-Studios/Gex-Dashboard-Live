@@ -36,9 +36,9 @@ Flujo completo para entrenar y desplegar el `hybrid_model`: generación de datos
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                         PC LOCAL (Windows + GPU)                        │
 ├─────────────────────────────────────────────────────────────────────────┤
-│  1. collect_training_data.py  →  training_data/training_data.csv       │
-│  2. train_walkforward.py      →  models/trading_hybrid_wf.pt           │
-│  3. backtest.py               →  Validación de estrategia              │
+│  1. neural/collect_training_data.py  →  training_data/training_data.csv        │
+│  2. neural/train_walkforward.py      →  models/trading_hybrid_wf.pt            │
+│  3. neural/backtest_hybrid.py        →  Validación de estrategia               │
 └───────────────────────────────────────┬─────────────────────────────────┘
                                         │ scp modelo entrenado
                                         ▼
@@ -160,7 +160,7 @@ cd Gex-Dashboard-Live
 
 # Generar CSV con todos los datos disponibles (p.ej. últimos 365 días)
 # Target 0.4% (0.004) para filtrar movimientos pequeños
-python bots/collect_training_data.py --output training_data.csv --days 365
+python neural/collect_training_data.py --output training_data.csv --days 365
 
 # Output: training_data/training_data.csv
 ```
@@ -180,9 +180,9 @@ print(df['target'].value_counts())
 Walk-forward previene el *lookahead bias* (predecir el pasado con datos del futuro) y genera métricas más realistas.
 
 ```powershell
-python bots/train_walkforward.py \
+python neural/train_walkforward.py \
   --data training_data/training_data.csv \
-  --model-size small \
+  --model-size medium \
   --train-months 3 \
   --test-months 1 \
   --epochs 100
@@ -197,7 +197,7 @@ python bots/train_walkforward.py \
 Si prefieres u método más simple (hold-out validation):
 
 ```powershell
-python bots/train_hybrid.py --data training_data/training_data.csv --model-size medium --epochs 200 --lr 0.001
+python neural/train_hybrid.py --data training_data/training_data.csv --model-size medium --epochs 200 --lr 0.001
 
 # Output:
 #   models/trading_hybrid.pt
@@ -219,7 +219,7 @@ Esta es la configuración validada que maximiza el Profit Factor y minimiza el D
 *   **Max Time 20**: Evita trades que el modelo predice tardarán mucho (lentos).
 
 ```powershell
-python bots/backtest_hybrid.py --model models/trading_hybrid.pt --data training_data/backtest_trades.csv --threshold 0.5 --target 0.004 --stop 0.004 --max-time 20 --min-iv 0.2
+python neural/backtest_hybrid.py --model models/trading_hybrid.pt --data training_data/backtest_trades.csv --threshold 0.5 --target 0.004 --stop 0.004 --max-time 20 --min-iv 0.2
 ```
 
 ### 5.2 Verificar Alertas (Simulación Discord)
@@ -227,7 +227,7 @@ python bots/backtest_hybrid.py --model models/trading_hybrid.pt --data training_
 ```powershell
 # Verificar Alertas Discord (Simulación: Envía solo 3 alertas para probar)
 # Envía alertas de APERTURA y CIERRE al canal configurado
-python bots/backtest_hybrid.py --threshold 0.5 --target 0.004 --stop 0.004 --max-time 20 --min-iv 0.2 --discord --limit 3
+python neural/backtest_hybrid.py --threshold 0.5 --target 0.004 --stop 0.004 --max-time 20 --min-iv 0.2 --discord --limit 3
 ```
 
 > [!NOTE]
@@ -245,7 +245,7 @@ Sube el código y los modelos entrenados:
 
 ```bash
 # Subir código
-scp -r bots/ deploy/ docs/ usuario@servidor:/home/Option-Greeks-Plotting-Discord-Bot/
+scp -r bots/ neural/ deploy/ docs/ usuario@servidor:/home/Option-Greeks-Plotting-Discord-Bot/
 
 # Subir modelo entrenado
 scp models/trading_hybrid.pt models/hybrid_normalizer.npz usuario@servidor:/home/Option-Greeks-Plotting-Discord-Bot/models/
@@ -298,7 +298,7 @@ Para que el bot corra 24/7 y se reinicie solo:
 
 | Tarea | Comando / Ubicación |
 |-------|---------------------|
-| **Entrenar** | `python bots/train_hybrid.py --model-size small` |
-| **Backtest** | `python bots/backtest_hybrid.py --threshold 0.5 --min-iv 0.2` |
+| **Entrenar** | `python neural/train_hybrid.py --model-size medium` |
+| **Backtest** | `python neural/backtest_hybrid.py --threshold 0.5 --min-iv 0.2` |
 | **Ver Logs** | `sudo journalctl -u gex_bot -f` |
 | **Ver Trades**| `logs/tradingbot_wrapper.log` o canal de Discord |

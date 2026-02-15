@@ -80,45 +80,57 @@ graph TD
 
 ---
 
-## 3. Features de Entrada (66 Features)
+## 3. Features de Entrada (93 Features)
 
-El modelo utiliza un set rico de 66 variables derivadas de la cadena de opciones y el mercado.
+El modelo utiliza un set expandido de **93 variables** derivadas de la cadena de opciones, contexto de mercado y análisis técnico avanzado.
 
-### 3.1 0DTE Greeks (19 Features)
+### 3.1 0DTE Greeks (21 Features)
 Energía intradiaria del mercado.
 *   **Net Exposures**: `net_gamma`, `net_vanna`, `net_charm`, `net_dgex`, `net_zomma`, `net_delta`.
-*   **Regime Signals**: Flags binarios/continuos como `gamma_regime`, `vanna_bullish`, `dgex_sticky` (mercado pegajoso).
-*   **Level Distances**: Distancia porcentual al precio actual de niveles clave (`max_gamma`, `min_vanna` magnet, `zero_gamma`).
-*   **Proximity Flags**: `near_max_gamma`, `near_min_gamma`.
+*   **Vol/Risk Exposures**: `net_vega` (Sensibilidad a Vol), `net_vomma` (Aceleración de Vol).
+*   **Regime Signals**: Flags binarios/continuos como `gamma_regime`, `vanna_bullish`, `dgex_sticky`, `zomma_stabilizing`.
+*   **Level Distances**: Distancia porcentual al precio actual de niveles clave (`max_gamma`, `min_vanna`, `zero_gamma`).
 
-### 3.2 Weekly Greeks (14 Features)
-Estructura de mercado a mediano plazo (Viernes de expiración).
-*   **Net Exposures**: `wk_net_gamma`, `wk_net_vanna`... (versiones semanales).
-*   **Level Distances**: Niveles estructurales que actúan como imanes fuertes.
-*   **Regime**: Contexto semanal (`wk_gamma_regime`) que puede apoyar o frenar la acción de 0DTE.
+### 3.2 Weekly Greeks (16 Features)
+Estructura de mercado a mediano plazo.
+*   **Net Exposures**: `wk_net_gamma`, `wk_net_vanna`, `wk_net_vega`, `wk_net_vomma`.
+*   **Level Distances**: Distancias a muros semanales (`wk_max_gamma`, `wk_max_dgex`, etc.).
+*   **Regime**: Contexto semanal (`wk_gamma_regime`) para filtrar ruido intradiario.
 
-### 3.3 Cross-Expiry Divergence (4 Features)
-Detecta conflictos entre corto y mediano plazo.
-*   `gamma_0dte_vs_wk`: ¿Tienen signo opuesto? (Posible breakout/reversal).
-*   `vanna_0dte_vs_wk`: Divergencia de flujos.
-*   `dgex_0dte_vs_wk`, `delta_0dte_vs_wk`.
+### 3.3 Cross-Expiry Divergence (6 Features)
+Conflictos entre plazos temporales.
+*   `gamma_0dte_vs_wk`: Divergencia de signo en Gamma.
+*   `vanna_0dte_vs_wk`: flujo 0DTE vs flujo semanal.
+*   `dgex_0dte_vs_wk`, `vega_0dte_vs_wk`.
 
-### 3.4 IB + Market Context (18 Features)
-Contexto de precio y volatilidad.
-*   **Initial Balance (IB)**: Relación del precio con el rango de la primera hora (`price_vs_ib_high`, `in_ib_range`).
-*   **Fibonacci**: Extensiones 127.2% y 161.8% del rango IB.
-*   **Volatility**: `atm_iv` (IV implícita), `iv_zscore`, `vix_spot`, `vix_regime`.
-*   **Market**: `rsi` (momentum), `vol_relative`.
+### 3.4 IB + Fibonacci + Confluences (25 Features)
+Contexto de precio avanzado y zonas de confluencia.
+*   **Initial Balance (IB)**: Niveles `price_vs_ib_high`, `ib_range_pct`.
+*   **Fibonacci Extensions**: Distancias a extensiones 127.2%, 161.8% y 200% (Bullish y Bearish).
+*   **RBF Confluences**: Features sintéticos generados por Kernels RBF que miden la superposición entre niveles técnicos (IB/Fib) y niveles de Griegas (Muros de Gamma/Vega).
+    *   *Ejemplo*: `confluence_ib_high_max_gamma` (1.0 si IB High coincide con Max Gamma).
 
-### 3.5 Engineered Features (11 Features)
-Variables sintéticas de alto valor predictivo.
-*   **Ratios**: `gamma_vanna_ratio` (¿Quién domina, Gamma o Vanna?), `dgex_gamma_ratio`.
-*   **Temporal Deltas**: Cambio en las griegas desde el minuto anterior (`gamma_change`, `vanna_change`).
-*   **Momentum**: `gamma_momentum` (Cambio de gamma * signo), `price_vs_dgex_magnet`.
+### 3.5 Engineered Features (25 Features)
+Variables de alto orden y dinámicas.
+*   **Ratios**: Relaciones de fuerza relativa.
+    *   `gamma_vanna_ratio`, `dgex_gamma_ratio`, `vomma_vega_ratio`.
+*   **Temporal Deltas**: Derivada temporal (cambio por minuto).
+    *   `gamma_change`, `vanna_change`, `vega_change`, `vomma_change`.
+*   **Momentum & Magnetism**: `gamma_momentum`, `price_vs_dgex_magnet`.
 
 ---
 
-## 4. Flujo de Datos
+## 4. Dimensionality Reduction Pipeline
+
+Dada la alta dimensionalidad (93 features), el sistema implementa un pipeline de reducción de características antes del entrenamiento para evitar la "maldición de la dimensionalidad":
+
+1.  **Variance Filtering**: Elimina features estáticas o con varianza casi nula.
+2.  **Correlation Grouping (Union-Find)**: Agrupa features colineales (corr > 0.95) y selecciona la más representativa del grupo.
+3.  **Grouped PCA**: Aplica PCA independientemente a cada grupo lógico de features (ej. Grupo Volatilidad, Grupo Gamma) para extraer componentes principales densos manteniendo la interpretabilidad semántica.
+
+---
+
+## 5. Flujo de Datos
 
 1.  **Colección de Datos (Market Hours)**:
     *   `gex_daemon.py` genera snapshots de griegas (Madrid Time).
