@@ -8,8 +8,8 @@ from pathlib import Path
 from concurrent.futures import ProcessPoolExecutor
 
 # --- CONFIGURACIÓN DE RUTAS ---
-IB_DATA_DIR = "trading_data/ib_backtest"      # Donde están tus JSON de IB
-GREEK_DATA_DIR = "trading_data/json_data"   # Donde están tus JSON de Griegas
+IB_DATA_DIR = "ib_backtest"      # Donde están tus JSON de IB
+GREEK_DATA_DIR = "json_data"   # Donde están tus JSON de Griegas
 MAX_WORKERS = 10
 
 def extract_muros_from_greeks(ticker, date_str):

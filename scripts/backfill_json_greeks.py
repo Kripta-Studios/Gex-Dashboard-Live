@@ -211,7 +211,7 @@ def backfill_file(filepath):
         print(f"[ERROR] Failed to process {filepath}: {e}")
 
 def main():
-    json_dir = "trading_data/json_data"
+    json_dir = "json_data"
     
     if not os.path.exists(json_dir):
         print(f"[ERROR] Directory {json_dir} not found.")
