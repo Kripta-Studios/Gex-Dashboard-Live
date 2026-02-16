@@ -69,11 +69,6 @@ class FeatureAugmentation:
 
 # --- LABEL SMOOTHING LOSS ---
 class LabelSmoothingCrossEntropy(nn.Module):
-    """
-    Cross entropy with label smoothing to prevent overconfident predictions.
-    Smoothing 0.1 means: 90% on true label, 10% distributed to other labels.
-    """
-    
     def __init__(self, smoothing: float = 0.1, num_classes: int = 3, weights=None):
         super().__init__()
         self.smoothing = smoothing
@@ -84,20 +79,20 @@ class LabelSmoothingCrossEntropy(nn.Module):
         confidence = 1.0 - self.smoothing
         smooth_value = self.smoothing / (self.num_classes - 1)
         
-        # Create smoothed labels
+        # Smoothed labels
         one_hot = torch.zeros_like(logits).scatter_(1, targets.unsqueeze(1), 1)
         smooth_labels = one_hot * confidence + (1 - one_hot) * smooth_value
         
-        # Compute cross entropy with soft labels
+        # Cross entropy
         log_probs = torch.log_softmax(logits, dim=-1)
-        loss = (-smooth_labels * log_probs).sum(dim=-1).mean()
+        loss = (-smooth_labels * log_probs).sum(dim=-1)
         
+        # Apply class weights ANTES del .mean()
         if self.weights is not None:
-            # Expandir pesos para cada muestra en el batch
             batch_weights = self.weights[targets]
             loss = loss * batch_weights
-            
-        return loss.mean()
+        
+        return loss.mean()  # Un solo .mean() al final
 
 
 # --- GAUSSIAN NLL LOSS (Bayesian Time Head) ---
@@ -114,6 +109,8 @@ def gaussian_nll_loss(mu: torch.Tensor, log_sigma: torch.Tensor,
     Returns:
         Scalar loss
     """
+    # Clip log_sigma para evitar explosión numérica
+    log_sigma = torch.clamp(log_sigma, min=-3.0, max=3.0)
     variance = torch.exp(2 * log_sigma) + 1e-6
     loss = 0.5 * torch.log(variance) + 0.5 * (((target - mu) ** 2) / variance)
     return (loss.squeeze() * mask).sum() / (mask.sum() + 1e-8)
@@ -142,30 +139,65 @@ def prepare_data(df, feature_columns: list = FEATURE_COLUMNS):
 
 
 def split_data(features: np.ndarray, targets: np.ndarray, time_targets: np.ndarray,
-               val_split: float = 0.2, shuffle: bool = True):
-    """Split data into train/val sets."""
+               val_split: float = 0.2):
+    """
+    Split data chronologically into train/val sets for time-series.
+    NUNCA usar shuffle en datos financieros para evitar Data Leakage.
+    """
     n_samples = len(features)
-    indices = np.arange(n_samples)
     
-    if shuffle:
-        np.random.shuffle(indices)
-    
+    # Calculamos el índice exacto donde cortar
     val_size = int(n_samples * val_split)
-    val_indices = indices[:val_size]
-    train_indices = indices[val_size:]
+    train_size = n_samples - val_size
     
-    return (
-        features[train_indices], targets[train_indices], time_targets[train_indices],
-        features[val_indices], targets[val_indices], time_targets[val_indices]
-    )
+    # Entrenamiento: El 80% más antiguo (El Pasado)
+    X_train = features[:train_size]
+    y_train = targets[:train_size]
+    t_train = time_targets[:train_size]
+    
+    # Validación: El 20% más reciente (El Futuro)
+    X_val = features[train_size:]
+    y_val = targets[train_size:]
+    t_val = time_targets[train_size:]
+    
+    return X_train, y_train, t_train, X_val, y_val, t_val
 
 
-def get_class_weights(targets: np.ndarray) -> torch.Tensor:
-    """Compute class weights for imbalanced data."""
+def get_class_weights(targets: np.ndarray, smoothing: float = 0.3) -> torch.Tensor:
+    """
+    Compute class weights for imbalanced data with optional smoothing.
+    
+    Args:
+        targets: Array of class labels (0=SHORT, 1=HOLD, 2=LONG)
+        smoothing: Float in [0, 1]. Controls weight smoothing:
+                   - 0.0 = Full inverse frequency weighting (aggressive)
+                   - 0.5 = Balanced between inverse frequency and uniform
+                   - 1.0 = Uniform weights (no correction)
+    
+    Returns:
+        Tensor of class weights
+    """
     class_counts = np.bincount(targets, minlength=3)
     total = len(targets)
-    weights = total / (3 * class_counts + 1e-6)
-    return torch.FloatTensor(weights)
+    
+    # Raw inverse frequency weights
+    raw_weights = total / (3 * class_counts + 1e-6)
+    
+    # Smooth towards uniform weights (all 1.0)
+    smooth_weights = (1 - smoothing) * raw_weights + smoothing * np.ones(3)
+    
+    # Debug output
+    print(f"    Class distribution (smoothing={smoothing}):")
+    for i, name in enumerate(["SHORT", "HOLD", "LONG"]):
+        print(f"      {name} ({i}): {class_counts[i]:,} samples → "
+              f"raw weight {raw_weights[i]:.3f} → smooth weight {smooth_weights[i]:.3f}")
+    
+    # Show weight ratios
+    max_weight = smooth_weights.max()
+    min_weight = smooth_weights.min()
+    print(f"    Weight ratio (max/min): {max_weight/min_weight:.2f}x")
+    
+    return torch.FloatTensor(smooth_weights)
 
 
 # --- MAIN TRAINING FUNCTION ---
@@ -175,7 +207,7 @@ def train(
     normalizer_path: str = "models/hybrid_normalizer.npz",
     model_size: str = "medium",
     epochs: int = 200,
-    batch_size: int = 128,
+    batch_size: int = 2048,
     learning_rate: float = 0.001,
     val_split: float = 0.2,
     early_stopping_patience: int = 25,
@@ -227,7 +259,7 @@ def train(
     val_dataset = TensorDataset(torch.FloatTensor(X_val), torch.LongTensor(y_val), torch.FloatTensor(t_val))
     
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, drop_last=True)
-    val_loader = DataLoader(val_dataset, batch_size=batch_size * 2)
+    val_loader = DataLoader(val_dataset, batch_size=batch_size,shuffle=False, drop_last=False)
     
     # 5. Inicializar modelo
     print(f"\n[4/6] Initializing {model_size.upper()} Hybrid model...")
@@ -246,16 +278,11 @@ def train(
     
 
     # Class weights for imbalanced data
-    class_weights = get_class_weights(y_train).to(device)
+    class_weights = get_class_weights(y_train, smoothing=0.3).to(device)
     
     # Loss function with label smoothing and weights
     cls_criterion = LabelSmoothingCrossEntropy(smoothing=label_smoothing, num_classes=3, weights=class_weights)
 
-    # Regression loss: Gaussian NLL (defined above, not nn.MSELoss)
-    
-    # Class weights for imbalanced data
-    class_weights = get_class_weights(y_train).to(device)
-    
     # Optimizer with weight decay
     optimizer = optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
     
@@ -351,6 +378,8 @@ def train(
         # Validation phase (no augmentation)
         model.eval()
         val_loss = 0.0
+        val_cls_loss = 0.0
+        val_reg_loss = 0.0 
         val_correct = 0
         val_total = 0
         val_mae_sum = 0.0
@@ -368,6 +397,16 @@ def train(
                 log_sigma = time_pred[:, 1:2]
                 mask = (batch_y != 1).float()
                 
+                if epoch % 10 == 0:  # Solo cada 10 épocas
+                    log_sigma_vals = time_pred[:, 1:2]
+                    sigma_vals = torch.exp(log_sigma_vals)
+
+                    print(f"Predicted σ range: [{sigma_vals.min():.6f}, {sigma_vals.max():.6f}]")
+                    print(f"Mean σ: {sigma_vals.mean():.6f}")
+                    print(f"    log_sigma range: [{log_sigma.min().item():.2f}, {log_sigma.max().item():.2f}]")
+                    print(f"    variance range:  [{torch.exp(2*log_sigma).min().item():.6f}, {torch.exp(2*log_sigma).max().item():.2f}]")
+                    break  # Solo primer batch
+                
                 if mask.sum() > 0:
                     masked_reg_loss = gaussian_nll_loss(mu, log_sigma, batch_t.unsqueeze(1), mask)
                     # MAE for signals (in minutes: mu * 120 - target * 120)
@@ -379,13 +418,17 @@ def train(
                 
                 loss = loss_cls + 0.5 * masked_reg_loss
                 val_loss += loss.item()
+                val_cls_loss += loss_cls.item()
+                val_reg_loss += masked_reg_loss.item()
                 
                 _, predicted = logits.max(1)
                 val_total += batch_y.size(0)
                 val_correct += predicted.eq(batch_y).sum().item()
         
         avg_val_loss = val_loss / len(val_loader)
-        val_acc = val_correct / val_total
+        avg_val_cls = val_cls_loss / len(val_loader)
+        avg_val_reg = val_reg_loss / len(val_loader)
+        val_acc = val_correct / val_total if val_total > 0 else 0.0
         val_mae = val_mae_sum / val_signal_count if val_signal_count > 0 else 0.0
         
         # Record history
@@ -402,9 +445,13 @@ def train(
             gap = avg_val_loss - avg_train_loss
             print(f"Epoch {epoch+1:3d}/{epochs} | "
                   f"Loss: {avg_train_loss:.4f}/{avg_val_loss:.4f} | "
+                  f"Cls: {avg_train_cls:.3f}/{avg_val_cls:.3f} | "
+                  f"Reg: {avg_train_reg:.3f}/{avg_val_reg:.3f} | "
                   f"Acc: {val_acc:.1%} | "
-                  f"Time MAE: {val_mae:.1f}m | "
-                  f"LR: {current_lr:.2e}")
+                  f"MAE: {val_mae:.1f}m | "
+                  f"LR: {current_lr:.2e} | "
+                  f"Gap: {gap:.3f} | "
+                  f"Epoch time: {epoch_time:.1f}s")
         
         # Early stopping
         if avg_val_loss < best_val_loss:

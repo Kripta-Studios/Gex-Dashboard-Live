@@ -394,9 +394,40 @@ def walk_forward_splits(
     Returns list of (train_df, test_df) tuples.
     """
     df = df.copy()
-    df['_date'] = pd.to_datetime(df[date_col])
-    df = df.sort_values('_date')
     
+    # 1. FORZAR CONVERSIÓN DE FECHA (Convierte 20260127 -> Datetime)
+    if not pd.api.types.is_datetime64_any_dtype(df[date_col]):
+        # Intentar formato YYYYMMDD que es el que tienes
+        df[date_col] = pd.to_datetime(df[date_col].astype(str), format='%Y%m%d', errors='coerce')
+        
+    df = df.sort_values(date_col)
+    # Extraer solo la fecha (sin hora) para contar días únicos
+    unique_dates = sorted(df[date_col].dt.date.unique())
+    n_unique_days = len(unique_dates)
+    
+    # 2. LÓGICA DE EMERGENCIA PARA 14 DÍAS (Modo Micro-Window)
+    if train_window_months == 0 or n_unique_days < 20:
+        # Forzamos una partición proporcional: 6 días entreno / 2 días test
+        train_days = 6 
+        test_days = 2
+        step_days = 2 # Desplazamos la ventana de 2 en 2 días
+        
+        print(f"    [WF-DEBUG] Corregido: Detectados {n_unique_days} días reales.")
+        print(f"    [WF-DEBUG] Ventanas: Train={train_days}d, Test={test_days}d")
+        
+        splits = []
+        for i in range(0, n_unique_days - train_days - test_days + 1, step_days):
+            train_dates = unique_dates[i : i + train_days]
+            test_dates = unique_dates[i + train_days : i + train_days + test_days]
+            
+            train_split = df[df[date_col].dt.date.isin(train_dates)].copy()
+            test_split = df[df[date_col].dt.date.isin(test_dates)].copy()
+            
+            if len(train_split) > 100: # Asegurar que hay datos
+                splits.append((train_split, test_split))
+        
+        return splits
+
     min_date = df['_date'].min()
     max_date = df['_date'].max()
     

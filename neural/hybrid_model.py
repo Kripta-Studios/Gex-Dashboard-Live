@@ -410,7 +410,7 @@ def save_hybrid_model(model: HybridTradingModel, normalizer: FeatureNormalizer,
 
 
 def load_hybrid_model(model_path: str, normalizer_path: str, 
-                      model_size: str = "medium", device: torch.device = None):
+                      model_size: str = "small", device: torch.device = None):
     """Load model and normalizer."""
     if device is None:
         device = get_device()
