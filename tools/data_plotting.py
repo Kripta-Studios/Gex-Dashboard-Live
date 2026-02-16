@@ -36,7 +36,17 @@ import pickle
 import asyncio
 from concurrent.futures import ProcessPoolExecutor
 from functools import partial
+import pandas_market_calendars as mcal
+from zoneinfo import ZoneInfo
+import datetime
 
+# Inicializar el calendario globalmente para no sobrecargar la memoria
+NYSE_CALENDAR = mcal.get_calendar('NYSE')
+
+def is_market_open(check_date) -> bool:
+    """Verifica si el NYSE está abierto en una fecha específica."""
+    schedule = NYSE_CALENDAR.schedule(start_date=check_date, end_date=check_date)
+    return not schedule.empty
 # --- CONFIGURACIÓN DE ESTILOS (TAMAÑOS AUMENTADOS Y ALTO CONTRASTE) ---
 STYLE_CONFIG = {
     "title_size": 26,
@@ -1859,6 +1869,18 @@ def calcular_spx_media(es_price, sofr_rate):
 
 def get_options_data(ticker, expir, greek_filter):
     async def _fetch_internal():
+        ny_tz = ZoneInfo("America/New_York")
+        now_ny = datetime.datetime.now(ny_tz)
+        trading_date = now_ny.date()
+        
+        # Ajuste de madrugada: Si son antes de las 3 AM, cuenta como el día de ayer
+        if now_ny.time() < datetime.time(3, 0):
+            trading_date -= datetime.timedelta(days=1)
+            
+        if not is_market_open(trading_date):
+            print(f"[{now_ny.strftime('%H:%M:%S')}] NYSE CERRADO. Omitiendo descarga y guardado de JSON para {ticker}.")
+            # Retornamos vacío para abortar el proceso sin causar errores
+            return [], [], []
         load_dotenv()
         t0 = time.time()
         username = getenv("TASTYTRADE_USERNAME")
