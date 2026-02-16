@@ -19,38 +19,31 @@ Flujo completo para entrenar y desplegar el `hybrid_model`: generación de datos
 
 ## 1. Arquitectura del Sistema
 
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                           SERVIDOR (Linux VPS)                          │
-├─────────────────────────────────────────────────────────────────────────┤
-│  Servicios 24/7:                                                        │
-│  ├── gex_daemon.py        → json_data/*.json    (Greeks cada 5 min)    │
-│  ├── fourier_service.py   → fourier/*.json      (IV/VIX cada 30 min)   │
-│  └── ib_service.py        → ib_charts/*.json    (IB en tiempo real)    │
-│                                                                         │
-│  Scripts de backtest:                                                   │
-│  └── ib_backtest.py       → ib_backtest/*.json  (IB histórico + VP)    │
-└───────────────────────────────────────┬─────────────────────────────────┘
-                                        │ rsync / scp
-                                        ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         PC LOCAL (Windows + GPU)                        │
-├─────────────────────────────────────────────────────────────────────────┤
-│  1. neural/collect_training_data.py  →  training_data/training_data.csv        │
-│  2. neural/train_walkforward.py      →  models/trading_hybrid_wf.pt            │
-│  3. neural/backtest_hybrid.py        →  Validación de estrategia               │
-└───────────────────────────────────────┬─────────────────────────────────┘
-                                        │ scp modelo entrenado
-                                        ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│                        SERVIDOR (Producción)                            │
-├─────────────────────────────────────────────────────────────────────────┤
-│  tradingbot_wrapper.py                                                  │
-│  ├── Carga modelo entrenado                                            │
-│  ├── Lee datos en tiempo real                                          │
-│  ├── Genera señales ML                                                 │
-│  └── Envía alertas a Discord                                           │
-└─────────────────────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    subgraph "Server (Linux VPS)"
+        GEX[gex_daemon.py] --"Greeks (5min)"--> JSON((json_data))
+        FOUR[fourier_service.py] --"IV/VIX (30min)"--> FOURIER((fourier))
+        IB[ib_service.py] --"Real-time Data"--> IBCHART((ib_charts))
+        BACK[ib_backtest.py] --"Volume Profile"--> IBBACK((ib_backtest))
+    end
+
+    subgraph "Local PC (Training)"
+        JSON & FOURIER & IBBACK -.->|rsync/scp| TRAINING[collect_training_data.py]
+        TRAINING --> DATA[(training_data.csv)]
+        DATA --> TRAIN[train_walkforward.py]
+        TRAIN --> MODEL{{trading_hybrid.pt}}
+        TRAIN --> BACKTEST[backtest_hybrid.py]
+    end
+
+    subgraph "Production (Live)"
+        MODEL -.->|scp| PROD_BOT[tradingbot_wrapper.py]
+        IBCHART & JSON & FOURIER --> PROD_BOT
+        PROD_BOT --> DISCORD[Discord Alerts]
+    end
+
+    style GEX fill:#f9f
+    style PROD_BOT fill:#bfb
 ```
 
 ---
@@ -180,12 +173,7 @@ print(df['target'].value_counts())
 Walk-forward previene el *lookahead bias* (predecir el pasado con datos del futuro) y genera métricas más realistas.
 
 ```powershell
-python neural/train_walkforward.py \
-  --data training_data/training_data.csv \
-  --model-size medium \
-  --train-months 3 \
-  --test-months 1 \
-  --epochs 100
+python neural/train_walkforward.py --data training_data/training_data.csv --model-size micro --epochs 100 --batch-size 512 --lr 0.0005 --train-months 0 --test-months 0
 
 # Output:
 #   models/trading_hybrid_wf.pt
@@ -197,7 +185,7 @@ python neural/train_walkforward.py \
 Si prefieres u método más simple (hold-out validation):
 
 ```powershell
-python neural/train_hybrid.py --data training_data/training_data.csv --model-size medium --epochs 200 --lr 0.001
+python neural/train_hybrid.py --data training_data/training_data.csv --model-size small --epochs 200 --lr 0.001 --weight-decay 0.1 --augment-noise 0.1 --batch-size 1024
 
 # Output:
 #   models/trading_hybrid.pt
@@ -220,6 +208,8 @@ Esta es la configuración validada que maximiza el Profit Factor y minimiza el D
 
 ```powershell
 python neural/backtest_hybrid.py --model models/trading_hybrid.pt --data training_data/backtest_trades.csv --threshold 0.5 --target 0.004 --stop 0.004 --max-time 20 --min-iv 0.2
+
+python .\neural\backtest_hybrid.py --threshold 0.5 --uncertainty 120 --max-time 120
 ```
 
 ### 5.2 Verificar Alertas (Simulación Discord)

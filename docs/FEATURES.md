@@ -83,10 +83,12 @@ net_greek = Σ(greek_exposure[strike]) for all strikes
 |---------|--------------|---------|---------------------|
 | `net_gamma` | totalgamma | Σ(all[i]) | **Volatility dampening/amplification**. Positive = dealers long gamma (stabilizing), negative = dealers short gamma (destabilizing) |
 | `net_vanna` | totalvanna | Σ(all[i]) | **Vol-spot correlation**. Positive vanna means rising IV → rising spot (bullish feedback loop) |
-| `net_charm` | totalcharm | Σ(all[i]) | **Time decay directional pressure** ⭐ #1 MOST IMPORTANT (21.5%). Positive charm = theta decay pushes price up |
+| `net_charm` | totalcharm | Σ(all[i]) | **Time decay directional pressure**. Positive charm = theta decay pushes price up |
 | `net_dgex` | totaldgex | Σ(all[i]) | **Dealer gamma exposure**. Shows where dealers need to hedge most aggressively |
 | `net_zomma` | totalzomma | Σ(all[i]) | **Gamma stability**. Positive = gamma increases with vol (stabilizing effect) |
 | `net_delta` | totaldelta | Σ(all[i]) | **Directional exposure**. Net directional pressure from all options |
+| `net_vega` | totalvega | Σ(all[i]) | **Volatility exposure**. Sensitivity to changes in implied volatility |
+| `net_vomma` | totalvomma | Σ(all[i]) | **Vol-of-vol exposure**. Second-order sensitivity (convexity) to volatility changes |
 
 ### Greek Regime Classification
 
@@ -105,8 +107,9 @@ gamma_regime = {
 |---------|---------|----------------|
 | `vanna_bullish` | 1 if net_vanna > 0.1 else 0 | Vol-spot feedback is bullish |
 | `charm_bullish` | 1 if net_charm > 0.1 else 0 | Time decay favors upside |
-| `dgex_sticky` | 1 if net_dgex > 0.1 else 0 | Dealers pin price (high hedging) ⭐ #5 FEATURE (3.0%) |
+| `dgex_sticky` | 1 if net_dgex > 0.1 else 0 | Dealers pin price (high hedging) |
 | `zomma_stabilizing` | 1 if net_zomma > 0.1 else 0 | Gamma becomes more stabilizing with vol |
+| `vega_elevated` | 1 if abs(net_vega) > 0.1 else 0 | High sensitivity to volatility changes |
 
 ---
 
@@ -119,10 +122,14 @@ Key levels are strikes where Greek exposure is concentrated, creating natural su
 **Max/Min Greek Strikes:**
 ```python
 max_gamma_strike = levels[argmax(totalgamma.all)]
-min_gamma_strike = levels[argmin(totalgamma.all)]  # ⭐ #2 FEATURE (5.6%)
+min_gamma_strike = levels[argmin(totalgamma.all)] 
 max_dgex_strike = levels[argmax(totaldgex.all)]
 min_dgex_strike = levels[argmin(totaldgex.all)]
-min_vanna_strike = levels[argmin(totalvanna.all)]  # ⭐ #4 FEATURE (3.2%)
+min_vanna_strike = levels[argmin(totalvanna.all)] 
+max_vega_strike = levels[argmax(totalvega.all)]
+min_vega_strike = levels[argmin(totalvega.all)]
+max_vomma_strike = levels[argmax(totalvomma.all)]
+min_vomma_strike = levels[argmin(totalvomma.all)]
 ```
 
 **Zero Crossings:**
@@ -140,11 +147,15 @@ dist_to_level = (spot_price - level) / spot_price
 | Feature | Formula | Trading Use |
 |---------|---------|-------------|
 | `dist_to_max_gamma` | (spot - max_gamma) / spot | Distance to strongest gamma wall (resistance/support) |
-| `dist_to_min_gamma` | (spot - min_gamma) / spot | ⭐ #2 MOST IMPORTANT (5.6%) - Distance to gamma hole (volatility zone) |
-| `dist_to_min_vanna` | (spot - min_vanna) / spot | ⭐ #4 MOST IMPORTANT (3.2%) - Distance to vanna flip point |
+| `dist_to_min_gamma` | (spot - min_gamma) / spot | Distance to gamma hole (volatility zone) |
+| `dist_to_min_vanna` | (spot - min_vanna) / spot | Distance to vanna flip point |
 | `dist_to_zero_gamma` | (spot - zero_gamma) / spot | Distance to gamma transition level |
 | `dist_to_max_dgex` | (spot - max_dgex) / spot | Distance to peak dealer hedging |
 | `dist_to_min_dgex` | (spot - min_dgex) / spot | Distance to dealer hedging hole |
+| `dist_to_max_vega` | (spot - max_vega) / spot | Distance to peak volatility exposure |
+| `dist_to_min_vega` | (spot - min_vega) / spot | Distance to volatility hole |
+| `dist_to_max_vomma` | (spot - max_vomma) / spot | Distance to peak convexity |
+| `dist_to_min_vomma` | (spot - min_vomma) / spot | Distance to convexity hole |
 
 ### Proximity Flags
 
@@ -180,6 +191,8 @@ All weekly features use the same formulas as 0DTE Greeks but with `wk_` prefix a
 | `wk_net_dgex` | weekly totaldgex | Σ(all[i]) |
 | `wk_net_zomma` | weekly totalzomma | Σ(all[i]) |
 | `wk_net_delta` | weekly totaldelta | Σ(all[i]) |
+| `wk_net_vega` | weekly totalvega | Σ(all[i]) |
+| `wk_net_vomma` | weekly totalvomma | Σ(all[i]) |
 
 ### Weekly Key Levels
 
@@ -189,6 +202,8 @@ All weekly features use the same formulas as 0DTE Greeks but with `wk_` prefix a
 | `wk_dist_to_min_gamma` | (spot - wk_min_gamma) / spot | Weekly gamma hole location |
 | `wk_dist_to_max_dgex` | (spot - wk_max_dgex) / spot | Weekly dealer pin level |
 | `wk_dist_to_min_dgex` | (spot - wk_min_dgex) / spot | Weekly dealer hedging hole |
+| `wk_dist_to_max_vega` | (spot - wk_max_vega) / spot | Weekly volatility exposure peak |
+| `wk_dist_to_min_vega` | (spot - wk_min_vega) / spot | Weekly volatility hole |
 
 ### Weekly Regime
 
@@ -224,6 +239,8 @@ def sign_divergence(a: float, b: float) -> float:
 | `vanna_0dte_vs_wk` | sign_div(net_vanna, wk_net_vanna) | 1.0 = vol-spot feedback disagreement |
 | `dgex_0dte_vs_wk` | sign_div(net_dgex, wk_net_dgex) | 1.0 = intraday vs multi-day dealer hedging conflict |
 | `delta_0dte_vs_wk` | sign_div(net_delta, wk_net_delta) | 1.0 = directional flow disagreement |
+| `vega_0dte_vs_wk` | sign_div(net_vega, wk_net_vega) | 1.0 = volatility exposure mismatch |
+| `vomma_0dte_vs_wk` | sign_div(net_vomma, wk_net_vomma) | 1.0 = convexity mismatch |
 
 **Trading Edge:** High divergence (1.0) often precedes reversals or regime changes as one timeframe "wins" the tug-of-war.
 
@@ -385,7 +402,7 @@ vix_regime_normalized = vix_regime / 2.0  # Scale to [0, 1]
 
 ### Technical Indicators
 
-#### RSI (Relative Strength Index) ⭐ #3 MOST IMPORTANT (4.8%)
+#### RSI (Relative Strength Index)
 
 **Formula:**
 ```python
@@ -439,6 +456,32 @@ vol_relative_normalized = min(vol_relative, 5.0) / 5.0  # Capped at 5x average
 
 ---
 
+## RBF Confluences
+
+Radial Basis Function (RBF) confluences measure the overlap between structural levels (IB, Fibonacci) and Greek levels using a Gaussian kernel.
+
+**Formula:**
+```python
+def rbf_confluence(level_a, level_b, spot, sigma=0.05):
+    dist = abs(level_a - level_b) / spot
+    return exp(-dist**2 / (2 * sigma**2))  # Returns [0, 1]
+```
+
+**Interpretation:**
+- 1.0: Levels are identical (Strong Confluence)
+- 0.0: Levels are far apart (No Confluence)
+- High confluence indicates a "super level" where multiple factors align.
+
+**Key Confluences:**
+| Feature | Combination | Significance |
+|---------|-------------|--------------|
+| `confluence_ib_high_max_gamma` | IB High + Max Gamma | Structural resistance backed by gamma wall |
+| `confluence_ib_low_min_gamma` | IB Low + Min Gamma | Structural support at volatility trigger point |
+| `confluence_fib161_bull_max_vega` | Fib 1.618 Up + Max Vega | Bullish target aligns with high vol exposure |
+| `confluence_fib127_bear_min_dgex` | Fib 1.272 Down + Min DGEX | Bearish target aligns with dealer hedging hole |
+
+---
+
 ## Engineered Features
 
 These features combine multiple inputs to capture complex market dynamics.
@@ -453,6 +496,8 @@ Ratios reveal the relative strength of different Greek forces:
 | `dgex_gamma_ratio` | net_dgex / (\|net_gamma\| + ε) | Dealer hedging intensity vs gamma regime |
 | `charm_vanna_ratio` | net_charm / (\|net_vanna\| + ε) | Time decay pressure vs vol-spot feedback |
 | `delta_gamma_ratio` | net_delta / (\|net_gamma\| + ε) | Directional flow vs gamma regime |
+| `vega_gamma_ratio` | net_vega / (\|net_gamma\| + ε) | Volatility exposure vs gamma stabilizing/destabilizing |
+| `vomma_vega_ratio` | net_vomma / (\|net_vega\| + ε) | Convexity vs linear volatility exposure |
 
 **Note:** ε = 1e-6 prevents division by zero
 
@@ -472,6 +517,8 @@ Changes between consecutive observations reveal flow acceleration/deceleration:
 | `dgex_change` | net_dgex(t) - net_dgex(t-1) | Dealer hedging pressure change |
 | `delta_change` | net_delta(t) - net_delta(t-1) | Directional flow acceleration |
 | `spot_change` | (spot(t) - spot(t-1)) / spot(t-1) | Price momentum |
+| `vega_change` | net_vega(t) - net_vega(t-1) | Volatility exposure change |
+| `vomma_change` | net_vomma(t) - net_vomma(t-1) | Convexity change |
 
 **Trading Logic:**
 - Positive gamma_change + rising price = gamma wall building above (resistance)
@@ -642,9 +689,21 @@ From the latest model training (medium architecture), the top 5 most important f
 ### Key Concepts
 
 - **Gamma Pinning:** Price gravitates toward strikes with high positive gamma
-- **Charm:** dGamma/dTime - how gamma changes with time decay ⭐ #1 FEATURE
+- **Charm:** dGamma/dTime - how gamma changes with time decay
 - **Vanna:** dDelta/dVol - how directional exposure changes with volatility
 - **Zomma:** dGamma/dVol - how gamma changes with volatility
+- **Vega:** dPrice/dVol - sensitivity to volatility changes
+- **Vomma:** dVega/dVol - convexity of vega (second order)
+
+### Feature Reduction Strategy
+
+The model uses a 3-step feature reduction pipeline (`neural/feature_reduction.py`) to manage the large number of features (~93):
+
+1.  **Variance Filtering:** Removes features with near-zero variance (< 0.01) to eliminate constant or irrelevant signals.
+2.  **Correlation Grouping:** Identifies groups of highly correlated features (|r| > 0.85).
+3.  **Grouped PCA:** Applies PCA to each correlated group (keeping top 3 components) while preserving standalone features.
+
+This reduces dimensionality while retaining the signal from correlated groups (e.g., if multiple Greek distances are highly correlated, PCA extracts their common trend).
 
 ### Model Architecture
 
