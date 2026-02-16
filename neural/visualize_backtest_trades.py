@@ -386,7 +386,7 @@ def main():
         plot_trades(candles_df, day_trades, ticker, date_str, 
                    hold_minutes=args.hold, output_path=output_path)
     
-    pnl_summary_path = str(OUTPUT_DIR / "pnl_performance_summary.png") if args.save else None
+    pnl_summary_path = str(OUTPUT_DIR / f"pnl_performance_summary_{args.date}_{args.ticker}.png") if args.save else None
     plot_pnl_summary(trades_df, output_path=pnl_summary_path)
     print(f"\n{'=' * 60}")
     print("  VISUALIZATION COMPLETE")

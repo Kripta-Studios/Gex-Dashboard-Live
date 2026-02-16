@@ -540,6 +540,7 @@ def main():
     parser = argparse.ArgumentParser(description="Backtest hybrid trading model")
     parser.add_argument("--data", default="training_data/training_data.csv", help="Path to CSV data")
     parser.add_argument("--model", default="models/trading_hybrid.pt", help="Path to model file")
+    parser.add_argument("--model-size", choices=["micro", "small", "medium", "large"], default="small", help="Model size used during training")
     parser.add_argument("--threshold", type=float, default=0.7, help="Confidence threshold for trades (0.5-0.9)")
     parser.add_argument("--cooldown", type=int, default=30, help="Minutes between trades per ticker (default: 30)")
     parser.add_argument("--position-size", type=float, default=1.0, help="Position size multiplier")
@@ -594,7 +595,7 @@ def main():
         
     try:
         # load_hybrid_model returns (model, normalizer)
-        model, normalizer = load_hybrid_model(args.model, normalizer_path)
+        model, normalizer = load_hybrid_model(args.model, normalizer_path, args.model_size, device)
         model.to(device)
         model.eval()
         print("  [OK] Model loaded")
