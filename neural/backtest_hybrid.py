@@ -155,6 +155,7 @@ class TradeSimulator:
         
         # Track last trade time per ticker per day to enforce cooldown
         last_trade_time = {}
+        open_positions = {}  # key: (ticker, date), value: exit_minute
         
         # Point values per ticker
         point_values = {
@@ -183,6 +184,15 @@ class TradeSimulator:
             current_minute = row['minutes']
             if 570 <= current_minute < 580:
                 continue
+
+            if (ticker, date) in open_positions:
+                expected_exit = open_positions[(ticker, date)]
+                if current_minute < expected_exit:
+                    continue  # Skip - position still open
+                else:
+                    # Position closed, remove from tracking
+                    del open_positions[(ticker, date)]
+
             # Cooldown check
             last_time = last_trade_time.get((ticker, date), -999)
             if current_minute - last_time < self.cooldown_minutes:
@@ -423,6 +433,9 @@ class TradeSimulator:
             if self.trade_limit > 0 and len(trades) >= self.trade_limit:
                 print(f"\n[INFO] Trade limit of {self.trade_limit} reached. Stopping simulation.")
                 break
+            
+            expected_exit_minute = current_minute + hold_minutes
+            open_positions[(ticker, date)] = expected_exit_minute
             
             # Update cooldown
             last_trade_time[(ticker, date)] = current_minute
