@@ -11,9 +11,19 @@ Simulates trading based on model predictions and calculates:
 Usage:
     python bots/backtest_hybrid.py --data training_data/training_data.csv --threshold 0.6
 """
-
+# Asegúrate de que estas líneas estén así al principio del archivo:
 import os
 import sys
+from pathlib import Path
+
+# 1. Obtenemos la raíz del proyecto (un nivel arriba de 'neural/')
+SCRIPT_DIR = Path(__file__).parent
+PROJECT_ROOT = SCRIPT_DIR.parent
+
+# 2. Añadimos tanto la raíz como la carpeta 'bots' al PATH de Python
+sys.path.insert(0, str(PROJECT_ROOT))
+sys.path.insert(0, str(PROJECT_ROOT / "bots"))
+
 import time
 import argparse
 import numpy as np
@@ -323,45 +333,44 @@ class TradeSimulator:
 
             
             # --- DISCORD ALERT SIMULATION ---
-            if self.discord_enabled and send_discord_trade_open:
-                print(f"  [Discord Request] Sending alert for {ticker} {direction}...")
-                # ... (Discord logic remains same, omitted for brevity if unchanged logic needed)
-                # ... (Actually I need to keep it or it will be deleted by replacement)
-                # Re-implementing simplified Discord Logic for safety
+            if self.discord_enabled and _has_discord:
                 try:
-                    tp_price = entry_price * (1 + self.target_pct) if direction == "LONG" else entry_price * (1 - self.target_pct)
+                    # Calculamos precios teóricos para el mensaje
+                    tp_price = entry_price * (1 + smart_target) if direction == "LONG" else entry_price * (1 - smart_target)
                     sl_price = entry_price * (1 - self.stop_pct) if direction == "LONG" else entry_price * (1 + self.stop_pct)
                     
+                    # Creamos un objeto Mock que imite lo que el Wrapper espera
                     class MockSignal:
-                        def __init__(self, t, d, p, tp, sl, mu_min=0.0, sigma_min=0.0):
+                        def __init__(self, t, d, p, tp, sl, mu, sigma):
                             self.ticker = t
                             self.direction = d
                             self.entry_price = p
                             self.stop_loss = sl
                             self.take_profit_1 = tp
-                            self.take_profit_2 = tp
-                            self.raw_confidence = 0.99
-                            self.calibrated_confidence = 0.99
+                            self.take_profit_2 = tp * 1.05
+                            self.raw_confidence = max_prob
+                            self.calibrated_confidence = max_prob
                             self.position_size = 1.0
-                            self.max_hold_time = 120
-                            self.regime = "trending_up"
-                            self.time_mu_minutes = mu_min
-                            self.time_sigma_minutes = sigma_min
+                            self.max_hold_time = hold_minutes
+                            self.regime = "Backtest_Discovery"
+                            self.time_mu_minutes = mu
+                            self.time_sigma_minutes = sigma
+                            self.reasoning = f"Backtest Signal (Prob: {max_prob:.2f})"
 
-                    mock_signal = MockSignal(ticker, direction, entry_price, tp_price, sl_price,
-                                             mu_min=pred_minutes_value, sigma_min=sigma_minutes)
+                    mock_signal = MockSignal(ticker, direction, entry_price, tp_price, sl_price, 
+                                            pred_minutes_value, sigma_minutes)
                     
-                    # Parse entry date/time for the alert
-                    date_str = str(date)
-                    dt_str = f"{date_str} {time_str}"
-                    entry_dt = datetime.strptime(dt_str, "%Y%m%d %H:%M")
+                    # Convertimos la fecha del CSV a objeto datetime para el mensaje
+                    entry_dt = datetime.strptime(f"{date} {time_str}", "%Y%m%d %H:%M")
                     
+                    # LLAMADA REAL AL WEBHOOK
                     send_discord_trade_open(mock_signal, timestamp=entry_dt)
-                    time.sleep(0.1)
+                    
+                    # Pequeño delay para no saturar la API de Discord
+                    time.sleep(0.5) 
                 except Exception as e:
-                    print(f"  [Discord Error] {e}")
+                    print(f"  [Discord Error] No se pudo enviar: {e}")
 
-            
             # Calculate P&L
             multiplier = point_values.get(ticker, 100.0)
             
