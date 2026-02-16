@@ -53,8 +53,8 @@ load_dotenv()
 GREEK_DATA_DIR = os.getenv("GREEK_DATA_DIR", "/home/Option-Greeks-Plotting-Discord-Bot/json_data")
 FOURIER_DIR = os.getenv("FOURIER_DIR", "/home/Option-Greeks-Plotting-Discord-Bot/fourier")
 IB_CHARTS_DIR = os.getenv("IB_CHARTS_DIR", "/home/Option-Greeks-Plotting-Discord-Bot/ib_charts")
-MODEL_PATH = os.path.join(PROJECT_ROOT, "models", "trading_hybrid.pt")
-NORMALIZER_PATH = os.path.join(PROJECT_ROOT, "models", "hybrid_normalizer.npz")
+MODEL_PATH = os.path.join(PROJECT_ROOT, "models", "trading_hybrid_wf.pt")
+NORMALIZER_PATH = os.path.join(PROJECT_ROOT, "models", "hybrid_normalizer_wf.npz")
 CALIBRATION_PATH = os.path.join(PROJECT_ROOT, "models", "calibration.json")
 TRADES_DIR = os.path.join(PROJECT_ROOT, "trades_wrapper")
 LOGS_DIR = os.path.join(PROJECT_ROOT, "logs")
@@ -68,7 +68,7 @@ os.makedirs(LOGS_DIR, exist_ok=True)
 # OPTIMIZED TRADING PARAMETERS (From Backtest: 71.1% WR, PF 3.44, Sharpe 16.6)
 # =============================================================================
 
-MIN_CONFIDENCE = 0.80  # Threshold: 0.8 (287 trades over 14 days)
+MIN_CONFIDENCE = 0.70  # Threshold: 0.8 (287 trades over 14 days)
 BASE_RISK_PCT = 0.01   # 1% base risk per trade
 MAX_POSITION_PCT = 0.05  # 5% maximum position size
 LOOP_INTERVAL = 30  # seconds
@@ -84,7 +84,7 @@ TARGET_SHORT_PCT = 0.005  # 0.5% target for SHORT positions
 STOP_LOSS_PCT = 0.003  # 0.3% stop loss (same for both directions)
 MAX_TIME_MINUTES = 120  # Max predicted time to target
 MAX_UNCERTAINTY_MINUTES = 45.0  # Bayesian σ exit threshold
-TRADE_COOLDOWN_MINUTES = 60  # Cooldown between trades (prevents overtrading)
+TRADE_COOLDOWN_MINUTES = 30  # Cooldown between trades (prevents overtrading)
 
 # Market Filters
 MIN_IV_PCT = 0.00  # Minimum IV percentile (0.0 = disabled)
@@ -105,7 +105,7 @@ TICKERS = [
     "SPY",  # ETF tracking SPX
     "QQQ",  # Nasdaq ETF
 ]
-FUTURES_TO_TRACK = []  # Futures
+FUTURES_TO_TRACK = ["/ES", "/NQ"]  # Futures
 FUTURES_GREEKS_MAPPING = {"/ES": "SPX", "/NQ": "QQQ"}
 
 # Point values for P&L calculation (only trained tickers)
@@ -494,7 +494,7 @@ class TradingBotWrapper:
         
         self.model, self.normalizer = load_hybrid_model(
             MODEL_PATH, NORMALIZER_PATH, 
-            model_size="medium", device=self.device  # Changed from "small" to "medium"
+            model_size="micro", device=self.device  # Changed from "small" to "medium"
         )
         
         # Initialize wrapper with OPTIMIZED parameters
