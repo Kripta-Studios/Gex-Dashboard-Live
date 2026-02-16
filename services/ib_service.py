@@ -28,6 +28,7 @@ import discord
 from datetime import datetime, timedelta, time as dt_time
 from zoneinfo import ZoneInfo
 from dotenv import load_dotenv
+import pandas_market_calendars as mcal
 
 # --- IMPORTS TASTYTRADE (DIRECTOS, SIN TTCLI) ---
 from tastytrade import Session, DXLinkStreamer
@@ -39,6 +40,7 @@ DISCORD_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
 TT_USERNAME = os.getenv("TASTYTRADE_USERNAME")
 TT_PASSWORD = os.getenv("TASTYTRADE_PASSWORD")
 
+NYSE_CALENDAR = mcal.get_calendar('NYSE')
 # Mapeo de Canales
 CHANNEL_MAPPING = {
     "SPX": 1462142087305892064,
@@ -1164,7 +1166,14 @@ def generate_ib_chart(ticker: str, df_candles: pd.DataFrame, greeks_files: list,
 
     return output_filename
 
-
+def is_market_open(check_date) -> bool:
+    """
+    Verifica si el NYSE está abierto en una fecha específica 
+    (excluye fines de semana y días festivos oficiales).
+    """
+    schedule = NYSE_CALENDAR.schedule(start_date=check_date, end_date=check_date)
+    return not schedule.empty
+    
 # --- BOT DE DISCORD ---
 class IBBot(discord.Client):
     def __init__(self):
@@ -1197,6 +1206,11 @@ class IBBot(discord.Client):
         trading_date = now_ny.date()
         if now_ny.time() < dt_time(3, 0):
             trading_date = trading_date - timedelta(days=1)
+
+        if not is_market_open(trading_date):
+            # Opcional: imprimir menos frecuentemente para no saturar el log
+            # print(f"--- Ciclo IB {now_ny.strftime('%H:%M:%S')} --- [NYSE CERRADO]")
+            return
             
         today_str = trading_date.strftime("%Y%m%d")
         print(f"--- Ciclo IB {now_ny.strftime('%H:%M:%S')} ---", flush=True)

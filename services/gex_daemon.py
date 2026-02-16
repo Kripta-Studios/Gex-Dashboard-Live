@@ -21,12 +21,22 @@ from dotenv import load_dotenv
 import calendar
 import pickle
 import traceback
+import pandas_market_calendars as mcal
+
+# Inicializar el calendario del NYSE de forma global por rendimiento
+NYSE_CALENDAR = mcal.get_calendar('NYSE')
 
 # --- CONFIGURACIÓN ---
 TICKERS_TO_TRACK = ["SPX", "SPY", "QQQ"]
 EXPIRATION_MODE = "0dte"  # O "weekly", "all"
 UPDATE_INTERVAL = 30  # Segundos entre vueltas completas
 
+def is_market_open(check_date) -> bool:
+    """
+    Verifica si el NYSE está abierto en una fecha específica.
+    """
+    schedule = NYSE_CALENDAR.schedule(start_date=check_date, end_date=check_date)
+    return not schedule.empty
 
 # --- FUNCIONES DE CÁLCULO (Tu código original de calc_exposures y spx_media) ---
 # [PEGAR AQUÍ LA FUNCIÓN calc_exposures QUE ME PASASTE]
@@ -1014,6 +1024,25 @@ async def main_loop():
         refresh_token=os.getenv('TASTYTRADE_REFRESH_TOKEN'))
 
     while True:
+        # 1. Obtener la hora actual en NY
+        now_ny = pd.Timestamp.now(tz="America/New_York")
+        trading_date = now_ny.date()
+        
+        # Ajuste para la madrugada (antes de las 3:00 AM cuenta como el día anterior)
+        if now_ny.time() < time(3, 0):
+            trading_date = trading_date - timedelta(days=1)
+
+        # 2. Validar si el mercado está abierto hoy
+        if not is_market_open(trading_date):
+            print(f"[{now_ny.strftime('%H:%M:%S')}] NYSE CERRADO. Esperando 50 minutos...")
+            await asyncio.sleep(3000)  # Duerme 5 minutos para no consumir CPU ni log spam
+            continue
+            
+        if not (time(3, 0) <= current_time <= time(17, 0)):
+            print(f"[{now_ny.strftime('%H:%M:%S')}] FUERA DE HORARIO. En reposo (50 min)...")
+            await asyncio.sleep(3000)
+            continue
+        
         start_time = datetime.now()
 
         # Validar sesión

@@ -17,11 +17,12 @@ from datetime import datetime, timedelta
 from datetime import time as dt_time
 from zoneinfo import ZoneInfo
 from dotenv import load_dotenv
+import pandas_market_calendars as mcal
 
 # --- CONFIGURACIÓN DE DISCORD ---
 load_dotenv()
 DISCORD_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
-
+NYSE_CALENDAR = mcal.get_calendar('NYSE')
 # ¡¡IMPORTANTE!!: RELLENA ESTOS IDs CON LOS DE TU SERVIDOR
 # Si no pones IDs, el script generará las imágenes pero no las enviará.
 CHANNEL_MAPPING = {
@@ -94,7 +95,12 @@ if not os.path.exists(OUTPUT_DIR):
 SENT_CACHE = {}
 
 # --- 1. PROCESAMIENTO ---
-
+def is_market_open(check_date) -> bool:
+    """
+    Verifica si el NYSE está abierto en una fecha específica.
+    """
+    schedule = NYSE_CALENDAR.schedule(start_date=check_date, end_date=check_date)
+    return not schedule.empty
 
 def process_single_file(filepath, spot_price_key="spot_price"):
     try:
@@ -358,6 +364,19 @@ class FourierBot(discord.Client):
 
         while not self.is_closed():
             try:
+                # --- VALIDACIÓN DE DÍA HÁBIL ---
+                now_ny = datetime.now(NY_TZ) if NY_TZ else datetime.now()
+                trading_date = now_ny.date()
+                
+                # Si son antes de las 3:00 AM en NY, cuenta como el día de trading anterior
+                if now_ny.time() < dt_time(3, 0):
+                    trading_date = trading_date - timedelta(days=1)
+                
+                if not is_market_open(trading_date):
+                    # El mercado está cerrado hoy. Dormimos 5 minutos y volvemos a comprobar.
+                    print(f"[{now_ny.strftime('%H:%M:%S')}] NYSE CERRADO. FourierBot en reposo (esperando 5 min)...")
+                    await asyncio.sleep(300) 
+                    continue
                 await self.loop.run_in_executor(None, self.process_tickers_sync)
             except Exception as e:
                 print(f"[ERROR LOOP] {e}")
