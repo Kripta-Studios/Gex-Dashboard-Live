@@ -556,11 +556,11 @@ class TradingBotWrapper:
     def get_ib_data(self, ticker: str) -> dict:
         """Load IB data for ticker."""
         safe_ticker = ticker.replace("/", "")
-        today = datetime.now().strftime("%Y-%m-%d")
+        today = datetime.now().strftime("%Y%m%d")
         ib_file = Path(IB_CHARTS_DIR) / f"ib_data_{safe_ticker}_{today}.json"
         
         if not ib_file.exists():
-            yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
+            yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y%m%d")
             ib_file = Path(IB_CHARTS_DIR) / f"ib_data_{safe_ticker}_{yesterday}.json"
         
         if not ib_file.exists():
@@ -847,6 +847,16 @@ class TradingBotWrapper:
         features = self.extract_features(greek_data, ib_data, ticker, weekly_data=weekly_data)
         if features is None:
             return
+
+        # --- 🚨 CÓDIGO DE DIAGNÓSTICO (INICIO) 🚨 ---
+        # 1. Revisar si hay valores NaN o Infinitos que rompen el modelo
+        if np.isnan(features).any() or np.isinf(features).any():
+            logger.error(f"DATOS CORRUPTOS] {ticker} contiene NaN o Infinito. Failing Model")
+            # Buscar exactamente qué columnas están fallando
+            fallos = [FEATURE_COLUMNS[i] for i, val in enumerate(features) if np.isnan(val) or np.isinf(val)]
+            logger.error(f"  -> Columnas rotas: {fallos}")
+            return # Abortamos para este ticker para no saturar al modelo
+        # --- 🚨 CÓDIGO DE DIAGNÓSTICO (FIN) 🚨 ---
         
         current_price = greek_data.get("spot", greek_data.get("spot_price", 0))
         
@@ -877,6 +887,21 @@ class TradingBotWrapper:
                     signal.take_profit_2 = signal.entry_price * (1 - target_pct * 1.5)
 
                 self._open_position(signal)
+
+            else:
+                confianza = getattr(signal, 'raw_confidence', 0.0)
+                regimen = getattr(signal, 'regime', 'Desconocido')
+                
+                if confianza == 0.0:
+                    # Imprimimos por qué el bot ha descartado la señal (o si faltan datos base)
+                    logger.warning(f"🚫 [BLOQUEO] {ticker} | Confianza 0.0% | Motivo/Régimen: {regimen} | IB Data Existe: {ib_data is not None}")
+                    
+                    # Si es uno de los futuros (/ES o /NQ) que siempre fallan, imprimimos su spot para ver si llega
+                    if ticker in ["/ES", "/NQ"]:
+                        logger.warning(f"  -> Debug {ticker}: Precio actual = {current_price} | Datos Griegas: {greek_data is not None}")
+                else:
+                    logger.info(f"👀 [SCAN] {ticker} | Precio: ${current_price:.2f} | Señal: HOLD | Confianza ML: {confianza:.1%} (Requiere: {MIN_CONFIDENCE:.0%})")
+                    
     
     def _open_position(self, signal: TradeSignal):
         """Open a new position based on wrapper signal and capture entry market conditions."""
