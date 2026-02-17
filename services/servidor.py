@@ -35,6 +35,7 @@ QUANTUM_SIMULATOR = AerSimulator()
 USERS = {
     "admin@flowgreeks.com": {"pass": "admin123", "role": "ADMIN"},
     "user1@flowgreeks.com": {"pass": "FlowGreeksPlottingUser1", "role": "USER"},
+    "user2@flowgreeks.com": {"pass": "FlowGreeksPlottingUser2", "role": "USER"},
 }
 SESSIONS = {}        # { token_uuid: {"email": str, "role": str} }
 EMAIL_TO_TOKEN = {}  # { email: token } — single-session enforcement
