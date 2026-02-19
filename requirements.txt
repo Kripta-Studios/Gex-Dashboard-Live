@@ -20,3 +20,4 @@ scipy
 flask
 qiskit 
 qiskit-aer
+git+https://github.com/Kripta-Studios/thetadata-api.git#egg=thetadata_api
