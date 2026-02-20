@@ -367,9 +367,12 @@ class RegimeFilter:
             return False, "No fresh Greek data available"
         
         # Check time of day (NY time)
-        now = datetime.now()
-        hour = now.hour
-        minute = now.minute
+        import pytz
+        
+        ny_tz = pytz.timezone('America/New_York')
+        now_ny = datetime.now(ny_tz)  # Hora de NY correcta
+        hour = now_ny.hour
+        minute = now_ny.minute
         
         # Adjust for timezone if needed (assuming local time for now)
         # Market hours: 9:30 AM - 4:00 PM ET

@@ -68,7 +68,7 @@ os.makedirs(LOGS_DIR, exist_ok=True)
 # OPTIMIZED TRADING PARAMETERS (From Backtest: 71.1% WR, PF 3.44, Sharpe 16.6)
 # =============================================================================
 
-MIN_CONFIDENCE = 0.70  # Threshold: 0.8 (287 trades over 14 days)
+MIN_CONFIDENCE = 0.69  # Threshold: 0.8 (287 trades over 14 days)
 BASE_RISK_PCT = 0.01   # 1% base risk per trade
 MAX_POSITION_PCT = 0.05  # 5% maximum position size
 LOOP_INTERVAL = 30  # seconds
@@ -319,7 +319,7 @@ class Position:
         self.entry_ib_context = {}
         
         # Target used (for asymmetric tracking)
-        self.target_pct_used = TARGET_LONG_PCT if direction == "LONG" else TARGET_SHORT_PCT
+        self.target_pct_used = TARGET_LONG_PCT if self.direction == "LONG" else TARGET_SHORT_PCT
     
     def add_price_update(self, price: float):
         """Track price movement during trade lifetime."""
