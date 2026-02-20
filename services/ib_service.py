@@ -714,9 +714,6 @@ def get_all_greeks_files(ticker: str, expiry: str, date_str: str) -> list:
             dt_str = f"{match.group(1)} {match.group(2)}"
             dt_file = datetime.strptime(dt_str, "%Y%m%d %H%M%S")
             
-            if SERVER_TZ and NY_TZ:
-                dt_file = dt_file.replace(tzinfo=SERVER_TZ).astimezone(NY_TZ)
-            
             file_times.append((dt_file, filepath))
         except:
             continue
