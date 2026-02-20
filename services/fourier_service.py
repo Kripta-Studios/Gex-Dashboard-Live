@@ -120,10 +120,8 @@ def process_single_file(filepath, spot_price_key="spot_price"):
             dt_server = datetime.strptime(dt_str, "%Y%m%d %H%M%S")
 
             # Conversión TZ
-            if SERVER_TZ and NY_TZ:
-                dt_server = dt_server.replace(tzinfo=SERVER_TZ)
-                dt_ny = dt_server.astimezone(NY_TZ)
-                ny_time = dt_ny.time()
+            if NY_TZ:
+                dt_ny = dt_server.replace(tzinfo=NY_TZ)
             else:
                 dt_ny = dt_server  # Fallback si fallan las TZ
         else:
