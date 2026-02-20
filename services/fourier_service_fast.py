@@ -613,7 +613,11 @@ class FourierBot(discord.Client):
 
     async def process_futures_async(self):
         """Procesa futuros (/ES, /NQ) con análisis Fourier."""
-        today_str = datetime.now().strftime("%Y%m%d")
+        now_ny = datetime.now(NY_TZ) if NY_TZ else datetime.now()
+        trading_date = now_ny.date()
+        if now_ny.time() < dt_time(3, 0):
+            trading_date = trading_date - timedelta(days=1)
+        today_str = trading_date.strftime("%Y%m%d")
         
         for ticker in FUTURES_TO_TRACK:
             try:
