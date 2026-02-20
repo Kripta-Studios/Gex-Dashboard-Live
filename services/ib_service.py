@@ -521,7 +521,7 @@ def generate_futures_ib_chart(ticker: str, df_candles: pd.DataFrame, greeks: dic
             "meta": {
                 "ticker": ticker,
                 "date": date_str,
-                "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "generated_at": datetime.now(NY_TZ).strftime("%Y-%m-%d %H:%M:%S") if NY_TZ else datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             },
             "analysis": {
                 "ib_high": float(ib_high),
@@ -897,7 +897,7 @@ def save_to_ib_backtest(ticker: str, df_candles: pd.DataFrame, ib_high: float, i
         "meta": {
             "ticker": ticker,
             "date": date_str,
-            "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "generated_at": datetime.now(NY_TZ).strftime("%Y-%m-%d %H:%M:%S") if NY_TZ else datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "note": "EOD backup from ib_service.py with volume profile"
         },
         "analysis": {
@@ -979,7 +979,7 @@ def generate_ib_chart(ticker: str, df_candles: pd.DataFrame, greeks_files: list,
             "meta": {
                 "ticker": ticker,
                 "date": date_str,
-                "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "generated_at": datetime.now(NY_TZ).strftime("%Y-%m-%d %H:%M:%S") if NY_TZ else datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             },
             "analysis": {
                 "ib_high": float(ib_high),
