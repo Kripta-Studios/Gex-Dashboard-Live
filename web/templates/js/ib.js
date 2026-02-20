@@ -178,7 +178,7 @@ function renderIBChart(canvas, jsonData) {
         'max_dgex': '#00FFFF', 'min_dgex': '#FFA500',
         'min_vanna': '#9400D3',
         'max_vega': '#FF1493',
-        'max_vomma': '#FFFFFF'
+        'max_vomma': '#FFFFFF',
         'call_wall': '#00FF00', 
         'put_wall': '#FF0000'
     };
