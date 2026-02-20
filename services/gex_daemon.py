@@ -1027,6 +1027,7 @@ async def main_loop():
         # 1. Obtener la hora actual en NY
         now_ny = pd.Timestamp.now(tz="America/New_York")
         trading_date = now_ny.date()
+        current_time = now_ny.time()
         
         # Ajuste para la madrugada (antes de las 3:00 AM cuenta como el día anterior)
         if now_ny.time() < time(3, 0):
