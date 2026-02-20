@@ -2059,7 +2059,7 @@ def get_options_data(ticker, expir, greek_filter):
             json_dir = "json_data"
             if not path.exists(json_dir):
                 makedirs(json_dir, exist_ok=True)
-            fname = f"{t_san}_{exp_clean}_ExposureData_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+            fname = f"{t_san}_{exp_clean}_ExposureData_{today.strftime('%Y%m%d_%H%M%S')}.json"
             t0 = time.time()
             with open(path.join(json_dir, fname), "w") as f:
                 json.dump(exp_dict, f, default=serialize)

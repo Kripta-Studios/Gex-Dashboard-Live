@@ -521,7 +521,7 @@ def generate_futures_ib_chart(ticker: str, df_candles: pd.DataFrame, greeks: dic
             "meta": {
                 "ticker": ticker,
                 "date": date_str,
-                "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "generated_at": datetime.now(NY_TZ).strftime("%Y-%m-%d %H:%M:%S") if NY_TZ else datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             },
             "analysis": {
                 "ib_high": float(ib_high),
@@ -714,9 +714,6 @@ def get_all_greeks_files(ticker: str, expiry: str, date_str: str) -> list:
             dt_str = f"{match.group(1)} {match.group(2)}"
             dt_file = datetime.strptime(dt_str, "%Y%m%d %H%M%S")
             
-            if SERVER_TZ and NY_TZ:
-                dt_file = dt_file.replace(tzinfo=SERVER_TZ).astimezone(NY_TZ)
-            
             file_times.append((dt_file, filepath))
         except:
             continue
@@ -897,7 +894,7 @@ def save_to_ib_backtest(ticker: str, df_candles: pd.DataFrame, ib_high: float, i
         "meta": {
             "ticker": ticker,
             "date": date_str,
-            "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "generated_at": datetime.now(NY_TZ).strftime("%Y-%m-%d %H:%M:%S") if NY_TZ else datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "note": "EOD backup from ib_service.py with volume profile"
         },
         "analysis": {
@@ -979,7 +976,7 @@ def generate_ib_chart(ticker: str, df_candles: pd.DataFrame, greeks_files: list,
             "meta": {
                 "ticker": ticker,
                 "date": date_str,
-                "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "generated_at": datetime.now(NY_TZ).strftime("%Y-%m-%d %H:%M:%S") if NY_TZ else datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             },
             "analysis": {
                 "ib_high": float(ib_high),

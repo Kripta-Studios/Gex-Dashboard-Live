@@ -1,0 +1,3 @@
+[submodule "thetadata-api"]
+	path = thetadata-api
+	url = git@github-kripta:Kripta-Studios/thetadata-api.git
