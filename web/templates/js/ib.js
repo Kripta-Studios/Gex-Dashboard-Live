@@ -179,6 +179,8 @@ function renderIBChart(canvas, jsonData) {
         'min_vanna': '#9400D3',
         'max_vega': '#FF1493',
         'max_vomma': '#FFFFFF'
+        'call_wall': '#00FF00', 
+        'put_wall': '#FF0000'
     };
 
     if (jsonData.levels) {
