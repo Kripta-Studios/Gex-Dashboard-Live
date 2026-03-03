@@ -64,129 +64,158 @@
             <button class="new-tab-btn" onclick="addNewTab()">+</button>
         </div>
         <div class="main-content">
-            <div class="top-bar">
-                <div class="control-panel">
-                    <input type="date" id="fourier-date" style="width: 110px; font-weight:700;"
-                        title="Date for Fourier Analysis">
+            <!-- Flex Container to hold middle panel and right panel -->
+            <div style="display: flex; width: 100%; height: 100%; overflow: hidden; gap: 15px;">
 
-                    <button onclick="handleLoadFourier()"
-                        style="background: var(--accent-red); color: white;">FOURIER</button>
-                    <button id="btn-ib" onclick="handleLoadIB()"
-                        style="background: #FFD700; color: black; display: none; font-weight:bold; margin-left:5px;">IB</button>
-                    <input type="text" id="ticker" value="SPX" placeholder="Ticker" list="ticker-list"
-                        oninput="updateExpSuggestions()" style="width: 70px; font-weight:700;">
-                    <datalist id="ticker-list">
-                        <option value="SPX">
-                        <option value="QQQ">
-                        <option value="SPY">
-                        <option value="IWM">
-                        <option value="VIX">
-                        <option value="/ES">
-                        <option value="/NQ">
-                        <option value="ES">
-                        <option value="NQ">
-                        <option value="AAPL">
-                        <option value="AMZN">
-                        <option value="MSFT">
-                        <option value="GOOGL">
-                        <option value="META">
-                        <option value="NVDA">
-                        <option value="AMD">
-                        <option value="TSLA">
-                        <option value="NFLX">
-                        <option value="PLTR">
-                        <option value="HOOD">
-                        <option value="MSTR">
-                        <option value="HIMS">
-                        <option value="UNH">
-                        <option value="GLD">
-                        <option value="SLV">
-                    </datalist>
+                <!-- Left/Center Area: existing charts wrapper -->
+                <div style="flex: 1; display: flex; flex-direction: column; overflow: hidden;">
+                    <div class="top-bar">
+                        <div class="control-panel">
+                            <input type="date" id="fourier-date" style="width: 110px; font-weight:700;"
+                                title="Date for Fourier Analysis">
 
-                    <input type="text" id="exp" value="0dte" placeholder="Exp" list="exp-list"
-                        style="width: 60px; font-weight:700;">
-                    <datalist id="exp-list"></datalist>
+                            <button onclick="handleLoadFourier()"
+                                style="background: var(--accent-red); color: white;">FOURIER</button>
+                            <button id="btn-ib" onclick="handleLoadIB()"
+                                style="background: #FFD700; color: black; display: none; font-weight:bold; margin-left:5px;">IB</button>
+                            <input type="text" id="ticker" value="SPX" placeholder="Ticker" list="ticker-list"
+                                oninput="updateExpSuggestions()" style="width: 70px; font-weight:700;">
+                            <datalist id="ticker-list">
+                                <option value="SPX">
+                                <option value="QQQ">
+                                <option value="SPY">
+                                <option value="IWM">
+                                <option value="VIX">
+                                <option value="/ES">
+                                <option value="/NQ">
+                                <option value="ES">
+                                <option value="NQ">
+                                <option value="AAPL">
+                                <option value="AMZN">
+                                <option value="MSFT">
+                                <option value="GOOGL">
+                                <option value="META">
+                                <option value="NVDA">
+                                <option value="AMD">
+                                <option value="TSLA">
+                                <option value="NFLX">
+                                <option value="PLTR">
+                                <option value="HOOD">
+                                <option value="MSTR">
+                                <option value="HIMS">
+                                <option value="UNH">
+                                <option value="GLD">
+                                <option value="SLV">
+                            </datalist>
 
-                    <select id="greek-select" style="font-weight:700;">
-                        <option value="gamma">Gamma</option>
-                        <option value="delta">Delta</option>
-                        <option value="vanna">Vanna</option>
-                        <option value="charm">Charm</option>
-                        <option value="zomma">Zomma</option>
-                        <option value="dgex">Dgex</option>
-                        <option value="vega">Vega</option>
-                        <option value="vomma">Vomma</option>
-                    </select>
+                            <input type="text" id="exp" value="0dte" placeholder="Exp" list="exp-list"
+                                style="width: 60px; font-weight:700;">
+                            <datalist id="exp-list"></datalist>
 
-                    <button onclick="handleLoadData()">LOAD</button>
-                    <button class="btn-add" onclick="handleAddChart()">+</button>
+                            <select id="greek-select" style="font-weight:700;">
+                                <option value="gamma">Gamma</option>
+                                <option value="delta">Delta</option>
+                                <option value="vanna">Vanna</option>
+                                <option value="charm">Charm</option>
+                                <option value="zomma">Zomma</option>
+                                <option value="dgex">Dgex</option>
+                                <option value="vega">Vega</option>
+                                <option value="vomma">Vomma</option>
+                            </select>
 
-                    <select onchange="changePalette(this.value)" style="width:80px;" title="Theme">
-                        <option value="default">Default</option>
-                        <option value="palette-alt">Blue/Org</option>
-                    </select>
+                            <button onclick="handleLoadData()">LOAD</button>
+                            <button class="btn-add" onclick="handleAddChart()">+</button>
 
-                    <button class="btn-icon" onclick="realignAllCharts()" title="Realign All to Spot">CENTER
-                        ALL</button>
-                    <button class="btn-icon" onclick="takeSnapshot()" title="Save Image">📸</button>
-                    <button class="btn-icon" onclick="toggleZenMode()" title="Zen Mode">🧘</button>
-                    <button class="btn-icon" onclick="popoutCurrentLayout()" title="Pop out Layout">⇱</button>
-                    <button onclick="saveAllLayouts()" style="background:#333; color:#ccc;">SAVE</button>
+                            <select onchange="changePalette(this.value)" style="width:80px;" title="Theme">
+                                <option value="default">Default</option>
+                                <option value="palette-alt">Blue/Org</option>
+                            </select>
 
-                    <label class="checkbox-wrapper">
-                        <input type="checkbox" id="auto-refresh" onchange="toggleAutoRefresh()" checked>
-                        AUTO
-                        <span id="timer-indicator"
-                            style="width: 6px; height: 6px; background: var(--accent-green); border-radius: 50%; display: none;"></span>
-                    </label>
-                </div>
+                            <button class="btn-icon" onclick="realignAllCharts()" title="Realign All to Spot">CENTER
+                                ALL</button>
+                            <button class="btn-icon" onclick="takeSnapshot()" title="Save Image">📸</button>
+                            <button class="btn-icon" onclick="toggleZenMode()" title="Zen Mode">🧘</button>
+                            <button class="btn-icon" onclick="popoutCurrentLayout()" title="Pop out Layout">⇱</button>
+                            <button onclick="saveAllLayouts()" style="background:#333; color:#ccc;">SAVE</button>
 
-                <div class="control-panel market-monitor">
-                    <div class="market-item">
-                        <div style="display:flex; justify-content:space-between;">
-                            <span class="market-label">SPX SPOT</span>
+                            <label class="checkbox-wrapper">
+                                <input type="checkbox" id="auto-refresh" onchange="toggleAutoRefresh()" checked>
+                                AUTO
+                                <span id="timer-indicator"
+                                    style="width: 6px; height: 6px; background: var(--accent-green); border-radius: 50%; display: none;"></span>
+                            </label>
                         </div>
-                        <div class="price-group">
-                            <span class="market-price" id="spot-spx">----.--</span>
-                            <span class="market-change" id="change-spx"></span>
+
+                        <div class="control-panel market-monitor">
+                            <div class="market-item">
+                                <div style="display:flex; justify-content:space-between;">
+                                    <span class="market-label">SPX SPOT</span>
+                                </div>
+                                <div class="price-group">
+                                    <span class="market-price" id="spot-spx">----.--</span>
+                                    <span class="market-change" id="change-spx"></span>
+                                </div>
+                            </div>
+                            <div style="width: 1px; height: 30px; background: var(--border);"></div>
+                            <div class="market-item">
+                                <span class="market-label">VIX SPOT</span>
+                                <div class="price-group">
+                                    <span class="market-price" id="spot-vix">--.--</span>
+                                    <span class="market-change" id="change-vix"></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div style="width: 1px; height: 30px; background: var(--border);"></div>
-                    <div class="market-item">
-                        <span class="market-label">VIX SPOT</span>
-                        <div class="price-group">
-                            <span class="market-price" id="spot-vix">--.--</span>
-                            <span class="market-change" id="change-vix"></span>
+
+                    <div id="charts-wrapper" ondragover="handleWrapperDragOver(event)">
+                        <div
+                            style="width:100%; text-align:center; padding-top:100px; color:var(--text-dim); font-size: 14px;">
+                            No charts loaded.
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <div id="charts-wrapper" ondragover="handleWrapperDragOver(event)">
-                <div style="width:100%; text-align:center; padding-top:100px; color:var(--text-dim); font-size: 14px;">
-                    No charts loaded.
-                </div>
-            </div>
+                    <div id="time-machine-panel">
+                        <button style="background:transparent; border:none; color:var(--text-dim); cursor:pointer;"
+                            onclick="playHistory()">▶</button>
+                        <button id="btn-history-load" onclick="loadHistoryNow()"
+                            style="margin: 0 5px; background: var(--accent-blue); border: none; color: white; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; cursor: pointer;"
+                            title="Load Data for Selected Time">GO</button>
+                        <button onclick="goLive()"
+                            style="margin: 0 10px; background: var(--panel-bg); border: 1px solid var(--accent-green); color: var(--accent-green); font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; cursor: pointer;">GO
+                            LIVE</button>
+                        <div style="font-size:9px; color:var(--text-dim); width:60px;">HISTORY</div>
+                        <input type="range" id="history-slider" min="0" max="100" value="100"
+                            oninput="scrubHistory(this.value)">
+                        <div style="text-align:right; width:80px;">
+                            <div style="font-size:9px; color:var(--text-dim);">DATA TIME</div>
+                            <div id="history-time"
+                                style="font-family:'Roboto Mono'; font-weight:700; color:var(--accent-green); font-size:12px;">
+                                LIVE</div>
+                        </div>
+                    </div>
 
-            <div id="time-machine-panel">
-                <button style="background:transparent; border:none; color:var(--text-dim); cursor:pointer;"
-                    onclick="playHistory()">▶</button>
-                <button id="btn-history-load" onclick="loadHistoryNow()"
-                    style="margin: 0 5px; background: var(--accent-blue); border: none; color: white; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; cursor: pointer;"
-                    title="Load Data for Selected Time">GO</button>
-                <button onclick="goLive()"
-                    style="margin: 0 10px; background: var(--panel-bg); border: 1px solid var(--accent-green); color: var(--accent-green); font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; cursor: pointer;">GO
-                    LIVE</button>
-                <div style="font-size:9px; color:var(--text-dim); width:60px;">HISTORY</div>
-                <input type="range" id="history-slider" min="0" max="100" value="100"
-                    oninput="scrubHistory(this.value)">
-                <div style="text-align:right; width:80px;">
-                    <div style="font-size:9px; color:var(--text-dim);">DATA TIME</div>
-                    <div id="history-time"
-                        style="font-family:'Roboto Mono'; font-weight:700; color:var(--accent-green); font-size:12px;">
-                        LIVE</div>
-                </div>
-            </div>
+                </div> <!-- End Left/Center Area -->
+
+                <!-- Right Area: Market Structure Engine Panel (Hidden by default, requires ADMIN) -->
+                <div id="market-structure-panel" class="ms-panel" style="display:none;">
+                    <div class="ms-header">MARKET STRUCTURE ENGINE</div>
+                    <div class="ms-content">
+                        <div id="ms-warning" class="ms-warning" style="display:none;"></div>
+                        <div id="ms-structure-name" class="ms-title">Awaiting Data...</div>
+                        <div id="ms-dealer-action" class="ms-subtitle"></div>
+
+                        <div class="ms-tilt-container">
+                            <span id="ms-tilt-tag" class="ms-tilt"></span>
+                        </div>
+
+                        <div id="ms-flags-container" class="ms-flags">
+                            <!-- Badges injected here -->
+                        </div>
+                    </div>
+                </div> <!-- End Right Area -->
+
+            </div> <!-- End Flex Container -->
+
         </div>
     </div>
 
@@ -245,8 +274,11 @@
     <!-- 15. Auth - Authentication -->
     <script src="js/auth.js"></script>
 
-    <!-- 16. Init - Application initialization (must be last) -->
+    <!-- 16. Init - Application initialization -->
     <script src="js/init.js"></script>
+
+    <!-- 17. Engine - Market Structure Engine (must be last to ensure API is ready) -->
+    <script src="js/market_structure.js"></script>
 
 </body>
 

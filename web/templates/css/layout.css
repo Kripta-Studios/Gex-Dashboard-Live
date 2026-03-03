@@ -113,3 +113,121 @@
     border-left: 2px solid var(--accent-blue);
 }
 
+/* --- MARKET STRUCTURE ENGINE PANEL --- */
+.ms-panel {
+    width: 250px;
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+.ms-header {
+    background: #1a1a1a;
+    padding: 12px 15px;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+}
+
+.ms-content {
+    padding: 20px 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    text-align: center;
+}
+
+.ms-warning {
+    background: rgba(255, 165, 0, 0.2);
+    border: 1px solid var(--accent-yellow, orange);
+    color: var(--accent-yellow, orange);
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.ms-title {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: white;
+}
+
+.ms-subtitle {
+    font-size: 13px;
+    color: #ccc;
+    font-style: italic;
+    margin-bottom: 10px;
+}
+
+.ms-tilt-container {
+    width: 100%;
+    border-top: 1px dashed rgba(255, 255, 255, 0.1);
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+    padding: 12px 0;
+    margin: 5px 0;
+}
+
+.ms-tilt {
+    font-size: 12px;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #111;
+}
+
+.ms-flags {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.ms-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 6px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.badge-vanna {
+    background: rgba(148, 0, 211, 0.2);
+    border: 1px solid #9400D3;
+    color: #DDA0DD;
+}
+
+.badge-ib {
+    background: rgba(255, 215, 0, 0.2);
+    border: 1px solid #FFD700;
+    color: #FFD700;
+}
+
+.badge-dadu {
+    background: rgba(255, 69, 0, 0.2);
+    border: 1px solid #FF4500;
+    color: #FF7F50;
+}
+
+.ms-loading {
+    opacity: 0.5;
+    pointer-events: none;
+}
+

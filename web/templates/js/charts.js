@@ -89,7 +89,11 @@ function realignAllCharts() {
 function createChartPanel(chartObj, index) {
     // Dispatch to specific panel creators
     if (chartObj.type === 'fourier') return createFourierPanel(chartObj, index);
-    if (chartObj.type === 'ib') return createIBPanel(chartObj, index);
+    if (chartObj.type === 'ib') {
+        const role = sessionStorage.getItem("gex_user_role");
+        if (role !== "ADMIN") return document.createElement("div"); // Security Block
+        return createIBPanel(chartObj, index);
+    }
     return createHeatmapPanel(chartObj, index);
 }
 

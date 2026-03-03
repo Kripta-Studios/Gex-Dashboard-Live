@@ -179,7 +179,7 @@ function renderIBChart(canvas, jsonData) {
         'min_vanna': '#9400D3',
         'max_vega': '#FF1493',
         'max_vomma': '#FFFFFF',
-        'call_wall': '#00FF00', 
+        'call_wall': '#00FF00',
         'put_wall': '#FF0000'
     };
 
@@ -335,6 +335,10 @@ function addIBChartToCurrent(data, ticker, dateStr) {
  * Handle Load IB button click
  */
 async function handleLoadIB() {
+    // SECURITY CHECK: Only ADMIN role can run the IB logic
+    const role = sessionStorage.getItem("gex_user_role");
+    if (role !== "ADMIN") return;
+
     const ticker = document.getElementById("ticker").value.toUpperCase();
     const dateVal = document.getElementById("fourier-date").value;
     const dateStr = dateVal.replace(/-/g, "");

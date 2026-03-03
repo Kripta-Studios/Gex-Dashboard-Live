@@ -47,10 +47,15 @@ function grantAccess(role) {
     document.getElementById("login-screen").style.display = "none";
     document.getElementById("app-wrapper").style.display = "flex";
 
-    // Admin-only: Show IB button
+    // Admin-only: Show IB button and Market Structure Panel
     if (role === 'ADMIN') {
         const ibBtn = document.getElementById("btn-ib");
         if (ibBtn) ibBtn.style.display = "inline-block";
+        const msPanel = document.getElementById("market-structure-panel");
+        if (msPanel) msPanel.style.display = "flex";
+    } else {
+        const msPanel = document.getElementById("market-structure-panel");
+        if (msPanel) msPanel.style.display = "none";
     }
 
     // Call init only if it's defined (script.js must be loaded first)

@@ -82,6 +82,11 @@ async function refreshDashboard() {
     // Re-render all charts
     renderAllCharts();
     updateNYTime();
+
+    // Update Market Structure Widget
+    if (typeof updateMarketStructureUI === 'function') {
+        updateMarketStructureUI();
+    }
 }
 
 /**
