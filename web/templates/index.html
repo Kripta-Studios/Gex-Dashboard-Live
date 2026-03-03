@@ -68,7 +68,7 @@
             <div style="display: flex; width: 100%; height: 100%; overflow: hidden; gap: 15px;">
 
                 <!-- Left/Center Area: existing charts wrapper -->
-                <div style="flex: 1; display: flex; flex-direction: column; overflow: hidden;">
+                <div style="flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0;">
                     <div class="top-bar">
                         <div class="control-panel">
                             <input type="date" id="fourier-date" style="width: 110px; font-weight:700;"
@@ -78,6 +78,9 @@
                                 style="background: var(--accent-red); color: white;">FOURIER</button>
                             <button id="btn-ib" onclick="handleLoadIB()"
                                 style="background: #FFD700; color: black; display: none; font-weight:bold; margin-left:5px;">IB</button>
+                            <button id="btn-toggle-ms" onclick="toggleMarketStructurePanel()"
+                                style="background: #9400D3; color: white; display: none; font-weight:bold; margin-left:5px;"
+                                title="Toggle Market Structure Engine">MS ENGINE</button>
                             <input type="text" id="ticker" value="SPX" placeholder="Ticker" list="ticker-list"
                                 oninput="updateExpSuggestions()" style="width: 70px; font-weight:700;">
                             <datalist id="ticker-list">
@@ -167,7 +170,8 @@
                         </div>
                     </div>
 
-                    <div id="charts-wrapper" ondragover="handleWrapperDragOver(event)">
+                    <div id="charts-wrapper" ondragover="handleWrapperDragOver(event)"
+                        style="overflow-x: auto; display: flex; flex-direction: row;">
                         <div
                             style="width:100%; text-align:center; padding-top:100px; color:var(--text-dim); font-size: 14px;">
                             No charts loaded.
@@ -198,7 +202,11 @@
 
                 <!-- Right Area: Market Structure Engine Panel (Hidden by default, requires ADMIN) -->
                 <div id="market-structure-panel" class="ms-panel" style="display:none;">
-                    <div class="ms-header">MARKET STRUCTURE ENGINE</div>
+                    <div class="ms-header">
+                        <span>MARKET STRUCTURE</span>
+                        <button class="ms-close-btn" onclick="toggleMarketStructurePanel()"
+                            title="Hide Panel">×</button>
+                    </div>
                     <div class="ms-content">
                         <div id="ms-warning" class="ms-warning" style="display:none;"></div>
                         <div id="ms-structure-name" class="ms-title">Awaiting Data...</div>
@@ -206,6 +214,13 @@
 
                         <div class="ms-tilt-container">
                             <span id="ms-tilt-tag" class="ms-tilt"></span>
+                        </div>
+
+                        <div class="ms-cause-container">
+                            <div class="ms-cause-title">Structure Condition Match</div>
+                            <div id="ms-cause-list" class="ms-cause-list">
+                                <!-- Logic injected here -->
+                            </div>
                         </div>
 
                         <div id="ms-flags-container" class="ms-flags">

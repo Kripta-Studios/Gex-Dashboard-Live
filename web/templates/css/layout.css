@@ -115,7 +115,7 @@
 
 /* --- MARKET STRUCTURE ENGINE PANEL --- */
 .ms-panel {
-    width: 250px;
+    width: 260px;
     background: var(--panel-bg);
     border: 1px solid var(--border);
     border-radius: 8px;
@@ -123,6 +123,7 @@
     flex-direction: column;
     overflow-y: auto;
     flex-shrink: 0;
+    max-height: 100%;
 }
 
 .ms-header {
@@ -134,13 +135,17 @@
     color: var(--text-dim);
     border-bottom: 1px solid var(--border);
     text-align: center;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .ms-content {
-    padding: 20px 15px;
+    padding: 15px 15px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
     align-items: center;
     text-align: center;
 }
@@ -231,3 +236,65 @@
     pointer-events: none;
 }
 
+.ms-close-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    font-size: 16px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.ms-close-btn:hover {
+    color: var(--accent-red);
+}
+
+.ms-cause-container {
+    width: 100%;
+    margin-top: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 6px;
+    text-align: left;
+    font-size: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.ms-cause-title {
+    color: var(--text-dim);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.ms-cause-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    justify-content: center;
+}
+
+.ms-cause-item {
+    background: #111;
+    padding: 2px 6px;
+    border-radius: 3px;
+    border: 1px solid #333;
+    font-family: 'Roboto Mono', monospace;
+}
+
+.ms-cause-pos {
+    color: var(--pos-high, #00FF00);
+}
+
+.ms-cause-neg {
+    color: var(--neg-high, #FF4500);
+}
+
+.ms-cause-high {
+    color: #DDA0DD;
+}
+
+.ms-cause-low {
+    color: #87CEFA;
+}

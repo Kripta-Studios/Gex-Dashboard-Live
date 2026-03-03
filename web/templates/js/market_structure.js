@@ -420,6 +420,7 @@ async function updateMarketStructureUI() {
         parentContainer.classList.remove("ms-loading");
 
         const struct = result.structure;
+        const cond = result.conditions;
 
         // Title and fallback colors
         const nameEl = document.getElementById("ms-structure-name");
@@ -446,6 +447,33 @@ async function updateMarketStructureUI() {
         } else {
             tiltEl.style.background = 'var(--panel-bg, #2A2A2A)';
             tiltEl.style.color = '#fff';
+        }
+
+        // Cause Data Array
+        const causeListEl = document.getElementById("ms-cause-list");
+        if (causeListEl) {
+            let causesHTML = '';
+
+            // IV State
+            const ivClass = cond.IV === 'High' ? 'ms-cause-high' : 'ms-cause-low';
+            causesHTML += `<div class="ms-cause-item">IV: <span class="${ivClass}">${cond.IV}</span></div>`;
+
+            // Greeks
+            const greeks = ['Gamma', 'Zomma', 'Delta', 'Vex', 'Vega', 'Vomma'];
+            greeks.forEach(g => {
+                const val = cond[g];
+                const cls = val === 'Pos' ? 'ms-cause-pos' : 'ms-cause-neg';
+                causesHTML += `<div class="ms-cause-item">${g.substring(0, 3)}: <span class="${cls}">${val}</span></div>`;
+            });
+
+            // Regime Technical
+            if (result.warning) {
+                causesHTML += `<div class="ms-cause-item" style="width:100%; color:var(--accent-yellow); margin-top:2px;">Tech: Mismatch</div>`;
+            } else if (result.technicals) {
+                causesHTML += `<div class="ms-cause-item" style="width:100%; color:#aaa; margin-top:2px;">Trend Confirmed</div>`;
+            }
+
+            causeListEl.innerHTML = causesHTML;
         }
 
         // Flags

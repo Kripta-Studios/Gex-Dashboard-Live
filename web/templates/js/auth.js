@@ -40,6 +40,26 @@ async function checkLogin() {
 }
 
 /**
+ * Toggle Market Structure Panel Visibility
+ */
+function toggleMarketStructurePanel() {
+    const role = sessionStorage.getItem("gex_user_role");
+    if (role !== "ADMIN") return;
+
+    const msPanel = document.getElementById("market-structure-panel");
+    if (msPanel) {
+        if (msPanel.style.display === "none") {
+            msPanel.style.display = "flex";
+            if (typeof updateMarketStructureUI === 'function') {
+                updateMarketStructureUI();
+            }
+        } else {
+            msPanel.style.display = "none";
+        }
+    }
+}
+
+/**
  * Grant access to the application
  * @param {string} role - User role (ADMIN, USER)
  */
@@ -51,9 +71,13 @@ function grantAccess(role) {
     if (role === 'ADMIN') {
         const ibBtn = document.getElementById("btn-ib");
         if (ibBtn) ibBtn.style.display = "inline-block";
+        const msBtn = document.getElementById("btn-toggle-ms");
+        if (msBtn) msBtn.style.display = "inline-block";
         const msPanel = document.getElementById("market-structure-panel");
         if (msPanel) msPanel.style.display = "flex";
     } else {
+        const msBtn = document.getElementById("btn-toggle-ms");
+        if (msBtn) msBtn.style.display = "none";
         const msPanel = document.getElementById("market-structure-panel");
         if (msPanel) msPanel.style.display = "none";
     }
