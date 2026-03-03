@@ -21,6 +21,7 @@
     gap: 15px;
     overflow: hidden;
     position: relative;
+    box-sizing: border-box;
 }
 
 .top-bar {
