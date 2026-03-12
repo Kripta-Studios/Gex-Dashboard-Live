@@ -7,7 +7,7 @@ $ErrorActionPreference = "Continue"
 # El script descarta automáticamente días donde falte SPX o QQQ.
 # ─────────────────────────────────────────────────────────────────────────────
 Write-Host "`n=== RECOLECTANDO DATOS SPX+QQQ ===" -ForegroundColor Cyan
-python collect_training_data_spx_qqq_wide.py `
+python collect_training_data_spx_qqq.py `
   --start 20220801 --end 20260228 `
   --workers 28 --tickers SPX QQQ `
   --output training_data_spx_qqq.parquet
@@ -147,10 +147,10 @@ python ..\backtest\analyze_trade_gaps.py
 # ─────────────────────────────────────────────────────────────────────────────
 Write-Host "`n=== VISUALIZACION ===" -ForegroundColor Cyan
 python ..\visualizer\analyze_backtests.py
-python ..\visualizer\analyze_backtests.py --ticker SPX --month 202601
-python ..\visualizer\analyze_backtests.py --ticker SPX --month 202602
-python ..\visualizer\analyze_backtests.py --ticker SPX --month 202603
-python ..\visualizer\analyze_backtests.py --ticker SPX --month 202503
-python ..\visualizer\analyze_backtests.py --ticker SPX --month 202504
+python ..\visualizer\analyze_backtests.py --month 202601
+python ..\visualizer\analyze_backtests.py --month 202602
+python ..\visualizer\analyze_backtests.py --month 202603
+python ..\visualizer\analyze_backtests.py --month 202503
+python ..\visualizer\analyze_backtests.py --month 202504
 
 Write-Host "`n=== PIPELINE COMPLETO CON EXITO ===" -ForegroundColor Green

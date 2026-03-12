@@ -694,5 +694,13 @@ def main():
     print(f"\nReport saved: {report_path}")
     compile_pdf_local(report_path)
 
+    # Clean up auxiliary LaTeX files
+    for ext in ["*.out", "*.log", "*.aux"]:
+        for file in out_dir.glob(ext):
+            try:
+                file.unlink()
+            except Exception as e:
+                print(f"Failed to delete {file.name}: {e}")
+
 if __name__ == "__main__":
     main()
