@@ -11,7 +11,7 @@ Group=root
 WorkingDirectory=/home/Option-Greeks-Plotting-Discord-Bot
 
 # Comando exacto para ejecutar - ACTUALIZADO para nueva estructura
-ExecStart=/usr/bin/java -jar /home/Option-Greeks-Plotting-Discord-Bot/services/ThetaTerminalv3.jar
+ExecStart=/usr/bin/java -Xms512M -Xmx2G -jar /home/Option-Greeks-Plotting-Discord-Bot/services/ThetaTerminalv3.jar
 
 # --- REINICIO AUTOMÁTICO ---
 # Si el proceso muere por cualquier razón, reiniciarlo
