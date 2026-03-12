@@ -1,0 +1,108 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{fontspec}
+\setmainfont{Segoe UI}
+\usepackage[margin=0.6in]{geometry}
+\usepackage{booktabs,longtable,tabularx,colortbl,multirow}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx,float,xcolor,tikz,pgfplots}
+\usepackage{fancyhdr,titlesec,enumitem}
+\usepackage{hyperref}
+
+% ─── Color Palette ───
+\definecolor{bgdark}{HTML}{0D1117}
+\definecolor{cardbg}{HTML}{161B22}
+\definecolor{accent}{HTML}{00FFCC}
+\definecolor{accentrl}{HTML}{FFCC00}
+\definecolor{txtmain}{HTML}{E6EDF3}
+\definecolor{txtsub}{HTML}{8B949E}
+\definecolor{wingreen}{HTML}{3FB950}
+\definecolor{lossred}{HTML}{F85149}
+\definecolor{rowalt}{HTML}{1C2333}
+\definecolor{bordergray}{HTML}{30363D}
+
+\pagecolor{bgdark}
+\color{txtmain}
+
+% ─── Header/Footer ───
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{bordergray}\leaders\hrule height \headrulewidth\hfill}}
+\fancyhead[L]{\color{txtsub}\small GEX Dashboard Live}
+\fancyhead[R]{\color{txtsub}\small Backtest Analysis Report}
+\fancyfoot[C]{\color{txtsub}\small\thepage}
+
+% ─── Section Styling ───
+\titleformat{\section}{\Large\bfseries\color{accent}}{\thesection}{1em}{}[\color{bordergray}\titlerule]
+\titleformat{\subsection}{\large\bfseries\color{accentrl}}{\thesubsection}{0.8em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries\color{txtmain}}{\thesubsubsection}{0.6em}{}
+
+% ─── Custom commands ───
+\newcommand{\metricbox}[3]{%
+  \begin{tikzpicture}
+    \node[fill=cardbg, rounded corners=4pt, minimum width=3.8cm, minimum height=1.6cm,
+          draw=bordergray, line width=0.5pt, inner sep=6pt] (box) {
+      \begin{minipage}{3.4cm}\centering
+        {\color{txtsub}\scriptsize #1}\\[2pt]
+        {\color{#3}\Large\bfseries #2}
+      \end{minipage}
+    };
+  \end{tikzpicture}%
+}
+\newcommand{\pnlcolor}[1]{\ifnum#1>0\color{wingreen}\else\color{lossred}\fi}
+
+\hypersetup{colorlinks=true,linkcolor=accent,urlcolor=accent}
+
+\begin{document}
+
+\begin{center}
+{\Huge\bfseries\color{accent} GEX Dashboard Live}\\[6pt]
+{\Large\color{txtsub} Backtest Analysis Report — 202603}\\[4pt]
+{\normalsize\color{txtsub} Tickers: ALL \quad|\quad GBT: gbt_only_20260312_204346.csv \quad|\quad RL: gbt_rl_20260312_204346.csv}
+\end{center}
+\vspace{12pt}
+\noindent\textcolor{bordergray}{\rule{\textwidth}{0.5pt}}
+\vspace{8pt}
+\section*{GBT-Only vs GBT+RL Comparison}
+\vspace{4pt}
+\noindent\begin{center}
+\metricbox{GBT-Only Trades}{0}{accent}
+\hspace{4pt}
+\metricbox{GBT+RL Trades}{0}{accentrl}
+\hspace{4pt}
+\metricbox{PF Improvement}{0.0\%}{wingreen}
+\end{center}
+\vspace{8pt}
+\noindent\begin{center}
+\rowcolors{2}{cardbg}{rowalt}
+\begin{tabular}{>{\color{txtmain}}l >{\color{accent}}r >{\color{accentrl}}r >{\color{txtsub}}r}
+\toprule
+\rowcolor{cardbg}
+\textcolor{txtmain}{\textbf{Metric}} & \textcolor{accent}{\textbf{GBT-Only}} & \textcolor{accentrl}{\textbf{GBT+RL}} & \textcolor{txtsub}{\textbf{Delta}} \\
+\midrule
+Total Trades & 0 & 0 & \textcolor{txtsub}{0} \\
+Win Rate (\%) & 0.0 & 0.0 & \textcolor{txtsub}{0.0} \\
+Profit Factor & 0.00 & 0.00 & \textcolor{txtsub}{0.00} \\
+Total P\&L (\$) & 0.0 & 0.0 & \textcolor{txtsub}{0.0} \\
+Max Drawdown (\$) & 0.0 & 0.0 & \textcolor{txtsub}{0.0} \\
+Sharpe Ratio & 0.00 & 0.00 & \textcolor{txtsub}{0.00} \\
+W/L Size Ratio & 0.00 & 0.00 & \textcolor{txtsub}{0.00} \\
+Avg Hold Win (min) & 0 & 0 & \textcolor{txtsub}{0} \\
+Avg Hold Loss (min) & 0 & 0 & \textcolor{txtsub}{0} \\
+\bottomrule
+\end{tabular}
+\end{center}
+\vspace{6pt}
+\section*{Performance by Ticker}
+\clearpage
+\clearpage
+\section*{Alpha vs Beta Analysis}
+\clearpage
+\section*{Charts}
+\subsection*{Equity Curves}
+\begin{center}
+\includegraphics[width=0.95\textwidth]{202603_equity_curves.png}
+\end{center}
+\vspace{8pt}
+\clearpage
+\end{document}

@@ -9,7 +9,7 @@ User=root
 
 # ACTUALIZADO para nueva estructura
 WorkingDirectory=/home/Option-Greeks-Plotting-Discord-Bot/bots
-ExecStart=/usr/bin/python3 /home/Option-Greeks-Plotting-Discord-Bot/bots/tradingbot_wrapper.py
+ExecStart=/usr/bin/python3 /home/Option-Greeks-Plotting-Discord-Bot/bots/tradingbot_wrapper_rl.py
 
 Restart=always
 RestartSec=30

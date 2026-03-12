@@ -102,6 +102,38 @@ def calculate_target_label_robust(
         return -1  # SHORT
     return 0  # HOLD
 
+def calculate_target_label_level_aware(
+    series: list, 
+    current_idx: int,
+    long_profit_pct: float, 
+    short_profit_pct: float,
+    stop_pct: float, 
+    nearest_level_type: int,
+    nearest_level_dist: float,
+    lookahead: int = 30
+) -> tuple:
+    """
+    Level-aware target labeling.
+    Currently wraps the asymmetric logic, but exposes the level context 
+    (identity and distance) so that future enhancements can dynamically 
+    adjust profit/stop targets based on whether the level is expected 
+    to act as support or resistance.
+    """
+    from collect_training_data_spx_qqq import calculate_target_label_asymmetric
+    
+    # Placeholder for future logic: e.g., if nearest_level_type is IB High, 
+    # we might expect resistance, so we could tighten the long stop or 
+    # relax the short profit target.
+    # For now, we just pass through to the asymmetric labeler.
+    
+    return calculate_target_label_asymmetric(
+        series=series,
+        current_idx=current_idx,
+        long_profit_pct=long_profit_pct,
+        short_profit_pct=short_profit_pct,
+        stop_pct=stop_pct,
+        lookahead=lookahead
+    )
 
 def calculate_target_with_max_adverse(
     prices: List[float],
@@ -428,12 +460,22 @@ def walk_forward_splits(
         
         return splits
 
-    min_date = df['_date'].min()
-    max_date = df['_date'].max()
+    # Use date_col (already converted to datetime above) for splitting.
+    # Do NOT use the hardcoded '_date' column — callers may have their own
+    # '_date' with a different value (e.g. diagnose_pipeline adds it before
+    # calling us, causing column contamination).
+    min_date = df[date_col].min()
+    max_date = df[date_col].max()
     
     splits = []
     current_train_start = min_date
     
+    # FIX: Purge gap between train and test to prevent target autocorrelation
+    # from leaking across the boundary. With 180-minute rolling lookahead,
+    # the last 180 min of training data share target overlap with the first
+    # 180 min of test data. Purging this gap eliminates the data bleeding.
+    purge_gap = timedelta(minutes=180)
+
     while True:
         train_end = current_train_start + timedelta(days=train_window_months * 30)
         test_end = train_end + timedelta(days=test_window_months * 30)
@@ -441,13 +483,14 @@ def walk_forward_splits(
         if test_end > max_date:
             break
         
-        train_mask = (df['_date'] >= current_train_start) & (df['_date'] < train_end)
-        test_mask = (df['_date'] >= train_end) & (df['_date'] < test_end)
+        train_mask = (df[date_col] >= current_train_start) & (df[date_col] < train_end)
+        test_mask  = (df[date_col] >= train_end + purge_gap) & (df[date_col] < test_end)
         
-        train_split = df[train_mask].drop(columns=['_date'], errors='ignore')
-        test_split = df[test_mask].drop(columns=['_date'], errors='ignore')
+        # Keep _date in the split for downstream date annotation (diagnose_pipeline uses it)
+        train_split = df[train_mask].copy()
+        test_split  = df[test_mask].copy()
         
-        if len(train_split) > 100 and len(test_split) > 10:  # Minimum samples
+        if len(train_split) > 100 and len(test_split) > 10:
             splits.append((train_split, test_split))
         
         current_train_start += timedelta(days=step_months * 30)

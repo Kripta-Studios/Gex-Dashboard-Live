@@ -1,0 +1,717 @@
+% ============================================================================
+%  Kripta Studios — Operational and Deployment Guide
+%  GBT+RL 0DTE Options Trading System
+% ============================================================================
+\documentclass[11pt,a4paper,twoside]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{mathpazo}
+\usepackage{amsmath, amsfonts, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{titlesec}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, citecolor=red, urlcolor=blue}
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  columns=fullflexible,
+  backgroundcolor=\color{gray!8},
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray}
+}
+\usepackage{xcolor}
+
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\newtheorem{remark}{Remark}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\R}{\mathbb{R}}
+
+% ============================================================================
+\title{\textbf{Operational and Deployment Guide} \\[0.5em]
+\large{Installation, Training Pipeline, Backtesting, \\
+and Live Production Deployment of the GBT+RL Trading System}}
+\author{Kripta Studios — Quantitative Research Division}
+\date{March 2026}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+% ============================================================================
+\section{Prerequisites and System Requirements}
+\label{sec:prereqs}
+% ============================================================================
+
+\subsection{Hardware Specifications}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lp{3.5cm}p{6cm}}
+\toprule
+\textbf{Component} & \textbf{Minimum} & \textbf{Recommended / Notes} \\
+\midrule
+CPU Cores & 8 logical & 24+ for full parallel preprocessing ($W = 24$ workers) \\
+RAM & 32 GB & 64 GB for RL training with \texttt{max\_days\_in\_ram = 120} \\
+Storage & NVMe SSD & $\geq 200$ GB free; options archive $\approx 80$ GB compressed \\
+GPU & None required & Training is CPU-bound (LightGBM) and small-MLP (PPO) \\
+Network & Broadband & ThetaTerminal requires stable connection to ThetaData servers \\
+OS & Windows 10+ & PowerShell 7+ required for \texttt{run\_pipeline.ps1} \\
+\bottomrule
+\end{tabular}
+\caption{Hardware and operating environment requirements.}
+\label{tab:hardware}
+\end{table}
+
+\subsection{Software Dependencies}
+
+The system is implemented in Python 3.10+ and managed via a standard \texttt{requirements.txt}. Key dependencies include:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{llp{5.5cm}}
+\toprule
+\textbf{Package} & \textbf{Version} & \textbf{Role} \\
+\midrule
+\texttt{lightgbm} & $\geq 4.0$ & GBT directional classifier \\
+\texttt{torch} & $\geq 2.0$ & PPO agent (small CPU MLP, 187K params) \\
+\texttt{pyarrow} & $\geq 12.0$ & Parquet I/O with snappy compression \\
+\texttt{pandas} & $\geq 2.0$ & Data manipulation \\
+\texttt{numpy} & $\geq 1.24$ & Numerical operations \\
+\texttt{httpx} & $\geq 0.25$ & Async ThetaData API client \\
+\texttt{joblib} & $\geq 1.3$ & GBT model serialization \\
+\texttt{tqdm} & any & Progress bars \\
+\bottomrule
+\end{tabular}
+\caption{Core Python dependencies.}
+\label{tab:dependencies}
+\end{table}
+
+\subsection{ThetaData Terminal}
+
+All historical and real-time data is sourced from ThetaData via the ThetaTerminal local proxy. Before running any data ingestion command, the terminal must be active:
+\begin{lstlisting}[language=bash]
+java -jar ThetaTerminalv3.jar
+\end{lstlisting}
+The terminal proxies all API requests to \texttt{http://127.0.0.1:25503/v3}. An active ThetaData subscription with historical options access is required. The system requests OHLC, Greeks, and open interest for SPXW, SPX, SPY, QQQ, VIX, and TLT.
+
+% ============================================================================
+\section{Complete Training Pipeline}
+\label{sec:pipeline}
+% ============================================================================
+
+The full pipeline to train and deploy a production GBT+RL system is a sequential five-stage procedure, illustrated in Figure~\ref{fig:pipeline}.
+
+\begin{figure}[H]
+\centering
+\begin{equation}
+\underbrace{\text{Data Collection}}_{\S\ref{sec:step1}} \;\to\;
+\underbrace{\text{GBT Training}}_{\S\ref{sec:step2}} \;\to\;
+\underbrace{\text{Episode Generation}}_{\S\ref{sec:step3}} \;\to\;
+\underbrace{\text{RL Preprocessing}}_{\S\ref{sec:step4}} \;\to\;
+\underbrace{\text{PPO Training}}_{\S\ref{sec:step5}}
+\label{eq:pipeline}
+\end{equation}
+\caption{Five-stage training pipeline. Each stage must complete before the next begins.}
+\label{fig:pipeline}
+\end{figure}
+
+The unified PowerShell orchestrator executes Stages~1--3 automatically:
+\begin{lstlisting}[language=bash]
+.\neural\run_pipeline.ps1 -Update true
+\end{lstlisting}
+This script handles market holiday detection (via \texttt{last\_trading\_day\_of\_week}) to resolve non-standard expiration dislocations in quarterly and holiday-shortened weeks.
+
+\subsection{Stage 1: Historical Data Collection}
+\label{sec:step1}
+
+Download raw options OHLC + Greeks from ThetaData:
+\begin{lstlisting}[language=bash]
+# Options chains (all strikes, OHLC + IV + Greeks)
+python services/options_downloader.py \
+  --symbols SPXW SPX SPY QQQ VIX TLT \
+  --start 2024-01-01 \
+  --end 2026-02-28
+
+# Derive underlying OHLC from options (spot price proxy)
+python services/underlying_downloader.py \
+  --symbols SPXW SPX SPY QQQ VIX TLT \
+  --start 2024-01-01 \
+  --end 2026-02-28
+
+# Fix zero-gaps at 09:30 open (critical pre-processing step)
+python services/data_corrector.py \
+  --data-dir D:/ThetaData/data_underlying_derived \
+  --symbols SPXW SPY QQQ VIX TLT
+\end{lstlisting}
+
+Then build the flat training design matrix $\mathbf{X} \in \R^{N \times 163}$:
+\begin{lstlisting}[language=bash]
+python neural/collect_training_data_parquet.py \
+  --start 20240101 \
+  --end 20260220 \
+  --workers 26 \
+  --output training_data_derived.parquet
+\end{lstlisting}
+
+\subsection{Stage 2: GBT Walk-Forward Training}
+\label{sec:step2}
+
+Train the LightGBM directional ensemble using anchored walk-forward cross-validation:
+\begin{lstlisting}[language=bash]
+python neural/train_walkforward.py \
+  --data training_data/training_data_derived.parquet \
+  --train-months 6 \
+  --test-months 1 \
+  --ensemble 3 \
+  --top-n-windows 10 \
+  --model_path models/trading_hybrid_wf.joblib \
+  --norm_path models/hybrid_normalizer_wf.npz
+\end{lstlisting}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{llp{6.5cm}}
+\toprule
+\textbf{Argument} & \textbf{Default} & \textbf{Description} \\
+\midrule
+\texttt{--train-months} & 6 & Training window size in months \\
+\texttt{--test-months} & 1 & Validation window size in months \\
+\texttt{--ensemble} & 3 & Number of LightGBM models per window (different seeds) \\
+\texttt{--top-n-windows} & 10 & Top-N walk-forward windows by rank\_score to include \\
+\texttt{--min-window} & 0 & Ignore windows before this index (recency filtering) \\
+\bottomrule
+\end{tabular}
+\caption{Key arguments for \texttt{train\_walkforward.py}.}
+\label{tab:gbt_args}
+\end{table}
+
+The training procedure:
+\begin{enumerate}
+    \item Generates walk-forward splits (train window $\to$ test window, step 1 month).
+    \item For each window, trains $N_{\text{ensemble}}$ LightGBM classifiers with seeds $\{42, 43, \ldots, 42 + N_{\text{ensemble}} - 1\}$.
+    \item Rejects models with collapse ($> 90\%$ one-class predictions), fewer than 20 test trades, or profit factor $< 0.30$.
+    \item Registers accepted windows and ranks by a recency-weighted score:
+    \begin{equation}
+        \text{rank\_score}_w = \text{PF}_w \cdot \left(\frac{w}{W_{\text{total}}}\right)^2
+        \label{eq:rank_score}
+    \end{equation}
+    \item Flattens all GBTModels from the top-$N$ windows into a single \texttt{GBTEnsemble} and serializes via \texttt{joblib}.
+\end{enumerate}
+
+Outputs: \texttt{models/trading\_hybrid\_wf.joblib}, \texttt{models/hybrid\_normalizer\_wf.npz}, \texttt{models/window\_registry.json}.
+
+\subsection{Stage 3: Episode Index Generation}
+\label{sec:step3}
+
+Run GBT inference over the training data to create the episode index for RL training:
+\begin{lstlisting}[language=python]
+import torch, numpy as np, pandas as pd
+from hybrid_model import FEATURE_COLUMNS, FeatureNormalizer
+from gbt_model import load_gbt_ensemble
+
+ensemble, normalizer = load_gbt_ensemble(
+    'models/trading_hybrid_wf.joblib',
+    'models/hybrid_normalizer_wf.npz'
+)
+
+df = pd.read_parquet('training_data/training_data_derived.parquet')
+feats = normalizer.transform(df[FEATURE_COLUMNS].values.astype('float32'))
+
+# Batch inference
+probs_list = []
+for i in range(0, len(feats), 4096):
+    batch = feats[i:i+4096]
+    logits, _ = ensemble(batch)
+    probs_list.append(logits.numpy())
+probs = np.concatenate(probs_list)
+
+dm = {0: 'SHORT', 1: 'HOLD', 2: 'LONG'}
+df['mlp_direction']  = [dm[p] for p in np.argmax(probs, 1)]
+df['mlp_confidence'] = probs.max(1)
+
+mask = df['mlp_direction'].isin(['LONG', 'SHORT']) \
+       & (df['mlp_confidence'] >= 0.55)
+ep = df[mask].copy().reset_index(drop=True)
+ep['episode_id'] = range(len(ep))
+ep.to_parquet('rl_data/episode_index.parquet', index=False)
+\end{lstlisting}
+
+\subsection{Stage 4: RL Preprocessing}
+\label{sec:step4}
+
+Build per-day options cache shards for the RL environment:
+\begin{lstlisting}[language=bash]
+cd neural
+python run_preprocess.py \
+  --training-data ../training_data/training_data_derived.parquet \
+  --options-dir D:/ThetaData/data_options \
+  --output ../rl_data/rl_options_cache_chunks \
+  --num-workers 24
+\end{lstlisting}
+
+This generates one \texttt{YYYYMMDD.pkl} shard per trading day in \texttt{rl\_data/rl\_options\_cache\_chunks/}, keyed by \texttt{"YYYYMMDD\_HH:MM"} timestamps. Preprocessing time scales as $\mathcal{O}(M / W)$ where $M$ is the number of trading days and $W = 24$ workers.
+
+\subsection{Stage 5: PPO Training}
+\label{sec:step5}
+
+Train the RL agent (187,348-parameter PPO network):
+\begin{lstlisting}[language=bash]
+cd neural
+python -m rl.training \
+  --episode-index ../rl_data/episode_index.parquet \
+  --options-cache ../rl_data/rl_options_cache_chunks \
+  --save-dir ../rl_models \
+  --total-updates 200 \
+  --max-days-in-ram 120
+\end{lstlisting}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{llp{6.5cm}}
+\toprule
+\textbf{Argument} & \textbf{Default} & \textbf{Description} \\
+\midrule
+\texttt{--total-updates} & 200 & Number of PPO gradient update steps \\
+\texttt{--episodes-per-update} & 64 & Rollout episodes collected per PPO step \\
+\texttt{--max-days-in-ram} & 120 & LRU cache size: max daily shards in RAM \\
+\bottomrule
+\end{tabular}
+\caption{Key arguments for \texttt{rl/training.py}.}
+\label{tab:rl_args}
+\end{table}
+
+Output: \texttt{rl\_models/best\_rl\_agent.pt} (selected by maximum evaluation profit factor).
+
+% ============================================================================
+\section{Backtesting}
+\label{sec:backtest}
+% ============================================================================
+
+\subsection{GBT-Only Backtest}
+
+Simulates directional trading on spot (synthetic futures) using fixed targets and stops:
+\begin{lstlisting}[language=bash]
+python neural/backtest_hybrid_parquet.py \
+  --data training_data/training_data_backtest.parquet \
+  --model models/trading_hybrid_wf.joblib \
+  --normalizer models/hybrid_normalizer_wf.npz \
+  --model-size small \
+  --ensemble \
+  --threshold 0.55 \
+  --cooldown 30 \
+  --target_long 0.010 \
+  --target_short 0.005 \
+  --stop 0.003
+\end{lstlisting}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{llp{7cm}}
+\toprule
+\textbf{Argument} & \textbf{Default} & \textbf{Description} \\
+\midrule
+\texttt{--threshold} & 0.70 & Minimum GBT confidence to take a trade \\
+\texttt{--target\_long} & 0.010 & LONG profit target (1\% of spot) \\
+\texttt{--target\_short} & 0.005 & SHORT profit target (0.5\% of spot) \\
+\texttt{--stop} & 0.003 & Stop loss (0.3\% of spot) \\
+\texttt{--cooldown} & 30 & Minimum minutes between trades per ticker \\
+\texttt{--max-time} & 120 & Maximum bars to hold \\
+\texttt{--uncertainty} & 45.0 & Maximum Bayesian sigma (minutes) \\
+\bottomrule
+\end{tabular}
+\caption{Key arguments for \texttt{backtest\_hybrid\_parquet.py}.}
+\label{tab:backtest_args}
+\end{table}
+
+\subsection{GBT+RL Backtest}
+
+Side-by-side comparison of GBT-only spot simulation versus GBT+RL real-options execution:
+\begin{lstlisting}[language=bash]
+python neural/backtest_rl.py \
+  --data training_data/training_data_backtest.parquet \
+  --model models/trading_hybrid_wf.joblib \
+  --normalizer models/hybrid_normalizer_wf.npz \
+  --rl-model rl_models/best_rl_agent.pt \
+  --model-size small \
+  --ensemble \
+  --threshold 0.55 \
+  --cooldown 30
+\end{lstlisting}
+
+\subsection{Position Sizing and Risk Management}
+
+Position sizing scales with GBT confidence:
+\begin{equation}
+    \text{Risk}\% = 10\% + \frac{c_t - 0.55}{0.45} \times 40\%, \quad c_t \in [0.55, 1.00]
+    \label{eq:sizing}
+\end{equation}
+This maps minimum confidence ($0.55$) to 10\% risk per trade and maximum confidence ($1.00$) to 50\% risk per trade.
+
+After 3 consecutive losses, the system enters drawdown mode:
+\begin{equation}
+    n_{\text{contracts}} \gets \max\!\left(1,\; \left\lfloor n_{\text{contracts}} / 2 \right\rfloor\right)
+    \label{eq:drawdown}
+\end{equation}
+Normal position sizing resumes when the account balance recovers to the pre-drawdown watermark.
+
+% ============================================================================
+\section{Live Trading Deployment}
+\label{sec:live}
+% ============================================================================
+
+The production system trades 0DTE options on both \textbf{SPXW} (S\&P 500 Weeklys) and \textbf{QQQ} (Invesco Nasdaq-100 ETF), generating directional signals via the GBT ensemble and executing strike selection and exit management via the RL agent. Discord alerts differentiate between these two model outputs, enabling real-time monitoring of both signal and execution layers.
+
+\subsection{System Architecture}
+
+The live deployment comprises three runtime components: a data feed process, a trading bot process, and the ThetaTerminal proxy. All three must be running simultaneously during market hours.
+
+\begin{figure}[H]
+\centering
+\begin{equation}
+\underbrace{\texttt{ThetaTerminal.jar}}_{\text{Data Proxy}} \;\longrightarrow\;
+\underbrace{\texttt{realtime\_feed.py}}_{\text{Data Feed}} \;\xrightarrow{\text{Parquet}}\;
+\underbrace{\texttt{tradingbot\_wrapper\_rl.py}}_{\text{GBT+RL Bot}} \;\xrightarrow{\text{Webhook}}\;
+\underbrace{\texttt{Discord}}_{\text{Alerts}}
+\end{equation}
+\caption{Live system data flow. All communication between feed and bot is via Parquet files in \texttt{rt\_data/\{YYYYMMDD\}/}.}
+\label{fig:live_arch}
+\end{figure}
+
+\subsection{Environment Configuration}
+\label{sec:env}
+
+Before launching the system, configure the following environment variables in a \texttt{.env} file at the project root or via system environment:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{llp{6cm}}
+\toprule
+\textbf{Variable} & \textbf{Required} & \textbf{Description} \\
+\midrule
+\texttt{DISCORD\_WEBHOOK\_URL} & Yes & Discord webhook endpoint for the alerts channel \\
+\texttt{DISCORD\_ROLE\_PING} & No & Role mention string (e.g., \texttt{<@\&ROLE\_ID>}) for @-pinging a role on trade alerts \\
+\texttt{THETADATA\_DIR} & No & ThetaData base directory (default: \texttt{D:\textbackslash ThetaData}) \\
+\texttt{PROJECT\_ROOT} & Auto & Auto-detected from script location \\
+\bottomrule
+\end{tabular}
+\caption{Environment variables for live deployment.}
+\label{tab:env}
+\end{table}
+
+\subsection{Step-by-Step Startup Sequence}
+\label{sec:startup}
+
+\subsubsection{Step 1: Start ThetaTerminal Proxy}
+
+The ThetaTerminal JAR file must be running before any data requests. It proxies all API calls to \texttt{http://127.0.0.1:25503/v3}:
+\begin{lstlisting}[language=bash]
+java -jar ThetaTerminalv3.jar
+\end{lstlisting}
+Verify the terminal responds with no errors. An active ThetaData subscription with historical and live options access is required.
+
+\subsubsection{Step 2: Launch the Real-Time Data Feed}
+
+The feed service fetches options and spot data for both tickers every 60 seconds:
+\begin{lstlisting}[language=bash]
+python services/realtime_feed.py --interval 60
+\end{lstlisting}
+
+\paragraph{What the feed downloads:}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{llll}
+\toprule
+\textbf{Ticker} & \textbf{Options Symbol} & \textbf{0DTE Endpoints} & \textbf{Weekly Endpoints} \\
+\midrule
+SPX & SPXW & Greeks, OI, IV, OHLC & Greeks, OI \\
+QQQ & QQQ & Greeks, OI, IV, OHLC & Greeks, OI \\
+\bottomrule
+\end{tabular}
+\caption{Options data fetched per ticker per poll cycle.}
+\label{tab:feed_data}
+\end{table}
+
+In addition, the feed downloads 1-minute spot candles (underlying derived) for: \textbf{SPX}, \textbf{QQQ}, \textbf{VIX}, and \textbf{TLT}.
+
+\paragraph{Startup behavior:}
+\begin{enumerate}
+    \item \textbf{Expiration resolution:} For each ticker (SPXW, QQQ), the feed queries ThetaData for available expirations and computes:
+    \begin{itemize}
+        \item \textbf{0DTE:} Today's date (must be in the available expirations list).
+        \item \textbf{Weekly:} This week's Friday. If Friday is a market holiday, walk backward to Thursday, Wednesday, etc. If the weekly expiration coincides with the 0DTE expiration (e.g., today is Friday), the weekly is pushed to the following week's Friday and the walk-backward procedure is repeated.
+    \end{itemize}
+    Each ticker resolves its expirations independently, since SPXW and QQQ may have different available expiration dates.
+
+    \item \textbf{Historical backfill:} Downloads 5 previous trading days of spot data for SPX, QQQ, VIX, and TLT. This provides the historical Initial Balance (IB) levels required by features \texttt{dist\_ib\_high\_D1}$\ldots$\texttt{D5}.
+
+    \item \textbf{OHLC zero-fix:} At 09:30, the underlying derived data from ThetaData may contain zero values in the \texttt{open}, \texttt{high}, \texttt{low}, or \texttt{close} columns. The \texttt{\_fix\_ohlc\_zeros} method handles this:
+    \begin{itemize}
+        \item Rows where \emph{all} OHLC columns are zero are dropped entirely.
+        \item Rows where \emph{some} columns are zero: the zero values are replaced with the first non-zero value from the same row (e.g., if \texttt{open}=0 but \texttt{close}=5980, then \texttt{open} is set to 5980).
+    \end{itemize}
+\end{enumerate}
+
+\paragraph{Output file structure:} All data is written as Parquet to \texttt{rt\_data/\{YYYYMMDD\}/}:
+\begin{lstlisting}[language=bash]
+rt_data/20260304/
+  SPXW_greeks_0dte_latest.parquet
+  SPXW_oi_0dte_latest.parquet
+  SPXW_iv_0dte_latest.parquet
+  SPXW_ohlc_0dte_latest.parquet
+  SPXW_greeks_weekly_latest.parquet
+  SPXW_oi_weekly_latest.parquet
+  QQQ_greeks_0dte_latest.parquet
+  QQQ_oi_0dte_latest.parquet
+  QQQ_iv_0dte_latest.parquet
+  QQQ_ohlc_0dte_latest.parquet
+  QQQ_greeks_weekly_latest.parquet
+  QQQ_oi_weekly_latest.parquet
+  spot_SPX_latest.parquet
+  spot_QQQ_latest.parquet
+  spot_VIX_latest.parquet
+  spot_TLT_latest.parquet
+\end{lstlisting}
+
+For a single-poll dry run (useful for validating data download without entering the main loop):
+\begin{lstlisting}[language=bash]
+python services/realtime_feed.py --dry-run
+\end{lstlisting}
+
+\subsubsection{Step 3: Launch the Trading Bot}
+
+\begin{lstlisting}[language=bash]
+python bots/tradingbot_wrapper_rl.py
+\end{lstlisting}
+
+The bot requires the following model files to be present:
+\begin{itemize}
+    \item \texttt{models/trading\_hybrid\_wf.joblib} --- GBT ensemble (directional classifier)
+    \item \texttt{models/hybrid\_normalizer\_wf.npz} --- Feature normalizer
+    \item \texttt{rl\_models/best\_rl\_agent.pt} --- PPO agent (strike selection + exit management)
+\end{itemize}
+
+\subsection{Dual-Ticker Processing Pipeline}
+\label{sec:dual_ticker}
+
+The bot processes both SPX and QQQ in each polling cycle (every 30 seconds). For each ticker $\tau \in \{\text{SPX}, \text{QQQ}\}$:
+
+\begin{enumerate}
+    \item \textbf{Data loading:} Reads the ticker-specific Parquet files from \texttt{rt\_data/}. SPX reads \texttt{SPXW\_*} files; QQQ reads \texttt{QQQ\_*} files. A freshness check rejects any file older than 120 seconds.
+
+    \item \textbf{Greek exposure computation:} Merges Greeks and OI DataFrames, computes net exposures $\Gamma_{\text{net}}$, $\mathcal{V}_{\text{net}}$, $\Theta_{\text{net}}$, etc. using the same \texttt{get\_net\_exposures\_from\_parquet} function as training.
+
+    \item \textbf{Feature engineering:} Builds a 163-dimensional feature vector $\mathbf{x}_t^{(\tau)} \in \mathbb{R}^{163}$, identical in structure to the training features. Per-ticker state (price history, IV history, IB levels, historical IB D-1$\ldots$D-5) is tracked independently.
+
+    \item \textbf{GBT inference:}
+    \begin{equation}
+        (\hat{y}_t^{(\tau)},\; \mathbf{p}_t^{(\tau)}) = \texttt{GBTEnsemble}\!\left(\texttt{normalize}(\mathbf{x}_t^{(\tau)})\right)
+    \end{equation}
+    where $\hat{y}_t \in \{\text{SHORT}, \text{HOLD}, \text{LONG}\}$ and $\mathbf{p}_t = (p_{\text{short}}, p_{\text{hold}}, p_{\text{long}}) \in \Delta^2$ is the softmax probability vector.
+
+    \item \textbf{RL execution:} The directed signal is passed to the \texttt{IntegratedTradingSystem}, which uses the RL agent to select the optimal strike (delta bucket) from the live options chain, manage entry timing, and decide exit via the learned policy.
+
+    \item \textbf{Discord alerts:} Both GBT signals and RL executions generate tagged Discord messages (see \S\ref{sec:discord}).
+\end{enumerate}
+
+\subsection{Market Hours and Safety}
+
+Both the feed and the bot enforce Regular Trading Hours (09:30--16:00 ET):
+\begin{itemize}
+    \item The feed polls only within 09:30--16:00 ET and skips weekends.
+    \item The bot's \texttt{is\_market\_hours()} method returns \texttt{False} outside this window, causing the main loop to sleep for 60 seconds before rechecking.
+    \item On startup before market open, the feed downloads historical backfill data; the bot loads historical IB levels from the backfilled files.
+\end{itemize}
+
+\subsection{Discord Alert System}
+\label{sec:discord}
+
+Trade signals, entries, exits, and status updates are transmitted to a Discord channel via HTTP POST to the configured \texttt{DISCORD\_WEBHOOK\_URL}. Alerts are tagged by model origin to distinguish between directional signals and execution events.
+
+\subsubsection{GBT Directional Signals --- \texttt{[GBM]} Tag}
+
+When the GBT ensemble produces a non-HOLD directional prediction with confidence $c_t \geq c_{\min}$ (default $c_{\min} = 0.55$), a \texttt{[GBM]} alert is sent. These alerts are \textbf{deduplicated}: the same direction is not re-alerted until the GBT signal changes (e.g., LONG $\to$ HOLD $\to$ LONG generates two alerts, not a continuous stream).
+
+\begin{lstlisting}[language=bash]
+[GBM] SPX LONG (67.2%)
+  SHORT: 12.3% | HOLD: 20.5% | LONG: 67.2%
+  RL: AGREES (LONG)
+\end{lstlisting}
+
+The alert includes:
+\begin{itemize}
+    \item Ticker and predicted direction (LONG/SHORT).
+    \item Full probability breakdown across all three classes.
+    \item RL agreement status: whether the RL agent's current action aligns with the GBT direction.
+\end{itemize}
+
+\subsubsection{RL Trade Execution --- \texttt{[RL]} Tag}
+
+When the RL agent opens or closes a position, an \texttt{[RL]} alert is sent:
+
+\paragraph{Trade open:}
+\begin{lstlisting}[language=bash]
+[RL] OPEN SPX LONG
+  Strike: 5980 | Delta: 0.35 | Bucket: otm_near
+  Entry: $4.20 | Confidence: 67.2%
+\end{lstlisting}
+
+\paragraph{Trade close:}
+\begin{lstlisting}[language=bash]
+[RL] CLOSE SPX LONG
+  Strike: 5980 | P&L: +12.3% ($62.50)
+  Hold: 23 min | Reason: agent_exit
+\end{lstlisting}
+
+\subsubsection{Bot Status Messages}
+
+The bot sends \texttt{[STATUS]} messages on startup and shutdown:
+\begin{lstlisting}[language=bash]
+[STATUS] Bot started
+[STATUS] Bot stopped | Daily P&L: +$142.30
+\end{lstlisting}
+
+\subsection{Expiration Resolution Logic}
+\label{sec:expiration}
+
+The weekly expiration resolution follows a deterministic algorithm designed to handle market holidays and coinciding expirations:
+
+\begin{definition}[Weekly Expiration Resolution]
+Given today's date $d$ and a set of available expirations $\mathcal{E}$:
+\begin{enumerate}
+    \item Let $F_0$ be the Friday of the current week: $F_0 = d + (4 - \text{weekday}(d)) \bmod 7$.
+    \item Walk backward from $F_0$: for $k = 0, 1, 2, 3, 4$, check if $(F_0 - k) \in \mathcal{E}$ and $(F_0 - k) > d$.
+    \item If found and not equal to the 0DTE expiration, accept it as the weekly.
+    \item If no valid weekly is found (or found weekly $= $ 0DTE): set $F_1 = F_0 + 7$ and repeat the walk-backward from $F_1$.
+\end{enumerate}
+\end{definition}
+
+This handles: (a) Good Friday and other exchange holidays where Friday expirations do not exist (falls back to Thursday); (b) a Wednesday trading day where the only remaining expiration this week is Thursday; (c) Friday itself, where the weekly must be next week to avoid collision with 0DTE.
+
+\subsection{Historical Data Requirements}
+
+The bot loads historical IB data for the previous 5 trading days for each ticker independently. If data files are missing (e.g., first-time deployment), the feed's \texttt{--dry-run} mode downloads them automatically:
+
+\begin{lstlisting}[language=bash]
+# Download all historical data needed by the bot
+python services/realtime_feed.py --dry-run
+\end{lstlisting}
+
+After running, verify that the following files exist for each of the last 5 trading days:
+\begin{lstlisting}[language=bash]
+rt_data/YYYYMMDD/spot_SPX_latest.parquet
+rt_data/YYYYMMDD/spot_QQQ_latest.parquet
+rt_data/YYYYMMDD/spot_VIX_latest.parquet
+rt_data/YYYYMMDD/spot_TLT_latest.parquet
+\end{lstlisting}
+
+% ============================================================================
+\section{Visualization and Diagnostics}
+\label{sec:viz}
+% ============================================================================
+
+\subsection{Trade Chart}
+
+Plot all trades from a backtest CSV, colored by win/loss:
+\begin{lstlisting}[language=bash]
+python neural/visualize_backtest_trades.py \
+  --trades training_data/backtest_trades.csv \
+  --ticker SPX \
+  --save
+\end{lstlisting}
+
+\subsection{Feature Importance}
+
+Generate SHAP-style feature importance from the GBT ensemble:
+\begin{lstlisting}[language=bash]
+python neural/visualize_hybrid.py \
+  --model models/trading_hybrid_wf.joblib \
+  --normalizer models/hybrid_normalizer_wf.npz \
+  --data training_data/training_data_derived.parquet \
+  --model-size small \
+  --ensemble \
+  --save
+\end{lstlisting}
+
+\subsection{Model Registry Inspection}
+
+The walk-forward window registry is saved to \texttt{models/window\_registry.json} after each training run. It contains the rank, number of models, average profit factor, and rank score for every eligible window:
+\begin{lstlisting}
+[
+  {"window": 12, "n_models": 3, "pf_avg": 1.847,
+   "rank_score": 1.532, "status": "PROD"},
+  {"window": 11, "n_models": 2, "pf_avg": 1.612,
+   "rank_score": 1.198, "status": "PROD"},
+  ...
+]
+\end{lstlisting}
+
+% ============================================================================
+\section{Operational Checklist}
+\label{sec:checklist}
+% ============================================================================
+
+\begin{table}[H]
+\centering
+\begin{tabular}{clp{7cm}}
+\toprule
+\textbf{Step} & \textbf{Action} & \textbf{Verification} \\
+\midrule
+1 & Start ThetaTerminal & API responds at \texttt{http://127.0.0.1:25503/v3} \\
+2 & Run data corrector & Zero-value anomalies cleared in \texttt{data\_underlying\_derived} \\
+3 & Collect training data & \texttt{training\_data\_derived.parquet} exists with $N > 100{,}000$ rows \\
+4 & Train GBT & \texttt{trading\_hybrid\_wf.joblib} updated; \texttt{window\_registry.json} shows $\geq 5$ PROD windows \\
+5 & Generate episode index & \texttt{episode\_index.parquet} contains $N_{\text{ep}} > 5{,}000$ rows \\
+6 & Run RL preprocessing & \texttt{rl\_options\_cache\_chunks/} contains one \texttt{.pkl} per trading day \\
+7 & Train PPO & \texttt{best\_rl\_agent.pt} saved; eval PF $> 1.0$ \\
+8 & Backtest & Win rate $> 50\%$, profit factor $> 1.2$ on out-of-sample data \\
+9 & Start feed & \texttt{rt\_data/} refreshing every 60 s \\
+10 & Start bot & First Discord alert received within 30 min of market open \\
+\bottomrule
+\end{tabular}
+\caption{Pre-deployment operational checklist.}
+\label{tab:checklist}
+\end{table}
+
+\begin{thebibliography}{4}
+
+\bibitem{schulman2017}
+J.~Schulman et al.,
+``Proximal Policy Optimization Algorithms,''
+\textit{arXiv:1707.06347}, 2017.
+
+\bibitem{ke2017}
+G.~Ke et al.,
+``LightGBM: A Highly Efficient Gradient Boosting Decision Tree,''
+\textit{NeurIPS}, vol.~30, 2017.
+
+\bibitem{thetadata}
+ThetaData Systems,
+``ThetaData API v3 Documentation,''
+\url{https://docs.thetadata.us}, 2024.
+
+\bibitem{grinsztajn2022}
+L.~Grinsztajn, E.~Oyallon, and G.~Varoquaux,
+``Why do tree-based models still outperform deep learning on typical tabular data?''
+\textit{NeurIPS}, vol.~35, 2022.
+
+\end{thebibliography}
+
+\end{document}

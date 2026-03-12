@@ -21,3 +21,6 @@ futures_plots/
 training_data/
 trading_data/
 logs/
+rl_data/
+rt_data/
+*.joblib

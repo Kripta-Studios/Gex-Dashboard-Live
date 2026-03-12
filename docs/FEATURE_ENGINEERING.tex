@@ -1,0 +1,361 @@
+% ============================================================================
+%  Kripta Studios — Feature Engineering: Mathematical Foundations
+%  GBT+RL 0DTE Options Trading System
+% ============================================================================
+\documentclass[11pt,a4paper,twoside]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{mathpazo}
+\usepackage{amsmath, amsfonts, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{titlesec}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, citecolor=red, urlcolor=blue}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily\small, breaklines=true, frame=single, columns=fullflexible}
+\usepackage{xcolor}
+
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{remark}{Remark}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\bx}{\bm{x}}
+
+% ============================================================================
+\title{\textbf{Feature Engineering: Mathematical Foundations} \\[0.5em]
+\large{Derivation of the 163-Dimensional State Representation from Raw \\
+Options Chain Data for the GBT Directional Classifier}}
+\author{Kripta Studios — Quantitative Research Division}
+\date{March 2026}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+% ============================================================================
+\section{Motivation and Design Principles}
+\label{sec:motivation}
+% ============================================================================
+
+The GBT classifier operates on tabular data derived from a non-stationary financial time series. Unlike neural architectures that can implicitly learn feature representations, Gradient Boosted Trees partition the input space through axis-aligned splits. Predictive performance therefore depends critically on the quality of the pre-computed feature set: splits on raw, non-stationary price levels generalize poorly across the multi-year walk-forward training horizon, while splits on standardized, economically interpretable quantities yield robust cross-window performance.
+
+This document formalizes the mathematical derivations behind each feature category, with particular attention to the transformations that induce approximate stationarity in the resulting feature distributions. The canonical target of these transformations is to produce a feature vector $\bx_t \in \R^{163}$ whose marginal distributions are approximately time-stationary—i.e., $\bx_t \overset{d}{\approx} \bx_{t+\Delta}$ for all reasonable $\Delta$—so that splits learned on historical training windows transfer to held-out test windows without systematic bias.
+
+% ============================================================================
+\section{Underlying Price Dynamics}
+\label{sec:spot_dynamics}
+% ============================================================================
+
+\subsection{Spot Price Normalization}
+
+The raw spot price $S_t$ is highly non-stationary (integrated of order 1). Direct use of $S_t$ as a feature would create splits of the form $S_t > K$ that are meaningless once the underlying trends away from the training range. We therefore replace $S_t$ with a rolling $z$-score:
+\begin{equation}
+    x^{\text{spot}}_t = \frac{S_t - \mu_{S,20}}{\sigma_{S,20}}, \quad \mu_{S,20} = \frac{1}{20}\sum_{k=1}^{20} S_{t-k\Delta}, \quad \sigma_{S,20} = \sqrt{\frac{1}{20}\sum_{k=1}^{20}(S_{t-k\Delta} - \mu_{S,20})^2}
+    \label{eq:spot_zscore}
+\end{equation}
+where the lookback window is 20 bars of 5 minutes each (100 minutes). This feature is bounded in practice to $[-3, +3]$ by the normal quantile and is $\mathcal{O}(1)$ regardless of the absolute price level of the underlying.
+
+\subsection{Multi-Horizon Log Returns}
+
+Log returns are the natural stationary transform of a geometric Brownian Motion:
+\begin{equation}
+    r_{t,\Delta} = \log S_t - \log S_{t-\Delta} \approx \frac{S_t - S_{t-\Delta}}{S_{t-\Delta}}, \quad \Delta \in \{1, 5, 15, 30\}\text{ min}
+    \label{eq:log_returns}
+\end{equation}
+Under the Black-Scholes model $S_t = S_0 \exp\!\left(\mu t + \sigma W_t\right)$, the log return $r_{t,\Delta} \sim \mathcal{N}(\mu\Delta, \sigma^2\Delta)$ is strictly stationary and normally distributed. In practice, equity returns exhibit excess kurtosis and volatility clustering, motivating the volatility-adjusted transform in Section~\ref{sec:vol_adj}.
+
+\subsection{Volatility-Adjusted Returns}
+\label{sec:vol_adj}
+
+The conditional variance of intraday returns is dominated by the implied volatility of the ATM 0DTE option. Scaling returns by the expected volatility over the horizon $\Delta$ normalizes the distribution across different volatility regimes:
+\begin{equation}
+    \tilde{r}_{t,\Delta} = \frac{r_{t,\Delta}}{\sigma^{\text{ATM}}_t \sqrt{\Delta / (252 \times 390)}}
+    \label{eq:vol_adj}
+\end{equation}
+where $\sigma^{\text{ATM}}_t$ is the annualized ATM implied volatility from the 0DTE chain, and $252 \times 390$ converts annual volatility to the per-minute scale.
+
+\begin{proposition}[Approximate Stationarity of Volatility-Adjusted Returns]
+Under a stochastic volatility model $dS_t = S_t(\mu \, dt + \sigma_t \, dW_t)$, the quantity $\tilde{r}_{t,\Delta}$ has bounded variance conditional on $\sigma^{\text{ATM}}_t$:
+\begin{equation}
+    \text{Var}(\tilde{r}_{t,\Delta} \mid \sigma^{\text{ATM}}_t) \approx 1 + \mathcal{O}\!\left(\frac{\text{Var}(\sigma_t)}{\sigma_t^2}\right)
+    \label{eq:vol_adj_variance}
+\end{equation}
+In periods of low volatility-of-volatility, $\tilde{r}_{t,\Delta}$ is approximately unit-variance, providing consistent scaling for GBT split thresholds across all market regimes.
+\end{proposition}
+
+\begin{proof}[Sketch]
+By Itô's lemma, $r_{t,\Delta} \approx \sigma_t W_\Delta$ to first order. If $\sigma^{\text{ATM}}_t$ is a good predictor of $\sigma_t$, then $\tilde{r}_{t,\Delta} \approx W_\Delta / \sqrt{\Delta}$, which is a standard normal increment with unit variance. The error term arises from vol-of-vol effects.
+\end{proof}
+
+% ============================================================================
+\section{Options Greek Surface}
+\label{sec:greek_surface}
+% ============================================================================
+
+\subsection{Black-Scholes Greek Derivations}
+
+Under the risk-neutral measure, the price of a European call with strike $K$, expiry $T$, at current time $t$ with spot $S_t$, risk-free rate $r$, dividend yield $q$, and implied volatility $\sigma$ is:
+\begin{align}
+    C(S_t, K, T-t, r, q, \sigma) &= S_t e^{-q(T-t)} \Phi(d_1) - K e^{-r(T-t)} \Phi(d_2) \\
+    d_1 &= \frac{\log(S_t/K) + (r - q + \sigma^2/2)(T-t)}{\sigma\sqrt{T-t}}, \quad d_2 = d_1 - \sigma\sqrt{T-t}
+    \label{eq:bs_call}
+\end{align}
+where $\Phi$ is the standard normal CDF. The primary Greeks are:
+\begin{align}
+    \Delta &= \frac{\partial C}{\partial S} = e^{-q(T-t)} \Phi(d_1) \\
+    \Gamma &= \frac{\partial^2 C}{\partial S^2} = \frac{e^{-q(T-t)} \phi(d_1)}{S_t \sigma \sqrt{T-t}} \\
+    \theta &= \frac{\partial C}{\partial t} = -\frac{S_t \sigma e^{-q(T-t)} \phi(d_1)}{2\sqrt{T-t}} + qS_t e^{-q(T-t)}\Phi(d_1) - rKe^{-r(T-t)}\Phi(d_2) \\
+    \mathcal{V} &= \frac{\partial C}{\partial \sigma} = S_t e^{-q(T-t)} \phi(d_1) \sqrt{T-t}
+    \label{eq:bs_greeks}
+\end{align}
+where $\phi$ is the standard normal PDF. Near expiration ($T - t \to 0$), $\Gamma \to \infty$ for ATM options, which motivates the sign-preserving log transform (Equation~\ref{eq:log_transform}) applied to aggregate Greek sums.
+
+\subsection{Higher-Order Greeks}
+
+The system includes two third-order Greeks of particular relevance to 0DTE trading:
+
+\textbf{Vanna} ($\partial \Delta / \partial \sigma = \partial^2 C / \partial S \partial \sigma$) quantifies how the delta of a position changes as implied volatility moves. When market makers are long vanna, a VIX spike forces them to buy additional spot hedge as their deltas increase, creating a self-reinforcing upward price move:
+\begin{equation}
+    \text{Vanna}_i = \frac{\partial^2 C_i}{\partial S \partial \sigma} = -e^{-q\tau} \phi(d_1) \frac{d_2}{\sigma}, \quad \tau = T - t
+    \label{eq:vanna}
+\end{equation}
+
+\textbf{Charm} ($\partial \Delta / \partial t$) captures delta decay over time, particularly relevant for 0DTE positions where theta-delta interaction accelerates:
+\begin{equation}
+    \text{Charm}_i = \frac{\partial^2 C_i}{\partial S \partial t} = qe^{-q\tau}\Phi(d_1) - e^{-q\tau}\phi(d_1)\frac{2(r-q)\tau - d_2\sigma\sqrt{\tau}}{2\tau\sigma\sqrt{\tau}}
+    \label{eq:charm}
+\end{equation}
+
+\subsection{Net Dealer Exposure Aggregates}
+
+Market-maker hedging pressure on the spot market is approximated by aggregating Greeks across the options chain weighted by open interest:
+\begin{equation}
+    \mathcal{G}^{\text{net}}_t(\text{Greek}) = \sum_{i=1}^{N_{\text{chain}}} \text{OI}_i \cdot \text{Greek}_i \cdot \text{Mult}
+    \label{eq:net_greek_aggregate}
+\end{equation}
+where $\text{Mult} = 100$ for SPX (each contract controls 100 index units). Since OI values can reach $10^5$--$10^6$ and gamma values peak near ATM-0DTE at $10^{-3}$--$10^{-2}$, products can easily exceed $10^4$. The log transform of Equation~\ref{eq:log_transform} is essential here.
+
+% ============================================================================
+\section{Dealer Gamma Exposure and Spot Dynamics}
+\label{sec:gex_dynamics}
+% ============================================================================
+
+\subsection{GEX as a Regime Indicator}
+
+The relationship between aggregate GEX and realized spot volatility is well-documented in the market microstructure literature. Let $\text{GEX}_t$ be computed as in Definition~3 of the Features document. The key regime classification is:
+
+\begin{definition}[GEX Regime]
+\begin{align}
+    \text{GEX}_t > 0 \;&\Rightarrow\; \text{``Pinned'' regime: dealers sell rallies, buy dips} \\
+    \text{GEX}_t < 0 \;&\Rightarrow\; \text{``Trending'' regime: dealers buy rallies, sell dips}
+\end{align}
+\end{definition}
+
+In the pinned regime, realized volatility is suppressed relative to implied volatility, and mean-reversion strategies around the max-gamma strike are expected to outperform. In the trending regime, momentum strategies are favored. The GBT learns this regime-conditional behavior from the data without explicit hard-coding.
+
+\subsection{Dominant Gamma Strike and Confluence}
+
+The dominant gamma strike $K^*_\Gamma$ is the strike with the largest aggregate notional gamma exposure:
+\begin{equation}
+    K^*_\Gamma = \argmax_{K \in \mathcal{K}} \sum_{\substack{i \in \text{chain} \\ K_i = K}} \Gamma_i \cdot \text{OI}_i \cdot \text{Mult} \cdot S_t^2
+    \label{eq:dominant_gamma}
+\end{equation}
+
+The spatial proximity of spot to this level is encoded via a Gaussian RBF kernel with bandwidth proportional to the spot price:
+\begin{equation}
+    \Phi^{\Gamma}_t = \exp\!\left(-\frac{(S_t - K^*_\Gamma)^2}{2\,(b \cdot S_t)^2}\right), \quad b = 0.005 \;(50\,\text{bps})
+    \label{eq:rbf_confluence}
+\end{equation}
+The bandwidth $b = 0.005$ corresponds to approximately $25$ SPX points at the current price level, chosen to capture the typical pin-radius observed empirically in 0DTE market maker hedging behavior.
+
+% ============================================================================
+\section{Initial Balance Geometry}
+\label{sec:ib_geometry}
+% ============================================================================
+
+\subsection{Theoretical Motivation}
+
+The Initial Balance (IB) represents the price range established during the first 60 minutes of trading (09:30--10:30 ET). Market Profile theory~\cite{steidlmayer1986} postulates that the IB serves as a reference frame for the remainder of the session: price tends to either remain within (``inside day'') or break out of (``trending day'') this initial range, with distinct autocorrelation structures in each case.
+
+Formally, for trading day $d$, define:
+\begin{equation}
+    \text{IB}^{(d)}_{\text{high}} = \sup_{\tau \in \mathcal{T}^{(d)}} S_\tau, \quad
+    \text{IB}^{(d)}_{\text{low}} = \inf_{\tau \in \mathcal{T}^{(d)}} S_\tau, \quad
+    \mathcal{T}^{(d)} = [09\text{:}30, 10\text{:}30]_d
+    \label{eq:ib_formal}
+\end{equation}
+The midpoint and width of the IB are:
+\begin{equation}
+    \text{IB}^{(d)}_{\text{mid}} = \frac{\text{IB}^{(d)}_{\text{high}} + \text{IB}^{(d)}_{\text{low}}}{2}, \quad
+    \text{IB}^{(d)}_{\text{width}} = \text{IB}^{(d)}_{\text{high}} - \text{IB}^{(d)}_{\text{low}}
+    \label{eq:ib_mid_width}
+\end{equation}
+
+\subsection{Normalized Distance Features}
+
+The distance from spot to each IB boundary is normalized by a basis-point scaling factor $\nu = 0.005$ (50 bps of spot price) to produce features that are commensurate across different absolute price levels:
+\begin{equation}
+    \delta^{(d)}_{\text{high}} = \text{clip}\!\left(\frac{S_t - \text{IB}^{(d)}_{\text{high}}}{\nu \cdot S_t},\; -10,\; 10\right)
+    \label{eq:ib_dist_high}
+\end{equation}
+\begin{equation}
+    \delta^{(d)}_{\text{low}} = \text{clip}\!\left(\frac{S_t - \text{IB}^{(d)}_{\text{low}}}{\nu \cdot S_t},\; -10,\; 10\right)
+    \label{eq:ib_dist_low}
+\end{equation}
+When $\delta^{(d)}_{\text{high}} > 0$, spot is above the IB high; when $\delta^{(d)}_{\text{high}} < 0$, spot is within or below. The clip at $\pm 10$ bounds the features to $\pm 5\%$ of spot price.
+
+\subsection{Multi-Day Lookback Structure}
+
+Historical IB levels from prior trading days $d \in \{-1, -2, -3, -4, -5\}$ serve as multi-day support/resistance reference frames. For each prior day $d$, three features are computed:
+\begin{align}
+    \mathcal{F}^{(d)}_{\text{ib\_high}} &= \delta^{(d)}_{\text{high}} \\
+    \mathcal{F}^{(d)}_{\text{ib\_low}}  &= \delta^{(d)}_{\text{low}} \\
+    \mathcal{F}^{(d)}_{\text{prev\_close\_vs\_ib}} &= \frac{P^{(d)}_{\text{close}} - \text{IB}^{(d)}_{\text{mid}}}{\text{IB}^{(d)}_{\text{width}} + \varepsilon}
+    \label{eq:multi_day_ib}
+\end{align}
+The third feature $\mathcal{F}^{(d)}_{\text{prev\_close\_vs\_ib}}$ captures where the previous session's closing price settled relative to its own IB midpoint, encoding overnight directional commitment.
+
+The conjunction of current spot position with historical IB levels yields cross-day confluence features. For example, \texttt{confluence\_d1ibh\_max\_gamma} measures the geometric alignment between the prior day's IB high and the current day's dominant gamma strike:
+\begin{equation}
+    \Phi^{(d1 \times \Gamma)}_t = \exp\!\left(-\frac{(\text{IB}^{(-1)}_{\text{high}} - K^*_\Gamma)^2}{2\,(b \cdot S_t)^2}\right)
+    \label{eq:cross_confluence}
+\end{equation}
+High values of this feature indicate that a prior-day supply zone is coinciding with the current-day gamma pin, a particularly high-conviction resistance configuration.
+
+% ============================================================================
+\section{Implied Volatility Surface Parameterization}
+\label{sec:iv_surface}
+% ============================================================================
+
+\subsection{ATM Implied Volatility and Term Structure}
+
+The ATM implied volatility $\sigma^{\text{ATM}}_t$ for a given expiry $T$ is the IV at the strike $K$ closest to the current forward price $F_t = S_t e^{(r-q)(T-t)}$:
+\begin{equation}
+    \sigma^{\text{ATM}}_t(T) = \text{IV}(K^*, T), \quad K^* = \argmin_{K \in \mathcal{K}} |K - F_t|
+    \label{eq:atm_iv}
+\end{equation}
+
+The term structure of ATM IV captures the ratio of shorter to longer expiry volatilities:
+\begin{equation}
+    \tau_{\text{struct}} = \frac{\sigma^{\text{ATM}}_t(\text{0DTE})}{\sigma^{\text{ATM}}_t(\text{weekly})}
+    \label{eq:term_structure}
+\end{equation}
+A ratio $\tau_{\text{struct}} > 1$ (contango in volatility) indicates near-term elevated uncertainty; $\tau_{\text{struct}} < 1$ (backwardation) suggests calm short-term conditions.
+
+\subsection{Volatility Skew}
+
+The options market prices downside risk differently from upside risk. The risk-reversal skew at the 25-delta moneyness level quantifies this asymmetry:
+\begin{equation}
+    \text{Skew}_{25\Delta} = \text{IV}(K_{25\Delta}^{\text{put}}) - \text{IV}(K_{25\Delta}^{\text{call}})
+    \label{eq:skew}
+\end{equation}
+High positive skew ($\text{Skew}_{25\Delta} \gg 0$) indicates elevated put demand, consistent with hedging pressure from large institutional long equity positions. Negative skew (``reverse skew'') is unusual in equity markets and may signal short-gamma crowding.
+
+\subsection{Smile Slope}
+
+The slope of the implied volatility smile along the strike axis provides a continuous measure of the skew at each expiry:
+\begin{equation}
+    \text{SmileSlope}_{\text{call}} = \frac{d\, \text{IV}}{dK}\bigg|_{K > F_t}, \quad \text{SmileSlope}_{\text{put}} = \frac{d\, \text{IV}}{dK}\bigg|_{K < F_t}
+    \label{eq:smile_slope}
+\end{equation}
+These are estimated numerically from the discrete options chain via finite differences between the ATM and adjacent OTM strikes.
+
+% ============================================================================
+\section{Cross-Ticker Feature Construction}
+\label{sec:cross_ticker}
+% ============================================================================
+
+\subsection{VIX as a Volatility Regime Signal}
+
+The CBOE Volatility Index (VIX) measures 30-day implied volatility on the S\&P~500. At 5-minute intervals, we compute:
+\begin{align}
+    x^{\text{VIX}}_t &= \text{VIX}_t \quad \text{(level, not further transformed)} \\
+    r^{\text{VIX}}_{t,\Delta} &= \frac{\text{VIX}_t - \text{VIX}_{t-\Delta}}{\text{VIX}_{t-\Delta}}, \quad \Delta \in \{1, 5\}\text{ min}
+    \label{eq:vix_features}
+\end{align}
+The raw VIX level is retained untransformed because the GBT can naturally partition on absolute VIX thresholds (e.g., ``high regime: VIX $> 20$''), which are economically interpretable and stable across time.
+
+\subsection{TLT as a Risk-Off Signal}
+
+The iShares 20+ Year Treasury ETF (TLT) serves as a real-time proxy for flight-to-safety flows. Large positive TLT returns coinciding with negative SPX returns signal a risk-off environment where put demand is elevated:
+\begin{equation}
+    \rho^{\text{SPX/TLT}}_{t,5} = \text{corr}\!\left(\{r^{\text{SPX}}_{s,1}\}_{s=t-4}^{t}, \{r^{\text{TLT}}_{s,1}\}_{s=t-4}^{t}\right)
+    \label{eq:spx_tlt_corr}
+\end{equation}
+This rolling 5-bar correlation is included to capture the real-time equity/bond correlation regime.
+
+% ============================================================================
+\section{Temporal Feature Construction}
+\label{sec:temporal}
+% ============================================================================
+
+The intraday session exhibits strong periodicity: liquidity, volatility, and option premium dynamics all follow systematic patterns across the 390-minute trading window. A naive \texttt{minutes\_elapsed} feature would create splits that are specific to the numerical range $[0, 390]$ and would not generalize across the cyclical boundary between session close and next-day open.
+
+Fourier basis encoding resolves this via:
+\begin{equation}
+    x^{\sin}_{\text{tod}} = \sin\!\left(\frac{2\pi m_t}{390}\right), \quad x^{\cos}_{\text{tod}} = \cos\!\left(\frac{2\pi m_t}{390}\right)
+    \label{eq:temporal_fourier}
+\end{equation}
+where $m_t$ is the number of minutes since 09:30. This places 09:30 and 16:00 at the same circular distance from the midday reference point, correctly encoding the symmetric time-decay acceleration at both market open and close.
+
+\begin{remark}[Interaction with Theta Decay]
+For 0DTE options, theta decay is highly non-linear in time remaining. The raw \texttt{minutes\_to\_close} $= 390 - m_t$ feature is retained alongside the Fourier features because it enables the GBT to learn threshold splits of the form ``enter position only if $390 - m_t > 120$'' (do not trade within 2 hours of expiry), which are not naturally expressible via the sinusoidal encoding.
+\end{remark}
+
+\begin{thebibliography}{7}
+
+\bibitem{steidlmayer1986}
+J.~P.~Steidlmayer and K.~Koy,
+``Markets and Market Logic,''
+Chicago Board of Trade, 1986.
+
+\bibitem{gatheral2011}
+J.~Gatheral,
+``The Volatility Surface: A Practitioner's Guide,''
+John Wiley \& Sons, 2011.
+
+\bibitem{cboe_vix}
+CBOE,
+``VIX White Paper: CBOE Volatility Index,''
+\url{https://cdn.cboe.com/resources/vix/vixwhite.pdf}, 2023.
+
+\bibitem{black1973}
+F.~Black and M.~Scholes,
+``The Pricing of Options and Corporate Liabilities,''
+\textit{Journal of Political Economy}, vol.~81, no.~3, pp.~637--654, 1973.
+
+\bibitem{hull2017}
+J.~C.~Hull,
+\textit{Options, Futures, and Other Derivatives},
+10th ed., Pearson, 2017.
+
+\bibitem{avellaneda2020}
+M.~Avellaneda and A.~Savine,
+``Gamma PnL explanation and hedging under incomplete markets,''
+\textit{Risk Magazine}, 2020.
+
+\bibitem{grinsztajn2022}
+L.~Grinsztajn, E.~Oyallon, and G.~Varoquaux,
+``Why do tree-based models still outperform deep learning on typical tabular data?''
+\textit{NeurIPS}, vol.~35, 2022.
+
+\end{thebibliography}
+
+\end{document}

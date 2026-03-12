@@ -124,10 +124,10 @@ def prepare_data(df, feature_columns: list = FEATURE_COLUMNS):
     features = np.nan_to_num(features, nan=0.0, posinf=5.0, neginf=-5.0)
     targets = (df['target'].values + 1).astype(np.int64)  # -1,0,1 -> 0,1,2
     
-    # Time targets: normalize to [0, 1] fraction of 120-minute lookahead
+    # Time targets: normalize to [0, 1] fraction of 180-minute lookahead
     # No clipping — allow the Bayesian head to model the full distribution
     if 'time_to_target' in df.columns:
-        time_targets = df['time_to_target'].values.astype(np.float32) / 120.0
+        time_targets = df['time_to_target'].values.astype(np.float32) / 180.0
     else:
         print("⚠ 'time_to_target' column missing, using zeros")
         time_targets = np.zeros(len(targets), dtype=np.float32)
@@ -238,7 +238,7 @@ def train(
     features_raw = np.nan_to_num(features_raw, nan=0.0, posinf=5.0, neginf=-5.0)
     
     targets = (df['target'].values + 1).astype(np.int64) # -1,0,1 -> 0,1,2
-    time_targets = df['time_to_target'].values.astype(np.float32) / 120.0
+    time_targets = df['time_to_target'].values.astype(np.float32) / 180.0
     
     # 3. SPLIT PRIMERO (Elimina el Data Leakage)
     print("\n[3/6] Splitting data BEFORE normalization...")
@@ -409,8 +409,8 @@ def train(
                 
                 if mask.sum() > 0:
                     masked_reg_loss = gaussian_nll_loss(mu, log_sigma, batch_t.unsqueeze(1), mask)
-                    # MAE for signals (in minutes: mu * 120 - target * 120)
-                    abs_err = torch.abs(mu.squeeze() - batch_t) * 120.0
+                    # MAE for signals (in minutes: mu * 180 - target * 180)
+                    abs_err = torch.abs(mu.squeeze() - batch_t) * 180.0
                     val_mae_sum += (abs_err * mask).sum().item()
                     val_signal_count += mask.sum().item()
                 else:

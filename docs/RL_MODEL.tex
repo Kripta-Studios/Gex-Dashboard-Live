@@ -1,0 +1,475 @@
+% ============================================================================
+%  Kripta Studios — PPO Reinforcement Learning Agent
+%  GBT+RL 0DTE Options Trading System
+% ============================================================================
+\documentclass[11pt,a4paper,twoside]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{mathpazo}
+\usepackage{amsmath, amsfonts, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{titlesec}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, citecolor=red, urlcolor=blue}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily\small, breaklines=true, frame=single, columns=fullflexible}
+\usepackage{xcolor}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{remark}{Remark}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\bx}{\bm{x}}
+\newcommand{\bs}{\bm{s}}
+\newcommand{\ba}{\bm{a}}
+\newcommand{\bth}{\bm{\theta}}
+\newcommand{\bph}{\bm{\phi}}
+
+% ============================================================================
+\title{\textbf{Proximal Policy Optimization Agent for \\
+0DTE Options Execution} \\[0.5em]
+\large{Architecture, MDP Formalization, Reward Engineering, \\
+and Training Protocol for the RL Execution Layer}}
+\author{Kripta Studios — Quantitative Research Division}
+\date{March 2026}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+% ============================================================================
+\section{Introduction}
+\label{sec:intro}
+% ============================================================================
+
+The GBT directional classifier (Stage~1) produces a probabilistic signal $\hat{y}_t \in \{\textsc{short}, \textsc{hold}, \textsc{long}\}$ with associated confidence $c_t \in [0, 1]$. This signal answers the question: \emph{which direction will the market move?} It does not, however, specify the optimal options contract to trade, the timing of entry within the observation window, or the exit strategy that maximizes risk-adjusted return.
+
+These three sub-problems constitute the execution problem, which is solved by a Proximal Policy Optimization (PPO)~\cite{schulman2017} reinforcement learning agent. The RL agent operates on a real-options pricing environment (\texttt{SPXOptionsEnv}) populated with historical ThetaData quotes, and is trained to discover policies that select strikes, time entries, and manage exits so as to maximize a multi-component reward function that penalizes premature exits, excessive stop-losses, and theta-decay erosion.
+
+The two-stage separation is a deliberate architectural choice: the GBT is exposed only to the directional classification objective, while the RL agent is exposed only to the execution objective given a fixed direction. This modularity allows each component to be retrained, replaced, or upgraded independently.
+
+% ============================================================================
+\section{Markov Decision Process Formalization}
+\label{sec:mdp}
+% ============================================================================
+
+\subsection{State Space}
+
+Each episode begins when the GBT emits a directional signal with $c_t \geq c_{\min} = 0.55$. The RL agent's state space $\mathcal{S}$ is the 175-dimensional vector defined in Section~6 of the Features document:
+\begin{equation}
+    \bs_t = \left[\bx_t^\top \;\Big|\; P_L,\; M_{\text{cap}},\; D_{\text{open}},\; \Delta_{\text{strike}},\; \Gamma_{\text{pos}},\; P_{\text{bid}},\; P_{\text{ask}},\; P_{\text{entry}},\; r_{\text{pos}},\; t_{\text{hold}},\; c_{\text{GBT}},\; d_{\text{GBT}}\right]^\top \in \R^{175}
+    \label{eq:state}
+\end{equation}
+where $\bx_t \in \R^{163}$ is the shared market feature vector from the GBT, and the remaining 12 components encode the position's internal state (see Features document for definitions). Prior to any position entry, position-specific components are set to zero.
+
+\begin{definition}[Episode Phases]
+Each episode progresses through three phases:
+\begin{equation}
+    \underbrace{\texttt{PRE\_ENTRY}}_{\substack{\text{up to 15 min} \\ \text{``sniper'' window}}} \;\longrightarrow\; \underbrace{\texttt{IN\_POSITION}}_{\substack{\text{hold/exit decisions} \\ \text{every 5 min}}} \;\longrightarrow\; \underbrace{\texttt{CLOSED}}_{\text{terminal}}
+    \label{eq:episode_phases}
+\end{equation}
+\end{definition}
+
+\subsection{Action Space}
+\label{subsec:action_space}
+
+The action space is discrete and phase-dependent:
+
+\textbf{PRE\_ENTRY (sniper mode):}
+\begin{equation}
+    \mathcal{A}_{\text{entry}} = \{\textsc{wait},\; \textsc{enter\_delta\_low},\; \textsc{enter\_delta\_mid},\; \textsc{enter\_delta\_high}\}
+    \label{eq:action_entry}
+\end{equation}
+The three entry actions correspond to three delta buckets of the real options chain:
+\begin{align}
+    \textsc{enter\_delta\_low}  &: |\Delta| \in [0.20, 0.35) \quad \text{(OTM)} \\
+    \textsc{enter\_delta\_mid}  &: |\Delta| \in [0.35, 0.55) \quad \text{(near-ATM)} \\
+    \textsc{enter\_delta\_high} &: |\Delta| \in [0.55, 0.75] \quad \text{(ITM)}
+\end{align}
+For each delta bucket, the system selects the actual strike from the real options chain as the one closest to the bucket's midpoint delta, given the GBT's directional signal (call for LONG, put for SHORT).
+
+\textbf{IN\_POSITION:}
+\begin{equation}
+    \mathcal{A}_{\text{pos}} = \{\textsc{hold},\; \textsc{exit}\}
+    \label{eq:action_pos}
+\end{equation}
+
+\subsection{Transition Dynamics}
+
+The environment transitions follow the real options pricing data. At each timestep $t$ while $\texttt{IN\_POSITION}$, the mark-to-market value of the position is updated as:
+\begin{equation}
+    P_t =
+    \begin{cases}
+        P^{\text{ThetaData}}_t & \text{if real quote available} \\
+        P_{t-1} + \Delta_{\text{pos}} \cdot (S_t - S_{t-1}) + \tfrac{1}{2}\Gamma_{\text{pos}} \cdot (S_t - S_{t-1})^2 & \text{otherwise (delta-gamma approx.)}
+    \end{cases}
+    \label{eq:mtm}
+\end{equation}
+The unrealized P\&L as a fraction of premium is:
+\begin{equation}
+    P_L = \frac{P_t - P_{\text{entry}}}{P_{\text{entry}}}
+    \label{eq:pnl}
+\end{equation}
+
+% ============================================================================
+\section{Actor-Critic Network Architecture}
+\label{sec:network}
+% ============================================================================
+
+\subsection{Network Design}
+
+The \texttt{PPOAgent} is implemented as an actor-critic network with a shared feature extractor. The architecture contains approximately 187,348 trainable parameters:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lllr}
+\toprule
+\textbf{Module} & \textbf{Input Dim} & \textbf{Output Dim} & \textbf{Parameters} \\
+\midrule
+Shared trunk (FC + LayerNorm) & 175 & 256 & 45,568 \\
+Hidden layer 1 (FC + LayerNorm + Dropout) & 256 & 256 & 66,048 \\
+Hidden layer 2 (FC + LayerNorm) & 256 & 128 & 33,024 \\
+\midrule
+Actor head (entry, $|\mathcal{A}_{\text{entry}}| = 4$) & 128 & 4 & 516 \\
+Actor head (position, $|\mathcal{A}_{\text{pos}}| = 2$) & 128 & 2 & 258 \\
+Critic head (value) & 128 & 1 & 129 \\
+\midrule
+\textbf{Total} & & & \textbf{187,348} \\
+\bottomrule
+\end{tabular}
+\caption{PPO agent architecture. All FC layers use ReLU activation. Dropout $p = 0.1$ in hidden layer 1 during training.}
+\label{tab:network}
+\end{table}
+
+The shared trunk processes the 175-dimensional state vector, producing a latent representation that is subsequently branched into the phase-conditioned actor heads and the value function critic. The actor selects from $\mathcal{A}_{\text{entry}}$ during PRE\_ENTRY and from $\mathcal{A}_{\text{pos}}$ during IN\_POSITION; the critic outputs a scalar value estimate $V_{\bph}(\bs_t)$ used in the GAE advantage computation.
+
+\subsection{Policy Distribution}
+
+The actor produces a categorical distribution over the discrete action set:
+\begin{equation}
+    \pi_{\bth}(a \mid \bs_t) = \text{Softmax}\!\left(f_{\text{actor}}(\bs_t)\right)[a]
+    \label{eq:policy}
+\end{equation}
+During training, actions are sampled stochastically from $\pi_{\bth}$. During evaluation and live trading, the policy is run deterministically ($a = \argmax_a \pi_{\bth}(a \mid \bs_t)$) to reduce variance.
+
+% ============================================================================
+\section{Proximal Policy Optimization}
+\label{sec:ppo}
+% ============================================================================
+
+\subsection{Generalized Advantage Estimation}
+
+The advantage function $\hat{A}_t$ measures how much better action $a_t$ is relative to the average policy behavior from state $\bs_t$. GAE~\cite{schulman2016gae} computes a bias-variance tradeoff via exponential discounting of TD residuals:
+\begin{equation}
+    \delta_t = r_t + \gamma V_{\bph}(\bs_{t+1})(1 - \mathbf{1}_{\text{done}}) - V_{\bph}(\bs_t)
+    \label{eq:td_error}
+\end{equation}
+\begin{equation}
+    \hat{A}_t = \sum_{l=0}^{T-t-1} (\gamma \lambda)^l \delta_{t+l}
+    \label{eq:gae}
+\end{equation}
+where $\gamma = 0.99$ is the discount factor and $\lambda = 0.95$ is the GAE parameter, configured in \texttt{rl/config.py} under \texttt{RL\_CONFIG}. The returns (rewards-to-go) are:
+\begin{equation}
+    \hat{R}_t = \hat{A}_t + V_{\bph}(\bs_t)
+    \label{eq:returns}
+\end{equation}
+
+\subsection{PPO Clipped Objective}
+
+The probability ratio between the updated policy $\pi_{\bth}$ and the behavior policy $\pi_{\bth_{\text{old}}}$ used to collect the rollout is:
+\begin{equation}
+    \rho_t(\bth) = \frac{\pi_{\bth}(a_t \mid \bs_t)}{\pi_{\bth_{\text{old}}}(a_t \mid \bs_t)}
+    \label{eq:prob_ratio}
+\end{equation}
+
+The clipped surrogate objective prevents catastrophically large policy updates by constraining $\rho_t$ to remain within $[1-\epsilon, 1+\epsilon]$, with $\epsilon = 0.2$:
+\begin{equation}
+    L^{\text{CLIP}}(\bth) = \hat{\E}_t\!\left[\min\!\left(\rho_t(\bth)\hat{A}_t,\; \text{clip}(\rho_t(\bth), 1-\epsilon, 1+\epsilon)\hat{A}_t\right)\right]
+    \label{eq:ppo_clip}
+\end{equation}
+
+\subsection{Full PPO Objective}
+
+The total loss combines the policy objective, a mean-squared-error value function loss, and an entropy bonus to encourage exploration:
+\begin{equation}
+    L(\bth, \bph) = -L^{\text{CLIP}}(\bth) + c_v \cdot L^{\text{VF}}(\bph) - c_e \cdot H[\pi_{\bth}]
+    \label{eq:ppo_total}
+\end{equation}
+where:
+\begin{align}
+    L^{\text{VF}}(\bph) &= \hat{\E}_t\!\left[\left(V_{\bph}(\bs_t) - \hat{R}_t\right)^2\right] \\
+    H[\pi_{\bth}] &= -\hat{\E}_t\!\left[\sum_a \pi_{\bth}(a \mid \bs_t) \log \pi_{\bth}(a \mid \bs_t)\right]
+    \label{eq:entropy}
+\end{align}
+with hyperparameters $c_v = 0.5$ (value coefficient) and $c_e = 0.01$ (entropy coefficient). The optimizer is Adam with learning rate $\text{lr} = 3 \times 10^{-4}$.
+
+\subsection{PPO Update Procedure}
+
+\begin{algorithm}[H]
+\caption{PPO Update Step}
+\begin{algorithmic}[1]
+\State Collect $N_{\text{ep}}$ episodes using current policy $\pi_{\bth_{\text{old}}}$
+\State Compute GAE advantages $\{\hat{A}_t\}$ and returns $\{\hat{R}_t\}$ (Eq.~\ref{eq:gae}--\ref{eq:returns})
+\State Normalize rewards via \texttt{RunningMeanStd}
+\For{$k = 1, \ldots, K_{\text{epochs}}$}
+    \For{each mini-batch $\mathcal{B}$ sampled uniformly from rollout buffer}
+        \State Compute $\rho_t(\bth)$ for all $t \in \mathcal{B}$
+        \State Compute $L(\bth, \bph)$ via Eq.~\ref{eq:ppo_total}
+        \State Update $(\bth, \bph) \gets (\bth, \bph) - \alpha \nabla L(\bth, \bph)$
+    \EndFor
+\EndFor
+\State $\bth_{\text{old}} \gets \bth$
+\end{algorithmic}
+\end{algorithm}
+
+The training loop runs for \texttt{total\_updates} = 200 PPO update steps by default, with $N_{\text{ep}} = 64$ episodes per update and $K_{\text{epochs}} = 4$ optimization epochs over the collected rollout.
+
+% ============================================================================
+\section{Reward Function Engineering}
+\label{sec:reward}
+% ============================================================================
+
+The reward function is a critical design choice for the RL execution agent. A naive reward based solely on terminal P\&L would provide sparse feedback and encourage high-variance policies. The system employs a dense, multi-component reward $R_t$ that decomposes the terminal objective into intermediate behavioral targets.
+
+\subsection{Profit and Loss Reward}
+
+The base reward at exit is proportional to the premium-normalized P\&L:
+\begin{equation}
+    R^{\text{PnL}} = P_L = \frac{P_{\text{exit}} - P_{\text{entry}}}{P_{\text{entry}}}
+    \label{eq:r_pnl}
+\end{equation}
+
+\subsection{Theta Decay Penalty}
+
+Every timestep the position is held, a penalty proportional to the realized theta is applied:
+\begin{equation}
+    R^{\theta}_t = -\alpha_\theta \cdot \frac{|\theta_{\text{pos}}| \cdot \Delta t}{P_{\text{entry}}}, \quad \alpha_\theta = 0.5
+    \label{eq:r_theta}
+\end{equation}
+This penalty discourages the agent from holding positions through large theta-decay periods, particularly in the final 90 minutes of the session when 0DTE theta is accelerating exponentially.
+
+\subsection{Stop-Loss Penalty}
+
+Hard stops imposed by the environment at $P_L < -0.50$ (50\% premium loss) incur an additional penalty:
+\begin{equation}
+    R^{\text{stop}} =
+    \begin{cases}
+        -1.0 & \text{if } P_L \leq -0.50 \text{ (hard stop triggered)} \\
+        0    & \text{otherwise}
+    \end{cases}
+    \label{eq:r_stop}
+\end{equation}
+
+\subsection{Move-Capture Bonus}
+
+The agent is rewarded for capturing a large fraction $\rho$ of the maximum favorable move $M_t$ available during the hold period:
+\begin{equation}
+    M_t = \max_{\tau \in [t_{\text{entry}}, t_{\text{exit}}]} \frac{P_\tau - P_{\text{entry}}}{P_{\text{entry}}}
+    \label{eq:max_move}
+\end{equation}
+\begin{equation}
+    R^{\text{capture}} =
+    \begin{cases}
+        -0.2 \cdot (1 - \rho) & \text{if } M_t > 0 \;\wedge\; P_L > 0 \;\wedge\; \rho < 0.30 \\
+        0                     & \text{otherwise}
+    \end{cases}, \quad \rho = \frac{P_L}{M_t}
+    \label{eq:r_capture}
+\end{equation}
+A winning trade that exits with less than 30\% of the available move captured receives a proportional penalty. This discourages premature profit-taking that leaves large residual gains unrealized.
+
+\subsection{Entry Timing Bonus}
+
+The 15-minute sniper window allows the agent to improve entry price relative to the GBT signal timestamp. Favorable price improvement during PRE\_ENTRY generates a small bonus:
+\begin{equation}
+    R^{\text{entry}} = \min\!\left(5 \cdot \Delta_{\text{price}},\; 0.3\right) \cdot \mathbf{1}[\Delta_{\text{price}} > 0]
+    \label{eq:r_entry}
+\end{equation}
+where $\Delta_{\text{price}} = (P_{\text{entry\_actual}} - P_{\text{signal\_time}}) / P_{\text{signal\_time}}$ measures the improvement achieved by waiting for a more favorable entry price. The capping at $0.3$ prevents the agent from exclusively optimizing entry timing at the cost of missing the trade entirely.
+
+\subsection{Total Reward}
+
+The total reward signal combines all components:
+\begin{equation}
+    R_t =
+    \begin{cases}
+        R^{\text{PnL}} + R^{\text{capture}} + R^{\text{stop}} + R^{\text{entry}} & \text{if } t = t_{\text{exit}} \text{ (terminal)} \\
+        R^{\theta}_t & \text{otherwise (per-step)}
+    \end{cases}
+    \label{eq:total_reward}
+\end{equation}
+
+\begin{remark}
+The reward structure is designed to produce a \emph{patient} agent that holds positions through minor drawdowns if the expected remaining upside is large, rather than exiting immediately at any positive P\&L. The theta penalty counterbalances this patience near expiration, inducing natural time-based exit discipline.
+\end{remark}
+
+% ============================================================================
+\section{Hard Exit Rules}
+\label{sec:hard_exits}
+% ============================================================================
+
+The environment enforces non-negotiable exit conditions that override the agent's action. These are implemented as pre-action checks in \texttt{SPXOptionsEnv.step()}:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{p{3.5cm}p{3cm}p{7cm}}
+\toprule
+\textbf{Rule} & \textbf{Threshold} & \textbf{Rationale} \\
+\midrule
+Maximum loss & $P_L \leq -0.50$ & Prevent ruin on a single trade \\
+Maximum profit & $P_L \geq +3.00$ & Capture extraordinary gains (300\% of premium) \\
+Time to close & $\text{minutes\_to\_close} \leq 5$ & Avoid illiquid 15:55+ pricing \\
+Maximum hold & 180 minutes & Align with GBT lookahead horizon ($T_{\max}$) \\
+\bottomrule
+\end{tabular}
+\caption{Hard exit rules enforced by \texttt{SPXOptionsEnv} regardless of agent action.}
+\label{tab:hard_exits}
+\end{table}
+
+% ============================================================================
+\section{Curriculum Learning Protocol}
+\label{sec:curriculum}
+% ============================================================================
+
+The training curriculum follows a three-phase confidence progression managed by \texttt{CurriculumScheduler}:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{llcc}
+\toprule
+\textbf{Phase} & \textbf{Training Steps} & \textbf{Min Confidence $c_{\min}$} & \textbf{Rationale} \\
+\midrule
+Phase 1: High confidence & Steps 1--50 & 0.70 & Learn on cleanest signals first \\
+Phase 2: Medium confidence & Steps 51--120 & 0.60 & Expand to moderate signals \\
+Phase 3: Full distribution & Steps 121+ & 0.55 & Learn full production range \\
+\bottomrule
+\end{tabular}
+\caption{Curriculum learning schedule for RL training.}
+\label{tab:curriculum}
+\end{table}
+
+This protocol is motivated by the observation that high-confidence GBT signals produce more directionally-consistent price moves, providing cleaner reward signals for the PPO agent to learn from in the early stages of training. By the time the curriculum reaches the full confidence range, the agent has developed robust baseline policies that can be refined on the noisier low-confidence episodes.
+
+% ============================================================================
+\section{Training Infrastructure}
+\label{sec:training_infra}
+% ============================================================================
+
+\subsection{Episode Collection and Rollout Buffer}
+
+At each PPO update step, the trainer collects $N_{\text{ep}} = 64$ complete episodes using the current policy. Each episode is stored in a \texttt{RolloutBuffer} as a sequence of $(s_t, a_t, a_{\text{type}}, r_t, \log\pi_{\bth}(a_t|s_t), V_{\bph}(s_t), \text{done}_t)$ tuples. After collection, GAE returns are computed and rewards are normalized via a \texttt{RunningMeanStd} tracker.
+
+State augmentation during training adds i.i.d. Gaussian noise $\epsilon_t \sim \mathcal{N}(0, 0.01)$ to continuous state components:
+\begin{equation}
+    \bs^{\text{aug}}_t = \bs_t + \epsilon_t
+    \label{eq:augmentation}
+\end{equation}
+This data augmentation improves robustness of the learned policy to the slight distributional shift between historical training data and live deployment conditions.
+
+\subsection{Overfitting Detection}
+
+Every \texttt{eval\_interval} = 20 update steps, the trainer runs a deterministic evaluation rollout of 50 episodes (no augmentation). Key metrics are compared between the stochastic training rollout (rolling average over the last 20 steps) and the deterministic evaluation:
+\begin{equation}
+    \Delta_{\text{PF}} = \text{PF}_{\text{train}} - \text{PF}_{\text{eval}}
+    \label{eq:pf_gap}
+\end{equation}
+Warnings are emitted at:
+\begin{itemize}
+    \item $\Delta_{\text{PF}} > 0.5$ and $\text{PF}_{\text{eval}} < 1.0$ — severe overfitting.
+    \item $\Delta_{\text{PF}} > 0.3$ — mild overfitting, monitor.
+    \item Eval win rate $< 40\%$ — agent may be exhibiting degenerate policy.
+\end{itemize}
+The best model checkpoint (by evaluation profit factor) is saved to \texttt{rl\_models/best\_rl\_agent.pt}.
+
+\subsection{Model Persistence}
+
+Checkpoints are saved at three levels:
+\begin{enumerate}
+    \item \texttt{best\_rl\_agent.pt} — best evaluation profit factor at any step.
+    \item \texttt{rl\_agent\_step\_\{N\}.pt} — periodic checkpoint every 50 steps.
+    \item \texttt{final\_rl\_agent.pt} — end-of-training snapshot.
+\end{enumerate}
+Training history is serialized to \texttt{rl\_training\_history.json}, containing per-step metrics for both training and evaluation rollouts.
+
+\subsection{Chunked Options Cache}
+
+The RL environment accesses historical options data via the \texttt{ChunkedOptionsCache}, which implements an LRU eviction policy parameterized by \texttt{max\_days\_in\_ram} (default: 120 days, configurable via CLI). The cache key format is \texttt{"YYYYMMDD\_HH:MM"}, from which the date prefix is extracted to identify the correct daily shard. Memory consumption is bounded at $\mathcal{O}(k \cdot \bar{m}_d)$, where $k$ is the cache size and $\bar{m}_d$ is the average shard size in memory.
+
+% ============================================================================
+\section{Integration with GBT Classifier}
+\label{sec:integration}
+% ============================================================================
+
+The GBT ensemble and PPO agent are coupled through the \texttt{IntegratedTradingSystem} class in the live bot. The interface contract is:
+\begin{enumerate}
+    \item GBT emits $(\hat{y}_t, c_t)$ every 5-minute bar.
+    \item If $\hat{y}_t \neq \textsc{hold}$ and $c_t \geq c_{\min}$, an episode is instantiated in the RL environment.
+    \item The RL agent steps through PRE\_ENTRY and IN\_POSITION phases using live options quotes from the real-time feed.
+    \item The episode terminates on agent \textsc{exit} action or hard exit rule trigger.
+\end{enumerate}
+
+The \texttt{GBTEnsemble} exposes a PyTorch-compatible \texttt{\_\_call\_\_} interface that returns \texttt{(logits, dummy\_time\_pred)}, preserving compatibility with the RL state encoder that was originally designed for the legacy MLP:
+\begin{equation}
+    \texttt{GBTEnsemble}(\bx) \to \left(\underbrace{\bm{p} \in \R^3}_{\text{class probs}},\; \underbrace{(60.0, 0.0)}_{\text{dummy time pred}}\right)
+    \label{eq:gbt_interface}
+\end{equation}
+The class probabilities $\bm{p}$ are passed as logits (no further softmax applied), since $\text{softmax}(\bm{p})$ where $\sum_k p_k = 1$ introduces only minimal distortion relative to $\bm{p}$ itself. This avoids requiring the RL state encoder to handle the log-probability transform that would be needed if true logits were passed.
+
+\begin{thebibliography}{7}
+
+\bibitem{schulman2017}
+J.~Schulman, F.~Wolski, P.~Dhariwal, A.~Radford, and O.~Klimov,
+``Proximal Policy Optimization Algorithms,''
+\textit{arXiv:1707.06347}, 2017.
+
+\bibitem{schulman2016gae}
+J.~Schulman, P.~Moritz, S.~Levine, M.~I.~Jordan, and P.~Abbeel,
+``High-Dimensional Continuous Control Using Generalized Advantage Estimation,''
+\textit{ICLR}, 2016.
+
+\bibitem{mnih2015}
+V.~Mnih et al.,
+``Human-level control through deep reinforcement learning,''
+\textit{Nature}, vol.~518, pp.~529--533, 2015.
+
+\bibitem{ke2017}
+G.~Ke et al.,
+``LightGBM: A Highly Efficient Gradient Boosting Decision Tree,''
+\textit{NeurIPS}, vol.~30, 2017.
+
+\bibitem{moody2001}
+J.~Moody and M.~Saffell,
+``Learning to trade via direct reinforcement,''
+\textit{IEEE Trans. Neural Networks}, vol.~12, no.~4, pp.~875--889, 2001.
+
+\bibitem{deng2017}
+Y.~Deng, F.~Bao, Y.~Kong, Z.~Ren, and Q.~Dai,
+``Deep direct reinforcement learning for financial signal representation and trading,''
+\textit{IEEE Trans. Neural Networks and Learning Systems}, vol.~28, no.~3, 2017.
+
+\bibitem{hull2017}
+J.~C.~Hull,
+\textit{Options, Futures, and Other Derivatives},
+10th ed., Pearson, 2017.
+
+\end{thebibliography}
+
+\end{document}

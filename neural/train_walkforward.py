@@ -1,3 +1,17 @@
+# -*- coding: utf-8 -*-
+"""
+Walk-Forward Training Pipeline — LightGBM Edition
+
+Replaces the PyTorch MLP with LightGBM for tabular data classification.
+GBT achieves 72% accuracy on SHORT vs LONG OOS where the MLP got ~0%.
+
+Structure unchanged:
+  - Walk-forward splits (train_m/test_m months, step=1 month)
+  - Ensemble of N models per window (different random seeds)
+  - Cal_df from first 10 test days for threshold calibration
+  - Collapse detection + min-trades + PF floor for acceptance
+  - Top-N windows by rank_score (PF * recency) for production
+"""
 import os
 import sys
 import argparse
@@ -6,321 +20,547 @@ import json
 import numpy as np
 import pandas as pd
 from pathlib import Path
-import torch
-import torch.nn as nn
-import torch.optim as optim
-from torch.utils.data import DataLoader, TensorDataset, WeightedRandomSampler
+
+import lightgbm as lgb
 
 # Add project root to path
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
 sys.path.insert(0, PROJECT_ROOT)
 
-from hybrid_model import (
-    get_hybrid_model, get_device, save_hybrid_model,
-    FeatureNormalizer, FEATURE_COLUMNS
-)
-
+from hybrid_model import FeatureNormalizer, FEATURE_COLUMNS
+from gbt_model import GBTModel, GBTEnsemble, save_gbt_ensemble
 from data_utils import walk_forward_splits, add_sample_weights
 
-# --- DATA AUGMENTATION ---
-class FeatureAugmentation:
-    """
-    Data augmentation for tabular features.
-    Helps prevent overfitting on small datasets.
-    """
-    
-    def __init__(self, noise_std: float = 0.1, dropout_prob: float = 0.1):
-        self.noise_std = noise_std
-        self.dropout_prob = dropout_prob
-    
-    def __call__(self, x: torch.Tensor) -> torch.Tensor:
-        # Add Gaussian noise
-        if self.noise_std > 0:
-            noise = torch.randn_like(x) * self.noise_std
-            x = x + noise
-        
-        # Random feature dropout (set some features to 0)
-        if self.dropout_prob > 0:
-            mask = torch.rand_like(x) > self.dropout_prob
-            x = x * mask.float()
-        
-        return x
 
-def get_class_weights(targets: np.ndarray, smoothing: float = 0.3) -> torch.Tensor:
-    """
-    Compute class weights for imbalanced data with optional smoothing.
-    """
-    class_counts = np.bincount(targets, minlength=3)
-    total = len(targets)
-    
-    # Raw inverse frequency weights
-    raw_weights = total / (3 * class_counts + 1e-6)
-    
-    # Smooth towards uniform weights (all 1.0)
-    smooth_weights = (1 - smoothing) * raw_weights + smoothing * np.ones(3)
-    
-    # Debug output
-    print(f"    Class distribution (smoothing={smoothing}):")
-    for i, name in enumerate(["SHORT", "HOLD", "LONG"]):
-        print(f"      {name} ({i}): {class_counts[i]:,} samples → "
-              f"weight {smooth_weights[i]:.3f}")
-    
-    return torch.FloatTensor(smooth_weights)
+def set_seed(seed: int):
+    import random
+    random.seed(seed)
+    np.random.seed(seed)
 
-# --- METRICAS DE TRADING ---
+
+# ═══════════════════════════════════════════════════════════════
+# METRICS
+# ═══════════════════════════════════════════════════════════════
 def calculate_trading_metrics(predictions, targets):
-    metrics = {}
-    metrics["accuracy"] = (predictions == targets).mean()
-    class_names = ["SHORT", "HOLD", "LONG"]
-    for cls_idx, cls_name in enumerate(class_names):
-        pred_mask = (predictions == cls_idx)
-        if pred_mask.sum() > 0:
-            precision = (targets[pred_mask] == cls_idx).sum() / pred_mask.sum()
-            metrics[f"precision_{cls_name}"] = float(precision)
-            metrics[f"count_{cls_name}"] = int(pred_mask.sum())
-    
+    predictions = np.asarray(predictions)
+    targets = np.asarray(targets)
+    metrics = {"accuracy": float((predictions == targets).mean())}
     trade_mask = (predictions != 1)
-    if trade_mask.sum() > 0:
-        wins = (predictions[trade_mask] == targets[trade_mask]).sum()
-        metrics["win_rate"] = float(wins / trade_mask.sum())
-        losses = trade_mask.sum() - wins
-        metrics["profit_factor"] = float(wins / losses) if losses > 0 else float('inf')
+    n_trades = trade_mask.sum()
+    if n_trades > 0:
+        wins = int((predictions[trade_mask] == targets[trade_mask]).sum())
+        losses = int(n_trades - wins)
+        metrics["win_rate"] = float(wins / n_trades)
+        MIN_LOSSES_FOR_PF = 5
+        if losses < MIN_LOSSES_FOR_PF:
+            metrics["profit_factor"] = float(wins / max(losses, MIN_LOSSES_FOR_PF))
+        else:
+            metrics["profit_factor"] = float(wins / losses)
+        metrics["total_trades"] = int(n_trades)
     else:
-        metrics["win_rate"], metrics["profit_factor"] = 0, 0
+        metrics.update({"win_rate": 0.0, "profit_factor": 0.0, "total_trades": 0})
     return metrics
 
-# --- LOSS FUNCTIONS ---
-class LabelSmoothingCrossEntropy(nn.Module):
-    def __init__(self, smoothing=0.1, num_classes=3, weights=None):
-        super().__init__()
-        self.smoothing = smoothing
-        self.num_classes = num_classes
-        self.weights = weights
-    def forward(self, logits, targets):
-        confidence = 1.0 - self.smoothing
-        smooth_val = self.smoothing / (self.num_classes - 1)
-        one_hot = torch.zeros_like(logits).scatter_(1, targets.unsqueeze(1), 1)
-        labels = one_hot * confidence + (1 - one_hot) * smooth_val
-        log_probs = torch.log_softmax(logits, dim=-1)
-        loss = (-labels * log_probs).sum(dim=-1)
-        if self.weights is not None:
-            loss = loss * self.weights[targets]
-        return loss.mean()
 
-def gaussian_nll_loss_clamped(mu, log_sigma, target, mask):
-    log_sigma = torch.clamp(log_sigma, min=-3.0, max=3.0)
-    variance = torch.exp(2 * log_sigma) + 1e-6
-    loss = 0.5 * torch.log(variance) + 0.5 * (((target - mu) ** 2) / variance)
-    return (loss.squeeze() * mask).sum() / (mask.sum() + 1e-8)
+# ═══════════════════════════════════════════════════════════════
+# CLASS BALANCING
+# ═══════════════════════════════════════════════════════════════
+def balance_classes(y_train: np.ndarray,
+                    rng: np.random.Generator,
+                    hold_ratio: float = 2.0,
+                    min_dir_samples: int = 30) -> np.ndarray:
+    """
+    Balance SHORT / LONG / HOLD independently.
+    SHORT and LONG are equalized; HOLD is capped at hold_ratio * directional.
+    """
+    short_idx = np.where(y_train == 0)[0]
+    long_idx  = np.where(y_train == 2)[0]
+    hold_idx  = np.where(y_train == 1)[0]
 
-# --- ENTRENAMIENTO DE UNA VENTANA ---
-def train_single_window(train_df, val_df, model_size="small", epochs=50, batch_size=1024, 
-                        learning_rate=0.001, weight_decay=0.1, label_smoothing=0.1, 
-                        augment_noise=0.05, augment_dropout=0.1, warmup_epochs=5,
-                        device=None, verbose=True):
-    if device is None: device = get_device()
-    
+    n_long  = len(long_idx)
+    n_short = len(short_idx)
+
+    MAX_DIR_RATIO = 1.0
+    n_minority = max(min(n_long, n_short), min_dir_samples)
+    n_majority_cap = int(n_minority * MAX_DIR_RATIO)
+
+    if n_long <= n_short:
+        n_long_keep  = n_long
+        n_short_keep = min(n_short, n_majority_cap)
+    else:
+        n_short_keep = n_short
+        n_long_keep  = min(n_long, n_majority_cap)
+
+    n_long_keep  = max(n_long_keep,  min(min_dir_samples, n_long))
+    n_short_keep = max(n_short_keep, min(min_dir_samples, n_short))
+
+    long_sampled  = rng.choice(long_idx,  size=n_long_keep,  replace=False)
+    short_sampled = rng.choice(short_idx, size=n_short_keep, replace=False)
+
+    n_signals     = n_long_keep + n_short_keep
+    n_hold_target = min(len(hold_idx), int(n_signals * hold_ratio))
+    hold_sampled  = rng.choice(hold_idx, size=n_hold_target, replace=False)
+
+    keep_idx = np.sort(np.concatenate([short_sampled, long_sampled, hold_sampled]))
+    return keep_idx, n_long_keep, n_short_keep, n_hold_target
+
+
+# ═══════════════════════════════════════════════════════════════
+# TRADE CALIBRATION
+# ═══════════════════════════════════════════════════════════════
+def apply_trade_calibration(val_probs: np.ndarray,
+                            trade_thresh: float = 0.50,
+                            hold_margin: float = 0.05,
+                            thresh_long: float = None,
+                            thresh_short: float = None) -> np.ndarray:
+    """Convert class probabilities to predictions {0=SHORT, 1=HOLD, 2=LONG}."""
+    p_short = val_probs[:, 0]
+    p_hold  = val_probs[:, 1]
+    p_long  = val_probs[:, 2]
+
+    t_long  = thresh_long  if thresh_long  is not None else trade_thresh
+    t_short = thresh_short if thresh_short is not None else trade_thresh
+
+    preds = np.ones(len(val_probs), dtype=np.int64)  # default HOLD
+    long_mask  = (p_long  >= t_long)  & (p_long  >= p_short) & (p_long  >= p_hold + hold_margin)
+    short_mask = (p_short >= t_short) & (p_short >  p_long)  & (p_short >= p_hold + hold_margin)
+    preds[long_mask] = 2
+    preds[short_mask] = 0
+    return preds
+
+
+# ═══════════════════════════════════════════════════════════════
+# SINGLE WINDOW TRAINING (LightGBM)
+# ═══════════════════════════════════════════════════════════════
+def train_single_window(train_df, val_df, verbose=True, window_idx=None, seed=42, hold_ratio=2.0):
+    """
+    Train a single LightGBM model on one walk-forward window.
+
+    Returns:
+        (GBTModel, FeatureNormalizer, metrics_dict)
+    """
     cols = [c for c in FEATURE_COLUMNS if c in train_df.columns]
-    
-    # Preparar datos
+
+    needs_remapping = False
+    if 'target' in train_df.columns and train_df['target'].min() < 0:
+        needs_remapping = True
+
     def prep(df):
         x = np.nan_to_num(df[cols].values.astype(np.float32), nan=0.0, posinf=5.0, neginf=-5.0)
-        y = (df['target'].values + 1).astype(np.int64)
-        t = df['time_to_target'].values.astype(np.float32) / 120.0
-        return x, y, t
+        raw_target = df['target'].values
+        if needs_remapping:
+            y = (raw_target + 1).astype(np.int64)
+        else:
+            y = raw_target.astype(np.int64)
+        return x, y
 
-    X_train_raw, y_train, t_train = prep(train_df)
-    X_val_raw, y_val, t_val = prep(val_df)
+    # 1. Chronological ordering
+    if '_date' not in train_df.columns and 'date' in train_df.columns:
+        train_df = train_df.copy()
+        train_df['_date'] = pd.to_datetime(train_df['date'], errors='coerce')
 
+    if '_date' in train_df.columns:
+        train_df = train_df.sort_values('_date').reset_index(drop=True)
+
+    # 2. Cal_df from first 10 test days
+    if '_date' not in val_df.columns and 'date' in val_df.columns:
+        val_df = val_df.copy()
+        val_df['_date'] = pd.to_datetime(val_df['date'], errors='coerce')
+
+    if '_date' in val_df.columns:
+        val_df = val_df.sort_values('_date').reset_index(drop=True)
+
+    val_dates = sorted(val_df['_date'].dt.date.unique())
+    n_cal_from_test = min(10, len(val_dates) // 2)
+    cal_dates = set(val_dates[:n_cal_from_test])
+    cal_mask = val_df['_date'].dt.date.isin(cal_dates)
+    cal_df = val_df[cal_mask].reset_index(drop=True)
+
+    min_trades_req = 10
+    n_cal = len(cal_df)
+    n_cal_short = (cal_df['target'] == (-1 if needs_remapping else 0)).sum()
+    n_cal_long  = (cal_df['target'] == (1 if needs_remapping else 2)).sum()
+    n_cal_hold  = n_cal - n_cal_short - n_cal_long
+    print(f"  [CAL_DF] first {n_cal_from_test} test days | rows={n_cal} | "
+          f"Short={n_cal_short} Long={n_cal_long} Hold={n_cal_hold}")
+    print(f"  [CAL] min_trades_req={min_trades_req}")
+
+    # 3. Prep data
+    X_train_raw, y_train = prep(train_df)
+    X_train_raw_full = X_train_raw.copy()  # keep FULL for normalizer fit
+
+    # 4. Balance classes
+    rng = np.random.default_rng(seed=seed)
+    keep_idx, n_long_k, n_short_k, n_hold_k = balance_classes(
+        y_train, rng, hold_ratio=hold_ratio, min_dir_samples=30
+    )
+
+    X_train_raw = X_train_raw[keep_idx]
+    y_train     = y_train[keep_idx]
+
+    dist_train = np.bincount(y_train, minlength=3).tolist()
+    print(f"      [Balance] Long={n_long_k} | Short={n_short_k} | Hold={n_hold_k} | "
+          f"Ratio L:S={n_long_k/max(n_short_k,1):.2f}")
+    print(f"      [Dist train] {dist_train}")
+
+    # Min directional samples
+    MIN_DIR_TRAIN = 100
+    if n_long_k < MIN_DIR_TRAIN or n_short_k < MIN_DIR_TRAIN:
+        print(f"      [SKIP] Insufficient directional samples: Long={n_long_k}, Short={n_short_k} < {MIN_DIR_TRAIN}")
+        return None, None, {"accuracy": 0, "win_rate": 0, "profit_factor": 0, "total_trades": 0, "min_trades_req": min_trades_req}
+
+    # 5. Normalize features
     norm = FeatureNormalizer()
-    X_train = norm.fit_transform(X_train_raw, cols)
-    X_val = norm.transform(X_val_raw)
+    norm.fit(X_train_raw_full, cols)
+    X_train = norm.transform(X_train_raw)
 
-    # Pesos robustos
-    cw_tensor = get_class_weights(y_train, smoothing=0.3).to(device)
-    
-    # Sampler basado en pesos de clase + sample weights (freshness)
-    # Reconstruimos los pesos por muestra para el sampler
-    class_weights_np = cw_tensor.cpu().numpy()
-    sample_weights = np.array([class_weights_np[y] for y in y_train])
-    
-    if 'sample_weight' in train_df.columns:
-        sample_weights *= train_df['sample_weight'].values
-    
-    sampler = WeightedRandomSampler(torch.FloatTensor(sample_weights), len(sample_weights))
+    # 6. Train LightGBM
+    model = lgb.LGBMClassifier(
+        objective='multiclass',
+        n_estimators=300,
+        max_depth=6,
+        learning_rate=0.05,
+        subsample=0.8,
+        colsample_bytree=0.8,
+        min_child_samples=50,
+        reg_alpha=0.1,
+        reg_lambda=1.0,
+        num_class=3,
+        random_state=seed,
+        verbose=-1,
+        n_jobs=-1,
+    )
+    model.fit(X_train, y_train)
 
-    train_loader = DataLoader(TensorDataset(torch.FloatTensor(X_train), torch.LongTensor(y_train), torch.FloatTensor(t_train)), 
-                              batch_size=batch_size, sampler=sampler)
-    val_loader = DataLoader(TensorDataset(torch.FloatTensor(X_val), torch.LongTensor(y_val), torch.FloatTensor(t_val)), 
-                            batch_size=batch_size * 2)
-
-    model = get_hybrid_model(model_size, X_train.shape[1]).to(device)
+    # 7. Threshold calibration on cal_df
+    X_cal, y_cal = prep(cal_df)
+    X_cal_norm = norm.transform(X_cal)
     
-    # Loss con pesos de clase
-    criterion_cls = LabelSmoothingCrossEntropy(smoothing=label_smoothing, weights=cw_tensor)
-    
-    optimizer = optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
-    
-    # Scheduler con Warmup
-    def lr_lambda(epoch):
-        if epoch < warmup_epochs:
-            return (epoch + 1) / (warmup_epochs + 1e-6)
-        progress = (epoch - warmup_epochs) / (epochs - warmup_epochs)
-        return 0.5 * (1 + np.cos(np.pi * progress))
-    
-    scheduler = optim.lr_scheduler.LambdaLR(optimizer, lr_lambda)
-    
-    # Augmentation
-    augment = FeatureAugmentation(noise_std=augment_noise, dropout_prob=augment_dropout)
+    # Wrap in DataFrame to avoid LightGBM feature names warning
+    X_cal_df = pd.DataFrame(X_cal_norm, columns=cols)
+    val_probs = model.predict_proba(X_cal_df)
+    val_targets = y_cal
 
-    best_val_loss = float('inf')
-    best_state = None
+    print(f"  [CAL] target distribution: {np.bincount(val_targets, minlength=3)}")
 
-    for epoch in range(epochs):
-        # --- PHASE: TRAINING ---
-        model.train()
-        train_loss = 0.0
-        train_correct = 0
-        train_total = 0
-        
-        for bx, by, bt in train_loader:
-            bx, by, bt = bx.to(device), by.to(device), bt.to(device)
-            
-            # Apply Augmentation
-            bx = augment(bx)
-            
-            optimizer.zero_grad()
-            logits, t_pred = model(bx)
-            
-            l_cls = criterion_cls(logits, by)
-            mask = (by != 1).float()
-            l_reg = gaussian_nll_loss_clamped(t_pred[:,0:1], t_pred[:,1:2], bt.unsqueeze(1), mask)
-            
-            loss = l_cls + 0.5 * l_reg
-            loss.backward()
-            torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
-            optimizer.step()
-            
-            train_loss += loss.item()
-            # Stats de entrenamiento rápido
-            preds = logits.argmax(1)
-            train_correct += (preds == by).sum().item()
-            train_total += by.size(0)
+    # Confidence diagnostics
+    argmax_preds = val_probs.argmax(axis=1)
+    max_conf = val_probs.max(axis=1)
+    for cls_id, cls_name in [(0, 'SHORT'), (2, 'LONG')]:
+        mask = argmax_preds == cls_id
+        if mask.sum() > 0:
+            conf_vals = max_conf[mask]
+            print(f"      [Conf] {cls_name}: n={mask.sum()} | "
+                  f"mean={conf_vals.mean():.3f} median={np.median(conf_vals):.3f} | "
+                  f">=0.60: {(conf_vals >= 0.60).sum()} ({(conf_vals >= 0.60).mean():.0%}) | "
+                  f">=0.65: {(conf_vals >= 0.65).sum()} ({(conf_vals >= 0.65).mean():.0%})")
+        else:
+            print(f"      [Conf] {cls_name}: n=0 (no predictions)")
 
-        scheduler.step()
-
-        # --- PHASE: VALIDATION ---
-        model.eval()
-        v_loss = 0
-        v_correct = 0
-        v_total = 0
-        v_signal_correct = 0
-        v_signal_total = 0
-        
-        with torch.no_grad():
-            for bx, by, bt in val_loader:
-                bx, by, bt = bx.to(device), by.to(device), bt.to(device)
-                logits, t_pred = model(bx)
+    # Grid search for best thresholds
+    use_argmax = True
+    preds_argmax = val_probs.argmax(axis=1)
+    m_base = calculate_trading_metrics(preds_argmax, val_targets)
+    best_pf = m_base['profit_factor'] if m_base['total_trades'] >= 50 else 0.0
+    best_thresh_long  = None
+    best_thresh_short = None
+    best_hold_margin  = None
+  
+    thresh_vals = np.arange(0.50, 0.81, 0.05)
+    for t_long in thresh_vals:
+        for t_short in thresh_vals:
+            for hold_margin in (0.00, 0.02, 0.05):
+                preds = apply_trade_calibration(
+                    val_probs, hold_margin=float(hold_margin),
+                    thresh_long=float(t_long), thresh_short=float(t_short)
+                )
+                m = calculate_trading_metrics(preds, val_targets)
                 
-                # Losses
-                l_cls = criterion_cls(logits, by)
-                mask = (by != 1).float()
-                l_reg = gaussian_nll_loss_clamped(t_pred[:,0:1], t_pred[:,1:2], bt.unsqueeze(1), mask)
-                v_loss += (l_cls + 0.5 * l_reg).item()
+                if m['total_trades'] < min_trades_req:
+                    continue
                 
-                # Accuracy Stats
-                preds = logits.argmax(1)
-                v_correct += (preds == by).sum().item()
-                v_total += by.size(0)
+                # --- NEW: Calculate Balance Penalty ---
+                n_s = (preds == 0).sum()
+                n_l = (preds == 2).sum()
+                n_dir = n_s + n_l
                 
-                # Stats específicas para LONG (2) y SHORT (0)
-                sig_mask = (by != 1)
-                if sig_mask.sum() > 0:
-                    v_signal_correct += ((preds == by) & sig_mask).sum().item()
-                    v_signal_total += sig_mask.sum().item()
-        
-        # --- LOGGING ---
-        avg_train_loss = train_loss / len(train_loader)
-        avg_v_loss = v_loss / len(val_loader)
-        val_acc = (v_correct / v_total) * 100
-        # Evitar división por cero si una ventana no tiene señales
-        sig_acc = (v_signal_correct / v_signal_total * 100) if v_signal_total > 0 else 0.0
-        
-        if avg_v_loss < best_val_loss:
-            best_val_loss = avg_v_loss
-            best_state = {k: v.cpu().clone() for k, v in model.state_dict().items()}
-        
-        # Print profesional cada época o cada N épocas
-        if verbose:
-            if epoch % 20 == 0:
-                print(f"      Epoch {epoch:2d}/{epochs} | "
-                      f"Loss T/V: {avg_train_loss:.3f}/{avg_v_loss:.3f} | "
-                      f"Acc: {val_acc:4.1f}% | "
-                      f"SigAcc: {sig_acc:4.1f}% | "
-                      f"LR: {scheduler.get_last_lr()[0]:.1e} | "
-                      f"Signals: {v_signal_total} predicted")
+                penalty = 1.0
+                if n_dir > 0:
+                    max_side_pct = max(n_s, n_l) / n_dir
+                    # If more than 65% one-sided, start heavily penalizing the PF
+                    if max_side_pct > 0.65:
+                        penalty = 1.0 - ((max_side_pct - 0.65) * 2) 
+                        penalty = max(0.1, penalty) # Don't let it go below 0.1
+                
+                penalized_pf = m['profit_factor'] * penalty
+                # ------------------------------------
 
-    if best_state: model.load_state_dict(best_state)
-    
-    # Final Metrics
-    model.eval()
-    all_p, all_t = [], []
-    with torch.no_grad():
-        for bx, by, _ in val_loader:
-            logits, _ = model(bx.to(device))
-            all_p.extend(logits.argmax(1).cpu().numpy())
-            all_t.extend(by.numpy())
-    
-    return model, norm, calculate_trading_metrics(np.array(all_p), np.array(all_t))
+                # Evaluate using the PENALIZED pf, but store the real thresholds
+                if penalized_pf > best_pf:
+                    best_pf = penalized_pf 
+                    use_argmax = False
+                    best_thresh_long  = float(t_long)
+                    best_thresh_short = float(t_short)
+                    best_hold_margin  = float(hold_margin)
+    # Compute final cal predictions
+    if use_argmax:
+        cal_preds = val_probs.argmax(axis=1)
+    else:
+        cal_preds = apply_trade_calibration(
+            val_probs, hold_margin=best_hold_margin,
+            thresh_long=best_thresh_long, thresh_short=best_thresh_short
+        )
+        n_cal_dir = int(((cal_preds == 0) | (cal_preds == 2)).sum())
+        if n_cal_dir == 0:
+            print(f"      [!] Calibrated produces 0 trades -- fallback to thresh=0.50")
+            cal_preds = apply_trade_calibration(
+                val_probs, hold_margin=0.00,
+                thresh_long=0.50, thresh_short=0.50
+            )
 
-# --- MAIN ENGINE ---
-def walk_forward_train(data_path, model_path, norm_path, model_size, train_m, test_m, step_m, epochs, batch_size, lr):
-    print("=" * 70 + "\nWALK-FORWARD MULTI-TASK TRAINING\n" + "=" * 70)
-    df = pd.read_csv(data_path)
-    if 'date' in df.columns: df = add_sample_weights(df, decay_days=14) # Freshness para 14 días
-    
-    splits = walk_forward_splits(df, train_window_months=train_m, test_window_months=test_m, step_months=step_m)
-    print(f"[OK] Generated {len(splits)} windows")
+    n_final_short = int((cal_preds == 0).sum())
+    n_final_long  = int((cal_preds == 2).sum())
+    n_final_dir   = n_final_short + n_final_long
 
-    results, best_model, best_norm, best_wr = [], None, None, 0
-    
+    if use_argmax:
+        print(f"      [Honest] argmax=True | Pred Long={n_final_long} Short={n_final_short}")
+    else:
+        print(f"      [Honest] thresh_L={best_thresh_long:.2f} thresh_S={best_thresh_short:.2f} "
+              f"hold_m={best_hold_margin:.2f} | "
+              f"Pred Long={n_final_long} Short={n_final_short}")
+
+    # Collapse detection
+    collapsed = False
+    if n_final_dir > 0:
+        long_ratio  = n_final_long  / n_final_dir
+        short_ratio = n_final_short / n_final_dir
+        is_collapsed = (long_ratio > 0.80) or (short_ratio > 0.80)
+        if is_collapsed:
+            direction = "LONG" if long_ratio > 0.80 else "SHORT"
+            print(f"      [!!] COLLAPSE -> {direction} ({max(long_ratio, short_ratio):.0%} one-sided)")
+            collapsed = True
+    else:
+        collapsed = True
+
+    honest_metrics = calculate_trading_metrics(cal_preds, val_targets)
+    honest_metrics['min_trades_req'] = min_trades_req
+    honest_metrics['collapsed'] = collapsed
+
+    # Wrap as GBTModel
+    gbt_model = GBTModel(model)
+
+    return gbt_model, norm, honest_metrics
+
+
+# ═══════════════════════════════════════════════════════════════
+# WALK-FORWARD ENGINE
+# ═══════════════════════════════════════════════════════════════
+def walk_forward_train(data_path, model_path, norm_path, model_size,
+                       train_m, test_m, epochs, batch_size, lr, n_ensemble=3,
+                       top_n_windows=10, min_window=0, hold_ratio=2.0):
+    print("=" * 70 + f"\nWALK-FORWARD TRAINING (GBT ENSEMBLE x{n_ensemble})\n" + "=" * 70)
+
+    # Load data
+    if data_path.endswith('.parquet'):
+        df = pd.read_parquet(data_path)
+    else:
+        df = pd.read_csv(data_path)
+
+    # Parse dates
+    if 'date' in df.columns:
+        df['_date'] = pd.to_datetime(df['date'], errors='coerce')
+        n_bad = df['_date'].isna().sum()
+        if n_bad > 0:
+            print(f"  [!] {n_bad} rows with invalid date removed.")
+        df = df.dropna(subset=['_date'])
+    else:
+        raise KeyError("Column 'date' not found in data.")
+
+    try:
+        df = add_sample_weights(df, decay_days=30)
+    except Exception as e:
+        print(f"  [!] Warning in add_sample_weights: {e}. Continuing.")
+
+    if '_date' not in df.columns:
+        df['_date'] = pd.to_datetime(df['date'], errors='coerce')
+
+    # Global distribution log
+    raw_target = df['target'].values
+    y_global = (raw_target + 1).astype(int) if raw_target.min() < 0 else raw_target.astype(int)
+    dist_global = np.bincount(y_global, minlength=3)
+    print(f"\n  [Dataset global] Short={dist_global[0]:,} | Hold={dist_global[1]:,} | "
+          f"Long={dist_global[2]:,} | Ratio L:S={dist_global[2]/max(dist_global[0],1):.2f}")
+
+    # Walk-forward splits
+    splits = walk_forward_splits(df, train_window_months=train_m,
+                                 test_window_months=test_m, step_months=1)
+    print(f"[OK] Generated {len(splits)} windows\n")
+
+    production_norm = None
+    window_registry = []
+
+    # ── PF floor: reject models with PF < 0.30 ──
+    MIN_PF_FLOOR = 0.30
+
     for i, (tr_df, ts_df) in enumerate(splits):
         print(f"\n--- Window {i+1}/{len(splits)} | Train: {len(tr_df):,} | Test: {len(ts_df):,} ---")
-        # Usamos parámetros robustos por defecto
-        mod, nr, met = train_single_window(
-            tr_df, ts_df, 
-            model_size=model_size, 
-            epochs=epochs, 
-            batch_size=batch_size, 
-            learning_rate=lr,
-            weight_decay=0.05,
-            label_smoothing=0.1,
-            augment_noise=0.05,
-            augment_dropout=0.1,
-            warmup_epochs=max(1, int(epochs * 0.1))
-        )
-        print(f"      Results: Acc={met['accuracy']:.1%} | WinRate={met['win_rate']:.1%} | PF={met['profit_factor']:.2f}")
-        results.append(met)
-        if met['win_rate'] > best_wr:
-            best_wr, best_model, best_norm = met['win_rate'], mod, nr
+        window_ensemble  = []
+        window_model_pfs = []
 
-    if best_model:
-        save_hybrid_model(best_model, best_norm, model_path, norm_path)
-        print(f"\n✓ Best model saved to {model_path}")
+        for s in range(n_ensemble):
+            seed = 42 + s
+            set_seed(seed)
+            mod, nr, met = train_single_window(
+                tr_df, ts_df, verbose=True, window_idx=i+1, seed=seed, hold_ratio=hold_ratio
+            )
+            min_trades_req = met.get('min_trades_req', 20)
+            print(f"      Model {s+1}: Acc={met['accuracy']:.1%} | "
+                  f"WR={met['win_rate']:.1%} | PF={met['profit_factor']:.2f} | "
+                  f"Trades={met['total_trades']}")
 
-def main():
+            if mod is None:
+                print(f"      Model {s+1}: SKIPPED (insufficient data)")
+                continue
+
+            n_trades  = met['total_trades']
+            pf        = met['profit_factor']
+            collapsed = met.get('collapsed', False)
+
+            if collapsed:
+                print(f"      [Select] RECHAZADO (COLLAPSE >80% one-sided)")
+                if production_norm is None or i == len(splits) - 1:
+                    production_norm = nr
+                continue
+
+            if n_trades < min_trades_req:
+                sel_reason = f"RECHAZADO (trades={n_trades} < min={min_trades_req})"
+            elif n_trades >= 30 and pf < MIN_PF_FLOOR:
+                sel_reason = f"RECHAZADO (PF={pf:.2f} < floor={MIN_PF_FLOOR}, n={n_trades})"
+            else:
+                window_ensemble.append(mod)
+                window_model_pfs.append(pf)
+                sel_reason = f"ACEPTADO (trades={n_trades}, PF={pf:.2f}, WR={met['win_rate']:.1%})"
+            print(f"      [Select] {sel_reason}")
+
+            # Overwriting here is fine as long as we select top_windows[0]['norm'] later
+            # It only acts as a fallback for 0 valid windows.
+            if production_norm is None or i == len(splits) - 1:
+                production_norm = nr
+
+        if window_ensemble:
+            avg_pf = float(np.mean(window_model_pfs))
+            ensemble_obj = GBTEnsemble(window_ensemble)
+            window_registry.append({
+                "window_idx":   i + 1,
+                "ensemble_obj": ensemble_obj,
+                "avg_pf":       avg_pf,
+                "n_models":     len(window_ensemble),
+                "norm":         nr,
+            })
+            print(f"      [Window {i+1}] Registrado: {len(window_ensemble)} modelos | "
+                  f"PF_avg={avg_pf:.3f}")
+        else:
+            print(f"      [!] Window {i+1} sin modelos validos -- omitted.")
+
+    # ── Select top-N windows by rank_score ──
+    if window_registry:
+        total_splits = len(splits)
+        
+        eligible = [w for w in window_registry if w['window_idx'] >= min_window]
+        
+        for w in eligible:
+            recency = (w['window_idx'] / total_splits) ** 2
+            w['rank_score'] = w['avg_pf'] * recency
+
+        eligible.sort(key=lambda w: w['rank_score'], reverse=True)
+
+        print(f"\n{'='*60}")
+        print(f"  WINDOW REGISTRY -- {len(eligible)} valid/eligible windows")
+        print(f"  Selecting top {top_n_windows} by rank_score (PF * recency²)")
+        print(f"{'='*70}")
+        print(f"  {'Rank':>4}  {'Win':>4}  {'Models':>6}  {'PF_avg':>8}  {'Score':>8}  {'Status'}")
+        print(f"  {'-'*60}")
+        for rank, w in enumerate(eligible, 1):
+            status = "OK PROD" if rank <= top_n_windows else "  skip"
+            print(f"  {rank:>4}  {w['window_idx']:>4}  {w['n_models']:>6}  "
+                  f"{w['avg_pf']:>8.3f}  {w['rank_score']:>8.3f}  {status}")
+
+        top_windows = eligible[:top_n_windows]
+
+        # Flatten all GBTModels from top windows into one ensemble
+        all_final = [m for w in top_windows for m in w["ensemble_obj"].models]
+        production_norm = top_windows[0]["norm"]
+
+        final_ensemble = GBTEnsemble(all_final)
+        save_gbt_ensemble(final_ensemble, production_norm, model_path, norm_path)
+
+        # Export registry to JSON
+        import pathlib
+        registry_export = [
+            {
+                "window":     w["window_idx"],
+                "n_models":   w["n_models"],
+                "pf_avg":     round(w["avg_pf"], 4),
+                "rank_score": round(w["rank_score"], 4),
+                "status":     "PROD" if rank_idx < top_n_windows else "skip",
+            }
+            for rank_idx, w in enumerate(eligible)
+        ]
+        registry_path = pathlib.Path(model_path).parent / "window_registry.json"
+        registry_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(registry_path, "w") as f:
+            json.dump(registry_export, f, indent=2)
+        print(f"  Registry saved: {registry_path}")
+
+        total_win_models = sum(w["n_models"] for w in top_windows)
+        best_pf  = top_windows[0]["avg_pf"]
+        worst_pf = top_windows[-1]["avg_pf"]
+        print(f"\nOK Saved Production Ensemble (GBT)")
+        print(f"  Windows: {len(top_windows)} (of {len(window_registry)} valid)")
+        print(f"  Models: {total_win_models} total")
+        print(f"  PF range: {worst_pf:.3f} - {best_pf:.3f}")
+    else:
+        print("\n[!] No production models generated. "
+              "Check selection criteria or data quality.")
+
+
+if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data", default="training_data/training_data.csv")
-    parser.add_argument("--model-size", default="small")
-    parser.add_argument("--train-months", type=int, default=0)
-    parser.add_argument("--test-months", type=int, default=0)
-    parser.add_argument("--epochs", type=int, default=60)
-    parser.add_argument("--batch-size", type=int, default=1024)
-    parser.add_argument("--lr", type=float, default=0.001)
+    parser.add_argument("--data",         required=True)
+    parser.add_argument("--model-size",   default="small",  help="Unused (legacy), kept for CLI compat")
+    parser.add_argument("--train-months", type=int,   default=6)
+    parser.add_argument("--test-months",  type=int,   default=1)
+    parser.add_argument("--epochs",       type=int,   default=80,  help="Unused (legacy)")
+    parser.add_argument("--batch-size",   type=int,   default=512, help="Unused (legacy)")
+    parser.add_argument("--lr",           type=float, default=0.0003, help="Unused (legacy)")
+    parser.add_argument("--weight-decay", type=float, default=0.05,   help="Unused (legacy)")
+    parser.add_argument("--ensemble",        type=int,   default=3)
+    parser.add_argument("--top-n-windows",   type=int,   default=10,
+                        help="N. top-PF windows to include in production ensemble")
+    parser.add_argument("--min-window",      type=int,   default=0,
+                        help="Ignorar ventanas anteriores a este indice para produccion")
+    parser.add_argument("--hold-ratio",      type=float, default=2.0,
+                        help="Ratio de muestras HOLD respecto al total de direccionales (2.0 = fuerte supresion del ruido)")
+    parser.add_argument("--model_path", default="models/trading_hybrid_wf.joblib")
+    parser.add_argument("--norm_path",  default="models/hybrid_normalizer_wf.npz")
     args = parser.parse_args()
 
-    walk_forward_train(args.data, "models/trading_hybrid_wf.pt", "models/hybrid_normalizer_wf.npz",
-                       args.model_size, args.train_months, args.test_months, 1, args.epochs, args.batch_size, args.lr)
+    model_path = args.model_path
+    norm_path  = args.norm_path
 
-if __name__ == "__main__": main()
+    walk_forward_train(
+        args.data,
+        model_path,
+        norm_path,
+        args.model_size,
+        args.train_months,
+        args.test_months,
+        args.epochs,
+        args.batch_size,
+        args.lr,
+        args.ensemble,
+        args.top_n_windows,
+        args.min_window,
+        args.hold_ratio
+    )

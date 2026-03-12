@@ -1,0 +1,335 @@
+% ============================================================================
+%  Kripta Studios — Data Architecture and Storage Pipeline
+%  GBT+RL 0DTE Options Trading System
+% ============================================================================
+\documentclass[11pt,a4paper,twoside]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath, amsfonts, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{titlesec}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, citecolor=red, urlcolor=blue}
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  columns=fullflexible,
+  backgroundcolor=\color{gray!8}
+}
+\usepackage{xcolor}
+\usepackage{array}
+
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\newtheorem{remark}{Remark}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\R}{\mathbb{R}}
+
+% ============================================================================
+\title{\textbf{Data Architecture and Storage Pipeline} \\[0.5em]
+\large{Filesystem Design, Tensor Representation, and Anomaly Repair \\
+for the GBT+RL 0DTE Options Trading System}}
+\author{Kripta Studios — Quantitative Research Division}
+\date{March 2026}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+% ============================================================================
+\section{Introduction}
+\label{sec:intro}
+% ============================================================================
+
+This document describes the complete data storage architecture, ingestion pipeline, and tensor feature structures underpinning the GBT+RL 0DTE options trading system. The infrastructure is designed to serve three distinct consumers: (1) the GBT walk-forward training pipeline, which demands a flat \texttt{.parquet} design matrix $\mathbf{X} \in \R^{N \times D}$ with $D = 163$ features per 5-minute bar; (2) the PPO reinforcement learning environment, which requires per-episode access to real-time options chains at nanosecond-resolved timestamps; and (3) the live trading bot, which consumes a rolling real-time feed updated at 60-second intervals.
+
+All three consumers share identical algebraic feature mappings, defined in \texttt{compute\_features.py} and \texttt{realtime\_feed.py}, guaranteeing strict model parity between training-time and inference-time state representations.
+
+The data sourced in this system is the historical and live options data obtained from the ThetaData API (v3), which provides end-of-minute OHLC bars, implied volatility, full Greeks ($\Delta, \Gamma, \theta, \mathcal{V}, \rho$), and open interest for all listed SPX/SPXW/SPY/QQQ strikes from 2024 onwards.
+
+% ============================================================================
+\section{Filesystem Architecture}
+\label{sec:filesystem}
+% ============================================================================
+
+\subsection{Primary Historical Store: \texttt{data\_options}}
+
+The foundational data ingestion from the ThetaData API is partitioned into daily \texttt{.parquet} files compressed with \texttt{snappy}, which provides near-optimal read throughput for columnar scans while maintaining acceptable write latency during bulk download. The directory hierarchy is organized as:
+
+\begin{lstlisting}[language=bash]
+D:/ThetaData/data_options/
+└── {SYMBOL}/                     # SPXW, SPX, SPY, QQQ, VIX, TLT
+    ├── greeks/
+    │   └── {YEAR}/
+    │       └── {MONTH}/
+    │           └── {SYM}_{expiry}_{trade_date}_greeks.parquet
+    ├── ohlc/
+    │   └── {YEAR}/{MONTH}/
+    │       └── {SYM}_{expiry}_{trade_date}_ohlc.parquet
+    ├── oi/
+    │   └── ...
+    └── iv/
+        └── ...
+\end{lstlisting}
+
+The canonical filename convention encodes both the option's expiration date $T$ and the active trading date $t$:
+\begin{equation}
+    \texttt{filename} ::= \texttt{\{Symbol\}\_\{T\}\_\{t\}\_\{type\}.parquet}
+    \label{eq:filename}
+\end{equation}
+This dual-date convention allows the system to efficiently load all contracts with $T = t$ (0DTE instruments) as well as weekly or multi-day expirations by filtering on the expiry field. The files are discovered via a recursive directory scan in \texttt{options\_downloader.py} and \texttt{run\_preprocess.py}.
+
+\begin{definition}[0DTE Contract]
+A 0DTE (zero days to expiration) contract is any options contract for which the expiration date $T$ is equal to the current trading date $t$: $T = t$. For SPX, these are SPXW contracts listed under the CBOE's Friday-daily listing program, available every trading day since 2022.
+\end{definition}
+
+\subsection{Derived Spot Price Store: \texttt{data\_underlying\_derived}}
+
+Because the CBOE imposes endpoint restrictions on raw SPX index historical data via most retail data vendors, the pipeline reconstructs spot price $S_t$ implicitly from the \texttt{underlying\_price} field embedded within the options Greeks metadata provided by ThetaData. This field reports the settlement spot price used by the ThetaData matching engine at the time of the quote.
+
+The derived spot price at time $t$ is estimated as the mean of the \texttt{underlying\_price} field across all listed strikes $\mathcal{K}_t$ for the nearest 0DTE expiration:
+\begin{equation}
+    \hat{S}_t = \frac{1}{|\mathcal{K}_t|} \sum_{k \in \mathcal{K}_t} u_{t,k,T}
+    \label{eq:spot_derive}
+\end{equation}
+where $u_{t,k,T}$ denotes the \texttt{underlying\_price} field for strike $k$, expiry $T$, at time $t$. This derivation guarantees synchronization between the options pricing surface and the spot reference frame, eliminating latency asymmetries present in disparate data feeds.
+
+The \texttt{underlying\_downloader.py} script writes these derived spot prices to:
+\begin{lstlisting}[language=bash]
+D:/ThetaData/data_underlying_derived/
+└── {SYMBOL}/
+    └── {YEAR}/{MONTH}/
+        └── {SYM}_{trade_date}_spot.parquet
+\end{lstlisting}
+
+\subsection{Real-Time Feed: \texttt{rt\_data}}
+
+The live trading infrastructure maintains a rolling real-time store, updated every 60 seconds by the \texttt{realtime\_feed.py} microservice:
+\begin{lstlisting}[language=bash]
+rt_data/
+└── {YYYYMMDD}/
+    ├── SPXW_greeks_0dte_latest.parquet
+    ├── SPXW_oi_weekly_latest.parquet
+    ├── spot_SPX_latest.parquet
+    ├── spot_VIX_latest.parquet
+    └── spot_TLT_latest.parquet
+\end{lstlisting}
+
+On service startup, the feed downloads backfill data for trading days $D{-}1$ through $D{-}5$, ensuring that all multi-day Initial Balance features (Section~\ref{sec:ib_features}) are populated from the first active minute bar at 09:30 ET. This prevents cold-start failures in the Initial Balance computation and multi-day confluence features.
+
+The asynchronous polling daemon targets the ThetaData v3 API via:
+\begin{equation}
+    \texttt{http://127.0.0.1:25503/v3} \quad \text{(ThetaTerminal local proxy)}
+    \label{eq:theta_uri}
+\end{equation}
+with all HTTP calls routed through \texttt{httpx.AsyncClient}. The polling interval is configurable via \texttt{--interval} (default: 60 seconds), and the pipeline achieves end-to-end latency of $\mathcal{O}(150\,\text{ms})$ from market tick to persisted \texttt{.parquet} write.
+
+% ============================================================================
+\section{Design Matrix Construction}
+\label{sec:design_matrix}
+% ============================================================================
+
+\subsection{Flat Feature Matrix (GBT Training)}
+
+The primary artifact consumed by the GBT classifier and RL episode-generation pipeline is a flat Parquet design matrix:
+\begin{equation}
+    \mathbf{X} \in \R^{N \times D}, \quad D = 163, \quad N \approx 138{,}000
+    \label{eq:design_matrix}
+\end{equation}
+Each row corresponds to a single 5-minute bar for one of the tracked underlyings (SPX, SPY, QQQ). The matrix is constructed by \texttt{collect\_training\_data\_parquet.py} using $W$ parallel workers (configurable via \texttt{--workers}), with each worker independently processing a date partition.
+
+The target label $y_t \in \{0, 1, 2\}$ is assigned by the labeling oracle:
+\begin{equation}
+    y_t =
+    \begin{cases}
+        2 \;\;(\textsc{long})  & \text{if } \max_{\tau \in (t, t+T_{\max}]} S_\tau \geq S_t (1 + \theta_L) \text{ before } S_\tau \leq S_t(1-\theta_S) \\
+        0 \;\;(\textsc{short}) & \text{if } \min_{\tau \in (t, t+T_{\max}]} S_\tau \leq S_t (1 - \theta_S) \text{ before } S_\tau \geq S_t(1+\theta_L) \\
+        1 \;\;(\textsc{hold})  & \text{otherwise}
+    \end{cases}
+    \label{eq:label}
+\end{equation}
+where $\theta_L = 1.0\%$, $\theta_S = 0.5\%$, and $T_{\max} = 180\,\text{minutes}$ are the default long target, stop threshold, and lookahead horizon respectively.
+
+\begin{remark}
+The class imbalance in $\mathbf{X}$ is severe: directional signals (LONG or SHORT) constitute approximately $13\%$ of all bars. The walk-forward training procedure (Section~3 of the Architecture document) addresses this via explicit class balancing, equalizing SHORT and LONG samples and capping HOLD at $2\times$ the total directional count per training window.
+\end{remark}
+
+\subsection{RL Options Cache}
+
+The reinforcement learning environment requires access to real options chain data indexed by $(t, T, K)$ tuples at each timestep. Loading the full historical options store into RAM is infeasible given typical archive sizes of $\sim$80 GB. The \texttt{run\_preprocess.py} script constructs a per-day serialized cache:
+\begin{lstlisting}[language=bash]
+rl_data/
+├── episode_index.parquet          # N_ep x D episode index
+└── rl_options_cache_chunks/
+    ├── 20240102.pkl
+    ├── 20240103.pkl
+    └── ...
+\end{lstlisting}
+
+Each \texttt{YYYYMMDD.pkl} shard contains a Python dictionary keyed by \texttt{"YYYYMMDD\_HH:MM"} timestamps, mapping to a list of option records with fields: \texttt{strike}, \texttt{delta}, \texttt{gamma}, \texttt{theta}, \texttt{vega}, \texttt{bid}, \texttt{ask}, \texttt{mid}, \texttt{open\_interest}.
+
+\subsection{Episode Index}
+
+The episode index is a Parquet file with one row per candidate trade signal:
+\begin{equation}
+    \mathbf{E} \in \R^{N_{\text{ep}} \times (D + 4)}
+    \label{eq:episode_index}
+\end{equation}
+Each row contains the full 163-dimensional feature vector at the signal timestamp, plus derived GBT prediction columns: \texttt{mlp\_direction} $\in \{\textsc{short}, \textsc{long}\}$, \texttt{mlp\_confidence} $\in [0,1]$, \texttt{mlp\_time\_to\_target} (normalized 0--1), and \texttt{episode\_id}.
+
+Only rows with \texttt{mlp\_direction} $\neq$ HOLD and \texttt{mlp\_confidence} $\geq 0.55$ are retained, yielding $N_{\text{ep}} \ll N$ episodes. The RL training curriculum then further filters these by confidence tier (Section~5 of the RL Model document).
+
+% ============================================================================
+\section{Chunked LRU Cache for RL Training}
+\label{sec:lru_cache}
+% ============================================================================
+
+\subsection{Memory Constraint}
+
+Loading all daily options shards simultaneously would require $\mathcal{O}(G_{\text{total}})$ RAM, where $G_{\text{total}}$ denotes the total uncompressed size of the options archive. To bound memory consumption, the \texttt{ChunkedOptionsCache} class implements a Least Recently Used (LRU) eviction policy parameterized by \texttt{max\_days\_in\_ram} $= k$:
+
+\begin{definition}[ChunkedOptionsCache]
+Let $\mathcal{D} = \{d_1, d_2, \ldots, d_M\}$ be the set of all available trading day shards. The \texttt{ChunkedOptionsCache} maintains an in-memory dictionary $\mathcal{L} \subseteq \mathcal{D}$ with $|\mathcal{L}| \leq k$. On a cache miss for day $d$, the shard $d$ is loaded from disk into $\mathcal{L}$; if $|\mathcal{L}| > k$, the least recently accessed day is evicted:
+\begin{equation}
+    d_{\text{evict}} = \argmax_{d \in \mathcal{L}} \; (t_{\text{now}} - t_{\text{access}}(d))
+    \label{eq:lru}
+\end{equation}
+\end{definition}
+
+The key lookup interface is:
+\begin{equation}
+    \texttt{cache.get}(\underbrace{\texttt{"YYYYMMDD\_HH:MM"}}_{\text{composite key}}) \to \text{option records} \;|\; \texttt{None}
+    \label{eq:cache_key}
+\end{equation}
+
+The date prefix \texttt{YYYYMMDD} is extracted from the key string to determine which daily shard to load. This design reduces RAM usage from $\mathcal{O}(M)$ to $\mathcal{O}(k)$ days, where $k = 30$--$120$ is configurable via \texttt{--max-days-in-ram}.
+
+\subsection{Parallel Preprocessing}
+
+The preprocessing pipeline (\texttt{run\_preprocess.py}) constructs the shards using $W$ parallel workers (default $W = 24$), achieving near-linear speedup across date partitions:
+\begin{equation}
+    T_{\text{preprocess}} \approx \frac{M \cdot \bar{t}_{\text{day}}}{W}
+    \label{eq:preprocess_time}
+\end{equation}
+where $\bar{t}_{\text{day}}$ is the average per-day processing time. For a 2-year historical archive ($M \approx 500$ trading days), this yields preprocessing times of approximately 15--40 minutes on a 24-core workstation.
+
+% ============================================================================
+\section{Data Anomaly Repair}
+\label{sec:anomaly_repair}
+% ============================================================================
+
+\subsection{Zero-Value Anomalies at Market Open}
+
+ThetaData exhibits a systematic data quality issue at the 09:30:00 ET open bar: OHLC fields occasionally report zero values due to quote latency in the first minute of trading. This manifests as $S_{09:30} = 0$ in the underlying OHLC, which would propagate catastrophic errors through all downstream features.
+
+The \texttt{data\_corrector.py} script (\texttt{services/}) applies a cascading repair procedure. Let $x_t^{(f)}$ denote field $f \in \{\text{open}, \text{high}, \text{low}, \text{close}\}$ at the open bar $t = 09:30$:
+\begin{equation}
+    \hat{x}_t^{(f)} =
+    \begin{cases}
+        x_t^{\text{close}} & \text{if } x_t^{(f)} = 0 \;\wedge\; x_t^{\text{close}} > 0 \\
+        \texttt{NaN}       & \text{if } x_t^{(f)} = 0 \;\wedge\; x_t^{\text{close}} = 0 \\
+        x_t^{(f)}          & \text{otherwise}
+    \end{cases}
+    \label{eq:zero_repair}
+\end{equation}
+
+\subsection{Residual Gap Imputation}
+
+After zero repair, any residual \texttt{NaN} values resulting from missing minute bars (e.g., early-close sessions, system outages) are imputed via a two-pass temporal propagation:
+\begin{equation}
+    \hat{x}_t =
+    \begin{cases}
+        x_{t+1} & \text{backward fill: propagate next valid value} \\
+        x_{t-1} & \text{forward fill: propagate last valid value (fallback)}
+    \end{cases}
+    \label{eq:imputation}
+\end{equation}
+This sequential \texttt{bfill} $\to$ \texttt{ffill} scheme ensures that no \texttt{NaN} values survive into the feature computation stage. The corrector operates on the \texttt{data\_underlying\_derived} directory and is invoked on demand via:
+\begin{lstlisting}[language=bash]
+python services/data_corrector.py \
+  --data-dir D:/ThetaData/data_underlying_derived \
+  --symbols SPXW SPY QQQ VIX TLT
+\end{lstlisting}
+
+\subsection{Feature-Level Numerical Stability}
+
+Several derived features involve ratios of Greek quantities (e.g., \texttt{delta\_gamma\_ratio}, \texttt{net\_zomma}) that can assume values exceeding $10^6$ in magnitude during low-gamma regimes. These are regularized via a sign-preserving log transform applied during data collection:
+\begin{equation}
+    \tilde{x} = \text{sign}(x) \cdot \log(1 + |x|)
+    \label{eq:log_transform}
+\end{equation}
+This transform is applied before the feature matrix is written to Parquet. It reduces the kurtosis of extreme-valued features from $\sim 10^3$ to $\mathcal{O}(10)$, improving both GBT split quality and gradient stability during RL training. The untransformed values are never stored in the training Parquet.
+
+At inference time in the GBT normalizer (\texttt{FeatureNormalizer.transform}), a further standardization is applied to center and scale each feature to approximate zero mean and unit variance, using statistics computed from the training window:
+\begin{equation}
+    x_{\text{norm}} = \frac{\tilde{x} - \mu_{\text{train}}}{\sigma_{\text{train}} + \varepsilon}
+    \label{eq:standardize}
+\end{equation}
+with $\varepsilon = 10^{-8}$ for numerical stability.
+
+% ============================================================================
+\section{Data Volume and Retention Policy}
+\label{sec:volume}
+% ============================================================================
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrrl}
+\toprule
+\textbf{Component} & \textbf{Raw Size} & \textbf{Compressed} & \textbf{Retention} \\
+\midrule
+\texttt{data\_options} (SPXW/SPX/SPY/QQQ) & $\sim$80 GB & 28 GB & Permanent \\
+\texttt{data\_underlying\_derived} & $\sim$2 GB & 600 MB & Permanent \\
+\texttt{training\_data\_derived.parquet} & 2--4 GB & 600 MB & Per-run \\
+\texttt{rl\_options\_cache\_chunks} & $\sim$8 GB & N/A & Per-run \\
+\texttt{rt\_data} (rolling 5 days) & $\sim$50 MB & 15 MB & Rolling \\
+\bottomrule
+\end{tabular}
+\caption{Approximate storage requirements by pipeline component. Compressed sizes assume \texttt{snappy} encoding. ``Per-run'' artifacts can be regenerated from raw data.}
+\label{tab:storage}
+\end{table}
+
+All \texttt{.parquet} files use \texttt{pyarrow} as the serialization engine with the \texttt{snappy} codec. This provides columnar read latency of approximately 100--300 ms for a single day's options chain on NVMe storage, enabling the RL environment to load missing day shards within the episode reset timeout.
+
+\begin{thebibliography}{5}
+
+\bibitem{thetadata}
+ThetaData Systems,
+``ThetaData API v3 Documentation,''
+\url{https://docs.thetadata.us}, 2024.
+
+\bibitem{arrow}
+Apache Software Foundation,
+``Apache Arrow: Columnar In-Memory Analytics,''
+\url{https://arrow.apache.org}, 2024.
+
+\bibitem{ke2017}
+G.~Ke et al.,
+``LightGBM: A Highly Efficient Gradient Boosting Decision Tree,''
+\textit{NeurIPS}, vol.~30, 2017.
+
+\bibitem{schulman2017}
+J.~Schulman et al.,
+``Proximal Policy Optimization Algorithms,''
+\textit{arXiv:1707.06347}, 2017.
+
+\end{thebibliography}
+
+\end{document}

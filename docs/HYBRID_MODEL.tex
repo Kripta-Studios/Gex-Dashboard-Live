@@ -1,0 +1,85 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\geometry{margin=2.5cm}
+\hypersetup{colorlinks=true, linkcolor=blue, citecolor=red, urlcolor=blue}
+
+\title{\textbf{Hybrid Neural Engine (MLP + Random Forest)}}
+\author{Machine Learning \& Quantitative Strategies}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Introduction}
+The Hybrid Model represents the core inferential layer for directional $0$-DTE options trading operations. It operates by generating probability outputs regarding intra-day asset price action (SPX) relative to short-term strike barriers. The architecture utilizes a dual-engine ensemble combining a regularized Multilayer Perceptron (MLP) within PyTorch, and a complementary Random Forest (RF) classifier acting as a non-linear interaction filter.
+
+\section{Mathematical Formulation of the Target Variable}
+The classification target $\mathcal{Y} \in \{0, 1, 2\}$ is defined as a non-overlapping categorical state indicating optimal market execution directions:
+\[
+y_i = 
+\begin{cases} 
+1 & \text{if } R^{f}_{30m} \ge +0.06\% \quad (\text{LONG}) \\
+2 & \text{if } R^{f}_{30m} \le -0.06\% \quad (\text{SHORT}) \\
+0 & \text{otherwise} \quad (\text{HOLD})
+\end{cases}
+\]
+where $R^{f}_{30m}$ is the 30-minute forward geometric return of the underlying asset. The threshold of $\pm 0.06\%$ accounts for expected slippage, commissions, and standard bid-ask spreads on high-gamma SPX contracts.
+
+\section{Architectural Design}
+
+\subsection{Multilayer Perceptron (MLP) Specifications}
+The MLP maps the standardized continuous $\mathcal{X} \in \mathbb{R}^{92}$ dimensional matrix into a continuous $\mathbb{R}^3$ logit representation. Let $\mathbf{x}^{(0)}$ be the initial feature state. The forward pass is defined as:
+\[
+\mathbf{z}^{(l)} = \mathbf{W}^{(l)}\mathbf{x}^{(l-1)} + \mathbf{b}^{(l)}
+\]
+\[
+\mathbf{x}^{(l)} = \text{Mish}(\text{LayerNorm}(\mathbf{z}^{(l)})) \odot \text{Dropout}(p)
+\]
+for layers $l \in \{1, 2, 3\}$, sequentially reducing dimensionality: $92 \to 256 \to 128 \to 64$. 
+
+The final probability distribution is extracted via the Softmax normalization operator:
+\[
+P(\hat{y} = k \mid \mathbf{x}) = \frac{\exp(\mathbf{z}_{\text{out}}^{(k)})}{\sum_{j=0}^{2} \exp(\mathbf{z}_{\text{out}}^{(j)})}
+\]
+
+\subsection{Random Forest Class Weighting \& Voting}
+Gradient-boosted decision trees inherently manage categorical imbalances without aggressive undersampling. The secondary model partitions the feature space $\mathcal{X}$ into discontinuous hyper-rectangles $R_m$:
+\[
+H_{\text{RF}}(\mathbf{x}) = \arg\max_{c \in \{0,1,2\}} \sum_{t=1}^{N_{\text{trees}}} \mathbf{1}_{\{h_t(\mathbf{x}) = c\}}
+\]
+The system demands strict unanimity. Execution is triggered only if:
+\[
+P(\hat{y}_{MLP} = c) > \tau \quad \land \quad H_{\text{RF}}(\mathbf{x}) = c
+\]
+where $\tau$ is the mathematically determined operational threshold natively optimized over out-of-sample periods (typically $\tau \approx 0.60$).
+
+\section{Training Regimen and Overfitting Mitigation}
+
+\subsection{Walk-Forward Validation}
+The model entirely dismisses traditional randomized cross-validation (K-Fold) to prevent strict temporal leakage. Training epochs advance via a staggered sliding window manifold:
+\begin{itemize}
+    \item \textbf{Training Horizon:} $t - 180 \text{ Days} \to t$.
+    \item \textbf{Validation Horizon:} $t \to t + 30 \text{ Days}$.
+\end{itemize}
+
+\subsection{Cross-Entropy Objective and Focal Penalties}
+The minimization parameter space applies a weighted Negative Log-Likelihood utilizing dynamically computed inverse class frequencies $\omega_k$:
+\[
+\mathcal{L}(\theta) = - \sum_{i=1}^{B} \omega_{y_i} \log P(\hat{y}_i \mid \mathbf{x}_i; \theta) + \lambda ||\mathbf{W}||_2^2
+\]
+where $L_2$ regularization ($\lambda = 10^{-4}$) is applied across all dense linear constraints to ensure continuous geometric generalization outside of historical state bounds.
+
+\end{document}
