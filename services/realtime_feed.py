@@ -697,7 +697,7 @@ class RealtimeOptionsFeed:
 
         # Get latest timestamp snapshot
         if "underlying_timestamp" in df_greeks.columns:
-            df_greeks["dt"] = pd.to_datetime(df_greeks["underlying_timestamp"], unit="ms")
+            df_greeks["dt"] = pd.to_datetime(df_greeks["underlying_timestamp"], format="mixed", errors="coerce")
             latest_ts = df_greeks["dt"].max()
             df_greeks = df_greeks[df_greeks["dt"] == latest_ts].copy()
 
@@ -748,7 +748,7 @@ class RealtimeOptionsFeed:
         if df_iv.empty or "implied_vol" not in df_iv.columns or "strike" not in df_iv.columns:
             return 0.0
         if "underlying_timestamp" in df_iv.columns:
-            df_iv["dt"] = pd.to_datetime(df_iv["underlying_timestamp"], unit="ms")
+            df_iv["dt"] = pd.to_datetime(df_iv["underlying_timestamp"], format="mixed", errors="coerce")
             df_iv = df_iv[df_iv["dt"] == df_iv["dt"].max()]
         if df_iv.empty:
             return 0.0

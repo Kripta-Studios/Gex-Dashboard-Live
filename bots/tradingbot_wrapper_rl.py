@@ -709,7 +709,7 @@ class RLTradingBot:
             return None
 
         if 'underlying_timestamp' in df_greeks.columns:
-            df_greeks['dt'] = pd.to_datetime(df_greeks['underlying_timestamp'], unit='ms')
+            df_greeks['dt'] = pd.to_datetime(df_greeks['underlying_timestamp'], format='mixed', errors='coerce')
             latest_ts = df_greeks['dt'].max()
             df_greeks = df_greeks[df_greeks['dt'] == latest_ts].copy()
 
@@ -767,7 +767,7 @@ class RLTradingBot:
             return {"calls": {}, "puts": {}}
 
         if 'underlying_timestamp' in df_greeks.columns:
-            df_greeks['dt'] = pd.to_datetime(df_greeks['underlying_timestamp'], unit='ms')
+            df_greeks['dt'] = pd.to_datetime(df_greeks['underlying_timestamp'], format='mixed', errors='coerce')
             latest_ts = df_greeks['dt'].max()
             df_greeks = df_greeks[df_greeks['dt'] == latest_ts]
 
@@ -845,7 +845,7 @@ class RLTradingBot:
             return 0.0
 
         if 'underlying_timestamp' in df_iv.columns:
-            df_iv['dt'] = pd.to_datetime(df_iv['underlying_timestamp'], unit='ms')
+            df_iv['dt'] = pd.to_datetime(df_iv['underlying_timestamp'], format='mixed', errors='coerce')
             latest_ts = df_iv['dt'].max()
             df_iv = df_iv[df_iv['dt'] == latest_ts]
 
