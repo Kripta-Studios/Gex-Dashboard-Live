@@ -229,7 +229,7 @@ class RealtimeOptionsFeed:
         exp_str = expiration.strftime("%Y%m%d")
         endpoint = OPTIONS_ENDPOINTS[endpoint_key]
 
-        window_start = (now_et - timedelta(seconds=90)).strftime("%H:%M:%S")
+        window_start = (now_et - timedelta(seconds=60)).strftime("%H:%M:%S")
         window_end   = now_et.strftime("%H:%M:%S")
 
         base_url = getattr(self.client, "base_url", "http://127.0.0.1:25503/v3")
