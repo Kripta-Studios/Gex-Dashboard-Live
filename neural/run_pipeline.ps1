@@ -8,7 +8,7 @@ $ErrorActionPreference = "Continue"
 # ─────────────────────────────────────────────────────────────────────────────
 Write-Host "`n=== RECOLECTANDO DATOS SPX+QQQ ===" -ForegroundColor Cyan
 python collect_training_data_spx_qqq.py `
-  --start 20220801 --end 20260228 `
+  --start 20220801 --end 20260328 `
   --workers 28 --tickers SPX QQQ `
   --output training_data_spx_qqq.parquet
 

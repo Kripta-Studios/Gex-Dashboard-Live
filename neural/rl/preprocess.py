@@ -150,7 +150,7 @@ def _process_single_date(args_tuple):
     """
     date_str, date_episodes, options_dir, max_forward_minutes, output_dir = args_tuple
 
-    from collect_training_data_parquet import get_parquet_file, calculate_exact_t
+    from collect_training_data_spx_qqq import get_parquet_file, calculate_exact_t
 
     date_str = str(date_str)
     year, month = date_str[:4], date_str[4:6]
