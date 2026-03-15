@@ -10,15 +10,21 @@ import pandas as pd
 import torch
 import sys
 import os
+import argparse
 
 sys.path.insert(0, '.')
 from hybrid_model import load_ensemble_model, FEATURE_COLUMNS
 from rl.config import RL_CONFIG
 
+parser = argparse.ArgumentParser(description="Generate Episode Index for RL")
+parser.add_argument("--data", default=os.environ.get('TRAINING_DATA', '../training_data/training_data_spx_qqq.parquet'), help="Path to the training data parquet file")
+parser.add_argument("--output", default='../rl_data/episode_index.parquet', help="Path to save the generated episode index parquet file")
+args = parser.parse_args()
+
 # Paths relative to neural/ (CWD)
 MODEL_PATH = os.environ.get('MODEL_PATH', 'models/trading_hybrid_wf.joblib')
 NORM_PATH  = os.environ.get('NORM_PATH', 'models/hybrid_normalizer_wf.npz')
-DATA_PATH  = os.environ.get('TRAINING_DATA', '../training_data/training_data_spx_qqq.parquet')
+DATA_PATH  = args.data
 
 # Auto-detect model format
 if not os.path.exists(MODEL_PATH):
@@ -93,7 +99,7 @@ if len(ep_long) > n_min:
 ep = pd.concat([ep_long, ep_short]).sort_values('date').reset_index(drop=True)
 ep['episode_id'] = range(len(ep))
 
-out = os.path.abspath('../rl_data/episode_index.parquet')
+out = os.path.abspath(args.output)
 os.makedirs(os.path.dirname(out), exist_ok=True)
 ep.to_parquet(out, index=False)
 print(f'Saved: {len(ep):,} episodes')
