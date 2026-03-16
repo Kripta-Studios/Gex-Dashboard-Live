@@ -91,37 +91,46 @@ class IntegratedTradingSystem:
             market_features.reshape(1, -1)
         )[0]
 
-        # 2. MLP forward pass
-        with torch.no_grad():
-            x = torch.FloatTensor(features_norm).unsqueeze(0).to(self.device)
-            output = self.mlp(x)
+        # 2. MLP/GBT forward pass
+        is_gbt = hasattr(self.mlp, 'predict_proba') and not isinstance(self.mlp, torch.nn.Module)
+        
+        if is_gbt:
+            # GBT Inference
+            probs = self.mlp.predict_proba(features_norm.reshape(1, -1))[0]
+            time_to_target = 0.5 # GBM doesn't predict time
+            log_sigma = 0.5
+        else:
+            # PyTorch Inference
+            with torch.no_grad():
+                x = torch.FloatTensor(features_norm).unsqueeze(0).to(self.device)
+                output = self.mlp(x)
 
-            if isinstance(output, tuple):
-                logits, time_pred = output[:2]
-            elif isinstance(output, dict):
-                logits = output.get("logits", output.get("class_logits"))
-                time_pred = output.get("time_to_target", None)
+                if isinstance(output, tuple):
+                    logits, time_pred = output[:2]
+                elif isinstance(output, dict):
+                    logits = output.get("logits", output.get("class_logits"))
+                    time_pred = output.get("time_to_target", None)
+                else:
+                    logits = output
+                    time_pred = None
+
+                probs = torch.softmax(logits, dim=-1).cpu().numpy()[0]
+
+            if time_pred is not None and getattr(time_pred, 'numel', lambda: len(time_pred))() >= 2:
+                try:
+                    tt = time_pred[0, 0].item() if hasattr(time_pred[0, 0], 'item') else float(time_pred[0, 0])
+                    ls = time_pred[0, 1].item() if hasattr(time_pred[0, 1], 'item') else float(time_pred[0, 1])
+                    time_to_target = float(tt / 180.0)
+                    log_sigma = float(ls)
+                except:
+                    time_to_target = 0.5
+                    log_sigma = 0.5
             else:
-                logits = output
-                time_pred = None
-
-            probs = torch.softmax(logits, dim=-1).cpu().numpy()[0]
+                time_to_target = 0.5
+                log_sigma = 0.5
 
         prediction = int(np.argmax(probs))
         confidence = float(np.max(probs))
-        
-        if time_pred is not None and getattr(time_pred, 'numel', lambda: len(time_pred))() >= 2:
-            try:
-                tt = time_pred[0, 0].item() if hasattr(time_pred[0, 0], 'item') else float(time_pred[0, 0])
-                ls = time_pred[0, 1].item() if hasattr(time_pred[0, 1], 'item') else float(time_pred[0, 1])
-                time_to_target = float(tt / 180.0)
-                log_sigma = float(ls)
-            except:
-                time_to_target = 0.5
-                log_sigma = 0.5
-        else:
-            time_to_target = 0.5
-            log_sigma = 0.5
 
         # Direction mapping: 0=SHORT, 1=HOLD, 2=LONG
         direction_map = {0: "SHORT", 1: "HOLD", 2: "LONG"}
@@ -167,9 +176,8 @@ class IntegratedTradingSystem:
             action, _, _ = self.rl.get_action(
                 state_tensor, action_type="strike", deterministic=True)
 
-        # action is a dictionary for "strike" type
-        strike_action = action["strike"]
-        suggested_sizing_fraction = action["size"]
+        # action is now a plain int (strike bucket index)
+        strike_action = action
         
         bucket = STRIKE_BUCKETS.get(strike_action, STRIKE_BUCKETS[4])
         delta_target = bucket["delta_target"]
@@ -220,7 +228,6 @@ class IntegratedTradingSystem:
                 "delta_target": delta_target,
                 "entry_price": effective_entry,
                 "spread_cost": half_spread,
-                "suggested_sizing_fraction": suggested_sizing_fraction,
             },
         }
 
@@ -275,8 +282,10 @@ class IntegratedTradingSystem:
                 state_tensor, action_type="exit", deterministic=True)
         action_val = action.item() if hasattr(action, 'item') else int(action)
         if action_val == 1:  # EXIT
-            # Enforce min_hold curriculum constraint, just like in training
-            min_hold = RL_CONFIG["hold_min_minutes_curriculum"][3]["min_hold"]
+            # Enforce min_hold curriculum constraint, just like in training/backtest
+            phase3_config = RL_CONFIG.get("hold_min_minutes_curriculum", {}).get(3, {})
+            min_hold = phase3_config.get("min_hold", 30)
+            
             emergency_stop = RL_CONFIG.get("emergency_stop_pct", -0.30)
             is_emergency = pnl_pct <= emergency_stop
             

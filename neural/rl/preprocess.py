@@ -342,6 +342,7 @@ def preprocess_options_for_rl(episode_index: pd.DataFrame,
     total_skipped = 0
     total_dates = len(unique_dates)
     t_pool_start = time.time()
+    recent_times = [(t_pool_start, 0)] # (timestamp, episodes_done)
 
     with ctx.Pool(processes=num_workers) as pool:
         # Workers return only (processed, skipped) counters — no large dicts over IPC
@@ -351,15 +352,39 @@ def preprocess_options_for_rl(episode_index: pd.DataFrame,
             total_processed += proc
             total_skipped += skip
 
-            # Progress every date
+            # Progress tracking
             done = i + 1
+            now = time.time()
+            recent_times.append((now, done))
+            if len(recent_times) > 15: # Sliding window of last 15 dates
+                recent_times.pop(0)
+
             pct = done / total_dates * 100
-            elapsed = time.time() - t_pool_start
-            if done > 1:
-                eta = elapsed / done * (total_dates - done)
-                eta_str = f"{eta/60:.1f}min" if eta > 60 else f"{eta:.0f}s"
+            
+            # Calculate stable ETA
+            if len(recent_times) >= 3:
+                # Window-based velocity (dates per second)
+                t_old, d_old = recent_times[0]
+                t_new, d_new = recent_times[-1]
+                
+                # Check for div by zero / instant finishes
+                if t_new > t_old:
+                    velocity = (d_new - d_old) / (t_new - t_old)
+                    remaining = total_dates - done
+                    eta_seconds = remaining / velocity
+                else:
+                    eta_seconds = 0
+                
+                # Format ETA
+                if eta_seconds > 3600:
+                    eta_str = f"{int(eta_seconds // 3600)}h {int((eta_seconds % 3600) // 60)}m"
+                elif eta_seconds > 60:
+                    eta_str = f"{int(eta_seconds // 60)}m {int(eta_seconds % 60)}s"
+                else:
+                    eta_str = f"{int(eta_seconds)}s"
             else:
                 eta_str = "..."
+
             bar_len = 25
             filled = int(bar_len * done / total_dates)
             bar = "█" * filled + "░" * (bar_len - filled)

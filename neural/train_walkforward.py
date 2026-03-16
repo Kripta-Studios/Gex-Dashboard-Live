@@ -469,9 +469,11 @@ def walk_forward_train(data_path, model_path, norm_path, model_size,
         
         eligible = [w for w in window_registry if w['window_idx'] >= min_window]
         
-        
+        # Use max eligible window_idx for recency normalization (not total_splits)
+        # to avoid distortion when many windows are skipped
+        max_idx = max(w['window_idx'] for w in eligible) if eligible else 1
         for w in eligible:
-            recency = (w['window_idx'] / total_splits) ** 2
+            recency = (w['window_idx'] / max_idx) ** 2
             w['rank_score'] = w['avg_pf'] * recency
 
         eligible.sort(key=lambda w: w['rank_score'], reverse=True)
@@ -508,6 +510,18 @@ def walk_forward_train(data_path, model_path, norm_path, model_size,
             }
             for rank_idx, w in enumerate(eligible)
         ]
+        # Include pre-min_window entries for transparency
+        excluded_entries = [
+            {
+                "window":     w["window_idx"],
+                "n_models":   w["n_models"],
+                "pf_avg":     round(w["avg_pf"], 4),
+                "rank_score": 0.0,
+                "status":     "excluded (< min_window)",
+            }
+            for w in window_registry if w['window_idx'] < min_window
+        ]
+        registry_export = excluded_entries + registry_export
         registry_path = pathlib.Path(model_path).parent / "window_registry.json"
         registry_path.parent.mkdir(parents=True, exist_ok=True)
         with open(registry_path, "w") as f:
@@ -524,6 +538,9 @@ def walk_forward_train(data_path, model_path, norm_path, model_size,
     else:
         print("\n[!] No production models generated. "
               "Check selection criteria or data quality.")
+        if production_norm is not None:
+            print("  [WARNING] Using emergency fallback normalizer from last trained model.")
+            print("  This normalizer may come from a rejected window — verify consistency.")
 
 
 if __name__ == "__main__":

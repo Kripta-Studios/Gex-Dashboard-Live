@@ -82,6 +82,12 @@ class GBTEnsemble:
             (logits, time_pred) tuple of torch.Tensors
             - logits: [N, 3] — log-probabilities (compatible with softmax)
             - time_pred: [N, 2] — dummy (mu=60.0, log_sigma=0.0)
+
+        WARNING: logits are LOG-PROBABILITIES, not raw logits.
+        Downstream code should apply softmax() EXACTLY ONCE to recover
+        the original probabilities. Applying softmax twice will produce
+        a near-uniform distribution and distort predictions.
+        For direct probabilities, use predict_proba() instead.
         """
         if isinstance(x, torch.Tensor):
             X_np = x.detach().cpu().numpy()

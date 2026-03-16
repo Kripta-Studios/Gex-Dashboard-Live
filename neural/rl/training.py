@@ -215,17 +215,15 @@ class PPOTrainer:
                     action, log_prob, value = self.agent.get_action(
                         state_tensor, action_type, deterministic=not training)
 
-                # action is either an int or a dict
-                action_val = action
+                # action is now an int (strike bucket, sniper choice, or exit choice)
+                env_action = action
                 log_prob_float = log_prob.item() if isinstance(log_prob, torch.Tensor) else log_prob
                 value_float = value.item() if isinstance(value, torch.Tensor) else value
 
-                # environment only needs the discrete action index
-                env_action = action_val["strike"] if isinstance(action_val, dict) else action_val
                 next_state, reward, done, info = self.env.step(env_action)
 
                 episode_states.append(state)
-                episode_actions.append(action_val)
+                episode_actions.append(env_action)
                 episode_action_types.append(action_type)
                 episode_rewards.append(reward)
                 episode_log_probs.append(log_prob_float)
@@ -514,7 +512,7 @@ class PPOTrainer:
 
                 # Collect eval episodes (no augmentation, deterministic)
                 eval_buffer, eval_infos = self.collect_episodes(
-                    n_episodes=min(n_episodes, 50),
+                    n_episodes=min(n_episodes, 200),
                     min_confidence=min_conf,
                     training=False,  # No augmentation, deterministic
                 )

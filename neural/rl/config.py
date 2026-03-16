@@ -112,8 +112,9 @@ RL_CONFIG = {
     # Session
     "session_length_minutes": 390,
 
-    # Sniper Entry Window
-    "use_sniper_mode":          True,
+    # Sniper Entry Window — DISABLED: was trained but never used in production,
+    # causing train/prod distribution mismatch at 175 vs 173 dims.
+    "use_sniper_mode":          False,
     "sniper_window_minutes":    SNIPER_WINDOW_MINUTES,
     "sniper_timeout_penalty":   -0.05,
     "sniper_entropy_coeff":     0.10,
@@ -128,9 +129,9 @@ RL_CONFIG = {
     # ANTES: Phase 3 = 30 min → agente salía exactamente a los 30 min
     # AHORA: Phase 3 = 45 min → agente debe aguantar 15 min más mínimo
     "hold_min_minutes_curriculum": {
-        1: {"min_hold": 90},   # Phase 1: ≥90 min (aprende con trades largos)
-        2: {"min_hold": 60},   # Phase 2: ≥60 min
-        3: {"min_hold": 45},   # Phase 3: ≥45 min (era 30 — el agente salía exactamente aquí)
+        1: {"min_hold": 60},   # Phase 1: ≥60 min (aprende con trades largos)
+        2: {"min_hold": 45},   # Phase 2: ≥45 min
+        3: {"min_hold": 30},   # Phase 3: ≥30 min (era 30 — el agente salía exactamente aquí)
     },
 
     # Emergency stop: bypass min_hold si el trade va muy mal muy rápido

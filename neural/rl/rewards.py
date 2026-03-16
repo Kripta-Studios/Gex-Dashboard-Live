@@ -47,13 +47,13 @@ def compute_step_reward(prev_pnl_pct: float, curr_pnl_pct: float,
     # CLAVE: el agente recibe incentive por aguantar aunque el trade esté plano o rojo
     # Esto evita que salga a los 30 min (el mínimo forzado) en cuanto puede
     if hold_time_minutes < 15:
-        time_incentive = 0.005   # zona scalping — casi nada
+        time_incentive = 0.002
     elif hold_time_minutes < 45:
-        time_incentive = 0.04    # zona media — moderado, compite con transaction_penalty
+        time_incentive = 0.015
     elif hold_time_minutes < 90:
-        time_incentive = 0.12    # zona homerun — fuerte incentive
+        time_incentive = 0.04
     else:
-        time_incentive = 0.20    # zona máxima
+        time_incentive = 0.06
 
     # Bonus adicional si el trade está en verde (mantener lógica original)
     if curr_pnl_pct > 0.05:
@@ -113,21 +113,19 @@ def compute_terminal_reward(final_pnl_pct: float, hold_time_norm: float,
     else:
         strike_bonus = 0.0
 
-    # 5. Combined exit penalty — BUG FIX: inicializar ambas a 0.0
-    cowardice_penalty = 0.0
-    upside_penalty = 0.0
+    # 5. Combined exit penalty — BUG FIX: aplicar la más severa
+    combined_exit_penalty = 0.0
 
     if exit_type == "agent_exit" and final_pnl_pct > 0 and max_move_pct > 0:
         capture_ratio = final_pnl_pct / max_move_pct
-        if capture_ratio < 0.50:
-            missed_pct = max_move_pct - final_pnl_pct
-            cowardice_penalty = -2.0 * missed_pct * (1.0 - capture_ratio)
-            cowardice_penalty = max(cowardice_penalty, -20.0)
+        missed_pct = max_move_pct - final_pnl_pct
+        
         if capture_ratio < 0.30:
-            missed_pct = max_move_pct - final_pnl_pct
             upside_penalty = -4.0 * missed_pct * (1.0 - capture_ratio)
-
-    combined_exit_penalty = min(cowardice_penalty, upside_penalty)
+            combined_exit_penalty = max(upside_penalty, -20.0)
+        elif capture_ratio < 0.50:
+            cowardice_penalty = -2.0 * missed_pct * (1.0 - capture_ratio)
+            combined_exit_penalty = max(cowardice_penalty, -20.0)
 
     # 6. Early exit penalty on losers
     early_exit_penalty = 0.0
@@ -138,8 +136,8 @@ def compute_terminal_reward(final_pnl_pct: float, hold_time_norm: float,
     entry_timing_bonus = (min(entry_price_improvement * 5.0, 0.3)
                           if entry_price_improvement > 0 else 0.0)
 
-    # 8. Transaction penalty — flat -1.0, fuera del confidence scaling
-    transaction_penalty = -1.0
+    # 8. Transaction penalty — proporcional a la confianza
+    transaction_penalty = -0.15 * (2.0 - mlp_confidence)
 
     base_reward = (pnl_reward + time_bonus + hard_stop_penalty
                    + strike_bonus + combined_exit_penalty + early_exit_penalty

@@ -54,7 +54,7 @@ FIXED_STOP_PCT   = 0.003             # 0.3% — stop for both directions → 1:1
                                      # Previous: 0.6% profit / 0.3% stop → missed 0.3-0.5% moves
 BPS_CLIP = 500                        # clamp distances at ±500 bps (±5%)
 
-def classify_gamma_regime(net_gamma: float, threshold: float = 0.1) -> int:
+def classify_gamma_regime(net_gamma: float, threshold: float = 1e8) -> int:
     if net_gamma > threshold: return 2
     elif net_gamma < -threshold: return 0
     return 1

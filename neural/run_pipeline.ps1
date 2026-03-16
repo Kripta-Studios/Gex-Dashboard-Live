@@ -24,7 +24,7 @@ Write-Host "`n=== ENTRENAMIENTO GBT Walk-Forward (LightGBM Ensemble) ===" -Foreg
 python train_walkforward.py `
   --data ..\training_data\training_data_spx_qqq.parquet `
   --model-size small `
-  --train-months 3 `
+  --train-months 4 `
   --test-months 1 `
   --ensemble 5 `
   --top-n-windows 10 `
@@ -42,7 +42,7 @@ if ($LASTEXITCODE -ne 0) {
 # ─────────────────────────────────────────────────────────────────────────────
 Write-Host "`n=== DIAGNOSTICO POST-ENTRENAMIENTO ===" -ForegroundColor Magenta
 python diagnose_pipeline.py `
-  --train-months 3 `
+  --train-months 4 `
   --test-months 1 `
   --data ..\training_data\training_data_spx_qqq.parquet `
   --model models\trading_hybrid_wf.joblib `
@@ -89,7 +89,7 @@ python -m rl.training `
   --episode-index ..\rl_data\episode_index.parquet `
   --options-cache ..\rl_data\rl_options_cache_chunks `
   --save-dir ..\rl_models `
-  --total-updates 400 `
+  --total-updates 600 `
   --workers 32
 
 if ($LASTEXITCODE -ne 0) {
@@ -151,4 +151,5 @@ python ..\visualizer\analyze_backtests.py --month 202603
 python ..\visualizer\analyze_backtests.py --month 202503
 python ..\visualizer\analyze_backtests.py --month 202504
 
-Write-Host "`n=== PIPELINE COMPLETO CON EXITO ===" -ForegroundColor Green
+
+Write-Host "`n=== PIPELINE COMPLETO CON EXITO ===" -ForegroundColor GreenWrite-Host "`n=== PIPELINE COMPLETO CON EXITO ===" -ForegroundColor Green

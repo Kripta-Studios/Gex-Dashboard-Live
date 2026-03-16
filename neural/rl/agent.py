@@ -2,13 +2,16 @@
 PPO Agent — Shared-Backbone with Triple Action Heads
 
 Architecture:
-    State(173) → Backbone(256→256→128) → Strike Head(7) + Exit Head(2)
-                                        + Sniper Head(8) + Value Head(1)
+    State(173/175) → Backbone(256→256→128) → Strike Head(7) + Exit Head(2)
+                                            + Sniper Head(8) + Value Head(1)
 
 The Strike Head is only active at trade entry (immediate mode).
 The Sniper Head is active during PRE_ENTRY phase (WAIT=0, ENTER+strike=1-7).
 The Exit Head is active every minute while a position is open.
 The Value Head (critic) is shared across all action types.
+
+NOTE: sizing_head was removed — it was trained but never used in production,
+introducing noise into PPO gradients without affecting actual position sizing.
 """
 
 import torch
@@ -27,7 +30,7 @@ class PPOAgent(nn.Module):
 
     def __init__(self, state_dim: int = None, hidden_dims: list = None):
         super().__init__()
-        state_dim = state_dim or RL_CONFIG["state_dim"]
+        self.state_dim = state_dim or RL_CONFIG["state_dim"]
         hidden_dims = hidden_dims or RL_CONFIG["hidden_dims"]
 
         # ── Shared backbone ──
@@ -66,12 +69,8 @@ class PPOAgent(nn.Module):
             nn.Linear(64, NUM_SNIPER_ACTIONS),
         )
 
-        # ── Sizing head (continuous dimension fraction, entry only) ──
-        self.sizing_head = nn.Sequential(
-            nn.Linear(last_dim, 64),
-            nn.GELU(),
-            nn.Linear(64, 2)  # mu, log_std
-        )
+        # NOTE: sizing_head removed — was trained but never used in production.
+        # Its gradients added noise to the shared backbone without affecting returns.
 
         # ── Value head (critic, shared) ──
         self.value_head = nn.Sequential(
@@ -100,7 +99,6 @@ class PPOAgent(nn.Module):
 
         Returns:
             logits: action logits from the appropriate head
-            size_params: sizing head output (only for strike), None otherwise
             value:  critic state value estimate
         """
         features = self.backbone(state)
@@ -108,14 +106,12 @@ class PPOAgent(nn.Module):
 
         if action_type == "strike":
             logits = self.strike_head(features)
-            size_params = self.sizing_head(features)
-            return logits, size_params, value
         elif action_type == "sniper_entry":
             logits = self.sniper_head(features)
-            return logits, None, value
         else:
             logits = self.exit_head(features)
-            return logits, None, value
+
+        return logits, value
 
     def get_action(self, state: torch.Tensor, action_type: str,
                    deterministic: bool = False):
@@ -124,38 +120,18 @@ class PPOAgent(nn.Module):
 
         Returns: (action, log_prob, value) — all tensors.
         """
-        logits, size_params, value = self.forward(state, action_type)
+        logits, value = self.forward(state, action_type)
 
         if action_type == "strike":
-            # Discrete Strike
+            # Discrete Strike (delta bucket 0-6)
             if deterministic:
-                # Use temperature scaling T=0.5 to sharpen distribution but preserve sampling
                 dist = Categorical(logits=logits / 0.5)
-                action_strike = dist.sample()
+                action = dist.sample()
             else:
                 dist = Categorical(logits=logits)
-                action_strike = dist.sample()
-            log_prob_strike = dist.log_prob(action_strike)
-            
-            # Continuous Size
-            mu, log_std = size_params[:, 0], size_params[:, 1]
-            std = torch.exp(torch.clamp(log_std, -20, 2))
-            from torch.distributions import Normal
-            size_dist = Normal(mu, std)
-            
-            if deterministic:
-                action_size_raw = mu
-            else:
-                action_size_raw = size_dist.sample()
-            log_prob_size_raw = size_dist.log_prob(action_size_raw)
-            
-            # Sigmoid bounded fraction
-            action_size = torch.sigmoid(action_size_raw)
-            derivative = torch.clamp(action_size * (1.0 - action_size), min=1e-8)
-            log_prob_size = log_prob_size_raw - torch.log(derivative)
-            
-            action = {"strike": action_strike.item(), "size": action_size.item()}
-            log_prob = log_prob_strike + log_prob_size
+                action = dist.sample()
+            log_prob = dist.log_prob(action)
+            action = action.item()
 
         elif action_type == "sniper_entry":
             # Discrete Sniper: WAIT(0) or ENTER with strike(1-7)
@@ -169,7 +145,7 @@ class PPOAgent(nn.Module):
             action = action.item()
 
         else:
-            # Discrete Exit
+            # Discrete Exit: HOLD(0) or EXIT(1)
             if deterministic:
                 dist = Categorical(logits=logits / 0.5)
                 action = dist.sample()
@@ -185,13 +161,12 @@ class PPOAgent(nn.Module):
                          action_types: list):
         """
         Evaluate log_probs and entropy for a batch of (state, action) pairs.
-        actions is a list: dicts if 'strike', ints if 'exit' or 'sniper_entry'.
+        actions is a list of ints (strike bucket, exit choice, or sniper choice).
         """
         features = self.backbone(states)
         values = self.value_head(features).squeeze(-1)
 
         strike_logits = self.strike_head(features)
-        size_params = self.sizing_head(features)
         exit_logits = self.exit_head(features)
         sniper_logits = self.sniper_head(features)
 
@@ -199,7 +174,6 @@ class PPOAgent(nn.Module):
         is_strike_list = []
         is_sniper_list = []
         strike_acts = []
-        size_acts_final = []
         exit_acts = []
         sniper_acts = []
 
@@ -207,22 +181,19 @@ class PPOAgent(nn.Module):
             if at == "strike":
                 is_strike_list.append(True)
                 is_sniper_list.append(False)
-                strike_acts.append(actions[i]["strike"])
-                size_acts_final.append(actions[i]["size"])
+                strike_acts.append(actions[i])
                 exit_acts.append(0)
                 sniper_acts.append(0)
             elif at == "sniper_entry":
                 is_strike_list.append(False)
                 is_sniper_list.append(True)
                 strike_acts.append(0)
-                size_acts_final.append(0.5)
                 exit_acts.append(0)
                 sniper_acts.append(actions[i])
             else:
                 is_strike_list.append(False)
                 is_sniper_list.append(False)
                 strike_acts.append(0)
-                size_acts_final.append(0.5)
                 exit_acts.append(actions[i])
                 sniper_acts.append(0)
 
@@ -231,29 +202,12 @@ class PPOAgent(nn.Module):
         strike_acts_t = torch.tensor(strike_acts, dtype=torch.long, device=states.device)
         exit_acts_t = torch.tensor(exit_acts, dtype=torch.long, device=states.device)
         sniper_acts_t = torch.tensor(sniper_acts, dtype=torch.long, device=states.device)
-        size_acts_final_t = torch.tensor(size_acts_final, dtype=torch.float32, device=states.device)
 
         # ── Strike evaluation ──
         strike_dist = Categorical(logits=strike_logits)
         strike_acts_t = strike_acts_t.clamp(0, NUM_STRIKE_ACTIONS - 1)
         strike_log_probs = strike_dist.log_prob(strike_acts_t)
         strike_entropy = strike_dist.entropy()
-
-        # Size evaluation
-        mu, log_std = size_params[:, 0], size_params[:, 1]
-        std = torch.exp(torch.clamp(log_std, -20, 2))
-        from torch.distributions import Normal
-        size_dist = Normal(mu, std)
-
-        safe_y = torch.clamp(size_acts_final_t, min=1e-6, max=1.0-1e-6)
-        x_raw = torch.log(safe_y / (1.0 - safe_y))
-        size_log_probs_raw = size_dist.log_prob(x_raw)
-        derivative = safe_y * (1.0 - safe_y)
-        size_log_probs = size_log_probs_raw - torch.log(derivative)
-        size_entropy = size_dist.entropy()
-
-        total_strike_log_probs = strike_log_probs + size_log_probs
-        total_strike_entropy = strike_entropy + size_entropy
 
         # ── Exit evaluation ──
         exit_dist = Categorical(logits=exit_logits)
@@ -269,9 +223,9 @@ class PPOAgent(nn.Module):
 
         # ── Select per-sample ──
         # Priority: strike > sniper > exit
-        log_probs = torch.where(is_strike, total_strike_log_probs,
+        log_probs = torch.where(is_strike, strike_log_probs,
                      torch.where(is_sniper, sniper_log_probs, exit_log_probs))
-        entropy = torch.where(is_strike, total_strike_entropy,
+        entropy = torch.where(is_strike, strike_entropy,
                    torch.where(is_sniper, sniper_entropy, exit_entropy))
 
         return log_probs, entropy, values
