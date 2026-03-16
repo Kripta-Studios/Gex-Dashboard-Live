@@ -836,14 +836,14 @@ def main():
 
     feat_ok = check_feature_health(df, feature_cols)
     check_normalizer(args.normalizer, FEATURE_COLUMNS)
-
+    
     # FIX [1]: pass train/test months through
     oos_wr, collapse_detected, prod_windows_ok = check_mlp_edge(
         df, FEATURE_COLUMNS, args.model, args.normalizer,
         train_months=args.train_months,
         test_months=args.test_months,
     )
-
+    
     check_episode_balance()
     check_rl_agent()
 
@@ -872,6 +872,7 @@ def main():
     else:
         print(f"  {C.FAIL} NO EDGE — do NOT deploy")
     print()
+    
 
 
 if __name__ == '__main__':

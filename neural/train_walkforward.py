@@ -469,6 +469,7 @@ def walk_forward_train(data_path, model_path, norm_path, model_size,
         
         eligible = [w for w in window_registry if w['window_idx'] >= min_window]
         
+        
         for w in eligible:
             recency = (w['window_idx'] / total_splits) ** 2
             w['rank_score'] = w['avg_pf'] * recency
@@ -540,7 +541,7 @@ if __name__ == "__main__":
                         help="N. top-PF windows to include in production ensemble")
     parser.add_argument("--min-window",      type=int,   default=0,
                         help="Ignorar ventanas anteriores a este indice para produccion")
-    parser.add_argument("--hold-ratio",      type=float, default=2.0,
+    parser.add_argument("--hold-ratio",      type=float, default=1.5,
                         help="Ratio de muestras HOLD respecto al total de direccionales (2.0 = fuerte supresion del ruido)")
     parser.add_argument("--model_path", default="models/trading_hybrid_wf.joblib")
     parser.add_argument("--norm_path",  default="models/hybrid_normalizer_wf.npz")

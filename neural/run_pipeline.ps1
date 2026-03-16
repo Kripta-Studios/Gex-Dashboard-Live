@@ -8,8 +8,8 @@ $ErrorActionPreference = "Continue"
 # ─────────────────────────────────────────────────────────────────────────────
 Write-Host "`n=== RECOLECTANDO DATOS SPX+QQQ ===" -ForegroundColor Cyan
 python collect_training_data_spx_qqq.py `
-  --start 20220801 --end 20260328 `
-  --workers 28 --tickers SPX QQQ `
+  --start 20220801 --end 20260330 `
+  --workers 32 --tickers SPX QQQ `
   --output training_data_spx_qqq.parquet
 
 if ($LASTEXITCODE -ne 0) {
@@ -57,7 +57,7 @@ if ($LASTEXITCODE -ne 0) {
 # PASO 2 — GENERACIÓN DE ÍNDICE DE EPISODIOS (para RL)
 # ─────────────────────────────────────────────────────────────────────────────
 Write-Host "`n=== Generando Indice de Episodios ===" -ForegroundColor Cyan
-python .\generate_episode_index.py
+python .\generate_episode_index.py --data ..\training_data\training_data_spx_qqq.parquet
 
 if ($LASTEXITCODE -ne 0) {
   Write-Host "ERROR: generate_episode_index.py fallo." -ForegroundColor Red
@@ -74,7 +74,7 @@ python run_preprocess.py `
   --output ..\rl_data\rl_options_cache_chunks `
   --mlp-model models\trading_hybrid_wf.joblib `
   --mlp-normalizer models\hybrid_normalizer_wf.npz `
-  --num-workers 28
+  --num-workers 32
 
 if ($LASTEXITCODE -ne 0) {
   Write-Host "ERROR: Preprocessing fallo. Posible error de OOM o lectura de ThetaData." -ForegroundColor Red
@@ -90,7 +90,7 @@ python -m rl.training `
   --options-cache ..\rl_data\rl_options_cache_chunks `
   --save-dir ..\rl_models `
   --total-updates 400 `
-  --workers 28
+  --workers 32
 
 if ($LASTEXITCODE -ne 0) {
   Write-Host "ERROR: RL Training fallo." -ForegroundColor Red
@@ -99,8 +99,6 @@ if ($LASTEXITCODE -ne 0) {
 
 Write-Host "`n=== PIPELINE PRINCIPAL COMPLETO CON EXITO ===" -ForegroundColor Green
 Write-Host "Modelo GBT Hibrido y Agente RL listos para Gex-Dashboard-Live." -ForegroundColor Green
-
-
 
 # ─────────────────────────────────────────────────────────────────────────────
 # PASO 6 — BACKTESTING GBT solo
