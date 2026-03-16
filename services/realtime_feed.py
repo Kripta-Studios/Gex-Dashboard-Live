@@ -552,7 +552,7 @@ class RealtimeOptionsFeed:
     # ─────────────────────────────────────────
 
     @staticmethod
-    def _classify_gamma_regime(net_gamma: float, threshold: float = 0.1) -> int:
+    def _classify_gamma_regime(net_gamma: float, threshold: float = 1e8) -> int:
         if net_gamma > threshold:
             return 2
         elif net_gamma < -threshold:

@@ -494,6 +494,7 @@ def _get_premium_at_time(premium_lookup: dict, strike: float,
 
 def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                     probabilities: np.ndarray, rl_agent: PPOAgent,
+                    features_norm: np.ndarray = None,
                     threshold: float = 0.50, max_time: int = 180,
                     cooldown: int = 10, device: torch.device = None,
                     risk_capital: float = 500.0) -> pd.DataFrame:
@@ -533,12 +534,15 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
         # Greeks are now loaded per-ticker inside the trade loop below
         # (cache keyed by (ticker, date) instead of date only)
 
-        # Pre-extract market features for the day to avoid pandas overhead
-        n_features = len(FEATURE_COLUMNS)
-        day_features = np.zeros((len(day_idx), n_features), dtype=np.float32)
-        for fi, col in enumerate(FEATURE_COLUMNS[:n_features]):
-            if col in day_df.columns:
-                day_features[:, fi] = day_df[col].fillna(0).values.astype(np.float32)
+        # Pre-extract market features for the day (normalized if available)
+        day_features = features_norm[day_idx] if features_norm is not None else None
+        if day_features is None:
+            # Fallback (slow/unnormalized)
+            n_features = len(FEATURE_COLUMNS)
+            day_features = np.zeros((len(day_idx), n_features), dtype=np.float32)
+            for fi, col in enumerate(FEATURE_COLUMNS[:n_features]):
+                if col in day_df.columns:
+                    day_features[:, fi] = day_df[col].fillna(0).values.astype(np.float32)
 
         for i, global_idx in enumerate(day_idx):
             row = day_df.loc[global_idx]
@@ -548,54 +552,77 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
             if pred == 1 or max_prob < threshold:
                 continue
 
-            direction = "LONG" if pred == 2 else "SHORT"
-            ticker = row.get("ticker", "SPX")
-
-            key = f"{ticker}_{d}"
-            
-            # Open position check — don't overlap
-            if key in open_positions:
-                if i < open_positions[key]:
-                    continue
-                else:
-                    del open_positions[key]
-                    
-            if key in last_trade_time:
-                elapsed = i - last_trade_time[key]
-                if elapsed < cooldown:
-                    continue
-
-            entry_price = row.get("spot_price", 0)
-            if entry_price == 0:
-                continue
-
+            # CRITICAL: Define current_minute BEFORE using it in filters
             entry_time = str(row.get("time", "09:30"))
             try:
                 h, m = map(int, entry_time.split(':'))
                 current_minute = h * 60 + m
             except Exception:
                 current_minute = 570
-                
+
             # Skip trades in the first 10 minutes (09:30-09:39) due to unstable options pricing.
             if 570 <= current_minute < 580:
                 continue
 
-            # Retrieve pre-calculated market features
-            market_features = day_features[i]
+            direction = "LONG" if pred == 2 else "SHORT"
+            ticker = row.get("ticker", "SPX")
 
-            # Model context: [confidence, time_to_target, mins_since_signal, log_sigma]
-            mlp_context = np.array([max_prob, 0.5, 0.0, 0.0], dtype=np.float32)
-            sniper_state = np.zeros(SNIPER_STATE_DIM, dtype=np.float32)
+            key = f"{ticker}_{d}"
+            
+            # Open position check — don't overlap (in real minutes)
+            if key in open_positions:
+                if current_minute < open_positions[key]:
+                    continue
+                else:
+                    del open_positions[key]
+                    
+            if key in last_trade_time:
+                elapsed = current_minute - last_trade_time[key]
+                # Re-entry protection: if we just exited a GBT signal burst, 
+                # don't re-enter until the signal disappears or a long cooldown passed.
+                # This prevents over-trading from RL's early exits.
+                long_cooldown = 20 # Minimum lockout after an RL exit
+                if elapsed < long_cooldown:
+                    continue
 
+            entry_price = row.get("spot_price", 0)
+            if entry_price == 0:
+                continue
+
+            # Retrieve pre-calculated market features (normalized)
+            market_features = features_norm[global_idx]
+            
+            # Current signal confidence and predicted class
+            conf = probabilities[global_idx, pred]
+            
+            # RL state needs the context of the signal (same as training environment)
+            # Group 3: MLP signal context (4 dims)
+            mlp_context = np.array([
+                conf,                        # confidence
+                60.0,                        # dummy time-to-target for GBT
+                0.0,                         # mins_since_signal
+                0.0,                         # dummy log_sigma for GBT
+            ], dtype=np.float32)
+            
             # ── ENTRY: RL strike selection ──
             position_state = np.zeros(6, dtype=np.float32)
-            state = np.concatenate([market_features, position_state, mlp_context, sniper_state])
+            
+            # Construct entry state
+            state_parts = [market_features, position_state, mlp_context]
+            if RL_CONFIG.get("use_sniper_mode", False):
+                sniper_state = np.zeros(SNIPER_TOTAL_STATE_DIM, dtype=np.float32)
+                state_parts.append(sniper_state)
+            
+            state = np.concatenate(state_parts)
+            state = state[:rl_agent.state_dim] # Match agent expectation
             state_tensor = torch.FloatTensor(state).unsqueeze(0).to(device)
 
             with torch.no_grad():
                 action, _, _ = rl_agent.get_action(
                     state_tensor, action_type="strike", deterministic=True)
-            strike_bucket = action["strike"]
+            
+            # Handle both dictionary (backwards compatibility) and integer (new architecture) actions
+            strike_bucket = action["strike"] if isinstance(action, dict) else int(action)
             delta_target = STRIKE_BUCKETS[strike_bucket]["delta_target"]
 
             # ── Find REAL option contract ──
@@ -655,7 +682,7 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
             # Skip the first row (which is the entry minute itself)
             future_sub_df = ticker_df.iloc[1:max_time+1]
 
-            for idx_global, future_row in future_sub_df.iterrows():
+            for t, (idx_global, future_row) in enumerate(future_sub_df.iterrows()):
                 price = future_row.get("spot_price", entry_price)
                 future_time = str(future_row.get("time", ""))
                 hold_minutes = future_row["minutes"] - current_minute
@@ -676,10 +703,11 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                     premium_pnl_pct = (current_premium - entry_premium) / entry_premium
                 else:
                     # Fallback: extrapolate from last known premium using delta approximation
+                    # NOTE: For puts, delta is already negative (e.g. -0.4), so
+                    # delta * spot_change naturally produces positive premium_change
+                    # when spot drops (favorable for SHORT). No sign flip needed.
                     spot_change = price - entry_price
                     premium_change = actual_delta * spot_change + 0.5 * actual_gamma * spot_change**2
-                    if direction == "SHORT":
-                        premium_change = -premium_change  # puts move inversely
                     current_premium = max(0.01, entry_premium + premium_change)
                     premium_pnl_pct = (current_premium - entry_premium) / entry_premium
 
@@ -731,20 +759,24 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                     np.clip(mae, -1.0, 0.0),
                 ], dtype=np.float32)
 
-                # Update market features from pre-calculated array.
-                # `idx_global` is the original dataframe index. To match `day_features`, 
-                # we must find its positional index within `day_idx`.
-                pos_idx = day_idx.index(idx_global)
-                market_features = day_features[pos_idx]
+                # Update market features (normalized) using the global index
+                market_features = features_norm[idx_global]
 
-                state = np.concatenate([market_features, position_state, mlp_context, sniper_state])
+                state_parts = [market_features, position_state, mlp_context]
+                if RL_CONFIG.get("use_sniper_mode", False):
+                    sniper_state = np.zeros(SNIPER_STATE_DIM, dtype=np.float32)
+                    state_parts.append(sniper_state)
+                
+                state = np.concatenate(state_parts)
+                state = state[:rl_agent.state_dim] # FORCE DIM
                 state_tensor = torch.FloatTensor(state).unsqueeze(0).to(device)
 
                 with torch.no_grad():
                     exit_action, _, _ = rl_agent.get_action(
                         state_tensor, action_type="exit", deterministic=True)
 
-                if exit_action == 1:  # EXIT
+                # Action is compared directly as int for new architecture
+                if int(exit_action) == 1:  # EXIT
                     # Ensure agent respects Phase 3 min_hold unless emergency_stop is hit
                     min_hold = RL_CONFIG["hold_min_minutes_curriculum"][3]["min_hold"]
                     emergency_stop = RL_CONFIG.get("emergency_stop_pct", -0.30)
@@ -811,8 +843,8 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                 "contracts": contracts,
                 "balance": round(balance, 2),
             })
-            last_trade_time[key] = i
-            open_positions[key] = i + hold_minutes
+            last_trade_time[key] = current_minute
+            open_positions[key] = current_minute + hold_minutes
 
         # Progress reporting
         if (d_idx + 1) % report_interval == 0 or d_idx == total_dates - 1:
@@ -875,8 +907,10 @@ def calculate_metrics(trades_df: pd.DataFrame) -> dict:
     else:
         sharpe = 0
 
-    mean_winner = wins["pnl_pct"].mean() if len(wins) > 0 else 0
-    mean_loser = abs(losses["pnl_pct"].mean()) if len(losses) > 0 else 1e-6
+    # Use pnl_dollars for W/L ratio — pnl_pct is in different units between
+    # GBT-only (spot returns) and GBT+RL (premium returns), making them incomparable.
+    mean_winner = wins["pnl_dollars"].mean() if len(wins) > 0 else 0
+    mean_loser = abs(losses["pnl_dollars"].mean()) if len(losses) > 0 else 1e-6
     wl_ratio = mean_winner / mean_loser if mean_loser > 0 else 0
 
     avg_hold_w = wins["hold_minutes"].mean() if len(wins) > 0 else 0
@@ -1048,6 +1082,7 @@ def main():
     print(f"  Running GBT+RL simulation...")
     rl_trades = simulate_mlp_rl(
         df, predictions, probs, rl_agent,
+        features_norm=features_norm,
         threshold=args.threshold, max_time=args.max_time,
         cooldown=args.cooldown, device=device,
         risk_capital=args.risk_capital)

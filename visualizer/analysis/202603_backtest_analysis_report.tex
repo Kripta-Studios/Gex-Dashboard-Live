@@ -57,7 +57,7 @@
 \begin{center}
 {\Huge\bfseries\color{accent} GEX Dashboard Live}\\[6pt]
 {\Large\color{txtsub} Backtest Analysis Report — 202603}\\[4pt]
-{\normalsize\color{txtsub} Tickers: QQQ, SPX \quad|\quad GBT: gbt\_only\_20260316\_140557.csv \quad|\quad RL: gbt\_rl\_20260316\_140557.csv}
+{\normalsize\color{txtsub} Tickers: QQQ, SPX \quad|\quad GBT: gbt\_only\_20260316\_223912.csv \quad|\quad RL: gbt\_rl\_20260316\_223912.csv}
 \end{center}
 \vspace{12pt}
 \noindent\textcolor{bordergray}{\rule{\textwidth}{0.5pt}}
@@ -65,11 +65,11 @@
 \section*{GBT-Only vs GBT+RL Comparison}
 \vspace{4pt}
 \noindent\begin{center}
-\metricbox{GBT-Only Trades}{52}{accent}
+\metricbox{GBT-Only Trades}{43}{accent}
 \hspace{4pt}
-\metricbox{GBT+RL Trades}{38}{accentrl}
+\metricbox{GBT+RL Trades}{98}{accentrl}
 \hspace{4pt}
-\metricbox{PF Improvement}{-1.7\%}{lossred}
+\metricbox{PF Improvement}{-46.4\%}{lossred}
 \end{center}
 \vspace{8pt}
 \noindent\begin{center}
@@ -79,15 +79,15 @@
 \rowcolor{cardbg}
 \textcolor{txtmain}{\textbf{Metric}} & \textcolor{accent}{\textbf{GBT-Only}} & \textcolor{accentrl}{\textbf{GBT+RL}} & \textcolor{txtsub}{\textbf{Delta}} \\
 \midrule
-Total Trades & 52 & 38 & \textcolor{lossred}{-14} \\
-Win Rate (\%) & 40.4 & 44.7 & \textcolor{wingreen}{+4.4} \\
-Profit Factor & 1.69 & 1.66 & \textcolor{lossred}{-0.03} \\
-Total P\&L (\$) & 11,346.3 & 5,477.0 & \textcolor{lossred}{-5,869.3} \\
-Max Drawdown (\$) & -5,703.7 & -4,236.5 & \textcolor{lossred}{+1,467.2} \\
-Sharpe Ratio & 7.01 & 4.82 & \textcolor{lossred}{-2.19} \\
-W/L Size Ratio & 2.25 & 2.00 & \textcolor{lossred}{-0.26} \\
-Avg Hold Win (min) & 126 & 63 & \textcolor{lossred}{-64} \\
-Avg Hold Loss (min) & 65 & 52 & \textcolor{wingreen}{-12} \\
+Total Trades & 43 & 98 & \textcolor{wingreen}{+55} \\
+Win Rate (\%) & 39.5 & 32.7 & \textcolor{lossred}{-6.9} \\
+Profit Factor & 1.59 & 0.85 & \textcolor{lossred}{-0.74} \\
+Total P\&L (\$) & 8,418.8 & -3,010.5 & \textcolor{lossred}{-11,429.3} \\
+Max Drawdown (\$) & -5,392.7 & -8,973.0 & \textcolor{wingreen}{-3,580.3} \\
+Sharpe Ratio & 9.01 & -2.29 & \textcolor{lossred}{-11.31} \\
+W/L Size Ratio & 2.29 & 1.54 & \textcolor{lossred}{-0.75} \\
+Avg Hold Win (min) & 135 & 37 & \textcolor{lossred}{-98} \\
+Avg Hold Loss (min) & 68 & 27 & \textcolor{wingreen}{-41} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -101,8 +101,8 @@ Avg Hold Loss (min) & 65 & 52 & \textcolor{wingreen}{-12} \\
 \rowcolor{cardbg}
 \textbf{Ticker} & \textbf{Trades} & \textbf{WR (\%)} & \textbf{PF} & \textbf{P\&L (\$)} \\
 \midrule
-QQQ & 33 & 36.4 & 1.33 & \textcolor{wingreen}{+2,345.2} \\
-SPX & 19 & 47.4 & 1.97 & \textcolor{wingreen}{+9,001.1} \\
+QQQ & 26 & 38.5 & 1.36 & \textcolor{wingreen}{+2,035.7} \\
+SPX & 17 & 41.2 & 1.75 & \textcolor{wingreen}{+6,383.0} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -115,8 +115,8 @@ SPX & 19 & 47.4 & 1.97 & \textcolor{wingreen}{+9,001.1} \\
 \rowcolor{cardbg}
 \textbf{Ticker} & \textbf{Trades} & \textbf{WR (\%)} & \textbf{PF} & \textbf{P\&L (\$)} \\
 \midrule
-QQQ & 23 & 43.5 & 2.28 & \textcolor{wingreen}{+2,914.5} \\
-SPX & 15 & 46.7 & 1.42 & \textcolor{wingreen}{+2,562.5} \\
+QQQ & 57 & 29.8 & 0.48 & \textcolor{lossred}{-3,290.5} \\
+SPX & 41 & 36.6 & 1.02 & \textcolor{wingreen}{+280.0} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -124,17 +124,17 @@ SPX & 15 & 46.7 & 1.42 & \textcolor{wingreen}{+2,562.5} \\
 \clearpage
 \section*{\textcolor{accent}{GBT-Only (Synthetic Futures)}}
 \noindent\begin{center}
-\metricbox{Trades}{52}{accent}
+\metricbox{Trades}{43}{accent}
 \hspace{3pt}
-\metricbox{Win Rate}{40.4\%}{lossred}
+\metricbox{Win Rate}{39.5\%}{lossred}
 \hspace{3pt}
-\metricbox{Profit Factor}{1.69}{wingreen}
+\metricbox{Profit Factor}{1.59}{wingreen}
 \hspace{3pt}
-\metricbox{Net P\&L}{\$11,708}{wingreen}
+\metricbox{Net P\&L}{\$8,782}{wingreen}
 \hspace{3pt}
-\metricbox{Max DD}{\$7,226}{lossred}
+\metricbox{Max DD}{\$5,393}{lossred}
 \hspace{3pt}
-\metricbox{Avg Hold}{90 min}{txtsub}
+\metricbox{Avg Hold}{94 min}{txtsub}
 \end{center}
 \vspace{6pt}
 \subsection*{Monthly Breakdown}
@@ -145,7 +145,7 @@ SPX & 15 & 46.7 & 1.42 & \textcolor{wingreen}{+2,562.5} \\
 \rowcolor{cardbg}
 \textbf{Month} & \textbf{Trades} & \textbf{WR (\%)} & \textbf{P\&L (\$)} \\
 \midrule
-2026-03 & 52 & 40.4 & \textcolor{wingreen}{11,346.27} \\
+2026-03 & 43 & 39.5 & \textcolor{wingreen}{8,418.76} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -157,11 +157,11 @@ SPX & 15 & 46.7 & 1.42 & \textcolor{wingreen}{+2,562.5} \\
 \rowcolor{cardbg}
 \textbf{Date} & \textbf{Entry} & \textbf{Ticker} & \textbf{Dir} & \textbf{Hold} & \textbf{P\&L (\$)} \\
 \midrule
-2026-03-05 & 10:20 & SPX & SHORT & 150m & \textcolor{wingreen}{3,421.96} \\
 2026-03-09 & 09:55 & SPX & LONG & 91m & \textcolor{wingreen}{3,321.51} \\
 2026-03-02 & 09:40 & SPX & LONG & 180m & \textcolor{wingreen}{2,844.50} \\
-2026-03-05 & 13:00 & SPX & LONG & 180m & \textcolor{wingreen}{2,586.00} \\
+2026-03-05 & 12:05 & SPX & SHORT & 180m & \textcolor{wingreen}{2,535.50} \\
 2026-03-04 & 09:40 & SPX & LONG & 180m & \textcolor{wingreen}{2,512.50} \\
+2026-03-06 & 09:50 & SPX & LONG & 180m & \textcolor{wingreen}{1,454.00} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -175,26 +175,26 @@ SPX & 15 & 46.7 & 1.42 & \textcolor{wingreen}{+2,562.5} \\
 \midrule
 2026-03-02 & 12:40 & SPX & SHORT & 110m & \textcolor{lossred}{-1,031.71} \\
 2026-03-03 & 13:25 & SPX & SHORT & 80m & \textcolor{lossred}{-1,022.21} \\
-2026-03-10 & 10:40 & SPX & SHORT & 22m & \textcolor{lossred}{-1,021.11} \\
+2026-03-10 & 10:35 & SPX & SHORT & 21m & \textcolor{lossred}{-1,020.16} \\
 2026-03-03 & 11:50 & SPX & SHORT & 92m & \textcolor{lossred}{-1,018.50} \\
-2026-03-10 & 09:40 & SPX & SHORT & 59m & \textcolor{lossred}{-1,017.97} \\
+2026-03-09 & 15:30 & SPX & SHORT & 8m & \textcolor{lossred}{-1,017.92} \\
 \bottomrule
 \end{tabular}
 \end{center}
 \clearpage
 \section*{\textcolor{accentrl}{GBT+RL (Real Options)}}
 \noindent\begin{center}
-\metricbox{Trades}{38}{accentrl}
+\metricbox{Trades}{98}{accentrl}
 \hspace{3pt}
-\metricbox{Win Rate}{44.7\%}{lossred}
+\metricbox{Win Rate}{32.7\%}{lossred}
 \hspace{3pt}
-\metricbox{Profit Factor}{1.66}{wingreen}
+\metricbox{Profit Factor}{0.85}{lossred}
 \hspace{3pt}
-\metricbox{Net P\&L}{\$3,962}{wingreen}
+\metricbox{Net P\&L}{\$-4,316}{lossred}
 \hspace{3pt}
-\metricbox{Max DD}{\$4,236}{lossred}
+\metricbox{Max DD}{\$8,973}{lossred}
 \hspace{3pt}
-\metricbox{Avg Hold}{57 min}{txtsub}
+\metricbox{Avg Hold}{30 min}{txtsub}
 \end{center}
 \vspace{6pt}
 \subsection*{Monthly Breakdown}
@@ -205,7 +205,7 @@ SPX & 15 & 46.7 & 1.42 & \textcolor{wingreen}{+2,562.5} \\
 \rowcolor{cardbg}
 \textbf{Month} & \textbf{Trades} & \textbf{WR (\%)} & \textbf{P\&L (\$)} \\
 \midrule
-2026-03 & 38 & 44.7 & \textcolor{wingreen}{5,477.00} \\
+2026-03 & 98 & 32.7 & \textcolor{lossred}{-3,010.50} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -217,11 +217,11 @@ SPX & 15 & 46.7 & 1.42 & \textcolor{wingreen}{+2,562.5} \\
 \rowcolor{cardbg}
 \textbf{Date} & \textbf{Entry} & \textbf{Ticker} & \textbf{Dir} & \textbf{Hold} & \textbf{P\&L (\$)} \\
 \midrule
-2026-03-09 & 09:55 & SPX & LONG & 60m & \textcolor{wingreen}{3,355.00} \\
-2026-03-02 & 09:40 & SPX & LONG & 45m & \textcolor{wingreen}{1,515.00} \\
-2026-03-04 & 09:40 & SPX & LONG & 45m & \textcolor{wingreen}{1,435.00} \\
-2026-03-05 & 10:20 & SPX & SHORT & 45m & \textcolor{wingreen}{1,105.00} \\
-2026-03-05 & 12:20 & QQQ & SHORT & 95m & \textcolor{wingreen}{1,071.00} \\
+2026-03-05 & 12:05 & SPX & SHORT & 40m & \textcolor{wingreen}{3,075.00} \\
+2026-03-10 & 14:05 & SPX & SHORT & 55m & \textcolor{wingreen}{2,925.00} \\
+2026-03-06 & 09:50 & SPX & LONG & 40m & \textcolor{wingreen}{2,070.00} \\
+2026-03-09 & 12:45 & SPX & SHORT & 40m & \textcolor{wingreen}{1,770.00} \\
+2026-03-02 & 09:40 & SPX & LONG & 50m & \textcolor{wingreen}{1,305.00} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -233,11 +233,11 @@ SPX & 15 & 46.7 & 1.42 & \textcolor{wingreen}{+2,562.5} \\
 \rowcolor{cardbg}
 \textbf{Date} & \textbf{Entry} & \textbf{Ticker} & \textbf{Dir} & \textbf{Hold} & \textbf{P\&L (\$)} \\
 \midrule
-2026-03-03 & 11:50 & SPX & SHORT & 95m & \textcolor{lossred}{-1,640.00} \\
-2026-03-10 & 12:00 & SPX & SHORT & 90m & \textcolor{lossred}{-1,390.00} \\
-2026-03-02 & 13:40 & SPX & SHORT & 40m & \textcolor{lossred}{-950.00} \\
-2026-03-09 & 12:25 & SPX & SHORT & 130m & \textcolor{lossred}{-810.00} \\
-2026-03-10 & 09:40 & SPX & SHORT & 55m & \textcolor{lossred}{-432.50} \\
+2026-03-09 & 15:20 & SPX & SHORT & 10m & \textcolor{lossred}{-1,460.00} \\
+2026-03-09 & 12:05 & SPX & SHORT & 40m & \textcolor{lossred}{-1,165.00} \\
+2026-03-09 & 15:45 & SPX & SHORT & 15m & \textcolor{lossred}{-1,040.00} \\
+2026-03-03 & 13:15 & SPX & SHORT & 10m & \textcolor{lossred}{-975.00} \\
+2026-03-02 & 10:40 & SPX & SHORT & 35m & \textcolor{lossred}{-890.00} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -250,9 +250,8 @@ SPX & 15 & 46.7 & 1.42 & \textcolor{wingreen}{+2,562.5} \\
 \rowcolor{cardbg}
 \textbf{Reason} & \textbf{Count} & \textbf{\%} \\
 \midrule
-agent\_exit & 24 & 63.2\% \\
-hard\_stop & 13 & 34.2\% \\
-max\_time & 1 & 2.6\% \\
+agent\_exit & 81 & 82.7\% \\
+hard\_stop & 17 & 17.3\% \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -264,12 +263,12 @@ max\_time & 1 & 2.6\% \\
 \rowcolor{cardbg}
 \textbf{Bucket} & \textbf{Trades} & \textbf{\%} & \textbf{WR} & \textbf{PF} & \textbf{Avg Dist} & \textbf{Avg P\&L} \\
 \midrule
-otm\_far & 6 & 15.8\% & 16.7\% & 0.93 & -17.6p & \textcolor{lossred}{-14.08} \\
-otm\_near & 5 & 13.2\% & 40.0\% & 2.04 & +0.1p & \textcolor{wingreen}{+159.40} \\
-otm\_light & 6 & 15.8\% & 66.7\% & 5.79 & +3.5p & \textcolor{wingreen}{+331.83} \\
-atm & 9 & 23.7\% & 33.3\% & 1.85 & -0.2p & \textcolor{wingreen}{+171.89} \\
-itm\_light & 7 & 18.4\% & 57.1\% & 2.42 & -2.2p & \textcolor{wingreen}{+370.07} \\
-itm & 5 & 13.2\% & 60.0\% & 0.42 & +10.2p & \textcolor{lossred}{-272.80} \\
+deep\_otm & 6 & 6.1\% & 33.3\% & 0.92 & -13.9p & \textcolor{lossred}{-9.00} \\
+otm\_far & 3 & 3.1\% & 66.7\% & 2.68 & +12.4p & \textcolor{wingreen}{+107.33} \\
+otm\_near & 4 & 4.1\% & 75.0\% & 9.73 & -13.4p & \textcolor{wingreen}{+742.38} \\
+otm\_light & 4 & 4.1\% & 50.0\% & 0.79 & -5.4p & \textcolor{lossred}{-22.25} \\
+atm & 29 & 29.6\% & 24.1\% & 0.99 & +0.0p & \textcolor{lossred}{-2.67} \\
+itm\_light & 52 & 53.1\% & 30.8\% & 0.51 & +2.4p & \textcolor{lossred}{-116.95} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -277,11 +276,11 @@ itm & 5 & 13.2\% & 60.0\% & 0.42 & +10.2p & \textcolor{lossred}{-272.80} \\
 \section*{Alpha vs Beta Analysis}
 \subsection*{\textcolor{accent}{GBT-Only Performance by Market Trend}}
 \noindent\begin{center}
-\metricbox{Rank Corr w/ Market}{-0.12}{wingreen}
+\metricbox{Rank Corr w/ Market}{-0.11}{wingreen}
 \hspace{4pt}
-\metricbox{Market UP Trades}{33}{wingreen}
+\metricbox{Market UP Trades}{28}{wingreen}
 \hspace{4pt}
-\metricbox{Market DOWN Trades}{19}{lossred}
+\metricbox{Market DOWN Trades}{15}{lossred}
 \end{center}
 \vspace{4pt}
 \noindent\begin{center}
@@ -291,19 +290,19 @@ itm & 5 & 13.2\% & 60.0\% & 0.42 & +10.2p & \textcolor{lossred}{-272.80} \\
 \rowcolor{cardbg}
 \textbf{Market} & \textbf{Trades} & \textbf{WR (\%)} & \textbf{PF} \\
 \midrule
-UP Days & 33 & 33.3 & 1.21 \\
-DOWN Days & 19 & 52.6 & 2.94 \\
+UP Days & 28 & 32.1 & 1.14 \\
+DOWN Days & 15 & 53.3 & 3.15 \\
 \bottomrule
 \end{tabular}
 \end{center}
 \vspace{6pt}
 \subsection*{\textcolor{accentrl}{GBT+RL Performance by Market Trend}}
 \noindent\begin{center}
-\metricbox{Rank Corr w/ Market}{+0.17}{wingreen}
+\metricbox{Rank Corr w/ Market}{-0.68}{lossred}
 \hspace{4pt}
-\metricbox{Market UP Trades}{22}{wingreen}
+\metricbox{Market UP Trades}{70}{wingreen}
 \hspace{4pt}
-\metricbox{Market DOWN Trades}{16}{lossred}
+\metricbox{Market DOWN Trades}{28}{lossred}
 \end{center}
 \vspace{4pt}
 \noindent\begin{center}
@@ -313,8 +312,8 @@ DOWN Days & 19 & 52.6 & 2.94 \\
 \rowcolor{cardbg}
 \textbf{Market} & \textbf{Trades} & \textbf{WR (\%)} & \textbf{PF} \\
 \midrule
-UP Days & 22 & 36.4 & 1.54 \\
-DOWN Days & 16 & 56.2 & 1.92 \\
+UP Days & 70 & 28.6 & 0.42 \\
+DOWN Days & 28 & 42.9 & 2.75 \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -352,12 +351,10 @@ DOWN Days & 16 & 56.2 & 1.92 \\
 \bottomrule
 \endlastfoot
 03-02 & 09:40 & 12:40 & SPX & LONG & 6826.00 & 6882.89 & \textcolor{wingreen}{+0.83\%} & \textcolor{wingreen}{+0.83\%} & 180m & max\_time & \textcolor{wingreen}{2,844.50} \\
-03-02 & 09:45 & 10:07 & QQQ & SHORT & 603.59 & 605.40 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 22m & stop & \textcolor{lossred}{-362.15} \\
-03-02 & 10:10 & 11:10 & QQQ & SHORT & 605.17 & 606.99 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 60m & stop & \textcolor{lossred}{-363.10} \\
+03-02 & 09:50 & 11:08 & QQQ & SHORT & 604.90 & 606.71 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 78m & stop & \textcolor{lossred}{-362.94} \\
 03-02 & 11:10 & 12:15 & QQQ & SHORT & 606.98 & 608.80 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 65m & stop & \textcolor{lossred}{-364.19} \\
 03-02 & 12:15 & 15:15 & QQQ & SHORT & 608.24 & 607.39 & \textcolor{wingreen}{+0.14\%} & \textcolor{wingreen}{+0.14\%} & 180m & max\_time & \textcolor{wingreen}{170.00} \\
 03-02 & 12:40 & 14:30 & SPX & SHORT & 6878.05 & 6898.68 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 110m & stop & \textcolor{lossred}{-1,031.71} \\
-03-02 & 15:20 & 16:00 & QQQ & SHORT & 607.54 & 608.08 & \textcolor{lossred}{-0.09\%} & \textcolor{lossred}{-0.09\%} & 40m & max\_time & \textcolor{lossred}{-108.00} \\
 03-03 & 11:25 & 11:46 & QQQ & SHORT & 598.55 & 600.35 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 21m & stop & \textcolor{lossred}{-359.13} \\
 03-03 & 11:50 & 13:27 & QQQ & SHORT & 600.06 & 601.86 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 97m & stop & \textcolor{lossred}{-360.04} \\
 03-03 & 11:50 & 13:22 & SPX & SHORT & 6790.03 & 6810.40 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 92m & stop & \textcolor{lossred}{-1,018.50} \\
@@ -370,36 +367,29 @@ DOWN Days & 16 & 56.2 & 1.92 \\
 03-04 & 10:30 & 13:30 & QQQ & SHORT & 610.98 & 612.05 & \textcolor{lossred}{-0.18\%} & \textcolor{lossred}{-0.18\%} & 180m & max\_time & \textcolor{lossred}{-214.00} \\
 03-04 & 12:40 & 15:40 & SPX & SHORT & 6875.01 & 6878.33 & \textcolor{lossred}{-0.05\%} & \textcolor{lossred}{-0.05\%} & 180m & max\_time & \textcolor{lossred}{-166.00} \\
 03-04 & 13:30 & 16:00 & QQQ & SHORT & 611.78 & 610.56 & \textcolor{wingreen}{+0.20\%} & \textcolor{wingreen}{+0.20\%} & 150m & max\_time & \textcolor{wingreen}{244.00} \\
-03-05 & 10:20 & 12:50 & SPX & SHORT & 6843.91 & 6775.47 & \textcolor{wingreen}{+1.00\%} & \textcolor{wingreen}{+1.00\%} & 150m & target & \textcolor{wingreen}{3,421.96} \\
 03-05 & 10:25 & 12:04 & QQQ & SHORT & 608.31 & 610.13 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 99m & stop & \textcolor{lossred}{-364.99} \\
-03-05 & 12:10 & 12:50 & QQQ & SHORT & 608.82 & 602.73 & \textcolor{wingreen}{+1.00\%} & \textcolor{wingreen}{+1.00\%} & 40m & target & \textcolor{wingreen}{1,217.64} \\
-03-05 & 13:00 & 16:00 & SPX & LONG & 6778.41 & 6830.13 & \textcolor{wingreen}{+0.76\%} & \textcolor{wingreen}{+0.76\%} & 180m & max\_time & \textcolor{wingreen}{2,586.00} \\
-03-06 & 09:40 & 12:40 & QQQ & LONG & 600.20 & 602.23 & \textcolor{wingreen}{+0.34\%} & \textcolor{wingreen}{+0.34\%} & 180m & max\_time & \textcolor{wingreen}{406.00} \\
-03-06 & 09:40 & 12:40 & SPX & LONG & 6724.14 & 6739.11 & \textcolor{wingreen}{+0.22\%} & \textcolor{wingreen}{+0.22\%} & 180m & max\_time & \textcolor{wingreen}{748.50} \\
-03-06 & 12:40 & 13:12 & QQQ & SHORT & 602.46 & 604.27 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 32m & stop & \textcolor{lossred}{-361.48} \\
-03-06 & 13:15 & 15:32 & QQQ & SHORT & 605.21 & 599.16 & \textcolor{wingreen}{+1.00\%} & \textcolor{wingreen}{+1.00\%} & 137m & target & \textcolor{wingreen}{1,210.42} \\
-03-09 & 09:40 & 09:53 & QQQ & LONG & 593.42 & 591.64 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 13m & stop & \textcolor{lossred}{-356.05} \\
-03-09 & 09:55 & 11:03 & QQQ & LONG & 592.00 & 597.92 & \textcolor{wingreen}{+1.00\%} & \textcolor{wingreen}{+1.00\%} & 68m & target & \textcolor{wingreen}{1,184.00} \\
+03-05 & 12:05 & 15:05 & SPX & SHORT & 6837.43 & 6786.72 & \textcolor{wingreen}{+0.74\%} & \textcolor{wingreen}{+0.74\%} & 180m & max\_time & \textcolor{wingreen}{2,535.50} \\
+03-06 & 09:50 & 12:50 & SPX & LONG & 6719.36 & 6748.44 & \textcolor{wingreen}{+0.43\%} & \textcolor{wingreen}{+0.43\%} & 180m & max\_time & \textcolor{wingreen}{1,454.00} \\
+03-06 & 10:00 & 10:02 & QQQ & SHORT & 600.46 & 602.26 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 2m & stop & \textcolor{lossred}{-360.28} \\
+03-06 & 10:15 & 10:35 & QQQ & SHORT & 602.88 & 604.69 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 20m & stop & \textcolor{lossred}{-361.73} \\
+03-06 & 10:35 & 13:35 & QQQ & SHORT & 604.33 & 603.62 & \textcolor{wingreen}{+0.12\%} & \textcolor{wingreen}{+0.12\%} & 180m & max\_time & \textcolor{wingreen}{142.00} \\
+03-06 & 13:35 & 16:00 & QQQ & SHORT & 604.18 & 599.84 & \textcolor{wingreen}{+0.72\%} & \textcolor{wingreen}{+0.72\%} & 145m & max\_time & \textcolor{wingreen}{868.00} \\
+03-09 & 09:45 & 11:25 & QQQ & LONG & 593.02 & 598.95 & \textcolor{wingreen}{+1.00\%} & \textcolor{wingreen}{+1.00\%} & 100m & target & \textcolor{wingreen}{1,186.04} \\
 03-09 & 09:55 & 11:26 & SPX & LONG & 6643.02 & 6709.45 & \textcolor{wingreen}{+1.00\%} & \textcolor{wingreen}{+1.00\%} & 91m & target & \textcolor{wingreen}{3,321.51} \\
-03-09 & 11:20 & 12:24 & QQQ & SHORT & 598.36 & 600.16 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 64m & stop & \textcolor{lossred}{-359.02} \\
+03-09 & 11:25 & 12:26 & QQQ & SHORT & 598.75 & 600.55 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 61m & stop & \textcolor{lossred}{-359.25} \\
 03-09 & 11:30 & 12:43 & SPX & SHORT & 6710.09 & 6730.22 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 73m & stop & \textcolor{lossred}{-1,006.51} \\
-03-09 & 12:25 & 15:19 & QQQ & SHORT & 600.04 & 601.84 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 174m & stop & \textcolor{lossred}{-360.02} \\
+03-09 & 12:30 & 15:19 & QQQ & SHORT & 600.45 & 602.25 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 169m & stop & \textcolor{lossred}{-360.27} \\
 03-09 & 12:45 & 15:20 & SPX & SHORT & 6730.84 & 6751.03 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 155m & stop & \textcolor{lossred}{-1,009.63} \\
 03-09 & 15:20 & 15:21 & QQQ & SHORT & 602.91 & 604.72 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 1m & stop & \textcolor{lossred}{-361.75} \\
 03-09 & 15:20 & 15:23 & SPX & SHORT & 6745.56 & 6765.80 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 3m & stop & \textcolor{lossred}{-1,011.83} \\
-03-09 & 15:30 & 15:38 & QQQ & SHORT & 606.78 & 608.60 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 8m & stop & \textcolor{lossred}{-364.07} \\
 03-09 & 15:30 & 15:38 & SPX & SHORT & 6786.14 & 6806.50 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 8m & stop & \textcolor{lossred}{-1,017.92} \\
-03-09 & 15:40 & 16:00 & SPX & SHORT & 6808.73 & 6796.33 & \textcolor{wingreen}{+0.18\%} & \textcolor{wingreen}{+0.18\%} & 20m & max\_time & \textcolor{wingreen}{620.00} \\
-03-10 & 09:40 & 10:39 & SPX & SHORT & 6786.50 & 6806.86 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 59m & stop & \textcolor{lossred}{-1,017.97} \\
+03-09 & 15:45 & 16:00 & SPX & SHORT & 6791.33 & 6796.33 & \textcolor{lossred}{-0.07\%} & \textcolor{lossred}{-0.07\%} & 15m & max\_time & \textcolor{lossred}{-250.00} \\
 03-10 & 10:25 & 10:34 & QQQ & SHORT & 607.53 & 609.35 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 9m & stop & \textcolor{lossred}{-364.52} \\
 03-10 & 10:35 & 10:54 & QQQ & SHORT & 609.32 & 611.15 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 19m & stop & \textcolor{lossred}{-365.59} \\
-03-10 & 10:40 & 11:02 & SPX & SHORT & 6807.37 & 6827.79 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 22m & stop & \textcolor{lossred}{-1,021.11} \\
+03-10 & 10:35 & 10:56 & SPX & SHORT & 6801.05 & 6821.45 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 21m & stop & \textcolor{lossred}{-1,020.16} \\
 03-10 & 10:55 & 13:27 & QQQ & SHORT & 611.09 & 612.92 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 152m & stop & \textcolor{lossred}{-366.65} \\
 03-10 & 12:00 & 15:00 & SPX & SHORT & 6825.93 & 6797.53 & \textcolor{wingreen}{+0.42\%} & \textcolor{wingreen}{+0.42\%} & 180m & max\_time & \textcolor{wingreen}{1,420.00} \\
-03-10 & 13:35 & 16:00 & QQQ & SHORT & 611.94 & 607.65 & \textcolor{wingreen}{+0.70\%} & \textcolor{wingreen}{+0.70\%} & 145m & max\_time & \textcolor{wingreen}{858.00} \\
-03-11 & 10:40 & 11:01 & QQQ & SHORT & 608.30 & 610.12 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 21m & stop & \textcolor{lossred}{-364.98} \\
-03-11 & 11:15 & 14:15 & QQQ & SHORT & 607.95 & 605.88 & \textcolor{wingreen}{+0.34\%} & \textcolor{wingreen}{+0.34\%} & 180m & max\_time & \textcolor{wingreen}{414.00} \\
-03-11 & 14:25 & 15:55 & QQQ & SHORT & 606.32 & 608.14 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 90m & stop & \textcolor{lossred}{-363.79} \\
+03-10 & 13:30 & 15:36 & QQQ & SHORT & 613.17 & 607.04 & \textcolor{wingreen}{+1.00\%} & \textcolor{wingreen}{+1.00\%} & 126m & target & \textcolor{wingreen}{1,226.34} \\
 03-12 & 09:40 & 11:13 & QQQ & SHORT & 603.73 & 597.69 & \textcolor{wingreen}{+1.00\%} & \textcolor{wingreen}{+1.00\%} & 93m & target & \textcolor{wingreen}{1,207.46} \\
 03-13 & 09:45 & 10:56 & QQQ & SHORT & 602.76 & 596.73 & \textcolor{wingreen}{+1.00\%} & \textcolor{wingreen}{+1.00\%} & 71m & target & \textcolor{wingreen}{1,205.52} \\
 03-13 & 11:00 & 11:43 & QQQ & LONG & 595.98 & 594.19 & \textcolor{lossred}{-0.30\%} & \textcolor{lossred}{-0.30\%} & 43m & stop & \textcolor{lossred}{-357.59} \\
@@ -426,44 +416,104 @@ DOWN Days & 16 & 56.2 & 1.92 \\
 \endfoot
 \bottomrule
 \endlastfoot
-03-02 & 09:40 & 10:25 & SPX & LONG & 24.85 & 40.00 & \textcolor{wingreen}{+0.46\%} & \textcolor{wingreen}{+60.97\%} & 45m & agent\_exit & \textcolor{wingreen}{1,515.00} \\
-03-02 & 09:45 & 10:15 & QQQ & SHORT & 2.77 & 1.29 & \textcolor{lossred}{-0.38\%} & \textcolor{lossred}{-53.51\%} & 30m & hard\_stop & \textcolor{lossred}{-148.50} \\
-03-02 & 11:00 & 11:45 & QQQ & SHORT & 0.61 & 0.23 & \textcolor{lossred}{-0.35\%} & \textcolor{lossred}{-61.79\%} & 45m & hard\_stop & \textcolor{lossred}{-304.00} \\
-03-02 & 11:35 & 11:40 & SPX & SHORT & 7.60 & 4.20 & \textcolor{lossred}{-0.20\%} & \textcolor{lossred}{-44.74\%} & 5m & agent\_exit & \textcolor{lossred}{-340.00} \\
-03-02 & 12:00 & 12:40 & SPX & SHORT & 4.05 & 2.55 & \textcolor{wingreen}{+0.00\%} & \textcolor{lossred}{-37.04\%} & 40m & agent\_exit & \textcolor{lossred}{-150.00} \\
-03-02 & 12:55 & 14:30 & QQQ & SHORT & 0.60 & 0.26 & \textcolor{lossred}{-0.06\%} & \textcolor{lossred}{-57.85\%} & 95m & hard\_stop & \textcolor{lossred}{-280.00} \\
-03-02 & 13:40 & 14:20 & SPX & SHORT & 15.45 & 5.95 & \textcolor{lossred}{-0.21\%} & \textcolor{lossred}{-61.49\%} & 40m & hard\_stop & \textcolor{lossred}{-950.00} \\
-03-03 & 11:25 & 11:50 & QQQ & SHORT & 1.06 & 0.66 & \textcolor{lossred}{-0.25\%} & \textcolor{lossred}{-37.91\%} & 25m & agent\_exit & \textcolor{lossred}{-160.00} \\
-03-03 & 11:50 & 13:25 & SPX & SHORT & 23.75 & 7.35 & \textcolor{lossred}{-0.36\%} & \textcolor{lossred}{-69.05\%} & 95m & hard\_stop & \textcolor{lossred}{-1,640.00} \\
-03-03 & 12:30 & 13:25 & QQQ & SHORT & 0.79 & 0.34 & \textcolor{lossred}{-0.22\%} & \textcolor{lossred}{-56.05\%} & 55m & hard\_stop & \textcolor{lossred}{-264.00} \\
-03-03 & 14:50 & 15:35 & QQQ & SHORT & 0.56 & 0.69 & \textcolor{wingreen}{+0.20\%} & \textcolor{wingreen}{+25.23\%} & 45m & agent\_exit & \textcolor{wingreen}{126.00} \\
-03-04 & 09:40 & 10:25 & SPX & LONG & 11.30 & 25.65 & \textcolor{wingreen}{+0.66\%} & \textcolor{wingreen}{+126.99\%} & 45m & agent\_exit & \textcolor{wingreen}{1,435.00} \\
-03-04 & 09:45 & 10:30 & QQQ & LONG & 1.69 & 5.45 & \textcolor{wingreen}{+1.15\%} & \textcolor{wingreen}{+223.15\%} & 45m & agent\_exit & \textcolor{wingreen}{752.00} \\
-03-04 & 11:35 & 12:30 & SPX & SHORT & 20.55 & 20.65 & \textcolor{wingreen}{+0.02\%} & \textcolor{wingreen}{+0.49\%} & 55m & agent\_exit & \textcolor{wingreen}{10.00} \\
-03-04 & 11:40 & 11:45 & QQQ & SHORT & 1.73 & 1.17 & \textcolor{lossred}{-0.18\%} & \textcolor{lossred}{-32.28\%} & 5m & agent\_exit & \textcolor{lossred}{-112.00} \\
-03-04 & 12:05 & 13:50 & QQQ & SHORT & 1.40 & 0.68 & \textcolor{lossred}{-0.15\%} & \textcolor{lossred}{-51.61\%} & 105m & hard\_stop & \textcolor{lossred}{-216.00} \\
-03-04 & 13:55 & 14:55 & SPX & SHORT & 6.50 & 3.15 & \textcolor{lossred}{-0.06\%} & \textcolor{lossred}{-51.54\%} & 60m & hard\_stop & \textcolor{lossred}{-335.00} \\
-03-05 & 10:20 & 11:05 & SPX & SHORT & 19.85 & 30.90 & \textcolor{wingreen}{+0.30\%} & \textcolor{wingreen}{+55.67\%} & 45m & agent\_exit & \textcolor{wingreen}{1,105.00} \\
-03-05 & 10:25 & 11:10 & QQQ & SHORT & 0.73 & 0.71 & \textcolor{wingreen}{+0.10\%} & \textcolor{lossred}{-2.05\%} & 45m & agent\_exit & \textcolor{lossred}{-9.00} \\
-03-05 & 12:20 & 13:55 & QQQ & SHORT & 0.56 & 1.75 & \textcolor{wingreen}{+0.72\%} & \textcolor{wingreen}{+214.41\%} & 95m & agent\_exit & \textcolor{wingreen}{1,071.00} \\
-03-05 & 13:00 & 13:45 & SPX & LONG & 21.60 & 26.85 & \textcolor{wingreen}{+0.20\%} & \textcolor{wingreen}{+24.31\%} & 45m & agent\_exit & \textcolor{wingreen}{525.00} \\
-03-06 & 09:40 & 10:30 & SPX & LONG & 22.80 & 29.45 & \textcolor{wingreen}{+0.45\%} & \textcolor{wingreen}{+29.17\%} & 50m & agent\_exit & \textcolor{wingreen}{665.00} \\
-03-06 & 09:40 & 10:45 & QQQ & LONG & 2.43 & 3.39 & \textcolor{wingreen}{+0.63\%} & \textcolor{wingreen}{+39.51\%} & 65m & agent\_exit & \textcolor{wingreen}{192.00} \\
-03-06 & 12:25 & 13:10 & QQQ & SHORT & 2.32 & 2.38 & \textcolor{wingreen}{+0.08\%} & \textcolor{wingreen}{+2.80\%} & 45m & agent\_exit & \textcolor{wingreen}{13.00} \\
-03-06 & 14:20 & 15:35 & QQQ & SHORT & 1.90 & 5.81 & \textcolor{wingreen}{+0.75\%} & \textcolor{wingreen}{+205.25\%} & 75m & agent\_exit & \textcolor{wingreen}{782.00} \\
-03-09 & 09:40 & 12:45 & QQQ & LONG & 3.80 & 9.03 & \textcolor{wingreen}{+1.26\%} & \textcolor{wingreen}{+137.50\%} & 185m & max\_time & \textcolor{wingreen}{522.50} \\
-03-09 & 09:55 & 10:55 & SPX & LONG & 38.70 & 72.25 & \textcolor{wingreen}{+0.76\%} & \textcolor{wingreen}{+86.69\%} & 60m & agent\_exit & \textcolor{wingreen}{3,355.00} \\
-03-09 & 12:25 & 14:35 & SPX & SHORT & 13.70 & 5.60 & \textcolor{lossred}{-0.10\%} & \textcolor{lossred}{-59.12\%} & 130m & hard\_stop & \textcolor{lossred}{-810.00} \\
-03-10 & 09:40 & 10:35 & SPX & SHORT & 7.05 & 2.73 & \textcolor{lossred}{-0.21\%} & \textcolor{lossred}{-61.35\%} & 55m & hard\_stop & \textcolor{lossred}{-432.50} \\
-03-10 & 10:25 & 10:45 & QQQ & SHORT & 2.84 & 0.92 & \textcolor{lossred}{-0.49\%} & \textcolor{lossred}{-67.78\%} & 20m & hard\_stop & \textcolor{lossred}{-192.50} \\
-03-10 & 11:15 & 12:35 & QQQ & SHORT & 0.48 & 0.23 & \textcolor{lossred}{-0.11\%} & \textcolor{lossred}{-53.61\%} & 80m & hard\_stop & \textcolor{lossred}{-260.00} \\
-03-10 & 12:00 & 13:30 & SPX & SHORT & 24.40 & 10.50 & \textcolor{lossred}{-0.27\%} & \textcolor{lossred}{-56.97\%} & 90m & hard\_stop & \textcolor{lossred}{-1,390.00} \\
-03-11 & 10:40 & 10:55 & QQQ & SHORT & 1.96 & 1.33 & \textcolor{lossred}{-0.16\%} & \textcolor{lossred}{-31.89\%} & 15m & agent\_exit & \textcolor{lossred}{-125.00} \\
-03-11 & 11:25 & 12:10 & QQQ & SHORT & 3.56 & 5.41 & \textcolor{wingreen}{+0.38\%} & \textcolor{wingreen}{+51.61\%} & 45m & agent\_exit & \textcolor{wingreen}{184.00} \\
-03-11 & 13:20 & 13:30 & QQQ & SHORT & 1.08 & 0.74 & \textcolor{lossred}{-0.11\%} & \textcolor{lossred}{-31.34\%} & 10m & agent\_exit & \textcolor{lossred}{-136.00} \\
-03-11 & 13:50 & 14:40 & QQQ & SHORT & 2.01 & 1.65 & \textcolor{lossred}{-0.01\%} & \textcolor{lossred}{-18.11\%} & 50m & agent\_exit & \textcolor{lossred}{-73.00} \\
-03-12 & 09:40 & 10:35 & QQQ & SHORT & 1.67 & 4.32 & \textcolor{wingreen}{+0.85\%} & \textcolor{wingreen}{+159.76\%} & 55m & agent\_exit & \textcolor{wingreen}{798.00} \\
-03-13 & 09:45 & 10:55 & QQQ & SHORT & 2.25 & 6.03 & \textcolor{wingreen}{+0.90\%} & \textcolor{wingreen}{+167.18\%} & 70m & agent\_exit & \textcolor{wingreen}{754.00} \\
+03-02 & 09:40 & 10:30 & SPX & LONG & 33.80 & 46.85 & \textcolor{wingreen}{+0.35\%} & \textcolor{wingreen}{+38.61\%} & 50m & agent\_exit & \textcolor{wingreen}{1,305.00} \\
+03-02 & 09:50 & 10:15 & QQQ & SHORT & 2.45 & 1.62 & \textcolor{lossred}{-0.16\%} & \textcolor{lossred}{-33.74\%} & 25m & agent\_exit & \textcolor{lossred}{-165.00} \\
+03-02 & 10:15 & 10:55 & QQQ & SHORT & 2.52 & 2.95 & \textcolor{wingreen}{+0.17\%} & \textcolor{wingreen}{+16.87\%} & 40m & agent\_exit & \textcolor{wingreen}{42.50} \\
+03-02 & 10:40 & 11:15 & SPX & SHORT & 17.75 & 8.85 & \textcolor{lossred}{-0.21\%} & \textcolor{lossred}{-50.14\%} & 35m & hard\_stop & \textcolor{lossred}{-890.00} \\
+03-02 & 10:55 & 11:10 & QQQ & SHORT & 1.85 & 0.84 & \textcolor{lossred}{-0.35\%} & \textcolor{lossred}{-54.20\%} & 15m & hard\_stop & \textcolor{lossred}{-200.00} \\
+03-02 & 11:15 & 12:15 & QQQ & SHORT & 1.54 & 0.73 & \textcolor{lossred}{-0.23\%} & \textcolor{lossred}{-52.43\%} & 60m & hard\_stop & \textcolor{lossred}{-243.00} \\
+03-02 & 11:20 & 11:45 & SPX & SHORT & 6.95 & 3.55 & \textcolor{lossred}{-0.24\%} & \textcolor{lossred}{-48.92\%} & 25m & agent\_exit & \textcolor{lossred}{-340.00} \\
+03-02 & 11:45 & 12:15 & SPX & SHORT & 12.80 & 11.40 & \textcolor{wingreen}{+0.01\%} & \textcolor{lossred}{-10.94\%} & 30m & agent\_exit & \textcolor{lossred}{-140.00} \\
+03-02 & 12:15 & 12:25 & SPX & SHORT & 11.40 & 7.95 & \textcolor{lossred}{-0.10\%} & \textcolor{lossred}{-30.26\%} & 10m & agent\_exit & \textcolor{lossred}{-345.00} \\
+03-02 & 12:15 & 12:50 & QQQ & SHORT & 1.08 & 0.77 & \textcolor{lossred}{-0.07\%} & \textcolor{lossred}{-28.84\%} & 35m & agent\_exit & \textcolor{lossred}{-124.00} \\
+03-02 & 12:35 & 12:55 & SPX & SHORT & 10.00 & 4.95 & \textcolor{lossred}{-0.15\%} & \textcolor{lossred}{-50.50\%} & 20m & hard\_stop & \textcolor{lossred}{-505.00} \\
+03-02 & 12:50 & 13:20 & QQQ & SHORT & 1.17 & 1.21 & \textcolor{wingreen}{+0.05\%} & \textcolor{wingreen}{+2.55\%} & 30m & agent\_exit & \textcolor{wingreen}{12.00} \\
+03-02 & 12:55 & 13:45 & SPX & SHORT & 10.50 & 15.20 & \textcolor{wingreen}{+0.13\%} & \textcolor{wingreen}{+44.76\%} & 50m & agent\_exit & \textcolor{wingreen}{470.00} \\
+03-02 & 13:20 & 13:50 & QQQ & SHORT & 0.73 & 1.08 & \textcolor{wingreen}{+0.14\%} & \textcolor{wingreen}{+47.62\%} & 30m & agent\_exit & \textcolor{wingreen}{210.00} \\
+03-02 & 13:45 & 14:20 & SPX & SHORT & 11.70 & 4.25 & \textcolor{lossred}{-0.20\%} & \textcolor{lossred}{-63.68\%} & 35m & hard\_stop & \textcolor{lossred}{-745.00} \\
+03-02 & 13:50 & 14:10 & QQQ & SHORT & 0.66 & 0.34 & \textcolor{lossred}{-0.12\%} & \textcolor{lossred}{-47.33\%} & 20m & agent\_exit & \textcolor{lossred}{-217.00} \\
+03-02 & 14:15 & 14:50 & QQQ & SHORT & 0.91 & 0.33 & \textcolor{lossred}{-0.18\%} & \textcolor{lossred}{-64.09\%} & 35m & hard\_stop & \textcolor{lossred}{-290.00} \\
+03-03 & 11:25 & 11:50 & QQQ & SHORT & 0.60 & 0.36 & \textcolor{lossred}{-0.25\%} & \textcolor{lossred}{-39.67\%} & 25m & agent\_exit & \textcolor{lossred}{-192.00} \\
+03-03 & 11:50 & 12:40 & SPX & SHORT & 23.75 & 26.05 & \textcolor{wingreen}{+0.13\%} & \textcolor{wingreen}{+9.68\%} & 50m & agent\_exit & \textcolor{wingreen}{230.00} \\
+03-03 & 11:50 & 12:20 & QQQ & SHORT & 1.92 & 1.90 & \textcolor{wingreen}{+0.07\%} & \textcolor{lossred}{-1.30\%} & 30m & agent\_exit & \textcolor{lossred}{-5.00} \\
+03-03 & 12:20 & 12:50 & QQQ & SHORT & 1.90 & 1.62 & \textcolor{lossred}{-0.06\%} & \textcolor{lossred}{-14.78\%} & 30m & agent\_exit & \textcolor{lossred}{-56.00} \\
+03-03 & 12:45 & 13:15 & SPX & SHORT & 19.30 & 18.75 & \textcolor{wingreen}{+0.02\%} & \textcolor{lossred}{-2.85\%} & 30m & agent\_exit & \textcolor{lossred}{-55.00} \\
+03-03 & 12:50 & 13:30 & QQQ & SHORT & 2.13 & 1.14 & \textcolor{lossred}{-0.24\%} & \textcolor{lossred}{-46.48\%} & 40m & agent\_exit & \textcolor{lossred}{-198.00} \\
+03-03 & 13:15 & 13:25 & SPX & SHORT & 18.75 & 9.00 & \textcolor{lossred}{-0.29\%} & \textcolor{lossred}{-52.00\%} & 10m & hard\_stop & \textcolor{lossred}{-975.00} \\
+03-03 & 13:30 & 13:45 & QQQ & SHORT & 1.63 & 1.01 & \textcolor{lossred}{-0.22\%} & \textcolor{lossred}{-38.04\%} & 15m & agent\_exit & \textcolor{lossred}{-186.00} \\
+03-03 & 13:35 & 13:55 & SPX & SHORT & 12.20 & 7.70 & \textcolor{lossred}{-0.12\%} & \textcolor{lossred}{-36.89\%} & 20m & agent\_exit & \textcolor{lossred}{-450.00} \\
+03-03 & 13:50 & 14:20 & QQQ & SHORT & 1.86 & 2.22 & \textcolor{wingreen}{+0.13\%} & \textcolor{wingreen}{+19.30\%} & 30m & agent\_exit & \textcolor{wingreen}{72.00} \\
+03-03 & 13:55 & 14:25 & SPX & SHORT & 7.70 & 7.80 & \textcolor{wingreen}{+0.06\%} & \textcolor{wingreen}{+1.30\%} & 30m & agent\_exit & \textcolor{wingreen}{10.00} \\
+03-03 & 14:20 & 14:50 & QQQ & SHORT & 0.64 & 0.33 & \textcolor{lossred}{-0.20\%} & \textcolor{lossred}{-48.82\%} & 30m & agent\_exit & \textcolor{lossred}{-217.00} \\
+03-03 & 14:25 & 14:50 & SPX & SHORT & 12.60 & 7.60 & \textcolor{lossred}{-0.16\%} & \textcolor{lossred}{-39.68\%} & 25m & agent\_exit & \textcolor{lossred}{-500.00} \\
+03-03 & 14:50 & 15:30 & SPX & SHORT & 12.40 & 16.45 & \textcolor{wingreen}{+0.15\%} & \textcolor{wingreen}{+32.66\%} & 40m & agent\_exit & \textcolor{wingreen}{405.00} \\
+03-03 & 14:50 & 15:20 & QQQ & SHORT & 1.44 & 2.48 & \textcolor{wingreen}{+0.27\%} & \textcolor{wingreen}{+72.22\%} & 30m & agent\_exit & \textcolor{wingreen}{312.00} \\
+03-03 & 15:20 & 15:35 & QQQ & SHORT & 1.01 & 0.69 & \textcolor{lossred}{-0.07\%} & \textcolor{lossred}{-31.19\%} & 15m & agent\_exit & \textcolor{lossred}{-126.00} \\
+03-03 & 15:30 & 16:00 & SPX & SHORT & 9.25 & 13.10 & \textcolor{wingreen}{+0.12\%} & \textcolor{wingreen}{+41.62\%} & 30m & agent\_exit & \textcolor{wingreen}{385.00} \\
+03-04 & 09:40 & 10:15 & SPX & LONG & 6.80 & 8.70 & \textcolor{wingreen}{+0.32\%} & \textcolor{wingreen}{+27.94\%} & 35m & agent\_exit & \textcolor{wingreen}{190.00} \\
+03-04 & 09:45 & 10:15 & QQQ & LONG & 2.67 & 4.11 & \textcolor{wingreen}{+0.50\%} & \textcolor{wingreen}{+54.22\%} & 30m & agent\_exit & \textcolor{wingreen}{144.50} \\
+03-04 & 10:25 & 10:55 & QQQ & SHORT & 2.36 & 2.37 & \textcolor{wingreen}{+0.04\%} & \textcolor{wingreen}{+0.42\%} & 30m & agent\_exit & \textcolor{wingreen}{2.00} \\
+03-04 & 10:55 & 11:05 & QQQ & SHORT & 2.37 & 1.48 & \textcolor{lossred}{-0.23\%} & \textcolor{lossred}{-37.34\%} & 10m & agent\_exit & \textcolor{lossred}{-177.00} \\
+03-04 & 11:00 & 11:30 & SPX & SHORT & 7.10 & 8.95 & \textcolor{wingreen}{+0.10\%} & \textcolor{wingreen}{+26.06\%} & 30m & agent\_exit & \textcolor{wingreen}{185.00} \\
+03-04 & 11:30 & 11:55 & QQQ & SHORT & 1.93 & 1.12 & \textcolor{lossred}{-0.22\%} & \textcolor{lossred}{-41.97\%} & 25m & agent\_exit & \textcolor{lossred}{-162.00} \\
+03-04 & 11:35 & 12:05 & SPX & SHORT & 12.40 & 7.65 & \textcolor{lossred}{-0.11\%} & \textcolor{lossred}{-38.31\%} & 30m & agent\_exit & \textcolor{lossred}{-475.00} \\
+03-04 & 11:55 & 12:40 & QQQ & SHORT & 1.12 & 0.94 & \textcolor{lossred}{-0.02\%} & \textcolor{lossred}{-15.63\%} & 45m & agent\_exit & \textcolor{lossred}{-70.00} \\
+03-04 & 12:05 & 12:55 & SPX & SHORT & 14.05 & 12.80 & \textcolor{lossred}{-0.00\%} & \textcolor{lossred}{-8.90\%} & 50m & agent\_exit & \textcolor{lossred}{-125.00} \\
+03-04 & 12:40 & 13:10 & QQQ & SHORT & 1.37 & 1.17 & \textcolor{lossred}{-0.02\%} & \textcolor{lossred}{-14.65\%} & 30m & agent\_exit & \textcolor{lossred}{-60.00} \\
+03-04 & 12:55 & 13:30 & SPX & SHORT & 12.80 & 13.25 & \textcolor{wingreen}{+0.02\%} & \textcolor{wingreen}{+3.52\%} & 35m & agent\_exit & \textcolor{wingreen}{45.00} \\
+03-04 & 13:10 & 13:50 & QQQ & SHORT & 1.17 & 0.68 & \textcolor{lossred}{-0.13\%} & \textcolor{lossred}{-42.06\%} & 40m & agent\_exit & \textcolor{lossred}{-196.00} \\
+03-04 & 13:30 & 13:55 & SPX & SHORT & 10.25 & 6.50 & \textcolor{lossred}{-0.08\%} & \textcolor{lossred}{-36.59\%} & 25m & agent\_exit & \textcolor{lossred}{-375.00} \\
+03-05 & 10:25 & 10:55 & QQQ & SHORT & 3.00 & 2.00 & \textcolor{lossred}{-0.22\%} & \textcolor{lossred}{-33.22\%} & 30m & agent\_exit & \textcolor{lossred}{-99.50} \\
+03-05 & 11:15 & 11:50 & QQQ & SHORT & 2.78 & 1.90 & \textcolor{lossred}{-0.16\%} & \textcolor{lossred}{-31.65\%} & 35m & agent\_exit & \textcolor{lossred}{-88.00} \\
+03-05 & 12:05 & 12:45 & SPX & SHORT & 7.70 & 38.45 & \textcolor{wingreen}{+0.76\%} & \textcolor{wingreen}{+399.35\%} & 40m & agent\_exit & \textcolor{wingreen}{3,075.00} \\
+03-06 & 09:50 & 10:30 & SPX & LONG & 41.05 & 61.75 & \textcolor{wingreen}{+0.52\%} & \textcolor{wingreen}{+50.43\%} & 40m & agent\_exit & \textcolor{wingreen}{2,070.00} \\
+03-06 & 10:00 & 10:25 & QQQ & SHORT & 3.70 & 1.84 & \textcolor{lossred}{-0.49\%} & \textcolor{lossred}{-50.20\%} & 25m & hard\_stop & \textcolor{lossred}{-185.50} \\
+03-06 & 10:25 & 10:55 & QQQ & SHORT & 2.27 & 2.28 & \textcolor{wingreen}{+0.10\%} & \textcolor{wingreen}{+0.44\%} & 30m & agent\_exit & \textcolor{wingreen}{2.00} \\
+03-06 & 10:55 & 11:05 & QQQ & SHORT & 2.81 & 1.54 & \textcolor{lossred}{-0.42\%} & \textcolor{lossred}{-45.37\%} & 10m & agent\_exit & \textcolor{lossred}{-127.50} \\
+03-06 & 11:15 & 12:20 & QQQ & SHORT & 2.25 & 1.75 & \textcolor{lossred}{-0.09\%} & \textcolor{lossred}{-22.27\%} & 65m & agent\_exit & \textcolor{lossred}{-100.00} \\
+03-06 & 12:20 & 12:55 & QQQ & SHORT & 0.29 & 0.41 & \textcolor{wingreen}{+0.22\%} & \textcolor{wingreen}{+42.11\%} & 35m & agent\_exit & \textcolor{wingreen}{204.00} \\
+03-06 & 12:55 & 13:15 & QQQ & SHORT & 1.80 & 0.80 & \textcolor{lossred}{-0.38\%} & \textcolor{lossred}{-55.83\%} & 20m & hard\_stop & \textcolor{lossred}{-201.00} \\
+03-06 & 13:15 & 14:05 & QQQ & SHORT & 0.56 & 0.92 & \textcolor{wingreen}{+0.37\%} & \textcolor{wingreen}{+64.86\%} & 50m & agent\_exit & \textcolor{wingreen}{324.00} \\
+03-06 & 14:05 & 14:15 & QQQ & SHORT & 1.88 & 1.10 & \textcolor{lossred}{-0.19\%} & \textcolor{lossred}{-41.38\%} & 10m & agent\_exit & \textcolor{lossred}{-156.00} \\
+03-06 & 14:25 & 14:55 & QQQ & SHORT & 1.78 & 1.54 & \textcolor{lossred}{-0.03\%} & \textcolor{lossred}{-13.20\%} & 30m & agent\_exit & \textcolor{lossred}{-47.00} \\
+03-06 & 15:00 & 15:05 & QQQ & SHORT & 0.17 & 0.10 & \textcolor{lossred}{-0.15\%} & \textcolor{lossred}{-42.42\%} & 5m & agent\_exit & \textcolor{lossred}{-210.00} \\
+03-09 & 09:45 & 10:25 & QQQ & LONG & 1.27 & 1.43 & \textcolor{wingreen}{+0.29\%} & \textcolor{wingreen}{+13.04\%} & 40m & agent\_exit & \textcolor{wingreen}{49.50} \\
+03-09 & 09:55 & 10:25 & SPX & LONG & 27.25 & 36.20 & \textcolor{wingreen}{+0.33\%} & \textcolor{wingreen}{+32.84\%} & 30m & agent\_exit & \textcolor{wingreen}{895.00} \\
+03-09 & 11:05 & 11:30 & SPX & SHORT & 18.35 & 12.15 & \textcolor{lossred}{-0.19\%} & \textcolor{lossred}{-33.79\%} & 25m & agent\_exit & \textcolor{lossred}{-620.00} \\
+03-09 & 11:25 & 11:55 & QQQ & SHORT & 0.27 & 0.17 & \textcolor{lossred}{-0.12\%} & \textcolor{lossred}{-33.96\%} & 30m & agent\_exit & \textcolor{lossred}{-162.00} \\
+03-09 & 11:30 & 12:05 & SPX & SHORT & 13.85 & 11.70 & \textcolor{wingreen}{+0.01\%} & \textcolor{lossred}{-15.52\%} & 35m & agent\_exit & \textcolor{lossred}{-215.00} \\
+03-09 & 11:55 & 12:30 & QQQ & SHORT & 1.46 & 1.00 & \textcolor{lossred}{-0.16\%} & \textcolor{lossred}{-30.93\%} & 35m & agent\_exit & \textcolor{lossred}{-135.00} \\
+03-09 & 12:05 & 12:45 & SPX & SHORT & 21.10 & 9.45 & \textcolor{lossred}{-0.32\%} & \textcolor{lossred}{-55.21\%} & 40m & hard\_stop & \textcolor{lossred}{-1,165.00} \\
+03-09 & 12:30 & 13:15 & QQQ & SHORT & 1.84 & 1.65 & \textcolor{wingreen}{+0.03\%} & \textcolor{lossred}{-10.05\%} & 45m & agent\_exit & \textcolor{lossred}{-37.00} \\
+03-09 & 12:45 & 13:25 & SPX & SHORT & 13.30 & 31.00 & \textcolor{wingreen}{+0.42\%} & \textcolor{wingreen}{+133.08\%} & 40m & agent\_exit & \textcolor{wingreen}{1,770.00} \\
+03-09 & 13:15 & 13:45 & QQQ & SHORT & 0.20 & 0.35 & \textcolor{wingreen}{+0.40\%} & \textcolor{wingreen}{+82.05\%} & 30m & agent\_exit & \textcolor{wingreen}{400.00} \\
+03-09 & 13:25 & 14:00 & SPX & SHORT & 17.15 & 15.75 & \textcolor{wingreen}{+0.03\%} & \textcolor{lossred}{-8.16\%} & 35m & agent\_exit & \textcolor{lossred}{-140.00} \\
+03-09 & 13:45 & 14:10 & QQQ & SHORT & 1.83 & 1.19 & \textcolor{lossred}{-0.13\%} & \textcolor{lossred}{-35.25\%} & 25m & agent\_exit & \textcolor{lossred}{-129.00} \\
+03-09 & 14:00 & 14:20 & SPX & SHORT & 10.20 & 3.85 & \textcolor{lossred}{-0.20\%} & \textcolor{lossred}{-62.25\%} & 20m & hard\_stop & \textcolor{lossred}{-635.00} \\
+03-09 & 14:10 & 14:30 & QQQ & SHORT & 1.19 & 0.70 & \textcolor{lossred}{-0.13\%} & \textcolor{lossred}{-40.51\%} & 20m & agent\_exit & \textcolor{lossred}{-192.00} \\
+03-09 & 14:20 & 14:55 & SPX & SHORT & 11.85 & 7.15 & \textcolor{lossred}{-0.11\%} & \textcolor{lossred}{-39.66\%} & 35m & agent\_exit & \textcolor{lossred}{-470.00} \\
+03-09 & 14:30 & 14:35 & QQQ & SHORT & 1.19 & 0.68 & \textcolor{lossred}{-0.18\%} & \textcolor{lossred}{-43.51\%} & 5m & agent\_exit & \textcolor{lossred}{-208.00} \\
+03-09 & 14:50 & 15:20 & QQQ & SHORT & 1.10 & 0.42 & \textcolor{lossred}{-0.40\%} & \textcolor{lossred}{-61.64\%} & 30m & hard\_stop & \textcolor{lossred}{-270.00} \\
+03-09 & 14:55 & 15:20 & SPX & SHORT & 9.65 & 4.10 & \textcolor{lossred}{-0.36\%} & \textcolor{lossred}{-57.51\%} & 25m & hard\_stop & \textcolor{lossred}{-555.00} \\
+03-09 & 15:20 & 15:30 & SPX & SHORT & 16.95 & 2.35 & \textcolor{lossred}{-0.60\%} & \textcolor{lossred}{-86.14\%} & 10m & hard\_stop & \textcolor{lossred}{-1,460.00} \\
+03-09 & 15:20 & 15:30 & QQQ & SHORT & 1.17 & 0.18 & \textcolor{lossred}{-0.64\%} & \textcolor{lossred}{-84.12\%} & 10m & hard\_stop & \textcolor{lossred}{-392.00} \\
+03-09 & 15:45 & 16:00 & SPX & SHORT & 11.10 & 0.70 & \textcolor{lossred}{-0.07\%} & \textcolor{lossred}{-93.69\%} & 15m & hard\_stop & \textcolor{lossred}{-1,040.00} \\
+03-10 & 10:25 & 10:45 & QQQ & SHORT & 3.42 & 1.21 & \textcolor{lossred}{-0.49\%} & \textcolor{lossred}{-64.71\%} & 20m & hard\_stop & \textcolor{lossred}{-221.00} \\
+03-10 & 10:35 & 10:50 & SPX & SHORT & 25.20 & 16.40 & \textcolor{lossred}{-0.20\%} & \textcolor{lossred}{-34.92\%} & 15m & agent\_exit & \textcolor{lossred}{-880.00} \\
+03-10 & 10:55 & 11:25 & QQQ & SHORT & 2.13 & 1.71 & \textcolor{lossred}{-0.09\%} & \textcolor{lossred}{-19.91\%} & 30m & agent\_exit & \textcolor{lossred}{-85.00} \\
+03-10 & 11:25 & 12:05 & QQQ & SHORT & 2.25 & 2.71 & \textcolor{wingreen}{+0.14\%} & \textcolor{wingreen}{+20.94\%} & 40m & agent\_exit & \textcolor{wingreen}{94.00} \\
+03-10 & 12:00 & 12:50 & SPX & SHORT & 1.98 & 1.62 & \textcolor{wingreen}{+0.07\%} & \textcolor{lossred}{-17.72\%} & 50m & agent\_exit & \textcolor{lossred}{-70.00} \\
+03-10 & 12:05 & 12:40 & QQQ & SHORT & 1.52 & 0.90 & \textcolor{lossred}{-0.18\%} & \textcolor{lossred}{-40.92\%} & 35m & agent\_exit & \textcolor{lossred}{-186.00} \\
+03-10 & 12:40 & 13:25 & QQQ & SHORT & 0.21 & 0.11 & \textcolor{lossred}{-0.14\%} & \textcolor{lossred}{-43.90\%} & 45m & agent\_exit & \textcolor{lossred}{-216.00} \\
+03-10 & 12:50 & 13:05 & SPX & SHORT & 11.05 & 6.75 & \textcolor{lossred}{-0.14\%} & \textcolor{lossred}{-38.91\%} & 15m & agent\_exit & \textcolor{lossred}{-430.00} \\
+03-10 & 13:10 & 13:30 & SPX & SHORT & 14.70 & 8.30 & \textcolor{lossred}{-0.18\%} & \textcolor{lossred}{-43.54\%} & 20m & agent\_exit & \textcolor{lossred}{-640.00} \\
+03-10 & 13:25 & 14:00 & QQQ & SHORT & 1.21 & 1.47 & \textcolor{wingreen}{+0.10\%} & \textcolor{wingreen}{+21.49\%} & 35m & agent\_exit & \textcolor{wingreen}{104.00} \\
+03-10 & 13:30 & 14:05 & SPX & SHORT & 10.50 & 16.10 & \textcolor{wingreen}{+0.17\%} & \textcolor{wingreen}{+53.33\%} & 35m & agent\_exit & \textcolor{wingreen}{560.00} \\
+03-10 & 14:00 & 14:30 & QQQ & SHORT & 1.47 & 3.58 & \textcolor{wingreen}{+0.41\%} & \textcolor{wingreen}{+143.88\%} & 30m & agent\_exit & \textcolor{wingreen}{634.50} \\
+03-10 & 14:05 & 15:00 & SPX & SHORT & 9.80 & 39.05 & \textcolor{wingreen}{+0.52\%} & \textcolor{wingreen}{+298.47\%} & 55m & agent\_exit & \textcolor{wingreen}{2,925.00} \\
+03-12 & 09:40 & 10:10 & QQQ & SHORT & 1.67 & 2.77 & \textcolor{wingreen}{+0.45\%} & \textcolor{wingreen}{+66.67\%} & 30m & agent\_exit & \textcolor{wingreen}{333.00} \\
+03-13 & 09:45 & 10:25 & QQQ & SHORT & 2.76 & 4.30 & \textcolor{wingreen}{+0.40\%} & \textcolor{wingreen}{+55.98\%} & 40m & agent\_exit & \textcolor{wingreen}{154.50} \\
+03-13 & 11:00 & 11:30 & QQQ & LONG & 2.79 & 2.25 & \textcolor{lossred}{-0.09\%} & \textcolor{lossred}{-19.21\%} & 30m & agent\_exit & \textcolor{lossred}{-53.50} \\
 \end{longtable}
 \end{center}
 \clearpage

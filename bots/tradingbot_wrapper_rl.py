@@ -100,7 +100,7 @@ SPOT_SOURCES = {
 
 # Timing
 LOOP_INTERVAL = 65  # seconds — aligned with realtime_feed's 60s poll interval
-COOLDOWN_MINUTES = 30
+COOLDOWN_MINUTES = 20
 
 # GBM Spot-Based TP/SL Configuration (mirrors backtest_rl.py simulate_mlp_only)
 GBM_TARGET_LONG = 0.010       # +1.0% spot move target for LONG
@@ -1035,7 +1035,7 @@ class RLTradingBot:
         # ── RSI ──
         prices_list = [p for _, p in self.price_history[ticker]]
         features["rsi"] = simple_rsi(prices_list) / 100.0
-        features["vol_relative"] = 0.2
+        features["vol_relative"] = 1.0  # neutral — no intraday volume available in RT yet
 
         # ── Greek ratios — safe_log to match training ──
         # Training: "gamma_vanna_ratio": safe_log(exp["net_gamma"] / (abs(exp["net_vanna"]) + 1e-6))
@@ -1282,34 +1282,9 @@ class RLTradingBot:
             features["gap_direction"] = 0.0
             features["overnight_vs_ib_ratio"] = 0.0
             
-        # ── IV and VRP context ──
-        if ticker not in getattr(self, 'iv_history', {}):
-            self.iv_history = {t: [] for t in self.systems.keys()}
-        self.iv_history[ticker].append(atm_iv_norm)
-        while len(self.iv_history[ticker]) > 30:
-            if hasattr(self.iv_history[ticker], 'popleft'):
-                self.iv_history[ticker].popleft()
-            else:
-                self.iv_history[ticker].pop(0)
-            
-        iv_hist_arr = self.iv_history[ticker]
-        iv_min = min(iv_hist_arr)
-        iv_max = max(iv_hist_arr)
-        iv_pct = float((atm_iv_norm - iv_min) / (iv_max - iv_min)) if iv_max > iv_min else 0.5
-        iv_mean = np.mean(iv_hist_arr)
-        iv_std = np.std(iv_hist_arr)
-        iv_zscore = float((atm_iv_norm - iv_mean) / iv_std) if iv_std > 1e-6 else 0.0
-        
-        features["iv_percentile"] = iv_pct
-        features["iv_zscore"] = float(np.clip(iv_zscore, -3.0, 3.0) / 3.0)
-        
-        # We don't have intraday minute-by-minute total volume easily accessible in RT yet, 
-        # so vol_relative defaults to 1.0 (neutral) to match training average for now.
-        vol_relative = features.get("vol_relative", 1.0)
-        
-        features["rvol_iv_log"] = safe_log(vol_relative / (atm_iv_norm + 1e-6))
-        features["rvol_trend"] = float(np.clip((vol_relative - 1.0)/1.0, -2.0, 2.0))
-        features["rvol_regime"] = 1.0 if vol_relative > 1.2 else (0.0 if vol_relative < 0.8 else 0.5)
+        # NOTE: IV/VRP context already computed at lines 1018-1033 (iv_history)
+        # and lines 1151-1170 (rvol_iv_log/rvol_trend/rvol_regime from historical closes).
+        # DO NOT duplicate — the earlier computations are canonical.
 
         # ── Time encoding ──
         features["time_sin"] = float(np.sin(2 * np.pi * minutes_since_open / 390))
@@ -1417,23 +1392,8 @@ class RLTradingBot:
         features["nearest_level_id"] = float(LEVEL_IDENTITY_MAP[best_name])
         features["nearest_level_dist_bps"] = float(np.clip(best_dist * 10000.0, 0.0, BPS_CLIP)) if best_name != "none" else float(BPS_CLIP)
 
-        # ── Signal Persistence & TLT ──
-        # Net charm history handles persistence
-        if ticker not in getattr(self, 'net_charm_history', {}):
-            self.net_charm_history = {t: deque(maxlen=5) for t in self.systems.keys()}
-            
-        current_charm_sign = math.copysign(1.0, features.get("net_charm", 0.0))
-        self.net_charm_history[ticker].append(current_charm_sign)
-        
-        signal_persistence_5m = 0.0
-        if len(self.net_charm_history[ticker]) > 0:
-            hist_list = list(self.net_charm_history[ticker])
-            current_bias = hist_list[-1]
-            for x in reversed(hist_list):
-                if x == current_bias:
-                    signal_persistence_5m += current_bias
-                else: break
-        features["signal_persistence_5m"] = signal_persistence_5m
+        # NOTE: signal_persistence_5m already computed at lines 1172-1180
+        # using raw exp_0dte["net_charm"] (correct). DO NOT duplicate.
         
         # TLT missing values (assume proxy or flat if missing)
         for label in ["tlt_ret_1m", "tlt_ret_5m", "tlt_ret_15m"]:
