@@ -108,7 +108,7 @@ GBM_TARGET_SHORT = 0.010      # +1.0% spot move target for SHORT
 GBM_STOP_PCT = 0.003          # 0.3% adverse spot move stop loss
 GBM_MAX_HOLD_MINUTES = 180    # 3 hours max hold
 # IB constants
-LEVEL_PROXIMITY_THRESHOLD = 0.0004
+LEVEL_PROXIMITY_THRESHOLD = 0.0015
 
 logging.basicConfig(
     level=logging.INFO,
@@ -1236,8 +1236,8 @@ class RLTradingBot:
                         gamma_lower = float(g_by_strike.iloc[idx_lower])
                         speed_raw = (gamma_upper - gamma_lower) / (2.0 * delta_s)
                         speed_scaled = speed_raw * (day_atr ** 2)
-                        speed_norm = float(np.sign(speed_scaled) * np.log1p(np.abs(speed_scaled)))
-                        gamma_speed_val = float(np.clip(speed_norm, -20.0, 20.0))
+                        speed_norm_val = float(np.sign(speed_scaled) * np.log1p(np.abs(speed_scaled)))
+                        gamma_speed_val = float(np.clip(speed_norm_val, -20.0, 20.0))
         features["gamma_speed"] = safe_log(gamma_speed_val)
 
         # ── Charm Acceleration ──
@@ -1360,11 +1360,12 @@ class RLTradingBot:
         # ── Interaction features ──
         near_ib_high = 1 if is_near_level(spot, ib_high) else 0
         near_ib_low  = 1 if is_near_level(spot, ib_low) else 0
-        speed_norm = features.get("gamma_speed", 0.0)
+        # Use raw gamma_speed_val to match training scaling for interaction features
+        # (collect_training_data line 1318 uses gamma_speed_val * near_ib_high)
         charm_accel_norm = features.get("charm_accel_weighted", 0.0)
 
-        features["speed_x_near_ib_high"] = speed_norm * near_ib_high
-        features["speed_x_near_ib_low"]  = speed_norm * near_ib_low
+        features["speed_x_near_ib_high"] = gamma_speed_val * near_ib_high
+        features["speed_x_near_ib_low"]  = gamma_speed_val * near_ib_low
         features["charm_accel_x_near_ib_high"] = charm_accel_norm * near_ib_high
         features["charm_accel_x_near_ib_low"]  = charm_accel_norm * near_ib_low
 
@@ -1528,7 +1529,7 @@ class RLTradingBot:
             logger.info(f"[{ticker}] NO-TRADE: spot=0")
             return
 
-        FROZEN_CYCLES_THRESHOLD = 2  # ciclos de 30s = 60s congelado
+        FROZEN_CYCLES_THRESHOLD = 5  # ciclos de 65s = ~5.4 mins congelado
         prev_spot = self._frozen_spot_prev.get(ticker, 0.0)
 
         if prev_spot > 0 and spot == prev_spot:
@@ -1536,21 +1537,22 @@ class RLTradingBot:
             count = self._frozen_spot_count[ticker]
 
             if count >= FROZEN_CYCLES_THRESHOLD:
-                # Resetear prev_features: en el próximo ciclo los deltas
-                # (spot_change, gamma_change, etc.) serán 0 en vez de
-                # acumularse sobre una base contaminada. Pero al menos
-                # el GBM no verá un vector de "todo igual que siempre".
+                # Si el mercado está muerto de verdad por >5 min, reseteamos prev_features
+                # para que el próximo cambio real no tenga un momentum contaminado.
                 self.prev_features.pop(ticker, None)
                 logger.warning(
                     f"[{ticker}] SPOT CONGELADO {count} ciclos @ {spot:.2f} "
-                    f"— prev_features reseteado, saltando ciclo"
+                    f"— prev_features reseteado para evitar momentum rancio"
                 )
-                return  # no procesar hasta que el feed se recupere
+                # NOTA: No hacemos 'return' prematuro. Dejamos que el bot procese
+                # aunque el spot sea igual. Si no hay señal, el modelo dirá HOLD.
+                # Pero no bloqueamos el ciclo por "prev_spot == spot" para permitirlo
+                # en mercados laterales o feeds lentos.
 
             else:
-                logger.warning(
-                    f"[{ticker}] spot repetido ({count}/{FROZEN_CYCLES_THRESHOLD}) "
-                    f"@ {spot:.2f} — vigilando"
+                logger.info(
+                    f"[{ticker}] spot lateral/repetido ({count}/{FROZEN_CYCLES_THRESHOLD}) "
+                    f"@ {spot:.2f} — procesando normalmente"
                 )
         else:
             # Spot cambió: limpiar contador
