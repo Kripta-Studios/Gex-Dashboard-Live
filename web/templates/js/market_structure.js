@@ -410,7 +410,7 @@ const MARKET_STRUCTURES = [
     {
         "id": 23,
         "name": "Pre-breakout Convexity Pocket / Gamma Squeeze",
-        "condition": { "IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos" },
+        "condition": { "IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Pos", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos" },
         "regime": "Compression",
         "action": "Forced Buying",
         "actionDirection": "BUY",
@@ -826,8 +826,8 @@ async function updateMarketStructureUI() {
             // Regime
             if (struct.regime && struct.regime !== 'UNKNOWN') {
                 const regimeColor = struct.regime === 'Trend Day' ? '#00E676' :
-                                    struct.regime === 'Compression' ? '#42A5F5' :
-                                    struct.regime.includes('Transitional') ? '#AB47BC' : '#888';
+                    struct.regime === 'Compression' ? '#42A5F5' :
+                        struct.regime.includes('Transitional') ? '#AB47BC' : '#888';
                 detailsHTML += `<div class="ms-detail-item"><span class="ms-detail-label">Regime</span><span class="ms-detail-value" style="color:${regimeColor}">${struct.regime}</span></div>`;
             }
 
