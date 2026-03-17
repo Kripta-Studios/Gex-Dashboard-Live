@@ -254,8 +254,8 @@ class RealtimeOptionsFeed:
             }
 
             try:
-                async with httpx.AsyncClient(timeout=30.0) as hx:
-                    response = await hx.get(f"{base_url}{endpoint}", params=params)
+                # Reuse self.client.session for connection pooling
+                response = await self.client.session.get(f"{base_url}{endpoint}", params=params, timeout=120.0)
 
                 if response.status_code != 200:
                     logger.warning(
