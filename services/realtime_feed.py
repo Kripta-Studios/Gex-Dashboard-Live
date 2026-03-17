@@ -39,6 +39,7 @@ from thetadata_api.corrector import fix_dataframe
 from thetadata_api.utils import fetch_with_interval_fallback, parse_response, get_logger
 from services.compute_features import get_net_exposures_from_parquet, calculate_exact_t
 from neural.hybrid_model import FEATURE_COLUMNS
+from modules.utils import get_market_trading_days
 
 logger = get_logger("RealtimeFeed")
 
@@ -348,6 +349,10 @@ class RealtimeOptionsFeed:
             if res and not res.data.empty:
                 df = res.data.copy()
                 df = self._fix_ohlc_zeros(df)
+                if "timestamp" in df.columns:
+                    df["timestamp"] = pd.to_datetime(df["timestamp"].astype(str), format="mixed", errors="coerce")
+                elif "time" in df.columns:
+                    df["time"] = pd.to_datetime(df["time"].astype(str), format="mixed", errors="coerce")
                 return df
         except Exception as e:
             logger.warning(f"Error deriving spot {symbol}: {e}")
@@ -503,15 +508,18 @@ class RealtimeOptionsFeed:
     # ─────────────────────────────────────────
 
     def _get_previous_trading_days(self, n: int = 5) -> list[date]:
-        """Return the last N trading days before today (Mon-Fri, no weekends)."""
+        """Return the last N trading days BEFORE today using the market calendar."""
+        # Get today's date in ET
         today = datetime.now(ET).date()
-        result = []
-        candidate = today - timedelta(days=1)
-        while len(result) < n and candidate > today - timedelta(days=30):
-            if candidate.weekday() < 5:  # Mon-Fri
-                result.append(candidate)
-            candidate -= timedelta(days=1)
-        return result
+        
+        # We want the N trading days PRIOR to today.
+        # get_market_trading_days(n+1) will include today if it's a trading day,
+        # so we fetch n+1 and exclude today to be safe and accurate.
+        all_recent = get_market_trading_days(n + 1, end_date=today)
+        
+        # Filter out today if it's in the list, then take last N
+        result = [d for d in all_recent if d < today]
+        return result[-n:]
 
     async def _backfill_historical_spot(self):
         """
@@ -537,6 +545,10 @@ class RealtimeOptionsFeed:
                     res = await self.client.fetch_underlying_ohlc(symbol, day_str, interval="1m")
                     if res and not res.data.empty:
                         df = self._fix_ohlc_zeros(res.data.copy())
+                        if "timestamp" in df.columns:
+                            df["timestamp"] = pd.to_datetime(df["timestamp"].astype(str), format="mixed", errors="coerce")
+                        elif "time" in df.columns:
+                            df["time"] = pd.to_datetime(df["time"].astype(str), format="mixed", errors="coerce")
                         df.to_parquet(filepath, engine='pyarrow', index=False)
                         logger.info(f"  ✓ spot_{symbol} {day_str} ({len(df)} rows)")
                     else:
@@ -636,9 +648,9 @@ class RealtimeOptionsFeed:
             try:
                 df = pd.read_parquet(path)
                 if "timestamp" in df.columns:
-                    df["dt"] = pd.to_datetime(df["timestamp"])
+                    df["dt"] = pd.to_datetime(df["timestamp"].astype(str), format="mixed", errors="coerce")
                 elif "time" in df.columns:
-                    df["dt"] = pd.to_datetime(df["time"])
+                    df["dt"] = pd.to_datetime(df["time"].astype(str), format="mixed", errors="coerce")
                 else:
                     self.historical_ibs[ticker].append(None)
                     continue
@@ -778,9 +790,9 @@ class RealtimeOptionsFeed:
         if df.empty:
             return
         if "timestamp" in df.columns:
-            df["dt"] = pd.to_datetime(df["timestamp"])
+            df["dt"] = pd.to_datetime(df["timestamp"].astype(str), format="mixed", errors="coerce")
         elif "time" in df.columns:
-            df["dt"] = pd.to_datetime(df["time"])
+            df["dt"] = pd.to_datetime(df["time"].astype(str), format="mixed", errors="coerce")
         else:
             return
         df = df.sort_values("dt")

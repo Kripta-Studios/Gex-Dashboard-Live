@@ -392,10 +392,38 @@ def temporal_train_val_test_split(
     df = df.sort_values('_date')
     
     max_date = df['_date'].max()
-    test_start = max_date - timedelta(days=test_months * 30)
-    val_start = test_start - timedelta(days=val_months * 30)
-    train_start = val_start - timedelta(days=train_months * 30)
     
+    # Instead of naive timedelta(days=30), we count the actual trading days present in the DF
+    unique_dates = sorted(df['_date'].dt.date.unique())
+    n_days = len(unique_dates)
+    
+    # Approx 21 trading days per month
+    test_days_count = test_months * 21
+    val_days_count = val_months * 21
+    train_days_count = train_months * 21
+    
+    # Extract boundaries from unique_dates list
+    if n_days > (test_days_count + val_days_count):
+        test_dates = unique_dates[-test_days_count:]
+        val_dates = unique_dates[-(test_days_count + val_days_count) : -test_days_count]
+        
+        test_start = pd.Timestamp(test_dates[0])
+        val_start = pd.Timestamp(val_dates[0])
+        
+        # Train start: either train_months * 21 or beginning of data
+        if n_days > (test_days_count + val_days_count + train_days_count):
+            train_dates = unique_dates[-(test_days_count + val_days_count + train_days_count) : -(test_days_count + val_days_count)]
+            train_start = pd.Timestamp(train_dates[0])
+        else:
+            train_start = pd.Timestamp(unique_dates[0])
+    else:
+        # Fallback for very small datasets: 60/20/20% split
+        idx_test = int(n_days * 0.8)
+        idx_val = int(n_days * 0.6)
+        test_start = pd.Timestamp(unique_dates[idx_test]) if idx_test < n_days else max_date
+        val_start = pd.Timestamp(unique_dates[idx_val]) if idx_val < n_days else test_start
+        train_start = pd.Timestamp(unique_dates[0])
+
     train_df = df[(df['_date'] >= train_start) & (df['_date'] < val_start)]
     val_df = df[(df['_date'] >= val_start) & (df['_date'] < test_start)]
     test_df = df[df['_date'] >= test_start]
@@ -460,40 +488,31 @@ def walk_forward_splits(
         
         return splits
 
-    # Use date_col (already converted to datetime above) for splitting.
-    # Do NOT use the hardcoded '_date' column — callers may have their own
-    # '_date' with a different value (e.g. diagnose_pipeline adds it before
-    # calling us, causing column contamination).
-    min_date = df[date_col].min()
-    max_date = df[date_col].max()
-    
     splits = []
-    current_train_start = min_date
+    # Walk-forward logic using trading days counts
+    train_days = train_window_months * 21
+    test_days  = test_window_months * 21
+    step_days  = step_months * 21
     
-    # FIX: Purge gap between train and test to prevent target autocorrelation
-    # from leaking across the boundary. With 180-minute rolling lookahead,
-    # the last 180 min of training data share target overlap with the first
-    # 180 min of test data. Purging this gap eliminates the data bleeding.
+    # Purge gap to prevent target autocorrelation leak (180 mins)
     purge_gap = timedelta(minutes=180)
-
-    while True:
-        train_end = current_train_start + timedelta(days=train_window_months * 30)
-        test_end = train_end + timedelta(days=test_window_months * 30)
+    
+    for i in range(0, n_unique_days - train_days - test_days + 1, step_days):
+        train_dates = unique_dates[i : i + train_days]
+        test_dates = unique_dates[i + train_days : i + train_days + test_days]
         
-        if test_end > max_date:
-            break
+        train_mask = df[date_col].dt.date.isin(train_dates)
+        # Apply purge gap to test mask
+        train_end_ts = pd.Timestamp(train_dates[-1]) + timedelta(days=1) # start of next day
+        test_start_boundary = train_end_ts + purge_gap
         
-        train_mask = (df[date_col] >= current_train_start) & (df[date_col] < train_end)
-        test_mask  = (df[date_col] >= train_end + purge_gap) & (df[date_col] < test_end)
+        test_mask = (df[date_col].dt.date.isin(test_dates)) & (df[date_col] >= test_start_boundary)
         
-        # Keep _date in the split for downstream date annotation (diagnose_pipeline uses it)
         train_split = df[train_mask].copy()
         test_split  = df[test_mask].copy()
         
         if len(train_split) > 100 and len(test_split) > 10:
             splits.append((train_split, test_split))
-        
-        current_train_start += timedelta(days=step_months * 30)
     
     return splits
 

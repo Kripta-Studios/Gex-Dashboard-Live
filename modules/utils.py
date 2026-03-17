@@ -21,12 +21,38 @@ def get_friday_of_this_week():
         friday = today
     elif weekday < 4:
         # Aún no es viernes: sumar los días necesarios
-        friday = today + timedelta(days=(4 - weekday))
+        friday = today + datetime.timedelta(days=(4 - weekday))
     else:
         # Sábado (5) o domingo (6): restar días hasta el viernes anterior
-        friday = today - timedelta(days=(weekday - 4))
+        friday = today - datetime.timedelta(days=(weekday - 4))
 
     return friday.strftime("%Y %b %d")
+
+
+def get_market_trading_days(n_days: int, end_date: datetime.date = None) -> list:
+    """
+    Returns the last n_days trading dates before (and including) end_date.
+    Uses XNYS (NYSE) calendar to account for weekends and holidays.
+    """
+    if end_date is None:
+        end_date = datetime.date.today()
+
+    # We need a range to fetch the calendar sessions.
+    # To be safe for n_days, we look back approx 3 * n_days + 10 calendar days.
+    start_lookback = end_date - datetime.timedelta(days=max(n_days * 3 + 10, 30))
+
+    try:
+        # Using the same pattern as is_third_friday which seems compatible with local library version
+        calendar = xcals.get_calendar("XNYS", start=pd.Timestamp(start_lookback), end=pd.Timestamp(end_date))
+        sessions = calendar.sessions.to_pydatetime()
+        trading_days = [s.date() for s in sessions if s.date() <= end_date]
+    except (TypeError, AttributeError):
+        # Fallback for different exchange_calendars versions if the above fails
+        calendar = xcals.get_calendar("XNYS")
+        sessions = calendar.sessions_in_range(pd.Timestamp(start_lookback), pd.Timestamp(end_date))
+        trading_days = [s.date() for s in sessions]
+
+    return trading_days[-n_days:]
 
 
 @cachetools.cached(

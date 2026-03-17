@@ -236,26 +236,28 @@ def check_mlp_edge(df, feature_cols, model_path, norm_path,
 
     print(f"  Walk-forward params: train={train_months}m  test={test_months}m  step=1m")
 
-    # Build splits manually (avoids the _date/date_col ambiguity in data_utils)
-    from datetime import timedelta
+    # FIX [calendar-bug]: use unique trading days instead of naive 30-day timedelta
     unique_dates = sorted(df['_date'].dt.date.unique())
-    min_date = df['_date'].min()
-    max_date = df['_date'].max()
-
+    n_unique_days = len(unique_dates)
+    
+    train_days_count = train_months * 21
+    test_days_count = test_months * 21
+    step_days_count = 21 # 1 month
+    
     raw_splits = []          # list of (tr_df, ts_df, test_start_date)
-    current_start = min_date
-    while True:
-        train_end = current_start + timedelta(days=train_months * 30)
-        test_end  = train_end    + timedelta(days=test_months  * 30)
-        if test_end > max_date:
-            break
-        tr_mask = (df['_date'] >= current_start) & (df['_date'] < train_end)
-        ts_mask = (df['_date'] >= train_end)      & (df['_date'] < test_end)
+    for i in range(0, n_unique_days - train_days_count - test_days_count + 1, step_days_count):
+        train_dates = unique_dates[i : i + train_days_count]
+        test_dates = unique_dates[i + train_days_count : i + train_days_count + test_days_count]
+        
+        tr_mask = df['_date'].dt.date.isin(train_dates)
+        ts_mask = df['_date'].dt.date.isin(test_dates)
+        
         tr = df[tr_mask].copy()
         ts = df[ts_mask].copy()
+        
         if len(tr) > 100 and len(ts) > 10:
-            raw_splits.append((tr, ts, train_end))
-        current_start += timedelta(days=30)
+            # For backfill/reporting, we use the date of the first test day
+            raw_splits.append((tr, ts, pd.Timestamp(test_dates[0])))
 
     print(f"  Total splits generated: {len(raw_splits)}")
 
@@ -638,22 +640,25 @@ def check_rl_edge(df, feature_cols, rl_path, options_cache_dir,
     df_copy['_date'] = pd.to_datetime(df_copy['date'].astype(str), format='%Y%m%d', errors='coerce')
     df_copy = df_copy.sort_values('_date').reset_index(drop=True)
 
+    # Build Walk-Forward Splits using trading day counts
     unique_dates = sorted(df_copy['_date'].dt.date.unique())
-    min_date = df_copy['_date'].min()
-    max_date = df_copy['_date'].max()
-
+    n_unique_days = len(unique_dates)
+    
+    train_days_count = train_months * 21
+    test_days_count = test_months * 21
+    step_days_count = 21 # 1 month
+    
     raw_splits = []
-    current_start = min_date
-    while True:
-        train_end = current_start + timedelta(days=train_months * 30)
-        test_end  = train_end    + timedelta(days=test_months  * 30)
-        if test_end > max_date:
-            break
-        ts_mask = (df_copy['_date'] >= train_end) & (df_copy['_date'] < test_end)
+    for i in range(0, n_unique_days - train_days_count - test_days_count + 1, step_days_count):
+        train_dates = unique_dates[i : i + train_days_count]
+        test_dates = unique_dates[i + train_days_count : i + train_days_count + test_days_count]
+        
+        ts_mask = df_copy['_date'].dt.date.isin(test_dates)
         ts_df = df_copy[ts_mask].copy()
+        
         if len(ts_df) > 10:
-            raw_splits.append((ts_df, train_end, test_end))
-        current_start += timedelta(days=30)
+            # (test_df, start_t, end_t)
+            raw_splits.append((ts_df, pd.Timestamp(test_dates[0]), pd.Timestamp(test_dates[-1])))
 
     prod_windows = load_prod_windows()
 
