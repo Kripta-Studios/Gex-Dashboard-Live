@@ -35,7 +35,7 @@ class PPOAgent(nn.Module):
 
         # ── Shared backbone ──
         layers = []
-        prev = state_dim
+        prev = self.state_dim
         for h in hidden_dims:
             layers.extend([
                 nn.Linear(prev, h),
