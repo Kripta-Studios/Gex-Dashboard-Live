@@ -238,12 +238,12 @@ def is_near_level(price: float, level: float, threshold: float = LEVEL_PROXIMITY
 def calculate_fibonacci_levels(ib_high: float, ib_low: float) -> dict:
     ib_range = ib_high - ib_low
     return {
-        "fib_127_up": ib_high + ib_range * 0.272,
-        "fib_161_up": ib_high + ib_range * 0.618,
-        "fib_200_up": ib_high + ib_range * 1.0,
-        "fib_127_dn": ib_low - ib_range * 0.272,
-        "fib_161_dn": ib_low - ib_range * 0.618,
-        "fib_200_dn": ib_low - ib_range * 1.0,
+        "fib_127_up": ib_low + (ib_range * 1.272),
+        "fib_161_up": ib_low + (ib_range * 1.618),
+        "fib_200_up": ib_low + (ib_range * 2.0),
+        "fib_127_dn": ib_low + (ib_range * -0.272),
+        "fib_161_dn": ib_low + (ib_range * -0.618),
+        "fib_200_dn": ib_low + (ib_range * -1.0),
     }
 
 def simple_rsi(prices: list, period: int = 14) -> float:
@@ -264,12 +264,15 @@ def sign_divergence(a: float, b: float) -> float:
         return 0.5
     return 1.0 if (a > 0) != (b > 0) else 0.0
 
-def rbf_confluence(level_a, level_b, spot_price: float, sigma: float = 0.05) -> float:
-    if spot_price <= 0 or level_a is None or level_b is None or level_a == 0 or level_b == 0:
+def rbf_confluence(level_a: float, level_b: float, spot_price: float, sigma: float = 0.05) -> float:
+    if level_a is None or level_b is None or spot_price is None:
         return 0.0
-    d = abs(level_a - level_b) / spot_price
-    v = np.exp(-d**2 / (2 * sigma**2))
-    return float(np.clip(v, 0.0, 1.0)) if np.isfinite(v) else 0.0
+    if spot_price <= 0:
+        return 0.0
+    dist_a = abs(spot_price - level_a) / spot_price
+    dist_b = abs(spot_price - level_b) / spot_price
+    overlap_dist = abs(level_a - level_b) / spot_price
+    return float(np.exp(-0.5 * (dist_a/sigma)**2) * np.exp(-0.5 * (dist_b/sigma)**2) * np.exp(-0.5 * (overlap_dist/(2*sigma))**2))
 
 
 # ═════════════════════════════════════════════════════════════════════════
@@ -935,12 +938,8 @@ class RLTradingBot:
             "wk_net_gamma": 0.0, "wk_net_vanna": 0.0, "wk_net_charm": 0.0,
             "wk_net_dgex": 0.0, "wk_net_zomma": 0.0, "wk_net_delta": 0.0,
             "wk_net_vega": 0.0, "wk_net_vomma": 0.0,
-            "wk_dist_to_max_gamma": 0.0, "wk_dist_to_min_gamma": 0.0,
-            "wk_dist_to_max_dgex": 0.0, "wk_dist_to_min_dgex": 0.0,
-            "wk_dist_to_max_vega": 0.0, "wk_dist_to_min_vega": 0.0,
-            "wk_dist_to_max_vomma": 0.0, "wk_dist_to_min_vomma": 0.0,
             "wk_gamma_regime": 0.5, "wk_vanna_bullish": 0,
-            "wk_dgex_sticky": 0, "wk_zomma_stabilizing": 0, "wk_vega_elevated": 0,
+            "wk_dgex_sticky": 0, "wk_zomma_stabilizing": 0,
         }
 
         if exp_weekly:
@@ -954,20 +953,11 @@ class RLTradingBot:
                 "wk_net_delta": safe_log(exp_weekly["net_delta"]),
                 "wk_net_vega":  safe_log(exp_weekly["net_vega"]),
                 "wk_net_vomma": safe_log(exp_weekly["net_vomma"]),
-                "wk_dist_to_max_gamma": dist_bps(spot, exp_weekly["max_gamma_strike"]),
-                "wk_dist_to_min_gamma": dist_bps(spot, exp_weekly["min_gamma_strike"]),
-                "wk_dist_to_max_dgex":  dist_bps(spot, exp_weekly["max_dgex_strike"]),
-                "wk_dist_to_min_dgex":  dist_bps(spot, exp_weekly["min_dgex_strike"]),
-                "wk_dist_to_max_vega":  dist_bps(spot, exp_weekly["max_vega_strike"]),
-                "wk_dist_to_min_vega":  dist_bps(spot, exp_weekly["min_vega_strike"]),
-                "wk_dist_to_max_vomma": dist_bps(spot, exp_weekly["max_vomma_strike"]),
-                "wk_dist_to_min_vomma": dist_bps(spot, exp_weekly["min_vomma_strike"]),
                 "wk_gamma_regime": classify_gamma_regime(exp_weekly["net_gamma"]) / 2.0,
                 # thresholds on raw values (pre-safe_log) — 0.1 matches training intent
                 "wk_vanna_bullish":     1 if exp_weekly["net_vanna"] > 0.1 else 0,
                 "wk_dgex_sticky":       1 if exp_weekly["net_dgex"]  > 0.1 else 0,
                 "wk_zomma_stabilizing": 1 if exp_weekly["net_zomma"] > 0.1 else 0,
-                "wk_vega_elevated":     1 if abs(exp_weekly["net_vega"]) > 0.1 else 0,
             })
         features.update(wk_defaults)
 
@@ -1035,7 +1025,7 @@ class RLTradingBot:
         # ── RSI ──
         prices_list = [p for _, p in self.price_history[ticker]]
         features["rsi"] = simple_rsi(prices_list) / 100.0
-        features["vol_relative"] = 1.0  # neutral — no intraday volume available in RT yet
+        features["vol_relative"] = 0.2  # matches training: min(~1.0, 5.0) / 5.0 ≈ 0.2
 
         # ── Greek ratios — safe_log to match training ──
         # Training: "gamma_vanna_ratio": safe_log(exp["net_gamma"] / (abs(exp["net_vanna"]) + 1e-6))
@@ -1266,21 +1256,10 @@ class RLTradingBot:
             else:
                 features[f"ret_{label}_vol_adj"] = 0.0
                 
-        # ── Gap & IB features ──
-        if self.historical_ibs[ticker] and self.historical_ibs[ticker][0] is not None:
-            prev_close = self.historical_ibs[ticker][0].get('close', spot)
-            if prev_close and prev_close > 0:
-                gap_pct = (spot - prev_close) / prev_close
-                features["gap_pct"] = float(np.clip(gap_pct * 100.0, -5.0, 5.0))
-                features["gap_direction"] = 1.0 if gap_pct > 0.001 else (-1.0 if gap_pct < -0.001 else 0.0)
-                if ib_high > ib_low:
-                    features["overnight_vs_ib_ratio"] = float(np.clip(abs(spot - prev_close) / (ib_high - ib_low), 0.0, 10.0))
-                else:
-                    features["overnight_vs_ib_ratio"] = 0.0
-        if "gap_pct" not in features:
-            features["gap_pct"] = 0.0
-            features["gap_direction"] = 0.0
-            features["overnight_vs_ib_ratio"] = 0.0
+        # NOTE: gap_pct/gap_direction/overnight_vs_ib_ratio already computed
+        # at lines 1111-1129 using today_open (correct, matching training).
+        # DO NOT recompute here — the old code used current spot instead of
+        # today_open, and multiplied by 100, completely mismatching training.
             
         # NOTE: IV/VRP context already computed at lines 1018-1033 (iv_history)
         # and lines 1151-1170 (rvol_iv_log/rvol_trend/rvol_regime from historical closes).

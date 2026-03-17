@@ -63,7 +63,7 @@ def dist_bps(spot: float, level: float) -> float:
 # ─────────────────────────────────────────────
 # LEVEL PROXIMITY THRESHOLD (mirrors bot)
 # ─────────────────────────────────────────────
-LEVEL_PROXIMITY_THRESHOLD = 0.0004
+LEVEL_PROXIMITY_THRESHOLD = 0.0015
 
 # ─────────────────────────────────────────────
 # CONFIGURATION
@@ -233,7 +233,7 @@ class RealtimeOptionsFeed:
         window_start = (now_et - timedelta(seconds=60)).strftime("%H:%M:%S")
         window_end   = now_et.strftime("%H:%M:%S")
 
-        base_url = getattr(self.client, "base_url", "http://127.0.0.1:25503/v3")
+        base_url = getattr(self.client, "base_url", "http://91.99.90.39:25503/v3")
         all_rows = []
 
         # No client-side strike filter — API fetches all strikes with strike="*"
@@ -581,12 +581,12 @@ class RealtimeOptionsFeed:
     def _calculate_fibonacci_levels(ib_high: float, ib_low: float) -> dict:
         ib_range = ib_high - ib_low
         return {
-            "fib_127_up": ib_high + ib_range * 0.272,
-            "fib_161_up": ib_high + ib_range * 0.618,
-            "fib_200_up": ib_high + ib_range * 1.0,
-            "fib_127_dn": ib_low - ib_range * 0.272,
-            "fib_161_dn": ib_low - ib_range * 0.618,
-            "fib_200_dn": ib_low - ib_range * 1.0,
+            "fib_127_up": ib_low + (ib_range * 1.272),
+            "fib_161_up": ib_low + (ib_range * 1.618),
+            "fib_200_up": ib_low + (ib_range * 2.0),
+            "fib_127_dn": ib_low + (ib_range * -0.272),
+            "fib_161_dn": ib_low + (ib_range * -0.618),
+            "fib_200_dn": ib_low + (ib_range * -1.0),
         }
 
     @staticmethod
@@ -611,11 +611,14 @@ class RealtimeOptionsFeed:
 
     @staticmethod
     def _rbf_confluence(level_a, level_b, spot_price: float, sigma: float = 0.05) -> float:
-        if spot_price <= 0 or level_a is None or level_b is None or level_a == 0 or level_b == 0:
+        if level_a is None or level_b is None or spot_price is None:
             return 0.0
-        d = abs(level_a - level_b) / spot_price
-        v = np.exp(-d ** 2 / (2 * sigma ** 2))
-        return float(np.clip(v, 0.0, 1.0)) if np.isfinite(v) else 0.0
+        if spot_price <= 0:
+            return 0.0
+        dist_a = abs(spot_price - level_a) / spot_price
+        dist_b = abs(spot_price - level_b) / spot_price
+        overlap_dist = abs(level_a - level_b) / spot_price
+        return float(np.exp(-0.5 * (dist_a/sigma)**2) * np.exp(-0.5 * (dist_b/sigma)**2) * np.exp(-0.5 * (overlap_dist/(2*sigma))**2))
 
     @staticmethod
     def _get_price_n_minutes_ago(history: deque, current_min: float, n_min: int):
