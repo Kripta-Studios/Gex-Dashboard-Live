@@ -89,7 +89,7 @@ python -m rl.training `
   --episode-index ..\rl_data\episode_index.parquet `
   --options-cache ..\rl_data\rl_options_cache_chunks `
   --save-dir ..\rl_models `
-  --total-updates 600 `
+  --total-updates 500 `
   --workers 32
 
 if ($LASTEXITCODE -ne 0) {

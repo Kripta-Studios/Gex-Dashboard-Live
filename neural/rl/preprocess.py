@@ -356,13 +356,13 @@ def preprocess_options_for_rl(episode_index: pd.DataFrame,
             done = i + 1
             now = time.time()
             recent_times.append((now, done))
-            if len(recent_times) > 15: # Sliding window of last 15 dates
+            if len(recent_times) > 50: # Sliding window of last 50 dates
                 recent_times.pop(0)
 
             pct = done / total_dates * 100
             
             # Calculate stable ETA
-            if len(recent_times) >= 3:
+            if len(recent_times) >= 30:
                 # Window-based velocity (dates per second)
                 t_old, d_old = recent_times[0]
                 t_new, d_new = recent_times[-1]
