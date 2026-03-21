@@ -43,7 +43,7 @@ def is_market_open(check_date) -> bool:
 # [PEGAR AQUÍ LA FUNCIÓN calcular_spx_media QUE ME PASASTE]
 # Para que el script funcione, asegúrate de importar o copiar esas funciones aquí.
 # Por brevedad, asumo que las tienes en el mismo archivo o importadas.
-async def calc_exposures(
+def calc_exposures(
     option_data,
     ticker,
     expir,
@@ -226,6 +226,30 @@ async def calc_exposures(
         0,
     )
 
+    # SPEED EXPOSURE
+    option_data["call_speedex"] = np.where(
+        nonzero_call_cond,
+        stats.calc_speed_ex(
+            call_gex_2d,
+            np_spot_price,
+            opt_call_ivs,
+            time_till_exp,
+            call_dp
+        )[0],
+        0,
+    )
+    option_data["put_speedex"] = np.where(
+        nonzero_put_cond,
+        stats.calc_speed_ex(
+            put_gex_2d,
+            np_spot_price,
+            opt_put_ivs,
+            time_till_exp,
+            put_dp
+        )[0],
+        0,
+    )
+
     # ==============================================================================
 
     # Calculate total and scale down
@@ -256,6 +280,10 @@ async def calc_exposures(
 
     option_data["total_vomma"] = (
         option_data["call_vommex"].to_numpy() + option_data["put_vommex"].to_numpy()
+    ) / 10**9
+
+    option_data["total_speed"] = (
+        option_data["call_speedex"].to_numpy() + option_data["put_speedex"].to_numpy()
     ) / 10**9
 
     df_agg_strike_mean = (
@@ -319,6 +347,11 @@ async def calc_exposures(
         "ex_fri": np.array([]),
     }
     totalvomma = {
+        "all": np.array([]),
+        "ex_next": np.array([]),
+        "ex_fri": np.array([]),
+    }
+    totalspeed = {
         "all": np.array([]),
         "ex_next": np.array([]),
         "ex_fri": np.array([]),
@@ -509,6 +542,29 @@ async def calc_exposures(
         0,
     )
 
+    call_speed_ex = np.where(
+        nonzero_call_cond,
+        stats.calc_speed_ex(
+            call_gamma_ex,
+            levels,
+            opt_call_ivs,
+            time_till_exp,
+            call_dp
+        ),
+        0,
+    )
+    put_speed_ex = np.where(
+        nonzero_put_cond,
+        stats.calc_speed_ex(
+            put_gamma_ex,
+            levels,
+            opt_put_ivs,
+            time_till_exp,
+            put_dp
+        ),
+        0,
+    )
+
     totaldelta["all"] = (call_delta_ex.sum(axis=1) + put_delta_ex.sum(axis=1)) / 10**9
     totalgamma["all"] = (call_gamma_ex.sum(axis=1) - put_gamma_ex.sum(axis=1)) / 10**9
     totalvanna["all"] = (call_vanna_ex.sum(axis=1) - put_vanna_ex.sum(axis=1)) / 10**9
@@ -517,6 +573,7 @@ async def calc_exposures(
     totalzomma["all"] = (call_zomma_ex.sum(axis=1) + put_zomma_ex.sum(axis=1)) / 10**9
     totalvega["all"] = (call_vega_ex.sum(axis=1) + put_vega_ex.sum(axis=1)) / 10**9
     totalvomma["all"] = (call_vomma_ex.sum(axis=1) + put_vomma_ex.sum(axis=1)) / 10**9
+    totalspeed["all"] = (call_speed_ex.sum(axis=1) + put_speed_ex.sum(axis=1)) / 10**9
 
     expirs_next_expiry = expirations == first_expiry
     expirs_up_to_monthly_opex = expirations <= this_monthly_opex
@@ -553,6 +610,10 @@ async def calc_exposures(
             np.where(expirs_next_expiry, call_vomma_ex, 0).sum(axis=1)
             + np.where(expirs_next_expiry, put_vomma_ex, 0).sum(axis=1)
         ) / 10**9
+        totalspeed["ex_next"] = (
+            np.where(expirs_next_expiry, call_speed_ex, 0).sum(axis=1)
+            + np.where(expirs_next_expiry, put_speed_ex, 0).sum(axis=1)
+        ) / 10**9
         if expir == "all":
             totaldelta["ex_fri"] = (
                 np.where(expirs_up_to_monthly_opex, call_delta_ex, 0).sum(axis=1)
@@ -586,6 +647,10 @@ async def calc_exposures(
                 np.where(expirs_up_to_monthly_opex, call_vomma_ex, 0).sum(axis=1)
                 + np.where(expirs_up_to_monthly_opex, put_vomma_ex, 0).sum(axis=1)
             ) / 10**9
+            totalspeed["ex_fri"] = (
+                np.where(expirs_up_to_monthly_opex, call_speed_ex, 0).sum(axis=1)
+                + np.where(expirs_up_to_monthly_opex, put_speed_ex, 0).sum(axis=1)
+            ) / 10**9
 
     zero_cross_idx = np.where(np.diff(np.sign(totaldelta["all"])))[0]
     neg_delta = totaldelta["all"][zero_cross_idx]
@@ -605,6 +670,15 @@ async def calc_exposures(
         (pos_strike - neg_strike) * posGamma / (posGamma - negGamma)
     )
 
+    zero_cross_idx = np.where(np.diff(np.sign(totalspeed["all"])))[0]
+    neg_speed = totalspeed["all"][zero_cross_idx]
+    pos_speed = totalspeed["all"][zero_cross_idx + 1]
+    neg_strike = levels[zero_cross_idx]
+    pos_strike = levels[zero_cross_idx + 1]
+    zerospeed = pos_strike - (
+        (pos_strike - neg_strike) * pos_speed / (pos_speed - neg_speed)
+    )
+
     if zerodelta.size > 0:
         zerodelta = zerodelta[0][0]
     else:
@@ -613,6 +687,10 @@ async def calc_exposures(
         zerogamma = zerogamma[0][0]
     else:
         zerogamma = 0
+    if zerospeed.size > 0:
+        zerospeed = zerospeed[0][0]
+    else:
+        zerospeed = 0
 
     return (
         option_data,
@@ -631,8 +709,10 @@ async def calc_exposures(
         totalzomma,
         totalvega,
         totalvomma,
+        totalspeed,
         zerodelta,
         zerogamma,
+        zerospeed,
         call_ivs,
         put_ivs,
     )
@@ -923,7 +1003,7 @@ async def process_ticker(session, ticker, expir, greek_filter="gamma"):
         this_opex, _ = is_third_friday(first, "America/New_York")
         today_str = today.strftime("%Y %b %d, %I:%M %p %Z")
 
-        exp_data = await calc_exposures(
+        exp_data = calc_exposures(
             opt_data,
             t_san,
             exp_clean,
@@ -956,8 +1036,10 @@ async def process_ticker(session, ticker, expir, greek_filter="gamma"):
             "totalzomma",
             "totalvega",
             "totalvomma",
+            "totalspeed",
             "zerodelta",
             "zerogamma",
+            "zerospeed",
             "call_ivs",
             "put_ivs",
             "expir",

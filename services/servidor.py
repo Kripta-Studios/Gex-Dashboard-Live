@@ -307,6 +307,15 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
         if path_only.endswith(".css") or path_only.endswith(".js"):
             filename = path_only.lstrip("/")
             file_path = os.path.join(TEMPLATE_FOLDER, filename)
+
+            # Enforce ADMIN role for sensitive dashboard modules
+            if filename in ["js/ib.js", "js/market_structure.js", "js/charts.js", "js/fourier.js"]:
+                auth_info = self._check_auth()
+                if not auth_info or auth_info.get("role") != "ADMIN":
+                    logging.warning(f"Unauthorized JS access attempt: {filename} from {self.client_address[0]}")
+                    self._send_json(403, {"status": "error", "message": "Admin script access denied"})
+                    return
+
             if os.path.exists(file_path):
                 self.send_response(200)
                 ctype = (
@@ -540,14 +549,20 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
             return
 
         allowed_dirs = ["/json_data/", "/fourier/", "/ib_charts/"]
-
-        is_allowed = False
+        requested_dir = None
         for directory in allowed_dirs:
             if self.path.startswith(directory):
-                is_allowed = True
+                requested_dir = directory
                 break
 
-        if is_allowed:
+        if requested_dir:
+            # Enforce ADMIN role for sensitive analytics data
+            if requested_dir in ["/fourier/", "/ib_charts/"]:
+                auth_info = self._require_auth()
+                if not auth_info or auth_info.get("role") != "ADMIN":
+                    self._send_json(403, {"status": "error", "message": "Access Denied: Admin Role Required"})
+                    return
+
             return http.server.SimpleHTTPRequestHandler.do_GET(self)
         else:
             self.send_error(404, "File not found or Access Denied")
