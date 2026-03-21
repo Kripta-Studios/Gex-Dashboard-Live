@@ -16,6 +16,7 @@ import argparse
 import numpy as np
 import pandas as pd
 import torch
+import pickle
 from pathlib import Path
 from datetime import datetime
 import time as _time
@@ -33,6 +34,7 @@ from hybrid_model import (
 from neural.rl.config import RL_CONFIG, HARD_EXITS, STRIKE_BUCKETS, SNIPER_TOTAL_STATE_DIM, MLP_CONTEXT_DIM, SNIPER_STATE_DIM
 from neural.rl.agent import PPOAgent
 from rl.rewards import compute_step_reward, compute_terminal_reward
+from rl.utils import get_delta_bucket, get_iv_bucket, get_pnl_bucket
 
 
 # ─────────────────────────────────────────────────────────────────────────
@@ -410,15 +412,20 @@ def _load_daily_greeks(date_str: str, ticker: str = "SPXW") -> tuple:
                 valid["_key"] = list(zip(valid["time_str"], valid["strike"].astype(float), valid["right_upper"]))
                 premium_lookup = dict(zip(valid["_key"], valid["mid"]))
 
-                # Build O(1) greeks lookup: (time, strike, right) -> {delta, theta, iv}
+                # Build O(1) greeks lookup: (time, strike, right) -> {delta, theta, iv, gamma, spot}
                 greeks_lookup = {}
-                for key, delta, theta, iv in zip(
+                for key, delta, theta, iv, gamma, spot in zip(
                     valid["_key"],
                     valid["delta"].fillna(0).astype(float),
                     valid.get("theta", pd.Series(0, index=valid.index)).fillna(0).astype(float),
                     valid.get("implied_vol", pd.Series(0.15, index=valid.index)).fillna(0.15).astype(float),
+                    valid.get("gamma", pd.Series(0, index=valid.index)).fillna(0).astype(float),
+                    valid.get("underlying_price", pd.Series(0, index=valid.index)).fillna(0).astype(float),
                 ):
-                    greeks_lookup[key] = {"delta": float(delta), "theta": float(theta), "iv": float(iv)}
+                    greeks_lookup[key] = {
+                        "delta": float(delta), "theta": float(theta),
+                        "iv": float(iv), "gamma": float(gamma), "spot": float(spot),
+                    }
 
                 return df, premium_lookup, greeks_lookup
             except Exception as e:
@@ -488,6 +495,99 @@ def _get_premium_at_time(premium_lookup: dict, strike: float,
     return mid if mid is not None and mid > 0 else None
 
 
+def _build_dynamic_market_features(
+    current_minute: int,
+    entry_spot: float,
+    entry_iv: float,
+    spot_history: list,
+    greeks_lookup: dict,
+    actual_strike: float,
+    option_right: str,
+    future_time: str,
+    entry_minute: int,
+    direction: str,
+    premium_history: list,
+) -> np.ndarray:
+    """
+    Build the 8 dynamic market features the RL agent was trained on.
+    Uses O(1) accumulated lists — no pandas scan per step.
+
+    Index mapping (must match environment._get_dynamic_market_features):
+      [0] spot_change_pct     — % spot change from signal time  (clipped ±2)
+      [1] spot_velocity_5m    — % spot change over last 5 bars  (clipped ±1)
+      [2] atm_iv_change       — relative IV change from signal  (clipped ±1)
+      [3] atm_gamma_norm      — gamma * spot * 0.01             (clipped ±2)
+      [4] spot_vs_entry       — signed % distance spot vs position open (clipped ±3)
+      [5] minutes_remaining   — (390 - mins_since_open) / 390   (0-1)
+      [6] option_momentum_3m  — option price change over last 3 bars  (clipped ±1)
+      [7] underlying_trend    — directional ratio of last ≤20 bars  (-1 to 1)
+    """
+    dynamic = np.zeros(8, dtype=np.float32)
+
+    if entry_spot <= 0:
+        return dynamic
+
+    # Pull current spot from greeks_lookup (any strike at this minute)
+    current_spot = entry_spot  # fallback
+    if greeks_lookup is not None and actual_strike is not None:
+        right_upper = option_right.upper()
+        alt_right = right_upper[0] if len(right_upper) > 1 else right_upper
+        g = (greeks_lookup.get((future_time, actual_strike, right_upper)) or
+             greeks_lookup.get((future_time, actual_strike, alt_right)))
+        if g and g.get("spot", 0) > 0:
+            current_spot = g["spot"]
+
+    spot_history.append(current_spot)
+
+    # [0] spot change from signal time
+    dynamic[0] = float(np.clip((current_spot - entry_spot) / entry_spot * 100, -2.0, 2.0))
+
+    # [1] spot velocity over last 5 bars
+    if len(spot_history) >= 6:
+        dynamic[1] = float(np.clip((current_spot - spot_history[-6]) / entry_spot * 100, -1.0, 1.0))
+    elif len(spot_history) >= 2:
+        dynamic[1] = float(np.clip((current_spot - spot_history[0]) / entry_spot * 100, -1.0, 1.0))
+
+    # [2] ATM IV change  [3] ATM gamma
+    if greeks_lookup is not None and actual_strike is not None:
+        right_upper = option_right.upper()
+        alt_right = right_upper[0] if len(right_upper) > 1 else right_upper
+        g = (greeks_lookup.get((future_time, actual_strike, right_upper)) or
+             greeks_lookup.get((future_time, actual_strike, alt_right)))
+        if g:
+            cur_iv = g.get("iv", entry_iv)
+            if cur_iv > 0 and entry_iv > 0:
+                dynamic[2] = float(np.clip((cur_iv - entry_iv) / entry_iv, -1.0, 1.0))
+            dynamic[3] = float(np.clip(g.get("gamma", 0.0) * current_spot * 0.01, -2.0, 2.0))
+
+    # [4] spot vs position entry spot (signed by direction)
+    if entry_minute > 0 and current_spot > 0 and entry_spot > 0:
+        spot_vs = (current_spot - entry_spot) / entry_spot
+        if direction == "SHORT":
+            spot_vs = -spot_vs
+        dynamic[4] = float(np.clip(spot_vs * 100, -3.0, 3.0))
+
+    # [5] minutes remaining to close
+    SESSION_OPEN = 570  # 9:30
+    mins_since_open = max(0, current_minute - SESSION_OPEN)
+    dynamic[5] = float(max(0.0, (390 - mins_since_open) / 390.0))
+
+    # [6] option momentum over last 3 bars
+    if len(premium_history) >= 4 and premium_history[-4] > 0:
+        dynamic[6] = float(np.clip((premium_history[-1] - premium_history[-4]) / premium_history[-4], -1.0, 1.0))
+
+    # [7] underlying directional trend (last ≤20 bars)
+    if len(spot_history) >= 3:
+        window = spot_history[-min(20, len(spot_history)):]
+        diffs = np.diff(window)
+        up = float(np.sum(diffs > 0))
+        dn = float(np.sum(diffs < 0))
+        if up + dn > 0:
+            dynamic[7] = float((up - dn) / (up + dn))
+
+    return dynamic
+
+
 # ─────────────────────────────────────────────────────────────────────────
 # GBT+RL SIMULATOR (REAL OPTIONS PRICING)
 # ─────────────────────────────────────────────────────────────────────────
@@ -497,7 +597,9 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                     features_norm: np.ndarray = None,
                     threshold: float = 0.50, max_time: int = 180,
                     cooldown: int = 10, device: torch.device = None,
-                    risk_capital: float = 500.0) -> pd.DataFrame:
+                    risk_capital: float = 500.0,
+                    single_step_eval: bool = False,
+                    recovery_lookup: dict = None) -> pd.DataFrame:
     """Simulate GBT+RL trades using REAL options pricing from ThetaData."""
     trades = []
     skipped_diagnostics = []
@@ -517,6 +619,9 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
     _greeks_cache: dict[str, tuple] = {}
     options_loaded = 0
     options_missed = 0
+    df_greeks = None
+    premium_lookup = None
+    greeks_lookup = None
 
     dates = sorted(df["date"].unique())
     total_dates = len(dates)
@@ -606,15 +711,50 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
             
             # ── ENTRY: RL strike selection ──
             position_state = np.zeros(6, dtype=np.float32)
-            
-            # Construct entry state
-            state_parts = [market_features, position_state, mlp_context]
+
+            # Initialise per-trade O(1) histories
+            _spot_history: list = [entry_price]
+            _premium_history: list = []
+
+            mins_left = 390.0 - (current_minute - 570)
+
+            # Load greeks per-ticker (cached by (ticker, date)) for both entry and exit logic
+            cache_key = f"{ticker}_{d_str}"
+            if cache_key not in _greeks_cache:
+                _greeks_cache[cache_key] = _load_daily_greeks(d_str, ticker)
+                if len(_greeks_cache) > 30:
+                    oldest_key = next(iter(_greeks_cache))
+                    del _greeks_cache[oldest_key]
+            df_greeks, premium_lookup, greeks_lookup = _greeks_cache[cache_key]
+
+            # Find ATM IV at entry for dynamic features (snapshot, not per-minute)
+            entry_atm_iv = 0.15
+            if df_greeks is not None:
+                entry_slice = df_greeks[df_greeks["time_str"] == entry_time]
+                if not entry_slice.empty:
+                    closest_idx = (entry_slice["strike"] - entry_price).abs().idxmin()
+                    entry_atm_iv = float(entry_slice.loc[closest_idx, "implied_vol"])
+
+            # Entry dynamic: no held strike yet, so gamma/iv dims are 0; minutes_remaining is real
+            dynamic_market_entry = np.zeros(8, dtype=np.float32)
+            SESSION_OPEN_MIN = 570
+            dynamic_market_entry[5] = float(max(0.0, (390 - max(0, current_minute - SESSION_OPEN_MIN)) / 390.0))
+
+            # Entry position state (all zeros except iv_ratio=1.0)
+            # Order: [pnl, hold, delta, recovery, iv_ratio, mae]
+            position_state_entry = np.zeros(6, dtype=np.float32)
+            position_state_entry[4] = 1.0 # default iv_ratio
+
+            state_parts = [market_features, dynamic_market_entry, position_state_entry, mlp_context]
             if RL_CONFIG.get("use_sniper_mode", False):
-                sniper_state = np.zeros(SNIPER_TOTAL_STATE_DIM, dtype=np.float32)
+                sniper_state = np.zeros(SNIPER_STATE_DIM, dtype=np.float32)
                 state_parts.append(sniper_state)
-            
+
             state = np.concatenate(state_parts)
-            state = state[:rl_agent.state_dim] # Match agent expectation
+            if len(state) < rl_agent.state_dim:
+                state = np.concatenate([state, np.zeros(rl_agent.state_dim - len(state), dtype=np.float32)])
+            else:
+                state = state[:rl_agent.state_dim]
             state_tensor = torch.FloatTensor(state).unsqueeze(0).to(device)
 
             with torch.no_grad():
@@ -635,16 +775,6 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
             actual_gamma = 0.0
             option_right = "CALL" if direction == "LONG" else "PUT"
             using_real_data = False
-
-            # Load greeks per-ticker (cached by (ticker, date))
-            cache_key = f"{ticker}_{d_str}"
-            if cache_key not in _greeks_cache:
-                _greeks_cache[cache_key] = _load_daily_greeks(d_str, ticker)
-                # Evict oldest entries to limit memory
-                if len(_greeks_cache) > 30:
-                    oldest_key = next(iter(_greeks_cache))
-                    del _greeks_cache[oldest_key]
-            df_greeks, premium_lookup, greeks_lookup = _greeks_cache[cache_key]
 
             if df_greeks is not None:
                 # Get options snapshot at strict entry time
@@ -714,6 +844,7 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                 premium_pnl_pct = float(np.clip(premium_pnl_pct, -1.0, 10.0))
                 mae = min(mae, premium_pnl_pct)
                 exit_premium = current_premium
+                _premium_history.append(current_premium)  # O(1) accumulation
 
                 # Hard exit checks
                 if premium_pnl_pct <= HARD_EXITS["max_loss_pct"]:
@@ -725,50 +856,71 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                     exit_price_spot = price
                     break
 
-                # Build RL state for exit decision — use PER-MINUTE greeks
+                # ── Build RL state for exit decision ──
                 hold_norm = hold_minutes / HARD_EXITS["max_hold_minutes"]
 
-                # Fetch current greeks from lookup at this minute
+                # Per-minute greeks
                 right_upper = option_right.upper()
                 alt_right = right_upper[0] if len(right_upper) > 1 else right_upper
                 minute_greeks = None
                 if greeks_lookup is not None and actual_strike is not None:
-                    minute_greeks = greeks_lookup.get((future_time, actual_strike, right_upper))
-                    if minute_greeks is None:
-                        minute_greeks = greeks_lookup.get((future_time, actual_strike, alt_right))
+                    minute_greeks = (greeks_lookup.get((future_time, actual_strike, right_upper)) or
+                                     greeks_lookup.get((future_time, actual_strike, alt_right)))
 
                 if minute_greeks is not None:
+                    cur_iv   = minute_greeks["iv"]
                     cur_delta = minute_greeks["delta"]
-                    cur_theta = minute_greeks["theta"]
-                    cur_iv = minute_greeks["iv"]
                 else:
-                    cur_delta = actual_delta  # fallback to entry
-                    cur_theta = actual_theta
-                    cur_iv = actual_iv
+                    cur_iv   = actual_iv
+                    cur_delta = actual_delta
 
-                # Normalize theta by entry premium
-                theta_vs = float(np.clip(cur_theta / entry_premium, -0.5, 0.0)) if entry_premium > 0 else -0.05
-                iv_ratio = cur_iv / 0.15 if cur_iv > 0 else 1.0
+                # Recovery lookup
+                recovery_prob = 0.5
+                if recovery_lookup is not None and actual_strike is not None:
+                    d_bucket = get_delta_bucket(abs(cur_delta))
+                    v_bucket = get_iv_bucket(cur_iv)
+                    p_bucket = get_pnl_bucket(premium_pnl_pct)
+                    recovery_prob = float(recovery_lookup.get((d_bucket, v_bucket, p_bucket), 0.5))
+
+                iv_ratio = cur_iv / entry_atm_iv if entry_atm_iv > 0 else 1.0
 
                 position_state = np.array([
-                    np.clip(premium_pnl_pct, -1.0, 5.0),
-                    np.clip(hold_norm, 0.0, 1.0),
-                    abs(cur_delta),
-                    theta_vs,
-                    np.clip(iv_ratio, 0.5, 3.0),
-                    np.clip(mae, -1.0, 0.0),
+                    np.clip(premium_pnl_pct, -1.0, 5.0), # [0] pnl
+                    np.clip(hold_norm, 0.0, 1.0),        # [1] hold
+                    abs(cur_delta),                     # [2] delta
+                    recovery_prob,                      # [3] recovery
+                    np.clip(iv_ratio, 0.5, 3.0),        # [4] iv_ratio
+                    np.clip(mae, -1.0, 0.0),            # [5] mae
                 ], dtype=np.float32)
 
-                # Update market features (normalized) using the global index
                 market_features = features_norm[idx_global]
 
-                state_parts = [market_features, position_state, mlp_context]
+                # Dynamic market features — O(1), accumulates _spot_history in place
+                bar_minute = current_minute + hold_minutes
+                dynamic_market = _build_dynamic_market_features(
+                    current_minute=bar_minute,
+                    entry_spot=entry_price,
+                    entry_iv=entry_atm_iv,
+                    spot_history=_spot_history,
+                    greeks_lookup=greeks_lookup,
+                    actual_strike=actual_strike,
+                    option_right=option_right,
+                    future_time=future_time,
+                    entry_minute=current_minute,
+                    direction=direction,
+                    premium_history=_premium_history,
+                )
+
+                state_parts = [market_features, dynamic_market, position_state, mlp_context]
                 if RL_CONFIG.get("use_sniper_mode", False):
                     sniper_state = np.zeros(SNIPER_STATE_DIM, dtype=np.float32)
                     state_parts.append(sniper_state)
-                
+
                 state = np.concatenate(state_parts)
-                state = state[:rl_agent.state_dim] # FORCE DIM
+                if len(state) < rl_agent.state_dim:
+                    state = np.concatenate([state, np.zeros(rl_agent.state_dim - len(state), dtype=np.float32)])
+                else:
+                    state = state[:rl_agent.state_dim]
                 state_tensor = torch.FloatTensor(state).unsqueeze(0).to(device)
 
                 with torch.no_grad():
@@ -777,8 +929,7 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
 
                 # Action is compared directly as int for new architecture
                 if int(exit_action) == 1:  # EXIT
-                    # Ensure agent respects Phase 3 min_hold unless emergency_stop is hit
-                    min_hold = RL_CONFIG["hold_min_minutes_curriculum"][3]["min_hold"]
+                    min_hold = RL_CONFIG["curriculum_phases"][3].get("min_hold_minutes", 10)
                     emergency_stop = RL_CONFIG.get("emergency_stop_pct", -0.30)
                     is_emergency = premium_pnl_pct <= emergency_stop
                     
@@ -982,6 +1133,11 @@ def main():
     parser.add_argument("--ensemble", action="store_true", help="Load model as ensemble")
     parser.add_argument("--risk-capital", type=float, default=500.0,
                         help="Risk capital in dollars per trade (fixed)")
+    parser.add_argument("--filter-by-greeks", action="store_true",
+                        help="Drop training dates that have no 0DTE greeks parquet in ThetaData. "
+                             "Use this to diagnose low trade counts — shows coverage before running.")
+    parser.add_argument("--single-step-eval", action="store_true", help="Strictly use current minute info only (no lookahead)")
+    parser.add_argument("--strict-wf", action="store_true", help="Enable strict Walk-Forward date filtering for GBT inference")
     args = parser.parse_args()
 
     device = get_device()
@@ -998,7 +1154,7 @@ def main():
         model, normalizer = load_hybrid_model(args.model, args.normalizer, args.model_size, device)
         model.eval()
         print(f"  OK")
-
+    
     # ── Load RL agent ──
     print(f"\n[2/5] Loading RL agent from {args.rl_model}...")
     if os.path.exists(args.rl_model):
@@ -1013,6 +1169,19 @@ def main():
         rl_agent.eval()
         has_rl = False
 
+    # ── Load recovery stats ──
+    recovery_stats = None
+    stats_path = os.path.join(PROJECT_ROOT, "rl_data", "recovery_stats.pkl")
+    if os.path.exists(stats_path):
+        try:
+            with open(stats_path, "rb") as f:
+                recovery_stats = pickle.load(f)
+            print(f"  OK (Recovery stats loaded: {len(recovery_stats)} entries)")
+        except Exception as e:
+            print(f"  Warning: Failed to load recovery stats: {e}")
+    else:
+        print(f"  Warning: recovery_stats.pkl not found at {stats_path}")
+
     # ── Load data ──
     print(f"\n[3/5] Loading data from {args.data}...")
     if args.data.endswith(".parquet"):
@@ -1024,6 +1193,31 @@ def main():
     if args.tickers:
         df = df[df["ticker"].isin(args.tickers)]
         print(f"  Filtered to tickers: {args.tickers}")
+
+    # ── Optional: drop dates with no 0DTE greeks coverage ──
+    if args.filter_by_greeks:
+        ticker_to_options = {"SPX": "SPXW", "SPXW": "SPXW", "QQQ": "QQQ"}
+        available_by_ticker: dict[str, set] = {}
+        for tk in (args.tickers or df["ticker"].unique().tolist()):
+            options_ticker = ticker_to_options.get(tk, tk)
+            greeks_root = Path(OPTIONS_DIR) / options_ticker / "greeks"
+            covered: set[str] = set()
+            if greeks_root.exists():
+                for f in greeks_root.rglob(f"{options_ticker}_*_greeks.parquet"):
+                    parts = f.stem.split("_")   # e.g. SPXW_20240115_20240115_greeks
+                    if len(parts) >= 3 and parts[1] == parts[2]:   # exp == trade date → 0DTE
+                        covered.add(parts[1])
+            available_by_ticker[tk] = covered
+            print(f"  [{tk}] greeks coverage: {len(covered)} dates found under {greeks_root}")
+
+        before = len(df)
+        def _has_greeks(row):
+            tk = row["ticker"]
+            return str(row["date"]) in available_by_ticker.get(tk, set())
+        df = df[df.apply(_has_greeks, axis=1)]
+        after = len(df)
+        print(f"  Greeks filter: {before:,} → {after:,} rows "
+              f"({before - after:,} dropped, {df['date'].nunique()} dates remain)")
 
     print(f"  {len(df):,} samples | {df['date'].nunique()} days | tickers: {df['ticker'].unique().tolist()}")
 
@@ -1042,7 +1236,18 @@ def main():
     features_norm = normalizer.transform(features)
     
     if is_gbt:
-        probs = model.predict_proba(features_norm)
+        if args.strict_wf:
+            print(f"  [i] Using STRICT Walk-Forward inference (date-by-date filtering) for GBT predictions...")
+            probs = np.zeros((len(df), 3), dtype=np.float32)
+            unique_dates = sorted(df['date'].unique()) # Uses 'date' col typically strings
+            for d_str in unique_dates:
+                mask = df['date'] == d_str
+                idx = np.where(mask)[0]
+                if len(idx) == 0: continue
+                # Pass date to ensemble for strict filtering
+                probs[idx] = model.predict_proba(features_norm[idx], date=str(d_str))
+        else:
+            probs = model.predict_proba(features_norm)
         predictions = np.argmax(probs, axis=1)
     else:
         features_tensor = torch.tensor(features_norm, dtype=torch.float32)
@@ -1085,7 +1290,9 @@ def main():
         features_norm=features_norm,
         threshold=args.threshold, max_time=args.max_time,
         cooldown=args.cooldown, device=device,
-        risk_capital=args.risk_capital)
+        risk_capital=args.risk_capital,
+        single_step_eval=args.single_step_eval,
+        recovery_lookup=recovery_stats)
     rl_metrics = calculate_metrics(rl_trades)
     print(f"  GBT+RL: {len(rl_trades)} trades")
 

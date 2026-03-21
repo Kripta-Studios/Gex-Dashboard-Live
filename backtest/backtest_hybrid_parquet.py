@@ -597,6 +597,7 @@ def main():
     parser.add_argument("--limit", type=int, default=0, help="Limit number of trades to simulate (0 = all)")
     parser.add_argument("--uncertainty", type=float, default=45.0, help="Max uncertainty sigma (minutes) to enter trade (default: 45)")
     parser.add_argument("--ensemble", action="store_true", help="Load model as ensemble (use with ensemble-trained .pt files)")
+    parser.add_argument("--strict-wf", action="store_true", help="Enable strict Walk-Forward (only use models trained before the trade date)")
     
     args = parser.parse_args()
     
@@ -685,7 +686,24 @@ def main():
 
     if is_gbt:
         # GBT inference
-        probs = model.predict_proba(features_norm)
+        if args.strict_wf:
+            print(f"  [i] Using STRICT Walk-Forward inference (date-by-date filtering)...")
+            probs = np.zeros((len(df), 3), dtype=np.float32)
+            
+            # Group by date to apply correct ensemble filter per day
+            unique_dates = sorted(df['date'].unique())
+            for d_str in unique_dates:
+                # Find indices for this date
+                mask = df['date'] == d_str
+                idx = np.where(mask)[0]
+                if len(idx) == 0: continue
+                
+                # Predict only for this day using the date as filter
+                # date format in CSV is 'YYYYMMDD' (from line 658)
+                probs[idx] = model.predict_proba(features_norm[idx], date=d_str)
+        else:
+            probs = model.predict_proba(features_norm)
+            
         predictions = np.argmax(probs, axis=1)
         # Dummy Bayesian time parameters for GBT [mu_norm=0.5 (60m), sigma_minutes=0.0]
         mu_norm = np.full(len(features_norm), 0.5)
