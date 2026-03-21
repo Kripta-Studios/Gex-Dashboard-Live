@@ -81,6 +81,9 @@
                             <button id="btn-toggle-ms" onclick="toggleMarketStructurePanel()"
                                 style="background: #9400D3; color: white; display: none; font-weight:bold; margin-left:5px;"
                                 title="Toggle Market Structure Engine">MS ENGINE</button>
+                            <button id="btn-chart" onclick="handleLoadPriceChart()"
+                                style="background: #1E90FF; color: white; display: none; font-weight:bold; margin-left:5px;"
+                                title="Load Price Chart (No IB Levels)">CHART</button>
                             <input type="text" id="ticker" value="SPX" placeholder="Ticker" list="ticker-list"
                                 oninput="updateExpSuggestions()" style="width: 70px; font-weight:700;">
                             <datalist id="ticker-list">
@@ -124,6 +127,7 @@
                                 <option value="dgex">Dgex</option>
                                 <option value="vega">Vega</option>
                                 <option value="vomma">Vomma</option>
+                                <option value="speed">Speed</option>
                             </select>
 
                             <button onclick="handleLoadData()">LOAD</button>
@@ -266,17 +270,14 @@
     <!-- 5. Drag & Drop - Panel reordering -->
     <script src="js/dragdrop.js"></script>
 
-    <!-- 6. Charts - Chart panel dispatcher -->
-    <script src="js/charts.js"></script>
+    <!-- 6. Dashboard - Core rendering logic (Public) -->
+    <script src="js/dashboard.js"></script>
 
     <!-- 7. Heatmap - Greek exposure heatmaps -->
     <script src="js/heatmap.js"></script>
 
-    <!-- 8. Fourier - Fourier analysis charts -->
-    <script src="js/fourier.js"></script>
-
-    <!-- 9. IB - Initial Balance charts -->
-    <script src="js/ib.js"></script>
+    <!-- 8. Scripts below are loaded dynamically by auth.js for ADMINs only -->
+    <!-- js/fourier.js, js/ib.js, js/charts.js, js/market_structure.js -->
 
     <!-- 10. Handlers - Form handling -->
     <script src="js/handlers.js"></script>

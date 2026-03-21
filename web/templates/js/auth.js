@@ -67,19 +67,32 @@ function grantAccess(role) {
     document.getElementById("login-screen").style.display = "none";
     document.getElementById("app-wrapper").style.display = "flex";
 
-    // Admin-only: Show IB button and Market Structure Panel
+    // Admin-only: Show IB, MS Engine, and Chart buttons
     if (role === 'ADMIN') {
-        const ibBtn = document.getElementById("btn-ib");
-        if (ibBtn) ibBtn.style.display = "inline-block";
         const msBtn = document.getElementById("btn-toggle-ms");
         if (msBtn) msBtn.style.display = "inline-block";
         const msPanel = document.getElementById("market-structure-panel");
         if (msPanel) msPanel.style.display = "flex";
+
+        const chartBtn = document.getElementById("btn-chart");
+        if (chartBtn) chartBtn.style.display = "inline-block";
+
+        const ibBtn = document.getElementById("btn-ib");
+        if (ibBtn) ibBtn.style.display = "inline-block";
+
+        // Load restrictive admin scripts dynamically
+        loadAdminScripts();
     } else {
         const msBtn = document.getElementById("btn-toggle-ms");
         if (msBtn) msBtn.style.display = "none";
         const msPanel = document.getElementById("market-structure-panel");
         if (msPanel) msPanel.style.display = "none";
+
+        const chartBtn = document.getElementById("btn-chart");
+        if (chartBtn) chartBtn.style.display = "none";
+
+        const ibBtn = document.getElementById("btn-ib");
+        if (ibBtn) ibBtn.style.display = "none";
     }
 
     // Call init only if it's defined (script.js must be loaded first)
@@ -147,6 +160,40 @@ if (document.readyState === 'loading') {
 } else {
     // DOM already loaded, but wait a tick for other scripts
     setTimeout(checkSession, 0);
+}
+
+/**
+ * Dynamically load restricted admin scripts using authenticated fetch
+ */
+async function loadAdminScripts() {
+    const role = sessionStorage.getItem("gex_user_role");
+    if (role !== "ADMIN") return;
+
+    const scripts = ["js/fourier.js", "js/ib.js", "js/charts.js", "js/market_structure.js"];
+    const token = sessionStorage.getItem("gex_auth_token");
+
+    console.log("[Auth] Loading specialized admin modules...");
+
+    for (const path of scripts) {
+        try {
+            const resp = await fetch(`/${path}`, {
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+
+            if (resp.ok) {
+                const code = await resp.text();
+                const scriptEl = document.createElement("script");
+                scriptEl.textContent = code;
+                scriptEl.dataset.path = path;
+                document.head.appendChild(scriptEl);
+                console.log(`[Auth] Injected: ${path}`);
+            } else {
+                console.error(`[Auth] Failed to load admin script: ${path} (Status: ${resp.status})`);
+            }
+        } catch (e) {
+            console.error(`[Auth] Error loading ${path}:`, e);
+        }
+    }
 }
 
 // Enter key login handler

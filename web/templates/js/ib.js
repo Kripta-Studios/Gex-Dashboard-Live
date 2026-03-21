@@ -42,12 +42,15 @@ function createIBPanel(chartObj, index) {
     }
 
     // Header
+    const isPriceOnly = chartObj.isPriceOnly || false;
+    const titleText = isPriceOnly ? `${inputTicker} PRICE CHART` : `${inputTicker} IB & LEVELS`;
+
     const header = document.createElement("div");
     header.className = "chart-header";
     header.innerHTML = `
     <div class="chart-title-row">
       <div>
-        <span class="chart-title" style="color:#FFD700;">${inputTicker} IB & LEVELS</span>
+        <span class="chart-title" style="color:#FFD700;">${titleText}</span>
         <span class="chart-subtitle">${dateStr}</span>
       </div>
       <div>
@@ -55,11 +58,13 @@ function createIBPanel(chartObj, index) {
         <button class="btn-close" onclick="removeChart(${index})">×</button>
       </div>
     </div>
+    ${isPriceOnly ? '' : `
     <div class="chart-stats" style="border-left: 3px solid #FFD700; display:flex; gap:10px;">
       <span style="font-size:10px;">Range: <strong style="color:white">${data.analysis.ib_range.toFixed(2)}</strong></span>
       <span style="font-size:10px;">High: ${data.analysis.ib_high.toFixed(2)}</span>
       <span style="font-size:10px;">Low: ${data.analysis.ib_low.toFixed(2)}</span>
     </div>
+    `}
   `;
     panel.appendChild(header);
 
@@ -73,7 +78,7 @@ function createIBPanel(chartObj, index) {
     canvasContainer.appendChild(canvas);
     panel.appendChild(canvasContainer);
 
-    setTimeout(() => renderIBChart(canvas, data), 0);
+    setTimeout(() => renderIBChart(canvas, data, isPriceOnly), 0);
 
     return panel;
 }
@@ -82,8 +87,9 @@ function createIBPanel(chartObj, index) {
  * Render IB chart using Chart.js with candlesticks
  * @param {HTMLCanvasElement} canvas - Canvas element
  * @param {Object} jsonData - IB data object
+ * @param {boolean} isPriceOnly - Whether to hide IB levels and fibs
  */
-function renderIBChart(canvas, jsonData) {
+function renderIBChart(canvas, jsonData, isPriceOnly = false) {
     // 1. Obtener la hora actual en Nueva York
     const now = new Date();
     const nyTime = now.toLocaleTimeString('en-US', {
@@ -149,27 +155,29 @@ function renderIBChart(canvas, jsonData) {
     });
 
     // IB lines
-    datasets.push(makeHLine(ibHigh, 'rgba(255,255,255,0.7)', 'IB High'));
-    datasets.push(makeHLine(ibLow, 'rgba(255,255,255,0.7)', 'IB Low'));
+    if (!isPriceOnly) {
+        datasets.push(makeHLine(ibHigh, 'rgba(255,255,255,0.7)', 'IB High'));
+        datasets.push(makeHLine(ibLow, 'rgba(255,255,255,0.7)', 'IB Low'));
 
-    // Fibonacci extensions
-    const fibColors = ['#FFD700', '#FF8C00', '#FF4500'];
-    const ibMid = (ibHigh + ibLow) / 2;
+        // Fibonacci extensions
+        const fibColors = ['#FFD700', '#FF8C00', '#FF4500'];
+        const ibMid = (ibHigh + ibLow) / 2;
 
-    if (currentPrice >= ibMid) {
-        [1.272, 1.618, 2.0, 2.272, 2.618, 3, 3.272, 3.618, 4].forEach((ext, i) => {
-            const val = ibLow + (ibRange * ext);
-            if (val >= lowerLimit && val <= upperLimit) {
-                datasets.push(makeHLine(val, fibColors[i % fibColors.length], `Fib ${ext}`, [2, 2]));
-            }
-        });
-    } else {
-        [-0.272, -0.618, -1.0, -1.272, -1.618, -2, -2.272, -2.618, -3].forEach((ext, i) => {
-            const val = ibLow + (ibRange * ext);
-            if (val >= lowerLimit && val <= upperLimit) {
-                datasets.push(makeHLine(val, fibColors[i % fibColors.length], `Fib ${ext}`, [2, 2]));
-            }
-        });
+        if (currentPrice >= ibMid) {
+            [1.272, 1.618, 2.0, 2.272, 2.618, 3, 3.272, 3.618, 4].forEach((ext, i) => {
+                const val = ibLow + (ibRange * ext);
+                if (val >= lowerLimit && val <= upperLimit) {
+                    datasets.push(makeHLine(val, fibColors[i % fibColors.length], `Fib ${ext}`, [2, 2]));
+                }
+            });
+        } else {
+            [-0.272, -0.618, -1.0, -1.272, -1.618, -2, -2.272, -2.618, -3].forEach((ext, i) => {
+                const val = ibLow + (ibRange * ext);
+                if (val >= lowerLimit && val <= upperLimit) {
+                    datasets.push(makeHLine(val, fibColors[i % fibColors.length], `Fib ${ext}`, [2, 2]));
+                }
+            });
+        }
     }
 
     // Greek levels
@@ -318,7 +326,7 @@ function renderIBChart(canvas, jsonData) {
 /**
  * Add IB chart to current tab
  */
-function addIBChartToCurrent(data, ticker, dateStr) {
+function addIBChartToCurrent(data, ticker, dateStr, isPriceOnly = false) {
     const tab = tabs.find((t) => t.id === currentTabId);
     if (tab) {
         tab.charts.push({
@@ -326,7 +334,8 @@ function addIBChartToCurrent(data, ticker, dateStr) {
             data: data,
             inputTicker: ticker,
             inputExp: 'ib',
-            dateStr: dateStr
+            dateStr: dateStr,
+            isPriceOnly: isPriceOnly
         });
     }
 }
@@ -353,11 +362,40 @@ async function handleLoadIB() {
     btn.innerText = originalText;
 
     if (data) {
-        addIBChartToCurrent(data, ticker, dateStr);
+        addIBChartToCurrent(data, ticker, dateStr, false);
         renderAllCharts();
     } else {
         // Show actual file being searched (without slashes)
         const cleanTicker = ticker.replace(/\//g, '');
         alert(`No IB Levels data found for ${ticker}.\nSearched: ib_data_${cleanTicker}_${dateStr}.json`);
+    }
+}
+
+/**
+ * Handle Load Price Chart button click (ADMIN only)
+ */
+async function handleLoadPriceChart() {
+    const role = sessionStorage.getItem("gex_user_role");
+    if (role !== "ADMIN") return;
+
+    const ticker = document.getElementById("ticker").value.toUpperCase();
+    const dateVal = document.getElementById("fourier-date").value;
+    const dateStr = dateVal.replace(/-/g, "");
+
+    const btn = document.getElementById("btn-chart");
+    const originalText = btn.innerText;
+    btn.innerText = "⏳";
+
+    // Use retry mechanism to wait for server to finish generating file
+    const data = await fetchIBDataWithRetry(ticker, dateStr);
+
+    btn.innerText = originalText;
+
+    if (data) {
+        addIBChartToCurrent(data, ticker, dateStr, true);
+        renderAllCharts();
+    } else {
+        const cleanTicker = ticker.replace(/\//g, '');
+        alert(`No Chart data found for ${ticker}.\nSearched: ib_data_${cleanTicker}_${dateStr}.json`);
     }
 }

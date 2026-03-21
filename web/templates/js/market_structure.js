@@ -11,236 +11,145 @@ const MARKET_STRUCTURES = [
     {
         "id": 1,
         "name": "The Waterfall",
-        "condition": { "IV": "High", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Pos", "Vex": "Neg", "Vega": "Neg", "Vomma": "Neg" },
+        "condition": { "IV": "High", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Pos", "Vex": "Neg", "Vega": "Neg", "Vomma": "Neg", "Speed": null },
         "regime": "Trend Day",
         "action": "Forced Selling",
         "actionDirection": "SELL",
         "tilt": "Trend Day, Pull backs are entries",
         "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
-        "spreads": null,
-        "entry": null,
-        "emas": "5DEMA/15DEMA",
-        "approxBouncePts": null,
-        "stochastic": null,
-        "vvixVix": null,
-        "reversalSignal": null,
-        "trendEliminator": null
+        "spreads": null, "entry": null, "emas": "5DEMA/15DEMA", "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
     },
     {
         "id": 2,
         "name": "Mean Reversion",
-        "condition": { "IV": "High", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Pos", "Vex": "Pos", "Vega": "Pos", "Vomma": null },
+        "condition": { "IV": "High", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Pos", "Vex": "Pos", "Vega": "Pos", "Vomma": null, "Speed": null },
         "regime": "Compression",
         "action": "Buy the Dip / Sell the Rally",
         "actionDirection": "SELL",
         "tilt": "Fade Extremes",
         "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
-        "spreads": null,
-        "entry": null,
-        "emas": null,
-        "approxBouncePts": null,
-        "stochastic": null,
-        "vvixVix": null,
-        "reversalSignal": null,
-        "trendEliminator": null
+        "spreads": null, "entry": null, "emas": null, "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
     },
     {
         "id": 3,
         "name": "The Melt Up",
-        "condition": { "IV": "High", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Neg", "Vex": "Pos", "Vega": "Neg", "Vomma": null },
+        "condition": { "IV": "High", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Neg", "Vex": "Pos", "Vega": "Neg", "Vomma": null, "Speed": null },
         "regime": "Trend Day",
         "action": "Forced Buying",
         "actionDirection": "BUY",
         "tilt": "Trend Day, Pull backs are entries",
         "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
-        "spreads": null,
-        "entry": null,
-        "emas": "5DEMA/15DEMA",
-        "approxBouncePts": null,
-        "stochastic": null,
-        "vvixVix": null,
-        "reversalSignal": null,
-        "trendEliminator": null
+        "spreads": null, "entry": null, "emas": "5DEMA/15DEMA", "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
     },
     {
         "id": 4,
         "name": "The Drag",
-        "condition": { "IV": "High", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg", "Vex": "Pos", "Vega": "Pos", "Vomma": null },
+        "condition": { "IV": "High", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg", "Vex": "Pos", "Vega": "Pos", "Vomma": null, "Speed": null },
         "regime": "Compression",
         "action": "Sell into Rally",
         "actionDirection": "SELL",
         "tilt": "Fade Extremes",
         "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
-        "spreads": null,
-        "entry": null,
-        "emas": null,
-        "approxBouncePts": null,
-        "stochastic": null,
-        "vvixVix": null,
-        "reversalSignal": null,
-        "trendEliminator": null
+        "spreads": null, "entry": null, "emas": null, "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
     },
     {
         "id": 5,
         "name": "Vol of Vol / Fragile Long Vol",
-        "condition": { "IV": "High", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Neg", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos" },
+        "condition": { "IV": "High", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Neg", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": null },
         "regime": "Trend Day",
         "action": "Sell into Rally",
         "actionDirection": "SELL",
         "tilt": "Momentum, Pull backs are entries",
         "flags": { "max_vanna_level": true, "ib_bounce": false, "dadu_pinning": false },
-        "spreads": "CCS",
-        "entry": "Short Max Vanna",
-        "emas": "8/20",
-        "approxBouncePts": "40 pts",
-        "stochastic": null,
-        "vvixVix": null,
-        "reversalSignal": "Change in Max Vanna",
-        "trendEliminator": null
+        "spreads": "CCS", "entry": "Short Max Vanna", "emas": "8/20", "approxBouncePts": "40 pts", "stochastic": null, "vvixVix": null, "reversalSignal": "Change in Max Vanna", "trendEliminator": null
     },
     {
         "id": 6,
         "name": "Liquidation",
-        "condition": { "IV": "High", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Neg", "Vex": "Neg", "Vega": "Neg", "Vomma": "Neg" },
+        "condition": { "IV": "High", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Neg", "Vex": "Neg", "Vega": "Neg", "Vomma": "Neg", "Speed": null },
         "regime": "Trend Day",
         "action": "Forced Selling",
         "actionDirection": "SELL",
         "tilt": "Trend Day, Pull backs are entries",
         "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
-        "spreads": null,
-        "entry": null,
-        "emas": null,
-        "approxBouncePts": null,
-        "stochastic": null,
-        "vvixVix": null,
-        "reversalSignal": null,
-        "trendEliminator": null
+        "spreads": null, "entry": null, "emas": null, "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
     },
     {
         "id": 7,
-        "name": "Fragile Stabilisation / The Exhaustive Pin",
-        "condition": { "IV": "High", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg", "Vex": "Pos", "Vega": "Pos", "Vomma": "Neg" },
+        "name": "Pinned long vol",
+        "condition": { "IV": "High", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg", "Vex": "Pos", "Vega": "Pos", "Vomma": "Neg", "Speed": "Neg" },
         "regime": "Transitional",
         "action": "Dealer is Binary. Buys until the pin snaps, then aggressively SELLS.",
         "actionDirection": "BINARY",
         "tilt": "Do not trade",
         "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
-        "spreads": "N/A",
-        "entry": null,
-        "emas": null,
-        "approxBouncePts": null,
-        "stochastic": null,
-        "vvixVix": null,
-        "reversalSignal": null,
-        "trendEliminator": null
+        "spreads": "N/A", "entry": null, "emas": null, "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
     },
     {
         "id": 8,
-        "name": "Vol Spike with Spot Resilience",
-        "condition": { "IV": "High", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos" },
+        "name": "Vol-expansion pre-trend",
+        "condition": { "IV": "High", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": null },
         "regime": "Trend Day",
-        "action": "Supportive Buyers",
-        "actionDirection": "BUY",
-        "tilt": "Trend Day, Pull backs are entries",
+        "action": "Sell into Rally",
+        "actionDirection": "SELL",
+        "tilt": "Fade extremes while gamma exists",
         "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
-        "spreads": null,
-        "entry": null,
-        "emas": "5DEMA/15DEMA",
-        "approxBouncePts": null,
-        "stochastic": null,
-        "vvixVix": null,
-        "reversalSignal": null,
-        "trendEliminator": null
+        "spreads": null, "entry": null, "emas": "5DEMA/15DEMA", "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
     },
     {
         "id": 9,
         "name": "Directionless Chop - Slight Bid",
-        "condition": { "IV": "High", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg", "Vex": "Neg", "Vega": "Pos", "Vomma": "Pos" },
+        "condition": { "IV": "High", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg", "Vex": "Neg", "Vega": "Pos", "Vomma": "Pos", "Speed": null },
         "regime": "Compression",
         "action": "Passive Buyers",
         "actionDirection": "CHOP",
         "tilt": "Fade Extremes",
         "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
-        "spreads": null,
-        "entry": null,
-        "emas": null,
-        "approxBouncePts": null,
-        "stochastic": null,
-        "vvixVix": null,
-        "reversalSignal": null,
-        "trendEliminator": null
+        "spreads": null, "entry": null, "emas": null, "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
     },
     {
         "id": 10,
         "name": "Short Bearish Gamma Squeeze",
-        "condition": { "IV": "High", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Neg", "Vex": "Neg", "Vega": "Pos", "Vomma": "Neg" },
+        "condition": { "IV": "High", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Neg", "Vex": "Neg", "Vega": "Pos", "Vomma": "Neg", "Speed": null },
         "regime": "Trend Day",
         "action": "Forced Sellers",
         "actionDirection": "SELL",
         "tilt": "Trend Day, Pull backs are entries",
         "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
-        "spreads": null,
-        "entry": null,
-        "emas": "5DEMA/15DEMA",
-        "approxBouncePts": null,
-        "stochastic": null,
-        "vvixVix": null,
-        "reversalSignal": null,
-        "trendEliminator": null
+        "spreads": null, "entry": null, "emas": "5DEMA/15DEMA", "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
     },
     {
         "id": 11,
         "name": "Negative Convexity Vol Unwind (Compression Type)",
-        "condition": { "IV": "High", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Pos", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos" },
+        "condition": { "IV": "High", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Pos", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Neg" },
         "regime": "Compression",
         "action": "Dealer Sells",
         "actionDirection": "SELL",
         "tilt": "High Risk - Fade Extremes",
         "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
-        "spreads": null,
-        "entry": null,
-        "emas": null,
-        "approxBouncePts": null,
-        "stochastic": null,
-        "vvixVix": null,
-        "reversalSignal": null,
-        "trendEliminator": null
+        "spreads": null, "entry": null, "emas": null, "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
     },
     {
         "id": 12,
         "name": "Negative Convexity Vol Unwind (Expansion Type)",
-        "condition": { "IV": "High", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Neg", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos" },
+        "condition": { "IV": "High", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Neg", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Neg" },
         "regime": "Trend Day",
         "action": "Dealer Sells",
         "actionDirection": "SELL",
         "tilt": "Momentum, Pull backs are entries",
         "flags": { "max_vanna_level": false, "ib_bounce": true, "dadu_pinning": false },
-        "spreads": null,
-        "entry": null,
-        "emas": "5DEMA/15DEMA",
-        "approxBouncePts": null,
-        "stochastic": null,
-        "vvixVix": null,
-        "reversalSignal": null,
-        "trendEliminator": null
+        "spreads": null, "entry": null, "emas": "5DEMA/15DEMA", "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
     },
     {
         "id": 13,
         "name": "The Gamma Trap / Crash-to-Melt Vanna",
-        "condition": { "IV": "High", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Pos", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos" },
+        "condition": { "IV": "High", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Pos", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": null },
         "regime": "Transitional / Expansion",
         "action": "Binary at open.",
         "actionDirection": "BINARY",
         "tilt": "Do not trade / Scalp Only",
         "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
-        "spreads": "No",
-        "entry": null,
-        "emas": null,
-        "approxBouncePts": null,
-        "stochastic": null,
-        "vvixVix": null,
-        "reversalSignal": null,
-        "trendEliminator": null
+        "spreads": "No", "entry": null, "emas": null, "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
     },
     // ═══════════════════════════════════════════════════════════════════
     //  LOW IV STRUCTURES
@@ -248,169 +157,272 @@ const MARKET_STRUCTURES = [
     {
         "id": 14,
         "name": "The Melt Up (Low IV)",
-        "condition": { "IV": "Low", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Neg", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos" },
+        "condition": { "IV": "Low", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Neg", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": null },
         "regime": "Trend Day",
         "action": "Forced Buying",
         "actionDirection": "BUY",
         "tilt": "Momentum, Pull backs are entries",
         "flags": { "max_vanna_level": false, "ib_bounce": true, "dadu_pinning": false },
-        "spreads": "PCS",
-        "entry": null,
-        "emas": "8/20",
-        "approxBouncePts": null,
-        "stochastic": "Yes - Works on Pullbacks",
-        "vvixVix": "VIX Down, VVIX Down",
-        "reversalSignal": "Change in Max Vanna",
-        "trendEliminator": "Short upside calls"
+        "spreads": "PCS", "entry": null, "emas": "8/20", "approxBouncePts": null, "stochastic": "Yes - Works on Pullbacks", "vvixVix": "VIX Down, VVIX Down", "reversalSignal": "Change in Max Vanna", "trendEliminator": "Short upside calls"
     },
     {
         "id": 15,
         "name": "The Fade",
-        "condition": { "IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg", "Vex": "Neg", "Vega": "Neg", "Vomma": null },
+        "condition": { "IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg", "Vex": "Neg", "Vega": "Neg", "Vomma": null, "Speed": null },
         "regime": "Compression",
         "action": "Dealer Sells",
         "actionDirection": "SELL",
         "tilt": "Fade Extremes",
         "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
-        "spreads": null,
-        "entry": null,
-        "emas": null,
-        "approxBouncePts": null,
-        "stochastic": null,
-        "vvixVix": null,
-        "reversalSignal": null,
-        "trendEliminator": null
+        "spreads": null, "entry": null, "emas": null, "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
     },
     {
         "id": 16,
         "name": "V Bottom",
-        "condition": { "IV": "Low", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Pos", "Vex": "Neg", "Vega": "Pos", "Vomma": "Neg" },
+        "condition": { "IV": "Low", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Pos", "Vex": "Neg", "Vega": "Pos", "Vomma": "Neg", "Speed": null },
         "regime": "Trend Day",
         "action": "Forced Buying",
         "actionDirection": "BUY",
         "tilt": "Trend Day, Pull backs are entries",
         "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
-        "spreads": null,
-        "entry": null,
-        "emas": null,
-        "approxBouncePts": null,
-        "stochastic": null,
-        "vvixVix": null,
-        "reversalSignal": null,
-        "trendEliminator": null
+        "spreads": null, "entry": null, "emas": null, "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
     },
     {
         "id": 17,
         "name": "The Bleed",
-        "condition": { "IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Pos", "Vex": "Neg", "Vega": "Neg", "Vomma": null },
+        "condition": { "IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Pos", "Vex": "Neg", "Vega": "Neg", "Vomma": null, "Speed": null },
         "regime": "Compression",
         "action": "Dealer Sells",
         "actionDirection": "SELL",
         "tilt": "Fade Extremes",
         "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
-        "spreads": null,
-        "entry": null,
-        "emas": null,
-        "approxBouncePts": null,
-        "stochastic": null,
-        "vvixVix": null,
-        "reversalSignal": null,
-        "trendEliminator": null
+        "spreads": null, "entry": null, "emas": null, "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
     },
     {
         "id": 18,
         "name": "Volatility Mean Reversion Sideways Grind",
-        "condition": { "IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg", "Vex": "Neg", "Vega": "Pos", "Vomma": "Neg" },
+        "condition": { "IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg", "Vex": "Neg", "Vega": "Pos", "Vomma": "Neg", "Speed": null },
         "regime": "Compression",
         "action": "Buy the Dip / Sell the Rally",
         "actionDirection": "SIDEWAYS GRIND",
         "tilt": "Fade Extremes",
         "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
-        "spreads": null,
-        "entry": null,
-        "emas": null,
-        "approxBouncePts": null,
-        "stochastic": null,
-        "vvixVix": null,
-        "reversalSignal": null,
-        "trendEliminator": null
+        "spreads": null, "entry": null, "emas": null, "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
     },
     {
         "id": 19,
         "name": "Volatility Mean Reversion Crush",
-        "condition": { "IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg", "Vex": "Neg", "Vega": "Pos", "Vomma": "Pos" },
+        "condition": { "IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg", "Vex": "Neg", "Vega": "Pos", "Vomma": "Pos", "Speed": null },
         "regime": "Compression",
         "action": "Buy the Dip / Sell the Rally",
         "actionDirection": "BUY",
         "tilt": "Fade Extremes",
         "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
-        "spreads": null,
-        "entry": null,
-        "emas": null,
-        "approxBouncePts": null,
-        "stochastic": null,
-        "vvixVix": null,
-        "reversalSignal": null,
-        "trendEliminator": null
+        "spreads": null, "entry": null, "emas": null, "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
     },
     {
         "id": 20,
         "name": "The Ceiling / The Call Pin",
-        "condition": { "IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Pos", "Vex": "Neg", "Vega": "Pos", "Vomma": "Pos" },
+        "condition": { "IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Pos", "Vex": "Neg", "Vega": "Pos", "Vomma": "Pos", "Speed": null },
         "regime": "Compression",
-        "action": "Forced Sellers on Rips",
+        "action": "Forced Sellers on Rips. Break of Pin on flat IV is a genuine breakout — do not fade otherwise causes snapback",
         "actionDirection": "SELL / PIN",
         "tilt": "Fade Extremes",
         "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
-        "spreads": null,
-        "entry": null,
-        "emas": null,
-        "approxBouncePts": null,
-        "stochastic": null,
-        "vvixVix": null,
-        "reversalSignal": null,
-        "trendEliminator": null
+        "spreads": null, "entry": null, "emas": null, "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": "Break of Pin on flat IV is genuine breakout", "trendEliminator": null
     },
     {
         "id": 21,
         "name": "High Confidence Grind / PIN",
-        "condition": { "IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Pos", "Vex": "Pos", "Vega": "Pos", "Vomma": "Neg" },
+        "condition": { "IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Pos", "Vex": "Pos", "Vega": "Pos", "Vomma": "Neg", "Speed": null },
         "regime": "Compression",
         "action": "Supportive Buyers",
         "actionDirection": "BUY / PIN",
         "tilt": "Fade Extremes / PIN",
         "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
-        "spreads": null,
-        "entry": null,
-        "emas": null,
-        "approxBouncePts": null,
-        "stochastic": null,
-        "vvixVix": null,
-        "reversalSignal": null,
-        "trendEliminator": null
+        "spreads": null, "entry": null, "emas": null, "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
     },
     {
         "id": 22,
         "name": "Vanna-fueled Melt Up",
-        "condition": { "IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Pos", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos" },
+        "condition": { "IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Pos", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Neg" },
         "regime": "Trend Day",
         "action": "Forced Buying",
         "actionDirection": "BUY",
         "tilt": "Momentum, Pull backs are entries",
         "flags": { "max_vanna_level": false, "ib_bounce": true, "dadu_pinning": true },
-        "spreads": "PCS",
-        "entry": null,
-        "emas": "8/20",
-        "approxBouncePts": null,
-        "stochastic": "Yes - Works on Pullbacks. Pullbacks can be decent or small.",
-        "vvixVix": "VIX Down, VVIX Down",
-        "reversalSignal": null,
-        "trendEliminator": null
+        "spreads": "PCS", "entry": null, "emas": "8/20", "approxBouncePts": null, "stochastic": "Yes - Works on Pullbacks", "vvixVix": "VIX Down, VVIX Down", "reversalSignal": null, "trendEliminator": null
     },
     {
         "id": 23,
         "name": "Pre-breakout Convexity Pocket / Gamma Squeeze",
-        "condition": { "IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Pos", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos" },
+        "condition": { "IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Pos", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": null },
+        "regime": "Compression",
+        "action": "Forced Buying",
+        "actionDirection": "BUY",
+        "tilt": "Fade Extremes",
+        "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
+        "spreads": null, "entry": null, "emas": null, "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
+    },
+    // ═══════════════════════════════════════════════════════════════════
+    //  NEW EXTENDED STRUCTURES (N1-N14)
+    // ═══════════════════════════════════════════════════════════════════
+    {
+        "id": 24,
+        "name": "Bear trend coiled in a gamma pin / Pre breakdown structure",
+        "condition": { "IV": "High", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg", "Vex": "Neg", "Vega": "Pos", "Vomma": "Pos", "Speed": "Neg" },
+        "regime": "Compression",
+        "action": "Selling Pressure in Chop",
+        "actionDirection": "CHOP -> SELL",
+        "tilt": "Selling into Pin",
+        "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
+        "spreads": null, "entry": null, "emas": null, "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
+    },
+    {
+        "id": 25,
+        "name": "Short Bearish Gamma Squeeze (Extended)",
+        "condition": { "IV": "High", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Neg", "Vex": "Neg", "Vega": "Pos", "Vomma": "Neg", "Speed": "Neg" },
+        "regime": "Trend Day",
+        "action": "Forced Selling / Liquidations",
+        "actionDirection": "SELL",
+        "tilt": "Trend Day, Aggressive Sells",
+        "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
+        "spreads": null, "entry": null, "emas": null, "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
+    },
+    {
+        "id": 26,
+        "name": "Low IV positive gamma grind (mean-reverting compression)",
+        "condition": { "IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg", "Vex": "Neg", "Vega": "Pos", "Vomma": "Neg", "Speed": "Neg" },
+        "regime": "Compression",
+        "action": "Passive Selling / Sideways",
+        "actionDirection": "SELL LEAN",
+        "tilt": "Mean Reverting",
+        "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
+        "spreads": null, "entry": null, "emas": null, "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
+    },
+    {
+        "id": 27,
+        "name": "Compression regime with asymmetric vol expansion payoff",
+        "condition": { "IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg", "Vex": "Neg", "Vega": "Pos", "Vomma": "Pos", "Speed": "Neg" },
+        "regime": "Compression",
+        "action": "Bullish Bias in Compression",
+        "actionDirection": "BUY",
+        "tilt": "Asymmetric Risk/Reward",
+        "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
+        "spreads": null, "entry": null, "emas": null, "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
+    },
+    {
+        "id": 28,
+        "name": "Short Gamma Trap / Melt up",
+        "condition": { "IV": "Low", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Neg", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Pos" },
+        "regime": "Trend Day",
+        "action": "Forced Buying on Trap",
+        "actionDirection": "BUY",
+        "tilt": "Momentum, Squeeze Potential",
+        "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
+        "spreads": "PCS / Long Calls", "entry": null, "emas": null, "approxBouncePts": null, "stochastic": "Yes - High Confidence", "vvixVix": "VIX Down, VVIX Down", "reversalSignal": "Gamma shift or spot stall", "trendEliminator": null
+    },
+    {
+        "id": 29,
+        "name": "Vanna Fueled Melt Up / Pre Gamma Squeeze",
+        "condition": { "IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Pos", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Neg" },
+        "regime": "Compression",
+        "action": "Stable Drift Up",
+        "actionDirection": "BUY (Compression)",
+        "tilt": "Slow Grind",
+        "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
+        "spreads": null, "entry": null, "emas": null, "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
+    },
+    {
+        "id": 30,
+        "name": "The Waterfall Sell Off",
+        "condition": { "IV": "High", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Pos", "Vex": "Neg", "Vega": "Neg", "Vomma": "Neg", "Speed": "Neg" },
+        "regime": "Trend Day",
+        "action": "Aggressive Liquidations",
+        "actionDirection": "SELL",
+        "tilt": "High Volatility Sell",
+        "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
+        "spreads": null, "entry": null, "emas": null, "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
+    },
+    {
+        "id": 31,
+        "name": "The Mean Reversion Anchor",
+        "condition": { "IV": "High", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Pos", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Pos" },
+        "regime": "Compression",
+        "action": "Buying the Dips / Selling the Rallies",
+        "actionDirection": "SELL/BUY",
+        "tilt": "Range Bound High Vol",
+        "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
+        "spreads": null, "entry": null, "emas": null, "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
+    },
+    {
+        "id": 32,
+        "name": "Short-Vol Capitulation / The Melt Up",
+        "condition": { "IV": "High", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Neg", "Vex": "Pos", "Vega": "Neg", "Vomma": "Neg", "Speed": "Neg" },
+        "regime": "Trend Day",
+        "action": "Shorts Covering / Panicked Buying",
+        "actionDirection": "BUY",
+        "tilt": "Aggressive Upward Trend",
+        "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
+        "spreads": null, "entry": null, "emas": null, "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
+    },
+    {
+        "id": 33,
+        "name": "Orderly Sell Off / Hedged Bear Market",
+        "condition": { "IV": "High", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Pos" },
+        "regime": "Trend Day",
+        "action": "Managed Portfolios Hedging",
+        "actionDirection": "SELL",
+        "tilt": "Downward Drift",
+        "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
+        "spreads": null, "entry": null, "emas": null, "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
+    },
+    {
+        "id": 34,
+        "name": "Fragile Vanna-Hollow Melt-Up / Fragile Drift",
+        "condition": { "IV": "Low", "Gamma": "Neg", "Zomma": "Neg", "Delta": "Neg", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Pos" },
+        "regime": "Trend Day",
+        "action": "Unstable Buying",
+        "actionDirection": "BUY",
+        "tilt": "Fragile Upside",
+        "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
+        "spreads": null, "entry": null, "emas": null, "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
+    },
+    {
+        "id": 35,
+        "name": "Volatility-Capped Slide / The Gamma Trap (in Reverse)",
+        "condition": { "IV": "High", "Gamma": "Neg", "Zomma": "Neg", "Delta": "Neg", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Pos" },
+        "regime": "Expansion",
+        "action": "Selling Pressure with Vol Cap",
+        "actionDirection": "Trade in direction",
+        "tilt": "Binary - Watch Spreads",
+        "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
+        "spreads": null, "entry": null, "emas": null, "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
+    },
+    {
+        "id": 36,
+        "name": "Possible Volatility Expansion Engine",
+        "condition": { "IV": "Low", "Gamma": "Pos", "Zomma": "Pos", "Delta": "Pos", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Neg" },
+        "regime": "Expansion",
+        "action": "Vol Coiling for Expansion",
+        "actionDirection": "BUY/SELL",
+        "tilt": "Binary Breakdown/Breakout",
+        "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
+        "spreads": "Straddle / Strangles", "entry": null, "emas": null, "approxBouncePts": null, "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
+    },
+    {
+        "id": 37,
+        "name": "Orderly Bear Drift / Mean-Reverting Slide",
+        "condition": { "IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Pos" },
+        "regime": "Compression",
+        "action": "Dealer Hedging Downside Moves",
+        "actionDirection": "BUY/SELL",
+        "tilt": "Drifting Lower",
+        "flags": { "max_vanna_level": false, "ib_bounce": true, "dadu_pinning": false },
+        "spreads": "Iron Condors", "entry": null, "emas": null, "approxBouncePts": null, "stochastic": "Yes", "vvixVix": null, "reversalSignal": null, "trendEliminator": null
+    }
+];
+", "Delta": "Pos", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos" },
         "regime": "Compression",
         "action": "Forced Buying",
         "actionDirection": "BUY",
@@ -546,7 +558,7 @@ async function fetchTechnicals(dateStr) {
  */
 async function fetchNetGreeksLive(ticker) {
     // We can use the batch load pattern or fetch them explicitly
-    const greeks = ["gamma", "zomma", "delta", "vex", "vega", "vomma"];
+    const greeks = ["gamma", "zomma", "delta", "vex", "vega", "vomma", "speed"];
     let net = {};
 
     // Default fallback values
@@ -575,12 +587,25 @@ async function fetchNetGreeksLive(ticker) {
             if (batchData[dataKey]) {
                 const optData = batchData[dataKey].option_data;
                 const colMetric = optData.columns.findIndex(c => c.trim() === `total_${g}` || c.trim() === g);
+                const colStrike = optData.columns.findIndex(c => c.trim().toLowerCase() === "strike_price" || c.trim().toLowerCase() === "strike");
+
                 if (colMetric !== -1) {
                     let sum = 0;
+                    let maxVal = -Infinity;
+                    let strikeAtMax = 0;
+
                     optData.data.forEach(r => {
-                        sum += (parseFloat(r[colMetric]) || 0);
+                        const val = (parseFloat(r[colMetric]) || 0);
+                        sum += val;
+
+                        // For Vanna, track the strike where exposure is highest (Max Vanna Level)
+                        if (g === "vanna" && val > maxVal) {
+                            maxVal = val;
+                            strikeAtMax = parseFloat(r[colStrike]) || 0;
+                        }
                     });
                     net[g] = sum;
+                    if (g === "vanna") net["max_vanna_strike"] = strikeAtMax;
                 }
             }
         }
@@ -629,16 +654,16 @@ async function runMarketStructureEngine(ticker = "SPX") {
         ivState = "Low"; // Fallback
     }
 
-    // 4. Layer 2: Matrix Lookup
-    // Map net raw numbers to Pos/Neg
+    // Construct current conditions matrix
     const currentConditions = {
-        "IV": ivState === "High" ? "High" : "Low", // Case formatting
-        "Gamma": netGreeks.gamma >= 0 ? "Pos" : "Neg",
-        "Zomma": netGreeks.zomma >= 0 ? "Pos" : "Neg",
-        "Delta": netGreeks.delta >= 0 ? "Pos" : "Neg",
-        "Vex": netGreeks.vex >= 0 ? "Pos" : "Neg",
-        "Vega": netGreeks.vega >= 0 ? "Pos" : "Neg",
-        "Vomma": netGreeks.vomma >= 0 ? "Pos" : "Neg"
+        IV: ivState,
+        Gamma: netGreeks.gamma >= 0 ? "Pos" : "Neg",
+        Zomma: netGreeks.zomma >= 0 ? "Pos" : "Neg",
+        Delta: netGreeks.delta >= 0 ? "Pos" : "Neg",
+        Vex: netGreeks.vex >= 0 ? "Pos" : "Neg",
+        Vega: netGreeks.vega >= 0 ? "Pos" : "Neg",
+        Vomma: netGreeks.vomma >= 0 ? "Pos" : "Neg",
+        Speed: netGreeks.speed >= 0 ? "Pos" : "Neg"
     };
 
     // Match structures — null condition fields act as wildcards (match any value)
@@ -650,9 +675,19 @@ async function runMarketStructureEngine(ticker = "SPX") {
             s.condition.Delta === currentConditions.Delta &&
             s.condition.Vex === currentConditions.Vex &&
             s.condition.Vega === currentConditions.Vega &&
-            (s.condition.Vomma === null || s.condition.Vomma === currentConditions.Vomma)
+            (s.condition.Vomma === null || s.condition.Vomma === currentConditions.Vomma) &&
+            (s.condition.Speed === undefined || s.condition.Speed === null || s.condition.Speed === currentConditions.Speed)
         );
     });
+
+    // 4b. Heuristic Overlay: Vanna Tagging (Fragile Vol)
+    let vannaTagging = false;
+    if (netGreeks.max_vanna_strike && realSpotSPX > 0) {
+        const dist = Math.abs(realSpotSPX - netGreeks.max_vanna_strike);
+        if (dist < 6) { // Proximity threshold (e.g., within 6 points)
+            vannaTagging = true;
+        }
+    }
 
     if (!matchedStructure) {
         matchedStructure = {
@@ -698,7 +733,9 @@ async function runMarketStructureEngine(ticker = "SPX") {
         structure: matchedStructure,
         conditions: currentConditions,
         warning: layer3Warning,
-        technicals: tech
+        technicals: tech,
+        vannaTagging: vannaTagging,
+        maxVannaStrike: netGreeks.max_vanna_strike
     };
 }
 
@@ -786,7 +823,7 @@ async function updateMarketStructureUI() {
             causesHTML += `<div class="ms-cause-item">IV: <span class="${ivClass}">${cond.IV}</span></div>`;
 
             // Greeks
-            const greeks = ['Gamma', 'Zomma', 'Delta', 'Vex', 'Vega', 'Vomma'];
+            const greeks = ['Gamma', 'Zomma', 'Delta', 'Vex', 'Vega', 'Vomma', 'Speed'];
             greeks.forEach(g => {
                 const val = cond[g];
                 const cls = val === 'Pos' ? 'ms-cause-pos' : 'ms-cause-neg';
@@ -811,7 +848,7 @@ async function updateMarketStructureUI() {
                 flagsContainer.innerHTML += `<span class="ms-badge badge-vanna">WATCH: Max Vanna Level</span>`;
             }
             if (struct.flags.ib_bounce) {
-                flagsContainer.innerHTML += `<span class="ms-badge badge-ib">WATCH: IB Bounce Level</span>`;
+                flagsContainer.innerHTML += `<span class="ms-badge badge-ib">WATCH: Sup/Res Bounce Level</span>`;
             }
             if (struct.flags.dadu_pinning) {
                 flagsContainer.innerHTML += `<span class="ms-badge badge-dadu">Dadu Pinning Active</span>`;
@@ -874,10 +911,17 @@ async function updateMarketStructureUI() {
             detailsContainer.innerHTML = detailsHTML;
         }
 
-        // Warning
+        // Warning & Vanna Tagging
         const warningEl = document.getElementById("ms-warning");
-        if (result.warning) {
+        if (result.vannaTagging) {
+            warningEl.innerHTML = `⚠️ VANNA TAGGED: FRAGILE VOL ZONE (${result.maxVannaStrike})`;
+            warningEl.style.background = "#FF1744";
+            warningEl.style.color = "white";
+            warningEl.style.display = 'block';
+        } else if (result.warning) {
             warningEl.innerText = result.warning;
+            warningEl.style.background = "rgba(255, 109, 0, 0.2)";
+            warningEl.style.color = "var(--accent-yellow)";
             warningEl.style.display = 'block';
         } else {
             warningEl.style.display = 'none';
