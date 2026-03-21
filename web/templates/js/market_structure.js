@@ -422,22 +422,6 @@ const MARKET_STRUCTURES = [
         "spreads": "Iron Condors", "entry": null, "emas": null, "approxBouncePts": null, "stochastic": "Yes", "vvixVix": null, "reversalSignal": null, "trendEliminator": null
     }
 ];
-", "Delta": "Pos", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos" },
-        "regime": "Compression",
-        "action": "Forced Buying",
-        "actionDirection": "BUY",
-        "tilt": "Fade Extremes",
-        "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
-        "spreads": null,
-        "entry": null,
-        "emas": null,
-        "approxBouncePts": null,
-        "stochastic": null,
-        "vvixVix": null,
-        "reversalSignal": null,
-        "trendEliminator": null
-    }
-];
 
 /**
  * Utility to calculate EMA from an array of prices
