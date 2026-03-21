@@ -214,3 +214,44 @@ def calc_vomma_ex(vega_ex, dp, vol, T):
         vomma_ex[:, i] = vega_ex[:, i] * vomma_factor
     
     return vomma_ex
+
+
+@njit(cache=True)
+def calc_speed_ex(gamma_ex, dp, vol, T, S):
+    """
+    Calcula la "Speed Exposure" (sensibilidad de Gamma al cambio en el precio).
+    Speed = - (Gamma / S) * (1 + d1 / (sigma * sqrt(T)))
+    Aprovechamos que ya tenemos gamma_ex calculado.
+    
+    Args:
+        gamma_ex: (N, M) array - Gamma exposure matrix
+        dp: (N, M) array - d1 values
+        vol: (M,) array - volatilities per option
+        T: (M,) array - time to expiration per option
+        S: (N, 1) array - spot prices (levels)
+    
+    Returns:
+        (N, M) array - Speed exposure matrix
+    """
+    n_prices = gamma_ex.shape[0]
+    n_options = gamma_ex.shape[1]
+    
+    # Crear output array
+    speed_ex = np.zeros((n_prices, n_options), dtype=np.float64)
+    
+    # Calcular para cada opción (columna)
+    for i in range(n_options):
+        sqrt_T = np.sqrt(T[i])
+        vol_i = vol[i]
+        
+        # Factor de ajuste Speed: (1 + d1 / (vol * sqrt_T))
+        # El signo negativo se aplica al final
+        speed_factor = (1.0 + dp[:, i] / (vol_i * sqrt_T))
+        
+        # Aplicar a gamma_ex (gamma_ex ya incluye OI * S * S)
+        # Speed = - (Gamma / S) * speed_factor
+        # Como gamma_ex es Gamma * OI * S^2, entonces:
+        # speed_ex = - (gamma_ex / S) * speed_factor
+        speed_ex[:, i] = -(gamma_ex[:, i] / S[:, 0]) * speed_factor
+    
+    return speed_ex
