@@ -73,13 +73,66 @@ class PPOTrainer:
         self.agent.to(self.device)
         self.num_workers = num_workers
 
-        self.optimizer = optim.Adam(
-            self.agent.parameters(),
-            lr=RL_CONFIG["learning_rate"],
+        # Split parameters into policy and value groups (Fix 2)
+        policy_params = []
+        value_params  = []
+        for name, param in self.agent.named_parameters():
+            if "value" in name or "critic" in name:
+                value_params.append(param)
+            else:
+                policy_params.append(param)
+
+        self.optimizer = optim.Adam([
+            {"params": policy_params, "lr": RL_CONFIG["learning_rate"]},       # 3e-5
+            {"params": value_params,  "lr": RL_CONFIG["learning_rate"] * 5},   # 1.5e-4
+        ], weight_decay=1e-4)
+
+        # Fix 6: Decoupled LR Decay (Issue: value head needs higher floor)
+        def get_lr_lambda(group_idx):
+            def _lambda(step):
+                # Warmup (First 20 steps)
+                if step < 20:
+                    return 0.3 + 0.7 * (step / 20.0)
+                # Platform (20 to 250)
+                if step < 250:
+                    return 1.0
+                # Decay (250 to 500+)
+                total_updates = RL_CONFIG.get("total_updates", 500)
+                decay_steps = total_updates - 250
+                if decay_steps <= 0: return 1.0
+                
+                prog = min((step - 250) / float(decay_steps), 1.0)
+                floor = RL_CONFIG.get("value_lr_decay_floor", 0.4) if group_idx == 1 else 0.2
+                return 1.0 - (1.0 - floor) * prog
+            return _lambda
+
+        self.scheduler = optim.lr_scheduler.LambdaLR(
+            self.optimizer, 
+            lr_lambda=[get_lr_lambda(0), get_lr_lambda(1)]
         )
+        
+        # Split verification (Fix 2)
+        print("\n================================")
+        print("  OPTIMIZER PARAMETER GROUPS")
+        print("================================")
+        for i, group in enumerate(self.optimizer.param_groups):
+            n_params = sum(p.numel() for p in group["params"])
+            lr = group["lr"]
+            role = "VALUE/CRITIC" if lr > RL_CONFIG["learning_rate"] else "POLICY/BACKBONE"
+            print(f"  Group {i} ({role:15}): {n_params:6d} params | LR={lr:.2e}")
+        print("================================\n")
+
         self.reward_normalizer = RunningMeanStd()
         self.curriculum = CurriculumScheduler()
         self.best_profit_factor = 0.0
+
+        # Fix 6: Chronological Date Split (80/20) for Train/Eval Separation
+        # Ensures evaluation is always out-of-sample relative to training data
+        all_dates = sorted(self.env.episode_index['date'].unique())
+        split_idx = int(len(all_dates) * 0.8)
+        self.train_dates = all_dates[:split_idx]
+        self.eval_dates  = all_dates[split_idx:]
+        print(f"[RL] Date Split: {len(self.train_dates)} train days, {len(self.eval_dates)} eval days.")
 
         # Multiprocessing pool
         self.pool = None
@@ -114,7 +167,9 @@ class PPOTrainer:
         }
 
     def collect_episodes(self, n_episodes: int, min_confidence: float = 0.60,
-                         training: bool = True) -> tuple:
+                         min_strike: int = 0,
+                         training: bool = True, update_step: int = 0, total_updates: int = 400,
+                         logit_noise_level: float = 0.0, obs_noise: bool = True) -> tuple:
         """
         Collect n_episodes by running the current policy in the environment.
         Uses multiprocessing pool if self.num_workers > 1 and training is True.
@@ -122,17 +177,36 @@ class PPOTrainer:
         buffer = RolloutBuffer()
         episode_infos = []
         
-        curriculum_phase = getattr(self.env, "_curriculum_phase", 3)
-        
+        phase_info = self.curriculum.get_phase_info(update_step)
+        min_confidence = phase_info["min_confidence"]
+        min_strike = phase_info["min_strike_bucket"]
+        max_strike = phase_info.get("max_strike_bucket", 6)
+        min_hold = phase_info.get("min_hold_minutes", 0)
+        curriculum_phase = phase_info["phase"]
+
         if self.pool is not None and training:
             # Move agent weights to CPU to be safely serialized
             self.agent.cpu()
             state_dict = {k: v.cpu() for k, v in self.agent.state_dict().items()}
             self.agent.to(self.device)
             
+            # --- Sample from date-restriced pool (Issue 6) ---
+            eligible_indices = self.env.episode_index[self.env.episode_index['date'].isin(
+                self.train_dates if training else self.eval_dates
+            )].index.tolist()
+            
+            if not eligible_indices:
+                print(f"  [!] No eligible episodes for {'train' if training else 'eval'}")
+                return buffer, episode_infos # Return empty buffer if no eligible episodes
+
             futures = []
             for _ in range(n_episodes):
-                futures.append(self.pool.submit(worker_collect, state_dict, min_confidence, curriculum_phase))
+                # Sample random episode from restricted pool
+                ep_idx = np.random.choice(eligible_indices)
+                futures.append(self.pool.submit(
+                    worker_collect, state_dict, min_confidence, min_strike, max_strike, min_hold,
+                    curriculum_phase, update_step, total_updates, logit_noise_level, ep_idx, obs_noise
+                ))
                 
             import concurrent.futures
             collected = 0
@@ -168,11 +242,20 @@ class PPOTrainer:
 
         # Filter environment episodes by curriculum confidence
         valid_mask = self.env.episode_index["mlp_confidence"] >= min_confidence
-        valid_indices = self.env.episode_index[valid_mask].index.tolist()
+        
+        # Apply train/eval date split for single-threaded collection as well
+        date_mask = self.env.episode_index['date'].isin(self.train_dates if training else self.eval_dates)
+        
+        valid_indices = self.env.episode_index[valid_mask & date_mask].index.tolist()
 
         if not valid_indices:
-            print(f"[RL] Warning: no episodes with confidence >= {min_confidence}")
-            valid_indices = list(range(len(self.env.episode_index)))
+            print(f"[RL] Warning: no episodes with confidence >= {min_confidence} for {'train' if training else 'eval'} split.")
+            # Fallback to all episodes if no valid ones in split, but log it
+            valid_indices = self.env.episode_index[date_mask].index.tolist()
+            if not valid_indices: # If still no episodes, then something is wrong
+                print(f"[RL] Critical: No episodes found for {'train' if training else 'eval'} split even without confidence filter.")
+                return buffer, episode_infos
+
 
         collected = 0
         max_attempts = n_episodes * 3
@@ -182,6 +265,9 @@ class PPOTrainer:
                 break
 
             idx = np.random.choice(valid_indices)
+            self.env._current_min_confidence = min_confidence
+            self.env._current_min_strike_bucket = min_strike
+            self.env._current_max_strike_bucket = phase_info.get("max_strike_bucket", 6)
             state = self.env.reset(episode_idx=idx)
 
             episode_states = []
@@ -196,12 +282,7 @@ class PPOTrainer:
             step_count = 0
 
             while not done and step_count < RL_CONFIG["session_length_minutes"]:
-                # Augment state during training
-                if training:
-                    state_input = augment_state(state)
-                else:
-                    state_input = state
-
+                state_input = augment_state(state) if obs_noise else state
                 state_tensor = torch.FloatTensor(state_input).unsqueeze(0).to(self.device)
 
                 with torch.no_grad():
@@ -212,8 +293,11 @@ class PPOTrainer:
                     else:
                         action_type = "exit"
 
+                    # Apply logit noise for strike exploration in early Phase 1
+                    l_noise = 0.5 if training and update_step < (total_updates * 0.1) and action_type == "strike" else 0.0
+                    
                     action, log_prob, value = self.agent.get_action(
-                        state_tensor, action_type, deterministic=not training)
+                        state_tensor, action_type, deterministic=not training, logit_noise=l_noise)
 
                 # action is now an int (strike bucket, sniper choice, or exit choice)
                 env_action = action
@@ -262,73 +346,165 @@ class PPOTrainer:
 
         return buffer, episode_infos
 
-    def ppo_update(self, buffer: RolloutBuffer) -> dict:
-        """
-        Run PPO clipped objective update on collected rollout data.
-
-        Returns: dict with loss components.
-        """
+    def ppo_update(self, buffer: RolloutBuffer, update_step: int = 0) -> dict:
+        """Run PPO clipped objective update with entropy annealing and KL stopping."""
+        
+        # Scheduled base entropy coefficient (annealed)
+        progress = min(update_step / RL_CONFIG.get("entropy_anneal_end", 350), 1.0)
+        base_coeff  = RL_CONFIG["entropy_coeff"]
+        floor_coeff = RL_CONFIG.get("entropy_coeff_min", 0.04)
+        current_coeff = base_coeff - (base_coeff - floor_coeff) * progress
+        
+        kl_target = RL_CONFIG.get("kl_target", 0.015)
+        entropy_target = RL_CONFIG.get("entropy_target", 0.05)
+        
         self.agent.train()
-        total_policy_loss = 0.0
-        total_value_loss = 0.0
-        total_entropy_loss = 0.0
+        total_policy_loss = total_value_loss = total_entropy_loss = 0.0
+        total_mean_entropy = 0.0
+        total_approx_kl = 0.0
         n_batches = 0
 
+        # Per-head entropy for diagnostics (Issue 1)
+        total_h_strike = 0.0
+        total_h_exit = 0.0
+
         for epoch in range(RL_CONFIG["ppo_epochs"]):
+            epoch_kls = []
             for batch in buffer.get_batches(RL_CONFIG["batch_size"]):
                 states = batch["states"].to(self.device)
-                actions = batch["actions"] # list of dict/int
+                actions = batch["actions"]
+                action_types = batch["action_types"]
                 old_log_probs = batch["old_log_probs"].to(self.device)
                 returns = batch["returns"].to(self.device)
-                advantages = batch["advantages"].to(self.device)
-                action_types = batch["action_types"]
 
-                # Evaluate current policy
+                if states.shape[0] < 2:
+                    continue
+
+                # ── Recompute log_probs, entropy, and values with CURRENT weights (Fix 4) ──
                 log_probs, entropy, values = self.agent.evaluate_actions(
                     states, actions, action_types)
 
-                # PPO clipped objective
+                if update_step == 0 and epoch == 0 and n_batches == 0:
+                    print(f"\n[DEBUG] Entropy sample: min={entropy.min():.4f} "
+                          f"max={entropy.max():.4f} mean={entropy.mean():.4f}")
+                    print(f"[DEBUG] Action types sample: {action_types[:10]}")
+
+                # ── Advantages computed fresh, using current V_θ (Fix 4) ──
+                # Use .detach() on the value prediction used for advantages to separate gradients
+                advantages = returns - values.detach()
+                adv_std = advantages.std(unbiased=False)
+                advantages = (advantages - advantages.mean()) / (adv_std + 1e-8)
+
+                # ── PPO clipped objective ──
                 ratio = torch.exp(log_probs - old_log_probs)
+                
+                # Track approximate KL for early stopping
+                with torch.no_grad():
+                    approx_kl = ((ratio - 1) - torch.log(ratio)).mean().item()
+                    epoch_kls.append(approx_kl)
+                
                 clip_eps = RL_CONFIG["clip_epsilon"]
                 surr1 = ratio * advantages
                 surr2 = torch.clamp(ratio, 1.0 - clip_eps, 1.0 + clip_eps) * advantages
                 policy_loss = -torch.min(surr1, surr2).mean()
 
-                # Value loss
-                value_loss = nn.MSELoss()(values, returns)
+                # ── Per-head entropy for diagnostics (Issue 1) ──
+                with torch.no_grad():
+                    # Map action types to indices for boolean masking
+                    is_strike_batch = torch.tensor([at != "exit" for at in action_types], device=self.device)
+                    is_exit_batch = ~is_strike_batch
+                    
+                    h_strike = entropy[is_strike_batch].mean().item() if is_strike_batch.any() else 0.0
+                    h_exit = entropy[is_exit_batch].mean().item() if is_exit_batch.any() else 0.0
 
-                # Entropy bonus — per-action-type coefficient
-                # Sniper steps get higher entropy to force exploration of WAIT vs ENTER
-                sniper_entropy_coeff = RL_CONFIG.get("sniper_entropy_coeff", 0.10)
-                base_entropy_coeff = RL_CONFIG["entropy_coeff"]
-                is_sniper = torch.tensor(
-                    [at == "sniper_entry" for at in action_types],
-                    dtype=torch.float32, device=self.device
-                )
-                per_sample_coeff = is_sniper * sniper_entropy_coeff + (1 - is_sniper) * base_entropy_coeff
+                # ── Normalized Value Loss (Issue 3) ──
+                # Use batch-wise std to scale returns/values to stable range (~N(0,1))
+                # Clamp at 1.0 to avoid inflating loss during low-variance early steps
+                ret_std = returns.std().clamp(min=1.0)
+                value_loss = nn.MSELoss()(values / ret_std, returns / ret_std)
+
+                # ── Entropy bonus (Conditional Regularization) ──
+                # Issue: Emergency boost must be per-sample to avoid masking collapse (Strike H masks Exit H)
+                exit_tgt = RL_CONFIG.get("exit_entropy_target", 0.40)
+                strike_tgt = RL_CONFIG.get("entropy_target", 0.25)
+                
+                mean_ent_val = entropy.mean().item() # for logging
+
+                coeffs = []
+                for i, at in enumerate(action_types):
+                    e_val = entropy[i].item()
+                    
+                    if at == "sniper_entry":
+                        coeffs.append(RL_CONFIG.get("sniper_entropy_coeff", 0.10))
+                        continue
+                    
+                    tgt = exit_tgt if at == "exit" else strike_tgt
+                    deficit_ratio = max(0.0, (tgt - e_val) / tgt)
+                    
+                    # Emergency multiplier only kicks in when deficit > 30% of target (Issue: overcorrection)
+                    if deficit_ratio > 0.30:
+                        em = 1.0 + deficit_ratio * 3.0
+                    else:
+                        em = 1.0
+                    
+                    base = current_coeff * (1.1 if at == "exit" else 1.0)
+                    # Hard cap: never exceed 2x current_coeff to prevent entropy dominating policy loss
+                    coeffs.append(min(base * em, current_coeff * 2.0))
+                
+                per_sample_coeff = torch.tensor(coeffs, dtype=torch.float32, device=self.device)
                 entropy_loss = -(entropy * per_sample_coeff).mean()
 
                 # Total loss
+                # Values and returns both normalized by ret_std — stable scale regardless of hold duration
                 loss = (policy_loss
                         + RL_CONFIG["value_loss_coeff"] * value_loss
                         + entropy_loss)
 
+                if not torch.isfinite(loss):
+                    continue
+
                 self.optimizer.zero_grad()
                 loss.backward()
-                nn.utils.clip_grad_norm_(self.agent.parameters(),
-                                         RL_CONFIG["max_grad_norm"])
+
+                # Gradient cleaning & clipping
+                for p in self.agent.parameters():
+                    if p.grad is not None:
+                        p.grad.nan_to_num_(nan=0.0, posinf=0.0, neginf=0.0)
+
+                # Separate, tighter clipping for value head to prevent spikes during hold duration shifts (Issue 3)
+                value_params = list(self.agent.value_head.parameters())
+                nn.utils.clip_grad_norm_(value_params, max_norm=1.0)
+
+                # Clip only non-value parameters to max_grad_norm (Issue 3 Fix: avoid double-clipping)
+                non_value_params = [p for p in self.agent.parameters() if not any(p is vp for vp in value_params)]
+                nn.utils.clip_grad_norm_(non_value_params, RL_CONFIG["max_grad_norm"])
                 self.optimizer.step()
 
                 total_policy_loss += policy_loss.item()
                 total_value_loss += value_loss.item()
                 total_entropy_loss += entropy_loss.item()
+                total_mean_entropy += mean_ent_val
+                
+                # Diagnostics (Issue 1)
+                total_h_strike += h_strike
+                total_h_exit += h_exit
+
+                total_approx_kl += approx_kl
                 n_batches += 1
+            
+            # KL early stopping (Fix 1)
+            if epoch_kls and np.mean(epoch_kls) > kl_target:
+                break
 
         n_batches = max(n_batches, 1)
         return {
-            "policy_loss": total_policy_loss / n_batches,
-            "value_loss": total_value_loss / n_batches,
+            "policy_loss":  total_policy_loss / n_batches,
+            "value_loss":   total_value_loss / n_batches,
             "entropy_loss": total_entropy_loss / n_batches,
+            "mean_entropy": total_mean_entropy / n_batches,
+            "h_strike":     total_h_strike / n_batches,
+            "h_exit":       total_h_exit / n_batches,
+            "approx_kl":    total_approx_kl / n_batches,
         }
 
     def train(self, save_dir: str = "../rl_models",
@@ -364,12 +540,16 @@ class PPOTrainer:
         rolling_policy_loss = []
         rolling_value_loss = []
         rolling_entropy = []
+        rolling_mean_entropy = []
+        rolling_kl = []
         step_times = []
+        self._next_logit_noise = 0.0
 
         # Eval history for overfitting comparison
         eval_history = {
             "step": [], "eval_pf": [], "eval_wr": [], "eval_pnl": [],
             "train_pf": [], "train_wr": [], "train_pnl": [],
+            "stochastic_train_pf": [], # Added for Issue 2
         }
 
         train_start = time.time()
@@ -377,18 +557,35 @@ class PPOTrainer:
         for update_step in range(total_updates):
             t_start = time.time()
 
-            # Get curriculum phase
+            # Fix 7: Dynamic Logit Noise (PREVIOUSLY calculated level)
+            noise_level = getattr(self, "_next_logit_noise", 0.0)
+            
+            # Get curriculum phase (interpolated)
             phase_info = self.curriculum.get_phase_info(update_step)
             min_conf = phase_info["min_confidence"]
 
-            # Propagate curriculum phase to environment for min-wait enforcement
+            # Propagate curriculum to environment
+            min_strike = phase_info["min_strike_bucket"]
             self.env._curriculum_phase = phase_info["phase"]
+            self.env._current_min_confidence = min_conf
+            self.env._current_min_strike_bucket = min_strike
+            self.env._current_max_strike_bucket = phase_info.get("max_strike_bucket", 6)
+            self.env._current_min_hold_minutes = phase_info.get("min_hold_minutes", 0)
+            
+            # Sniper min_wait lookup
+            sniper_curriculum = RL_CONFIG.get("sniper_min_wait_curriculum", {})
+            self.env._current_min_wait = sniper_curriculum.get(phase_info["phase"], {"min_wait": 0}).get("min_wait", 0)
 
-            # Collect episodes
+            # Collect episodes with dynamic noise
             buffer, episode_infos = self.collect_episodes(
                 n_episodes=n_episodes,
                 min_confidence=min_conf,
+                min_strike=min_strike,
                 training=True,
+                update_step=update_step,
+                total_updates=total_updates,
+                logit_noise_level=noise_level,
+                obs_noise=True # Training uses observation noise
             )
 
             if len(buffer) == 0:
@@ -396,7 +593,8 @@ class PPOTrainer:
                 continue
 
             # PPO update
-            losses = self.ppo_update(buffer)
+            losses = self.ppo_update(buffer, update_step=update_step)
+            self.scheduler.step()
 
             # Compute episode-level statistics
             pnl_pcts = [info["final_pnl_pct"] for info in episode_infos
@@ -438,9 +636,30 @@ class PPOTrainer:
             rolling_pf.append(profit_factor)
             rolling_wr.append(win_rate)
             rolling_pnl.append(mean_pnl)
+            # Track Stochastic Train PF (Issue 2)
+            # Collect 64 episodes (increased for statistical significance) on train dates without noise
+            with torch.no_grad():
+                _, s_infos = self.collect_episodes(
+                    n_episodes=64,
+                    training=True, 
+                    update_step=update_step,
+                    logit_noise_level=0.0,
+                    obs_noise=False 
+                )
+            s_pf = 0.0
+            if s_infos:
+                s_wins = sum(1 for info in s_infos if info.get("final_pnl_pct", 0) > 0)
+                s_losses = sum(1 for info in s_infos if info.get("final_pnl_pct", 0) < 0)
+                s_total_win = sum(info.get("final_pnl_pct", 0) for info in s_infos if info.get("final_pnl_pct", 0) > 0)
+                s_total_loss = abs(sum(info.get("final_pnl_pct", 0) for info in s_infos if info.get("final_pnl_pct", 0) < 0))
+                s_pf = s_total_win / s_total_loss if s_total_loss > 0 else (2.0 if s_total_win > 0 else 1.0)
+
+            # Logging
             rolling_policy_loss.append(losses["policy_loss"])
             rolling_value_loss.append(losses["value_loss"])
             rolling_entropy.append(losses["entropy_loss"])
+            rolling_mean_entropy.append(losses.get("mean_entropy", 0.05))
+            rolling_kl.append(losses.get("approx_kl", 0))
 
             # Keep only last ROLLING_WINDOW
             if len(rolling_pf) > ROLLING_WINDOW:
@@ -450,6 +669,15 @@ class PPOTrainer:
                 rolling_policy_loss.pop(0)
                 rolling_value_loss.pop(0)
                 rolling_entropy.pop(0)
+                rolling_mean_entropy.pop(0)
+                rolling_kl.pop(0)
+
+            # Fix 7: Calculate noise for the NEXT step based on RAW mean entropy
+            r_h_raw = np.mean(rolling_mean_entropy) if rolling_mean_entropy else 0.08
+            if r_h_raw < 0.035:
+                self._next_logit_noise = min((0.035 - r_h_raw) * 10.0, 1.5)
+            else:
+                self._next_logit_noise = 0.0
 
             # Save history
             self.history["update_step"].append(update_step)
@@ -475,31 +703,40 @@ class PPOTrainer:
             # ─── PROGRESS LOG ───
             if update_step % log_interval == 0 or update_step == total_updates - 1:
                 pct_done = (update_step + 1) / total_updates * 100
-                bar_len = 20
+                bar_len = 25
                 filled = int(bar_len * (update_step + 1) / total_updates)
                 bar = "█" * filled + "░" * (bar_len - filled)
 
-                # Rolling averages
-                r_pf = np.mean(rolling_pf)
-                r_wr = np.mean(rolling_wr)
-                r_pnl = np.mean(rolling_pnl)
-                r_pi = np.mean(rolling_policy_loss)
-                r_v = np.mean(rolling_value_loss)
-                r_h = np.mean(rolling_entropy)
+                # Rolling averages (protect vs empty)
+                r_pf = np.mean(rolling_pf) if rolling_pf else 1.0
+                r_wr = np.mean(rolling_wr) if rolling_wr else 0.5
+                r_pnl = np.mean(rolling_pnl) if rolling_pnl else 0.0
+                r_pi = np.mean(rolling_policy_loss) if rolling_policy_loss else 0.0
+                r_v = np.mean(rolling_value_loss) if rolling_value_loss else 0.0
+                r_h = np.mean(rolling_mean_entropy) if rolling_mean_entropy else 0.08
+                r_kl = np.mean(rolling_kl) if rolling_kl else 0.0
 
-                print(f"\n  [{bar}] {pct_done:5.1f}% | Step {update_step}/{total_updates} | "
+                # Issue 1: Display per-head entropy to detect collapse early
+                h_s = losses.get("h_strike", 0.0)
+                h_e = losses.get("h_exit", 0.0)
+
+                print(f"\n  [{bar}] {pct_done:5.1f}% | Update {update_step}/{total_updates} | "
                       f"ETA: {eta_min:.1f}min | Phase {phase_info['phase']}")
-                print(f"  ├─ This step:  PF={profit_factor:.2f} WR={win_rate:.1%} "
+                print(f"  ├─ Current:    PF={profit_factor:.2f} WR={win_rate:.1%} "
                       f"PnL={mean_pnl:+.4f} Hold={mean_hold:.0f}m "
                       f"L/S={n_long}/{n_short} Stop={hard_stop_rate:.0%}")
+                
+                # Manual request: explicit Entropy and KL monitor
+                print(f"  ├─ Entropy:    {r_h:.4f} (target: 0.03-0.10) H[S/E]={h_s:.2f}/{h_e:.2f}")
+                print(f"  ├─ Approx KL:  {losses.get('approx_kl', 0):.4f} (avg:{r_kl:.4f})")
+
                 if RL_CONFIG.get("use_sniper_mode"):
                     print(f"  ├─ Sniper:     AvgWait={mean_sniper_wait:.1f}m "
                           f"Timeouts={sniper_timeouts}/{len(episode_infos)}")
+                
                 print(f"  ├─ Rolling{ROLLING_WINDOW:2d}: PF={r_pf:.2f} WR={r_wr:.1%} "
                       f"PnL={r_pnl:+.4f}")
-                print(f"  ├─ Losses:     π={losses['policy_loss']:.4f} "
-                      f"V={losses['value_loss']:.4f} "
-                      f"H={losses['entropy_loss']:.4f} "
+                print(f"  ├─ Losses:     π={losses['policy_loss']:.4f} V={losses['value_loss']:.4f} "
                       f"(avg: π={r_pi:.4f} V={r_v:.4f})")
                 print(f"  └─ Timing:     {elapsed:.1f}s/step | "
                       f"Total: {(time.time()-train_start)/60:.1f}min")
@@ -514,7 +751,10 @@ class PPOTrainer:
                 eval_buffer, eval_infos = self.collect_episodes(
                     n_episodes=min(n_episodes, 200),
                     min_confidence=min_conf,
+                    min_strike=min_strike,
                     training=False,  # No augmentation, deterministic
+                    update_step=update_step,
+                    obs_noise=False # No observation noise for eval
                 )
 
                 eval_pnls = [info["final_pnl_pct"] for info in eval_infos
@@ -543,6 +783,7 @@ class PPOTrainer:
                 eval_history["train_pf"].append(train_pf_avg)
                 eval_history["train_wr"].append(train_wr_avg)
                 eval_history["train_pnl"].append(train_pnl_avg)
+                eval_history["stochastic_train_pf"].append(s_pf) # Added for Issue 2
 
                 print(f"  {'Metric':<18} {'Train (rolling)':>16} {'Eval (determ.)':>16} {'Gap':>10}")
                 print(f"  {'─'*60}")
@@ -564,7 +805,10 @@ class PPOTrainer:
                     print(f"\n  ⚡ Mild overfitting: PF gap = {pf_gap:.2f}. Monitor closely.")
                 elif eval_pf > train_pf_avg and eval_pf > 1.0:
                     print(f"\n  ✅ Healthy: Eval PF ({eval_pf:.2f}) ≥ Train PF ({train_pf_avg:.2f})")
-
+                print(f"  Train:      PF {train_pf_avg:.2f} | WR {train_wr_avg:.1%} | PnL {train_pnl_avg:+.2%}")
+                print(f"  StochTrain: PF {s_pf:.2f} (clean states)")
+                if eval_pf > 0:
+                    pass # Already printed above
                 if eval_wr < 0.40:
                     print(f"  ⚠️  LOW EVAL WIN RATE: {eval_wr:.1%} — agent may be guessing.")
 
@@ -644,20 +888,74 @@ class ChunkedOptionsCache:
             self.access_order.append(date_str)
 
     def get(self, key, default=None):
-        """Get a cache entry by key (format: 'TICKER_YYYYMMDD_HH:MM')."""
+        """
+        Get a cache entry by key (format: 'TICKER_DATE_HH:MM').
+        
+        If the loaded shard is in the new 'Global Minute' format, it
+        dynamically reconstructs the 180-minute forward window for the episode.
+        """
         parts = key.split('_')
         if len(parts) >= 3:
+            ticker = parts[0]
             date_str = parts[1]
+            time_str = parts[2]
         else:
             date_str = parts[0]
-        
+            ticker = "SPX"
+            time_str = ""
+
         if date_str not in self.loaded_days:
             if not self._load_day(date_str):
                 return default
         else:
             self._touch(date_str)
         
-        return self.loaded_days[date_str].get(key, default)
+        shard = self.loaded_days[date_str]
+        
+        # 1. New Format: Shared Minute Data
+        if "minute_data" in shard and "episodes" in shard:
+            ep_info = shard["episodes"].get(key)
+            if not ep_info:
+                return default
+            
+            # Reconstruct the 'minutes' dictionary (offset 0 to 180)
+            # using the sorted timestamps available in the shard
+            timestamps = shard.get("timestamps", [])
+            if not timestamps:
+                # Fallback: just return the ep_info if no minutes needed
+                return ep_info
+            
+            try:
+                start_idx = timestamps.index(time_str)
+            except ValueError:
+                return ep_info # Should not happen with well-formed cache
+            
+            reconstructed_minutes = {}
+            # Build forward window (matches max_forward_minutes from preprocess)
+            # Default is 180 minutes
+            max_forward = 180 
+            for offset in range(max_forward + 1):
+                idx = start_idx + offset
+                if idx >= len(timestamps):
+                    break
+                ts = timestamps[idx]
+                
+                # Check for ticker-specific minute data
+                ticker_data = shard["minute_data"].get(ticker, {})
+                if ts in ticker_data:
+                    reconstructed_minutes[offset] = ticker_data[ts]
+            
+            # Return a complete object that matches the Environment's expectations
+            return {
+                "spot": ep_info.get("spot", 0),
+                "day_atr": ep_info.get("day_atr", 5.0),
+                "calls": ep_info.get("calls", {}),
+                "puts": ep_info.get("puts", {}),
+                "minutes": reconstructed_minutes
+            }
+
+        # 2. Old Format: Redundant Per-Episode Data
+        return shard.get(key, default)
     
     def __contains__(self, key):
         return self.get(key) is not None
@@ -704,7 +1002,9 @@ def init_worker(episode_index_path, options_cache_dir, max_days, feature_columns
     g_worker_agent = PPOAgent(state_dim=state_dim, hidden_dims=hidden_dims)
     g_worker_agent.eval()
 
-def worker_collect(agent_state_dict, min_confidence, curriculum_phase):
+def worker_collect(agent_state_dict, min_confidence, min_strike, max_strike, min_hold,
+                   curriculum_phase, update_step, total_updates, logit_noise_level=0.0, 
+                   episode_idx=None, obs_noise=True):
     """Worker function to collect a single episode."""
     global g_worker_env, g_worker_agent
     import torch
@@ -714,14 +1014,23 @@ def worker_collect(agent_state_dict, min_confidence, curriculum_phase):
     
     g_worker_agent.load_state_dict(agent_state_dict)
     g_worker_env._curriculum_phase = curriculum_phase
+    g_worker_env._current_min_confidence = min_confidence
+    g_worker_env._current_min_strike_bucket = min_strike
+    g_worker_env._current_max_strike_bucket = max_strike
+    g_worker_env._current_min_hold_minutes = min_hold
     
-    valid_mask = g_worker_env.episode_index["mlp_confidence"] >= min_confidence
-    valid_indices = g_worker_env.episode_index[valid_mask].index.tolist()
-    if not valid_indices:
-        valid_indices = list(range(len(g_worker_env.episode_index)))
-        
-    for _ in range(10):
+    # Use pre-sampled index if provided (Issue 6)
+    if episode_idx is not None:
+        idx = episode_idx
+    else:
+        # Fallback to internal sampling if not provided (should not happen with new logic)
+        valid_mask = g_worker_env.episode_index["mlp_confidence"] >= min_confidence
+        valid_indices = g_worker_env.episode_index[valid_mask].index.tolist()
+        if not valid_indices:
+            valid_indices = list(range(len(g_worker_env.episode_index)))
         idx = np.random.choice(valid_indices)
+
+    for _ in range(1): # No longer need multiple attempts here as index is pre-verified
         state = g_worker_env.reset(episode_idx=idx)
         
         episode_states = []
@@ -737,7 +1046,7 @@ def worker_collect(agent_state_dict, min_confidence, curriculum_phase):
         
         with torch.no_grad():
             while not done and step_count < RL_CONFIG["session_length_minutes"]:
-                state_input = augment_state(state)
+                state_input = augment_state(state) if obs_noise else state
                 # Ensure it runs on CPU inside the worker
                 state_tensor = torch.FloatTensor(state_input).unsqueeze(0)
                 
@@ -748,8 +1057,18 @@ def worker_collect(agent_state_dict, min_confidence, curriculum_phase):
                 else:
                     action_type = "exit"
                     
+                # Fix: Apply logit noise to 'exit' if policy is collapsing (dynamic)
+                # Also keep the early-phase strike noise for exploration
+                l_noise = 0.0
+                if action_type == "strike" and update_step < (total_updates * 0.1):
+                    l_noise = 0.5
+                elif action_type == "exit":
+                    # Exit Head: HOLD(0) or EXIT(1)
+                    override = RL_CONFIG.get("logit_noise_exit_override", 0.0)
+                    l_noise = max(logit_noise_level, override)
+                
                 action, log_prob, value = g_worker_agent.get_action(
-                    state_tensor, action_type, deterministic=False)
+                    state_tensor, action_type, deterministic=False, logit_noise=l_noise)
                     
                 action_val = action
                 log_prob_float = log_prob.item() if isinstance(log_prob, torch.Tensor) else log_prob

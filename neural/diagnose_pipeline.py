@@ -95,6 +95,7 @@ def check_feature_health(df, feature_cols):
         'atm_iv', 'iv_zscore', 'vix_spot', 'rsi',
         'gamma_change', 'vanna_change', 'dgex_change',
         'time_sin', 'time_cos', 'minutes_to_close_norm',
+        'gamma_speed', 'vix_gamma', 'wonham_trend_prob', 'signal_persistence_5m'
     ]
 
     issues = []

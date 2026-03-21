@@ -28,15 +28,11 @@ from .config import RL_CONFIG, STRIKE_BUCKETS
 def generate_episode_index(training_df: pd.DataFrame,
                            mlp_model=None,
                            mlp_normalizer=None,
-                           min_confidence: float = None) -> pd.DataFrame:
+                           min_confidence: float = None,
+                           strict_wf: bool = False) -> pd.DataFrame:
     """
     Pre-filter training_df to only rows where the MLP would emit a LONG or SHORT
     signal with confidence >= min_confidence.
-
-    If mlp_model is provided, runs inference to compute predictions.
-    If not, uses the 'target' column as a proxy (target != 0 means signal).
-
-    Returns: filtered DataFrame with 'episode_id', 'mlp_direction', 'mlp_confidence' added.
     """
     min_confidence = min_confidence or RL_CONFIG["min_confidence"]
 
@@ -45,31 +41,36 @@ def generate_episode_index(training_df: pd.DataFrame,
         import torch
         from hybrid_model import FEATURE_COLUMNS
 
-        # Filter to only columns that exist in the training data
         cols = [c for c in FEATURE_COLUMNS if c in training_df.columns]
-        if len(cols) != len(FEATURE_COLUMNS):
-            missing = [c for c in FEATURE_COLUMNS if c not in training_df.columns]
-            print(f"  [!] {len(missing)} features missing from data (using {len(cols)}/{len(FEATURE_COLUMNS)}): {missing}")
         features = training_df[cols].values.astype(np.float32)
         features_norm = mlp_normalizer.transform(features)
 
         is_gbt = hasattr(mlp_model, 'predict_proba') and not isinstance(mlp_model, torch.nn.Module)
 
         if is_gbt:
-            # GBT Inference
-            probs = mlp_model.predict_proba(features_norm)
+            if strict_wf:
+                print(f"  [i] Using STRICT Walk-Forward inference (date-by-date filtering) for RL Prep...")
+                probs = np.zeros((len(training_df), 3), dtype=np.float32)
+                unique_dates = sorted(training_df['date'].unique())
+                for d_str in unique_dates:
+                    mask = training_df['date'] == d_str
+                    idx = np.where(mask)[0]
+                    if len(idx) == 0: continue
+                    probs[idx] = mlp_model.predict_proba(features_norm[idx], date=str(d_str))
+            else:
+                probs = mlp_model.predict_proba(features_norm)
+                
             predictions = np.argmax(probs, axis=1)
             confidences = np.max(probs, axis=1)
-            time_targets = np.column_stack([np.full(len(probs), 60.0), np.full(len(probs), 0.0)])
+            # GBT doesn't predict time_to_target, use defaults
+            # (Matches v6 collection logic)
         else:
-            # PyTorch Inference
             device = next(mlp_model.parameters()).device
             mlp_model.eval()
             with torch.no_grad():
                 X = torch.FloatTensor(features_norm).to(device)
                 batch_size = 4096
-                all_probs = []
-                all_time_targets = []
+                all_probs, all_time_targets = [], []
                 for i in range(0, len(X), batch_size):
                     batch = X[i:i + batch_size]
                     output = mlp_model(batch)
@@ -79,23 +80,17 @@ def generate_episode_index(training_df: pd.DataFrame,
                         logits = output.get("logits", output.get("class_logits"))
                         time_pred = output.get("time_to_target", None)
                     else:
-                        logits = output 
-                        time_pred = None
-                    batch_probs = torch.softmax(logits, dim=-1).cpu().numpy()
-                    all_probs.append(batch_probs)
+                        logits, time_pred = output, None
+                    all_probs.append(torch.softmax(logits, dim=-1).cpu().numpy())
                     if time_pred is not None:
                         all_time_targets.append(time_pred.cpu().numpy())
 
                 probs = np.concatenate(all_probs, axis=0)
-                if all_time_targets:
-                    time_targets = np.concatenate(all_time_targets, axis=0)
-                else:
-                    time_targets = np.full(len(probs), 0.5)
+                time_targets = np.concatenate(all_time_targets, axis=0) if all_time_targets else np.full((len(probs), 2), 0.5)
             
             predictions = np.argmax(probs, axis=1)
             confidences = np.max(probs, axis=1)
 
-        # Map: 0=LONG, 1=HOLD, 2=SHORT (standard mapping)
         direction_map = {0: "SHORT", 1: "HOLD", 2: "LONG"}
         directions = [direction_map.get(p, "HOLD") for p in predictions]
 
@@ -115,362 +110,320 @@ def generate_episode_index(training_df: pd.DataFrame,
                 training_df["mlp_log_sigma"] = 0.5
 
     else:
-        # Proxy: use target column
         training_df = training_df.copy()
         target = training_df.get("target", pd.Series(0, index=training_df.index))
         training_df["mlp_direction"] = target.map({1: "LONG", -1: "SHORT", 0: "HOLD"})
-        training_df["mlp_confidence"] = 0.70  # default
+        training_df["mlp_confidence"] = 0.70
         training_df["mlp_time_to_target"] = 0.5
         training_df["mlp_log_sigma"] = 0.5
 
-    # Filter to signal events only
-    mask = (
-        (training_df["mlp_direction"].isin(["LONG", "SHORT"])) &
-        (training_df["mlp_confidence"] >= min_confidence)
-    )
-    filtered = training_df[mask].copy()
+    short_thresh = min_confidence - 0.05
+    long_thresh  = min_confidence
+
+    mask_long  = (training_df["mlp_direction"] == "LONG")  & (training_df["mlp_confidence"] >= long_thresh)
+    mask_short = (training_df["mlp_direction"] == "SHORT") & (training_df["mlp_confidence"] >= short_thresh)
+
+    ep_long  = training_df[mask_long].copy()
+    ep_short = training_df[mask_short].copy()
+
+    if not ep_short.empty and not ep_long.empty:
+        n_long, n_short = len(ep_long), len(ep_short)
+        if n_short < n_long:
+            repeats, remainder = n_long // n_short, n_long % n_short
+            ep_short = pd.concat([ep_short] * repeats + [ep_short.sample(remainder, random_state=42) if remainder > 0 else pd.DataFrame()])
+        elif n_long < n_short:
+            repeats, remainder = n_short // n_long, n_short % n_long
+            ep_long = pd.concat([ep_long] * repeats + [ep_long.sample(remainder, random_state=42) if remainder > 0 else pd.DataFrame()])
+
+    filtered = pd.concat([ep_long, ep_short]).sort_values(["date", "time"]).reset_index(drop=True)
     filtered["episode_id"] = range(len(filtered))
-
-    print(f"[RL] Episode index: {len(filtered)}/{len(training_df)} rows qualify "
-          f"({100*len(filtered)/len(training_df):.1f}%)")
-    print(f"[RL] Direction split: {filtered['mlp_direction'].value_counts().to_dict()}")
-
-    return filtered.reset_index(drop=True)
+    return filtered
 
 
 def _process_single_date(args_tuple):
     """
-    Process a single date's options data for the RL cache.
-    Top-level function so it can be pickled by multiprocessing.
-    
-    Each worker saves its own {date_str}.pkl shard to output_dir,
-    avoiding MemoryError from large IPC serialization.
-    
-    Returns: (processed_count, skipped_count)
+    Process a single date's options data robustly and quickly.
     """
     date_str, date_episodes, options_dir, max_forward_minutes, output_dir = args_tuple
-
-    from collect_training_data_spx_qqq import get_parquet_file, calculate_exact_t
+    from collect_training_data_spx_qqq import get_parquet_file
+    from services.compute_features import calculate_exact_t, R_RATE, Q_DIV
+    from training_data.stats import calc_dp_cdf_pdf
 
     date_str = str(date_str)
     year, month = date_str[:4], date_str[4:6]
-
     partial_cache = {}
     processed = 0
     skipped = 0
 
-    # Group episodes by ticker
     for ticker_sym, ticker_episodes in date_episodes.groupby("ticker"):
         greek_ticker = "SPXW" if ticker_sym == "SPX" else ticker_sym
-        entry_times = ticker_episodes["time"].unique()
-
+        
         # Load daily greek file
         try:
             daily_file = get_parquet_file(greek_ticker, date_str, is_0dte=True)
             if daily_file is None:
-                skipped += len(entry_times)
+                skipped += len(ticker_episodes)
                 continue
             df_daily = pd.read_parquet(daily_file)
             df_daily["dt"] = pd.to_datetime(df_daily["underlying_timestamp"])
-        except Exception:
-            skipped += len(entry_times)
+        except:
+            skipped += len(ticker_episodes)
             continue
 
         # Load OI data
         oi_dir = Path(options_dir) / greek_ticker / "oi" / year / month
         oi_file = oi_dir / daily_file.name.replace("greeks.parquet", "oi.parquet")
         if not oi_file.exists():
-            skipped += len(entry_times)
+            skipped += len(ticker_episodes)
             continue
 
         try:
             df_oi = pd.read_parquet(oi_file)
-            df_oi_agg = df_oi.groupby(["strike", "right"]).agg(
-                {"open_interest": "max"}
-            ).reset_index()
-        except Exception:
-            skipped += len(entry_times)
+            df_oi_agg = df_oi.groupby(["strike", "right"], observed=True).agg({"open_interest": "max"}).reset_index()
+        except:
+            skipped += len(ticker_episodes)
             continue
 
-        all_timestamps = sorted(df_daily["dt"].unique())
-        ts_index = {pd.to_datetime(ts).strftime("%H:%M"): i
-                    for i, ts in enumerate(all_timestamps)}
+        # ── Optimization: Merge & Clean ──
+        df_merged = pd.merge(df_daily, df_oi_agg, on=["strike", "right"], how="inner")
+        if df_merged.empty:
+            skipped += len(ticker_episodes)
+            continue
+            
+        # Robust Column Mapping
+        df_merged["right"] = df_merged["right"].str.upper()
+        df_merged["mid"] = (df_merged.get("bid", 0).fillna(0) + df_merged.get("ask", 0).fillna(0)) / 2.0
+        
+        # Skip zero-price options or invalid underlying prices (data gaps)
+        df_merged = df_merged[(df_merged["mid"] > 0) & 
+                              (df_merged["underlying_price"] > 0) & 
+                              (df_merged["strike"] > 0)].copy()
+        if df_merged.empty:
+            skipped += len(ticker_episodes)
+            continue
 
-        for entry_time in entry_times:
-            entry_time = str(entry_time)
-            cache_key = f"{ticker_sym}_{date_str}_{entry_time}"
+        # Map IV
+        if "implied_vol" in df_merged.columns:
+            df_merged["iv"] = df_merged["implied_vol"]
+        elif "iv" in df_merged.columns:
+            df_merged["iv"] = df_merged["iv"]
+        elif "implied_volatility" in df_merged.columns:
+            df_merged["iv"] = df_merged["implied_volatility"]
+        else:
+            df_merged["iv"] = np.nan
+            
+        df_merged["iv"] = df_merged["iv"].fillna(0.15) # Last resort
 
-            if entry_time not in ts_index:
+        # ── ROBUST GREEKS CALCULATION ──
+        greeks_to_check = ["delta", "gamma", "vega", "theta"]
+        needs_bs = any(g not in df_merged.columns or df_merged[g].isna().all() for g in greeks_to_check)
+        
+        if needs_bs:
+            S_vec = df_merged["underlying_price"].values.astype(np.float64)
+            K_vec = df_merged["strike"].values.astype(np.float64)
+            iv_vec = df_merged["iv"].values.astype(np.float64)
+            # Ensure IV is safe for division
+            iv_vec = np.clip(iv_vec, 0.005, 5.0)
+            
+            # Ensure T is safe (at least 60s)
+            T_vec = calculate_exact_t(pd.to_datetime(df_merged["underlying_timestamp"])).astype(np.float64)
+            T_vec = np.clip(T_vec, 1e-7, 1.0)
+            
+            # Use local error suppression for extreme strikes
+            with np.errstate(divide='ignore', invalid='ignore'):
+                dp, cdf_dp, pdf_dp = calc_dp_cdf_pdf(S_vec, K_vec, iv_vec, T_vec, R_RATE, Q_DIV)
+                is_call = (df_merged["right"] == "CALL").values
+                
+                if "gamma" not in df_merged.columns or df_merged["gamma"].isna().all():
+                    # Formula: exp(-qT) * pdf(d1) / (S * sigma * sqrt(T))
+                    denom = S_vec * iv_vec * np.sqrt(T_vec)
+                    gamma_vals = (np.exp(-Q_DIV * T_vec) * pdf_dp) / denom
+                    df_merged["gamma"] = np.nan_to_num(gamma_vals, nan=0.0, posinf=0.0, neginf=0.0)
+                
+                if "delta" not in df_merged.columns or df_merged["delta"].isna().all():
+                    d_call = np.exp(-Q_DIV * T_vec) * cdf_dp
+                    d_put = -np.exp(-Q_DIV * T_vec) * (1.0 - cdf_dp)
+                    delta_vals = np.where(is_call, d_call, d_put)
+                    df_merged["delta"] = np.nan_to_num(delta_vals, nan=0.0)
+                    
+                if "vega" not in df_merged.columns or df_merged["vega"].isna().all():
+                    vega_vals = S_vec * np.exp(-Q_DIV * T_vec) * np.sqrt(T_vec) * pdf_dp
+                    df_merged["vega"] = np.nan_to_num(vega_vals, nan=0.0)
+
+                if "theta" not in df_merged.columns or df_merged["theta"].isna().all():
+                    # Simplified BS Theta (ignoring rate effect)
+                    term1 = -(S_vec * pdf_dp * iv_vec * np.exp(-Q_DIV * T_vec)) / (2 * np.sqrt(T_vec))
+                    term2_call = Q_DIV * S_vec * cdf_dp * np.exp(-Q_DIV * T_vec)
+                    term2_put = -Q_DIV * S_vec * (1.0 - cdf_dp) * np.exp(-Q_DIV * T_vec)
+                    theta_vals = term1 + np.where(is_call, term2_call, term2_put)
+                    df_merged["theta"] = np.nan_to_num(theta_vals, nan=0.0)
+
+        # Final cleanup
+        for g in greeks_to_check:
+            if g in df_merged.columns:
+                df_merged[g] = df_merged[g].fillna(0.0)
+            else:
+                df_merged[g] = 0.0
+        
+        # ── Organization into Buckets ──
+        underlying_series = df_daily.groupby("dt")["underlying_price"].first().sort_index()
+        all_timestamps = underlying_series.index.tolist()
+        all_timestamp_strs = [ts.strftime("%H:%M") for ts in all_timestamps]
+        
+        # Build global minute buckets for this day/ticker
+        # We store them in minute_buckets[timestamp_str]
+        minute_buckets = {}
+        target_cols = ["strike", "right", "mid", "delta", "iv", "theta", "gamma"]
+        for ts, group in df_merged.groupby("dt"):
+            ts_str = ts.strftime("%H:%M")
+            
+            calls, puts = {}, {}
+            # Pre-filter by a broad range to save RAM in global bucket
+            # (We will filter more tightly in the environment anyway)
+            spot = group["underlying_price"].iloc[0]
+            # Broad filter: ±150 pts for SPX, ±5 for others
+            b_range = 150.0 if ticker_sym == "SPX" else 10.0
+            
+            for _, row in group.iterrows():
+                strike = row["strike"]
+                if not (spot - b_range <= strike <= spot + b_range):
+                    continue
+                
+                data = {
+                    "price": row["mid"],
+                    "delta": row["delta"],
+                    "iv": row["iv"],
+                    "theta": row["theta"],
+                    "gamma": row["gamma"]
+                }
+                if row["right"] == "CALL":
+                    calls[strike] = data
+                else:
+                    puts[strike] = data
+            
+            minute_buckets[ts_str] = {"spot": spot, "calls": calls, "puts": puts}
+
+        # Day-wide structures
+        if "episodes" not in partial_cache:
+            partial_cache = {
+                "timestamps": all_timestamp_strs,
+                "minute_data": {ticker_sym: minute_buckets},
+                "episodes": {}
+            }
+        else:
+            # Shared timestamps, but per-ticker market data
+            partial_cache["minute_data"][ticker_sym] = minute_buckets
+
+        for _, ep_row in ticker_episodes.iterrows():
+            entry_time_str = str(ep_row["time"])
+            cache_key = f"{ticker_sym}_{date_str}_{entry_time_str}"
+            
+            if entry_time_str not in all_timestamp_strs:
                 skipped += 1
                 continue
 
-            start_idx = ts_index[entry_time]
-            spot = float(ticker_episodes[
-                ticker_episodes["time"] == entry_time
-            ].iloc[0].get("spot_price", 0))
+            # Compute day ATR (needed for env)
+            try:
+                start_idx = all_timestamp_strs.index(entry_time_str)
+            except ValueError:
+                skipped += 1
+                continue
 
-            # Compute day ATR from surrounding data
-            day_atr = _compute_day_atr(df_daily, all_timestamps, start_idx)
+            window = 15
+            idx_start = max(0, start_idx - window)
+            idx_end = min(len(all_timestamps), start_idx + window)
+            prices = underlying_series.iloc[idx_start:idx_end].values
+            
+            if len(prices) > 1:
+                day_atr = float(np.mean(np.abs(np.diff(prices))))
+            else:
+                day_atr = 5.0
+            day_atr = max(day_atr, 0.5)
 
-            # Build forward-looking minute data
-            minutes_data = {}
-            for offset in range(min(max_forward_minutes + 1,
-                                    len(all_timestamps) - start_idx)):
-                ts_np = all_timestamps[start_idx + offset]
-                ts = pd.to_datetime(ts_np)
-
-                df_min = df_daily[df_daily["dt"] == ts_np].copy()
-                df_pq = pd.merge(df_min, df_oi_agg, on=["strike", "right"], how="inner")
-                if df_pq.empty:
-                    continue
-
-                minute_spot = float(df_pq["underlying_price"].iloc[0]) if "underlying_price" in df_pq.columns else spot
-                atr_range = 5.0 * day_atr
-
-                # Filter to ±5 ATR
-                df_pq = df_pq[
-                    (df_pq["strike"] >= minute_spot - atr_range) &
-                    (df_pq["strike"] <= minute_spot + atr_range)
-                ]
-
-                # Filtrar strikes sin datos reales
-                if "bid" in df_pq.columns:
-                    df_pq = df_pq[
-                        (df_pq["delta"].abs() > 0.01) &
-                        (df_pq["bid"] > 0)
-                    ]
-                else:
-                    # Fallback in case "bid" is not in the derived columns
-                    df_pq = df_pq[df_pq["delta"].abs() > 0.01]
-
-                calls, puts = {}, {}
-                for _, row in df_pq.iterrows():
-                    strike = float(row["strike"])
-                    right = str(row.get("right", "")).upper()
-                    
-                    bid = float(row.get("bid", 0))
-                    ask = float(row.get("ask", 0))
-                    mid = (bid + ask) / 2.0 if (bid > 0 or ask > 0) else 0.0
-                    
-                    data = {
-                        "price": mid,
-                        "delta": float(row.get("delta", 0)),
-                        "iv": float(row.get("implied_vol", 0.15)),
-                        "theta": float(row.get("theta", 0)),
-                        "gamma": float(row.get("gamma", 0)),
-                    }
-                    if right == "CALL" or right == "C":
-                        calls[strike] = data
-                    elif right == "PUT" or right == "P":
-                        puts[strike] = data
-
-                minutes_data[offset] = {
-                    "spot": minute_spot,
-                    "calls": calls,
-                    "puts": puts,
-                }
-
-            # Entry-level data
-            entry_minute = minutes_data.get(0, {})
-            partial_cache[cache_key] = {
-                "spot": spot,
+            # Store only entry-minute data and metadata
+            # 'minutes' will be reconstructed by ChunkedOptionsCache
+            entry_data = minute_buckets.get(entry_time_str, {})
+            
+            partial_cache["episodes"][cache_key] = {
+                "ticker": ticker_sym,
+                "date": date_str,
+                "time": entry_time_str,
+                "spot": ep_row.get("spot_price", 0),
                 "day_atr": day_atr,
-                "calls": entry_minute.get("calls", {}),
-                "puts": entry_minute.get("puts", {}),
-                "minutes": minutes_data,
+                "calls": entry_data.get("calls", {}),
+                "puts": entry_data.get("puts", {})
             }
             processed += 1
 
-    # --- Save shard directly to disk ---
-    if partial_cache:
+    if partial_cache and processed > 0:
         out_file = Path(output_dir) / f"{date_str}.pkl"
         with open(out_file, "wb") as f:
             pickle.dump(partial_cache, f, protocol=pickle.HIGHEST_PROTOCOL)
 
-    # Only return counters — no large dict over IPC
     return processed, skipped
 
 
-def preprocess_options_for_rl(episode_index: pd.DataFrame,
-                              options_dir: str,
-                              output_dir: str,
-                              max_forward_minutes: int = 180,
-                              num_workers: int = 24):
-    """
-    Build compact options cache for fast RL episode resets.
-    Parallelized across dates using multiprocessing.Pool.
-
-    Each worker saves its own {date}.pkl shard to output_dir,
-    avoiding MemoryError from large IPC serialization.
-
-    For each unique (date, time) pair in episode_index:
-    1. Load the per-strike Greeks + prices from parquet
-    2. Extract strikes within ±5 ATR of spot
-    3. Save as compact dict shard per date
-
-    Output format per key:
-    {
-        "spot": float,
-        "day_atr": float,
-        "calls": {strike: {price, delta, iv, theta, gamma}},
-        "puts":  {strike: {price, delta, iv, theta, gamma}},
-        "minutes": {
-            0: {"spot": float, "calls": {...}, "puts": {...}},
-            1: {"spot": float, "calls": {...}, "puts": {...}},
-            ...up to max_forward_minutes
-        }
-    }
-    """
+def preprocess_options_for_rl(episode_index, options_dir, output_dir, max_forward_minutes=180, num_workers=24):
     import multiprocessing
     ctx = multiprocessing.get_context('spawn')
-
-    unique_dates = episode_index["date"].unique()
-    print(f"[RL] Pre-processing options for {len(unique_dates)} unique dates with {num_workers} workers...", flush=True)
-
-    # Create the output directory for shards
+    unique_dates = sorted(episode_index["date"].unique())
     os.makedirs(output_dir, exist_ok=True)
 
-    # Build per-date argument tuples (includes output_dir for each worker)
     work_items = []
     for date_str in unique_dates:
-        date_episodes = episode_index[episode_index["date"].astype(str) == str(date_str)].copy()
-        work_items.append((date_str, date_episodes, options_dir, max_forward_minutes, output_dir))
+        mask = episode_index["date"].astype(str) == str(date_str)
+        work_items.append((date_str, episode_index[mask].copy(), options_dir, max_forward_minutes, output_dir))
 
-    print(f"[RL] Dispatching {len(work_items)} work items to pool...", flush=True)
-
-    total_processed = 0
-    total_skipped = 0
+    total_processed, total_skipped = 0, 0
     total_dates = len(unique_dates)
-    t_pool_start = time.time()
-    recent_times = [(t_pool_start, 0)] # (timestamp, episodes_done)
+    t_start = time.time()
 
     with ctx.Pool(processes=num_workers) as pool:
-        # Workers return only (processed, skipped) counters — no large dicts over IPC
-        for i, (proc, skip) in enumerate(
-            pool.imap_unordered(_process_single_date, work_items)
-        ):
+        for i, (proc, skip) in enumerate(pool.imap_unordered(_process_single_date, work_items)):
             total_processed += proc
             total_skipped += skip
-
-            # Progress tracking
             done = i + 1
-            now = time.time()
-            recent_times.append((now, done))
-            if len(recent_times) > 50: # Sliding window of last 50 dates
-                recent_times.pop(0)
-
             pct = done / total_dates * 100
+            elapsed = time.time() - t_start
+            eta = (elapsed / done) * (total_dates - done) if done > 0 else 0
+            eta_str = f"{int(eta//60)}m {int(eta%60)}s" if eta > 60 else f"{int(eta)}s"
             
-            # Calculate stable ETA
-            if len(recent_times) >= 30:
-                # Window-based velocity (dates per second)
-                t_old, d_old = recent_times[0]
-                t_new, d_new = recent_times[-1]
-                
-                # Check for div by zero / instant finishes
-                if t_new > t_old:
-                    velocity = (d_new - d_old) / (t_new - t_old)
-                    remaining = total_dates - done
-                    eta_seconds = remaining / velocity
-                else:
-                    eta_seconds = 0
-                
-                # Format ETA
-                if eta_seconds > 3600:
-                    eta_str = f"{int(eta_seconds // 3600)}h {int((eta_seconds % 3600) // 60)}m"
-                elif eta_seconds > 60:
-                    eta_str = f"{int(eta_seconds // 60)}m {int(eta_seconds % 60)}s"
-                else:
-                    eta_str = f"{int(eta_seconds)}s"
-            else:
-                eta_str = "..."
+            bar = "█" * int(25 * done / total_dates) + "░" * (25 - int(25 * done / total_dates))
+            print(f"\r  [{bar}] {pct:5.1f}% | {done}/{total_dates} dates | eps: {total_processed:,} | ETA: {eta_str}   ", end="", flush=True)
 
-            bar_len = 25
-            filled = int(bar_len * done / total_dates)
-            bar = "█" * filled + "░" * (bar_len - filled)
-            print(f"\r  [{bar}] {pct:5.1f}% | {done}/{total_dates} dates | "
-                  f"eps: {total_processed:,} | skip: {total_skipped:,} | "
-                  f"ETA: {eta_str}   ", end="", flush=True)
+    print(f"\n[RL] Options cache built in: {output_dir}")
+    return total_processed, total_skipped
 
-    print(flush=True)
-    print(f"[RL] Options cache chunks built in: {output_dir}", flush=True)
-    print(f"[RL] Total: {total_processed} episodes processed, {total_skipped} skipped", flush=True)
-    return None
-
-
-def _compute_day_atr(df_daily: pd.DataFrame, all_timestamps: list,
-                     center_idx: int, window: int = 15) -> float:
-    """Compute rolling ATR from surrounding price data."""
-    start = max(0, center_idx - window)
-    end = min(len(all_timestamps), center_idx + window)
-
-    prices = []
-    for i in range(start, end):
-        ts_np = all_timestamps[i]
-        rows = df_daily[df_daily["dt"] == ts_np]
-        if not rows.empty and "underlying_price" in rows.columns:
-            prices.append(float(rows["underlying_price"].iloc[0]))
-
-    if len(prices) < 3:
-        return 5.0  # fallback
-
-    prices_arr = np.array(prices)
-    returns = np.abs(np.diff(prices_arr))
-    atr = float(np.mean(returns))
-    return max(atr, 0.5)
-
-
-# ═══════════════════════════════════════════════════════════════════════════
-# CLI
-# ═══════════════════════════════════════════════════════════════════════════
 
 def main():
     import argparse
-    
     parser = argparse.ArgumentParser(description="Build RL options cache")
-    parser.add_argument("--training-data", type=str, required=True,
-                        help="Path to training_data_derived.parquet")
-    parser.add_argument("--options-dir", type=str, default="D:/ThetaData/data_options",
-                        help="Path to options data directory")
-    parser.add_argument("--output", type=str, default="../rl_data/rl_options_cache_chunks",
-                        help="Output directory for per-day cache shards (.pkl)")
-    parser.add_argument("--mlp-model", type=str, default=None,
-                        help="Path to trained MLP model (optional)")
-    parser.add_argument("--mlp-normalizer", type=str, default=None,
-                        help="Path to trained normalizer (optional)")
-    parser.add_argument("--num-workers", type=int, default=24,
-                        help="Number of parallel workers (default: 24)")
+    parser.add_argument("--training-data", type=str, required=True)
+    parser.add_argument("--options-dir", type=str, default="D:/ThetaData/data_options")
+    parser.add_argument("--output", type=str, default="../rl_data/rl_options_cache_chunks")
+    parser.add_argument("--mlp-model", type=str, default=None)
+    parser.add_argument("--mlp-normalizer", type=str, default=None)
+    parser.add_argument("--num-workers", type=int, default=32)
+    parser.add_argument("--strict-wf", action="store_true")
     args = parser.parse_args()
 
-    print("=" * 70, flush=True)
-    print("RL DATA PREPROCESSING — OPTIONS CACHE BUILDER (CHUNKED)", flush=True)
-    print("=" * 70, flush=True)
+    print("=" * 70)
+    print("RL DATA PREPROCESSING — OPTIONS CACHE BUILDER (CHUNKED)")
+    print("=" * 70)
 
-    print(f"Loading training data from: {args.training_data}", flush=True)
     training_df = pd.read_parquet(args.training_data)
-    print(f"Loaded training data: {training_df.shape}", flush=True)
-
-    mlp_model = None
-    mlp_normalizer = None
+    mlp_model, mlp_normalizer = None, None
     if args.mlp_model and args.mlp_normalizer:
         from hybrid_model import load_ensemble_model
         mlp_model, mlp_normalizer = load_ensemble_model(args.mlp_model, args.mlp_normalizer, model_size="small")
 
-    episode_index = generate_episode_index(training_df, mlp_model, mlp_normalizer)
-
-    # Save episode index alongside the chunks directory
+    episode_index = generate_episode_index(training_df, mlp_model, mlp_normalizer, strict_wf=args.strict_wf)
+    
     output_parent = os.path.dirname(os.path.abspath(args.output))
     os.makedirs(output_parent, exist_ok=True)
-    episode_index.to_parquet(
-        os.path.join(output_parent, "episode_index.parquet"),
-        index=False,
-    )
+    episode_index.to_parquet(os.path.join(output_parent, "episode_index.parquet"), index=False)
 
-    preprocess_options_for_rl(
-        episode_index, args.options_dir, args.output,
-        num_workers=args.num_workers,
-    )
-
+    preprocess_options_for_rl(episode_index, args.options_dir, args.output, num_workers=args.num_workers)
     print("\n✓ Preprocessing complete!")
 
 

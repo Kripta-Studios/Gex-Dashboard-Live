@@ -19,6 +19,7 @@ from rl.config import RL_CONFIG
 parser = argparse.ArgumentParser(description="Generate Episode Index for RL")
 parser.add_argument("--data", default=os.environ.get('TRAINING_DATA', '../training_data/training_data_spx_qqq.parquet'), help="Path to the training data parquet file")
 parser.add_argument("--output", default='../rl_data/episode_index.parquet', help="Path to save the generated episode index parquet file")
+parser.add_argument("--strict-wf", action="store_true", help="Enable strict Walk-Forward date filtering for GBT inference")
 args = parser.parse_args()
 
 # Paths relative to neural/ (CWD)
@@ -56,13 +57,24 @@ is_gbt = hasattr(ensemble, 'predict_proba') and not isinstance(ensemble, torch.n
 
 if is_gbt:
     # GBT: direct numpy inference
-    probs = ensemble.predict_proba(feats)
+    if args.strict_wf:
+        print(f"  [i] Using STRICT Walk-Forward inference (date-by-date filtering) for Episode Index...")
+        probs = np.zeros((len(df), 3), dtype=np.float32)
+        unique_dates = sorted(df['date'].unique()) # Using 'date' column as filter
+        for d_str in unique_dates:
+            mask = df['date'] == d_str
+            idx = np.where(mask)[0]
+            if len(idx) == 0: continue
+            probs[idx] = ensemble.predict_proba(feats[idx], date=str(d_str))
+    else:
+        probs = ensemble.predict_proba(feats)
+        
     # Dummy time predictions
     tpreds = np.column_stack([
         np.full(len(feats), 60.0),
         np.full(len(feats), 0.0)
     ])
-    print(f'  [GBT] Inference complete: {len(feats):,} samples')
+    print(f'  [GBT] Inference complete (strict={args.strict_wf}): {len(feats):,} samples')
 else:
     # PyTorch: batch inference with GPU
     device = next(ensemble.parameters()).device
@@ -83,19 +95,47 @@ df['mlp_confidence']     = probs.max(1)
 df['mlp_time_to_target'] = tpreds[:, 0] / 180.0  # normalized 0-1
 df['mlp_log_sigma']      = tpreds[:, 1]
 
-# Filter valid signals
-mask = df['mlp_direction'].isin(['LONG', 'SHORT']) & (df['mlp_confidence'] >= RL_CONFIG['min_confidence'])
-ep = df[mask].copy().reset_index(drop=True)
+# Filter valid signals with ASYMMETRIC threshold
+# SHORT signals are harder for the model to detect, so we use a lower threshold to capture more of them.
+short_thresh = RL_CONFIG['min_confidence'] - 0.05
+long_thresh  = RL_CONFIG['min_confidence']
 
-# ── Balance LONG/SHORT episodes ──
-ep_long = ep[ep.mlp_direction == 'LONG']
-ep_short = ep[ep.mlp_direction == 'SHORT']
-n_min = min(len(ep_long), len(ep_short))
-print(f'Pre-balance: LONG={len(ep_long):,} SHORT={len(ep_short):,} → downsample to {n_min:,} each')
-if len(ep_short) > n_min:
-    ep_short = ep_short.sample(n_min, random_state=42)
-if len(ep_long) > n_min:
-    ep_long = ep_long.sample(n_min, random_state=42)
+mask_long  = (df['mlp_direction'] == 'LONG')  & (df['mlp_confidence'] >= long_thresh)
+mask_short = (df['mlp_direction'] == 'SHORT') & (df['mlp_confidence'] >= short_thresh)
+
+ep_long  = df[mask_long].copy()
+ep_short = df[mask_short].copy()
+
+print(f'Detected signals: LONG={len(ep_long):,} SHORT={len(ep_short):,}')
+
+# ── Balance LONG/SHORT episodes via OVERSAMPLING ──
+# We don't want to throw away 90% of our LONG data, so we repeat SHORT episodes.
+if not ep_short.empty and not ep_long.empty:
+    n_long = len(ep_long)
+    n_short = len(ep_short)
+    
+    if n_short < n_long:
+        print(f'  [Balance] Upsampling SHORT: {n_short:,} → {n_long:,}')
+        # Randomly duplicate short episodes to match long count
+        repeats = n_long // n_short
+        remainder = n_long % n_short
+        
+        ep_short_repeated = pd.concat([ep_short] * repeats)
+        if remainder > 0:
+            ep_short_extra = ep_short.sample(remainder, random_state=42)
+            ep_short_repeated = pd.concat([ep_short_repeated, ep_short_extra])
+        ep_short = ep_short_repeated
+    elif n_long < n_short:
+        print(f'  [Balance] Upsampling LONG: {n_long:,} → {n_short:,}')
+        repeats = n_short // n_long
+        remainder = n_short % n_long
+        
+        ep_long_repeated = pd.concat([ep_long] * repeats)
+        if remainder > 0:
+            ep_long_extra = ep_long.sample(remainder, random_state=42)
+            ep_long_repeated = pd.concat([ep_long_repeated, ep_long_extra])
+        ep_long = ep_long_repeated
+
 ep = pd.concat([ep_long, ep_short]).sort_values('date').reset_index(drop=True)
 ep['episode_id'] = range(len(ep))
 

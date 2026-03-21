@@ -22,6 +22,14 @@ PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
 sys.path.insert(0, PROJECT_ROOT)
 
 from training_data.stats import *
+from services.compute_features import (
+    extract_feature_vector, calculate_exact_t, 
+    calculate_fibonacci_levels, get_nearest_level_identity,
+    safe_log, dist_bps, is_near_level, classify_gamma_regime,
+    sign_divergence, simple_rsi, rbf_confluence,
+    compute_wonham_filter
+)
+from neural.hybrid_model import FEATURE_COLUMNS
 
 try:
     from dotenv import load_dotenv
@@ -54,26 +62,41 @@ FIXED_STOP_PCT   = 0.003             # 0.3% — stop for both directions → 1:1
                                      # Previous: 0.6% profit / 0.3% stop → missed 0.3-0.5% moves
 BPS_CLIP = 500                        # clamp distances at ±500 bps (±5%)
 
-def classify_gamma_regime(net_gamma: float, threshold: float = 1e8) -> int:
-    if net_gamma > threshold: return 2
-    elif net_gamma < -threshold: return 0
-    return 1
+# Column Optimization for Memory
+GREEKS_COLUMNS = ['strike', 'right', 'underlying_price', 'underlying_timestamp', 'implied_vol', 'implied_volatility']
+OI_COLUMNS = ['strike', 'right', 'open_interest']
+IV_COLUMNS = ['strike', 'implied_vol', 'underlying_timestamp']
+OHLC_COLUMNS = ['strike', 'right', 'volume', 'timestamp']
 
-def is_near_level(price: float, level: float, threshold: float = LEVEL_PROXIMITY_THRESHOLD) -> bool:
-    if level is None or level == 0 or price == 0: return False
-    return abs(price - level) / price <= threshold
-
-def safe_log(x: float) -> float:
-    """Sign-preserving log-transform: sign(x) * log1p(|x|).
-    Compresses extreme greek values (10^8-10^11) to manageable range (~20-26)
-    while preserving sign and monotonicity."""
-    return float(np.sign(x) * np.log1p(abs(x)))
-
-def dist_bps(spot: float, level: float) -> float:
-    """Percentage distance from spot to level in basis points, clamped."""
-    if level is None or level == 0 or spot == 0:
-        return 0.0
-    return float(np.clip((spot - level) / spot * 10000.0, -BPS_CLIP, BPS_CLIP))
+def safe_read_parquet(filepath, columns=None):
+    """
+    Robust parquet reader that handles missing columns and renames 
+    'implied_volatility' to 'implied_vol' if needed.
+    """
+    if not os.path.exists(filepath):
+        return pd.DataFrame()
+    try:
+        import pyarrow.parquet as pq
+        parquet_file = pq.ParquetFile(filepath)
+        available_cols = parquet_file.schema.names
+        
+        if columns is None:
+            request_cols = available_cols
+        else:
+            request_cols = [c for c in columns if c in available_cols]
+            
+        df = pd.read_parquet(filepath, columns=request_cols)
+        
+        # Consistent Greek naming
+        if 'implied_vol' not in df.columns and 'implied_volatility' in df.columns:
+            df['implied_vol'] = df['implied_volatility']
+        elif 'implied_volatility' not in df.columns and 'implied_vol' in df.columns:
+            df['implied_volatility'] = df['implied_vol']
+            
+        return df
+    except Exception as e:
+        print(f"Error reading {filepath}: {e}")
+        return pd.DataFrame()
 
 def proximity_gate(spot: float, levels: list, threshold: float = LEVEL_PROXIMITY_THRESHOLD) -> bool:
     """Return True if spot is within ±threshold% of ANY level in the list."""
@@ -82,116 +105,10 @@ def proximity_gate(spot: float, levels: list, threshold: float = LEVEL_PROXIMITY
             return True
     return False
 
-def calculate_fibonacci_levels(ib_high: float, ib_low: float):
-    ib_range = ib_high - ib_low
-    return {
-        "fib_127_up": ib_low + (ib_range * 1.272),
-        "fib_161_up": ib_low + (ib_range * 1.618),
-        "fib_200_up": ib_low + (ib_range * 2.0),
-        "fib_127_dn": ib_low + (ib_range * -0.272),
-        "fib_161_dn": ib_low + (ib_range * -0.618),
-        "fib_200_dn": ib_low + (ib_range * -1.0),
-    }
-
-# ═══════════════════════════════════════════════════════════════
-# LEVEL IDENTITY — encodes WHICH level price is touching
-# The model needs this to learn "touching fib_127_up with positive
-# gamma" vs "touching ib_high with positive gamma" separately.
-# ═══════════════════════════════════════════════════════════════
-LEVEL_IDENTITY_MAP = {
-    "ib_high":    0,
-    "ib_low":     1,
-    "fib_127_up": 2,
-    "fib_161_up": 3,
-    "fib_200_up": 4,
-    "fib_127_dn": 5,
-    "fib_161_dn": 6,
-    "fib_200_dn": 7,
-    "none":       8,
-}
-N_LEVEL_TYPES = len(LEVEL_IDENTITY_MAP)  # 9
-
-def get_nearest_level_identity(spot: float, levels_dict: dict,
-                                threshold: float = LEVEL_PROXIMITY_THRESHOLD) -> tuple:
-    """
-    Returns (level_id: int, dist_bps: float) for the closest named level
-    within ±threshold of spot.  level_id = 8 ("none") when no level is near.
-    """
-    best_name, best_dist = "none", float('inf')
-    for name, level in levels_dict.items():
-        if level is None or level == 0:
-            continue
-        d = abs(spot - level) / spot
-        if d < threshold and d < best_dist:
-            best_dist = d
-            best_name = name
-    dist_val = float(np.clip(best_dist * 10000.0, 0.0, BPS_CLIP)) if best_name != "none" else float(BPS_CLIP)
-    return LEVEL_IDENTITY_MAP[best_name], dist_val
+# REDUNDANT FUNCTIONS REMOVED (now in services.compute_features)
 
 
-def simple_rsi(prices: list, period: int = 14) -> float:
-    if len(prices) < period + 1: return 50.0
-    deltas = np.diff(prices[-period-1:])
-    gains = np.where(deltas > 0, deltas, 0)
-    losses = np.where(deltas < 0, -deltas, 0)
-    avg_gain = np.mean(gains)
-    avg_loss = np.mean(losses)
-    if avg_loss == 0: return 100.0
-    rs = avg_gain / avg_loss
-    return float(100 - (100 / (1 + rs)))
-
-def sign_divergence(a: float, b: float) -> float:
-    if abs(a) < 0.01 or abs(b) < 0.01: return 0.5
-    if (a > 0) != (b > 0): return 1.0
-    return 0.0
-
-def rbf_confluence(level_a: float, level_b: float, spot_price: float, sigma: float = 0.05) -> float:
-    if level_a is None or level_b is None or spot_price is None: return 0.0
-    if spot_price <= 0: return 0.0
-    dist_a = abs(spot_price - level_a) / spot_price
-    dist_b = abs(spot_price - level_b) / spot_price
-    overlap_dist = abs(level_a - level_b) / spot_price
-    return float(np.exp(-0.5 * (dist_a/sigma)**2) * np.exp(-0.5 * (dist_b/sigma)**2) * np.exp(-0.5 * (overlap_dist/(2*sigma))**2))
-
-
-def compute_wonham_filter(prices: list,
-                          lambda1: float = 0.5, lambda2: float = 0.5,
-                          mu1: float = 0.002, mu2: float = -0.003,
-                          sigma: float = 0.01, dt: float = 1.0/390.0) -> list:
-    """
-    Discrete Wonham Filter for regime detection.
-    
-    From "A Stochastic Approximation Approach for Trend-Following Trading"
-    (Nguyen, Yin, Zhang). Computes p_t = P(trending regime) recursively.
-    
-    Discretized SDE:
-        p_{t+1} = clip( p_t + f(p_t)*dt + ((mu1-mu2)/sigma^2)*p_t*(1-p_t)*log(S_{t+1}/S_t), 0, 1 )
-    
-    Where f(p) = -(lambda1+lambda2)*p + lambda2 - ((mu1-mu2)/sigma^2)*p*(1-p)*((mu1-mu2)*p + mu2 - sigma^2/2)
-    """
-    n = len(prices)
-    if n < 2:
-        return [0.5] * n
-    
-    p = [0.5]  # Start with equal prior
-    mu_diff = mu1 - mu2
-    sigma2 = sigma ** 2
-    snr_scale = mu_diff / sigma2 if sigma2 > 0 else 0.0
-    
-    for t in range(n - 1):
-        pt = p[t]
-        if prices[t] > 0 and prices[t + 1] > 0:
-            log_ret = np.log(prices[t + 1] / prices[t])
-        else:
-            log_ret = 0.0
-        f_p = (-(lambda1 + lambda2) * pt + lambda2
-               - snr_scale * pt * (1 - pt) * (mu_diff * pt + mu2 - sigma2 / 2))
-        innovation = snr_scale * pt * (1 - pt) * log_ret
-        p_next = pt + f_p * dt + innovation
-        p_next = min(max(p_next, 0.0), 1.0)
-        p.append(p_next)
-    
-    return p
+# compute_wonham_filter removed — now using unified version from services.compute_features
 
 def load_ohlc_data(ticker: str, date_str: str) -> dict:
     underlying_ticker = "SPXW" if ticker == "SPX" else ticker
@@ -200,26 +117,50 @@ def load_ohlc_data(ticker: str, date_str: str) -> dict:
     if not filepath.exists(): return None
     
     try:
-        df = pd.read_parquet(filepath)
+        request_cols = ['timestamp', 'open', 'high', 'low', 'close', 'tick_count', 'volume']
+        df = safe_read_parquet(filepath, columns=request_cols)
+        if df.empty: return None
+        
         df['dt'] = pd.to_datetime(df['timestamp'])
+        
+        # Downcast for memory
+        for col in ['open', 'high', 'low', 'close']:
+            if col in df.columns:
+                df[col] = df[col].astype(np.float32)
+        
         df = df[(df['dt'].dt.time >= dt_time(8, 0)) & (df['dt'].dt.time <= dt_time(17, 0))]
         if df.empty: return None
         
-        start_time = df['dt'].min()
-        ib_end = start_time + pd.Timedelta(minutes=60)
-        df_ib = df[df['dt'] < ib_end]
+        # Fix IB window: Strictly 9:30-10:30 ET (RTH)
+        df_rth = df[df['dt'].dt.time >= dt_time(9, 30)]
+        if df_rth.empty:
+            ib_high = float(df['high'].max())
+            ib_low = float(df['low'].min())
+        else:
+            first_rth = df_rth['dt'].min()
+            ib_end = first_rth + pd.Timedelta(minutes=60)
+            df_ib = df_rth[df_rth['dt'] < ib_end]
+            ib_high = float(df_ib['high'].max() if not df_ib.empty else df_rth['high'].max())
+            ib_low = float(df_ib['low'].min() if not df_ib.empty else df_rth['low'].min())
         
-        ib_high = df_ib['high'].max() if not df_ib.empty else df['high'].max()
-        ib_low = df_ib['low'].min() if not df_ib.empty else df['low'].min()
+        total_volume = float(df['tick_count'].sum() if 'tick_count' in df.columns else df['volume'].sum() if 'volume' in df.columns else 1)
         
-        total_volume = df['tick_count'].sum() if 'tick_count' in df.columns else df['volume'].sum() if 'volume' in df.columns else 1
+        # Select and downcast for memory efficiency
+        if 'tick_count' in df.columns:
+            df['volume'] = df['tick_count'].astype(np.float32)
+        elif 'volume' in df.columns:
+            df['volume'] = df['volume'].astype(np.float32)
+        else:
+            df['volume'] = 1.0
+            
+        df['close'] = df['close'].astype(np.float32)
         
         series = []
         for _, row in df.iterrows():
             series.append({
                 "time": row['dt'].strftime("%H:%M"),
                 "price": float(row['close']),
-                "volume": float(row['tick_count']) if 'tick_count' in row else 1.0
+                "volume": float(row['volume'])
             })
             
         return {
@@ -328,15 +269,7 @@ def calculate_target_label_asymmetric(series: list, current_idx: int,
         return (-1, short_profit_time, short_stop_time, down_move)
     return (0, 0, 0, 0.0)
 
-def calculate_exact_t(series_dt):
-    if hasattr(series_dt, 'dt'):
-        target_close = series_dt.dt.normalize() + pd.Timedelta(hours=16)
-        seconds_left = (target_close - series_dt).dt.total_seconds()
-    else:
-        target_close = series_dt.normalize() + pd.Timedelta(hours=16)
-        seconds_left = (target_close - series_dt).total_seconds()
-    seconds_left = np.where(seconds_left < 60, 60, seconds_left)
-    return seconds_left / (3600 * 24 * 365.25)
+# calculate_exact_t is imported from services.compute_features
 
 def get_net_exposures_from_parquet(df, spot_col='underlying_price'):
     if df.empty: return None
@@ -427,7 +360,8 @@ def get_net_exposures_from_parquet(df, spot_col='underlying_price'):
         "max_zomma_strike": max_zomma, "min_zomma_strike": min_zomma,
         "max_vega_strike": max_vega, "min_vega_strike": min_vega,
         "max_vomma_strike": max_vomma, "min_vomma_strike": min_vomma,
-        "zero_gamma": zero_gamma_strike
+        "zero_gamma": zero_gamma_strike,
+        "_df": df_clean
     }
 
 def get_parquet_file(ticker, trade_date_str, is_0dte=True, folder="greeks", suffix="greeks"):
@@ -470,7 +404,8 @@ def load_vix_data(date_str: str) -> dict:
     vix_ohlc_path = Path(THETADATA_DIR) / "data_underlying_derived" / "VIX" / year / month / f"VIX_{date_str}.parquet"
     if vix_ohlc_path.exists():
         try:
-            df_vix = pd.read_parquet(vix_ohlc_path)
+            # Optimize: Load only close for VIX spot
+            df_vix = safe_read_parquet(vix_ohlc_path, columns=['close'])
             if not df_vix.empty:
                 vix_spot = float(df_vix['close'].iloc[-1])
         except: pass
@@ -479,23 +414,25 @@ def load_vix_data(date_str: str) -> dict:
     weekly_file = get_parquet_file("VIX", date_str, is_0dte=False)
     if weekly_file:
         try:
-            df_g = pd.read_parquet(weekly_file)
-            year, month = date_str[:4], date_str[4:6]
-            oi_file = Path(OPTIONS_DIR) / "VIX" / "oi" / year / month / weekly_file.name.replace("greeks.parquet", "oi.parquet")
-            if oi_file.exists():
-                df_oi = pd.read_parquet(oi_file)
-                df_oi_agg = df_oi.groupby(['strike', 'right']).agg({'open_interest': 'max'}).reset_index()
-                df_g['dt'] = pd.to_datetime(df_g['underlying_timestamp'])
-                target_dt = pd.to_datetime(f"{date_str[:4]}-{date_str[4:6]}-{date_str[6:8]} 15:00:00")
-                if not df_g.empty:
-                    nearest_ts = df_g['dt'].unique()[np.abs(df_g['dt'].unique() - target_dt.to_datetime64()).argmin()]
-                    df_min = df_g[df_g['dt'] == nearest_ts].copy()
-                    df_pq = pd.merge(df_min, df_oi_agg, on=['strike', 'right'], how='inner')
-                    if not df_pq.empty:
-                        df_pq['T'] = calculate_exact_t(pd.to_datetime(nearest_ts))
-                        exposures = get_net_exposures_from_parquet(df_pq)
-                        if exposures: vix_gamma = exposures["net_gamma"]
-                        if vix_spot == 0: vix_spot = float(df_pq['underlying_price'].iloc[0])
+            # Optimize: Greeks columns
+            df_g = safe_read_parquet(weekly_file, columns=GREEKS_COLUMNS)
+            if not df_g.empty:
+                year, month = date_str[:4], date_str[4:6]
+                oi_file = Path(OPTIONS_DIR) / "VIX" / "oi" / year / month / weekly_file.name.replace("greeks.parquet", "oi.parquet")
+                if oi_file.exists():
+                    df_oi = safe_read_parquet(oi_file, columns=OI_COLUMNS)
+                    if not df_oi.empty:
+                        df_oi_agg = df_oi.groupby(['strike', 'right'], observed=True).agg({'open_interest': 'max'}).reset_index()
+                        df_g['dt'] = pd.to_datetime(df_g['underlying_timestamp'])
+                        target_dt = pd.to_datetime(f"{date_str[:4]}-{date_str[4:6]}-{date_str[6:8]} 15:00:00")
+                        nearest_ts = df_g['dt'].unique()[np.abs(df_g['dt'].unique() - target_dt.to_datetime64()).argmin()]
+                        df_min = df_g[df_g['dt'] == nearest_ts].copy()
+                        df_pq = pd.merge(df_min, df_oi_agg, on=['strike', 'right'], how='inner')
+                        if not df_pq.empty:
+                            df_pq['T'] = calculate_exact_t(pd.to_datetime(nearest_ts))
+                            exposures = get_net_exposures_from_parquet(df_pq)
+                            if exposures: vix_gamma = exposures["net_gamma"]
+                            if vix_spot == 0: vix_spot = float(df_pq['underlying_price'].iloc[0])
         except Exception as e: print(f"Error loading VIX weekly data: {e}")
 
     vix_regime = 2 if vix_spot > 25 else (1 if vix_spot > 18 else 0)
@@ -525,16 +462,27 @@ def load_historical_ib_levels(greek_ticker: str, current_date_str: str, n_days: 
     results = []
     for d, filepath in available[:n_days]:
         try:
-            df = pd.read_parquet(filepath)
-            df['dt'] = pd.to_datetime(df['timestamp'])
-            df = df[(df['dt'].dt.time >= dt_time(8, 0)) & (df['dt'].dt.time <= dt_time(17, 0))]
+            # Optimize: Selective columns for historical IB
+            df = safe_read_parquet(filepath, columns=['timestamp', 'high', 'low', 'close'])
             if df.empty:
                 results.append(None)
-                print(f"No data for {greek_ticker} on {d}")
                 continue
-            start_time = df['dt'].min()
-            ib_end = start_time + pd.Timedelta(minutes=60)
-            df_ib = df[df['dt'] < ib_end]
+                
+            df['dt'] = pd.to_datetime(df['timestamp'])
+            # Downcast
+            for col in ['high', 'low', 'close']:
+                if col in df.columns:
+                    df[col] = df[col].astype(np.float32)
+            df = df[(df['dt'].dt.time >= dt_time(9, 30)) & (df['dt'].dt.time <= dt_time(16, 0))]
+            if df.empty:
+                results.append(None)
+                continue
+            
+            # IB window: first 60 minutes of RTH
+            rth_start = df['dt'].dt.normalize().iloc[0] + pd.Timedelta(hours=9, minutes=30)
+            ib_end = rth_start + pd.Timedelta(minutes=60)
+            df_ib = df[(df['dt'] >= rth_start) & (df['dt'] < ib_end)]
+            
             ib_high = float(df_ib['high'].max()) if not df_ib.empty else float(df['high'].max())
             ib_low = float(df_ib['low'].min()) if not df_ib.empty else float(df['low'].min())
             close_before_4 = df[df['dt'].dt.time <= dt_time(16, 0)]
@@ -559,11 +507,13 @@ def load_tlt_intraday(date_str: str) -> pd.DataFrame:
     if not tlt_path.exists():
         return pd.DataFrame()
     try:
-        df = pd.read_parquet(tlt_path)
+        # Optimize: TLT loading
+        df = safe_read_parquet(tlt_path, columns=['timestamp', 'close'])
+        if df.empty: return pd.DataFrame()
         df['dt'] = pd.to_datetime(df['timestamp'])
         df = df.sort_values('dt')
         df = df[(df['dt'].dt.time >= dt_time(8, 0)) & (df['dt'].dt.time <= dt_time(17, 0))]
-        df['close'] = df['close'].ffill()
+        df['close'] = df['close'].ffill().astype(np.float32)
         return df[['dt', 'close']].reset_index(drop=True)
     except:
         return pd.DataFrame()
@@ -693,7 +643,7 @@ def get_trend_context(series: list, current_idx: int, lookback: int = 30) -> flo
     return float(np.clip(slope / (prices[-1] * 0.0001), -1.0, 1.0))
 
 
-def process_ticker_date(args: tuple) -> list:
+def process_ticker_date(args: tuple) -> tuple:
     ticker, target_date = args
     if ticker not in ["SPX", "QQQ"]:
         return [], 0.0, 0, 0, 0
@@ -727,8 +677,13 @@ def process_ticker_date(args: tuple) -> list:
     df_iv = None
     if iv_file:
         try:
-            df_iv = pd.read_parquet(iv_file)
-            df_iv['dt'] = pd.to_datetime(df_iv['underlying_timestamp'])
+            # Optimize: Load only necessary columns for IV
+            df_iv = safe_read_parquet(iv_file, columns=['strike', 'implied_vol', 'underlying_timestamp'])
+            if not df_iv.empty:
+                df_iv['dt'] = pd.to_datetime(df_iv['underlying_timestamp'])
+                # Downcast
+                df_iv['strike'] = df_iv['strike'].astype(np.float32)
+                df_iv['implied_vol'] = df_iv['implied_vol'].astype(np.float32)
         except Exception as e: 
             print(f"[DEBUG {ticker} {date_str}] ERROR leyendo IV: {e}")
     else:
@@ -757,12 +712,35 @@ def process_ticker_date(args: tuple) -> list:
         daily_file = get_parquet_file(greek_ticker, date_str, is_0dte=True)
         weekly_file = get_parquet_file(greek_ticker, date_str, is_0dte=False)
         
-        if not daily_file or not weekly_file: 
-            print(f"[DEBUG {ticker} {date_str}] ABORTADO: Faltan archivos daily_file ({bool(daily_file)}) o weekly_file ({bool(weekly_file)}).")
+        if not daily_file:
+            # Check if this is a known market gap (before daily exp launch)
+            day_of_week = target_date.strftime("%a") # Mon, Tue, Wed, Thu, Fri
+            is_market_gap = False
+            if ticker == "SPX":
+                if day_of_week == "Tue" and target_date < datetime(2022, 4, 18).date(): is_market_gap = True
+                if day_of_week == "Thu" and target_date < datetime(2022, 5, 11).date(): is_market_gap = True
+            elif ticker == "QQQ":
+                if day_of_week in ["Tue", "Thu"] and target_date < datetime(2022, 10, 3).date(): is_market_gap = True
+                # QQQ Monday/Wednesday also had gaps in early 2022
+                if day_of_week in ["Mon", "Wed"] and target_date < datetime(2022, 5, 23).date(): is_market_gap = True
+
+            if is_market_gap:
+                print(f"[DEBUG {ticker} {date_str}] SALTADO: No existe expiración 0DTE (lanzamiento oficial posterior).")
+            else:
+                print(f"[DEBUG {ticker} {date_str}] ABORTADO: Falta daily_file (0DTE).")
+            return []
+
+        if not weekly_file:
+            print(f"[DEBUG {ticker} {date_str}] ABORTADO: Falta weekly_file.")
             return []
         
-        df_daily = pd.read_parquet(daily_file)
-        df_weekly = pd.read_parquet(weekly_file)
+        # Optimize: Selective column loading for greeks
+        df_daily = safe_read_parquet(daily_file, columns=GREEKS_COLUMNS)
+        df_weekly = safe_read_parquet(weekly_file, columns=GREEKS_COLUMNS)
+        
+        if df_daily.empty or df_weekly.empty:
+            print(f"[DEBUG {ticker} {date_str}] ABORTADO: Data de Greeks vacía en daily_file o weekly_file.")
+            return []
         
         oi_daily_file = Path(OPTIONS_DIR) / greek_ticker / "oi" / year / month / daily_file.name.replace("greeks.parquet", "oi.parquet")
         oi_weekly_file = Path(OPTIONS_DIR) / greek_ticker / "oi" / year / month / weekly_file.name.replace("greeks.parquet", "oi.parquet")
@@ -771,22 +749,53 @@ def process_ticker_date(args: tuple) -> list:
             print(f"[DEBUG {ticker} {date_str}] ABORTADO: Faltan archivos Open Interest (OI) diarios o semanales.")
             return []
 
-        df_oi_daily = pd.read_parquet(oi_daily_file)
-        df_oi_weekly = pd.read_parquet(oi_weekly_file)
+        df_oi_daily = safe_read_parquet(oi_daily_file, columns=OI_COLUMNS)
+        df_oi_weekly = safe_read_parquet(oi_weekly_file, columns=OI_COLUMNS)
         
-        df_oi_daily_agg = df_oi_daily.groupby(['strike', 'right']).agg({'open_interest': 'max'}).reset_index()
-        df_oi_weekly_agg = df_oi_weekly.groupby(['strike', 'right']).agg({'open_interest': 'max'}).reset_index()
+        if df_oi_daily.empty or df_oi_weekly.empty:
+            print(f"[DEBUG {ticker} {date_str}] ABORTADO: Data de OI vacía.")
+            return []
+        
+        # Downcast for memory
+        for df in [df_daily, df_weekly, df_oi_daily, df_oi_weekly]:
+            for col in df.select_dtypes(include=['float64']).columns:
+                df[col] = df[col].astype(np.float32)
+            if 'strike' in df.columns:
+                df['strike'] = df['strike'].astype(np.float32)
+
+        df_oi_daily_agg = df_oi_daily.groupby(['strike', 'right'], observed=True).agg({'open_interest': 'max'}).reset_index()
+        df_oi_weekly_agg = df_oi_weekly.groupby(['strike', 'right'], observed=True).agg({'open_interest': 'max'}).reset_index()
         
         df_daily['dt'] = pd.to_datetime(df_daily['underlying_timestamp'])
         df_weekly['dt'] = pd.to_datetime(df_weekly['underlying_timestamp'])
         
+        # Optimize: Fill underlying_price once for the entire day before grouping
+        # This avoids .copy() and .loc in every iteration of the loop
+        price_map = {candle.get("time"): candle.get("price", 0) for candle in series}
+        
+        def fill_missing_prices(df):
+            df['time_key'] = df['dt'].dt.strftime("%H:%M")
+            # Only fill if underlying_price is <= 0 or NaN
+            mask = (df['underlying_price'] <= 0) | (df['underlying_price'].isna())
+            if mask.any():
+                # Map time_key to price
+                df.loc[mask, 'underlying_price'] = df.loc[mask, 'time_key'].map(price_map).astype(np.float32)
+            return df
+
+        df_daily = fill_missing_prices(df_daily)
+        df_weekly = fill_missing_prices(df_weekly)
+
         df_daily = df_daily[(df_daily['dt'].dt.time >= dt_time(8, 0)) & (df_daily['dt'].dt.time <= dt_time(17, 0))]
         
         df_pq_daily_all = pd.merge(df_daily, df_oi_daily_agg, on=['strike', 'right'], how='inner')
         df_pq_weekly_all = pd.merge(df_weekly, df_oi_weekly_agg, on=['strike', 'right'], how='inner')
         
-        groups_daily = df_pq_daily_all.groupby('dt')
-        groups_weekly = df_pq_weekly_all.groupby('dt')
+        # Categorical optimization
+        df_pq_daily_all['right'] = df_pq_daily_all['right'].astype('category')
+        df_pq_weekly_all['right'] = df_pq_weekly_all['right'].astype('category')
+
+        groups_daily = df_pq_daily_all.groupby('dt', observed=True)
+        groups_weekly = df_pq_weekly_all.groupby('dt', observed=True)
         
         timestamps = sorted(df_daily['dt'].unique())
         prev_vals = None
@@ -795,9 +804,19 @@ def process_ticker_date(args: tuple) -> list:
         df_ohlc_daily = None
         if daily_ohlc_file:
             try:
-                df_ohlc_daily = pd.read_parquet(daily_ohlc_file)
+                # Optimize: Selective OHLC loading
+                import pyarrow.parquet as pq
+                parquet_file = pq.ParquetFile(daily_ohlc_file)
+                available_ohlc_cols = parquet_file.schema.names
+                request_ohlc_cols = [c for c in OHLC_COLUMNS if c in available_ohlc_cols]
+                
+                df_ohlc_daily = pd.read_parquet(daily_ohlc_file, columns=request_ohlc_cols)
                 if 'timestamp' in df_ohlc_daily.columns:
                     df_ohlc_daily['dt'] = pd.to_datetime(df_ohlc_daily['timestamp'])
+                # Downcast
+                df_ohlc_daily['strike'] = df_ohlc_daily['strike'].astype(np.float32)
+                df_ohlc_daily['volume'] = df_ohlc_daily['volume'].astype(np.float32)
+                df_ohlc_daily['right'] = df_ohlc_daily['right'].astype('category')
             except:
                 df_ohlc_daily = None
 
@@ -839,27 +858,76 @@ def process_ticker_date(args: tuple) -> list:
         price_window_for_atr = deque(maxlen=16)
         price_history = deque(maxlen=35)
         tlt_price_history = deque(maxlen=35)
+        iv_history = deque(maxlen=32)
         pcr_history = deque(maxlen=32)
-        net_charm_history = deque(maxlen=5)
         net_gamma_window = deque(maxlen=60)
-        day_atr = 1.0
+        net_charm_history = deque(maxlen=32)
+        prev_features = None
+        
+        # Persistence tracking
+        current_regime = None
+        regime_persistence = 0
+        # --- Aligned ATR Calculation (15-day Daily Range) ---
+        day_atr = 70.0  # Default for SPX
+        try:
+            # Load last 15 days of OHLC to get ATR
+            hist_ohlc = load_historical_ib_levels(greek_ticker, date_str, n_days=15)
+            ranges = [h['ib_high'] - h['ib_low'] for h in hist_ohlc if h is not None]
+            if len(ranges) >= 1:
+                day_atr = float(np.mean(ranges))
+        except Exception as e:
+            print(f"[DEBUG {ticker} {date_str}] Error calculating ATR: {e}")
+        
+        net_gamma_window = deque(maxlen=60)
         session_length = 390.0
         daily_atrs = []
+        
+        # Initial Balance tracking
+        running_ib_high = 0.0
+        running_ib_low = 0.0
         
         for ts_np in timestamps:
             ts = pd.to_datetime(ts_np)
             time_key = ts.strftime("%H:%M")
             if time_key not in price_by_time: continue
             series_idx, series_price = price_by_time[time_key]
+            
+            # --- Aligned IB and ATR Calculation ---
+            minutes_since_open = max(0, (ts.hour * 60 + ts.minute) - (9 * 60 + 30))
+            
+            # Update running IB during the first hour (9:30 - 10:30)
+            if 0 <= minutes_since_open <= 60:
+                if running_ib_high == 0:
+                    running_ib_high = series_price
+                    running_ib_low = series_price
+                else:
+                    running_ib_high = max(running_ib_high, series_price)
+                    running_ib_low = min(running_ib_low, series_price)
+
+            # ELIMINATE LOOKAHEAD BIAS:
+            # During the first 60 minutes, use the IB formed SO FAR.
+            # After 60 minutes, use the FINAL RTH IB (9:30-10:30).
+            if minutes_since_open < 60:
+                cur_ib_high = running_ib_high
+                cur_ib_low = running_ib_low
+            else:
+                cur_ib_high = ib_high
+                cur_ib_low = ib_low
+            cur_fib_levels = calculate_fibonacci_levels(cur_ib_high, cur_ib_low)
+            
+            # --- ATR Alignment ---
+            # Instead of rolling minute moves, use the 15-day daily range ATR.
+            # We pre-calculated this at the start of the function (see below).
             target_label, time_to_target, time_to_stop, max_move = 0, 0, 0, 0.0
             
             wk_exp = None
             if ts in groups_weekly.groups:
-                df_pq_wk = groups_weekly.get_group(ts).copy()
+                # Use group directly, no .copy()
+                df_pq_wk = groups_weekly.get_group(ts)
                 if not df_pq_wk.empty:
-                    df_pq_wk.loc[df_pq_wk['underlying_price'] <= 0, 'underlying_price'] = series_price
-                    df_pq_wk['T'] = calculate_exact_t(ts)
-                    wk_exp = get_net_exposures_from_parquet(df_pq_wk)
+                    # Note: underlying_price was already filled above
+                    df_pq_wk_with_T = df_pq_wk.assign(T=calculate_exact_t(ts))
+                    wk_exp = get_net_exposures_from_parquet(df_pq_wk_with_T)
             
             # ── FIX: Update weekly_features DYNAMICALLY at each timestamp ──
             # Previously, weekly greeks were fetched once from 15:45 PM (end-of-day)
@@ -892,24 +960,16 @@ def process_ticker_date(args: tuple) -> list:
                 }
 
             if ts not in groups_daily.groups: continue
-            df_pq = groups_daily.get_group(ts).copy()
+            df_pq = groups_daily.get_group(ts)
             if df_pq.empty: continue
             
-            df_pq.loc[df_pq['underlying_price'] <= 0, 'underlying_price'] = series_price
-            df_pq['T'] = calculate_exact_t(ts)
-            exp = get_net_exposures_from_parquet(df_pq)
+            # Use assign instead of .loc/copy
+            df_pq_with_T = df_pq.assign(T=calculate_exact_t(ts))
+            exp = get_net_exposures_from_parquet(df_pq_with_T)
             if not exp: continue
+            
             spot = exp["spot_price"]
             
-            # ── Rolling ATR (causal, 15-bar) ──
-            price_window_for_atr.append(spot)
-            if len(price_window_for_atr) >= 3:
-                prices_arr = np.array(price_window_for_atr)
-                abs_returns = np.abs(np.diff(prices_arr))
-                if len(abs_returns) >= 2:
-                    day_atr = float(np.mean(abs_returns[:-1]))
-                    day_atr = max(day_atr, 0.5)
-
             atr_denom = day_atr + 1e-6
 
             # ── Weekly guard ──
@@ -929,6 +989,16 @@ def process_ticker_date(args: tuple) -> list:
             dow_cos = float(np.cos(2 * np.pi * dow / 5))
 
             price_history.append((minutes_since_open, spot))
+            net_gamma_window.append(exp["net_gamma"])
+            net_charm_history.append(exp["net_charm"]) # This one is actually updated twice in original, let's stick to once for now or match original if critical
+            
+            # ── TLT Rate of Change (Raw) ──
+            tlt_now = 0.0
+            if not tlt_df.empty:
+                past_rows = tlt_df[tlt_df['dt'] <= ts]
+                if not past_rows.empty:
+                    tlt_now = float(past_rows.iloc[-1]['close'])
+                    tlt_price_history.append((minutes_since_open, tlt_now))
             
             # ── ATM IV ──
             atm_iv = 0.0
@@ -942,13 +1012,36 @@ def process_ticker_date(args: tuple) -> list:
                     atm_iv = float(df_iv_min[df_iv_min['strike'] == closest_strike]['implied_vol'].mean())
             if atm_iv > 0:
                 iv_history.append(atm_iv)
-                iv_mean = np.mean(iv_history)
-                iv_std = np.std(iv_history) if len(iv_history) > 1 else 0
-                iv_zscore = float((atm_iv - iv_mean) / iv_std) if iv_std > 0 else 0.0
-                iv_min, iv_max = min(iv_history), max(iv_history)
-                iv_pct = float((atm_iv - iv_min) / (iv_max - iv_min)) if iv_max > iv_min else 0.5
             else:
                 atm_iv = float(iv_history[-1]) if len(iv_history) > 0 else 0.0
+            
+            # --- Persistence Tracking ---
+            regime = classify_gamma_regime(exp["net_gamma"])
+            if regime == current_regime:
+                regime_persistence += 1
+            else:
+                current_regime = regime
+                regime_persistence = 1
+            # Normalize persistence (cap at 12 bars = 60 mins)
+            persistence_val = float(np.clip(regime_persistence / 12.0, 0.0, 1.0))
+            
+            # ── PCR Proxy (Raw) ──
+            if df_ohlc_daily is not None and 'dt' in df_ohlc_daily.columns:
+                df_ohlc_min = df_ohlc_daily[df_ohlc_daily['dt'] == ts_np]
+                if not df_ohlc_min.empty and 'volume' in df_ohlc_min.columns:
+                    otm_range = 1.5 * day_atr
+                    df_calls_otm = df_ohlc_min[
+                        (df_ohlc_min['right'].str.upper() == 'CALL') &
+                        (df_ohlc_min['strike'].between(spot, spot + otm_range))
+                    ]
+                    df_puts_otm = df_ohlc_min[
+                        (df_ohlc_min['right'].str.upper() == 'PUT') &
+                        (df_ohlc_min['strike'].between(spot - otm_range, spot))
+                    ]
+                    call_vol = float(df_calls_otm['volume'].sum())
+                    put_vol = float(df_puts_otm['volume'].sum())
+                    delta_filtered_pcr_raw = put_vol / (call_vol + 1e-6)
+                    pcr_history.append(delta_filtered_pcr_raw)
                 
             # ── Proximity-Gated Labeling ──
             key_levels = [
@@ -957,9 +1050,9 @@ def process_ticker_date(args: tuple) -> list:
                 exp["max_dgex_strike"], exp["min_dgex_strike"],
                 exp.get("max_vega_strike", 0), exp.get("min_vega_strike", 0),
                 exp.get("max_vomma_strike", 0), exp.get("min_vomma_strike", 0),
-                ib_high, ib_low,
-                fib_levels["fib_127_up"], fib_levels["fib_161_up"], fib_levels["fib_200_up"],
-                fib_levels["fib_127_dn"], fib_levels["fib_161_dn"], fib_levels["fib_200_dn"],
+                cur_ib_high, cur_ib_low,
+                cur_fib_levels["fib_127_up"], cur_fib_levels["fib_161_up"], cur_fib_levels["fib_200_up"],
+                cur_fib_levels["fib_127_dn"], cur_fib_levels["fib_161_dn"], cur_fib_levels["fib_200_dn"],
             ]
             for hi in historical_ibs[:5]:
                 if hi is not None:
@@ -1023,389 +1116,48 @@ def process_ticker_date(args: tuple) -> list:
             else:
                 target_label, time_to_target, time_to_stop, max_move = 0, 0, 0, 0.0
             
-            gamma_regime = classify_gamma_regime(exp["net_gamma"])
-            vanna_bullish = 1 if exp["net_vanna"] > 0.1 else 0
-            charm_bullish = 1 if exp["net_charm"] > 0.1 else 0
-            dgex_sticky = 1 if exp["net_dgex"] > 0.1 else 0
-            zomma_stabilizing = 1 if exp["net_zomma"] > 0.1 else 0
-            vega_elevated = 1 if abs(exp["net_vega"]) > 0.1 else 0
-            
-            price_vs_ib_high = dist_bps(spot, ib_high)
-            price_vs_ib_low = dist_bps(spot, ib_low)
-            ib_range_pct = (ib_high - ib_low) / spot if spot > 0 else 0
-            
-            near_min_vanna = 1 if is_near_level(spot, exp["min_vanna_strike"]) else 0
-            near_ib_high = 1 if is_near_level(spot, ib_high) else 0
-            near_ib_low = 1 if is_near_level(spot, ib_low) else 0
-            above_ib = 1 if spot > ib_high else 0
-            below_ib = 1 if spot < ib_low else 0
-            in_ib_range = 1 if ib_low <= spot <= ib_high else 0
-            
-            prices_before = [series[i].get("price", 0) for i in range(max(0, series_idx - 15), series_idx + 1)]
-            rsi = simple_rsi(prices_before)
-            total_vol = ib_data.get("total_volume", 1)
-            current_vol = series[series_idx].get("volume", 0) if series_idx < len(series) else 0
-            vol_relative = current_vol / (total_vol / len(series)) if total_vol > 0 and len(series) > 0 else 1.0
+            # Pass vix_gamma into exp_0dte or as extra arg
+            exp["vix_gamma"] = vix_data.get("vix_gamma", 0.0)
+            exp["signal_persistence_5m"] = persistence_val
 
-            # ── Volatility-adjusted returns ──
-            atm_iv_current = atm_iv if atm_iv > 0.001 else 0.15
-            ret_features = {}
-            for label, lb in [("1m", 1), ("5m", 5), ("15m", 15)]:
-                past_price = get_price_n_minutes_ago(price_history, minutes_since_open, lb)
-                if past_price is not None and past_price > 0:
-                    raw_return = (spot - past_price) / past_price
-                    vol_norm = atm_iv_current * np.sqrt(lb / (252.0 * 390.0)) + 1e-8
-                    ret_features[f"ret_{label}_vol_adj"] = float(np.clip(raw_return / vol_norm, -5.0, 5.0))
-                else:
-                    ret_features[f"ret_{label}_vol_adj"] = 0.0
-
-            # ── Delta-filtered PCR proxy ──
-            delta_filtered_pcr_norm = 0.0
-            pcr_derivative_5m_clipped = 0.0
-            if df_ohlc_daily is not None and 'dt' in df_ohlc_daily.columns:
-                df_ohlc_min = df_ohlc_daily[df_ohlc_daily['dt'] == ts_np]
-                if not df_ohlc_min.empty and 'volume' in df_ohlc_min.columns:
-                    otm_range = 1.5 * day_atr
-                    df_calls_otm = df_ohlc_min[
-                        (df_ohlc_min['right'].str.upper() == 'CALL') &
-                        (df_ohlc_min['strike'].between(spot, spot + otm_range))
-                    ]
-                    df_puts_otm = df_ohlc_min[
-                        (df_ohlc_min['right'].str.upper() == 'PUT') &
-                        (df_ohlc_min['strike'].between(spot - otm_range, spot))
-                    ]
-                    call_vol = float(df_calls_otm['volume'].sum())
-                    put_vol = float(df_puts_otm['volume'].sum())
-                    delta_filtered_pcr_raw = put_vol / (call_vol + 1e-6)
-                    delta_filtered_pcr_norm = float(np.clip(np.log1p(delta_filtered_pcr_raw) / np.log1p(5.0), 0.0, 1.0))
-                    pcr_history.append(delta_filtered_pcr_raw)
-                    if len(pcr_history) >= 5:
-                        pcr_derivative_5m_clipped = float(np.clip(
-                            (list(pcr_history)[-1] - list(pcr_history)[-5]) / 5.0, -1.0, 1.0))
-
-            # ── Charm acceleration ──
-            net_charm_history.append(exp["net_charm"])
-            charm_accel_weighted = 0.0
-            if len(net_charm_history) >= 3:
-                charm_arr = np.array(list(net_charm_history)[-3:])
-                charm_accel = charm_arr[-1] - 2.0 * charm_arr[-2] + charm_arr[-3]
-                charm_accel_norm = float(np.clip(charm_accel / (atm_iv_current + 1e-6), -5.0, 5.0))
-                close_weight = 1.0 + np.exp(-minutes_to_close / 60.0)
-                charm_accel_weighted = float(np.clip(charm_accel_norm * close_weight, -10.0, 10.0))
-
-            # NOTE: delta_s must be adaptive by spot scale (SPX vs QQQ).
-            # Passing a fixed 5.0 was suppressing QQQ signal because QQQ strike spacing is ~1.
-            gamma_speed_val = compute_gamma_speed(df_pq, spot, day_atr)
-
-            # ── Hilbert phase of net gamma ──
-            net_gamma_window.append(exp["net_gamma"])
-            hilbert_features = {"gamma_phase_sin": 0.0, "gamma_phase_cos": 0.0,
-                                "gamma_amplitude_ratio": 0.0, "gamma_phase_delta": 0.0}
-            if len(net_gamma_window) >= 30:
-                try:
-                    gamma_arr = np.array(net_gamma_window)
-                    gamma_detrended = gamma_arr - np.mean(gamma_arr)
-                    gamma_std = np.std(gamma_detrended) + 1e-8
-                    gamma_normalized = gamma_detrended / gamma_std
-                    pad_len = max(1, len(gamma_normalized) // 4)
-                    left_pad = gamma_normalized[pad_len:0:-1]
-                    right_pad = gamma_normalized[-2:-(pad_len + 2):-1]
-                    padded_gamma = np.concatenate([left_pad, gamma_normalized, right_pad])
-                    analytic_padded = scipy_hilbert(padded_gamma)
-                    analytic_signal = analytic_padded[len(left_pad):len(left_pad) + len(gamma_normalized)]
-                    amplitude_envelope = np.abs(analytic_signal)
-                    instant_phase = np.angle(analytic_signal)
-                    current_phase = float(instant_phase[-1])
-                    current_amplitude = float(amplitude_envelope[-1])
-                    mean_amplitude = float(np.mean(amplitude_envelope))
-                    amplitude_ratio = float(np.clip(current_amplitude / (mean_amplitude + 1e-8), 0.0, 3.0))
-                    phase_delta_norm = 0.0
-                    if len(net_gamma_window) >= 2:
-                        unwrapped = np.unwrap(instant_phase)
-                        phase_delta_norm = float(np.clip((unwrapped[-1] - unwrapped[-2]) / np.pi, -1.0, 1.0))
-                    signal_quality = 1.0 if amplitude_ratio > 0.5 else 0.0
-                    hilbert_features = {
-                        "gamma_phase_sin": float(np.sin(current_phase)) * signal_quality,
-                        "gamma_phase_cos": float(np.cos(current_phase)) * signal_quality,
-                        "gamma_amplitude_ratio": amplitude_ratio,
-                        "gamma_phase_delta": phase_delta_norm * signal_quality,
-                    }
-                except:
-                    pass
-
-            # ── Signal Persistence ──
-            net_charm_history.append(math.copysign(1.0, exp["net_charm"]))
-            signal_persistence_5m = 0
-            if len(net_charm_history) > 0:
-                current_bias = net_charm_history[-1]
-                for x in reversed(net_charm_history):
-                    if x == current_bias: signal_persistence_5m += current_bias
-                    else: break
-
-            # ── TLT rate of change ──
-            tlt_features = {"tlt_ret_1m": 0.0, "tlt_ret_5m": 0.0, "tlt_ret_15m": 0.0}
-            if not tlt_df.empty:
-                past_rows = tlt_df[tlt_df['dt'] <= ts]
-                tlt_now = float(past_rows.iloc[-1]['close']) if not past_rows.empty else None
-                if tlt_now is not None:
-                    tlt_price_history.append((minutes_since_open, tlt_now))
-                    tlt_norm_base = 0.05
-                    for label, lb in [("1m", 1), ("5m", 5), ("15m", 15)]:
-                        tlt_past = get_price_n_minutes_ago(tlt_price_history, minutes_since_open, lb)
-                        if tlt_past is not None and tlt_past > 0:
-                            tlt_norm = tlt_norm_base * np.sqrt(lb)
-                            tlt_features[f"tlt_ret_{label}"] = float(np.clip(
-                                (tlt_now - tlt_past) / (tlt_norm + 1e-8), -3.0, 3.0))
-
-            # ── Historical IB distance features (D-1 to D-5) ──
-            hist_ib_features = {}
-            for i in range(5):
-                d = i + 1
-                hist = historical_ibs[i] if i < len(historical_ibs) else None
-                if hist is not None:
-                    ib_h = hist['ib_high']
-                    ib_l = hist['ib_low']
-                    prev_close = hist['close_price']
-                    ib_mid = (ib_h + ib_l) / 2.0
-                    ib_width = ib_h - ib_l + 1e-6
-                    hist_ib_features[f"dist_ib_high_D{d}"] = dist_bps(spot, ib_h)
-                    hist_ib_features[f"dist_ib_low_D{d}"] = dist_bps(spot, ib_l)
-                    hist_ib_features[f"prev_close_vs_ib_D{d}"] = float(np.clip((prev_close - ib_mid) / ib_width, -2.0, 2.0))
-                else:
-                    hist_ib_features[f"dist_ib_high_D{d}"] = 0.0
-                    hist_ib_features[f"dist_ib_low_D{d}"] = 0.0
-                    hist_ib_features[f"prev_close_vs_ib_D{d}"] = 0.0
-
-            # ── D-1 IB confluences ──
-            d1_confluence = {}
-            spx_sigma = max((ib_high - ib_low) / (spot + 1e-6) * 0.5, 0.005)
-            if len(historical_ibs) >= 1 and historical_ibs[0] is not None:
-                d1_ib_high = historical_ibs[0]['ib_high']
-                d1_ib_low = historical_ibs[0]['ib_low']
-                d1_confluence["confluence_d1ibh_max_gamma"] = rbf_confluence(d1_ib_high, exp["max_gamma_strike"], spot, sigma=spx_sigma)
-                d1_confluence["confluence_d1ibl_min_gamma"] = rbf_confluence(d1_ib_low, exp["min_gamma_strike"], spot, sigma=spx_sigma)
-                d1_confluence["confluence_d1ibh_max_dgex"] = rbf_confluence(d1_ib_high, exp["max_dgex_strike"], spot, sigma=spx_sigma)
-                d1_confluence["confluence_d1ibl_min_dgex"] = rbf_confluence(d1_ib_low, exp["min_dgex_strike"], spot, sigma=spx_sigma)
-                d1_confluence["confluence_d1ibh_max_vomma"] = rbf_confluence(d1_ib_high, exp.get("max_vomma_strike"), spot, sigma=spx_sigma)
-                d1_confluence["confluence_d1ibh_ibh_today"] = rbf_confluence(d1_ib_high, ib_high, spot, sigma=spx_sigma)
-                d1_confluence["confluence_d1ibl_ibl_today"] = rbf_confluence(d1_ib_low, ib_low, spot, sigma=spx_sigma)
-            else:
-                for key in ["confluence_d1ibh_max_gamma", "confluence_d1ibl_min_gamma",
-                            "confluence_d1ibh_max_dgex", "confluence_d1ibl_min_dgex",
-                            "confluence_d1ibh_max_vomma", "confluence_d1ibh_ibh_today",
-                            "confluence_d1ibl_ibl_today"]:
-                    d1_confluence[key] = 0.0
-
-            # ══════════════════════════════════════════════════════
-            #  LEVEL IDENTITY + GREEK × LEVEL INTERACTIONS
-            #
-            #  These encode YOUR trading hypothesis directly:
-            #  "net_delta>0 AND net_gamma>0 AND vanna<0 AT a fib
-            #   extension of the IB → LONG"
-            #
-            #  Without explicit interaction terms, the model must
-            #  discover these conjunctions from the full feature
-            #  product space, which requires far more data.
-            # ══════════════════════════════════════════════════════
-
-            # Named IB + Fib levels for identity lookup
-            named_levels = {
-                "ib_high":    ib_high,
-                "ib_low":     ib_low,
-                "fib_127_up": fib_levels["fib_127_up"],
-                "fib_161_up": fib_levels["fib_161_up"],
-                "fib_200_up": fib_levels["fib_200_up"],
-                "fib_127_dn": fib_levels["fib_127_dn"],
-                "fib_161_dn": fib_levels["fib_161_dn"],
-                "fib_200_dn": fib_levels["fib_200_dn"],
-            }
-            nearest_level_id, nearest_level_dist_bps = get_nearest_level_identity(spot, named_levels)
-
-            # Boolean proximity flags (raw, for interactions)
-            near_any_fib_up = (
-                is_near_level(spot, fib_levels["fib_127_up"]) or
-                is_near_level(spot, fib_levels["fib_161_up"]) or
-                is_near_level(spot, fib_levels["fib_200_up"])
+            features_dict = extract_feature_vector(
+                exp_0dte=exp,
+                exp_weekly=wk_exp,
+                spot=spot,
+                atm_iv=atm_iv,
+                vix_spot=vix_spot,
+                tlt_spot=tlt_now,
+                ib_high=cur_ib_high,
+                ib_low=cur_ib_low,
+                historical_ibs=historical_ibs,
+                price_history=price_history,
+                tlt_price_history=tlt_price_history,
+                iv_history=iv_history,
+                pcr_history=pcr_history,
+                net_gamma_window=net_gamma_window,
+                net_charm_history=net_charm_history,
+                prev_features=prev_features,
+                minutes_since_open=minutes_since_open,
+                day_atr=day_atr,
+                now_et=ts,
+                FEATURE_COLUMNS=None,  # Return dictionary for training
+                wonham_prob=wonham_by_time.get(time_key, 0.5)
             )
-            near_any_fib_dn = (
-                is_near_level(spot, fib_levels["fib_127_dn"]) or
-                is_near_level(spot, fib_levels["fib_161_dn"]) or
-                is_near_level(spot, fib_levels["fib_200_dn"])
-            )
-            near_ib = bool(near_ib_high or near_ib_low)
 
-            net_delta_val  = exp.get("net_delta", 0.0)
-            net_gamma_val  = exp["net_gamma"]
-            net_vanna_val  = exp["net_vanna"]
-
-            # ── Greek × Level interaction scalars ──────────────────────────
-            # These are the direct feature-products the FiLM / attention
-            # architecture would otherwise need thousands of samples to infer.
-
-            gamma_x_near_fib_up  = safe_log(net_gamma_val) * float(near_any_fib_up)
-            gamma_x_near_fib_dn  = safe_log(net_gamma_val) * float(near_any_fib_dn)
-            gamma_x_near_ib      = safe_log(net_gamma_val) * float(near_ib)
-
-            delta_x_near_fib_up  = safe_log(net_delta_val) * float(near_any_fib_up)
-            delta_x_near_fib_dn  = safe_log(net_delta_val) * float(near_any_fib_dn)
-            delta_x_near_ib_high = safe_log(net_delta_val) * float(near_ib_high)
-            delta_x_near_ib_low  = safe_log(net_delta_val) * float(near_ib_low)
-
-            vanna_x_near_fib_up  = safe_log(net_vanna_val) * float(near_any_fib_up)
-            vanna_x_near_fib_dn  = safe_log(net_vanna_val) * float(near_any_fib_dn)
-            vanna_x_near_ib      = safe_log(net_vanna_val) * float(near_ib)
-
-            # ── Composite setup flags REMOVED ────────────────────────────
-            # bull/bear_greek_setup had ~0.2% prevalence in train (55/26k rows)
-            # and WR=0%. The underlying interaction features (gamma_x_near_*,
-            # delta_x_near_*, vanna_x_near_*) already encode the signal.
-
-            # ══════════════════════════════════════════════════════
-            #  BUILD SAMPLE DICTIONARY — ALL FEATURES
-            # ══════════════════════════════════════════════════════
+            # --- Target Labeling & Sampling ---
             sample = {
                 "ticker": ticker, "date": date_str, "time": time_key, "timestamp": ts,
                 "spot_price": spot, "target": target_label, "time_to_target": time_to_target,
                 "time_to_stop": time_to_stop, "max_move": max_move,
-                # ── 0DTE Greek exposures ──
-                "net_gamma": safe_log(exp["net_gamma"]),
-                "net_vanna": safe_log(exp["net_vanna"]),
-                "net_charm": safe_log(exp["net_charm"]),
-                "net_dgex":  safe_log(exp["net_dgex"]),
-                "net_zomma": safe_log(exp["net_zomma"]),
-                "net_delta": safe_log(exp.get("net_delta", 0.0)),
-                "signal_persistence_5m": float(signal_persistence_5m),
-                "gamma_regime": gamma_regime, "vanna_bullish": vanna_bullish,
-                "charm_bullish": charm_bullish, "dgex_sticky": dgex_sticky,
-                "zomma_stabilizing": zomma_stabilizing,
-                # ── Distance features in basis points ──
-                "dist_to_max_gamma": dist_bps(spot, exp["max_gamma_strike"]),
-                "dist_to_min_gamma": dist_bps(spot, exp["min_gamma_strike"]),
-                "dist_to_min_vanna": dist_bps(spot, exp["min_vanna_strike"]),
-                "dist_to_zero_gamma": dist_bps(spot, exp["zero_gamma"]),
-                "dist_to_max_dgex": dist_bps(spot, exp["max_dgex_strike"]),
-                "dist_to_min_dgex": dist_bps(spot, exp["min_dgex_strike"]),
-                "near_min_vanna": near_min_vanna,
-                # ── Weekly features ──
-                **weekly_features,
-                "gamma_0dte_vs_wk": sign_divergence(exp["net_gamma"], weekly_features["wk_net_gamma"]),
-                "vanna_0dte_vs_wk": sign_divergence(exp["net_vanna"], weekly_features["wk_net_vanna"]),
-                "dgex_0dte_vs_wk": sign_divergence(exp["net_dgex"], weekly_features["wk_net_dgex"]),
-                "delta_0dte_vs_wk": sign_divergence(exp.get("net_delta", 0), weekly_features["wk_net_delta"]),
-                "vega_0dte_vs_wk": sign_divergence(exp.get("net_vega", 0), weekly_features.get("wk_net_vega", 0)),
-                "vomma_0dte_vs_wk": sign_divergence(exp.get("net_vomma", 0), weekly_features.get("wk_net_vomma", 0)),
-                # ── IB features ──
-                "price_vs_ib_high": price_vs_ib_high, "price_vs_ib_low": price_vs_ib_low,
-                "ib_range_pct": ib_range_pct, "near_ib_high": near_ib_high, "near_ib_low": near_ib_low,
-                "above_ib": above_ib, "below_ib": below_ib, "in_ib_range": in_ib_range,
-                # ── Fibonacci distances SPX ──
-                "dist_fib_127_up": dist_bps(spot, fib_levels["fib_127_up"]),
-                "dist_fib_161_up": dist_bps(spot, fib_levels["fib_161_up"]),
-                "dist_fib_200_up": dist_bps(spot, fib_levels["fib_200_up"]),
-                "dist_fib_127_dn": dist_bps(spot, fib_levels["fib_127_dn"]),
-                "dist_fib_161_dn": dist_bps(spot, fib_levels["fib_161_dn"]),
-                "dist_fib_200_dn": dist_bps(spot, fib_levels["fib_200_dn"]),
-                # ── IV / VIX context ──
-                "atm_iv": atm_iv / 100.0 if atm_iv > 1 else atm_iv,
-                "iv_zscore": np.clip(iv_zscore, -3, 3) / 3.0,
-                "iv_percentile": iv_pct,
-                "vix_spot": vix_spot / 50.0 if vix_spot > 0 else 0,
-                "vix_gamma": safe_log(vix_gamma), "vix_regime": vix_regime / 2.0,
-                "rsi": rsi / 100.0, "vol_relative": min(vol_relative, 5.0) / 5.0,
-                # ── Greek ratios ──
-                "gamma_vanna_ratio": safe_log(exp["net_gamma"] / (abs(exp["net_vanna"]) + 1e-6)),
-                "dgex_gamma_ratio":  safe_log(exp["net_dgex"] / (abs(exp["net_gamma"]) + 1e-6)),
-                "charm_vanna_ratio": safe_log(exp["net_charm"] / (abs(exp["net_vanna"]) + 1e-6)),
-                "delta_gamma_ratio": safe_log(exp.get("net_delta", 0) / (abs(exp["net_gamma"]) + 1e-6)),
-                "vega_gamma_ratio":  safe_log(exp.get("net_vega", 0) / (abs(exp["net_gamma"]) + 1e-6)),
-                "vomma_vega_ratio":  safe_log(exp.get("net_vomma", 0) / (abs(exp.get("net_vega", 0)) + 1e-6)),
-                # ── Temporal deltas ──
-                "gamma_change": safe_log(exp["net_gamma"] - prev_vals["net_gamma"]) if prev_vals else 0.0,
-                "vanna_change": safe_log(exp["net_vanna"] - prev_vals["net_vanna"]) if prev_vals else 0.0,
-                "dgex_change":  safe_log(exp["net_dgex"] - prev_vals["net_dgex"]) if prev_vals else 0.0,
-                "delta_change": safe_log(exp.get("net_delta", 0) - prev_vals.get("net_delta", 0)) if prev_vals else 0.0,
-                "vega_change":  safe_log(exp.get("net_vega", 0) - prev_vals.get("net_vega", 0)) if prev_vals else 0.0,
-                "vomma_change": safe_log(exp.get("net_vomma", 0) - prev_vals.get("net_vomma", 0)) if prev_vals else 0.0,
-                "spot_change": ((spot - prev_vals["spot"])/prev_vals["spot"] * 10000.0) if prev_vals and prev_vals["spot"] > 0 else 0.0,
-                "gamma_momentum": safe_log((exp["net_gamma"] - prev_vals["net_gamma"]) * np.sign(exp["net_gamma"])) if prev_vals else 0.0,
-                "price_vs_dgex_magnet": (((spot - prev_vals["spot"])/prev_vals["spot"] * 10000.0)) * np.sign((spot - exp["max_dgex_strike"])/spot) if prev_vals and prev_vals["spot"] > 0 and exp["max_dgex_strike"] else 0.0,
-                # ── 0DTE Vega/Vomma ──
-                "net_vega":  safe_log(exp.get("net_vega", 0.0)),
-                "net_vomma": safe_log(exp.get("net_vomma", 0.0)),
-                "vega_elevated": vega_elevated,
-                "dist_to_max_vega": dist_bps(spot, exp.get("max_vega_strike", 0)),
-                "dist_to_min_vega": dist_bps(spot, exp.get("min_vega_strike", 0)),
-                "dist_to_max_vomma": dist_bps(spot, exp.get("max_vomma_strike", 0)),
-                "dist_to_min_vomma": dist_bps(spot, exp.get("min_vomma_strike", 0)),
-                # ── Original SPX confluences ──
-                "confluence_ib_high_max_gamma": rbf_confluence(ib_high, exp["max_gamma_strike"], spot, sigma=spx_sigma),
-                "confluence_ib_low_min_gamma": rbf_confluence(ib_low, exp["min_gamma_strike"], spot, sigma=spx_sigma),
-                "confluence_ib_high_max_vega": rbf_confluence(ib_high, exp.get("max_vega_strike"), spot, sigma=spx_sigma),
-                "confluence_ib_low_max_dgex": rbf_confluence(ib_low, exp["max_dgex_strike"], spot, sigma=spx_sigma),
-                "confluence_fib127_bull_max_gamma": rbf_confluence(fib_levels["fib_127_up"], exp["max_gamma_strike"], spot, sigma=spx_sigma),
-                "confluence_fib161_bull_max_vega": rbf_confluence(fib_levels["fib_161_up"], exp.get("max_vega_strike"), spot, sigma=spx_sigma),
-                "confluence_fib127_bear_min_gamma": rbf_confluence(fib_levels["fib_127_dn"], exp["min_gamma_strike"], spot, sigma=spx_sigma),
-                "confluence_fib161_bear_max_vomma": rbf_confluence(fib_levels["fib_161_dn"], exp.get("max_vomma_strike"), spot, sigma=spx_sigma),
-                "confluence_fib161_bull_max_vomma": rbf_confluence(fib_levels["fib_161_up"], exp.get("max_vomma_strike"), spot, sigma=spx_sigma),
-                "confluence_fib127_bear_min_vomma": rbf_confluence(fib_levels["fib_127_dn"], exp.get("min_vomma_strike"), spot, sigma=spx_sigma),
-                "confluence_fib127_bull_max_dgex": rbf_confluence(fib_levels["fib_127_up"], exp["max_dgex_strike"], spot, sigma=spx_sigma),
-                "confluence_fib127_bear_min_dgex": rbf_confluence(fib_levels["fib_127_dn"], exp["min_dgex_strike"], spot, sigma=spx_sigma),
-                "confluence_fib161_bull_max_dgex": rbf_confluence(fib_levels["fib_161_up"], exp["max_dgex_strike"], spot, sigma=spx_sigma),
-                "confluence_fib161_bear_min_dgex": rbf_confluence(fib_levels["fib_161_dn"], exp["min_dgex_strike"], spot, sigma=spx_sigma),
-                # ── VRP regime ──
-                **vrp_features,
-                # ── Historical IB D-1 to D-5 ──
-                **hist_ib_features,
-                # ── Vol-adjusted returns ──
-                **ret_features,
-                # ── Time encoding ──
-                "time_sin": time_sin, "time_cos": time_cos,
-                "minutes_to_close_norm": minutes_to_close_norm,
-                "dow_sin": dow_sin, "dow_cos": dow_cos,
-                # ── IB structure context ──
-                "ib_range_percentile": ib_range_percentile_val,
-                **gap_features,
-                # ── OpEx ──
-                **opex_features,
-                # ── Greek dynamics ──
-                "charm_accel_weighted": charm_accel_weighted,
-                "gamma_speed": safe_log(gamma_speed_val),
-                # ── Hilbert phase ──
-                **hilbert_features,
-                # ── Option flow ──
-                "delta_filtered_pcr": delta_filtered_pcr_norm,
-                "pcr_derivative_5m": pcr_derivative_5m_clipped,
-                # ── TLT proxy ──
-                **tlt_features,
-                # ── D-1 IB confluences ──
-                **d1_confluence,
-                # ── Interaction features ──
-                "speed_x_near_ib_high": gamma_speed_val * near_ib_high,
-                "speed_x_near_ib_low": gamma_speed_val * near_ib_low,
-                "charm_accel_x_near_ib_high": charm_accel_weighted * near_ib_high,
-                "charm_accel_x_near_ib_low": charm_accel_weighted * near_ib_low,
-                # ── Wonham Filter ──
-                "wonham_trend_prob": wonham_by_time.get(time_key, 0.5),
-                # ── Level identity (2) ──
-                # nearest_level_id: 0=ib_high,1=ib_low,2=fib_127_up,...,8=none
-                # Explicit token for WHICH structural level is currently being touched.
-                "nearest_level_id":       float(nearest_level_id),
-                "nearest_level_dist_bps": nearest_level_dist_bps,
-                # ── Greek × Level interaction scalars (10) ──
-                # Pre-computed feature-products so the model doesn't need to
-                # discover these conjunctions from scratch.
-                "gamma_x_near_fib_up":  gamma_x_near_fib_up,
-                "gamma_x_near_fib_dn":  gamma_x_near_fib_dn,
-                "gamma_x_near_ib":      gamma_x_near_ib,
-                "delta_x_near_fib_up":  delta_x_near_fib_up,
-                "delta_x_near_fib_dn":  delta_x_near_fib_dn,
-                "delta_x_near_ib_high": delta_x_near_ib_high,
-                "delta_x_near_ib_low":  delta_x_near_ib_low,
-                "vanna_x_near_fib_up":  vanna_x_near_fib_up,
-                "vanna_x_near_fib_dn":  vanna_x_near_fib_dn,
-                "vanna_x_near_ib":      vanna_x_near_ib,
-                # ── Composite setup flags REMOVED (see comment above) ──
+                **features_dict
             }
+            
+            # Additional training-specific logic (not in feature vector but saved)
+            # Add gap and opex features if they are not already in features_dict (they should be)
+            # But the training script used to merge them here.
+
+            prev_features = features_dict
+            prev_features["spot"] = spot  # Ensure spot is available for temporal deltas
             
             prev_vals = {
                 "spot": spot, "net_gamma": exp["net_gamma"], "net_vanna": exp["net_vanna"],
@@ -1436,7 +1188,7 @@ def process_ticker_date(args: tuple) -> list:
 
 def collect_training_data(tickers: list, num_days: int = 365, num_workers: int = None, start_date=None, end_date=None) -> pd.DataFrame:
     if num_workers is None:
-        num_workers = min(multiprocessing.cpu_count(), 20)
+        num_workers = min(multiprocessing.cpu_count(), 30)
     
     all_symbols = [t for t in tickers if t in ["SPX", "QQQ"]]
     if not all_symbols:
@@ -1635,4 +1387,4 @@ def main():
     print(df['target'].value_counts().sort_index())
     
 if __name__ == "__main__":
-    main()
+    main()

@@ -142,6 +142,14 @@ def train_single_window(train_df, val_df, verbose=True, window_idx=None, seed=42
     """
     cols = [c for c in FEATURE_COLUMNS if c in train_df.columns]
 
+    # Capture cutoff date (last date of training)
+    if '_date' in train_df.columns:
+        last_date = train_df['_date'].max()
+    else:
+        last_date = pd.to_datetime(train_df['date'], errors='coerce').max()
+    
+    cutoff_date_int = int(last_date.strftime('%Y%m%d'))
+
     needs_remapping = False
     if 'target' in train_df.columns and train_df['target'].min() < 0:
         needs_remapping = True
@@ -219,15 +227,16 @@ def train_single_window(train_df, val_df, verbose=True, window_idx=None, seed=42
     model = lgb.LGBMClassifier(
         objective='multiclass',
         n_estimators=300,
-        max_depth=6,
+        max_depth=4,         # REDUCED from 6 to 4
         learning_rate=0.05,
         subsample=0.8,
         colsample_bytree=0.8,
-        min_child_samples=50,
-        reg_alpha=0.1,
-        reg_lambda=1.0,
+        min_child_samples=100, # INCREASED from 50 to 100
+        reg_alpha=0.2,       # INCREASED from 0.1
+        reg_lambda=5.0,      # INCREASED from 1.0
         num_class=3,
         random_state=seed,
+        class_weight='balanced',
         verbose=-1,
         n_jobs=-1,
     )
@@ -347,8 +356,9 @@ def train_single_window(train_df, val_df, verbose=True, window_idx=None, seed=42
     honest_metrics['min_trades_req'] = min_trades_req
     honest_metrics['collapsed'] = collapsed
 
-    # Wrap as GBTModel
-    gbt_model = GBTModel(model)
+    # Wrap as GBTModel with metadata
+    from gbt_model import GBTModel
+    gbt_model = GBTModel(model, metadata={'cutoff_date': cutoff_date_int})
 
     return gbt_model, norm, honest_metrics
 

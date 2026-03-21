@@ -32,6 +32,7 @@ HARD_EXITS = {
     "max_profit_pct":    +4.00,   # exit if position gained 400%
     "minutes_to_close":   5,      # always exit 5 min before market close
     "max_hold_minutes":   180,    # maximum hold time = MLP lookahead
+    "min_hold_minutes":   5,      # minimum hold time before RL agent can choose to exit
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -56,9 +57,10 @@ def get_half_spread(abs_delta: float) -> float:
 # ═══════════════════════════════════════════════════════════════════════════
 
 MARKET_FEATURE_DIM = 163
+DYNAMIC_MARKET_DIM = 8   # per-minute features from options cache
 POSITION_STATE_DIM = 6
 MLP_CONTEXT_DIM = 4
-TOTAL_STATE_DIM = MARKET_FEATURE_DIM + POSITION_STATE_DIM + MLP_CONTEXT_DIM  # 173
+TOTAL_STATE_DIM = MARKET_FEATURE_DIM + DYNAMIC_MARKET_DIM + POSITION_STATE_DIM + MLP_CONTEXT_DIM  # 181
 
 # ═══════════════════════════════════════════════════════════════════════════
 # SNIPER ENTRY WINDOW
@@ -67,7 +69,7 @@ TOTAL_STATE_DIM = MARKET_FEATURE_DIM + POSITION_STATE_DIM + MLP_CONTEXT_DIM  # 1
 SNIPER_STATE_DIM = 2
 SNIPER_WINDOW_MINUTES = 15
 NUM_SNIPER_ACTIONS = NUM_STRIKE_ACTIONS + 1  # 8: WAIT(0) + ENTER with strike(1-7)
-SNIPER_TOTAL_STATE_DIM = TOTAL_STATE_DIM + SNIPER_STATE_DIM  # 175
+SNIPER_TOTAL_STATE_DIM = TOTAL_STATE_DIM + SNIPER_STATE_DIM  # 183
 
 # ═══════════════════════════════════════════════════════════════════════════
 # PPO HYPERPARAMETERS
@@ -77,21 +79,27 @@ RL_CONFIG = {
     # Architecture
     "state_dim":            TOTAL_STATE_DIM,
     "hidden_dims":          [256, 256, 128],
-    "backbone_dropout":     0.1,
+    "backbone_dropout":     0.4,
 
     # PPO core
-    "learning_rate":        3e-4,
+    "learning_rate":        3e-5,   # Reducido para mayor estabilidad y evitar overfitting
     "gamma":                0.99,
     "gae_lambda":           0.95,
-    "clip_epsilon":         0.20,
-    "value_loss_coeff":     0.5,
-    "entropy_coeff":        0.05,
+    "clip_epsilon":         0.15,   # Issue 5: Constrain policy updates directly
+    "value_loss_coeff":     0.3,    # Subido de 0.1: permite el crittico aprender mas rapido
+    "entropy_coeff":        0.06,   # Lowered from 0.08: prevent over-regularization
+    "entropy_coeff_min":    0.04,   # floor — never go below this (Increased from 0.02 to prevent collapse)
+    "entropy_target":       0.25,   # Fallback / Strike head target
+    "exit_entropy_target":  0.35,   # Lowered from 0.40: 50% of max binary entropy (revive policy loss)
+    "entropy_anneal_end":   350,    # step at which entropy reaches the floor
+    "kl_target":            0.030,  # Issue 5: Raised for Phase 0 to allow broader exploration
     "max_grad_norm":        0.5,
+    "value_lr_decay_floor": 0.4,    # Keep critic learning at a higher floor than policy (40% vs 20%)
 
     # Training schedule
-    "ppo_epochs":           10,
+    "ppo_epochs":           4,
     "n_episodes_per_update": 256,
-    "total_updates":        400,
+    "total_updates":        500,    # Asegurar que coincide con el run_pipeline
     "batch_size":           128,
 
     # Walk-forward
@@ -99,14 +107,15 @@ RL_CONFIG = {
     "test_months":          1,
 
     # Regularization
-    "obs_noise_std":        0.02,
-    "min_confidence":       0.50,
+    "obs_noise_std":        0.05,
+    "min_confidence":       0.45,
 
-    # Curriculum — todos los phases usan min_confidence=0.50 (sin filtro)
+    # Curriculum — linear interpolation will be used between these nodes:
     "curriculum_phases": {
-        1: {"pct_training": 0.30, "min_confidence": 0.50},
-        2: {"pct_training": 0.70, "min_confidence": 0.50},
-        3: {"pct_training": 1.00, "min_confidence": 0.50},
+        0: {"pct": 0.00, "min_confidence": 0.60, "min_strike_bucket": 2, "max_strike_bucket": 3, "min_hold_minutes": 5},  # Block ITM (6)
+        1: {"pct": 0.15, "min_confidence": 0.55, "min_strike_bucket": 1, "max_strike_bucket": 4, "min_hold_minutes": 5},  # Relax filters
+        2: {"pct": 0.35, "min_confidence": 0.50, "min_strike_bucket": 0, "max_strike_bucket": 5, "min_hold_minutes": 10}, # Full diversity
+        3: {"pct": 1.00, "min_confidence": 0.45, "min_strike_bucket": 0, "max_strike_bucket": 6, "min_hold_minutes": 10}, # Wide exploitation
     },
 
     # Session
@@ -118,24 +127,18 @@ RL_CONFIG = {
     "sniper_window_minutes":    SNIPER_WINDOW_MINUTES,
     "sniper_timeout_penalty":   -0.05,
     "sniper_entropy_coeff":     0.10,
+    "exit_entropy_coeff":       0.05,
+
+    # Safety Fallback: Force noise in exit head regardless of measured entropy
+    "logit_noise_exit_override": 0.0,  # set to 0.3+ if entropy triggers fail
+    
     "sniper_min_wait_curriculum": {
+        0: {"min_wait": 5},
         1: {"min_wait": 3},
         2: {"min_wait": 1},
         3: {"min_wait": 0},
     },
 
-    # Minimum hold time — AUMENTADO para forzar al agente a experimentar
-    # holds más largos y aprender que son rentables
-    # ANTES: Phase 3 = 30 min → agente salía exactamente a los 30 min
-    # AHORA: Phase 3 = 45 min → agente debe aguantar 15 min más mínimo
-    "hold_min_minutes_curriculum": {
-        1: {"min_hold": 60},   # Phase 1: ≥60 min (aprende con trades largos)
-        2: {"min_hold": 45},   # Phase 2: ≥45 min
-        3: {"min_hold": 30},   # Phase 3: ≥30 min (era 30 — el agente salía exactamente aquí)
-    },
-
-    # Emergency stop: bypass min_hold si el trade va muy mal muy rápido
-    "emergency_stop_pct": -0.3,
 }
 
 # ── Apply state_dim override when sniper mode is active ──

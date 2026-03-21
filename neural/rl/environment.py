@@ -18,12 +18,15 @@ import pandas as pd
 from datetime import time as dt_time
 
 from .config import (
-    STRIKE_BUCKETS, HARD_EXITS, MARKET_FEATURE_DIM,
+    STRIKE_BUCKETS, HARD_EXITS, MARKET_FEATURE_DIM, DYNAMIC_MARKET_DIM,
     POSITION_STATE_DIM, MLP_CONTEXT_DIM, TOTAL_STATE_DIM,
     SNIPER_STATE_DIM, SNIPER_TOTAL_STATE_DIM,
     RL_CONFIG, get_half_spread,
 )
 from .rewards import compute_step_reward, compute_terminal_reward, compute_sniper_step_reward
+from .utils import get_delta_bucket, get_iv_bucket, get_pnl_bucket
+import pickle
+import os
 
 
 class SPXOptionsEnv:
@@ -64,6 +67,19 @@ class SPXOptionsEnv:
         self.feature_columns = feature_columns
         self.normalizer = normalizer
         self.hard_exits = hard_exit_rules or HARD_EXITS
+        
+        # Load recovery stats for v4 feature
+        self._recovery_lookup = {}
+        # Get path to root (Gex-Dashboard-Live/) from neural/rl/environment.py
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        stats_path = os.path.join(os.path.dirname(os.path.dirname(current_dir)), "rl_data", "recovery_stats.pkl")
+        
+        if os.path.exists(stats_path):
+            try:
+                with open(stats_path, "rb") as f:
+                    self._recovery_lookup = pickle.load(f)
+            except Exception as e:
+                print(f"  [!] Error loading recovery_stats: {e}")
 
         # Episode state
         self._current_episode = None
@@ -73,6 +89,16 @@ class SPXOptionsEnv:
         self._info = {}
         self._mae = 0.0
         self._prev_pnl_pct = 0.0
+        self._spot_history = []
+        self._last_mark_price: float = 0.0
+        self._current_iv = 0.15
+        self._current_delta = 0.50
+        self._dynamic_market_state = np.zeros(DYNAMIC_MARKET_DIM, dtype=np.float32)
+        # per-minute spot prices for velocity
+        self._entry_spot = 0.0       # spot at signal time
+        self._entry_atm_iv = 0.15    # ATM IV at signal time
+        self._dynamic_cache_t = -1   # Cache marker for dynamic features
+        self._current_max_strike_bucket = 6
 
         # Sniper mode state
         self._use_sniper = RL_CONFIG.get("use_sniper_mode", False)
@@ -120,6 +146,9 @@ class SPXOptionsEnv:
         self._mae = 0.0
         self._prev_pnl_pct = 0.0
         self._info = {}
+        self._spot_history = []
+        self._entry_spot = 0.0
+        self._entry_atm_iv = 0.15
 
         # Sniper mode initialization
         self._sniper_mode = self._use_sniper
@@ -134,6 +163,20 @@ class SPXOptionsEnv:
         cache_key = f"{ticker}_{date_str}_{time_str}"
         cache_entry = self.options_cache.get(cache_key)
         self._sniper_signal_spot = float(cache_entry.get("spot", 0)) if cache_entry else 0.0
+        self._entry_spot = self._sniper_signal_spot
+        if self._entry_spot > 0:
+            self._spot_history = [self._entry_spot]
+
+        # Capture entry ATM IV for dynamic feature tracking
+        if cache_entry:
+            direction = ep.get("mlp_direction", "LONG")
+            right_key = "calls" if direction == "LONG" else "puts"
+            options = cache_entry.get(right_key, {})
+            if options and self._entry_spot > 0:
+                # Find ATM option (closest to spot)
+                atm_strike = min(options.keys(), key=lambda s: abs(float(s) - self._entry_spot), default=None)
+                if atm_strike is not None:
+                    self._entry_atm_iv = float(options[atm_strike].get("iv", 0.15))
 
         return self._build_state_vector()
 
@@ -167,18 +210,15 @@ class SPXOptionsEnv:
 
     def _get_current_min_wait(self) -> int:
         """Get minimum wait minutes for current curriculum phase."""
-        curriculum = RL_CONFIG.get("sniper_min_wait_curriculum", {})
-        # Default to current_phase from env attribute if set, else phase 3
-        phase = getattr(self, '_curriculum_phase', 3)
-        phase_config = curriculum.get(phase, {"min_wait": 0})
-        return phase_config.get("min_wait", 0)
+        return getattr(self, "_current_min_wait", 0)
 
-    def _get_current_min_hold(self) -> int:
-        """Get minimum hold minutes for current curriculum phase."""
-        curriculum = RL_CONFIG.get("hold_min_minutes_curriculum", {})
-        phase = getattr(self, '_curriculum_phase', 3)
-        phase_config = curriculum.get(phase, {"min_hold": 0})
-        return phase_config.get("min_hold", 0)
+    def _get_current_min_strike_bucket(self) -> int:
+        """Get minimum strike bucket (delta) for current curriculum phase."""
+        return getattr(self, "_current_min_strike_bucket", 0)
+
+    def _get_current_max_strike_bucket(self) -> int:
+        """Get maximum strike bucket (delta) for current curriculum phase."""
+        return getattr(self, "_current_max_strike_bucket", 6)
 
     def _handle_sniper(self, action: int) -> tuple:
         """
@@ -217,10 +257,13 @@ class SPXOptionsEnv:
                 "action": "sniper_wait",
                 "sniper_minute": self._sniper_minutes_elapsed,
             }
+        
         else:
             # ── ENTER with strike bucket ──
             strike_action = action - 1  # map 1-7 → 0-6
-            strike_action = max(0, min(strike_action, len(STRIKE_BUCKETS) - 1))
+            min_strike = self._get_current_min_strike_bucket()
+            max_strike = self._get_current_max_strike_bucket()
+            strike_action = max(min_strike, min(strike_action, max_strike))
 
             result = self._handle_entry(strike_action)
             state, reward, done, info = result
@@ -287,6 +330,10 @@ class SPXOptionsEnv:
 
     def _handle_entry(self, strike_action: int) -> tuple:
         """Resolve strike from delta bucket and open position."""
+        min_strike = self._get_current_min_strike_bucket()
+        max_strike = self._get_current_max_strike_bucket()
+        strike_action = max(min_strike, min(strike_action, max_strike))
+        
         bucket = STRIKE_BUCKETS.get(strike_action, STRIKE_BUCKETS[4])  # default ATM
         delta_target = bucket["delta_target"]
 
@@ -366,6 +413,7 @@ class SPXOptionsEnv:
 
         return self._build_state_vector(), 0.0, False, {"action": "entry"}
 
+
     def _handle_holding(self, exit_action: int) -> tuple:
         """Process HOLD/EXIT and advance time."""
         ep = self._current_episode
@@ -373,10 +421,15 @@ class SPXOptionsEnv:
         date_str = str(ep.get("date", ""))
         time_str = str(ep.get("time", ""))
 
+        hold_minutes = self._t - self._position["entry_minute"]
+        minutes_to_close = max(0, RL_CONFIG["session_length_minutes"] - self._minutes_since_open())
+
         # Get current option price at t minutes after signal
         current_price = self._get_current_option_price(ticker, date_str, time_str, self._t)
         if current_price is None:
-            current_price = self._position["raw_entry_price"]
+            # Fallback to last known price or entry if first minute
+            current_price = getattr(self, "_last_mark_price", self._position["raw_entry_price"])
+        self._last_mark_price = current_price
 
         entry_price = self._position["entry_price"]
         pnl_pct = (current_price - entry_price) / entry_price if entry_price > 0 else 0.0
@@ -385,18 +438,15 @@ class SPXOptionsEnv:
         # Update MAE
         self._mae = min(self._mae, pnl_pct)
 
-        hold_minutes = self._t - self._position["entry_minute"]
-        hold_time_norm = hold_minutes / self.hard_exits["max_hold_minutes"]
+        # [v6] Pass context to rewards: hold_time, recovery_rate, spot_momentum
+        # hold_minutes already calculated above
+        dynamic_features = self._get_dynamic_market_features()
+        spot_momentum = float(dynamic_features[7])
+        self._dynamic_market_state = dynamic_features # Save for state builder
 
-        # Get current greeks for state vector
         current_greeks = self._get_current_greeks(ticker, date_str, time_str, self._t)
         self._current_delta = current_greeks["delta"]
-        self._current_theta = current_greeks["theta_vs_premium"]
         self._current_iv = current_greeks["iv"]
-
-        # Get position state for theta (used in step reward only)
-        theta_vs_premium = self._current_theta
-        minutes_to_close = max(0, RL_CONFIG["session_length_minutes"] - self._minutes_since_open())
 
         # ── Check hard exit rules ──
         exit_type = None
@@ -409,36 +459,19 @@ class SPXOptionsEnv:
         elif hold_minutes >= self.hard_exits["max_hold_minutes"]:
             exit_type = "hard_max_hold"
 
-        # ── Minimum hold curriculum enforcement ──
-        # Force HOLD if below the phase minimum (hard exits + emergency stop override)
-        min_hold = self._get_current_min_hold()
-        emergency_stop = RL_CONFIG.get("emergency_stop_pct", -0.30)
-        is_emergency = pnl_pct <= emergency_stop
-        if exit_action == 1 and exit_type is None and hold_minutes < min_hold and not is_emergency:
-            exit_action = 0  # override: agent must hold longer
-
         # ── Agent-requested exit ──
         if exit_action == 1 and exit_type is None:
-            exit_type = "agent_exit"
+            if hold_minutes < self.hard_exits.get("min_hold_minutes", 0):
+                exit_action = 0 # Force HOLD to prevent 1-min spread-cost collapse
+            else:
+                exit_type = "agent_exit"
 
         if exit_type is not None:
             # ── TERMINAL ──
-            # Calculate max option move from actual option prices (not underlying)
-            max_option_move = self._get_max_option_move_pct(
-                ticker, date_str, time_str,
-                self._position["entry_minute"],
-                self.hard_exits["max_hold_minutes"]
-            )
             terminal_reward = compute_terminal_reward(
                 final_pnl_pct=pnl_pct,
-                hold_time_norm=hold_time_norm,
-                entry_delta=self._position["entry_delta"],
-                mlp_confidence=float(ep.get("mlp_confidence", 0.60)),
                 exit_type=exit_type,
-                entry_iv=self._position["entry_iv"],
-                entry_price_improvement=self._position.get("entry_price_improvement", 0.0),
-                max_move_pct=max_option_move,
-                hold_time_minutes=hold_minutes,
+                hold_time_minutes=hold_minutes
             )
             self._done = True
             info = {
@@ -451,23 +484,32 @@ class SPXOptionsEnv:
                 "mae": self._mae,
                 "direction": self._position["direction"],
             }
-            # Include sniper wait time if used
             if self._use_sniper:
                 info["sniper_minutes_waited"] = self._sniper_minutes_elapsed
             return self._build_state_vector(), terminal_reward, True, info
         else:
-            # ── STEP (holding) ──
-            step_reward = compute_step_reward(
+            # ── STEP REWARD ──
+            db = get_delta_bucket(abs(self._current_delta))
+            ib = get_iv_bucket(self._current_iv)
+            pb = get_pnl_bucket(pnl_pct)
+            recovery_rate = float(self._recovery_lookup.get((db, ib, pb), 0.3))
+
+            reward = compute_step_reward(
                 prev_pnl_pct=self._prev_pnl_pct,
                 curr_pnl_pct=pnl_pct,
-                theta_vs_premium=theta_vs_premium,
-                minutes_to_close=minutes_to_close,
-                mae_ratio=self._mae,
                 hold_time_minutes=hold_minutes,
+                recovery_rate=recovery_rate,
+                spot_momentum=spot_momentum
             )
             self._prev_pnl_pct = pnl_pct
             self._t += 1
-            return self._build_state_vector(), step_reward, False, {"action": "hold"}
+            return self._build_state_vector(), float(reward), False, { # [v6]
+                "action": "hold",
+                "pnl_pct": pnl_pct,
+                "hold_minutes": hold_minutes,
+                "recovery_rate": recovery_rate,
+                "spot_momentum": spot_momentum
+            }
 
     # ═══════════════════════════════════════════════════════════════════════
     # STRIKE RESOLUTION
@@ -663,6 +705,102 @@ class SPXOptionsEnv:
         except:
             return self._t
 
+    def _get_dynamic_market_features(self) -> np.ndarray:
+        """
+        Compute 8 dynamic market features from the per-minute options cache.
+        [v6.1] Caching: prevent multiple calls (and spot_history updates) per step.
+        """
+        if self._dynamic_cache_t == self._t:
+            return self._dynamic_market_state
+
+        self._dynamic_cache_t = self._t
+        dynamic = np.zeros(DYNAMIC_MARKET_DIM, dtype=np.float32)
+        ep = self._current_episode
+        ticker = str(ep.get("ticker", "SPX"))
+        date_str = str(ep.get("date", ""))
+        time_str = str(ep.get("time", ""))
+        cache_key = f"{ticker}_{date_str}_{time_str}"
+        cache_entry = self.options_cache.get(cache_key)
+
+        if cache_entry is None or self._entry_spot <= 0:
+            return dynamic
+
+        minutes_data = cache_entry.get("minutes", {})
+        minute_data = minutes_data.get(self._t)
+
+        if minute_data is None:
+            return dynamic
+
+        current_spot = float(minute_data.get("spot", self._entry_spot))
+
+        # Track spot history for velocity
+        self._spot_history.append(current_spot)
+
+        # [0] Spot change from signal time (clipped to ±2%)
+        spot_change = (current_spot - self._entry_spot) / self._entry_spot
+        dynamic[0] = np.clip(spot_change * 100, -2.0, 2.0)  # in pct, clipped
+
+        # [1] Spot velocity over last 5 minutes
+        if len(self._spot_history) >= 6:
+            spot_5m_ago = self._spot_history[-6]
+            velocity = (current_spot - spot_5m_ago) / self._entry_spot
+            dynamic[1] = np.clip(velocity * 100, -1.0, 1.0)
+        elif len(self._spot_history) >= 2:
+            velocity = (current_spot - self._spot_history[0]) / self._entry_spot
+            dynamic[1] = np.clip(velocity * 100, -1.0, 1.0)
+
+        # [2] ATM IV change from signal time
+        direction = ep.get("mlp_direction", "LONG")
+        right_key = "calls" if direction == "LONG" else "puts"
+        options = minute_data.get(right_key, {})
+        if options and current_spot > 0:
+            atm_strike = min(options.keys(), key=lambda s: abs(float(s) - current_spot), default=None)
+            if atm_strike is not None:
+                current_iv = float(options[atm_strike].get("iv", self._entry_atm_iv))
+                iv_change = (current_iv - self._entry_atm_iv) / max(self._entry_atm_iv, 0.01)
+                dynamic[2] = np.clip(iv_change, -1.0, 1.0)
+
+                # [3] Current ATM gamma (normalized)
+                gamma = float(options[atm_strike].get("gamma", 0))
+                dynamic[3] = np.clip(gamma * current_spot * 0.01, -2.0, 2.0)
+
+        # [4] Spot vs entry price (if in position, distance from position entry spot)
+        if self._position is not None and self._entry_spot > 0:
+            entry_minute = self._position.get("entry_minute", 0)
+            entry_minute_data = minutes_data.get(entry_minute, {})
+            entry_spot_at_open = float(entry_minute_data.get("spot", self._entry_spot))
+            if entry_spot_at_open > 0:
+                spot_vs_entry = (current_spot - entry_spot_at_open) / entry_spot_at_open
+                # Sign matters: for LONG, positive = good; for SHORT, negative = good
+                if direction == "SHORT":
+                    spot_vs_entry = -spot_vs_entry
+                dynamic[4] = np.clip(spot_vs_entry * 100, -3.0, 3.0)
+
+        # [5] Minutes remaining to market close (normalized 0-1)
+        total_session = RL_CONFIG["session_length_minutes"]  # 390
+        mins_since_open = self._minutes_since_open()
+        minutes_left = max(0, total_session - mins_since_open)
+        dynamic[5] = minutes_left / total_session
+
+        # [6] Option momentum: price change over last 3 min (if in position)
+        if self._position is not None and self._t >= 3:
+            price_now = self._get_current_option_price(ticker, date_str, time_str, self._t)
+            price_3ago = self._get_current_option_price(ticker, date_str, time_str, self._t - 3)
+            if price_now is not None and price_3ago is not None and price_3ago > 0:
+                opt_momentum = (price_now - price_3ago) / price_3ago
+                dynamic[6] = np.clip(opt_momentum, -1.0, 1.0)
+
+        # [7] Underlying trend (cumulative direction, smoothed)
+        if len(self._spot_history) >= 3:
+            diffs = np.diff(self._spot_history[-min(20, len(self._spot_history)):])
+            up_moves = np.sum(diffs > 0)
+            dn_moves = np.sum(diffs < 0)
+            total_moves = up_moves + dn_moves
+            if total_moves > 0:
+                dynamic[7] = (up_moves - dn_moves) / total_moves  # range [-1, 1]
+
+        return dynamic
+
     # ═══════════════════════════════════════════════════════════════════════
     # STATE VECTOR
     # ═══════════════════════════════════════════════════════════════════════
@@ -671,11 +809,11 @@ class SPXOptionsEnv:
         """
         Concatenate state groups into the observation vector.
 
-        When use_sniper_mode=True (175 dims):
-          [market_features(163), position_features(6), mlp_context(4), sniper_features(2)]
+        When use_sniper_mode=True (183 dims):
+          [market_features(163), dynamic_market(8), position_features(6), mlp_context(4), sniper_features(2)]
 
-        When use_sniper_mode=False (173 dims):
-          [market_features(163), position_features(6), mlp_context(4)]
+        When use_sniper_mode=False (181 dims):
+          [market_features(163), dynamic_market(8), position_features(6), mlp_context(4)]
         """
         ep = self._current_episode
 
@@ -687,7 +825,10 @@ class SPXOptionsEnv:
             val = ep.get(col, 0.0)
             market_features[i] = float(val) if not pd.isna(val) else 0.0
 
-        # ── Group 2: Position state ──
+        # ── Group 2: Dynamic market features (updated per minute) ──
+        dynamic_features = self._get_dynamic_market_features()
+
+        # ── Group 3: Position state ──
         position_features = np.zeros(POSITION_STATE_DIM, dtype=np.float32)
         if self._position is not None:
             pnl_pct = self._prev_pnl_pct
@@ -698,13 +839,21 @@ class SPXOptionsEnv:
             position_features[1] = np.clip(hold_time_norm, 0.0, 1.0)    # time_held_norm
             position_features[2] = abs(getattr(self, '_current_delta',
                                                self._position["entry_delta"]))  # current delta
-            position_features[3] = getattr(self, '_current_theta', -0.05)       # current theta
+            
+            # --- v4: Drawdown Recovery Rate instead of Theta ---
+            db = get_delta_bucket(position_features[2])
             iv = getattr(self, '_current_iv', 0.15)
+            ib = get_iv_bucket(iv)
+            pb = get_pnl_bucket(pnl_pct)
+            
+            recovery_prob = self._recovery_lookup.get((db, ib, pb), 0.3) # Prior 0.3 if bucket missing
+            position_features[3] = float(recovery_prob)
+            
             position_features[4] = np.clip(iv / 0.15 if iv > 0 else 1.0,
                                            0.5, 3.0)                            # current iv_ratio
             position_features[5] = np.clip(self._mae, -1.0, 0.0)        # mae_ratio
 
-        # ── Group 3: MLP signal context ──
+        # ── Group 4: MLP signal context ──
         mlp_context = np.zeros(MLP_CONTEXT_DIM, dtype=np.float32)
         mlp_context[0] = float(ep.get("mlp_confidence", 0.60))
         mlp_context[1] = float(ep.get("mlp_time_to_target", 0.5))
@@ -714,7 +863,7 @@ class SPXOptionsEnv:
         ) if self._use_sniper else 0.0
         mlp_context[3] = float(ep.get("mlp_log_sigma", 0.5))
 
-        # ── Group 4: Sniper features (only when sniper mode enabled) ──
+        # ── Group 5: Sniper features (only when sniper mode enabled) ──
         if self._use_sniper:
             sniper_features = np.zeros(SNIPER_STATE_DIM, dtype=np.float32)
             if self._position is None and self._sniper_mode:
@@ -723,8 +872,8 @@ class SPXOptionsEnv:
                 sniper_features[0] = (window - self._sniper_minutes_elapsed) / window
                 sniper_features[1] = 1.0 if self._sniper_entry_attempted else 0.0
             # else: already in position — sniper features are 0 (no longer relevant)
-            state = np.concatenate([market_features, position_features, mlp_context, sniper_features])
+            state = np.concatenate([market_features, dynamic_features, position_features, mlp_context, sniper_features])
         else:
-            state = np.concatenate([market_features, position_features, mlp_context])
+            state = np.concatenate([market_features, dynamic_features, position_features, mlp_context])
 
         return state.astype(np.float32)

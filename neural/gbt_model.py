@@ -21,10 +21,11 @@ from hybrid_model import FeatureNormalizer
 # SINGLE GBT MODEL
 # ═══════════════════════════════════════════════════════════════
 class GBTModel:
-    """Wrapper around a single LightGBM classifier."""
+    """Wrapper around a single LightGBM classifier with optional metadata."""
 
-    def __init__(self, lgb_model: lgb.LGBMClassifier = None):
+    def __init__(self, lgb_model: lgb.LGBMClassifier = None, metadata: dict = None):
         self.model = lgb_model
+        self.metadata = metadata or {}
 
     def predict_proba(self, X: np.ndarray) -> np.ndarray:
         """Return class probabilities [N, 3]."""
@@ -55,20 +56,44 @@ class GBTEnsemble:
         self.models = models
         self._device = torch.device("cpu")
 
-    def predict_proba(self, X: np.ndarray) -> np.ndarray:
-        """Average probabilities across ensemble. Returns [N, 3]."""
+    def predict_proba(self, X: np.ndarray, date: str = None) -> np.ndarray:
+        """
+        Average probabilities across ensemble. Returns [N, 3].
+        
+        Args:
+            X: Input features
+            date: Optional 'YYYYMMDD' string. If provided, only models trained 
+                  BEFORE this date (cutoff_date < date) are used.
+        """
         import pandas as pd
         
+        # Filter models by date if requested
+        eligible_models = self.models
+        if date is not None:
+            # Convert YYYYMMDD string to int for comparison
+            d_val = int(date.replace('-', '').replace('/', ''))
+            eligible_models = [
+                m for m in self.models 
+                if m.metadata.get('cutoff_date', 0) < d_val
+            ]
+            
+            # Fallback if no models are old enough: use the oldest one available
+            if not eligible_models:
+                eligible_models = [min(self.models, key=lambda m: m.metadata.get('cutoff_date', 99999999))]
+
+        if not eligible_models:
+            raise ValueError("No models available in ensemble.")
+
         # Convert to DataFrame to avoid LightGBM feature name warnings
         if not isinstance(X, pd.DataFrame):
             try:
                 # Extract feature names from the underlying LGBM model
-                feature_names = self.models[0].model.feature_name_
+                feature_names = eligible_models[0].model.feature_name_
                 X = pd.DataFrame(X, columns=feature_names)
-            except AttributeError:
+            except (AttributeError, IndexError):
                 pass  # Fallback to numpy if feature names aren't available
 
-        probs = np.stack([m.predict_proba(X) for m in self.models], axis=0)
+        probs = np.stack([m.predict_proba(X) for m in eligible_models], axis=0)
         return probs.mean(axis=0)
 
     def __call__(self, x):
@@ -155,14 +180,21 @@ def save_gbt_ensemble(ensemble: GBTEnsemble, normalizer: FeatureNormalizer,
     os.makedirs(os.path.dirname(model_path), exist_ok=True)
     os.makedirs(os.path.dirname(norm_path), exist_ok=True)
 
-    # Save list of raw LGBMClassifier objects
-    lgb_models = [m.model for m in ensemble.models]
-    joblib.dump(lgb_models, model_path)
+    # Save as list of dictionaries { 'model': classifier, 'metadata': dict }
+    # This remains compatible with joblib but allows rich metadata
+    serialized = []
+    for m in ensemble.models:
+        serialized.append({
+            'model': m.model,
+            'metadata': m.metadata
+        })
+        
+    joblib.dump(serialized, model_path)
 
     if normalizer is not None:
         normalizer.save(norm_path)
 
-    print(f"  [GBT] Saved {len(lgb_models)} models to {model_path}")
+    print(f"  [GBT] Saved {len(serialized)} models with metadata to {model_path}")
 
 
 def load_gbt_ensemble(model_path: str, norm_path: str) -> tuple:
@@ -175,12 +207,20 @@ def load_gbt_ensemble(model_path: str, norm_path: str) -> tuple:
     normalizer = FeatureNormalizer()
     normalizer.load(norm_path)
 
-    lgb_models = joblib.load(model_path)
+    objs = joblib.load(model_path)
 
-    if not isinstance(lgb_models, list):
-        lgb_models = [lgb_models]
+    if not isinstance(objs, list):
+        objs = [objs]
 
-    models = [GBTModel(m) for m in lgb_models]
+    models = []
+    for o in objs:
+        if isinstance(o, dict) and 'model' in o:
+            # Modern format with metadata
+            models.append(GBTModel(o['model'], o.get('metadata')))
+        else:
+            # Legacy format (just the classifier)
+            models.append(GBTModel(o))
+            
     ensemble = GBTEnsemble(models)
 
     print(f"  [GBT] Loaded {len(models)} models from {model_path}")

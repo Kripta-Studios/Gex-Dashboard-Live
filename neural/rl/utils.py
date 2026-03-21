@@ -3,7 +3,7 @@ RL Utilities — RunningMeanStd, State Augmentation, Curriculum Scheduler
 """
 
 import numpy as np
-from .config import RL_CONFIG
+from .config import RL_CONFIG, POSITION_STATE_DIM, MLP_CONTEXT_DIM, SNIPER_STATE_DIM
 
 
 class RunningMeanStd:
@@ -54,8 +54,11 @@ def augment_state(state: np.ndarray, market_feature_dim: int = None,
     because noise on P&L features would corrupt the reward signal.
     """
     if market_feature_dim is None:
-        # 6 position + 3 MLP + (2 sniper if active) = 9 or 11 non-market dims
-        non_market = 11 if RL_CONFIG.get("use_sniper_mode") else 9
+        # Position + MLP context + (sniper if active) = non-market dims
+        # noise applies to BOTH static (163) and dynamic (8) market features
+        non_market = (SNIPER_STATE_DIM + POSITION_STATE_DIM + MLP_CONTEXT_DIM
+                      if RL_CONFIG.get("use_sniper_mode")
+                      else POSITION_STATE_DIM + MLP_CONTEXT_DIM)  # 10 or 12
         market_feature_dim = RL_CONFIG["state_dim"] - non_market
     if noise_std is None:
         noise_std = RL_CONFIG.get("obs_noise_std", 0.02)
@@ -68,36 +71,54 @@ def augment_state(state: np.ndarray, market_feature_dim: int = None,
 
 class CurriculumScheduler:
     """
-    3-phase curriculum learning for RL training.
-
-    Phase 1 (first 30%):  High-confidence signals only (≥0.80)
-    Phase 2 (next 40%):   Medium-confidence (≥0.65)
-    Phase 3 (final 30%):  Full distribution (≥0.60)
+    Gradual curriculum learning with linear interpolation between nodes.
+    Prevents "cliff effects" when transitioning between phases.
     """
 
     def __init__(self, total_updates: int = None):
         self.total_updates = total_updates or RL_CONFIG["total_updates"]
         self.phases = RL_CONFIG["curriculum_phases"]
 
-    def get_min_confidence(self, update_step: int) -> float:
-        """Return the minimum MLP confidence threshold for the current phase."""
-        progress = update_step / max(self.total_updates, 1)
-        for phase_idx in sorted(self.phases.keys()):
-            phase = self.phases[phase_idx]
-            if progress <= phase["pct_training"]:
-                return phase["min_confidence"]
-        return RL_CONFIG["min_confidence"]
-
     def get_phase_info(self, update_step: int) -> dict:
-        """Return full phase info for logging."""
-        progress = update_step / max(self.total_updates, 1)
-        for phase_idx in sorted(self.phases.keys()):
-            phase = self.phases[phase_idx]
-            if progress <= phase["pct_training"]:
-                return {"phase": phase_idx, "progress": progress, **phase}
-        return {"phase": len(self.phases), "progress": progress,
-                "min_confidence": RL_CONFIG["min_confidence"],
-                "description": "full"}
+        """
+        Linearly interpolate curriculum parameters based on training progress.
+        Returns: {phase, min_confidence, progress}
+        """
+        progress = min(update_step / max(self.total_updates, 1), 1.0)
+        
+        # Sort nodes by pct to find the interval
+        nodes = sorted(self.phases.items(), key=lambda x: x[1]["pct"])
+        
+        lower = nodes[0][1]
+        upper = nodes[-1][1]
+        current_phase = nodes[0][0]
+        
+        for i in range(len(nodes) - 1):
+            if nodes[i][1]["pct"] <= progress <= nodes[i+1][1]["pct"]:
+                lower = nodes[i][1]
+                upper = nodes[i+1][1]
+                current_phase = nodes[i][0]
+                break
+        
+        # Linear interpolation factor
+        if upper["pct"] == lower["pct"]:
+            alpha = 1.0
+        else:
+            alpha = (progress - lower["pct"]) / (upper["pct"] - lower["pct"])
+            
+        conf = lower["min_confidence"] + alpha * (upper["min_confidence"] - lower["min_confidence"])
+        strike = lower["min_strike_bucket"] + alpha * (upper["min_strike_bucket"] - lower["min_strike_bucket"])
+        max_s = lower.get("max_strike_bucket", 6) + alpha * (upper.get("max_strike_bucket", 6) - lower.get("max_strike_bucket", 6))
+        hold = lower.get("min_hold_minutes", 0) + alpha * (upper.get("min_hold_minutes", 0) - lower.get("min_hold_minutes", 0))
+        
+        return {
+            "phase": current_phase,
+            "min_confidence": float(conf),
+            "min_strike_bucket": int(round(strike)),
+            "max_strike_bucket": int(round(max_s)),
+            "min_hold_minutes": int(round(hold)),
+            "progress": progress
+        }
 
 
 class RolloutBuffer:
@@ -141,11 +162,6 @@ class RolloutBuffer:
         old_log_probs = np.array(self.log_probs, dtype=np.float32)
         returns = np.array(self.rewards, dtype=np.float32)  # pre-computed in GAE
         values = np.array(self.values, dtype=np.float32)
-        advantages = returns - values
-
-        # Normalize advantages
-        adv_mean, adv_std = advantages.mean(), advantages.std() + 1e-8
-        advantages = (advantages - adv_mean) / adv_std
 
         for start in range(0, n, batch_size):
             end = min(start + batch_size, n)
@@ -156,5 +172,30 @@ class RolloutBuffer:
                 "action_types": [self.action_types[i] for i in idx],
                 "old_log_probs": torch.FloatTensor(old_log_probs[idx]),
                 "returns": torch.FloatTensor(returns[idx]),
-                "advantages": torch.FloatTensor(advantages[idx]),
+                "values": torch.FloatTensor(values[idx]),
             }
+
+def get_delta_bucket(delta: float) -> int:
+    """Bucketize absolute delta [0.1-0.7] into 6 categories."""
+    d = abs(delta)
+    if d < 0.2: return 0
+    if d < 0.3: return 1
+    if d < 0.4: return 2
+    if d < 0.5: return 3
+    if d < 0.6: return 4
+    return 5 # > 0.6
+
+def get_iv_bucket(iv: float) -> int:
+    """Bucketize IV into 3 categories."""
+    if iv < 0.15: return 0
+    if iv < 0.25: return 1
+    return 2 # > 0.25
+
+def get_pnl_bucket(pnl: float) -> int:
+    """Bucketize PnL [-0.5 to 0] into 6 floor categories."""
+    if pnl < -0.40: return 0
+    if pnl < -0.30: return 1
+    if pnl < -0.20: return 2
+    if pnl < -0.10: return 3
+    if pnl < -0.05: return 4
+    return 5 # -0.05 to 0
