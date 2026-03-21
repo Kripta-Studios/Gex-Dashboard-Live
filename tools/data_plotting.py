@@ -459,6 +459,8 @@ def _plot_single_histogram_worker(args):
             ylabel_text += " (zomma / 1% IV move)"
         elif name == "Dgex":
             ylabel_text += " (dgex / 1% move)"
+        elif name == "Speed":
+            ylabel_text += " (speed / 1% move)"
 
         # --- FIGURE PRIVADO ---
         fig = Figure(figsize=(20, 12))
@@ -753,8 +755,10 @@ async def plot_greeks_table(
     totalzomma,
     totalvega, 
     totalvomma,
+    totalspeed,
     zerodelta,
     zerogamma,
+    zerospeed,
     call_ivs,
     put_ivs,
     exp,
@@ -772,12 +776,13 @@ async def plot_greeks_table(
     GREEKS = (
         [greek_filter]
         if greek_filter
-        else ["delta", "gamma", "vanna", "charm", "dgex", "zomma", "vega", "vomma"]
+        else ["delta", "gamma", "speed", "vanna", "charm", "dgex", "zomma", "vega", "vomma"]
     )
 
     VISUALIZATIONS = {
         "delta": ["Absolute Delta Exposure", "Delta Exposure By Calls/Puts"],
         "gamma": ["Absolute Gamma Exposure", "Gamma Exposure By Calls/Puts"],
+        "speed": ["Absolute Speed Exposure"],
         "vanna": ["Absolute Vanna Exposure", "Implied Volatility Average"],
         "charm": ["Absolute Charm Exposure"],
         "dgex": ["Absolute Dgex Exposure"],
@@ -1020,8 +1025,10 @@ async def plot_greeks_histogram(
     totalzomma,
     totalvega, 
     totalvomma,
+    totalspeed,
     zerodelta,
     zerogamma,
+    zerospeed,
     call_ivs,
     put_ivs,
     exp,
@@ -1039,11 +1046,12 @@ async def plot_greeks_histogram(
     GREEKS = (
         [greek_filter]
         if greek_filter
-        else ["delta", "gamma", "vanna", "charm", "dgex", "zomma", "vega", "vomma"]
+        else ["delta", "gamma", "speed", "vanna", "charm", "dgex", "zomma", "vega", "vomma"]
     )
     VISUALIZATIONS = {
         "delta": ["Absolute Delta Exposure", "Delta Exposure By Calls/Puts"],
         "gamma": ["Absolute Gamma Exposure", "Gamma Exposure By Calls/Puts"],
+        "speed": ["Absolute Speed Exposure"],
         "vanna": ["Absolute Vanna Exposure", "Implied Volatility Average"],
         "charm": ["Absolute Charm Exposure"],
         "dgex": ["Absolute Dgex Exposure"],
@@ -1269,7 +1277,7 @@ async def plot_greeks_histogram(
 
 
 # --- MISMAS FUNCIONES DE CÁLCULO DE SIEMPRE (SIN CAMBIOS) ---
-async def calc_exposures(
+def calc_exposures(
     option_data,
     ticker,
     expir,
@@ -1444,6 +1452,17 @@ async def calc_exposures(
         0,
     )
 
+    option_data["call_speed"] = np.where(
+        nonzero_call_cond,
+        stats.calc_speed_ex(call_gex_2d, call_dp, opt_call_ivs, time_till_exp, np_spot_price)[0],
+        0,
+    )
+    option_data["put_speed"] = np.where(
+        nonzero_put_cond,
+        stats.calc_speed_ex(put_gex_2d, put_dp, opt_put_ivs, time_till_exp, np_spot_price)[0],
+        0,
+    )
+
     # Calculate total and scale down
     option_data["total_delta"] = (
         option_data["call_dex"].to_numpy() + option_data["put_dex"].to_numpy()
@@ -1468,6 +1487,7 @@ async def calc_exposures(
 
     option_data["total_vega"] = (option_data["call_vegex"].to_numpy() + option_data["put_vegex"].to_numpy()) / 10**9
     option_data["total_vomma"] = (option_data["call_vommex"].to_numpy() + option_data["put_vommex"].to_numpy()) / 10**9
+    option_data["total_speed"] = (option_data["call_speed"].to_numpy() + option_data["put_speed"].to_numpy()) / 10**9
 
 
     df_agg_strike_mean = (
@@ -1528,6 +1548,7 @@ async def calc_exposures(
 
     totalvega = {"all": np.array([]), "ex_next": np.array([]), "ex_fri": np.array([])}
     totalvomma = {"all": np.array([]), "ex_next": np.array([]), "ex_fri": np.array([])}
+    totalspeed = {"all": np.array([]), "ex_next": np.array([]), "ex_fri": np.array([])}
 
     call_dp, call_cdf_dp, call_pdf_dp = stats.calc_dp_cdf_pdf(
         levels,
@@ -1591,6 +1612,16 @@ async def calc_exposures(
             put_open_interest,
             put_pdf_dp,
         ),
+        0,
+    )
+    call_speed_ex = np.where(
+        nonzero_call_cond,
+        stats.calc_speed_ex(call_gamma_ex, call_dp, opt_call_ivs, time_till_exp, levels),
+        0,
+    )
+    put_speed_ex = np.where(
+        nonzero_put_cond,
+        stats.calc_speed_ex(put_gamma_ex, put_dp, opt_put_ivs, time_till_exp, levels),
         0,
     )
     call_vanna_ex = np.where(
@@ -1723,6 +1754,7 @@ async def calc_exposures(
         ) / 10**9
         totalvega["ex_next"] = (np.where(expirs_next_expiry, call_vega_ex, 0).sum(axis=1) + np.where(expirs_next_expiry, put_vega_ex, 0).sum(axis=1)) / 10**9
         totalvomma["ex_next"] = (np.where(expirs_next_expiry, call_vomma_ex, 0).sum(axis=1) + np.where(expirs_next_expiry, put_vomma_ex, 0).sum(axis=1)) / 10**9
+        totalspeed["ex_next"] = (np.where(expirs_next_expiry, call_speed_ex, 0).sum(axis=1) + np.where(expirs_next_expiry, put_speed_ex, 0).sum(axis=1)) / 10**9
 
         if expir == "all":
             totaldelta["ex_fri"] = (
@@ -1751,6 +1783,7 @@ async def calc_exposures(
             ) / 10**9
             totalvega["ex_fri"] = (np.where(expirs_up_to_monthly_opex, call_vega_ex, 0).sum(axis=1) + np.where(expirs_up_to_monthly_opex, put_vega_ex, 0).sum(axis=1)) / 10**9
             totalvomma["ex_fri"] = (np.where(expirs_up_to_monthly_opex, call_vomma_ex, 0).sum(axis=1) + np.where(expirs_up_to_monthly_opex, put_vomma_ex, 0).sum(axis=1)) / 10**9
+            totalspeed["ex_fri"] = (np.where(expirs_up_to_monthly_opex, call_speed_ex, 0).sum(axis=1) + np.where(expirs_up_to_monthly_opex, put_speed_ex, 0).sum(axis=1)) / 10**9
 
 
     zero_cross_idx = np.where(np.diff(np.sign(totaldelta["all"])))[0]
@@ -1780,6 +1813,20 @@ async def calc_exposures(
     else:
         zerogamma = 0
 
+    zero_cross_idx = np.where(np.diff(np.sign(totalspeed["all"])))[0]
+    negSpeed = totalspeed["all"][zero_cross_idx]
+    posSpeed = totalspeed["all"][zero_cross_idx + 1]
+    neg_strike = levels[zero_cross_idx]
+    pos_strike = levels[zero_cross_idx + 1]
+    zerospeed = pos_strike - (
+        (pos_strike - neg_strike) * posSpeed / (posSpeed - negSpeed)
+    )
+    if zerospeed.size > 0:
+        zerospeed = zerospeed[0][0]
+    else:
+        zerospeed = 0
+
+
     return (
         option_data,
         today_ddt,
@@ -1797,8 +1844,10 @@ async def calc_exposures(
         totalzomma,
         totalvega,
         totalvomma,
+        totalspeed,
         zerodelta,
         zerogamma,
+        zerospeed,
         call_ivs,
         put_ivs,
     )
@@ -1992,7 +2041,7 @@ def get_options_data(ticker, expir, greek_filter):
         this_opex, _ = is_third_friday(first, "America/New_York")
         today_str = today.strftime("%Y %b %d, %I:%M %p %Z")
 
-        exp_data = await calc_exposures(
+        exp_data = calc_exposures(
             opt_data,
             t_san,
             exp_clean,
@@ -2024,8 +2073,10 @@ def get_options_data(ticker, expir, greek_filter):
                 "totalzomma",
                 "totalvega",
                 "totalvomma",
+                "totalspeed",
                 "zerodelta",
                 "zerogamma",
+                "zerospeed",
                 "call_ivs",
                 "put_ivs",
                 "expir",
