@@ -26,10 +26,11 @@ load_dotenv()
 TICKERS = ["SPX", "Ticker"]  # Yahoo Finance format
 # EXPIRATIONS = ["0dte", "1dte", "weekly", "opex", "monthly", "all"]
 EXPIRATIONS = ["0dte", "1dte", "weekly"]
-GREEKS = ["delta", "gamma", "vanna", "charm", "dgex", "zomma", "vega", "vomma"]
+GREEKS = ["delta", "gamma", "speed", "vanna", "charm", "dgex", "zomma", "vega", "vomma"]
 VISUALIZATIONS = {
     "delta": ["Absolute Delta Exposure", "Delta Exposure By Calls/Puts"],
     "gamma": ["Absolute Gamma Exposure", "Gamma Exposure By Calls/Puts"],
+    "speed": ["Absolute Speed Exposure"],
     "vanna": ["Absolute Vanna Exposure", "Implied Volatility Average"],
     "charm": ["Absolute Charm Exposure"],
     "dgex": ["Absolute Dgex Exposure", "Dgex Exposure By Calls/Puts"],
@@ -48,6 +49,7 @@ DISCORD_CHANNEL_IDS = {
     "SPX/0dte/zomma": 1456249198726086696,
     "SPX/0dte/vega": 1472633054714532117,
     "SPX/0dte/vomma": 1472633270234644542,
+    "SPX/0dte/speed": 1484719973288116234,
     "SPX/1dte/delta": 1387377603031207976,
     "SPX/1dte/gamma": 1387376325399941231,
     "SPX/1dte/vanna": 1387376810559275158,
@@ -56,6 +58,7 @@ DISCORD_CHANNEL_IDS = {
     "SPX/1dte/zomma": 1456249231982596137,
     "SPX/1dte/vega": 1472633092706668637,
     "SPX/1dte/vomma": 1472633286915391665,
+    "SPX/1dte/speed": 1484719994322292776,
     "SPX/opex/delta": 1387377627505102909,
     "SPX/opex/gamma": 1387376441389486131,
     "SPX/opex/vanna": 1387376838757711913,
@@ -88,6 +91,7 @@ DISCORD_CHANNEL_IDS = {
     "SPX/weekly/zomma": 1456249264144388208,
     "SPX/weekly/vega": 1472633118497312879,
     "SPX/weekly/vomma": 1472633311322181827,
+    "SPX/weekly/speed": 1484720011393105951,
     "Ticker/0dte/delta": 1387378772805947492,
     "Ticker/0dte/gamma": 1387377700465016862,
     "Ticker/0dte/vanna": 1387378541284425828,
@@ -108,7 +112,7 @@ DISCORD_CHANNEL_IDS = {
     "Ticker/all/gamma": 1387378499417014392,
     "Ticker/all/vanna": 1387378622293344356,
     "Ticker/all/charm": 1387378750827794644,
-    "SPY/weekly/gamma": 1405682462197153962,  # Replace with actual channel IDs
+    "SPY/weekly/gamma": 1405682462197153962,
     "SPY/0dte/delta": 1462069774136905963,
     "SPY/0dte/gamma": 1435228025217355799,
     "SPY/0dte/vanna": 1448657151198367874,
@@ -116,6 +120,7 @@ DISCORD_CHANNEL_IDS = {
     "SPY/0dte/dgex": 1457671508959821845,
     "SPY/0dte/vega": 1472633954057195713,
     "SPY/0dte/vomma": 1472634061380911285,
+    "SPY/0dte/speed": 1484720509475225671,
     "QQQ/weekly/gamma": 1405682477313429624,
     "QQQ/0dte/delta": 1462069803228332179,
     "QQQ/0dte/gamma": 1436339202663911499,
@@ -124,6 +129,7 @@ DISCORD_CHANNEL_IDS = {
     "QQQ/0dte/dgex": 1457671555965386928,
     "QQQ/0dte/vega": 1472634088719651054,
     "QQQ/0dte/vomma": 1472634111121293537,
+    "QQQ/0dte/speed": 1484720667663536228,
 }
 
 # Initialize cache

@@ -39,24 +39,14 @@ from neural.gbt_model import load_gbt_ensemble
 from neural.rl.agent import PPOAgent
 from neural.rl.integration import IntegratedTradingSystem
 from neural.rl.config import STRIKE_BUCKETS, HARD_EXITS, RL_CONFIG
-from services.compute_features import get_net_exposures_from_parquet, calculate_exact_t
+from services.compute_features import (
+    get_net_exposures_from_parquet, calculate_exact_t, extract_feature_vector,
+    compute_wonham_filter,
+    safe_log, dist_bps, is_near_level, classify_gamma_regime, sign_divergence,
+    simple_rsi, calculate_fibonacci_levels, rbf_confluence
+)
 
 load_dotenv()
-
-# ── Feature transforms (must match training pipeline exactly) ──
-def safe_log(x: float) -> float:
-    """Sign-preserving log-transform: sign(x) * log1p(|x|).
-    Compresses extreme greek values (10^8-10^11) to manageable range (~20-26)
-    while preserving sign and monotonicity."""
-    return math.copysign(math.log1p(abs(x)), x)
-
-BPS_CLIP = 500  # clamp distances at ±500 bps (±5%)
-
-def dist_bps(spot: float, level: float) -> float:
-    """Percentage distance from spot to level in basis points, clamped."""
-    if spot <= 0 or level <= 0:
-        return 0.0
-    return float(np.clip((spot - level) / spot * 10000.0, -BPS_CLIP, BPS_CLIP))
 
 ET = ZoneInfo("America/New_York")
 
@@ -100,7 +90,7 @@ SPOT_SOURCES = {
 
 # Timing
 LOOP_INTERVAL = 65  # seconds — aligned with realtime_feed's 60s poll interval
-COOLDOWN_MINUTES = 20
+COOLDOWN_MINUTES = 5
 
 # GBM Spot-Based TP/SL Configuration (mirrors backtest_rl.py simulate_mlp_only)
 GBM_TARGET_LONG = 0.010       # +1.0% spot move target for LONG
@@ -223,58 +213,6 @@ def _send(content: str):
 # HELPERS
 # ═════════════════════════════════════════════════════════════════════════
 
-def classify_gamma_regime(net_gamma: float, threshold: float = 1e8) -> int:
-    if net_gamma > threshold:
-        return 2  # positive gamma
-    elif net_gamma < -threshold:
-        return 0  # negative gamma
-    return 1  # neutral
-
-def is_near_level(price: float, level: float, threshold: float = LEVEL_PROXIMITY_THRESHOLD) -> bool:
-    if price <= 0 or level <= 0:
-        return False
-    return abs(price - level) / price < threshold
-
-def calculate_fibonacci_levels(ib_high: float, ib_low: float) -> dict:
-    ib_range = ib_high - ib_low
-    return {
-        "fib_127_up": ib_low + (ib_range * 1.272),
-        "fib_161_up": ib_low + (ib_range * 1.618),
-        "fib_200_up": ib_low + (ib_range * 2.0),
-        "fib_127_dn": ib_low + (ib_range * -0.272),
-        "fib_161_dn": ib_low + (ib_range * -0.618),
-        "fib_200_dn": ib_low + (ib_range * -1.0),
-    }
-
-def simple_rsi(prices: list, period: int = 14) -> float:
-    if len(prices) < 2:
-        return 50.0
-    deltas = [prices[i] - prices[i-1] for i in range(1, len(prices))]
-    gains = [d if d > 0 else 0 for d in deltas]
-    losses = [-d if d < 0 else 0 for d in deltas]
-    avg_gain = sum(gains[-period:]) / period
-    avg_loss = sum(losses[-period:]) / period
-    if avg_loss == 0:
-        return 100.0
-    rs = avg_gain / avg_loss
-    return 100 - (100 / (1 + rs))
-
-def sign_divergence(a: float, b: float) -> float:
-    if abs(a) < 0.01 or abs(b) < 0.01:
-        return 0.5
-    return 1.0 if (a > 0) != (b > 0) else 0.0
-
-def rbf_confluence(level_a: float, level_b: float, spot_price: float, sigma: float = 0.05) -> float:
-    if level_a is None or level_b is None or spot_price is None:
-        return 0.0
-    if spot_price <= 0:
-        return 0.0
-    dist_a = abs(spot_price - level_a) / spot_price
-    dist_b = abs(spot_price - level_b) / spot_price
-    overlap_dist = abs(level_a - level_b) / spot_price
-    return float(np.exp(-0.5 * (dist_a/sigma)**2) * np.exp(-0.5 * (dist_b/sigma)**2) * np.exp(-0.5 * (overlap_dist/(2*sigma))**2))
-
-
 # ═════════════════════════════════════════════════════════════════════════
 # POSITION TRACKING
 # ═════════════════════════════════════════════════════════════════════════
@@ -282,7 +220,8 @@ def rbf_confluence(level_a: float, level_b: float, spot_price: float, sigma: flo
 class RLPosition:
     """Tracks an open RL-managed position."""
     def __init__(self, ticker, direction, strike, delta, entry_premium,
-                 confidence, bucket, entry_time=None):
+                 confidence, bucket, entry_time=None, entry_spot=0.0, entry_atm_iv=0.15,
+                 mae=0.0, prev_pnl_pct=0.0, bucket_index=4, time_to_target=0.5, log_sigma=0.5):
         self.ticker = ticker
         self.direction = direction
         self.strike = strike
@@ -291,6 +230,13 @@ class RLPosition:
         self.confidence = confidence
         self.bucket = bucket
         self.entry_time = entry_time or datetime.now(ET)
+        self.entry_spot = entry_spot
+        self.entry_atm_iv = entry_atm_iv
+        self.mae = mae
+        self.prev_pnl_pct = prev_pnl_pct
+        self.bucket_index = bucket_index
+        self.time_to_target = time_to_target
+        self.log_sigma = log_sigma
 
     def to_dict(self):
         return {
@@ -299,6 +245,13 @@ class RLPosition:
             "entry_premium": self.entry_premium,
             "confidence": self.confidence, "bucket": self.bucket,
             "entry_time": self.entry_time.isoformat(),
+            "entry_spot": self.entry_spot,
+            "entry_atm_iv": self.entry_atm_iv,
+            "mae": self.mae,
+            "prev_pnl_pct": self.prev_pnl_pct,
+            "bucket_index": self.bucket_index,
+            "time_to_target": self.time_to_target,
+            "log_sigma": self.log_sigma,
         }
 
     @classmethod
@@ -306,6 +259,13 @@ class RLPosition:
         pos = cls(d["ticker"], d["direction"], d["strike"], d["delta"],
                   d["entry_premium"], d["confidence"], d["bucket"])
         pos.entry_time = datetime.fromisoformat(d["entry_time"])
+        pos.entry_spot = d.get("entry_spot", 0.0)
+        pos.entry_atm_iv = d.get("entry_atm_iv", 0.15)
+        pos.mae = d.get("mae", 0.0)
+        pos.prev_pnl_pct = d.get("prev_pnl_pct", 0.0)
+        pos.bucket_index = d.get("bucket_index", 4)
+        pos.time_to_target = d.get("time_to_target", 0.5)
+        pos.log_sigma = d.get("log_sigma", 0.5)
         return pos
 
 
@@ -394,12 +354,12 @@ class RLTradingBot:
 
     def __init__(self):
         self.device = get_device()
-        self.systems = {}  # ticker -> IntegratedTradingSystem
+        self.systems: dict[str, IntegratedTradingSystem] = {}
         self.gbm_model = None  # GBT ensemble (independent)
         self.gbm_normalizer = None
-        self.positions = {}  # ticker -> RLPosition
-        self.last_trade_time = {}
-        self.prev_features = {}
+        self.positions: dict[str, RLPosition] = {}
+        self.last_trade_time: dict[str, datetime] = {}
+        self.prev_features: dict[str, np.ndarray] = {}
         self.trade_count = 0
         self.daily_pnl = 0.0
 
@@ -412,8 +372,9 @@ class RLTradingBot:
         self.ib_low = {t: None for t in TICKERS}
         self.historical_ibs = {t: [] for t in TICKERS}
         self.pcr_history = {t: deque(maxlen=32) for t in TICKERS}
-        self.net_charm_history = {t: deque(maxlen=5) for t in TICKERS}
-        self.net_gamma_window = {t: deque(maxlen=60) for t in TICKERS}
+        self.net_charm_history = {t: deque(maxlen=60) for t in TICKERS}
+        self.net_gamma_window = {t: deque(maxlen=100) for t in TICKERS}
+        self.wonham_probs = {t: 0.5 for t in TICKERS}
 
         # GBM signal tracking (avoid spamming repeated signals)
         self._last_gbm_direction = {}
@@ -485,18 +446,66 @@ class RLTradingBot:
             logger.error(f"Failed to save positions: {e}")
 
     def _load_positions(self):
-        """Restore positions from disk."""
+        """Restore positions from disk. Cleans up stale positions from previous days."""
         if not os.path.exists(POSITIONS_FILE):
             return
         try:
             with open(POSITIONS_FILE) as f:
                 data = json.load(f)
+            
+            now = datetime.now(ET)
             for ticker, d in data.items():
-                self.positions[ticker] = RLPosition.from_dict(d)
-                dur = (datetime.now(ET) - self.positions[ticker].entry_time).total_seconds() / 60
+                pos = RLPosition.from_dict(d)
+                
+                # Check for stale position (different day)
+                if pos.entry_time.date() != now.date():
+                    dur_days = (now.date() - pos.entry_time.date()).days
+                    logger.warning(f"[{ticker}] Clearing stale position from {dur_days} days ago: {pos.strike:.0f}")
+                    self._close_stale_position(ticker, pos)
+                    continue
+
+                self.positions[ticker] = pos
+                dur = (now - pos.entry_time).total_seconds() / 60
                 logger.info(f"Restored: {ticker} {d['direction']} {d['strike']:.0f} ({dur:.0f}min)")
+            
+            # Save any changes (in case we cleared stale positions)
+            self._save_positions()
         except Exception as e:
             logger.error(f"Failed to load positions: {e}")
+
+    def _close_stale_position(self, ticker: str, pos: RLPosition):
+        """Close a position that was found to be from a previous day during startup."""
+        pnl_pct = -1.0  # 100% loss since 0DTE expired
+        pnl_dollars = pnl_pct * pos.entry_premium * POINT_VALUES.get(ticker, 100)
+        
+        # Log to trade history
+        now = datetime.now(ET)
+        trade = {
+            "ticker": ticker, "direction": pos.direction,
+            "strike": pos.strike, "delta": pos.delta,
+            "entry_premium": pos.entry_premium,
+            "pnl_pct": pnl_pct, "pnl_dollars": pnl_dollars,
+            "hold_minutes": (now - pos.entry_time).total_seconds() / 60,
+            "exit_reason": "STALE_RECOVERY",
+            "confidence": pos.confidence, "bucket": pos.bucket,
+            "entry_time": pos.entry_time.isoformat(),
+            "exit_time": now.isoformat(),
+        }
+        
+        # Append to daily trades file (of the trade's OWN date if possible, or today)
+        trades_file = os.path.join(TRADES_DIR, f"trades_{now.strftime('%Y%m%d')}.json")
+        try:
+            existing = []
+            if os.path.exists(trades_file):
+                with open(trades_file) as f:
+                    existing = json.load(f)
+            existing.append(trade)
+            with open(trades_file, "w") as f:
+                json.dump(existing, f, indent=2)
+        except: pass
+
+        discord_close(ticker, pos.direction, pos.strike, pnl_pct, pnl_dollars, 
+                      (now - pos.entry_time).total_seconds() / 60, "STALE_RECOVERY")
 
     def _save_gbm_trackers(self):
         """Persist open GBM trackers to disk."""
@@ -510,20 +519,41 @@ class RLTradingBot:
             logger.error(f"Failed to save GBM trackers: {e}")
 
     def _load_gbm_trackers(self):
-        """Restore GBM trackers from disk."""
+        """Restore GBM trackers from disk. Cleans up stale trackers from previous days."""
         if not os.path.exists(GBM_TRACKERS_FILE):
             return
         try:
             with open(GBM_TRACKERS_FILE) as f:
                 data = json.load(f)
+            
+            now = datetime.now(ET)
             for ticker, d in data.items():
-                self.gbm_trackers[ticker] = GBMSignalTracker.from_dict(d)
-                dur = (datetime.now(ET) - self.gbm_trackers[ticker].entry_time).total_seconds() / 60
+                tracker = GBMSignalTracker.from_dict(d)
+                
+                # Check for stale tracker (different day)
+                if tracker.entry_time.date() != now.date():
+                    logger.warning(f"[{ticker}][GBM] Clearing stale tracker from a previous day: {tracker.direction}")
+                    self._close_stale_tracker(ticker, tracker)
+                    continue
+
+                self.gbm_trackers[ticker] = tracker
+                dur = (now - tracker.entry_time).total_seconds() / 60
                 logger.info(
                     f"Restored GBM tracker: {ticker} {d['direction']} @ {d['entry_price']:.2f} "
                     f"(TP:{d['target_price']:.2f} SL:{d['stop_price']:.2f}, {dur:.0f}min)")
+            
+            # Save any changes
+            self._save_gbm_trackers()
         except Exception as e:
             logger.error(f"Failed to load GBM trackers: {e}")
+
+    def _close_stale_tracker(self, ticker: str, tracker: GBMSignalTracker):
+        """Close a GBM tracker that was found to be from a previous day during startup."""
+        now = datetime.now(ET)
+        discord_gbm_track_close(
+            ticker, tracker.direction, tracker.entry_price,
+            tracker.entry_price * 0.5, -0.5, (now - tracker.entry_time).total_seconds() / 60, 
+            "STALE_RECOVERY")
 
     def _restore_rl_system_state(self):
         """
@@ -543,20 +573,28 @@ class RLTradingBot:
                 "direction": pos.direction,
                 "entry_price": pos.entry_premium,
                 "raw_entry_price": pos.entry_premium,
-                "entry_iv": 0.15,
+                "entry_iv": pos.entry_atm_iv,
                 "entry_delta": pos.delta,
                 "entry_theta": -0.05,
                 "entry_gamma": 0.0,
                 "entry_time": pos.entry_time,
-                "strike_action": 4,  # default ATM bucket
+                "entry_spot": pos.entry_spot,
+                "strike_action": pos.bucket_index,
             }
-            self.systems[ticker]._mae = 0.0
-            self.systems[ticker]._prev_pnl_pct = 0.0
+            self.systems[ticker]._mae = pos.mae
+            self.systems[ticker]._prev_pnl_pct = pos.prev_pnl_pct
+            self.systems[ticker]._entry_spot = pos.entry_spot
+            self.systems[ticker]._entry_atm_iv = pos.entry_atm_iv
             self.systems[ticker]._entry_mlp_context = np.array(
-                [pos.confidence, 0.5, 0.0, 0.5], dtype=np.float32)
+                [pos.confidence, pos.time_to_target, 0.0, pos.log_sigma], dtype=np.float32)
+            
+            # Dynamic market state: start at zeros — _update_dynamic_features()
+            # will populate it correctly on the first on_new_minute() call.
+            self.systems[ticker]._dynamic_market_state = np.zeros(8, dtype=np.float32)
             logger.info(
                 f"Restored RL system state: {ticker} {pos.direction} "
-                f"strike={pos.strike:.0f} premium={pos.entry_premium:.2f}")
+                f"strike={pos.strike:.0f} premium={pos.entry_premium:.2f} "
+                f"mae={pos.mae:+.2%}")
 
     # ─────────────────────────────────────────
     # PARQUET DATA LOADING
@@ -703,7 +741,7 @@ class RLTradingBot:
         """
         Load Greeks + OI from Parquet, merge, and compute net exposures.
         """
-        options_symbol = OPTIONS_SYMBOLS.get(ticker, "SPXW")
+        options_symbol = OPTIONS_SYMBOLS.get(ticker, ticker) # Default to ticker if not in map
         suffix = "weekly" if is_weekly else "0dte"
         df_greeks = self._read_parquet(f"{options_symbol}_greeks_{suffix}_latest.parquet")
         df_oi = self._read_parquet(f"{options_symbol}_oi_{suffix}_latest.parquet")
@@ -764,7 +802,7 @@ class RLTradingBot:
         Load real options chain for RL strike resolution.
         Returns {calls: {strike: {price, delta, iv, theta, gamma}}, puts: {...}}
         """
-        options_symbol = OPTIONS_SYMBOLS.get(ticker, "SPXW")
+        options_symbol = OPTIONS_SYMBOLS.get(ticker, ticker)
         df_greeks = self._read_parquet(f"{options_symbol}_greeks_0dte_latest.parquet")
         if df_greeks.empty:
             return {"calls": {}, "puts": {}}
@@ -804,16 +842,16 @@ class RLTradingBot:
 
         return {"calls": calls, "puts": puts}
 
-    def _load_spot(self, symbol: str = "SPX") -> float:
+    def _load_spot(self, symbol: str) -> float:
         """Load latest spot price from Parquet."""
         df = self._read_parquet(f"spot_{symbol}_latest.parquet")
         if df.empty or 'close' not in df.columns:
             return 0.0
         return float(df['close'].iloc[-1])
 
-    def _load_spot_candles(self) -> pd.DataFrame:
+    def _load_spot_candles(self, ticker: str = "SPX") -> pd.DataFrame:
         """Load full intraday spot candles for IB computation."""
-        df = self._read_parquet("spot_SPX_latest.parquet")
+        df = self._read_parquet(f"spot_{ticker}_latest.parquet")
         if df.empty:
             return df
         if 'timestamp' in df.columns:
@@ -832,17 +870,18 @@ class RLTradingBot:
         if df_rth.empty:
             return
 
-        rth_start = df_rth['dt'].min()
+        # Always use 9:30 - 10:30 RTH window for IB
+        rth_start = df_rth['dt'].dt.normalize().iloc[0] + pd.Timedelta(hours=9, minutes=30)
         ib_end = rth_start + pd.Timedelta(minutes=60)
-        df_ib = df_rth[df_rth['dt'] < ib_end]
+        df_ib = df_rth[(df_rth['dt'] >= rth_start) & (df_rth['dt'] < ib_end)]
 
         if not df_ib.empty and 'high' in df_ib.columns and 'low' in df_ib.columns:
             self.ib_high[ticker] = float(df_ib['high'].max())
             self.ib_low[ticker] = float(df_ib['low'].min())
 
-    def _load_atm_iv(self, spot: float, ticker: str = "SPX") -> float:
+    def _load_atm_iv(self, spot: float, ticker: str) -> float:
         """Load ATM IV from IV parquet."""
-        options_symbol = OPTIONS_SYMBOLS.get(ticker, "SPXW")
+        options_symbol = OPTIONS_SYMBOLS.get(ticker, ticker)
         df_iv = self._read_parquet(f"{options_symbol}_iv_0dte_latest.parquet")
         if df_iv.empty or 'implied_vol' not in df_iv.columns or 'strike' not in df_iv.columns:
             return 0.0
@@ -860,563 +899,64 @@ class RLTradingBot:
             atm_iv = atm_iv / 100.0
         return max(atm_iv, 0.01)
 
-    # ─────────────────────────────────────────
-    # FEATURE EXTRACTION
-    # ─────────────────────────────────────────
+    def _calculate_current_atr(self, ticker: str) -> float:
+        """Calculate 15-day ATR from historical daily ranges (high-low)."""
+        hist = self.historical_ibs.get(ticker, [])
+        ranges = [h['ib_high'] - h['ib_low'] for h in hist if h is not None]
+        
+        if len(ranges) >= 1:
+            return float(np.mean(ranges))
+        
+        # Fallbacks
+        return 70.0 if ticker == "SPX" else 4.0
 
     def extract_features(self, exp_0dte: dict, exp_weekly: dict,
                          spot: float, atm_iv: float,
                          vix_spot: float, tlt_spot: float,
                          ticker: str) -> np.ndarray:
         """
-        Extract features — identical to collect_training_data_spx_qqq.py.
-
-        CRITICAL: All greek values are passed through safe_log() before being
-        stored in the feature vector, exactly matching the training pipeline
-        (collect_training_data lines 1291-1350). The normalizer was fitted on
-        safe_log'd values (~15-26 range), NOT on raw greek magnitudes (~10^8-10^11).
-        Signal thresholds (vanna_bullish etc.) use 0.1 to match training.
+        Extract features using the unified logic in services.compute_features.
         """
-        features = {}
-
         if spot <= 0 or exp_0dte is None:
             return None
 
-        # ── 0DTE Greek exposures — safe_log to match training ──
-        # Training: "net_gamma": safe_log(exp["net_gamma"]), etc.
-        features["net_gamma"] = safe_log(exp_0dte["net_gamma"])
-        features["net_vanna"] = safe_log(exp_0dte["net_vanna"])
-        features["net_charm"] = safe_log(exp_0dte["net_charm"])
-        features["net_dgex"]  = safe_log(exp_0dte["net_dgex"])
-        features["net_zomma"] = safe_log(exp_0dte["net_zomma"])
-        features["net_delta"] = safe_log(exp_0dte["net_delta"])
-        features["net_vega"]  = safe_log(exp_0dte["net_vega"])
-        features["net_vomma"] = safe_log(exp_0dte["net_vomma"])
-
-        # ── Signals — threshold 0.1 on safe_log'd values, matching training ──
-        # Training: "vanna_bullish": 1 if exp["net_vanna"] > 0.1 else 0
-        # (net_vanna is already safe_log'd in training's sample dict)
-        features["gamma_regime"] = classify_gamma_regime(exp_0dte["net_gamma"]) / 2.0
-        features["vanna_bullish"]      = 1 if exp_0dte["net_vanna"] > 0.1 else 0
-        features["charm_bullish"]      = 1 if exp_0dte["net_charm"] > 0.1 else 0
-        features["dgex_sticky"]        = 1 if exp_0dte["net_dgex"]  > 0.1 else 0
-        features["zomma_stabilizing"]  = 1 if exp_0dte["net_zomma"] > 0.1 else 0
-        features["vega_elevated"]      = 1 if abs(exp_0dte["net_vega"]) > 0.1 else 0
-
-        # ── ATR for normalizing distances (rolling 15-bar) ──
         now_et = datetime.now(ET)
         minutes_since_open = max(0, (now_et.hour * 60 + now_et.minute) - (9 * 60 + 30))
-        self.price_history[ticker].append((minutes_since_open, spot))
-
-        day_atr = 1.0
-        if len(self.price_history[ticker]) >= 3:
-            prices = [p for _, p in self.price_history[ticker]]
-            abs_returns = [abs(prices[i] - prices[i-1]) for i in range(1, len(prices))]
-            if abs_returns:
-                day_atr = max(np.mean(abs_returns), 0.5)
-        atr_denom = day_atr + 1e-6
-
-        # ── Greek strike distances (basis points) ──
-        features["dist_to_max_gamma"]  = dist_bps(spot, exp_0dte["max_gamma_strike"])
-        features["dist_to_min_gamma"]  = dist_bps(spot, exp_0dte["min_gamma_strike"])
-        features["dist_to_min_vanna"]  = dist_bps(spot, exp_0dte["min_vanna_strike"])
-        features["dist_to_zero_gamma"] = dist_bps(spot, exp_0dte["zero_gamma"])
-        features["dist_to_max_dgex"]   = dist_bps(spot, exp_0dte["max_dgex_strike"])
-        features["dist_to_min_dgex"]   = dist_bps(spot, exp_0dte["min_dgex_strike"])
-        features["dist_to_max_vega"]   = dist_bps(spot, exp_0dte["max_vega_strike"])
-        features["dist_to_min_vega"]   = dist_bps(spot, exp_0dte["min_vega_strike"])
-        features["dist_to_max_vomma"]  = dist_bps(spot, exp_0dte["max_vomma_strike"])
-        features["dist_to_min_vomma"]  = dist_bps(spot, exp_0dte["min_vomma_strike"])
-
-        features["near_max_gamma"]  = 1 if is_near_level(spot, exp_0dte["max_gamma_strike"]) else 0
-        features["near_min_gamma"]  = 1 if is_near_level(spot, exp_0dte["min_gamma_strike"]) else 0
-        features["near_min_vanna"]  = 1 if is_near_level(spot, exp_0dte["min_vanna_strike"]) else 0
-        features["near_zero_gamma"] = 1 if is_near_level(spot, exp_0dte["zero_gamma"]) else 0
-
-        # ── Weekly features — safe_log to match training ──
-        wk_defaults = {
-            "wk_net_gamma": 0.0, "wk_net_vanna": 0.0, "wk_net_charm": 0.0,
-            "wk_net_dgex": 0.0, "wk_net_zomma": 0.0, "wk_net_delta": 0.0,
-            "wk_net_vega": 0.0, "wk_net_vomma": 0.0,
-            "wk_gamma_regime": 0.5, "wk_vanna_bullish": 0,
-            "wk_dgex_sticky": 0, "wk_zomma_stabilizing": 0,
-        }
-
-        if exp_weekly:
-            wk_defaults.update({
-                # safe_log to match training pipeline
-                "wk_net_gamma": safe_log(exp_weekly["net_gamma"]),
-                "wk_net_vanna": safe_log(exp_weekly["net_vanna"]),
-                "wk_net_charm": safe_log(exp_weekly["net_charm"]),
-                "wk_net_dgex":  safe_log(exp_weekly["net_dgex"]),
-                "wk_net_zomma": safe_log(exp_weekly["net_zomma"]),
-                "wk_net_delta": safe_log(exp_weekly["net_delta"]),
-                "wk_net_vega":  safe_log(exp_weekly["net_vega"]),
-                "wk_net_vomma": safe_log(exp_weekly["net_vomma"]),
-                "wk_gamma_regime": classify_gamma_regime(exp_weekly["net_gamma"]) / 2.0,
-                # thresholds on raw values (pre-safe_log) — 0.1 matches training intent
-                "wk_vanna_bullish":     1 if exp_weekly["net_vanna"] > 0.1 else 0,
-                "wk_dgex_sticky":       1 if exp_weekly["net_dgex"]  > 0.1 else 0,
-                "wk_zomma_stabilizing": 1 if exp_weekly["net_zomma"] > 0.1 else 0,
-            })
-        features.update(wk_defaults)
-
-        # ── Cross-expiry divergence ──
-        # sign_divergence compares raw greek signs — use raw exp values, not safe_log'd
-        features["gamma_0dte_vs_wk"] = sign_divergence(exp_0dte["net_gamma"], exp_weekly["net_gamma"] if exp_weekly else 0)
-        features["vanna_0dte_vs_wk"] = sign_divergence(exp_0dte["net_vanna"], exp_weekly["net_vanna"] if exp_weekly else 0)
-        features["dgex_0dte_vs_wk"]  = sign_divergence(exp_0dte["net_dgex"],  exp_weekly["net_dgex"]  if exp_weekly else 0)
-        features["delta_0dte_vs_wk"] = sign_divergence(exp_0dte["net_delta"], exp_weekly["net_delta"] if exp_weekly else 0)
-        features["vega_0dte_vs_wk"]  = sign_divergence(exp_0dte["net_vega"],  exp_weekly["net_vega"]  if exp_weekly else 0)
-        features["vomma_0dte_vs_wk"] = sign_divergence(exp_0dte["net_vomma"], exp_weekly["net_vomma"] if exp_weekly else 0)
-
-        # ── IB levels ──
-        ib_high = self.ib_high.get(ticker) or spot
-        ib_low = self.ib_low.get(ticker) or spot
-        ib_range = max(ib_high - ib_low, 0.01)
-
-        features["price_vs_ib_high"] = dist_bps(spot, ib_high)
-        features["price_vs_ib_low"]  = dist_bps(spot, ib_low)
-        features["ib_range_pct"] = ib_range / spot if spot > 0 else 0
-        features["near_ib_high"] = 1 if is_near_level(spot, ib_high) else 0
-        features["near_ib_low"]  = 1 if is_near_level(spot, ib_low) else 0
-        features["above_ib"] = 1 if spot > ib_high else 0
-        features["below_ib"] = 1 if spot < ib_low else 0
-        features["in_ib_range"] = 1 if ib_low <= spot <= ib_high else 0
-
-        # ── Fibonacci (basis points) ──
-        fib = calculate_fibonacci_levels(ib_high, ib_low)
-        for key in fib:
-            features[f"dist_{key}"] = dist_bps(spot, fib[key])
-
-        # ── Confluences ──
-        features["confluence_ib_high_max_gamma"] = rbf_confluence(ib_high, exp_0dte["max_gamma_strike"], spot)
-        features["confluence_ib_low_min_gamma"]  = rbf_confluence(ib_low, exp_0dte["min_gamma_strike"], spot)
-        features["confluence_ib_high_max_vega"]  = rbf_confluence(ib_high, exp_0dte.get("max_vega_strike", 0), spot)
-        features["confluence_ib_low_max_dgex"]   = rbf_confluence(ib_low, exp_0dte["max_dgex_strike"], spot)
-        features["confluence_fib127_bull_max_gamma"] = rbf_confluence(fib["fib_127_up"], exp_0dte["max_gamma_strike"], spot)
-        features["confluence_fib161_bull_max_vega"]  = rbf_confluence(fib["fib_161_up"], exp_0dte.get("max_vega_strike", 0), spot)
-        features["confluence_fib127_bear_min_gamma"] = rbf_confluence(fib["fib_127_dn"], exp_0dte["min_gamma_strike"], spot)
-        features["confluence_fib161_bear_max_vomma"] = rbf_confluence(fib["fib_161_dn"], exp_0dte.get("max_vomma_strike", 0), spot)
-        features["confluence_fib161_bull_max_vomma"] = rbf_confluence(fib["fib_161_up"], exp_0dte.get("max_vomma_strike", 0), spot)
-        features["confluence_fib127_bear_min_vomma"] = rbf_confluence(fib["fib_127_dn"], exp_0dte.get("min_vomma_strike", 0), spot)
-        features["confluence_fib127_bull_max_dgex"]  = rbf_confluence(fib["fib_127_up"], exp_0dte["max_dgex_strike"], spot)
-        features["confluence_fib127_bear_min_dgex"]  = rbf_confluence(fib["fib_127_dn"], exp_0dte["min_dgex_strike"], spot)
-        features["confluence_fib161_bull_max_dgex"]  = rbf_confluence(fib["fib_161_up"], exp_0dte["max_dgex_strike"], spot)
-        features["confluence_fib161_bear_min_dgex"]  = rbf_confluence(fib["fib_161_dn"], exp_0dte["min_dgex_strike"], spot)
-
-        # ── IV / VIX ──
-        atm_iv_norm = atm_iv / 100.0 if atm_iv > 1 else atm_iv
-        if atm_iv_norm > 0:
-            self.iv_history[ticker].append(atm_iv_norm)
-        iv_mean = np.mean(self.iv_history[ticker]) if self.iv_history[ticker] else 0.15
-        iv_std = np.std(self.iv_history[ticker]) if len(self.iv_history[ticker]) > 1 else 0
-        iv_zscore = float((atm_iv_norm - iv_mean) / iv_std) if iv_std > 0 else 0
-        iv_min, iv_max = (min(self.iv_history[ticker]), max(self.iv_history[ticker])) if self.iv_history[ticker] else (0, 1)
-        iv_pct = float((atm_iv_norm - iv_min) / (iv_max - iv_min)) if iv_max > iv_min else 0.5
-
-        features["atm_iv"] = atm_iv_norm
-        features["iv_zscore"] = np.clip(iv_zscore, -3, 3) / 3.0
-        features["iv_percentile"] = iv_pct
-        features["vix_spot"] = vix_spot / 50.0 if vix_spot > 0 else 0
-        features["vix_gamma"] = 0
-        features["vix_regime"] = (2 if vix_spot > 25 else (1 if vix_spot > 18 else 0)) / 2.0
-
-        # ── RSI ──
+        
+        # Update Wonham Filter State (recursive update)
         prices_list = [p for _, p in self.price_history[ticker]]
-        features["rsi"] = simple_rsi(prices_list) / 100.0
-        features["vol_relative"] = 0.2  # matches training: min(~1.0, 5.0) / 5.0 ≈ 0.2
+        if len(prices_list) >= 2:
+            self.wonham_probs[ticker] = compute_wonham_filter(
+                [prices_list[-2], prices_list[-1]], 
+                p_start=self.wonham_probs[ticker]
+            )[-1]
 
-        # ── Greek ratios — safe_log to match training ──
-        # Training: "gamma_vanna_ratio": safe_log(exp["net_gamma"] / (abs(exp["net_vanna"]) + 1e-6))
-        eps = 1e-6
-        features["gamma_vanna_ratio"] = safe_log(exp_0dte["net_gamma"] / (abs(exp_0dte["net_vanna"]) + eps))
-        features["dgex_gamma_ratio"]  = safe_log(exp_0dte["net_dgex"]  / (abs(exp_0dte["net_gamma"]) + eps))
-        features["charm_vanna_ratio"] = safe_log(exp_0dte["net_charm"] / (abs(exp_0dte["net_vanna"]) + eps))
-        features["delta_gamma_ratio"] = safe_log(exp_0dte["net_delta"] / (abs(exp_0dte["net_gamma"]) + eps))
-        features["vega_gamma_ratio"]  = safe_log(exp_0dte["net_vega"]  / (abs(exp_0dte["net_gamma"]) + eps))
-        features["vomma_vega_ratio"]  = safe_log(exp_0dte["net_vomma"] / (abs(exp_0dte["net_vega"])  + eps))
-
-        # ── Temporal deltas — safe_log to match training ──
-        # Training: "gamma_change": safe_log(exp["net_gamma"] - prev_vals["net_gamma"])
-        prev = self.prev_features.get(ticker)
-        if prev:
-            features["gamma_change"]  = safe_log(exp_0dte["net_gamma"] - prev["net_gamma"])
-            features["vanna_change"]  = safe_log(exp_0dte["net_vanna"] - prev["net_vanna"])
-            features["dgex_change"]   = safe_log(exp_0dte["net_dgex"]  - prev["net_dgex"])
-            features["delta_change"]  = safe_log(exp_0dte["net_delta"] - prev.get("net_delta", 0))
-            features["vega_change"]   = safe_log(exp_0dte["net_vega"]  - prev.get("net_vega", 0))
-            features["vomma_change"]  = safe_log(exp_0dte["net_vomma"] - prev.get("net_vomma", 0))
-            features["spot_change"]   = ((spot - prev["spot"]) / prev["spot"] * 10000.0) if prev["spot"] > 0 else 0
-            # Training: "gamma_momentum": safe_log((exp["net_gamma"] - prev_vals["net_gamma"]) * np.sign(exp["net_gamma"]))
-            features["gamma_momentum"] = safe_log(
-                (exp_0dte["net_gamma"] - prev["net_gamma"]) * np.sign(exp_0dte["net_gamma"]))
-            features["price_vs_dgex_magnet"] = features["spot_change"] * np.sign(
-                (spot - exp_0dte["max_dgex_strike"]) / spot) if spot > 0 and exp_0dte["max_dgex_strike"] else 0
-        else:
-            for f in ["gamma_change", "vanna_change", "dgex_change", "delta_change",
-                       "spot_change", "gamma_momentum", "price_vs_dgex_magnet",
-                       "vega_change", "vomma_change"]:
-                features[f] = 0.0
-
-        self.prev_features[ticker] = {
-            "spot": spot,
-            "net_gamma": exp_0dte["net_gamma"], "net_vanna": exp_0dte["net_vanna"],
-            "net_dgex": exp_0dte["net_dgex"],   "net_delta": exp_0dte["net_delta"],
-            "net_vega": exp_0dte["net_vega"],    "net_vomma": exp_0dte["net_vomma"],
-        }
-
-        # ── TLT features ──
-        if tlt_spot > 0:
-            self.tlt_price_history.append((minutes_since_open, tlt_spot))
-            for label, lb in [("1m", 1), ("5m", 5), ("15m", 15)]:
-                past_price = self._get_price_n_minutes_ago(self.tlt_price_history, minutes_since_open, lb)
-                if past_price and past_price > 0:
-                    tlt_norm = 0.05 * np.sqrt(lb)
-                    features[f"tlt_ret_{label}"] = float(np.clip((tlt_spot - past_price) / (tlt_norm + 1e-8), -3, 3))
-                else:
-                    features[f"tlt_ret_{label}"] = 0.0
-        else:
-            for label in ["1m", "5m", "15m"]:
-                features[f"tlt_ret_{label}"] = 0.0
-
-        # ── Historical IB D-1 to D-5 ──
-        for i in range(5):
-            d = i + 1
-            hist = self.historical_ibs[ticker][i] if i < len(self.historical_ibs[ticker]) else None
-            if hist is not None:
-                h_ib_h = hist['ib_high']
-                h_ib_l = hist['ib_low']
-                prev_close = hist['close_price']
-                ib_mid = (h_ib_h + h_ib_l) / 2.0
-                ib_width = h_ib_h - h_ib_l + 1e-6
-                features[f"dist_ib_high_D{d}"] = dist_bps(spot, h_ib_h)
-                features[f"dist_ib_low_D{d}"]  = dist_bps(spot, h_ib_l)
-                features[f"prev_close_vs_ib_D{d}"] = float(np.clip((prev_close - ib_mid) / ib_width, -2, 2))
-            else:
-                features[f"dist_ib_high_D{d}"] = 0.0
-                features[f"dist_ib_low_D{d}"]  = 0.0
-                features[f"prev_close_vs_ib_D{d}"] = 0.0
-
-        # ── Gap Features ──
-        if self.historical_ibs[ticker] and self.historical_ibs[ticker][0] is not None and len(self.price_history[ticker]) > 0:
-            d1_close = self.historical_ibs[ticker][0]['close_price']
-            today_open = self.price_history[ticker][0][1]
-            if d1_close > 0 and today_open > 0:
-                gap_pct = np.clip((today_open - d1_close) / d1_close, -0.02, 0.02)
-                gap_direction = 1.0 if gap_pct > 0.001 else (-1.0 if gap_pct < -0.001 else 0.0)
-                overnight_vs_ib_ratio = np.clip(abs(today_open - d1_close) / ib_range, 0.0, 3.0)
-                features["gap_pct"] = float(gap_pct)
-                features["gap_direction"] = float(gap_direction)
-                features["overnight_vs_ib_ratio"] = float(overnight_vs_ib_ratio)
-            else:
-                features["gap_pct"] = 0.0
-                features["gap_direction"] = 0.0
-                features["overnight_vs_ib_ratio"] = 0.0
-        else:
-            features["gap_pct"] = 0.0
-            features["gap_direction"] = 0.0
-            features["overnight_vs_ib_ratio"] = 0.0
-
-        # ── OpEx Proximity ──
-        dt = now_et
-        year, month = dt.year, dt.month
-        cal = calendar.Calendar(firstweekday=0)
-        fridays = [d for d in cal.itermonthdays2(year, month) if d[0] != 0 and d[1] == 4]
-        third_friday = fridays[2][0] if len(fridays) >= 3 else fridays[-1][0]
-        opex_date = datetime(year, month, third_friday, tzinfo=ET)
-        days_to_opex = (opex_date - dt).days
-        if days_to_opex < 0:
-            nm = month + 1 if month < 12 else 1
-            ny = year if month < 12 else year + 1
-            fridays_next = [d for d in calendar.Calendar().itermonthdays2(ny, nm) if d[0] != 0 and d[1] == 4]
-            third_friday_next = fridays_next[2][0] if len(fridays_next) >= 3 else fridays_next[-1][0]
-            opex_date = datetime(ny, nm, third_friday_next, tzinfo=ET)
-            days_to_opex = (opex_date - dt).days
-        is_quarterly = opex_date.month in (3, 6, 9, 12)
-        features["days_to_opex_norm"] = float(np.clip(days_to_opex / 21.0, 0.0, 1.0))
-        features["is_opex_week"] = 1.0 if abs(days_to_opex) <= 5 else 0.0
-        features["is_quarterly_opex_week"] = 1.0 if abs(days_to_opex) <= 5 and is_quarterly else 0.0
-
-        # ── Volatility Risk Premium (RVOL) ──
-        closes = [h['close_price'] for h in self.historical_ibs[ticker] if h is not None and h.get('close_price', 0) > 0]
-        if len(closes) >= 5:
-            closes_arr = np.array(closes[::-1])
-            log_rets = np.diff(np.log(closes_arr))
-            if len(log_rets) >= 4:
-                rvol_full = float(np.std(log_rets) * np.sqrt(252))
-                ratio = rvol_full / (atm_iv_norm + 1e-6)
-                features["rvol_iv_log"] = float(np.clip(np.log(max(ratio, 1e-6)), -1.5, 1.5))
-                rvol_5d = float(np.std(log_rets[-min(5, len(log_rets)):]) * np.sqrt(252))
-                features["rvol_trend"] = float(np.clip((rvol_5d - rvol_full) / (atm_iv_norm + 1e-6), -1.0, 1.0))
-                features["rvol_regime"] = 0.0 if ratio < 0.85 else (2.0 if ratio > 1.15 else 1.0)
-            else:
-                features["rvol_iv_log"] = 0.0
-                features["rvol_trend"] = 0.0
-                features["rvol_regime"] = 1.0
-        else:
-            features["rvol_iv_log"] = 0.0
-            features["rvol_trend"] = 0.0
-            features["rvol_regime"] = 1.0
-
-        # ── Signal Persistence ──
-        self.net_charm_history[ticker].append(math.copysign(1.0, exp_0dte["net_charm"]))
-        signal_persistence_5m = 0
-        if len(self.net_charm_history[ticker]) > 0:
-            current_bias = self.net_charm_history[ticker][-1]
-            for x in reversed(self.net_charm_history[ticker]):
-                if x == current_bias: signal_persistence_5m += current_bias
-                else: break
-        features["signal_persistence_5m"] = signal_persistence_5m
-
-        # ── Hilbert phase of net gamma ──
-        self.net_gamma_window[ticker].append(exp_0dte["net_gamma"])
-        if len(self.net_gamma_window[ticker]) >= 30:
-            try:
-                gamma_arr = np.array(self.net_gamma_window[ticker])
-                gamma_detrended = gamma_arr - np.mean(gamma_arr)
-                gamma_std = np.std(gamma_detrended) + 1e-8
-                gamma_normalized = gamma_detrended / gamma_std
-                pad_len = max(1, len(gamma_normalized) // 4)
-                left_pad = gamma_normalized[pad_len:0:-1]
-                right_pad = gamma_normalized[-2:-(pad_len + 2):-1]
-                padded_gamma = np.concatenate([left_pad, gamma_normalized, right_pad])
-                analytic_padded = scipy_hilbert(padded_gamma)
-                analytic_signal = analytic_padded[len(left_pad):len(left_pad) + len(gamma_normalized)]
-                amplitude_envelope = np.abs(analytic_signal)
-                instant_phase = np.angle(analytic_signal)
-                current_phase = float(instant_phase[-1])
-                current_amplitude = float(amplitude_envelope[-1])
-                mean_amplitude = float(np.mean(amplitude_envelope))
-                amplitude_ratio = float(np.clip(current_amplitude / (mean_amplitude + 1e-8), 0.0, 3.0))
-                phase_delta_norm = 0.0
-                if len(self.net_gamma_window[ticker]) >= 2:
-                    unwrapped = np.unwrap(instant_phase)
-                    phase_delta_norm = float(np.clip((unwrapped[-1] - unwrapped[-2]) / np.pi, -1.0, 1.0))
-                signal_quality = 1.0 if amplitude_ratio > 0.5 else 0.0
-                features["gamma_phase_sin"] = float(np.sin(current_phase)) * signal_quality
-                features["gamma_phase_cos"] = float(np.cos(current_phase)) * signal_quality
-                features["gamma_amplitude_ratio"] = amplitude_ratio
-                features["gamma_phase_delta"] = phase_delta_norm * signal_quality
-            except:
-                features["gamma_phase_sin"] = 0.0
-                features["gamma_phase_cos"] = 0.0
-                features["gamma_amplitude_ratio"] = 0.0
-                features["gamma_phase_delta"] = 0.0
-        else:
-            features["gamma_phase_sin"] = 0.0
-            features["gamma_phase_cos"] = 0.0
-            features["gamma_amplitude_ratio"] = 0.0
-            features["gamma_phase_delta"] = 0.0
-
-        # ── Gamma Speed — safe_log to match training ──
-        # Training: "gamma_speed": safe_log(gamma_speed_val)
-        gamma_speed_val = 0.0
-        if exp_0dte.get('_df') is not None and not exp_0dte['_df'].empty:
-            df_pq = exp_0dte['_df']
-            if 'pq_net_gamma' in df_pq.columns:
-                delta_s = 5.0 if spot > 1000 else 1.0
-                g_by_strike = df_pq.groupby('strike')['pq_net_gamma'].sum()
-                strikes = g_by_strike.index.values
-                if len(strikes) >= 2:
-                    idx_upper = int(np.argmin(np.abs(strikes - (spot + delta_s))))
-                    idx_lower = int(np.argmin(np.abs(strikes - (spot - delta_s))))
-                    if idx_upper != idx_lower:
-                        gamma_upper = float(g_by_strike.iloc[idx_upper])
-                        gamma_lower = float(g_by_strike.iloc[idx_lower])
-                        speed_raw = (gamma_upper - gamma_lower) / (2.0 * delta_s)
-                        speed_scaled = speed_raw * (day_atr ** 2)
-                        speed_norm_val = float(np.sign(speed_scaled) * np.log1p(np.abs(speed_scaled)))
-                        gamma_speed_val = float(np.clip(speed_norm_val, -20.0, 20.0))
-        features["gamma_speed"] = safe_log(gamma_speed_val)
-
-        # ── Charm Acceleration ──
-        charm_accel_weighted = 0.0
-        if len(self.net_charm_history[ticker]) >= 3:
-            charm_arr = np.array(list(self.net_charm_history[ticker])[-3:])
-            charm_accel = charm_arr[-1] - 2.0 * charm_arr[-2] + charm_arr[-3]
-            charm_accel_norm = float(np.clip(charm_accel / (atm_iv_norm + 1e-6), -5.0, 5.0))
-            minutes_to_close = max(0.0, 390.0 - minutes_since_open)
-            close_weight = 1.0 + np.exp(-minutes_to_close / 60.0)
-            charm_accel_weighted = float(np.clip(charm_accel_norm * close_weight, -10.0, 10.0))
-        features["charm_accel_weighted"] = charm_accel_weighted
-
-        # ── Vol-adjusted returns & RSI ──
-        prices_before = [p for _, p in self.price_history[ticker]]
-        rsi = simple_rsi(prices_before)
-        features["rsi"] = rsi / 100.0
+        # ATR logic (15-day range)
+        day_atr = self._calculate_current_atr(ticker)
         
-        atm_iv_for_norm = atm_iv_norm if atm_iv_norm > 0.001 else 0.15
-        for label, lb in [("1m", 1), ("5m", 5), ("15m", 15), ("30m", 30)]:
-            past_price = self._get_price_n_minutes_ago(self.price_history[ticker], minutes_since_open, lb)
-            if past_price and past_price > 0:
-                raw_return = (spot - past_price) / past_price
-                vol_norm = atm_iv_for_norm * np.sqrt(lb / (252.0 * 390.0)) + 1e-8
-                features[f"ret_{label}_vol_adj"] = float(np.clip(raw_return / vol_norm, -5, 5))
-            else:
-                features[f"ret_{label}_vol_adj"] = 0.0
-                
-        # NOTE: gap_pct/gap_direction/overnight_vs_ib_ratio already computed
-        # at lines 1111-1129 using today_open (correct, matching training).
-        # DO NOT recompute here — the old code used current spot instead of
-        # today_open, and multiplied by 100, completely mismatching training.
-            
-        # NOTE: IV/VRP context already computed at lines 1018-1033 (iv_history)
-        # and lines 1151-1170 (rvol_iv_log/rvol_trend/rvol_regime from historical closes).
-        # DO NOT duplicate — the earlier computations are canonical.
-
-        # ── Time encoding ──
-        features["time_sin"] = float(np.sin(2 * np.pi * minutes_since_open / 390))
-        features["time_cos"] = float(np.cos(2 * np.pi * minutes_since_open / 390))
-        features["minutes_to_close_norm"] = max(0, 390 - minutes_since_open) / 390.0
-        features["dow_sin"] = float(np.sin(2 * np.pi * now_et.weekday() / 5))
-        features["dow_cos"] = float(np.cos(2 * np.pi * now_et.weekday() / 5))
-
-        # ── D-1 IB confluences ──
-        if self.historical_ibs[ticker] and self.historical_ibs[ticker][0] is not None:
-            d1_ib_high = self.historical_ibs[ticker][0]['ib_high']
-            d1_ib_low  = self.historical_ibs[ticker][0]['ib_low']
-            features["confluence_d1ibh_max_gamma"]  = rbf_confluence(d1_ib_high, exp_0dte["max_gamma_strike"], spot)
-            features["confluence_d1ibl_min_gamma"]  = rbf_confluence(d1_ib_low,  exp_0dte["min_gamma_strike"], spot)
-            features["confluence_d1ibh_max_dgex"]   = rbf_confluence(d1_ib_high, exp_0dte["max_dgex_strike"], spot)
-            features["confluence_d1ibl_min_dgex"]   = rbf_confluence(d1_ib_low,  exp_0dte["min_dgex_strike"], spot)
-            features["confluence_d1ibh_max_vomma"]  = rbf_confluence(d1_ib_high, exp_0dte.get("max_vomma_strike", 0), spot)
-            features["confluence_d1ibh_ibh_today"]  = rbf_confluence(d1_ib_high, ib_high, spot)
-            features["confluence_d1ibl_ibl_today"]  = rbf_confluence(d1_ib_low,  ib_low, spot)
-        else:
-            for key in ["confluence_d1ibh_max_gamma", "confluence_d1ibl_min_gamma",
-                        "confluence_d1ibh_max_dgex", "confluence_d1ibl_min_dgex",
-                        "confluence_d1ibh_max_vomma",
-                        "confluence_d1ibh_ibh_today", "confluence_d1ibl_ibl_today"]:
-                features[key] = 0.0
-
-        # ── IB Range Percentile ──
-        past_ranges = [h['ib_high'] - h['ib_low'] for h in self.historical_ibs[ticker] if h is not None]
-        if past_ranges:
-            current_ib_range = ib_high - ib_low
-            features["ib_range_percentile"] = sum(r < current_ib_range for r in past_ranges) / len(past_ranges)
-        else:
-            features["ib_range_percentile"] = 0.5
-
-        # ── Wonham Trend Probability ──
-        prices_so_far = [p for _, p in self.price_history[ticker]]
-        if len(prices_so_far) >= 5:
-            x = np.arange(len(prices_so_far), dtype=float)
-            slope = np.polyfit(x, prices_so_far, 1)[0]
-            trend_norm = float(np.clip(slope / (prices_so_far[-1] * 0.0001), -1.0, 1.0))
-            features["wonham_trend_prob"] = float(np.clip((trend_norm + 1.0) / 2.0, 0.0, 1.0))
-        else:
-            features["wonham_trend_prob"] = 0.5
-
-        # ── Delta-filtered PCR proxy ──
-        delta_filtered_pcr_norm = 0.0
-        pcr_derivative_5m_clipped = 0.0
-        if exp_0dte.get('_df') is not None and not exp_0dte['_df'].empty:
-            df_pq = exp_0dte['_df']
-            if 'volume' in df_pq.columns:
-                otm_range = 1.5 * day_atr
-                df_calls_otm = df_pq[
-                    (df_pq['right'].str.upper() == 'CALL') &
-                    (df_pq['strike'].between(spot, spot + otm_range))
-                ]
-                df_puts_otm = df_pq[
-                    (df_pq['right'].str.upper() == 'PUT') &
-                    (df_pq['strike'].between(spot - otm_range, spot))
-                ]
-                call_vol = float(df_calls_otm['volume'].sum())
-                put_vol = float(df_puts_otm['volume'].sum())
-                delta_filtered_pcr_raw = put_vol / (call_vol + 1e-6)
-                delta_filtered_pcr_norm = float(np.clip(np.log1p(delta_filtered_pcr_raw) / np.log1p(5.0), 0.0, 1.0))
-
-                self.pcr_history[ticker].append(delta_filtered_pcr_raw)
-                if len(self.pcr_history[ticker]) >= 5:
-                    pcr_history_list = list(self.pcr_history[ticker])
-                    pcr_derivative_5m_clipped = float(np.clip(
-                        (pcr_history_list[-1] - pcr_history_list[-5]) / 5.0, -1.0, 1.0))
-        features["delta_filtered_pcr"] = delta_filtered_pcr_norm
-        features["pcr_derivative_5m"] = pcr_derivative_5m_clipped
-
-        # ── Interaction features ──
-        near_ib_high = 1 if is_near_level(spot, ib_high) else 0
-        near_ib_low  = 1 if is_near_level(spot, ib_low) else 0
-        # Use raw gamma_speed_val to match training scaling for interaction features
-        # (collect_training_data line 1318 uses gamma_speed_val * near_ib_high)
-        charm_accel_norm = features.get("charm_accel_weighted", 0.0)
-
-        features["speed_x_near_ib_high"] = gamma_speed_val * near_ib_high
-        features["speed_x_near_ib_low"]  = gamma_speed_val * near_ib_low
-        features["charm_accel_x_near_ib_high"] = charm_accel_norm * near_ib_high
-        features["charm_accel_x_near_ib_low"]  = charm_accel_norm * near_ib_low
-
-        # ── Level identity — nearest named level ──
-        named_levels = {
-            "ib_high":    ib_high,    "ib_low":     ib_low,
-            "fib_127_up": fib["fib_127_up"], "fib_161_up": fib["fib_161_up"],
-            "fib_200_up": fib["fib_200_up"], "fib_127_dn": fib["fib_127_dn"],
-            "fib_161_dn": fib["fib_161_dn"], "fib_200_dn": fib["fib_200_dn"],
-        }
-        LEVEL_IDENTITY_MAP = {
-            "ib_high": 0, "ib_low": 1,
-            "fib_127_up": 2, "fib_161_up": 3, "fib_200_up": 4,
-            "fib_127_dn": 5, "fib_161_dn": 6, "fib_200_dn": 7,
-            "none": 8,
-        }
-        best_name, best_dist = "none", float('inf')
-        for name, level in named_levels.items():
-            if level is None or level <= 0:
-                continue
-            d = abs(spot - level) / spot
-            if d < LEVEL_PROXIMITY_THRESHOLD and d < best_dist:
-                best_dist = d
-                best_name = name
-        features["nearest_level_id"] = float(LEVEL_IDENTITY_MAP[best_name])
-        features["nearest_level_dist_bps"] = float(np.clip(best_dist * 10000.0, 0.0, BPS_CLIP)) if best_name != "none" else float(BPS_CLIP)
-
-        # NOTE: signal_persistence_5m already computed at lines 1172-1180
-        # using raw exp_0dte["net_charm"] (correct). DO NOT duplicate.
-        
-        # TLT missing values (assume proxy or flat if missing)
-        for label in ["tlt_ret_1m", "tlt_ret_5m", "tlt_ret_15m"]:
-            if label not in features: features[label] = 0.0
-
-        # ── Greek × Level interaction scalars ──
-        # Training uses safe_log on raw net_delta/net_gamma/net_vanna then multiplies by proximity flag
-        near_any_fib_up = any(is_near_level(spot, fib[k]) for k in ["fib_127_up", "fib_161_up", "fib_200_up"])
-        near_any_fib_dn = any(is_near_level(spot, fib[k]) for k in ["fib_127_dn", "fib_161_dn", "fib_200_dn"])
-        near_ib_flag = bool(near_ib_high or near_ib_low)
-
-        net_delta_sl  = safe_log(exp_0dte["net_delta"])
-        net_gamma_sl  = safe_log(exp_0dte["net_gamma"])
-        net_vanna_sl  = safe_log(exp_0dte["net_vanna"])
-
-        features["gamma_x_near_fib_up"]  = net_gamma_sl * float(near_any_fib_up)
-        features["gamma_x_near_fib_dn"]  = net_gamma_sl * float(near_any_fib_dn)
-        features["gamma_x_near_ib"]      = net_gamma_sl * float(near_ib_flag)
-        features["delta_x_near_fib_up"]  = net_delta_sl * float(near_any_fib_up)
-        features["delta_x_near_fib_dn"]  = net_delta_sl * float(near_any_fib_dn)
-        features["delta_x_near_ib_high"] = net_delta_sl * float(near_ib_high)
-        features["delta_x_near_ib_low"]  = net_delta_sl * float(near_ib_low)
-        features["vanna_x_near_fib_up"]  = net_vanna_sl * float(near_any_fib_up)
-        features["vanna_x_near_fib_dn"]  = net_vanna_sl * float(near_any_fib_dn)
-        features["vanna_x_near_ib"]      = net_vanna_sl * float(near_ib_flag)
-
-        # ── Build final vector ──
-        return np.array([features.get(col, 0.0) for col in FEATURE_COLUMNS], dtype=np.float32)
-
-    @staticmethod
-    def _get_price_n_minutes_ago(history: deque, current_min: float, n_min: int):
-        """Retrieve price from N minutes ago."""
-        target_min = current_min - n_min
-        best_price = None
-        best_diff = float('inf')
-        for (t, p) in history:
-            if t > current_min:
-                continue
-            diff = abs(t - target_min)
-            if diff < best_diff:
-                best_diff = diff
-                best_price = p
-        return best_price if best_diff <= 2.0 else None
+        return extract_feature_vector(
+            exp_0dte=exp_0dte,
+            exp_weekly=exp_weekly,
+            spot=spot,
+            atm_iv=atm_iv,
+            vix_spot=vix_spot,
+            tlt_spot=tlt_spot,
+            ib_high=self.ib_high.get(ticker) or spot,
+            ib_low=self.ib_low.get(ticker) or spot,
+            historical_ibs=self.historical_ibs[ticker],
+            price_history=self.price_history[ticker],
+            tlt_price_history=self.tlt_price_history,
+            iv_history=self.iv_history[ticker],
+            pcr_history=self.pcr_history[ticker],
+            net_gamma_window=self.net_gamma_window[ticker],
+            net_charm_history=self.net_charm_history[ticker],
+            prev_features=self.prev_features.get(ticker),
+            minutes_since_open=minutes_since_open,
+            day_atr=day_atr,
+            now_et=now_et,
+            FEATURE_COLUMNS=FEATURE_COLUMNS,
+            wonham_prob=self.wonham_probs[ticker]
+        )
 
     # ─────────────────────────────────────────
     # MAIN PROCESSING
@@ -1479,6 +1019,7 @@ class RLTradingBot:
     def process_ticker(self, ticker: str):
         """Process a single ticker through GBM+RL pipeline."""
         now = datetime.now(ET)
+        minutes_since_open = max(0, (now.hour * 60 + now.minute) - (9 * 60 + 30))
         
         # 0. Skip the first 10 minutes of the market (09:30 - 09:39) due to toxic options pricing
         current_minute = now.hour * 60 + now.minute
@@ -1544,9 +1085,14 @@ class RLTradingBot:
 
         self._frozen_spot_prev[ticker] = spot
 
-        # 2. Load spot candles and compute IB (once per session per ticker)
-        if self.ib_high[ticker] is None:
-            df_spot = self._load_spot_candles()
+        # 2. Update IB: re-compute during the first hour (9:30-10:30)
+        # to ensure it expands dynamically. Locks after 60 minutes.
+        # This matches the dynamic IB logic in collect_training_data_spx_qqq.py
+        now_et = datetime.now(ET)
+        minutes_since_open = max(0, (now_et.hour * 60 + now_et.minute) - (9 * 60 + 30))
+        
+        if self.ib_high[ticker] is None or minutes_since_open <= 60:
+            df_spot = self._load_spot_candles(ticker)
             self._compute_ib_levels(df_spot, ticker)
 
         # 3. Load additional data
@@ -1561,6 +1107,17 @@ class RLTradingBot:
             f"net_delta={exp_0dte.get('net_delta', 0):.2e} "
             f"net_vanna={exp_0dte.get('net_vanna', 0):.2e}"
         )
+        # Update rolling histories (essential for multi-step features)
+        self.price_history[ticker].append((minutes_since_open, spot))
+        if atm_iv > 0:
+            # Normalize IV to 0-1 if it's in percentage (e.g. 15.0 -> 0.15)
+            self.iv_history[ticker].append(atm_iv / 100.0 if atm_iv > 1.0 else atm_iv)
+        self.net_gamma_window[ticker].append(exp_0dte.get("net_gamma", 0.0))
+        self.net_charm_history[ticker].append(exp_0dte.get("net_charm", 0.0))
+        self.pcr_history[ticker].append(0.5) 
+        
+        if tlt_spot > 0:
+             self.tlt_price_history.append((minutes_since_open, tlt_spot))
 
         # 4. Extract features (safe_log applied internally to match training)
         features = self.extract_features(
@@ -1602,6 +1159,14 @@ class RLTradingBot:
 
         if not action.startswith("BUY_"):
             logger.info(f"[{ticker}] NO-TRADE: RL action={action} (not BUY)")
+        
+        # Update P&L and MAE for open position (if HOLD)
+        if action == "HOLD" and ticker in self.positions:
+            pos = self.positions[ticker]
+            details = result.get("details", {})
+            pos.mae = details.get("mae", pos.mae)
+            pos.prev_pnl_pct = details.get("pnl_pct", pos.prev_pnl_pct)
+            self._save_positions()
 
         # 8. Check existing GBM spot trackers for TP/SL
         self._check_gbm_trackers(ticker, spot, now)
@@ -1670,6 +1235,11 @@ class RLTradingBot:
                 confidence=result.get("confidence", 0),
                 bucket=details.get("bucket", "unknown"),
                 entry_time=now,
+                entry_spot=spot,
+                entry_atm_iv=atm_iv,
+                bucket_index=details.get("bucket_index", 4),
+                time_to_target=details.get("time_to_target", 0.5),
+                log_sigma=details.get("log_sigma", 0.5),
             )
             self.positions[ticker] = pos
             self.last_trade_time[ticker] = now
