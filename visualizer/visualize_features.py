@@ -42,7 +42,7 @@ DEFAULT_MLP_NORM    = os.path.join(NEURAL_DIR, 'models', 'hybrid_normalizer_wf.n
 DEFAULT_RL_MODEL    = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'rl_models', 'best_rl_agent.pt'))
 DEFAULT_DATA        = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'training_data', 'training_data_spx_qqq.parquet'))
 DEFAULT_TOP_N       = 30
-OUTPUT_DIR          = os.path.join(NEURAL_DIR, 'training_data', 'charts')
+OUTPUT_DIR          = os.path.join(os.path.dirname(__file__), 'charts')
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -62,7 +62,9 @@ def gbt_importance(model_path: str, norm_path: str) -> pd.DataFrame:
     # Average feature_importances_ across ensemble members
     all_imp = []
     for m in lgb_models:
-        imp = m.feature_importances_.astype(np.float64)
+        # Handle dict-wrapped models with metadata
+        model_obj = m['model'] if isinstance(m, dict) and 'model' in m else m
+        imp = model_obj.feature_importances_.astype(np.float64)
         imp_sum = imp.sum()
         all_imp.append(imp / imp_sum if imp_sum > 0 else imp)
     avg_imp = np.mean(all_imp, axis=0)
@@ -95,11 +97,19 @@ def mlp_attention_importance(model_path: str, norm_path: str, data_path: str,
 
     device = get_device()
 
-    # Try ensemble first, fall back to single
-    try:
-        model, normalizer = load_ensemble_model(model_path, norm_path, model_size, device)
-        print(f"  Loaded MLP ensemble from {model_path}")
-    except Exception:
+    # Try different model sizes if the default fails (architecture mismatch)
+    model, normalizer = None, None
+    for size in [model_size, 'micro', 'small', 'medium', 'medium_v2', 'large']:
+        try:
+            model, normalizer = load_ensemble_model(model_path, norm_path, size, device)
+            print(f"  Loaded MLP ensemble from {model_path} (size={size})")
+            break
+        except Exception as e:
+            if size == 'large': # last attempt failed
+                raise e
+            continue
+
+    if model is None:
         model, normalizer = load_hybrid_model(model_path, norm_path, model_size, device)
         print(f"  Loaded MLP single model from {model_path}")
 
@@ -228,12 +238,26 @@ def rl_saliency(rl_model_path: str, gbt_model_path: str, norm_path: str,
     features_norm = normalizer.transform(features)
 
     # ── Build full RL observation ──
-    # State = [position_state(6)] + [market_features(163)] + [mlp_context(4)] = 173
+    # Expected order (from environment.py): 
+    # [market(163), dynamic_market(8), position(6), mlp_context(4)] = 181
+    # with sniper: [..., sniper(2)] = 183
+    
     market_tensor = torch.FloatTensor(features_norm).to(device).requires_grad_(True)
     n_samples = len(features_norm)
-    pos_state = torch.zeros(n_samples, 6, device=device)    # no position
-    mlp_ctx = torch.zeros(n_samples, 4, device=device)      # neutral MLP context
-    full_obs = torch.cat([pos_state, market_tensor, mlp_ctx], dim=1)
+    
+    # Static components
+    dyn_market = torch.zeros(n_samples, rl_config_mod.DYNAMIC_MARKET_DIM, device=device)
+    pos_state = torch.zeros(n_samples, rl_config_mod.POSITION_STATE_DIM, device=device)
+    mlp_ctx = torch.zeros(n_samples, rl_config_mod.MLP_CONTEXT_DIM, device=device)
+    
+    components = [market_tensor, dyn_market, pos_state, mlp_ctx]
+    
+    # Handle optional sniper dim
+    if RL_CONFIG.get("use_sniper_mode"):
+        sniper_state = torch.zeros(n_samples, rl_config_mod.SNIPER_STATE_DIM, device=device)
+        components.append(sniper_state)
+        
+    full_obs = torch.cat(components, dim=1)
 
     # ── Forward + backward through exit head (most common action type) ──
     logits, value = agent(full_obs, action_type="exit")
@@ -258,9 +282,9 @@ def rl_saliency(rl_model_path: str, gbt_model_path: str, norm_path: str,
 # ═══════════════════════════════════════════════════════════════
 def print_table(df: pd.DataFrame, title: str, top_n: int = 30, target_feature: str = None):
     """Print importance table to console."""
-    print(f"\n{'═'*60}")
+    print(f"\n{'='*60}")
     print(f"  {title}")
-    print(f"{'═'*60}")
+    print(f"{'='*60}")
 
     if target_feature:
         row = df[df['Feature'] == target_feature]
@@ -278,7 +302,7 @@ def print_table(df: pd.DataFrame, title: str, top_n: int = 30, target_feature: s
         start = max(0, idx - 3)
         end = min(len(df), idx + 4)
         print(f"\n  {'Rank':<6} {'Feature':<35} {'Importance':>10}")
-        print(f"  {'─'*6} {'─'*35} {'─'*10}")
+        print(f"  {'-'*6} {'-'*35} {'-'*10}")
         for i in range(start, end):
             r = df.iloc[i]
             marker = " >>" if r['Feature'] == target_feature else "   "
@@ -287,11 +311,11 @@ def print_table(df: pd.DataFrame, title: str, top_n: int = 30, target_feature: s
 
     # Print top N
     print(f"\n  {'Rank':<6} {'Feature':<35} {'Importance':>10}  {'Bar'}")
-    print(f"  {'─'*6} {'─'*35} {'─'*10}  {'─'*20}")
+    print(f"  {'-'*6} {'-'*35} {'-'*10}  {'-'*20}")
     max_imp = df['Importance'].max()
     for i, (_, row) in enumerate(df.head(top_n).iterrows()):
         bar_len = int(20 * row['Importance'] / max_imp) if max_imp > 0 else 0
-        bar = '█' * bar_len
+        bar = '#' * bar_len
         print(f"  #{i+1:<5} {row['Feature']:<35} {row['Importance']:>10.4f}  {bar}")
 
     # Summary stats
@@ -306,7 +330,7 @@ def print_table(df: pd.DataFrame, title: str, top_n: int = 30, target_feature: s
     zero_threshold = 0.001
     near_zero = df[df['Importance'] < zero_threshold]
     if len(near_zero) > 0:
-        print(f"\n  ⚠ {len(near_zero)} features with <0.1% importance (effectively dead):")
+        print(f"\n  WARN: {len(near_zero)} features with <0.1% importance (effectively dead):")
         for _, r in near_zero.iterrows():
             print(f"    - {r['Feature']}")
 
@@ -341,7 +365,7 @@ def plot_importance(dfs: dict, top_n: int = 30, save_path: str = None, show: boo
     if save_path:
         os.makedirs(os.path.dirname(save_path), exist_ok=True)
         plt.savefig(save_path, dpi=150, bbox_inches='tight')
-        print(f"\n  ✓ Chart saved to {save_path}")
+        print(f"\n  OK: Chart saved to {save_path}")
 
     if show:
         matplotlib.use('TkAgg')
@@ -391,7 +415,7 @@ def main():
             print_table(df_gbt, 'GBT — Split-Based Feature Importance',
                        args.top, args.feature)
         except Exception as e:
-            print(f"  ✗ GBT analysis failed: {e}")
+            print(f"  FAIL: GBT analysis failed: {e}")
 
     # ── MLP ──
     if args.mode in ('mlp', 'all'):
@@ -402,7 +426,7 @@ def main():
             print_table(df_mlp, 'MLP — Cross-Attention Importance',
                        args.top, args.feature)
         except Exception as e:
-            print(f"  ✗ MLP analysis failed: {e}")
+            print(f"  FAIL: MLP analysis failed: {e}")
 
     # ── RL ──
     if args.mode in ('rl', 'all'):
@@ -413,7 +437,7 @@ def main():
             print_table(df_rl, 'RL — Gradient Saliency',
                        args.top, args.feature)
         except Exception as e:
-            print(f"  ✗ RL analysis failed: {e}")
+            print(f"  FAIL: RL analysis failed: {e}")
 
     if not results:
         print("No models could be loaded. Check paths.")

@@ -89,8 +89,8 @@ def latex_preamble():
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{mathpazo}
-\usepackage[margin=1in]{geometry}
-\usepackage{booktabs,longtable,tabularx,colortbl,multirow}
+\usepackage[left=0.4in, right=0.4in, top=0.7in, bottom=0.7in]{geometry}
+\usepackage{booktabs,longtable,tabularx,colortbl,multirow,pdflscape}
 \usepackage{graphicx,float,xcolor,tikz,pgfplots}
 \usepackage{fancyhdr,titlesec,enumitem}
 \usepackage{hyperref}
@@ -137,14 +137,14 @@ def latex_preamble():
 }
 \newcommand{\pnlcolor}[1]{\ifnum#1>0\color{wingreen}\else\color{lossred}\fi}
 
-\hypersetup{colorlinks=true,linkcolor=accent,urlcolor=accent}
+\hypersetup{colorlinks=true,linkcolor=accent,urlcolor=accent,bookmarksopen=true,bookmarksopenlevel=2}
 
 \begin{document}
 """
 
 # ─── LaTeX: Comparison Table ──────────────────────────────────────────
 def latex_comparison(mlp_m, rl_m, out):
-    out.append(r"\section*{GBT-Only vs GBT+RL Comparison}")
+    out.append(r"\section{GBT-Only vs GBT+RL Comparison}")
     out.append(r"\vspace{4pt}")
 
     # Metric cards row
@@ -197,12 +197,12 @@ def latex_comparison(mlp_m, rl_m, out):
 
 # ─── LaTeX: Per-Ticker Breakdown ──────────────────────────────────────
 def latex_ticker_breakdown(mlp_df, rl_df, out):
-    out.append(r"\section*{Performance by Ticker}")
+    out.append(r"\section{Performance by Ticker}")
 
     for label, df, col in [("GBT-Only", mlp_df, "accent"), ("GBT+RL", rl_df, "accentrl")]:
         if df.empty:
             continue
-        out.append(r"\subsection*{\textcolor{%s}{%s}}" % (col, label))
+        out.append(r"\subsection{\textcolor{%s}{%s}}" % (col, label))
         out.append(r"\noindent\begin{center}")
         out.append(r"\rowcolors{2}{cardbg}{rowalt}")
         out.append(r"\begin{tabular}{>{\color{txtmain}}l rrrr}")
@@ -226,7 +226,7 @@ def latex_ticker_breakdown(mlp_df, rl_df, out):
 def latex_exit_reasons(rl_df, out):
     if rl_df.empty or "exit_reason" not in rl_df.columns:
         return
-    out.append(r"\section*{RL Exit Reasons}")
+    out.append(r"\section{RL Exit Reasons}")
     out.append(r"\noindent\begin{center}")
     out.append(r"\rowcolors{2}{cardbg}{rowalt}")
     out.append(r"\begin{tabular}{>{\color{txtmain}}l rr}")
@@ -246,7 +246,7 @@ def latex_exit_reasons(rl_df, out):
 def latex_strike_analysis(rl_df, out):
     if rl_df.empty or "strike_bucket" not in rl_df.columns:
         return
-    out.append(r"\section*{RL Strike Analysis}")
+    out.append(r"\section{RL Strike Analysis}")
     out.append(r"\noindent\begin{center}")
     out.append(r"\rowcolors{2}{cardbg}{rowalt}")
     out.append(r"\begin{tabular}{>{\color{txtmain}}l rrrrr>{\color{txtsub}}r}")
@@ -274,11 +274,12 @@ def latex_strike_analysis(rl_df, out):
 
 # ─── LaTeX: Alpha vs Beta ─────────────────────────────────────────────
 def latex_alpha_beta(mlp_df, rl_df, training_data_path, out):
-    out.append(r"\section*{Alpha vs Beta Analysis}")
+    out.append(r"\section{Alpha vs Beta Analysis}")
     # Try to load training data for market returns
     try:
         raw = pd.read_parquet(training_data_path)
-        raw['date'] = raw['date'].astype(str)
+        # Convert raw['date'] to YYYYMMDD string format reliably
+        raw['date'] = pd.to_datetime(raw['date']).dt.strftime('%Y%m%d')
         daily_grp = raw.groupby(['ticker','date'])['spot_price'].agg(['first','last']).reset_index()
         daily_grp['mkt_ret_pct'] = (daily_grp['last'] / daily_grp['first'] - 1) * 100
         daily_grp['mkt_dir'] = np.where(daily_grp['mkt_ret_pct'] > 0, 'UP', 'DOWN')
@@ -289,7 +290,8 @@ def latex_alpha_beta(mlp_df, rl_df, training_data_path, out):
     for label, tdf, col in [("GBT-Only", mlp_df, "accent"), ("GBT+RL", rl_df, "accentrl")]:
         if tdf.empty: continue
         tdf = tdf.copy()
-        tdf['date'] = tdf['date'].astype(str)
+        # Convert tdf['date'] to YYYYMMDD string format reliably
+        tdf['date'] = pd.to_datetime(tdf['date'], format='mixed', yearfirst=True).dt.strftime('%Y%m%d')
         merged = tdf.merge(daily_grp[['ticker','date','mkt_ret_pct','mkt_dir']], on=['ticker','date'], how='inner')
 
         up = merged[merged['mkt_dir'] == 'UP']
@@ -316,7 +318,7 @@ def latex_alpha_beta(mlp_df, rl_df, training_data_path, out):
 
         corr_col = "wingreen" if abs(corr) < 0.3 else ("accentrl" if abs(corr) < 0.6 else "lossred")
 
-        out.append(r"\subsection*{\textcolor{%s}{%s Performance by Market Trend}}" % (col, label))
+        out.append(r"\subsection{\textcolor{%s}{%s Performance by Market Trend}}" % (col, label))
         out.append(r"\noindent\begin{center}")
         out.append(r"\metricbox{Rank Corr w/ Market}{%+.2f}{%s}" % (corr, corr_col))
         out.append(r"\hspace{4pt}")
@@ -362,7 +364,7 @@ def latex_strategy_detail(df, name, color, out):
     max_dd_p = dd_pct.min()*100
     max_dd_a = dd_abs.min()
 
-    out.append(r"\section*{\textcolor{%s}{%s}}" % (color, name))
+    out.append(r"\section{\textcolor{%s}{%s}}" % (color, name))
 
     # Metric cards
     out.append(r"\noindent\begin{center}")
@@ -382,7 +384,7 @@ def latex_strategy_detail(df, name, color, out):
     out.append(r"\vspace{6pt}")
 
     # Monthly table
-    out.append(r"\subsection*{Monthly Breakdown}")
+    out.append(r"\subsection{Monthly Breakdown}")
     df['Month'] = df['date'].dt.to_period('M')
     monthly = df.groupby('Month').agg({'pnl_dollars': ['count', 'sum', lambda x: (x>0).mean()*100]})
     monthly.columns = ['Trades', 'PNL', 'WR']
@@ -405,7 +407,7 @@ def latex_strategy_detail(df, name, color, out):
     # Top/Bottom 5
     for title, sub_df in [("Top 5 Winners", df.nlargest(5, 'pnl_dollars')),
                           ("Top 5 Losers", df.nsmallest(5, 'pnl_dollars'))]:
-        out.append(r"\subsection*{%s}" % title)
+        out.append(r"\subsection{%s}" % title)
         out.append(r"\noindent\begin{center}")
         out.append(r"\rowcolors{2}{cardbg}{rowalt}")
         out.append(r"\begin{tabular}{>{\color{txtmain}}l llll r}")
@@ -437,27 +439,45 @@ def latex_full_trade_log(df, name, color, out):
         df['date'] = pd.to_datetime(df['date'].astype(str))
     df = df.sort_values(by=['date', 'entry_time']).reset_index(drop=True)
 
-    out.append(r"\section*{\textcolor{%s}{Full Trade Log: %s}}" % (color, name))
+    out.append(r"\section{\textcolor{%s}{Full Trade Log: %s}}" % (color, name))
     
-    # We use a longtable so it can break across pages.
+    is_rl = "RL" in name
+    
+    # Column specs
+    if is_rl:
+        # Date, In, Out, Tckr, Dir, Stk, SpIn, SpOut, PrIn, PrOut, %DSp, %DPr, Hld, Reason, P&L (15 columns)
+        # Using tiny font for RL to fit 15 columns
+        col_spec = r"{>{\color{txtmain}}l l l l l r r r r r r r r >{\color{txtmain}}l r}"
+        headers = r"\textbf{Date} & \textbf{In} & \textbf{Out} & \textbf{Tckr} & \textbf{Dir} & \textbf{Stk} & \textbf{SpIn} & \textbf{SpOut} & \textbf{PrIn} & \textbf{PrOut} & \textbf{\%\(\Delta\)Sp} & \textbf{\%\(\Delta\)Pr} & \textbf{Hld} & \textbf{Reason} & \textbf{P\&L} \\"
+        num_cols = 15
+        out.append(r"\begin{landscape}")
+    else:
+        # Date, In, Out, Tckr, Dir, Entry, Exit, %DSpot, Hold, Reason, P&L (11 columns)
+        col_spec = r"{>{\color{txtmain}}l l l l l r r r r >{\color{txtmain}}l r}"
+        headers = r"\textbf{Date} & \textbf{In} & \textbf{Out} & \textbf{Tckr} & \textbf{Dir} & \textbf{Entry} & \textbf{Exit} & \textbf{\%\(\Delta\)Spot} & \textbf{Hold} & \textbf{Reason} & \textbf{P\&L (\$)} \\"
+        num_cols = 11
+
     out.append(r"\begin{center}")
-    out.append(r"\small") # Use a smaller font size to fit everything
+    if is_rl:
+        out.append(r"\tiny") # Even smaller for 15 columns
+    else:
+        out.append(r"\scriptsize")
     out.append(r"\rowcolors{2}{cardbg}{rowalt}")
-    out.append(r"\begin{longtable}{>{\color{txtmain}}l l l l l r r r r r >{\color{txtmain}}l r}")
+    out.append(r"\begin{longtable}%s" % col_spec)
     out.append(r"\toprule")
     out.append(r"\rowcolor{cardbg}")
-    out.append(r"\textbf{Date} & \textbf{In} & \textbf{Out} & \textbf{Tckr} & \textbf{Dir} & \textbf{Entry} & \textbf{Exit} & \textbf{\%\(\Delta\)Spot} & \textbf{\%\(\Delta\)Prem} & \textbf{Hold} & \textbf{Reason} & \textbf{P\&L (\$)} \\")
+    out.append(headers)
     out.append(r"\midrule")
     out.append(r"\endfirsthead")
     
     out.append(r"\toprule")
     out.append(r"\rowcolor{cardbg}")
-    out.append(r"\textbf{Date} & \textbf{In} & \textbf{Out} & \textbf{Tckr} & \textbf{Dir} & \textbf{Entry} & \textbf{Exit} & \textbf{\%\(\Delta\)Spot} & \textbf{\%\(\Delta\)Prem} & \textbf{Hold} & \textbf{Reason} & \textbf{P\&L (\$)} \\")
+    out.append(headers)
     out.append(r"\midrule")
     out.append(r"\endhead")
     
     out.append(r"\midrule")
-    out.append(r"\multicolumn{12}{r}{\textit{Continued on next page...}} \\")
+    out.append(r"\multicolumn{%d}{r}{\textit{Continued on next page...}} \\" % num_cols)
     out.append(r"\endfoot")
     
     out.append(r"\bottomrule")
@@ -465,42 +485,46 @@ def latex_full_trade_log(df, name, color, out):
 
     for _, t in df.iterrows():
         d = t['date'].strftime('%m-%d') if hasattr(t['date'], 'strftime') else str(t['date'])[5:10]
-        et = str(t.get('entry_time', ''))
-        ex_t = str(t.get('exit_time', ''))
-        tk = str(t.get('ticker', ''))
-        dr = str(t.get('direction', ''))
+        et = _esc(str(t.get('entry_time', '')))
+        ex_t = _esc(str(t.get('exit_time', '')))
+        tk = _esc(str(t.get('ticker', '')))
+        dr = _esc(str(t.get('direction', '')))
         
         entry_spot = float(t.get('entry_price', 0))
         exit_spot = float(t.get('exit_price', 0))
         
         # Spot movement percent relative to entry
+        spot_pct = 0.0
         if entry_spot > 0:
             spot_pct = (exit_spot - entry_spot) / entry_spot * 100.0
             if dr == 'SHORT':
                 spot_pct = -spot_pct
-        else:
-            spot_pct = 0.0
             
         # Premium/Overall movement percent
         prem_pct = float(t.get('pnl_pct', 0)) * 100.0
         
         if 'entry_premium' in t and t['entry_premium'] > 0:
-            entry_val = f"{t['entry_premium']:.2f}"
-            exit_val = f"{t.get('exit_premium', 0):.2f}"
+            e_pr = f"{t['entry_premium']:.2f}"
+            x_pr = f"{t.get('exit_premium', 0):.2f}"
         else:
-            entry_val = f"{entry_spot:.2f}"
-            exit_val = f"{exit_spot:.2f}"
+            e_pr = "-"
+            x_pr = "-"
 
         hm = t.get('hold_minutes', 0)
         rs = _esc(str(t.get('exit_reason', '')))
-        
         pnl = t.get('pnl_dollars', 0.0)
         pc = "wingreen" if pnl >= 0 else "lossred"
         
         spot_pc = "wingreen" if spot_pct >= 0 else "lossred"
         prem_pc = "wingreen" if prem_pct >= 0 else "lossred"
 
-        out.append(f"{d} & {et} & {ex_t} & {tk} & {dr} & {entry_val} & {exit_val} & \\textcolor{{{spot_pc}}}{{{spot_pct:+.2f}\\%}} & \\textcolor{{{prem_pc}}}{{{prem_pct:+.2f}\\%}} & {hm:.0f}m & {rs} & \\textcolor{{{pc}}}{{{pnl:,.2f}}} \\\\")
+        if is_rl:
+            strike = _esc(str(t.get('actual_strike', t.get('strike', ''))))
+            # 15 columns: Date, In, Out, Tckr, Dir, Stk, SpIn, SpOut, PrIn, PrOut, %DSp, %DPr, Hld, Reason, P&L
+            out.append(f"{d} & {et} & {ex_t} & {tk} & {dr} & {strike} & {entry_spot:,.1f} & {exit_spot:,.1f} & {e_pr} & {x_pr} & \\textcolor{{{spot_pc}}}{{{spot_pct:+.1f}\\%}} & \\textcolor{{{prem_pc}}}{{{prem_pct:+.1f}\\%}} & {hm:.0f}m & {rs} & \\textcolor{{{pc}}}{{{pnl:,.1f}}} \\\\")
+        else:
+            # 11 columns: Date, In, Out, Tckr, Dir, Entry, Exit, %DSpot, Hold, Reason, P&L
+            out.append(f"{d} & {et} & {ex_t} & {tk} & {dr} & {entry_spot:,.1f} & {exit_spot:,.1f} & \\textcolor{{{spot_pc}}}{{{spot_pct:+.1f}\\%}} & {hm:.0f}m & {rs} & \\textcolor{{{pc}}}{{{pnl:,.2f}}} \\\\")
 
     out.append(r"\end{longtable}")
     out.append(r"\end{center}")
@@ -636,6 +660,9 @@ def main():
     tex.append(r"\noindent\textcolor{bordergray}{\rule{\textwidth}{0.5pt}}")
     tex.append(r"\vspace{8pt}")
 
+    tex.append(r"\tableofcontents")
+    tex.append(r"\clearpage")
+
     # 1. Comparison
     latex_comparison(mlp_m, rl_m, tex)
     # 2. Per-ticker
@@ -654,18 +681,18 @@ def main():
     if td_path and td_path.exists():
         latex_alpha_beta(mlp_df, rl_df, td_path, tex)
     else:
-        tex.append(r"\section*{Alpha vs Beta Analysis}")
+        tex.append(r"\section{Alpha vs Beta Analysis}")
         tex.append(r"\textcolor{txtsub}{Training data not found — skipping alpha/beta analysis.}")
         tex.append(r"\textcolor{txtsub}{Use --training-data to specify path.}")
 
     # 8. Embedded Charts
     tex.append(r"\clearpage")
-    tex.append(r"\section*{Charts}")
+    tex.append(r"\section{Charts}")
 
     # Equity curves
     equity_path = out_dir / equity_png
     if equity_path.exists():
-        tex.append(r"\subsection*{Equity Curves}")
+        tex.append(r"\subsection{Equity Curves}")
         tex.append(r"\begin{center}")
         tex.append(r"\includegraphics[width=0.95\textwidth]{" + equity_png + r"}")
         tex.append(r"\end{center}")
@@ -674,7 +701,7 @@ def main():
     # Strike distribution
     strike_path = out_dir / strike_png
     if strike_path.exists():
-        tex.append(r"\subsection*{RL Strike Distribution}")
+        tex.append(r"\subsection{RL Strike Distribution}")
         tex.append(r"\begin{center}")
         tex.append(r"\includegraphics[width=0.7\textwidth]{" + strike_png + r"}")
         tex.append(r"\end{center}")
@@ -695,7 +722,7 @@ def main():
     compile_pdf_local(report_path)
 
     # Clean up auxiliary LaTeX files
-    for ext in ["*.out", "*.log", "*.aux"]:
+    for ext in ["*.out", "*.log", "*.aux", "*.toc"]:
         for file in out_dir.glob(ext):
             try:
                 file.unlink()
