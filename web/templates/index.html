@@ -81,6 +81,9 @@
                             <button id="btn-toggle-ms" onclick="toggleMarketStructurePanel()"
                                 style="background: #9400D3; color: white; display: none; font-weight:bold; margin-left:5px;"
                                 title="Toggle Market Structure Engine">MS ENGINE</button>
+                            <button id="btn-toggle-bot" onclick="toggleBotStatusPanel()"
+                                style="background: #20b2aa; color: white; display: none; font-weight:bold; margin-left:5px;"
+                                title="Toggle Live Bot Status">BOT STATUS</button>
                             <button id="btn-chart" onclick="handleLoadPriceChart()"
                                 style="background: #1E90FF; color: white; display: none; font-weight:bold; margin-left:5px;"
                                 title="Load Price Chart (No IB Levels)">CHART</button>
@@ -239,6 +242,18 @@
                         </div>
                     </div>
                 </div> <!-- End Right Area -->
+
+                <!-- Right Area: Bot Status Panel (Hidden by default, requires ADMIN) -->
+                <div id="bot-status-panel" class="ms-panel" style="display:none; width: 320px;">
+                    <div class="ms-header" style="background: var(--panel-bg); border-bottom: 2px solid #20b2aa;">
+                        <span style="color: #20b2aa;">LIVE BOT STATUS</span>
+                        <button class="ms-close-btn" onclick="toggleBotStatusPanel()"
+                            title="Hide Panel">×</button>
+                    </div>
+                    <div class="ms-content" id="bot-status-content" style="overflow-y: auto;">
+                        <div class="ms-title" style="text-align:center; padding: 20px; color: var(--text-dim);">Awaiting Bot Data...</div>
+                    </div>
+                </div>
 
             </div> <!-- End Flex Container -->
 

@@ -60,6 +60,26 @@ function toggleMarketStructurePanel() {
 }
 
 /**
+ * Toggle Bot Status Panel Visibility
+ */
+function toggleBotStatusPanel() {
+    const role = sessionStorage.getItem("gex_user_role");
+    if (role !== "ADMIN") return;
+
+    const botPanel = document.getElementById("bot-status-panel");
+    if (botPanel) {
+        if (botPanel.style.display === "none") {
+            botPanel.style.display = "flex";
+            if (typeof updateBotStatusUI === 'function') {
+                updateBotStatusUI();
+            }
+        } else {
+            botPanel.style.display = "none";
+        }
+    }
+}
+
+/**
  * Grant access to the application
  * @param {string} role - User role (ADMIN, USER)
  */
@@ -74,6 +94,9 @@ function grantAccess(role) {
         const msPanel = document.getElementById("market-structure-panel");
         if (msPanel) msPanel.style.display = "flex";
 
+        const botBtn = document.getElementById("btn-toggle-bot");
+        if (botBtn) botBtn.style.display = "inline-block";
+
         const chartBtn = document.getElementById("btn-chart");
         if (chartBtn) chartBtn.style.display = "inline-block";
 
@@ -87,6 +110,11 @@ function grantAccess(role) {
         if (msBtn) msBtn.style.display = "none";
         const msPanel = document.getElementById("market-structure-panel");
         if (msPanel) msPanel.style.display = "none";
+
+        const botBtn = document.getElementById("btn-toggle-bot");
+        if (botBtn) botBtn.style.display = "none";
+        const botPanel = document.getElementById("bot-status-panel");
+        if (botPanel) botPanel.style.display = "none";
 
         const chartBtn = document.getElementById("btn-chart");
         if (chartBtn) chartBtn.style.display = "none";
@@ -169,7 +197,7 @@ async function loadAdminScripts() {
     const role = sessionStorage.getItem("gex_user_role");
     if (role !== "ADMIN") return;
 
-    const scripts = ["js/fourier.js", "js/ib.js", "js/charts.js", "js/market_structure.js"];
+    const scripts = ["js/fourier.js", "js/ib.js", "js/charts.js", "js/market_structure.js", "js/bot_status.js"];
     const token = sessionStorage.getItem("gex_auth_token");
 
     console.log("[Auth] Loading specialized admin modules...");
