@@ -72,13 +72,19 @@ if ($skip_to_step -le 2) {
   # PASO 3 — PREPROCESSING (inferencia GBT → cache RL)
   # ─────────────────────────────────────────────────────────────────────────────
   Write-Host "`n=== Preprocessing con GBT SPX+QQQ (Inferencia de Senales) ===" -ForegroundColor Cyan
+  
+  # Limpiar la cache corrupta por precaucion tras el crash OOM original
+  If (Test-Path "..\rl_data\rl_options_cache_chunks") {
+    Remove-Item "..\rl_data\rl_options_cache_chunks\*" -Recurse -Force -ErrorAction SilentlyContinue
+  }
+
   python run_preprocess.py `
     --training-data ..\training_data\training_data_spx_qqq.parquet `
     --options-dir D:\ThetaData\data_options `
     --output ..\rl_data\rl_options_cache_chunks `
     --mlp-model models\trading_hybrid_wf.joblib `
     --mlp-normalizer models\hybrid_normalizer_wf.npz `
-    --num-workers 32 `
+    --num-workers 22 `
     --strict-wf
 
   python rl/compute_recovery_stats.py
@@ -138,7 +144,8 @@ if ($skip_to_step -le 6) {
     --model-size small --ensemble `
     --threshold 0.50 --cooldown 5 `
     --target_long 0.010 --target_short 0.010 --stop 0.003 `
-    --uncertainty 150
+    --uncertainty 150 `
+    --strict-wf
         
   if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR: Backtest GBT fallo." -ForegroundColor Red
@@ -157,11 +164,12 @@ if ($skip_to_step -le 7) {
     --normalizer models\hybrid_normalizer_wf.npz `
     --rl-model ..\rl_models\best_rl_agent.pt `
     --model-size small --ensemble `
-    --threshold 0.50 --cooldown 5 `
+    --threshold 0.60 --cooldown 5 `
     --target-long 0.010 --target-short 0.010 --stop 0.003 `
-    --risk-capital 500.0 `
+    --risk-capital 1000.0 `
     --filter-by-greeks `
-    --single-step-eval
+    --single-step-eval `
+    --strict-wf
 
   if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR: Backtest GBT+RL fallo." -ForegroundColor Red

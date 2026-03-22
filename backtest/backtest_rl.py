@@ -1147,6 +1147,9 @@ def main():
     print("  RL BACKTEST — GBT+RL vs GBT-ONLY")
     print("=" * 72)
     print(f"\n[1/5] Loading GBT model...")
+    if args.strict_wf and args.model.endswith('.joblib'):
+        args.model = args.model.replace('.joblib', '_history.joblib')
+        
     if args.ensemble:
         model, normalizer = load_ensemble_model(args.model, args.normalizer, args.model_size, device)
         print(f"  OK (ensemble)")

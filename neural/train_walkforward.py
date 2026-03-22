@@ -501,12 +501,24 @@ def walk_forward_train(data_path, model_path, norm_path, model_size,
 
         top_windows = eligible[:top_n_windows]
 
+        # ── INJECT METADATA before any ensemble is created ──
+        for w in eligible:
+            for m in w["ensemble_obj"].models:
+                m.metadata["window_idx"] = w["window_idx"]
+                m.metadata["avg_pf"] = w["avg_pf"]
+
         # Flatten all GBTModels from top windows into one ensemble
         all_final = [m for w in top_windows for m in w["ensemble_obj"].models]
         production_norm = top_windows[0]["norm"]
 
         final_ensemble = GBTEnsemble(all_final)
         save_gbt_ensemble(final_ensemble, production_norm, model_path, norm_path)
+
+        # ── NEW: Save ALL windows for strict Walk-Forward backtest ──
+        all_history = [m for w in eligible for m in w["ensemble_obj"].models]
+        history_ensemble = GBTEnsemble(all_history)
+        history_path = str(model_path).replace(".joblib", "_history.joblib")
+        save_gbt_ensemble(history_ensemble, production_norm, history_path, norm_path)
 
         # Export registry to JSON
         import pathlib

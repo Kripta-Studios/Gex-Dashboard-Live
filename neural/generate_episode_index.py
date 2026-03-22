@@ -35,6 +35,9 @@ if not os.path.exists(MODEL_PATH):
         MODEL_PATH = alt_path
         print(f"  [!] Using legacy .pt model: {MODEL_PATH}")
 
+if args.strict_wf and MODEL_PATH.endswith('.joblib'):
+    MODEL_PATH = MODEL_PATH.replace('.joblib', '_history.joblib')
+
 ensemble, normalizer = load_ensemble_model(MODEL_PATH, NORM_PATH, 'small')
 
 df = pd.read_parquet(DATA_PATH)

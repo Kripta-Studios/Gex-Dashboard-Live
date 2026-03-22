@@ -414,6 +414,9 @@ def main():
     training_df = pd.read_parquet(args.training_data)
     mlp_model, mlp_normalizer = None, None
     if args.mlp_model and args.mlp_normalizer:
+        if args.strict_wf and args.mlp_model.endswith('.joblib'):
+            args.mlp_model = args.mlp_model.replace('.joblib', '_history.joblib')
+            
         from hybrid_model import load_ensemble_model
         mlp_model, mlp_normalizer = load_ensemble_model(args.mlp_model, args.mlp_normalizer, model_size="small")
 

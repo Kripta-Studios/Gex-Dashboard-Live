@@ -72,14 +72,41 @@ class GBTEnsemble:
         if date is not None:
             # Convert YYYYMMDD string to int for comparison
             d_val = int(date.replace('-', '').replace('/', ''))
-            eligible_models = [
+            
+            # Find all models trained strictly before this date
+            past_models = [
                 m for m in self.models 
                 if m.metadata.get('cutoff_date', 0) < d_val
             ]
             
-            # Fallback if no models are old enough: use the oldest one available
-            if not eligible_models:
-                eligible_models = [min(self.models, key=lambda m: m.metadata.get('cutoff_date', 99999999))]
+            if past_models:
+                from collections import defaultdict
+                # Group models by window_idx
+                windows = defaultdict(list)
+                for m in past_models:
+                    windows[m.metadata.get('window_idx', 0)].append(m)
+                
+                # Re-calculate rank_score (PF * recency^2) relative to current max_idx
+                max_idx = max(windows.keys()) if windows else 1
+                if max_idx == 0:
+                    max_idx = 1
+                scored_windows = []
+                for widx, models_in_window in windows.items():
+                    avg_pf = models_in_window[0].metadata.get('avg_pf', 0.0)
+                    recency = (widx / max_idx) ** 2
+                    rank_score = avg_pf * recency
+                    scored_windows.append((rank_score, models_in_window))
+                
+                # Sort descending by rank_score and take Top 10 windows
+                scored_windows.sort(key=lambda x: x[0], reverse=True)
+                top_10 = scored_windows[:10]
+                
+                # Flatten the selected models into eligible_models
+                eligible_models = [m for w in top_10 for m in w[1]]
+            else:
+                # Fallback if no models are old enough: use the oldest one available
+                oldest_model = min(self.models, key=lambda m: m.metadata.get('cutoff_date', 99999999))
+                eligible_models = [oldest_model]
 
         if not eligible_models:
             raise ValueError("No models available in ensemble.")

@@ -625,6 +625,11 @@ def main():
     # Get absolute paths relative to execution dir
     base_dir = Path(__file__).parent.parent
     data_path = Path(args.data).resolve()
+    
+    if args.strict_wf and args.model.endswith('.joblib'):
+        # In strict WF mode, we use the _history ensemble containing all past models
+        args.model = args.model.replace('.joblib', '_history.joblib')
+        
     model_path = str(Path(args.model).resolve())
     normalizer_path = str(Path(args.normalizer).resolve())
     
