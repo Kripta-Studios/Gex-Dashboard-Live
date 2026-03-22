@@ -486,6 +486,59 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
             finally:
                 self._release_api_key(auth_info)
 
+        # 4.5 API: BOT STATUS (auth required, ADMIN only)
+        if self.path == "/api/bot_status":
+            auth_info = self._require_auth()
+            if not auth_info or auth_info.get("role") != "ADMIN":
+                if auth_info:
+                    self._send_json(403, {"status": "error", "message": "Admin Role Required"})
+                return
+                
+            try:
+                trades_dir = os.path.join(PROJECT_ROOT, "trades_rl")
+                today_str = datetime.now().strftime("%Y%m%d")
+                
+                open_rl, open_gbm = {}, {}
+                pos_rl_file = os.path.join(trades_dir, "open_positions_rl.json")
+                if os.path.exists(pos_rl_file):
+                    with open(pos_rl_file, "r") as f:
+                        open_rl = json.load(f)
+                        
+                pos_gbm_file = os.path.join(trades_dir, "open_gbm_trackers.json")
+                if os.path.exists(pos_gbm_file):
+                    with open(pos_gbm_file, "r") as f:
+                        open_gbm = json.load(f)
+                        
+                hist_rl, hist_gbm = [], []
+                hist_rl_file = os.path.join(trades_dir, f"trades_rl_{today_str}.json")
+                if os.path.exists(hist_rl_file):
+                    with open(hist_rl_file, "r") as f:
+                        hist_rl = json.load(f)
+                        
+                hist_gbm_file = os.path.join(trades_dir, f"trades_gbm_{today_str}.json")
+                if os.path.exists(hist_gbm_file):
+                    with open(hist_gbm_file, "r") as f:
+                        hist_gbm = json.load(f)
+                        
+                hist_legacy_file = os.path.join(trades_dir, f"trades_{today_str}.json")
+                if os.path.exists(hist_legacy_file) and not os.path.exists(hist_rl_file):
+                    with open(hist_legacy_file, "r") as f:
+                        hist_rl = json.load(f)
+
+                response_data = {
+                    "open_positions": {"rl": open_rl, "gbm": open_gbm},
+                    "history": {"rl": hist_rl, "gbm": hist_gbm}
+                }
+                
+                self._send_json(200, response_data)
+                return
+            except Exception as e:
+                logging.error(f"Bot Status Error: {e}")
+                self.send_error(500, str(e))
+                return
+            finally:
+                self._release_api_key(auth_info)
+
         # 5. API: QUANTUM GENERATOR (Para Unity)
         if self.path == "/generate_bit":
             try:
