@@ -309,23 +309,16 @@ The dominance of \texttt{vix\_spot} and \texttt{ret\_5m\_vol\_adj} confirms that
 \label{sec:rl_state}
 % ============================================================================
 
-The PPO agent observes an extended 175-dimensional state vector $\bs_t$ that appends 12 position-management features to the base 163-dimensional market feature vector:
+The PPO agent observes an extended 182-dimensional state vector $\bs_t$ that appends 19 dynamic and position-management features to the base 163-dimensional market feature vector:
 \begin{equation}
-    \bs_t = \left[\bx_t \;\Big|\; P_L,\; M_{\text{cap}},\; D_{\text{open}},\; \Delta_{\text{strike}},\; \Gamma_{\text{pos}},\; P_{\text{bid}},\; P_{\text{ask}},\; P_{\text{entry}},\; r_{\text{pos}},\; t_{\text{hold}},\; c_{\text{GBT}},\; d_{\text{GBT}} \right] \in \R^{175}
+    \bs_t = \left[\bx_t \;\Big|\; \bx^{\text{dyn}}_t \;\Big|\; \bm{q}_t \;\Big|\; \bm{c}_t \right] \in \R^{182}
     \label{eq:rl_state}
 \end{equation}
 where:
 \begin{itemize}
-    \item $P_L \in \R$ — unrealized P\&L as a fraction of premium paid.
-    \item $M_{\text{cap}} \in [0, 1]$ — fraction of available capital remaining.
-    \item $D_{\text{open}} \in [0, 1]$ — normalized hold duration.
-    \item $\Delta_{\text{strike}}$ — delta of the current position's strike.
-    \item $\Gamma_{\text{pos}}$ — gamma of the current position.
-    \item $P_{\text{bid}}, P_{\text{ask}}, P_{\text{entry}}$ — current bid, ask, and entry premium.
-    \item $r_{\text{pos}} = P_{\text{mid}} / P_{\text{entry}} - 1$ — current mark-to-market return.
-    \item $t_{\text{hold}}$ — minutes since entry.
-    \item $c_{\text{GBT}}$ — GBT confidence score at signal time.
-    \item $d_{\text{GBT}} \in \{-1, +1\}$ — GBT direction (SHORT/LONG).
+    \item $\bx^{\text{dyn}}_t \in \R^8$ — Dynamic market features: per-minute spot history, delta history, and volume.
+    \item $\bm{q}_t \in \R^7$ — Position state: unrealized PnL\%, hold time, $|\Delta|$, recovery probability, implied volatility, maximum adverse excursion (MAE), and trailing drawdown.
+    \item $\bm{c}_t \in \R^4$ — Model context: GBT confidence score $c_t$, time-to-target, dummy edge indicator, and $\log\sigma$ (observation noise).
 \end{itemize}
 
 The state is augmented during training via \texttt{augment\_state()}, which adds small Gaussian noise $\mathcal{N}(0, 0.01)$ to all continuous components to improve policy generalization.

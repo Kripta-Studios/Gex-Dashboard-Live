@@ -132,11 +132,11 @@ The full pipeline to train and deploy a production GBT+RL system is a sequential
 \label{fig:pipeline}
 \end{figure}
 
-The unified PowerShell orchestrator executes Stages~1--3 automatically:
+The unified PowerShell orchestrator executes Stages~1--5 automatically:
 \begin{lstlisting}[language=bash]
-.\neural\run_pipeline.ps1 -Update true
+.\neural\run_pipeline.ps1 -gbt
 \end{lstlisting}
-This script handles market holiday detection (via \texttt{last\_trading\_day\_of\_week}) to resolve non-standard expiration dislocations in quarterly and holiday-shortened weeks.
+This script orchestrates data collection, walk-forward training, episode generation, RL preprocessing, and PPO training. The script accepts granular flags (e.g., \texttt{-rl}, \texttt{-bt}, \texttt{-v}) to skip to specific pipeline stages.
 
 \subsection{Stage 1: Historical Data Collection}
 \label{sec:step1}
@@ -163,11 +163,12 @@ python services/data_corrector.py \
 
 Then build the flat training design matrix $\mathbf{X} \in \R^{N \times 163}$:
 \begin{lstlisting}[language=bash]
-python neural/collect_training_data_parquet.py \
-  --start 20240101 \
-  --end 20260220 \
-  --workers 26 \
-  --output training_data_derived.parquet
+python neural/collect_training_data_spx_qqq.py \
+  --start 20220801 \
+  --end 20260330 \
+  --workers 20 \
+  --tickers SPX QQQ \
+  --output training_data_spx_qqq.parquet
 \end{lstlisting}
 
 \subsection{Stage 2: GBT Walk-Forward Training}
@@ -176,10 +177,11 @@ python neural/collect_training_data_parquet.py \
 Train the LightGBM directional ensemble using anchored walk-forward cross-validation:
 \begin{lstlisting}[language=bash]
 python neural/train_walkforward.py \
-  --data training_data/training_data_derived.parquet \
-  --train-months 6 \
+  --data training_data/training_data_spx_qqq.parquet \
+  --model-size small \
+  --train-months 9 \
   --test-months 1 \
-  --ensemble 3 \
+  --ensemble 5 \
   --top-n-windows 10 \
   --model_path models/trading_hybrid_wf.joblib \
   --norm_path models/hybrid_normalizer_wf.npz
@@ -231,7 +233,7 @@ ensemble, normalizer = load_gbt_ensemble(
     'models/hybrid_normalizer_wf.npz'
 )
 
-df = pd.read_parquet('training_data/training_data_derived.parquet')
+df = pd.read_parquet('training_data/training_data_spx_qqq.parquet')
 feats = normalizer.transform(df[FEATURE_COLUMNS].values.astype('float32'))
 
 # Batch inference
@@ -260,7 +262,7 @@ Build per-day options cache shards for the RL environment:
 \begin{lstlisting}[language=bash]
 cd neural
 python run_preprocess.py \
-  --training-data ../training_data/training_data_derived.parquet \
+  --training-data ../training_data/training_data_spx_qqq.parquet \
   --options-dir D:/ThetaData/data_options \
   --output ../rl_data/rl_options_cache_chunks \
   --num-workers 24
@@ -271,7 +273,7 @@ This generates one \texttt{YYYYMMDD.pkl} shard per trading day in \texttt{rl\_da
 \subsection{Stage 5: PPO Training}
 \label{sec:step5}
 
-Train the RL agent (187,348-parameter PPO network):
+Train the RL agent (181,010-parameter PPO network):
 \begin{lstlisting}[language=bash]
 cd neural
 python -m rl.training \
@@ -308,16 +310,16 @@ Output: \texttt{rl\_models/best\_rl\_agent.pt} (selected by maximum evaluation p
 
 Simulates directional trading on spot (synthetic futures) using fixed targets and stops:
 \begin{lstlisting}[language=bash]
-python neural/backtest_hybrid_parquet.py \
-  --data training_data/training_data_backtest.parquet \
+python backtest/backtest_hybrid_parquet.py \
+  --data training_data/training_data_spx_qqq.parquet \
   --model models/trading_hybrid_wf.joblib \
   --normalizer models/hybrid_normalizer_wf.npz \
   --model-size small \
   --ensemble \
-  --threshold 0.55 \
-  --cooldown 30 \
-  --target_long 0.010 \
-  --target_short 0.005 \
+  --threshold 0.60 \
+  --cooldown 5 \
+  --target-long 0.010 \
+  --target-short 0.010 \
   --stop 0.003
 \end{lstlisting}
 
@@ -344,15 +346,15 @@ python neural/backtest_hybrid_parquet.py \
 
 Side-by-side comparison of GBT-only spot simulation versus GBT+RL real-options execution:
 \begin{lstlisting}[language=bash]
-python neural/backtest_rl.py \
-  --data training_data/training_data_backtest.parquet \
+python backtest/backtest_rl.py \
+  --data training_data/training_data_spx_qqq.parquet \
   --model models/trading_hybrid_wf.joblib \
   --normalizer models/hybrid_normalizer_wf.npz \
   --rl-model rl_models/best_rl_agent.pt \
   --model-size small \
   --ensemble \
-  --threshold 0.55 \
-  --cooldown 30
+  --threshold 0.60 \
+  --cooldown 5
 \end{lstlisting}
 
 \subsection{Position Sizing and Risk Management}

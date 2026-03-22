@@ -153,7 +153,7 @@ The primary artifact consumed by the GBT classifier and RL episode-generation pi
     \mathbf{X} \in \R^{N \times D}, \quad D = 163, \quad N \approx 138{,}000
     \label{eq:design_matrix}
 \end{equation}
-Each row corresponds to a single 5-minute bar for one of the tracked underlyings (SPX, SPY, QQQ). The matrix is constructed by \texttt{collect\_training\_data\_parquet.py} using $W$ parallel workers (configurable via \texttt{--workers}), with each worker independently processing a date partition.
+Each row corresponds to a single 5-minute bar for one of the tracked underlyings (SPX, SPY, QQQ). The matrix is constructed by \texttt{collect\_training\_data\_spx\_qqq.py} using $W$ parallel workers (configurable via \texttt{--workers}), with each worker independently processing a date partition.
 
 The target label $y_t \in \{0, 1, 2\}$ is assigned by the labeling oracle:
 \begin{equation}
@@ -297,7 +297,7 @@ with $\varepsilon = 10^{-8}$ for numerical stability.
 \midrule
 \texttt{data\_options} (SPXW/SPX/SPY/QQQ) & $\sim$80 GB & 28 GB & Permanent \\
 \texttt{data\_underlying\_derived} & $\sim$2 GB & 600 MB & Permanent \\
-\texttt{training\_data\_derived.parquet} & 2--4 GB & 600 MB & Per-run \\
+\texttt{training\_data\_spx\_qqq.parquet} & 2--4 GB & 600 MB & Per-run \\
 \texttt{rl\_options\_cache\_chunks} & $\sim$8 GB & N/A & Per-run \\
 \texttt{rt\_data} (rolling 5 days) & $\sim$50 MB & 15 MB & Rolling \\
 \bottomrule

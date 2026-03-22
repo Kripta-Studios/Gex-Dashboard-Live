@@ -74,17 +74,17 @@ The two-stage separation is a deliberate architectural choice: the GBT is expose
 
 \subsection{State Space}
 
-Each episode begins when the GBT emits a directional signal with $c_t \geq c_{\min} = 0.55$. The RL agent's state space $\mathcal{S}$ is the 175-dimensional vector defined in Section~6 of the Features document:
+Each episode begins when the GBT emits a directional signal with $c_t \geq c_{\min} = 0.55$. The RL agent's state space $\mathcal{S}$ is the 182-dimensional vector defined in the Features document:
 \begin{equation}
-    \bs_t = \left[\bx_t^\top \;\Big|\; P_L,\; M_{\text{cap}},\; D_{\text{open}},\; \Delta_{\text{strike}},\; \Gamma_{\text{pos}},\; P_{\text{bid}},\; P_{\text{ask}},\; P_{\text{entry}},\; r_{\text{pos}},\; t_{\text{hold}},\; c_{\text{GBT}},\; d_{\text{GBT}}\right]^\top \in \R^{175}
+    \bs_t = \left[\bx_t^\top \;\Big|\; \bx^{\text{dyn}\top}_t \;\Big|\; \bm{q}_t^\top \;\Big|\; \bm{c}_t^\top\right]^\top \in \R^{182}
     \label{eq:state}
 \end{equation}
-where $\bx_t \in \R^{163}$ is the shared market feature vector from the GBT, and the remaining 12 components encode the position's internal state (see Features document for definitions). Prior to any position entry, position-specific components are set to zero.
+where $\bx_t \in \R^{163}$ is the shared market feature vector from the GBT, and the remaining 19 components encode dynamic market history, model context, and the position's internal state. Prior to any position entry, position-specific components are set to zero.
 
 \begin{definition}[Episode Phases]
-Each episode progresses through three phases:
+Each episode progresses through two phases:
 \begin{equation}
-    \underbrace{\texttt{PRE\_ENTRY}}_{\substack{\text{up to 15 min} \\ \text{``sniper'' window}}} \;\longrightarrow\; \underbrace{\texttt{IN\_POSITION}}_{\substack{\text{hold/exit decisions} \\ \text{every 5 min}}} \;\longrightarrow\; \underbrace{\texttt{CLOSED}}_{\text{terminal}}
+    \underbrace{\texttt{ENTRY}}_{\text{strike selection}} \;\longrightarrow\; \underbrace{\texttt{IN\_POSITION}}_{\substack{\text{hold/exit decisions} \\ \text{every 5 min}}} \;\longrightarrow\; \underbrace{\texttt{CLOSED}}_{\text{terminal}}
     \label{eq:episode_phases}
 \end{equation}
 \end{definition}
@@ -94,18 +94,12 @@ Each episode progresses through three phases:
 
 The action space is discrete and phase-dependent:
 
-\textbf{PRE\_ENTRY (sniper mode):}
+\textbf{ENTRY:}
 \begin{equation}
-    \mathcal{A}_{\text{entry}} = \{\textsc{wait},\; \textsc{enter\_delta\_low},\; \textsc{enter\_delta\_mid},\; \textsc{enter\_delta\_high}\}
+    \mathcal{A}_{\text{entry}} = \{0.10,\; 0.20,\; 0.30,\; 0.40,\; 0.50,\; 0.60,\; 0.70\}
     \label{eq:action_entry}
 \end{equation}
-The three entry actions correspond to three delta buckets of the real options chain:
-\begin{align}
-    \textsc{enter\_delta\_low}  &: |\Delta| \in [0.20, 0.35) \quad \text{(OTM)} \\
-    \textsc{enter\_delta\_mid}  &: |\Delta| \in [0.35, 0.55) \quad \text{(near-ATM)} \\
-    \textsc{enter\_delta\_high} &: |\Delta| \in [0.55, 0.75] \quad \text{(ITM)}
-\end{align}
-For each delta bucket, the system selects the actual strike from the real options chain as the one closest to the bucket's midpoint delta, given the GBT's directional signal (call for LONG, put for SHORT).
+The entry action space consists of 7 delta buckets. For the selected delta bucket, the system chooses the actual strike from the real options chain that is closest to the bucket's midpoint delta, given the GBT's directional signal (call for LONG, put for SHORT).
 
 \textbf{IN\_POSITION:}
 \begin{equation}
@@ -137,7 +131,7 @@ The unrealized P\&L as a fraction of premium is:
 
 \subsection{Network Design}
 
-The \texttt{PPOAgent} is implemented as an actor-critic network with a shared feature extractor. The architecture contains approximately 187,348 trainable parameters:
+The \texttt{PPOAgent} is implemented as an actor-critic network with a shared feature extractor. The architecture contains approximately 181,010 trainable parameters:
 
 \begin{table}[H]
 \centering
@@ -145,22 +139,22 @@ The \texttt{PPOAgent} is implemented as an actor-critic network with a shared fe
 \toprule
 \textbf{Module} & \textbf{Input Dim} & \textbf{Output Dim} & \textbf{Parameters} \\
 \midrule
-Shared trunk (FC + LayerNorm) & 175 & 256 & 45,568 \\
+Shared trunk (FC + LayerNorm) & 182 & 256 & 46,848 \\
 Hidden layer 1 (FC + LayerNorm + Dropout) & 256 & 256 & 66,048 \\
 Hidden layer 2 (FC + LayerNorm) & 256 & 128 & 33,024 \\
 \midrule
-Actor head (entry, $|\mathcal{A}_{\text{entry}}| = 4$) & 128 & 4 & 516 \\
+Actor head (entry, $|\mathcal{A}_{\text{entry}}| = 7$) & 128 & 7 & 903 \\
 Actor head (position, $|\mathcal{A}_{\text{pos}}| = 2$) & 128 & 2 & 258 \\
 Critic head (value) & 128 & 1 & 129 \\
 \midrule
-\textbf{Total} & & & \textbf{187,348} \\
+\textbf{Total} & & & \textbf{$\approx$ 181,010} \\
 \bottomrule
 \end{tabular}
 \caption{PPO agent architecture. All FC layers use ReLU activation. Dropout $p = 0.1$ in hidden layer 1 during training.}
 \label{tab:network}
 \end{table}
 
-The shared trunk processes the 175-dimensional state vector, producing a latent representation that is subsequently branched into the phase-conditioned actor heads and the value function critic. The actor selects from $\mathcal{A}_{\text{entry}}$ during PRE\_ENTRY and from $\mathcal{A}_{\text{pos}}$ during IN\_POSITION; the critic outputs a scalar value estimate $V_{\bph}(\bs_t)$ used in the GAE advantage computation.
+The shared trunk processes the 182-dimensional state vector, producing a latent representation that is subsequently branched into the phase-conditioned actor heads and the value function critic. The actor selects from $\mathcal{A}_{\text{entry}}$ at entry and from $\mathcal{A}_{\text{pos}}$ during IN\_POSITION; the critic outputs a scalar value estimate $V_{\bph}(\bs_t)$ used in the GAE advantage computation.
 
 \subsection{Policy Distribution}
 
@@ -296,22 +290,13 @@ The agent is rewarded for capturing a large fraction $\rho$ of the maximum favor
 \end{equation}
 A winning trade that exits with less than 30\% of the available move captured receives a proportional penalty. This discourages premature profit-taking that leaves large residual gains unrealized.
 
-\subsection{Entry Timing Bonus}
-
-The 15-minute sniper window allows the agent to improve entry price relative to the GBT signal timestamp. Favorable price improvement during PRE\_ENTRY generates a small bonus:
-\begin{equation}
-    R^{\text{entry}} = \min\!\left(5 \cdot \Delta_{\text{price}},\; 0.3\right) \cdot \mathbf{1}[\Delta_{\text{price}} > 0]
-    \label{eq:r_entry}
-\end{equation}
-where $\Delta_{\text{price}} = (P_{\text{entry\_actual}} - P_{\text{signal\_time}}) / P_{\text{signal\_time}}$ measures the improvement achieved by waiting for a more favorable entry price. The capping at $0.3$ prevents the agent from exclusively optimizing entry timing at the cost of missing the trade entirely.
-
 \subsection{Total Reward}
 
 The total reward signal combines all components:
 \begin{equation}
     R_t =
     \begin{cases}
-        R^{\text{PnL}} + R^{\text{capture}} + R^{\text{stop}} + R^{\text{entry}} & \text{if } t = t_{\text{exit}} \text{ (terminal)} \\
+        R^{\text{PnL}} + R^{\text{capture}} + R^{\text{stop}} & \text{if } t = t_{\text{exit}} \text{ (terminal)} \\
         R^{\theta}_t & \text{otherwise (per-step)}
     \end{cases}
     \label{eq:total_reward}
@@ -335,7 +320,7 @@ The environment enforces non-negotiable exit conditions that override the agent'
 \textbf{Rule} & \textbf{Threshold} & \textbf{Rationale} \\
 \midrule
 Maximum loss & $P_L \leq -0.50$ & Prevent ruin on a single trade \\
-Maximum profit & $P_L \geq +3.00$ & Capture extraordinary gains (300\% of premium) \\
+Maximum profit & $P_L \geq +4.00$ & Capture extraordinary gains (400\% of premium) \\
 Time to close & $\text{minutes\_to\_close} \leq 5$ & Avoid illiquid 15:55+ pricing \\
 Maximum hold & 180 minutes & Align with GBT lookahead horizon ($T_{\max}$) \\
 \bottomrule
@@ -355,11 +340,11 @@ The training curriculum follows a three-phase confidence progression managed by 
 \centering
 \begin{tabular}{llcc}
 \toprule
-\textbf{Phase} & \textbf{Training Steps} & \textbf{Min Confidence $c_{\min}$} & \textbf{Rationale} \\
+\textbf{Phase} & \textbf{Training \%} & \textbf{Min Confidence $c_{\min}$} & \textbf{Rationale} \\
 \midrule
-Phase 1: High confidence & Steps 1--50 & 0.70 & Learn on cleanest signals first \\
-Phase 2: Medium confidence & Steps 51--120 & 0.60 & Expand to moderate signals \\
-Phase 3: Full distribution & Steps 121+ & 0.55 & Learn full production range \\
+Phase 0: High confidence & 0--15\% & 0.60 & Learn on cleanest signals first \\
+Phase 1: Medium confidence & 15--35\% & 0.55 & Expand to moderate signals \\
+Phase 2: Full distribution & 35--100\% & 0.50 & Learn full production range \\
 \bottomrule
 \end{tabular}
 \caption{Curriculum learning schedule for RL training.}
@@ -422,7 +407,7 @@ The GBT ensemble and PPO agent are coupled through the \texttt{IntegratedTrading
 \begin{enumerate}
     \item GBT emits $(\hat{y}_t, c_t)$ every 5-minute bar.
     \item If $\hat{y}_t \neq \textsc{hold}$ and $c_t \geq c_{\min}$, an episode is instantiated in the RL environment.
-    \item The RL agent steps through PRE\_ENTRY and IN\_POSITION phases using live options quotes from the real-time feed.
+    \item The RL agent steps through ENTRY and IN\_POSITION phases using live options quotes from the real-time feed.
     \item The episode terminates on agent \textsc{exit} action or hard exit rule trigger.
 \end{enumerate}
 
