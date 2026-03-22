@@ -65,6 +65,7 @@ class IntegratedTradingSystem:
         self.open_position: Optional[dict] = None
         self._mae = 0.0
         self._prev_pnl_pct = 0.0
+        self._max_unrealized_pnl = 0.0
         self._entry_mlp_context = np.zeros(MLP_CONTEXT_DIM, dtype=np.float32)
         
         # Curriculum/Constraints
@@ -326,6 +327,7 @@ class IntegratedTradingSystem:
         }
         self._mae = 0.0
         self._prev_pnl_pct = 0.0
+        self._max_unrealized_pnl = 0.0
         
         # Record entry-time context for dynamic features
         self._entry_spot = spot
@@ -379,6 +381,9 @@ class IntegratedTradingSystem:
         pnl_pct = (current_price - entry_price) / entry_price if entry_price > 0 else 0.0
         pnl_pct = float(np.clip(pnl_pct, -1.0, 5.0))
         self._mae = min(self._mae, pnl_pct)
+        self._max_unrealized_pnl = max(self._max_unrealized_pnl, pnl_pct)
+        
+        trailing_drawdown = self._max_unrealized_pnl - pnl_pct if self._max_unrealized_pnl > 0 else 0.0
 
         hold_minutes = (timestamp - pos["entry_time"]).total_seconds() / 60.0
         hold_time_norm = hold_minutes / HARD_EXITS["max_hold_minutes"]
@@ -403,7 +408,7 @@ class IntegratedTradingSystem:
             current_delta=abs(live_delta),
             current_theta=live_theta, current_iv=live_iv,
             entry_iv=pos["entry_iv"], entry_price=pos["entry_price"],
-            mae=self._mae)
+            mae=self._mae, trailing_drawdown=trailing_drawdown)
 
         state_tensor = torch.FloatTensor(state).unsqueeze(0).to(self.device)
 
@@ -431,6 +436,7 @@ class IntegratedTradingSystem:
                 "pnl_pct": pnl_pct,
                 "hold_minutes": hold_minutes,
                 "mae": self._mae,
+                "max_unrealized_pnl": self._max_unrealized_pnl,
             },
         }
 
@@ -454,6 +460,7 @@ class IntegratedTradingSystem:
         self.open_position = None
         self._mae = 0.0
         self._prev_pnl_pct = 0.0
+        self._max_unrealized_pnl = 0.0
         # Reset per-trade dynamic tracking so the next trade starts clean.
         # Without this, _spot_history and _option_price_history from the closed
         # trade bleed into the next one, corrupting dynamic[0,1,6,7].
@@ -475,7 +482,8 @@ class IntegratedTradingSystem:
                      current_iv: float = 0.15,
                      entry_iv: float = 0.15,
                      entry_price: float = 1.0,
-                     mae: float = 0.0) -> np.ndarray:
+                     mae: float = 0.0,
+                     trailing_drawdown: float = 0.0) -> np.ndarray:
         """Build the full state vector (181 or 183-dim with sniper)."""
         # Market features (already normalized)
         market = np.zeros(MARKET_FEATURE_DIM, dtype=np.float32)
@@ -502,6 +510,8 @@ class IntegratedTradingSystem:
             iv_ratio = current_iv / 0.15 if current_iv > 0 else 1.0
             pos_state[4] = np.clip(iv_ratio, 0.5, 3.0)
             pos_state[5] = np.clip(mae, -1.0, 0.0)
+            if POSITION_STATE_DIM > 6:
+                pos_state[6] = np.clip(trailing_drawdown, 0.0, 2.0)
 
         # MLP context
         if position_active:

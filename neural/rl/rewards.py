@@ -24,7 +24,8 @@ def compute_sniper_step_reward() -> float:
 
 def compute_step_reward(prev_pnl_pct: float, curr_pnl_pct: float,
                         hold_time_minutes: int, recovery_rate: float = 0.3,
-                        spot_momentum: float = 0.0) -> float:
+                        spot_momentum: float = 0.0,
+                        trailing_drawdown: float = 0.0) -> float:
     """
     V7 Step Reward: Oriented to decision quality and long-term stay.
     Including hold-time shaping to overcome noise floor.
@@ -45,8 +46,17 @@ def compute_step_reward(prev_pnl_pct: float, curr_pnl_pct: float,
         hold_bonus = 0.002 * min(hold_time_minutes, 60) ** 0.5
     else:
         hold_bonus = 0.0
+        
+    # Trailing Drawdown Penalty: Gracefully penalize giving back gains
+    # To prevent micro-scalping, we only care if drawdown > 15% 
+    # meaning we actually had some profits to lock in.
+    drawdown_penalty = 0.0
+    drawdown_tolerance = 0.15
+    if trailing_drawdown > drawdown_tolerance:
+        drawdown_penalty = (trailing_drawdown - drawdown_tolerance) * 0.05
     
-    return float(delta_pnl + context_bonus + hold_bonus)
+    step_reward = delta_pnl + context_bonus + hold_bonus - drawdown_penalty
+    return float(step_reward)
 
 
 def compute_terminal_reward(final_pnl_pct: float, exit_type: str, 

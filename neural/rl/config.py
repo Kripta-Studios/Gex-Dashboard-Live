@@ -58,9 +58,9 @@ def get_half_spread(abs_delta: float) -> float:
 
 MARKET_FEATURE_DIM = 163
 DYNAMIC_MARKET_DIM = 8   # per-minute features from options cache
-POSITION_STATE_DIM = 6
+POSITION_STATE_DIM = 7
 MLP_CONTEXT_DIM = 4
-TOTAL_STATE_DIM = MARKET_FEATURE_DIM + DYNAMIC_MARKET_DIM + POSITION_STATE_DIM + MLP_CONTEXT_DIM  # 181
+TOTAL_STATE_DIM = MARKET_FEATURE_DIM + DYNAMIC_MARKET_DIM + POSITION_STATE_DIM + MLP_CONTEXT_DIM  # 182
 
 # ═══════════════════════════════════════════════════════════════════════════
 # SNIPER ENTRY WINDOW

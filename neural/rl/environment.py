@@ -89,6 +89,8 @@ class SPXOptionsEnv:
         self._info = {}
         self._mae = 0.0
         self._prev_pnl_pct = 0.0
+        self._max_unrealized_pnl = 0.0
+        self._trailing_drawdown = 0.0
         self._spot_history = []
         self._last_mark_price: float = 0.0
         self._current_iv = 0.15
@@ -145,6 +147,8 @@ class SPXOptionsEnv:
         self._position = None
         self._mae = 0.0
         self._prev_pnl_pct = 0.0
+        self._max_unrealized_pnl = 0.0
+        self._trailing_drawdown = 0.0
         self._info = {}
         self._spot_history = []
         self._entry_spot = 0.0
@@ -409,6 +413,8 @@ class SPXOptionsEnv:
         }
         self._mae = 0.0
         self._prev_pnl_pct = 0.0
+        self._max_unrealized_pnl = 0.0
+        self._trailing_drawdown = 0.0
         self._t += 1
 
         return self._build_state_vector(), 0.0, False, {"action": "entry"}
@@ -437,6 +443,10 @@ class SPXOptionsEnv:
 
         # Update MAE
         self._mae = min(self._mae, pnl_pct)
+
+        # Track Trailing Drawdown
+        self._max_unrealized_pnl = max(self._max_unrealized_pnl, pnl_pct)
+        self._trailing_drawdown = max(0.0, self._max_unrealized_pnl - pnl_pct)
 
         # [v6] Pass context to rewards: hold_time, recovery_rate, spot_momentum
         # hold_minutes already calculated above
@@ -499,7 +509,8 @@ class SPXOptionsEnv:
                 curr_pnl_pct=pnl_pct,
                 hold_time_minutes=hold_minutes,
                 recovery_rate=recovery_rate,
-                spot_momentum=spot_momentum
+                spot_momentum=spot_momentum,
+                trailing_drawdown=self._trailing_drawdown
             )
             self._prev_pnl_pct = pnl_pct
             self._t += 1
@@ -852,6 +863,7 @@ class SPXOptionsEnv:
             position_features[4] = np.clip(iv / 0.15 if iv > 0 else 1.0,
                                            0.5, 3.0)                            # current iv_ratio
             position_features[5] = np.clip(self._mae, -1.0, 0.0)        # mae_ratio
+            position_features[6] = np.clip(self._trailing_drawdown, 0.0, 2.0)
 
         # ── Group 4: MLP signal context ──
         mlp_context = np.zeros(MLP_CONTEXT_DIM, dtype=np.float32)

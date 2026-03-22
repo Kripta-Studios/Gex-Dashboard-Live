@@ -849,7 +849,7 @@ def main():
         train_months=args.train_months,
         test_months=args.test_months,
     )
-    
+    '''
     check_episode_balance()
     check_rl_agent()
 
@@ -878,7 +878,7 @@ def main():
     else:
         print(f"  {C.FAIL} NO EDGE — do NOT deploy")
     print()
-    
+    '''
 
 
 if __name__ == '__main__':

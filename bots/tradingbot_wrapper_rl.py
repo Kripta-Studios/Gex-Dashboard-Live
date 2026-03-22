@@ -221,7 +221,7 @@ class RLPosition:
     """Tracks an open RL-managed position."""
     def __init__(self, ticker, direction, strike, delta, entry_premium,
                  confidence, bucket, entry_time=None, entry_spot=0.0, entry_atm_iv=0.15,
-                 mae=0.0, prev_pnl_pct=0.0, bucket_index=4, time_to_target=0.5, log_sigma=0.5):
+                 mae=0.0, prev_pnl_pct=0.0, bucket_index=4, time_to_target=0.5, log_sigma=0.5, max_unrealized_pnl=0.0):
         self.ticker = ticker
         self.direction = direction
         self.strike = strike
@@ -237,6 +237,7 @@ class RLPosition:
         self.bucket_index = bucket_index
         self.time_to_target = time_to_target
         self.log_sigma = log_sigma
+        self.max_unrealized_pnl = max_unrealized_pnl
 
     def to_dict(self):
         return {
@@ -252,6 +253,7 @@ class RLPosition:
             "bucket_index": self.bucket_index,
             "time_to_target": self.time_to_target,
             "log_sigma": self.log_sigma,
+            "max_unrealized_pnl": self.max_unrealized_pnl,
         }
 
     @classmethod
@@ -266,6 +268,7 @@ class RLPosition:
         pos.bucket_index = d.get("bucket_index", 4)
         pos.time_to_target = d.get("time_to_target", 0.5)
         pos.log_sigma = d.get("log_sigma", 0.5)
+        pos.max_unrealized_pnl = d.get("max_unrealized_pnl", 0.0)
         return pos
 
 
@@ -493,16 +496,7 @@ class RLTradingBot:
         }
         
         # Append to daily trades file (of the trade's OWN date if possible, or today)
-        trades_file = os.path.join(TRADES_DIR, f"trades_{now.strftime('%Y%m%d')}.json")
-        try:
-            existing = []
-            if os.path.exists(trades_file):
-                with open(trades_file) as f:
-                    existing = json.load(f)
-            existing.append(trade)
-            with open(trades_file, "w") as f:
-                json.dump(existing, f, indent=2)
-        except: pass
+        self._log_trade_history(trade, now, "trades_rl")
 
         discord_close(ticker, pos.direction, pos.strike, pnl_pct, pnl_dollars, 
                       (now - pos.entry_time).total_seconds() / 60, "STALE_RECOVERY")
@@ -555,6 +549,30 @@ class RLTradingBot:
             tracker.entry_price * 0.5, -0.5, (now - tracker.entry_time).total_seconds() / 60, 
             "STALE_RECOVERY")
 
+        trade = {
+            "model": "GBM", "ticker": ticker, "direction": tracker.direction,
+            "entry_price": tracker.entry_price, "exit_price": tracker.entry_price * 0.5,
+            "pnl_pct": -0.5, "pnl_dollars": 0.0,
+            "hold_minutes": (now - tracker.entry_time).total_seconds() / 60,
+            "exit_reason": "STALE_RECOVERY", "confidence": tracker.confidence,
+            "entry_time": tracker.entry_time.isoformat(), "exit_time": now.isoformat()
+        }
+        self._log_trade_history(trade, now, "trades_gbm")
+
+    def _log_trade_history(self, trade: dict, now: datetime, prefix: str = "trades"):
+        """Append trade to daily json file."""
+        trades_file = os.path.join(TRADES_DIR, f"{prefix}_{now.strftime('%Y%m%d')}.json")
+        try:
+            existing = []
+            if os.path.exists(trades_file):
+                with open(trades_file, "r") as f:
+                    existing = json.load(f)
+            existing.append(trade)
+            with open(trades_file, "w") as f:
+                json.dump(existing, f, indent=2)
+        except Exception as e:
+            logger.error(f"Failed to log trade history: {e}")
+
     def _restore_rl_system_state(self):
         """
         After loading persisted RL positions, restore IntegratedTradingSystem.open_position
@@ -578,17 +596,6 @@ class RLTradingBot:
                 "entry_theta": -0.05,
                 "entry_gamma": 0.0,
                 "entry_time": pos.entry_time,
-                "entry_spot": pos.entry_spot,
-                "strike_action": pos.bucket_index,
-            }
-            self.systems[ticker]._mae = pos.mae
-            self.systems[ticker]._prev_pnl_pct = pos.prev_pnl_pct
-            self.systems[ticker]._entry_spot = pos.entry_spot
-            self.systems[ticker]._entry_atm_iv = pos.entry_atm_iv
-            self.systems[ticker]._entry_mlp_context = np.array(
-                [pos.confidence, pos.time_to_target, 0.0, pos.log_sigma], dtype=np.float32)
-            
-            # Dynamic market state: start at zeros — _update_dynamic_features()
             # will populate it correctly on the first on_new_minute() call.
             self.systems[ticker]._dynamic_market_state = np.zeros(8, dtype=np.float32)
             logger.info(
@@ -1013,6 +1020,16 @@ class RLTradingBot:
                 ticker, tracker.direction, tracker.entry_price,
                 exit_price, pnl_pct, hold_min, reason)
 
+            trade = {
+                "model": "GBM", "ticker": ticker, "direction": tracker.direction,
+                "entry_price": tracker.entry_price, "exit_price": exit_price,
+                "pnl_pct": pnl_pct, "pnl_dollars": 0.0,
+                "hold_minutes": hold_min, "exit_reason": reason,
+                "confidence": tracker.confidence,
+                "entry_time": tracker.entry_time.isoformat(), "exit_time": now.isoformat()
+            }
+            self._log_trade_history(trade, now, "trades_gbm")
+
             del self.gbm_trackers[ticker]
             self._save_gbm_trackers()
 
@@ -1166,6 +1183,7 @@ class RLTradingBot:
             details = result.get("details", {})
             pos.mae = details.get("mae", pos.mae)
             pos.prev_pnl_pct = details.get("pnl_pct", pos.prev_pnl_pct)
+            pos.max_unrealized_pnl = details.get("max_unrealized_pnl", getattr(pos, 'max_unrealized_pnl', 0.0))
             self._save_positions()
 
         # 8. Check existing GBM spot trackers for TP/SL
@@ -1280,17 +1298,7 @@ class RLTradingBot:
                 "entry_time": pos.entry_time.isoformat(),
                 "exit_time": now.isoformat(),
             }
-            trades_file = os.path.join(TRADES_DIR, f"trades_{now.strftime('%Y%m%d')}.json")
-            try:
-                existing = []
-                if os.path.exists(trades_file):
-                    with open(trades_file) as f:
-                        existing = json.load(f)
-                existing.append(trade)
-                with open(trades_file, "w") as f:
-                    json.dump(existing, f, indent=2)
-            except Exception as e:
-                logger.error(f"Failed to save trade: {e}")
+            self._log_trade_history(trade, now, "trades_rl")
 
     def is_market_hours(self) -> bool:
         """Check if within trading window (9:30-16:00 EST)."""
