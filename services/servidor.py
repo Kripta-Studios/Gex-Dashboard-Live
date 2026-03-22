@@ -21,6 +21,12 @@ PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
 
 DATA_FOLDER = os.path.join(PROJECT_ROOT, "json_data")
 TEMPLATE_FOLDER = os.path.join(PROJECT_ROOT, "web", "templates")
+DOCS_PDF_FOLDER = os.path.join(PROJECT_ROOT, "docs", "pdfs")
+VIS_FOLDER = os.path.join(PROJECT_ROOT, "visualizar")
+
+os.makedirs(DOCS_PDF_FOLDER, exist_ok=True)
+os.makedirs(VIS_FOLDER, exist_ok=True)
+
 # Cambio solicitado: nombre del archivo de logs
 LOG_FILE = os.path.join(PROJECT_ROOT, "servidor_logs.txt")
 MOVIE_DIRECTORY = "/home/kripta/Movies"
@@ -112,6 +118,11 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
             self._send_json(429, {"status": "error", "message": "Too many requests for this API key"})
             return None
         return auth_info
+
+    def list_directory(self, path):
+        """Sobrescribe el método por defecto para deshabilitar el listado de directorios"""
+        self.send_error(403, "Directory listing is disabled for security reasons.")
+        return None
 
     # --- MODIFICACIÓN CLAVE: Sistema de Logs ---
     def log_message(self, format, *args):
@@ -291,6 +302,19 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
                 self._send_json(401, {"status": "error", "message": "Invalid or expired token"})
             return
 
+        # 0.5 DOCS HTML (no auth required for HTML, but auth is done in JS)
+        if path_only in ["/docs", "/docs/"]:
+            docs_path = os.path.join(TEMPLATE_FOLDER, "docs.html")
+            if os.path.exists(docs_path):
+                self.send_response(200)
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+                with open(docs_path, "rb") as f:
+                    self.wfile.write(f.read())
+            else:
+                self.send_error(404, f"Falta {docs_path}")
+            return
+
         # 1. SERVIR HTML/CSS/JS (no auth required)
         if path_only == "/" or path_only == "/index.html":
             index_path = os.path.join(TEMPLATE_FOLDER, "index.html")
@@ -364,6 +388,72 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
                 return
             finally:
                 self._release_api_key(auth_info)
+
+        # API: LISTAR PDFs (auth required, ADMIN only)
+        if path_only == "/api/pdfs/list":
+            auth_info = self._require_auth()
+            if not auth_info or auth_info.get("role") != "ADMIN":
+                if auth_info: # if authenticated but not admin
+                    self._send_json(403, {"status": "error", "message": "Admin access required"})
+                return
+            
+            try:
+                found_pdfs = []
+                for base_dir in [DOCS_PDF_FOLDER, VIS_FOLDER]:
+                    if os.path.exists(base_dir):
+                        for root, _, files in os.walk(base_dir):
+                            for file in files:
+                                if file.lower().endswith(".pdf"):
+                                    full_path = os.path.join(root, file)
+                                    rel_path = os.path.relpath(full_path, PROJECT_ROOT).replace("\\", "/")
+                                    found_pdfs.append(rel_path)
+                
+                self._send_json(200, sorted(found_pdfs))
+            except Exception as e:
+                self.send_error(500, str(e))
+            finally:
+                self._release_api_key(auth_info)
+            return
+
+        # API: SERVIR PDF (auth checked via query token)
+        if path_only == "/api/pdfs/serve":
+            query = urllib.parse.urlparse(self.path).query
+            params = urllib.parse.parse_qs(query)
+            token = params.get("token", [""])[0]
+            rel_file = params.get("file", [""])[0]
+
+            auth_info = None
+            with CACHE_LOCK:
+                if token in SESSIONS:
+                    auth_info = SESSIONS[token]
+            
+            if not auth_info or auth_info.get("role") != "ADMIN":
+                self.send_error(403, "Admin access required")
+                return
+
+            if not rel_file or ".." in rel_file:
+                self.send_error(400, "Invalid file path")
+                return
+
+            full_path = os.path.abspath(os.path.join(PROJECT_ROOT, rel_file))
+            if not (full_path.startswith(os.path.abspath(DOCS_PDF_FOLDER)) or full_path.startswith(os.path.abspath(VIS_FOLDER))):
+                self.send_error(403, "Path traversal restricted")
+                return
+
+            if not os.path.exists(full_path) or not full_path.lower().endswith(".pdf"):
+                self.send_error(404, "PDF not found")
+                return
+
+            try:
+                self.send_response(200)
+                self.send_header("Content-type", "application/pdf")
+                self.send_header("Content-Disposition", f'inline; filename="{os.path.basename(full_path)}"')
+                self.end_headers()
+                with open(full_path, "rb") as f:
+                    self.wfile.write(f.read())
+            except Exception as e:
+                self.send_error(500, str(e))
+            return
 
         # 3. API: GET LATEST (auth required)
         if self.path.startswith("/get_latest"):
@@ -609,10 +699,14 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
                 break
 
         if requested_dir:
+            # Enforce authentication for ANY direct access
+            auth_info = self._require_auth()
+            if not auth_info:
+                return
+                
             # Enforce ADMIN role for sensitive analytics data
             if requested_dir in ["/fourier/", "/ib_charts/"]:
-                auth_info = self._require_auth()
-                if not auth_info or auth_info.get("role") != "ADMIN":
+                if auth_info.get("role") != "ADMIN":
                     self._send_json(403, {"status": "error", "message": "Access Denied: Admin Role Required"})
                     return
 
