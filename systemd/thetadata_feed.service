@@ -18,7 +18,7 @@ ExecStart=/usr/bin/java -Xms512M -Xmx2G -jar /home/Option-Greeks-Plotting-Discor
 Restart=always
 # Esperar 5 segundos antes de reiniciar para no saturar si hay un error bucle
 RestartSec=5
-MemoryMax=1G
+MemoryMax=2.5G
 MemorySwapMax=0
 Restart=always
 # Opcional: Para ver los print() en los logs inmediatamente
