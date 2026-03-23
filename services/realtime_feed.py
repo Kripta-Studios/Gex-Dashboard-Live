@@ -210,26 +210,35 @@ class RealtimeOptionsFeed:
         today = datetime.now(ET).date()
         today_str = today.strftime("%Y%m%d")
 
-        all_resolved = True
-        for ticker, options_symbol in OPTIONS_TICKERS.items():
-            try:
-                exps = await self.client.get_expirations(options_symbol, today_str)
-            except Exception as e:
-                logger.warning(f"Cannot get expirations for {options_symbol}: {e}")
-                all_resolved = False
-                continue
-
-            available = []
-            for exp_str in exps:
+        semaphore = asyncio.Semaphore(4)
+        
+        async def fetch_and_compute(ticker, options_symbol):
+            async with semaphore:
                 try:
-                    exp_date = date(int(exp_str[:4]), int(exp_str[4:6]), int(exp_str[6:8]))
-                    available.append(exp_date)
-                except (ValueError, IndexError):
-                    continue
+                    exps = await self.client.get_expirations(options_symbol, today_str)
+                    available = []
+                    for exp_str in exps:
+                        try:
+                            exp_date = date(int(exp_str[:4]), int(exp_str[4:6]), int(exp_str[6:8]))
+                            available.append(exp_date)
+                        except (ValueError, IndexError):
+                            continue
+                    exp_0dte, exp_weekly = self._compute_target_expirations(today, available)
+                    return ticker, options_symbol, exp_0dte, exp_weekly, True
+                except Exception as e:
+                    logger.warning(f"Cannot get expirations for {options_symbol}: {e}")
+                    return ticker, options_symbol, None, None, False
 
-            exp_0dte, exp_weekly = self._compute_target_expirations(today, available)
-            self._expirations[ticker] = (exp_0dte, exp_weekly)
-            logger.info(f"Expirations [{options_symbol}]: 0DTE={exp_0dte} | Weekly={exp_weekly}")
+        tasks = [fetch_and_compute(t, s) for t, s in OPTIONS_TICKERS.items()]
+        results = await asyncio.gather(*tasks)
+
+        all_resolved = True
+        for ticker, options_symbol, exp_0dte, exp_weekly, success in results:
+            if not success:
+                all_resolved = False
+            else:
+                self._expirations[ticker] = (exp_0dte, exp_weekly)
+                logger.info(f"Expirations [{options_symbol}]: 0DTE={exp_0dte} | Weekly={exp_weekly}")
 
         self._expirations_resolved = all_resolved or len(self._expirations) > 0
 
@@ -586,23 +595,34 @@ class RealtimeOptionsFeed:
                 logger.error("Cannot resolve expirations — skipping poll")
                 return
 
-        # ── 1. Spot prices (SEQUENTIAL) ──
+        # ── 1. Spot prices (CONCURRENT WITH SEMAPHORE MAX 4) ──
         spot_prices = {}
-        for symbol in SPOT_SYMBOLS:
-            if symbol == "VIX":
-                df_spot = await self._fetch_spot_vix()
-            else:
-                df_spot = await self._fetch_spot(symbol)
-            self._save_parquet(df_spot, f"spot_{symbol}_latest.parquet")
-            if not df_spot.empty and 'close' in df_spot.columns:
-                last_price = float(df_spot['close'].iloc[-1])
-                spot_prices[symbol] = last_price
-                logger.info(f"  [Spot {symbol}] ${last_price:.2f}")
-            else:
-                fallback_price = self._load_spot_local(symbol)
-                spot_prices[symbol] = fallback_price
-                if fallback_price > 0:
-                    logger.info(f"  [Spot {symbol}] ${fallback_price:.2f} (fallback)")
+        spot_semaphore = asyncio.Semaphore(4)
+
+        async def fetch_and_process_spot(symbol):
+            async with spot_semaphore:
+                if symbol == "VIX":
+                    df_spot = await self._fetch_spot_vix()
+                else:
+                    df_spot = await self._fetch_spot(symbol)
+                
+                self._save_parquet(df_spot, f"spot_{symbol}_latest.parquet")
+                
+                if not df_spot.empty and 'close' in df_spot.columns:
+                    last_price = float(df_spot['close'].iloc[-1])
+                    logger.info(f"  [Spot {symbol}] ${last_price:.2f}")
+                    return symbol, last_price
+                else:
+                    fallback_price = self._load_spot_local(symbol)
+                    if fallback_price > 0:
+                        logger.info(f"  [Spot {symbol}] ${fallback_price:.2f} (fallback)")
+                    return symbol, fallback_price
+
+        spot_tasks = [fetch_and_process_spot(sym) for sym in SPOT_SYMBOLS]
+        logger.info("Downloading spot prices (Max 4 concurrently)...")
+        results = await asyncio.gather(*spot_tasks)
+        for sym, price in results:
+            spot_prices[sym] = price
 
         # ── 1.1 Update ATR (needed for options filtering) ──
         for ticker in OPTIONS_TICKERS:
@@ -687,16 +707,11 @@ class RealtimeOptionsFeed:
         prev_days = self._get_previous_trading_days(15)
         logger.info(f"Backfilling historical spot for {len(prev_days)} previous trading days...")
 
-        for day in prev_days:
-            day_str = day.strftime("%Y%m%d")
-            day_dir = self._rt_data_base / day_str
-            day_dir.mkdir(parents=True, exist_ok=True)
+        semaphore = asyncio.Semaphore(4)
+        tasks = []
 
-            for symbol in SPOT_SYMBOLS:
-                filepath = day_dir / f"spot_{symbol}_latest.parquet"
-                if filepath.exists():
-                    continue  # Already have this day
-
+        async def fetch_and_save_spot(day, symbol, day_str, filepath):
+            async with semaphore:
                 logger.info(f"  Downloading spot {symbol} for {day_str}...")
                 try:
                     # Map SPX to SPXW just for the underlying proxy request
@@ -714,6 +729,22 @@ class RealtimeOptionsFeed:
                         logger.warning(f"  ✗ spot_{symbol} {day_str}: empty data")
                 except Exception as e:
                     logger.warning(f"  ✗ spot_{symbol} {day_str}: {e}")
+
+        for day in prev_days:
+            day_str = day.strftime("%Y%m%d")
+            day_dir = self._rt_data_base / day_str
+            day_dir.mkdir(parents=True, exist_ok=True)
+
+            for symbol in SPOT_SYMBOLS:
+                filepath = day_dir / f"spot_{symbol}_latest.parquet"
+                if filepath.exists():
+                    continue  # Already have this day
+                
+                tasks.append(fetch_and_save_spot(day, symbol, day_str, filepath))
+
+        if tasks:
+            logger.info(f"Queueing {len(tasks)} backfill tasks (Max 4 concurrently)...")
+            await asyncio.gather(*tasks)
 
         self._historical_backfilled = True
         logger.info("Historical spot backfill complete.")
