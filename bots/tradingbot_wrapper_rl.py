@@ -596,6 +596,8 @@ class RLTradingBot:
                 "entry_theta": -0.05,
                 "entry_gamma": 0.0,
                 "entry_time": pos.entry_time,
+                
+            }
             # will populate it correctly on the first on_new_minute() call.
             self.systems[ticker]._dynamic_market_state = np.zeros(8, dtype=np.float32)
             logger.info(
