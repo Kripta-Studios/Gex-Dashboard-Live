@@ -17,6 +17,7 @@ import math
 import asyncio
 import requests
 import logging
+from typing import Optional
 import numpy as np
 import pandas as pd
 import torch
@@ -58,6 +59,8 @@ TRADES_DIR = os.path.join(PROJECT_ROOT, "trades_rl")
 LOGS_DIR = os.path.join(PROJECT_ROOT, "logs")
 POSITIONS_FILE = os.path.join(TRADES_DIR, "open_positions_rl.json")
 GBM_TRACKERS_FILE = os.path.join(TRADES_DIR, "open_gbm_trackers.json")
+GBM_SIGNALS_FILE = os.path.join(TRADES_DIR, "gbm_signals_rl.json")
+COOLDOWNS_FILE = os.path.join(TRADES_DIR, "cooldowns_rl.json")
 RT_DATA_DIR = os.path.join(PROJECT_ROOT, "rt_data")
 
 # GBM signal confidence threshold
@@ -68,8 +71,10 @@ os.makedirs(LOGS_DIR, exist_ok=True)
 
 # Discord
 DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
+DISCORD_WEBHOOK_URL_2 = os.getenv("DISCORD_WEBHOOK_URL_2")
+DISCORD_WEBHOOKS = [url for url in [DISCORD_WEBHOOK_URL, DISCORD_WEBHOOK_URL_2] if url]
 DISCORD_ROLE_PING = os.getenv("DISCORD_ROLE_PING", "<@&1464601287411634226>")
-DISCORD_ENABLED = bool(DISCORD_WEBHOOK_URL)
+DISCORD_ENABLED = len(DISCORD_WEBHOOKS) > 0
 
 # Process both SPX and QQQ
 TICKERS = ["SPX", "QQQ"]
@@ -90,7 +95,7 @@ SPOT_SOURCES = {
 
 # Timing
 LOOP_INTERVAL = 65  # seconds — aligned with realtime_feed's 60s poll interval
-COOLDOWN_MINUTES = 5
+COOLDOWN_MINUTES = 15
 
 # GBM Spot-Based TP/SL Configuration (mirrors backtest_rl.py simulate_mlp_only)
 GBM_TARGET_LONG = 0.010       # +1.0% spot move target for LONG
@@ -114,16 +119,41 @@ logger = logging.getLogger(__name__)
 # DISCORD — MINIMAL, NO EMOJI
 # ═════════════════════════════════════════════════════════════════════════
 
+def format_expiration_for_tracker(exp_str: str) -> str:
+    """Convert YYYYMMDD to M/D/YY for trade_tracker.py."""
+    if not exp_str or len(exp_str) != 8:
+        return ""
+    try:
+        dt = datetime.strptime(exp_str, "%Y%m%d")
+        # Use str(int(x)) to remove leading zeros if desired, 
+        # or just %m/%d/%y which works fine with the tracker's parser.
+        return dt.strftime("%m/%d/%y")
+    except:
+        return ""
+
+
 def discord_open(ticker: str, direction: str, strike: float, delta: float,
                  confidence: float, sigma_min: float, entry_premium: float,
-                 bucket: str):
-    """Send trade OPEN alert — clean, no emoji. Tagged [RL]."""
+                 bucket: str, expiration: Optional[str] = None):
+    """Send trade OPEN alert — compatible with trade_tracker.py."""
     if not DISCORD_ENABLED:
         return
     right = "C" if direction == "LONG" else "P"
+    cmd = "BTO"  # For options, we always BTO (buy call or buy put)
+    
+    # First line: [BTO|STO] TICKER [DATE] [STRIKE][C|P] @ M
+    if expiration:
+        exp_fmt = format_expiration_for_tracker(expiration)
+        tracker_line = f"{cmd} {ticker} {exp_fmt} {strike:.0f}{right} @ M"
+    else:
+        tracker_line = f"{cmd} {ticker} @ M"
+
+    # Send tracker command separately for maximum reliability
+    _send(tracker_line)
+
     msg = (
         f"{DISCORD_ROLE_PING}\n"
-        f"**[RL] OPEN {direction} {ticker} {strike:.0f}{right} ({delta:.2f}D)**\n"
+        f"**[OPTIONS] OPEN {direction} {ticker} {strike:.0f}{right} ({delta:.2f}D)**\n"
         f"Confidence: {confidence:.0%} | Sigma: {sigma_min:.0f}min | Bucket: {bucket}\n"
         f"Entry premium: ${entry_premium:.2f} | Hard stop: {HARD_EXITS['max_loss_pct']:.0%} | Max hold: {HARD_EXITS['max_hold_minutes']}min"
     )
@@ -132,15 +162,26 @@ def discord_open(ticker: str, direction: str, strike: float, delta: float,
 
 def discord_close(ticker: str, direction: str, strike: float,
                   pnl_pct: float, pnl_dollars: float, hold_min: float,
-                  reason: str):
-    """Send trade CLOSE alert — clean, no emoji. Tagged [RL]."""
+                  reason: str, expiration: Optional[str] = None):
+    """Send trade CLOSE alert — compatible with trade_tracker.py."""
     if not DISCORD_ENABLED:
         return
     right = "C" if direction == "LONG" else "P"
+    cmd = "STC"  # For options, we always STC (sell back the bought option)
+    
+    # First line: [STC|BTC] TICKER [DATE] [STRIKE][C|P] @ M
+    if expiration:
+        exp_fmt = format_expiration_for_tracker(expiration)
+        tracker_line = f"{cmd} {ticker} {exp_fmt} {strike:.0f}{right} @ M"
+    else:
+        tracker_line = f"{cmd} {ticker} @ M"
+
     result = "WIN" if pnl_pct >= 0 else "LOSS"
+    _send(tracker_line)
+    
     msg = (
         f"{DISCORD_ROLE_PING}\n"
-        f"**[RL] CLOSED {ticker} {strike:.0f}{right} — {result}**\n"
+        f"**[OPTIONS] CLOSED {ticker} {strike:.0f}{right} — {result}**\n"
         f"P&L: {pnl_pct:+.1%} (${pnl_dollars:+.1f}) | {hold_min:.0f}min | {reason}"
     )
     _send(msg)
@@ -150,12 +191,12 @@ def discord_status(message: str):
     """Send status update."""
     if not DISCORD_ENABLED:
         return
-    _send(f"[RL Bot] {message}")
+    _send(f"[Options Bot] {message}")
 
 
 def discord_gbm_signal(ticker: str, direction: str, confidence: float,
                        probs: list, rl_direction: str = None):
-    """Send GBM signal alert — tagged [GBM]."""
+    """Send GBM signal alert — info only, tracker line removed to avoid duplicate."""
     if not DISCORD_ENABLED:
         return
     prob_str = f"SHORT={probs[0]:.0%} | HOLD={probs[1]:.0%} | LONG={probs[2]:.0%}"
@@ -164,9 +205,9 @@ def discord_gbm_signal(ticker: str, direction: str, confidence: float,
         agree_str = f" | RL: {rl_direction} ({agree})"
     else:
         agree_str = ""
+
     msg = (
-        f"{DISCORD_ROLE_PING}\n"
-        f"**[GBM] Signal: {direction} {ticker}**\n"
+        f"**[DIRECTION] Signal: {direction} {ticker}**\n"
         f"Confidence: {confidence:.0%} | {prob_str}{agree_str}"
     )
     _send(msg)
@@ -174,11 +215,17 @@ def discord_gbm_signal(ticker: str, direction: str, confidence: float,
 
 def discord_gbm_track_open(ticker: str, direction: str, entry_price: float,
                            confidence: float, target_price: float, stop_price: float):
-    """Send GBM TP/SL tracking OPEN alert."""
+    """Send GBM TP/SL tracking OPEN alert — compatible with trade_tracker.py."""
     if not DISCORD_ENABLED:
         return
+    cmd = "BTO" if direction == "LONG" else "STO"
+    tracker_line = f"{cmd} {ticker} @ M"
+
+    _send(tracker_line)
+
     msg = (
-        f"**[GBM] TRACKING {direction} {ticker} @ {entry_price:.2f}**\n"
+        f"{DISCORD_ROLE_PING}\n"
+        f"**[DIRECTION] TRACKING {direction} {ticker} @ {entry_price:.2f}**\n"
         f"Confidence: {confidence:.0%} | "
         f"TP: {target_price:.2f} | SL: {stop_price:.2f} | Max: {GBM_MAX_HOLD_MINUTES}min"
     )
@@ -188,25 +235,32 @@ def discord_gbm_track_open(ticker: str, direction: str, entry_price: float,
 def discord_gbm_track_close(ticker: str, direction: str, entry_price: float,
                             exit_price: float, pnl_pct: float, hold_min: float,
                             reason: str):
-    """Send GBM TP/SL tracking result alert."""
+    """Send GBM TP/SL tracking result alert — compatible with trade_tracker.py."""
     if not DISCORD_ENABLED:
         return
+    cmd = "STC" if direction == "LONG" else "BTC"
+    tracker_line = f"{cmd} {ticker} @ M"
+
     result = "WIN" if pnl_pct >= 0 else "LOSS"
+    _send(tracker_line)
+
     msg = (
-        f"**[GBM] {result} {ticker} @ {exit_price:.2f}**\n"
+        f"{DISCORD_ROLE_PING}\n"
+        f"**[DIRECTION] {result} {ticker} @ {exit_price:.2f}**\n"
         f"Entry: {entry_price:.2f} | P&L: {pnl_pct:+.2%} | {hold_min:.0f}min | {reason}"
     )
     _send(msg)
 
 
 def _send(content: str):
-    """Send raw message to Discord webhook."""
-    try:
-        resp = requests.post(DISCORD_WEBHOOK_URL, json={"content": content}, timeout=5)
-        if resp.status_code >= 400:
-            logger.error(f"Discord webhook error: {resp.status_code}")
-    except Exception as e:
-        logger.error(f"Discord send failed: {e}")
+    """Send raw message to all configured Discord webhooks."""
+    for url in DISCORD_WEBHOOKS:
+        try:
+            resp = requests.post(url, json={"content": content}, timeout=5)
+            if resp.status_code >= 400:
+                logger.error(f"Discord webhook error ({url}): {resp.status_code}")
+        except Exception as e:
+            logger.error(f"Discord send failed for {url}: {e}")
 
 
 # ═════════════════════════════════════════════════════════════════════════
@@ -220,8 +274,10 @@ def _send(content: str):
 class RLPosition:
     """Tracks an open RL-managed position."""
     def __init__(self, ticker, direction, strike, delta, entry_premium,
-                 confidence, bucket, entry_time=None, entry_spot=0.0, entry_atm_iv=0.15,
-                 mae=0.0, prev_pnl_pct=0.0, bucket_index=4, time_to_target=0.5, log_sigma=0.5, max_unrealized_pnl=0.0):
+                 confidence, bucket, entry_time, signal_spot, position_entry_spot,
+                 entry_atm_iv, bucket_index,
+                 expiration=None, mae=0.0, prev_pnl_pct=0.0, time_to_target=0.5,
+                 log_sigma=0.5, max_unrealized_pnl=0.0, right=None):
         self.ticker = ticker
         self.direction = direction
         self.strike = strike
@@ -229,15 +285,18 @@ class RLPosition:
         self.entry_premium = entry_premium
         self.confidence = confidence
         self.bucket = bucket
-        self.entry_time = entry_time or datetime.now(ET)
-        self.entry_spot = entry_spot
+        self.entry_time = entry_time
+        self.signal_spot = signal_spot
+        self.position_entry_spot = position_entry_spot
         self.entry_atm_iv = entry_atm_iv
+        self.expiration = expiration
         self.mae = mae
         self.prev_pnl_pct = prev_pnl_pct
         self.bucket_index = bucket_index
         self.time_to_target = time_to_target
         self.log_sigma = log_sigma
         self.max_unrealized_pnl = max_unrealized_pnl
+        self.right = right or ("CALL" if direction == "LONG" else "PUT")
 
     def to_dict(self):
         return {
@@ -246,29 +305,35 @@ class RLPosition:
             "entry_premium": self.entry_premium,
             "confidence": self.confidence, "bucket": self.bucket,
             "entry_time": self.entry_time.isoformat(),
-            "entry_spot": self.entry_spot,
+            "signal_spot": self.signal_spot,
+            "position_entry_spot": self.position_entry_spot,
             "entry_atm_iv": self.entry_atm_iv,
+            "expiration": self.expiration,
             "mae": self.mae,
             "prev_pnl_pct": self.prev_pnl_pct,
             "bucket_index": self.bucket_index,
             "time_to_target": self.time_to_target,
             "log_sigma": self.log_sigma,
             "max_unrealized_pnl": self.max_unrealized_pnl,
+            "right": self.right,
         }
 
     @classmethod
     def from_dict(cls, d):
         pos = cls(d["ticker"], d["direction"], d["strike"], d["delta"],
-                  d["entry_premium"], d["confidence"], d["bucket"])
-        pos.entry_time = datetime.fromisoformat(d["entry_time"])
-        pos.entry_spot = d.get("entry_spot", 0.0)
-        pos.entry_atm_iv = d.get("entry_atm_iv", 0.15)
-        pos.mae = d.get("mae", 0.0)
-        pos.prev_pnl_pct = d.get("prev_pnl_pct", 0.0)
-        pos.bucket_index = d.get("bucket_index", 4)
-        pos.time_to_target = d.get("time_to_target", 0.5)
-        pos.log_sigma = d.get("log_sigma", 0.5)
-        pos.max_unrealized_pnl = d.get("max_unrealized_pnl", 0.0)
+                  d["entry_premium"], d["confidence"], d["bucket"],
+                  entry_time=datetime.fromisoformat(d["entry_time"]),
+                  signal_spot=d.get("signal_spot", d.get("entry_spot", 0.0)),
+                  position_entry_spot=d.get("position_entry_spot", d.get("entry_spot", 0.0)),
+                  entry_atm_iv=d.get("entry_atm_iv", 0.15),
+                  bucket_index=d.get("bucket_index", 4),
+                  expiration=d.get("expiration"),
+                  mae=d.get("mae", 0.0),
+                  prev_pnl_pct=d.get("prev_pnl_pct", 0.0),
+                  time_to_target=d.get("time_to_target", 0.5),
+                  log_sigma=d.get("log_sigma", 0.5),
+                  max_unrealized_pnl=d.get("max_unrealized_pnl", 0.0),
+                  right=d.get("right"))
         return pos
 
 
@@ -395,6 +460,8 @@ class RLTradingBot:
         self._load_models()
         self._load_positions()
         self._load_gbm_trackers()
+        self._last_gbm_direction = self._load_gbm_signals()
+        self.last_trade_time = self._load_cooldowns()
         self._restore_rl_system_state()
         for ticker in TICKERS:
             self._load_historical_ib_levels(ticker)
@@ -499,7 +566,50 @@ class RLTradingBot:
         self._log_trade_history(trade, now, "trades_rl")
 
         discord_close(ticker, pos.direction, pos.strike, pnl_pct, pnl_dollars, 
-                      (now - pos.entry_time).total_seconds() / 60, "STALE_RECOVERY")
+                      (now - pos.entry_time).total_seconds() / 60, "STALE_RECOVERY",
+                      expiration=pos.expiration)
+
+    def _save_gbm_signals(self):
+        """Persist last seen GBM directions to disk."""
+        try:
+            with open(GBM_SIGNALS_FILE, "w") as f:
+                json.dump(self._last_gbm_direction, f)
+        except Exception as e:
+            logger.error(f"Failed to save GBM signals: {e}")
+
+    def _load_gbm_signals(self) -> dict:
+        """Load last seen GBM directions from disk."""
+        if not os.path.exists(GBM_SIGNALS_FILE):
+            return {}
+        try:
+            with open(GBM_SIGNALS_FILE, "r") as f:
+                return json.load(f)
+        except Exception as e:
+            logger.error(f"Failed to load GBM signals: {e}")
+            return {}
+
+    def _save_cooldowns(self):
+        """Persist last trade times for cooldown enforcement."""
+        try:
+            # Convert datetime to ISO strings for JSON
+            data = {t: dt.isoformat() for t, dt in self.last_trade_time.items()}
+            with open(COOLDOWNS_FILE, "w") as f:
+                json.dump(data, f)
+        except Exception as e:
+            logger.error(f"Failed to save cooldowns: {e}")
+
+    def _load_cooldowns(self) -> dict:
+        """Load last trade times from disk."""
+        if not os.path.exists(COOLDOWNS_FILE):
+            return {}
+        try:
+            with open(COOLDOWNS_FILE, "r") as f:
+                data = json.load(f)
+                # Convert ISO strings back to datetime objects
+                return {t: datetime.fromisoformat(dt) for t, dt in data.items()}
+        except Exception as e:
+            logger.error(f"Failed to load cooldowns: {e}")
+            return {}
 
     def _save_gbm_trackers(self):
         """Persist open GBM trackers to disk."""
@@ -584,26 +694,15 @@ class RLTradingBot:
         for ticker, pos in self.positions.items():
             if ticker not in self.systems:
                 continue
-            right = "CALL" if pos.direction == "LONG" else "PUT"
-            self.systems[ticker].open_position = {
-                "strike": pos.strike,
-                "right": right,
-                "direction": pos.direction,
-                "entry_price": pos.entry_premium,
-                "raw_entry_price": pos.entry_premium,
-                "entry_iv": pos.entry_atm_iv,
-                "entry_delta": pos.delta,
-                "entry_theta": -0.05,
-                "entry_gamma": 0.0,
-                "entry_time": pos.entry_time,
-                
-            }
-            # will populate it correctly on the first on_new_minute() call.
-            self.systems[ticker]._dynamic_market_state = np.zeros(8, dtype=np.float32)
-            logger.info(
-                f"Restored RL system state: {ticker} {pos.direction} "
-                f"strike={pos.strike:.0f} premium={pos.entry_premium:.2f} "
-                f"mae={pos.mae:+.2%}")
+            
+            # Use the new restore_state method to populate all internal references
+            self.systems[ticker].restore_state(
+                pos_data=pos.to_dict(),
+                confidence=pos.confidence,
+                time_to_target=pos.time_to_target,
+                log_sigma=pos.log_sigma
+            )
+            logger.info(f"Restored RL system state for {ticker} (conf={pos.confidence:.0%})")
 
     # ─────────────────────────────────────────
     # PARQUET DATA LOADING
@@ -806,15 +905,20 @@ class RLTradingBot:
 
         return get_net_exposures_from_parquet(df_pq)
 
-    def _load_options_chain(self, ticker: str) -> dict:
+    def _load_options_chain(self, ticker: str) -> tuple:
         """
         Load real options chain for RL strike resolution.
-        Returns {calls: {strike: {price, delta, iv, theta, gamma}}, puts: {...}}
+        Returns (calls, puts, expiration)
         """
         options_symbol = OPTIONS_SYMBOLS.get(ticker, ticker)
         df_greeks = self._read_parquet(f"{options_symbol}_greeks_0dte_latest.parquet")
         if df_greeks.empty:
-            return {"calls": {}, "puts": {}}
+            return {}, {}, None
+
+        expiration = None
+        if 'expiration' in df_greeks.columns:
+            # All rows in 0dte file should have same expiration
+            expiration = str(df_greeks['expiration'].iloc[0])
 
         if 'underlying_timestamp' in df_greeks.columns:
             df_greeks['dt'] = pd.to_datetime(df_greeks['underlying_timestamp'], format='mixed', errors='coerce')
@@ -849,7 +953,7 @@ class RLTradingBot:
             elif right in ("P", "PUT"):
                 puts[strike] = data
 
-        return {"calls": calls, "puts": puts}
+        return calls, puts, expiration
 
     def _load_spot(self, symbol: str) -> float:
         """Load latest spot price from Parquet."""
@@ -1004,6 +1108,10 @@ class RLTradingBot:
 
         tracker = self.gbm_trackers[ticker]
         result = tracker.check(spot, now)
+        
+        # Debug log to see SL/TP levels
+        if now.second < 10: # Log only every minute-ish
+            logger.info(f"[{ticker}][GBM] Monitoring: Spot={spot:.2f} SL={tracker.stop_price:.2f} TP={tracker.target_price:.2f}")
 
         if result is not None:
             # Tracker has triggered — log and alert
@@ -1083,22 +1191,18 @@ class RLTradingBot:
                     f"[{ticker}] SPOT CONGELADO {count} ciclos @ {spot:.2f} "
                     f"— prev_features reseteado para evitar momentum rancio"
                 )
-                # NOTA: No hacemos 'return' prematuro. Dejamos que el bot procese
-                # aunque el spot sea igual. Si no hay señal, el modelo dirá HOLD.
-                # Pero no bloqueamos el ciclo por "prev_spot == spot" para permitirlo
-                # en mercados laterales o feeds lentos.
 
             else:
                 logger.info(
-                    f"[{ticker}] spot lateral/repetido ({count}/{FROZEN_CYCLES_THRESHOLD}) "
-                    f"@ {spot:.2f} — procesando normalmente"
+                    f"[{ticker}] spot repeated ({count}/{FROZEN_CYCLES_THRESHOLD}) "
+                    f"@ {spot:.2f} — processing normally"
                 )
         else:
             # Spot cambió: limpiar contador
             if self._frozen_spot_count.get(ticker, 0) > 0:
                 logger.info(
-                    f"[{ticker}] spot recuperado: {prev_spot:.2f} → {spot:.2f} "
-                    f"(congelado {self._frozen_spot_count[ticker]} ciclos)"
+                    f"[{ticker}] spot recovered: {prev_spot:.2f} → {spot:.2f} "
+                    f"(frozen {self._frozen_spot_count[ticker]} cycles)"
                 )
             self._frozen_spot_count[ticker] = 0
 
@@ -1160,9 +1264,11 @@ class RLTradingBot:
                 f"[{ticker}] NO-TRADE: GBM confidence insufficient "
                 f"{gbm_result['confidence']:.0%} < {GBM_MIN_CONFIDENCE:.0%} required"
             )
+            return
 
         # 6. Load real options chain for RL
-        options_data = self._load_options_chain(ticker)
+        calls, puts, expiration = self._load_options_chain(ticker)
+        options_data = {"calls": calls, "puts": puts}
 
         # 7. Call IntegratedTradingSystem (GBM + RL)
         result = self.systems[ticker].on_new_minute(
@@ -1172,13 +1278,20 @@ class RLTradingBot:
             timestamp=now
         )
 
-        action = result.get("action", "")
+        action = result.get("action", "NO_SIGNAL")
         rl_conf = result.get("confidence", 0)
-        logger.info(f"[{ticker}] RL: action={action} conf={rl_conf:.0%}")
-
-        if not action.startswith("BUY_"):
-            logger.info(f"[{ticker}] NO-TRADE: RL action={action} (not BUY)")
         
+        # Enhanced logging for RL state
+        if action == "HOLD" and ticker in self.positions:
+            pos = self.positions[ticker]
+            # Use gbm_result for live confidence if available, else rl_conf
+            live_conf = gbm_result["confidence"] if gbm_result else rl_conf
+            details = result.get("details", {})
+            pnl_pct = details.get("pnl_pct", 0.0)
+            logger.info(f"[{ticker}] RL: action={action} | PnL={pnl_pct:+.1%} | LiveConf={live_conf:.0%} | EntryConf={pos.confidence:.0%}")
+        else:
+            logger.info(f"[{ticker}] RL: action={action} conf={rl_conf:.0%}")
+
         # Update P&L and MAE for open position (if HOLD)
         if action == "HOLD" and ticker in self.positions:
             pos = self.positions[ticker]
@@ -1187,6 +1300,13 @@ class RLTradingBot:
             pos.prev_pnl_pct = details.get("pnl_pct", pos.prev_pnl_pct)
             pos.max_unrealized_pnl = details.get("max_unrealized_pnl", getattr(pos, 'max_unrealized_pnl', 0.0))
             self._save_positions()
+
+        # Update: include reason in NO-TRADE logs for better debugging
+        if action == "NO_SIGNAL" or (action == "HOLD" and ticker not in self.positions):
+            details = result.get("details", {})
+            reason = details.get("reason", "unknown")
+            gbm_dir = gbm_result["direction"] if gbm_result else "unknown"
+            logger.info(f"[{ticker}] NO-TRADE: RL action={action} | GBM={gbm_dir} | Reason={reason} | conf={rl_conf:.0%}")
 
         # 8. Check existing GBM spot trackers for TP/SL
         self._check_gbm_trackers(ticker, spot, now)
@@ -1206,6 +1326,7 @@ class RLTradingBot:
                     ticker, gbm_result["direction"], gbm_result["confidence"],
                     gbm_result["probs"], rl_direction=rl_dir)
                 self._last_gbm_direction[ticker] = gbm_result["direction"]
+                self._save_gbm_signals()
 
                 # Create spot-based tracker if not already tracking this ticker
                 if ticker not in self.gbm_trackers:
@@ -1225,7 +1346,9 @@ class RLTradingBot:
                         gbm_result["confidence"], tracker.target_price, tracker.stop_price)
                     self._save_gbm_trackers()
         elif gbm_result and gbm_result["direction"] == "HOLD":
-            self._last_gbm_direction[ticker] = None
+            if self._last_gbm_direction.get(ticker) is not None:
+                self._last_gbm_direction[ticker] = None
+                self._save_gbm_signals()
 
         if action.startswith("BUY_"):
             last = self.last_trade_time.get(ticker)
@@ -1255,14 +1378,18 @@ class RLTradingBot:
                 confidence=result.get("confidence", 0),
                 bucket=details.get("bucket", "unknown"),
                 entry_time=now,
-                entry_spot=spot,
-                entry_atm_iv=atm_iv,
+                signal_spot=self.systems[ticker]._signal_spot,
+                position_entry_spot=spot,
+                entry_atm_iv=self.systems[ticker]._entry_atm_iv,
                 bucket_index=details.get("bucket_index", 4),
+                expiration=expiration,
                 time_to_target=details.get("time_to_target", 0.5),
                 log_sigma=details.get("log_sigma", 0.5),
+                right="CALL" if "CALL" in action else "PUT"
             )
             self.positions[ticker] = pos
             self.last_trade_time[ticker] = now
+            self._save_cooldowns()
             self.trade_count += 1
             self._save_positions()
 
@@ -1270,7 +1397,8 @@ class RLTradingBot:
 
             discord_open(
                 ticker, pos.direction, pos.strike, pos.delta,
-                pos.confidence, 0, pos.entry_premium, pos.bucket)
+                pos.confidence, 0, pos.entry_premium, pos.bucket,
+                expiration=pos.expiration)
 
         elif action == "EXIT":
             if ticker not in self.positions:
@@ -1283,12 +1411,15 @@ class RLTradingBot:
             pnl_dollars = pnl_pct * pos.entry_premium * POINT_VALUES.get(ticker, 100)
             reason = details.get("exit_reason", "unknown")
             self.daily_pnl += pnl_dollars
+            self.last_trade_time[ticker] = now
+            self._save_cooldowns()
             self._save_positions()
 
             logger.info(f"CLOSE {ticker} | {pnl_pct:+.1%} | ${pnl_dollars:+.1f} | {hold_min:.0f}min | {reason}")
 
             discord_close(ticker, pos.direction, pos.strike,
-                          pnl_pct, pnl_dollars, hold_min, reason)
+                          pnl_pct, pnl_dollars, hold_min, reason,
+                          expiration=pos.expiration)
 
             trade = {
                 "ticker": ticker, "direction": pos.direction,
