@@ -281,7 +281,7 @@ class RealtimeOptionsFeed:
 
             try:
                 # Reuse self.client.session for connection pooling
-                response = await self.client.session.get(f"{base_url}{endpoint}", params=params, timeout=120.0)
+                response = await self.client.session.get(f"{base_url}{endpoint}", params=params, timeout=180.0)
 
                 if response.status_code != 200:
                     logger.warning(
@@ -351,8 +351,10 @@ class RealtimeOptionsFeed:
                         df_part['right'] = df_part['right'].replace({"C": "CALL", "P": "PUT"})
                     all_rows.append(df_part)
 
+            except httpx.TimeoutException:
+                logger.warning(f"[{options_symbol}] {endpoint_key} {right} exp={exp_str}: Request timed out after 180s")
             except Exception as e:
-                logger.warning(f"[{options_symbol}] {endpoint_key} {right} exp={exp_str}: {e}")
+                logger.warning(f"[{options_symbol}] {endpoint_key} {right} exp={exp_str}: {type(e).__name__} - {e}")
 
         if not all_rows:
             return pd.DataFrame()
@@ -551,6 +553,41 @@ class RealtimeOptionsFeed:
 
         return df
 
+    def _verify_parquet_file(self, filepath: Path) -> bool:
+        """
+        Verify if a Parquet file is complete and contains valid data.
+        A full RTH day should have ~391 minutes.
+        Also checks for NaN/Inf in OHLC columns.
+        """
+        try:
+            df = pd.read_parquet(filepath)
+            if df.empty:
+                return False
+            
+            # 1. Check for NaN or Inf
+            ohlc_cols = [c for c in ["open", "high", "low", "close", "underlying_price"] if c in df.columns]
+            if ohlc_cols:
+                if df[ohlc_cols].isna().any().any():
+                    logger.warning(f"  [verify] {filepath.name}: Found NaN values")
+                    return False
+                # Convert to numpy for fast Inf check
+                if np.isinf(df[ohlc_cols].to_numpy()).any():
+                    logger.warning(f"  [verify] {filepath.name}: Found Inf values")
+                    return False
+
+            # 2. Check row count (only for spot files)
+            # Full RTH: 9:30 - 16:00 inclusive = 391 bars.
+            if "spot_" in filepath.name:
+                row_count = len(df)
+                if row_count < 380:
+                    logger.warning(f"  [verify] {filepath.name}: Incomplete data ({row_count} rows)")
+                    return False
+            
+            return True
+        except Exception as e:
+            logger.warning(f"  [verify] {filepath.name}: Corruption or error: {e}")
+            return False
+
     # ─────────────────────────────────────────
     # SAVE TO PARQUET
     # ─────────────────────────────────────────
@@ -564,7 +601,7 @@ class RealtimeOptionsFeed:
         # Filtro de seguridad: underlying_price=0 corrompe net_gamma/delta/vanna
         if 'underlying_price' in df.columns:
             before = len(df)
-            df = df[df['underlying_price'] > 0]
+            df = df[df['underlying_price'] > 0].copy()
             removed = before - len(df)
             if removed > 0:
                 logger.debug(f"  [filter] {filename}: eliminadas {removed} filas con underlying_price=0")
@@ -701,7 +738,7 @@ class RealtimeOptionsFeed:
     async def _backfill_historical_spot(self):
         """
         On startup, ensure spot_SPX/VIX/TLT data exists for the last 15 trading days.
-        If missing, download full-day OHLC from ThetaData and save as Parquet.
+        If missing or incomplete/corrupt, download full-day OHLC from ThetaData.
         This provides the bot with Historical IB (D-1 to D-15) and accurate ATR.
         """
         prev_days = self._get_previous_trading_days(15)
@@ -738,7 +775,10 @@ class RealtimeOptionsFeed:
             for symbol in SPOT_SYMBOLS:
                 filepath = day_dir / f"spot_{symbol}_latest.parquet"
                 if filepath.exists():
-                    continue  # Already have this day
+                    if self._verify_parquet_file(filepath):
+                        continue  # File exists and is valid
+                    else:
+                        logger.info(f"  [verify] {symbol} {day_str} failed verification, re-downloading...")
                 
                 tasks.append(fetch_and_save_spot(day, symbol, day_str, filepath))
 
