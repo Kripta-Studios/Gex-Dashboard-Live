@@ -468,6 +468,22 @@ class SPXOptionsEnv:
             exit_type = "hard_time_close"
         elif hold_minutes >= self.hard_exits["max_hold_minutes"]:
             exit_type = "hard_max_hold"
+        else:
+            # [Production Alignment] Check Signal Reversal
+            cache_key = f"{ticker}_{date_str}_{time_str}"
+            cache_entry = self.options_cache.get(cache_key, {})
+            minutes_data = cache_entry.get("minutes", {})
+            minute_data = minutes_data.get(self._t)
+            
+            if minute_data:
+                sig_dir = minute_data.get("sig_dir", "HOLD")
+                sig_conf = minute_data.get("sig_conf", 0.5)
+                
+                # Minimum confidence threshold (Matches production)
+                if self._position["direction"] == "SHORT" and sig_dir == "LONG" and sig_conf >= 0.50:
+                    exit_type = "signal_reversal"
+                elif self._position["direction"] == "LONG" and sig_dir == "SHORT" and sig_conf >= 0.50:
+                    exit_type = "signal_reversal"
 
         # ── Agent-requested exit ──
         if exit_action == 1 and exit_type is None:

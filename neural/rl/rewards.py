@@ -88,6 +88,10 @@ def compute_terminal_reward(final_pnl_pct: float, exit_type: str,
     elif exit_type == "hard_stop_loss":
         # Llegó al hard stop: máxima penalización (reduced to -2.0 to prevent over-correction)
         base_reward = -2.0
+    elif exit_type == "signal_reversal":
+        # Inversión de señal (GBM flip): recompensa neutral/PnL 
+        # (similar al time close pero identificado explícitamente)
+        base_reward = final_pnl_pct * 1.2 # Pequeño bono por "salvación"
     else:
         # Otros casos (time close, etc.)
         base_reward = final_pnl_pct * 1.0

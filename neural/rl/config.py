@@ -108,14 +108,14 @@ RL_CONFIG = {
 
     # Regularization
     "obs_noise_std":        0.05,
-    "min_confidence":       0.45,
+    "min_confidence":       0.50,
 
     # Curriculum — linear interpolation will be used between these nodes:
     "curriculum_phases": {
         0: {"pct": 0.00, "min_confidence": 0.60, "min_strike_bucket": 2, "max_strike_bucket": 3, "min_hold_minutes": 5},  # Block ITM (6)
         1: {"pct": 0.15, "min_confidence": 0.55, "min_strike_bucket": 1, "max_strike_bucket": 4, "min_hold_minutes": 5},  # Relax filters
         2: {"pct": 0.35, "min_confidence": 0.50, "min_strike_bucket": 0, "max_strike_bucket": 5, "min_hold_minutes": 10}, # Full diversity
-        3: {"pct": 1.00, "min_confidence": 0.45, "min_strike_bucket": 0, "max_strike_bucket": 6, "min_hold_minutes": 10}, # Wide exploitation
+        3: {"pct": 1.00, "min_confidence": 0.50, "min_strike_bucket": 0, "max_strike_bucket": 6, "min_hold_minutes": 10}, # Wide exploitation
     },
 
     # Session

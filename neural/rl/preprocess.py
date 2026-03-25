@@ -137,14 +137,14 @@ def generate_episode_index(training_df: pd.DataFrame,
 
     filtered = pd.concat([ep_long, ep_short]).sort_values(["date", "time"]).reset_index(drop=True)
     filtered["episode_id"] = range(len(filtered))
-    return filtered
+    return filtered, training_df
 
 
 def _process_single_date(args_tuple):
     """
     Process a single date's options data robustly and quickly.
     """
-    date_str, date_episodes, options_dir, max_forward_minutes, output_dir = args_tuple
+    date_str, date_episodes, options_dir, max_forward_minutes, output_dir, daily_signals = args_tuple
     from collect_training_data_spx_qqq import get_parquet_file
     from services.compute_features import calculate_exact_t, R_RATE, Q_DIV
     from training_data.stats import calc_dp_cdf_pdf
@@ -301,7 +301,16 @@ def _process_single_date(args_tuple):
                 else:
                     puts[strike] = data
             
-            minute_buckets[ts_str] = {"spot": spot, "calls": calls, "puts": puts}
+            # Get signal for this minute
+            sig = daily_signals.get(ts_str, {"dir": "HOLD", "conf": 0.5})
+            
+            minute_buckets[ts_str] = {
+                "spot": spot, 
+                "calls": calls, 
+                "puts": puts,
+                "sig_dir": sig["dir"],
+                "sig_conf": sig["conf"]
+            }
 
         # Day-wide structures
         if "episodes" not in partial_cache:
@@ -363,7 +372,7 @@ def _process_single_date(args_tuple):
     return processed, skipped
 
 
-def preprocess_options_for_rl(episode_index, options_dir, output_dir, max_forward_minutes=180, num_workers=24):
+def preprocess_options_for_rl(episode_index, options_dir, output_dir, max_forward_minutes=180, num_workers=24, **kwargs):
     import multiprocessing
     ctx = multiprocessing.get_context('spawn')
     unique_dates = sorted(episode_index["date"].unique())
@@ -372,7 +381,21 @@ def preprocess_options_for_rl(episode_index, options_dir, output_dir, max_forwar
     work_items = []
     for date_str in unique_dates:
         mask = episode_index["date"].astype(str) == str(date_str)
-        work_items.append((date_str, episode_index[mask].copy(), options_dir, max_forward_minutes, output_dir))
+        
+        # Prepare daily signals dict for fast lookup
+        # We use the full training_df (if provided) to get signals for every minute
+        from .config import RL_CONFIG
+        daily_signals = {}
+        if "training_df" in kwargs:
+            df_full = kwargs["training_df"]
+            df_date = df_full[df_full["date"].astype(str) == str(date_str)]
+            for _, row in df_date.iterrows():
+                daily_signals[str(row["time"])] = {
+                    "dir": row.get("mlp_direction", "HOLD"),
+                    "conf": float(row.get("mlp_confidence", 0.5))
+                }
+        
+        work_items.append((date_str, episode_index[mask].copy(), options_dir, max_forward_minutes, output_dir, daily_signals))
 
     total_processed, total_skipped = 0, 0
     total_dates = len(unique_dates)
@@ -420,13 +443,13 @@ def main():
         from hybrid_model import load_ensemble_model
         mlp_model, mlp_normalizer = load_ensemble_model(args.mlp_model, args.mlp_normalizer, model_size="small")
 
-    episode_index = generate_episode_index(training_df, mlp_model, mlp_normalizer, strict_wf=args.strict_wf)
+    episode_index, training_df_with_signals = generate_episode_index(training_df, mlp_model, mlp_normalizer, strict_wf=args.strict_wf)
     
     output_parent = os.path.dirname(os.path.abspath(args.output))
     os.makedirs(output_parent, exist_ok=True)
     episode_index.to_parquet(os.path.join(output_parent, "episode_index.parquet"), index=False)
 
-    preprocess_options_for_rl(episode_index, args.options_dir, args.output, num_workers=args.num_workers)
+    preprocess_options_for_rl(episode_index, args.options_dir, args.output, num_workers=args.num_workers, training_df=training_df_with_signals)
     print("\n✓ Preprocessing complete!")
 
 

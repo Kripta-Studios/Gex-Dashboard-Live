@@ -74,8 +74,15 @@ class IntegratedTradingSystem:
         # Internal history for dynamic features
         self._spot_history = deque(maxlen=25)
         self._option_price_history = deque(maxlen=10)
-        self._entry_spot = 0.0
-        self._entry_atm_iv = 0.15
+        
+        # Spot references (aligned with environment.py)
+        self._signal_spot = 0.0          # Spot at the time MLP signal first appeared
+        self._entry_atm_iv = 0.15        # IV at the time MLP signal first appeared
+        self._position_entry_spot = 0.0  # Spot at the time RL agent actually entered
+        
+        self._signal_direction = "HOLD"
+        self._signal_confidence = 0.0
+        
         self._dynamic_market_state = np.zeros(8, dtype=np.float32)
         
         # Load recovery stats for v4 feature alignment
@@ -114,6 +121,14 @@ class IntegratedTradingSystem:
         """
         # 0. Update history and dynamic features
         self._spot_history.append(spot)
+        
+        # 0.1 Update signal state (first time we see a non-HOLD signal)
+        # In Env, this is the episode start. In Production, we track when the model starts saying LONG/SHORT.
+        # This allows dynamic[0] to be "change since signal detected".
+        if self.open_position is None:
+            # We don't have a position yet: track current signal as the 'detected' signal
+            pass # logic handled below after inference
+        
         self._update_dynamic_features(options_data, spot, timestamp)
 
         # 1. Normalize market features
@@ -165,11 +180,28 @@ class IntegratedTradingSystem:
         # Direction mapping: 0=SHORT, 1=HOLD, 2=LONG
         direction_map = {0: "SHORT", 1: "HOLD", 2: "LONG"}
         direction = direction_map.get(prediction, "HOLD")
+        
+        # Update signal references if we are not in a position
+        if self.open_position is None:
+            if direction != "HOLD" and confidence >= RL_CONFIG["min_confidence"]:
+                # New or continuing signal
+                if self._signal_direction == "HOLD":
+                    # First detection: lock the signal spot
+                    self._signal_spot = spot
+                    self._entry_atm_iv = self._get_atm_iv(options_data, spot)
+                    
+                self._signal_direction = direction
+                self._signal_confidence = confidence
+            else:
+                # No signal: reset references
+                self._signal_direction = "HOLD"
+                self._signal_confidence = 0.0
+                self._signal_spot = 0.0
 
         # 3. No signal if HOLD or low confidence
         if direction == "HOLD" or confidence < RL_CONFIG["min_confidence"]:
             if self.open_position is not None:
-                return self._handle_exit(features_norm, options_data, spot, timestamp)
+                return self._handle_exit(features_norm, options_data, spot, timestamp, direction, confidence)
             return self._no_signal(confidence)
 
         # 4. If no open position → consider entry
@@ -179,7 +211,7 @@ class IntegratedTradingSystem:
                 direction, confidence, time_to_target, log_sigma)
 
         # 5. If position IS open → handle exit decision
-        return self._handle_exit(features_norm, options_data, spot, timestamp)
+        return self._handle_exit(features_norm, options_data, spot, timestamp, direction, confidence)
 
     def _update_dynamic_features(self, options_data: dict, spot: float, timestamp: pd.Timestamp):
         """Compute the 8 dynamic market features (mirrors environment.py)."""
@@ -190,14 +222,15 @@ class IntegratedTradingSystem:
             return
 
         # [0] Spot change from signal time
-        if self._entry_spot > 0:
-            spot_change = (spot - self._entry_spot) / self._entry_spot
+        if self._signal_spot > 0:
+            spot_change = (spot - self._signal_spot) / self._signal_spot
             dynamic[0] = np.clip(spot_change * 100, -2.0, 2.0)
 
-        # [1] Spot velocity over last 5 minutes
+        # [1] Spot velocity over last 5 minutes (denominator = signal_spot, per environment.py)
         if len(self._spot_history) >= 6:
             spot_5m_ago = self._spot_history[-6]
-            velocity = (spot - spot_5m_ago) / max(self._entry_spot, spot, 1.0)
+            ref_spot = self._signal_spot if self._signal_spot > 0 else spot
+            velocity = (spot - spot_5m_ago) / max(ref_spot, 1.0)
             dynamic[1] = np.clip(velocity * 100, -1.0, 1.0)
 
         # [2] ATM IV change from signal time
@@ -216,8 +249,8 @@ class IntegratedTradingSystem:
 
         # [4] Spot vs entry price (if in position)
         if self.open_position:
-            if self._entry_spot > 0:
-                spot_vs_entry = (spot - self._entry_spot) / self._entry_spot
+            if self._position_entry_spot > 0:
+                spot_vs_entry = (spot - self._position_entry_spot) / self._position_entry_spot
                 if self.open_position["direction"] == "SHORT":
                     spot_vs_entry = -spot_vs_entry
                 dynamic[4] = np.clip(spot_vs_entry * 100, -3.0, 3.0)
@@ -250,9 +283,9 @@ class IntegratedTradingSystem:
             else:
                 self._option_price_history.append(0.01)
 
-        # [7] Underlying trend (last 20 mins)
+        # [7] Underlying trend (last 20 mins, per environment.py)
         if len(self._spot_history) >= 3:
-            hist = list(self._spot_history)
+            hist = list(self._spot_history)[-20:] # Limit to 20 per environment.py
             diffs = np.diff(hist)
             up = np.sum(diffs > 0)
             dn = np.sum(diffs < 0)
@@ -266,7 +299,7 @@ class IntegratedTradingSystem:
             "action": "NO_SIGNAL",
             "strike": None, "delta": None,
             "confidence": confidence,
-            "details": {},
+            "details": {"reason": "GBM_HOLD"},
         }
 
     def _handle_entry(self, features_norm: np.ndarray, options_data: dict,
@@ -329,15 +362,7 @@ class IntegratedTradingSystem:
         self._prev_pnl_pct = 0.0
         self._max_unrealized_pnl = 0.0
         
-        # Record entry-time context for dynamic features
-        self._entry_spot = spot
-        # Find ATM IV at entry
-        all_opts = {**options_data.get("calls", {}), **options_data.get("puts", {})}
-        if all_opts:
-            atm_s = min(all_opts.keys(), key=lambda s: abs(float(s) - spot))
-            self._entry_atm_iv = float(all_opts[atm_s].get("iv", 0.15))
-        else:
-            self._entry_atm_iv = 0.15
+        self._position_entry_spot = spot
         
         self._option_price_history.clear()
         self._option_price_history.append(self.open_position["entry_price"])
@@ -363,7 +388,8 @@ class IntegratedTradingSystem:
         }
 
     def _handle_exit(self, features_norm: np.ndarray, options_data: dict,
-                     spot: float, timestamp: pd.Timestamp) -> dict:
+                     spot: float, timestamp: pd.Timestamp,
+                     curr_direction: str = "HOLD", curr_confidence: float = 0.0) -> dict:
         """Use RL Exit Head to decide HOLD or EXIT. Hard exits override."""
         pos = self.open_position
         right_key = "calls" if pos["right"] == "CALL" else "puts"
@@ -400,6 +426,19 @@ class IntegratedTradingSystem:
             return self._close_position("HARD_TIME_CLOSE", pnl_pct)
         if hold_minutes >= HARD_EXITS["max_hold_minutes"]:
             return self._close_position("HARD_MAX_HOLD", pnl_pct)
+
+        # ── Signal Reversal Check ──
+        # If we have a clear contradictory signal, exit immediately.
+        # This prevents holding a SHORT when a strong LONG signal appears (and vice versa).
+        if curr_direction != "HOLD" and curr_confidence >= RL_CONFIG["min_confidence"]:
+            is_reversal = False
+            if pos["direction"] == "LONG" and curr_direction == "SHORT":
+                is_reversal = True
+            elif pos["direction"] == "SHORT" and curr_direction == "LONG":
+                is_reversal = True
+            
+            if is_reversal:
+                return self._close_position("SIGNAL_REVERSAL", pnl_pct)
 
         # ── RL Exit Head ──
         state = self._build_state(
@@ -464,11 +503,39 @@ class IntegratedTradingSystem:
         # Reset per-trade dynamic tracking so the next trade starts clean.
         # Without this, _spot_history and _option_price_history from the closed
         # trade bleed into the next one, corrupting dynamic[0,1,6,7].
-        self._entry_spot = 0.0
+        self._signal_spot = 0.0
+        self._position_entry_spot = 0.0
+        self._signal_direction = "HOLD"
+        self._signal_confidence = 0.0
         self._entry_atm_iv = 0.15
         self._option_price_history.clear()
         self._dynamic_market_state = np.zeros(8, dtype=np.float32)
         return result
+
+    def restore_state(self, pos_data: dict, confidence: float, time_to_target: float, log_sigma: float):
+        """Restore internal state from persisted position data."""
+        # Map fields from RLPosition to internal dict structure
+        self.open_position = {
+            "ticker": pos_data.get("ticker"),
+            "strike": pos_data.get("strike"),
+            "right": pos_data.get("right"),
+            "direction": pos_data.get("direction"),
+            "entry_price": pos_data.get("entry_premium"),  # RLPosition calls it entry_premium
+            "raw_entry_price": pos_data.get("entry_premium"),
+            "entry_iv": pos_data.get("entry_atm_iv", 0.15), # RLPosition calls it entry_atm_iv
+            "entry_delta": pos_data.get("delta", 0.5),      # RLPosition calls it delta
+            "entry_theta": -0.05,
+            "entry_gamma": 0.0,
+            "entry_time": pd.to_datetime(pos_data.get("entry_time")),
+            "strike_action": pos_data.get("bucket_index", 4),
+        }
+        self._entry_mlp_context = [confidence, time_to_target, log_sigma, self.open_position["entry_iv"]]
+        self._signal_direction = pos_data.get("direction", "HOLD")
+        self._signal_confidence = confidence
+        self._signal_spot = pos_data.get("signal_spot", 0.0)
+        self._mae = pos_data.get("mae", 0.0)
+        self._max_unrealized_pnl = pos_data.get("max_unrealized_pnl", 0.0)
+        self._prev_pnl_pct = pos_data.get("prev_pnl_pct", 0.0)
 
     def _build_state(self, features_norm: np.ndarray,
                      position_active: bool = False,
@@ -527,6 +594,14 @@ class IntegratedTradingSystem:
             return np.concatenate([base_state, sniper_state])
 
         return base_state
+
+    def _get_atm_iv(self, options_data: dict, spot: float) -> float:
+        """Find ATM IV at current spot."""
+        all_opts = {**options_data.get("calls", {}), **options_data.get("puts", {})}
+        if all_opts:
+            atm_s = min(all_opts.keys(), key=lambda s: abs(float(s) - spot))
+            return float(all_opts[atm_s].get("iv", 0.15))
+        return 0.15
 
     def _resolve_strike(self, options_data: dict, delta_target: float,
                         right: str) -> dict:

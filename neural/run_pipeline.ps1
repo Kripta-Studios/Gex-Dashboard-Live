@@ -164,7 +164,7 @@ if ($skip_to_step -le 7) {
     --normalizer models\hybrid_normalizer_wf.npz `
     --rl-model ..\rl_models\best_rl_agent.pt `
     --model-size small --ensemble `
-    --threshold 0.60 --cooldown 5 `
+    --threshold 0.50 --cooldown 5 `
     --target-long 0.010 --target-short 0.010 --stop 0.003 `
     --risk-capital 1000.0 `
     --filter-by-greeks `
