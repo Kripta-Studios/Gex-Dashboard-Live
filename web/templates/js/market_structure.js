@@ -784,6 +784,153 @@ const MARKET_STRUCTURES = [
         "vvixVix": null,
         "reversalSignal": null,
         "trendEliminator": null
+    },
+    // ═══════════════════════════════════════════════════════════════════
+    //  ML DISCOVERED STRUCTURES (gbm_greeks/interaction_matrix.xlsx)
+    // ═══════════════════════════════════════════════════════════════════
+
+    // -- Top 5 Bullish Discovered --
+    {
+        "id": 40,
+        "name": "Machine-Driven Short Squeeze",
+        // ML: IV=High | Gamma- | Zomma- | Delta+ | Vex+ | Vega+ | Vomma+ | Speed- (Edge: 0.0549)
+        "condition": { "IV": "High", "Gamma": "Neg", "Zomma": "Neg", "Delta": "Pos", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Neg" },
+        "regime": "Expansion",
+        "action": "Aggressive Chasing",
+        "actionDirection": "BUY",
+        "tilt": "Momentum Breakout, High Probability Upside",
+        "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
+        "spreads": "Long Calls / PCS",
+        "entry": null, "emas": "5DMA/15DMA", "approxBouncePts": null,
+        "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
+    },
+    {
+        "id": 41,
+        "name": "Vanna Convexity Ignition",
+        // ML: IV=High | Gamma+ | Zomma+ | Delta+ | Vex- | Vega+ | Vomma+ | Speed+ (Edge: 0.0495)
+        "condition": { "IV": "High", "Gamma": "Pos", "Zomma": "Pos", "Delta": "Pos", "Vex": "Neg", "Vega": "Pos", "Vomma": "Pos", "Speed": "Pos" },
+        "regime": "Trend Day",
+        "action": "Forced Buying",
+        "actionDirection": "BUY",
+        "tilt": "Trend Day, Pull backs are entries",
+        "flags": { "max_vanna_level": true, "ib_bounce": false, "dadu_pinning": false },
+        "spreads": null,
+        "entry": null, "emas": null, "approxBouncePts": null,
+        "stochastic": "Works on Pullbacks", "vvixVix": null, "reversalSignal": null, "trendEliminator": null
+    },
+    {
+        "id": 42,
+        "name": "Delta-Negative Melt Up",
+        // ML: IV=High | Gamma+ | Zomma+ | Delta- | Vex+ | Vega+ | Vomma+ | Speed+ (Edge: 0.0235)
+        "condition": { "IV": "High", "Gamma": "Pos", "Zomma": "Pos", "Delta": "Neg", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Pos" },
+        "regime": "Transitional / Expansion",
+        "action": "Dealer Hedging Upside",
+        "actionDirection": "BUY",
+        "tilt": "Strong Underlying Bid despite negative delta",
+        "flags": { "max_vanna_level": false, "ib_bounce": true, "dadu_pinning": false },
+        "spreads": null,
+        "entry": null, "emas": null, "approxBouncePts": null,
+        "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
+    },
+    {
+        "id": 43,
+        "name": "High Volatility Grind Up",
+        // ML: IV=High | Gamma+ | Zomma+ | Delta+ | Vex+ | Vega+ | Vomma+ | Speed- (Edge: 0.0194, N=1494)
+        "condition": { "IV": "High", "Gamma": "Pos", "Zomma": "Pos", "Delta": "Pos", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Neg" },
+        "regime": "Compression",
+        "action": "Supportive Buyers",
+        "actionDirection": "BUY",
+        "tilt": "Steady Uptrend, Buying Dips",
+        "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
+        "spreads": "PCS",
+        "entry": null, "emas": null, "approxBouncePts": null,
+        "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
+    },
+    {
+        "id": 44,
+        "name": "Gamma Drain Short Squeeze",
+        // ML: IV=High | Gamma- | Zomma+ | Delta+ | Vex- | Vega+ | Vomma+ | Speed+ (Edge: 0.0193, N=3259)
+        "condition": { "IV": "High", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Pos", "Vex": "Neg", "Vega": "Pos", "Vomma": "Pos", "Speed": "Pos" },
+        "regime": "Trend Day",
+        "action": "Forced Covering",
+        "actionDirection": "BUY",
+        "tilt": "Momentum Chasing",
+        "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
+        "spreads": null,
+        "entry": null, "emas": "5DMA/15DMA", "approxBouncePts": null,
+        "stochastic": null, "vvixVix": null, "reversalSignal": "Vol crush", "trendEliminator": null
+    },
+
+    // -- Top 5 Bearish Discovered --
+    {
+        "id": 45,
+        "name": "The Silent Trap / High Probability Breakdown",
+        // ML: IV=Low | Gamma- | Zomma- | Delta+ | Vex+ | Vega+ | Vomma+ | Speed+ (Edge: -0.0941)
+        "condition": { "IV": "Low", "Gamma": "Neg", "Zomma": "Neg", "Delta": "Pos", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Pos" },
+        "regime": "Transitional (To Trend Down)",
+        "action": "Aggressive Dealer Selling",
+        "actionDirection": "SELL",
+        "tilt": "High Danger of Violent Breakdown",
+        "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
+        "spreads": "Long Puts / CCS",
+        "entry": null, "emas": null, "approxBouncePts": null,
+        "stochastic": null, "vvixVix": "VIX Up", "reversalSignal": null, "trendEliminator": null
+    },
+    {
+        "id": 46,
+        "name": "Negative Convexity Cascade",
+        // ML: IV=Low | Gamma- | Zomma+ | Delta+ | Vex+ | Vega+ | Vomma+ | Speed+ (Edge: -0.0695)
+        "condition": { "IV": "Low", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Pos", "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Pos" },
+        "regime": "Trend Day (Violent Down)",
+        "action": "Forced Selling",
+        "actionDirection": "SELL",
+        "tilt": "Momentum Downside, Do not catch falling knives",
+        "flags": { "max_vanna_level": true, "ib_bounce": false, "dadu_pinning": false },
+        "spreads": null,
+        "entry": null, "emas": null, "approxBouncePts": null,
+        "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
+    },
+    {
+        "id": 47,
+        "name": "False Breakout Fail",
+        // ML: IV=Low | Gamma+ | Zomma+ | Delta+ | Vex- | Vega+ | Vomma+ | Speed- (Edge: -0.0574)
+        "condition": { "IV": "Low", "Gamma": "Pos", "Zomma": "Pos", "Delta": "Pos", "Vex": "Neg", "Vega": "Pos", "Vomma": "Pos", "Speed": "Neg" },
+        "regime": "Compression",
+        "action": "Dealer Fades Rally",
+        "actionDirection": "SELL",
+        "tilt": "Fade Upside Extremes",
+        "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": true },
+        "spreads": null,
+        "entry": null, "emas": null, "approxBouncePts": null,
+        "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
+    },
+    {
+        "id": 48,
+        "name": "High IV Liquidation Failure",
+        // ML: IV=High | Gamma+ | Zomma+ | Delta- | Vex- | Vega+ | Vomma+ | Speed+ (Edge: -0.0506)
+        "condition": { "IV": "High", "Gamma": "Pos", "Zomma": "Pos", "Delta": "Neg", "Vex": "Neg", "Vega": "Pos", "Vomma": "Pos", "Speed": "Pos" },
+        "regime": "Trend Day",
+        "action": "Selling Pressure",
+        "actionDirection": "SELL",
+        "tilt": "Trend Down despite Positive Gamma",
+        "flags": { "max_vanna_level": false, "ib_bounce": true, "dadu_pinning": false },
+        "spreads": null,
+        "entry": null, "emas": null, "approxBouncePts": null,
+        "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
+    },
+    {
+        "id": 49,
+        "name": "Vol-Expansion Downward Slide",
+        // ML: IV=Low | Gamma- | Zomma+ | Delta+ | Vex- | Vega+ | Vomma+ | Speed+ (Edge: -0.0463, N=3306)
+        "condition": { "IV": "Low", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Pos", "Vex": "Neg", "Vega": "Pos", "Vomma": "Pos", "Speed": "Pos" },
+        "regime": "Compression -> Transition",
+        "action": "Selling into Rips",
+        "actionDirection": "SELL",
+        "tilt": "Mean Reverting Downward",
+        "flags": { "max_vanna_level": false, "ib_bounce": false, "dadu_pinning": false },
+        "spreads": "CCS",
+        "entry": null, "emas": null, "approxBouncePts": null,
+        "stochastic": null, "vvixVix": null, "reversalSignal": null, "trendEliminator": null
     }
 ];
 
@@ -809,6 +956,8 @@ const MARKET_STRUCTURES = [
  * @param {number} vixPrevClose - VIX previous session close
  * @returns {"High"|"Low"}
  */
+
+/*
 function getIVState(vixCurrent, vixOpen, vixPrevClose) {
     if (vixCurrent !== null && vixOpen !== null && vixPrevClose !== null) {
         if (vixCurrent < vixOpen) return "Low";
@@ -816,7 +965,27 @@ function getIVState(vixCurrent, vixOpen, vixPrevClose) {
     }
     return "Low"; // conservative fallback
 }
+*/
+/**
+ * Determine IV state aligned with ML training logic (Dynamic Median/Average proxy).
+ * @param {number} currentIV    - Current implied volatility (VIX spot or ATM IV)
+ * @param {number} dynamicMean  - The dynamic average/median for the session (e.g., EMA20 or Daily Median)
+ * @returns {"High"|"Low"}
+ */
+function getIVState(currentIV, dynamicMean) {
+    // Si tenemos ambos datos, evaluamos como el modelo de LightGBM: 
+    // ¿Está el IV actual por encima de la tendencia/mediana central?
+    if (currentIV !== null && dynamicMean !== null) {
+        if (currentIV > dynamicMean) {
+            return "High";
+        } else {
+            return "Low";
+        }
+    }
 
+    // Fallback de seguridad si faltan datos
+    return "Low";
+}
 /**
  * VIX momentum confirmation (from "Dealers Action" rows 2–3).
  * Returns the momentum label and regime change signal.
@@ -866,7 +1035,7 @@ function resampleTo5Min(series1m) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 async function fetchTechnicals(dateStr) {
-    let vixOpen = null, vix9dValue = null, vixEMA20 = null, vixPrevClose = null;
+    let vixOpen = null, vix9dValue = null, vixEMA20 = null, vixEMA5 = null, vixEMA15 = null, vixPrevClose = null;
 
     try {
         const vixIB = await fetchIBData("VIX", dateStr);
@@ -876,7 +1045,9 @@ async function fetchTechnicals(dateStr) {
                 ? (startMarket.open ?? startMarket.price)
                 : (vixIB.series[0].open ?? vixIB.series[0].price);
             const vix5m = resampleTo5Min(vixIB.series);
-            vixEMA20 = calculateEMA(vix5m, 20);
+            vixEMA20 = calculateEMA(vix5m, 20); // Mantenemos este para el IV State dinámico
+            vixEMA5 = calculateEMA(vix5m, 5);   // NUEVO: Media rápida del VIX
+            vixEMA15 = calculateEMA(vix5m, 15); // NUEVO: Media lenta del VIX
             vix9dValue = vixIB.series[vixIB.series.length - 1].price;
         }
 
@@ -884,6 +1055,8 @@ async function fetchTechnicals(dateStr) {
         if (vix9dIB?.series?.length > 0) {
             vix9dValue = vix9dIB.series[vix9dIB.series.length - 1].price;
             vixEMA20 = calculateEMA(resampleTo5Min(vix9dIB.series), 20);
+            vixEMA5 = calculateEMA(resampleTo5Min(vix9dIB.series), 5);
+            vixEMA15 = calculateEMA(resampleTo5Min(vix9dIB.series), 15);
         }
 
         const vixLive = await fetchChartData("VIX", "weekly");
@@ -905,7 +1078,7 @@ async function fetchTechnicals(dateStr) {
         console.warn("Error fetching SPX technicals", e);
     }
 
-    return { vixOpen, vixPrevClose, vixEMA20, vix9dValue, spotEMA20, spotEMA50 };
+    return { vixOpen, vixPrevClose, vixEMA20, vixEMA5, vixEMA15, vix9dValue, spotEMA20, spotEMA50 };
 }
 
 
@@ -979,13 +1152,14 @@ async function runMarketStructureEngine(ticker = "SPX") {
         if (vixLive?.spot_price) vixCurrent = vixLive.spot_price;
     } catch (_) { }
 
-    const ivState = getIVState(vixCurrent, tech.vixOpen, tech.vixPrevClose);
+    //const ivState = getIVState(vixCurrent, tech.vixOpen, tech.vixPrevClose);
+    const ivState = getIVState(vixCurrent, tech.vixEMA20);
 
     // 4. VIX Momentum overlay (rows 2–3 of "Dealers Action")
     const vixMomentum = getVIXMomentum(
-        tech.vixEMA20,       // proxy for 5MA (calculated from 5m bars)
-        tech.spotEMA20,      // NOTE: replace with a true 15MA source if available
-        0.433696             // regime change threshold from cell D3
+        tech.vixEMA5,       // proxy for 5MA (calculated from 5m bars)
+        tech.vixEMA15,      // NOTE: replace with a true 15MA source if available
+        0.15             // regime change threshold from cell D3
     );
 
     // 5. Build conditions matrix
