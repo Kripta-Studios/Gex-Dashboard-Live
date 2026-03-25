@@ -4,7 +4,7 @@ from pathlib import Path
 
 def compile_latex_directory():
     # Set up directory paths
-    current_dir = Path.cwd()
+    current_dir = Path(__file__).resolve().parent
     output_dir = current_dir / "pdfs"
     output_dir.mkdir(exist_ok=True)
 
@@ -13,7 +13,7 @@ def compile_latex_directory():
     tex_files = list(current_dir.glob("*.tex"))
     
     if not tex_files:
-        print("No .tex files found in the current directory.")
+        print(f"No .tex files found in {current_dir}")
         return
 
     print(f"--- Checking for changes in {len(tex_files)} files ---")
