@@ -88,12 +88,12 @@ ENDPOINTS_0DTE  = ["greeks", "oi", "iv", "ohlc"]
 ENDPOINTS_WEEKLY = ["greeks", "oi"]
 
 # Spot indices/stocks to fetch
-SPOT_SYMBOLS = ["SPX", "QQQ", "VIX", "TLT"]
+SPOT_SYMBOLS = ["QQQ", "SPY", "VIX", "TLT"]
 
 # Map trading ticker → options symbol
 OPTIONS_TICKERS = {
-    "SPX": "SPXW",   # SPX uses SPXW options
     "QQQ": "QQQ",    # QQQ uses QQQ options directly
+    "SPY": "SPY",    # SPY uses SPY options (American-style)
 }
 
 
