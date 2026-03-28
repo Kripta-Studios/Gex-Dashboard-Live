@@ -76,32 +76,35 @@ DISCORD_WEBHOOKS = [url for url in [DISCORD_WEBHOOK_URL, DISCORD_WEBHOOK_URL_2] 
 DISCORD_ROLE_PING = os.getenv("DISCORD_ROLE_PING", "<@&1464601287411634226>")
 DISCORD_ENABLED = len(DISCORD_WEBHOOKS) > 0
 
-# Process both SPX and QQQ
-TICKERS = ["SPX", "QQQ"]
-POINT_VALUES = {"SPX": 50.0, "SPY": 100.0, "QQQ": 100.0}
+# Process SPX, QQQ, and SPY
+TICKERS = ["QQQ", "SPY"]
+POINT_VALUES = {"SPY": 100.0, "QQQ": 100.0}
 MODEL_SIZE = "small"
 
 # Map trading ticker → options symbol (matches training data)
 OPTIONS_SYMBOLS = {
-    "SPX": "SPXW",  # SPX uses SPXW options
     "QQQ": "QQQ",   # QQQ uses QQQ options directly
+    "SPY": "SPY",   # SPY uses SPY options (American-style)
 }
 
 # Spot source symbol (for underlying derived data)
 SPOT_SOURCES = {
-    "SPX": "SPX",   # SPX uses SPXW underlying derived
     "QQQ": "QQQ",   # QQQ uses QQQ underlying derived
+    "SPY": "SPY",   # SPY uses SPY underlying derived
 }
 
 # Timing
 LOOP_INTERVAL = 65  # seconds — aligned with realtime_feed's 60s poll interval
 COOLDOWN_MINUTES = 15
+EOD_CLEANUP_MINUTE = 55  # minute of 15:XX EST at which EOD cleanup triggers
 
 # GBM Spot-Based TP/SL Configuration (mirrors backtest_rl.py simulate_mlp_only)
 GBM_TARGET_LONG = 0.010       # +1.0% spot move target for LONG
 GBM_TARGET_SHORT = 0.010      # +1.0% spot move target for SHORT
 GBM_STOP_PCT = 0.003          # 0.3% adverse spot move stop loss
 GBM_MAX_HOLD_MINUTES = 180    # 3 hours max hold
+GBM_TRAILING_STOP_PCT = 0.0030 # 0.30% spot retrace from peak (user requested)
+GBM_TRAILING_ACTIVATION_PCT = 0.0050 # Activate trailing at +0.50% spot profit
 # IB constants
 LEVEL_PROXIMITY_THRESHOLD = 0.0015
 
@@ -349,6 +352,7 @@ class GBMSignalTracker:
         self.target_pct = GBM_TARGET_LONG if direction == "LONG" else GBM_TARGET_SHORT
         self.stop_pct = GBM_STOP_PCT
         self.max_hold_minutes = GBM_MAX_HOLD_MINUTES
+        self.peak_price = entry_price  # Track peak favorable price
 
         # Pre-compute target/stop prices
         if direction == "LONG":
@@ -366,21 +370,39 @@ class GBMSignalTracker:
         hold_minutes = (now - self.entry_time).total_seconds() / 60.0
 
         if self.direction == "LONG":
+            self.peak_price = max(self.peak_price, current_price)
             pnl_pct = (current_price - self.entry_price) / self.entry_price
+            peak_pnl = (self.peak_price - self.entry_price) / self.entry_price
+            
             if current_price >= self.target_price:
                 return {"reason": "target", "exit_price": current_price,
                         "pnl_pct": pnl_pct, "hold_min": hold_minutes}
             if current_price <= self.stop_price:
                 return {"reason": "stop", "exit_price": current_price,
                         "pnl_pct": pnl_pct, "hold_min": hold_minutes}
+            
+            # Trailing Stop check
+            if peak_pnl >= GBM_TRAILING_ACTIVATION_PCT:
+                if (self.peak_price - current_price) / self.entry_price >= GBM_TRAILING_STOP_PCT:
+                    return {"reason": "trailing_stop", "exit_price": current_price,
+                            "pnl_pct": pnl_pct, "hold_min": hold_minutes}
         else:  # SHORT
+            self.peak_price = min(self.peak_price, current_price)
             pnl_pct = (self.entry_price - current_price) / self.entry_price
+            peak_pnl = (self.entry_price - self.peak_price) / self.entry_price
+            
             if current_price <= self.target_price:
                 return {"reason": "target", "exit_price": current_price,
                         "pnl_pct": pnl_pct, "hold_min": hold_minutes}
             if current_price >= self.stop_price:
                 return {"reason": "stop", "exit_price": current_price,
                         "pnl_pct": pnl_pct, "hold_min": hold_minutes}
+            
+            # Trailing Stop check
+            if peak_pnl >= GBM_TRAILING_ACTIVATION_PCT:
+                if (current_price - self.peak_price) / self.entry_price >= GBM_TRAILING_STOP_PCT:
+                    return {"reason": "trailing_stop", "exit_price": current_price,
+                            "pnl_pct": pnl_pct, "hold_min": hold_minutes}
 
         if hold_minutes >= self.max_hold_minutes:
             if self.direction == "LONG":
@@ -398,6 +420,7 @@ class GBMSignalTracker:
             "entry_price": self.entry_price, "confidence": self.confidence,
             "entry_time": self.entry_time.isoformat(),
             "target_price": self.target_price, "stop_price": self.stop_price,
+            "peak_price": self.peak_price,
         }
 
     @classmethod
@@ -410,6 +433,7 @@ class GBMSignalTracker:
         # Restore pre-computed levels from saved state
         tracker.target_price = d["target_price"]
         tracker.stop_price = d["stop_price"]
+        tracker.peak_price = d.get("peak_price", d["entry_price"])
         return tracker
 
 
@@ -443,6 +467,10 @@ class RLTradingBot:
         self.net_charm_history = {t: deque(maxlen=60) for t in TICKERS}
         self.net_gamma_window = {t: deque(maxlen=100) for t in TICKERS}
         self.wonham_probs = {t: 0.5 for t in TICKERS}
+
+        # Track volume for PCR calculation
+        self._prev_call_vol = {t: 0 for t in TICKERS}
+        self._prev_put_vol = {t: 0 for t in TICKERS}
 
         # GBM signal tracking (avoid spamming repeated signals)
         self._last_gbm_direction = {}
@@ -515,40 +543,36 @@ class RLTradingBot:
         except Exception as e:
             logger.error(f"Failed to save positions: {e}")
 
+    def _is_past_eod(self, now: datetime = None) -> bool:
+        """Check if current time is past EOD cleanup cutoff (15:55 EST)."""
+        if now is None:
+            now = datetime.now(ET)
+        return (now.hour > 15) or (now.hour == 15 and now.minute >= EOD_CLEANUP_MINUTE)
+
     def _load_positions(self):
-        """Restore positions from disk. Cleans up stale positions from previous days."""
+        """Restore positions from disk (passive load — no cleanup, no Discord)."""
         if not os.path.exists(POSITIONS_FILE):
             return
         try:
             with open(POSITIONS_FILE) as f:
                 data = json.load(f)
             
-            now = datetime.now(ET)
             for ticker, d in data.items():
                 pos = RLPosition.from_dict(d)
-                
-                # Check for stale position (different day)
-                if pos.entry_time.date() != now.date():
-                    dur_days = (now.date() - pos.entry_time.date()).days
-                    logger.warning(f"[{ticker}] Clearing stale position from {dur_days} days ago: {pos.strike:.0f}")
-                    self._close_stale_position(ticker, pos)
-                    continue
-
                 self.positions[ticker] = pos
-                dur = (now - pos.entry_time).total_seconds() / 60
-                logger.info(f"Restored: {ticker} {d['direction']} {d['strike']:.0f} ({dur:.0f}min)")
-            
-            # Save any changes (in case we cleared stale positions)
-            self._save_positions()
+                logger.info(f"Loaded position: {ticker} {d['direction']} {d['strike']:.0f}")
         except Exception as e:
             logger.error(f"Failed to load positions: {e}")
 
-    def _close_stale_position(self, ticker: str, pos: RLPosition):
-        """Close a position that was found to be from a previous day during startup."""
-        pnl_pct = -1.0  # 100% loss since 0DTE expired
+    def _close_stale_position(self, ticker: str, pos: RLPosition, reason: str = "STALE_RECOVERY"):
+        """Close a position found stale (previous day) or past EOD during startup."""
+        # EOD_CLOSE uses last known PnL; STALE_RECOVERY assumes -100% (0DTE expired)
+        if reason == "EOD_CLOSE":
+            pnl_pct = pos.prev_pnl_pct
+        else:
+            pnl_pct = -1.0
         pnl_dollars = pnl_pct * pos.entry_premium * POINT_VALUES.get(ticker, 100)
         
-        # Log to trade history
         now = datetime.now(ET)
         trade = {
             "ticker": ticker, "direction": pos.direction,
@@ -556,17 +580,15 @@ class RLTradingBot:
             "entry_premium": pos.entry_premium,
             "pnl_pct": pnl_pct, "pnl_dollars": pnl_dollars,
             "hold_minutes": (now - pos.entry_time).total_seconds() / 60,
-            "exit_reason": "STALE_RECOVERY",
+            "exit_reason": reason,
             "confidence": pos.confidence, "bucket": pos.bucket,
             "entry_time": pos.entry_time.isoformat(),
             "exit_time": now.isoformat(),
         }
-        
-        # Append to daily trades file (of the trade's OWN date if possible, or today)
         self._log_trade_history(trade, now, "trades_rl")
 
         discord_close(ticker, pos.direction, pos.strike, pnl_pct, pnl_dollars, 
-                      (now - pos.entry_time).total_seconds() / 60, "STALE_RECOVERY",
+                      (now - pos.entry_time).total_seconds() / 60, reason,
                       expiration=pos.expiration)
 
     def _save_gbm_signals(self):
@@ -623,48 +645,49 @@ class RLTradingBot:
             logger.error(f"Failed to save GBM trackers: {e}")
 
     def _load_gbm_trackers(self):
-        """Restore GBM trackers from disk. Cleans up stale trackers from previous days."""
+        """Restore GBM trackers from disk (passive load — no cleanup, no Discord)."""
         if not os.path.exists(GBM_TRACKERS_FILE):
             return
         try:
             with open(GBM_TRACKERS_FILE) as f:
                 data = json.load(f)
             
-            now = datetime.now(ET)
             for ticker, d in data.items():
                 tracker = GBMSignalTracker.from_dict(d)
-                
-                # Check for stale tracker (different day)
-                if tracker.entry_time.date() != now.date():
-                    logger.warning(f"[{ticker}][GBM] Clearing stale tracker from a previous day: {tracker.direction}")
-                    self._close_stale_tracker(ticker, tracker)
-                    continue
-
                 self.gbm_trackers[ticker] = tracker
-                dur = (now - tracker.entry_time).total_seconds() / 60
                 logger.info(
-                    f"Restored GBM tracker: {ticker} {d['direction']} @ {d['entry_price']:.2f} "
-                    f"(TP:{d['target_price']:.2f} SL:{d['stop_price']:.2f}, {dur:.0f}min)")
-            
-            # Save any changes
-            self._save_gbm_trackers()
+                    f"Loaded GBM tracker: {ticker} {d['direction']} @ {d['entry_price']:.2f} "
+                    f"(TP:{d['target_price']:.2f} SL:{d['stop_price']:.2f})")
         except Exception as e:
             logger.error(f"Failed to load GBM trackers: {e}")
 
-    def _close_stale_tracker(self, ticker: str, tracker: GBMSignalTracker):
-        """Close a GBM tracker that was found to be from a previous day during startup."""
+    def _close_stale_tracker(self, ticker: str, tracker: GBMSignalTracker, reason: str = "STALE_RECOVERY"):
+        """Close a GBM tracker found stale or past EOD."""
         now = datetime.now(ET)
+
+        # EOD_CLOSE: estimate real PnL from last known price direction
+        if reason == "EOD_CLOSE":
+            # Use peak_price as best exit proxy (market was still open recently)
+            exit_price = tracker.peak_price
+            if tracker.direction == "LONG":
+                pnl_pct = (exit_price - tracker.entry_price) / tracker.entry_price
+            else:
+                pnl_pct = (tracker.entry_price - exit_price) / tracker.entry_price
+        else:
+            exit_price = tracker.entry_price * 0.5
+            pnl_pct = -0.5
+
+        hold_min = (now - tracker.entry_time).total_seconds() / 60
         discord_gbm_track_close(
             ticker, tracker.direction, tracker.entry_price,
-            tracker.entry_price * 0.5, -0.5, (now - tracker.entry_time).total_seconds() / 60, 
-            "STALE_RECOVERY")
+            exit_price, pnl_pct, hold_min, reason)
 
         trade = {
             "model": "GBM", "ticker": ticker, "direction": tracker.direction,
-            "entry_price": tracker.entry_price, "exit_price": tracker.entry_price * 0.5,
-            "pnl_pct": -0.5, "pnl_dollars": 0.0,
-            "hold_minutes": (now - tracker.entry_time).total_seconds() / 60,
-            "exit_reason": "STALE_RECOVERY", "confidence": tracker.confidence,
+            "entry_price": tracker.entry_price, "exit_price": exit_price,
+            "pnl_pct": pnl_pct, "pnl_dollars": 0.0,
+            "hold_minutes": hold_min,
+            "exit_reason": reason, "confidence": tracker.confidence,
             "entry_time": tracker.entry_time.isoformat(), "exit_time": now.isoformat()
         }
         self._log_trade_history(trade, now, "trades_gbm")
@@ -722,7 +745,7 @@ class RLTradingBot:
                 return subdirs[0]
         return d
 
-    def _get_previous_trading_days(self, n: int = 5) -> list:
+    def _get_previous_trading_days(self, n: int = 10) -> list:
         """Return the last N trading days before today (Mon-Fri)."""
         today = datetime.now(ET).date()
         result = []
@@ -735,9 +758,9 @@ class RLTradingBot:
 
     def _load_historical_ib_levels(self, ticker: str):
         """
-        Load Historical IB (D-1 to D-5) from previous days' spot data.
+        Load Historical IB (D-1 to D-10) from previous days' spot data.
         """
-        prev_days = self._get_previous_trading_days(5)
+        prev_days = self._get_previous_trading_days(10)
         self.historical_ibs[ticker] = []
 
         spot_source = SPOT_SOURCES.get(ticker, ticker)
@@ -807,11 +830,11 @@ class RLTradingBot:
                 logger.warning(f"Failed to load historical IB for {ticker} {day_str}: {e}")
                 self.historical_ibs[ticker].append(None)
 
-        while len(self.historical_ibs[ticker]) < 5:
+        while len(self.historical_ibs[ticker]) < 10:
             self.historical_ibs[ticker].append(None)
 
         loaded = sum(1 for h in self.historical_ibs[ticker] if h is not None)
-        logger.info(f"[{ticker}] Historical IB: {loaded}/5 days loaded")
+        logger.info(f"[{ticker}] Historical IB: {loaded}/10 days loaded")
 
     _stale_last_warned: dict = {}
 
@@ -1012,6 +1035,41 @@ class RLTradingBot:
             atm_iv = atm_iv / 100.0
         return max(atm_iv, 0.01)
 
+    def _compute_pcr_val(self, ticker: str, spot: float, day_atr: float) -> float:
+        """Compute delta-filtered PCR proxy using recent option volume."""
+        options_symbol = OPTIONS_SYMBOLS.get(ticker, ticker)
+        df_opt = self._read_parquet(f"{options_symbol}_ohlc_0dte_latest.parquet")
+        
+        pcr_val = 0.5
+        if df_opt is not None and not df_opt.empty and 'volume' in df_opt.columns and 'strike' in df_opt.columns and 'right' in df_opt.columns:
+            try:
+                otm_range = 1.5 * day_atr
+                df_calls_otm = df_opt[
+                    (df_opt['right'].str.upper().isin(['CALL', 'C'])) &
+                    (df_opt['strike'].between(spot, spot + otm_range))
+                ]
+                df_puts_otm = df_opt[
+                    (df_opt['right'].str.upper().isin(['PUT', 'P'])) &
+                    (df_opt['strike'].between(spot - otm_range, spot))
+                ]
+                call_vol = float(df_calls_otm['volume'].sum())
+                put_vol = float(df_puts_otm['volume'].sum())
+                
+                prev_vol_c = self._prev_call_vol.get(ticker, 0)
+                prev_vol_p = self._prev_put_vol.get(ticker, 0)
+                
+                min_call_vol = max(0, call_vol - prev_vol_c)
+                min_put_vol = max(0, put_vol - prev_vol_p)
+                
+                self._prev_call_vol[ticker] = call_vol
+                self._prev_put_vol[ticker] = put_vol
+                
+                if min_call_vol + min_put_vol > 0:
+                    pcr_val = min_put_vol / (min_call_vol + 1e-6)
+            except Exception as e:
+                logger.error(f"[{ticker}] Error calculating PCR: {e}")
+        return pcr_val
+
     def _calculate_current_atr(self, ticker: str) -> float:
         """Calculate 15-day ATR from historical daily ranges (high-low)."""
         hist = self.historical_ibs.get(ticker, [])
@@ -1142,6 +1200,77 @@ class RLTradingBot:
 
             del self.gbm_trackers[ticker]
             self._save_gbm_trackers()
+            
+            # Set cooldown so we don't instantly re-enter a new trade
+            self.last_trade_time[ticker] = now
+            self._save_cooldowns()
+
+            # Reset last known direction so the next signal (even same direction)
+            # triggers a fresh Discord alert and creates a new tracker, BUT only after cooldown
+            self._last_gbm_direction[ticker] = None
+            self._save_gbm_signals()
+
+    def _execute_eod_cleanup(self, ticker: str, spot: float, now: datetime):
+        """Forcefully close open positions and trackers at End of Day (15:55 EST)."""
+        closed_something = False
+
+        # Close RL Position
+        if ticker in self.positions:
+            pos = self.positions.pop(ticker)
+            pnl_pct = pos.prev_pnl_pct
+            pnl_dollars = pnl_pct * pos.entry_premium * POINT_VALUES.get(ticker, 100)
+            hold_min = (now - pos.entry_time).total_seconds() / 60
+            
+            self.daily_pnl += pnl_dollars
+            self.last_trade_time[ticker] = now
+            self._save_cooldowns()
+            self._save_positions()
+            
+            logger.info(f"[{ticker}] EOD_CLOSE RL | {pnl_pct:+.1%} | ${pnl_dollars:+.1f} | {hold_min:.0f}min")
+            discord_close(ticker, pos.direction, pos.strike, pnl_pct, pnl_dollars, hold_min, "EOD_CLOSE", expiration=pos.expiration)
+            
+            trade = {
+                "ticker": ticker, "direction": pos.direction,
+                "strike": pos.strike, "delta": pos.delta,
+                "entry_premium": pos.entry_premium,
+                "pnl_pct": pnl_pct, "pnl_dollars": pnl_dollars,
+                "hold_minutes": hold_min, "exit_reason": "EOD_CLOSE",
+                "confidence": pos.confidence, "bucket": pos.bucket,
+                "entry_time": pos.entry_time.isoformat(),
+                "exit_time": now.isoformat(),
+            }
+            self._log_trade_history(trade, now, "trades_rl")
+            closed_something = True
+
+        # Close GBM Tracker
+        if ticker in self.gbm_trackers:
+            tracker = self.gbm_trackers.pop(ticker)
+            
+            if tracker.direction == "LONG":
+                pnl_pct = (spot - tracker.entry_price) / tracker.entry_price
+            else:
+                pnl_pct = (tracker.entry_price - spot) / tracker.entry_price
+                
+            hold_min = (now - tracker.entry_time).total_seconds() / 60
+            
+            logger.info(f"[{ticker}][GBM] EOD_CLOSE | {tracker.direction} entry={tracker.entry_price:.2f} exit={spot:.2f} pnl={pnl_pct:+.2%} hold={hold_min:.0f}min")
+            discord_gbm_track_close(ticker, tracker.direction, tracker.entry_price, spot, pnl_pct, hold_min, "EOD_CLOSE")
+            
+            trade = {
+                "model": "GBM", "ticker": ticker, "direction": tracker.direction,
+                "entry_price": tracker.entry_price, "exit_price": spot,
+                "pnl_pct": pnl_pct, "pnl_dollars": 0.0,
+                "hold_minutes": hold_min, "exit_reason": "EOD_CLOSE",
+                "confidence": tracker.confidence,
+                "entry_time": tracker.entry_time.isoformat(), "exit_time": now.isoformat()
+            }
+            self._log_trade_history(trade, now, "trades_gbm")
+            self._save_gbm_trackers()
+            closed_something = True
+
+        if closed_something:
+            self._last_gbm_direction[ticker] = None
+            self._save_gbm_signals()
 
     def process_ticker(self, ticker: str):
         """Process a single ticker through GBM+RL pipeline."""
@@ -1174,6 +1303,11 @@ class RLTradingBot:
             spot = exp_0dte["spot_price"]
         if spot <= 0:
             logger.info(f"[{ticker}] NO-TRADE: spot=0")
+            return
+
+        # --- EOD CLEANUP (15:55 EST) ---
+        if self._is_past_eod(now):
+            self._execute_eod_cleanup(ticker, spot, now)
             return
 
         FROZEN_CYCLES_THRESHOLD = 5  # ciclos de 65s = ~5.4 mins congelado
@@ -1237,7 +1371,10 @@ class RLTradingBot:
             self.iv_history[ticker].append(atm_iv / 100.0 if atm_iv > 1.0 else atm_iv)
         self.net_gamma_window[ticker].append(exp_0dte.get("net_gamma", 0.0))
         self.net_charm_history[ticker].append(exp_0dte.get("net_charm", 0.0))
-        self.pcr_history[ticker].append(0.5) 
+        
+        day_atr = self._calculate_current_atr(ticker)
+        pcr_val = self._compute_pcr_val(ticker, spot, day_atr)
+        self.pcr_history[ticker].append(pcr_val) 
         
         if tlt_spot > 0:
              self.tlt_price_history.append((minutes_since_open, tlt_spot))
@@ -1260,11 +1397,17 @@ class RLTradingBot:
         if gbm_result and gbm_result["direction"] == "HOLD":
             logger.info(f"[{ticker}] NO-TRADE: GBM says HOLD conf={gbm_result['confidence']:.0%}")
         elif gbm_result and gbm_result["confidence"] < GBM_MIN_CONFIDENCE:
+            if ticker not in self.positions:
+                logger.info(
+                    f"[{ticker}] NO-TRADE: GBM confidence insufficient "
+                    f"{gbm_result['confidence']:.0%} < {GBM_MIN_CONFIDENCE:.0%} required"
+                )
+                return
+            # If position is open, fall through to ITS for exit evaluation
             logger.info(
-                f"[{ticker}] NO-TRADE: GBM confidence insufficient "
-                f"{gbm_result['confidence']:.0%} < {GBM_MIN_CONFIDENCE:.0%} required"
+                f"[{ticker}] GBM conf low ({gbm_result['confidence']:.0%}) "
+                f"but position open — evaluating exit"
             )
-            return
 
         # 6. Load real options chain for RL
         calls, puts, expiration = self._load_options_chain(ticker)
@@ -1275,7 +1418,8 @@ class RLTradingBot:
             market_features=features,
             options_data=options_data,
             spot=spot,
-            timestamp=now
+            timestamp=now,
+            has_real_position=(ticker in self.positions),
         )
 
         action = result.get("action", "NO_SIGNAL")
@@ -1315,36 +1459,42 @@ class RLTradingBot:
         if gbm_result and gbm_result["direction"] != "HOLD" and gbm_result["confidence"] >= GBM_MIN_CONFIDENCE:
             last_gbm = self._last_gbm_direction.get(ticker)
             if gbm_result["direction"] != last_gbm:
-                rl_action = result.get("action", "")
-                if rl_action.startswith("BUY_CALL"):
-                    rl_dir = "LONG"
-                elif rl_action.startswith("BUY_PUT"):
-                    rl_dir = "SHORT"
+                # Check cooldown before tracking again
+                last = self.last_trade_time.get(ticker)
+                if last and (now - last).total_seconds() / 60 < COOLDOWN_MINUTES:
+                    elapsed = (now - last).total_seconds() / 60
+                    logger.info(f"[{ticker}][GBM] NO-TRADE: cooldown active ({elapsed:.1f} min elapsed) - suppressing GBM tracker")
                 else:
-                    rl_dir = None
-                discord_gbm_signal(
-                    ticker, gbm_result["direction"], gbm_result["confidence"],
-                    gbm_result["probs"], rl_direction=rl_dir)
-                self._last_gbm_direction[ticker] = gbm_result["direction"]
-                self._save_gbm_signals()
+                    rl_action = result.get("action", "")
+                    if rl_action.startswith("BUY_CALL"):
+                        rl_dir = "LONG"
+                    elif rl_action.startswith("BUY_PUT"):
+                        rl_dir = "SHORT"
+                    else:
+                        rl_dir = None
+                    discord_gbm_signal(
+                        ticker, gbm_result["direction"], gbm_result["confidence"],
+                        gbm_result["probs"], rl_direction=rl_dir)
+                    self._last_gbm_direction[ticker] = gbm_result["direction"]
+                    self._save_gbm_signals()
 
-                # Create spot-based tracker if not already tracking this ticker
-                if ticker not in self.gbm_trackers:
-                    tracker = GBMSignalTracker(
-                        ticker=ticker,
-                        direction=gbm_result["direction"],
-                        entry_price=spot,
-                        confidence=gbm_result["confidence"],
-                        entry_time=now,
-                    )
-                    self.gbm_trackers[ticker] = tracker
-                    logger.info(
-                        f"[{ticker}][GBM] Tracking {gbm_result['direction']} @ {spot:.2f} | "
-                        f"TP: {tracker.target_price:.2f} | SL: {tracker.stop_price:.2f}")
-                    discord_gbm_track_open(
-                        ticker, gbm_result["direction"], spot,
-                        gbm_result["confidence"], tracker.target_price, tracker.stop_price)
-                    self._save_gbm_trackers()
+                    # Create spot-based tracker if not already tracking this ticker
+                    if ticker not in self.gbm_trackers:
+                        tracker = GBMSignalTracker(
+                            ticker=ticker,
+                            direction=gbm_result["direction"],
+                            entry_price=spot,
+                            confidence=gbm_result["confidence"],
+                            entry_time=now,
+                        )
+                        self.gbm_trackers[ticker] = tracker
+                        logger.info(
+                            f"[{ticker}][GBM] Tracking {gbm_result['direction']} @ {spot:.2f} | "
+                            f"TP: {tracker.target_price:.2f} | SL: {tracker.stop_price:.2f}")
+                        discord_gbm_track_open(
+                            ticker, gbm_result["direction"], spot,
+                            gbm_result["confidence"], tracker.target_price, tracker.stop_price)
+                        self._save_gbm_trackers()
         elif gbm_result and gbm_result["direction"] == "HOLD":
             if self._last_gbm_direction.get(ticker) is not None:
                 self._last_gbm_direction[ticker] = None
@@ -1358,6 +1508,8 @@ class RLTradingBot:
                     f"[{ticker}] NO-TRADE: cooldown active "
                     f"({elapsed:.1f} min elapsed, requires {COOLDOWN_MINUTES} min)"
                 )
+                # Rollback ITS state: it already set open_position internally
+                self.systems[ticker]._reset_position_state()
                 return
 
             if ticker in self.positions:
@@ -1366,6 +1518,8 @@ class RLTradingBot:
                     f"[{ticker}] NO-TRADE: already in position "
                     f"{pos.direction} strike={pos.strike:.0f} since {pos.entry_time.strftime('%H:%M')}"
                 )
+                # Rollback ITS state: wrapper rejected the entry
+                self.systems[ticker]._reset_position_state()
                 return
 
             details = result.get("details", {})
@@ -1442,16 +1596,86 @@ class RLTradingBot:
         market_close = now.replace(hour=16, minute=0, second=0)
         return market_open <= now <= market_close
 
+    def _startup_cleanup(self):
+        """
+        Run once when market opens. Closes any stale (previous day) or
+        post-EOD (same day, past 15:55) positions/trackers WITH Discord
+        notifications so the trade tracker picks them up.
+        """
+        now = datetime.now(ET)
+        cleaned = False
+
+        # --- RL Positions ---
+        stale_tickers = []
+        for ticker, pos in list(self.positions.items()):
+            if pos.entry_time.date() != now.date():
+                reason = "STALE_RECOVERY"
+                dur_days = (now.date() - pos.entry_time.date()).days
+                logger.warning(f"[{ticker}] Startup cleanup: stale position from {dur_days} days ago")
+            elif self._is_past_eod(now):
+                reason = "EOD_CLOSE"
+                logger.warning(f"[{ticker}] Startup cleanup: same-day post-EOD position")
+            else:
+                continue  # valid position, keep it
+
+            self._close_stale_position(ticker, pos, reason=reason)
+            stale_tickers.append(ticker)
+            cleaned = True
+
+        for t in stale_tickers:
+            self.positions.pop(t, None)
+        if stale_tickers:
+            self._save_positions()
+
+        # --- GBM Trackers ---
+        stale_tracker_tickers = []
+        for ticker, tracker in list(self.gbm_trackers.items()):
+            if tracker.entry_time.date() != now.date():
+                reason = "STALE_RECOVERY"
+                logger.warning(f"[{ticker}][GBM] Startup cleanup: stale tracker from previous day")
+            elif self._is_past_eod(now):
+                reason = "EOD_CLOSE"
+                logger.warning(f"[{ticker}][GBM] Startup cleanup: same-day post-EOD tracker")
+            else:
+                continue  # valid tracker, keep it
+
+            self._close_stale_tracker(ticker, tracker, reason=reason)
+            stale_tracker_tickers.append(ticker)
+            cleaned = True
+
+        for t in stale_tracker_tickers:
+            self.gbm_trackers.pop(t, None)
+        if stale_tracker_tickers:
+            self._save_gbm_trackers()
+
+        # --- Wipe auxiliary JSON if anything was cleaned ---
+        if cleaned:
+            self._last_gbm_direction = {}
+            self._save_gbm_signals()
+            self.last_trade_time = {}
+            self._save_cooldowns()
+            logger.info("Startup cleanup complete — stale JSON state cleared.")
+
     def run(self):
         """Main loop."""
         logger.info("Starting GBM+RL Trading Bot (Parquet pipeline)")
         discord_status("Bot started")
+        startup_cleanup_done = False
 
         while True:
             try:
                 if not self.is_market_hours():
+                    # Outside market hours: just sleep. No cleanup here
+                    # because the Discord trade tracker ignores messages
+                    # sent outside market hours.
+                    startup_cleanup_done = False  # reset so cleanup runs on next open
                     time.sleep(60)
                     continue
+
+                # First market-hours loop: clean up stale/EOD positions
+                if not startup_cleanup_done:
+                    self._startup_cleanup()
+                    startup_cleanup_done = True
 
                 for ticker in TICKERS:
                     try:
