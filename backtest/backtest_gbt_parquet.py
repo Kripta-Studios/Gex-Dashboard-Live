@@ -65,6 +65,10 @@ def _calc_contracts_futures(risk_capital: float, entry_price: float,
     raw_contracts = int(risk_capital / max_loss_per_contract)
     return max(1, min(raw_contracts, MAX_CONTRACTS))
 
+# --- GBM EXIT CONSTANTS ---
+GBM_TRAILING_ACTIVATION_PCT = 0.0050  # 0.50% spot profit to activate
+GBM_TRAILING_STOP_PCT = 0.0030        # 0.30% retrace from peak to exit
+
 # --- TRADE SIMULATION ---
 class TradeSimulator:
     """Simulates trades based on model predictions with cooldown to prevent overtrading."""
@@ -167,6 +171,7 @@ class TradeSimulator:
             "/NQ": 20.0,
             "SPY": 100.0,
             "QQQ": 100.0,
+            "IWM": 100.0,
         }
         
         for idx, row in df_work.iterrows():
@@ -239,7 +244,9 @@ class TradeSimulator:
             actual_hold_minutes = hold_minutes
             target_hit = False
             stop_hit = False
+            trailing_stop_hit = False
             mae = 0.0
+            peak_price = entry_price
 
             base_target = self.target_long if direction == "LONG" else self.target_short
             
@@ -283,11 +290,19 @@ class TradeSimulator:
                         # Realistic: check overlapping ranges.
                         
                         if direction == "LONG":
-                            # Track MAE
-                            if l < entry_price:
-                                current_mae = (l - entry_price) / entry_price
-                                mae = min(mae, current_mae)
-                                
+                            # Peak tracking
+                            peak_price = max(peak_price, h)
+                            peak_pnl = (peak_price - entry_price) / entry_price
+                            
+                            # Trailing stop check
+                            if peak_pnl >= GBM_TRAILING_ACTIVATION_PCT:
+                                if (peak_price - l) / entry_price >= GBM_TRAILING_STOP_PCT:
+                                    exit_price = peak_price - (entry_price * GBM_TRAILING_STOP_PCT)
+                                    trailing_stop_hit = True
+                                    actual_hold_minutes = m - current_minute
+                                    found_exit_scan = True
+                                    break
+
                             # Stop Loss (Low triggers it)
                             if l <= entry_price * (1 - self.stop_pct):
                                 exit_price = entry_price * (1 - self.stop_pct)
@@ -305,11 +320,19 @@ class TradeSimulator:
                                 break
                                 
                         else: # SHORT
-                            # Track MAE
-                            if h > entry_price:
-                                current_mae = (entry_price - h) / entry_price
-                                mae = min(mae, current_mae)
-                                
+                            # Peak tracking
+                            peak_price = min(peak_price, l)
+                            peak_pnl = (entry_price - peak_price) / entry_price
+                            
+                            # Trailing stop check
+                            if peak_pnl >= GBM_TRAILING_ACTIVATION_PCT:
+                                if (h - peak_price) / entry_price >= GBM_TRAILING_STOP_PCT:
+                                    exit_price = peak_price + (entry_price * GBM_TRAILING_STOP_PCT)
+                                    trailing_stop_hit = True
+                                    actual_hold_minutes = m - current_minute
+                                    found_exit_scan = True
+                                    break
+
                             # Stop Loss (High triggers it)
                             if h >= entry_price * (1 + self.stop_pct):
                                 exit_price = entry_price * (1 + self.stop_pct)
@@ -398,6 +421,7 @@ class TradeSimulator:
                 reason = "Time Exit"
                 if target_hit: reason = "Target Hit"
                 elif stop_hit: reason = "Stop Loss"
+                elif trailing_stop_hit: reason = "Trailing Stop"
           
                 try:
                     date_str = str(date)
@@ -445,6 +469,8 @@ class TradeSimulator:
                 "hold_minutes": hold_minutes,
                 "target_hit": target_hit,
                 "stop_hit": stop_hit,
+                "trailing_stop_hit": trailing_stop_hit,
+                "exit_reason": "target" if target_hit else "stop" if stop_hit else "trailing_stop" if trailing_stop_hit else "max_time",
                 "actual_hold_minutes": actual_hold_minutes,
                 "point_value_used": multiplier,
                 "contracts": contracts,

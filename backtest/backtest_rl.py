@@ -89,9 +89,12 @@ def _time_to_minutes(t) -> int:
 
 # Fixed point values per ticker
 GBT_POINT_VALUES = {
-    "SPX": 50.0, "/ES": 50.0, "/NQ": 20.0,
-    "SPY": 100.0, "QQQ": 100.0,
+    "SPY": 100.0, "QQQ": 100.0, "IWM": 100.0,
 }
+
+# --- GBM EXIT CONSTANTS (Aligned with backtest_gbt_parquet.py) ---
+GBM_TRAILING_ACTIVATION_PCT = 0.0050
+GBM_TRAILING_STOP_PCT = 0.0030
 
 # ── Position Sizing ──
 INITIAL_BALANCE = 10_000.0
@@ -115,7 +118,7 @@ def simulate_mlp_only(df: pd.DataFrame, predictions: np.ndarray,
                       probabilities: np.ndarray, threshold: float = 0.50,
                       target_long: float = 0.010, target_short: float = 0.005,
                       stop_pct: float = 0.003, max_time: int = 180,
-                      cooldown: int = 10, risk_capital: float = 500.0) -> pd.DataFrame:
+                      cooldown: int = 15, risk_capital: float = 500.0) -> pd.DataFrame:
     """
     Simulate GBT-only trades using spot price targets/stops.
     Aligned with backtest_hybrid_parquet.py: real dollar P&L, OHLC intrabar
@@ -186,7 +189,9 @@ def simulate_mlp_only(df: pd.DataFrame, predictions: np.ndarray,
             actual_hold_minutes = max_time
             target_hit = False
             stop_hit = False
+            trailing_stop_hit = False
             mae = 0.0
+            peak_price = entry_price
 
             if ohlc:
                 # Find entry index in OHLC data
@@ -209,11 +214,18 @@ def simulate_mlp_only(df: pd.DataFrame, predictions: np.ndarray,
                             break
 
                         if direction == "LONG":
-                            # Track MAE (lowest point)
-                            if l < entry_price:
-                                current_mae = (l - entry_price) / entry_price
-                                mae = min(mae, current_mae)
-                                
+                            # Peak tracking
+                            peak_price = max(peak_price, h)
+                            peak_pnl = (peak_price - entry_price) / entry_price
+                            
+                            if peak_pnl >= GBM_TRAILING_ACTIVATION_PCT:
+                                if (peak_price - l) / entry_price >= GBM_TRAILING_STOP_PCT:
+                                    exit_price = peak_price - (entry_price * GBM_TRAILING_STOP_PCT)
+                                    trailing_stop_hit = True
+                                    actual_hold_minutes = elapsed
+                                    found_exit = True
+                                    break
+
                             # Stop loss (low triggers)
                             if l <= entry_price * (1 - stop_pct):
                                 exit_price = entry_price * (1 - stop_pct)
@@ -229,11 +241,18 @@ def simulate_mlp_only(df: pd.DataFrame, predictions: np.ndarray,
                                 found_exit = True
                                 break
                         else:  # SHORT
-                            # Track MAE (highest point)
-                            if h > entry_price:
-                                current_mae = (entry_price - h) / entry_price
-                                mae = min(mae, current_mae)
-                                
+                            # Peak tracking
+                            peak_price = min(peak_price, l)
+                            peak_pnl = (entry_price - peak_price) / entry_price
+                            
+                            if peak_pnl >= GBM_TRAILING_ACTIVATION_PCT:
+                                if (h - peak_price) / entry_price >= GBM_TRAILING_STOP_PCT:
+                                    exit_price = peak_price + (entry_price * GBM_TRAILING_STOP_PCT)
+                                    trailing_stop_hit = True
+                                    actual_hold_minutes = elapsed
+                                    found_exit = True
+                                    break
+
                             # Stop loss (high triggers)
                             if h >= entry_price * (1 + stop_pct):
                                 exit_price = entry_price * (1 + stop_pct)
@@ -260,35 +279,42 @@ def simulate_mlp_only(df: pd.DataFrame, predictions: np.ndarray,
                     elapsed = future_row['minutes'] - current_minute
                     if elapsed > max_time:
                         break
+                    
                     if direction == "LONG":
-                        if price < entry_price:
-                            current_mae = (price - entry_price) / entry_price
-                            mae = min(mae, current_mae)
-                            
+                        peak_price = max(peak_price, price)
+                        peak_pnl = (peak_price - entry_price) / entry_price
+                        
+                        if peak_pnl >= GBM_TRAILING_ACTIVATION_PCT:
+                            if (peak_price - price) / entry_price >= GBM_TRAILING_STOP_PCT:
+                                exit_price = peak_price - (entry_price * GBM_TRAILING_STOP_PCT)
+                                trailing_stop_hit = True
+                                break
+                        
                         if price >= entry_price * (1 + base_target):
                             exit_price = entry_price * (1 + base_target)
                             target_hit = True
-                            actual_hold_minutes = elapsed
                             break
                         elif price <= entry_price * (1 - stop_pct):
                             exit_price = entry_price * (1 - stop_pct)
                             stop_hit = True
-                            actual_hold_minutes = elapsed
                             break
                     else:
-                        if price > entry_price:
-                            current_mae = (entry_price - price) / entry_price
-                            mae = min(mae, current_mae)
-                            
+                        peak_price = min(peak_price, price)
+                        peak_pnl = (entry_price - peak_price) / entry_price
+                        
+                        if peak_pnl >= GBM_TRAILING_ACTIVATION_PCT:
+                            if (price - peak_price) / entry_price >= GBM_TRAILING_STOP_PCT:
+                                exit_price = peak_price + (entry_price * GBM_TRAILING_STOP_PCT)
+                                trailing_stop_hit = True
+                                break
+                        
                         if price <= entry_price * (1 - base_target):
                             exit_price = entry_price * (1 - base_target)
                             target_hit = True
-                            actual_hold_minutes = elapsed
                             break
                         elif price >= entry_price * (1 + stop_pct):
                             exit_price = entry_price * (1 + stop_pct)
                             stop_hit = True
-                            actual_hold_minutes = elapsed
                             break
                     exit_price = price
                     actual_hold_minutes = elapsed
@@ -323,7 +349,7 @@ def simulate_mlp_only(df: pd.DataFrame, predictions: np.ndarray,
                 if consecutive_losses >= 3:
                     in_drawdown_mode = True
 
-            exit_reason = "target" if target_hit else "stop" if stop_hit else "max_time"
+            exit_reason = "target" if target_hit else "stop" if stop_hit else "trailing_stop" if trailing_stop_hit else "max_time"
 
             # Compute approximate exit time from entry minute + actual hold minutes
             exit_minute = current_minute + actual_hold_minutes
@@ -373,7 +399,7 @@ _GREEKS_COLS = ["underlying_timestamp", "strike", "right", "delta",
                 "bid", "ask", "implied_vol", "theta", "gamma", "underlying_price"]
 
 # Map training-data ticker names to ThetaData options directory names
-_TICKER_TO_OPTIONS = {"SPX": "SPXW", "SPXW": "SPXW", "QQQ": "QQQ"}
+_TICKER_TO_OPTIONS = {"SPX": "SPXW", "SPXW": "SPXW", "QQQ": "QQQ", "SPY": "SPY"}
 
 def _load_daily_greeks(date_str: str, ticker: str = "SPXW") -> tuple:
     """
@@ -598,7 +624,7 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                     probabilities: np.ndarray, rl_agent: PPOAgent,
                     features_norm: np.ndarray = None,
                     threshold: float = 0.50, max_time: int = 180,
-                    cooldown: int = 10, device: torch.device = None,
+                    cooldown: int = 15, device: torch.device = None,
                     risk_capital: float = 500.0,
                     single_step_eval: bool = False,
                     recovery_lookup: dict = None) -> pd.DataFrame:
@@ -688,7 +714,7 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                 # Re-entry protection: if we just exited a GBT signal burst, 
                 # don't re-enter until the signal disappears or a long cooldown passed.
                 # This prevents over-trading from RL's early exits.
-                long_cooldown = 20 # Minimum lockout after an RL exit
+                long_cooldown = 15 # Minimum lockout after an RL exit
                 if elapsed < long_cooldown:
                     continue
 
@@ -806,6 +832,7 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
             exit_reason = "max_time"
             hold_minutes = 0
             premium_pnl_pct = 0.0
+            peak_premium = entry_premium
 
             # Isolate future rows specific to this ticker
             ticker_mask = (day_df["ticker"] == ticker) & (day_df["minutes"] >= current_minute)
@@ -846,6 +873,8 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                 premium_pnl_pct = float(np.clip(premium_pnl_pct, -1.0, 10.0))
                 mae = min(mae, premium_pnl_pct)
                 exit_premium = current_premium
+                peak_premium = max(peak_premium, current_premium)
+                peak_pnl = (peak_premium - entry_premium) / entry_premium
                 _premium_history.append(current_premium)  # O(1) accumulation
 
                 # Hard exit checks
@@ -857,6 +886,13 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                     exit_reason = "hard_take_profit"
                     exit_price_spot = price
                     break
+                
+                # Trailing stop check (RL Premium based)
+                if peak_pnl >= HARD_EXITS.get("trailing_stop_activation_pct", 0.40):
+                    if (peak_premium - current_premium) / entry_premium >= HARD_EXITS.get("trailing_stop_pct", 0.30):
+                        exit_reason = "trailing_stop"
+                        exit_price_spot = price
+                        break
 
                 # ── Build RL state for exit decision ──
                 hold_norm = hold_minutes / HARD_EXITS["max_hold_minutes"]
@@ -1126,7 +1162,7 @@ def main():
     parser.add_argument("--model-size", default="small", choices=["micro", "small", "medium", "medium_v2", "large"])
     parser.add_argument("--rl-model", default=os.path.join(PROJECT_ROOT, "rl_models", "best_rl_agent.pt"), help="RL agent checkpoint")
     parser.add_argument("--threshold", type=float, default=0.50)
-    parser.add_argument("--cooldown", type=int, default=10)
+    parser.add_argument("--cooldown", type=int, default=15)
     parser.add_argument("--target-long", type=float, default=0.010)
     parser.add_argument("--target-short", type=float, default=0.005)
     parser.add_argument("--stop", type=float, default=0.003)
@@ -1201,7 +1237,7 @@ def main():
 
     # ── Optional: drop dates with no 0DTE greeks coverage ──
     if args.filter_by_greeks:
-        ticker_to_options = {"SPX": "SPXW", "SPXW": "SPXW", "QQQ": "QQQ"}
+        ticker_to_options = {"SPX": "SPXW", "SPXW": "SPXW", "QQQ": "QQQ", "SPY": "SPY"}
         available_by_ticker: dict[str, set] = {}
         for tk in (args.tickers or df["ticker"].unique().tolist()):
             options_ticker = ticker_to_options.get(tk, tk)
@@ -1225,6 +1261,9 @@ def main():
               f"({before - after:,} dropped, {df['date'].nunique()} dates remain)")
 
     print(f"  {len(df):,} samples | {df['date'].nunique()} days | tickers: {df['ticker'].unique().tolist()}")
+
+    # Reset index after all filtering so features_norm[idx] aligns with df.index
+    df = df.reset_index(drop=True)
 
     # ── GBT predictions ──
     print(f"\n[4/5] Running GBT predictions...")
