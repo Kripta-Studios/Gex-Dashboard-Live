@@ -1045,18 +1045,19 @@ async function fetchTechnicals(dateStr) {
                 ? (startMarket.open ?? startMarket.price)
                 : (vixIB.series[0].open ?? vixIB.series[0].price);
             const vix5m = resampleTo5Min(vixIB.series);
-            vixEMA20 = calculateEMA(vix5m, 20); // Mantenemos este para el IV State dinámico
-            vixEMA5 = calculateEMA(vix5m, 5);   // NUEVO: Media rápida del VIX
-            vixEMA15 = calculateEMA(vix5m, 15); // NUEVO: Media lenta del VIX
+            // VIX EMAs — used for IV State (VIX vs its own EMA20) and Momentum (EMA5 vs EMA15)
+            vixEMA20 = calculateEMA(vix5m, 20);
+            vixEMA5 = calculateEMA(vix5m, 5);
+            vixEMA15 = calculateEMA(vix5m, 15);
             vix9dValue = vixIB.series[vixIB.series.length - 1].price;
         }
 
+        // VIX9D — only use for the 9-day VIX value, do NOT overwrite VIX EMAs
+        // Previously this was overwriting vixEMA20 with VIX9D's EMA20, causing
+        // the IV state to compare VIX spot against VIX9D EMA20 (different instruments).
         const vix9dIB = await fetchIBData("VIX9D", dateStr);
         if (vix9dIB?.series?.length > 0) {
             vix9dValue = vix9dIB.series[vix9dIB.series.length - 1].price;
-            vixEMA20 = calculateEMA(resampleTo5Min(vix9dIB.series), 20);
-            vixEMA5 = calculateEMA(resampleTo5Min(vix9dIB.series), 5);
-            vixEMA15 = calculateEMA(resampleTo5Min(vix9dIB.series), 15);
         }
 
         const vixLive = await fetchChartData("VIX", "weekly");
@@ -1087,7 +1088,7 @@ async function fetchTechnicals(dateStr) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 async function fetchNetGreeksLive(ticker) {
-    const greeks = ["gamma", "zomma", "delta", "vex", "vega", "vomma", "speed"];
+    const greeks = ["gamma", "zomma", "delta", "vex", "vega", "vomma", "speed", "charm"];
     const net = {};
     for (const g of greeks) net[g] = 0;
 
@@ -1234,7 +1235,8 @@ async function runMarketStructureEngine(ticker = "SPX") {
         technicals: tech,
         vixMomentum,
         vannaTagging,
-        maxVannaStrike: netGreeks.max_vanna_strike
+        maxVannaStrike: netGreeks.max_vanna_strike,
+        netCharm: netGreeks.charm || 0
     };
 }
 
@@ -1355,20 +1357,23 @@ async function updateMarketStructureUI() {
             }
             if (struct.spreads && struct.spreads !== 'N/A' && struct.spreads !== 'No')
                 detailsHTML += `<div class="ms-detail-item"><span class="ms-detail-label">Spreads</span><span class="ms-detail-value">${struct.spreads}</span></div>`;
-            if (struct.entry)
-                detailsHTML += `<div class="ms-detail-item"><span class="ms-detail-label">Entry</span><span class="ms-detail-value">${struct.entry}</span></div>`;
-            if (struct.emas)
-                detailsHTML += `<div class="ms-detail-item"><span class="ms-detail-label">EMAs</span><span class="ms-detail-value">${struct.emas}</span></div>`;
-            if (struct.approxBouncePts)
-                detailsHTML += `<div class="ms-detail-item"><span class="ms-detail-label">Bounce</span><span class="ms-detail-value">${struct.approxBouncePts}</span></div>`;
-            if (struct.stochastic)
-                detailsHTML += `<div class="ms-detail-item" style="grid-column:1/-1"><span class="ms-detail-label">Stochastic</span><span class="ms-detail-value">${struct.stochastic}</span></div>`;
-            if (struct.vvixVix)
-                detailsHTML += `<div class="ms-detail-item" style="grid-column:1/-1"><span class="ms-detail-label">VVIX & VIX</span><span class="ms-detail-value">${struct.vvixVix}</span></div>`;
-            if (struct.reversalSignal)
-                detailsHTML += `<div class="ms-detail-item" style="grid-column:1/-1"><span class="ms-detail-label">⚠ Reversal</span><span class="ms-detail-value" style="color:var(--accent-yellow,#FFD700)">${struct.reversalSignal}</span></div>`;
-            if (struct.trendEliminator)
-                detailsHTML += `<div class="ms-detail-item" style="grid-column:1/-1"><span class="ms-detail-label">⚠ Trend Killer</span><span class="ms-detail-value" style="color:#FF6D00">${struct.trendEliminator}</span></div>`;
+
+            // — Net Charm box
+            // Positive (+) charm → time decay increases delta for ITM calls/OTM puts → induces SELLING
+            // Negative (-) charm → time decay decreases delta for ITM puts/OTM calls → induces BUYING
+            const netCharmVal = result.netCharm || 0;
+            const isSuppressive = netCharmVal > 0;
+            const charmLabel = isSuppressive ? 'SUPPRESSIVE' : 'SUPPORTIVE';
+            const charmColor = isSuppressive ? '#FF5252' : '#69F0AE';
+            const charmDesc = isSuppressive
+                ? 'Time decay induces dealer selling pressure'
+                : 'Time decay induces dealer buying pressure';
+            detailsHTML += `<div class="ms-detail-item" style="grid-column:1/-1;border:1px solid ${charmColor}33;border-radius:6px;padding:8px 10px;background:${charmColor}11;">`
+                + `<span class="ms-detail-label" style="color:${charmColor};">Net Charm</span>`
+                + `<span class="ms-detail-value" style="color:${charmColor};font-weight:700;font-size:0.9rem;">${charmLabel}</span>`
+                + `<div style="color:#aaa;font-size:0.65rem;margin-top:3px;">${charmDesc} (${netCharmVal >= 0 ? '+' : ''}${netCharmVal.toFixed(4)})</div>`
+                + `</div>`;
+
             detailsContainer.innerHTML = detailsHTML;
         }
 
