@@ -48,12 +48,12 @@ def compute_step_reward(prev_pnl_pct: float, curr_pnl_pct: float,
         hold_bonus = 0.0
         
     # Trailing Drawdown Penalty: Gracefully penalize giving back gains
-    # To prevent micro-scalping, we only care if drawdown > 15% 
-    # meaning we actually had some profits to lock in.
+    # Softened: only penalize if drawdown > 40% of peak unrealized,
+    # with gentle 0.01 multiplier to avoid incentivizing micro-scalping.
     drawdown_penalty = 0.0
-    drawdown_tolerance = 0.15
+    drawdown_tolerance = 0.40
     if trailing_drawdown > drawdown_tolerance:
-        drawdown_penalty = (trailing_drawdown - drawdown_tolerance) * 0.05
+        drawdown_penalty = (trailing_drawdown - drawdown_tolerance) * 0.01
     
     step_reward = delta_pnl + context_bonus + hold_bonus - drawdown_penalty
     return float(step_reward)

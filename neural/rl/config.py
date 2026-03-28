@@ -29,7 +29,9 @@ NUM_EXIT_ACTIONS = 2  # HOLD=0, EXIT=1
 
 HARD_EXITS = {
     "max_loss_pct":      -0.50,   # exit if position lost 50% of premium
-    "max_profit_pct":    +4.00,   # exit if position gained 400%
+    "max_profit_pct":    +2.50,   # exit if position gained 250% (Homerun cap)
+    "trailing_stop_pct":  0.30,   # retrace % (inactive — activation unreachable)
+    "trailing_stop_activation_pct": 9.99, # Disabled: RL alpha is best without trail
     "minutes_to_close":   5,      # always exit 5 min before market close
     "max_hold_minutes":   180,    # maximum hold time = MLP lookahead
     "min_hold_minutes":   5,      # minimum hold time before RL agent can choose to exit
@@ -40,8 +42,8 @@ HARD_EXITS = {
 # ═══════════════════════════════════════════════════════════════════════════
 
 SPREAD_MODEL = {
-    "otm":  0.06,
-    "atm":  0.03,
+    "otm":  0.03,
+    "atm":  0.015,
     "itm":  0.01,
 }
 
@@ -111,11 +113,12 @@ RL_CONFIG = {
     "min_confidence":       0.50,
 
     # Curriculum — linear interpolation will be used between these nodes:
+    # Redesigned: force longer holds early + OTM/ATM exploration before ITM
     "curriculum_phases": {
-        0: {"pct": 0.00, "min_confidence": 0.60, "min_strike_bucket": 2, "max_strike_bucket": 3, "min_hold_minutes": 5},  # Block ITM (6)
-        1: {"pct": 0.15, "min_confidence": 0.55, "min_strike_bucket": 1, "max_strike_bucket": 4, "min_hold_minutes": 5},  # Relax filters
-        2: {"pct": 0.35, "min_confidence": 0.50, "min_strike_bucket": 0, "max_strike_bucket": 5, "min_hold_minutes": 10}, # Full diversity
-        3: {"pct": 1.00, "min_confidence": 0.50, "min_strike_bucket": 0, "max_strike_bucket": 6, "min_hold_minutes": 10}, # Wide exploitation
+        0: {"pct": 0.00, "min_confidence": 0.60, "min_strike_bucket": 1, "max_strike_bucket": 3, "min_hold_minutes": 120},  # OTM only, forced 2h hold
+        1: {"pct": 0.15, "min_confidence": 0.55, "min_strike_bucket": 0, "max_strike_bucket": 4, "min_hold_minutes": 90},  # OTM+ATM, forced 1.5h hold
+        2: {"pct": 0.35, "min_confidence": 0.50, "min_strike_bucket": 0, "max_strike_bucket": 5, "min_hold_minutes": 60},  # Full diversity incl ITM_light, 1h hold
+        3: {"pct": 0.60, "min_confidence": 0.50, "min_strike_bucket": 0, "max_strike_bucket": 6, "min_hold_minutes": 30},  # Wide exploitation, 30min hold
     },
 
     # Session

@@ -98,7 +98,8 @@ class IntegratedTradingSystem:
                 print(f"  [ITS] Warning: recovery_stats not loaded: {e}")
 
     def on_new_minute(self, market_features: np.ndarray, options_data: dict,
-                      spot: float, timestamp: pd.Timestamp) -> dict:
+                      spot: float, timestamp: pd.Timestamp,
+                      has_real_position: bool = None) -> dict:
         """
         Called every minute with fresh market data.
 
@@ -109,8 +110,9 @@ class IntegratedTradingSystem:
                               "puts":  {strike: {price, delta, iv, theta, gamma}}}
             spot:            current SPX spot price
             timestamp:       current market timestamp
-            force_rl:        if True, skip MLP HOLD gate and let RL decide
-                             (used when GBM HOLD is saturated)
+            has_real_position: if provided, used to sync ITS state with the
+                             main bot wrapper. If False but ITS believes it
+                             has a position, the ghost is cleared.
 
         Returns: dict with keys:
             'action':     'BUY_CALL' | 'BUY_PUT' | 'EXIT' | 'HOLD' | 'NO_SIGNAL'
@@ -119,10 +121,14 @@ class IntegratedTradingSystem:
             'confidence': float
             'details':    dict with additional info
         """
-        # 0. Update history and dynamic features
+        # 0. One-way state sync: wrapper is the source of truth for positions
+        if has_real_position is not None and not has_real_position and self.open_position is not None:
+            self._clear_ghost_position()
+
+        # 0.1 Update history and dynamic features
         self._spot_history.append(spot)
         
-        # 0.1 Update signal state (first time we see a non-HOLD signal)
+        # 0.2 Update signal state (first time we see a non-HOLD signal)
         # In Env, this is the episode start. In Production, we track when the model starts saying LONG/SHORT.
         # This allows dynamic[0] to be "change since signal detected".
         if self.open_position is None:
@@ -440,6 +446,12 @@ class IntegratedTradingSystem:
             if is_reversal:
                 return self._close_position("SIGNAL_REVERSAL", pnl_pct)
 
+        # ── Hard Trailing Stop ──
+        # Activate only if we reached the required profit threshold
+        if self._max_unrealized_pnl >= HARD_EXITS.get("trailing_stop_activation_pct", 0.40):
+            if trailing_drawdown >= HARD_EXITS.get("trailing_stop_pct", 0.30):
+                return self._close_position("TRAILING_STOP", pnl_pct)
+
         # ── RL Exit Head ──
         state = self._build_state(
             features_norm, position_active=True,
@@ -496,6 +508,11 @@ class IntegratedTradingSystem:
                     pos["strike_action"], {}).get("label", "unknown"),
             },
         }
+        self._reset_position_state()
+        return result
+
+    def _reset_position_state(self):
+        """Reset all position-related internal state."""
         self.open_position = None
         self._mae = 0.0
         self._prev_pnl_pct = 0.0
@@ -510,7 +527,18 @@ class IntegratedTradingSystem:
         self._entry_atm_iv = 0.15
         self._option_price_history.clear()
         self._dynamic_market_state = np.zeros(8, dtype=np.float32)
-        return result
+
+    def _clear_ghost_position(self):
+        """Clear a ghost position that exists in ITS but not in the main wrapper."""
+        import logging
+        logger = logging.getLogger(__name__)
+        pos = self.open_position
+        if pos:
+            logger.warning(
+                f"[ITS] Ghost position detected: {pos.get('direction', '?')} "
+                f"strike={pos.get('strike', '?')} — clearing state to allow new entries"
+            )
+        self._reset_position_state()
 
     def restore_state(self, pos_data: dict, confidence: float, time_to_target: float, log_sigma: float):
         """Restore internal state from persisted position data."""

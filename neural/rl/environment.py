@@ -464,6 +464,8 @@ class SPXOptionsEnv:
             exit_type = "hard_stop_loss"
         elif pnl_pct >= self.hard_exits["max_profit_pct"]:
             exit_type = "hard_take_profit"
+        elif self._max_unrealized_pnl >= self.hard_exits["trailing_stop_activation_pct"] and self._trailing_drawdown >= self.hard_exits["trailing_stop_pct"]:
+            exit_type = "trailing_stop"
         elif minutes_to_close <= self.hard_exits["minutes_to_close"]:
             exit_type = "hard_time_close"
         elif hold_minutes >= self.hard_exits["max_hold_minutes"]:
@@ -616,55 +618,6 @@ class SPXOptionsEnv:
         if price <= 0:
             return None   # ← force fallback to raw_entry_price
         return price
-
-    def _get_max_option_move_pct(self, ticker: str, date_str: str, entry_time: str,
-                                  entry_minute: int, max_hold: int) -> float:
-        """Scan forward through options cache to find the maximum favorable
-        option price movement as a percentage of entry premium.
-
-        This gives the TRUE max_move in option-price space, not underlying space.
-        Used by the terminal reward to calculate capture_ratio correctly.
-        """
-        if self._position is None:
-            return 0.0
-
-        entry_price = self._position["entry_price"]
-        if entry_price <= 0:
-            return 0.0
-
-        cache_key = f"{ticker}_{date_str}_{entry_time}"
-        cache_entry = self.options_cache.get(cache_key)
-        if cache_entry is None:
-            return 0.0
-
-        minutes_data = cache_entry.get("minutes", {})
-        right_key = "calls" if self._position["right"] == "CALL" else "puts"
-        strike = self._position["strike"]
-
-        max_price = entry_price
-        # Scan from entry+1 to max_hold (or however many minutes are available)
-        for offset in range(entry_minute + 1, entry_minute + max_hold + 1):
-            minute_data = minutes_data.get(offset)
-            if minute_data is None:
-                continue
-            options = minute_data.get(right_key, {})
-            strike_data = options.get(strike)
-            if strike_data is None:
-                # Try nearest available strike
-                available = list(options.keys())
-                if not available:
-                    continue
-                nearest = min(available, key=lambda s: abs(float(s) - strike))
-                strike_data = options[nearest]
-
-            price = float(strike_data.get("price", 0))
-            if price > max_price:
-                max_price = price
-
-        # Return as percentage of entry premium
-        if max_price <= entry_price:
-            return 0.0
-        return (max_price - entry_price) / entry_price
 
     def _get_theta_vs_premium(self, ticker: str, date_str: str, entry_time: str,
                               minute_offset: int) -> float:

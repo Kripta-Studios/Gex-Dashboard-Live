@@ -111,33 +111,18 @@ ep_short = df[mask_short].copy()
 
 print(f'Detected signals: LONG={len(ep_long):,} SHORT={len(ep_short):,}')
 
-# ── Balance LONG/SHORT episodes via OVERSAMPLING ──
-# We don't want to throw away 90% of our LONG data, so we repeat SHORT episodes.
+# ── NO OVERSAMPLING here ──
+# Previously, SHORT/LONG were oversampled (duplicated) to match counts.
+# This caused data leakage: the same episode could appear in both RL train
+# and eval splits as duplicates, inflating eval metrics.
+# The RL trainer handles class balance during collect_episodes() via
+# weighted sampling from the date-restricted pool.
 if not ep_short.empty and not ep_long.empty:
     n_long = len(ep_long)
     n_short = len(ep_short)
-    
-    if n_short < n_long:
-        print(f'  [Balance] Upsampling SHORT: {n_short:,} → {n_long:,}')
-        # Randomly duplicate short episodes to match long count
-        repeats = n_long // n_short
-        remainder = n_long % n_short
-        
-        ep_short_repeated = pd.concat([ep_short] * repeats)
-        if remainder > 0:
-            ep_short_extra = ep_short.sample(remainder, random_state=42)
-            ep_short_repeated = pd.concat([ep_short_repeated, ep_short_extra])
-        ep_short = ep_short_repeated
-    elif n_long < n_short:
-        print(f'  [Balance] Upsampling LONG: {n_long:,} → {n_short:,}')
-        repeats = n_short // n_long
-        remainder = n_short % n_long
-        
-        ep_long_repeated = pd.concat([ep_long] * repeats)
-        if remainder > 0:
-            ep_long_extra = ep_long.sample(remainder, random_state=42)
-            ep_long_repeated = pd.concat([ep_long_repeated, ep_long_extra])
-        ep_long = ep_long_repeated
+    ratio = max(n_long, n_short) / max(min(n_long, n_short), 1)
+    print(f'  [Balance] No oversampling (anti-leakage). L:S ratio = {ratio:.2f}')
+    print(f'  [Balance] RL trainer will handle balance via weighted sampling per split.')
 
 ep = pd.concat([ep_long, ep_short]).sort_values('date').reset_index(drop=True)
 ep['episode_id'] = range(len(ep))

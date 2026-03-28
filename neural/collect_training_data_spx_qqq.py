@@ -51,7 +51,7 @@ IB_BACKTEST_DIR = get_env_path("IB_BACKTEST_DIR", os.path.join(PROJECT_ROOT, "tr
 FOURIER_DIR = get_env_path("FOURIER_DIR", os.path.join(PROJECT_ROOT, "trading_data", "fourier"))
 OUTPUT_DIR = os.path.join(PROJECT_ROOT, "training_data")
 
-TICKERS = ["SPX", "QQQ"]
+TICKERS = ["SPX", "QQQ", "SPY"]
 R_RATE, Q_DIV = 0.0325, 0.0150
 LEVEL_PROXIMITY_THRESHOLD = 0.0015   # ±0.15% — widened to capture S/R bounces at IB/fib levels
                                      # Was 0.0008 (±4pts SPX) — too tight, missed 0.10-0.15% reactions
@@ -645,7 +645,7 @@ def get_trend_context(series: list, current_idx: int, lookback: int = 30) -> flo
 
 def process_ticker_date(args: tuple) -> tuple:
     ticker, target_date = args
-    if ticker not in ["SPX", "QQQ"]:
+    if ticker not in ["SPX", "QQQ", "SPY"]:
         return [], 0.0, 0, 0, 0
 
     greek_ticker = "SPXW" if ticker == "SPX" else ticker
@@ -723,6 +723,14 @@ def process_ticker_date(args: tuple) -> tuple:
                 if day_of_week in ["Tue", "Thu"] and target_date < datetime(2022, 10, 3).date(): is_market_gap = True
                 # QQQ Monday/Wednesday also had gaps in early 2022
                 if day_of_week in ["Mon", "Wed"] and target_date < datetime(2022, 5, 23).date(): is_market_gap = True
+            elif ticker == "SPY":
+                # SPY 0DTE launched ~Feb 2023 for Mon/Wed/Fri, Tue/Thu added later
+                if day_of_week in ["Tue", "Thu"] and target_date < datetime(2022, 5, 1).date(): is_market_gap = True
+                if day_of_week in ["Mon", "Wed"] and target_date < datetime(2022, 2, 13).date(): is_market_gap = True
+            elif ticker == "IWM":
+                # IWM 0DTE: Mon/Wed/Fri from ~Oct 2022, Tue/Thu added ~May 2024
+                if target_date < datetime(2022, 10, 1).date(): is_market_gap = True
+                elif day_of_week in ["Tue", "Thu"] and target_date < datetime(2024, 5, 1).date(): is_market_gap = True
 
             if is_market_gap:
                 print(f"[DEBUG {ticker} {date_str}] SALTADO: No existe expiración 0DTE (lanzamiento oficial posterior).")
@@ -1190,9 +1198,9 @@ def collect_training_data(tickers: list, num_days: int = 365, num_workers: int =
     if num_workers is None:
         num_workers = min(multiprocessing.cpu_count(), 30)
     
-    all_symbols = [t for t in tickers if t in ["SPX", "QQQ"]]
+    all_symbols = [t for t in tickers if t in ["SPX", "QQQ", "SPY"]]
     if not all_symbols:
-        print("ADVERTENCIA: No se encontraron tickers válidos (SPX, QQQ soportados). Usando SPX y QQQ.")
+        print("ADVERTENCIA: No se encontraron tickers válidos (SPX, QQQ, SPY soportados). Usando SPX y QQQ.")
         all_symbols = ["SPX", "QQQ"]
 
     available_dates = set()

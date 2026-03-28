@@ -22,14 +22,14 @@ if ($v) { $skip_to_step = 8 }
 # PASO 0 — RECOLECCIÓN DE DATOS (SPX base + QQQ como contexto)
 # ─────────────────────────────────────────────────────────────────────────────
 if ($skip_to_step -le 0) {
-  Write-Host "`n=== RECOLECTANDO DATOS SPX+QQQ ===" -ForegroundColor Cyan
+  Write-Host "`n=== RECOLECTANDO DATOS SPX+QQQ+SPY ===" -ForegroundColor Cyan
   python collect_training_data_spx_qqq.py `
     --start 20220801 --end 20260330 `
-    --workers 20 --tickers SPX QQQ `
-    --output training_data_spx_qqq.parquet
+    --workers 20 --tickers SPX QQQ SPY `
+    --output training_data_spx_qqq_spy.parquet
 
   if ($LASTEXITCODE -ne 0) {
-    Write-Host "ERROR en la recoleccion de datos SPX+QQQ." -ForegroundColor Red
+    Write-Host "ERROR en la recoleccion de datos SPX+QQQ+SPY." -ForegroundColor Red
     exit 1
   }
 }
@@ -40,7 +40,7 @@ if ($skip_to_step -le 0) {
 if ($skip_to_step -le 1) {
   Write-Host "`n=== ENTRENAMIENTO GBT Walk-Forward (LightGBM Ensemble) ===" -ForegroundColor Cyan
   python train_walkforward.py `
-    --data ..\training_data\training_data_spx_qqq.parquet `
+    --data ..\training_data\training_data_spx_qqq_spy.parquet `
     --model-size small `
     --train-months 9 `
     --test-months 1 `
@@ -61,7 +61,7 @@ if ($skip_to_step -le 1) {
 # ─────────────────────────────────────────────────────────────────────────────
 if ($skip_to_step -le 2) {
   Write-Host "`n=== Generando Indice de Episodios ===" -ForegroundColor Cyan
-  python .\generate_episode_index.py --data ..\training_data\training_data_spx_qqq.parquet --strict-wf
+  python .\generate_episode_index.py --data ..\training_data\training_data_spx_qqq_spy.parquet --strict-wf
 
   if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR: generate_episode_index.py fallo." -ForegroundColor Red
@@ -79,7 +79,7 @@ if ($skip_to_step -le 2) {
   }
 
   python run_preprocess.py `
-    --training-data ..\training_data\training_data_spx_qqq.parquet `
+    --training-data ..\training_data\training_data_spx_qqq_spy.parquet `
     --options-dir D:\ThetaData\data_options `
     --output ..\rl_data\rl_options_cache_chunks `
     --mlp-model models\trading_hybrid_wf.joblib `
@@ -119,7 +119,7 @@ if ($skip_to_step -le 4.5) {
   python diagnose_pipeline.py `
     --train-months 9 `
     --test-months 1 `
-    --data ..\training_data\training_data_spx_qqq.parquet `
+    --data ..\training_data\training_data_spx_qqq_spy.parquet `
     --model models\trading_hybrid_wf.joblib `
     --normalizer models\hybrid_normalizer_wf.npz `
     --options-cache ..\rl_data\rl_options_cache_chunks
@@ -137,8 +137,8 @@ if ($skip_to_step -le 4.5) {
 # ─────────────────────────────────────────────────────────────────────────────
 if ($skip_to_step -le 6) {
   Write-Host "`n=== BACKTESTING GBT only ===" -ForegroundColor Yellow
-  python ..\backtest\backtest_hybrid_parquet.py `
-    --data ..\training_data\training_data_spx_qqq.parquet `
+  python ..\backtest\backtest_gbt_parquet.py `
+    --data ..\training_data\training_data_spx_qqq_spy.parquet `
     --model models\trading_hybrid_wf.joblib `
     --normalizer models\hybrid_normalizer_wf.npz `
     --model-size small --ensemble `
@@ -159,7 +159,7 @@ if ($skip_to_step -le 6) {
 if ($skip_to_step -le 7) {
   Write-Host "`n=== BACKTESTING GBT+RL ===" -ForegroundColor DarkGreen
   python ..\backtest\backtest_rl.py `
-    --data ..\training_data\training_data_spx_qqq.parquet `
+    --data ..\training_data\training_data_spx_qqq_spy.parquet `
     --model models\trading_hybrid_wf.joblib `
     --normalizer models\hybrid_normalizer_wf.npz `
     --rl-model ..\rl_models\best_rl_agent.pt `
@@ -169,7 +169,8 @@ if ($skip_to_step -le 7) {
     --risk-capital 1000.0 `
     --filter-by-greeks `
     --single-step-eval `
-    --strict-wf
+    --strict-wf `
+    --tickers QQQ SPY
 
   if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR: Backtest GBT+RL fallo." -ForegroundColor Red

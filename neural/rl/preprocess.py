@@ -126,14 +126,14 @@ def generate_episode_index(training_df: pd.DataFrame,
     ep_long  = training_df[mask_long].copy()
     ep_short = training_df[mask_short].copy()
 
+    # ── NO OVERSAMPLING (anti-leakage) ──
+    # Previously duplicated minority episodes here, which caused the same
+    # episode to appear in both RL train and eval splits.
+    # The RL trainer handles class balance during collect_episodes().
     if not ep_short.empty and not ep_long.empty:
         n_long, n_short = len(ep_long), len(ep_short)
-        if n_short < n_long:
-            repeats, remainder = n_long // n_short, n_long % n_short
-            ep_short = pd.concat([ep_short] * repeats + [ep_short.sample(remainder, random_state=42) if remainder > 0 else pd.DataFrame()])
-        elif n_long < n_short:
-            repeats, remainder = n_short // n_long, n_short % n_long
-            ep_long = pd.concat([ep_long] * repeats + [ep_long.sample(remainder, random_state=42) if remainder > 0 else pd.DataFrame()])
+        ratio = max(n_long, n_short) / max(min(n_long, n_short), 1)
+        print(f"  [Balance] No oversampling (anti-leakage). L:S ratio = {ratio:.2f}")
 
     filtered = pd.concat([ep_long, ep_short]).sort_values(["date", "time"]).reset_index(drop=True)
     filtered["episode_id"] = range(len(filtered))

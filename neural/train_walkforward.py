@@ -171,7 +171,10 @@ def train_single_window(train_df, val_df, verbose=True, window_idx=None, seed=42
     if '_date' in train_df.columns:
         train_df = train_df.sort_values('_date').reset_index(drop=True)
 
-    # 2. Cal_df from first 10 test days
+    # 2. Split test window into CAL (threshold tuning) and HONEST (held-out evaluation)
+    #    CAL = first 10 days → used for threshold grid search only
+    #    HONEST = remaining days → used for honest_metrics and rank_score
+    #    This prevents data snooping: the PF used for window selection is genuinely OOS.
     if '_date' not in val_df.columns and 'date' in val_df.columns:
         val_df = val_df.copy()
         val_df['_date'] = pd.to_datetime(val_df['date'], errors='coerce')
@@ -182,8 +185,11 @@ def train_single_window(train_df, val_df, verbose=True, window_idx=None, seed=42
     val_dates = sorted(val_df['_date'].dt.date.unique())
     n_cal_from_test = min(10, len(val_dates) // 2)
     cal_dates = set(val_dates[:n_cal_from_test])
+    honest_dates = set(val_dates[n_cal_from_test:])  # held-out test days
     cal_mask = val_df['_date'].dt.date.isin(cal_dates)
+    honest_mask = val_df['_date'].dt.date.isin(honest_dates)
     cal_df = val_df[cal_mask].reset_index(drop=True)
+    honest_df = val_df[honest_mask].reset_index(drop=True)
 
     min_trades_req = 10
     n_cal = len(cal_df)
@@ -192,6 +198,7 @@ def train_single_window(train_df, val_df, verbose=True, window_idx=None, seed=42
     n_cal_hold  = n_cal - n_cal_short - n_cal_long
     print(f"  [CAL_DF] first {n_cal_from_test} test days | rows={n_cal} | "
           f"Short={n_cal_short} Long={n_cal_long} Hold={n_cal_hold}")
+    print(f"  [HONEST_DF] remaining {len(honest_dates)} test days | rows={len(honest_df)}")
     print(f"  [CAL] min_trades_req={min_trades_req}")
 
     # 3. Prep data
@@ -339,7 +346,7 @@ def train_single_window(train_df, val_df, verbose=True, window_idx=None, seed=42
               f"hold_m={best_hold_margin:.2f} | "
               f"Pred Long={n_final_long} Short={n_final_short}")
 
-    # Collapse detection
+    # Collapse detection (on cal predictions)
     collapsed = False
     if n_final_dir > 0:
         long_ratio  = n_final_long  / n_final_dir
@@ -352,7 +359,30 @@ def train_single_window(train_df, val_df, verbose=True, window_idx=None, seed=42
     else:
         collapsed = True
 
-    honest_metrics = calculate_trading_metrics(cal_preds, val_targets)
+    # ── HONEST METRICS: evaluate on HELD-OUT test days (NOT used for calibration) ──
+    # This is the anti-snooping fix: rank_score is based on genuinely unseen data.
+    if len(honest_df) >= 10:
+        X_honest, y_honest = prep(honest_df)
+        X_honest_norm = norm.transform(X_honest)
+        X_honest_df_lgb = pd.DataFrame(X_honest_norm, columns=cols)
+        honest_probs = model.predict_proba(X_honest_df_lgb)
+        if use_argmax:
+            honest_preds = honest_probs.argmax(axis=1)
+        else:
+            honest_preds = apply_trade_calibration(
+                honest_probs, hold_margin=best_hold_margin,
+                thresh_long=best_thresh_long, thresh_short=best_thresh_short
+            )
+        honest_metrics = calculate_trading_metrics(honest_preds, y_honest)
+        print(f"      [HONEST OOS] PF={honest_metrics['profit_factor']:.2f} "
+              f"WR={honest_metrics['win_rate']:.1%} "
+              f"Trades={honest_metrics['total_trades']} "
+              f"(on {len(honest_dates)} held-out test days)")
+    else:
+        # Fallback: not enough honest days, use cal_df metrics with warning
+        honest_metrics = calculate_trading_metrics(cal_preds, val_targets)
+        print(f"      [!] Only {len(honest_df)} honest days available, using cal_df metrics as fallback")
+
     honest_metrics['min_trades_req'] = min_trades_req
     honest_metrics['collapsed'] = collapsed
 
@@ -509,7 +539,11 @@ def walk_forward_train(data_path, model_path, norm_path, model_size,
 
         # Flatten all GBTModels from top windows into one ensemble
         all_final = [m for w in top_windows for m in w["ensemble_obj"].models]
-        production_norm = top_windows[0]["norm"]
+        # Use the MOST RECENT window's normalizer (not highest-ranked)
+        # to ensure feature distributions match current market conditions.
+        most_recent_window = max(top_windows, key=lambda w: w['window_idx'])
+        production_norm = most_recent_window["norm"]
+        print(f"  [Norm] Using normalizer from window {most_recent_window['window_idx']} (most recent in top-{top_n_windows})")
 
         final_ensemble = GBTEnsemble(all_final)
         save_gbt_ensemble(final_ensemble, production_norm, model_path, norm_path)

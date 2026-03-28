@@ -166,6 +166,26 @@ class PPOTrainer:
             "phase": [],
         }
 
+        # Pre-compute direction indices for balanced sampling (anti-bias)
+        self._long_indices_train = self.env.episode_index[
+            (self.env.episode_index['mlp_direction'] == 'LONG') &
+            (self.env.episode_index['date'].isin(self.train_dates))
+        ].index.tolist()
+        self._short_indices_train = self.env.episode_index[
+            (self.env.episode_index['mlp_direction'] == 'SHORT') &
+            (self.env.episode_index['date'].isin(self.train_dates))
+        ].index.tolist()
+        self._long_indices_eval = self.env.episode_index[
+            (self.env.episode_index['mlp_direction'] == 'LONG') &
+            (self.env.episode_index['date'].isin(self.eval_dates))
+        ].index.tolist()
+        self._short_indices_eval = self.env.episode_index[
+            (self.env.episode_index['mlp_direction'] == 'SHORT') &
+            (self.env.episode_index['date'].isin(self.eval_dates))
+        ].index.tolist()
+        print(f"[RL] Balanced sampling: Train L={len(self._long_indices_train)} S={len(self._short_indices_train)} | "
+              f"Eval L={len(self._long_indices_eval)} S={len(self._short_indices_eval)}")
+
     def collect_episodes(self, n_episodes: int, min_confidence: float = 0.60,
                          min_strike: int = 0,
                          training: bool = True, update_step: int = 0, total_updates: int = 400,
@@ -190,19 +210,24 @@ class PPOTrainer:
             state_dict = {k: v.cpu() for k, v in self.agent.state_dict().items()}
             self.agent.to(self.device)
             
-            # --- Sample from date-restriced pool (Issue 6) ---
-            eligible_indices = self.env.episode_index[self.env.episode_index['date'].isin(
-                self.train_dates if training else self.eval_dates
-            )].index.tolist()
+            # --- Direction-balanced sampling from date-restricted pool ---
+            long_pool = self._long_indices_train if training else self._long_indices_eval
+            short_pool = self._short_indices_train if training else self._short_indices_eval
             
-            if not eligible_indices:
+            if not long_pool and not short_pool:
                 print(f"  [!] No eligible episodes for {'train' if training else 'eval'}")
-                return buffer, episode_infos # Return empty buffer if no eligible episodes
+                return buffer, episode_infos
 
             futures = []
-            for _ in range(n_episodes):
-                # Sample random episode from restricted pool
-                ep_idx = np.random.choice(eligible_indices)
+            for i in range(n_episodes):
+                # Alternate 50/50 between LONG and SHORT episodes
+                if long_pool and short_pool:
+                    pool_to_use = long_pool if i % 2 == 0 else short_pool
+                elif long_pool:
+                    pool_to_use = long_pool
+                else:
+                    pool_to_use = short_pool
+                ep_idx = np.random.choice(pool_to_use)
                 futures.append(self.pool.submit(
                     worker_collect, state_dict, min_confidence, min_strike, max_strike, min_hold,
                     curriculum_phase, update_step, total_updates, logit_noise_level, ep_idx, obs_noise
@@ -240,20 +265,23 @@ class PPOTrainer:
         # single-threaded fallback (used for eval and non-pool)
         self.agent.eval()
 
-        # Filter environment episodes by curriculum confidence
-        valid_mask = self.env.episode_index["mlp_confidence"] >= min_confidence
+        # Direction-balanced sampling (single-threaded path)
+        long_pool = self._long_indices_train if training else self._long_indices_eval
+        short_pool = self._short_indices_train if training else self._short_indices_eval
         
-        # Apply train/eval date split for single-threaded collection as well
-        date_mask = self.env.episode_index['date'].isin(self.train_dates if training else self.eval_dates)
-        
-        valid_indices = self.env.episode_index[valid_mask & date_mask].index.tolist()
+        # Apply confidence filter
+        if min_confidence > 0:
+            conf_series = self.env.episode_index["mlp_confidence"]
+            long_pool = [i for i in long_pool if conf_series.iloc[i] >= min_confidence] if long_pool else []
+            short_pool = [i for i in short_pool if conf_series.iloc[i] >= min_confidence] if short_pool else []
 
-        if not valid_indices:
+        if not long_pool and not short_pool:
             print(f"[RL] Warning: no episodes with confidence >= {min_confidence} for {'train' if training else 'eval'} split.")
-            # Fallback to all episodes if no valid ones in split, but log it
-            valid_indices = self.env.episode_index[date_mask].index.tolist()
-            if not valid_indices: # If still no episodes, then something is wrong
-                print(f"[RL] Critical: No episodes found for {'train' if training else 'eval'} split even without confidence filter.")
+            # Fallback: use all direction indices without confidence filter
+            long_pool = self._long_indices_train if training else self._long_indices_eval
+            short_pool = self._short_indices_train if training else self._short_indices_eval
+            if not long_pool and not short_pool:
+                print(f"[RL] Critical: No episodes found for {'train' if training else 'eval'} split.")
                 return buffer, episode_infos
 
 
@@ -264,7 +292,14 @@ class PPOTrainer:
             if collected >= n_episodes:
                 break
 
-            idx = np.random.choice(valid_indices)
+            # Alternate 50/50 between LONG and SHORT
+            if long_pool and short_pool:
+                pool_to_use = long_pool if attempt % 2 == 0 else short_pool
+            elif long_pool:
+                pool_to_use = long_pool
+            else:
+                pool_to_use = short_pool
+            idx = np.random.choice(pool_to_use)
             self.env._current_min_confidence = min_confidence
             self.env._current_min_strike_bucket = min_strike
             self.env._current_max_strike_bucket = phase_info.get("max_strike_bucket", 6)
