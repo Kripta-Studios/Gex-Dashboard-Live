@@ -74,10 +74,11 @@ def calc_metrics(df: pd.DataFrame) -> dict:
     wl = mean_w / mean_l if mean_l > 0 else 0
     ah_w = wins["hold_minutes"].mean() if len(wins) > 0 else 0
     ah_l = losses["hold_minutes"].mean() if len(losses) > 0 else 0
+    ts = len(df[df["exit_reason"].str.contains("trailing_stop", na=False)]) if "exit_reason" in df.columns else 0
     return {"total": n, "wins": len(wins), "losses": len(losses),
             "win_rate": wr, "pf": pf, "total_pnl": total_pnl,
             "max_dd": max_dd, "sharpe": sharpe, "wl_ratio": wl,
-            "avg_hold_win": ah_w, "avg_hold_loss": ah_l}
+            "avg_hold_win": ah_w, "avg_hold_loss": ah_l, "trailing_stops": ts}
 
 def _esc(s):
     """Escape special LaTeX characters."""
@@ -181,6 +182,7 @@ def latex_comparison(mlp_m, rl_m, out):
         out.append(f"{label} & {f1} & {f2} & \\textcolor{{{col}}}{{{fd}}} \\\\")
 
     _row("Total Trades", "total", "d", False)
+    _row("Trailing Stops", "trailing_stops", "d", False)
     _row("Win Rate (\\%)", "win_rate", ".1f")
     _row("Profit Factor", "pf", ".2f")
     _row("Total P\\&L (\\$)", "total_pnl", ",.1f")
@@ -618,6 +620,7 @@ def main():
     else:
         # Auto-detect latest training data
         candidates = [
+            project_root / "training_data" / "training_data_spx_qqq_spy.parquet",
             project_root / "training_data" / "training_data_spx_qqq_march.parquet",
             project_root / "training_data" / "training_data_spx_qqq.parquet",
             project_root / "training_data" / "training_data_derived.parquet",

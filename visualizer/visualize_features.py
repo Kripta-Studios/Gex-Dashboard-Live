@@ -40,7 +40,7 @@ DEFAULT_GBT_NORM    = os.path.join(NEURAL_DIR, 'models', 'hybrid_normalizer_wf.n
 DEFAULT_MLP_MODEL   = os.path.join(NEURAL_DIR, 'models', 'trading_hybrid_wf.pt')
 DEFAULT_MLP_NORM    = os.path.join(NEURAL_DIR, 'models', 'hybrid_normalizer_wf.npz')
 DEFAULT_RL_MODEL    = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'rl_models', 'best_rl_agent.pt'))
-DEFAULT_DATA        = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'training_data', 'training_data_spx_qqq.parquet'))
+DEFAULT_DATA        = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'training_data', 'training_data_spx_qqq_spy.parquet'))
 DEFAULT_TOP_N       = 30
 OUTPUT_DIR          = os.path.join(os.path.dirname(__file__), 'charts')
 
