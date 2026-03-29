@@ -44,7 +44,8 @@ def compile_latex_directory():
                 for pass_num in range(1, 3):
                     subprocess.run(
                         [compiler, "-halt-on-error", "-interaction=nonstopmode", 
-                         f"-output-directory={output_dir}", str(tex_file)],
+                         f"-output-directory={output_dir}", tex_file.name],
+                        cwd=current_dir,
                         check=True,
                         capture_output=True,
                         text=True,
