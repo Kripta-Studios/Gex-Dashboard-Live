@@ -290,6 +290,14 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
             return
 
     def do_GET(self):
+        # SEGURIDAD PREVENTIVA: Bloquea Path Traversal y archivos sensibles inmediatamente
+        if any(x in self.path for x in [".git", ".env", "servidor.py", ".."]):
+            logging.warning(
+                f"Intento de acceso bloqueado desde {self.client_address[0]}: {self.path}"
+            )
+            self.send_error(403, "Forbidden: Access Denied")
+            return
+
         parsed_url = urllib.parse.urlparse(self.path)
         path_only = parsed_url.path
 
@@ -681,14 +689,6 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
                 self.serve_video(full_movie_path)
             else:
                 self.send_error(404, "Movie not found")
-            return
-
-        # SEGURIDAD Y FALLBACK
-        if any(x in self.path for x in [".git", ".env", "servidor.py", ".."]):
-            logging.warning(
-                f"Intento de acceso bloqueado desde {self.client_address[0]}: {self.path}"
-            )
-            self.send_error(403, "Forbidden: Access Denied")
             return
 
         allowed_dirs = ["/json_data/", "/fourier/", "/ib_charts/"]
