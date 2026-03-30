@@ -32,8 +32,8 @@ async function refreshDashboard() {
                 body: JSON.stringify(uniqueRequests)
             });
 
-            const batchData = await response.json();
-
+            const batchData = await safeJsonParse(response);
+            if (!batchData) throw new Error("Batch response was null or unparseable");
             heatmaps.forEach(chart => {
                 const dataKey = `${chart.inputTicker.toUpperCase()}_${chart.inputExp.toLowerCase()}`;
                 if (batchData[dataKey]) {
