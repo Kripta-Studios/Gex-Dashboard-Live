@@ -24,7 +24,8 @@ async function updateBotStatusUI() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const data = await response.json();
+        const data = await safeJsonParse(response);
+        if (!data) throw new Error("Parsed data is null or invalid json");
         renderBotStatus(data);
         
         if (!botStatusInterval) {

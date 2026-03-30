@@ -1098,7 +1098,7 @@ async function fetchNetGreeksLive(ticker) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify([{ ticker, exp: "0dte" }])
         });
-        const batchData = await resp.json();
+        const batchData = await safeJsonParse(resp);
 
         for (const g of greeks) {
             const dataKey = `${ticker.toUpperCase()}_0dte`;

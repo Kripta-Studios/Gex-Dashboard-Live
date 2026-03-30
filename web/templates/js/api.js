@@ -37,6 +37,25 @@ async function authFetch(url, options = {}) {
 }
 
 /**
+ * Safely parse JSON that might contain Python's NaN or Infinity
+ * @param {Response} response 
+ */
+async function safeJsonParse(response) {
+    const text = await response.text();
+    if (!text) return null;
+    // Replace unquoted NaN and Infinity with null for JS compatibility
+    const sanitized = text.replace(/:\s*NaN/g, ': null')
+                          .replace(/:\s*Infinity/g, ': null')
+                          .replace(/:\s*-Infinity/g, ': null');
+    try {
+        return JSON.parse(sanitized);
+    } catch(e) {
+        console.error("Parse error on sanitized JSON:", e);
+        return null;
+    }
+}
+
+/**
  * Fetch Greek exposure data for a ticker/expiration
  * @param {string} ticker - Ticker symbol (SPX, QQQ, /ES, /NQ, etc.)
  * @param {string} exp - Expiration (0dte, weekly, etc.)
@@ -67,7 +86,7 @@ async function fetchChartData(ticker, exp) {
         const response = await authFetch(url);
         if (!response.ok) return null;
 
-        const data = await response.json();
+        const data = await safeJsonParse(response);
         // Force ticker to be the requested one (e.g. /ES) even if data comes from SPX
         data.ticker = originalTicker;
         data.originalTicker = originalTicker;
@@ -95,7 +114,7 @@ async function fetchChartData(ticker, exp) {
 
                 const ibResp = await authFetch(ibUrl);
                 if (ibResp.ok) {
-                    const ibData = await ibResp.json();
+                    const ibData = await safeJsonParse(ibResp);
                     if (ibData && ibData.analysis && ibData.analysis.current_price) {
                         const futureSpot = ibData.analysis.current_price;
                         data.futureSpot = futureSpot; // Inject future spot
@@ -137,7 +156,7 @@ async function fetchFourierData(ticker, dateStr) {
         const url = `/fourier/fourier_data_${fourierTicker}_${dateStr}.json?_=${ts}`;
         const response = await authFetch(url);
         if (!response.ok) return null;
-        return await response.json();
+        return await safeJsonParse(response);
     } catch (e) {
         console.error("Fourier Fetch Error:", e);
         return null;
@@ -159,7 +178,7 @@ async function fetchIBData(ticker, dateStr) {
         const url = `/ib_charts/ib_data_${cleanTicker}_${dateStr}.json?_=${ts}`;
         const response = await authFetch(url);
         if (!response.ok) return null;
-        return await response.json();
+        return await safeJsonParse(response);
     } catch (e) {
         return null;
     }

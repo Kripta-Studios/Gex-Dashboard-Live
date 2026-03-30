@@ -596,32 +596,24 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
                 trades_dir = os.path.join(PROJECT_ROOT, "trades_rl")
                 today_str = datetime.now().strftime("%Y%m%d")
                 
-                open_rl, open_gbm = {}, {}
-                pos_rl_file = os.path.join(trades_dir, "open_positions_rl.json")
-                if os.path.exists(pos_rl_file):
-                    with open(pos_rl_file, "r") as f:
-                        open_rl = json.load(f)
-                        
-                pos_gbm_file = os.path.join(trades_dir, "open_gbm_trackers.json")
-                if os.path.exists(pos_gbm_file):
-                    with open(pos_gbm_file, "r") as f:
-                        open_gbm = json.load(f)
-                        
-                hist_rl, hist_gbm = [], []
-                hist_rl_file = os.path.join(trades_dir, f"trades_rl_{today_str}.json")
-                if os.path.exists(hist_rl_file):
-                    with open(hist_rl_file, "r") as f:
-                        hist_rl = json.load(f)
-                        
-                hist_gbm_file = os.path.join(trades_dir, f"trades_gbm_{today_str}.json")
-                if os.path.exists(hist_gbm_file):
-                    with open(hist_gbm_file, "r") as f:
-                        hist_gbm = json.load(f)
-                        
-                hist_legacy_file = os.path.join(trades_dir, f"trades_{today_str}.json")
-                if os.path.exists(hist_legacy_file) and not os.path.exists(hist_rl_file):
-                    with open(hist_legacy_file, "r") as f:
-                        hist_rl = json.load(f)
+                def safe_load_json(filepath, default_val):
+                    if os.path.exists(filepath):
+                        try:
+                            with open(filepath, "r") as f:
+                                return json.load(f)
+                        except json.JSONDecodeError as e:
+                            logging.warning(f"Error parseando {filepath}: {e}")
+                            return default_val
+                    return default_val
+
+                open_rl = safe_load_json(os.path.join(trades_dir, "open_positions_rl.json"), {})
+                open_gbm = safe_load_json(os.path.join(trades_dir, "open_gbm_trackers.json"), {})
+                
+                hist_rl = safe_load_json(os.path.join(trades_dir, f"trades_rl_{today_str}.json"), [])
+                hist_gbm = safe_load_json(os.path.join(trades_dir, f"trades_gbm_{today_str}.json"), [])
+                
+                if not hist_rl:
+                    hist_rl = safe_load_json(os.path.join(trades_dir, f"trades_{today_str}.json"), [])
 
                 response_data = {
                     "open_positions": {"rl": open_rl, "gbm": open_gbm},
