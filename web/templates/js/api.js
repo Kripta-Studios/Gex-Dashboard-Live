@@ -37,19 +37,26 @@ async function authFetch(url, options = {}) {
 }
 
 /**
- * Safely parse JSON that might contain Python's NaN or Infinity
- * @param {Response} response 
+ * Safely parse JSON that might contain Python's NaN, Infinity, True, False, None
+ * Handles all positions: after colons, in arrays, nested objects, etc.
+ * @param {Response} response
  */
 async function safeJsonParse(response) {
     const text = await response.text();
     if (!text) return null;
-    // Replace unquoted NaN and Infinity with null for JS compatibility
-    const sanitized = text.replace(/:\s*NaN/g, ': null')
-                          .replace(/:\s*Infinity/g, ': null')
-                          .replace(/:\s*-Infinity/g, ': null');
+    // Replace Python/JS non-standard tokens with JSON-safe equivalents.
+    // Word-boundary patterns avoid corrupting string values that contain
+    // these as substrings (e.g. "NaNometer", "Infinity pool").
+    const sanitized = text
+        .replace(/\bTrue\b/g, 'true')       // Python bool → JSON bool
+        .replace(/\bFalse\b/g, 'false')
+        .replace(/\bNone\b/g, 'null')        // Python None → JSON null
+        .replace(/\bNaN\b/g, 'null')         // NaN anywhere → null
+        .replace(/-Infinity\b/g, 'null')     // -Infinity before +Infinity
+        .replace(/\bInfinity\b/g, 'null');   // +Infinity → null
     try {
         return JSON.parse(sanitized);
-    } catch(e) {
+    } catch (e) {
         console.error("Parse error on sanitized JSON:", e);
         return null;
     }
@@ -87,6 +94,11 @@ async function fetchChartData(ticker, exp) {
         if (!response.ok) return null;
 
         const data = await safeJsonParse(response);
+        // Guard: parse can return null if server sends malformed/truncated JSON
+        if (!data) {
+            console.warn(`[fetchChartData] Null data after parse for ${greekTicker} ${exp}`);
+            return null;
+        }
         // Force ticker to be the requested one (e.g. /ES) even if data comes from SPX
         data.ticker = originalTicker;
         data.originalTicker = originalTicker;
