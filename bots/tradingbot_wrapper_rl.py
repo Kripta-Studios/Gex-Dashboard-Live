@@ -64,7 +64,7 @@ COOLDOWNS_FILE = os.path.join(TRADES_DIR, "cooldowns_rl.json")
 RT_DATA_DIR = os.path.join(PROJECT_ROOT, "rt_data")
 
 # GBM signal confidence threshold
-GBM_MIN_CONFIDENCE = 0.50
+GBM_MIN_CONFIDENCE = 0.60
 
 os.makedirs(TRADES_DIR, exist_ok=True)
 os.makedirs(LOGS_DIR, exist_ok=True)
