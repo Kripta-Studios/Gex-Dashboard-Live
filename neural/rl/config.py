@@ -110,15 +110,15 @@ RL_CONFIG = {
 
     # Regularization
     "obs_noise_std":        0.05,
-    "min_confidence":       0.50,
+    "min_confidence":       0.60,
 
     # Curriculum — linear interpolation will be used between these nodes:
     # Redesigned: force longer holds early + OTM/ATM exploration before ITM
     "curriculum_phases": {
-        0: {"pct": 0.00, "min_confidence": 0.60, "min_strike_bucket": 1, "max_strike_bucket": 3, "min_hold_minutes": 120},  # OTM only, forced 2h hold
-        1: {"pct": 0.15, "min_confidence": 0.55, "min_strike_bucket": 0, "max_strike_bucket": 4, "min_hold_minutes": 90},  # OTM+ATM, forced 1.5h hold
-        2: {"pct": 0.35, "min_confidence": 0.50, "min_strike_bucket": 0, "max_strike_bucket": 5, "min_hold_minutes": 60},  # Full diversity incl ITM_light, 1h hold
-        3: {"pct": 0.60, "min_confidence": 0.50, "min_strike_bucket": 0, "max_strike_bucket": 6, "min_hold_minutes": 30},  # Wide exploitation, 30min hold
+        0: {"pct": 0.00, "min_confidence": 0.70, "min_strike_bucket": 1, "max_strike_bucket": 3, "min_hold_minutes": 120},  # OTM only, forced 2h hold
+        1: {"pct": 0.15, "min_confidence": 0.65, "min_strike_bucket": 0, "max_strike_bucket": 4, "min_hold_minutes": 90},  # OTM+ATM, forced 1.5h hold
+        2: {"pct": 0.35, "min_confidence": 0.60, "min_strike_bucket": 0, "max_strike_bucket": 5, "min_hold_minutes": 60},  # Full diversity incl ITM_light, 1h hold
+        3: {"pct": 0.60, "min_confidence": 0.60, "min_strike_bucket": 0, "max_strike_bucket": 6, "min_hold_minutes": 30},  # Wide exploitation, 30min hold
     },
 
     # Session

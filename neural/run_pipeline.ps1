@@ -5,7 +5,8 @@ Param(
   [switch]$rl,  # Paso 2 en adelante (Episode Index + Preprocess + RL)
   [switch]$a,   # Paso 4.5 en adelante (Diagnosis)
   [switch]$bt,  # Paso 7 en adelante (Backtest GBT+RL)
-  [switch]$v    # Paso 8 en adelante (Visualización)
+  [switch]$v,   # Paso 8 en adelante (Visualización)
+  [switch]$u    # Modo Update: espera a las 22:05h, actualiza ThetaData y empieza en Paso 0
 )
 
 $ErrorActionPreference = "Continue"
@@ -19,12 +20,40 @@ if ($bt) { $skip_to_step = 7 }
 if ($v) { $skip_to_step = 8 }
 
 # ─────────────────────────────────────────────────────────────────────────────
+# MODO UPDATE (-u): Espera a las 22:05h y descarga históricos en ThetaData
+# ─────────────────────────────────────────────────────────────────────────────
+if ($u) {
+  $targetTime = (Get-Date).Date.AddHours(22).AddMinutes(5)
+  if ((Get-Date) -gt $targetTime) {
+      Write-Host "`n[UPDATE MODE] Ya son pasadas las 22:05h. Ejecutando scripts inmediatamente." -ForegroundColor Cyan
+  } else {
+      Write-Host "`n[UPDATE MODE] Esperando hasta las 22:05h para actualizar ThetaData..." -ForegroundColor Cyan
+      while ((Get-Date) -lt $targetTime) {
+          $timeToWait = $targetTime - (Get-Date)
+          Write-Host -NoNewline "`rFaltan $($timeToWait.Hours)h $($timeToWait.Minutes)m $($timeToWait.Seconds)s...  "
+          Start-Sleep -Seconds 10
+      }
+      Write-Host "`n¡Hora alcanzada! (22:05h) Empezando descarga...`n" -ForegroundColor Green
+  }
+
+  Write-Host "Ejecutando D:\ThetaData\options_bulk.py..." -ForegroundColor Yellow
+  python D:\ThetaData\options_bulk.py
+  if ($LASTEXITCODE -ne 0) { Write-Host "ERROR: options_bulk.py fallo." -ForegroundColor Red; exit 1 }
+
+  Write-Host "Ejecutando D:\ThetaData\script4_underlying_from_options.py..." -ForegroundColor Yellow
+  python D:\ThetaData\script4_underlying_from_options.py
+  if ($LASTEXITCODE -ne 0) { Write-Host "ERROR: script4_underlying_from_options.py fallo." -ForegroundColor Red; exit 1 }
+  
+  $skip_to_step = 0
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
 # PASO 0 — RECOLECCIÓN DE DATOS (SPX base + QQQ como contexto)
 # ─────────────────────────────────────────────────────────────────────────────
 if ($skip_to_step -le 0) {
   Write-Host "`n=== RECOLECTANDO DATOS SPX+QQQ+SPY ===" -ForegroundColor Cyan
   python collect_training_data_spx_qqq.py `
-    --start 20220801 --end 20260330 `
+    --start 20220801 --end 20260430 `
     --workers 20 --tickers SPX QQQ SPY `
     --output training_data_spx_qqq_spy.parquet
 
@@ -142,9 +171,8 @@ if ($skip_to_step -le 6) {
     --model models\trading_hybrid_wf.joblib `
     --normalizer models\hybrid_normalizer_wf.npz `
     --model-size small --ensemble `
-    --threshold 0.50 --cooldown 5 `
+    --threshold 0.60 --cooldown 15 `
     --target_long 0.010 --target_short 0.010 --stop 0.003 `
-    --uncertainty 150 `
     --strict-wf
         
   if ($LASTEXITCODE -ne 0) {
@@ -164,7 +192,7 @@ if ($skip_to_step -le 7) {
     --normalizer models\hybrid_normalizer_wf.npz `
     --rl-model ..\rl_models\best_rl_agent.pt `
     --model-size small --ensemble `
-    --threshold 0.50 --cooldown 5 `
+    --threshold 0.60 --cooldown 15 `
     --target-long 0.010 --target-short 0.010 --stop 0.003 `
     --risk-capital 1000.0 `
     --filter-by-greeks `
