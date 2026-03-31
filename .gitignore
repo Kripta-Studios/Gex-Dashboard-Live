@@ -23,6 +23,5 @@ trading_data/
 logs/
 rl_data/
 rt_data/
-*.joblib
 services/config.toml
 services/lib/
