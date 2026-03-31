@@ -76,7 +76,7 @@ class TradeSimulator:
     def __init__(self, threshold: float = 0.6, position_size: float = 1.0, cooldown_minutes: int = 30, 
                  target_long: float = 0.010, target_short: float = 0.005, # <-- Targets separados
                  stop_pct: float = 0.003, max_time: int = 180, min_iv_pct: float = 0.0,
-                 discord_enabled: bool = False, trade_limit: int = 0, uncertainty_threshold: float = 45.0,
+                 discord_enabled: bool = False, trade_limit: int = 0,
                  risk_capital: float = 500.0):
         self.threshold = threshold
         self.position_size = position_size
@@ -89,7 +89,6 @@ class TradeSimulator:
         self.min_iv_pct = min_iv_pct
         self.discord_enabled = discord_enabled
         self.trade_limit = trade_limit
-        self.uncertainty_threshold = uncertainty_threshold  # σ > this → exit (minutes)
         self.trades = []
         
     def load_ib_data(self, ticker, date):
@@ -130,7 +129,7 @@ class TradeSimulator:
         self._ib_data_cache[(ticker, date)] = []
         return []
 
-    def simulate(self, df: pd.DataFrame, predictions: np.ndarray, probabilities: np.ndarray, time_predictions: np.ndarray = None) -> pd.DataFrame:
+    def simulate(self, df: pd.DataFrame, predictions: np.ndarray, probabilities: np.ndarray) -> pd.DataFrame:
         """
         Simulate trades based on predictions with cooldown between trades.
         """
@@ -141,9 +140,6 @@ class TradeSimulator:
         df_work = df.copy()
         df_work['pred'] = predictions
         df_work['max_prob'] = probabilities.max(axis=1)
-        if time_predictions is not None:
-            df_work['time_mu'] = time_predictions[:, 0]   # μ (normalized 0-1)
-            df_work['time_sigma'] = time_predictions[:, 1] # σ in minutes
         
         # Convert time to minutes for easier comparison
         def time_to_minutes(t):
@@ -210,33 +206,13 @@ class TradeSimulator:
             entry_price = row['spot_price']
             direction = "LONG" if pred == 2 else "SHORT"
             
-            # Determine hold time using Bayesian prediction if available
-            pred_minutes_value = 180 # default
-            sigma_minutes = 0.0
-            if time_predictions is not None:
-                # μ is normalized 0-1, fraction of LOOKAHEAD_MINUTES (180)
-                raw_pred = row['time_mu'] * 180.0
-                pred_minutes_value = int(round(raw_pred))
-                sigma_minutes = row['time_sigma']  # Already in minutes
-                
-                # FILTER: Skip if predicted time is too long (slow move)
-                if pred_minutes_value > self.max_time:
-                    continue
-                
-                # FILTER: Skip if uncertainty is too high (Bayesian)
-                if sigma_minutes > self.uncertainty_threshold:
-                    continue
-                
-                # FILTER: Skip if Volatility (IV Percentile) is too low
-                # iv_percentile is in dataframe
-                if 'iv_percentile' in row and row['iv_percentile'] < self.min_iv_pct:
-                    continue
-                    
-                pred_minutes = max(2, pred_minutes_value)
-                # Cap at 180 mins (LOOKAHEAD_MINUTES)
-                hold_minutes = min(180, pred_minutes)
-            else:
-                hold_minutes = 180  # Default fallback
+            
+            hold_minutes = 180  # Default fallback
+            
+            # FILTER: Skip if Volatility (IV Percentile) is too low
+            # iv_percentile is in dataframe
+            if 'iv_percentile' in row and row['iv_percentile'] < self.min_iv_pct:
+                continue
             
             # --- HIGH RESOLUTION EXIT LOGIC ---
             exit_price = entry_price
@@ -249,10 +225,6 @@ class TradeSimulator:
             peak_price = entry_price
 
             base_target = self.target_long if direction == "LONG" else self.target_short
-            
-            smart_target = base_target
-            if sigma_minutes < 15.0: # Si la incertidumbre es muy baja, somos más ambiciosos
-                smart_target = base_target * 1.5
             
             # Load 1-minute data for this day
             minute_data = self.load_ib_data(ticker, date)
@@ -312,8 +284,8 @@ class TradeSimulator:
                                 break
                             
                             # Take Profit (High triggers it)
-                            if h >= entry_price * (1 + smart_target):
-                                exit_price = entry_price * (1 + smart_target)
+                            if h >= entry_price * (1 + base_target):
+                                exit_price = entry_price * (1 + base_target)
                                 target_hit = True
                                 actual_hold_minutes = m - current_minute
                                 found_exit_scan = True
@@ -342,8 +314,8 @@ class TradeSimulator:
                                 break
                                 
                             # Take Profit (Low triggers it)
-                            if l <= entry_price * (1 - smart_target):
-                                exit_price = entry_price * (1 - smart_target)
+                            if l <= entry_price * (1 - base_target):
+                                exit_price = entry_price * (1 - base_target)
                                 target_hit = True
                                 actual_hold_minutes = m - current_minute
                                 found_exit_scan = True
@@ -363,12 +335,12 @@ class TradeSimulator:
             if self.discord_enabled and _has_discord:
                 try:
                     # Calculamos precios teóricos para el mensaje
-                    tp_price = entry_price * (1 + smart_target) if direction == "LONG" else entry_price * (1 - smart_target)
+                    tp_price = entry_price * (1 + base_target) if direction == "LONG" else entry_price * (1 - base_target)
                     sl_price = entry_price * (1 - self.stop_pct) if direction == "LONG" else entry_price * (1 + self.stop_pct)
                     
                     # Creamos un objeto Mock que imite lo que el Wrapper espera
                     class MockSignal:
-                        def __init__(self, t, d, p, tp, sl, mu, sigma):
+                        def __init__(self, t, d, p, tp, sl):
                             self.ticker = t
                             self.direction = d
                             self.entry_price = p
@@ -380,12 +352,9 @@ class TradeSimulator:
                             self.position_size = 1.0
                             self.max_hold_time = hold_minutes
                             self.regime = "Backtest_Discovery"
-                            self.time_mu_minutes = mu
-                            self.time_sigma_minutes = sigma
                             self.reasoning = f"Backtest Signal (Prob: {max_prob:.2f})"
 
-                    mock_signal = MockSignal(ticker, direction, entry_price, tp_price, sl_price, 
-                                            pred_minutes_value, sigma_minutes)
+                    mock_signal = MockSignal(ticker, direction, entry_price, tp_price, sl_price)
                     
                     # Convertimos la fecha del CSV a objeto datetime para el mensaje
                     entry_dt = datetime.strptime(f"{date} {time_str}", "%Y%m%d %H:%M")
@@ -621,7 +590,6 @@ def main():
     parser.add_argument("--min-iv", type=float, default=0.0, help="Min IV Percentile (0-1) to trade (default: 0)")
     parser.add_argument("--discord", action="store_true", help="Send Discord alerts for trades (first 3 only)")
     parser.add_argument("--limit", type=int, default=0, help="Limit number of trades to simulate (0 = all)")
-    parser.add_argument("--uncertainty", type=float, default=45.0, help="Max uncertainty sigma (minutes) to enter trade (default: 45)")
     parser.add_argument("--ensemble", action="store_true", help="Load model as ensemble (use with ensemble-trained .pt files)")
     parser.add_argument("--strict-wf", action="store_true", help="Enable strict Walk-Forward (only use models trained before the trade date)")
     
@@ -715,55 +683,26 @@ def main():
     # Normalize
     features_norm = normalizer.transform(features)
 
-    if is_gbt:
-        # GBT inference
-        if args.strict_wf:
-            print(f"  [i] Using STRICT Walk-Forward inference (date-by-date filtering)...")
-            probs = np.zeros((len(df), 3), dtype=np.float32)
-            
-            # Group by date to apply correct ensemble filter per day
-            unique_dates = sorted(df['date'].unique())
-            for d_str in unique_dates:
-                # Find indices for this date
-                mask = df['date'] == d_str
-                idx = np.where(mask)[0]
-                if len(idx) == 0: continue
-                
-                # Predict only for this day using the date as filter
-                # date format in CSV is 'YYYYMMDD' (from line 658)
-                probs[idx] = model.predict_proba(features_norm[idx], date=d_str)
-        else:
-            probs = model.predict_proba(features_norm)
-            
-        predictions = np.argmax(probs, axis=1)
-        # Dummy Bayesian time parameters for GBT [mu_norm=0.5 (60m), sigma_minutes=0.0]
-        mu_norm = np.full(len(features_norm), 0.5)
-        sigma_minutes = np.zeros(len(features_norm))
-        time_predictions = np.column_stack([mu_norm, sigma_minutes])
-    else:
-        # PyTorch inference
-        features_tensor = torch.tensor(features_norm, dtype=torch.float32)
-        batch_size = 1024  
-        logits_list = []
-        time_pred_list = []
-
-        with torch.inference_mode():
-            for i in range(0, len(features_tensor), batch_size):
-                batch = features_tensor[i:i + batch_size].to(device)
-                batch_logits, batch_time_pred = model(batch)
-                logits_list.append(batch_logits.cpu())
-                time_pred_list.append(batch_time_pred.cpu())
-
-        logits = torch.cat(logits_list, dim=0)
-        time_pred = torch.cat(time_pred_list, dim=0)
-        probs = torch.softmax(logits, dim=-1).numpy()
-        predictions = logits.argmax(dim=-1).numpy()
+    # GBT inference
+    if args.strict_wf:
+        print(f"  [i] Using STRICT Walk-Forward inference (date-by-date filtering)...")
+        probs = np.zeros((len(df), 3), dtype=np.float32)
         
-        time_params = time_pred.numpy()
-        mu_norm = time_params[:, 0]
-        log_sigma = time_params[:, 1]
-        sigma_minutes = np.exp(log_sigma) * 180.0
-        time_predictions = np.column_stack([mu_norm, sigma_minutes])
+        # Group by date to apply correct ensemble filter per day
+        unique_dates = sorted(df['date'].unique())
+        for d_str in unique_dates:
+            # Find indices for this date
+            mask = df['date'] == d_str
+            idx = np.where(mask)[0]
+            if len(idx) == 0: continue
+            
+            # Predict only for this day using the date as filter
+            # date format in CSV is 'YYYYMMDD' (from line 658)
+            probs[idx] = model.predict_proba(features_norm[idx], date=d_str)
+    else:
+        probs = model.predict_proba(features_norm)
+        
+    predictions = np.argmax(probs, axis=1)
     
     print(f"  [OK] Predictions complete")
     print(f"    SHORT: {(predictions == 0).sum():,}")
@@ -771,11 +710,11 @@ def main():
     print(f"    LONG:  {(predictions == 2).sum():,}")
     
     # Simulate trades
-    print(f"\n[4/4] Simulating trades (threshold={args.threshold}, cooldown={args.cooldown}min, target_L={args.target_long:.1%}, target_S={args.target_short:.1%}, stop={args.stop:.1%}, max_time={args.max_time}m, min_iv={args.min_iv}, σ_max={args.uncertainty}m)...")
+    print(f"\n[4/4] Simulating trades (threshold={args.threshold}, cooldown={args.cooldown}min, target_L={args.target_long:.1%}, target_S={args.target_short:.1%}, stop={args.stop:.1%}, max_time={args.max_time}m, min_iv={args.min_iv})...")
     simulator = TradeSimulator(threshold=args.threshold, position_size=args.position_size, cooldown_minutes=args.cooldown,
                                target_long=args.target_long, target_short=args.target_short, stop_pct=args.stop, max_time=args.max_time, min_iv_pct=args.min_iv,
-                               discord_enabled=args.discord, uncertainty_threshold=args.uncertainty, risk_capital=args.risk_capital)
-    trades_df = simulator.simulate(df, predictions, probs, time_predictions)
+                               discord_enabled=args.discord, risk_capital=args.risk_capital)
+    trades_df = simulator.simulate(df, predictions, probs)
     print(f"  [OK] Executed {len(trades_df):,} trades")
     
     # Calculate and print metrics
@@ -795,8 +734,8 @@ def main():
     for thresh in [0.5, 0.6, 0.7, 0.8, 0.9]:
         sim = TradeSimulator(threshold=thresh, cooldown_minutes=args.cooldown,
                              target_long=args.target_long, target_short=args.target_short, stop_pct=args.stop, max_time=args.max_time, min_iv_pct=args.min_iv,
-                             discord_enabled=False, uncertainty_threshold=args.uncertainty, risk_capital=args.risk_capital)
-        trades = sim.simulate(df, predictions, probs, time_predictions)
+                             discord_enabled=False, risk_capital=args.risk_capital)
+        trades = sim.simulate(df, predictions, probs)
         m = calculate_metrics(trades)
         if "error" not in m:
             print(f"  {thresh:<12.1f} {m['total_trades']:<10,} {m['win_rate']:<12.1f}% {m['profit_factor']:<10.2f} {m['total_pnl']:<+10.2f}")

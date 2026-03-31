@@ -89,6 +89,7 @@ def _time_to_minutes(t) -> int:
 
 # Fixed point values per ticker
 GBT_POINT_VALUES = {
+    "SPX": 50.0, "/ES": 50.0, "/NQ": 20.0,
     "SPY": 100.0, "QQQ": 100.0, "IWM": 100.0,
 }
 
@@ -1273,43 +1274,22 @@ def main():
         if col in df.columns:
             features[:, i] = df[col].values.astype(np.float32)
     
-    # Check if GBT
-    is_gbt = hasattr(model, 'predict_proba') and not isinstance(model, torch.nn.Module)
-
     features = np.nan_to_num(features, nan=0.0, posinf=5.0, neginf=-5.0)
     features_norm = normalizer.transform(features)
     
-    if is_gbt:
-        if args.strict_wf:
-            print(f"  [i] Using STRICT Walk-Forward inference (date-by-date filtering) for GBT predictions...")
-            probs = np.zeros((len(df), 3), dtype=np.float32)
-            unique_dates = sorted(df['date'].unique()) # Uses 'date' col typically strings
-            for d_str in unique_dates:
-                mask = df['date'] == d_str
-                idx = np.where(mask)[0]
-                if len(idx) == 0: continue
-                # Pass date to ensemble for strict filtering
-                probs[idx] = model.predict_proba(features_norm[idx], date=str(d_str))
-        else:
-            probs = model.predict_proba(features_norm)
-        predictions = np.argmax(probs, axis=1)
+    if args.strict_wf:
+        print(f"  [i] Using STRICT Walk-Forward inference (date-by-date filtering) for GBT predictions...")
+        probs = np.zeros((len(df), 3), dtype=np.float32)
+        unique_dates = sorted(df['date'].unique()) # Uses 'date' col typically strings
+        for d_str in unique_dates:
+            mask = df['date'] == d_str
+            idx = np.where(mask)[0]
+            if len(idx) == 0: continue
+            # Pass date to ensemble for strict filtering
+            probs[idx] = model.predict_proba(features_norm[idx], date=str(d_str))
     else:
-        features_tensor = torch.tensor(features_norm, dtype=torch.float32)
-
-        logits_list, time_list = [], []
-        with torch.inference_mode():
-            for i in range(0, len(features_tensor), 1024):
-                batch = features_tensor[i:i+1024].to(device)
-                out = model(batch)
-                if isinstance(out, tuple):
-                    logits_list.append(out[0].cpu())
-                    time_list.append(out[1].cpu() if out[1] is not None else torch.zeros(len(batch), 2))
-                else:
-                    logits_list.append(out.cpu())
-
-        logits = torch.cat(logits_list, dim=0)
-        probs = torch.softmax(logits, dim=-1).numpy()
-        predictions = np.argmax(probs, axis=1)
+        probs = model.predict_proba(features_norm)
+    predictions = np.argmax(probs, axis=1)
         
     print(f"  Predictions: {np.bincount(predictions, minlength=3)} [SHORT, HOLD, LONG]")
 
