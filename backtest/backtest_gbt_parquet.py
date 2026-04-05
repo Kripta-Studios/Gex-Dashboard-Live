@@ -91,10 +91,10 @@ class TradeSimulator:
         self.trade_limit = trade_limit
         self.trades = []
         
-    def load_ib_data(self, ticker, date):
+    def load_ohlc_data(self, ticker, date):
         """Lazy load ThetaData 1-minute OHLC data for a ticker/date."""
-        if (ticker, date) in self._ib_data_cache:
-            return self._ib_data_cache[(ticker, date)]
+        if (ticker, date) in self._ohlc_data_cache:
+            return self._ohlc_data_cache[(ticker, date)]
         
         file_ticker = "SPXW" if ticker.replace("/", "") == "SPX" else ticker
         date_str = str(date).replace("-", "")
@@ -120,20 +120,20 @@ class TradeSimulator:
                     c = float(row['close'])
                     parsed_series.append((mins, o, h_p, l, c))
                 
-                self._ib_data_cache[(ticker, date)] = parsed_series
+                self._ohlc_data_cache[(ticker, date)] = parsed_series
                 return parsed_series
             except Exception as e:
                 print(f"Error loading Parquet data {filepath}: {e}")
         
         # Cache empty result if not found
-        self._ib_data_cache[(ticker, date)] = []
+        self._ohlc_data_cache[(ticker, date)] = []
         return []
 
     def simulate(self, df: pd.DataFrame, predictions: np.ndarray, probabilities: np.ndarray) -> pd.DataFrame:
         """
         Simulate trades based on predictions with cooldown between trades.
         """
-        self._ib_data_cache = {} # Clear cache at start of simulation
+        self._ohlc_data_cache = {} # Clear cache at start of simulation
         trades = []
         
         # Create a copy with predictions and sort properly
@@ -227,7 +227,7 @@ class TradeSimulator:
             base_target = self.target_long if direction == "LONG" else self.target_short
             
             # Load 1-minute data for this day
-            minute_data = self.load_ib_data(ticker, date)
+            minute_data = self.load_ohlc_data(ticker, date)
             
             if not minute_data:
                 # Fallback: simple time exit at entry price (conservative)
@@ -592,6 +592,7 @@ def main():
     parser.add_argument("--limit", type=int, default=0, help="Limit number of trades to simulate (0 = all)")
     parser.add_argument("--ensemble", action="store_true", help="Load model as ensemble (use with ensemble-trained .pt files)")
     parser.add_argument("--strict-wf", action="store_true", help="Enable strict Walk-Forward (only use models trained before the trade date)")
+    parser.add_argument("--tickers", nargs="+", help="Filter by specific tickers (e.g., SPY QQQ)")
     
     args = parser.parse_args()
     
@@ -663,6 +664,11 @@ def main():
     
     print(f"  [i] Filtering for {date_filter_1} to {date_filter_2}...")
     df = df[(df['date'] >= date_filter_1) & (df['date'] <= date_filter_2)].copy()
+    
+    if getattr(args, 'tickers', None):
+        print(f"  [i] Filtering to tickers: {args.tickers}")
+        df = df[df['ticker'].isin(args.tickers)].copy()
+
     if df.empty:
         print(f"  [!] Error: No data found in the {date_filter_1} to {date_filter_2} range.")
         sys.exit(1)
