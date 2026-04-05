@@ -145,18 +145,27 @@ def _process_single_date(args_tuple):
     Process a single date's options data robustly and quickly.
     """
     date_str, date_episodes, options_dir, max_forward_minutes, output_dir, daily_signals = args_tuple
-    from collect_training_data_spx_qqq import get_parquet_file
-    from services.compute_features import calculate_exact_t, R_RATE, Q_DIV
-    from training_data.stats import calc_dp_cdf_pdf
-
     date_str = str(date_str)
     year, month = date_str[:4], date_str[4:6]
     partial_cache = {}
     processed = 0
     skipped = 0
 
+    from collect_training_data_spx_qqq import get_parquet_file, load_historical_ib_levels
+    from services.compute_features import calculate_exact_t, R_RATE, Q_DIV
+    from training_data.stats import calc_dp_cdf_pdf
+
     for ticker_sym, ticker_episodes in date_episodes.groupby("ticker"):
         greek_ticker = "SPXW" if ticker_sym == "SPX" else ticker_sym
+        
+        # Calculate robust daily ATR without lookahead bias
+        hist_ohlc = load_historical_ib_levels(greek_ticker, date_str, n_days=15)
+        ranges = [h['ib_high'] - h['ib_low'] for h in hist_ohlc if h is not None]
+        if len(ranges) >= 1:
+            day_atr = float(np.mean(ranges))
+        else:
+            day_atr = 70.0 if ticker_sym == "SPX" else 4.0
+        day_atr = max(day_atr, 0.5)
         
         # Load daily greek file
         try:
@@ -330,24 +339,6 @@ def _process_single_date(args_tuple):
             if entry_time_str not in all_timestamp_strs:
                 skipped += 1
                 continue
-
-            # Compute day ATR (needed for env)
-            try:
-                start_idx = all_timestamp_strs.index(entry_time_str)
-            except ValueError:
-                skipped += 1
-                continue
-
-            window = 15
-            idx_start = max(0, start_idx - window)
-            idx_end = min(len(all_timestamps), start_idx + window)
-            prices = underlying_series.iloc[idx_start:idx_end].values
-            
-            if len(prices) > 1:
-                day_atr = float(np.mean(np.abs(np.diff(prices))))
-            else:
-                day_atr = 5.0
-            day_atr = max(day_atr, 0.5)
 
             # Store only entry-minute data and metadata
             # 'minutes' will be reconstructed by ChunkedOptionsCache
