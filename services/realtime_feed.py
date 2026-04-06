@@ -106,7 +106,7 @@ class RealtimeOptionsFeed:
     Saves all data as Parquet files in rt_data/{YYYYMMDD}/.
     """
 
-    def __init__(self, poll_interval: int = 60, output_dir: str = None):
+    def __init__(self, poll_interval: int = 40, output_dir: str = None):
         thetadata_url = os.environ.get("THETADATA_URL", "http://91.99.90.39:25503/v3")
         self.client = ThetaClient(base_url=thetadata_url)
         self.poll_interval = poll_interval
@@ -1281,7 +1281,7 @@ class RealtimeOptionsFeed:
 
 def main():
     parser = argparse.ArgumentParser(description="Real-time options + spot feed (Parquet)")
-    parser.add_argument("--interval", type=int, default=60, help="Poll interval in seconds")
+    parser.add_argument("--interval", type=int, default=40, help="Poll interval in seconds")
     parser.add_argument("--output", type=str, default=None, help="Output directory")
     parser.add_argument("--dry-run", action="store_true", help="Single poll then exit")
     args = parser.parse_args()
