@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto Teyka — Gestión del Estado Nervioso</title>
+    <meta name="description" content="Proyecto Teyka: De la biometría pasiva a la intervención proactiva. Índice de Saturación (IS) en tiempo real.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="icon.png">
+</head>
+<body>
+    <!-- NAV -->
+    <nav id="main-nav">
+        <div class="nav-brand"><span class="nav-icon">💎</span><span class="nav-title">Proyecto Teyka</span></div>
+        <div class="nav-links">
+            <a href="#hero" class="nav-link active">Inicio</a>
+            <a href="#is-live" class="nav-link">IS Live</a>
+            <a href="#dual-view" class="nav-link">Visualización</a>
+            <a href="#nudge" class="nav-link">Nudge</a>
+            <a href="#pipeline" class="nav-link">Pipeline</a>
+        </div>
+        <div class="nav-badge">Impacthon 2026</div>
+    </nav>
+
+    <!-- ═══════════════ HERO ═══════════════ -->
+    <section id="hero">
+        <div class="hero-content">
+            <div class="hero-badge">Gestión del Estado Nervioso</div>
+            <h1>No bloquees la pantalla.<br><span class="gradient-text">Entiende por qué no la sueltas.</span></h1>
+            <p class="hero-subtitle">Biometría pasiva como alarma temprana de la pérdida de autorregulación cognitiva. De la detección a la intervención.</p>
+            <div class="hero-stats">
+                <div class="hero-stat"><span class="hero-stat-value" data-target="14">0</span><span class="hero-stat-label">Usuarios Fitbit</span></div>
+                <div class="hero-stat"><span class="hero-stat-value" data-target="40">0</span><span class="hero-stat-label">Participantes GLOBEM</span></div>
+                <div class="hero-stat"><span class="hero-stat-value" data-target="1673">0</span><span class="hero-stat-label">Días-muestra</span></div>
+            </div>
+            <div class="hero-integrations">
+                <div class="integration-badge"><span>📡</span><span>Fitbit HRV</span></div>
+                <div class="integration-badge"><span>📱</span><span>GLOBEM Screen</span></div>
+                <div class="integration-badge"><span>📅</span><span>Google Calendar</span></div>
+                <div class="integration-badge"><span>✨</span><span>Gemini AI</span></div>
+            </div>
+            <a href="#is-live" class="hero-cta">Ver IS en Tiempo Real ↓</a>
+        </div>
+    </section>
+
+    <!-- ═══════════════ IS LIVE ═══════════════ -->
+    <section id="is-live">
+        <div class="section-header">
+            <span class="section-tag">Índice de Saturación (IS) — Basado en Wang, R., Chen, F., Chen, Z. et al. «StudentLife: Assessing Mental Health, Academic Performance and Behavioral Trends», ACM UbiComp, 2021</span>
+            <h2>Índice de Saturación en Vivo</h2>
+            <p>IS = (0.55 × StressScore) + (0.45 × BehaviorScore) — Alerta cuando IS > 70% + Ocio</p>
+        </div>
+
+        <!-- User selector -->
+        <div class="user-selector" id="user-selector"></div>
+
+        <!-- IS Panel -->
+        <div class="is-panel">
+            <div class="is-gauge-container">
+                <svg viewBox="0 0 180 180" class="is-gauge-svg">
+                    <circle cx="90" cy="90" r="78" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="12"/>
+                    <circle cx="90" cy="90" r="78" fill="none" stroke-width="12" stroke-linecap="round"
+                        stroke-dasharray="490" stroke-dashoffset="490" id="is-arc"
+                        transform="rotate(-90 90 90)"/>
+                </svg>
+                <div class="is-gauge-center">
+                    <div class="is-value" id="is-value">0%</div>
+                    <div class="is-label">Índice de<br>Saturación</div>
+                </div>
+            </div>
+
+            <div class="is-scores">
+                <div class="is-score-card">
+                    <div class="isc-header"><span class="isc-icon">💓</span>StressScore<span class="isc-weight">×0.55</span></div>
+                    <div class="isc-value" id="stress-val">0</div>
+                    <div class="isc-bar"><div class="isc-fill" id="stress-fill"></div></div>
+                    <div class="isc-detail" id="stress-detail">RMSSD: — ms</div>
+                </div>
+                <div class="is-score-card">
+                    <div class="isc-header"><span class="isc-icon">📱</span>BehaviorScore<span class="isc-weight">×0.45</span></div>
+                    <div class="isc-value" id="behavior-val">0</div>
+                    <div class="isc-bar"><div class="isc-fill" id="behavior-fill"></div></div>
+                    <div class="isc-detail" id="behavior-detail">Inercia: 0%</div>
+                </div>
+                <div class="is-formula-bar">
+                    <code>IS = (0.55 × <span id="f-stress">0</span>) + (0.45 × <span id="f-behavior">0</span>) = <strong id="f-total">0</strong></code>
+                </div>
+            </div>
+
+            <div class="is-classification">
+                <div class="class-header">Clasificación de Sesión</div>
+                <div class="class-segments" id="class-segments">
+                    <div class="class-seg"><span class="seg-time">🌅 Mañana</span><span class="seg-badge" id="class-morning">—</span></div>
+                    <div class="class-seg"><span class="seg-time">☀️ Tarde</span><span class="seg-badge" id="class-afternoon">—</span></div>
+                    <div class="class-seg"><span class="seg-time">🌆 Noche</span><span class="seg-badge" id="class-evening">—</span></div>
+                    <div class="class-seg"><span class="seg-time">🌙 Madrug.</span><span class="seg-badge" id="class-night">—</span></div>
+                </div>
+                <div class="class-summary">
+                    <div class="class-bar-row"><span class="class-dot green"></span><span>Productivo</span><div class="class-bar-track"><div class="class-bar-fill green" id="prod-fill"></div></div><span id="prod-pct">0%</span></div>
+                    <div class="class-bar-row"><span class="class-dot red"></span><span>Entretenim.</span><div class="class-bar-track"><div class="class-bar-fill red" id="ent-fill"></div></div><span id="ent-pct">0%</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- IS Alert -->
+        <div class="is-alert hidden" id="is-alert">
+            <span class="is-alert-pulse"></span>
+            <span class="is-alert-icon">⚠️</span>
+            <span class="is-alert-text"><strong>IS > 70%</strong> — Momento de intervención. Tu sistema nervioso muestra saturación en tiempo de inactividad.</span>
+            <span class="is-alert-action" id="is-alert-action">💡 Sugerencia</span>
+        </div>
+
+        <!-- KPI Row -->
+        <div class="kpi-row">
+            <div class="kpi-card"><div class="kpi-icon">📱</div><div class="kpi-val" id="k-screen">0</div><div class="kpi-unit">min</div><div class="kpi-name">Pantalla</div><div class="kpi-bar"><div class="kpi-fill" id="kf-screen"></div></div></div>
+            <div class="kpi-card"><div class="kpi-icon">🚶</div><div class="kpi-val" id="k-steps">0</div><div class="kpi-unit">pasos</div><div class="kpi-name">Actividad</div><div class="kpi-bar"><div class="kpi-fill" id="kf-steps"></div></div></div>
+            <div class="kpi-card"><div class="kpi-icon">🪑</div><div class="kpi-val" id="k-sed">0</div><div class="kpi-unit">min</div><div class="kpi-name">Sedentarismo</div><div class="kpi-bar"><div class="kpi-fill" id="kf-sed"></div></div></div>
+            <div class="kpi-card"><div class="kpi-icon">💓</div><div class="kpi-val" id="k-rmssd">0</div><div class="kpi-unit">ms</div><div class="kpi-name">RMSSD Synth.</div><div class="kpi-bar"><div class="kpi-fill" id="kf-rmssd"></div></div></div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="timeline-control">
+            <button class="play-btn" id="play-btn">▶ Reproducir</button>
+            <div class="speed-toggle" id="speed-toggle"><span class="speed-label">Vel.</span><span class="speed-dot active" data-ms="7000"></span><span class="speed-dot" data-ms="3500"></span><span class="speed-dot" data-ms="1500"></span></div>
+            <input type="range" min="0" max="1" value="0" class="timeline-slider" id="timeline-slider">
+            <span class="timeline-date" id="timeline-date">—</span>
+        </div>
+    </section>
+
+    <!-- ═══════════════ DUAL VIEW ═══════════════ -->
+    <section id="dual-view">
+        <div class="section-header">
+            <span class="section-tag">Visualización Dual — Grafana-style</span>
+            <h2>Biometría × Conducta</h2>
+            <p>La caída del HRV alineada con el aumento del uso de pantalla</p>
+        </div>
+        <div class="dual-charts">
+            <div class="chart-box"><canvas id="chart-dual-timeline"></canvas></div>
+        </div>
+        <div class="dual-charts duo">
+            <div class="chart-box half"><canvas id="chart-intraday-screen"></canvas></div>
+            <div class="chart-box half"><canvas id="chart-intraday-is"></canvas></div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ NUDGE ═══════════════ -->
+    <section id="nudge">
+        <div class="section-header">
+            <span class="section-tag">Intervención Proactiva</span>
+            <h2>Sistema de Nudge Teyka</h2>
+            <p>Sugerencias de actividad alternativa cuando el Índice de Saturación supera el umbral crítico</p>
+        </div>
+        <div class="nudge-container">
+            <div class="nudge-steps">
+                <div class="nudge-step active" data-n="1"><div class="ns-num">1</div><div class="ns-body"><h4><svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" style="vertical-align:bottom;margin-right:6px;"><circle cx="12" cy="12" r="2"/><path d="M16 12a4 4 0 0 1-8 0"/><path d="M20 12a8 8 0 0 1-16 0"/></svg> Monitoreo Pasivo</h4><p>El smartwatch captura variabilidad cardíaca (RMSSD). El móvil registra uso de pantalla y actividad física.</p></div></div>
+                <div class="nudge-step" data-n="2"><div class="ns-num">2</div><div class="ns-body"><h4><svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" style="vertical-align:bottom;margin-right:6px;"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg> Motor IS</h4><p>StressScore (desviación RMSSD) + BehaviorScore (inercia pantalla) → IS > 70% + Ocio → Trigger de intervención.</p></div></div>
+                <div class="nudge-step" data-n="3"><div class="ns-num">3</div><div class="ns-body"><h4><svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" style="vertical-align:bottom;margin-right:6px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> Nudge Contextual</h4><p>Sugerencia de actividad alternativa adaptada al perfil de intereses y al momento del día.</p></div></div>
+                <div class="nudge-step" data-n="4"><div class="ns-num">4</div><div class="ns-body"><h4><svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" style="vertical-align:bottom;margin-right:6px;"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg> Aprendizaje Continuo</h4><p>El feedback del usuario ajusta los pesos del motor de recomendación para futuras intervenciones.</p></div></div>
+            </div>
+            <div class="nudge-watch">
+                <div class="watch-frame">
+                    <div class="watch-notch"></div>
+                    <div class="watch-screen" id="watch-screen">
+                        <div id="w-idle">
+                            <div class="w-time" id="w-time">21:45</div>
+                            <div class="w-date">Viernes, 11 Abril</div>
+                            <div class="w-metric"><span><svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" style="vertical-align:middle"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span> 78 BPM</div>
+                            <div class="w-metric"><span><svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" style="vertical-align:middle"><rect x="5" y="2" width="14" height="20" rx="3"/><line x1="12" y1="18" x2="12.01" y2="18"></line></svg></span> IS: 82%</div>
+                        </div>
+                        <div class="hidden" id="w-notif">
+                            <div class="wn-header"><span class="wn-dot"></span>Teyka<span class="wn-time">21:45</span></div>
+                            <div class="wn-title" id="wn-title">Momento de desconectar</div>
+                            <div class="wn-body" id="wn-body">
+                                <p><svg width="12" height="12" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" style="vertical-align:middle;margin-right:4px;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> HRV <strong>45% bajo</strong></p>
+                                <p><svg width="12" height="12" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" style="vertical-align:middle;margin-right:4px;"><rect x="5" y="2" width="14" height="20" rx="3"/><line x1="12" y1="18" x2="12.01" y2="18"></line></svg> <strong>5h 23min</strong> pantalla</p>
+                            </div>
+                            <div class="wn-suggestion" id="wn-suggestion">Sal a <strong>caminar 15 min</strong> — tu HRV mejorará un 20%.</div>
+                            <div class="wn-actions">
+                                <button class="wn-btn primary" id="wn-accept">Ahora</button>
+                                <button class="wn-btn secondary" id="wn-later">En 15 min</button>
+                            </div>
+                            <div class="wn-feedback hidden" id="wn-feedback"><span>¿Útil?</span><button class="fb-btn" id="fb-y"><svg width="14" height="14" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg></button><button class="fb-btn" id="fb-n"><svg width="14" height="14" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3"></path></svg></button></div>
+                        </div>
+                        <div class="hidden" id="w-ok"><div class="ok-check"><svg width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg></div><div class="ok-text">¡Registrado!</div><div class="ok-detail">↑ +12% HRV estimado</div></div>
+                    </div>
+                    <div class="watch-button"></div>
+                </div>
+                <button class="sim-nudge-btn" id="sim-nudge-btn">Simular Alerta IS > 70% (Ocio)</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ PIPELINE ═══════════════ -->
+    <section id="pipeline">
+        <div class="section-header">
+            <span class="section-tag">Arquitectura Teyka</span>
+            <h2>Pipeline de Datos</h2>
+            <p>De la señal biométrica cruda a la intervención personalizada</p>
+        </div>
+        <div class="pipeline-flow">
+            <div class="pipe-stage" data-s="1"><div class="ps-icon"><svg width="24" height="24" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div><h4>Ingesta</h4><code>Fitbit HR + GLOBEM</code><small>Biometría + Conducta</small></div>
+            <div class="pipe-arrow">→</div>
+            <div class="pipe-stage" data-s="2"><div class="ps-icon"><svg width="24" height="24" stroke="currentColor" stroke-width="1.5" fill="none"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div><h4>ETL + Baseline</h4><code>IBI → RMSSD</code><small>Media móvil por usuario</small></div>
+            <div class="pipe-arrow">→</div>
+            <div class="pipe-stage" data-s="3"><div class="ps-icon"><svg width="24" height="24" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg></div><h4>IS Engine</h4><code>0.60×S + 0.40×B</code><small>Clasificación sesiones</small></div>
+            <div class="pipe-arrow">→</div>
+            <div class="pipe-stage" data-s="4"><div class="ps-icon"><svg width="24" height="24" stroke="currentColor" stroke-width="1.5" fill="none"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div><h4>Contexto</h4><div class="ps-apis"><span class="api-badge cal"><svg width="12" height="12" stroke="currentColor" stroke-width="2" fill="none" style="vertical-align:text-bottom;margin-right:4px;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Calendar</span><span class="api-badge Teyka"><svg width="12" height="12" stroke="currentColor" stroke-width="2" fill="none" style="vertical-align:text-bottom;margin-right:4px;"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Gemini</span></div><small>IS > 70% & Ocio → Trigger</small></div>
+            <div class="pipe-arrow">→</div>
+            <div class="pipe-stage" data-s="5"><div class="ps-icon"><svg width="24" height="24" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div><h4>Nudge Teyka</h4><small>Sugerencia personalizada basada en hobbies y agenda</small></div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-brand"><span><svg width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" style="vertical-align:bottom;margin-right:8px;"><polygon points="12 2 2 7 12 22 22 7 12 2"></polygon><polyline points="2 7 12 12 22 7"></polyline><line x1="12" y1="22" x2="12" y2="12"></line></svg></span>Proyecto Teyka<p>Gestión del Estado Nervioso</p></div>
+            <div class="footer-col"><h4>Datos</h4><span>Fitbit — Fitabase (Kaggle)</span><span>GLOBEM — UW EXP Lab</span></div>
+            <div class="footer-col"><h4>Integraciones</h4><span>Google Calendar API</span><span>Gemini API · Fitbit Web API</span></div>
+        </div>
+        <div class="footer-bottom">Impacthon 2026 — USC · Proyecto Teyka</div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

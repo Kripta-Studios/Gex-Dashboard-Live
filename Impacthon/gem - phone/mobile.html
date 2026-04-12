@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Teyka — Tu Estado Nervioso</title>
+    <meta name="description" content="Gestión del Estado Nervioso. Monitoreo biométrico pasivo.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="icon" type="image/png" href="icon.png">
+</head>
+<body>
+    <!-- App Container -->
+    <div class="app" id="app">
+        <!-- ═══ ONBOARDING OVERLAY ═══ -->
+    <div class="onboarding-overlay" id="onboarding-overlay">
+        <!-- Step 0: Welcome Splash -->
+        <div class="ob-step ob-step-active" id="ob-welcome">
+            <div class="ob-welcome-content">
+                <div class="ob-logo-ring">
+                    <img src="icon.png" alt="Teyka Icon" style="width: 140px; height: 140px; object-fit: contain;">
+                </div>
+                <h1 class="ob-title">Bienvenido</h1>
+                <p class="ob-desc">Medimos tus constantes, te enseñamos cuándo parar.</p>
+            </div>
+        </div>
+
+        <!-- Step 1: IS Gauge -->
+        <div class="ob-step" id="ob-gauge">
+            <div class="ob-tooltip ob-tooltip-bottom" style="top:270px;">
+                <div class="ob-tooltip-arrow ob-arrow-top"></div>
+                <h3>Tu Índice de Saturación</h3>
+                <p>Monitorizamos tu actividad en tiempo real.</p>
+            </div>
+        </div>
+
+        <!-- Step 2: Chart -->
+        <div class="ob-step" id="ob-chart">
+            <div class="ob-tooltip ob-tooltip-top" style="top:160px;">
+                <div class="ob-tooltip-arrow ob-arrow-bottom"></div>
+                <h3>Tu Gráfica Intradía</h3>
+                <p>Encontramos tus puntos más sensibles, donde deberías haber parado.</p>
+            </div>
+        </div>
+
+        <!-- Step 4: Notifications -->
+        <div class="ob-step" id="ob-notif">
+            <div class="ob-tooltip ob-tooltip-center">
+                <h3>Alertas Inteligentes</h3>
+                <p>¿Quieres personalizar tus notificaciones para que se adapten a ti?</p>
+                <div style="display:flex; gap:10px; margin-top:16px;">
+                    <button class="ob-done-btn" id="ob-personalize-yes" style="padding:10px; flex:1;">Sí</button>
+                    <button class="ob-done-btn" id="ob-personalize-no" style="padding:10px; flex:1; background:var(--bg-card); color:var(--text); border:1px solid var(--border);">Más tarde</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 5: Hobby Selector -->
+        <div class="ob-step" id="ob-hobbies">
+            <div class="ob-hobbies-content">
+                <h2 class="ob-hobbies-title">¿Qué te gusta hacer?</h2>
+                <p class="ob-hobbies-desc">Selecciona tus intereses para personalizar las sugerencias de descanso.</p>
+                <div class="ob-tags" id="ob-tags">
+                    <button class="ob-tag" data-hobby="caminar">Caminar</button>
+                    <button class="ob-tag" data-hobby="correr">Correr</button>
+                    <button class="ob-tag" data-hobby="musica">Escuchar música</button>
+                    <button class="ob-tag" data-hobby="leer">Leer</button>
+                    <button class="ob-tag" data-hobby="meditar">Meditar</button>
+                    <button class="ob-tag" data-hobby="cocinar">Cocinar</button>
+                    <button class="ob-tag" data-hobby="guitarra">Tocar un instrumento</button>
+                    <button class="ob-tag" data-hobby="dibujar">Dibujar</button>
+                    <button class="ob-tag" data-hobby="yoga">Yoga</button>
+                    <button class="ob-tag" data-hobby="naturaleza">Estar en la naturaleza</button>
+                    <button class="ob-tag" data-hobby="amigos">Quedar con amigos</button>
+                    <button class="ob-tag" data-hobby="gimnasio">Ir al gimnasio</button>
+                </div>
+                <div class="ob-custom-wrap">
+                    <input type="text" class="ob-custom-input" id="ob-custom-input" placeholder="Otro: escribe tu hobby...">
+                    <button class="ob-custom-add" id="ob-custom-add">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </button>
+                </div>
+                <button class="ob-done-btn" id="ob-done-btn">Empezar</button>
+            </div>
+        </div>
+
+        <!-- Navigation dots + next button -->
+        <div class="ob-nav" id="ob-nav">
+            <div class="ob-dots">
+                <span class="ob-dot ob-dot-active" data-step="0"></span>
+                <span class="ob-dot" data-step="1"></span>
+                <span class="ob-dot" data-step="2"></span>
+                <span class="ob-dot" data-step="3"></span>
+                <span class="ob-dot" data-step="4"></span>
+            </div>
+            <button class="ob-next-btn" id="ob-next-btn">Siguiente</button>
+        </div>
+    </div>
+
+    <!-- iOS Notification Popup -->
+        <div class="notif-overlay" id="notif-overlay">
+            <div class="notif-card" id="notif-card">
+                <div class="notif-handle"></div>
+                <div class="notif-header">
+                    <div class="notif-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E53935" stroke-width="2" stroke-linecap="round"><path d="M12 2a7 7 0 0 1 7 7c0 3-1.5 5.5-3 8H8c-1.5-2.5-3-5-3-8a7 7 0 0 1 7-7z"/><path d="M9 22h6"/><path d="M12 2v3"/></svg>
+                    </div>
+                    <div class="notif-app">Teyka</div>
+                    <div class="notif-time">ahora</div>
+                </div>
+                <div class="notif-title" id="notif-title">Tu cuerpo necesita un descanso</div>
+                <div class="notif-body" id="notif-body">Llevas 3h de pantalla continua. Tu índice de saturación ha superado el umbral.</div>
+                <div class="notif-actions">
+                    <button class="notif-btn notif-btn-primary" id="notif-now">Descansar ahora</button>
+                    <button class="notif-btn notif-btn-later" id="notif-later">En 15 min</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Bar Mock -->
+        <div class="status-bar">
+            <span class="status-time" id="status-time">12:00</span>
+            <div class="status-icons">
+                <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M1 11L3 7L5.5 9L8.5 3L11 7L13 4L15 1" stroke="#1A1A1A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <svg width="22" height="12" viewBox="0 0 22 12" fill="none"><rect x="0.5" y="1" width="19" height="10" rx="2" stroke="#1A1A1A" stroke-width="1"/><rect x="2" y="3" width="13" height="6" rx="1" fill="#1A1A1A"/><path d="M21 4.5v3" stroke="#1A1A1A" stroke-width="1" stroke-linecap="round"/></svg>
+            </div>
+        </div>
+
+        <!-- Swipeable Screens -->
+        <div class="screens-container" id="screens">
+            <!-- Screen 1: Today Chart -->
+            <div class="screen screen-active" id="screen-today">
+                <div class="screen-scroll">
+                    <!-- Greeting -->
+                    <div class="greeting-section">
+                        <h1 class="greeting-name" id="greeting-name">Hola, Álvaro</h1>
+                        <p class="greeting-sub" id="greeting-sub">Tu resumen de hoy</p>
+                        <div class="user-selector-trigger" id="user-trigger">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B6B70" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+                        </div>
+                    </div>
+
+                    <!-- Daily Summary Card (Yesterday Recap) -->
+                    <div class="daily-summary" id="daily-summary" style="display:none;">
+                        <div class="ds-header">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E53935" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                            <span class="ds-label">Resumen de ayer</span>
+                            <button class="ds-close" id="ds-close">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                            </button>
+                        </div>
+                        <div class="ds-body">
+                            <div class="ds-peak">
+                                <div class="ds-peak-value" id="ds-peak-val">—</div>
+                                <div class="ds-peak-label">IS máximo</div>
+                            </div>
+                            <div class="ds-detail" id="ds-detail"></div>
+                        </div>
+                        <div class="ds-result" id="ds-result"></div>
+                    </div>
+
+                    <!-- IS Circular Gauge -->
+                    <div class="is-hero">
+                        <div class="is-gauge">
+                            <svg viewBox="0 0 120 120" class="is-ring">
+                                <circle cx="60" cy="60" r="52" fill="none" stroke="#F2F2F7" stroke-width="10"/>
+                                <circle cx="60" cy="60" r="52" fill="none" stroke-width="10" stroke-linecap="round"
+                                    id="is-arc" stroke-dasharray="327" stroke-dashoffset="327"
+                                    transform="rotate(-90 60 60)"/>
+                            </svg>
+                            <div class="is-gauge-inner">
+                                <div class="is-number" id="is-number">0</div>
+                                <div class="is-unit">%</div>
+                            </div>
+                        </div>
+                        <div class="is-level" id="is-level">Estado óptimo</div>
+                        <div class="is-level-dot" id="is-level-dot"></div>
+                        <div class="is-date" id="is-date"></div>
+                    </div>
+
+                    <!-- Main Chart -->
+                    <div class="chart-container">
+                        <canvas id="main-chart"></canvas>
+                        <div class="chart-tooltip" id="chart-tooltip">
+                            <div class="tooltip-hour" id="tooltip-hour">14:00</div>
+                            <div class="tooltip-is" id="tooltip-is">45%</div>
+                        </div>
+                    </div>
+
+                    <!-- Time Range Selector -->
+                    <div class="range-selector" id="range-selector">
+                        <button class="range-btn range-active" data-range="day">Hoy</button>
+                        <button class="range-btn" data-range="week">Semana</button>
+                        <button class="range-btn" data-range="month">Mes</button>
+                    </div>
+
+                    <!-- Rest Points Summary -->
+                    <div class="rest-summary" id="rest-summary">
+                        <div class="section-title">Momentos de descanso sugeridos</div>
+                        <div class="rest-points" id="rest-points"></div>
+                    </div>
+
+                    <!-- Stress vs Behavior -->
+                    <div class="decomp-section">
+                        <div class="section-title">Descomposición del IS</div>
+                        <div class="decomp-row">
+                            <div class="decomp-card">
+                                <div class="decomp-label">StressScore</div>
+                                <div class="decomp-value" id="d-stress">0</div>
+                                <div class="decomp-weight">×0.55</div>
+                                <div class="decomp-bar"><div class="decomp-fill" id="df-stress"></div></div>
+                            </div>
+                            <div class="decomp-card">
+                                <div class="decomp-label">BehaviorScore</div>
+                                <div class="decomp-value" id="d-behavior">0</div>
+                                <div class="decomp-weight">×0.45</div>
+                                <div class="decomp-bar"><div class="decomp-fill" id="df-behavior"></div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Health Connection -->
+                    <div class="health-section">
+                        <div class="section-title">Salud física y mental</div>
+                        <div class="health-grid">
+                            <div class="health-card">
+                                <div class="health-icon-wrap">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E53935" stroke-width="2" stroke-linecap="round"><path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0L12 5.36l-.77-.78a5.4 5.4 0 0 0-7.65 7.65l1.06 1.06L12 20.64l7.36-7.36 1.06-1.06a5.4 5.4 0 0 0 0-7.64z"/></svg>
+                                </div>
+                                <div class="health-label">RMSSD</div>
+                                <div class="health-value" id="h-rmssd">—</div>
+                                <div class="health-unit">ms</div>
+                                <div class="health-bar"><div class="health-fill" id="hf-rmssd"></div></div>
+                            </div>
+                            <div class="health-card">
+                                <div class="health-icon-wrap">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="2" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                                </div>
+                                <div class="health-label">Pasos</div>
+                                <div class="health-value" id="h-steps">—</div>
+                                <div class="health-unit">hoy</div>
+                                <div class="health-bar"><div class="health-fill" id="hf-steps"></div></div>
+                            </div>
+                            <div class="health-card">
+                                <div class="health-icon-wrap">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#007AFF" stroke-width="2" stroke-linecap="round"><rect x="5" y="2" width="14" height="20" rx="3"/><line x1="12" y1="18" x2="12" y2="18.01" stroke-width="3"/></svg>
+                                </div>
+                                <div class="health-label">Pantalla</div>
+                                <div class="health-value" id="h-screen">—</div>
+                                <div class="health-unit">min</div>
+                                <div class="health-bar"><div class="health-fill" id="hf-screen"></div></div>
+                            </div>
+                            <div class="health-card">
+                                <div class="health-icon-wrap">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF9F0A" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+                                </div>
+                                <div class="health-label">Actividad</div>
+                                <div class="health-value" id="h-active">—</div>
+                                <div class="health-unit">min</div>
+                                <div class="health-bar"><div class="health-fill" id="hf-active"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen 2: History Calendar -->
+            <div class="screen" id="screen-history">
+                <div class="screen-scroll">
+                    <div class="history-header">
+                        <h2>Historial</h2>
+                        <div class="history-month" id="history-month">Mayo 2018</div>
+                    </div>
+                    <div class="calendar-grid" id="calendar-grid"></div>
+                    <div class="history-chart-container">
+                        <canvas id="history-chart"></canvas>
+                    </div>
+                    <div class="history-stats" id="history-stats"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Nav -->
+        <div class="bottom-nav">
+            <button class="nav-btn nav-active" data-screen="0" id="nav-today">
+                <svg class="nav-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3v18h18"/><path d="M7 16l4-8 4 4 4-6"/></svg>
+                <span class="nav-label">Hoy</span>
+            </button>
+            <button class="nav-btn" data-screen="1" id="nav-history">
+                <svg class="nav-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                <span class="nav-label">Historial</span>
+            </button>
+        </div>
+
+        <!-- User Selector Modal -->
+        <div class="modal-overlay" id="user-modal">
+            <div class="modal-card">
+                <div class="modal-handle"></div>
+                <div class="modal-title">Seleccionar perfil</div>
+                <div class="user-list" id="user-list"></div>
+            </div>
+        </div>
+
+        <!-- Day Selector Modal -->
+        <div class="modal-overlay" id="day-modal">
+            <div class="modal-card">
+                <div class="modal-handle"></div>
+                <div class="modal-title">Seleccionar día</div>
+                <div class="day-slider-container">
+                    <input type="range" id="day-slider" min="0" max="10" value="0" class="day-slider">
+                    <div class="day-slider-label" id="day-slider-label">Día 1</div>
+                </div>
+                <button class="modal-done" id="day-done">Hecho</button>
+            </div>
+        </div>
+    </div> <!-- Cerrando el contenedor app maestro -->
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script src="mobile.js?v=5"></script>
+</body>
+</html>

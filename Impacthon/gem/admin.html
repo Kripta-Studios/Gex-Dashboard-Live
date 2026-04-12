@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teyka Admin — Panel de Investigación</title>
+    <meta name="description" content="Panel de administración y data mining del Proyecto Teyka. Observabilidad, correlaciones y banco de pruebas.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css">
+    <link rel="icon" type="image/png" href="icon.png">
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo" style="display:flex; align-items:center; justify-content:center;"><img src="icon.png" alt="Teyka Icon" style="width: 36px; height: 36px;"></div>
+            <div class="logo-sub">Research Panel</div>
+        </div>
+        <nav class="sidebar-nav">
+            <button class="nav-item nav-active" data-view="overview" id="nav-overview">
+                <span class="nav-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="21"></line><line x1="16" y1="12" x2="16" y2="21"></line><line x1="8" y1="15" x2="8" y2="21"></line></svg></span> Overview
+            </button>
+            <button class="nav-item" data-view="users" id="nav-users">
+                <span class="nav-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span> Usuarios
+            </button>
+            <button class="nav-item" data-view="correlations" id="nav-correlations">
+                <span class="nav-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg></span> Correlaciones
+            </button>
+            <button class="nav-item" data-view="logs" id="nav-logs">
+                <span class="nav-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg></span> Logs & Alertas
+            </button>
+            <button class="nav-item" data-view="sandbox" id="nav-sandbox">
+                <span class="nav-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.31"></path><path d="M14 9.3V1.99"></path><path d="M8.5 2h7"></path><path d="M14 9.3a6.5 6.5 0 1 1-4 0"></path><path d="M5.52 16h12.96"></path></svg></span> Banco de Pruebas
+            </button>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="export-btn" id="export-csv">
+                <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg></span> Exportar CSV
+            </button>
+            <button class="export-btn" id="export-json">
+                <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg></span> Exportar JSON
+            </button>
+            <div class="sidebar-info">
+                <span id="sidebar-version">v3.1</span> · <span id="sidebar-date"></span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main" id="main">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <h1 class="topbar-title" id="topbar-title">Overview</h1>
+            <div class="topbar-meta">
+                <span class="topbar-badge" id="topbar-users">— usuarios</span>
+                <span class="topbar-badge" id="topbar-days">— días</span>
+                <span class="topbar-badge topbar-badge-accent" id="topbar-alerts">— alertas</span>
+            </div>
+        </header>
+
+        <!-- ═══════ VIEW: OVERVIEW ═══════ -->
+        <section class="view view-active" id="view-overview">
+            <!-- KPI Cards -->
+            <div class="kpi-row" id="kpi-row">
+                <div class="kpi-card">
+                    <div class="kpi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+                    <div class="kpi-body">
+                        <div class="kpi-label">Usuarios GLOBEM</div>
+                        <div class="kpi-value" id="kpi-users">—</div>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="21"></line><line x1="16" y1="12" x2="16" y2="21"></line><line x1="8" y1="15" x2="8" y2="21"></line></svg></div>
+                    <div class="kpi-body">
+                        <div class="kpi-label">IS Medio Global</div>
+                        <div class="kpi-value" id="kpi-avg-is">—</div>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E53935" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg></div>
+                    <div class="kpi-body">
+                        <div class="kpi-label">Días Críticos (IS>70%)</div>
+                        <div class="kpi-value" id="kpi-critical">—</div>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></div>
+                    <div class="kpi-body">
+                        <div class="kpi-label">Total Días de Datos</div>
+                        <div class="kpi-value" id="kpi-days">—</div>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg></div>
+                    <div class="kpi-body">
+                        <div class="kpi-label">Pantalla Media</div>
+                        <div class="kpi-value" id="kpi-screen">—</div>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></div>
+                    <div class="kpi-body">
+                        <div class="kpi-label">Pasos Medio</div>
+                        <div class="kpi-value" id="kpi-steps">—</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row 1 -->
+            <div class="charts-row">
+                <div class="chart-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">Distribución IS — Todos los usuarios</div>
+                    </div>
+                    <div class="chart-wrap"><canvas id="chart-dist"></canvas></div>
+                </div>
+                <div class="chart-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">IS por Usuario (comparativa)</div>
+                    </div>
+                    <div class="chart-wrap"><canvas id="chart-user-compare"></canvas></div>
+                </div>
+            </div>
+
+            <!-- Charts Row 2 -->
+            <div class="charts-row">
+                <div class="chart-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">Segmentos: Entretenimiento vs Productivo</div>
+                    </div>
+                    <div class="chart-wrap"><canvas id="chart-segments"></canvas></div>
+                </div>
+                <div class="chart-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">RMSSD por Usuario (baseline vs diario)</div>
+                    </div>
+                    <div class="chart-wrap"><canvas id="chart-rmssd"></canvas></div>
+                </div>
+            </div>
+
+            <!-- Fitbit Bar -->
+            <div class="chart-panel chart-full">
+                <div class="panel-header">
+                    <div class="panel-title">Fitbit: RMSSD Poblacional</div>
+                    <span class="panel-badge">14 participantes</span>
+                </div>
+                <div class="chart-wrap chart-wrap-sm"><canvas id="chart-fitbit"></canvas></div>
+            </div>
+        </section>
+
+        <!-- ═══════ VIEW: USERS ═══════ -->
+        <section class="view" id="view-users">
+            <div class="table-controls">
+                <input type="text" class="search-input" id="user-search" placeholder="Buscar por PID...">
+                <select class="sort-select" id="user-sort">
+                    <option value="is-desc">IS ↓ (mayor primero)</option>
+                    <option value="is-asc">IS ↑ (menor primero)</option>
+                    <option value="screen-desc">Pantalla ↓</option>
+                    <option value="steps-desc">Pasos ↓</option>
+                    <option value="sed-desc">Sedentarismo ↓</option>
+                </select>
+            </div>
+            <div class="table-wrapper">
+                <table class="data-table" id="user-table">
+                    <thead>
+                        <tr>
+                            <th>PID</th>
+                            <th>IS Medio</th>
+                            <th>Pantalla (min/día)</th>
+                            <th>Pasos (día)</th>
+                            <th>Sedentarismo (min)</th>
+                            <th>RMSSD Base (ms)</th>
+                            <th>Días Críticos</th>
+                            <th>Total Días</th>
+                        </tr>
+                    </thead>
+                    <tbody id="user-tbody"></tbody>
+                </table>
+            </div>
+
+            <!-- User Detail Panel (shown on row click) -->
+            <div class="detail-panel" id="user-detail" style="display:none">
+                <div class="detail-header">
+                    <h3 id="detail-title">—</h3>
+                    <button class="detail-close" id="detail-close">✕</button>
+                </div>
+                <div class="detail-kpis" id="detail-kpis"></div>
+                <div class="charts-row">
+                    <div class="chart-panel">
+                        <div class="panel-title">IS Diario</div>
+                        <div class="chart-wrap"><canvas id="chart-detail-daily"></canvas></div>
+                    </div>
+                    <div class="chart-panel">
+                        <div class="panel-title">Stress vs Behavior (diario)</div>
+                        <div class="chart-wrap"><canvas id="chart-detail-decomp"></canvas></div>
+                    </div>
+                </div>
+                <div class="chart-panel chart-full">
+                    <div class="panel-title">Sesiones por Segmento (timeline)</div>
+                    <div class="chart-wrap chart-wrap-sm"><canvas id="chart-detail-segments"></canvas></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════ VIEW: CORRELATIONS ═══════ -->
+        <section class="view" id="view-correlations">
+            <div class="charts-row">
+                <div class="chart-panel">
+                    <div class="panel-title">Pantalla (min) vs IS (%)</div>
+                    <div class="chart-wrap"><canvas id="scatter-screen-is"></canvas></div>
+                </div>
+                <div class="chart-panel">
+                    <div class="panel-title">Pasos vs StressScore</div>
+                    <div class="chart-wrap"><canvas id="scatter-steps-stress"></canvas></div>
+                </div>
+            </div>
+            <div class="charts-row">
+                <div class="chart-panel">
+                    <div class="panel-title">RMSSD (ms) vs IS (%)</div>
+                    <div class="chart-wrap"><canvas id="scatter-rmssd-is"></canvas></div>
+                </div>
+                <div class="chart-panel">
+                    <div class="panel-title">Sedentarismo (min) vs BehaviorScore</div>
+                    <div class="chart-wrap"><canvas id="scatter-sed-behavior"></canvas></div>
+                </div>
+            </div>
+            <div class="chart-panel chart-full">
+                <div class="panel-title">Correlation Matrix (IS components)</div>
+                <div class="corr-grid" id="corr-grid"></div>
+            </div>
+        </section>
+
+        <!-- ═══════ VIEW: LOGS ═══════ -->
+        <section class="view" id="view-logs">
+            <div class="table-controls">
+                <select class="sort-select" id="log-filter">
+                    <option value="all">Todos los niveles</option>
+                    <option value="critical">Solo Críticos (IS>75%)</option>
+                    <option value="alert">Alerta (IS>50%)</option>
+                </select>
+                <span class="log-count" id="log-count">— registros</span>
+            </div>
+            <div class="table-wrapper table-wrapper-tall">
+                <table class="data-table" id="logs-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Usuario</th>
+                            <th>IS</th>
+                            <th>Stress</th>
+                            <th>Behavior</th>
+                            <th>Pantalla</th>
+                            <th>Pasos</th>
+                            <th>Sedentario</th>
+                            <th>Segmentos Ent.</th>
+                            <th>Nivel</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logs-tbody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ═══════ VIEW: SANDBOX ═══════ -->
+        <section class="view" id="view-sandbox">
+            <div class="sandbox-grid">
+                <div class="sandbox-controls">
+                    <h3>Simulador de Pesos IS</h3>
+                    <p class="sandbox-desc">Ajusta los pesos de la fórmula IS = W₁×StressScore + W₂×BehaviorScore y observa el impacto en todas las métricas.</p>
+                    
+                    <div class="slider-group">
+                        <label>W₁ (StressScore): <strong id="w-stress-val">0.55</strong></label>
+                        <input type="range" min="0" max="100" value="55" id="w-stress" class="sandbox-slider">
+                    </div>
+                    <div class="slider-group">
+                        <label>W₂ (BehaviorScore): <strong id="w-behavior-val">0.45</strong></label>
+                        <input type="range" min="0" max="100" value="45" id="w-behavior" class="sandbox-slider" disabled>
+                    </div>
+                    <div class="slider-group">
+                        <label>Umbral alerta: <strong id="w-threshold-val">75</strong>%</label>
+                        <input type="range" min="30" max="95" value="75" id="w-threshold" class="sandbox-slider">
+                    </div>
+                    
+                    <div class="sandbox-results">
+                        <div class="sr-row">
+                            <div class="sr-item">
+                                <div class="sr-label">IS Medio Simulado</div>
+                                <div class="sr-value" id="sr-avg">—</div>
+                            </div>
+                            <div class="sr-item">
+                                <div class="sr-label">Días Críticos</div>
+                                <div class="sr-value" id="sr-critical">—</div>
+                            </div>
+                        </div>
+                        <div class="sr-row">
+                            <div class="sr-item">
+                                <div class="sr-label">IS Min</div>
+                                <div class="sr-value" id="sr-min">—</div>
+                            </div>
+                            <div class="sr-item">
+                                <div class="sr-label">IS Max</div>
+                                <div class="sr-value" id="sr-max">—</div>
+                            </div>
+                        </div>
+                        <div class="sr-delta" id="sr-delta"></div>
+                    </div>
+                </div>
+                <div class="chart-panel">
+                    <div class="panel-title">Distribución IS Simulada vs Original</div>
+                    <div class="chart-wrap"><canvas id="chart-sandbox"></canvas></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
