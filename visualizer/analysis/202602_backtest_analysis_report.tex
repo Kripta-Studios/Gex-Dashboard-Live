@@ -57,7 +57,7 @@
 \begin{center}
 {\Huge\bfseries\color{accent} GEX Dashboard Live}\\[6pt]
 {\Large\color{txtsub} Backtest Analysis Report — 202602}\\[4pt]
-{\normalsize\color{txtsub} Tickers: QQQ, SPY \quad|\quad GBT: gbt\_only\_20260410\_025412.csv \quad|\quad RL: gbt\_rl\_20260410\_025412.csv}
+{\normalsize\color{txtsub} Tickers: QQQ, SPY \quad|\quad GBT: gbt\_only\_20260412\_225159.csv \quad|\quad RL: gbt\_rl\_20260412\_225159.csv}
 \end{center}
 \vspace{12pt}
 \noindent\textcolor{bordergray}{\rule{\textwidth}{0.5pt}}
@@ -67,11 +67,11 @@
 \section{GBT-Only vs GBT+RL Comparison}
 \vspace{4pt}
 \noindent\begin{center}
-\metricbox{GBT-Only Trades}{37}{accent}
+\metricbox{GBT-Only Trades}{40}{accent}
 \hspace{4pt}
 \metricbox{GBT+RL Trades}{30}{accentrl}
 \hspace{4pt}
-\metricbox{PF Improvement}{35.5\%}{wingreen}
+\metricbox{PF Improvement}{40.8\%}{wingreen}
 \end{center}
 \vspace{8pt}
 \noindent\begin{center}
@@ -81,16 +81,16 @@
 \rowcolor{cardbg}
 \textcolor{txtmain}{\textbf{Metric}} & \textcolor{accent}{\textbf{GBT-Only}} & \textcolor{accentrl}{\textbf{GBT+RL}} & \textcolor{txtsub}{\textbf{Delta}} \\
 \midrule
-Total Trades & 37 & 30 & \textcolor{lossred}{-7} \\
-Trailing Stops & 8 & 0 & \textcolor{lossred}{-8} \\
-Win Rate (\%) & 51.4 & 60.0 & \textcolor{wingreen}{+8.6} \\
-Profit Factor & 1.93 & 2.62 & \textcolor{wingreen}{+0.69} \\
-Total P\&L (\$) & 15,054.4 & 8,641.0 & \textcolor{lossred}{-6,413.4} \\
+Total Trades & 40 & 30 & \textcolor{lossred}{-10} \\
+Trailing Stops & 5 & 0 & \textcolor{lossred}{-5} \\
+Win Rate (\%) & 45.0 & 46.7 & \textcolor{wingreen}{+1.7} \\
+Profit Factor & 1.41 & 1.98 & \textcolor{wingreen}{+0.57} \\
+Total P\&L (\$) & 8,085.6 & 6,162.5 & \textcolor{lossred}{-1,923.1} \\
 Max Drawdown (\$) & -6,477.5 & -2,183.5 & \textcolor{lossred}{+4,294.0} \\
-Sharpe Ratio & 8.36 & 8.85 & \textcolor{wingreen}{+0.50} \\
-W/L Size Ratio & 1.90 & 1.64 & \textcolor{lossred}{-0.26} \\
-Avg Hold Win (min) & 109 & 150 & \textcolor{wingreen}{+41} \\
-Avg Hold Loss (min) & 36 & 63 & \textcolor{lossred}{+27} \\
+Sharpe Ratio & 4.91 & 8.66 & \textcolor{wingreen}{+3.75} \\
+W/L Size Ratio & 1.80 & 2.10 & \textcolor{wingreen}{+0.30} \\
+Avg Hold Win (min) & 121 & 154 & \textcolor{wingreen}{+33} \\
+Avg Hold Loss (min) & 32 & 73 & \textcolor{lossred}{+41} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -104,8 +104,8 @@ Avg Hold Loss (min) & 36 & 63 & \textcolor{lossred}{+27} \\
 \rowcolor{cardbg}
 \textbf{Ticker} & \textbf{Trades} & \textbf{WR (\%)} & \textbf{PF} & \textbf{P\&L (\$)} \\
 \midrule
-QQQ & 24 & 41.7 & 1.37 & \textcolor{wingreen}{+4,800.5} \\
-SPY & 13 & 69.2 & 4.11 & \textcolor{wingreen}{+10,253.9} \\
+QQQ & 25 & 32.0 & 0.81 & \textcolor{lossred}{-3,001.4} \\
+SPY & 15 & 66.7 & 3.69 & \textcolor{wingreen}{+11,087.1} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -118,8 +118,8 @@ SPY & 13 & 69.2 & 4.11 & \textcolor{wingreen}{+10,253.9} \\
 \rowcolor{cardbg}
 \textbf{Ticker} & \textbf{Trades} & \textbf{WR (\%)} & \textbf{PF} & \textbf{P\&L (\$)} \\
 \midrule
-QQQ & 19 & 52.6 & 1.74 & \textcolor{wingreen}{+2,871.5} \\
-SPY & 11 & 72.7 & 4.99 & \textcolor{wingreen}{+5,769.5} \\
+QQQ & 18 & 33.3 & 0.82 & \textcolor{lossred}{-821.0} \\
+SPY & 12 & 66.7 & 4.88 & \textcolor{wingreen}{+6,983.5} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -127,17 +127,17 @@ SPY & 11 & 72.7 & 4.99 & \textcolor{wingreen}{+5,769.5} \\
 \clearpage
 \section{\textcolor{accent}{GBT-Only (Synthetic Futures)}}
 \noindent\begin{center}
-\metricbox{Trades}{37}{accent}
+\metricbox{Trades}{40}{accent}
 \hspace{3pt}
-\metricbox{Win Rate}{51.4\%}{wingreen}
+\metricbox{Win Rate}{45.0\%}{lossred}
 \hspace{3pt}
-\metricbox{Profit Factor}{1.93}{wingreen}
+\metricbox{Profit Factor}{1.41}{wingreen}
 \hspace{3pt}
-\metricbox{Net P\&L}{\$15,990}{wingreen}
+\metricbox{Net P\&L}{\$9,021}{wingreen}
 \hspace{3pt}
 \metricbox{Max DD}{\$6,477}{lossred}
 \hspace{3pt}
-\metricbox{Avg Hold}{74 min}{txtsub}
+\metricbox{Avg Hold}{72 min}{txtsub}
 \end{center}
 \vspace{6pt}
 \subsection{Monthly Breakdown}
@@ -148,7 +148,7 @@ SPY & 11 & 72.7 & 4.99 & \textcolor{wingreen}{+5,769.5} \\
 \rowcolor{cardbg}
 \textbf{Month} & \textbf{Trades} & \textbf{WR (\%)} & \textbf{P\&L (\$)} \\
 \midrule
-2026-02 & 37 & 51.4 & \textcolor{wingreen}{15,054.42} \\
+2026-02 & 40 & 45.0 & \textcolor{wingreen}{8,085.62} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -162,8 +162,8 @@ SPY & 11 & 72.7 & 4.99 & \textcolor{wingreen}{+5,769.5} \\
 \midrule
 2026-02-04 & 12:45 & QQQ & LONG & 123m & \textcolor{wingreen}{3,010.40} \\
 2026-02-06 & 10:25 & QQQ & LONG & 127m & \textcolor{wingreen}{3,010.20} \\
-2026-02-05 & 11:15 & QQQ & LONG & 15m & \textcolor{wingreen}{2,974.80} \\
 2026-02-12 & 09:40 & SPY & SHORT & 85m & \textcolor{wingreen}{2,779.16} \\
+2026-02-23 & 09:40 & SPY & SHORT & 75m & \textcolor{wingreen}{2,758.28} \\
 2026-02-03 & 14:50 & QQQ & LONG & 70m & \textcolor{wingreen}{2,360.00} \\
 \bottomrule
 \end{tabular}
@@ -189,15 +189,15 @@ SPY & 11 & 72.7 & 4.99 & \textcolor{wingreen}{+5,769.5} \\
 \noindent\begin{center}
 \metricbox{Trades}{30}{accentrl}
 \hspace{3pt}
-\metricbox{Win Rate}{60.0\%}{wingreen}
+\metricbox{Win Rate}{46.7\%}{lossred}
 \hspace{3pt}
-\metricbox{Profit Factor}{2.62}{wingreen}
+\metricbox{Profit Factor}{1.98}{wingreen}
 \hspace{3pt}
-\metricbox{Net P\&L}{\$9,028}{wingreen}
+\metricbox{Net P\&L}{\$6,550}{wingreen}
 \hspace{3pt}
 \metricbox{Max DD}{\$2,184}{lossred}
 \hspace{3pt}
-\metricbox{Avg Hold}{115 min}{txtsub}
+\metricbox{Avg Hold}{111 min}{txtsub}
 \end{center}
 \vspace{6pt}
 \subsection{Monthly Breakdown}
@@ -208,7 +208,7 @@ SPY & 11 & 72.7 & 4.99 & \textcolor{wingreen}{+5,769.5} \\
 \rowcolor{cardbg}
 \textbf{Month} & \textbf{Trades} & \textbf{WR (\%)} & \textbf{P\&L (\$)} \\
 \midrule
-2026-02 & 30 & 60.0 & \textcolor{wingreen}{8,641.00} \\
+2026-02 & 30 & 46.7 & \textcolor{wingreen}{6,162.50} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -221,9 +221,9 @@ SPY & 11 & 72.7 & 4.99 & \textcolor{wingreen}{+5,769.5} \\
 \textbf{Date} & \textbf{Entry} & \textbf{Ticker} & \textbf{Dir} & \textbf{Hold} & \textbf{P\&L (\$)} \\
 \midrule
 2026-02-12 & 09:40 & SPY & SHORT & 80m & \textcolor{wingreen}{2,700.00} \\
-2026-02-12 & 09:40 & QQQ & SHORT & 80m & \textcolor{wingreen}{2,283.00} \\
-2026-02-03 & 14:05 & SPY & LONG & 115m & \textcolor{wingreen}{1,678.00} \\
+2026-02-23 & 09:40 & SPY & SHORT & 85m & \textcolor{wingreen}{2,298.00} \\
 2026-02-03 & 14:50 & QQQ & LONG & 70m & \textcolor{wingreen}{1,640.00} \\
+2026-02-03 & 14:10 & SPY & LONG & 110m & \textcolor{wingreen}{1,381.50} \\
 2026-02-04 & 12:50 & QQQ & LONG & 185m & \textcolor{wingreen}{928.00} \\
 \bottomrule
 \end{tabular}
@@ -239,8 +239,8 @@ SPY & 11 & 72.7 & 4.99 & \textcolor{wingreen}{+5,769.5} \\
 2026-02-10 & 13:30 & QQQ & LONG & 105m & \textcolor{lossred}{-552.50} \\
 2026-02-04 & 10:05 & SPY & LONG & 145m & \textcolor{lossred}{-514.00} \\
 2026-02-04 & 11:45 & QQQ & LONG & 65m & \textcolor{lossred}{-494.00} \\
+2026-02-12 & 15:35 & QQQ & LONG & 25m & \textcolor{lossred}{-492.50} \\
 2026-02-03 & 14:15 & QQQ & LONG & 35m & \textcolor{lossred}{-488.00} \\
-2026-02-03 & 12:35 & SPY & LONG & 60m & \textcolor{lossred}{-478.50} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -253,10 +253,9 @@ SPY & 11 & 72.7 & 4.99 & \textcolor{wingreen}{+5,769.5} \\
 \rowcolor{cardbg}
 \textbf{Reason} & \textbf{Count} & \textbf{\%} \\
 \midrule
-max\_time & 15 & 50.0\% \\
-hard\_stop & 12 & 40.0\% \\
+hard\_stop & 14 & 46.7\% \\
+max\_time & 14 & 46.7\% \\
 hard\_take\_profit & 2 & 6.7\% \\
-agent\_exit & 1 & 3.3\% \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -268,7 +267,7 @@ agent\_exit & 1 & 3.3\% \\
 \rowcolor{cardbg}
 \textbf{Bucket} & \textbf{Trades} & \textbf{\%} & \textbf{WR} & \textbf{PF} & \textbf{Avg Dist} & \textbf{Avg P\&L} \\
 \midrule
-itm & 30 & 100.0\% & 60.0\% & 2.62 & -2.0p & \textcolor{wingreen}{+288.03} \\
+itm & 30 & 100.0\% & 46.7\% & 1.98 & -2.0p & \textcolor{wingreen}{+205.42} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -276,11 +275,11 @@ itm & 30 & 100.0\% & 60.0\% & 2.62 & -2.0p & \textcolor{wingreen}{+288.03} \\
 \section{Alpha vs Beta Analysis}
 \subsection{\textcolor{accent}{GBT-Only Performance by Market Trend}}
 \noindent\begin{center}
-\metricbox{Rank Corr w/ Market}{+0.13}{wingreen}
+\metricbox{Rank Corr w/ Market}{+0.41}{accentrl}
 \hspace{4pt}
 \metricbox{Market UP Trades}{6}{wingreen}
 \hspace{4pt}
-\metricbox{Market DOWN Trades}{31}{lossred}
+\metricbox{Market DOWN Trades}{34}{lossred}
 \end{center}
 \vspace{4pt}
 \noindent\begin{center}
@@ -290,15 +289,15 @@ itm & 30 & 100.0\% & 60.0\% & 2.62 & -2.0p & \textcolor{wingreen}{+288.03} \\
 \rowcolor{cardbg}
 \textbf{Market} & \textbf{Trades} & \textbf{WR (\%)} & \textbf{PF} \\
 \midrule
-UP Days & 6 & 83.3 & 9.73 \\
-DOWN Days & 31 & 45.2 & 1.47 \\
+UP Days & 6 & 83.3 & 9.66 \\
+DOWN Days & 34 & 38.2 & 1.01 \\
 \bottomrule
 \end{tabular}
 \end{center}
 \vspace{6pt}
 \subsection{\textcolor{accentrl}{GBT+RL Performance by Market Trend}}
 \noindent\begin{center}
-\metricbox{Rank Corr w/ Market}{+0.04}{wingreen}
+\metricbox{Rank Corr w/ Market}{-0.03}{wingreen}
 \hspace{4pt}
 \metricbox{Market UP Trades}{5}{wingreen}
 \hspace{4pt}
@@ -312,8 +311,8 @@ DOWN Days & 31 & 45.2 & 1.47 \\
 \rowcolor{cardbg}
 \textbf{Market} & \textbf{Trades} & \textbf{WR (\%)} & \textbf{PF} \\
 \midrule
-UP Days & 5 & 100.0 & 2255000000000.00 \\
-DOWN Days & 25 & 52.0 & 2.19 \\
+UP Days & 5 & 100.0 & 2235000000000.00 \\
+DOWN Days & 25 & 36.0 & 1.63 \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -364,27 +363,30 @@ DOWN Days & 25 & 52.0 & 2.19 \\
 02-03 & 14:50 & 16:00 & QQQ & LONG & 611.7 & 616.5 & \textcolor{wingreen}{+0.8\%} & 70m & max\_time & \textcolor{wingreen}{2,360.00} \\
 02-04 & 09:45 & 09:53 & QQQ & LONG & 613.8 & 611.9 & \textcolor{lossred}{-0.3\%} & 8m & stop & \textcolor{lossred}{-920.64} \\
 02-04 & 10:05 & 10:34 & SPY & LONG & 687.3 & 688.7 & \textcolor{wingreen}{+0.2\%} & 29m & trailing\_stop & \textcolor{wingreen}{559.25} \\
-02-04 & 11:05 & 11:48 & SPY & LONG & 687.1 & 685.0 & \textcolor{lossred}{-0.3\%} & 43m & stop & \textcolor{lossred}{-824.47} \\
+02-04 & 11:10 & 11:48 & SPY & LONG & 686.8 & 684.7 & \textcolor{lossred}{-0.3\%} & 38m & stop & \textcolor{lossred}{-824.17} \\
 02-04 & 11:45 & 12:27 & QQQ & LONG & 605.2 & 603.4 & \textcolor{lossred}{-0.3\%} & 42m & stop & \textcolor{lossred}{-907.77} \\
 02-04 & 11:50 & 12:37 & SPY & LONG & 684.8 & 682.8 & \textcolor{lossred}{-0.3\%} & 47m & stop & \textcolor{lossred}{-821.77} \\
 02-04 & 12:30 & 12:40 & QQQ & LONG & 603.0 & 601.2 & \textcolor{lossred}{-0.3\%} & 10m & stop & \textcolor{lossred}{-904.50} \\
 02-04 & 12:40 & 15:40 & SPY & LONG & 682.5 & 688.0 & \textcolor{wingreen}{+0.8\%} & 180m & max\_time & \textcolor{wingreen}{2,212.00} \\
 02-04 & 12:45 & 14:48 & QQQ & LONG & 602.1 & 608.1 & \textcolor{wingreen}{+1.0\%} & 123m & target & \textcolor{wingreen}{3,010.40} \\
-02-05 & 11:15 & 11:30 & QQQ & LONG & 595.0 & 600.9 & \textcolor{wingreen}{+1.0\%} & 15m & target & \textcolor{wingreen}{2,974.80} \\
+02-04 & 15:35 & 15:56 & QQQ & LONG & 607.3 & 605.5 & \textcolor{lossred}{-0.3\%} & 21m & stop & \textcolor{lossred}{-910.98} \\
 02-06 & 10:00 & 10:06 & QQQ & LONG & 602.5 & 600.7 & \textcolor{lossred}{-0.3\%} & 6m & stop & \textcolor{lossred}{-903.72} \\
-02-06 & 10:05 & 13:05 & SPY & LONG & 684.1 & 689.4 & \textcolor{wingreen}{+0.8\%} & 180m & max\_time & \textcolor{wingreen}{2,120.00} \\
+02-06 & 10:15 & 13:15 & SPY & LONG & 683.7 & 688.9 & \textcolor{wingreen}{+0.8\%} & 180m & max\_time & \textcolor{wingreen}{2,056.01} \\
 02-06 & 10:25 & 12:32 & QQQ & LONG & 602.0 & 608.1 & \textcolor{wingreen}{+1.0\%} & 127m & target & \textcolor{wingreen}{3,010.20} \\
 02-10 & 09:40 & 12:40 & QQQ & LONG & 614.1 & 615.3 & \textcolor{wingreen}{+0.2\%} & 180m & max\_time & \textcolor{wingreen}{584.99} \\
 02-10 & 13:30 & 15:55 & QQQ & LONG & 613.3 & 611.4 & \textcolor{lossred}{-0.3\%} & 145m & stop & \textcolor{lossred}{-919.91} \\
 02-11 & 09:40 & 10:03 & QQQ & LONG & 614.8 & 612.9 & \textcolor{lossred}{-0.3\%} & 23m & stop & \textcolor{lossred}{-922.17} \\
-02-12 & 09:40 & 10:22 & QQQ & SHORT & 615.0 & 612.3 & \textcolor{wingreen}{+0.4\%} & 42m & trailing\_stop & \textcolor{wingreen}{1,347.47} \\
+02-11 & 10:10 & 10:20 & SPY & LONG & 692.7 & 690.6 & \textcolor{lossred}{-0.3\%} & 10m & stop & \textcolor{lossred}{-831.19} \\
 02-12 & 09:40 & 11:05 & SPY & SHORT & 694.8 & 687.8 & \textcolor{wingreen}{+1.0\%} & 85m & target & \textcolor{wingreen}{2,779.16} \\
-02-12 & 11:30 & 14:30 & QQQ & LONG & 601.9 & 603.8 & \textcolor{wingreen}{+0.3\%} & 180m & max\_time & \textcolor{wingreen}{910.00} \\
+02-12 & 11:25 & 11:31 & QQQ & LONG & 603.5 & 601.7 & \textcolor{lossred}{-0.3\%} & 6m & stop & \textcolor{lossred}{-905.28} \\
+02-12 & 11:55 & 14:55 & QQQ & LONG & 602.9 & 604.3 & \textcolor{wingreen}{+0.2\%} & 180m & max\_time & \textcolor{wingreen}{705.01} \\
+02-12 & 15:35 & 15:51 & QQQ & LONG & 601.6 & 599.8 & \textcolor{lossred}{-0.3\%} & 16m & stop & \textcolor{lossred}{-902.40} \\
 02-17 & 10:00 & 11:30 & SPY & LONG & 676.6 & 681.2 & \textcolor{wingreen}{+0.7\%} & 90m & trailing\_stop & \textcolor{wingreen}{1,812.04} \\
-02-23 & 10:25 & 11:27 & SPY & SHORT & 684.8 & 682.5 & \textcolor{wingreen}{+0.3\%} & 62m & trailing\_stop & \textcolor{wingreen}{942.22} \\
+02-23 & 09:40 & 10:55 & SPY & SHORT & 689.6 & 682.7 & \textcolor{wingreen}{+1.0\%} & 75m & target & \textcolor{wingreen}{2,758.28} \\
 02-23 & 10:30 & 11:26 & QQQ & SHORT & 604.0 & 600.9 & \textcolor{wingreen}{+0.5\%} & 56m & trailing\_stop & \textcolor{wingreen}{1,539.08} \\
-02-23 & 12:05 & 15:05 & SPY & SHORT & 682.1 & 681.1 & \textcolor{wingreen}{+0.1\%} & 180m & max\_time & \textcolor{wingreen}{400.00} \\
-02-23 & 13:25 & 15:50 & QQQ & SHORT & 602.6 & 601.1 & \textcolor{wingreen}{+0.2\%} & 145m & trailing\_stop & \textcolor{wingreen}{751.08} \\
+02-23 & 10:55 & 13:55 & SPY & SHORT & 682.8 & 682.1 & \textcolor{wingreen}{+0.1\%} & 180m & max\_time & \textcolor{wingreen}{272.00} \\
+02-23 & 13:15 & 16:00 & QQQ & SHORT & 601.8 & 601.5 & \textcolor{wingreen}{+0.1\%} & 165m & max\_time & \textcolor{wingreen}{195.01} \\
+02-23 & 13:55 & 16:00 & SPY & SHORT & 682.5 & 682.4 & \textcolor{wingreen}{+0.0\%} & 125m & max\_time & \textcolor{wingreen}{40.00} \\
 02-27 & 09:45 & 10:52 & QQQ & LONG & 603.7 & 606.1 & \textcolor{wingreen}{+0.4\%} & 67m & trailing\_stop & \textcolor{wingreen}{1,204.50} \\
 02-27 & 09:45 & 12:19 & SPY & LONG & 682.6 & 684.2 & \textcolor{wingreen}{+0.2\%} & 154m & trailing\_stop & \textcolor{wingreen}{644.87} \\
 \end{longtable}
@@ -417,7 +419,7 @@ DOWN Days & 25 & 52.0 & 2.19 \\
 02-03 & 12:35 & 13:55 & QQQ & LONG & 612.0 & 614.8 & 612.1 & 3.70 & 1.61 & \textcolor{lossred}{-0.4\%} & \textcolor{lossred}{-56.5\%} & 80m & hard\_stop & \textcolor{lossred}{-418.0} \\
 02-03 & 12:35 & 13:35 & SPY & LONG & 686.0 & 688.1 & 686.0 & 2.97 & 1.38 & \textcolor{lossred}{-0.3\%} & \textcolor{lossred}{-53.7\%} & 60m & hard\_stop & \textcolor{lossred}{-478.5} \\
 02-03 & 13:40 & 14:05 & SPY & LONG & 685.0 & 686.4 & 684.5 & 2.19 & 1.06 & \textcolor{lossred}{-0.3\%} & \textcolor{lossred}{-51.8\%} & 25m & hard\_stop & \textcolor{lossred}{-454.0} \\
-02-03 & 14:05 & 16:00 & SPY & LONG & 683.0 & 684.5 & 689.5 & 2.25 & 6.45 & \textcolor{wingreen}{+0.7\%} & \textcolor{wingreen}{+186.4\%} & 115m & max\_time & \textcolor{wingreen}{1,678.0} \\
+02-03 & 14:10 & 16:00 & SPY & LONG & 682.0 & 684.2 & 689.5 & 2.80 & 7.41 & \textcolor{wingreen}{+0.8\%} & \textcolor{wingreen}{+164.2\%} & 110m & max\_time & \textcolor{wingreen}{1,381.5} \\
 02-03 & 14:15 & 14:50 & QQQ & LONG & 612.0 & 613.5 & 611.7 & 2.35 & 1.13 & \textcolor{lossred}{-0.3\%} & \textcolor{lossred}{-51.8\%} & 35m & hard\_stop & \textcolor{lossred}{-488.0} \\
 02-03 & 14:50 & 16:00 & QQQ & LONG & 610.0 & 611.7 & 616.5 & 2.37 & 6.46 & \textcolor{wingreen}{+0.8\%} & \textcolor{wingreen}{+173.4\%} & 70m & max\_time & \textcolor{wingreen}{1,640.0} \\
 02-04 & 09:45 & 10:50 & QQQ & LONG & 610.0 & 613.8 & 609.7 & 5.38 & 2.66 & \textcolor{lossred}{-0.7\%} & \textcolor{lossred}{-50.5\%} & 65m & hard\_stop & \textcolor{lossred}{-271.5} \\
@@ -425,19 +427,19 @@ DOWN Days & 25 & 52.0 & 2.19 \\
 02-04 & 11:45 & 12:50 & QQQ & LONG & 602.0 & 605.2 & 601.1 & 4.59 & 2.12 & \textcolor{lossred}{-0.7\%} & \textcolor{lossred}{-53.8\%} & 65m & hard\_stop & \textcolor{lossred}{-494.0} \\
 02-04 & 12:30 & 15:35 & SPY & LONG & 681.0 & 683.7 & 687.5 & 3.83 & 6.53 & \textcolor{wingreen}{+0.6\%} & \textcolor{wingreen}{+70.5\%} & 185m & max\_time & \textcolor{wingreen}{540.0} \\
 02-04 & 12:50 & 15:55 & QQQ & LONG & 598.0 & 601.1 & 607.8 & 4.42 & 9.06 & \textcolor{wingreen}{+1.1\%} & \textcolor{wingreen}{+105.0\%} & 185m & max\_time & \textcolor{wingreen}{928.0} \\
-02-05 & 11:15 & 14:20 & QQQ & LONG & 591.0 & 595.0 & 601.0 & 5.50 & 10.04 & \textcolor{wingreen}{+1.0\%} & \textcolor{wingreen}{+82.5\%} & 185m & max\_time & \textcolor{wingreen}{453.5} \\
 02-06 & 10:00 & 13:05 & QQQ & LONG & 598.0 & 602.5 & 608.2 & 6.00 & 10.40 & \textcolor{wingreen}{+1.0\%} & \textcolor{wingreen}{+73.3\%} & 185m & max\_time & \textcolor{wingreen}{440.0} \\
-02-06 & 10:05 & 13:10 & SPY & LONG & 681.0 & 684.1 & 689.5 & 4.28 & 8.54 & \textcolor{wingreen}{+0.8\%} & \textcolor{wingreen}{+99.6\%} & 185m & max\_time & \textcolor{wingreen}{853.0} \\
-02-10 & 09:40 & 10:10 & QQQ & LONG & 611.0 & 614.1 & 616.7 & 4.15 & 6.01 & \textcolor{wingreen}{+0.4\%} & \textcolor{wingreen}{+44.6\%} & 30m & agent\_exit & \textcolor{wingreen}{371.0} \\
+02-06 & 10:15 & 13:20 & SPY & LONG & 681.0 & 683.7 & 689.0 & 3.99 & 8.15 & \textcolor{wingreen}{+0.8\%} & \textcolor{wingreen}{+104.5\%} & 185m & max\_time & \textcolor{wingreen}{833.0} \\
+02-10 & 09:40 & 12:45 & QQQ & LONG & 611.0 & 614.1 & 615.0 & 4.15 & 4.07 & \textcolor{wingreen}{+0.1\%} & \textcolor{lossred}{-2.0\%} & 185m & max\_time & \textcolor{lossred}{-17.0} \\
 02-10 & 13:30 & 15:15 & QQQ & LONG & 612.0 & 613.3 & 612.3 & 1.85 & 0.74 & \textcolor{lossred}{-0.2\%} & \textcolor{lossred}{-59.7\%} & 105m & hard\_stop & \textcolor{lossred}{-552.5} \\
 02-11 & 09:40 & 10:15 & QQQ & LONG & 612.0 & 614.8 & 610.8 & 3.85 & 1.56 & \textcolor{lossred}{-0.6\%} & \textcolor{lossred}{-59.5\%} & 35m & hard\_stop & \textcolor{lossred}{-459.0} \\
-02-12 & 09:40 & 11:00 & QQQ & SHORT & 617.0 & 615.0 & 606.6 & 2.84 & 10.46 & \textcolor{wingreen}{+1.4\%} & \textcolor{wingreen}{+267.5\%} & 80m & hard\_take\_profit & \textcolor{wingreen}{2,283.0} \\
+02-11 & 10:10 & 10:30 & SPY & LONG & 690.0 & 692.7 & 689.7 & 3.51 & 1.75 & \textcolor{lossred}{-0.4\%} & \textcolor{lossred}{-50.1\%} & 20m & hard\_stop & \textcolor{lossred}{-352.0} \\
 02-12 & 09:40 & 11:00 & SPY & SHORT & 696.0 & 694.8 & 688.7 & 1.99 & 7.39 & \textcolor{wingreen}{+0.9\%} & \textcolor{wingreen}{+271.4\%} & 80m & hard\_take\_profit & \textcolor{wingreen}{2,700.0} \\
-02-12 & 11:30 & 14:35 & QQQ & LONG & 598.0 & 601.9 & 603.2 & 5.12 & 5.36 & \textcolor{wingreen}{+0.2\%} & \textcolor{wingreen}{+4.8\%} & 185m & max\_time & \textcolor{wingreen}{24.5} \\
+02-12 & 11:25 & 14:30 & QQQ & LONG & 600.0 & 603.5 & 604.3 & 4.68 & 4.42 & \textcolor{wingreen}{+0.1\%} & \textcolor{lossred}{-5.5\%} & 185m & max\_time & \textcolor{lossred}{-51.0} \\
+02-12 & 15:35 & 16:00 & QQQ & LONG & 600.0 & 601.6 & 600.6 & 1.95 & 0.97 & \textcolor{lossred}{-0.2\%} & \textcolor{lossred}{-50.5\%} & 25m & hard\_stop & \textcolor{lossred}{-492.5} \\
 02-17 & 10:00 & 13:05 & SPY & LONG & 673.0 & 676.6 & 681.0 & 4.85 & 8.09 & \textcolor{wingreen}{+0.6\%} & \textcolor{wingreen}{+66.9\%} & 185m & max\_time & \textcolor{wingreen}{648.0} \\
-02-23 & 10:25 & 13:30 & SPY & SHORT & 687.0 & 684.8 & 683.7 & 2.96 & 3.40 & \textcolor{wingreen}{+0.2\%} & \textcolor{wingreen}{+14.9\%} & 185m & max\_time & \textcolor{wingreen}{132.0} \\
+02-23 & 09:40 & 11:05 & SPY & SHORT & 692.0 & 689.6 & 681.3 & 3.06 & 10.72 & \textcolor{wingreen}{+1.2\%} & \textcolor{wingreen}{+250.3\%} & 85m & hard\_take\_profit & \textcolor{wingreen}{2,298.0} \\
 02-23 & 10:30 & 13:35 & QQQ & SHORT & 606.0 & 604.0 & 602.5 & 3.04 & 3.68 & \textcolor{wingreen}{+0.2\%} & \textcolor{wingreen}{+21.3\%} & 185m & max\_time & \textcolor{wingreen}{193.5} \\
-02-23 & 13:30 & 16:00 & SPY & SHORT & 685.0 & 683.8 & 682.4 & 1.65 & 2.61 & \textcolor{wingreen}{+0.2\%} & \textcolor{wingreen}{+58.2\%} & 150m & max\_time & \textcolor{wingreen}{576.0} \\
+02-23 & 11:30 & 14:35 & SPY & SHORT & 685.0 & 682.9 & 681.3 & 2.79 & 3.76 & \textcolor{wingreen}{+0.2\%} & \textcolor{wingreen}{+35.0\%} & 185m & max\_time & \textcolor{wingreen}{292.5} \\
 02-23 & 13:40 & 16:00 & QQQ & SHORT & 604.0 & 602.3 & 601.5 & 2.04 & 2.58 & \textcolor{wingreen}{+0.1\%} & \textcolor{wingreen}{+26.4\%} & 140m & max\_time & \textcolor{wingreen}{216.0} \\
 02-27 & 09:45 & 12:50 & QQQ & LONG & 600.0 & 603.7 & 605.9 & 4.95 & 6.07 & \textcolor{wingreen}{+0.4\%} & \textcolor{wingreen}{+22.8\%} & 185m & max\_time & \textcolor{wingreen}{225.0} \\
 02-27 & 09:45 & 12:50 & SPY & LONG & 679.0 & 682.6 & 683.9 & 4.72 & 5.17 & \textcolor{wingreen}{+0.2\%} & \textcolor{wingreen}{+9.4\%} & 185m & max\_time & \textcolor{wingreen}{89.0} \\
