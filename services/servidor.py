@@ -323,6 +323,42 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_error(404, f"Falta {docs_path}")
             return
 
+        # --- INICIO: Subproyectos Impacthon (rutas directas) ---
+        if path_only.startswith("/gem/"):
+            rel_path = path_only.replace("/gem/", "", 1)
+            if not rel_path: rel_path = "index.html"
+            file_path = os.path.join(PROJECT_ROOT, "Impacthon", "gem", rel_path)
+            if os.path.exists(file_path) and os.path.isfile(file_path):
+                self.send_response(200)
+                if file_path.endswith(".css"): self.send_header("Content-type", "text/css")
+                elif file_path.endswith(".js"): self.send_header("Content-type", "application/javascript")
+                elif file_path.endswith(".html"): self.send_header("Content-type", "text/html")
+                elif file_path.endswith(".json"): self.send_header("Content-type", "application/json")
+                elif file_path.endswith(".png"): self.send_header("Content-type", "image/png")
+                self.end_headers()
+                with open(file_path, "rb") as f: self.wfile.write(f.read())
+            else:
+                self.send_error(404, "File not found in gem")
+            return
+
+        if path_only.startswith("/gem-phone/"):
+            rel_path = path_only.replace("/gem-phone/", "", 1)
+            if not rel_path: rel_path = "mobile.html"
+            file_path = os.path.join(PROJECT_ROOT, "Impacthon", "gem - phone", rel_path)
+            if os.path.exists(file_path) and os.path.isfile(file_path):
+                self.send_response(200)
+                if file_path.endswith(".css"): self.send_header("Content-type", "text/css")
+                elif file_path.endswith(".js"): self.send_header("Content-type", "application/javascript")
+                elif file_path.endswith(".html"): self.send_header("Content-type", "text/html")
+                elif file_path.endswith(".json"): self.send_header("Content-type", "application/json")
+                elif file_path.endswith(".png"): self.send_header("Content-type", "image/png")
+                self.end_headers()
+                with open(file_path, "rb") as f: self.wfile.write(f.read())
+            else:
+                self.send_error(404, "File not found in gem-phone")
+            return
+        # --- FIN: Subproyectos Impacthon ---
+
         # 1. SERVIR HTML/CSS/JS (no auth required)
         if path_only == "/" or path_only == "/index.html":
             index_path = os.path.join(TEMPLATE_FOLDER, "index.html")
@@ -363,42 +399,6 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
             else:
                 self.send_error(404)
                 return
-
-        # --- INICIO: Subproyectos Impacthon (rutas directas) ---
-        if path_only.startswith("/gem/"):
-            rel_path = path_only.replace("/gem/", "", 1)
-            if not rel_path: rel_path = "index.html"
-            file_path = os.path.join(PROJECT_ROOT, "Impacthon", "gem", rel_path)
-            if os.path.exists(file_path) and os.path.isfile(file_path):
-                self.send_response(200)
-                if file_path.endswith(".css"): self.send_header("Content-type", "text/css")
-                elif file_path.endswith(".js"): self.send_header("Content-type", "application/javascript")
-                elif file_path.endswith(".html"): self.send_header("Content-type", "text/html")
-                elif file_path.endswith(".json"): self.send_header("Content-type", "application/json")
-                elif file_path.endswith(".png"): self.send_header("Content-type", "image/png")
-                self.end_headers()
-                with open(file_path, "rb") as f: self.wfile.write(f.read())
-            else:
-                self.send_error(404, "File not found in gem")
-            return
-
-        if path_only.startswith("/gem-phone/"):
-            rel_path = path_only.replace("/gem-phone/", "", 1)
-            if not rel_path: rel_path = "mobile.html"
-            file_path = os.path.join(PROJECT_ROOT, "Impacthon", "gem - phone", rel_path)
-            if os.path.exists(file_path) and os.path.isfile(file_path):
-                self.send_response(200)
-                if file_path.endswith(".css"): self.send_header("Content-type", "text/css")
-                elif file_path.endswith(".js"): self.send_header("Content-type", "application/javascript")
-                elif file_path.endswith(".html"): self.send_header("Content-type", "text/html")
-                elif file_path.endswith(".json"): self.send_header("Content-type", "application/json")
-                elif file_path.endswith(".png"): self.send_header("Content-type", "image/png")
-                self.end_headers()
-                with open(file_path, "rb") as f: self.wfile.write(f.read())
-            else:
-                self.send_error(404, "File not found in gem-phone")
-            return
-        # --- FIN: Subproyectos Impacthon ---
 
         # 2. API: LISTAR ARCHIVOS (auth required)
         if self.path.startswith("/list_files"):
