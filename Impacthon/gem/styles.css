@@ -30,12 +30,6 @@ body {
     color: var(--text);
     line-height: 1.6;
     overflow-x: hidden;
-    opacity: 1;
-    transition: opacity 0.5s ease-in-out;
-}
-
-body.app-loading {
-    opacity: 0 !important;
 }
 
 /* ─── NAV ─────────────────────────────────────────────────────── */

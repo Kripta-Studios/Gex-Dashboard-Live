@@ -68,13 +68,6 @@ html, body {
     background: var(--bg);
     position: relative;
     overflow: hidden;
-    opacity: 1;
-    transition: opacity 0.4s ease-in-out;
-}
-
-/* FOUC Prevention: hide until JS ready */
-.app-loading {
-    opacity: 0 !important;
 }
 
 /* ─── Screens ────────────────────────────────────────────── */
