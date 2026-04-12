@@ -1055,32 +1055,22 @@ async function getHobbySuggestion(useGemini = true) {
     const stored = localStorage.getItem('gem_hobbies');
     const hobbies = stored ? JSON.parse(stored) : [];
     
-    // Configuración API: Leemos dinámicamente el .env
+    // Configuración API: Leemos directamente el endpoint seguro del servidor
     let API_KEY = "";
     try {
-        const envRes = await fetch('../.env');
+        const envRes = await fetch('/api/impacthon/env');
         if (!envRes.ok) throw new Error(`HTTP ${envRes.status}`);
         const envText = await envRes.text();
         const match = envText.match(/key=([^\r\n]+)/i);
-        if (match) API_KEY = match[1].trim();
-        console.log("✅ API KEY cargada desde ../.env");
-    } catch (e) {
-        console.warn("⚠️ Falló ../.env, intentando .env local. Error:", e.message);
-        try {
-            const envResChild = await fetch('.env');
-            if (!envResChild.ok) throw new Error(`HTTP ${envResChild.status}`);
-            const envTextChild = await envResChild.text();
-            const matchChild = envTextChild.match(/key=([^\r\n]+)/i);
-            if (matchChild) {
-                API_KEY = matchChild[1].trim();
-                console.log("✅ API KEY cargada desde .env local");
-            } else {
-                console.error("❌ Archivo .env descargado, pero no se encontró 'key=...'! Contenido:", envTextChild);
-            }
-        } catch (err) {
-            console.error("❌ Fallo CRÍTICO leyendo el archivo .env vía Fetch. Mensaje HTTP:", err.message);
-            console.warn("⚠️ Pasando a Offline Fallback por falta de .env. Verifica que el servidor de Python exponga el .env y no haya permisos de sistema bloqueándolo.");
+        if (match) {
+            API_KEY = match[1].trim();
+            console.log("✅ API KEY cargada correctamente desde el servidor.");
+        } else {
+            console.error("❌ Archivo expuesto por el servidor, pero no se encontró 'key=...'! Contenido:", envText);
         }
+    } catch (err) {
+        console.error("❌ Fallo CRÍTICO leyendo el endpoint de API KEY. Mensaje HTTP:", err.message);
+        console.warn("⚠️ Pasando a Offline Fallback. Verifica que Impacthon/.env exista en el servidor.");
     }
 
     if (!API_KEY) {
