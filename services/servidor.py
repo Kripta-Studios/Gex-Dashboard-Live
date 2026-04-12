@@ -756,9 +756,38 @@ def cache_updater_loop():
         time.sleep(1)  # Esperar 1 segundo antes de volver a escanear
 
 
+def start_static_server(directory, port):
+    import functools
+    def run():
+        Handler = functools.partial(http.server.SimpleHTTPRequestHandler, directory=directory)
+        try:
+            with ThreadedReusableServer(("0.0.0.0", port), Handler) as httpd:
+                print(f"Subproyecto servidor corriendo en puerto {port} -> {directory}")
+                logging.info(f"Subproyecto servidor corriendo en puerto {port} -> {directory}")
+                httpd.serve_forever()
+        except Exception as e:
+            msg = f"Error iniciando servidor en puerto {port}: {e}"
+            print(msg)
+            logging.error(msg)
+            
+    t = threading.Thread(target=run, daemon=True)
+    t.start()
+
 if __name__ == "__main__":
     if not os.path.exists(DATA_FOLDER):
         os.makedirs(DATA_FOLDER)
+        
+    # --- INICIO: Agregar servidores estáticos de Impacthon ---
+    impacthon_dir = os.path.join(PROJECT_ROOT, "Impacthon")
+    gem_dir = os.path.join(impacthon_dir, "gem")
+    gem_phone_dir = os.path.join(impacthon_dir, "gem - phone")
+    
+    if os.path.exists(gem_dir):
+        start_static_server(gem_dir, 8096)
+    if os.path.exists(gem_phone_dir):
+        start_static_server(gem_phone_dir, 8097)
+    # --- FIN: Agregar servidores estáticos de Impacthon ---
+
     t = threading.Thread(target=cache_updater_loop, daemon=True)
     t.start()
     print("Background Cache Updater Started")
