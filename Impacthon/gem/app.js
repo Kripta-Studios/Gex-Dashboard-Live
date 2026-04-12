@@ -34,6 +34,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     initNudge();
     initPipeline();
     initNav();
+
+    // Revelar el dashboard (FOUC Prevention)
+    setTimeout(() => {
+        document.body.classList.remove('app-loading');
+    }, 150);
 });
 
 // ─── Counter Animation ──────────────────────────────────────────

@@ -1061,16 +1061,18 @@ async function getHobbySuggestion(useGemini = true) {
         const envRes = await fetch('/api/impacthon/env');
         if (!envRes.ok) throw new Error(`HTTP ${envRes.status}`);
         const envText = await envRes.text();
-        const match = envText.match(/key=([^\r\n]+)/i);
+        
+        // Regex mejorada para captar la key independientemente del formato de Saltos de línea
+        const match = envText.match(/key\s*=\s*([^\r\n\s]+)/i);
         if (match) {
             API_KEY = match[1].trim();
             console.log("✅ API KEY cargada correctamente desde el servidor.");
         } else {
-            console.error("❌ Archivo expuesto por el servidor, pero no se encontró 'key=...'! Contenido:", envText);
+            console.error("❌ Endpoint '/api/impacthon/env' respondio, pero no se encontro 'key=...' en el texto.");
         }
     } catch (err) {
-        console.error("❌ Fallo CRÍTICO leyendo el endpoint de API KEY. Mensaje HTTP:", err.message);
-        console.warn("⚠️ Pasando a Offline Fallback. Verifica que Impacthon/.env exista en el servidor.");
+        console.error("❌ Error recuperando la API KEY:", err.message);
+        console.warn("⚠️ Pasando a modo offline (Fallback).");
     }
 
     if (!API_KEY) {

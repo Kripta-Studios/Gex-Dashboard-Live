@@ -290,6 +290,24 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
             return
 
     def do_GET(self):
+        parsed_url = urllib.parse.urlparse(self.path)
+        path_only = parsed_url.path
+
+        # Endpoint especial para que Impacthon pueda leer su propio .env
+        # Mantenemos este handler ANTES de los bloqueos de seguridad de ".env"
+        if path_only == "/api/impacthon/env":
+            env_file = os.path.join(PROJECT_ROOT, "Impacthon", ".env")
+            if os.path.exists(env_file):
+                self.send_response(200)
+                self.send_header("Access-Control-Allow-Origin", "*") # Allow cross-origin if needed
+                self.send_header("Content-type", "text/plain")
+                self.end_headers()
+                with open(env_file, "rb") as f:
+                    self.wfile.write(f.read())
+            else:
+                self.send_error(404, "Impacthon .env not found")
+            return
+
         # SEGURIDAD PREVENTIVA: Bloquea Path Traversal y archivos sensibles inmediatamente
         if any(x in self.path for x in [".git", "servidor.py", ".."]):
             logging.warning(
@@ -298,15 +316,12 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
             self.send_error(403, "Forbidden: Access Denied")
             return
             
-        # Bloquear .env a menos que sea específicamente de Impacthon
+        # Bloquear cualquier acceso a archivos .env por rutas directas
         if ".env" in self.path:
-            if self.path not in ["/gem/.env", "/gem-phone/.env"]:
-                logging.warning(f"Intento de acceso a .env bloqueado desde {self.client_address[0]}: {self.path}")
-                self.send_error(403, "Forbidden: Access Denied")
-                return
+            logging.warning(f"Intento de acceso a .env bloqueado desde {self.client_address[0]}: {self.path}")
+            self.send_error(403, "Forbidden: Access Denied")
+            return
 
-        parsed_url = urllib.parse.urlparse(self.path)
-        path_only = parsed_url.path
 
         # 0. VERIFY TOKEN (no auth required — it IS the auth check)
         if path_only == "/verify_token":
