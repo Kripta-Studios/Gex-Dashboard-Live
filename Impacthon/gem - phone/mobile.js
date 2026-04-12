@@ -1091,7 +1091,7 @@ async function getHobbySuggestion(useGemini = true) {
     const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
     
     // Función de fallback genérica
-    const getFallback = (forceDefault = false) => {
+    function getFallback(forceDefault = false) {
         if (forceDefault || !hobbies.length) {
             const defaults = [
                 'salir a dar un paseo corto', 
@@ -1120,7 +1120,7 @@ async function getHobbySuggestion(useGemini = true) {
         };
         const pick = hobbies[Math.floor(Math.random() * hobbies.length)];
         return templates[pick] || `dedicar un momento a la afición seleccionada (${pick})`;
-    };
+    }
 
     if (!useGemini) return getFallback(true);
     if (!hobbies.length) return getFallback();

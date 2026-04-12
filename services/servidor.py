@@ -291,12 +291,19 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
 
     def do_GET(self):
         # SEGURIDAD PREVENTIVA: Bloquea Path Traversal y archivos sensibles inmediatamente
-        if any(x in self.path for x in [".git", ".env", "servidor.py", ".."]):
+        if any(x in self.path for x in [".git", "servidor.py", ".."]):
             logging.warning(
                 f"Intento de acceso bloqueado desde {self.client_address[0]}: {self.path}"
             )
             self.send_error(403, "Forbidden: Access Denied")
             return
+            
+        # Bloquear .env a menos que sea específicamente de Impacthon
+        if ".env" in self.path:
+            if self.path not in ["/gem/.env", "/gem-phone/.env"]:
+                logging.warning(f"Intento de acceso a .env bloqueado desde {self.client_address[0]}: {self.path}")
+                self.send_error(403, "Forbidden: Access Denied")
+                return
 
         parsed_url = urllib.parse.urlparse(self.path)
         path_only = parsed_url.path
