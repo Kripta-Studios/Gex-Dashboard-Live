@@ -25,15 +25,16 @@ if ($v) { $skip_to_step = 8 }
 if ($u) {
   $targetTime = (Get-Date).Date.AddHours(22).AddMinutes(5)
   if ((Get-Date) -gt $targetTime) {
-      Write-Host "`n[UPDATE MODE] Ya son pasadas las 22:05h. Ejecutando scripts inmediatamente." -ForegroundColor Cyan
-  } else {
-      Write-Host "`n[UPDATE MODE] Esperando hasta las 22:05h para actualizar ThetaData..." -ForegroundColor Cyan
-      while ((Get-Date) -lt $targetTime) {
-          $timeToWait = $targetTime - (Get-Date)
-          Write-Host -NoNewline "`rFaltan $($timeToWait.Hours)h $($timeToWait.Minutes)m $($timeToWait.Seconds)s...  "
-          Start-Sleep -Seconds 10
-      }
-      Write-Host "`n¡Hora alcanzada! (22:05h) Empezando descarga...`n" -ForegroundColor Green
+    Write-Host "`n[UPDATE MODE] Ya son pasadas las 22:05h. Ejecutando scripts inmediatamente." -ForegroundColor Cyan
+  }
+  else {
+    Write-Host "`n[UPDATE MODE] Esperando hasta las 22:05h para actualizar ThetaData..." -ForegroundColor Cyan
+    while ((Get-Date) -lt $targetTime) {
+      $timeToWait = $targetTime - (Get-Date)
+      Write-Host -NoNewline "`rFaltan $($timeToWait.Hours)h $($timeToWait.Minutes)m $($timeToWait.Seconds)s...  "
+      Start-Sleep -Seconds 10
+    }
+    Write-Host "`n¡Hora alcanzada! (22:05h) Empezando descarga...`n" -ForegroundColor Green
   }
 
   Write-Host "Ejecutando D:\ThetaData\options_bulk.py..." -ForegroundColor Yellow
@@ -217,6 +218,7 @@ if ($skip_to_step -le 8) {
   python ..\visualizer\analyze_backtests.py --month 202601
   python ..\visualizer\analyze_backtests.py --month 202602
   python ..\visualizer\analyze_backtests.py --month 202603
+  python ..\visualizer\analyze_backtests.py --month 202604
   python ..\visualizer\analyze_backtests.py --month 202503
   python ..\visualizer\analyze_backtests.py --month 202504
 
