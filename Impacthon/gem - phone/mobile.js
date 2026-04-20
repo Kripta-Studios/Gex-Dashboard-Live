@@ -7,7 +7,7 @@
 // ─── Deterministic RNG para Demos ───────────────────────────────
 // Sobrescribimos Math.random con una semilla fija para que al recargar (F5) los picos sean idénticos
 let _seed = 1337;
-Math.random = function() {
+Math.random = function () {
     var x = Math.sin(_seed++) * 10000;
     return x - Math.floor(x);
 };
@@ -48,6 +48,9 @@ const SVG = {
 
 // ─── Init ───────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
+    // Esto borra los datos al abrir la app
+    localStorage.removeItem('gem_onboarded');
+    localStorage.removeItem('gem_hobbies');
     updateClock();
     setInterval(updateClock, 30000);
 
@@ -86,7 +89,7 @@ function updateGreeting(userName) {
     const names = ['Álvaro', 'María', 'Carlos', 'Lucía', 'Diego', 'Ana', 'Pablo', 'Sofía'];
     const idx = state.userIdx % names.length;
     const name = names[idx];
-    
+
     document.getElementById('greeting-name').textContent = `Hola, ${name}`;
     document.getElementById('greeting-sub').textContent = `${greeting} · Tu resumen de hoy`;
 }
@@ -110,7 +113,7 @@ function buildUserList() {
     list.innerHTML = '';
     DATA.users.forEach((u, i) => {
         const level = getLevel(u.summary.avg_is);
-        const avatarColors = ['#E53935','#F4511E','#7B1FA2','#1976D2','#00897B','#43A047','#FF8F00','#5E35B1'];
+        const avatarColors = ['#E53935', '#F4511E', '#7B1FA2', '#1976D2', '#00897B', '#43A047', '#FF8F00', '#5E35B1'];
         const names = ['Álvaro', 'María', 'Carlos', 'Lucía', 'Diego', 'Ana', 'Pablo', 'Sofía'];
         const item = document.createElement('div');
         item.className = `user-item ${i === state.userIdx ? 'user-selected' : ''}`;
@@ -189,15 +192,15 @@ function renderDay() {
     // Inyectar contexto demo dinámico una sola vez por día
     if (!day._demoInjected) {
         day._demoInjected = true;
-        
+
         // Generar un patrón estocástico pero coherente
         day.hourly.forEach((h) => {
             if (h.hour < 8) h.app_type = 'inactive';
-            else if (h.hour < 14) h.app_type = Math.random() > 0.2 ? 'productive' : 'non-productive'; 
-            else if (h.hour < 16) h.app_type = Math.random() > 0.4 ? 'non-productive' : 'productive'; 
-            else if (h.hour < 20) h.app_type = Math.random() > 0.3 ? 'productive' : 'non-productive'; 
-            else h.app_type = Math.random() > 0.6 ? 'productive' : 'non-productive'; 
-            
+            else if (h.hour < 14) h.app_type = Math.random() > 0.2 ? 'productive' : 'non-productive';
+            else if (h.hour < 16) h.app_type = Math.random() > 0.4 ? 'non-productive' : 'productive';
+            else if (h.hour < 20) h.app_type = Math.random() > 0.3 ? 'productive' : 'non-productive';
+            else h.app_type = Math.random() > 0.6 ? 'productive' : 'non-productive';
+
             // Alterar algo de IS original (+/- 10%) para ruido natural
             h.is = Math.max(0, Math.min(100, (h.is || 0) + (Math.random() * 20 - 10)));
         });
@@ -290,7 +293,7 @@ function renderDayChart(day) {
     const restSet = new Set(day.rest_points || []);
 
     const maxVal = Math.max(...values);
-    
+
     const thresholdLinePlugin = {
         id: 'thresholdLine',
         beforeDraw(chart) {
@@ -326,15 +329,15 @@ function renderDayChart(day) {
         beforeDatasetsDraw(chart) {
             const { ctx, chartArea, scales: { x, y } } = chart;
             if (!chartArea || !x || !y) return;
-            
+
             const meta = chart.getDatasetMeta(0);
             if (!meta || !meta.data || !meta.data.length || restSet.size === 0) return;
-            
+
             ctx.save();
             const points = meta.data;
 
             const periods = [];
-            const sorted = Array.from(restSet).sort((a,b)=>a-b);
+            const sorted = Array.from(restSet).sort((a, b) => a - b);
             sorted.forEach(hour => {
                 const i = day.hourly.findIndex(h => h.hour === hour);
                 if (i === -1) return;
@@ -343,11 +346,11 @@ function renderDayChart(day) {
 
             const merged = [];
             periods.forEach(p => {
-                if (!merged.length) merged.push({...p});
+                if (!merged.length) merged.push({ ...p });
                 else {
                     const last = merged[merged.length - 1];
                     if (p.start <= last.end) last.end = Math.max(last.end, p.end);
-                    else merged.push({...p});
+                    else merged.push({ ...p });
                 }
             });
 
@@ -364,7 +367,7 @@ function renderDayChart(day) {
                         ctx.lineTo(pt.x, pt.y);
                     }
                 }
-                
+
                 ctx.lineTo(points[p.end].x, chartArea.bottom);
                 ctx.closePath();
 
@@ -452,10 +455,10 @@ function renderDayChart(day) {
                     const idx = elements[0].index;
                     const h = day.hourly[idx];
                     tooltip.querySelector('#tooltip-hour').textContent = `${h.hour}:00`;
-                    
+
                     const appLabel = h.app_type === 'productive' ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;color:#4F46E5"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>Productivo' :
-                                     h.app_type === 'non-productive' ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;color:#EF4444"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>Ocio' : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;color:#AEAEB2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>Inactivo';
-                    
+                        h.app_type === 'non-productive' ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;color:#EF4444"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>Ocio' : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;color:#AEAEB2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>Inactivo';
+
                     tooltip.querySelector('#tooltip-is').innerHTML = `<span style="font-size:12px;color:#AEAEB2;font-weight:400">${appLabel}</span><br><strong style="font-size:16px">${Math.round(h.is)}% IS</strong>`;
                     tooltip.classList.add('visible');
                     const x = elements[0].element.x;
@@ -479,7 +482,7 @@ function renderWeekChart(user) {
     const weekDays = user.days.slice(startIdx, state.dayIdx + 1);
     const labels = weekDays.map(d => {
         const dt = new Date(d.date);
-        return ['Dom','Lun','Mar','Mie','Jue','Vie','Sáb'][dt.getDay()];
+        return ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sáb'][dt.getDay()];
     });
     const values = weekDays.map(d => d.daily_is);
 
@@ -621,7 +624,7 @@ function renderHistory() {
     const grid = document.getElementById('calendar-grid');
     grid.innerHTML = '';
 
-    ['L','M','X','J','V','S','D'].forEach(d => {
+    ['L', 'M', 'X', 'J', 'V', 'S', 'D'].forEach(d => {
         const h = document.createElement('div');
         h.className = 'cal-header';
         h.textContent = d;
@@ -630,7 +633,7 @@ function renderHistory() {
 
     if (user.days.length > 0) {
         const dt = new Date(user.days[state.dayIdx].date);
-        const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+        const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
         document.getElementById('history-month').textContent = `${months[dt.getMonth()]} ${dt.getFullYear()}`;
     }
 
@@ -786,14 +789,14 @@ function showNotification(day) {
     if (!localStorage.getItem('gem_onboarded')) return; // Block notifications from interrupting the onboarding tour
     state.notifShown = true;
 
-    const notifPoint = day.hourly.filter(h => h.is > 70 && h.app_type === 'non-productive').reduce((a, b) => a.is > b.is ? a : b, {is: 0, hour: 0});
+    const notifPoint = day.hourly.filter(h => h.is > 70 && h.app_type === 'non-productive').reduce((a, b) => a.is > b.is ? a : b, { is: 0, hour: 0 });
     if (!notifPoint.hour) return;
 
     const screenTotal = Math.round(day.screen_total);
     const titleEl = document.getElementById('notif-title');
     const bodyEl = document.getElementById('notif-body');
     const card = document.getElementById('notif-card');
-    
+
     titleEl.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px;"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>Gemini calculando nudge...';
     bodyEl.innerHTML = `<span style="opacity:0.7">Saturación crítica (IS ${Math.round(notifPoint.is)}%) detectada en zona horaria no productiva. Generando sugerencia contextual...</span>`;
     card.classList.add('notif-visible');
@@ -889,7 +892,7 @@ function showDailySummary() {
 
     // Populate card
     document.getElementById('ds-peak-val').textContent = peakIS + '%';
-    document.getElementById('ds-detail').innerHTML = 
+    document.getElementById('ds-detail').innerHTML =
         `Ayer a las <strong>${peakHour.hour}:00</strong> alcanzaste un pico de <strong>${peakIS}% IS</strong> durante un periodo de <strong>${peakType}</strong>. ` +
         `Llevabas <strong>${Math.round(yesterday.screen_total)} min</strong> de pantalla.`;
 
@@ -940,7 +943,7 @@ function initOnboarding() {
     // Personalization buttons
     const btnYes = document.getElementById('ob-personalize-yes');
     if (btnYes) btnYes.addEventListener('click', advanceOnboarding);
-    
+
     const btnNo = document.getElementById('ob-personalize-no');
     if (btnNo) btnNo.addEventListener('click', finishOnboarding);
 
@@ -960,11 +963,11 @@ function initOnboarding() {
     // Custom hobby input
     const customInput = document.getElementById('ob-custom-input');
     const customAdd = document.getElementById('ob-custom-add');
-    
+
     function addCustomHobby() {
         const val = customInput.value.trim();
         if (!val) return;
-        
+
         // Create new tag
         const btn = document.createElement('button');
         btn.className = 'ob-tag ob-tag-active';
@@ -974,7 +977,7 @@ function initOnboarding() {
         userHobbies.push(val.toLowerCase());
         customInput.value = '';
     }
-    
+
     customAdd.addEventListener('click', addCustomHobby);
     customInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') { e.preventDefault(); addCustomHobby(); }
@@ -994,11 +997,11 @@ function advanceOnboarding() {
     const next = document.getElementById(OB_STEPS[obStep]);
     if (next) {
         next.classList.add('ob-step-active');
-        
+
         const scrollContainer = document.querySelector('.screen-scroll');
         if (scrollContainer) {
             if (OB_STEPS[obStep] === 'ob-gauge' || Math.abs(obStep) === 1 || OB_STEPS[obStep] === 'ob-chart') {
-                scrollContainer.scrollTo({top: 0, behavior: 'smooth'});
+                scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }
     }
@@ -1054,14 +1057,14 @@ function finishOnboarding() {
 async function getHobbySuggestion(useGemini = true) {
     const stored = localStorage.getItem('gem_hobbies');
     const hobbies = stored ? JSON.parse(stored) : [];
-    
+
     // Configuración API: Leemos directamente el endpoint seguro del servidor
     let API_KEY = "";
     try {
         const envRes = await fetch('/api/impacthon/env');
         if (!envRes.ok) throw new Error(`HTTP ${envRes.status}`);
         const envText = await envRes.text();
-        
+
         // Regex mejorada para captar la key independientemente del formato de Saltos de línea
         const match = envText.match(/key\s*=\s*([^\r\n\s]+)/i);
         if (match) {
@@ -1081,14 +1084,14 @@ async function getHobbySuggestion(useGemini = true) {
     }
 
     const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
-    
+
     // Función de fallback genérica
     function getFallback(forceDefault = false) {
         if (forceDefault || !hobbies.length) {
             const defaults = [
-                'salir a dar un paseo corto', 
-                'hacer una serie de estiramientos', 
-                'prepararte un té o café', 
+                'salir a dar un paseo corto',
+                'hacer una serie de estiramientos',
+                'prepararte un té o café',
                 'respirar profundamente 5 minutos',
                 'apagar la pantalla un instante',
                 'tomar un vaso de agua fresca',
@@ -1131,14 +1134,14 @@ async function getHobbySuggestion(useGemini = true) {
             console.error(`❌ HTTP Error ${response.status}: ${errorText}`);
             throw new Error(`API request failed with status ${response.status}`);
         }
-        
+
         const data = await response.json();
         let aiText = data.candidates[0].content.parts[0].text.trim().toLowerCase();
-        
+
         // Limpiamos formato si la IA añade punto o comillas por error
         aiText = aiText.replace(/^[.¡!¿?"']+|[.¡!¿?"']+$/g, '');
         return aiText;
-        
+
     } catch (error) {
         console.warn("⚠️ Gemini API falló (posible límite de cuota o key agotada). Usando fallback offline:", error);
         return getFallback();
