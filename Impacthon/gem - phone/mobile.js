@@ -1114,7 +1114,7 @@ async function getHobbySuggestion(useGemini = true) {
             'gimnasio': 'levantarte y hacer movilidad articular',
         };
         const pick = hobbies[Math.floor(Math.random() * hobbies.length)];
-        return templates[pick] || `dedicar un momento a la afición seleccionada (${pick})`;
+        return templates[pick] || `dedicar un rato a ${pick} para desconectar`;
     }
 
     if (!useGemini) return getFallback(true);
