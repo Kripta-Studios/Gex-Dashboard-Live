@@ -86,7 +86,7 @@ function updateGreeting(userName) {
     else greeting = 'Buenas noches';
 
     // Extract a name: "Usuario 1" → "Álvaro" (use fixed name for demo)
-    const names = ['Álvaro', 'María', 'Carlos', 'Lucía', 'Diego', 'Ana', 'Pablo', 'Sofía'];
+    const names = ['Álvaro', 'Belén', 'Carlos', 'Carmen', 'Diego', 'Ana', 'Pablo', 'Sofía'];
     const idx = state.userIdx % names.length;
     const name = names[idx];
 
@@ -114,7 +114,7 @@ function buildUserList() {
     DATA.users.forEach((u, i) => {
         const level = getLevel(u.summary.avg_is);
         const avatarColors = ['#E53935', '#F4511E', '#7B1FA2', '#1976D2', '#00897B', '#43A047', '#FF8F00', '#5E35B1'];
-        const names = ['Álvaro', 'María', 'Carlos', 'Lucía', 'Diego', 'Ana', 'Pablo', 'Sofía'];
+        const names = ['Álvaro', 'Belén', 'Carlos', 'Carmen', 'Diego', 'Ana', 'Pablo', 'Sofía'];
         const item = document.createElement('div');
         item.className = `user-item ${i === state.userIdx ? 'user-selected' : ''}`;
         item.innerHTML = `
