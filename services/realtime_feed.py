@@ -115,6 +115,7 @@ class RealtimeOptionsFeed:
         today_str = datetime.now(ET).strftime("%Y%m%d")
         self.output_dir = Path(output_dir or os.path.join(PROJECT_ROOT, "rt_data", today_str))
         self.output_dir.mkdir(parents=True, exist_ok=True)
+        self.current_trading_day = datetime.now(ET).date()
 
         # Expiration cache — per ticker: {"SPX": (0dte, weekly), "QQQ": (0dte, weekly)}
         self._expirations = {}  # ticker -> (exp_0dte, exp_weekly)
@@ -622,6 +623,21 @@ class RealtimeOptionsFeed:
     async def poll_once(self):
         """Single poll cycle — fetch all data and save as Parquet."""
         now = datetime.now(ET)
+        now_date = now.date()
+
+        # ── NUEVO: Detección de cambio de día ──
+        if now_date > self.current_trading_day:
+            logger.info("Cambio de día detectado. Reseteando expiraciones y directorios.")
+            self.current_trading_day = now_date
+            self._expirations_resolved = False
+            self._expirations.clear()
+            
+            # Actualizar la carpeta de salida al nuevo día
+            today_str = now_date.strftime("%Y%m%d")
+            self.output_dir = Path(os.path.join(self._rt_data_base, today_str))
+            self.output_dir.mkdir(parents=True, exist_ok=True)
+        # ───────────────────────────────────────
+
         now_str = now.strftime("%H:%M:%S EST")
         logger.info(f"{'='*50}")
         logger.info(f"--- Poll at {now_str} ---")
