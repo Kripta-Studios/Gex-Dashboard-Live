@@ -11,6 +11,30 @@ Param(
 
 $ErrorActionPreference = "Continue"
 
+function Get-RLBaseConfidence {
+  Push-Location $PSScriptRoot
+  try {
+    $confidenceRaw = & python -c "from rl.config import RL_CONFIG; print(RL_CONFIG['min_confidence'])"
+    if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($confidenceRaw)) {
+      throw "No se pudo leer RL_CONFIG['min_confidence']"
+    }
+
+    $confidenceText = ($confidenceRaw | Select-Object -Last 1).Trim()
+    return [double]::Parse($confidenceText, [System.Globalization.CultureInfo]::InvariantCulture)
+  }
+  finally {
+    Pop-Location
+  }
+}
+
+$BaseConfidence = Get-RLBaseConfidence
+$BaseConfidenceArg = [string]::Format(
+  [System.Globalization.CultureInfo]::InvariantCulture,
+  "{0:0.00}",
+  $BaseConfidence
+)
+Write-Host "[CONFIG] Base confidence cargada desde RL_CONFIG: $BaseConfidenceArg" -ForegroundColor DarkCyan
+
 # Determine starting stage
 $skip_to_step = 0
 if ($gbt) { $skip_to_step = 1 }
@@ -117,10 +141,15 @@ if ($skip_to_step -le 2) {
     --num-workers 22 `
     --strict-wf
 
+  if ($LASTEXITCODE -ne 0) {
+    Write-Host "ERROR: run_preprocess.py fallo. No se continuara con artefactos viejos." -ForegroundColor Red
+    exit 1
+  }
+
   python rl/compute_recovery_stats.py
 
   if ($LASTEXITCODE -ne 0) {
-    Write-Host "ERROR: Preprocessing fallo. Posible error de OOM o lectura de ThetaData." -ForegroundColor Red
+    Write-Host "ERROR: compute_recovery_stats.py fallo tras el preprocess." -ForegroundColor Red
     exit 1
   }
 
@@ -172,7 +201,7 @@ if ($skip_to_step -le 6) {
     --model models\trading_hybrid_wf.joblib `
     --normalizer models\hybrid_normalizer_wf.npz `
     --model-size small --ensemble `
-    --threshold 0.60 --cooldown 15 `
+    --threshold $BaseConfidenceArg --cooldown 15 `
     --target_long 0.010 --target_short 0.010 --stop 0.003 `
     --strict-wf
         
@@ -193,13 +222,13 @@ if ($skip_to_step -le 7) {
     --normalizer models\hybrid_normalizer_wf.npz `
     --rl-model ..\rl_models\best_rl_agent.pt `
     --model-size small --ensemble `
-    --threshold 0.60 --cooldown 15 `
+    --threshold $BaseConfidenceArg --cooldown 15 `
     --target-long 0.010 --target-short 0.010 --stop 0.003 `
     --risk-capital 1000.0 `
     --filter-by-greeks `
     --single-step-eval `
     --strict-wf `
-    --tickers QQQ SPY
+    --tickers SPX QQQ SPY
 
   if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR: Backtest GBT+RL fallo." -ForegroundColor Red
