@@ -40,10 +40,13 @@ from neural.gbt_model import load_gbt_ensemble
 from neural.rl.agent import PPOAgent
 from neural.rl.integration import IntegratedTradingSystem
 from neural.rl.config import STRIKE_BUCKETS, HARD_EXITS, RL_CONFIG
+from neural.signal_policy import entry_cadence_minutes, is_actionable_signal
+from modules.utils import get_market_trading_days
 from services.compute_features import (
     get_net_exposures_from_parquet, calculate_exact_t, extract_feature_vector,
     compute_wonham_filter,
     safe_log, dist_bps, is_near_level, classify_gamma_regime, sign_divergence,
+    inverse_safe_log, invert_delta_filtered_pcr,
     simple_rsi, calculate_fibonacci_levels, rbf_confluence
 )
 
@@ -62,9 +65,10 @@ GBM_TRACKERS_FILE = os.path.join(TRADES_DIR, "open_gbm_trackers.json")
 GBM_SIGNALS_FILE = os.path.join(TRADES_DIR, "gbm_signals_rl.json")
 COOLDOWNS_FILE = os.path.join(TRADES_DIR, "cooldowns_rl.json")
 RT_DATA_DIR = os.path.join(PROJECT_ROOT, "rt_data")
+BOT_STATE_FILENAME = "bot_intraday_state.json"
 
 # GBM signal confidence threshold
-GBM_MIN_CONFIDENCE = 0.60
+GBM_MIN_CONFIDENCE = RL_CONFIG["min_confidence"]
 
 os.makedirs(TRADES_DIR, exist_ok=True)
 os.makedirs(LOGS_DIR, exist_ok=True)
@@ -77,24 +81,28 @@ DISCORD_ROLE_PING = os.getenv("DISCORD_ROLE_PING", "<@&1464601287411634226>")
 DISCORD_ENABLED = len(DISCORD_WEBHOOKS) > 0
 
 # Process SPX, QQQ, and SPY
-TICKERS = ["QQQ", "SPY"]
-POINT_VALUES = {"SPY": 100.0, "QQQ": 100.0}
+TICKERS = ["SPX", "QQQ", "SPY"]
+POINT_VALUES = {"SPX": 50.0, "SPY": 100.0, "QQQ": 100.0}
 MODEL_SIZE = "small"
 
 # Map trading ticker → options symbol (matches training data)
 OPTIONS_SYMBOLS = {
+    "SPX": "SPXW",   # SPX uses SPXW options
     "QQQ": "QQQ",   # QQQ uses QQQ options directly
     "SPY": "SPY",   # SPY uses SPY options (American-style)
 }
 
 # Spot source symbol (for underlying derived data)
 SPOT_SOURCES = {
+    "SPX": "SPX",   # SPX uses SPX underlying derived
     "QQQ": "QQQ",   # QQQ uses QQQ underlying derived
     "SPY": "SPY",   # SPY uses SPY underlying derived
 }
 
 # Timing
 LOOP_INTERVAL = 65  # seconds — aligned with realtime_feed's 60s poll interval
+MAX_FEED_SNAPSHOT_AGE_SECONDS = 90
+ENTRY_EVAL_CADENCE_MINUTES = entry_cadence_minutes()
 COOLDOWN_MINUTES = 15
 EOD_CLEANUP_MINUTE = 55  # minute of 15:XX EST at which EOD cleanup triggers
 
@@ -280,7 +288,8 @@ class RLPosition:
                  confidence, bucket, entry_time, signal_spot, position_entry_spot,
                  entry_atm_iv, bucket_index,
                  expiration=None, mae=0.0, prev_pnl_pct=0.0, time_to_target=0.5,
-                 log_sigma=0.5, max_unrealized_pnl=0.0, right=None):
+                 log_sigma=0.0, max_unrealized_pnl=0.0, right=None,
+                 entry_market_features=None):
         self.ticker = ticker
         self.direction = direction
         self.strike = strike
@@ -300,6 +309,7 @@ class RLPosition:
         self.log_sigma = log_sigma
         self.max_unrealized_pnl = max_unrealized_pnl
         self.right = right or ("CALL" if direction == "LONG" else "PUT")
+        self.entry_market_features = entry_market_features
 
     def to_dict(self):
         return {
@@ -319,6 +329,7 @@ class RLPosition:
             "log_sigma": self.log_sigma,
             "max_unrealized_pnl": self.max_unrealized_pnl,
             "right": self.right,
+            "entry_market_features": self.entry_market_features,
         }
 
     @classmethod
@@ -334,9 +345,10 @@ class RLPosition:
                   mae=d.get("mae", 0.0),
                   prev_pnl_pct=d.get("prev_pnl_pct", 0.0),
                   time_to_target=d.get("time_to_target", 0.5),
-                  log_sigma=d.get("log_sigma", 0.5),
+                  log_sigma=d.get("log_sigma", 0.0),
                   max_unrealized_pnl=d.get("max_unrealized_pnl", 0.0),
-                  right=d.get("right"))
+                  right=d.get("right"),
+                  entry_market_features=d.get("entry_market_features"))
         return pos
 
 
@@ -454,18 +466,20 @@ class RLTradingBot:
         self.prev_features: dict[str, np.ndarray] = {}
         self.trade_count = 0
         self.daily_pnl = 0.0
+        self.current_session_date = datetime.now(ET).date()
+        self._intraday_state_ready_date = None
 
         # Rolling state for feature computation — per ticker
         self.price_history = {t: deque(maxlen=35) for t in TICKERS}
-        self.iv_history = {t: deque(maxlen=60) for t in TICKERS}
+        self.iv_history = {t: deque(maxlen=32) for t in TICKERS}
         self.spot_candles = {t: deque(maxlen=400) for t in TICKERS}
         self.tlt_price_history = deque(maxlen=35)  # TLT is cross-ticker
         self.ib_high = {t: None for t in TICKERS}
         self.ib_low = {t: None for t in TICKERS}
         self.historical_ibs = {t: [] for t in TICKERS}
         self.pcr_history = {t: deque(maxlen=32) for t in TICKERS}
-        self.net_charm_history = {t: deque(maxlen=60) for t in TICKERS}
-        self.net_gamma_window = {t: deque(maxlen=100) for t in TICKERS}
+        self.net_charm_history = {t: deque(maxlen=32) for t in TICKERS}
+        self.net_gamma_window = {t: deque(maxlen=60) for t in TICKERS}
         self.wonham_probs = {t: 0.5 for t in TICKERS}
 
         # Track volume for PCR calculation
@@ -493,6 +507,7 @@ class RLTradingBot:
         self._restore_rl_system_state()
         for ticker in TICKERS:
             self._load_historical_ib_levels(ticker)
+        self._restore_intraday_state_from_rt_data()
 
     def _load_models(self):
         """Load GBM + RL agent."""
@@ -706,6 +721,440 @@ class RLTradingBot:
         except Exception as e:
             logger.error(f"Failed to log trade history: {e}")
 
+    @staticmethod
+    def _serialize_price_history(history: deque) -> list[list[float]]:
+        rows = []
+        for item in history:
+            try:
+                minute, price = item
+                rows.append([float(minute), float(price)])
+            except Exception:
+                continue
+        return rows
+
+    @staticmethod
+    def _deserialize_price_history(rows, maxlen: int) -> deque:
+        history = deque(maxlen=maxlen)
+        for item in rows or []:
+            if not isinstance(item, (list, tuple)) or len(item) != 2:
+                continue
+            try:
+                history.append((float(item[0]), float(item[1])))
+            except Exception:
+                continue
+        return history
+
+    @staticmethod
+    def _float_or_none(value):
+        try:
+            value = float(value)
+        except Exception:
+            return None
+        return value if np.isfinite(value) else None
+
+    @staticmethod
+    def _normalize_prev_features(prev: dict | None) -> dict | None:
+        if not isinstance(prev, dict):
+            return None
+        normalized = {}
+        for key, value in prev.items():
+            norm = RLTradingBot._float_or_none(value)
+            if norm is not None:
+                normalized[key] = norm
+        return normalized or None
+
+    def _get_day_rt_data_dir(self, day=None, create: bool = False) -> Path:
+        day = day or datetime.now(ET).date()
+        day_dir = Path(RT_DATA_DIR) / day.strftime("%Y%m%d")
+        if create:
+            day_dir.mkdir(parents=True, exist_ok=True)
+        return day_dir
+
+    def _get_intraday_state_path(self, day=None, create: bool = False) -> Path:
+        return self._get_day_rt_data_dir(day=day, create=create) / BOT_STATE_FILENAME
+
+    def _reset_feature_runtime_state(self):
+        self.prev_features = {}
+        self.tlt_price_history.clear()
+        for ticker in TICKERS:
+            self.price_history[ticker].clear()
+            self.iv_history[ticker].clear()
+            self.spot_candles[ticker].clear()
+            self.ib_high[ticker] = None
+            self.ib_low[ticker] = None
+            self.pcr_history[ticker].clear()
+            self.net_charm_history[ticker].clear()
+            self.net_gamma_window[ticker].clear()
+            self.wonham_probs[ticker] = 0.5
+            self._prev_call_vol[ticker] = 0.0
+            self._prev_put_vol[ticker] = 0.0
+            self._frozen_spot_count[ticker] = 0
+            self._frozen_spot_prev[ticker] = 0.0
+
+            system = self.systems.get(ticker)
+            if system is None:
+                continue
+
+            system._spot_history.clear()
+            system._option_price_history.clear()
+            system._dynamic_market_state = np.zeros(8, dtype=np.float32)
+            if system.open_position is None:
+                system._signal_spot = 0.0
+                system._position_entry_spot = 0.0
+                system._signal_direction = "HOLD"
+                system._signal_confidence = 0.0
+                system._entry_atm_iv = 0.15
+
+    def _has_runtime_feature_state(self) -> bool:
+        if len(self.tlt_price_history) > 0:
+            return True
+        if self.prev_features:
+            return True
+        for ticker in TICKERS:
+            if (
+                len(self.price_history[ticker]) > 0 or
+                len(self.iv_history[ticker]) > 0 or
+                len(self.pcr_history[ticker]) > 0 or
+                len(self.net_gamma_window[ticker]) > 0 or
+                len(self.net_charm_history[ticker]) > 0
+            ):
+                return True
+        return False
+
+    def _load_day_spot_history(self, day_dir: Path, symbol: str, target_history: deque) -> bool:
+        path = day_dir / f"spot_{symbol}_latest.parquet"
+        if not path.exists():
+            return False
+        try:
+            df = pd.read_parquet(path)
+            if df.empty:
+                return False
+            if "timestamp" in df.columns:
+                df["dt"] = pd.to_datetime(df["timestamp"], format="mixed", errors="coerce")
+            elif "time" in df.columns:
+                df["dt"] = pd.to_datetime(df["time"], format="mixed", errors="coerce")
+            else:
+                return False
+            df = df.dropna(subset=["dt"]).sort_values("dt")
+            df = df[(df["dt"].dt.time >= dt_time(9, 30)) & (df["dt"].dt.time <= dt_time(16, 0))]
+            target_history.clear()
+            for _, row in df.tail(target_history.maxlen).iterrows():
+                close = self._float_or_none(row.get("close", 0.0))
+                if close is None or close <= 0:
+                    continue
+                mins = max(0, (row["dt"].hour * 60 + row["dt"].minute) - (9 * 60 + 30))
+                target_history.append((float(mins), close))
+            return len(target_history) > 0
+        except Exception as e:
+            logger.warning(f"[{symbol}] Failed to restore spot history: {e}")
+            return False
+
+    def _restore_prev_features_from_df(self, ticker: str, df_features: pd.DataFrame, latest_spot: float):
+        if df_features.empty:
+            return
+        last = df_features.iloc[-1]
+
+        def _raw_value(raw_col: str, feat_col: str) -> float:
+            raw_val = last.get(raw_col)
+            if pd.notna(raw_val):
+                raw_val = self._float_or_none(raw_val)
+                if raw_val is not None:
+                    return raw_val
+            feat_val = last.get(feat_col)
+            if pd.notna(feat_val):
+                feat_val = self._float_or_none(feat_val)
+                if feat_val is not None:
+                    return float(inverse_safe_log(feat_val))
+            return 0.0
+
+        spot = latest_spot
+        if spot <= 0 and pd.notna(last.get("spot_price")):
+            spot = self._float_or_none(last.get("spot_price")) or 0.0
+        if spot <= 0:
+            return
+
+        self.prev_features[ticker] = {
+            "spot": float(spot),
+            "net_gamma": _raw_value("net_gamma_raw", "net_gamma"),
+            "net_vanna": _raw_value("net_vanna_raw", "net_vanna"),
+            "net_dgex": _raw_value("net_dgex_raw", "net_dgex"),
+            "net_delta": _raw_value("net_delta_raw", "net_delta"),
+            "net_vega": _raw_value("net_vega_raw", "net_vega"),
+            "net_vomma": _raw_value("net_vomma_raw", "net_vomma"),
+        }
+
+    def _restore_feature_diary_state(self, ticker: str, day_dir: Path) -> bool:
+        path = day_dir / f"ml_features_{ticker}_latest.parquet"
+        if not path.exists():
+            return False
+        try:
+            df = pd.read_parquet(path)
+            if df.empty:
+                return False
+
+            iv_col = "atm_iv_raw" if "atm_iv_raw" in df.columns else "atm_iv"
+            if iv_col in df.columns:
+                iv_vals = [self._float_or_none(v) for v in df[iv_col].tail(self.iv_history[ticker].maxlen)]
+                self.iv_history[ticker] = deque([v for v in iv_vals if v is not None and v > 0], maxlen=32)
+
+            if "pcr_raw" in df.columns:
+                pcr_vals = [self._float_or_none(v) for v in df["pcr_raw"].tail(self.pcr_history[ticker].maxlen)]
+                self.pcr_history[ticker] = deque([v for v in pcr_vals if v is not None and v >= 0], maxlen=32)
+            elif "delta_filtered_pcr" in df.columns:
+                pcr_vals = []
+                for val in df["delta_filtered_pcr"].tail(self.pcr_history[ticker].maxlen):
+                    parsed = self._float_or_none(val)
+                    if parsed is not None:
+                        pcr_vals.append(float(invert_delta_filtered_pcr(parsed)))
+                self.pcr_history[ticker] = deque(pcr_vals, maxlen=32)
+
+            gamma_col = "net_gamma_raw" if "net_gamma_raw" in df.columns else "net_gamma"
+            gamma_vals = []
+            if gamma_col in df.columns:
+                for val in df[gamma_col].tail(self.net_gamma_window[ticker].maxlen):
+                    parsed = self._float_or_none(val)
+                    if parsed is None:
+                        continue
+                    gamma_vals.append(parsed if gamma_col.endswith("_raw") else float(inverse_safe_log(parsed)))
+            self.net_gamma_window[ticker] = deque(gamma_vals, maxlen=60)
+
+            charm_col = "net_charm_raw" if "net_charm_raw" in df.columns else "net_charm"
+            charm_vals = []
+            if charm_col in df.columns:
+                for val in df[charm_col].tail(self.net_charm_history[ticker].maxlen):
+                    parsed = self._float_or_none(val)
+                    if parsed is None:
+                        continue
+                    charm_vals.append(parsed if charm_col.endswith("_raw") else float(inverse_safe_log(parsed)))
+            self.net_charm_history[ticker] = deque(charm_vals, maxlen=32)
+
+            if "wonham_trend_prob" in df.columns:
+                wonham = self._float_or_none(df["wonham_trend_prob"].iloc[-1])
+                if wonham is not None:
+                    self.wonham_probs[ticker] = float(np.clip(wonham, 0.0, 1.0))
+
+            latest_spot = self.price_history[ticker][-1][1] if self.price_history[ticker] else 0.0
+            self._restore_prev_features_from_df(ticker, df, latest_spot)
+            return True
+        except Exception as e:
+            logger.warning(f"[{ticker}] Failed to restore feature diary: {e}")
+            return False
+
+    def _seed_pcr_volume_baseline(self, ticker: str, spot: float):
+        if spot <= 0:
+            return
+        options_symbol = OPTIONS_SYMBOLS.get(ticker, ticker)
+        day_dir = self._get_day_rt_data_dir(day=datetime.now(ET).date(), create=False)
+        path = day_dir / f"{options_symbol}_ohlc_0dte_latest.parquet"
+        if not path.exists():
+            return
+        df_opt = pd.read_parquet(path)
+        if df_opt.empty or "volume" not in df_opt.columns or "strike" not in df_opt.columns or "right" not in df_opt.columns:
+            return
+        try:
+            day_atr = max(self._calculate_current_atr(ticker), 1e-6)
+            otm_range = 1.5 * day_atr
+            df_calls_otm = df_opt[
+                (df_opt["right"].astype(str).str.upper().isin(["CALL", "C"])) &
+                (df_opt["strike"].between(spot, spot + otm_range))
+            ]
+            df_puts_otm = df_opt[
+                (df_opt["right"].astype(str).str.upper().isin(["PUT", "P"])) &
+                (df_opt["strike"].between(spot - otm_range, spot))
+            ]
+            self._prev_call_vol[ticker] = float(df_calls_otm["volume"].sum())
+            self._prev_put_vol[ticker] = float(df_puts_otm["volume"].sum())
+        except Exception as e:
+            logger.warning(f"[{ticker}] Failed to seed PCR baseline: {e}")
+
+    def _save_intraday_state(self):
+        day = datetime.now(ET).date()
+        state = {
+            "session_date": day.strftime("%Y%m%d"),
+            "tlt_price_history": self._serialize_price_history(self.tlt_price_history),
+            "tickers": {},
+        }
+
+        for ticker in TICKERS:
+            system = self.systems.get(ticker)
+            state["tickers"][ticker] = {
+                "price_history": self._serialize_price_history(self.price_history[ticker]),
+                "iv_history": [float(v) for v in self.iv_history[ticker]],
+                "ib_high": self._float_or_none(self.ib_high.get(ticker)),
+                "ib_low": self._float_or_none(self.ib_low.get(ticker)),
+                "prev_features": self._normalize_prev_features(self.prev_features.get(ticker)),
+                "pcr_history": [float(v) for v in self.pcr_history[ticker]],
+                "net_charm_history": [float(v) for v in self.net_charm_history[ticker]],
+                "net_gamma_window": [float(v) for v in self.net_gamma_window[ticker]],
+                "wonham_prob": float(self.wonham_probs.get(ticker, 0.5)),
+                "prev_call_vol": float(self._prev_call_vol.get(ticker, 0.0)),
+                "prev_put_vol": float(self._prev_put_vol.get(ticker, 0.0)),
+                "frozen_spot_count": int(self._frozen_spot_count.get(ticker, 0)),
+                "frozen_spot_prev": float(self._frozen_spot_prev.get(ticker, 0.0)),
+                "its": {
+                    "spot_history": [float(v) for v in getattr(system, "_spot_history", [])] if system else [],
+                    "option_price_history": [float(v) for v in getattr(system, "_option_price_history", [])] if system else [],
+                    "signal_spot": self._float_or_none(getattr(system, "_signal_spot", 0.0)) if system else 0.0,
+                    "position_entry_spot": self._float_or_none(getattr(system, "_position_entry_spot", 0.0)) if system else 0.0,
+                    "entry_market_features": getattr(system, "_entry_market_features", None).tolist() if system and getattr(system, "_entry_market_features", None) is not None else None,
+                    "signal_direction": getattr(system, "_signal_direction", "HOLD") if system else "HOLD",
+                    "signal_confidence": float(getattr(system, "_signal_confidence", 0.0)) if system else 0.0,
+                    "entry_atm_iv": float(getattr(system, "_entry_atm_iv", 0.15)) if system else 0.15,
+                    "dynamic_market_state": getattr(system, "_dynamic_market_state", np.zeros(8, dtype=np.float32)).tolist() if system else [0.0] * 8,
+                },
+            }
+
+        path = self._get_intraday_state_path(day=day, create=True)
+        tmp_path = path.with_suffix(path.suffix + ".tmp")
+        try:
+            with open(tmp_path, "w", encoding="utf-8") as f:
+                json.dump(state, f, indent=2)
+            os.replace(tmp_path, path)
+        except Exception as e:
+            logger.warning(f"Failed to save bot intraday state: {e}")
+            try:
+                if tmp_path.exists():
+                    tmp_path.unlink()
+            except Exception:
+                pass
+
+    def _restore_intraday_state_from_rt_data(self, now: datetime = None) -> bool:
+        now = now or datetime.now(ET)
+        day = now.date()
+        if self._intraday_state_ready_date == day:
+            return True
+
+        day_dir = self._get_day_rt_data_dir(day=day, create=False)
+        if not day_dir.exists():
+            return False
+
+        self._reset_feature_runtime_state()
+        restored = False
+        state_path = self._get_intraday_state_path(day=day, create=False)
+
+        if state_path.exists():
+            try:
+                with open(state_path, "r", encoding="utf-8") as f:
+                    state = json.load(f)
+                if state.get("session_date") == day.strftime("%Y%m%d"):
+                    self.tlt_price_history = self._deserialize_price_history(
+                        state.get("tlt_price_history"), self.tlt_price_history.maxlen
+                    )
+                    for ticker in TICKERS:
+                        tk_state = (state.get("tickers") or {}).get(ticker, {})
+                        self.price_history[ticker] = self._deserialize_price_history(
+                            tk_state.get("price_history"), self.price_history[ticker].maxlen
+                        )
+                        self.iv_history[ticker] = deque(
+                            [float(v) for v in tk_state.get("iv_history", []) if self._float_or_none(v) is not None],
+                            maxlen=32,
+                        )
+                        self.ib_high[ticker] = self._float_or_none(tk_state.get("ib_high"))
+                        self.ib_low[ticker] = self._float_or_none(tk_state.get("ib_low"))
+                        prev = self._normalize_prev_features(tk_state.get("prev_features"))
+                        if prev:
+                            self.prev_features[ticker] = prev
+                        self.pcr_history[ticker] = deque(
+                            [float(v) for v in tk_state.get("pcr_history", []) if self._float_or_none(v) is not None],
+                            maxlen=32,
+                        )
+                        self.net_charm_history[ticker] = deque(
+                            [float(v) for v in tk_state.get("net_charm_history", []) if self._float_or_none(v) is not None],
+                            maxlen=32,
+                        )
+                        self.net_gamma_window[ticker] = deque(
+                            [float(v) for v in tk_state.get("net_gamma_window", []) if self._float_or_none(v) is not None],
+                            maxlen=60,
+                        )
+                        wonham = self._float_or_none(tk_state.get("wonham_prob"))
+                        if wonham is not None:
+                            self.wonham_probs[ticker] = float(np.clip(wonham, 0.0, 1.0))
+                        self._prev_call_vol[ticker] = float(tk_state.get("prev_call_vol", 0.0))
+                        self._prev_put_vol[ticker] = float(tk_state.get("prev_put_vol", 0.0))
+                        self._frozen_spot_count[ticker] = int(tk_state.get("frozen_spot_count", 0))
+                        self._frozen_spot_prev[ticker] = float(tk_state.get("frozen_spot_prev", 0.0))
+
+                        system = self.systems.get(ticker)
+                        if system is not None:
+                            sys_state = tk_state.get("its") or {}
+                            system._spot_history = deque(
+                                [float(v) for v in sys_state.get("spot_history", []) if self._float_or_none(v) is not None],
+                                maxlen=25,
+                            )
+                            system._option_price_history = deque(
+                                [float(v) for v in sys_state.get("option_price_history", []) if self._float_or_none(v) is not None],
+                                maxlen=10,
+                            )
+                            system._signal_spot = float(sys_state.get("signal_spot", 0.0) or 0.0)
+                            system._position_entry_spot = float(sys_state.get("position_entry_spot", 0.0) or 0.0)
+                            entry_market_features = sys_state.get("entry_market_features")
+                            if entry_market_features:
+                                system._entry_market_features = np.array(entry_market_features, dtype=np.float32)
+                            system._signal_direction = str(sys_state.get("signal_direction", "HOLD"))
+                            system._signal_confidence = float(sys_state.get("signal_confidence", 0.0) or 0.0)
+                            system._entry_atm_iv = float(sys_state.get("entry_atm_iv", 0.15) or 0.15)
+                            dynamic_state = sys_state.get("dynamic_market_state") or []
+                            if len(dynamic_state) == 8:
+                                system._dynamic_market_state = np.array(dynamic_state, dtype=np.float32)
+                    restored = True
+                    logger.info(f"[State] Bot intraday state restored from {state_path.name}")
+            except Exception as e:
+                logger.warning(f"[State] Failed to restore bot intraday state: {e}")
+
+        if not restored:
+            any_restored = self._load_day_spot_history(day_dir, "TLT", self.tlt_price_history)
+            for ticker in TICKERS:
+                any_restored = self._load_day_spot_history(day_dir, ticker, self.price_history[ticker]) or any_restored
+                if self.price_history[ticker]:
+                    df_spot = pd.read_parquet(day_dir / f"spot_{ticker}_latest.parquet")
+                    if "timestamp" in df_spot.columns:
+                        df_spot["dt"] = pd.to_datetime(df_spot["timestamp"], format="mixed", errors="coerce")
+                    elif "time" in df_spot.columns:
+                        df_spot["dt"] = pd.to_datetime(df_spot["time"], format="mixed", errors="coerce")
+                    self._compute_ib_levels(df_spot, ticker)
+                any_restored = self._restore_feature_diary_state(ticker, day_dir) or any_restored
+
+                latest_spot = self.price_history[ticker][-1][1] if self.price_history[ticker] else 0.0
+                if latest_spot > 0:
+                    self._seed_pcr_volume_baseline(ticker, latest_spot)
+                    system = self.systems.get(ticker)
+                    if system is not None:
+                        system._spot_history = deque(
+                            [price for _, price in list(self.price_history[ticker])[-25:]],
+                            maxlen=25,
+                        )
+                        if ticker in self.positions:
+                            pos = self.positions[ticker]
+                            system._signal_spot = pos.signal_spot or latest_spot
+                            system._position_entry_spot = pos.position_entry_spot or system._signal_spot
+                            system._entry_atm_iv = pos.entry_atm_iv or system._entry_atm_iv
+                            if not system._option_price_history:
+                                system._option_price_history.append(float(pos.entry_premium))
+
+            if any_restored:
+                logger.info("[State] Bot intraday histories rebuilt from rt_data")
+                restored = True
+
+        if restored:
+            self._intraday_state_ready_date = day
+            self._save_intraday_state()
+        return restored
+
+    def _handle_session_rollover(self, now: datetime):
+        if now.date() <= self.current_session_date:
+            return
+
+        logger.info(f"Session rollover detected: {self.current_session_date} -> {now.date()}")
+        self.current_session_date = now.date()
+        self._intraday_state_ready_date = None
+        self._reset_feature_runtime_state()
+        for ticker in TICKERS:
+            self._load_historical_ib_levels(ticker)
+        self._last_gbm_direction = {}
+        self._save_gbm_signals()
+        self.last_trade_time = {}
+        self._save_cooldowns()
+
     def _restore_rl_system_state(self):
         """
         After loading persisted RL positions, restore IntegratedTradingSystem.open_position
@@ -732,35 +1181,22 @@ class RLTradingBot:
     # ─────────────────────────────────────────
 
     def _get_rt_data_dir(self) -> Path:
-        """Get today's rt_data directory."""
+        """Get the current session rt_data directory. Never fall back to a prior day."""
         today_str = datetime.now(ET).strftime("%Y%m%d")
-        d = Path(RT_DATA_DIR) / today_str
-        if d.exists():
-            return d
-        # Fallback: most recent directory
-        base = Path(RT_DATA_DIR)
-        if base.exists():
-            subdirs = sorted([x for x in base.iterdir() if x.is_dir()], reverse=True)
-            if subdirs:
-                return subdirs[0]
-        return d
+        return Path(RT_DATA_DIR) / today_str
 
     def _get_previous_trading_days(self, n: int = 10) -> list:
-        """Return the last N trading days before today (Mon-Fri)."""
+        """Return the last N actual market trading days before today."""
         today = datetime.now(ET).date()
-        result = []
-        candidate = today - timedelta(days=1)
-        while len(result) < n and candidate > today - timedelta(days=30):
-            if candidate.weekday() < 5:  # Mon-Fri
-                result.append(candidate)
-            candidate -= timedelta(days=1)
-        return result
+        all_recent = get_market_trading_days(n + 1, end_date=today)
+        result = [d for d in all_recent if d < today]
+        return result[-n:]
 
     def _load_historical_ib_levels(self, ticker: str):
         """
-        Load Historical IB (D-1 to D-10) from previous days' spot data.
+        Load Historical IB (D-1 to D-15) from previous days' spot data.
         """
-        prev_days = self._get_previous_trading_days(10)
+        prev_days = self._get_previous_trading_days(15)
         self.historical_ibs[ticker] = []
 
         spot_source = SPOT_SOURCES.get(ticker, ticker)
@@ -830,18 +1266,20 @@ class RLTradingBot:
                 logger.warning(f"Failed to load historical IB for {ticker} {day_str}: {e}")
                 self.historical_ibs[ticker].append(None)
 
-        while len(self.historical_ibs[ticker]) < 10:
+        while len(self.historical_ibs[ticker]) < 15:
             self.historical_ibs[ticker].append(None)
 
         loaded = sum(1 for h in self.historical_ibs[ticker] if h is not None)
-        logger.info(f"[{ticker}] Historical IB: {loaded}/10 days loaded")
+        logger.info(f"[{ticker}] Historical IB: {loaded}/15 days loaded")
 
     _stale_last_warned: dict = {}
 
-    def _read_parquet(self, filename: str, max_age: int = 300) -> pd.DataFrame:
+    def _read_parquet(self, filename: str, max_age: int = MAX_FEED_SNAPSHOT_AGE_SECONDS) -> pd.DataFrame:
         """
-        Read a Parquet from rt_data, checking freshness.
-        Returns data even if stale (better old snapshot than empty).
+        Read a Parquet from rt_data, rejecting stale snapshots.
+
+        For 0DTE intraday trading we prefer to skip a cycle rather than act on
+        delayed Greeks/spot/IV data under the current minute's decision logic.
         Warning throttled to max 1x/minute per file.
         """
         rt_dir = self._get_rt_data_dir()
@@ -858,9 +1296,10 @@ class RLTradingBot:
             if now_ts - last_warned > 60:
                 logger.warning(
                     f"[Feed] STALE {filename} ({age:.0f}s) -- "
-                    f"using prior snapshot (delayed feed poll)"
+                    f"blocking live decision until fresh snapshot arrives"
                 )
                 self._stale_last_warned[filename] = now_ts
+            return pd.DataFrame()
 
         try:
             return pd.read_parquet(path)
@@ -880,9 +1319,12 @@ class RLTradingBot:
         if df_greeks.empty:
             return None
 
+        snapshot_ts = pd.Timestamp.now(tz='America/New_York')
         if 'underlying_timestamp' in df_greeks.columns:
             df_greeks['dt'] = pd.to_datetime(df_greeks['underlying_timestamp'], format='mixed', errors='coerce')
             latest_ts = df_greeks['dt'].max()
+            if pd.notna(latest_ts):
+                snapshot_ts = latest_ts
             df_greeks = df_greeks[df_greeks['dt'] == latest_ts].copy()
 
         if not df_oi.empty:
@@ -913,8 +1355,7 @@ class RLTradingBot:
             logger.warning("No underlying_price column — cannot compute exposures")
             return None
 
-        now_et = pd.Timestamp.now(tz='America/New_York')
-        df_pq['T'] = calculate_exact_t(now_et)
+        df_pq['T'] = calculate_exact_t(snapshot_ts)
 
         required = ['strike', 'right', 'implied_vol', 'open_interest', 'underlying_price', 'T']
         for col in required:
@@ -1114,7 +1555,7 @@ class RLTradingBot:
             tlt_spot=tlt_spot,
             ib_high=self.ib_high.get(ticker) or spot,
             ib_low=self.ib_low.get(ticker) or spot,
-            historical_ibs=self.historical_ibs[ticker],
+            historical_ibs=self.historical_ibs[ticker][:10],
             price_history=self.price_history[ticker],
             tlt_price_history=self.tlt_price_history,
             iv_history=self.iv_history[ticker],
@@ -1139,8 +1580,12 @@ class RLTradingBot:
             return None
 
         try:
-            features_norm = self.gbm_normalizer.transform(features.reshape(1, -1))
-            probs = self.gbm_model.predict_proba(features_norm)[0]  # [SHORT, HOLD, LONG]
+            is_gbt = hasattr(self.gbm_model, "predict_proba") and not isinstance(self.gbm_model, torch.nn.Module)
+            if is_gbt:
+                probs = self.gbm_model.predict_proba(features.reshape(1, -1))[0]
+            else:
+                features_norm = self.gbm_normalizer.transform(features.reshape(1, -1))
+                probs = self.gbm_model.predict_proba(features_norm)[0]
             prediction = int(np.argmax(probs))
             confidence = float(np.max(probs))
             direction_map = {0: "SHORT", 1: "HOLD", 2: "LONG"}
@@ -1275,7 +1720,10 @@ class RLTradingBot:
     def process_ticker(self, ticker: str):
         """Process a single ticker through GBM+RL pipeline."""
         now = datetime.now(ET)
+        if self._intraday_state_ready_date != now.date() and not self._has_runtime_feature_state():
+            self._restore_intraday_state_from_rt_data(now)
         minutes_since_open = max(0, (now.hour * 60 + now.minute) - (9 * 60 + 30))
+        entry_eval_due = (minutes_since_open % ENTRY_EVAL_CADENCE_MINUTES) == 0
         
         # 0. Skip the first 10 minutes of the market (09:30 - 09:39) due to toxic options pricing
         current_minute = now.hour * 60 + now.minute
@@ -1289,7 +1737,7 @@ class RLTradingBot:
         exp_0dte = self._load_greek_exposures(ticker, is_weekly=False)
         if not exp_0dte:
             options_symbol = OPTIONS_SYMBOLS.get(ticker, "SPXW")
-            logger.info(f"[{ticker}] NO-TRADE: 0DTE data missing ({options_symbol}_greeks_0dte_latest.parquet empty)")
+            logger.info(f"[{ticker}] NO-TRADE: 0DTE data missing/stale ({options_symbol}_greeks_0dte_latest.parquet empty)")
             return
 
         exp_weekly = self._load_greek_exposures(ticker, is_weekly=True)
@@ -1384,11 +1832,22 @@ class RLTradingBot:
             exp_0dte, exp_weekly, spot, atm_iv, vix_spot, tlt_spot, ticker)
         if features is None:
             logger.info(f"[{ticker}] NO-TRADE: extract_features() returned None")
+            self._save_intraday_state()
             return
 
         if np.isnan(features).any() or np.isinf(features).any():
             n_bad = int(np.sum(np.isnan(features) | np.isinf(features)))
             logger.info(f"[{ticker}] NO-TRADE: {n_bad} features with NaN/Inf")
+            self._save_intraday_state()
+            return
+
+        if ticker not in self.positions and not entry_eval_due:
+            logger.info(
+                f"[{ticker}] ENTRY-GATED: waiting for {ENTRY_EVAL_CADENCE_MINUTES}m bar "
+                f"(m={minutes_since_open})"
+            )
+            self._check_gbm_trackers(ticker, spot, now)
+            self._save_intraday_state()
             return
 
         # 5. Run GBM prediction (independent, no RL)
@@ -1396,12 +1855,17 @@ class RLTradingBot:
 
         if gbm_result and gbm_result["direction"] == "HOLD":
             logger.info(f"[{ticker}] NO-TRADE: GBM says HOLD conf={gbm_result['confidence']:.0%}")
-        elif gbm_result and gbm_result["confidence"] < GBM_MIN_CONFIDENCE:
+        elif gbm_result and not is_actionable_signal(
+            gbm_result["direction"],
+            gbm_result["confidence"],
+            base_confidence=GBM_MIN_CONFIDENCE,
+        ):
             if ticker not in self.positions:
                 logger.info(
                     f"[{ticker}] NO-TRADE: GBM confidence insufficient "
-                    f"{gbm_result['confidence']:.0%} < {GBM_MIN_CONFIDENCE:.0%} required"
+                    f"{gbm_result['confidence']:.0%} below directional threshold"
                 )
+                self._save_intraday_state()
                 return
             # If position is open, fall through to ITS for exit evaluation
             logger.info(
@@ -1456,7 +1920,11 @@ class RLTradingBot:
         self._check_gbm_trackers(ticker, spot, now)
 
         # 9. GBM Discord alert + create TP/SL tracker (only when direction changes or is actionable)
-        if gbm_result and gbm_result["direction"] != "HOLD" and gbm_result["confidence"] >= GBM_MIN_CONFIDENCE:
+        if gbm_result and is_actionable_signal(
+            gbm_result["direction"],
+            gbm_result["confidence"],
+            base_confidence=GBM_MIN_CONFIDENCE,
+        ):
             last_gbm = self._last_gbm_direction.get(ticker)
             if gbm_result["direction"] != last_gbm:
                 # Check cooldown before tracking again
@@ -1510,6 +1978,7 @@ class RLTradingBot:
                 )
                 # Rollback ITS state: it already set open_position internally
                 self.systems[ticker]._reset_position_state()
+                self._save_intraday_state()
                 return
 
             if ticker in self.positions:
@@ -1520,6 +1989,7 @@ class RLTradingBot:
                 )
                 # Rollback ITS state: wrapper rejected the entry
                 self.systems[ticker]._reset_position_state()
+                self._save_intraday_state()
                 return
 
             details = result.get("details", {})
@@ -1539,7 +2009,12 @@ class RLTradingBot:
                 expiration=expiration,
                 time_to_target=details.get("time_to_target", 0.5),
                 log_sigma=details.get("log_sigma", 0.5),
-                right="CALL" if "CALL" in action else "PUT"
+                right="CALL" if "CALL" in action else "PUT",
+                entry_market_features=(
+                    getattr(self.systems[ticker], "_entry_market_features", None).tolist()
+                    if getattr(self.systems[ticker], "_entry_market_features", None) is not None
+                    else None
+                )
             )
             self.positions[ticker] = pos
             self.last_trade_time[ticker] = now
@@ -1556,6 +2031,7 @@ class RLTradingBot:
 
         elif action == "EXIT":
             if ticker not in self.positions:
+                self._save_intraday_state()
                 return
 
             pos = self.positions.pop(ticker)
@@ -1586,6 +2062,8 @@ class RLTradingBot:
                 "exit_time": now.isoformat(),
             }
             self._log_trade_history(trade, now, "trades_rl")
+
+        self._save_intraday_state()
 
     def is_market_hours(self) -> bool:
         """Check if within trading window (9:30-16:00 EST)."""
@@ -1664,6 +2142,9 @@ class RLTradingBot:
 
         while True:
             try:
+                now = datetime.now(ET)
+                self._handle_session_rollover(now)
+
                 if not self.is_market_hours():
                     # Outside market hours: just sleep. No cleanup here
                     # because the Discord trade tracker ignores messages
