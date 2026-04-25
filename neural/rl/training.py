@@ -204,6 +204,31 @@ class PPOTrainer:
         min_hold = phase_info.get("min_hold_minutes", 0)
         curriculum_phase = phase_info["phase"]
 
+        conf_series = self.env.episode_index["mlp_confidence"]
+
+        def _apply_confidence_filter(long_pool, short_pool):
+            long_filtered = list(long_pool or [])
+            short_filtered = list(short_pool or [])
+
+            if min_confidence > 0:
+                long_filtered = [
+                    idx for idx in long_filtered
+                    if float(conf_series.loc[idx]) >= min_confidence
+                ]
+                short_filtered = [
+                    idx for idx in short_filtered
+                    if float(conf_series.loc[idx]) >= min_confidence
+                ]
+
+            if long_filtered or short_filtered:
+                return long_filtered, short_filtered
+
+            print(
+                f"[RL] Warning: no episodes with confidence >= {min_confidence} for "
+                f"{'train' if training else 'eval'} split."
+            )
+            return list(long_pool or []), list(short_pool or [])
+
         if self.pool is not None and training:
             # Move agent weights to CPU to be safely serialized
             self.agent.cpu()
@@ -213,6 +238,7 @@ class PPOTrainer:
             # --- Direction-balanced sampling from date-restricted pool ---
             long_pool = self._long_indices_train if training else self._long_indices_eval
             short_pool = self._short_indices_train if training else self._short_indices_eval
+            long_pool, short_pool = _apply_confidence_filter(long_pool, short_pool)
             
             if not long_pool and not short_pool:
                 print(f"  [!] No eligible episodes for {'train' if training else 'eval'}")
@@ -268,21 +294,11 @@ class PPOTrainer:
         # Direction-balanced sampling (single-threaded path)
         long_pool = self._long_indices_train if training else self._long_indices_eval
         short_pool = self._short_indices_train if training else self._short_indices_eval
-        
-        # Apply confidence filter
-        if min_confidence > 0:
-            conf_series = self.env.episode_index["mlp_confidence"]
-            long_pool = [i for i in long_pool if conf_series.iloc[i] >= min_confidence] if long_pool else []
-            short_pool = [i for i in short_pool if conf_series.iloc[i] >= min_confidence] if short_pool else []
+        long_pool, short_pool = _apply_confidence_filter(long_pool, short_pool)
 
         if not long_pool and not short_pool:
-            print(f"[RL] Warning: no episodes with confidence >= {min_confidence} for {'train' if training else 'eval'} split.")
-            # Fallback: use all direction indices without confidence filter
-            long_pool = self._long_indices_train if training else self._long_indices_eval
-            short_pool = self._short_indices_train if training else self._short_indices_eval
-            if not long_pool and not short_pool:
-                print(f"[RL] Critical: No episodes found for {'train' if training else 'eval'} split.")
-                return buffer, episode_infos
+            print(f"[RL] Critical: No episodes found for {'train' if training else 'eval'} split.")
+            return buffer, episode_infos
 
 
         collected = 0
@@ -555,7 +571,7 @@ class PPOTrainer:
         eval_pf = 0
 
         print("=" * 70)
-        print("PPO-RL TRAINING — SPX 0DTE OPTIONS AGENT")
+        print("PPO-RL TRAINING - SPX 0DTE OPTIONS AGENT")
         print("=" * 70)
         print(f"  Total updates:     {total_updates}")
         print(f"  Episodes/update:   {n_episodes}")
@@ -740,7 +756,7 @@ class PPOTrainer:
                 pct_done = (update_step + 1) / total_updates * 100
                 bar_len = 25
                 filled = int(bar_len * (update_step + 1) / total_updates)
-                bar = "█" * filled + "░" * (bar_len - filled)
+                bar = "=" * filled + "." * (bar_len - filled)
 
                 # Rolling averages (protect vs empty)
                 r_pf = np.mean(rolling_pf) if rolling_pf else 1.0
@@ -757,30 +773,30 @@ class PPOTrainer:
 
                 print(f"\n  [{bar}] {pct_done:5.1f}% | Update {update_step}/{total_updates} | "
                       f"ETA: {eta_min:.1f}min | Phase {phase_info['phase']}")
-                print(f"  ├─ Current:    PF={profit_factor:.2f} WR={win_rate:.1%} "
+                print(f"  |- Current:    PF={profit_factor:.2f} WR={win_rate:.1%} "
                       f"PnL={mean_pnl:+.4f} Hold={mean_hold:.0f}m "
                       f"L/S={n_long}/{n_short} Stop={hard_stop_rate:.0%}")
                 
                 # Manual request: explicit Entropy and KL monitor
-                print(f"  ├─ Entropy:    {r_h:.4f} (target: 0.03-0.10) H[S/E]={h_s:.2f}/{h_e:.2f}")
-                print(f"  ├─ Approx KL:  {losses.get('approx_kl', 0):.4f} (avg:{r_kl:.4f})")
+                print(f"  |- Entropy:    {r_h:.4f} (target: 0.03-0.10) H[S/E]={h_s:.2f}/{h_e:.2f}")
+                print(f"  |- Approx KL:  {losses.get('approx_kl', 0):.4f} (avg:{r_kl:.4f})")
 
                 if RL_CONFIG.get("use_sniper_mode"):
-                    print(f"  ├─ Sniper:     AvgWait={mean_sniper_wait:.1f}m "
+                    print(f"  |- Sniper:     AvgWait={mean_sniper_wait:.1f}m "
                           f"Timeouts={sniper_timeouts}/{len(episode_infos)}")
                 
-                print(f"  ├─ Rolling{ROLLING_WINDOW:2d}: PF={r_pf:.2f} WR={r_wr:.1%} "
+                print(f"  |- Rolling{ROLLING_WINDOW:2d}: PF={r_pf:.2f} WR={r_wr:.1%} "
                       f"PnL={r_pnl:+.4f}")
-                print(f"  ├─ Losses:     π={losses['policy_loss']:.4f} V={losses['value_loss']:.4f} "
-                      f"(avg: π={r_pi:.4f} V={r_v:.4f})")
-                print(f"  └─ Timing:     {elapsed:.1f}s/step | "
+                print(f"  |- Losses:     pi={losses['policy_loss']:.4f} V={losses['value_loss']:.4f} "
+                      f"(avg: pi={r_pi:.4f} V={r_v:.4f})")
+                print(f"  `- Timing:     {elapsed:.1f}s/step | "
                       f"Total: {(time.time()-train_start)/60:.1f}min")
 
             # ─── EVAL + OVERFITTING CHECK ───
             if update_step > 0 and update_step % eval_interval == 0:
-                print(f"\n  {'─'*60}")
-                print(f"  📊 EVAL CHECKPOINT (step {update_step})")
-                print(f"  {'─'*60}")
+                print(f"\n  {'-'*60}")
+                print(f"  EVAL CHECKPOINT (step {update_step})")
+                print(f"  {'-'*60}")
 
                 # Collect eval episodes (no augmentation, deterministic)
                 eval_buffer, eval_infos = self.collect_episodes(
@@ -821,7 +837,7 @@ class PPOTrainer:
                 eval_history["stochastic_train_pf"].append(s_pf) # Added for Issue 2
 
                 print(f"  {'Metric':<18} {'Train (rolling)':>16} {'Eval (determ.)':>16} {'Gap':>10}")
-                print(f"  {'─'*60}")
+                print(f"  {'-'*60}")
                 print(f"  {'Profit Factor':<18} {train_pf_avg:>16.2f} {eval_pf:>16.2f} "
                       f"{train_pf_avg - eval_pf:>+10.2f}")
                 print(f"  {'Win Rate':<18} {train_wr_avg:>15.1%} {eval_wr:>15.1%} "
@@ -834,26 +850,26 @@ class PPOTrainer:
                 wr_gap = train_wr_avg - eval_wr
 
                 if pf_gap > 0.5 and eval_pf < 1.0:
-                    print(f"\n  ⚠️  OVERFITTING WARNING: Train PF >> Eval PF "
+                    print(f"\n  WARN OVERFITTING: Train PF >> Eval PF "
                           f"(gap={pf_gap:.2f}). Policy memorizing train episodes.")
                 elif pf_gap > 0.3:
-                    print(f"\n  ⚡ Mild overfitting: PF gap = {pf_gap:.2f}. Monitor closely.")
+                    print(f"\n  WARN Mild overfitting: PF gap = {pf_gap:.2f}. Monitor closely.")
                 elif eval_pf > train_pf_avg and eval_pf > 1.0:
-                    print(f"\n  ✅ Healthy: Eval PF ({eval_pf:.2f}) ≥ Train PF ({train_pf_avg:.2f})")
+                    print(f"\n  OK Healthy: Eval PF ({eval_pf:.2f}) >= Train PF ({train_pf_avg:.2f})")
                 print(f"  Train:      PF {train_pf_avg:.2f} | WR {train_wr_avg:.1%} | PnL {train_pnl_avg:+.2%}")
                 print(f"  StochTrain: PF {s_pf:.2f} (clean states)")
                 if eval_pf > 0:
                     pass # Already printed above
                 if eval_wr < 0.40:
-                    print(f"  ⚠️  LOW EVAL WIN RATE: {eval_wr:.1%} — agent may be guessing.")
+                    print(f"  WARN LOW EVAL WIN RATE: {eval_wr:.1%} - agent may be guessing.")
 
-                print(f"  {'─'*60}")
+                print(f"  {'-'*60}")
 
             # Save best model by profit factor
             if eval_pf > self.best_profit_factor and update_step > 10:
                 self.best_profit_factor = eval_pf
                 self.agent.save(os.path.join(save_dir, "best_rl_agent.pt"))
-                print(f"  → New best Eval PF: {eval_pf:.3f}")
+                print(f"  -> New best Eval PF: {eval_pf:.3f}")
 
             # Periodic checkpoint
             if (update_step + 1) % 50 == 0:

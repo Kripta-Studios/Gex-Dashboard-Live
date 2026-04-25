@@ -1220,13 +1220,23 @@ def collect_training_data(tickers: list, num_days: int = 365, num_workers: int =
         return pd.DataFrame()
         
     sorted_dates = sorted(available_dates)
-    trading_days = sorted_dates[-num_days:] if len(sorted_dates) > num_days else sorted_dates
-    
-    if start_date:
-        start_dt = datetime.strptime(start_date, "%Y%m%d").date()
-    if end_date:
-        end_dt = datetime.strptime(end_date, "%Y%m%d").date()
-        trading_days = sorted([d for d in available_dates if start_dt <= d <= end_dt])
+    start_dt = datetime.strptime(start_date, "%Y%m%d").date() if start_date else None
+    end_dt = datetime.strptime(end_date, "%Y%m%d").date() if end_date else None
+
+    if start_dt and end_dt and start_dt > end_dt:
+        raise ValueError(f"Invalid date range: start_date {start_date} > end_date {end_date}")
+
+    if start_dt is not None or end_dt is not None:
+        trading_days = [
+            d for d in sorted_dates
+            if (start_dt is None or d >= start_dt) and (end_dt is None or d <= end_dt)
+        ]
+    else:
+        trading_days = sorted_dates[-num_days:] if len(sorted_dates) > num_days else sorted_dates
+
+    if not trading_days:
+        print("No trading days matched the requested date range.")
+        return pd.DataFrame()
     
     task_args = []
     for ticker in all_symbols:
@@ -1246,6 +1256,37 @@ def collect_training_data(tickers: list, num_days: int = 365, num_workers: int =
     valid_atr_days = 0
     start_time_all = time.time()
     
+    def _dedupe_samples(samples: list) -> list:
+        seen = set()
+        deduped_samples = []
+        for sample in samples:
+            time_str = sample.get("time", "")
+            try:
+                minutes = int(str(time_str)[3:5])
+                rounded_minutes = (minutes // 5) * 5
+                bucket_time = f"{str(time_str)[:3]}{rounded_minutes:02d}"
+            except Exception:
+                bucket_time = str(time_str)[:4]
+
+            level_type = str(sample.get("nearest_level_id", 8))
+            key = (level_type, bucket_time)
+            if key in seen:
+                continue
+            seen.add(key)
+            deduped_samples.append(sample)
+        return deduped_samples
+
+    def _count_targets(samples: list) -> tuple[int, int, int]:
+        longs = shorts = holds = 0
+        for sample in samples:
+            if sample["target"] == 1:
+                longs += 1
+            elif sample["target"] == -1:
+                shorts += 1
+            else:
+                holds += 1
+        return longs, shorts, holds
+
     if num_workers == 1:
         for args in task_args:
             completed += 1
@@ -1257,35 +1298,9 @@ def collect_training_data(tickers: list, num_days: int = 365, num_workers: int =
                     samples, day_atr, longs, shorts, holds = res, 0.0, 0, 0, 0
                     
                 if samples:
-                    # --- Deduplicate Samples (Fix for Bug #5 Clustering) ---
-                    seen = set()
-                    deduped_samples = []
-                    for s in samples:
-                        # Key: (level_type, HH:MM rounded down to 5 min intervals)
-                        time_str = s['time']
-                        try:
-                            minutes = int(time_str[3:5])
-                            rounded_minutes = (minutes // 5) * 5
-                            bucket_time = f"{time_str[:3]}{rounded_minutes:02d}"
-                        except:
-                            bucket_time = time_str[:4] # fallback
-                        
-                        # Deduplication using nearest level ID
-                        level_type = str(s.get('nearest_level_id', 8))
-                            
-                        key = (level_type, bucket_time)
-                        if key not in seen:
-                            seen.add(key)
-                            deduped_samples.append(s)
-                            
+                    deduped_samples = _dedupe_samples(samples)
                     all_samples.extend(deduped_samples)
-                    
-                    # Recalculate longs, shorts, holds based on deduped samples
-                    longs, shorts, holds = 0, 0, 0
-                    for s_deduped in deduped_samples:
-                        if s_deduped["target"] == 1: longs += 1
-                        elif s_deduped["target"] == -1: shorts += 1
-                        else: holds += 1
+                    longs, shorts, holds = _count_targets(deduped_samples)
 
                     total_longs += longs
                     total_shorts += shorts
@@ -1326,7 +1341,9 @@ def collect_training_data(tickers: list, num_days: int = 365, num_workers: int =
                         samples, day_atr, longs, shorts, holds = res, 0.0, 0, 0, 0
                         
                     if samples:
-                        all_samples.extend(samples)
+                        deduped_samples = _dedupe_samples(samples)
+                        all_samples.extend(deduped_samples)
+                        longs, shorts, holds = _count_targets(deduped_samples)
                         total_longs += longs
                         total_shorts += shorts
                         total_holds += holds
