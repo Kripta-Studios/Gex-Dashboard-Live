@@ -2,9 +2,10 @@
 Real-Time Options + Spot Feed — Parquet-based for MLP+RL Bot
 
 60-second polling daemon that fetches from ThetaData:
-  - SPXW 0DTE:   Greeks, OI, IV, OHLC (all strikes, calls+puts)
-  - SPXW Weekly:  Greeks, OI            (all strikes, calls+puts)
-  - Spot prices:  SPX, VIX, TLT         (1-min OHLC candles)
+  - SPXW 0DTE:    Greeks, OI, IV, OHLC (all strikes, calls+puts)
+  - SPXW Weekly:  Greeks, OI           (all strikes, calls+puts)
+  - QQQ/SPY 0DTE+Weekly: same schema
+  - Spot prices:  SPX, QQQ, SPY, VIX, TLT (1-min OHLC candles)
 
 Friday logic: 0DTE = today, weekly = NEXT Friday (never same as 0DTE).
 
@@ -20,6 +21,7 @@ import httpx
 import os
 import asyncio
 import argparse
+import json
 import signal
 import pandas as pd
 import numpy as np
@@ -42,7 +44,8 @@ from thetadata_api.corrector import fix_dataframe
 from thetadata_api.utils import fetch_with_interval_fallback, parse_response, get_logger
 from services.compute_features import (
     get_net_exposures_from_parquet, calculate_exact_t,
-    extract_feature_vector, compute_wonham_filter
+    extract_feature_vector, compute_wonham_filter,
+    inverse_safe_log, invert_delta_filtered_pcr
 )
 from neural.hybrid_model import FEATURE_COLUMNS
 from modules.utils import get_market_trading_days
@@ -86,12 +89,15 @@ OPTIONS_ENDPOINTS = {
 # Which endpoints to fetch for 0DTE vs weekly
 ENDPOINTS_0DTE  = ["greeks", "oi", "iv", "ohlc"]
 ENDPOINTS_WEEKLY = ["greeks", "oi"]
+FEED_STATE_FILENAME = "feed_intraday_state.json"
+DEFAULT_POLL_INTERVAL_SECONDS = 60
 
 # Spot indices/stocks to fetch
-SPOT_SYMBOLS = ["QQQ", "SPY", "VIX", "TLT"]
+SPOT_SYMBOLS = ["SPX", "QQQ", "SPY", "VIX", "TLT"]
 
 # Map trading ticker → options symbol
 OPTIONS_TICKERS = {
+    "SPX": "SPXW",    # SPX uses SPXW options
     "QQQ": "QQQ",    # QQQ uses QQQ options directly
     "SPY": "SPY",    # SPY uses SPY options (American-style)
 }
@@ -106,7 +112,7 @@ class RealtimeOptionsFeed:
     Saves all data as Parquet files in rt_data/{YYYYMMDD}/.
     """
 
-    def __init__(self, poll_interval: int = 40, output_dir: str = None):
+    def __init__(self, poll_interval: int = DEFAULT_POLL_INTERVAL_SECONDS, output_dir: str = None):
         thetadata_url = os.environ.get("THETADATA_URL", "http://91.99.90.39:25503/v3")
         self.client = ThetaClient(base_url=thetadata_url)
         self.poll_interval = poll_interval
@@ -121,6 +127,7 @@ class RealtimeOptionsFeed:
         self._expirations = {}  # ticker -> (exp_0dte, exp_weekly)
         self._expirations_resolved = False
         self._historical_backfilled = False
+        self._restored_state_day: str | None = None
 
         # Base rt_data directory (parent of per-day dirs)
         self._rt_data_base = Path(output_dir or os.path.join(PROJECT_ROOT, "rt_data"))
@@ -128,7 +135,7 @@ class RealtimeOptionsFeed:
 
         # ── ML feature computation state (per-ticker) ──
         self.price_history = {}    # ticker -> deque(maxlen=35)
-        self.iv_history = {}       # ticker -> deque(maxlen=60)
+        self.iv_history = {}       # ticker -> deque(maxlen=32)
         self.tlt_price_history = deque(maxlen=35)  # shared (TLT is global)
         self.ib_high: dict[str, float | None] = {}  # ticker -> float
         self.ib_low: dict[str, float | None] = {}   # ticker -> float
@@ -137,24 +144,26 @@ class RealtimeOptionsFeed:
         self._ml_features_rows = {}  # ticker -> list of rows
         self._historical_ib_loaded = {}  # ticker -> bool
         self.day_atr = {}             # ticker -> float
-        self.net_gamma_window = {}    # ticker -> deque(maxlen=100)
-        self.net_charm_history = {}   # ticker -> deque(maxlen=60)
-        self.pcr_history = {}         # ticker -> deque(maxlen=60)
+        self.net_gamma_window = {}    # ticker -> deque(maxlen=60)
+        self.net_charm_history = {}   # ticker -> deque(maxlen=32)
+        self.pcr_history = {}         # ticker -> deque(maxlen=32)
         self.wonham_probs = {}        # ticker -> float
+        self._prev_call_vol = {tk: 0.0 for tk in OPTIONS_TICKERS}
+        self._prev_put_vol = {tk: 0.0 for tk in OPTIONS_TICKERS}
 
         # Initialize per-ticker structures
         for tk in OPTIONS_TICKERS:
             self.price_history[tk] = deque(maxlen=35)
-            self.iv_history[tk] = deque(maxlen=60)
+            self.iv_history[tk] = deque(maxlen=32)
             self.ib_high[tk] = None
             self.ib_low[tk] = None
             self.historical_ibs[tk] = []
             self._ml_features_rows[tk] = []
             self._historical_ib_loaded[tk] = False
             self.day_atr[tk] = 1.0
-            self.net_gamma_window[tk] = deque(maxlen=100)
-            self.net_charm_history[tk] = deque(maxlen=60)
-            self.pcr_history[tk] = deque(maxlen=60)
+            self.net_gamma_window[tk] = deque(maxlen=60)
+            self.net_charm_history[tk] = deque(maxlen=32)
+            self.pcr_history[tk] = deque(maxlen=32)
             self.wonham_probs[tk] = 0.5
 
     # ─────────────────────────────────────────
@@ -616,6 +625,383 @@ class RealtimeOptionsFeed:
         except Exception as e:
             logger.warning(f"  FAIL {filename}: {e}")
 
+    @staticmethod
+    def _serialize_price_history(history: deque) -> list[list[float]]:
+        rows = []
+        for item in history:
+            try:
+                minute, price = item
+                rows.append([float(minute), float(price)])
+            except Exception:
+                continue
+        return rows
+
+    @staticmethod
+    def _deserialize_price_history(rows, maxlen: int) -> deque:
+        history = deque(maxlen=maxlen)
+        for item in rows or []:
+            if not isinstance(item, (list, tuple)) or len(item) != 2:
+                continue
+            try:
+                history.append((float(item[0]), float(item[1])))
+            except Exception:
+                continue
+        return history
+
+    @staticmethod
+    def _float_or_none(value):
+        try:
+            value = float(value)
+        except Exception:
+            return None
+        return value if np.isfinite(value) else None
+
+    @staticmethod
+    def _normalize_prev_features(prev: dict | None) -> dict | None:
+        if not isinstance(prev, dict):
+            return None
+        normalized = {}
+        for key, value in prev.items():
+            norm = RealtimeOptionsFeed._float_or_none(value)
+            if norm is not None:
+                normalized[key] = norm
+        return normalized or None
+
+    def _get_state_path(self) -> Path:
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+        return self.output_dir / FEED_STATE_FILENAME
+
+    def _reset_intraday_runtime_state(self):
+        self.tlt_price_history.clear()
+        self._prev_call_vol = {tk: 0.0 for tk in OPTIONS_TICKERS}
+        self._prev_put_vol = {tk: 0.0 for tk in OPTIONS_TICKERS}
+        self.prev_features = {}
+        for tk in OPTIONS_TICKERS:
+            self.price_history[tk].clear()
+            self.iv_history[tk].clear()
+            self.ib_high[tk] = None
+            self.ib_low[tk] = None
+            self.historical_ibs[tk] = []
+            self._ml_features_rows[tk] = []
+            self._historical_ib_loaded[tk] = False
+            self.day_atr[tk] = 1.0
+            self.net_gamma_window[tk].clear()
+            self.net_charm_history[tk].clear()
+            self.pcr_history[tk].clear()
+            self.wonham_probs[tk] = 0.5
+
+    def _load_existing_ml_feature_rows(self, ticker: str) -> list[dict]:
+        path = self.output_dir / f"ml_features_{ticker}_latest.parquet"
+        if not path.exists():
+            return []
+        try:
+            df = pd.read_parquet(path)
+            if df.empty:
+                return []
+            if "minutes_since_open" in df.columns:
+                df = (
+                    df.sort_values("timestamp" if "timestamp" in df.columns else "minutes_since_open")
+                    .drop_duplicates(subset=["minutes_since_open"], keep="last")
+                    .reset_index(drop=True)
+                )
+            return df.to_dict("records")
+        except Exception as e:
+            logger.warning(f"[ML][{ticker}] Failed to reload feature diary: {e}")
+            return []
+
+    def _restore_tlt_price_history_from_spot(self) -> bool:
+        path = self.output_dir / "spot_TLT_latest.parquet"
+        if not path.exists():
+            return False
+        try:
+            df = pd.read_parquet(path)
+            if df.empty:
+                return False
+            if "timestamp" in df.columns:
+                df["dt"] = pd.to_datetime(df["timestamp"], format="mixed", errors="coerce")
+            elif "time" in df.columns:
+                df["dt"] = pd.to_datetime(df["time"], format="mixed", errors="coerce")
+            else:
+                return False
+            df = df.dropna(subset=["dt"]).sort_values("dt")
+            self.tlt_price_history.clear()
+            for _, row in df.tail(self.tlt_price_history.maxlen).iterrows():
+                close = self._float_or_none(row.get("close", 0.0))
+                if close is None or close <= 0:
+                    continue
+                mins = max(0, (row["dt"].hour * 60 + row["dt"].minute) - (9 * 60 + 30))
+                self.tlt_price_history.append((float(mins), close))
+            return len(self.tlt_price_history) > 0
+        except Exception as e:
+            logger.warning(f"[TLT] Failed to restore intraday history: {e}")
+            return False
+
+    def _restore_price_history_from_spot(self, ticker: str) -> bool:
+        path = self.output_dir / f"spot_{ticker}_latest.parquet"
+        if not path.exists():
+            return False
+        try:
+            df = pd.read_parquet(path)
+            if df.empty:
+                return False
+            if "timestamp" in df.columns:
+                df["dt"] = pd.to_datetime(df["timestamp"], format="mixed", errors="coerce")
+            elif "time" in df.columns:
+                df["dt"] = pd.to_datetime(df["time"], format="mixed", errors="coerce")
+            else:
+                return False
+            df = df.dropna(subset=["dt"]).sort_values("dt")
+            df = df[(df["dt"].dt.time >= dt_time(9, 30)) & (df["dt"].dt.time <= dt_time(16, 0))]
+            self.price_history[ticker].clear()
+            for _, row in df.tail(self.price_history[ticker].maxlen).iterrows():
+                close = self._float_or_none(row.get("close", 0.0))
+                if close is None or close <= 0:
+                    continue
+                mins = max(0, (row["dt"].hour * 60 + row["dt"].minute) - (9 * 60 + 30))
+                self.price_history[ticker].append((float(mins), close))
+            if len(self.price_history[ticker]) > 0:
+                self._compute_ib_from_spot(ticker)
+                return True
+        except Exception as e:
+            logger.warning(f"[{ticker}] Failed to restore spot history: {e}")
+        return False
+
+    def _restore_prev_features_from_df(self, ticker: str, df_features: pd.DataFrame, latest_spot: float):
+        if df_features.empty:
+            return
+        last = df_features.iloc[-1]
+
+        def _raw_value(raw_col: str, feat_col: str) -> float:
+            raw_val = last.get(raw_col)
+            if pd.notna(raw_val):
+                raw_val = self._float_or_none(raw_val)
+                if raw_val is not None:
+                    return raw_val
+            feat_val = last.get(feat_col)
+            if pd.notna(feat_val):
+                feat_val = self._float_or_none(feat_val)
+                if feat_val is not None:
+                    return float(inverse_safe_log(feat_val))
+            return 0.0
+
+        spot = latest_spot
+        if spot <= 0 and pd.notna(last.get("spot_price")):
+            spot = self._float_or_none(last.get("spot_price")) or 0.0
+        if spot <= 0:
+            return
+
+        self.prev_features[ticker] = {
+            "spot": float(spot),
+            "net_gamma": _raw_value("net_gamma_raw", "net_gamma"),
+            "net_vanna": _raw_value("net_vanna_raw", "net_vanna"),
+            "net_dgex": _raw_value("net_dgex_raw", "net_dgex"),
+            "net_delta": _raw_value("net_delta_raw", "net_delta"),
+            "net_vega": _raw_value("net_vega_raw", "net_vega"),
+            "net_vomma": _raw_value("net_vomma_raw", "net_vomma"),
+        }
+
+    def _restore_feature_diary_state(self, ticker: str) -> bool:
+        path = self.output_dir / f"ml_features_{ticker}_latest.parquet"
+        if not path.exists():
+            return False
+        try:
+            df = pd.read_parquet(path)
+            if df.empty:
+                return False
+
+            if "minutes_since_open" in df.columns:
+                df = (
+                    df.sort_values("timestamp" if "timestamp" in df.columns else "minutes_since_open")
+                    .drop_duplicates(subset=["minutes_since_open"], keep="last")
+                    .reset_index(drop=True)
+                )
+
+            self._ml_features_rows[ticker] = df.to_dict("records")
+
+            iv_col = "atm_iv_raw" if "atm_iv_raw" in df.columns else "atm_iv"
+            if iv_col in df.columns:
+                vals = [self._float_or_none(v) for v in df[iv_col].tail(self.iv_history[ticker].maxlen)]
+                self.iv_history[ticker] = deque([v for v in vals if v is not None and v > 0], maxlen=32)
+
+            if "pcr_raw" in df.columns:
+                pcr_vals = [self._float_or_none(v) for v in df["pcr_raw"].tail(self.pcr_history[ticker].maxlen)]
+                self.pcr_history[ticker] = deque([v for v in pcr_vals if v is not None and v >= 0], maxlen=32)
+            elif "delta_filtered_pcr" in df.columns:
+                pcr_vals = []
+                for val in df["delta_filtered_pcr"].tail(self.pcr_history[ticker].maxlen):
+                    pcr_norm = self._float_or_none(val)
+                    if pcr_norm is not None:
+                        pcr_vals.append(float(invert_delta_filtered_pcr(pcr_norm)))
+                self.pcr_history[ticker] = deque(pcr_vals, maxlen=32)
+
+            gamma_col = "net_gamma_raw" if "net_gamma_raw" in df.columns else "net_gamma"
+            gamma_vals = []
+            if gamma_col in df.columns:
+                for val in df[gamma_col].tail(self.net_gamma_window[ticker].maxlen):
+                    parsed = self._float_or_none(val)
+                    if parsed is None:
+                        continue
+                    gamma_vals.append(parsed if gamma_col.endswith("_raw") else float(inverse_safe_log(parsed)))
+            self.net_gamma_window[ticker] = deque(gamma_vals, maxlen=60)
+
+            charm_col = "net_charm_raw" if "net_charm_raw" in df.columns else "net_charm"
+            charm_vals = []
+            if charm_col in df.columns:
+                for val in df[charm_col].tail(self.net_charm_history[ticker].maxlen):
+                    parsed = self._float_or_none(val)
+                    if parsed is None:
+                        continue
+                    charm_vals.append(parsed if charm_col.endswith("_raw") else float(inverse_safe_log(parsed)))
+            self.net_charm_history[ticker] = deque(charm_vals, maxlen=32)
+
+            if "wonham_trend_prob" in df.columns:
+                last_prob = self._float_or_none(df["wonham_trend_prob"].iloc[-1])
+                if last_prob is not None:
+                    self.wonham_probs[ticker] = float(np.clip(last_prob, 0.0, 1.0))
+
+            latest_spot = self.price_history[ticker][-1][1] if self.price_history[ticker] else 0.0
+            self._restore_prev_features_from_df(ticker, df, latest_spot)
+            return True
+        except Exception as e:
+            logger.warning(f"[ML][{ticker}] Failed to restore feature diary state: {e}")
+            return False
+
+    def _seed_pcr_volume_baseline(self, ticker: str, spot: float):
+        options_symbol = OPTIONS_TICKERS.get(ticker, "SPXW")
+        path = self.output_dir / f"{options_symbol}_ohlc_0dte_latest.parquet"
+        if not path.exists() or spot <= 0:
+            return
+        try:
+            df_opt = pd.read_parquet(path)
+            if df_opt.empty or "volume" not in df_opt.columns or "strike" not in df_opt.columns or "right" not in df_opt.columns:
+                return
+            day_atr = max(self.day_atr.get(ticker, 1.0), 1e-6)
+            otm_range = 1.5 * day_atr
+            df_calls_otm = df_opt[
+                (df_opt["right"].astype(str).str.upper().isin(["CALL", "C"])) &
+                (df_opt["strike"].between(spot, spot + otm_range))
+            ]
+            df_puts_otm = df_opt[
+                (df_opt["right"].astype(str).str.upper().isin(["PUT", "P"])) &
+                (df_opt["strike"].between(spot - otm_range, spot))
+            ]
+            self._prev_call_vol[ticker] = float(df_calls_otm["volume"].sum())
+            self._prev_put_vol[ticker] = float(df_puts_otm["volume"].sum())
+        except Exception as e:
+            logger.warning(f"[{ticker}] Failed to seed PCR baseline: {e}")
+
+    def _save_intraday_state(self):
+        state = {
+            "session_date": self.current_trading_day.strftime("%Y%m%d"),
+            "tlt_price_history": self._serialize_price_history(self.tlt_price_history),
+            "prev_call_vol": {tk: float(v) for tk, v in self._prev_call_vol.items()},
+            "prev_put_vol": {tk: float(v) for tk, v in self._prev_put_vol.items()},
+            "tickers": {},
+        }
+
+        for tk in OPTIONS_TICKERS:
+            state["tickers"][tk] = {
+                "price_history": self._serialize_price_history(self.price_history[tk]),
+                "iv_history": [float(v) for v in self.iv_history[tk]],
+                "ib_high": self._float_or_none(self.ib_high.get(tk)),
+                "ib_low": self._float_or_none(self.ib_low.get(tk)),
+                "prev_features": self._normalize_prev_features(self.prev_features.get(tk)),
+                "day_atr": float(self.day_atr.get(tk, 1.0)),
+                "net_gamma_window": [float(v) for v in self.net_gamma_window[tk]],
+                "net_charm_history": [float(v) for v in self.net_charm_history[tk]],
+                "pcr_history": [float(v) for v in self.pcr_history[tk]],
+                "wonham_prob": float(self.wonham_probs.get(tk, 0.5)),
+            }
+
+        path = self._get_state_path()
+        tmp_path = path.with_suffix(path.suffix + ".tmp")
+        try:
+            with open(tmp_path, "w", encoding="utf-8") as f:
+                json.dump(state, f, indent=2)
+            os.replace(tmp_path, path)
+        except Exception as e:
+            logger.warning(f"Failed to save feed intraday state: {e}")
+            try:
+                if tmp_path.exists():
+                    tmp_path.unlink()
+            except Exception:
+                pass
+
+    def _restore_intraday_state_from_disk(self):
+        day_str = self.current_trading_day.strftime("%Y%m%d")
+        if self._restored_state_day == day_str:
+            return
+
+        self._reset_intraday_runtime_state()
+        restored = False
+        path = self._get_state_path()
+
+        if path.exists():
+            try:
+                with open(path, "r", encoding="utf-8") as f:
+                    state = json.load(f)
+                if state.get("session_date") == day_str:
+                    self.tlt_price_history = self._deserialize_price_history(
+                        state.get("tlt_price_history"), self.tlt_price_history.maxlen
+                    )
+                    for tk in OPTIONS_TICKERS:
+                        tk_state = (state.get("tickers") or {}).get(tk, {})
+                        self.price_history[tk] = self._deserialize_price_history(
+                            tk_state.get("price_history"), self.price_history[tk].maxlen
+                        )
+                        self.iv_history[tk] = deque(
+                            [float(v) for v in tk_state.get("iv_history", []) if self._float_or_none(v) is not None],
+                            maxlen=32,
+                        )
+                        self.ib_high[tk] = self._float_or_none(tk_state.get("ib_high"))
+                        self.ib_low[tk] = self._float_or_none(tk_state.get("ib_low"))
+                        prev = self._normalize_prev_features(tk_state.get("prev_features"))
+                        if prev:
+                            self.prev_features[tk] = prev
+                        self.day_atr[tk] = float(tk_state.get("day_atr", 1.0))
+                        self.net_gamma_window[tk] = deque(
+                            [float(v) for v in tk_state.get("net_gamma_window", []) if self._float_or_none(v) is not None],
+                            maxlen=60,
+                        )
+                        self.net_charm_history[tk] = deque(
+                            [float(v) for v in tk_state.get("net_charm_history", []) if self._float_or_none(v) is not None],
+                            maxlen=32,
+                        )
+                        self.pcr_history[tk] = deque(
+                            [float(v) for v in tk_state.get("pcr_history", []) if self._float_or_none(v) is not None],
+                            maxlen=32,
+                        )
+                        wonham = self._float_or_none(tk_state.get("wonham_prob"))
+                        if wonham is not None:
+                            self.wonham_probs[tk] = float(np.clip(wonham, 0.0, 1.0))
+                        self._ml_features_rows[tk] = self._load_existing_ml_feature_rows(tk)
+                    self._prev_call_vol = {
+                        tk: float((state.get("prev_call_vol") or {}).get(tk, 0.0))
+                        for tk in OPTIONS_TICKERS
+                    }
+                    self._prev_put_vol = {
+                        tk: float((state.get("prev_put_vol") or {}).get(tk, 0.0))
+                        for tk in OPTIONS_TICKERS
+                    }
+                    restored = True
+                    logger.info(f"[State] Feed intraday state restored from {path.name}")
+            except Exception as e:
+                logger.warning(f"[State] Failed to restore feed intraday state: {e}")
+
+        if not restored:
+            any_restored = self._restore_tlt_price_history_from_spot()
+            for tk in OPTIONS_TICKERS:
+                self._load_historical_ib_levels(tk)
+                self.day_atr[tk] = self._calculate_current_atr(tk)
+                any_restored = self._restore_price_history_from_spot(tk) or any_restored
+                any_restored = self._restore_feature_diary_state(tk) or any_restored
+                if self.price_history[tk]:
+                    self._seed_pcr_volume_baseline(tk, self.price_history[tk][-1][1])
+            if any_restored:
+                logger.info("[State] Feed intraday histories rebuilt from rt_data")
+
+        self._restored_state_day = day_str
+
     # ─────────────────────────────────────────
     # MAIN POLL CYCLE
     # ─────────────────────────────────────────
@@ -631,11 +1017,15 @@ class RealtimeOptionsFeed:
             self.current_trading_day = now_date
             self._expirations_resolved = False
             self._expirations.clear()
-            
+            self._restored_state_day = None
+             
             # Actualizar la carpeta de salida al nuevo día
             today_str = now_date.strftime("%Y%m%d")
             self.output_dir = Path(os.path.join(self._rt_data_base, today_str))
             self.output_dir.mkdir(parents=True, exist_ok=True)
+
+        # Restore exact intraday state on reboot, or rebuild best-effort from rt_data.
+        self._restore_intraday_state_from_disk()
         # ───────────────────────────────────────
 
         now_str = now.strftime("%H:%M:%S EST")
@@ -686,10 +1076,10 @@ class RealtimeOptionsFeed:
         # El semáforo limita a 4 peticiones en vuelo exactamente
         semaphore = asyncio.Semaphore(4)
 
-        async def fetch_and_save(options_symbol, exp, ep_key, current_spot, fname):
+        async def fetch_and_save(options_symbol, exp, ep_key, current_spot, fname, ticker_sym):
             async with semaphore:  # Espera su turno en la fila de 4
                 try:
-                    result_df = await self._fetch_options_data(options_symbol, exp, ep_key, current_spot, ticker)
+                    result_df = await self._fetch_options_data(options_symbol, exp, ep_key, current_spot, ticker_sym)
                     self._save_parquet(result_df, fname)
                 except Exception as e:
                     logger.error(f"  FAIL {fname}: {e}")
@@ -711,14 +1101,14 @@ class RealtimeOptionsFeed:
                 logger.info(f"[{options_symbol} 0DTE] Queueing exp={exp_0dte} | Full chain")
                 for ep_key in ENDPOINTS_0DTE:
                     fname = f"{options_symbol}_{ep_key}_0dte_latest.parquet"
-                    tasks.append(fetch_and_save(options_symbol, exp_0dte, ep_key, current_spot, fname))
+                    tasks.append(fetch_and_save(options_symbol, exp_0dte, ep_key, current_spot, fname, ticker))
 
             # Preparar tareas Weekly
             if exp_weekly:
                 logger.info(f"[{options_symbol} Weekly] Queueing exp={exp_weekly} | Full chain")
                 for ep_key in ENDPOINTS_WEEKLY:
                     fname = f"{options_symbol}_{ep_key}_weekly_latest.parquet"
-                    tasks.append(fetch_and_save(options_symbol, exp_weekly, ep_key, current_spot, fname))
+                    tasks.append(fetch_and_save(options_symbol, exp_weekly, ep_key, current_spot, fname, ticker))
 
         # Lanzar todas las tareas (el semáforo gestionará el tráfico internamente)
         if tasks:
@@ -977,9 +1367,12 @@ class RealtimeOptionsFeed:
         df_oi = pd.read_parquet(oi_path) if oi_path.exists() else pd.DataFrame()
 
         # Get latest timestamp snapshot
+        snapshot_ts = pd.Timestamp.now(tz="America/New_York")
         if "underlying_timestamp" in df_greeks.columns:
             df_greeks["dt"] = pd.to_datetime(df_greeks["underlying_timestamp"], format="mixed", errors="coerce")
             latest_ts = df_greeks["dt"].max()
+            if pd.notna(latest_ts):
+                snapshot_ts = latest_ts
             df_greeks = df_greeks[df_greeks["dt"] == latest_ts].copy()
 
         # Merge with OI
@@ -1006,8 +1399,7 @@ class RealtimeOptionsFeed:
         if "underlying_price" not in df_pq.columns:
             return None
 
-        now_et = pd.Timestamp.now(tz="America/New_York")
-        df_pq["T"] = calculate_exact_t(now_et)
+        df_pq["T"] = calculate_exact_t(snapshot_ts)
 
         required = ["strike", "right", "implied_vol", "open_interest", "underlying_price", "T"]
         for col in required:
@@ -1083,7 +1475,7 @@ class RealtimeOptionsFeed:
         """
         Build the 163-feature vector (identical to tradingbot_wrapper_rl.py)
         from the freshly-polled Parquet data and save per-ticker parquet files.
-        Loops over both SPX and QQQ.
+        Loops over SPX, QQQ, and SPY.
         """
         now_et = datetime.now(ET)
         minutes_since_open = max(0, (now_et.hour * 60 + now_et.minute) - (9 * 60 + 30))
@@ -1104,6 +1496,16 @@ class RealtimeOptionsFeed:
         vix_spot: float, tlt_spot: float
     ):
         """Compute and save ML features for a single ticker."""
+        last_rows = self._ml_features_rows.get(ticker, [])
+        if last_rows:
+            last_minute = self._float_or_none(last_rows[-1].get("minutes_since_open"))
+            if last_minute is not None and int(last_minute) == int(minutes_since_open):
+                logger.info(
+                    f"  [ML][{ticker}] Duplicate poll inside minute {minutes_since_open} "
+                    f"— keeping single 1m snapshot"
+                )
+                return
+
         # Lazy load historical IB on first call
         if not self._historical_ib_loaded.get(ticker, False):
             self._load_historical_ib_levels(ticker)
@@ -1127,6 +1529,11 @@ class RealtimeOptionsFeed:
             self._compute_ib_from_spot(ticker)
 
         atm_iv = self._load_atm_iv_local(spot, ticker)
+        if atm_iv > 0:
+            atm_iv = atm_iv / 100.0 if atm_iv > 1.0 else atm_iv
+            self.iv_history[ticker].append(atm_iv)
+        elif len(self.iv_history[ticker]) > 0:
+            atm_iv = float(self.iv_history[ticker][-1])
 
         self.price_history[ticker].append((minutes_since_open, spot))
         
@@ -1151,11 +1558,6 @@ class RealtimeOptionsFeed:
                 ]
                 call_vol = float(df_calls_otm['volume'].sum())
                 put_vol = float(df_puts_otm['volume'].sum())
-                
-                if not hasattr(self, '_prev_call_vol'):
-                    self._prev_call_vol = {}
-                    self._prev_put_vol = {}
-                    
                 prev_vol_c = self._prev_call_vol.get(ticker, 0)
                 prev_vol_p = self._prev_put_vol.get(ticker, 0)
                 
@@ -1192,7 +1594,7 @@ class RealtimeOptionsFeed:
             tlt_spot=tlt_spot,
             ib_high=self.ib_high.get(ticker) or spot,
             ib_low=self.ib_low.get(ticker) or spot,
-            historical_ibs=self.historical_ibs[ticker],
+            historical_ibs=self.historical_ibs[ticker][:10],
             price_history=self.price_history[ticker],
             tlt_price_history=self.tlt_price_history,
             iv_history=self.iv_history[ticker],
@@ -1209,6 +1611,21 @@ class RealtimeOptionsFeed:
 
         # ── Build Final Dataframe Row ──
         row = {col: float(features_vec[i]) for i, col in enumerate(FEATURE_COLUMNS)}
+        row.update({
+            "timestamp": pd.Timestamp(now_et).isoformat(),
+            "minutes_since_open": float(minutes_since_open),
+            "ticker": ticker,
+            "spot_price": float(spot),
+            "atm_iv_raw": float(atm_iv),
+            "pcr_raw": float(self.pcr_history[ticker][-1]) if self.pcr_history[ticker] else 0.5,
+            "net_gamma_raw": float(exp_0dte["net_gamma"]),
+            "net_vanna_raw": float(exp_0dte["net_vanna"]),
+            "net_charm_raw": float(exp_0dte["net_charm"]),
+            "net_dgex_raw": float(exp_0dte["net_dgex"]),
+            "net_delta_raw": float(exp_0dte.get("net_delta", 0.0)),
+            "net_vega_raw": float(exp_0dte.get("net_vega", 0.0)),
+            "net_vomma_raw": float(exp_0dte.get("net_vomma", 0.0)),
+        })
         
         # Update prev_features for the next poll's temporal deltas
         self.prev_features[ticker] = {
@@ -1224,6 +1641,7 @@ class RealtimeOptionsFeed:
         self._ml_features_rows[ticker].append(row)
         df_features = pd.DataFrame(self._ml_features_rows[ticker])
         self._save_parquet(df_features, f"ml_features_{ticker}_latest.parquet")
+        self._save_intraday_state()
         logger.info(f"  [ML][{ticker}] Feature vector saved ({len(self._ml_features_rows[ticker])} rows, spot=${spot:.2f})")
 
     # ─────────────────────────────────────────
@@ -1297,13 +1715,13 @@ class RealtimeOptionsFeed:
 
 def main():
     parser = argparse.ArgumentParser(description="Real-time options + spot feed (Parquet)")
-    parser.add_argument("--interval", type=int, default=40, help="Poll interval in seconds")
+    parser.add_argument("--interval", type=int, default=DEFAULT_POLL_INTERVAL_SECONDS, help="Poll interval in seconds")
     parser.add_argument("--output", type=str, default=None, help="Output directory")
     parser.add_argument("--dry-run", action="store_true", help="Single poll then exit")
     args = parser.parse_args()
 
     print("="*60)
-    print("REAL-TIME OPTIONS FEED — SPXW+QQQ 0DTE+Weekly + Spot (Parquet)")
+    print("REAL-TIME OPTIONS FEED — SPXW+QQQ+SPY 0DTE+Weekly + Spot (Parquet)")
     print("="*60)
     print(f"  Options:  {', '.join(f'{t}->{s}' for t,s in OPTIONS_TICKERS.items())} (0DTE + Weekly)")
     print(f"  Spot:     {', '.join(SPOT_SYMBOLS)}")

@@ -181,6 +181,22 @@ def safe_log(x):
     if x is None: return 0.0
     return float(np.sign(x) * np.log1p(np.abs(x)))
 
+
+def inverse_safe_log(y):
+    """Inverse of safe_log: sign(y) * (exp(|y|) - 1)."""
+    if y is None or not np.isfinite(y):
+        return 0.0
+    y = float(y)
+    return float(np.sign(y) * np.expm1(np.abs(y)))
+
+
+def invert_delta_filtered_pcr(x):
+    """Approximate raw PCR from its normalized feature representation."""
+    if x is None or not np.isfinite(x):
+        return 0.5
+    x = float(np.clip(x, 0.0, 1.0))
+    return float(np.expm1(x * np.log1p(5.0)))
+
 def dist_bps(spot, level):
     """Distance in basis points: (spot - level) / spot * 10000."""
     if spot <= 0 or level <= 0: return 0.0
