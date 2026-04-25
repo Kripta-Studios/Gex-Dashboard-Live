@@ -21,6 +21,7 @@ from .config import (
     POSITION_STATE_DIM, get_half_spread,
 )
 from .agent import PPOAgent
+from neural.signal_policy import is_actionable_signal, should_exit_on_reversal
 
 
 class IntegratedTradingSystem:
@@ -137,21 +138,21 @@ class IntegratedTradingSystem:
         
         self._update_dynamic_features(options_data, spot, timestamp)
 
-        # 1. Normalize market features
-        features_norm = self.normalizer.transform(
-            market_features.reshape(1, -1)
-        )[0]
+        market_features = np.asarray(market_features, dtype=np.float32)
 
         # 2. MLP/GBT forward pass
         is_gbt = hasattr(self.mlp, 'predict_proba') and not isinstance(self.mlp, torch.nn.Module)
         
         if is_gbt:
             # GBT Inference
-            probs = self.mlp.predict_proba(features_norm.reshape(1, -1))[0]
-            time_to_target = 0.5 # GBM doesn't predict time
-            log_sigma = 0.5
+            probs = self.mlp.predict_proba(market_features.reshape(1, -1))[0]
+            time_to_target = 0.5  # GBT doesn't predict time
+            log_sigma = 0.0       # Must match rl.preprocess GBT defaults
         else:
             # PyTorch Inference
+            features_norm = self.normalizer.transform(
+                market_features.reshape(1, -1)
+            )[0]
             with torch.no_grad():
                 x = torch.FloatTensor(features_norm).unsqueeze(0).to(self.device)
                 output = self.mlp(x)
@@ -189,7 +190,7 @@ class IntegratedTradingSystem:
         
         # Update signal references if we are not in a position
         if self.open_position is None:
-            if direction != "HOLD" and confidence >= RL_CONFIG["min_confidence"]:
+            if is_actionable_signal(direction, confidence, base_confidence=RL_CONFIG["min_confidence"]):
                 # New or continuing signal
                 if self._signal_direction == "HOLD":
                     # First detection: lock the signal spot
@@ -205,19 +206,19 @@ class IntegratedTradingSystem:
                 self._signal_spot = 0.0
 
         # 3. No signal if HOLD or low confidence
-        if direction == "HOLD" or confidence < RL_CONFIG["min_confidence"]:
+        if not is_actionable_signal(direction, confidence, base_confidence=RL_CONFIG["min_confidence"]):
             if self.open_position is not None:
-                return self._handle_exit(features_norm, options_data, spot, timestamp, direction, confidence)
+                return self._handle_exit(market_features, options_data, spot, timestamp, direction, confidence)
             return self._no_signal(confidence)
 
         # 4. If no open position → consider entry
         if self.open_position is None:
             return self._handle_entry(
-                features_norm, options_data, spot, timestamp,
+                market_features, options_data, spot, timestamp,
                 direction, confidence, time_to_target, log_sigma)
 
         # 5. If position IS open → handle exit decision
-        return self._handle_exit(features_norm, options_data, spot, timestamp, direction, confidence)
+        return self._handle_exit(market_features, options_data, spot, timestamp, direction, confidence)
 
     def _update_dynamic_features(self, options_data: dict, spot: float, timestamp: pd.Timestamp):
         """Compute the 8 dynamic market features (mirrors environment.py)."""
@@ -308,13 +309,15 @@ class IntegratedTradingSystem:
             "details": {"reason": "GBM_HOLD"},
         }
 
-    def _handle_entry(self, features_norm: np.ndarray, options_data: dict,
+    def _handle_entry(self, market_features: np.ndarray, options_data: dict,
                       spot: float, timestamp: pd.Timestamp,
                       direction: str, confidence: float,
                       time_to_target: float, log_sigma: float) -> dict:
         """Use RL Strike Head to choose a delta bucket and resolve strike."""
+        self._entry_market_features = np.asarray(market_features, dtype=np.float32).copy()
+
         # Build state vector
-        state = self._build_state(features_norm, position_active=False,
+        state = self._build_state(market_features, position_active=False,
                                   confidence=confidence,
                                   time_to_target=time_to_target,
                                   log_sigma=log_sigma)
@@ -393,7 +396,7 @@ class IntegratedTradingSystem:
             },
         }
 
-    def _handle_exit(self, features_norm: np.ndarray, options_data: dict,
+    def _handle_exit(self, market_features: np.ndarray, options_data: dict,
                      spot: float, timestamp: pd.Timestamp,
                      curr_direction: str = "HOLD", curr_confidence: float = 0.0) -> dict:
         """Use RL Exit Head to decide HOLD or EXIT. Hard exits override."""
@@ -434,17 +437,17 @@ class IntegratedTradingSystem:
             return self._close_position("HARD_MAX_HOLD", pnl_pct)
 
         # ── Signal Reversal Check ──
-        # If we have a clear contradictory signal, exit immediately.
-        # This prevents holding a SHORT when a strong LONG signal appears (and vice versa).
-        if curr_direction != "HOLD" and curr_confidence >= RL_CONFIG["min_confidence"]:
-            is_reversal = False
-            if pos["direction"] == "LONG" and curr_direction == "SHORT":
-                is_reversal = True
-            elif pos["direction"] == "SHORT" and curr_direction == "LONG":
-                is_reversal = True
-            
-            if is_reversal:
-                return self._close_position("SIGNAL_REVERSAL", pnl_pct)
+        now_et = timestamp
+        if hasattr(now_et, "tz_convert"):
+            now_et = now_et.tz_convert("America/New_York")
+        minutes_since_open = max(0, (now_et.hour * 60 + now_et.minute) - 570)
+        if should_exit_on_reversal(
+            position_direction=pos["direction"],
+            signal_direction=curr_direction,
+            signal_confidence=curr_confidence,
+            minutes_since_open=minutes_since_open,
+        ):
+            return self._close_position("SIGNAL_REVERSAL", pnl_pct)
 
         # ── Hard Trailing Stop ──
         # Activate only if we reached the required profit threshold
@@ -454,7 +457,7 @@ class IntegratedTradingSystem:
 
         # ── RL Exit Head ──
         state = self._build_state(
-            features_norm, position_active=True,
+            market_features, position_active=True,
             pnl_pct=pnl_pct, hold_time_norm=hold_time_norm,
             current_delta=abs(live_delta),
             current_theta=live_theta, current_iv=live_iv,
@@ -524,7 +527,9 @@ class IntegratedTradingSystem:
         self._position_entry_spot = 0.0
         self._signal_direction = "HOLD"
         self._signal_confidence = 0.0
+        self._entry_market_features: Optional[np.ndarray] = None
         self._entry_atm_iv = 0.15
+        self._spot_history.clear()
         self._option_price_history.clear()
         self._dynamic_market_state = np.zeros(8, dtype=np.float32)
 
@@ -557,15 +562,27 @@ class IntegratedTradingSystem:
             "entry_time": pd.to_datetime(pos_data.get("entry_time")),
             "strike_action": pos_data.get("bucket_index", 4),
         }
-        self._entry_mlp_context = [confidence, time_to_target, log_sigma, self.open_position["entry_iv"]]
+        self._entry_mlp_context = np.array(
+            [confidence, time_to_target, 0.0, log_sigma], dtype=np.float32
+        )
         self._signal_direction = pos_data.get("direction", "HOLD")
         self._signal_confidence = confidence
         self._signal_spot = pos_data.get("signal_spot", 0.0)
+        self._position_entry_spot = pos_data.get("position_entry_spot", self._signal_spot)
+        self._entry_atm_iv = pos_data.get("entry_atm_iv", 0.15)
+        entry_market_features = pos_data.get("entry_market_features")
+        self._entry_market_features = (
+            np.asarray(entry_market_features, dtype=np.float32)
+            if entry_market_features is not None
+            else None
+        )
         self._mae = pos_data.get("mae", 0.0)
         self._max_unrealized_pnl = pos_data.get("max_unrealized_pnl", 0.0)
         self._prev_pnl_pct = pos_data.get("prev_pnl_pct", 0.0)
+        self._option_price_history.clear()
+        self._option_price_history.append(float(pos_data.get("entry_premium", 0.01)))
 
-    def _build_state(self, features_norm: np.ndarray,
+    def _build_state(self, market_features: np.ndarray,
                      position_active: bool = False,
                      confidence: float = 0.60,
                      time_to_target: float = 0.5,
@@ -580,10 +597,16 @@ class IntegratedTradingSystem:
                      mae: float = 0.0,
                      trailing_drawdown: float = 0.0) -> np.ndarray:
         """Build the full state vector (181 or 183-dim with sniper)."""
-        # Market features (already normalized)
+        # Market features stay frozen from the entry snapshot while a position
+        # is open, matching the RL training environment.
+        feature_source = (
+            self._entry_market_features
+            if position_active and self._entry_market_features is not None
+            else np.asarray(market_features, dtype=np.float32)
+        )
         market = np.zeros(MARKET_FEATURE_DIM, dtype=np.float32)
-        n = min(len(features_norm), MARKET_FEATURE_DIM)
-        market[:n] = features_norm[:n]
+        n = min(len(feature_source), MARKET_FEATURE_DIM)
+        market[:n] = feature_source[:n]
 
         # Dynamic market features (8 dims) — using persistent state
         dynamic = self._dynamic_market_state

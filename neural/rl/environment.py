@@ -28,6 +28,11 @@ from .utils import get_delta_bucket, get_iv_bucket, get_pnl_bucket
 import pickle
 import os
 
+try:
+    from neural.signal_policy import should_exit_on_reversal
+except ModuleNotFoundError:
+    from signal_policy import should_exit_on_reversal
+
 
 class SPXOptionsEnv:
     """
@@ -49,7 +54,7 @@ class SPXOptionsEnv:
             episode_index:  DataFrame of valid MLP signal events with columns:
                             [date, time, ticker, spot_price, mlp_direction,
                              mlp_confidence, mlp_time_to_target, target, max_move]
-                            + all FEATURE_COLUMNS (already normalized)
+                            + all FEATURE_COLUMNS copied from the signal row
             options_cache:  dict keyed by "YYYYMMDD_HH:MM" → {
                                 "spot": float,
                                 "day_atr": float,
@@ -471,7 +476,8 @@ class SPXOptionsEnv:
         elif hold_minutes >= self.hard_exits["max_hold_minutes"]:
             exit_type = "hard_max_hold"
         else:
-            # [Production Alignment] Check Signal Reversal
+            # Mirror live/backtest: only evaluate reversal on the configured
+            # signal cadence instead of every minute.
             cache_key = f"{ticker}_{date_str}_{time_str}"
             cache_entry = self.options_cache.get(cache_key, {})
             minutes_data = cache_entry.get("minutes", {})
@@ -480,16 +486,20 @@ class SPXOptionsEnv:
             if minute_data:
                 sig_dir = minute_data.get("sig_dir", "HOLD")
                 sig_conf = minute_data.get("sig_conf", 0.5)
-                
-                # Minimum confidence threshold (Matches production)
-                if self._position["direction"] == "SHORT" and sig_dir == "LONG" and sig_conf >= 0.50:
-                    exit_type = "signal_reversal"
-                elif self._position["direction"] == "LONG" and sig_dir == "SHORT" and sig_conf >= 0.50:
+
+                current_minute = self._minutes_since_open()
+                if should_exit_on_reversal(
+                    position_direction=self._position["direction"],
+                    signal_direction=sig_dir,
+                    signal_confidence=sig_conf,
+                    minutes_since_open=current_minute,
+                ):
                     exit_type = "signal_reversal"
 
         # ── Agent-requested exit ──
         if exit_action == 1 and exit_type is None:
-            if hold_minutes < self.hard_exits.get("min_hold_minutes", 0):
+            min_hold = getattr(self, "_current_min_hold_minutes", self.hard_exits.get("min_hold_minutes", 0))
+            if hold_minutes < min_hold:
                 exit_action = 0 # Force HOLD to prevent 1-min spread-cost collapse
             else:
                 exit_type = "agent_exit"

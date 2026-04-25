@@ -8,7 +8,7 @@ GBT achieves 72% accuracy on SHORT vs LONG OOS where the MLP got ~0%.
 Structure unchanged:
   - Walk-forward splits (train_m/test_m months, step=1 month)
   - Ensemble of N models per window (different random seeds)
-  - Cal_df from first 10 test days for threshold calibration
+  - Cal_df from first 10 test days for policy health checks / collapse detection
   - Collapse detection + min-trades + PF floor for acceptance
   - Top-N windows by rank_score (PF * recency) for production
 """
@@ -31,6 +31,8 @@ sys.path.insert(0, PROJECT_ROOT)
 from hybrid_model import FeatureNormalizer, FEATURE_COLUMNS
 from gbt_model import GBTModel, GBTEnsemble, save_gbt_ensemble
 from data_utils import walk_forward_splits, add_sample_weights
+from neural.rl.config import RL_CONFIG
+from neural.signal_policy import entry_thresholds, is_actionable_prediction
 
 
 def set_seed(seed: int):
@@ -107,26 +109,21 @@ def balance_classes(y_train: np.ndarray,
 
 
 # ═══════════════════════════════════════════════════════════════
-# TRADE CALIBRATION
+# DEPLOYED SIGNAL POLICY
 # ═══════════════════════════════════════════════════════════════
-def apply_trade_calibration(val_probs: np.ndarray,
-                            trade_thresh: float = 0.50,
-                            hold_margin: float = 0.05,
-                            thresh_long: float = None,
-                            thresh_short: float = None) -> np.ndarray:
-    """Convert class probabilities to predictions {0=SHORT, 1=HOLD, 2=LONG}."""
-    p_short = val_probs[:, 0]
-    p_hold  = val_probs[:, 1]
-    p_long  = val_probs[:, 2]
-
-    t_long  = thresh_long  if thresh_long  is not None else trade_thresh
-    t_short = thresh_short if thresh_short is not None else trade_thresh
+def apply_deployed_signal_policy(
+    val_probs: np.ndarray,
+    base_confidence: float | None = None,
+) -> np.ndarray:
+    """Convert probabilities to deployed predictions {0=SHORT, 1=HOLD, 2=LONG}."""
+    val_probs = np.asarray(val_probs, dtype=np.float32)
+    argmax_preds = val_probs.argmax(axis=1)
+    max_conf = val_probs.max(axis=1)
 
     preds = np.ones(len(val_probs), dtype=np.int64)  # default HOLD
-    long_mask  = (p_long  >= t_long)  & (p_long  >= p_short) & (p_long  >= p_hold + hold_margin)
-    short_mask = (p_short >= t_short) & (p_short >  p_long)  & (p_short >= p_hold + hold_margin)
-    preds[long_mask] = 2
-    preds[short_mask] = 0
+    for idx, (pred, conf) in enumerate(zip(argmax_preds, max_conf)):
+        if is_actionable_prediction(int(pred), float(conf), base_confidence=base_confidence):
+            preds[idx] = int(pred)
     return preds
 
 
@@ -171,10 +168,10 @@ def train_single_window(train_df, val_df, verbose=True, window_idx=None, seed=42
     if '_date' in train_df.columns:
         train_df = train_df.sort_values('_date').reset_index(drop=True)
 
-    # 2. Split test window into CAL (threshold tuning) and HONEST (held-out evaluation)
-    #    CAL = first 10 days → used for threshold grid search only
+    # 2. Split test window into CAL and HONEST.
+    #    CAL = first 10 days → sanity checks, collapse detection, trade sufficiency
     #    HONEST = remaining days → used for honest_metrics and rank_score
-    #    This prevents data snooping: the PF used for window selection is genuinely OOS.
+    #    Both are evaluated with the same deployed signal policy as live/backtest.
     if '_date' not in val_df.columns and 'date' in val_df.columns:
         val_df = val_df.copy()
         val_df['_date'] = pd.to_datetime(val_df['date'], errors='coerce')
@@ -249,7 +246,7 @@ def train_single_window(train_df, val_df, verbose=True, window_idx=None, seed=42
     )
     model.fit(X_train, y_train)
 
-    # 7. Threshold calibration on cal_df
+    # 7. Evaluate with the deployed entry policy on cal_df
     X_cal, y_cal = prep(cal_df)
     X_cal_norm = norm.transform(X_cal)
     
@@ -274,77 +271,24 @@ def train_single_window(train_df, val_df, verbose=True, window_idx=None, seed=42
         else:
             print(f"      [Conf] {cls_name}: n=0 (no predictions)")
 
-    # Grid search for best thresholds
-    use_argmax = True
-    preds_argmax = val_probs.argmax(axis=1)
-    m_base = calculate_trading_metrics(preds_argmax, val_targets)
-    best_pf = m_base['profit_factor'] if m_base['total_trades'] >= 50 else 0.0
-    best_thresh_long  = None
-    best_thresh_short = None
-    best_hold_margin  = None
-  
-    thresh_vals = np.arange(0.50, 0.81, 0.05)
-    for t_long in thresh_vals:
-        for t_short in thresh_vals:
-            for hold_margin in (0.00, 0.02, 0.05):
-                preds = apply_trade_calibration(
-                    val_probs, hold_margin=float(hold_margin),
-                    thresh_long=float(t_long), thresh_short=float(t_short)
-                )
-                m = calculate_trading_metrics(preds, val_targets)
-                
-                if m['total_trades'] < min_trades_req:
-                    continue
-                
-                # --- NEW: Calculate Balance Penalty ---
-                n_s = (preds == 0).sum()
-                n_l = (preds == 2).sum()
-                n_dir = n_s + n_l
-                
-                penalty = 1.0
-                if n_dir > 0:
-                    max_side_pct = max(n_s, n_l) / n_dir
-                    # If more than 65% one-sided, start heavily penalizing the PF
-                    if max_side_pct > 0.65:
-                        penalty = 1.0 - ((max_side_pct - 0.65) * 2) 
-                        penalty = max(0.1, penalty) # Don't let it go below 0.1
-                
-                penalized_pf = m['profit_factor'] * penalty
-                # ------------------------------------
-
-                # Evaluate using the PENALIZED pf, but store the real thresholds
-                if penalized_pf > best_pf:
-                    best_pf = penalized_pf 
-                    use_argmax = False
-                    best_thresh_long  = float(t_long)
-                    best_thresh_short = float(t_short)
-                    best_hold_margin  = float(hold_margin)
-    # Compute final cal predictions
-    if use_argmax:
-        cal_preds = val_probs.argmax(axis=1)
-    else:
-        cal_preds = apply_trade_calibration(
-            val_probs, hold_margin=best_hold_margin,
-            thresh_long=best_thresh_long, thresh_short=best_thresh_short
-        )
-        n_cal_dir = int(((cal_preds == 0) | (cal_preds == 2)).sum())
-        if n_cal_dir == 0:
-            print(f"      [!] Calibrated produces 0 trades -- fallback to thresh=0.50")
-            cal_preds = apply_trade_calibration(
-                val_probs, hold_margin=0.00,
-                thresh_long=0.50, thresh_short=0.50
-            )
+    deployed_base_confidence = float(RL_CONFIG["min_confidence"])
+    deployed_long_threshold, deployed_short_threshold = entry_thresholds(
+        deployed_base_confidence
+    )
+    cal_preds = apply_deployed_signal_policy(
+        val_probs,
+        base_confidence=deployed_base_confidence,
+    )
 
     n_final_short = int((cal_preds == 0).sum())
     n_final_long  = int((cal_preds == 2).sum())
     n_final_dir   = n_final_short + n_final_long
 
-    if use_argmax:
-        print(f"      [Honest] argmax=True | Pred Long={n_final_long} Short={n_final_short}")
-    else:
-        print(f"      [Honest] thresh_L={best_thresh_long:.2f} thresh_S={best_thresh_short:.2f} "
-              f"hold_m={best_hold_margin:.2f} | "
-              f"Pred Long={n_final_long} Short={n_final_short}")
+    print(
+        f"      [Policy] live/backtest thresholds | "
+        f"Long>={deployed_long_threshold:.2f} Short>={deployed_short_threshold:.2f} | "
+        f"Pred Long={n_final_long} Short={n_final_short}"
+    )
 
     # Collapse detection (on cal predictions)
     collapsed = False
@@ -366,13 +310,10 @@ def train_single_window(train_df, val_df, verbose=True, window_idx=None, seed=42
         X_honest_norm = norm.transform(X_honest)
         X_honest_df_lgb = pd.DataFrame(X_honest_norm, columns=cols)
         honest_probs = model.predict_proba(X_honest_df_lgb)
-        if use_argmax:
-            honest_preds = honest_probs.argmax(axis=1)
-        else:
-            honest_preds = apply_trade_calibration(
-                honest_probs, hold_margin=best_hold_margin,
-                thresh_long=best_thresh_long, thresh_short=best_thresh_short
-            )
+        honest_preds = apply_deployed_signal_policy(
+            honest_probs,
+            base_confidence=deployed_base_confidence,
+        )
         honest_metrics = calculate_trading_metrics(honest_preds, y_honest)
         print(f"      [HONEST OOS] PF={honest_metrics['profit_factor']:.2f} "
               f"WR={honest_metrics['win_rate']:.1%} "
@@ -388,7 +329,11 @@ def train_single_window(train_df, val_df, verbose=True, window_idx=None, seed=42
 
     # Wrap as GBTModel with metadata
     from gbt_model import GBTModel
-    gbt_model = GBTModel(model, metadata={'cutoff_date': cutoff_date_int})
+    gbt_model = GBTModel(
+        model,
+        metadata={'cutoff_date': cutoff_date_int},
+        normalizer=norm,
+    )
 
     return gbt_model, norm, honest_metrics
 

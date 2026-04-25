@@ -23,6 +23,7 @@ sys.path.insert(0, NEURAL_DIR)
 sys.path.insert(0, PROJECT_ROOT)
 
 from .config import RL_CONFIG, STRIKE_BUCKETS
+from neural.signal_policy import entry_thresholds
 
 
 def generate_episode_index(training_df: pd.DataFrame,
@@ -43,7 +44,7 @@ def generate_episode_index(training_df: pd.DataFrame,
 
         cols = [c for c in FEATURE_COLUMNS if c in training_df.columns]
         features = training_df[cols].values.astype(np.float32)
-        features_norm = mlp_normalizer.transform(features)
+        features = np.nan_to_num(features, nan=0.0, posinf=5.0, neginf=-5.0)
 
         is_gbt = hasattr(mlp_model, 'predict_proba') and not isinstance(mlp_model, torch.nn.Module)
 
@@ -56,15 +57,16 @@ def generate_episode_index(training_df: pd.DataFrame,
                     mask = training_df['date'] == d_str
                     idx = np.where(mask)[0]
                     if len(idx) == 0: continue
-                    probs[idx] = mlp_model.predict_proba(features_norm[idx], date=str(d_str))
+                    probs[idx] = mlp_model.predict_proba(features[idx], date=str(d_str))
             else:
-                probs = mlp_model.predict_proba(features_norm)
-                
+                probs = mlp_model.predict_proba(features)
+                 
             predictions = np.argmax(probs, axis=1)
             confidences = np.max(probs, axis=1)
             # GBT doesn't predict time_to_target, use defaults
             # (Matches v6 collection logic)
         else:
+            features_norm = mlp_normalizer.transform(features)
             device = next(mlp_model.parameters()).device
             mlp_model.eval()
             with torch.no_grad():
@@ -117,8 +119,7 @@ def generate_episode_index(training_df: pd.DataFrame,
         training_df["mlp_time_to_target"] = 0.5
         training_df["mlp_log_sigma"] = 0.5
 
-    short_thresh = min_confidence - 0.05
-    long_thresh  = min_confidence
+    long_thresh, short_thresh = entry_thresholds(min_confidence)
 
     mask_long  = (training_df["mlp_direction"] == "LONG")  & (training_df["mlp_confidence"] >= long_thresh)
     mask_short = (training_df["mlp_direction"] == "SHORT") & (training_df["mlp_confidence"] >= short_thresh)

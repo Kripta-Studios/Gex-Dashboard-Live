@@ -111,6 +111,9 @@ RL_CONFIG = {
     # Regularization
     "obs_noise_std":        0.05,
     "min_confidence":       0.60,
+    "short_confidence_offset": 0.05,
+    "signal_reversal_min_confidence": 0.50,
+    "signal_eval_cadence_minutes": 5,
 
     # Curriculum — linear interpolation will be used between these nodes:
     # Redesigned: force longer holds early + OTM/ATM exploration before ITM

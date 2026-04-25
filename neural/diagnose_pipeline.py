@@ -35,6 +35,13 @@ import pandas as pd
 sys.path.insert(0, '.')
 warnings.filterwarnings('ignore')
 
+from rl.config import RL_CONFIG
+
+try:
+    from neural.signal_policy import is_actionable_prediction
+except ModuleNotFoundError:
+    from signal_policy import is_actionable_prediction
+
 # ═══════════════════════════════════════════════════════════════
 # COLORS
 # ═══════════════════════════════════════════════════════════════
@@ -200,11 +207,9 @@ def check_feature_health(df, feature_cols):
 #   are the only ones where the loaded model is actually appropriate.
 #   For all other windows we report metrics but flag them as [HIST-ONLY].
 #
-# BUG-D: threshold 0.55 is far too low. Training uses thresh 0.70-0.80
-#   for directional trades. At 0.55 the model dumps 1000-5000 low-conf
-#   trades per window, diluting WR dramatically.
-#   FIX: evaluate at three confidence levels (0.60, 0.65, 0.70) and show
-#   all three so the operator can see the true confidence curve.
+# BUG-D: diagnosis must use the same directional entry policy as deployment.
+#   The representative threshold therefore starts at RL_CONFIG["min_confidence"],
+#   while SHORT keeps its configured offset.
 #
 # ═══════════════════════════════════════════════════════════════
 def check_mlp_edge(df, feature_cols, model_path, norm_path,
@@ -285,13 +290,13 @@ def check_mlp_edge(df, feature_cols, model_path, norm_path,
             if col in sub_df.columns:
                 raw[:, j] = sub_df[col].values.astype(np.float32)
         raw = np.nan_to_num(raw, nan=0.0)
-        feats = normalizer.transform(raw)
         targets = _remap_targets(sub_df['target'].values)
 
         if is_gbt:
-            probs = ensemble.predict_proba(feats)
+            probs = ensemble.predict_proba(raw)
             return probs, targets
         else:
+            feats = normalizer.transform(raw)
             all_probs = []
             with torch.no_grad():
                 for k in range(0, len(feats), 8192):
@@ -300,11 +305,25 @@ def check_mlp_edge(df, feature_cols, model_path, norm_path,
                     all_probs.append(torch.softmax(logits, -1).cpu().numpy())
             return np.concatenate(all_probs), targets
 
+    def _policy_mask(preds: np.ndarray, probs: np.ndarray, base_threshold: float) -> np.ndarray:
+        confidences = probs[np.arange(len(preds)), preds]
+        return np.fromiter(
+            (
+                is_actionable_prediction(int(pred), float(conf), base_confidence=base_threshold)
+                for pred, conf in zip(preds, confidences)
+            ),
+            dtype=bool,
+            count=len(preds),
+        )
+
+    base_threshold = float(RL_CONFIG["min_confidence"])
+    THRESHOLDS = [round(base_threshold + step, 2) for step in (0.00, 0.05, 0.10)]
+    DISP_THR = base_threshold
+
     # ── A) Full-data reference (in-sample + OOS mixed) ──
     print(f"\n  {C.BOLD}A) Full-data evaluation (in-sample reference only — not a valid edge check):{C.END}")
     all_probs, all_targets = _infer(df)
     preds_all = np.argmax(all_probs, axis=1)
-    max_p_all  = all_probs.max(axis=1)
 
     dm = {0: 'SHORT', 1: 'HOLD', 2: 'LONG'}
     for cls in [0, 1, 2]:
@@ -312,14 +331,15 @@ def check_mlp_edge(df, feature_cols, model_path, norm_path,
         print(f"    {dm[cls]:6s}: {n:>7,} ({n/len(preds_all)*100:5.1f}%)")
 
     wr_is = 0.0
-    for thr in [0.55, 0.65, 0.70]:
-        sig = (preds_all != 1) & (max_p_all >= thr)
+    print(f"    Policy thresholds: LONG>={base_threshold:.0%}, SHORT uses the configured offset")
+    for thr in THRESHOLDS:
+        sig = _policy_mask(preds_all, all_probs, thr)
         if sig.sum() > 0:
             correct = (preds_all[sig] == all_targets[sig]).sum()
             w = correct / sig.sum()
             pf = correct / max(sig.sum() - correct, 1)
             print(f"    In-sample @{thr:.0%}: {sig.sum():,} trades | WR={w:.1%} | PF={pf:.2f}")
-            if thr == 0.55:
+            if thr == DISP_THR:
                 wr_is = w
 
     # ── B) TRUE OOS: evaluate each test split ──
@@ -327,9 +347,6 @@ def check_mlp_edge(df, feature_cols, model_path, norm_path,
     print(f"  {C.WARN} NOTE: This uses the PRODUCTION ensemble trained on recent data.")
     print(f"  Only PROD-flagged windows have in-distribution test sets.")
     print(f"  Historical windows (HIST) are shown for trend analysis only.\n")
-
-    # Confidence thresholds to evaluate — mirrors training thresholds (0.65-0.80)
-    THRESHOLDS = [0.60, 0.65, 0.70]
 
     oos_results_by_thr = {t: [] for t in THRESHOLDS}   # (preds, targets) per threshold
     window_results = []
@@ -343,7 +360,6 @@ def check_mlp_edge(df, feature_cols, model_path, norm_path,
 
         probs, targets = _infer(ts_df)
         preds  = np.argmax(probs, axis=1)
-        max_p  = probs.max(axis=1)
 
         # Regime of this test window (from actual labels)
         n_tgt_short = int((targets == 0).sum())
@@ -356,7 +372,7 @@ def check_mlp_edge(df, feature_cols, model_path, norm_path,
         # Evaluate at each threshold
         thr_metrics = {}
         for thr in THRESHOLDS:
-            sig_mask  = (preds != 1) & (max_p >= thr)
+            sig_mask  = _policy_mask(preds, probs, thr)
             n_sig     = int(sig_mask.sum())
             if n_sig > 0:
                 correct   = (preds[sig_mask] == targets[sig_mask])
@@ -376,8 +392,8 @@ def check_mlp_edge(df, feature_cols, model_path, norm_path,
                                     ns=n_short_p, nl=n_long_p, collapse=collapse)
             oos_results_by_thr[thr].append((preds[sig_mask], targets[sig_mask]))
 
-        # Use 0.65 as representative threshold for collapse tracking
-        rep = thr_metrics[0.65]
+        # Use the deployed base threshold as the representative policy check.
+        rep = thr_metrics[DISP_THR]
         if rep['collapse']:
             direction_collapse_count += 1
             collapse_dir = 'SHORT' if rep['ns'] > rep['nl'] else 'LONG'
@@ -392,9 +408,7 @@ def check_mlp_edge(df, feature_cols, model_path, norm_path,
         })
 
     # ── Print per-window table ──
-    # Primary display threshold = 0.65 (closest to training thresholds)
-    DISP_THR = 0.65
-    print(f"  Showing metrics at confidence ≥{DISP_THR:.0%}  (training uses 0.70-0.80)")
+    print(f"  Showing metrics at deployed policy threshold base ≥{DISP_THR:.0%}")
     print(f"\n  {'Win':>4}  {'Date':>7}  {'Regime':>7}  {'Sig':>5}  "
           f"{'S':>4}  {'L':>4}  {'WR':>6}  {'PF':>5}  Notes")
     print(f"  {'─'*4}  {'─'*7}  {'─'*7}  {'─'*5}  "
@@ -698,7 +712,7 @@ def check_rl_edge(df, feature_cols, rl_path, options_cache_dir,
         is_prod = win_num in prod_windows
 
         # Extract sub episode-index
-        mask = (episode_index['_date'] >= start_t) & (episode_index['_date'] < end_t) & (episode_index['mlp_confidence'] > 0.50)
+        mask = (episode_index['_date'] >= start_t) & (episode_index['_date'] < end_t)
         sub_idx = episode_index[mask].copy().reset_index(drop=True)
 
         if len(sub_idx) < 3:
@@ -849,7 +863,6 @@ def main():
         train_months=args.train_months,
         test_months=args.test_months,
     )
-    '''
     check_episode_balance()
     check_rl_agent()
 
@@ -869,16 +882,19 @@ def main():
     # Final verdict
     header("VERDICT")
     mlp_ok = feat_ok and oos_wr > 0.52 and not collapse_detected and prod_windows_ok
+    exit_code = 1
     if mlp_ok and rl_edge_ok:
         print(f"  {C.OK} Pipeline + RL ready for live deployment")
+        exit_code = 0
     elif mlp_ok:
         print(f"  {C.OK} MLP ready, but RL edge missing or untested")
+        exit_code = 0 if not args.options_cache else 1
     elif feat_ok and oos_wr > 0.48:
         print(f"  {C.WARN} MARGINAL — paper trade only, do NOT deploy live")
     else:
         print(f"  {C.FAIL} NO EDGE — do NOT deploy")
     print()
-    '''
+    raise SystemExit(exit_code)
 
 
 if __name__ == '__main__':
