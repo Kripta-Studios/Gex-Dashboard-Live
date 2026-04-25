@@ -23,9 +23,11 @@ from hybrid_model import FeatureNormalizer
 class GBTModel:
     """Wrapper around a single LightGBM classifier with optional metadata."""
 
-    def __init__(self, lgb_model: lgb.LGBMClassifier = None, metadata: dict = None):
+    def __init__(self, lgb_model: lgb.LGBMClassifier = None, metadata: dict = None,
+                 normalizer: FeatureNormalizer = None):
         self.model = lgb_model
         self.metadata = metadata or {}
+        self.normalizer = normalizer
 
     def predict_proba(self, X: np.ndarray) -> np.ndarray:
         """Return class probabilities [N, 3]."""
@@ -56,17 +58,48 @@ class GBTEnsemble:
         self.models = models
         self._device = torch.device("cpu")
 
+    @staticmethod
+    def _to_feature_frame(X: np.ndarray, model: GBTModel):
+        import pandas as pd
+
+        if isinstance(X, pd.DataFrame):
+            return X
+
+        try:
+            feature_names = model.model.feature_name_
+            return pd.DataFrame(X, columns=feature_names)
+        except (AttributeError, IndexError):
+            return X
+
+    def _group_models_by_normalizer(self, eligible_models: list):
+        grouped = {}
+        for idx, model in enumerate(eligible_models):
+            window_idx = model.metadata.get("window_idx")
+            if window_idx is not None:
+                key = ("window", int(window_idx))
+            elif model.normalizer is None:
+                key = ("raw", idx)
+            else:
+                key = ("model", idx)
+
+            if key not in grouped:
+                grouped[key] = {
+                    "normalizer": model.normalizer,
+                    "models": [],
+                }
+            grouped[key]["models"].append(model)
+        return grouped.values()
+
     def predict_proba(self, X: np.ndarray, date: str = None) -> np.ndarray:
         """
         Average probabilities across ensemble. Returns [N, 3].
-        
+
         Args:
-            X: Input features
+            X: Raw feature matrix. Each eligible model applies its own frozen
+               walk-forward normalizer before inference.
             date: Optional 'YYYYMMDD' string. If provided, only models trained 
                   BEFORE this date (cutoff_date < date) are used.
         """
-        import pandas as pd
-        
         # Filter models by date if requested
         eligible_models = self.models
         if date is not None:
@@ -111,16 +144,20 @@ class GBTEnsemble:
         if not eligible_models:
             raise ValueError("No models available in ensemble.")
 
-        # Convert to DataFrame to avoid LightGBM feature name warnings
-        if not isinstance(X, pd.DataFrame):
-            try:
-                # Extract feature names from the underlying LGBM model
-                feature_names = eligible_models[0].model.feature_name_
-                X = pd.DataFrame(X, columns=feature_names)
-            except (AttributeError, IndexError):
-                pass  # Fallback to numpy if feature names aren't available
+        X_np = np.asarray(X, dtype=np.float32)
+        probs_per_model = []
+        for group in self._group_models_by_normalizer(eligible_models):
+            normalizer = group["normalizer"]
+            if normalizer is not None:
+                X_group = normalizer.transform(X_np)
+            else:
+                X_group = X_np
 
-        probs = np.stack([m.predict_proba(X) for m in eligible_models], axis=0)
+            X_group = self._to_feature_frame(X_group, group["models"][0])
+            for model in group["models"]:
+                probs_per_model.append(model.predict_proba(X_group))
+
+        probs = np.stack(probs_per_model, axis=0)
         return probs.mean(axis=0)
 
     def __call__(self, x):
@@ -213,7 +250,8 @@ def save_gbt_ensemble(ensemble: GBTEnsemble, normalizer: FeatureNormalizer,
     for m in ensemble.models:
         serialized.append({
             'model': m.model,
-            'metadata': m.metadata
+            'metadata': m.metadata,
+            'normalizer_state': _serialize_normalizer_state(m.normalizer or normalizer),
         })
         
     joblib.dump(serialized, model_path)
@@ -243,13 +281,58 @@ def load_gbt_ensemble(model_path: str, norm_path: str) -> tuple:
     for o in objs:
         if isinstance(o, dict) and 'model' in o:
             # Modern format with metadata
-            models.append(GBTModel(o['model'], o.get('metadata')))
+            model_normalizer = _deserialize_normalizer_state(o.get('normalizer_state'))
+            models.append(GBTModel(o['model'], o.get('metadata'), model_normalizer or normalizer))
         else:
             # Legacy format (just the classifier)
-            models.append(GBTModel(o))
+            models.append(GBTModel(o, normalizer=normalizer))
             
     ensemble = GBTEnsemble(models)
 
     print(f"  [GBT] Loaded {len(models)} models from {model_path}")
 
     return ensemble, normalizer
+
+
+def _serialize_normalizer_state(normalizer: FeatureNormalizer) -> dict | None:
+    if normalizer is None or normalizer.medians is None:
+        return None
+
+    return {
+        "medians": np.asarray(normalizer.medians),
+        "iqrs": np.asarray(normalizer.iqrs),
+        "p_low": np.asarray(normalizer.p_low),
+        "p_high": np.asarray(normalizer.p_high),
+        "log_mask": np.asarray(normalizer.log_mask) if normalizer.log_mask is not None else np.array([]),
+        "feature_names": np.asarray(normalizer.feature_names if normalizer.feature_names is not None else []),
+        "clip_value": float(getattr(normalizer, "clip_value", 5.0)),
+        "winsorize_p": tuple(getattr(normalizer, "winsorize_p", (1.0, 99.0))),
+    }
+
+
+def _deserialize_normalizer_state(state: dict | None) -> FeatureNormalizer | None:
+    if not state:
+        return None
+
+    normalizer = FeatureNormalizer(
+        clip_value=float(state.get("clip_value", 5.0)),
+        winsorize_p=tuple(state.get("winsorize_p", (1.0, 99.0))),
+    )
+    normalizer.medians = np.asarray(state["medians"])
+    normalizer.iqrs = np.asarray(state["iqrs"])
+    normalizer.p_low = np.asarray(state["p_low"])
+    normalizer.p_high = np.asarray(state["p_high"])
+
+    log_mask = state.get("log_mask")
+    if log_mask is not None and len(log_mask) > 0:
+        normalizer.log_mask = np.asarray(log_mask)
+    else:
+        normalizer.log_mask = None
+
+    feature_names = state.get("feature_names")
+    if feature_names is not None and len(feature_names) > 0:
+        normalizer.feature_names = np.asarray(feature_names).tolist()
+    else:
+        normalizer.feature_names = None
+
+    return normalizer
