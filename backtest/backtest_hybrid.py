@@ -38,6 +38,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from hybrid_model import load_hybrid_model, get_device, FEATURE_COLUMNS
 from datetime import datetime, timedelta
+from neural.signal_policy import direction_from_prediction, is_actionable_signal
 
 try:
     from tradingbot_wrapper import send_discord_trade_open, send_discord_trade_close
@@ -186,13 +187,9 @@ class TradeSimulator:
         for idx, row in df_work.iterrows():
             pred = row['pred']
             max_prob = row['max_prob']
+            direction = direction_from_prediction(pred)
             
-            # Only trade if confidence exceeds threshold
-            if max_prob < self.threshold:
-                continue
-            
-            # Skip HOLD predictions
-            if pred == 1:
+            if not is_actionable_signal(direction, max_prob, base_confidence=self.threshold):
                 continue
             
             ticker = row['ticker']
@@ -217,7 +214,6 @@ class TradeSimulator:
                 
             # Execute trade
             entry_price = row['spot_price']
-            direction = "LONG" if pred == 2 else "SHORT"
             
             # Determine hold time using Bayesian prediction if available
             pred_minutes_value = 120 # default

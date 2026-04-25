@@ -31,10 +31,19 @@ from hybrid_model import (
     get_hybrid_model, get_device, load_hybrid_model, load_ensemble_model,
     FeatureNormalizer, FEATURE_COLUMNS
 )
-from neural.rl.config import RL_CONFIG, HARD_EXITS, STRIKE_BUCKETS, SNIPER_TOTAL_STATE_DIM, MLP_CONTEXT_DIM, SNIPER_STATE_DIM
+from neural.rl.config import (
+    RL_CONFIG, HARD_EXITS, STRIKE_BUCKETS,
+    SNIPER_TOTAL_STATE_DIM, MLP_CONTEXT_DIM,
+    POSITION_STATE_DIM, SNIPER_STATE_DIM,
+)
 from neural.rl.agent import PPOAgent
 from rl.rewards import compute_step_reward, compute_terminal_reward
 from rl.utils import get_delta_bucket, get_iv_bucket, get_pnl_bucket
+from neural.signal_policy import (
+    direction_from_prediction,
+    is_actionable_signal,
+    should_exit_on_reversal,
+)
 
 # ─────────────────────────────────────────────────────────────────────────
 
@@ -99,6 +108,34 @@ GBM_TRAILING_STOP_PCT = 0.0030
 
 # ── Position Sizing ──
 INITIAL_BALANCE = 10_000.0
+GBT_MLP_TIME_TO_TARGET = 0.5
+GBT_MLP_LOG_SIGMA = 0.0
+
+
+def _pad_or_trim_state(state: np.ndarray, state_dim: int) -> np.ndarray:
+    if len(state) < state_dim:
+        pad = np.zeros(state_dim - len(state), dtype=np.float32)
+        return np.concatenate([state, pad])
+    return state[:state_dim]
+
+
+def _build_position_state(pnl_pct: float = 0.0,
+                          hold_norm: float = 0.0,
+                          current_delta: float = 0.0,
+                          recovery_prob: float = 0.0,
+                          iv_ratio: float = 1.0,
+                          mae: float = 0.0,
+                          trailing_drawdown: float = 0.0) -> np.ndarray:
+    pos = np.zeros(POSITION_STATE_DIM, dtype=np.float32)
+    pos[0] = np.clip(pnl_pct, -1.0, 5.0)
+    pos[1] = np.clip(hold_norm, 0.0, 1.0)
+    pos[2] = abs(current_delta)
+    pos[3] = np.clip(recovery_prob, 0.0, 1.0)
+    pos[4] = np.clip(iv_ratio, 0.5, 3.0)
+    pos[5] = np.clip(mae, -1.0, 0.0)
+    if POSITION_STATE_DIM > 6:
+        pos[6] = np.clip(trailing_drawdown, 0.0, 2.0)
+    return pos
 
 def _calc_contracts_futures(risk_capital: float, entry_price: float, stop_pct: float, multiplier: float) -> int:
     """Contracts for futures (SPX spot): risk_capital / max_loss_per_contract."""
@@ -116,7 +153,7 @@ def _calc_contracts_options(risk_capital: float, entry_premium: float) -> int:
 
 
 def simulate_mlp_only(df: pd.DataFrame, predictions: np.ndarray,
-                      probabilities: np.ndarray, threshold: float = 0.50,
+                      probabilities: np.ndarray, threshold: float = RL_CONFIG["min_confidence"],
                       target_long: float = 0.010, target_short: float = 0.005,
                       stop_pct: float = 0.003, max_time: int = 180,
                       cooldown: int = 15, risk_capital: float = 500.0) -> pd.DataFrame:
@@ -157,14 +194,13 @@ def simulate_mlp_only(df: pd.DataFrame, predictions: np.ndarray,
             current_minute = row['minutes']
             ticker = row.get('ticker', 'SPX')
 
-            if pred == 1 or max_prob < threshold:
+            direction = direction_from_prediction(pred)
+            if not is_actionable_signal(direction, max_prob, base_confidence=threshold):
                 continue
 
             # Skip first 10 minutes (9:30-9:40) — market opening noise
             if 570 <= current_minute < 580:
                 continue
-
-            direction = "LONG" if pred == 2 else "SHORT"
 
             # Open position check — don't overlap
             if (ticker, d) in open_positions:
@@ -623,8 +659,8 @@ def _build_dynamic_market_features(
 
 def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                     probabilities: np.ndarray, rl_agent: PPOAgent,
-                    features_norm: np.ndarray = None,
-                    threshold: float = 0.50, max_time: int = 180,
+                    market_features_matrix: np.ndarray = None,
+                    threshold: float = RL_CONFIG["min_confidence"], max_time: int = 180,
                     cooldown: int = 15, device: torch.device = None,
                     risk_capital: float = 500.0,
                     single_step_eval: bool = False,
@@ -668,10 +704,11 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
         # Greeks are now loaded per-ticker inside the trade loop below
         # (cache keyed by (ticker, date) instead of date only)
 
-        # Pre-extract market features for the day (normalized if available)
-        day_features = features_norm[day_idx] if features_norm is not None else None
+        # Pre-extract market features for the day. These stay raw to mirror the
+        # RL training environment, which freezes the episode snapshot itself.
+        day_features = market_features_matrix[day_idx] if market_features_matrix is not None else None
         if day_features is None:
-            # Fallback (slow/unnormalized)
+            # Fallback (slow/raw)
             n_features = len(FEATURE_COLUMNS)
             day_features = np.zeros((len(day_idx), n_features), dtype=np.float32)
             for fi, col in enumerate(FEATURE_COLUMNS[:n_features]):
@@ -679,11 +716,13 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                     day_features[:, fi] = day_df[col].fillna(0).values.astype(np.float32)
 
         for i, global_idx in enumerate(day_idx):
+            entry_idx = global_idx
             row = day_df.loc[global_idx]
             pred = predictions[global_idx]
             max_prob = probabilities[global_idx].max()
+            direction = direction_from_prediction(pred)
 
-            if pred == 1 or max_prob < threshold:
+            if not is_actionable_signal(direction, max_prob, base_confidence=threshold):
                 continue
 
             # CRITICAL: Define current_minute BEFORE using it in filters
@@ -698,7 +737,6 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
             if 570 <= current_minute < 580:
                 continue
 
-            direction = "LONG" if pred == 2 else "SHORT"
             ticker = row.get("ticker", "SPX")
 
             key = f"{ticker}_{d}"
@@ -723,8 +761,9 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
             if entry_price == 0:
                 continue
 
-            # Retrieve pre-calculated market features (normalized)
-            market_features = features_norm[global_idx]
+            # Match the training environment: market features come from the
+            # fixed signal-row snapshot, while only the dynamic/position blocks evolve.
+            entry_market_features = day_features[i]
             
             # Current signal confidence and predicted class
             conf = probabilities[global_idx, pred]
@@ -733,14 +772,12 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
             # Group 3: MLP signal context (4 dims)
             mlp_context = np.array([
                 conf,                        # confidence
-                60.0,                        # dummy time-to-target for GBT
+                GBT_MLP_TIME_TO_TARGET,      # normalized time-to-target used by RL prep
                 0.0,                         # mins_since_signal
-                0.0,                         # dummy log_sigma for GBT
+                GBT_MLP_LOG_SIGMA,           # dummy log_sigma for GBT
             ], dtype=np.float32)
             
             # ── ENTRY: RL strike selection ──
-            position_state = np.zeros(6, dtype=np.float32)
-
             # Initialise per-trade O(1) histories
             _spot_history: list = [entry_price]
             _premium_history: list = []
@@ -770,20 +807,14 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
             dynamic_market_entry[5] = float(max(0.0, (390 - max(0, current_minute - SESSION_OPEN_MIN)) / 390.0))
 
             # Entry position state (all zeros except iv_ratio=1.0)
-            # Order: [pnl, hold, delta, recovery, iv_ratio, mae]
-            position_state_entry = np.zeros(6, dtype=np.float32)
-            position_state_entry[4] = 1.0 # default iv_ratio
+            position_state_entry = _build_position_state(iv_ratio=1.0)
 
-            state_parts = [market_features, dynamic_market_entry, position_state_entry, mlp_context]
+            state_parts = [entry_market_features, dynamic_market_entry, position_state_entry, mlp_context]
             if RL_CONFIG.get("use_sniper_mode", False):
                 sniper_state = np.zeros(SNIPER_STATE_DIM, dtype=np.float32)
                 state_parts.append(sniper_state)
 
-            state = np.concatenate(state_parts)
-            if len(state) < rl_agent.state_dim:
-                state = np.concatenate([state, np.zeros(rl_agent.state_dim - len(state), dtype=np.float32)])
-            else:
-                state = state[:rl_agent.state_dim]
+            state = _pad_or_trim_state(np.concatenate(state_parts), rl_agent.state_dim)
             state_tensor = torch.FloatTensor(state).unsqueeze(0).to(device)
 
             with torch.no_grad():
@@ -895,6 +926,22 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                         exit_price_spot = price
                         break
 
+                # Match the training environment/live system: bail out when the
+                # underlying directional signal flips with sufficient confidence.
+                future_pred = int(predictions[idx_global])
+                future_dir = direction_from_prediction(future_pred)
+                future_conf = float(probabilities[idx_global, future_pred])
+                bar_minute = current_minute + hold_minutes
+                if should_exit_on_reversal(
+                    position_direction=direction,
+                    signal_direction=future_dir,
+                    signal_confidence=future_conf,
+                    minutes_since_open=bar_minute,
+                ):
+                    exit_reason = "signal_reversal"
+                    exit_price_spot = price
+                    break
+
                 # ── Build RL state for exit decision ──
                 hold_norm = hold_minutes / HARD_EXITS["max_hold_minutes"]
 
@@ -922,20 +969,28 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                     recovery_prob = float(recovery_lookup.get((d_bucket, v_bucket, p_bucket), 0.5))
 
                 iv_ratio = cur_iv / entry_atm_iv if entry_atm_iv > 0 else 1.0
+                trailing_drawdown = max(0.0, peak_pnl - premium_pnl_pct)
+                position_state = _build_position_state(
+                    pnl_pct=premium_pnl_pct,
+                    hold_norm=hold_norm,
+                    current_delta=cur_delta,
+                    recovery_prob=recovery_prob,
+                    iv_ratio=iv_ratio,
+                    mae=mae,
+                    trailing_drawdown=trailing_drawdown,
+                )
 
-                position_state = np.array([
-                    np.clip(premium_pnl_pct, -1.0, 5.0), # [0] pnl
-                    np.clip(hold_norm, 0.0, 1.0),        # [1] hold
-                    abs(cur_delta),                     # [2] delta
-                    recovery_prob,                      # [3] recovery
-                    np.clip(iv_ratio, 0.5, 3.0),        # [4] iv_ratio
-                    np.clip(mae, -1.0, 0.0),            # [5] mae
-                ], dtype=np.float32)
-
-                market_features = features_norm[idx_global]
+                market_features = (
+                    entry_market_features
+                    if single_step_eval
+                    else (
+                        market_features_matrix[idx_global]
+                        if market_features_matrix is not None
+                        else day_features[min(i + t + 1, len(day_features) - 1)]
+                    )
+                )
 
                 # Dynamic market features — O(1), accumulates _spot_history in place
-                bar_minute = current_minute + hold_minutes
                 dynamic_market = _build_dynamic_market_features(
                     current_minute=bar_minute,
                     entry_spot=entry_price,
@@ -955,11 +1010,7 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                     sniper_state = np.zeros(SNIPER_STATE_DIM, dtype=np.float32)
                     state_parts.append(sniper_state)
 
-                state = np.concatenate(state_parts)
-                if len(state) < rl_agent.state_dim:
-                    state = np.concatenate([state, np.zeros(rl_agent.state_dim - len(state), dtype=np.float32)])
-                else:
-                    state = state[:rl_agent.state_dim]
+                state = _pad_or_trim_state(np.concatenate(state_parts), rl_agent.state_dim)
                 state_tensor = torch.FloatTensor(state).unsqueeze(0).to(device)
 
                 with torch.no_grad():
@@ -1162,7 +1213,12 @@ def main():
     parser.add_argument("--normalizer", default=os.path.join(PROJECT_ROOT, "models", "hybrid_normalizer_wf.npz"))
     parser.add_argument("--model-size", default="small", choices=["micro", "small", "medium", "medium_v2", "large"])
     parser.add_argument("--rl-model", default=os.path.join(PROJECT_ROOT, "rl_models", "best_rl_agent.pt"), help="RL agent checkpoint")
-    parser.add_argument("--threshold", type=float, default=0.50)
+    parser.add_argument(
+        "--threshold",
+        type=float,
+        default=RL_CONFIG["min_confidence"],
+        help="Base confidence threshold. LONG uses this value; SHORT uses the configured directional offset.",
+    )
     parser.add_argument("--cooldown", type=int, default=15)
     parser.add_argument("--target-long", type=float, default=0.010)
     parser.add_argument("--target-short", type=float, default=0.005)
@@ -1175,7 +1231,11 @@ def main():
     parser.add_argument("--filter-by-greeks", action="store_true",
                         help="Drop training dates that have no 0DTE greeks parquet in ThetaData. "
                              "Use this to diagnose low trade counts — shows coverage before running.")
-    parser.add_argument("--single-step-eval", action="store_true", help="Strictly use current minute info only (no lookahead)")
+    parser.add_argument(
+        "--single-step-eval",
+        action="store_true",
+        help="Freeze the entry market snapshot while dynamic and position features evolve, matching RL training/live.",
+    )
     parser.add_argument("--strict-wf", action="store_true", help="Enable strict Walk-Forward date filtering for GBT inference")
     args = parser.parse_args()
 
@@ -1196,6 +1256,7 @@ def main():
         model, normalizer = load_hybrid_model(args.model, args.normalizer, args.model_size, device)
         model.eval()
         print(f"  OK")
+    is_gbt = hasattr(model, "predict_proba") and not isinstance(model, torch.nn.Module)
     
     # ── Load RL agent ──
     print(f"\n[2/5] Loading RL agent from {args.rl_model}...")
@@ -1263,7 +1324,7 @@ def main():
 
     print(f"  {len(df):,} samples | {df['date'].nunique()} days | tickers: {df['ticker'].unique().tolist()}")
 
-    # Reset index after all filtering so features_norm[idx] aligns with df.index
+    # Reset index after all filtering so feature arrays align with df.index
     df = df.reset_index(drop=True)
 
     # ── GBT predictions ──
@@ -1275,7 +1336,6 @@ def main():
             features[:, i] = df[col].values.astype(np.float32)
     
     features = np.nan_to_num(features, nan=0.0, posinf=5.0, neginf=-5.0)
-    features_norm = normalizer.transform(features)
     
     if args.strict_wf:
         print(f"  [i] Using STRICT Walk-Forward inference (date-by-date filtering) for GBT predictions...")
@@ -1285,10 +1345,21 @@ def main():
             mask = df['date'] == d_str
             idx = np.where(mask)[0]
             if len(idx) == 0: continue
-            # Pass date to ensemble for strict filtering
-            probs[idx] = model.predict_proba(features_norm[idx], date=str(d_str))
+            if is_gbt:
+                probs[idx] = model.predict_proba(features[idx], date=str(d_str))
+            else:
+                batch = torch.FloatTensor(normalizer.transform(features[idx])).to(device)
+                with torch.no_grad():
+                    logits, _ = model(batch)
+                probs[idx] = torch.softmax(logits, dim=-1).cpu().numpy()
     else:
-        probs = model.predict_proba(features_norm)
+        if is_gbt:
+            probs = model.predict_proba(features)
+        else:
+            batch = torch.FloatTensor(normalizer.transform(features)).to(device)
+            with torch.no_grad():
+                logits, _ = model(batch)
+            probs = torch.softmax(logits, dim=-1).cpu().numpy()
     predictions = np.argmax(probs, axis=1)
         
     print(f"  Predictions: {np.bincount(predictions, minlength=3)} [SHORT, HOLD, LONG]")
@@ -1311,7 +1382,7 @@ def main():
     print(f"  Running GBT+RL simulation...")
     rl_trades = simulate_mlp_rl(
         df, predictions, probs, rl_agent,
-        features_norm=features_norm,
+        market_features_matrix=features,
         threshold=args.threshold, max_time=args.max_time,
         cooldown=args.cooldown, device=device,
         risk_capital=args.risk_capital,

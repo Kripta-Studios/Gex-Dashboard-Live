@@ -38,6 +38,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from hybrid_model import get_hybrid_model, load_hybrid_model, load_ensemble_model, EnsembleTradingModel, FeatureNormalizer, get_device, FEATURE_COLUMNS
 from datetime import datetime, timedelta
+from neural.signal_policy import direction_from_prediction, is_actionable_signal
 
 try:
     from tradingbot_wrapper import send_discord_trade_open, send_discord_trade_close
@@ -173,13 +174,9 @@ class TradeSimulator:
         for idx, row in df_work.iterrows():
             pred = row['pred']
             max_prob = row['max_prob']
+            direction = direction_from_prediction(pred)
             
-            # Only trade if confidence exceeds threshold
-            if max_prob < self.threshold:
-                continue
-            
-            # Skip HOLD predictions
-            if pred == 1:
+            if not is_actionable_signal(direction, max_prob, base_confidence=self.threshold):
                 continue
             
             ticker = row['ticker']
@@ -204,7 +201,6 @@ class TradeSimulator:
                 
             # Execute trade
             entry_price = row['spot_price']
-            direction = "LONG" if pred == 2 else "SHORT"
             
             
             hold_minutes = 180  # Default fallback
@@ -579,7 +575,7 @@ def main():
     parser.add_argument("--model", default="models/trading_hybrid_wf.pt", help="Path to model file")
     parser.add_argument("--normalizer", default="models/hybrid_normalizer_wf.npz", help="Path to normalizer file")
     parser.add_argument("--model-size", choices=["micro", "small", "medium", "large"], default="small", help="Model size used during training")
-    parser.add_argument("--threshold", type=float, default=0.7, help="Confidence threshold for trades (0.5-0.9)")
+    parser.add_argument("--threshold", type=float, default=0.6, help="Base confidence threshold for trades")
     parser.add_argument("--cooldown", type=int, default=30, help="Minutes between trades per ticker (default: 30)")
     parser.add_argument("--risk-capital", type=float, default=500.0, help="Risk capital in dollars per trade (fixed)")
     parser.add_argument("--position-size", type=float, default=1.0, help="Position size multiplier")
@@ -686,27 +682,32 @@ def main():
             features[:, i] = df[col].values.astype(np.float32)
     features = np.nan_to_num(features, nan=0.0, posinf=5.0, neginf=-5.0)
 
-    # Normalize
-    features_norm = normalizer.transform(features)
+    is_gbt = hasattr(model, "predict_proba") and not isinstance(model, torch.nn.Module)
 
-    # GBT inference
     if args.strict_wf:
         print(f"  [i] Using STRICT Walk-Forward inference (date-by-date filtering)...")
         probs = np.zeros((len(df), 3), dtype=np.float32)
-        
-        # Group by date to apply correct ensemble filter per day
         unique_dates = sorted(df['date'].unique())
         for d_str in unique_dates:
-            # Find indices for this date
             mask = df['date'] == d_str
             idx = np.where(mask)[0]
-            if len(idx) == 0: continue
-            
-            # Predict only for this day using the date as filter
-            # date format in CSV is 'YYYYMMDD' (from line 658)
-            probs[idx] = model.predict_proba(features_norm[idx], date=d_str)
+            if len(idx) == 0:
+                continue
+            if is_gbt:
+                probs[idx] = model.predict_proba(features[idx], date=d_str)
+            else:
+                batch = torch.FloatTensor(normalizer.transform(features[idx])).to(device)
+                with torch.no_grad():
+                    logits, _ = model(batch)
+                probs[idx] = torch.softmax(logits, dim=-1).cpu().numpy()
     else:
-        probs = model.predict_proba(features_norm)
+        if is_gbt:
+            probs = model.predict_proba(features)
+        else:
+            batch = torch.FloatTensor(normalizer.transform(features)).to(device)
+            with torch.no_grad():
+                logits, _ = model(batch)
+            probs = torch.softmax(logits, dim=-1).cpu().numpy()
         
     predictions = np.argmax(probs, axis=1)
     
