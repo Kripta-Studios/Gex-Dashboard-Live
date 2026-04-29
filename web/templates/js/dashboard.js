@@ -142,14 +142,14 @@ function generateRegimeHTML(ticker, greek, spot, netValue, spotStrikeValue, netC
         let mmSelling = (isLocalPos && ivRising) || (!isLocalPos && ivFalling);
         regimeText = isLocalPos ? "POS VANNA" : "NEG VANNA";
         if (mmBuying) {
-            regimeColorVar = "--pos-high";
-            behaviorText = `MM BUYING (IV ${ivTrend.toUpperCase()}) → Support`;
+            regimeColorVar = null; // will use inline color
+            behaviorText = `SUPPORTIVE — Dealers BUYING (IV ${ivTrend.toUpperCase()})`;
         } else if (mmSelling) {
-            regimeColorVar = "--neg-high";
-            behaviorText = `MM SELLING (IV ${ivTrend.toUpperCase()}) → Pressure`;
+            regimeColorVar = null; // will use inline color
+            behaviorText = `SUPPRESSIVE — Dealers SELLING (IV ${ivTrend.toUpperCase()})`;
         } else {
-            regimeColorVar = isLocalPos ? "--pos-high" : "--neg-high";
-            behaviorText = isLocalPos ? "IV Drop = Buying | IV Spike = Selling." : "IV Drop = Selling | IV Spike = Buying.";
+            regimeColorVar = null;
+            behaviorText = isLocalPos ? "IV Drop = Supportive (BUY) | IV Spike = Suppressive (SELL)" : "IV Drop = Suppressive (SELL) | IV Spike = Supportive (BUY)";
         }
         biasText = `IV: ${ivTrend.toUpperCase()}`;
     } else if (greek === "vega") {
@@ -184,6 +184,16 @@ function generateRegimeHTML(ticker, greek, spot, netValue, spotStrikeValue, netC
             regimeColorVar = "--neg-high";
         }
         biasText = "Gamma sensitivity";
+    } else if (greek === "charm") {
+        // Negative charm → time decay induces dealer BUYING → Supportive
+        // Positive charm → time decay induces dealer SELLING → Suppressive
+        const isCharmSupportive = isLocalPos ? false : true; // negative local = supportive
+        regimeText = isCharmSupportive ? "SUPPORTIVE CHARM" : "SUPPRESSIVE CHARM";
+        behaviorText = isCharmSupportive
+            ? "SUPPORTIVE — Time decay induces dealer BUYING"
+            : "SUPPRESSIVE — Time decay induces dealer SELLING";
+        regimeColorVar = null;
+        biasText = isNetPos ? "Net Positive" : "Net Negative";
     } else {
         regimeText = isLocalPos ? "LOCAL POS" : "LOCAL NEG";
         behaviorText = "Standard hedging mechanics apply.";
@@ -191,7 +201,19 @@ function generateRegimeHTML(ticker, greek, spot, netValue, spotStrikeValue, netC
         biasText = `Net: ${formatK(netValue)}`;
     }
 
-    const borderColor = `var(${regimeColorVar})`;
+    let borderColor;
+    if (regimeColorVar === null) {
+        // Vanna Supportive/Suppressive — use direct flow colors
+        if (behaviorText.includes('SUPPORTIVE')) {
+            borderColor = '#00BCD4';
+        } else if (behaviorText.includes('SUPPRESSIVE')) {
+            borderColor = '#FFB300';
+        } else {
+            borderColor = 'var(--text-dim)';
+        }
+    } else {
+        borderColor = `var(${regimeColorVar})`;
+    }
     const formattedSpot = spot.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
     return `

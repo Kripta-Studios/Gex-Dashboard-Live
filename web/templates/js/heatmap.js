@@ -203,9 +203,75 @@ function createHeatmapPanel(chartObj, index) {
         return panel;
     }
 
+    // Supportive/Suppressive legend for Vanna & Charm
+    if (greek === 'vanna' || greek === 'charm') {
+        const ivTrend = ivTrendByTicker[globalData.ticker] || 'neutral';
+        const legendDiv = document.createElement("div");
+        legendDiv.style.cssText = "display:flex;justify-content:center;gap:12px;padding:4px 8px;font-size:8px;font-weight:700;letter-spacing:0.5px;background:rgba(255,255,255,0.03);border-top:1px solid rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.05);";
+        let ivLabel = '';
+        if (greek === 'vanna') {
+            const ivColor = ivTrend === 'rising' ? '#FF5252' : ivTrend === 'falling' ? '#69F0AE' : '#888';
+            ivLabel = `<span style="color:${ivColor};margin-right:8px;">IV: ${ivTrend.toUpperCase()}</span>`;
+        }
+        legendDiv.innerHTML = `${ivLabel}<span style="color:#00BCD4;">■ SUPPORTIVE (BUY)</span><span style="color:#FFB300;">■ SUPPRESSIVE (SELL)</span>`;
+        panel.appendChild(legendDiv);
+    }
+
     // Heatmap scroll container
     const scroll = document.createElement("div");
     scroll.className = "heatmap-scroll";
+
+    // Determine if this greek uses Supportive/Suppressive coloring
+    const useFlowColoring = (greek === 'vanna' || greek === 'charm');
+    const ticker = globalData.ticker;
+
+    // Supportive/Suppressive color palette
+    // Supportive (dealers buying) = Cyan/Blue tones
+    // Suppressive (dealers selling) = Amber/Gold tones
+    const FLOW_COLORS = {
+        supportive: {
+            high: '#00BCD4',           // Bright cyan for max supportive
+            lowRgb: '0, 150, 170',     // Teal for lower intensities
+            text: '#B2EBF2',           // Light cyan text
+            textPeak: '#000',          // Black text on bright bg
+        },
+        suppressive: {
+            high: '#FFB300',           // Bright amber for max suppressive
+            lowRgb: '180, 130, 0',     // Dark gold for lower intensities
+            text: '#FFF3E0',           // Light amber text
+            textPeak: '#000',          // Black text on bright bg
+        }
+    };
+
+    /**
+     * Determine if a strike's value represents Supportive or Suppressive flow.
+     * @param {number} val - The greek exposure value at this strike
+     * @returns {'supportive'|'suppressive'} 
+     */
+    function getFlowType(val) {
+        if (greek === 'charm') {
+            // Negative charm → time decay induces dealer BUYING → Supportive
+            // Positive charm → time decay induces dealer SELLING → Suppressive
+            return val < 0 ? 'supportive' : 'suppressive';
+        }
+        if (greek === 'vanna') {
+            // Vanna flow depends on IV trend direction
+            const ivTrend = ivTrendByTicker[ticker] || 'neutral';
+            const isPos = val >= 0;
+            if (ivTrend === 'falling') {
+                // IV falling: +vanna → delta decreases → buying (supportive)
+                //             -vanna → delta increases → selling (suppressive)
+                return isPos ? 'supportive' : 'suppressive';
+            } else if (ivTrend === 'rising') {
+                // IV rising:  +vanna → delta increases → selling (suppressive)
+                //             -vanna → delta decreases → buying (supportive)
+                return isPos ? 'suppressive' : 'supportive';
+            }
+            // Neutral IV: fall back to sign-based (positive = supportive potential)
+            return isPos ? 'supportive' : 'suppressive';
+        }
+        return 'supportive'; // fallback
+    }
 
     rows.forEach((row) => {
         const div = document.createElement("div");
@@ -221,43 +287,84 @@ function createHeatmapPanel(chartObj, index) {
         let weight = "400";
 
         if (Math.abs(val) > 1000) {
-            if (isPos) {
+            if (useFlowColoring) {
+                // ── Supportive / Suppressive coloring for Vanna & Charm ──
+                const flow = getFlowType(val);
+                const palette = FLOW_COLORS[flow];
                 const op = 0.15 + intensity * 0.85;
-                if (row.strike === maxPosStrike || intensity > 0.8) {
-                    bg = "var(--pos-high)";
-                    txtColor = "black";
+                const isPeak = (isPos && (row.strike === maxPosStrike || intensity > 0.8))
+                             || (!isPos && (row.strike === maxNegStrike || intensity > 0.8));
+
+                if (isPeak) {
+                    bg = palette.high;
+                    txtColor = palette.textPeak;
                     weight = "700";
                 } else {
-                    bg = `rgba(var(--pos-low-rgb), ${op})`;
-                    txtColor = "#ccc";
+                    bg = `rgba(${palette.lowRgb}, ${op})`;
+                    txtColor = palette.text;
                 }
             } else {
-                const op = 0.15 + intensity * 0.85;
-                if (row.strike === maxNegStrike) {
-                    bg = "var(--neg-high)";
-                    txtColor = "black";
-                    weight = "700";
+                // ── Default positive/negative coloring for other greeks ──
+                if (isPos) {
+                    const op = 0.15 + intensity * 0.85;
+                    if (row.strike === maxPosStrike || intensity > 0.8) {
+                        bg = "var(--pos-high)";
+                        txtColor = "black";
+                        weight = "700";
+                    } else {
+                        bg = `rgba(var(--pos-low-rgb), ${op})`;
+                        txtColor = "#ccc";
+                    }
                 } else {
-                    bg = `rgba(var(--neg-low-rgb), ${op})`;
-                    txtColor = "#dcd0ff";
+                    const op = 0.15 + intensity * 0.85;
+                    if (row.strike === maxNegStrike) {
+                        bg = "var(--neg-high)";
+                        txtColor = "black";
+                        weight = "700";
+                    } else {
+                        bg = `rgba(var(--neg-low-rgb), ${op})`;
+                        txtColor = "#dcd0ff";
+                    }
                 }
             }
         } else {
-            txtColor = "#444";
+            // Near-zero values: use a readable dim gray instead of near-invisible black
+            txtColor = "#777";
         }
 
         let labelStyle = "";
-        if (row.strike === closest) labelStyle = "color: white; font-weight: 700;";
-        else if (row.strike === maxPosStrike) labelStyle = "color: var(--pos-high); font-weight: 700;";
-        else if (row.strike === maxNegStrike) labelStyle = "color: var(--neg-high); font-weight: 700;";
+        if (row.strike === closest) {
+            labelStyle = "color: white; font-weight: 700;";
+        } else if (useFlowColoring) {
+            // For Vanna/Charm, color strike labels by flow type too
+            if (row.strike === maxPosStrike) {
+                const flow = getFlowType(maxPos);
+                labelStyle = `color: ${FLOW_COLORS[flow].high}; font-weight: 700;`;
+            } else if (row.strike === maxNegStrike) {
+                const flow = getFlowType(maxNeg);
+                labelStyle = `color: ${FLOW_COLORS[flow].high}; font-weight: 700;`;
+            }
+        } else {
+            if (row.strike === maxPosStrike) labelStyle = "color: var(--pos-high); font-weight: 700;";
+            else if (row.strike === maxNegStrike) labelStyle = "color: var(--neg-high); font-weight: 700;";
+        }
 
         const changeHTML = strikeChangeMap[row.strike] || "";
+
+        // Add a small flow indicator tag for Vanna/Charm on significant values
+        let flowTag = "";
+        if (useFlowColoring && Math.abs(val) > 1000) {
+            const flow = getFlowType(val);
+            const tagColor = flow === 'supportive' ? '#00BCD4' : '#FFB300';
+            const tagLabel = flow === 'supportive' ? 'BUY' : 'SELL';
+            flowTag = `<span style="font-size:7px;font-weight:700;color:${tagColor};margin-left:3px;opacity:0.8;">${tagLabel}</span>`;
+        }
 
         div.innerHTML = `
       <div class="y-axis-label" style="${labelStyle}">${row.strike}</div>
       <div class="bar-area">
         <div class="bar-fill" style="background:${bg}"></div>
-        <span class="value-text" style="color:${txtColor}; font-weight:${weight}">${formatK(val)}${changeHTML}</span>
+        <span class="value-text" style="color:${txtColor}; font-weight:${weight}">${formatK(val)}${flowTag}${changeHTML}</span>
         ${row.strike === maxPosStrike ? '<div class="ref-line ref-max-pos"></div>' : ""}
         ${row.strike === maxNegStrike ? '<div class="ref-line ref-max-neg"></div>' : ""}
       </div>

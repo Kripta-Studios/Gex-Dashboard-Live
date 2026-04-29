@@ -1816,7 +1816,7 @@ async function fetchTechnicals(dateStr) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 async function fetchNetGreeksLive(ticker) {
-    const greeks = ["gamma", "zomma", "delta", "vex", "vega", "vomma", "speed", "charm"];
+    const greeks = ["gamma", "zomma", "delta", "vex", "vega", "vomma", "speed", "charm", "vanna"];
     const net = {};
     for (const g of greeks) net[g] = 0;
 
@@ -1964,7 +1964,9 @@ async function runMarketStructureEngine(ticker = "SPX") {
         vixMomentum,
         vannaTagging,
         maxVannaStrike: netGreeks.max_vanna_strike,
-        netCharm: netGreeks.charm || 0
+        netCharm: netGreeks.charm || 0,
+        netVanna: netGreeks.vanna || 0,
+        ivState: ivState
     };
 }
 
@@ -2093,25 +2095,63 @@ async function updateMarketStructureUI() {
                     + `</div>`;
             }
 
-            // — Net Charm box
+            // ── Net Vanna box ──
+            // Vanna flow depends on IV direction:
+            //   +Vanna + IV falling → delta decreases → dealers BUY → SUPPORTIVE
+            //   +Vanna + IV rising  → delta increases → dealers SELL → SUPPRESSIVE
+            //   -Vanna + IV rising  → delta decreases → dealers BUY → SUPPORTIVE
+            //   -Vanna + IV falling → delta increases → dealers SELL → SUPPRESSIVE
+            const netVannaVal = result.netVanna || 0;
+            const vannaIVState = result.ivState || 'Low';
+            const vannaIsPos = netVannaVal >= 0;
+            // IV High = rising environment, IV Low = falling/compressed environment
+            const ivIsRising = vannaIVState === 'High';
+            const vannaSupportive = (vannaIsPos && !ivIsRising) || (!vannaIsPos && ivIsRising);
+            const vannaFlowLabel = vannaSupportive ? 'SUPPORTIVE' : 'SUPPRESSIVE';
+            const vannaFlowColor = vannaSupportive ? '#00BCD4' : '#FFB300';
+            const vannaFlowAction = vannaSupportive ? 'Dealers BUYING' : 'Dealers SELLING';
+            let vannaDesc = vannaSupportive
+                ? `IV ${vannaIVState} — vanna induces dealer buying pressure`
+                : `IV ${vannaIVState} — vanna induces dealer selling pressure`;
+            
+            if (struct.vannaNetPositive && vannaIsPos) {
+                vannaDesc += ' — ' + struct.vannaNetPositive;
+            } else if (struct.vannaNetNegative && !vannaIsPos) {
+                vannaDesc += ' — ' + struct.vannaNetNegative;
+            }
+
+            detailsHTML += `<div class="ms-detail-item" style="grid-column:1/-1;border:1px solid ${vannaFlowColor}33;border-radius:6px;padding:8px 10px;background:${vannaFlowColor}11;">`
+                + `<div style="display:flex;justify-content:space-between;align-items:center;">`
+                + `<span class="ms-detail-label" style="color:${vannaFlowColor};">Net Vanna</span>`
+                + `<span style="font-size:8px;font-weight:700;color:${vannaFlowColor};opacity:0.7;">${vannaFlowAction}</span>`
+                + `</div>`
+                + `<span class="ms-detail-value" style="color:${vannaFlowColor};font-weight:700;font-size:0.9rem;">${vannaFlowLabel}</span>`
+                + `<div style="color:#aaa;font-size:0.65rem;margin-top:3px;white-space:normal;">${vannaDesc} (${netVannaVal >= 0 ? '+' : ''}${netVannaVal.toFixed(4)})</div>`
+                + `</div>`;
+
+            // ── Net Charm box ──
             // Positive (+) charm → time decay increases delta for ITM calls/OTM puts → induces SELLING
             // Negative (-) charm → time decay decreases delta for ITM puts/OTM calls → induces BUYING
             const netCharmVal = result.netCharm || 0;
-            const isSuppressive = netCharmVal > 0;
-            const charmLabel = isSuppressive ? 'SUPPRESSIVE' : 'SUPPORTIVE';
-            const charmColor = isSuppressive ? '#FF5252' : '#69F0AE';
-            let charmDesc = isSuppressive
+            const charmIsSuppressive = netCharmVal > 0;
+            const charmLabel = charmIsSuppressive ? 'SUPPRESSIVE' : 'SUPPORTIVE';
+            const charmColor = charmIsSuppressive ? '#FFB300' : '#00BCD4';
+            const charmFlowAction = charmIsSuppressive ? 'Dealers SELLING' : 'Dealers BUYING';
+            let charmDesc = charmIsSuppressive
                 ? 'Time decay induces dealer selling pressure'
                 : 'Time decay induces dealer buying pressure';
             
-            if (struct.charmNetPositive && isSuppressive) {
+            if (struct.charmNetPositive && charmIsSuppressive) {
                 charmDesc += ' — ' + struct.charmNetPositive;
-            } else if (struct.charmNetNegative && !isSuppressive) {
+            } else if (struct.charmNetNegative && !charmIsSuppressive) {
                 charmDesc += ' — ' + struct.charmNetNegative;
             }
 
             detailsHTML += `<div class="ms-detail-item" style="grid-column:1/-1;border:1px solid ${charmColor}33;border-radius:6px;padding:8px 10px;background:${charmColor}11;">`
+                + `<div style="display:flex;justify-content:space-between;align-items:center;">`
                 + `<span class="ms-detail-label" style="color:${charmColor};">Net Charm</span>`
+                + `<span style="font-size:8px;font-weight:700;color:${charmColor};opacity:0.7;">${charmFlowAction}</span>`
+                + `</div>`
                 + `<span class="ms-detail-value" style="color:${charmColor};font-weight:700;font-size:0.9rem;">${charmLabel}</span>`
                 + `<div style="color:#aaa;font-size:0.65rem;margin-top:3px;white-space:normal;">${charmDesc} (${netCharmVal >= 0 ? '+' : ''}${netCharmVal.toFixed(4)})</div>`
                 + `</div>`;
