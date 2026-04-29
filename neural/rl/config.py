@@ -34,7 +34,7 @@ HARD_EXITS = {
     "trailing_stop_activation_pct": 9.99, # Disabled: RL alpha is best without trail
     "minutes_to_close":   5,      # always exit 5 min before market close
     "max_hold_minutes":   180,    # maximum hold time = MLP lookahead
-    "min_hold_minutes":   5,      # minimum hold time before RL agent can choose to exit
+    "min_hold_minutes":   30,      # minimum hold time before RL agent can choose to exit
 }
 
 # ═══════════════════════════════════════════════════════════════════════════

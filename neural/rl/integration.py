@@ -436,12 +436,15 @@ class IntegratedTradingSystem:
         if hold_minutes >= HARD_EXITS["max_hold_minutes"]:
             return self._close_position("HARD_MAX_HOLD", pnl_pct)
 
+        # ── Enforce min_hold first (before any soft exit) ──
+        min_hold = HARD_EXITS.get("min_hold_minutes", 0)
+
         # ── Signal Reversal Check ──
         now_et = timestamp
         if hasattr(now_et, "tz_convert"):
             now_et = now_et.tz_convert("America/New_York")
         minutes_since_open = max(0, (now_et.hour * 60 + now_et.minute) - 570)
-        if should_exit_on_reversal(
+        if hold_minutes >= min_hold and should_exit_on_reversal(
             position_direction=pos["direction"],
             signal_direction=curr_direction,
             signal_confidence=curr_confidence,
@@ -472,7 +475,7 @@ class IntegratedTradingSystem:
         action_val = action.item() if hasattr(action, 'item') else int(action)
         
         # Enforce min_hold to prevent immediate exit
-        min_hold = HARD_EXITS.get("min_hold_minutes", 0)
+        min_hold = HARD_EXITS.get("min_hold_minutes", 0) # Removed: done earlier
         if action_val == 1 and hold_minutes < min_hold:
             action_val = 0 # Override to HOLD
 
