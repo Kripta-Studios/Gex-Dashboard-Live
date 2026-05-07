@@ -101,7 +101,7 @@ SPOT_SOURCES = {
 
 # Timing
 LOOP_INTERVAL = 65  # seconds — aligned with realtime_feed's 60s poll interval
-MAX_FEED_SNAPSHOT_AGE_SECONDS = 90
+MAX_FEED_SNAPSHOT_AGE_SECONDS = 150
 ENTRY_EVAL_CADENCE_MINUTES = entry_cadence_minutes()
 COOLDOWN_MINUTES = 15
 EOD_CLEANUP_MINUTE = 55  # minute of 15:XX EST at which EOD cleanup triggers
@@ -1290,7 +1290,12 @@ class RLTradingBot:
 
         age = time.time() - path.stat().st_mtime
 
-        if age > max_age:
+        # Relax staleness check for OI files (static intraday)
+        effective_max_age = max_age
+        if "_oi_" in filename:
+            effective_max_age = 86400  # 24 hours
+
+        if age > effective_max_age:
             now_ts = time.time()
             last_warned = self._stale_last_warned.get(filename, 0)
             if now_ts - last_warned > 60:
@@ -1457,21 +1462,34 @@ class RLTradingBot:
             self.ib_low[ticker] = float(df_ib['low'].min())
 
     def _load_atm_iv(self, spot: float, ticker: str) -> float:
-        """Load ATM IV from IV parquet."""
+        """Load ATM IV from either IV or Greeks parquet."""
         options_symbol = OPTIONS_SYMBOLS.get(ticker, ticker)
-        df_iv = self._read_parquet(f"{options_symbol}_iv_0dte_latest.parquet")
-        if df_iv.empty or 'implied_vol' not in df_iv.columns or 'strike' not in df_iv.columns:
+        iv_path = f"{options_symbol}_iv_0dte_latest.parquet"
+        g_path = f"{options_symbol}_greeks_0dte_latest.parquet"
+        
+        # Prefer greeks as primary source if IV is not being polled
+        df = self._read_parquet(g_path)
+        if df.empty:
+            df = self._read_parquet(iv_path)
+            
+        if df.empty:
             return 0.0
-
-        if 'underlying_timestamp' in df_iv.columns:
-            df_iv['dt'] = pd.to_datetime(df_iv['underlying_timestamp'], format='mixed', errors='coerce')
-            latest_ts = df_iv['dt'].max()
-            df_iv = df_iv[df_iv['dt'] == latest_ts]
-
-        if df_iv.empty:
+            
+        iv_col = "implied_vol" if "implied_vol" in df.columns else "implied_volatility"
+        if iv_col not in df.columns or "strike" not in df.columns:
             return 0.0
-        closest_idx = (df_iv['strike'] - spot).abs().idxmin()
-        atm_iv = float(df_iv.loc[closest_idx, 'implied_vol'])
+            
+        if "underlying_timestamp" in df.columns:
+            df["dt"] = pd.to_datetime(df["underlying_timestamp"], format="mixed", errors="coerce")
+            latest_ts = df["dt"].max()
+            if pd.notna(latest_ts):
+                df = df[df["dt"] == latest_ts]
+
+        if df.empty:
+            return 0.0
+            
+        closest_idx = (df["strike"] - spot).abs().idxmin()
+        atm_iv = float(df.loc[closest_idx, iv_col])
         if atm_iv > 1.0:
             atm_iv = atm_iv / 100.0
         return max(atm_iv, 0.01)
