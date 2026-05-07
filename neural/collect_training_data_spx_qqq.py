@@ -489,6 +489,8 @@ def load_historical_ib_levels(greek_ticker: str, current_date_str: str, n_days: 
             close_price = float(close_before_4['close'].iloc[-1]) if not close_before_4.empty else float(df['close'].iloc[-1])
             results.append({
                 "ib_high": ib_high, "ib_low": ib_low,
+                "daily_high": float(df['high'].max()),
+                "daily_low": float(df['low'].min()),
                 "close_price": close_price, "date_str": d.strftime("%Y%m%d")
             })
         except:
@@ -673,9 +675,10 @@ def process_ticker_date(args: tuple) -> tuple:
         time_str = candle.get("time", "")
         price_by_time[time_str] = (i, candle.get("price", 0))
         
-    iv_file = get_parquet_file(greek_ticker, date_str, is_0dte=True, folder="iv", suffix="iv")
-    df_iv = None
-    if iv_file:
+    # Aligned with realtime_feed: Reading IV from Greeks exclusively
+    iv_history = deque(maxlen=60)
+    df_iv = None # Removed loading logic to align with realtime_feed
+    if False: # if iv_file:
         try:
             # Optimize: Load only necessary columns for IV
             df_iv = safe_read_parquet(iv_file, columns=['strike', 'implied_vol', 'underlying_timestamp'])
@@ -836,16 +839,17 @@ def process_ticker_date(args: tuple) -> tuple:
         ib_range_percentile_val = compute_ib_range_percentile(ib_high - ib_low, historical_ibs)
 
         atm_iv_open = 0.15
-        if df_iv is not None and not df_iv.empty:
+        if True: # Aligned: Extracting from Greeks (df_daily)
             try:
-                df_iv_open = df_iv[df_iv['dt'].dt.time >= dt_time(9, 30)].sort_values('dt')
+                df_iv_open = df_daily[df_daily['dt'].dt.time >= dt_time(9, 30)].sort_values('dt')
                 if not df_iv_open.empty:
                     ts_open = df_iv_open['dt'].iloc[0]
                     spot_open_approx = series[0].get('price', 5000)
                     mask = df_iv_open['dt'] == ts_open
                     if mask.any():
                         closest_idx = (df_iv_open[mask]['strike'] - spot_open_approx).abs().idxmin()
-                        atm_iv_open_raw = float(df_iv_open.loc[closest_idx, 'implied_vol'])
+                        iv_col = 'implied_vol' if 'implied_vol' in df_iv_open.columns else 'implied_volatility'
+                        atm_iv_open_raw = float(df_iv_open.loc[closest_idx, iv_col])
                         atm_iv_open = atm_iv_open_raw / 100.0 if atm_iv_open_raw > 1.0 else atm_iv_open_raw
                         atm_iv_open = max(atm_iv_open, 0.05)
             except:
@@ -880,7 +884,7 @@ def process_ticker_date(args: tuple) -> tuple:
         try:
             # Load last 15 days of OHLC to get ATR
             hist_ohlc = load_historical_ib_levels(greek_ticker, date_str, n_days=15)
-            ranges = [h['ib_high'] - h['ib_low'] for h in hist_ohlc if h is not None]
+            ranges = [h['daily_high'] - h['daily_low'] for h in hist_ohlc if h is not None]
             if len(ranges) >= 1:
                 day_atr = float(np.mean(ranges))
         except Exception as e:
@@ -1012,12 +1016,13 @@ def process_ticker_date(args: tuple) -> tuple:
             atm_iv = 0.0
             iv_zscore = 0.0
             iv_pct = 0.5
-            if df_iv is not None and not df_iv.empty:
-                df_iv_min = df_iv[df_iv['dt'] == ts_np]
-                if not df_iv_min.empty:
-                    closest_idx = (df_iv_min['strike'] - spot).abs().idxmin()
-                    closest_strike = df_iv_min.loc[closest_idx, 'strike']
-                    atm_iv = float(df_iv_min[df_iv_min['strike'] == closest_strike]['implied_vol'].mean())
+            if True: # Aligned: Reading from Greeks (df_pq)
+                # Reading from df_pq (merged greeks) instead of df_iv
+                if not df_pq.empty:
+                    closest_idx = (df_pq['strike'] - spot).abs().idxmin()
+                    iv_col = 'implied_vol' if 'implied_vol' in df_pq.columns else 'implied_volatility'
+                    atm_iv_raw = float(df_pq.loc[closest_idx, iv_col])
+                    atm_iv = atm_iv_raw / 100.0 if atm_iv_raw > 1.0 else atm_iv_raw
             if atm_iv > 0:
                 iv_history.append(atm_iv)
             else:
