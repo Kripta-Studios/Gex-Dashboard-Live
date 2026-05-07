@@ -1074,7 +1074,7 @@ class RealtimeOptionsFeed:
         # ── 1.1 Update ATR (needed for options filtering) ──
         for ticker in OPTIONS_TICKERS:
             self.day_atr[ticker] = self._calculate_current_atr(ticker)
-            logger.debug(f"  [ATR][{ticker}] Current 1m ATR: {self.day_atr[ticker]:.4f} (Filter range: ±{50*self.day_atr[ticker]:.2f})")
+            logger.debug(f"  [ATR][{ticker}] Current 15-day ATR: {self.day_atr[ticker]:.4f} (Filter range: ±{15*self.day_atr[ticker]:.2f})")
 
         # ── 2. Options data per ticker (CONCURRENT WITH SEMAPHORE MAX 4) ──
         # El semáforo limita a 4 peticiones en vuelo exactamente
