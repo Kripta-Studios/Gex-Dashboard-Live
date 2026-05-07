@@ -78,7 +78,7 @@ if ($u) {
 if ($skip_to_step -le 0) {
   Write-Host "`n=== RECOLECTANDO DATOS SPX+QQQ+SPY ===" -ForegroundColor Cyan
   python collect_training_data_spx_qqq.py `
-    --start 20220801 --end 20260430 `
+    --start 20220801 --end 20261230 `
     --workers 20 --tickers SPX QQQ SPY `
     --output training_data_spx_qqq_spy.parquet
 
