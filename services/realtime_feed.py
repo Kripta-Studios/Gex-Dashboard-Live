@@ -87,8 +87,10 @@ OPTIONS_ENDPOINTS = {
 }
 
 # Which endpoints to fetch for 0DTE vs weekly
-ENDPOINTS_0DTE  = ["greeks", "oi", "iv", "ohlc"]
-ENDPOINTS_WEEKLY = ["greeks", "oi"]
+# OI is removed from regular polling because it's static intraday.
+# IV is removed because 'greeks' already contains implied_volatility.
+ENDPOINTS_0DTE  = ["greeks", "ohlc"]
+ENDPOINTS_WEEKLY = ["greeks"]
 FEED_STATE_FILENAME = "feed_intraday_state.json"
 DEFAULT_POLL_INTERVAL_SECONDS = 60
 
@@ -272,10 +274,10 @@ class RealtimeOptionsFeed:
         base_url = getattr(self.client, "base_url", "http://91.99.90.39:25503/v3")
         all_rows = []
 
-        # Expanded Filter: ±50 ATR (to match training/backtest availability)
+        # Optimized Filter: ±15 ATR (balance between model needs and RAM usage)
         atr = self.day_atr.get(ticker, 1.0)
-        min_strike = spot_price - (50.0 * atr) if spot_price > 0 else 0.0
-        max_strike = spot_price + (50.0 * atr) if spot_price > 0 else float('inf')
+        min_strike = spot_price - (15.0 * atr) if spot_price > 0 else 0.0
+        max_strike = spot_price + (15.0 * atr) if spot_price > 0 else float('inf')
 
         for right in ["C", "P"]:
             params = {
@@ -323,7 +325,7 @@ class RealtimeOptionsFeed:
                     if isinstance(item, dict) and "contract" in item and "data" in item:
                         contract = item["contract"]
                         
-                        # --- FILTRO ±50 ATR ---
+                        # --- FILTRO ±15 ATR ---
                         strike = float(contract.get("strike", 0))
                         if spot_price > 0 and (strike < min_strike or strike > max_strike):
                             continue
@@ -339,7 +341,7 @@ class RealtimeOptionsFeed:
                             rows.append({**contract, **datarow})
                             
                     elif isinstance(item, dict):
-                        # --- FILTRO ±50 ATR (caso diccionario plano) ---
+                        # --- FILTRO ±15 ATR (caso diccionario plano) ---
                         strike = float(item.get("strike", 0))
                         if spot_price > 0 and (strike < min_strike or strike > max_strike):
                             continue
@@ -589,7 +591,9 @@ class RealtimeOptionsFeed:
             # Full RTH: 9:30 - 16:00 inclusive = 391 bars.
             if "spot_" in filepath.name:
                 row_count = len(df)
-                if row_count < 380:
+                # VIX/TLT might have fewer bars if derived — be more lenient
+                min_rows = 380 if "VIX" not in filepath.name and "TLT" not in filepath.name else 50
+                if row_count < min_rows:
                     logger.warning(f"  [verify] {filepath.name}: Incomplete data ({row_count} rows)")
                     return False
             
@@ -1109,11 +1113,26 @@ class RealtimeOptionsFeed:
                 for ep_key in ENDPOINTS_WEEKLY:
                     fname = f"{options_symbol}_{ep_key}_weekly_latest.parquet"
                     tasks.append(fetch_and_save(options_symbol, exp_weekly, ep_key, current_spot, fname, ticker))
+            
+            # --- NUEVO: Descargar OI una sola vez si no existe para hoy y es hora adecuada ---
+            # El OI definitivo suele publicarse entre las 01:00 y 07:00 AM ET.
+            # Bajándolo a partir de las 08:00 AM aseguramos datos frescos para la sesión.
+            is_after_eight = now.hour >= 8
+            for suffix, exp_target in [("0dte", exp_0dte), ("weekly", exp_weekly)]:
+                if not exp_target: continue
+                oi_fname = f"{options_symbol}_oi_{suffix}_latest.parquet"
+                if not (self.output_dir / oi_fname).exists() and is_after_eight:
+                    logger.info(f"[{options_symbol}] Downloading static OI for {suffix} (Time: {now.strftime('%H:%M')})...")
+                    tasks.append(fetch_and_save(options_symbol, exp_target, "oi", current_spot, oi_fname, ticker))
 
         # Lanzar todas las tareas (el semáforo gestionará el tráfico internamente)
         if tasks:
             logger.info("Downloading options endpoints (Max 4 concurrently)...")
             await asyncio.gather(*tasks)
+
+        # Force garbage collection after large Pandas processing
+        import gc
+        gc.collect()
 
         # ── 3. Compute ML features ──
         try:
@@ -1412,24 +1431,40 @@ class RealtimeOptionsFeed:
         return get_net_exposures_from_parquet(df_pq)
 
     def _load_atm_iv_local(self, spot: float, ticker: str = "SPX") -> float:
-        """Load ATM IV from the IV parquet."""
+        """Load ATM IV from either IV or Greeks parquet."""
         options_symbol = OPTIONS_TICKERS.get(ticker, "SPXW")
         iv_path = self.output_dir / f"{options_symbol}_iv_0dte_latest.parquet"
-        if not iv_path.exists():
+        g_path = self.output_dir / f"{options_symbol}_greeks_0dte_latest.parquet"
+        
+        # Use greeks as primary source if IV is not being polled
+        path = g_path if g_path.exists() else iv_path
+        
+        if not path.exists():
             return 0.0
-        df_iv = pd.read_parquet(iv_path)
-        if df_iv.empty or "implied_vol" not in df_iv.columns or "strike" not in df_iv.columns:
+            
+        try:
+            df = pd.read_parquet(path)
+            if df.empty:
+                return 0.0
+                
+            iv_col = "implied_vol" if "implied_vol" in df.columns else "implied_volatility"
+            if iv_col not in df.columns or "strike" not in df.columns:
+                return 0.0
+                
+            if "underlying_timestamp" in df.columns:
+                df["dt"] = pd.to_datetime(df["underlying_timestamp"], format="mixed", errors="coerce")
+                df = df[df["dt"] == df["dt"].max()]
+            
+            if df.empty:
+                return 0.0
+                
+            closest_idx = (df["strike"] - spot).abs().idxmin()
+            atm_iv = float(df.loc[closest_idx, iv_col])
+            if atm_iv > 1.0:
+                atm_iv = atm_iv / 100.0
+            return max(atm_iv, 0.01)
+        except Exception:
             return 0.0
-        if "underlying_timestamp" in df_iv.columns:
-            df_iv["dt"] = pd.to_datetime(df_iv["underlying_timestamp"], format="mixed", errors="coerce")
-            df_iv = df_iv[df_iv["dt"] == df_iv["dt"].max()]
-        if df_iv.empty:
-            return 0.0
-        closest_idx = (df_iv["strike"] - spot).abs().idxmin()
-        atm_iv = float(df_iv.loc[closest_idx, "implied_vol"])
-        if atm_iv > 1.0:
-            atm_iv = atm_iv / 100.0
-        return max(atm_iv, 0.01)
 
     def _load_spot_local(self, symbol: str) -> float:
         """Load latest spot price from Parquet."""
