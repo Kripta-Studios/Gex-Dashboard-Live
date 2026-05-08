@@ -677,21 +677,6 @@ def process_ticker_date(args: tuple) -> tuple:
         
     # Aligned with realtime_feed: Reading IV from Greeks exclusively
     iv_history = deque(maxlen=60)
-    df_iv = None # Removed loading logic to align with realtime_feed
-    if False: # if iv_file:
-        try:
-            # Optimize: Load only necessary columns for IV
-            df_iv = safe_read_parquet(iv_file, columns=['strike', 'implied_vol', 'underlying_timestamp'])
-            if not df_iv.empty:
-                df_iv['dt'] = pd.to_datetime(df_iv['underlying_timestamp'])
-                # Downcast
-                df_iv['strike'] = df_iv['strike'].astype(np.float32)
-                df_iv['implied_vol'] = df_iv['implied_vol'].astype(np.float32)
-        except Exception as e: 
-            print(f"[DEBUG {ticker} {date_str}] ERROR leyendo IV: {e}")
-    else:
-        print(f"[DEBUG {ticker} {date_str}] ADVERTENCIA: No se encontró archivo IV.")
-    iv_history = deque(maxlen=60)
         
     vix_data = load_vix_data(date_str)
     vix_spot, vix_gamma, vix_regime = vix_data["vix_spot"], vix_data["vix_gamma"], vix_data["vix_regime"]
