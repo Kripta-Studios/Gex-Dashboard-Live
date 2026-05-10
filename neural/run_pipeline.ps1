@@ -30,7 +30,7 @@ function Get-RLBaseConfidence {
 $BaseConfidence = Get-RLBaseConfidence
 $BaseConfidenceArg = [string]::Format(
   [System.Globalization.CultureInfo]::InvariantCulture,
-  "{0:0.00}",
+  "{0:0.###}",
   $BaseConfidence
 )
 Write-Host "[CONFIG] Base confidence cargada desde RL_CONFIG: $BaseConfidenceArg" -ForegroundColor DarkCyan

@@ -69,6 +69,7 @@ class IntegratedTradingSystem:
         self._max_unrealized_pnl = 0.0
         self._trailing_drawdown = 0.0
         self._entry_mlp_context = np.zeros(MLP_CONTEXT_DIM, dtype=np.float32)
+        self._entry_market_features = None
         
         # Curriculum/Constraints
         self.min_strike_bucket = 0
@@ -255,9 +256,10 @@ class IntegratedTradingSystem:
         if strike_info is None: return self._no_signal(confidence)
 
         half_spread = get_half_spread(abs(strike_info["entry_delta"]))
+        entry_price = strike_info["entry_price"] * (1.0 + half_spread)
         self.open_position = {
             **strike_info, "right": right, "direction": direction,
-            "entry_price": strike_info["entry_price"] * (1.0 + half_spread),
+            "entry_price": entry_price,
             "raw_entry_price": strike_info["entry_price"],
             "entry_time": timestamp, "strike_action": strike_action
         }
@@ -269,7 +271,22 @@ class IntegratedTradingSystem:
         return {
             "action": f"BUY_{right}", "strike": strike_info["strike"],
             "delta": strike_info["entry_delta"], "confidence": confidence,
-            "details": {"strike_action": strike_action, "delta_target": bucket["delta_target"]}
+            "details": {
+                "strike_action": strike_action,
+                "bucket_index": strike_action,
+                "bucket": bucket["label"],
+                "delta_target": bucket["delta_target"],
+                "entry_price": entry_price,
+                "raw_entry_price": strike_info["entry_price"],
+                "entry_iv": strike_info["entry_iv"],
+                "entry_theta": strike_info["entry_theta"],
+                "entry_gamma": strike_info["entry_gamma"],
+                "time_to_target": time_to_target,
+                "log_sigma": log_sigma,
+                "right": right,
+                "direction": direction,
+                "half_spread": half_spread,
+            }
         }
 
     def _handle_exit(self, market_features: np.ndarray, options_data: dict,
@@ -293,11 +310,10 @@ class IntegratedTradingSystem:
         if pnl >= HARD_EXITS["max_profit_pct"]: return self._close_position("HARD_TAKE_PROFIT", pnl)
         
         # Signal Reversal
-        if hold_m >= HARD_EXITS.get("min_hold_minutes", 0):
-            now_et = timestamp # Assumed ET
-            m_open = max(0, (now_et.hour * 60 + now_et.minute) - 570)
-            if should_exit_on_reversal(pos["direction"], curr_dir, curr_conf, m_open):
-                return self._close_position("SIGNAL_REVERSAL", pnl)
+        now_et = timestamp # Assumed ET
+        m_open = max(0, (now_et.hour * 60 + now_et.minute) - 570)
+        if should_exit_on_reversal(pos["direction"], curr_dir, curr_conf, m_open):
+            return self._close_position("SIGNAL_REVERSAL", pnl)
 
         # RL Exit
         state = self._build_state(market_features, True, pnl_pct=pnl, 
@@ -310,20 +326,46 @@ class IntegratedTradingSystem:
         with torch.no_grad():
             action, _, _ = self.rl.get_action(torch.FloatTensor(state).unsqueeze(0).to(self.device), "exit", True)
         
-        if int(action) == 1 and hold_m >= HARD_EXITS.get("min_hold_minutes", 0):
+        if int(action) == 1 and hold_m >= self._agent_min_hold_minutes():
             return self._close_position("AGENT_EXIT", pnl)
 
         self._prev_pnl_pct = pnl
         return {"action": "HOLD", "strike": pos["strike"], "delta": pos["entry_delta"], 
-                "confidence": self._entry_mlp_context[0], "details": {"pnl_pct": pnl, "hold_m": hold_m}}
+                "confidence": self._entry_mlp_context[0],
+                "details": {
+                    "pnl_pct": pnl,
+                    "hold_m": hold_m,
+                    "mae": self._mae,
+                    "max_unrealized_pnl": self._max_unrealized_pnl,
+                    "trailing_drawdown": self._trailing_drawdown,
+                    "entry_price": pos["entry_price"],
+                    "raw_entry_price": pos["raw_entry_price"],
+                }}
 
     def _close_position(self, reason: str, pnl: float) -> dict:
         pos = self.open_position
         res = {"action": "EXIT", "strike": pos["strike"], "delta": pos["entry_delta"],
                "confidence": self._entry_mlp_context[0], 
-               "details": {"exit_reason": reason, "final_pnl": pnl}}
+               "details": {
+                   "exit_reason": reason,
+                   "final_pnl": pnl,
+                   "final_pnl_pct": pnl,
+                   "mae": self._mae,
+                   "max_unrealized_pnl": self._max_unrealized_pnl,
+                   "trailing_drawdown": self._trailing_drawdown,
+                   "entry_price": pos["entry_price"],
+                   "raw_entry_price": pos["raw_entry_price"],
+               }}
         self._reset_position_state()
         return res
+
+    def _agent_min_hold_minutes(self) -> float:
+        final_phase = max(RL_CONFIG.get("curriculum_phases", {0: {}}).keys())
+        return float(
+            RL_CONFIG.get("curriculum_phases", {})
+            .get(final_phase, {})
+            .get("min_hold_minutes", HARD_EXITS.get("min_hold_minutes", 0))
+        )
 
     def _reset_position_state(self):
         self.open_position = None
@@ -402,6 +444,7 @@ class IntegratedTradingSystem:
         self._entry_atm_iv = pos_data.get("entry_atm_iv", 0.15)
         self._entry_market_features = np.asarray(pos_data.get("entry_market_features"), dtype=np.float32) if pos_data.get("entry_market_features") else None
         self._mae, self._max_unrealized_pnl, self._prev_pnl_pct = pos_data.get("mae", 0.0), pos_data.get("max_unrealized_pnl", 0.0), pos_data.get("prev_pnl_pct", 0.0)
+        self._trailing_drawdown = max(0.0, self._max_unrealized_pnl - self._prev_pnl_pct)
 
     def _no_signal(self, conf: float) -> dict:
         return {"action": "NO_SIGNAL", "strike": None, "delta": None, "confidence": conf, "details": {"reason": "GBM_HOLD"}}

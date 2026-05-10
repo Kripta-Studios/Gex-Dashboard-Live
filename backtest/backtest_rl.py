@@ -492,6 +492,20 @@ def _load_daily_greeks(date_str: str, ticker: str = "SPXW") -> tuple:
                         "iv": float(iv), "gamma": float(gamma), "spot": float(spot),
                     }
 
+                # O(1) ATM greeks lookup for dynamic state. Training/live use
+                # ATM IV/gamma, not the held strike's IV/gamma.
+                atm = valid.copy()
+                atm["_atm_dist"] = (atm["strike"].astype(float) - atm["underlying_price"].astype(float)).abs()
+                atm = atm.sort_values("_atm_dist").groupby(["time_str", "right_upper"], observed=True).first().reset_index()
+                for _, row in atm.iterrows():
+                    greeks_lookup[(row["time_str"], "__ATM__", row["right_upper"])] = {
+                        "delta": float(row.get("delta", 0.0)),
+                        "theta": float(row.get("theta", 0.0)),
+                        "iv": float(row.get("implied_vol", 0.15)),
+                        "gamma": float(row.get("gamma", 0.0)),
+                        "spot": float(row.get("underlying_price", 0.0)),
+                    }
+
                 return df, premium_lookup, greeks_lookup
             except Exception as e:
                 import traceback
@@ -617,8 +631,8 @@ def _build_dynamic_market_features(
     if greeks_lookup is not None and actual_strike is not None:
         right_upper = option_right.upper()
         alt_right = right_upper[0] if len(right_upper) > 1 else right_upper
-        g = (greeks_lookup.get((future_time, actual_strike, right_upper)) or
-             greeks_lookup.get((future_time, actual_strike, alt_right)))
+        g = (greeks_lookup.get((future_time, "__ATM__", right_upper)) or
+             greeks_lookup.get((future_time, "__ATM__", alt_right)))
         if g:
             cur_iv = g.get("iv", entry_iv)
             if cur_iv > 0 and entry_iv > 0:
@@ -961,12 +975,12 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                     cur_delta = actual_delta
 
                 # Recovery lookup
-                recovery_prob = 0.5
+                recovery_prob = 0.3
                 if recovery_lookup is not None and actual_strike is not None:
                     d_bucket = get_delta_bucket(abs(cur_delta))
                     v_bucket = get_iv_bucket(cur_iv)
                     p_bucket = get_pnl_bucket(premium_pnl_pct)
-                    recovery_prob = float(recovery_lookup.get((d_bucket, v_bucket, p_bucket), 0.5))
+                    recovery_prob = float(recovery_lookup.get((d_bucket, v_bucket, p_bucket), 0.3))
 
                 iv_ratio = cur_iv / entry_atm_iv if entry_atm_iv > 0 else 1.0
                 trailing_drawdown = max(0.0, peak_pnl - premium_pnl_pct)

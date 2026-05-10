@@ -67,8 +67,14 @@ COOLDOWNS_FILE = os.path.join(TRADES_DIR, "cooldowns_rl.json")
 RT_DATA_DIR = os.path.join(PROJECT_ROOT, "rt_data")
 BOT_STATE_FILENAME = "bot_intraday_state.json"
 
-# GBM signal confidence threshold
-GBM_MIN_CONFIDENCE = RL_CONFIG["min_confidence"]
+# GBM signal confidence threshold. Must match the RL training/backtest run.
+EXPECTED_LIVE_MIN_CONFIDENCE = 0.575
+GBM_MIN_CONFIDENCE = float(RL_CONFIG["min_confidence"])
+if not math.isclose(GBM_MIN_CONFIDENCE, EXPECTED_LIVE_MIN_CONFIDENCE, rel_tol=0.0, abs_tol=1e-9):
+    raise RuntimeError(
+        f"Live confidence threshold mismatch: wrapper={GBM_MIN_CONFIDENCE}, "
+        f"expected={EXPECTED_LIVE_MIN_CONFIDENCE}"
+    )
 
 os.makedirs(TRADES_DIR, exist_ok=True)
 os.makedirs(LOGS_DIR, exist_ok=True)
@@ -83,6 +89,7 @@ DISCORD_ENABLED = len(DISCORD_WEBHOOKS) > 0
 # Process SPX, QQQ, and SPY
 TICKERS = ["SPX", "QQQ", "SPY"]
 POINT_VALUES = {"SPX": 50.0, "SPY": 100.0, "QQQ": 100.0}
+OPTION_CONTRACT_MULTIPLIER = 100.0
 MODEL_SIZE = "small"
 
 # Map trading ticker → options symbol (matches training data)
@@ -289,7 +296,7 @@ class RLPosition:
                  entry_atm_iv, bucket_index,
                  expiration=None, mae=0.0, prev_pnl_pct=0.0, time_to_target=0.5,
                  log_sigma=0.0, max_unrealized_pnl=0.0, right=None,
-                 entry_market_features=None):
+                 entry_market_features=None, trailing_drawdown=0.0):
         self.ticker = ticker
         self.direction = direction
         self.strike = strike
@@ -310,6 +317,7 @@ class RLPosition:
         self.max_unrealized_pnl = max_unrealized_pnl
         self.right = right or ("CALL" if direction == "LONG" else "PUT")
         self.entry_market_features = entry_market_features
+        self.trailing_drawdown = trailing_drawdown
 
     def to_dict(self):
         return {
@@ -330,6 +338,7 @@ class RLPosition:
             "max_unrealized_pnl": self.max_unrealized_pnl,
             "right": self.right,
             "entry_market_features": self.entry_market_features,
+            "trailing_drawdown": self.trailing_drawdown,
         }
 
     @classmethod
@@ -348,7 +357,8 @@ class RLPosition:
                   log_sigma=d.get("log_sigma", 0.0),
                   max_unrealized_pnl=d.get("max_unrealized_pnl", 0.0),
                   right=d.get("right"),
-                  entry_market_features=d.get("entry_market_features"))
+                  entry_market_features=d.get("entry_market_features"),
+                  trailing_drawdown=d.get("trailing_drawdown", 0.0))
         return pos
 
 
@@ -1863,6 +1873,19 @@ class RLTradingBot:
             self._save_intraday_state()
             return
 
+        # Keep temporal-delta features aligned with training/realtime_feed.
+        # The current row must become the previous raw exposure snapshot for
+        # the next poll.
+        self.prev_features[ticker] = {
+            "spot": spot,
+            "net_gamma": exp_0dte.get("net_gamma", 0.0),
+            "net_vanna": exp_0dte.get("net_vanna", 0.0),
+            "net_dgex": exp_0dte.get("net_dgex", 0.0),
+            "net_delta": exp_0dte.get("net_delta", 0.0),
+            "net_vega": exp_0dte.get("net_vega", 0.0),
+            "net_vomma": exp_0dte.get("net_vomma", 0.0),
+        }
+
         if ticker not in self.positions and not entry_eval_due:
             logger.info(
                 f"[{ticker}] ENTRY-GATED: waiting for {ENTRY_EVAL_CADENCE_MINUTES}m bar "
@@ -1929,6 +1952,7 @@ class RLTradingBot:
             pos.mae = details.get("mae", pos.mae)
             pos.prev_pnl_pct = details.get("pnl_pct", pos.prev_pnl_pct)
             pos.max_unrealized_pnl = details.get("max_unrealized_pnl", getattr(pos, 'max_unrealized_pnl', 0.0))
+            pos.trailing_drawdown = details.get("trailing_drawdown", getattr(pos, 'trailing_drawdown', 0.0))
             self._save_positions()
 
         # Update: include reason in NO-TRADE logs for better debugging
@@ -2060,7 +2084,7 @@ class RLTradingBot:
             details = result.get("details", {})
             pnl_pct = details.get("final_pnl_pct", 0)
             hold_min = (now - pos.entry_time).total_seconds() / 60
-            pnl_dollars = pnl_pct * pos.entry_premium * POINT_VALUES.get(ticker, 100)
+            pnl_dollars = pnl_pct * pos.entry_premium * OPTION_CONTRACT_MULTIPLIER
             reason = details.get("exit_reason", "unknown")
             self.daily_pnl += pnl_dollars
             self.last_trade_time[ticker] = now
