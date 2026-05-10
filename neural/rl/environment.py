@@ -449,12 +449,15 @@ class SPXOptionsEnv:
         # Update MAE
         self._mae = min(self._mae, pnl_pct)
 
-        # Track Trailing Drawdown
-        self._max_unrealized_pnl = max(self._max_unrealized_pnl, pnl_pct)
+        # Track Trailing Drawdown and detect new HWM
+        is_new_hwm = False
+        if pnl_pct > self._max_unrealized_pnl:
+            self._max_unrealized_pnl = pnl_pct
+            is_new_hwm = True
+            
         self._trailing_drawdown = max(0.0, self._max_unrealized_pnl - pnl_pct)
 
         # [v6] Pass context to rewards: hold_time, recovery_rate, spot_momentum
-        # hold_minutes already calculated above
         dynamic_features = self._get_dynamic_market_features()
         spot_momentum = float(dynamic_features[7])
         self._dynamic_market_state = dynamic_features # Save for state builder
@@ -538,10 +541,18 @@ class SPXOptionsEnv:
                 hold_time_minutes=hold_minutes,
                 recovery_rate=recovery_rate,
                 spot_momentum=spot_momentum,
-                trailing_drawdown=self._trailing_drawdown
+                trailing_drawdown=self._trailing_drawdown,
+                is_new_hwm=is_new_hwm
             )
             self._prev_pnl_pct = pnl_pct
             self._t += 1
+            return self._build_state_vector(), float(reward), False, {
+                "action": "hold",
+                "pnl_pct": pnl_pct,
+                "hold_minutes": hold_minutes,
+                "recovery_rate": recovery_rate,
+                "spot_momentum": spot_momentum
+            }
             return self._build_state_vector(), float(reward), False, { # [v6]
                 "action": "hold",
                 "pnl_pct": pnl_pct,

@@ -1255,6 +1255,8 @@ class RLTradingBot:
                     self.historical_ibs[ticker].append({
                         "ib_high": ib_h,
                         "ib_low": ib_l,
+                        "daily_high": float(df['high'].max()) if 'high' in df.columns else ib_h,
+                        "daily_low": float(df['low'].min()) if 'low' in df.columns else ib_l,
                         "close_price": close_price,
                         "date_str": day_str,
                     })
@@ -1532,7 +1534,9 @@ class RLTradingBot:
     def _calculate_current_atr(self, ticker: str) -> float:
         """Calculate 15-day ATR from historical daily ranges (high-low)."""
         hist = self.historical_ibs.get(ticker, [])
-        ranges = [h['ib_high'] - h['ib_low'] for h in hist if h is not None]
+        # CRITICAL PARITY FIX: Use daily_high - daily_low to match collect_training_data_spx_qqq.py
+        ranges = [h.get('daily_high', h['ib_high']) - h.get('daily_low', h['ib_low']) 
+                  for h in hist if h is not None]
         
         if len(ranges) >= 1:
             return float(np.mean(ranges))

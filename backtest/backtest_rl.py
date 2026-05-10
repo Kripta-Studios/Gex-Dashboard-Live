@@ -1319,7 +1319,7 @@ def main():
             return str(row["date"]) in available_by_ticker.get(tk, set())
         df = df[df.apply(_has_greeks, axis=1)]
         after = len(df)
-        print(f"  Greeks filter: {before:,} → {after:,} rows "
+        print(f"  Greeks filter: {before:,} -> {after:,} rows "
               f"({before - after:,} dropped, {df['date'].nunique()} dates remain)")
 
     print(f"  {len(df):,} samples | {df['date'].nunique()} days | tickers: {df['ticker'].unique().tolist()}")

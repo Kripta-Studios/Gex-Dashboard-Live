@@ -81,20 +81,20 @@ RL_CONFIG = {
     # Architecture
     "state_dim":            TOTAL_STATE_DIM,
     "hidden_dims":          [256, 256, 128],
-    "backbone_dropout":     0.4,
+    "backbone_dropout":     0.05,
 
     # PPO core
-    "learning_rate":        3e-5,   # Reducido para mayor estabilidad y evitar overfitting
-    "gamma":                0.99,
+    "learning_rate":        6e-5,   # Slightly higher to force exit from zero-gradient trap
+    "gamma":                0.995,  
     "gae_lambda":           0.95,
-    "clip_epsilon":         0.15,   # Issue 5: Constrain policy updates directly
-    "value_loss_coeff":     0.3,    # Subido de 0.1: permite el crittico aprender mas rapido
-    "entropy_coeff":        0.06,   # Lowered from 0.08: prevent over-regularization
-    "entropy_coeff_min":    0.04,   # floor — never go below this (Increased from 0.02 to prevent collapse)
-    "entropy_target":       0.25,   # Fallback / Strike head target
-    "exit_entropy_target":  0.35,   # Lowered from 0.40: 50% of max binary entropy (revive policy loss)
-    "entropy_anneal_end":   350,    # step at which entropy reaches the floor
-    "kl_target":            0.030,  # Issue 5: Raised for Phase 0 to allow broader exploration
+    "clip_epsilon":         0.30,   # Increased from 0.25 to allow bolder updates
+    "value_loss_coeff":     0.5,    
+    "entropy_coeff":        0.002,  
+    "entropy_coeff_min":    0.0005, 
+    "entropy_target":       0.10,   
+    "exit_entropy_target":  0.15,   
+    "entropy_anneal_end":   300,    
+    "kl_target":            0.050,  # Increased from 0.02 to allow the policy to move
     "max_grad_norm":        0.5,
     "value_lr_decay_floor": 0.4,    # Keep critic learning at a higher floor than policy (40% vs 20%)
 
@@ -118,10 +118,10 @@ RL_CONFIG = {
     # Curriculum — linear interpolation will be used between these nodes:
     # Redesigned: force longer holds early + OTM/ATM exploration before ITM
     "curriculum_phases": {
-        0: {"pct": 0.00, "min_confidence": 0.70, "min_strike_bucket": 1, "max_strike_bucket": 3, "min_hold_minutes": 120},  # OTM only, forced 2h hold
-        1: {"pct": 0.15, "min_confidence": 0.65, "min_strike_bucket": 0, "max_strike_bucket": 4, "min_hold_minutes": 90},  # OTM+ATM, forced 1.5h hold
-        2: {"pct": 0.35, "min_confidence": 0.60, "min_strike_bucket": 0, "max_strike_bucket": 5, "min_hold_minutes": 60},  # Full diversity incl ITM_light, 1h hold
-        3: {"pct": 0.60, "min_confidence": 0.60, "min_strike_bucket": 0, "max_strike_bucket": 6, "min_hold_minutes": 30},  # Wide exploitation, 30min hold
+        0: {"pct": 0.00, "min_confidence": 0.70, "min_strike_bucket": 1, "max_strike_bucket": 3, "min_hold_minutes": 15},  
+        1: {"pct": 0.15, "min_confidence": 0.65, "min_strike_bucket": 0, "max_strike_bucket": 4, "min_hold_minutes": 12},  
+        2: {"pct": 0.35, "min_confidence": 0.60, "min_strike_bucket": 0, "max_strike_bucket": 5, "min_hold_minutes": 10},  
+        3: {"pct": 0.60, "min_confidence": 0.60, "min_strike_bucket": 0, "max_strike_bucket": 6, "min_hold_minutes": 5},  
     },
 
     # Session

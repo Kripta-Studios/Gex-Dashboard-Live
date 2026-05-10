@@ -117,12 +117,6 @@ class PPOAgent(nn.Module):
                    deterministic: bool = False, logit_noise: float = 0.0):
         """
         Sample an action from the policy or take argmax.
-
-        Args:
-            state: (batch, state_dim) tensor
-            action_type: "strike", "exit", or "sniper_entry"
-            deterministic: if True, take argmax instead of sampling
-            logit_noise: std of Gaussian noise to add to logits (for exploration)
         """
         logits, value = self.forward(state, action_type)
 
@@ -132,19 +126,22 @@ class PPOAgent(nn.Module):
 
         if action_type == "strike":
             # Discrete Strike (delta bucket 0-6)
-            # Apply Entropy Guard for Strike Selection
+            dist_original = Categorical(logits=logits)
+            
             if not deterministic:
                 with torch.no_grad():
-                    temp_dist = Categorical(logits=logits)
-                    if temp_dist.entropy().item() < 0.5:
+                    if dist_original.entropy().item() < 0.5:
+                        # Temperature scaling for EXPLORATION only
                         logits = logits / 2.0
 
-            dist = Categorical(logits=logits)
             if deterministic:
                 action = torch.argmax(logits, dim=-1)
             else:
-                action = dist.sample()
-            log_prob = dist.log_prob(action)
+                dist_sample = Categorical(logits=logits)
+                action = dist_sample.sample()
+            
+            # CRITICAL: Always store log_prob from the ORIGINAL (non-temperature) distribution
+            log_prob = dist_original.log_prob(action)
             action = action.item()
 
         elif action_type == "sniper_entry":
@@ -159,29 +156,31 @@ class PPOAgent(nn.Module):
 
         else:
             # Discrete Exit: HOLD(0) or EXIT(1)
-            # Apply Entropy Guard (Issue 1 Sync)
+            dist_original = Categorical(logits=logits)
+            
             if not deterministic:
                 with torch.no_grad():
-                    temp_dist = Categorical(logits=logits)
-                    if temp_dist.entropy().item() < 0.15:
-                        # Apply same T=2.0 as in evaluate_actions to keep ratios valid
+                    if dist_original.entropy().item() < 0.15:
+                        # Temperature scaling for EXPLORATION only
                         logits = logits / 2.0
             
-            dist = Categorical(logits=logits)
             if deterministic:
                 action = torch.argmax(logits, dim=-1)
             else:
-                action = dist.sample()
-            log_prob = dist.log_prob(action)
+                dist_sample = Categorical(logits=logits)
+                action = dist_sample.sample()
+                
+            # CRITICAL: Always store log_prob from the ORIGINAL distribution
+            log_prob = dist_original.log_prob(action)
             action = action.item()
 
         return action, log_prob, value
 
     def evaluate_actions(self, states: torch.Tensor, actions: list,
-                         action_types: list):
+                          action_types: list):
         """
         Evaluate log_probs and entropy for a batch of (state, action) pairs.
-        actions is a list of ints (strike bucket, exit choice, or sniper choice).
+        Uses raw logits (no entropy guard) to ensure PPO ratios are valid.
         """
         features = self.backbone(states)
         values = self.value_head(features).squeeze(-1)
@@ -223,39 +222,14 @@ class PPOAgent(nn.Module):
         exit_acts_t = torch.tensor(exit_acts, dtype=torch.long, device=states.device)
         sniper_acts_t = torch.tensor(sniper_acts, dtype=torch.long, device=states.device)
 
-        # ── Strike evaluation with Entropy Guard ──
-        with torch.no_grad():
-            strike_temp_dist = Categorical(logits=strike_logits)
-            strike_ent = strike_temp_dist.entropy()
-            # Threshold 0.5 for 7 actions (vs 0.15 for 2 actions in exit)
-            strike_collapsing = strike_ent < 0.5
-            
-        if strike_collapsing.any():
-            guard_strike_logits = strike_logits.clone()
-            guard_strike_logits[strike_collapsing] /= 2.0
-            strike_dist = Categorical(logits=guard_strike_logits)
-        else:
-            strike_dist = Categorical(logits=strike_logits)
-
+        # ── Strike evaluation (Raw) ──
+        strike_dist = Categorical(logits=strike_logits)
         strike_acts_t = strike_acts_t.clamp(0, NUM_STRIKE_ACTIONS - 1)
         strike_log_probs = strike_dist.log_prob(strike_acts_t)
         strike_entropy = strike_dist.entropy()
 
-        # ── Exit evaluation with Entropy Guard (Issue 1) ──
-        # Force minimum exploration when entropy collapses below 0.15
-        with torch.no_grad():
-            temp_dist = Categorical(logits=exit_logits)
-            ent_val = temp_dist.entropy()
-            is_collapsing = ent_val < 0.15
-            
-        if is_collapsing.any():
-            # Apply temperature scaling (T=2.0) to collapsing samples to flatten distribution
-            guard_logits = exit_logits.clone()
-            guard_logits[is_collapsing] /= 2.0
-            exit_dist = Categorical(logits=guard_logits)
-        else:
-            exit_dist = Categorical(logits=exit_logits)
-
+        # ── Exit evaluation (Raw) ──
+        exit_dist = Categorical(logits=exit_logits)
         exit_acts_t = exit_acts_t.clamp(0, NUM_EXIT_ACTIONS - 1)
         exit_log_probs = exit_dist.log_prob(exit_acts_t)
         exit_entropy = exit_dist.entropy()

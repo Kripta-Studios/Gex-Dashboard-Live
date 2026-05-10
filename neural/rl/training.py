@@ -401,9 +401,9 @@ class PPOTrainer:
         """Run PPO clipped objective update with entropy annealing and KL stopping."""
         
         # Scheduled base entropy coefficient (annealed)
-        progress = min(update_step / RL_CONFIG.get("entropy_anneal_end", 350), 1.0)
-        base_coeff  = RL_CONFIG["entropy_coeff"]
-        floor_coeff = RL_CONFIG.get("entropy_coeff_min", 0.04)
+        progress = min(update_step / RL_CONFIG.get("entropy_anneal_end", 300), 1.0)
+        base_coeff  = 0.05 # Start high to ensure exploration
+        floor_coeff = RL_CONFIG.get("entropy_coeff_min", 0.0005)
         current_coeff = base_coeff - (base_coeff - floor_coeff) * progress
         
         kl_target = RL_CONFIG.get("kl_target", 0.015)
@@ -468,11 +468,9 @@ class PPOTrainer:
                     h_strike = entropy[is_strike_batch].mean().item() if is_strike_batch.any() else 0.0
                     h_exit = entropy[is_exit_batch].mean().item() if is_exit_batch.any() else 0.0
 
-                # ── Normalized Value Loss (Issue 3) ──
-                # Use batch-wise std to scale returns/values to stable range (~N(0,1))
-                # Clamp at 1.0 to avoid inflating loss during low-variance early steps
-                ret_std = returns.std().clamp(min=1.0)
-                value_loss = nn.MSELoss()(values / ret_std, returns / ret_std)
+                # ── Raw Value Loss (Bug #4 Fix) ──
+                # Use returns as-is to keep the critic on the reward scale.
+                value_loss = nn.MSELoss()(values, returns)
 
                 # ── Entropy bonus (Conditional Regularization) ──
                 # Issue: Emergency boost must be per-sample to avoid masking collapse (Strike H masks Exit H)
@@ -687,24 +685,6 @@ class PPOTrainer:
             rolling_pf.append(profit_factor)
             rolling_wr.append(win_rate)
             rolling_pnl.append(mean_pnl)
-            # Track Stochastic Train PF (Issue 2)
-            # Collect 64 episodes (increased for statistical significance) on train dates without noise
-            with torch.no_grad():
-                _, s_infos = self.collect_episodes(
-                    n_episodes=64,
-                    training=True, 
-                    update_step=update_step,
-                    logit_noise_level=0.0,
-                    obs_noise=False 
-                )
-            s_pf = 0.0
-            if s_infos:
-                s_wins = sum(1 for info in s_infos if info.get("final_pnl_pct", 0) > 0)
-                s_losses = sum(1 for info in s_infos if info.get("final_pnl_pct", 0) < 0)
-                s_total_win = sum(info.get("final_pnl_pct", 0) for info in s_infos if info.get("final_pnl_pct", 0) > 0)
-                s_total_loss = abs(sum(info.get("final_pnl_pct", 0) for info in s_infos if info.get("final_pnl_pct", 0) < 0))
-                s_pf = s_total_win / s_total_loss if s_total_loss > 0 else (2.0 if s_total_win > 0 else 1.0)
-
             # Logging
             rolling_policy_loss.append(losses["policy_loss"])
             rolling_value_loss.append(losses["value_loss"])
@@ -834,7 +814,6 @@ class PPOTrainer:
                 eval_history["train_pf"].append(train_pf_avg)
                 eval_history["train_wr"].append(train_wr_avg)
                 eval_history["train_pnl"].append(train_pnl_avg)
-                eval_history["stochastic_train_pf"].append(s_pf) # Added for Issue 2
 
                 print(f"  {'Metric':<18} {'Train (rolling)':>16} {'Eval (determ.)':>16} {'Gap':>10}")
                 print(f"  {'-'*60}")
@@ -857,7 +836,6 @@ class PPOTrainer:
                 elif eval_pf > train_pf_avg and eval_pf > 1.0:
                     print(f"\n  OK Healthy: Eval PF ({eval_pf:.2f}) >= Train PF ({train_pf_avg:.2f})")
                 print(f"  Train:      PF {train_pf_avg:.2f} | WR {train_wr_avg:.1%} | PnL {train_pnl_avg:+.2%}")
-                print(f"  StochTrain: PF {s_pf:.2f} (clean states)")
                 if eval_pf > 0:
                     pass # Already printed above
                 if eval_wr < 0.40:

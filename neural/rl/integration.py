@@ -51,11 +51,11 @@ class IntegratedTradingSystem:
         self.device = device or torch.device(
             "cuda" if torch.cuda.is_available() else "cpu")
 
-        # Freeze model — GBT models don't have PyTorch parameters
+        # Freeze models
         self.mlp.eval()
         if hasattr(self.mlp, 'parameters'):
             params = list(self.mlp.parameters())
-            if params:  # Only freeze if there are actual parameters
+            if params:
                 for param in params:
                     param.requires_grad = False
                 self.mlp.to(self.device)
@@ -67,96 +67,66 @@ class IntegratedTradingSystem:
         self._mae = 0.0
         self._prev_pnl_pct = 0.0
         self._max_unrealized_pnl = 0.0
+        self._trailing_drawdown = 0.0
         self._entry_mlp_context = np.zeros(MLP_CONTEXT_DIM, dtype=np.float32)
         
         # Curriculum/Constraints
-        self.min_strike_bucket = 0  # Default to full diversity for production
+        self.min_strike_bucket = 0
         
         # Internal history for dynamic features
         self._spot_history = deque(maxlen=25)
         self._option_price_history = deque(maxlen=10)
         
-        # Spot references (aligned with environment.py)
-        self._signal_spot = 0.0          # Spot at the time MLP signal first appeared
-        self._entry_atm_iv = 0.15        # IV at the time MLP signal first appeared
-        self._position_entry_spot = 0.0  # Spot at the time RL agent actually entered
+        # Spot references
+        self._signal_spot = 0.0          
+        self._entry_atm_iv = 0.15        
+        self._position_entry_spot = 0.0  
         
         self._signal_direction = "HOLD"
         self._signal_confidence = 0.0
         
         self._dynamic_market_state = np.zeros(8, dtype=np.float32)
         
-        # Load recovery stats for v4 feature alignment
+        # Load recovery stats
         self._recovery_lookup = {}
-        stats_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                  "../../rl_data/recovery_stats.pkl")
+        # Correct path from neural/rl/ to project root: ../../rl_data/recovery_stats.pkl
+        current_file_dir = os.path.dirname(os.path.abspath(__file__))
+        stats_path = os.path.abspath(os.path.join(current_file_dir, "../../rl_data/recovery_stats.pkl"))
+        
         if os.path.exists(stats_path):
             try:
                 with open(stats_path, "rb") as f:
                     self._recovery_lookup = pickle.load(f)
-                print(f"  [ITS] Recovery lookup: {len(self._recovery_lookup)} buckets loaded")
             except Exception as e:
-                print(f"  [ITS] Warning: recovery_stats not loaded: {e}")
+                import logging
+                logging.getLogger(__name__).warning(f"[ITS] Error loading recovery_stats: {e}")
 
     def on_new_minute(self, market_features: np.ndarray, options_data: dict,
                       spot: float, timestamp: pd.Timestamp,
                       has_real_position: bool = None) -> dict:
-        """
-        Called every minute with fresh market data.
-
-        Args:
-            market_features: raw feature vector (len=163), NOT yet normalized
-            options_data:    dict of available strikes:
-                             {"calls": {strike: {price, delta, iv, theta, gamma}},
-                              "puts":  {strike: {price, delta, iv, theta, gamma}}}
-            spot:            current SPX spot price
-            timestamp:       current market timestamp
-            has_real_position: if provided, used to sync ITS state with the
-                             main bot wrapper. If False but ITS believes it
-                             has a position, the ghost is cleared.
-
-        Returns: dict with keys:
-            'action':     'BUY_CALL' | 'BUY_PUT' | 'EXIT' | 'HOLD' | 'NO_SIGNAL'
-            'strike':     float or None
-            'delta':      float or None
-            'confidence': float
-            'details':    dict with additional info
-        """
-        # 0. One-way state sync: wrapper is the source of truth for positions
+        """Called every minute with fresh market data."""
+        # 0. Sync position state
         if has_real_position is not None and not has_real_position and self.open_position is not None:
-            self._clear_ghost_position()
+            self._reset_position_state()
 
-        # 0.1 Update history and dynamic features
+        # 1. Update histories
         self._spot_history.append(spot)
-        
-        # 0.2 Update signal state (first time we see a non-HOLD signal)
-        # In Env, this is the episode start. In Production, we track when the model starts saying LONG/SHORT.
-        # This allows dynamic[0] to be "change since signal detected".
-        if self.open_position is None:
-            # We don't have a position yet: track current signal as the 'detected' signal
-            pass # logic handled below after inference
-        
         self._update_dynamic_features(options_data, spot, timestamp)
 
+        # 2. MLP Inference
         market_features = np.asarray(market_features, dtype=np.float32)
-
-        # 2. MLP/GBT forward pass
         is_gbt = hasattr(self.mlp, 'predict_proba') and not isinstance(self.mlp, torch.nn.Module)
         
         if is_gbt:
-            # GBT Inference
             probs = self.mlp.predict_proba(market_features.reshape(1, -1))[0]
-            time_to_target = 0.5  # GBT doesn't predict time
-            log_sigma = 0.0       # Must match rl.preprocess GBT defaults
+            time_to_target = 0.5
+            log_sigma = 0.5
         else:
-            # PyTorch Inference
-            features_norm = self.normalizer.transform(
-                market_features.reshape(1, -1)
-            )[0]
+            features_norm = self.normalizer.transform(market_features.reshape(1, -1))[0]
             with torch.no_grad():
                 x = torch.FloatTensor(features_norm).unsqueeze(0).to(self.device)
                 output = self.mlp(x)
-
+                
                 if isinstance(output, tuple):
                     logits, time_pred = output[:2]
                 elif isinstance(output, dict):
@@ -165,566 +135,273 @@ class IntegratedTradingSystem:
                 else:
                     logits = output
                     time_pred = None
-
+                
                 probs = torch.softmax(logits, dim=-1).cpu().numpy()[0]
-
-            if time_pred is not None and getattr(time_pred, 'numel', lambda: len(time_pred))() >= 2:
-                try:
-                    tt = time_pred[0, 0].item() if hasattr(time_pred[0, 0], 'item') else float(time_pred[0, 0])
-                    ls = time_pred[0, 1].item() if hasattr(time_pred[0, 1], 'item') else float(time_pred[0, 1])
-                    time_to_target = float(tt / 180.0)
-                    log_sigma = float(ls)
-                except:
-                    time_to_target = 0.5
-                    log_sigma = 0.5
-            else:
-                time_to_target = 0.5
-                log_sigma = 0.5
+                
+                if time_pred is not None:
+                    time_to_target = float(time_pred[0, 0].cpu().numpy()) / 180.0
+                    log_sigma = float(time_pred[0, 1].cpu().numpy())
+                else:
+                    time_to_target, log_sigma = 0.5, 0.5
 
         prediction = int(np.argmax(probs))
         confidence = float(np.max(probs))
-
-        # Direction mapping: 0=SHORT, 1=HOLD, 2=LONG
-        direction_map = {0: "SHORT", 1: "HOLD", 2: "LONG"}
-        direction = direction_map.get(prediction, "HOLD")
+        direction = {0: "SHORT", 1: "HOLD", 2: "LONG"}.get(prediction, "HOLD")
         
-        # Update signal references if we are not in a position
+        # 3. Handle signal tracking
         if self.open_position is None:
             if is_actionable_signal(direction, confidence, base_confidence=RL_CONFIG["min_confidence"]):
-                # New or continuing signal
                 if self._signal_direction == "HOLD":
-                    # First detection: lock the signal spot
                     self._signal_spot = spot
                     self._entry_atm_iv = self._get_atm_iv(options_data, spot)
-                    
                 self._signal_direction = direction
                 self._signal_confidence = confidence
             else:
-                # No signal: reset references
                 self._signal_direction = "HOLD"
                 self._signal_confidence = 0.0
                 self._signal_spot = 0.0
 
-        # 3. No signal if HOLD or low confidence
+        # 4. Routing
         if not is_actionable_signal(direction, confidence, base_confidence=RL_CONFIG["min_confidence"]):
             if self.open_position is not None:
                 return self._handle_exit(market_features, options_data, spot, timestamp, direction, confidence)
             return self._no_signal(confidence)
 
-        # 4. If no open position → consider entry
         if self.open_position is None:
-            return self._handle_entry(
-                market_features, options_data, spot, timestamp,
-                direction, confidence, time_to_target, log_sigma)
+            return self._handle_entry(market_features, options_data, spot, timestamp, 
+                                     direction, confidence, time_to_target, log_sigma)
 
-        # 5. If position IS open → handle exit decision
         return self._handle_exit(market_features, options_data, spot, timestamp, direction, confidence)
 
     def _update_dynamic_features(self, options_data: dict, spot: float, timestamp: pd.Timestamp):
         """Compute the 8 dynamic market features (mirrors environment.py)."""
         dynamic = np.zeros(8, dtype=np.float32)
-        
         if spot <= 0:
             self._dynamic_market_state = dynamic
             return
 
-        # [0] Spot change from signal time
+        # [0] Spot change from signal detection
         if self._signal_spot > 0:
             spot_change = (spot - self._signal_spot) / self._signal_spot
             dynamic[0] = np.clip(spot_change * 100, -2.0, 2.0)
 
-        # [1] Spot velocity over last 5 minutes (denominator = signal_spot, per environment.py)
+        # [1] Spot velocity last 5m
         if len(self._spot_history) >= 6:
-            spot_5m_ago = self._spot_history[-6]
-            ref_spot = self._signal_spot if self._signal_spot > 0 else spot
-            velocity = (spot - spot_5m_ago) / max(ref_spot, 1.0)
-            dynamic[1] = np.clip(velocity * 100, -1.0, 1.0)
+            v = (spot - self._spot_history[-6]) / (self._signal_spot if self._signal_spot > 0 else spot)
+            dynamic[1] = np.clip(v * 100, -1.0, 1.0)
 
-        # [2] ATM IV change from signal time
-        calls = options_data.get("calls", {})
-        puts = options_data.get("puts", {})
-        all_options = {**calls, **puts}
-        if all_options:
-            atm_strike = min(all_options.keys(), key=lambda s: abs(float(s) - spot))
-            current_iv = float(all_options[atm_strike].get("iv", self._entry_atm_iv))
-            iv_diff = (current_iv - self._entry_atm_iv) / max(self._entry_atm_iv, 0.01)
-            dynamic[2] = np.clip(iv_diff, -1.0, 1.0)
-            
-            # [3] Current ATM gamma (normalized)
-            gamma = float(all_options[atm_strike].get("gamma", 0))
-            dynamic[3] = np.clip(gamma * spot * 0.01, -2.0, 2.0)
+        # [2] ATM IV change
+        all_opts = {**options_data.get("calls", {}), **options_data.get("puts", {})}
+        if all_opts:
+            atm_s = min(all_opts.keys(), key=lambda s: abs(float(s) - spot))
+            curr_iv = float(all_opts[atm_s].get("iv", self._entry_atm_iv))
+            dynamic[2] = np.clip((curr_iv - self._entry_atm_iv) / max(self._entry_atm_iv, 0.01), -1, 1)
+            # [3] ATM Gamma
+            dynamic[3] = np.clip(float(all_opts[atm_s].get("gamma", 0)) * spot * 0.01, -2, 2)
 
-        # [4] Spot vs entry price (if in position)
-        if self.open_position:
-            if self._position_entry_spot > 0:
-                spot_vs_entry = (spot - self._position_entry_spot) / self._position_entry_spot
-                if self.open_position["direction"] == "SHORT":
-                    spot_vs_entry = -spot_vs_entry
-                dynamic[4] = np.clip(spot_vs_entry * 100, -3.0, 3.0)
+        # [4] Spot vs entry price
+        if self.open_position and self._position_entry_spot > 0:
+            sv_entry = (spot - self._position_entry_spot) / self._position_entry_spot
+            if self.open_position["direction"] == "SHORT": sv_entry = -sv_entry
+            dynamic[4] = np.clip(sv_entry * 100, -3.0, 3.0)
 
-        # [5] Minutes remaining to market close (normalized 0-1)
+        # [5] Time to close
         try:
-            # Assumes timestamp is pandas Timestamp or datetime
-            now_et = timestamp
-            if hasattr(now_et, "tz_convert"):
-                now_et = now_et.tz_convert("America/New_York")
-            close_time = now_et.replace(hour=16, minute=0, second=0, microsecond=0)
-            mins_left = max(0, (close_time - now_et).total_seconds() / 60.0)
+            close_t = timestamp.replace(hour=16, minute=0, second=0, microsecond=0)
+            mins_left = max(0, (close_t - timestamp).total_seconds() / 60.0)
             dynamic[5] = np.clip(mins_left / 390.0, 0.0, 1.0)
-        except:
-            dynamic[5] = 0.5
+        except: dynamic[5] = 0.5
 
-        # [6] Option momentum (last 3 min)
+        # [6] Option momentum
         if self.open_position:
-            right_key = "calls" if self.open_position["right"] == "CALL" else "puts"
-            strike = self.open_position["strike"]
-            strike_data = options_data.get(right_key, {}).get(strike)
-            if strike_data:
-                price_now = float(strike_data.get("price", 0.01))
-                self._option_price_history.append(price_now)
-                if len(self._option_price_history) >= 4:
-                    price_3ago = self._option_price_history[-4]
-                    if price_3ago > 0:
-                        opt_mom = (price_now - price_3ago) / price_3ago
-                        dynamic[6] = np.clip(opt_mom, -1.0, 1.0)
-            else:
-                self._option_price_history.append(0.01)
+            opts = options_data.get("calls" if self.open_position["right"] == "CALL" else "puts", {})
+            price = float(opts.get(self.open_position["strike"], {}).get("price", 0.01))
+            self._option_price_history.append(price)
+            if len(self._option_price_history) >= 4:
+                p3 = self._option_price_history[-4]
+                dynamic[6] = np.clip((price - p3) / p3, -1, 1) if p3 > 0 else 0
 
-        # [7] Underlying trend (last 20 mins, per environment.py)
+        # [7] Trend
         if len(self._spot_history) >= 3:
-            hist = list(self._spot_history)[-20:] # Limit to 20 per environment.py
+            hist = list(self._spot_history)[-20:]
             diffs = np.diff(hist)
-            up = np.sum(diffs > 0)
-            dn = np.sum(diffs < 0)
-            if (up + dn) > 0:
-                dynamic[7] = (up - dn) / (up + dn)
+            up, dn = np.sum(diffs > 0), np.sum(diffs < 0)
+            dynamic[7] = (up - dn) / (up + dn) if (up + dn) > 0 else 0
 
         self._dynamic_market_state = dynamic
-
-    def _no_signal(self, confidence: float) -> dict:
-        return {
-            "action": "NO_SIGNAL",
-            "strike": None, "delta": None,
-            "confidence": confidence,
-            "details": {"reason": "GBM_HOLD"},
-        }
 
     def _handle_entry(self, market_features: np.ndarray, options_data: dict,
                       spot: float, timestamp: pd.Timestamp,
                       direction: str, confidence: float,
                       time_to_target: float, log_sigma: float) -> dict:
-        """Use RL Strike Head to choose a delta bucket and resolve strike."""
+        """Choose strike and open position."""
         self._entry_market_features = np.asarray(market_features, dtype=np.float32).copy()
+        self._entry_mlp_context = np.array([confidence, time_to_target, 0.0, log_sigma], dtype=np.float32)
 
-        # Build state vector
-        state = self._build_state(market_features, position_active=False,
-                                  confidence=confidence,
-                                  time_to_target=time_to_target,
-                                  log_sigma=log_sigma)
-
+        state = self._build_state(market_features, False, confidence, time_to_target, log_sigma)
         state_tensor = torch.FloatTensor(state).unsqueeze(0).to(self.device)
 
         with torch.no_grad():
-            action, _, _ = self.rl.get_action(
-                state_tensor, action_type="strike", deterministic=True)
-
-        # action is now a plain int (strike bucket index)
-        strike_action = action
+            action, _, _ = self.rl.get_action(state_tensor, "strike", True)
         
-        # Enforce min_strike_bucket parity
-        strike_action = max(self.min_strike_bucket, strike_action)
-        
+        strike_action = int(action)
+        if hasattr(self, 'min_strike_bucket'):
+            strike_action = max(self.min_strike_bucket, strike_action)
+            
         bucket = STRIKE_BUCKETS.get(strike_action, STRIKE_BUCKETS[4])
-        delta_target = bucket["delta_target"]
         right = "CALL" if direction == "LONG" else "PUT"
+        strike_info = self._resolve_strike(options_data, bucket["delta_target"], right)
 
-        # Resolve actual strike from options_data
-        strike_info = self._resolve_strike(options_data, delta_target, right)
+        if strike_info is None: return self._no_signal(confidence)
 
-        if strike_info is None:
-            return {
-                "action": "NO_SIGNAL",
-                "strike": None, "delta": None,
-                "confidence": confidence,
-                "details": {"reason": "no_strike_available"},
-            }
-
-        # Apply spread cost
         half_spread = get_half_spread(abs(strike_info["entry_delta"]))
-        effective_entry = strike_info["entry_price"] * (1.0 + half_spread)
-
-        # Open position
         self.open_position = {
-            "strike": strike_info["strike"],
-            "right": right,
-            "direction": direction,
-            "entry_price": effective_entry,
+            **strike_info, "right": right, "direction": direction,
+            "entry_price": strike_info["entry_price"] * (1.0 + half_spread),
             "raw_entry_price": strike_info["entry_price"],
-            "entry_iv": strike_info["entry_iv"],
-            "entry_delta": strike_info["entry_delta"],
-            "entry_theta": strike_info["entry_theta"],
-            "entry_gamma": strike_info["entry_gamma"],
-            "entry_time": timestamp,
-            "strike_action": strike_action,
+            "entry_time": timestamp, "strike_action": strike_action
         }
-        self._mae = 0.0
-        self._prev_pnl_pct = 0.0
-        self._max_unrealized_pnl = 0.0
-        
+        self._mae, self._prev_pnl_pct, self._max_unrealized_pnl, self._trailing_drawdown = 0.0, 0.0, 0.0, 0.0
         self._position_entry_spot = spot
-        
         self._option_price_history.clear()
         self._option_price_history.append(self.open_position["entry_price"])
 
-        self._entry_mlp_context = np.array(
-            [confidence, time_to_target, 0.0, log_sigma], dtype=np.float32)
-
-        action_str = f"BUY_{right}"
         return {
-            "action": action_str,
-            "strike": strike_info["strike"],
-            "delta": strike_info["entry_delta"],
-            "confidence": confidence,
-            "details": {
-                "bucket": bucket["label"],
-                "bucket_index": strike_action,
-                "delta_target": delta_target,
-                "entry_price": effective_entry,
-                "spread_cost": half_spread,
-                "time_to_target": time_to_target,
-                "log_sigma": log_sigma,
-            },
+            "action": f"BUY_{right}", "strike": strike_info["strike"],
+            "delta": strike_info["entry_delta"], "confidence": confidence,
+            "details": {"strike_action": strike_action, "delta_target": bucket["delta_target"]}
         }
 
     def _handle_exit(self, market_features: np.ndarray, options_data: dict,
                      spot: float, timestamp: pd.Timestamp,
-                     curr_direction: str = "HOLD", curr_confidence: float = 0.0) -> dict:
-        """Use RL Exit Head to decide HOLD or EXIT. Hard exits override."""
+                     curr_dir: str, curr_conf: float) -> dict:
+        """Check for exits."""
         pos = self.open_position
-        right_key = "calls" if pos["right"] == "CALL" else "puts"
+        opts = options_data.get("calls" if pos["right"] == "CALL" else "puts", {})
+        price = self._lookup_price(opts, pos["strike"]) or pos["raw_entry_price"]
+        l_delta, l_theta, l_iv = self._lookup_greeks(opts, pos["strike"])
 
-        # Get current option price + live greeks
-        options = options_data.get(right_key, {})
-        current_price = self._lookup_price(options, pos["strike"])
-        if current_price is None:
-            current_price = pos["raw_entry_price"]
-
-        # Fetch live delta, theta and IV for the position's strike
-        live_delta, live_theta, live_iv = self._lookup_greeks(options, pos["strike"])
-
-        entry_price = pos["entry_price"]
-        pnl_pct = (current_price - entry_price) / entry_price if entry_price > 0 else 0.0
-        pnl_pct = float(np.clip(pnl_pct, -1.0, 5.0))
-        self._mae = min(self._mae, pnl_pct)
-        self._max_unrealized_pnl = max(self._max_unrealized_pnl, pnl_pct)
+        pnl = (price - pos["entry_price"]) / pos["entry_price"]
+        pnl = float(np.clip(pnl, -1.0, 5.0))
+        self._mae = min(self._mae, pnl)
+        self._max_unrealized_pnl = max(self._max_unrealized_pnl, pnl)
+        self._trailing_drawdown = self._max_unrealized_pnl - pnl
+        hold_m = (timestamp - pos["entry_time"]).total_seconds() / 60.0
         
-        trailing_drawdown = self._max_unrealized_pnl - pnl_pct if self._max_unrealized_pnl > 0 else 0.0
+        # Hard Exits
+        if pnl <= HARD_EXITS["max_loss_pct"]: return self._close_position("HARD_STOP", pnl)
+        if pnl >= HARD_EXITS["max_profit_pct"]: return self._close_position("HARD_TAKE_PROFIT", pnl)
+        
+        # Signal Reversal
+        if hold_m >= HARD_EXITS.get("min_hold_minutes", 0):
+            now_et = timestamp # Assumed ET
+            m_open = max(0, (now_et.hour * 60 + now_et.minute) - 570)
+            if should_exit_on_reversal(pos["direction"], curr_dir, curr_conf, m_open):
+                return self._close_position("SIGNAL_REVERSAL", pnl)
 
-        hold_minutes = (timestamp - pos["entry_time"]).total_seconds() / 60.0
-        hold_time_norm = hold_minutes / HARD_EXITS["max_hold_minutes"]
-
-        minutes_to_close = max(0, RL_CONFIG["session_length_minutes"]
-                               - ((timestamp.hour * 60 + timestamp.minute) - 570))
-
-        # ── Hard exit checks ──
-        if pnl_pct <= HARD_EXITS["max_loss_pct"]:
-            return self._close_position("HARD_STOP", pnl_pct)
-        if pnl_pct >= HARD_EXITS["max_profit_pct"]:
-            return self._close_position("HARD_TAKE_PROFIT", pnl_pct)
-        if minutes_to_close <= HARD_EXITS["minutes_to_close"]:
-            return self._close_position("HARD_TIME_CLOSE", pnl_pct)
-        if hold_minutes >= HARD_EXITS["max_hold_minutes"]:
-            return self._close_position("HARD_MAX_HOLD", pnl_pct)
-
-        # ── Enforce min_hold first (before any soft exit) ──
-        min_hold = HARD_EXITS.get("min_hold_minutes", 0)
-
-        # ── Signal Reversal Check ──
-        now_et = timestamp
-        if hasattr(now_et, "tz_convert"):
-            now_et = now_et.tz_convert("America/New_York")
-        minutes_since_open = max(0, (now_et.hour * 60 + now_et.minute) - 570)
-        if hold_minutes >= min_hold and should_exit_on_reversal(
-            position_direction=pos["direction"],
-            signal_direction=curr_direction,
-            signal_confidence=curr_confidence,
-            minutes_since_open=minutes_since_open,
-        ):
-            return self._close_position("SIGNAL_REVERSAL", pnl_pct)
-
-        # ── Hard Trailing Stop ──
-        # Activate only if we reached the required profit threshold
-        if self._max_unrealized_pnl >= HARD_EXITS.get("trailing_stop_activation_pct", 0.40):
-            if trailing_drawdown >= HARD_EXITS.get("trailing_stop_pct", 0.30):
-                return self._close_position("TRAILING_STOP", pnl_pct)
-
-        # ── RL Exit Head ──
-        state = self._build_state(
-            market_features, position_active=True,
-            pnl_pct=pnl_pct, hold_time_norm=hold_time_norm,
-            current_delta=abs(live_delta),
-            current_theta=live_theta, current_iv=live_iv,
-            entry_iv=pos["entry_iv"], entry_price=pos["entry_price"],
-            mae=self._mae, trailing_drawdown=trailing_drawdown)
-
-        state_tensor = torch.FloatTensor(state).unsqueeze(0).to(self.device)
-
+        # RL Exit
+        state = self._build_state(market_features, True, pnl_pct=pnl, 
+                                 hold_time_norm=hold_m/HARD_EXITS["max_hold_minutes"],
+                                 current_delta=abs(l_delta), current_theta=l_theta, 
+                                 current_iv=l_iv, entry_iv=pos["entry_iv"], 
+                                 entry_price=pos["entry_price"], mae=self._mae, 
+                                 trailing_drawdown=self._trailing_drawdown)
+        
         with torch.no_grad():
-            action, _, _ = self.rl.get_action(
-                state_tensor, action_type="exit", deterministic=True)
-        action_val = action.item() if hasattr(action, 'item') else int(action)
+            action, _, _ = self.rl.get_action(torch.FloatTensor(state).unsqueeze(0).to(self.device), "exit", True)
         
-        # Enforce min_hold to prevent immediate exit
-        min_hold = HARD_EXITS.get("min_hold_minutes", 0) # Removed: done earlier
-        if action_val == 1 and hold_minutes < min_hold:
-            action_val = 0 # Override to HOLD
+        if int(action) == 1 and hold_m >= HARD_EXITS.get("min_hold_minutes", 0):
+            return self._close_position("AGENT_EXIT", pnl)
 
-        if action_val == 1:  # EXIT
-            return self._close_position("AGENT_EXIT", pnl_pct)
+        self._prev_pnl_pct = pnl
+        return {"action": "HOLD", "strike": pos["strike"], "delta": pos["entry_delta"], 
+                "confidence": self._entry_mlp_context[0], "details": {"pnl_pct": pnl, "hold_m": hold_m}}
 
-        # HOLD
-        self._prev_pnl_pct = pnl_pct
-        return {
-            "action": "HOLD",
-            "strike": pos["strike"],
-            "delta": pos["entry_delta"],
-            "confidence": self._entry_mlp_context[0],
-            "details": {
-                "pnl_pct": pnl_pct,
-                "hold_minutes": hold_minutes,
-                "mae": self._mae,
-                "max_unrealized_pnl": self._max_unrealized_pnl,
-            },
-        }
-
-    def _close_position(self, reason: str, pnl_pct: float) -> dict:
-        """Close position and reset state."""
+    def _close_position(self, reason: str, pnl: float) -> dict:
         pos = self.open_position
-        result = {
-            "action": "EXIT",
-            "strike": pos["strike"],
-            "delta": pos["entry_delta"],
-            "confidence": self._entry_mlp_context[0],
-            "details": {
-                "exit_reason": reason,
-                "final_pnl_pct": pnl_pct,
-                "direction": pos["direction"],
-                "bucket_index": pos["strike_action"],
-                "bucket": STRIKE_BUCKETS.get(
-                    pos["strike_action"], {}).get("label", "unknown"),
-            },
-        }
+        res = {"action": "EXIT", "strike": pos["strike"], "delta": pos["entry_delta"],
+               "confidence": self._entry_mlp_context[0], 
+               "details": {"exit_reason": reason, "final_pnl": pnl}}
         self._reset_position_state()
-        return result
+        return res
 
     def _reset_position_state(self):
-        """Reset all position-related internal state."""
         self.open_position = None
-        self._mae = 0.0
-        self._prev_pnl_pct = 0.0
-        self._max_unrealized_pnl = 0.0
-        # Reset per-trade dynamic tracking so the next trade starts clean.
-        # Without this, _spot_history and _option_price_history from the closed
-        # trade bleed into the next one, corrupting dynamic[0,1,6,7].
-        self._signal_spot = 0.0
-        self._position_entry_spot = 0.0
-        self._signal_direction = "HOLD"
-        self._signal_confidence = 0.0
-        self._entry_market_features: Optional[np.ndarray] = None
+        self._mae, self._prev_pnl_pct, self._max_unrealized_pnl, self._trailing_drawdown = 0.0, 0.0, 0.0, 0.0
+        self._signal_spot, self._position_entry_spot, self._signal_direction = 0.0, 0.0, "HOLD"
+        self._signal_confidence, self._entry_market_features = 0.0, None
         self._entry_atm_iv = 0.15
         self._spot_history.clear()
         self._option_price_history.clear()
         self._dynamic_market_state = np.zeros(8, dtype=np.float32)
 
-    def _clear_ghost_position(self):
-        """Clear a ghost position that exists in ITS but not in the main wrapper."""
-        import logging
-        logger = logging.getLogger(__name__)
-        pos = self.open_position
-        if pos:
-            logger.warning(
-                f"[ITS] Ghost position detected: {pos.get('direction', '?')} "
-                f"strike={pos.get('strike', '?')} — clearing state to allow new entries"
-            )
-        self._reset_position_state()
+    def _build_state(self, market_features: np.ndarray, position_active: bool,
+                      confidence: float = 0.6, time_to_target: float = 0.5,
+                      log_sigma: float = 0.5, pnl_pct: float = 0.0,
+                      hold_time_norm: float = 0.0, current_delta: float = 0.5,
+                      current_theta: float = -0.05, current_iv: float = 0.15,
+                      entry_iv: float = 0.15, entry_price: float = 1.0,
+                      mae: float = 0.0, trailing_drawdown: float = 0.0) -> np.ndarray:
+        source = self._entry_market_features if position_active and self._entry_market_features is not None else market_features
+        market = np.zeros(MARKET_FEATURE_DIM, dtype=np.float32)
+        n = min(len(source), MARKET_FEATURE_DIM)
+        market[:n] = source[:n]
+        
+        pos_state = np.zeros(POSITION_STATE_DIM, dtype=np.float32)
+        if position_active:
+            pos_state[0] = np.clip(pnl_pct, -1, 5)
+            pos_state[1] = np.clip(hold_time_norm, 0, 1)
+            pos_state[2] = abs(current_delta)
+            db, ib, pb = get_delta_bucket(pos_state[2]), get_iv_bucket(current_iv), get_pnl_bucket(pnl_pct)
+            pos_state[3] = float(self._recovery_lookup.get((db, ib, pb), 0.3))
+            pos_state[4] = np.clip(current_iv / 0.15 if current_iv > 0 else 1.0, 0.5, 3.0)
+            pos_state[5] = np.clip(mae, -1, 0)
+            if POSITION_STATE_DIM > 6: pos_state[6] = np.clip(trailing_drawdown, 0, 2)
 
-    def restore_state(self, pos_data: dict, confidence: float, time_to_target: float, log_sigma: float):
-        """Restore internal state from persisted position data."""
-        # Map fields from RLPosition to internal dict structure
+        mlp_ctx = self._entry_mlp_context if position_active else np.array([confidence, time_to_target, 0.0, log_sigma], dtype=np.float32)
+        return np.concatenate([market, self._dynamic_market_state, pos_state, mlp_ctx]).astype(np.float32)
+
+    def _get_atm_iv(self, options_data: dict, spot: float) -> float:
+        all_opts = {**options_data.get("calls", {}), **options_data.get("puts", {})}
+        if not all_opts: return 0.15
+        atm_s = min(all_opts.keys(), key=lambda s: abs(float(s) - spot))
+        return float(all_opts[atm_s].get("iv", 0.15))
+
+    def _resolve_strike(self, options_data: dict, delta_target: float, right: str) -> Optional[dict]:
+        opts = options_data.get("calls" if right == "CALL" else "puts", {})
+        if not opts: return None
+        best_s = min(opts.keys(), key=lambda s: abs(abs(opts[s].get("delta", 0)) - delta_target))
+        d = opts[best_s]
+        return {"strike": float(best_s), "entry_price": float(d.get("price", 0)), 
+                "entry_iv": float(d.get("iv", 0.15)), "entry_delta": float(d.get("delta", 0)),
+                "entry_theta": float(d.get("theta", 0)), "entry_gamma": float(d.get("gamma", 0))}
+
+    def _lookup_price(self, options: dict, strike: float) -> Optional[float]:
+        if not options: return None
+        s = strike if strike in options else min(options.keys(), key=lambda x: abs(float(x) - strike))
+        return float(options[s].get("price", 0))
+
+    def _lookup_greeks(self, options: dict, strike: float) -> tuple:
+        if not options: return 0.5, -0.05, 0.15
+        s = strike if strike in options else min(options.keys(), key=lambda x: abs(float(x) - strike))
+        d = options[s]
+        return float(d.get("delta", 0.5)), -abs(float(d.get("theta", -0.05))), float(d.get("iv", 0.15))
+
+    def restore_state(self, pos_data: dict, conf: float, tt: float, ls: float):
         self.open_position = {
-            "ticker": pos_data.get("ticker"),
-            "strike": pos_data.get("strike"),
-            "right": pos_data.get("right"),
-            "direction": pos_data.get("direction"),
-            "entry_price": pos_data.get("entry_premium"),  # RLPosition calls it entry_premium
-            "raw_entry_price": pos_data.get("entry_premium"),
-            "entry_iv": pos_data.get("entry_atm_iv", 0.15), # RLPosition calls it entry_atm_iv
-            "entry_delta": pos_data.get("delta", 0.5),      # RLPosition calls it delta
-            "entry_theta": -0.05,
-            "entry_gamma": 0.0,
-            "entry_time": pd.to_datetime(pos_data.get("entry_time")),
-            "strike_action": pos_data.get("bucket_index", 4),
+            "ticker": pos_data.get("ticker"), "strike": pos_data.get("strike"),
+            "right": pos_data.get("right"), "direction": pos_data.get("direction"),
+            "entry_price": pos_data.get("entry_premium"), "raw_entry_price": pos_data.get("entry_premium"),
+            "entry_iv": pos_data.get("entry_atm_iv", 0.15), "entry_delta": pos_data.get("delta", 0.5),
+            "entry_time": pd.to_datetime(pos_data.get("entry_time")), "strike_action": pos_data.get("bucket_index", 4)
         }
-        self._entry_mlp_context = np.array(
-            [confidence, time_to_target, 0.0, log_sigma], dtype=np.float32
-        )
-        self._signal_direction = pos_data.get("direction", "HOLD")
-        self._signal_confidence = confidence
+        self._entry_mlp_context = np.array([conf, tt, 0.0, ls], dtype=np.float32)
+        self._signal_direction, self._signal_confidence = pos_data.get("direction", "HOLD"), conf
         self._signal_spot = pos_data.get("signal_spot", 0.0)
         self._position_entry_spot = pos_data.get("position_entry_spot", self._signal_spot)
         self._entry_atm_iv = pos_data.get("entry_atm_iv", 0.15)
-        entry_market_features = pos_data.get("entry_market_features")
-        self._entry_market_features = (
-            np.asarray(entry_market_features, dtype=np.float32)
-            if entry_market_features is not None
-            else None
-        )
-        self._mae = pos_data.get("mae", 0.0)
-        self._max_unrealized_pnl = pos_data.get("max_unrealized_pnl", 0.0)
-        self._prev_pnl_pct = pos_data.get("prev_pnl_pct", 0.0)
-        self._option_price_history.clear()
-        self._option_price_history.append(float(pos_data.get("entry_premium", 0.01)))
+        self._entry_market_features = np.asarray(pos_data.get("entry_market_features"), dtype=np.float32) if pos_data.get("entry_market_features") else None
+        self._mae, self._max_unrealized_pnl, self._prev_pnl_pct = pos_data.get("mae", 0.0), pos_data.get("max_unrealized_pnl", 0.0), pos_data.get("prev_pnl_pct", 0.0)
 
-    def _build_state(self, market_features: np.ndarray,
-                     position_active: bool = False,
-                     confidence: float = 0.60,
-                     time_to_target: float = 0.5,
-                     log_sigma: float = 0.5,
-                     pnl_pct: float = 0.0,
-                     hold_time_norm: float = 0.0,
-                     current_delta: float = 0.0,
-                     current_theta: float = -0.05,
-                     current_iv: float = 0.15,
-                     entry_iv: float = 0.15,
-                     entry_price: float = 1.0,
-                     mae: float = 0.0,
-                     trailing_drawdown: float = 0.0) -> np.ndarray:
-        """Build the full state vector (181 or 183-dim with sniper)."""
-        # Market features stay frozen from the entry snapshot while a position
-        # is open, matching the RL training environment.
-        feature_source = (
-            self._entry_market_features
-            if position_active and self._entry_market_features is not None
-            else np.asarray(market_features, dtype=np.float32)
-        )
-        market = np.zeros(MARKET_FEATURE_DIM, dtype=np.float32)
-        n = min(len(feature_source), MARKET_FEATURE_DIM)
-        market[:n] = feature_source[:n]
-
-        # Dynamic market features (8 dims) — using persistent state
-        dynamic = self._dynamic_market_state
-
-        # Position state — live greeks from options chain
-        pos_state = np.zeros(POSITION_STATE_DIM, dtype=np.float32)
-        if position_active:
-            # Aligned with environment.py: [pnl, hold, delta, recovery, iv_ratio, mae]
-            pos_state[0] = np.clip(pnl_pct, -1.0, 5.0)
-            pos_state[1] = np.clip(hold_time_norm, 0.0, 1.0)
-            pos_state[2] = abs(current_delta)
-            
-            db = get_delta_bucket(pos_state[2])
-            ib = get_iv_bucket(current_iv)
-            pb = get_pnl_bucket(pnl_pct)
-            recovery_prob = self._recovery_lookup.get((db, ib, pb), 0.3)
-            pos_state[3] = float(recovery_prob)
-            
-            iv_ratio = current_iv / 0.15 if current_iv > 0 else 1.0
-            pos_state[4] = np.clip(iv_ratio, 0.5, 3.0)
-            pos_state[5] = np.clip(mae, -1.0, 0.0)
-            if POSITION_STATE_DIM > 6:
-                pos_state[6] = np.clip(trailing_drawdown, 0.0, 2.0)
-
-        # MLP context
-        if position_active:
-            mlp_ctx = self._entry_mlp_context
-        else:
-            mlp_ctx = np.array([confidence, time_to_target, 0.0, log_sigma], dtype=np.float32)
-
-        base_state = np.concatenate([market, dynamic, pos_state, mlp_ctx])
-
-        # Append sniper state if sniper mode is active (181 → 183)
-        if RL_CONFIG.get("use_sniper_mode", False):
-            sniper_state = np.zeros(SNIPER_STATE_DIM, dtype=np.float32)
-            return np.concatenate([base_state, sniper_state])
-
-        return base_state
-
-    def _get_atm_iv(self, options_data: dict, spot: float) -> float:
-        """Find ATM IV at current spot."""
-        all_opts = {**options_data.get("calls", {}), **options_data.get("puts", {})}
-        if all_opts:
-            atm_s = min(all_opts.keys(), key=lambda s: abs(float(s) - spot))
-            return float(all_opts[atm_s].get("iv", 0.15))
-        return 0.15
-
-    def _resolve_strike(self, options_data: dict, delta_target: float,
-                        right: str) -> dict:
-        """Resolve actual strike from available options."""
-        key = "calls" if right == "CALL" else "puts"
-        options = options_data.get(key, {})
-        if not options:
-            return None
-
-        best_strike = None
-        best_diff = float("inf")
-        for strike, data in options.items():
-            delta = abs(data.get("delta", 0))
-            diff = abs(delta - delta_target)
-            if diff < best_diff:
-                best_diff = diff
-                best_strike = strike
-                best_data = data
-
-        if best_strike is None:
-            return None
-
-        return {
-            "strike": float(best_strike),
-            "entry_price": float(best_data.get("price", 0)),
-            "entry_iv": float(best_data.get("iv", 0.15)),
-            "entry_delta": float(best_data.get("delta", delta_target)),
-            "entry_theta": float(best_data.get("theta", 0)),
-            "entry_gamma": float(best_data.get("gamma", 0)),
-        }
-
-    def _lookup_greeks(self, options: dict, strike: float) -> tuple:
-        """Look up live theta and IV for a specific strike, with nearest-strike fallback.
-
-        Returns:
-            (delta, theta, iv) — floats with sensible defaults if not found.
-        """
-        default_delta = 0.5
-        default_theta = -0.05
-        default_iv = 0.15
-
-        data = None
-        if strike in options:
-            data = options[strike]
-        elif options:
-            nearest = min(options.keys(), key=lambda s: abs(float(s) - strike))
-            data = options[nearest]
-
-        if data is not None:
-            delta = float(data.get("delta", default_delta))
-            theta = float(data.get("theta", default_theta))
-            iv = float(data.get("iv", default_iv))
-            # Sanity: theta should be negative for long options
-            if theta > 0:
-                theta = -abs(theta)
-            # IV sanity: should be between 0.01 and 5.0
-            if iv <= 0 or iv > 5.0:
-                iv = default_iv
-            return delta, theta, iv
-
-        return default_delta, default_theta, default_iv
-
-    def _lookup_price(self, options: dict, strike: float) -> float:
-        """Look up price for a specific strike, with nearest-strike fallback."""
-        if strike in options:
-            return float(options[strike].get("price", 0))
-
-        if not options:
-            return None
-
-        nearest = min(options.keys(), key=lambda s: abs(float(s) - strike))
-        return float(options[nearest].get("price", 0))
+    def _no_signal(self, conf: float) -> dict:
+        return {"action": "NO_SIGNAL", "strike": None, "delta": None, "confidence": conf, "details": {"reason": "GBM_HOLD"}}

@@ -25,75 +25,79 @@ def compute_sniper_step_reward() -> float:
 def compute_step_reward(prev_pnl_pct: float, curr_pnl_pct: float,
                         hold_time_minutes: int, recovery_rate: float = 0.3,
                         spot_momentum: float = 0.0,
-                        trailing_drawdown: float = 0.0) -> float:
+                        trailing_drawdown: float = 0.0,
+                        is_new_hwm: bool = False) -> float:
     """
-    V7 Step Reward: Oriented to decision quality and long-term stay.
-    Including hold-time shaping to overcome noise floor.
+    V8-Homerun Step Reward: De-emphasizes noise, rewards patience.
     """
-    delta_pnl = curr_pnl_pct - prev_pnl_pct
+    # Reduced delta weight (0.4x) to focus on the long-term goal
+    delta_pnl = (curr_pnl_pct - prev_pnl_pct) * 0.4
     
     # context_bonus: ¿fue correcto aguantar este minuto?
     if curr_pnl_pct > 0.05:
-        context_bonus = 0.02 * (1 + spot_momentum)
+        context_bonus = 0.01 * (1 + spot_momentum)
     elif curr_pnl_pct < -0.10 and recovery_rate < 0.35:
-        context_bonus = -0.015 * (1 - recovery_rate)
+        context_bonus = -0.01 * (1 - recovery_rate)
     else:
         context_bonus = 0.0
 
-    # Hold-time shaping: small nonlinear bonus for staying in the trade
-    # Gives +0.006 at 10m, +0.012 at 30m, +0.016 at 60m (doubled from v6)
-    if curr_pnl_pct > -0.15:   # only for trades that aren't near the stop
-        hold_bonus = 0.002 * min(hold_time_minutes, 60) ** 0.5
+    # Stronger hold-time incentive: linear growth to reward staying in the trade
+    if curr_pnl_pct > -0.20:
+        hold_bonus = 0.005 * (hold_time_minutes / 60.0)
     else:
         hold_bonus = 0.0
         
+    # High-Water Mark Bonus: reward reaching new equity peaks
+    hwm_bonus = 0.05 if is_new_hwm and curr_pnl_pct > 0 else 0.0
+
     # Trailing Drawdown Penalty: Gracefully penalize giving back gains
-    # Softened: only penalize if drawdown > 40% of peak unrealized,
-    # with gentle 0.01 multiplier to avoid incentivizing micro-scalping.
     drawdown_penalty = 0.0
-    drawdown_tolerance = 0.40
+    drawdown_tolerance = 0.35
     if trailing_drawdown > drawdown_tolerance:
-        drawdown_penalty = (trailing_drawdown - drawdown_tolerance) * 0.01
+        drawdown_penalty = (trailing_drawdown - drawdown_tolerance) * 0.02
     
-    step_reward = delta_pnl + context_bonus + hold_bonus - drawdown_penalty
+    step_reward = delta_pnl + context_bonus + hold_bonus + hwm_bonus - drawdown_penalty
     return float(step_reward)
 
 
 def compute_terminal_reward(final_pnl_pct: float, exit_type: str, 
                             hold_time_minutes: int) -> float:
     """
-    V7 Terminal Reward: Optimized for Homerun Strategy.
-    Prevents "fearful exits" by dynamic penalization.
+    V8-Homerun Terminal Reward: Convex incentives and 'Weak Hands' penalties.
+    Optimized for 300%+ outliers.
     """
     if final_pnl_pct > 0:
-        # Ganador: recompensar proporcionalmente al PnL y al tiempo aguantado
-        base_reward = final_pnl_pct * 2.0
-        # Homerun patience bonus (Issue: scale reward to overcome discount)
-        if hold_time_minutes > 60:
-            base_reward += final_pnl_pct * 3.0  
-        elif hold_time_minutes > 30:
-            base_reward += final_pnl_pct * 2.0
+        # Base winner multiplier
+        base_reward = final_pnl_pct * 5.0
+        
+        # [NEW] Convex Bonus: Reward outliers exponentially (Jackpot effect)
+        if final_pnl_pct > 1.0:
+            base_reward += (final_pnl_pct ** 2) * 2.0
+            
+        # [NEW] Weak Hands Penalty: Penalize closing winners too early
+        if hold_time_minutes < 45:
+            base_reward *= 0.6  # 40% reduction for cowardly exits
+            
+        # Homerun patience bonus
+        if hold_time_minutes > 90:
+            base_reward += 5.0  
+        elif hold_time_minutes > 60:
+            base_reward += 2.0  
             
     elif exit_type == "agent_exit":
         # Loser: agent chose to exit manually
+        base_reward = (final_pnl_pct / 0.50) * 4.0
         
-        # Strict linear penalty: -0.10 loss -> -0.40 reward. -0.50 loss (hard stop) -> -2.0 reward.
-        base_reward = (final_pnl_pct / 0.50) * 2.0
-        
-        # Flee penalty: extra punishment for exiting before 10 mins (prevents micro-exits)
-        if hold_time_minutes < 10:
-            time_factor = (10 - hold_time_minutes) / 10.0 # 1.0 at minute 0, 0.1 at minute 9
-            base_reward -= (0.50 * time_factor)
+        # Flee penalty: extra punishment for exiting before 15 mins
+        if hold_time_minutes < 15:
+            time_factor = (15 - hold_time_minutes) / 15.0
+            base_reward -= (1.5 * time_factor)
             
     elif exit_type == "hard_stop_loss":
-        # Llegó al hard stop: máxima penalización (reduced to -2.0 to prevent over-correction)
-        base_reward = -2.0
+        base_reward = -5.0
     elif exit_type == "signal_reversal":
-        # Inversión de señal (GBM flip): recompensa neutral/PnL 
-        # (similar al time close pero identificado explícitamente)
-        base_reward = final_pnl_pct * 1.2 # Pequeño bono por "salvación"
+        base_reward = final_pnl_pct * 2.5
     else:
-        # Otros casos (time close, etc.)
-        base_reward = final_pnl_pct * 1.0
+        base_reward = final_pnl_pct * 2.0
     
-    return float(max(base_reward, -2.0))
+    return float(np.clip(base_reward, -6.0, 20.0))

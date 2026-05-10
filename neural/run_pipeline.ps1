@@ -99,7 +99,8 @@ if ($skip_to_step -le 1) {
     --train-months 9 `
     --test-months 1 `
     --ensemble 5 `
-    --top-n-windows 10 `
+    --top-n-windows 15 `
+    --hold-ratio 1.2 `
     --min-window 20 `
     --model_path models\trading_hybrid_wf.joblib `
     --norm_path models\hybrid_normalizer_wf.npz

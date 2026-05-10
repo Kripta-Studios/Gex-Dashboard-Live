@@ -89,6 +89,18 @@ class CurriculumScheduler:
         # Sort nodes by pct to find the interval
         nodes = sorted(self.phases.items(), key=lambda x: x[1]["pct"])
         
+        # New logic: Cap at final node if progress exceeds last pct
+        if progress >= nodes[-1][1]["pct"]:
+            final_phase, final_info = nodes[-1]
+            return {
+                "phase": final_phase,
+                "min_confidence": float(final_info["min_confidence"]),
+                "min_strike_bucket": int(final_info["min_strike_bucket"]),
+                "max_strike_bucket": int(final_info.get("max_strike_bucket", 6)),
+                "min_hold_minutes": int(final_info.get("min_hold_minutes", 0)),
+                "progress": progress
+            }
+
         lower = nodes[0][1]
         upper = nodes[-1][1]
         current_phase = nodes[0][0]
