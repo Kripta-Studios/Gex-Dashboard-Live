@@ -25,3 +25,4 @@ rl_data/
 rt_data/
 services/config.toml
 services/lib/
+*.joblib
