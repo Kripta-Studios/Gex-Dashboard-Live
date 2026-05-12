@@ -429,7 +429,7 @@ class IntegratedTradingSystem:
         d = options[s]
         return float(d.get("delta", 0.5)), -abs(float(d.get("theta", -0.05))), float(d.get("iv", 0.15))
 
-    def restore_state(self, pos_data: dict, conf: float, tt: float, ls: float):
+    def restore_state(self, pos_data: dict, confidence: float, time_to_target: float, log_sigma: float):
         self.open_position = {
             "ticker": pos_data.get("ticker"), "strike": pos_data.get("strike"),
             "right": pos_data.get("right"), "direction": pos_data.get("direction"),
@@ -437,8 +437,8 @@ class IntegratedTradingSystem:
             "entry_iv": pos_data.get("entry_atm_iv", 0.15), "entry_delta": pos_data.get("delta", 0.5),
             "entry_time": pd.to_datetime(pos_data.get("entry_time")), "strike_action": pos_data.get("bucket_index", 4)
         }
-        self._entry_mlp_context = np.array([conf, tt, 0.0, ls], dtype=np.float32)
-        self._signal_direction, self._signal_confidence = pos_data.get("direction", "HOLD"), conf
+        self._entry_mlp_context = np.array([confidence, time_to_target, 0.0, log_sigma], dtype=np.float32)
+        self._signal_direction, self._signal_confidence = pos_data.get("direction", "HOLD"), confidence
         self._signal_spot = pos_data.get("signal_spot", 0.0)
         self._position_entry_spot = pos_data.get("position_entry_spot", self._signal_spot)
         self._entry_atm_iv = pos_data.get("entry_atm_iv", 0.15)
