@@ -361,11 +361,12 @@ class IntegratedTradingSystem:
 
     def _agent_min_hold_minutes(self) -> float:
         final_phase = max(RL_CONFIG.get("curriculum_phases", {0: {}}).keys())
-        return float(
+        cur_min = float(
             RL_CONFIG.get("curriculum_phases", {})
             .get(final_phase, {})
-            .get("min_hold_minutes", HARD_EXITS.get("min_hold_minutes", 0))
+            .get("min_hold_minutes", 0)
         )
+        return max(cur_min, float(HARD_EXITS.get("min_hold_minutes", 0)))
 
     def _reset_position_state(self):
         self.open_position = None

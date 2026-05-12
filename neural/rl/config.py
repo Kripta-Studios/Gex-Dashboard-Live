@@ -118,10 +118,10 @@ RL_CONFIG = {
     # Curriculum — linear interpolation will be used between these nodes:
     # Redesigned: force longer holds early + OTM/ATM exploration before ITM
     "curriculum_phases": {
-        0: {"pct": 0.00, "min_confidence": 0.675, "min_strike_bucket": 1, "max_strike_bucket": 3, "min_hold_minutes": 15},  
-        1: {"pct": 0.15, "min_confidence": 0.625, "min_strike_bucket": 0, "max_strike_bucket": 4, "min_hold_minutes": 12},  
-        2: {"pct": 0.35, "min_confidence": 0.575, "min_strike_bucket": 0, "max_strike_bucket": 5, "min_hold_minutes": 10},  
-        3: {"pct": 0.60, "min_confidence": 0.575, "min_strike_bucket": 0, "max_strike_bucket": 6, "min_hold_minutes": 5},  
+        0: {"pct": 0.00, "min_confidence": 0.675, "min_strike_bucket": 1, "max_strike_bucket": 3, "min_hold_minutes": 120},  
+        1: {"pct": 0.15, "min_confidence": 0.625, "min_strike_bucket": 0, "max_strike_bucket": 4, "min_hold_minutes": 90},  
+        2: {"pct": 0.35, "min_confidence": 0.550, "min_strike_bucket": 0, "max_strike_bucket": 5, "min_hold_minutes": 60},  
+        3: {"pct": 0.60, "min_confidence": 0.550, "min_strike_bucket": 0, "max_strike_bucket": 6, "min_hold_minutes": 45},  
     },
 
     # Session
