@@ -403,7 +403,7 @@ def preprocess_options_for_rl(episode_index, options_dir, output_dir, max_forwar
             eta = (elapsed / done) * (total_dates - done) if done > 0 else 0
             eta_str = f"{int(eta//60)}m {int(eta%60)}s" if eta > 60 else f"{int(eta)}s"
             
-            bar = "█" * int(25 * done / total_dates) + "░" * (25 - int(25 * done / total_dates))
+            bar = "=" * int(25 * done / total_dates) + "." * (25 - int(25 * done / total_dates))
             print(f"\r  [{bar}] {pct:5.1f}% | {done}/{total_dates} dates | eps: {total_processed:,} | ETA: {eta_str}   ", end="", flush=True)
 
     print(f"\n[RL] Options cache built in: {output_dir}")
@@ -442,7 +442,7 @@ def main():
     episode_index.to_parquet(os.path.join(output_parent, "episode_index.parquet"), index=False)
 
     preprocess_options_for_rl(episode_index, args.options_dir, args.output, num_workers=args.num_workers, training_df=training_df_with_signals)
-    print("\n✓ Preprocessing complete!")
+    print("\n[OK] Preprocessing complete!")
 
 
 if __name__ == "__main__":

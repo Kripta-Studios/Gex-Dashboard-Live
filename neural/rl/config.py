@@ -110,8 +110,8 @@ RL_CONFIG = {
 
     # Regularization
     "obs_noise_std":        0.05,
-    "min_confidence":       0.575,
-    "short_confidence_offset": 0.05,
+    "min_confidence":       0.550,
+    "short_confidence_offset": 0.025,
     "signal_reversal_min_confidence": 0.50,
     "signal_eval_cadence_minutes": 5,
 
