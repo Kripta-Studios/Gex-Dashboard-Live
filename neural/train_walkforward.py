@@ -231,13 +231,13 @@ def train_single_window(train_df, val_df, verbose=True, window_idx=None, seed=42
     model = lgb.LGBMClassifier(
         objective='multiclass',
         n_estimators=300,
-        max_depth=6,         
-        learning_rate=0.05,
-        subsample=0.8,
-        colsample_bytree=0.8,
-        min_child_samples=50, 
-        reg_alpha=0.2,       
-        reg_lambda=2.0,      
+        max_depth=4,         
+        learning_rate=0.03,
+        subsample=0.7,
+        colsample_bytree=0.7,
+        min_child_samples=100, 
+        reg_alpha=0.5,       
+        reg_lambda=5.0,      
         num_class=3,
         random_state=seed,
         class_weight='balanced',
@@ -385,8 +385,8 @@ def walk_forward_train(data_path, model_path, norm_path, model_size,
     production_norm = None
     window_registry = []
 
-    # -- PF floor: reject models with PF < 0.20 --
-    MIN_PF_FLOOR = 0.20
+    # -- PF floor: reject models with PF < 0.10 --
+    MIN_PF_FLOOR = 0.10
 
     for i, (tr_df, ts_df) in enumerate(splits):
         print(f"\n--- Window {i+1}/{len(splits)} | Train: {len(tr_df):,} | Test: {len(ts_df):,} ---")

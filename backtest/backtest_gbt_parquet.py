@@ -532,34 +532,34 @@ def print_metrics(metrics: dict, title: str = ""):
     print(f"{'=' * 60}")
     
     if "error" in metrics:
-        print(f"  ⚠ {metrics['error']}")
+        print(f"  [!] {metrics['error']}")
         return
     
-    print(f"\n  📊 TRADE SUMMARY")
-    print(f"  {'─' * 40}")
+    print(f"\n  TRADE SUMMARY")
+    print(f"  {'-' * 40}")
     print(f"  Total trades:     {metrics['total_trades']:,}")
     print(f"  Wins:             {metrics['wins']:,}")
     print(f"  Losses:           {metrics['losses']:,}")
     print(f"  Flat:             {metrics['flat']:,}")
     
-    print(f"\n  💰 PERFORMANCE")
-    print(f"  {'─' * 40}")
+    print(f"\n  PERFORMANCE")
+    print(f"  {'-' * 40}")
     print(f"  Win Rate:         {metrics['win_rate']:.1f}%")
     print(f"  Profit Factor:    {metrics['profit_factor']:.2f}")
     print(f"  Total P&L:        {metrics['total_pnl']:+.2f}")
     print(f"  Max Drawdown:     {metrics['max_drawdown']:.2f}")
     print(f"  Sharpe Ratio:     {metrics['sharpe_ratio']:.2f}")
     
-    print(f"\n  📈 BY DIRECTION")
-    print(f"  {'─' * 40}")
+    print(f"\n  BY DIRECTION")
+    print(f"  {'-' * 40}")
     print(f"  LONG:  {metrics['long_trades']:,} trades | {metrics['long_win_rate']:.1f}% win | P&L: {metrics['long_pnl']:+.2f}")
     print(f"  SHORT: {metrics['short_trades']:,} trades | {metrics['short_win_rate']:.1f}% win | P&L: {metrics['short_pnl']:+.2f}")
 
 
 def print_by_ticker(trades_df: pd.DataFrame):
     """Print metrics by ticker."""
-    print(f"\n  📊 BY TICKER")
-    print(f"  {'─' * 40}")
+    print(f"\n  BY TICKER")
+    print(f"  {'-' * 40}")
     
     for ticker in trades_df["ticker"].unique():
         ticker_trades = trades_df[trades_df["ticker"] == ticker]
@@ -736,7 +736,7 @@ def main():
     print("  THRESHOLD SENSITIVITY ANALYSIS")
     print(f"{'=' * 60}")
     print(f"\n  {'Threshold':<12} {'Trades':<10} {'Win Rate':<12} {'PF':<10} {'P&L':<10}")
-    print(f"  {'─' * 54}")
+    print(f"  {'-' * 54}")
     
     for thresh in [0.5, 0.6, 0.7, 0.8, 0.9]:
         sim = TradeSimulator(threshold=thresh, cooldown_minutes=args.cooldown,
