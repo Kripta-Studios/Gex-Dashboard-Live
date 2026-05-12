@@ -68,7 +68,7 @@ RT_DATA_DIR = os.path.join(PROJECT_ROOT, "rt_data")
 BOT_STATE_FILENAME = "bot_intraday_state.json"
 
 # GBM signal confidence threshold. Must match the RL training/backtest run.
-EXPECTED_LIVE_MIN_CONFIDENCE = 0.575
+EXPECTED_LIVE_MIN_CONFIDENCE = 0.550
 GBM_MIN_CONFIDENCE = float(RL_CONFIG["min_confidence"])
 if not math.isclose(GBM_MIN_CONFIDENCE, EXPECTED_LIVE_MIN_CONFIDENCE, rel_tol=0.0, abs_tol=1e-9):
     raise RuntimeError(
