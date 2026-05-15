@@ -131,26 +131,23 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
         Sobrescribe el método por defecto para guardar logs.
         Detecta la IP real si se usa un Proxy Inverso (Nginx/Apache).
         """
-        # 1. Intentar obtener la IP desde la cabecera X-Forwarded-For (Estándar)
-        x_forwarded = self.headers.get("X-Forwarded-For")
-
-        # 2. Intentar obtener la IP desde X-Real-IP (Común en Nginx)
-        x_real = self.headers.get("X-Real-IP")
-
+        # 1. Intentar obtener la IP desde cabeceras (Proxy Inverso)
+        headers = getattr(self, 'headers', None)
+        x_forwarded = headers.get("X-Forwarded-For") if headers else None
+        x_real = headers.get("X-Real-IP") if headers else None
+        
         if x_forwarded:
-            # X-Forwarded-For puede ser una lista: "client, proxy1, proxy2"
-            # Nos quedamos con la primera, que es la del cliente real.
             client_ip = x_forwarded.split(',')[0].strip()
         elif x_real:
             client_ip = x_real
         else:
-            # Si no hay proxy, usar la IP directa de la conexión
             client_ip = self.client_address[0]
 
         status_message = format % args
+        req_line = getattr(self, 'requestline', 'N/A')
 
         log_entry = (
-            f"IP: {client_ip: <15} | REQ: {self.requestline} | RES: {status_message}"
+            f"IP: {client_ip: <15} | REQ: {req_line} | RES: {status_message}"
         )
 
         # Escribir en el archivo y mostrar en consola
@@ -400,7 +397,7 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
             file_path = os.path.join(TEMPLATE_FOLDER, filename)
 
             # Enforce ADMIN role for sensitive dashboard modules
-            if filename in ["js/ib.js", "js/market_structure.js", "js/charts.js", "js/fourier.js"]:
+            if filename in ["js/ib.js", "js/market_structure.js", "js/charts.js", "js/fourier.js", "js/bot_status.js"]:
                 auth_info = self._check_auth()
                 if not auth_info or auth_info.get("role") != "ADMIN":
                     logging.warning(f"Unauthorized JS access attempt: {filename} from {self.client_address[0]}")
