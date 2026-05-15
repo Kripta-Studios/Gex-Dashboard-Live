@@ -38,7 +38,7 @@ from neural.rl.config import (
 )
 from neural.rl.agent import PPOAgent
 from rl.rewards import compute_step_reward, compute_terminal_reward
-from rl.utils import get_delta_bucket, get_iv_bucket, get_pnl_bucket
+from rl.utils import get_delta_bucket, get_iv_bucket, get_pnl_bucket, CurriculumScheduler
 from neural.signal_policy import (
     direction_from_prediction,
     is_actionable_signal,
@@ -994,6 +994,36 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                     trailing_drawdown=trailing_drawdown,
                 )
 
+            # [FIX] Get curricular min hold from agent's training step
+            scheduler = CurriculumScheduler(total_updates=500)
+            curr_params = scheduler.get_phase_info(rl_agent.update_step)
+            rl_min_hold = curr_params.get("min_hold_minutes", 0)
+
+            # --- Holding Loop ---
+            for t in range(max_time):
+                bar_idx = entry_idx + t + 1
+                if bar_idx >= len(day_df):
+                    break
+                
+                row_bar = day_df.iloc[bar_idx]
+                bar_minute = row_bar['minutes']
+                hold_minutes = bar_minute - current_minute
+                if hold_minutes > max_time:
+                    break
+                
+                price = row_bar.get('spot_price', entry_price)
+                
+                # Real options pricing
+                future_time = row_bar.get('time', '16:00')
+                premium = _get_premium_at_time(premium_lookup, actual_strike, option_right, future_time)
+                if premium is None:
+                    premium = _premium_history[-1] if _premium_history else entry_premium
+                
+                _premium_history.append(premium)
+                premium_pnl_pct = (premium - entry_premium) / entry_premium
+                
+                # Build RL State
+                idx_global = day_idx[min(i + t + 1, len(day_idx) - 1)]
                 market_features = (
                     entry_market_features
                     if single_step_eval
@@ -1003,8 +1033,16 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                         else day_features[min(i + t + 1, len(day_features) - 1)]
                     )
                 )
-
-                # Dynamic market features — O(1), accumulates _spot_history in place
+                
+                position_state = _build_position_state(
+                    pnl_pct=premium_pnl_pct,
+                    hold_norm=hold_minutes / 390.0,
+                    current_delta=0.0,
+                    recovery_prob=0.0,
+                    iv_ratio=1.0,
+                    mae=0.0
+                )
+                
                 dynamic_market = _build_dynamic_market_features(
                     current_minute=bar_minute,
                     entry_spot=entry_price,
@@ -1018,7 +1056,7 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                     direction=direction,
                     premium_history=_premium_history,
                 )
-
+                
                 state_parts = [market_features, dynamic_market, position_state, mlp_context]
                 if RL_CONFIG.get("use_sniper_mode", False):
                     sniper_state = np.zeros(SNIPER_STATE_DIM, dtype=np.float32)
@@ -1028,22 +1066,17 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                 state_tensor = torch.FloatTensor(state).unsqueeze(0).to(device)
 
                 with torch.no_grad():
-                    exit_action, _, _ = rl_agent.get_action(
-                        state_tensor, action_type="exit", deterministic=True)
+                    exit_action, _, _ = rl_agent.get_action(state_tensor, action_type="exit", deterministic=True)
 
-                # Action is compared directly as int for new architecture
-                if int(exit_action) == 1:  # EXIT
-                    min_hold = RL_CONFIG["curriculum_phases"][3].get("min_hold_minutes", 10)
-                    emergency_stop = RL_CONFIG.get("emergency_stop_pct", -0.30)
-                    is_emergency = premium_pnl_pct <= emergency_stop
-                    
-                    if hold_minutes >= min_hold or is_emergency:
+                if int(exit_action) == 1:
+                    is_emergency = premium_pnl_pct <= RL_CONFIG.get("emergency_stop_pct", -0.30)
+                    if hold_minutes >= rl_min_hold or is_emergency:
                         exit_reason = "agent_exit"
                         exit_price_spot = price
                         break
-
+                
                 exit_price_spot = price
-
+            
             # Real strike distance from spot
             strike_distance_pts = actual_strike - entry_price if actual_strike else 0.0
 
@@ -1278,13 +1311,35 @@ def main():
         rl_agent = PPOAgent.load(args.rl_model, device)
         rl_agent.eval()
         has_rl = True
+        # Compute curriculum min_hold from the agent's actual training step
+        _curriculum = CurriculumScheduler(total_updates=RL_CONFIG.get("total_updates", 500))
+        _agent_step = getattr(rl_agent, "update_step", 0)
+        _phase_info = _curriculum.get_phase_info(_agent_step)
+        if _agent_step == 0:
+            # Legacy model without step metadata — fall back to final phase
+            _final_phase = max(RL_CONFIG.get("curriculum_phases", {0: {}}).keys())
+            _curriculum_min_hold = float(
+                RL_CONFIG.get("curriculum_phases", {})
+                .get(_final_phase, {})
+                .get("min_hold_minutes", 0)
+            )
+        else:
+            _curriculum_min_hold = float(_phase_info.get("min_hold_minutes", 0))
+        rl_min_hold = max(_curriculum_min_hold, float(HARD_EXITS.get("min_hold_minutes", 0)))
         print(f"  OK ({sum(p.numel() for p in rl_agent.parameters()):,} params)")
+        print(f"  Agent step: {_agent_step} | Phase: {_phase_info['phase']} | min_hold: {rl_min_hold:.0f} min")
     else:
         print(f"  RL model not found — using random policy for comparison")
         rl_agent = PPOAgent()
         rl_agent.to(device)
         rl_agent.eval()
         has_rl = False
+        # Default to final phase min_hold for random agent
+        _final_phase = max(RL_CONFIG.get("curriculum_phases", {0: {}}).keys())
+        rl_min_hold = max(
+            float(RL_CONFIG["curriculum_phases"][_final_phase].get("min_hold_minutes", 0)),
+            float(HARD_EXITS.get("min_hold_minutes", 0))
+        )
 
     # ── Load recovery stats ──
     recovery_stats = None

@@ -15,13 +15,16 @@ from collections import deque
 
 from neural.hybrid_model import FEATURE_COLUMNS
 from neural.rl.config import RL_CONFIG, HARD_EXITS, STRIKE_BUCKETS, SNIPER_STATE_DIM, MLP_CONTEXT_DIM
-from .utils import get_delta_bucket, get_iv_bucket, get_pnl_bucket
+from .utils import get_delta_bucket, get_iv_bucket, get_pnl_bucket, CurriculumScheduler
 from .config import (
     MARKET_FEATURE_DIM, DYNAMIC_MARKET_DIM,
     POSITION_STATE_DIM, get_half_spread,
 )
 from .agent import PPOAgent
 from neural.signal_policy import is_actionable_signal, should_exit_on_reversal
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class IntegratedTradingSystem:
@@ -99,8 +102,16 @@ class IntegratedTradingSystem:
                 with open(stats_path, "rb") as f:
                     self._recovery_lookup = pickle.load(f)
             except Exception as e:
-                import logging
-                logging.getLogger(__name__).warning(f"[ITS] Error loading recovery_stats: {e}")
+                logger.warning(f"[ITS] Error loading recovery_stats: {e}")
+
+        # Curriculum Alignment: determine parameters based on agent's training step
+        self.update_step = getattr(self.rl, "update_step", 0)
+        self.scheduler = CurriculumScheduler(total_updates=RL_CONFIG.get("total_updates", 500))
+        
+        # If update_step is 0 (legacy model), we might want to default to final phase
+        # for safety, but if it's a new model, we use its specific step.
+        self._curriculum_info = self.scheduler.get_phase_info(self.update_step)
+        logger.info(f"[ITS] Initialized with RL Agent Step: {self.update_step} (Phase: {self._curriculum_info['phase']})")
 
     def on_new_minute(self, market_features: np.ndarray, options_data: dict,
                       spot: float, timestamp: pd.Timestamp,
@@ -326,8 +337,15 @@ class IntegratedTradingSystem:
         with torch.no_grad():
             action, _, _ = self.rl.get_action(torch.FloatTensor(state).unsqueeze(0).to(self.device), "exit", True)
         
-        if int(action) == 1 and hold_m >= self._agent_min_hold_minutes():
-            return self._close_position("AGENT_EXIT", pnl)
+        min_hold = self._agent_min_hold_minutes()
+        if int(action) == 1:
+            if hold_m >= min_hold:
+                logger.info(f"[ITS][{pos['ticker']}] AGENT_EXIT triggered. hold_m={hold_m:.1f} >= min_hold={min_hold:.1f}")
+                return self._close_position("AGENT_EXIT", pnl)
+            else:
+                # IMPORTANT: Diagnostic log to catch premature exit requests
+                if int(hold_m) % 5 == 0: # Avoid spamming every minute
+                    logger.info(f"[ITS][{pos['ticker']}] Agent requested exit but BLOCKED by min_hold. hold_m={hold_m:.1f}, min_hold={min_hold:.1f}")
 
         self._prev_pnl_pct = pnl
         return {"action": "HOLD", "strike": pos["strike"], "delta": pos["entry_delta"], 
@@ -360,12 +378,22 @@ class IntegratedTradingSystem:
         return res
 
     def _agent_min_hold_minutes(self) -> float:
-        final_phase = max(RL_CONFIG.get("curriculum_phases", {0: {}}).keys())
-        cur_min = float(
-            RL_CONFIG.get("curriculum_phases", {})
-            .get(final_phase, {})
-            .get("min_hold_minutes", 0)
-        )
+        """
+        Calculates the minimum hold time based on the agent's training step
+        or the final phase as a fallback.
+        """
+        # If the model is a legacy model (step 0), default to the final phase settings
+        if self.update_step == 0:
+            final_phase = max(RL_CONFIG.get("curriculum_phases", {0: {}}).keys())
+            cur_min = float(
+                RL_CONFIG.get("curriculum_phases", {})
+                .get(final_phase, {})
+                .get("min_hold_minutes", 0)
+            )
+        else:
+            # Use interpolated value from the actual training progress
+            cur_min = float(self._curriculum_info.get("min_hold_minutes", 0))
+
         return max(cur_min, float(HARD_EXITS.get("min_hold_minutes", 0)))
 
     def _reset_position_state(self):

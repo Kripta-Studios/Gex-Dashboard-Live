@@ -75,14 +75,16 @@ def compute_terminal_reward(final_pnl_pct: float, exit_type: str,
             base_reward += (final_pnl_pct ** 2) * 2.0
             
         # [NEW] Weak Hands Penalty: Penalize closing winners too early
-        if hold_time_minutes < 45:
-            base_reward *= 0.6  # 40% reduction for cowardly exits
+        if hold_time_minutes < 60:
+            base_reward *= 0.5  # 50% reduction for cowardly exits
             
         # Homerun patience bonus
-        if hold_time_minutes > 90:
+        if hold_time_minutes > 120:
+            base_reward += 10.0
+        elif hold_time_minutes > 90:
             base_reward += 5.0  
         elif hold_time_minutes > 60:
-            base_reward += 2.0  
+            base_reward += 2.5  
             
     elif exit_type == "agent_exit":
         # Loser: agent chose to exit manually

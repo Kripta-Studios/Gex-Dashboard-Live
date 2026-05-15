@@ -37,6 +37,13 @@ from sklearn.metrics import classification_report
 # ── Project root ──────────────────────────────────────────────────────────────
 PROJECT_ROOT = Path(__file__).parents[2]
 sys.path.append(str(PROJECT_ROOT))
+sys.path.append(str(PROJECT_ROOT / "modules"))
+
+try:
+    from market_structures_data import MARKET_STRUCTURES, match_market_structure
+except ImportError:
+    MARKET_STRUCTURES = []
+    def match_market_structure(iv, combo): return []
 
 try:
     import shap
@@ -73,92 +80,7 @@ GREEK_MAP = {
 # The 8 greeks that appear in JS conditions (in order)
 JS_CONDITION_GREEKS = ["Gamma", "Zomma", "Delta", "Vex", "Vega", "Vomma", "Speed"]
 
-# ── Known JS structures for cross-reference ───────────────────────────────────
-# Embedded directly to avoid import path issues across project layouts.
-# condition fields: None = wildcard (matches both Pos and Neg).
-MARKET_STRUCTURES = [
-    # HIGH IV
-    {"id":  1, "name": "The Waterfall",
-     "condition": {"IV":"High","Gamma":"Neg","Zomma":"Pos","Delta":"Pos","Vex":"Neg","Vega":"Neg","Vomma":"Neg","Speed":"Neg"}},
-    {"id":  2, "name": "Mean Reversion",
-     "condition": {"IV":"High","Gamma":"Pos","Zomma":"Neg","Delta":"Pos","Vex":"Pos","Vega":"Pos","Vomma":None,"Speed":None}},
-    {"id":  3, "name": "The Melt Up (High IV)",
-     "condition": {"IV":"High","Gamma":"Neg","Zomma":"Pos","Delta":"Neg","Vex":"Pos","Vega":"Neg","Vomma":None,"Speed":None}},
-    {"id":  4, "name": "The Drag",
-     "condition": {"IV":"High","Gamma":"Pos","Zomma":"Neg","Delta":"Neg","Vex":"Pos","Vega":"Pos","Vomma":None,"Speed":None}},
-    {"id":  5, "name": "Vol of Vol / Fragile Long Vol",
-     "condition": {"IV":"High","Gamma":"Neg","Zomma":"Pos","Delta":"Neg","Vex":"Pos","Vega":"Pos","Vomma":"Pos","Speed":"Pos"}},
-    {"id":  6, "name": "Liquidation",
-     "condition": {"IV":"High","Gamma":"Neg","Zomma":"Pos","Delta":"Neg","Vex":"Neg","Vega":"Neg","Vomma":"Neg","Speed":None}},
-    {"id":  7, "name": "Pinned Long Vol",
-     "condition": {"IV":"High","Gamma":"Pos","Zomma":"Neg","Delta":"Neg","Vex":"Pos","Vega":"Pos","Vomma":"Neg","Speed":"Neg"}},
-    {"id":  8, "name": "Vol-Expansion Pre-Trend",
-     "condition": {"IV":"High","Gamma":"Pos","Zomma":"Neg","Delta":"Neg","Vex":"Pos","Vega":"Pos","Vomma":"Pos","Speed":"Neg"}},
-    {"id":  9, "name": "Directionless Chop - Slight Bid",
-     "condition": {"IV":"High","Gamma":"Pos","Zomma":"Neg","Delta":"Neg","Vex":"Neg","Vega":"Pos","Vomma":"Pos","Speed":"Neg"}},
-    {"id": 10, "name": "Short Bearish Gamma Squeeze",
-     "condition": {"IV":"High","Gamma":"Neg","Zomma":"Pos","Delta":"Neg","Vex":"Neg","Vega":"Pos","Vomma":"Neg","Speed":"Neg"}},
-    {"id": 11, "name": "Negative Convexity Vol Unwind",
-     "condition": {"IV":"High","Gamma":"Pos","Zomma":"Neg","Delta":"Pos","Vex":"Pos","Vega":"Pos","Vomma":"Pos","Speed":"Neg"}},
-    {"id": 12, "name": "Short Gamma Squeeze / Neg Convexity Feedback",
-     "condition": {"IV":"High","Gamma":"Neg","Zomma":"Pos","Delta":"Neg","Vex":"Pos","Vega":"Pos","Vomma":"Pos","Speed":"Neg"}},
-    {"id": 13, "name": "The Gamma Trap / Crash-to-Melt Vanna",
-     "condition": {"IV":"High","Gamma":"Pos","Zomma":"Neg","Delta":"Pos","Vex":"Pos","Vega":"Pos","Vomma":"Pos","Speed":"Pos"}},
-    # LOW IV
-    {"id": 14, "name": "The Melt Up (Low IV)",
-     "condition": {"IV":"Low","Gamma":"Neg","Zomma":"Pos","Delta":"Neg","Vex":"Pos","Vega":"Pos","Vomma":"Pos","Speed":None}},
-    {"id": 15, "name": "The Fade",
-     "condition": {"IV":"Low","Gamma":"Pos","Zomma":"Neg","Delta":"Neg","Vex":"Neg","Vega":"Neg","Vomma":None,"Speed":None}},
-    {"id": 16, "name": "V Bottom",
-     "condition": {"IV":"Low","Gamma":"Neg","Zomma":"Pos","Delta":"Pos","Vex":"Neg","Vega":"Pos","Vomma":"Neg","Speed":None}},
-    {"id": 17, "name": "The Bleed",
-     "condition": {"IV":"Low","Gamma":"Pos","Zomma":"Neg","Delta":"Pos","Vex":"Neg","Vega":"Neg","Vomma":None,"Speed":None}},
-    {"id": 18, "name": "Volatility Mean Reversion Sideways Grind",
-     "condition": {"IV":"Low","Gamma":"Pos","Zomma":"Neg","Delta":"Neg","Vex":"Neg","Vega":"Pos","Vomma":"Neg","Speed":None}},
-    {"id": 19, "name": "Volatility Mean Reversion Crush",
-     "condition": {"IV":"Low","Gamma":"Pos","Zomma":"Neg","Delta":"Neg","Vex":"Neg","Vega":"Pos","Vomma":"Pos","Speed":None}},
-    {"id": 20, "name": "The Ceiling / The Call Pin",
-     "condition": {"IV":"Low","Gamma":"Pos","Zomma":"Neg","Delta":"Pos","Vex":"Neg","Vega":"Pos","Vomma":"Pos","Speed":"Neg"}},
-    {"id": 21, "name": "High Confidence Grind / PIN",
-     "condition": {"IV":"Low","Gamma":"Pos","Zomma":"Neg","Delta":"Pos","Vex":"Pos","Vega":"Pos","Vomma":"Neg","Speed":"Neg"}},
-    {"id": 22, "name": "Vanna-Fueled Melt Up",
-     "condition": {"IV":"Low","Gamma":"Pos","Zomma":"Neg","Delta":"Pos","Vex":"Pos","Vega":"Pos","Vomma":"Pos","Speed":"Neg"}},
-    {"id": 23, "name": "Pre-Breakout Convexity Pocket / Gamma Squeeze",
-     "condition": {"IV":"Low","Gamma":"Pos","Zomma":"Neg","Delta":"Neg","Vex":"Pos","Vega":"Pos","Vomma":"Pos","Speed":None}},
-    # EXTENDED (Add Wk 62)
-    {"id": 24, "name": "Bear Trend Coiled in Gamma Pin",
-     "condition": {"IV":"High","Gamma":"Pos","Zomma":"Neg","Delta":"Neg","Vex":"Neg","Vega":"Pos","Vomma":"Pos","Speed":"Neg"}},
-    {"id": 25, "name": "Short Bearish Gamma Squeeze (Extended)",
-     "condition": {"IV":"High","Gamma":"Neg","Zomma":"Pos","Delta":"Neg","Vex":"Neg","Vega":"Pos","Vomma":"Neg","Speed":"Neg"}},
-    {"id": 26, "name": "Low IV Positive Gamma Grind",
-     "condition": {"IV":"Low","Gamma":"Pos","Zomma":"Neg","Delta":"Neg","Vex":"Neg","Vega":"Pos","Vomma":"Neg","Speed":"Neg"}},
-    {"id": 27, "name": "Compression w/ Asymmetric Vol Expansion Payoff",
-     "condition": {"IV":"Low","Gamma":"Pos","Zomma":"Neg","Delta":"Neg","Vex":"Neg","Vega":"Pos","Vomma":"Pos","Speed":"Neg"}},
-    {"id": 28, "name": "Short Gamma Trap / Melt Up",
-     "condition": {"IV":"Low","Gamma":"Neg","Zomma":"Pos","Delta":"Neg","Vex":"Pos","Vega":"Pos","Vomma":"Pos","Speed":"Pos"}},
-    {"id": 29, "name": "Positive Convexity Vanna-Fueled Melt Up",
-     "condition": {"IV":"Low","Gamma":"Pos","Zomma":"Neg","Delta":"Pos","Vex":"Pos","Vega":"Pos","Vomma":"Pos","Speed":"Pos"}},
-    {"id": 30, "name": "The Waterfall Sell Off",
-     "condition": {"IV":"High","Gamma":"Neg","Zomma":"Pos","Delta":"Pos","Vex":"Neg","Vega":"Neg","Vomma":"Neg","Speed":"Neg"}},
-    {"id": 31, "name": "The Mean Reversion Anchor",
-     "condition": {"IV":"High","Gamma":"Pos","Zomma":"Neg","Delta":"Pos","Vex":"Pos","Vega":"Pos","Vomma":"Pos","Speed":"Pos"}},
-    {"id": 32, "name": "Short-Vol Capitulation / The Melt Up",
-     "condition": {"IV":"High","Gamma":"Neg","Zomma":"Pos","Delta":"Neg","Vex":"Pos","Vega":"Neg","Vomma":"Neg","Speed":"Neg"}},
-    {"id": 33, "name": "Orderly Sell Off / Hedged Bear Market",
-     "condition": {"IV":"High","Gamma":"Pos","Zomma":"Neg","Delta":"Neg","Vex":"Pos","Vega":"Pos","Vomma":"Pos","Speed":"Pos"}},
-    {"id": 34, "name": "Fragile Vanna-Hollow Melt-Up",
-     "condition": {"IV":"Low","Gamma":"Neg","Zomma":"Neg","Delta":"Neg","Vex":"Pos","Vega":"Pos","Vomma":"Pos","Speed":"Pos"}},
-    {"id": 35, "name": "Volatility-Capped Slide / Gamma Trap (Reverse)",
-     "condition": {"IV":"High","Gamma":"Neg","Zomma":"Neg","Delta":"Neg","Vex":"Pos","Vega":"Pos","Vomma":"Pos","Speed":"Pos"}},
-    {"id": 36, "name": "Possible Volatility Expansion Engine",
-     "condition": {"IV":"Low","Gamma":"Pos","Zomma":"Pos","Delta":"Pos","Vex":"Pos","Vega":"Pos","Vomma":"Pos","Speed":"Neg"}},
-    {"id": 37, "name": "Orderly Bear Drift / Mean-Reverting Slide",
-     "condition": {"IV":"Low","Gamma":"Pos","Zomma":"Neg","Delta":"Neg","Vex":"Pos","Vega":"Pos","Vomma":"Pos","Speed":"Pos"}},
-    {"id": 38, "name": "Vanna-Fueled Melt Up / Expansion",
-     "condition": {"IV":"Low","Gamma":"Pos","Zomma":"Pos","Delta":"Pos","Vex":"Pos","Vega":"Pos","Vomma":"Pos","Speed":"Pos"}},
-    {"id": 39, "name": "Vol Spike with Spot Resilience",
-     "condition": {"IV":"High","Gamma":"Pos","Zomma":"Neg","Delta":"Neg","Vex":"Pos","Vega":"Pos","Vomma":"Pos","Speed":None}},
-]
+# Market structures are now loaded from modules/market_structures_data.py
 
 
 # ── LGB training configuration ────────────────────────────────────────────────
@@ -421,7 +343,7 @@ def analyze_interaction_matrix(df_raw: pd.DataFrame) -> pd.DataFrame:
 
     # New patterns (not in any JS structure)
     new = matrix_df[matrix_df["JS_Structure"] == "—"]
-    print(f"\n[*] {len(new)} combinations NOT present in the 39 JS structures.")
+    print(f"\n[*] {len(new)} combinations NOT present in the {len(MARKET_STRUCTURES)} JS structures.")
     if not new.empty:
         print("    Top 5 new bullish patterns:")
         print(new.head(5)[["Combination", "Samples", "Avg_Edge", "Bull_Prob"]].to_string(index=False))
@@ -434,32 +356,12 @@ def analyze_interaction_matrix(df_raw: pd.DataFrame) -> pd.DataFrame:
 
 def _match_js_structure(iv_state: str, combo: dict) -> str:
     """
-    Match a greek sign-combo against the 39 JS structures.
-
-    Rules:
-    - IV must match exactly.
-    - Non-None fields must match exactly.
-    - None fields in the JS structure are wildcards → always match.
-    - A combo can match multiple structures (e.g. when Vomma/Speed are None
-      in JS, both Pos and Neg combos match). Returns all IDs joined by ' / '.
-    - Returns '—' if no structure matches.
+    Match a greek sign-combo against the JS structures using shared module.
     """
-    matches = []
-    for s in MARKET_STRUCTURES:
-        c = s["condition"]
-        if c.get("IV") != iv_state:
-            continue
-        ok = True
-        for field in ("Gamma", "Zomma", "Delta", "Vex", "Vega", "Vomma", "Speed"):
-            wanted = c.get(field)
-            if wanted is None:          # wildcard — skip
-                continue
-            if combo.get(field) != wanted:
-                ok = False
-                break
-        if ok:
-            matches.append(f"#{s['id']}")
-    return " / ".join(matches) if matches else "—"
+    matches = match_market_structure(iv_state, combo)
+    if not matches:
+        return "—"
+    return " / ".join([f"#{s['id']}" for s in matches])
 
 
 # ── Entry point ───────────────────────────────────────────────────────────────

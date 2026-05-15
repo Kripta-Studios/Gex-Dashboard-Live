@@ -129,9 +129,9 @@ if ($skip_to_step -le 2) {
   Write-Host "`n=== Preprocessing con GBT SPX+QQQ (Inferencia de Senales) ===" -ForegroundColor Cyan
   
   # Limpiar la cache corrupta por precaucion tras el crash OOM original
-  If (Test-Path "..\rl_data\rl_options_cache_chunks") {
-    Remove-Item "..\rl_data\rl_options_cache_chunks\*" -Recurse -Force -ErrorAction SilentlyContinue
-  }
+  # If (Test-Path "..\rl_data\rl_options_cache_chunks") {
+  #   Remove-Item "..\rl_data\rl_options_cache_chunks\*" -Recurse -Force -ErrorAction SilentlyContinue
+  # }
 
   python run_preprocess.py `
     --training-data ..\training_data\training_data_spx_qqq_spy.parquet `

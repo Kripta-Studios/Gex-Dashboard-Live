@@ -83,9 +83,10 @@ class PPOTrainer:
                 policy_params.append(param)
 
         self.optimizer = optim.Adam([
-            {"params": policy_params, "lr": RL_CONFIG["learning_rate"]},       # 3e-5
-            {"params": value_params,  "lr": RL_CONFIG["learning_rate"] * 5},   # 1.5e-4
-        ], weight_decay=1e-4)
+            {"params": policy_params, "lr": RL_CONFIG["learning_rate"], "weight_decay": 0.0},
+            {"params": value_params,  "lr": RL_CONFIG["learning_rate"] * 2.5, "weight_decay": 1e-4}, # Reduced from 5x to 2.5x
+        ], weight_decay=0.0)
+
 
         # Fix 6: Decoupled LR Decay (Issue: value head needs higher floor)
         def get_lr_lambda(group_idx):
@@ -230,10 +231,8 @@ class PPOTrainer:
             return list(long_pool or []), list(short_pool or [])
 
         if self.pool is not None and training:
-            # Move agent weights to CPU to be safely serialized
-            self.agent.cpu()
-            state_dict = {k: v.cpu() for k, v in self.agent.state_dict().items()}
-            self.agent.to(self.device)
+            # Just copy state_dict to CPU without moving the GPU model
+            state_dict = {k: v.detach().cpu() for k, v in self.agent.state_dict().items()}
             
             # --- Direction-balanced sampling from date-restricted pool ---
             long_pool = self._long_indices_train if training else self._long_indices_eval
@@ -352,13 +351,27 @@ class PPOTrainer:
 
                 # action is now an int (strike bucket, sniper choice, or exit choice)
                 env_action = action
-                log_prob_float = log_prob.item() if isinstance(log_prob, torch.Tensor) else log_prob
                 value_float = value.item() if isinstance(value, torch.Tensor) else value
 
                 next_state, reward, done, info = self.env.step(env_action)
+                
+                # [FIX] Mismatch detection: if environment forced a different action (e.g. min_hold)
+                # we MUST record the log_prob of the action actually taken (the effective_action).
+                effective_action = info.get("effective_action", env_action)
+                
+                if effective_action != env_action:
+                    # Re-evaluate log_prob for the forced action
+                    with torch.no_grad():
+                        # We use evaluate_actions to get the log_prob of the effective_action
+                        # This ensures the PPO ratio (new/old) is 1.0 at the start of the update.
+                        new_log_probs, _, _ = self.agent.evaluate_actions(
+                            state_tensor, [effective_action], [action_type])
+                        log_prob_float = new_log_probs.item()
+                else:
+                    log_prob_float = log_prob.item() if isinstance(log_prob, torch.Tensor) else log_prob
 
                 episode_states.append(state)
-                episode_actions.append(env_action)
+                episode_actions.append(effective_action)
                 episode_action_types.append(action_type)
                 episode_rewards.append(reward)
                 episode_log_probs.append(log_prob_float)
@@ -419,8 +432,15 @@ class PPOTrainer:
         total_h_strike = 0.0
         total_h_exit = 0.0
 
+        if len(buffer) < RL_CONFIG["batch_size"]:
+            return {
+                "policy_loss": 0, "value_loss": 0, "entropy_loss": 0, 
+                "mean_entropy": 0, "h_strike": 0, "h_exit": 0, "approx_kl": 0
+            }
+
         for epoch in range(RL_CONFIG["ppo_epochs"]):
             epoch_kls = []
+            stop_update = False
             for batch in buffer.get_batches(RL_CONFIG["batch_size"]):
                 states = batch["states"].to(self.device)
                 actions = batch["actions"]
@@ -453,6 +473,12 @@ class PPOTrainer:
                 with torch.no_grad():
                     approx_kl = ((ratio - 1) - torch.log(ratio)).mean().item()
                     epoch_kls.append(approx_kl)
+                    
+                    # [STABILITY FIX] Intra-batch KL early stop
+                    # Relaxed to 5x target to allow adaptation during curriculum shifts
+                    if approx_kl > (kl_target * 5.0):
+                        stop_update = True
+                        break
                 
                 clip_eps = RL_CONFIG["clip_epsilon"]
                 surr1 = ratio * advantages
@@ -488,17 +514,16 @@ class PPOTrainer:
                         continue
                     
                     tgt = exit_tgt if at == "exit" else strike_tgt
-                    deficit_ratio = max(0.0, (tgt - e_val) / tgt)
+                    deficit_ratio = (tgt - e_val) / tgt
                     
-                    # Emergency multiplier only kicks in when deficit > 30% of target (Issue: overcorrection)
-                    if deficit_ratio > 0.30:
-                        em = 1.0 + deficit_ratio * 3.0
+                    if deficit_ratio > 0:
+                        # Entropy is below target: provide bonus to encourage exploration
+                        em = 1.0 + deficit_ratio * 2.0
+                        base = current_coeff * (1.2 if at == "exit" else 1.0)
+                        coeffs.append(min(base * em, current_coeff * 3.0))
                     else:
-                        em = 1.0
-                    
-                    base = current_coeff * (1.1 if at == "exit" else 1.0)
-                    # Hard cap: never exceed 2x current_coeff to prevent entropy dominating policy loss
-                    coeffs.append(min(base * em, current_coeff * 2.0))
+                        # Entropy is above target: no bonus/penalty. Standard exploration.
+                        coeffs.append(0.0) 
                 
                 per_sample_coeff = torch.tensor(coeffs, dtype=torch.float32, device=self.device)
                 entropy_loss = -(entropy * per_sample_coeff).mean()
@@ -510,6 +535,7 @@ class PPOTrainer:
                         + entropy_loss)
 
                 if not torch.isfinite(loss):
+                    print(f"  [!] Non-finite loss detected: {loss.item()}. Skipping batch.")
                     continue
 
                 self.optimizer.zero_grad()
@@ -518,7 +544,10 @@ class PPOTrainer:
                 # Gradient cleaning & clipping
                 for p in self.agent.parameters():
                     if p.grad is not None:
-                        p.grad.nan_to_num_(nan=0.0, posinf=0.0, neginf=0.0)
+                        if not torch.isfinite(p.grad).all():
+                            p.grad.zero_() # Wipe corrupted gradients
+                        else:
+                            p.grad.nan_to_num_(nan=0.0, posinf=0.0, neginf=0.0)
 
                 # Separate, tighter clipping for value head to prevent spikes during hold duration shifts (Issue 3)
                 value_params = list(self.agent.value_head.parameters())
@@ -542,7 +571,7 @@ class PPOTrainer:
                 n_batches += 1
             
             # KL early stopping (Fix 1)
-            if epoch_kls and np.mean(epoch_kls) > kl_target:
+            if stop_update or (epoch_kls and np.mean(epoch_kls) > kl_target):
                 break
 
         n_batches = max(n_batches, 1)
@@ -841,20 +870,33 @@ class PPOTrainer:
                 if eval_wr < 0.40:
                     print(f"  WARN LOW EVAL WIN RATE: {eval_wr:.1%} - agent may be guessing.")
 
-                print(f"  {'-'*60}")
+                # [IMPROVEMENT] Quality Score = PF * (1 + hold_min/300) * (WR / 0.35)
+                # Weighted to balance Profitability, Holding Time and Consistency (Win Rate)
+                current_hold_min = phase_info.get("min_hold_minutes", 0)
+                hold_factor = 1.0 + (current_hold_min / 300.0)
+                wr_factor = eval_wr / 0.35 # Baseline 35% WR
+                current_score = eval_pf * hold_factor * wr_factor
 
-            # Save best model by profit factor
-            if eval_pf > self.best_profit_factor and update_step > 10:
-                self.best_profit_factor = eval_pf
-                self.agent.save(os.path.join(save_dir, "best_rl_agent.pt"))
-                print(f"  -> New best Eval PF: {eval_pf:.3f}")
+                if current_score > getattr(self, "best_score", 0) and update_step > 10:
+                    self.best_score = current_score
+                    self.best_profit_factor = eval_pf
+                    self.agent.save(os.path.join(save_dir, "best_rl_agent.pt"), update_step=update_step)
+                    print(f"  -> New best Model found at step {update_step}")
+                    print(f"     Score: {current_score:.3f} (PF: {eval_pf:.2f} * HoldFactor: {hold_factor:.2f} * WRFactor: {wr_factor:.2f})")
+
+                # [NEW] Save history periodically
+                combined_history = {**self.history, "eval": eval_history}
+                with open(os.path.join(save_dir, "rl_training_history.json"), "w") as f:
+                    json.dump(combined_history, f, indent=2)
+
+                print(f"  {'-'*60}")
 
             # Periodic checkpoint
             if (update_step + 1) % 50 == 0:
-                self.agent.save(os.path.join(save_dir, f"rl_agent_step_{update_step}.pt"))
+                self.agent.save(os.path.join(save_dir, f"rl_agent_step_{update_step}.pt"), update_step=update_step)
 
         # Final save
-        self.agent.save(os.path.join(save_dir, "final_rl_agent.pt"))
+        self.agent.save(os.path.join(save_dir, "final_rl_agent.pt"), update_step=total_updates)
 
         # Save training history + eval history
         combined_history = {**self.history, "eval": eval_history}
@@ -1100,14 +1142,23 @@ def worker_collect(agent_state_dict, min_confidence, min_strike, max_strike, min
                     state_tensor, action_type, deterministic=False, logit_noise=l_noise)
                     
                 action_val = action
-                log_prob_float = log_prob.item() if isinstance(log_prob, torch.Tensor) else log_prob
                 value_float = value.item() if isinstance(value, torch.Tensor) else value
                 
                 env_action = action_val["strike"] if isinstance(action_val, dict) else action_val
                 next_state, reward, done, info = g_worker_env.step(env_action)
                 
+                # [FIX] Mismatch detection in worker
+                effective_action = info.get("effective_action", action_val)
+                if effective_action != action_val:
+                    with torch.no_grad():
+                        new_log_probs, _, _ = g_worker_agent.evaluate_actions(
+                            state_tensor, [effective_action], [action_type])
+                        log_prob_float = new_log_probs.item()
+                else:
+                    log_prob_float = log_prob.item() if isinstance(log_prob, torch.Tensor) else log_prob
+
                 episode_states.append(state)
-                episode_actions.append(action_val)
+                episode_actions.append(effective_action)
                 episode_action_types.append(action_type)
                 episode_rewards.append(reward)
                 episode_log_probs.append(log_prob_float)

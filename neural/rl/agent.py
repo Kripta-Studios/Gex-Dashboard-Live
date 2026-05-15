@@ -14,6 +14,7 @@ NOTE: sizing_head was removed — it was trained but never used in production,
 introducing noise into PPO gradients without affecting actual position sizing.
 """
 
+# pyrefly: ignore [missing-import]
 import torch
 import torch.nn as nn
 import numpy as np
@@ -31,6 +32,7 @@ class PPOAgent(nn.Module):
     def __init__(self, state_dim: int = None, hidden_dims: list = None):
         super().__init__()
         self.state_dim = state_dim or RL_CONFIG["state_dim"]
+        self.update_step = 0
         hidden_dims = hidden_dims or RL_CONFIG["hidden_dims"]
 
         # ── Shared backbone ──
@@ -85,7 +87,7 @@ class PPOAgent(nn.Module):
         """Initialize with small weights to prevent early overfitting."""
         for m in self.modules():
             if isinstance(m, nn.Linear):
-                nn.init.orthogonal_(m.weight, gain=0.5)
+                nn.init.orthogonal_(m.weight, gain=1.0)
                 if m.bias is not None:
                     nn.init.zeros_(m.bias)
 
@@ -110,6 +112,9 @@ class PPOAgent(nn.Module):
             logits = self.sniper_head(features)
         else:
             logits = self.exit_head(features)
+
+        # Clamp logits to prevent extreme values and numerical instability
+        logits = torch.clamp(logits, -20.0, 20.0)
 
         return logits, value
 
@@ -249,16 +254,17 @@ class PPOAgent(nn.Module):
 
         return log_probs, entropy, values
 
-    def save(self, filepath: str):
-        """Save agent weights."""
+    def save(self, filepath: str, update_step: int = 0):
+        """Save agent weights and metadata."""
         torch.save({
             "model_state_dict": self.state_dict(),
             "config": {
-                "state_dim": RL_CONFIG["state_dim"],
+                "state_dim": self.state_dim,
                 "hidden_dims": RL_CONFIG["hidden_dims"],
+                "update_step": update_step,
             }
         }, filepath)
-        print(f"[RL] Agent saved to {filepath}")
+        print(f"[RL] Agent saved to {filepath} (Step: {update_step})")
 
     @classmethod
     def load(cls, filepath: str, device: torch.device = None):
@@ -272,4 +278,7 @@ class PPOAgent(nn.Module):
         # strict=False: pre-sniper checkpoints won't have sniper_head weights
         agent.load_state_dict(checkpoint["model_state_dict"], strict=False)
         agent.to(device)
+        
+        # Restore metadata
+        agent.update_step = config.get("update_step", 0)
         return agent

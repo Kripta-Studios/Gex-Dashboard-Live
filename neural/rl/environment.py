@@ -500,10 +500,11 @@ class SPXOptionsEnv:
                     exit_type = "signal_reversal"
 
         # ── Agent-requested exit ──
+        effective_action = exit_action
         if exit_action == 1 and exit_type is None:
             min_hold = getattr(self, "_current_min_hold_minutes", self.hard_exits.get("min_hold_minutes", 0))
             if hold_minutes < min_hold:
-                exit_action = 0 # Force HOLD to prevent 1-min spread-cost collapse
+                effective_action = 0 # Force HOLD to prevent 1-min spread-cost collapse
             else:
                 exit_type = "agent_exit"
 
@@ -524,6 +525,7 @@ class SPXOptionsEnv:
                 "entry_delta": self._position["entry_delta"],
                 "mae": self._mae,
                 "direction": self._position["direction"],
+                "effective_action": effective_action,
             }
             if self._use_sniper:
                 info["sniper_minutes_waited"] = self._sniper_minutes_elapsed
@@ -551,7 +553,8 @@ class SPXOptionsEnv:
                 "pnl_pct": pnl_pct,
                 "hold_minutes": hold_minutes,
                 "recovery_rate": recovery_rate,
-                "spot_momentum": spot_momentum
+                "spot_momentum": spot_momentum,
+                "effective_action": effective_action
             }
             return self._build_state_vector(), float(reward), False, { # [v6]
                 "action": "hold",

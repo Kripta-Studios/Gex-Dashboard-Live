@@ -84,25 +84,26 @@ RL_CONFIG = {
     "backbone_dropout":     0.05,
 
     # PPO core
-    "learning_rate":        6e-5,   # Slightly higher to force exit from zero-gradient trap
-    "gamma":                0.995,  
+    # PPO core
+    "learning_rate": 1e-05,   # Increased from 3e-5 to escape local minima faster
+    "gamma": 0.998,  
     "gae_lambda":           0.95,
-    "clip_epsilon":         0.30,   # Increased from 0.25 to allow bolder updates
-    "value_loss_coeff":     0.5,    
-    "entropy_coeff":        0.002,  
-    "entropy_coeff_min":    0.0005, 
-    "entropy_target":       0.10,   
-    "exit_entropy_target":  0.15,   
-    "entropy_anneal_end":   300,    
-    "kl_target":            0.050,  # Increased from 0.02 to allow the policy to move
+    "clip_epsilon": 0.1,   # Standard PPO value for stability
+    "value_loss_coeff": 0.4,    
+    "entropy_coeff": 0.02,  # Reduced from 0.010 to prevent over-randomization
+    "entropy_coeff_min":    0.002, 
+    "entropy_target":       0.15,   
+    "exit_entropy_target":  0.20,   
+    "entropy_anneal_end":   400,    # Slower annealing
+    "kl_target":            0.030,  
     "max_grad_norm":        0.5,
-    "value_lr_decay_floor": 0.4,    # Keep critic learning at a higher floor than policy (40% vs 20%)
+    "value_lr_decay_floor": 0.4,    
 
     # Training schedule
-    "ppo_epochs":           4,
+    "ppo_epochs": 3,
     "n_episodes_per_update": 256,
-    "total_updates":        500,    # Asegurar que coincide con el run_pipeline
-    "batch_size":           128,
+    "total_updates":        500,    
+    "batch_size": 256,
 
     # Walk-forward
     "train_months":         3,
@@ -115,13 +116,13 @@ RL_CONFIG = {
     "signal_reversal_min_confidence": 0.50,
     "signal_eval_cadence_minutes": 5,
 
-    # Curriculum — linear interpolation will be used between these nodes:
-    # Redesigned: force longer holds early + OTM/ATM exploration before ITM
+    # Curriculum — Linear interpolation
+    # FIXED: Confidence remains stable at 0.55 to maintain trade volume
     "curriculum_phases": {
-        0: {"pct": 0.00, "min_confidence": 0.675, "min_strike_bucket": 1, "max_strike_bucket": 3, "min_hold_minutes": 120},  
-        1: {"pct": 0.15, "min_confidence": 0.625, "min_strike_bucket": 0, "max_strike_bucket": 4, "min_hold_minutes": 90},  
-        2: {"pct": 0.35, "min_confidence": 0.550, "min_strike_bucket": 0, "max_strike_bucket": 5, "min_hold_minutes": 60},  
-        3: {"pct": 0.60, "min_confidence": 0.550, "min_strike_bucket": 0, "max_strike_bucket": 6, "min_hold_minutes": 45},  
+        0: {"pct": 0.00, "min_confidence": 0.550, "min_strike_bucket": 1, "max_strike_bucket": 3, "min_hold_minutes": 45},  
+        1: {"pct": 0.20, "min_confidence": 0.550, "min_strike_bucket": 0, "max_strike_bucket": 4, "min_hold_minutes": 75},  
+        2: {"pct": 0.45, "min_confidence": 0.550, "min_strike_bucket": 0, "max_strike_bucket": 5, "min_hold_minutes": 105},  
+        3: {"pct": 0.70, "min_confidence": 0.550, "min_strike_bucket": 0, "max_strike_bucket": 6, "min_hold_minutes": 150},  
     },
 
     # Session

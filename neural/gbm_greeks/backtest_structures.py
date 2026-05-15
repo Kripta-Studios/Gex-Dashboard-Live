@@ -37,6 +37,12 @@ from datetime import datetime
 # ── Project root ──────────────────────────────────────────────────────────────
 PROJECT_ROOT = Path(__file__).parents[2]
 sys.path.append(str(PROJECT_ROOT))
+sys.path.append(str(PROJECT_ROOT / "modules"))
+
+try:
+    from market_structures_data import MARKET_STRUCTURES
+except ImportError:
+    MARKET_STRUCTURES = []
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
 POSSIBLE_PATHS = [
@@ -76,245 +82,7 @@ DIR_TO_TARGET = {
     "SELL / BUY":                    0,
 }
 
-# ═══════════════════════════════════════════════════════════════════════════════
-#  ALL STRUCTURES
-# ═══════════════════════════════════════════════════════════════════════════════
-MARKET_STRUCTURES = [
-    {
-        "id": 1,  "name": "The Waterfall",
-        "condition": {"IV": "High", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Pos",
-                      "Vex": "Neg", "Vega": "Neg", "Vomma": "Neg", "Speed": "Neg"},
-        "regime": "Trend Day", "actionDirection": "SELL",
-    },
-    {
-        "id": 2,  "name": "Mean Reversion",
-        "condition": {"IV": "High", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Pos",
-                      "Vex": "Pos", "Vega": "Pos", "Vomma": None,  "Speed": None},
-        "regime": "Compression", "actionDirection": "SELL",
-    },
-    {
-        "id": 3,  "name": "The Melt Up (High IV)",
-        "condition": {"IV": "High", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Neg",
-                      "Vex": "Pos", "Vega": "Neg", "Vomma": None,  "Speed": None},
-        "regime": "Trend Day", "actionDirection": "BUY",
-    },
-    {
-        "id": 4,  "name": "The Drag",
-        "condition": {"IV": "High", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg",
-                      "Vex": "Pos", "Vega": "Pos", "Vomma": None,  "Speed": None},
-        "regime": "Compression", "actionDirection": "SELL",
-    },
-    {
-        "id": 5,  "name": "Vol of Vol / Fragile Long Vol",
-        "condition": {"IV": "High", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Neg",
-                      "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Pos"},
-        "regime": "Trend Day (Not clean)", "actionDirection": "SELL",
-    },
-    {
-        "id": 6,  "name": "Liquidation",
-        "condition": {"IV": "High", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Neg",
-                      "Vex": "Neg", "Vega": "Neg", "Vomma": "Neg", "Speed": None},
-        "regime": "Trend Day", "actionDirection": "SELL",
-    },
-    {
-        "id": 7,  "name": "Pinned Long Vol",
-        "condition": {"IV": "High", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg",
-                      "Vex": "Pos", "Vega": "Pos", "Vomma": "Neg", "Speed": "Neg"},
-        "regime": "Transitional", "actionDirection": "BINARY",
-    },
-    {
-        "id": 8,  "name": "Vol-Expansion Pre-Trend",
-        "condition": {"IV": "High", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg",
-                      "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Neg"},
-        "regime": "Compression", "actionDirection": "SELL",
-    },
-    {
-        "id": 9,  "name": "Directionless Chop - Slight Bid",
-        "condition": {"IV": "High", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg",
-                      "Vex": "Neg", "Vega": "Pos", "Vomma": "Pos", "Speed": "Neg"},
-        "regime": "Compression", "actionDirection": "CHOP",
-    },
-    {
-        "id": 10, "name": "Short Bearish Gamma Squeeze",
-        "condition": {"IV": "High", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Neg",
-                      "Vex": "Neg", "Vega": "Pos", "Vomma": "Neg", "Speed": "Neg"},
-        "regime": "Trend Day", "actionDirection": "SELL",
-    },
-    {
-        "id": 11, "name": "Negative Convexity Vol Unwind (Compression Type)",
-        "condition": {"IV": "High", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Pos",
-                      "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Neg"},
-        "regime": "Compression", "actionDirection": "SELL",
-    },
-    {
-        "id": 12, "name": "Short Gamma Squeeze / Negative Convexity Feedback Loop",
-        "condition": {"IV": "High", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Neg",
-                      "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Neg"},
-        "regime": "Trend Day (Violent)", "actionDirection": "SELL",
-    },
-    {
-        "id": 13, "name": "The Gamma Trap / Crash-to-Melt Vanna (High Vol Pin)",
-        "condition": {"IV": "High", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Pos",
-                      "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Pos"},
-        "regime": "Transitional / Expansion", "actionDirection": "BINARY",
-    },
-    {
-        "id": 14, "name": "The Melt Up (Low IV)",
-        "condition": {"IV": "Low", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Neg",
-                      "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": None},
-        "regime": "Trend Day", "actionDirection": "BUY",
-    },
-    {
-        "id": 15, "name": "The Fade",
-        "condition": {"IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg",
-                      "Vex": "Neg", "Vega": "Neg", "Vomma": None,  "Speed": None},
-        "regime": "Compression", "actionDirection": "SELL",
-    },
-    {
-        "id": 16, "name": "V Bottom",
-        "condition": {"IV": "Low", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Pos",
-                      "Vex": "Neg", "Vega": "Pos", "Vomma": "Neg", "Speed": None},
-        "regime": "Trend Day", "actionDirection": "BUY",
-    },
-    {
-        "id": 17, "name": "The Bleed",
-        "condition": {"IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Pos",
-                      "Vex": "Neg", "Vega": "Neg", "Vomma": None,  "Speed": None},
-        "regime": "Compression", "actionDirection": "SELL",
-    },
-    {
-        "id": 18, "name": "Volatility Mean Reversion Sideways Grind",
-        "condition": {"IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg",
-                      "Vex": "Neg", "Vega": "Pos", "Vomma": "Neg", "Speed": None},
-        "regime": "Compression", "actionDirection": "SIDEWAYS GRIND",
-    },
-    {
-        "id": 19, "name": "Volatility Mean Reversion Crush",
-        "condition": {"IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg",
-                      "Vex": "Neg", "Vega": "Pos", "Vomma": "Pos", "Speed": None},
-        "regime": "Compression", "actionDirection": "BUY",
-    },
-    {
-        "id": 20, "name": "The Ceiling / The Call Pin",
-        "condition": {"IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Pos",
-                      "Vex": "Neg", "Vega": "Pos", "Vomma": "Pos", "Speed": "Neg"},
-        "regime": "Compression", "actionDirection": "SELL / PIN",
-    },
-    {
-        "id": 21, "name": "High Confidence Grind / PIN",
-        "condition": {"IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Pos",
-                      "Vex": "Pos", "Vega": "Pos", "Vomma": "Neg", "Speed": "Neg"},
-        "regime": "Compression", "actionDirection": "BUY / PIN",
-    },
-    {
-        "id": 22, "name": "Vanna-Fueled Melt Up",
-        "condition": {"IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Pos",
-                      "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Neg"},
-        "regime": "Trend Day", "actionDirection": "BUY",
-    },
-    {
-        "id": 23, "name": "Pre-Breakout Convexity Pocket / Gamma Squeeze",
-        "condition": {"IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg",
-                      "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": None},
-        "regime": "Compression", "actionDirection": "BUY",
-    },
-    {
-        "id": 24, "name": "Bear Trend Coiled in a Gamma Pin / Pre-Breakdown Structure",
-        "condition": {"IV": "High", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg",
-                      "Vex": "Neg", "Vega": "Pos", "Vomma": "Pos", "Speed": "Neg"},
-        "regime": "Compression", "actionDirection": "CHOP -> SELL",
-    },
-    {
-        "id": 25, "name": "Short Bearish Gamma Squeeze (Extended)",
-        "condition": {"IV": "High", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Neg",
-                      "Vex": "Neg", "Vega": "Pos", "Vomma": "Neg", "Speed": "Neg"},
-        "regime": "Trend Day", "actionDirection": "SELL",
-    },
-    {
-        "id": 26, "name": "Low IV Positive Gamma Grind (Mean-Reverting Compression)",
-        "condition": {"IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg",
-                      "Vex": "Neg", "Vega": "Pos", "Vomma": "Neg", "Speed": "Neg"},
-        "regime": "Compression", "actionDirection": "SELL LEAN",
-    },
-    {
-        "id": 27, "name": "Compression Regime with Asymmetric Vol Expansion Payoff",
-        "condition": {"IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg",
-                      "Vex": "Neg", "Vega": "Pos", "Vomma": "Pos", "Speed": "Neg"},
-        "regime": "Compression", "actionDirection": "BUY",
-    },
-    {
-        "id": 28, "name": "Short Gamma Trap / Melt Up",
-        "condition": {"IV": "Low", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Neg",
-                      "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Pos"},
-        "regime": "Trend Day", "actionDirection": "BUY",
-    },
-    {
-        "id": 29, "name": "Positive Convexity Vanna-Fueled Melt Up / Pre Gamma Squeeze",
-        "condition": {"IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Pos",
-                      "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Pos"},
-        "regime": "Transition to Expansion", "actionDirection": "BUY (Transition)",
-    },
-    {
-        "id": 30, "name": "The Waterfall Sell Off",
-        "condition": {"IV": "High", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Pos",
-                      "Vex": "Neg", "Vega": "Neg", "Vomma": "Neg", "Speed": "Neg"},
-        "regime": "Trend Day", "actionDirection": "SELL",
-    },
-    {
-        "id": 31, "name": "The Mean Reversion Anchor",
-        "condition": {"IV": "High", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Pos",
-                      "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Pos"},
-        "regime": "Compression", "actionDirection": "SELL / BUY",
-    },
-    {
-        "id": 32, "name": "Short-Vol Capitulation / The Melt Up",
-        "condition": {"IV": "High", "Gamma": "Neg", "Zomma": "Pos", "Delta": "Neg",
-                      "Vex": "Pos", "Vega": "Neg", "Vomma": "Neg", "Speed": "Neg"},
-        "regime": "Trend Day", "actionDirection": "BUY",
-    },
-    {
-        "id": 33, "name": "Orderly Sell Off / Hedged Bear Market",
-        "condition": {"IV": "High", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg",
-                      "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Pos"},
-        "regime": "Compression", "actionDirection": "SELL",
-    },
-    {
-        "id": 34, "name": "Fragile Vanna-Hollow Melt-Up / Fragile Drift",
-        "condition": {"IV": "Low", "Gamma": "Neg", "Zomma": "Neg", "Delta": "Neg",
-                      "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Pos"},
-        "regime": "Transitional", "actionDirection": "BUY",
-    },
-    {
-        "id": 35, "name": "Volatility-Capped Slide / The Gamma Trap (in Reverse)",
-        "condition": {"IV": "High", "Gamma": "Neg", "Zomma": "Neg", "Delta": "Neg",
-                      "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Pos"},
-        "regime": "Trend Day (Fading)", "actionDirection": "Trade in direction of the move",
-    },
-    {
-        "id": 36, "name": "Possible Volatility Expansion Engine (If IV Wakes Up)",
-        "condition": {"IV": "Low", "Gamma": "Pos", "Zomma": "Pos", "Delta": "Pos",
-                      "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Neg"},
-        "regime": "Compression", "actionDirection": "BUY / SELL",
-    },
-    {
-        "id": 37, "name": "Orderly Bear Drift / Mean-Reverting Slide",
-        "condition": {"IV": "Low", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg",
-                      "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Pos"},
-        "regime": "Compression", "actionDirection": "BUY / SELL",
-    },
-    {
-        "id": 38, "name": "Vanna-Fueled Melt Up / Expansion",
-        "condition": {"IV": "Low", "Gamma": "Pos", "Zomma": "Pos", "Delta": "Pos",
-                      "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": "Pos"},
-        "regime": "Trend Day", "actionDirection": "BUY",
-    },
-    {
-        "id": 39, "name": "Vol Spike with Spot Resilience",
-        "condition": {"IV": "High", "Gamma": "Pos", "Zomma": "Neg", "Delta": "Neg",
-                      "Vex": "Pos", "Vega": "Pos", "Vomma": "Pos", "Speed": None},
-        "regime": "Trend Day", "actionDirection": "BUY",
-    },
-]
+# Market structures are now loaded from modules/market_structures_data.py
 
 # ── IV state helper ────────────────────────────────────────────────────────────
 def build_iv_state(df: pd.DataFrame) -> pd.Series:
@@ -591,7 +359,7 @@ def run_backtest(min_samples: int = 30) -> None:
     report = pd.DataFrame(results).sort_values("Avg_Edge", ascending=False)
 
     print("\n" + "=" * 110)
-    print("MARKET STRUCTURE BACKTEST REPORT — ALL 39 STRUCTURES")
+    print(f"MARKET STRUCTURE BACKTEST REPORT — ALL {len(MARKET_STRUCTURES)} STRUCTURES")
     print("=" * 110)
     print(report.to_string(index=False))
 
