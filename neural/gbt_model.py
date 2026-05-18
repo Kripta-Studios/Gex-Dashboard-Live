@@ -106,10 +106,14 @@ class GBTEnsemble:
             # Convert YYYYMMDD string to int for comparison
             d_val = int(date.replace('-', '').replace('/', ''))
             
-            # Find all models trained strictly before this date
+            # Find all models whose selection data was available strictly before
+            # this date. Newer ensembles set available_date to the end of the
+            # validation/test window used for ranking. Older model artifacts do
+            # not have that metadata, so they fall back to cutoff_date for
+            # backwards compatibility.
             past_models = [
                 m for m in self.models 
-                if m.metadata.get('cutoff_date', 0) < d_val
+                if m.metadata.get('available_date', m.metadata.get('cutoff_date', 0)) < d_val
             ]
             
             if past_models:

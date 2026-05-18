@@ -26,11 +26,25 @@ from .config import RL_CONFIG, STRIKE_BUCKETS
 from neural.signal_policy import entry_thresholds
 
 
+def _time_to_minutes(value) -> int:
+    try:
+        if hasattr(value, "hour") and hasattr(value, "minute"):
+            return int(value.hour) * 60 + int(value.minute)
+        text = str(value)
+        hour, minute = text.split(":")[:2]
+        return int(hour) * 60 + int(minute)
+    except Exception:
+        return 570
+
+
 def generate_episode_index(training_df: pd.DataFrame,
                            mlp_model=None,
                            mlp_normalizer=None,
                            min_confidence: float = None,
-                           strict_wf: bool = False) -> pd.DataFrame:
+                           strict_wf: bool = False,
+                           min_entry_minute: int = 580,
+                           min_short_entry_minute: int | None = None,
+                           min_short_price_vs_ib_high: float | None = None) -> pd.DataFrame:
     """
     Pre-filter training_df to only rows where the MLP would emit a LONG or SHORT
     signal with confidence >= min_confidence.
@@ -120,9 +134,25 @@ def generate_episode_index(training_df: pd.DataFrame,
         training_df["mlp_log_sigma"] = 0.5
 
     long_thresh, short_thresh = entry_thresholds(min_confidence)
+    entry_minutes = training_df["time"].apply(_time_to_minutes)
+    time_mask = entry_minutes >= int(min_entry_minute)
+    short_time_mask = (
+        pd.Series(True, index=training_df.index)
+        if min_short_entry_minute is None
+        else entry_minutes >= int(min_short_entry_minute)
+    )
+    if min_short_price_vs_ib_high is None:
+        short_ib_mask = pd.Series(True, index=training_df.index)
+    else:
+        price_vs_ib_high = (
+            pd.to_numeric(training_df["price_vs_ib_high"], errors="coerce")
+            if "price_vs_ib_high" in training_df.columns
+            else pd.Series(0.0, index=training_df.index)
+        ).fillna(0.0)
+        short_ib_mask = price_vs_ib_high >= float(min_short_price_vs_ib_high)
 
-    mask_long  = (training_df["mlp_direction"] == "LONG")  & (training_df["mlp_confidence"] >= long_thresh)
-    mask_short = (training_df["mlp_direction"] == "SHORT") & (training_df["mlp_confidence"] >= short_thresh)
+    mask_long  = time_mask & (training_df["mlp_direction"] == "LONG")  & (training_df["mlp_confidence"] >= long_thresh)
+    mask_short = time_mask & short_time_mask & short_ib_mask & (training_df["mlp_direction"] == "SHORT") & (training_df["mlp_confidence"] >= short_thresh)
 
     ep_long  = training_df[mask_long].copy()
     ep_short = training_df[mask_short].copy()
@@ -420,6 +450,10 @@ def main():
     parser.add_argument("--mlp-normalizer", type=str, default=None)
     parser.add_argument("--num-workers", type=int, default=32)
     parser.add_argument("--strict-wf", action="store_true")
+    parser.add_argument("--min-confidence", type=float, default=None)
+    parser.add_argument("--min-entry-minute", type=int, default=580)
+    parser.add_argument("--min-short-entry-minute", type=int, default=None)
+    parser.add_argument("--min-short-price-vs-ib-high", type=float, default=None)
     args = parser.parse_args()
 
     print("=" * 70)
@@ -435,7 +469,16 @@ def main():
         from hybrid_model import load_ensemble_model
         mlp_model, mlp_normalizer = load_ensemble_model(args.mlp_model, args.mlp_normalizer, model_size="small")
 
-    episode_index, training_df_with_signals = generate_episode_index(training_df, mlp_model, mlp_normalizer, strict_wf=args.strict_wf)
+    episode_index, training_df_with_signals = generate_episode_index(
+        training_df,
+        mlp_model,
+        mlp_normalizer,
+        min_confidence=args.min_confidence,
+        strict_wf=args.strict_wf,
+        min_entry_minute=args.min_entry_minute,
+        min_short_entry_minute=args.min_short_entry_minute,
+        min_short_price_vs_ib_high=args.min_short_price_vs_ib_high,
+    )
     
     output_parent = os.path.dirname(os.path.abspath(args.output))
     os.makedirs(output_parent, exist_ok=True)

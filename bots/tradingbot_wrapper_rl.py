@@ -55,8 +55,15 @@ load_dotenv()
 ET = ZoneInfo("America/New_York")
 
 # ── Configuration ──
-MODEL_PATH = os.path.join(PROJECT_ROOT, "neural/models", "trading_hybrid_wf.joblib")
-NORMALIZER_PATH = os.path.join(PROJECT_ROOT, "neural/models", "hybrid_normalizer_wf.npz")
+# Must match the promoted model configured in neural/run_pipeline.ps1.
+MODEL_PATH = os.path.join(
+    PROJECT_ROOT, "neural", "models", "codex_exp",
+    "gbt_18m_econ_pf150_minsel10_avail.joblib",
+)
+NORMALIZER_PATH = os.path.join(
+    PROJECT_ROOT, "neural", "models", "codex_exp",
+    "gbt_18m_econ_pf150_minsel10_avail_norm.npz",
+)
 RL_MODEL_PATH = os.path.join(PROJECT_ROOT, "rl_models", "best_rl_agent.pt")
 TRADES_DIR = os.path.join(PROJECT_ROOT, "trades_rl")
 LOGS_DIR = os.path.join(PROJECT_ROOT, "logs")
@@ -68,7 +75,7 @@ RT_DATA_DIR = os.path.join(PROJECT_ROOT, "rt_data")
 BOT_STATE_FILENAME = "bot_intraday_state.json"
 
 # GBM signal confidence threshold. Must match the RL training/backtest run.
-EXPECTED_LIVE_MIN_CONFIDENCE = 0.550
+EXPECTED_LIVE_MIN_CONFIDENCE = 0.475
 GBM_MIN_CONFIDENCE = float(RL_CONFIG["min_confidence"])
 if not math.isclose(GBM_MIN_CONFIDENCE, EXPECTED_LIVE_MIN_CONFIDENCE, rel_tol=0.0, abs_tol=1e-9):
     raise RuntimeError(
@@ -90,6 +97,7 @@ DISCORD_ENABLED = len(DISCORD_WEBHOOKS) > 0
 TICKERS = ["SPX", "QQQ", "SPY"]
 POINT_VALUES = {"SPX": 50.0, "SPY": 100.0, "QQQ": 100.0}
 OPTION_CONTRACT_MULTIPLIER = 100.0
+RISK_CAPITAL = 1000.0
 MODEL_SIZE = "small"
 
 # Map trading ticker → options symbol (matches training data)
@@ -112,11 +120,14 @@ MAX_FEED_SNAPSHOT_AGE_SECONDS = 150
 ENTRY_EVAL_CADENCE_MINUTES = entry_cadence_minutes()
 COOLDOWN_MINUTES = 15
 EOD_CLEANUP_MINUTE = 55  # minute of 15:XX EST at which EOD cleanup triggers
+MIN_ENTRY_MINUTE = 580
+MIN_SHORT_ENTRY_MINUTE = 615
+MIN_SHORT_PRICE_VS_IB_HIGH = -40.0
 
 # GBM Spot-Based TP/SL Configuration (mirrors backtest_rl.py simulate_mlp_only)
 GBM_TARGET_LONG = 0.010       # +1.0% spot move target for LONG
 GBM_TARGET_SHORT = 0.010      # +1.0% spot move target for SHORT
-GBM_STOP_PCT = 0.003          # 0.3% adverse spot move stop loss
+GBM_STOP_PCT = 0.0025         # 0.25% adverse spot move stop loss
 GBM_MAX_HOLD_MINUTES = 180    # 3 hours max hold
 GBM_TRAILING_STOP_PCT = 0.0030 # 0.30% spot retrace from peak (user requested)
 GBM_TRAILING_ACTIVATION_PCT = 0.0050 # Activate trailing at +0.50% spot profit
@@ -285,6 +296,13 @@ def _send(content: str):
 # HELPERS
 # ═════════════════════════════════════════════════════════════════════════
 
+def calc_contracts_options(entry_premium: float) -> int:
+    cost_per_contract = float(entry_premium or 0.0) * OPTION_CONTRACT_MULTIPLIER
+    if cost_per_contract <= 0:
+        return 1
+    return max(1, int(RISK_CAPITAL / cost_per_contract))
+
+
 # ═════════════════════════════════════════════════════════════════════════
 # POSITION TRACKING
 # ═════════════════════════════════════════════════════════════════════════
@@ -296,7 +314,8 @@ class RLPosition:
                  entry_atm_iv, bucket_index,
                  expiration=None, mae=0.0, prev_pnl_pct=0.0, time_to_target=0.5,
                  log_sigma=0.0, max_unrealized_pnl=0.0, right=None,
-                 entry_market_features=None, trailing_drawdown=0.0):
+                 entry_market_features=None, trailing_drawdown=0.0,
+                 contracts=1):
         self.ticker = ticker
         self.direction = direction
         self.strike = strike
@@ -318,6 +337,7 @@ class RLPosition:
         self.right = right or ("CALL" if direction == "LONG" else "PUT")
         self.entry_market_features = entry_market_features
         self.trailing_drawdown = trailing_drawdown
+        self.contracts = max(1, int(contracts or 1))
 
     def to_dict(self):
         return {
@@ -339,6 +359,7 @@ class RLPosition:
             "right": self.right,
             "entry_market_features": self.entry_market_features,
             "trailing_drawdown": self.trailing_drawdown,
+            "contracts": self.contracts,
         }
 
     @classmethod
@@ -358,7 +379,8 @@ class RLPosition:
                   max_unrealized_pnl=d.get("max_unrealized_pnl", 0.0),
                   right=d.get("right"),
                   entry_market_features=d.get("entry_market_features"),
-                  trailing_drawdown=d.get("trailing_drawdown", 0.0))
+                  trailing_drawdown=d.get("trailing_drawdown", 0.0),
+                  contracts=d.get("contracts", 1))
         return pos
 
 
@@ -550,9 +572,22 @@ class RLTradingBot:
                 rl_agent=rl_agent,
                 feature_columns=FEATURE_COLUMNS,
                 device=self.device,
+                min_confidence=GBM_MIN_CONFIDENCE,
             )
 
         logger.info(f"IntegratedTradingSystem isolated per ticker ready: {TICKERS}")
+        logger.info(
+            "Live policy: min_conf=%.3f cooldown=%s target_L=%.3f target_S=%.3f "
+            "stop=%.4f min_entry=%s min_short_entry=%s short_price_vs_ib_high>=%.1f",
+            GBM_MIN_CONFIDENCE,
+            COOLDOWN_MINUTES,
+            GBM_TARGET_LONG,
+            GBM_TARGET_SHORT,
+            GBM_STOP_PCT,
+            MIN_ENTRY_MINUTE,
+            MIN_SHORT_ENTRY_MINUTE,
+            MIN_SHORT_PRICE_VS_IB_HIGH,
+        )
         logger.info(f"Discord: {'enabled' if DISCORD_ENABLED else 'disabled'}")
         logger.info(f"Data source: {RT_DATA_DIR}")
         logger.info("=" * 60)
@@ -1636,6 +1671,13 @@ class RLTradingBot:
             logger.warning(f"[{ticker}][GBM] Prediction failed: {e}")
             return None
 
+    @staticmethod
+    def _feature_value(features: np.ndarray, name: str, default: float = 0.0) -> float:
+        try:
+            return float(features[FEATURE_COLUMNS.index(name)])
+        except (ValueError, IndexError, TypeError):
+            return float(default)
+
     def _check_gbm_trackers(self, ticker: str, spot: float, now: datetime):
         """Check GBM spot-based TP/SL trackers for this ticker."""
         if ticker not in self.gbm_trackers:
@@ -1757,9 +1799,9 @@ class RLTradingBot:
         minutes_since_open = max(0, (now.hour * 60 + now.minute) - (9 * 60 + 30))
         entry_eval_due = (minutes_since_open % ENTRY_EVAL_CADENCE_MINUTES) == 0
         
-        # 0. Skip the first 10 minutes of the market (09:30 - 09:39) due to toxic options pricing
+        # 0. Skip the unstable opening window configured by the promoted backtest.
         current_minute = now.hour * 60 + now.minute
-        if 570 <= current_minute < 580:
+        if 570 <= current_minute < MIN_ENTRY_MINUTE:
             logger.info(f"[{ticker}] NO-TRADE: Skipping market open volatility ({now.strftime('%H:%M:%S')})")
             return
 
@@ -1900,6 +1942,33 @@ class RLTradingBot:
 
         if gbm_result and gbm_result["direction"] == "HOLD":
             logger.info(f"[{ticker}] NO-TRADE: GBM says HOLD conf={gbm_result['confidence']:.0%}")
+        elif (
+            ticker not in self.positions
+            and gbm_result
+            and gbm_result["direction"] == "SHORT"
+            and current_minute < MIN_SHORT_ENTRY_MINUTE
+        ):
+            logger.info(
+                f"[{ticker}] NO-TRADE: SHORT entry before "
+                f"{MIN_SHORT_ENTRY_MINUTE // 60:02d}:{MIN_SHORT_ENTRY_MINUTE % 60:02d}"
+            )
+            self._check_gbm_trackers(ticker, spot, now)
+            self._save_intraday_state()
+            return
+        elif (
+            ticker not in self.positions
+            and gbm_result
+            and gbm_result["direction"] == "SHORT"
+            and self._feature_value(features, "price_vs_ib_high") < MIN_SHORT_PRICE_VS_IB_HIGH
+        ):
+            price_vs_ib_high = self._feature_value(features, "price_vs_ib_high")
+            logger.info(
+                f"[{ticker}] NO-TRADE: SHORT price_vs_ib_high={price_vs_ib_high:.1f} "
+                f"below {MIN_SHORT_PRICE_VS_IB_HIGH:.1f}"
+            )
+            self._check_gbm_trackers(ticker, spot, now)
+            self._save_intraday_state()
+            return
         elif gbm_result and not is_actionable_signal(
             gbm_result["direction"],
             gbm_result["confidence"],
@@ -2039,12 +2108,14 @@ class RLTradingBot:
                 return
 
             details = result.get("details", {})
+            entry_premium = details.get("entry_price", 0)
+            contracts = calc_contracts_options(entry_premium)
             pos = RLPosition(
                 ticker=ticker,
                 direction="LONG" if "CALL" in action else "SHORT",
                 strike=result.get("strike", 0),
                 delta=result.get("delta", 0),
-                entry_premium=details.get("entry_price", 0),
+                entry_premium=entry_premium,
                 confidence=result.get("confidence", 0),
                 bucket=details.get("bucket", "unknown"),
                 entry_time=now,
@@ -2060,7 +2131,8 @@ class RLTradingBot:
                     getattr(self.systems[ticker], "_entry_market_features", None).tolist()
                     if getattr(self.systems[ticker], "_entry_market_features", None) is not None
                     else None
-                )
+                ),
+                contracts=contracts,
             )
             self.positions[ticker] = pos
             self.last_trade_time[ticker] = now
@@ -2068,7 +2140,10 @@ class RLTradingBot:
             self.trade_count += 1
             self._save_positions()
 
-            logger.info(f"OPEN {pos.direction} {ticker} {pos.strike:.0f} {pos.bucket} | conf={pos.confidence:.0%}")
+            logger.info(
+                f"OPEN {pos.direction} {ticker} {pos.strike:.0f} {pos.bucket} | "
+                f"conf={pos.confidence:.0%} | contracts={pos.contracts}"
+            )
 
             discord_open(
                 ticker, pos.direction, pos.strike, pos.delta,
@@ -2084,7 +2159,7 @@ class RLTradingBot:
             details = result.get("details", {})
             pnl_pct = details.get("final_pnl_pct", 0)
             hold_min = (now - pos.entry_time).total_seconds() / 60
-            pnl_dollars = pnl_pct * pos.entry_premium * OPTION_CONTRACT_MULTIPLIER
+            pnl_dollars = pnl_pct * pos.entry_premium * OPTION_CONTRACT_MULTIPLIER * pos.contracts
             reason = details.get("exit_reason", "unknown")
             self.daily_pnl += pnl_dollars
             self.last_trade_time[ticker] = now
@@ -2101,6 +2176,7 @@ class RLTradingBot:
                 "ticker": ticker, "direction": pos.direction,
                 "strike": pos.strike, "delta": pos.delta,
                 "entry_premium": pos.entry_premium,
+                "contracts": pos.contracts,
                 "pnl_pct": pnl_pct, "pnl_dollars": pnl_dollars,
                 "hold_minutes": hold_min, "exit_reason": reason,
                 "confidence": pos.confidence, "bucket": pos.bucket,

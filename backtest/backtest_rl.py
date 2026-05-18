@@ -47,6 +47,89 @@ from neural.signal_policy import (
 
 # ─────────────────────────────────────────────────────────────────────────
 
+def _parse_block_rule(rule: str) -> tuple[str, str, str]:
+    """Parse ticker:direction:bucket policy rules, using * as wildcard."""
+    parts = [p.strip() for p in str(rule).split(":")]
+    if len(parts) != 3:
+        raise ValueError(
+            f"Invalid RL block rule '{rule}'. Expected ticker:direction:bucket, e.g. SPY:LONG:*"
+        )
+    ticker, direction, bucket = parts
+    ticker = ticker.upper() if ticker and ticker != "*" else "*"
+    direction = direction.upper() if direction and direction != "*" else "*"
+    bucket = bucket.lower() if bucket and bucket != "*" else "*"
+    return ticker, direction, bucket
+
+
+def _matches_block_rule(
+    ticker: str,
+    direction: str,
+    strike_bucket_label: str,
+    rules: list[tuple[str, str, str]] | None,
+) -> bool:
+    if not rules:
+        return False
+    ticker = str(ticker).upper()
+    direction = str(direction).upper()
+    bucket = str(strike_bucket_label).lower()
+    for rule_ticker, rule_direction, rule_bucket in rules:
+        if rule_ticker not in ("*", ticker):
+            continue
+        if rule_direction not in ("*", direction):
+            continue
+        if rule_bucket not in ("*", bucket):
+            continue
+        return True
+    return False
+
+
+def _parse_feature_rule(rule: str) -> tuple[str, str, str, float]:
+    """Parse direction:feature:op:value feature guards, with ALL/* as wildcard direction."""
+    parts = [p.strip() for p in str(rule).split(":")]
+    if len(parts) != 4:
+        raise ValueError(
+            f"Invalid RL feature rule '{rule}'. Expected direction:feature:op:value, "
+            "e.g. SHORT:price_vs_ib_low:lte:5.4"
+        )
+    direction, feature, op, value = parts
+    direction = direction.upper()
+    if direction in ("ALL", ""):
+        direction = "*"
+    op = op.lower()
+    if op not in ("lt", "lte", "gt", "gte"):
+        raise ValueError(f"Invalid feature rule op '{op}'. Use lt/lte/gt/gte.")
+    return direction, feature, op, float(value)
+
+
+def _matches_feature_rule(
+    row: pd.Series,
+    direction: str,
+    rules: list[tuple[str, str, str, float]] | None,
+) -> bool:
+    if not rules:
+        return False
+    direction = str(direction).upper()
+    for rule_direction, feature, op, value in rules:
+        if rule_direction not in ("*", direction):
+            continue
+        if feature not in row.index:
+            continue
+        try:
+            observed = float(row.get(feature))
+        except Exception:
+            continue
+        if not np.isfinite(observed):
+            continue
+        if op == "lt" and observed < value:
+            return True
+        if op == "lte" and observed <= value:
+            return True
+        if op == "gt" and observed > value:
+            return True
+        if op == "gte" and observed >= value:
+            return True
+    return False
+
 
 # ─────────────────────────────────────────────────────────────────────────
 # GBT-ONLY SIMULATOR (aligned with backtest_hybrid_parquet.py)
@@ -156,7 +239,10 @@ def simulate_mlp_only(df: pd.DataFrame, predictions: np.ndarray,
                       probabilities: np.ndarray, threshold: float = RL_CONFIG["min_confidence"],
                       target_long: float = 0.010, target_short: float = 0.005,
                       stop_pct: float = 0.003, max_time: int = 180,
-                      cooldown: int = 15, risk_capital: float = 500.0) -> pd.DataFrame:
+                      cooldown: int = 15, risk_capital: float = 500.0,
+                      min_entry_minute: int = 580,
+                      min_short_entry_minute: int | None = None,
+                      min_short_price_vs_ib_high: float | None = None) -> pd.DataFrame:
     """
     Simulate GBT-only trades using spot price targets/stops.
     Aligned with backtest_hybrid_parquet.py: real dollar P&L, OHLC intrabar
@@ -198,8 +284,21 @@ def simulate_mlp_only(df: pd.DataFrame, predictions: np.ndarray,
             if not is_actionable_signal(direction, max_prob, base_confidence=threshold):
                 continue
 
-            # Skip first 10 minutes (9:30-9:40) — market opening noise
-            if 570 <= current_minute < 580:
+            # Skip unstable opening window. 580 preserves the historical
+            # first-10-minute guard; higher values are explicit pipeline policy.
+            if current_minute < min_entry_minute:
+                continue
+            if (
+                direction == "SHORT"
+                and min_short_entry_minute is not None
+                and current_minute < int(min_short_entry_minute)
+            ):
+                continue
+            if (
+                direction == "SHORT"
+                and min_short_price_vs_ib_high is not None
+                and float(row.get("price_vs_ib_high", 0.0)) < float(min_short_price_vs_ib_high)
+            ):
                 continue
 
             # Open position check — don't overlap
@@ -678,7 +777,13 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                     cooldown: int = 15, device: torch.device = None,
                     risk_capital: float = 500.0,
                     single_step_eval: bool = False,
-                    recovery_lookup: dict = None) -> pd.DataFrame:
+                    recovery_lookup: dict = None,
+                    block_rules: list[tuple[str, str, str]] | None = None,
+                    block_short_confidence_above: float | None = None,
+                    feature_rules: list[tuple[str, str, str, float]] | None = None,
+                    min_entry_minute: int = 580,
+                    min_short_entry_minute: int | None = None,
+                    min_short_price_vs_ib_high: float | None = None) -> pd.DataFrame:
     """Simulate GBT+RL trades using REAL options pricing from ThetaData."""
     trades = []
     skipped_diagnostics = []
@@ -698,6 +803,9 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
     _greeks_cache: dict[str, tuple] = {}
     options_loaded = 0
     options_missed = 0
+    blocked_by_rule = 0
+    blocked_by_confidence = 0
+    blocked_by_feature = 0
     df_greeks = None
     premium_lookup = None
     greeks_lookup = None
@@ -706,6 +814,9 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
     total_dates = len(dates)
     t_start = _time.time()
     report_interval = max(1, total_dates // 10)  # report every ~10%
+    scheduler = CurriculumScheduler(total_updates=RL_CONFIG.get("total_updates", 500))
+    curr_params = scheduler.get_phase_info(getattr(rl_agent, "update_step", 0))
+    rl_min_hold = curr_params.get("min_hold_minutes", 0)
 
     for d_idx, d in enumerate(dates):
         d_str = str(d)
@@ -739,6 +850,18 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
             if not is_actionable_signal(direction, max_prob, base_confidence=threshold):
                 continue
 
+            if (
+                block_short_confidence_above is not None
+                and direction == "SHORT"
+                and max_prob > block_short_confidence_above
+            ):
+                blocked_by_confidence += 1
+                continue
+
+            if _matches_feature_rule(row, direction, feature_rules):
+                blocked_by_feature += 1
+                continue
+
             # CRITICAL: Define current_minute BEFORE using it in filters
             entry_time = str(row.get("time", "09:30"))
             try:
@@ -747,8 +870,21 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
             except Exception:
                 current_minute = 570
 
-            # Skip trades in the first 10 minutes (09:30-09:39) due to unstable options pricing.
-            if 570 <= current_minute < 580:
+            # Skip unstable opening window. 580 preserves the historical
+            # first-10-minute guard; higher values are explicit pipeline policy.
+            if current_minute < min_entry_minute:
+                continue
+            if (
+                direction == "SHORT"
+                and min_short_entry_minute is not None
+                and current_minute < int(min_short_entry_minute)
+            ):
+                continue
+            if (
+                direction == "SHORT"
+                and min_short_price_vs_ib_high is not None
+                and float(row.get("price_vs_ib_high", 0.0)) < float(min_short_price_vs_ib_high)
+            ):
                 continue
 
             ticker = row.get("ticker", "SPX")
@@ -767,7 +903,7 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                 # Re-entry protection: if we just exited a GBT signal burst, 
                 # don't re-enter until the signal disappears or a long cooldown passed.
                 # This prevents over-trading from RL's early exits.
-                long_cooldown = 15 # Minimum lockout after an RL exit
+                long_cooldown = cooldown # Minimum lockout after an RL exit
                 if elapsed < long_cooldown:
                     continue
 
@@ -837,6 +973,10 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
             
             # Handle both dictionary (backwards compatibility) and integer (new architecture) actions
             strike_bucket = action["strike"] if isinstance(action, dict) else int(action)
+            strike_bucket_label = STRIKE_BUCKETS[strike_bucket]["label"]
+            if _matches_block_rule(ticker, direction, strike_bucket_label, block_rules):
+                blocked_by_rule += 1
+                continue
             delta_target = STRIKE_BUCKETS[strike_bucket]["delta_target"]
 
             # ── Find REAL option contract ──
@@ -879,6 +1019,7 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
             hold_minutes = 0
             premium_pnl_pct = 0.0
             peak_premium = entry_premium
+            peak_pnl = 0.0
 
             # Isolate future rows specific to this ticker
             ticker_mask = (day_df["ticker"] == ticker) & (day_df["minutes"] >= current_minute)
@@ -922,22 +1063,20 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                 peak_premium = max(peak_premium, current_premium)
                 peak_pnl = (peak_premium - entry_premium) / entry_premium
                 _premium_history.append(current_premium)  # O(1) accumulation
+                exit_price_spot = price
 
                 # Hard exit checks
                 if premium_pnl_pct <= HARD_EXITS["max_loss_pct"]:
                     exit_reason = "hard_stop"
-                    exit_price_spot = price
                     break
                 if premium_pnl_pct >= HARD_EXITS["max_profit_pct"]:
                     exit_reason = "hard_take_profit"
-                    exit_price_spot = price
                     break
                 
                 # Trailing stop check (RL Premium based)
                 if peak_pnl >= HARD_EXITS.get("trailing_stop_activation_pct", 0.40):
                     if (peak_premium - current_premium) / entry_premium >= HARD_EXITS.get("trailing_stop_pct", 0.30):
                         exit_reason = "trailing_stop"
-                        exit_price_spot = price
                         break
 
                 # Match the training environment/live system: bail out when the
@@ -953,7 +1092,6 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                     minutes_since_open=bar_minute,
                 ):
                     exit_reason = "signal_reversal"
-                    exit_price_spot = price
                     break
 
                 # ── Build RL state for exit decision ──
@@ -993,37 +1131,6 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                     mae=mae,
                     trailing_drawdown=trailing_drawdown,
                 )
-
-            # [FIX] Get curricular min hold from agent's training step
-            scheduler = CurriculumScheduler(total_updates=500)
-            curr_params = scheduler.get_phase_info(rl_agent.update_step)
-            rl_min_hold = curr_params.get("min_hold_minutes", 0)
-
-            # --- Holding Loop ---
-            for t in range(max_time):
-                bar_idx = entry_idx + t + 1
-                if bar_idx >= len(day_df):
-                    break
-                
-                row_bar = day_df.iloc[bar_idx]
-                bar_minute = row_bar['minutes']
-                hold_minutes = bar_minute - current_minute
-                if hold_minutes > max_time:
-                    break
-                
-                price = row_bar.get('spot_price', entry_price)
-                
-                # Real options pricing
-                future_time = row_bar.get('time', '16:00')
-                premium = _get_premium_at_time(premium_lookup, actual_strike, option_right, future_time)
-                if premium is None:
-                    premium = _premium_history[-1] if _premium_history else entry_premium
-                
-                _premium_history.append(premium)
-                premium_pnl_pct = (premium - entry_premium) / entry_premium
-                
-                # Build RL State
-                idx_global = day_idx[min(i + t + 1, len(day_idx) - 1)]
                 market_features = (
                     entry_market_features
                     if single_step_eval
@@ -1034,17 +1141,8 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                     )
                 )
                 
-                position_state = _build_position_state(
-                    pnl_pct=premium_pnl_pct,
-                    hold_norm=hold_minutes / 390.0,
-                    current_delta=0.0,
-                    recovery_prob=0.0,
-                    iv_ratio=1.0,
-                    mae=0.0
-                )
-                
                 dynamic_market = _build_dynamic_market_features(
-                    current_minute=bar_minute,
+                    current_minute=current_minute + hold_minutes,
                     entry_spot=entry_price,
                     entry_iv=entry_atm_iv,
                     spot_history=_spot_history,
@@ -1072,10 +1170,7 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                     is_emergency = premium_pnl_pct <= RL_CONFIG.get("emergency_stop_pct", -0.30)
                     if hold_minutes >= rl_min_hold or is_emergency:
                         exit_reason = "agent_exit"
-                        exit_price_spot = price
                         break
-                
-                exit_price_spot = price
             
             # Real strike distance from spot
             strike_distance_pts = actual_strike - entry_price if actual_strike else 0.0
@@ -1121,7 +1216,7 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                 "pnl_dollars": premium_pnl_dollars,
                 "hold_minutes": hold_minutes, "exit_reason": exit_reason,
                 "confidence": max_prob,
-                "strike_bucket": STRIKE_BUCKETS[strike_bucket]["label"],
+                "strike_bucket": strike_bucket_label,
                 "delta_target": delta_target,
                 "actual_delta": round(actual_delta, 3),
                 "actual_iv": round(actual_iv, 3),
@@ -1131,7 +1226,9 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                 "contracts": contracts,
                 "balance": round(balance, 2),
             })
-            last_trade_time[key] = current_minute
+            # Cooldown starts after the position is closed, not after entry.
+            # Otherwise long holds can re-enter immediately on the same signal burst.
+            last_trade_time[key] = current_minute + hold_minutes
             open_positions[key] = current_minute + hold_minutes
 
         # Progress reporting
@@ -1152,6 +1249,15 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                   f"ETA {int(eta)}s")
 
     print(f"  Options data: {options_loaded} trades with real pricing, {options_missed} skipped (no data)")
+    if block_rules:
+        print(f"  RL policy rules: {blocked_by_rule} candidate entries blocked")
+    if block_short_confidence_above is not None:
+        print(
+            f"  RL confidence guard: {blocked_by_confidence} SHORT candidates blocked "
+            f"(confidence > {block_short_confidence_above:.3f})"
+        )
+    if feature_rules:
+        print(f"  RL feature guards: {blocked_by_feature} candidate entries blocked")
     if skipped_diagnostics:
         skipped_df = pd.DataFrame(skipped_diagnostics)
         top_dates = skipped_df["date"].value_counts()
@@ -1271,7 +1377,15 @@ def main():
     parser.add_argument("--target-short", type=float, default=0.005)
     parser.add_argument("--stop", type=float, default=0.003)
     parser.add_argument("--max-time", type=int, default=180)
+    parser.add_argument("--min-entry-minute", type=int, default=580,
+                        help="Earliest absolute minute of day for entries (10:30 = 630)")
+    parser.add_argument("--min-short-entry-minute", type=int, default=None,
+                        help="Earliest absolute minute of day for SHORT entries (10:15 = 615)")
+    parser.add_argument("--min-short-price-vs-ib-high", type=float, default=None,
+                        help="For SHORT entries, require price_vs_ib_high >= this value.")
     parser.add_argument("--tickers", nargs="+", default=None, help="Filter tickers (e.g. SPX SPY QQQ)")
+    parser.add_argument("--start-date", default=None, help="Inclusive YYYYMMDD start date filter")
+    parser.add_argument("--end-date", default=None, help="Inclusive YYYYMMDD end date filter")
     parser.add_argument("--ensemble", action="store_true", help="Load model as ensemble")
     parser.add_argument("--risk-capital", type=float, default=500.0,
                         help="Risk capital in dollars per trade (fixed)")
@@ -1284,7 +1398,31 @@ def main():
         help="Freeze the entry market snapshot while dynamic and position features evolve, matching RL training/live.",
     )
     parser.add_argument("--strict-wf", action="store_true", help="Enable strict Walk-Forward date filtering for GBT inference")
+    parser.add_argument(
+        "--block-rl-rule",
+        action="append",
+        default=[],
+        help="Block RL entries matching ticker:direction:bucket; use * as wildcard, e.g. SPY:LONG:* or *:*:itm_light.",
+    )
+    parser.add_argument(
+        "--block-short-confidence-above",
+        type=float,
+        default=None,
+        help="Block over-confident SHORT candidates above this probability; useful as a calibration guard.",
+    )
+    parser.add_argument(
+        "--block-rl-feature-rule",
+        action="append",
+        default=[],
+        help="Block RL entries by entry-row feature rule direction:feature:op:value; op is lt/lte/gt/gte.",
+    )
     args = parser.parse_args()
+    block_rules = [_parse_block_rule(rule) for rule in args.block_rl_rule]
+    feature_rules = [_parse_feature_rule(rule) for rule in args.block_rl_feature_rule]
+    if block_rules:
+        print(f"  RL block rules: {args.block_rl_rule}")
+    if feature_rules:
+        print(f"  RL feature rules: {args.block_rl_feature_rule}")
 
     device = get_device()
 
@@ -1366,6 +1504,13 @@ def main():
         df = df[df["ticker"].isin(args.tickers)]
         print(f"  Filtered to tickers: {args.tickers}")
 
+    if args.start_date:
+        df = df[df["date"] >= str(args.start_date)]
+        print(f"  Filtered start date: {args.start_date}")
+    if args.end_date:
+        df = df[df["date"] <= str(args.end_date)]
+        print(f"  Filtered end date:   {args.end_date}")
+
     # ── Optional: drop dates with no 0DTE greeks coverage ──
     if args.filter_by_greeks:
         ticker_to_options = {"SPX": "SPXW", "SPXW": "SPXW", "QQQ": "QQQ", "SPY": "SPY"}
@@ -1443,7 +1588,10 @@ def main():
         threshold=args.threshold,
         target_long=args.target_long, target_short=args.target_short,
         stop_pct=args.stop, max_time=args.max_time, cooldown=args.cooldown,
-        risk_capital=args.risk_capital)
+        risk_capital=args.risk_capital,
+        min_entry_minute=args.min_entry_minute,
+        min_short_entry_minute=args.min_short_entry_minute,
+        min_short_price_vs_ib_high=args.min_short_price_vs_ib_high)
     mlp_metrics = calculate_metrics(mlp_trades)
     print(f"  GBT-only: {len(mlp_trades)} trades")
 
@@ -1456,7 +1604,13 @@ def main():
         cooldown=args.cooldown, device=device,
         risk_capital=args.risk_capital,
         single_step_eval=args.single_step_eval,
-        recovery_lookup=recovery_stats)
+        recovery_lookup=recovery_stats,
+        block_rules=block_rules,
+        block_short_confidence_above=args.block_short_confidence_above,
+        feature_rules=feature_rules,
+        min_entry_minute=args.min_entry_minute,
+        min_short_entry_minute=args.min_short_entry_minute,
+        min_short_price_vs_ib_high=args.min_short_price_vs_ib_high)
     rl_metrics = calculate_metrics(rl_trades)
     print(f"  GBT+RL: {len(rl_trades)} trades")
 

@@ -78,7 +78,9 @@ class TradeSimulator:
                  target_long: float = 0.010, target_short: float = 0.005, # <-- Targets separados
                  stop_pct: float = 0.003, max_time: int = 180, min_iv_pct: float = 0.0,
                  discord_enabled: bool = False, trade_limit: int = 0,
-                 risk_capital: float = 500.0):
+                 risk_capital: float = 500.0, min_entry_minute: int = 580,
+                 min_short_entry_minute: int | None = None,
+                 min_short_price_vs_ib_high: float | None = None):
         self.threshold = threshold
         self.position_size = position_size
         self.risk_capital = risk_capital
@@ -90,6 +92,9 @@ class TradeSimulator:
         self.min_iv_pct = min_iv_pct
         self.discord_enabled = discord_enabled
         self.trade_limit = trade_limit
+        self.min_entry_minute = min_entry_minute
+        self.min_short_entry_minute = min_short_entry_minute
+        self.min_short_price_vs_ib_high = min_short_price_vs_ib_high
         self.trades = []
         
     def load_ohlc_data(self, ticker, date):
@@ -183,7 +188,19 @@ class TradeSimulator:
             date = row['date']
             time_str = row['time']
             current_minute = row['minutes']
-            if 570 <= current_minute < 580:
+            if current_minute < self.min_entry_minute:
+                continue
+            if (
+                direction == "SHORT"
+                and self.min_short_entry_minute is not None
+                and current_minute < int(self.min_short_entry_minute)
+            ):
+                continue
+            if (
+                direction == "SHORT"
+                and self.min_short_price_vs_ib_high is not None
+                and float(row.get("price_vs_ib_high", 0.0)) < float(self.min_short_price_vs_ib_high)
+            ):
                 continue
 
             if (ticker, date) in open_positions:
@@ -583,6 +600,9 @@ def main():
     parser.add_argument("--target_short", type=float, default=0.005, help="Target for SHORT (default 0.5%%)")
     parser.add_argument("--stop", type=float, default=0.003, help="Stop loss %% (default: 0.3%%)")
     parser.add_argument("--max-time", type=int, default=180, help="Max predicted time to enter trade (default: 180 min)")
+    parser.add_argument("--min-entry-minute", type=int, default=580, help="Earliest absolute minute of day for entries (10:30 = 630)")
+    parser.add_argument("--min-short-entry-minute", type=int, default=None, help="Earliest absolute minute of day for SHORT entries (10:15 = 615)")
+    parser.add_argument("--min-short-price-vs-ib-high", type=float, default=None, help="For SHORT entries, require price_vs_ib_high >= this value")
     parser.add_argument("--min-iv", type=float, default=0.0, help="Min IV Percentile (0-1) to trade (default: 0)")
     parser.add_argument("--discord", action="store_true", help="Send Discord alerts for trades (first 3 only)")
     parser.add_argument("--limit", type=int, default=0, help="Limit number of trades to simulate (0 = all)")
@@ -717,10 +737,12 @@ def main():
     print(f"    LONG:  {(predictions == 2).sum():,}")
     
     # Simulate trades
-    print(f"\n[4/4] Simulating trades (threshold={args.threshold}, cooldown={args.cooldown}min, target_L={args.target_long:.1%}, target_S={args.target_short:.1%}, stop={args.stop:.1%}, max_time={args.max_time}m, min_iv={args.min_iv})...")
+    print(f"\n[4/4] Simulating trades (threshold={args.threshold}, cooldown={args.cooldown}min, target_L={args.target_long:.1%}, target_S={args.target_short:.1%}, stop={args.stop:.1%}, max_time={args.max_time}m, min_iv={args.min_iv}, min_entry_minute={args.min_entry_minute}, min_short_entry_minute={args.min_short_entry_minute}, min_short_price_vs_ib_high={args.min_short_price_vs_ib_high})...")
     simulator = TradeSimulator(threshold=args.threshold, position_size=args.position_size, cooldown_minutes=args.cooldown,
                                target_long=args.target_long, target_short=args.target_short, stop_pct=args.stop, max_time=args.max_time, min_iv_pct=args.min_iv,
-                               discord_enabled=args.discord, risk_capital=args.risk_capital)
+                               discord_enabled=args.discord, risk_capital=args.risk_capital, min_entry_minute=args.min_entry_minute,
+                               min_short_entry_minute=args.min_short_entry_minute,
+                               min_short_price_vs_ib_high=args.min_short_price_vs_ib_high)
     trades_df = simulator.simulate(df, predictions, probs)
     print(f"  [OK] Executed {len(trades_df):,} trades")
     
@@ -741,7 +763,9 @@ def main():
     for thresh in [0.5, 0.6, 0.7, 0.8, 0.9]:
         sim = TradeSimulator(threshold=thresh, cooldown_minutes=args.cooldown,
                              target_long=args.target_long, target_short=args.target_short, stop_pct=args.stop, max_time=args.max_time, min_iv_pct=args.min_iv,
-                             discord_enabled=False, risk_capital=args.risk_capital)
+                             discord_enabled=False, risk_capital=args.risk_capital, min_entry_minute=args.min_entry_minute,
+                             min_short_entry_minute=args.min_short_entry_minute,
+                             min_short_price_vs_ib_high=args.min_short_price_vs_ib_high)
         trades = sim.simulate(df, predictions, probs)
         m = calculate_metrics(trades)
         if "error" not in m:

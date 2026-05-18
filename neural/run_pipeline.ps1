@@ -10,21 +10,32 @@ Param(
 )
 
 $ErrorActionPreference = "Continue"
+$env:PYTHONUNBUFFERED = "1"
+$NeuralRoot = $PSScriptRoot
+$ProjectRoot = Split-Path $NeuralRoot -Parent
+$PathSeparator = [System.IO.Path]::PathSeparator
+$PythonPathParts = @($NeuralRoot, $ProjectRoot)
+if (-not [string]::IsNullOrWhiteSpace($env:PYTHONPATH)) {
+  $PythonPathParts += $env:PYTHONPATH
+}
+$env:PYTHONPATH = ($PythonPathParts -join $PathSeparator)
+
+function Join-NeuralPath([string]$RelativePath) {
+  return Join-Path $NeuralRoot $RelativePath
+}
+
+function Join-ProjectPath([string]$RelativePath) {
+  return Join-Path $ProjectRoot $RelativePath
+}
 
 function Get-RLBaseConfidence {
-  Push-Location $PSScriptRoot
-  try {
-    $confidenceRaw = & python -c "from rl.config import RL_CONFIG; print(RL_CONFIG['min_confidence'])"
-    if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($confidenceRaw)) {
-      throw "No se pudo leer RL_CONFIG['min_confidence']"
-    }
+  $confidenceRaw = & python -c "from rl.config import RL_CONFIG; print(RL_CONFIG['min_confidence'])"
+  if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($confidenceRaw)) {
+    throw "No se pudo leer RL_CONFIG['min_confidence']"
+  }
 
-    $confidenceText = ($confidenceRaw | Select-Object -Last 1).Trim()
-    return [double]::Parse($confidenceText, [System.Globalization.CultureInfo]::InvariantCulture)
-  }
-  finally {
-    Pop-Location
-  }
+  $confidenceText = ($confidenceRaw | Select-Object -Last 1).Trim()
+  return [double]::Parse($confidenceText, [System.Globalization.CultureInfo]::InvariantCulture)
 }
 
 $BaseConfidence = Get-RLBaseConfidence
@@ -34,6 +45,48 @@ $BaseConfidenceArg = [string]::Format(
   $BaseConfidence
 )
 Write-Host "[CONFIG] Base confidence cargada desde RL_CONFIG: $BaseConfidenceArg" -ForegroundColor DarkCyan
+
+# Best validated configuration for the Apr/May 2026 recent gate.
+# Avoid post-hoc ticker/direction blocks: they improved diagnostics but were
+# hindsight-fit. Promoted filters are broad time/IB-context guards.
+$TrainingDataPath = Join-ProjectPath "training_data\training_data_spx_qqq_spy.parquet"
+$RlEpisodeIndexPath = Join-ProjectPath "rl_data\episode_index.parquet"
+$RlOptionsCachePath = Join-ProjectPath "rl_data\rl_options_cache_chunks"
+$RlModelsDir = Join-ProjectPath "rl_models"
+$RlBestModelPath = Join-ProjectPath "rl_models\best_rl_agent.pt"
+$GbtModelPath = Join-NeuralPath "models\codex_exp\gbt_18m_econ_pf150_minsel10_avail.joblib"
+$GbtNormalizerPath = Join-NeuralPath "models\codex_exp\gbt_18m_econ_pf150_minsel10_avail_norm.npz"
+$GbtTrainMonths = 18
+$GbtTestMonths = 1
+$GbtEnsemble = 3
+$GbtTopNWindows = 10
+$GbtHoldRatioArg = "1.2"
+$GbtMinWindow = 15
+$GbtClassWeight = "none"
+$GbtMinPfFloorArg = "1.50"
+$GbtSelectionMetric = "economic"
+$GbtMinSelectionTrades = 10
+$GbtSelectionBaseConfidenceArg = "0.55"
+
+# This is an explicit validated deployment override, not a hidden drift from RL_CONFIG.
+# It is passed consistently to episode extraction, preprocess and backtests.
+$BacktestBaseConfidenceArg = "0.475"
+$BacktestCooldownMinutes = 15
+$BacktestTargetLongArg = "0.010"
+$BacktestTargetShortArg = "0.010"
+$BacktestStopArg = "0.0025"
+$BacktestRiskCapitalArg = "1000.0"
+$BacktestTickers = @("SPX", "QQQ", "SPY")
+$MinEntryMinute = 580
+$MinShortEntryMinute = 615
+$MinShortPriceVsIbHighArg = "-40.0"
+$MinTradesPerWeekGate = 6
+Write-Host "[CONFIG] GBT model path: $GbtModelPath" -ForegroundColor DarkCyan
+Write-Host "[CONFIG] GBT selection base confidence: $GbtSelectionBaseConfidenceArg" -ForegroundColor DarkCyan
+Write-Host "[CONFIG] BacktestBaseConfidenceArg efectivo: $BacktestBaseConfidenceArg" -ForegroundColor DarkCyan
+Write-Host "[CONFIG] Entry windows: all >= $MinEntryMinute, shorts >= $MinShortEntryMinute" -ForegroundColor DarkCyan
+Write-Host "[CONFIG] SHORT IB gate: price_vs_ib_high >= $MinShortPriceVsIbHighArg" -ForegroundColor DarkCyan
+Write-Host "[CONFIG] Gate de volumen reciente: >= $MinTradesPerWeekGate trades/semana" -ForegroundColor DarkCyan
 
 # Determine starting stage
 $skip_to_step = 0
@@ -77,10 +130,10 @@ if ($u) {
 # ─────────────────────────────────────────────────────────────────────────────
 if ($skip_to_step -le 0) {
   Write-Host "`n=== RECOLECTANDO DATOS SPX+QQQ+SPY ===" -ForegroundColor Cyan
-  python collect_training_data_spx_qqq.py `
+  python -u (Join-NeuralPath "collect_training_data_spx_qqq.py") `
     --start 20220801 --end 20261230 `
     --workers 20 --tickers SPX QQQ SPY `
-    --output training_data_spx_qqq_spy.parquet
+    --output $TrainingDataPath
 
   if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR en la recoleccion de datos SPX+QQQ+SPY." -ForegroundColor Red
@@ -93,17 +146,24 @@ if ($skip_to_step -le 0) {
 # ─────────────────────────────────────────────────────────────────────────────
 if ($skip_to_step -le 1) {
   Write-Host "`n=== ENTRENAMIENTO GBT Walk-Forward (LightGBM Ensemble) ===" -ForegroundColor Cyan
-  python train_walkforward.py `
-    --data ..\training_data\training_data_spx_qqq_spy.parquet `
+  New-Item -ItemType Directory -Force -Path (Split-Path $GbtModelPath) | Out-Null
+  python -u (Join-NeuralPath "train_walkforward.py") `
+    --data $TrainingDataPath `
     --model-size small `
-    --train-months 9 `
-    --test-months 1 `
-    --ensemble 5 `
-    --top-n-windows 15 `
-    --hold-ratio 1.2 `
-    --min-window 20 `
-    --model_path models\trading_hybrid_wf.joblib `
-    --norm_path models\hybrid_normalizer_wf.npz
+    --train-months $GbtTrainMonths `
+    --test-months $GbtTestMonths `
+    --ensemble $GbtEnsemble `
+    --top-n-windows $GbtTopNWindows `
+    --hold-ratio $GbtHoldRatioArg `
+    --min-window $GbtMinWindow `
+    --class-weight $GbtClassWeight `
+    --min-pf-floor $GbtMinPfFloorArg `
+    --selection-metric $GbtSelectionMetric `
+    --min-selection-trades $GbtMinSelectionTrades `
+    --selection-base-confidence $GbtSelectionBaseConfidenceArg `
+    --min-entry-minute $MinEntryMinute `
+    --model_path $GbtModelPath `
+    --norm_path $GbtNormalizerPath
 
   if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR: El entrenamiento del GBT fallo. Revisa los candados matematicos o el LR." -ForegroundColor Red
@@ -116,7 +176,15 @@ if ($skip_to_step -le 1) {
 # ─────────────────────────────────────────────────────────────────────────────
 if ($skip_to_step -le 2) {
   Write-Host "`n=== Generando Indice de Episodios ===" -ForegroundColor Cyan
-  python .\generate_episode_index.py --data ..\training_data\training_data_spx_qqq_spy.parquet --strict-wf
+  $env:MODEL_PATH = $GbtModelPath
+  $env:NORM_PATH = $GbtNormalizerPath
+  python -u (Join-NeuralPath "generate_episode_index.py") `
+    --data $TrainingDataPath `
+    --strict-wf `
+    --min-confidence $BacktestBaseConfidenceArg `
+    --min-entry-minute $MinEntryMinute `
+    --min-short-entry-minute $MinShortEntryMinute `
+    --min-short-price-vs-ib-high $MinShortPriceVsIbHighArg
 
   if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR: generate_episode_index.py fallo." -ForegroundColor Red
@@ -133,21 +201,25 @@ if ($skip_to_step -le 2) {
   #   Remove-Item "..\rl_data\rl_options_cache_chunks\*" -Recurse -Force -ErrorAction SilentlyContinue
   # }
 
-  python run_preprocess.py `
-    --training-data ..\training_data\training_data_spx_qqq_spy.parquet `
+  python -u (Join-NeuralPath "run_preprocess.py") `
+    --training-data $TrainingDataPath `
     --options-dir D:\ThetaData\data_options `
-    --output ..\rl_data\rl_options_cache_chunks `
-    --mlp-model models\trading_hybrid_wf.joblib `
-    --mlp-normalizer models\hybrid_normalizer_wf.npz `
+    --output $RlOptionsCachePath `
+    --mlp-model $GbtModelPath `
+    --mlp-normalizer $GbtNormalizerPath `
     --num-workers 22 `
-    --strict-wf
+    --strict-wf `
+    --min-confidence $BacktestBaseConfidenceArg `
+    --min-entry-minute $MinEntryMinute `
+    --min-short-entry-minute $MinShortEntryMinute `
+    --min-short-price-vs-ib-high $MinShortPriceVsIbHighArg
 
   if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR: run_preprocess.py fallo. No se continuara con artefactos viejos." -ForegroundColor Red
     exit 1
   }
 
-  python rl/compute_recovery_stats.py
+  python -u (Join-NeuralPath "rl\compute_recovery_stats.py")
 
   if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR: compute_recovery_stats.py fallo tras el preprocess." -ForegroundColor Red
@@ -158,11 +230,12 @@ if ($skip_to_step -le 2) {
   # PASO 4 — RL TRAINING (Policy Optimization sobre señales GBT)
   # ─────────────────────────────────────────────────────────────────────────────
   Write-Host "`n=== RL Training (Policy Optimization sobre senales GBT) ===" -ForegroundColor Cyan
-  python -m rl.training `
-    --episode-index ..\rl_data\episode_index.parquet `
-    --options-cache ..\rl_data\rl_options_cache_chunks `
-    --save-dir ..\rl_models `
+  python -u -m rl.training `
+    --episode-index $RlEpisodeIndexPath `
+    --options-cache $RlOptionsCachePath `
+    --save-dir $RlModelsDir `
     --total-updates 500 `
+    --min-confidence $BacktestBaseConfidenceArg `
     --workers 32
 
   if ($LASTEXITCODE -ne 0) {
@@ -176,13 +249,13 @@ if ($skip_to_step -le 2) {
 # ─────────────────────────────────────────────────────────────────────────────
 if ($skip_to_step -le 4.5) {
   Write-Host "`n=== Pipeline Diagnosis (Health & Performance Check) ===" -ForegroundColor Cyan
-  python diagnose_pipeline.py `
-    --train-months 9 `
-    --test-months 1 `
-    --data ..\training_data\training_data_spx_qqq_spy.parquet `
-    --model models\trading_hybrid_wf.joblib `
-    --normalizer models\hybrid_normalizer_wf.npz `
-    --options-cache ..\rl_data\rl_options_cache_chunks
+  python -u (Join-NeuralPath "diagnose_pipeline.py") `
+    --train-months $GbtTrainMonths `
+    --test-months $GbtTestMonths `
+    --data $TrainingDataPath `
+    --model $GbtModelPath `
+    --normalizer $GbtNormalizerPath `
+    --options-cache $RlOptionsCachePath
 
   if ($LASTEXITCODE -ne 0) {
     Write-Host "WARNING: Diagnosis detecto problemas potenciales, pero continuamos..." -ForegroundColor Yellow
@@ -197,13 +270,18 @@ if ($skip_to_step -le 4.5) {
 # ─────────────────────────────────────────────────────────────────────────────
 if ($skip_to_step -le 6) {
   Write-Host "`n=== BACKTESTING GBT only ===" -ForegroundColor Yellow
-  python ..\backtest\backtest_gbt_parquet.py `
-    --data ..\training_data\training_data_spx_qqq_spy.parquet `
-    --model models\trading_hybrid_wf.joblib `
-    --normalizer models\hybrid_normalizer_wf.npz `
+  python -u (Join-ProjectPath "backtest\backtest_gbt_parquet.py") `
+    --data $TrainingDataPath `
+    --model $GbtModelPath `
+    --normalizer $GbtNormalizerPath `
     --model-size small --ensemble `
-    --threshold $BaseConfidenceArg --cooldown 15 `
-    --target_long 0.010 --target_short 0.010 --stop 0.003 `
+    --threshold $BacktestBaseConfidenceArg --cooldown $BacktestCooldownMinutes `
+    --target_long $BacktestTargetLongArg --target_short $BacktestTargetShortArg --stop $BacktestStopArg `
+    --risk-capital $BacktestRiskCapitalArg `
+    --min-entry-minute $MinEntryMinute `
+    --min-short-entry-minute $MinShortEntryMinute `
+    --min-short-price-vs-ib-high $MinShortPriceVsIbHighArg `
+    --tickers $BacktestTickers `
     --strict-wf
         
   if ($LASTEXITCODE -ne 0) {
@@ -217,26 +295,29 @@ if ($skip_to_step -le 6) {
 # ─────────────────────────────────────────────────────────────────────────────
 if ($skip_to_step -le 7) {
   Write-Host "`n=== BACKTESTING GBT+RL ===" -ForegroundColor DarkGreen
-  python ..\backtest\backtest_rl.py `
-    --data ..\training_data\training_data_spx_qqq_spy.parquet `
-    --model models\trading_hybrid_wf.joblib `
-    --normalizer models\hybrid_normalizer_wf.npz `
-    --rl-model ..\rl_models\best_rl_agent.pt `
+  python -u (Join-ProjectPath "backtest\backtest_rl.py") `
+    --data $TrainingDataPath `
+    --model $GbtModelPath `
+    --normalizer $GbtNormalizerPath `
+    --rl-model $RlBestModelPath `
     --model-size small --ensemble `
-    --threshold $BaseConfidenceArg --cooldown 15 `
-    --target-long 0.010 --target-short 0.010 --stop 0.003 `
-    --risk-capital 1000.0 `
+    --threshold $BacktestBaseConfidenceArg --cooldown $BacktestCooldownMinutes `
+    --target-long $BacktestTargetLongArg --target-short $BacktestTargetShortArg --stop $BacktestStopArg `
+    --risk-capital $BacktestRiskCapitalArg `
+    --min-entry-minute $MinEntryMinute `
+    --min-short-entry-minute $MinShortEntryMinute `
+    --min-short-price-vs-ib-high $MinShortPriceVsIbHighArg `
     --filter-by-greeks `
     --single-step-eval `
     --strict-wf `
-    --tickers SPX QQQ SPY
+    --tickers $BacktestTickers
 
   if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR: Backtest GBT+RL fallo." -ForegroundColor Red
     exit 1
   }
 
-  python ..\backtest\analyze_trade_gaps.py
+  python -u (Join-ProjectPath "backtest\analyze_trade_gaps.py")
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -244,15 +325,20 @@ if ($skip_to_step -le 7) {
 # ─────────────────────────────────────────────────────────────────────────────
 if ($skip_to_step -le 8) {
   Write-Host "`n=== VISUALIZACION ===" -ForegroundColor Cyan
-  python ..\visualizer\analyze_backtests.py
-  python ..\visualizer\analyze_backtests.py --month 202601
-  python ..\visualizer\analyze_backtests.py --month 202602
-  python ..\visualizer\analyze_backtests.py --month 202603
-  python ..\visualizer\analyze_backtests.py --month 202604
-  python ..\visualizer\analyze_backtests.py --month 202503
-  python ..\visualizer\analyze_backtests.py --month 202504
+  python -u (Join-ProjectPath "visualizer\analyze_backtests.py")
+  python -u (Join-ProjectPath "visualizer\analyze_backtests.py") --month 202601
+  python -u (Join-ProjectPath "visualizer\analyze_backtests.py") --month 202602
+  python -u (Join-ProjectPath "visualizer\analyze_backtests.py") --month 202603
+  python -u (Join-ProjectPath "visualizer\analyze_backtests.py") --month 202604
+  python -u (Join-ProjectPath "visualizer\analyze_backtests.py") --month 202605
+  python -u (Join-ProjectPath "visualizer\analyze_backtests.py") --month 202503
+  python -u (Join-ProjectPath "visualizer\analyze_backtests.py") --month 202504
 
-  python ..\visualizer\visualize_features.py --mode all --save
+  python -u (Join-ProjectPath "visualizer\visualize_features.py") `
+    --mode all `
+    --gbt-model $GbtModelPath `
+    --normalizer $GbtNormalizerPath `
+    --save
 
   Write-Host "`n=== PIPELINE COMPLETO CON EXITO ===" -ForegroundColor Green
 }

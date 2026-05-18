@@ -32,7 +32,12 @@ from hybrid_model import FeatureNormalizer, FEATURE_COLUMNS
 from gbt_model import GBTModel, GBTEnsemble, save_gbt_ensemble
 from data_utils import walk_forward_splits, add_sample_weights
 from neural.rl.config import RL_CONFIG
-from neural.signal_policy import entry_thresholds, is_actionable_prediction
+from neural.signal_policy import (
+    direction_from_prediction,
+    entry_thresholds,
+    is_actionable_prediction,
+    is_actionable_signal,
+)
 
 
 def set_seed(seed: int):
@@ -63,6 +68,173 @@ def calculate_trading_metrics(predictions, targets):
     else:
         metrics.update({"win_rate": 0.0, "profit_factor": 0.0, "total_trades": 0})
     return metrics
+
+
+ECON_POINT_VALUES = {
+    "SPX": 50.0,
+    "/ES": 50.0,
+    "/NQ": 20.0,
+    "SPY": 100.0,
+    "QQQ": 100.0,
+    "IWM": 100.0,
+}
+
+
+def _time_to_minutes(t) -> int:
+    try:
+        if hasattr(t, "hour") and hasattr(t, "minute"):
+            return int(t.hour) * 60 + int(t.minute)
+        text = str(t)
+        hh, mm = text.split(":")[:2]
+        return int(hh) * 60 + int(mm)
+    except Exception:
+        return 570
+
+
+def _calc_contracts(risk_capital: float, entry_price: float, stop_pct: float, multiplier: float) -> int:
+    max_loss_per_contract = entry_price * stop_pct * multiplier
+    if max_loss_per_contract <= 0:
+        return 1
+    return max(1, min(1000, int(risk_capital / max_loss_per_contract)))
+
+
+def calculate_economic_metrics(
+    val_df: pd.DataFrame,
+    predictions: np.ndarray,
+    probabilities: np.ndarray,
+    base_confidence: float,
+    target_long: float = 0.010,
+    target_short: float = 0.010,
+    stop_pct: float = 0.003,
+    max_time: int = 180,
+    cooldown: int = 15,
+    risk_capital: float = 1000.0,
+    min_entry_minute: int = 580,
+    min_short_entry_minute: int | None = None,
+    min_short_price_vs_ib_high: float | None = None,
+) -> dict:
+    """
+    Honest validation scorer using the same deployed entry policy and a
+    lightweight spot-price PnL simulation. This is deliberately simpler than
+    the full options backtest, but it ranks windows by economic outcomes rather
+    than by label-match counts.
+    """
+    if len(val_df) == 0:
+        return {"win_rate": 0.0, "profit_factor": 0.0, "total_trades": 0, "total_pnl": 0.0}
+
+    work = val_df.copy()
+    work["pred"] = np.asarray(predictions)
+    work["max_prob"] = np.asarray(probabilities).max(axis=1)
+    work["minutes"] = work["time"].apply(_time_to_minutes)
+    work["date"] = work["date"].astype(str)
+    work["ticker"] = work.get("ticker", "SPX")
+    work = work.sort_values(["date", "ticker", "minutes"]).reset_index(drop=True)
+
+    pnl_values: list[float] = []
+    for (date_str, ticker), day_df in work.groupby(["date", "ticker"], sort=True):
+        last_trade_minute = -99999
+        open_until = -99999
+        day_df = day_df.reset_index(drop=True)
+
+        for row_pos, row in day_df.iterrows():
+            current_minute = int(row["minutes"])
+            if current_minute < min_entry_minute:
+                continue
+
+            pred = int(row["pred"])
+            direction = direction_from_prediction(pred)
+            if not is_actionable_signal(direction, float(row["max_prob"]), base_confidence=base_confidence):
+                continue
+            if (
+                direction == "SHORT"
+                and min_short_entry_minute is not None
+                and current_minute < int(min_short_entry_minute)
+            ):
+                continue
+            if (
+                direction == "SHORT"
+                and min_short_price_vs_ib_high is not None
+                and float(row.get("price_vs_ib_high", 0.0)) < float(min_short_price_vs_ib_high)
+            ):
+                continue
+            if current_minute < open_until:
+                continue
+            if current_minute - last_trade_minute < cooldown:
+                continue
+
+            entry_price = float(row.get("spot_price", 0.0))
+            if entry_price <= 0:
+                continue
+
+            target = target_long if direction == "LONG" else target_short
+            exit_price = entry_price
+            actual_hold = max_time
+            peak_price = entry_price
+
+            future_rows = day_df.iloc[row_pos + 1:]
+            for _, future_row in future_rows.iterrows():
+                elapsed = int(future_row["minutes"]) - current_minute
+                if elapsed <= 0:
+                    continue
+                if elapsed > max_time:
+                    break
+
+                price = float(future_row.get("spot_price", entry_price))
+                if price <= 0:
+                    continue
+
+                exit_price = price
+                actual_hold = elapsed
+
+                if direction == "LONG":
+                    peak_price = max(peak_price, price)
+                    peak_pnl = (peak_price - entry_price) / entry_price
+                    if peak_pnl >= 0.005 and (peak_price - price) / entry_price >= 0.003:
+                        exit_price = peak_price - (entry_price * 0.003)
+                        break
+                    if price >= entry_price * (1 + target):
+                        exit_price = entry_price * (1 + target)
+                        break
+                    if price <= entry_price * (1 - stop_pct):
+                        exit_price = entry_price * (1 - stop_pct)
+                        break
+                else:
+                    peak_price = min(peak_price, price)
+                    peak_pnl = (entry_price - peak_price) / entry_price
+                    if peak_pnl >= 0.005 and (price - peak_price) / entry_price >= 0.003:
+                        exit_price = peak_price + (entry_price * 0.003)
+                        break
+                    if price <= entry_price * (1 - target):
+                        exit_price = entry_price * (1 - target)
+                        break
+                    if price >= entry_price * (1 + stop_pct):
+                        exit_price = entry_price * (1 + stop_pct)
+                        break
+
+            multiplier = ECON_POINT_VALUES.get(str(ticker), 100.0)
+            contracts = _calc_contracts(risk_capital, entry_price, stop_pct, multiplier)
+            pnl_pts = (exit_price - entry_price) if direction == "LONG" else (entry_price - exit_price)
+            pnl_dollars = pnl_pts * multiplier * contracts
+            pnl_values.append(float(pnl_dollars))
+            open_until = current_minute + actual_hold
+            last_trade_minute = open_until
+
+    if not pnl_values:
+        return {"win_rate": 0.0, "profit_factor": 0.0, "total_trades": 0, "total_pnl": 0.0}
+
+    pnl = np.asarray(pnl_values, dtype=np.float64)
+    wins = pnl[pnl > 0]
+    losses = pnl[pnl < 0]
+    gross_profit = float(wins.sum()) if len(wins) else 0.0
+    gross_loss = float(-losses.sum()) if len(losses) else 0.0
+    pf = gross_profit / gross_loss if gross_loss > 0 else (gross_profit / 1e-6 if gross_profit > 0 else 0.0)
+
+    return {
+        "win_rate": float((pnl > 0).mean()),
+        "profit_factor": float(pf),
+        "total_trades": int(len(pnl)),
+        "total_pnl": float(pnl.sum()),
+    }
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -130,7 +302,21 @@ def apply_deployed_signal_policy(
 # ═══════════════════════════════════════════════════════════════
 # SINGLE WINDOW TRAINING (LightGBM)
 # ═══════════════════════════════════════════════════════════════
-def train_single_window(train_df, val_df, verbose=True, window_idx=None, seed=42, hold_ratio=2.0):
+def train_single_window(
+    train_df,
+    val_df,
+    verbose=True,
+    window_idx=None,
+    seed=42,
+    hold_ratio=2.0,
+    class_weight=None,
+    selection_metric="label",
+    min_selection_trades=10,
+    selection_base_confidence=None,
+    min_entry_minute=580,
+    min_short_entry_minute=None,
+    min_short_price_vs_ib_high=None,
+):
     """
     Train a single LightGBM model on one walk-forward window.
 
@@ -183,12 +369,14 @@ def train_single_window(train_df, val_df, verbose=True, window_idx=None, seed=42
     n_cal_from_test = min(10, len(val_dates) // 2)
     cal_dates = set(val_dates[:n_cal_from_test])
     honest_dates = set(val_dates[n_cal_from_test:])  # held-out test days
+    validation_start_date_int = int(pd.Timestamp(val_dates[0]).strftime('%Y%m%d')) if val_dates else cutoff_date_int
+    validation_end_date_int = int(pd.Timestamp(val_dates[-1]).strftime('%Y%m%d')) if val_dates else cutoff_date_int
     cal_mask = val_df['_date'].dt.date.isin(cal_dates)
     honest_mask = val_df['_date'].dt.date.isin(honest_dates)
     cal_df = val_df[cal_mask].reset_index(drop=True)
     honest_df = val_df[honest_mask].reset_index(drop=True)
 
-    min_trades_req = 10
+    min_trades_req = int(min_selection_trades)
     n_cal = len(cal_df)
     n_cal_short = (cal_df['target'] == (-1 if needs_remapping else 0)).sum()
     n_cal_long  = (cal_df['target'] == (1 if needs_remapping else 2)).sum()
@@ -228,6 +416,7 @@ def train_single_window(train_df, val_df, verbose=True, window_idx=None, seed=42
     X_train = norm.transform(X_train_raw)
 
     # 6. Train LightGBM
+    lgb_class_weight = None if class_weight in (None, "none", "None", "") else class_weight
     model = lgb.LGBMClassifier(
         objective='multiclass',
         n_estimators=300,
@@ -240,7 +429,7 @@ def train_single_window(train_df, val_df, verbose=True, window_idx=None, seed=42
         reg_lambda=5.0,      
         num_class=3,
         random_state=seed,
-        class_weight='balanced',
+        class_weight=lgb_class_weight,
         verbose=-1,
         n_jobs=-1,
     )
@@ -271,7 +460,11 @@ def train_single_window(train_df, val_df, verbose=True, window_idx=None, seed=42
         else:
             print(f"      [Conf] {cls_name}: n=0 (no predictions)")
 
-    deployed_base_confidence = float(RL_CONFIG["min_confidence"])
+    deployed_base_confidence = float(
+        RL_CONFIG["min_confidence"]
+        if selection_base_confidence is None
+        else selection_base_confidence
+    )
     deployed_long_threshold, deployed_short_threshold = entry_thresholds(
         deployed_base_confidence
     )
@@ -314,11 +507,51 @@ def train_single_window(train_df, val_df, verbose=True, window_idx=None, seed=42
             honest_probs,
             base_confidence=deployed_base_confidence,
         )
-        honest_metrics = calculate_trading_metrics(honest_preds, y_honest)
-        print(f"      [HONEST OOS] PF={honest_metrics['profit_factor']:.2f} "
-              f"WR={honest_metrics['win_rate']:.1%} "
-              f"Trades={honest_metrics['total_trades']} "
+        label_metrics = calculate_trading_metrics(honest_preds, y_honest)
+        economic_metrics = calculate_economic_metrics(
+            honest_df,
+            honest_preds,
+            honest_probs,
+            base_confidence=deployed_base_confidence,
+            target_long=0.010,
+            target_short=0.010,
+            stop_pct=0.003,
+            max_time=180,
+            cooldown=15,
+            risk_capital=1000.0,
+            min_entry_minute=min_entry_minute,
+            min_short_entry_minute=min_short_entry_minute,
+            min_short_price_vs_ib_high=min_short_price_vs_ib_high,
+        )
+        print(f"      [HONEST LABEL] PF={label_metrics['profit_factor']:.2f} "
+              f"WR={label_metrics['win_rate']:.1%} "
+              f"Trades={label_metrics['total_trades']} "
               f"(on {len(honest_dates)} held-out test days)")
+        print(f"      [HONEST ECON]  PF={economic_metrics['profit_factor']:.2f} "
+              f"WR={economic_metrics['win_rate']:.1%} "
+              f"Trades={economic_metrics['total_trades']} "
+              f"PnL={economic_metrics['total_pnl']:+.1f}")
+        if selection_metric == "economic":
+            honest_metrics = {
+                **label_metrics,
+                "win_rate": economic_metrics["win_rate"],
+                "profit_factor": economic_metrics["profit_factor"],
+                "total_trades": economic_metrics["total_trades"],
+                "total_pnl": economic_metrics["total_pnl"],
+                "label_profit_factor": label_metrics["profit_factor"],
+                "label_win_rate": label_metrics["win_rate"],
+                "label_total_trades": label_metrics["total_trades"],
+                "selection_metric": "economic",
+            }
+        else:
+            honest_metrics = {
+                **label_metrics,
+                "economic_profit_factor": economic_metrics["profit_factor"],
+                "economic_win_rate": economic_metrics["win_rate"],
+                "economic_total_trades": economic_metrics["total_trades"],
+                "economic_total_pnl": economic_metrics["total_pnl"],
+                "selection_metric": "label",
+            }
     else:
         # Fallback: not enough honest days, use cal_df metrics with warning
         honest_metrics = calculate_trading_metrics(cal_preds, val_targets)
@@ -331,7 +564,12 @@ def train_single_window(train_df, val_df, verbose=True, window_idx=None, seed=42
     from gbt_model import GBTModel
     gbt_model = GBTModel(
         model,
-        metadata={'cutoff_date': cutoff_date_int},
+        metadata={
+            'cutoff_date': cutoff_date_int,
+            'validation_start_date': validation_start_date_int,
+            'validation_end_date': validation_end_date_int,
+            'available_date': validation_end_date_int,
+        },
         normalizer=norm,
     )
 
@@ -343,7 +581,12 @@ def train_single_window(train_df, val_df, verbose=True, window_idx=None, seed=42
 # ═══════════════════════════════════════════════════════════════
 def walk_forward_train(data_path, model_path, norm_path, model_size,
                        train_m, test_m, epochs, batch_size, lr, n_ensemble=3,
-                       top_n_windows=10, min_window=0, hold_ratio=2.0):
+                       top_n_windows=10, min_window=0, hold_ratio=2.0,
+                       class_weight=None, min_pf_floor=0.10,
+                       selection_metric="label", min_selection_trades=10,
+                       selection_base_confidence=None, min_entry_minute=580,
+                       min_short_entry_minute=None,
+                       min_short_price_vs_ib_high=None):
     print("=" * 70 + f"\nWALK-FORWARD TRAINING (GBT ENSEMBLE x{n_ensemble})\n" + "=" * 70)
 
     # Load data
@@ -385,8 +628,20 @@ def walk_forward_train(data_path, model_path, norm_path, model_size,
     production_norm = None
     window_registry = []
 
-    # -- PF floor: reject models with PF < 0.10 --
-    MIN_PF_FLOOR = 0.10
+    # Reject windows whose held-out directional PF is too weak.
+    MIN_PF_FLOOR = float(min_pf_floor)
+    selection_conf = (
+        float(RL_CONFIG["min_confidence"])
+        if selection_base_confidence is None
+        else float(selection_base_confidence)
+    )
+    print(f"  [Config] class_weight={class_weight or 'none'} | "
+          f"min_pf_floor={MIN_PF_FLOOR:.2f} | selection_metric={selection_metric} | "
+          f"min_selection_trades={min_selection_trades} | "
+          f"selection_base_confidence={selection_conf:.3f} | "
+          f"min_entry_minute={min_entry_minute} | "
+          f"min_short_entry_minute={min_short_entry_minute} | "
+          f"min_short_price_vs_ib_high={min_short_price_vs_ib_high}")
 
     for i, (tr_df, ts_df) in enumerate(splits):
         print(f"\n--- Window {i+1}/{len(splits)} | Train: {len(tr_df):,} | Test: {len(ts_df):,} ---")
@@ -397,7 +652,19 @@ def walk_forward_train(data_path, model_path, norm_path, model_size,
             seed = 42 + s
             set_seed(seed)
             mod, nr, met = train_single_window(
-                tr_df, ts_df, verbose=True, window_idx=i+1, seed=seed, hold_ratio=hold_ratio
+                tr_df,
+                ts_df,
+                verbose=True,
+                window_idx=i+1,
+                seed=seed,
+                hold_ratio=hold_ratio,
+                class_weight=class_weight,
+                selection_metric=selection_metric,
+                min_selection_trades=min_selection_trades,
+                selection_base_confidence=selection_base_confidence,
+                min_entry_minute=min_entry_minute,
+                min_short_entry_minute=min_short_entry_minute,
+                min_short_price_vs_ib_high=min_short_price_vs_ib_high,
             )
             min_trades_req = met.get('min_trades_req', 20)
             print(f"      Model {s+1}: Acc={met['accuracy']:.1%} | "
@@ -418,9 +685,11 @@ def walk_forward_train(data_path, model_path, norm_path, model_size,
                     production_norm = nr
                 continue
 
+            pf_floor_min_trades = 30 if selection_metric == "label" else min_trades_req
+
             if n_trades < min_trades_req:
                 sel_reason = f"RECHAZADO (trades={n_trades} < min={min_trades_req})"
-            elif n_trades >= 30 and pf < MIN_PF_FLOOR:
+            elif n_trades >= pf_floor_min_trades and pf < MIN_PF_FLOOR:
                 sel_reason = f"RECHAZADO (PF={pf:.2f} < floor={MIN_PF_FLOOR}, n={n_trades})"
             else:
                 window_ensemble.append(mod)
@@ -548,7 +817,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--data",         required=True)
     parser.add_argument("--model-size",   default="small",  help="Unused (legacy), kept for CLI compat")
-    parser.add_argument("--train-months", type=int,   default=6)
+    parser.add_argument("--train-months", type=int,   default=12)
     parser.add_argument("--test-months",  type=int,   default=1)
     parser.add_argument("--epochs",       type=int,   default=80,  help="Unused (legacy)")
     parser.add_argument("--batch-size",   type=int,   default=512, help="Unused (legacy)")
@@ -561,6 +830,22 @@ if __name__ == "__main__":
                         help="Ignorar ventanas anteriores a este indice para produccion")
     parser.add_argument("--hold-ratio",      type=float, default=1.5,
                         help="Ratio de muestras HOLD respecto al total de direccionales (2.0 = fuerte supresion del ruido)")
+    parser.add_argument("--class-weight", default="none", choices=["none", "balanced"],
+                        help="LightGBM class_weight. Use 'none' when balance_classes already undersamples classes.")
+    parser.add_argument("--min-pf-floor", type=float, default=0.10,
+                        help="Reject accepted non-collapsed models with at least 30 honest trades but PF below this floor.")
+    parser.add_argument("--selection-metric", default="label", choices=["label", "economic"],
+                        help="Window selection metric: label-match PF or lightweight economic PnL PF on honest split.")
+    parser.add_argument("--min-selection-trades", type=int, default=10,
+                        help="Minimum deployed-policy trades required on the held-out selection split.")
+    parser.add_argument("--selection-base-confidence", type=float, default=None,
+                        help="Base confidence used by the deployed-policy scorer during window selection.")
+    parser.add_argument("--min-entry-minute", type=int, default=580,
+                        help="Earliest absolute minute of day allowed for selection-policy entries (10:30 = 630).")
+    parser.add_argument("--min-short-entry-minute", type=int, default=None,
+                        help="Earliest absolute minute of day allowed for selection-policy SHORT entries (10:15 = 615).")
+    parser.add_argument("--min-short-price-vs-ib-high", type=float, default=None,
+                        help="For selection-policy SHORT entries, require price_vs_ib_high >= this value.")
     parser.add_argument("--model_path", default="models/trading_hybrid_wf.joblib")
     parser.add_argument("--norm_path",  default="models/hybrid_normalizer_wf.npz")
     args = parser.parse_args()
@@ -581,5 +866,13 @@ if __name__ == "__main__":
         args.ensemble,
         args.top_n_windows,
         args.min_window,
-        args.hold_ratio
+        args.hold_ratio,
+        args.class_weight,
+        args.min_pf_floor,
+        args.selection_metric,
+        args.min_selection_trades,
+        args.selection_base_confidence,
+        args.min_entry_minute,
+        args.min_short_entry_minute,
+        args.min_short_price_vs_ib_high,
     )

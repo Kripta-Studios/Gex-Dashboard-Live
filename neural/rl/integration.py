@@ -38,7 +38,8 @@ class IntegratedTradingSystem:
     """
 
     def __init__(self, mlp_model, mlp_normalizer, rl_agent: PPOAgent,
-                 feature_columns: list, device: torch.device = None):
+                 feature_columns: list, device: torch.device = None,
+                 min_confidence: float | None = None):
         """
         Args:
             mlp_model:       Trained model (HybridTradingModel or GBTEnsemble)
@@ -53,6 +54,11 @@ class IntegratedTradingSystem:
         self.feature_columns = feature_columns
         self.device = device or torch.device(
             "cuda" if torch.cuda.is_available() else "cpu")
+        self.min_confidence = (
+            float(RL_CONFIG["min_confidence"])
+            if min_confidence is None
+            else float(min_confidence)
+        )
 
         # Freeze models
         self.mlp.eval()
@@ -162,7 +168,7 @@ class IntegratedTradingSystem:
         
         # 3. Handle signal tracking
         if self.open_position is None:
-            if is_actionable_signal(direction, confidence, base_confidence=RL_CONFIG["min_confidence"]):
+            if is_actionable_signal(direction, confidence, base_confidence=self.min_confidence):
                 if self._signal_direction == "HOLD":
                     self._signal_spot = spot
                     self._entry_atm_iv = self._get_atm_iv(options_data, spot)
@@ -174,7 +180,7 @@ class IntegratedTradingSystem:
                 self._signal_spot = 0.0
 
         # 4. Routing
-        if not is_actionable_signal(direction, confidence, base_confidence=RL_CONFIG["min_confidence"]):
+        if not is_actionable_signal(direction, confidence, base_confidence=self.min_confidence):
             if self.open_position is not None:
                 return self._handle_exit(market_features, options_data, spot, timestamp, direction, confidence)
             return self._no_signal(confidence)
