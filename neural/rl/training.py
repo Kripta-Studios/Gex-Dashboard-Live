@@ -1185,6 +1185,12 @@ if __name__ == "__main__":
     parser.add_argument("--save-dir", type=str, default="../rl_models")
     parser.add_argument("--total-updates", type=int, default=None)
     parser.add_argument("--episodes-per-update", type=int, default=None)
+    parser.add_argument(
+        "--min-confidence",
+        type=float,
+        default=None,
+        help="Override RL_CONFIG min_confidence and curriculum phase thresholds.",
+    )
     parser.add_argument("--max-days-in-ram", type=int, default=260,
                         help="Max number of day shards to keep in RAM (LRU)")
     parser.add_argument("--workers", type=int, default=1,
@@ -1204,6 +1210,11 @@ if __name__ == "__main__":
         RL_CONFIG["total_updates"] = args.total_updates
     if args.episodes_per_update:
         RL_CONFIG["n_episodes_per_update"] = args.episodes_per_update
+    if args.min_confidence is not None:
+        RL_CONFIG["min_confidence"] = float(args.min_confidence)
+        for phase in RL_CONFIG.get("curriculum_phases", {}).values():
+            phase["min_confidence"] = float(args.min_confidence)
+        print(f"[RL] min_confidence override: {args.min_confidence:.3f}")
 
     env = SPXOptionsEnv(
         episode_index=episode_index,

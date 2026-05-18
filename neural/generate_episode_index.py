@@ -18,6 +18,10 @@ parser = argparse.ArgumentParser(description="Generate Episode Index for RL")
 parser.add_argument("--data", default=os.environ.get('TRAINING_DATA', '../training_data/training_data_spx_qqq.parquet'), help="Path to the training data parquet file")
 parser.add_argument("--output", default='../rl_data/episode_index.parquet', help="Path to save the generated episode index parquet file")
 parser.add_argument("--strict-wf", action="store_true", help="Enable strict Walk-Forward date filtering for GBT inference")
+parser.add_argument("--min-confidence", type=float, default=None, help="Base confidence threshold for episode extraction")
+parser.add_argument("--min-entry-minute", type=int, default=580, help="Earliest absolute minute of day for episodes (10:30 = 630)")
+parser.add_argument("--min-short-entry-minute", type=int, default=None, help="Earliest absolute minute of day for SHORT episodes (10:15 = 615)")
+parser.add_argument("--min-short-price-vs-ib-high", type=float, default=None, help="For SHORT episodes, require price_vs_ib_high >= this value")
 args = parser.parse_args()
 
 # Paths relative to neural/ (CWD)
@@ -45,7 +49,11 @@ ep, _ = generate_episode_index(
     df,
     mlp_model=ensemble,
     mlp_normalizer=normalizer,
+    min_confidence=args.min_confidence,
     strict_wf=args.strict_wf,
+    min_entry_minute=args.min_entry_minute,
+    min_short_entry_minute=args.min_short_entry_minute,
+    min_short_price_vs_ib_high=args.min_short_price_vs_ib_high,
 )
 
 out = os.path.abspath(args.output)
