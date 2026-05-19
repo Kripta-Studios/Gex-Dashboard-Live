@@ -66,11 +66,11 @@ $GbtClassWeight = "none"
 $GbtMinPfFloorArg = "1.50"
 $GbtSelectionMetric = "economic"
 $GbtMinSelectionTrades = 10
-$GbtSelectionBaseConfidenceArg = "0.55"
 
 # This is an explicit validated deployment override, not a hidden drift from RL_CONFIG.
-# It is passed consistently to episode extraction, preprocess and backtests.
+# It is passed consistently to GBT selection, episode extraction, preprocess and backtests.
 $BacktestBaseConfidenceArg = "0.475"
+$GbtSelectionBaseConfidenceArg = $BacktestBaseConfidenceArg
 $BacktestCooldownMinutes = 15
 $BacktestTargetLongArg = "0.010"
 $BacktestTargetShortArg = "0.010"
@@ -162,6 +162,8 @@ if ($skip_to_step -le 1) {
     --min-selection-trades $GbtMinSelectionTrades `
     --selection-base-confidence $GbtSelectionBaseConfidenceArg `
     --min-entry-minute $MinEntryMinute `
+    --min-short-entry-minute $MinShortEntryMinute `
+    --min-short-price-vs-ib-high $MinShortPriceVsIbHighArg `
     --model_path $GbtModelPath `
     --norm_path $GbtNormalizerPath
 
