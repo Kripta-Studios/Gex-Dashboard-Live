@@ -13,6 +13,26 @@ $ErrorActionPreference = "Continue"
 $env:PYTHONUNBUFFERED = "1"
 $NeuralRoot = $PSScriptRoot
 $ProjectRoot = Split-Path $NeuralRoot -Parent
+
+# Initialize Logging
+$LogsDir = Join-Path $ProjectRoot "logs"
+if (-not (Test-Path $LogsDir)) {
+  New-Item -ItemType Directory -Path $LogsDir -Force | Out-Null
+}
+$Timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm"
+$LogFile = Join-Path $LogsDir "run_$Timestamp.txt"
+
+Write-Host "Iniciando registro en: $LogFile" -ForegroundColor Yellow
+Start-Transcript -Path $LogFile -Force | Out-Null
+$global:TranscriptStarted = $true
+
+function Exit-Pipeline([int]$code) {
+  if ($global:TranscriptStarted) {
+    Stop-Transcript | Out-Null
+    $global:TranscriptStarted = $false
+  }
+  exit $code
+}
 $PathSeparator = [System.IO.Path]::PathSeparator
 $PythonPathParts = @($NeuralRoot, $ProjectRoot)
 if (-not [string]::IsNullOrWhiteSpace($env:PYTHONPATH)) {
@@ -49,7 +69,10 @@ Write-Host "[CONFIG] Base confidence cargada desde RL_CONFIG: $BaseConfidenceArg
 # Best validated configuration for the Apr/May 2026 recent gate.
 # Avoid post-hoc ticker/direction blocks: they improved diagnostics but were
 # hindsight-fit. Promoted filters are broad time/IB-context guards.
-$TrainingDataPath = Join-ProjectPath "training_data\training_data_spx_qqq_spy.parquet"
+# Fecha más reciente en training_data_spx_qqq_spy.parquet: 20260518
+# Fecha más reciente en training_data_TRAIN.parquet: 20260430
+$TrainingDataPath = Join-ProjectPath "training_data\training_data_TRAIN.parquet"
+$BacktestDataPath = Join-ProjectPath "training_data\training_data_spx_qqq_spy.parquet"
 $RlEpisodeIndexPath = Join-ProjectPath "rl_data\episode_index.parquet"
 $RlOptionsCachePath = Join-ProjectPath "rl_data\rl_options_cache_chunks"
 $RlModelsDir = Join-ProjectPath "rl_models"
@@ -81,12 +104,51 @@ $MinEntryMinute = 580
 $MinShortEntryMinute = 615
 $MinShortPriceVsIbHighArg = "-40.0"
 $MinTradesPerWeekGate = 6
-Write-Host "[CONFIG] GBT model path: $GbtModelPath" -ForegroundColor DarkCyan
-Write-Host "[CONFIG] GBT selection base confidence: $GbtSelectionBaseConfidenceArg" -ForegroundColor DarkCyan
-Write-Host "[CONFIG] BacktestBaseConfidenceArg efectivo: $BacktestBaseConfidenceArg" -ForegroundColor DarkCyan
-Write-Host "[CONFIG] Entry windows: all >= $MinEntryMinute, shorts >= $MinShortEntryMinute" -ForegroundColor DarkCyan
-Write-Host "[CONFIG] SHORT IB gate: price_vs_ib_high >= $MinShortPriceVsIbHighArg" -ForegroundColor DarkCyan
-Write-Host "[CONFIG] Gate de volumen reciente: >= $MinTradesPerWeekGate trades/semana" -ForegroundColor DarkCyan
+Write-Host "`n=== PIPELINE CONFIGURATION & RUN VARIABLES ===" -ForegroundColor Green
+Write-Host "Parameters / Switches:"
+Write-Host "  -gbt                            : $gbt"
+Write-Host "  -rl                             : $rl"
+Write-Host "  -a                              : $a"
+Write-Host "  -bt                             : $bt"
+Write-Host "  -v                              : $v"
+Write-Host "  -u                              : $u"
+Write-Host "Directories & Paths:"
+Write-Host "  NeuralRoot                      : $NeuralRoot"
+Write-Host "  ProjectRoot                     : $ProjectRoot"
+Write-Host "  TrainingDataPath                : $TrainingDataPath"
+Write-Host "  BacktestDataPath                : $BacktestDataPath"
+Write-Host "  RlEpisodeIndexPath              : $RlEpisodeIndexPath"
+Write-Host "  RlOptionsCachePath              : $RlOptionsCachePath"
+Write-Host "  RlModelsDir                     : $RlModelsDir"
+Write-Host "  RlBestModelPath                 : $RlBestModelPath"
+Write-Host "  GbtModelPath                    : $GbtModelPath"
+Write-Host "  GbtNormalizerPath               : $GbtNormalizerPath"
+Write-Host "GBT Configuration:"
+Write-Host "  GbtTrainMonths                  : $GbtTrainMonths"
+Write-Host "  GbtTestMonths                   : $GbtTestMonths"
+Write-Host "  GbtEnsemble                     : $GbtEnsemble"
+Write-Host "  GbtTopNWindows                  : $GbtTopNWindows"
+Write-Host "  GbtHoldRatioArg                 : $GbtHoldRatioArg"
+Write-Host "  GbtMinWindow                    : $GbtMinWindow"
+Write-Host "  GbtClassWeight                  : $GbtClassWeight"
+Write-Host "  GbtMinPfFloorArg                : $GbtMinPfFloorArg"
+Write-Host "  GbtSelectionMetric              : $GbtSelectionMetric"
+Write-Host "  GbtMinSelectionTrades           : $GbtMinSelectionTrades"
+Write-Host "Backtest & Execution Parameters:"
+Write-Host "  BaseConfidence (RL_CONFIG)      : $BaseConfidenceArg"
+Write-Host "  BacktestBaseConfidenceArg       : $BacktestBaseConfidenceArg"
+Write-Host "  GbtSelectionBaseConfidenceArg   : $GbtSelectionBaseConfidenceArg"
+Write-Host "  BacktestCooldownMinutes         : $BacktestCooldownMinutes"
+Write-Host "  BacktestTargetLongArg           : $BacktestTargetLongArg"
+Write-Host "  BacktestTargetShortArg          : $BacktestTargetShortArg"
+Write-Host "  BacktestStopArg                 : $BacktestStopArg"
+Write-Host "  BacktestRiskCapitalArg          : $BacktestRiskCapitalArg"
+Write-Host "  BacktestTickers                 : $($BacktestTickers -join ', ')"
+Write-Host "  MinEntryMinute                  : $MinEntryMinute"
+Write-Host "  MinShortEntryMinute             : $MinShortEntryMinute"
+Write-Host "  MinShortPriceVsIbHighArg        : $MinShortPriceVsIbHighArg"
+Write-Host "  MinTradesPerWeekGate            : $MinTradesPerWeekGate"
+Write-Host "==============================================`n" -ForegroundColor Green
 
 # Determine starting stage
 $skip_to_step = 0
@@ -116,11 +178,11 @@ if ($u) {
 
   Write-Host "Ejecutando D:\ThetaData\options_bulk.py..." -ForegroundColor Yellow
   python D:\ThetaData\options_bulk.py
-  if ($LASTEXITCODE -ne 0) { Write-Host "ERROR: options_bulk.py fallo." -ForegroundColor Red; exit 1 }
+  if ($LASTEXITCODE -ne 0) { Write-Host "ERROR: options_bulk.py fallo." -ForegroundColor Red; Exit-Pipeline 1 }
 
   Write-Host "Ejecutando D:\ThetaData\script4_underlying_from_options.py..." -ForegroundColor Yellow
   python D:\ThetaData\script4_underlying_from_options.py
-  if ($LASTEXITCODE -ne 0) { Write-Host "ERROR: script4_underlying_from_options.py fallo." -ForegroundColor Red; exit 1 }
+  if ($LASTEXITCODE -ne 0) { Write-Host "ERROR: script4_underlying_from_options.py fallo." -ForegroundColor Red; Exit-Pipeline 1 }
   
   $skip_to_step = 0
 }
@@ -133,11 +195,11 @@ if ($skip_to_step -le 0) {
   python -u (Join-NeuralPath "collect_training_data_spx_qqq.py") `
     --start 20220801 --end 20261230 `
     --workers 20 --tickers SPX QQQ SPY `
-    --output $TrainingDataPath
+    --output $BacktestDataPath
 
   if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR en la recoleccion de datos SPX+QQQ+SPY." -ForegroundColor Red
-    exit 1
+    Exit-Pipeline 1
   }
 }
 
@@ -169,7 +231,7 @@ if ($skip_to_step -le 1) {
 
   if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR: El entrenamiento del GBT fallo. Revisa los candados matematicos o el LR." -ForegroundColor Red
-    exit 1
+    Exit-Pipeline 1
   }
 }
 
@@ -190,7 +252,7 @@ if ($skip_to_step -le 2) {
 
   if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR: generate_episode_index.py fallo." -ForegroundColor Red
-    exit 1
+    Exit-Pipeline 1
   }
 
   # ─────────────────────────────────────────────────────────────────────────────
@@ -218,14 +280,14 @@ if ($skip_to_step -le 2) {
 
   if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR: run_preprocess.py fallo. No se continuara con artefactos viejos." -ForegroundColor Red
-    exit 1
+    Exit-Pipeline 1
   }
 
   python -u (Join-NeuralPath "rl\compute_recovery_stats.py")
 
   if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR: compute_recovery_stats.py fallo tras el preprocess." -ForegroundColor Red
-    exit 1
+    Exit-Pipeline 1
   }
 
   # ─────────────────────────────────────────────────────────────────────────────
@@ -242,7 +304,7 @@ if ($skip_to_step -le 2) {
 
   if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR: RL Training fallo." -ForegroundColor Red
-    exit 1
+    Exit-Pipeline 1
   }
 }
 
@@ -273,7 +335,7 @@ if ($skip_to_step -le 4.5) {
 if ($skip_to_step -le 6) {
   Write-Host "`n=== BACKTESTING GBT only ===" -ForegroundColor Yellow
   python -u (Join-ProjectPath "backtest\backtest_gbt_parquet.py") `
-    --data $TrainingDataPath `
+    --data $BacktestDataPath `
     --model $GbtModelPath `
     --normalizer $GbtNormalizerPath `
     --model-size small --ensemble `
@@ -288,7 +350,7 @@ if ($skip_to_step -le 6) {
         
   if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR: Backtest GBT fallo." -ForegroundColor Red
-    exit 1
+    Exit-Pipeline 1
   }
 }
 
@@ -298,7 +360,7 @@ if ($skip_to_step -le 6) {
 if ($skip_to_step -le 7) {
   Write-Host "`n=== BACKTESTING GBT+RL ===" -ForegroundColor DarkGreen
   python -u (Join-ProjectPath "backtest\backtest_rl.py") `
-    --data $TrainingDataPath `
+    --data $BacktestDataPath `
     --model $GbtModelPath `
     --normalizer $GbtNormalizerPath `
     --rl-model $RlBestModelPath `
@@ -316,7 +378,7 @@ if ($skip_to_step -le 7) {
 
   if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR: Backtest GBT+RL fallo." -ForegroundColor Red
-    exit 1
+    Exit-Pipeline 1
   }
 
   python -u (Join-ProjectPath "backtest\analyze_trade_gaps.py")
@@ -344,3 +406,5 @@ if ($skip_to_step -le 8) {
 
   Write-Host "`n=== PIPELINE COMPLETO CON EXITO ===" -ForegroundColor Green
 }
+
+Exit-Pipeline 0

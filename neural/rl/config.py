@@ -90,11 +90,17 @@ RL_CONFIG = {
     "gae_lambda":           0.95,
     "clip_epsilon": 0.1,   # Standard PPO value for stability
     "value_loss_coeff": 0.4,    
-    "entropy_coeff": 0.02,  # Reduced from 0.010 to prevent over-randomization
-    "entropy_coeff_min":    0.002, 
+    "entropy_coeff": 0.02,
+    "entropy_coeff_min":    0.01,   # Raised from 0.002: old value allowed total entropy death
     "entropy_target":       0.15,   
     "exit_entropy_target":  0.20,   
     "entropy_anneal_end":   400,    # Slower annealing
+
+    # Per-head entropy coefficients (Fix: strike head collapse to otm_light)
+    # Strike head gets 4x the exit coefficient + a floor that never anneals to zero
+    "strike_entropy_coeff":  0.08,  # High: prevent 7-way categorical collapse
+    "strike_entropy_floor":  0.03,  # Minimum strike coeff (never anneal below)
+    "exit_entropy_coeff":    0.02,  # Exit head (binary) needs less exploration
     "kl_target":            0.030,  
     "max_grad_norm":        0.5,
     "value_lr_decay_floor": 0.4,    

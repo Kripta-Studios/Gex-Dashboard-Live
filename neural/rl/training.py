@@ -411,13 +411,26 @@ class PPOTrainer:
         return buffer, episode_infos
 
     def ppo_update(self, buffer: RolloutBuffer, update_step: int = 0) -> dict:
-        """Run PPO clipped objective update with entropy annealing and KL stopping."""
+        """Run PPO clipped objective update with per-head entropy and KL stopping."""
         
-        # Scheduled base entropy coefficient (annealed)
+        # Annealing progress
         progress = min(update_step / RL_CONFIG.get("entropy_anneal_end", 300), 1.0)
-        base_coeff  = 0.05 # Start high to ensure exploration
-        floor_coeff = RL_CONFIG.get("entropy_coeff_min", 0.0005)
-        current_coeff = base_coeff - (base_coeff - floor_coeff) * progress
+        
+        # Per-head entropy coefficients (Fix: strike head collapse)
+        # Strike head: high initial coeff with a floor that never reaches zero
+        strike_coeff_base = RL_CONFIG.get("strike_entropy_coeff", 0.08)
+        strike_coeff_floor = RL_CONFIG.get("strike_entropy_floor", 0.03)
+        self._current_strike_coeff = max(
+            strike_coeff_base - (strike_coeff_base - strike_coeff_floor) * progress,
+            strike_coeff_floor
+        )
+        # Exit head: lower coefficient (binary choice needs less exploration)
+        exit_coeff_base = RL_CONFIG.get("exit_entropy_coeff", 0.02)
+        exit_coeff_floor = RL_CONFIG.get("entropy_coeff_min", 0.01)
+        self._current_exit_coeff = max(
+            exit_coeff_base - (exit_coeff_base - exit_coeff_floor) * progress,
+            exit_coeff_floor
+        )
         
         kl_target = RL_CONFIG.get("kl_target", 0.015)
         entropy_target = RL_CONFIG.get("entropy_target", 0.05)
@@ -475,8 +488,10 @@ class PPOTrainer:
                     epoch_kls.append(approx_kl)
                     
                     # [STABILITY FIX] Intra-batch KL early stop
-                    # Relaxed to 5x target to allow adaptation during curriculum shifts
-                    if approx_kl > (kl_target * 5.0):
+                    # CRITICAL: Skip on the first batch of each epoch so entropy
+                    # gradients always flow. Without this, the entropy coefficients
+                    # never get applied and strike head collapses irreversibly.
+                    if n_batches > 0 and approx_kl > (kl_target * 10.0):
                         stop_update = True
                         break
                 
@@ -498,8 +513,12 @@ class PPOTrainer:
                 # Use returns as-is to keep the critic on the reward scale.
                 value_loss = nn.MSELoss()(values, returns)
 
-                # ── Entropy bonus (Conditional Regularization) ──
-                # Issue: Emergency boost must be per-sample to avoid masking collapse (Strike H masks Exit H)
+                # ── Per-Head Entropy Bonus (Fix: strike head collapse) ──
+                # Strike head gets its own coefficient with a floor that never
+                # reaches zero. Exit head gets a separate, lower coefficient.
+                # The old system set coeff=0.0 when entropy exceeded target,
+                # which killed the exploration gradient and caused irreversible
+                # collapse to otm_light (99.2% of trades).
                 exit_tgt = RL_CONFIG.get("exit_entropy_target", 0.40)
                 strike_tgt = RL_CONFIG.get("entropy_target", 0.25)
                 
@@ -513,17 +532,21 @@ class PPOTrainer:
                         coeffs.append(RL_CONFIG.get("sniper_entropy_coeff", 0.10))
                         continue
                     
-                    tgt = exit_tgt if at == "exit" else strike_tgt
-                    deficit_ratio = (tgt - e_val) / tgt
-                    
-                    if deficit_ratio > 0:
-                        # Entropy is below target: provide bonus to encourage exploration
-                        em = 1.0 + deficit_ratio * 2.0
-                        base = current_coeff * (1.2 if at == "exit" else 1.0)
-                        coeffs.append(min(base * em, current_coeff * 3.0))
+                    if at == "strike":
+                        # Strike head: ALWAYS maintain minimum exploration
+                        # Never set to 0 — that caused irreversible collapse
+                        deficit = max(0, strike_tgt - e_val) / (strike_tgt + 1e-8)
+                        boost = 1.0 + deficit * 3.0  # Stronger boost when collapsed
+                        coeffs.append(self._current_strike_coeff * boost)
                     else:
-                        # Entropy is above target: no bonus/penalty. Standard exploration.
-                        coeffs.append(0.0) 
+                        # Exit head: reduced but never zero
+                        deficit = max(0, exit_tgt - e_val) / (exit_tgt + 1e-8)
+                        if deficit > 0:
+                            boost = 1.0 + deficit * 2.0
+                            coeffs.append(self._current_exit_coeff * boost)
+                        else:
+                            # Above target: reduce but keep small gradient
+                            coeffs.append(self._current_exit_coeff * 0.5)
                 
                 per_sample_coeff = torch.tensor(coeffs, dtype=torch.float32, device=self.device)
                 entropy_loss = -(entropy * per_sample_coeff).mean()
@@ -570,8 +593,8 @@ class PPOTrainer:
                 total_approx_kl += approx_kl
                 n_batches += 1
             
-            # KL early stopping (Fix 1)
-            if stop_update or (epoch_kls and np.mean(epoch_kls) > kl_target):
+            # KL early stopping (Fix 1) — relaxed to 3x to allow entropy gradients to flow
+            if stop_update or (epoch_kls and np.mean(epoch_kls) > kl_target * 3.0):
                 break
 
         n_batches = max(n_batches, 1)
@@ -622,6 +645,7 @@ class PPOTrainer:
         rolling_kl = []
         step_times = []
         self._next_logit_noise = 0.0
+        strike_collapse_counter = 0  # Track consecutive low-entropy strike steps
 
         # Eval history for overfitting comparison
         eval_history = {
@@ -786,9 +810,22 @@ class PPOTrainer:
                       f"PnL={mean_pnl:+.4f} Hold={mean_hold:.0f}m "
                       f"L/S={n_long}/{n_short} Stop={hard_stop_rate:.0%}")
                 
-                # Manual request: explicit Entropy and KL monitor
-                print(f"  |- Entropy:    {r_h:.4f} (target: 0.03-0.10) H[S/E]={h_s:.2f}/{h_e:.2f}")
+                # Per-head entropy monitor with strike coefficient visibility
+                strike_c = getattr(self, '_current_strike_coeff', 0.0)
+                exit_c = getattr(self, '_current_exit_coeff', 0.0)
+                print(f"  |- Entropy:    {r_h:.4f} (target: 0.03-0.10) "
+                      f"H[Strike]={h_s:.2f} H[Exit]={h_e:.2f} "
+                      f"coeff_s={strike_c:.4f} coeff_e={exit_c:.4f}")
                 print(f"  |- Approx KL:  {losses.get('approx_kl', 0):.4f} (avg:{r_kl:.4f})")
+                
+                # Strike collapse warning
+                if h_s < 0.10:
+                    strike_collapse_counter += 1
+                    if strike_collapse_counter >= 5:
+                        print(f"  [!!] STRIKE COLLAPSE WARNING: H[Strike]={h_s:.4f} < 0.10 "
+                              f"for {strike_collapse_counter} consecutive steps")
+                else:
+                    strike_collapse_counter = 0
 
                 if RL_CONFIG.get("use_sniper_mode"):
                     print(f"  |- Sniper:     AvgWait={mean_sniper_wait:.1f}m "
@@ -888,6 +925,21 @@ class PPOTrainer:
                 combined_history = {**self.history, "eval": eval_history}
                 with open(os.path.join(save_dir, "rl_training_history.json"), "w") as f:
                     json.dump(combined_history, f, indent=2)
+
+                # ── EARLY STOPPING on Eval PF degradation ──
+                # If Eval PF has degraded for N consecutive checkpoints after
+                # a good-enough best was found, stop to prevent overfitting.
+                eval_patience = 3
+                if len(eval_history["eval_pf"]) >= eval_patience + 1:
+                    best_ever_pf = max(eval_history["eval_pf"])
+                    recent_pfs = eval_history["eval_pf"][-eval_patience:]
+                    if all(pf < best_ever_pf * 0.85 for pf in recent_pfs) and best_ever_pf > 1.5:
+                        print(f"\n  [EARLY STOP] Eval PF degraded for {eval_patience} consecutive "
+                              f"checkpoints. Best={best_ever_pf:.2f}, "
+                              f"Recent={[f'{p:.2f}' for p in recent_pfs]}")
+                        print(f"  Stopping training at step {update_step} to prevent overfitting.")
+                        print(f"  {'-'*60}")
+                        break
 
                 print(f"  {'-'*60}")
 
