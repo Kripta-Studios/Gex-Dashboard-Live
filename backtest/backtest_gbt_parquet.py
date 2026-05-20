@@ -165,6 +165,7 @@ class TradeSimulator:
         last_trade_time = {}
         open_positions = {}  # key: (ticker, date), value: exit_minute
         balance = INITIAL_BALANCE  # equity tracking
+        ticker_consecutive_losses = {}
         
         # Fixed point values per ticker (no dynamic scaling)
         POINT_VALUES = {
@@ -181,13 +182,30 @@ class TradeSimulator:
             max_prob = row['max_prob']
             direction = direction_from_prediction(pred)
             
-            if not is_actionable_signal(direction, max_prob, base_confidence=self.threshold):
-                continue
-            
             ticker = row['ticker']
             date = row['date']
             time_str = row['time']
             current_minute = row['minutes']
+            
+            # Graduated dynamic confidence threshold and risk sizing based on consecutive losses
+            if ticker not in ticker_consecutive_losses:
+                ticker_consecutive_losses[ticker] = 0
+            
+            consec = ticker_consecutive_losses[ticker]
+            if consec >= 4:
+                # 4+ consecutive losses: very aggressive filter (P(L|LLLL) ≈ 65%+)
+                effective_threshold = self.threshold + 0.20
+                effective_risk_capital = self.risk_capital * 0.25
+            elif consec >= 2:
+                # 2-3 consecutive losses: moderate filter
+                effective_threshold = self.threshold + 0.10
+                effective_risk_capital = self.risk_capital * 0.50
+            else:
+                effective_threshold = self.threshold
+                effective_risk_capital = self.risk_capital
+            
+            if not is_actionable_signal(direction, max_prob, base_confidence=effective_threshold):
+                continue
             if current_minute < self.min_entry_minute:
                 continue
             if (
@@ -382,7 +400,7 @@ class TradeSimulator:
 
             # Calculate P&L using fixed multiplier and dynamic sizing
             multiplier = POINT_VALUES.get(ticker, 100.0)
-            contracts = _calc_contracts_futures(self.risk_capital, entry_price, self.stop_pct, multiplier)
+            contracts = _calc_contracts_futures(effective_risk_capital, entry_price, self.stop_pct, multiplier)
             
             pnl_dollars = 0.0
             if direction == "LONG":
@@ -395,6 +413,12 @@ class TradeSimulator:
                 pnl_pct = (entry_price - exit_price) / entry_price
             
             balance += pnl_dollars
+            
+            # Drawdown tracker updates
+            if pnl_dollars > 0:
+                ticker_consecutive_losses[ticker] = 0
+            elif pnl_dollars < 0:
+                ticker_consecutive_losses[ticker] += 1
             
             # --- DISCORD CLOSE ALERT ---
             if self.discord_enabled and send_discord_trade_close:
@@ -471,7 +495,7 @@ class TradeSimulator:
                 print(f"\n[INFO] Trade limit of {self.trade_limit} reached. Stopping simulation.")
                 break
             
-            expected_exit_minute = current_minute + hold_minutes
+            expected_exit_minute = current_minute + actual_hold_minutes
             open_positions[(ticker, date)] = expected_exit_minute
             
             # Update cooldown
@@ -640,7 +664,6 @@ def main():
     if args.strict_wf and args.model.endswith('.joblib'):
         # In strict WF mode, we use the _history ensemble containing all past models
         args.model = args.model.replace('.joblib', '_history.joblib')
-        
     model_path = str(Path(args.model).resolve())
     normalizer_path = str(Path(args.normalizer).resolve())
     
@@ -651,19 +674,46 @@ def main():
         print(f"  [!] Normalizer not found at {normalizer_path}. Trying default location...")
         normalizer_path = "models/hybrid_normalizer_wf.npz"
         
-    try:
-        if args.ensemble:
-            model, normalizer = load_ensemble_model(model_path, normalizer_path, args.model_size, device)
-            print(f"  [OK] Ensemble model loaded")
-        else:
-            model, normalizer = load_hybrid_model(model_path, normalizer_path, args.model_size, device)
-            print("  [OK] Model loaded")
-    except Exception as e:
-        print(f"  [ERROR] Error loading model: {e}")
-        return
+    ticker_models = {}
+    ticker_normalizers = {}
+    is_ticker_specific = False
     
-    # Check if GBT
-    is_gbt = hasattr(model, 'predict_proba') and not isinstance(model, torch.nn.Module)
+    for ticker in ["SPX", "QQQ", "SPY"]:
+        if "_history.joblib" in model_path:
+            t_model_path = model_path.replace("_history.joblib", f"_{ticker}_history.joblib")
+        else:
+            t_model_path = model_path.replace(".joblib", f"_{ticker}.joblib")
+        t_norm_path = normalizer_path.replace(".npz", f"_{ticker}.npz")
+        
+        if os.path.exists(t_model_path) and os.path.exists(t_norm_path):
+            print(f"  [i] Ticker-specific model found for {ticker}")
+            try:
+                if args.ensemble:
+                    t_model, t_normalizer = load_ensemble_model(t_model_path, t_norm_path, args.model_size, device)
+                else:
+                    t_model, t_normalizer = load_hybrid_model(t_model_path, t_norm_path, args.model_size, device)
+                ticker_models[ticker] = t_model
+                ticker_normalizers[ticker] = t_normalizer
+                is_ticker_specific = True
+            except Exception as e:
+                print(f"  [WARNING] Failed to load ticker-specific model for {ticker}: {e}")
+                
+    if is_ticker_specific:
+        print(f"  [OK] Loaded ticker-specific models for: {list(ticker_models.keys())}")
+        any_model = next(iter(ticker_models.values()))
+        is_gbt = hasattr(any_model, 'predict_proba') and not isinstance(any_model, torch.nn.Module)
+    else:
+        try:
+            if args.ensemble:
+                model, normalizer = load_ensemble_model(model_path, normalizer_path, args.model_size, device)
+                print(f"  [OK] Ensemble model loaded")
+            else:
+                model, normalizer = load_hybrid_model(model_path, normalizer_path, args.model_size, device)
+                print("  [OK] Model loaded")
+        except Exception as e:
+            print(f"  [ERROR] Error loading model: {e}")
+            return
+        is_gbt = hasattr(model, 'predict_proba') and not isinstance(model, torch.nn.Module)
 
     # Load data
     print(f"\n[2/4] Loading data from {data_path}...")
@@ -694,7 +744,11 @@ def main():
     
     # Prepare features
     print(f"\n[3/4] Running predictions...")
-    expected_cols = normalizer.feature_names if getattr(normalizer, 'feature_names', None) is not None and len(normalizer.feature_names) > 0 else FEATURE_COLUMNS
+    if is_ticker_specific:
+        any_norm = next(iter(ticker_normalizers.values()))
+        expected_cols = any_norm.feature_names if getattr(any_norm, 'feature_names', None) is not None and len(any_norm.feature_names) > 0 else FEATURE_COLUMNS
+    else:
+        expected_cols = normalizer.feature_names if getattr(normalizer, 'feature_names', None) is not None and len(normalizer.feature_names) > 0 else FEATURE_COLUMNS
     
     features = np.zeros((len(df), len(expected_cols)), dtype=np.float32)
     for i, col in enumerate(expected_cols):
@@ -702,32 +756,63 @@ def main():
             features[:, i] = df[col].values.astype(np.float32)
     features = np.nan_to_num(features, nan=0.0, posinf=5.0, neginf=-5.0)
 
-    is_gbt = hasattr(model, "predict_proba") and not isinstance(model, torch.nn.Module)
-
     if args.strict_wf:
         print(f"  [i] Using STRICT Walk-Forward inference (date-by-date filtering)...")
         probs = np.zeros((len(df), 3), dtype=np.float32)
         unique_dates = sorted(df['date'].unique())
         for d_str in unique_dates:
             mask = df['date'] == d_str
-            idx = np.where(mask)[0]
-            if len(idx) == 0:
-                continue
-            if is_gbt:
-                probs[idx] = model.predict_proba(features[idx], date=d_str)
+            if is_ticker_specific:
+                for ticker in df.loc[mask, 'ticker'].unique():
+                    t_mask = mask & (df['ticker'] == ticker)
+                    idx = np.where(t_mask)[0]
+                    if len(idx) == 0:
+                        continue
+                    t_model = ticker_models[ticker]
+                    t_norm = ticker_normalizers[ticker]
+                    if is_gbt:
+                        probs[idx] = t_model.predict_proba(features[idx], date=d_str)
+                    else:
+                        batch = torch.FloatTensor(t_norm.transform(features[idx])).to(device)
+                        with torch.no_grad():
+                            logits, _ = t_model(batch)
+                        probs[idx] = torch.softmax(logits, dim=-1).cpu().numpy()
             else:
-                batch = torch.FloatTensor(normalizer.transform(features[idx])).to(device)
+                idx = np.where(mask)[0]
+                if len(idx) == 0:
+                    continue
+                if is_gbt:
+                    probs[idx] = model.predict_proba(features[idx], date=d_str)
+                else:
+                    batch = torch.FloatTensor(normalizer.transform(features[idx])).to(device)
+                    with torch.no_grad():
+                        logits, _ = model(batch)
+                    probs[idx] = torch.softmax(logits, dim=-1).cpu().numpy()
+    else:
+        probs = np.zeros((len(df), 3), dtype=np.float32)
+        if is_ticker_specific:
+            for ticker in df['ticker'].unique():
+                t_mask = df['ticker'] == ticker
+                idx = np.where(t_mask)[0]
+                if len(idx) == 0:
+                    continue
+                t_model = ticker_models[ticker]
+                t_norm = ticker_normalizers[ticker]
+                if is_gbt:
+                    probs[idx] = t_model.predict_proba(features[idx])
+                else:
+                    batch = torch.FloatTensor(t_norm.transform(features[idx])).to(device)
+                    with torch.no_grad():
+                        logits, _ = t_model(batch)
+                    probs[idx] = torch.softmax(logits, dim=-1).cpu().numpy()
+        else:
+            if is_gbt:
+                probs = model.predict_proba(features)
+            else:
+                batch = torch.FloatTensor(normalizer.transform(features)).to(device)
                 with torch.no_grad():
                     logits, _ = model(batch)
-                probs[idx] = torch.softmax(logits, dim=-1).cpu().numpy()
-    else:
-        if is_gbt:
-            probs = model.predict_proba(features)
-        else:
-            batch = torch.FloatTensor(normalizer.transform(features)).to(device)
-            with torch.no_grad():
-                logits, _ = model(batch)
-            probs = torch.softmax(logits, dim=-1).cpu().numpy()
+                probs = torch.softmax(logits, dim=-1).cpu().numpy()
         
     predictions = np.argmax(probs, axis=1)
     

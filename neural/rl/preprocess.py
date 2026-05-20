@@ -44,7 +44,10 @@ def generate_episode_index(training_df: pd.DataFrame,
                            strict_wf: bool = False,
                            min_entry_minute: int = 580,
                            min_short_entry_minute: int | None = None,
-                           min_short_price_vs_ib_high: float | None = None) -> pd.DataFrame:
+                           min_short_price_vs_ib_high: float | None = None,
+                           ticker_models: dict = None,
+                           ticker_normalizers: dict = None,
+                           is_ticker_specific: bool = False) -> pd.DataFrame:
     """
     Pre-filter training_df to only rows where the MLP would emit a LONG or SHORT
     signal with confidence >= min_confidence.
@@ -69,11 +72,30 @@ def generate_episode_index(training_df: pd.DataFrame,
                 unique_dates = sorted(training_df['date'].unique())
                 for d_str in unique_dates:
                     mask = training_df['date'] == d_str
-                    idx = np.where(mask)[0]
-                    if len(idx) == 0: continue
-                    probs[idx] = mlp_model.predict_proba(features[idx], date=str(d_str))
+                    for ticker in training_df.loc[mask, 'ticker'].unique():
+                        t_mask = mask & (training_df['ticker'] == ticker)
+                        idx = np.where(t_mask)[0]
+                        if len(idx) == 0:
+                            continue
+                        if is_ticker_specific and ticker_models and ticker in ticker_models:
+                            t_model = ticker_models[ticker]
+                            probs[idx] = t_model.predict_proba(features[idx], date=str(d_str))
+                        else:
+                            probs[idx] = mlp_model.predict_proba(features[idx], date=str(d_str))
             else:
-                probs = mlp_model.predict_proba(features)
+                probs = np.zeros((len(training_df), 3), dtype=np.float32)
+                if is_ticker_specific and ticker_models:
+                    for ticker in training_df['ticker'].unique():
+                        mask = training_df['ticker'] == ticker
+                        idx = np.where(mask)[0]
+                        if len(idx) == 0:
+                            continue
+                        if ticker in ticker_models:
+                            probs[idx] = ticker_models[ticker].predict_proba(features[idx])
+                        else:
+                            probs[idx] = mlp_model.predict_proba(features[idx])
+                else:
+                    probs = mlp_model.predict_proba(features)
                  
             predictions = np.argmax(probs, axis=1)
             confidences = np.max(probs, axis=1)
@@ -462,12 +484,48 @@ def main():
 
     training_df = pd.read_parquet(args.training_data)
     mlp_model, mlp_normalizer = None, None
+    ticker_models = {}
+    ticker_normalizers = {}
+    is_ticker_specific = False
+
     if args.mlp_model and args.mlp_normalizer:
-        if args.strict_wf and args.mlp_model.endswith('.joblib'):
+        if args.strict_wf and args.mlp_model.endswith('.joblib') and not args.mlp_model.endswith('_history.joblib'):
             args.mlp_model = args.mlp_model.replace('.joblib', '_history.joblib')
             
         from hybrid_model import load_ensemble_model
-        mlp_model, mlp_normalizer = load_ensemble_model(args.mlp_model, args.mlp_normalizer, model_size="small")
+        from pathlib import Path
+        
+        model_path = str(Path(args.mlp_model).resolve())
+        normalizer_path = str(Path(args.mlp_normalizer).resolve())
+
+        for ticker in ["SPX", "QQQ", "SPY"]:
+            if "_history.joblib" in model_path:
+                t_model_path = model_path.replace("_history.joblib", f"_{ticker}_history.joblib")
+            else:
+                t_model_path = model_path.replace(".joblib", f"_{ticker}.joblib")
+            t_norm_path = normalizer_path.replace(".npz", f"_{ticker}.npz")
+
+            if os.path.exists(t_model_path) and os.path.exists(t_norm_path):
+                print(f"  [i] Ticker-specific model found for {ticker} in RL Prep")
+                try:
+                    t_model, t_normalizer = load_ensemble_model(t_model_path, t_norm_path, model_size="small")
+                    ticker_models[ticker] = t_model
+                    ticker_normalizers[ticker] = t_normalizer
+                    is_ticker_specific = True
+                except Exception as e:
+                    print(f"  [WARNING] Failed to load ticker-specific model for {ticker}: {e}")
+
+        if is_ticker_specific:
+            print(f"  [OK] Loaded ticker-specific models for: {list(ticker_models.keys())}")
+            any_model = next(iter(ticker_models.values()))
+            mlp_model = any_model
+            mlp_normalizer = next(iter(ticker_normalizers.values()))
+        else:
+            try:
+                mlp_model, mlp_normalizer = load_ensemble_model(model_path, normalizer_path, model_size="small")
+                print(f"  [OK] Ensemble model loaded")
+            except Exception as e:
+                print(f"  [ERROR] Error loading model: {e}")
 
     episode_index, training_df_with_signals = generate_episode_index(
         training_df,
@@ -478,6 +536,9 @@ def main():
         min_entry_minute=args.min_entry_minute,
         min_short_entry_minute=args.min_short_entry_minute,
         min_short_price_vs_ib_high=args.min_short_price_vs_ib_high,
+        ticker_models=ticker_models,
+        ticker_normalizers=ticker_normalizers,
+        is_ticker_specific=is_ticker_specific,
     )
     
     output_parent = os.path.dirname(os.path.abspath(args.output))

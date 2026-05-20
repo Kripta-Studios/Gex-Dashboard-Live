@@ -23,8 +23,22 @@ $Timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm"
 $LogFile = Join-Path $LogsDir "run_$Timestamp.txt"
 
 Write-Host "Iniciando registro en: $LogFile" -ForegroundColor Yellow
-Start-Transcript -Path $LogFile -Force | Out-Null
-$global:TranscriptStarted = $true
+
+# Intentar detener cualquier transcripción previa de forma segura
+try {
+  Stop-Transcript -ErrorAction Stop | Out-Null
+} catch {
+  # Ignorar silenciosamente si no había ninguna transcripción activa
+}
+
+# Iniciar la nueva transcripción
+try {
+  Start-Transcript -Path $LogFile -Force | Out-Null
+  $global:TranscriptStarted = $true
+} catch {
+  Write-Host "Warning: No se pudo iniciar la transcripción de PowerShell: $_" -ForegroundColor Yellow
+  $global:TranscriptStarted = $false
+}
 
 function Exit-Pipeline([int]$code) {
   if ($global:TranscriptStarted) {
@@ -71,30 +85,30 @@ Write-Host "[CONFIG] Base confidence cargada desde RL_CONFIG: $BaseConfidenceArg
 # hindsight-fit. Promoted filters are broad time/IB-context guards.
 # Fecha más reciente en training_data_spx_qqq_spy.parquet: 20260518
 # Fecha más reciente en training_data_TRAIN.parquet: 20260430
-$TrainingDataPath = Join-ProjectPath "training_data\training_data_TRAIN.parquet"
+$TrainingDataPath = Join-ProjectPath "training_data\training_data_spx_qqq_spy.parquet"
 $BacktestDataPath = Join-ProjectPath "training_data\training_data_spx_qqq_spy.parquet"
 $RlEpisodeIndexPath = Join-ProjectPath "rl_data\episode_index.parquet"
 $RlOptionsCachePath = Join-ProjectPath "rl_data\rl_options_cache_chunks"
 $RlModelsDir = Join-ProjectPath "rl_models"
 $RlBestModelPath = Join-ProjectPath "rl_models\best_rl_agent.pt"
-$GbtModelPath = Join-NeuralPath "models\codex_exp\gbt_18m_econ_pf150_minsel10_avail.joblib"
-$GbtNormalizerPath = Join-NeuralPath "models\codex_exp\gbt_18m_econ_pf150_minsel10_avail_norm.npz"
-$GbtTrainMonths = 18
+$GbtModelPath = Join-NeuralPath "models\codex_exp\gbt_12m_econ_pf150_minsel10_avail.joblib"
+$GbtNormalizerPath = Join-NeuralPath "models\codex_exp\gbt_12m_econ_pf150_minsel10_avail_norm.npz"
+$GbtTrainMonths = 12
 $GbtTestMonths = 1
 $GbtEnsemble = 3
 $GbtTopNWindows = 10
-$GbtHoldRatioArg = "1.2"
-$GbtMinWindow = 15
-$GbtClassWeight = "none"
+$GbtHoldRatioArg = "0.5"
+$GbtMinWindow = 5
+$GbtClassWeight = "balanced"
 $GbtMinPfFloorArg = "1.50"
 $GbtSelectionMetric = "economic"
 $GbtMinSelectionTrades = 10
 
 # This is an explicit validated deployment override, not a hidden drift from RL_CONFIG.
 # It is passed consistently to GBT selection, episode extraction, preprocess and backtests.
-$BacktestBaseConfidenceArg = "0.475"
+$BacktestBaseConfidenceArg = "0.450"
 $GbtSelectionBaseConfidenceArg = $BacktestBaseConfidenceArg
-$BacktestCooldownMinutes = 15
+$BacktestCooldownMinutes = 8
 $BacktestTargetLongArg = "0.010"
 $BacktestTargetShortArg = "0.010"
 $BacktestStopArg = "0.0025"
@@ -102,7 +116,7 @@ $BacktestRiskCapitalArg = "1000.0"
 $BacktestTickers = @("SPX", "QQQ", "SPY")
 $MinEntryMinute = 580
 $MinShortEntryMinute = 615
-$MinShortPriceVsIbHighArg = "-40.0"
+$MinShortPriceVsIbHighArg = "-150.0"
 $MinTradesPerWeekGate = 6
 Write-Host "`n=== PIPELINE CONFIGURATION & RUN VARIABLES ===" -ForegroundColor Green
 Write-Host "Parameters / Switches:"
@@ -207,31 +221,36 @@ if ($skip_to_step -le 0) {
 # PASO 1 — ENTRENAMIENTO GBT (Walk-Forward LightGBM)
 # ─────────────────────────────────────────────────────────────────────────────
 if ($skip_to_step -le 1) {
-  Write-Host "`n=== ENTRENAMIENTO GBT Walk-Forward (LightGBM Ensemble) ===" -ForegroundColor Cyan
+  Write-Host "`n=== ENTRENAMIENTO GBT Walk-Forward (LightGBM Ensemble por Ticker) ===" -ForegroundColor Cyan
   New-Item -ItemType Directory -Force -Path (Split-Path $GbtModelPath) | Out-Null
-  python -u (Join-NeuralPath "train_walkforward.py") `
-    --data $TrainingDataPath `
-    --model-size small `
-    --train-months $GbtTrainMonths `
-    --test-months $GbtTestMonths `
-    --ensemble $GbtEnsemble `
-    --top-n-windows $GbtTopNWindows `
-    --hold-ratio $GbtHoldRatioArg `
-    --min-window $GbtMinWindow `
-    --class-weight $GbtClassWeight `
-    --min-pf-floor $GbtMinPfFloorArg `
-    --selection-metric $GbtSelectionMetric `
-    --min-selection-trades $GbtMinSelectionTrades `
-    --selection-base-confidence $GbtSelectionBaseConfidenceArg `
-    --min-entry-minute $MinEntryMinute `
-    --min-short-entry-minute $MinShortEntryMinute `
-    --min-short-price-vs-ib-high $MinShortPriceVsIbHighArg `
-    --model_path $GbtModelPath `
-    --norm_path $GbtNormalizerPath
+  
+  foreach ($Ticker in $BacktestTickers) {
+    Write-Host "`n--> Entrenando modelo especializado para: $Ticker" -ForegroundColor Yellow
+    python -u (Join-NeuralPath "train_walkforward.py") `
+      --data $TrainingDataPath `
+      --ticker $Ticker `
+      --model-size small `
+      --train-months $GbtTrainMonths `
+      --test-months $GbtTestMonths `
+      --ensemble $GbtEnsemble `
+      --top-n-windows $GbtTopNWindows `
+      --hold-ratio $GbtHoldRatioArg `
+      --min-window $GbtMinWindow `
+      --class-weight $GbtClassWeight `
+      --min-pf-floor $GbtMinPfFloorArg `
+      --selection-metric $GbtSelectionMetric `
+      --min-selection-trades $GbtMinSelectionTrades `
+      --selection-base-confidence $GbtSelectionBaseConfidenceArg `
+      --min-entry-minute $MinEntryMinute `
+      --min-short-entry-minute $MinShortEntryMinute `
+      --min-short-price-vs-ib-high $MinShortPriceVsIbHighArg `
+      --model_path $GbtModelPath `
+      --norm_path $GbtNormalizerPath
 
-  if ($LASTEXITCODE -ne 0) {
-    Write-Host "ERROR: El entrenamiento del GBT fallo. Revisa los candados matematicos o el LR." -ForegroundColor Red
-    Exit-Pipeline 1
+    if ($LASTEXITCODE -ne 0) {
+      Write-Host "ERROR: El entrenamiento del GBT para $Ticker fallo." -ForegroundColor Red
+      Exit-Pipeline 1
+    }
   }
 }
 

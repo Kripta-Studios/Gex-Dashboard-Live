@@ -80,6 +80,10 @@ class IntegratedTradingSystem:
         self._entry_mlp_context = np.zeros(MLP_CONTEXT_DIM, dtype=np.float32)
         self._entry_market_features = None
         
+        # Consecutive losses counter (mirrors ticker_consecutive_losses in backtest)
+        # Persists across trades — reset only on winning trade, not on position reset.
+        self._consecutive_losses = 0
+        
         # Curriculum/Constraints
         self.min_strike_bucket = 0
         
@@ -137,8 +141,8 @@ class IntegratedTradingSystem:
         
         if is_gbt:
             probs = self.mlp.predict_proba(market_features.reshape(1, -1))[0]
-            time_to_target = 0.5
-            log_sigma = 0.5
+            time_to_target = 0.5   # GBT_MLP_TIME_TO_TARGET — matches backtest constant
+            log_sigma = 0.0        # GBT_MLP_LOG_SIGMA — matches backtest constant (was 0.5)
         else:
             features_norm = self.normalizer.transform(market_features.reshape(1, -1))[0]
             with torch.no_grad():
@@ -217,9 +221,10 @@ class IntegratedTradingSystem:
             # [3] ATM Gamma
             dynamic[3] = np.clip(float(all_opts[atm_s].get("gamma", 0)) * spot * 0.01, -2, 2)
 
-        # [4] Spot vs entry price
-        if self.open_position and self._position_entry_spot > 0:
-            sv_entry = (spot - self._position_entry_spot) / self._position_entry_spot
+        # [4] Spot vs entry price — reference is _signal_spot (spot at signal time),
+        # matching backtest entry_price which is the signal-moment spot, not fill spot.
+        if self.open_position and self._signal_spot > 0:
+            sv_entry = (spot - self._signal_spot) / self._signal_spot
             if self.open_position["direction"] == "SHORT": sv_entry = -sv_entry
             dynamic[4] = np.clip(sv_entry * 100, -3.0, 3.0)
 
@@ -256,7 +261,16 @@ class IntegratedTradingSystem:
         self._entry_market_features = np.asarray(market_features, dtype=np.float32).copy()
         self._entry_mlp_context = np.array([confidence, time_to_target, 0.0, log_sigma], dtype=np.float32)
 
-        state = self._build_state(market_features, False, confidence, time_to_target, log_sigma)
+        # Build entry dynamic state exactly as the backtest (single_step_eval=True):
+        # only [5] (minutes_remaining normalised) is non-zero; all others are zero.
+        SESSION_OPEN_MIN = 570  # 9:30 ET in absolute minutes
+        current_minute = timestamp.hour * 60 + timestamp.minute
+        mins_since_open = max(0, current_minute - SESSION_OPEN_MIN)
+        entry_dynamic = np.zeros(8, dtype=np.float32)
+        entry_dynamic[5] = float(max(0.0, (390 - mins_since_open) / 390.0))
+
+        state = self._build_state(market_features, False, confidence, time_to_target, log_sigma,
+                                  dynamic_override=entry_dynamic)
         state_tensor = torch.FloatTensor(state).unsqueeze(0).to(self.device)
 
         with torch.no_grad():
@@ -325,6 +339,19 @@ class IntegratedTradingSystem:
         # Hard Exits
         if pnl <= HARD_EXITS["max_loss_pct"]: return self._close_position("HARD_STOP", pnl)
         if pnl >= HARD_EXITS["max_profit_pct"]: return self._close_position("HARD_TAKE_PROFIT", pnl)
+
+        # Hard max hold (mirrors backtest max_time=180 loop boundary)
+        if hold_m >= float(HARD_EXITS.get("max_hold_minutes", 180)):
+            return self._close_position("HARD_MAX_HOLD", pnl)
+
+        # Hard time-to-close (5 min before market close)
+        try:
+            close_time_et = timestamp.replace(hour=16, minute=0, second=0, microsecond=0)
+            mins_to_close = max(0, (close_time_et - timestamp).total_seconds() / 60.0)
+            if mins_to_close <= float(HARD_EXITS.get("minutes_to_close", 5)):
+                return self._close_position("HARD_TIME_CLOSE", pnl)
+        except Exception:
+            pass
         
         # Signal Reversal
         now_et = timestamp # Assumed ET
@@ -332,13 +359,18 @@ class IntegratedTradingSystem:
         if should_exit_on_reversal(pos["direction"], curr_dir, curr_conf, m_open):
             return self._close_position("SIGNAL_REVERSAL", pnl)
 
+        # iv_ratio uses entry_atm_iv (mirrors backtest: cur_iv / entry_atm_iv)
+        entry_iv_ref = self._entry_atm_iv if self._entry_atm_iv > 0 else 0.15
+        iv_ratio = np.clip(l_iv / entry_iv_ref if l_iv > 0 else 1.0, 0.5, 3.0)
+
         # RL Exit
         state = self._build_state(market_features, True, pnl_pct=pnl, 
                                  hold_time_norm=hold_m/HARD_EXITS["max_hold_minutes"],
                                  current_delta=abs(l_delta), current_theta=l_theta, 
                                  current_iv=l_iv, entry_iv=pos["entry_iv"], 
                                  entry_price=pos["entry_price"], mae=self._mae, 
-                                 trailing_drawdown=self._trailing_drawdown)
+                                 trailing_drawdown=self._trailing_drawdown,
+                                 iv_ratio_override=iv_ratio)
         
         with torch.no_grad():
             action, _, _ = self.rl.get_action(torch.FloatTensor(state).unsqueeze(0).to(self.device), "exit", True)
@@ -368,6 +400,11 @@ class IntegratedTradingSystem:
 
     def _close_position(self, reason: str, pnl: float) -> dict:
         pos = self.open_position
+        # Update consecutive losses counter (persists across trades, mirrors backtest)
+        if pnl < 0:
+            self._consecutive_losses += 1
+        else:
+            self._consecutive_losses = 0
         res = {"action": "EXIT", "strike": pos["strike"], "delta": pos["entry_delta"],
                "confidence": self._entry_mlp_context[0], 
                "details": {
@@ -411,6 +448,8 @@ class IntegratedTradingSystem:
         self._spot_history.clear()
         self._option_price_history.clear()
         self._dynamic_market_state = np.zeros(8, dtype=np.float32)
+        # NOTE: _consecutive_losses intentionally NOT reset here.
+        # It persists across trades (mirrors ticker_consecutive_losses in backtest).
 
     def _build_state(self, market_features: np.ndarray, position_active: bool,
                       confidence: float = 0.6, time_to_target: float = 0.5,
@@ -418,12 +457,18 @@ class IntegratedTradingSystem:
                       hold_time_norm: float = 0.0, current_delta: float = 0.5,
                       current_theta: float = -0.05, current_iv: float = 0.15,
                       entry_iv: float = 0.15, entry_price: float = 1.0,
-                      mae: float = 0.0, trailing_drawdown: float = 0.0) -> np.ndarray:
+                      mae: float = 0.0, trailing_drawdown: float = 0.0,
+                      dynamic_override: np.ndarray = None,
+                      iv_ratio_override: float = None) -> np.ndarray:
         source = self._entry_market_features if position_active and self._entry_market_features is not None else market_features
         market = np.zeros(MARKET_FEATURE_DIM, dtype=np.float32)
         n = min(len(source), MARKET_FEATURE_DIM)
         market[:n] = source[:n]
-        
+
+        # Use dynamic_override when provided (e.g. entry state must freeze all dims
+        # except [5], mirroring backtest single_step_eval=True entry initialisation).
+        dynamic = dynamic_override if dynamic_override is not None else self._dynamic_market_state
+
         pos_state = np.zeros(POSITION_STATE_DIM, dtype=np.float32)
         if position_active:
             pos_state[0] = np.clip(pnl_pct, -1, 5)
@@ -431,12 +476,26 @@ class IntegratedTradingSystem:
             pos_state[2] = abs(current_delta)
             db, ib, pb = get_delta_bucket(pos_state[2]), get_iv_bucket(current_iv), get_pnl_bucket(pnl_pct)
             pos_state[3] = float(self._recovery_lookup.get((db, ib, pb), 0.3))
-            pos_state[4] = np.clip(current_iv / 0.15 if current_iv > 0 else 1.0, 0.5, 3.0)
+            # iv_ratio: use pre-computed override (entry_atm_iv denominator) when available,
+            # otherwise fall back to fixed 0.15 baseline. Backtest uses cur_iv/entry_atm_iv.
+            if iv_ratio_override is not None:
+                pos_state[4] = float(iv_ratio_override)
+            else:
+                pos_state[4] = np.clip(current_iv / 0.15 if current_iv > 0 else 1.0, 0.5, 3.0)
             pos_state[5] = np.clip(mae, -1, 0)
-            if POSITION_STATE_DIM > 6: pos_state[6] = np.clip(trailing_drawdown, 0, 2)
+            # pos_state[6]: consecutive losses (mirrors ticker_consecutive_losses in backtest).
+            # The backtest populates this field with the count of prior losing trades, NOT
+            # the trailing drawdown of the current position. Persists across trades.
+            if POSITION_STATE_DIM > 6:
+                pos_state[6] = np.clip(float(self._consecutive_losses), 0, 2)
+        else:
+            # Entry state: pos_state mostly zero, but [6] carries pre-trade loss streak
+            # so the agent sees the same session context as the backtest entry snapshot.
+            if POSITION_STATE_DIM > 6:
+                pos_state[6] = np.clip(float(self._consecutive_losses), 0, 2)
 
         mlp_ctx = self._entry_mlp_context if position_active else np.array([confidence, time_to_target, 0.0, log_sigma], dtype=np.float32)
-        return np.concatenate([market, self._dynamic_market_state, pos_state, mlp_ctx]).astype(np.float32)
+        return np.concatenate([market, dynamic, pos_state, mlp_ctx]).astype(np.float32)
 
     def _get_atm_iv(self, options_data: dict, spot: float) -> float:
         all_opts = {**options_data.get("calls", {}), **options_data.get("puts", {})}

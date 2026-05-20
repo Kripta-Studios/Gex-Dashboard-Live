@@ -253,10 +253,8 @@ def simulate_mlp_only(df: pd.DataFrame, predictions: np.ndarray,
     open_positions = {}      # (ticker, date) -> expected exit minute
     balance = INITIAL_BALANCE  # equity tracking
 
-    # Drawdown mitigation sequence limit
-    consecutive_losses = 0
-    in_drawdown_mode = False
-    drawdown_watermark = balance
+    # Drawdown mitigation sequence limit (per ticker)
+    ticker_consecutive_losses = {}
 
     # Merge predictions into dataframe for proper sorting
     df_work = df.copy()
@@ -280,8 +278,17 @@ def simulate_mlp_only(df: pd.DataFrame, predictions: np.ndarray,
             current_minute = row['minutes']
             ticker = row.get('ticker', 'SPX')
 
+            # Per-ticker dynamic confidence
+            tck = str(ticker)
+            if tck not in ticker_consecutive_losses:
+                ticker_consecutive_losses[tck] = 0
+            
+            is_drawdown = ticker_consecutive_losses[tck] >= 2
+            effective_threshold = threshold + 0.10 if is_drawdown else threshold
+            effective_risk_capital = risk_capital * 0.5 if is_drawdown else risk_capital
+
             direction = direction_from_prediction(pred)
-            if not is_actionable_signal(direction, max_prob, base_confidence=threshold):
+            if not is_actionable_signal(direction, max_prob, base_confidence=effective_threshold):
                 continue
 
             # Skip unstable opening window. 580 preserves the historical
@@ -460,7 +467,7 @@ def simulate_mlp_only(df: pd.DataFrame, predictions: np.ndarray,
 
             # Real dollar P&L with dynamic sizing
             multiplier = GBT_POINT_VALUES.get(ticker, 100.0)
-            contracts = _calc_contracts_futures(risk_capital, entry_price, stop_pct, multiplier)
+            contracts = _calc_contracts_futures(effective_risk_capital, entry_price, stop_pct, multiplier)
 
             # Apply contract limits
             contracts = min(contracts, 1000) # Max 1000 spot contracts
@@ -475,15 +482,9 @@ def simulate_mlp_only(df: pd.DataFrame, predictions: np.ndarray,
 
             # Drawdown tracker updates
             if pnl_dollars > 0:
-                consecutive_losses = 0
-                if in_drawdown_mode and balance >= drawdown_watermark:
-                    in_drawdown_mode = False
+                ticker_consecutive_losses[tck] = 0
             elif pnl_dollars < 0:
-                if consecutive_losses == 0 and not in_drawdown_mode:
-                    drawdown_watermark = balance - pnl_dollars
-                consecutive_losses += 1
-                if consecutive_losses >= 3:
-                    in_drawdown_mode = True
+                ticker_consecutive_losses[tck] += 1
 
             exit_reason = "target" if target_hit else "stop" if stop_hit else "trailing_stop" if trailing_stop_hit else "max_time"
 
@@ -793,10 +794,8 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
     rl_agent.eval()
     balance = INITIAL_BALANCE  # equity tracking
 
-    # Drawdown mitigation sequence limit
-    consecutive_losses = 0
-    in_drawdown_mode = False
-    drawdown_watermark = balance
+    # Drawdown mitigation sequence limit (per ticker)
+    ticker_consecutive_losses = {}
 
     # Cache daily greeks by date to avoid re-loading
     # Each entry is (df, premium_lookup) or (None, None)
@@ -847,7 +846,24 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
             max_prob = probabilities[global_idx].max()
             direction = direction_from_prediction(pred)
 
-            if not is_actionable_signal(direction, max_prob, base_confidence=threshold):
+            ticker = row.get("ticker", "SPX")
+            tck = str(ticker)
+            if tck not in ticker_consecutive_losses:
+                ticker_consecutive_losses[tck] = 0
+            
+            # CRITICAL: Define current_minute BEFORE using it in filters and chop guard
+            entry_time = str(row.get("time", "09:30"))
+            try:
+                h, m = map(int, entry_time.split(':'))
+                current_minute = h * 60 + m
+            except Exception:
+                current_minute = 570
+
+            is_drawdown = ticker_consecutive_losses[tck] >= 2
+            effective_threshold = threshold + 0.10 if is_drawdown else threshold
+            effective_risk_capital = risk_capital * 0.5 if is_drawdown else risk_capital
+
+            if not is_actionable_signal(direction, max_prob, base_confidence=effective_threshold):
                 continue
 
             if (
@@ -861,14 +877,6 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
             if _matches_feature_rule(row, direction, feature_rules):
                 blocked_by_feature += 1
                 continue
-
-            # CRITICAL: Define current_minute BEFORE using it in filters
-            entry_time = str(row.get("time", "09:30"))
-            try:
-                h, m = map(int, entry_time.split(':'))
-                current_minute = h * 60 + m
-            except Exception:
-                current_minute = 570
 
             # Skip unstable opening window. 580 preserves the historical
             # first-10-minute guard; higher values are explicit pipeline policy.
@@ -887,7 +895,7 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
             ):
                 continue
 
-            ticker = row.get("ticker", "SPX")
+            # Ticker already extracted above
 
             key = f"{ticker}_{d}"
             
@@ -957,7 +965,7 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
             dynamic_market_entry[5] = float(max(0.0, (390 - max(0, current_minute - SESSION_OPEN_MIN)) / 390.0))
 
             # Entry position state (all zeros except iv_ratio=1.0)
-            position_state_entry = _build_position_state(iv_ratio=1.0)
+            position_state_entry = _build_position_state(iv_ratio=1.0, trailing_drawdown=float(ticker_consecutive_losses[tck]))
 
             state_parts = [entry_market_features, dynamic_market_entry, position_state_entry, mlp_context]
             if RL_CONFIG.get("use_sniper_mode", False):
@@ -1129,7 +1137,7 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                     recovery_prob=recovery_prob,
                     iv_ratio=iv_ratio,
                     mae=mae,
-                    trailing_drawdown=trailing_drawdown,
+                    trailing_drawdown=float(ticker_consecutive_losses[tck]),
                 )
                 market_features = (
                     entry_market_features
@@ -1176,7 +1184,7 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
             strike_distance_pts = actual_strike - entry_price if actual_strike else 0.0
 
             # Dynamic sizing for options (risk % of balance)
-            contracts = _calc_contracts_options(risk_capital, entry_premium) if entry_premium else 1
+            contracts = _calc_contracts_options(effective_risk_capital, entry_premium) if entry_premium else 1
 
             # Apply contract limits
             contracts = min(contracts, 500) # Max 500 options contracts
@@ -1187,15 +1195,9 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
 
             # Drawdown tracker updates
             if premium_pnl_dollars > 0:
-                consecutive_losses = 0
-                if in_drawdown_mode and balance >= drawdown_watermark:
-                    in_drawdown_mode = False
+                ticker_consecutive_losses[tck] = 0
             elif premium_pnl_dollars < 0:
-                if consecutive_losses == 0 and not in_drawdown_mode:
-                    drawdown_watermark = balance - premium_pnl_dollars
-                consecutive_losses += 1
-                if consecutive_losses >= 3:
-                    in_drawdown_mode = True
+                ticker_consecutive_losses[tck] += 1
 
             # Compute exit time from entry time and hold minutes
             try:
@@ -1431,17 +1433,56 @@ def main():
     print("  RL BACKTEST — GBT+RL vs GBT-ONLY")
     print("=" * 72)
     print(f"\n[1/5] Loading GBT model...")
-    if args.strict_wf and args.model.endswith('.joblib'):
+    if args.strict_wf and args.model.endswith('.joblib') and not args.model.endswith('_history.joblib'):
         args.model = args.model.replace('.joblib', '_history.joblib')
-        
-    if args.ensemble:
-        model, normalizer = load_ensemble_model(args.model, args.normalizer, args.model_size, device)
-        print(f"  OK (ensemble)")
+
+    model_path = str(Path(args.model).resolve())
+    normalizer_path = str(Path(args.normalizer).resolve())
+
+    ticker_models = {}
+    ticker_normalizers = {}
+    is_ticker_specific = False
+    model = None
+    normalizer = None
+
+    for ticker in ["SPX", "QQQ", "SPY"]:
+        if "_history.joblib" in model_path:
+            t_model_path = model_path.replace("_history.joblib", f"_{ticker}_history.joblib")
+        else:
+            t_model_path = model_path.replace(".joblib", f"_{ticker}.joblib")
+        t_norm_path = normalizer_path.replace(".npz", f"_{ticker}.npz")
+
+        if os.path.exists(t_model_path) and os.path.exists(t_norm_path):
+            print(f"  [i] Ticker-specific model found for {ticker}")
+            try:
+                if args.ensemble:
+                    t_model, t_normalizer = load_ensemble_model(t_model_path, t_norm_path, args.model_size, device)
+                else:
+                    t_model, t_normalizer = load_hybrid_model(t_model_path, t_norm_path, args.model_size, device)
+                ticker_models[ticker] = t_model
+                ticker_normalizers[ticker] = t_normalizer
+                is_ticker_specific = True
+            except Exception as e:
+                print(f"  [WARNING] Failed to load ticker-specific model for {ticker}: {e}")
+
+    if is_ticker_specific:
+        print(f"  [OK] Loaded ticker-specific models for: {list(ticker_models.keys())}")
+        any_model = next(iter(ticker_models.values()))
+        is_gbt = hasattr(any_model, 'predict_proba') and not isinstance(any_model, torch.nn.Module)
+        # Assign first one to 'model' and 'normalizer' to prevent undefined variable checks
+        model = any_model
+        normalizer = next(iter(ticker_normalizers.values()))
     else:
-        model, normalizer = load_hybrid_model(args.model, args.normalizer, args.model_size, device)
-        model.eval()
-        print(f"  OK")
-    is_gbt = hasattr(model, "predict_proba") and not isinstance(model, torch.nn.Module)
+        try:
+            if args.ensemble:
+                model, normalizer = load_ensemble_model(model_path, normalizer_path, args.model_size, device)
+                print(f"  [OK] Ensemble model loaded")
+            else:
+                model, normalizer = load_hybrid_model(model_path, normalizer_path, args.model_size, device)
+                print("  [OK] Model loaded")
+        except Exception as e:
+            print(f"  [ERROR] Error loading model: {e}")
+        is_gbt = hasattr(model, "predict_proba") and not isinstance(model, torch.nn.Module)
     
     # ── Load RL agent ──
     print(f"\n[2/5] Loading RL agent from {args.rl_model}...")
@@ -1557,23 +1598,42 @@ def main():
         unique_dates = sorted(df['date'].unique()) # Uses 'date' col typically strings
         for d_str in unique_dates:
             mask = df['date'] == d_str
-            idx = np.where(mask)[0]
-            if len(idx) == 0: continue
+            for ticker in df.loc[mask, 'ticker'].unique():
+                t_mask = mask & (df['ticker'] == ticker)
+                idx = np.where(t_mask)[0]
+                if len(idx) == 0:
+                    continue
+                if is_ticker_specific and ticker in ticker_models:
+                    t_model = ticker_models[ticker]
+                    probs[idx] = t_model.predict_proba(features[idx], date=str(d_str))
+                else:
+                    if is_gbt:
+                        probs[idx] = model.predict_proba(features[idx], date=str(d_str))
+                    else:
+                        batch = torch.FloatTensor(normalizer.transform(features[idx])).to(device)
+                        with torch.no_grad():
+                            logits, _ = model(batch)
+                        probs[idx] = torch.softmax(logits, dim=-1).cpu().numpy()
+    else:
+        probs = np.zeros((len(df), 3), dtype=np.float32)
+        if is_ticker_specific:
+            for ticker in df['ticker'].unique():
+                mask = df['ticker'] == ticker
+                idx = np.where(mask)[0]
+                if len(idx) == 0:
+                    continue
+                if ticker in ticker_models:
+                    probs[idx] = ticker_models[ticker].predict_proba(features[idx])
+                else:
+                    probs[idx] = model.predict_proba(features[idx])
+        else:
             if is_gbt:
-                probs[idx] = model.predict_proba(features[idx], date=str(d_str))
+                probs = model.predict_proba(features)
             else:
-                batch = torch.FloatTensor(normalizer.transform(features[idx])).to(device)
+                batch = torch.FloatTensor(normalizer.transform(features)).to(device)
                 with torch.no_grad():
                     logits, _ = model(batch)
-                probs[idx] = torch.softmax(logits, dim=-1).cpu().numpy()
-    else:
-        if is_gbt:
-            probs = model.predict_proba(features)
-        else:
-            batch = torch.FloatTensor(normalizer.transform(features)).to(device)
-            with torch.no_grad():
-                logits, _ = model(batch)
-            probs = torch.softmax(logits, dim=-1).cpu().numpy()
+                probs = torch.softmax(logits, dim=-1).cpu().numpy()
     predictions = np.argmax(probs, axis=1)
         
     print(f"  Predictions: {np.bincount(predictions, minlength=3)} [SHORT, HOLD, LONG]")

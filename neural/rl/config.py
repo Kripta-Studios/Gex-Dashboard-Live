@@ -119,7 +119,7 @@ RL_CONFIG = {
     "obs_noise_std":        0.05,
     # Deployment/backtest signal threshold promoted by neural/run_pipeline.ps1.
     # Keep this aligned with episode extraction, PPO sampling and live routing.
-    "min_confidence":       0.475,
+    "min_confidence":       0.420,
     "short_confidence_offset": 0.025,
     "signal_reversal_min_confidence": 0.50,
     "signal_eval_cadence_minutes": 5,
@@ -127,10 +127,10 @@ RL_CONFIG = {
     # Curriculum — Linear interpolation
     # Confidence remains stable at the promoted deployment threshold.
     "curriculum_phases": {
-        0: {"pct": 0.00, "min_confidence": 0.475, "min_strike_bucket": 1, "max_strike_bucket": 3, "min_hold_minutes": 45},  
-        1: {"pct": 0.20, "min_confidence": 0.475, "min_strike_bucket": 0, "max_strike_bucket": 4, "min_hold_minutes": 75},  
-        2: {"pct": 0.45, "min_confidence": 0.475, "min_strike_bucket": 0, "max_strike_bucket": 5, "min_hold_minutes": 105},  
-        3: {"pct": 0.70, "min_confidence": 0.475, "min_strike_bucket": 0, "max_strike_bucket": 6, "min_hold_minutes": 150},  
+        0: {"pct": 0.00, "min_confidence": 0.550, "min_strike_bucket": 1, "max_strike_bucket": 3, "min_hold_minutes": 45},  
+        1: {"pct": 0.20, "min_confidence": 0.520, "min_strike_bucket": 0, "max_strike_bucket": 4, "min_hold_minutes": 75},  
+        2: {"pct": 0.45, "min_confidence": 0.500, "min_strike_bucket": 0, "max_strike_bucket": 5, "min_hold_minutes": 105},  
+        3: {"pct": 0.70, "min_confidence": 0.480, "min_strike_bucket": 0, "max_strike_bucket": 6, "min_hold_minutes": 150},  
     },
 
     # Session

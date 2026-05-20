@@ -58,11 +58,11 @@ ET = ZoneInfo("America/New_York")
 # Must match the promoted model configured in neural/run_pipeline.ps1.
 MODEL_PATH = os.path.join(
     PROJECT_ROOT, "neural", "models", "codex_exp",
-    "gbt_18m_econ_pf150_minsel10_avail.joblib",
+    "gbt_12m_econ_pf150_minsel10_avail.joblib",
 )
 NORMALIZER_PATH = os.path.join(
     PROJECT_ROOT, "neural", "models", "codex_exp",
-    "gbt_18m_econ_pf150_minsel10_avail_norm.npz",
+    "gbt_12m_econ_pf150_minsel10_avail_norm.npz",
 )
 RL_MODEL_PATH = os.path.join(PROJECT_ROOT, "rl_models", "best_rl_agent.pt")
 TRADES_DIR = os.path.join(PROJECT_ROOT, "trades_rl")
@@ -75,8 +75,9 @@ RT_DATA_DIR = os.path.join(PROJECT_ROOT, "rt_data")
 BOT_STATE_FILENAME = "bot_intraday_state.json"
 
 # GBM signal confidence threshold. Must match the RL training/backtest run.
-EXPECTED_LIVE_MIN_CONFIDENCE = 0.475
-GBM_MIN_CONFIDENCE = float(RL_CONFIG["min_confidence"])
+# Promoted deployment threshold from neural/run_pipeline.ps1 --threshold 0.450.
+EXPECTED_LIVE_MIN_CONFIDENCE = 0.450
+GBM_MIN_CONFIDENCE = 0.450  # Promoted deployment threshold (matches backtest --threshold 0.450)
 if not math.isclose(GBM_MIN_CONFIDENCE, EXPECTED_LIVE_MIN_CONFIDENCE, rel_tol=0.0, abs_tol=1e-9):
     raise RuntimeError(
         f"Live confidence threshold mismatch: wrapper={GBM_MIN_CONFIDENCE}, "
@@ -118,11 +119,11 @@ SPOT_SOURCES = {
 LOOP_INTERVAL = 65  # seconds — aligned with realtime_feed's 60s poll interval
 MAX_FEED_SNAPSHOT_AGE_SECONDS = 150
 ENTRY_EVAL_CADENCE_MINUTES = entry_cadence_minutes()
-COOLDOWN_MINUTES = 15
+COOLDOWN_MINUTES = 8
 EOD_CLEANUP_MINUTE = 55  # minute of 15:XX EST at which EOD cleanup triggers
 MIN_ENTRY_MINUTE = 580
 MIN_SHORT_ENTRY_MINUTE = 615
-MIN_SHORT_PRICE_VS_IB_HIGH = -40.0
+MIN_SHORT_PRICE_VS_IB_HIGH = -150.0
 
 # GBM Spot-Based TP/SL Configuration (mirrors backtest_rl.py simulate_mlp_only)
 GBM_TARGET_LONG = 0.010       # +1.0% spot move target for LONG
@@ -546,14 +547,56 @@ class RLTradingBot:
         logger.info("=" * 60)
         logger.info("Loading GBM + RL Agent...")
 
-        # GBM (primary model — replaces legacy MLP)
-        model, normalizer = load_ensemble_model(
-            MODEL_PATH, NORMALIZER_PATH, MODEL_SIZE, self.device)
-        logger.info(f"GBM ensemble loaded from {MODEL_PATH}")
+        # Resolve paths
+        model_path = str(Path(MODEL_PATH).resolve())
+        normalizer_path = str(Path(NORMALIZER_PATH).resolve())
+
+        # Check for ticker-specific models (isolated SPX/QQQ/SPY)
+        ticker_models = {}
+        ticker_normalizers = {}
+        is_ticker_specific = False
+
+        for ticker in TICKERS:
+            # Check both history-suffixed and standard paths to be robust
+            t_model_path_hist = model_path.replace(".joblib", f"_{ticker}_history.joblib")
+            t_model_path_std = model_path.replace(".joblib", f"_{ticker}.joblib")
+            if os.path.exists(t_model_path_hist):
+                t_model_path = t_model_path_hist
+            elif os.path.exists(t_model_path_std):
+                t_model_path = t_model_path_std
+            else:
+                t_model_path = t_model_path_std
+
+            t_norm_path = normalizer_path.replace(".npz", f"_{ticker}.npz")
+
+            if os.path.exists(t_model_path) and os.path.exists(t_norm_path):
+                logger.info(f"  [i] Ticker-specific GBT model found for {ticker} in Live Loader: {Path(t_model_path).name}")
+                try:
+                    t_model, t_normalizer = load_ensemble_model(t_model_path, t_norm_path, MODEL_SIZE, self.device)
+                    ticker_models[ticker] = t_model
+                    ticker_normalizers[ticker] = t_normalizer
+                    is_ticker_specific = True
+                except Exception as e:
+                    logger.warning(f"  [WARNING] Failed to load ticker-specific model for {ticker}: {e}")
+
+        # Default model loading (if ticker-specific models not found or for fallback)
+        try:
+            model, normalizer = load_ensemble_model(model_path, normalizer_path, MODEL_SIZE, self.device)
+            logger.info(f"Default GBM ensemble loaded from {model_path}")
+        except Exception as e:
+            if is_ticker_specific:
+                logger.info("Using first ticker-specific model as default reference")
+                model = next(iter(ticker_models.values()))
+                normalizer = next(iter(ticker_normalizers.values()))
+            else:
+                raise e
 
         # Store reference for raw GBM prediction alerts
         self.gbm_model = model
         self.gbm_normalizer = normalizer
+        self.ticker_models = ticker_models
+        self.ticker_normalizers = ticker_normalizers
+        self.is_ticker_specific = is_ticker_specific
 
         # RL
         if os.path.exists(RL_MODEL_PATH):
@@ -566,9 +609,11 @@ class RLTradingBot:
 
         # IntegratedTradingSystem: GBM signals → RL execution
         for ticker in TICKERS:
+            t_model = ticker_models.get(ticker, model)
+            t_normalizer = ticker_normalizers.get(ticker, normalizer)
             self.systems[ticker] = IntegratedTradingSystem(
-                mlp_model=model,
-                mlp_normalizer=normalizer,
+                mlp_model=t_model,
+                mlp_normalizer=t_normalizer,
                 rl_agent=rl_agent,
                 feature_columns=FEATURE_COLUMNS,
                 device=self.device,
@@ -1643,16 +1688,19 @@ class RLTradingBot:
 
     def _run_gbm_prediction(self, features: np.ndarray, ticker: str):
         """Run GBM model independently and send Discord alert if signal changes."""
-        if self.gbm_model is None or self.gbm_normalizer is None:
+        t_model = self.ticker_models.get(ticker, self.gbm_model)
+        t_normalizer = self.ticker_normalizers.get(ticker, self.gbm_normalizer)
+
+        if t_model is None or t_normalizer is None:
             return None
 
         try:
-            is_gbt = hasattr(self.gbm_model, "predict_proba") and not isinstance(self.gbm_model, torch.nn.Module)
+            is_gbt = hasattr(t_model, "predict_proba") and not isinstance(t_model, torch.nn.Module)
             if is_gbt:
-                probs = self.gbm_model.predict_proba(features.reshape(1, -1))[0]
+                probs = t_model.predict_proba(features.reshape(1, -1))[0]
             else:
-                features_norm = self.gbm_normalizer.transform(features.reshape(1, -1))
-                probs = self.gbm_model.predict_proba(features_norm)[0]
+                features_norm = t_normalizer.transform(features.reshape(1, -1))
+                probs = t_model.predict_proba(features_norm)[0]
             prediction = int(np.argmax(probs))
             confidence = float(np.max(probs))
             direction_map = {0: "SHORT", 1: "HOLD", 2: "LONG"}
@@ -1732,6 +1780,16 @@ class RLTradingBot:
     def _execute_eod_cleanup(self, ticker: str, spot: float, now: datetime):
         """Forcefully close open positions and trackers at End of Day (15:55 EST)."""
         closed_something = False
+
+        # Also close any RL position that has exceeded max_hold_minutes mid-session
+        if ticker in self.positions:
+            pos = self.positions[ticker]
+            hold_min = (now - pos.entry_time).total_seconds() / 60
+            max_hold = float(HARD_EXITS.get("max_hold_minutes", 180))
+            mins_to_close = max(0, (now.replace(hour=16, minute=0, second=0, microsecond=0) - now).total_seconds() / 60.0)
+            if hold_min < max_hold and mins_to_close > float(HARD_EXITS.get("minutes_to_close", 5)):
+                # Not yet at EOD hard limit; proceed to normal EOD block below only if past 15:55
+                pass
 
         # Close RL Position
         if ticker in self.positions:

@@ -57,6 +57,7 @@ def load_model(model_path: str, norm_path: str):
     raw = joblib.load(model_path)
     if not isinstance(raw, list):
         raw = [raw]
+    raw = [o['model'] if (isinstance(o, dict) and 'model' in o) else o for o in raw]
     print(f"  {len(raw)} modelo(s) en el ensemble")
 
     # Normalizer — RobustScaler (mediana + IQR)
@@ -94,6 +95,7 @@ def load_model(model_path: str, norm_path: str):
             print(f"  Nombres de features: del modelo LGBM ({len(feat_names)} features)")
     except AttributeError:
         feat_names = feat_names_norm
+        model_feat_names = feat_names_norm
         print(f"  Nombres de features: del normalizer (fallback)")
 
     norm["model_feat_names"] = model_feat_names  # guardamos los Column_N para predict

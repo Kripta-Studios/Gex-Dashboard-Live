@@ -131,19 +131,39 @@ def calculate_economic_metrics(
     work = work.sort_values(["date", "ticker", "minutes"]).reset_index(drop=True)
 
     pnl_values: list[float] = []
+    
+    # Global tracker for dynamic confidence
+    ticker_consecutive_losses = {}
+    
     for (date_str, ticker), day_df in work.groupby(["date", "ticker"], sort=True):
         last_trade_minute = -99999
         open_until = -99999
         day_df = day_df.reset_index(drop=True)
+        
+        tck = str(ticker)
+        if tck not in ticker_consecutive_losses:
+            ticker_consecutive_losses[tck] = 0
 
         for row_pos, row in day_df.iterrows():
             current_minute = int(row["minutes"])
             if current_minute < min_entry_minute:
                 continue
 
+            # Graduated dynamic confidence and sizing (match backtest logic)
+            current_losses = ticker_consecutive_losses[tck]
+            if current_losses >= 4:
+                effective_base_confidence = base_confidence + 0.20
+                effective_risk_capital = risk_capital * 0.25
+            elif current_losses >= 2:
+                effective_base_confidence = base_confidence + 0.10
+                effective_risk_capital = risk_capital * 0.50
+            else:
+                effective_base_confidence = base_confidence
+                effective_risk_capital = risk_capital
+
             pred = int(row["pred"])
             direction = direction_from_prediction(pred)
-            if not is_actionable_signal(direction, float(row["max_prob"]), base_confidence=base_confidence):
+            if not is_actionable_signal(direction, float(row["max_prob"]), base_confidence=effective_base_confidence):
                 continue
             if (
                 direction == "SHORT"
@@ -212,10 +232,16 @@ def calculate_economic_metrics(
                         break
 
             multiplier = ECON_POINT_VALUES.get(str(ticker), 100.0)
-            contracts = _calc_contracts(risk_capital, entry_price, stop_pct, multiplier)
+            contracts = _calc_contracts(effective_risk_capital, entry_price, stop_pct, multiplier)
             pnl_pts = (exit_price - entry_price) if direction == "LONG" else (entry_price - exit_price)
             pnl_dollars = pnl_pts * multiplier * contracts
             pnl_values.append(float(pnl_dollars))
+            
+            if pnl_dollars > 0:
+                ticker_consecutive_losses[tck] = 0
+            elif pnl_dollars < 0:
+                ticker_consecutive_losses[tck] += 1
+                
             open_until = current_minute + actual_hold
             last_trade_minute = open_until
 
@@ -399,6 +425,14 @@ def train_single_window(
     X_train_raw = X_train_raw[keep_idx]
     y_train     = y_train[keep_idx]
 
+    # Compute local sample weights based on freshness within this window (decay_days=30)
+    # This avoids the global max_date bug where early windows had weights close to 0.
+    weights_train = None
+    if '_date' in train_df.columns:
+        cutoff_date = train_df['_date'].max()
+        days_ago = (cutoff_date - train_df['_date']).dt.days.values
+        weights_train = np.exp(-days_ago / 30.0)[keep_idx]
+
     dist_train = np.bincount(y_train, minlength=3).tolist()
     print(f"      [Balance] Long={n_long_k} | Short={n_short_k} | Hold={n_hold_k} | "
           f"Ratio L:S={n_long_k/max(n_short_k,1):.2f}")
@@ -419,21 +453,24 @@ def train_single_window(
     lgb_class_weight = None if class_weight in (None, "none", "None", "") else class_weight
     model = lgb.LGBMClassifier(
         objective='multiclass',
-        n_estimators=300,
-        max_depth=4,         
-        learning_rate=0.03,
+        n_estimators=450,       # Increased from 300
+        max_depth=6,            # Increased from 4
+        learning_rate=0.02,     # Decreased from 0.03
         subsample=0.7,
         colsample_bytree=0.7,
-        min_child_samples=100, 
-        reg_alpha=0.5,       
-        reg_lambda=5.0,      
+        min_child_samples=40,   # Decreased from 100
+        reg_alpha=0.5,
+        reg_lambda=2.0,         # Decreased from 5.0
         num_class=3,
         random_state=seed,
         class_weight=lgb_class_weight,
         verbose=-1,
         n_jobs=-1,
     )
-    model.fit(X_train, y_train)
+    if weights_train is not None:
+        model.fit(X_train, y_train, sample_weight=weights_train)
+    else:
+        model.fit(X_train, y_train)
 
     # 7. Evaluate with the deployed entry policy on cal_df
     X_cal, y_cal = prep(cal_df)
@@ -582,18 +619,28 @@ def train_single_window(
 def walk_forward_train(data_path, model_path, norm_path, model_size,
                        train_m, test_m, epochs, batch_size, lr, n_ensemble=3,
                        top_n_windows=10, min_window=0, hold_ratio=2.0,
-                       class_weight=None, min_pf_floor=0.10,
+                       class_weight=None, min_pf_floor=1.05,
                        selection_metric="label", min_selection_trades=10,
                        selection_base_confidence=None, min_entry_minute=580,
                        min_short_entry_minute=None,
-                       min_short_price_vs_ib_high=None):
-    print("=" * 70 + f"\nWALK-FORWARD TRAINING (GBT ENSEMBLE x{n_ensemble})\n" + "=" * 70)
+                       min_short_price_vs_ib_high=None,
+                       ticker="all"):
+    print("=" * 70 + f"\nWALK-FORWARD TRAINING (GBT ENSEMBLE x{n_ensemble}) | Ticker: {ticker}\n" + "=" * 70)
+
+    if ticker != "all":
+        model_path = model_path.replace(".joblib", f"_{ticker}.joblib")
+        norm_path = norm_path.replace(".npz", f"_{ticker}.npz")
+        print(f"  [Suffix] Appended ticker suffix: {ticker} -> models: {model_path}, norm: {norm_path}")
 
     # Load data
     if data_path.endswith('.parquet'):
         df = pd.read_parquet(data_path)
     else:
         df = pd.read_csv(data_path)
+
+    if ticker != "all":
+        df = df[df['ticker'] == ticker].copy()
+        print(f"  [Filter] Filtered dataset to ticker: {ticker}. Rows remaining: {len(df):,}")
 
     # Parse dates
     if 'date' in df.columns:
@@ -647,6 +694,8 @@ def walk_forward_train(data_path, model_path, norm_path, model_size,
         print(f"\n--- Window {i+1}/{len(splits)} | Train: {len(tr_df):,} | Test: {len(ts_df):,} ---")
         window_ensemble  = []
         window_model_pfs = []
+        best_model_fallback = None
+        best_model_pf = -1.0
 
         for s in range(n_ensemble):
             seed = 42 + s
@@ -685,6 +734,11 @@ def walk_forward_train(data_path, model_path, norm_path, model_size,
                     production_norm = nr
                 continue
 
+            # Track the best model in this window for fallback
+            if not collapsed and pf > best_model_pf:
+                best_model_pf = pf
+                best_model_fallback = mod
+
             pf_floor_min_trades = 30 if selection_metric == "label" else min_trades_req
 
             if n_trades < min_trades_req:
@@ -714,6 +768,18 @@ def walk_forward_train(data_path, model_path, norm_path, model_size,
             })
             print(f"      [Window {i+1}] Registrado: {len(window_ensemble)} modelos | "
                   f"PF_avg={avg_pf:.3f}")
+        elif best_model_fallback is not None:
+            # Fallback registration to prevent stale model registry gaps!
+            ensemble_obj = GBTEnsemble([best_model_fallback])
+            window_registry.append({
+                "window_idx":   i + 1,
+                "ensemble_obj": ensemble_obj,
+                "avg_pf":       best_model_pf,
+                "n_models":     1,
+                "norm":         nr,
+                "is_fallback":  True,
+            })
+            print(f"      [!] Window {i+1} sin modelos validos -- FALLBACK REGISTRATION of best model (PF={best_model_pf:.3f})")
         else:
             print(f"      [!] Window {i+1} sin modelos validos -- omitted.")
 
@@ -816,6 +882,7 @@ def walk_forward_train(data_path, model_path, norm_path, model_size,
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--data",         required=True)
+    parser.add_argument("--ticker",       default="all", choices=["all", "SPX", "QQQ", "SPY"], help="Train for a specific ticker only")
     parser.add_argument("--model-size",   default="small",  help="Unused (legacy), kept for CLI compat")
     parser.add_argument("--train-months", type=int,   default=12)
     parser.add_argument("--test-months",  type=int,   default=1)
@@ -875,4 +942,5 @@ if __name__ == "__main__":
         args.min_entry_minute,
         args.min_short_entry_minute,
         args.min_short_price_vs_ib_high,
+        args.ticker,
     )

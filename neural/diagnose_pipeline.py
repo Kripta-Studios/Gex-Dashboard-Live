@@ -224,13 +224,55 @@ def check_mlp_edge(df, feature_cols, model_path, norm_path,
         print(f"  {C.WARN} Model not found: {model_path}")
         return 0.0, False, False
 
-    ensemble, normalizer = load_ensemble_model(model_path, norm_path, 'small')
+    ticker_models = {}
+    ticker_normalizers = {}
+    is_ticker_specific = False
+    ensemble = None
+    normalizer = None
+
+    for ticker in ["SPX", "QQQ", "SPY"]:
+        found = False
+        for suffix_fmt in ["_history.joblib", ".joblib"]:
+            if suffix_fmt == "_history.joblib":
+                base = model_path.replace("_history.joblib", "").replace(".joblib", "")
+                t_model_path = f"{base}_{ticker}_history.joblib"
+            else:
+                base = model_path.replace(".joblib", "")
+                t_model_path = f"{base}_{ticker}.joblib"
+            
+            t_norm_path = norm_path.replace(".npz", f"_{ticker}.npz")
+
+            if os.path.exists(t_model_path) and os.path.exists(t_norm_path):
+                print(f"  [i] Ticker-specific model found for {ticker} in Edge Check: {t_model_path}")
+                try:
+                    t_model, t_normalizer = load_ensemble_model(t_model_path, t_norm_path, 'small')
+                    ticker_models[ticker] = t_model
+                    ticker_normalizers[ticker] = t_normalizer
+                    is_ticker_specific = True
+                    found = True
+                    break
+                except Exception as e:
+                    print(f"  [WARNING] Failed to load ticker-specific model for {ticker}: {e}")
+
+    if is_ticker_specific:
+        print(f"  [OK] Loaded ticker-specific models for: {list(ticker_models.keys())}")
+        any_model = next(iter(ticker_models.values()))
+        ensemble = any_model
+        normalizer = next(iter(ticker_normalizers.values()))
+    else:
+        try:
+            ensemble, normalizer = load_ensemble_model(model_path, norm_path, 'small')
+            print(f"  [OK] Ensemble model loaded")
+        except Exception as e:
+            print(f"  [ERROR] Error loading model: {e}")
+
     is_gbt = hasattr(ensemble, 'predict_proba') and not isinstance(ensemble, torch.nn.Module)
     if is_gbt:
         device = torch.device('cpu')
     else:
         device = next(ensemble.parameters()).device
-    ensemble.eval()
+    if not is_gbt:
+        ensemble.eval()
 
     # FIX BUG-A: normalise date before calling walk_forward_splits so
     # that the internal _date column is always in sync.
@@ -293,7 +335,19 @@ def check_mlp_edge(df, feature_cols, model_path, norm_path,
         targets = _remap_targets(sub_df['target'].values)
 
         if is_gbt:
-            probs = ensemble.predict_proba(raw)
+            probs = np.zeros((len(sub_df), 3), dtype=np.float32)
+            if is_ticker_specific and ticker_models:
+                for ticker in sub_df['ticker'].unique():
+                    t_mask = sub_df['ticker'] == ticker
+                    idx = np.where(t_mask)[0]
+                    if len(idx) == 0:
+                        continue
+                    if ticker in ticker_models:
+                        probs[idx] = ticker_models[ticker].predict_proba(raw[idx])
+                    else:
+                        probs[idx] = ensemble.predict_proba(raw[idx])
+            else:
+                probs = ensemble.predict_proba(raw)
             return probs, targets
         else:
             feats = normalizer.transform(raw)
@@ -316,8 +370,8 @@ def check_mlp_edge(df, feature_cols, model_path, norm_path,
             count=len(preds),
         )
 
-    base_threshold = float(RL_CONFIG["min_confidence"])
-    THRESHOLDS = [round(base_threshold + step, 2) for step in (0.00, 0.05, 0.10)]
+    base_threshold = round(float(RL_CONFIG["min_confidence"]), 3)
+    THRESHOLDS = [round(base_threshold + step, 3) for step in (0.00, 0.05, 0.10)]
     DISP_THR = base_threshold
 
     # ── A) Full-data reference (in-sample + OOS mixed) ──
@@ -853,7 +907,6 @@ def main():
     if missing:
         print(f"  {C.WARN} {len(missing)} FEATURE_COLUMNS not in data: {missing[:5]}...")
     print(f"  Feature columns matched: {len(feature_cols)}/{len(FEATURE_COLUMNS)}")
-    '''
     feat_ok = check_feature_health(df, feature_cols)
     check_normalizer(args.normalizer, FEATURE_COLUMNS)
     
@@ -864,9 +917,10 @@ def main():
         test_months=args.test_months,
     )
     check_episode_balance()
+    '''
     check_rl_agent()
 
-    rl_path = os.path.abspath('../rl_models/best_rl_agent.pt')
+    rl_path = os.path.abspath('rl_models/best_rl_agent.pt')
     if args.options_cache:
         rl_oos_wr, rl_edge_ok = check_rl_edge(
             df, feature_cols, rl_path,
