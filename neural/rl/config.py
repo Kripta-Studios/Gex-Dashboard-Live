@@ -82,6 +82,10 @@ RL_CONFIG = {
     "state_dim":            TOTAL_STATE_DIM,
     "hidden_dims":          [256, 256, 128],
     "backbone_dropout":     0.05,
+    "num_experts":          3,
+    "moe_load_balance_coeff": 0.01,
+    "pretrain_critic_epochs": 10,
+    "pretrain_critic_samples": 5000,
 
     # PPO core
     # PPO core
@@ -89,7 +93,7 @@ RL_CONFIG = {
     "gamma": 0.998,  
     "gae_lambda":           0.95,
     "clip_epsilon": 0.1,   # Standard PPO value for stability
-    "value_loss_coeff": 0.4,    
+    "value_loss_coeff": 0.05,    
     "entropy_coeff": 0.02,
     "entropy_coeff_min":    0.01,   # Raised from 0.002: old value allowed total entropy death
     "entropy_target":       0.15,   
@@ -109,7 +113,7 @@ RL_CONFIG = {
     "ppo_epochs": 3,
     "n_episodes_per_update": 256,
     "total_updates":        500,    
-    "batch_size": 256,
+    "batch_size": 1024,
 
     # Walk-forward
     "train_months":         3,

@@ -27,6 +27,15 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+def _pad_or_trim_state(state: np.ndarray, state_dim: int) -> np.ndarray:
+    """Pad with zeros or trim to match the agent's expected state_dim.
+    Mirrors backtest_rl.py's _pad_or_trim_state for parity."""
+    if len(state) < state_dim:
+        pad = np.zeros(state_dim - len(state), dtype=np.float32)
+        return np.concatenate([state, pad])
+    return state[:state_dim]
+
+
 class IntegratedTradingSystem:
     """
     Production integration: MLP signals, RL executes.
@@ -495,7 +504,8 @@ class IntegratedTradingSystem:
                 pos_state[6] = np.clip(float(self._consecutive_losses), 0, 2)
 
         mlp_ctx = self._entry_mlp_context if position_active else np.array([confidence, time_to_target, 0.0, log_sigma], dtype=np.float32)
-        return np.concatenate([market, dynamic, pos_state, mlp_ctx]).astype(np.float32)
+        raw = np.concatenate([market, dynamic, pos_state, mlp_ctx]).astype(np.float32)
+        return _pad_or_trim_state(raw, self.rl.state_dim)
 
     def _get_atm_iv(self, options_data: dict, spot: float) -> float:
         all_opts = {**options_data.get("calls", {}), **options_data.get("puts", {})}

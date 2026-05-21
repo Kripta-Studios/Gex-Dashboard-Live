@@ -3,6 +3,7 @@
 Param(
   [switch]$gbt, # Paso 1 en adelante (GBT Training + Episode Index + Preprocess + RL)
   [switch]$rl,  # Paso 2 en adelante (Episode Index + Preprocess + RL)
+  [switch]$tr,  # Paso 4 en adelante (RL)
   [switch]$a,   # Paso 4.5 en adelante (Diagnosis)
   [switch]$bt,  # Paso 7 en adelante (Backtest GBT+RL)
   [switch]$v,   # Paso 8 en adelante (Visualización)
@@ -122,6 +123,7 @@ Write-Host "`n=== PIPELINE CONFIGURATION & RUN VARIABLES ===" -ForegroundColor G
 Write-Host "Parameters / Switches:"
 Write-Host "  -gbt                            : $gbt"
 Write-Host "  -rl                             : $rl"
+Write-Host "  -tr                             : $tr"
 Write-Host "  -a                              : $a"
 Write-Host "  -bt                             : $bt"
 Write-Host "  -v                              : $v"
@@ -168,6 +170,7 @@ Write-Host "==============================================`n" -ForegroundColor G
 $skip_to_step = 0
 if ($gbt) { $skip_to_step = 1 }
 if ($rl) { $skip_to_step = 2 }
+if ($tr) { $skip_to_step = 4 }
 if ($a) { $skip_to_step = 4.5 }
 if ($bt) { $skip_to_step = 7 }
 if ($v) { $skip_to_step = 8 }
@@ -308,7 +311,9 @@ if ($skip_to_step -le 2) {
     Write-Host "ERROR: compute_recovery_stats.py fallo tras el preprocess." -ForegroundColor Red
     Exit-Pipeline 1
   }
+}
 
+if ($skip_to_step -le 4) {
   # ─────────────────────────────────────────────────────────────────────────────
   # PASO 4 — RL TRAINING (Policy Optimization sobre señales GBT)
   # ─────────────────────────────────────────────────────────────────────────────

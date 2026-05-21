@@ -364,7 +364,7 @@ class PPOTrainer:
                     with torch.no_grad():
                         # We use evaluate_actions to get the log_prob of the effective_action
                         # This ensures the PPO ratio (new/old) is 1.0 at the start of the update.
-                        new_log_probs, _, _ = self.agent.evaluate_actions(
+                        new_log_probs, _, _, _ = self.agent.evaluate_actions(
                             state_tensor, [effective_action], [action_type])
                         log_prob_float = new_log_probs.item()
                 else:
@@ -439,16 +439,16 @@ class PPOTrainer:
         total_policy_loss = total_value_loss = total_entropy_loss = 0.0
         total_mean_entropy = 0.0
         total_approx_kl = 0.0
-        n_batches = 0
-
-        # Per-head entropy for diagnostics (Issue 1)
         total_h_strike = 0.0
         total_h_exit = 0.0
+        total_gating_probs = None
+        
+        n_batches = 0
 
         if len(buffer) < RL_CONFIG["batch_size"]:
             return {
                 "policy_loss": 0, "value_loss": 0, "entropy_loss": 0, 
-                "mean_entropy": 0, "h_strike": 0, "h_exit": 0, "approx_kl": 0
+                "mean_entropy": 0, "h_strike": 0, "h_exit": 0, "approx_kl": 0, "moe_gating": np.zeros(3)
             }
 
         for epoch in range(RL_CONFIG["ppo_epochs"]):
@@ -465,8 +465,8 @@ class PPOTrainer:
                     continue
 
                 # ── Recompute log_probs, entropy, and values with CURRENT weights (Fix 4) ──
-                log_probs, entropy, values = self.agent.evaluate_actions(
-                    states, actions, action_types)
+                log_probs, entropy, values, gating_probs = self.agent.evaluate_actions(
+                    states, actions, action_types, detach_value=True)
 
                 if update_step == 0 and epoch == 0 and n_batches == 0:
                     print(f"\n[DEBUG] Entropy sample: min={entropy.min():.4f} "
@@ -488,10 +488,8 @@ class PPOTrainer:
                     epoch_kls.append(approx_kl)
                     
                     # [STABILITY FIX] Intra-batch KL early stop
-                    # CRITICAL: Skip on the first batch of each epoch so entropy
-                    # gradients always flow. Without this, the entropy coefficients
-                    # never get applied and strike head collapses irreversibly.
-                    if n_batches > 0 and approx_kl > (kl_target * 10.0):
+                    # CRITICAL: Skip on the first batch of each epoch so entropy gradients always flow.
+                    if n_batches > 0 and approx_kl > (kl_target * 1.5):
                         stop_update = True
                         break
                 
@@ -551,11 +549,16 @@ class PPOTrainer:
                 per_sample_coeff = torch.tensor(coeffs, dtype=torch.float32, device=self.device)
                 entropy_loss = -(entropy * per_sample_coeff).mean()
 
+                # ── MoE Load Balancing Loss ──
+                expert_mean_prob = gating_probs.mean(dim=0)
+                moe_loss = RL_CONFIG.get("moe_load_balance_coeff", 0.01) * torch.sum(expert_mean_prob ** 2) * gating_probs.size(1)
+
                 # Total loss
                 # Values and returns both normalized by ret_std — stable scale regardless of hold duration
                 loss = (policy_loss
                         + RL_CONFIG["value_loss_coeff"] * value_loss
-                        + entropy_loss)
+                        + entropy_loss
+                        + moe_loss)
 
                 if not torch.isfinite(loss):
                     print(f"  [!] Non-finite loss detected: {loss.item()}. Skipping batch.")
@@ -591,10 +594,15 @@ class PPOTrainer:
                 total_h_exit += h_exit
 
                 total_approx_kl += approx_kl
+                if total_gating_probs is None:
+                    total_gating_probs = expert_mean_prob.detach().cpu().numpy()
+                else:
+                    total_gating_probs += expert_mean_prob.detach().cpu().numpy()
+                
                 n_batches += 1
             
             # KL early stopping (Fix 1) — relaxed to 3x to allow entropy gradients to flow
-            if stop_update or (epoch_kls and np.mean(epoch_kls) > kl_target * 3.0):
+            if stop_update or (epoch_kls and np.mean(epoch_kls) > kl_target * 1.5):
                 break
 
         n_batches = max(n_batches, 1)
@@ -606,7 +614,71 @@ class PPOTrainer:
             "h_strike":     total_h_strike / n_batches,
             "h_exit":       total_h_exit / n_batches,
             "approx_kl":    total_approx_kl / n_batches,
+            "moe_gating":   total_gating_probs / n_batches if total_gating_probs is not None else np.zeros(3),
         }
+
+    def pretrain_critic(self):
+        epochs = RL_CONFIG.get("pretrain_critic_epochs", 10)
+        samples = RL_CONFIG.get("pretrain_critic_samples", 5000)
+        
+        print("\n" + "=" * 70)
+        print(f"PRE-TRAINING CRITIC (Value Head) - {epochs} epochs, {samples} samples")
+        print("=" * 70)
+        
+        buffer, _ = self.collect_episodes(
+            n_episodes=samples // RL_CONFIG.get("session_length_minutes", 390) + 1,
+            min_confidence=0.5,
+            min_strike=0,
+            training=True,
+            update_step=0,
+            obs_noise=False,
+            logit_noise_level=0.5
+        )
+        
+        if len(buffer) == 0:
+            print("[!] No data collected for pre-training. Skipping.")
+            return
+
+        print(f"[RL] Collected {len(buffer)} transitions for Value Pre-training.")
+        
+        for param in self.agent.strike_head.parameters(): param.requires_grad = False
+        for param in self.agent.exit_head.parameters(): param.requires_grad = False
+        if hasattr(self.agent, "sniper_head"):
+            for param in self.agent.sniper_head.parameters(): param.requires_grad = False
+            
+        value_optimizer = optim.Adam(
+            list(self.agent.value_head.parameters()) + 
+            list(self.agent.experts.parameters()) + 
+            list(self.agent.gating_network.parameters()),
+            lr=RL_CONFIG.get("learning_rate", 3e-4) * 3
+        )
+        
+        self.agent.train()
+        for epoch in range(epochs):
+            total_loss = 0.0
+            batches = 0
+            for batch in buffer.get_batches(RL_CONFIG["batch_size"]):
+                states = batch["states"].to(self.device)
+                returns = batch["returns"].to(self.device)
+                
+                _, _, values, _ = self.agent.evaluate_actions(states, batch["actions"], batch["action_types"])
+                
+                loss = nn.MSELoss()(values, returns)
+                
+                value_optimizer.zero_grad()
+                loss.backward()
+                nn.utils.clip_grad_norm_(self.agent.parameters(), 1.0)
+                value_optimizer.step()
+                
+                total_loss += loss.item()
+                batches += 1
+            
+            print(f"  Epoch {epoch+1}/{epochs} - Value Loss: {total_loss/max(batches, 1):.4f}")
+            
+        for param in self.agent.parameters():
+            param.requires_grad = True
+            
+        print("Pre-training complete.\n")
 
     def train(self, save_dir: str = "../rl_models",
               log_interval: int = 5,
@@ -643,6 +715,7 @@ class PPOTrainer:
         rolling_entropy = []
         rolling_mean_entropy = []
         rolling_kl = []
+        rolling_gating = []
         step_times = []
         self._next_logit_noise = 0.0
         strike_collapse_counter = 0  # Track consecutive low-entropy strike steps
@@ -655,6 +728,9 @@ class PPOTrainer:
         }
 
         train_start = time.time()
+
+        if RL_CONFIG.get("pretrain_critic_epochs", 0) > 0:
+            self.pretrain_critic()
 
         for update_step in range(total_updates):
             t_start = time.time()
@@ -744,6 +820,7 @@ class PPOTrainer:
             rolling_entropy.append(losses["entropy_loss"])
             rolling_mean_entropy.append(losses.get("mean_entropy", 0.05))
             rolling_kl.append(losses.get("approx_kl", 0))
+            rolling_gating.append(losses.get("moe_gating", np.zeros(3)))
 
             # Keep only last ROLLING_WINDOW
             if len(rolling_pf) > ROLLING_WINDOW:
@@ -755,6 +832,7 @@ class PPOTrainer:
                 rolling_entropy.pop(0)
                 rolling_mean_entropy.pop(0)
                 rolling_kl.pop(0)
+                rolling_gating.pop(0)
 
             # Fix 7: Calculate noise for the NEXT step based on RAW mean entropy
             r_h_raw = np.mean(rolling_mean_entropy) if rolling_mean_entropy else 0.08
@@ -799,6 +877,8 @@ class PPOTrainer:
                 r_v = np.mean(rolling_value_loss) if rolling_value_loss else 0.0
                 r_h = np.mean(rolling_mean_entropy) if rolling_mean_entropy else 0.08
                 r_kl = np.mean(rolling_kl) if rolling_kl else 0.0
+                r_gating = np.mean(rolling_gating, axis=0) if rolling_gating else np.zeros(3)
+                gating_str = "[" + ", ".join([f"{x:.2f}" for x in r_gating]) + "]"
 
                 # Issue 1: Display per-head entropy to detect collapse early
                 h_s = losses.get("h_strike", 0.0)
@@ -817,6 +897,7 @@ class PPOTrainer:
                       f"H[Strike]={h_s:.2f} H[Exit]={h_e:.2f} "
                       f"coeff_s={strike_c:.4f} coeff_e={exit_c:.4f}")
                 print(f"  |- Approx KL:  {losses.get('approx_kl', 0):.4f} (avg:{r_kl:.4f})")
+                print(f"  |- MoE Gating: {gating_str}")
                 
                 # Strike collapse warning
                 if h_s < 0.10:
@@ -1203,7 +1284,7 @@ def worker_collect(agent_state_dict, min_confidence, min_strike, max_strike, min
                 effective_action = info.get("effective_action", action_val)
                 if effective_action != action_val:
                     with torch.no_grad():
-                        new_log_probs, _, _ = g_worker_agent.evaluate_actions(
+                        new_log_probs, _, _, _ = g_worker_agent.evaluate_actions(
                             state_tensor, [effective_action], [action_type])
                         log_prob_float = new_log_probs.item()
                 else:

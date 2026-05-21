@@ -35,20 +35,22 @@ class PPOAgent(nn.Module):
         self.update_step = 0
         hidden_dims = hidden_dims or RL_CONFIG["hidden_dims"]
 
-        # ── Shared backbone ──
-        layers = []
-        prev = self.state_dim
-        for h in hidden_dims:
-            layers.extend([
-                nn.Linear(prev, h),
-                nn.LayerNorm(h),
-                nn.GELU(),
-                nn.Dropout(RL_CONFIG.get("backbone_dropout", 0.1)),
-            ])
-            prev = h
-        self.backbone = nn.Sequential(*layers)
+        # ── MoE Backbone ──
+        self.num_experts = RL_CONFIG.get("num_experts", 3)
+        self.experts = nn.ModuleList([self._build_expert(hidden_dims) for _ in range(self.num_experts)])
+        
+        self.gating_network = nn.Sequential(
+            nn.Linear(self.state_dim, 128),
+            nn.LayerNorm(128),
+            nn.GELU(),
+            nn.Linear(128, 64),
+            nn.LayerNorm(64),
+            nn.GELU(),
+            nn.Linear(64, self.num_experts)
+        )
 
         last_dim = hidden_dims[-1]
+        self.last_dim = last_dim
 
         # ── Strike selection head (immediate entry, 7 delta buckets) ──
         self.strike_head = nn.Sequential(
@@ -91,6 +93,37 @@ class PPOAgent(nn.Module):
                 if m.bias is not None:
                     nn.init.zeros_(m.bias)
 
+    def _build_expert(self, hidden_dims):
+        layers = []
+        prev = self.state_dim
+        for h in hidden_dims:
+            layers.extend([
+                nn.Linear(prev, h),
+                nn.LayerNorm(h),
+                nn.GELU(),
+                nn.Dropout(RL_CONFIG.get("backbone_dropout", 0.1)),
+            ])
+            prev = h
+        return nn.Sequential(*layers)
+
+    def _forward_moe(self, state: torch.Tensor):
+        gating_logits = self.gating_network(state)
+        gating_probs = torch.softmax(gating_logits, dim=-1)
+        
+        expert_indices = torch.argmax(gating_probs, dim=-1)
+        
+        features = torch.zeros(state.size(0), self.last_dim, device=state.device)
+        for i, expert in enumerate(self.experts):
+            mask = (expert_indices == i)
+            if mask.any():
+                features[mask] = expert(state[mask])
+                
+        # Straight-Through Estimator: preserve scale but flow gradients to gating
+        chosen_probs = gating_probs[torch.arange(state.size(0), device=state.device), expert_indices].unsqueeze(-1)
+        features = features * (chosen_probs / (chosen_probs.detach() + 1e-8))
+        
+        return features, gating_probs
+
     def forward(self, state: torch.Tensor, action_type: str = "exit"):
         """
         Forward pass through backbone + appropriate head.
@@ -103,7 +136,7 @@ class PPOAgent(nn.Module):
             logits: action logits from the appropriate head
             value:  critic state value estimate
         """
-        features = self.backbone(state)
+        features, _ = self._forward_moe(state)
         value = self.value_head(features).squeeze(-1)
 
         if action_type == "strike":
@@ -124,6 +157,9 @@ class PPOAgent(nn.Module):
         Sample an action from the policy or take argmax.
         """
         logits, value = self.forward(state, action_type)
+        
+        # Save clean logits for true policy log_prob calculation (Crucial for PPO stability)
+        clean_logits = logits.clone()
 
         if not deterministic and logit_noise > 0:
             noise = torch.randn_like(logits) * logit_noise
@@ -145,8 +181,9 @@ class PPOAgent(nn.Module):
                 dist_sample = Categorical(logits=logits)
                 action = dist_sample.sample()
             
-            # CRITICAL: Always store log_prob from the ORIGINAL (non-temperature) distribution
-            log_prob = dist_original.log_prob(action)
+            # CRITICAL: Always store log_prob from the TRUE CLEAN policy distribution
+            dist_clean = Categorical(logits=clean_logits)
+            log_prob = dist_clean.log_prob(action)
             action = action.item()
 
         elif action_type == "sniper_entry":
@@ -156,7 +193,8 @@ class PPOAgent(nn.Module):
                 action = torch.argmax(logits, dim=-1)
             else:
                 action = dist.sample()
-            log_prob = dist.log_prob(action)
+            dist_clean = Categorical(logits=clean_logits)
+            log_prob = dist_clean.log_prob(action)
             action = action.item()
 
         else:
@@ -175,20 +213,24 @@ class PPOAgent(nn.Module):
                 dist_sample = Categorical(logits=logits)
                 action = dist_sample.sample()
                 
-            # CRITICAL: Always store log_prob from the ORIGINAL distribution
-            log_prob = dist_original.log_prob(action)
+            # CRITICAL: Always store log_prob from the TRUE CLEAN policy distribution
+            dist_clean = Categorical(logits=clean_logits)
+            log_prob = dist_clean.log_prob(action)
             action = action.item()
 
         return action, log_prob, value
 
     def evaluate_actions(self, states: torch.Tensor, actions: list,
-                          action_types: list):
+                          action_types: list, detach_value: bool = False):
         """
         Evaluate log_probs and entropy for a batch of (state, action) pairs.
         Uses raw logits (no entropy guard) to ensure PPO ratios are valid.
         """
-        features = self.backbone(states)
-        values = self.value_head(features).squeeze(-1)
+        features, gating_probs = self._forward_moe(states)
+        if detach_value:
+            values = self.value_head(features.detach()).squeeze(-1)
+        else:
+            values = self.value_head(features).squeeze(-1)
 
         strike_logits = self.strike_head(features)
         exit_logits = self.exit_head(features)
@@ -252,7 +294,7 @@ class PPOAgent(nn.Module):
         entropy = torch.where(is_strike, strike_entropy,
                    torch.where(is_sniper, sniper_entropy, exit_entropy))
 
-        return log_probs, entropy, values
+        return log_probs, entropy, values, gating_probs
 
     def save(self, filepath: str, update_step: int = 0):
         """Save agent weights and metadata."""
