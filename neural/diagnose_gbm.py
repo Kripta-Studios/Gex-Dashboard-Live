@@ -30,6 +30,8 @@ import numpy as np
 import pandas as pd
 import joblib
 
+from neural.signal_policy import direction_from_prediction, get_independent_signals
+
 # ── Colores ANSI ──────────────────────────────────────────────────────────────
 GREEN  = "\033[92m"
 YELLOW = "\033[93m"
@@ -517,8 +519,9 @@ def section_failure_simulation(models, norm, feat_names):
     probs = predict_ensemble(models, X_norm)[0]
 
     p_short, p_hold, p_long = probs[0], probs[1], probs[2]
-    pred = ["SHORT", "HOLD", "LONG"][np.argmax(probs)]
-    conf = float(np.max(probs))
+    pred_arr, conf_arr = get_independent_signals(probs.reshape(1, -1), base_confidence=None)
+    pred = direction_from_prediction(int(pred_arr[0]))
+    conf = float(conf_arr[0])
 
     print(f"\n  Predicción con vector de fallo:")
     print(f"    SHORT = {p_short:.1%}   HOLD = {p_hold:.1%}   LONG = {p_long:.1%}")

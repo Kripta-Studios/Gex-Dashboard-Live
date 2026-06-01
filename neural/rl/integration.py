@@ -21,7 +21,12 @@ from .config import (
     POSITION_STATE_DIM, get_half_spread,
 )
 from .agent import PPOAgent
-from neural.signal_policy import is_actionable_signal, should_exit_on_reversal
+from neural.signal_policy import (
+    deployment_context_allowed,
+    get_independent_signals,
+    is_actionable_signal,
+    should_exit_on_reversal,
+)
 import logging
 
 logger = logging.getLogger(__name__)
@@ -175,9 +180,20 @@ class IntegratedTradingSystem:
                 else:
                     time_to_target, log_sigma = 0.5, 0.5
 
-        prediction = int(np.argmax(probs))
-        confidence = float(np.max(probs))
+        preds, _ = get_independent_signals(probs.reshape(1, -1), base_confidence=None)
+        prediction = int(preds[0])
+        confidence = float(probs[prediction])
         direction = {0: "SHORT", 1: "HOLD", 2: "LONG"}.get(prediction, "HOLD")
+        feature_context = {
+            col: float(market_features[i])
+            for i, col in enumerate(self.feature_columns[:len(market_features)])
+        }
+        feature_context["timestamp"] = timestamp
+        feature_context["time"] = timestamp.strftime("%H:%M")
+        feature_context["minutes"] = timestamp.hour * 60 + timestamp.minute
+        if not deployment_context_allowed(feature_context, direction=direction):
+            direction = "HOLD"
+            confidence = 0.0
         
         # 3. Handle signal tracking
         if self.open_position is None:

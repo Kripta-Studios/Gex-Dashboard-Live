@@ -57,9 +57,18 @@ LEVEL_PROXIMITY_THRESHOLD = 0.0015   # ±0.15% — widened to capture S/R bounce
                                      # Was 0.0008 (±4pts SPX) — too tight, missed 0.10-0.15% reactions
                                      # With 0.0015 = ±6pts in SPX@4100, ±0.45pts in QQQ@300
 LOOKAHEAD_MINUTES = 180
-FIXED_PROFIT_PCT = 0.003             # 0.3% — target for LONG/SHORT (captures typical S/R bounces)
-FIXED_STOP_PCT   = 0.003             # 0.3% — stop for both directions → 1:1 R/R
-                                     # Previous: 0.6% profit / 0.3% stop → missed 0.3-0.5% moves
+TICKER_LABEL_TARGETS = {
+    "SPX": (0.010, 0.010),
+    "QQQ": (0.006, 0.006),
+    "SPY": (0.006, 0.006),
+}
+TICKER_LABEL_STOPS = {
+    "SPX": 0.0025,
+    "QQQ": 0.0025,
+    "SPY": 0.0035,
+}
+FIXED_PROFIT_PCT = 0.006             # fallback only; ticker targets above are used in production collection
+FIXED_STOP_PCT   = 0.0025            # fallback only; ticker stops above are used in production collection
 BPS_CLIP = 500                        # clamp distances at ±500 bps (±5%)
 
 # Column Optimization for Memory
@@ -157,9 +166,17 @@ def load_ohlc_data(ticker: str, date_str: str) -> dict:
         
         series = []
         for _, row in df.iterrows():
+            open_price = float(row['open'])
+            high_price = float(row['high'])
+            low_price = float(row['low'])
+            close_price = float(row['close'])
             series.append({
                 "time": row['dt'].strftime("%H:%M"),
-                "price": float(row['close']),
+                "open": open_price,
+                "high": high_price,
+                "low": low_price,
+                "close": close_price,
+                "price": close_price,
                 "volume": float(row['volume'])
             })
             
@@ -176,6 +193,14 @@ def load_ohlc_data(ticker: str, date_str: str) -> dict:
 
 MIN_FORWARD_MINUTES = 10  # Minimum bars needed for labeling (vs full LOOKAHEAD)
 
+
+def get_ticker_label_params(ticker: str) -> tuple[float, float, float]:
+    ticker_key = str(ticker).upper()
+    long_target, short_target = TICKER_LABEL_TARGETS.get(ticker_key, (FIXED_PROFIT_PCT, FIXED_PROFIT_PCT))
+    stop_pct = TICKER_LABEL_STOPS.get(ticker_key, FIXED_STOP_PCT)
+    return float(long_target), float(short_target), float(stop_pct)
+
+
 def calculate_target_label(series: list, current_idx: int, profit_pct: float, stop_pct: float, lookahead: int = LOOKAHEAD_MINUTES) -> tuple:
     """Asymmetric labeling dynamically scaled by ATR.
     Label LONG/SHORT only when profit target is hit *before* stop."""
@@ -187,12 +212,15 @@ def calculate_target_label(series: list, current_idx: int, profit_pct: float, st
     long_profit_time, long_stop_time = 0, 0
     short_profit_time, short_stop_time = 0, 0
     for i in range(current_idx + 1, min(current_idx + lookahead + 1, len(series))):
-        price = series[i].get("price", current_price)
+        candle = series[i]
+        price = candle.get("price", current_price)
+        high_price = candle.get("high", price)
+        low_price = candle.get("low", price)
         minutes_elapsed = i - current_idx
-        if price > max_price: max_price = price
-        if price < min_price: min_price = price
-        up_pct = (price - current_price) / current_price
-        down_pct = (current_price - price) / current_price
+        if high_price > max_price: max_price = high_price
+        if low_price < min_price: min_price = low_price
+        up_pct = (high_price - current_price) / current_price
+        down_pct = (current_price - low_price) / current_price
         if long_profit_time == 0 and up_pct >= profit_pct: long_profit_time = minutes_elapsed
         if long_stop_time == 0 and down_pct >= stop_pct: long_stop_time = minutes_elapsed
         if short_profit_time == 0 and down_pct >= profit_pct: short_profit_time = minutes_elapsed
@@ -240,12 +268,15 @@ def calculate_target_label_asymmetric(series: list, current_idx: int,
     short_profit_time, short_stop_time = 0, 0
 
     for i in range(current_idx + 1, min(current_idx + lookahead + 1, len(series))):
-        price = series[i].get("price", current_price)
+        candle = series[i]
+        price = candle.get("price", current_price)
+        high_price = candle.get("high", price)
+        low_price = candle.get("low", price)
         minutes_elapsed = i - current_idx
-        if price > max_price: max_price = price
-        if price < min_price: min_price = price
-        up_pct   = (price - current_price) / current_price
-        down_pct = (current_price - price) / current_price
+        if high_price > max_price: max_price = high_price
+        if low_price < min_price: min_price = low_price
+        up_pct   = (high_price - current_price) / current_price
+        down_pct = (current_price - low_price) / current_price
 
         if long_profit_time == 0 and up_pct   >= long_profit_pct:  long_profit_time  = minutes_elapsed
         if long_stop_time   == 0 and down_pct >= long_stop_pct:    long_stop_time    = minutes_elapsed
@@ -268,6 +299,118 @@ def calculate_target_label_asymmetric(series: list, current_idx: int,
     elif short_valid:
         return (-1, short_profit_time, short_stop_time, down_move)
     return (0, 0, 0, 0.0)
+
+
+def _simulate_direction_outcome(
+    series: list,
+    current_idx: int,
+    direction: str,
+    target_pct: float,
+    stop_pct: float,
+    lookahead: int = LOOKAHEAD_MINUTES,
+) -> tuple[float, int, float]:
+    """Spot outcome using the same stop/target/breakeven mechanics as the GBT backtest."""
+    remaining = len(series) - current_idx - 1
+    if remaining < MIN_FORWARD_MINUTES:
+        return 0.0, 0, 0.0
+
+    current = series[current_idx]
+    entry_price = float(current.get("price", 0.0))
+    if entry_price <= 0:
+        return 0.0, 0, 0.0
+
+    direction = str(direction).upper()
+    exit_price = entry_price
+    peak_price = entry_price
+    max_favorable_move = 0.0
+    actual_hold = min(lookahead, remaining)
+    end_idx = min(current_idx + lookahead + 1, len(series))
+
+    found_exit = False
+    for i in range(current_idx, end_idx):
+        elapsed = i - current_idx
+        candle = series[i]
+        open_price = float(candle.get("open", candle.get("price", entry_price)))
+        high_price = float(candle.get("high", candle.get("price", entry_price)))
+        low_price = float(candle.get("low", candle.get("price", entry_price)))
+        close_price = float(candle.get("close", candle.get("price", entry_price)))
+
+        if elapsed > lookahead:
+            exit_price = open_price
+            actual_hold = elapsed
+            found_exit = True
+            break
+
+        if direction == "LONG":
+            peak_price = max(peak_price, high_price)
+            max_favorable_move = max(max_favorable_move, (peak_price - entry_price) / entry_price)
+            current_stop_price = entry_price * (1 - stop_pct)
+            if max_favorable_move >= 0.004:
+                current_stop_price = max(current_stop_price, entry_price * 1.001)
+
+            if low_price <= current_stop_price:
+                exit_price = current_stop_price
+                actual_hold = elapsed
+                found_exit = True
+                break
+            if high_price >= entry_price * (1 + target_pct):
+                exit_price = entry_price * (1 + target_pct)
+                actual_hold = elapsed
+                found_exit = True
+                break
+            exit_price = close_price
+        else:
+            peak_price = min(peak_price, low_price)
+            max_favorable_move = max(max_favorable_move, (entry_price - peak_price) / entry_price)
+            current_stop_price = entry_price * (1 + stop_pct)
+            if max_favorable_move >= 0.004:
+                current_stop_price = min(current_stop_price, entry_price * 0.999)
+
+            if high_price >= current_stop_price:
+                exit_price = current_stop_price
+                actual_hold = elapsed
+                found_exit = True
+                break
+            if low_price <= entry_price * (1 - target_pct):
+                exit_price = entry_price * (1 - target_pct)
+                actual_hold = elapsed
+                found_exit = True
+                break
+            exit_price = close_price
+
+    if not found_exit and end_idx > current_idx:
+        last = series[end_idx - 1]
+        exit_price = float(last.get("close", last.get("price", entry_price)))
+        actual_hold = end_idx - 1 - current_idx
+
+    if direction == "LONG":
+        pnl_pct = (exit_price - entry_price) / entry_price
+    else:
+        pnl_pct = (entry_price - exit_price) / entry_price
+    return float(pnl_pct), int(actual_hold), float(max_favorable_move)
+
+
+def calculate_trade_outcome_label_asymmetric(
+    series: list,
+    current_idx: int,
+    long_profit_pct: float,
+    short_profit_pct: float,
+    stop_pct: float,
+    lookahead: int = LOOKAHEAD_MINUTES,
+) -> tuple[int, int, int, float]:
+    """Label the side whose exact backtest-style outcome is positive and strongest."""
+    long_pnl, long_hold, long_mfe = _simulate_direction_outcome(
+        series, current_idx, "LONG", long_profit_pct, stop_pct, lookahead
+    )
+    short_pnl, short_hold, short_mfe = _simulate_direction_outcome(
+        series, current_idx, "SHORT", short_profit_pct, stop_pct, lookahead
+    )
+
+    if long_pnl > 0.0 and long_pnl >= short_pnl:
+        return (1, long_hold, 0, long_mfe)
+    if short_pnl > 0.0:
+        return (-1, short_hold, 0, short_mfe)
+    return (0, 0, min(long_hold, short_hold), max(long_mfe, short_mfe))
 
 # calculate_exact_t is imported from services.compute_features
 
@@ -645,6 +788,29 @@ def get_trend_context(series: list, current_idx: int, lookback: int = 30) -> flo
     return float(np.clip(slope / (prices[-1] * 0.0001), -1.0, 1.0))
 
 
+def load_vix_history(current_date_str: str, n_days: int = 5) -> list:
+    current_date = datetime.strptime(current_date_str, '%Y%m%d').date()
+    base_dir = Path(THETADATA_DIR) / 'data_underlying_derived' / 'VIX'
+    if not base_dir.exists(): return []
+    available = []
+    for f in base_dir.rglob('*.parquet'):
+        try:
+            parts = f.stem.split('_')
+            date_str = parts[1] if len(parts) >= 2 else parts[0]
+            d = datetime.strptime(date_str, '%Y%m%d').date()
+            if d < current_date:
+                available.append((d, f))
+        except: continue
+    available.sort(key=lambda x: x[0], reverse=True)
+    results = []
+    for d, filepath in available[:n_days]:
+        try:
+            df = safe_read_parquet(filepath, columns=['timestamp', 'close'])
+            if not df.empty:
+                results.append(float(df['close'].iloc[-1]))
+        except: pass
+    return results
+
 def process_ticker_date(args: tuple) -> tuple:
     ticker, target_date = args
     if ticker not in ["SPX", "QQQ", "SPY"]:
@@ -816,7 +982,21 @@ def process_ticker_date(args: tuple) -> tuple:
             except:
                 df_ohlc_daily = None
 
-        historical_ibs = load_historical_ib_levels(greek_ticker, date_str, n_days=10)
+        vix_history = load_vix_history(date_str, n_days=5)
+        vix_5d_mean = float(np.mean(vix_history)) if len(vix_history) > 0 else 20.0
+        vix_5d_std = float(np.std(vix_history)) if len(vix_history) > 1 else 0.0
+
+        historical_ibs = load_historical_ib_levels(greek_ticker, date_str, n_days=15)
+        recent_5d_ibs = [h for h in historical_ibs if h is not None][:5]
+        if len(recent_5d_ibs) > 0:
+            atrs = [h['daily_high'] - h['daily_low'] for h in recent_5d_ibs]
+            atr_5d = float(np.mean(atrs))
+            # Fallback to 5000 to avoid div by zero if series is empty, though checked before
+            spot_px = series[0].get('price', 5000) if len(series) > 0 else 5000
+            atr_5d_norm = float(np.clip(atr_5d / spot_px, 0.0, 0.05))
+        else:
+            atr_5d_norm = 0.005
+
         tlt_df = load_tlt_intraday(date_str)
 
         gap_features = compute_gap_features(series, historical_ibs, ib_high, ib_low)
@@ -894,12 +1074,15 @@ def process_ticker_date(args: tuple) -> tuple:
             
             # Update running IB during the first hour (9:30 - 10:30)
             if 0 <= minutes_since_open <= 60:
+                current_candle = series[series_idx]
+                candle_high = float(current_candle.get("high", series_price))
+                candle_low = float(current_candle.get("low", series_price))
                 if running_ib_high == 0:
-                    running_ib_high = series_price
-                    running_ib_low = series_price
+                    running_ib_high = candle_high
+                    running_ib_low = candle_low
                 else:
-                    running_ib_high = max(running_ib_high, series_price)
-                    running_ib_low = min(running_ib_low, series_price)
+                    running_ib_high = max(running_ib_high, candle_high)
+                    running_ib_low = min(running_ib_low, candle_low)
 
             # ELIMINATE LOOKAHEAD BIAS:
             # During the first 60 minutes, use the IB formed SO FAR.
@@ -1070,9 +1253,9 @@ def process_ticker_date(args: tuple) -> tuple:
             min_vanna = exp.get("min_vanna_strike", 0)
             vanna_touched_today = False
             if min_vanna > 0:
-                prices_so_far = [s.get("price", spot) for s in series[:series_idx + 1]]
-                high_so_far = max(prices_so_far)
-                low_so_far = min(prices_so_far)
+                candles_so_far = series[:series_idx + 1]
+                high_so_far = max(s.get("high", s.get("price", spot)) for s in candles_so_far)
+                low_so_far = min(s.get("low", s.get("price", spot)) for s in candles_so_far)
                 buffer = min_vanna * LEVEL_PROXIMITY_THRESHOLD
                 if (low_so_far - buffer) <= min_vanna <= (high_so_far + buffer):
                     vanna_touched_today = True
@@ -1086,31 +1269,14 @@ def process_ticker_date(args: tuple) -> tuple:
                     implied_move_pct = 0.004
                 implied_move_pct = float(np.clip(implied_move_pct, 0.0015, 0.01))
 
-                # ── Contexto de tendencia para ajustar asimetría ──
-                trend = get_trend_context(series, series_idx, lookback=30)
-                # En tendencia fuerte, el lado contrario a la tendencia es más difícil
-                # trend > 0.3 → mercado alcista → exigir más al SHORT, facilitar LONG
-                # trend < -0.3 → mercado bajista → exigir más al LONG, facilitar SHORT
-
-                if magnet_active:
-                    dynamic_profit_pct = dist_to_vanna_pct
-                    noise_floor_pct = (day_atr * 2) / spot
-                    dynamic_stop_pct = max(dist_to_vanna_pct / 3.0, noise_floor_pct)
-                    target_label, time_to_target, time_to_stop, max_move = calculate_target_label(
-                        series, series_idx,
-                        profit_pct=dynamic_profit_pct,
-                        stop_pct=dynamic_stop_pct,
-                        lookahead=LOOKAHEAD_MINUTES
-                    )
-                else:
-                    target_label, time_to_target, time_to_stop, max_move = calculate_target_label_asymmetric(
-                        series, series_idx,
-                        long_profit_pct=FIXED_PROFIT_PCT,
-                        short_profit_pct=FIXED_PROFIT_PCT,
-                        long_stop_pct=FIXED_STOP_PCT,
-                        short_stop_pct=FIXED_STOP_PCT,
-                        lookahead=LOOKAHEAD_MINUTES
-                    )
+                long_target_pct, short_target_pct, stop_pct = get_ticker_label_params(ticker)
+                target_label, time_to_target, time_to_stop, max_move = calculate_trade_outcome_label_asymmetric(
+                    series, series_idx,
+                    long_profit_pct=long_target_pct,
+                    short_profit_pct=short_target_pct,
+                    stop_pct=stop_pct,
+                    lookahead=LOOKAHEAD_MINUTES
+                )
             else:
                 target_label, time_to_target, time_to_stop, max_move = 0, 0, 0, 0.0
             
@@ -1147,6 +1313,7 @@ def process_ticker_date(args: tuple) -> tuple:
                 "ticker": ticker, "date": date_str, "time": time_key, "timestamp": ts,
                 "spot_price": spot, "target": target_label, "time_to_target": time_to_target,
                 "time_to_stop": time_to_stop, "max_move": max_move,
+                "vix_5d_mean": vix_5d_mean, "vix_5d_std": vix_5d_std, "atr_5d_norm": atr_5d_norm,
                 **features_dict
             }
             
@@ -1364,6 +1531,163 @@ def collect_training_data(tickers: list, num_days: int = 365, num_workers: int =
     print(f"\nTotal samples collected: {len(df)}")
     return df
 
+
+def normalize_yyyymmdd(value) -> str:
+    digits = "".join(ch for ch in str(value) if ch.isdigit())
+    if len(digits) < 8:
+        return ""
+    return digits[:8]
+
+
+def next_calendar_date(date_str: str) -> str:
+    dt = datetime.strptime(normalize_yyyymmdd(date_str), "%Y%m%d").date()
+    return (dt + timedelta(days=1)).strftime("%Y%m%d")
+
+
+def requested_tickers(tickers: list[str]) -> set[str]:
+    return {str(t).upper() for t in tickers if str(t).upper() in {"SPX", "QQQ", "SPY"}}
+
+
+def read_existing_output_metadata(output_path: str | Path) -> dict:
+    path = Path(output_path)
+    try:
+        meta = pd.read_parquet(path, columns=["ticker", "date"])
+    except Exception as exc:
+        return {"ok": False, "reason": f"could not read ticker/date columns: {exc}"}
+
+    if meta.empty:
+        return {"ok": False, "reason": "existing parquet is empty"}
+    if "ticker" not in meta.columns or "date" not in meta.columns:
+        return {"ok": False, "reason": "existing parquet missing ticker/date columns"}
+
+    dates = meta["date"].map(normalize_yyyymmdd)
+    dates = dates[dates != ""]
+    if dates.empty:
+        return {"ok": False, "reason": "existing parquet has no parseable dates"}
+
+    tickers = {str(t).upper() for t in meta["ticker"].dropna().astype(str).unique().tolist()}
+    return {
+        "ok": True,
+        "rows": int(len(meta)),
+        "tickers": tickers,
+        "min_date": str(dates.min()),
+        "max_date": str(dates.max()),
+        "unique_dates": int(dates.nunique()),
+    }
+
+
+def plan_collection_mode(
+    output_path: str | Path,
+    tickers: list[str],
+    start_date: str | None,
+    end_date: str | None,
+    force_rebuild: bool,
+    no_incremental: bool,
+) -> dict:
+    path = Path(output_path)
+    if force_rebuild:
+        return {"mode": "full", "reason": "--force-rebuild was set"}
+    if no_incremental:
+        return {"mode": "full", "reason": "--no-incremental was set"}
+    if not path.exists():
+        return {"mode": "full", "reason": "output parquet does not exist"}
+
+    script_mtime = Path(__file__).stat().st_mtime
+    output_mtime = path.stat().st_mtime
+    if script_mtime > output_mtime:
+        return {
+            "mode": "full",
+            "reason": "collector script is newer than output parquet",
+            "script_mtime": script_mtime,
+            "output_mtime": output_mtime,
+        }
+
+    meta = read_existing_output_metadata(path)
+    if not meta.get("ok", False):
+        return {"mode": "full", "reason": meta.get("reason", "could not inspect existing parquet")}
+
+    expected_tickers = requested_tickers(tickers)
+    if expected_tickers and meta["tickers"] != expected_tickers:
+        return {
+            "mode": "full",
+            "reason": f"requested tickers {sorted(expected_tickers)} differ from existing tickers {sorted(meta['tickers'])}",
+            "existing": meta,
+        }
+
+    start_norm = normalize_yyyymmdd(start_date) if start_date else ""
+    end_norm = normalize_yyyymmdd(end_date) if end_date else ""
+    if start_norm and start_norm < meta["min_date"]:
+        return {
+            "mode": "full",
+            "reason": f"requested start {start_norm} is before existing min date {meta['min_date']}",
+            "existing": meta,
+        }
+    if start_norm and start_norm > meta["min_date"]:
+        return {
+            "mode": "full",
+            "reason": f"requested start {start_norm} is after existing min date {meta['min_date']}",
+            "existing": meta,
+        }
+    if end_norm and end_norm < meta["max_date"]:
+        return {
+            "mode": "full",
+            "reason": f"requested end {end_norm} is before existing max date {meta['max_date']}",
+            "existing": meta,
+        }
+    if end_norm and meta["max_date"] >= end_norm:
+        return {"mode": "current", "reason": "existing parquet already covers requested end date", "existing": meta}
+
+    return {
+        "mode": "incremental",
+        "reason": "collector unchanged and existing parquet can be appended",
+        "existing": meta,
+        "incremental_start": next_calendar_date(meta["max_date"]),
+        "incremental_end": end_norm or None,
+    }
+
+
+def dedupe_and_sort_training_frame(df: pd.DataFrame) -> pd.DataFrame:
+    if df.empty:
+        return df
+    out = df.copy()
+    if "date" in out.columns:
+        out["date"] = out["date"].map(normalize_yyyymmdd)
+    dedupe_keys = [c for c in ["ticker", "date", "time"] if c in out.columns]
+    if len(dedupe_keys) < 3:
+        dedupe_keys = [c for c in ["ticker", "date", "timestamp"] if c in out.columns]
+    if len(dedupe_keys) >= 3:
+        before = len(out)
+        out = out.drop_duplicates(subset=dedupe_keys, keep="last")
+        dropped = before - len(out)
+        if dropped:
+            print(f"Deduplicated {dropped:,} rows on keys {dedupe_keys}")
+    sort_cols = [c for c in ["ticker", "date", "time", "timestamp"] if c in out.columns]
+    if sort_cols:
+        out = out.sort_values(sort_cols).reset_index(drop=True)
+    return out
+
+
+def save_training_parquet_atomic(df: pd.DataFrame, output_path: str | Path) -> None:
+    path = Path(output_path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_name(path.name + ".tmp")
+    df.to_parquet(tmp, index=False)
+    tmp.replace(path)
+
+
+def print_dataset_summary(df: pd.DataFrame) -> None:
+    print("\n=== Dataset Summary ===")
+    print(f"Total samples: {len(df)}")
+    if "ticker" in df.columns:
+        print(f"Tickers: {df['ticker'].dropna().unique().tolist()}")
+    if "date" in df.columns:
+        print(f"Dates: {df['date'].nunique()} unique days")
+        print(f"Date range: {df['date'].min()} -> {df['date'].max()}")
+    if "target" in df.columns:
+        print("\nTarget distribution:")
+        print(df["target"].value_counts().sort_index())
+
+
 def main():
     parser = argparse.ArgumentParser(description="Collect training data for PyTorch trading bot using Parquets")
     parser.add_argument("--output", default="training_data_derived.parquet", help="Output Parquet filename")
@@ -1374,6 +1698,8 @@ def main():
     parser.add_argument("--end", type=str, default=None, help="End date YYYYMMDD")
     parser.add_argument("--gui", action="store_true", help="Launch trade annotation GUI (skips data collection)")
     parser.add_argument("--port", type=int, default=8501, help="GUI server port (only with --gui)")
+    parser.add_argument("--force-rebuild", action="store_true", help="Ignore any existing output parquet and rebuild from --start")
+    parser.add_argument("--no-incremental", action="store_true", help="Disable append mode and use the previous full-rebuild behavior")
     args = parser.parse_args()
     
     os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -1385,21 +1711,53 @@ def main():
         launch_gui(output_path=output_path, port=args.port)
         return
 
-    df = collect_training_data(args.tickers, args.days, args.workers, args.start, args.end)
-    
-    if df.empty:
-        print("No data collected!")
+    plan = plan_collection_mode(
+        output_path=output_path,
+        tickers=args.tickers,
+        start_date=args.start,
+        end_date=args.end,
+        force_rebuild=args.force_rebuild,
+        no_incremental=args.no_incremental,
+    )
+    print(f"\n=== Collection Mode: {plan['mode'].upper()} ===")
+    print(f"Reason: {plan['reason']}")
+
+    if plan["mode"] == "current":
+        meta = plan["existing"]
+        print(
+            f"Existing parquet is current: {meta['rows']:,} rows, "
+            f"{meta['unique_dates']} days, {meta['min_date']} -> {meta['max_date']}"
+        )
         return
-        
-    df.to_parquet(output_path, index=False)
+
+    if plan["mode"] == "incremental":
+        existing_meta = plan["existing"]
+        incremental_start = plan["incremental_start"]
+        incremental_end = plan["incremental_end"]
+        print(
+            f"Existing parquet: {existing_meta['rows']:,} rows, "
+            f"{existing_meta['unique_dates']} days, {existing_meta['min_date']} -> {existing_meta['max_date']}"
+        )
+        print(f"Collecting append range: {incremental_start} -> {incremental_end or 'latest available'}")
+        new_df = collect_training_data(args.tickers, args.days, args.workers, incremental_start, incremental_end)
+        if new_df.empty:
+            print("No new trading days collected. Keeping existing parquet unchanged.")
+            return
+
+        existing_df = pd.read_parquet(output_path)
+        df = pd.concat([existing_df, new_df], ignore_index=True, sort=False)
+        df = dedupe_and_sort_training_frame(df)
+    else:
+        print("Running full rebuild.")
+        df = collect_training_data(args.tickers, args.days, args.workers, args.start, args.end)
+        if df.empty:
+            print("No data collected!")
+            return
+        df = dedupe_and_sort_training_frame(df)
+
+    save_training_parquet_atomic(df, output_path)
     print(f"\nSaved to: {output_path}")
-    
-    print("\n=== Dataset Summary ===")
-    print(f"Total samples: {len(df)}")
-    print(f"Tickers: {df['ticker'].unique().tolist()}")
-    print(f"Dates: {df['date'].nunique()} unique days")
-    print(f"\nTarget distribution:")
-    print(df['target'].value_counts().sort_index())
+    print_dataset_summary(df)
     
 if __name__ == "__main__":
     main()

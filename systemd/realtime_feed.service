@@ -1,28 +1,23 @@
 [Unit]
-Description=Gex Realtime Feed Daemon
-After=network.target
+Description=GEX Realtime Feed Daemon - Live Base+JEPA Features
+After=network-online.target
+Wants=network-online.target
 
 [Service]
-# Usuario que ejecutará el script (cámbialo si no usas root)
 User=root
 Group=root
 
-# Directorio donde está el script (IMPORTANTE para que encuentre la carpeta json_data)
 WorkingDirectory=/home/Option-Greeks-Plotting-Discord-Bot
 
-# Comando exacto para ejecutar - ACTUALIZADO para nueva estructura
-ExecStart=/usr/bin/python3 /home/Option-Greeks-Plotting-Discord-Bot/services/realtime_feed.py
+ExecStart=/usr/bin/python3 /home/Option-Greeks-Plotting-Discord-Bot/services/realtime_feed.py --interval 60 --jepa-model-dir /home/Option-Greeks-Plotting-Discord-Bot/neural/models/jepa/xinput_v3_production --jepa-device auto
 
-# --- REINICIO AUTOMÁTICO ---
-# Si el proceso muere por cualquier razón, reiniciarlo
 Restart=always
-# Esperar 5 segundos antes de reiniciar para no saturar si hay un error bucle
 RestartSec=5
-MemoryMax=1.5G
+MemoryMax=2G
 MemorySwapMax=0
-Restart=always
-# Opcional: Para ver los print() en los logs inmediatamente
 Environment=PYTHONUNBUFFERED=1
+StandardOutput=journal
+StandardError=journal
 
 [Install]
 WantedBy=multi-user.target

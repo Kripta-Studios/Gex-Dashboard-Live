@@ -24,7 +24,7 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 NEURAL_DIR = os.path.dirname(SCRIPT_DIR)
 sys.path.insert(0, NEURAL_DIR)
 
-from .config import RL_CONFIG
+from .config import RL_CONFIG, STRIKE_BUCKETS, NUM_STRIKE_ACTIONS
 from .agent import PPOAgent
 from .environment import SPXOptionsEnv
 from .utils import RunningMeanStd, CurriculumScheduler, RolloutBuffer, augment_state
@@ -140,7 +140,7 @@ class PPOTrainer:
         if self.num_workers > 1 and episode_index_path and options_cache_dir:
             from concurrent.futures import ProcessPoolExecutor
             # Reduce max days based on worker count to prevent MemoryError
-            worker_max_days = max(2, int(150 / self.num_workers))
+            worker_max_days = max(2, int(12 / self.num_workers))
             self.pool = ProcessPoolExecutor(
                 max_workers=self.num_workers,
                 initializer=init_worker,
@@ -150,7 +150,9 @@ class PPOTrainer:
                     worker_max_days, 
                     env.feature_columns,
                     RL_CONFIG["state_dim"],
-                    RL_CONFIG["hidden_dims"]
+                    RL_CONFIG["hidden_dims"],
+                    RL_CONFIG.get("use_entry_skip_action", False),
+                    RL_CONFIG.get("force_hold_exit_training", False),
                 )
             )
             print(f"[RL] Initialized multiprocessing pool with {self.num_workers} workers.")
@@ -263,8 +265,9 @@ class PPOTrainer:
             for future in concurrent.futures.as_completed(futures):
                 res = future.result()
                 if res is not None:
-                    (e_states, e_actions, e_action_types, 
-                     e_rewards, e_log_probs, e_values, e_dones, info) = res
+                    (e_states, e_actions, e_action_types, e_action_masks,
+                     e_policy_active, e_rewards, e_log_probs, e_values,
+                     e_dones, info) = res
                      
                     returns = compute_gae(e_rewards, e_values, e_dones)
                     self.reward_normalizer.update(np.array(e_rewards))
@@ -278,6 +281,8 @@ class PPOTrainer:
                             log_prob=e_log_probs[i],
                             value=e_values[i],
                             done=e_dones[i],
+                            action_mask=e_action_masks[i],
+                            policy_active=e_policy_active[i],
                         )
                     
                     if info.get("final_pnl_pct") is not None:
@@ -318,11 +323,15 @@ class PPOTrainer:
             self.env._current_min_confidence = min_confidence
             self.env._current_min_strike_bucket = min_strike
             self.env._current_max_strike_bucket = phase_info.get("max_strike_bucket", 6)
+            self.env._current_min_hold_minutes = min_hold
+            self.env._curriculum_phase = curriculum_phase
             state = self.env.reset(episode_idx=idx)
 
             episode_states = []
             episode_actions = []
             episode_action_types = []
+            episode_action_masks = []
+            episode_policy_active = []
             episode_rewards = []
             episode_log_probs = []
             episode_values = []
@@ -331,23 +340,51 @@ class PPOTrainer:
             done = False
             step_count = 0
 
+            # ── Strike action mask — alineada con currículo actual ──
+            from .config import NUM_STRIKE_ACTIONS
+            _st_mask = [(min_strike <= i <= max_strike) for i in range(NUM_STRIKE_ACTIONS)]
+            if not any(_st_mask):
+                _st_mask = [True] * NUM_STRIKE_ACTIONS
+            _entry_mask = [True] + list(_st_mask)
+
             while not done and step_count < RL_CONFIG["session_length_minutes"]:
                 state_input = augment_state(state) if obs_noise else state
                 state_tensor = torch.FloatTensor(state_input).unsqueeze(0).to(self.device)
 
                 with torch.no_grad():
-                    if self.env._position is None and self.env._sniper_mode:
+                    if self.env._position is None and (
+                        self.env._sniper_mode or RL_CONFIG.get("use_entry_skip_action", False)
+                    ):
                         action_type = "sniper_entry"
+                        current_mask = _entry_mask
                     elif self.env._position is None:
                         action_type = "strike"
+                        current_mask = _st_mask
                     else:
                         action_type = "exit"
+                        current_mask = None
 
-                    # Apply logit noise for strike exploration in early Phase 1
-                    l_noise = 0.5 if training and update_step < (total_updates * 0.1) and action_type == "strike" else 0.0
-                    
-                    action, log_prob, value = self.agent.get_action(
-                        state_tensor, action_type, deterministic=not training, logit_noise=l_noise)
+                    force_hold_exit = (
+                        action_type == "exit"
+                        and RL_CONFIG.get("force_hold_exit_training", False)
+                    )
+                    if force_hold_exit:
+                        _, value = self.agent.forward(state_tensor, action_type)
+                        action = 0
+                        log_prob = torch.zeros(1, device=self.device)
+                    else:
+                        # Apply logit noise for strike exploration in early Phase 1
+                        l_noise = (
+                            0.5
+                            if training
+                            and update_step < (total_updates * 0.1)
+                            and action_type in ("strike", "sniper_entry")
+                            else 0.0
+                        )
+
+                        action, log_prob, value = self.agent.get_action(
+                            state_tensor, action_type, deterministic=not training,
+                            logit_noise=l_noise, action_mask=current_mask)
 
                 # action is now an int (strike bucket, sniper choice, or exit choice)
                 env_action = action
@@ -355,17 +392,15 @@ class PPOTrainer:
 
                 next_state, reward, done, info = self.env.step(env_action)
                 
-                # [FIX] Mismatch detection: if environment forced a different action (e.g. min_hold)
-                # we MUST record the log_prob of the action actually taken (the effective_action).
+                # [FIX] Mismatch detection: recalcula log_prob con la máscara correcta
                 effective_action = info.get("effective_action", env_action)
+                policy_active = (effective_action == env_action) and not force_hold_exit
                 
                 if effective_action != env_action:
-                    # Re-evaluate log_prob for the forced action
                     with torch.no_grad():
-                        # We use evaluate_actions to get the log_prob of the effective_action
-                        # This ensures the PPO ratio (new/old) is 1.0 at the start of the update.
                         new_log_probs, _, _, _ = self.agent.evaluate_actions(
-                            state_tensor, [effective_action], [action_type])
+                            state_tensor, [effective_action], [action_type],
+                            action_masks=[current_mask])
                         log_prob_float = new_log_probs.item()
                 else:
                     log_prob_float = log_prob.item() if isinstance(log_prob, torch.Tensor) else log_prob
@@ -373,6 +408,8 @@ class PPOTrainer:
                 episode_states.append(state)
                 episode_actions.append(effective_action)
                 episode_action_types.append(action_type)
+                episode_action_masks.append(current_mask)
+                episode_policy_active.append(policy_active)
                 episode_rewards.append(reward)
                 episode_log_probs.append(log_prob_float)
                 episode_values.append(value_float)
@@ -401,6 +438,8 @@ class PPOTrainer:
                     log_prob=episode_log_probs[i],
                     value=episode_values[i],
                     done=episode_dones[i],
+                    action_mask=episode_action_masks[i],
+                    policy_active=episode_policy_active[i],
                 )
 
             if info.get("final_pnl_pct") is not None:
@@ -409,6 +448,345 @@ class PPOTrainer:
             collected += 1
 
         return buffer, episode_infos
+
+    def _simulate_hold_episode(self, episode_idx: int, strike_action: int) -> tuple[float, str]:
+        """
+        Run one cached episode with a forced strike and HOLD-only exits.
+
+        This is used only for train-period oracle labelling. It mirrors the
+        force-hold RL setup, so labels are generated from the same environment
+        reward surface PPO later optimizes.
+        """
+        self.env.reset(episode_idx=episode_idx)
+        _, _, done, info = self.env.step(int(strike_action))
+
+        steps = 0
+        while not done and steps < RL_CONFIG["session_length_minutes"]:
+            _, _, done, info = self.env.step(0)
+            steps += 1
+
+        return float(info.get("final_pnl_pct", 0.0)), str(info.get("exit_type", ""))
+
+    def _sample_oracle_indices(self, samples: int, min_confidence: float) -> list[int]:
+        """Balanced ticker/direction sampling from the chronological train split."""
+        train_mask = self.env.episode_index["date"].isin(self.train_dates)
+        conf_mask = self.env.episode_index["mlp_confidence"].astype(float) >= float(min_confidence)
+        pool_df = self.env.episode_index[train_mask & conf_mask]
+
+        grouped: list[list[int]] = []
+        if "ticker" in pool_df.columns and "mlp_direction" in pool_df.columns:
+            for _, group in pool_df.groupby(["ticker", "mlp_direction"], sort=True):
+                indices = group.index.tolist()
+                if indices:
+                    grouped.append(indices)
+
+        if not grouped:
+            indices = pool_df.index.tolist()
+            if not indices:
+                raise RuntimeError("No train episodes available for strike oracle pretraining.")
+            grouped = [indices]
+
+        sampled: list[int] = []
+        rng = np.random.default_rng(20260531)
+        for i in range(int(samples)):
+            bucket = grouped[i % len(grouped)]
+            sampled.append(int(rng.choice(bucket)))
+        rng.shuffle(sampled)
+        return sampled
+
+    def pretrain_strike_oracle(
+        self,
+        samples: int = 0,
+        epochs: int = 3,
+        lr: float = 1e-4,
+        min_confidence: float = None,
+        save_dir: str = None,
+    ) -> dict:
+        """
+        Supervised warm-start for the strike head using train-period oracle labels.
+
+        The oracle never reads Apr/May 2026 or the eval split. It simulates all
+        strike buckets for sampled train episodes and labels the bucket with the
+        highest final option PnL under HOLD-only exit rules.
+        """
+        if samples <= 0:
+            return {}
+
+        min_conf = float(min_confidence if min_confidence is not None else RL_CONFIG.get("min_confidence", 0.0))
+        indices = self._sample_oracle_indices(samples=samples, min_confidence=min_conf)
+        print("\n" + "=" * 70)
+        print("STRIKE ORACLE PRETRAIN")
+        print(f"  Samples:        {len(indices)}")
+        print(f"  Epochs:         {epochs}")
+        print(f"  LR:             {lr:.2e}")
+        print(f"  Min confidence: {min_conf:.3f}")
+        print("  Label split:    chronological train dates only")
+        print("=" * 70)
+
+        states = []
+        labels = []
+        weights = []
+        label_rows = []
+        skipped = 0
+
+        label_start = time.time()
+        for n, ep_idx in enumerate(indices, start=1):
+            state = self.env.reset(episode_idx=ep_idx).astype(np.float32)
+            pnls = []
+            exits = []
+            for action in range(NUM_STRIKE_ACTIONS):
+                pnl, exit_type = self._simulate_hold_episode(ep_idx, action)
+                pnls.append(pnl)
+                exits.append(exit_type)
+
+            if all(exit_type == "no_strike_available" for exit_type in exits):
+                skipped += 1
+                continue
+
+            best_action = int(np.argmax(pnls))
+            sorted_pnls = sorted(pnls, reverse=True)
+            best_pnl = float(sorted_pnls[0])
+            margin = float(sorted_pnls[0] - sorted_pnls[1]) if len(sorted_pnls) > 1 else 0.0
+            # Weight high-opportunity and clear-margin labels without letting
+            # a few huge option winners dominate the classifier.
+            sample_weight = float(np.clip(0.25 + abs(best_pnl) + max(margin, 0.0), 0.25, 4.0))
+
+            ep = self.env.episode_index.loc[ep_idx]
+            states.append(state)
+            labels.append(best_action)
+            weights.append(sample_weight)
+            label_rows.append({
+                "episode_index": int(ep_idx),
+                "ticker": ep.get("ticker", ""),
+                "date": ep.get("date", ""),
+                "time": ep.get("time", ""),
+                "direction": ep.get("mlp_direction", ""),
+                "confidence": float(ep.get("mlp_confidence", 0.0)),
+                "best_bucket": best_action,
+                "best_label": STRIKE_BUCKETS.get(best_action, {}).get("label", str(best_action)),
+                "best_pnl_pct": best_pnl,
+                "second_best_margin": margin,
+                **{f"bucket_{i}_pnl_pct": float(v) for i, v in enumerate(pnls)},
+            })
+
+            if n % 500 == 0:
+                elapsed = (time.time() - label_start) / 60.0
+                print(f"  labelled {n}/{len(indices)} episodes ({elapsed:.1f} min)")
+
+        if not states:
+            raise RuntimeError("Strike oracle pretraining could not build any labels.")
+
+        states_t = torch.tensor(np.asarray(states, dtype=np.float32), dtype=torch.float32, device=self.device)
+        labels_t = torch.tensor(labels, dtype=torch.long, device=self.device)
+        weights_t = torch.tensor(weights, dtype=torch.float32, device=self.device)
+        weights_t = weights_t / (weights_t.mean() + 1e-8)
+
+        params = list(self.agent.backbone.parameters()) + list(self.agent.strike_head.parameters())
+        optimizer = optim.Adam(params, lr=float(lr), weight_decay=1e-4)
+        batch_size = min(1024, max(64, len(labels) // 4))
+        criterion = nn.CrossEntropyLoss(reduction="none", label_smoothing=0.05)
+
+        self.agent.train()
+        metrics = {}
+        for epoch in range(1, int(epochs) + 1):
+            perm = torch.randperm(states_t.size(0), device=self.device)
+            epoch_loss = 0.0
+            correct = 0
+            seen = 0
+
+            for start in range(0, states_t.size(0), batch_size):
+                batch_idx = perm[start:start + batch_size]
+                logits, _ = self.agent.forward(states_t[batch_idx], action_type="strike")
+                per_sample_loss = criterion(logits, labels_t[batch_idx])
+                loss = (per_sample_loss * weights_t[batch_idx]).mean()
+
+                optimizer.zero_grad()
+                loss.backward()
+                nn.utils.clip_grad_norm_(params, RL_CONFIG["max_grad_norm"])
+                optimizer.step()
+
+                with torch.no_grad():
+                    pred = torch.argmax(logits, dim=-1)
+                    correct += int((pred == labels_t[batch_idx]).sum().item())
+                    seen += int(batch_idx.numel())
+                    epoch_loss += float(loss.item()) * int(batch_idx.numel())
+
+            metrics = {
+                "samples": int(len(labels)),
+                "skipped": int(skipped),
+                "epoch": int(epoch),
+                "loss": epoch_loss / max(seen, 1),
+                "accuracy": correct / max(seen, 1),
+            }
+            print(
+                f"  epoch {epoch}/{epochs}: "
+                f"loss={metrics['loss']:.4f} acc={metrics['accuracy']:.1%}"
+            )
+
+        label_df = pd.DataFrame(label_rows)
+        print("  Label distribution:")
+        label_counts = label_df["best_bucket"].value_counts().sort_index()
+        for bucket, count in label_counts.items():
+            label = STRIKE_BUCKETS.get(int(bucket), {}).get("label", str(bucket))
+            print(f"    {int(bucket)} {label:<10}: {int(count)}")
+
+        if save_dir:
+            os.makedirs(save_dir, exist_ok=True)
+            labels_path = os.path.join(save_dir, "strike_oracle_pretrain_labels.csv")
+            label_df.to_csv(labels_path, index=False)
+            print(f"  Labels saved to: {labels_path}")
+
+        print("=" * 70 + "\n")
+        return metrics
+
+    def pretrain_entry_oracle_from_labels(
+        self,
+        labels_path: str,
+        epochs: int = 8,
+        lr: float = 1e-4,
+        target_entry_rate: float = 0.75,
+        min_enter_pnl: float | None = None,
+        fixed_enter_bucket: int | None = None,
+        save_dir: str = None,
+    ) -> dict:
+        """
+        Supervised warm-start for direct SKIP/ENTER+bucket decisions.
+
+        The labels file must come from pretrain_strike_oracle(), which only
+        simulates train-period episodes. Action 0 skips; actions 1..7 enter
+        with bucket 0..6. A target entry rate is selected on train labels only
+        to preserve trade volume without looking at Apr/May outcomes.
+        """
+        if not labels_path:
+            return {}
+
+        label_df = pd.read_csv(labels_path)
+        required = {"episode_index", "ticker", "best_bucket", "best_pnl_pct"}
+        missing = required - set(label_df.columns)
+        if missing:
+            raise ValueError(f"Entry oracle labels missing columns: {sorted(missing)}")
+
+        label_df = label_df.copy()
+        target_entry_rate = float(target_entry_rate)
+        if not (0.0 < target_entry_rate <= 1.0):
+            raise ValueError("--entry-oracle-target-entry-rate must be in (0, 1].")
+
+        thresholds = {}
+        if min_enter_pnl is None:
+            q = max(0.0, min(1.0, 1.0 - target_entry_rate))
+            for ticker, group in label_df.groupby("ticker", sort=True):
+                thresholds[str(ticker)] = float(group["best_pnl_pct"].quantile(q))
+        else:
+            for ticker in label_df["ticker"].dropna().unique():
+                thresholds[str(ticker)] = float(min_enter_pnl)
+
+        def _action(row):
+            ticker = str(row["ticker"])
+            threshold = thresholds.get(ticker, float(min_enter_pnl or 0.0))
+            if float(row["best_pnl_pct"]) < threshold:
+                return 0
+            if fixed_enter_bucket is not None:
+                return int(fixed_enter_bucket) + 1
+            return int(row["best_bucket"]) + 1
+
+        label_df["entry_action"] = label_df.apply(_action, axis=1).astype(int)
+
+        states = []
+        labels = []
+        tickers = []
+        skipped_missing = 0
+        for _, row in label_df.iterrows():
+            ep_idx = int(row["episode_index"])
+            if ep_idx < 0 or ep_idx >= len(self.env.episode_index):
+                skipped_missing += 1
+                continue
+            state = self.env.reset(episode_idx=ep_idx).astype(np.float32)
+            states.append(state)
+            labels.append(int(row["entry_action"]))
+            tickers.append(str(row["ticker"]))
+
+        if not states:
+            raise RuntimeError("Entry oracle pretraining could not build any states.")
+
+        states_t = torch.tensor(np.asarray(states, dtype=np.float32), dtype=torch.float32, device=self.device)
+        labels_t = torch.tensor(labels, dtype=torch.long, device=self.device)
+
+        class_counts = torch.bincount(labels_t, minlength=8).float()
+        class_weights = class_counts.sum() / torch.clamp(class_counts, min=1.0)
+        class_weights = class_weights / class_weights.mean()
+        class_weights = torch.clamp(class_weights, 0.25, 4.0)
+
+        params = list(self.agent.backbone.parameters()) + list(self.agent.sniper_head.parameters())
+        optimizer = optim.Adam(params, lr=float(lr), weight_decay=1e-4)
+        criterion = nn.CrossEntropyLoss(weight=class_weights, label_smoothing=0.03)
+        batch_size = min(2048, max(128, states_t.size(0) // 4))
+
+        print("\n" + "=" * 70)
+        print("ENTRY ORACLE PRETRAIN")
+        print(f"  Labels:             {labels_path}")
+        print(f"  Samples:            {states_t.size(0)} (skipped missing: {skipped_missing})")
+        print(f"  Epochs:             {epochs}")
+        print(f"  LR:                 {lr:.2e}")
+        print(f"  Target entry rate:  {target_entry_rate:.1%}")
+        if fixed_enter_bucket is not None:
+            fixed_label = STRIKE_BUCKETS.get(int(fixed_enter_bucket), {}).get("label", str(fixed_enter_bucket))
+            print(f"  Fixed enter bucket: {int(fixed_enter_bucket)} {fixed_label}")
+        print("  Thresholds by ticker:")
+        for ticker, threshold in sorted(thresholds.items()):
+            sub = label_df[label_df["ticker"].astype(str) == ticker]
+            entry_rate = float((sub["entry_action"] > 0).mean()) if len(sub) else 0.0
+            print(f"    {ticker}: threshold={threshold:+.4f}, labelled_entry={entry_rate:.1%}, n={len(sub)}")
+        print("  Action distribution:")
+        for action, count in label_df["entry_action"].value_counts().sort_index().items():
+            name = "SKIP" if int(action) == 0 else STRIKE_BUCKETS.get(int(action) - 1, {}).get("label", str(action))
+            print(f"    {int(action)} {name:<10}: {int(count)}")
+        print("=" * 70)
+
+        self.agent.train()
+        metrics = {}
+        for epoch in range(1, int(epochs) + 1):
+            perm = torch.randperm(states_t.size(0), device=self.device)
+            epoch_loss = 0.0
+            correct = 0
+            seen = 0
+
+            for start in range(0, states_t.size(0), batch_size):
+                idx = perm[start:start + batch_size]
+                logits, _ = self.agent.forward(states_t[idx], action_type="sniper_entry")
+                loss = criterion(logits, labels_t[idx])
+
+                optimizer.zero_grad()
+                loss.backward()
+                nn.utils.clip_grad_norm_(params, RL_CONFIG["max_grad_norm"])
+                optimizer.step()
+
+                with torch.no_grad():
+                    pred = torch.argmax(logits, dim=-1)
+                    correct += int((pred == labels_t[idx]).sum().item())
+                    seen += int(idx.numel())
+                    epoch_loss += float(loss.item()) * int(idx.numel())
+
+            metrics = {
+                "samples": int(states_t.size(0)),
+                "epoch": int(epoch),
+                "loss": epoch_loss / max(seen, 1),
+                "accuracy": correct / max(seen, 1),
+            }
+            print(
+                f"  epoch {epoch}/{epochs}: "
+                f"loss={metrics['loss']:.4f} acc={metrics['accuracy']:.1%}"
+            )
+
+        if save_dir:
+            os.makedirs(save_dir, exist_ok=True)
+            out_labels = os.path.join(save_dir, "entry_oracle_pretrain_labels.csv")
+            label_df.to_csv(out_labels, index=False)
+            self.agent.save(os.path.join(save_dir, "entry_oracle_agent.pt"), update_step=0)
+            print(f"  Labels saved to: {out_labels}")
+            print(f"  Agent saved to:  {os.path.join(save_dir, 'entry_oracle_agent.pt')}")
+
+        print("=" * 70 + "\n")
+        return metrics
 
     def ppo_update(self, buffer: RolloutBuffer, update_step: int = 0) -> dict:
         """Run PPO clipped objective update with per-head entropy and KL stopping."""
@@ -448,7 +826,7 @@ class PPOTrainer:
         if len(buffer) < RL_CONFIG["batch_size"]:
             return {
                 "policy_loss": 0, "value_loss": 0, "entropy_loss": 0, 
-                "mean_entropy": 0, "h_strike": 0, "h_exit": 0, "approx_kl": 0, "moe_gating": np.zeros(3)
+                "mean_entropy": 0, "h_strike": 0, "h_exit": 0, "approx_kl": 0, "moe_gating": np.ones(1)
             }
 
         for epoch in range(RL_CONFIG["ppo_epochs"]):
@@ -458,6 +836,8 @@ class PPOTrainer:
                 states = batch["states"].to(self.device)
                 actions = batch["actions"]
                 action_types = batch["action_types"]
+                action_masks = batch["action_masks"]
+                policy_active = batch["policy_active"].to(self.device)
                 old_log_probs = batch["old_log_probs"].to(self.device)
                 returns = batch["returns"].to(self.device)
 
@@ -466,7 +846,9 @@ class PPOTrainer:
 
                 # ── Recompute log_probs, entropy, and values with CURRENT weights (Fix 4) ──
                 log_probs, entropy, values, gating_probs = self.agent.evaluate_actions(
-                    states, actions, action_types, detach_value=True)
+                    states, actions, action_types,
+                    action_masks=action_masks,
+                    detach_value=True)
 
                 if update_step == 0 and epoch == 0 and n_batches == 0:
                     print(f"\n[DEBUG] Entropy sample: min={entropy.min():.4f} "
@@ -480,7 +862,14 @@ class PPOTrainer:
                 advantages = (advantages - advantages.mean()) / (adv_std + 1e-8)
 
                 # ── PPO clipped objective ──
-                ratio = torch.exp(log_probs - old_log_probs)
+                active_mask = policy_active.bool()
+                active_count = int(active_mask.sum().item())
+                if active_count > 0:
+                    ratio = torch.exp(log_probs[active_mask] - old_log_probs[active_mask])
+                    active_advantages = advantages[active_mask]
+                else:
+                    ratio = torch.ones(1, dtype=log_probs.dtype, device=self.device)
+                    active_advantages = torch.zeros(1, dtype=advantages.dtype, device=self.device)
                 
                 # Track approximate KL for early stopping
                 with torch.no_grad():
@@ -494,15 +883,19 @@ class PPOTrainer:
                         break
                 
                 clip_eps = RL_CONFIG["clip_epsilon"]
-                surr1 = ratio * advantages
-                surr2 = torch.clamp(ratio, 1.0 - clip_eps, 1.0 + clip_eps) * advantages
-                policy_loss = -torch.min(surr1, surr2).mean()
+                if active_count > 0:
+                    surr1 = ratio * active_advantages
+                    surr2 = torch.clamp(ratio, 1.0 - clip_eps, 1.0 + clip_eps) * active_advantages
+                    policy_loss = -torch.min(surr1, surr2).mean()
+                else:
+                    policy_loss = values.sum() * 0.0
 
                 # ── Per-head entropy for diagnostics (Issue 1) ──
                 with torch.no_grad():
                     # Map action types to indices for boolean masking
-                    is_strike_batch = torch.tensor([at != "exit" for at in action_types], device=self.device)
+                    is_strike_batch = torch.tensor([at != "exit" for at in action_types], device=self.device) & active_mask
                     is_exit_batch = ~is_strike_batch
+                    is_exit_batch = is_exit_batch & active_mask
                     
                     h_strike = entropy[is_strike_batch].mean().item() if is_strike_batch.any() else 0.0
                     h_exit = entropy[is_exit_batch].mean().item() if is_exit_batch.any() else 0.0
@@ -520,10 +913,14 @@ class PPOTrainer:
                 exit_tgt = RL_CONFIG.get("exit_entropy_target", 0.40)
                 strike_tgt = RL_CONFIG.get("entropy_target", 0.25)
                 
-                mean_ent_val = entropy.mean().item() # for logging
+                active_entropy = entropy[active_mask] if active_count > 0 else entropy
+                mean_ent_val = active_entropy.mean().item() # for logging
 
                 coeffs = []
                 for i, at in enumerate(action_types):
+                    if not bool(active_mask[i].item()):
+                        coeffs.append(0.0)
+                        continue
                     e_val = entropy[i].item()
                     
                     if at == "sniper_entry":
@@ -614,7 +1011,7 @@ class PPOTrainer:
             "h_strike":     total_h_strike / n_batches,
             "h_exit":       total_h_exit / n_batches,
             "approx_kl":    total_approx_kl / n_batches,
-            "moe_gating":   total_gating_probs / n_batches if total_gating_probs is not None else np.zeros(3),
+            "moe_gating":   total_gating_probs / n_batches if total_gating_probs is not None else np.ones(1),
         }
 
     def pretrain_critic(self):
@@ -625,8 +1022,11 @@ class PPOTrainer:
         print(f"PRE-TRAINING CRITIC (Value Head) - {epochs} epochs, {samples} samples")
         print("=" * 70)
         
+        # Target transitions, not episodes. The old formula requested only
+        # ~13 episodes for 5k samples, leaving the critic nearly untrained.
+        pretrain_episodes = max(128, int(np.ceil(samples / 20)))
         buffer, _ = self.collect_episodes(
-            n_episodes=samples // RL_CONFIG.get("session_length_minutes", 390) + 1,
+            n_episodes=pretrain_episodes,
             min_confidence=0.5,
             min_strike=0,
             training=True,
@@ -639,7 +1039,10 @@ class PPOTrainer:
             print("[!] No data collected for pre-training. Skipping.")
             return
 
-        print(f"[RL] Collected {len(buffer)} transitions for Value Pre-training.")
+        print(
+            f"[RL] Collected {len(buffer)} transitions from {pretrain_episodes} "
+            f"episodes for Value Pre-training."
+        )
         
         for param in self.agent.strike_head.parameters(): param.requires_grad = False
         for param in self.agent.exit_head.parameters(): param.requires_grad = False
@@ -648,8 +1051,7 @@ class PPOTrainer:
             
         value_optimizer = optim.Adam(
             list(self.agent.value_head.parameters()) + 
-            list(self.agent.experts.parameters()) + 
-            list(self.agent.gating_network.parameters()),
+            list(self.agent.backbone.parameters()),
             lr=RL_CONFIG.get("learning_rate", 3e-4) * 3
         )
         
@@ -775,13 +1177,23 @@ class PPOTrainer:
             self.scheduler.step()
 
             # Compute episode-level statistics
-            pnl_pcts = [info["final_pnl_pct"] for info in episode_infos
+            non_trade_exit_types = {"entry_skip", "sniper_timeout"}
+            trade_infos = [
+                info for info in episode_infos
+                if info.get("exit_type") not in non_trade_exit_types
+            ]
+            skip_count = sum(
+                1 for info in episode_infos
+                if info.get("exit_type") in non_trade_exit_types
+            )
+            entry_rate = len(trade_infos) / max(len(episode_infos), 1)
+            pnl_pcts = [info["final_pnl_pct"] for info in trade_infos
                         if "final_pnl_pct" in info]
-            hold_mins = [info["hold_minutes"] for info in episode_infos
+            hold_mins = [info["hold_minutes"] for info in trade_infos
                          if "hold_minutes" in info]
-            exit_types = [info["exit_type"] for info in episode_infos
+            exit_types = [info["exit_type"] for info in trade_infos
                           if "exit_type" in info]
-            directions = [info.get("direction", "?") for info in episode_infos]
+            directions = [info.get("direction", "?") for info in trade_infos]
 
             # Sniper stats
             sniper_waits = [info.get("sniper_minutes_waited", 0) for info in episode_infos
@@ -820,7 +1232,7 @@ class PPOTrainer:
             rolling_entropy.append(losses["entropy_loss"])
             rolling_mean_entropy.append(losses.get("mean_entropy", 0.05))
             rolling_kl.append(losses.get("approx_kl", 0))
-            rolling_gating.append(losses.get("moe_gating", np.zeros(3)))
+            rolling_gating.append(np.asarray(losses.get("moe_gating", np.ones(1)), dtype=float).reshape(-1))
 
             # Keep only last ROLLING_WINDOW
             if len(rolling_pf) > ROLLING_WINDOW:
@@ -877,7 +1289,10 @@ class PPOTrainer:
                 r_v = np.mean(rolling_value_loss) if rolling_value_loss else 0.0
                 r_h = np.mean(rolling_mean_entropy) if rolling_mean_entropy else 0.08
                 r_kl = np.mean(rolling_kl) if rolling_kl else 0.0
-                r_gating = np.mean(rolling_gating, axis=0) if rolling_gating else np.zeros(3)
+                r_gating = (
+                    np.mean(np.vstack(rolling_gating), axis=0)
+                    if rolling_gating else np.ones(1)
+                )
                 gating_str = "[" + ", ".join([f"{x:.2f}" for x in r_gating]) + "]"
 
                 # Issue 1: Display per-head entropy to detect collapse early
@@ -888,7 +1303,8 @@ class PPOTrainer:
                       f"ETA: {eta_min:.1f}min | Phase {phase_info['phase']}")
                 print(f"  |- Current:    PF={profit_factor:.2f} WR={win_rate:.1%} "
                       f"PnL={mean_pnl:+.4f} Hold={mean_hold:.0f}m "
-                      f"L/S={n_long}/{n_short} Stop={hard_stop_rate:.0%}")
+                      f"L/S={n_long}/{n_short} Stop={hard_stop_rate:.0%} "
+                      f"Entry={entry_rate:.0%} Skip={skip_count}")
                 
                 # Per-head entropy monitor with strike coefficient visibility
                 strike_c = getattr(self, '_current_strike_coeff', 0.0)
@@ -927,7 +1343,7 @@ class PPOTrainer:
 
                 # Collect eval episodes (no augmentation, deterministic)
                 eval_buffer, eval_infos = self.collect_episodes(
-                    n_episodes=min(n_episodes, 200),
+                    n_episodes=max(min(n_episodes, 200), RL_CONFIG.get("eval_episodes", 200)),
                     min_confidence=min_conf,
                     min_strike=min_strike,
                     training=False,  # No augmentation, deterministic
@@ -935,7 +1351,13 @@ class PPOTrainer:
                     obs_noise=False # No observation noise for eval
                 )
 
-                eval_pnls = [info["final_pnl_pct"] for info in eval_infos
+                eval_trade_infos = [
+                    info for info in eval_infos
+                    if info.get("exit_type") not in non_trade_exit_types
+                ]
+                eval_skip_count = len(eval_infos) - len(eval_trade_infos)
+                eval_entry_rate = len(eval_trade_infos) / max(len(eval_infos), 1)
+                eval_pnls = [info["final_pnl_pct"] for info in eval_trade_infos
                              if "final_pnl_pct" in info]
 
                 if eval_pnls:
@@ -946,8 +1368,27 @@ class PPOTrainer:
                     eval_pf_den = abs(sum(eval_losses)) if eval_losses else 1e-6
                     eval_pf = eval_pf_num / eval_pf_den if eval_pf_den > 0 else 0
                     eval_mean_pnl = np.mean(eval_pnls)
+                    eval_exit_types = [info.get("exit_type", "") for info in eval_trade_infos]
+                    eval_hold_minutes = [
+                        info.get("hold_minutes", 0) for info in eval_trade_infos
+                        if "hold_minutes" in info
+                    ]
+                    eval_mean_hold = float(np.mean(eval_hold_minutes)) if eval_hold_minutes else 0.0
+                    eval_agent_exit_rate = (
+                        sum(1 for e in eval_exit_types if e == "agent_exit") / len(eval_exit_types)
+                        if eval_exit_types else 0.0
+                    )
+                    eval_hard_stop_rate = (
+                        sum(1 for e in eval_exit_types if e == "hard_stop_loss") / len(eval_exit_types)
+                        if eval_exit_types else 0.0
+                    )
                 else:
                     eval_wr = eval_pf = eval_mean_pnl = 0
+                    eval_hard_stop_rate = 0.0
+                    eval_mean_hold = 0.0
+                    eval_agent_exit_rate = 0.0
+                    eval_entry_rate = 0.0
+                    eval_skip_count = len(eval_infos)
 
                 # Use rolling train stats for comparison
                 train_pf_avg = np.mean(rolling_pf)
@@ -958,6 +1399,8 @@ class PPOTrainer:
                 eval_history["eval_pf"].append(eval_pf)
                 eval_history["eval_wr"].append(eval_wr)
                 eval_history["eval_pnl"].append(eval_mean_pnl)
+                eval_history.setdefault("eval_hard_stop_rate", []).append(eval_hard_stop_rate)
+                eval_history.setdefault("eval_entry_rate", []).append(eval_entry_rate)
                 eval_history["train_pf"].append(train_pf_avg)
                 eval_history["train_wr"].append(train_wr_avg)
                 eval_history["train_pnl"].append(train_pnl_avg)
@@ -970,6 +1413,14 @@ class PPOTrainer:
                       f"{(train_wr_avg - eval_wr)*100:>+9.1f}%")
                 print(f"  {'Mean PnL':<18} {train_pnl_avg:>+16.4f} {eval_mean_pnl:>+16.4f} "
                       f"{train_pnl_avg - eval_mean_pnl:>+10.4f}")
+                print(f"  {'Hard Stop Rate':<18} {hard_stop_rate:>15.1%} {eval_hard_stop_rate:>15.1%} "
+                      f"{(hard_stop_rate - eval_hard_stop_rate)*100:>+9.1f}%")
+                print(f"  {'Mean Hold':<18} {mean_hold:>15.1f}m {eval_mean_hold:>15.1f}m "
+                      f"{mean_hold - eval_mean_hold:>+9.1f}m")
+                print(f"  {'Agent Exit Rate':<18} {'':>16} {eval_agent_exit_rate:>15.1%} {'':>10}")
+                print(f"  {'Entry Rate':<18} {entry_rate:>15.1%} {eval_entry_rate:>15.1%} "
+                      f"{(entry_rate - eval_entry_rate)*100:>+9.1f}%")
+                print(f"  {'Skips':<18} {skip_count:>16} {eval_skip_count:>16} {'':>10}")
 
                 # Overfitting warnings
                 pf_gap = train_pf_avg - eval_pf
@@ -988,19 +1439,56 @@ class PPOTrainer:
                 if eval_wr < 0.40:
                     print(f"  WARN LOW EVAL WIN RATE: {eval_wr:.1%} - agent may be guessing.")
 
-                # [IMPROVEMENT] Quality Score = PF * (1 + hold_min/300) * (WR / 0.35)
-                # Weighted to balance Profitability, Holding Time and Consistency (Win Rate)
+                # Quality Score: prefer PF/WR that survives deterministic OOS eval
+                # and explicitly penalize policies that reach many hard stops.
                 current_hold_min = phase_info.get("min_hold_minutes", 0)
-                hold_factor = 1.0 + (current_hold_min / 300.0)
-                wr_factor = eval_wr / 0.35 # Baseline 35% WR
-                current_score = eval_pf * hold_factor * wr_factor
+                min_best_hold = float(RL_CONFIG.get("min_best_hold_minutes", 0))
+                hold_factor = max(0.10, min(eval_mean_hold / 90.0, 1.50))
+                wr_factor = max(eval_wr / 0.45, 0.10)
+                hard_stop_factor = max(0.10, 1.0 - (eval_hard_stop_rate / 0.35))
+                agent_exit_factor = max(0.10, 1.0 - max(0.0, eval_agent_exit_rate - 0.55) / 0.35)
+                min_entry_rate = float(RL_CONFIG.get("min_best_entry_rate", 0.0))
+                entry_rate_factor = (
+                    max(0.10, min(eval_entry_rate / max(min_entry_rate, 1e-6), 1.25))
+                    if min_entry_rate > 0
+                    else 1.0
+                )
+                current_score = (
+                    eval_pf
+                    * hold_factor
+                    * wr_factor
+                    * hard_stop_factor
+                    * agent_exit_factor
+                    * entry_rate_factor
+                )
 
-                if current_score > getattr(self, "best_score", 0) and update_step > 10:
+                if (
+                    current_score > getattr(self, "best_score", 0)
+                    and update_step > 10
+                    and current_hold_min >= min_best_hold
+                    and eval_entry_rate >= min_entry_rate
+                ):
                     self.best_score = current_score
                     self.best_profit_factor = eval_pf
                     self.agent.save(os.path.join(save_dir, "best_rl_agent.pt"), update_step=update_step)
                     print(f"  -> New best Model found at step {update_step}")
-                    print(f"     Score: {current_score:.3f} (PF: {eval_pf:.2f} * HoldFactor: {hold_factor:.2f} * WRFactor: {wr_factor:.2f})")
+                    print(
+                        f"     Score: {current_score:.3f} "
+                        f"(PF: {eval_pf:.2f} * HoldFactor: {hold_factor:.2f} * "
+                        f"WRFactor: {wr_factor:.2f} * HardStopFactor: {hard_stop_factor:.2f} * "
+                        f"AgentExitFactor: {agent_exit_factor:.2f} * "
+                        f"EntryRateFactor: {entry_rate_factor:.2f})"
+                    )
+                elif current_hold_min < min_best_hold:
+                    print(
+                        f"  -> Best checkpoint gated: curriculum min_hold "
+                        f"{current_hold_min}m < required {min_best_hold:.0f}m"
+                    )
+                elif eval_entry_rate < min_entry_rate:
+                    print(
+                        f"  -> Best checkpoint gated: eval entry rate "
+                        f"{eval_entry_rate:.1%} < required {min_entry_rate:.1%}"
+                    )
 
                 # [NEW] Save history periodically
                 combined_history = {**self.history, "eval": eval_history}
@@ -1179,12 +1667,24 @@ g_worker_env = None
 g_worker_agent = None
 
 
-def init_worker(episode_index_path, options_cache_dir, max_days, feature_columns, state_dim, hidden_dims):
+def init_worker(
+    episode_index_path,
+    options_cache_dir,
+    max_days,
+    feature_columns,
+    state_dim,
+    hidden_dims,
+    use_entry_skip_action=False,
+    force_hold_exit_training=False,
+):
     """Initialize global environment and agent per worker process."""
     global g_worker_env, g_worker_agent
     import pandas as pd
     from rl.environment import SPXOptionsEnv
     from rl.agent import PPOAgent
+    from rl.config import RL_CONFIG
+    RL_CONFIG["use_entry_skip_action"] = bool(use_entry_skip_action)
+    RL_CONFIG["force_hold_exit_training"] = bool(force_hold_exit_training)
     
     # Reset seeds per worker to avoid identically sampled trajectories
     import numpy as np
@@ -1240,6 +1740,8 @@ def worker_collect(agent_state_dict, min_confidence, min_strike, max_strike, min
         episode_states = []
         episode_actions = []
         episode_action_types = []
+        episode_action_masks = []
+        episode_policy_active = []
         episode_rewards = []
         episode_log_probs = []
         episode_values = []
@@ -1248,31 +1750,60 @@ def worker_collect(agent_state_dict, min_confidence, min_strike, max_strike, min
         done = False
         step_count = 0
         
+        # ── Pre-build strike action mask (fijo por episodio según currículo) ──
+        # Alinea la distribución de política con lo que el entorno realmente ejecuta.
+        # Sin esta máscara el agente muestrea libremente y el env corrige en silencio,
+        # creando una discrepancia política/entorno que colapsa el strike head en deep_otm.
+        from rl.config import NUM_STRIKE_ACTIONS, NUM_EXIT_ACTIONS, NUM_SNIPER_ACTIONS
+        _n_strike = NUM_STRIKE_ACTIONS  # 7
+        strike_action_mask = [
+            (min_strike <= i <= max_strike) for i in range(_n_strike)
+        ]
+        # Garantía de seguridad: al menos un bucket válido
+        if not any(strike_action_mask):
+            strike_action_mask = [True] * _n_strike
+        entry_action_mask = [True] + list(strike_action_mask)
+
         with torch.no_grad():
             while not done and step_count < RL_CONFIG["session_length_minutes"]:
                 state_input = augment_state(state) if obs_noise else state
                 # Ensure it runs on CPU inside the worker
                 state_tensor = torch.FloatTensor(state_input).unsqueeze(0)
                 
-                if g_worker_env._position is None and g_worker_env._use_sniper:
+                if g_worker_env._position is None and (
+                    g_worker_env._use_sniper or RL_CONFIG.get("use_entry_skip_action", False)
+                ):
                     action_type = "sniper_entry"
+                    current_mask = entry_action_mask
                 elif g_worker_env._position is None:
                     action_type = "strike"
+                    current_mask = strike_action_mask
                 else:
                     action_type = "exit"
+                    current_mask = None  # exit es binario, sin restricción
                     
-                # Fix: Apply logit noise to 'exit' if policy is collapsing (dynamic)
-                # Also keep the early-phase strike noise for exploration
-                l_noise = 0.0
-                if action_type == "strike" and update_step < (total_updates * 0.1):
-                    l_noise = 0.5
-                elif action_type == "exit":
-                    # Exit Head: HOLD(0) or EXIT(1)
-                    override = RL_CONFIG.get("logit_noise_exit_override", 0.0)
-                    l_noise = max(logit_noise_level, override)
-                
-                action, log_prob, value = g_worker_agent.get_action(
-                    state_tensor, action_type, deterministic=False, logit_noise=l_noise)
+                force_hold_exit = (
+                    action_type == "exit"
+                    and RL_CONFIG.get("force_hold_exit_training", False)
+                )
+                if force_hold_exit:
+                    _, value = g_worker_agent.forward(state_tensor, action_type)
+                    action = 0
+                    log_prob = torch.zeros(1)
+                else:
+                    # Fix: Apply logit noise to 'exit' if policy is collapsing (dynamic)
+                    # Also keep the early-phase strike noise for exploration
+                    l_noise = 0.0
+                    if action_type in ("strike", "sniper_entry") and update_step < (total_updates * 0.1):
+                        l_noise = 0.5
+                    elif action_type == "exit":
+                        # Exit Head: HOLD(0) or EXIT(1)
+                        override = RL_CONFIG.get("logit_noise_exit_override", 0.0)
+                        l_noise = max(logit_noise_level, override)
+
+                    action, log_prob, value = g_worker_agent.get_action(
+                        state_tensor, action_type, deterministic=False,
+                        logit_noise=l_noise, action_mask=current_mask)
                     
                 action_val = action
                 value_float = value.item() if isinstance(value, torch.Tensor) else value
@@ -1281,11 +1812,15 @@ def worker_collect(agent_state_dict, min_confidence, min_strike, max_strike, min
                 next_state, reward, done, info = g_worker_env.step(env_action)
                 
                 # [FIX] Mismatch detection in worker
+                # Si el entorno forzó una acción diferente (e.g. min_hold),
+                # recalculamos el log_prob con la máscara correcta.
                 effective_action = info.get("effective_action", action_val)
+                policy_active = (effective_action == action_val) and not force_hold_exit
                 if effective_action != action_val:
                     with torch.no_grad():
                         new_log_probs, _, _, _ = g_worker_agent.evaluate_actions(
-                            state_tensor, [effective_action], [action_type])
+                            state_tensor, [effective_action], [action_type],
+                            action_masks=[current_mask])
                         log_prob_float = new_log_probs.item()
                 else:
                     log_prob_float = log_prob.item() if isinstance(log_prob, torch.Tensor) else log_prob
@@ -1293,6 +1828,8 @@ def worker_collect(agent_state_dict, min_confidence, min_strike, max_strike, min
                 episode_states.append(state)
                 episode_actions.append(effective_action)
                 episode_action_types.append(action_type)
+                episode_action_masks.append(current_mask)
+                episode_policy_active.append(policy_active)
                 episode_rewards.append(reward)
                 episode_log_probs.append(log_prob_float)
                 episode_values.append(value_float)
@@ -1302,8 +1839,12 @@ def worker_collect(agent_state_dict, min_confidence, min_strike, max_strike, min
                 step_count += 1
                 
         if step_count > 0:
-            return (episode_states, episode_actions, episode_action_types, 
-                    episode_rewards, episode_log_probs, episode_values, episode_dones, info)
+            return (
+                episode_states, episode_actions, episode_action_types,
+                episode_action_masks, episode_policy_active,
+                episode_rewards, episode_log_probs, episode_values,
+                episode_dones, info,
+            )
             
     return None
 
@@ -1328,6 +1869,75 @@ if __name__ == "__main__":
                         help="Max number of day shards to keep in RAM (LRU)")
     parser.add_argument("--workers", type=int, default=1,
                         help="Number of background CPU workers for data collection")
+    parser.add_argument(
+        "--entry-skip-action",
+        action="store_true",
+        help="Use sniper_head as direct SKIP(0) / ENTER+strike(1-7) entry policy.",
+    )
+    parser.add_argument(
+        "--force-hold-exit",
+        action="store_true",
+        help="During training, force exit actions to HOLD and train only entry/strike plus critic.",
+    )
+    parser.add_argument(
+        "--strike-oracle-pretrain-samples",
+        type=int,
+        default=0,
+        help="Train-period episodes to label with all-strike oracle before PPO (0 disables).",
+    )
+    parser.add_argument(
+        "--strike-oracle-pretrain-epochs",
+        type=int,
+        default=3,
+        help="Supervised epochs for --strike-oracle-pretrain-samples.",
+    )
+    parser.add_argument(
+        "--strike-oracle-pretrain-lr",
+        type=float,
+        default=1e-4,
+        help="Learning rate for strike oracle supervised warm-start.",
+    )
+    parser.add_argument(
+        "--entry-oracle-labels",
+        type=str,
+        default=None,
+        help="CSV from strike oracle labels to train SKIP/ENTER+bucket sniper_head.",
+    )
+    parser.add_argument(
+        "--entry-oracle-pretrain-epochs",
+        type=int,
+        default=8,
+        help="Supervised epochs for --entry-oracle-labels.",
+    )
+    parser.add_argument(
+        "--entry-oracle-pretrain-lr",
+        type=float,
+        default=1e-4,
+        help="Learning rate for entry oracle supervised warm-start.",
+    )
+    parser.add_argument(
+        "--entry-oracle-target-entry-rate",
+        type=float,
+        default=0.75,
+        help="Train-label entry rate used to set per-ticker SKIP thresholds.",
+    )
+    parser.add_argument(
+        "--entry-oracle-min-enter-pnl",
+        type=float,
+        default=None,
+        help="Fixed best_pnl_pct threshold for ENTER labels; overrides target entry-rate quantile.",
+    )
+    parser.add_argument(
+        "--entry-oracle-fixed-enter-bucket",
+        type=int,
+        default=None,
+        help="If set, all ENTER labels use this bucket instead of oracle best bucket.",
+    )
+    parser.add_argument(
+        "--entry-oracle-only",
+        action="store_true",
+        help="Save entry-oracle checkpoint as best/final and skip PPO updates.",
+    )
     args = parser.parse_args()
 
     from hybrid_model import FEATURE_COLUMNS
@@ -1348,6 +1958,12 @@ if __name__ == "__main__":
         for phase in RL_CONFIG.get("curriculum_phases", {}).values():
             phase["min_confidence"] = float(args.min_confidence)
         print(f"[RL] min_confidence override: {args.min_confidence:.3f}")
+    if args.entry_skip_action:
+        RL_CONFIG["use_entry_skip_action"] = True
+        print("[RL] entry skip action enabled: SKIP(0) / ENTER+strike(1-7)")
+    if args.force_hold_exit:
+        RL_CONFIG["force_hold_exit_training"] = True
+        print("[RL] force-hold exit training enabled: exit head policy gradients disabled")
 
     env = SPXOptionsEnv(
         episode_index=episode_index,
@@ -1363,4 +1979,28 @@ if __name__ == "__main__":
         episode_index_path=args.episode_index,
         options_cache_dir=args.options_cache
     )
+    if args.strike_oracle_pretrain_samples and args.strike_oracle_pretrain_samples > 0:
+        trainer.pretrain_strike_oracle(
+            samples=args.strike_oracle_pretrain_samples,
+            epochs=args.strike_oracle_pretrain_epochs,
+            lr=args.strike_oracle_pretrain_lr,
+            min_confidence=args.min_confidence,
+            save_dir=args.save_dir,
+        )
+    if args.entry_oracle_labels:
+        trainer.pretrain_entry_oracle_from_labels(
+            labels_path=args.entry_oracle_labels,
+            epochs=args.entry_oracle_pretrain_epochs,
+            lr=args.entry_oracle_pretrain_lr,
+            target_entry_rate=args.entry_oracle_target_entry_rate,
+            min_enter_pnl=args.entry_oracle_min_enter_pnl,
+            fixed_enter_bucket=args.entry_oracle_fixed_enter_bucket,
+            save_dir=args.save_dir,
+        )
+        if args.entry_oracle_only:
+            os.makedirs(args.save_dir, exist_ok=True)
+            agent.save(os.path.join(args.save_dir, "best_rl_agent.pt"), update_step=0)
+            agent.save(os.path.join(args.save_dir, "final_rl_agent.pt"), update_step=0)
+            print("[RL] entry-oracle-only enabled: saved best/final checkpoint and skipped PPO.")
+            sys.exit(0)
     trainer.train(save_dir=args.save_dir)

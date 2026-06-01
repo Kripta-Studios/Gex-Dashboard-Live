@@ -1,354 +1,315 @@
 % ============================================================================
-%  Kripta Studios — Feature Space Specification
-%  GBT+RL 0DTE Options Trading System
+%  Kripta Studios -- Detailed Feature Catalogue
 % ============================================================================
-\documentclass[11pt,a4paper,twoside]{article}
+\documentclass[11pt,a4paper]{article}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{lmodern}
-\usepackage{amsmath, amsfonts, amssymb, amsthm}
-\usepackage{mathtools}
-\usepackage{bm}
+\usepackage{mathpazo}
+\usepackage{amsmath, amssymb}
 \usepackage{geometry}
 \geometry{margin=1in}
-\usepackage{titlesec}
 \usepackage{setspace}
 \onehalfspacing
-\usepackage{graphicx}
 \usepackage{booktabs}
-\usepackage{multirow}
 \usepackage{longtable}
-\usepackage{float}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{graphicx}
 \usepackage{hyperref}
-\hypersetup{colorlinks=true, linkcolor=blue, citecolor=red, urlcolor=blue}
-\usepackage{listings}
-\lstset{basicstyle=\ttfamily\small, breaklines=true, frame=single, columns=fullflexible}
-\usepackage{xcolor}
+\hypersetup{colorlinks=true, linkcolor=blue, urlcolor=blue}
+\setcounter{tocdepth}{2}
+\sloppy
 
-\newtheorem{definition}{Definition}
-\newtheorem{proposition}{Proposition}
-\newtheorem{remark}{Remark}
-
-\DeclareMathOperator*{\argmax}{arg\,max}
-\newcommand{\E}{\mathbb{E}}
-\newcommand{\R}{\mathbb{R}}
-\newcommand{\bx}{\bm{x}}
-\newcommand{\bs}{\bm{s}}
-\newcommand{\ba}{\bm{a}}
-
-% ============================================================================
-\title{\textbf{Feature Space Specification} \\[0.5em]
-\large{163-Dimensional State Representation for the GBT Directional Classifier \\
-and PPO Reinforcement Learning Agent}}
-\author{Kripta Studios — Quantitative Research Division}
-\date{March 2026}
+\title{\textbf{Detailed Feature Catalogue for the Current GBT+JEPA Models}}
+\author{Kripta Studios}
+\date{June 2026}
 
 \begin{document}
 \maketitle
 \tableofcontents
 \newpage
 
-% ============================================================================
-\section{Introduction}
-\label{sec:intro}
-% ============================================================================
+\begin{abstract}
+This document catalogues the feature blocks used by the current system.  It is intentionally more detailed than a summary report: it explains the economic meaning of the key engineered features, the state/input split used by XInputJEPA, the 42 JEPA features appended downstream, and the option-candidate features used by the 0DTE research models.  The machine-readable source of truth remains the model artifacts and feature-name JSON files.
+\end{abstract}
 
-The directional GBT classifier and the PPO reinforcement learning agent both operate on a shared 163-dimensional feature vector $\bx_t \in \R^{163}$, computed at each 5-minute bar $t$ during regular trading hours (09:30--16:00 ET). This vector encodes the complete market microstructure state as seen from the perspective of a 0DTE options market participant: spot price dynamics, the full Greek surface, dealer inventory exposures, volatility term structure, cross-asset context, and temporal position within the trading session.
+\section{Source of Truth}
 
-The feature set is defined in \texttt{hybrid\_model.py} under the constant \texttt{FEATURE\_COLUMNS}, which is imported identically by the GBT training pipeline, the RL episode generator, and the live inference bot. This guarantees perfect train/test/production parity.
+The definitive feature sources are:
 
-\begin{definition}[Feature Vector]
-The feature vector at time $t$ is the ordered tuple:
-\begin{equation}
-    \bx_t = (x_t^{(1)}, x_t^{(2)}, \ldots, x_t^{(163)}) \in \R^{163}
-    \label{eq:feature_vector}
-\end{equation}
-where each component $x_t^{(i)}$ is a real-valued statistic computed from publicly observable market data up to and including time $t$. No lookahead is permitted: $x_t^{(i)} \perp \{S_\tau : \tau > t\}$.
-\end{definition}
-
-% ============================================================================
-\section{Feature Taxonomy}
-\label{sec:taxonomy}
-% ============================================================================
-
-The 163 features are organized into ten functional categories, summarized in Table~\ref{tab:feature_summary}.
-
-\begin{longtable}{llr}
-\toprule
-\textbf{Category} & \textbf{Primary Information Content} & \textbf{Dimensions} \\
-\midrule
-\endhead
-\midrule
-\endfoot
-\bottomrule
-\caption{Summary of feature categories and their dimensionality.}
-\label{tab:feature_summary}
-\endlastfoot
-Spot \& Log Returns         & Price level, 1/5/15/30-min returns, vol-adj returns & 8 \\
-Technical Indicators        & RSI, MACD, Bollinger Bands, momentum & 10 \\
-Greek Exposures             & $\Delta$, $\Gamma$, $\theta$, $\mathcal{V}$, $\rho$ by expiry bucket & 24 \\
-GEX / DEX / VEX             & Aggregate gamma, delta, vanna exposure measures & 18 \\
-Put/Call Metrics            & Volume PCR, OI PCR, delta-filtered PCR & 12 \\
-IV Surface                  & ATM IV, skew, term structure, call/put smile slopes & 16 \\
-Order Flow Derivatives      & Net gamma, net vanna, net charm, DGEX, cross-products & 14 \\
-Level Proximity             & Distance to max-gamma strike, IB levels ($D{-}1$ to $D{-}5$) & 21 \\
-Temporal Encoding           & Time-of-day sinusoid, day-of-week sinusoid, minutes-to-close & 5 \\
-Cross-Ticker Context        & QQQ/VIX/TLT returns, spread, correlation & 35 \\
-\midrule
-\textbf{Total} & & \textbf{163} \\
-\end{longtable}
-
-% ============================================================================
-\section{Category Definitions}
-\label{sec:categories}
-% ============================================================================
-
-\subsection{Spot Price and Log Returns ($D = 8$)}
-
-The raw spot price $S_t$ is standardized relative to its recent distribution:
-\begin{equation}
-    x^{\text{spot}}_t = \frac{S_t - \bar{S}_{20}}{s_{20}}, \quad \bar{S}_{20} = \frac{1}{20}\sum_{i=1}^{20} S_{t-i},\quad s_{20} = \text{std}\{S_{t-i}\}_{i=1}^{20}
-    \label{eq:spot_norm}
-\end{equation}
-
-Multi-horizon log returns are included at four lookback windows $\Delta \in \{1, 5, 15, 30\}$ minutes:
-\begin{equation}
-    r_{t,\Delta} = \log\left(\frac{S_t}{S_{t-\Delta}}\right)
-    \label{eq:log_return}
-\end{equation}
-
-Volatility-adjusted counterparts normalize each return by the implied 0DTE ATM volatility $\sigma^{\text{ATM}}_t$ scaled to the corresponding horizon:
-\begin{equation}
-    \tilde{r}_{t,\Delta} = \frac{r_{t,\Delta}}{\sigma^{\text{ATM}}_t \sqrt{\Delta / (252 \times 390)}}
-    \label{eq:vol_adj_return}
-\end{equation}
-This transformation maps raw price dynamics into a stationary, approximately standard-normal space, conditioning the GBT on moves expressed in implied-volatility units rather than raw basis points.
-
-\subsection{Technical Indicators ($D = 10$)}
-
-Classical price-based indicators are included as non-linear compressors of recent price history:
 \begin{itemize}
-    \item \textbf{RSI(14):} 14-period Relative Strength Index, bounded in $[0, 100]$.
-    \item \textbf{MACD and signal:} 12-period minus 26-period exponential moving averages, plus the 9-period signal line and histogram.
-    \item \textbf{Bollinger Bands:} upper band $\mu_{20} + 2\sigma_{20}$, lower band $\mu_{20} - 2\sigma_{20}$, and bandwidth $4\sigma_{20} / \mu_{20}$.
+  \item base candidate features: \path{neural/hybrid_model.py}, variable \path{FEATURE_COLUMNS};
+  \item JEPA appended feature names: \path{neural/models/jepa/xinput_v3_production/jepa_feature_names.json};
+  \item production direction feature order: per-ticker joblib artifacts under \path{neural/models/jepa/jepa_production_final_180m/base_jepa};
+  \item option candidate feature definitions: \path{neural/jepa/train_backtest_option_policy.py};
+  \item OptionValueJEPA feature inference: \path{neural/jepa/train_option_value_jepa.py}.
 \end{itemize}
 
-\subsection{Greek Exposures ($D = 24$)}
+\section{Feature Counts}
 
-Aggregate net Greeks across the listed options chain are computed for both 0DTE and the nearest weekly expiration:
-\begin{equation}
-    \mathcal{G}^{(k)}_t = \sum_{\substack{i \in \text{chain}\\T_i = T_k}} \text{OI}_i \cdot \text{Greek}_i, \quad k \in \{\text{0DTE}, \text{weekly}\}
-    \label{eq:net_greek}
-\end{equation}
-where $\text{OI}_i$ is the open interest of contract $i$. Six Greeks ($\Delta, \Gamma, \theta, \mathcal{V}, \rho$, charm) are computed for each of the two expiry buckets, yielding 12 features per side (24 total).
-
-\subsection{GEX, DEX, and VEX ($D = 18$)}
-\label{subsec:gex_dex}
-
-Dealer exposure measures estimate the aggregate hedging pressure that market makers exert on the spot price:
-
-\begin{definition}[Gamma Exposure (GEX)]
-The market-maker net gamma exposure at time $t$ is:
-\begin{equation}
-    \text{GEX}_t = \sum_{i \in \text{chain}} \Gamma_i \cdot \text{OI}_i \cdot \text{Multiplier} \cdot S_t^2 / 100
-    \label{eq:gex}
-\end{equation}
-A positive $\text{GEX}_t$ indicates dealers are net long gamma: they sell rallies and buy dips, imposing mean-reverting pressure on the spot price. Negative GEX indicates dealers are net short gamma, amplifying directional moves.
-\end{definition}
-
-\begin{definition}[Delta Exposure (DEX) and Vanna Exposure (VEX)]
-\begin{align}
-    \text{DEX}_t &= \sum_{i} \Delta_i \cdot \text{OI}_i \cdot \text{Multiplier} \cdot S_t \\
-    \text{VEX}_t &= \sum_{i} \mathcal{V}^{(\text{vanna})}_i \cdot \text{OI}_i \cdot \text{Multiplier}
-\end{align}
-DEX measures the directional delta hedge flow. VEX captures the sensitivity of dealer delta to changes in implied volatility, becoming particularly relevant during VIX spike regimes.
-\end{definition}
-
-These three exposure metrics are computed separately for 0DTE, weekly, and the combined chain, yielding 18 features.
-
-\subsection{Put/Call Metrics ($D = 12$)}
-
-Put/call ratios provide an aggregate measure of options market sentiment:
-\begin{align}
-    \text{PCR}_{\text{vol}} &= \frac{V_{\text{put}}}{V_{\text{call}}} \\
-    \text{PCR}_{\text{OI}}  &= \frac{\text{OI}_{\text{put}}}{\text{OI}_{\text{call}}} \\
-    \text{PCR}_{\Delta}     &= \frac{\sum_{i:\Delta_i < 0} |\Delta_i| \cdot \text{OI}_i}{\sum_{j:\Delta_j > 0} \Delta_j \cdot \text{OI}_j}
-\end{align}
-where $V$ denotes traded volume. The delta-filtered PCR weights contracts by their hedge ratio, providing a more precise measure of directional pressure than raw volume ratios. These are computed for three expiry tiers (0DTE, weekly, all).
-
-\subsection{Implied Volatility Surface ($D = 16$)}
-
-The IV surface features encode the term structure and cross-sectional shape of implied volatility:
-\begin{itemize}
-    \item \textbf{ATM IV (0DTE, weekly, monthly):} implied volatility at the at-the-money strike.
-    \item \textbf{IV Skew:} $\text{IV}_{25\Delta,\text{put}} - \text{IV}_{25\Delta,\text{call}}$, a risk-reversal proxy for demand asymmetry.
-    \item \textbf{Term structure:} weekly/0DTE IV ratio and monthly/weekly IV ratio.
-    \item \textbf{Smile slopes:} OTM call slope and OTM put slope, capturing tail-risk premium asymmetry.
-\end{itemize}
-
-\subsection{Order Flow Derivatives ($D = 14$)}
-
-Higher-order Greek cross-products capture the sensitivity of dealer hedge flows to joint price-volatility moves:
-\begin{align}
-    \text{net\_vanna}_t  &= \sum_i \frac{\partial^2 C_i}{\partial S \, \partial \sigma} \cdot \text{OI}_i \\
-    \text{net\_charm}_t  &= \sum_i \frac{\partial^2 C_i}{\partial S \, \partial t} \cdot \text{OI}_i \\
-    \text{DGEX}_t        &= \frac{d(\text{GEX})}{dS}\bigg|_t
-\end{align}
-These terms become significant near zero-day expiration when the term-structure derivatives of gamma approach infinity.
-
-\subsection{Level Proximity and Initial Balance ($D = 21$)}
-\label{sec:ib_features}
-
-Market microstructure research has long identified that traders react asymmetrically to the initial price range established during the first hour of trading. The Initial Balance (IB) for day $d$ is:
-\begin{equation}
-    \text{IB}_{\text{high}}^{(d)} = \sup_{\tau \in [09:30, 10:30]_d} S_\tau, \qquad
-    \text{IB}_{\text{low}}^{(d)}  = \inf_{\tau \in [09:30, 10:30]_d} S_\tau
-    \label{eq:ib_definition}
-\end{equation}
-
-Distance features quantify the spot price's position relative to IB levels for the current and prior five trading days $d \in \{0, -1, -2, -3, -4, -5\}$:
-\begin{equation}
-    \delta^{(d)}_{\text{high}} = \text{clip}\!\left(\frac{S_t - \text{IB}_{\text{high}}^{(d)}}{\nu \cdot S_t},\; -10,\; 10\right), \quad \nu = 0.005
-    \label{eq:ib_distance}
-\end{equation}
-An inside-IB boolean $\mathbf{1}[{\text{IB}_{\text{low}}^{(0)} \leq S_t \leq \text{IB}_{\text{high}}^{(0)}}]$ is also included.
-
-Additionally, confluence features encode whether the current spot price aligns with the maximum-gamma strike $K^*_\Gamma$ via a Gaussian RBF kernel:
-\begin{equation}
-    \Phi^{\Gamma}_t = \exp\!\left(-\frac{(S_t - K^*_\Gamma)^2}{2\,(0.005 \cdot S_t)^2}\right), \quad K^*_\Gamma = \argmax_{K} \sum_{i: K_i = K} \Gamma_i \cdot \text{OI}_i
-    \label{eq:gamma_confluence}
-\end{equation}
-$\Phi^{\Gamma}_t \to 1$ when spot approaches the dominant gamma strike; $\Phi^{\Gamma}_t \to 0$ in open price space. Analogous confluence features are computed for Vanna and DGEX strikes.
-
-\subsection{Temporal Encoding ($D = 5$)}
-
-Intraday and weekly periodicity is encoded via Fourier projections to prevent artificial discontinuities at the day and week boundaries that would otherwise confuse tree-based splits:
-\begin{align}
-    x^{\sin}_{\text{tod}} &= \sin\!\left(2\pi \cdot \frac{m_t}{390}\right), \quad
-    x^{\cos}_{\text{tod}} = \cos\!\left(2\pi \cdot \frac{m_t}{390}\right) \\
-    x^{\sin}_{\text{dow}} &= \sin\!\left(2\pi \cdot \frac{d_t}{5}\right), \quad
-    x^{\cos}_{\text{dow}} = \cos\!\left(2\pi \cdot \frac{d_t}{5}\right)
-\end{align}
-where $m_t \in [0, 390]$ is the number of minutes elapsed since the 09:30 open, and $d_t \in \{0,1,2,3,4\}$ is the day-of-week index. A raw \texttt{minutes\_to\_close} $= 390 - m_t$ feature is also included to allow the GBT to model the accelerating theta-decay regime in the final hour.
-
-\subsection{Cross-Ticker Context ($D = 35$)}
-
-The system tracks four secondary instruments: QQQ, VIX, TLT, and the SPX/QQQ spread. For each, multi-horizon returns and selected Greeks are included:
-\begin{itemize}
-    \item \textbf{VIX:} spot level, 1-min and 5-min returns. Acts as an implied-volatility regime indicator.
-    \item \textbf{TLT (20Y Treasury ETF):} 1-min, 5-min, and 15-min returns. Captures risk-off flows.
-    \item \textbf{QQQ:} full analog of the SPX feature vector (spot, returns, Greeks). Encodes tech-sector divergence.
-    \item \textbf{SPX/QQQ spread:} normalized difference in 5-minute returns. Captures sector rotation.
-\end{itemize}
-
-% ============================================================================
-\section{Numerical Preprocessing Pipeline}
-\label{sec:preprocessing}
-% ============================================================================
-
-\subsection{Log Transform for Extreme-Scale Features}
-
-Features with raw magnitudes exceeding $10^4$ (e.g., raw GEX in dollar-gamma units) undergo the sign-preserving log transform before being written to the training Parquet:
-\begin{equation}
-    \tilde{x} = \text{sign}(x) \cdot \log(1 + |x|)
-    \label{eq:log_transform}
-\end{equation}
-This is applied to: \texttt{net\_gamma}, \texttt{net\_vanna}, \texttt{net\_charm}, \texttt{net\_dgex}, \texttt{gex\_0dte}, \texttt{gex\_weekly}, \texttt{delta\_gamma\_ratio}, and all raw exposure scalars.
-
-\subsection{Feature Normalizer}
-
-The \texttt{FeatureNormalizer} class fits per-feature mean $\mu_j$ and standard deviation $\sigma_j$ on the training window:
-\begin{equation}
-    x_{\text{norm}}^{(j)} = \frac{x^{(j)} - \mu_j}{\sigma_j + \varepsilon}, \quad \varepsilon = 10^{-8}
-    \label{eq:normalizer}
-\end{equation}
-Statistics are fit once per walk-forward window and serialized to \texttt{models/hybrid\_normalizer\_wf.npz}. At inference time, the normalizer is loaded and applied identically to every input batch, including the live trading bot.
-
-\subsection{NaN Handling}
-
-The GBT training pipeline applies \texttt{np.nan\_to\_num(X, nan=0.0, posinf=5.0, neginf=-5.0)} before model fitting. LightGBM natively handles missing values (NaN) via its optimal split-finding mechanism, which learns a dedicated branch direction for NaN samples. The explicit imputation to zero is applied only as a safety measure for features that should never be NaN in well-formed data.
-
-% ============================================================================
-\section{Feature Importance and Selection}
-\label{sec:importance}
-% ============================================================================
-
-LightGBM provides three native feature importance metrics: split count, gain, and permutation importance. Across walk-forward windows, the consistently highest-importance features are:
-
-\begin{table}[H]
+\begin{table}[h]
 \centering
-\begin{tabular}{clcc}
+\begin{tabular}{lr}
 \toprule
-\textbf{Rank} & \textbf{Feature} & \textbf{Category} & \textbf{Gain Contribution} \\
+Feature object & Count \\
 \midrule
-1 & \texttt{vix\_spot}                & Cross-Ticker     & High \\
-2 & \texttt{ret\_5m\_vol\_adj}         & Spot \& Returns  & High \\
-3 & \texttt{gex\_0dte}                & GEX/DEX/VEX      & Medium-High \\
-4 & \texttt{pcr\_vol\_0dte}            & Put/Call         & Medium-High \\
-5 & \texttt{iv\_skew\_0dte}            & IV Surface       & Medium-High \\
-6 & \texttt{dist\_ib\_high}            & Level Proximity  & Medium \\
-7 & \texttt{net\_vanna}               & Order Flow       & Medium \\
-8 & \texttt{minutes\_to\_close}        & Temporal         & Medium \\
-9 & \texttt{confluence\_max\_gamma}    & Level Proximity  & Medium \\
-10 & \texttt{tlt\_ret\_5m}             & Cross-Ticker     & Medium \\
-\midrule
-\multicolumn{4}{l}{\textit{Note: Rankings are window-averaged; individual windows may vary.}} \\
+Base candidate features in loader & 182 \\
+Base features present in production \texttt{base\_jepa} artifact & 180 \\
+JEPA appended features & 42 \\
+Production \texttt{base\_jepa} GBT feature columns & 222 \\
+XInputJEPA state branch & 155 \\
+XInputJEPA input branch & 25 \\
+OptionValueJEPA market feature block & 222 \\
+OptionValueJEPA option feature block & 31 \\
+OptionValueJEPA dynamic feature block & 15 \\
 \bottomrule
 \end{tabular}
-\caption{Top-10 features by average LightGBM gain across walk-forward windows.}
-\label{tab:importance}
+\caption{Feature counts from the current code and artifacts.}
 \end{table}
 
-\begin{remark}
-The dominance of \texttt{vix\_spot} and \texttt{ret\_5m\_vol\_adj} confirms that volatility regime and recent momentum are the primary drivers of 0DTE directional predictability. The GEX and IB features provide secondary conditioning, particularly for mean-reversion signals near dominant gamma strikes.
-\end{remark}
+The two base candidate features absent from the final production \texttt{base\_jepa} artifact are \path{charm_0dte_vs_wk} and \path{zomma_0dte_vs_wk}, because they were not present in the final production training table.
 
-% ============================================================================
-\section{RL State Space Extension}
-\label{sec:rl_state}
-% ============================================================================
+\section{Key Engineered Market Features}
 
-The PPO agent observes an extended 182-dimensional state vector $\bs_t$ that appends 19 dynamic and position-management features to the base 163-dimensional market feature vector:
-\begin{equation}
-    \bs_t = \left[\bx_t \;\Big|\; \bx^{\text{dyn}}_t \;\Big|\; \bm{q}_t \;\Big|\; \bm{c}_t \right] \in \R^{182}
-    \label{eq:rl_state}
-\end{equation}
-where:
-\begin{itemize}
-    \item $\bx^{\text{dyn}}_t \in \R^8$ — Dynamic market features: per-minute spot history, delta history, and volume.
-    \item $\bm{q}_t \in \R^7$ — Position state: unrealized PnL\%, hold time, $|\Delta|$, recovery probability, implied volatility, maximum adverse excursion (MAE), and trailing drawdown.
-    \item $\bm{c}_t \in \R^4$ — Model context: GBT confidence score $c_t$, time-to-target, dummy edge indicator, and $\log\sigma$ (observation noise).
-\end{itemize}
+\subsection{Net Greek Exposure}
 
-The state is augmented during training via \texttt{augment\_state()}, which adds small Gaussian noise $\mathcal{N}(0, 0.01)$ to all continuous components to improve policy generalization.
+These are the core state variables.  The important features are:
 
-\begin{thebibliography}{6}
+\begin{longtable}{p{0.23\textwidth}p{0.67\textwidth}}
+\toprule
+Feature & Interpretation \\
+\midrule
+\endhead
+\path{net_gamma} & Aggregate gamma exposure.  It describes how dealer delta changes with spot.  The sign and magnitude condition whether price movement is expected to be dampened or amplified. \\
+\path{net_vanna} & Aggregate vanna exposure.  It connects volatility movement to delta hedging pressure.  It becomes especially relevant when IV is moving. \\
+\path{net_charm} & Aggregate charm exposure.  It captures delta decay through time, particularly important for 0DTE because time decay is intraday and fast. \\
+\path{net_dgex} & Delta-gamma exposure proxy.  It is used as a directional hedging-pressure descriptor and as a source of DGEX magnet distances. \\
+\path{net_zomma} & Gamma sensitivity to volatility.  It helps distinguish gamma regimes that are stable from regimes where volatility changes can reshape gamma quickly. \\
+\path{net_delta} & Aggregate directional option exposure.  It is a direct state descriptor but is most useful in interaction with gamma and vanna. \\
+\path{net_vega} & Aggregate volatility exposure.  It conditions option payoff and volatility sensitivity. \\
+\path{net_vomma} & Convexity of vega.  It describes whether volatility exposure itself changes sharply as IV moves. \\
+\bottomrule
+\end{longtable}
 
-\bibitem{grinsztajn2022}
-L.~Grinsztajn, E.~Oyallon, and G.~Varoquaux,
-``Why do tree-based models still outperform deep learning on typical tabular data?''
-\textit{NeurIPS}, vol.~35, 2022.
+\subsection{Weekly Exposure Features}
 
-\bibitem{ke2017}
-G.~Ke et al.,
-``LightGBM: A Highly Efficient Gradient Boosting Decision Tree,''
-\textit{NeurIPS}, vol.~30, 2017.
+The weekly fields mirror the 0DTE fields:
 
-\bibitem{cboe_gex}
-S.~Avellaneda and A.~Savine,
-``Hedging with options: Gamma exposure and market impact,''
-\textit{Journal of Financial Economics}, 2021.
+\begin{center}
+\path{wk_net_gamma}, \path{wk_net_vanna}, \path{wk_net_charm}, \path{wk_net_dgex}, \path{wk_net_zomma}, \path{wk_net_delta}, \path{wk_net_vega}, \path{wk_net_vomma}.
+\end{center}
 
-\bibitem{initial_balance}
-D.~Steidlmayer,
-``Markets and Market Logic,'' Chicago Board of Trade, 1986.
+They exist because 0DTE exposure alone can be too local.  Weekly exposure can define broader support/resistance or magnetic zones.  Ratio fields such as \path{gamma_0dte_vs_wk}, \path{vanna_0dte_vs_wk}, \path{dgex_0dte_vs_wk}, \path{delta_0dte_vs_wk}, \path{vega_0dte_vs_wk}, and \path{vomma_0dte_vs_wk} compare short-expiry pressure to the wider expiry structure.
 
-\bibitem{schulman2017}
-J.~Schulman et al.,
-``Proximal Policy Optimization Algorithms,''
-\textit{arXiv:1707.06347}, 2017.
+\subsection{Regime and Boolean State Features}
 
-\end{thebibliography}
+Examples:
+
+\begin{center}
+\path{gamma_regime}, \path{vanna_bullish}, \path{charm_bullish}, \path{dgex_sticky}, \path{zomma_stabilizing}, \path{wk_gamma_regime}, \path{wk_vanna_bullish}, \path{wk_dgex_sticky}, \path{wk_zomma_stabilizing}.
+\end{center}
+
+These are not meant to be final trade rules.  They are compact regime descriptors.  A GBT can use them to learn different behavior in positive/negative gamma, sticky DGEX, or stabilizing zomma environments.
+
+\section{Location and Strike Geometry Features}
+
+\subsection{Distances to Option-Exposure Levels}
+
+Important level-distance fields include:
+
+\begin{center}
+\path{dist_to_max_gamma}, \path{dist_to_min_gamma}, \path{dist_to_min_vanna}, \path{dist_to_zero_gamma}, \path{dist_to_max_dgex}, \path{dist_to_min_dgex}, \path{dist_to_max_vega}, \path{dist_to_min_vega}, \path{dist_to_max_vomma}, \path{dist_to_min_vomma}.
+\end{center}
+
+The intuition is spatial.  A market near a large max-gamma or DGEX level may behave differently from a market far away from all large option concentrations.
+
+\subsection{Initial-Balance Features}
+
+The initial-balance family includes:
+
+\begin{center}
+\path{price_vs_ib_high}, \path{price_vs_ib_low}, \path{ib_range_pct}, \path{near_ib_high}, \path{near_ib_low}, \path{above_ib}, \path{below_ib}, \path{in_ib_range}.
+\end{center}
+
+These features encode whether the current price is inside balance, breaking out, rejecting, or extending.  Prior-day variants \path{dist_ib_high_D1} through \path{dist_ib_high_D5}, \path{dist_ib_low_D1} through \path{dist_ib_low_D5}, and \path{prev_close_vs_ib_D1} through \path{prev_close_vs_ib_D5} add multi-day context.
+
+\subsection{Fibonacci and Level Features}
+
+The model includes extension distances such as:
+
+\begin{center}
+\path{dist_fib_127_up}, \path{dist_fib_161_up}, \path{dist_fib_200_up}, \path{dist_fib_127_dn}, \path{dist_fib_161_dn}, \path{dist_fib_200_dn}.
+\end{center}
+
+It also includes support/resistance style variables:
+
+\begin{center}
+\path{nearest_level_dist}, \path{level_cluster_density}, \path{rejection_bullish}, \path{rejection_bearish}, \path{trend_grind_up}, \path{trend_flush_down}, \path{bouncing_from_support}, \path{rejecting_resistance}, \path{wall_at_fib}, \path{wall_at_ib}, \path{is_touching_fib}, \path{is_touching_max_gamma}, \path{is_touching_min_gamma}, \path{is_touching_max_dgex}.
+\end{center}
+
+\section{Volatility, Momentum, and Calendar Features}
+
+\subsection{Volatility State}
+
+Key volatility variables:
+
+\begin{center}
+\path{atm_iv}, \path{iv_zscore}, \path{iv_percentile}, \path{vix_spot}, \path{vix_gamma}, \path{vix_regime}, \path{vix_5d_mean}, \path{vix_5d_std}, \path{atr_5d_norm}, \path{rvol_iv_log}, \path{rvol_trend}, \path{rvol_regime}.
+\end{center}
+
+These features make the model conditional on option richness, realized/expected volatility, and volume/volatility regime.
+
+\subsection{Return and Momentum State}
+
+Return and momentum features include:
+
+\begin{center}
+\path{ret_1m_vol_adj}, \path{ret_5m_vol_adj}, \path{ret_15m_vol_adj}, \path{momentum_5m_bps}, \path{spot_change}, \path{gamma_momentum}, \path{rsi}.
+\end{center}
+
+They allow the model to distinguish a level touch during strong momentum from a level touch during mean reversion.
+
+\subsection{Calendar and Time of Day}
+
+Time features include:
+
+\begin{center}
+\path{time_sin}, \path{time_cos}, \path{minutes_to_close_norm}, \path{dow_sin}, \path{dow_cos}, \path{days_to_opex_norm}, \path{is_opex_week}, \path{is_quarterly_opex_week}.
+\end{center}
+
+Time encoding matters because 0DTE exposure, liquidity, and theta decay are highly intraday.
+
+\section{Interaction Features}
+
+\subsection{Greek Ratios}
+
+Ratio features include:
+
+\begin{center}
+\path{gamma_vanna_ratio}, \path{dgex_gamma_ratio}, \path{charm_vanna_ratio}, \path{delta_gamma_ratio}, \path{vega_gamma_ratio}, \path{vomma_vega_ratio}.
+\end{center}
+
+They describe which Greek channel is dominant.  For example, large gamma with small vanna is a different state from large vanna with small gamma.
+
+\subsection{Confluence Families}
+
+Confluence examples:
+
+\begin{center}
+\path{confluence_ib_high_max_gamma}, \path{confluence_ib_low_min_gamma}, \path{confluence_ib_high_max_vega}, \path{confluence_ib_low_max_dgex}, \path{confluence_fib127_bull_max_gamma}, \path{confluence_fib161_bull_max_vega}, \path{confluence_fib127_bear_min_gamma}, \path{confluence_fib161_bear_max_vomma}.
+\end{center}
+
+There are also prior-day initial-balance confluences:
+
+\begin{center}
+\path{confluence_d1ibh_max_gamma}, \path{confluence_d1ibl_min_gamma}, \path{confluence_d1ibh_max_dgex}, \path{confluence_d1ibl_min_dgex}, \path{confluence_d1ibh_max_vomma}.
+\end{center}
+
+These features encode multi-condition events directly.
+
+\section{JEPA Input Features}
+
+XInputJEPA input features are designed to behave like exogenous actions or perturbations.  The current input candidates are:
+
+\begin{longtable}{p{0.30\textwidth}p{0.60\textwidth}}
+\toprule
+Input group & Features \\
+\midrule
+\endhead
+Greek changes & \path{gamma_change}, \path{vanna_change}, \path{dgex_change}, \path{delta_change}, \path{vega_change}, \path{vomma_change}. \\
+Price and momentum changes & \path{spot_change}, \path{gamma_momentum}, \path{momentum_5m_bps}, \path{ret_1m_vol_adj}, \path{ret_5m_vol_adj}, \path{ret_15m_vol_adj}. \\
+Cross-market changes & \path{tlt_ret_1m}, \path{tlt_ret_5m}, \path{tlt_ret_15m}. \\
+Exposure dynamics & \path{gamma_speed}, \path{charm_accel_weighted}, \path{gamma_phase_delta}, \path{pcr_derivative_5m}. \\
+Volume and vol perturbations & \path{rvol_trend}, \path{rvol_regime}, \path{vol_relative}, \path{iv_zscore}, \path{iv_percentile}, \path{vix_5d_std}. \\
+Persistence & \path{signal_persistence_5m}. \\
+\bottomrule
+\end{longtable}
+
+The production artifact contains 25 input features because only columns present in both the parquet and base feature set are used.
+
+\section{JEPA Output Features}
+
+\subsection{Latent State}
+
+\begin{center}
+\path{xjepa_z_00}, \path{xjepa_z_01}, \path{xjepa_z_02}, \path{xjepa_z_03}, \path{xjepa_z_04}, \path{xjepa_z_05}, \path{xjepa_z_06}, \path{xjepa_z_07}, \path{xjepa_z_08}, \path{xjepa_z_09}, \path{xjepa_z_10}, \path{xjepa_z_11}, \path{xjepa_z_12}, \path{xjepa_z_13}, \path{xjepa_z_14}, \path{xjepa_z_15}.
+\end{center}
+
+These are 16 coordinates of the encoded market state.
+
+\subsection{Latent Input}
+
+\begin{center}
+\path{xjepa_u_00}, \path{xjepa_u_01}, \path{xjepa_u_02}, \path{xjepa_u_03}, \path{xjepa_u_04}, \path{xjepa_u_05}, \path{xjepa_u_06}, \path{xjepa_u_07}, \path{xjepa_u_08}, \path{xjepa_u_09}, \path{xjepa_u_10}, \path{xjepa_u_11}.
+\end{center}
+
+These are 12 coordinates of the recent perturbation/input sequence.
+
+\subsection{Derived JEPA Diagnostics}
+
+\begin{longtable}{p{0.30\textwidth}p{0.60\textwidth}}
+\toprule
+Feature & Meaning \\
+\midrule
+\endhead
+\path{xjepa_latent_velocity} & Norm of the change in $z$ from the previous valid context. \\
+\path{xjepa_input_velocity} & Norm of the change in $u$ from the previous valid context. \\
+\path{xjepa_pred_dispersion_short} & Pairwise dispersion among predicted latent states for horizons 1, 3, and 6. \\
+\path{xjepa_pred_dispersion_long} & Pairwise dispersion among predicted latent states for horizons 12, 24, and 36. \\
+\path{xjepa_lagged_pred_30m_err} & Error between the 30 minute old latent forecast and the current latent state. \\
+\path{xjepa_lagged_pred_60m_err} & Error between the 60 minute old latent forecast and the current latent state. \\
+\path{xjepa_lagged_pred_180m_err} & Error between the 180 minute old latent forecast and the current latent state. \\
+\path{xjepa_prob_short} & JEPA auxiliary head probability of short regime. \\
+\path{xjepa_prob_hold} & JEPA auxiliary head probability of hold/no-trade regime. \\
+\path{xjepa_prob_long} & JEPA auxiliary head probability of long regime. \\
+\path{xjepa_trade_confidence} & Maximum of short and long probabilities. \\
+\path{xjepa_direction_score} & Long probability minus short probability. \\
+\path{xjepa_entropy} & Entropy of the three-class auxiliary distribution. \\
+\path{xjepa_context_valid} & Indicator that enough history existed to produce a valid JEPA context. \\
+\bottomrule
+\end{longtable}
+
+\section{Option Candidate Features}
+
+The fixed-delta policy does not need a learned option-value feature matrix.  However, the research models use the following candidate families:
+
+\begin{longtable}{p{0.25\textwidth}p{0.65\textwidth}}
+\toprule
+Family & Features \\
+\midrule
+\endhead
+Ticker and side & \path{ticker_SPX}, \path{ticker_QQQ}, \path{ticker_SPY}, \path{side_LONG}, \path{side_SHORT}. \\
+Signal state & \path{jepa180_prob_up}, \path{jepa180_confidence}, \path{jepa180_direction}, \path{jepa180_edge}. \\
+Time state & \path{entry_minute}, \path{pos_in_day}, \path{minutes_to_close}. \\
+Delta/strike & \path{delta_target}, \path{actual_delta}, \path{actual_delta_abs}, \path{actual_strike}, \path{strike_distance_pts}, \path{strike_distance_bps}. \\
+Premium/spread & \path{entry_premium}, \path{raw_entry_premium}, \path{entry_spread_pct}, \path{premium_to_spot_bps}, \path{entry_cost_dollars}, \path{contracts}. \\
+Option Greeks & \path{actual_iv}, \path{actual_theta}, \path{actual_gamma}, \path{theta_over_premium}, \path{gamma_notional}. \\
+\bottomrule
+\end{longtable}
+
+\section{Dynamic Option Exit Features}
+
+Learned exit experiments use:
+
+\begin{center}
+\path{hold_minutes}, \path{hold_norm}, \path{current_pnl_pct}, \path{current_return_on_risk}, \path{current_premium}, \path{premium_ratio}, \path{peak_pnl_pct}, \path{drawdown_from_peak}, \path{mae_pnl_pct}, \path{current_delta}, \path{current_delta_abs}, \path{current_iv}, \path{current_gamma}, \path{spot_return_bps}, \path{signed_spot_return_bps}, \path{minutes_remaining}.
+\end{center}
+
+The OptionValueJEPA feature inference excludes \path{current_return_on_risk} from the dynamic feature block and uses it instead in the exit decision comparison.
+
+\section{Feature Interpretation Caveats}
+
+\begin{enumerate}
+  \item A feature name can be economically meaningful without being individually predictive.
+  \item A JEPA latent coordinate can be predictive without being human-interpretable.
+  \item The GBT may ignore most features.  That is acceptable if the retained splits improve OOS performance.
+  \item Option candidate labels are noisier than direction labels because option payoff includes spread, theta, IV, gamma, and liquidity.
+  \item Oracle-derived fields must never enter deployable features.
+\end{enumerate}
+
+\section{Conclusion}
+
+The key feature blocks are the net Greek state, strike geometry, volatility regime, intraday location, JEPA latent state/input, and option candidate path state.  The evidence supports using JEPA features as a complement to the base GBT features.  The next feature-development frontier is not more static market columns; it is better live-safe option-path and liquidity descriptors that can help a learned option selector beat fixed delta.
 
 \end{document}

@@ -144,15 +144,15 @@ def latex_preamble():
 """
 
 # ─── LaTeX: Comparison Table ──────────────────────────────────────────
-def latex_comparison(mlp_m, rl_m, out):
-    out.append(r"\section{GBT-Only vs GBT+RL Comparison}")
+def latex_comparison(mlp_m, rl_m, out, mlp_label="GBT-Only", rl_label="GBT+RL"):
+    out.append(r"\section{%s vs %s Comparison}" % (_esc(mlp_label), _esc(rl_label)))
     out.append(r"\vspace{4pt}")
 
     # Metric cards row
     out.append(r"\noindent\begin{center}")
-    out.append(r"\metricbox{GBT-Only Trades}{%d}{accent}" % mlp_m.get("total", 0))
+    out.append(r"\metricbox{%s Trades}{%d}{accent}" % (_esc(mlp_label), mlp_m.get("total", 0)))
     out.append(r"\hspace{4pt}")
-    out.append(r"\metricbox{GBT+RL Trades}{%d}{accentrl}" % rl_m.get("total", 0))
+    out.append(r"\metricbox{%s Trades}{%d}{accentrl}" % (_esc(rl_label), rl_m.get("total", 0)))
     out.append(r"\hspace{4pt}")
     pf_imp = 0
     if mlp_m.get("pf", 0) > 0:
@@ -168,7 +168,7 @@ def latex_comparison(mlp_m, rl_m, out):
     out.append(r"\begin{tabular}{>{\color{txtmain}}l >{\color{accent}}r >{\color{accentrl}}r >{\color{txtsub}}r}")
     out.append(r"\toprule")
     out.append(r"\rowcolor{cardbg}")
-    out.append(r"\textcolor{txtmain}{\textbf{Metric}} & \textcolor{accent}{\textbf{GBT-Only}} & \textcolor{accentrl}{\textbf{GBT+RL}} & \textcolor{txtsub}{\textbf{Delta}} \\")
+    out.append(r"\textcolor{txtmain}{\textbf{Metric}} & \textcolor{accent}{\textbf{%s}} & \textcolor{accentrl}{\textbf{%s}} & \textcolor{txtsub}{\textbf{Delta}} \\" % (_esc(mlp_label), _esc(rl_label)))
     out.append(r"\midrule")
 
     def _row(label, key, fmt=".2f", invert=False):
@@ -198,10 +198,10 @@ def latex_comparison(mlp_m, rl_m, out):
     out.append(r"\vspace{6pt}")
 
 # ─── LaTeX: Per-Ticker Breakdown ──────────────────────────────────────
-def latex_ticker_breakdown(mlp_df, rl_df, out):
+def latex_ticker_breakdown(mlp_df, rl_df, out, mlp_label="GBT-Only", rl_label="GBT+RL"):
     out.append(r"\section{Performance by Ticker}")
 
-    for label, df, col in [("GBT-Only", mlp_df, "accent"), ("GBT+RL", rl_df, "accentrl")]:
+    for label, df, col in [(mlp_label, mlp_df, "accent"), (rl_label, rl_df, "accentrl")]:
         if df.empty:
             continue
         out.append(r"\subsection{\textcolor{%s}{%s}}" % (col, label))
@@ -225,10 +225,10 @@ def latex_ticker_breakdown(mlp_df, rl_df, out):
         out.append(r"\vspace{4pt}")
 
 # ─── LaTeX: RL Exit Reasons ───────────────────────────────────────────
-def latex_exit_reasons(rl_df, out):
+def latex_exit_reasons(rl_df, out, label="RL"):
     if rl_df.empty or "exit_reason" not in rl_df.columns:
         return
-    out.append(r"\section{RL Exit Reasons}")
+    out.append(r"\section{%s Exit Reasons}" % _esc(label))
     out.append(r"\noindent\begin{center}")
     out.append(r"\rowcolors{2}{cardbg}{rowalt}")
     out.append(r"\begin{tabular}{>{\color{txtmain}}l rr}")
@@ -245,10 +245,10 @@ def latex_exit_reasons(rl_df, out):
     out.append(r"\end{center}")
 
 # ─── LaTeX: RL Strike Analysis ────────────────────────────────────────
-def latex_strike_analysis(rl_df, out):
+def latex_strike_analysis(rl_df, out, label="RL"):
     if rl_df.empty or "strike_bucket" not in rl_df.columns:
         return
-    out.append(r"\section{RL Strike Analysis}")
+    out.append(r"\section{%s Strike Analysis}" % _esc(label))
     out.append(r"\noindent\begin{center}")
     out.append(r"\rowcolors{2}{cardbg}{rowalt}")
     out.append(r"\begin{tabular}{>{\color{txtmain}}l rrrrr>{\color{txtsub}}r}")
@@ -433,7 +433,7 @@ def latex_strategy_detail(df, name, color, out):
     out.append(r"\clearpage")
 
 # ─── LaTeX: Full Trade Log ─────────────────────────────────────────────
-def latex_full_trade_log(df, name, color, out):
+def latex_full_trade_log(df, name, color, out, is_rl=None):
     """Outputs a complete table of all trades in a longtable environment."""
     if df.empty: return
     df = df.copy()
@@ -443,7 +443,8 @@ def latex_full_trade_log(df, name, color, out):
 
     out.append(r"\section{\textcolor{%s}{Full Trade Log: %s}}" % (color, name))
     
-    is_rl = "RL" in name
+    if is_rl is None:
+        is_rl = "RL" in name
     
     # Column specs
     if is_rl:
@@ -556,13 +557,13 @@ def plot_equity_curves(mlp_df, rl_df, output_dir, prefix=""):
     plt.savefig(output_dir / f'{prefix}equity_curves.png', dpi=300, bbox_inches='tight')
     plt.close()
 
-def plot_strike_pie(rl_df, output_dir, prefix=""):
+def plot_strike_pie(rl_df, output_dir, prefix="", label="RL"):
     if 'strike_bucket' not in rl_df.columns or rl_df.empty: return
     bc = rl_df['strike_bucket'].value_counts()
     plt.figure(figsize=(10, 8))
     plt.pie(bc.values, labels=bc.index, autopct='%1.1f%%', startangle=90,
             colors=plt.cm.viridis(np.linspace(0, 1, len(bc))))
-    plt.title('RL Strike Distribution', fontsize=16)
+    plt.title(f'{label} Strike Distribution', fontsize=16)
     plt.savefig(output_dir / f'{prefix}rl_strike_distribution.png', dpi=300, bbox_inches='tight')
     plt.close()
 
@@ -573,12 +574,16 @@ def main():
     parser.add_argument("--mlp-file", type=str, default=None)
     parser.add_argument("--rl-file", type=str, default=None)
     parser.add_argument("--training-data", type=str, default=None, help="Path to training parquet for alpha/beta")
+    parser.add_argument("--output-dir", type=str, default=None, help="Directory for generated .tex/.pdf/.png files")
+    parser.add_argument("--report-prefix", type=str, default="", help="Prefix for generated report filenames")
+    parser.add_argument("--mlp-label", type=str, default="GBT-Only")
+    parser.add_argument("--rl-label", type=str, default="GBT+RL")
     args = parser.parse_args()
 
     script_dir = Path(__file__).resolve().parent
     project_root = script_dir.parent
     results_dir = project_root / "backtest_results"
-    out_dir = script_dir / "analysis"
+    out_dir = Path(args.output_dir) if args.output_dir else script_dir / "analysis"
     out_dir.mkdir(parents=True, exist_ok=True)
 
     # Find / load CSVs
@@ -632,10 +637,12 @@ def main():
                 break
 
     # ─── Generate charts FIRST (so PNGs exist for LaTeX) ───
-    prefix = f"{args.month}_" if args.month else "All_"
+    report_prefix = "".join(ch if ch.isalnum() or ch in "-_" else "_" for ch in str(args.report_prefix).strip())
+    report_prefix = f"{report_prefix}_" if report_prefix else ""
+    prefix = f"{report_prefix}{args.month}_" if args.month else f"{report_prefix}All_"
     print("Generating charts...")
     plot_equity_curves(mlp_df, rl_df, out_dir, prefix)
-    plot_strike_pie(rl_df, out_dir, prefix)
+    plot_strike_pie(rl_df, out_dir, prefix, args.rl_label)
     print(f"Charts saved to: {out_dir}")
 
     # Chart file paths (relative to .tex location = out_dir)
@@ -667,18 +674,18 @@ def main():
     tex.append(r"\clearpage")
 
     # 1. Comparison
-    latex_comparison(mlp_m, rl_m, tex)
+    latex_comparison(mlp_m, rl_m, tex, args.mlp_label, args.rl_label)
     # 2. Per-ticker
-    latex_ticker_breakdown(mlp_df, rl_df, tex)
+    latex_ticker_breakdown(mlp_df, rl_df, tex, args.mlp_label, args.rl_label)
     tex.append(r"\clearpage")
-    # 3. Detailed GBT-Only
-    latex_strategy_detail(mlp_df, "GBT-Only (Synthetic Futures)", "accent", tex)
-    # 4. Detailed GBT+RL
-    latex_strategy_detail(rl_df, "GBT+RL (Real Options)", "accentrl", tex)
-    # 5. RL Exit Reasons
-    latex_exit_reasons(rl_df, tex)
+    # 3. Detailed first model
+    latex_strategy_detail(mlp_df, args.mlp_label, "accent", tex)
+    # 4. Detailed second model
+    latex_strategy_detail(rl_df, args.rl_label, "accentrl", tex)
+    # 5. Second model exit reasons
+    latex_exit_reasons(rl_df, tex, args.rl_label)
     # 6. Strike Analysis
-    latex_strike_analysis(rl_df, tex)
+    latex_strike_analysis(rl_df, tex, args.rl_label)
     tex.append(r"\clearpage")
     # 7. Alpha vs Beta
     if td_path and td_path.exists():
@@ -712,8 +719,8 @@ def main():
     tex.append(r"\clearpage")
 
     # 9. Full Trade Logs Appendix
-    latex_full_trade_log(mlp_df, "GBT-Only", "accent", tex)
-    latex_full_trade_log(rl_df, "GBT+RL", "accentrl", tex)
+    latex_full_trade_log(mlp_df, args.mlp_label, "accent", tex, is_rl=False)
+    latex_full_trade_log(rl_df, args.rl_label, "accentrl", tex, is_rl=True)
 
     tex.append(r"\end{document}")
 

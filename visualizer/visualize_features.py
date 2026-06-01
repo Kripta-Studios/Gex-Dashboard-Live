@@ -226,16 +226,23 @@ def rl_saliency(rl_model_path: str, gbt_model_path: str, norm_path: str,
     df = pd.read_parquet(data_path)
     sample_df = df.sample(min(200, len(df)), random_state=42)
 
-    n_features = len(FEATURE_COLUMNS)  # 163
-    features = np.zeros((len(sample_df), n_features), dtype=np.float32)
+    normalizer = FeatureNormalizer()
+    normalizer.load(norm_path)
+    
+    n_features = len(FEATURE_COLUMNS)  # 162 or 163
+    # Allow loading old normalizer that had 163 features
+    norm_dims = normalizer.medians.shape[0] if hasattr(normalizer, 'medians') and normalizer.medians is not None else n_features
+    features = np.zeros((len(sample_df), norm_dims), dtype=np.float32)
     for i, col in enumerate(FEATURE_COLUMNS):
         if col in sample_df.columns:
             features[:, i] = sample_df[col].values.astype(np.float32)
     features = np.nan_to_num(features, nan=0.0)
 
-    normalizer = FeatureNormalizer()
-    normalizer.load(norm_path)
     features_norm = normalizer.transform(features)
+    
+    # If we padded to 163 for the normalizer but the environment uses 162, slice it back
+    if features_norm.shape[1] > n_features:
+        features_norm = features_norm[:, :n_features]
 
     # ── Build full RL observation ──
     # Expected order (from environment.py): 

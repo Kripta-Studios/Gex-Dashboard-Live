@@ -3,7 +3,7 @@ RL Utilities — RunningMeanStd, State Augmentation, Curriculum Scheduler
 """
 
 import numpy as np
-from .config import RL_CONFIG, POSITION_STATE_DIM, MLP_CONTEXT_DIM, SNIPER_STATE_DIM
+from .config import RL_CONFIG, POSITION_STATE_DIM, MLP_CONTEXT_DIM, TICKER_CONTEXT_DIM, SNIPER_STATE_DIM
 
 
 class RunningMeanStd:
@@ -56,9 +56,9 @@ def augment_state(state: np.ndarray, market_feature_dim: int = None,
     if market_feature_dim is None:
         # Position + MLP context + (sniper if active) = non-market dims
         # noise applies to BOTH static (163) and dynamic (8) market features
-        non_market = (SNIPER_STATE_DIM + POSITION_STATE_DIM + MLP_CONTEXT_DIM
+        non_market = (SNIPER_STATE_DIM + POSITION_STATE_DIM + MLP_CONTEXT_DIM + TICKER_CONTEXT_DIM
                       if RL_CONFIG.get("use_sniper_mode")
-                      else POSITION_STATE_DIM + MLP_CONTEXT_DIM)  # 10 or 12
+                      else POSITION_STATE_DIM + MLP_CONTEXT_DIM + TICKER_CONTEXT_DIM)
         market_feature_dim = RL_CONFIG["state_dim"] - non_market
     if noise_std is None:
         noise_std = RL_CONFIG.get("obs_noise_std", 0.02)
@@ -146,16 +146,21 @@ class RolloutBuffer:
         self.states = []
         self.actions = []
         self.action_types = []  # "strike" or "exit"
+        self.action_masks = []
+        self.policy_active = []
         self.rewards = []
         self.log_probs = []
         self.values = []
         self.dones = []
 
     def add(self, state: np.ndarray, action: int, action_type: str,
-            reward: float, log_prob: float, value: float, done: bool):
+            reward: float, log_prob: float, value: float, done: bool,
+            action_mask=None, policy_active: bool = True):
         self.states.append(state)
         self.actions.append(action)
         self.action_types.append(action_type)
+        self.action_masks.append(None if action_mask is None else list(action_mask))
+        self.policy_active.append(bool(policy_active))
         self.rewards.append(reward)
         self.log_probs.append(log_prob)
         self.values.append(value)
@@ -182,6 +187,8 @@ class RolloutBuffer:
                 "states": torch.FloatTensor(states[idx]),
                 "actions": [self.actions[i] for i in idx],
                 "action_types": [self.action_types[i] for i in idx],
+                "action_masks": [self.action_masks[i] for i in idx],
+                "policy_active": torch.BoolTensor([self.policy_active[i] for i in idx]),
                 "old_log_probs": torch.FloatTensor(old_log_probs[idx]),
                 "returns": torch.FloatTensor(returns[idx]),
                 "values": torch.FloatTensor(values[idx]),

@@ -1,0 +1,593 @@
+# JEPA Research Summary
+
+## Production Release 2026-06-01
+
+The current live release artifacts are:
+
+- JEPA feature model: `neural/models/jepa/xinput_v3_production/`
+- 180m signal model: `neural/models/jepa/jepa_production_final_180m/base_jepa/`
+- Live feed: `services/realtime_feed.py --jepa-model-dir .../xinput_v3_production`
+- Live bot: `bots/tradingbot_wrapper_jepa.py --model-dir .../jepa_production_final_180m`
+- Deployment uploader: `push_models.ps1`, which uploads only the git-ignored model directories.
+
+Production training command:
+
+```powershell
+.\neural\jepa\run_pipeline.ps1 -ProductionTrain -SkipCollect
+```
+
+This release used `TrainEndDate=20261230`, which only means "use every available row up to that cutoff." The actual collected parquet ended at `20260529`.
+
+Production diagnostics:
+
+| Check | Result |
+| --- | ---: |
+| Source rows | 221,832 |
+| Exact 180m training windows | 56,160 |
+| XInputJEPA final-fit dates | 960 |
+| XInputJEPA final epochs | 5 |
+| `base_jepa` production feature count | 222 |
+
+May 2026 smoke backtest with `jepa_production_final_180m/base_jepa`:
+
+| Scope | Trades | WR | PF | PnL | Max DD |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| May 2026 model-history smoke | 56 | 82.1% | 18.088 | +13,377 | -288 |
+
+This smoke test proves the production artifacts exist, load, score, and generate trades. It is not OOS validation because the production model was intentionally trained using all available data, including May 2026. The OOS evidence remains the March-cutoff research run with April/May held out.
+
+The collector now supports incremental daily updates: if `neural/collect_training_data_spx_qqq.py` is older than the requested output parquet, it appends only dates after the parquet max date; if the script is newer or the parquet is missing, it rebuilds from scratch.
+
+This folder contains the isolated implementation for testing whether JEPA latent state adds alpha to the current GBT trading pipeline.
+
+## Scope
+
+- No changes to `neural/run_pipeline.ps1`.
+- No changes to `neural/rl/*`.
+- JEPA artifacts and GBT candidate models use separate names and paths.
+- Results are written under `research_papers/JEPA/results/`.
+
+## Current Status
+
+- Implementation and first full experiment completed on branch `jepa`.
+- Experiments completed:
+  - `tabular_v1`
+  - `alpha_v2`
+  - `alpha_v2_topk8`
+  - `xinput_v3`
+- Result: Gate A failed for every GBT-augmentation candidate. Do not promote JEPA into the current GBT pipeline.
+
+## Artifacts
+
+- JEPA model: `neural/models/jepa/tabular_v1/model.pt`
+- Augmented March cutoff parquet: `training_data/training_data_spx_qqq_spy_march_2026_jepa_tabular_v1.parquet`
+- Augmented full parquet: `training_data/training_data_spx_qqq_spy_jepa_tabular_v1.parquet`
+- Results: `research_papers/JEPA/results/tabular_v1/`
+- Alpha report: `research_papers/JEPA/results/tabular_v1/alpha_report.md`
+- Feature usage report: `research_papers/JEPA/results/tabular_v1/jepa_feature_usage.md`
+- AlphaJEPA v2 results: `research_papers/JEPA/results/alpha_v2/`
+- AlphaJEPA Top-K results: `research_papers/JEPA/results/alpha_v2_topk8/`
+- XInput Market JEPA results: `research_papers/JEPA/results/xinput_v3/`
+
+## Strict-WF Backtest Results
+
+These backtests were rerun with the same strict-WF environment gates used by `neural/run_pipeline.ps1`:
+
+| Run | Trades | WR | PF | PnL | Max DD |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Baseline GBT | 3,545 | 49.6% | 1.305 | +367,372 | -17,217 |
+| GBT + JEPA | 3,448 | 48.9% | 1.232 | +276,393 | -37,328 |
+| JEPA-only probe | 3,949 | 44.9% | 0.962 | -58,716 | -99,570 |
+| GBT + JEPA permuted | 3,518 | 48.8% | 1.233 | +280,949 | -33,286 |
+
+## AlphaJEPA v2 Results
+
+AlphaJEPA v2 changed the important failure points from v1:
+
+- latent dimension reduced from 32 to 16.
+- stop-gradient target enabled.
+- SIGReg weight increased.
+- VICReg-style variance/covariance regularizer added.
+- auxiliary HOLD/SHORT/LONG trading head added.
+- Apr/May 2026 OOS reports added.
+
+Full strict-WF:
+
+| Run | Trades | WR | PF | PnL | Max DD |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Baseline GBT | 3,545 | 49.6% | 1.305 | +367,372 | -17,217 |
+| GBT + AlphaJEPA | 3,787 | 50.5% | 1.301 | +390,076 | -22,373 |
+| AlphaJEPA-only | 4,139 | 46.9% | 1.073 | +111,098 | -40,426 |
+| GBT + AlphaJEPA permuted | 4,152 | 48.1% | 1.143 | +212,521 | -32,445 |
+
+Apr/May 2026 true OOS:
+
+| Run | Trades | WR | PF | PnL | Max DD |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Baseline GBT | 213 | 49.8% | 1.300 | +23,980 | -8,074 |
+| GBT + AlphaJEPA | 234 | 51.7% | 1.292 | +25,430 | -7,913 |
+| AlphaJEPA-only | 256 | 52.0% | 1.423 | +38,487 | -9,307 |
+| GBT + AlphaJEPA permuted | 235 | 51.9% | 1.352 | +30,283 | -7,556 |
+
+Interpretation:
+
+- AlphaJEPA v2 is materially better than v1.
+- Full-history GBT + AlphaJEPA increased PnL by about +22.7k but PF was slightly lower and drawdown worsened by about 30%, so Gate A still failed.
+- OOS GBT + AlphaJEPA was only slightly better on PnL and lower on PF; it did not meet the required uplift.
+- AlphaJEPA-only OOS was strong, but full-history AlphaJEPA-only remained much weaker than baseline. Treat this as a hypothesis, not a production signal.
+- Permutation confirms some AlphaJEPA signal exists in full history, but OOS permutation was better than the unpermuted GBT+AlphaJEPA candidate. The live value is not stable enough.
+
+## Top-K AlphaJEPA Results
+
+Top-K used base features plus the union of the 8 most important AlphaJEPA features per ticker, producing 13 AlphaJEPA columns.
+
+Full strict-WF:
+
+| Run | Trades | WR | PF | PnL | Max DD |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Baseline GBT | 3,545 | 49.6% | 1.305 | +367,372 | -17,217 |
+| GBT + AlphaJEPA Top-K | 3,858 | 48.8% | 1.213 | +290,583 | -31,268 |
+| AlphaJEPA-only | 4,139 | 46.9% | 1.073 | +111,098 | -40,426 |
+| GBT + AlphaJEPA Top-K permuted | 4,201 | 47.8% | 1.123 | +187,880 | -33,418 |
+
+Apr/May 2026 true OOS:
+
+| Run | Trades | WR | PF | PnL | Max DD |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Baseline GBT | 213 | 49.8% | 1.300 | +23,980 | -8,074 |
+| GBT + AlphaJEPA Top-K | 226 | 48.7% | 1.195 | +16,948 | -11,273 |
+| AlphaJEPA-only | 256 | 52.0% | 1.423 | +38,487 | -9,307 |
+| GBT + AlphaJEPA Top-K permuted | 242 | 49.2% | 1.270 | +24,157 | -10,449 |
+
+Top-K did not solve the problem. It reduced the feature count but made OOS worse.
+
+## XInput Market JEPA Results
+
+This variant implements the user's LeWorldModel analogy more directly:
+
+```text
+state_encoder(current market state) -> z_t
+input_encoder(dynamic Greek/IV/price changes) -> u_t
+predictor(z_t, u_t, horizon) -> z_hat_{t+h}
+```
+
+The split used 155 state features and 25 input/delta features:
+
+`gamma_change`, `vanna_change`, `dgex_change`, `delta_change`, `vega_change`, `vomma_change`, `spot_change`, `gamma_momentum`, `signal_persistence_5m`, `momentum_5m_bps`, `ret_1m_vol_adj`, `ret_5m_vol_adj`, `ret_15m_vol_adj`, `tlt_ret_1m`, `tlt_ret_5m`, `tlt_ret_15m`, `gamma_speed`, `charm_accel_weighted`, `gamma_phase_delta`, `pcr_derivative_5m`, `rvol_trend`, `rvol_regime`, `iv_zscore`, `iv_percentile`, `vix_5d_std`.
+
+Full strict-WF:
+
+| Run | Trades | WR | PF | PnL | Max DD |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Baseline GBT | 3,545 | 49.6% | 1.305 | +367,372 | -17,217 |
+| GBT + XInputJEPA | 3,843 | 51.1% | 1.335 | +439,787 | -18,997 |
+| XInputJEPA-only | 3,967 | 49.6% | 1.197 | +279,232 | -27,146 |
+| GBT + XInputJEPA permuted | 4,233 | 47.2% | 1.109 | +168,118 | -33,559 |
+
+Apr/May 2026 true OOS:
+
+| Run | Trades | WR | PF | PnL | Max DD |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Baseline GBT | 213 | 49.8% | 1.300 | +23,980 | -8,074 |
+| GBT + XInputJEPA | 227 | 48.0% | 1.094 | +8,763 | -6,154 |
+| XInputJEPA-only | 249 | 54.6% | 1.406 | +34,800 | -6,479 |
+| GBT + XInputJEPA permuted | 230 | 50.4% | 1.355 | +28,544 | -5,872 |
+
+Interpretation:
+
+- This is the first JEPA variant with clear full-history improvement: PF +0.030 and PnL +72.4k versus baseline.
+- The permutation test shows real full-history signal: permuting XInputJEPA features cut PF from 1.335 to 1.109.
+- It still failed Gate A because full-history drawdown was 1.103x baseline, slightly above the 1.10 limit.
+- More importantly, Apr/May OOS GBT+XInputJEPA degraded badly: PF 1.094 versus baseline 1.300.
+- XInputJEPA-only was strong in Apr/May OOS, but not strong enough over the full history to replace the GBT.
+- The dynamic input encoder remained relatively low rank during training; best saved model had strong `z` rank but low `u` rank, suggesting the input channel is still not robustly using all dynamic degrees of freedom.
+
+Direct predictive-capacity diagnostic:
+
+- Report: `research_papers/JEPA/results/xinput_v3/predictive_diagnostics/SUMMARY.md`
+- The model does not beat a persistence baseline at the key short/medium latent horizons:
+  - 5m OOS: -471.6% MSE improvement versus persistence.
+  - 15m OOS: -111.4%.
+  - 30m OOS: -41.6%.
+  - 60m OOS: -8.7%.
+- It does beat persistence at slower horizons:
+  - 120m OOS: +5.9%.
+  - 180m OOS: +19.1%.
+- OOS auxiliary direction head:
+  - balanced accuracy 41.5%,
+  - long AUC 0.722,
+  - short AUC 0.424,
+  - trade-vs-hold AUC 0.606.
+- OOS trade-level alignment is weak:
+  - `GBT+XInputJEPA` alignment AUC for win/loss separation 0.546,
+  - `XInputJEPA-only` alignment AUC 0.519.
+- Exact 180m terminal spot-direction test:
+  - full-history AUC for `spot(t+180m) > spot(t)`: 0.641, sign accuracy 60.6%,
+  - Apr/May OOS AUC: 0.545, sign accuracy 49.0%,
+  - full-history top score quintile averaged +25.60 bps 180m return, but OOS top quintile averaged only +11.93 bps while the bottom quintile was still positive at +1.27 bps.
+
+This means XInputJEPA learned some slower state dynamics, but the exact 180m terminal direction signal is not stable enough OOS. The Apr/May XInputJEPA-only result is therefore not enough evidence to promote it or to operate futures/options directly from this checkpoint.
+
+## JEPA 180m Direction Experiment
+
+Report: `research_papers/JEPA/results/jepa_180m_direction/SUMMARY.md`
+
+This experiment changed the task to the hypothesis implied by the 180m latent result:
+
+```text
+features available at t -> spot_price(t+180m) > spot_price(t)
+```
+
+It used strict temporal training for Apr/May 2026 OOS, feature modes `base`, `jepa_only`, and `base_jepa`, and a fixed-hold 180m backtest with 36-sample cooldown, 1 bps default cost, and $100k notional per trade.
+
+Important mechanics:
+
+- `collect_training_data_spx_qqq.py` was not modified for this experiment.
+- The experiment starts from `training_data/training_data_spx_qqq_spy_jepa_xinput_v3.parquet`, which already contains base market features, `xjepa_*` features, `ticker`, `date`, `time`, and `spot_price`.
+- The 180m label is constructed offline:
+
+```text
+future_return_180m = spot_price(t+180m) / spot_price(t) - 1
+future_up_180m = future_return_180m > 0
+```
+
+- `future_return_180m`, `future_up_180m`, `target`, `time_to_target`, `time_to_stop`, and `max_move` are explicitly excluded from model features.
+- The trained model is still LightGBM. `base_jepa` means:
+
+```text
+LightGBM(base market features + xjepa_* features) -> terminal direction at 180m
+```
+
+- This differs from the current GBT-only model:
+
+```text
+current GBT target: target/stop path outcome inside 180m
+base_jepa 180m target: terminal spot direction exactly at t+180m
+```
+
+Backtest mechanics:
+
+- If the model emits LONG, enter at `spot_price(t)` and exit at `spot_price(t+180m)`.
+- If the model emits SHORT, enter at `spot_price(t)` and exit at `spot_price(t+180m)`.
+- PnL is computed from terminal spot return, minus cost bps, with fixed notional.
+- This is a spot/futures-style proxy, not an options premium simulation.
+
+OOS prediction metrics:
+
+| Mode | Rows | AUC | Accuracy | Balanced Acc | Spearman Return | Top Q Ret bps | Bottom Q Ret bps |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| base | 2,200 | 0.617 | 62.1% | 59.0% | 0.167 | 11.03 | 1.38 |
+| jepa_only | 2,200 | 0.577 | 55.2% | 54.9% | 0.125 | 12.84 | 1.73 |
+| base_jepa | 2,200 | 0.623 | 60.2% | 59.8% | 0.200 | 14.97 | 0.20 |
+
+OOS fixed-hold 180m backtest:
+
+| Mode | Trades | WR | PF | Avg bps | PnL | Max DD |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| base | 87 | 57.5% | 1.591 | 6.43 | +5,596 | -1,404 |
+| jepa_only | 106 | 57.5% | 1.378 | 4.27 | +4,523 | -2,855 |
+| base_jepa | 106 | 65.1% | 1.886 | 8.21 | +8,707 | -1,539 |
+
+Cost sensitivity:
+
+- At 5 bps, `base_jepa` remains positive: PF 1.393, PnL +4,467.
+- At 10 bps, `base_jepa` turns negative: PF 0.938, PnL -833.
+
+Interpretation: the 180m hypothesis is materially better than the previous target/stop JEPA augmentation. `base_jepa` adds OOS value for a medium-horizon fixed-hold directional module. This is not yet a production options/futures strategy because it has only been proven on Apr/May 2026 OOS and on spot/futures-style terminal returns, not on actual option premium paths.
+
+Why JEPA likely helps here:
+
+- Direct diagnostics showed XInputJEPA was weak at 5-60m but better at 120-180m latent prediction, so the 180m target matches the horizon where the representation has signal.
+- Base features describe the current state: Greeks, IV, levels, price position, momentum, and time context.
+- `xjepa_*` features add learned temporal state dynamics: latent state, dynamic input encoding, direction score, and prediction/surprise information.
+- The improvement appears in direction selection, not just trade count: frozen `base_jepa` improved WR and PF versus frozen base-only.
+
+## Frozen Base+JEPA 180m Candidate
+
+Report: `research_papers/JEPA/results/jepa_180m_frozen_march/SUMMARY.md`
+
+This is the stricter deployment-style version of the 180m experiment:
+
+- Train cutoff: 2026-03-31.
+- Test start: 2026-04-01.
+- No May retrain using April data.
+- Models saved under `neural/models/jepa/jepa_180m_frozen_march/`.
+
+OOS prediction metrics:
+
+| Mode | Rows | AUC | Accuracy | Balanced Acc | Spearman Return | Top Q Ret bps | Bottom Q Ret bps |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| base | 2,200 | 0.622 | 62.0% | 60.0% | 0.178 | 10.83 | -0.60 |
+| jepa_only | 2,200 | 0.572 | 55.5% | 55.5% | 0.121 | 12.32 | 3.49 |
+| base_jepa | 2,200 | 0.630 | 61.5% | 60.6% | 0.216 | 13.87 | -0.16 |
+
+OOS fixed-hold 180m backtest:
+
+| Mode | Trades | WR | PF | Avg bps | PnL | Max DD |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| base | 80 | 58.8% | 1.389 | 4.40 | +3,522 | -1,640 |
+| jepa_only | 109 | 58.7% | 1.326 | 3.81 | +4,157 | -3,270 |
+| base_jepa | 104 | 68.3% | 1.936 | 8.70 | +9,044 | -1,522 |
+
+Cost sensitivity:
+
+- At 5 bps, `base_jepa` remains strong: PF 1.441, PnL +4,884.
+- At 10 bps, `base_jepa` is near breakeven but negative: PF 0.976, PnL -316.
+
+Existing-signal fixed-180 comparison:
+
+- Current baseline GBT target/stop entries repriced with fixed 180m hold: 30 trades, PF 1.239, PnL +909.
+- Frozen `base_jepa` 180m model: 104 trades, PF 1.936, PnL +9,044.
+
+Interpretation: `base_jepa` is now a credible replacement candidate for the current 180m entry signal under a fixed-hold SPX/SPY/QQQ proxy. It should not be called a full production replacement until it is wired into the pipeline and evaluated under the exact production execution constraints, but the research gate for continuing is passed.
+
+## Standalone JEPA 180m Signal
+
+Report: `research_papers/JEPA/results/jepa_180m_standalone/SUMMARY.md`
+
+Operational modules added:
+
+- `neural/jepa/jepa_180m_signal.py`
+- `neural/jepa/backtest_jepa_180m.py`
+- `neural/jepa/run_jepa_180m_standalone.ps1`
+
+The standalone backtest loads frozen `base_jepa` model artifacts and runs through the same inference class that an integration would use.
+
+Apr/May OOS standalone result:
+
+| Scope | Trades | WR | PF | Avg bps | PnL | Max DD |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| base_jepa 180m | 104 | 68.3% | 1.936 | 8.70 | +9,044 | -1,522 |
+
+Cooldown sensitivity:
+
+| Cooldown | Trades | WR | PF | Avg bps | PnL | Max DD |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 60m | 178 | 64.0% | 1.889 | 7.83 | +13,931 | -2,166 |
+| 90m | 160 | 61.9% | 1.838 | 8.24 | +13,182 | -2,830 |
+| 120m | 104 | 68.3% | 1.936 | 8.70 | +9,044 | -1,522 |
+| 180m | 104 | 68.3% | 1.936 | 8.70 | +9,044 | -1,522 |
+
+Cooldown interpretation: the default 180m cooldown is used because the label and fixed-hold execution horizon are 180m. It avoids counting overlapping 5-minute entries as independent trades. Shorter cooldowns can increase raw PnL, but they create correlated stacked exposure and larger drawdown.
+
+## JEPA 0DTE Option Policy
+
+Report: `research_papers/JEPA/results/jepa_option_policy/SUMMARY.md`
+
+Operational modules added:
+
+- `neural/jepa/train_backtest_option_policy.py`
+- `neural/jepa/run_jepa_option_policy.ps1`
+
+This test uses frozen `base_jepa` 180m signals as entries, then evaluates real 0DTE option premium paths from ThetaData. It does not touch `neural/run_pipeline.ps1` or `neural/rl/*`.
+
+Setup:
+
+- Train cutoff: 2026-03-31.
+- Test start: 2026-04-01.
+- Entry source: frozen `base_jepa` 180m signals.
+- Cooldown: 180m.
+- Candidates: 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70 absolute delta.
+- Current execution: buy option premium with `$1,000` risk capital, hard stop `-60%`, take profit `+250%`, max hold `180m`.
+- Labels use future option paths only for offline supervision and scoring, not as model inputs.
+
+Apr/May 2026 OOS option-policy results:
+
+| Policy | Trades | WR | PF | PnL | Max DD | Avg Delta |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| fixed_delta_0.60_hard | 105 | 51.4% | 1.885 | +25,226 | -3,354 | 0.603 |
+| validation_best_delta_0.70_hard | 105 | 56.2% | 2.033 | +28,115 | -3,548 | 0.702 |
+| learned_delta_regression_all_hard | 105 | 53.3% | 1.889 | +26,223 | -3,548 | 0.635 |
+| learned_delta_ranker_all_hard | 105 | 55.2% | 1.965 | +27,145 | -3,548 | 0.686 |
+| supervised_entry_strike_skip_hard | 46 | 58.7% | 2.235 | +19,472 | -2,389 | 0.642 |
+| supervised_entry_strike_learned_exit | 46 | 58.7% | 2.489 | +23,381 | -2,389 | 0.642 |
+| oracle_best_delta_hard | 105 | 56.2% | 5.053 | +69,480 | -1,703 | 0.548 |
+| oracle_best_delta_oracle_exit | 105 | 87.6% | 140.828 | +167,995 | -342 | 0.464 |
+
+Internal monthly walk-forward validation from 2025-05 through 2026-03 chose the simple 0.70 fixed-delta policy over learned delta selectors:
+
+| Policy | Trades | WR | PF | PnL | Max DD |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| fixed_070 | 685 | 58.0% | 2.793 | +239,857 | -5,706 |
+| jepa_huber_60 selector | 685 | 53.6% | 2.567 | +224,060 | -6,214 |
+| full_huber_100 selector | 685 | 53.1% | 2.482 | +214,810 | -6,158 |
+| full_reg_100 selector | 685 | 50.5% | 2.324 | +206,690 | -6,310 |
+| fixed_060 | 685 | 49.2% | 2.294 | +193,999 | -8,971 |
+
+Decision:
+
+- Promote `validation_best_delta_0.70_hard` as the current deployable JEPA options policy candidate.
+- Do not promote the learned delta selector yet. It can beat some baselines in diagnostics, but walk-forward validation does not justify replacing the simpler 0.70 policy.
+- Do not promote the skip-gated supervised policy. The earlier skip threshold created unstable trade filtering; the fixed-delta policy preserves the validated JEPA entry distribution.
+- The remaining gap to `oracle_best_delta_hard` is mostly per-signal delta selection, not entry timing. The oracle often uses lower deltas to reduce losses, but that choice is not yet predicted robustly from available features.
+- The `-60%` stop was selected by the fixed-exit grid using only months through 2026-03, then verified on Apr/May 2026 OOS.
+
+## OptionValueJEPA Strike And 5m Exit
+
+Report: `research_papers/JEPA/results/option_value_jepa/SUMMARY.md`
+
+Operational modules added:
+
+- `neural/jepa/train_option_value_jepa.py`
+- `neural/jepa/run_option_value_jepa.ps1`
+
+This experiment explicitly trains a neural value model over each candidate option:
+
+```text
+market state features -> market latent
+option candidate features -> option latent
+(market latent, option latent, horizon) -> predicted option value
+```
+
+It also trains a continuation-value head on compact 5m option states:
+
+```text
+current option state every 5m -> predicted future best value if we continue
+exit if predicted continuation value <= current realized value + margin
+```
+
+Latest full-pipeline data generated:
+
+- 19,558 option candidates.
+- 704,088 compact 5m option state rows.
+- State cache: `research_papers/JEPA/results/jepa_full_pipeline_option_value_walkforward/option_value_state_rows.parquet`.
+
+Full monthly walk-forward results from 2023-08 through 2026-05:
+
+| Policy | Trades | WR | PF | PnL | Max DD | Avg Hold | Avg Delta |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| fixed_delta_0.70_hard | 2100 | 74.3% | 5.761 | +1,171,610 | -5,546 | 169.3 | 0.703 |
+| fixed_delta_0.70_learned_exit_5m | 2100 | 75.1% | 5.398 | +1,055,623 | -5,546 | 155.8 | 0.703 |
+| option_value_hold180_select_hard | 2100 | 65.8% | 4.414 | +1,199,159 | -5,546 | 159.3 | 0.572 |
+| option_value_rule_select_hard | 2100 | 66.0% | 4.415 | +1,187,154 | -5,546 | 159.8 | 0.578 |
+| option_value_best_select_hard | 2100 | 51.8% | 2.937 | +1,106,884 | -8,180 | 143.3 | 0.399 |
+| option_value_best_select_learned_exit_5m | 2100 | 52.9% | 2.829 | +1,028,827 | -8,769 | 133.2 | 0.399 |
+| oracle_best_delta_hard | 2100 | 74.5% | 13.993 | +2,084,499 | -2,093 | 155.1 | 0.531 |
+| oracle_best_delta_oracle_exit | 2100 | 95.9% | 643.432 | +4,256,509 | -342 | 114.6 | 0.387 |
+
+Interpretation:
+
+- OptionValueJEPA does learn strike/delta information: `option_value_hold180_select_hard` slightly beats fixed 0.70 on full-WF PnL (+27,549) while using lower average delta.
+- It does not beat fixed 0.70 on robustness: PF falls from 5.761 to 4.414 and WR falls from 74.3% to 65.8%.
+- The 5m learned-exit head is not ready. On fixed 0.70, it raises WR slightly but cuts PnL from +1,171,610 to +1,055,623 and lowers PF.
+- Current best deployable policy remains fixed 0.70 with `-60%/+250%/180m` if the priority is PF/WR robustness. `option_value_hold180_select_hard` is the current research candidate if the priority is maximizing raw PnL, but it should not replace fixed 0.70 without a stricter rolling promotion gate.
+- Do not promote `option_value_*_learned_exit_5m` until it beats the hard-exit version on rolling validation.
+
+## GBT+JEPA 180m Continuation Exit Walk-Forward
+
+Report: `research_papers/JEPA/results/jepa_full_pipeline_180m_continuation_exit_wf/SUMMARY.md`
+
+Operational module added:
+
+- `neural/jepa/walkforward_jepa_180m_continuation_exit.py`
+
+This is the direct test of whether the `base_jepa` 180m spot/proxy strategy should learn to exit before 180m. It builds a trade-state dataset, not just an entry dataset:
+
+```text
+entry state: base + xjepa_* features, base_jepa probability, direction, confidence
+current 5m state: current price return, current PnL, MFE/MAE, drawdown from peak,
+                  time remaining, JEPA probability change, current/entry/delta feature values
+labels only: exit_now_value, continue_value, terminal_value
+```
+
+The learned model predicts continuation edge, then a monthly walk-forward validation chooses the exit margin from past months only. Apr/May 2026 are never used to select the margin for April, and May can only use months known before May.
+
+Dataset:
+
+- 2,794 selected `base_jepa` 180m trades from 2022 onward.
+- 100,584 5m trade-state rows.
+- 689 numeric continuation features.
+- Test months: 202604 and 202605.
+
+Chronological Apr/May 2026 result:
+
+| Policy | Trades | WR | PF | PnL | Max DD | Avg Hold |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| fixed_180m | 105 | 68.6% | 1.945 | +9,132 | -2,093 | 180.0 |
+| pooled_continue_edge_l1 | 105 | 68.6% | 1.945 | +9,132 | -2,093 | 180.0 |
+| pooled_continue_edge_q75 | 105 | 70.5% | 1.901 | +8,679 | -2,093 | 175.9 |
+| per_ticker_continue_edge_l1 | 105 | 68.6% | 1.799 | +7,357 | -2,033 | 149.7 |
+| oracle_exit | 105 | 90.5% | 44.155 | +27,428 | -215 | 110.0 |
+
+Decision:
+
+- Do not promote learned exits for GBT+JEPA 180m.
+- `pooled_continue_edge_l1` effectively learned to hold to 180m, so it adds no value.
+- `pooled_continue_edge_q75` improved win rate but lowered PF and PnL.
+- `per_ticker_continue_edge_l1` lowered drawdown slightly but gave up too much PnL and PF.
+- The oracle confirms there is exit-timing ceiling, but the currently learnable state model does not capture it robustly enough.
+
+## Excess-Vs-Fixed 0DTE Strike Selector
+
+Report: `research_papers/JEPA/results/jepa_full_pipeline_excess_vs_fixed_selector/SUMMARY.md`
+
+Operational module added:
+
+- `neural/jepa/research_excess_vs_fixed_option_selector.py`
+
+This was a stricter attempt to reduce the option oracle gap. Instead of predicting absolute option payoff, the model predicts whether each candidate strike/delta beats the fixed 0.70 delta candidate for the same signal. It falls back to fixed 0.70 unless validation-selected predicted edge clears the margin.
+
+Apr/May 2026 OOS result:
+
+| Policy | Trades | WR | PF | PnL | Max DD | Avg Delta |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| fixed_delta_0.70_hard | 105 | 42.9% | 1.725 | +20,719 | -5,095 | 0.702 |
+| excess_vs_fixed_selector | 105 | 39.0% | 1.717 | +18,748 | -5,614 | 0.651 |
+| oracle_best_delta_hard | 105 | 42.9% | 4.092 | +54,238 | -1,965 | 0.513 |
+
+Decision: reject this selector. It slightly improved SPX PF but gave up too much SPX PnL and did not help QQQ/SPY enough. Fixed 0.70 remains the robust 0DTE strike policy.
+
+## Fixed 0.70 Exit Grid
+
+Report: `research_papers/JEPA/results/jepa_full_pipeline_fixed_delta_exit_grid/SUMMARY.md`
+
+Operational module added:
+
+- `neural/jepa/research_fixed_delta_exit_grid.py`
+
+This test keeps the same `base_jepa` entries and fixed 0.70 delta strike, then changes only the option exit contract using cached 5m option paths. The exit config was selected only from pre-OOS months ending 2026-03.
+
+Selected config:
+
+```text
+hard stop -60%
+take profit +250%
+max hold 180m
+```
+
+Result:
+
+| Scope | Trades | WR | PF | PnL | Max DD | Min Trades/Ticker-Month |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Meta-train old -35/+250 | 1,995 | 58.9% | 3.098 | +773,131 | -9,193 | 18 |
+| Meta-train selected -60/+250 | 1,995 | 75.2% | 6.224 | +1,143,494 | -8,249 | 18 |
+| Apr/May old -35/+250 | 105 | 42.9% | 1.725 | +20,719 | -4,343 | 17 |
+| Apr/May selected -60/+250 | 105 | 56.2% | 2.033 | +28,115 | -3,982 | 17 |
+
+Decision: promote the exit contract change inside the isolated JEPA pipeline. This is not a lookahead model improvement; it is an execution-contract improvement selected on months before Apr/May and verified OOS.
+
+## Leakage and OOS Audit
+
+Audit date: 2026-06-01.
+
+Reviewed `neural/jepa/run_pipeline.ps1` and the scripts it calls for lookahead bias, data snooping, survivorship bias, and overfitting risk.
+
+Findings:
+
+- No direct lookahead feature leakage was found in the promoted `base_jepa` 180m model or the fixed 0.70 option contract path.
+- The actual parquets used by the full pipeline split cleanly: train rows end at `20260331`; OOS rows start at `20260401`.
+- Saved `base`, `jepa_only`, and `base_jepa` 180m model artifacts contain no `target`, `future_*`, `time_to_*`, `max_move`, `oracle_*`, or option-outcome columns in their feature lists.
+- `candidate_labels.parquet` correctly contains future option outcomes because it is a label/backtest table, but the option policy and OptionValueJEPA feature sets exclude those outcome columns.
+- The JEPA feature append path uses only current/past context. The lagged-prediction error features compare old JEPA predictions against the now-observed current state, which is live-safe.
+- The 0DTE fixed exit grid selects the promoted stop/TP from meta-train months ending `202603`, then reports Apr/May 2026 OOS separately.
+
+Caveats:
+
+- Step 4B and the visualizer "All" reports include in-sample/model-history months before `20260401`; they are reporting artifacts, not promotion evidence.
+- Apr/May 2026 has now been inspected repeatedly during research. Mechanically it is OOS in the scripts, but final production claims still need a locked future holdout or a pre-registered rolling promotion rule.
+- The global OptionValueJEPA walk-forward `exit_margin=-0.30` should not be treated as clean if it was chosen after inspecting all folds. Learned exits are not promoted.
+- Survivorship bias is low for SPX/SPY/QQQ because the universe is fixed index/ETF instruments, but there is still instrument-selection bias and possible missing-data availability bias from skipped dates.
+
+Conclusion: the current script implementation passes the direct lookahead audit for the promoted `base_jepa` + fixed 0.70 0DTE candidate. The remaining risk is mostly research-process data snooping, not feature-level leakage.
+
+## Conclusion
+
+Target/stop JEPA augmentation did not add enough value, but the separate `base+JEPA 180m` direction model did.
+
+- Do not promote the old `tabular_v1`, `alpha_v2`, `alpha_v2_topk8`, or `xinput_v3` target/stop GBT-augmentation results.
+- Do promote `base_jepa` 180m to the next integration phase as a standalone, fixed-hold 180m entry candidate.
+- For 0DTE options, promote `base_jepa` 180m entries with fixed 0.70 delta and the selected `-60%/+250%/180m` exit as the first RL-replacement candidate.
+- Keep `OptionValueJEPA` as the next strike-selection research branch because it reduced the PnL gap to oracle, but require rolling validation before replacing fixed 0.70.
+- Do not promote the excess-vs-fixed strike selector; it failed Apr/May OOS against fixed 0.70.
+- Keep GBT+JEPA 180m exits fixed at 180m for now. The learned continuation-exit experiment failed the promotion gate.
+- Do not treat `jepa_only` as the replacement. The winning model is `base_jepa`: base market features plus JEPA features.
+- Do not average current GBT target/stop probabilities with JEPA 180m probabilities. They answer different labels.
+- Keep the current GBT/RL pipeline intact until the JEPA 180m standalone step is integrated and passes repeated OOS checks.
+
+Current accepted candidate:
+
+- Model artifacts: `neural/models/jepa/jepa_180m_frozen_march/base_jepa/`
+- Inference: `neural/jepa/jepa_180m_signal.py`
+- Backtest: `neural/jepa/backtest_jepa_180m.py`
+- Runner: `neural/jepa/run_jepa_180m_standalone.ps1`
+- Integration plan: `neural/jepa/PLAN.md`

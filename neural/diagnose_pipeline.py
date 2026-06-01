@@ -33,14 +33,16 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, '.')
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
 warnings.filterwarnings('ignore')
 
 from rl.config import RL_CONFIG
 
 try:
-    from neural.signal_policy import is_actionable_prediction
+    from neural.signal_policy import is_actionable_prediction, get_independent_signals
 except ModuleNotFoundError:
-    from signal_policy import is_actionable_prediction
+    from signal_policy import is_actionable_prediction, get_independent_signals
 
 # ═══════════════════════════════════════════════════════════════
 # COLORS
@@ -325,7 +327,7 @@ def check_mlp_edge(df, feature_cols, model_path, norm_path,
             return (arr + 1).astype(int)
         return arr.astype(int)
 
-    def _infer(sub_df):
+    def _infer(sub_df, date_str=None):
         """Return (probs [N,3], targets [N]) for a dataframe."""
         raw = np.zeros((len(sub_df), len(feature_cols)), dtype=np.float32)
         for j, col in enumerate(feature_cols):
@@ -336,6 +338,9 @@ def check_mlp_edge(df, feature_cols, model_path, norm_path,
 
         if is_gbt:
             probs = np.zeros((len(sub_df), 3), dtype=np.float32)
+            
+            is_up_day = (sub_df["gap_direction"] > 0).values if "gap_direction" in sub_df.columns else np.ones(len(sub_df), dtype=bool)
+
             if is_ticker_specific and ticker_models:
                 for ticker in sub_df['ticker'].unique():
                     t_mask = sub_df['ticker'] == ticker
@@ -343,11 +348,11 @@ def check_mlp_edge(df, feature_cols, model_path, norm_path,
                     if len(idx) == 0:
                         continue
                     if ticker in ticker_models:
-                        probs[idx] = ticker_models[ticker].predict_proba(raw[idx])
+                        probs[idx] = ticker_models[ticker].predict_proba(raw[idx], date=date_str, is_up_day=is_up_day[idx])
                     else:
-                        probs[idx] = ensemble.predict_proba(raw[idx])
+                        probs[idx] = ensemble.predict_proba(raw[idx], date=date_str, is_up_day=is_up_day[idx])
             else:
-                probs = ensemble.predict_proba(raw)
+                probs = ensemble.predict_proba(raw, date=date_str, is_up_day=is_up_day)
             return probs, targets
         else:
             feats = normalizer.transform(raw)
@@ -359,16 +364,8 @@ def check_mlp_edge(df, feature_cols, model_path, norm_path,
                     all_probs.append(torch.softmax(logits, -1).cpu().numpy())
             return np.concatenate(all_probs), targets
 
-    def _policy_mask(preds: np.ndarray, probs: np.ndarray, base_threshold: float) -> np.ndarray:
-        confidences = probs[np.arange(len(preds)), preds]
-        return np.fromiter(
-            (
-                is_actionable_prediction(int(pred), float(conf), base_confidence=base_threshold)
-                for pred, conf in zip(preds, confidences)
-            ),
-            dtype=bool,
-            count=len(preds),
-        )
+    def _policy_mask(preds: np.ndarray) -> np.ndarray:
+        return preds != 1  # Anything not HOLD is a signal
 
     base_threshold = round(float(RL_CONFIG["min_confidence"]), 3)
     THRESHOLDS = [round(base_threshold + step, 3) for step in (0.00, 0.05, 0.10)]
@@ -376,8 +373,8 @@ def check_mlp_edge(df, feature_cols, model_path, norm_path,
 
     # ── A) Full-data reference (in-sample + OOS mixed) ──
     print(f"\n  {C.BOLD}A) Full-data evaluation (in-sample reference only — not a valid edge check):{C.END}")
-    all_probs, all_targets = _infer(df)
-    preds_all = np.argmax(all_probs, axis=1)
+    all_probs, all_targets = _infer(df, date_str=None)
+    preds_all, _ = get_independent_signals(all_probs, base_confidence=base_threshold)
 
     dm = {0: 'SHORT', 1: 'HOLD', 2: 'LONG'}
     for cls in [0, 1, 2]:
@@ -387,9 +384,10 @@ def check_mlp_edge(df, feature_cols, model_path, norm_path,
     wr_is = 0.0
     print(f"    Policy thresholds: LONG>={base_threshold:.0%}, SHORT uses the configured offset")
     for thr in THRESHOLDS:
-        sig = _policy_mask(preds_all, all_probs, thr)
+        preds_thr, _ = get_independent_signals(all_probs, base_confidence=thr)
+        sig = preds_thr != 1
         if sig.sum() > 0:
-            correct = (preds_all[sig] == all_targets[sig]).sum()
+            correct = (preds_thr[sig] == all_targets[sig]).sum()
             w = correct / sig.sum()
             pf = correct / max(sig.sum() - correct, 1)
             print(f"    In-sample @{thr:.0%}: {sig.sum():,} trades | WR={w:.1%} | PF={pf:.2f}")
@@ -409,11 +407,11 @@ def check_mlp_edge(df, feature_cols, model_path, norm_path,
     for i, (tr_df, ts_df, test_start) in enumerate(raw_splits):
         win_num = i + 1
 
-        # FIX BUG-B: get dates from _date column which we kept in the df
         d_str = test_start.strftime('%Y-%m')
+        date_query = test_start.strftime('%Y%m%d')
 
-        probs, targets = _infer(ts_df)
-        preds  = np.argmax(probs, axis=1)
+        probs, targets = _infer(ts_df, date_str=date_query)
+        # We don't need a single argmax anymore. The predictions will be evaluated inside the loop per threshold.
 
         # Regime of this test window (from actual labels)
         n_tgt_short = int((targets == 0).sum())
@@ -426,7 +424,8 @@ def check_mlp_edge(df, feature_cols, model_path, norm_path,
         # Evaluate at each threshold
         thr_metrics = {}
         for thr in THRESHOLDS:
-            sig_mask  = _policy_mask(preds, probs, thr)
+            preds, _ = get_independent_signals(probs, base_confidence=thr)
+            sig_mask  = preds != 1
             n_sig     = int(sig_mask.sum())
             if n_sig > 0:
                 correct   = (preds[sig_mask] == targets[sig_mask])

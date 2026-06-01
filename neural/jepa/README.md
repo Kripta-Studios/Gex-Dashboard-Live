@@ -1,0 +1,319 @@
+# JEPA Pipeline
+
+This directory contains the isolated JEPA pipeline used for research validation
+and for the current live-production release. It does not modify the legacy
+`neural/run_pipeline.ps1` PPO/RL flow.
+
+## Current Production Release
+
+The live release produced on 2026-06-01 uses:
+
+```text
+Feature model:
+  neural/models/jepa/xinput_v3_production/
+
+Signal model:
+  neural/models/jepa/jepa_production_final_180m/base_jepa/{SPX,QQQ,SPY}.joblib
+
+Execution contract:
+  base_jepa 180m direction signal
+  fixed absolute delta 0.70 0DTE option
+  hard stop -60%
+  take profit +250%
+  max hold 180m
+  cooldown 180m per ticker
+```
+
+The fixed 0.70 option policy has no learned model artifact. It is deterministic
+strike selection from the live 0DTE option chain.
+
+## Fixed 0.70 Option Policy
+
+The fixed-delta 0DTE leg is not trained like JEPA or LightGBM. It is a validated
+execution rule:
+
+```text
+if base_jepa says LONG:
+  choose the 0DTE call with absolute delta closest to 0.70
+
+if base_jepa says SHORT:
+  choose the 0DTE put with absolute delta closest to 0.70
+```
+
+The research scripts trained and tested learned option selectors, but those did
+not beat the simpler fixed 0.70 rule robustly. The promoted option contract was
+selected by backtesting candidate exits on pre-OOS months, then checking
+April/May 2026 OOS:
+
+```text
+strike selection: closest abs(delta) to 0.70
+hard stop: -60%
+take profit: +250%
+max hold: 180m
+```
+
+So the production artifacts are only:
+
+- XInputJEPA feature model;
+- `base_jepa` 180m direction model.
+
+There is no separate `fixed_delta_0.70` model file to upload.
+
+The production run used `TrainEndDate=20261230`, which means "include every row
+currently available up to that cutoff". The actual source parquet available for
+this release ended at `20260529`.
+
+## Production Training
+
+Run the daily release trainer from the project root:
+
+```powershell
+.\neural\jepa\run_pipeline.ps1 -ProductionTrain
+```
+
+This command first calls `neural/collect_training_data_spx_qqq.py`. The collector
+is incremental:
+
+- if the output parquet does not exist, it builds it from scratch;
+- if `neural/collect_training_data_spx_qqq.py` is newer than the parquet, it
+  rebuilds from scratch because feature logic may have changed;
+- if the collector script is older than the parquet, it reads the parquet max
+  date and appends only new dates up to `--end 20261230`.
+
+If data was already collected and you only want to retrain from the existing
+parquet:
+
+```powershell
+.\neural\jepa\run_pipeline.ps1 -ProductionTrain -SkipCollect
+```
+
+If you need to force a full data rebuild manually:
+
+```powershell
+python .\neural\collect_training_data_spx_qqq.py `
+  --start 20220801 `
+  --end 20261230 `
+  --workers 20 `
+  --tickers SPX QQQ SPY `
+  --output training_data_spx_qqq_spy.parquet `
+  --force-rebuild
+
+.\neural\jepa\run_pipeline.ps1 -ProductionTrain -SkipCollect
+```
+
+If you want the old non-incremental collector behavior without changing the
+script timestamp rule:
+
+```powershell
+python .\neural\collect_training_data_spx_qqq.py `
+  --start 20220801 `
+  --end 20261230 `
+  --workers 20 `
+  --tickers SPX QQQ SPY `
+  --output training_data_spx_qqq_spy.parquet `
+  --no-incremental
+```
+
+`-ProductionTrain` changes the pipeline contract:
+
+- sets `Experiment=jepa_production_final`;
+- sets `JepaFeatureExperiment=xinput_v3_production`;
+- sets `Jepa180Experiment=jepa_production_final_180m`;
+- forces `TrainEndDate=20261230`;
+- trains the XInputJEPA feature model on all eligible available data;
+- appends live-safe `xjepa_*` features to the production parquet;
+- trains final per-ticker LightGBM 180m artifacts for `base`, `jepa_only`, and `base_jepa`;
+- skips OptionValueJEPA, option-policy research, standalone OOS backtests, and visualizer reports.
+
+The production summary is written to:
+
+```text
+research_papers/JEPA/results/jepa_production_final_180m/SUMMARY.md
+```
+
+Those production metrics are model-history diagnostics only. They are not OOS
+validation, because the final artifacts are trained on all eligible rows.
+
+## Research OOS Pipeline
+
+Use the research pipeline when you want validation, reports, option-policy
+research, and visualizer output. For the canonical April/May 2026 OOS split:
+
+```powershell
+.\neural\jepa\run_pipeline.ps1 `
+  -SkipCollect `
+  -Experiment jepa_oos_apr_may_2026 `
+  -JepaFeatureExperiment xinput_v3_oos_apr_may_2026 `
+  -Jepa180Experiment jepa_oos_apr_may_2026_180m `
+  -TrainEndDate 20260331 `
+  -TestStartDate 20260401
+```
+
+That runs the full research stack: JEPA training, feature append, 180m
+base/base_jepa/jepa_only OOS backtests, 0DTE option-policy research,
+OptionValueJEPA walk-forward, fixed-exit grid, and visualizer exports. It can
+take much longer than production training.
+
+For a faster OOS check of only the 180m `base_jepa` signal, skip the option
+research stages:
+
+```powershell
+.\neural\jepa\run_pipeline.ps1 `
+  -SkipCollect `
+  -Experiment jepa_oos_180m_only `
+  -JepaFeatureExperiment xinput_v3_oos_180m_only `
+  -Jepa180Experiment jepa_oos_180m_only_180m `
+  -TrainEndDate 20260331 `
+  -TestStartDate 20260401 `
+  -SkipOptionPolicy `
+  -SkipOptionValueSplit `
+  -SkipWalkForward `
+  -SkipExitGrid `
+  -SkipVisualizer
+```
+
+For a custom future OOS split, move the cutoff dates forward explicitly:
+
+```powershell
+.\neural\jepa\run_pipeline.ps1 `
+  -SkipCollect `
+  -Experiment jepa_oos_jun_2026 `
+  -JepaFeatureExperiment xinput_v3_oos_jun_2026 `
+  -Jepa180Experiment jepa_oos_jun_2026_180m `
+  -TrainEndDate 20260529 `
+  -TestStartDate 20260601 `
+  -SkipOptionPolicy `
+  -SkipOptionValueSplit `
+  -SkipWalkForward `
+  -SkipExitGrid `
+  -SkipVisualizer
+```
+
+The OOS contract is:
+
+```text
+train rows: date <= TrainEndDate
+OOS rows:  date >= TestStartDate
+```
+
+The OOS evidence that justified promotion is the March-cutoff research run, not
+the production-final model-history diagnostics.
+
+## What The Models Do
+
+`train_xinput_jepa.py` trains the explicit exogenous-input JEPA:
+
+- state encoder: current market state, Greeks, exposures, IV/VIX, support/resistance context;
+- input encoder: recent changes in Greeks/exposures and related dynamics;
+- predictor: forecasts future latent states across 5m to 180m horizons;
+- exported features: `xjepa_z_*`, `xjepa_u_*`, prediction dispersion, lagged prediction errors, auxiliary direction probabilities, entropy, and context-valid flag.
+
+`train_180m_production.py` trains the production 180m LightGBM signal artifacts.
+The live bot uses only the `base_jepa` mode: base market features plus the frozen
+JEPA features.
+
+The 180m label is:
+
+```text
+spot_price(t + 180m) > spot_price(t)
+```
+
+Future columns are generated only for labels, diagnostics, and backtest outcomes.
+They are explicitly excluded from model feature lists.
+
+## Live Inference
+
+The live stack has two long-running services:
+
+```text
+services/realtime_feed.py
+  Polls ThetaData.
+  Writes raw spot/option snapshots.
+  Computes base ML features.
+  Appends xjepa_* features using xinput_v3_production.
+  Writes 1m diagnostic feature files and 5m model feature files.
+
+bots/tradingbot_wrapper_jepa.py
+  Reads rt_data/YYYYMMDD/ml_features_{TICKER}_latest.parquet.
+  Requires xjepa_context_valid=1.
+  Runs jepa_production_final_180m/base_jepa.
+  Selects the 0DTE option closest to abs(delta)=0.70.
+  Tracks exits at -60%, +250%, 180m max hold, and EOD cleanup.
+```
+
+The bot is an alert/tracker bot. It does not place broker orders.
+
+## Deployment
+
+Source files should be deployed with git. Generated model artifacts are ignored
+by git and are uploaded separately with `push_models.ps1`.
+
+Local release flow:
+
+```powershell
+.\neural\jepa\run_pipeline.ps1 -ProductionTrain -SkipCollect
+python .\bots\tradingbot_wrapper_jepa.py --model-dir .\neural\models\jepa\jepa_production_final_180m --dry-run --force
+.\push_models.ps1 -HostAlias kripta -RemoteRoot /home/Option-Greeks-Plotting-Discord-Bot
+```
+
+`push_models.ps1` uploads only:
+
+```text
+neural/models/jepa/xinput_v3_production/
+neural/models/jepa/jepa_production_final_180m/
+```
+
+It intentionally does not upload `.py`, `.service`, or README files. Commit those
+source changes and pull them on the VPS.
+
+VPS update flow:
+
+```bash
+cd /home/Option-Greeks-Plotting-Discord-Bot
+git pull
+
+sudo cp systemd/realtime_feed.service /etc/systemd/system/realtime_feed.service
+sudo cp systemd/ai_bot.service /etc/systemd/system/ai_bot.service
+sudo systemctl daemon-reload
+sudo systemctl restart realtime_feed.service ai_bot.service
+```
+
+Required production model paths on the VPS:
+
+```text
+/home/Option-Greeks-Plotting-Discord-Bot/neural/models/jepa/xinput_v3_production/
+/home/Option-Greeks-Plotting-Discord-Bot/neural/models/jepa/jepa_production_final_180m/
+```
+
+The systemd units point to those exact directories:
+
+```text
+systemd/realtime_feed.service -> --jepa-model-dir .../xinput_v3_production
+systemd/ai_bot.service       -> --model-dir .../jepa_production_final_180m
+```
+
+Monitor live services:
+
+```bash
+journalctl -u realtime_feed.service -f
+journalctl -u ai_bot.service -f
+tail -f trades_jepa/tradingbot_jepa.log
+```
+
+## Operational Checks
+
+Before market open:
+
+- ThetaData is reachable from the VPS.
+- `rt_data/YYYYMMDD/` is being written.
+- `ml_features_SPX_latest.parquet`, `ml_features_QQQ_latest.parquet`, and `ml_features_SPY_latest.parquet` appear every 5 minutes.
+- `xjepa_context_valid` becomes `1` after 24 five-minute rows.
+- `bots/tradingbot_wrapper_jepa.py --dry-run --force` loads `jepa_production_final_180m` without errors.
+- Discord alerts arrive in dry run before relying on live alerts.
+
+## Report Interpretation
+
+Do not read `All` visualizer reports or production-final diagnostics as clean
+OOS evidence. The clean promotion evidence is the March-cutoff research pipeline
+with April/May 2026 held out. The final production release deliberately retrains
+on all available data so the live model has the freshest available state.

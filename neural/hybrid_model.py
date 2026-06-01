@@ -819,7 +819,11 @@ FEATURE_COLUMNS = [
     
     # ── Divergence (6) ──
     "gamma_0dte_vs_wk", "vanna_0dte_vs_wk", "dgex_0dte_vs_wk", 
-    "delta_0dte_vs_wk", "vega_0dte_vs_wk", "vomma_0dte_vs_wk",
+    "delta_0dte_vs_wk", "charm_0dte_vs_wk", "zomma_0dte_vs_wk",
+    "vega_0dte_vs_wk", "vomma_0dte_vs_wk",
+
+    # 📊 Volatility Context Features (3) 📊
+    "vix_5d_mean", "vix_5d_std", "atr_5d_norm",
     
     # ── IB & Fibs (14) ──
     "price_vs_ib_high", "price_vs_ib_low", "ib_range_pct", "near_ib_high", 
@@ -831,7 +835,7 @@ FEATURE_COLUMNS = [
     "atm_iv", "iv_zscore", "iv_percentile", "vix_spot", "vix_gamma", "vix_regime",
     
     # ── Technicals (2) ──
-    "rsi", "vol_relative",
+    "rsi",
     
     # ── Ratios (6) ──
     "gamma_vanna_ratio", "dgex_gamma_ratio", "charm_vanna_ratio", 
@@ -900,6 +904,19 @@ FEATURE_COLUMNS = [
     "speed_x_near_ib_high", "speed_x_near_ib_low",
     "charm_accel_x_near_ib_high", "charm_accel_x_near_ib_low",
     "wonham_trend_prob",
+
+    # ── S/R Price Action (7) ──
+    "nearest_level_dist", "level_cluster_density", 
+    "momentum_5m_bps", "rejection_bullish", "rejection_bearish",
+    "trend_grind_up", "trend_flush_down",
+
+    # ── Explicit S/R state from the collector (8) ──
+    # These are current-row support/resistance flags. Do not add max_move,
+    # time_to_target or time_to_stop here; those are future outcome fields.
+    "bouncing_from_support", "rejecting_resistance",
+    "wall_at_fib", "wall_at_ib", "is_touching_fib",
+    "is_touching_max_gamma", "is_touching_min_gamma",
+    "is_touching_max_dgex",
 
     # ── Level identity (2) ──
     # nearest_level_id: 0=ib_high, 1=ib_low, 2=fib_127_up, 3=fib_161_up,

@@ -5,6 +5,7 @@ Param(
   [switch]$rl,  # Paso 2 en adelante (Episode Index + Preprocess + RL)
   [switch]$tr,  # Paso 4 en adelante (RL)
   [switch]$a,   # Paso 4.5 en adelante (Diagnosis)
+  [switch]$bt_gbt, # Paso 6 en adelante (Backtest GBT solo + RL + Visualizacion)
   [switch]$bt,  # Paso 7 en adelante (Backtest GBT+RL)
   [switch]$v,   # Paso 8 en adelante (Visualización)
   [switch]$u    # Modo Update: espera a las 22:05h, actualiza ThetaData y empieza en Paso 0
@@ -86,39 +87,152 @@ Write-Host "[CONFIG] Base confidence cargada desde RL_CONFIG: $BaseConfidenceArg
 # hindsight-fit. Promoted filters are broad time/IB-context guards.
 # Fecha más reciente en training_data_spx_qqq_spy.parquet: 20260518
 # Fecha más reciente en training_data_TRAIN.parquet: 20260430
-$TrainingDataPath = Join-ProjectPath "training_data\training_data_spx_qqq_spy.parquet"
 $BacktestDataPath = Join-ProjectPath "training_data\training_data_spx_qqq_spy.parquet"
-$RlEpisodeIndexPath = Join-ProjectPath "rl_data\episode_index.parquet"
-$RlOptionsCachePath = Join-ProjectPath "rl_data\rl_options_cache_chunks"
-$RlModelsDir = Join-ProjectPath "rl_models"
-$RlBestModelPath = Join-ProjectPath "rl_models\best_rl_agent.pt"
-$GbtModelPath = Join-NeuralPath "models\codex_exp\gbt_12m_econ_pf150_minsel10_avail.joblib"
-$GbtNormalizerPath = Join-NeuralPath "models\codex_exp\gbt_12m_econ_pf150_minsel10_avail_norm.npz"
+$TrainingDataMarchPath = Join-ProjectPath "training_data\training_data_spx_qqq_spy_march_2026.parquet"
+$TrainingDataPath = $TrainingDataMarchPath
+$RlEpisodeIndexPath = Join-ProjectPath "rl_data\episode_index_march2026.parquet"
+$RlOptionsCachePath = Join-ProjectPath "rl_data\rl_options_cache_chunks_march2026_tickersig"
+$RlModelsDir = Join-ProjectPath "rl_models\march2026_oos_v12_chainctx_oracle_holdexit"
+$RlBestModelPath = Join-ProjectPath "rl_models\march2026_oos_v12_chainctx_oracle_holdexit\best_rl_agent.pt"
+# Codex research candidate, 2026-05-30 03:38.
+# Status: GBT true OOS passed. Default training data is the March-2026 cutoff;
+# backtests still run against the full parquet through May 2026.
+#
+# Structural fixes already in code:
+#   - labels and economic scorer use exact OHLC target/stop mechanics;
+#   - model features include current-row S/R flags, not future outcome fields;
+#   - selection/backtest use broad nearest_level_dist when available, matching
+#     IB/fib/Greek-level support/resistance labels;
+#   - strict-WF top-N/min-trades are explicit env vars.
+#
+# Current GBT command parameters reproduced below in Paso 1:
+#   --train-months 12 --test-months 1 --ensemble 3 --top-n-windows 10
+#   --hold-ratio 2.0 --min-window 5 --class-weight balanced
+#   --min-pf-floor 1.20 --selection-metric economic
+#   --min-selection-trades 12 --selection-base-confidence 0.450
+#   --min-selection-win-rate 0.45 --selection-cooldown 8
+#   --sample-weight-decay-days SPX=0, QQQ=30, SPY=30
+#   --min-entry-minute 580 --min-short-entry-minute 615
+#   --min-short-price-vs-ib-high -150.0
+#   SPX target-long/short 0.010 stop 0.0025
+#   QQQ target-long/short 0.006 label stop 0.0025, execution stop 0.0030
+#   SPY target-long/short 0.006 stop 0.0035
+#   SPX objective multiclass; QQQ/SPY objective binary_ovr.
+#
+# Strict-WF deployment policy:
+#   Global: MIN_AVG_PF=1.25, MIN_VALIDATION_TRADES=12, TOP_N=3, RECENCY_POWER=2.0
+#   QQQ override: MIN_AVG_PF=1.25, TOP_N=2, RECENCY_POWER=0.5
+#   SPY deployment context: DEPLOYMENT_TICKER_MAX_VIX_SPOT=SPY:0.4108
+#
+# True OOS backtest log:
+#   logs\codex_bt_combined_march2026_true_oos_qqq_rec05_20260530_0925.txt
+# Result: QQQ 1295 trades WR 48.8 PF 1.233; SPX 1291 trades WR 47.6 PF 1.370;
+# SPY 959 trades WR 53.4 PF 1.333; all positive in Apr/May 2026.
+# Home-run/duration audit log:
+#   logs\codex_bt_gbt_full_home_run_profile_fixed180_20260530_1555.txt
+# Result: 3545 trades, WR 49.6, PF 1.31, avg hold 95.4m, median hold 85.0m,
+# winner median hold 135.0m, 59.3% of trades >=60m and 40.6% >=120m.
+$GbtModelPath = Join-NeuralPath "models\codex_exp\gbt_candidate_top2_rec1_march2026.joblib"
+$GbtNormalizerPath = Join-NeuralPath "models\codex_exp\gbt_candidate_top2_rec1_march2026_norm.npz"
+$GbtModelSize = "small"
 $GbtTrainMonths = 12
 $GbtTestMonths = 1
+$GbtTrainMaxTimeMinutes = 390
 $GbtEnsemble = 3
 $GbtTopNWindows = 10
-$GbtHoldRatioArg = "0.5"
+$GbtHoldRatioArg = "2.0"
 $GbtMinWindow = 5
 $GbtClassWeight = "balanced"
-$GbtMinPfFloorArg = "1.50"
+$GbtMinPfFloorArg = "1.20"
 $GbtSelectionMetric = "economic"
-$GbtMinSelectionTrades = 10
+$GbtMinSelectionTrades = 12
+$GbtMinSelectionWinRateArg = "0.45"
+$GbtSelectionCooldownMinutes = 8
+$GbtSampleWeightDecayDaysArg = "30"
+$GbtSampleWeightDecayDaysByTicker = @{
+  "SPX" = "0"
+  "QQQ" = "30"
+  "SPY" = "30"
+}
+$GbtObjectiveModeByTicker = @{
+  "SPX" = "multiclass"
+  "QQQ" = "binary_ovr"
+  "SPY" = "binary_ovr"
+}
+$GbtCalibrateBinaryOvr = $false
+$GbtStrictMinValidationTrades = "12"
+$GbtStrictMinAvgPfArg = "1.25"
+$GbtStrictTopNWindows = "3"
+$GbtStrictRecencyPowerArg = "2.0"
+$GbtTickerStrictMinAvgPf = "QQQ:1.25"
+$GbtTickerStrictTopNWindows = "QQQ:2"
+$GbtTickerStrictRecencyPowerArg = "QQQ:0.5"
+$DeploymentTickerMaxVixSpot = "SPY:0.4108"
 
-# This is an explicit validated deployment override, not a hidden drift from RL_CONFIG.
-# It is passed consistently to GBT selection, episode extraction, preprocess and backtests.
-$BacktestBaseConfidenceArg = "0.450"
-$GbtSelectionBaseConfidenceArg = $BacktestBaseConfidenceArg
+# Train-time selection and deploy-time threshold are separate on purpose.
+# 0.400 is the current diagnostic deployment candidate; do not treat it as a
+# clean final validation result until the next regenerated-data experiment passes.
+$GbtSelectionBaseConfidenceArg = "0.450"
+$BacktestBaseConfidenceArg = "0.400"
 $BacktestCooldownMinutes = 8
+$BacktestMaxTimeMinutes = 180
 $BacktestTargetLongArg = "0.010"
 $BacktestTargetShortArg = "0.010"
 $BacktestStopArg = "0.0025"
+$BacktestSpxTargetArg = "0.010"
+$BacktestEtfTargetArg = "0.006"
+$BacktestSpxStopArg = "0.0025"
+$BacktestEtfStopArg = "0.0030"
+$BacktestQqqTargetArg = "0.006"
+$BacktestSpyTargetArg = "0.006"
+$BacktestQqqStopArg = "0.0030"
+$BacktestSpyStopArg = "0.0035"
 $BacktestRiskCapitalArg = "1000.0"
+$RlReentryLockMinutes = 0
+$RlTotalUpdates = 220
+$RlWorkers = 32
+$RlUseEntrySkipAction = $false
+$RlForceHoldExitTraining = $true
+$RlStrikeOraclePretrainSamples = 6000
+$RlStrikeOraclePretrainEpochs = 3
+$RlStrikeOraclePretrainLrArg = "0.0001"
+# RL diagnostic-only backtest overrides. Keep disabled for the promoted
+# pipeline; set them explicitly when reproducing strike/exit ablations.
+# Last diagnostic commands/results are documented in SUMMARY.md.
+$RlDiagnosticForceStrikeBucket = ""
+$RlDiagnosticForceTickerStrikeBuckets = ""
+$RlDiagnosticExitPolicy = "hold"
+$RlDiagnosticMaxLossPctArg = ""
+$RlDiagnosticMaxProfitPctArg = ""
 $BacktestTickers = @("SPX", "QQQ", "SPY")
+$GbtTargetLongByTicker = @{
+  "SPX" = "0.010"
+  "QQQ" = "0.006"
+  "SPY" = "0.006"
+}
+$GbtTargetShortByTicker = @{
+  "SPX" = "0.010"
+  "QQQ" = "0.006"
+  "SPY" = "0.006"
+}
+$GbtStopByTicker = @{
+  "SPX" = "0.0025"
+  "QQQ" = "0.0025"
+  "SPY" = "0.0035"
+}
 $MinEntryMinute = 580
 $MinShortEntryMinute = 615
 $MinShortPriceVsIbHighArg = "-150.0"
 $MinTradesPerWeekGate = 6
+$env:GBT_MIN_STRICT_WF_AVG_PF = $GbtStrictMinAvgPfArg
+$env:GBT_MIN_STRICT_WF_VALIDATION_TRADES = $GbtStrictMinValidationTrades
+$env:GBT_STRICT_WF_TOP_N = $GbtStrictTopNWindows
+$env:GBT_STRICT_WF_RECENCY_POWER = $GbtStrictRecencyPowerArg
+$env:GBT_TICKER_MIN_STRICT_WF_AVG_PF = $GbtTickerStrictMinAvgPf
+$env:GBT_TICKER_STRICT_WF_TOP_N = $GbtTickerStrictTopNWindows
+$env:GBT_TICKER_STRICT_WF_RECENCY_POWER = $GbtTickerStrictRecencyPowerArg
+Remove-Item Env:\DEPLOYMENT_TICKER_MIN_PRICE_VS_IB_HIGH -ErrorAction SilentlyContinue
+$env:DEPLOYMENT_TICKER_MAX_VIX_SPOT = $DeploymentTickerMaxVixSpot
 Write-Host "`n=== PIPELINE CONFIGURATION & RUN VARIABLES ===" -ForegroundColor Green
 Write-Host "Parameters / Switches:"
 Write-Host "  -gbt                            : $gbt"
@@ -132,6 +246,7 @@ Write-Host "Directories & Paths:"
 Write-Host "  NeuralRoot                      : $NeuralRoot"
 Write-Host "  ProjectRoot                     : $ProjectRoot"
 Write-Host "  TrainingDataPath                : $TrainingDataPath"
+Write-Host "  TrainingDataMarchPath           : $TrainingDataMarchPath"
 Write-Host "  BacktestDataPath                : $BacktestDataPath"
 Write-Host "  RlEpisodeIndexPath              : $RlEpisodeIndexPath"
 Write-Host "  RlOptionsCachePath              : $RlOptionsCachePath"
@@ -140,8 +255,10 @@ Write-Host "  RlBestModelPath                 : $RlBestModelPath"
 Write-Host "  GbtModelPath                    : $GbtModelPath"
 Write-Host "  GbtNormalizerPath               : $GbtNormalizerPath"
 Write-Host "GBT Configuration:"
+Write-Host "  GbtModelSize                    : $GbtModelSize"
 Write-Host "  GbtTrainMonths                  : $GbtTrainMonths"
 Write-Host "  GbtTestMonths                   : $GbtTestMonths"
+Write-Host "  GbtTrainMaxTimeMinutes          : $GbtTrainMaxTimeMinutes"
 Write-Host "  GbtEnsemble                     : $GbtEnsemble"
 Write-Host "  GbtTopNWindows                  : $GbtTopNWindows"
 Write-Host "  GbtHoldRatioArg                 : $GbtHoldRatioArg"
@@ -150,19 +267,55 @@ Write-Host "  GbtClassWeight                  : $GbtClassWeight"
 Write-Host "  GbtMinPfFloorArg                : $GbtMinPfFloorArg"
 Write-Host "  GbtSelectionMetric              : $GbtSelectionMetric"
 Write-Host "  GbtMinSelectionTrades           : $GbtMinSelectionTrades"
+Write-Host "  GbtMinSelectionWinRateArg       : $GbtMinSelectionWinRateArg"
+Write-Host "  GbtSelectionCooldownMinutes     : $GbtSelectionCooldownMinutes"
+Write-Host "  GbtSampleWeightDecayDaysArg     : $GbtSampleWeightDecayDaysArg"
+Write-Host "  GbtSampleWeightDecayDaysByTicker: SPX=$($GbtSampleWeightDecayDaysByTicker['SPX']), QQQ=$($GbtSampleWeightDecayDaysByTicker['QQQ']), SPY=$($GbtSampleWeightDecayDaysByTicker['SPY'])"
+Write-Host "  GbtObjectiveModeByTicker        : SPX=$($GbtObjectiveModeByTicker['SPX']), QQQ=$($GbtObjectiveModeByTicker['QQQ']), SPY=$($GbtObjectiveModeByTicker['SPY'])"
+Write-Host "  GbtCalibrateBinaryOvr           : $GbtCalibrateBinaryOvr"
+Write-Host "  GbtStrictMinAvgPfArg            : $GbtStrictMinAvgPfArg"
+Write-Host "  GbtStrictMinValidationTrades    : $GbtStrictMinValidationTrades"
+Write-Host "  GbtStrictTopNWindows            : $GbtStrictTopNWindows"
+Write-Host "  GbtStrictRecencyPowerArg        : $GbtStrictRecencyPowerArg"
+Write-Host "  GbtTickerStrictMinAvgPf         : $GbtTickerStrictMinAvgPf"
+Write-Host "  GbtTickerStrictTopNWindows      : $GbtTickerStrictTopNWindows"
+Write-Host "  GbtTickerStrictRecencyPowerArg  : $GbtTickerStrictRecencyPowerArg"
 Write-Host "Backtest & Execution Parameters:"
 Write-Host "  BaseConfidence (RL_CONFIG)      : $BaseConfidenceArg"
 Write-Host "  BacktestBaseConfidenceArg       : $BacktestBaseConfidenceArg"
 Write-Host "  GbtSelectionBaseConfidenceArg   : $GbtSelectionBaseConfidenceArg"
 Write-Host "  BacktestCooldownMinutes         : $BacktestCooldownMinutes"
+Write-Host "  BacktestMaxTimeMinutes          : $BacktestMaxTimeMinutes"
 Write-Host "  BacktestTargetLongArg           : $BacktestTargetLongArg"
 Write-Host "  BacktestTargetShortArg          : $BacktestTargetShortArg"
 Write-Host "  BacktestStopArg                 : $BacktestStopArg"
+Write-Host "  BacktestSpxTargetArg            : $BacktestSpxTargetArg"
+Write-Host "  BacktestEtfTargetArg            : $BacktestEtfTargetArg"
+Write-Host "  BacktestSpxStopArg              : $BacktestSpxStopArg"
+Write-Host "  BacktestEtfStopArg              : $BacktestEtfStopArg"
+Write-Host "  BacktestQqqTargetArg            : $BacktestQqqTargetArg"
+Write-Host "  BacktestSpyTargetArg            : $BacktestSpyTargetArg"
+Write-Host "  BacktestQqqStopArg              : $BacktestQqqStopArg"
+Write-Host "  BacktestSpyStopArg              : $BacktestSpyStopArg"
 Write-Host "  BacktestRiskCapitalArg          : $BacktestRiskCapitalArg"
+Write-Host "  RlReentryLockMinutes            : $RlReentryLockMinutes"
+Write-Host "  RlTotalUpdates                  : $RlTotalUpdates"
+Write-Host "  RlWorkers                       : $RlWorkers"
+Write-Host "  RlUseEntrySkipAction            : $RlUseEntrySkipAction"
+Write-Host "  RlForceHoldExitTraining         : $RlForceHoldExitTraining"
+Write-Host "  RlStrikeOraclePretrainSamples   : $RlStrikeOraclePretrainSamples"
+Write-Host "  RlStrikeOraclePretrainEpochs    : $RlStrikeOraclePretrainEpochs"
+Write-Host "  RlStrikeOraclePretrainLrArg     : $RlStrikeOraclePretrainLrArg"
+Write-Host "  RlDiagnosticForceStrikeBucket   : $RlDiagnosticForceStrikeBucket"
+Write-Host "  RlDiagnosticForceTickerBuckets  : $RlDiagnosticForceTickerStrikeBuckets"
+Write-Host "  RlDiagnosticExitPolicy          : $RlDiagnosticExitPolicy"
+Write-Host "  RlDiagnosticMaxLossPctArg       : $RlDiagnosticMaxLossPctArg"
+Write-Host "  RlDiagnosticMaxProfitPctArg     : $RlDiagnosticMaxProfitPctArg"
 Write-Host "  BacktestTickers                 : $($BacktestTickers -join ', ')"
 Write-Host "  MinEntryMinute                  : $MinEntryMinute"
 Write-Host "  MinShortEntryMinute             : $MinShortEntryMinute"
 Write-Host "  MinShortPriceVsIbHighArg        : $MinShortPriceVsIbHighArg"
+Write-Host "  DeploymentTickerMaxVixSpot      : $DeploymentTickerMaxVixSpot"
 Write-Host "  MinTradesPerWeekGate            : $MinTradesPerWeekGate"
 Write-Host "==============================================`n" -ForegroundColor Green
 
@@ -172,6 +325,7 @@ if ($gbt) { $skip_to_step = 1 }
 if ($rl) { $skip_to_step = 2 }
 if ($tr) { $skip_to_step = 4 }
 if ($a) { $skip_to_step = 4.5 }
+if ($bt_gbt) { $skip_to_step = 6 }
 if ($bt) { $skip_to_step = 7 }
 if ($v) { $skip_to_step = 8 }
 
@@ -218,6 +372,14 @@ if ($skip_to_step -le 0) {
     Write-Host "ERROR en la recoleccion de datos SPX+QQQ+SPY." -ForegroundColor Red
     Exit-Pipeline 1
   }
+
+  Write-Host "`n=== CREANDO CORTE TRUE OOS HASTA MARZO 2026 ===" -ForegroundColor Cyan
+  python -c "import pandas as pd; src=r'$BacktestDataPath'; dst=r'$TrainingDataMarchPath'; df=pd.read_parquet(src); out=df[df['date'].astype(str) <= '20260331'].copy(); out.to_parquet(dst, index=False); print(f'rows_full={len(df)} rows_march={len(out)}'); print(out.groupby('ticker')['date'].agg(['min','max','nunique','count']))"
+
+  if ($LASTEXITCODE -ne 0) {
+    Write-Host "ERROR creando training_data_spx_qqq_spy_march_2026.parquet." -ForegroundColor Red
+    Exit-Pipeline 1
+  }
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -228,11 +390,21 @@ if ($skip_to_step -le 1) {
   New-Item -ItemType Directory -Force -Path (Split-Path $GbtModelPath) | Out-Null
   
   foreach ($Ticker in $BacktestTickers) {
+    $TickerTargetLong = $GbtTargetLongByTicker[$Ticker]
+    $TickerTargetShort = $GbtTargetShortByTicker[$Ticker]
+    $TickerStop = $GbtStopByTicker[$Ticker]
+    $TickerObjectiveMode = $GbtObjectiveModeByTicker[$Ticker]
+    $TickerSampleWeightDecayDays = $GbtSampleWeightDecayDaysByTicker[$Ticker]
+    $TickerCalibrationArgs = @()
+    if ($GbtCalibrateBinaryOvr -and $TickerObjectiveMode -eq "binary_ovr") {
+      $TickerCalibrationArgs += "--calibrate-binary-ovr"
+    }
+    Write-Host "Using specific settings for $($Ticker): Objective $($TickerObjectiveMode), Target $($TickerTargetLong), Stop $($TickerStop), SampleDecayDays $($TickerSampleWeightDecayDays)" -ForegroundColor Cyan
     Write-Host "`n--> Entrenando modelo especializado para: $Ticker" -ForegroundColor Yellow
     python -u (Join-NeuralPath "train_walkforward.py") `
       --data $TrainingDataPath `
       --ticker $Ticker `
-      --model-size small `
+      --model-size $GbtModelSize `
       --train-months $GbtTrainMonths `
       --test-months $GbtTestMonths `
       --ensemble $GbtEnsemble `
@@ -244,9 +416,18 @@ if ($skip_to_step -le 1) {
       --selection-metric $GbtSelectionMetric `
       --min-selection-trades $GbtMinSelectionTrades `
       --selection-base-confidence $GbtSelectionBaseConfidenceArg `
+      --selection-cooldown $GbtSelectionCooldownMinutes `
+      --min-selection-win-rate $GbtMinSelectionWinRateArg `
       --min-entry-minute $MinEntryMinute `
+      --max-time $GbtTrainMaxTimeMinutes `
+        --target-long $TickerTargetLong `
+        --target-short $TickerTargetShort `
+        --stop-pct $TickerStop `
       --min-short-entry-minute $MinShortEntryMinute `
       --min-short-price-vs-ib-high $MinShortPriceVsIbHighArg `
+      --objective-mode $TickerObjectiveMode `
+      @TickerCalibrationArgs `
+      --sample-weight-decay-days $TickerSampleWeightDecayDays `
       --model_path $GbtModelPath `
       --norm_path $GbtNormalizerPath
 
@@ -266,6 +447,7 @@ if ($skip_to_step -le 2) {
   $env:NORM_PATH = $GbtNormalizerPath
   python -u (Join-NeuralPath "generate_episode_index.py") `
     --data $TrainingDataPath `
+    --output $RlEpisodeIndexPath `
     --strict-wf `
     --min-confidence $BacktestBaseConfidenceArg `
     --min-entry-minute $MinEntryMinute `
@@ -305,7 +487,10 @@ if ($skip_to_step -le 2) {
     Exit-Pipeline 1
   }
 
-  python -u (Join-NeuralPath "rl\compute_recovery_stats.py")
+  python -u (Join-NeuralPath "rl\compute_recovery_stats.py") `
+    --episode-index $RlEpisodeIndexPath `
+    --options-cache $RlOptionsCachePath `
+    --output (Join-ProjectPath "rl_data\recovery_stats.pkl")
 
   if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR: compute_recovery_stats.py fallo tras el preprocess." -ForegroundColor Red
@@ -318,13 +503,30 @@ if ($skip_to_step -le 4) {
   # PASO 4 — RL TRAINING (Policy Optimization sobre señales GBT)
   # ─────────────────────────────────────────────────────────────────────────────
   Write-Host "`n=== RL Training (Policy Optimization sobre senales GBT) ===" -ForegroundColor Cyan
+  $RlTrainingExtraArgs = @()
+  if ($RlUseEntrySkipAction) {
+    $RlTrainingExtraArgs += "--entry-skip-action"
+  }
+  if ($RlForceHoldExitTraining) {
+    $RlTrainingExtraArgs += "--force-hold-exit"
+  }
+  if ($RlStrikeOraclePretrainSamples -gt 0) {
+    $RlTrainingExtraArgs += "--strike-oracle-pretrain-samples"
+    $RlTrainingExtraArgs += "$RlStrikeOraclePretrainSamples"
+    $RlTrainingExtraArgs += "--strike-oracle-pretrain-epochs"
+    $RlTrainingExtraArgs += "$RlStrikeOraclePretrainEpochs"
+    $RlTrainingExtraArgs += "--strike-oracle-pretrain-lr"
+    $RlTrainingExtraArgs += "$RlStrikeOraclePretrainLrArg"
+  }
+
   python -u -m rl.training `
     --episode-index $RlEpisodeIndexPath `
     --options-cache $RlOptionsCachePath `
     --save-dir $RlModelsDir `
-    --total-updates 500 `
+    --total-updates $RlTotalUpdates `
     --min-confidence $BacktestBaseConfidenceArg `
-    --workers 32
+    --workers $RlWorkers `
+    @RlTrainingExtraArgs
 
   if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR: RL Training fallo." -ForegroundColor Red
@@ -362,9 +564,14 @@ if ($skip_to_step -le 6) {
     --data $BacktestDataPath `
     --model $GbtModelPath `
     --normalizer $GbtNormalizerPath `
-    --model-size small --ensemble `
+    --model-size $GbtModelSize --ensemble `
     --threshold $BacktestBaseConfidenceArg --cooldown $BacktestCooldownMinutes `
+    --max-time $BacktestMaxTimeMinutes `
     --target_long $BacktestTargetLongArg --target_short $BacktestTargetShortArg --stop $BacktestStopArg `
+    --spx-target $BacktestSpxTargetArg --etf-target $BacktestEtfTargetArg `
+    --spx-stop $BacktestSpxStopArg --etf-stop $BacktestEtfStopArg `
+    --qqq-target $BacktestQqqTargetArg --spy-target $BacktestSpyTargetArg `
+    --qqq-stop $BacktestQqqStopArg --spy-stop $BacktestSpyStopArg `
     --risk-capital $BacktestRiskCapitalArg `
     --min-entry-minute $MinEntryMinute `
     --min-short-entry-minute $MinShortEntryMinute `
@@ -383,22 +590,49 @@ if ($skip_to_step -le 6) {
 # ─────────────────────────────────────────────────────────────────────────────
 if ($skip_to_step -le 7) {
   Write-Host "`n=== BACKTESTING GBT+RL ===" -ForegroundColor DarkGreen
+  $RlBacktestExtraArgs = @()
+  if (-not [string]::IsNullOrWhiteSpace($RlDiagnosticForceStrikeBucket)) {
+    $RlBacktestExtraArgs += @("--force-rl-strike-bucket", $RlDiagnosticForceStrikeBucket)
+  }
+  if (-not [string]::IsNullOrWhiteSpace($RlDiagnosticForceTickerStrikeBuckets)) {
+    $RlBacktestExtraArgs += @("--force-rl-ticker-strike-buckets", $RlDiagnosticForceTickerStrikeBuckets)
+  }
+  if (-not [string]::IsNullOrWhiteSpace($RlDiagnosticExitPolicy) -and $RlDiagnosticExitPolicy -ne "agent") {
+    $RlBacktestExtraArgs += @("--rl-exit-policy", $RlDiagnosticExitPolicy)
+  }
+  if (-not [string]::IsNullOrWhiteSpace($RlDiagnosticMaxLossPctArg)) {
+    $RlBacktestExtraArgs += @("--rl-max-loss-pct", $RlDiagnosticMaxLossPctArg)
+  }
+  if (-not [string]::IsNullOrWhiteSpace($RlDiagnosticMaxProfitPctArg)) {
+    $RlBacktestExtraArgs += @("--rl-max-profit-pct", $RlDiagnosticMaxProfitPctArg)
+  }
+  if ($RlUseEntrySkipAction) {
+    $RlBacktestExtraArgs += "--rl-entry-skip-action"
+  }
+
   python -u (Join-ProjectPath "backtest\backtest_rl.py") `
     --data $BacktestDataPath `
     --model $GbtModelPath `
     --normalizer $GbtNormalizerPath `
     --rl-model $RlBestModelPath `
-    --model-size small --ensemble `
+    --model-size $GbtModelSize --ensemble `
     --threshold $BacktestBaseConfidenceArg --cooldown $BacktestCooldownMinutes `
+    --max-time $BacktestMaxTimeMinutes `
     --target-long $BacktestTargetLongArg --target-short $BacktestTargetShortArg --stop $BacktestStopArg `
+    --spx-target $BacktestSpxTargetArg --etf-target $BacktestEtfTargetArg `
+    --spx-stop $BacktestSpxStopArg --etf-stop $BacktestEtfStopArg `
+    --qqq-target $BacktestQqqTargetArg --spy-target $BacktestSpyTargetArg `
+    --qqq-stop $BacktestQqqStopArg --spy-stop $BacktestSpyStopArg `
     --risk-capital $BacktestRiskCapitalArg `
     --min-entry-minute $MinEntryMinute `
     --min-short-entry-minute $MinShortEntryMinute `
     --min-short-price-vs-ib-high $MinShortPriceVsIbHighArg `
+    --rl-reentry-lock-minutes $RlReentryLockMinutes `
     --filter-by-greeks `
     --single-step-eval `
     --strict-wf `
-    --tickers $BacktestTickers
+    --tickers $BacktestTickers `
+    @RlBacktestExtraArgs
 
   if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR: Backtest GBT+RL fallo." -ForegroundColor Red

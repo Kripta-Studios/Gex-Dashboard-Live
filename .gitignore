@@ -25,5 +25,8 @@ rl_data/
 rt_data/
 services/config.toml
 services/lib/
+neural/models/jepa/
 *.joblib
 push_models.ps1
+research_papers/JEPA/results/jepa_full_pipeline_180m_continuation_exit_wf/trade_state_rows.parquet
+
