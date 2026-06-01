@@ -38,7 +38,11 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from hybrid_model import load_hybrid_model, get_device, FEATURE_COLUMNS
 from datetime import datetime, timedelta
-from neural.signal_policy import direction_from_prediction, is_actionable_signal
+from neural.signal_policy import (
+    confidence_for_predictions,
+    direction_from_prediction,
+    is_actionable_signal,
+)
 
 try:
     from tradingbot_wrapper import send_discord_trade_open, send_discord_trade_close
@@ -146,7 +150,7 @@ class TradeSimulator:
         # Create a copy with predictions and sort properly
         df_work = df.copy()
         df_work['pred'] = predictions
-        df_work['max_prob'] = probabilities.max(axis=1)
+        df_work['signal_confidence'] = confidence_for_predictions(probabilities, predictions)
         if time_predictions is not None:
             df_work['time_mu'] = time_predictions[:, 0]   # μ (normalized 0-1)
             df_work['time_sigma'] = time_predictions[:, 1] # σ in minutes
@@ -186,10 +190,10 @@ class TradeSimulator:
         
         for idx, row in df_work.iterrows():
             pred = row['pred']
-            max_prob = row['max_prob']
+            signal_confidence = row['signal_confidence']
             direction = direction_from_prediction(pred)
             
-            if not is_actionable_signal(direction, max_prob, base_confidence=self.threshold):
+            if not is_actionable_signal(direction, signal_confidence, base_confidence=self.threshold):
                 continue
             
             ticker = row['ticker']
@@ -351,14 +355,14 @@ class TradeSimulator:
                             self.stop_loss = sl
                             self.take_profit_1 = tp
                             self.take_profit_2 = tp * 1.05
-                            self.raw_confidence = max_prob
-                            self.calibrated_confidence = max_prob
+                            self.raw_confidence = signal_confidence
+                            self.calibrated_confidence = signal_confidence
                             self.position_size = 1.0
                             self.max_hold_time = hold_minutes
                             self.regime = "Backtest_Discovery"
                             self.time_mu_minutes = mu
                             self.time_sigma_minutes = sigma
-                            self.reasoning = f"Backtest Signal (Prob: {max_prob:.2f})"
+                            self.reasoning = f"Backtest Signal (Prob: {signal_confidence:.2f})"
 
                     mock_signal = MockSignal(ticker, direction, entry_price, tp_price, sl_price, 
                                             pred_minutes_value, sigma_minutes)
@@ -447,7 +451,7 @@ class TradeSimulator:
                 "entry_price": entry_price,
                 "exit_price": exit_price,
                 "pnl": pnl,
-                "confidence": max_prob,
+                "confidence": signal_confidence,
                 "hold_minutes": hold_minutes,
                 "target_hit": target_hit,
                 "stop_hit": stop_hit,

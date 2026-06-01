@@ -23,7 +23,11 @@ sys.path.insert(0, NEURAL_DIR)
 sys.path.insert(0, PROJECT_ROOT)
 
 from .config import RL_CONFIG, STRIKE_BUCKETS
-from neural.signal_policy import entry_thresholds
+from neural.signal_policy import (
+    deployment_context_mask,
+    entry_thresholds,
+    get_independent_signals,
+)
 
 
 def _time_to_minutes(value) -> int:
@@ -72,35 +76,45 @@ def generate_episode_index(training_df: pd.DataFrame,
                 unique_dates = sorted(training_df['date'].unique())
                 for d_str in unique_dates:
                     mask = training_df['date'] == d_str
+                    # Derive is_up_day from gap_direction
+                    gap_dir_day = training_df.loc[mask, 'gap_direction'].values if 'gap_direction' in training_df.columns else None
+                    is_up_day_day = (gap_dir_day > 0) if gap_dir_day is not None else None
+
                     for ticker in training_df.loc[mask, 'ticker'].unique():
                         t_mask = mask & (training_df['ticker'] == ticker)
                         idx = np.where(t_mask)[0]
                         if len(idx) == 0:
                             continue
+                        
+                        is_up_day_t = is_up_day_day[t_mask[mask].values] if is_up_day_day is not None else None
+
                         if is_ticker_specific and ticker_models and ticker in ticker_models:
                             t_model = ticker_models[ticker]
-                            probs[idx] = t_model.predict_proba(features[idx], date=str(d_str))
+                            probs[idx] = t_model.predict_proba(features[idx], date=str(d_str), is_up_day=is_up_day_t)
                         else:
-                            probs[idx] = mlp_model.predict_proba(features[idx], date=str(d_str))
+                            probs[idx] = mlp_model.predict_proba(features[idx], date=str(d_str), is_up_day=is_up_day_t)
             else:
                 probs = np.zeros((len(training_df), 3), dtype=np.float32)
+                gap_dir_all = training_df['gap_direction'].values if 'gap_direction' in training_df.columns else None
+                is_up_day_all = (gap_dir_all > 0) if gap_dir_all is not None else None
+
                 if is_ticker_specific and ticker_models:
                     for ticker in training_df['ticker'].unique():
                         mask = training_df['ticker'] == ticker
                         idx = np.where(mask)[0]
                         if len(idx) == 0:
                             continue
+                        
+                        is_up_day_t = is_up_day_all[idx] if is_up_day_all is not None else None
+
                         if ticker in ticker_models:
-                            probs[idx] = ticker_models[ticker].predict_proba(features[idx])
+                            probs[idx] = ticker_models[ticker].predict_proba(features[idx], is_up_day=is_up_day_t)
                         else:
-                            probs[idx] = mlp_model.predict_proba(features[idx])
+                            probs[idx] = mlp_model.predict_proba(features[idx], is_up_day=is_up_day_t)
                 else:
-                    probs = mlp_model.predict_proba(features)
+                    probs = mlp_model.predict_proba(features, is_up_day=is_up_day_all)
                  
-            predictions = np.argmax(probs, axis=1)
-            confidences = np.max(probs, axis=1)
-            # GBT doesn't predict time_to_target, use defaults
-            # (Matches v6 collection logic)
+            predictions, confidences = get_independent_signals(probs, base_confidence=min_confidence)
         else:
             features_norm = mlp_normalizer.transform(features)
             device = next(mlp_model.parameters()).device
@@ -126,8 +140,7 @@ def generate_episode_index(training_df: pd.DataFrame,
                 probs = np.concatenate(all_probs, axis=0)
                 time_targets = np.concatenate(all_time_targets, axis=0) if all_time_targets else np.full((len(probs), 2), 0.5)
             
-            predictions = np.argmax(probs, axis=1)
-            confidences = np.max(probs, axis=1)
+            predictions, confidences = get_independent_signals(probs, base_confidence=min_confidence)
 
         direction_map = {0: "SHORT", 1: "HOLD", 2: "LONG"}
         directions = [direction_map.get(p, "HOLD") for p in predictions]
@@ -173,8 +186,9 @@ def generate_episode_index(training_df: pd.DataFrame,
         ).fillna(0.0)
         short_ib_mask = price_vs_ib_high >= float(min_short_price_vs_ib_high)
 
-    mask_long  = time_mask & (training_df["mlp_direction"] == "LONG")  & (training_df["mlp_confidence"] >= long_thresh)
-    mask_short = time_mask & short_time_mask & short_ib_mask & (training_df["mlp_direction"] == "SHORT") & (training_df["mlp_confidence"] >= short_thresh)
+    context_mask = pd.Series(deployment_context_mask(training_df), index=training_df.index)
+    mask_long  = context_mask & time_mask & (training_df["mlp_direction"] == "LONG")  & (training_df["mlp_confidence"] >= long_thresh)
+    mask_short = context_mask & time_mask & short_time_mask & short_ib_mask & (training_df["mlp_direction"] == "SHORT") & (training_df["mlp_confidence"] >= short_thresh)
 
     ep_long  = training_df[mask_long].copy()
     ep_short = training_df[mask_short].copy()
@@ -363,8 +377,13 @@ def _process_single_date(args_tuple):
                 else:
                     puts[strike] = data
             
-            # Get signal for this minute
-            sig = daily_signals.get(ts_str, {"dir": "HOLD", "conf": 0.5})
+            # Get ticker-specific signal for this minute.  The previous cache
+            # keyed this only by time, so SPX/QQQ/SPY could inherit another
+            # ticker's reversal signal when timestamps overlapped.
+            sig = daily_signals.get(
+                (str(ticker_sym).upper(), ts_str),
+                daily_signals.get(ts_str, {"dir": "HOLD", "conf": 0.5}),
+            )
             
             minute_buckets[ts_str] = {
                 "spot": spot, 
@@ -434,7 +453,9 @@ def preprocess_options_for_rl(episode_index, options_dir, output_dir, max_forwar
             df_full = kwargs["training_df"]
             df_date = df_full[df_full["date"].astype(str) == str(date_str)]
             for _, row in df_date.iterrows():
-                daily_signals[str(row["time"])] = {
+                ticker_key = str(row.get("ticker", "")).upper()
+                time_key = str(row["time"])
+                daily_signals[(ticker_key, time_key)] = {
                     "dir": row.get("mlp_direction", "HOLD"),
                     "conf": float(row.get("mlp_confidence", 0.5))
                 }

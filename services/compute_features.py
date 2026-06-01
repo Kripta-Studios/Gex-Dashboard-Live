@@ -412,6 +412,74 @@ def extract_feature_vector(
     for k, v in fibs.items():
         features[f"dist_{k}"] = dist_bps(spot, v)
 
+    # 6.5 S/R Level Interactions (Price Action)
+    # Recopilar todos los niveles importantes
+    all_levels = [
+        ib_high, ib_low,
+        exp_0dte["max_gamma_strike"], exp_0dte["min_gamma_strike"],
+        exp_0dte["max_dgex_strike"], exp_0dte["min_dgex_strike"]
+    ] + list(fibs.values())
+    if exp_weekly:
+        all_levels.extend([exp_weekly.get("max_gamma_strike", 0), exp_weekly.get("min_gamma_strike", 0)])
+    
+    valid_levels = [l for l in all_levels if l is not None and l > 0]
+    
+    # Nearest level dist
+    if valid_levels:
+        min_dist = min(abs(spot - l) / spot for l in valid_levels)
+        features["nearest_level_dist"] = float(np.clip(min_dist * 10000, 0, 500)) # in bps, capped at 500
+    else:
+        features["nearest_level_dist"] = 500.0
+
+    # Cluster Density (cuántos niveles hay cerca del spot)
+    cluster_threshold = 0.0015 # 0.15% (e.g. ~7 points on 5000)
+    density = sum(1 for l in valid_levels if abs(spot - l)/spot < cluster_threshold)
+    features["level_cluster_density"] = float(np.clip(density / 10.0, 0, 1.0)) # Capped at 1.0 (10 levels)
+
+    # Momentum and Rejection Tails (using price history)
+    prices_list = [p for _, p in price_history]
+    if len(prices_list) >= 5:
+        last_5_prices = prices_list[-5:]
+        max_5 = max(last_5_prices)
+        min_5 = min(last_5_prices)
+        p_now = prices_list[-1]
+        p_past = prices_list[-5]
+        momentum_5m = (p_now - p_past) / p_past
+        
+        # Momentum into level (speed of approach)
+        features["momentum_5m_bps"] = float(np.clip(momentum_5m * 10000, -200, 200))
+        
+        # Rejection tail logic: Did it pierce a level and close back inside?
+        # e.g., if it dropped below a level (min_5 < level) but is now above it (p_now > level)
+        rejection_bullish = 0
+        rejection_bearish = 0
+        for l in valid_levels:
+            if min_5 < l and p_now > l + (l * 0.0002): # pierced down, bounced up
+                rejection_bullish += 1
+            if max_5 > l and p_now < l - (l * 0.0002): # pierced up, rejected down
+                rejection_bearish += 1
+                
+        features["rejection_bullish"] = float(np.clip(rejection_bullish / 5.0, 0, 1.0))
+        features["rejection_bearish"] = float(np.clip(rejection_bearish / 5.0, 0, 1.0))
+    else:
+        features["momentum_5m_bps"] = 0.0
+        features["rejection_bullish"] = 0.0
+        features["rejection_bearish"] = 0.0
+
+    # Trend context (Grind vs Flush)
+    if len(prices_list) >= 30:
+        last_30 = prices_list[-30:]
+        trend_30m = (prices_list[-1] - prices_list[-30]) / prices_list[-30]
+        volatility_30m = np.std(last_30) / prices_list[-30] if len(last_30) > 1 else 0
+        
+        # Grind up: steady uptrend with low volatility
+        features["trend_grind_up"] = 1.0 if trend_30m > 0.001 and volatility_30m < 0.001 else 0.0
+        # Flush down: sharp downtrend with high volatility
+        features["trend_flush_down"] = 1.0 if trend_30m < -0.002 and volatility_30m > 0.001 else 0.0
+    else:
+        features["trend_grind_up"] = 0.0
+        features["trend_flush_down"] = 0.0
+
     # 7. IV / VIX
     atm_iv_norm = atm_iv / 100.0 if atm_iv > 1 else atm_iv
     iv_history_list = list(iv_history)
@@ -646,6 +714,34 @@ def extract_feature_vector(
     features["charm_accel_x_near_ib_high"] = charm_accel_weighted * float(features["near_ib_high"])
     features["charm_accel_x_near_ib_low"]  = charm_accel_weighted * float(features["near_ib_low"])
     
+    # Synthetic Binary Bounce/Wall Features
+    near_max_gamma = is_near_level(spot, exp_0dte["max_gamma_strike"])
+    near_min_gamma = is_near_level(spot, exp_0dte["min_gamma_strike"])
+    near_max_dgex = is_near_level(spot, exp_0dte["max_dgex_strike"])
+    near_min_vanna = is_near_level(spot, exp_0dte["min_vanna_strike"])
+    
+    features["is_touching_fib"] = 1.0 if (near_fib_up or near_fib_dn) else 0.0
+    features["is_touching_max_gamma"] = 1.0 if near_max_gamma else 0.0
+    features["is_touching_min_gamma"] = 1.0 if near_min_gamma else 0.0
+    features["is_touching_max_dgex"] = 1.0 if near_max_dgex else 0.0
+    
+    # Combined confluences (e.g. Fib + Greek Wall)
+    features["wall_at_fib"] = 1.0 if (features["is_touching_fib"] and (near_max_gamma or near_min_gamma or near_max_dgex)) else 0.0
+    features["wall_at_ib"] = 1.0 if (near_ib and (near_max_gamma or near_min_gamma or near_max_dgex)) else 0.0
+    
+    # Bounce proxy: Price is near a wall and spot_change is moving away from it
+    if features["spot_change"] > 0:
+        # Price is going UP. If we are near min_gamma (support) or Fib DN (support), it's a bounce.
+        features["bouncing_from_support"] = 1.0 if (near_min_gamma or near_fib_dn or features["near_ib_low"]) else 0.0
+        features["rejecting_resistance"] = 0.0
+    elif features["spot_change"] < 0:
+        # Price is going DOWN. If we are near max_gamma (resistance) or Fib UP, it's a rejection.
+        features["rejecting_resistance"] = 1.0 if (near_max_gamma or near_fib_up or features["near_ib_high"]) else 0.0
+        features["bouncing_from_support"] = 0.0
+    else:
+        features["bouncing_from_support"] = 0.0
+        features["rejecting_resistance"] = 0.0
+
     # 23. Level Identity
     named_levels = {
         "ib_high": ib_high, "ib_low": ib_low,

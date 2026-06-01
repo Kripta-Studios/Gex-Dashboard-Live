@@ -34,16 +34,22 @@ from hybrid_model import (
 from neural.rl.config import (
     RL_CONFIG, HARD_EXITS, STRIKE_BUCKETS,
     SNIPER_TOTAL_STATE_DIM, MLP_CONTEXT_DIM,
-    POSITION_STATE_DIM, SNIPER_STATE_DIM,
+    POSITION_STATE_DIM, TICKER_CONTEXT_DIM, SNIPER_STATE_DIM,
+    STRIKE_CONTEXT_DIM, STRIKE_CONTEXT_FEATURES_PER_BUCKET,
+    get_half_spread,
 )
 from neural.rl.agent import PPOAgent
 from rl.rewards import compute_step_reward, compute_terminal_reward
 from rl.utils import get_delta_bucket, get_iv_bucket, get_pnl_bucket, CurriculumScheduler
 from neural.signal_policy import (
+    confidence_for_predictions,
+    deployment_context_allowed,
     direction_from_prediction,
+    get_independent_signals,
     is_actionable_signal,
     should_exit_on_reversal,
 )
+from backtest_gbt_parquet import TradeSimulator as GBTSpotTradeSimulator
 
 # ─────────────────────────────────────────────────────────────────────────
 
@@ -79,8 +85,44 @@ def _matches_block_rule(
             continue
         if rule_bucket not in ("*", bucket):
             continue
-        return True
+            return True
     return False
+
+
+def _parse_strike_bucket_override(value: str | int | None) -> int | None:
+    """Parse a strike bucket override from an int index or configured label."""
+    if value is None or value == "":
+        return None
+    text = str(value).strip().lower()
+    if text.isdigit():
+        idx = int(text)
+        if idx not in STRIKE_BUCKETS:
+            raise ValueError(f"Invalid strike bucket index {idx}; expected 0-{len(STRIKE_BUCKETS)-1}")
+        return idx
+    for idx, spec in STRIKE_BUCKETS.items():
+        if text == str(spec.get("label", "")).lower():
+            return int(idx)
+    labels = ", ".join(str(v["label"]) for v in STRIKE_BUCKETS.values())
+    raise ValueError(f"Invalid strike bucket '{value}'. Expected one of: {labels}")
+
+
+def _parse_ticker_strike_bucket_overrides(value: str | None) -> dict[str, int]:
+    """Parse ticker:bucket overrides separated by comma or semicolon."""
+    overrides: dict[str, int] = {}
+    if not value:
+        return overrides
+    for raw_part in str(value).replace(";", ",").split(","):
+        part = raw_part.strip()
+        if not part:
+            continue
+        if ":" not in part:
+            raise ValueError(
+                f"Invalid ticker strike override '{part}'. Expected TICKER:bucket, e.g. SPX:deep_otm"
+            )
+        ticker, bucket = part.split(":", 1)
+        ticker = ticker.strip().upper()
+        overrides[ticker] = _parse_strike_bucket_override(bucket)
+    return overrides
 
 
 def _parse_feature_rule(rule: str) -> tuple[str, str, str, float]:
@@ -220,6 +262,50 @@ def _build_position_state(pnl_pct: float = 0.0,
         pos[6] = np.clip(trailing_drawdown, 0.0, 2.0)
     return pos
 
+
+def _build_ticker_context(ticker: str) -> np.ndarray:
+    ctx = np.zeros(TICKER_CONTEXT_DIM, dtype=np.float32)
+    mapping = {"SPX": 0, "SPXW": 0, "SPY": 1, "QQQ": 2}
+    idx = mapping.get(str(ticker).upper())
+    if idx is not None and idx < TICKER_CONTEXT_DIM:
+        ctx[idx] = 1.0
+    return ctx
+
+
+def _build_strike_context_from_slice(
+    entry_slice: pd.DataFrame | None,
+    direction: str,
+    spot: float,
+    entry_atm_iv: float,
+) -> np.ndarray:
+    """Mirror RL training's per-bucket entry chain context."""
+    context = np.zeros(STRIKE_CONTEXT_DIM, dtype=np.float32)
+    if entry_slice is None or entry_slice.empty:
+        return context
+
+    spot = float(spot or 0.0)
+    atm_iv = float(entry_atm_iv or 0.15)
+    for action, bucket in STRIKE_BUCKETS.items():
+        offset = int(action) * STRIKE_CONTEXT_FEATURES_PER_BUCKET
+        chain = _find_strike_by_delta(
+            entry_slice,
+            direction,
+            float(bucket.get("delta_target", 0.5)),
+        )
+        if chain is None:
+            continue
+
+        premium = float(chain.get("mid_price", 0.0))
+        iv = float(chain.get("iv", atm_iv))
+        theta = float(chain.get("theta", 0.0))
+        context[offset + 0] = 1.0
+        context[offset + 1] = np.clip(abs(float(chain.get("delta", 0.0))), 0.0, 1.0)
+        context[offset + 2] = np.clip((premium / spot) * 100.0 if spot > 0 else 0.0, 0.0, 10.0)
+        context[offset + 3] = np.clip(iv / atm_iv if atm_iv > 0 else 1.0, 0.25, 4.0)
+        context[offset + 4] = np.clip(theta / premium if premium > 0 else 0.0, -5.0, 0.0)
+
+    return context
+
 def _calc_contracts_futures(risk_capital: float, entry_price: float, stop_pct: float, multiplier: float) -> int:
     """Contracts for futures (SPX spot): risk_capital / max_loss_per_contract."""
     max_loss_per_contract = entry_price * stop_pct * multiplier
@@ -240,6 +326,10 @@ def simulate_mlp_only(df: pd.DataFrame, predictions: np.ndarray,
                       target_long: float = 0.010, target_short: float = 0.005,
                       stop_pct: float = 0.003, max_time: int = 180,
                       cooldown: int = 15, risk_capital: float = 500.0,
+                      spx_target: float = 0.010, etf_target: float = 0.006,
+                      spx_stop: float = 0.0025, etf_stop: float = 0.0025,
+                      qqq_target: float | None = None, spy_target: float | None = None,
+                      qqq_stop: float | None = None, spy_stop: float | None = None,
                       min_entry_minute: int = 580,
                       min_short_entry_minute: int | None = None,
                       min_short_price_vs_ib_high: float | None = None) -> pd.DataFrame:
@@ -259,7 +349,7 @@ def simulate_mlp_only(df: pd.DataFrame, predictions: np.ndarray,
     # Merge predictions into dataframe for proper sorting
     df_work = df.copy()
     df_work['pred'] = predictions
-    df_work['max_prob'] = probabilities.max(axis=1)
+    df_work['signal_confidence'] = confidence_for_predictions(probabilities, predictions)
     df_work['minutes'] = df_work['time'].apply(_time_to_minutes)
     df_work['date'] = df_work['date'].astype(str)
     df_work = df_work.sort_values(['ticker', 'date', 'minutes']).reset_index(drop=True)
@@ -274,21 +364,24 @@ def simulate_mlp_only(df: pd.DataFrame, predictions: np.ndarray,
 
         for _, row in day_df.iterrows():
             pred = row['pred']
-            max_prob = row['max_prob']
+            signal_confidence = row['signal_confidence']
             current_minute = row['minutes']
             ticker = row.get('ticker', 'SPX')
 
             # Per-ticker dynamic confidence
             tck = str(ticker)
-            if tck not in ticker_consecutive_losses:
-                ticker_consecutive_losses[tck] = 0
-            
-            is_drawdown = ticker_consecutive_losses[tck] >= 2
+            loss_streak_key = (tck, str(d))
+            if loss_streak_key not in ticker_consecutive_losses:
+                ticker_consecutive_losses[loss_streak_key] = 0
+
+            is_drawdown = ticker_consecutive_losses[loss_streak_key] >= 2
             effective_threshold = threshold + 0.10 if is_drawdown else threshold
             effective_risk_capital = risk_capital * 0.5 if is_drawdown else risk_capital
 
             direction = direction_from_prediction(pred)
-            if not is_actionable_signal(direction, max_prob, base_confidence=effective_threshold):
+            if not is_actionable_signal(direction, signal_confidence, base_confidence=effective_threshold):
+                continue
+            if not deployment_context_allowed(row, direction=direction):
                 continue
 
             # Skip unstable opening window. 580 preserves the historical
@@ -324,7 +417,17 @@ def simulate_mlp_only(df: pd.DataFrame, predictions: np.ndarray,
             if entry_price <= 0:
                 continue
 
+            ticker_stop = stop_pct
             base_target = target_long if direction == "LONG" else target_short
+            if ticker == "QQQ":
+                base_target = etf_target if qqq_target is None else qqq_target
+                ticker_stop = etf_stop if qqq_stop is None else qqq_stop
+            elif ticker == "SPY":
+                base_target = etf_target if spy_target is None else spy_target
+                ticker_stop = etf_stop if spy_stop is None else spy_stop
+            elif ticker in ("SPX", "SPXW"):
+                base_target = spx_target
+                ticker_stop = spx_stop
 
             # ── OHLC intrabar exit simulation ──
             ohlc = _load_ohlc_data(ticker, d)
@@ -360,7 +463,7 @@ def simulate_mlp_only(df: pd.DataFrame, predictions: np.ndarray,
                             # Peak tracking
                             peak_price = max(peak_price, h)
                             peak_pnl = (peak_price - entry_price) / entry_price
-                            
+
                             if peak_pnl >= GBM_TRAILING_ACTIVATION_PCT:
                                 if (peak_price - l) / entry_price >= GBM_TRAILING_STOP_PCT:
                                     exit_price = peak_price - (entry_price * GBM_TRAILING_STOP_PCT)
@@ -370,8 +473,8 @@ def simulate_mlp_only(df: pd.DataFrame, predictions: np.ndarray,
                                     break
 
                             # Stop loss (low triggers)
-                            if l <= entry_price * (1 - stop_pct):
-                                exit_price = entry_price * (1 - stop_pct)
+                            if l <= entry_price * (1 - ticker_stop):
+                                exit_price = entry_price * (1 - ticker_stop)
                                 stop_hit = True
                                 actual_hold_minutes = elapsed
                                 found_exit = True
@@ -387,7 +490,7 @@ def simulate_mlp_only(df: pd.DataFrame, predictions: np.ndarray,
                             # Peak tracking
                             peak_price = min(peak_price, l)
                             peak_pnl = (entry_price - peak_price) / entry_price
-                            
+
                             if peak_pnl >= GBM_TRAILING_ACTIVATION_PCT:
                                 if (h - peak_price) / entry_price >= GBM_TRAILING_STOP_PCT:
                                     exit_price = peak_price + (entry_price * GBM_TRAILING_STOP_PCT)
@@ -397,8 +500,8 @@ def simulate_mlp_only(df: pd.DataFrame, predictions: np.ndarray,
                                     break
 
                             # Stop loss (high triggers)
-                            if h >= entry_price * (1 + stop_pct):
-                                exit_price = entry_price * (1 + stop_pct)
+                            if h >= entry_price * (1 + ticker_stop):
+                                exit_price = entry_price * (1 + ticker_stop)
                                 stop_hit = True
                                 actual_hold_minutes = elapsed
                                 found_exit = True
@@ -422,41 +525,41 @@ def simulate_mlp_only(df: pd.DataFrame, predictions: np.ndarray,
                     elapsed = future_row['minutes'] - current_minute
                     if elapsed > max_time:
                         break
-                    
+
                     if direction == "LONG":
                         peak_price = max(peak_price, price)
                         peak_pnl = (peak_price - entry_price) / entry_price
-                        
+
                         if peak_pnl >= GBM_TRAILING_ACTIVATION_PCT:
                             if (peak_price - price) / entry_price >= GBM_TRAILING_STOP_PCT:
                                 exit_price = peak_price - (entry_price * GBM_TRAILING_STOP_PCT)
                                 trailing_stop_hit = True
                                 break
-                        
+
                         if price >= entry_price * (1 + base_target):
                             exit_price = entry_price * (1 + base_target)
                             target_hit = True
                             break
-                        elif price <= entry_price * (1 - stop_pct):
-                            exit_price = entry_price * (1 - stop_pct)
+                        elif price <= entry_price * (1 - ticker_stop):
+                            exit_price = entry_price * (1 - ticker_stop)
                             stop_hit = True
                             break
                     else:
                         peak_price = min(peak_price, price)
                         peak_pnl = (entry_price - peak_price) / entry_price
-                        
+
                         if peak_pnl >= GBM_TRAILING_ACTIVATION_PCT:
                             if (price - peak_price) / entry_price >= GBM_TRAILING_STOP_PCT:
                                 exit_price = peak_price + (entry_price * GBM_TRAILING_STOP_PCT)
                                 trailing_stop_hit = True
                                 break
-                        
+
                         if price <= entry_price * (1 - base_target):
                             exit_price = entry_price * (1 - base_target)
                             target_hit = True
                             break
-                        elif price >= entry_price * (1 + stop_pct):
-                            exit_price = entry_price * (1 + stop_pct)
+                        elif price >= entry_price * (1 + ticker_stop):
+                            exit_price = entry_price * (1 + ticker_stop)
                             stop_hit = True
                             break
                     exit_price = price
@@ -467,7 +570,7 @@ def simulate_mlp_only(df: pd.DataFrame, predictions: np.ndarray,
 
             # Real dollar P&L with dynamic sizing
             multiplier = GBT_POINT_VALUES.get(ticker, 100.0)
-            contracts = _calc_contracts_futures(effective_risk_capital, entry_price, stop_pct, multiplier)
+            contracts = _calc_contracts_futures(effective_risk_capital, entry_price, ticker_stop, multiplier)
 
             # Apply contract limits
             contracts = min(contracts, 1000) # Max 1000 spot contracts
@@ -482,9 +585,9 @@ def simulate_mlp_only(df: pd.DataFrame, predictions: np.ndarray,
 
             # Drawdown tracker updates
             if pnl_dollars > 0:
-                ticker_consecutive_losses[tck] = 0
+                ticker_consecutive_losses[loss_streak_key] = 0
             elif pnl_dollars < 0:
-                ticker_consecutive_losses[tck] += 1
+                ticker_consecutive_losses[loss_streak_key] += 1
 
             exit_reason = "target" if target_hit else "stop" if stop_hit else "trailing_stop" if trailing_stop_hit else "max_time"
 
@@ -499,7 +602,7 @@ def simulate_mlp_only(df: pd.DataFrame, predictions: np.ndarray,
                 "entry_price": entry_price, "exit_price": exit_price,
                 "pnl_pct": pnl_pct, "pnl_dollars": pnl_dollars,
                 "hold_minutes": actual_hold_minutes, "exit_reason": exit_reason,
-                "confidence": max_prob, "contracts": contracts,
+                "confidence": signal_confidence, "contracts": contracts,
                 "mae": mae,
                 "balance": round(balance, 2),
             })
@@ -777,11 +880,28 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                     threshold: float = RL_CONFIG["min_confidence"], max_time: int = 180,
                     cooldown: int = 15, device: torch.device = None,
                     risk_capital: float = 500.0,
+                    target_long: float = 0.010, target_short: float = 0.010,
+                    stop_pct: float = 0.0025,
+                    spx_target: float = 0.010, etf_target: float = 0.006,
+                    spx_stop: float = 0.0025, etf_stop: float = 0.0025,
+                    qqq_target: float | None = None, spy_target: float | None = None,
+                    qqq_stop: float | None = None, spy_stop: float | None = None,
                     single_step_eval: bool = False,
                     recovery_lookup: dict = None,
                     block_rules: list[tuple[str, str, str]] | None = None,
                     block_short_confidence_above: float | None = None,
                     feature_rules: list[tuple[str, str, str, float]] | None = None,
+                    agent_exit_min_pnl: float | None = None,
+                    force_strike_bucket: int | None = None,
+                    force_ticker_strike_buckets: dict[str, int] | None = None,
+                    force_delta_target: float | None = None,
+                    underlying_exit_policy: str = "off",
+                    disable_signal_reversal: bool = False,
+                    exit_policy: str = "agent",
+                    entry_skip_action: bool = False,
+                    max_loss_pct: float | None = None,
+                    max_profit_pct: float | None = None,
+                    reentry_lock_minutes: int | None = None,
                     min_entry_minute: int = 580,
                     min_short_entry_minute: int | None = None,
                     min_short_price_vs_ib_high: float | None = None) -> pd.DataFrame:
@@ -805,6 +925,7 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
     blocked_by_rule = 0
     blocked_by_confidence = 0
     blocked_by_feature = 0
+    skipped_by_entry_policy = 0
     df_greeks = None
     premium_lookup = None
     greeks_lookup = None
@@ -813,9 +934,24 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
     total_dates = len(dates)
     t_start = _time.time()
     report_interval = max(1, total_dates // 10)  # report every ~10%
-    scheduler = CurriculumScheduler(total_updates=RL_CONFIG.get("total_updates", 500))
+    agent_total_updates = getattr(rl_agent, "total_updates", RL_CONFIG.get("total_updates", 500))
+    scheduler = CurriculumScheduler(total_updates=agent_total_updates)
     curr_params = scheduler.get_phase_info(getattr(rl_agent, "update_step", 0))
     rl_min_hold = curr_params.get("min_hold_minutes", 0)
+    if agent_exit_min_pnl is None:
+        agent_exit_min_pnl = float(RL_CONFIG.get("agent_exit_min_pnl_pct", 0.0))
+    if reentry_lock_minutes is None:
+        reentry_lock_minutes = 0
+    reentry_lock_minutes = max(0, int(reentry_lock_minutes))
+    force_ticker_strike_buckets = force_ticker_strike_buckets or {}
+    hard_exits = dict(HARD_EXITS)
+    if max_loss_pct is not None:
+        hard_exits["max_loss_pct"] = -abs(float(max_loss_pct))
+    if max_profit_pct is not None:
+        hard_exits["max_profit_pct"] = float(max_profit_pct)
+    underlying_exit_policy = str(underlying_exit_policy or "off").lower()
+    if underlying_exit_policy not in {"off", "hybrid", "only"}:
+        raise ValueError("underlying_exit_policy must be one of: off, hybrid, only")
 
     for d_idx, d in enumerate(dates):
         d_str = str(d)
@@ -843,14 +979,15 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
             entry_idx = global_idx
             row = day_df.loc[global_idx]
             pred = predictions[global_idx]
-            max_prob = probabilities[global_idx].max()
+            signal_confidence = float(probabilities[global_idx, pred])
             direction = direction_from_prediction(pred)
 
             ticker = row.get("ticker", "SPX")
             tck = str(ticker)
-            if tck not in ticker_consecutive_losses:
-                ticker_consecutive_losses[tck] = 0
-            
+            loss_streak_key = (tck, str(d))
+            if loss_streak_key not in ticker_consecutive_losses:
+                ticker_consecutive_losses[loss_streak_key] = 0
+
             # CRITICAL: Define current_minute BEFORE using it in filters and chop guard
             entry_time = str(row.get("time", "09:30"))
             try:
@@ -859,17 +996,19 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
             except Exception:
                 current_minute = 570
 
-            is_drawdown = ticker_consecutive_losses[tck] >= 2
+            is_drawdown = ticker_consecutive_losses[loss_streak_key] >= 2
             effective_threshold = threshold + 0.10 if is_drawdown else threshold
             effective_risk_capital = risk_capital * 0.5 if is_drawdown else risk_capital
 
-            if not is_actionable_signal(direction, max_prob, base_confidence=effective_threshold):
+            if not is_actionable_signal(direction, signal_confidence, base_confidence=effective_threshold):
+                continue
+            if not deployment_context_allowed(row, direction=direction):
                 continue
 
             if (
                 block_short_confidence_above is not None
                 and direction == "SHORT"
-                and max_prob > block_short_confidence_above
+                and signal_confidence > block_short_confidence_above
             ):
                 blocked_by_confidence += 1
                 continue
@@ -898,21 +1037,20 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
             # Ticker already extracted above
 
             key = f"{ticker}_{d}"
-            
+
             # Open position check — don't overlap (in real minutes)
             if key in open_positions:
                 if current_minute < open_positions[key]:
                     continue
                 else:
                     del open_positions[key]
-                    
+
             if key in last_trade_time:
                 elapsed = current_minute - last_trade_time[key]
-                # Re-entry protection: if we just exited a GBT signal burst, 
-                # don't re-enter until the signal disappears or a long cooldown passed.
-                # This prevents over-trading from RL's early exits.
-                long_cooldown = cooldown # Minimum lockout after an RL exit
-                if elapsed < long_cooldown:
+                # Match the GBT-only simulator: cooldown is measured from the
+                # entry timestamp, while open_positions prevents overlap until
+                # the simulated position has actually closed.
+                if elapsed < cooldown:
                     continue
 
             entry_price = row.get("spot_price", 0)
@@ -922,10 +1060,10 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
             # Match the training environment: market features come from the
             # fixed signal-row snapshot, while only the dynamic/position blocks evolve.
             entry_market_features = day_features[i]
-            
+
             # Current signal confidence and predicted class
             conf = probabilities[global_idx, pred]
-            
+
             # RL state needs the context of the signal (same as training environment)
             # Group 3: MLP signal context (4 dims)
             mlp_context = np.array([
@@ -934,7 +1072,7 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                 0.0,                         # mins_since_signal
                 GBT_MLP_LOG_SIGMA,           # dummy log_sigma for GBT
             ], dtype=np.float32)
-            
+
             # ── ENTRY: RL strike selection ──
             # Initialise per-trade O(1) histories
             _spot_history: list = [entry_price]
@@ -953,6 +1091,7 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
 
             # Find ATM IV at entry for dynamic features (snapshot, not per-minute)
             entry_atm_iv = 0.15
+            entry_slice = None
             if df_greeks is not None:
                 entry_slice = df_greeks[df_greeks["time_str"] == entry_time]
                 if not entry_slice.empty:
@@ -965,27 +1104,57 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
             dynamic_market_entry[5] = float(max(0.0, (390 - max(0, current_minute - SESSION_OPEN_MIN)) / 390.0))
 
             # Entry position state (all zeros except iv_ratio=1.0)
-            position_state_entry = _build_position_state(iv_ratio=1.0, trailing_drawdown=float(ticker_consecutive_losses[tck]))
+            position_state_entry = _build_position_state(iv_ratio=1.0, trailing_drawdown=float(ticker_consecutive_losses[loss_streak_key]))
 
-            state_parts = [entry_market_features, dynamic_market_entry, position_state_entry, mlp_context]
+            ticker_context = _build_ticker_context(ticker)
+            strike_context = _build_strike_context_from_slice(
+                entry_slice,
+                direction,
+                entry_price,
+                entry_atm_iv,
+            )
+            state_parts = [entry_market_features, dynamic_market_entry, position_state_entry, mlp_context, ticker_context, strike_context]
             if RL_CONFIG.get("use_sniper_mode", False):
                 sniper_state = np.zeros(SNIPER_STATE_DIM, dtype=np.float32)
                 state_parts.append(sniper_state)
 
             state = _pad_or_trim_state(np.concatenate(state_parts), rl_agent.state_dim)
             state_tensor = torch.FloatTensor(state).unsqueeze(0).to(device)
+            use_entry_skip = (
+                entry_skip_action
+                and force_strike_bucket is None
+                and not force_ticker_strike_buckets
+            )
+            entry_action_type = "sniper_entry" if use_entry_skip else "strike"
 
             with torch.no_grad():
                 action, _, _ = rl_agent.get_action(
-                    state_tensor, action_type="strike", deterministic=True)
-            
+                    state_tensor, action_type=entry_action_type, deterministic=True)
+
             # Handle both dictionary (backwards compatibility) and integer (new architecture) actions
-            strike_bucket = action["strike"] if isinstance(action, dict) else int(action)
+            raw_entry_action = action["strike"] if isinstance(action, dict) else int(action)
+            if use_entry_skip:
+                if raw_entry_action <= 0:
+                    skipped_by_entry_policy += 1
+                    last_trade_time[key] = current_minute
+                    open_positions[key] = current_minute + cooldown
+                    continue
+                strike_bucket = raw_entry_action - 1
+            else:
+                strike_bucket = raw_entry_action
+            ticker_override = force_ticker_strike_buckets.get(str(ticker).upper())
+            if ticker_override is not None:
+                strike_bucket = int(ticker_override)
+            elif force_strike_bucket is not None:
+                strike_bucket = int(force_strike_bucket)
             strike_bucket_label = STRIKE_BUCKETS[strike_bucket]["label"]
             if _matches_block_rule(ticker, direction, strike_bucket_label, block_rules):
                 blocked_by_rule += 1
                 continue
             delta_target = STRIKE_BUCKETS[strike_bucket]["delta_target"]
+            if force_delta_target is not None:
+                delta_target = abs(float(force_delta_target))
+                strike_bucket_label = f"delta_{delta_target:.2f}"
 
             # ── Find REAL option contract ──
             entry_chain = None
@@ -1006,12 +1175,16 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
 
             if entry_chain is not None:
                 actual_strike = entry_chain["strike"]
-                entry_premium = entry_chain["mid_price"]
+                raw_entry_premium = entry_chain["mid_price"]
                 actual_delta = entry_chain["delta"]
                 actual_iv = entry_chain["iv"]
                 actual_theta = entry_chain["theta"]
                 actual_gamma = entry_chain["gamma"]
                 option_right = entry_chain["right"]
+                base_half_spread = get_half_spread(abs(actual_delta))
+                gamma_speed = float(row.get("gamma_speed", 0.0) or 0.0)
+                effective_spread = base_half_spread * (1.0 + 0.5 * abs(gamma_speed))
+                entry_premium = raw_entry_premium * (1.0 + effective_spread)
                 using_real_data = True
                 options_loaded += 1
             else:
@@ -1032,15 +1205,27 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
             # Isolate future rows specific to this ticker
             ticker_mask = (day_df["ticker"] == ticker) & (day_df["minutes"] >= current_minute)
             ticker_df = day_df[ticker_mask]
-            
+
             # Skip the first row (which is the entry minute itself)
             future_sub_df = ticker_df.iloc[1:max_time+1]
+
+            ticker_stop = stop_pct
+            base_target = target_long if direction == "LONG" else target_short
+            if ticker == "QQQ":
+                base_target = etf_target if qqq_target is None else qqq_target
+                ticker_stop = etf_stop if qqq_stop is None else qqq_stop
+            elif ticker == "SPY":
+                base_target = etf_target if spy_target is None else spy_target
+                ticker_stop = etf_stop if spy_stop is None else spy_stop
+            elif ticker in ("SPX", "SPXW"):
+                base_target = spx_target
+                ticker_stop = spx_stop
 
             for t, (idx_global, future_row) in enumerate(future_sub_df.iterrows()):
                 price = future_row.get("spot_price", entry_price)
                 future_time = str(future_row.get("time", ""))
                 hold_minutes = future_row["minutes"] - current_minute
-                
+
                 # Failsafe
                 if hold_minutes > max_time:
                     break
@@ -1073,37 +1258,51 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                 _premium_history.append(current_premium)  # O(1) accumulation
                 exit_price_spot = price
 
-                # Hard exit checks
-                if premium_pnl_pct <= HARD_EXITS["max_loss_pct"]:
-                    exit_reason = "hard_stop"
-                    break
-                if premium_pnl_pct >= HARD_EXITS["max_profit_pct"]:
-                    exit_reason = "hard_take_profit"
-                    break
-                
-                # Trailing stop check (RL Premium based)
-                if peak_pnl >= HARD_EXITS.get("trailing_stop_activation_pct", 0.40):
-                    if (peak_premium - current_premium) / entry_premium >= HARD_EXITS.get("trailing_stop_pct", 0.30):
-                        exit_reason = "trailing_stop"
+                if underlying_exit_policy in {"hybrid", "only"}:
+                    if direction == "LONG":
+                        underlying_pnl_pct = (price - entry_price) / entry_price
+                    else:
+                        underlying_pnl_pct = (entry_price - price) / entry_price
+                    if underlying_pnl_pct <= -ticker_stop:
+                        exit_reason = "underlying_stop"
                         break
+                    if underlying_pnl_pct >= base_target:
+                        exit_reason = "underlying_target"
+                        break
+
+                # Hard exit checks
+                if underlying_exit_policy != "only":
+                    if premium_pnl_pct <= hard_exits["max_loss_pct"]:
+                        exit_reason = "hard_stop"
+                        break
+                    if premium_pnl_pct >= hard_exits["max_profit_pct"]:
+                        exit_reason = "hard_take_profit"
+                        break
+
+                    # Trailing stop check (RL Premium based)
+                    if peak_pnl >= hard_exits.get("trailing_stop_activation_pct", 0.40):
+                        if (peak_premium - current_premium) / entry_premium >= hard_exits.get("trailing_stop_pct", 0.30):
+                            exit_reason = "trailing_stop"
+                            break
 
                 # Match the training environment/live system: bail out when the
                 # underlying directional signal flips with sufficient confidence.
-                future_pred = int(predictions[idx_global])
-                future_dir = direction_from_prediction(future_pred)
-                future_conf = float(probabilities[idx_global, future_pred])
-                bar_minute = current_minute + hold_minutes
-                if should_exit_on_reversal(
-                    position_direction=direction,
-                    signal_direction=future_dir,
-                    signal_confidence=future_conf,
-                    minutes_since_open=bar_minute,
-                ):
-                    exit_reason = "signal_reversal"
-                    break
+                if not disable_signal_reversal:
+                    future_pred = int(predictions[idx_global])
+                    future_dir = direction_from_prediction(future_pred)
+                    future_conf = float(probabilities[idx_global, future_pred])
+                    bar_minute = current_minute + hold_minutes
+                    if should_exit_on_reversal(
+                        position_direction=direction,
+                        signal_direction=future_dir,
+                        signal_confidence=future_conf,
+                        minutes_since_open=bar_minute,
+                    ):
+                        exit_reason = "signal_reversal"
+                        break
 
                 # ── Build RL state for exit decision ──
-                hold_norm = hold_minutes / HARD_EXITS["max_hold_minutes"]
+                hold_norm = hold_minutes / hard_exits["max_hold_minutes"]
 
                 # Per-minute greeks
                 right_upper = option_right.upper()
@@ -1137,7 +1336,7 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                     recovery_prob=recovery_prob,
                     iv_ratio=iv_ratio,
                     mae=mae,
-                    trailing_drawdown=float(ticker_consecutive_losses[tck]),
+                    trailing_drawdown=trailing_drawdown,
                 )
                 market_features = (
                     entry_market_features
@@ -1148,7 +1347,7 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                         else day_features[min(i + t + 1, len(day_features) - 1)]
                     )
                 )
-                
+
                 dynamic_market = _build_dynamic_market_features(
                     current_minute=current_minute + hold_minutes,
                     entry_spot=entry_price,
@@ -1162,8 +1361,8 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                     direction=direction,
                     premium_history=_premium_history,
                 )
-                
-                state_parts = [market_features, dynamic_market, position_state, mlp_context]
+
+                state_parts = [market_features, dynamic_market, position_state, mlp_context, ticker_context, strike_context]
                 if RL_CONFIG.get("use_sniper_mode", False):
                     sniper_state = np.zeros(SNIPER_STATE_DIM, dtype=np.float32)
                     state_parts.append(sniper_state)
@@ -1171,15 +1370,25 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                 state = _pad_or_trim_state(np.concatenate(state_parts), rl_agent.state_dim)
                 state_tensor = torch.FloatTensor(state).unsqueeze(0).to(device)
 
-                with torch.no_grad():
-                    exit_action, _, _ = rl_agent.get_action(state_tensor, action_type="exit", deterministic=True)
+                if exit_policy == "hold":
+                    exit_action = 0
+                else:
+                    with torch.no_grad():
+                        exit_action, _, _ = rl_agent.get_action(state_tensor, action_type="exit", deterministic=True)
 
                 if int(exit_action) == 1:
-                    is_emergency = premium_pnl_pct <= RL_CONFIG.get("emergency_stop_pct", -0.30)
-                    if hold_minutes >= rl_min_hold or is_emergency:
+                    is_emergency = premium_pnl_pct <= RL_CONFIG.get(
+                        "emergency_stop_pct",
+                        hard_exits["max_loss_pct"],
+                    )
+                    is_voluntary_exit_allowed = (
+                        hold_minutes >= rl_min_hold
+                        and premium_pnl_pct >= float(agent_exit_min_pnl)
+                    )
+                    if is_voluntary_exit_allowed or is_emergency:
                         exit_reason = "agent_exit"
                         break
-            
+
             # Real strike distance from spot
             strike_distance_pts = actual_strike - entry_price if actual_strike else 0.0
 
@@ -1188,16 +1397,16 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
 
             # Apply contract limits
             contracts = min(contracts, 500) # Max 500 options contracts
-            
+
             # P&L in dollars: premium_change * 100 * contracts
             premium_pnl_dollars = (exit_premium - entry_premium) * 100.0 * contracts
             balance += premium_pnl_dollars
 
             # Drawdown tracker updates
             if premium_pnl_dollars > 0:
-                ticker_consecutive_losses[tck] = 0
+                ticker_consecutive_losses[loss_streak_key] = 0
             elif premium_pnl_dollars < 0:
-                ticker_consecutive_losses[tck] += 1
+                ticker_consecutive_losses[loss_streak_key] += 1
 
             # Compute exit time from entry time and hold minutes
             try:
@@ -1212,12 +1421,14 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                 "ticker": ticker, "direction": direction,
                 "entry_price": entry_price, "exit_price": exit_price_spot,
                 "actual_strike": actual_strike,
+                "raw_entry_premium": round(raw_entry_premium, 2) if using_real_data else 0,
                 "entry_premium": round(entry_premium, 2) if entry_premium else 0,
+                "entry_spread_pct": effective_spread if using_real_data else 0,
                 "exit_premium": round(exit_premium, 2) if exit_premium else 0,
                 "pnl_pct": premium_pnl_pct,
                 "pnl_dollars": premium_pnl_dollars,
                 "hold_minutes": hold_minutes, "exit_reason": exit_reason,
-                "confidence": max_prob,
+                "confidence": signal_confidence,
                 "strike_bucket": strike_bucket_label,
                 "delta_target": delta_target,
                 "actual_delta": round(actual_delta, 3),
@@ -1228,10 +1439,8 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                 "contracts": contracts,
                 "balance": round(balance, 2),
             })
-            # Cooldown starts after the position is closed, not after entry.
-            # Otherwise long holds can re-enter immediately on the same signal burst.
-            last_trade_time[key] = current_minute + hold_minutes
-            open_positions[key] = current_minute + hold_minutes
+            last_trade_time[key] = current_minute
+            open_positions[key] = current_minute + max(hold_minutes, reentry_lock_minutes)
 
         # Progress reporting
         if (d_idx + 1) % report_interval == 0 or d_idx == total_dates - 1:
@@ -1251,6 +1460,8 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
                   f"ETA {int(eta)}s")
 
     print(f"  Options data: {options_loaded} trades with real pricing, {options_missed} skipped (no data)")
+    if entry_skip_action:
+        print(f"  RL entry policy skips: {skipped_by_entry_policy} candidate entries skipped")
     if block_rules:
         print(f"  RL policy rules: {blocked_by_rule} candidate entries blocked")
     if block_short_confidence_above is not None:
@@ -1271,7 +1482,7 @@ def simulate_mlp_rl(df: pd.DataFrame, predictions: np.ndarray,
         print(f"  Top 10 Dates:")
         for date, count in top_dates.items():
             print(f"    {date}: {count} missed")
-        
+
     return pd.DataFrame(trades)
 
 
@@ -1309,8 +1520,9 @@ def calculate_metrics(trades_df: pd.DataFrame) -> dict:
     mean_loser = abs(losses["pnl_dollars"].mean()) if len(losses) > 0 else 1e-6
     wl_ratio = mean_winner / mean_loser if mean_loser > 0 else 0
 
-    avg_hold_w = wins["hold_minutes"].mean() if len(wins) > 0 else 0
-    avg_hold_l = losses["hold_minutes"].mean() if len(losses) > 0 else 0
+    hold_col = "actual_hold_minutes" if "actual_hold_minutes" in trades_df.columns else "hold_minutes"
+    avg_hold_w = wins[hold_col].mean() if len(wins) > 0 and hold_col in wins.columns else 0
+    avg_hold_l = losses[hold_col].mean() if len(losses) > 0 and hold_col in losses.columns else 0
 
     return {
         "total": n, "wins": len(wins), "losses": len(losses),
@@ -1375,9 +1587,29 @@ def main():
         help="Base confidence threshold. LONG uses this value; SHORT uses the configured directional offset.",
     )
     parser.add_argument("--cooldown", type=int, default=15)
+    parser.add_argument("--position-size", type=float, default=1.0,
+                        help="Kept for parity with backtest_gbt_parquet.py; sizing is risk-capital based.")
     parser.add_argument("--target-long", type=float, default=0.010)
     parser.add_argument("--target-short", type=float, default=0.005)
     parser.add_argument("--stop", type=float, default=0.003)
+    parser.add_argument("--min-iv", type=float, default=0.0,
+                        help="Minimum iv_percentile for the GBT-only baseline, matching backtest_gbt_parquet.py.")
+    parser.add_argument("--spx-target", type=float, default=0.010,
+                        help="SPX target override used by the GBT-only simulator.")
+    parser.add_argument("--etf-target", type=float, default=0.006,
+                        help="Default SPY/QQQ target override used by the GBT-only simulator.")
+    parser.add_argument("--spx-stop", type=float, default=0.0025,
+                        help="SPX stop override used by the GBT-only simulator.")
+    parser.add_argument("--etf-stop", type=float, default=0.0025,
+                        help="Default SPY/QQQ stop override used by the GBT-only simulator.")
+    parser.add_argument("--qqq-target", type=float, default=None,
+                        help="QQQ target override; defaults to --etf-target.")
+    parser.add_argument("--spy-target", type=float, default=None,
+                        help="SPY target override; defaults to --etf-target.")
+    parser.add_argument("--qqq-stop", type=float, default=None,
+                        help="QQQ stop override; defaults to --etf-stop.")
+    parser.add_argument("--spy-stop", type=float, default=None,
+                        help="SPY stop override; defaults to --etf-stop.")
     parser.add_argument("--max-time", type=int, default=180)
     parser.add_argument("--min-entry-minute", type=int, default=580,
                         help="Earliest absolute minute of day for entries (10:30 = 630)")
@@ -1418,13 +1650,115 @@ def main():
         default=[],
         help="Block RL entries by entry-row feature rule direction:feature:op:value; op is lt/lte/gt/gte.",
     )
+    parser.add_argument(
+        "--agent-exit-min-pnl",
+        type=float,
+        default=None,
+        help="Minimum option PnL pct required for voluntary RL agent exits. "
+             "Defaults to RL_CONFIG['agent_exit_min_pnl_pct']; emergency exits still apply.",
+    )
+    parser.add_argument(
+        "--force-rl-strike-bucket",
+        default=None,
+        help="Diagnostic override: force RL strike bucket by index or label "
+             "(deep_otm, otm_far, otm_near, otm_light, atm, itm_light, itm).",
+    )
+    parser.add_argument(
+        "--force-rl-ticker-strike-buckets",
+        default=None,
+        help="Diagnostic per-ticker strike overrides, e.g. SPX:deep_otm,QQQ:atm,SPY:itm.",
+    )
+    parser.add_argument(
+        "--force-rl-delta-target",
+        type=float,
+        default=None,
+        help="Diagnostic override: select the option closest to this absolute delta target, e.g. 0.80.",
+    )
+    parser.add_argument(
+        "--rl-underlying-exit-policy",
+        choices=["off", "hybrid", "only"],
+        default="off",
+        help=(
+            "Diagnostic exit alignment: off=current premium exits; "
+            "hybrid=underlying target/stop plus premium exits; "
+            "only=underlying target/stop without premium hard stop/take-profit."
+        ),
+    )
+    parser.add_argument(
+        "--disable-rl-signal-reversal",
+        action="store_true",
+        help="Diagnostic override: do not force RL exits on GBT signal reversal.",
+    )
+    parser.add_argument(
+        "--rl-exit-policy",
+        choices=["agent", "hold"],
+        default="agent",
+        help="Diagnostic exit policy. 'hold' disables voluntary agent exits; hard exits, reversals and max-time remain.",
+    )
+    parser.add_argument(
+        "--rl-entry-skip-action",
+        action="store_true",
+        help="Use sniper_head as direct SKIP(0) / ENTER+strike(1-7) entry policy.",
+    )
+    parser.add_argument(
+        "--rl-max-loss-pct",
+        type=float,
+        default=None,
+        help=(
+            "Diagnostic override for option premium hard stop magnitude. "
+            "Positive values are normalized to losses, so 0.50 and -0.50 both mean -0.50."
+        ),
+    )
+    parser.add_argument(
+        "--rl-max-profit-pct",
+        type=float,
+        default=None,
+        help="Diagnostic override for option premium hard take-profit, e.g. 3.0.",
+    )
+    parser.add_argument(
+        "--rl-reentry-lock-minutes",
+        type=int,
+        default=None,
+        help=(
+            "Optional minimum minutes from entry before same ticker/day RL "
+            "re-entry. Default 0 matches GBT-style open-position + cooldown "
+            "behavior; use 180 only as a diagnostic long-horizon lock."
+        ),
+    )
     args = parser.parse_args()
     block_rules = [_parse_block_rule(rule) for rule in args.block_rl_rule]
     feature_rules = [_parse_feature_rule(rule) for rule in args.block_rl_feature_rule]
+    force_strike_bucket = _parse_strike_bucket_override(args.force_rl_strike_bucket)
+    force_ticker_strike_buckets = _parse_ticker_strike_bucket_overrides(args.force_rl_ticker_strike_buckets)
     if block_rules:
         print(f"  RL block rules: {args.block_rl_rule}")
     if feature_rules:
         print(f"  RL feature rules: {args.block_rl_feature_rule}")
+    if force_strike_bucket is not None:
+        print(
+            "  RL force strike bucket: "
+            f"{force_strike_bucket} ({STRIKE_BUCKETS[force_strike_bucket]['label']})"
+        )
+    if force_ticker_strike_buckets:
+        pretty = ", ".join(
+            f"{ticker}:{STRIKE_BUCKETS[idx]['label']}"
+            for ticker, idx in sorted(force_ticker_strike_buckets.items())
+        )
+        print(f"  RL force ticker strike buckets: {pretty}")
+    if args.force_rl_delta_target is not None:
+        print(f"  RL force delta target: {abs(float(args.force_rl_delta_target)):.2f}")
+    if args.rl_underlying_exit_policy != "off":
+        print(f"  RL underlying exit policy: {args.rl_underlying_exit_policy}")
+    if args.disable_rl_signal_reversal:
+        print("  RL signal reversal exit: disabled")
+    if args.rl_exit_policy != "agent":
+        print(f"  RL exit policy override: {args.rl_exit_policy}")
+    if args.rl_entry_skip_action:
+        print("  RL entry skip action: enabled")
+    if args.rl_max_loss_pct is not None:
+        print(f"  RL max loss override: {-abs(args.rl_max_loss_pct):.2f}")
+    if args.rl_max_profit_pct is not None:
+        print(f"  RL max profit override: {args.rl_max_profit_pct:.2f}")
 
     device = get_device()
 
@@ -1483,7 +1817,7 @@ def main():
         except Exception as e:
             print(f"  [ERROR] Error loading model: {e}")
         is_gbt = hasattr(model, "predict_proba") and not isinstance(model, torch.nn.Module)
-    
+
     # ── Load RL agent ──
     print(f"\n[2/5] Loading RL agent from {args.rl_model}...")
     if os.path.exists(args.rl_model):
@@ -1491,7 +1825,8 @@ def main():
         rl_agent.eval()
         has_rl = True
         # Compute curriculum min_hold from the agent's actual training step
-        _curriculum = CurriculumScheduler(total_updates=RL_CONFIG.get("total_updates", 500))
+        _agent_total_updates = getattr(rl_agent, "total_updates", RL_CONFIG.get("total_updates", 500))
+        _curriculum = CurriculumScheduler(total_updates=_agent_total_updates)
         _agent_step = getattr(rl_agent, "update_step", 0)
         _phase_info = _curriculum.get_phase_info(_agent_step)
         if _agent_step == 0:
@@ -1506,7 +1841,10 @@ def main():
             _curriculum_min_hold = float(_phase_info.get("min_hold_minutes", 0))
         rl_min_hold = max(_curriculum_min_hold, float(HARD_EXITS.get("min_hold_minutes", 0)))
         print(f"  OK ({sum(p.numel() for p in rl_agent.parameters()):,} params)")
-        print(f"  Agent step: {_agent_step} | Phase: {_phase_info['phase']} | min_hold: {rl_min_hold:.0f} min")
+        print(
+            f"  Agent step: {_agent_step}/{_agent_total_updates} | "
+            f"Phase: {_phase_info['phase']} | min_hold: {rl_min_hold:.0f} min"
+        )
     else:
         print(f"  RL model not found — using random policy for comparison")
         rl_agent = PPOAgent()
@@ -1589,9 +1927,9 @@ def main():
     for i, col in enumerate(FEATURE_COLUMNS):
         if col in df.columns:
             features[:, i] = df[col].values.astype(np.float32)
-    
+
     features = np.nan_to_num(features, nan=0.0, posinf=5.0, neginf=-5.0)
-    
+
     if args.strict_wf:
         print(f"  [i] Using STRICT Walk-Forward inference (date-by-date filtering) for GBT predictions...")
         probs = np.zeros((len(df), 3), dtype=np.float32)
@@ -1634,26 +1972,62 @@ def main():
                 with torch.no_grad():
                     logits, _ = model(batch)
                 probs = torch.softmax(logits, dim=-1).cpu().numpy()
-    predictions = np.argmax(probs, axis=1)
-        
+    predictions, _ = get_independent_signals(probs, base_confidence=args.threshold)
+
     print(f"  Predictions: {np.bincount(predictions, minlength=3)} [SHORT, HOLD, LONG]")
 
     # ── Simulate both ──
     print(f"\n[5/5] Running simulations...")
+    print(
+        "  GBT-only ticker exits: "
+        f"SPX {args.spx_target:.2%}/{args.spx_stop:.2%}; "
+        f"QQQ {(args.qqq_target if args.qqq_target is not None else args.etf_target):.2%}/"
+        f"{(args.qqq_stop if args.qqq_stop is not None else args.etf_stop):.2%}; "
+        f"SPY {(args.spy_target if args.spy_target is not None else args.etf_target):.2%}/"
+        f"{(args.spy_stop if args.spy_stop is not None else args.etf_stop):.2%}"
+    )
 
     # GBT-only
     print(f"  Running GBT-only simulation...")
-    mlp_trades = simulate_mlp_only(
-        df, predictions, probs,
+    gbt_simulator = GBTSpotTradeSimulator(
         threshold=args.threshold,
-        target_long=args.target_long, target_short=args.target_short,
-        stop_pct=args.stop, max_time=args.max_time, cooldown=args.cooldown,
+        position_size=args.position_size,
+        cooldown_minutes=args.cooldown,
+        target_long=args.target_long,
+        target_short=args.target_short,
+        stop_pct=args.stop,
+        max_time=args.max_time,
+        min_iv_pct=args.min_iv,
+        discord_enabled=False,
         risk_capital=args.risk_capital,
         min_entry_minute=args.min_entry_minute,
         min_short_entry_minute=args.min_short_entry_minute,
-        min_short_price_vs_ib_high=args.min_short_price_vs_ib_high)
+        min_short_price_vs_ib_high=args.min_short_price_vs_ib_high,
+        spx_target=args.spx_target,
+        etf_target=args.etf_target,
+        spx_stop=args.spx_stop,
+        etf_stop=args.etf_stop,
+        qqq_target=args.qqq_target,
+        spy_target=args.spy_target,
+        qqq_stop=args.qqq_stop,
+        spy_stop=args.spy_stop,
+    )
+    mlp_trades = gbt_simulator.simulate(df, predictions, probs)
     mlp_metrics = calculate_metrics(mlp_trades)
     print(f"  GBT-only: {len(mlp_trades)} trades")
+
+    import sys
+    print("\n--- GBT ONLY RESULTS ---")
+    for k, v in mlp_metrics.items():
+        if isinstance(v, float):
+            print(f"  {k}: {v:.3f}")
+        else:
+            print(f"  {k}: {v}")
+
+    logs_dir = os.path.join(PROJECT_ROOT, "logs")           # → Gex-Dashboard-Live\logs
+    os.makedirs(logs_dir, exist_ok=True)                    # no falla si ya existe
+    mlp_trades.to_csv(os.path.join(logs_dir, "gbt_only_backtest_trades.csv"), index=False)
+    print("Saved trades to logs/gbt_only_backtest_trades.csv")
 
     # GBT+RL
     print(f"  Running GBT+RL simulation...")
@@ -1663,11 +2037,33 @@ def main():
         threshold=args.threshold, max_time=args.max_time,
         cooldown=args.cooldown, device=device,
         risk_capital=args.risk_capital,
+        target_long=args.target_long,
+        target_short=args.target_short,
+        stop_pct=args.stop,
+        spx_target=args.spx_target,
+        etf_target=args.etf_target,
+        spx_stop=args.spx_stop,
+        etf_stop=args.etf_stop,
+        qqq_target=args.qqq_target,
+        spy_target=args.spy_target,
+        qqq_stop=args.qqq_stop,
+        spy_stop=args.spy_stop,
         single_step_eval=args.single_step_eval,
         recovery_lookup=recovery_stats,
         block_rules=block_rules,
         block_short_confidence_above=args.block_short_confidence_above,
         feature_rules=feature_rules,
+        agent_exit_min_pnl=args.agent_exit_min_pnl,
+        force_strike_bucket=force_strike_bucket,
+        force_ticker_strike_buckets=force_ticker_strike_buckets,
+        force_delta_target=args.force_rl_delta_target,
+        underlying_exit_policy=args.rl_underlying_exit_policy,
+        disable_signal_reversal=args.disable_rl_signal_reversal,
+        exit_policy=args.rl_exit_policy,
+        entry_skip_action=args.rl_entry_skip_action,
+        max_loss_pct=args.rl_max_loss_pct,
+        max_profit_pct=args.rl_max_profit_pct,
+        reentry_lock_minutes=args.rl_reentry_lock_minutes,
         min_entry_minute=args.min_entry_minute,
         min_short_entry_minute=args.min_short_entry_minute,
         min_short_price_vs_ib_high=args.min_short_price_vs_ib_high)
@@ -1718,7 +2114,7 @@ def main():
     print(f"\n" + "=" * 72)
     print("  ALPHA vs BETA ANALYSIS")
     print("=" * 72)
-    
+
     if not df.empty:
         # Compute daily return of the underlying assets from the raw 1-min data
         daily_grp = df.groupby(['ticker', 'date'])['spot_price'].agg(['first', 'last']).reset_index()
@@ -1729,10 +2125,10 @@ def main():
         for label, trades_df in [("GBT-Only", mlp_trades), ("GBT+RL", rl_trades)]:
             if trades_df.empty:
                 continue
-                
+
             # Merge market direction into the trades
             t_df = trades_df.merge(daily_grp[['ticker', 'date', 'mkt_ret_pct', 'mkt_dir']], on=['ticker', 'date'], how='inner')
-            
+
             def _get_pf_wr(df_sub):
                 if df_sub.empty: return 0.0, 0.0
                 wins = len(df_sub[df_sub['pnl_dollars'] > 0])
@@ -1740,28 +2136,28 @@ def main():
                 gw = df_sub[df_sub['pnl_dollars'] > 0]['pnl_dollars'].sum()
                 gl = abs(df_sub[df_sub['pnl_dollars'] < 0]['pnl_dollars'].sum()) + 1e-9
                 return (gw / gl), wr
-                
+
             up_days = t_df[t_df['mkt_dir'] == 'UP']
             dn_days = t_df[t_df['mkt_dir'] == 'DOWN']
-            
+
             pf_up, wr_up = _get_pf_wr(up_days)
             pf_dn, wr_dn = _get_pf_wr(dn_days)
-            
+
             # Correlation: Calculate TRUE daily portfolio % return to adjust for GBT contracts and RL Options leverage as well as compounding
             daily_dollars = t_df.groupby('date')['pnl_dollars'].sum().reset_index()
             daily_dollars['cum_pnl'] = daily_dollars['pnl_dollars'].cumsum()
             # Approximate start balance per day
             daily_dollars['start_bal'] = 100_000.0 + daily_dollars['cum_pnl'].shift(1).fillna(0)
             daily_dollars['port_ret_pct'] = (daily_dollars['pnl_dollars'] / daily_dollars['start_bal']) * 100.0
-            
+
             daily_mkt_simp = daily_grp[['date', 'mkt_ret_pct']].drop_duplicates()
             daily_strat = daily_dollars.merge(daily_mkt_simp, on='date', how='inner')
-            
+
             corr = 0.0
             if len(daily_strat) > 1:
                 # Use Spearman rank correlation instead of Pearson to ignore the massive non-linear spikes of options payouts
                 corr = daily_strat['port_ret_pct'].corr(daily_strat['mkt_ret_pct'], method='spearman')
-                
+
             print(f"  {label} Performance by Market Trend:")
             print(f"    Rank Correlation w/ Market: {corr:+.2f} (0.0 = Pure Alpha, +1.0/-1.0 = Pure Beta)")
             print(f"    On MARKET UP Days:   {len(up_days):4d} trades | WR: {wr_up:5.1f}% | PF: {pf_up:.2f}")

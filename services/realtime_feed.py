@@ -50,6 +50,19 @@ from services.compute_features import (
 from neural.hybrid_model import FEATURE_COLUMNS
 from modules.utils import get_market_trading_days
 
+try:
+    import torch
+    from neural.jepa.features import load_feature_names
+    from neural.jepa.xinput_dataset import XInputNormalizers
+    from neural.jepa.xinput_model import load_xinput_model
+    JEPA_IMPORT_ERROR = None
+except Exception as exc:  # pragma: no cover - live dependency guard
+    torch = None
+    load_feature_names = None
+    XInputNormalizers = None
+    load_xinput_model = None
+    JEPA_IMPORT_ERROR = exc
+
 logger = get_logger("RealtimeFeed")
 
 ET = ZoneInfo("America/New_York")
@@ -93,6 +106,14 @@ ENDPOINTS_0DTE  = ["greeks", "ohlc"]
 ENDPOINTS_WEEKLY = ["greeks"]
 FEED_STATE_FILENAME = "feed_intraday_state.json"
 DEFAULT_POLL_INTERVAL_SECONDS = 60
+MODEL_SAMPLE_MINUTES = 5
+DEFAULT_JEPA_FEATURE_MODEL_DIR = os.path.join(
+    PROJECT_ROOT,
+    "neural",
+    "models",
+    "jepa",
+    os.environ.get("JEPA_FEATURE_EXPERIMENT", "xinput_v3_production"),
+)
 
 # Spot indices/stocks to fetch
 SPOT_SYMBOLS = ["SPX", "QQQ", "SPY", "VIX", "TLT"]
@@ -105,6 +126,237 @@ OPTIONS_TICKERS = {
 }
 
 
+class OnlineXInputJEPAFeatureEngine:
+    """Append live-safe XInputJEPA features to the 5-minute feature diary.
+
+    The training pipeline builds JEPA features from same-day 5-minute rows only.
+    This engine mirrors that contract: each feature at row t is computed from
+    rows <= t, and lagged prediction errors compare an old prediction with the
+    state that is now observable.
+    """
+
+    def __init__(
+        self,
+        model_dir: str | Path = DEFAULT_JEPA_FEATURE_MODEL_DIR,
+        device: str = "auto",
+        enabled: bool = True,
+        batch_size: int = 1024,
+    ):
+        self.model_dir = Path(model_dir)
+        self.device_name = device
+        self.enabled = bool(enabled)
+        self.batch_size = int(batch_size)
+        self.ready = False
+        self.normalizers = None
+        self.model = None
+        self.device = None
+        self.feature_names = self._default_feature_names()
+
+        if not self.enabled:
+            logger.info("[JEPA] Live XInputJEPA feature generation disabled")
+            return
+        if JEPA_IMPORT_ERROR is not None:
+            logger.warning(f"[JEPA] Live XInputJEPA imports unavailable: {JEPA_IMPORT_ERROR}")
+            return
+        try:
+            self._load()
+        except Exception as exc:
+            logger.warning(f"[JEPA] Could not load live XInputJEPA feature engine: {exc}")
+
+    @staticmethod
+    def _default_feature_names() -> list[str]:
+        names = [f"xjepa_z_{i:02d}" for i in range(16)]
+        names += [f"xjepa_u_{i:02d}" for i in range(12)]
+        names += [
+            "xjepa_latent_velocity",
+            "xjepa_input_velocity",
+            "xjepa_pred_dispersion_short",
+            "xjepa_pred_dispersion_long",
+            "xjepa_lagged_pred_30m_err",
+            "xjepa_lagged_pred_60m_err",
+            "xjepa_lagged_pred_180m_err",
+            "xjepa_prob_short",
+            "xjepa_prob_hold",
+            "xjepa_prob_long",
+            "xjepa_trade_confidence",
+            "xjepa_direction_score",
+            "xjepa_entropy",
+            "xjepa_context_valid",
+        ]
+        return names
+
+    def _load(self) -> None:
+        normalizer_path = self.model_dir / "normalizers.json"
+        model_path = self.model_dir / "model.pt"
+        feature_names_path = self.model_dir / "jepa_feature_names.json"
+        if not normalizer_path.exists():
+            raise FileNotFoundError(normalizer_path)
+        if not model_path.exists():
+            raise FileNotFoundError(model_path)
+
+        self.normalizers = XInputNormalizers.load(normalizer_path)
+        self.model = load_xinput_model(self.model_dir, map_location="cpu")
+        if feature_names_path.exists():
+            self.feature_names = load_feature_names(feature_names_path)
+        if not self.feature_names:
+            self.feature_names = self._default_feature_names()
+
+        if self.device_name == "auto":
+            self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        else:
+            self.device = torch.device(self.device_name)
+        self.model.to(self.device)
+        self.model.eval()
+        self.ready = True
+        logger.info(
+            f"[JEPA] Live XInputJEPA feature engine loaded from {self.model_dir} "
+            f"on {self.device}"
+        )
+
+    @staticmethod
+    def _pairwise_dispersion(preds: np.ndarray, indices: list[int]) -> float:
+        valid = [i for i in indices if i >= 0]
+        if len(valid) < 2:
+            return 0.0
+        vals = preds[valid]
+        dists = []
+        for i in range(len(vals)):
+            for j in range(i + 1, len(vals)):
+                dists.append(float(np.linalg.norm(vals[i] - vals[j])))
+        return float(np.mean(dists)) if dists else 0.0
+
+    def _zero_features(self, n_rows: int) -> dict[str, np.ndarray]:
+        return {name: np.zeros(n_rows, dtype=np.float32) for name in self.feature_names}
+
+    def append_features(self, frame: pd.DataFrame) -> pd.DataFrame:
+        out = frame.copy()
+        n_rows = len(out)
+        if n_rows == 0:
+            for name in self.feature_names:
+                out[name] = np.asarray([], dtype=np.float32)
+            return out
+
+        feature_data = self._zero_features(n_rows)
+        if not self.ready:
+            for name, values in feature_data.items():
+                out[name] = values
+            return out
+
+        context_len = int(self.model.config.context_len)
+        if n_rows < context_len:
+            for name, values in feature_data.items():
+                out[name] = values
+            return out
+
+        work = out.copy()
+        for col in self.normalizers.state.feature_names + self.normalizers.input.feature_names:
+            if col not in work.columns:
+                work[col] = 0.0
+        sort_cols = [c for c in ["timestamp", "time", "minutes_since_open"] if c in work.columns]
+        if sort_cols:
+            work = work.sort_values(sort_cols).reset_index(drop=False).rename(columns={"index": "_orig_index"})
+        else:
+            work = work.reset_index(drop=False).rename(columns={"index": "_orig_index"})
+
+        try:
+            s_arr = self.normalizers.state.transform_frame(work)
+            u_arr = self.normalizers.input.transform_frame(work)
+        except Exception as exc:
+            logger.warning(f"[JEPA] Normalization failed; writing invalid xjepa context: {exc}")
+            for name, values in feature_data.items():
+                out[name] = values
+            return out
+
+        contexts_s = []
+        contexts_u = []
+        positions = []
+        for pos in range(context_len - 1, len(work)):
+            contexts_s.append(s_arr[pos - context_len + 1 : pos + 1])
+            contexts_u.append(u_arr[pos - context_len + 1 : pos + 1])
+            positions.append(pos)
+        if not contexts_s:
+            for name, values in feature_data.items():
+                out[name] = values
+            return out
+
+        state_ctx = np.stack(contexts_s, axis=0).astype(np.float32)
+        input_ctx = np.stack(contexts_u, axis=0).astype(np.float32)
+        z_parts, u_parts, pred_parts, prob_parts = [], [], [], []
+        with torch.no_grad():
+            for start in range(0, len(state_ctx), self.batch_size):
+                s = torch.from_numpy(state_ctx[start : start + self.batch_size]).to(self.device).float()
+                uin = torch.from_numpy(input_ctx[start : start + self.batch_size]).to(self.device).float()
+                z, u_lat, pred, logits = self.model(s, uin)
+                z_parts.append(z.cpu().numpy())
+                u_parts.append(u_lat.cpu().numpy())
+                pred_parts.append(pred.cpu().numpy())
+                prob_parts.append(torch.softmax(logits, dim=-1).cpu().numpy())
+
+        z = np.concatenate(z_parts)
+        u_lat = np.concatenate(u_parts)
+        pred = np.concatenate(pred_parts)
+        probs = np.concatenate(prob_parts)
+
+        z_dim = int(self.model.config.z_dim)
+        u_dim = int(self.model.config.u_dim)
+        horizons = [int(h) for h in self.model.config.horizons]
+        h_to_idx = {h: i for i, h in enumerate(horizons)}
+        z_by_pos = np.zeros((len(work), z_dim), dtype=np.float32)
+        u_by_pos = np.zeros((len(work), u_dim), dtype=np.float32)
+        pred_by_pos = np.zeros((len(work), len(horizons), z_dim), dtype=np.float32)
+        prob_by_pos = np.zeros((len(work), 3), dtype=np.float32)
+        valid = np.zeros(len(work), dtype=bool)
+
+        for row_i, pos in enumerate(positions):
+            z_by_pos[pos] = z[row_i]
+            u_by_pos[pos] = u_lat[row_i]
+            pred_by_pos[pos] = pred[row_i]
+            prob_by_pos[pos] = probs[row_i]
+            valid[pos] = True
+
+        for pos in range(len(work)):
+            orig_i = int(work.loc[pos, "_orig_index"])
+            if not valid[pos]:
+                continue
+            feature_data["xjepa_context_valid"][orig_i] = 1.0
+            for zi in range(z_dim):
+                col = f"xjepa_z_{zi:02d}"
+                if col in feature_data:
+                    feature_data[col][orig_i] = z_by_pos[pos, zi]
+            for ui in range(u_dim):
+                col = f"xjepa_u_{ui:02d}"
+                if col in feature_data:
+                    feature_data[col][orig_i] = u_by_pos[pos, ui]
+            if pos >= 1 and valid[pos - 1]:
+                feature_data["xjepa_latent_velocity"][orig_i] = float(np.linalg.norm(z_by_pos[pos] - z_by_pos[pos - 1]))
+                feature_data["xjepa_input_velocity"][orig_i] = float(np.linalg.norm(u_by_pos[pos] - u_by_pos[pos - 1]))
+            short_idx = [h_to_idx.get(h, -1) for h in (1, 3, 6)]
+            long_idx = [h_to_idx.get(h, -1) for h in (12, 24, 36)]
+            feature_data["xjepa_pred_dispersion_short"][orig_i] = self._pairwise_dispersion(pred_by_pos[pos], short_idx)
+            feature_data["xjepa_pred_dispersion_long"][orig_i] = self._pairwise_dispersion(pred_by_pos[pos], long_idx)
+            for h, col in [
+                (6, "xjepa_lagged_pred_30m_err"),
+                (12, "xjepa_lagged_pred_60m_err"),
+                (36, "xjepa_lagged_pred_180m_err"),
+            ]:
+                hi = h_to_idx.get(h)
+                src = pos - h
+                if col in feature_data and hi is not None and src >= 0 and valid[src]:
+                    feature_data[col][orig_i] = float(np.linalg.norm(pred_by_pos[src, hi] - z_by_pos[pos]))
+            p = prob_by_pos[pos]
+            entropy = -float(np.sum(p * np.log(np.clip(p, 1e-8, 1.0))))
+            feature_data["xjepa_prob_short"][orig_i] = float(p[0])
+            feature_data["xjepa_prob_hold"][orig_i] = float(p[1])
+            feature_data["xjepa_prob_long"][orig_i] = float(p[2])
+            feature_data["xjepa_trade_confidence"][orig_i] = float(max(p[0], p[2]))
+            feature_data["xjepa_direction_score"][orig_i] = float(p[2] - p[0])
+            feature_data["xjepa_entropy"][orig_i] = entropy
+
+        for name, values in feature_data.items():
+            out[name] = values
+        return out
+
+
 class RealtimeOptionsFeed:
     """
     Real-time options + spot feed for GBM+RL bot.
@@ -114,7 +366,14 @@ class RealtimeOptionsFeed:
     Saves all data as Parquet files in rt_data/{YYYYMMDD}/.
     """
 
-    def __init__(self, poll_interval: int = DEFAULT_POLL_INTERVAL_SECONDS, output_dir: str = None):
+    def __init__(
+        self,
+        poll_interval: int = DEFAULT_POLL_INTERVAL_SECONDS,
+        output_dir: str = None,
+        enable_jepa_features: bool = True,
+        jepa_model_dir: str = DEFAULT_JEPA_FEATURE_MODEL_DIR,
+        jepa_device: str = "auto",
+    ):
         thetadata_url = os.environ.get("THETADATA_URL", "http://91.99.90.39:25503/v3")
         self.client = ThetaClient(base_url=thetadata_url)
         self.poll_interval = poll_interval
@@ -144,6 +403,7 @@ class RealtimeOptionsFeed:
         self.historical_ibs = {}   # ticker -> list[dict|None]
         self.prev_features = {}    # ticker -> dict
         self._ml_features_rows = {}  # ticker -> list of rows
+        self._ml_features_1m_rows = {}  # ticker -> list of diagnostic 1m rows
         self._historical_ib_loaded = {}  # ticker -> bool
         self.day_atr = {}             # ticker -> float
         self.net_gamma_window = {}    # ticker -> deque(maxlen=60)
@@ -161,12 +421,19 @@ class RealtimeOptionsFeed:
             self.ib_low[tk] = None
             self.historical_ibs[tk] = []
             self._ml_features_rows[tk] = []
+            self._ml_features_1m_rows[tk] = []
             self._historical_ib_loaded[tk] = False
             self.day_atr[tk] = 1.0
             self.net_gamma_window[tk] = deque(maxlen=60)
             self.net_charm_history[tk] = deque(maxlen=32)
             self.pcr_history[tk] = deque(maxlen=32)
             self.wonham_probs[tk] = 0.5
+
+        self.jepa_feature_engine = OnlineXInputJEPAFeatureEngine(
+            model_dir=jepa_model_dir,
+            device=jepa_device,
+            enabled=enable_jepa_features,
+        )
 
     # ─────────────────────────────────────────
     # EXPIRATION RESOLUTION
@@ -687,6 +954,7 @@ class RealtimeOptionsFeed:
             self.ib_low[tk] = None
             self.historical_ibs[tk] = []
             self._ml_features_rows[tk] = []
+            self._ml_features_1m_rows[tk] = []
             self._historical_ib_loaded[tk] = False
             self.day_atr[tk] = 1.0
             self.net_gamma_window[tk].clear()
@@ -1531,9 +1799,9 @@ class RealtimeOptionsFeed:
         vix_spot: float, tlt_spot: float
     ):
         """Compute and save ML features for a single ticker."""
-        last_rows = self._ml_features_rows.get(ticker, [])
-        if last_rows:
-            last_minute = self._float_or_none(last_rows[-1].get("minutes_since_open"))
+        last_rows_1m = self._ml_features_1m_rows.get(ticker, [])
+        if last_rows_1m:
+            last_minute = self._float_or_none(last_rows_1m[-1].get("minutes_since_open"))
             if last_minute is not None and int(last_minute) == int(minutes_since_open):
                 logger.info(
                     f"  [ML][{ticker}] Duplicate poll inside minute {minutes_since_open} "
@@ -1648,6 +1916,8 @@ class RealtimeOptionsFeed:
         row = {col: float(features_vec[i]) for i, col in enumerate(FEATURE_COLUMNS)}
         row.update({
             "timestamp": pd.Timestamp(now_et).isoformat(),
+            "date": now_et.strftime("%Y%m%d"),
+            "time": now_et.strftime("%H:%M"),
             "minutes_since_open": float(minutes_since_open),
             "ticker": ticker,
             "spot_price": float(spot),
@@ -1673,11 +1943,33 @@ class RealtimeOptionsFeed:
             "net_vomma": exp_0dte.get("net_vomma", 0.0),
         }
 
+        self._ml_features_1m_rows[ticker].append(dict(row))
+        self._ml_features_1m_rows[ticker] = self._ml_features_1m_rows[ticker][-500:]
+        self._save_parquet(
+            pd.DataFrame(self._ml_features_1m_rows[ticker]),
+            f"ml_features_1m_{ticker}_latest.parquet",
+        )
+
+        if int(minutes_since_open) % MODEL_SAMPLE_MINUTES != 0:
+            self._save_intraday_state()
+            logger.info(
+                f"  [ML][{ticker}] 1m feature snapshot saved; waiting for "
+                f"{MODEL_SAMPLE_MINUTES}m model cadence (m={minutes_since_open})"
+            )
+            return
+
         self._ml_features_rows[ticker].append(row)
         df_features = pd.DataFrame(self._ml_features_rows[ticker])
+        df_features = self.jepa_feature_engine.append_features(df_features)
+        self._ml_features_rows[ticker] = df_features.to_dict("records")
         self._save_parquet(df_features, f"ml_features_{ticker}_latest.parquet")
         self._save_intraday_state()
-        logger.info(f"  [ML][{ticker}] Feature vector saved ({len(self._ml_features_rows[ticker])} rows, spot=${spot:.2f})")
+        context_valid = float(df_features["xjepa_context_valid"].iloc[-1]) if "xjepa_context_valid" in df_features.columns else 0.0
+        logger.info(
+            f"  [ML][{ticker}] 5m Base+JEPA feature vector saved "
+            f"({len(self._ml_features_rows[ticker])} rows, spot=${spot:.2f}, "
+            f"xjepa_valid={context_valid:.0f})"
+        )
 
     # ─────────────────────────────────────────
     # PUBLIC API
@@ -1753,6 +2045,9 @@ def main():
     parser.add_argument("--interval", type=int, default=DEFAULT_POLL_INTERVAL_SECONDS, help="Poll interval in seconds")
     parser.add_argument("--output", type=str, default=None, help="Output directory")
     parser.add_argument("--dry-run", action="store_true", help="Single poll then exit")
+    parser.add_argument("--disable-jepa", action="store_true", help="Do not append live xjepa_* features")
+    parser.add_argument("--jepa-model-dir", type=str, default=DEFAULT_JEPA_FEATURE_MODEL_DIR, help="XInputJEPA feature model directory")
+    parser.add_argument("--jepa-device", type=str, default="auto", help="JEPA device: auto, cpu, cuda")
     args = parser.parse_args()
 
     print("="*60)
@@ -1761,12 +2056,16 @@ def main():
     print(f"  Options:  {', '.join(f'{t}->{s}' for t,s in OPTIONS_TICKERS.items())} (0DTE + Weekly)")
     print(f"  Spot:     {', '.join(SPOT_SYMBOLS)}")
     print(f"  Interval: {args.interval}s")
+    print(f"  JEPA:     {'disabled' if args.disable_jepa else args.jepa_model_dir}")
     print(f"  Timezone: EST (America/New_York)")
     print("=" * 60)
 
     feed = RealtimeOptionsFeed(
         poll_interval=args.interval,
         output_dir=args.output,
+        enable_jepa_features=not args.disable_jepa,
+        jepa_model_dir=args.jepa_model_dir,
+        jepa_device=args.jepa_device,
     )
     asyncio.run(feed.run(dry_run=args.dry_run))
 

@@ -1,361 +1,324 @@
 % ============================================================================
-%  Kripta Studios — Feature Engineering: Mathematical Foundations
-%  GBT+RL 0DTE Options Trading System
+%  Kripta Studios -- Scientific Feature Engineering Document
 % ============================================================================
-\documentclass[11pt,a4paper,twoside]{article}
+\documentclass[11pt,a4paper]{article}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{mathpazo}
-\usepackage{amsmath, amsfonts, amssymb, amsthm}
-\usepackage{mathtools}
-\usepackage{bm}
+\usepackage{amsmath, amssymb, bm}
 \usepackage{geometry}
 \geometry{margin=1in}
-\usepackage{titlesec}
 \usepackage{setspace}
 \onehalfspacing
-\usepackage{graphicx}
 \usepackage{booktabs}
-\usepackage{multirow}
 \usepackage{longtable}
-\usepackage{float}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{graphicx}
 \usepackage{hyperref}
-\hypersetup{colorlinks=true, linkcolor=blue, citecolor=red, urlcolor=blue}
-\usepackage{listings}
-\lstset{basicstyle=\ttfamily\small, breaklines=true, frame=single, columns=fullflexible}
-\usepackage{xcolor}
+\hypersetup{colorlinks=true, linkcolor=blue, urlcolor=blue}
+\setcounter{tocdepth}{2}
+\sloppy
 
-\newtheorem{definition}{Definition}
-\newtheorem{proposition}{Proposition}
-\newtheorem{lemma}{Lemma}
-\newtheorem{remark}{Remark}
-
-\DeclareMathOperator*{\argmax}{arg\,max}
-\DeclareMathOperator*{\argmin}{arg\,min}
-\newcommand{\E}{\mathbb{E}}
-\newcommand{\R}{\mathbb{R}}
-\newcommand{\bx}{\bm{x}}
-
-% ============================================================================
-\title{\textbf{Feature Engineering: Mathematical Foundations} \\[0.5em]
-\large{Derivation of the 163-Dimensional State Representation from Raw \\
-Options Chain Data for the GBT Directional Classifier}}
-\author{Kripta Studios — Quantitative Research Division}
-\date{March 2026}
+\title{\textbf{Feature Engineering Methodology for the GBT+JEPA Trading System}}
+\author{Kripta Studios}
+\date{June 2026}
 
 \begin{document}
 \maketitle
 \tableofcontents
 \newpage
 
-% ============================================================================
-\section{Motivation and Design Principles}
-\label{sec:motivation}
-% ============================================================================
+\begin{abstract}
+The current feature engineering stack combines two philosophies.  The first is explicit domain engineering: option Greek exposure, strike geometry, volatility context, intraday location, and support/resistance descriptors are represented as tabular features.  The second is learned representation: XInputJEPA converts a two-hour sequence of state and input variables into latent transition features.  The final LightGBM model can then decide which explicit and latent features matter for each ticker and regime.
+\end{abstract}
 
-The GBT classifier operates on tabular data derived from a non-stationary financial time series. Unlike neural architectures that can implicitly learn feature representations, Gradient Boosted Trees partition the input space through axis-aligned splits. Predictive performance therefore depends critically on the quality of the pre-computed feature set: splits on raw, non-stationary price levels generalize poorly across the multi-year walk-forward training horizon, while splits on standardized, economically interpretable quantities yield robust cross-window performance.
+\section{Core Principle: Live-Safe State Estimation}
 
-This document formalizes the mathematical derivations behind each feature category, with particular attention to the transformations that induce approximate stationarity in the resulting feature distributions. The canonical target of these transformations is to produce a feature vector $\bx_t \in \R^{163}$ whose marginal distributions are approximately time-stationary—i.e., $\bx_t \overset{d}{\approx} \bx_{t+\Delta}$ for all reasonable $\Delta$—so that splits learned on historical training windows transfer to held-out test windows without systematic bias.
+Feature engineering is constrained by the live trading problem.  At timestamp $t$, the model may use only:
 
-% ============================================================================
-\section{Underlying Price Dynamics}
-\label{sec:spot_dynamics}
-% ============================================================================
+\[
+  \mathcal{F}_t =
+  \{ \mathrm{market\ data}_{\leq t}, \mathrm{option\ chain}_{\leq t}, \mathrm{calendar}_{t}, \mathrm{model\ state}_{\leq t} \}.
+\]
 
-\subsection{Spot Price Normalization}
+It may not use future returns, future option paths, realized future MFE, realized future drawdown, oracle exit, or future best delta.  Those quantities are labels or diagnostics, not input features.
 
-The raw spot price $S_t$ is highly non-stationary (integrated of order 1). Direct use of $S_t$ as a feature would create splits of the form $S_t > K$ that are meaningless once the underlying trends away from the training range. We therefore replace $S_t$ with a rolling $z$-score:
-\begin{equation}
-    x^{\text{spot}}_t = \frac{S_t - \mu_{S,20}}{\sigma_{S,20}}, \quad \mu_{S,20} = \frac{1}{20}\sum_{k=1}^{20} S_{t-k\Delta}, \quad \sigma_{S,20} = \sqrt{\frac{1}{20}\sum_{k=1}^{20}(S_{t-k\Delta} - \mu_{S,20})^2}
-    \label{eq:spot_zscore}
-\end{equation}
-where the lookback window is 20 bars of 5 minutes each (100 minutes). This feature is bounded in practice to $[-3, +3]$ by the normal quantile and is $\mathcal{O}(1)$ regardless of the absolute price level of the underlying.
+\section{Normalization Philosophy}
 
-\subsection{Multi-Horizon Log Returns}
+\subsection{Robust Normalization for JEPA}
 
-Log returns are the natural stationary transform of a geometric Brownian Motion:
-\begin{equation}
-    r_{t,\Delta} = \log S_t - \log S_{t-\Delta} \approx \frac{S_t - S_{t-\Delta}}{S_{t-\Delta}}, \quad \Delta \in \{1, 5, 15, 30\}\text{ min}
-    \label{eq:log_returns}
-\end{equation}
-Under the Black-Scholes model $S_t = S_0 \exp\!\left(\mu t + \sigma W_t\right)$, the log return $r_{t,\Delta} \sim \mathcal{N}(\mu\Delta, \sigma^2\Delta)$ is strictly stationary and normally distributed. In practice, equity returns exhibit excess kurtosis and volatility clustering, motivating the volatility-adjusted transform in Section~\ref{sec:vol_adj}.
+XInputJEPA uses robust normalization:
 
-\subsection{Volatility-Adjusted Returns}
-\label{sec:vol_adj}
+\[
+  \tilde{x}_{i,j} =
+  \mathrm{clip}\left(
+  \frac{x_{i,j} - \mathrm{median}_j}{\mathrm{IQR}_j},
+  -c,
+  c
+  \right),
+\]
 
-The conditional variance of intraday returns is dominated by the implied volatility of the ATM 0DTE option. Scaling returns by the expected volatility over the horizon $\Delta$ normalizes the distribution across different volatility regimes:
-\begin{equation}
-    \tilde{r}_{t,\Delta} = \frac{r_{t,\Delta}}{\sigma^{\text{ATM}}_t \sqrt{\Delta / (252 \times 390)}}
-    \label{eq:vol_adj}
-\end{equation}
-where $\sigma^{\text{ATM}}_t$ is the annualized ATM implied volatility from the 0DTE chain, and $252 \times 390$ converts annual volatility to the per-minute scale.
+with clip value $c=10$.  Median and interquartile range are fitted only on the training dates for validation experiments and on all available dates for final production fit.  Robust scaling is used because option-derived features have heavy tails and occasional extreme values.
 
-\begin{proposition}[Approximate Stationarity of Volatility-Adjusted Returns]
-Under a stochastic volatility model $dS_t = S_t(\mu \, dt + \sigma_t \, dW_t)$, the quantity $\tilde{r}_{t,\Delta}$ has bounded variance conditional on $\sigma^{\text{ATM}}_t$:
-\begin{equation}
-    \text{Var}(\tilde{r}_{t,\Delta} \mid \sigma^{\text{ATM}}_t) \approx 1 + \mathcal{O}\!\left(\frac{\text{Var}(\sigma_t)}{\sigma_t^2}\right)
-    \label{eq:vol_adj_variance}
-\end{equation}
-In periods of low volatility-of-volatility, $\tilde{r}_{t,\Delta}$ is approximately unit-variance, providing consistent scaling for GBT split thresholds across all market regimes.
-\end{proposition}
+\subsection{Median Imputation for GBT}
 
-\begin{proof}[Sketch]
-By Itô's lemma, $r_{t,\Delta} \approx \sigma_t W_\Delta$ to first order. If $\sigma^{\text{ATM}}_t$ is a good predictor of $\sigma_t$, then $\tilde{r}_{t,\Delta} \approx W_\Delta / \sqrt{\Delta}$, which is a standard normal increment with unit variance. The error term arises from vol-of-vol effects.
-\end{proof}
+The LightGBM direction model uses median imputation:
 
-% ============================================================================
-\section{Options Greek Surface}
-\label{sec:greek_surface}
-% ============================================================================
+\[
+  x_{i,j}^{\mathrm{filled}} =
+  \begin{cases}
+  x_{i,j}, & x_{i,j}\ \mathrm{finite},\\
+  \mathrm{median}_j, & \mathrm{otherwise}.
+  \end{cases}
+\]
 
-\subsection{Black-Scholes Greek Derivations}
+The fitted medians are stored inside each per-ticker joblib artifact.  This keeps live inference deterministic and reproducible.
 
-Under the risk-neutral measure, the price of a European call with strike $K$, expiry $T$, at current time $t$ with spot $S_t$, risk-free rate $r$, dividend yield $q$, and implied volatility $\sigma$ is:
-\begin{align}
-    C(S_t, K, T-t, r, q, \sigma) &= S_t e^{-q(T-t)} \Phi(d_1) - K e^{-r(T-t)} \Phi(d_2) \\
-    d_1 &= \frac{\log(S_t/K) + (r - q + \sigma^2/2)(T-t)}{\sigma\sqrt{T-t}}, \quad d_2 = d_1 - \sigma\sqrt{T-t}
-    \label{eq:bs_call}
-\end{align}
-where $\Phi$ is the standard normal CDF. The primary Greeks are:
-\begin{align}
-    \Delta &= \frac{\partial C}{\partial S} = e^{-q(T-t)} \Phi(d_1) \\
-    \Gamma &= \frac{\partial^2 C}{\partial S^2} = \frac{e^{-q(T-t)} \phi(d_1)}{S_t \sigma \sqrt{T-t}} \\
-    \theta &= \frac{\partial C}{\partial t} = -\frac{S_t \sigma e^{-q(T-t)} \phi(d_1)}{2\sqrt{T-t}} + qS_t e^{-q(T-t)}\Phi(d_1) - rKe^{-r(T-t)}\Phi(d_2) \\
-    \mathcal{V} &= \frac{\partial C}{\partial \sigma} = S_t e^{-q(T-t)} \phi(d_1) \sqrt{T-t}
-    \label{eq:bs_greeks}
-\end{align}
-where $\phi$ is the standard normal PDF. Near expiration ($T - t \to 0$), $\Gamma \to \infty$ for ATM options, which motivates the sign-preserving log transform (Equation~\ref{eq:log_transform}) applied to aggregate Greek sums.
+\section{Feature Families}
 
-\subsection{Higher-Order Greeks}
+\subsection{Greek Exposure Features}
 
-The system includes two third-order Greeks of particular relevance to 0DTE trading:
+The most important engineered features are net Greek exposures:
 
-\textbf{Vanna} ($\partial \Delta / \partial \sigma = \partial^2 C / \partial S \partial \sigma$) quantifies how the delta of a position changes as implied volatility moves. When market makers are long vanna, a VIX spike forces them to buy additional spot hedge as their deltas increase, creating a self-reinforcing upward price move:
-\begin{equation}
-    \text{Vanna}_i = \frac{\partial^2 C_i}{\partial S \partial \sigma} = -e^{-q\tau} \phi(d_1) \frac{d_2}{\sigma}, \quad \tau = T - t
-    \label{eq:vanna}
-\end{equation}
+\begin{itemize}
+  \item \texttt{net\_gamma}: convexity exposure; often associated with stabilizing or destabilizing dealer hedging depending on sign.
+  \item \texttt{net\_vanna}: sensitivity of delta exposure to volatility; relevant when implied volatility changes.
+  \item \texttt{net\_charm}: time decay of delta exposure; especially relevant intraday for 0DTE.
+  \item \texttt{net\_dgex}: delta-gamma exposure proxy used as a directional/hedging pressure descriptor.
+  \item \texttt{net\_zomma}: sensitivity of gamma to volatility.
+  \item \texttt{net\_delta}: aggregate directional option exposure.
+  \item \texttt{net\_vega} and \texttt{net\_vomma}: volatility exposure and volatility convexity.
+\end{itemize}
 
-\textbf{Charm} ($\partial \Delta / \partial t$) captures delta decay over time, particularly relevant for 0DTE positions where theta-delta interaction accelerates:
-\begin{equation}
-    \text{Charm}_i = \frac{\partial^2 C_i}{\partial S \partial t} = qe^{-q\tau}\Phi(d_1) - e^{-q\tau}\phi(d_1)\frac{2(r-q)\tau - d_2\sigma\sqrt{\tau}}{2\tau\sigma\sqrt{\tau}}
-    \label{eq:charm}
-\end{equation}
+These fields are not used as isolated signals.  Their predictive value comes from interaction with price location, volatility regime, and recent changes.
 
-\subsection{Net Dealer Exposure Aggregates}
+\subsection{Weekly Versus 0DTE Exposure}
 
-Market-maker hedging pressure on the spot market is approximated by aggregating Greeks across the options chain weighted by open interest:
-\begin{equation}
-    \mathcal{G}^{\text{net}}_t(\text{Greek}) = \sum_{i=1}^{N_{\text{chain}}} \text{OI}_i \cdot \text{Greek}_i \cdot \text{Mult}
-    \label{eq:net_greek_aggregate}
-\end{equation}
-where $\text{Mult} = 100$ for SPX (each contract controls 100 index units). Since OI values can reach $10^5$--$10^6$ and gamma values peak near ATM-0DTE at $10^{-3}$--$10^{-2}$, products can easily exceed $10^4$. The log transform of Equation~\ref{eq:log_transform} is essential here.
+The pipeline includes weekly exposure fields such as \texttt{wk\_net\_gamma}, \texttt{wk\_net\_vanna}, and \texttt{wk\_net\_dgex}.  Ratios such as \texttt{gamma\_0dte\_vs\_wk} and \texttt{vanna\_0dte\_vs\_wk} help distinguish a local 0DTE imbalance from a broader expiry structure.  This matters because a same-day imbalance may decay quickly, while weekly exposure can act as a larger magnetic or stabilizing structure.
 
-% ============================================================================
-\section{Dealer Gamma Exposure and Spot Dynamics}
-\label{sec:gex_dynamics}
-% ============================================================================
+\subsection{Regime Flags}
 
-\subsection{GEX as a Regime Indicator}
+Regime features reduce the burden on the GBT to infer sign states repeatedly.  Examples include:
 
-The relationship between aggregate GEX and realized spot volatility is well-documented in the market microstructure literature. Let $\text{GEX}_t$ be computed as in Definition~3 of the Features document. The key regime classification is:
+\begin{itemize}
+  \item \texttt{gamma\_regime},
+  \item \texttt{vanna\_bullish},
+  \item \texttt{charm\_bullish},
+  \item \texttt{dgex\_sticky},
+  \item \texttt{zomma\_stabilizing}.
+\end{itemize}
 
-\begin{definition}[GEX Regime]
-\begin{align}
-    \text{GEX}_t > 0 \;&\Rightarrow\; \text{``Pinned'' regime: dealers sell rallies, buy dips} \\
-    \text{GEX}_t < 0 \;&\Rightarrow\; \text{``Trending'' regime: dealers buy rallies, sell dips}
-\end{align}
-\end{definition}
+These are compact encodings of nonlinear market-structure assumptions.  For example, a distance-to-level feature may be bullish in one gamma regime and mean-reverting in another.
 
-In the pinned regime, realized volatility is suppressed relative to implied volatility, and mean-reversion strategies around the max-gamma strike are expected to outperform. In the trending regime, momentum strategies are favored. The GBT learns this regime-conditional behavior from the data without explicit hard-coding.
+\subsection{Strike Geometry}
 
-\subsection{Dominant Gamma Strike and Confluence}
+The option chain creates a spatial field around spot.  The model encodes normalized distances from current spot to important strikes:
 
-The dominant gamma strike $K^*_\Gamma$ is the strike with the largest aggregate notional gamma exposure:
-\begin{equation}
-    K^*_\Gamma = \argmax_{K \in \mathcal{K}} \sum_{\substack{i \in \text{chain} \\ K_i = K}} \Gamma_i \cdot \text{OI}_i \cdot \text{Mult} \cdot S_t^2
-    \label{eq:dominant_gamma}
-\end{equation}
+\[
+  d_{\mathrm{level}} =
+  \frac{S_t - K_{\mathrm{level}}}{S_t} \times 10{,}000.
+\]
 
-The spatial proximity of spot to this level is encoded via a Gaussian RBF kernel with bandwidth proportional to the spot price:
-\begin{equation}
-    \Phi^{\Gamma}_t = \exp\!\left(-\frac{(S_t - K^*_\Gamma)^2}{2\,(b \cdot S_t)^2}\right), \quad b = 0.005 \;(50\,\text{bps})
-    \label{eq:rbf_confluence}
-\end{equation}
-The bandwidth $b = 0.005$ corresponds to approximately $25$ SPX points at the current price level, chosen to capture the typical pin-radius observed empirically in 0DTE market maker hedging behavior.
+Examples include \texttt{dist\_to\_max\_gamma}, \texttt{dist\_to\_min\_gamma}, \texttt{dist\_to\_zero\_gamma}, \texttt{dist\_to\_max\_dgex}, and distances to vega/vomma extrema.  These features are important because option pressure is spatial: the same net exposure can matter differently when spot is near a large strike concentration.
 
-% ============================================================================
-\section{Initial Balance Geometry}
-\label{sec:ib_geometry}
-% ============================================================================
+\subsection{Intraday Price Map}
 
-\subsection{Theoretical Motivation}
+The intraday map includes:
 
-The Initial Balance (IB) represents the price range established during the first 60 minutes of trading (09:30--10:30 ET). Market Profile theory~\cite{steidlmayer1986} postulates that the IB serves as a reference frame for the remainder of the session: price tends to either remain within (``inside day'') or break out of (``trending day'') this initial range, with distinct autocorrelation structures in each case.
+\begin{itemize}
+  \item price relative to initial-balance high and low,
+  \item whether price is above, below, or inside the initial balance,
+  \item initial-balance range percentage,
+  \item distance to prior-day initial-balance levels,
+  \item gap percentage and gap direction,
+  \item minutes to close.
+\end{itemize}
 
-Formally, for trading day $d$, define:
-\begin{equation}
-    \text{IB}^{(d)}_{\text{high}} = \sup_{\tau \in \mathcal{T}^{(d)}} S_\tau, \quad
-    \text{IB}^{(d)}_{\text{low}} = \inf_{\tau \in \mathcal{T}^{(d)}} S_\tau, \quad
-    \mathcal{T}^{(d)} = [09\text{:}30, 10\text{:}30]_d
-    \label{eq:ib_formal}
-\end{equation}
-The midpoint and width of the IB are:
-\begin{equation}
-    \text{IB}^{(d)}_{\text{mid}} = \frac{\text{IB}^{(d)}_{\text{high}} + \text{IB}^{(d)}_{\text{low}}}{2}, \quad
-    \text{IB}^{(d)}_{\text{width}} = \text{IB}^{(d)}_{\text{high}} - \text{IB}^{(d)}_{\text{low}}
-    \label{eq:ib_mid_width}
-\end{equation}
+These features encode whether the market is extended, balanced, rejecting, or grinding.  They also allow the model to treat morning and afternoon signals differently.
 
-\subsection{Normalized Distance Features}
+\subsection{Volatility Features}
 
-The distance from spot to each IB boundary is normalized by a basis-point scaling factor $\nu = 0.005$ (50 bps of spot price) to produce features that are commensurate across different absolute price levels:
-\begin{equation}
-    \delta^{(d)}_{\text{high}} = \text{clip}\!\left(\frac{S_t - \text{IB}^{(d)}_{\text{high}}}{\nu \cdot S_t},\; -10,\; 10\right)
-    \label{eq:ib_dist_high}
-\end{equation}
-\begin{equation}
-    \delta^{(d)}_{\text{low}} = \text{clip}\!\left(\frac{S_t - \text{IB}^{(d)}_{\text{low}}}{\nu \cdot S_t},\; -10,\; 10\right)
-    \label{eq:ib_dist_low}
-\end{equation}
-When $\delta^{(d)}_{\text{high}} > 0$, spot is above the IB high; when $\delta^{(d)}_{\text{high}} < 0$, spot is within or below. The clip at $\pm 10$ bounds the features to $\pm 5\%$ of spot price.
+Volatility state is represented by:
 
-\subsection{Multi-Day Lookback Structure}
+\begin{itemize}
+  \item \texttt{atm\_iv},
+  \item \texttt{iv\_zscore},
+  \item \texttt{iv\_percentile},
+  \item \texttt{vix\_spot},
+  \item \texttt{vix\_gamma},
+  \item \texttt{vix\_regime},
+  \item \texttt{atr\_5d\_norm}.
+\end{itemize}
 
-Historical IB levels from prior trading days $d \in \{-1, -2, -3, -4, -5\}$ serve as multi-day support/resistance reference frames. For each prior day $d$, three features are computed:
-\begin{align}
-    \mathcal{F}^{(d)}_{\text{ib\_high}} &= \delta^{(d)}_{\text{high}} \\
-    \mathcal{F}^{(d)}_{\text{ib\_low}}  &= \delta^{(d)}_{\text{low}} \\
-    \mathcal{F}^{(d)}_{\text{prev\_close\_vs\_ib}} &= \frac{P^{(d)}_{\text{close}} - \text{IB}^{(d)}_{\text{mid}}}{\text{IB}^{(d)}_{\text{width}} + \varepsilon}
-    \label{eq:multi_day_ib}
-\end{align}
-The third feature $\mathcal{F}^{(d)}_{\text{prev\_close\_vs\_ib}}$ captures where the previous session's closing price settled relative to its own IB midpoint, encoding overnight directional commitment.
+These variables condition the model on whether current option prices are rich, cheap, compressed, or expanding.  The same directional forecast can have different option payoff properties under different IV states.
 
-The conjunction of current spot position with historical IB levels yields cross-day confluence features. For example, \texttt{confluence\_d1ibh\_max\_gamma} measures the geometric alignment between the prior day's IB high and the current day's dominant gamma strike:
-\begin{equation}
-    \Phi^{(d1 \times \Gamma)}_t = \exp\!\left(-\frac{(\text{IB}^{(-1)}_{\text{high}} - K^*_\Gamma)^2}{2\,(b \cdot S_t)^2}\right)
-    \label{eq:cross_confluence}
-\end{equation}
-High values of this feature indicate that a prior-day supply zone is coinciding with the current-day gamma pin, a particularly high-conviction resistance configuration.
+\subsection{Confluence Features}
 
-% ============================================================================
-\section{Implied Volatility Surface Parameterization}
-\label{sec:iv_surface}
-% ============================================================================
+Confluence features combine level geometry with Greek concentrations.  Examples:
 
-\subsection{ATM Implied Volatility and Term Structure}
+\begin{itemize}
+  \item \texttt{confluence\_ib\_high\_max\_gamma},
+  \item \texttt{confluence\_ib\_low\_min\_gamma},
+  \item \texttt{confluence\_fib127\_bull\_max\_dgex},
+  \item \texttt{confluence\_fib161\_bear\_min\_dgex}.
+\end{itemize}
 
-The ATM implied volatility $\sigma^{\text{ATM}}_t$ for a given expiry $T$ is the IV at the strike $K$ closest to the current forward price $F_t = S_t e^{(r-q)(T-t)}$:
-\begin{equation}
-    \sigma^{\text{ATM}}_t(T) = \text{IV}(K^*, T), \quad K^* = \argmin_{K \in \mathcal{K}} |K - F_t|
-    \label{eq:atm_iv}
-\end{equation}
+These are engineered interaction terms.  They allow the GBT to split directly on a semantically meaningful condition instead of having to reconstruct it through multiple tree levels.
 
-The term structure of ATM IV captures the ratio of shorter to longer expiry volatilities:
-\begin{equation}
-    \tau_{\text{struct}} = \frac{\sigma^{\text{ATM}}_t(\text{0DTE})}{\sigma^{\text{ATM}}_t(\text{weekly})}
-    \label{eq:term_structure}
-\end{equation}
-A ratio $\tau_{\text{struct}} > 1$ (contango in volatility) indicates near-term elevated uncertainty; $\tau_{\text{struct}} < 1$ (backwardation) suggests calm short-term conditions.
+\section{State/Input Split for JEPA}
 
-\subsection{Volatility Skew}
+\subsection{State Features}
 
-The options market prices downside risk differently from upside risk. The risk-reversal skew at the 25-delta moneyness level quantifies this asymmetry:
-\begin{equation}
-    \text{Skew}_{25\Delta} = \text{IV}(K_{25\Delta}^{\text{put}}) - \text{IV}(K_{25\Delta}^{\text{call}})
-    \label{eq:skew}
-\end{equation}
-High positive skew ($\text{Skew}_{25\Delta} \gg 0$) indicates elevated put demand, consistent with hedging pressure from large institutional long equity positions. Negative skew (``reverse skew'') is unusual in equity markets and may signal short-gamma crowding.
+State features describe what the system is now: exposure, volatility, location, levels, confluences, and calendar context.
 
-\subsection{Smile Slope}
+\subsection{Input Features}
 
-The slope of the implied volatility smile along the strike axis provides a continuous measure of the skew at each expiry:
-\begin{equation}
-    \text{SmileSlope}_{\text{call}} = \frac{d\, \text{IV}}{dK}\bigg|_{K > F_t}, \quad \text{SmileSlope}_{\text{put}} = \frac{d\, \text{IV}}{dK}\bigg|_{K < F_t}
-    \label{eq:smile_slope}
-\end{equation}
-These are estimated numerically from the discrete options chain via finite differences between the ATM and adjacent OTM strikes.
+Input features describe recent perturbations:
 
-% ============================================================================
-\section{Cross-Ticker Feature Construction}
-\label{sec:cross_ticker}
-% ============================================================================
+\[
+  \bm{u}_t =
+  [\Delta \Gamma_t, \Delta \mathrm{Vanna}_t, \Delta \mathrm{DGEX}_t,
+  \Delta S_t, \mathrm{momentum}_t, \Delta \mathrm{IV}_t,\ldots].
+\]
 
-\subsection{VIX as a Volatility Regime Signal}
+This is the key JEPA design choice.  In the LeWorldModel-style interpretation, the model predicts future state from current latent state and an input.  In our market setting, variations in Greek exposure and spot are the input.
 
-The CBOE Volatility Index (VIX) measures 30-day implied volatility on the S\&P~500. At 5-minute intervals, we compute:
-\begin{align}
-    x^{\text{VIX}}_t &= \text{VIX}_t \quad \text{(level, not further transformed)} \\
-    r^{\text{VIX}}_{t,\Delta} &= \frac{\text{VIX}_t - \text{VIX}_{t-\Delta}}{\text{VIX}_{t-\Delta}}, \quad \Delta \in \{1, 5\}\text{ min}
-    \label{eq:vix_features}
-\end{align}
-The raw VIX level is retained untransformed because the GBT can naturally partition on absolute VIX thresholds (e.g., ``high regime: VIX $> 20$''), which are economically interpretable and stable across time.
+\section{JEPA Feature Engineering}
 
-\subsection{TLT as a Risk-Off Signal}
+\subsection{Latent Coordinates}
 
-The iShares 20+ Year Treasury ETF (TLT) serves as a real-time proxy for flight-to-safety flows. Large positive TLT returns coinciding with negative SPX returns signal a risk-off environment where put demand is elevated:
-\begin{equation}
-    \rho^{\text{SPX/TLT}}_{t,5} = \text{corr}\!\left(\{r^{\text{SPX}}_{s,1}\}_{s=t-4}^{t}, \{r^{\text{TLT}}_{s,1}\}_{s=t-4}^{t}\right)
-    \label{eq:spx_tlt_corr}
-\end{equation}
-This rolling 5-bar correlation is included to capture the real-time equity/bond correlation regime.
+The first 28 JEPA features are raw latent coordinates:
 
-% ============================================================================
-\section{Temporal Feature Construction}
-\label{sec:temporal}
-% ============================================================================
+\[
+  z_t \in \mathbb{R}^{16}, \qquad u_t \in \mathbb{R}^{12}.
+\]
 
-The intraday session exhibits strong periodicity: liquidity, volatility, and option premium dynamics all follow systematic patterns across the 390-minute trading window. A naive \texttt{minutes\_elapsed} feature would create splits that are specific to the numerical range $[0, 390]$ and would not generalize across the cyclical boundary between session close and next-day open.
+These coordinates are not individually named economic variables.  They are learned factors.  Their value is assessed by whether the downstream GBT improves OOS performance when they are present.
 
-Fourier basis encoding resolves this via:
-\begin{equation}
-    x^{\sin}_{\text{tod}} = \sin\!\left(\frac{2\pi m_t}{390}\right), \quad x^{\cos}_{\text{tod}} = \cos\!\left(\frac{2\pi m_t}{390}\right)
-    \label{eq:temporal_fourier}
-\end{equation}
-where $m_t$ is the number of minutes since 09:30. This places 09:30 and 16:00 at the same circular distance from the midday reference point, correctly encoding the symmetric time-decay acceleration at both market open and close.
+\subsection{Latent Velocity}
 
-\begin{remark}[Interaction with Theta Decay]
-For 0DTE options, theta decay is highly non-linear in time remaining. The raw \texttt{minutes\_to\_close} $= 390 - m_t$ feature is retained alongside the Fourier features because it enables the GBT to learn threshold splits of the form ``enter position only if $390 - m_t > 120$'' (do not trade within 2 hours of expiry), which are not naturally expressible via the sinusoidal encoding.
-\end{remark}
+Latent velocity is:
 
-\begin{thebibliography}{7}
+\[
+  v^z_t = \|z_t - z_{t-1}\|_2,
+  \qquad
+  v^u_t = \|u_t - u_{t-1}\|_2.
+\]
 
-\bibitem{steidlmayer1986}
-J.~P.~Steidlmayer and K.~Koy,
-``Markets and Market Logic,''
-Chicago Board of Trade, 1986.
+High velocity indicates that the latent market state or latent input is changing quickly.  This can be useful around regime transitions, volatility shocks, or rapid exposure changes.
 
-\bibitem{gatheral2011}
-J.~Gatheral,
-``The Volatility Surface: A Practitioner's Guide,''
-John Wiley \& Sons, 2011.
+\subsection{Prediction Dispersion}
 
-\bibitem{cboe_vix}
-CBOE,
-``VIX White Paper: CBOE Volatility Index,''
-\url{https://cdn.cboe.com/resources/vix/vixwhite.pdf}, 2023.
+Prediction dispersion measures disagreement among predicted future latent states.  Short dispersion compares horizons 1, 3, and 6.  Long dispersion compares horizons 12, 24, and 36:
 
-\bibitem{black1973}
-F.~Black and M.~Scholes,
-``The Pricing of Options and Corporate Liabilities,''
-\textit{Journal of Political Economy}, vol.~81, no.~3, pp.~637--654, 1973.
+\[
+  D_{\mathrm{short}} =
+  \mathrm{mean}_{i<j,\ i,j\in\{1,3,6\}}
+  \|\hat{z}_{t+i}-\hat{z}_{t+j}\|_2.
+\]
 
-\bibitem{hull2017}
-J.~C.~Hull,
-\textit{Options, Futures, and Other Derivatives},
-10th ed., Pearson, 2017.
+High dispersion means the model expects future state to vary by horizon; low dispersion means the projected state is more stable.
 
-\bibitem{avellaneda2020}
-M.~Avellaneda and A.~Savine,
-``Gamma PnL explanation and hedging under incomplete markets,''
-\textit{Risk Magazine}, 2020.
+\subsection{Lagged Prediction Error}
 
-\bibitem{grinsztajn2022}
-L.~Grinsztajn, E.~Oyallon, and G.~Varoquaux,
-``Why do tree-based models still outperform deep learning on typical tabular data?''
-\textit{NeurIPS}, vol.~35, 2022.
+Lagged prediction errors are computed when a previous forecast matures:
 
-\end{thebibliography}
+\[
+  e_{t,h} = \|\hat{z}_{t-h,h} - z_t\|_2.
+\]
+
+This is live-safe because both terms are known at time $t$.  It is a measure of whether the recent latent world model has been surprised.
+
+\subsection{Directional Probabilities}
+
+The JEPA class head produces:
+
+\[
+  (p_{\mathrm{short}}, p_{\mathrm{hold}}, p_{\mathrm{long}}).
+\]
+
+The derived features are:
+
+\[
+  \mathrm{confidence} = \max(p_{\mathrm{short}}, p_{\mathrm{long}}),
+\]
+
+\[
+  \mathrm{direction\ score} = p_{\mathrm{long}} - p_{\mathrm{short}},
+\]
+
+\[
+  H(p) = -\sum_i p_i \log(p_i).
+\]
+
+These features are not final trade decisions.  They are inputs to the GBT.
+
+\section{Option Candidate Feature Engineering}
+
+The option layer adds features at the candidate level:
+
+\begin{itemize}
+  \item one-hot ticker and side,
+  \item \texttt{jepa180\_prob\_up}, confidence, direction, and edge,
+  \item entry minute, position in day, and minutes to close,
+  \item target delta and actual delta,
+  \item entry premium, raw premium, and spread-adjusted premium,
+  \item premium-to-spot in bps,
+  \item strike distance in points and bps,
+  \item actual IV, theta, gamma,
+  \item theta over premium,
+  \item gamma notional.
+\end{itemize}
+
+The spread adjustment is deliberately conservative.  The code increases the effective entry premium using a delta-dependent spread and a gamma-speed adjustment.  This penalizes fragile high-gamma entries.
+
+\section{Dynamic Exit Feature Engineering}
+
+For learned exits, each open trade is represented every 5 minutes by:
+
+\begin{itemize}
+  \item current PnL percentage,
+  \item current return on risk,
+  \item current premium and premium ratio,
+  \item peak PnL percentage,
+  \item drawdown from peak,
+  \item maximum adverse excursion proxy,
+  \item current delta, IV, and gamma,
+  \item spot return and signed spot return,
+  \item hold minutes and minutes remaining.
+\end{itemize}
+
+The target is future best return on risk from the current state:
+
+\[
+  V^*(s_t) =
+  \max_{\tau \in [t, t+T]}
+  \frac{\mathrm{PnL}_{\tau}}{\mathrm{risk\ capital}}.
+\]
+
+This is used to train a continuation-value model.  It is not a feature in live inference.
+
+\section{Why Many Base Features Can Coexist with JEPA}
+
+The user concern that ``the GBT already has many features and might ignore JEPA'' is correct in principle.  That is not a problem; it is the point of the experiment.  If the JEPA block adds no marginal signal, the GBT should ignore it.  The strict OOS result shows the opposite: \texttt{base\_jepa} improves trade metrics relative to \texttt{base}.  Therefore the JEPA features are not merely being ignored.
+
+\section{Feature Promotion Criteria}
+
+A feature or feature block should be promoted only if:
+
+\begin{enumerate}
+  \item it is live-safe,
+  \item it is produced identically in training and live inference,
+  \item it improves strict OOS or walk-forward results,
+  \item the improvement survives transaction-cost sensitivity,
+  \item it does not depend on a single ticker or a single lucky month,
+  \item it is documented in the artifact metadata or feature-name file.
+\end{enumerate}
+
+\section{Conclusion}
+
+The system uses explicit features to encode known market structure and JEPA features to encode latent temporal dynamics.  The combined approach is empirically stronger than either component alone.  Future feature engineering should prioritize better option-path state variables, liquidity/slippage realism, and robust learned exit targets rather than simply adding more static features to the already broad base set.
 
 \end{document}

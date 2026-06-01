@@ -13,29 +13,146 @@ import numpy as np
 import torch
 import joblib
 import os
+import re
 import lightgbm as lgb
 from hybrid_model import FeatureNormalizer
+from neural.signal_policy import get_independent_signals
+
+MIN_STRICT_WF_AVG_PF = float(os.environ.get("GBT_MIN_STRICT_WF_AVG_PF", "1.25"))
+MIN_STRICT_WF_RANK_PF = float(os.environ.get("GBT_MIN_STRICT_WF_RANK_PF", "0.0"))
+MIN_STRICT_WF_VALIDATION_TRADES = int(os.environ.get("GBT_MIN_STRICT_WF_VALIDATION_TRADES", "20"))
+MAX_STRICT_WF_RANK_PF = float(os.environ.get("GBT_MAX_STRICT_WF_RANK_PF", "5.0"))
+STRICT_WF_TOP_N = int(os.environ.get("GBT_STRICT_WF_TOP_N", "10"))
+STRICT_WF_RECENCY_POWER = float(os.environ.get("GBT_STRICT_WF_RECENCY_POWER", "2.0"))
+
+
+def _parse_ticker_overrides(env_name: str) -> dict:
+    raw = os.environ.get(env_name, "").strip()
+    if not raw:
+        return {}
+    overrides = {}
+    for part in raw.split(","):
+        if ":" not in part:
+            continue
+        ticker, value = part.split(":", 1)
+        ticker = ticker.strip().upper()
+        value = value.strip()
+        if ticker and value:
+            overrides[ticker] = value
+    return overrides
+
+
+def _ticker_float(env_name: str, ticker: str | None, default: float) -> float:
+    value = _parse_ticker_overrides(env_name).get((ticker or "").upper())
+    if value is None:
+        return default
+    try:
+        return float(value)
+    except ValueError:
+        return default
+
+
+def _ticker_int(env_name: str, ticker: str | None, default: int) -> int:
+    value = _parse_ticker_overrides(env_name).get((ticker or "").upper())
+    if value is None:
+        return default
+    try:
+        return int(value)
+    except ValueError:
+        return default
+
+
+def _infer_ticker_from_model_path(model_path: str) -> str | None:
+    name = os.path.basename(str(model_path)).upper()
+    match = re.search(r"_(SPX|SPY|QQQ)(?:_HISTORY)?\.JOBLIB$", name)
+    return match.group(1) if match else None
 
 
 # ═══════════════════════════════════════════════════════════════
 # SINGLE GBT MODEL
 # ═══════════════════════════════════════════════════════════════
 class GBTModel:
-    """Wrapper around a single LightGBM classifier with optional metadata."""
+    """Wrapper around LightGBM classifiers (LONG and SHORT) with optional metadata and calibrators."""
 
-    def __init__(self, lgb_model: lgb.LGBMClassifier = None, metadata: dict = None,
-                 normalizer: FeatureNormalizer = None):
-        self.model = lgb_model
+    def __init__(self, model_long: lgb.LGBMClassifier = None, model_short: lgb.LGBMClassifier = None,
+                 metadata: dict = None, normalizer: FeatureNormalizer = None, calibrators: dict = None,
+                 model: lgb.LGBMClassifier = None):
+        self.model_long = model_long
+        self.model_short = model_short
+        self.model = model
         self.metadata = metadata or {}
         self.normalizer = normalizer
+        self.calibrators = calibrators or {}
 
-    def predict_proba(self, X: np.ndarray) -> np.ndarray:
-        """Return class probabilities [N, 3]."""
-        return self.model.predict_proba(X)
+    def predict_proba(self, X: np.ndarray, is_up_day: np.ndarray = None) -> np.ndarray:
+        """
+        Return class probabilities [N, 3].
+        Index 0: SHORT, Index 1: HOLD, Index 2: LONG
+        """
+        if getattr(self, 'model', None) is not None:
+            return self.model.predict_proba(X)
 
-    def predict(self, X: np.ndarray) -> np.ndarray:
-        """Return class predictions [N]."""
-        return self.model.predict(X)
+        import pandas as pd
+        # LightGBM predict_proba returns [N, 2] for binary classification. Index 1 is the positive class.
+        p_long_raw = self.model_long.predict_proba(X)[:, 1]
+        p_short_raw = self.model_short.predict_proba(X)[:, 1]
+
+        p_long = p_long_raw.copy()
+        p_short = p_short_raw.copy()
+
+        # Apply global calibration if available. These calibrators are fitted on
+        # the walk-forward calibration split, before the honest selection split.
+        cal_long_global = self.calibrators.get("long") if self.calibrators else None
+        cal_short_global = self.calibrators.get("short") if self.calibrators else None
+        if cal_long_global:
+            p_long = cal_long_global.predict(p_long)
+        if cal_short_global:
+            p_short = cal_short_global.predict(p_short)
+
+        # Apply regime-specific calibration if available.
+        if self.calibrators and is_up_day is not None and not (cal_long_global or cal_short_global):
+            # Calibrate LONG
+            cal_long_up = self.calibrators.get("long_up")
+            cal_long_down = self.calibrators.get("long_down")
+            if cal_long_up and cal_long_down:
+                if is_up_day.any():
+                    p_long[is_up_day] = cal_long_up.predict(p_long[is_up_day])
+                if (~is_up_day).any():
+                    p_long[~is_up_day] = cal_long_down.predict(p_long[~is_up_day])
+            elif cal_long_up: # Fallback if only one calibrator
+                if len(p_long) > 0:
+                    p_long = cal_long_up.predict(p_long)
+
+            # Calibrate SHORT
+            cal_short_up = self.calibrators.get("short_up")
+            cal_short_down = self.calibrators.get("short_down")
+            if cal_short_up and cal_short_down:
+                if is_up_day.any():
+                    p_short[is_up_day] = cal_short_up.predict(p_short[is_up_day])
+                if (~is_up_day).any():
+                    p_short[~is_up_day] = cal_short_down.predict(p_short[~is_up_day])
+            elif cal_short_up:
+                if len(p_short) > 0:
+                    p_short = cal_short_up.predict(p_short)
+
+        # Fill missing with 0 and cap at 1.0
+        p_long = np.nan_to_num(p_long, nan=0.0)
+        p_short = np.nan_to_num(p_short, nan=0.0)
+        p_long = np.clip(p_long, 0.0, 1.0)
+        p_short = np.clip(p_short, 0.0, 1.0)
+
+        # Convert to 3-class distribution
+        p_hold = np.maximum(0.0, 1.0 - (p_long + p_short))
+
+        # Normalize to ensure sum is 1
+        total = p_short + p_hold + p_long + 1e-8
+        return np.column_stack([p_short / total, p_hold / total, p_long / total])
+
+    def predict(self, X: np.ndarray, is_up_day: np.ndarray = None) -> np.ndarray:
+        """Return class predictions [N] (0=SHORT, 1=HOLD, 2=LONG)."""
+        probs = self.predict_proba(X, is_up_day)
+        preds, _ = get_independent_signals(probs, base_confidence=None)
+        return preds
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -50,26 +167,61 @@ class GBTEnsemble:
     downstream code expecting (logits, time_pred) tuples.
     """
 
-    def __init__(self, models: list):
+    def __init__(self, models: list, ticker: str | None = None):
         """
         Args:
             models: list of GBTModel instances
         """
         self.models = models
+        self.ticker = ticker
+        self.min_strict_wf_avg_pf = _ticker_float(
+            "GBT_TICKER_MIN_STRICT_WF_AVG_PF", ticker, MIN_STRICT_WF_AVG_PF
+        )
+        self.min_strict_wf_rank_pf = _ticker_float(
+            "GBT_TICKER_MIN_STRICT_WF_RANK_PF", ticker, MIN_STRICT_WF_RANK_PF
+        )
+        self.min_strict_wf_validation_trades = _ticker_int(
+            "GBT_TICKER_MIN_STRICT_WF_VALIDATION_TRADES", ticker, MIN_STRICT_WF_VALIDATION_TRADES
+        )
+        self.max_strict_wf_rank_pf = _ticker_float(
+            "GBT_TICKER_MAX_STRICT_WF_RANK_PF", ticker, MAX_STRICT_WF_RANK_PF
+        )
+        self.strict_wf_top_n = _ticker_int(
+            "GBT_TICKER_STRICT_WF_TOP_N", ticker, STRICT_WF_TOP_N
+        )
+        self.strict_wf_recency_power = _ticker_float(
+            "GBT_TICKER_STRICT_WF_RECENCY_POWER", ticker, STRICT_WF_RECENCY_POWER
+        )
         self._device = torch.device("cpu")
 
     @staticmethod
-    def _to_feature_frame(X: np.ndarray, model: GBTModel):
+    def _to_feature_frame(X: np.ndarray, model):
         import pandas as pd
 
         if isinstance(X, pd.DataFrame):
             return X
 
-        try:
-            feature_names = model.model.feature_name_
-            return pd.DataFrame(X, columns=feature_names)
-        except (AttributeError, IndexError):
-            return X
+        if isinstance(X, np.ndarray):
+            try:
+                from hybrid_model import FEATURE_COLUMNS
+                # Handle case where X was passed as full array
+                if X.shape[1] == len(FEATURE_COLUMNS):
+                    X_df = pd.DataFrame(X, columns=FEATURE_COLUMNS)
+                    
+                    if hasattr(model, 'metadata') and model.metadata and "cols" in model.metadata:
+                        return X_df[model.metadata["cols"]]
+                    
+                    if hasattr(model, 'normalizer') and model.normalizer and getattr(model.normalizer, 'feature_names', None):
+                        return X_df[model.normalizer.feature_names]
+                        
+                    if hasattr(model, 'model_long') and model.model_long and hasattr(model.model_long, 'feature_name_'):
+                        return X_df[model.model_long.feature_name_]
+                        
+                    return X_df
+            except Exception:
+                pass
+                
+        return X
 
     def _group_models_by_normalizer(self, eligible_models: list):
         grouped = {}
@@ -90,76 +242,104 @@ class GBTEnsemble:
             grouped[key]["models"].append(model)
         return grouped.values()
 
-    def predict_proba(self, X: np.ndarray, date: str = None) -> np.ndarray:
+    def predict_proba(self, X: np.ndarray, date: str = None, is_up_day: np.ndarray = None) -> np.ndarray:
         """
         Average probabilities across ensemble. Returns [N, 3].
 
         Args:
             X: Raw feature matrix. Each eligible model applies its own frozen
                walk-forward normalizer before inference.
-            date: Optional 'YYYYMMDD' string. If provided, only models trained 
+            date: Optional 'YYYYMMDD' string. If provided, only models trained
                   BEFORE this date (cutoff_date < date) are used.
+            is_up_day: Boolean array [N] indicating if the day is an UP day for calibration.
         """
+        X_np = np.asarray(X, dtype=np.float32)
+
         # Filter models by date if requested
         eligible_models = self.models
         if date is not None:
             # Convert YYYYMMDD string to int for comparison
             d_val = int(date.replace('-', '').replace('/', ''))
-            
+
             # Find all models whose selection data was available strictly before
             # this date. Newer ensembles set available_date to the end of the
             # validation/test window used for ranking. Older model artifacts do
             # not have that metadata, so they fall back to cutoff_date for
             # backwards compatibility.
-            past_models = [
-                m for m in self.models 
-                if m.metadata.get('available_date', m.metadata.get('cutoff_date', 0)) < d_val
-            ]
-            
+            past_models = []
+            for m in self.models:
+                metadata = m.metadata or {}
+                if metadata.get('available_date', metadata.get('cutoff_date', 0)) >= d_val:
+                    continue
+                if metadata.get('is_fallback', False):
+                    continue
+
+                avg_pf = float(metadata.get('avg_pf', metadata.get('rank_pf', 0.0)))
+                rank_pf = float(metadata.get('rank_pf', min(avg_pf, self.max_strict_wf_rank_pf)))
+                validation_trades = int(metadata.get('total_validation_trades', self.min_strict_wf_validation_trades))
+                if validation_trades < self.min_strict_wf_validation_trades:
+                    continue
+                if avg_pf < self.min_strict_wf_avg_pf:
+                    continue
+                if rank_pf < self.min_strict_wf_rank_pf:
+                    continue
+                past_models.append(m)
+
             if past_models:
                 from collections import defaultdict
                 # Group models by window_idx
                 windows = defaultdict(list)
                 for m in past_models:
                     windows[m.metadata.get('window_idx', 0)].append(m)
-                
+
                 # Re-calculate rank_score (PF * recency^2) relative to current max_idx
                 max_idx = max(windows.keys()) if windows else 1
                 if max_idx == 0:
                     max_idx = 1
                 scored_windows = []
                 for widx, models_in_window in windows.items():
-                    avg_pf = models_in_window[0].metadata.get('avg_pf', 0.0)
-                    recency = (widx / max_idx) ** 2
+                    avg_pf = models_in_window[0].metadata.get('rank_pf', models_in_window[0].metadata.get('avg_pf', 0.0))
+                    avg_pf = min(float(avg_pf), self.max_strict_wf_rank_pf)
+                    recency = (widx / max_idx) ** self.strict_wf_recency_power
                     rank_score = avg_pf * recency
                     scored_windows.append((rank_score, models_in_window))
-                
-                # Sort descending by rank_score and take Top 10 windows
+
+                # Sort descending by rank_score and take the configured top-N windows.
                 scored_windows.sort(key=lambda x: x[0], reverse=True)
-                top_10 = scored_windows[:10]
-                
+                top_n = max(1, self.strict_wf_top_n)
+                top_windows = scored_windows[:top_n]
+
                 # Flatten the selected models into eligible_models
-                eligible_models = [m for w in top_10 for m in w[1]]
+                eligible_models = [m for w in top_windows for m in w[1]]
             else:
-                # Fallback if no models are old enough: use the oldest one available
-                oldest_model = min(self.models, key=lambda m: m.metadata.get('cutoff_date', 99999999))
-                eligible_models = [oldest_model]
+                # Strict walk-forward means no deployed model was available yet.
+                # Return HOLD instead of leaking the oldest future model backward.
+                return np.tile(np.array([0.0, 1.0, 0.0], dtype=np.float32), (len(X_np), 1))
 
         if not eligible_models:
             raise ValueError("No models available in ensemble.")
 
-        X_np = np.asarray(X, dtype=np.float32)
+        # Determine is_up_day if not provided. We might need a heuristic if not provided.
+        # But we'll assume the caller (hybrid_model.py or predict wrapper) will pass it,
+        # or we default to False.
+        if is_up_day is None:
+            is_up_day = np.zeros(len(X_np), dtype=bool)
+
         probs_per_model = []
         for group in self._group_models_by_normalizer(eligible_models):
             normalizer = group["normalizer"]
-            if normalizer is not None:
-                X_group = normalizer.transform(X_np)
-            else:
-                X_group = X_np
+            
+            # Filter features BEFORE normalizing to avoid broadcasting mismatch
+            X_group = self._to_feature_frame(X_np, group["models"][0])
+            import pandas as pd
+            if isinstance(X_group, pd.DataFrame):
+                X_group = X_group.values
 
-            X_group = self._to_feature_frame(X_group, group["models"][0])
+            if normalizer is not None:
+                X_group = normalizer.transform(X_group)
+
             for model in group["models"]:
-                probs_per_model.append(model.predict_proba(X_group))
+                probs_per_model.append(model.predict_proba(X_group, is_up_day=is_up_day))
 
         probs = np.stack(probs_per_model, axis=0)
         return probs.mean(axis=0)
@@ -253,11 +433,14 @@ def save_gbt_ensemble(ensemble: GBTEnsemble, normalizer: FeatureNormalizer,
     serialized = []
     for m in ensemble.models:
         serialized.append({
-            'model': m.model,
+            'model': getattr(m, 'model', None),
+            'model_long': m.model_long,
+            'model_short': m.model_short,
+            'calibrators': m.calibrators,
             'metadata': m.metadata,
             'normalizer_state': _serialize_normalizer_state(m.normalizer or normalizer),
         })
-        
+
     joblib.dump(serialized, model_path)
 
     if normalizer is not None:
@@ -283,17 +466,35 @@ def load_gbt_ensemble(model_path: str, norm_path: str) -> tuple:
 
     models = []
     for o in objs:
-        if isinstance(o, dict) and 'model' in o:
+        if isinstance(o, dict) and ('model_long' in o or 'model' in o):
             # Modern format with metadata
             model_normalizer = _deserialize_normalizer_state(o.get('normalizer_state'))
-            models.append(GBTModel(o['model'], o.get('metadata'), model_normalizer or normalizer))
+
+            # Compatibility with older format (single model)
+            if 'model_long' in o and o['model_long'] is not None:
+                models.append(GBTModel(o['model_long'] if o.get('model_short') is not None else None, o.get('model_short'), o.get('metadata'), model_normalizer or normalizer, o.get('calibrators'), o.get('model') or (o['model_long'] if o.get('model_short') is None else None)))
+            elif 'model' in o and o['model'] is not None:
+                models.append(GBTModel(model=o['model'], metadata=o.get('metadata'), normalizer=model_normalizer or normalizer))
+            else:
+                # Old format
+                old_gbt = GBTModel(None, None, o.get('metadata'), model_normalizer or normalizer)
+                old_gbt.model = o['model']
+                old_gbt.predict_proba = lambda X, is_up_day=None: old_gbt.model.predict_proba(X)
+                old_gbt.predict = lambda X, is_up_day=None: old_gbt.model.predict(X)
+                models.append(old_gbt)
         else:
             # Legacy format (just the classifier)
-            models.append(GBTModel(o, normalizer=normalizer))
-            
-    ensemble = GBTEnsemble(models)
+            old_gbt = GBTModel(None, None, None, normalizer)
+            old_gbt.model = o
+            old_gbt.predict_proba = lambda X, is_up_day=None: old_gbt.model.predict_proba(X)
+            old_gbt.predict = lambda X, is_up_day=None: old_gbt.model.predict(X)
+            models.append(old_gbt)
 
-    print(f"  [GBT] Loaded {len(models)} models from {model_path}")
+    ticker = _infer_ticker_from_model_path(model_path)
+    ensemble = GBTEnsemble(models, ticker=ticker)
+
+    ticker_suffix = f" for {ticker}" if ticker else ""
+    print(f"  [GBT] Loaded {len(models)} models{ticker_suffix} from {model_path}")
 
     return ensemble, normalizer
 
@@ -326,7 +527,7 @@ def _deserialize_normalizer_state(state: dict | None) -> FeatureNormalizer | Non
     normalizer.iqrs = np.asarray(state["iqrs"])
     normalizer.p_low = np.asarray(state["p_low"])
     normalizer.p_high = np.asarray(state["p_high"])
-
+    
     log_mask = state.get("log_mask")
     if log_mask is not None and len(log_mask) > 0:
         normalizer.log_mask = np.asarray(log_mask)

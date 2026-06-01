@@ -610,10 +610,236 @@ MIT License — ver `LICENSE` para más detalles.
 
 ---
 
-<div align="center">
+</div>
 
-**WristGuard** — *Porque tu cuerpo merece una segunda opinión.*
+---
 
-⌚ + 📱 + 🧠 = 🌿
+## 🧪 Historial de Experimentación y Optimización (GBT & RL)
+
+A lo largo del desarrollo, hemos iterado profundamente sobre la arquitectura conjunta de **Gradient Boosting Trees (GBT)** para la generación de señales base, y **Reinforcement Learning (PPO)** para la ejecución de la política de trading (selección de Strike y decisión de Exit).
+
+### 1. Optimizaciones sobre el Modelo GBT (Señales Base)
+- **Umbrales de Confianza Dinámicos:** Para alcanzar los objetivos de volumen (Total trades > 2000) y rentabilidad (Total PnL > 250k), redujimos el `min_confidence` base del GBT de 0.51 a **0.45**. Esto incrementó drásticamente el corpus de episodios elegibles (pasando a manejar más de 154,000 episodios) permitiendo al agente de RL tener suficientes oportunidades para iterar.
+- **Validación del Backbone:** Mantuvimos el dropout del backbone en **0.05** como regularizador. Descubrimos que eliminarlo por completo generaba un sobreajuste rápido, mientras que dejarlo en 0.05 contenía la divergencia sin destruir la señal determinista durante la evaluación.
+
+### 2. Optimizaciones sobre el Agente RL (PPO)
+La arquitectura PPO (con un MLP puro de ~172.000 parámetros que puentea la estructura MoE para facilitar el escalado) sufrió graves problemas de estabilidad y colapso que resolvimos sistemáticamente:
+
+#### A. Resolución de la Varianza Extrema y el Critic
+- **Problema:** El Critic era incapaz de aprender porque las recompensas terminales (los cierres ganadores) llegaban hasta `+20.0`, mientras que las recompensas continuas (*step rewards*) rondaban el `0.05`. Una diferencia de magnitud de 400x que destrozaba el cálculo de los Retornos Monte Carlo y disparaba el Loss del Valor y el KL.
+- **Solución:** 
+  1. Escalamos el `terminal_reward` en `rewards.py` multiplicando por `0.1` (acotándolo al rango `[-0.6, 2.0]`), alineando así ambas magnitudes.
+  2. Subimos los `pretrain_critic_samples` masivamente de 5,000 a **20,000**.
+  3. Aumentamos el Learning Rate del pre-entrenamiento del Critic de `1e-4` a **`5e-4`**.
+  *Resultado:* El `V_loss` inicial bajó de rangos descontrolados (~15.0) a converger limpiamente por debajo de `3.0` antes de arrancar el PPO.
+
+#### B. Prevención del "Exit Head Collapse"
+- **Problema:** La cabeza de salida (*Exit Head*) perdía toda su entropía (bajando de 0.68 a 0.02) y aprendía a no salir nunca (HOLD perpetuo). Al retirar la restricción mecánica (`min_hold_minutes=0`), el agente caía en el extremo opuesto: *micro-scalping* (salía a los 2 minutos), vaciando el buffer de PPO y rompiendo el aprendizaje.
+- **Solución:** 
+  1. Restauramos el freno mecánico de la valla temporal (`min_hold_minutes` a 45/75/105/150 según fase).
+  2. Implementamos un filtro lógico en `training.py`: las transiciones donde el entorno forzaba la acción a HOLD (sobrescribiendo la decisión original de EXIT del agente) **se descartan del buffer**. Así el agente no aprende falsos positivos.
+  3. Subimos el `exit_entropy_coeff` a **0.25** e inyectamos ruido exploratorio (`logit_noise_exit_override=0.30`) para mantener la cabeza viva en la fase inicial.
+
+#### C. Estabilización de la Divergencia de Política (KL)
+2. DETECCIÓN PASIVA
+   └── WristGuard recoge datos en segundo plano
+       sin que el usuario haga nada
+
+3. INTERVENCIÓN INTELIGENTE
+   └── Vibración suave en el watch
+   └── Mensaje con las 3 razones principales (SHAP)
+   └── Sugerencia, nunca bloqueo forzado
+
+4. FEEDBACK DEL USUARIO
+   └── "¿Era buen momento?" → el modelo aprende y mejora
+   └── Reinforcement learning ligero sobre preferencias personales
+
+5. DASHBOARD SEMANAL
+   └── Score de bienestar digital
+   └── Tus mejores y peores momentos de la semana
+   └── Tendencias de tus métricas biométricas
+```
+
+---
+
+## 🎯 Usuario objetivo
+
+**Perfil principal:**
+- 18-35 años, con smartwatch (Apple Watch, Galaxy Watch, Garmin, Fitbit)
+- Consciente de que usa demasiado el móvil
+- Le importa su salud y bienestar — ya usa apps de fitness o meditación
+- Orientado a la optimización personal ("quantified self")
+
+**Por qué este perfil:**
+- Ya tiene el hardware necesario (smartwatch)
+- Ya está en el mindset de medir para mejorar
+- La propuesta de valor resuena inmediatamente: no es control parental, es autoconocimiento
+
+**Lo que NO somos:**
+- No somos una app de control parental
+- No bloqueamos el móvil a la fuerza
+- No juzgamos el tiempo de pantalla — juzgamos **cómo responde tu cuerpo**
+
+---
+
+## 🔄 El aprendizaje continuo
+
+WristGuard mejora con el tiempo de dos formas:
+
+**1. Personalización individual:**  
+Cada usuario refina su propio modelo con su feedback. Después de 2-3 semanas, las intervenciones son notablemente más precisas que al principio.
+
+**2. Mejora del modelo global:**  
+Los patrones anonimizados de todos los usuarios (con consentimiento explícito) alimentan mejoras al modelo base. El sistema aprende qué combinaciones biométricas predicen mejor el momento óptimo para distintos perfiles de usuario.
+
+---
+
+## 🚀 Stack tecnológico
+
+| Componente | Tecnología |
+|---|---|
+| Inferencia borrosa | scikit-fuzzy (Mamdani) |
+| Modelo ML | LightGBM + SHAP |
+| Backend | FastAPI (Python) |
+| App móvil | React Native |
+| App watch | WatchOS / Wear OS nativo |
+| Datos biométricos | Apple HealthKit / Google Health Connect |
+| Datos de pantalla | Screen Time API (iOS) / Digital Wellbeing API (Android) |
+| Infraestructura | Cloud con procesamiento on-device para privacidad |
+
+---
+
+## 🔐 Privacidad por diseño
+
+Los datos biométricos son altamente sensibles. WristGuard se construye con **Privacy by Design**:
+
+- El modelo de inferencia se ejecuta **on-device** siempre que es posible
+- Los datos en crudo nunca salen del dispositivo sin cifrado de extremo a extremo
+- El usuario puede exportar, ver y eliminar todos sus datos en cualquier momento
+- Cumplimiento con **GDPR** (Europa) y regulaciones equivalentes
+- Los datos anonimizados para mejora del modelo requieren **opt-in explícito**
+
+---
+
+## 📋 Plan para el Hackathon
+
+### Día 1: Datos y modelo base
+- [ ] Descargar y explorar GLOBEM (PhysioNet)
+- [ ] Feature engineering sobre `screen.csv`, `steps.csv`, `sleep.csv`
+- [ ] Definir y construir el target variable desde `dep_weekly.csv`
+- [ ] Entrenar modelo LightGBM baseline
+- [ ] Generar SHAP values y validar explicabilidad
+
+### Día 2: Inferencia borrosa y validación
+- [ ] Implementar sistema Mamdani con `scikit-fuzzy`
+- [ ] Calibrar funciones de pertenencia con distribuciones reales de GLOBEM
+- [ ] Integrar `hrv_index_fuzzy`, `hr_stress_fuzzy` y `bio_digital_risk` en el pipeline
+- [ ] Validar con cross-validation por usuario (LOSO — Leave-One-Subject-Out)
+- [ ] Construir demo de intervención con explicación en lenguaje natural
+
+### Día 3: Producto y pitch
+- [ ] Mockup del watch con la notificación explicable
+- [ ] Dashboard de bienestar digital (Streamlit o React)
+- [ ] Preparar las métricas del modelo para el pitch
+- [ ] Ensayar demostración en vivo
+
+### Métricas de éxito para el último día
+
+```
+Modelo:
+  - AUC-ROC > 0.75 en validación cruzada
+  - bio_digital_risk en top-3 SHAP features
+  - Top 3 SHAP features con sentido clínico y biológico
+  - Diferencia significativa entre grupos de alto/bajo riesgo
+
+Inferencia borrosa:
+  - hrv_index y hr_stress coherentes con los ejemplos clínicos documentados
+  - R15 ("tormenta perfecta") activándose en los casos esperados
+
+Producto:
+  - Demo funcional del flujo de intervención
+  - Explicación clara de por qué no es "otro timer de pantalla"
+  - Story: from data → fuzzy inference → GBT insight → action → feedback loop
+```
+
+---
+
+## 📚 Referencias y validación científica
+
+### Machine Learning y datos
+- **GLOBEM Dataset** — UW EXP Lab, PhysioNet (2022). Multi-year mobile and wearable sensing datasets.
+- **WESAD** — Schmidt et al. (2018). Wearable Stress and Affect Detection. ACM ICMI.
+
+### HRV, sueño y actividad física
+- **HRV-Sueño:** *Heart Rate Variability, Sleep Quality and Physical Activity in Medical Students*. ScienceDirect, 2024. Correlación PSQI-SDNN estadísticamente significativa.
+- **RMSSD-Bienestar:** *Associations Between Daily HRV and Self-Reported Wellness*. MDPI Sensors, 2025. β=0.510 (sleep), 0.281 (fatiga), 0.353 (estrés).
+- **HRV-Sueño profundo:** *Pre-sleep HRV predicts chronic insomnia*. Frontiers in Physiology, 2025.
+- **Ejercicio-HRV:** *Interaction between exercise and sleep with HRV*. European Journal of Applied Physiology, 2025.
+- **Umbrales clínicos HRV:** *Impact of exhaustive exercise on ANS*. Frontiers in Physiology, 2024. SDNN<50ms = simpático elevado; RMSSD<25ms = inhibición vagal.
+- **Sedentarismo-HR:** *Associations of Sedentary Time with HR and HRV: Meta-analysis*. MDPI IJERPH, 2021. β=0.24 bpm/hora sedentaria.
+- **Sedentarismo-Simpático:** *Sedentary Lifestyle: Updated Evidence*. PMC, 2020.
+- **Estrés-Sedentarismo:** *Sedentary Behaviour and Psychobiological Stress Reactivity*. Neuroscience & Biobehavioral Reviews, 2022.
+- **Sueño combinado:** *Combined effect of poor sleep and low HRV on metabolic syndrome*. Sleep Journal, 2023. MIDUS II, n=966.
+
+### Lógica borrosa para estrés fisiológico
+- **Sierra et al. (2011).** *A Stress-Detection System Based on Physiological Signals and Fuzzy Logic*. IEEE Trans. Ind. Electron.
+- **Zalabarria et al. (2020).** *A low-cost portable solution for stress estimation based on real-time fuzzy algorithm*. IEEE Access 8: 74118–74128.
+- **Springer (2023).** *State-of-the-Art of Stress Prediction from HRV Using AI*. Cognitive Computation. Revisión de 43 estudios.
+- **AIMS Neuroscience (2024).** *Predicting Stress Using Physiological Data*. Revisión de clasificadores (fuzzy, SVM, ANN, Bayesian).
+
+### Uso nocturno y sueño
+- **Lemola et al. (2015).** *Adolescents' Electronic Media Use at Night*. PLOS ONE.
+- **Shaffer & Ginsberg (2017).** *An Overview of HRV Metrics and Norms*. Frontiers in Public Health.
+
+---
+
+## 👥 El equipo
+
+*[Añadir nombres y roles del equipo aquí]*
+
+---
+
+## 📄 Licencia
+
+MIT License — ver `LICENSE` para más detalles.
+
+---
 
 </div>
+
+---
+
+## 🧪 Historial de Experimentación y Optimización (GBT & RL)
+
+A lo largo del desarrollo, hemos iterado profundamente sobre la arquitectura conjunta de **Gradient Boosting Trees (GBT)** para la generación de señales base, y **Reinforcement Learning (PPO)** para la ejecución de la política de trading (selección de Strike y decisión de Exit).
+
+### 1. Optimizaciones sobre el Modelo GBT (Señales Base)
+- **Umbrales de Confianza Dinámicos:** Para alcanzar los objetivos de volumen (Total trades > 2000) y rentabilidad (Total PnL > 250k), redujimos el `min_confidence` base del GBT de 0.51 a **0.45**. Esto incrementó drásticamente el corpus de episodios elegibles (pasando a manejar más de 154,000 episodios) permitiendo al agente de RL tener suficientes oportunidades para iterar.
+- **Validación del Backbone:** Mantuvimos el dropout del backbone en **0.05** como regularizador. Descubrimos que eliminarlo por completo generaba un sobreajuste rápido, mientras que dejarlo en 0.05 contenía la divergencia sin destruir la señal determinista durante la evaluación.
+
+### 2. Optimizaciones sobre el Agente RL (PPO)
+La arquitectura PPO (con un MLP puro de ~172.000 parámetros que puentea la estructura MoE para facilitar el escalado) sufrió graves problemas de estabilidad y colapso que resolvimos sistemáticamente:
+
+#### A. Resolución de la Varianza Extrema y el Critic
+- **Problema:** El Critic era incapaz de aprender porque las recompensas terminales (los cierres ganadores) llegaban hasta `+20.0`, mientras que las recompensas continuas (*step rewards*) rondaban el `0.05`. Una diferencia de magnitud de 400x que destrozaba el cálculo de los Retornos Monte Carlo y disparaba el Loss del Valor y el KL.
+- **Solución:** 
+  1. Escalamos el `terminal_reward` en `rewards.py` multiplicando por `0.1` (acotándolo al rango `[-0.6, 2.0]`), alineando así ambas magnitudes.
+  2. Subimos los `pretrain_critic_samples` masivamente de 5,000 a **20,000**.
+  3. Aumentamos el Learning Rate del pre-entrenamiento del Critic de `1e-4` a **`5e-4`**.
+  *Resultado:* El `V_loss` inicial bajó de rangos descontrolados (~15.0) a converger limpiamente por debajo de `3.0` antes de arrancar el PPO.
+
+#### B. Prevención del "Exit Head Collapse"
+- **Problema:** La cabeza de salida (*Exit Head*) perdía toda su entropía (bajando de 0.68 a 0.02) y aprendía a no salir nunca (HOLD perpetuo). Al retirar la restricción mecánica (`min_hold_minutes=0`), el agente caía en el extremo opuesto: *micro-scalping* (salía a los 2 minutos), vaciando el buffer de PPO y rompiendo el aprendizaje.
+- **Solución:** 
+  1. Restauramos el freno mecánico de la valla temporal (`min_hold_minutes` a 45/75/105/150 según fase).
+  2. Implementamos un filtro lógico en `training.py`: las transiciones donde el entorno forzaba la acción a HOLD (sobrescribiendo la decisión original de EXIT del agente) **se descartan del buffer**. Así el agente no aprende falsos positivos.
+  3. Subimos el `exit_entropy_coeff` a **0.25** e inyectamos ruido exploratorio (`logit_noise_exit_override=0.30`) para mantener la cabeza viva en la fase inicial.
+
+#### C. Estabilización de la Divergencia de Política (KL)
+- **Problema:** El estimador de KL (Divergencia de Kullback-Leibler) explotaba rápidamente por la asimetría de los retornos del mercado de opciones 0DTE, activando el *early stopping* prematuramente e impidiendo que los gradientes de entropía fluyeran.
+- **Solución:**
+  1. Elevamos el `kl_target` de 0.030 a **0.065** y el `clip_epsilon` a **0.15**.
+  2. Relajamos el multiplicador del *early stopping* a `kl_target * 2.0` para obligar al algoritmo a completar más batches antes de abortar el epoch, previniendo el "envejecimiento" prematuro del Rollout Buffer.
+
+#### D. Bugfixes de Estructura
+- Reparación del cálculo del **MoE Gating** en el proceso de PPO. Aunque actualmente el modelo es un *Pure MLP*, el sistema de logueo de las probabilidades del Gating (`total_gating_probs`) provocaba lecturas de `[0.00, 0.00, 0.00]`. Fue parcheado para ser compatible si en el futuro se activan los expertos (ej. para subir los *hidden_dims* de `[256, 256, 128]` a `[512, 512, 256]`).

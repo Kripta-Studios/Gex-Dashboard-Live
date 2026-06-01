@@ -38,7 +38,13 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from hybrid_model import get_hybrid_model, load_hybrid_model, load_ensemble_model, EnsembleTradingModel, FeatureNormalizer, get_device, FEATURE_COLUMNS
 from datetime import datetime, timedelta
-from neural.signal_policy import direction_from_prediction, is_actionable_signal
+from neural.signal_policy import (
+    confidence_for_predictions,
+    deployment_context_allowed,
+    direction_from_prediction,
+    is_actionable_signal,
+    get_independent_signals,
+)
 
 try:
     from tradingbot_wrapper import send_discord_trade_open, send_discord_trade_close
@@ -54,6 +60,25 @@ except ImportError as e:
 
 # --- POSITION SIZING ---
 INITIAL_BALANCE = 10_000.0
+
+
+def _row_nearest_level_dist_bps(row) -> float:
+    """
+    Distance to nearest deployment S/R level in bps.
+
+    `nearest_level_dist` is broad: IB, fibs and Greek exposure levels.
+    `nearest_level_dist_bps` is narrower IB/fib identity distance and is kept
+    as fallback for old parquet files.
+    """
+    for col in ("nearest_level_dist", "nearest_level_dist_bps"):
+        try:
+            value = float(row.get(col, np.nan))
+        except (AttributeError, TypeError, ValueError):
+            continue
+        if np.isfinite(value):
+            return value
+    return 999.0
+
 
 def _calc_contracts_futures(risk_capital: float, entry_price: float,
                             stop_pct: float, multiplier: float) -> int:
@@ -80,7 +105,11 @@ class TradeSimulator:
                  discord_enabled: bool = False, trade_limit: int = 0,
                  risk_capital: float = 500.0, min_entry_minute: int = 580,
                  min_short_entry_minute: int | None = None,
-                 min_short_price_vs_ib_high: float | None = None):
+                 min_short_price_vs_ib_high: float | None = None,
+                 spx_target: float = 0.010, etf_target: float = 0.006,
+                 spx_stop: float = 0.0025, etf_stop: float = 0.0025,
+                 qqq_target: float | None = None, spy_target: float | None = None,
+                 qqq_stop: float | None = None, spy_stop: float | None = None):
         self.threshold = threshold
         self.position_size = position_size
         self.risk_capital = risk_capital
@@ -95,6 +124,14 @@ class TradeSimulator:
         self.min_entry_minute = min_entry_minute
         self.min_short_entry_minute = min_short_entry_minute
         self.min_short_price_vs_ib_high = min_short_price_vs_ib_high
+        self.spx_target = spx_target
+        self.etf_target = etf_target
+        self.spx_stop = spx_stop
+        self.etf_stop = etf_stop
+        self.qqq_target = etf_target if qqq_target is None else qqq_target
+        self.spy_target = etf_target if spy_target is None else spy_target
+        self.qqq_stop = etf_stop if qqq_stop is None else qqq_stop
+        self.spy_stop = etf_stop if spy_stop is None else spy_stop
         self.trades = []
         
     def load_ohlc_data(self, ticker, date):
@@ -145,7 +182,11 @@ class TradeSimulator:
         # Create a copy with predictions and sort properly
         df_work = df.copy()
         df_work['pred'] = predictions
-        df_work['max_prob'] = probabilities.max(axis=1)
+        df_work['signal_confidence'] = confidence_for_predictions(probabilities, predictions)
+        df_work['p_short'] = probabilities[:, 0]
+        df_work['p_hold'] = probabilities[:, 1]
+        df_work['p_long'] = probabilities[:, 2]
+        df_work['signal_margin'] = np.abs(df_work['p_long'] - df_work['p_short'])
         
         # Convert time to minutes for easier comparison
         def time_to_minutes(t):
@@ -179,7 +220,7 @@ class TradeSimulator:
         
         for idx, row in df_work.iterrows():
             pred = row['pred']
-            max_prob = row['max_prob']
+            signal_confidence = row['signal_confidence']
             direction = direction_from_prediction(pred)
             
             ticker = row['ticker']
@@ -188,10 +229,11 @@ class TradeSimulator:
             current_minute = row['minutes']
             
             # Graduated dynamic confidence threshold and risk sizing based on consecutive losses
-            if ticker not in ticker_consecutive_losses:
-                ticker_consecutive_losses[ticker] = 0
+            loss_streak_key = (ticker, date)
+            if loss_streak_key not in ticker_consecutive_losses:
+                ticker_consecutive_losses[loss_streak_key] = 0
             
-            consec = ticker_consecutive_losses[ticker]
+            consec = ticker_consecutive_losses[loss_streak_key]
             if consec >= 4:
                 # 4+ consecutive losses: very aggressive filter (P(L|LLLL) ≈ 65%+)
                 effective_threshold = self.threshold + 0.20
@@ -203,8 +245,13 @@ class TradeSimulator:
             else:
                 effective_threshold = self.threshold
                 effective_risk_capital = self.risk_capital
+                
+            # --- DYNAMIC THRESHOLD BY TICKER & DIRECTION ---
+            # Removed hardcoded overrides to allow natural evaluation based on label targets
             
-            if not is_actionable_signal(direction, max_prob, base_confidence=effective_threshold):
+            if not is_actionable_signal(direction, signal_confidence, base_confidence=effective_threshold):
+                continue
+            if not deployment_context_allowed(row, direction=direction):
                 continue
             if current_minute < self.min_entry_minute:
                 continue
@@ -238,11 +285,19 @@ class TradeSimulator:
             entry_price = row['spot_price']
             
             
-            hold_minutes = 180  # Default fallback
+            hold_minutes = int(self.max_time)
             
             # FILTER: Skip if Volatility (IV Percentile) is too low
             # iv_percentile is in dataframe
             if 'iv_percentile' in row and row['iv_percentile'] < self.min_iv_pct:
+                continue
+                
+            # FILTER: Strict Price Action Confluence (User Edge)
+            # Only trade if we are within 15 bps of a key level. Use the broad
+            # collector distance so deployment matches labels: IB, fibs and
+            # Greek exposure levels are all valid S/R anchors.
+            level_dist_used = _row_nearest_level_dist_bps(row)
+            if level_dist_used > 15.0:
                 continue
             
             # --- HIGH RESOLUTION EXIT LOGIC ---
@@ -254,61 +309,60 @@ class TradeSimulator:
             trailing_stop_hit = False
             mae = 0.0
             peak_price = entry_price
+            # --- TICKER TARGET/STOP ---
+            ticker_stop = self.stop_pct
+            ticker_target = self.target_long if direction == "LONG" else self.target_short
 
-            base_target = self.target_long if direction == "LONG" else self.target_short
+            if row.ticker == "QQQ":
+                ticker_target = self.qqq_target
+                ticker_stop = self.qqq_stop
+            elif row.ticker == "SPY":
+                ticker_target = self.spy_target
+                ticker_stop = self.spy_stop
+            elif row.ticker == "SPX":
+                ticker_target = self.spx_target
+                ticker_stop = self.spx_stop
+            
+            base_target = ticker_target
             
             # Load 1-minute data for this day
             minute_data = self.load_ohlc_data(ticker, date)
             
             if not minute_data:
-                # Fallback: simple time exit at entry price (conservative)
-                # Or could use low-res data if available, but let's be strict for now
                 pass 
             else:
-                # Find entry index
                 entry_idx = -1
-                # Simple binary search or scan? Scan is fine for ~390 mins
                 for i, (m, o, h, l, c) in enumerate(minute_data):
                     if m >= current_minute:
                         entry_idx = i
                         break
                 
                 if entry_idx != -1:
-                    # Scan forward
                     exit_minute_limit = current_minute + hold_minutes
                     found_exit_scan = False
                     
                     for i in range(entry_idx, len(minute_data)):
                         m, o, h, l, c = minute_data[i]
                         
-                        # Check Time Force Exit
                         if m > exit_minute_limit:
-                            exit_price = o # Exit at open of next candle
+                            exit_price = o
                             actual_hold_minutes = m - current_minute
                             found_exit_scan = True
                             break
-                        
-                        # Check Targets/Stops (Intra-candle)
-                        # Conservative: check Low for Long Stop, High for Short Stop first?
-                        # Realistic: check overlapping ranges.
                         
                         if direction == "LONG":
                             # Peak tracking
                             peak_price = max(peak_price, h)
                             peak_pnl = (peak_price - entry_price) / entry_price
                             
-                            # Trailing stop check
-                            if peak_pnl >= GBM_TRAILING_ACTIVATION_PCT:
-                                if (peak_price - l) / entry_price >= GBM_TRAILING_STOP_PCT:
-                                    exit_price = peak_price - (entry_price * GBM_TRAILING_STOP_PCT)
-                                    trailing_stop_hit = True
-                                    actual_hold_minutes = m - current_minute
-                                    found_exit_scan = True
-                                    break
+                            # Breakeven Stop: If we hit +0.4% profit, move stop to entry_price + 0.1%
+                            current_stop_price = entry_price * (1 - ticker_stop)
+                            if peak_pnl >= 0.004:
+                                current_stop_price = max(current_stop_price, entry_price * 1.001)
 
                             # Stop Loss (Low triggers it)
-                            if l <= entry_price * (1 - self.stop_pct):
-                                exit_price = entry_price * (1 - self.stop_pct)
+                            if l <= current_stop_price:
+                                exit_price = current_stop_price
                                 stop_hit = True
                                 actual_hold_minutes = m - current_minute
                                 found_exit_scan = True
@@ -327,18 +381,14 @@ class TradeSimulator:
                             peak_price = min(peak_price, l)
                             peak_pnl = (entry_price - peak_price) / entry_price
                             
-                            # Trailing stop check
-                            if peak_pnl >= GBM_TRAILING_ACTIVATION_PCT:
-                                if (h - peak_price) / entry_price >= GBM_TRAILING_STOP_PCT:
-                                    exit_price = peak_price + (entry_price * GBM_TRAILING_STOP_PCT)
-                                    trailing_stop_hit = True
-                                    actual_hold_minutes = m - current_minute
-                                    found_exit_scan = True
-                                    break
+                            # Breakeven Stop: If we hit +0.4% profit, move stop to entry_price - 0.1%
+                            current_stop_price = entry_price * (1 + ticker_stop)
+                            if peak_pnl >= 0.004:
+                                current_stop_price = min(current_stop_price, entry_price * 0.999)
 
                             # Stop Loss (High triggers it)
-                            if h >= entry_price * (1 + self.stop_pct):
-                                exit_price = entry_price * (1 + self.stop_pct)
+                            if h >= current_stop_price:
+                                exit_price = current_stop_price
                                 stop_hit = True
                                 actual_hold_minutes = m - current_minute
                                 found_exit_scan = True
@@ -367,7 +417,7 @@ class TradeSimulator:
                 try:
                     # Calculamos precios teóricos para el mensaje
                     tp_price = entry_price * (1 + base_target) if direction == "LONG" else entry_price * (1 - base_target)
-                    sl_price = entry_price * (1 - self.stop_pct) if direction == "LONG" else entry_price * (1 + self.stop_pct)
+                    sl_price = entry_price * (1 - ticker_stop) if direction == "LONG" else entry_price * (1 + ticker_stop)
                     
                     # Creamos un objeto Mock que imite lo que el Wrapper espera
                     class MockSignal:
@@ -378,12 +428,12 @@ class TradeSimulator:
                             self.stop_loss = sl
                             self.take_profit_1 = tp
                             self.take_profit_2 = tp * 1.05
-                            self.raw_confidence = max_prob
-                            self.calibrated_confidence = max_prob
+                            self.raw_confidence = signal_confidence
+                            self.calibrated_confidence = signal_confidence
                             self.position_size = 1.0
                             self.max_hold_time = hold_minutes
                             self.regime = "Backtest_Discovery"
-                            self.reasoning = f"Backtest Signal (Prob: {max_prob:.2f})"
+                            self.reasoning = f"Backtest Signal (Prob: {signal_confidence:.2f})"
 
                     mock_signal = MockSignal(ticker, direction, entry_price, tp_price, sl_price)
                     
@@ -400,7 +450,7 @@ class TradeSimulator:
 
             # Calculate P&L using fixed multiplier and dynamic sizing
             multiplier = POINT_VALUES.get(ticker, 100.0)
-            contracts = _calc_contracts_futures(effective_risk_capital, entry_price, self.stop_pct, multiplier)
+            contracts = _calc_contracts_futures(effective_risk_capital, entry_price, ticker_stop, multiplier)
             
             pnl_dollars = 0.0
             if direction == "LONG":
@@ -416,9 +466,9 @@ class TradeSimulator:
             
             # Drawdown tracker updates
             if pnl_dollars > 0:
-                ticker_consecutive_losses[ticker] = 0
+                ticker_consecutive_losses[loss_streak_key] = 0
             elif pnl_dollars < 0:
-                ticker_consecutive_losses[ticker] += 1
+                ticker_consecutive_losses[loss_streak_key] += 1
             
             # --- DISCORD CLOSE ALERT ---
             if self.discord_enabled and send_discord_trade_close:
@@ -471,7 +521,14 @@ class TradeSimulator:
                 "exit_price": exit_price,
                 "pnl": pnl,
                 "pnl_dollars": pnl_dollars,
-                "confidence": max_prob,
+                "confidence": signal_confidence,
+                "p_short": float(row.get("p_short", np.nan)),
+                "p_hold": float(row.get("p_hold", np.nan)),
+                "p_long": float(row.get("p_long", np.nan)),
+                "signal_margin": float(row.get("signal_margin", np.nan)),
+                "nearest_level_dist_used_bps": float(level_dist_used),
+                "nearest_level_dist": float(row.get("nearest_level_dist", np.nan)),
+                "nearest_level_dist_bps": float(row.get("nearest_level_dist_bps", np.nan)),
                 "hold_minutes": hold_minutes,
                 "target_hit": target_hit,
                 "stop_hit": stop_hit,
@@ -546,6 +603,11 @@ def calculate_metrics(trades_df: pd.DataFrame) -> dict:
     
     long_win_rate = len(long_trades[long_trades["pnl_dollars"] > 0]) / len(long_trades) * 100 if len(long_trades) > 0 else 0
     short_win_rate = len(short_trades[short_trades["pnl_dollars"] > 0]) / len(short_trades) * 100 if len(short_trades) > 0 else 0
+
+    hold_col = "actual_hold_minutes" if "actual_hold_minutes" in trades_df.columns else "hold_minutes"
+    hold_values = trades_df[hold_col] if hold_col in trades_df.columns else pd.Series(dtype=float)
+    winner_hold_values = wins[hold_col] if hold_col in wins.columns else pd.Series(dtype=float)
+    exit_counts = trades_df["exit_reason"].value_counts() if "exit_reason" in trades_df.columns else pd.Series(dtype=int)
     
     return {
         "total_trades": total_trades,
@@ -563,6 +625,20 @@ def calculate_metrics(trades_df: pd.DataFrame) -> dict:
         "short_trades": len(short_trades),
         "short_win_rate": short_win_rate,
         "short_pnl": short_trades["pnl_dollars"].sum() if len(short_trades) > 0 else 0,
+        "avg_hold_minutes": float(hold_values.mean()) if len(hold_values) > 0 else 0.0,
+        "median_hold_minutes": float(hold_values.median()) if len(hold_values) > 0 else 0.0,
+        "p25_hold_minutes": float(hold_values.quantile(0.25)) if len(hold_values) > 0 else 0.0,
+        "p75_hold_minutes": float(hold_values.quantile(0.75)) if len(hold_values) > 0 else 0.0,
+        "pct_hold_lt30": float((hold_values < 30).mean() * 100) if len(hold_values) > 0 else 0.0,
+        "pct_hold_ge60": float((hold_values >= 60).mean() * 100) if len(hold_values) > 0 else 0.0,
+        "pct_hold_ge120": float((hold_values >= 120).mean() * 100) if len(hold_values) > 0 else 0.0,
+        "winner_avg_hold_minutes": float(winner_hold_values.mean()) if len(winner_hold_values) > 0 else 0.0,
+        "winner_median_hold_minutes": float(winner_hold_values.median()) if len(winner_hold_values) > 0 else 0.0,
+        "winner_pct_hold_ge60": float((winner_hold_values >= 60).mean() * 100) if len(winner_hold_values) > 0 else 0.0,
+        "exit_target_trades": int(exit_counts.get("target", 0)),
+        "exit_stop_trades": int(exit_counts.get("stop", 0)),
+        "exit_trailing_stop_trades": int(exit_counts.get("trailing_stop", 0)),
+        "exit_max_time_trades": int(exit_counts.get("max_time", 0)),
     }
 
 
@@ -596,6 +672,25 @@ def print_metrics(metrics: dict, title: str = ""):
     print(f"  LONG:  {metrics['long_trades']:,} trades | {metrics['long_win_rate']:.1f}% win | P&L: {metrics['long_pnl']:+.2f}")
     print(f"  SHORT: {metrics['short_trades']:,} trades | {metrics['short_win_rate']:.1f}% win | P&L: {metrics['short_pnl']:+.2f}")
 
+    print(f"\n  HOLD / HOME-RUN PROFILE")
+    print(f"  {'-' * 40}")
+    print(f"  Avg hold:         {metrics['avg_hold_minutes']:.1f} min")
+    print(f"  Median hold:      {metrics['median_hold_minutes']:.1f} min")
+    print(f"  Hold p25 / p75:   {metrics['p25_hold_minutes']:.1f} / {metrics['p75_hold_minutes']:.1f} min")
+    print(f"  Trades <30 min:   {metrics['pct_hold_lt30']:.1f}%")
+    print(f"  Trades >=60 min:  {metrics['pct_hold_ge60']:.1f}%")
+    print(f"  Trades >=120 min: {metrics['pct_hold_ge120']:.1f}%")
+    print(f"  Winner avg hold:  {metrics['winner_avg_hold_minutes']:.1f} min")
+    print(f"  Winner med hold:  {metrics['winner_median_hold_minutes']:.1f} min")
+    print(f"  Winners >=60 min: {metrics['winner_pct_hold_ge60']:.1f}%")
+    print(
+        "  Exit reasons:     "
+        f"target={metrics['exit_target_trades']:,}, "
+        f"stop={metrics['exit_stop_trades']:,}, "
+        f"trailing={metrics['exit_trailing_stop_trades']:,}, "
+        f"max_time={metrics['exit_max_time_trades']:,}"
+    )
+
 
 def print_by_ticker(trades_df: pd.DataFrame):
     """Print metrics by ticker."""
@@ -606,7 +701,12 @@ def print_by_ticker(trades_df: pd.DataFrame):
         ticker_trades = trades_df[trades_df["ticker"] == ticker]
         metrics = calculate_metrics(ticker_trades)
         if "error" not in metrics:
-            print(f"  {ticker:6s}: {metrics['total_trades']:4d} trades | {metrics['win_rate']:5.1f}% win | P&L: {metrics['total_pnl']:+6.2f}")
+            print(
+                f"  {ticker:6s}: {metrics['total_trades']:4d} trades | "
+                f"{metrics['win_rate']:5.1f}% win | PF {metrics['profit_factor']:.2f} | "
+                f"P&L: {metrics['total_pnl']:+6.2f} | "
+                f"hold med {metrics['median_hold_minutes']:.0f}m | >=60m {metrics['pct_hold_ge60']:.1f}%"
+            )
 
 
 # --- MAIN ---
@@ -615,14 +715,22 @@ def main():
     parser.add_argument("--data", default="training_data/training_data_derived.parquet", help="Path to CSV data")
     parser.add_argument("--model", default="models/trading_hybrid_wf.pt", help="Path to model file")
     parser.add_argument("--normalizer", default="models/hybrid_normalizer_wf.npz", help="Path to normalizer file")
-    parser.add_argument("--model-size", choices=["micro", "small", "medium", "large"], default="small", help="Model size used during training")
-    parser.add_argument("--threshold", type=float, default=0.6, help="Base confidence threshold for trades")
+    parser.add_argument("--model-size", choices=["micro", "legacy", "small", "medium", "large"], default="small", help="Model size used during training")
+    parser.add_argument("--threshold", type=float, default=0.45, help="Base confidence threshold for trades")
     parser.add_argument("--cooldown", type=int, default=30, help="Minutes between trades per ticker (default: 30)")
     parser.add_argument("--risk-capital", type=float, default=500.0, help="Risk capital in dollars per trade (fixed)")
     parser.add_argument("--position-size", type=float, default=1.0, help="Position size multiplier")
     parser.add_argument("--target_long", type=float, default=0.010, help="Target for LONG (default 1%%)")
     parser.add_argument("--target_short", type=float, default=0.005, help="Target for SHORT (default 0.5%%)")
     parser.add_argument("--stop", type=float, default=0.003, help="Stop loss %% (default: 0.3%%)")
+    parser.add_argument("--spx-target", type=float, default=0.010, help="SPX target override used by the simulator.")
+    parser.add_argument("--etf-target", type=float, default=0.006, help="SPY/QQQ target override used by the simulator.")
+    parser.add_argument("--spx-stop", type=float, default=0.0025, help="SPX stop override used by the simulator.")
+    parser.add_argument("--etf-stop", type=float, default=0.0025, help="SPY/QQQ stop override used by the simulator.")
+    parser.add_argument("--qqq-target", type=float, default=None, help="QQQ target override; defaults to --etf-target.")
+    parser.add_argument("--spy-target", type=float, default=None, help="SPY target override; defaults to --etf-target.")
+    parser.add_argument("--qqq-stop", type=float, default=None, help="QQQ stop override; defaults to --etf-stop.")
+    parser.add_argument("--spy-stop", type=float, default=None, help="SPY stop override; defaults to --etf-stop.")
     parser.add_argument("--max-time", type=int, default=180, help="Max predicted time to enter trade (default: 180 min)")
     parser.add_argument("--min-entry-minute", type=int, default=580, help="Earliest absolute minute of day for entries (10:30 = 630)")
     parser.add_argument("--min-short-entry-minute", type=int, default=None, help="Earliest absolute minute of day for SHORT entries (10:15 = 615)")
@@ -633,6 +741,13 @@ def main():
     parser.add_argument("--ensemble", action="store_true", help="Load model as ensemble (use with ensemble-trained .pt files)")
     parser.add_argument("--strict-wf", action="store_true", help="Enable strict Walk-Forward (only use models trained before the trade date)")
     parser.add_argument("--tickers", nargs="+", help="Filter by specific tickers (e.g., SPY QQQ)")
+    parser.add_argument(
+        "--sensitivity-thresholds",
+        nargs="+",
+        type=float,
+        default=[0.38, 0.40, 0.42, 0.45, 0.50],
+        help="Confidence thresholds to test after the main backtest.",
+    )
     
     args = parser.parse_args()
     
@@ -644,6 +759,9 @@ def main():
     print(f"  • Target LONG: {args.target_long:.1%}")
     print(f"  • Target SHORT:{args.target_short:.1%}")
     print(f"  • Stop Loss:  {args.stop:.1%}")
+    print(f"  • Ticker risk: SPX target/stop {args.spx_target:.1%}/{args.spx_stop:.2%}; "
+          f"QQQ target/stop {(args.qqq_target if args.qqq_target is not None else args.etf_target):.1%}/{(args.qqq_stop if args.qqq_stop is not None else args.etf_stop):.2%}; "
+          f"SPY target/stop {(args.spy_target if args.spy_target is not None else args.etf_target):.1%}/{(args.spy_stop if args.spy_stop is not None else args.etf_stop):.2%}")
     print(f"  • Max Time:   {args.max_time} min")
     print(f"  • Min IV Pct: {args.min_iv:.2f}")
     if args.discord:
@@ -661,7 +779,7 @@ def main():
     base_dir = Path(__file__).parent.parent
     data_path = Path(args.data).resolve()
     
-    if args.strict_wf and args.model.endswith('.joblib'):
+    if args.strict_wf and args.model.endswith('.joblib') and not args.model.endswith('_history.joblib'):
         # In strict WF mode, we use the _history ensemble containing all past models
         args.model = args.model.replace('.joblib', '_history.joblib')
     model_path = str(Path(args.model).resolve())
@@ -670,10 +788,8 @@ def main():
     # Load model
     print(f"\n[1/4] Loading model from {model_path}...")
     
-    if not os.path.exists(normalizer_path):
-        print(f"  [!] Normalizer not found at {normalizer_path}. Trying default location...")
-        normalizer_path = "models/hybrid_normalizer_wf.npz"
-        
+    # Normalizer path may not exist as a base file if only ticker-specific ones exist.
+    # We will check ticker-specific paths next.
     ticker_models = {}
     ticker_normalizers = {}
     is_ticker_specific = False
@@ -732,6 +848,8 @@ def main():
     df = df[(df['date'] >= date_filter_1) & (df['date'] <= date_filter_2)].copy()
     
     if getattr(args, 'tickers', None):
+        if len(args.tickers) == 1 and ' ' in args.tickers[0]:
+            args.tickers = args.tickers[0].split(' ')
         print(f"  [i] Filtering to tickers: {args.tickers}")
         df = df[df['ticker'].isin(args.tickers)].copy()
 
@@ -814,7 +932,7 @@ def main():
                     logits, _ = model(batch)
                 probs = torch.softmax(logits, dim=-1).cpu().numpy()
         
-    predictions = np.argmax(probs, axis=1)
+    predictions, _ = get_independent_signals(probs, base_confidence=args.threshold)
     
     print(f"  [OK] Predictions complete")
     print(f"    SHORT: {(predictions == 0).sum():,}")
@@ -827,7 +945,11 @@ def main():
                                target_long=args.target_long, target_short=args.target_short, stop_pct=args.stop, max_time=args.max_time, min_iv_pct=args.min_iv,
                                discord_enabled=args.discord, risk_capital=args.risk_capital, min_entry_minute=args.min_entry_minute,
                                min_short_entry_minute=args.min_short_entry_minute,
-                               min_short_price_vs_ib_high=args.min_short_price_vs_ib_high)
+                               min_short_price_vs_ib_high=args.min_short_price_vs_ib_high,
+                               spx_target=args.spx_target, etf_target=args.etf_target,
+                               spx_stop=args.spx_stop, etf_stop=args.etf_stop,
+                               qqq_target=args.qqq_target, spy_target=args.spy_target,
+                               qqq_stop=args.qqq_stop, spy_stop=args.spy_stop)
     trades_df = simulator.simulate(df, predictions, probs)
     print(f"  [OK] Executed {len(trades_df):,} trades")
     
@@ -845,16 +967,21 @@ def main():
     print(f"\n  {'Threshold':<12} {'Trades':<10} {'Win Rate':<12} {'PF':<10} {'P&L':<10}")
     print(f"  {'-' * 54}")
     
-    for thresh in [0.5, 0.6, 0.7, 0.8, 0.9]:
+    for thresh in args.sensitivity_thresholds:
+        thresh_predictions, _ = get_independent_signals(probs, base_confidence=thresh)
         sim = TradeSimulator(threshold=thresh, cooldown_minutes=args.cooldown,
                              target_long=args.target_long, target_short=args.target_short, stop_pct=args.stop, max_time=args.max_time, min_iv_pct=args.min_iv,
                              discord_enabled=False, risk_capital=args.risk_capital, min_entry_minute=args.min_entry_minute,
                              min_short_entry_minute=args.min_short_entry_minute,
-                             min_short_price_vs_ib_high=args.min_short_price_vs_ib_high)
-        trades = sim.simulate(df, predictions, probs)
+                             min_short_price_vs_ib_high=args.min_short_price_vs_ib_high,
+                             spx_target=args.spx_target, etf_target=args.etf_target,
+                             spx_stop=args.spx_stop, etf_stop=args.etf_stop,
+                             qqq_target=args.qqq_target, spy_target=args.spy_target,
+                             qqq_stop=args.qqq_stop, spy_stop=args.spy_stop)
+        trades = sim.simulate(df, thresh_predictions, probs)
         m = calculate_metrics(trades)
         if "error" not in m:
-            print(f"  {thresh:<12.1f} {m['total_trades']:<10,} {m['win_rate']:<12.1f}% {m['profit_factor']:<10.2f} {m['total_pnl']:<+10.2f}")
+            print(f"  {thresh:<12.2f} {m['total_trades']:<10,} {m['win_rate']:<12.1f}% {m['profit_factor']:<10.2f} {m['total_pnl']:<+10.2f}")
         else:
             print(f"  {thresh:<12.1f} {'No trades':<10}")
     

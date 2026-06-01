@@ -1,3 +1,4 @@
+import argparse
 import os
 import sys
 import pickle
@@ -12,14 +13,14 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..",
 from neural.rl.utils import get_delta_bucket, get_iv_bucket, get_pnl_bucket
 
 
-def main():
+def main(index_path=None, cache_dir=None, output_path=None):
     # Get absolute path to project root (Gex-Dashboard-Live/)
     script_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.dirname(os.path.dirname(script_dir))
     
-    index_path = os.path.join(project_root, "rl_data", "episode_index.parquet")
-    cache_dir = os.path.join(project_root, "rl_data", "rl_options_cache_chunks")
-    output_path = os.path.join(project_root, "rl_data", "recovery_stats.pkl")
+    index_path = index_path or os.path.join(project_root, "rl_data", "episode_index.parquet")
+    cache_dir = cache_dir or os.path.join(project_root, "rl_data", "rl_options_cache_chunks")
+    output_path = output_path or os.path.join(project_root, "rl_data", "recovery_stats.pkl")
     
     if not os.path.exists(index_path):
         print(f"Index not found at {index_path}")
@@ -162,4 +163,9 @@ def main():
     print(f"Saved lookup table with {len(lookup)} buckets to {output_path}")
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Compute RL recovery stats from an options cache")
+    parser.add_argument("--episode-index", default=None, help="Path to episode_index parquet")
+    parser.add_argument("--options-cache", default=None, help="Directory with per-day options cache shards")
+    parser.add_argument("--output", default=None, help="Output pickle path for recovery_stats")
+    args = parser.parse_args()
+    main(index_path=args.episode_index, cache_dir=args.options_cache, output_path=args.output)

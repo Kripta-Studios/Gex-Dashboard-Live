@@ -1,15 +1,15 @@
 [Unit]
-Description=Greek Exposure AI Trading Bot - Live Trading
+Description=GEX JEPA Live Trading Bot - GBT+JEPA 180m + Fixed 0.70 Delta
 Documentation=https://github.com/kripta-studios/gex-trading
-After=network.target
+After=network-online.target realtime_feed.service
+Wants=network-online.target
 
 [Service]
 Type=simple
 User=root
 
-# ACTUALIZADO para nueva estructura
-WorkingDirectory=/home/Option-Greeks-Plotting-Discord-Bot/bots
-ExecStart=/usr/bin/python3 /home/Option-Greeks-Plotting-Discord-Bot/bots/tradingbot_wrapper_rl.py
+WorkingDirectory=/home/Option-Greeks-Plotting-Discord-Bot
+ExecStart=/usr/bin/python3 /home/Option-Greeks-Plotting-Discord-Bot/bots/tradingbot_wrapper_jepa.py --model-dir /home/Option-Greeks-Plotting-Discord-Bot/neural/models/jepa/jepa_production_final_180m --rt-data-dir /home/Option-Greeks-Plotting-Discord-Bot/rt_data --trades-dir /home/Option-Greeks-Plotting-Discord-Bot/trades_jepa --tickers SPX QQQ SPY
 
 Restart=always
 RestartSec=30
@@ -18,8 +18,8 @@ StandardOutput=journal
 StandardError=journal
 
 # Resource limits
-MemoryMax=1.2G
-CPUQuota=50%
+MemoryMax=2G
+CPUQuota=75%
 
 [Install]
 WantedBy=multi-user.target

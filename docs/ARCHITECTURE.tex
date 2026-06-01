@@ -1,856 +1,450 @@
 % ============================================================================
-%  Kripta Studios — Full System Architecture Document
-%  GBT+RL 0DTE Options Trading System
+%  Kripta Studios -- Scientific Architecture Document
+%  Current GBT+JEPA and 0DTE Option Execution Stack
 % ============================================================================
-\documentclass[11pt,a4paper,twoside]{article}
+\documentclass[11pt,a4paper]{article}
 
-% ── Encoding & Fonts ──
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{mathpazo}
-
-% ── Mathematics ──
-\usepackage{amsmath, amsfonts, amssymb, amsthm}
-\usepackage{mathtools}
-\usepackage{bm}
-
-% ── Layout & Structure ──
+\usepackage{amsmath, amssymb, bm}
 \usepackage{geometry}
 \geometry{margin=1in}
-\usepackage{titling}
-\usepackage{titlesec}
 \usepackage{setspace}
 \onehalfspacing
-
-% ── Tables & Figures ──
-\usepackage{graphicx}
 \usepackage{booktabs}
-\usepackage{multirow}
 \usepackage{longtable}
-\usepackage{float}
-
-% ── Code & Links ──
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{xcolor}
 \usepackage{hyperref}
-\hypersetup{colorlinks=true, linkcolor=blue, citecolor=red, urlcolor=blue}
-\usepackage{listings}
-\lstset{
-  basicstyle=\ttfamily\small,
-  breaklines=true,
-  frame=single,
-  columns=fullflexible
-}
+\hypersetup{colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue}
+\setcounter{tocdepth}{2}
+\sloppy
 
-% ── Theorems ──
-\newtheorem{definition}{Definition}
-\newtheorem{proposition}{Proposition}
-
-% ── Notation shortcuts ──
-\DeclareMathOperator*{\argmax}{arg\,max}
-\DeclareMathOperator*{\argmin}{arg\,min}
-\newcommand{\E}{\mathbb{E}}
-\newcommand{\R}{\mathbb{R}}
-\newcommand{\bx}{\bm{x}}
-\newcommand{\bs}{\bm{s}}
-\newcommand{\ba}{\bm{a}}
-
-% ============================================================================
-\title{\textbf{Adaptive Directional Options Trading via \\
-Gradient Boosted Ensemble Classification \\
-and Proximal Policy-Optimized Execution} \\[0.5em]
-\large{System Architecture, Mathematical Foundations, \\
-and Empirical Validation}}
-\author{Kripta Studios — Quantitative Research Division}
-\date{March 2026}
+\title{\textbf{Architecture of the Current GBT+JEPA Market Direction System and 0DTE Option Execution Stack}}
+\author{Kripta Studios}
+\date{June 2026}
 
 \begin{document}
 \maketitle
-
-% ============================================================================
-% ABSTRACT
-% ============================================================================
-\begin{abstract}
-We present the complete architecture of an automated intraday trading system for zero-days-to-expiration (0DTE) index options on the S\&P~500 (SPX) and NASDAQ-100 (QQQ). The system operates as a two-stage pipeline: (1)~a \emph{directional classifier} based on an ensemble of Gradient Boosted Trees (GBT) trained via anchored walk-forward validation emits a probabilistic signal $\hat{y} \in \{\textsc{short}, \textsc{hold}, \textsc{long}\}$; (2)~a \emph{Proximal Policy Optimization} (PPO) agent consumes this signal together with a 182-dimensional state vector to execute option strike selection, entry timing, and exit management with real-time options pricing.
-
-This document provides the mathematical foundations, design rationale, training methodology, reward engineering, and empirical results that justify the architectural evolution from a legacy Multi-Layer Perceptron (MLP) to the current GBT+RL framework. The migration resolved a fundamental over-parameterization failure, recovering a true out-of-sample directional edge of $+10.7\%$ above base rate and enabling profitable execution with a profit factor exceeding $1.5$ across walk-forward windows spanning 897 trading days.
-\end{abstract}
-
 \tableofcontents
 \newpage
 
-% ============================================================================
-%  PART I — PROBLEM FORMULATION
-% ============================================================================
-\section{Problem Formulation}
-\label{sec:problem}
+\begin{abstract}
+This document describes the current production-candidate architecture after the research migration from the legacy GBT+PPO/RL stack to a supervised GBT+JEPA stack.  The deployed idea is not ``JEPA instead of everything.''  The promoted model is a hybrid: a tabular LightGBM classifier predicts 180 minute market direction using both engineered market microstructure features and latent features learned by an explicit-input Joint-Embedding Predictive Architecture (XInputJEPA).  The option layer currently uses a deterministic 0DTE fixed-delta execution rule near $\Delta=0.70$.  OptionValueJEPA, learned strike selection, and learned 5 minute exits were evaluated as research extensions, but they are not yet promoted because they did not beat the fixed-delta baseline on the relevant out-of-sample gates.  The strict out-of-sample result is the April--May 2026 frozen-March test, where \texttt{base\_jepa} produced 105 trades, 68.6\% win rate, 1.945 profit factor, and \$9,132 proxy PnL at 1 bps cost.
+\end{abstract}
 
-\subsection{Objective}
-The primary objective is to construct a system that, at each 5-minute bar $t$ during U.S.\ equity market hours (09:30--16:00~ET), produces:
-\begin{enumerate}
-    \item A \textbf{directional classification} $\hat{y}_t \in \{0, 1, 2\}$ corresponding to $\{\textsc{short}, \textsc{hold}, \textsc{long}\}$ with an associated confidence $c_t = \max_{k} p_k(t) \in [0, 1]$.
-    \item Given a non-\textsc{hold} signal with $c_t \geq c_{\min}$, an \textbf{execution policy} $\pi_\theta$ that selects the option strike (via delta bucket) and manages the position minute-by-minute until exit.
-\end{enumerate}
+\section{Research Question}
 
-\subsection{Market Microstructure}
-The system operates on 0DTE SPX options—contracts whose expiration falls on the current trading day. These instruments exhibit:
-\begin{itemize}
-    \item \textbf{Extreme theta decay:} time value vanishes entirely by 16:00~ET, creating an exponentially accelerating cost of holding.
-    \item \textbf{High gamma exposure:} near-expiration options exhibit convex payoffs, amplifying directional moves.
-    \item \textbf{Wide bid-ask spreads:} deeply OTM strikes can exhibit spreads of $6\%$ of mid price, while ITM spreads compress to $\sim1\%$.
-\end{itemize}
+The architectural question is whether a JEPA-style latent state adds predictive information to an already feature-rich GBT market model.  The specific trading question is:
 
-We model transaction costs via a delta-regime half-spread estimate:
-\begin{equation}
-    \text{HalfSpread}(|\Delta|) =
-    \begin{cases}
-        0.06 \cdot P_{\text{mid}} & \text{if } |\Delta| < 0.30 \quad (\text{OTM}) \\
-        0.03 \cdot P_{\text{mid}} & \text{if } 0.30 \leq |\Delta| \leq 0.60 \quad (\text{ATM}) \\
-        0.01 \cdot P_{\text{mid}} & \text{if } |\Delta| > 0.60 \quad (\text{ITM})
-    \end{cases}
-    \label{eq:spread}
-\end{equation}
+\[
+  \Pr(S_{t+180m} > S_t \mid \mathcal{F}_t),
+\]
 
-\subsection{Feature Space}
-\label{subsec:features}
-The observation at each timestep consists of $D = 163$ continuously-valued features derived from the underlying spot price and the complete options chain. These are organized into the following categories:
+where $S_t$ is the underlying spot or proxy price and $\mathcal{F}_t$ is the information set available at timestamp $t$.  The system trades a fixed 180 minute horizon.  This horizon is not arbitrary: it matches the label produced by the data collector and the operational window used by the existing trading pipeline.
 
-\begin{longtable}{llc}
+\subsection{Hypothesis}
+
+The hypothesis is that option-market state is partially observable.  Hand-engineered features describe the current surface and exposure map, but they may not fully encode how the system is evolving.  JEPA is used to learn a compact latent transition model:
+
+\[
+  \mathrm{current\ state} + \mathrm{recent\ input} \rightarrow \mathrm{future\ latent\ state}.
+\]
+
+If the latent variables summarize transition dynamics that the GBT cannot easily reconstruct from static features, then adding JEPA features should improve out-of-sample trade metrics.  This is exactly what the strict April--May 2026 test shows for the combined \texttt{base\_jepa} model.
+
+\subsection{Non-Hypothesis}
+
+The research does not currently support replacing the entire trading system with an end-to-end JEPA-only model.  The JEPA-only model has signal, but it underperforms the combined model.  The production design therefore keeps the interpretable engineered state and uses JEPA as a representation layer.
+
+\section{High-Level System Diagram}
+
+\[
+\begin{array}{cccccc}
+\text{ThetaData and market data}
+&\rightarrow&
+\text{base feature parquet}
+&\rightarrow&
+\text{XInputJEPA append}
+&\rightarrow \\
+&&&&
+\text{GBT feature matrix}
+&\rightarrow
+\text{per-ticker 180m direction models}
+\rightarrow
+\text{0DTE option execution}.
+\end{array}
+\]
+
+The code-level orchestration is:
+
+\begin{center}
+\path{neural/jepa/run_pipeline.ps1}
+\end{center}
+
+The production mode is:
+
+\begin{center}
+\texttt{.\textbackslash neural\textbackslash jepa\textbackslash run\_pipeline.ps1 -ProductionTrain}
+\end{center}
+
+When \texttt{-SkipCollect} is not supplied, this mode runs the data collector.  The collector itself decides whether to rebuild or append incrementally.
+
+\section{Pipeline Stages}
+
+\begin{longtable}{p{0.16\textwidth}p{0.25\textwidth}p{0.49\textwidth}}
 \toprule
-\textbf{Category} & \textbf{Description} & \textbf{Dims} \\
+Stage & Main script & Function \\
 \midrule
 \endhead
-Spot \& Returns & Price, log returns, realized vol & 8 \\
-Greek Exposures & $\Delta$, $\Gamma$, $\theta$, $\mathcal{V}$, $\rho$ by expiry & 24 \\
-GEX / DEX / VEX & Gamma, delta, vanna exposure measures & 18 \\
-Volume Profiles & Put/call volume, open interest ratios & 12 \\
-IV Surface & ATM IV, skew, term structure, smile slopes & 16 \\
-Order Flow & Net gamma, vanna/charm cross-products & 14 \\
-Level Proximity & Distance to support/resistance in bps & 6 \\
-Temporal & Time of day, day of week, minutes to close & 5 \\
-Cross-Ticker & QQQ context features (correlation, spread) & 12 \\
-Derived Ratios & Composite signals, z-scores, log-transforms & 48 \\
-\midrule
-\textbf{Total} & & \textbf{163} \\
+Data collection & \path{neural/collect_training_data_spx_qqq.py} & Builds the base SPX/QQQ/SPY market-state parquet.  It can rebuild from 2022 or append only new dates when the collector script is older than the output parquet. \\
+Production cutoff & \path{neural/jepa/run_pipeline.ps1} & In production mode, creates a cutoff parquet using \texttt{TrainEndDate=20261230}; the real maximum date is the maximum date available in the source data. \\
+XInputJEPA training & \path{neural/jepa/train_xinput_jepa.py} & Trains a state/input JEPA using 24 five-minute contexts and multi-horizon latent prediction.  In production mode it selects a validation epoch and then refits on all available dates. \\
+Feature append & \path{neural/jepa/append_xinput_jepa_features.py} & Appends 42 \texttt{xjepa\_*} features to each live-safe row. \\
+180m GBT training & \path{neural/jepa/train_180m_production.py} & Trains per-ticker LightGBM classifiers for \texttt{base}, \texttt{jepa\_only}, and \texttt{base\_jepa}. \\
+180m backtesting & \path{neural/jepa/backtest_jepa_180m.py} & Scores a frozen model over a chosen date range and simulates fixed 180 minute holds with cooldown. \\
+Option policy research & \path{neural/jepa/train_backtest_option_policy.py} & Builds 0DTE option candidate labels and evaluates fixed delta, learned selectors, and oracle ceilings. \\
+OptionValueJEPA research & \path{neural/jepa/train_option_value_jepa.py} and \path{neural/jepa/walkforward_option_value_jepa.py} & Learns candidate option values and 5 minute continuation values.  This is research-only until it beats fixed delta in walk-forward. \\
 \bottomrule
 \end{longtable}
 
-All features with extreme-scale distributions (e.g., \texttt{delta\_gamma\_ratio}, \texttt{net\_zomma}, \texttt{gamma\_x\_near\_*}) undergo a sign-preserving log transform during data collection:
-\begin{equation}
-    \tilde{x} = \text{sign}(x) \cdot \log(1 + |x|)
-    \label{eq:log_transform}
-\end{equation}
-This prevents neural saturation and reduces the kurtosis of features with raw values exceeding $10^6$.
+\section{Data Model}
 
+The base data object is a row-level intraday market state.  Required identifiers include ticker, date, time, and spot price.  The training rows are sorted by ticker, date, and timestamp or time.  The exact 180 minute label is built by shifting within each ticker-date group:
 
-% ============================================================================
-%  PART II — DIRECTIONAL CLASSIFIER
-% ============================================================================
-\section{Stage 1: Directional Classifier (GBT Ensemble)}
-\label{sec:gbt}
+\[
+  S_{t+180m} = S_{i+36},
+\]
 
-\subsection{Architectural Migration: MLP $\to$ GBT}
-\label{subsec:migration}
+where one row step is five minutes.  Rows that do not have an exact 36-step future observation are excluded from 180 minute training.
 
-The legacy architecture employed a PyTorch-based Multi-Layer Perceptron with approximately 150,000 trainable parameters. Walk-forward validation revealed a catastrophic failure mode: the model achieved $0\%$ precision and recall for out-of-sample directional trades at all confidence thresholds above $0.50$.
+The latest production run used:
 
-\subsubsection{Root Cause: Over-Parameterization}
-The fundamental mismatch lay in the model capacity relative to sample size. The training dataset contained approximately $138{,}000$ individual 5-minute bars, but directional signals (LONG or SHORT) accounted for merely $13\%$ of observations. After class balancing, the effective training set per walk-forward window was approximately $14{,}000$ samples.
+\begin{itemize}
+  \item 221,832 rows in the production source parquet,
+  \item source maximum date May 29, 2026,
+  \item 56,160 rows after exact 180 minute label construction,
+  \item 960 production dates and 56,160 JEPA windows in the final-fit XInputJEPA run.
+\end{itemize}
 
-\begin{proposition}[Sample-to-Parameter Ratio]
-For a neural network with $P$ parameters trained on $N$ effective samples in a noisy financial prediction setting with signal-to-noise ratio $\text{SNR} \ll 1$, the generalization error scales as:
-\begin{equation}
-    \epsilon_{\text{gen}} \propto \sqrt{\frac{P}{N}} \cdot \frac{1}{\text{SNR}}
-\end{equation}
-With $P = 150{,}000$ and $N = 14{,}000$, the ratio $P/N \approx 10.7$ guarantees catastrophic overfitting under the low-SNR financial regime.
-\end{proposition}
-
-The MLP learned training data perfectly ($c_{\text{train}} = 1.00$) but produced out-of-sample confidence rarely exceeding $0.45$, well below the actionable threshold of $0.55$.
-
-\subsubsection{Diagnostic Test}
-To isolate the failure locus (features vs.\ architecture), a LightGBM model was trained on $85\%$ of the temporal timeline and tested strictly out-of-sample on the remaining $15\%$:
-
-\begin{table}[H]
-\centering
-\begin{tabular}{lccc}
-\toprule
-\textbf{Task} & \textbf{GBT Accuracy} & \textbf{Base Rate} & \textbf{Edge} \\
-\midrule
-Multiclass (Short/Hold/Long) & 91.0\% & 90.2\% & +0.8\% \\
-Directional (Short vs Long) & 72.2\% & 61.5\% & \textbf{+10.7\%} \\
-\bottomrule
-\end{tabular}
-\caption{LightGBM diagnostic test—proof that the 163 features contain a robust directional signal that the MLP was incapable of extracting.}
-\label{tab:diagnostic}
-\end{table}
-
-This established that the features contain statistically significant directional information, and the failure was architectural, not informational.
-
-\subsection{Why Gradient Boosted Trees}
-Gradient Boosted Trees represent the empirically dominant architecture for tabular data with $N < 10^6$ \cite{grinsztajn2022}. Key advantages:
-
-\begin{enumerate}
-    \item \textbf{Implicit feature selection:} tree splits naturally ignore uninformative features, providing built-in regularization.
-    \item \textbf{Scale invariance:} unlike neural networks, GBTs are invariant to monotone feature transformations, eliminating the sensitivity to normalization.
-    \item \textbf{Data efficiency:} GBTs extract robust non-linear interactions from orders of magnitude fewer samples than deep neural networks.
-    \item \textbf{No gradient vanishing:} each tree fits the residual directly, avoiding the vanishing gradient problem in deep networks.
-\end{enumerate}
-
-\subsection{LightGBM Configuration}
-\label{subsec:lgbm_config}
-
-Each individual model uses the following hyperparameter configuration:
-
-\begin{table}[H]
-\centering
-\begin{tabular}{llp{7cm}}
-\toprule
-\textbf{Parameter} & \textbf{Value} & \textbf{Rationale} \\
-\midrule
-\texttt{objective} & \texttt{multiclass} & 3-class classification (Short/Hold/Long) \\
-\texttt{n\_estimators} & 300 & Sufficient capacity without excessive boosting rounds \\
-\texttt{max\_depth} & 6 & Limits higher-order noise interactions \\
-\texttt{learning\_rate} & 0.05 & Ensures smooth gradient descent in function space \\
-\texttt{subsample} & 0.8 & Row bagging for variance reduction \\
-\texttt{colsample\_bytree} & 0.8 & Stochastic feature selection per tree \\
-\texttt{min\_child\_samples} & 50 & Prevents leaf nodes from fitting noise \\
-\texttt{reg\_alpha} ($\alpha$) & 0.1 & L1 regularization \\
-\texttt{reg\_lambda} ($\lambda$) & 1.0 & L2 regularization \\
-\bottomrule
-\end{tabular}
-\caption{Production LightGBM hyperparameters. The depth limit of 6 implies at most $2^6 = 64$ leaf nodes per tree, giving $300 \times 64 = 19{,}200$ effective parameters—far below the MLP's 150,000.}
-\label{tab:lgbm_params}
-\end{table}
-
-The GBT loss function is the standard multiclass log-loss (cross-entropy):
-\begin{equation}
-    \mathcal{L}_{\text{GBT}} = -\frac{1}{N} \sum_{i=1}^{N} \sum_{k=0}^{2} y_{ik} \log \hat{p}_{ik}
-    \label{eq:gbt_loss}
-\end{equation}
-where $y_{ik} \in \{0, 1\}$ is the one-hot target and $\hat{p}_{ik}$ is the softmax probability for class $k$.
-
-\subsection{Feature Normalization}
-Despite GBT's inherent scale invariance, a feature normalizer computes per-column statistics for downstream compatibility with the RL agent's neural network backbone:
-\begin{equation}
-    \hat{x}_j = \frac{x_j - \mu_j}{\sigma_j + \epsilon}, \quad \epsilon = 10^{-8}
-    \label{eq:norm}
-\end{equation}
-The normalizer is fit on the \textbf{full training set} (before class balancing) to capture the true feature distribution, then applied to all downstream consumers.
-
-
-% ============================================================================
-%  PART III — TRAINING METHODOLOGY
-% ============================================================================
-\section{Walk-Forward Training Pipeline}
-\label{sec:walkforward}
-
-\subsection{Temporal Splitting}
-Financial time series exhibit non-stationarity and autocorrelation, making random train/test splits invalid. We employ \textbf{anchored walk-forward validation}:
-
-\begin{definition}[Walk-Forward Window]
-Given a dataset spanning $T$ months, with training window $W_{\text{train}}$ and test window $W_{\text{test}}$, the $i$-th split is defined as:
-\begin{align}
-    \text{Train}_i &= [t_{i-1}, \; t_{i-1} + W_{\text{train}}) \\
-    \text{Test}_i  &= [t_{i-1} + W_{\text{train}}, \; t_{i-1} + W_{\text{train}} + W_{\text{test}})
-\end{align}
-with step size $\Delta = 1$ month. This generates $\lfloor (T - W_{\text{train}}) / \Delta \rfloor$ windows.
-\end{definition}
-
-In production, $W_{\text{train}} = 9$ months and $W_{\text{test}} = 1$ month. For a dataset spanning August 2022 to February 2026 ($\sim42$ months), this produces approximately 33 walk-forward windows.
-
-\subsection{Class Balancing}
-\label{subsec:balancing}
-Financial labeling produces inherently unbalanced classes, with HOLD typically comprising $87\%$ of observations. We apply the following balancing algorithm:
-
-\begin{enumerate}
-    \item Let $n_L = |\{i : y_i = \text{LONG}\}|$ and $n_S = |\{i : y_i = \text{SHORT}\}|$.
-    \item Set the minority count $n_{\min} = \max(\min(n_L, n_S), \; 30)$.
-    \item Balance directional classes: $n_L' = n_S' = n_{\min}$ (strict 1:1 ratio).
-    \item Cap HOLD samples: $n_H' = \min(n_H, \; 2 \cdot (n_L' + n_S'))$.
-    \item Reject the window if $n_L' < 100$ or $n_S' < 100$.
-\end{enumerate}
-
-This ensures zero directional bias and prevents label-sparse windows from producing unreliable models.
-
-\subsection{Calibration}
-\label{subsec:calibration}
-Each model's decision thresholds are calibrated on a \emph{calibration set} (the first 10 trading days of the test period). This prevents threshold optimization from contaminating the out-of-sample evaluation.
-
-The trade calibration function converts raw class probabilities $\bm{p} = (p_{\text{S}}, p_{\text{H}}, p_{\text{L}})$ into a discrete prediction:
-\begin{equation}
-    \hat{y} =
-    \begin{cases}
-        \text{LONG}  & \text{if } p_{\text{L}} \geq \tau_L \;\wedge\; p_{\text{L}} \geq p_{\text{S}} \;\wedge\; p_{\text{L}} \geq p_{\text{H}} + m \\
-        \text{SHORT} & \text{if } p_{\text{S}} \geq \tau_S \;\wedge\; p_{\text{S}} > p_{\text{L}} \;\wedge\; p_{\text{S}} \geq p_{\text{H}} + m \\
-        \text{HOLD}  & \text{otherwise}
-    \end{cases}
-    \label{eq:calibration}
-\end{equation}
-where $\tau_L, \tau_S \in [0.50, 0.80]$ are per-class confidence thresholds and $m \in \{0.00, 0.05, 0.10\}$ is the hold margin. These are grid-searched on the calibration set to maximize profit factor subject to a minimum trade count constraint ($\geq 10$).
-
-\subsection{Window Selection and Ensemble Construction}
-\label{subsec:ensemble}
-
-Not all walk-forward windows produce viable models. A multi-stage filter removes degenerate windows:
-
-\begin{enumerate}
-    \item \textbf{Collapse detection:} reject if $>90\%$ of directional predictions are one-sided.
-    \item \textbf{Minimum trades:} reject if calibrated predictions produce fewer than $\max(10, |\text{cal}|/50)$ trades.
-    \item \textbf{Profit factor floor:} reject if PF $< 0.30$ with $\geq 30$ trades.
-\end{enumerate}
-
-Surviving windows are ranked by a \textbf{recency-weighted score} that penalizes older windows:
-\begin{equation}
-    \text{Score}(w_i) = \overline{\text{PF}}_i \cdot \left(\frac{i}{W_{\text{total}}}\right)^2
-    \label{eq:rank_score}
-\end{equation}
-where $\overline{\text{PF}}_i$ is the average profit factor across the window's ensemble constituents and $i / W_{\text{total}}$ is the recency fraction. The quadratic exponent heavily penalizes models trained on data more than 12 months old.
-
-The top $N = 10$ windows contribute their models to the production ensemble. Each window trains $K = 5$ models with different random seeds, yielding up to $N \times K = 50$ constituent models. The ensemble prediction is the arithmetic mean of individual model probabilities:
-\begin{equation}
-    \hat{\bm{p}}_{\text{ensemble}}(\bx) = \frac{1}{M} \sum_{m=1}^{M} \hat{\bm{p}}_m(\bx)
-    \label{eq:ensemble}
-\end{equation}
-where $M$ is the total number of accepted models across all selected windows.
-
-\subsection{Temporal Sample Weighting}
-To address non-stationarity, exponential decay weights are applied to training samples:
-\begin{equation}
-    w_i = \exp\left(-\frac{t_{\max} - t_i}{\tau_{\text{decay}}}\right), \quad \tau_{\text{decay}} = 30 \text{ days}
-    \label{eq:temporal_weights}
-\end{equation}
-This ensures that recent market regimes contribute disproportionately to the gradient during boosting.
-
-
-% ============================================================================
-%  PART IV — TARGET LABELING
-% ============================================================================
-\section{Target Label Engineering}
-\label{sec:labeling}
-
-\subsection{Asymmetric Profit/Stop Labeling}
-Given the well-documented negative skewness of equity returns, we employ asymmetric profit targets:
-
-\begin{definition}[Directional Label]
-At bar $t$ with spot price $S_t$, scanning forward up to $L = 180$ minutes:
-\begin{equation}
-    y_t =
-    \begin{cases}
-        \textsc{long}  & \text{if } \exists \, t' \in [t+1, t+L] : S_{t'} \geq S_t (1 + \alpha_L) \;\wedge\; \min_{\tau \in [t, t']} S_\tau > S_t(1 - \sigma) \\
-        \textsc{short} & \text{if } \exists \, t' \in [t+1, t+L] : S_{t'} \leq S_t (1 - \alpha_S) \;\wedge\; \max_{\tau \in [t, t']} S_\tau < S_t(1 + \sigma) \\
-        \textsc{hold}  & \text{otherwise}
-    \end{cases}
-\end{equation}
-where $\alpha_L = 1.0\%$ (long profit target), $\alpha_S = 0.5\%$ (short profit target), $\sigma = 0.3\%$ (stop loss), and $L = 180$ minutes (lookahead window).
-\end{definition}
-
-The asymmetry ($\alpha_L > \alpha_S$) reflects the empirically observed prevalence of large upside moves in equity indices, ensuring a balanced label distribution under trending market conditions.
-
-\subsection{Maximum Move Computation}
-For each labeled bar $t$, the \textbf{maximum favorable move} within the lookahead window is computed:
-\begin{equation}
-    M_t = \max_{\tau \in [t+1, t+L]} \; \frac{|S_\tau - S_t|}{S_t}
-    \label{eq:max_move}
-\end{equation}
-This quantity is propagated to the RL reward function as \texttt{max\_move}, enabling the under-capture penalty described in Section~\ref{subsec:terminal_reward}.
-
-
-% ============================================================================
-%  PART V — REINFORCEMENT LEARNING AGENT
-% ============================================================================
-\section{Stage 2: RL Execution Agent (PPO)}
-\label{sec:rl}
+\section{XInputJEPA Architecture}
 
 \subsection{Motivation}
-The directional classifier provides a probabilistic signal; the RL agent transforms this signal into profitable option trades. The agent must learn three interrelated skills:
+
+The most important architectural change versus a conventional tabular model is the state/input split.  Market state is not treated as a single flat vector.  Instead, the model receives two synchronized sequences:
+
+\[
+  X_t = [x_{t-23}, \ldots, x_t],
+  \qquad
+  U_t = [u_{t-23}, \ldots, u_t],
+\]
+
+where $x$ is the state feature set and $u$ is the exogenous-input/change feature set.  In production:
+
+\begin{itemize}
+  \item $x$ has 155 dimensions,
+  \item $u$ has 25 dimensions,
+  \item the context length is 24 rows, or approximately two hours at five-minute spacing.
+\end{itemize}
+
+\subsection{Encoders}
+
+Both the state and input branches use the same sequence-encoder pattern:
+
+\[
+  \mathrm{LayerNorm} \rightarrow \mathrm{GRU}_{2\ layers} \rightarrow
+  \mathrm{LayerNorm} \rightarrow \mathrm{Linear} \rightarrow \mathrm{GELU}
+  \rightarrow \mathrm{Dropout} \rightarrow \mathrm{Linear}.
+\]
+
+The state encoder produces a 16-dimensional latent vector:
+
+\[
+  z_t = f_\theta(X_t) \in \mathbb{R}^{16}.
+\]
+
+The input encoder produces a 12-dimensional latent vector:
+
+\[
+  u_t = g_\phi(U_t) \in \mathbb{R}^{12}.
+\]
+
+\subsection{Multi-Horizon Latent Predictor}
+
+The predictor learns a separate head for each horizon.  For horizon index $h$, an embedding $e_h$ is concatenated with the state and input latents:
+
+\[
+  \hat{z}_{t+h} =
+  p_{\psi,h}\left([z_t, u_t, e_h]\right).
+\]
+
+The production horizons are:
+
+\[
+  h \in \{1,3,6,12,24,36\}.
+\]
+
+At five-minute spacing, the final horizon corresponds to 180 minutes.
+
+\subsection{Auxiliary Direction Head}
+
+The model also includes a three-class head over short, hold, and long:
+
+\[
+  \ell_t =
+  c_\omega\left([z_t,u_t,\mathrm{mean}_h(\hat{z}_{t+h})]\right)
+  \in \mathbb{R}^3.
+\]
+
+This head does not replace the GBT.  It regularizes the latent space toward trading-relevant state transitions and produces useful appended features such as \texttt{xjepa\_prob\_short}, \texttt{xjepa\_prob\_hold}, and \texttt{xjepa\_prob\_long}.
+
+\subsection{Training Objective}
+
+The loss is a weighted combination:
+
+\[
+  \mathcal{L}
+  =
+  \mathcal{L}_{\mathrm{pred}}
+  + \lambda_{\mathrm{sig}}\mathcal{L}_{\mathrm{sigreg}}
+  + \lambda_{\mathrm{vic}}\mathcal{L}_{\mathrm{vicreg}}
+  + \lambda_{\mathrm{ce}}\mathcal{L}_{\mathrm{ce}}.
+\]
+
+The predictive loss aligns predicted future latent states with encoded future contexts:
+
+\[
+  \mathcal{L}_{\mathrm{pred}}
+  =
+  \left\|
+  \hat{z}_{t+h} -
+  \mathrm{stopgrad}\left(f_\theta(X_{t+h})\right)
+  \right\|_2^2.
+\]
+
+The SIGReg and VICReg-style terms prevent latent collapse.  The cross-entropy term is weighted by class frequency and uses a balanced sampler when requested by the pipeline.  The production hyperparameters are:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lr}
+\toprule
+Parameter & Value \\
+\midrule
+Hidden dimension & 96 \\
+GRU layers & 2 \\
+Dropout & 0.15 \\
+$z$ dimension & 16 \\
+$u$ dimension & 12 \\
+Learning rate & 0.0007 \\
+Weight decay & 0.02 \\
+Batch size & 512 \\
+$\lambda_{\mathrm{sig}}$ & 0.15 \\
+$\lambda_{\mathrm{vic}}$ & 0.20 \\
+$\lambda_{\mathrm{ce}}$ & 0.35 \\
+\bottomrule
+\end{tabular}
+\caption{Production XInputJEPA hyperparameters from the production configuration artifact.}
+\end{table}
+
+\section{JEPA Feature Export}
+
+After training, \path{append_xinput_jepa_features.py} appends 42 live-safe features.  These include latent components, latent velocities, prediction dispersion, lagged prediction errors, class probabilities, entropy, confidence, and context validity.
+
+The lagged prediction error features are important because they measure whether the previous JEPA forecast matched the state that actually arrived:
+
+\[
+  e_{t,h} = \left\|\hat{z}_{t-h,h} - z_t\right\|_2.
+\]
+
+This is still live-safe at time $t$ because it uses a prediction made at $t-h$ and the current observed latent state.
+
+\section{GBT Direction Model}
+
+\subsection{Why LightGBM Remains the Final Predictor}
+
+The GBT has three advantages in this project:
+
 \begin{enumerate}
-    \item \textbf{Strike selection:} choosing the option delta (moneyness) that balances premium cost against directional leverage.
-    \item \textbf{Exit management:} deciding each minute whether to hold or exit the position, balancing unrealized gains against theta decay and adverse moves.
+  \item It handles heterogeneous tabular features well.
+  \item It can ignore weak or redundant features.
+  \item It gives stable per-ticker thresholding with modest data volume.
 \end{enumerate}
 
-\subsection{State Space}
-\label{subsec:state}
-The agent observes a state vector $\bs_t \in \R^{182}$ composed of four groups:
+The JEPA block produces a learned representation, but the final decision boundary is still learned by the GBT over both explicit features and latents.
 
-\begin{table}[H]
-\centering
-\begin{tabular}{lcc}
-\toprule
-\textbf{Group} & \textbf{Dims} & \textbf{Components} \\
-\midrule
-Market features $\bx_t$ & 163 & Normalized options chain features (§\ref{subsec:features}) \\
-Dynamic Market & 8 & Per-minute spot history, delta history, volume \\
-Position state $\bm{q}_t$ & 7 & PnL\%, hold time, $|\Delta|$, recovery prob, IV, MAE, Trailing Drawdown \\
-Model context $\bm{c}_t$ & 4 & Confidence, time-to-target, dummy edge, $\log\sigma$ \\
-\midrule
-\textbf{Total} & \textbf{182} & \\
-\bottomrule
-\end{tabular}
-\caption{State vector decomposition.}
-\label{tab:state}
-\end{table}
+\subsection{Feature Modes}
 
-The position state components are:
-\begin{align}
-    q_1 &= \text{clip}(\text{PnL}\%, -1.0, 5.0) \label{eq:q1} \\
-    q_2 &= t_{\text{held}} / T_{\max}, \quad T_{\max} = 180\text{min} \label{eq:q2} \\
-    q_3 &= |\Delta_{\text{current}}| \label{eq:q3} \\
-    q_4 &= \text{Recovery Probability} \quad \text{(historical backtest conditional logic)} \label{eq:q4} \\
-    q_5 &= \text{clip}(\text{IV}_t / 0.15, \; 0.5, \; 3.0) \label{eq:q5} \\
-    q_6 &= \text{clip}(\text{MAE}, -1.0, 0.0) \label{eq:q6} \\
-    q_7 &= \text{clip}(\text{Trailing Drawdown}, 0.0, 2.0) \label{eq:q7}
-\end{align}
+Three feature modes are trained:
 
-\subsection{Action Space}
-The agent operates in multiple \textbf{action phases}, each with a distinct discrete action space:
-
-\begin{table}[H]
-\centering
-\begin{tabular}{llcl}
-\toprule
-\textbf{Phase} & \textbf{Head} & \textbf{$|\mathcal{A}|$} & \textbf{Actions} \\
-\midrule
-ENTRY & Strike & 7 & Delta buckets $\{0.10, 0.20, \ldots, 0.70\}$ \\
-HOLDING & Exit & 2 & HOLD(0), EXIT(1) \\
-\midrule
-\multicolumn{2}{l}{\emph{Continuous}} & — & Position size fraction $f \in (0, 1)$ \\
-\bottomrule
-\end{tabular}
-\caption{Multi-phase action space. The sizing head is only active at entry and outputs parameters of a sigmoid-bounded Gaussian.}
-\label{tab:actions}
-\end{table}
-
-The 7 delta buckets map directly to target option deltas:
-\begin{equation}
-    \delta_k \in \{0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70\}
-    \label{eq:delta_buckets}
-\end{equation}
-corresponding to labels: deep OTM, OTM far, OTM near, OTM light, ATM, ITM light, ITM.
-
-
-\subsection{Network Architecture}
-\label{subsec:network}
-
-The PPO agent uses a \textbf{shared-backbone, multi-head} architecture:
-
-\begin{equation}
-    \bs \in \R^{182} \xrightarrow{\text{Backbone}} \bm{h} \in \R^{128} \xrightarrow{\text{Heads}}
-    \begin{cases}
-        \pi_{\text{strike}}(\cdot|\bs) & \in \Delta^6 \\
-        \pi_{\text{exit}}(\cdot|\bs)   & \in \Delta^1 \\
-        f(\bs) \sim \mathcal{N}(\mu, \sigma^2) & \text{(sizing)} \\
-        V(\bs) & \in \R \;\text{(critic)}
-    \end{cases}
-    \label{eq:architecture}
-\end{equation}
-
-\subsubsection{Backbone}
-The shared backbone processes the 175-dimensional state through three fully-connected blocks:
-\begin{equation}
-    \text{Backbone}: \R^{182} \xrightarrow{W_1} \R^{256} \xrightarrow{\text{LN}} \xrightarrow{\text{GELU}} \xrightarrow{\text{Drop}(0.1)} \R^{256} \xrightarrow{W_2} \cdots \xrightarrow{W_3} \R^{128}
-    \label{eq:backbone}
-\end{equation}
-Each block applies: Linear $\to$ LayerNorm $\to$ GELU $\to$ Dropout$(0.1)$.
-
-\subsubsection{Action Heads}
-Each head is a two-layer MLP: $\R^{128} \to \R^{64} \to \R^{|\mathcal{A}|}$, with GELU activation. The sizing head outputs $(\mu, \log\sigma)$ parameterizing a Gaussian mapped through a sigmoid squash:
-\begin{align}
-    z &\sim \mathcal{N}(\mu, \sigma^2) \\
-    f &= \text{sigmoid}(z) \in (0, 1) \\
-    \log \pi(f | \bs) &= \log \mathcal{N}(z; \mu, \sigma^2) - \log \big|f(1 - f)\big|
-    \label{eq:sizing}
-\end{align}
-The Jacobian correction ensures valid probability density under the change of variables.
-
-\subsubsection{Weight Initialization}
-All linear layers are initialized with orthogonal weights (gain $= 0.5$) and zero biases, following established practice for PPO to prevent premature policy collapse.
-
-The total parameter count is approximately $\mathbf{181{,}010}$ (172,689 policy backbone + 8,321 critic).
-
-\subsection{PPO Training}
-\label{subsec:ppo}
-
-The agent is trained using Proximal Policy Optimization with clipped surrogate objective:
-
-\begin{equation}
-    \mathcal{L}_{\text{PPO}} = -\E_t \left[\min\left(r_t(\theta) \hat{A}_t, \; \text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon) \hat{A}_t\right)\right]
-    \label{eq:ppo}
-\end{equation}
-where $r_t(\theta) = \pi_\theta(a_t | s_t) / \pi_{\theta_{\text{old}}}(a_t | s_t)$ is the probability ratio and $\hat{A}_t$ is the Generalized Advantage Estimate (GAE):
-\begin{equation}
-    \hat{A}_t = \sum_{l=0}^{\infty} (\gamma \lambda)^l \delta_{t+l}, \quad \delta_t = r_t + \gamma V(s_{t+1}) - V(s_t)
-    \label{eq:gae}
-\end{equation}
-
-The total loss combines policy, value, and entropy terms:
-\begin{equation}
-    \mathcal{L} = \mathcal{L}_{\text{PPO}} + c_v \cdot \mathcal{L}_V - c_H \cdot H[\pi_\theta]
-    \label{eq:total_loss}
-\end{equation}
-
-\begin{table}[H]
-\centering
-\begin{tabular}{lll}
-\toprule
-\textbf{Hyperparameter} & \textbf{Symbol} & \textbf{Value} \\
-\midrule
-Learning rate & $\eta$ & $3 \times 10^{-4}$ \\
-Discount factor & $\gamma$ & 0.99 \\
-GAE smoothing & $\lambda$ & 0.95 \\
-Clip range & $\epsilon$ & 0.20 \\
-Value loss coefficient & $c_v$ & 0.5 \\
-Entropy coefficient (exit) & $c_H$ & 0.05 \\
-Max gradient norm & — & 0.5 \\
-PPO epochs per update & — & 10 \\
-Episodes per update & — & 256 \\
-Total updates & — & 400 \\
-Observation noise & — & $\sigma = 0.02$ \\
-\bottomrule
-\end{tabular}
-\caption{PPO hyperparameters.}
-\label{tab:ppo_params}
-\end{table}
-
-\subsection{Curriculum Learning}
-\label{subsec:curriculum}
-Training proceeds in three phases with decreasing constraints:
-
-\begin{table}[H]
-\centering
-\begin{tabular}{cccc}
-\toprule
-\textbf{Phase} & \textbf{Training \%} & \textbf{Min Confidence} & \textbf{Min Hold (min)} \\
-\midrule
-0 & 0--15\%  & 0.60 & 5 \\
-1 & 15--35\% & 0.55 & 5 \\
-2 & 35--100\%& 0.50 & 10 \\
-\bottomrule
-\end{tabular}
-\caption{Curriculum phases. Linear interpolation gradually relaxes the confidence threshold.}
-\label{tab:curriculum}
-\end{table}
-
-
-% ============================================================================
-%  PART VI — REWARD ENGINEERING
-% ============================================================================
-\section{Reward Function Design}
-\label{sec:rewards}
-
-The reward function is the most critical design decision in the RL agent. We employ a \textbf{hybrid dense+sparse} reward structure:
-
-\subsection{Step Reward (Dense)}
-At each minute $t$ while holding a position, the agent receives:
-\begin{equation}
-    r_t^{\text{step}} = 0.3 \cdot \Delta_t^{\text{PnL}} - 0.02 \cdot |\Theta_t^{\text{pen}}| - 0.05 \cdot |D_t^{\text{pen}}|
-    \label{eq:step_reward}
-\end{equation}
-where:
 \begin{itemize}
-    \item $\Delta_t^{\text{PnL}} = \text{PnL}_t - \text{PnL}_{t-1}$ is the instantaneous P\&L change.
-    \item $\Theta_t^{\text{pen}}$ is the theta penalty, exponentially weighted by minutes to close:
-    \begin{equation}
-        \Theta_t^{\text{pen}} =
-        \begin{cases}
-            0 & \text{if PnL}_t > 10\% \\
-            \frac{\theta_t}{P_0} \cdot \left(1 + 2e^{-m_t/60}\right) & \text{otherwise}
-        \end{cases}
-        \label{eq:theta}
-    \end{equation}
-    where $m_t$ is minutes to market close and the exponential term doubles the penalty in the last hour.
-    \item $D_t^{\text{pen}}$ is the drawdown penalty, active only on new MAE extensions:
-    \begin{equation}
-        D_t^{\text{pen}} =
-        \begin{cases}
-            0.2 \cdot (\text{PnL}_t - \text{MAE}_t) & \text{if PnL}_t < \text{MAE}_t \;\wedge\; \text{PnL}_t < 0 \\
-            0 & \text{otherwise}
-        \end{cases}
-    \end{equation}
+  \item \texttt{base}: original engineered market features only.
+  \item \texttt{jepa\_only}: JEPA features plus basic time context.
+  \item \texttt{base\_jepa}: base market features plus JEPA features.
 \end{itemize}
 
-Step rewards are intentionally small ($|r_t^{\text{step}}| \ll 1$) to prevent the dense signal from overwhelming the sparse terminal reward.
+The live model is \texttt{base\_jepa}.  The production artifact has 222 columns: 180 base columns present in the production training table plus 42 JEPA columns.
 
+\subsection{Classifier Specification}
 
+The 180 minute classifier is a per-ticker LightGBM binary classifier:
 
-\subsection{Terminal Reward (Sparse)}
-\label{subsec:terminal_reward}
-Upon position exit, the agent receives a multi-component terminal reward:
+\[
+  \hat{p}_t = \Pr(y_t=1 \mid \bm{x}_t).
+\]
 
-\begin{equation}
-    R^{\text{term}} = \text{clip}\bigg[\big(R^{\text{PnL}} + R^{\text{patience}} + R^{\text{stop}} + R^{\text{strike}} + R^{\text{exit}} + R^{\text{capture}}\big) \cdot c_{\text{scale}}, \; -3, \; +5\bigg]
-    \label{eq:terminal}
-\end{equation}
-where $c_{\text{scale}} = 0.5 + c_t$ and $c_t$ is the GBT confidence at signal time. Each component:
+The implementation uses:
 
-\subsubsection{1. Core P\&L Reward (Asymmetric)}
-\begin{equation}
-    R^{\text{PnL}} =
-    \begin{cases}
-        2.0 \cdot \tilde{P} & \text{if } \tilde{P} \geq 0 \\
-        1.5 \cdot \tilde{P} & \text{if } \tilde{P} < 0
-    \end{cases}
-    , \quad \tilde{P} = P_{\text{final}} \cdot \frac{0.15}{\max(\text{IV}_0, 0.05)}
-    \label{eq:pnl_reward}
-\end{equation}
-The volatility scaling normalizes P\&L to a reference IV of 15\%, ensuring that the agent is equally rewarded for a +30\% gain in a low-vol environment as a +30\% gain in a high-vol environment. The asymmetric multipliers ($2.0$ vs $1.5$) create a positive expected reward for break-even policies, nudging the agent toward profitable trades.
+\begin{itemize}
+  \item binary objective,
+  \item 0.035 learning rate,
+  \item 31 leaves,
+  \item 0.85 row subsampling,
+  \item 0.85 column subsampling,
+  \item minimum child samples of 40,
+  \item L1 regularization 0.05,
+  \item L2 regularization 0.50,
+  \item balanced class weights.
+\end{itemize}
 
-\subsubsection{2. Patience Bonus}
-Replaces the legacy speed-based bonus to prevent premature exits:
-\begin{equation}
-    R^{\text{patience}} =
-    \begin{cases}
-        0.5 + 0.3 \cdot P_{\text{final}} & \text{if } P_{\text{final}} \geq 100\% \\
-        0.3 \cdot P_{\text{final}} \cdot (0.3 + 0.7 \cdot \text{patience}) & \text{if } 30\% \leq P_{\text{final}} < 100\% \\
-        0.1 \cdot P_{\text{final}} & \text{if } 0 < P_{\text{final}} < 30\% \\
-        0 & \text{otherwise}
-    \end{cases}
-    \label{eq:patience}
-\end{equation}
-where $\text{patience} = \min(t_{\text{held}} / 90, \; 1.0)$ saturates at 90 minutes. This construction rewards holding through large winners—the agent receives more for a +80\% gain held for 60 minutes than a +30\% gain taken after 10 minutes.
+Missing values are imputed with training medians stored in the joblib artifact.  This matters for live inference because the bot can reproduce the exact training matrix behavior.
 
-\subsubsection{3. Hard Stop Penalty}
-\begin{equation}
-    R^{\text{stop}} =
-    \begin{cases}
-        -1.0 & \text{if exit type = hard stop loss} \\
-        0 & \text{otherwise}
-    \end{cases}
-\end{equation}
+\section{Thresholding and Trading Contract}
 
-\subsubsection{4. Strike Quality Bonus}
-Corrected from a prior implementation bug where the ITM bonus was silently overwritten:
-\begin{equation}
-    R^{\text{strike}} =
-    \begin{cases}
-        +0.50 & \text{if } |\Delta_0| \geq 0.50 \;\wedge\; P_{\text{final}} > 0 \quad (\text{ITM winner}) \\
-        +0.10 & \text{if } 0.25 \leq |\Delta_0| \leq 0.45 \;\wedge\; P_{\text{final}} > 0 \quad (\text{OTM sweet-spot}) \\
-        +0.05 & \text{if } |\Delta_0| \geq 0.50 \;\wedge\; P_{\text{final}} \leq 0 \quad (\text{ITM exploration}) \\
-        0 & \text{otherwise}
-    \end{cases}
-    \label{eq:strike}
-\end{equation}
+The model does not trade merely because $\hat{p}_t > 0.5$.  Each ticker receives thresholds selected on validation data:
 
-\subsubsection{5. Early Exit Penalty}
-Penalizes panic exits on losing positions (but not quick profitable escapes):
-\begin{equation}
-    R^{\text{exit}} =
-    \begin{cases}
-        -0.30 & \text{if agent exit} \;\wedge\; t_{\text{held}} < 0.10 \cdot T_{\max} \;\wedge\; P_{\text{final}} \leq 0 \\
-        0 & \text{otherwise}
-    \end{cases}
-\end{equation}
+\[
+  \mathrm{LONG}\quad \mathrm{if}\quad \hat{p}_t \geq \tau_L,
+\]
 
-\subsubsection{6. Under-Capture Penalty}
-Penalizes the agent for exiting a winning trade having captured less than 30\% of the available move:
-\begin{equation}
-    R^{\text{capture}} =
-    \begin{cases}
-        -0.2 \cdot (1 - \rho) & \text{if } M_t > 0 \;\wedge\; P_{\text{final}} > 0 \;\wedge\; \rho < 0.30 \\
-        0 & \text{otherwise}
-    \end{cases}
-    , \quad \rho = \frac{P_{\text{final}}}{M_t}
-    \label{eq:capture}
-\end{equation}
-where $M_t$ is the maximum favorable move from Equation~(\ref{eq:max_move}).
+\[
+  \mathrm{SHORT}\quad \mathrm{if}\quad \hat{p}_t \leq \tau_S,
+\]
 
+where $\tau_S=1-\tau_L$ in the threshold grid.  Candidate long thresholds include 0.52, 0.55, 0.57, 0.60, 0.62, 0.65, and 0.70.  The validation score is:
 
+\[
+  \mathrm{score} = \mathrm{PnL} - 0.25 |\mathrm{MaxDD}|,
+\]
 
+subject to a minimum validation trade count.
 
-% ============================================================================
-%  PART VII — HARD EXIT RULES
-% ============================================================================
-\section{Risk Management: Hard Exit Rules}
-\label{sec:risk}
+The promoted contract is a fixed 180 minute hold with a 180 minute cooldown.  The cooldown prevents overlapping entries that are effectively the same forecast window.
 
-The environment enforces non-negotiable risk limits that override the agent's exit decision:
+\section{0DTE Option Execution Layer}
 
-\begin{table}[H]
-\centering
-\begin{tabular}{lll}
-\toprule
-\textbf{Rule} & \textbf{Threshold} & \textbf{Rationale} \\
-\midrule
-Maximum loss & $-50\%$ of premium & Prevent catastrophic single-trade losses \\
-Maximum profit & $+400\%$ of premium & Capture extreme outlier gains \\
-Time to close & $\leq 5$ minutes & Avoid illiquid close-of-session pricing \\
-Maximum hold & 180 minutes & Align with GBT lookahead window \\
-\bottomrule
-\end{tabular}
-\caption{Hard exit rules enforced by the environment irrespective of agent policy.}
-\label{tab:hard_exits}
-\end{table}
+\subsection{Fixed-Delta Production Rule}
 
+The promoted 0DTE execution rule is deterministic:
 
-% ============================================================================
-%  PART VIII — ENVIRONMENT
-% ============================================================================
-\section{RL Environment: SPXOptionsEnv}
-\label{sec:environment}
-
-\subsection{Episode Structure}
-Each episode represents a single trade lifecycle triggered by a GBT directional signal:
-
-\begin{equation}
-    \underbrace{\text{Signal}}_{\text{GBT}} \;\to\; \underbrace{\text{ENTRY}}_{\substack{\text{Strike} \\ \text{selection}}} \;\to\; \underbrace{\text{IN\_POSITION}}_{\substack{\text{Hold/Exit} \\ \text{decisions}}} \;\to\; \underbrace{\text{CLOSED}}_{\text{Terminal reward}}
-    \label{eq:episode}
-\end{equation}
-
-\subsection{Options Pricing}
-The environment uses \textbf{real ThetaData options pricing} for mark-to-market at each timestep. For timestamps without available quotes, a delta-gamma approximation is used:
-\begin{equation}
-    P_t \approx P_0 + \Delta \cdot (S_t - S_0) + \tfrac{1}{2} \Gamma \cdot (S_t - S_0)^2
-    \label{eq:delta_gamma}
-\end{equation}
-
-\subsection{Stratified Sampling}
-To ensure balanced training across market regimes, episodes are stratified by VIX regime and time of day. The sampling strata prevent the agent from over-fitting to low-volatility, mid-day conditions.
-
-
-% ============================================================================
-%  PART IX — SYSTEM INTEGRATION
-% ============================================================================
-\section{System Integration}
-\label{sec:integration}
-
-\subsection{GBT–RL Interface}
-A key engineering requirement was preserving pipeline compatibility during the MLP$\to$GBT migration. The \texttt{GBTEnsemble} compatibility layer wraps the native LightGBM \texttt{predict\_proba()} method and exposes a PyTorch \texttt{\_\_call\_\_} signature:
-
-\begin{equation}
-    \texttt{GBTEnsemble}(\bx) \to (\underbrace{\bm{p}}_{\text{logits} \in \R^3}, \; \underbrace{(60, 0)}_{\text{dummy time pred}})
-\end{equation}
-
-This ensures that the RL agent's \texttt{IntegratedTradingSystem} and the PPO environment remain completely agnostic to the underlying mathematical engine. The probabilities are passed directly as ``logits'' (not log-transformed), since \texttt{softmax}($\bm{p}$) where $\sum p_k = 1$ introduces minimal distortion compared to \texttt{softmax}($\log \bm{p}$).
-
-\subsection{Data Pipeline}
-\begin{equation}
-    \underbrace{\texttt{collect\_data}}_{\text{ThetaData API}} \;\to\; \underbrace{\texttt{train\_walkforward}}_{\text{GBT Ensemble}} \;\to\; \underbrace{\texttt{generate\_episodes}}_{\text{Episode Index}} \;\to\; \underbrace{\texttt{preprocess}}_{\text{Options Cache}} \;\to\; \underbrace{\texttt{rl.training}}_{\text{PPO Agent}}
-\end{equation}
-
-
-% ============================================================================
-%  PART X — BACKTESTING
-% ============================================================================
-\section{Backtesting Framework}
-\label{sec:backtest}
-
-\subsection{Dual Simulation}
-The backtesting system runs two parallel simulations:
 \begin{enumerate}
-    \item \textbf{GBT-Only (Synthetic Futures):} directional entry at spot price, exit at fixed target/stop, using OHLC-intrabar detection.
-    \item \textbf{GBT+RL (Real Options):} RL agent selects strike from the real options chain, manages entry timing and exit using actual ThetaData greeks pricing.
+  \item use \texttt{base\_jepa} to choose direction,
+  \item buy the 0DTE call for a long signal or put for a short signal,
+  \item choose the option with absolute delta closest to 0.70,
+  \item size contracts from fixed risk capital,
+  \item apply hard stop and take-profit rules.
 \end{enumerate}
 
-\subsection{Position Sizing}
-Position size is a function of model confidence and account balance:
-\begin{equation}
-    \text{Risk}\% = 10\% + \frac{c_t - 0.55}{0.45} \times 40\%, \quad c_t \in [0.55, 1.00]
-    \label{eq:sizing}
-\end{equation}
-This maps minimum confidence ($0.55$) to 10\% risk and maximum confidence ($1.00$) to 50\% risk.
+This rule is not a neural model.  It is promoted because it is robust and because learned alternatives did not beat it in the current tests.
 
-\subsection{Drawdown Mitigation}
-After 3 consecutive losses, the system enters ``drawdown mode'':
+\subsection{Why Fixed Delta Can Beat Learned Selection}
+
+Option strike selection is path-dependent and extremely noisy.  A learned selector must infer premium response, spread sensitivity, gamma convexity, volatility change, and liquidation timing.  The fixed $\Delta=0.70$ rule is less flexible, but it avoids many degrees of freedom and therefore currently generalizes better.
+
+\section{OptionValueJEPA Research Architecture}
+
+OptionValueJEPA is a separate neural model for option candidate valuation.  It receives:
+
 \begin{itemize}
-    \item Position size is halved: $n_{\text{contracts}} \gets \max(1, \lfloor n/2 \rfloor)$.
-    \item Drawdown mode exits when balance recovers to the pre-drawdown watermark.
+  \item a market feature block, including \texttt{base\_jepa} signal features,
+  \item an option candidate block, including delta, premium, spread, strike distance, IV, theta, and gamma,
+  \item a dynamic state block during an open trade, including current PnL, premium ratio, MFE/MAE-like fields, delta drift, IV, gamma, spot return, and minutes remaining.
 \end{itemize}
 
-\subsection{Empirical Backtest Results}
-\label{subsec:empirical}
+The architecture has three encoders:
 
-The following results were obtained from a full out-of-sample backtest spanning \textbf{August 2022 -- March 2026} on SPX and QQQ, using the production ensemble of 50 LightGBM models (10 windows, 5 ensemble per window) and the \textbf{181,010}-parameter PPO agent. The GBT ensemble emitted 2,360 actionable directional signals ($\geq$ 0.60 confidence).
+\[
+  z_m = E_m(x_m),\quad z_o = E_o(x_o),\quad z_d = E_d(x_d).
+\]
 
-\begin{table}[H]
-\centering
-\begin{tabular}{lrrr}
-\toprule
-\textbf{Metric} & \textbf{GBT-Only} & \textbf{GBT+RL} & \textbf{Delta} \\
-\midrule
-Total Trades              & 2,360    & 1,965    & $-395$      \\
-Win Rate (\%)             & 42.8     & 43.0     & $+0.2$     \\
-Profit Factor             & 1.38     & \textbf{1.61}     & $+0.23$    \\
-W/L Size Ratio            & 1.85     & \textbf{2.06}     & $+0.21$    \\
-Avg Hold Win (min)        & 142      & \textbf{166}      & $+24$      \\
-Avg Hold Loss (min)       & 55       & \textbf{87}       & $+32$      \\
-Max Drawdown (\$)         & $-35{,}813$ & $-38{,}770$ & $-2{,}957$ \\
-Sharpe Ratio              & 3.34     & \textbf{3.82}     & $+0.48$    \\
-\bottomrule
-\end{tabular}
-\caption{GBT-Only ($1.0\%$ PT / $0.3\%$ SL in Spot) vs.\ GBT+RL (Live Options with Trailing Drawdown) backtest comparison. The RL agent improves profit factor and the win/loss size ratio relative to the GBT-only baseline, achieving highly profitable trading mechanics out-of-sample without overfitting.}
-\label{tab:backtest_results}
-\end{table}
+The entry path predicts three candidate values:
 
-The key insight from Table~\ref{tab:backtest_results} is that the RL agent achieves a significant \emph{profitability advantage} by allowing winners to run longer. The average winning hold duration rises from 142 to 166 minutes, while the W/L size ratio increases from 1.85 to 2.06 ($+11.3\%$). This translates robustly to out-of-sample edge in Live Options vs simple spot boundaries.
+\[
+  \left[
+  \widehat{V}_{\mathrm{hold180}},
+  \widehat{V}_{\mathrm{rule}},
+  \widehat{V}_{\mathrm{best}}
+  \right]
+  =
+  H_{\mathrm{entry}}([z_m,z_o,T(z_m,z_o,h)]).
+\]
 
+The dynamic path predicts continuation value:
 
+\[
+  \widehat{V}_{\mathrm{continue}} =
+  H_{\mathrm{dyn}}([z_m,z_o,z_d,h_{\mathrm{remaining}}]).
+\]
 
-\subsubsection{RL Strike Selection Analysis}
+It is trained with SmoothL1 loss on clipped return-on-risk targets.  This architecture is conceptually correct, but the current experiments show it has not yet closed the gap to the oracle.
 
-The RL agent autonomously learned a strike preference distribution across seven delta buckets. Table~\ref{tab:strike_analysis} reveals that ITM and near-ATM strikes dominate in both trade count and profit factor, consistent with the transaction cost model (Equation~\ref{eq:spread}): ITM options have tighter bid-ask spreads ($\sim 1\%$ of mid) compared to deep OTM ($\sim 6\%$), directly impacting net P\&L.
+\section{Oracle Definitions}
 
-\begin{table}[H]
-\centering
-\begin{tabular}{lrrrrr}
-\toprule
-\textbf{Bucket} & \textbf{Trades} & \textbf{\%} & \textbf{Win Rate} & \textbf{PF} \\
-\midrule
-deep\_otm   & 204 & 14.4\% & 50.0\% & 4.90 \\
-otm\_far    & 183 & 12.9\% & 59.6\% & 8.12 \\
-otm\_near   & 241 & 17.0\% & 58.5\% & 6.40 \\
-otm\_light  & 193 & 13.6\% & 58.5\% & 3.98 \\
-atm         & 189 & 13.4\% & 67.7\% & 4.83 \\
-itm\_light  & 195 & 13.8\% & 66.7\% & \textbf{7.53} \\
-itm         & 209 & 14.8\% & 68.9\% & 7.00 \\
-\bottomrule
-\end{tabular}
-\caption{RL strike selection analysis. Trade distribution is near-uniform across buckets, indicating the agent has not collapsed to a degenerate one-bucket policy. ITM strikes achieve the highest win rates; \texttt{otm\_far} achieves the highest profit factor (8.12) due to high leverage on successful directional moves.}
-\label{tab:strike_analysis}
-\end{table}
+The reports include oracle rows.  These are not models.  They use future information and serve only as upper bounds:
 
-\subsubsection{RL Exit Reason Distribution}
-
-Of the 1,414 RL-managed trades, exit reasons are distributed as follows:
 \begin{itemize}
-    \item \textbf{Agent-initiated exit:} 1,137 trades (80.4\%) — the policy is the dominant exit mechanism.
-    \item \textbf{Hard stop ($P_L \leq -50\%$):} 189 trades (13.4\%) — consistent with a disciplined stop structure.
-    \item \textbf{Hard take-profit ($P_L \geq +300\%$):} 79 trades (5.6\%) — outlier winners captured.
-    \item \textbf{Maximum hold (180 min):} 9 trades (0.6\%) — rare timeout exits.
+  \item \textbf{oracle best delta hard}: chooses the best delta bucket after observing the future path, then exits with mechanical rules.
+  \item \textbf{oracle best delta oracle exit}: chooses both the best candidate and best future exit point.
 \end{itemize}
-The 80.4\% agent-exit rate confirms that the PPO policy has learned a non-trivial exit strategy beyond relying on hard limits. The 5.6\% hard-take-profit rate ($+300\%$ of premium) represents a meaningful contribution to total P\&L from extreme outlier trades, a structural advantage of options over synthetic futures that the GBT-only simulation cannot replicate.
 
+Large oracle performance does not imply deployable edge.  It only indicates potential headroom if a learnable signal can approximate the oracle without using future information.
 
-% ============================================================================
-%  PART XI — CONCLUSION
-% ============================================================================
+\section{Live Runtime}
+
+The live runtime has two primary scripts:
+
+\begin{itemize}
+  \item \path{services/realtime_feed.py} generates live features compatible with the production \texttt{base\_jepa} model.
+  \item \path{bots/tradingbot_wrapper_jepa.py} loads the production direction model and applies the fixed-delta option execution rule.
+\end{itemize}
+
+Model artifacts are under \path{neural/models/jepa}.  They are ignored by git and deployed with \path{push_models.ps1}.  Source code and systemd service files are deployed through git.
+
+\section{Empirical Summary}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrrrrrr}
+\toprule
+Model & Trades & WR & PF & Avg bps & PnL & Max DD \\
+\midrule
+base & 80 & 58.8\% & 1.389 & 4.40 & \$3,522 & -\$1,640 \\
+jepa\_only & 110 & 59.1\% & 1.333 & 3.86 & \$4,245 & -\$3,270 \\
+base\_jepa & 105 & 68.6\% & 1.945 & 8.70 & \$9,132 & -\$1,522 \\
+\bottomrule
+\end{tabular}
+\caption{Strict frozen-March April--May 2026 OOS 180 minute proxy backtest.}
+\end{table}
+
+The architectural conclusion is specific: JEPA adds value as an auxiliary representation to the GBT.  JEPA-only and learned option selection are not currently sufficient replacements.
+
+\section{Risk Controls and Bias Controls}
+
+The architecture contains explicit controls:
+
+\begin{itemize}
+  \item future return columns are excluded from feature selection,
+  \item JEPA context validity is required before a row can be scored,
+  \item strict OOS tests freeze training before April 2026,
+  \item production diagnostics are labelled as non-OOS,
+  \item oracle rows are labelled as non-deployable,
+  \item live artifacts store medians, features, thresholds, and metadata.
+\end{itemize}
+
 \section{Conclusion}
-\label{sec:conclusion}
 
-The migration from a Multi-Layer Perceptron to Gradient Boosted Trees represents a pivotal alignment of model architecture with data structure. By deploying a model inherently suited for mid-sized tabular data with low signal-to-noise ratios, we successfully extracted the latent predictive signal within our 163-dimensional options feature space.
-
-The two-stage GBT+RL architecture cleanly separates the directional classification problem (``which way?'') from the execution problem (``how to trade it?''), allowing each component to be optimized and validated independently. The walk-forward training methodology ensures no temporal leakage, while the multi-component reward function encourages the RL agent to develop patient, high-conviction trading behavior rather than the premature exit patterns observed under the legacy reward structure.
-
-Key empirical results from the out-of-sample backtest (Table~\ref{tab:backtest_results}):
-\begin{itemize}
-    \item \textbf{GBT directional accuracy:} $72.2\%$ OOS on Short vs Long ($+10.7\%$ over base rate), with a production ensemble of 50 models drawn from the top walk-forward windows.
-    \item \textbf{GBT-only profit factor:} 1.38 across 2,360 trades at 42.8\% win rate.
-    \item \textbf{GBT+RL profit factor:} \textbf{1.61} ($+16.6\%$ improvement), driven by a W/L size ratio of 2.06 vs.\ 1.85 in the GBT-only baseline.
-    \item \textbf{RL agent:} 181,010-parameter PPO network; 80.4\% of exits are agent-initiated; average winning hold time increased to allow better trend-following.
-    \item \textbf{Strike selection:} Near-uniform distribution across seven delta buckets confirms no degenerate policy collapse.
-\end{itemize}
-
-\begin{thebibliography}{9}
-\bibitem{grinsztajn2022}
-L.~Grinsztajn, E.~Oyallon, and G.~Varoquaux,
-``Why do tree-based models still outperform deep learning on typical tabular data?''
-\emph{Advances in Neural Information Processing Systems}, vol.~35, 2022.
-
-\bibitem{schulman2017}
-J.~Schulman, F.~Wolski, P.~Dhariwal, A.~Radford, and O.~Klimov,
-``Proximal Policy Optimization Algorithms,''
-\emph{arXiv:1707.06347}, 2017.
-
-\bibitem{ke2017}
-G.~Ke, Q.~Meng, T.~Finley, T.~Wang, W.~Chen, W.~Ma, Q.~Ye, and T.-Y.~Liu,
-``LightGBM: A Highly Efficient Gradient Boosting Decision Tree,''
-\emph{Advances in Neural Information Processing Systems}, vol.~30, 2017.
-\end{thebibliography}
+The current architecture is a supervised market-state predictor plus deterministic option execution, not an RL system.  The JEPA layer is valuable because it converts recent state/input dynamics into latent features that improve a tabular GBT.  The fixed-delta option execution rule remains the production choice because the learned option-value and exit models have not yet shown robust superiority.  Future work should focus on improving OptionValueJEPA with better path labels, ticker-specific calibration, slippage modelling, and walk-forward promotion gates rather than replacing the already-promoted \texttt{base\_jepa} direction model prematurely.
 
 \end{document}

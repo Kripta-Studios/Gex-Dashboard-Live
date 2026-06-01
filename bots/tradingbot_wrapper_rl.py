@@ -40,7 +40,7 @@ from neural.gbt_model import load_gbt_ensemble
 from neural.rl.agent import PPOAgent
 from neural.rl.integration import IntegratedTradingSystem
 from neural.rl.config import STRIKE_BUCKETS, HARD_EXITS, RL_CONFIG
-from neural.signal_policy import entry_cadence_minutes, is_actionable_signal
+from neural.signal_policy import entry_cadence_minutes, get_independent_signals, is_actionable_signal
 from modules.utils import get_market_trading_days
 from services.compute_features import (
     get_net_exposures_from_parquet, calculate_exact_t, extract_feature_vector,
@@ -1701,8 +1701,9 @@ class RLTradingBot:
             else:
                 features_norm = t_normalizer.transform(features.reshape(1, -1))
                 probs = t_model.predict_proba(features_norm)[0]
-            prediction = int(np.argmax(probs))
-            confidence = float(np.max(probs))
+            pred_arr, conf_arr = get_independent_signals(probs.reshape(1, -1), base_confidence=GBM_MIN_CONFIDENCE)
+            prediction = int(pred_arr[0])
+            confidence = float(conf_arr[0])
             direction_map = {0: "SHORT", 1: "HOLD", 2: "LONG"}
             direction = direction_map.get(prediction, "HOLD")
 
