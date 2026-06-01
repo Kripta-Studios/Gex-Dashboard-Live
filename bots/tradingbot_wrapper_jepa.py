@@ -72,7 +72,8 @@ DISCORD_WEBHOOKS = [
     for url in [os.getenv("DISCORD_WEBHOOK_URL"), os.getenv("DISCORD_WEBHOOK_URL_2")]
     if url
 ]
-DISCORD_ROLE_PING = os.getenv("DISCORD_ROLE_PING", "")
+DISCORD_ROLE_ID = os.getenv("DISCORD_ROLE_ID", "1464601287411634226")
+DISCORD_ROLE_PING = os.getenv("DISCORD_ROLE_PING", f"<@&{DISCORD_ROLE_ID}>").strip()
 
 
 def _now_et() -> datetime:
@@ -112,9 +113,17 @@ def _format_expiration_for_tracker(value: Any) -> str:
 def _send_discord(message: str) -> None:
     if not DISCORD_WEBHOOKS:
         return
+    content = str(message).lstrip()
+    if DISCORD_ROLE_PING and not content.startswith(DISCORD_ROLE_PING):
+        content = f"{DISCORD_ROLE_PING}\n{content}" if content else DISCORD_ROLE_PING
+
+    payload: dict[str, Any] = {"content": content}
+    if DISCORD_ROLE_ID:
+        payload["allowed_mentions"] = {"roles": [DISCORD_ROLE_ID]}
+
     for webhook in DISCORD_WEBHOOKS:
         try:
-            requests.post(webhook, json={"content": message}, timeout=10)
+            requests.post(webhook, json=payload, timeout=10)
         except Exception as exc:
             logging.getLogger(__name__).warning("Discord send failed: %s", exc)
 
@@ -408,7 +417,6 @@ class JepaFixedDeltaBot:
         tracker = f"BTO {pos.ticker} {exp_fmt} {pos.strike:.0f}{right_short} @ M"
         _send_discord(tracker)
         _send_discord(
-            f"{DISCORD_ROLE_PING}\n"
             f"**[JEPA] OPEN {pos.direction} {pos.ticker} {pos.strike:.0f}{right_short}**\n"
             f"prob_up={pos.jepa_prob_up:.3f} conf={pos.confidence:.0%} "
             f"delta={pos.delta:.2f} premium=${pos.entry_premium:.2f} contracts={pos.contracts}\n"
@@ -421,7 +429,6 @@ class JepaFixedDeltaBot:
         tracker = f"STC {pos.ticker} {exp_fmt} {pos.strike:.0f}{right_short} @ M"
         _send_discord(tracker)
         _send_discord(
-            f"{DISCORD_ROLE_PING}\n"
             f"**[JEPA] CLOSE {pos.ticker} {pos.strike:.0f}{right_short} {reason}**\n"
             f"pnl={pnl_pct:+.1%} (${pnl_dollars:+.2f}) hold={hold_min:.0f}m"
         )
