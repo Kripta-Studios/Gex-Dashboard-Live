@@ -2,7 +2,7 @@
 Description=GEX JEPA Live Trading Bot - GBT+JEPA 180m + Fixed 0.70 Delta
 Documentation=https://github.com/kripta-studios/gex-trading
 After=network-online.target realtime_feed.service
-Wants=network-online.target
+Wants=network-online.target realtime_feed.service
 
 [Service]
 Type=simple

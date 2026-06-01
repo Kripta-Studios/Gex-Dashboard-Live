@@ -23,6 +23,7 @@ import asyncio
 import argparse
 import json
 import signal
+import time as time_module
 import pandas as pd
 import numpy as np
 from dotenv import load_dotenv
@@ -404,6 +405,7 @@ class RealtimeOptionsFeed:
         self.prev_features = {}    # ticker -> dict
         self._ml_features_rows = {}  # ticker -> list of rows
         self._ml_features_1m_rows = {}  # ticker -> list of diagnostic 1m rows
+        self._last_model_sample_bucket = {}  # ticker -> last emitted 5m bucket
         self._historical_ib_loaded = {}  # ticker -> bool
         self.day_atr = {}             # ticker -> float
         self.net_gamma_window = {}    # ticker -> deque(maxlen=60)
@@ -422,6 +424,7 @@ class RealtimeOptionsFeed:
             self.historical_ibs[tk] = []
             self._ml_features_rows[tk] = []
             self._ml_features_1m_rows[tk] = []
+            self._last_model_sample_bucket[tk] = None
             self._historical_ib_loaded[tk] = False
             self.day_atr[tk] = 1.0
             self.net_gamma_window[tk] = deque(maxlen=60)
@@ -955,12 +958,20 @@ class RealtimeOptionsFeed:
             self.historical_ibs[tk] = []
             self._ml_features_rows[tk] = []
             self._ml_features_1m_rows[tk] = []
+            self._last_model_sample_bucket[tk] = None
             self._historical_ib_loaded[tk] = False
             self.day_atr[tk] = 1.0
             self.net_gamma_window[tk].clear()
             self.net_charm_history[tk].clear()
             self.pcr_history[tk].clear()
             self.wonham_probs[tk] = 0.5
+
+    @staticmethod
+    def _model_sample_bucket(minutes_since_open) -> int | None:
+        minute = RealtimeOptionsFeed._float_or_none(minutes_since_open)
+        if minute is None:
+            return None
+        return int(max(0, minute)) // MODEL_SAMPLE_MINUTES
 
     def _load_existing_ml_feature_rows(self, ticker: str) -> list[dict]:
         path = self.output_dir / f"ml_features_{ticker}_latest.parquet"
@@ -980,6 +991,12 @@ class RealtimeOptionsFeed:
         except Exception as e:
             logger.warning(f"[ML][{ticker}] Failed to reload feature diary: {e}")
             return []
+
+    def _latest_model_sample_bucket_from_rows(self, ticker: str) -> int | None:
+        rows = self._ml_features_rows.get(ticker) or []
+        if not rows:
+            return None
+        return self._model_sample_bucket(rows[-1].get("minutes_since_open"))
 
     def _restore_tlt_price_history_from_spot(self) -> bool:
         path = self.output_dir / "spot_TLT_latest.parquet"
@@ -1089,6 +1106,7 @@ class RealtimeOptionsFeed:
                 )
 
             self._ml_features_rows[ticker] = df.to_dict("records")
+            self._last_model_sample_bucket[ticker] = self._latest_model_sample_bucket_from_rows(ticker)
 
             iv_col = "atm_iv_raw" if "atm_iv_raw" in df.columns else "atm_iv"
             if iv_col in df.columns:
@@ -1178,6 +1196,7 @@ class RealtimeOptionsFeed:
                 "ib_high": self._float_or_none(self.ib_high.get(tk)),
                 "ib_low": self._float_or_none(self.ib_low.get(tk)),
                 "prev_features": self._normalize_prev_features(self.prev_features.get(tk)),
+                "last_model_sample_bucket": self._last_model_sample_bucket.get(tk),
                 "day_atr": float(self.day_atr.get(tk, 1.0)),
                 "net_gamma_window": [float(v) for v in self.net_gamma_window[tk]],
                 "net_charm_history": [float(v) for v in self.net_charm_history[tk]],
@@ -1230,6 +1249,12 @@ class RealtimeOptionsFeed:
                         prev = self._normalize_prev_features(tk_state.get("prev_features"))
                         if prev:
                             self.prev_features[tk] = prev
+                        sample_bucket = tk_state.get("last_model_sample_bucket")
+                        if sample_bucket is not None:
+                            try:
+                                self._last_model_sample_bucket[tk] = int(sample_bucket)
+                            except Exception:
+                                self._last_model_sample_bucket[tk] = None
                         self.day_atr[tk] = float(tk_state.get("day_atr", 1.0))
                         self.net_gamma_window[tk] = deque(
                             [float(v) for v in tk_state.get("net_gamma_window", []) if self._float_or_none(v) is not None],
@@ -1247,6 +1272,8 @@ class RealtimeOptionsFeed:
                         if wonham is not None:
                             self.wonham_probs[tk] = float(np.clip(wonham, 0.0, 1.0))
                         self._ml_features_rows[tk] = self._load_existing_ml_feature_rows(tk)
+                        if self._last_model_sample_bucket.get(tk) is None:
+                            self._last_model_sample_bucket[tk] = self._latest_model_sample_bucket_from_rows(tk)
                     self._prev_call_vol = {
                         tk: float((state.get("prev_call_vol") or {}).get(tk, 0.0))
                         for tk in OPTIONS_TICKERS
@@ -1950,11 +1977,14 @@ class RealtimeOptionsFeed:
             f"ml_features_1m_{ticker}_latest.parquet",
         )
 
-        if int(minutes_since_open) % MODEL_SAMPLE_MINUTES != 0:
+        sample_bucket = self._model_sample_bucket(minutes_since_open)
+        last_sample_bucket = self._last_model_sample_bucket.get(ticker)
+        if sample_bucket is None or sample_bucket == last_sample_bucket:
             self._save_intraday_state()
             logger.info(
-                f"  [ML][{ticker}] 1m feature snapshot saved; waiting for "
-                f"{MODEL_SAMPLE_MINUTES}m model cadence (m={minutes_since_open})"
+                f"  [ML][{ticker}] 1m feature snapshot saved; waiting for next "
+                f"{MODEL_SAMPLE_MINUTES}m model bucket "
+                f"(m={minutes_since_open}, bucket={sample_bucket}, last={last_sample_bucket})"
             )
             return
 
@@ -1962,6 +1992,7 @@ class RealtimeOptionsFeed:
         df_features = pd.DataFrame(self._ml_features_rows[ticker])
         df_features = self.jepa_feature_engine.append_features(df_features)
         self._ml_features_rows[ticker] = df_features.to_dict("records")
+        self._last_model_sample_bucket[ticker] = sample_bucket
         self._save_parquet(df_features, f"ml_features_{ticker}_latest.parquet")
         self._save_intraday_state()
         context_valid = float(df_features["xjepa_context_valid"].iloc[-1]) if "xjepa_context_valid" in df_features.columns else 0.0
@@ -2023,13 +2054,15 @@ class RealtimeOptionsFeed:
                         await asyncio.sleep(60)
                         continue
 
+                poll_started = time_module.monotonic()
                 await self.poll_once()
 
                 if dry_run:
                     logger.info("Dry run — exiting after one poll")
                     break
 
-                await asyncio.sleep(self.poll_interval)
+                elapsed = time_module.monotonic() - poll_started
+                await asyncio.sleep(max(0.0, self.poll_interval - elapsed))
 
         except asyncio.CancelledError:
             logger.info("Feed stopped.")

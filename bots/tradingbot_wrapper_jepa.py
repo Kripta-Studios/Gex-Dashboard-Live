@@ -63,6 +63,7 @@ TAKE_PROFIT_PCT = 2.50
 MAX_HOLD_MINUTES = 180
 COOLDOWN_MINUTES = 180
 MAX_FEED_SNAPSHOT_AGE_SECONDS = 150
+MAX_MODEL_FEATURE_AGE_SECONDS = 390
 LOOP_INTERVAL_SECONDS = 65
 EOD_CLEANUP_TIME = dt_time(15, 55)
 
@@ -195,9 +196,11 @@ class JepaFixedDeltaBot:
         self.dry_run = bool(dry_run)
         self.positions_path = self.trades_dir / "open_positions_jepa.json"
         self.cooldowns_path = self.trades_dir / "cooldowns_jepa.json"
+        self.evaluated_features_path = self.trades_dir / "evaluated_features_jepa.json"
         self.trade_log_path = self.trades_dir / "trades_jepa.csv"
         self.positions: dict[str, JepaOptionPosition] = self._load_positions()
         self.cooldowns: dict[str, str] = _read_json(self.cooldowns_path, {})
+        self.evaluated_feature_timestamps: dict[str, str] = _read_json(self.evaluated_features_path, {})
         self.signal_model = Jepa180mSignalModel(self.model_dir, mode=MODEL_MODE, tickers=self.tickers)
 
     def _load_positions(self) -> dict[str, JepaOptionPosition]:
@@ -216,8 +219,29 @@ class JepaFixedDeltaBot:
     def _save_cooldowns(self) -> None:
         _write_json(self.cooldowns_path, self.cooldowns)
 
+    def _save_evaluated_features(self) -> None:
+        _write_json(self.evaluated_features_path, self.evaluated_feature_timestamps)
+
     def _current_day_dir(self) -> Path:
         return self.rt_data_dir / _now_et().strftime("%Y%m%d")
+
+    @staticmethod
+    def _feature_row_id(row: pd.DataFrame) -> str:
+        if row.empty:
+            return ""
+        latest = row.iloc[-1]
+        timestamp = latest.get("timestamp")
+        if pd.notna(timestamp):
+            return str(timestamp)
+        date_value = latest.get("date", "")
+        minute = latest.get("minutes_since_open", "")
+        return f"{date_value}:{minute}"
+
+    def _mark_feature_evaluated(self, ticker: str, feature_id: str) -> None:
+        if not feature_id:
+            return
+        self.evaluated_feature_timestamps[ticker] = feature_id
+        self._save_evaluated_features()
 
     def _read_parquet(self, filename: str, max_age: int = MAX_FEED_SNAPSHOT_AGE_SECONDS) -> pd.DataFrame:
         path = self._current_day_dir() / filename
@@ -234,7 +258,10 @@ class JepaFixedDeltaBot:
             return pd.DataFrame()
 
     def _latest_feature_row(self, ticker: str) -> pd.DataFrame:
-        df = self._read_parquet(f"ml_features_{ticker}_latest.parquet")
+        df = self._read_parquet(
+            f"ml_features_{ticker}_latest.parquet",
+            max_age=MAX_MODEL_FEATURE_AGE_SECONDS,
+        )
         if df.empty:
             return pd.DataFrame()
         if "xjepa_context_valid" not in df.columns:
@@ -459,9 +486,6 @@ class JepaFixedDeltaBot:
             return
         if now.time() >= EOD_CLEANUP_TIME:
             return
-        minutes_since_open = max(0, now.hour * 60 + now.minute - (9 * 60 + 30))
-        if minutes_since_open % 5 != 0:
-            return
         if self._cooldown_active(ticker, now):
             logging.info("[%s] cooldown active", ticker)
             return
@@ -469,10 +493,14 @@ class JepaFixedDeltaBot:
         features = self._latest_feature_row(ticker)
         if features.empty:
             return
+        feature_id = self._feature_row_id(features)
+        if self.evaluated_feature_timestamps.get(ticker) == feature_id:
+            return
         pred = self.signal_model.predict_frame(features).iloc[-1]
         direction_int = int(pred.get("jepa180_direction", 0))
         if direction_int == 0:
             logging.info("[%s] no JEPA signal prob_up=%.3f", ticker, _safe_float(pred.get("jepa180_prob_up", 0.5)))
+            self._mark_feature_evaluated(ticker, feature_id)
             return
         direction = "LONG" if direction_int > 0 else "SHORT"
         option = self._select_fixed_delta_option(ticker, direction)
@@ -503,6 +531,7 @@ class JepaFixedDeltaBot:
         self.positions[ticker] = pos
         self._record_cooldown(ticker, now)
         self._save_positions()
+        self._mark_feature_evaluated(ticker, feature_id)
         logging.info(
             "[%s] OPEN %s strike=%.0f delta=%.2f premium=%.2f contracts=%d prob_up=%.3f conf=%.0f%%",
             ticker,
