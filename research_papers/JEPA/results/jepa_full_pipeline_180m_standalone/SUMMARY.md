@@ -3,31 +3,31 @@
 Data: `C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\training_data\training_data_spx_qqq_spy_jepa_xinput_v3_pipeline.parquet`
 Model dir: `C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\neural\models\jepa\jepa_full_pipeline_180m_frozen_march`
 Mode: `base_jepa`
-Rows scored: 2,220
+Rows scored: 2,280
 Execution: fixed `180`m hold, cooldown `180`m, cost `1.0` bps, notional `$100,000`.
 
 ## Overall
 
 | Scope | Trades | WR | PF | Avg bps | PnL | Max DD | Long Rate |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| all | 105 | 68.6% | 1.945 | 8.70 | +9,132 | -1,522 | 63.8% |
+| all | 107 | 69.2% | 2.031 | 9.31 | +9,963 | -1,522 | 64.5% |
 
 ## Per Ticker
 
 | Ticker | Trades | WR | PF | Avg bps | PnL | Max DD | Long Rate |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| QQQ | 35 | 62.9% | 1.573 | 7.76 | +2,717 | -1,522 | 65.7% |
+| QQQ | 36 | 63.9% | 1.687 | 9.05 | +3,258 | -1,522 | 66.7% |
 | SPX | 36 | 72.2% | 4.144 | 14.00 | +5,041 | -579 | 61.1% |
-| SPY | 34 | 70.6% | 1.414 | 4.04 | +1,374 | -1,026 | 64.7% |
+| SPY | 35 | 71.4% | 1.502 | 4.75 | +1,664 | -1,026 | 65.7% |
 
 ## Cost Sensitivity
 
 | Cost | Trades | WR | PF | Avg bps | PnL | Max DD | Long Rate |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 1 bps | 105 | 68.6% | 1.945 | 8.70 | +9,132 | -1,522 | 63.8% |
-| 3 bps | 105 | 65.7% | 1.679 | 6.70 | +7,032 | -1,562 | 63.8% |
-| 5 bps | 105 | 64.8% | 1.445 | 4.70 | +4,932 | -1,625 | 63.8% |
-| 10 bps | 105 | 55.2% | 0.976 | -0.30 | -318 | -2,086 | 63.8% |
+| 1 bps | 107 | 69.2% | 2.031 | 9.31 | +9,963 | -1,522 | 64.5% |
+| 3 bps | 107 | 66.4% | 1.755 | 7.31 | +7,823 | -1,562 | 64.5% |
+| 5 bps | 107 | 65.4% | 1.513 | 5.31 | +5,683 | -1,625 | 64.5% |
+| 10 bps | 107 | 56.1% | 1.025 | 0.31 | +333 | -2,086 | 64.5% |
 
 ## Model Thresholds
 

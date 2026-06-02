@@ -57,7 +57,7 @@
 \begin{center}
 {\Huge\bfseries\color{accent} GEX Dashboard Live}\\[6pt]
 {\Large\color{txtsub} Backtest Analysis Report — All Time}\\[4pt]
-{\normalsize\color{txtsub} Tickers: QQQ, SPX, SPY \quad|\quad GBT: gbt\_only\_jepa\_full\_pipeline\_base\_jepa\_180m\_20260601\_115725.csv \quad|\quad RL: gbt\_rl\_jepa\_full\_pipeline\_option\_value\_jepa\_20260601\_115725.csv}
+{\normalsize\color{txtsub} Tickers: QQQ, SPX, SPY \quad|\quad GBT: gbt\_only\_jepa\_full\_pipeline\_base\_jepa\_180m\_20260602\_001817.csv \quad|\quad RL: gbt\_rl\_jepa\_full\_pipeline\_option\_value\_jepa\_20260602\_001817.csv}
 \end{center}
 \vspace{12pt}
 \noindent\textcolor{bordergray}{\rule{\textwidth}{0.5pt}}
@@ -67,9 +67,9 @@
 \section{GBT+JEPA 180m vs JEPA 0DTE Fixed 0.70 Comparison}
 \vspace{4pt}
 \noindent\begin{center}
-\metricbox{GBT+JEPA 180m Trades}{2794}{accent}
+\metricbox{GBT+JEPA 180m Trades}{2796}{accent}
 \hspace{4pt}
-\metricbox{JEPA 0DTE Fixed 0.70 Trades}{2100}{accentrl}
+\metricbox{JEPA 0DTE Fixed 0.70 Trades}{2102}{accentrl}
 \hspace{4pt}
 \metricbox{PF Improvement}{-76.3\%}{lossred}
 \end{center}
@@ -81,13 +81,13 @@
 \rowcolor{cardbg}
 \textcolor{txtmain}{\textbf{Metric}} & \textcolor{accent}{\textbf{GBT+JEPA 180m}} & \textcolor{accentrl}{\textbf{JEPA 0DTE Fixed 0.70}} & \textcolor{txtsub}{\textbf{Delta}} \\
 \midrule
-Total Trades & 2794 & 2100 & \textcolor{lossred}{-694} \\
+Total Trades & 2796 & 2102 & \textcolor{lossred}{-694} \\
 Trailing Stops & 0 & 0 & \textcolor{txtsub}{0} \\
 Win Rate (\%) & 89.7 & 74.3 & \textcolor{lossred}{-15.4} \\
-Profit Factor & 24.29 & 5.76 & \textcolor{lossred}{-18.53} \\
-Total P\&L (\$) & 876,623.4 & 1,171,609.5 & \textcolor{wingreen}{+294,986.1} \\
+Profit Factor & 24.31 & 5.77 & \textcolor{lossred}{-18.54} \\
+Total P\&L (\$) & 877,454.1 & 1,173,822.3 & \textcolor{wingreen}{+296,368.1} \\
 Max Drawdown (\$) & -2,093.3 & -8,249.4 & \textcolor{wingreen}{-6,156.1} \\
-Sharpe Ratio & 11.53 & 8.92 & \textcolor{lossred}{-2.61} \\
+Sharpe Ratio & 11.54 & 8.93 & \textcolor{lossred}{-2.60} \\
 W/L Size Ratio & 2.78 & 1.97 & \textcolor{lossred}{-0.81} \\
 Avg Hold Win (min) & 180 & 178 & \textcolor{lossred}{-2} \\
 Avg Hold Loss (min) & 180 & 143 & \textcolor{wingreen}{-37} \\
@@ -104,9 +104,9 @@ Avg Hold Loss (min) & 180 & 143 & \textcolor{wingreen}{-37} \\
 \rowcolor{cardbg}
 \textbf{Ticker} & \textbf{Trades} & \textbf{WR (\%)} & \textbf{PF} & \textbf{P\&L (\$)} \\
 \midrule
-QQQ & 924 & 88.0 & 18.60 & \textcolor{wingreen}{+334,650.8} \\
+QQQ & 925 & 88.0 & 18.63 & \textcolor{wingreen}{+335,191.8} \\
 SPX & 947 & 92.6 & 48.12 & \textcolor{wingreen}{+283,469.7} \\
-SPY & 923 & 88.5 & 21.50 & \textcolor{wingreen}{+258,502.9} \\
+SPY & 924 & 88.5 & 21.52 & \textcolor{wingreen}{+258,792.6} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -119,9 +119,9 @@ SPY & 923 & 88.5 & 21.50 & \textcolor{wingreen}{+258,502.9} \\
 \rowcolor{cardbg}
 \textbf{Ticker} & \textbf{Trades} & \textbf{WR (\%)} & \textbf{PF} & \textbf{P\&L (\$)} \\
 \midrule
-QQQ & 702 & 72.4 & 5.85 & \textcolor{wingreen}{+261,821.1} \\
+QQQ & 703 & 72.4 & 5.87 & \textcolor{wingreen}{+263,106.3} \\
 SPX & 696 & 76.0 & 5.90 & \textcolor{wingreen}{+656,430.5} \\
-SPY & 702 & 74.5 & 5.36 & \textcolor{wingreen}{+253,357.9} \\
+SPY & 703 & 74.5 & 5.37 & \textcolor{wingreen}{+254,285.4} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -129,15 +129,15 @@ SPY & 702 & 74.5 & 5.36 & \textcolor{wingreen}{+253,357.9} \\
 \clearpage
 \section{\textcolor{accent}{GBT+JEPA 180m}}
 \noindent\begin{center}
-\metricbox{Trades}{2794}{accent}
+\metricbox{Trades}{2796}{accent}
 \hspace{3pt}
 \metricbox{Win Rate}{89.7\%}{wingreen}
 \hspace{3pt}
-\metricbox{Profit Factor}{24.29}{wingreen}
+\metricbox{Profit Factor}{24.31}{wingreen}
 \hspace{3pt}
-\metricbox{Net P\&L}{\$875,803}{wingreen}
+\metricbox{Net P\&L}{\$876,633}{wingreen}
 \hspace{3pt}
-\metricbox{Max DD}{\$4,563}{lossred}
+\metricbox{Max DD}{\$15,137}{lossred}
 \hspace{3pt}
 \metricbox{Avg Hold}{180 min}{txtsub}
 \end{center}
@@ -196,6 +196,7 @@ SPY & 702 & 74.5 & 5.36 & \textcolor{wingreen}{+253,357.9} \\
 2026-03 & 66 & 90.9 & \textcolor{wingreen}{23,604.30} \\
 2026-04 & 52 & 69.2 & \textcolor{wingreen}{4,299.41} \\
 2026-05 & 53 & 67.9 & \textcolor{wingreen}{4,832.44} \\
+2026-06 & 2 & 100.0 & \textcolor{wingreen}{830.71} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -234,13 +235,13 @@ SPY & 702 & 74.5 & 5.36 & \textcolor{wingreen}{+253,357.9} \\
 \clearpage
 \section{\textcolor{accentrl}{JEPA 0DTE Fixed 0.70}}
 \noindent\begin{center}
-\metricbox{Trades}{2100}{accentrl}
+\metricbox{Trades}{2102}{accentrl}
 \hspace{3pt}
 \metricbox{Win Rate}{74.3\%}{wingreen}
 \hspace{3pt}
-\metricbox{Profit Factor}{5.76}{wingreen}
+\metricbox{Profit Factor}{5.77}{wingreen}
 \hspace{3pt}
-\metricbox{Net P\&L}{\$1,171,337}{wingreen}
+\metricbox{Net P\&L}{\$1,173,549}{wingreen}
 \hspace{3pt}
 \metricbox{Max DD}{\$10,877}{lossred}
 \hspace{3pt}
@@ -289,6 +290,7 @@ SPY & 702 & 74.5 & 5.36 & \textcolor{wingreen}{+253,357.9} \\
 2026-03 & 66 & 63.6 & \textcolor{wingreen}{45,324.82} \\
 2026-04 & 52 & 59.6 & \textcolor{wingreen}{13,448.79} \\
 2026-05 & 53 & 52.8 & \textcolor{wingreen}{14,666.62} \\
+2026-06 & 2 & 100.0 & \textcolor{wingreen}{2,212.71} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -333,7 +335,7 @@ SPY & 702 & 74.5 & 5.36 & \textcolor{wingreen}{+253,357.9} \\
 \rowcolor{cardbg}
 \textbf{Reason} & \textbf{Count} & \textbf{\%} \\
 \midrule
-max\_time & 1836 & 87.4\% \\
+max\_time & 1838 & 87.4\% \\
 hard\_stop & 211 & 10.0\% \\
 hard\_take\_profit & 53 & 2.5\% \\
 \bottomrule
@@ -347,7 +349,7 @@ hard\_take\_profit & 53 & 2.5\% \\
 \rowcolor{cardbg}
 \textbf{Bucket} & \textbf{Trades} & \textbf{\%} & \textbf{WR} & \textbf{PF} & \textbf{Avg Dist} & \textbf{Avg P\&L} \\
 \midrule
-itm & 2100 & 100.0\% & 74.3\% & 5.76 & +0.0p & \textcolor{wingreen}{+557.91} \\
+itm & 2102 & 100.0\% & 74.3\% & 5.77 & +0.0p & \textcolor{wingreen}{+558.43} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -357,7 +359,7 @@ itm & 2100 & 100.0\% & 74.3\% & 5.76 & +0.0p & \textcolor{wingreen}{+557.91} \\
 \noindent\begin{center}
 \metricbox{Rank Corr w/ Market}{-0.02}{wingreen}
 \hspace{4pt}
-\metricbox{Market UP Trades}{1509}{wingreen}
+\metricbox{Market UP Trades}{1511}{wingreen}
 \hspace{4pt}
 \metricbox{Market DOWN Trades}{1285}{lossred}
 \end{center}
@@ -369,7 +371,7 @@ itm & 2100 & 100.0\% & 74.3\% & 5.76 & +0.0p & \textcolor{wingreen}{+557.91} \\
 \rowcolor{cardbg}
 \textbf{Market} & \textbf{Trades} & \textbf{WR (\%)} & \textbf{PF} \\
 \midrule
-UP Days & 1509 & 90.2 & 27.38 \\
+UP Days & 1511 & 90.2 & 27.43 \\
 DOWN Days & 1285 & 89.2 & 21.65 \\
 \bottomrule
 \end{tabular}
@@ -379,7 +381,7 @@ DOWN Days & 1285 & 89.2 & 21.65 \\
 \noindent\begin{center}
 \metricbox{Rank Corr w/ Market}{+0.01}{wingreen}
 \hspace{4pt}
-\metricbox{Market UP Trades}{1134}{wingreen}
+\metricbox{Market UP Trades}{1136}{wingreen}
 \hspace{4pt}
 \metricbox{Market DOWN Trades}{966}{lossred}
 \end{center}
@@ -391,7 +393,7 @@ DOWN Days & 1285 & 89.2 & 21.65 \\
 \rowcolor{cardbg}
 \textbf{Market} & \textbf{Trades} & \textbf{WR (\%)} & \textbf{PF} \\
 \midrule
-UP Days & 1134 & 75.7 & 6.67 \\
+UP Days & 1136 & 75.7 & 6.69 \\
 DOWN Days & 966 & 72.7 & 5.04 \\
 \bottomrule
 \end{tabular}
@@ -3223,6 +3225,8 @@ DOWN Days & 966 & 72.7 & 5.04 \\
 05-28 & 11:25 & 14:25 & QQQ & LONG & 734.2 & 736.1 & \textcolor{wingreen}{+0.3\%} & 180m & max\_time\_180m & \textcolor{wingreen}{248.80} \\
 05-28 & 11:25 & 14:25 & SPY & LONG & 753.7 & 754.8 & \textcolor{wingreen}{+0.1\%} & 180m & max\_time\_180m & \textcolor{wingreen}{139.93} \\
 05-29 & 11:25 & 14:25 & SPX & SHORT & 7,586.7 & 7,579.3 & \textcolor{wingreen}{+0.1\%} & 180m & max\_time\_180m & \textcolor{wingreen}{87.54} \\
+06-01 & 11:25 & 14:25 & QQQ & LONG & 740.5 & 744.5 & \textcolor{wingreen}{+0.6\%} & 180m & max\_time\_180m & \textcolor{wingreen}{541.00} \\
+06-01 & 11:40 & 14:40 & SPY & LONG & 757.4 & 759.7 & \textcolor{wingreen}{+0.3\%} & 180m & max\_time\_180m & \textcolor{wingreen}{289.70} \\
 \end{longtable}
 \end{center}
 \clearpage
@@ -5347,6 +5351,8 @@ DOWN Days & 966 & 72.7 & 5.04 \\
 05-28 & 11:25 & 14:25 & QQQ & LONG & 732.0 & 734.2 & 0.0 & 2.98 & 4.14 & \textcolor{lossred}{-100.0\%} & \textcolor{wingreen}{+39.0\%} & 180m & max\_time & \textcolor{wingreen}{348.5} \\
 05-28 & 11:25 & 14:25 & SPY & LONG & 752.0 & 753.7 & 0.0 & 2.14 & 2.83 & \textcolor{lossred}{-100.0\%} & \textcolor{wingreen}{+32.1\%} & 180m & max\_time & \textcolor{wingreen}{274.9} \\
 05-29 & 11:25 & 14:25 & SPX & SHORT & 7600.0 & 7,586.7 & 0.0 & 19.48 & 22.10 & \textcolor{wingreen}{+100.0\%} & \textcolor{wingreen}{+13.5\%} & 180m & max\_time & \textcolor{wingreen}{262.1} \\
+06-01 & 11:25 & 14:25 & QQQ & LONG & 739.0 & 740.5 & 0.0 & 2.37 & 5.58 & \textcolor{lossred}{-100.0\%} & \textcolor{wingreen}{+135.7\%} & 180m & max\_time & \textcolor{wingreen}{1,285.2} \\
+06-01 & 11:40 & 14:40 & SPY & LONG & 756.0 & 757.4 & 0.0 & 1.83 & 3.69 & \textcolor{lossred}{-100.0\%} & \textcolor{wingreen}{+101.4\%} & 180m & max\_time & \textcolor{wingreen}{927.5} \\
 \end{longtable}
 \end{center}
 \clearpage

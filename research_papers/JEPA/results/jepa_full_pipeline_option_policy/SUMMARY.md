@@ -4,8 +4,8 @@ Data: `C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\train
 Signal model: `C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\neural\models\jepa\jepa_full_pipeline_180m_frozen_march` / mode `base_jepa`
 Train cutoff: `20260331`
 Test start: `20260401`
-Signals after `180`m cooldown: 2,794 total, 2,689 train, 105 test.
-Option candidates with valid real premium paths: 19,558.
+Signals after `180`m cooldown: 2,796 total, 2,689 train, 107 test.
+Option candidates with valid real premium paths: 19,572.
 Candidate deltas: `0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7`.
 Execution: buy 0DTE option, risk capital `$1,000`, max hold `180`m, hard stop `-60%`, take profit `250%`.
 
@@ -24,15 +24,15 @@ Execution: buy 0DTE option, risk capital `$1,000`, max hold `180`m, hard stop `-
 
 | Policy | Trades | WR | PF | PnL | Max DD | Avg PnL | Avg Hold | Avg Delta |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| fixed_delta_0.60_hard | 105 | 51.4% | 1.885 | +25,226 | -3,354 | +240 | 152.6 | 0.603 |
-| fixed_delta_0.70_hard | 105 | 56.2% | 2.033 | +28,115 | -3,548 | +268 | 161.0 | 0.702 |
-| validation_best_delta_0.70_hard | 105 | 56.2% | 2.033 | +28,115 | -3,548 | +268 | 161.0 | 0.702 |
-| learned_delta_regression_all_hard | 105 | 53.3% | 1.889 | +26,223 | -3,548 | +250 | 156.5 | 0.635 |
-| learned_delta_ranker_all_hard | 105 | 55.2% | 1.965 | +27,145 | -3,548 | +259 | 159.7 | 0.686 |
+| fixed_delta_0.60_hard | 107 | 52.3% | 1.980 | +27,931 | -3,354 | +261 | 153.1 | 0.602 |
+| fixed_delta_0.70_hard | 107 | 57.0% | 2.115 | +30,328 | -3,548 | +283 | 161.4 | 0.702 |
+| validation_best_delta_0.70_hard | 107 | 57.0% | 2.115 | +30,328 | -3,548 | +283 | 161.4 | 0.702 |
+| learned_delta_regression_all_hard | 107 | 54.2% | 1.964 | +28,436 | -3,548 | +266 | 157.0 | 0.636 |
+| learned_delta_ranker_all_hard | 107 | 56.1% | 2.044 | +29,357 | -3,548 | +274 | 160.0 | 0.686 |
 | supervised_entry_strike_skip_hard | 46 | 58.7% | 2.235 | +19,472 | -2,389 | +423 | 156.1 | 0.642 |
 | supervised_entry_strike_learned_exit | 46 | 58.7% | 2.489 | +23,381 | -2,389 | +508 | 149.9 | 0.642 |
-| oracle_best_delta_hard | 105 | 56.2% | 5.053 | +69,480 | -1,703 | +662 | 144.6 | 0.548 |
-| oracle_best_delta_oracle_exit | 105 | 87.6% | 140.828 | +167,995 | -342 | +1,600 | 89.2 | 0.464 |
+| oracle_best_delta_hard | 107 | 57.0% | 5.403 | +75,487 | -1,703 | +705 | 144.9 | 0.543 |
+| oracle_best_delta_oracle_exit | 107 | 87.9% | 149.264 | +178,130 | -342 | +1,665 | 90.2 | 0.458 |
 
 ## Per-Ticker OOS Results
 
@@ -40,41 +40,41 @@ Execution: buy 0DTE option, risk capital `$1,000`, max hold `180`m, hard stop `-
 
 | Ticker | Trades | WR | PF | PnL | Max DD | Avg PnL | Avg Hold | Avg Delta |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| QQQ | 35 | 45.7% | 1.236 | +2,092 | -3,354 | +60 | 139.0 | 0.603 |
+| QQQ | 36 | 47.2% | 1.398 | +3,521 | -3,354 | +98 | 140.1 | 0.601 |
 | SPX | 36 | 58.3% | 2.553 | +18,849 | -2,795 | +524 | 156.5 | 0.600 |
-| SPY | 34 | 50.0% | 1.571 | +4,286 | -2,364 | +126 | 162.4 | 0.607 |
+| SPY | 35 | 51.4% | 1.740 | +5,561 | -2,364 | +159 | 162.9 | 0.606 |
 
 ### fixed_delta_0.70_hard
 
 | Ticker | Trades | WR | PF | PnL | Max DD | Avg PnL | Avg Hold | Avg Delta |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| QQQ | 35 | 51.4% | 1.474 | +3,229 | -2,144 | +92 | 151.4 | 0.702 |
+| QQQ | 36 | 52.8% | 1.663 | +4,514 | -2,144 | +125 | 152.2 | 0.701 |
 | SPX | 36 | 63.9% | 2.406 | +20,298 | -3,548 | +564 | 166.1 | 0.703 |
-| SPY | 34 | 52.9% | 1.770 | +4,589 | -2,261 | +135 | 165.6 | 0.701 |
+| SPY | 35 | 54.3% | 1.926 | +5,516 | -2,261 | +158 | 166.0 | 0.702 |
 
 ### validation_best_delta_0.70_hard
 
 | Ticker | Trades | WR | PF | PnL | Max DD | Avg PnL | Avg Hold | Avg Delta |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| QQQ | 35 | 51.4% | 1.474 | +3,229 | -2,144 | +92 | 151.4 | 0.702 |
+| QQQ | 36 | 52.8% | 1.663 | +4,514 | -2,144 | +125 | 152.2 | 0.701 |
 | SPX | 36 | 63.9% | 2.406 | +20,298 | -3,548 | +564 | 166.1 | 0.703 |
-| SPY | 34 | 52.9% | 1.770 | +4,589 | -2,261 | +135 | 165.6 | 0.701 |
+| SPY | 35 | 54.3% | 1.926 | +5,516 | -2,261 | +158 | 166.0 | 0.702 |
 
 ### learned_delta_regression_all_hard
 
 | Ticker | Trades | WR | PF | PnL | Max DD | Avg PnL | Avg Hold | Avg Delta |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| QQQ | 35 | 48.6% | 1.388 | +3,294 | -2,917 | +94 | 143.7 | 0.605 |
+| QQQ | 36 | 50.0% | 1.539 | +4,579 | -2,917 | +127 | 144.7 | 0.606 |
 | SPX | 36 | 58.3% | 2.254 | +18,088 | -3,548 | +502 | 163.6 | 0.662 |
-| SPY | 34 | 52.9% | 1.735 | +4,841 | -2,261 | +142 | 162.2 | 0.637 |
+| SPY | 35 | 54.3% | 1.876 | +5,769 | -2,261 | +165 | 162.7 | 0.639 |
 
 ### learned_delta_ranker_all_hard
 
 | Ticker | Trades | WR | PF | PnL | Max DD | Avg PnL | Avg Hold | Avg Delta |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| QQQ | 35 | 48.6% | 1.290 | +2,209 | -2,332 | +63 | 147.6 | 0.669 |
+| QQQ | 36 | 50.0% | 1.459 | +3,494 | -2,332 | +97 | 148.5 | 0.669 |
 | SPX | 36 | 63.9% | 2.406 | +20,298 | -3,548 | +564 | 166.1 | 0.703 |
-| SPY | 34 | 52.9% | 1.765 | +4,638 | -2,261 | +136 | 165.3 | 0.686 |
+| SPY | 35 | 54.3% | 1.918 | +5,565 | -2,261 | +159 | 165.7 | 0.688 |
 
 ### supervised_entry_strike_skip_hard
 
@@ -96,17 +96,17 @@ Execution: buy 0DTE option, risk capital `$1,000`, max hold `180`m, hard stop `-
 
 | Ticker | Trades | WR | PF | PnL | Max DD | Avg PnL | Avg Hold | Avg Delta |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| QQQ | 35 | 51.4% | 3.341 | +15,364 | -1,703 | +439 | 144.6 | 0.558 |
+| QQQ | 36 | 52.8% | 3.952 | +19,376 | -1,703 | +538 | 144.4 | 0.546 |
 | SPX | 36 | 63.9% | 7.884 | +33,903 | -1,353 | +942 | 143.2 | 0.571 |
-| SPY | 34 | 52.9% | 4.575 | +20,212 | -1,153 | +594 | 146.2 | 0.514 |
+| SPY | 35 | 54.3% | 4.928 | +22,208 | -1,153 | +635 | 147.1 | 0.510 |
 
 ### oracle_best_delta_oracle_exit
 
 | Ticker | Trades | WR | PF | PnL | Max DD | Avg PnL | Avg Hold | Avg Delta |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| QQQ | 35 | 85.7% | 75.537 | +50,516 | -342 | +1,443 | 82.7 | 0.432 |
+| QQQ | 36 | 86.1% | 85.572 | +57,317 | -342 | +1,592 | 84.6 | 0.422 |
 | SPX | 36 | 91.7% | 246.060 | +81,364 | -157 | +2,260 | 101.1 | 0.543 |
-| SPY | 34 | 85.3% | 189.403 | +36,115 | -85 | +1,062 | 83.2 | 0.415 |
+| SPY | 35 | 85.7% | 206.795 | +39,449 | -85 | +1,127 | 84.7 | 0.407 |
 
 ## Validation Choices
 
@@ -685,9 +685,9 @@ Execution: buy 0DTE option, risk capital `$1,000`, max hold `180`m, hard stop `-
     "minutes_remaining"
   ],
   "train_candidates": 18823,
-  "test_candidates": 735,
+  "test_candidates": 749,
   "train_signals": 2689,
-  "test_signals": 105,
+  "test_signals": 107,
   "validation": {
     "val_months": [
       "202601",
@@ -1164,27 +1164,27 @@ Execution: buy 0DTE option, risk capital `$1,000`, max hold `180`m, hard stop `-
   "policy_metrics": {
     "fixed_delta_0.60_hard": {
       "overall": {
-        "trades": 105,
-        "win_rate": 0.5142857142857142,
-        "profit_factor": 1.885043609247198,
-        "pnl_dollars": 25225.861604997135,
+        "trades": 107,
+        "win_rate": 0.5233644859813084,
+        "profit_factor": 1.9799465591451921,
+        "pnl_dollars": 27930.822869074374,
         "max_drawdown": -3353.560386331479,
-        "avg_pnl": 240.2463009999727,
-        "avg_hold_minutes": 152.57142857142858,
-        "long_rate": 0.638095238095238,
-        "avg_delta_abs": 0.6029561904761905
+        "avg_pnl": 261.0357277483586,
+        "avg_hold_minutes": 153.0841121495327,
+        "long_rate": 0.6448598130841121,
+        "avg_delta_abs": 0.6022691588785047
       },
       "per_ticker": {
         "QQQ": {
-          "trades": 35,
-          "win_rate": 0.45714285714285713,
-          "profit_factor": 1.2362267449178503,
-          "pnl_dollars": 2091.670355607453,
+          "trades": 36,
+          "win_rate": 0.4722222222222222,
+          "profit_factor": 1.3976698523255668,
+          "pnl_dollars": 3521.1687894080123,
           "max_drawdown": -3353.560386331479,
-          "avg_pnl": 59.762010160212945,
-          "avg_hold_minutes": 139.0,
-          "long_rate": 0.6571428571428571,
-          "avg_delta_abs": 0.6025828571428571
+          "avg_pnl": 97.81024415022256,
+          "avg_hold_minutes": 140.13888888888889,
+          "long_rate": 0.6666666666666666,
+          "avg_delta_abs": 0.60125
         },
         "SPX": {
           "trades": 36,
@@ -1198,41 +1198,41 @@ Execution: buy 0DTE option, risk capital `$1,000`, max hold `180`m, hard stop `-
           "avg_delta_abs": 0.5997305555555555
         },
         "SPY": {
-          "trades": 34,
-          "win_rate": 0.5,
-          "profit_factor": 1.5706500069356384,
-          "pnl_dollars": 4285.530780958537,
+          "trades": 35,
+          "win_rate": 0.5142857142857142,
+          "profit_factor": 1.740487282676951,
+          "pnl_dollars": 5560.993611235221,
           "max_drawdown": -2364.3862343654914,
-          "avg_pnl": 126.04502296936874,
-          "avg_hold_minutes": 162.35294117647058,
-          "long_rate": 0.6470588235294118,
-          "avg_delta_abs": 0.6067558823529412
+          "avg_pnl": 158.88553174957772,
+          "avg_hold_minutes": 162.85714285714286,
+          "long_rate": 0.6571428571428571,
+          "avg_delta_abs": 0.6059285714285714
         }
       }
     },
     "fixed_delta_0.70_hard": {
       "overall": {
-        "trades": 105,
-        "win_rate": 0.5619047619047619,
-        "profit_factor": 2.033279021214499,
-        "pnl_dollars": 28115.412084034062,
-        "max_drawdown": -3547.9676886717352,
-        "avg_pnl": 267.76582937175294,
-        "avg_hold_minutes": 161.04761904761904,
-        "long_rate": 0.638095238095238,
-        "avg_delta_abs": 0.7018904761904762
+        "trades": 107,
+        "win_rate": 0.5700934579439252,
+        "profit_factor": 2.11459923361917,
+        "pnl_dollars": 30328.126399893477,
+        "max_drawdown": -3547.967688671736,
+        "avg_pnl": 283.44043364386425,
+        "avg_hold_minutes": 161.4018691588785,
+        "long_rate": 0.6448598130841121,
+        "avg_delta_abs": 0.7017822429906541
       },
       "per_ticker": {
         "QQQ": {
-          "trades": 35,
-          "win_rate": 0.5142857142857142,
-          "profit_factor": 1.4738695695010169,
-          "pnl_dollars": 3228.65704875179,
+          "trades": 36,
+          "win_rate": 0.5277777777777778,
+          "profit_factor": 1.6625019463349813,
+          "pnl_dollars": 4513.8825459895415,
           "max_drawdown": -2144.4928378222658,
-          "avg_pnl": 92.24734425005114,
-          "avg_hold_minutes": 151.42857142857142,
-          "long_rate": 0.6571428571428571,
-          "avg_delta_abs": 0.7020771428571428
+          "avg_pnl": 125.38562627748726,
+          "avg_hold_minutes": 152.22222222222223,
+          "long_rate": 0.6666666666666666,
+          "avg_delta_abs": 0.7008416666666667
         },
         "SPX": {
           "trades": 36,
@@ -1246,41 +1246,41 @@ Execution: buy 0DTE option, risk capital `$1,000`, max hold `180`m, hard stop `-
           "avg_delta_abs": 0.7025527777777777
         },
         "SPY": {
-          "trades": 34,
-          "win_rate": 0.5294117647058824,
-          "profit_factor": 1.7700999599510128,
-          "pnl_dollars": 4588.777514997081,
+          "trades": 35,
+          "win_rate": 0.5428571428571428,
+          "profit_factor": 1.925753420974391,
+          "pnl_dollars": 5516.266333618741,
           "max_drawdown": -2260.68503362054,
-          "avg_pnl": 134.96404455873767,
-          "avg_hold_minutes": 165.58823529411765,
-          "long_rate": 0.6470588235294118,
-          "avg_delta_abs": 0.7009970588235294
+          "avg_pnl": 157.60760953196402,
+          "avg_hold_minutes": 166.0,
+          "long_rate": 0.6571428571428571,
+          "avg_delta_abs": 0.7019571428571428
         }
       }
     },
     "validation_best_delta_0.70_hard": {
       "overall": {
-        "trades": 105,
-        "win_rate": 0.5619047619047619,
-        "profit_factor": 2.033279021214499,
-        "pnl_dollars": 28115.412084034062,
-        "max_drawdown": -3547.9676886717352,
-        "avg_pnl": 267.76582937175294,
-        "avg_hold_minutes": 161.04761904761904,
-        "long_rate": 0.638095238095238,
-        "avg_delta_abs": 0.7018904761904762
+        "trades": 107,
+        "win_rate": 0.5700934579439252,
+        "profit_factor": 2.11459923361917,
+        "pnl_dollars": 30328.126399893477,
+        "max_drawdown": -3547.967688671736,
+        "avg_pnl": 283.44043364386425,
+        "avg_hold_minutes": 161.4018691588785,
+        "long_rate": 0.6448598130841121,
+        "avg_delta_abs": 0.7017822429906541
       },
       "per_ticker": {
         "QQQ": {
-          "trades": 35,
-          "win_rate": 0.5142857142857142,
-          "profit_factor": 1.4738695695010169,
-          "pnl_dollars": 3228.65704875179,
+          "trades": 36,
+          "win_rate": 0.5277777777777778,
+          "profit_factor": 1.6625019463349813,
+          "pnl_dollars": 4513.8825459895415,
           "max_drawdown": -2144.4928378222658,
-          "avg_pnl": 92.24734425005114,
-          "avg_hold_minutes": 151.42857142857142,
-          "long_rate": 0.6571428571428571,
-          "avg_delta_abs": 0.7020771428571428
+          "avg_pnl": 125.38562627748726,
+          "avg_hold_minutes": 152.22222222222223,
+          "long_rate": 0.6666666666666666,
+          "avg_delta_abs": 0.7008416666666667
         },
         "SPX": {
           "trades": 36,
@@ -1294,41 +1294,41 @@ Execution: buy 0DTE option, risk capital `$1,000`, max hold `180`m, hard stop `-
           "avg_delta_abs": 0.7025527777777777
         },
         "SPY": {
-          "trades": 34,
-          "win_rate": 0.5294117647058824,
-          "profit_factor": 1.7700999599510128,
-          "pnl_dollars": 4588.777514997081,
+          "trades": 35,
+          "win_rate": 0.5428571428571428,
+          "profit_factor": 1.925753420974391,
+          "pnl_dollars": 5516.266333618741,
           "max_drawdown": -2260.68503362054,
-          "avg_pnl": 134.96404455873767,
-          "avg_hold_minutes": 165.58823529411765,
-          "long_rate": 0.6470588235294118,
-          "avg_delta_abs": 0.7009970588235294
+          "avg_pnl": 157.60760953196402,
+          "avg_hold_minutes": 166.0,
+          "long_rate": 0.6571428571428571,
+          "avg_delta_abs": 0.7019571428571428
         }
       }
     },
     "learned_delta_regression_all_hard": {
       "overall": {
-        "trades": 105,
-        "win_rate": 0.5333333333333333,
-        "profit_factor": 1.8887382423110703,
-        "pnl_dollars": 26223.067519804536,
-        "max_drawdown": -3547.9676886717352,
-        "avg_pnl": 249.74350018861463,
-        "avg_hold_minutes": 156.52380952380952,
-        "long_rate": 0.638095238095238,
-        "avg_delta_abs": 0.6345161904761905
+        "trades": 107,
+        "win_rate": 0.5420560747663551,
+        "profit_factor": 1.9637303777783741,
+        "pnl_dollars": 28435.78183566394,
+        "max_drawdown": -3547.967688671736,
+        "avg_pnl": 265.7549704267658,
+        "avg_hold_minutes": 156.9626168224299,
+        "long_rate": 0.6448598130841121,
+        "avg_delta_abs": 0.635667289719626
       },
       "per_ticker": {
         "QQQ": {
-          "trades": 35,
-          "win_rate": 0.4857142857142857,
-          "profit_factor": 1.387766551662588,
-          "pnl_dollars": 3293.520734965642,
+          "trades": 36,
+          "win_rate": 0.5,
+          "profit_factor": 1.5390840927613287,
+          "pnl_dollars": 4578.746232203393,
           "max_drawdown": -2916.8551964765647,
-          "avg_pnl": 94.10059242758977,
-          "avg_hold_minutes": 143.71428571428572,
-          "long_rate": 0.6571428571428571,
-          "avg_delta_abs": 0.6045028571428571
+          "avg_pnl": 127.18739533898315,
+          "avg_hold_minutes": 144.72222222222223,
+          "long_rate": 0.6666666666666666,
+          "avg_delta_abs": 0.6059777777777777
         },
         "SPX": {
           "trades": 36,
@@ -1342,41 +1342,41 @@ Execution: buy 0DTE option, risk capital `$1,000`, max hold `180`m, hard stop `-
           "avg_delta_abs": 0.6617055555555554
         },
         "SPY": {
-          "trades": 34,
-          "win_rate": 0.5294117647058824,
-          "profit_factor": 1.7350560946628475,
-          "pnl_dollars": 4841.090597579261,
+          "trades": 35,
+          "win_rate": 0.5428571428571428,
+          "profit_factor": 1.8758831036017838,
+          "pnl_dollars": 5768.579416200921,
           "max_drawdown": -2260.6850336205393,
-          "avg_pnl": 142.38501757586062,
-          "avg_hold_minutes": 162.2058823529412,
-          "long_rate": 0.6470588235294118,
-          "avg_delta_abs": 0.6366235294117648
+          "avg_pnl": 164.81655474859772,
+          "avg_hold_minutes": 162.71428571428572,
+          "long_rate": 0.6571428571428571,
+          "avg_delta_abs": 0.6394228571428572
         }
       }
     },
     "learned_delta_ranker_all_hard": {
       "overall": {
-        "trades": 105,
-        "win_rate": 0.5523809523809524,
-        "profit_factor": 1.9652047696173305,
-        "pnl_dollars": 27144.57535961654,
+        "trades": 107,
+        "win_rate": 0.5607476635514018,
+        "profit_factor": 2.0438842988850974,
+        "pnl_dollars": 29357.289675475953,
         "max_drawdown": -3547.9676886717352,
-        "avg_pnl": 258.5197653296813,
-        "avg_hold_minutes": 159.66666666666666,
-        "long_rate": 0.638095238095238,
-        "avg_delta_abs": 0.6861180952380952
+        "avg_pnl": 274.3671932287472,
+        "avg_hold_minutes": 160.0467289719626,
+        "long_rate": 0.6448598130841121,
+        "avg_delta_abs": 0.6863046728971963
       },
       "per_ticker": {
         "QQQ": {
-          "trades": 35,
-          "win_rate": 0.4857142857142857,
-          "profit_factor": 1.2898622566002553,
-          "pnl_dollars": 2208.997668659936,
+          "trades": 36,
+          "win_rate": 0.5,
+          "profit_factor": 1.458508139823625,
+          "pnl_dollars": 3494.223165897687,
           "max_drawdown": -2331.9655611868966,
-          "avg_pnl": 63.11421910456961,
-          "avg_hold_minutes": 147.57142857142858,
-          "long_rate": 0.6571428571428571,
-          "avg_delta_abs": 0.66914
+          "avg_pnl": 97.06175460826908,
+          "avg_hold_minutes": 148.47222222222223,
+          "long_rate": 0.6666666666666666,
+          "avg_delta_abs": 0.6688194444444444
         },
         "SPX": {
           "trades": 36,
@@ -1390,15 +1390,15 @@ Execution: buy 0DTE option, risk capital `$1,000`, max hold `180`m, hard stop `-
           "avg_delta_abs": 0.7025527777777777
         },
         "SPY": {
-          "trades": 34,
-          "win_rate": 0.5294117647058824,
-          "profit_factor": 1.764719654849848,
-          "pnl_dollars": 4637.6001706714105,
+          "trades": 35,
+          "win_rate": 0.5428571428571428,
+          "profit_factor": 1.9176584385205335,
+          "pnl_dollars": 5565.08898929307,
           "max_drawdown": -2260.68503362054,
-          "avg_pnl": 136.40000501974737,
-          "avg_hold_minutes": 165.2941176470588,
-          "long_rate": 0.6470588235294118,
-          "avg_delta_abs": 0.6861941176470588
+          "avg_pnl": 159.00254255123056,
+          "avg_hold_minutes": 165.71428571428572,
+          "long_rate": 0.6571428571428571,
+          "avg_delta_abs": 0.6875771428571429
         }
       }
     },
@@ -1500,27 +1500,27 @@ Execution: buy 0DTE option, risk capital `$1,000`, max hold `180`m, hard stop `-
     },
     "oracle_best_delta_hard": {
       "overall": {
-        "trades": 105,
-        "win_rate": 0.5619047619047619,
-        "profit_factor": 5.053111536830328,
-        "pnl_dollars": 69480.14171453597,
+        "trades": 107,
+        "win_rate": 0.5700934579439252,
+        "profit_factor": 5.403493409942994,
+        "pnl_dollars": 75486.53506859376,
         "max_drawdown": -1703.3687367736284,
-        "avg_pnl": 661.7156353765331,
-        "avg_hold_minutes": 144.61904761904762,
-        "long_rate": 0.638095238095238,
-        "avg_delta_abs": 0.5483990476190477
+        "avg_pnl": 705.4816361550819,
+        "avg_hold_minutes": 144.90654205607476,
+        "long_rate": 0.6448598130841121,
+        "avg_delta_abs": 0.5426570093457945
       },
       "per_ticker": {
         "QQQ": {
-          "trades": 35,
-          "win_rate": 0.5142857142857142,
-          "profit_factor": 3.3411036616532463,
-          "pnl_dollars": 15364.438313645878,
+          "trades": 36,
+          "win_rate": 0.5277777777777778,
+          "profit_factor": 3.952301525211303,
+          "pnl_dollars": 19375.671146214412,
           "max_drawdown": -1703.3687367736284,
-          "avg_pnl": 438.98395181845365,
-          "avg_hold_minutes": 144.57142857142858,
-          "long_rate": 0.6571428571428571,
-          "avg_delta_abs": 0.5584485714285713
+          "avg_pnl": 538.2130873948448,
+          "avg_hold_minutes": 144.44444444444446,
+          "long_rate": 0.6666666666666666,
+          "avg_delta_abs": 0.54555
         },
         "SPX": {
           "trades": 36,
@@ -1534,41 +1534,41 @@ Execution: buy 0DTE option, risk capital `$1,000`, max hold `180`m, hard stop `-
           "avg_delta_abs": 0.5712194444444444
         },
         "SPY": {
-          "trades": 34,
-          "win_rate": 0.5294117647058824,
-          "profit_factor": 4.5747464610424515,
-          "pnl_dollars": 20212.45088557505,
+          "trades": 35,
+          "win_rate": 0.5428571428571428,
+          "profit_factor": 4.92760782623668,
+          "pnl_dollars": 22207.6114070643,
           "max_drawdown": -1153.3183861986322,
-          "avg_pnl": 594.4838495757367,
-          "avg_hold_minutes": 146.1764705882353,
-          "long_rate": 0.6470588235294118,
-          "avg_delta_abs": 0.5138911764705882
+          "avg_pnl": 634.5031830589801,
+          "avg_hold_minutes": 147.14285714285714,
+          "long_rate": 0.6571428571428571,
+          "avg_delta_abs": 0.5103028571428572
         }
       }
     },
     "oracle_best_delta_oracle_exit": {
       "overall": {
-        "trades": 105,
-        "win_rate": 0.8761904761904762,
-        "profit_factor": 140.8283189366126,
-        "pnl_dollars": 167995.15512808313,
+        "trades": 107,
+        "win_rate": 0.8785046728971962,
+        "profit_factor": 149.26423830493337,
+        "pnl_dollars": 178130.39521182823,
         "max_drawdown": -342.42661216767584,
-        "avg_pnl": 1599.9538583626966,
-        "avg_hold_minutes": 89.19047619047619,
-        "long_rate": 0.638095238095238,
-        "avg_delta_abs": 0.46444571428571424
+        "avg_pnl": 1664.7700487086752,
+        "avg_hold_minutes": 90.18691588785046,
+        "long_rate": 0.6448598130841121,
+        "avg_delta_abs": 0.4577168224299066
       },
       "per_ticker": {
         "QQQ": {
-          "trades": 35,
-          "win_rate": 0.8571428571428571,
-          "profit_factor": 75.5366985203139,
-          "pnl_dollars": 50515.71667452988,
+          "trades": 36,
+          "win_rate": 0.8611111111111112,
+          "profit_factor": 85.57201969518347,
+          "pnl_dollars": 57316.94950709842,
           "max_drawdown": -342.42661216767584,
-          "avg_pnl": 1443.3061907008537,
-          "avg_hold_minutes": 82.71428571428571,
-          "long_rate": 0.6571428571428571,
-          "avg_delta_abs": 0.43162
+          "avg_pnl": 1592.1374863082895,
+          "avg_hold_minutes": 84.58333333333333,
+          "long_rate": 0.6666666666666666,
+          "avg_delta_abs": 0.4222444444444444
         },
         "SPX": {
           "trades": 36,
@@ -1582,15 +1582,15 @@ Execution: buy 0DTE option, risk capital `$1,000`, max hold `180`m, hard stop `-
           "avg_delta_abs": 0.5426749999999999
         },
         "SPY": {
-          "trades": 34,
-          "win_rate": 0.8529411764705882,
-          "profit_factor": 189.40261230585097,
-          "pnl_dollars": 36115.12939341375,
+          "trades": 35,
+          "win_rate": 0.8571428571428571,
+          "profit_factor": 206.79520333676862,
+          "pnl_dollars": 39449.13664459034,
           "max_drawdown": -84.68778027878943,
-          "avg_pnl": 1062.2096880415809,
-          "avg_hold_minutes": 83.23529411764706,
-          "long_rate": 0.6470588235294118,
-          "avg_delta_abs": 0.4154058823529412
+          "avg_pnl": 1127.1181898454383,
+          "avg_hold_minutes": 84.71428571428571,
+          "long_rate": 0.6571428571428571,
+          "avg_delta_abs": 0.4068171428571429
         }
       }
     }
