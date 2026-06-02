@@ -110,22 +110,29 @@ def _format_expiration_for_tracker(value: Any) -> str:
         return ""
 
 
-def _send_discord(message: str) -> None:
-    if not DISCORD_WEBHOOKS:
-        return
-    content = str(message).lstrip()
-    if DISCORD_ROLE_PING and not content.startswith(DISCORD_ROLE_PING):
-        content = f"{DISCORD_ROLE_PING}\n{content}" if content else DISCORD_ROLE_PING
-
-    payload: dict[str, Any] = {"content": content}
-    if DISCORD_ROLE_ID:
-        payload["allowed_mentions"] = {"roles": [DISCORD_ROLE_ID]}
-
+def _post_discord(payload: dict[str, Any]) -> None:
     for webhook in DISCORD_WEBHOOKS:
         try:
             requests.post(webhook, json=payload, timeout=10)
         except Exception as exc:
             logging.getLogger(__name__).warning("Discord send failed: %s", exc)
+
+
+def _send_discord(message: str, ping: bool = True) -> None:
+    if not DISCORD_WEBHOOKS:
+        return
+    content = str(message).lstrip()
+    if DISCORD_ROLE_PING and content.startswith(DISCORD_ROLE_PING):
+        content = content[len(DISCORD_ROLE_PING) :].lstrip()
+
+    if ping and DISCORD_ROLE_PING:
+        ping_payload: dict[str, Any] = {"content": DISCORD_ROLE_PING}
+        if DISCORD_ROLE_ID:
+            ping_payload["allowed_mentions"] = {"roles": [DISCORD_ROLE_ID]}
+        _post_discord(ping_payload)
+
+    if content:
+        _post_discord({"content": content})
 
 
 def _read_json(path: Path, default: Any) -> Any:
@@ -417,10 +424,11 @@ class JepaFixedDeltaBot:
         tracker = f"BTO {pos.ticker} {exp_fmt} {pos.strike:.0f}{right_short} @ M"
         _send_discord(tracker)
         _send_discord(
-            f"**[JEPA] OPEN {pos.direction} {pos.ticker} {pos.strike:.0f}{right_short}**\n"
+            f"**[BOT] OPEN {pos.direction} {pos.ticker} {pos.strike:.0f}{right_short}**\n"
             f"prob_up={pos.jepa_prob_up:.3f} conf={pos.confidence:.0%} "
             f"delta={pos.delta:.2f} premium=${pos.entry_premium:.2f} contracts={pos.contracts}\n"
-            f"stop={HARD_STOP_PCT:.0%} tp={TAKE_PROFIT_PCT:.0%} max_hold={MAX_HOLD_MINUTES}m"
+            f"stop={HARD_STOP_PCT:.0%} tp={TAKE_PROFIT_PCT:.0%} max_hold={MAX_HOLD_MINUTES}m",
+            ping=False,
         )
 
     def _discord_close(self, pos: JepaOptionPosition, pnl_pct: float, pnl_dollars: float, hold_min: float, reason: str) -> None:
@@ -429,8 +437,9 @@ class JepaFixedDeltaBot:
         tracker = f"STC {pos.ticker} {exp_fmt} {pos.strike:.0f}{right_short} @ M"
         _send_discord(tracker)
         _send_discord(
-            f"**[JEPA] CLOSE {pos.ticker} {pos.strike:.0f}{right_short} {reason}**\n"
-            f"pnl={pnl_pct:+.1%} (${pnl_dollars:+.2f}) hold={hold_min:.0f}m"
+            f"**[BOT] CLOSE {pos.ticker} {pos.strike:.0f}{right_short} {reason}**\n"
+            f"pnl={pnl_pct:+.1%} (${pnl_dollars:+.2f}) hold={hold_min:.0f}m",
+            ping=False,
         )
 
     def _close_position(self, ticker: str, premium: float, reason: str, now: datetime) -> None:
