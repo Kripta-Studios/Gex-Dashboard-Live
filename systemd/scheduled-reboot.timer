@@ -1,0 +1,10 @@
+[Unit]
+Description=Reboot daily at 09:00 ET
+
+[Timer]
+# Format: DayOfWeek Year-Month-Day Hour:Minute:Second Timezone
+OnCalendar=*-*-* 09:00:00 America/New_York
+Unit=reboot.target
+
+[Install]
+WantedBy=timers.target
