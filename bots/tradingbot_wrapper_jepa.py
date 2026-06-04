@@ -874,6 +874,7 @@ class JepaFixedDeltaBot:
             pos.selector_policy,
         )
         self._discord_open(pos)
+        time.sleep(3)
 
     def run_once(self) -> None:
         now = _now_et()
