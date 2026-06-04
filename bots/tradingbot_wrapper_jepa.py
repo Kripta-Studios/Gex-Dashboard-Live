@@ -92,6 +92,11 @@ LATEST_ENTRY_TIME = dt_time(14, 30)
 MAX_FEED_SNAPSHOT_AGE_SECONDS = 150
 MAX_MODEL_FEATURE_AGE_SECONDS = 390
 LOOP_INTERVAL_SECONDS = 65
+CRITICAL_LIVE_CONTEXT_FEATURES = [
+    "vix_5d_mean",
+    "vix_5d_std",
+    "atr_5d_norm",
+]
 EOD_CLEANUP_TIME = dt_time(16, 0)
 FIXED_POLICY_NAME = "base_jepa_180m_fixed_delta_0.70_trail050_025_cutoff1430"
 OPTION_VALUE_POLICY_NAME = "base_jepa_180m_option_value_blended_trail050_025_cutoff1430"
@@ -434,6 +439,35 @@ class JepaFixedDeltaBot:
         row = df.tail(1).copy()
         if float(row["xjepa_context_valid"].iloc[0]) <= 0.0:
             logging.info("[%s] JEPA context not valid yet; needs 24 five-minute rows", ticker)
+            return pd.DataFrame()
+
+        # Safety guard: xjepa_context_valid only proves the JEPA sequence has
+        # enough same-day 5-minute rows.  It does not prove the base live
+        # context features match the OOS/production-training feature contract.
+        # Do not open entries if the feed has not populated the historical
+        # context features that the model used in training.  This guard only
+        # affects entries; exits/position management are handled elsewhere.
+        if "live_feature_context_valid" not in row.columns:
+            logging.info("[%s] live_feature_context_valid missing; skipping entry", ticker)
+            return pd.DataFrame()
+        if _safe_float(row["live_feature_context_valid"].iloc[0], 0.0) <= 0.0:
+            bad = []
+            for col in CRITICAL_LIVE_CONTEXT_FEATURES:
+                if col not in row.columns or _safe_float(row[col].iloc[0], 0.0) <= 0.0:
+                    bad.append(col)
+            logging.info(
+                "[%s] live feature context not valid; skipping entry bad=%s",
+                ticker,
+                bad or ["live_feature_context_valid"],
+            )
+            return pd.DataFrame()
+
+        bad = [
+            col for col in CRITICAL_LIVE_CONTEXT_FEATURES
+            if col not in row.columns or _safe_float(row[col].iloc[0], 0.0) <= 0.0
+        ]
+        if bad:
+            logging.info("[%s] zero/invalid critical live features; skipping entry bad=%s", ticker, bad)
             return pd.DataFrame()
         return row
 
