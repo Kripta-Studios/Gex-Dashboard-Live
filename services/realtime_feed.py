@@ -431,6 +431,8 @@ class RealtimeOptionsFeed:
         self.net_charm_history = {}   # ticker -> deque(maxlen=32)
         self.pcr_history = {}         # ticker -> deque(maxlen=32)
         self.wonham_probs = {}        # ticker -> float
+        self._gamma_regime_state = {}        # ticker -> latest raw gamma regime
+        self._gamma_regime_persistence = {}  # ticker -> consecutive 5m/1m observations in same regime
         self._prev_call_vol = {tk: 0.0 for tk in OPTIONS_TICKERS}
         self._prev_put_vol = {tk: 0.0 for tk in OPTIONS_TICKERS}
 
@@ -450,6 +452,8 @@ class RealtimeOptionsFeed:
             self.net_charm_history[tk] = deque(maxlen=32)
             self.pcr_history[tk] = deque(maxlen=32)
             self.wonham_probs[tk] = 0.5
+            self._gamma_regime_state[tk] = None
+            self._gamma_regime_persistence[tk] = 0
 
         self.jepa_feature_engine = OnlineXInputJEPAFeatureEngine(
             model_dir=jepa_model_dir,
@@ -993,6 +997,8 @@ class RealtimeOptionsFeed:
             self.net_charm_history[tk].clear()
             self.pcr_history[tk].clear()
             self.wonham_probs[tk] = 0.5
+            self._gamma_regime_state[tk] = None
+            self._gamma_regime_persistence[tk] = 0
 
     @staticmethod
     def _model_sample_bucket(minutes_since_open) -> int | None:
@@ -1084,38 +1090,32 @@ class RealtimeOptionsFeed:
         return False
 
     def _restore_prev_features_from_df(self, ticker: str, df_features: pd.DataFrame, latest_spot: float):
+        """Restore prev_features in the same representation used by training.
+
+        collect_training_data_spx_qqq.py sets prev_features = features_dict and
+        then adds prev_features["spot"] = spot.  That means temporal deltas in
+        extract_feature_vector compare the current raw Greek exposures against
+        the previous *feature-space* values, not against inverse-transformed raw
+        exposures.  Keep live aligned with that training contract.
+        """
         if df_features.empty:
             return
         last = df_features.iloc[-1]
-
-        def _raw_value(raw_col: str, feat_col: str) -> float:
-            raw_val = last.get(raw_col)
-            if pd.notna(raw_val):
-                raw_val = self._float_or_none(raw_val)
-                if raw_val is not None:
-                    return raw_val
-            feat_val = last.get(feat_col)
-            if pd.notna(feat_val):
-                feat_val = self._float_or_none(feat_val)
-                if feat_val is not None:
-                    return float(inverse_safe_log(feat_val))
-            return 0.0
+        prev: dict[str, float] = {}
+        for key, value in last.items():
+            if key in {"timestamp", "date", "time", "ticker"}:
+                continue
+            norm = self._float_or_none(value)
+            if norm is not None:
+                prev[str(key)] = float(norm)
 
         spot = latest_spot
         if spot <= 0 and pd.notna(last.get("spot_price")):
             spot = self._float_or_none(last.get("spot_price")) or 0.0
-        if spot <= 0:
-            return
-
-        self.prev_features[ticker] = {
-            "spot": float(spot),
-            "net_gamma": _raw_value("net_gamma_raw", "net_gamma"),
-            "net_vanna": _raw_value("net_vanna_raw", "net_vanna"),
-            "net_dgex": _raw_value("net_dgex_raw", "net_dgex"),
-            "net_delta": _raw_value("net_delta_raw", "net_delta"),
-            "net_vega": _raw_value("net_vega_raw", "net_vega"),
-            "net_vomma": _raw_value("net_vomma_raw", "net_vomma"),
-        }
+        if spot > 0:
+            prev["spot"] = float(spot)
+        if prev:
+            self.prev_features[ticker] = prev
 
     def _restore_feature_diary_state(self, ticker: str) -> bool:
         path = self.output_dir / f"ml_features_{ticker}_latest.parquet"
@@ -1230,6 +1230,8 @@ class RealtimeOptionsFeed:
                 "net_charm_history": [float(v) for v in self.net_charm_history[tk]],
                 "pcr_history": [float(v) for v in self.pcr_history[tk]],
                 "wonham_prob": float(self.wonham_probs.get(tk, 0.5)),
+                "gamma_regime_state": self._float_or_none(self._gamma_regime_state.get(tk)),
+                "gamma_regime_persistence": int(self._gamma_regime_persistence.get(tk, 0)),
             }
 
         path = self._get_state_path()
@@ -1299,9 +1301,18 @@ class RealtimeOptionsFeed:
                         wonham = self._float_or_none(tk_state.get("wonham_prob"))
                         if wonham is not None:
                             self.wonham_probs[tk] = float(np.clip(wonham, 0.0, 1.0))
+                        gamma_state = self._float_or_none(tk_state.get("gamma_regime_state"))
+                        self._gamma_regime_state[tk] = gamma_state
+                        try:
+                            self._gamma_regime_persistence[tk] = int(tk_state.get("gamma_regime_persistence", 0) or 0)
+                        except Exception:
+                            self._gamma_regime_persistence[tk] = 0
                         self._ml_features_rows[tk] = self._load_existing_ml_feature_rows(tk)
                         if self._last_model_sample_bucket.get(tk) is None:
                             self._last_model_sample_bucket[tk] = self._latest_model_sample_bucket_from_rows(tk)
+                        if self._ml_features_rows[tk]:
+                            latest_spot = self.price_history[tk][-1][1] if self.price_history[tk] else 0.0
+                            self._restore_prev_features_from_df(tk, pd.DataFrame(self._ml_features_rows[tk]), latest_spot)
                     self._prev_call_vol = {
                         tk: float((state.get("prev_call_vol") or {}).get(tk, 0.0))
                         for tk in OPTIONS_TICKERS
@@ -1634,7 +1645,10 @@ class RealtimeOptionsFeed:
 
     def _load_historical_ib_levels(self, ticker: str = "SPX"):
         """Load Historical IB (D-1 to D-15) from previous days' spot Parquet."""
-        prev_days = self._get_previous_trading_days(15)
+        # Training load_historical_ib_levels returns D-1 first, then D-2...
+        # get_previous_trading_days returns ascending dates, so reverse it here
+        # to preserve offline/OOS feature parity for D1-D5 features.
+        prev_days = list(reversed(self._get_previous_trading_days(15)))
         self.historical_ibs[ticker] = []
         spot_symbol = ticker  # SPX -> spot_SPX, QQQ -> spot_QQQ
 
@@ -1694,6 +1708,87 @@ class RealtimeOptionsFeed:
         while len(self.historical_ibs[ticker]) < 15:
             self.historical_ibs[ticker].append(None)
         self._historical_ib_loaded[ticker] = True
+
+    def _load_vix_history_from_rt(self, n_days: int = 5) -> list[float]:
+        """Load previous trading-day VIX closes from rt_data, mirroring offline collector.
+
+        The production/OOS collector computes vix_5d_mean/std outside
+        extract_feature_vector.  Live must do the same instead of letting the
+        FEATURE_COLUMNS vectorization silently fill those columns with 0.0.
+        """
+        vals: list[float] = []
+        for day in reversed(self._get_previous_trading_days(int(n_days))):
+            day_str = day.strftime("%Y%m%d")
+            path = self._rt_data_base / day_str / "spot_VIX_latest.parquet"
+            if not path.exists():
+                continue
+            try:
+                df = pd.read_parquet(path)
+                if df.empty or "close" not in df.columns:
+                    continue
+                close = self._float_or_none(df["close"].iloc[-1])
+                if close is not None and close > 0:
+                    vals.append(float(close))
+            except Exception as exc:
+                logger.warning(f"[VIX] Failed to load historical VIX {day_str}: {exc}")
+        return vals
+
+    def _compute_live_extra_context_features(self, ticker: str, spot: float) -> dict[str, float]:
+        """Compute live-only context features that the offline collector adds manually.
+
+        These columns are part of FEATURE_COLUMNS/model artifacts, but they are
+        not produced inside services.compute_features.extract_feature_vector().
+        If live calls extract_feature_vector(... FEATURE_COLUMNS=FEATURE_COLUMNS),
+        they become silent zeros.  This method restores training/OOS parity.
+        """
+        vix_history = self._load_vix_history_from_rt(n_days=5)
+        vix_5d_mean = float(np.mean(vix_history)) if len(vix_history) > 0 else 20.0
+        vix_5d_std = float(np.std(vix_history)) if len(vix_history) > 1 else 0.0
+
+        historical_ibs = self.historical_ibs.get(ticker, [])
+        recent_5d_ibs = [h for h in historical_ibs if h is not None][:5]
+        if recent_5d_ibs and spot > 0:
+            ranges = []
+            for h in recent_5d_ibs:
+                high = self._float_or_none(h.get("daily_high", h.get("ib_high", 0.0))) or 0.0
+                low = self._float_or_none(h.get("daily_low", h.get("ib_low", 0.0))) or 0.0
+                if high > 0 and low > 0 and high >= low:
+                    ranges.append(high - low)
+            if ranges:
+                atr_5d = float(np.mean(ranges))
+                atr_5d_norm = float(np.clip(atr_5d / max(float(spot), 1e-9), 0.0, 0.05))
+            else:
+                atr_5d_norm = 0.005
+        else:
+            atr_5d_norm = 0.005
+
+        live_feature_context_valid = (
+            len(vix_history) >= 5
+            and len(recent_5d_ibs) >= 5
+            and vix_5d_mean > 0.0
+            and vix_5d_std > 0.0
+            and atr_5d_norm > 0.0
+        )
+        return {
+            "vix_5d_mean": float(vix_5d_mean),
+            "vix_5d_std": float(vix_5d_std),
+            "atr_5d_norm": float(atr_5d_norm),
+            "live_feature_context_valid": float(live_feature_context_valid),
+        }
+
+    def _update_signal_persistence(self, ticker: str, raw_net_gamma: float) -> float:
+        """Mirror collect_training_data_spx_qqq.py regime persistence."""
+        try:
+            raw_net_gamma = float(raw_net_gamma)
+        except Exception:
+            raw_net_gamma = 0.0
+        regime = 2.0 if raw_net_gamma > 1.0 else (0.0 if raw_net_gamma < -1.0 else 1.0)
+        if regime == self._gamma_regime_state.get(ticker):
+            self._gamma_regime_persistence[ticker] = int(self._gamma_regime_persistence.get(ticker, 0)) + 1
+        else:
+            self._gamma_regime_state[ticker] = regime
+            self._gamma_regime_persistence[ticker] = 1
+        return float(np.clip(self._gamma_regime_persistence[ticker] / 12.0, 0.0, 1.0))
 
     def _load_greek_exposures_local(self, is_weekly: bool = False, ticker: str = "SPX"):
         """Load Greeks+OI from Parquet and compute net exposures (mirrors bot)."""
@@ -1843,6 +1938,10 @@ class RealtimeOptionsFeed:
         # Shared data (VIX, TLT are the same for all tickers)
         vix_spot = self._load_spot_local("VIX")
         tlt_spot = self._load_spot_local("TLT")
+        if tlt_spot > 0:
+            last_tlt_minute = self.tlt_price_history[-1][0] if self.tlt_price_history else None
+            if last_tlt_minute is None or int(last_tlt_minute) != int(minutes_since_open):
+                self.tlt_price_history.append((float(minutes_since_open), float(tlt_spot)))
 
         for ticker in OPTIONS_TICKERS:
             try:
@@ -1945,7 +2044,14 @@ class RealtimeOptionsFeed:
             )[-1]
 
         # ── Unified Feature Extraction (Single Source of Truth) ──
-        features_vec = extract_feature_vector(
+        # Match offline/OOS collection: extract a dict first, then add the
+        # extra context features that collect_training_data_spx_qqq.py adds
+        # outside extract_feature_vector.  Passing FEATURE_COLUMNS here would
+        # silently fill those external features with 0.0.
+        exp_0dte["signal_persistence_5m"] = self._update_signal_persistence(
+            ticker, exp_0dte.get("net_gamma", 0.0)
+        )
+        features_dict = extract_feature_vector(
             exp_0dte=exp_0dte,
             exp_weekly=exp_weekly,
             spot=spot,
@@ -1965,12 +2071,13 @@ class RealtimeOptionsFeed:
             minutes_since_open=minutes_since_open,
             day_atr=self.day_atr.get(ticker, 1.0),
             now_et=now_et,
-            FEATURE_COLUMNS=FEATURE_COLUMNS,
+            FEATURE_COLUMNS=None,
             wonham_prob=self.wonham_probs[ticker]
         )
+        features_dict.update(self._compute_live_extra_context_features(ticker, spot))
 
         # ── Build Final Dataframe Row ──
-        row = {col: float(features_vec[i]) for i, col in enumerate(FEATURE_COLUMNS)}
+        row = {col: float(features_dict.get(col, 0.0)) for col in FEATURE_COLUMNS}
         row.update({
             "timestamp": pd.Timestamp(now_et).isoformat(),
             "date": now_et.strftime("%Y%m%d"),
@@ -1987,18 +2094,17 @@ class RealtimeOptionsFeed:
             "net_delta_raw": float(exp_0dte.get("net_delta", 0.0)),
             "net_vega_raw": float(exp_0dte.get("net_vega", 0.0)),
             "net_vomma_raw": float(exp_0dte.get("net_vomma", 0.0)),
+            "live_feature_context_valid": float(features_dict.get("live_feature_context_valid", 0.0)),
         })
         
-        # Update prev_features for the next poll's temporal deltas
+        # Update prev_features for the next poll's temporal deltas.
+        # Keep the same representation as training: prev_features = features_dict
+        # plus raw spot.
         self.prev_features[ticker] = {
-            "spot": spot,
-            "net_gamma": exp_0dte["net_gamma"],
-            "net_vanna": exp_0dte["net_vanna"],
-            "net_dgex": exp_0dte["net_dgex"],
-            "net_delta": exp_0dte.get("net_delta", 0.0),
-            "net_vega": exp_0dte.get("net_vega", 0.0),
-            "net_vomma": exp_0dte.get("net_vomma", 0.0),
+            k: float(v) for k, v in features_dict.items()
+            if self._float_or_none(v) is not None
         }
+        self.prev_features[ticker]["spot"] = float(spot)
 
         self._ml_features_1m_rows[ticker].append(dict(row))
         self._ml_features_1m_rows[ticker] = self._ml_features_1m_rows[ticker][-500:]
@@ -2029,6 +2135,11 @@ class RealtimeOptionsFeed:
         logger.info(
             f"  [ML][{ticker}] 5m Base+JEPA feature vector saved "
             f"({len(self._ml_features_rows[ticker])} rows, spot=${spot:.2f}, "
+            f"vix5_mean={row.get('vix_5d_mean', 0.0):.3f}, "
+            f"vix5_std={row.get('vix_5d_std', 0.0):.3f}, "
+            f"atr5_norm={row.get('atr_5d_norm', 0.0):.5f}, "
+            f"persist={row.get('signal_persistence_5m', 0.0):.3f}, "
+            f"live_ctx={row.get('live_feature_context_valid', 0.0):.0f}, "
             f"xjepa_valid={context_valid:.0f})"
         )
 
