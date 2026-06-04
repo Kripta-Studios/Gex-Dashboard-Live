@@ -69,6 +69,10 @@ class FitResult:
     ticker: str | None = None
 
 
+def log(message: str) -> None:
+    print(f"[GBT_JEPA_EXIT] {message}", flush=True)
+
+
 def normalize_date(value) -> str:
     digits = "".join(ch for ch in str(value) if ch.isdigit())
     return digits[:8] if len(digits) >= 8 else str(value)
@@ -110,8 +114,14 @@ def selected_signals(
     cooldown_steps: int,
     min_entry_minute: int | None,
     max_entry_minute: int | None,
+    truncate_eod_horizon: bool,
 ) -> pd.DataFrame:
-    frame = build_terminal_180m_frame(data_path, horizon_steps, min_abs_bps=0.0)
+    frame = build_terminal_180m_frame(
+        data_path,
+        horizon_steps,
+        min_abs_bps=0.0,
+        truncate_to_eod=bool(truncate_eod_horizon),
+    )
     frame["ticker"] = frame["ticker"].map(normalize_ticker)
     frame["date"] = frame["date"].map(normalize_date)
     frame = frame[frame["date"] >= normalize_date(start_date)].copy()
@@ -182,6 +192,7 @@ def build_state_rows(
     include_entry_features: bool,
     include_current_features: bool,
     include_feature_deltas: bool,
+    truncate_eod_horizon: bool,
 ) -> tuple[pd.DataFrame, pd.DataFrame, list[str]]:
     scored_raw = model.predict_frame(raw)
     feature_names = numeric_feature_names(scored_raw, model)
@@ -200,7 +211,13 @@ def build_state_rows(
             continue
         pos = int(signal.pos_in_day)
         end_pos = pos + int(horizon_steps)
-        if pos < 0 or end_pos >= len(day):
+        if pos < 0:
+            continue
+        if end_pos >= len(day):
+            if not truncate_eod_horizon:
+                continue
+            end_pos = len(day) - 1
+        if end_pos <= pos:
             continue
 
         entry_row = day.iloc[pos]
@@ -278,12 +295,12 @@ def build_state_rows(
                     "month": str(signal.date)[:6],
                     "time": str(signal.time),
                     "entry_time": str(signal.time),
-                    "exit_time": time_plus_minutes(signal.time, horizon_steps * 5),
+                    "exit_time": str(path.iloc[-1]["time"]),
                     "side": side,
                     "spot_price": entry_spot,
                     "net_bps": fixed_pnl / float(notional) * 10000.0,
                     "pnl_dollars": fixed_pnl,
-                    "hold_minutes": int(horizon_steps * 5),
+                    "hold_minutes": int((end_pos - pos) * 5),
                     "exit_reason": "fixed_180m",
                     "policy": "fixed_180m",
                 }
@@ -384,6 +401,13 @@ def fit_one_model(
     elif target == "continue_edge_l1":
         model = lgb.LGBMRegressor(objective="regression_l1", **params)
         y_train = train_states["continue_edge"].astype(float).clip(lower=0.0).to_numpy()
+    elif target == "oracle_now":
+        model = lgb.LGBMClassifier(
+            objective="binary",
+            class_weight="balanced",
+            **params,
+        )
+        y_train = train_states["oracle_is_now"].astype(int).to_numpy()
     else:
         model = lgb.LGBMRegressor(objective="huber", alpha=0.90, **params)
         y_train = train_states["continue_edge"].astype(float).clip(lower=0.0).to_numpy()
@@ -416,6 +440,9 @@ def predict_edge(models: dict[str, FitResult], states: pd.DataFrame) -> np.ndarr
     if "__pooled__" in models:
         fit = models["__pooled__"]
         x, _ = make_matrix(states, fit.features, fit.medians)
+        if fit.target == "oracle_now":
+            out[:] = fit.model.predict_proba(x)[:, 1]
+            return out
         out[:] = fit.model.predict(x)
         return np.maximum(out, 0.0)
 
@@ -424,7 +451,12 @@ def predict_edge(models: dict[str, FitResult], states: pd.DataFrame) -> np.ndarr
         if not mask.any():
             continue
         x, _ = make_matrix(states.loc[mask], fit.features, fit.medians)
-        out[np.flatnonzero(mask)] = fit.model.predict(x)
+        if fit.target == "oracle_now":
+            out[np.flatnonzero(mask)] = fit.model.predict_proba(x)[:, 1]
+        else:
+            out[np.flatnonzero(mask)] = fit.model.predict(x)
+    if any(fit.target == "oracle_now" for fit in models.values()):
+        return np.nan_to_num(out, nan=0.0)
     return np.maximum(np.nan_to_num(out, nan=1e9), 0.0)
 
 
@@ -437,6 +469,7 @@ def simulate_exit(
     notional: float,
 ) -> pd.DataFrame:
     trades: list[dict] = []
+    exits_on_high_score = any(fit.target == "oracle_now" for fit in models.values())
     for trade_id, path in states.groupby("trade_id", sort=False):
         path = path.sort_values("hold_minutes").reset_index(drop=True)
         pred_edge = predict_edge(models, path)
@@ -445,7 +478,12 @@ def simulate_exit(
         for idx, row in path.iterrows():
             if int(row["hold_minutes"]) < int(min_hold_minutes):
                 continue
-            if float(pred_edge[idx]) <= float(margin_dollars):
+            should_exit = (
+                float(pred_edge[idx]) >= float(margin_dollars)
+                if exits_on_high_score
+                else float(pred_edge[idx]) <= float(margin_dollars)
+            )
+            if should_exit:
                 exit_row = row
                 exit_reason = "continuation_exit"
                 break
@@ -500,6 +538,149 @@ def oracle_exit(states: pd.DataFrame, notional: float) -> pd.DataFrame:
             }
         )
     return pd.DataFrame(trades)
+
+
+def simulate_trailing_exit(
+    states: pd.DataFrame,
+    stop_bps: float | None,
+    activation_bps: float | None,
+    drawdown_bps: float | None,
+    take_profit_bps: float | None,
+    min_hold_minutes: int,
+    policy_name: str,
+    notional: float,
+) -> pd.DataFrame:
+    trades: list[dict] = []
+    use_stop = stop_bps is not None and np.isfinite(float(stop_bps))
+    use_trail = (
+        activation_bps is not None
+        and drawdown_bps is not None
+        and np.isfinite(float(activation_bps))
+        and np.isfinite(float(drawdown_bps))
+    )
+    use_tp = take_profit_bps is not None and np.isfinite(float(take_profit_bps))
+    for trade_id, path in states.groupby("trade_id", sort=False):
+        path = path.sort_values("hold_minutes").reset_index(drop=True)
+        exit_row = path.iloc[-1]
+        exit_reason = "max_time"
+        peak_bps = -1e18
+        for _, row in path.iterrows():
+            net_bps = float(row["current_net_bps"])
+            peak_bps = max(peak_bps, net_bps)
+            if int(row["hold_minutes"]) < int(min_hold_minutes):
+                continue
+            if use_stop and net_bps <= float(stop_bps):
+                exit_row = row
+                exit_reason = "hard_stop"
+                break
+            if use_tp and net_bps >= float(take_profit_bps):
+                exit_row = row
+                exit_reason = "take_profit"
+                break
+            if use_trail and peak_bps >= float(activation_bps) and net_bps <= peak_bps - float(drawdown_bps):
+                exit_row = row
+                exit_reason = "trail_stop"
+                break
+        pnl = float(exit_row["current_pnl_dollars"])
+        trades.append(
+            {
+                "trade_id": int(trade_id),
+                "ticker": str(exit_row["ticker"]),
+                "date": str(exit_row["date"]),
+                "month": str(exit_row["month"]),
+                "time": str(exit_row["entry_time"]),
+                "entry_time": str(exit_row["entry_time"]),
+                "exit_time": str(exit_row["path_time"]),
+                "side": str(exit_row["side"]),
+                "spot_price": float(exit_row["entry_spot"]),
+                "net_bps": pnl / float(notional) * 10000.0,
+                "pnl_dollars": pnl,
+                "hold_minutes": int(exit_row["hold_minutes"]),
+                "exit_reason": exit_reason,
+                "policy": policy_name,
+                "stop_bps": float(stop_bps) if use_stop else np.nan,
+                "trail_activation_bps": float(activation_bps) if use_trail else np.nan,
+                "trail_drawdown_bps": float(drawdown_bps) if use_trail else np.nan,
+                "take_profit_bps": float(take_profit_bps) if use_tp else np.nan,
+            }
+        )
+    return pd.DataFrame(trades)
+
+
+def score_trailing_config(metrics: dict, min_trades: int, fixed_metrics: dict | None = None) -> float:
+    trades = int(metrics.get("trades", 0))
+    pnl = float(metrics.get("pnl_dollars", 0.0))
+    pf = float(metrics.get("profit_factor", 0.0))
+    wr = float(metrics.get("win_rate", 0.0))
+    dd = abs(float(metrics.get("max_drawdown", 0.0)))
+    if trades < int(min_trades) or pnl <= 0.0 or pf <= 0.0 or not np.isfinite(pf):
+        return -1e18 + pnl
+    score = pnl / 1000.0 + 100.0 * wr + 40.0 * np.log(max(pf, 1e-9)) + trades / 10.0 - dd / 1000.0
+    if fixed_metrics is not None:
+        fixed_pnl = float(fixed_metrics.get("pnl_dollars", 0.0))
+        fixed_pf = float(fixed_metrics.get("profit_factor", 0.0))
+        fixed_wr = float(fixed_metrics.get("win_rate", 0.0))
+        if pnl < fixed_pnl:
+            score -= (fixed_pnl - pnl) / 200.0
+        if pf < fixed_pf:
+            score -= (fixed_pf - pf) * 50.0
+        if wr < fixed_wr:
+            score -= (fixed_wr - wr) * 100.0
+    return float(score)
+
+
+def choose_trailing_config(
+    val_states: pd.DataFrame,
+    val_fixed: pd.DataFrame,
+    stop_grid: list[float],
+    activation_grid: list[float],
+    drawdown_grid: list[float],
+    take_profit_grid: list[float],
+    min_hold_minutes: int,
+    min_val_trades: int,
+    notional: float,
+) -> tuple[dict, pd.DataFrame]:
+    fixed_metrics = metrics_for(val_fixed)
+    rows = []
+    best_config: dict | None = None
+    best_score = -1e18
+    for stop in stop_grid:
+        for activation in activation_grid:
+            for drawdown in drawdown_grid:
+                for take_profit in take_profit_grid:
+                    trades = simulate_trailing_exit(
+                        val_states,
+                        float(stop),
+                        float(activation),
+                        float(drawdown),
+                        float(take_profit),
+                        min_hold_minutes,
+                        "validation_trailing_exit",
+                        notional,
+                    )
+                    metrics = metrics_for(trades)
+                    score = score_trailing_config(metrics, min_val_trades, fixed_metrics)
+                    row = {
+                        "stop_bps": float(stop),
+                        "trail_activation_bps": float(activation),
+                        "trail_drawdown_bps": float(drawdown),
+                        "take_profit_bps": float(take_profit),
+                        "score": float(score),
+                        **metrics,
+                    }
+                    rows.append(row)
+                    if score > best_score:
+                        best_score = score
+                        best_config = row
+    if best_config is None:
+        best_config = {
+            "stop_bps": -50.0,
+            "trail_activation_bps": 25.0,
+            "trail_drawdown_bps": 10.0,
+            "take_profit_bps": 250.0,
+            "score": -1e18,
+        }
+    return best_config, pd.DataFrame(rows)
 
 
 def score_metrics(metrics: dict, min_trades: int, fixed_metrics: dict | None = None) -> float:
@@ -675,6 +856,107 @@ def evaluate_policy_walkforward(
     return trades, pd.DataFrame(fold_rows)
 
 
+def evaluate_trailing_walkforward(
+    states: pd.DataFrame,
+    fixed: pd.DataFrame,
+    stop_grid: list[float],
+    activation_grid: list[float],
+    drawdown_grid: list[float],
+    take_profit_grid: list[float],
+    start_month: str,
+    end_month: str | None,
+    val_months: int,
+    min_fit_trades: int,
+    min_val_trades: int,
+    min_hold_minutes: int,
+    notional: float,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    fold_rows = []
+    trade_parts = []
+    for test_month in fold_months(states, start_month, end_month):
+        train_cutoff = month_add(test_month, -1)
+        test_ids = set(fixed[fixed["month"].astype(str) == test_month]["trade_id"].astype(int))
+        if not test_ids:
+            continue
+
+        available_months = sorted(fixed[fixed["month"].astype(str) <= train_cutoff]["month"].astype(str).unique())
+        if len(available_months) <= int(val_months):
+            continue
+        val_set = set(available_months[-int(val_months) :])
+        fit_ids = set(
+            fixed[
+                (fixed["month"].astype(str) <= train_cutoff)
+                & (~fixed["month"].astype(str).isin(val_set))
+            ]["trade_id"].astype(int)
+        )
+        val_ids = set(
+            fixed[
+                (fixed["month"].astype(str) <= train_cutoff)
+                & (fixed["month"].astype(str).isin(val_set))
+            ]["trade_id"].astype(int)
+        )
+        if len(fit_ids) < int(min_fit_trades) or len(val_ids) < int(min_val_trades):
+            continue
+
+        val_states = filter_trade_ids(states, val_ids)
+        test_states = filter_trade_ids(states, test_ids)
+        val_fixed = fixed[fixed["trade_id"].astype(int).isin(val_ids)].copy()
+        test_fixed = fixed[fixed["trade_id"].astype(int).isin(test_ids)].copy()
+        config, grid = choose_trailing_config(
+            val_states,
+            val_fixed,
+            stop_grid,
+            activation_grid,
+            drawdown_grid,
+            take_profit_grid,
+            min_hold_minutes,
+            min_val_trades,
+            notional,
+        )
+        test_trades = simulate_trailing_exit(
+            test_states,
+            float(config["stop_bps"]),
+            float(config["trail_activation_bps"]),
+            float(config["trail_drawdown_bps"]),
+            float(config["take_profit_bps"]),
+            min_hold_minutes,
+            "trailing_exit",
+            notional,
+        )
+        test_trades["fold_month"] = test_month
+        test_trades["selected_stop_bps"] = float(config["stop_bps"])
+        test_trades["selected_trail_activation_bps"] = float(config["trail_activation_bps"])
+        test_trades["selected_trail_drawdown_bps"] = float(config["trail_drawdown_bps"])
+        test_trades["selected_take_profit_bps"] = float(config["take_profit_bps"])
+        test_trades["val_months"] = ",".join(sorted(val_set))
+        trade_parts.append(test_trades)
+
+        trail_metrics = metrics_for(test_trades)
+        fixed_metrics = metrics_for(test_fixed)
+        oracle_metrics = metrics_for(oracle_exit(test_states, notional))
+        fold_rows.append(
+            {
+                "policy": "trailing_exit",
+                "fold_month": test_month,
+                "fit_trades": len(fit_ids),
+                "val_trades": len(val_ids),
+                "test_trades": len(test_ids),
+                "selected_margin_dollars": float("nan"),
+                "selected_stop_bps": float(config["stop_bps"]),
+                "selected_trail_activation_bps": float(config["trail_activation_bps"]),
+                "selected_trail_drawdown_bps": float(config["trail_drawdown_bps"]),
+                "selected_take_profit_bps": float(config["take_profit_bps"]),
+                "val_months": ",".join(sorted(val_set)),
+                "val_grid": grid.to_dict(orient="records"),
+                **{f"learned_{k}": v for k, v in trail_metrics.items()},
+                **{f"fixed_{k}": v for k, v in fixed_metrics.items()},
+                **{f"oracle_{k}": v for k, v in oracle_metrics.items()},
+            }
+        )
+    trades = pd.concat(trade_parts, ignore_index=True) if trade_parts else pd.DataFrame()
+    return trades, pd.DataFrame(fold_rows)
+
+
 def metrics_row(label: str, frame: pd.DataFrame) -> str:
     frame = order_trades(frame)
     metrics = metrics_for(frame)
@@ -734,7 +1016,7 @@ def write_summary(
         "",
         "## Promotion Gate",
         "",
-        "A learned exit is promotable only if it beats fixed 180m on PF, PnL, and max drawdown without changing entries.",
+        "An exit policy is promotable only if it beats fixed 180m on PF, PnL, and max drawdown without changing entries.",
         "",
         "| Policy | Passed | PF | PnL | DD | Same Trades |",
         "| --- | ---: | ---: | ---: | ---: | ---: |",
@@ -773,9 +1055,10 @@ def write_summary(
         "## Interpretation",
         "",
         "- `oracle_exit` is not deployable. It chooses the best point after seeing the future path.",
+        "- `fixed_trailing_exit`, when present, is a fixed mechanical trail/limit config. It is not a learned JEPA exit.",
         "- The learned policies only see information available at each 5m state: entry features, current features, JEPA probability changes, PnL path statistics, and time remaining.",
         "- Future best/terminal values are labels only and are not included as model features.",
-        "- If every learned policy fails the promotion gate, fixed 180m remains the correct GBT+JEPA exit contract.",
+        "- If every non-oracle policy fails the promotion gate, fixed 180m remains the correct GBT+JEPA exit contract.",
         "",
     ]
     (output_dir / "SUMMARY.md").write_text("\n".join(lines), encoding="utf-8")
@@ -795,12 +1078,13 @@ def main() -> int:
     parser.add_argument("--cooldown-minutes", type=int, default=180)
     parser.add_argument("--cost-bps", type=float, default=1.0)
     parser.add_argument("--notional", type=float, default=100000.0)
+    parser.add_argument("--truncate-eod-horizon", action="store_true")
     parser.add_argument("--val-months", type=int, default=3)
     parser.add_argument("--min-fit-trades", type=int, default=100)
     parser.add_argument("--min-val-trades", type=int, default=25)
     parser.add_argument("--min-hold-minutes", type=int, default=15)
     parser.add_argument("--n-estimators", type=int, default=220)
-    parser.add_argument("--n-jobs", type=int, default=1)
+    parser.add_argument("--n-jobs", type=int, default=20)
     parser.add_argument("--seed", type=int, default=4477)
     parser.add_argument("--min-entry-minute", type=int, default=None)
     parser.add_argument("--max-entry-minute", type=int, default=None)
@@ -811,6 +1095,18 @@ def main() -> int:
         type=float,
         default=[-250, -100, 0, 50, 100, 150, 200, 300, 500, 750, 1000, 1500],
     )
+    parser.add_argument("--prob-margins", nargs="+", type=float, default=[0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90])
+    parser.add_argument("--trail-stops-bps", nargs="+", type=float, default=[-100, -75, -50, -35, -25])
+    parser.add_argument("--trail-activations-bps", nargs="+", type=float, default=[10, 15, 20, 30, 40, 60, 80])
+    parser.add_argument("--trail-drawdowns-bps", nargs="+", type=float, default=[5, 8, 10, 15, 20, 30, 40])
+    parser.add_argument("--trail-take-profits-bps", nargs="+", type=float, default=[100, 150, 200, 300, 500])
+    parser.add_argument("--fixed-trail-stop-bps", type=float, default=None)
+    parser.add_argument("--fixed-trail-activation-bps", type=float, default=None)
+    parser.add_argument("--fixed-trail-drawdown-bps", type=float, default=None)
+    parser.add_argument("--fixed-trail-take-profit-bps", type=float, default=None)
+    parser.add_argument("--skip-trailing", action="store_true")
+    parser.add_argument("--skip-learned", action="store_true")
+    parser.add_argument("--reuse-state-rows", action="store_true")
     parser.add_argument("--no-entry-features", action="store_true")
     parser.add_argument("--no-current-features", action="store_true")
     parser.add_argument("--no-feature-deltas", action="store_true")
@@ -822,31 +1118,45 @@ def main() -> int:
     model_dir = Path(args.model_dir)
     cooldown_steps = max(0, int(round(float(args.cooldown_minutes) / 5.0)))
 
-    raw = prepare_raw_frame(data_path)
-    all_signals = selected_signals(
-        data_path,
-        model_dir,
-        args.mode,
-        args.train_start_date,
-        None,
-        args.tickers,
-        int(args.horizon_steps),
-        cooldown_steps,
-        args.min_entry_minute,
-        args.max_entry_minute,
-    )
-    model = Jepa180mSignalModel(model_dir, args.mode, tickers=args.tickers)
-    states, fixed, base_features = build_state_rows(
-        all_signals,
-        raw,
-        model,
-        int(args.horizon_steps),
-        float(args.cost_bps),
-        float(args.notional),
-        include_entry_features=not args.no_entry_features,
-        include_current_features=not args.no_current_features,
-        include_feature_deltas=not args.no_feature_deltas,
-    )
+    state_path = output_dir / "trade_state_rows.parquet"
+    fixed_all_path = output_dir / "fixed_180m_all_trades.csv"
+    if args.reuse_state_rows and state_path.exists() and fixed_all_path.exists():
+        log(f"reusing state rows from {state_path}")
+        states = pd.read_parquet(state_path)
+        fixed = pd.read_csv(fixed_all_path)
+        all_signals = fixed.drop_duplicates("trade_id").copy()
+        base_features = []
+    else:
+        log("loading raw frame")
+        raw = prepare_raw_frame(data_path)
+        log("selecting base_jepa signals")
+        all_signals = selected_signals(
+            data_path,
+            model_dir,
+            args.mode,
+            args.train_start_date,
+            None,
+            args.tickers,
+            int(args.horizon_steps),
+            cooldown_steps,
+            args.min_entry_minute,
+            args.max_entry_minute,
+            bool(args.truncate_eod_horizon),
+        )
+        log(f"building state rows signals={len(all_signals):,}")
+        model = Jepa180mSignalModel(model_dir, args.mode, tickers=args.tickers)
+        states, fixed, base_features = build_state_rows(
+            all_signals,
+            raw,
+            model,
+            int(args.horizon_steps),
+            float(args.cost_bps),
+            float(args.notional),
+            include_entry_features=not args.no_entry_features,
+            include_current_features=not args.no_current_features,
+            include_feature_deltas=not args.no_feature_deltas,
+            truncate_eod_horizon=bool(args.truncate_eod_horizon),
+        )
     if states.empty or fixed.empty:
         raise RuntimeError("No state rows/trades were built.")
 
@@ -858,21 +1168,86 @@ def main() -> int:
     test_states = filter_trade_ids(states, test_ids)
     oracle_test = order_trades(oracle_exit(test_states, float(args.notional)))
 
-    states.to_parquet(output_dir / "trade_state_rows.parquet", index=False)
-    fixed.to_csv(output_dir / "fixed_180m_all_trades.csv", index=False)
+    states.to_parquet(state_path, index=False)
+    fixed.to_csv(fixed_all_path, index=False)
     fixed_test.to_csv(output_dir / "fixed_180m_trades.csv", index=False)
     oracle_test.to_csv(output_dir / "oracle_exit_trades.csv", index=False)
 
     policy_trades: dict[str, pd.DataFrame] = {}
     fold_tables: dict[str, pd.DataFrame] = {}
     gate_results: dict[str, dict] = {}
-    for policy in args.policies:
+    if not args.skip_trailing:
+        log("evaluating trailing_exit walk-forward")
+        trail_trades, trail_folds = evaluate_trailing_walkforward(
+            states,
+            fixed,
+            [float(x) for x in args.trail_stops_bps],
+            [float(x) for x in args.trail_activations_bps],
+            [float(x) for x in args.trail_drawdowns_bps],
+            [float(x) for x in args.trail_take_profits_bps],
+            str(args.test_start_month),
+            test_end_month,
+            int(args.val_months),
+            int(args.min_fit_trades),
+            int(args.min_val_trades),
+            int(args.min_hold_minutes),
+            float(args.notional),
+        )
+        trail_trades = order_trades(trail_trades)
+        policy_trades["trailing_exit"] = trail_trades
+        fold_tables["trailing_exit"] = trail_folds
+        gate_results["trailing_exit"] = promotion_gate(fixed_test, trail_trades)
+        trail_trades.to_csv(output_dir / "trailing_exit_trades.csv", index=False)
+        trail_folds.to_json(output_dir / "trailing_exit_folds.json", orient="records", indent=2)
+        trail_folds.drop(columns=["val_grid"], errors="ignore").to_csv(output_dir / "trailing_exit_folds.csv", index=False)
+    elif (output_dir / "trailing_exit_trades.csv").exists():
+        log("reusing existing trailing_exit outputs")
+        trail_trades = order_trades(pd.read_csv(output_dir / "trailing_exit_trades.csv"))
+        trail_folds = pd.read_csv(output_dir / "trailing_exit_folds.csv") if (output_dir / "trailing_exit_folds.csv").exists() else pd.DataFrame()
+        policy_trades["trailing_exit"] = trail_trades
+        fold_tables["trailing_exit"] = trail_folds
+        gate_results["trailing_exit"] = promotion_gate(fixed_test, trail_trades)
+
+    fixed_trail_values = [
+        args.fixed_trail_stop_bps,
+        args.fixed_trail_activation_bps,
+        args.fixed_trail_drawdown_bps,
+        args.fixed_trail_take_profit_bps,
+    ]
+    if all(value is not None for value in fixed_trail_values):
+        log(
+            "evaluating fixed_trailing_exit "
+            f"stop={args.fixed_trail_stop_bps} activation={args.fixed_trail_activation_bps} "
+            f"drawdown={args.fixed_trail_drawdown_bps} tp={args.fixed_trail_take_profit_bps}"
+        )
+        fixed_trail_trades = order_trades(
+            simulate_trailing_exit(
+                test_states,
+                float(args.fixed_trail_stop_bps),
+                float(args.fixed_trail_activation_bps),
+                float(args.fixed_trail_drawdown_bps),
+                float(args.fixed_trail_take_profit_bps),
+                int(args.min_hold_minutes),
+                "fixed_trailing_exit",
+                float(args.notional),
+            )
+        )
+        policy_trades["fixed_trailing_exit"] = fixed_trail_trades
+        gate_results["fixed_trailing_exit"] = promotion_gate(fixed_test, fixed_trail_trades)
+        fixed_trail_trades.to_csv(output_dir / "fixed_trailing_exit_trades.csv", index=False)
+
+    if args.skip_learned:
+        log("learned policy evaluation skipped")
+
+    for policy in ([] if args.skip_learned else args.policies):
+        log(f"evaluating learned policy {policy}")
+        policy_margins = [float(x) for x in (args.prob_margins if "oracle_now" in str(policy) else args.margins)]
         trades, folds = evaluate_policy_walkforward(
             states,
             fixed,
             policy,
             features,
-            [float(x) for x in args.margins],
+            policy_margins,
             str(args.test_start_month),
             test_end_month,
             int(args.val_months),

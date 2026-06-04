@@ -3,7 +3,11 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import sys
+import threading
+import time
+from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
@@ -29,6 +33,8 @@ from neural.jepa.features import (
     time_context_features,
 )
 
+LOG_HEARTBEAT_SECONDS = int(os.environ.get("JEPA_LOG_HEARTBEAT_SECONDS", "60"))
+
 
 LEAKAGE_COLUMNS = {
     "target",
@@ -42,6 +48,27 @@ LEAKAGE_COLUMNS = {
     "future_spot_180m",
     "terminal_label_180m",
 }
+
+
+@contextmanager
+def logged_phase(message: str, heartbeat_seconds: int | None = None):
+    start = time.time()
+    interval = int(heartbeat_seconds or LOG_HEARTBEAT_SECONDS)
+    stop_event = threading.Event()
+
+    def heartbeat() -> None:
+        while not stop_event.wait(max(1, interval)):
+            print(f"[JEPA_180M] STILL {message} elapsed={time.time() - start:.1f}s", flush=True)
+
+    print(f"[JEPA_180M] START {message}", flush=True)
+    thread = threading.Thread(target=heartbeat, name=f"jepa-180m-{message[:24]}", daemon=True)
+    thread.start()
+    try:
+        yield
+    finally:
+        stop_event.set()
+        thread.join(timeout=1.0)
+        print(f"[JEPA_180M] DONE {message} elapsed={time.time() - start:.1f}s", flush=True)
 
 
 @dataclass
@@ -84,7 +111,12 @@ def fmt_money(value: float) -> str:
     return f"{float(value):+,.0f}"
 
 
-def build_terminal_180m_frame(data_path: str | Path, horizon_steps: int, min_abs_bps: float) -> pd.DataFrame:
+def build_terminal_180m_frame(
+    data_path: str | Path,
+    horizon_steps: int,
+    min_abs_bps: float,
+    truncate_to_eod: bool = False,
+) -> pd.DataFrame:
     df = pd.read_parquet(data_path)
     required = {"ticker", "date", "time", "spot_price"}
     missing = required - set(df.columns)
@@ -97,15 +129,31 @@ def build_terminal_180m_frame(data_path: str | Path, horizon_steps: int, min_abs
     work["_orig_pos"] = np.arange(len(work), dtype=np.int64)
     work["pos_in_day"] = work.groupby(["ticker", "date"], sort=False).cumcount()
 
+    horizon_steps = int(horizon_steps)
     future_spot = np.full(len(work), np.nan, dtype=np.float64)
+    terminal_hold_steps = np.full(len(work), np.nan, dtype=np.float64)
+    terminal_exit_time = np.full(len(work), "", dtype=object)
     for _, idx in work.groupby(["ticker", "date"], sort=False).groups.items():
         positions = np.asarray(list(idx), dtype=np.int64)
-        if len(positions) <= horizon_steps:
+        if len(positions) <= 1 or horizon_steps <= 0:
             continue
         spot = work.loc[positions, "spot_price"].to_numpy(dtype=np.float64)
-        future = np.full(len(positions), np.nan, dtype=np.float64)
-        future[:-horizon_steps] = spot[horizon_steps:]
-        future_spot[positions] = future
+        if truncate_to_eod:
+            for pos_i, abs_i in enumerate(positions):
+                target_i = min(pos_i + horizon_steps, len(positions) - 1)
+                if target_i <= pos_i:
+                    continue
+                future_spot[abs_i] = spot[target_i]
+                terminal_hold_steps[abs_i] = float(target_i - pos_i)
+                terminal_exit_time[abs_i] = str(work.loc[positions[target_i], "time"])
+        else:
+            if len(positions) <= horizon_steps:
+                continue
+            future = np.full(len(positions), np.nan, dtype=np.float64)
+            future[:-horizon_steps] = spot[horizon_steps:]
+            future_spot[positions] = future
+            terminal_hold_steps[positions[:-horizon_steps]] = float(horizon_steps)
+            terminal_exit_time[positions[:-horizon_steps]] = work.loc[positions[horizon_steps:], "time"].astype(str).to_numpy()
 
     spot_now = work["spot_price"].to_numpy(dtype=np.float64)
     future_return = future_spot / spot_now - 1.0
@@ -119,6 +167,10 @@ def build_terminal_180m_frame(data_path: str | Path, horizon_steps: int, min_abs
     work["future_return_bps_180m"] = future_bps
     work["future_up_180m"] = (future_return > 0.0).astype(np.int8)
     work["future_abs_bps_180m"] = np.abs(future_bps)
+    work["terminal_hold_steps"] = terminal_hold_steps
+    work["terminal_hold_minutes"] = terminal_hold_steps * 5.0
+    work["terminal_exit_time"] = terminal_exit_time
+    work["terminal_horizon_truncated"] = terminal_hold_steps < float(horizon_steps)
     work["month"] = work["date"].str[:6]
     work["oos_apr_may_2026"] = work["date"] >= "20260401"
     work = work.loc[valid].copy()
@@ -186,7 +238,11 @@ def train_model(
         n_jobs=int(n_jobs),
         verbose=-1,
     )
-    model.fit(x_train, y_train)
+    with logged_phase(
+        f"fit LGBMClassifier rows={len(train):,} features={len(features):,} "
+        f"trees={int(n_estimators):,} n_jobs={int(n_jobs)}"
+    ):
+        model.fit(x_train, y_train)
     return model, medians
 
 
@@ -210,7 +266,11 @@ def simulate_hold180(
 ) -> pd.DataFrame:
     if frame.empty:
         return pd.DataFrame()
-    work = frame[["ticker", "date", "time", "pos_in_day", "spot_price", "future_return_180m", "future_return_bps_180m"]].copy()
+    cols = ["ticker", "date", "time", "pos_in_day", "spot_price", "future_return_180m", "future_return_bps_180m"]
+    for optional in ["terminal_exit_time", "terminal_hold_minutes", "terminal_horizon_truncated"]:
+        if optional in frame.columns:
+            cols.append(optional)
+    work = frame[cols].copy()
     work["prob_up"] = prob
     work["side"] = np.where(work["prob_up"] >= long_threshold, 1, np.where(work["prob_up"] <= short_threshold, -1, 0))
     work = work[work["side"] != 0].sort_values(["ticker", "date", "pos_in_day"]).reset_index(drop=True)
@@ -232,6 +292,9 @@ def simulate_hold180(
                 "prob_up": float(row.prob_up),
                 "spot_price": float(row.spot_price),
                 "future_return_bps": float(row.future_return_bps_180m),
+                "exit_time": str(getattr(row, "terminal_exit_time", "")),
+                "hold_minutes": float(getattr(row, "terminal_hold_minutes", np.nan)),
+                "horizon_truncated": bool(getattr(row, "terminal_horizon_truncated", False)),
                 "gross_bps": gross_bps,
                 "net_bps": net_bps,
                 "pnl_dollars": net_bps / 10000.0 * float(notional),
@@ -529,15 +592,21 @@ def write_report(output_dir: Path, summaries: dict[str, dict], args, dataset_row
     test_window = "all eligible walk-forward months"
     if args.test_start_month or args.test_end_month:
         test_window = f"{args.test_start_month or 'first'} to {args.test_end_month or 'last'}"
+    horizon_text = "EOD-truncated 180m" if getattr(args, "truncate_eod_horizon", False) else "exact 180m"
+    backtest_text = (
+        "max 180m hold truncated to same-day last row"
+        if getattr(args, "truncate_eod_horizon", False)
+        else "fixed 180m hold"
+    )
     lines = [
         "# JEPA 180m Direction Experiment",
         "",
         f"Data: `{args.data}`",
-        f"Rows after exact 180m label construction: {valid_rows:,} from {dataset_rows:,}",
+        f"Rows after {horizon_text} label construction: {valid_rows:,} from {dataset_rows:,}",
         f"Label: `spot_price(t+{args.horizon_steps * 5}m) > spot_price(t)`",
         f"Test months: `{test_window}`",
         f"OOS split: dates >= `{args.oos_start}`",
-        f"Backtest: fixed 180m hold, cooldown `{args.cooldown_steps}` samples, cost `{args.cost_bps}` bps, notional `${args.notional:,.0f}` per trade.",
+        f"Backtest: {backtest_text}, cooldown `{args.cooldown_steps}` samples, cost `{args.cost_bps}` bps, notional `${args.notional:,.0f}` per trade.",
         "",
         "## Prediction Metrics",
         "",
@@ -580,6 +649,11 @@ def main() -> int:
     parser.add_argument("--output-dir", required=True)
     parser.add_argument("--modes", nargs="+", default=["base", "jepa_only", "base_jepa"])
     parser.add_argument("--horizon-steps", type=int, default=36)
+    parser.add_argument(
+        "--truncate-eod-horizon",
+        action="store_true",
+        help="Use min(t+horizon, last same-day row) instead of dropping rows with fewer than horizon steps left.",
+    )
     parser.add_argument("--min-abs-bps", type=float, default=0.0)
     parser.add_argument("--min-train-months", type=int, default=12)
     parser.add_argument("--val-months", type=int, default=3)
@@ -590,7 +664,7 @@ def main() -> int:
     parser.add_argument("--oos-start", default="20260401")
     parser.add_argument("--seed", type=int, default=777)
     parser.add_argument("--n-estimators", type=int, default=160)
-    parser.add_argument("--n-jobs", type=int, default=1)
+    parser.add_argument("--n-jobs", type=int, default=20)
     parser.add_argument("--test-start-month", default=None)
     parser.add_argument("--test-end-month", default=None)
     args = parser.parse_args()
@@ -599,7 +673,12 @@ def main() -> int:
     output_dir.mkdir(parents=True, exist_ok=True)
 
     raw_rows = len(pd.read_parquet(args.data, columns=["ticker"]))
-    df = build_terminal_180m_frame(args.data, args.horizon_steps, args.min_abs_bps)
+    df = build_terminal_180m_frame(
+        args.data,
+        args.horizon_steps,
+        args.min_abs_bps,
+        truncate_to_eod=args.truncate_eod_horizon,
+    )
     summaries = {}
     for mode in args.modes:
         print(f"[JEPA_180M] mode={mode} rows={len(df)}")

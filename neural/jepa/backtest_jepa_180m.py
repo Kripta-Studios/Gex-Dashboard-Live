@@ -76,7 +76,17 @@ def build_trades(predictions: pd.DataFrame, cost_bps: float, cooldown_steps: int
         "net_bps",
         "pnl_dollars",
     ]
-    return signals[keep].rename(columns={"future_return_bps_180m": "future_return_bps"})
+    for optional in ["terminal_exit_time", "terminal_hold_minutes", "terminal_horizon_truncated"]:
+        if optional in signals.columns:
+            keep.append(optional)
+    return signals[keep].rename(
+        columns={
+            "future_return_bps_180m": "future_return_bps",
+            "terminal_exit_time": "exit_time",
+            "terminal_hold_minutes": "hold_minutes",
+            "terminal_horizon_truncated": "horizon_truncated",
+        }
+    )
 
 
 def per_ticker_metrics(trades: pd.DataFrame) -> dict[str, dict]:
@@ -118,6 +128,8 @@ def write_report(
     trades: pd.DataFrame,
     summary: dict,
 ) -> None:
+    execution_mode = "max" if args.truncate_eod_horizon else "fixed"
+    truncation_note = " truncated to the last same-day row" if args.truncate_eod_horizon else ""
     lines = [
         "# JEPA 180m Standalone Backtest",
         "",
@@ -125,7 +137,8 @@ def write_report(
         f"Model dir: `{args.model_dir}`",
         f"Mode: `{args.mode}`",
         f"Rows scored: {len(predictions):,}",
-        f"Execution: fixed `{args.horizon_steps * 5}`m hold, cooldown `{args.cooldown_minutes}`m, cost `{args.cost_bps}` bps, notional `${args.notional:,.0f}`.",
+        f"Execution: `{execution_mode} {args.horizon_steps * 5}m` hold{truncation_note}, "
+        f"cooldown `{args.cooldown_minutes}`m, cost `{args.cost_bps}` bps, notional `${args.notional:,.0f}`.",
         "",
         "## Overall",
         "",
@@ -169,7 +182,8 @@ def write_report(
         "",
         "## Cooldown Note",
         "",
-        "- The default cooldown is 180m because the label and execution horizon are 180m.",
+        "- The default cooldown is 180m because the maximum label/execution horizon is 180m.",
+        "- In EOD-truncated mode, late entries use the last same-day row as the terminal outcome.",
         "- This prevents stacking many overlapping 5-minute entries that mostly bet on the same future window.",
         "- The value is configurable with `--cooldown-minutes` for sensitivity testing.",
         "",
@@ -192,13 +206,23 @@ def main() -> int:
     parser.add_argument("--notional", type=float, default=100000.0)
     parser.add_argument("--min-entry-minute", type=int, default=None)
     parser.add_argument("--max-entry-minute", type=int, default=None)
+    parser.add_argument(
+        "--truncate-eod-horizon",
+        action="store_true",
+        help="Use min(entry + horizon, last same-day row) as the terminal outcome, matching live EOD cleanup.",
+    )
     args = parser.parse_args()
 
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     cooldown_steps = max(0, int(round(args.cooldown_minutes / 5.0)))
 
-    df = build_terminal_180m_frame(args.data, args.horizon_steps, min_abs_bps=0.0)
+    df = build_terminal_180m_frame(
+        args.data,
+        args.horizon_steps,
+        min_abs_bps=0.0,
+        truncate_to_eod=args.truncate_eod_horizon,
+    )
     df["ticker"] = df["ticker"].map(normalize_ticker)
     df["date"] = df["date"].map(normalize_date)
     if args.start_date:

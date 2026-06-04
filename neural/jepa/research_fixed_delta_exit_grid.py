@@ -41,6 +41,8 @@ def simulate_exit(
     hard_stop_pct: float,
     take_profit_pct: float,
     policy_name: str,
+    trail_activation_pct: float | None = None,
+    trail_drawdown_pct: float | None = None,
 ) -> pd.DataFrame:
     rows = []
     for candidate in selected.itertuples(index=False):
@@ -49,8 +51,10 @@ def simulate_exit(
             continue
         exit_point = path.iloc[-1]
         reason = "max_time"
+        peak_pnl_pct = -float("inf")
         for _, point in path.iterrows():
             pnl_pct = float(point["current_pnl_pct"])
+            peak_pnl_pct = max(peak_pnl_pct, pnl_pct)
             if pnl_pct <= float(hard_stop_pct):
                 exit_point = point
                 reason = "hard_stop"
@@ -58,6 +62,15 @@ def simulate_exit(
             if pnl_pct >= float(take_profit_pct):
                 exit_point = point
                 reason = "take_profit"
+                break
+            if (
+                trail_activation_pct is not None
+                and trail_drawdown_pct is not None
+                and peak_pnl_pct >= float(trail_activation_pct)
+                and pnl_pct <= peak_pnl_pct - float(trail_drawdown_pct)
+            ):
+                exit_point = point
+                reason = "trail_stop"
                 break
         rows.append(
             {
@@ -79,6 +92,8 @@ def simulate_exit(
                 "hold_minutes": int(exit_point["hold_minutes"]),
                 "pnl_pct": float(exit_point["current_pnl_pct"]),
                 "pnl_dollars": float(exit_point["pnl_dollars"]),
+                "trail_activation_pct": float(trail_activation_pct) if trail_activation_pct is not None else float("nan"),
+                "trail_drawdown_pct": float(trail_drawdown_pct) if trail_drawdown_pct is not None else float("nan"),
             }
         )
     return pd.DataFrame(rows)
@@ -159,12 +174,14 @@ def write_summary(output_dir: Path, args, selected_config: dict, train_rows: lis
         "",
         "## Top Train Grid Rows",
         "",
-        "| Rank | Stop | TP | Train WR | Train PF | Train PnL | OOS WR | OOS PF | OOS PnL | Score |",
-        "| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+        "| Rank | Family | Stop | TP | Trail Act | Trail DD | Train WR | Train PF | Train PnL | OOS WR | OOS PF | OOS PnL | Score |",
+        "| ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
     ]
     for rank, (_, row) in enumerate(grid.head(20).iterrows(), start=1):
         lines.append(
-            f"| {rank} | {row['hard_stop_pct']:.2f} | {row['take_profit_pct']:.2f} | "
+            f"| {rank} | {row['policy_family']} | {row['hard_stop_pct']:.2f} | {row['take_profit_pct']:.2f} | "
+            f"{fmt_float(row.get('trail_activation_pct', float('nan')), 2)} | "
+            f"{fmt_float(row.get('trail_drawdown_pct', float('nan')), 2)} | "
             f"{fmt_pct(row['train_win_rate'])} | {fmt_float(row['train_profit_factor'])} | "
             f"{fmt_money(row['train_pnl_dollars'])} | {fmt_pct(row['oos_win_rate'])} | "
             f"{fmt_float(row['oos_profit_factor'])} | {fmt_money(row['oos_pnl_dollars'])} | "
@@ -194,6 +211,11 @@ def main() -> int:
     parser.add_argument("--oos-end", default="202605")
     parser.add_argument("--stops", nargs="+", type=float, default=[-0.60, -0.50, -0.45, -0.40, -0.35, -0.30, -0.25, -0.20])
     parser.add_argument("--take-profits", nargs="+", type=float, default=[0.75, 1.00, 1.50, 2.00, 2.50, 3.00, 4.00, 10.00])
+    parser.add_argument("--trail-stops", nargs="+", type=float, default=[-0.60, -0.50, -0.40, -0.35])
+    parser.add_argument("--trail-activations", nargs="+", type=float, default=[0.50, 0.75, 1.00, 1.50, 2.00])
+    parser.add_argument("--trail-drawdowns", nargs="+", type=float, default=[0.25, 0.35, 0.50, 0.75, 1.00, 1.50])
+    parser.add_argument("--trail-take-profit", type=float, default=10.0)
+    parser.add_argument("--skip-trailing", action="store_true")
     args = parser.parse_args()
 
     output_dir = Path(args.output_dir)
@@ -211,40 +233,86 @@ def main() -> int:
 
     grid_rows = []
     trade_cache = {}
+
+    def add_grid_row(
+        family: str,
+        stop: float,
+        tp: float,
+        trades: pd.DataFrame,
+        trail_activation: float | None = None,
+        trail_drawdown: float | None = None,
+    ) -> None:
+        train = trades[
+            (trades["month"].astype(str) >= str(args.meta_train_start))
+            & (trades["month"].astype(str) <= str(args.meta_train_end))
+        ].copy()
+        oos = trades[
+            (trades["month"].astype(str) >= str(args.oos_start))
+            & (trades["month"].astype(str) <= str(args.oos_end))
+        ].copy()
+        train_m = summarize(trades["policy"].iloc[0] if not trades.empty else family, train)
+        oos_m = summarize(trades["policy"].iloc[0] if not trades.empty else family, oos)
+        grid_rows.append(
+            {
+                "policy_family": family,
+                "hard_stop_pct": float(stop),
+                "take_profit_pct": float(tp),
+                "trail_activation_pct": float(trail_activation) if trail_activation is not None else float("nan"),
+                "trail_drawdown_pct": float(trail_drawdown) if trail_drawdown is not None else float("nan"),
+                "score": score_train(train_m),
+                **{f"train_{k}": v for k, v in train_m.items() if k != "policy"},
+                **{f"oos_{k}": v for k, v in oos_m.items() if k != "policy"},
+            }
+        )
+
     for stop in args.stops:
         for tp in args.take_profits:
             name = f"fixed_delta_0.70_stop{stop:.2f}_tp{tp:.2f}"
             trades = simulate_exit(selected, state_groups, float(stop), float(tp), name)
-            trade_cache[(float(stop), float(tp))] = trades
-            train = trades[
-                (trades["month"].astype(str) >= str(args.meta_train_start))
-                & (trades["month"].astype(str) <= str(args.meta_train_end))
-            ].copy()
-            oos = trades[
-                (trades["month"].astype(str) >= str(args.oos_start))
-                & (trades["month"].astype(str) <= str(args.oos_end))
-            ].copy()
-            train_m = summarize(name, train)
-            oos_m = summarize(name, oos)
-            grid_rows.append(
-                {
-                    "hard_stop_pct": float(stop),
-                    "take_profit_pct": float(tp),
-                    "score": score_train(train_m),
-                    **{f"train_{k}": v for k, v in train_m.items() if k != "policy"},
-                    **{f"oos_{k}": v for k, v in oos_m.items() if k != "policy"},
-                }
-            )
+            trade_cache[("hard", float(stop), float(tp), None, None)] = trades
+            add_grid_row("hard", float(stop), float(tp), trades)
+    if not args.skip_trailing:
+        for stop in args.trail_stops:
+            for activation in args.trail_activations:
+                for drawdown in args.trail_drawdowns:
+                    name = f"fixed_delta_0.70_stop{stop:.2f}_trail{activation:.2f}_{drawdown:.2f}"
+                    trades = simulate_exit(
+                        selected,
+                        state_groups,
+                        float(stop),
+                        float(args.trail_take_profit),
+                        name,
+                        trail_activation_pct=float(activation),
+                        trail_drawdown_pct=float(drawdown),
+                    )
+                    trade_cache[("trail", float(stop), float(args.trail_take_profit), float(activation), float(drawdown))] = trades
+                    add_grid_row(
+                        "trail",
+                        float(stop),
+                        float(args.trail_take_profit),
+                        trades,
+                        trail_activation=float(activation),
+                        trail_drawdown=float(drawdown),
+                    )
     grid = pd.DataFrame(grid_rows).sort_values("score", ascending=False).reset_index(drop=True)
     best = grid.iloc[0]
     selected_config = {
         "fixed_delta": float(args.fixed_delta),
+        "policy_family": str(best["policy_family"]),
         "hard_stop_pct": float(best["hard_stop_pct"]),
         "take_profit_pct": float(best["take_profit_pct"]),
+        "trail_activation_pct": float(best["trail_activation_pct"]) if np.isfinite(float(best["trail_activation_pct"])) else None,
+        "trail_drawdown_pct": float(best["trail_drawdown_pct"]) if np.isfinite(float(best["trail_drawdown_pct"])) else None,
         "selection": "max meta-train score with PF>=1.3, WR>=45%, positive PnL",
     }
-    old_key = (-0.35, 2.50)
-    new_key = (selected_config["hard_stop_pct"], selected_config["take_profit_pct"])
+    old_key = ("hard", -0.35, 2.50, None, None)
+    new_key = (
+        selected_config["policy_family"],
+        selected_config["hard_stop_pct"],
+        selected_config["take_profit_pct"],
+        float(selected_config["trail_activation_pct"]) if selected_config["trail_activation_pct"] is not None else None,
+        float(selected_config["trail_drawdown_pct"]) if selected_config["trail_drawdown_pct"] is not None else None,
+    )
     baseline = trade_cache.get(old_key)
     if baseline is None:
         baseline = simulate_exit(selected, state_groups, -0.35, 2.50, "fixed_delta_0.70_stop-0.35_tp2.50")

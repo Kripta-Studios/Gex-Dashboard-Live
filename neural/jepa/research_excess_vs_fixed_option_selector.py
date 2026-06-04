@@ -289,7 +289,7 @@ def main() -> int:
     parser.add_argument("--val-months", type=int, default=3)
     parser.add_argument("--fixed-delta", type=float, default=0.70)
     parser.add_argument("--n-estimators", type=int, default=260)
-    parser.add_argument("--n-jobs", type=int, default=1)
+    parser.add_argument("--n-jobs", type=int, default=20)
     parser.add_argument("--seed", type=int, default=5521)
     parser.add_argument("--min-val-trades", type=int, default=12)
     args = parser.parse_args()

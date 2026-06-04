@@ -108,6 +108,24 @@ ENDPOINTS_WEEKLY = ["greeks"]
 FEED_STATE_FILENAME = "feed_intraday_state.json"
 DEFAULT_POLL_INTERVAL_SECONDS = 60
 MODEL_SAMPLE_MINUTES = 5
+MARKET_DATA_START_TIME = dt_time(9, 30)
+MARKET_DATA_STOP_TIME = dt_time(16, 1)
+JEPA_LIVE_EXECUTION_CONFIG = {
+    "policy": "base_jepa_180m_option_value_blended_trail050_025_cutoff1430",
+    "entry_cutoff_et": "14:30",
+    "model_sample_minutes": MODEL_SAMPLE_MINUTES,
+    "selector": "OptionValue rule/best mean + 2.0*abs_delta over 0.10..0.70 candidates",
+    "fallback_delta_target": 0.70,
+    "cooldown_minutes": 180,
+    "risk_capital_dollars": 1000.0,
+    "hard_stop_pct": -0.60,
+    "trail_activation_pct": 0.50,
+    "trail_drawdown_pct": 0.25,
+    "take_profit_pct": 10.00,
+    "max_hold_minutes": 180,
+    "eod_cleanup_et": "16:00",
+    "data_poll_stop_et": "16:01",
+}
 DEFAULT_JEPA_FEATURE_MODEL_DIR = os.path.join(
     PROJECT_ROOT,
     "neural",
@@ -384,6 +402,7 @@ class RealtimeOptionsFeed:
         self.output_dir = Path(output_dir or os.path.join(PROJECT_ROOT, "rt_data", today_str))
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.current_trading_day = datetime.now(ET).date()
+        self._write_live_execution_config()
 
         # Expiration cache — per ticker: {"SPX": (0dte, weekly), "QQQ": (0dte, weekly)}
         self._expirations = {}  # ticker -> (exp_0dte, exp_weekly)
@@ -437,6 +456,15 @@ class RealtimeOptionsFeed:
             device=jepa_device,
             enabled=enable_jepa_features,
         )
+
+    def _write_live_execution_config(self) -> None:
+        payload = dict(JEPA_LIVE_EXECUTION_CONFIG)
+        payload["written_at_et"] = datetime.now(ET).isoformat()
+        path = self.output_dir / "jepa_live_execution_config.json"
+        try:
+            path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        except Exception as exc:
+            logger.warning(f"[JEPA] Could not write live execution config {path}: {exc}")
 
     # ─────────────────────────────────────────
     # EXPIRATION RESOLUTION
@@ -1322,6 +1350,7 @@ class RealtimeOptionsFeed:
             today_str = now_date.strftime("%Y%m%d")
             self.output_dir = Path(os.path.join(self._rt_data_base, today_str))
             self.output_dir.mkdir(parents=True, exist_ok=True)
+            self._write_live_execution_config()
 
         # Restore exact intraday state on reboot, or rebuild best-effort from rt_data.
         self._restore_intraday_state_from_disk()
@@ -1330,6 +1359,7 @@ class RealtimeOptionsFeed:
         now_str = now.strftime("%H:%M:%S EST")
         logger.info(f"{'='*50}")
         logger.info(f"--- Poll at {now_str} ---")
+        self._write_live_execution_config()
 
         if not self._expirations_resolved:
             await self._resolve_expirations()
@@ -2029,6 +2059,7 @@ class RealtimeOptionsFeed:
         logger.info(f"Starting RealtimeOptionsFeed")
         logger.info(f"Poll interval: {self.poll_interval}s")
         logger.info(f"Output: {self.output_dir}")
+        logger.info(f"JEPA live execution config: {JEPA_LIVE_EXECUTION_CONFIG}")
 
         # Backfill historical spot data on first startup
         if not self._historical_backfilled:
@@ -2040,9 +2071,18 @@ class RealtimeOptionsFeed:
 
                 # Dry run bypasses market hours (for testing)
                 if not dry_run:
-                    # Market hours check (9:30-16:00 EST)
-                    market_open = now.replace(hour=9, minute=30, second=0)
-                    market_close = now.replace(hour=16, minute=0, second=0)
+                    # Poll one minute after the cash close so the bot can see the final
+                    # same-day option snapshot for EOD exits. Entry cutoff lives in the bot.
+                    market_open = now.replace(
+                        hour=MARKET_DATA_START_TIME.hour,
+                        minute=MARKET_DATA_START_TIME.minute,
+                        second=0,
+                    )
+                    market_close = now.replace(
+                        hour=MARKET_DATA_STOP_TIME.hour,
+                        minute=MARKET_DATA_STOP_TIME.minute,
+                        second=0,
+                    )
 
                     if now.weekday() >= 5:
                         logger.info("Weekend — sleeping 60s")
@@ -2090,6 +2130,13 @@ def main():
     print(f"  Spot:     {', '.join(SPOT_SYMBOLS)}")
     print(f"  Interval: {args.interval}s")
     print(f"  JEPA:     {'disabled' if args.disable_jepa else args.jepa_model_dir}")
+    print(
+        "  JEPA live policy: "
+        f"{JEPA_LIVE_EXECUTION_CONFIG['policy']} "
+        f"(entry <= {JEPA_LIVE_EXECUTION_CONFIG['entry_cutoff_et']} ET, "
+        f"trail {JEPA_LIVE_EXECUTION_CONFIG['trail_activation_pct']:.0%}/"
+        f"{JEPA_LIVE_EXECUTION_CONFIG['trail_drawdown_pct']:.0%})"
+    )
     print(f"  Timezone: EST (America/New_York)")
     print("=" * 60)
 

@@ -29,4 +29,5 @@ neural/models/jepa/
 *.joblib
 push_models.ps1
 research_papers/JEPA/results/jepa_full_pipeline_180m_continuation_exit_wf/trade_state_rows.parquet
-
+research_papers/JEPA/results/jepa_full_pipeline_180m_continuation_exit/trade_state_rows.parquet
+research_papers/JEPA/results/jepa_full_pipeline_180m_continuation_exit_truncate_trail/trade_state_rows.parquet

@@ -17,6 +17,7 @@ Param(
   [switch]$SkipAppend,
   [switch]$SkipGbt180,
   [switch]$SkipStandaloneBacktest,
+  [switch]$SkipGbtExitResearch,
   [switch]$SkipOptionPolicy,
   [switch]$SkipOptionValueSplit,
   [switch]$SkipWalkForward,
@@ -45,12 +46,16 @@ Param(
   [int]$MinExitHoldMinutes = 15,
   [int]$OptionPolicyNEstimators = 260,
   [int]$OptionPolicyExitNEstimators = 220,
-  [int]$OptionValueEpochs = 35,
+  [int]$OptionValueEpochs = 20,
   [int]$WalkForwardEpochs = 8,
   [int]$MaxDynamicTrainRows = 260000,
-  [int]$NJobs = 1,
-  [string]$OptionValueVisualizerPolicy = "fixed_delta_0.70_hard_wf_trades.csv",
-  [string]$OptionValueVisualizerLabel = "JEPA 0DTE Fixed 0.70",
+  [int]$NJobs = 20,
+  [double]$GbtExitTrailStopBps = -50.0,
+  [double]$GbtExitTrailActivationBps = 30.0,
+  [double]$GbtExitTrailDrawdownBps = 5.0,
+  [double]$GbtExitTrailTakeProfitBps = 100.0,
+  [string]$OptionValueVisualizerPolicy = "option_value_blended_score_trail_cutoff_trades.csv",
+  [string]$OptionValueVisualizerLabel = "JEPA 0DTE OptionValue Blended Trail",
   [string]$FeatureVizGbtModel = "",
   [string]$FeatureVizNormalizer = ""
 )
@@ -129,8 +134,9 @@ if ($ProductionTrain) {
   $TrainEndDate = "20261230"
   $TestStartDate = ""
   $SkipStandaloneBacktest = $true
-  $SkipOptionPolicy = $true
-  $SkipOptionValueSplit = $true
+  $SkipGbtExitResearch = $true
+  # Keep option candidate generation and OptionValue final-fit enabled so live
+  # production has its own option selector artifact.
   $SkipWalkForward = $true
   $SkipExitGrid = $true
   $SkipFullVisualizerBacktests = $true
@@ -167,10 +173,15 @@ $Jepa180ResultsDir = Join-ProjectPath "research_papers\JEPA\results\$Jepa180Expe
 $Jepa180ModelDir = Join-NeuralPath "models\jepa\$Jepa180Experiment"
 $Jepa180StandaloneResultsDir = Join-ProjectPath "research_papers\JEPA\results\${Experiment}_180m_standalone"
 $Jepa180FullResultsDir = Join-ProjectPath "research_papers\JEPA\results\${Experiment}_180m_full"
+$GbtExitResearchResultsDir = Join-ProjectPath "research_papers\JEPA\results\${Experiment}_180m_continuation_exit"
 $OptionPolicyResultsDir = Join-ProjectPath "research_papers\JEPA\results\${Experiment}_option_policy"
 $OptionPolicyModelDir = Join-NeuralPath "models\jepa\${Experiment}_option_policy"
 $OptionValueSplitResultsDir = Join-ProjectPath "research_papers\JEPA\results\${Experiment}_option_value_split"
 $OptionValueSplitModelDir = Join-NeuralPath "models\jepa\${Experiment}_option_value_split"
+if ($ProductionTrain) {
+  $OptionValueSplitResultsDir = Join-ProjectPath "research_papers\JEPA\results\${Experiment}_option_value_production"
+  $OptionValueSplitModelDir = Join-NeuralPath "models\jepa\${Experiment}_option_value"
+}
 $OptionValueWalkForwardResultsDir = Join-ProjectPath "research_papers\JEPA\results\${Experiment}_option_value_walkforward"
 $FixedExitGridResultsDir = Join-ProjectPath "research_papers\JEPA\results\${Experiment}_fixed_delta_exit_grid"
 $CandidateLabelsPath = Join-Path $OptionPolicyResultsDir "candidate_labels.parquet"
@@ -222,6 +233,9 @@ $WalkForwardEpochsEffective = if ($QuickSmoke) { "1" } else { "$WalkForwardEpoch
 $MaxDynamicTrainRowsEffective = if ($QuickSmoke) { "50000" } else { "$MaxDynamicTrainRows" }
 $OptionMaxSignals = if ($QuickSmoke) { "40" } else { "0" }
 $WalkForwardMaxFolds = if ($QuickSmoke) { "2" } else { "0" }
+if ($QuickSmoke) {
+  $SkipGbtExitResearch = $true
+}
 
 Write-Host "`n=== JEPA PIPELINE CONFIGURATION ===" -ForegroundColor Green
 Write-Host "ProjectRoot              : $ProjectRoot"
@@ -236,6 +250,9 @@ Write-Host "ProductionTrain          : $ProductionTrain"
 Write-Host "TrainEndDate             : $TrainEndDate"
 Write-Host "TestStartDate            : $TestStartDate"
 Write-Host "QuickSmoke               : $QuickSmoke"
+Write-Host "Workers                  : $Workers"
+Write-Host "NJobs                    : $NJobs"
+Write-Host "GbtExitTrailBps          : stop=$GbtExitTrailStopBps activation=$GbtExitTrailActivationBps drawdown=$GbtExitTrailDrawdownBps takeProfit=$GbtExitTrailTakeProfitBps"
 Write-Host "Transcript               : $TranscriptPath"
 
 try {
@@ -338,6 +355,7 @@ try {
         "--modes", "base", "jepa_only", "base_jepa",
         "--train-end-date", $TrainEndDate,
         "--horizon-steps", "36",
+        "--truncate-eod-horizon",
         "--min-abs-bps", "0.0",
         "--val-months", "3",
         "--cost-bps", "1.0",
@@ -360,6 +378,7 @@ try {
         "--train-end-date", $TrainEndDate,
         "--test-start-date", $TestStartDate,
         "--horizon-steps", "36",
+        "--truncate-eod-horizon",
         "--min-abs-bps", "0.0",
         "--val-months", "3",
         "--cost-bps", "1.0",
@@ -392,6 +411,7 @@ try {
       "--start-date", $TestStartDate,
       "--tickers", "SPX", "QQQ", "SPY",
       "--horizon-steps", "36",
+      "--truncate-eod-horizon",
       "--cooldown-minutes", "$CooldownMinutes",
       "--cost-bps", "1.0",
       "--notional", "100000"
@@ -419,6 +439,7 @@ try {
       "--start-date", $StartDate,
       "--tickers", "SPX", "QQQ", "SPY",
       "--horizon-steps", "36",
+      "--truncate-eod-horizon",
       "--cooldown-minutes", "$CooldownMinutes",
       "--cost-bps", "1.0",
       "--notional", "100000"
@@ -429,6 +450,50 @@ try {
     Invoke-PythonStep "Step 4B - full-period base_jepa 180m backtest for visualizer" $FullStandaloneArgs (Join-Path $ResultsRoot "04b_backtest_base_jepa_180m_full.log")
   } elseif (($skip_to_step -le 4) -and (-not $SkipStandaloneBacktest)) {
     Write-Host "`n=== Step 4B - full-period visualizer backtest skipped ===" -ForegroundColor Yellow
+  }
+
+  # Step 4C: validate the promoted mechanical GBT+JEPA spot/proxy exit.
+  # This is research/OOS evidence only. Production uses the trained 180m signal
+  # plus the option execution contract in the live bot.
+  if (($skip_to_step -le 4) -and (-not $SkipStandaloneBacktest) -and (-not $SkipGbtExitResearch)) {
+    Assert-PathExists $FullJepaDataPath "Full JEPA parquet"
+    Assert-PathExists $Jepa180ModelDir "JEPA 180m model directory"
+    New-Item -ItemType Directory -Force -Path $GbtExitResearchResultsDir | Out-Null
+    $GbtExitTestStartMonth = $TestStartDate.Substring(0, 6)
+    $GbtExitArgs = @(
+      (Join-Path $ScriptDir "walkforward_jepa_180m_continuation_exit.py"),
+      "--data", $FullJepaDataPath,
+      "--model-dir", $Jepa180ModelDir,
+      "--mode", "base_jepa",
+      "--output-dir", $GbtExitResearchResultsDir,
+      "--train-start-date", $StartDate,
+      "--test-start-month", $GbtExitTestStartMonth,
+      "--tickers", "SPX", "QQQ", "SPY",
+      "--horizon-steps", "36",
+      "--truncate-eod-horizon",
+      "--cooldown-minutes", "$CooldownMinutes",
+      "--cost-bps", "1.0",
+      "--notional", "100000",
+      "--val-months", "3",
+      "--min-fit-trades", "100",
+      "--min-val-trades", "25",
+      "--min-hold-minutes", "15",
+      "--n-estimators", "160",
+      "--n-jobs", "$NJobs",
+      "--reuse-state-rows",
+      "--skip-trailing",
+      "--skip-learned",
+      "--fixed-trail-stop-bps", "$GbtExitTrailStopBps",
+      "--fixed-trail-activation-bps", "$GbtExitTrailActivationBps",
+      "--fixed-trail-drawdown-bps", "$GbtExitTrailDrawdownBps",
+      "--fixed-trail-take-profit-bps", "$GbtExitTrailTakeProfitBps"
+    )
+    if (-not [string]::IsNullOrWhiteSpace($TestEndDate)) {
+      $GbtExitArgs += @("--test-end-month", $TestEndDate.Substring(0, 6))
+    }
+    Invoke-PythonStep "Step 4C - GBT+JEPA fixed trailing exit OOS check" $GbtExitArgs (Join-Path $ResultsRoot "04c_gbt_jepa_fixed_trailing_exit.log")
+  } elseif (($skip_to_step -le 4) -and (-not $SkipStandaloneBacktest)) {
+    Write-Host "`n=== Step 4C - GBT+JEPA exit research skipped ===" -ForegroundColor Yellow
   }
 
   # Step 5: build 0DTE option candidates and compare fixed delta, learned selectors, and oracle.
@@ -447,8 +512,8 @@ try {
       "--tickers", "SPX", "QQQ", "SPY",
       "--train-start-date", $StartDate,
       "--train-end-date", $TrainEndDate,
-      "--test-start-date", $TestStartDate,
       "--horizon-steps", "36",
+      "--truncate-eod-horizon",
       "--cooldown-minutes", "$CooldownMinutes",
       "--max-hold-minutes", "$MaxHoldMinutes",
       "--risk-capital", "$RiskCapital",
@@ -460,6 +525,12 @@ try {
       "--n-jobs", "$NJobs",
       "--max-signals", $OptionMaxSignals
     )
+    if (-not [string]::IsNullOrWhiteSpace($TestStartDate)) {
+      $OptionPolicyArgs += @("--test-start-date", $TestStartDate)
+    }
+    if ($ProductionTrain) {
+      $OptionPolicyArgs += "--labels-only"
+    }
     if ($ReuseOptionCandidates) {
       $OptionPolicyArgs += "--reuse-candidates"
     }
@@ -482,14 +553,27 @@ try {
       "--model-dir", $OptionValueSplitModelDir,
       "--train-start-date", $StartDate,
       "--train-end-date", $TrainEndDate,
-      "--test-start-date", $TestStartDate,
       "--risk-capital", "$RiskCapital",
       "--max-hold-minutes", "$MaxHoldMinutes",
       "--hard-stop-pct", "$HardStopPct",
       "--min-exit-hold-minutes", "$MinExitHoldMinutes",
       "--epochs", $OptionValueEpochsEffective,
+      "--dynamic-target", "future_edge",
+      "--entry-cutoff-time", "14:30",
+      "--trail-activation-pct", "0.50",
+      "--trail-drawdown-pct", "0.25",
+      "--trail-take-profit-pct", "10.0",
+      "--blended-selector-score-base", "ovjepa_pred_rule_best_mean",
+      "--blended-selector-delta-bonus", "2.0",
+      "--blended-selector-min-delta", "0.0",
       "--device", $Device
     )
+    if (-not [string]::IsNullOrWhiteSpace($TestStartDate)) {
+      $OptionValueArgs += @("--test-start-date", $TestStartDate)
+    }
+    if ($ProductionTrain) {
+      $OptionValueArgs += "--production-train"
+    }
     if ($RebuildOptionStateRows) {
       $OptionValueArgs += "--rebuild-state-rows"
     }
@@ -557,6 +641,9 @@ try {
     }
 
     $OptionValueVisualizerTrades = Join-Path $OptionValueWalkForwardResultsDir $OptionValueVisualizerPolicy
+    if (-not (Test-Path $OptionValueVisualizerTrades)) {
+      $OptionValueVisualizerTrades = Join-Path $OptionValueSplitResultsDir $OptionValueVisualizerPolicy
+    }
     if (-not (Test-Path $OptionValueVisualizerTrades)) {
       $OptionValueVisualizerTrades = Join-Path $OptionValueSplitResultsDir "option_value_best_select_learned_exit_5m_trades.csv"
     }
@@ -626,6 +713,7 @@ try {
   Write-Host "`n=== JEPA PIPELINE COMPLETE ===" -ForegroundColor Green
   Write-Host "Main run logs/results: $ResultsRoot"
   Write-Host "GBT+JEPA 180m results: $Jepa180ResultsDir"
+  Write-Host "GBT+JEPA exit research results: $GbtExitResearchResultsDir"
   Write-Host "0DTE option-policy results: $OptionPolicyResultsDir"
   Write-Host "OptionValueJEPA walk-forward results: $OptionValueWalkForwardResultsDir"
   Exit-JepaPipeline 0

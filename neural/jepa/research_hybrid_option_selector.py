@@ -305,7 +305,7 @@ def main() -> int:
     parser.add_argument("--test-start-date", default="20260401")
     parser.add_argument("--val-months", type=int, default=3)
     parser.add_argument("--n-estimators", type=int, default=260)
-    parser.add_argument("--n-jobs", type=int, default=1)
+    parser.add_argument("--n-jobs", type=int, default=20)
     parser.add_argument("--seed", type=int, default=4441)
     parser.add_argument("--min-val-trades", type=int, default=12)
     args = parser.parse_args()

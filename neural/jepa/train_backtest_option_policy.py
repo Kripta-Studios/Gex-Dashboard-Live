@@ -5,7 +5,9 @@ import json
 import math
 import os
 import sys
+import threading
 import time
+from contextlib import contextmanager
 from pathlib import Path
 
 import joblib
@@ -40,14 +42,38 @@ GREEKS_COLS = [
 ]
 TICKER_TO_OPTIONS = {"SPX": "SPXW", "SPXW": "SPXW", "QQQ": "QQQ", "SPY": "SPY"}
 LOG_PATH: Path | None = None
+LOG_HEARTBEAT_SECONDS = int(os.environ.get("JEPA_LOG_HEARTBEAT_SECONDS", "60"))
+_LOG_LOCK = threading.Lock()
 
 
 def log(message: str) -> None:
-    print(message, flush=True)
-    if LOG_PATH is not None:
-        LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
-        with LOG_PATH.open("a", encoding="utf-8") as handle:
-            handle.write(message + os.linesep)
+    with _LOG_LOCK:
+        print(message, flush=True)
+        if LOG_PATH is not None:
+            LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+            with LOG_PATH.open("a", encoding="utf-8") as handle:
+                handle.write(message + os.linesep)
+
+
+@contextmanager
+def logged_phase(name: str, heartbeat_seconds: int | None = None):
+    start = time.time()
+    interval = int(heartbeat_seconds or LOG_HEARTBEAT_SECONDS)
+    stop_event = threading.Event()
+
+    def heartbeat() -> None:
+        while not stop_event.wait(max(1, interval)):
+            log(f"[OPTION_POLICY] STILL {name} elapsed={time.time() - start:.1f}s")
+
+    log(f"[OPTION_POLICY] START {name}")
+    thread = threading.Thread(target=heartbeat, name=f"option-policy-{name[:24]}", daemon=True)
+    thread.start()
+    try:
+        yield
+    finally:
+        stop_event.set()
+        thread.join(timeout=1.0)
+        log(f"[OPTION_POLICY] DONE {name} elapsed={time.time() - start:.1f}s")
 
 
 def get_half_spread(abs_delta: float) -> float:
@@ -261,7 +287,7 @@ def train_regressor(
     seed: int,
     n_estimators: int,
     n_jobs: int,
-) -> tuple[lgb.LGBMRegressor, pd.Series]:
+    ) -> tuple[lgb.LGBMRegressor, pd.Series]:
     x, medians = make_matrix(frame, features)
     y = frame[target_col].astype(float).clip(-2.0, 5.0).to_numpy()
     model = lgb.LGBMRegressor(
@@ -280,7 +306,11 @@ def train_regressor(
         n_jobs=int(n_jobs),
         verbose=-1,
     )
-    model.fit(x, y)
+    with logged_phase(
+        f"fit LGBMRegressor target={target_col} rows={len(frame):,} features={len(features):,} "
+        f"trees={int(n_estimators):,} n_jobs={int(n_jobs)}"
+    ):
+        model.fit(x, y)
     return model, medians
 
 
@@ -311,7 +341,11 @@ def train_ranker(
         n_jobs=int(n_jobs),
         verbose=-1,
     )
-    model.fit(x_train, labels, group=groups)
+    with logged_phase(
+        f"fit LGBMRanker target={target_col} rows={len(work):,} groups={len(groups):,} "
+        f"features={len(features):,} trees={int(n_estimators):,} n_jobs={int(n_jobs)}"
+    ):
+        model.fit(x_train, labels, group=groups)
     return model, medians
 
 
@@ -354,6 +388,7 @@ def build_signal_scoring_frame(
     required_features: list[str],
     horizon_steps: int,
     tickers: list[str] | None,
+    truncate_to_eod: bool,
 ) -> pd.DataFrame:
     import pyarrow.parquet as pq
 
@@ -378,15 +413,31 @@ def build_signal_scoring_frame(
     frame = frame.sort_values(["ticker", "date", "minutes"]).reset_index(drop=True)
     frame["pos_in_day"] = frame.groupby(["ticker", "date"], sort=False).cumcount()
 
+    horizon_steps = int(horizon_steps)
     future_spot = np.full(len(frame), np.nan, dtype=np.float64)
+    terminal_hold_steps = np.full(len(frame), np.nan, dtype=np.float64)
+    terminal_exit_time = np.full(len(frame), "", dtype=object)
     for _, idx in frame.groupby(["ticker", "date"], sort=False).groups.items():
         positions = np.asarray(list(idx), dtype=np.int64)
-        if len(positions) <= int(horizon_steps):
+        if len(positions) <= 1 or horizon_steps <= 0:
             continue
         spot = frame.loc[positions, "spot_price"].to_numpy(dtype=np.float64)
-        future = np.full(len(positions), np.nan, dtype=np.float64)
-        future[:-int(horizon_steps)] = spot[int(horizon_steps):]
-        future_spot[positions] = future
+        if truncate_to_eod:
+            for pos_i, abs_i in enumerate(positions):
+                target_i = min(pos_i + horizon_steps, len(positions) - 1)
+                if target_i <= pos_i:
+                    continue
+                future_spot[abs_i] = spot[target_i]
+                terminal_hold_steps[abs_i] = float(target_i - pos_i)
+                terminal_exit_time[abs_i] = str(frame.loc[positions[target_i], "time"])
+        else:
+            if len(positions) <= horizon_steps:
+                continue
+            future = np.full(len(positions), np.nan, dtype=np.float64)
+            future[:-horizon_steps] = spot[horizon_steps:]
+            future_spot[positions] = future
+            terminal_hold_steps[positions[:-horizon_steps]] = float(horizon_steps)
+            terminal_exit_time[positions[:-horizon_steps]] = frame.loc[positions[horizon_steps:], "time"].astype(str).to_numpy()
 
     spot_now = frame["spot_price"].to_numpy(dtype=np.float64)
     future_return = future_spot / spot_now - 1.0
@@ -398,6 +449,10 @@ def build_signal_scoring_frame(
     frame["future_return_bps_180m"] = future_return * 10000.0
     frame["future_up_180m"] = (future_return > 0.0).astype(np.int8)
     frame["future_abs_bps_180m"] = np.abs(frame["future_return_bps_180m"].astype(float))
+    frame["terminal_hold_steps"] = terminal_hold_steps
+    frame["terminal_hold_minutes"] = terminal_hold_steps * 5.0
+    frame["terminal_exit_time"] = terminal_exit_time
+    frame["terminal_horizon_truncated"] = terminal_hold_steps < float(horizon_steps)
     frame["month"] = frame["date"].str[:6]
     out = frame.loc[valid].reset_index(drop=True)
     log(f"[OPTION_POLICY] scoring rows valid={len(out):,}")
@@ -411,6 +466,7 @@ def build_signals(args, signal_model: Jepa180mSignalModel) -> tuple[pd.DataFrame
         signal_model.required_features(),
         args.horizon_steps,
         args.tickers,
+        bool(args.truncate_eod_horizon),
     )
     log("[OPTION_POLICY] running JEPA signal inference")
     predictions = signal_model.predict_frame(labeled)
@@ -567,6 +623,10 @@ def build_option_labels(
     paths: dict[int, list[dict]] = {}
     candidate_id = 0
     start = time.time()
+    log(
+        f"[OPTION_LABELS] START signals={len(signals):,} delta_targets={len(args.delta_targets):,} "
+        f"max_hold_minutes={int(args.max_hold_minutes)} progress_every={int(args.progress_every)}"
+    )
 
     for n, row in enumerate(signals.itertuples(index=False), start=1):
         row_s = pd.Series(row._asdict())
@@ -680,6 +740,10 @@ def build_option_labels(
             )
 
     candidates = pd.DataFrame(records)
+    log(
+        f"[OPTION_LABELS] DONE signals={len(signals):,} candidates={len(candidates):,} "
+        f"paths={len(paths):,} elapsed={time.time() - start:.1f}s"
+    )
     return candidates, paths
 
 
@@ -833,10 +897,26 @@ def build_exit_training_rows(
 ) -> pd.DataFrame:
     rows: list[dict] = []
     indexed = candidates.set_index("candidate_id", drop=False)
-    for candidate_id, path in paths.items():
+    total_paths = len(paths)
+    start = time.time()
+    last_log = start
+    matched_paths = 0
+    log(
+        f"[OPTION_POLICY] START build exit training rows candidates={len(candidates):,} "
+        f"paths={total_paths:,} entry_features={len(entry_features):,}"
+    )
+    for n, (candidate_id, path) in enumerate(paths.items(), start=1):
         if candidate_id not in indexed.index or not path:
+            now = time.time()
+            if total_paths and (n % 5000 == 0 or now - last_log >= LOG_HEARTBEAT_SECONDS):
+                log(
+                    f"[OPTION_POLICY] STILL build exit training rows paths={n:,}/{total_paths:,} "
+                    f"matched={matched_paths:,} rows={len(rows):,} elapsed={now - start:.1f}s"
+                )
+                last_log = now
             continue
         candidate = indexed.loc[candidate_id]
+        matched_paths += 1
         future_best = np.maximum.accumulate([float(p["pnl_dollars"]) for p in reversed(path)])[::-1]
         path_so_far: list[dict] = []
         for idx, point in enumerate(path):
@@ -844,6 +924,17 @@ def build_exit_training_rows(
             record = build_exit_state_record(candidate, point, path_so_far, max_hold_minutes, entry_features)
             record["future_best_return_on_risk"] = float(future_best[idx]) / float(max(risk_capital, 1e-9))
             rows.append(record)
+        now = time.time()
+        if total_paths and (n % 5000 == 0 or now - last_log >= LOG_HEARTBEAT_SECONDS):
+            log(
+                f"[OPTION_POLICY] STILL build exit training rows paths={n:,}/{total_paths:,} "
+                f"matched={matched_paths:,} rows={len(rows):,} elapsed={now - start:.1f}s"
+            )
+            last_log = now
+    log(
+        f"[OPTION_POLICY] DONE build exit training rows paths={total_paths:,} matched={matched_paths:,} "
+        f"rows={len(rows):,} elapsed={time.time() - start:.1f}s"
+    )
     return pd.DataFrame(rows)
 
 
@@ -860,9 +951,20 @@ def simulate_learned_exit_for_selected(
 ) -> pd.DataFrame:
     trades: list[dict] = []
     indexed = selected.set_index("candidate_id", drop=False)
-    for candidate_id, candidate in indexed.iterrows():
+    total = len(indexed)
+    start = time.time()
+    last_log = start
+    log(f"[OPTION_POLICY] START simulate learned exits policy={policy_name} selected={total:,} margin={float(exit_margin):.4f}")
+    for n, (candidate_id, candidate) in enumerate(indexed.iterrows(), start=1):
         path = paths.get(int(candidate_id), [])
         if not path:
+            now = time.time()
+            if total and (n % 250 == 0 or now - last_log >= LOG_HEARTBEAT_SECONDS):
+                log(
+                    f"[OPTION_POLICY] STILL simulate learned exits policy={policy_name} "
+                    f"selected={n:,}/{total:,} trades={len(trades):,} elapsed={now - start:.1f}s"
+                )
+                last_log = now
             continue
         path_so_far: list[dict] = []
         exit_point = path[-1]
@@ -910,6 +1012,17 @@ def simulate_learned_exit_for_selected(
                 "pred_utility": float(candidate.get("_pred_utility", np.nan)),
             }
         )
+        now = time.time()
+        if total and (n % 250 == 0 or now - last_log >= LOG_HEARTBEAT_SECONDS):
+            log(
+                f"[OPTION_POLICY] STILL simulate learned exits policy={policy_name} "
+                f"selected={n:,}/{total:,} trades={len(trades):,} elapsed={now - start:.1f}s"
+            )
+            last_log = now
+    log(
+        f"[OPTION_POLICY] DONE simulate learned exits policy={policy_name} selected={total:,} "
+        f"trades={len(trades):,} elapsed={time.time() - start:.1f}s"
+    )
     return pd.DataFrame(trades)
 
 
@@ -927,6 +1040,7 @@ def choose_exit_margin(
     best_score = -1e18
     best_margin = 0.0
     rows = []
+    log(f"[OPTION_POLICY] START choose exit margin selected_val={len(selected_val):,} grid={grid}")
     for margin in grid:
         trades = simulate_learned_exit_for_selected(
             selected_val,
@@ -942,9 +1056,15 @@ def choose_exit_margin(
         metrics = trade_metrics(trades)
         score = score_metrics(metrics, min_trades)
         rows.append({"exit_margin": margin, "score": score, **metrics})
+        log(
+            f"[OPTION_POLICY] exit_margin={margin:.4f} trades={metrics.get('trades', 0)} "
+            f"wr={metrics.get('win_rate', float('nan')):.4f} pf={metrics.get('profit_factor', float('nan')):.4f} "
+            f"pnl={metrics.get('pnl_dollars', 0.0):.2f} score={score:.4f}"
+        )
         if score > best_score:
             best_score = score
             best_margin = margin
+    log(f"[OPTION_POLICY] DONE choose exit margin best_margin={best_margin:.4f} best_score={best_score:.4f}")
     return float(best_margin), {"grid": rows}
 
 
@@ -1035,7 +1155,7 @@ def write_summary(
         "- `oracle_best_delta_hard`: non-deployable upper bound that chooses the best delta after seeing the future under hard exits.",
         "- `oracle_best_delta_oracle_exit`: non-deployable upper bound that chooses best delta and best future exit.",
         "",
-        "## Apr/May OOS Results",
+        "## OOS Results",
         "",
         "| Policy | Trades | WR | PF | PnL | Max DD | Avg PnL | Avg Hold | Avg Delta |",
         "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
@@ -1062,13 +1182,13 @@ def write_summary(
     lines += [
         "## Validation Choices",
         "",
-        f"- Fixed delta selected on pre-April validation: `{fmt_float(validation.get('best_fixed_delta', float('nan')), 2)}`.",
-        f"- Entry utility threshold selected on pre-April validation: `{fmt_float(validation.get('entry_threshold', float('nan')), 4)}`.",
-        f"- Learned-exit margin selected on pre-April validation: `{fmt_float(validation.get('exit_margin', float('nan')), 4)}`.",
+        f"- Fixed delta selected on pre-OOS validation: `{fmt_float(validation.get('best_fixed_delta', float('nan')), 2)}`.",
+        f"- Entry utility threshold selected on pre-OOS validation: `{fmt_float(validation.get('entry_threshold', float('nan')), 4)}`.",
+        f"- Learned-exit margin selected on pre-OOS validation: `{fmt_float(validation.get('exit_margin', float('nan')), 4)}`.",
         "",
         "## Interpretation",
         "",
-        "- This is a frozen OOS test: option-policy models are trained through the March 2026 cutoff and scored from April 1, 2026 onward.",
+        "- This is a frozen OOS test: option-policy models are trained through the configured cutoff and scored from the configured test start onward.",
         "- Future option paths are used only to create supervised labels and to score the backtest, not as model inputs.",
         "- The test is stricter than the previous spot proxy because it uses real 0DTE option premium paths and spread-adjusted entries.",
         f"- The current deployable validated policy is `validation_best_delta_{validation.get('best_fixed_delta', float('nan')):.2f}_hard` unless a learned selector beats it on rolling walk-forward validation.",
@@ -1084,7 +1204,7 @@ def write_summary(
                 "",
                 "File: `monthly_cv_policy_grid.csv`",
                 "",
-                "This validation uses only months before Apr/May OOS. For each month from 2025-05 through 2026-03, models are trained on prior months and scored on the next month.",
+                "This validation uses only months before the configured OOS start. For each validation month, models are trained on prior months and scored on the next month.",
                 "",
                 "| Policy | Trades | WR | PF | PnL | Max DD | Avg Delta |",
                 "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",
@@ -1140,17 +1260,23 @@ def main() -> int:
     parser.add_argument("--hard-stop-pct", type=float, default=-0.60)
     parser.add_argument("--take-profit-pct", type=float, default=2.50)
     parser.add_argument("--min-exit-hold-minutes", type=int, default=15)
+    parser.add_argument(
+        "--truncate-eod-horizon",
+        action="store_true",
+        help="Keep late JEPA signals by scoring terminal direction at min(entry + horizon, last same-day row).",
+    )
     parser.add_argument("--delta-targets", nargs="+", type=float, default=[0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70])
     parser.add_argument("--val-months", type=int, default=3)
     parser.add_argument("--min-val-trades", type=int, default=12)
     parser.add_argument("--n-estimators", type=int, default=260)
     parser.add_argument("--exit-n-estimators", type=int, default=220)
     parser.add_argument("--seed", type=int, default=991)
-    parser.add_argument("--n-jobs", type=int, default=1)
+    parser.add_argument("--n-jobs", type=int, default=20)
     parser.add_argument("--greeks-cache-size", type=int, default=50)
     parser.add_argument("--progress-every", type=int, default=100)
     parser.add_argument("--max-signals", type=int, default=0)
     parser.add_argument("--reuse-candidates", action="store_true", help="Reuse output_dir/candidate_labels.parquet instead of rebuilding option labels.")
+    parser.add_argument("--labels-only", action="store_true", help="Build candidate_labels.parquet and exit without OOS model training.")
     args = parser.parse_args()
 
     output_dir = Path(args.output_dir)
@@ -1162,6 +1288,12 @@ def main() -> int:
     if LOG_PATH.exists():
         LOG_PATH.unlink()
 
+    log(
+        f"[OPTION_POLICY] config data={args.data} output_dir={output_dir} model_dir={model_dir} "
+        f"train={normalize_date(args.train_start_date)}..{normalize_date(args.train_end_date)} "
+        f"test_start={normalize_date(args.test_start_date)} n_jobs={int(args.n_jobs)} "
+        f"heartbeat={LOG_HEARTBEAT_SECONDS}s reuse_candidates={bool(args.reuse_candidates)}"
+    )
     log("[OPTION_POLICY] loading signal model")
     signal_model = Jepa180mSignalModel(args.signal_model_dir, args.signal_mode, tickers=args.tickers)
     base_features = [
@@ -1169,6 +1301,7 @@ def main() -> int:
         for f in signal_model.required_features()
         if f not in LEAKAGE_COLUMNS
     ]
+    log(f"[OPTION_POLICY] signal base_features={len(base_features):,}")
     candidate_path = output_dir / "candidate_labels.parquet"
     signal_path = output_dir / "signals.csv"
     if args.reuse_candidates and candidate_path.exists():
@@ -1180,6 +1313,7 @@ def main() -> int:
             signal_cols = [c for c in ["signal_id", "ticker", "date", "time", "pos_in_day", "side"] if c in candidates.columns]
             signals = candidates[signal_cols].drop_duplicates("signal_id").copy() if "signal_id" in signal_cols else pd.DataFrame()
         paths = {}
+        log(f"[OPTION_POLICY] reused candidates={len(candidates):,} signals={len(signals):,}; learned-exit paths unavailable")
     else:
         if args.reuse_candidates:
             log(f"[OPTION_POLICY] candidate labels not found at {candidate_path}; rebuilding labels")
@@ -1200,8 +1334,24 @@ def main() -> int:
         candidates["month"] = candidates["date"].astype(str).str.slice(0, 6)
 
     if not (args.reuse_candidates and candidate_path.exists()):
-        candidates.to_parquet(candidate_path, index=False)
-        signals.to_csv(signal_path, index=False)
+        with logged_phase(f"write candidate artifacts candidates={len(candidates):,} signals={len(signals):,}"):
+            candidates.to_parquet(candidate_path, index=False)
+            signals.to_csv(signal_path, index=False)
+    if args.labels_only:
+        metadata = {
+            "config": vars(args),
+            "base_feature_count": len(base_features),
+            "signals": int(len(signals)),
+            "candidates": int(len(candidates)),
+            "candidate_labels": str(candidate_path),
+            "signal_path": str(signal_path),
+        }
+        (output_dir / "metrics.json").write_text(json.dumps(metadata, indent=2, allow_nan=True), encoding="utf-8")
+        log(
+            f"[OPTION_POLICY] labels_only complete signals={len(signals):,} "
+            f"candidates={len(candidates):,} output={candidate_path}"
+        )
+        return 0
 
     train_end = normalize_date(args.train_end_date)
     test_start = normalize_date(args.test_start_date)
@@ -1217,10 +1367,16 @@ def main() -> int:
     if fit_candidates.empty or val_candidates.empty:
         fit_candidates = train_candidates.copy()
         val_candidates = train_candidates.copy()
+    log(
+        f"[OPTION_POLICY] split train_candidates={len(train_candidates):,} fit={len(fit_candidates):,} "
+        f"val={len(val_candidates):,} test_candidates={len(test_candidates):,} "
+        f"val_months={','.join(sorted(val_months))}"
+    )
 
     entry_features = [f for f in base_features if f in candidates.columns and f not in LEAKAGE_COLUMNS]
     entry_features += [f for f in OPTION_FEATURES if f in candidates.columns and f not in entry_features]
     entry_features = [f for f in entry_features if pd.api.types.is_numeric_dtype(candidates[f])]
+    log(f"[OPTION_POLICY] entry_features={len(entry_features):,} option_features={len([f for f in OPTION_FEATURES if f in entry_features]):,}")
 
     entry_model_fit, entry_medians_fit = train_regressor(
         fit_candidates,
@@ -1230,17 +1386,25 @@ def main() -> int:
         args.n_estimators,
         args.n_jobs,
     )
-    val_pred = predict_regressor(entry_model_fit, val_candidates, entry_features, entry_medians_fit)
-    entry_threshold, validation_trades, entry_threshold_payload = choose_entry_threshold(
-        val_candidates,
-        val_pred,
-        args.min_val_trades,
+    with logged_phase(f"predict validation entry utilities rows={len(val_candidates):,}"):
+        val_pred = predict_regressor(entry_model_fit, val_candidates, entry_features, entry_medians_fit)
+    with logged_phase(f"choose validation entry threshold rows={len(val_candidates):,} min_trades={int(args.min_val_trades)}"):
+        entry_threshold, validation_trades, entry_threshold_payload = choose_entry_threshold(
+            val_candidates,
+            val_pred,
+            args.min_val_trades,
+        )
+    log(
+        f"[OPTION_POLICY] validation entry_threshold={entry_threshold:.6f} "
+        f"trades={len(validation_trades):,} pf={trade_metrics(validation_trades).get('profit_factor', float('nan')):.4f}"
     )
-    best_fixed_delta, fixed_delta_grid = choose_validation_best_delta(
-        val_candidates,
-        args.delta_targets,
-        args.min_val_trades,
-    )
+    with logged_phase(f"choose validation fixed delta rows={len(val_candidates):,}"):
+        best_fixed_delta, fixed_delta_grid = choose_validation_best_delta(
+            val_candidates,
+            args.delta_targets,
+            args.min_val_trades,
+        )
+    log(f"[OPTION_POLICY] validation best_fixed_delta={best_fixed_delta:.2f}")
 
     exit_features: list[str] = []
     exit_model_fit = None
@@ -1259,6 +1423,7 @@ def main() -> int:
         if exit_fit_rows.empty:
             raise RuntimeError("No exit training rows were built.")
         exit_features = [f for f in exit_features if f in exit_fit_rows.columns and pd.api.types.is_numeric_dtype(exit_fit_rows[f])]
+        log(f"[OPTION_POLICY] exit_fit_rows={len(exit_fit_rows):,} exit_features={len(exit_features):,}")
         exit_model_fit, exit_medians_fit = train_regressor(
             exit_fit_rows,
             exit_features,
@@ -1267,7 +1432,9 @@ def main() -> int:
             args.exit_n_estimators,
             args.n_jobs,
         )
-        selected_val = select_best_by_prediction(val_candidates, val_pred, entry_threshold)
+        with logged_phase(f"select validation candidates rows={len(val_candidates):,}"):
+            selected_val = select_best_by_prediction(val_candidates, val_pred, entry_threshold)
+        log(f"[OPTION_POLICY] selected_val={len(selected_val):,}")
         exit_margin, exit_margin_payload = choose_exit_margin(
             selected_val,
             paths,
@@ -1308,6 +1475,7 @@ def main() -> int:
             args.max_hold_minutes,
             args.risk_capital,
         )
+        log(f"[OPTION_POLICY] exit_train_rows={len(exit_train_rows):,} exit_features={len(exit_features):,}")
         exit_model, exit_medians = train_regressor(
             exit_train_rows,
             exit_features,
@@ -1317,22 +1485,27 @@ def main() -> int:
             args.n_jobs,
         )
 
-    test_pred = predict_regressor(entry_model, test_candidates, entry_features, entry_medians)
-    selected_test_all = select_best_by_prediction(test_candidates, test_pred, -1e9)
-    learned_regression_all = candidate_trades_from_selection(
-        selected_test_all,
-        "rule",
-        "learned_delta_regression_all_hard",
-    )
-    ranker_pred = predict_regressor(ranker_model, test_candidates, entry_features, ranker_medians)
-    selected_ranker_all = select_best_by_prediction(test_candidates, ranker_pred, -1e9)
-    learned_ranker_all = candidate_trades_from_selection(
-        selected_ranker_all,
-        "rule",
-        "learned_delta_ranker_all_hard",
-    )
-    selected_test_skip = select_best_by_prediction(test_candidates, test_pred, entry_threshold)
-    supervised_hard = candidate_trades_from_selection(selected_test_skip, "rule", "supervised_entry_strike_skip_hard")
+    with logged_phase(f"predict OOS entry utilities rows={len(test_candidates):,}"):
+        test_pred = predict_regressor(entry_model, test_candidates, entry_features, entry_medians)
+    with logged_phase(f"build learned regression all-hard trades rows={len(test_candidates):,}"):
+        selected_test_all = select_best_by_prediction(test_candidates, test_pred, -1e9)
+        learned_regression_all = candidate_trades_from_selection(
+            selected_test_all,
+            "rule",
+            "learned_delta_regression_all_hard",
+        )
+    with logged_phase(f"predict OOS ranker utilities rows={len(test_candidates):,}"):
+        ranker_pred = predict_regressor(ranker_model, test_candidates, entry_features, ranker_medians)
+    with logged_phase(f"build learned ranker all-hard trades rows={len(test_candidates):,}"):
+        selected_ranker_all = select_best_by_prediction(test_candidates, ranker_pred, -1e9)
+        learned_ranker_all = candidate_trades_from_selection(
+            selected_ranker_all,
+            "rule",
+            "learned_delta_ranker_all_hard",
+        )
+    with logged_phase(f"build supervised skip trades rows={len(test_candidates):,} threshold={entry_threshold:.6f}"):
+        selected_test_skip = select_best_by_prediction(test_candidates, test_pred, entry_threshold)
+        supervised_hard = candidate_trades_from_selection(selected_test_skip, "rule", "supervised_entry_strike_skip_hard")
     if paths and exit_model is not None:
         supervised_learned = simulate_learned_exit_for_selected(
             selected_test_skip,
@@ -1347,16 +1520,17 @@ def main() -> int:
         )
     else:
         supervised_learned = pd.DataFrame()
-    fixed_delta_060 = fixed_delta_policy(test_candidates, 0.60, "rule", "fixed_delta_0.60_hard")
-    fixed_delta_070 = fixed_delta_policy(test_candidates, 0.70, "rule", "fixed_delta_0.70_hard")
-    validation_best_delta = fixed_delta_policy(
-        test_candidates,
-        best_fixed_delta,
-        "rule",
-        f"validation_best_delta_{best_fixed_delta:.2f}_hard",
-    )
-    oracle_rule = oracle_policy(test_candidates, "rule_pnl_dollars", "rule", "oracle_best_delta_hard")
-    oracle_exit = oracle_policy(test_candidates, "oracle_pnl_dollars", "oracle", "oracle_best_delta_oracle_exit")
+    with logged_phase(f"build fixed/oracle policies rows={len(test_candidates):,}"):
+        fixed_delta_060 = fixed_delta_policy(test_candidates, 0.60, "rule", "fixed_delta_0.60_hard")
+        fixed_delta_070 = fixed_delta_policy(test_candidates, 0.70, "rule", "fixed_delta_0.70_hard")
+        validation_best_delta = fixed_delta_policy(
+            test_candidates,
+            best_fixed_delta,
+            "rule",
+            f"validation_best_delta_{best_fixed_delta:.2f}_hard",
+        )
+        oracle_rule = oracle_policy(test_candidates, "rule_pnl_dollars", "rule", "oracle_best_delta_hard")
+        oracle_exit = oracle_policy(test_candidates, "oracle_pnl_dollars", "oracle", "oracle_best_delta_oracle_exit")
 
     policy_trades = {
         "fixed_delta_0.60_hard": fixed_delta_060,
@@ -1377,11 +1551,19 @@ def main() -> int:
         }
         for policy, trades in policy_trades.items()
     }
+    for policy, payload in policy_results.items():
+        metrics = payload["overall"]
+        log(
+            f"[OPTION_POLICY] OOS {policy} trades={metrics.get('trades', 0)} "
+            f"wr={metrics.get('win_rate', float('nan')):.4f} pf={metrics.get('profit_factor', float('nan')):.4f} "
+            f"pnl={metrics.get('pnl_dollars', 0.0):.2f} dd={metrics.get('max_drawdown', 0.0):.2f}"
+        )
 
-    selected_test_skip.to_csv(output_dir / "selected_test_candidates.csv", index=False)
-    selected_test_all.to_csv(output_dir / "learned_delta_regression_selected_candidates.csv", index=False)
-    selected_ranker_all.to_csv(output_dir / "learned_delta_ranker_selected_candidates.csv", index=False)
-    save_policy_outputs(output_dir, policy_results)
+    with logged_phase("write policy CSV outputs"):
+        selected_test_skip.to_csv(output_dir / "selected_test_candidates.csv", index=False)
+        selected_test_all.to_csv(output_dir / "learned_delta_regression_selected_candidates.csv", index=False)
+        selected_ranker_all.to_csv(output_dir / "learned_delta_ranker_selected_candidates.csv", index=False)
+        save_policy_outputs(output_dir, policy_results)
 
     metadata = {
         "config": vars(args),
@@ -1410,25 +1592,27 @@ def main() -> int:
             for policy, payload in policy_results.items()
         },
     }
-    (output_dir / "metrics.json").write_text(json.dumps(metadata, indent=2, allow_nan=True), encoding="utf-8")
+    with logged_phase("write metrics/model/summary artifacts"):
+        (output_dir / "metrics.json").write_text(json.dumps(metadata, indent=2, allow_nan=True), encoding="utf-8")
 
-    joblib.dump(
-        {
-            "entry_model": entry_model,
-            "entry_medians": entry_medians.to_dict(),
-            "entry_features": entry_features,
-            "entry_threshold": entry_threshold,
-            "ranker_model": ranker_model,
-            "ranker_medians": ranker_medians.to_dict(),
-            "exit_model": exit_model,
-            "exit_medians": exit_medians.to_dict(),
-            "exit_features": exit_features,
-            "exit_margin": exit_margin,
-            "metadata": metadata,
-        },
-        model_dir / "jepa_option_policy.joblib",
-    )
-    write_summary(output_dir, args, metadata, signals, candidates, policy_results, metadata["validation"])
+        joblib.dump(
+            {
+                "entry_model": entry_model,
+                "entry_medians": entry_medians.to_dict(),
+                "entry_features": entry_features,
+                "entry_threshold": entry_threshold,
+                "ranker_model": ranker_model,
+                "ranker_medians": ranker_medians.to_dict(),
+                "exit_model": exit_model,
+                "exit_medians": exit_medians.to_dict(),
+                "exit_features": exit_features,
+                "exit_margin": exit_margin,
+                "metadata": metadata,
+            },
+            model_dir / "jepa_option_policy.joblib",
+        )
+        write_summary(output_dir, args, metadata, signals, candidates, policy_results, metadata["validation"])
+    log("[OPTION_POLICY] COMPLETE")
     print((output_dir / "SUMMARY.md").read_text(encoding="utf-8"))
     return 0
 

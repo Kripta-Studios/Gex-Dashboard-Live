@@ -17,7 +17,7 @@ Param(
   [int]$MinExitHoldMinutes = 15,
   [int]$NEstimators = 180,
   [int]$ExitNEstimators = 100,
-  [int]$NJobs = 1,
+  [int]$NJobs = 20,
   [switch]$ReuseCandidates
 )
 
@@ -61,6 +61,7 @@ Write-Host "TestStartDate   : $TestStartDate"
 Write-Host "CooldownMinutes : $CooldownMinutes"
 Write-Host "MaxHoldMinutes  : $MaxHoldMinutes"
 Write-Host "RiskCapital     : $RiskCapital"
+Write-Host "NJobs           : $NJobs"
 Write-Host "ReuseCandidates : $ReuseCandidates"
 
 $ExtraArgs = @()

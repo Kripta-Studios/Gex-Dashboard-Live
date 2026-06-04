@@ -1,5 +1,5 @@
 """
-Trading Bot - GBT+JEPA 180m + fixed 0.70 delta 0DTE options.
+Trading Bot - GBT+JEPA 180m + OptionValue blended 0DTE options.
 
 Data source:
     rt_data/{YYYYMMDD}/ produced by services/realtime_feed.py.
@@ -7,9 +7,12 @@ Data source:
 Live contract:
     - Direction model: neural/models/jepa/jepa_production_final_180m/base_jepa
     - Entry cadence: 5-minute feature rows, matching the training/backtest sample cadence.
-    - Strike selection: buy the 0DTE option whose absolute delta is closest to 0.70.
-    - Exit: hard stop -60%, take profit +250%, max hold 180m, EOD cleanup.
-    - Cooldown: 180m per ticker after entry/exit, matching the promoted backtest.
+    - Entry window: feature rows through 14:30 ET, with EOD cleanup at the close.
+    - Strike selection: OptionValue blended score over 0.10..0.70 delta candidates,
+      falling back to the 0.70 delta rule if the OptionValue model is unavailable.
+    - Exit: hard stop -60%, trail from +50% with 25% giveback, emergency TP +1000%,
+      max hold 180m, EOD cleanup.
+    - Cooldown: 180m per ticker after entry, matching the promoted backtest.
 
 This script is an alert/tracker bot. It does not submit broker orders.
 """
@@ -18,6 +21,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import __main__ as main_module
 import json
 import logging
 import math
@@ -30,6 +34,7 @@ from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
 
+import joblib
 import numpy as np
 import pandas as pd
 import requests
@@ -42,6 +47,24 @@ sys.path.insert(0, str(PROJECT_ROOT / "neural"))
 
 from neural.jepa.jepa_180m_signal import Jepa180mSignalModel
 
+try:
+    import torch
+    from neural.jepa.train_option_value_jepa import (
+        FeatureScaler,
+        OptionValueConfig,
+        OptionValueJEPA,
+        add_selector_score_bases,
+    )
+
+    OPTION_VALUE_IMPORT_ERROR = None
+except Exception as exc:  # pragma: no cover - live dependency guard
+    torch = None
+    FeatureScaler = None
+    OptionValueConfig = None
+    OptionValueJEPA = None
+    add_selector_score_bases = None
+    OPTION_VALUE_IMPORT_ERROR = exc
+
 load_dotenv()
 
 ET = ZoneInfo("America/New_York")
@@ -51,6 +74,7 @@ OPTIONS_SYMBOLS = {"SPX": "SPXW", "QQQ": "QQQ", "SPY": "SPY"}
 RIGHT_FOR_DIRECTION = {"LONG": "CALL", "SHORT": "PUT"}
 
 DEFAULT_SIGNAL_MODEL_DIR = PROJECT_ROOT / "neural" / "models" / "jepa" / "jepa_production_final_180m"
+DEFAULT_OPTION_VALUE_MODEL_DIR = PROJECT_ROOT / "neural" / "models" / "jepa" / "jepa_production_final_option_value"
 DEFAULT_RT_DATA_DIR = PROJECT_ROOT / "rt_data"
 DEFAULT_TRADES_DIR = PROJECT_ROOT / "trades_jepa"
 
@@ -59,13 +83,22 @@ DELTA_TARGET = 0.70
 RISK_CAPITAL = 1000.0
 CONTRACT_MULTIPLIER = 100.0
 HARD_STOP_PCT = -0.60
-TAKE_PROFIT_PCT = 2.50
+TAKE_PROFIT_PCT = 10.00
+TRAIL_ACTIVATION_PCT = 0.50
+TRAIL_DRAWDOWN_PCT = 0.25
 MAX_HOLD_MINUTES = 180
 COOLDOWN_MINUTES = 180
+LATEST_ENTRY_TIME = dt_time(14, 30)
 MAX_FEED_SNAPSHOT_AGE_SECONDS = 150
 MAX_MODEL_FEATURE_AGE_SECONDS = 390
 LOOP_INTERVAL_SECONDS = 65
-EOD_CLEANUP_TIME = dt_time(15, 55)
+EOD_CLEANUP_TIME = dt_time(16, 0)
+FIXED_POLICY_NAME = "base_jepa_180m_fixed_delta_0.70_trail050_025_cutoff1430"
+OPTION_VALUE_POLICY_NAME = "base_jepa_180m_option_value_blended_trail050_025_cutoff1430"
+OPTION_VALUE_SCORE_BASE = "ovjepa_pred_rule_best_mean"
+OPTION_VALUE_DELTA_BONUS = 2.0
+OPTION_VALUE_MIN_DELTA_ABS = 0.0
+OPTION_VALUE_DELTA_TARGETS = [0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70]
 
 DISCORD_WEBHOOKS = [
     url
@@ -162,11 +195,14 @@ class JepaOptionPosition:
     entry_time: str
     entry_spot: float
     entry_premium: float
+    raw_entry_premium: float
+    entry_spread_pct: float
     contracts: int
     confidence: float
     jepa_prob_up: float
     long_threshold: float
     short_threshold: float
+    selector_policy: str = FIXED_POLICY_NAME
     peak_pnl_pct: float = 0.0
     trough_pnl_pct: float = 0.0
 
@@ -182,11 +218,14 @@ class JepaOptionPosition:
             entry_time=str(payload["entry_time"]),
             entry_spot=float(payload["entry_spot"]),
             entry_premium=float(payload["entry_premium"]),
+            raw_entry_premium=float(payload.get("raw_entry_premium", payload.get("entry_premium", 0.0))),
+            entry_spread_pct=float(payload.get("entry_spread_pct", 0.0)),
             contracts=int(payload["contracts"]),
             confidence=float(payload.get("confidence", 0.0)),
             jepa_prob_up=float(payload.get("jepa_prob_up", 0.5)),
             long_threshold=float(payload.get("long_threshold", 0.0)),
             short_threshold=float(payload.get("short_threshold", 0.0)),
+            selector_policy=str(payload.get("selector_policy", FIXED_POLICY_NAME)),
             peak_pnl_pct=float(payload.get("peak_pnl_pct", 0.0)),
             trough_pnl_pct=float(payload.get("trough_pnl_pct", 0.0)),
         )
@@ -196,10 +235,83 @@ class JepaOptionPosition:
         return datetime.fromisoformat(self.entry_time)
 
 
+class OptionValueLiveSelector:
+    @staticmethod
+    def _coerce_scalers(raw_scalers: dict) -> dict:
+        scalers = {}
+        for name, scaler in raw_scalers.items():
+            if hasattr(scaler, "transform"):
+                scalers[name] = scaler
+            elif isinstance(scaler, dict) and {"features", "median", "scale"}.issubset(scaler):
+                scalers[name] = FeatureScaler(
+                    features=list(scaler["features"]),
+                    median={str(k): float(v) for k, v in dict(scaler["median"]).items()},
+                    scale={str(k): float(v) for k, v in dict(scaler["scale"]).items()},
+                )
+            else:
+                raise TypeError(f"Unsupported OptionValue scaler payload for {name}: {type(scaler).__name__}")
+        return scalers
+
+    def __init__(self, model_dir: Path, device: str = "auto") -> None:
+        if OPTION_VALUE_IMPORT_ERROR is not None:
+            raise RuntimeError(f"OptionValue imports unavailable: {OPTION_VALUE_IMPORT_ERROR}")
+        self.model_dir = Path(model_dir)
+        model_path = self.model_dir / "option_value_jepa.pt"
+        scalers_path = self.model_dir / "option_value_jepa_scalers.joblib"
+        if not model_path.exists():
+            raise FileNotFoundError(model_path)
+        if not scalers_path.exists():
+            raise FileNotFoundError(scalers_path)
+
+        if device == "auto":
+            self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        else:
+            self.device = torch.device(device)
+        checkpoint = torch.load(model_path, map_location="cpu")
+        config = OptionValueConfig(**checkpoint["config"])
+        self.model = OptionValueJEPA(config).to(self.device)
+        self.model.load_state_dict(checkpoint["model_state"])
+        self.model.eval()
+        if FeatureScaler is not None and not hasattr(main_module, "FeatureScaler"):
+            setattr(main_module, "FeatureScaler", FeatureScaler)
+        self.scalers = self._coerce_scalers(joblib.load(scalers_path))
+
+    def predict(self, candidates: pd.DataFrame) -> pd.DataFrame:
+        if candidates.empty:
+            return candidates.copy()
+        out = candidates.copy()
+        market = torch.from_numpy(self.scalers["market"].transform(out)).to(self.device)
+        option = torch.from_numpy(self.scalers["option"].transform(out)).to(self.device)
+        horizon = torch.ones((len(out), 1), dtype=torch.float32, device=self.device)
+        with torch.no_grad():
+            pred = self.model.forward_entry(market, option, horizon).detach().cpu().numpy()
+        out["ovjepa_pred_hold180"] = pred[:, 0]
+        out["ovjepa_pred_rule"] = pred[:, 1]
+        out["ovjepa_pred_best"] = pred[:, 2]
+        return add_selector_score_bases(out)
+
+    def select(self, candidates: pd.DataFrame) -> pd.Series | None:
+        pred = self.predict(candidates)
+        if pred.empty or OPTION_VALUE_SCORE_BASE not in pred.columns:
+            return None
+        work = pred.copy()
+        if OPTION_VALUE_MIN_DELTA_ABS > 0.0:
+            work = work[work["actual_delta_abs"].astype(float) >= OPTION_VALUE_MIN_DELTA_ABS].copy()
+        if work.empty:
+            return None
+        work["_selector_score"] = (
+            work[OPTION_VALUE_SCORE_BASE].astype(float)
+            + OPTION_VALUE_DELTA_BONUS * work["actual_delta_abs"].astype(float)
+        )
+        return work.sort_values("_selector_score").iloc[-1]
+
+
 class JepaFixedDeltaBot:
     def __init__(
         self,
         model_dir: Path,
+        option_value_model_dir: Path | None,
+        option_value_device: str,
         rt_data_dir: Path,
         trades_dir: Path,
         tickers: list[str],
@@ -218,6 +330,24 @@ class JepaFixedDeltaBot:
         self.cooldowns: dict[str, str] = _read_json(self.cooldowns_path, {})
         self.evaluated_feature_timestamps: dict[str, str] = _read_json(self.evaluated_features_path, {})
         self.signal_model = Jepa180mSignalModel(self.model_dir, mode=MODEL_MODE, tickers=self.tickers)
+        self.option_value_selector = self._load_option_value_selector(option_value_model_dir, option_value_device)
+
+    def _load_option_value_selector(self, model_dir: Path | None, device: str) -> OptionValueLiveSelector | None:
+        if model_dir is None:
+            logging.info("OptionValue live selector disabled; using fixed delta %.2f", DELTA_TARGET)
+            return None
+        try:
+            selector = OptionValueLiveSelector(Path(model_dir), device=device)
+            logging.info(
+                "Loaded OptionValue live selector model_dir=%s score=%s + %.2f*abs_delta",
+                model_dir,
+                OPTION_VALUE_SCORE_BASE,
+                OPTION_VALUE_DELTA_BONUS,
+            )
+            return selector
+        except Exception as exc:
+            logging.warning("OptionValue selector unavailable (%s); falling back to fixed delta %.2f", exc, DELTA_TARGET)
+            return None
 
     def _load_positions(self) -> dict[str, JepaOptionPosition]:
         payload = _read_json(self.positions_path, {})
@@ -252,6 +382,24 @@ class JepaFixedDeltaBot:
         date_value = latest.get("date", "")
         minute = latest.get("minutes_since_open", "")
         return f"{date_value}:{minute}"
+
+    @staticmethod
+    def _feature_entry_time(row: pd.DataFrame) -> dt_time | None:
+        if row.empty:
+            return None
+        latest = row.iloc[-1]
+        value = latest.get("time")
+        if pd.notna(value):
+            try:
+                hour, minute = str(value)[:5].split(":")
+                return dt_time(int(hour), int(minute))
+            except Exception:
+                pass
+        minute_value = _safe_float(latest.get("minutes_since_open", float("nan")), float("nan"))
+        if math.isfinite(minute_value):
+            total_minutes = 9 * 60 + 30 + int(round(minute_value))
+            return dt_time(total_minutes // 60, total_minutes % 60)
+        return None
 
     def _mark_feature_evaluated(self, ticker: str, feature_id: str) -> None:
         if not feature_id:
@@ -328,7 +476,7 @@ class JepaFixedDeltaBot:
     def _row_price(row: pd.Series) -> float:
         bid = _safe_float(row.get("bid", 0.0))
         ask = _safe_float(row.get("ask", 0.0))
-        if bid > 0 and ask > 0:
+        if bid > 0 or ask > 0:
             return (bid + ask) / 2.0
         for col in ["mid_price", "mark", "close", "last", "price"]:
             value = _safe_float(row.get(col, 0.0))
@@ -354,6 +502,11 @@ class JepaFixedDeltaBot:
         if work.empty:
             return None
         work["delta_abs"] = pd.to_numeric(work["delta"], errors="coerce").abs()
+        work = work[work["delta_abs"] > 0.01].copy()
+        if "bid" in work.columns:
+            work = work[pd.to_numeric(work["bid"], errors="coerce") > 0].copy()
+        if work.empty:
+            return None
         work["delta_dist"] = (work["delta_abs"] - DELTA_TARGET).abs()
         work = work.dropna(subset=["delta_dist", "strike"]).sort_values(["delta_dist", "strike"])
         if work.empty:
@@ -375,8 +528,125 @@ class JepaFixedDeltaBot:
                 "delta": _safe_float(row.get("delta", 0.0)),
                 "premium": premium,
                 "expiration": _format_expiration(row.get("expiration", "")),
+                "selector_policy": FIXED_POLICY_NAME,
             }
         return None
+
+    def _option_value_candidates(self, ticker: str, direction: str, features: pd.DataFrame) -> pd.DataFrame:
+        if features.empty:
+            return pd.DataFrame()
+        right = RIGHT_FOR_DIRECTION[direction]
+        df = self._latest_option_snapshot(ticker)
+        if df.empty or "delta" not in df.columns or "strike" not in df.columns or "right_norm" not in df.columns:
+            return pd.DataFrame()
+        work = df[df["right_norm"] == right].copy()
+        if work.empty:
+            return pd.DataFrame()
+        work["delta_abs"] = pd.to_numeric(work["delta"], errors="coerce").abs()
+        work = work[work["delta_abs"] > 0.01].copy()
+        if "bid" in work.columns:
+            work = work[pd.to_numeric(work["bid"], errors="coerce") > 0].copy()
+        if work.empty:
+            return pd.DataFrame()
+
+        feature_row = features.iloc[-1].to_dict()
+        spot = self._latest_spot(ticker)
+        if spot <= 0:
+            spot = _safe_float(feature_row.get("spot_price", 0.0), 0.0)
+        now = _now_et()
+        date_value = str(feature_row.get("date", now.strftime("%Y%m%d")))
+        time_value = str(feature_row.get("time", now.strftime("%H:%M")))
+        rows: list[dict[str, Any]] = []
+        for delta_target in OPTION_VALUE_DELTA_TARGETS:
+            target_work = work.copy()
+            target_work["delta_dist"] = (target_work["delta_abs"] - float(delta_target)).abs()
+            target_work = target_work.dropna(subset=["delta_dist", "strike"]).sort_values(["delta_dist", "strike"])
+            for _, chain_row in target_work.head(8).iterrows():
+                strike = _safe_float(chain_row.get("strike", 0.0))
+                if strike <= 0:
+                    continue
+                raw_premium = self._row_price(chain_row)
+                if raw_premium <= 0:
+                    raw_premium = self._option_price_from_ohlc(ticker, strike, right)
+                if raw_premium <= 0:
+                    continue
+                actual_delta = _safe_float(chain_row.get("delta", 0.0))
+                actual_delta_abs = abs(actual_delta)
+                entry_spread_pct = self._entry_spread_pct(actual_delta_abs, features)
+                entry_premium = raw_premium * (1.0 + entry_spread_pct)
+                contracts = self._contracts(entry_premium)
+                if contracts <= 0:
+                    continue
+                actual_iv = _safe_float(
+                    chain_row.get("implied_vol", chain_row.get("implied_volatility", chain_row.get("iv", 0.15))),
+                    0.15,
+                )
+                actual_theta = _safe_float(chain_row.get("theta", 0.0), 0.0)
+                actual_gamma = _safe_float(chain_row.get("gamma", 0.0), 0.0)
+                candidate = dict(feature_row)
+                candidate.update(
+                    {
+                        "ticker": ticker,
+                        "date": date_value,
+                        "month": date_value[:6],
+                        "time": time_value[:5],
+                        "side": direction,
+                        "ticker_SPX": 1.0 if ticker == "SPX" else 0.0,
+                        "ticker_QQQ": 1.0 if ticker == "QQQ" else 0.0,
+                        "ticker_SPY": 1.0 if ticker == "SPY" else 0.0,
+                        "side_LONG": 1.0 if direction == "LONG" else 0.0,
+                        "side_SHORT": 1.0 if direction == "SHORT" else 0.0,
+                        "spot_price": spot,
+                        "delta_target": float(delta_target),
+                        "actual_strike": strike,
+                        "strike": strike,
+                        "right": right,
+                        "expiration": _format_expiration(chain_row.get("expiration", "")),
+                        "contracts": int(contracts),
+                        "entry_cost_dollars": entry_premium * CONTRACT_MULTIPLIER * contracts,
+                        "actual_delta": actual_delta,
+                        "actual_delta_abs": actual_delta_abs,
+                        "entry_premium": entry_premium,
+                        "raw_entry_premium": raw_premium,
+                        "premium": raw_premium,
+                        "entry_spread_pct": entry_spread_pct,
+                        "premium_to_spot_bps": entry_premium / max(spot, 1e-9) * 10000.0,
+                        "strike_distance_pts": strike - spot,
+                        "strike_distance_bps": (strike - spot) / max(spot, 1e-9) * 10000.0,
+                        "actual_iv": actual_iv,
+                        "actual_theta": actual_theta,
+                        "actual_gamma": actual_gamma,
+                        "theta_over_premium": actual_theta / max(entry_premium, 1e-9),
+                        "gamma_notional": actual_gamma * spot * CONTRACT_MULTIPLIER * contracts,
+                    }
+                )
+                rows.append(candidate)
+                break
+        return pd.DataFrame(rows)
+
+    def _select_option_value_option(self, ticker: str, direction: str, features: pd.DataFrame) -> dict | None:
+        if self.option_value_selector is None:
+            return None
+        candidates = self._option_value_candidates(ticker, direction, features)
+        selected = self.option_value_selector.select(candidates)
+        if selected is None:
+            return None
+        return {
+            "ticker": ticker,
+            "right": str(selected["right"]),
+            "strike": float(selected["strike"]),
+            "delta": float(selected["actual_delta"]),
+            "premium": float(selected["raw_entry_premium"]),
+            "entry_premium": float(selected["entry_premium"]),
+            "raw_entry_premium": float(selected["raw_entry_premium"]),
+            "entry_spread_pct": float(selected["entry_spread_pct"]),
+            "expiration": str(selected.get("expiration", "")),
+            "selector_policy": OPTION_VALUE_POLICY_NAME,
+            "selector_score": _safe_float(selected.get("_selector_score", 0.0), 0.0),
+            "ovjepa_pred_hold180": _safe_float(selected.get("ovjepa_pred_hold180", 0.0), 0.0),
+            "ovjepa_pred_rule": _safe_float(selected.get("ovjepa_pred_rule", 0.0), 0.0),
+            "ovjepa_pred_best": _safe_float(selected.get("ovjepa_pred_best", 0.0), 0.0),
+        }
 
     def _current_option_premium(self, pos: JepaOptionPosition) -> float:
         df = self._latest_option_snapshot(pos.ticker)
@@ -393,6 +663,20 @@ class JepaFixedDeltaBot:
         if cost <= 0:
             return 0
         return max(1, int(RISK_CAPITAL // cost))
+
+    @staticmethod
+    def _entry_spread_pct(abs_delta: float, features: pd.DataFrame) -> float:
+        abs_delta = abs(float(abs_delta))
+        if abs_delta < 0.30:
+            spread = 0.03
+        elif abs_delta > 0.60:
+            spread = 0.01
+        else:
+            spread = 0.015
+        gamma_speed = 0.0
+        if not features.empty and "gamma_speed" in features.columns:
+            gamma_speed = _safe_float(features.iloc[-1].get("gamma_speed", 0.0), 0.0)
+        return float(spread) * (1.0 + 0.5 * abs(gamma_speed))
 
     def _cooldown_active(self, ticker: str, now: datetime) -> bool:
         value = self.cooldowns.get(ticker)
@@ -427,7 +711,10 @@ class JepaFixedDeltaBot:
             f"**[BOT] OPEN {pos.direction} {pos.ticker} {pos.strike:.0f}{right_short}**\n"
             f"prob_up={pos.jepa_prob_up:.3f} conf={pos.confidence:.0%} "
             f"delta={pos.delta:.2f} premium=${pos.entry_premium:.2f} contracts={pos.contracts}\n"
-            f"stop={HARD_STOP_PCT:.0%} tp={TAKE_PROFIT_PCT:.0%} max_hold={MAX_HOLD_MINUTES}m",
+            f"stop={HARD_STOP_PCT:.0%} trail={TRAIL_ACTIVATION_PCT:.0%}/"
+            f"{TRAIL_DRAWDOWN_PCT:.0%} tp={TAKE_PROFIT_PCT:.0%} "
+            f"cutoff={LATEST_ENTRY_TIME.strftime('%H:%M')} max_hold={MAX_HOLD_MINUTES}m\n"
+            f"policy={pos.selector_policy}",
             ping=False,
         )
 
@@ -447,7 +734,6 @@ class JepaFixedDeltaBot:
         pnl_pct = premium / max(pos.entry_premium, 1e-9) - 1.0
         pnl_dollars = pnl_pct * pos.entry_premium * CONTRACT_MULTIPLIER * pos.contracts
         hold_min = (now - pos.entry_dt).total_seconds() / 60.0
-        self._record_cooldown(ticker, now)
         self._save_positions()
         self._append_trade_log(
             {
@@ -466,7 +752,9 @@ class JepaFixedDeltaBot:
                 "pnl_dollars": pnl_dollars,
                 "hold_minutes": hold_min,
                 "exit_reason": reason,
-                "source_model": "base_jepa_180m_fixed_delta_0.70",
+                "peak_pnl_pct": pos.peak_pnl_pct,
+                "trough_pnl_pct": pos.trough_pnl_pct,
+                "source_model": pos.selector_policy,
             }
         )
         logging.info("[%s] CLOSE %s pnl=%+.1f%% $%+.2f hold=%.0fm", ticker, reason, pnl_pct * 100.0, pnl_dollars, hold_min)
@@ -488,14 +776,24 @@ class JepaFixedDeltaBot:
 
         if pnl_pct <= HARD_STOP_PCT:
             self._close_position(ticker, premium, "hard_stop_-60pct", now)
+        elif pos.peak_pnl_pct >= TRAIL_ACTIVATION_PCT and pnl_pct <= pos.peak_pnl_pct - TRAIL_DRAWDOWN_PCT:
+            self._close_position(ticker, premium, "trail_stop_50pct_25pct_giveback", now)
         elif pnl_pct >= TAKE_PROFIT_PCT:
-            self._close_position(ticker, premium, "take_profit_250pct", now)
+            self._close_position(ticker, premium, "take_profit_1000pct", now)
         elif hold_min >= MAX_HOLD_MINUTES:
             self._close_position(ticker, premium, "max_hold_180m", now)
         elif now.time() >= EOD_CLEANUP_TIME:
             self._close_position(ticker, premium, "eod_cleanup", now)
         else:
-            logging.info("[%s] HOLD option pnl=%+.1f%% hold=%.0fm", ticker, pnl_pct * 100.0, hold_min)
+            giveback = pos.peak_pnl_pct - pnl_pct
+            logging.info(
+                "[%s] HOLD option pnl=%+.1f%% peak=%+.1f%% giveback=%.1f%% hold=%.0fm",
+                ticker,
+                pnl_pct * 100.0,
+                pos.peak_pnl_pct * 100.0,
+                giveback * 100.0,
+                hold_min,
+            )
 
     def _check_entry(self, ticker: str, now: datetime) -> None:
         if ticker in self.positions:
@@ -512,6 +810,11 @@ class JepaFixedDeltaBot:
         feature_id = self._feature_row_id(features)
         if self.evaluated_feature_timestamps.get(ticker) == feature_id:
             return
+        feature_time = self._feature_entry_time(features)
+        if feature_time is not None and feature_time > LATEST_ENTRY_TIME:
+            logging.info("[%s] feature row %s past live entry window", ticker, feature_time.strftime("%H:%M"))
+            self._mark_feature_evaluated(ticker, feature_id)
+            return
         pred = self.signal_model.predict_frame(features).iloc[-1]
         direction_int = int(pred.get("jepa180_direction", 0))
         if direction_int == 0:
@@ -519,11 +822,18 @@ class JepaFixedDeltaBot:
             self._mark_feature_evaluated(ticker, feature_id)
             return
         direction = "LONG" if direction_int > 0 else "SHORT"
-        option = self._select_fixed_delta_option(ticker, direction)
+        option = self._select_option_value_option(ticker, direction, features)
         if option is None:
-            logging.warning("[%s] JEPA signal but no fixed 0.70 delta option available", ticker)
+            option = self._select_fixed_delta_option(ticker, direction)
+        if option is None:
+            logging.warning("[%s] JEPA signal but no valid 0DTE option candidate available", ticker)
             return
-        contracts = self._contracts(option["premium"])
+        raw_entry_premium = float(option.get("raw_entry_premium", option["premium"]))
+        entry_spread_pct = float(
+            option.get("entry_spread_pct", self._entry_spread_pct(abs(float(option["delta"])), features))
+        )
+        entry_premium = float(option.get("entry_premium", raw_entry_premium * (1.0 + entry_spread_pct)))
+        contracts = self._contracts(entry_premium)
         if contracts <= 0:
             logging.warning("[%s] JEPA signal but premium too high/invalid", ticker)
             return
@@ -537,19 +847,22 @@ class JepaFixedDeltaBot:
             expiration=str(option["expiration"]),
             entry_time=now.isoformat(),
             entry_spot=float(spot),
-            entry_premium=float(option["premium"]),
+            entry_premium=float(entry_premium),
+            raw_entry_premium=float(raw_entry_premium),
+            entry_spread_pct=float(entry_spread_pct),
             contracts=int(contracts),
             confidence=_safe_float(pred.get("jepa180_confidence", 0.0)),
             jepa_prob_up=_safe_float(pred.get("jepa180_prob_up", 0.5)),
             long_threshold=_safe_float(pred.get("jepa180_long_threshold", 0.0)),
             short_threshold=_safe_float(pred.get("jepa180_short_threshold", 0.0)),
+            selector_policy=str(option.get("selector_policy", FIXED_POLICY_NAME)),
         )
         self.positions[ticker] = pos
         self._record_cooldown(ticker, now)
         self._save_positions()
         self._mark_feature_evaluated(ticker, feature_id)
         logging.info(
-            "[%s] OPEN %s strike=%.0f delta=%.2f premium=%.2f contracts=%d prob_up=%.3f conf=%.0f%%",
+            "[%s] OPEN %s strike=%.0f delta=%.2f premium=%.2f contracts=%d prob_up=%.3f conf=%.0f%% policy=%s",
             ticker,
             direction,
             pos.strike,
@@ -558,6 +871,7 @@ class JepaFixedDeltaBot:
             pos.contracts,
             pos.jepa_prob_up,
             pos.confidence * 100.0,
+            pos.selector_policy,
         )
         self._discord_open(pos)
 
@@ -575,9 +889,19 @@ class JepaFixedDeltaBot:
         )
 
     def run(self, force: bool = False) -> None:
-        logging.info("Starting JEPA live bot model_dir=%s rt_data=%s", self.model_dir, self.rt_data_dir)
+        logging.info(
+            "Starting JEPA live bot model_dir=%s rt_data=%s policy=%s cutoff=%s stop=%.0f%% trail=%.0f%%/%.0f%% tp=%.0f%%",
+            self.model_dir,
+            self.rt_data_dir,
+            OPTION_VALUE_POLICY_NAME if self.option_value_selector is not None else FIXED_POLICY_NAME,
+            LATEST_ENTRY_TIME.strftime("%H:%M"),
+            HARD_STOP_PCT * 100.0,
+            TRAIL_ACTIVATION_PCT * 100.0,
+            TRAIL_DRAWDOWN_PCT * 100.0,
+            TAKE_PROFIT_PCT * 100.0,
+        )
         while True:
-            if force or self.is_market_hours():
+            if force or self.is_market_hours() or self.positions:
                 self.run_once()
             else:
                 logging.info("Outside market hours; sleeping")
@@ -587,8 +911,11 @@ class JepaFixedDeltaBot:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Live GBT+JEPA 180m + fixed 0.70 delta option bot")
+    parser = argparse.ArgumentParser(description="Live GBT+JEPA 180m + OptionValue/fixed-delta option bot")
     parser.add_argument("--model-dir", default=str(DEFAULT_SIGNAL_MODEL_DIR))
+    parser.add_argument("--option-value-model-dir", default=str(DEFAULT_OPTION_VALUE_MODEL_DIR))
+    parser.add_argument("--option-value-device", default="auto", help="OptionValue device: auto, cpu, cuda")
+    parser.add_argument("--disable-option-value", action="store_true", help="Use fixed 0.70 delta even if OptionValue is available")
     parser.add_argument("--rt-data-dir", default=str(DEFAULT_RT_DATA_DIR))
     parser.add_argument("--trades-dir", default=str(DEFAULT_TRADES_DIR))
     parser.add_argument("--tickers", nargs="+", default=TICKERS)
@@ -610,6 +937,8 @@ def main() -> None:
 
     bot = JepaFixedDeltaBot(
         model_dir=Path(args.model_dir),
+        option_value_model_dir=None if args.disable_option_value else Path(args.option_value_model_dir),
+        option_value_device=args.option_value_device,
         rt_data_dir=Path(args.rt_data_dir),
         trades_dir=trades_dir,
         tickers=args.tickers,

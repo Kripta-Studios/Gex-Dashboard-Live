@@ -391,7 +391,7 @@ def main() -> int:
     parser.add_argument("--val-months", type=int, default=3)
     parser.add_argument("--min-hold-minutes", type=int, default=15)
     parser.add_argument("--n-estimators", type=int, default=180)
-    parser.add_argument("--n-jobs", type=int, default=1)
+    parser.add_argument("--n-jobs", type=int, default=20)
     parser.add_argument("--seed", type=int, default=3307)
     parser.add_argument("--min-entry-minute", type=int, default=None)
     parser.add_argument("--max-entry-minute", type=int, default=None)

@@ -3,31 +3,31 @@
 Data: `C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\training_data\training_data_spx_qqq_spy_jepa_xinput_v3_pipeline.parquet`
 Model dir: `C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\neural\models\jepa\jepa_full_pipeline_180m_frozen_march`
 Mode: `base_jepa`
-Rows scored: 56,220
-Execution: fixed `180`m hold, cooldown `180`m, cost `1.0` bps, notional `$100,000`.
+Rows scored: 154,935
+Execution: `max 180m` hold truncated to the last same-day row, cooldown `180`m, cost `1.0` bps, notional `$100,000`.
 
 ## Overall
 
 | Scope | Trades | WR | PF | Avg bps | PnL | Max DD | Long Rate |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| all | 2796 | 89.7% | 24.312 | 31.38 | +877,454 | -1,777 | 55.7% |
+| all | 5135 | 87.6% | 16.195 | 26.40 | +1,355,531 | -2,255 | 54.5% |
 
 ## Per Ticker
 
 | Ticker | Trades | WR | PF | Avg bps | PnL | Max DD | Long Rate |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| QQQ | 925 | 88.0% | 18.630 | 36.24 | +335,192 | -1,522 | 56.0% |
-| SPX | 947 | 92.6% | 48.116 | 29.93 | +283,470 | -735 | 55.9% |
-| SPY | 924 | 88.5% | 21.521 | 28.01 | +258,793 | -1,777 | 55.3% |
+| QQQ | 1679 | 89.2% | 18.367 | 30.56 | +513,019 | -2,255 | 54.0% |
+| SPX | 1602 | 90.1% | 22.928 | 26.40 | +422,883 | -1,114 | 54.6% |
+| SPY | 1854 | 84.0% | 11.391 | 22.63 | +419,629 | -1,671 | 54.9% |
 
 ## Cost Sensitivity
 
 | Cost | Trades | WR | PF | Avg bps | PnL | Max DD | Long Rate |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 1 bps | 2796 | 89.7% | 24.312 | 31.38 | +877,454 | -1,777 | 55.7% |
-| 3 bps | 2796 | 86.7% | 19.596 | 29.38 | +821,534 | -1,837 | 55.7% |
-| 5 bps | 2796 | 83.9% | 15.595 | 27.38 | +765,614 | -1,897 | 55.7% |
-| 10 bps | 2796 | 73.5% | 8.672 | 22.38 | +625,814 | -2,086 | 55.7% |
+| 1 bps | 5135 | 87.6% | 16.195 | 26.40 | +1,355,531 | -2,255 | 54.5% |
+| 3 bps | 5135 | 84.1% | 13.087 | 24.40 | +1,252,831 | -2,715 | 54.5% |
+| 5 bps | 5135 | 80.6% | 10.443 | 22.40 | +1,150,131 | -3,194 | 54.5% |
+| 10 bps | 5135 | 69.4% | 5.806 | 17.40 | +893,381 | -6,107 | 54.5% |
 
 ## Model Thresholds
 
@@ -38,16 +38,16 @@ Execution: fixed `180`m hold, cooldown `180`m, cost `1.0` bps, notional `$100,00
     "thresholds": {
       "long_threshold": 0.7,
       "short_threshold": 0.30000000000000004,
-      "val_score": 9066.796155890974,
-      "val_trades": 56,
-      "val_win_rate": 0.6428571428571429,
-      "val_avg_net_bps": 16.998134836126017,
-      "val_median_net_bps": 14.419209700507919,
-      "val_total_net_bps": 951.895550823057,
-      "val_profit_factor": 3.343484412526987,
-      "val_pnl_dollars": 9518.955508230569,
-      "val_max_drawdown": -1808.6374093583818,
-      "val_long_rate": 0.4107142857142857
+      "val_score": 4784.072928676833,
+      "val_trades": 69,
+      "val_win_rate": 0.5797101449275363,
+      "val_avg_net_bps": 8.194041555956858,
+      "val_median_net_bps": 7.59761003520032,
+      "val_total_net_bps": 565.3888673610231,
+      "val_profit_factor": 1.7284521941804214,
+      "val_pnl_dollars": 5653.888673610232,
+      "val_max_drawdown": -3479.2629797335967,
+      "val_long_rate": 0.2463768115942029
     },
     "meta": {
       "mode": "base_jepa",
@@ -58,6 +58,7 @@ Execution: fixed `180`m hold, cooldown `180`m, cost `1.0` bps, notional `$100,00
       "feature_count": 222,
       "horizon_steps": 36,
       "horizon_minutes": 180,
+      "truncate_eod_horizon": true,
       "cost_bps": 1.0,
       "cooldown_steps": 36,
       "notional": 100000.0
@@ -66,18 +67,18 @@ Execution: fixed `180`m hold, cooldown `180`m, cost `1.0` bps, notional `$100,00
   "QQQ": {
     "feature_count": 222,
     "thresholds": {
-      "long_threshold": 0.52,
-      "short_threshold": 0.48,
-      "val_score": 5529.586662946473,
-      "val_trades": 61,
-      "val_win_rate": 0.5573770491803278,
-      "val_avg_net_bps": 9.550396062265362,
-      "val_median_net_bps": 13.975727468296007,
-      "val_total_net_bps": 582.5741597981871,
-      "val_profit_factor": 1.785218341255456,
-      "val_pnl_dollars": 5825.741597981871,
-      "val_max_drawdown": -1184.6197401415923,
-      "val_long_rate": 0.3442622950819672
+      "long_threshold": 0.65,
+      "short_threshold": 0.35,
+      "val_score": 6649.165564465349,
+      "val_trades": 96,
+      "val_win_rate": 0.5625,
+      "val_avg_net_bps": 7.5068397233512805,
+      "val_median_net_bps": 4.667438747726794,
+      "val_total_net_bps": 720.6566134417229,
+      "val_profit_factor": 1.696265106010272,
+      "val_pnl_dollars": 7206.566134417231,
+      "val_max_drawdown": -2229.6022798075282,
+      "val_long_rate": 0.2708333333333333
     },
     "meta": {
       "mode": "base_jepa",
@@ -88,6 +89,7 @@ Execution: fixed `180`m hold, cooldown `180`m, cost `1.0` bps, notional `$100,00
       "feature_count": 222,
       "horizon_steps": 36,
       "horizon_minutes": 180,
+      "truncate_eod_horizon": true,
       "cost_bps": 1.0,
       "cooldown_steps": 36,
       "notional": 100000.0
@@ -96,18 +98,18 @@ Execution: fixed `180`m hold, cooldown `180`m, cost `1.0` bps, notional `$100,00
   "SPY": {
     "feature_count": 222,
     "thresholds": {
-      "long_threshold": 0.62,
-      "short_threshold": 0.38,
-      "val_score": 5496.12803263825,
-      "val_trades": 60,
-      "val_win_rate": 0.5666666666666667,
-      "val_avg_net_bps": 10.135999957080552,
-      "val_median_net_bps": 7.4761759696194705,
-      "val_total_net_bps": 608.1599974248331,
-      "val_profit_factor": 2.0988164102953806,
-      "val_pnl_dollars": 6081.599974248329,
-      "val_max_drawdown": -2341.8877664403144,
-      "val_long_rate": 0.36666666666666664
+      "long_threshold": 0.55,
+      "short_threshold": 0.44999999999999996,
+      "val_score": 5985.81241435946,
+      "val_trades": 122,
+      "val_win_rate": 0.5409836065573771,
+      "val_avg_net_bps": 5.379368354689219,
+      "val_median_net_bps": 4.183534519825894,
+      "val_total_net_bps": 656.2829392720847,
+      "val_profit_factor": 1.5585835656098903,
+      "val_pnl_dollars": 6562.829392720846,
+      "val_max_drawdown": -2308.067913445546,
+      "val_long_rate": 0.32786885245901637
     },
     "meta": {
       "mode": "base_jepa",
@@ -118,6 +120,7 @@ Execution: fixed `180`m hold, cooldown `180`m, cost `1.0` bps, notional `$100,00
       "feature_count": 222,
       "horizon_steps": 36,
       "horizon_minutes": 180,
+      "truncate_eod_horizon": true,
       "cost_bps": 1.0,
       "cooldown_steps": 36,
       "notional": 100000.0
@@ -128,6 +131,7 @@ Execution: fixed `180`m hold, cooldown `180`m, cost `1.0` bps, notional `$100,00
 
 ## Cooldown Note
 
-- The default cooldown is 180m because the label and execution horizon are 180m.
+- The default cooldown is 180m because the maximum label/execution horizon is 180m.
+- In EOD-truncated mode, late entries use the last same-day row as the terminal outcome.
 - This prevents stacking many overlapping 5-minute entries that mostly bet on the same future window.
 - The value is configurable with `--cooldown-minutes` for sensitivity testing.

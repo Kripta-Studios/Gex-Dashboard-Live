@@ -3,7 +3,8 @@ param(
   [double]$CostBps = 1.0,
   [double]$MinAbsBps = 0.0,
   [string]$TestStartMonth = "202604",
-  [string]$TestEndMonth = ""
+  [string]$TestEndMonth = "",
+  [switch]$TruncateEodHorizon
 )
 
 $ErrorActionPreference = "Stop"
@@ -36,7 +37,7 @@ $ResultsRoot = Join-Path $ProjectRoot "research_papers\JEPA\results\$Experiment"
 
 New-Item -ItemType Directory -Force -Path $ResultsRoot | Out-Null
 
-Invoke-PythonStep "Evaluate JEPA 180m direction" @(
+$EvalArgs = @(
   (Join-Path $ScriptDir "evaluate_180m_direction.py"),
   "--data", $DataPath,
   "--jepa-feature-names", $JepaFeatureNamesPath,
@@ -52,9 +53,17 @@ Invoke-PythonStep "Evaluate JEPA 180m direction" @(
   "--min-val-trades", "4",
   "--oos-start", "20260401",
   "--n-estimators", "160",
-  "--n-jobs", "1",
+  "--n-jobs", "20",
   "--test-start-month", $TestStartMonth,
   "--seed", "777"
-) (Join-Path $ResultsRoot "01_evaluate_180m_direction.log")
+)
+if ($TruncateEodHorizon) {
+  $EvalArgs += @("--truncate-eod-horizon")
+}
+if (-not [string]::IsNullOrWhiteSpace($TestEndMonth)) {
+  $EvalArgs += @("--test-end-month", $TestEndMonth)
+}
+
+Invoke-PythonStep "Evaluate JEPA 180m direction" $EvalArgs (Join-Path $ResultsRoot "01_evaluate_180m_direction.log")
 
 Write-Host "`nDone. Summary: $ResultsRoot\SUMMARY.md" -ForegroundColor Green

@@ -1,10 +1,10 @@
 # Production Base+JEPA 180m Artifacts
 
 Data: `C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\training_data\training_data_spx_qqq_spy_production_20261230_jepa_xinput_v3_production.parquet`
-Rows after exact 180m label construction: 56,220 from 222,069
+Rows after max/EOD-truncated 180m label construction: 154,935 from 222,543
 Production cutoff: `20261230`
-Label: `spot_price(t+180m) > spot_price(t)`
-Backtest diagnostic: fixed 180m hold, cooldown `36` samples, base cost `1.0` bps, notional `$100,000`.
+Label: `spot_price(min(t+180m, same-day last row)) > spot_price(t)`
+Backtest diagnostic: max 180m hold truncated to same-day last row, cooldown `36` samples, base cost `1.0` bps, notional `$100,000`.
 
 ## Important
 
@@ -17,34 +17,34 @@ Backtest diagnostic: fixed 180m hold, cooldown `36` samples, base cost `1.0` bps
 
 | Mode | Rows | Future Up | Pred Up | AUC | Acc | Bal Acc | Spearman Ret | Top Q Ret bps | Bottom Q Ret bps |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| base | 56220 | 55.4% | 54.9% | 0.976 | 91.8% | 91.7% | 0.846 | 46.58 | -52.72 |
-| jepa_only | 56220 | 55.4% | 54.3% | 0.942 | 87.0% | 86.9% | 0.758 | 35.07 | -47.95 |
-| base_jepa | 56220 | 55.4% | 55.1% | 0.975 | 91.9% | 91.8% | 0.832 | 43.36 | -52.18 |
+| base | 154935 | 53.6% | 53.0% | 0.951 | 88.5% | 88.5% | 0.814 | 37.93 | -41.82 |
+| jepa_only | 154935 | 53.6% | 51.7% | 0.881 | 80.4% | 80.4% | 0.682 | 31.00 | -34.88 |
+| base_jepa | 154935 | 53.6% | 53.2% | 0.953 | 89.1% | 89.0% | 0.819 | 37.84 | -41.46 |
 
 ## Fixed-Hold 180m Diagnostic
 
 | Mode | Trades | WR | PF | Avg bps | PnL | Max DD | Long Rate |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| base | 2811 | 85.7% | 17.340 | 30.41 | +854,830 | -2,674 | 54.5% |
-| jepa_only | 2790 | 86.9% | 13.937 | 29.86 | +833,167 | -7,906 | 55.7% |
-| base_jepa | 2796 | 90.4% | 29.367 | 32.12 | +898,155 | -1,799 | 56.2% |
+| base | 5241 | 86.9% | 15.326 | 25.68 | +1,345,889 | -1,362 | 53.7% |
+| jepa_only | 5455 | 79.7% | 6.803 | 21.83 | +1,190,797 | -2,375 | 52.7% |
+| base_jepa | 5500 | 87.7% | 17.117 | 26.09 | +1,434,780 | -1,362 | 54.6% |
 
 ## Cost Sensitivity
 
 | Cost | Mode | Trades | WR | PF | Avg bps | PnL | Max DD |
 | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| 1 bps | base | 2811 | 85.7% | 17.340 | 30.41 | +854,830 | -2,674 |
-| 1 bps | jepa_only | 2790 | 86.9% | 13.937 | 29.86 | +833,167 | -7,906 |
-| 1 bps | base_jepa | 2796 | 90.4% | 29.367 | 32.12 | +898,155 | -1,799 |
-| 3 bps | base | 2811 | 82.8% | 14.063 | 28.41 | +798,610 | -2,714 |
-| 3 bps | jepa_only | 2790 | 83.5% | 11.701 | 27.86 | +777,367 | -7,946 |
-| 3 bps | base_jepa | 2796 | 87.2% | 23.224 | 30.12 | +842,235 | -1,819 |
-| 5 bps | base | 2811 | 80.1% | 11.368 | 26.41 | +742,390 | -2,754 |
-| 5 bps | jepa_only | 2790 | 81.0% | 9.748 | 25.86 | +721,567 | -7,986 |
-| 5 bps | base_jepa | 2796 | 84.2% | 18.151 | 28.12 | +786,315 | -1,839 |
-| 10 bps | base | 2811 | 71.6% | 6.736 | 21.41 | +601,840 | -2,886 |
-| 10 bps | jepa_only | 2790 | 71.4% | 6.039 | 20.86 | +582,067 | -8,086 |
-| 10 bps | base_jepa | 2796 | 73.7% | 9.647 | 23.12 | +646,515 | -1,921 |
+| 1 bps | base | 5241 | 86.9% | 15.326 | 25.68 | +1,345,889 | -1,362 |
+| 1 bps | jepa_only | 5455 | 79.7% | 6.803 | 21.83 | +1,190,797 | -2,375 |
+| 1 bps | base_jepa | 5500 | 87.7% | 17.117 | 26.09 | +1,434,780 | -1,362 |
+| 3 bps | base | 5241 | 82.9% | 12.312 | 23.68 | +1,241,069 | -1,394 |
+| 3 bps | jepa_only | 5455 | 75.9% | 5.715 | 19.83 | +1,081,697 | -2,471 |
+| 3 bps | base_jepa | 5500 | 83.7% | 13.639 | 24.09 | +1,324,780 | -1,382 |
+| 5 bps | base | 5241 | 78.8% | 9.750 | 21.68 | +1,136,249 | -1,454 |
+| 5 bps | jepa_only | 5455 | 72.5% | 4.775 | 17.83 | +972,597 | -2,632 |
+| 5 bps | base_jepa | 5500 | 80.0% | 10.731 | 22.09 | +1,214,780 | -1,402 |
+| 10 bps | base | 5241 | 67.6% | 5.379 | 16.68 | +874,199 | -1,604 |
+| 10 bps | jepa_only | 5455 | 62.2% | 3.017 | 12.83 | +699,847 | -4,005 |
+| 10 bps | base_jepa | 5500 | 68.4% | 5.802 | 17.09 | +939,780 | -1,452 |
 
 ## Artifacts
 

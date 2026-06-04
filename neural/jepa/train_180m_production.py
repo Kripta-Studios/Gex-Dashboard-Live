@@ -102,19 +102,19 @@ def run_production_mode(df: pd.DataFrame, args, mode: str, model_dir: Path) -> M
 
         model, medians = train_model(ticker_df, features, args.seed, args.n_estimators, args.n_jobs)
         prob = predict_proba(model, ticker_df, features, medians)
-        pred_frame = ticker_df[
-            [
-                "ticker",
-                "date",
-                "time",
-                "month",
-                "pos_in_day",
-                "spot_price",
-                "future_return_180m",
-                "future_return_bps_180m",
-                "future_up_180m",
-            ]
-        ].copy()
+        pred_cols = [
+            "ticker",
+            "date",
+            "time",
+            "month",
+            "pos_in_day",
+            "spot_price",
+            "future_return_180m",
+            "future_return_bps_180m",
+            "future_up_180m",
+        ]
+        pred_cols += [c for c in ["terminal_exit_time", "terminal_hold_minutes", "terminal_horizon_truncated"] if c in ticker_df.columns]
+        pred_frame = ticker_df[pred_cols].copy()
         pred_frame["feature_mode"] = mode
         pred_frame["prob_up"] = prob
         pred_frame["pred_up"] = (prob >= 0.5).astype(np.int8)
@@ -146,6 +146,7 @@ def run_production_mode(df: pd.DataFrame, args, mode: str, model_dir: Path) -> M
             "feature_count": len(features),
             "horizon_steps": args.horizon_steps,
             "horizon_minutes": args.horizon_steps * 5,
+            "truncate_eod_horizon": bool(args.truncate_eod_horizon),
             "cost_bps": args.cost_bps,
             "cooldown_steps": args.cooldown_steps,
             "notional": args.notional,
@@ -274,14 +275,21 @@ def trade_row(label: str, summary: dict) -> str:
 
 
 def write_summary(output_dir: Path, summaries: dict[str, dict], cost_df: pd.DataFrame, args, raw_rows: int, valid_rows: int) -> None:
+    label_text = (
+        f"spot_price(min(t+{args.horizon_steps * 5}m, same-day last row)) > spot_price(t)"
+        if args.truncate_eod_horizon
+        else f"spot_price(t+{args.horizon_steps * 5}m) > spot_price(t)"
+    )
+    row_text = "max/EOD-truncated 180m" if args.truncate_eod_horizon else "exact 180m"
+    backtest_text = "max 180m hold truncated to same-day last row" if args.truncate_eod_horizon else "fixed 180m hold"
     lines = [
         "# Production Base+JEPA 180m Artifacts",
         "",
         f"Data: `{args.data}`",
-        f"Rows after exact 180m label construction: {valid_rows:,} from {raw_rows:,}",
+        f"Rows after {row_text} label construction: {valid_rows:,} from {raw_rows:,}",
         f"Production cutoff: `{normalize_date(args.train_end_date)}`",
-        f"Label: `spot_price(t+{args.horizon_steps * 5}m) > spot_price(t)`",
-        f"Backtest diagnostic: fixed 180m hold, cooldown `{args.cooldown_steps}` samples, base cost `{args.cost_bps}` bps, notional `${args.notional:,.0f}`.",
+        f"Label: `{label_text}`",
+        f"Backtest diagnostic: {backtest_text}, cooldown `{args.cooldown_steps}` samples, base cost `{args.cost_bps}` bps, notional `${args.notional:,.0f}`.",
         "",
         "## Important",
         "",
@@ -351,7 +359,12 @@ def main() -> int:
     parser.add_argument("--min-val-trades", type=int, default=4)
     parser.add_argument("--seed", type=int, default=777)
     parser.add_argument("--n-estimators", type=int, default=180)
-    parser.add_argument("--n-jobs", type=int, default=1)
+    parser.add_argument("--n-jobs", type=int, default=20)
+    parser.add_argument(
+        "--truncate-eod-horizon",
+        action="store_true",
+        help="Use min(entry + horizon, last same-day row) as labels/outcomes, matching live EOD cleanup.",
+    )
     args = parser.parse_args()
 
     output_dir = Path(args.output_dir)
@@ -360,7 +373,12 @@ def main() -> int:
     model_dir.mkdir(parents=True, exist_ok=True)
 
     raw_rows = len(pd.read_parquet(args.data, columns=["ticker"]))
-    df = build_terminal_180m_frame(args.data, args.horizon_steps, args.min_abs_bps)
+    df = build_terminal_180m_frame(
+        args.data,
+        args.horizon_steps,
+        args.min_abs_bps,
+        truncate_to_eod=args.truncate_eod_horizon,
+    )
     train_end = normalize_date(args.train_end_date)
     df = df[df["date"] <= train_end].copy()
     if df.empty:

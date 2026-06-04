@@ -56,7 +56,7 @@ $Args = @(
   "--notional", "100000",
   "--min-val-trades", "4",
   "--n-estimators", "180",
-  "--n-jobs", "1",
+  "--n-jobs", "20",
   "--seed", "777"
 )
 if (-not [string]::IsNullOrWhiteSpace($TestEndDate)) {

@@ -120,7 +120,8 @@ LOOP_INTERVAL = 65  # seconds — aligned with realtime_feed's 60s poll interval
 MAX_FEED_SNAPSHOT_AGE_SECONDS = 150
 ENTRY_EVAL_CADENCE_MINUTES = entry_cadence_minutes()
 COOLDOWN_MINUTES = 8
-EOD_CLEANUP_MINUTE = 55  # minute of 15:XX EST at which EOD cleanup triggers
+EOD_CLEANUP_HOUR = 15
+EOD_CLEANUP_MINUTE = 55
 MIN_ENTRY_MINUTE = 580
 MIN_SHORT_ENTRY_MINUTE = 615
 MIN_SHORT_PRICE_VS_IB_HIGH = -150.0
@@ -652,7 +653,9 @@ class RLTradingBot:
         """Check if current time is past EOD cleanup cutoff (15:55 EST)."""
         if now is None:
             now = datetime.now(ET)
-        return (now.hour > 15) or (now.hour == 15 and now.minute >= EOD_CLEANUP_MINUTE)
+        return (now.hour > EOD_CLEANUP_HOUR) or (
+            now.hour == EOD_CLEANUP_HOUR and now.minute >= EOD_CLEANUP_MINUTE
+        )
 
     def _load_positions(self):
         """Restore positions from disk (passive load — no cleanup, no Discord)."""

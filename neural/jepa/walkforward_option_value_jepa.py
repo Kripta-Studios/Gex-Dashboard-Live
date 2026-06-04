@@ -152,6 +152,7 @@ def write_summary(output_dir: Path, args, metadata: dict, policy_results: dict[s
         f"Train start: `{normalize_date(args.train_start_date)}`",
         f"Min train months: `{args.min_train_months}`",
         f"Epochs per fold: `{args.epochs}`",
+        f"Dynamic target: `{getattr(args, 'dynamic_target', 'future_best')}`",
         f"Exit margin: `{args.exit_margin}`",
         "",
         "## Overall Walk-Forward Results",
@@ -216,6 +217,12 @@ def main() -> int:
     parser.add_argument("--lr", type=float, default=8e-4)
     parser.add_argument("--weight-decay", type=float, default=1e-4)
     parser.add_argument("--dynamic-loss-weight", type=float, default=0.75)
+    parser.add_argument(
+        "--dynamic-target",
+        choices=sorted(ov.DYNAMIC_TARGET_COLUMNS),
+        default="future_best",
+        help="Continuation target used by the dynamic exit head.",
+    )
     parser.add_argument("--entry-batch-size", type=int, default=1024)
     parser.add_argument("--dynamic-batch-size", type=int, default=8192)
     parser.add_argument("--predict-batch-size", type=int, default=4096)

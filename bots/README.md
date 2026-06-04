@@ -5,27 +5,34 @@ release. The bot is an alert/tracker process; it does not submit broker orders.
 
 ## Production Models
 
-The live release uses two generated model directories:
+The live release uses three generated model directories:
 
 ```text
 neural/models/jepa/xinput_v3_production/
 neural/models/jepa/jepa_production_final_180m/
+neural/models/jepa/jepa_production_final_option_value/
 ```
 
 `services/realtime_feed.py` loads `xinput_v3_production` to append live `xjepa_*`
 features. `bots/tradingbot_wrapper_jepa.py` loads
-`jepa_production_final_180m/base_jepa` to produce the 180-minute direction signal.
+`jepa_production_final_180m/base_jepa` to produce the 180-minute direction signal
+and `jepa_production_final_option_value` to select the 0DTE contract. If the
+OptionValue artifact is missing or cannot load, the bot logs a warning and falls
+back to the fixed abs(delta)=0.70 rule.
 
 The execution contract is:
 
 ```text
 signal: base_jepa 180m direction
 entry cadence: 5-minute rows
-option: 0DTE contract closest to abs(delta)=0.70 in the signal direction
+entry window: feature rows through 14:30 ET
+option: OptionValue blended score over 0.10..0.70 delta candidates
+fallback option: 0DTE contract closest to abs(delta)=0.70 in the signal direction
 hard stop: -60%
-take profit: +250%
+trail stop: activate at +50%, close on 25% giveback from peak
+emergency take profit: +1000%
 max hold: 180 minutes
-cooldown: 180 minutes per ticker
+cooldown: 180 minutes per ticker from entry
 tickers: SPX, QQQ, SPY
 ```
 
@@ -41,6 +48,7 @@ rt_data/YYYYMMDD/
   ml_features_1m_{TICKER}_latest.parquet
   ml_features_{TICKER}_latest.parquet
   feed_intraday_state.json
+  jepa_live_execution_config.json
 ```
 
 The bot consumes only `ml_features_{TICKER}_latest.parquet`, sampled every 5
@@ -89,6 +97,7 @@ development machine:
 ```text
 neural/models/jepa/xinput_v3_production/
 neural/models/jepa/jepa_production_final_180m/
+neural/models/jepa/jepa_production_final_option_value/
 ```
 
 It intentionally does not upload `.py`, `.service`, README, or other source

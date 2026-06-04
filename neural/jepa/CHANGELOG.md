@@ -1,9 +1,85 @@
 # JEPA Changelog
 
+## 2026-06-03
+
+- Aligned the 180m research/backtest horizon with the intended live behavior.
+  - Added EOD-truncated terminal outcomes: `target = min(t + 180m, last same-day row)`.
+  - Rows after 13:00 ET are no longer discarded solely because fewer than 180 minutes remain.
+  - The affected path includes `evaluate_180m_direction.py`, `train_backtest_180m_frozen.py`, `train_180m_production.py`, `backtest_jepa_180m.py`, and the JEPA option-policy candidate builder.
+- Compared exact pre-change metrics from git/artifact diffs against the new OOS results.
+  - Old `base_jepa` standalone: 107 trades, WR 69.2%, PF 2.031, PnL +9,963.
+  - New EOD-truncated `base_jepa` standalone: 171 trades, WR 53.2%, PF 1.388, PnL +6,386. Raw late-entry signal quality worsened.
+  - Old fixed delta 0.70 option hard exit: 107 trades, WR 57.0%, PF 2.115, PnL +30,328.
+  - New fixed delta 0.70 hard exit with late entries: 171 trades, WR 44.4%, PF 1.386, PnL +20,640. Rejected.
+  - New fixed delta 0.70 trail/cutoff: 134 trades, WR 59.7%, PF 2.062, PnL +33,898, max DD -4,262.
+  - New OptionValue blended trail/cutoff: 134 trades, WR 59.7%, PF 2.135, PnL +36,601, max DD -3,920. This is the current best OOS option-execution result.
+  - Latest June-inclusive rerun: OptionValue blended trail/cutoff 136 trades, WR 58.8%, PF 2.095, PnL +35,988, max DD -3,920. The 134 common trades are unchanged; the degradation is from two added 2026-06-02 trades with combined PnL -612.60.
+  - Latest full OptionValue walk-forward still uses the older `future_best`/hard-exit setup. Over 3,841 trades, `option_value_rule_select_hard` raises raw PnL versus fixed 0.70 (+1,942,704 vs +1,890,342) but lowers PF/WR and worsens DD (PF 3.565 vs 4.573, WR 61.3% vs 70.1%, DD -13,908 vs -11,064); learned 5m exits remain rejected.
+- Changed the promoted live option execution contract.
+  - Latest entry is now 14:30 ET, selected from OOS execution results, not 13:00 ET and not 15:55 ET.
+  - Exit is hard stop -60%, trail activation +50%, trail giveback 25%, emergency take profit +1000%, max hold 180m, EOD cleanup 16:00 ET.
+  - Cooldown is recorded from entry, matching the promoted backtest contract.
+- Extended `train_option_value_jepa.py`.
+  - Added `--dynamic-target future_edge` so continuation learning predicts incremental future edge over current value.
+  - Added trail/cutoff policy simulations.
+  - Added selector score bases and validation selector grids.
+  - Added explicit blended selector config: `ovjepa_pred_rule_best_mean + 2.0 * abs(delta)`.
+  - Added validation-selected ticker-specific policy research. Each ticker can choose a mechanical exit and entry gate from validation only, then the frozen ticker config is applied to OOS.
+  - Added `option_value_blended_score_ticker_validated_trail_cutoff`. Validation selected:
+    - QQQ: hard stop -70%, trail +75%/25%, exclude entries from 11:31-12:30 ET.
+    - SPX: hard stop -70%, trail +75%/25%, exclude entries from 11:31-12:30 ET.
+    - SPY: hard stop -70%, trail +75%/25%, require same-side SPX confirmation.
+  - OOS result for the ticker-validated policy: 83 trades, WR 69.9%, PF 3.306, PnL +41,669, max DD -2,327. Per ticker: QQQ 25 trades, WR 56.0%, PF 1.444, PnL +2,593; SPX 35 trades, WR 74.3%, PF 4.081, PnL +29,612; SPY 23 trades, WR 78.3%, PF 4.616, PnL +9,464.
+  - Added `analyze_qqq_rescue.py` to reproduce QQQ-specific rescue diagnostics without disabling QQQ. QQQ improves from PF 0.902 / PnL -767 to PF 1.489 / PnL +2,157 with a looser QQQ exit plus the 11:31-12:30 ET exclusion, but it is still below SPX quality.
+  - Added optional learned profit-lock exit research with cached dynamic-path predictions so exit-margin/profit-lock grids do not repeatedly re-run JEPA inference.
+  - Reran the profit-lock research branch: validation selected `margin=0.03`, profit activation `+150%`, no trail-gate; Apr/May 2026 OOS worsened to 134 trades, WR 50.7%, PF 1.837, PnL +32,569, max DD -4,265 versus OptionValue blended trail/cutoff at WR 59.7%, PF 2.135, PnL +36,601, max DD -3,920. Rejected.
+  - Changed state-row cache handling so a cache missing a small number of `candidate_id` paths is repaired incrementally instead of rebuilding every option state row from scratch.
+  - Added `--production-train` final-fit mode.
+  - Added state-row cache validation/resume so stale state caches are rebuilt instead of silently reused.
+  - Changed scaler artifacts to plain payloads, while keeping live compatibility with older `__main__.FeatureScaler` pickles.
+- Extended `train_backtest_option_policy.py`.
+  - Added heartbeat logging around slow phases.
+  - Added `--labels-only` so production can build candidate labels without running research-only OOS option-policy training.
+  - Preserved 20-worker/job defaults for heavy LightGBM and data phases.
+- Updated `neural/jepa/run_pipeline.ps1`.
+  - Default `OptionValueEpochs` is now 20, matching the better OOS future-edge run.
+  - `-ProductionTrain` no longer skips OptionValue entirely.
+  - Production now builds option labels in `--labels-only` mode, then trains `jepa_production_final_option_value` with the promoted OOS execution config.
+  - The production OptionValue result path is `research_papers/JEPA/results/jepa_production_final_option_value_production/`.
+  - The production OptionValue model path is `neural/models/jepa/jepa_production_final_option_value/`.
+  - Added Step 4C to reproduce the promoted GBT+JEPA spot/proxy fixed trailing-exit check.
+  - Visualizer exports now prefer `option_value_blended_score_trail_cutoff_trades.csv` and label it as OptionValue blended trail.
+- Updated live runtime alignment.
+  - `bots/tradingbot_wrapper_jepa.py` now loads `jepa_production_final_option_value` by default.
+  - The bot selects among 0.10..0.70 delta candidates using the OptionValue blended score.
+  - If OptionValue is unavailable, the bot logs a warning and falls back to fixed abs(delta)=0.70.
+  - Added entry spread/cost handling to match the option-policy candidate labels.
+  - Added legacy/new scaler loading compatibility.
+  - Added explicit policy names in trade logs and Discord alerts.
+- Updated the realtime feed.
+  - `services/realtime_feed.py` now writes `rt_data/YYYYMMDD/jepa_live_execution_config.json`.
+  - The feed logs the live JEPA execution contract on startup/poll.
+  - Market-data polling runs through 16:01 ET so the bot can process the final same-day snapshot for EOD exits.
+- Updated deployment files.
+  - `systemd/ai_bot.service` now passes `--option-value-model-dir .../jepa_production_final_option_value`.
+  - `push_models.ps1` now uploads three model directories: `xinput_v3_production`, `jepa_production_final_180m`, and `jepa_production_final_option_value`.
+  - `bots/README.md` and `neural/jepa/README.md` were updated to describe the three-artifact production contract.
+- Extended `walkforward_jepa_180m_continuation_exit.py`.
+  - Added EOD-truncated state paths so the GBT+JEPA exit research uses the same entry universe as the current standalone OOS backtest.
+  - Added validation-selected spot/proxy trailing exits over stop/activation/drawdown/take-profit grids.
+  - Added explicit fixed-trail evaluation args: `--fixed-trail-stop-bps`, `--fixed-trail-activation-bps`, `--fixed-trail-drawdown-bps`, `--fixed-trail-take-profit-bps`, plus `--skip-learned` for fast mechanical-exit reruns.
+  - The Apr/May 2026 EOD-truncated frozen run now promotes the fixed mechanical spot/proxy trail `-50/30/5/100`: 169 trades, WR 55.0%, PF 1.498, PnL +7,411, max DD -1,819 versus fixed EOD-truncated 180m at 169 trades, WR 53.3%, PF 1.381, PnL +6,202, max DD -2,979.
+  - Validation-selected trailing remains rejected: 169 trades, WR 53.3%, PF 1.285, PnL +5,063.
+  - Pooled learned continuation remains rejected: 169 trades, WR 53.8%, PF 1.275, PnL +4,535.
+  - A partial `pooled_oracle_now` classifier run produced 169 trades, WR 59.2%, PF 1.314, PnL +4,464 and was stopped before `per_ticker_oracle_now` completed; it is not deployable because it uses oracle-style current-path labels and still did not beat fixed PF/PnL.
+  - A wider 2023-2026 monthly walk-forward signal audit confirmed the same fixed fast trail improves Apr/May OOS for the walk-forward signal set, but it underperforms fixed hold over the broader pre-OOS period. Treat it as the current Apr/May OOS mechanical exit candidate, not as a learned JEPA exit.
+- Updated `neural/jepa/SUMMARY.md` with the current promoted contract, exact before/after metrics, live/deploy changes, and remaining non-promoted items.
+
 ## 2026-06-01
 
 - Added explicit `-ProductionTrain` mode to `neural/jepa/run_pipeline.ps1`.
-  - It forces `TrainEndDate=20261230`, renames the production artifacts to `xinput_v3_production` and `jepa_production_final_180m`, trains on all available rows up to the cutoff, and skips research-only OptionValue/walk-forward/visualizer stages.
+  - The initial 2026-06-01 version forced `TrainEndDate=20261230`, renamed the production artifacts to `xinput_v3_production` and `jepa_production_final_180m`, trained on all available rows up to the cutoff, and skipped research-only OptionValue/walk-forward/visualizer stages.
+  - The 2026-06-03 update above supersedes the OptionValue part: production now also trains `jepa_production_final_option_value`.
   - It keeps production diagnostics clearly marked as non-OOS/model-history metrics.
 - Added `train_180m_production.py` for final per-ticker `base`, `jepa_only`, and `base_jepa` LightGBM artifacts trained on all eligible data.
 - Ran production training with `-ProductionTrain -SkipCollect`.
