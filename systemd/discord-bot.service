@@ -3,6 +3,7 @@ Description=Option Greeks Plotting Discord Bot
 After=network.target
 
 [Service]
+Environment="DXLINK_MAX_CONCURRENT=2"
 Type=notify
 WorkingDirectory=/home/Option-Greeks-Plotting-Discord-Bot
 User=root

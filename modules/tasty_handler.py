@@ -9,10 +9,13 @@ Optimizaciones aplicadas:
 5. Early exit cuando todos los datos llegaron
 """
 
-import asyncio
+import asyncio, os
 from collections import defaultdict
 from typing import TypedDict, List, Tuple, Dict
 import datetime
+
+_DXLINK_LIMIT = max(1, int(os.getenv("DXLINK_MAX_CONCURRENT", "2")))
+_DXLINK_SEMAPHORE = asyncio.Semaphore(_DXLINK_LIMIT)
 
 from tastytrade import Session, DXLinkStreamer
 from tastytrade.instruments import NestedOptionChain, NestedFutureOptionChain
@@ -284,38 +287,39 @@ async def main_downloader(
     total_expected = len(tasty_symbols) * 2  # Greeks + Summary
     data_cache = defaultdict(dict)
     received_count = 0
-    
-    async with DXLinkStreamer(session) as streamer:
-        # Suscripción masiva
-        await streamer.subscribe(Greeks, tasty_symbols)
-        await streamer.subscribe(Summary, tasty_symbols)
-        
-        # Escucha con early exit
-        async def collect_with_early_exit():
-            nonlocal received_count
+
+    async with _DXLINK_SEMAPHORE:
+        async with DXLinkStreamer(session) as streamer:
+            # Suscripción masiva
+            await streamer.subscribe(Greeks, tasty_symbols)
+            await streamer.subscribe(Summary, tasty_symbols)
             
-            async def collect_greeks():
+            # Escucha con early exit
+            async def collect_with_early_exit():
                 nonlocal received_count
-                async for event in streamer.listen(Greeks):
-                    if event.event_symbol not in data_cache or "greeks" not in data_cache[event.event_symbol]:
-                        data_cache[event.event_symbol]["greeks"] = event
-                        received_count += 1
+                
+                async def collect_greeks():
+                    nonlocal received_count
+                    async for event in streamer.listen(Greeks):
+                        if event.event_symbol not in data_cache or "greeks" not in data_cache[event.event_symbol]:
+                            data_cache[event.event_symbol]["greeks"] = event
+                            received_count += 1
+                
+                async def collect_summary():
+                    nonlocal received_count
+                    async for event in streamer.listen(Summary):
+                        if event.event_symbol not in data_cache or "summary" not in data_cache[event.event_symbol]:
+                            data_cache[event.event_symbol]["summary"] = event
+                            received_count += 1
+                
+                await asyncio.gather(collect_greeks(), collect_summary())
             
-            async def collect_summary():
-                nonlocal received_count
-                async for event in streamer.listen(Summary):
-                    if event.event_symbol not in data_cache or "summary" not in data_cache[event.event_symbol]:
-                        data_cache[event.event_symbol]["summary"] = event
-                        received_count += 1
-            
-            await asyncio.gather(collect_greeks(), collect_summary())
+            try:
+                # Timeout corto de 2 segundos (como el original)
+                await asyncio.wait_for(collect_with_early_exit(), timeout=2.0)
+            except asyncio.TimeoutError:
+                pass
         
-        try:
-            # Timeout corto de 2 segundos (como el original)
-            await asyncio.wait_for(collect_with_early_exit(), timeout=2.0)
-        except asyncio.TimeoutError:
-            pass
-    
     # Actualizar greeks_list con datos recibidos
     for tasty_symbol in tasty_symbols:
         cache_entry = data_cache.get(tasty_symbol, {})
