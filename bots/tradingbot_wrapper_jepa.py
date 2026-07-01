@@ -149,6 +149,28 @@ DISCORD_WEBHOOKS = [
 DISCORD_ROLE_ID = os.getenv("DISCORD_ROLE_ID", "1464601287411634226")
 DISCORD_ROLE_PING = os.getenv("DISCORD_ROLE_PING", f"<@&{DISCORD_ROLE_ID}>").strip()
 PAPER_ORDER_SCHEMA_VERSION = 1
+TRADE_LOG_FIELDS = [
+    "date",
+    "entry_time",
+    "exit_time",
+    "ticker",
+    "direction",
+    "right",
+    "strike",
+    "delta",
+    "entry_premium",
+    "exit_premium",
+    "contracts",
+    "pnl_pct",
+    "pnl_dollars",
+    "hold_minutes",
+    "exit_reason",
+    "peak_pnl_pct",
+    "trough_pnl_pct",
+    "option_snapshot_suffix",
+    "exit_contract",
+    "source_model",
+]
 
 
 def _now_et() -> datetime:
@@ -1274,14 +1296,36 @@ class JepaFixedDeltaBot:
                 continue
         return max(values) if values else None
 
-    def _event_trade_log(self) -> pd.DataFrame:
-        if not self.trade_log_path.exists():
-            return pd.DataFrame()
+    @staticmethod
+    def _read_trade_log_csv(path: Path) -> pd.DataFrame:
+        if not path.exists():
+            return pd.DataFrame(columns=TRADE_LOG_FIELDS)
         try:
-            return pd.read_csv(self.trade_log_path, dtype={"date": str, "source_model": str})
+            with path.open(newline="", encoding="utf-8") as handle:
+                rows = list(csv.reader(handle))
         except Exception:
-            logging.exception("Could not read event-option trade log")
-            return pd.DataFrame()
+            logging.exception("Could not read trade log %s", path)
+            return pd.DataFrame(columns=TRADE_LOG_FIELDS)
+        if not rows:
+            return pd.DataFrame(columns=TRADE_LOG_FIELDS)
+        header = [str(col).strip() for col in rows[0]]
+        missing_fields = [field for field in TRADE_LOG_FIELDS if field not in header]
+        records: list[dict[str, Any]] = []
+        for values in rows[1:]:
+            if not values or not any(str(value).strip() for value in values):
+                continue
+            record = {field: "" for field in TRADE_LOG_FIELDS}
+            for idx, value in enumerate(values[: len(header)]):
+                if idx < len(header) and header[idx] in record:
+                    record[header[idx]] = value
+            extra_values = values[len(header) :]
+            for field, value in zip(missing_fields, extra_values):
+                record[field] = value
+            records.append(record)
+        return pd.DataFrame(records, columns=TRADE_LOG_FIELDS)
+
+    def _event_trade_log(self) -> pd.DataFrame:
+        return self._read_trade_log_csv(self.trade_log_path)
 
     @staticmethod
     def _required_count_by_date(month_value: str, date_value: str, target: int) -> int:
@@ -1854,14 +1898,41 @@ class JepaFixedDeltaBot:
         self.cooldowns[ticker] = now.isoformat()
         self._save_cooldowns()
 
+    def _normalize_trade_log_file(self) -> None:
+        if not self.trade_log_path.exists():
+            return
+        try:
+            with self.trade_log_path.open(newline="", encoding="utf-8") as handle:
+                current_header = next(csv.reader(handle), [])
+        except Exception:
+            logging.exception("Could not inspect trade log header")
+            return
+        if [str(col).strip() for col in current_header] == TRADE_LOG_FIELDS:
+            return
+        frame = self._read_trade_log_csv(self.trade_log_path)
+        backup = self.trade_log_path.with_name(
+            f"{self.trade_log_path.stem}.schema_mismatch_{_now_et().strftime('%Y%m%dT%H%M%S')}.csv"
+        )
+        try:
+            self.trade_log_path.replace(backup)
+            with self.trade_log_path.open("w", newline="", encoding="utf-8") as handle:
+                writer = csv.DictWriter(handle, fieldnames=TRADE_LOG_FIELDS, extrasaction="ignore")
+                writer.writeheader()
+                for record in frame.to_dict("records"):
+                    writer.writerow({field: record.get(field, "") for field in TRADE_LOG_FIELDS})
+            logging.warning("Normalized mixed-schema trade log %s; backup=%s", self.trade_log_path, backup)
+        except Exception:
+            logging.exception("Could not normalize trade log %s", self.trade_log_path)
+
     def _append_trade_log(self, row: dict) -> None:
         self.trades_dir.mkdir(parents=True, exist_ok=True)
+        self._normalize_trade_log_file()
         exists = self.trade_log_path.exists()
         with self.trade_log_path.open("a", newline="", encoding="utf-8") as handle:
-            writer = csv.DictWriter(handle, fieldnames=list(row.keys()))
+            writer = csv.DictWriter(handle, fieldnames=TRADE_LOG_FIELDS, extrasaction="ignore")
             if not exists:
                 writer.writeheader()
-            writer.writerow(row)
+            writer.writerow({field: row.get(field, "") for field in TRADE_LOG_FIELDS})
 
     def _discord_open(self, pos: JepaOptionPosition) -> None:
         right_short = "C" if pos.right == "CALL" else "P"
@@ -2353,3 +2424,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
