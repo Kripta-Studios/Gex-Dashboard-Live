@@ -36,6 +36,25 @@ OPTIONS_SYMBOLS = {"SPX": "SPXW", "SPXW": "SPXW", "SPY": "SPY", "QQQ": "QQQ"}
 UNDERLYING_SYMBOLS = {"SPXW": "SPX", "SPX": "SPX", "SPY": "SPY", "QQQ": "QQQ"}
 EXPIRY_MODES = {"0dte": "zero_dte", "weekly": "front_weekly"}
 DELTA_INT_BUCKETS = tuple(int(round(delta * 100)) for delta in DELTA_BUCKETS)
+LIVE_INTRADAY_STATE_COLUMNS = {
+    "phys_event_seq_in_day",
+    "phys_event_frac_in_day",
+    "phys_minutes_since_first_event",
+    "phys_spot_ret_from_first_event_bps",
+    "phys_same_day_event_count",
+}
+LIVE_CONTEXT_COLUMNS = {
+    "spot",
+    "ret_1m_bps",
+    "ret_5m_bps",
+    "ret_15m_bps",
+    "ret_30m_bps",
+    "ib_range_bps",
+    "nearest_level_abs_bps",
+    "phys_d35_iv_skew_put_minus_call",
+    "phys_total_volume_skew_call_minus_put",
+    "phys_total_oi_skew_call_minus_put",
+}
 
 
 @dataclass(frozen=True)
@@ -306,6 +325,113 @@ def build_live_event_option_snapshots(
         "columns": int(len(frame.columns)) if not frame.empty else 0,
     }
     return LiveSnapshotBuildResult(rows=frame, summary=summary)
+
+
+def add_live_cross_index_context_asof(
+    frame: pd.DataFrame,
+    *,
+    max_context_age_minutes: int = 3,
+) -> pd.DataFrame:
+    """Add causal cross-index context for asynchronous live snapshots.
+
+    The offline dataset samples all tickers on an aligned grid, so exact
+    trade_date/minute joins work there. The live feed polls chains
+    asynchronously; this uses the latest row available at or before each
+    decision minute, bounded by a short staleness cap.
+    """
+    if frame.empty:
+        return frame.copy()
+    if not {"ticker", "trade_date", "minute"}.issubset(frame.columns):
+        return add_cross_index_context(frame)
+
+    out = frame.copy()
+    out["minute"] = pd.to_numeric(out["minute"], errors="coerce").fillna(-1).astype(int)
+    available = [col for col in LIVE_CONTEXT_COLUMNS if col in out.columns]
+    if not available:
+        return out
+
+    base = out[["trade_date", "minute"]].copy()
+    base["_row_index"] = np.arange(len(out))
+    base = base.sort_values(["trade_date", "minute", "_row_index"], kind="stable")
+    max_age = max(0, int(max_context_age_minutes))
+
+    for ticker in ("SPXW", "SPY", "QQQ"):
+        source = out[out["ticker"].astype(str).str.upper().eq(ticker)].copy()
+        if source.empty:
+            continue
+        source = source.sort_values(
+            [col for col in ("trade_date", "minute", "expiry_mode", "timestamp") if col in source.columns],
+            kind="stable",
+        )
+        source = source.drop_duplicates(["trade_date", "minute"], keep="first")
+        source_cols = ["trade_date", "minute", *available]
+        source = source[source_cols].copy()
+        source["_source_minute"] = source["minute"].astype(int)
+        source = source.sort_values(["trade_date", "minute"], kind="stable")
+        prefix = ticker.lower().replace("spxw", "spx")
+
+        mapped_parts: list[pd.DataFrame] = []
+        for trade_date, base_part in base.groupby("trade_date", sort=False):
+            source_part = source[source["trade_date"].astype(str).eq(str(trade_date))].copy()
+            if source_part.empty:
+                mapped = base_part[["_row_index", "minute"]].copy()
+                for col in available:
+                    mapped[col] = np.nan
+                mapped["_source_minute"] = np.nan
+            else:
+                mapped = pd.merge_asof(
+                    base_part.sort_values("minute", kind="stable"),
+                    source_part.sort_values("minute", kind="stable"),
+                    on="minute",
+                    direction="backward",
+                )
+            mapped_parts.append(mapped)
+        if not mapped_parts:
+            continue
+        mapped_all = pd.concat(mapped_parts, ignore_index=True, sort=False).set_index("_row_index")
+        age = out["minute"].astype(float) - pd.to_numeric(mapped_all["_source_minute"], errors="coerce")
+        fresh = age.ge(0.0) & age.le(float(max_age))
+        for col in available:
+            values = pd.to_numeric(mapped_all[col], errors="coerce").where(fresh, np.nan)
+            out[f"ctx_{prefix}_{col}"] = values.reindex(range(len(out))).to_numpy(dtype=float)
+            if col.startswith("ret_") and col in out.columns:
+                out[f"ctx_{prefix}_{col}_minus_self"] = out[f"ctx_{prefix}_{col}"] - pd.to_numeric(
+                    out[col], errors="coerce"
+                )
+
+    if {"ctx_spy_ret_5m_bps", "ctx_qqq_ret_5m_bps"}.issubset(out.columns):
+        out["ctx_spy_qqq_ret_5m_spread"] = (
+            pd.to_numeric(out["ctx_spy_ret_5m_bps"], errors="coerce")
+            - pd.to_numeric(out["ctx_qqq_ret_5m_bps"], errors="coerce")
+        )
+    if {"ctx_spx_ret_5m_bps", "ctx_spy_ret_5m_bps"}.issubset(out.columns):
+        out["ctx_spx_spy_ret_5m_spread"] = (
+            pd.to_numeric(out["ctx_spx_ret_5m_bps"], errors="coerce")
+            - pd.to_numeric(out["ctx_spy_ret_5m_bps"], errors="coerce")
+        )
+    return out
+
+
+def refresh_live_event_option_history_features(
+    frame: pd.DataFrame,
+    *,
+    max_context_age_minutes: int = 3,
+) -> pd.DataFrame:
+    """Recompute history-dependent live features after appending snapshot history."""
+    if frame.empty:
+        return frame.copy()
+    stale_cols = [
+        col
+        for col in frame.columns
+        if col.startswith("ctx_") or col in LIVE_INTRADAY_STATE_COLUMNS
+    ]
+    out = frame.drop(columns=stale_cols, errors="ignore").copy()
+    out = add_intraday_state(out)
+    out = add_live_cross_index_context_asof(out, max_context_age_minutes=max_context_age_minutes)
+    sort_cols = [col for col in ("ticker", "trade_date", "expiry_mode", "timestamp", "time") if col in out.columns]
+    if sort_cols:
+        out = out.sort_values(sort_cols, kind="stable").reset_index(drop=True)
+    return out
 
 
 def main() -> int:

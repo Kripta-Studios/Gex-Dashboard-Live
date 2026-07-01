@@ -172,6 +172,8 @@ def audit_event_option(
     live_snapshots_path: Path,
     reference_path: Path,
     strict_features: bool,
+    entry_start_minute: int,
+    entry_end_minute: int,
 ) -> dict[str, Any]:
     registry = EventOptionComponentRegistry.from_path(
         registry_path,
@@ -179,10 +181,16 @@ def audit_event_option(
         require_complete_live_equivalence=True,
     )
     live_snapshots = pd.read_parquet(live_snapshots_path)
+    audit_snapshots = live_snapshots.copy()
+    if "minute" in audit_snapshots.columns:
+        minute = pd.to_numeric(audit_snapshots["minute"], errors="coerce")
+        audit_snapshots = audit_snapshots[
+            minute.between(int(entry_start_minute), int(entry_end_minute), inclusive="both")
+        ].copy()
     reference = pd.read_csv(reference_path, low_memory=False)
     score_candidates, score_issues, enriched = score_event_option_live_candidates(
         registry,
-        live_snapshots,
+        audit_snapshots,
         strict_features=strict_features,
     )
     component_rows: list[dict[str, Any]] = []
@@ -194,7 +202,7 @@ def audit_event_option(
         medians = _as_medians(payload.get("medians", component.metadata.get("feature_medians", {})))
         tickers = [str(t).upper() for t in component.registry_entry.get("tickers", component.metadata.get("tickers", []))]
         ticker = tickers[0] if tickers else str(name).split(".", 1)[0].upper()
-        live_part = live_snapshots[live_snapshots["ticker"].astype(str).str.upper().eq(ticker)].copy()
+        live_part = audit_snapshots[audit_snapshots["ticker"].astype(str).str.upper().eq(ticker)].copy()
         if "expiry_mode" in live_part.columns:
             live_part = live_part[live_part["expiry_mode"].astype(str).eq("zero_dte")].copy()
         ref_part = reference[reference["ticker"].astype(str).str.upper().eq(ticker)].copy()
@@ -250,9 +258,11 @@ def audit_event_option(
     return {
         "live_snapshots_path": str(live_snapshots_path),
         "reference_path": str(reference_path),
-        "snapshot_rows": int(len(live_snapshots)),
-        "snapshot_tickers": sorted(live_snapshots.get("ticker", pd.Series(dtype=str)).astype(str).str.upper().unique().tolist()),
-        "snapshot_expiry_modes": live_snapshots.get("expiry_mode", pd.Series(dtype=str)).astype(str).value_counts().to_dict(),
+        "snapshot_rows_total": int(len(live_snapshots)),
+        "snapshot_rows": int(len(audit_snapshots)),
+        "entry_minute_window": [int(entry_start_minute), int(entry_end_minute)],
+        "snapshot_tickers": sorted(audit_snapshots.get("ticker", pd.Series(dtype=str)).astype(str).str.upper().unique().tolist()),
+        "snapshot_expiry_modes": audit_snapshots.get("expiry_mode", pd.Series(dtype=str)).astype(str).value_counts().to_dict(),
         "scored_candidate_rows": int(len(score_candidates)),
         "scored_candidate_tickers": sorted(score_candidates.get("ticker", pd.Series(dtype=str)).astype(str).str.upper().unique().tolist()) if not score_candidates.empty else [],
         "score_issues": list(score_issues),
@@ -346,6 +356,8 @@ def main() -> int:
     parser.add_argument("--xinput-normalizers", default=str(DEFAULT_XINPUT))
     parser.add_argument("--output", default="")
     parser.add_argument("--strict-features", action="store_true")
+    parser.add_argument("--entry-start-minute", type=int, default=600)
+    parser.add_argument("--entry-end-minute", type=int, default=870)
     args = parser.parse_args()
 
     day_dir = Path(args.day_dir)
@@ -356,6 +368,8 @@ def main() -> int:
         live_snapshots_path=live_snapshots,
         reference_path=Path(args.reference),
         strict_features=bool(args.strict_features),
+        entry_start_minute=int(args.entry_start_minute),
+        entry_end_minute=int(args.entry_end_minute),
     )
     xinput_audit = audit_xinput_features(day_dir=day_dir, normalizers_path=Path(args.xinput_normalizers))
     production_passed = bool(event_audit.get("passed"))

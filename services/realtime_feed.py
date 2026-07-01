@@ -66,10 +66,14 @@ except Exception as exc:  # pragma: no cover - live dependency guard
     JEPA_IMPORT_ERROR = exc
 
 try:
-    from neural.jepa.event_option_live_snapshot import build_live_event_option_snapshots
+    from neural.jepa.event_option_live_snapshot import (
+        build_live_event_option_snapshots,
+        refresh_live_event_option_history_features,
+    )
     EVENT_OPTION_SNAPSHOT_IMPORT_ERROR = None
 except Exception as exc:  # pragma: no cover - live dependency guard
     build_live_event_option_snapshots = None
+    refresh_live_event_option_history_features = None
     EVENT_OPTION_SNAPSHOT_IMPORT_ERROR = exc
 
 try:
@@ -2298,11 +2302,14 @@ class RealtimeOptionsFeed:
             sort_cols = [col for col in ("ticker", "trade_date", "expiry_mode", "timestamp", "time") if col in rows_to_save.columns]
             if sort_cols:
                 rows_to_save = rows_to_save.sort_values(sort_cols).reset_index(drop=True)
+            if refresh_live_event_option_history_features is not None:
+                rows_to_save = refresh_live_event_option_history_features(rows_to_save)
             self._save_parquet(rows_to_save, "event_option_snapshots_latest.parquet")
             summary_path = self.output_dir / "event_option_snapshots_latest.summary.json"
             summary = dict(result.summary)
             summary["new_rows"] = int(len(result.rows))
             summary["stored_rows"] = int(len(rows_to_save))
+            summary["history_features_refreshed"] = bool(refresh_live_event_option_history_features is not None)
             summary_path.write_text(json.dumps(summary, indent=2, allow_nan=True), encoding="utf-8")
             logger.info(
                 "[EVENT_OPTION] live snapshots saved new_rows=%d stored_rows=%d modes=%s missing=%s",

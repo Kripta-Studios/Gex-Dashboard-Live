@@ -2068,6 +2068,14 @@ class JepaFixedDeltaBot:
                 self.latest_entry_time.strftime("%H:%M"),
             )
             return
+        if now.time() > self.latest_entry_time:
+            logging.info(
+                "[%s] past event-option entry window %s-%s",
+                ticker,
+                self.earliest_entry_time.strftime("%H:%M"),
+                self.latest_entry_time.strftime("%H:%M"),
+            )
+            return
         candidates, issues = self._score_event_option_candidates()
         for issue in issues[:5]:
             logging.info("[%s] event-option scorer issue: %s", ticker, issue)

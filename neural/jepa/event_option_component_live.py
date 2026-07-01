@@ -171,6 +171,20 @@ def _prepare_feature_frame(
     return x, missing
 
 
+def _nonfinite_feature_rows(frame: pd.DataFrame, feature_cols: list[str]) -> tuple[pd.Series, dict[Any, list[str]]]:
+    expanded = _append_derived_one_hot_columns(frame, feature_cols)
+    x = expanded.reindex(columns=feature_cols)
+    for col in feature_cols:
+        x[col] = pd.to_numeric(x[col], errors="coerce")
+    x = x.replace([np.inf, -np.inf], np.nan)
+    bad = x.isna()
+    bad_rows = bad.any(axis=1)
+    row_features: dict[Any, list[str]] = {}
+    for idx in bad.index[bad_rows]:
+        row_features[idx] = [str(col) for col in bad.columns[bad.loc[idx]].tolist()]
+    return bad_rows, row_features
+
+
 @dataclass(frozen=True)
 class EventOptionComponent:
     name: str
@@ -546,14 +560,41 @@ class EventOptionComponentRegistry:
         if not feature_cols:
             raise ValueError(f"Event-option gate component {name} has no feature_cols")
         medians = _as_medians(payload.get("medians", component.metadata.get("feature_medians", {})))
-        x_score, missing = _prepare_feature_frame(snapshots, feature_cols, medians, strict=strict)
         call_model = payload.get("call_model")
         put_model = payload.get("put_model")
         if call_model is None or put_model is None:
             raise ValueError(f"Event-option gate component {name} is missing call_model/put_model")
         metadata = payload.get("metadata", component.metadata)
+        score_input = snapshots.copy()
+        dropped_nonfinite: dict[str, Any] = {}
+        if strict and not score_input.empty:
+            bad_rows, row_features = _nonfinite_feature_rows(score_input, feature_cols)
+            if bad_rows.any():
+                dropped = score_input.loc[bad_rows].copy()
+                score_input = score_input.loc[~bad_rows].copy()
+                preview = []
+                for idx, cols in list(row_features.items())[:5]:
+                    row = dropped.loc[idx] if idx in dropped.index else pd.Series(dtype=object)
+                    preview.append(
+                        {
+                            "ticker": str(row.get("ticker", "")),
+                            "time": str(row.get("time", "")),
+                            "features": cols[:12],
+                            "feature_count": int(len(cols)),
+                        }
+                    )
+                dropped_nonfinite = {
+                    "dropped_rows": int(bad_rows.sum()),
+                    "preview": preview,
+                }
+                if score_input.empty:
+                    raise ValueError(
+                        "All event-option snapshot rows have nonfinite required features; "
+                        f"examples={preview}"
+                    )
+        x_score, missing = _prepare_feature_frame(score_input, feature_cols, medians, strict=strict)
         label_mode = str((metadata.get("args") or {}).get("label_mode", "return")).lower()
-        out = snapshots.copy()
+        out = score_input.copy()
         if label_mode == "win":
             out["pred_call_return"] = call_model.predict_proba(x_score)[:, 1]
             out["pred_put_return"] = put_model.predict_proba(x_score)[:, 1]
@@ -568,6 +609,7 @@ class EventOptionComponentRegistry:
         out["deploy_config"] = str(metadata.get("deploy_config_name", ""))
         out["event_gate_pass"] = out[EVENT_GATE_SCORE_COL].astype(float) >= threshold
         out.attrs["missing_event_option_features"] = missing
+        out.attrs["dropped_nonfinite_event_option_features"] = dropped_nonfinite
         out.attrs["deploy_config"] = deploy_config
         return out
 

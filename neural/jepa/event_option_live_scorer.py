@@ -58,6 +58,24 @@ def annotate_contract_profile(
     return out
 
 
+def component_max_trades_per_day(
+    registry: EventOptionComponentRegistry,
+    component_name: str,
+    default: int,
+) -> int:
+    try:
+        component = registry.component(component_name)
+        deploy_config = component.registry_entry.get("deploy_config")
+        if not isinstance(deploy_config, dict):
+            deploy_config = component.metadata.get("deploy_config")
+        if isinstance(deploy_config, dict) and deploy_config.get("max_trades_per_day") is not None:
+            value = int(float(deploy_config["max_trades_per_day"]))
+            return value if value > 0 else int(default)
+    except Exception:
+        return int(default)
+    return int(default)
+
+
 def latest_rows(frame: pd.DataFrame, keys: list[str]) -> pd.DataFrame:
     if frame.empty:
         return frame.copy()
@@ -222,14 +240,21 @@ def score_monthly_backfill_policy(
         )
         if scored.empty:
             continue
+        role_max_day = component_max_trades_per_day(
+            registry,
+            component,
+            int(policy.get("max_day", 3)),
+        )
         scored = annotate_contract_profile(
             scored,
             policy_ticker=ticker,
             delta_bucket=delta_bucket,
             policy_source=f"{ticker}_DENSE15_BACKFILL18",
-            policy_max_day=int(policy.get("max_day", 3)),
+            policy_max_day=role_max_day,
             policy_cooldown_minutes=int(policy.get("cooldown_minutes", 30)),
         )
+        scored["monthly_policy_max_day"] = int(policy.get("max_day", 3))
+        scored["component_policy_max_day"] = int(role_max_day)
         scored["source_stream"] = source
         scored["monthly_backfill_role"] = role
         scored["backfill_policy_component"] = policy_name
