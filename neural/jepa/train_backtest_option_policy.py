@@ -191,6 +191,18 @@ LEAKAGE_COLUMNS = {
     "future_up_180m",
     "future_abs_bps_180m",
     "future_spot_180m",
+    "long_pnl_180m",
+    "short_pnl_180m",
+    "terminal_hold_steps",
+    "terminal_hold_minutes",
+    "terminal_exit_time",
+    "terminal_horizon_truncated",
+    "future_best_pnl_dollars",
+    "future_best_return_on_risk",
+    "future_edge_return_on_risk",
+    "terminal_pnl_dollars",
+    "terminal_return_on_risk",
+    "oos_apr_may_2026",
 }
 
 OPTION_FEATURES = [
@@ -468,8 +480,33 @@ def build_signals(args, signal_model: Jepa180mSignalModel) -> tuple[pd.DataFrame
         args.tickers,
         bool(args.truncate_eod_horizon),
     )
-    log("[OPTION_POLICY] running JEPA signal inference")
-    predictions = signal_model.predict_frame(labeled)
+
+    oof_path = str(getattr(args, "oof_predictions", "") or "").strip()
+    if oof_path and Path(oof_path).exists():
+        log(f"[OPTION_POLICY] using OOF GBT predictions from {oof_path}")
+        oof = pd.read_parquet(oof_path)
+        oof["ticker"] = oof["ticker"].map(normalize_ticker)
+        oof["date"] = oof["date"].map(normalize_date)
+        if "jepa180_prob_up" not in oof.columns and "jepa180_pred_bps" in oof.columns:
+            oof["jepa180_prob_up"] = oof["jepa180_pred_bps"].astype(float)
+        oof_cols = [
+            "ticker", "date", "time",
+            "jepa180_prob_up", "jepa180_pred_bps", "jepa180_long_threshold", "jepa180_short_threshold",
+            "jepa180_confidence", "jepa180_edge", "jepa180_direction", "jepa180_signal",
+            "level_target_bps", "level_stop_bps", "level_config",
+        ]
+        oof_merge = oof[[c for c in oof_cols if c in oof.columns]].copy()
+        labeled["ticker"] = labeled["ticker"].map(normalize_ticker)
+        labeled["date"] = labeled["date"].map(normalize_date)
+        predictions = labeled.merge(oof_merge, on=["ticker", "date", "time"], how="inner")
+        log(
+            f"[OPTION_POLICY] OOF merge: labeled={len(labeled):,} oof={len(oof):,} "
+            f"matched={len(predictions):,}"
+        )
+    else:
+        log("[OPTION_POLICY] running JEPA signal inference (frozen model)")
+        predictions = signal_model.predict_frame(labeled)
+
     predictions["entry_minute"] = predictions["time"].map(time_to_minutes).astype(int)
     signals = predictions[predictions["jepa180_direction"].astype(int) != 0].copy()
     signals = apply_signal_cooldown(signals, int(round(args.cooldown_minutes / 5.0)))
@@ -562,6 +599,28 @@ def select_rule_exit(path: list[dict], hard_stop_pct: float, take_profit_pct: fl
             return point, "hard_stop"
         if pnl_pct >= float(take_profit_pct):
             return point, "hard_take_profit"
+    return path[-1], "max_time"
+
+
+def select_level_exit(
+    path: list[dict],
+    hard_stop_pct: float,
+    level_target_bps: float,
+    level_stop_bps: float,
+) -> tuple[dict, str]:
+    has_target = np.isfinite(float(level_target_bps)) and float(level_target_bps) > 0.0
+    has_stop = np.isfinite(float(level_stop_bps)) and float(level_stop_bps) > 0.0
+    if not has_target and not has_stop:
+        return select_rule_exit(path, hard_stop_pct, float("inf"))
+    for point in path:
+        pnl_pct = float(point["current_pnl_pct"])
+        signed_spot_bps = float(point.get("signed_spot_return_bps", 0.0))
+        if pnl_pct <= float(hard_stop_pct):
+            return point, "hard_stop"
+        if has_stop and signed_spot_bps <= -float(level_stop_bps):
+            return point, "level_spot_stop"
+        if has_target and signed_spot_bps >= float(level_target_bps):
+            return point, "level_spot_target"
     return path[-1], "max_time"
 
 
@@ -688,7 +747,12 @@ def build_option_labels(
             if not path:
                 continue
 
-            rule_exit, rule_reason = select_rule_exit(path, args.hard_stop_pct, args.take_profit_pct)
+            level_target_bps = float(row_s.get("level_target_bps", np.nan))
+            level_stop_bps = float(row_s.get("level_stop_bps", np.nan))
+            if bool(getattr(args, "use_level_exit", False)):
+                rule_exit, rule_reason = select_level_exit(path, args.hard_stop_pct, level_target_bps, level_stop_bps)
+            else:
+                rule_exit, rule_reason = select_rule_exit(path, args.hard_stop_pct, args.take_profit_pct)
             oracle_exit, oracle_reason = select_oracle_exit(path)
             hold_exit = path[-1]
             record = {
@@ -700,6 +764,9 @@ def build_option_labels(
                 "time": entry_time,
                 "side": side,
                 "spot_price": entry_spot,
+                "level_target_bps": level_target_bps,
+                "level_stop_bps": level_stop_bps,
+                "level_config": str(row_s.get("level_config", "")),
                 "delta_target": float(delta_target),
                 "actual_strike": float(chain["strike"]),
                 "contracts": int(contracts),
@@ -840,16 +907,25 @@ def choose_entry_threshold(
     best_score = -1e18
     best_threshold = -1e9
     best_trades = pd.DataFrame()
+    fallback_threshold = -1e9
+    fallback_trades = pd.DataFrame()
     for threshold in grid:
         selected = select_best_by_prediction(candidates, pred, threshold)
         trades = candidate_trades_from_selection(selected, "rule", "validation_entry_hard")
         metrics = trade_metrics(trades)
         score = score_metrics(metrics, min_trades)
         rows.append({"threshold": threshold, "score": score, **metrics})
+        if float(threshold) == -1e9:
+            fallback_trades = trades
         if score > best_score:
+            if int(metrics.get("trades", 0)) < int(min_trades):
+                continue
             best_score = score
             best_threshold = threshold
             best_trades = trades
+    if best_trades.empty:
+        best_threshold = fallback_threshold
+        best_trades = fallback_trades
     return float(best_threshold), best_trades, {"grid": rows}
 
 
@@ -955,6 +1031,10 @@ def simulate_learned_exit_for_selected(
     start = time.time()
     last_log = start
     log(f"[OPTION_POLICY] START simulate learned exits policy={policy_name} selected={total:,} margin={float(exit_margin):.4f}")
+
+    blueprints: list[dict] = []
+    state_records: list[dict] = []
+    state_refs: list[tuple[int, dict]] = []
     for n, (candidate_id, candidate) in enumerate(indexed.iterrows(), start=1):
         path = paths.get(int(candidate_id), [])
         if not path:
@@ -969,6 +1049,7 @@ def simulate_learned_exit_for_selected(
         path_so_far: list[dict] = []
         exit_point = path[-1]
         exit_reason = "max_time"
+        state_start = len(state_records)
         for point in path:
             path_so_far.append(point)
             pnl_pct = float(point["current_pnl_pct"])
@@ -976,17 +1057,51 @@ def simulate_learned_exit_for_selected(
                 exit_point = point
                 exit_reason = "hard_stop"
                 break
-            if pnl_pct >= float(args.take_profit_pct):
+            if (
+                not bool(getattr(args, "learned_exit_ignore_take_profit", False))
+                and pnl_pct >= float(args.take_profit_pct)
+            ):
                 exit_point = point
                 exit_reason = "hard_take_profit"
                 break
             if int(point["hold_minutes"]) < int(args.min_exit_hold_minutes):
                 continue
             state = build_exit_state_record(candidate, point, path_so_far, int(args.max_hold_minutes), entry_features)
-            state_frame = pd.DataFrame([state])
-            predicted_future = float(predict_regressor(exit_model, state_frame, exit_features, exit_medians)[0])
+            state_records.append(state)
+            state_refs.append((len(blueprints), point))
+        state_end = len(state_records)
+        blueprints.append(
+            {
+                "candidate": candidate,
+                "exit_point": exit_point,
+                "exit_reason": exit_reason,
+                "state_start": state_start,
+                "state_end": state_end,
+            }
+        )
+        now = time.time()
+        if total and (n % 250 == 0 or now - last_log >= LOG_HEARTBEAT_SECONDS):
+            log(
+                f"[OPTION_POLICY] STILL simulate learned exits policy={policy_name} "
+                f"selected={n:,}/{total:,} prepared={len(blueprints):,} states={len(state_records):,} elapsed={now - start:.1f}s"
+            )
+            last_log = now
+
+    predictions = np.array([], dtype=np.float64)
+    if state_records:
+        with logged_phase(f"predict learned exits policy={policy_name} states={len(state_records):,}"):
+            state_frame = pd.DataFrame(state_records)
+            predictions = predict_regressor(exit_model, state_frame, exit_features, exit_medians)
+
+    for blueprint in blueprints:
+        candidate = blueprint["candidate"]
+        exit_point = blueprint["exit_point"]
+        exit_reason = blueprint["exit_reason"]
+        for state_idx in range(int(blueprint["state_start"]), int(blueprint["state_end"])):
+            point = state_refs[state_idx][1]
+            predicted_future = float(predictions[state_idx]) if state_idx < len(predictions) else float("nan")
             current_return = float(point["pnl_dollars"]) / float(max(args.risk_capital, 1e-9))
-            if predicted_future <= current_return + float(exit_margin):
+            if np.isfinite(predicted_future) and predicted_future <= current_return + float(exit_margin):
                 exit_point = point
                 exit_reason = "learned_exit"
                 break
@@ -1012,13 +1127,7 @@ def simulate_learned_exit_for_selected(
                 "pred_utility": float(candidate.get("_pred_utility", np.nan)),
             }
         )
-        now = time.time()
-        if total and (n % 250 == 0 or now - last_log >= LOG_HEARTBEAT_SECONDS):
-            log(
-                f"[OPTION_POLICY] STILL simulate learned exits policy={policy_name} "
-                f"selected={n:,}/{total:,} trades={len(trades):,} elapsed={now - start:.1f}s"
-            )
-            last_log = now
+
     log(
         f"[OPTION_POLICY] DONE simulate learned exits policy={policy_name} selected={total:,} "
         f"trades={len(trades):,} elapsed={time.time() - start:.1f}s"
@@ -1036,7 +1145,9 @@ def choose_exit_margin(
     args,
     min_trades: int,
 ) -> tuple[float, dict]:
-    grid = [-0.20, -0.10, -0.05, 0.0, 0.05, 0.10, 0.20]
+    grid = [float(x) for x in getattr(args, "exit_margin_grid", [])]
+    if not grid:
+        grid = [-0.20, -0.10, -0.05, 0.0, 0.05, 0.10, 0.20]
     best_score = -1e18
     best_margin = 0.0
     rows = []
@@ -1259,6 +1370,16 @@ def main() -> int:
     parser.add_argument("--risk-capital", type=float, default=1000.0)
     parser.add_argument("--hard-stop-pct", type=float, default=-0.60)
     parser.add_argument("--take-profit-pct", type=float, default=2.50)
+    parser.add_argument(
+        "--use-level-exit",
+        action="store_true",
+        help="Use level_target_bps/level_stop_bps from OOF rule signals for rule exits instead of option take-profit.",
+    )
+    parser.add_argument(
+        "--learned-exit-ignore-take-profit",
+        action="store_true",
+        help="For learned-exit policies, do not force the hard take-profit before consulting the exit model.",
+    )
     parser.add_argument("--min-exit-hold-minutes", type=int, default=15)
     parser.add_argument(
         "--truncate-eod-horizon",
@@ -1270,6 +1391,13 @@ def main() -> int:
     parser.add_argument("--min-val-trades", type=int, default=12)
     parser.add_argument("--n-estimators", type=int, default=260)
     parser.add_argument("--exit-n-estimators", type=int, default=220)
+    parser.add_argument(
+        "--exit-margin-grid",
+        nargs="+",
+        type=float,
+        default=[],
+        help="Margins evaluated for learned-exit validation. More negative values hold runners longer.",
+    )
     parser.add_argument("--seed", type=int, default=991)
     parser.add_argument("--n-jobs", type=int, default=20)
     parser.add_argument("--greeks-cache-size", type=int, default=50)
@@ -1277,6 +1405,15 @@ def main() -> int:
     parser.add_argument("--max-signals", type=int, default=0)
     parser.add_argument("--reuse-candidates", action="store_true", help="Reuse output_dir/candidate_labels.parquet instead of rebuilding option labels.")
     parser.add_argument("--labels-only", action="store_true", help="Build candidate_labels.parquet and exit without OOS model training.")
+    parser.add_argument(
+        "--oof-predictions",
+        default="",
+        help=(
+            "Path to walk-forward OOF GBT prediction parquet from walkforward_gbt_oof.py. "
+            "When provided, OOF predictions are merged onto the scoring frame instead of "
+            "calling the frozen signal model, removing lookahead bias from the candidate pool."
+        ),
+    )
     args = parser.parse_args()
 
     output_dir = Path(args.output_dir)
@@ -1507,6 +1644,28 @@ def main() -> int:
         selected_test_skip = select_best_by_prediction(test_candidates, test_pred, entry_threshold)
         supervised_hard = candidate_trades_from_selection(selected_test_skip, "rule", "supervised_entry_strike_skip_hard")
     if paths and exit_model is not None:
+        learned_regression_all_exit = simulate_learned_exit_for_selected(
+            selected_test_all,
+            paths,
+            exit_model,
+            exit_features,
+            exit_medians,
+            entry_features,
+            args,
+            "learned_delta_regression_all_learned_exit",
+            exit_margin,
+        )
+        learned_ranker_all_exit = simulate_learned_exit_for_selected(
+            selected_ranker_all,
+            paths,
+            exit_model,
+            exit_features,
+            exit_medians,
+            entry_features,
+            args,
+            "learned_delta_ranker_all_learned_exit",
+            exit_margin,
+        )
         supervised_learned = simulate_learned_exit_for_selected(
             selected_test_skip,
             paths,
@@ -1519,6 +1678,8 @@ def main() -> int:
             exit_margin,
         )
     else:
+        learned_regression_all_exit = pd.DataFrame()
+        learned_ranker_all_exit = pd.DataFrame()
         supervised_learned = pd.DataFrame()
     with logged_phase(f"build fixed/oracle policies rows={len(test_candidates):,}"):
         fixed_delta_060 = fixed_delta_policy(test_candidates, 0.60, "rule", "fixed_delta_0.60_hard")
@@ -1537,7 +1698,9 @@ def main() -> int:
         "fixed_delta_0.70_hard": fixed_delta_070,
         f"validation_best_delta_{best_fixed_delta:.2f}_hard": validation_best_delta,
         "learned_delta_regression_all_hard": learned_regression_all,
+        "learned_delta_regression_all_learned_exit": learned_regression_all_exit,
         "learned_delta_ranker_all_hard": learned_ranker_all,
+        "learned_delta_ranker_all_learned_exit": learned_ranker_all_exit,
         "supervised_entry_strike_skip_hard": supervised_hard,
         "supervised_entry_strike_learned_exit": supervised_learned,
         "oracle_best_delta_hard": oracle_rule,

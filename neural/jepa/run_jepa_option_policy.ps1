@@ -11,7 +11,7 @@ Param(
   [string]$TestStartDate = "20260401",
   [int]$CooldownMinutes = 180,
   [int]$MaxHoldMinutes = 180,
-  [double]$RiskCapital = 1000.0,
+  [double]$RiskCapital = 5000.0,
   [double]$HardStopPct = -0.60,
   [double]$TakeProfitPct = 2.50,
   [int]$MinExitHoldMinutes = 15,

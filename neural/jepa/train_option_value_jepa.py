@@ -52,6 +52,7 @@ OPTION_VALUE_TARGETS = [
 DYNAMIC_TARGET_COLUMNS = {
     "future_best": "future_best_return_on_risk",
     "future_edge": "future_edge_return_on_risk",
+    "terminal": "terminal_return_on_risk",
 }
 
 STATIC_DROP_COLUMNS = {
@@ -573,6 +574,7 @@ def train_model(
     model = OptionValueJEPA(config).to(device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=float(args.lr), weight_decay=float(args.weight_decay))
     loss_fn = nn.SmoothL1Loss()
+    loss_fn_none = nn.SmoothL1Loss(reduction="none")
 
     em, eo, eh, ey = make_entry_tensors(entry_train, scalers, device)
     dm, do, dd, dh, dy = make_dynamic_tensors(
@@ -614,7 +616,10 @@ def train_model(
             pred_entry = model.forward_entry(batch[0], batch[1], batch[2])
             loss_entry = loss_fn(pred_entry, batch[3])
             pred_dyn = model.forward_dynamic(dyn_batch[0], dyn_batch[1], dyn_batch[2], dyn_batch[3])
-            loss_dyn = loss_fn(pred_dyn, dyn_batch[4])
+            base_loss_dyn = loss_fn_none(pred_dyn, dyn_batch[4])
+            diff = pred_dyn - dyn_batch[4]
+            asymmetry = torch.where((diff > 0) & (dyn_batch[4] <= 0.0), 5.0, 1.0)
+            loss_dyn = (base_loss_dyn * asymmetry).mean()
             loss = loss_entry + float(args.dynamic_loss_weight) * loss_dyn
             loss.backward()
             nn.utils.clip_grad_norm_(model.parameters(), 2.0)

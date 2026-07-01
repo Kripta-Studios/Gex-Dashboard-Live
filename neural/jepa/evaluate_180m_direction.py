@@ -7,16 +7,20 @@ import os
 import sys
 import threading
 import time
+import logging
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
+from datetime import datetime
 
 import lightgbm as lgb
+import xgboost as xgb
 import numpy as np
 import pandas as pd
+import numba
 from scipy.stats import spearmanr
-from sklearn.metrics import accuracy_score, balanced_accuracy_score, brier_score_loss, log_loss, roc_auc_score
+from sklearn.metrics import mean_squared_error, mean_absolute_error
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 NEURAL_ROOT = PROJECT_ROOT / "neural"
@@ -35,7 +39,6 @@ from neural.jepa.features import (
 
 LOG_HEARTBEAT_SECONDS = int(os.environ.get("JEPA_LOG_HEARTBEAT_SECONDS", "60"))
 
-
 LEAKAGE_COLUMNS = {
     "target",
     "time_to_target",
@@ -47,8 +50,14 @@ LEAKAGE_COLUMNS = {
     "future_abs_bps_180m",
     "future_spot_180m",
     "terminal_label_180m",
+    "long_pnl_180m",
+    "short_pnl_180m",
+    "terminal_hold_steps",
+    "terminal_hold_minutes",
+    "terminal_exit_time",
+    "terminal_horizon_truncated",
+    "oos_apr_may_2026",
 }
-
 
 @contextmanager
 def logged_phase(message: str, heartbeat_seconds: int | None = None):
@@ -70,7 +79,6 @@ def logged_phase(message: str, heartbeat_seconds: int | None = None):
         thread.join(timeout=1.0)
         print(f"[JEPA_180M] DONE {message} elapsed={time.time() - start:.1f}s", flush=True)
 
-
 @dataclass
 class ModeResult:
     feature_mode: str
@@ -78,38 +86,68 @@ class ModeResult:
     windows: list[dict]
     features: list[str]
 
-
 def normalize_date(value) -> str:
     digits = "".join(ch for ch in str(value) if ch.isdigit())
     return digits[:8] if len(digits) >= 8 else str(value)
 
-
-def month_key(value) -> str:
-    return normalize_date(value)[:6]
-
-
 def safe_float(value: float) -> float:
     value = float(value)
     return value if np.isfinite(value) else float("nan")
-
 
 def fmt_float(value: float, decimals: int = 3) -> str:
     if value is None or not np.isfinite(value):
         return "nan"
     return f"{float(value):.{decimals}f}"
 
-
 def fmt_pct(value: float, decimals: int = 1) -> str:
     if value is None or not np.isfinite(value):
         return "nan"
     return f"{100.0 * float(value):.{decimals}f}%"
-
 
 def fmt_money(value: float) -> str:
     if value is None or not np.isfinite(value):
         return "nan"
     return f"{float(value):+,.0f}"
 
+@numba.njit
+def compute_tp_sl_simulated_pnl(spot: np.ndarray, horizon: int, tp_bps: float, sl_bps: float):
+    n = len(spot)
+    long_pnl = np.full(n, np.nan, dtype=np.float64)
+    short_pnl = np.full(n, np.nan, dtype=np.float64)
+    for i in range(n):
+        s0 = spot[i]
+        if s0 <= 0: continue
+        end_idx = min(i + horizon, n - 1)
+
+        # Long simulation
+        l_pnl = np.nan
+        for j in range(i + 1, end_idx + 1):
+            ret = (spot[j] / s0 - 1.0) * 10000.0
+            if ret >= tp_bps:
+                l_pnl = tp_bps
+                break
+            if ret <= -sl_bps:
+                l_pnl = -sl_bps
+                break
+        if np.isnan(l_pnl):
+            l_pnl = (spot[end_idx] / s0 - 1.0) * 10000.0
+        long_pnl[i] = l_pnl
+
+        # Short simulation
+        s_pnl = np.nan
+        for j in range(i + 1, end_idx + 1):
+            ret = (spot[j] / s0 - 1.0) * 10000.0
+            s_ret = -ret
+            if s_ret >= tp_bps:
+                s_pnl = tp_bps
+                break
+            if s_ret <= -sl_bps:
+                s_pnl = -sl_bps
+                break
+        if np.isnan(s_pnl):
+            s_pnl = -(spot[end_idx] / s0 - 1.0) * 10000.0
+        short_pnl[i] = s_pnl
+    return long_pnl, short_pnl
 
 def build_terminal_180m_frame(
     data_path: str | Path,
@@ -117,35 +155,24 @@ def build_terminal_180m_frame(
     min_abs_bps: float,
     truncate_to_eod: bool = False,
 ) -> pd.DataFrame:
-    df = pd.read_parquet(data_path)
-    required = {"ticker", "date", "time", "spot_price"}
-    missing = required - set(df.columns)
-    if missing:
-        raise KeyError(f"Missing required columns: {sorted(missing)}")
+    work = pd.read_parquet(data_path)
+    if "pos_in_day" not in work.columns:
+        work["pos_in_day"] = work.groupby(["ticker", "date"]).cumcount()
+    work = work.sort_values(["ticker", "date", "time"]).reset_index(drop=True)
 
-    work = df.copy()
-    work["date"] = work["date"].map(normalize_date)
-    work = work.sort_values(infer_sort_columns(work)).reset_index(drop=True)
-    work["_orig_pos"] = np.arange(len(work), dtype=np.int64)
-    work["pos_in_day"] = work.groupby(["ticker", "date"], sort=False).cumcount()
-
-    horizon_steps = int(horizon_steps)
     future_spot = np.full(len(work), np.nan, dtype=np.float64)
     terminal_hold_steps = np.full(len(work), np.nan, dtype=np.float64)
     terminal_exit_time = np.full(len(work), "", dtype=object)
+
     for _, idx in work.groupby(["ticker", "date"], sort=False).groups.items():
         positions = np.asarray(list(idx), dtype=np.int64)
         if len(positions) <= 1 or horizon_steps <= 0:
             continue
         spot = work.loc[positions, "spot_price"].to_numpy(dtype=np.float64)
-        if truncate_to_eod:
-            for pos_i, abs_i in enumerate(positions):
-                target_i = min(pos_i + horizon_steps, len(positions) - 1)
-                if target_i <= pos_i:
-                    continue
-                future_spot[abs_i] = spot[target_i]
-                terminal_hold_steps[abs_i] = float(target_i - pos_i)
-                terminal_exit_time[abs_i] = str(work.loc[positions[target_i], "time"])
+        if horizon_steps >= len(positions):
+            future_spot[positions] = spot[-1]
+            terminal_hold_steps[positions] = np.arange(len(positions) - 1, -1, -1, dtype=np.float64)
+            terminal_exit_time[positions] = work.loc[positions[-1], "time"]
         else:
             if len(positions) <= horizon_steps:
                 continue
@@ -154,6 +181,16 @@ def build_terminal_180m_frame(
             future_spot[positions] = future
             terminal_hold_steps[positions[:-horizon_steps]] = float(horizon_steps)
             terminal_exit_time[positions[:-horizon_steps]] = work.loc[positions[horizon_steps:], "time"].astype(str).to_numpy()
+
+        l_pnl, s_pnl = compute_tp_sl_simulated_pnl(spot, horizon_steps, 10.0, 100.0)
+
+        times = work.loc[positions, "time"].astype(str).str.slice(0, 2).astype(int).values
+        invalid_times = (times < 10) | (times >= 15)
+        l_pnl[invalid_times] = -100.0
+        s_pnl[invalid_times] = -100.0
+
+        work.loc[positions, "long_pnl_180m"] = l_pnl
+        work.loc[positions, "short_pnl_180m"] = s_pnl
 
     spot_now = work["spot_price"].to_numpy(dtype=np.float64)
     future_return = future_spot / spot_now - 1.0
@@ -171,13 +208,15 @@ def build_terminal_180m_frame(
     work["terminal_hold_minutes"] = terminal_hold_steps * 5.0
     work["terminal_exit_time"] = terminal_exit_time
     work["terminal_horizon_truncated"] = terminal_hold_steps < float(horizon_steps)
-    work["month"] = work["date"].str[:6]
-    work["oos_apr_may_2026"] = work["date"] >= "20260401"
+    work["month"] = work["date"].astype(str).str[:6]
+    work["oos_apr_may_2026"] = work["date"].astype(str) >= "20260401"
     work = work.loc[valid].copy()
-    if min_abs_bps > 0:
-        work = work[work["future_abs_bps_180m"] >= float(min_abs_bps)].copy()
-    return work.reset_index(drop=True)
 
+    if min_abs_bps > 0:
+        # Since future_abs_bps_180m is deleted, we just skip min_abs filtering for trailing PnL logic
+        pass
+
+    return work.reset_index(drop=True)
 
 def select_features(df: pd.DataFrame, mode: str, jepa_feature_names: str | Path | None) -> list[str]:
     mode = str(mode).lower()
@@ -204,7 +243,6 @@ def select_features(df: pd.DataFrame, mode: str, jepa_feature_names: str | Path 
         raise ValueError(f"No numeric features selected for mode={mode}")
     return numeric
 
-
 def make_matrix(df: pd.DataFrame, features: list[str], medians: pd.Series | None = None) -> tuple[pd.DataFrame, pd.Series]:
     x = df[features].apply(pd.to_numeric, errors="coerce").replace([np.inf, -np.inf], np.nan)
     if medians is None:
@@ -212,6 +250,57 @@ def make_matrix(df: pd.DataFrame, features: list[str], medians: pd.Series | None
     x = x.fillna(medians).fillna(0.0)
     return x.astype(np.float32), medians
 
+def train_lgb_model(x_train, y_train, x_val, y_val, seed, n_jobs=4):
+    train_data = lgb.Dataset(x_train, label=y_train)
+    val_data = lgb.Dataset(x_val, label=y_val, reference=train_data)
+    params = {
+        'objective': 'regression',
+        'metric': 'rmse',
+        'learning_rate': 0.01,
+        'num_leaves': 7,
+        'max_depth': 3,
+        'feature_fraction': 0.5,
+        'bagging_fraction': 0.5,
+        'bagging_freq': 5,
+        'min_data_in_leaf': 100,
+        'verbose': -1,
+        'seed': seed,
+        'n_jobs': n_jobs
+    }
+
+    model = lgb.train(
+        params,
+        train_data,
+        num_boost_round=500,
+        valid_sets=[val_data],
+        callbacks=[lgb.early_stopping(stopping_rounds=30, verbose=False)]
+    )
+    return model
+
+def train_xgb_model(x_train, y_train, x_val, y_val, seed, n_jobs=4):
+    train_data = xgb.DMatrix(x_train, label=y_train)
+    val_data = xgb.DMatrix(x_val, label=y_val)
+    xgb_params = {
+        'objective': 'reg:squarederror',
+        'eval_metric': 'rmse',
+        'learning_rate': 0.01,
+        'max_depth': 3,
+        'subsample': 0.5,
+        'colsample_bytree': 0.5,
+        'min_child_weight': 10,
+        'n_jobs': n_jobs,
+        'seed': seed + 100
+    }
+
+    model = xgb.train(
+        xgb_params,
+        train_data,
+        num_boost_round=500,
+        evals=[(val_data, 'eval')],
+        early_stopping_rounds=30,
+        verbose_eval=False
+    )
+    return model
 
 def train_model(
     train: pd.DataFrame,
@@ -219,45 +308,67 @@ def train_model(
     seed: int,
     n_estimators: int,
     n_jobs: int,
-) -> tuple[lgb.LGBMClassifier, pd.Series]:
-    x_train, medians = make_matrix(train, features)
-    y_train = train["future_up_180m"].astype(int).to_numpy()
-    model = lgb.LGBMClassifier(
-        objective="binary",
-        n_estimators=int(n_estimators),
-        learning_rate=0.035,
-        num_leaves=31,
-        max_depth=-1,
-        subsample=0.85,
-        colsample_bytree=0.85,
-        min_child_samples=40,
-        reg_alpha=0.05,
-        reg_lambda=0.50,
-        class_weight="balanced",
-        random_state=seed,
-        n_jobs=int(n_jobs),
-        verbose=-1,
-    )
-    with logged_phase(
-        f"fit LGBMClassifier rows={len(train):,} features={len(features):,} "
-        f"trees={int(n_estimators):,} n_jobs={int(n_jobs)}"
-    ):
-        model.fit(x_train, y_train)
-    return model, medians
+    ticker: str = "ALL",
+) -> tuple[dict, pd.Series, list[str]]:
 
+    x_train_all, medians = make_matrix(train, features)
+    y_long_all = train["long_pnl_180m"].astype(np.float32).to_numpy()
+    y_short_all = train["short_pnl_180m"].astype(np.float32).to_numpy()
 
-def predict_proba(model: lgb.LGBMClassifier, frame: pd.DataFrame, features: list[str], medians: pd.Series) -> np.ndarray:
+    split_idx = int(len(train) * 0.85)
+    x_train = x_train_all.iloc[:split_idx] if hasattr(x_train_all, "iloc") else x_train_all[:split_idx]
+
+    y_long_train = y_long_all[:split_idx]
+    y_long_es = y_long_all[split_idx:]
+
+    y_short_train = y_short_all[:split_idx]
+    y_short_es = y_short_all[split_idx:]
+
+    x_es = x_train_all.iloc[split_idx:] if hasattr(x_train_all, "iloc") else x_train_all[split_idx:]
+
+    with logged_phase(f"fit LGBM+XGB models rows={len(train):,} features={len(features):,} ticker={ticker}"):
+        model_long_list = []
+        model_short_list = []
+        for i in range(3):
+            model_long_list.append(('lgb', train_lgb_model(x_train, y_long_train, x_es, y_long_es, seed + i)))
+            model_short_list.append(('lgb', train_lgb_model(x_train, y_short_train, x_es, y_short_es, seed + i + 100)))
+        for i in range(2):
+            model_long_list.append(('xgb', train_xgb_model(x_train, y_long_train, x_es, y_long_es, seed + i + 50)))
+            model_short_list.append(('xgb', train_xgb_model(x_train, y_short_train, x_es, y_short_es, seed + i + 150)))
+
+    models = {"long": model_long_list, "short": model_short_list}
+    return models, medians, features
+
+def predict_returns(models: dict, frame: pd.DataFrame, features: list[str], medians: pd.Series) -> np.ndarray:
     x, _ = make_matrix(frame, features, medians)
-    proba = model.predict_proba(x)
-    if proba.shape[1] == 1:
-        return np.full(len(frame), float(model.classes_[0]), dtype=np.float64)
-    pos_idx = list(model.classes_).index(1)
-    return proba[:, pos_idx].astype(np.float64)
 
+    long_preds = []
+    for mtype, m in models["long"]:
+        if mtype == 'xgb':
+            dtest = xgb.DMatrix(x)
+            long_preds.append(m.predict(dtest))
+        else:
+            long_preds.append(m.predict(x))
+
+    short_preds = []
+    for mtype, m in models["short"]:
+        if mtype == 'xgb':
+            dtest = xgb.DMatrix(x)
+            short_preds.append(m.predict(dtest))
+        else:
+            short_preds.append(m.predict(x))
+
+    pred_long = np.mean(long_preds, axis=0)
+    pred_short = np.mean(short_preds, axis=0)
+
+    best_is_long = pred_long >= pred_short
+    best_value = np.maximum(pred_long, pred_short)
+    synthetic_pred = np.where(best_value > 0.0, np.where(best_is_long, best_value, -best_value), 0.0)
+    return synthetic_pred.astype(np.float64)
 
 def simulate_hold180(
     frame: pd.DataFrame,
-    prob: np.ndarray,
+    pred_bps: np.ndarray,
     long_threshold: float,
     short_threshold: float,
     cost_bps: float,
@@ -266,13 +377,13 @@ def simulate_hold180(
 ) -> pd.DataFrame:
     if frame.empty:
         return pd.DataFrame()
-    cols = ["ticker", "date", "time", "pos_in_day", "spot_price", "future_return_180m", "future_return_bps_180m"]
+    cols = ["ticker", "date", "time", "pos_in_day", "spot_price", "future_return_180m", "future_return_bps_180m", "long_pnl_180m", "short_pnl_180m"]
     for optional in ["terminal_exit_time", "terminal_hold_minutes", "terminal_horizon_truncated"]:
         if optional in frame.columns:
             cols.append(optional)
     work = frame[cols].copy()
-    work["prob_up"] = prob
-    work["side"] = np.where(work["prob_up"] >= long_threshold, 1, np.where(work["prob_up"] <= short_threshold, -1, 0))
+    work["pred_bps"] = pred_bps
+    work["side"] = np.where(work["pred_bps"] >= long_threshold, 1, np.where(work["pred_bps"] <= -short_threshold, -1, 0))
     work = work[work["side"] != 0].sort_values(["ticker", "date", "pos_in_day"]).reset_index(drop=True)
     trades = []
     next_allowed: dict[tuple[str, str], int] = {}
@@ -281,7 +392,12 @@ def simulate_hold180(
         pos = int(row.pos_in_day)
         if pos < next_allowed.get(key, -1):
             continue
-        gross_bps = float(row.side) * float(row.future_return_bps_180m)
+
+        hour = int(str(row.time)[:2])
+        if hour < 10 or hour >= 15:
+            continue
+
+        gross_bps = float(row.long_pnl_180m) if row.side > 0 else float(row.short_pnl_180m)
         net_bps = gross_bps - float(cost_bps)
         trades.append(
             {
@@ -289,7 +405,7 @@ def simulate_hold180(
                 "date": str(row.date),
                 "time": str(row.time),
                 "side": "LONG" if row.side > 0 else "SHORT",
-                "prob_up": float(row.prob_up),
+                "pred_bps": float(row.pred_bps),
                 "spot_price": float(row.spot_price),
                 "future_return_bps": float(row.future_return_bps_180m),
                 "exit_time": str(getattr(row, "terminal_exit_time", "")),
@@ -302,7 +418,6 @@ def simulate_hold180(
         )
         next_allowed[key] = pos + int(cooldown_steps)
     return pd.DataFrame(trades)
-
 
 def trade_metrics(trades: pd.DataFrame) -> dict:
     if trades.empty:
@@ -334,34 +449,105 @@ def trade_metrics(trades: pd.DataFrame) -> dict:
         "long_rate": float((trades["side"] == "LONG").mean()),
     }
 
+def score_trades(frame: pd.DataFrame, pred_bps: np.ndarray, threshold: float, side_val: int, cost_bps: float, cooldown_steps: int, notional: float):
+    # Only keep trades for the specific side
+    side_mask = (pred_bps >= threshold) if side_val == 1 else (pred_bps <= -threshold)
+    work = frame[side_mask].copy()
+    if work.empty:
+        return {"trades": 0, "win_rate": 0.0, "profit_factor": 0.0, "pnl_dollars": 0.0}
+
+    work["pred_bps"] = pred_bps[side_mask]
+    work["side"] = side_val
+    work = work.sort_values(["ticker", "date", "pos_in_day"]).reset_index(drop=True)
+
+    trades = []
+    next_allowed: dict[tuple[str, str], int] = {}
+    for row in work.itertuples(index=False):
+        key = (str(row.ticker), str(row.date))
+        pos = int(row.pos_in_day)
+        if pos < next_allowed.get(key, -1):
+            continue
+
+        hour = int(str(row.time)[:2])
+        if hour < 10 or hour >= 15:
+            continue
+
+        gross_bps = float(row.long_pnl_180m) if side_val > 0 else float(row.short_pnl_180m)
+        net_bps = gross_bps - float(cost_bps)
+        trades.append({
+            "side": "LONG" if side_val > 0 else "SHORT",
+            "net_bps": net_bps,
+            "pnl_dollars": net_bps / 10000.0 * float(notional),
+        })
+        next_allowed[key] = pos + int(cooldown_steps)
+
+    trades_df = pd.DataFrame(trades)
+    return trade_metrics(trades_df)
 
 def choose_thresholds(
     val_frame: pd.DataFrame,
-    val_prob: np.ndarray,
+    val_pred: np.ndarray,
     cost_bps: float,
     cooldown_steps: int,
     notional: float,
-    min_val_trades: int,
+    min_val_trades_per_side: int,
+    ticker: str = "ALL",
 ) -> dict:
-    candidates = [0.52, 0.55, 0.57, 0.60, 0.62, 0.65, 0.70]
-    best = None
-    for t in candidates:
-        trades = simulate_hold180(val_frame, val_prob, t, 1.0 - t, cost_bps, cooldown_steps, notional)
-        metrics = trade_metrics(trades)
-        if metrics["trades"] < min_val_trades:
-            score = -1e18 + metrics["trades"]
-        else:
-            score = metrics["pnl_dollars"] - abs(metrics["max_drawdown"]) * 0.25
-        item = {
-            "long_threshold": float(t),
-            "short_threshold": float(1.0 - t),
-            "val_score": float(score),
-            **{f"val_{k}": v for k, v in metrics.items()},
-        }
-        if best is None or item["val_score"] > best["val_score"]:
-            best = item
-    return best or {"long_threshold": 0.55, "short_threshold": 0.45, "val_score": float("nan")}
+    import numpy as np
 
+    thresholds = np.arange(0.5, 6.0, 0.25)
+    best_long_t = 0.5
+    best_short_t = 0.5 # Default to lowest to guarantee volume if constraint fails
+    best_long_score = -1e18
+    best_short_score = -1e18
+
+    for t in thresholds:
+        metrics = score_trades(val_frame, val_pred, float(t), 1, cost_bps, cooldown_steps, notional)
+
+        if metrics["trades"] < min_val_trades_per_side:
+            continue
+
+        wr = metrics.get("win_rate", 0.0)
+        pf = metrics.get("profit_factor", 0.0)
+        pnl = metrics.get("pnl_dollars", 0.0)
+        if np.isinf(pf) or np.isnan(pf):
+            pf = 3.0 if wr > 0.5 else 0.5
+
+        score = pf * (wr * 100.0)
+        if wr < 0.66:
+            score = score * 0.001
+
+        if score > best_long_score:
+            best_long_score = score
+            best_long_t = float(t)
+
+    best_short_score = -1e18
+    best_short_t = 0.5
+    for t in thresholds:
+        metrics = score_trades(val_frame, val_pred, float(t), -1, cost_bps, cooldown_steps, notional)
+
+        if metrics["trades"] < min_val_trades_per_side:
+            continue
+
+        wr = metrics.get("win_rate", 0.0)
+        pf = metrics.get("profit_factor", 0.0)
+        pnl = metrics.get("pnl_dollars", 0.0)
+        if np.isinf(pf) or np.isnan(pf):
+            pf = 3.0 if wr > 0.5 else 0.5
+
+        score = pf * (wr * 100.0)
+        if wr < 0.66:
+            score = score * 0.001
+
+        if score > best_short_score:
+            best_short_score = score
+            best_short_t = float(t)
+
+    return {
+        "long_threshold": best_long_t,
+        "short_threshold": best_short_t,
+        "val_score": best_long_score + best_short_score
+    }
 
 def metric_block(frame: pd.DataFrame, segment: str, ticker: str = "ALL") -> dict:
     if frame.empty:
@@ -369,47 +555,33 @@ def metric_block(frame: pd.DataFrame, segment: str, ticker: str = "ALL") -> dict
             "segment": segment,
             "ticker": ticker,
             "rows": 0,
-            "auc": float("nan"),
-            "accuracy": float("nan"),
-            "balanced_accuracy": float("nan"),
-            "brier": float("nan"),
-            "logloss": float("nan"),
+            "rmse": float("nan"),
+            "mae": float("nan"),
             "spearman_return": float("nan"),
-            "future_up_rate": float("nan"),
-            "pred_up_rate": float("nan"),
             "mean_future_return_bps": float("nan"),
             "top_quintile_return_bps": float("nan"),
             "bottom_quintile_return_bps": float("nan"),
         }
-    y = frame["future_up_180m"].astype(int).to_numpy()
-    p = np.clip(frame["prob_up"].astype(float).to_numpy(), 1e-6, 1.0 - 1e-6)
-    pred = p >= 0.5
-    if len(np.unique(y)) < 2:
-        auc = float("nan")
-        ll = float("nan")
-    else:
-        auc = float(roc_auc_score(y, p))
-        ll = float(log_loss(y, p, labels=[0, 1]))
-    corr = spearmanr(p, frame["future_return_bps_180m"].astype(float).to_numpy(), nan_policy="omit")
-    q80 = frame["prob_up"].quantile(0.80)
-    q20 = frame["prob_up"].quantile(0.20)
+    y = frame["future_return_bps_180m"].astype(float).to_numpy()
+    p = frame["pred_bps"].astype(float).to_numpy()
+
+    rmse = float(np.sqrt(mean_squared_error(y, p)))
+    mae = float(mean_absolute_error(y, p))
+    corr = spearmanr(p, y, nan_policy="omit")
+
+    q80 = frame["pred_bps"].quantile(0.80)
+    q20 = frame["pred_bps"].quantile(0.20)
     return {
         "segment": segment,
         "ticker": ticker,
         "rows": int(len(frame)),
-        "auc": auc,
-        "accuracy": float(accuracy_score(y, pred)),
-        "balanced_accuracy": float(balanced_accuracy_score(y, pred)),
-        "brier": float(brier_score_loss(y, p)),
-        "logloss": ll,
+        "rmse": rmse,
+        "mae": mae,
         "spearman_return": safe_float(corr.statistic),
-        "future_up_rate": float(y.mean()),
-        "pred_up_rate": float(pred.mean()),
-        "mean_future_return_bps": float(frame["future_return_bps_180m"].mean()),
-        "top_quintile_return_bps": float(frame.loc[frame["prob_up"] >= q80, "future_return_bps_180m"].mean()),
-        "bottom_quintile_return_bps": float(frame.loc[frame["prob_up"] <= q20, "future_return_bps_180m"].mean()),
+        "mean_future_return_bps": float(y.mean()),
+        "top_quintile_return_bps": float(frame.loc[frame["pred_bps"] >= q80, "future_return_bps_180m"].mean()) if len(frame[frame["pred_bps"] >= q80]) > 0 else float("nan"),
+        "bottom_quintile_return_bps": float(frame.loc[frame["pred_bps"] <= q20, "future_return_bps_180m"].mean()) if len(frame[frame["pred_bps"] <= q20]) > 0 else float("nan"),
     }
-
 
 def summarize_predictions(predictions: pd.DataFrame, trades: pd.DataFrame, oos_start: str) -> dict:
     pred = predictions.copy()
@@ -429,7 +601,6 @@ def summarize_predictions(predictions: pd.DataFrame, trades: pd.DataFrame, oos_s
             trade_summary[f"{segment}_{ticker}"] = trade_metrics(frame)
     return {"prediction_metrics": metrics, "trade_metrics": trade_summary}
 
-
 def run_mode(
     df: pd.DataFrame,
     feature_mode: str,
@@ -446,7 +617,7 @@ def run_mode(
     test_start_month: str | None,
     test_end_month: str | None,
 ) -> ModeResult:
-    features = select_features(df, feature_mode, jepa_feature_names)
+    features_orig = select_features(df, feature_mode, jepa_feature_names)
     months = sorted(df["month"].unique().tolist())
     predictions = []
     trades = []
@@ -467,21 +638,27 @@ def run_mode(
                 continue
             train_all = ticker_df[ticker_df["month"].isin(train_months)].copy()
             test = ticker_df[ticker_df["month"] == test_month].copy()
-            if test.empty or train_all["future_up_180m"].nunique() < 2:
+            if test.empty:
                 continue
+
             val_keys = train_months[-val_months:] if val_months > 0 else train_months[-1:]
             fit = train_all[~train_all["month"].isin(val_keys)].copy()
             val = train_all[train_all["month"].isin(val_keys)].copy()
-            if fit.empty or fit["future_up_180m"].nunique() < 2 or val.empty:
+            if fit.empty or val.empty:
                 fit = train_all.copy()
                 val = train_all.tail(min(len(train_all), max(200, len(train_all) // 5))).copy()
 
-            val_model, val_medians = train_model(fit, features, seed, n_estimators, n_jobs)
-            val_prob = predict_proba(val_model, val, features, val_medians)
-            thresholds = choose_thresholds(val, val_prob, cost_bps, cooldown_steps, notional, min_val_trades)
+            # Train a model on FIT data; validation rows select thresholds only.
+            val_model, val_medians, val_features = train_model(fit, features_orig, seed, n_estimators, n_jobs, ticker=ticker)
+            val_pred = predict_returns(val_model, val, val_features, val_medians)
 
-            model, medians = train_model(train_all, features, seed, n_estimators, n_jobs)
-            test_prob = predict_proba(model, test, features, medians)
+            # Since we split Long/Short independently, require half min_val_trades for each side
+            thresholds = choose_thresholds(val, val_pred, cost_bps, cooldown_steps, notional, max(2, min_val_trades // 2), ticker=ticker)
+
+            # Train final model only on pre-test rows.
+            model, medians, final_features = train_model(train_all, features_orig, seed, n_estimators, n_jobs, ticker=ticker)
+            test_pred = predict_returns(model, test, final_features, medians)
+
             pred_frame = test[
                 [
                     "ticker",
@@ -492,16 +669,15 @@ def run_mode(
                     "spot_price",
                     "future_return_180m",
                     "future_return_bps_180m",
-                    "future_up_180m",
                 ]
             ].copy()
             pred_frame["feature_mode"] = feature_mode
-            pred_frame["prob_up"] = test_prob
-            pred_frame["pred_up"] = (test_prob >= 0.5).astype(np.int8)
+            pred_frame["pred_bps"] = test_pred
             predictions.append(pred_frame)
+
             test_trades = simulate_hold180(
                 test,
-                test_prob,
+                test_pred,
                 thresholds["long_threshold"],
                 thresholds["short_threshold"],
                 cost_bps,
@@ -512,6 +688,7 @@ def run_mode(
                 test_trades["feature_mode"] = feature_mode
                 test_trades["test_month"] = test_month
                 trades.append(test_trades)
+
             windows.append(
                 {
                     "feature_mode": feature_mode,
@@ -519,7 +696,7 @@ def run_mode(
                     "test_month": test_month,
                     "train_rows": int(len(train_all)),
                     "test_rows": int(len(test)),
-                    "feature_count": int(len(features)),
+                    "feature_count": int(len(final_features)),
                     **thresholds,
                 }
             )
@@ -528,8 +705,9 @@ def run_mode(
     trade_all = pd.concat(trades, ignore_index=True) if trades else pd.DataFrame()
     if not pred_all.empty:
         pred_all.attrs["trades"] = trade_all
-    return ModeResult(feature_mode=feature_mode, predictions=pred_all, windows=windows, features=features)
 
+    # Just pass the final features back
+    return ModeResult(feature_mode=feature_mode, predictions=pred_all, windows=windows, features=features_orig)
 
 def write_mode_outputs(
     result: ModeResult,
@@ -561,7 +739,6 @@ def write_mode_outputs(
     (output_dir / f"{result.feature_mode}_metrics.json").write_text(json.dumps(summary, indent=2, allow_nan=True), encoding="utf-8")
     return summary
 
-
 def trade_row(label: str, metrics: dict) -> str:
     return (
         f"| {label} | {metrics.get('trades', 0)} | {fmt_pct(metrics.get('win_rate', float('nan')))} | "
@@ -570,23 +747,19 @@ def trade_row(label: str, metrics: dict) -> str:
         f"{fmt_pct(metrics.get('long_rate', float('nan')))} |"
     )
 
-
 def pred_table_row(label: str, metric: dict) -> str:
     return (
-        f"| {label} | {metric.get('rows', 0)} | {fmt_pct(metric.get('future_up_rate', float('nan')))} | "
-        f"{fmt_pct(metric.get('pred_up_rate', float('nan')))} | {fmt_float(metric.get('auc', float('nan')))} | "
-        f"{fmt_pct(metric.get('accuracy', float('nan')))} | {fmt_pct(metric.get('balanced_accuracy', float('nan')))} | "
-        f"{fmt_float(metric.get('spearman_return', float('nan')))} | {fmt_float(metric.get('top_quintile_return_bps', float('nan')), 2)} | "
+        f"| {label} | {metric.get('rows', 0)} | {fmt_float(metric.get('rmse', float('nan')))} | "
+        f"{fmt_float(metric.get('mae', float('nan')))} | {fmt_float(metric.get('spearman_return', float('nan')))} | "
+        f"{fmt_float(metric.get('top_quintile_return_bps', float('nan')), 2)} | "
         f"{fmt_float(metric.get('bottom_quintile_return_bps', float('nan')), 2)} |"
     )
-
 
 def find_metric(summary: dict, segment: str, ticker: str = "ALL") -> dict:
     for row in summary["prediction_metrics"]:
         if row["segment"] == segment and row["ticker"] == ticker:
             return row
     return {}
-
 
 def write_report(output_dir: Path, summaries: dict[str, dict], args, dataset_rows: int, valid_rows: int) -> None:
     test_window = "all eligible walk-forward months"
@@ -599,19 +772,19 @@ def write_report(output_dir: Path, summaries: dict[str, dict], args, dataset_row
         else "fixed 180m hold"
     )
     lines = [
-        "# JEPA 180m Direction Experiment",
+        "# JEPA 180m Regressor Experiment",
         "",
         f"Data: `{args.data}`",
         f"Rows after {horizon_text} label construction: {valid_rows:,} from {dataset_rows:,}",
-        f"Label: `spot_price(t+{args.horizon_steps * 5}m) > spot_price(t)`",
+        f"Label: `future_return_bps_180m` (Regression)",
         f"Test months: `{test_window}`",
         f"OOS split: dates >= `{args.oos_start}`",
         f"Backtest: {backtest_text}, cooldown `{args.cooldown_steps}` samples, cost `{args.cost_bps}` bps, notional `${args.notional:,.0f}` per trade.",
         "",
         "## Prediction Metrics",
         "",
-        "| Mode | Rows | Future Up | Pred Up | AUC | Acc | Bal Acc | Spearman Ret | Top Q Ret bps | Bottom Q Ret bps |",
-        "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+        "| Mode | Rows | RMSE | MAE | Spearman Ret | Top Q Ret bps | Bottom Q Ret bps |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",
     ]
     for mode, summary in summaries.items():
         lines.append(pred_table_row(f"{mode} overall", find_metric(summary, "overall")))
@@ -633,17 +806,16 @@ def write_report(output_dir: Path, summaries: dict[str, dict], args, dataset_row
         "",
         "## Interpretation",
         "",
-        "- This is a terminal 180m direction experiment, not the original target/stop 0DTE label.",
-        "- The future return is used only as the label and backtest outcome; feature columns explicitly exclude future/target columns.",
-        "- OOS metrics are the important decision point because previous XInputJEPA evidence was unstable in Apr/May 2026.",
-        "- A promotable 180m module should beat the base feature model OOS on AUC and fixed-hold PnL, with enough trades after the 180m cooldown.",
+        "- This is a terminal 180m return REGRESSOR experiment.",
+        "- Feature columns explicitly exclude future/target columns.",
+        "- OOS metrics are the important decision point.",
+        "- A promotable 180m module should beat the base feature model OOS on Return bps and fixed-hold PnL.",
         "",
     ]
     (output_dir / "SUMMARY.md").write_text("\n".join(lines), encoding="utf-8")
 
-
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Walk-forward test for exact 180m terminal direction.")
+    parser = argparse.ArgumentParser(description="Walk-forward test for 180m terminal return regression.")
     parser.add_argument("--data", required=True)
     parser.add_argument("--jepa-feature-names", required=True)
     parser.add_argument("--output-dir", required=True)
@@ -663,7 +835,7 @@ def main() -> int:
     parser.add_argument("--min-val-trades", type=int, default=4)
     parser.add_argument("--oos-start", default="20260401")
     parser.add_argument("--seed", type=int, default=777)
-    parser.add_argument("--n-estimators", type=int, default=160)
+    parser.add_argument("--n-estimators", type=int, default=250)
     parser.add_argument("--n-jobs", type=int, default=20)
     parser.add_argument("--test-start-month", default=None)
     parser.add_argument("--test-end-month", default=None)
@@ -717,7 +889,6 @@ def main() -> int:
     write_report(output_dir, summaries, args, raw_rows, len(df))
     print((output_dir / "SUMMARY.md").read_text(encoding="utf-8"))
     return 0
-
 
 if __name__ == "__main__":
     raise SystemExit(main())

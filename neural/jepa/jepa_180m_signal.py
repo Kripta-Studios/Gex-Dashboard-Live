@@ -105,12 +105,40 @@ class Jepa180mSignalModel:
             if not mask.any():
                 continue
             x = self._matrix(frame.loc[mask], artifact)
-            proba = artifact.model.predict_proba(x)
-            if proba.shape[1] == 1:
-                out[np.flatnonzero(mask.to_numpy())] = float(artifact.model.classes_[0])
+
+            # Support both regressor ensemble dict models and legacy classifier models
+            if isinstance(artifact.model, dict) and "long" in artifact.model and "short" in artifact.model:
+                import xgboost as xgb
+                long_preds = []
+                for mtype, m in artifact.model["long"]:
+                    if mtype == 'xgb':
+                        dtest = xgb.DMatrix(x)
+                        long_preds.append(m.predict(dtest))
+                    else:
+                        long_preds.append(m.predict(x))
+
+                short_preds = []
+                for mtype, m in artifact.model["short"]:
+                    if mtype == 'xgb':
+                        dtest = xgb.DMatrix(x)
+                        short_preds.append(m.predict(dtest))
+                    else:
+                        short_preds.append(m.predict(x))
+
+                pred_long = np.mean(long_preds, axis=0)
+                pred_short = np.mean(short_preds, axis=0)
+
+                best_is_long = pred_long >= pred_short
+                best_value = np.maximum(pred_long, pred_short)
+                synthetic_pred = np.where(best_value > 0.0, np.where(best_is_long, best_value, -best_value), 0.0)
+                out[np.flatnonzero(mask.to_numpy())] = synthetic_pred.astype(np.float64)
             else:
-                pos_idx = list(artifact.model.classes_).index(1)
-                out[np.flatnonzero(mask.to_numpy())] = proba[:, pos_idx].astype(np.float64)
+                proba = artifact.model.predict_proba(x)
+                if proba.shape[1] == 1:
+                    out[np.flatnonzero(mask.to_numpy())] = float(artifact.model.classes_[0])
+                else:
+                    pos_idx = list(artifact.model.classes_).index(1)
+                    out[np.flatnonzero(mask.to_numpy())] = proba[:, pos_idx].astype(np.float64)
         return out
 
     def predict_frame(self, frame: pd.DataFrame) -> pd.DataFrame:
@@ -127,18 +155,27 @@ class Jepa180mSignalModel:
             mask = result["ticker"] == ticker
             if not mask.any():
                 continue
+
+            is_regressor = isinstance(artifact.model, dict) and "long" in artifact.model and "short" in artifact.model
             long_threshold = float(artifact.thresholds.get("long_threshold", 0.70))
             short_threshold = float(artifact.thresholds.get("short_threshold", 0.30))
             prob = result.loc[mask, "jepa180_prob_up"].astype(float)
-            long_mask = mask & (result["jepa180_prob_up"].astype(float) >= long_threshold)
-            short_mask = mask & (result["jepa180_prob_up"].astype(float) <= short_threshold)
+
+            if is_regressor:
+                long_mask = mask & (prob >= long_threshold)
+                short_mask = mask & (prob <= -short_threshold)
+                result.loc[mask, "jepa180_confidence"] = prob.abs()
+            else:
+                long_mask = mask & (prob >= long_threshold)
+                short_mask = mask & (prob <= short_threshold)
+                result.loc[mask, "jepa180_confidence"] = np.maximum(prob, 1.0 - prob)
+
             result.loc[mask, "jepa180_long_threshold"] = long_threshold
             result.loc[mask, "jepa180_short_threshold"] = short_threshold
             result.loc[long_mask, "jepa180_signal"] = "LONG"
             result.loc[long_mask, "jepa180_direction"] = 1
             result.loc[short_mask, "jepa180_signal"] = "SHORT"
             result.loc[short_mask, "jepa180_direction"] = -1
-            result.loc[mask, "jepa180_confidence"] = np.maximum(prob, 1.0 - prob)
         return result
 
     def metadata(self) -> dict:

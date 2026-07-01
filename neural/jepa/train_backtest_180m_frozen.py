@@ -20,7 +20,7 @@ from neural.jepa.evaluate_180m_direction import (
     fmt_float,
     fmt_money,
     fmt_pct,
-    predict_proba,
+    predict_returns,
     select_features,
     simulate_hold180,
     summarize_predictions,
@@ -90,19 +90,20 @@ def run_frozen_mode(df: pd.DataFrame, args, mode: str, model_dir: Path) -> ModeR
             flush=True,
         )
 
-        val_model, val_medians = train_model(fit, features, args.seed, args.n_estimators, args.n_jobs)
-        val_prob = predict_proba(val_model, val, features, val_medians)
+        val_model, val_medians, val_features = train_model(fit, features, args.seed, args.n_estimators, args.n_jobs, ticker=ticker)
+        val_pred = predict_returns(val_model, val, val_features, val_medians)
         thresholds = choose_thresholds(
             val,
-            val_prob,
+            val_pred,
             args.cost_bps,
             args.cooldown_steps,
             args.notional,
-            args.min_val_trades,
+            max(2, args.min_val_trades // 2),
+            ticker=ticker,
         )
 
-        model, medians = train_model(train_all, features, args.seed, args.n_estimators, args.n_jobs)
-        test_prob = predict_proba(model, test, features, medians)
+        model, medians, final_features = train_model(train_all, features, args.seed, args.n_estimators, args.n_jobs, ticker=ticker)
+        test_pred = predict_returns(model, test, final_features, medians)
         pred_cols = [
             "ticker",
             "date",
@@ -117,13 +118,12 @@ def run_frozen_mode(df: pd.DataFrame, args, mode: str, model_dir: Path) -> ModeR
         pred_cols += [c for c in ["terminal_exit_time", "terminal_hold_minutes", "terminal_horizon_truncated"] if c in test.columns]
         pred_frame = test[pred_cols].copy()
         pred_frame["feature_mode"] = mode
-        pred_frame["prob_up"] = test_prob
-        pred_frame["pred_up"] = (test_prob >= 0.5).astype(np.int8)
+        pred_frame["pred_bps"] = test_pred
         predictions.append(pred_frame)
 
         test_trades = simulate_hold180(
             test,
-            test_prob,
+            test_pred,
             thresholds["long_threshold"],
             thresholds["short_threshold"],
             args.cost_bps,
@@ -141,7 +141,7 @@ def run_frozen_mode(df: pd.DataFrame, args, mode: str, model_dir: Path) -> ModeR
             "train_end_date": train_end,
             "test_start_date": test_start,
             "test_end_date": test_end,
-            "feature_count": len(features),
+            "feature_count": len(final_features),
             "horizon_steps": args.horizon_steps,
             "horizon_minutes": args.horizon_steps * 5,
             "truncate_eod_horizon": bool(args.truncate_eod_horizon),
@@ -149,7 +149,7 @@ def run_frozen_mode(df: pd.DataFrame, args, mode: str, model_dir: Path) -> ModeR
             "cooldown_steps": args.cooldown_steps,
             "notional": args.notional,
         }
-        save_model_artifact(model_dir / mode / f"{ticker}.joblib", model, medians, features, thresholds, meta)
+        save_model_artifact(model_dir / mode / f"{ticker}.joblib", model, medians, final_features, thresholds, meta)
         windows.append(
             {
                 "feature_mode": mode,
@@ -159,7 +159,7 @@ def run_frozen_mode(df: pd.DataFrame, args, mode: str, model_dir: Path) -> ModeR
                 "test_end_date": test_end,
                 "train_rows": int(len(train_all)),
                 "test_rows": int(len(test)),
-                "feature_count": int(len(features)),
+                "feature_count": int(len(final_features)),
                 **thresholds,
             }
         )
@@ -208,9 +208,8 @@ def cost_sensitivity(output_dir: Path, modes: list[str], base_cost_bps: float, n
 def pred_row(label: str, summary: dict) -> str:
     metric = next((x for x in summary["prediction_metrics"] if x["segment"] == "overall" and x["ticker"] == "ALL"), {})
     return (
-        f"| {label} | {metric.get('rows', 0)} | {fmt_pct(metric.get('future_up_rate', float('nan')))} | "
-        f"{fmt_pct(metric.get('pred_up_rate', float('nan')))} | {fmt_float(metric.get('auc', float('nan')))} | "
-        f"{fmt_pct(metric.get('accuracy', float('nan')))} | {fmt_pct(metric.get('balanced_accuracy', float('nan')))} | "
+        f"| {label} | {metric.get('rows', 0)} | "
+        f"{fmt_float(metric.get('rmse', float('nan')))} | {fmt_float(metric.get('mae', float('nan')))} | "
         f"{fmt_float(metric.get('spearman_return', float('nan')))} | "
         f"{fmt_float(metric.get('top_quintile_return_bps', float('nan')), 2)} | "
         f"{fmt_float(metric.get('bottom_quintile_return_bps', float('nan')), 2)} |"
@@ -249,8 +248,8 @@ def write_summary(output_dir: Path, summaries: dict[str, dict], cost_df: pd.Data
         "",
         "## Prediction Metrics",
         "",
-        "| Mode | Rows | Future Up | Pred Up | AUC | Acc | Bal Acc | Spearman Ret | Top Q Ret bps | Bottom Q Ret bps |",
-        "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+        "| Mode | Rows | RMSE | MAE | Spearman Ret | Top Q Ret bps | Bottom Q Ret bps |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",
     ]
     for mode, summary in summaries.items():
         lines.append(pred_row(mode, summary))

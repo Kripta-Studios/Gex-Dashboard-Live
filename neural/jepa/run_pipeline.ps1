@@ -16,6 +16,7 @@ Param(
   [switch]$SkipJepaTrain,
   [switch]$SkipAppend,
   [switch]$SkipGbt180,
+  [switch]$SkipGbtOof,
   [switch]$SkipStandaloneBacktest,
   [switch]$SkipGbtExitResearch,
   [switch]$SkipOptionPolicy,
@@ -27,20 +28,25 @@ Param(
   [switch]$ReuseOptionCandidates,
   [switch]$RebuildOptionStateRows,
   [switch]$ProductionTrain,
+  [switch]$DailyProduction,
+  [switch]$HighWinRateOptionsProfile,
 
   [string]$Experiment = "jepa_full_pipeline",
   [string]$JepaFeatureExperiment = "xinput_v3_pipeline",
   [string]$Jepa180Experiment = "",
+  [string]$ProductionDeployMonth = (Get-Date -Format "yyyyMM"),
   [string]$StartDate = "20220801",
   [string]$EndDate = "20261230",
   [string]$TrainEndDate = "20260331",
   [string]$TestStartDate = "20260401",
   [string]$TestEndDate = "",
+  [string]$WalkForwardStartMonth = "",
+  [string]$WalkForwardEndMonth = "",
   [int]$Workers = 20,
   [string]$Device = "cuda",
   [int]$CooldownMinutes = 180,
   [int]$MaxHoldMinutes = 180,
-  [double]$RiskCapital = 1000.0,
+  [double]$RiskCapital = 5000.0,
   [double]$HardStopPct = -0.60,
   [double]$TakeProfitPct = 2.50,
   [int]$MinExitHoldMinutes = 15,
@@ -48,6 +54,8 @@ Param(
   [int]$OptionPolicyExitNEstimators = 220,
   [int]$OptionValueEpochs = 20,
   [int]$WalkForwardEpochs = 8,
+  [int]$GbtOofMinTrainMonths = 24,
+  [int]$GbtOofValMonths = 6,
   [int]$MaxDynamicTrainRows = 260000,
   [int]$NJobs = 20,
   [double]$GbtExitTrailStopBps = -50.0,
@@ -121,6 +129,16 @@ if (-not [string]::IsNullOrWhiteSpace($env:PYTHONPATH)) {
 }
 $env:PYTHONPATH = ($PythonPathParts -join $PathSeparator)
 
+if ($DailyProduction) {
+  $DailyPipeline = Join-Path $ScriptDir "run_daily_production_pipeline.ps1"
+  Assert-PathExists $DailyPipeline "Daily production pipeline"
+  & $DailyPipeline -DeployMonth $ProductionDeployMonth -Workers $Workers -RiskCapital $RiskCapital
+  if ($LASTEXITCODE -ne 0) {
+    throw "Daily production pipeline failed with exit code $LASTEXITCODE"
+  }
+  exit 0
+}
+
 if ($ProductionTrain) {
   if ($Experiment -eq "jepa_full_pipeline") {
     $Experiment = "jepa_production_final"
@@ -141,6 +159,15 @@ if ($ProductionTrain) {
   $SkipExitGrid = $true
   $SkipFullVisualizerBacktests = $true
   $SkipVisualizer = $true
+}
+
+if ($HighWinRateOptionsProfile) {
+  # Validated on the high-precision QQQ/SPY long-only signal:
+  # Jan-Jun 2025 validation: delta 0.60, WR 71.9%, PF 1.85.
+  # Jul-2025..Jun-2026 test: delta 0.60, WR 76.5%, PF 2.08.
+  # This profile prioritizes win-rate over the old home-run objective.
+  $HardStopPct = -0.30
+  $TakeProfitPct = 0.15
 }
 
 if ([string]::IsNullOrWhiteSpace($Jepa180Experiment)) {
@@ -171,6 +198,7 @@ if ($ProductionTrain) {
 
 $Jepa180ResultsDir = Join-ProjectPath "research_papers\JEPA\results\$Jepa180Experiment"
 $Jepa180ModelDir = Join-NeuralPath "models\jepa\$Jepa180Experiment"
+$OofGbtPredictionsPath = Join-Path $Jepa180ResultsDir "oof_gbt_predictions.parquet"
 $Jepa180StandaloneResultsDir = Join-ProjectPath "research_papers\JEPA\results\${Experiment}_180m_standalone"
 $Jepa180FullResultsDir = Join-ProjectPath "research_papers\JEPA\results\${Experiment}_180m_full"
 $GbtExitResearchResultsDir = Join-ProjectPath "research_papers\JEPA\results\${Experiment}_180m_continuation_exit"
@@ -247,6 +275,7 @@ Write-Host "TrainBaseDataPath        : $TrainBaseDataPath"
 Write-Host "FullJepaDataPath         : $FullJepaDataPath"
 Write-Host "TrainJepaDataPath        : $TrainJepaDataPath"
 Write-Host "ProductionTrain          : $ProductionTrain"
+Write-Host "HighWinRateOptionsProfile: $HighWinRateOptionsProfile"
 Write-Host "TrainEndDate             : $TrainEndDate"
 Write-Host "TestStartDate            : $TestStartDate"
 Write-Host "QuickSmoke               : $QuickSmoke"
@@ -398,6 +427,38 @@ try {
     Write-Host "`n=== Step 3 - GBT+JEPA 180m training skipped ===" -ForegroundColor Yellow
   }
 
+  # Step 3B: generate walk-forward out-of-fold GBT predictions for unbiased
+  # option candidate generation. Step 5 must use this parquet in research mode;
+  # otherwise a frozen March-2026 model would score pre-March-2026 rows it had
+  # already trained on.
+  if (($skip_to_step -le 3) -and (-not $ProductionTrain) -and (-not $SkipGbtOof)) {
+    Assert-PathExists $FullJepaDataPath "Full JEPA parquet"
+    Assert-PathExists $JepaFeatureNamesPath "JEPA feature-name export"
+    Invoke-PythonStep "Step 3B - walk-forward OOF GBT predictions" @(
+      (Join-Path $ScriptDir "walkforward_gbt_oof.py"),
+      "--data", $FullJepaDataPath,
+      "--jepa-feature-names", $JepaFeatureNamesPath,
+      "--output", $OofGbtPredictionsPath,
+      "--output-dir", $Jepa180ResultsDir,
+      "--mode", "base_jepa",
+      "--tickers", "SPX", "QQQ", "SPY",
+      "--min-train-months", "$GbtOofMinTrainMonths",
+      "--val-months", "$GbtOofValMonths",
+      "--horizon-steps", "36",
+      "--truncate-eod-horizon",
+      "--min-abs-bps", "0.0",
+      "--cost-bps", "1.0",
+      "--cooldown-steps", "36",
+      "--notional", "100000",
+      "--min-val-trades", "4",
+      "--n-estimators", $Gbt180Estimators,
+      "--n-jobs", "$NJobs",
+      "--seed", "777"
+    ) (Join-Path $ResultsRoot "03b_walkforward_gbt_oof.log")
+  } elseif (($skip_to_step -le 3) -and (-not $ProductionTrain)) {
+    Write-Host "`n=== Step 3B - OOF GBT predictions skipped ===" -ForegroundColor Yellow
+  }
+
   # Step 4: run the standalone OOS backtest for the promoted base_jepa signal.
   if (($skip_to_step -le 4) -and (-not $SkipStandaloneBacktest)) {
     Assert-PathExists $FullJepaDataPath "Full JEPA parquet"
@@ -500,6 +561,9 @@ try {
   if (($skip_to_step -le 5) -and (-not $SkipOptionPolicy)) {
     Assert-PathExists $FullJepaDataPath "Full JEPA parquet"
     Assert-PathExists $Jepa180ModelDir "JEPA 180m model directory"
+    if (-not $ProductionTrain) {
+      Assert-PathExists $OofGbtPredictionsPath "Walk-forward OOF GBT predictions"
+    }
     New-Item -ItemType Directory -Force -Path $OptionPolicyResultsDir | Out-Null
     New-Item -ItemType Directory -Force -Path $OptionPolicyModelDir | Out-Null
     $OptionPolicyArgs = @(
@@ -527,6 +591,9 @@ try {
     )
     if (-not [string]::IsNullOrWhiteSpace($TestStartDate)) {
       $OptionPolicyArgs += @("--test-start-date", $TestStartDate)
+    }
+    if (-not $ProductionTrain) {
+      $OptionPolicyArgs += @("--oof-predictions", $OofGbtPredictionsPath)
     }
     if ($ProductionTrain) {
       $OptionPolicyArgs += "--labels-only"
@@ -599,9 +666,25 @@ try {
       "--hard-stop-pct", "$HardStopPct",
       "--min-exit-hold-minutes", "$MinExitHoldMinutes",
       "--epochs", $WalkForwardEpochsEffective,
+      "--production-like",
+      "--val-months", "3",
+      "--dynamic-target", "future_edge",
+      "--entry-cutoff-time", "14:30",
+      "--trail-activation-pct", "0.50",
+      "--trail-drawdown-pct", "0.25",
+      "--trail-take-profit-pct", "10.0",
+      "--blended-selector-score-base", "ovjepa_pred_rule_best_mean",
+      "--blended-selector-delta-bonus", "2.0",
+      "--blended-selector-min-delta", "0.0",
       "--max-dynamic-train-rows", $MaxDynamicTrainRowsEffective,
       "--device", $Device
     )
+    if (-not [string]::IsNullOrWhiteSpace($WalkForwardStartMonth)) {
+      $WalkForwardArgs += @("--start-month", $WalkForwardStartMonth)
+    }
+    if (-not [string]::IsNullOrWhiteSpace($WalkForwardEndMonth)) {
+      $WalkForwardArgs += @("--end-month", $WalkForwardEndMonth)
+    }
     if ($WalkForwardMaxFolds -gt 0) {
       $WalkForwardArgs += @("--max-folds", "$WalkForwardMaxFolds")
     }

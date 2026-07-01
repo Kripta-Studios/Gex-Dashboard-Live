@@ -44,6 +44,7 @@ class RobustNormalizer:
     def to_dict(self) -> dict:
         return {
             "feature_names": self.feature_names,
+            "kind": "global",
             "median": self.median.tolist(),
             "iqr": self.iqr.tolist(),
             "clip": self.clip,
@@ -51,6 +52,8 @@ class RobustNormalizer:
 
     @classmethod
     def from_dict(cls, data: dict) -> "RobustNormalizer":
+        if data.get("kind") == "ticker":
+            return TickerRobustNormalizer.from_dict(data)
         return cls(
             feature_names=[str(x) for x in data["feature_names"]],
             median=np.asarray(data["median"], dtype=np.float32),
@@ -66,6 +69,87 @@ class RobustNormalizer:
     @classmethod
     def load(cls, path: str | Path) -> "RobustNormalizer":
         return cls.from_dict(json.loads(Path(path).read_text(encoding="utf-8")))
+
+@dataclass
+class TickerRobustNormalizer(RobustNormalizer):
+    """Causal robust scaling with independent statistics per underlying ticker."""
+
+    ticker_median: dict[str, np.ndarray] | None = None
+    ticker_iqr: dict[str, np.ndarray] | None = None
+    ticker_column: str = "ticker"
+
+    @classmethod
+    def fit(
+        cls,
+        df: pd.DataFrame,
+        feature_names: Sequence[str],
+        clip: float = 10.0,
+        ticker_column: str = "ticker",
+    ) -> "TickerRobustNormalizer":
+        global_normalizer = RobustNormalizer.fit(df, feature_names, clip=clip)
+        ticker_median: dict[str, np.ndarray] = {}
+        ticker_iqr: dict[str, np.ndarray] = {}
+        if ticker_column in df.columns:
+            for ticker, group in df.groupby(ticker_column, sort=False):
+                key = str(ticker).upper()
+                ticker_normalizer = RobustNormalizer.fit(group, feature_names, clip=clip)
+                ticker_median[key] = ticker_normalizer.median
+                ticker_iqr[key] = ticker_normalizer.iqr
+        return cls(
+            list(feature_names),
+            global_normalizer.median,
+            global_normalizer.iqr,
+            float(clip),
+            ticker_median=ticker_median,
+            ticker_iqr=ticker_iqr,
+            ticker_column=str(ticker_column),
+        )
+
+    def transform_frame(self, df: pd.DataFrame) -> np.ndarray:
+        values = df[self.feature_names].values.astype(np.float32, copy=False)
+        values = np.nan_to_num(values, nan=0.0, posinf=self.clip, neginf=-self.clip)
+        median = np.broadcast_to(self.median.reshape(1, -1), values.shape).copy()
+        iqr = np.broadcast_to(self.iqr.reshape(1, -1), values.shape).copy()
+        if self.ticker_column in df.columns:
+            tickers = df[self.ticker_column].astype(str).str.upper().to_numpy()
+            for ticker in np.unique(tickers):
+                if self.ticker_median is None or self.ticker_iqr is None:
+                    continue
+                ticker_median = self.ticker_median.get(str(ticker))
+                ticker_iqr = self.ticker_iqr.get(str(ticker))
+                if ticker_median is None or ticker_iqr is None:
+                    continue
+                mask = tickers == ticker
+                median[mask] = ticker_median
+                iqr[mask] = ticker_iqr
+        out = (values - median) / iqr
+        out = np.nan_to_num(out, nan=0.0, posinf=self.clip, neginf=-self.clip)
+        return np.clip(out, -self.clip, self.clip).astype(np.float32, copy=False)
+
+    def to_dict(self) -> dict:
+        return {
+            "kind": "ticker",
+            "feature_names": self.feature_names,
+            "median": self.median.tolist(),
+            "iqr": self.iqr.tolist(),
+            "clip": self.clip,
+            "ticker_column": self.ticker_column,
+            "ticker_median": {key: value.tolist() for key, value in (self.ticker_median or {}).items()},
+            "ticker_iqr": {key: value.tolist() for key, value in (self.ticker_iqr or {}).items()},
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "TickerRobustNormalizer":
+        return cls(
+            feature_names=[str(x) for x in data["feature_names"]],
+            median=np.asarray(data["median"], dtype=np.float32),
+            iqr=np.asarray(data["iqr"], dtype=np.float32),
+            clip=float(data.get("clip", 10.0)),
+            ticker_column=str(data.get("ticker_column", "ticker")),
+            ticker_median={key: np.asarray(value, dtype=np.float32) for key, value in data.get("ticker_median", {}).items()},
+            ticker_iqr={key: np.asarray(value, dtype=np.float32) for key, value in data.get("ticker_iqr", {}).items()},
+        )
+
 
 
 def infer_sort_columns(df: pd.DataFrame) -> list[str]:

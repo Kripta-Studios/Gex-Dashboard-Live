@@ -11,7 +11,7 @@ Param(
   [string]$TestStartDate = "20260401",
   [int]$Epochs = 35,
   [int]$MaxHoldMinutes = 180,
-  [double]$RiskCapital = 1000.0,
+  [double]$RiskCapital = 5000.0,
   [double]$HardStopPct = -0.60,
   [int]$MinExitHoldMinutes = 15,
   [switch]$RebuildStateRows,
