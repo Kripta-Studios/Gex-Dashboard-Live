@@ -1,20 +1,29 @@
 """
-Trading Bot - GBT+JEPA 180m + OptionValue blended 0DTE options.
+Trading Bot - level-stability signal + structural 0DTE option profiles.
 
 Data source:
     rt_data/{YYYYMMDD}/ produced by services/realtime_feed.py.
 
 Live contract:
-    - Direction model: neural/models/jepa/jepa_production_final_180m/base_jepa
+    - Direction signal: production level-stability ensemble rules fit only on
+      months prior to the deployment month. The legacy JEPA 180m model is an
+      explicit fallback only.
     - Entry cadence: 5-minute feature rows, matching the training/backtest sample cadence.
     - Entry window: feature rows through 14:30 ET, with EOD cleanup at the close.
-    - Strike selection: OptionValue blended score over 0.10..0.70 delta candidates,
-      falling back to the 0.70 delta rule if the OptionValue model is unavailable.
-    - Exit: hard stop -60%, trail from +50% with 25% giveback, emergency TP +1000%,
-      max hold 180m, EOD cleanup.
-    - Cooldown: 180m per ticker after entry, matching the promoted backtest.
+    - Strike selection: production structural option profiles over 0.10..0.70
+      delta candidates. OptionValue/fixed-delta are diagnostics/fallback only.
+    - Exit: legacy structural path uses hard stop -60%, trail from +50% with
+      25% giveback, emergency TP +1000%, max hold 180m, EOD cleanup.
+      Event-option scorer positions use their validated +50%/-30% option
+      exit contract with 180m max hold and no trailing.
+    - Cooldown: per-policy in event-option scorer mode; 180m in the legacy
+      level-stability/structural path.
+    - Optional event-option risk guard: policy-configured daily loss-streak
+      pauses use only prior completed-day realized PnL per ticker.
 
-This script is an alert/tracker bot. It does not submit broker orders.
+This script is an alert/tracker bot. It does not submit broker orders. When
+`--paper-order-intents` is passed, it also writes broker-shaped paper order
+intents to disk for downstream validation.
 """
 
 from __future__ import annotations
@@ -45,7 +54,17 @@ PROJECT_ROOT = SCRIPT_DIR.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 sys.path.insert(0, str(PROJECT_ROOT / "neural"))
 
+from neural.jepa.event_option_component_live import EventOptionComponentRegistry
 from neural.jepa.jepa_180m_signal import Jepa180mSignalModel
+from neural.jepa.level_stability_live import LevelStabilityLiveSignal
+
+try:
+    from neural.jepa.event_option_live_scorer import score_event_option_live_candidates
+
+    EVENT_OPTION_SCORER_IMPORT_ERROR = None
+except Exception as exc:  # pragma: no cover - live dependency guard
+    score_event_option_live_candidates = None
+    EVENT_OPTION_SCORER_IMPORT_ERROR = exc
 
 try:
     import torch
@@ -74,20 +93,36 @@ OPTIONS_SYMBOLS = {"SPX": "SPXW", "QQQ": "QQQ", "SPY": "SPY"}
 RIGHT_FOR_DIRECTION = {"LONG": "CALL", "SHORT": "PUT"}
 
 DEFAULT_SIGNAL_MODEL_DIR = PROJECT_ROOT / "neural" / "models" / "jepa" / "jepa_production_final_180m"
+DEFAULT_LEVEL_SIGNAL_PATH = (
+    PROJECT_ROOT / "neural" / "models" / "jepa" / "jepa_production_level_stability" / "level_stability_signal.json"
+)
 DEFAULT_OPTION_VALUE_MODEL_DIR = PROJECT_ROOT / "neural" / "models" / "jepa" / "jepa_production_final_option_value"
+DEFAULT_STRUCTURAL_PROFILE_PATH = (
+    PROJECT_ROOT / "neural" / "models" / "jepa" / "jepa_production_structural_options" / "structural_option_profiles.json"
+)
+DEFAULT_EVENT_OPTION_POLICY_PATH = (
+    PROJECT_ROOT / "neural" / "models" / "jepa" / "jepa_production_event_options" / "event_option_policy.json"
+)
+DEFAULT_EVENT_OPTION_COMPONENT_REGISTRY_PATH = (
+    PROJECT_ROOT / "neural" / "models" / "jepa" / "jepa_production_event_options" / "component_registry.json"
+)
 DEFAULT_RT_DATA_DIR = PROJECT_ROOT / "rt_data"
 DEFAULT_TRADES_DIR = PROJECT_ROOT / "trades_jepa"
 
 MODEL_MODE = "base_jepa"
 DELTA_TARGET = 0.70
-RISK_CAPITAL = 1000.0
+RISK_CAPITAL = 5000.0
 CONTRACT_MULTIPLIER = 100.0
 HARD_STOP_PCT = -0.60
 TAKE_PROFIT_PCT = 10.00
 TRAIL_ACTIVATION_PCT = 0.50
 TRAIL_DRAWDOWN_PCT = 0.25
 MAX_HOLD_MINUTES = 180
+EVENT_OPTION_TAKE_PROFIT_PCT = 0.50
+EVENT_OPTION_STOP_LOSS_PCT = -0.30
+EVENT_OPTION_MAX_HOLD_MINUTES = 180
 COOLDOWN_MINUTES = 180
+EARLIEST_ENTRY_TIME = dt_time(10, 0)
 LATEST_ENTRY_TIME = dt_time(14, 30)
 MAX_FEED_SNAPSHOT_AGE_SECONDS = 150
 MAX_MODEL_FEATURE_AGE_SECONDS = 390
@@ -100,6 +135,7 @@ CRITICAL_LIVE_CONTEXT_FEATURES = [
 EOD_CLEANUP_TIME = dt_time(16, 0)
 FIXED_POLICY_NAME = "base_jepa_180m_fixed_delta_0.70_trail050_025_cutoff1430"
 OPTION_VALUE_POLICY_NAME = "base_jepa_180m_option_value_blended_trail050_025_cutoff1430"
+STRUCTURAL_POLICY_NAME = "level_stability_ensemble_nested_structural_profiles_risk5000"
 OPTION_VALUE_SCORE_BASE = "ovjepa_pred_rule_best_mean"
 OPTION_VALUE_DELTA_BONUS = 2.0
 OPTION_VALUE_MIN_DELTA_ABS = 0.0
@@ -112,6 +148,7 @@ DISCORD_WEBHOOKS = [
 ]
 DISCORD_ROLE_ID = os.getenv("DISCORD_ROLE_ID", "1464601287411634226")
 DISCORD_ROLE_PING = os.getenv("DISCORD_ROLE_PING", f"<@&{DISCORD_ROLE_ID}>").strip()
+PAPER_ORDER_SCHEMA_VERSION = 1
 
 
 def _now_et() -> datetime:
@@ -146,6 +183,14 @@ def _format_expiration_for_tracker(value: Any) -> str:
         return datetime.strptime(exp, "%Y%m%d").strftime("%m/%d/%y")
     except Exception:
         return ""
+
+
+def _ceil_cent(value: float) -> float:
+    return math.ceil(max(float(value), 0.0) * 100.0 - 1e-9) / 100.0
+
+
+def _floor_cent(value: float) -> float:
+    return math.floor(max(float(value), 0.0) * 100.0 + 1e-9) / 100.0
 
 
 def _post_discord(payload: dict[str, Any]) -> None:
@@ -187,6 +232,40 @@ def _write_json(path: Path, payload: Any) -> None:
     tmp = path.with_suffix(path.suffix + ".tmp")
     tmp.write_text(json.dumps(payload, indent=2, default=str), encoding="utf-8")
     tmp.replace(path)
+
+
+def _json_safe(value: Any) -> Any:
+    if value is None:
+        return None
+    if isinstance(value, dict):
+        return {str(key): _json_safe(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_json_safe(item) for item in value]
+    if isinstance(value, (pd.Timestamp, datetime)):
+        return value.isoformat()
+    if isinstance(value, np.integer):
+        return int(value)
+    if isinstance(value, np.floating):
+        out = float(value)
+        return out if math.isfinite(out) else None
+    if isinstance(value, np.bool_):
+        return bool(value)
+    if isinstance(value, float):
+        return value if math.isfinite(value) else None
+    try:
+        if pd.isna(value):
+            return None
+    except Exception:
+        pass
+    if isinstance(value, (str, int, bool)):
+        return value
+    return str(value)
+
+
+def _append_jsonl(path: Path, payload: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(_json_safe(payload), sort_keys=True, separators=(",", ":")) + "\n")
 
 
 @dataclass
@@ -311,31 +390,321 @@ class OptionValueLiveSelector:
         return work.sort_values("_selector_score").iloc[-1]
 
 
+@dataclass(frozen=True)
+class StructuralOptionProfile:
+    ticker: str
+    delta_target: float
+    max_minutes_to_close: float
+    feature: str
+    op: str
+    threshold: float
+    name: str = ""
+
+
+class StructuralOptionProfileSelector:
+    def __init__(self, path: Path) -> None:
+        self.path = Path(path)
+        payload = _read_json(self.path, {})
+        raw_profiles = payload.get("profiles", payload)
+        if not isinstance(raw_profiles, dict) or not raw_profiles:
+            raise ValueError(f"No structural option profiles found in {self.path}")
+        self.policy = str(payload.get("policy", STRUCTURAL_POLICY_NAME))
+        self.profiles: dict[str, StructuralOptionProfile] = {}
+        for ticker, item in raw_profiles.items():
+            if not isinstance(item, dict):
+                continue
+            profile = StructuralOptionProfile(
+                ticker=str(item.get("ticker", ticker)).upper(),
+                delta_target=float(item["delta_target"]),
+                max_minutes_to_close=float(item.get("max_minutes_to_close", 9999.0)),
+                feature=str(item.get("feature", "none")),
+                op=str(item.get("op", "<=")),
+                threshold=float(item.get("threshold", 0.0)),
+                name=str(item.get("name", "")),
+            )
+            self.profiles[profile.ticker] = profile
+        if not self.profiles:
+            raise ValueError(f"No valid structural option profiles found in {self.path}")
+
+    def select(self, ticker: str, candidates: pd.DataFrame) -> pd.Series | None:
+        profile = self.profiles.get(str(ticker).upper())
+        if profile is None or candidates.empty:
+            return None
+        work = candidates[np.isclose(pd.to_numeric(candidates["delta_target"], errors="coerce"), profile.delta_target)].copy()
+        if work.empty:
+            return None
+        if profile.max_minutes_to_close < 9999:
+            work = work[pd.to_numeric(work["minutes_to_close"], errors="coerce") <= profile.max_minutes_to_close].copy()
+        if profile.feature != "none":
+            if profile.feature not in work.columns:
+                logging.warning("[%s] structural profile feature missing: %s", ticker, profile.feature)
+                return None
+            values = pd.to_numeric(work[profile.feature], errors="coerce")
+            if profile.op in {"<=", "le"}:
+                work = work[values <= profile.threshold].copy()
+            elif profile.op in {">=", "ge"}:
+                work = work[values >= profile.threshold].copy()
+            else:
+                raise ValueError(f"Unsupported structural profile op={profile.op}")
+        if work.empty:
+            return None
+        work["_delta_dist"] = (pd.to_numeric(work["actual_delta_abs"], errors="coerce") - profile.delta_target).abs()
+        work = work.dropna(subset=["_delta_dist", "strike"]).sort_values(["_delta_dist", "strike"])
+        if work.empty:
+            return None
+        selected = work.iloc[0].copy()
+        selected["structural_profile"] = profile.name or self._profile_name(profile)
+        selected["structural_policy"] = self.policy
+        return selected
+
+    @staticmethod
+    def _profile_name(profile: StructuralOptionProfile) -> str:
+        time_part = "alltime" if profile.max_minutes_to_close >= 9999 else f"mtc_le_{profile.max_minutes_to_close:.0f}"
+        return f"{profile.ticker}_d{profile.delta_target:.2f}_{time_part}_{profile.feature}_{profile.op}_{profile.threshold:.5g}"
+
+
 class JepaFixedDeltaBot:
     def __init__(
         self,
         model_dir: Path,
+        level_signal_path: Path | None,
+        require_level_signal: bool,
+        allow_signal_model_fallback: bool,
         option_value_model_dir: Path | None,
         option_value_device: str,
+        structural_profile_path: Path | None,
+        require_structural_profile: bool,
+        event_option_policy_path: Path | None,
+        require_event_option_policy: bool,
+        event_option_component_registry_path: Path | None,
+        require_event_option_component_registry: bool,
+        require_event_option_live_ready: bool,
+        enable_event_option_scorer: bool,
+        strict_event_option_features: bool,
+        allow_selector_fallback: bool,
         rt_data_dir: Path,
         trades_dir: Path,
         tickers: list[str],
         dry_run: bool = False,
+        paper_order_intents: bool = False,
     ) -> None:
         self.model_dir = Path(model_dir)
         self.rt_data_dir = Path(rt_data_dir)
         self.trades_dir = Path(trades_dir)
         self.tickers = [str(t).upper() for t in tickers]
         self.dry_run = bool(dry_run)
+        self.paper_order_intents = bool(paper_order_intents)
+        self.allow_selector_fallback = bool(allow_selector_fallback)
+        self.allow_signal_model_fallback = bool(allow_signal_model_fallback)
+        self.require_event_option_live_ready = bool(require_event_option_live_ready)
+        self.event_option_scorer_enabled = bool(enable_event_option_scorer)
+        self.strict_event_option_features = bool(strict_event_option_features)
         self.positions_path = self.trades_dir / "open_positions_jepa.json"
         self.cooldowns_path = self.trades_dir / "cooldowns_jepa.json"
         self.evaluated_features_path = self.trades_dir / "evaluated_features_jepa.json"
+        self.event_option_state_path = self.trades_dir / "event_option_runtime_state.json"
+        self.paper_order_intents_path = self.trades_dir / "paper_order_intents_jepa.jsonl"
+        self.event_option_candidate_audit_path = self.trades_dir / "event_option_candidate_audit_jepa.jsonl"
         self.trade_log_path = self.trades_dir / "trades_jepa.csv"
         self.positions: dict[str, JepaOptionPosition] = self._load_positions()
         self.cooldowns: dict[str, str] = _read_json(self.cooldowns_path, {})
         self.evaluated_feature_timestamps: dict[str, str] = _read_json(self.evaluated_features_path, {})
-        self.signal_model = Jepa180mSignalModel(self.model_dir, mode=MODEL_MODE, tickers=self.tickers)
+        self.event_option_state: dict[str, Any] = self._load_event_option_state()
+        self._event_option_candidate_cache_key = ""
+        self._event_option_candidate_cache: pd.DataFrame = pd.DataFrame()
+        self._event_option_candidate_cache_issues: list[str] = []
+        self.level_signal = self._load_level_signal(level_signal_path, require_level_signal)
+        needs_legacy_signal = (not self.event_option_scorer_enabled) and (
+            self.level_signal is None or self.allow_signal_model_fallback
+        )
+        self.signal_model = (
+            self._load_legacy_signal_model(required=self.level_signal is None)
+            if needs_legacy_signal
+            else None
+        )
+        self.structural_selector = self._load_structural_selector(structural_profile_path, require_structural_profile)
+        self.event_option_policy = self._load_event_option_policy(
+            event_option_policy_path,
+            require_event_option_policy or self.require_event_option_live_ready,
+            self.require_event_option_live_ready,
+        )
+        self.event_option_components = self._load_event_option_component_registry(
+            event_option_component_registry_path,
+            require_event_option_component_registry or self.require_event_option_live_ready,
+            self.require_event_option_live_ready,
+        )
+        self.earliest_entry_time = self._resolve_earliest_entry_time()
+        self.latest_entry_time = self._resolve_latest_entry_time()
         self.option_value_selector = self._load_option_value_selector(option_value_model_dir, option_value_device)
+        if self.event_option_scorer_enabled:
+            if EVENT_OPTION_SCORER_IMPORT_ERROR is not None:
+                raise RuntimeError(f"Event-option live scorer import failed: {EVENT_OPTION_SCORER_IMPORT_ERROR}")
+            if self.event_option_policy is None:
+                raise RuntimeError("Event-option scorer enabled but policy is unavailable")
+            if self.event_option_components is None:
+                raise RuntimeError("Event-option scorer enabled but component registry is unavailable")
+        if self.event_option_policy is not None and self.event_option_components is not None:
+            missing = self.event_option_components.missing_for_full_live_equivalence
+            if missing:
+                logging.warning(
+                    "Event-option policy is not marked full live-ready (missing_live_equivalence=%d). "
+                    "If --enable-event-option-scorer is used, it is a guarded runtime replay path until "
+                    "strict replay equivalence is completed.",
+                    len(missing),
+                )
+
+    def _load_level_signal(self, signal_path: Path | None, required: bool) -> LevelStabilityLiveSignal | None:
+        if signal_path is None:
+            if required:
+                raise FileNotFoundError("Level-stability signal path is required but disabled")
+            logging.info("Level-stability live signal disabled")
+            return None
+        path = Path(signal_path)
+        if not path.exists():
+            if required:
+                raise FileNotFoundError(path)
+            logging.warning("Level-stability signal not found (%s); legacy signal fallback may be used", path)
+            return None
+        selector = LevelStabilityLiveSignal(path)
+        logging.info("Loaded level-stability signal policy=%s path=%s", selector.policy, path)
+        return selector
+
+    def _load_legacy_signal_model(self, required: bool) -> Jepa180mSignalModel | None:
+        try:
+            model = Jepa180mSignalModel(self.model_dir, mode=MODEL_MODE, tickers=self.tickers)
+            logging.info("Loaded legacy JEPA 180m signal model model_dir=%s", self.model_dir)
+            return model
+        except Exception as exc:
+            if required:
+                raise
+            logging.warning("Legacy JEPA 180m signal model unavailable (%s)", exc)
+            return None
+
+    def _load_structural_selector(
+        self,
+        profile_path: Path | None,
+        required: bool,
+    ) -> StructuralOptionProfileSelector | None:
+        if profile_path is None:
+            if required:
+                raise FileNotFoundError("Structural profile path is required but disabled")
+            logging.info("Structural option selector disabled")
+            return None
+        path = Path(profile_path)
+        if not path.exists():
+            if required:
+                raise FileNotFoundError(path)
+            logging.warning("Structural option profile not found (%s); falling back to legacy selectors", path)
+            return None
+        selector = StructuralOptionProfileSelector(path)
+        logging.info("Loaded structural option selector policy=%s path=%s", selector.policy, path)
+        return selector
+
+    def _load_event_option_policy(
+        self,
+        policy_path: Path | None,
+        required: bool,
+        require_live_ready: bool,
+    ) -> dict[str, Any] | None:
+        if policy_path is None:
+            if required:
+                raise FileNotFoundError("Event-option policy path is required but disabled")
+            logging.info("Event-option production policy disabled")
+            return None
+        path = Path(policy_path)
+        if not path.exists():
+            if required:
+                raise FileNotFoundError(path)
+            logging.warning("Event-option production policy not found (%s)", path)
+            return None
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(payload, dict):
+            raise ValueError(f"Event-option policy must be a JSON object: {path}")
+        if require_live_ready:
+            status = str(payload.get("status", "")).lower()
+            if "research" in status or "incomplete" in status:
+                raise ValueError(f"Event-option policy is not live-ready: {payload.get('status', '')}")
+        logging.info(
+            "Loaded event-option production policy=%s deploy_month=%s status=%s path=%s",
+            payload.get("policy", ""),
+            payload.get("deploy_month", ""),
+            payload.get("status", ""),
+            path,
+        )
+        return payload
+
+    def _load_event_option_component_registry(
+        self,
+        registry_path: Path | None,
+        required: bool,
+        require_live_ready: bool,
+    ) -> EventOptionComponentRegistry | None:
+        if registry_path is None:
+            if required:
+                raise FileNotFoundError("Event-option component registry path is required but disabled")
+            logging.info("Event-option component registry disabled")
+            return None
+        path = Path(registry_path)
+        if not path.exists():
+            if required:
+                raise FileNotFoundError(path)
+            logging.warning("Event-option component registry not found (%s)", path)
+            return None
+        registry = EventOptionComponentRegistry.from_path(
+            path,
+            project_root=PROJECT_ROOT,
+            require_complete_live_equivalence=bool(require_live_ready),
+        )
+        summary = registry.summary()
+        missing = summary.get("missing_for_full_live_equivalence", [])
+        invalidated = summary.get("invalidated_components", [])
+        logging.info(
+            "Loaded event-option component registry status=%s deploy_month=%s completed_through=%s components=%d missing_live_equivalence=%d invalidated=%d path=%s",
+            summary.get("status", ""),
+            summary.get("deploy_month", ""),
+            summary.get("completed_data_through_month", ""),
+            int(summary.get("component_count", 0)),
+            len(missing) if isinstance(missing, list) else 0,
+            len(invalidated) if isinstance(invalidated, list) else 0,
+            path,
+        )
+        return registry
+
+    def _resolve_earliest_entry_time(self) -> dt_time:
+        policy = self.event_option_policy or {}
+        live_contract = policy.get("live_contract") if isinstance(policy.get("live_contract"), dict) else {}
+        raw = str(live_contract.get("entry_time_min_et", "")).strip()
+        if raw:
+            try:
+                hour, minute = raw[:5].split(":")
+                return dt_time(int(hour), int(minute))
+            except Exception:
+                logging.warning("Invalid event-option entry_time_min_et=%s; using default %s", raw, EARLIEST_ENTRY_TIME)
+        return EARLIEST_ENTRY_TIME
+    def _resolve_latest_entry_time(self) -> dt_time:
+        policy = self.event_option_policy or {}
+        live_contract = policy.get("live_contract") if isinstance(policy.get("live_contract"), dict) else {}
+        raw = str(live_contract.get("entry_time_max_et", "")).strip()
+        missing_live_equivalence = (
+            self.event_option_components.missing_for_full_live_equivalence
+            if self.event_option_components is not None
+            else []
+        )
+        if missing_live_equivalence:
+            if raw and raw != LATEST_ENTRY_TIME.strftime("%H:%M"):
+                logging.warning(
+                    "Ignoring event-option cutoff %s because component registry is not a complete live scorer; using %s",
+                    raw,
+                    LATEST_ENTRY_TIME.strftime("%H:%M"),
+                )
+            return LATEST_ENTRY_TIME
+        if raw:
+            try:
+                hour, minute = raw[:5].split(":")
+                return dt_time(int(hour), int(minute))
+            except Exception:
+                logging.warning("Invalid event-option entry_time_max_et=%s; using default %s", raw, LATEST_ENTRY_TIME)
+        return LATEST_ENTRY_TIME
 
     def _load_option_value_selector(self, model_dir: Path | None, device: str) -> OptionValueLiveSelector | None:
         if model_dir is None:
@@ -372,6 +741,53 @@ class JepaFixedDeltaBot:
 
     def _save_evaluated_features(self) -> None:
         _write_json(self.evaluated_features_path, self.evaluated_feature_timestamps)
+
+    def _load_event_option_state(self) -> dict[str, Any]:
+        payload = _read_json(self.event_option_state_path, {})
+        if not isinstance(payload, dict):
+            payload = {}
+        payload.setdefault("entries", [])
+        payload.setdefault("candidate_ids", [])
+        return payload
+
+    def _save_event_option_state(self) -> None:
+        entries = self.event_option_state.get("entries", [])
+        if isinstance(entries, list) and len(entries) > 5000:
+            self.event_option_state["entries"] = entries[-5000:]
+        _write_json(self.event_option_state_path, self.event_option_state)
+
+    def _record_event_option_candidate_audit(
+        self,
+        *,
+        event: str,
+        now: datetime,
+        ticker: str = "",
+        feature_id: str = "",
+        candidates: pd.DataFrame | None = None,
+        issues: list[str] | None = None,
+        selected_row: pd.Series | dict[str, Any] | None = None,
+        reason: str = "",
+    ) -> None:
+        try:
+            payload: dict[str, Any] = {
+                "schema_version": 1,
+                "event": str(event),
+                "recorded_at": now.isoformat(),
+                "ticker": str(ticker).upper() if ticker else "",
+                "feature_id": str(feature_id),
+                "reason": str(reason),
+                "issues": list(issues or []),
+            }
+            if candidates is not None:
+                payload["candidate_count"] = int(len(candidates))
+                payload["candidates"] = candidates.to_dict("records")
+            if selected_row is not None:
+                payload["selected_candidate"] = (
+                    selected_row.to_dict() if isinstance(selected_row, pd.Series) else dict(selected_row)
+                )
+            _append_jsonl(self.event_option_candidate_audit_path, payload)
+        except Exception as exc:
+            logging.warning("Event-option candidate audit write failed: %s", exc)
 
     def _current_day_dir(self) -> Path:
         return self.rt_data_dir / _now_et().strftime("%Y%m%d")
@@ -477,9 +893,10 @@ class JepaFixedDeltaBot:
             return 0.0
         return _safe_float(df["close"].iloc[-1])
 
-    def _latest_option_snapshot(self, ticker: str) -> pd.DataFrame:
+    def _latest_option_snapshot(self, ticker: str, suffix: str = "0dte") -> pd.DataFrame:
         symbol = OPTIONS_SYMBOLS.get(ticker, ticker)
-        df = self._read_parquet(f"{symbol}_greeks_0dte_latest.parquet")
+        suffix = str(suffix or "0dte")
+        df = self._read_parquet(f"{symbol}_greeks_{suffix}_latest.parquet")
         if df.empty:
             return df
         if "underlying_timestamp" in df.columns:
@@ -491,9 +908,10 @@ class JepaFixedDeltaBot:
             df["right_norm"] = df["right"].map(_normalize_right)
         return df
 
-    def _latest_ohlc_snapshot(self, ticker: str) -> pd.DataFrame:
+    def _latest_ohlc_snapshot(self, ticker: str, suffix: str = "0dte") -> pd.DataFrame:
         symbol = OPTIONS_SYMBOLS.get(ticker, ticker)
-        df = self._read_parquet(f"{symbol}_ohlc_0dte_latest.parquet")
+        suffix = str(suffix or "0dte")
+        df = self._read_parquet(f"{symbol}_ohlc_{suffix}_latest.parquet")
         if df.empty:
             return df
         time_col = "timestamp" if "timestamp" in df.columns else "underlying_timestamp" if "underlying_timestamp" in df.columns else ""
@@ -518,8 +936,8 @@ class JepaFixedDeltaBot:
                 return value
         return 0.0
 
-    def _option_price_from_ohlc(self, ticker: str, strike: float, right: str) -> float:
-        df = self._latest_ohlc_snapshot(ticker)
+    def _option_price_from_ohlc(self, ticker: str, strike: float, right: str, suffix: str = "0dte") -> float:
+        df = self._latest_ohlc_snapshot(ticker, suffix=suffix)
         if df.empty or "strike" not in df.columns or "right_norm" not in df.columns:
             return 0.0
         work = df[(df["right_norm"] == right) & (np.isclose(pd.to_numeric(df["strike"], errors="coerce"), strike))]
@@ -566,6 +984,66 @@ class JepaFixedDeltaBot:
             }
         return None
 
+    def _select_delta_option(
+        self,
+        ticker: str,
+        *,
+        right: str,
+        delta_target: float,
+        suffix: str,
+        features: pd.DataFrame | None = None,
+        selector_policy: str,
+        selector_score: float = 0.0,
+    ) -> dict | None:
+        right = _normalize_right(right)
+        suffix = str(suffix or "0dte")
+        df = self._latest_option_snapshot(ticker, suffix=suffix)
+        if df.empty or "delta" not in df.columns or "strike" not in df.columns or "right_norm" not in df.columns:
+            return None
+        work = df[df["right_norm"] == right].copy()
+        if work.empty:
+            return None
+        work["delta_abs"] = pd.to_numeric(work["delta"], errors="coerce").abs()
+        work = work[work["delta_abs"] > 0.01].copy()
+        if "bid" in work.columns:
+            work = work[pd.to_numeric(work["bid"], errors="coerce") > 0].copy()
+        if work.empty:
+            return None
+        work["delta_dist"] = (work["delta_abs"] - float(delta_target)).abs()
+        work = work.dropna(subset=["delta_dist", "strike"]).sort_values(["delta_dist", "strike"])
+        for _, row in work.head(8).iterrows():
+            strike = _safe_float(row.get("strike", 0.0))
+            if strike <= 0:
+                continue
+            raw_premium = self._row_price(row)
+            if raw_premium <= 0:
+                raw_premium = self._option_price_from_ohlc(ticker, strike, right, suffix=suffix)
+            if raw_premium <= 0:
+                continue
+            actual_delta = _safe_float(row.get("delta", 0.0))
+            feature_frame = features if features is not None else pd.DataFrame()
+            model_entry_spread_pct = self._entry_spread_pct(abs(actual_delta), feature_frame)
+            entry_premium = raw_premium * (1.0 + model_entry_spread_pct)
+            ask_premium = _safe_float(row.get("ask", 0.0), 0.0)
+            if ask_premium > 0.0:
+                entry_premium = max(entry_premium, ask_premium)
+            entry_spread_pct = entry_premium / max(raw_premium, 1e-9) - 1.0
+            return {
+                "ticker": ticker,
+                "right": right,
+                "strike": strike,
+                "delta": actual_delta,
+                "premium": raw_premium,
+                "entry_premium": entry_premium,
+                "raw_entry_premium": raw_premium,
+                "entry_spread_pct": entry_spread_pct,
+                "expiration": _format_expiration(row.get("expiration", "")),
+                "selector_policy": selector_policy,
+                "selector_score": float(selector_score),
+                "option_snapshot_suffix": suffix,
+            }
+        return None
+
     def _option_value_candidates(self, ticker: str, direction: str, features: pd.DataFrame) -> pd.DataFrame:
         if features.empty:
             return pd.DataFrame()
@@ -590,6 +1068,8 @@ class JepaFixedDeltaBot:
         now = _now_et()
         date_value = str(feature_row.get("date", now.strftime("%Y%m%d")))
         time_value = str(feature_row.get("time", now.strftime("%H:%M")))
+        minutes_since_open = _safe_float(feature_row.get("minutes_since_open", 0.0), 0.0)
+        minutes_to_close = max(0.0, 390.0 - minutes_since_open)
         rows: list[dict[str, Any]] = []
         for delta_target in OPTION_VALUE_DELTA_TARGETS:
             target_work = work.copy()
@@ -625,6 +1105,7 @@ class JepaFixedDeltaBot:
                         "month": date_value[:6],
                         "time": time_value[:5],
                         "side": direction,
+                        "minutes_to_close": minutes_to_close,
                         "ticker_SPX": 1.0 if ticker == "SPX" else 0.0,
                         "ticker_QQQ": 1.0 if ticker == "QQQ" else 0.0,
                         "ticker_SPY": 1.0 if ticker == "SPY" else 0.0,
@@ -682,21 +1163,667 @@ class JepaFixedDeltaBot:
             "ovjepa_pred_best": _safe_float(selected.get("ovjepa_pred_best", 0.0), 0.0),
         }
 
+    def _select_structural_profile_option(self, ticker: str, direction: str, features: pd.DataFrame) -> dict | None:
+        if self.structural_selector is None:
+            return None
+        candidates = self._option_value_candidates(ticker, direction, features)
+        selected = self.structural_selector.select(ticker, candidates)
+        if selected is None:
+            return None
+        profile_name = str(selected.get("structural_profile", ""))
+        return {
+            "ticker": ticker,
+            "right": str(selected["right"]),
+            "strike": float(selected["strike"]),
+            "delta": float(selected["actual_delta"]),
+            "premium": float(selected["raw_entry_premium"]),
+            "entry_premium": float(selected["entry_premium"]),
+            "raw_entry_premium": float(selected["raw_entry_premium"]),
+            "entry_spread_pct": float(selected["entry_spread_pct"]),
+            "expiration": str(selected.get("expiration", "")),
+            "selector_policy": f"{selected.get('structural_policy', STRUCTURAL_POLICY_NAME)}:{profile_name}",
+            "selector_score": 0.0,
+            "structural_profile": profile_name,
+        }
+
+    def _latest_event_option_snapshots(self) -> pd.DataFrame:
+        return self._read_parquet("event_option_snapshots_latest.parquet", max_age=MAX_MODEL_FEATURE_AGE_SECONDS)
+
+    @staticmethod
+    def _event_feature_row_id(candidates: pd.DataFrame, ticker: str) -> str:
+        if candidates.empty:
+            return ""
+        work = candidates[candidates.get("bot_ticker", pd.Series(dtype=str)).astype(str).str.upper().eq(str(ticker).upper())]
+        if work.empty:
+            return ""
+        latest = work.sort_values([col for col in ["timestamp", "time", "expiry_mode"] if col in work.columns]).tail(1).iloc[-1]
+        timestamp = str(latest.get("timestamp", ""))
+        if timestamp:
+            return timestamp
+        return f"{latest.get('date', latest.get('trade_date', ''))}:{latest.get('time', '')}"
+
+    def _score_event_option_candidates(self) -> tuple[pd.DataFrame, list[str]]:
+        if not self.event_option_scorer_enabled or self.event_option_components is None:
+            return pd.DataFrame(), []
+        snapshot_path = self._current_day_dir() / "event_option_snapshots_latest.parquet"
+        if snapshot_path.exists():
+            cache_key = f"{snapshot_path}:{snapshot_path.stat().st_mtime_ns}"
+            if cache_key == self._event_option_candidate_cache_key:
+                return self._event_option_candidate_cache.copy(), list(self._event_option_candidate_cache_issues)
+        else:
+            cache_key = ""
+        snapshots = self._latest_event_option_snapshots()
+        if snapshots.empty:
+            return pd.DataFrame(), ["event_option_snapshots_latest.parquet unavailable"]
+        assert score_event_option_live_candidates is not None
+        candidates, issues, _enriched = score_event_option_live_candidates(
+            self.event_option_components,
+            snapshots,
+            strict_features=self.strict_event_option_features,
+        )
+        self._event_option_candidate_cache_key = cache_key
+        self._event_option_candidate_cache = candidates.copy()
+        self._event_option_candidate_cache_issues = list(issues)
+        self._record_event_option_candidate_audit(
+            event="score_snapshot",
+            now=_now_et(),
+            candidates=candidates,
+            issues=list(issues),
+            reason=f"snapshot_cache_key={cache_key}",
+        )
+        return candidates, issues
+
+    def _event_state_entries(self) -> list[dict[str, Any]]:
+        entries = self.event_option_state.get("entries", [])
+        return entries if isinstance(entries, list) else []
+
+    def _event_candidate_seen(self, candidate_id: str) -> bool:
+        seen = self.event_option_state.get("candidate_ids", [])
+        return str(candidate_id) in set(str(item) for item in seen if item)
+
+    def _event_daily_entry_count(self, policy_ticker: str, date_value: str) -> int:
+        policy_ticker = str(policy_ticker).upper()
+        return sum(
+            1
+            for item in self._event_state_entries()
+            if str(item.get("policy_ticker", "")).upper() == policy_ticker
+            and str(item.get("date", "")) == str(date_value)
+        )
+
+    def _event_monthly_entry_count(self, policy_ticker: str, month_value: str) -> int:
+        policy_ticker = str(policy_ticker).upper()
+        month_value = str(month_value)
+        return sum(
+            1
+            for item in self._event_state_entries()
+            if str(item.get("policy_ticker", "")).upper() == policy_ticker
+            and str(item.get("date", "")).startswith(month_value)
+        )
+
+    def _event_last_entry_dt(self, policy_ticker: str, date_value: str) -> datetime | None:
+        values: list[datetime] = []
+        policy_ticker = str(policy_ticker).upper()
+        for item in self._event_state_entries():
+            if str(item.get("policy_ticker", "")).upper() != policy_ticker:
+                continue
+            if str(item.get("date", "")) != str(date_value):
+                continue
+            try:
+                values.append(datetime.fromisoformat(str(item.get("entry_time", ""))))
+            except Exception:
+                continue
+        return max(values) if values else None
+
+    def _event_trade_log(self) -> pd.DataFrame:
+        if not self.trade_log_path.exists():
+            return pd.DataFrame()
+        try:
+            return pd.read_csv(self.trade_log_path, dtype={"date": str, "source_model": str})
+        except Exception:
+            logging.exception("Could not read event-option trade log")
+            return pd.DataFrame()
+
+    @staticmethod
+    def _required_count_by_date(month_value: str, date_value: str, target: int) -> int:
+        try:
+            start = pd.Timestamp(year=int(str(month_value)[:4]), month=int(str(month_value)[4:6]), day=1)
+        except Exception:
+            return int(target)
+        end = start + pd.offsets.MonthEnd(0)
+        days = pd.bdate_range(start, end)
+        current = pd.to_datetime(str(date_value), format="%Y%m%d", errors="coerce")
+        if pd.isna(current):
+            return 1
+        elapsed = int((days <= current).sum())
+        return int(math.ceil(float(target) * float(max(1, elapsed)) / float(max(1, len(days)))))
+
+    @staticmethod
+    def _log_exit_dt(frame: pd.DataFrame) -> pd.Series:
+        if frame.empty or "date" not in frame.columns or "exit_time" not in frame.columns:
+            return pd.Series(pd.NaT, index=frame.index)
+        return pd.to_datetime(
+            frame["date"].astype(str) + " " + frame["exit_time"].astype(str).str.slice(0, 5),
+            format="%Y%m%d %H:%M",
+            errors="coerce",
+        )
+
+    def _event_known_log_rows(self, *, policy_ticker: str, date_value: str, now: datetime) -> pd.DataFrame:
+        log = self._event_trade_log()
+        if log.empty or "source_model" not in log.columns or "pnl_dollars" not in log.columns:
+            return pd.DataFrame()
+        source = log["source_model"].astype(str)
+        work = log[
+            source.str.contains(f"event_option:{str(policy_ticker).upper()}:", regex=False)
+            & (log["date"].astype(str) == str(date_value))
+        ].copy()
+        if work.empty:
+            return work
+        work["_exit_dt"] = self._log_exit_dt(work)
+        current = pd.Timestamp(now.replace(tzinfo=None))
+        work = work[work["_exit_dt"].notna() & (work["_exit_dt"] <= current)].copy()
+        sort_cols = [col for col in ["_exit_dt", "entry_time"] if col in work.columns]
+        return work.sort_values(sort_cols, kind="stable") if sort_cols else work
+
+    def _event_daily_loss_guard_config(self) -> dict[str, Any]:
+        payload = self.event_option_policy if isinstance(self.event_option_policy, dict) else {}
+        guards = payload.get("runtime_risk_guards") if isinstance(payload.get("runtime_risk_guards"), dict) else {}
+        cfg = guards.get("daily_loss_streak_pause") if isinstance(guards.get("daily_loss_streak_pause"), dict) else {}
+        if not bool(cfg.get("enabled", False)):
+            return {"enabled": False}
+        return {
+            "enabled": True,
+            "trigger_losses": max(1, int(_safe_float(cfg.get("trigger_losses", 4), 4))),
+            "pause_days": max(1, int(_safe_float(cfg.get("pause_days", 1), 1))),
+            "loss_threshold_return": _safe_float(cfg.get("loss_threshold_return", 0.0), 0.0),
+            "risk_capital": max(1.0, _safe_float(cfg.get("risk_capital_dollars", RISK_CAPITAL), RISK_CAPITAL)),
+        }
+
+    def _event_daily_loss_guard_skips(self) -> list[dict[str, Any]]:
+        skips = self.event_option_state.get("daily_loss_guard_skips", [])
+        return skips if isinstance(skips, list) else []
+
+    def _event_daily_loss_guard_skip_dates(self, policy_ticker: str, before_or_equal_date: str) -> set[str]:
+        ticker = str(policy_ticker).upper()
+        cutoff = str(before_or_equal_date)
+        return {
+            str(item.get("date", ""))
+            for item in self._event_daily_loss_guard_skips()
+            if str(item.get("policy_ticker", "")).upper() == ticker
+            and str(item.get("date", "")) <= cutoff
+        }
+
+    def _record_event_daily_loss_guard_skip(
+        self,
+        *,
+        policy_ticker: str,
+        date_value: str,
+        now: datetime,
+        reason: str,
+        config: dict[str, Any],
+    ) -> None:
+        ticker = str(policy_ticker).upper()
+        date_text = str(date_value)
+        skips = self._event_daily_loss_guard_skips()
+        if any(str(item.get("policy_ticker", "")).upper() == ticker and str(item.get("date", "")) == date_text for item in skips):
+            return
+        skips.append(
+            {
+                "policy_ticker": ticker,
+                "date": date_text,
+                "recorded_at": now.isoformat(),
+                "reason": reason,
+                "trigger_losses": int(config.get("trigger_losses", 0)),
+                "pause_days": int(config.get("pause_days", 0)),
+                "loss_threshold_return": float(config.get("loss_threshold_return", 0.0)),
+            }
+        )
+        self.event_option_state["daily_loss_guard_skips"] = skips[-5000:]
+        self._save_event_option_state()
+
+    def _event_completed_daily_returns(self, policy_ticker: str, before_date: str, risk_capital: float) -> dict[str, float]:
+        log = self._event_trade_log()
+        if log.empty or "source_model" not in log.columns or "pnl_dollars" not in log.columns or "date" not in log.columns:
+            return {}
+        ticker = str(policy_ticker).upper()
+        source = log["source_model"].astype(str)
+        work = log[
+            source.str.contains(f"event_option:{ticker}:", regex=False)
+            & (log["date"].astype(str) < str(before_date))
+        ].copy()
+        if work.empty:
+            return {}
+        work["pnl_return"] = pd.to_numeric(work["pnl_dollars"], errors="coerce").fillna(0.0) / float(risk_capital)
+        return {str(date): float(value) for date, value in work.groupby(work["date"].astype(str))["pnl_return"].sum().items()}
+
+    def _event_daily_loss_guard_blocked(self, policy_ticker: str, date_value: str, now: datetime) -> tuple[bool, str]:
+        cfg = self._event_daily_loss_guard_config()
+        if not bool(cfg.get("enabled", False)):
+            return False, ""
+        ticker = str(policy_ticker).upper()
+        date_text = str(date_value)
+        skip_dates = self._event_daily_loss_guard_skip_dates(ticker, date_text)
+        if date_text in skip_dates:
+            return True, "daily_loss_streak_pause_already_active"
+        daily_returns = self._event_completed_daily_returns(ticker, date_text, float(cfg["risk_capital"]))
+        pause_remaining = 0
+        loss_streak = 0
+        for day in sorted(set(daily_returns).union({day for day in skip_dates if day < date_text})):
+            if pause_remaining > 0:
+                if day in skip_dates:
+                    pause_remaining -= 1
+                    continue
+                pause_remaining = 0
+            if day not in daily_returns:
+                continue
+            day_return = float(daily_returns[day])
+            if day_return < float(cfg["loss_threshold_return"]):
+                loss_streak += 1
+            elif day_return > 0.0:
+                loss_streak = 0
+            if loss_streak >= int(cfg["trigger_losses"]):
+                pause_remaining = int(cfg["pause_days"])
+                loss_streak = 0
+        if pause_remaining <= 0:
+            return False, ""
+        reason = f"daily_loss_streak_pause_t{int(cfg['trigger_losses'])}_p{int(cfg['pause_days'])}"
+        self._record_event_daily_loss_guard_skip(
+            policy_ticker=ticker,
+            date_value=date_text,
+            now=now,
+            reason=reason,
+            config=cfg,
+        )
+        return True, reason
+
+    @staticmethod
+    def _event_action_from_log(work: pd.DataFrame) -> pd.Series:
+        if "right" in work.columns:
+            right = work["right"].astype(str).str.upper()
+            return right.where(right.isin(["CALL", "PUT"]), "")
+        if "direction" in work.columns:
+            return work["direction"].astype(str).str.upper().map({"LONG": "CALL", "SHORT": "PUT"}).fillna("")
+        return pd.Series("", index=work.index)
+
+    def _qqq_prior_completed_day_base_mtd(self, date_value: str) -> float:
+        log = self._event_trade_log()
+        if log.empty or "source_model" not in log.columns or "pnl_dollars" not in log.columns:
+            return 0.0
+        month = str(date_value)[:6]
+        source = log["source_model"].astype(str)
+        work = log[
+            source.str.contains("event_option:QQQ:", regex=False)
+            & (log["date"].astype(str).str[:6] == month)
+            & (log["date"].astype(str) < str(date_value))
+            & (source.str.contains(":meta_s1:", regex=False) | source.str.contains(":current:", regex=False))
+        ].copy()
+        if work.empty:
+            return 0.0
+        return float(pd.to_numeric(work["pnl_dollars"], errors="coerce").fillna(0.0).sum() / RISK_CAPITAL)
+
+    def _spxw_fallback_side_daily_return(self, date_value: str, action: str, now: datetime) -> float:
+        work = self._event_known_log_rows(policy_ticker="SPXW", date_value=date_value, now=now)
+        if work.empty:
+            return 0.0
+        source = work["source_model"].astype(str)
+        work = work[source.str.contains(":base_fallback:", regex=False)].copy()
+        actions = self._event_action_from_log(work)
+        work = work[actions.astype(str).str.upper().eq(str(action).upper())].copy()
+        if work.empty:
+            return 0.0
+        return float(pd.to_numeric(work["pnl_dollars"], errors="coerce").fillna(0.0).sum() / RISK_CAPITAL)
+
+    def _qqq_current_circuit_halted(self, row: pd.Series, date_value: str, now: datetime) -> tuple[bool, str]:
+        mtd_source = str(row.get("mtd_source", "")).lower()
+        source_variant = str(row.get("source_variant", "")).lower()
+        if mtd_source != "current" and source_variant != "current":
+            return False, ""
+        cfg: dict[str, Any] = {
+            "config": "streak1_daylossoff_lossesoff",
+            "stop_after_loss_streak": 1,
+            "daily_loss_limit": -999.0,
+            "total_loss_limit": 999,
+            "min_trades_before_halt": 0,
+        }
+        side_specific = True
+        if self.event_option_components is not None and "QQQ.current_intraday_circuit" in self.event_option_components.components:
+            try:
+                cfg = self.event_option_components.intraday_circuit_config("QQQ.current_intraday_circuit", ticker="QQQ")
+                side_specific = bool(self.event_option_components.component("QQQ.current_intraday_circuit").metadata.get("side_specific", True))
+            except Exception:
+                logging.exception("Could not load QQQ current intraday circuit config; using deploy defaults")
+        work = self._event_known_log_rows(policy_ticker="QQQ", date_value=date_value, now=now)
+        if work.empty:
+            return False, ""
+        source = work["source_model"].astype(str)
+        work = work[
+            source.str.contains("event_option:QQQ:current:", regex=False)
+            | source.str.contains("event_option:QQQ:online:current:", regex=False)
+        ].copy()
+        if work.empty:
+            return False, ""
+        if side_specific:
+            candidate_action = str(row.get("action", "")).upper()
+            actions = self._event_action_from_log(work)
+            work = work[actions.astype(str).str.upper().eq(candidate_action)].copy()
+        if work.empty:
+            return False, ""
+        returns = pd.to_numeric(work["pnl_dollars"], errors="coerce").fillna(0.0) / RISK_CAPITAL
+        known_day_return = 0.0
+        loss_streak = 0
+        total_losses = 0
+        taken = 0
+        for ret in returns:
+            known_day_return += float(ret)
+            taken += 1
+            if float(ret) < 0.0:
+                loss_streak += 1
+                total_losses += 1
+            elif float(ret) > 0.0:
+                loss_streak = 0
+            triggered = (
+                loss_streak >= int(cfg.get("stop_after_loss_streak", 999))
+                or known_day_return <= float(cfg.get("daily_loss_limit", -999.0))
+                or total_losses >= int(cfg.get("total_loss_limit", 999))
+            )
+            if triggered and taken >= int(cfg.get("min_trades_before_halt", 0)):
+                return True, f"qqq_current_circuit_{cfg.get('config', 'halted')}"
+        return False, ""
+
+    @staticmethod
+    def _event_int(row: pd.Series, name: str, default: int) -> int:
+        try:
+            value = int(float(row.get(name, default)))
+            return value if value > 0 else int(default)
+        except Exception:
+            return int(default)
+
+    def _event_candidate_allowed(self, row: pd.Series, now: datetime) -> tuple[bool, str]:
+        candidate_id = str(row.get("event_candidate_id", ""))
+        if candidate_id and self._event_candidate_seen(candidate_id):
+            return False, "duplicate_candidate"
+        policy_ticker = str(row.get("policy_ticker", row.get("ticker", ""))).upper()
+        date_value = str(row.get("date", row.get("trade_date", now.strftime("%Y%m%d"))))
+        blocked, reason = self._event_daily_loss_guard_blocked(policy_ticker, date_value, now)
+        if blocked:
+            return False, reason
+        max_day = self._event_int(row, "policy_max_day", 999)
+        if max_day < 999 and self._event_daily_entry_count(policy_ticker, date_value) >= max_day:
+            return False, f"policy_max_day_{max_day}_reached"
+        cooldown = self._event_int(row, "policy_cooldown_minutes", 0)
+        last_dt = self._event_last_entry_dt(policy_ticker, date_value)
+        if cooldown > 0 and last_dt is not None:
+            elapsed = (now - last_dt).total_seconds() / 60.0
+            if elapsed < cooldown:
+                return False, f"policy_cooldown_{cooldown}m"
+        monthly_role = str(row.get("monthly_backfill_role", "")).lower()
+        if monthly_role == "fallback":
+            month_value = str(row.get("month", str(date_value)[:6]))
+            target = self._event_int(row, "backfill_min_month_trades", 18)
+            selected_count = self._event_monthly_entry_count(policy_ticker, month_value)
+            required = self._required_count_by_date(month_value, date_value, target)
+            if selected_count >= required:
+                return False, f"monthly_backfill_inactive_count_{selected_count}_required_{required}"
+        if policy_ticker == "QQQ" and str(row.get("mtd_source", "")).lower() == "online":
+            threshold = _safe_float(row.get("mtd_rescue_trigger_threshold_return", 1.0), 1.0)
+            prior_mtd = self._qqq_prior_completed_day_base_mtd(date_value)
+            if prior_mtd > threshold:
+                return False, f"qqq_mtd_rescue_inactive_prior_mtd_{prior_mtd:.3f}"
+        if policy_ticker == "QQQ":
+            halted, reason = self._qqq_current_circuit_halted(row, date_value, now)
+            if halted:
+                return False, reason
+        if policy_ticker == "SPXW" and str(row.get("spxw_backfill_role", "")).lower() == "fallback":
+            month_value = str(row.get("month", str(date_value)[:6]))
+            target = self._event_int(row, "backfill_min_month_trades", 18)
+            selected_count = self._event_monthly_entry_count(policy_ticker, month_value)
+            required = self._required_count_by_date(month_value, date_value, target)
+            if selected_count >= required:
+                return False, f"spxw_backfill_inactive_count_{selected_count}_required_{required}"
+            action = str(row.get("action", "")).upper()
+            if self._spxw_fallback_side_daily_return(date_value, action, now) <= -1.5:
+                return False, "spxw_base_side_daily_loss_limit"
+        return True, "allowed"
+
+    def _record_event_option_entry(self, row: pd.Series, now: datetime, option: dict) -> None:
+        candidate_id = str(row.get("event_candidate_id", ""))
+        raw_mtd = row.get("mtd_source", "")
+        mtd_source = str(raw_mtd) if pd.notna(raw_mtd) and str(raw_mtd).lower() != "nan" else "base"
+        ids = self.event_option_state.get("candidate_ids", [])
+        if not isinstance(ids, list):
+            ids = []
+        if candidate_id:
+            ids.append(candidate_id)
+        self.event_option_state["candidate_ids"] = ids[-5000:]
+        entries = self.event_option_state.get("entries", [])
+        if not isinstance(entries, list):
+            entries = []
+        entries.append(
+            {
+                "entry_time": now.isoformat(),
+                "date": str(row.get("date", row.get("trade_date", now.strftime("%Y%m%d")))),
+                "time": str(row.get("time", now.strftime("%H:%M"))),
+                "policy_ticker": str(row.get("policy_ticker", "")),
+                "bot_ticker": str(row.get("bot_ticker", option.get("ticker", ""))),
+                "event_candidate_id": candidate_id,
+                "event_option_policy_source": str(row.get("event_option_policy_source", "")),
+                "mtd_source": mtd_source,
+                "source_variant": str(row.get("source_variant", "")),
+                "spxw_backfill_role": str(row.get("spxw_backfill_role", "")),
+                "monthly_backfill_role": str(row.get("monthly_backfill_role", "")),
+                "backfill_policy_component": str(row.get("backfill_policy_component", "")),
+                "source_stream": str(row.get("source_stream", "")),
+                "expiry_mode": str(row.get("expiry_mode", "")),
+                "event_delta_bucket": str(row.get("event_delta_bucket", "")),
+                "action": str(row.get("action", "")),
+                "score": _safe_float(row.get("score", 0.0), 0.0),
+            }
+        )
+        self.event_option_state["entries"] = entries
+        self._save_event_option_state()
+
+    def _select_event_option_candidate(self, ticker: str, candidates: pd.DataFrame, now: datetime) -> pd.Series | None:
+        if candidates.empty or "bot_ticker" not in candidates.columns:
+            return None
+        work = candidates[candidates["bot_ticker"].astype(str).str.upper().eq(str(ticker).upper())].copy()
+        if work.empty:
+            return None
+        if "time" in work.columns:
+            parsed = pd.to_datetime(work["time"].astype(str).str[:5], format="%H:%M", errors="coerce").dt.time
+            work = work[(parsed.isna()) | ((parsed >= self.earliest_entry_time) & (parsed <= self.latest_entry_time))].copy()
+        if work.empty:
+            return None
+        if {"date", "time"}.issubset(work.columns):
+            latest_key = work.sort_values(["date", "time"], kind="stable").tail(1)[["date", "time"]].iloc[0]
+            work = work[
+                work["date"].astype(str).eq(str(latest_key["date"]))
+                & work["time"].astype(str).eq(str(latest_key["time"]))
+            ].copy()
+        sort_cols = [col for col in ["source_priority", "score"] if col in work.columns]
+        ascending = [True if col == "source_priority" else False for col in sort_cols]
+        if sort_cols:
+            work = work.sort_values(sort_cols, ascending=ascending, kind="stable")
+        feature_id = self._event_feature_row_id(work, ticker)
+        for _, row in work.iterrows():
+            allowed, reason = self._event_candidate_allowed(row, now)
+            if allowed:
+                self._record_event_option_candidate_audit(
+                    event="candidate_selected",
+                    now=now,
+                    ticker=ticker,
+                    feature_id=feature_id,
+                    candidates=work,
+                    selected_row=row,
+                    reason=reason,
+                )
+                return row
+            self._record_event_option_candidate_audit(
+                event="candidate_skipped",
+                now=now,
+                ticker=ticker,
+                feature_id=feature_id,
+                selected_row=row,
+                reason=reason,
+            )
+            logging.info("[%s] event-option candidate skipped: %s", ticker, reason)
+        self._record_event_option_candidate_audit(
+            event="no_allowed_candidate",
+            now=now,
+            ticker=ticker,
+            feature_id=feature_id,
+            candidates=work,
+            reason="all_candidates_rejected",
+        )
+        return None
+
+    def _select_event_option_option(self, ticker: str, row: pd.Series, features: pd.DataFrame | None = None) -> dict | None:
+        action = _normalize_right(row.get("action", ""))
+        if action not in {"CALL", "PUT"}:
+            return None
+        policy_ticker = str(row.get("policy_ticker", ticker)).upper()
+        source = str(row.get("event_option_policy_source", "event_option"))
+        raw_mtd = row.get("mtd_source", "")
+        mtd_source = str(raw_mtd) if pd.notna(raw_mtd) and str(raw_mtd).lower() != "nan" else "base"
+        source_variant = str(row.get("source_variant", "") or "source")
+        expiry_mode = str(row.get("expiry_mode", ""))
+        bucket = str(row.get("event_delta_bucket", ""))
+        selector_policy = f"event_option:{policy_ticker}:{mtd_source}:{source_variant}:{expiry_mode}:{bucket}:{source}"
+        return self._select_delta_option(
+            ticker,
+            right=action,
+            delta_target=_safe_float(row.get("event_delta_target", DELTA_TARGET), DELTA_TARGET),
+            suffix=str(row.get("option_snapshot_suffix", "0dte") or "0dte"),
+            features=features,
+            selector_policy=selector_policy,
+            selector_score=_safe_float(row.get("score", 0.0), 0.0),
+        )
+
+    def _predict_entry_signal(self, ticker: str, features: pd.DataFrame) -> pd.Series | None:
+        if self.level_signal is not None:
+            pred = self.level_signal.predict_frame(ticker, features)
+            if pred is not None:
+                return pred
+            if not self.allow_signal_model_fallback:
+                return None
+            logging.info("[%s] no level-stability signal; checking legacy JEPA fallback", ticker)
+        if self.signal_model is None:
+            return None
+        return self.signal_model.predict_frame(features).iloc[-1]
+
+    @staticmethod
+    def _is_event_option_position(pos: JepaOptionPosition) -> bool:
+        return str(pos.selector_policy).startswith("event_option:")
+
+    @staticmethod
+    def _option_snapshot_suffix_for_position(pos: JepaOptionPosition) -> str:
+        policy = str(pos.selector_policy)
+        if ":front_weekly:" in policy:
+            return "weekly"
+        if ":zero_dte:" in policy:
+            return "0dte"
+        return "0dte"
+
+    def _event_option_exit_contract(self) -> tuple[float, float, int]:
+        payload = self.event_option_policy if isinstance(self.event_option_policy, dict) else {}
+        contract = payload.get("validated_label_exit_contract") if isinstance(payload.get("validated_label_exit_contract"), dict) else {}
+        take_profit = _safe_float(contract.get("option_take_profit_pct", EVENT_OPTION_TAKE_PROFIT_PCT), EVENT_OPTION_TAKE_PROFIT_PCT)
+        stop_loss = -abs(_safe_float(contract.get("option_stop_loss_pct", abs(EVENT_OPTION_STOP_LOSS_PCT)), abs(EVENT_OPTION_STOP_LOSS_PCT)))
+        max_hold = int(_safe_float(contract.get("horizon_minutes", EVENT_OPTION_MAX_HOLD_MINUTES), EVENT_OPTION_MAX_HOLD_MINUTES))
+        return take_profit, stop_loss, max_hold
+
     def _current_option_premium(self, pos: JepaOptionPosition) -> float:
-        df = self._latest_option_snapshot(pos.ticker)
+        suffix = self._option_snapshot_suffix_for_position(pos)
+        df = self._latest_option_snapshot(pos.ticker, suffix=suffix)
         if not df.empty and "strike" in df.columns and "right_norm" in df.columns:
             work = df[(df["right_norm"] == pos.right) & (np.isclose(pd.to_numeric(df["strike"], errors="coerce"), pos.strike))]
             if not work.empty:
                 price = self._row_price(work.iloc[-1])
                 if price > 0:
                     return price
-        return self._option_price_from_ohlc(pos.ticker, pos.strike, pos.right)
+        return self._option_price_from_ohlc(pos.ticker, pos.strike, pos.right, suffix=suffix)
 
     def _contracts(self, premium: float) -> int:
         cost = premium * CONTRACT_MULTIPLIER
         if cost <= 0:
             return 0
         return max(1, int(RISK_CAPITAL // cost))
+
+    def _record_paper_order_intent(
+        self,
+        pos: JepaOptionPosition,
+        *,
+        now: datetime,
+        side: str,
+        limit_price: float,
+        reason: str,
+    ) -> None:
+        if not self.paper_order_intents:
+            return
+        side = str(side).upper()
+        if side == "BUY_TO_OPEN":
+            rounded_limit = _ceil_cent(float(limit_price))
+            debit = rounded_limit * CONTRACT_MULTIPLIER * int(pos.contracts)
+            credit = 0.0
+        elif side == "SELL_TO_CLOSE":
+            rounded_limit = max(0.01, _floor_cent(float(limit_price)))
+            debit = 0.0
+            credit = rounded_limit * CONTRACT_MULTIPLIER * int(pos.contracts)
+        else:
+            raise ValueError(f"Unsupported paper order side {side}")
+        root = OPTIONS_SYMBOLS.get(pos.ticker, pos.ticker)
+        right_short = "C" if pos.right == "CALL" else "P"
+        order_id = (
+            f"{now.strftime('%Y%m%dT%H%M%S')}_{pos.ticker}_{side}_"
+            f"{pos.expiration}_{pos.strike:.2f}{right_short}"
+        )
+        payload = {
+            "schema_version": PAPER_ORDER_SCHEMA_VERSION,
+            "order_id": order_id,
+            "generated_at": now.isoformat(),
+            "mode": "paper_order_intent",
+            "broker_submission": False,
+            "paper_status": "paper_filled_by_tracker",
+            "reason": str(reason),
+            "ticker": pos.ticker,
+            "option_contract": {
+                "root": root,
+                "expiration": _format_expiration(pos.expiration),
+                "right": pos.right,
+                "strike": float(pos.strike),
+            },
+            "order": {
+                "side": side,
+                "quantity": int(pos.contracts),
+                "order_type": "LIMIT",
+                "limit_price": float(rounded_limit),
+                "time_in_force": "DAY",
+                "asset_class": "OPTION",
+            },
+            "risk": {
+                "risk_capital": RISK_CAPITAL,
+                "contract_multiplier": CONTRACT_MULTIPLIER,
+                "max_debit": float(debit),
+                "estimated_credit": float(credit),
+            },
+            "position": {
+                "entry_time": pos.entry_time,
+                "entry_premium": float(pos.entry_premium),
+                "raw_entry_premium": float(pos.raw_entry_premium),
+                "entry_spread_pct": float(pos.entry_spread_pct),
+                "entry_spot": float(pos.entry_spot),
+                "delta": float(pos.delta),
+                "selector_policy": pos.selector_policy,
+            },
+            "not_covered": [
+                "broker API acceptance",
+                "exchange queue position",
+                "partial fills",
+                "live order acknowledgement latency",
+            ],
+        }
+        self.trades_dir.mkdir(parents=True, exist_ok=True)
+        with self.paper_order_intents_path.open("a", encoding="utf-8") as handle:
+            handle.write(json.dumps(payload, sort_keys=True, default=str) + "\n")
+        logging.info("[%s] PAPER ORDER %s qty=%d limit=%.2f reason=%s", pos.ticker, side, pos.contracts, rounded_limit, reason)
 
     @staticmethod
     def _entry_spread_pct(abs_delta: float, features: pd.DataFrame) -> float:
@@ -741,13 +1868,19 @@ class JepaFixedDeltaBot:
         exp_fmt = _format_expiration_for_tracker(pos.expiration)
         tracker = f"BTO {pos.ticker} {exp_fmt} {pos.strike:.0f}{right_short} @ M"
         _send_discord(tracker)
+        if self._is_event_option_position(pos):
+            tp, sl, max_hold = self._event_option_exit_contract()
+            exit_line = f"stop={sl:.0%} tp={tp:.0%} max_hold={max_hold}m"
+        else:
+            exit_line = (
+                f"stop={HARD_STOP_PCT:.0%} trail={TRAIL_ACTIVATION_PCT:.0%}/"
+                f"{TRAIL_DRAWDOWN_PCT:.0%} tp={TAKE_PROFIT_PCT:.0%} max_hold={MAX_HOLD_MINUTES}m"
+            )
         _send_discord(
             f"**[BOT] OPEN {pos.direction} {pos.ticker} {pos.strike:.0f}{right_short}**\n"
             f"prob_up={pos.jepa_prob_up:.3f} conf={pos.confidence:.0%} "
             f"delta={pos.delta:.2f} premium=${pos.entry_premium:.2f} contracts={pos.contracts}\n"
-            f"stop={HARD_STOP_PCT:.0%} trail={TRAIL_ACTIVATION_PCT:.0%}/"
-            f"{TRAIL_DRAWDOWN_PCT:.0%} tp={TAKE_PROFIT_PCT:.0%} "
-            f"cutoff={LATEST_ENTRY_TIME.strftime('%H:%M')} max_hold={MAX_HOLD_MINUTES}m\n"
+            f"{exit_line} entry_window={self.earliest_entry_time.strftime('%H:%M')}-{self.latest_entry_time.strftime('%H:%M')}\n"
             f"policy={pos.selector_policy}",
             ping=False,
         )
@@ -788,10 +1921,17 @@ class JepaFixedDeltaBot:
                 "exit_reason": reason,
                 "peak_pnl_pct": pos.peak_pnl_pct,
                 "trough_pnl_pct": pos.trough_pnl_pct,
+                "option_snapshot_suffix": self._option_snapshot_suffix_for_position(pos),
+                "exit_contract": (
+                    "event_option_tp50_sl30_max180"
+                    if self._is_event_option_position(pos)
+                    else "legacy_hard60_trail50_25_tp1000_max180"
+                ),
                 "source_model": pos.selector_policy,
             }
         )
         logging.info("[%s] CLOSE %s pnl=%+.1f%% $%+.2f hold=%.0fm", ticker, reason, pnl_pct * 100.0, pnl_dollars, hold_min)
+        self._record_paper_order_intent(pos, now=now, side="SELL_TO_CLOSE", limit_price=premium, reason=reason)
         self._discord_close(pos, pnl_pct, pnl_dollars, hold_min, reason)
 
     def _check_exit(self, ticker: str, now: datetime) -> None:
@@ -808,7 +1948,26 @@ class JepaFixedDeltaBot:
         hold_min = (now - pos.entry_dt).total_seconds() / 60.0
         self._save_positions()
 
-        if pnl_pct <= HARD_STOP_PCT:
+        if self._is_event_option_position(pos):
+            take_profit, stop_loss, max_hold = self._event_option_exit_contract()
+            if pnl_pct <= stop_loss:
+                self._close_position(ticker, premium, f"event_option_stop_loss_{abs(stop_loss):.0%}", now)
+            elif pnl_pct >= take_profit:
+                self._close_position(ticker, premium, f"event_option_take_profit_{take_profit:.0%}", now)
+            elif hold_min >= max_hold:
+                self._close_position(ticker, premium, f"event_option_max_hold_{max_hold}m", now)
+            elif now.time() >= EOD_CLEANUP_TIME:
+                self._close_position(ticker, premium, "event_option_eod_cleanup", now)
+            else:
+                logging.info(
+                    "[%s] HOLD event-option pnl=%+.1f%% peak=%+.1f%% trough=%+.1f%% hold=%.0fm",
+                    ticker,
+                    pnl_pct * 100.0,
+                    pos.peak_pnl_pct * 100.0,
+                    pos.trough_pnl_pct * 100.0,
+                    hold_min,
+                )
+        elif pnl_pct <= HARD_STOP_PCT:
             self._close_position(ticker, premium, "hard_stop_-60pct", now)
         elif pos.peak_pnl_pct >= TRAIL_ACTIVATION_PCT and pnl_pct <= pos.peak_pnl_pct - TRAIL_DRAWDOWN_PCT:
             self._close_position(ticker, premium, "trail_stop_50pct_25pct_giveback", now)
@@ -829,10 +1988,118 @@ class JepaFixedDeltaBot:
                 hold_min,
             )
 
+    def _check_event_option_entry(self, ticker: str, now: datetime) -> None:
+        if now.time() < self.earliest_entry_time:
+            logging.info(
+                "[%s] before event-option entry window %s-%s",
+                ticker,
+                self.earliest_entry_time.strftime("%H:%M"),
+                self.latest_entry_time.strftime("%H:%M"),
+            )
+            return
+        candidates, issues = self._score_event_option_candidates()
+        for issue in issues[:5]:
+            logging.info("[%s] event-option scorer issue: %s", ticker, issue)
+        feature_id = self._event_feature_row_id(candidates, ticker)
+        eval_key = f"event:{ticker}"
+        if feature_id and self.evaluated_feature_timestamps.get(eval_key) == feature_id:
+            return
+        if not feature_id:
+            self._mark_feature_evaluated(eval_key, now.isoformat(timespec="minutes"))
+            return
+        row = self._select_event_option_candidate(ticker, candidates, now)
+        if row is None:
+            self._record_event_option_candidate_audit(
+                event="no_entry_candidate",
+                now=now,
+                ticker=ticker,
+                feature_id=feature_id,
+                candidates=candidates,
+                reason="no_candidate_after_filters",
+            )
+            logging.info("[%s] no event-option entry candidate", ticker)
+            self._mark_feature_evaluated(eval_key, feature_id)
+            return
+        option = self._select_event_option_option(ticker, row)
+        if option is None:
+            self._record_event_option_candidate_audit(
+                event="entry_rejected",
+                now=now,
+                ticker=ticker,
+                feature_id=feature_id,
+                selected_row=row,
+                reason="no_matching_option_contract",
+            )
+            logging.warning("[%s] event-option candidate but no matching option contract available", ticker)
+            self._mark_feature_evaluated(eval_key, feature_id)
+            return
+        raw_entry_premium = float(option.get("raw_entry_premium", option["premium"]))
+        entry_spread_pct = float(option.get("entry_spread_pct", self._entry_spread_pct(abs(float(option["delta"])), pd.DataFrame())))
+        entry_premium = float(option.get("entry_premium", raw_entry_premium * (1.0 + entry_spread_pct)))
+        contracts = self._contracts(entry_premium)
+        if contracts <= 0:
+            self._record_event_option_candidate_audit(
+                event="entry_rejected",
+                now=now,
+                ticker=ticker,
+                feature_id=feature_id,
+                selected_row=row,
+                reason="premium_too_high_or_invalid",
+            )
+            logging.warning("[%s] event-option candidate but premium too high/invalid", ticker)
+            self._mark_feature_evaluated(eval_key, feature_id)
+            return
+        direction = "LONG" if str(row.get("action", "")).upper() == "CALL" else "SHORT"
+        spot = self._latest_spot(ticker)
+        score = _safe_float(row.get("score", 0.0), 0.0)
+        pred_call = _safe_float(row.get("pred_call_return", 0.5), 0.5)
+        pred_put = _safe_float(row.get("pred_put_return", 0.5), 0.5)
+        pos = JepaOptionPosition(
+            ticker=ticker,
+            direction=direction,
+            right=option["right"],
+            strike=float(option["strike"]),
+            delta=float(option["delta"]),
+            expiration=str(option["expiration"]),
+            entry_time=now.isoformat(),
+            entry_spot=float(spot),
+            entry_premium=float(entry_premium),
+            raw_entry_premium=float(raw_entry_premium),
+            entry_spread_pct=float(entry_spread_pct),
+            contracts=int(contracts),
+            confidence=max(0.0, min(1.0, abs(score))),
+            jepa_prob_up=pred_call if direction == "LONG" else 1.0 - pred_put,
+            long_threshold=pred_call,
+            short_threshold=pred_put,
+            selector_policy=str(option.get("selector_policy", FIXED_POLICY_NAME)),
+        )
+        self.positions[ticker] = pos
+        self._record_event_option_entry(row, now, option)
+        self._save_positions()
+        self._mark_feature_evaluated(eval_key, feature_id)
+        logging.info(
+            "[%s] OPEN event-option %s strike=%.0f delta=%.2f expiry=%s premium=%.2f contracts=%d score=%.4f policy=%s",
+            ticker,
+            direction,
+            pos.strike,
+            pos.delta,
+            str(row.get("expiry_mode", "")),
+            pos.entry_premium,
+            pos.contracts,
+            score,
+            pos.selector_policy,
+        )
+        self._record_paper_order_intent(pos, now=now, side="BUY_TO_OPEN", limit_price=pos.entry_premium, reason="event_option_entry")
+        self._discord_open(pos)
+        time.sleep(3)
+
     def _check_entry(self, ticker: str, now: datetime) -> None:
         if ticker in self.positions:
             return
         if now.time() >= EOD_CLEANUP_TIME:
+            return
+        if self.event_option_scorer_enabled:
+            self._check_event_option_entry(ticker, now)
             return
         if self._cooldown_active(ticker, now):
             logging.info("[%s] cooldown active", ticker)
@@ -845,22 +2112,36 @@ class JepaFixedDeltaBot:
         if self.evaluated_feature_timestamps.get(ticker) == feature_id:
             return
         feature_time = self._feature_entry_time(features)
-        if feature_time is not None and feature_time > LATEST_ENTRY_TIME:
+        if feature_time is not None and feature_time > self.latest_entry_time:
             logging.info("[%s] feature row %s past live entry window", ticker, feature_time.strftime("%H:%M"))
             self._mark_feature_evaluated(ticker, feature_id)
             return
-        pred = self.signal_model.predict_frame(features).iloc[-1]
+        pred = self._predict_entry_signal(ticker, features)
+        if pred is None:
+            logging.info("[%s] no production entry signal", ticker)
+            self._mark_feature_evaluated(ticker, feature_id)
+            return
         direction_int = int(pred.get("jepa180_direction", 0))
         if direction_int == 0:
-            logging.info("[%s] no JEPA signal prob_up=%.3f", ticker, _safe_float(pred.get("jepa180_prob_up", 0.5)))
+            logging.info("[%s] no entry signal prob_up=%.3f", ticker, _safe_float(pred.get("jepa180_prob_up", 0.5)))
             self._mark_feature_evaluated(ticker, feature_id)
             return
         direction = "LONG" if direction_int > 0 else "SHORT"
-        option = self._select_option_value_option(ticker, direction, features)
+        option = None
+        legacy_selector_mode = self.structural_selector is None
+        if self.structural_selector is not None:
+            option = self._select_structural_profile_option(ticker, direction, features)
+            if option is None and not self.allow_selector_fallback:
+                logging.info("[%s] JEPA signal skipped by structural option profile", ticker)
+                self._mark_feature_evaluated(ticker, feature_id)
+                return
         if option is None:
+            option = self._select_option_value_option(ticker, direction, features)
+        if option is None and (legacy_selector_mode or self.allow_selector_fallback):
             option = self._select_fixed_delta_option(ticker, direction)
         if option is None:
             logging.warning("[%s] JEPA signal but no valid 0DTE option candidate available", ticker)
+            self._mark_feature_evaluated(ticker, feature_id)
             return
         raw_entry_premium = float(option.get("raw_entry_premium", option["premium"]))
         entry_spread_pct = float(
@@ -907,6 +2188,7 @@ class JepaFixedDeltaBot:
             pos.confidence * 100.0,
             pos.selector_policy,
         )
+        self._record_paper_order_intent(pos, now=now, side="BUY_TO_OPEN", limit_price=pos.entry_premium, reason="legacy_entry")
         self._discord_open(pos)
         time.sleep(3)
 
@@ -924,17 +2206,44 @@ class JepaFixedDeltaBot:
         )
 
     def run(self, force: bool = False) -> None:
+        legacy_signal = "enabled" if self.signal_model is not None else "disabled"
+        event_policy_name = (
+            str(self.event_option_policy.get("policy", "none"))
+            if isinstance(self.event_option_policy, dict)
+            else "none"
+        )
+        event_component_status = (
+            f"{self.event_option_components.status}:{len(self.event_option_components.components)}"
+            if self.event_option_components is not None
+            else "none"
+        )
         logging.info(
-            "Starting JEPA live bot model_dir=%s rt_data=%s policy=%s cutoff=%s stop=%.0f%% trail=%.0f%%/%.0f%% tp=%.0f%%",
-            self.model_dir,
+            "Starting JEPA live bot signal=%s selector=%s event_scorer=%s event_policy=%s event_components=%s legacy_signal=%s rt_data=%s risk=%.0f entry_window=%s-%s stop=%.0f%% trail=%.0f%%/%.0f%% tp=%.0f%%",
+            (
+                self.level_signal.policy
+                if self.level_signal is not None
+                else f"legacy:{MODEL_MODE}" if self.signal_model is not None else "none"
+            ),
+            (
+                self.structural_selector.policy
+                if self.structural_selector is not None
+                else OPTION_VALUE_POLICY_NAME if self.option_value_selector is not None else FIXED_POLICY_NAME
+            ),
+            "enabled" if self.event_option_scorer_enabled else "disabled",
+            event_policy_name,
+            event_component_status,
+            legacy_signal,
             self.rt_data_dir,
-            OPTION_VALUE_POLICY_NAME if self.option_value_selector is not None else FIXED_POLICY_NAME,
-            LATEST_ENTRY_TIME.strftime("%H:%M"),
+            RISK_CAPITAL,
+            self.earliest_entry_time.strftime("%H:%M"),
+            self.latest_entry_time.strftime("%H:%M"),
             HARD_STOP_PCT * 100.0,
             TRAIL_ACTIVATION_PCT * 100.0,
             TRAIL_DRAWDOWN_PCT * 100.0,
             TAKE_PROFIT_PCT * 100.0,
         )
+        if self.paper_order_intents:
+            logging.info("Paper order intents enabled: writing %s; no broker submission is performed", self.paper_order_intents_path)
         while True:
             if force or self.is_market_hours() or self.positions:
                 self.run_once()
@@ -946,14 +2255,56 @@ class JepaFixedDeltaBot:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Live GBT+JEPA 180m + OptionValue/fixed-delta option bot")
+    parser = argparse.ArgumentParser(description="Live level-stability + structural option bot")
     parser.add_argument("--model-dir", default=str(DEFAULT_SIGNAL_MODEL_DIR))
+    parser.add_argument("--level-signal-path", default=str(DEFAULT_LEVEL_SIGNAL_PATH))
+    parser.add_argument("--disable-level-signal", action="store_true", help="Disable production level-stability signal")
+    parser.add_argument("--require-level-signal", action="store_true", help="Fail startup if level-stability signal is missing")
+    parser.add_argument("--allow-signal-model-fallback", action="store_true", help="Allow legacy JEPA 180m signal fallback")
     parser.add_argument("--option-value-model-dir", default=str(DEFAULT_OPTION_VALUE_MODEL_DIR))
     parser.add_argument("--option-value-device", default="auto", help="OptionValue device: auto, cpu, cuda")
     parser.add_argument("--disable-option-value", action="store_true", help="Use fixed 0.70 delta even if OptionValue is available")
+    parser.add_argument("--structural-profile-path", default=str(DEFAULT_STRUCTURAL_PROFILE_PATH))
+    parser.add_argument("--disable-structural-profile", action="store_true", help="Disable production structural option profiles")
+    parser.add_argument("--require-structural-profile", action="store_true", help="Fail startup if structural option profiles are missing")
+    parser.add_argument("--event-option-policy-path", default=str(DEFAULT_EVENT_OPTION_POLICY_PATH))
+    parser.add_argument("--disable-event-option-policy", action="store_true", help="Disable production event-option policy metadata")
+    parser.add_argument("--require-event-option-policy", action="store_true", help="Fail startup if event-option production policy is missing")
+    parser.add_argument("--event-option-component-registry-path", default=str(DEFAULT_EVENT_OPTION_COMPONENT_REGISTRY_PATH))
+    parser.add_argument(
+        "--disable-event-option-component-registry",
+        action="store_true",
+        help="Disable event-option component registry validation",
+    )
+    parser.add_argument(
+        "--require-event-option-component-registry",
+        action="store_true",
+        help="Fail startup if event-option component registry is missing or invalid",
+    )
+    parser.add_argument(
+        "--require-event-option-live-ready",
+        action="store_true",
+        help="Fail startup if the event-option policy/registry are still marked research-only or runtime-incomplete",
+    )
+    parser.add_argument(
+        "--enable-event-option-scorer",
+        action="store_true",
+        help="Use exported event-option component scorer for entries instead of level-stability/structural entries",
+    )
+    parser.add_argument(
+        "--strict-event-option-features",
+        action="store_true",
+        help="Fail event-option scoring when any registered live feature is missing",
+    )
+    parser.add_argument("--allow-selector-fallback", action="store_true", help="Allow OptionValue/fixed fallback when a structural profile skips a signal")
     parser.add_argument("--rt-data-dir", default=str(DEFAULT_RT_DATA_DIR))
     parser.add_argument("--trades-dir", default=str(DEFAULT_TRADES_DIR))
     parser.add_argument("--tickers", nargs="+", default=TICKERS)
+    parser.add_argument(
+        "--paper-order-intents",
+        action="store_true",
+        help="Write broker-shaped paper order intents to trades_dir without submitting broker orders",
+    )
     parser.add_argument("--dry-run", action="store_true", help="Run one cycle and exit")
     parser.add_argument("--force", action="store_true", help="Run outside market hours for diagnostics")
     parser.add_argument("--log-level", default="INFO")
@@ -972,12 +2323,30 @@ def main() -> None:
 
     bot = JepaFixedDeltaBot(
         model_dir=Path(args.model_dir),
+        level_signal_path=None if args.disable_level_signal else Path(args.level_signal_path),
+        require_level_signal=bool(args.require_level_signal),
+        allow_signal_model_fallback=bool(args.allow_signal_model_fallback),
         option_value_model_dir=None if args.disable_option_value else Path(args.option_value_model_dir),
         option_value_device=args.option_value_device,
+        structural_profile_path=None if args.disable_structural_profile else Path(args.structural_profile_path),
+        require_structural_profile=bool(args.require_structural_profile),
+        event_option_policy_path=None if args.disable_event_option_policy else Path(args.event_option_policy_path),
+        require_event_option_policy=bool(args.require_event_option_policy),
+        event_option_component_registry_path=(
+            None
+            if args.disable_event_option_component_registry
+            else Path(args.event_option_component_registry_path)
+        ),
+        require_event_option_component_registry=bool(args.require_event_option_component_registry),
+        require_event_option_live_ready=bool(args.require_event_option_live_ready),
+        enable_event_option_scorer=bool(args.enable_event_option_scorer),
+        strict_event_option_features=bool(args.strict_event_option_features),
+        allow_selector_fallback=bool(args.allow_selector_fallback),
         rt_data_dir=Path(args.rt_data_dir),
         trades_dir=trades_dir,
         tickers=args.tickers,
         dry_run=args.dry_run,
+        paper_order_intents=bool(args.paper_order_intents),
     )
     bot.run(force=args.force)
 

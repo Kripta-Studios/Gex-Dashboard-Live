@@ -1,5 +1,5 @@
 [Unit]
-Description=GEX JEPA Live Trading Bot - GBT+JEPA 180m + OptionValue 0DTE
+Description=GEX Level-Stability Structural Options Live Trading Bot
 Documentation=https://github.com/kripta-studios/gex-trading
 After=network-online.target realtime_feed.service
 Wants=network-online.target realtime_feed.service
@@ -9,7 +9,7 @@ Type=simple
 User=root
 
 WorkingDirectory=/home/Option-Greeks-Plotting-Discord-Bot
-ExecStart=/usr/bin/python3 /home/Option-Greeks-Plotting-Discord-Bot/bots/tradingbot_wrapper_jepa.py --model-dir /home/Option-Greeks-Plotting-Discord-Bot/neural/models/jepa/jepa_production_final_180m --option-value-model-dir /home/Option-Greeks-Plotting-Discord-Bot/neural/models/jepa/jepa_production_final_option_value --rt-data-dir /home/Option-Greeks-Plotting-Discord-Bot/rt_data --trades-dir /home/Option-Greeks-Plotting-Discord-Bot/trades_jepa --tickers SPX QQQ SPY
+ExecStart=/usr/bin/python3 /home/Option-Greeks-Plotting-Discord-Bot/bots/tradingbot_wrapper_jepa.py --disable-level-signal --disable-structural-profile --disable-option-value --event-option-policy-path /home/Option-Greeks-Plotting-Discord-Bot/neural/models/jepa/jepa_production_event_options_backfill19_spy_no_scorethr_wf2026_fullmayjun/event_option_policy.json --require-event-option-policy --event-option-component-registry-path /home/Option-Greeks-Plotting-Discord-Bot/neural/models/jepa/jepa_production_event_options_backfill19_spy_no_scorethr_wf2026_fullmayjun/component_registry.json --require-event-option-component-registry --require-event-option-live-ready --enable-event-option-scorer --strict-event-option-features --paper-order-intents --rt-data-dir /home/Option-Greeks-Plotting-Discord-Bot/rt_data --trades-dir /home/Option-Greeks-Plotting-Discord-Bot/trades_jepa --tickers SPX QQQ SPY
 
 Restart=always
 RestartSec=30

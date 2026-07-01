@@ -22,6 +22,7 @@ import os
 import asyncio
 import argparse
 import json
+import logging
 import signal
 import time as time_module
 import pandas as pd
@@ -63,6 +64,20 @@ except Exception as exc:  # pragma: no cover - live dependency guard
     XInputNormalizers = None
     load_xinput_model = None
     JEPA_IMPORT_ERROR = exc
+
+try:
+    from neural.jepa.event_option_live_snapshot import build_live_event_option_snapshots
+    EVENT_OPTION_SNAPSHOT_IMPORT_ERROR = None
+except Exception as exc:  # pragma: no cover - live dependency guard
+    build_live_event_option_snapshots = None
+    EVENT_OPTION_SNAPSHOT_IMPORT_ERROR = exc
+
+try:
+    from neural.jepa.event_option_component_live import EventOptionComponentRegistry
+    EVENT_OPTION_REGISTRY_IMPORT_ERROR = None
+except Exception as exc:  # pragma: no cover - live dependency guard
+    EventOptionComponentRegistry = None
+    EVENT_OPTION_REGISTRY_IMPORT_ERROR = exc
 
 logger = get_logger("RealtimeFeed")
 
@@ -111,13 +126,24 @@ MODEL_SAMPLE_MINUTES = 5
 MARKET_DATA_START_TIME = dt_time(9, 30)
 MARKET_DATA_STOP_TIME = dt_time(16, 1)
 JEPA_LIVE_EXECUTION_CONFIG = {
-    "policy": "base_jepa_180m_option_value_blended_trail050_025_cutoff1430",
+    "policy": "level_stability_ensemble_structural_profiles_202607",
+    "entry_signal": "Production level-stability ensemble rules fit only on prior months",
+    "signal_artifact": "neural/models/jepa/jepa_production_level_stability/level_stability_signal.json",
+    "event_option_policy_artifact": "",
+    "event_option_status": "disabled_not_live_ready",
+    "event_option_component_registry": "",
+    "event_option_component_status": "disabled_not_live_ready",
+    "event_option_entry_runtime": "disabled",
+    "event_option_exit_contract": None,
+    "event_option_live_ready": False,
+    "event_option_live_ready_evidence": [],
     "entry_cutoff_et": "14:30",
     "model_sample_minutes": MODEL_SAMPLE_MINUTES,
-    "selector": "OptionValue rule/best mean + 2.0*abs_delta over 0.10..0.70 candidates",
+    "selector": "Nested structural option profiles over 0.10..0.70 delta candidates",
+    "selector_artifact": "neural/models/jepa/jepa_production_structural_options/structural_option_profiles.json",
     "fallback_delta_target": 0.70,
     "cooldown_minutes": 180,
-    "risk_capital_dollars": 1000.0,
+    "risk_capital_dollars": 5000.0,
     "hard_stop_pct": -0.60,
     "trail_activation_pct": 0.50,
     "trail_drawdown_pct": 0.25,
@@ -126,6 +152,22 @@ JEPA_LIVE_EXECUTION_CONFIG = {
     "eod_cleanup_et": "16:00",
     "data_poll_stop_et": "16:01",
 }
+DEFAULT_EVENT_OPTION_POLICY_PATH = os.path.join(
+    PROJECT_ROOT,
+    "neural",
+    "models",
+    "jepa",
+    "jepa_production_event_options",
+    "event_option_policy.json",
+)
+DEFAULT_EVENT_OPTION_COMPONENT_REGISTRY_PATH = os.path.join(
+    PROJECT_ROOT,
+    "neural",
+    "models",
+    "jepa",
+    "jepa_production_event_options",
+    "component_registry.json",
+)
 DEFAULT_JEPA_FEATURE_MODEL_DIR = os.path.join(
     PROJECT_ROOT,
     "neural",
@@ -392,6 +434,9 @@ class RealtimeOptionsFeed:
         enable_jepa_features: bool = True,
         jepa_model_dir: str = DEFAULT_JEPA_FEATURE_MODEL_DIR,
         jepa_device: str = "auto",
+        event_option_policy_path: str | None = DEFAULT_EVENT_OPTION_POLICY_PATH,
+        event_option_component_registry_path: str | None = DEFAULT_EVENT_OPTION_COMPONENT_REGISTRY_PATH,
+        require_event_option_live_ready: bool = False,
     ):
         thetadata_url = os.environ.get("THETADATA_URL", "http://91.99.90.39:25503/v3")
         self.client = ThetaClient(base_url=thetadata_url)
@@ -401,7 +446,16 @@ class RealtimeOptionsFeed:
         today_str = datetime.now(ET).strftime("%Y%m%d")
         self.output_dir = Path(output_dir or os.path.join(PROJECT_ROOT, "rt_data", today_str))
         self.output_dir.mkdir(parents=True, exist_ok=True)
+        self._attach_file_logger()
         self.current_trading_day = datetime.now(ET).date()
+        self.event_option_policy_path = Path(event_option_policy_path) if event_option_policy_path else None
+        self.event_option_component_registry_path = (
+            Path(event_option_component_registry_path) if event_option_component_registry_path else None
+        )
+        self.require_event_option_live_ready = bool(require_event_option_live_ready)
+        self.event_option_policy_payload: dict | None = None
+        self.event_option_registry_summary: dict = {}
+        self._validate_event_option_live_artifacts()
         self._write_live_execution_config()
 
         # Expiration cache — per ticker: {"SPX": (0dte, weekly), "QQQ": (0dte, weekly)}
@@ -436,6 +490,13 @@ class RealtimeOptionsFeed:
         self._prev_call_vol = {tk: 0.0 for tk in OPTIONS_TICKERS}
         self._prev_put_vol = {tk: 0.0 for tk in OPTIONS_TICKERS}
 
+        # VIX gamma state — computed from VIX weekly options greeks
+        self._vix_gamma: float = 0.0
+        self._vix_weekly_exp: date | None = None
+        self._vix_gamma_timestamp: pd.Timestamp | None = None
+        self._vix_gamma_context_valid: float = 0.0
+        self._vix_spot_context_valid: float = 0.0
+
         # Initialize per-ticker structures
         for tk in OPTIONS_TICKERS:
             self.price_history[tk] = deque(maxlen=35)
@@ -461,9 +522,124 @@ class RealtimeOptionsFeed:
             enabled=enable_jepa_features,
         )
 
+    def _attach_file_logger(self) -> None:
+        log_path = self.output_dir / "realtime_feed.log"
+        resolved = str(log_path.resolve())
+        for handler in logger.handlers:
+            if getattr(handler, "baseFilename", None) == resolved:
+                return
+        file_handler = logging.FileHandler(log_path, encoding="utf-8")
+        file_handler.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
+        logger.addHandler(file_handler)
+    def _validate_event_option_live_artifacts(self) -> None:
+        def _is_live_ready_status(status: str) -> bool:
+            value = str(status).lower()
+            return "live_ready" in value and "research" not in value and "incomplete" not in value
+
+        policy_path = self.event_option_policy_path
+        if policy_path is None:
+            if self.require_event_option_live_ready:
+                raise FileNotFoundError("Event-option policy path is required for live-ready feed startup")
+            return
+        if not policy_path.exists():
+            if self.require_event_option_live_ready:
+                raise FileNotFoundError(policy_path)
+            logger.warning("[EVENT_OPTION] production policy not found: %s", policy_path)
+            return
+
+        payload = json.loads(policy_path.read_text(encoding="utf-8"))
+        if not isinstance(payload, dict):
+            raise ValueError(f"Event-option policy must be a JSON object: {policy_path}")
+        self.event_option_policy_payload = payload
+        status = str(payload.get("status", ""))
+        live_contract = payload.get("live_contract") if isinstance(payload.get("live_contract"), dict) else {}
+        if self.require_event_option_live_ready:
+            if not _is_live_ready_status(status):
+                raise ValueError(f"Event-option policy is not live-ready: {status}")
+            if live_contract.get("event_option_live_ready") is not True:
+                raise ValueError("Event-option policy live_contract.event_option_live_ready is not true")
+            replay_path = str(live_contract.get("runtime_policy_replay", "")).strip()
+            if not replay_path:
+                raise ValueError("Event-option policy is missing live_contract.runtime_policy_replay")
+            resolved_replay = Path(replay_path)
+            if not resolved_replay.is_absolute():
+                resolved_replay = Path(PROJECT_ROOT) / resolved_replay
+            if not resolved_replay.exists():
+                raise FileNotFoundError(f"Missing event-option runtime replay summary: {resolved_replay}")
+        logger.info(
+            "[EVENT_OPTION] loaded policy=%s deploy_month=%s status=%s live_ready_required=%s",
+            payload.get("policy", ""),
+            payload.get("deploy_month", ""),
+            status,
+            self.require_event_option_live_ready,
+        )
+
+        registry_path = self.event_option_component_registry_path
+        if registry_path is None:
+            if self.require_event_option_live_ready:
+                raise FileNotFoundError("Event-option component registry path is required for live-ready feed startup")
+            return
+        if not registry_path.exists():
+            if self.require_event_option_live_ready:
+                raise FileNotFoundError(registry_path)
+            logger.warning("[EVENT_OPTION] component registry not found: %s", registry_path)
+            return
+        if EventOptionComponentRegistry is None:
+            if self.require_event_option_live_ready:
+                raise RuntimeError(f"Event-option registry import failed: {EVENT_OPTION_REGISTRY_IMPORT_ERROR}")
+            logger.warning("[EVENT_OPTION] component registry import unavailable: %s", EVENT_OPTION_REGISTRY_IMPORT_ERROR)
+            return
+
+        registry = EventOptionComponentRegistry.from_path(
+            registry_path,
+            project_root=PROJECT_ROOT,
+            require_complete_live_equivalence=self.require_event_option_live_ready,
+        )
+        summary = registry.summary()
+        registry_status = str(summary.get("status", ""))
+        if self.require_event_option_live_ready and not _is_live_ready_status(registry_status):
+            raise ValueError(f"Event-option component registry is not live-ready: {registry_status}")
+        self.event_option_registry_summary = summary
+        logger.info(
+            "[EVENT_OPTION] loaded component registry status=%s deploy_month=%s components=%d missing_live_equivalence=%d invalidated=%d",
+            summary.get("status", ""),
+            summary.get("deploy_month", ""),
+            int(summary.get("component_count", 0)),
+            len(summary.get("missing_for_full_live_equivalence", []) or []),
+            len(summary.get("invalidated_components", []) or []),
+        )
+
     def _write_live_execution_config(self) -> None:
         payload = dict(JEPA_LIVE_EXECUTION_CONFIG)
         payload["written_at_et"] = datetime.now(ET).isoformat()
+        payload["event_option_policy_path"] = str(self.event_option_policy_path or "")
+        payload["event_option_component_registry_path"] = str(self.event_option_component_registry_path or "")
+        payload["event_option_live_ready_required"] = bool(self.require_event_option_live_ready)
+        if self.event_option_policy_payload:
+            live_contract = (
+                self.event_option_policy_payload.get("live_contract")
+                if isinstance(self.event_option_policy_payload.get("live_contract"), dict)
+                else {}
+            )
+            payload["event_option_policy_artifact"] = str(self.event_option_policy_path or "")
+            payload["event_option_status"] = str(self.event_option_policy_payload.get("status", ""))
+            payload["event_option_entry_runtime"] = (
+                "enabled_live_ready_stateful_scorer"
+                if live_contract.get("event_option_live_ready") is True
+                else "loaded_but_not_live_ready"
+            )
+            payload["event_option_exit_contract"] = live_contract.get("event_option_exit_contract")
+            payload["event_option_live_ready"] = bool(live_contract.get("event_option_live_ready") is True)
+            payload["event_option_live_ready_evidence"] = list(live_contract.get("event_option_live_ready_evidence", []) or [])
+            payload["event_option_loaded_policy"] = {
+                "policy": self.event_option_policy_payload.get("policy", ""),
+                "status": self.event_option_policy_payload.get("status", ""),
+                "deploy_month": self.event_option_policy_payload.get("deploy_month", ""),
+            }
+        if self.event_option_registry_summary:
+            payload["event_option_component_registry"] = str(self.event_option_component_registry_path or "")
+            payload["event_option_component_status"] = str(self.event_option_registry_summary.get("status", ""))
+            payload["event_option_registry_summary"] = self.event_option_registry_summary
         path = self.output_dir / "jepa_live_execution_config.json"
         try:
             path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
@@ -981,6 +1157,11 @@ class RealtimeOptionsFeed:
         self.tlt_price_history.clear()
         self._prev_call_vol = {tk: 0.0 for tk in OPTIONS_TICKERS}
         self._prev_put_vol = {tk: 0.0 for tk in OPTIONS_TICKERS}
+        self._vix_gamma = 0.0
+        self._vix_weekly_exp = None
+        self._vix_gamma_timestamp = None
+        self._vix_gamma_context_valid = 0.0
+        self._vix_spot_context_valid = 0.0
         self.prev_features = {}
         for tk in OPTIONS_TICKERS:
             self.price_history[tk].clear()
@@ -1214,6 +1395,10 @@ class RealtimeOptionsFeed:
             "tlt_price_history": self._serialize_price_history(self.tlt_price_history),
             "prev_call_vol": {tk: float(v) for tk, v in self._prev_call_vol.items()},
             "prev_put_vol": {tk: float(v) for tk, v in self._prev_put_vol.items()},
+            "vix_gamma": float(self._vix_gamma),
+            "vix_gamma_timestamp": self._vix_gamma_timestamp.isoformat() if self._vix_gamma_timestamp is not None else None,
+            "vix_gamma_context_valid": float(self._vix_gamma_context_valid),
+            "vix_spot_context_valid": float(self._vix_spot_context_valid),
             "tickers": {},
         }
 
@@ -1265,6 +1450,11 @@ class RealtimeOptionsFeed:
                     self.tlt_price_history = self._deserialize_price_history(
                         state.get("tlt_price_history"), self.tlt_price_history.maxlen
                     )
+                    self._vix_gamma = float(state.get("vix_gamma", 0.0) or 0.0)
+                    self._vix_gamma_context_valid = float(state.get("vix_gamma_context_valid", 0.0) or 0.0)
+                    self._vix_spot_context_valid = float(state.get("vix_spot_context_valid", 0.0) or 0.0)
+                    vix_ts = state.get("vix_gamma_timestamp")
+                    self._vix_gamma_timestamp = pd.Timestamp(vix_ts) if vix_ts else None
                     for tk in OPTIONS_TICKERS:
                         tk_state = (state.get("tickers") or {}).get(tk, {})
                         self.price_history[tk] = self._deserialize_price_history(
@@ -1461,6 +1651,43 @@ class RealtimeOptionsFeed:
                     logger.info(f"[{options_symbol}] Downloading static OI for {suffix} (Time: {now.strftime('%H:%M')})...")
                     tasks.append(fetch_and_save(options_symbol, exp_target, "oi", current_spot, oi_fname, ticker))
 
+        # ── VIX Weekly Greeks (for vix_gamma feature) ──
+        try:
+            vix_spot_price = spot_prices.get("VIX", 0.0)
+            if vix_spot_price > 0:
+                # Resolve VIX weekly expiration if not cached
+                if self._vix_weekly_exp is None:
+                    today = now.date()
+                    vix_exps = await self.client.get_expirations("VIX", today.strftime("%Y%m%d"))
+                    vix_available = []
+                    for exp_str in vix_exps:
+                        try:
+                            exp_d = date(int(exp_str[:4]), int(exp_str[4:6]), int(exp_str[6:8]))
+                            if exp_d > today:
+                                vix_available.append(exp_d)
+                        except (ValueError, IndexError):
+                            continue
+                    if vix_available:
+                        # Pick the nearest weekly expiration (> today)
+                        self._vix_weekly_exp = min(vix_available)
+                        logger.info(f"[VIX] Resolved weekly exp: {self._vix_weekly_exp}")
+
+                if self._vix_weekly_exp:
+                    vix_greeks_fname = "VIX_greeks_weekly_latest.parquet"
+                    tasks.append(fetch_and_save(
+                        "VIX", self._vix_weekly_exp, "greeks",
+                        vix_spot_price, vix_greeks_fname, "VIX"
+                    ))
+                    # Also fetch OI once per day
+                    vix_oi_fname = "VIX_oi_weekly_latest.parquet"
+                    if not (self.output_dir / vix_oi_fname).exists() and now.hour >= 8:
+                        tasks.append(fetch_and_save(
+                            "VIX", self._vix_weekly_exp, "oi",
+                            vix_spot_price, vix_oi_fname, "VIX"
+                        ))
+        except Exception as e:
+            logger.warning(f"[VIX] Failed to resolve/fetch VIX weekly greeks: {e}")
+
         # Lanzar todas las tareas (el semáforo gestionará el tráfico internamente)
         if tasks:
             logger.info("Downloading options endpoints (Max 4 concurrently)...")
@@ -1470,7 +1697,13 @@ class RealtimeOptionsFeed:
         import gc
         gc.collect()
 
-        # ── 3. Compute ML features ──
+        # ── 3. Compute VIX gamma from downloaded greeks ──
+        try:
+            self._compute_vix_gamma()
+        except Exception as e:
+            logger.warning(f"[VIX] Gamma computation failed: {e}")
+
+        # ── 4. Compute ML features ──
         try:
             self.compute_and_save_ml_features()
         except Exception as e:
@@ -1922,6 +2155,91 @@ class RealtimeOptionsFeed:
             self.ib_high[ticker] = float(df_ib["high"].max())
             self.ib_low[ticker] = float(df_ib["low"].min())
 
+    def _compute_vix_gamma(self):
+        """Compute VIX net_gamma from the VIX weekly greeks parquet (mirrors collector).
+
+        Updates self._vix_gamma which is then injected into each ticker's
+        exp_0dte["vix_gamma"] before feature extraction.
+        """
+        g_path = self.output_dir / "VIX_greeks_weekly_latest.parquet"
+        oi_path = self.output_dir / "VIX_oi_weekly_latest.parquet"
+
+        if not g_path.exists():
+            self._vix_gamma_context_valid = 1.0 if self._vix_gamma_timestamp is not None else 0.0
+            return  # Keep previous value
+
+        try:
+            df_greeks = pd.read_parquet(g_path)
+            if df_greeks.empty:
+                self._vix_gamma_context_valid = 1.0 if self._vix_gamma_timestamp is not None else 0.0
+                return
+
+            # Get latest timestamp snapshot
+            snapshot_ts = pd.Timestamp.now(tz="America/New_York")
+            if "underlying_timestamp" in df_greeks.columns:
+                df_greeks["dt"] = pd.to_datetime(
+                    df_greeks["underlying_timestamp"], format="mixed", errors="coerce"
+                )
+                latest_ts = df_greeks["dt"].max()
+                if pd.isna(latest_ts):
+                    self._vix_gamma_context_valid = 1.0 if self._vix_gamma_timestamp is not None else 0.0
+                    return
+                snapshot_ts = latest_ts
+                df_greeks = df_greeks[df_greeks["dt"] == latest_ts].copy()
+                if df_greeks.empty:
+                    self._vix_gamma_context_valid = 1.0 if self._vix_gamma_timestamp is not None else 0.0
+                    return
+            snapshot_ts = pd.Timestamp(snapshot_ts)
+            if snapshot_ts.tzinfo is None:
+                snapshot_ts = snapshot_ts.tz_localize(ET)
+            else:
+                snapshot_ts = snapshot_ts.tz_convert(ET)
+
+            # Merge with OI
+            df_oi = pd.DataFrame()
+            if oi_path.exists():
+                df_oi = pd.read_parquet(oi_path)
+
+            oi_group_cols = [c for c in ["strike", "right"] if c in df_oi.columns]
+            if not df_oi.empty and "open_interest" in df_oi.columns and oi_group_cols:
+                df_oi_agg = df_oi.groupby(oi_group_cols).agg({"open_interest": "max"}).reset_index()
+                merge_cols = [c for c in oi_group_cols if c in df_greeks.columns and c in df_oi_agg.columns]
+                if merge_cols:
+                    df_pq = pd.merge(df_greeks, df_oi_agg, on=merge_cols, how="inner")
+                else:
+                    df_pq = df_greeks.copy()
+                    df_pq["open_interest"] = 1000
+            else:
+                df_pq = df_greeks.copy()
+                df_pq["open_interest"] = 1000
+
+            if "implied_vol" not in df_pq.columns:
+                if "implied_volatility" in df_pq.columns:
+                    df_pq["implied_vol"] = df_pq["implied_volatility"]
+                else:
+                    df_pq["implied_vol"] = 0.20
+
+            if "underlying_price" not in df_pq.columns:
+                return
+
+            df_pq["T"] = calculate_exact_t(snapshot_ts)
+            required = ["strike", "right", "implied_vol", "open_interest", "underlying_price", "T"]
+            for col in required:
+                if col not in df_pq.columns:
+                    return
+            df_pq = df_pq.dropna(subset=required)
+            if df_pq.empty:
+                return
+
+            exposures = get_net_exposures_from_parquet(df_pq)
+            if exposures:
+                self._vix_gamma = float(exposures["net_gamma"])
+                self._vix_gamma_timestamp = snapshot_ts
+                self._vix_gamma_context_valid = 1.0
+                logger.info(f"  [VIX] Gamma updated: {self._vix_gamma:.4f} ts={snapshot_ts.isoformat()}")
+        except Exception as e:
+            logger.warning(f"[VIX] _compute_vix_gamma error: {e}")
+
     # ─────────────────────────────────────────
     # ML FEATURE VECTOR COMPUTATION
     # ─────────────────────────────────────────
@@ -1937,6 +2255,10 @@ class RealtimeOptionsFeed:
 
         # Shared data (VIX, TLT are the same for all tickers)
         vix_spot = self._load_spot_local("VIX")
+        self._vix_spot_context_valid = 1.0 if vix_spot > 0.0 else 0.0
+        if vix_spot <= 0.0:
+            vix_spot = 20.0
+            logger.warning("[VIX] Spot unavailable; using neutral fallback 20.0 for this feature row")
         tlt_spot = self._load_spot_local("TLT")
         if tlt_spot > 0:
             last_tlt_minute = self.tlt_price_history[-1][0] if self.tlt_price_history else None
@@ -1949,6 +2271,48 @@ class RealtimeOptionsFeed:
                     ticker, now_et, minutes_since_open, vix_spot, tlt_spot)
             except Exception as e:
                 logger.warning(f"[ML][{ticker}] Feature computation failed: {e}")
+        self._compute_and_save_event_option_snapshots(now_et)
+
+    def _compute_and_save_event_option_snapshots(self, now_et):
+        """Build live event-option snapshot rows that mirror the offline event dataset schema."""
+        if build_live_event_option_snapshots is None:
+            logger.debug("[EVENT_OPTION] live snapshot builder unavailable: %s", EVENT_OPTION_SNAPSHOT_IMPORT_ERROR)
+            return
+        try:
+            result = build_live_event_option_snapshots(self.output_dir, now=now_et)
+            if result.rows.empty:
+                logger.info("[EVENT_OPTION] no live snapshot rows built; missing=%s", result.summary.get("missing", []))
+                return
+            snapshot_file = self.output_dir / "event_option_snapshots_latest.parquet"
+            rows_to_save = result.rows
+            if snapshot_file.exists():
+                try:
+                    previous = pd.read_parquet(snapshot_file)
+                    rows_to_save = pd.concat([previous, result.rows], ignore_index=True, sort=False)
+                except Exception as exc:
+                    logger.debug("[EVENT_OPTION] could not read previous snapshot history: %s", exc)
+                    rows_to_save = result.rows
+            dedupe_cols = [col for col in ("ticker", "expiry_mode", "timestamp") if col in rows_to_save.columns]
+            if dedupe_cols:
+                rows_to_save = rows_to_save.drop_duplicates(dedupe_cols, keep="last")
+            sort_cols = [col for col in ("ticker", "trade_date", "expiry_mode", "timestamp", "time") if col in rows_to_save.columns]
+            if sort_cols:
+                rows_to_save = rows_to_save.sort_values(sort_cols).reset_index(drop=True)
+            self._save_parquet(rows_to_save, "event_option_snapshots_latest.parquet")
+            summary_path = self.output_dir / "event_option_snapshots_latest.summary.json"
+            summary = dict(result.summary)
+            summary["new_rows"] = int(len(result.rows))
+            summary["stored_rows"] = int(len(rows_to_save))
+            summary_path.write_text(json.dumps(summary, indent=2, allow_nan=True), encoding="utf-8")
+            logger.info(
+                "[EVENT_OPTION] live snapshots saved new_rows=%d stored_rows=%d modes=%s missing=%s",
+                int(result.summary.get("rows", 0)),
+                int(summary.get("stored_rows", 0)),
+                result.summary.get("expiry_modes", {}),
+                result.summary.get("missing", []),
+            )
+        except Exception as exc:
+            logger.warning("[EVENT_OPTION] live snapshot build failed: %s", exc)
 
     def _compute_ml_features_for_ticker(
         self, ticker: str, now_et, minutes_since_open: int,
@@ -2051,6 +2415,8 @@ class RealtimeOptionsFeed:
         exp_0dte["signal_persistence_5m"] = self._update_signal_persistence(
             ticker, exp_0dte.get("net_gamma", 0.0)
         )
+        # Inject VIX gamma computed from VIX weekly options chain
+        exp_0dte["vix_gamma"] = self._vix_gamma
         features_dict = extract_feature_vector(
             exp_0dte=exp_0dte,
             exp_weekly=exp_weekly,
@@ -2078,6 +2444,12 @@ class RealtimeOptionsFeed:
 
         # ── Build Final Dataframe Row ──
         row = {col: float(features_dict.get(col, 0.0)) for col in FEATURE_COLUMNS}
+        vix_gamma_age_seconds = float("nan")
+        if self._vix_gamma_timestamp is not None:
+            try:
+                vix_gamma_age_seconds = float((pd.Timestamp(now_et) - self._vix_gamma_timestamp).total_seconds())
+            except Exception:
+                vix_gamma_age_seconds = float("nan")
         row.update({
             "timestamp": pd.Timestamp(now_et).isoformat(),
             "date": now_et.strftime("%Y%m%d"),
@@ -2095,6 +2467,12 @@ class RealtimeOptionsFeed:
             "net_vega_raw": float(exp_0dte.get("net_vega", 0.0)),
             "net_vomma_raw": float(exp_0dte.get("net_vomma", 0.0)),
             "live_feature_context_valid": float(features_dict.get("live_feature_context_valid", 0.0)),
+            "vix_spot_raw": float(vix_spot),
+            "vix_spot_context_valid": float(self._vix_spot_context_valid),
+            "vix_gamma_raw": float(self._vix_gamma),
+            "vix_gamma_context_valid": float(self._vix_gamma_context_valid),
+            "vix_gamma_age_seconds": vix_gamma_age_seconds,
+            "vix_gamma_timestamp": self._vix_gamma_timestamp.isoformat() if self._vix_gamma_timestamp is not None else "",
         })
         
         # Update prev_features for the next poll's temporal deltas.
@@ -2135,6 +2513,9 @@ class RealtimeOptionsFeed:
         logger.info(
             f"  [ML][{ticker}] 5m Base+JEPA feature vector saved "
             f"({len(self._ml_features_rows[ticker])} rows, spot=${spot:.2f}, "
+            f"vix={row.get('vix_spot_raw', 0.0):.2f}, "
+            f"vix_gamma={row.get('vix_gamma', 0.0):.3f}, "
+            f"vix_gamma_ctx={row.get('vix_gamma_context_valid', 0.0):.0f}, "
             f"vix5_mean={row.get('vix_5d_mean', 0.0):.3f}, "
             f"vix5_std={row.get('vix_5d_std', 0.0):.3f}, "
             f"atr5_norm={row.get('atr_5d_norm', 0.0):.5f}, "
@@ -2232,6 +2613,23 @@ def main():
     parser.add_argument("--disable-jepa", action="store_true", help="Do not append live xjepa_* features")
     parser.add_argument("--jepa-model-dir", type=str, default=DEFAULT_JEPA_FEATURE_MODEL_DIR, help="XInputJEPA feature model directory")
     parser.add_argument("--jepa-device", type=str, default="auto", help="JEPA device: auto, cpu, cuda")
+    parser.add_argument("--event-option-policy-path", type=str, default=DEFAULT_EVENT_OPTION_POLICY_PATH)
+    parser.add_argument("--disable-event-option-policy", action="store_true", help="Do not load event-option production policy metadata")
+    parser.add_argument(
+        "--event-option-component-registry-path",
+        type=str,
+        default=DEFAULT_EVENT_OPTION_COMPONENT_REGISTRY_PATH,
+    )
+    parser.add_argument(
+        "--disable-event-option-component-registry",
+        action="store_true",
+        help="Do not load event-option component registry metadata",
+    )
+    parser.add_argument(
+        "--require-event-option-live-ready",
+        action="store_true",
+        help="Fail startup unless the event-option policy and component registry are live-ready",
+    )
     args = parser.parse_args()
 
     print("="*60)
@@ -2241,6 +2639,13 @@ def main():
     print(f"  Spot:     {', '.join(SPOT_SYMBOLS)}")
     print(f"  Interval: {args.interval}s")
     print(f"  JEPA:     {'disabled' if args.disable_jepa else args.jepa_model_dir}")
+    event_policy_path = None if args.disable_event_option_policy else args.event_option_policy_path
+    event_component_registry_path = (
+        None if args.disable_event_option_component_registry else args.event_option_component_registry_path
+    )
+    print(f"  Event policy: {event_policy_path or 'disabled'}")
+    print(f"  Event components: {event_component_registry_path or 'disabled'}")
+    print(f"  Event live-ready required: {args.require_event_option_live_ready}")
     print(
         "  JEPA live policy: "
         f"{JEPA_LIVE_EXECUTION_CONFIG['policy']} "
@@ -2257,6 +2662,9 @@ def main():
         enable_jepa_features=not args.disable_jepa,
         jepa_model_dir=args.jepa_model_dir,
         jepa_device=args.jepa_device,
+        event_option_policy_path=event_policy_path,
+        event_option_component_registry_path=event_component_registry_path,
+        require_event_option_live_ready=args.require_event_option_live_ready,
     )
     asyncio.run(feed.run(dry_run=args.dry_run))
 

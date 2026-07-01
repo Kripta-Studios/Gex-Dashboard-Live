@@ -1,5 +1,5 @@
 [Unit]
-Description=GEX Realtime Feed Daemon - Live Base+JEPA Features
+Description=GEX Realtime Feed Daemon - Level-Stability Features
 After=network-online.target
 Wants=network-online.target
 
@@ -9,13 +9,14 @@ Group=root
 
 WorkingDirectory=/home/Option-Greeks-Plotting-Discord-Bot
 
-ExecStart=/usr/bin/python3 /home/Option-Greeks-Plotting-Discord-Bot/services/realtime_feed.py --interval 60 --jepa-model-dir /home/Option-Greeks-Plotting-Discord-Bot/neural/models/jepa/xinput_v3_production --jepa-device auto
+ExecStart=/usr/bin/python3 /home/Option-Greeks-Plotting-Discord-Bot/services/realtime_feed.py --interval 60 --jepa-model-dir /home/Option-Greeks-Plotting-Discord-Bot/neural/models/jepa/xinput_v3_production --jepa-device auto --event-option-policy-path /home/Option-Greeks-Plotting-Discord-Bot/neural/models/jepa/jepa_production_event_options_backfill19_spy_no_scorethr_wf2026_fullmayjun/event_option_policy.json --event-option-component-registry-path /home/Option-Greeks-Plotting-Discord-Bot/neural/models/jepa/jepa_production_event_options_backfill19_spy_no_scorethr_wf2026_fullmayjun/component_registry.json --require-event-option-live-ready
 
 Restart=always
 RestartSec=5
 MemoryMax=2G
 MemorySwapMax=0
 Environment=PYTHONUNBUFFERED=1
+Environment=THETADATA_URL=http://91.99.90.39:25503/v3
 StandardOutput=journal
 StandardError=journal
 
