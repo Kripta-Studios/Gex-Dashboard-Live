@@ -76,6 +76,105 @@ def assert_metric_gate(name: str, value: float, minimum: float, issues: list[str
         issues.append(f"{name} {value:.6g} < {minimum:.6g}")
 
 
+def assert_strict_metric_gate(name: str, value: float, minimum: float, issues: list[str]) -> None:
+    if value <= minimum:
+        issues.append(f"{name} {value:.6g} <= {minimum:.6g}")
+
+
+def _exit_contract_value(exit_contract: dict[str, Any], key: str, default: float | None = None) -> float | None:
+    value = exit_contract.get(key)
+    if value is None:
+        return default
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def assert_exit_contract_consistency(policy: dict[str, Any], issues: list[str]) -> None:
+    exit_contract = policy.get("validated_label_exit_contract")
+    if not isinstance(exit_contract, dict):
+        issues.append("validated_label_exit_contract missing or invalid")
+        return
+    for key in ["horizon_minutes", "option_take_profit_pct", "option_stop_loss_pct"]:
+        if _exit_contract_value(exit_contract, key) is None:
+            issues.append(f"validated_label_exit_contract.{key} missing or nonnumeric")
+    min_hold = _exit_contract_value(exit_contract, "min_hold_minutes", 0.0)
+    if min_hold is None or min_hold < 0.0:
+        issues.append("validated_label_exit_contract.min_hold_minutes missing, nonnumeric, or negative")
+
+    exit_validation = policy.get("exit_contract_validation")
+    if isinstance(exit_validation, dict) and isinstance(exit_validation.get("contract"), dict):
+        validation_contract = exit_validation["contract"]
+        comparisons = {
+            "take_profit_pct": (
+                _exit_contract_value(validation_contract, "take_profit_pct"),
+                _exit_contract_value(exit_contract, "option_take_profit_pct"),
+            ),
+            "stop_loss_pct": (
+                _exit_contract_value(validation_contract, "stop_loss_pct"),
+                _exit_contract_value(exit_contract, "option_stop_loss_pct"),
+            ),
+            "horizon_minutes": (
+                _exit_contract_value(validation_contract, "horizon_minutes"),
+                _exit_contract_value(exit_contract, "horizon_minutes"),
+            ),
+            "min_hold_minutes": (
+                _exit_contract_value(validation_contract, "min_hold_minutes", 0.0),
+                _exit_contract_value(exit_contract, "min_hold_minutes", 0.0),
+            ),
+        }
+        for key, (actual, expected) in comparisons.items():
+            if actual is None or expected is None:
+                issues.append(f"exit_contract_validation.contract.{key} cannot be compared")
+                continue
+            if not nearly_equal(float(actual), float(expected)):
+                issues.append(
+                    f"exit_contract_validation.contract.{key} {float(actual):.12g} != validated {float(expected):.12g}"
+                )
+
+    live_contract = policy.get("live_contract") if isinstance(policy.get("live_contract"), dict) else {}
+    live_exit = live_contract.get("event_option_exit_contract") if isinstance(live_contract.get("event_option_exit_contract"), dict) else {}
+    if not live_exit:
+        return
+    comparisons = {
+        "take_profit_pct": (
+            _exit_contract_value(live_exit, "take_profit_pct"),
+            _exit_contract_value(exit_contract, "option_take_profit_pct"),
+        ),
+        "stop_loss_pct_abs": (
+            abs(_exit_contract_value(live_exit, "stop_loss_pct", 0.0) or 0.0),
+            _exit_contract_value(exit_contract, "option_stop_loss_pct"),
+        ),
+        "max_hold_minutes": (
+            _exit_contract_value(live_exit, "max_hold_minutes"),
+            _exit_contract_value(exit_contract, "horizon_minutes"),
+        ),
+        "min_hold_minutes": (
+            _exit_contract_value(live_exit, "min_hold_minutes", 0.0),
+            _exit_contract_value(exit_contract, "min_hold_minutes", 0.0),
+        ),
+    }
+    for key, (actual, expected) in comparisons.items():
+        if actual is None or expected is None:
+            issues.append(f"live_contract.event_option_exit_contract.{key} cannot be compared")
+            continue
+        if not nearly_equal(float(actual), float(expected)):
+            issues.append(
+                f"live_contract.event_option_exit_contract.{key} {float(actual):.12g} != validated {float(expected):.12g}"
+            )
+
+
+def exit_validation_metrics(policy: dict[str, Any]) -> dict[str, Any] | None:
+    validation = policy.get("exit_contract_validation")
+    if not isinstance(validation, dict):
+        return None
+    per_ticker = validation.get("per_ticker")
+    if not isinstance(per_ticker, dict):
+        return None
+    return validation
+
+
 
 def assert_raw_coverage_true_0dte(payload: dict[str, Any], tickers: list[str], issues: list[str]) -> None:
     try:
@@ -130,9 +229,16 @@ def assert_event_option_package(args: argparse.Namespace) -> dict[str, Any]:
     if curve:
         assert_result_dir_matches("curve_health", curve.get("result_dir"), result_dir, issues)
 
-    by_ticker = validation.get("by_ticker", {})
+    completed_by_ticker = validation.get("by_ticker", {})
+    if not isinstance(completed_by_ticker, dict):
+        completed_by_ticker = {}
+    exit_validation = exit_validation_metrics(policy)
+    by_ticker = exit_validation.get("per_ticker", {}) if exit_validation else completed_by_ticker
+    metrics_label = "exit_contract_validation" if exit_validation else "completed_month_validation"
+    if not exit_validation and float(args.min_avg_hold_minutes) > 0.0:
+        issues.append("exit_contract_validation missing; cannot verify avg_hold_minutes gate")
     if not isinstance(by_ticker, dict):
-        issues.append("completed_month_validation.by_ticker missing or invalid")
+        issues.append(f"{metrics_label}.by_ticker missing or invalid")
         by_ticker = {}
     required_tickers = [str(t).upper() for t in args.tickers]
     for ticker in required_tickers:
@@ -149,10 +255,20 @@ def assert_event_option_package(args: argparse.Namespace) -> dict[str, Any]:
         )
         if int(row.get("min_month_trades", 0)) < int(args.min_month_trades):
             issues.append(f"{ticker}.min_month_trades {row.get('min_month_trades')} < {args.min_month_trades}")
-        if float(row.get("positive_month_rate", 0.0)) < 1.0 and not bool(args.allow_nonpositive_months):
-            issues.append(f"{ticker}.positive_month_rate {row.get('positive_month_rate')} < 1.0")
-        if float(row.get("pnl_return", 0.0)) <= 0.0:
-            issues.append(f"{ticker}.pnl_return {row.get('pnl_return')} <= 0")
+        if exit_validation:
+            assert_strict_metric_gate(
+                f"{ticker}.avg_hold_minutes",
+                float(row.get("avg_hold_minutes", 0.0)),
+                float(args.min_avg_hold_minutes),
+                issues,
+            )
+            if float(row.get("avg_return", 0.0)) <= 0.0:
+                issues.append(f"{ticker}.avg_return {row.get('avg_return')} <= 0")
+        else:
+            if float(row.get("positive_month_rate", 0.0)) < 1.0 and not bool(args.allow_nonpositive_months):
+                issues.append(f"{ticker}.positive_month_rate {row.get('positive_month_rate')} < 1.0")
+            if float(row.get("pnl_return", 0.0)) <= 0.0:
+                issues.append(f"{ticker}.pnl_return {row.get('pnl_return')} <= 0")
 
     if trades_path.exists():
         trades = pd.read_csv(trades_path, usecols=lambda c: c in {"ticker", "topk_mode"}, low_memory=False)
@@ -163,25 +279,7 @@ def assert_event_option_package(args: argparse.Namespace) -> dict[str, Any]:
     else:
         issues.append(f"combined trades missing: {trades_path}")
 
-    exit_contract = policy.get("validated_label_exit_contract")
-    if not isinstance(exit_contract, dict):
-        issues.append("validated_label_exit_contract missing or invalid")
-    else:
-        expected_exit = {
-            "horizon_minutes": 180,
-            "option_take_profit_pct": 0.5,
-            "option_stop_loss_pct": 0.3,
-        }
-        for key, expected in expected_exit.items():
-            try:
-                actual = float(exit_contract.get(key))
-            except (TypeError, ValueError):
-                issues.append(f"validated_label_exit_contract.{key} missing or nonnumeric")
-                continue
-            if abs(actual - float(expected)) > 1e-9:
-                issues.append(
-                    f"validated_label_exit_contract.{key} {actual:.6g} != expected {float(expected):.6g}"
-                )
+    assert_exit_contract_consistency(policy, issues)
 
     missing_live = registry.get("missing_for_full_live_equivalence", [])
     invalidated = (registry.get("invalidated_components") or {}).get("components", [])
@@ -247,7 +345,7 @@ def assert_event_option_package(args: argparse.Namespace) -> dict[str, Any]:
             if not isinstance(side_by_ticker, dict):
                 issues.append("completed_month_metrics.by_ticker missing or invalid")
             else:
-                for ticker, expected_metrics in by_ticker.items():
+                for ticker, expected_metrics in completed_by_ticker.items():
                     actual_metrics = side_by_ticker.get(ticker)
                     if not isinstance(expected_metrics, dict) or not isinstance(actual_metrics, dict):
                         issues.append(f"completed_month_metrics.by_ticker.{ticker} missing or invalid")
@@ -336,6 +434,7 @@ def main() -> int:
     parser.add_argument("--tickers", nargs="+", default=["SPXW", "SPY", "QQQ"])
     parser.add_argument("--min-win-rate", type=float, default=0.45)
     parser.add_argument("--min-profit-factor", type=float, default=1.30)
+    parser.add_argument("--min-avg-hold-minutes", type=float, default=0.0)
     parser.add_argument("--min-month-trades", type=int, default=18)
     parser.add_argument("--require-live-ready", action="store_true")
     parser.add_argument("--raw-thetadata-coverage", default=str(DEFAULT_RAW_THETADATA_COVERAGE))

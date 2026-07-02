@@ -275,10 +275,11 @@ def main() -> int:
         "validated_label_exit_contract": {
             "source": "neural/jepa/build_event_option_dataset.py",
             "horizon_minutes": 180,
-            "option_take_profit_pct": 0.5,
-            "option_stop_loss_pct": 0.3,
+            "min_hold_minutes": 20,
+            "option_take_profit_pct": 0.75,
+            "option_stop_loss_pct": 0.5,
             "live_equivalence_note": (
-                "Walk-forward metrics are based on the +50%/-30%/180m option path label contract. "
+                "Walk-forward metrics are based on the +75%/-50%/20m-min/180m option path label contract. "
                 "Live execution must use the same exit contract unless separately revalidated."
             ),
         },
@@ -295,8 +296,9 @@ def main() -> int:
             "trailing_stop_giveback_pct": 0.25,
             "emergency_take_profit_pct": 10.0,
             "event_option_exit_contract": {
-                "take_profit_pct": 0.5,
-                "stop_loss_pct": -0.3,
+                "take_profit_pct": 0.75,
+                "stop_loss_pct": -0.5,
+                "min_hold_minutes": 20,
                 "max_hold_minutes": 180,
                 "trailing_enabled": False,
             },

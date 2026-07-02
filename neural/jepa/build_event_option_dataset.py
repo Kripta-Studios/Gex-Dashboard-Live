@@ -275,6 +275,7 @@ def option_path_label(
     sl_pct: float,
     prefix: str,
     exit_mode: str = "fixed",
+    min_hold_minutes: int = 0,
     trail_activation_pct: float = 0.50,
     trail_drawdown_pct: float = 0.25,
 ) -> dict:
@@ -328,12 +329,18 @@ def option_path_label(
     exit_minutes = 0
     peak_ret = -float("inf")
     mode = str(exit_mode).lower()
+    min_hold = max(0, int(min_hold_minutes))
     for item in path.itertuples():
         high = float(item.high)
         low = float(item.low)
         elapsed = int((pd.Timestamp(item.dt) - ts).total_seconds() // 60)
         high_ret = high / entry - 1.0 if high > 0.0 else -float("inf")
         low_ret = low / entry - 1.0 if low > 0.0 else float("inf")
+
+        if elapsed < min_hold:
+            if high_ret > peak_ret:
+                peak_ret = float(high_ret)
+            continue
 
         # Conservative intrabar order: adverse low is evaluated before favorable high.
         if low_ret <= -float(sl_pct):
@@ -462,6 +469,7 @@ def build_rows_for_manifest_row(row: dict, args_dict: dict) -> pd.DataFrame:
                         float(args.option_sl_pct),
                         prefix,
                         str(args.option_exit_mode),
+                        int(args.option_min_hold_minutes),
                         float(args.option_trail_activation_pct),
                         float(args.option_trail_drawdown_pct),
                     )
@@ -631,6 +639,7 @@ def main() -> int:
     parser.add_argument("--option-tp-pct", type=float, default=0.50)
     parser.add_argument("--option-sl-pct", type=float, default=0.30)
     parser.add_argument("--option-exit-mode", choices=["fixed", "trailing"], default="fixed")
+    parser.add_argument("--option-min-hold-minutes", type=int, default=0)
     parser.add_argument("--option-trail-activation-pct", type=float, default=0.50)
     parser.add_argument("--option-trail-drawdown-pct", type=float, default=0.25)
     parser.add_argument("--chunk-by", choices=["none", "month", "ticker_month"], default="none")
