@@ -1,5 +1,18 @@
 # JEPA Paper Summary
 
+## Current Project Status - 2026-07
+
+The papers summarized below are research background. The active live trading system is the JEPA event-option static-union package, not a literal LeWorldModel, V-JEPA, GBT+RL, or 180m JEPA production deployment.
+
+Current live package:
+
+```text
+neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/
+policy: event_option_frozen2025_static_union_balanced_202607
+```
+
+VISReg/SIGReg/XInputJEPA work should be treated as auxiliary representation research until it improves the static-union event-option baseline under the same causal/live-ready checks.
+
 This note summarizes the PDFs currently stored in `research_papers/JEPA`.
 
 ## 1. A Path Towards Autonomous Machine Intelligence

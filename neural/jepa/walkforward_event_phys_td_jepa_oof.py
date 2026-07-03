@@ -24,7 +24,13 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from neural.jepa.dataset import RobustNormalizer, TickerRobustNormalizer
 from neural.jepa.features import write_feature_names
-from neural.jepa.sigreg import SIGRegLoss, VarianceCovarianceLoss, latent_diagnostics
+from neural.jepa.sigreg import (
+    SIGRegLoss,
+    VISRegLoss,
+    VarianceCovarianceLoss,
+    latent_diagnostics,
+    latent_temporal_straightening_loss,
+)
 
 
 LEAKY_PATTERNS = (
@@ -541,6 +547,7 @@ def train_epoch(
     proto_loss_fn: PrototypeDistillationLoss | None,
     loader: DataLoader,
     sigreg: SIGRegLoss,
+    visreg: VISRegLoss,
     vicreg: VarianceCovarianceLoss,
     opt: torch.optim.Optimizer,
     args: argparse.Namespace,
@@ -549,7 +556,17 @@ def train_epoch(
     model.train()
     if teacher is not None:
         teacher.eval()
-    sums = {"pred": 0.0, "proto": 0.0, "state": 0.0, "dyn": 0.0, "sig": 0.0, "vic": 0.0, "total": 0.0}
+    sums = {
+        "pred": 0.0,
+        "proto": 0.0,
+        "state": 0.0,
+        "dyn": 0.0,
+        "sig": 0.0,
+        "vis": 0.0,
+        "vic": 0.0,
+        "straight": 0.0,
+        "total": 0.0,
+    }
     total = 0
     for ctx, delta_ctx, targets, q_now, q_future in loader:
         ctx = ctx.to(device).float()
@@ -579,14 +596,21 @@ def train_epoch(
         res_start = int(model.config.phys_dim)
         res_all = torch.cat([z[:, res_start:], target_z.reshape(b * h, -1)[:, res_start:]], dim=0)
         sig_loss = sigreg(res_all)
+        vis_loss = visreg(res_all)
         vic_loss = vicreg(res_all)
+        straight_loss = latent_temporal_straightening_loss(
+            torch.cat([z[:, res_start:].unsqueeze(1), target_z[:, :, res_start:]], dim=1),
+            speed_weight=float(args.straightening_speed_weight),
+        )
         loss = (
             pred_loss
             + float(args.lambda_proto) * proto_loss
             + float(args.lambda_state) * state_loss
             + float(args.lambda_dyn) * dyn_loss
             + float(args.lambda_sigreg) * sig_loss
+            + float(args.lambda_visreg) * vis_loss
             + float(args.lambda_vicreg) * vic_loss
+            + float(args.lambda_straightening) * straight_loss
         )
         opt.zero_grad(set_to_none=True)
         loss.backward()
@@ -601,7 +625,9 @@ def train_epoch(
         sums["state"] += float(state_loss.item()) * n
         sums["dyn"] += float(dyn_loss.item()) * n
         sums["sig"] += float(sig_loss.item()) * n
+        sums["vis"] += float(vis_loss.item()) * n
         sums["vic"] += float(vic_loss.item()) * n
+        sums["straight"] += float(straight_loss.item()) * n
         sums["total"] += float(loss.item()) * n
     return {k: v / max(1, total) for k, v in sums.items()}
 
@@ -612,6 +638,7 @@ def evaluate_model(
     proto_loss_fn: PrototypeDistillationLoss | None,
     loader: DataLoader,
     sigreg: SIGRegLoss,
+    visreg: VISRegLoss,
     vicreg: VarianceCovarianceLoss,
     args: argparse.Namespace,
     device: torch.device,
@@ -619,7 +646,17 @@ def evaluate_model(
     model.eval()
     if teacher is not None:
         teacher.eval()
-    sums = {"pred": 0.0, "proto": 0.0, "state": 0.0, "dyn": 0.0, "sig": 0.0, "vic": 0.0, "total": 0.0}
+    sums = {
+        "pred": 0.0,
+        "proto": 0.0,
+        "state": 0.0,
+        "dyn": 0.0,
+        "sig": 0.0,
+        "vis": 0.0,
+        "vic": 0.0,
+        "straight": 0.0,
+        "total": 0.0,
+    }
     total = 0
     z_batches = []
     with torch.no_grad():
@@ -649,14 +686,21 @@ def evaluate_model(
             res_start = int(model.config.phys_dim)
             res_all = torch.cat([z[:, res_start:], target_z.reshape(b * h, -1)[:, res_start:]], dim=0)
             sig_loss = sigreg(res_all)
+            vis_loss = visreg(res_all)
             vic_loss = vicreg(res_all)
+            straight_loss = latent_temporal_straightening_loss(
+                torch.cat([z[:, res_start:].unsqueeze(1), target_z[:, :, res_start:]], dim=1),
+                speed_weight=float(args.straightening_speed_weight),
+            )
             loss = (
                 pred_loss
                 + float(args.lambda_proto) * proto_loss
                 + float(args.lambda_state) * state_loss
                 + float(args.lambda_dyn) * dyn_loss
                 + float(args.lambda_sigreg) * sig_loss
+                + float(args.lambda_visreg) * vis_loss
                 + float(args.lambda_vicreg) * vic_loss
+                + float(args.lambda_straightening) * straight_loss
             )
             n = len(ctx)
             total += n
@@ -665,7 +709,9 @@ def evaluate_model(
             sums["state"] += float(state_loss.item()) * n
             sums["dyn"] += float(dyn_loss.item()) * n
             sums["sig"] += float(sig_loss.item()) * n
+            sums["vis"] += float(vis_loss.item()) * n
             sums["vic"] += float(vic_loss.item()) * n
+            sums["straight"] += float(straight_loss.item()) * n
             sums["total"] += float(loss.item()) * n
             if len(z_batches) < 12:
                 z_batches.append(z.detach().cpu())
@@ -866,15 +912,25 @@ def fit_encoder(
         else None
     )
     sigreg = SIGRegLoss(max(1, int(args.z_dim) - int(args.phys_dim)), num_projections=int(args.sigreg_projections)).to(device)
+    visreg = VISRegLoss(
+        max(1, int(args.z_dim) - int(args.phys_dim)),
+        num_slices=int(args.visreg_slices),
+        center_weight=float(args.visreg_center_weight),
+        scale_weight=float(args.visreg_scale_weight),
+        shape_weight=float(args.visreg_shape_weight),
+    ).to(device)
     vicreg = VarianceCovarianceLoss(min_std=float(args.vicreg_min_std), cov_weight=0.05, var_weight=1.0).to(device)
     params = list(model.parameters()) + (list(proto_loss_fn.parameters()) if proto_loss_fn is not None else [])
     opt = torch.optim.AdamW(params, lr=float(args.lr), weight_decay=float(args.weight_decay))
     history = []
     for epoch in range(1, int(args.epochs) + 1):
-        row = {"epoch": epoch, **train_epoch(model, teacher, proto_loss_fn, loader, sigreg, vicreg, opt, args, device)}
+        row = {
+            "epoch": epoch,
+            **train_epoch(model, teacher, proto_loss_fn, loader, sigreg, visreg, vicreg, opt, args, device),
+        }
         history.append(row)
     eval_loader = make_loader(ds, args, shuffle=False)
-    train_eval = evaluate_model(model, teacher, proto_loss_fn, eval_loader, sigreg, vicreg, args, device)
+    train_eval = evaluate_model(model, teacher, proto_loss_fn, eval_loader, sigreg, visreg, vicreg, args, device)
     export_model = teacher if teacher is not None and bool(args.export_teacher_features) else model
     return {
         "model": model,
@@ -1007,15 +1063,25 @@ def train_fold(
         else None
     )
     sigreg = SIGRegLoss(max(1, int(args.z_dim) - int(args.phys_dim)), num_projections=int(args.sigreg_projections)).to(device)
+    visreg = VISRegLoss(
+        max(1, int(args.z_dim) - int(args.phys_dim)),
+        num_slices=int(args.visreg_slices),
+        center_weight=float(args.visreg_center_weight),
+        scale_weight=float(args.visreg_scale_weight),
+        shape_weight=float(args.visreg_shape_weight),
+    ).to(device)
     vicreg = VarianceCovarianceLoss(min_std=float(args.vicreg_min_std), cov_weight=0.05, var_weight=1.0).to(device)
     params = list(model.parameters()) + (list(proto_loss_fn.parameters()) if proto_loss_fn is not None else [])
     opt = torch.optim.AdamW(params, lr=float(args.lr), weight_decay=float(args.weight_decay))
     history = []
     for epoch in range(1, int(args.epochs) + 1):
-        row = {"epoch": epoch, **train_epoch(model, teacher, proto_loss_fn, loader, sigreg, vicreg, opt, args, device)}
+        row = {
+            "epoch": epoch,
+            **train_epoch(model, teacher, proto_loss_fn, loader, sigreg, visreg, vicreg, opt, args, device),
+        }
         history.append(row)
     eval_loader = make_loader(ds, args, shuffle=False)
-    train_eval = evaluate_model(model, teacher, proto_loss_fn, eval_loader, sigreg, vicreg, args, device)
+    train_eval = evaluate_model(model, teacher, proto_loss_fn, eval_loader, sigreg, visreg, vicreg, args, device)
     export_model = teacher if teacher is not None and bool(args.export_teacher_features) else model
     features = export_month_features(export_model, normalizer, month_df, feature_cols, physical_cols, args, device)
     fold = {
@@ -1113,7 +1179,10 @@ def main() -> int:
     parser.add_argument("--lambda-dyn", type=float, default=0.10)
     parser.add_argument("--lambda-proto", type=float, default=0.0, help="DINO/TDV-style prototype loss weight; 0 keeps the legacy objective.")
     parser.add_argument("--lambda-sigreg", type=float, default=0.05)
+    parser.add_argument("--lambda-visreg", type=float, default=0.0)
     parser.add_argument("--lambda-vicreg", type=float, default=0.10)
+    parser.add_argument("--lambda-straightening", type=float, default=0.0)
+    parser.add_argument("--straightening-speed-weight", type=float, default=0.0)
     parser.add_argument("--use-ema-teacher", action="store_true", help="Use an EMA teacher for temporal prediction targets.")
     parser.add_argument("--teacher-momentum", type=float, default=0.996)
     parser.add_argument("--export-teacher-features", action=argparse.BooleanOptionalAction, default=True)
@@ -1129,6 +1198,10 @@ def main() -> int:
     parser.add_argument("--grad-clip", type=float, default=1.0)
     parser.add_argument("--clip", type=float, default=10.0)
     parser.add_argument("--sigreg-projections", type=int, default=64)
+    parser.add_argument("--visreg-slices", type=int, default=64)
+    parser.add_argument("--visreg-center-weight", type=float, default=1.0)
+    parser.add_argument("--visreg-scale-weight", type=float, default=1.0)
+    parser.add_argument("--visreg-shape-weight", type=float, default=1.0)
     parser.add_argument("--vicreg-min-std", type=float, default=0.75)
     parser.add_argument("--normalizer-mode", choices=("global", "ticker"), default="global", help="Fit robust feature statistics globally or independently per ticker within each causal fold.")
     parser.add_argument("--encoder-input-mode", choices=("flat", "modal"), default="flat", help="Use the legacy flat feature encoder or modality-balanced input projections.")

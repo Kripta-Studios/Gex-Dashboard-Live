@@ -1,87 +1,137 @@
-# JEPA Production Pipeline
+# JEPA Event-Option Production Pipeline
 
-This directory now serves two purposes:
+This directory contains the current production event-option package tooling plus older JEPA research experiments. The active live system is the frozen 2025 static-union event-option package for deploy month 202607.
 
-- production artifacts for the live bot;
-- reproducible research scripts for the causal level-stability and structural option-profile pipeline.
-
-## Current Live Contract
-
-The live bot does not use the old JEPA 180m model as the primary signal.
+## Active Production Package
 
 ```text
-entry signal:
-  neural/models/jepa/jepa_production_level_stability/level_stability_signal.json
-
-option selector:
-  neural/models/jepa/jepa_production_structural_options/structural_option_profiles.json
-
-execution:
-  0DTE options
-  risk capital 5000 dollars
-  hard stop -60%
-  trail activation +50%
-  trail giveback 25%
-  emergency take profit +1000%
-  latest entry 14:30 ET
-  EOD cleanup 16:00 ET
+neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/
+  event_option_policy.json
+  component_registry.json
 ```
 
-The legacy `jepa_production_final_180m` artifact is retained only for diagnostics or explicit fallback via `--allow-signal-model-fallback`.
-
-## Daily Production Build
-
-Run from the repository root:
-
-```powershell
-.\neural\jepa\run_pipeline.ps1 -DailyProduction -ProductionDeployMonth 202606 -Workers 32
-```
-
-Equivalent direct runner:
-
-```powershell
-.\neural\jepa\run_daily_production_pipeline.ps1 -DeployMonth 202606 -Workers 32
-```
-
-Both steps exclude the deployment month from model/profile selection.
-
-## Core Scripts
-
-- `level_stability_live.py`: live evaluator for the production level-stability signal.
-- `fit_production_level_stability_signal.py`: fits the production signal JSON from prior months only.
-- `fit_production_structural_option_profiles.py`: fits production option profiles from prior candidate labels only.
-- `run_daily_production_pipeline.ps1`: daily artifact build and smoke check.
-- `walkforward_level_stability_ensemble.py`: research OOF entry-signal generator.
-- `walkforward_structural_option_profiles.py`: nested walk-forward option-profile selector.
-- `combine_walkforward_option_results.py`: verifies per-ticker profitability/volume checks.
-- `search_option_structural_profiles.py`: profile search helpers used by production fitting.
-
-## Validated Result
-
-The clean Jan-May 2026 nested option-profile validation passes each ticker independently:
-
-Gates used: PF >= 1.10, WR >= 35%, PnL > 0, min 15 trades/month, long-rate 20%-80%.
-
-| Ticker | Trades | WR | PF | PnL | Min Month Trades |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| SPX | 227 | 37.9% | 1.181 | 69,884 | 17 |
-| SPY | 204 | 35.8% | 1.157 | 59,688 | 17 |
-| QQQ | 209 | 39.7% | 1.361 | 119,338 | 22 |
-
-The result path is:
+Policy id:
 
 ```text
-research_papers/JEPA/results/level_stability_nested_structural_profiles_risk5000_mixed_causal_2026janmay
+event_option_frozen2025_static_union_balanced_202607
 ```
 
-The combined result includes a walk-forward integrity audit: 15 folds and 640 selected trades checked, with no temporal leakage found.
-
-June 2026 is partial in the available data. Jan-Jun remains profitable but does not pass the 15-trades/month rule for SPX/SPY because June is incomplete.
-
-## Deployment
-
-Use the root deployment guide:
+Result directory:
 
 ```text
-README_PRODUCTION_DEPLOYMENT.md
+research_papers/JEPA/results/event_option_mh30trail_frozen2025_static_union_deploy202607_production_v1
 ```
+
+Live services:
+
+```text
+services/realtime_feed.py
+bots/tradingbot_wrapper_jepa.py
+systemd/realtime_feed.service
+systemd/ai_bot.service
+```
+
+## Live Contract
+
+```text
+tickers: SPX, QQQ, SPY
+option symbols: SPXW, QQQ, SPY
+expiry: 0DTE only
+entry window: 10:00-14:30 ET
+risk: 5000 dollars
+exit: stop -60%, trail +50% / 25% giveback, emergency TP +1000%
+hold: min 30m, max 180m
+order mode: paper intents and Discord alerts; no broker submission
+```
+
+Static policy caps:
+
+| Ticker | Bucket | Score gate | Max trades/day | Cooldown |
+| --- | --- | --- | ---: | --- |
+| SPXW | d25 | min score 0.34 | 4 | 0m |
+| QQQ | d35 | policy-defined | 2 | 30m |
+| SPY | d35 | policy-defined | 1 | 0m |
+
+## Validation
+
+Canonical production validation:
+
+```bash
+python3 neural/jepa/validate_event_option_production_package.py \
+  --policy neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/event_option_policy.json \
+  --registry neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/component_registry.json \
+  --require-live-ready \
+  --ignore-raw-thetadata-coverage \
+  --min-profit-factor 1.3 \
+  --min-win-rate 0.45 \
+  --min-month-trades 12
+```
+
+Completed Jan-Jun 2026 metrics:
+
+| Scope | Trades | WR | PF | Min month trades |
+| --- | ---: | ---: | ---: | ---: |
+| Overall | 697 | 57.819% | 1.915 | 103 |
+| QQQ | 236 | 60.593% | 1.771 | 36 |
+| SPXW | 355 | 55.211% | 2.037 | 51 |
+| SPY | 106 | 60.377% | 1.769 | 12 |
+
+The deployable gate is `min_month_trades=12`; the preferred 18-trades/month/ticker target is not met by SPY.
+
+## Daily Workflow
+
+Daily work is monitoring and audit:
+
+```bash
+DAY=$(TZ=America/New_York date +%Y%m%d)
+python3 neural/jepa/audit_live_feature_drift.py --day-dir "rt_data/$DAY" --strict-features
+journalctl -u realtime_feed.service -n 120 --no-pager
+journalctl -u ai_bot.service -n 160 --no-pager
+```
+
+Do not retrain every day. Retrain/reselect only after a month is complete and only promote a package that passes live-ready validation and service smoke checks.
+
+## Important Scripts
+
+Live equivalence and runtime:
+
+```text
+event_option_live_snapshot.py
+event_option_live_scorer.py
+event_option_component_live.py
+audit_live_feature_drift.py
+validate_event_option_production_package.py
+```
+
+Training, leakage, and walk-forward research:
+
+```text
+build_event_option_dataset.py
+audit_event_option_feature_leakage.py
+walkforward_event_option_gate.py
+walkforward_trade_quality_filter.py
+evaluate_dense_candidate_fixed_holdout.py
+```
+
+Representation-learning research:
+
+```text
+sigreg.py
+train_xinput_jepa.py
+walkforward_xinput_jepa_oof.py
+walkforward_event_phys_td_jepa_oof.py
+compare_xinput_jepa_regularizers.py
+```
+
+## Legacy Paths
+
+The following are research/legacy unless explicitly selected by a service or validation command:
+
+```text
+neural/models/jepa/jepa_production_final_180m
+neural/models/jepa/jepa_production_final_option_value
+neural/models/jepa/jepa_production_level_stability
+neural/models/jepa/jepa_production_structural_options
+```
+
+The live event-option static-union package replaced the previous level-stability + structural-profile path.

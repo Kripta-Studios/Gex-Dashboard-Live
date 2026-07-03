@@ -1,0 +1,597 @@
+# Event Option Gate Walk-Forward
+
+Causal diagnostic over event-level option-chain features. Models predict CALL/PUT option returns; thresholds are selected only on prior validation months.
+
+## Overall
+
+```json
+{
+  "trades": 943,
+  "win_rate": 0.4984093319194062,
+  "profit_factor": 1.3224869521946208,
+  "pnl_return": 90.48887553746404,
+  "avg_return": 0.09595851064418244,
+  "max_drawdown": -10.28600367805187,
+  "call_rate": 0.2873806998939555,
+  "days_with_trades": 122,
+  "daily_win_rate": 0.5655737704918032,
+  "median_daily_return": 0.3041780515825937,
+  "daily_max_drawdown": -16.06820562719284,
+  "top5_day_return": 52.69272277194557,
+  "top5_share_of_pnl": 0.5823116096754879,
+  "min_month_trades": 128,
+  "positive_month_rate": 1.0
+}
+```
+
+## Per Ticker
+
+```json
+{
+  "QQQ": {
+    "trades": 307,
+    "win_rate": 0.5309446254071661,
+    "profit_factor": 1.5014277007212276,
+    "pnl_return": 42.3770554956033,
+    "avg_return": 0.13803601138632998,
+    "max_drawdown": -8.215435008066635,
+    "call_rate": 0.41368078175895767,
+    "days_with_trades": 118,
+    "daily_win_rate": 0.576271186440678,
+    "median_daily_return": 0.11068737781866006,
+    "daily_max_drawdown": -7.4020598274337495,
+    "top5_day_return": 20.93069073764841,
+    "top5_share_of_pnl": 0.4939156459282549,
+    "min_month_trades": 36,
+    "positive_month_rate": 0.8333333333333334
+  },
+  "SPXW": {
+    "trades": 294,
+    "win_rate": 0.4931972789115646,
+    "profit_factor": 1.2434407775354728,
+    "pnl_return": 21.53948543229084,
+    "avg_return": 0.07326355589214571,
+    "max_drawdown": -8.38172690180298,
+    "call_rate": 0.19727891156462585,
+    "days_with_trades": 115,
+    "daily_win_rate": 0.5217391304347826,
+    "median_daily_return": 0.15329678923219114,
+    "daily_max_drawdown": -8.381726901802963,
+    "top5_day_return": 19.20397577248574,
+    "top5_share_of_pnl": 0.8915707774381728,
+    "min_month_trades": 36,
+    "positive_month_rate": 0.8333333333333334
+  },
+  "SPY": {
+    "trades": 342,
+    "win_rate": 0.47368421052631576,
+    "profit_factor": 1.246943640462638,
+    "pnl_return": 26.572334609569893,
+    "avg_return": 0.07769688482330378,
+    "max_drawdown": -10.286003678052053,
+    "call_rate": 0.25146198830409355,
+    "days_with_trades": 118,
+    "daily_win_rate": 0.4661016949152542,
+    "median_daily_return": -0.2132395324920972,
+    "daily_max_drawdown": -9.086003678052045,
+    "top5_day_return": 25.630855187814507,
+    "top5_share_of_pnl": 0.9645691868784342,
+    "min_month_trades": 47,
+    "positive_month_rate": 0.8333333333333334
+  }
+}
+```
+
+## Fold Configs
+
+```csv
+ticker,month,test_month,train_months,train_month_max,first_val_month,val_months,val_month_max,deploy_config,train_rows,val_rows,test_rows,val_score,abstained_invalid_val,val_trades,val_win_rate,val_profit_factor,val_pnl_return,val_avg_return,val_max_drawdown,val_call_rate,val_days_with_trades,val_daily_win_rate,val_median_daily_return,val_daily_max_drawdown,val_top5_day_return,val_top5_share_of_pnl,val_min_month_trades,val_positive_month_rate,test_trades,test_win_rate,test_profit_factor,test_pnl_return,test_avg_return,test_max_drawdown,test_call_rate,test_days_with_trades,test_daily_win_rate,test_median_daily_return,test_daily_max_drawdown,test_top5_day_return,test_top5_share_of_pnl,test_min_month_trades,test_positive_month_rate
+SPXW,202601,202601,"202501,202502,202503,202504,202505,202506",202506,202507,"202507,202508,202509,202510,202511,202512",202512,thr0.282_maxday3,4362,4797,779,9.533516558800757,False,330,0.5272727272727272,1.4601875574842254,42.97437312656632,0.13022537311080704,-4.5446006293098975,0.3515151515151515,120,0.5583333333333333,0.2390081103930421,-4.544600629309905,19.76738439737675,0.4599807503685668,47,0.8333333333333334,53,0.4528301886792453,1.0556679358708525,0.9475919746364302,0.01787909386106472,-3.987378158901549,0.32075471698113206,19,0.47368421052631576,-0.0716216007229884,-2.7996230692731943,7.400870249680634,7.810186713031399,53,1.0
+SPXW,202602,202602,"202501,202502,202503,202504,202505,202506,202507",202507,202508,"202508,202509,202510,202511,202512,202601",202601,thr0.604_maxday3,5225,4713,616,11.504423918498178,False,211,0.5924170616113744,2.0771649900580202,55.07079589320422,0.2609990326692143,-3.9257282020841515,0.0,96,0.6145833333333334,0.21594632305983097,-3.0,25.206178199545946,0.45770499210556004,22,1.0,36,0.5277777777777778,1.594386391528637,6.0627411935921,0.16840947759978053,-3.0000000000000004,0.0,17,0.5882352941176471,0.3465952982777737,-2.668604676951711,9.883910987167155,1.630270973402884,36,1.0
+SPXW,202603,202603,"202501,202502,202503,202504,202505,202506,202507,202508",202508,202509,"202509,202510,202511,202512,202601,202602",202602,thr0.200_maxday2,6003,4551,793,9.776508377913734,False,210,0.5904761904761905,1.79136134677852,40.08583973618323,0.19088495112468207,-3.6000000000000085,0.6142857142857143,113,0.5663716814159292,0.3038460033650031,-3.6000000000000085,18.13118729873855,0.4523090302726663,30,1.0,40,0.45,0.8977905319168364,-1.349164978697762,-0.03372912446744405,-6.389741526806273,0.65,21,0.38095238095238093,-0.26176472238190807,-6.389741526806273,6.718596440172028,-4.979818292242463,40,0.0
+SPXW,202604,202604,"202501,202502,202503,202504,202505,202506,202507,202508,202509",202509,202510,"202510,202511,202512,202601,202602,202603",202603,thr-999.000_maxday3,6817,4530,793,10.822221280079894,False,371,0.5336927223719676,1.566600398380088,58.41274230312514,0.15744674475235887,-7.5515092389566405,0.09973045822102426,125,0.6,0.46285357171767816,-6.9515092389565964,28.287162733048515,0.4842635633549963,55,1.0,63,0.5079365079365079,1.336053872409042,6.068172786364506,0.09632020295816676,-6.436111066039693,0.14285714285714285,21,0.5238095238095238,0.16388893396030524,-6.102777732706361,14.253647199894827,2.348919139534639,63,1.0
+SPXW,202605,202605,"202501,202502,202503,202504,202505,202506,202507,202508,202509,202510",202510,202511,"202511,202512,202601,202602,202603,202604",202604,thr0.050_maxday3,7669,4471,783,13.039005529322573,False,335,0.5432835820895522,1.8194174494940873,74.47428936804755,0.2223113115464106,-5.678571428571445,0.18507462686567164,118,0.5932203389830508,0.41476964792994514,-5.678571428571431,30.42127561321211,0.4084802402460258,49,1.0,50,0.52,1.1996720266489072,2.8752771837442648,0.05750554367488529,-5.944226934399246,0.06,18,0.5555555555555556,0.2870884947190355,-5.381726901802961,9.30061788895978,3.2346856649306623,50,1.0
+SPXW,202606,202606,"202501,202502,202503,202504,202505,202506,202507,202508,202509,202510,202511",202511,202512,"202512,202601,202602,202603,202604,202605",202605,thr0.215_maxday3,8317,4606,736,13.42976965736143,False,303,0.5808580858085809,1.9989134011203347,76.1172011653694,0.2512118850342224,-5.2468149755129545,0.29042904290429045,117,0.6410256410256411,0.5279070248835075,-4.323657115919595,27.589309405274804,0.36245827464590163,43,1.0,52,0.5,1.4445427738879044,6.934867272651305,0.13336283216637124,-3.0,0.057692307692307696,19,0.631578947368421,0.4475903408190638,-3.0,11.988650190916841,1.7287497683186948,52,1.0
+QQQ,202601,202601,"202501,202502,202503,202504,202505,202506",202506,202507,"202507,202508,202509,202510,202511,202512",202512,thr-0.200_maxday3,3974,4521,692,7.699218265803961,False,376,0.5106382978723404,1.3055443865946177,32.92595113264224,0.08756901896979319,-8.01085495012832,0.5797872340425532,128,0.53125,0.06262631366011351,-7.80132781910336,24.06529665332946,0.7308914648018027,57,0.8333333333333334,60,0.65,2.196081405456663,15.070625708753948,0.25117709514589914,-2.2976768726328283,0.5833333333333334,20,0.8,0.23890702220327642,-1.585646373363204,13.176708074059091,0.8743305240740766,60,1.0
+QQQ,202602,202602,"202501,202502,202503,202504,202505,202506,202507",202507,202508,"202508,202509,202510,202511,202512,202601",202601,thr0.506_maxday2,4771,4416,550,8.064271781840572,False,227,0.5286343612334802,1.493730314052059,31.223288025680624,0.13754752434220538,-6.213008381441168,0.022026431718061675,117,0.5042735042735043,0.030952490768198282,-5.66300825493335,15.964605976494468,0.5113044456869453,32,1.0,36,0.4444444444444444,1.1950900295537106,2.2648063534028178,0.06291128759452272,-4.0980561933262685,0.0,19,0.42105263157894735,-0.2679105725737686,-3.4980561933262706,9.559603117714879,4.220936197636412,36,1.0
+QQQ,202603,202603,"202501,202502,202503,202504,202505,202506,202507,202508",202508,202509,"202509,202510,202511,202512,202601,202602",202602,thr-0.041_maxday3,5526,4211,765,8.684191906164376,False,367,0.5340599455040872,1.468661270198125,47.274801047707726,0.12881417179211915,-11.231434388116128,0.4604904632152589,124,0.5483870967741935,0.11150489901023303,-10.542790101669954,26.411568065520576,0.5586817391122839,54,0.8333333333333334,65,0.5384615384615384,1.6128031638726605,11.030456949707892,0.16969933768781373,-7.137311950613441,0.6461538461538462,22,0.5909090909090909,0.5011758913693278,-6.221046916328925,14.759015258018135,1.3380239209771796,65,1.0
+QQQ,202604,202604,"202501,202502,202503,202504,202505,202506,202507,202508,202509",202509,202510,"202510,202511,202512,202601,202602,202603",202603,thr0.117_maxday3,6323,4179,637,12.172646061735428,False,346,0.5375722543352601,1.7325122751030142,68.37041275420124,0.19760234900058163,-6.561278323094996,0.2543352601156069,122,0.6065573770491803,0.39966884785062784,-5.6746586721817565,24.213506228832863,0.3541518217226937,53,1.0,52,0.5,1.345689713741666,5.194948217251807,0.09990285033176552,-2.7028301186559833,0.36538461538461536,18,0.6666666666666666,0.10048551438356951,-1.8522226246243223,9.86525725878311,1.8990097391195857,52,1.0
+QQQ,202605,202605,"202501,202502,202503,202504,202505,202506,202507,202508,202509,202510",202510,202511,"202511,202512,202601,202602,202603,202604",202604,thr0.050_maxday3,7126,4013,712,11.446821974405598,False,343,0.5451895043731778,1.6903115627127636,63.19010038725475,0.1842276979220255,-7.347239192839012,0.3323615160349854,120,0.625,0.4389608314815041,-7.214076966747172,21.94165863047236,0.3472325331975248,50,1.0,55,0.43636363636363634,0.7264440054109663,-4.955271438851682,-0.09009584434275786,-6.406483535964614,0.32727272727272727,19,0.3684210526315789,-0.39230751596258284,-5.682124538092958,5.339773487668137,-1.0775945482626395,55,0.0
+QQQ,202606,202606,"202501,202502,202503,202504,202505,202506,202507,202508,202509,202510,202511",202511,202512,"202512,202601,202602,202603,202604,202605",202605,thr-999.000_maxday2,7751,4100,619,10.1464412478139,False,241,0.5892116182572614,1.7663546420877623,45.43202421753368,0.18851462330926838,-4.596872350640261,0.5145228215767634,121,0.5371900826446281,0.12530866559550013,-4.596872350640243,21.35585713341414,0.47006175712444326,36,1.0,39,0.5897435897435898,2.503159142207994,13.771489705338526,0.3531151206497058,-3.6,0.3333333333333333,20,0.6,0.23585034879383537,-3.5999999999999996,15.241309645288311,1.1067291898987521,39,1.0
+SPY,202601,202601,"202501,202502,202503,202504,202505,202506",202506,202507,"202507,202508,202509,202510,202511,202512",202512,thr-999.000_maxday3,4331,4822,779,7.064190668759969,False,381,0.5118110236220472,1.2857293882691723,31.148858317780366,0.08175553364246815,-9.3642832257445,0.43832020997375326,128,0.4921875,-0.017258865512801314,-8.764283225744478,22.332348637746577,0.7169556074868672,55,0.6666666666666666,60,0.5166666666666667,1.2853671016597001,4.921943623953493,0.08203239373255822,-3.1864364512892527,0.36666666666666664,20,0.5,0.030777955693914893,-2.3653845095775496,9.968960105574315,2.025411273924114,60,1.0
+SPY,202602,202602,"202501,202502,202503,202504,202505,202506,202507",202507,202508,"202508,202509,202510,202511,202512,202601",202601,thr-0.200_maxday3,5201,4731,615,8.77662308576782,False,375,0.528,1.4140637927092012,43.11039992501513,0.11496106646670702,-8.40000000000002,0.07466666666666667,126,0.5714285714285714,0.26953005272745445,-8.033116836872768,23.79160897300036,0.5518763225203833,55,0.8333333333333334,56,0.39285714285714285,1.0464089527197769,0.9467426354834438,0.016906118490775782,-6.227777692418036,0.0,19,0.3684210526315789,-0.8111111938953366,-5.921040234870856,14.50911557081125,15.325300696321053,56,1.0
+SPY,202603,202603,"202501,202502,202503,202504,202505,202506,202507,202508",202508,202509,"202509,202510,202511,202512,202601,202602",202602,thr-999.000_maxday3,5987,4560,799,8.86241644857636,False,368,0.5489130434782609,1.4232802440174321,41.53765000549441,0.11287404892797395,-8.032866635144604,0.4429347826086957,124,0.6129032258064516,0.2810196662344301,-6.880671489559228,19.13767738352236,0.460730864191665,55,1.0,66,0.5303030303030303,1.43532155869127,8.066884689529203,0.12222552559892733,-5.939659412702085,0.48484848484848486,22,0.5,0.01625627882731473,-5.339659412702087,11.397390846217585,1.412861505385266,66,1.0
+SPY,202604,202604,"202501,202502,202503,202504,202505,202506,202507,202508,202509",202509,202510,"202510,202511,202512,202601,202602,202603",202603,thr-0.200_maxday3,6807,4539,689,11.95289064216454,False,371,0.5660377358490566,1.674429658848849,64.74846669612447,0.17452416899224923,-5.683333498901803,0.3261455525606469,125,0.656,0.4010101668482703,-4.368105780796803,27.27134936053802,0.42118911461683084,55,1.0,54,0.42592592592592593,0.916176496962975,-1.544551107088194,-0.028602798279411003,-9.091446011714135,0.2962962962962963,18,0.3888888888888889,-0.571413490788789,-8.208112643059529,10.720420895163299,-6.940800369742094,54,0.0
+SPY,202605,202605,"202501,202502,202503,202504,202505,202506,202507,202508,202509,202510",202510,202511,"202511,202512,202601,202602,202603,202604",202604,thr0.300_maxday3,7659,4376,775,9.45062543224322,False,256,0.5234375,1.6092220787601204,44.28604869716632,0.17299237772330595,-5.927766886939217,0.2734375,100,0.55,0.30488622518295816,-5.927766886939196,23.72425713872734,0.5357049869352051,33,0.8333333333333334,47,0.46808510638297873,1.4678694372734777,7.018041559102166,0.1493200331723865,-5.605336370231176,0.2553191489361702,18,0.5,-0.09437985505253832,-4.912093039910297,13.858022428130647,1.9746281510911339,47,1.0
+SPY,202606,202606,"202501,202502,202503,202504,202505,202506,202507,202508,202509,202510,202511",202511,202512,"202512,202601,202602,202603,202604,202605",202605,thr-999.000_maxday3,8306,4504,724,8.019623562266128,False,362,0.5220994475138122,1.3238146568199467,33.26559667547278,0.09189391346815684,-5.778571496995124,0.281767955801105,121,0.5454545454545454,0.20588222630708863,-4.6884709652517,19.24699130605075,0.5785854825878366,54,0.6666666666666666,59,0.4915254237288136,1.397959622699432,7.16327320858978,0.12141141031508103,-4.1999999999999975,0.06779661016949153,21,0.5238095238095238,0.403061197182379,-3.363498077727272,14.430953479290336,2.014575328773664,59,1.0
+
+```
+
+## Config
+
+```json
+{
+  "args": {
+    "data": "research_papers\\JEPA\\results\\_diagnostics\\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_trail050_025_tp1000_v1_physics\\event_option_dataset.parquet",
+    "output_dir": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d25_return_wf2026_v1",
+    "tickers": [
+      "SPXW",
+      "QQQ",
+      "SPY"
+    ],
+    "train_tickers": [],
+    "expiry_modes": [
+      "zero_dte"
+    ],
+    "start_month": "202601",
+    "end_month": "202606",
+    "val_months": 6,
+    "pooled_train": false,
+    "delta_bucket": 25,
+    "label_mode": "return",
+    "clip_return": 5.0,
+    "min_train_rows": 500,
+    "min_val_rows": 30,
+    "min_val_trades": 30,
+    "min_month_trades": 3,
+    "min_val_pf": 0.0,
+    "min_val_win_rate": 0.0,
+    "min_val_positive_month_rate": 0.0,
+    "min_val_daily_win_rate": 0.0,
+    "min_val_median_daily_return": -Infinity,
+    "max_val_top5_share": Infinity,
+    "max_val_daily_drawdown": Infinity,
+    "min_call_rate": 0.0,
+    "max_call_rate": 1.0,
+    "cooldown_minutes": 30,
+    "objective": "regression_l1",
+    "n_estimators": 160,
+    "learning_rate": 0.035,
+    "num_leaves": 31,
+    "min_child_samples": 60,
+    "subsample": 0.85,
+    "colsample_bytree": 0.85,
+    "reg_lambda": 5.0,
+    "lgb_jobs": 4,
+    "threshold_grid": [
+      -999.0,
+      -0.2,
+      -0.1,
+      0.0,
+      0.05,
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "threshold_quantiles": [
+      0.3,
+      0.5,
+      0.7,
+      0.85,
+      0.95,
+      0.98
+    ],
+    "max_day_grid": [
+      1,
+      2,
+      3
+    ],
+    "feature_include_prefixes": [
+      "ret_",
+      "dist_",
+      "nearest_",
+      "ib_",
+      "call_",
+      "put_",
+      "phys_",
+      "ctx_"
+    ],
+    "feature_exclude_prefixes": [],
+    "live_observable_features_only": true,
+    "entry_time_min_et": "10:00",
+    "allow_invalid_val_deploy": false,
+    "deploy_month": "",
+    "deploy_select_end_month": "",
+    "export_deploy_model": false,
+    "exclude_months": [],
+    "skip_walkforward": false,
+    "resume": false,
+    "seed": 20260617
+  },
+  "feature_count": 241,
+  "features": [
+    "ret_1m_bps",
+    "ret_5m_bps",
+    "ret_15m_bps",
+    "ret_30m_bps",
+    "call_d15_available",
+    "call_d15_strike_bps",
+    "call_d15_abs_delta",
+    "call_d15_iv",
+    "call_d15_mid_bps",
+    "call_d15_spread_pct",
+    "call_d15_theta_over_mid",
+    "call_d15_vega",
+    "call_d15_oi",
+    "call_d15_volume",
+    "put_d15_available",
+    "put_d15_strike_bps",
+    "put_d15_abs_delta",
+    "put_d15_iv",
+    "put_d15_mid_bps",
+    "put_d15_spread_pct",
+    "put_d15_theta_over_mid",
+    "put_d15_vega",
+    "put_d15_oi",
+    "put_d15_volume",
+    "call_d25_available",
+    "call_d25_strike_bps",
+    "call_d25_abs_delta",
+    "call_d25_iv",
+    "call_d25_mid_bps",
+    "call_d25_spread_pct",
+    "call_d25_theta_over_mid",
+    "call_d25_vega",
+    "call_d25_oi",
+    "call_d25_volume",
+    "put_d25_available",
+    "put_d25_strike_bps",
+    "put_d25_abs_delta",
+    "put_d25_iv",
+    "put_d25_mid_bps",
+    "put_d25_spread_pct",
+    "put_d25_theta_over_mid",
+    "put_d25_vega",
+    "put_d25_oi",
+    "put_d25_volume",
+    "call_d35_available",
+    "call_d35_strike_bps",
+    "call_d35_abs_delta",
+    "call_d35_iv",
+    "call_d35_mid_bps",
+    "call_d35_spread_pct",
+    "call_d35_theta_over_mid",
+    "call_d35_vega",
+    "call_d35_oi",
+    "call_d35_volume",
+    "put_d35_available",
+    "put_d35_strike_bps",
+    "put_d35_abs_delta",
+    "put_d35_iv",
+    "put_d35_mid_bps",
+    "put_d35_spread_pct",
+    "put_d35_theta_over_mid",
+    "put_d35_vega",
+    "put_d35_oi",
+    "put_d35_volume",
+    "call_d50_available",
+    "call_d50_strike_bps",
+    "call_d50_abs_delta",
+    "call_d50_iv",
+    "call_d50_mid_bps",
+    "call_d50_spread_pct",
+    "call_d50_theta_over_mid",
+    "call_d50_vega",
+    "call_d50_oi",
+    "call_d50_volume",
+    "put_d50_available",
+    "put_d50_strike_bps",
+    "put_d50_abs_delta",
+    "put_d50_iv",
+    "put_d50_mid_bps",
+    "put_d50_spread_pct",
+    "put_d50_theta_over_mid",
+    "put_d50_vega",
+    "put_d50_oi",
+    "put_d50_volume",
+    "call_d65_available",
+    "call_d65_strike_bps",
+    "call_d65_abs_delta",
+    "call_d65_iv",
+    "call_d65_mid_bps",
+    "call_d65_spread_pct",
+    "call_d65_theta_over_mid",
+    "call_d65_vega",
+    "call_d65_oi",
+    "call_d65_volume",
+    "put_d65_available",
+    "put_d65_strike_bps",
+    "put_d65_abs_delta",
+    "put_d65_iv",
+    "put_d65_mid_bps",
+    "put_d65_spread_pct",
+    "put_d65_theta_over_mid",
+    "put_d65_vega",
+    "put_d65_oi",
+    "put_d65_volume",
+    "call_d80_available",
+    "call_d80_strike_bps",
+    "call_d80_abs_delta",
+    "call_d80_iv",
+    "call_d80_mid_bps",
+    "call_d80_spread_pct",
+    "call_d80_theta_over_mid",
+    "call_d80_vega",
+    "call_d80_oi",
+    "call_d80_volume",
+    "put_d80_available",
+    "put_d80_strike_bps",
+    "put_d80_abs_delta",
+    "put_d80_iv",
+    "put_d80_mid_bps",
+    "put_d80_spread_pct",
+    "put_d80_theta_over_mid",
+    "put_d80_vega",
+    "put_d80_oi",
+    "put_d80_volume",
+    "phys_d15_iv_skew_put_minus_call",
+    "phys_d15_iv_mean",
+    "phys_d15_volume_skew_call_minus_put",
+    "phys_d15_oi_skew_call_minus_put",
+    "phys_d15_mid_skew_call_minus_put",
+    "phys_d15_spread_mean",
+    "phys_d15_theta_skew_call_minus_put",
+    "phys_d15_vega_skew_call_minus_put",
+    "phys_d15_abs_delta_gap",
+    "phys_d15_liquidity_score",
+    "phys_d25_iv_skew_put_minus_call",
+    "phys_d25_iv_mean",
+    "phys_d25_volume_skew_call_minus_put",
+    "phys_d25_oi_skew_call_minus_put",
+    "phys_d25_mid_skew_call_minus_put",
+    "phys_d25_spread_mean",
+    "phys_d25_theta_skew_call_minus_put",
+    "phys_d25_vega_skew_call_minus_put",
+    "phys_d25_abs_delta_gap",
+    "phys_d25_liquidity_score",
+    "phys_d35_iv_skew_put_minus_call",
+    "phys_d35_iv_mean",
+    "phys_d35_volume_skew_call_minus_put",
+    "phys_d35_oi_skew_call_minus_put",
+    "phys_d35_mid_skew_call_minus_put",
+    "phys_d35_spread_mean",
+    "phys_d35_theta_skew_call_minus_put",
+    "phys_d35_vega_skew_call_minus_put",
+    "phys_d35_abs_delta_gap",
+    "phys_d35_liquidity_score",
+    "phys_d50_iv_skew_put_minus_call",
+    "phys_d50_iv_mean",
+    "phys_d50_volume_skew_call_minus_put",
+    "phys_d50_oi_skew_call_minus_put",
+    "phys_d50_mid_skew_call_minus_put",
+    "phys_d50_spread_mean",
+    "phys_d50_theta_skew_call_minus_put",
+    "phys_d50_vega_skew_call_minus_put",
+    "phys_d50_abs_delta_gap",
+    "phys_d50_liquidity_score",
+    "phys_d65_iv_skew_put_minus_call",
+    "phys_d65_iv_mean",
+    "phys_d65_volume_skew_call_minus_put",
+    "phys_d65_oi_skew_call_minus_put",
+    "phys_d65_mid_skew_call_minus_put",
+    "phys_d65_spread_mean",
+    "phys_d65_theta_skew_call_minus_put",
+    "phys_d65_vega_skew_call_minus_put",
+    "phys_d65_abs_delta_gap",
+    "phys_d65_liquidity_score",
+    "phys_d80_iv_skew_put_minus_call",
+    "phys_d80_iv_mean",
+    "phys_d80_volume_skew_call_minus_put",
+    "phys_d80_oi_skew_call_minus_put",
+    "phys_d80_mid_skew_call_minus_put",
+    "phys_d80_spread_mean",
+    "phys_d80_theta_skew_call_minus_put",
+    "phys_d80_vega_skew_call_minus_put",
+    "phys_d80_abs_delta_gap",
+    "phys_d80_liquidity_score",
+    "phys_total_volume_skew_call_minus_put",
+    "phys_total_oi_skew_call_minus_put",
+    "phys_total_option_volume_log",
+    "phys_total_option_oi_log",
+    "phys_call_iv_slope_low_to_high",
+    "phys_put_iv_slope_low_to_high",
+    "phys_call_mid_slope_low_to_high",
+    "phys_put_mid_slope_low_to_high",
+    "phys_momentum_accel_ret_1m_bps_minus_ret_5m_bps",
+    "phys_abs_ret_1m_bps",
+    "phys_momentum_accel_ret_5m_bps_minus_ret_15m_bps",
+    "phys_abs_ret_5m_bps",
+    "phys_momentum_accel_ret_15m_bps_minus_ret_30m_bps",
+    "phys_abs_ret_15m_bps",
+    "phys_abs_ret_30m_bps",
+    "ctx_spx_spot",
+    "ctx_spx_ret_1m_bps",
+    "ctx_spx_ret_1m_bps_minus_self",
+    "ctx_spx_ret_5m_bps",
+    "ctx_spx_ret_5m_bps_minus_self",
+    "ctx_spx_ret_15m_bps",
+    "ctx_spx_ret_15m_bps_minus_self",
+    "ctx_spx_ret_30m_bps",
+    "ctx_spx_ret_30m_bps_minus_self",
+    "ctx_spx_phys_d35_iv_skew_put_minus_call",
+    "ctx_spx_phys_total_volume_skew_call_minus_put",
+    "ctx_spx_phys_total_oi_skew_call_minus_put",
+    "ctx_spy_spot",
+    "ctx_spy_ret_1m_bps",
+    "ctx_spy_ret_1m_bps_minus_self",
+    "ctx_spy_ret_5m_bps",
+    "ctx_spy_ret_5m_bps_minus_self",
+    "ctx_spy_ret_15m_bps",
+    "ctx_spy_ret_15m_bps_minus_self",
+    "ctx_spy_ret_30m_bps",
+    "ctx_spy_ret_30m_bps_minus_self",
+    "ctx_spy_phys_d35_iv_skew_put_minus_call",
+    "ctx_spy_phys_total_volume_skew_call_minus_put",
+    "ctx_spy_phys_total_oi_skew_call_minus_put",
+    "ctx_qqq_spot",
+    "ctx_qqq_ret_1m_bps",
+    "ctx_qqq_ret_1m_bps_minus_self",
+    "ctx_qqq_ret_5m_bps",
+    "ctx_qqq_ret_5m_bps_minus_self",
+    "ctx_qqq_ret_15m_bps",
+    "ctx_qqq_ret_15m_bps_minus_self",
+    "ctx_qqq_ret_30m_bps",
+    "ctx_qqq_ret_30m_bps_minus_self",
+    "ctx_qqq_phys_d35_iv_skew_put_minus_call",
+    "ctx_qqq_phys_total_volume_skew_call_minus_put",
+    "ctx_qqq_phys_total_oi_skew_call_minus_put",
+    "ctx_spy_qqq_ret_5m_spread",
+    "ctx_spx_spy_ret_5m_spread",
+    "ticker_QQQ",
+    "ticker_SPXW",
+    "ticker_SPY",
+    "expiry_mode_zero_dte"
+  ],
+  "grid": [
+    {
+      "threshold": -999.0,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": -999.0,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": -999.0,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": -0.2,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": -0.2,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": -0.2,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": -0.1,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": -0.1,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": -0.1,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": 0.0,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": 0.0,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.0,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": 0.05,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": 0.05,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.05,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": 0.1,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": 0.1,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.1,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": 0.2,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": 0.2,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.2,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": 0.3,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": 0.3,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.3,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": 0.4,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": 0.4,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.4,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": 0.5,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": 0.5,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.5,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": 0.75,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": 0.75,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.75,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": 1.0,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": 1.0,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 1.0,
+      "max_trades_per_day": 3
+    }
+  ],
+  "data_rows": 39663
+}
+```

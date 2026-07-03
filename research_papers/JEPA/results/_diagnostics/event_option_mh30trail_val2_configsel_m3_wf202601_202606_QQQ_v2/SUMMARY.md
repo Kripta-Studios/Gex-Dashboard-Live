@@ -1,0 +1,9631 @@
+# Event Trade Union Config Selector
+
+This result selects source variants, max trades per day, and cooldown walk-forward by test month using only prior out-of-sample months.
+
+## Overall
+
+```json
+{
+  "trades": 332,
+  "win_rate": 0.49096385542168675,
+  "profit_factor": 1.3110370950247536,
+  "pnl_return": 30.42856342740957,
+  "avg_return": 0.09165229948014932,
+  "max_drawdown": -12.967446840994564,
+  "call_rate": 0.3704819277108434,
+  "days_with_trades": 119,
+  "daily_win_rate": 0.5462184873949579,
+  "median_daily_return": 0.11666650109821575,
+  "daily_max_drawdown": -12.96744684099453,
+  "top5_day_return": 25.851559946572603,
+  "top5_share_of_pnl": 0.8495820056784517,
+  "min_month_trades": 35,
+  "positive_month_rate": 0.6666666666666666
+}
+```
+
+## By Ticker
+
+```json
+{
+  "QQQ": {
+    "trades": 332,
+    "win_rate": 0.49096385542168675,
+    "profit_factor": 1.3110370950247536,
+    "pnl_return": 30.42856342740957,
+    "avg_return": 0.09165229948014932,
+    "max_drawdown": -12.967446840994564,
+    "call_rate": 0.3704819277108434,
+    "days_with_trades": 119,
+    "daily_win_rate": 0.5462184873949579,
+    "median_daily_return": 0.11666650109821575,
+    "daily_max_drawdown": -12.96744684099453,
+    "top5_day_return": 25.851559946572603,
+    "top5_share_of_pnl": 0.8495820056784517,
+    "min_month_trades": 35,
+    "positive_month_rate": 0.6666666666666666
+  }
+}
+```
+
+- Risk capital: $5,000
+- Net PnL: $152,143
+
+## Folds
+
+```csv
+ticker,month,mode,variants,selected_source,source_stream,source_path,max_day,cooldown,daily_order,select_months,select_score,select_trades,select_win_rate,select_profit_factor,select_pnl_return,select_avg_return,select_max_drawdown,select_call_rate,select_days_with_trades,select_daily_win_rate,select_median_daily_return,select_daily_max_drawdown,select_top5_day_return,select_top5_share_of_pnl,select_min_month_trades,select_positive_month_rate,test_trades,test_win_rate,test_profit_factor,test_pnl_return,test_avg_return,test_max_drawdown,test_call_rate,test_days_with_trades,test_daily_win_rate,test_median_daily_return,test_daily_max_drawdown,test_top5_day_return,test_top5_share_of_pnl,test_min_month_trades,test_positive_month_rate
+QQQ,202601,SELECTED,"d25,d35,d50,d65","d25,d35,d50,d65",event_trade_union_config_selector,research_papers\JEPA\results\_diagnostics\event_option_mh30trail_clean1000_nopool_d25_return_wf202504_202606_val2_gpu_combined_v1\event_option_gate_trades.csv|research_papers\JEPA\results\_diagnostics\event_option_mh30trail_clean1000_nopool_d35_return_wf202504_202606_val2_gpu_combined_v1\event_option_gate_trades.csv|research_papers\JEPA\results\_diagnostics\event_option_mh30trail_clean1000_nopool_d50_return_wf202504_202606_val2_gpu_combined_v1\event_option_gate_trades.csv|research_papers\JEPA\results\_diagnostics\event_option_mh30trail_clean1000_nopool_d65_return_wf202504_202606_val2_gpu_combined_v1\event_option_gate_trades.csv,999,30,time_asc,"202510,202511,202512",27.62534667241513,190,0.5578947368421052,1.748869608279455,36.66979477326625,0.19299891985929604,-5.399999999999997,0.2894736842105263,64,0.609375,0.3694638561095711,-4.922727331839316,24.587598125402195,0.6705136551057969,38,1.0,74,0.47297297297297297,1.517372402826181,11.917449741244493,0.16104661812492557,-10.277866564671937,0.28378378378378377,20,0.55,0.19439297244920178,-9.677866564671945,20.581251618067242,1.7269845533175308,74,1.0
+QQQ,202602,SELECTED,"d25,d35,d50,d65","d25,d35,d50,d65",event_trade_union_config_selector,research_papers\JEPA\results\_diagnostics\event_option_mh30trail_clean1000_nopool_d25_return_wf202504_202606_val2_gpu_combined_v1\event_option_gate_trades.csv|research_papers\JEPA\results\_diagnostics\event_option_mh30trail_clean1000_nopool_d35_return_wf202504_202606_val2_gpu_combined_v1\event_option_gate_trades.csv|research_papers\JEPA\results\_diagnostics\event_option_mh30trail_clean1000_nopool_d50_return_wf202504_202606_val2_gpu_combined_v1\event_option_gate_trades.csv|research_papers\JEPA\results\_diagnostics\event_option_mh30trail_clean1000_nopool_d65_return_wf202504_202606_val2_gpu_combined_v1\event_option_gate_trades.csv,3,30,time_asc,"202511,202512,202601",29.10300004151918,161,0.5652173913043478,2.0270873480639255,42.064972874689694,0.2612731234452776,-6.077866564671968,0.38509316770186336,61,0.6229508196721312,0.5204699125015864,-5.782142324570398,24.544573923758573,0.5834919707870996,38,1.0,54,0.4074074074074074,0.6384500608947046,-6.844814765418092,-0.1267558289892239,-9.343648711399137,0.48148148148148145,19,0.5263157894736842,0.01695983052332395,-9.343648711399137,4.153273625881735,-0.606776628472874,54,0.0
+QQQ,202603,SELECTED,"d25,d65,d80","d25,d65,d80",event_trade_union_config_selector,research_papers\JEPA\results\_diagnostics\event_option_mh30trail_clean1000_nopool_d25_return_wf202504_202606_val2_gpu_combined_v1\event_option_gate_trades.csv|research_papers\JEPA\results\_diagnostics\event_option_mh30trail_clean1000_nopool_d65_return_wf202504_202606_val2_gpu_combined_v1\event_option_gate_trades.csv|research_papers\JEPA\results\_diagnostics\event_option_mh30trail_clean1000_nopool_d80_return_wf202504_202606_val2_gpu_combined_v1\event_option_gate_trades.csv,999,0,time_asc,"202512,202601,202602",28.12352545204748,209,0.5406698564593302,1.5729802856654178,31.66766639722497,0.151519934914952,-5.51158347715749,0.37320574162679426,61,0.5737704918032787,0.3130632391190371,-5.511583477157469,20.69732936553285,0.6535792409176873,57,1.0,56,0.5714285714285714,2.022719148587951,13.426041498914158,0.23975074105203853,-3.9034063929504583,0.5535714285714286,22,0.5454545454545454,0.1354215209732188,-3.4475241070387277,12.81193623364267,0.9542601394967271,56,1.0
+QQQ,202604,SELECTED,"d25,d65,d80","d25,d65,d80",event_trade_union_config_selector,research_papers\JEPA\results\_diagnostics\event_option_mh30trail_clean1000_nopool_d25_return_wf202504_202606_val2_gpu_combined_v1\event_option_gate_trades.csv|research_papers\JEPA\results\_diagnostics\event_option_mh30trail_clean1000_nopool_d65_return_wf202504_202606_val2_gpu_combined_v1\event_option_gate_trades.csv|research_papers\JEPA\results\_diagnostics\event_option_mh30trail_clean1000_nopool_d80_return_wf202504_202606_val2_gpu_combined_v1\event_option_gate_trades.csv,999,0,time_asc,"202601,202602,202603",28.437546686113155,191,0.5497382198952879,1.6489510415314845,31.71508337470815,0.16604755693564477,-5.511583477157458,0.42408376963350786,61,0.5409836065573771,0.2424999622628099,-5.511583477157462,21.186829273123376,0.6680363731920457,56,1.0,73,0.3972602739726027,0.8011321027231433,-5.042748424377724,-0.06907874553942087,-12.967446840994532,0.3424657534246575,18,0.5,-0.10417356448062393,-12.967446840994533,9.595273906415159,-1.9027865558451327,73,0.0
+QQQ,202605,SELECTED,"d25,d35,d50,d65,d80","d25,d35,d50,d65,d80",event_trade_union_config_selector,research_papers\JEPA\results\_diagnostics\event_option_mh30trail_clean1000_nopool_d25_return_wf202504_202606_val2_gpu_combined_v1\event_option_gate_trades.csv|research_papers\JEPA\results\_diagnostics\event_option_mh30trail_clean1000_nopool_d35_return_wf202504_202606_val2_gpu_combined_v1\event_option_gate_trades.csv|research_papers\JEPA\results\_diagnostics\event_option_mh30trail_clean1000_nopool_d50_return_wf202504_202606_val2_gpu_combined_v1\event_option_gate_trades.csv|research_papers\JEPA\results\_diagnostics\event_option_mh30trail_clean1000_nopool_d65_return_wf202504_202606_val2_gpu_combined_v1\event_option_gate_trades.csv|research_papers\JEPA\results\_diagnostics\event_option_mh30trail_clean1000_nopool_d80_return_wf202504_202606_val2_gpu_combined_v1\event_option_gate_trades.csv,2,0,time_asc,"202602,202603,202604",25.741345781436905,118,0.5677966101694916,1.6595750817494714,20.106018259468552,0.1703899852497335,-4.41385541952371,0.4576271186440678,59,0.4745762711864407,-0.06428568387518074,-4.078269862964004,14.07468069845274,0.7000232724758684,36,1.0,40,0.55,1.2895346200660007,3.0737497846952353,0.07684374461738089,-2.7581980261899828,0.3,20,0.55,0.41968768559620223,-2.758198026189982,6.607369101285622,2.149611895602214,40,1.0
+QQQ,202606,SELECTED,"d25,d50,d65","d25,d50,d65",event_trade_union_config_selector,research_papers\JEPA\results\_diagnostics\event_option_mh30trail_clean1000_nopool_d25_return_wf202504_202606_val2_gpu_combined_v1\event_option_gate_trades.csv|research_papers\JEPA\results\_diagnostics\event_option_mh30trail_clean1000_nopool_d50_return_wf202504_202606_val2_gpu_combined_v1\event_option_gate_trades.csv|research_papers\JEPA\results\_diagnostics\event_option_mh30trail_clean1000_nopool_d65_return_wf202504_202606_val2_gpu_combined_v1\event_option_gate_trades.csv,2,0,time_asc,"202603,202604,202605",26.56240295519829,120,0.575,1.7645680368739132,23.28239944893695,0.19401999540780793,-3.790822006342921,0.44166666666666665,60,0.5666666666666667,0.20056181731752043,-3.190822006342902,15.650004795529709,0.6721817839202253,36,1.0,35,0.6571428571428571,3.0555319302054693,13.898885592351501,0.3971110169243286,-1.3058139825009079,0.22857142857142856,20,0.6,0.0949345564918318,-1.3058139825009079,13.796996091807193,0.9926692323735381,35,1.0
+
+```
+
+## Candidate Configs
+
+```json
+[
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 1,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 2,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 3,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 0,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 15,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 30,
+    "daily_order": "score_desc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "time_asc"
+  },
+  {
+    "variants": [
+      "d25",
+      "d35",
+      "d50",
+      "d65",
+      "d80"
+    ],
+    "max_day": 999,
+    "cooldown": 60,
+    "daily_order": "score_desc"
+  }
+]
+```
+
+## Config
+
+```json
+{
+  "trade_source": [
+    "d25=research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d25_return_wf202504_202606_val2_gpu_combined_v1\\event_option_gate_trades.csv",
+    "d35=research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d35_return_wf202504_202606_val2_gpu_combined_v1\\event_option_gate_trades.csv",
+    "d50=research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d50_return_wf202504_202606_val2_gpu_combined_v1\\event_option_gate_trades.csv",
+    "d65=research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d65_return_wf202504_202606_val2_gpu_combined_v1\\event_option_gate_trades.csv",
+    "d80=research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d80_return_wf202504_202606_val2_gpu_combined_v1\\event_option_gate_trades.csv"
+  ],
+  "output_dir": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_val2_configsel_m3_wf202601_202606_QQQ_v2",
+  "ticker": "QQQ",
+  "history_start_month": "202504",
+  "start_month": "202601",
+  "end_month": "202606",
+  "max_source_group_size": 5,
+  "max_day_grid": [
+    1,
+    2,
+    3,
+    999
+  ],
+  "cooldown_grid": [
+    0,
+    15,
+    30,
+    60
+  ],
+  "daily_order_grid": [
+    "time_asc",
+    "score_desc"
+  ],
+  "workers": 2,
+  "chunksize": 32,
+  "select_months": 3,
+  "min_select_trades": 54,
+  "min_select_month_trades": 18,
+  "score_pf_weight": 3.0,
+  "score_pf_cap": 4.0,
+  "score_win_weight": 20.0,
+  "score_return_weight": 0.1,
+  "score_positive_month_weight": 4.0,
+  "score_volume_weight": 0.1,
+  "score_daily_dd_penalty": 0.05,
+  "score_top5_penalty": 0.25,
+  "risk_capital": 5000.0,
+  "deploy_month": "",
+  "deploy_select_end_month": "",
+  "export_deploy_config": false,
+  "skip_walkforward": false,
+  "allow_invalid_deploy_selection": false
+}
+```

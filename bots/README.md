@@ -1,40 +1,74 @@
-# Live JEPA Trading Bot
+# Live Event-Option Bot
 
-This folder contains the live inference wrapper for the current JEPA production
-release. The bot is an alert/tracker process; it does not submit broker orders.
+This folder contains the live JEPA event-option trading wrapper. The active process is an alert and paper-intent bot; it does not submit broker orders.
 
-## Production Models
-
-The live release uses three generated model directories:
+## Active Entry Point
 
 ```text
-neural/models/jepa/xinput_v3_production/
-neural/models/jepa/jepa_production_final_180m/
-neural/models/jepa/jepa_production_final_option_value/
+bots/tradingbot_wrapper_jepa.py
 ```
 
-`services/realtime_feed.py` loads `xinput_v3_production` to append live `xjepa_*`
-features. `bots/tradingbot_wrapper_jepa.py` loads
-`jepa_production_final_180m/base_jepa` to produce the 180-minute direction signal
-and `jepa_production_final_option_value` to select the 0DTE contract. If the
-OptionValue artifact is missing or cannot load, the bot logs a warning and falls
-back to the fixed abs(delta)=0.70 rule.
-
-The execution contract is:
+Systemd runs it through:
 
 ```text
-signal: base_jepa 180m direction
-entry cadence: 5-minute rows
-entry window: feature rows through 14:30 ET
-option: OptionValue blended score over 0.10..0.70 delta candidates
-fallback option: 0DTE contract closest to abs(delta)=0.70 in the signal direction
-hard stop: -60%
-trail stop: activate at +50%, close on 25% giveback from peak
-emergency take profit: +1000%
-max hold: 180 minutes
-cooldown: 180 minutes per ticker from entry
-tickers: SPX, QQQ, SPY
+systemd/ai_bot.service
 ```
+
+The companion feed is:
+
+```text
+services/realtime_feed.py
+systemd/realtime_feed.service
+```
+
+## Active Production Package
+
+```text
+neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/
+  event_option_policy.json
+  component_registry.json
+```
+
+Policy id:
+
+```text
+event_option_frozen2025_static_union_balanced_202607
+```
+
+The bot must be started with:
+
+```text
+--require-event-option-policy
+--require-event-option-component-registry
+--require-event-option-live-ready
+--enable-event-option-scorer
+--strict-event-option-features
+--paper-order-intents
+```
+
+## Runtime Contract
+
+| Field | Value |
+| --- | --- |
+| Tickers | SPX, QQQ, SPY |
+| Option symbols | SPX -> SPXW, QQQ -> QQQ, SPY -> SPY |
+| Expiry | 0DTE |
+| Entry window | 10:00-14:30 ET |
+| Risk capital | $5,000 |
+| Stop | -60% |
+| Trail | activate +50%, close after 25% giveback |
+| Emergency TP | +1000% |
+| Min hold | 30 minutes |
+| Max hold | 180 minutes |
+| Broker | disabled; paper intents only |
+
+Per-ticker caps:
+
+| Ticker | Bucket | Max trades/day | Cooldown |
+| --- | --- | ---: | --- |
+| SPXW | d25 | 4 | 0m |
+| QQQ | d35 | 2 | 30m |
+| SPY | d35 | 1 | 0m |
 
 ## Runtime Files
 
@@ -42,112 +76,82 @@ Feed output:
 
 ```text
 rt_data/YYYYMMDD/
+  event_option_snapshots_latest.parquet
   spot_{TICKER}_latest.parquet
   {OPTION_SYMBOL}_greeks_0dte_latest.parquet
   {OPTION_SYMBOL}_ohlc_0dte_latest.parquet
-  ml_features_1m_{TICKER}_latest.parquet
-  ml_features_{TICKER}_latest.parquet
-  feed_intraday_state.json
-  jepa_live_execution_config.json
+  realtime_feed.log
 ```
-
-The bot consumes only `ml_features_{TICKER}_latest.parquet`, sampled every 5
-minutes to match training. It waits until `xjepa_context_valid=1`, which requires
-24 five-minute rows.
 
 Bot output:
 
 ```text
 trades_jepa/
   open_positions_jepa.json
+  event_option_runtime_state.json
+  evaluated_features_jepa.json
   cooldowns_jepa.json
   trades_jepa.csv
+  event_option_candidate_audit_jepa.jsonl
+  paper_order_intents_jepa.jsonl
   tradingbot_jepa.log
 ```
 
-## Local Checks
+## Local/VPS Checks
 
-From the project root:
+Compile the live entry points:
 
-```powershell
-python .\bots\tradingbot_wrapper_jepa.py --model-dir .\neural\models\jepa\jepa_production_final_180m --dry-run --force
-python .\services\realtime_feed.py --dry-run --jepa-model-dir .\neural\models\jepa\xinput_v3_production
+```bash
+python3 -m py_compile \
+  services/realtime_feed.py \
+  bots/tradingbot_wrapper_jepa.py \
+  neural/jepa/event_option_live_snapshot.py \
+  neural/jepa/event_option_live_scorer.py \
+  neural/jepa/event_option_component_live.py
 ```
 
-The feed dry run requires ThetaData to be reachable.
+Validate the package:
+
+```bash
+python3 neural/jepa/validate_event_option_production_package.py \
+  --policy neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/event_option_policy.json \
+  --registry neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/component_registry.json \
+  --require-live-ready \
+  --ignore-raw-thetadata-coverage \
+  --min-profit-factor 1.3 \
+  --min-win-rate 0.45 \
+  --min-month-trades 12
+```
+
+Audit live feature drift after the feed has written the daily snapshot:
+
+```bash
+DAY=$(TZ=America/New_York date +%Y%m%d)
+python3 neural/jepa/audit_live_feature_drift.py --day-dir "rt_data/$DAY" --strict-features
+```
 
 ## Deployment
 
-Source files should be deployed with git:
-
 ```bash
 cd /home/Option-Greeks-Plotting-Discord-Bot
-git pull
-```
-
-Generated model artifacts are ignored by git and uploaded separately from the
-development machine:
-
-```powershell
-.\push_models.ps1 -HostAlias kripta -RemoteRoot /home/Option-Greeks-Plotting-Discord-Bot
-```
-
-`push_models.ps1` uploads only:
-
-```text
-neural/models/jepa/xinput_v3_production/
-neural/models/jepa/jepa_production_final_180m/
-neural/models/jepa/jepa_production_final_option_value/
-```
-
-It intentionally does not upload `.py`, `.service`, README, or other source
-files.
-
-## Systemd
-
-The repo includes systemd templates:
-
-```text
-systemd/realtime_feed.service
-systemd/ai_bot.service
-```
-
-Install or refresh them on the VPS after `git pull`:
-
-```bash
-sudo cp systemd/realtime_feed.service /etc/systemd/system/realtime_feed.service
-sudo cp systemd/ai_bot.service /etc/systemd/system/ai_bot.service
+git pull --ff-only
+sudo install -m 0644 systemd/realtime_feed.service /etc/systemd/system/realtime_feed.service
+sudo install -m 0644 systemd/ai_bot.service /etc/systemd/system/ai_bot.service
 sudo systemctl daemon-reload
-sudo systemctl enable realtime_feed.service ai_bot.service
-sudo systemctl restart realtime_feed.service ai_bot.service
+sudo systemctl restart realtime_feed.service
+sudo systemctl restart ai_bot.service
+sudo systemctl status realtime_feed.service ai_bot.service --no-pager -l
 ```
 
-Monitor:
+Expected bot log:
 
-```bash
-journalctl -u realtime_feed.service -f
-journalctl -u ai_bot.service -f
-tail -f trades_jepa/tradingbot_jepa.log
+```text
+Loaded event-option production policy=event_option_frozen2025_static_union_balanced_202607
+Loaded event-option component registry status=production_live_ready
+Starting JEPA live bot ... event_exit=stop=-60%/tp=1000%/trail=50%/25%/min_hold=30m/max_hold=180m
+Paper order intents enabled
 ```
 
-## Environment
+## Legacy Bot Files
 
-Create `.env` in the project root on the VPS:
-
-```dotenv
-THETADATA_URL=http://127.0.0.1:25503/v3
-DISCORD_WEBHOOK_URL=
-DISCORD_WEBHOOK_URL_2=
-DISCORD_ROLE_PING=
-JEPA_FEATURE_EXPERIMENT=xinput_v3_production
-```
-
-The systemd units also pass explicit model directories, so the environment value
-is a fallback rather than the primary deployment contract.
-
-## Interpreting Results
-
-The production model is trained on all available data. Backtests run on months
-inside that training range are functionality checks, not OOS validation. The
-clean OOS evidence remains the research pipeline that trained through March 2026
-and tested April/May 2026.
+Older `tradingbot1.py`, `tradingbot2.py`, wrapper, Hybrid, OptionValue, and base JEPA 180m paths are historical or diagnostic. Do not assume they are live production unless the active systemd units point to them.

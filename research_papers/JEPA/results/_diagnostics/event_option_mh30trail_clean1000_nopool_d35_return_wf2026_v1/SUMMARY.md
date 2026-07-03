@@ -1,0 +1,597 @@
+# Event Option Gate Walk-Forward
+
+Causal diagnostic over event-level option-chain features. Models predict CALL/PUT option returns; thresholds are selected only on prior validation months.
+
+## Overall
+
+```json
+{
+  "trades": 962,
+  "win_rate": 0.5145530145530145,
+  "profit_factor": 1.3169000811698,
+  "pnl_return": 87.80560359024751,
+  "avg_return": 0.0912740162060785,
+  "max_drawdown": -18.100077070710206,
+  "call_rate": 0.30353430353430355,
+  "days_with_trades": 122,
+  "daily_win_rate": 0.5409836065573771,
+  "median_daily_return": 0.13651925269714654,
+  "daily_max_drawdown": -31.002362543040817,
+  "top5_day_return": 49.57308303479194,
+  "top5_share_of_pnl": 0.564577669394872,
+  "min_month_trades": 110,
+  "positive_month_rate": 0.8333333333333334
+}
+```
+
+## Per Ticker
+
+```json
+{
+  "QQQ": {
+    "trades": 325,
+    "win_rate": 0.5046153846153846,
+    "profit_factor": 1.2924234054667574,
+    "pnl_return": 27.984947327983264,
+    "avg_return": 0.08610753023994851,
+    "max_drawdown": -18.100077070710192,
+    "call_rate": 0.4307692307692308,
+    "days_with_trades": 118,
+    "daily_win_rate": 0.5254237288135594,
+    "median_daily_return": 0.02770693543104752,
+    "daily_max_drawdown": -17.50007707071014,
+    "top5_day_return": 21.676265662010515,
+    "top5_share_of_pnl": 0.7745687496912154,
+    "min_month_trades": 36,
+    "positive_month_rate": 0.8333333333333334
+  },
+  "SPXW": {
+    "trades": 320,
+    "win_rate": 0.503125,
+    "profit_factor": 1.2193394303492586,
+    "pnl_return": 20.836455224092127,
+    "avg_return": 0.06511392257528789,
+    "max_drawdown": -7.8180794685675785,
+    "call_rate": 0.234375,
+    "days_with_trades": 119,
+    "daily_win_rate": 0.5210084033613446,
+    "median_daily_return": 0.1258017105799044,
+    "daily_max_drawdown": -7.1583573106595075,
+    "top5_day_return": 18.282012082850102,
+    "top5_share_of_pnl": 0.8774051001588575,
+    "min_month_trades": 44,
+    "positive_month_rate": 1.0
+  },
+  "SPY": {
+    "trades": 317,
+    "win_rate": 0.5362776025236593,
+    "profit_factor": 1.451309812754989,
+    "pnl_return": 38.98420103817212,
+    "avg_return": 0.12297855217088996,
+    "max_drawdown": -14.120811276921874,
+    "call_rate": 0.24290220820189273,
+    "days_with_trades": 116,
+    "daily_win_rate": 0.5862068965517241,
+    "median_daily_return": 0.28283071031628154,
+    "daily_max_drawdown": -12.807174877818198,
+    "top5_day_return": 23.124433782139278,
+    "top5_share_of_pnl": 0.5931744954705254,
+    "min_month_trades": 27,
+    "positive_month_rate": 0.6666666666666666
+  }
+}
+```
+
+## Fold Configs
+
+```csv
+ticker,month,test_month,train_months,train_month_max,first_val_month,val_months,val_month_max,deploy_config,train_rows,val_rows,test_rows,val_score,abstained_invalid_val,val_trades,val_win_rate,val_profit_factor,val_pnl_return,val_avg_return,val_max_drawdown,val_call_rate,val_days_with_trades,val_daily_win_rate,val_median_daily_return,val_daily_max_drawdown,val_top5_day_return,val_top5_share_of_pnl,val_min_month_trades,val_positive_month_rate,test_trades,test_win_rate,test_profit_factor,test_pnl_return,test_avg_return,test_max_drawdown,test_call_rate,test_days_with_trades,test_daily_win_rate,test_median_daily_return,test_daily_max_drawdown,test_top5_day_return,test_top5_share_of_pnl,test_min_month_trades,test_positive_month_rate
+SPXW,202601,202601,"202501,202502,202503,202504,202505,202506",202506,202507,"202507,202508,202509,202510,202511,202512",202512,thr-0.100_maxday3,4362,4797,779,9.797866093623886,False,374,0.5641711229946524,1.4597110168704333,43.90617771256496,0.11739619709241968,-4.800000000000011,0.4839572192513369,127,0.5905511811023622,0.28851538708602276,-4.4710526027597695,18.5922859320968,0.42345489634312,53,1.0,60,0.55,1.316219121458939,5.122749767634813,0.08537916279391355,-4.472625587030033,0.5333333333333333,20,0.6,0.14373418784327374,-4.2309589696659735,9.437802843277634,1.8423314179632655,60,1.0
+SPXW,202602,202602,"202501,202502,202503,202504,202505,202506,202507",202507,202508,"202508,202509,202510,202511,202512,202601",202601,thr0.468_maxday3,5225,4713,616,9.416604387210995,False,302,0.5993377483443708,1.6310240923389565,45.46784407931547,0.1505557750970711,-7.18406296945944,0.013245033112582781,115,0.6260869565217392,0.4352940829979929,-6.584062969459417,17.572597169511027,0.38648406418516046,40,0.8333333333333334,47,0.46808510638297873,1.0807817628028928,1.2117264420433909,0.025781413660497677,-5.658550722719479,0.0,18,0.4444444444444444,-0.6812499937911831,-5.221050710301848,11.524335555299897,9.510674320076628,47,1.0
+SPXW,202603,202603,"202501,202502,202503,202504,202505,202506,202507,202508",202508,202509,"202509,202510,202511,202512,202601,202602",202602,thr-0.100_maxday2,6003,4551,793,9.457496790638544,False,247,0.6153846153846154,1.7177319272756446,39.944609463224786,0.16171906665273192,-5.087000690217149,0.5708502024291497,124,0.49193548387096775,-0.016411917245402585,-4.359379344693561,21.128822654171294,0.5289530411762733,37,1.0,44,0.5681818181818182,1.6203313645486295,6.977815608760883,0.15858671838092916,-6.342723773594109,0.6590909090909091,22,0.45454545454545453,-0.10599741820865716,-6.031656639646068,11.790204878460466,1.6896698823135232,44,1.0
+SPXW,202604,202604,"202501,202502,202503,202504,202505,202506,202507,202508,202509",202509,202510,"202510,202511,202512,202601,202602,202603",202603,thr-999.000_maxday3,6817,4530,793,10.234546015204229,False,371,0.5525606469002695,1.5320357358484138,52.23972927181694,0.14080789561136642,-7.200000000000017,0.12398921832884097,125,0.592,0.36296241425553244,-7.200000000000003,24.954211422713456,0.4776864614452763,55,1.0,63,0.4603174603174603,1.0796479167358308,1.604735541171877,0.02547199271701392,-7.818079468567577,0.15873015873015872,21,0.47619047619047616,-0.25124219334662334,-7.158357310659503,11.321996738288943,7.055366101021806,63,1.0
+SPXW,202605,202605,"202501,202502,202503,202504,202505,202506,202507,202508,202509,202510",202510,202511,"202511,202512,202601,202602,202603,202604",202604,thr0.200_maxday3,7669,4471,783,10.542159075675038,False,346,0.5606936416184971,1.6341311724332523,57.29869923971602,0.1656031769933989,-7.794502689880352,0.15895953757225434,122,0.639344262295082,0.4089877493367991,-7.79450268988036,20.112855783431336,0.3510176679454236,50,0.8333333333333334,54,0.5185185185185185,1.191909991992649,2.9937958750853215,0.05544066435343188,-5.025342604133446,0.018518518518518517,19,0.5789473684210527,0.5181817488236861,-5.025342604133447,10.648048411297921,3.5567048842281066,54,1.0
+SPXW,202606,202606,"202501,202502,202503,202504,202505,202506,202507,202508,202509,202510,202511",202511,202512,"202512,202601,202602,202603,202604,202605",202605,thr0.100_maxday3,8317,4606,736,11.72482673447546,False,358,0.5782122905027933,1.691956743837215,62.136694870718614,0.1735661867897168,-5.535714285714299,0.30446927374301674,124,0.6532258064516129,0.40741476399860066,-5.138005298891148,19.890086410844567,0.3201020983209327,50,1.0,52,0.46153846153846156,1.174144761273562,2.925631989395841,0.05626215364222771,-2.729137019776218,0.057692307692307696,19,0.5789473684210527,0.30756305132035233,-2.704545454545454,9.002677663768708,3.0771736487704353,52,1.0
+QQQ,202601,202601,"202501,202502,202503,202504,202505,202506",202506,202507,"202507,202508,202509,202510,202511,202512",202512,thr-999.000_maxday3,3974,4522,692,6.364918941930283,False,377,0.5145888594164456,1.2251562763968873,23.698502694201412,0.06286074985199314,-9.54224249027904,0.583554376657825,128,0.546875,0.14215324719832667,-8.997061719800566,18.19567875732612,0.7677986661063726,57,0.8333333333333334,60,0.5666666666666667,1.952238817765564,14.265241160815744,0.23775401934692908,-4.24822707539813,0.5833333333333334,20,0.65,0.32369243386527646,-3.9050724287139236,16.75215487826127,1.174333801259292,60,1.0
+QQQ,202602,202602,"202501,202502,202503,202504,202505,202506,202507",202507,202508,"202508,202509,202510,202511,202512,202601",202601,thr0.444_maxday2,4771,4417,550,8.747739352133769,False,236,0.5466101694915254,1.6137669490460311,39.135107737520805,0.16582672770135934,-6.710545936964351,0.059322033898305086,120,0.5416666666666666,0.09968344339475244,-6.710545936964351,22.06809141004271,0.5638949957172321,31,0.8333333333333334,36,0.5277777777777778,1.1441209561311851,1.4439989964907873,0.0401110832358552,-2.9436330430907014,0.1111111111111111,19,0.42105263157894735,-0.23823533371657957,-2.9436330430907014,6.8708840605664,4.75823326557986,36,1.0
+QQQ,202603,202603,"202501,202502,202503,202504,202505,202506,202507,202508",202508,202509,"202509,202510,202511,202512,202601,202602",202602,thr0.000_maxday3,5526,4212,765,9.313366332607508,False,365,0.5287671232876713,1.4507077731642992,45.05136691085674,0.12342840249549793,-7.685429840183744,0.4438356164383562,124,0.5645161290322581,0.3171990028989762,-7.606902274784048,24.96845075492334,0.5542218242640334,54,1.0,66,0.5303030303030303,1.3821123348554434,7.107289428311249,0.10768620345926136,-6.270846474732068,0.5909090909090909,22,0.5909090909090909,0.23122575664019407,-5.414866518952693,11.418404205446823,1.6065765043931706,66,1.0
+QQQ,202604,202604,"202501,202502,202503,202504,202505,202506,202507,202508,202509",202509,202510,"202510,202511,202512,202601,202602,202603",202603,thr0.300_maxday3,6323,4180,637,9.337704721166373,False,346,0.5260115606936416,1.4374484386989537,42.19370634071751,0.12194712815236275,-5.933586874085135,0.26011560693641617,123,0.5040650406504065,0.013636318481331622,-5.355629847623685,25.369920845809766,0.6012726315376433,52,1.0,51,0.47058823529411764,1.072842136137016,1.1800426054196569,0.023138090302346214,-6.692896243534964,0.2549019607843137,18,0.5,-0.035963932977897184,-6.692896243534966,9.669074232112028,8.193834856219812,51,1.0
+QQQ,202605,202605,"202501,202502,202503,202504,202505,202506,202507,202508,202509,202510",202510,202511,"202511,202512,202601,202602,202603,202604",202604,thr0.000_maxday3,7126,4014,712,9.102908054994964,False,345,0.5449275362318841,1.4441992503091465,41.58501943529106,0.12053628821823495,-5.171553484373881,0.48985507246376814,119,0.5546218487394958,0.25684535331579006,-4.40937503783498,21.819454270006304,0.5246950600554309,52,0.6666666666666666,57,0.38596491228070173,0.4829100082691306,-10.807180827175166,-0.18959966363465205,-11.424827848187213,0.47368421052631576,19,0.3684210526315789,-0.880379777397029,-10.824827848187214,4.894214879039805,-0.45286693702145436,57,0.0
+QQQ,202606,202606,"202501,202502,202503,202504,202505,202506,202507,202508,202509,202510,202511",202511,202512,"202512,202601,202602,202603,202604,202605",202605,thr0.100_maxday3,7752,4100,619,9.098916835431469,False,325,0.5507692307692308,1.470387736669281,40.726381176976304,0.125311942083004,-5.6214189370027805,0.6092307692307692,118,0.5677966101694916,0.26329160544655766,-5.02141893700278,19.878545018260382,0.4880999598731411,46,0.8333333333333334,55,0.5454545454545454,1.9863703976080667,14.795555964121,0.26901010843856366,-3.340516423154895,0.4,20,0.6,0.48143083808580683,-2.3038497755617104,14.075070039301027,0.951303896483029,55,1.0
+SPY,202601,202601,"202501,202502,202503,202504,202505,202506",202506,202507,"202507,202508,202509,202510,202511,202512",202512,thr-0.200_maxday3,4331,4822,779,6.927662483073685,False,381,0.5223097112860893,1.2241351729746341,23.64687063180804,0.06206527724884,-6.719508242915564,0.48031496062992124,128,0.546875,0.17930849610859156,-5.878599102746435,19.15867347940153,0.8101991074299144,55,0.8333333333333334,60,0.6,1.85438005915632,11.703158411260771,0.1950526401876795,-2.4688553248768397,0.4,20,0.7,0.5304166005820877,-1.7999999999999998,10.955605757179136,0.9361238541074227,60,1.0
+SPY,202602,202602,"202501,202502,202503,202504,202505,202506,202507",202507,202508,"202508,202509,202510,202511,202512,202601",202601,thr0.515_maxday2,5201,4731,615,7.292479636504673,False,145,0.5655172413793104,1.6286296290132027,23.64583661093409,0.16307473524782132,-5.23724154025793,0.0,84,0.5119047619047619,0.1299342292391924,-4.987499974854291,17.356261337448238,0.7340091882992423,14,0.8333333333333334,27,0.5185185185185185,1.6727863728332708,4.929734927246904,0.18258277508321866,-4.588383195184317,0.0,16,0.5625,0.2894566526383877,-4.5883831951843215,9.111887884818769,1.8483525015628905,27,1.0
+SPY,202603,202603,"202501,202502,202503,202504,202505,202506,202507,202508",202508,202509,"202509,202510,202511,202512,202601,202602",202602,thr0.050_maxday3,5987,4560,799,8.559240225272905,False,362,0.5773480662983426,1.4097801791010902,37.15148883028343,0.10262842218310339,-6.4016493028084875,0.5165745856353591,124,0.6129032258064516,0.329768883160954,-6.15164930280849,15.354012608970674,0.41328121947175106,52,0.8333333333333334,65,0.6,1.649157815816468,9.926143924421014,0.15270990652955407,-2.9243902571991325,0.5230769230769231,22,0.7272727272727273,0.4616661193245345,-2.823571726612568,9.498168303302528,0.9568840000329282,65,1.0
+SPY,202604,202604,"202501,202502,202503,202504,202505,202506,202507,202508,202509",202509,202510,"202510,202511,202512,202601,202602,202603",202603,thr-0.100_maxday3,6807,4539,689,10.450824134181355,False,371,0.5741239892183289,1.5795406168875863,53.63908685784642,0.14457974894298228,-7.097103844278632,0.2668463611859838,125,0.592,0.32277300140464027,-6.000437190327599,24.550927679592196,0.45770592151683587,55,1.0,54,0.4444444444444444,0.9512102001554912,-0.8618304402117445,-0.015959822966884158,-7.505548769194205,0.18518518518518517,18,0.4444444444444444,-0.4222222498169641,-6.791912370090617,10.82872686667071,-12.564799711658111,54,0.0
+SPY,202605,202605,"202501,202502,202503,202504,202505,202506,202507,202508,202509,202510",202510,202511,"202511,202512,202601,202602,202603,202604",202604,thr0.100_maxday3,7659,4376,775,10.26978044046011,False,337,0.5845697329376854,1.6253569589783357,51.35036844623378,0.1523749805526225,-6.07305501988855,0.16023738872403562,118,0.6101694915254238,0.32128153150372085,-5.303473046783608,23.265553162322043,0.45307470747132333,50,0.8333333333333334,58,0.41379310344827586,0.8629666647132411,-2.795480039849876,-0.04819793172154958,-7.339236431869126,0.1206896551724138,20,0.35,-0.6742424834326564,-7.161199076804496,10.961547676698762,-3.92116828610496,58,0.0
+SPY,202606,202606,"202501,202502,202503,202504,202505,202506,202507,202508,202509,202510,202511",202511,202512,"202512,202601,202602,202603,202604,202605",202605,thr0.270_maxday3,8306,4504,724,8.402494008379218,False,271,0.5092250922509225,1.4286877805033091,33.50461349828371,0.1236332601412683,-5.663157908496004,0.15867158671586715,111,0.5225225225225225,0.2269840603963279,-5.063157908495992,19.365054824934607,0.5779817405124399,37,1.0,53,0.6226415094339622,2.3402061879420883,16.08247425530505,0.3034429104774538,-3.8197824678777015,0.03773584905660377,20,0.7,0.44354136433408464,-3.2197824678777005,14.693006111365094,0.9136035835106889,53,1.0
+
+```
+
+## Config
+
+```json
+{
+  "args": {
+    "data": "research_papers\\JEPA\\results\\_diagnostics\\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_trail050_025_tp1000_v1_physics\\event_option_dataset.parquet",
+    "output_dir": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d35_return_wf2026_v1",
+    "tickers": [
+      "SPXW",
+      "QQQ",
+      "SPY"
+    ],
+    "train_tickers": [],
+    "expiry_modes": [
+      "zero_dte"
+    ],
+    "start_month": "202601",
+    "end_month": "202606",
+    "val_months": 6,
+    "pooled_train": false,
+    "delta_bucket": 35,
+    "label_mode": "return",
+    "clip_return": 5.0,
+    "min_train_rows": 500,
+    "min_val_rows": 30,
+    "min_val_trades": 30,
+    "min_month_trades": 3,
+    "min_val_pf": 0.0,
+    "min_val_win_rate": 0.0,
+    "min_val_positive_month_rate": 0.0,
+    "min_val_daily_win_rate": 0.0,
+    "min_val_median_daily_return": -Infinity,
+    "max_val_top5_share": Infinity,
+    "max_val_daily_drawdown": Infinity,
+    "min_call_rate": 0.0,
+    "max_call_rate": 1.0,
+    "cooldown_minutes": 30,
+    "objective": "regression_l1",
+    "n_estimators": 160,
+    "learning_rate": 0.035,
+    "num_leaves": 31,
+    "min_child_samples": 60,
+    "subsample": 0.85,
+    "colsample_bytree": 0.85,
+    "reg_lambda": 5.0,
+    "lgb_jobs": 4,
+    "threshold_grid": [
+      -999.0,
+      -0.2,
+      -0.1,
+      0.0,
+      0.05,
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "threshold_quantiles": [
+      0.3,
+      0.5,
+      0.7,
+      0.85,
+      0.95,
+      0.98
+    ],
+    "max_day_grid": [
+      1,
+      2,
+      3
+    ],
+    "feature_include_prefixes": [
+      "ret_",
+      "dist_",
+      "nearest_",
+      "ib_",
+      "call_",
+      "put_",
+      "phys_",
+      "ctx_"
+    ],
+    "feature_exclude_prefixes": [],
+    "live_observable_features_only": true,
+    "entry_time_min_et": "10:00",
+    "allow_invalid_val_deploy": false,
+    "deploy_month": "",
+    "deploy_select_end_month": "",
+    "export_deploy_model": false,
+    "exclude_months": [],
+    "skip_walkforward": false,
+    "resume": false,
+    "seed": 20260617
+  },
+  "feature_count": 241,
+  "features": [
+    "ret_1m_bps",
+    "ret_5m_bps",
+    "ret_15m_bps",
+    "ret_30m_bps",
+    "call_d15_available",
+    "call_d15_strike_bps",
+    "call_d15_abs_delta",
+    "call_d15_iv",
+    "call_d15_mid_bps",
+    "call_d15_spread_pct",
+    "call_d15_theta_over_mid",
+    "call_d15_vega",
+    "call_d15_oi",
+    "call_d15_volume",
+    "put_d15_available",
+    "put_d15_strike_bps",
+    "put_d15_abs_delta",
+    "put_d15_iv",
+    "put_d15_mid_bps",
+    "put_d15_spread_pct",
+    "put_d15_theta_over_mid",
+    "put_d15_vega",
+    "put_d15_oi",
+    "put_d15_volume",
+    "call_d25_available",
+    "call_d25_strike_bps",
+    "call_d25_abs_delta",
+    "call_d25_iv",
+    "call_d25_mid_bps",
+    "call_d25_spread_pct",
+    "call_d25_theta_over_mid",
+    "call_d25_vega",
+    "call_d25_oi",
+    "call_d25_volume",
+    "put_d25_available",
+    "put_d25_strike_bps",
+    "put_d25_abs_delta",
+    "put_d25_iv",
+    "put_d25_mid_bps",
+    "put_d25_spread_pct",
+    "put_d25_theta_over_mid",
+    "put_d25_vega",
+    "put_d25_oi",
+    "put_d25_volume",
+    "call_d35_available",
+    "call_d35_strike_bps",
+    "call_d35_abs_delta",
+    "call_d35_iv",
+    "call_d35_mid_bps",
+    "call_d35_spread_pct",
+    "call_d35_theta_over_mid",
+    "call_d35_vega",
+    "call_d35_oi",
+    "call_d35_volume",
+    "put_d35_available",
+    "put_d35_strike_bps",
+    "put_d35_abs_delta",
+    "put_d35_iv",
+    "put_d35_mid_bps",
+    "put_d35_spread_pct",
+    "put_d35_theta_over_mid",
+    "put_d35_vega",
+    "put_d35_oi",
+    "put_d35_volume",
+    "call_d50_available",
+    "call_d50_strike_bps",
+    "call_d50_abs_delta",
+    "call_d50_iv",
+    "call_d50_mid_bps",
+    "call_d50_spread_pct",
+    "call_d50_theta_over_mid",
+    "call_d50_vega",
+    "call_d50_oi",
+    "call_d50_volume",
+    "put_d50_available",
+    "put_d50_strike_bps",
+    "put_d50_abs_delta",
+    "put_d50_iv",
+    "put_d50_mid_bps",
+    "put_d50_spread_pct",
+    "put_d50_theta_over_mid",
+    "put_d50_vega",
+    "put_d50_oi",
+    "put_d50_volume",
+    "call_d65_available",
+    "call_d65_strike_bps",
+    "call_d65_abs_delta",
+    "call_d65_iv",
+    "call_d65_mid_bps",
+    "call_d65_spread_pct",
+    "call_d65_theta_over_mid",
+    "call_d65_vega",
+    "call_d65_oi",
+    "call_d65_volume",
+    "put_d65_available",
+    "put_d65_strike_bps",
+    "put_d65_abs_delta",
+    "put_d65_iv",
+    "put_d65_mid_bps",
+    "put_d65_spread_pct",
+    "put_d65_theta_over_mid",
+    "put_d65_vega",
+    "put_d65_oi",
+    "put_d65_volume",
+    "call_d80_available",
+    "call_d80_strike_bps",
+    "call_d80_abs_delta",
+    "call_d80_iv",
+    "call_d80_mid_bps",
+    "call_d80_spread_pct",
+    "call_d80_theta_over_mid",
+    "call_d80_vega",
+    "call_d80_oi",
+    "call_d80_volume",
+    "put_d80_available",
+    "put_d80_strike_bps",
+    "put_d80_abs_delta",
+    "put_d80_iv",
+    "put_d80_mid_bps",
+    "put_d80_spread_pct",
+    "put_d80_theta_over_mid",
+    "put_d80_vega",
+    "put_d80_oi",
+    "put_d80_volume",
+    "phys_d15_iv_skew_put_minus_call",
+    "phys_d15_iv_mean",
+    "phys_d15_volume_skew_call_minus_put",
+    "phys_d15_oi_skew_call_minus_put",
+    "phys_d15_mid_skew_call_minus_put",
+    "phys_d15_spread_mean",
+    "phys_d15_theta_skew_call_minus_put",
+    "phys_d15_vega_skew_call_minus_put",
+    "phys_d15_abs_delta_gap",
+    "phys_d15_liquidity_score",
+    "phys_d25_iv_skew_put_minus_call",
+    "phys_d25_iv_mean",
+    "phys_d25_volume_skew_call_minus_put",
+    "phys_d25_oi_skew_call_minus_put",
+    "phys_d25_mid_skew_call_minus_put",
+    "phys_d25_spread_mean",
+    "phys_d25_theta_skew_call_minus_put",
+    "phys_d25_vega_skew_call_minus_put",
+    "phys_d25_abs_delta_gap",
+    "phys_d25_liquidity_score",
+    "phys_d35_iv_skew_put_minus_call",
+    "phys_d35_iv_mean",
+    "phys_d35_volume_skew_call_minus_put",
+    "phys_d35_oi_skew_call_minus_put",
+    "phys_d35_mid_skew_call_minus_put",
+    "phys_d35_spread_mean",
+    "phys_d35_theta_skew_call_minus_put",
+    "phys_d35_vega_skew_call_minus_put",
+    "phys_d35_abs_delta_gap",
+    "phys_d35_liquidity_score",
+    "phys_d50_iv_skew_put_minus_call",
+    "phys_d50_iv_mean",
+    "phys_d50_volume_skew_call_minus_put",
+    "phys_d50_oi_skew_call_minus_put",
+    "phys_d50_mid_skew_call_minus_put",
+    "phys_d50_spread_mean",
+    "phys_d50_theta_skew_call_minus_put",
+    "phys_d50_vega_skew_call_minus_put",
+    "phys_d50_abs_delta_gap",
+    "phys_d50_liquidity_score",
+    "phys_d65_iv_skew_put_minus_call",
+    "phys_d65_iv_mean",
+    "phys_d65_volume_skew_call_minus_put",
+    "phys_d65_oi_skew_call_minus_put",
+    "phys_d65_mid_skew_call_minus_put",
+    "phys_d65_spread_mean",
+    "phys_d65_theta_skew_call_minus_put",
+    "phys_d65_vega_skew_call_minus_put",
+    "phys_d65_abs_delta_gap",
+    "phys_d65_liquidity_score",
+    "phys_d80_iv_skew_put_minus_call",
+    "phys_d80_iv_mean",
+    "phys_d80_volume_skew_call_minus_put",
+    "phys_d80_oi_skew_call_minus_put",
+    "phys_d80_mid_skew_call_minus_put",
+    "phys_d80_spread_mean",
+    "phys_d80_theta_skew_call_minus_put",
+    "phys_d80_vega_skew_call_minus_put",
+    "phys_d80_abs_delta_gap",
+    "phys_d80_liquidity_score",
+    "phys_total_volume_skew_call_minus_put",
+    "phys_total_oi_skew_call_minus_put",
+    "phys_total_option_volume_log",
+    "phys_total_option_oi_log",
+    "phys_call_iv_slope_low_to_high",
+    "phys_put_iv_slope_low_to_high",
+    "phys_call_mid_slope_low_to_high",
+    "phys_put_mid_slope_low_to_high",
+    "phys_momentum_accel_ret_1m_bps_minus_ret_5m_bps",
+    "phys_abs_ret_1m_bps",
+    "phys_momentum_accel_ret_5m_bps_minus_ret_15m_bps",
+    "phys_abs_ret_5m_bps",
+    "phys_momentum_accel_ret_15m_bps_minus_ret_30m_bps",
+    "phys_abs_ret_15m_bps",
+    "phys_abs_ret_30m_bps",
+    "ctx_spx_spot",
+    "ctx_spx_ret_1m_bps",
+    "ctx_spx_ret_1m_bps_minus_self",
+    "ctx_spx_ret_5m_bps",
+    "ctx_spx_ret_5m_bps_minus_self",
+    "ctx_spx_ret_15m_bps",
+    "ctx_spx_ret_15m_bps_minus_self",
+    "ctx_spx_ret_30m_bps",
+    "ctx_spx_ret_30m_bps_minus_self",
+    "ctx_spx_phys_d35_iv_skew_put_minus_call",
+    "ctx_spx_phys_total_volume_skew_call_minus_put",
+    "ctx_spx_phys_total_oi_skew_call_minus_put",
+    "ctx_spy_spot",
+    "ctx_spy_ret_1m_bps",
+    "ctx_spy_ret_1m_bps_minus_self",
+    "ctx_spy_ret_5m_bps",
+    "ctx_spy_ret_5m_bps_minus_self",
+    "ctx_spy_ret_15m_bps",
+    "ctx_spy_ret_15m_bps_minus_self",
+    "ctx_spy_ret_30m_bps",
+    "ctx_spy_ret_30m_bps_minus_self",
+    "ctx_spy_phys_d35_iv_skew_put_minus_call",
+    "ctx_spy_phys_total_volume_skew_call_minus_put",
+    "ctx_spy_phys_total_oi_skew_call_minus_put",
+    "ctx_qqq_spot",
+    "ctx_qqq_ret_1m_bps",
+    "ctx_qqq_ret_1m_bps_minus_self",
+    "ctx_qqq_ret_5m_bps",
+    "ctx_qqq_ret_5m_bps_minus_self",
+    "ctx_qqq_ret_15m_bps",
+    "ctx_qqq_ret_15m_bps_minus_self",
+    "ctx_qqq_ret_30m_bps",
+    "ctx_qqq_ret_30m_bps_minus_self",
+    "ctx_qqq_phys_d35_iv_skew_put_minus_call",
+    "ctx_qqq_phys_total_volume_skew_call_minus_put",
+    "ctx_qqq_phys_total_oi_skew_call_minus_put",
+    "ctx_spy_qqq_ret_5m_spread",
+    "ctx_spx_spy_ret_5m_spread",
+    "ticker_QQQ",
+    "ticker_SPXW",
+    "ticker_SPY",
+    "expiry_mode_zero_dte"
+  ],
+  "grid": [
+    {
+      "threshold": -999.0,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": -999.0,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": -999.0,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": -0.2,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": -0.2,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": -0.2,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": -0.1,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": -0.1,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": -0.1,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": 0.0,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": 0.0,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.0,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": 0.05,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": 0.05,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.05,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": 0.1,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": 0.1,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.1,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": 0.2,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": 0.2,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.2,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": 0.3,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": 0.3,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.3,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": 0.4,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": 0.4,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.4,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": 0.5,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": 0.5,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.5,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": 0.75,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": 0.75,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.75,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": 1.0,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": 1.0,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 1.0,
+      "max_trades_per_day": 3
+    }
+  ],
+  "data_rows": 39664
+}
+```

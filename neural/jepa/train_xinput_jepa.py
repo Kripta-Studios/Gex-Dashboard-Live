@@ -18,7 +18,13 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from neural.jepa.dataset import split_dates
 from neural.jepa.features import write_feature_names
-from neural.jepa.sigreg import SIGRegLoss, VarianceCovarianceLoss, latent_diagnostics
+from neural.jepa.sigreg import (
+    SIGRegLoss,
+    VISRegLoss,
+    VarianceCovarianceLoss,
+    latent_diagnostics,
+    latent_temporal_straightening_loss,
+)
 from neural.jepa.xinput_dataset import XInputJEPADataset, fit_xinput_normalizers, prepare_xinput_frame
 from neural.jepa.xinput_model import XInputJEPAConfig, XInputMarketJEPA, save_xinput_model
 
@@ -61,10 +67,10 @@ def direction_metrics(logits: torch.Tensor, y: torch.Tensor) -> dict:
     }
 
 
-def evaluate(model, loader, sigreg, vicreg, ce_weight, args, device) -> dict:
+def evaluate(model, loader, sigreg, visreg, vicreg, ce_weight, args, device) -> dict:
     model.eval()
     total = 0
-    sums = {"pred": 0.0, "sig": 0.0, "vic": 0.0, "ce": 0.0, "total": 0.0}
+    sums = {"pred": 0.0, "sig": 0.0, "vis": 0.0, "vic": 0.0, "straight": 0.0, "ce": 0.0, "total": 0.0}
     logits_all, y_all, z_batches, u_batches = [], [], [], []
     with torch.no_grad():
         for state_ctx, input_ctx, targets, y in loader:
@@ -78,19 +84,28 @@ def evaluate(model, loader, sigreg, vicreg, ce_weight, args, device) -> dict:
             pred_loss = F.mse_loss(pred_z, target_z.detach())
             z_all = torch.cat([z, target_z.reshape(b * h, -1)], dim=0)
             sig_loss = sigreg(z_all)
+            vis_loss = visreg(z_all)
             vic_loss = vicreg(z_all)
+            straight_loss = latent_temporal_straightening_loss(
+                torch.cat([z.unsqueeze(1), target_z], dim=1),
+                speed_weight=float(args.straightening_speed_weight),
+            )
             ce_loss = F.cross_entropy(logits, y, weight=ce_weight)
             loss = (
                 pred_loss
                 + args.lambda_sigreg * sig_loss
+                + args.lambda_visreg * vis_loss
                 + args.lambda_vicreg * vic_loss
+                + args.lambda_straightening * straight_loss
                 + args.lambda_ce * ce_loss
             )
             n = len(state_ctx)
             total += n
             sums["pred"] += float(pred_loss.item()) * n
             sums["sig"] += float(sig_loss.item()) * n
+            sums["vis"] += float(vis_loss.item()) * n
             sums["vic"] += float(vic_loss.item()) * n
+            sums["straight"] += float(straight_loss.item()) * n
             sums["ce"] += float(ce_loss.item()) * n
             sums["total"] += float(loss.item()) * n
             logits_all.append(logits.cpu())
@@ -117,8 +132,15 @@ def main() -> int:
     parser.add_argument("--num-layers", type=int, default=2)
     parser.add_argument("--dropout", type=float, default=0.15)
     parser.add_argument("--lambda-sigreg", type=float, default=0.15)
+    parser.add_argument("--lambda-visreg", type=float, default=0.0)
     parser.add_argument("--lambda-vicreg", type=float, default=0.20)
+    parser.add_argument("--lambda-straightening", type=float, default=0.0)
+    parser.add_argument("--straightening-speed-weight", type=float, default=0.0)
     parser.add_argument("--lambda-ce", type=float, default=0.35)
+    parser.add_argument("--visreg-slices", type=int, default=64)
+    parser.add_argument("--visreg-center-weight", type=float, default=1.0)
+    parser.add_argument("--visreg-scale-weight", type=float, default=1.0)
+    parser.add_argument("--visreg-shape-weight", type=float, default=1.0)
     parser.add_argument("--epochs", type=int, default=40)
     parser.add_argument("--batch-size", type=int, default=512)
     parser.add_argument("--lr", type=float, default=7e-4)
@@ -186,6 +208,13 @@ def main() -> int:
     device = torch.device(args.device)
     model = XInputMarketJEPA(config).to(device)
     sigreg = SIGRegLoss(args.z_dim, num_projections=96).to(device)
+    visreg = VISRegLoss(
+        args.z_dim,
+        num_slices=int(args.visreg_slices),
+        center_weight=float(args.visreg_center_weight),
+        scale_weight=float(args.visreg_scale_weight),
+        shape_weight=float(args.visreg_shape_weight),
+    ).to(device)
     vicreg = VarianceCovarianceLoss(min_std=0.75, cov_weight=0.05, var_weight=1.0).to(device)
     ce_weight = class_weights(train_ds.labels, device)
     opt = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
@@ -211,12 +240,16 @@ def main() -> int:
         "train_total",
         "train_pred",
         "train_sig",
+        "train_vis",
         "train_vic",
+        "train_straight",
         "train_ce",
         "val_total",
         "val_pred",
         "val_sig",
+        "val_vis",
         "val_vic",
+        "val_straight",
         "val_ce",
         "val_acc",
         "val_trade_precision",
@@ -232,7 +265,7 @@ def main() -> int:
         writer.writeheader()
         for epoch in range(1, args.epochs + 1):
             model.train()
-            sums = {"pred": 0.0, "sig": 0.0, "vic": 0.0, "ce": 0.0, "total": 0.0}
+            sums = {"pred": 0.0, "sig": 0.0, "vis": 0.0, "vic": 0.0, "straight": 0.0, "ce": 0.0, "total": 0.0}
             total = 0
             for state_ctx, input_ctx, targets, y in train_loader:
                 state_ctx = state_ctx.to(device).float()
@@ -245,12 +278,19 @@ def main() -> int:
                 pred_loss = F.mse_loss(pred_z, target_z.detach())
                 z_all = torch.cat([z, target_z.reshape(b * h, -1)], dim=0)
                 sig_loss = sigreg(z_all)
+                vis_loss = visreg(z_all)
                 vic_loss = vicreg(z_all)
+                straight_loss = latent_temporal_straightening_loss(
+                    torch.cat([z.unsqueeze(1), target_z], dim=1),
+                    speed_weight=float(args.straightening_speed_weight),
+                )
                 ce_loss = F.cross_entropy(logits, y, weight=ce_weight)
                 loss = (
                     pred_loss
                     + args.lambda_sigreg * sig_loss
+                    + args.lambda_visreg * vis_loss
                     + args.lambda_vicreg * vic_loss
+                    + args.lambda_straightening * straight_loss
                     + args.lambda_ce * ce_loss
                 )
                 opt.zero_grad(set_to_none=True)
@@ -261,23 +301,29 @@ def main() -> int:
                 total += n
                 sums["pred"] += float(pred_loss.item()) * n
                 sums["sig"] += float(sig_loss.item()) * n
+                sums["vis"] += float(vis_loss.item()) * n
                 sums["vic"] += float(vic_loss.item()) * n
+                sums["straight"] += float(straight_loss.item()) * n
                 sums["ce"] += float(ce_loss.item()) * n
                 sums["total"] += float(loss.item()) * n
 
             train = {k: v / max(1, total) for k, v in sums.items()}
-            val = evaluate(model, val_loader, sigreg, vicreg, ce_weight, args, device)
+            val = evaluate(model, val_loader, sigreg, visreg, vicreg, ce_weight, args, device)
             row = {
                 "epoch": epoch,
                 "train_total": train["total"],
                 "train_pred": train["pred"],
                 "train_sig": train["sig"],
+                "train_vis": train["vis"],
                 "train_vic": train["vic"],
+                "train_straight": train["straight"],
                 "train_ce": train["ce"],
                 "val_total": val["total"],
                 "val_pred": val["pred"],
                 "val_sig": val["sig"],
+                "val_vis": val["vis"],
                 "val_vic": val["vic"],
+                "val_straight": val["straight"],
                 "val_ce": val["ce"],
                 "val_acc": val["acc"],
                 "val_trade_precision": val["trade_precision"],
@@ -323,13 +369,20 @@ def main() -> int:
         )
         model = XInputMarketJEPA(config).to(device)
         sigreg = SIGRegLoss(args.z_dim, num_projections=96).to(device)
+        visreg = VISRegLoss(
+            args.z_dim,
+            num_slices=int(args.visreg_slices),
+            center_weight=float(args.visreg_center_weight),
+            scale_weight=float(args.visreg_scale_weight),
+            shape_weight=float(args.visreg_shape_weight),
+        ).to(device)
         vicreg = VarianceCovarianceLoss(min_std=0.75, cov_weight=0.05, var_weight=1.0).to(device)
         ce_weight = class_weights(final_ds.labels, device)
         opt = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
 
         for epoch in range(1, final_epochs + 1):
             model.train()
-            sums = {"pred": 0.0, "sig": 0.0, "vic": 0.0, "ce": 0.0, "total": 0.0}
+            sums = {"pred": 0.0, "sig": 0.0, "vis": 0.0, "vic": 0.0, "straight": 0.0, "ce": 0.0, "total": 0.0}
             total = 0
             for state_ctx, input_ctx, targets, y in final_loader:
                 state_ctx = state_ctx.to(device).float()
@@ -342,12 +395,19 @@ def main() -> int:
                 pred_loss = F.mse_loss(pred_z, target_z.detach())
                 z_all = torch.cat([z, target_z.reshape(b * h, -1)], dim=0)
                 sig_loss = sigreg(z_all)
+                vis_loss = visreg(z_all)
                 vic_loss = vicreg(z_all)
+                straight_loss = latent_temporal_straightening_loss(
+                    torch.cat([z.unsqueeze(1), target_z], dim=1),
+                    speed_weight=float(args.straightening_speed_weight),
+                )
                 ce_loss = F.cross_entropy(logits, y, weight=ce_weight)
                 loss = (
                     pred_loss
                     + args.lambda_sigreg * sig_loss
+                    + args.lambda_visreg * vis_loss
                     + args.lambda_vicreg * vic_loss
+                    + args.lambda_straightening * straight_loss
                     + args.lambda_ce * ce_loss
                 )
                 opt.zero_grad(set_to_none=True)
@@ -358,7 +418,9 @@ def main() -> int:
                 total += n
                 sums["pred"] += float(pred_loss.item()) * n
                 sums["sig"] += float(sig_loss.item()) * n
+                sums["vis"] += float(vis_loss.item()) * n
                 sums["vic"] += float(vic_loss.item()) * n
+                sums["straight"] += float(straight_loss.item()) * n
                 sums["ce"] += float(ce_loss.item()) * n
                 sums["total"] += float(loss.item()) * n
             train = {k: v / max(1, total) for k, v in sums.items()}

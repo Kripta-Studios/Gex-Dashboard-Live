@@ -1,314 +1,144 @@
-% ============================================================================
-%  Kripta Studios -- Scientific Data Structure Document
-% ============================================================================
 \documentclass[11pt,a4paper]{article}
-
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{mathpazo}
-\usepackage{amsmath, amssymb, bm}
 \usepackage{geometry}
 \geometry{margin=1in}
-\usepackage{setspace}
-\onehalfspacing
 \usepackage{booktabs}
-\usepackage{longtable}
 \usepackage{tabularx}
+\usepackage{longtable}
 \usepackage{array}
-\usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage{listings}
 \hypersetup{colorlinks=true, linkcolor=blue, urlcolor=blue}
+\lstset{basicstyle=\ttfamily\small, breaklines=true, frame=single, columns=fullflexible}
 \setcounter{tocdepth}{2}
 \sloppy
 
-\title{\textbf{Data Structure, Labels, Chronological Splits, and Artifact Contracts for the GBT+JEPA Pipeline}}
+\title{\textbf{Data Structure Reference}\\Historical ThetaData, Live Runtime Files, and Production Artifacts}
 \author{Kripta Studios}
-\date{June 2026}
+\date{July 2026}
 
 \begin{document}
 \maketitle
 \tableofcontents
 \newpage
 
-\begin{abstract}
-This document defines the data contract used by the current GBT+JEPA pipeline.  The system is built around a timestamped intraday market-state table for SPX, SPY, and QQQ.  That table is enriched with XInputJEPA features, converted into exact 180 minute labels for the direction model, and converted into candidate option paths for 0DTE execution research.  The most important scientific requirement is chronological integrity: training rows, validation thresholds, out-of-sample rows, option candidate labels, and oracle diagnostics must remain separate.
-\end{abstract}
+\section{Historical Data Roots}
 
-\section{Canonical Row Unit}
+Local historical data is expected under \path{D:/ThetaData}. The current event-option pipeline uses:
 
-The canonical row is:
+\begin{lstlisting}
+D:/ThetaData/data_options/SPXW
+D:/ThetaData/data_options/QQQ
+D:/ThetaData/data_options/SPY
+D:/ThetaData/data_underlying_derived/SPXW
+D:/ThetaData/data_underlying_derived/QQQ
+D:/ThetaData/data_underlying_derived/SPY
+\end{lstlisting}
 
-\[
-  r_{i} = (\mathrm{ticker}, \mathrm{date}, \mathrm{time}, S_i, \bm{x}_i),
-\]
+SPX trades SPXW options. QQQ and SPY use their own option chains.
 
-where $S_i$ is the current underlying or proxy spot price and $\bm{x}_i$ is a vector of market-state features available at that timestamp.  Rows are sorted by ticker, date, and timestamp or time.  All time-series operations are performed within ticker-date groups to avoid crossing from one symbol or session into another.
+\section{Live Runtime Data}
 
-\section{Primary Files}
+On the VPS, each trading day writes into:
 
-\begin{longtable}{p{0.30\textwidth}p{0.60\textwidth}}
-\toprule
-File or directory & Role \\
-\midrule
-\endhead
-\path{training_data/training_data_spx_qqq_spy.parquet} & Canonical collected market-state parquet for SPX, QQQ, and SPY. \\
-\path{training_data/*production_20261230*.parquet} & Derived production cutoff and JEPA-enriched parquets.  The date in the filename is a cutoff argument, not a guarantee that data exists through that date. \\
-\path{neural/models/jepa/xinput_v3_production} & Production XInputJEPA model, feature split, normalizers, metrics, and appended feature-name list. \\
-\path{neural/models/jepa/jepa_production_final_180m} & Production 180 minute GBT artifacts for \texttt{base}, \texttt{jepa\_only}, and \texttt{base\_jepa}. \\
-\path{research_papers/JEPA/results/jepa_full_pipeline_180m_frozen_march} & Strict frozen-March April--May 2026 OOS direction benchmark. \\
-\path{research_papers/JEPA/results/jepa_full_pipeline_option_policy} & April--May OOS 0DTE option policy benchmark. \\
-\path{research_papers/JEPA/results/jepa_full_pipeline_option_value_walkforward} & Walk-forward OptionValueJEPA strike and exit research benchmark. \\
-\bottomrule
-\end{longtable}
+\begin{lstlisting}
+rt_data/YYYYMMDD/
+\end{lstlisting}
 
-\section{Raw Data Sources}
-
-The option execution layer reads ThetaData-style option-chain files from the configured local directory, including 0DTE Greeks and bid/ask prices.  The relevant scripts load columns such as:
-
-\begin{itemize}
-  \item underlying timestamp,
-  \item strike,
-  \item right, call or put,
-  \item delta,
-  \item bid and ask,
-  \item implied volatility,
-  \item theta,
-  \item gamma,
-  \item underlying price.
-\end{itemize}
-
-The option simulator constructs a mid-price lookup by timestamp, strike, and option right.  It also stores Greek lookups so that open-trade state rows can include current delta, IV, and gamma.
-
-\section{Identifier Columns}
-
-\begin{longtable}{p{0.20\textwidth}p{0.70\textwidth}}
-\toprule
-Column & Meaning \\
-\midrule
-\endhead
-\texttt{ticker} & Instrument identifier normalized to SPX, SPY, or QQQ. \\
-\texttt{date} & Session date normalized to \texttt{YYYYMMDD}. \\
-\texttt{time} & Intraday timestamp, generally at five-minute granularity. \\
-\texttt{timestamp} & Optional timestamp column used for sorting when present. \\
-\texttt{pos\_in\_day} & Integer row index within ticker-date after sorting. \\
-\texttt{month} & Chronological split key, \texttt{YYYYMM}. \\
-\texttt{spot\_price} & Current underlying or proxy price used for labels, distances, and option strike calculations. \\
-\bottomrule
-\end{longtable}
-
-\section{Base Market-State Column Families}
-
-The base feature loader exposes 182 candidate columns from \path{neural/hybrid_model.py}.  The production \texttt{base\_jepa} model uses 180 of those base columns plus 42 JEPA columns.
-
-\begin{longtable}{p{0.25\textwidth}p{0.65\textwidth}}
-\toprule
-Family & Examples and role \\
-\midrule
-\endhead
-0DTE exposure & Net gamma, vanna, charm, DGEX, zomma, delta, vega, and vomma.  These represent same-day option pressure. \\
-Weekly exposure & Weekly net Greek exposure fields used to compare near-expiry pressure with the broader expiry structure. \\
-Exposure regimes & Boolean or smooth variables such as gamma regime, vanna bullishness, charm bullishness, DGEX stickiness, and zomma stabilization. \\
-Strike geometry & Distances to max/min gamma, min vanna, zero gamma, max/min DGEX, max/min vega, and max/min vomma. \\
-Intraday map & Initial-balance position, distance to initial-balance high/low, and whether price is above, below, or inside the initial balance. \\
-Volatility context & ATM IV, IV percentile, IV z-score, VIX level, VIX gamma, VIX regime, ATR normalization, and RSI. \\
-Confluence variables & Interactions between level geometry and exposure concentrations, for example initial-balance high near max gamma. \\
-Returns and time context & Volatility-adjusted returns, time-of-day sine/cosine, day-of-week sine/cosine, and minutes-to-close normalization. \\
-Macro/relative context & TLT return features and relative-volume/IV interactions. \\
-Support/resistance features & Nearest level distance, level cluster density, rejection variables, trend variables, and wall/touch indicators. \\
-\bottomrule
-\end{longtable}
-
-\section{XInputJEPA State/Input Split}
-
-The XInputJEPA training dataset separates features into state and input blocks:
-
-\[
-  \bm{x}_t =
-  [\bm{s}_t, \bm{u}_t].
-\]
-
-The input block is a curated list of change-like or perturbation-like columns:
+Important files:
 
 \begin{center}
-\begin{tabular}{llll}
+\begin{tabularx}{\textwidth}{lX}
 \toprule
-\texttt{gamma\_change} & \texttt{vanna\_change} & \texttt{dgex\_change} & \texttt{delta\_change} \\
-\texttt{vega\_change} & \texttt{vomma\_change} & \texttt{spot\_change} & \texttt{gamma\_momentum} \\
-\texttt{signal\_persistence\_5m} & \texttt{momentum\_5m\_bps} & \texttt{ret\_1m\_vol\_adj} & \texttt{ret\_5m\_vol\_adj} \\
-\texttt{ret\_15m\_vol\_adj} & \texttt{tlt\_ret\_1m} & \texttt{tlt\_ret\_5m} & \texttt{tlt\_ret\_15m} \\
-\texttt{gamma\_speed} & \texttt{charm\_accel\_weighted} & \texttt{gamma\_phase\_delta} & \texttt{pcr\_derivative\_5m} \\
-\texttt{rvol\_trend} & \texttt{rvol\_regime} & \texttt{vol\_relative} & \texttt{iv\_zscore} \\
-\texttt{iv\_percentile} & \texttt{vix\_5d\_std} & & \\
+File & Meaning \\
+\midrule
+\path{event_option_snapshots_latest.parquet} & Live event-option candidate snapshot consumed by the bot. \\
+\path{spot_{TICKER}_latest.parquet} & Latest live or derived spot candles for SPX, QQQ, SPY, and support symbols. \\
+\path{{OPTION_SYMBOL}_greeks_0dte_latest.parquet} & 0DTE option Greeks for SPXW, QQQ, or SPY. \\
+\path{{OPTION_SYMBOL}_ohlc_0dte_latest.parquet} & 0DTE option OHLC data used for entry/exit pricing. \\
+\path{realtime_feed.log} & Feed-side operational log. \\
+\path{live_feature_drift_audit.json} & Output from the live feature drift audit. \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{center}
 
-Only columns that exist in the parquet and in the base feature set are used.  The remaining base columns become state features.  In the production artifact, this produces 155 state features and 25 input features.
+\section{Bot State}
 
-\section{JEPA-Appended Columns}
+The event-option bot writes state under:
 
-The appender writes 42 columns:
+\begin{lstlisting}
+trades_jepa/
+\end{lstlisting}
 
-\begin{itemize}
-  \item 16 state latent coordinates, \texttt{xjepa\_z\_00} through \texttt{xjepa\_z\_15},
-  \item 12 input latent coordinates, \texttt{xjepa\_u\_00} through \texttt{xjepa\_u\_11},
-  \item latent and input velocity,
-  \item short-horizon and long-horizon prediction dispersion,
-  \item lagged prediction errors at 30, 60, and 180 minutes,
-  \item short/hold/long probabilities,
-  \item trade confidence, direction score, entropy, and context validity.
-\end{itemize}
-
-\section{Exact 180 Minute Labels}
-
-The direction frame is built by shifting spot price exactly 36 five-minute rows within each ticker-date group:
-
-\[
-  \mathrm{future\_spot}_{i,180m} = S_{i+36}.
-\]
-
-Then:
-
-\[
-  \mathrm{future\_return}_{i,180m} = \frac{S_{i+36}}{S_i} - 1,
-\]
-
-\[
-  \mathrm{future\_up}_{i,180m} =
-  \mathbb{1}\left[\mathrm{future\_return}_{i,180m} > 0\right].
-\]
-
-Rows without a valid future spot are dropped.  If \texttt{xjepa\_context\_valid} exists, rows without a valid JEPA context are also dropped.  The future columns are labels and diagnostics; they are explicitly excluded from feature selection.
-
-\section{Leakage Columns}
-
-The direction scripts define a leakage block that must never be used as features:
-
-\begin{itemize}
-  \item \texttt{target},
-  \item \texttt{time\_to\_target},
-  \item \texttt{time\_to\_stop},
-  \item \texttt{max\_move},
-  \item \texttt{future\_return\_180m},
-  \item \texttt{future\_return\_bps\_180m},
-  \item \texttt{future\_up\_180m},
-  \item \texttt{future\_abs\_bps\_180m},
-  \item \texttt{future\_spot\_180m},
-  \item \texttt{terminal\_label\_180m}.
-\end{itemize}
-
-The existence of these columns in a dataframe is safe only if model feature selection excludes them.
-
-\section{Option Candidate Dataset}
-
-The 0DTE option policy dataset is not one row per market timestamp.  It is one row per signal and delta candidate:
-
-\[
-  c_{j,k} =
-  (\mathrm{signal}_j, \Delta_k, \mathrm{strike}, \mathrm{premium}, \mathrm{path}, \mathrm{labels}),
-\]
-
-where $\Delta_k$ is one of:
-
-\[
-  \{0.10,0.20,0.30,0.40,0.50,0.60,0.70\}.
-\]
-
-For each accepted \texttt{base\_jepa} signal, the script chooses the option whose actual absolute delta is closest to the target bucket.  It records actual strike, actual delta, entry premium, spread-adjusted premium, contracts, and path labels.
-
-\section{Option Path Labels}
-
-For each candidate, the option simulator reconstructs the future premium path up to 180 minutes.  The dataset stores:
-
-\begin{itemize}
-  \item hold-180 exit value,
-  \item hard-rule exit value,
-  \item oracle best-exit value,
-  \item rule exit reason and time,
-  \item oracle exit reason and time,
-  \item return on risk,
-  \item number of valid path points.
-\end{itemize}
-
-The hard-rule exit is deployable because it applies stop/take-profit rules forward in time.  The oracle exit is not deployable because it chooses the best future point after seeing the path.
-
-\section{Dynamic Option State Rows}
-
-OptionValueJEPA adds one row every 5 minutes while a candidate trade is open.  Each dynamic row contains current state and future labels:
-
-\begin{longtable}{p{0.30\textwidth}p{0.60\textwidth}}
+\begin{center}
+\begin{tabularx}{\textwidth}{lX}
 \toprule
-Field group & Meaning \\
+File & Meaning \\
 \midrule
-\endhead
-Current PnL & \texttt{current\_pnl\_pct}, \texttt{current\_return\_on\_risk}, and \texttt{pnl\_dollars}. \\
-Premium state & \texttt{current\_premium} and \texttt{premium\_ratio}. \\
-Path state & \texttt{peak\_pnl\_pct}, \texttt{drawdown\_from\_peak}, and \texttt{mae\_pnl\_pct}. \\
-Current Greeks & Current delta, absolute delta, IV, and gamma. \\
-Underlying move & Spot return and signed spot return since entry. \\
-Time state & Hold minutes, normalized hold, and minutes remaining. \\
-Future labels & Future best PnL from the current state to max hold and terminal PnL at max hold. \\
+\path{open_positions_jepa.json} & Current open paper positions. Deployment reset should check this first. \\
+\path{event_option_runtime_state.json} & Runtime counters and policy replay state. \\
+\path{evaluated_features_jepa.json} & Last evaluated feature records. \\
+\path{cooldowns_jepa.json} & Cooldown state by ticker/policy. \\
+\path{trades_jepa.csv} & Closed trade ledger. \\
+\path{event_option_candidate_audit_jepa.jsonl} & Candidate selection and rejection audit. \\
+\path{paper_order_intents_jepa.jsonl} & Paper order intents emitted by the bot. \\
+\path{tradingbot_jepa.log} & Bot operational log. \\
 \bottomrule
-\end{longtable}
+\end{tabularx}
+\end{center}
 
-These dynamic labels are not live features.  They are targets for the continuation-value model.
+\section{Production Artifacts}
 
-\section{Chronological Splits}
+The active package path is:
 
-\subsection{Strict OOS Split}
+\begin{lstlisting}
+neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/
+\end{lstlisting}
 
-The main frozen split is:
+Required files:
 
-\begin{itemize}
-  \item train through March 31, 2026,
-  \item test from April 1, 2026 through May 29, 2026,
-  \item 2,220 OOS labelled rows,
-  \item 105 \texttt{base\_jepa} OOS trades after 180 minute cooldown.
-\end{itemize}
+\begin{center}
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+Artifact & Required role \\
+\midrule
+\path{event_option_policy.json} & Runtime policy, static caps, exit contract, and production status. \\
+\path{component_registry.json} & Registry of scoring components and live-equivalence metadata. \\
+Component files & Model and sidecar files referenced by the registry. \\
+\bottomrule
+\end{tabularx}
+\end{center}
 
-\subsection{Walk-Forward OptionValueJEPA Split}
+\section{JSONL Intent Shape}
 
-The OptionValueJEPA walk-forward starts after a minimum 12 month training history and tests month by month from August 2023 through May 2026.  The aggregate contains:
+Each paper intent records the action, ticker, contract, quantity, price, policy id, and reason. Typical actions:
 
-\begin{itemize}
-  \item 2,100 evaluated trades,
-  \item 19,558 candidate rows,
-  \item 704,088 dynamic state rows.
-\end{itemize}
+\begin{lstlisting}
+BUY_TO_OPEN
+SELL_TO_CLOSE
+\end{lstlisting}
 
-\subsection{Production Final Split}
+Typical close reasons:
 
-The production run trains on all available data.  Its diagnostics are therefore model-history diagnostics.  The last production run used data through May 29, 2026 even though the configured cutoff argument was December 30, 2026.
+\begin{lstlisting}
+event_option_stop_loss_30%
+event_option_take_profit_50%
+event_option_trail_stop
+event_option_max_hold
+event_option_eod
+\end{lstlisting}
 
-\section{Incremental Collection}
+Reason strings can include legacy percentages from older live sessions. The current deployed exit contract is checked from the service startup log and policy, not from stale historical intent files.
 
-Daily retraining is accelerated by the collector's incremental logic:
+\section{Logs and Exports}
 
-\begin{enumerate}
-  \item If the output parquet does not exist, build from the requested start date.
-  \item If \texttt{--force-rebuild} or \texttt{--no-incremental} is supplied, build from the requested start date.
-  \item If the collector script is newer than the output parquet, rebuild from the requested start date because feature definitions may have changed.
-  \item Otherwise, read the last date inside the existing parquet and append only dates after that date up to the requested end date.
-\end{enumerate}
+Operational reviews are usually exported under:
 
-This is why a production run can be fast after the full parquet is current.  If the collector was recently edited, the next run rebuilds once.
+\begin{lstlisting}
+log_exports/jepa_live_review_YYYYMMDD_*.tar.gz
+\end{lstlisting}
 
-\section{Artifact Contracts}
-
-Every production 180 minute joblib artifact stores:
-
-\begin{itemize}
-  \item fitted LightGBM model,
-  \item training medians for imputation,
-  \item exact feature list and order,
-  \item long and short thresholds,
-  \item metadata including cutoff, feature count, horizon, cost assumptions, and validation months.
-\end{itemize}
-
-Live inference must use the artifact's feature list, not an independently inferred feature list.  This prevents training/live schema drift.
-
-\section{Conclusion}
-
-The data structure is a set of related chronological tables: base market rows, JEPA-enriched market rows, 180 minute label rows, option candidate rows, and dynamic option state rows.  The critical discipline is to keep live-safe features, future labels, and oracle diagnostics separated.  The current pipeline does that by explicit feature lists, leakage-column exclusions, chronological splits, and artifact-level feature contracts.
+Local analysis folders such as \path{analysis_jepa_live_review_*} are diagnostic artifacts, not source code.
 
 \end{document}

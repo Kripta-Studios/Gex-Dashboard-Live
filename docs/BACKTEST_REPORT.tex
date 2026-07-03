@@ -1,29 +1,22 @@
-% ============================================================================
-%  Kripta Studios -- Scientific Backtest Report
-% ============================================================================
 \documentclass[11pt,a4paper]{article}
-
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{mathpazo}
-\usepackage{amsmath, amssymb}
 \usepackage{geometry}
 \geometry{margin=1in}
-\usepackage{setspace}
-\onehalfspacing
 \usepackage{booktabs}
-\usepackage{longtable}
 \usepackage{tabularx}
+\usepackage{longtable}
 \usepackage{array}
-\usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage{listings}
 \hypersetup{colorlinks=true, linkcolor=blue, urlcolor=blue}
+\lstset{basicstyle=\ttfamily\small, breaklines=true, frame=single, columns=fullflexible}
 \setcounter{tocdepth}{2}
 \sloppy
 
-\title{\textbf{Backtest Report for GBT+JEPA Direction, Fixed-Delta 0DTE Execution, and OptionValueJEPA Research Models}}
+\title{\textbf{Production Backtest and Validation Report}\\Event-Option Static-Union Package}
 \author{Kripta Studios}
-\date{June 2026}
+\date{July 2026}
 
 \begin{document}
 \maketitle
@@ -31,332 +24,96 @@
 \newpage
 
 \begin{abstract}
-This report documents the current evidence for the GBT+JEPA trading architecture.  The strict out-of-sample benchmark trains through March 31, 2026 and tests April 1 through May 29, 2026.  In that benchmark, the combined \texttt{base\_jepa} 180 minute direction model outperforms both the base GBT and JEPA-only models.  The fixed $\Delta=0.70$ 0DTE option execution rule is currently stronger than the learned OptionValueJEPA strike/exit alternatives on the practical promotion criteria.  Production-history diagnostics are reported separately and are explicitly not out-of-sample evidence.
+This report summarizes the current production validation evidence for the JEPA event-option static-union package. The active package is \path{jepa_production_event_options_frozen2025_static_union_202607}, policy \texttt{event\_option\_frozen2025\_static\_union\_balanced\_202607}. Results below are the completed-month January--June 2026 production validation used for the July 2026 deployment decision.
 \end{abstract}
 
-\section{Executive Conclusion}
+\section{Production Candidate}
 
-The promoted production candidate is:
+The validated package is:
+
+\begin{lstlisting}
+neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/
+\end{lstlisting}
+
+Result directory:
+
+\begin{lstlisting}
+research_papers/JEPA/results/event_option_mh30trail_frozen2025_static_union_deploy202607_production_v1
+\end{lstlisting}
+
+The active runtime uses event-option candidate scoring, static policy caps, and mechanical exits. It does not use PPO/RL or OptionValue as the live decision layer.
+
+\section{Validation Command}
+
+\begin{lstlisting}
+python3 neural/jepa/validate_event_option_production_package.py \
+  --policy neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/event_option_policy.json \
+  --registry neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/component_registry.json \
+  --require-live-ready \
+  --ignore-raw-thetadata-coverage \
+  --min-profit-factor 1.3 \
+  --min-win-rate 0.45 \
+  --min-month-trades 12
+\end{lstlisting}
+
+\section{Aggregate Metrics}
 
 \begin{center}
-\textbf{GBT+JEPA 180 minute direction model + fixed $\Delta \approx 0.70$ 0DTE option execution.}
+\begin{tabular}{lrrrr}
+\toprule
+Scope & Trades & Win rate & Profit factor & Min month trades \\
+\midrule
+Overall & 697 & 57.819\% & 1.915 & 103 \\
+QQQ & 236 & 60.593\% & 1.771 & 36 \\
+SPXW & 355 & 55.211\% & 2.037 & 51 \\
+SPY & 106 & 60.377\% & 1.769 & 12 \\
+\bottomrule
+\end{tabular}
 \end{center}
 
-The main reasons are:
+Overall validation exceeds the current gates of 45\% win rate, 1.3 profit factor, and 12 completed-month trades per ticker. The main limitation is SPY volume. SPY passes the deployable gate but not the preferred 18 trades per month target.
+
+\section{Why This Replaced Prior Packages}
+
+The previous backfill19 SPY package and level-stability/structural-profile stack were useful stepping stones, but the current static-union package is the deployed artifact because it passes live-ready validation, starts under the current systemd units, and has a clear runtime exit contract:
+
+\begin{lstlisting}
+stop=-60%/tp=1000%/trail=50%/25%/min_hold=30m/max_hold=180m
+\end{lstlisting}
+
+The forced d50 behavior observed in earlier live tests is not the current policy target. The active service units point to the frozen2025 static-union package.
+
+\section{Production Caveats}
+
+\begin{itemize}
+  \item Validation is only meaningful if the live feed generates the same feature surface used by the package.
+  \item The validation gate is 12 trades per month because SPY does not satisfy 18 trades per month.
+  \item Daily live fills and paper intents are separate evidence and must be audited after deployment.
+  \item A strong backtest does not authorize features that depend on future prices, future option highs/lows, realized PnL, or labels.
+\end{itemize}
+
+\section{Live Comparison Protocol}
+
+For each live day:
 
 \begin{enumerate}
-  \item \texttt{base\_jepa} improves strict OOS direction-trade performance relative to the base GBT.
-  \item JEPA-only is weaker than base+JEPA, so JEPA should be used as a feature generator, not as a standalone replacement.
-  \item Fixed $\Delta=0.70$ option execution beats learned strike selectors on the most stable OOS option-policy comparison.
-  \item Learned 5 minute exits do not yet capture the large oracle-exit ceiling.
-  \item Production final diagnostics are strong but must be treated as model-history checks, not validation.
+  \item Export \path{rt_data/YYYYMMDD/} and \path{trades_jepa/}.
+  \item Parse \path{paper_order_intents_jepa.jsonl}.
+  \item Compare selected candidates, entry times, deltas, contracts, exits, and hold times against a replay using the same policy.
+  \item Run \path{audit_live_feature_drift.py} after the feed writes \path{event_option_snapshots_latest.parquet}.
 \end{enumerate}
 
-\section{Evaluation Definitions}
+\section{Promotion Rule}
 
-\subsection{Prediction Metrics}
-
-For the 180 minute direction model:
-
-\[
-  y_t = \mathbb{1}[S_{t+180m} > S_t].
-\]
-
-Reported prediction metrics include:
+A future package should replace this one only if it improves the relevant live-ready evidence:
 
 \begin{itemize}
-  \item AUC,
-  \item accuracy,
-  \item balanced accuracy,
-  \item Spearman correlation between predicted probability and future return,
-  \item top-quintile and bottom-quintile future returns.
+  \item profit factor and win rate above gate;
+  \item completed-month volume by ticker;
+  \item causal selection with no same-month or future-month leakage;
+  \item live feature equivalence;
+  \item successful systemd startup and smoke test;
+  \item forward live/paper behavior that matches replay.
 \end{itemize}
-
-\subsection{Trade Metrics}
-
-For proxy backtests:
-
-\[
-  \mathrm{gross\ bps}_t =
-  d_t \cdot 10{,}000\left(\frac{S_{t+180m}}{S_t}-1\right),
-\]
-
-where $d_t=+1$ for long and $d_t=-1$ for short.  Net bps subtracts cost:
-
-\[
-  \mathrm{net\ bps}_t = \mathrm{gross\ bps}_t - \mathrm{cost\ bps}.
-\]
-
-PnL is:
-
-\[
-  \mathrm{PnL}_t =
-  \frac{\mathrm{net\ bps}_t}{10{,}000}
-  \times \mathrm{notional}.
-\]
-
-Profit factor is:
-
-\[
-  \mathrm{PF} =
-  \frac{\sum_{\mathrm{PnL}>0}\mathrm{PnL}}
-       {|\sum_{\mathrm{PnL}<0}\mathrm{PnL}|}.
-\]
-
-\section{Strict OOS 180 Minute Direction Test}
-
-\subsection{Protocol}
-
-\begin{itemize}
-  \item Training cutoff: March 31, 2026.
-  \item Test period: April 1, 2026 through May 29, 2026.
-  \item Tickers: SPX, QQQ, SPY.
-  \item Label: exact 180 minute future direction.
-  \item Hold: fixed 180 minutes.
-  \item Cooldown: 180 minutes.
-  \item Cost: 1 bps.
-  \item Notional: \$100,000 per proxy trade.
-\end{itemize}
-
-This is the key validation split because all training and threshold selection are frozen before the OOS period.
-
-\subsection{Prediction Quality}
-
-\begin{table}[h]
-\centering
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{lrrrrrrrr}
-\toprule
-Model & Rows & Future Up & Pred Up & AUC & Acc & Bal Acc & Spearman & Top Q bps \\
-\midrule
-base & 2,220 & 62.6\% & 60.1\% & 0.626 & 62.3\% & 60.4\% & 0.183 & 10.82 \\
-jepa\_only & 2,220 & 62.6\% & 51.0\% & 0.579 & 55.9\% & 56.0\% & 0.129 & 12.29 \\
-base\_jepa & 2,220 & 62.6\% & 55.4\% & 0.636 & 61.8\% & 61.1\% & 0.222 & 13.89 \\
-\bottomrule
-\end{tabular}}
-\caption{Strict OOS prediction metrics for April--May 2026.}
-\end{table}
-
-\texttt{base\_jepa} has the best AUC and Spearman rank correlation.  This matters because trade profitability depends more on ranking and thresholding than on raw accuracy.
-
-\subsection{Trade Results}
-
-\begin{table}[h]
-\centering
-\begin{tabular}{lrrrrrrr}
-\toprule
-Model & Trades & WR & PF & Avg bps & PnL & Max DD & Long Rate \\
-\midrule
-base & 80 & 58.8\% & 1.389 & 4.40 & \$3,522 & -\$1,640 & 65.0\% \\
-jepa\_only & 110 & 59.1\% & 1.333 & 3.86 & \$4,245 & -\$3,270 & 52.7\% \\
-base\_jepa & 105 & 68.6\% & 1.945 & 8.70 & \$9,132 & -\$1,522 & 63.8\% \\
-\bottomrule
-\end{tabular}
-\caption{Strict OOS fixed-hold 180 minute proxy backtest.}
-\end{table}
-
-The combined model improves every practical trade metric versus the base model.  It increases trade count from 80 to 105, win rate from 58.8\% to 68.6\%, profit factor from 1.389 to 1.945, and PnL from \$3,522 to \$9,132.
-
-\section{Per-Ticker OOS Direction Results}
-
-\begin{table}[h]
-\centering
-\begin{tabular}{lrrrrrr}
-\toprule
-Ticker & Trades & WR & PF & Avg bps & PnL & Max DD \\
-\midrule
-QQQ & 35 & 62.9\% & 1.573 & 7.76 & \$2,717 & -\$1,522 \\
-SPX & 36 & 72.2\% & 4.144 & 14.00 & \$5,041 & -\$579 \\
-SPY & 34 & 70.6\% & 1.414 & 4.04 & \$1,374 & -\$1,026 \\
-\bottomrule
-\end{tabular}
-\caption{\texttt{base\_jepa} strict OOS proxy results by ticker.}
-\end{table}
-
-SPX is much stronger than SPY and QQQ in PF even though SPX and SPY are highly correlated.  The likely explanation is execution and feature microstructure rather than direction alone.  SPX option-chain exposure, model thresholds, realized range, and notional scaling produce a different payoff distribution.  Correlation of spot returns does not imply identical option-market state or identical threshold behavior.
-
-\section{Cost Sensitivity}
-
-\begin{table}[h]
-\centering
-\begin{tabular}{rrrrrr}
-\toprule
-Cost & Trades & WR & PF & Avg bps & PnL \\
-\midrule
-1 bps & 105 & 68.6\% & 1.945 & 8.70 & \$9,132 \\
-3 bps & 105 & 65.7\% & 1.679 & 6.70 & \$7,032 \\
-5 bps & 105 & 64.8\% & 1.445 & 4.70 & \$4,932 \\
-10 bps & 105 & 55.2\% & 0.976 & -0.30 & -\$318 \\
-\bottomrule
-\end{tabular}
-\caption{\texttt{base\_jepa} OOS cost sensitivity.}
-\end{table}
-
-The edge is execution-sensitive.  At 10 bps it disappears.  Live deployment should therefore focus on fills, spreads, and avoiding poor-liquidity conditions.
-
-\section{0DTE Option Policy OOS Test}
-
-\subsection{Protocol}
-
-The option-policy OOS benchmark uses the frozen-March \texttt{base\_jepa} model as the entry generator.  For every accepted signal, the simulator constructs option candidates for delta buckets:
-
-\[
-  \Delta \in \{0.10,0.20,0.30,0.40,0.50,0.60,0.70\}.
-\]
-
-The option side is call for long and put for short.  Entry premium is spread-adjusted.  Contract count is computed from risk capital.  Exits use hard stop and take-profit unless an experiment explicitly evaluates learned exit or oracle exit.
-
-\subsection{Aggregate OOS Results}
-
-\begin{table}[h]
-\centering
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{lrrrrrrr}
-\toprule
-Policy & Trades & WR & PF & PnL & Max DD & Avg PnL & Avg Hold \\
-\midrule
-fixed $\Delta=0.60$ hard & 105 & 51.4\% & 1.885 & \$25,226 & -\$3,354 & \$240 & 152.6 \\
-fixed $\Delta=0.70$ hard & 105 & 56.2\% & 2.033 & \$28,115 & -\$3,548 & \$268 & 161.0 \\
-learned delta regression hard & 105 & 53.3\% & 1.889 & \$26,223 & -\$3,548 & \$250 & 158.6 \\
-learned delta ranker hard & 105 & 55.2\% & 1.965 & \$27,145 & -\$3,548 & \$259 & 158.5 \\
-supervised entry/strike skip hard & 46 & 58.7\% & 2.235 & \$19,472 & -\$2,389 & \$423 & 149.9 \\
-supervised entry/strike learned exit & 46 & 58.7\% & 2.489 & \$23,381 & -\$2,389 & \$508 & 131.7 \\
-oracle best delta hard & 105 & 56.2\% & 5.053 & \$69,480 & -\$1,703 & \$662 & 161.7 \\
-oracle best delta oracle exit & 105 & 87.6\% & 140.828 & \$167,995 & -\$342 & \$1,600 & 109.6 \\
-\bottomrule
-\end{tabular}}
-\caption{April--May OOS 0DTE option-policy results.}
-\end{table}
-
-Fixed $\Delta=0.70$ is the production choice because it has the strongest combination of volume, PnL, and simplicity among deployable policies in this OOS slice.  The supervised skip model has higher PF but only 46 trades, so it is not a direct replacement for the high-volume contract.
-
-\subsection{Fixed $\Delta=0.70$ by Ticker}
-
-\begin{table}[h]
-\centering
-\begin{tabular}{lrrrrrr}
-\toprule
-Ticker & Trades & WR & PF & PnL & Max DD & Avg Delta \\
-\midrule
-QQQ & 35 & 51.4\% & 1.474 & \$3,229 & -\$2,144 & 0.702 \\
-SPX & 36 & 63.9\% & 2.406 & \$20,298 & -\$3,548 & 0.703 \\
-SPY & 34 & 52.9\% & 1.770 & \$4,589 & -\$2,261 & 0.701 \\
-\bottomrule
-\end{tabular}
-\caption{April--May OOS fixed-delta option results by ticker.}
-\end{table}
-
-\section{OptionValueJEPA Walk-Forward}
-
-\subsection{Protocol}
-
-OptionValueJEPA is evaluated month by month from August 2023 through May 2026 after at least 12 months of training data.  The aggregate experiment includes:
-
-\begin{itemize}
-  \item 2,100 evaluated trades,
-  \item 19,558 candidate option rows,
-  \item 704,088 5 minute dynamic state rows.
-\end{itemize}
-
-\subsection{Aggregate Results}
-
-\begin{table}[h]
-\centering
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{lrrrrrr}
-\toprule
-Policy & Trades & WR & PF & PnL & Max DD & Avg Delta \\
-\midrule
-fixed $\Delta=0.70$ hard & 2,100 & 74.3\% & 5.761 & \$1,171,610 & -\$5,546 & 0.703 \\
-fixed $\Delta=0.70$ learned exit 5m & 2,100 & 75.1\% & 5.398 & \$1,055,623 & -\$5,546 & 0.703 \\
-option-value hold180 select hard & 2,100 & 65.8\% & 4.414 & \$1,199,159 & -\$5,546 & 0.572 \\
-option-value rule select hard & 2,100 & 66.0\% & 4.415 & \$1,187,154 & -\$5,546 & 0.578 \\
-option-value best select hard & 2,100 & 51.8\% & 2.937 & \$1,106,884 & -\$8,180 & 0.399 \\
-option-value best select learned exit 5m & 2,100 & 52.9\% & 2.829 & \$1,028,827 & -\$8,769 & 0.399 \\
-oracle best delta hard & 2,100 & 74.5\% & 13.993 & \$2,084,499 & -\$2,093 & 0.531 \\
-oracle best delta oracle exit & 2,100 & 95.9\% & 643.432 & \$4,256,509 & -\$342 & 0.387 \\
-\bottomrule
-\end{tabular}}
-\caption{OptionValueJEPA walk-forward aggregate results.}
-\end{table}
-
-OptionValueJEPA is not useless: some selector modes produce high PnL.  However, the fixed-delta baseline remains stronger in win rate and profit factor.  The learned exit variants reduce PnL or PF relative to hard exits.  Therefore OptionValueJEPA remains research-only.
-
-\section{GBT+JEPA Learned Exit Experiment}
-
-\begin{table}[h]
-\centering
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{lrrrrrr}
-\toprule
-Policy & Trades & WR & PF & PnL & Max DD & Avg Hold \\
-\midrule
-fixed 180m & 105 & 68.6\% & 1.945 & \$9,132 & -\$2,093 & 180.0 \\
-pooled continuation edge L1 & 105 & 68.6\% & 1.945 & \$9,132 & -\$2,093 & 180.0 \\
-pooled continuation edge Q75 & 105 & 70.5\% & 1.901 & \$8,679 & -\$2,093 & 175.9 \\
-per-ticker continuation edge L1 & 105 & 68.6\% & 1.799 & \$7,357 & -\$2,033 & 149.7 \\
-oracle exit & 105 & 90.5\% & 44.155 & \$27,428 & -\$215 & 110.0 \\
-\bottomrule
-\end{tabular}}
-\caption{Continuation-exit experiment on top of \texttt{base\_jepa}.}
-\end{table}
-
-The oracle exit shows large theoretical headroom.  The learned exits failed because they did not reliably estimate continuation value in OOS.  Their state features are path-dependent and noisy, and the future-best target has heavy tails.
-
-\section{Production Final Diagnostics}
-
-\subsection{Important Warning}
-
-The production final model is trained on all available data through the source parquet maximum date.  It is the model to deploy, but its diagnostics are not OOS.  They are useful for verifying that the training run completed and the artifacts are internally consistent.
-
-\begin{table}[h]
-\centering
-\begin{tabular}{lrrrrrr}
-\toprule
-Mode & Trades & WR & PF & Avg bps & PnL & Max DD \\
-\midrule
-base & 2,803 & 87.5\% & 20.904 & 30.88 & \$865,707 & -\$3,111 \\
-jepa\_only & 2,634 & 86.3\% & 11.100 & 28.29 & \$745,029 & -\$4,711 \\
-base\_jepa & 2,808 & 88.1\% & 24.990 & 31.23 & \$876,958 & -\$2,674 \\
-\bottomrule
-\end{tabular}
-\caption{Production-history diagnostics.  These are not OOS results.}
-\end{table}
-
-A quick May 2026 smoke test of the production artifact produced 56 trades, 82.1\% win rate, 18.088 PF, and \$13,377 PnL.  This confirms that the model loads and trades, but it is not validation because May data was part of the final production training set.
-
-\section{Promotion Matrix}
-
-\begin{longtable}{p{0.24\textwidth}p{0.16\textwidth}p{0.50\textwidth}}
-\toprule
-Component & Decision & Reason \\
-\midrule
-\endhead
-\texttt{base\_jepa} 180m direction & Promote & Beats base GBT in strict April--May OOS on PF, WR, PnL, and drawdown. \\
-\texttt{jepa\_only} direction & Do not promote standalone & Contains signal but underperforms the combined model. \\
-Fixed $\Delta=0.70$ 0DTE execution & Promote & Best simple deployable option policy in the current OOS slice. \\
-OptionValueJEPA strike selector & Research & High PnL in some modes but weaker PF/WR and drawdown than fixed delta. \\
-Learned 5m exit & Reject for production & Oracle headroom exists, but learned exits do not capture it. \\
-Oracle best delta/exit & Diagnostic only & Uses future information and cannot be deployed. \\
-\bottomrule
-\end{longtable}
-
-\section{Interpretation}
-
-The results do not say that the system is solved.  They say that the next production release should use \texttt{base\_jepa} for 180 minute direction and fixed $\Delta=0.70$ for 0DTE execution.  The evidence is strongest for the direction layer and weaker for learned option optimization.  The research gap is now clear: close the gap between fixed delta and oracle selection without sacrificing OOS profit factor.
-
-\section{Recommended Next Tests}
-
-\begin{enumerate}
-  \item Extend the strict OOS protocol with future months as they become available.
-  \item Run per-ticker slippage and spread sensitivity for the fixed-delta option policy.
-  \item Train OptionValueJEPA with ticker-specific calibration or separate heads.
-  \item Test rank-based losses for option candidate selection, not only regression to clipped return-on-risk.
-  \item Keep learned exits behind a promotion gate requiring PF, PnL, and drawdown improvement over fixed hold.
-\end{enumerate}
-
-\section{Conclusion}
-
-The current empirical evidence supports a conservative deployment path.  JEPA improves the GBT as a latent feature generator.  The fixed-delta option layer remains better than learned option selection.  Production diagnostics are strong but must not be confused with OOS proof.  The next research objective is to make OptionValueJEPA beat the fixed $\Delta=0.70$ baseline robustly, not merely approach oracle performance in isolated diagnostics.
 
 \end{document}

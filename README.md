@@ -1,825 +1,220 @@
 # GEX Dashboard Live
 
-Real-time Greek Exposure (GEX) analysis and automated trading system for options markets, powered by a **Hybrid Attention-MLP** model.
+GEX Dashboard Live is a real-time options data, plotting, Discord, and paper-trading stack. The current live trading path is the JEPA event-option static-union package for 0DTE SPXW, QQQ, and SPY options.
 
----
+Older Hybrid Attention-MLP, GBT, level-stability, structural-profile, OptionValue, and PPO/RL systems remain in the repository as research or legacy tooling. They are not the active production trading service unless a service file or command explicitly enables them.
 
-## Table of Contents
+## Current Production Stack
 
-- [Overview](#overview)
-- [Project Structure](#project-structure)
-- [Services](#services)
-- [Trading Bots](#trading-bots)
-- [Hybrid Model](#hybrid-model)
-- [Backtesting](#backtesting)
-- [Discord Integration](#discord-integration)
-- [Tools & Utilities](#tools--utilities)
-- [Data Directories](#data-directories)
-- [Configuration](#configuration)
-- [Deployment](#deployment)
+The live trade-alert stack is:
 
----
-
-## Overview
-
-This project provides a comprehensive suite for:
-- **Real-time Greek exposure calculation** (Gamma, Vanna, Charm, Delta, DGEX, Vega, Vomma) across 0DTE and Weekly expirations.
-- **Automated trading** using a state-of-the-art **Hybrid Attention-MLP** neural network.
-- **Initial Balance (IB) analysis** with Fibonacci extensions.
-- **Discord notifications** for high-probability signals and trade management.
-- **Backtesting framework** to validate strategies against historical data.
-
-The system processes options chain data from TastyTrade, calculates complex Greek exposures, identifies key levels (magnet/accelerator), and executes trades based on ML predictions.
-
----
-
-## Project Structure
-
-```
-Gex-Dashboard-Live/
-├── services/              # Background daemons (24/7)
-│   ├── gex_daemon.py      # Greek exposure data generator
-│   ├── ib_service.py      # Initial Balance chart generator
-│   ├── servidor.py        # HTTP API server (port 8609)
-│   ├── fourier_service.py # Fourier cycle analysis
-│   ├── fourier_service_fast.py
-│   └── calc_max_pain.py   # Max Pain calculator
-│
-├── neural/                # Hybrid Neural Network (Attention-MLP)
-│   ├── hybrid_model.py    # Model Architecture (PyTorch)
-│   ├── train_hybrid.py    # Training script
-│   └── feature_reduction.py # PCA & feature engineering
-│
-├── bots/                  # Trading Logic & Execution
-│   ├── tradingbot_wrapper.py # Main entry point (loads neural model)
-│   ├── tradingbot1.py     # (Legacy) Multi-ticker confluence strategy
-│   ├── tradingbot2.py     # (Legacy) Level reversal strategy
-│   ├── check_trades.py    # Trade status monitor
-│   ├── trades_wrapper/    # Active & closed trades (JSON)
-│   └── trades_live/       # Legacy trades
-│
-├── models/                # Trained models
-│   ├── trading_hybrid.pt  # PyTorch model weights
-│   └── hybrid_normalizer.npz # Feature scalers
-│
-├── discord_app/           # Discord bot integration
-│   ├── main.py            # Discord bot entry point
-│   ├── bot.py             # Bot commands handler
-│   └── discord_send_plots.py  # Plot scheduler
-│
-├── backtest/              # Backtesting scripts
-│   ├── backtest_hybrid.py # ML-based backtesting
-│   ├── ib_backtest.py     # IB data fetcher
-│   └── plots/             # Backtest visualizations
-│
-├── scripts/               # Scripts
-│   ├── backfill_json_greeks.py # Greek exposure data
-│   └── fix_dates.py       # Fix dates in JSON files
-│
-├── tools/                 # CLI utilities
-│   ├── cli-app.py         # Manual data plotting
-│   ├── data_plotting.py   # Data plotting tools
-│   └── watchdog_notify.py # Watchdog notifications
-│
-├── web/                   # Web dashboard
-│   └── templates/
-│       ├── index.html         # Main HTML page
-│       ├── index_modular.html # Modular version (loads JS modules)
-│       ├── script.js          # Legacy monolithic script (backup)
-│       ├── styles.css         # Main CSS (imports modular files)
-│       ├── css/               # Modular CSS structure
-│       │   ├── base.css           # Variables, themes, typography
-│       │   ├── layout.css         # Main layout, tabs
-│       │   ├── components.css     # Buttons, inputs, market monitor
-│       │   ├── charts.css         # Chart panels, heatmap, regime
-│       │   ├── login.css          # Login screen
-│       │   └── modes.css          # Zen mode, detached modes
-│       └── js/                # Modular JavaScript (16 modules)
-│           ├── state.js           # Global state variables
-│           ├── api.js             # Data fetching functions
-│           ├── ui.js              # UI helpers, time, themes
-│           ├── tabs.js            # Tab management
-│           ├── dragdrop.js        # Drag and drop for panels
-│           ├── charts.js          # Chart panel dispatcher
-│           ├── heatmap.js         # Greek exposure heatmaps
-│           ├── fourier.js         # Fourier analysis panels
-│           ├── ib.js              # Initial Balance panels
-│           ├── handlers.js        # Form handlers
-│           ├── history.js         # Time machine controls
-│           ├── layout.js          # Save/load layouts
-│           ├── refresh.js         # Dashboard refresh logic
-│           ├── windows.js         # Detached windows
-│           ├── auth.js            # Authentication
-│           └── init.js            # App initialization
-│
-├── modules/               # Shared modules
-│   ├── stats.py           # Statistical functions
-│   ├── tasty_handler.py   # TastyTrade API client
-│   ├── ticker_dwn.py      # Ticker data downloader
-│   └── utils.py           # Common utilities
-│
-├── systemd/               # Systemd service files
-│   └── *.service
-│
-├── .env                   # Environment variables
-├── requirements.txt       # Python dependencies
-└── README.md
+```text
+services/realtime_feed.py
+bots/tradingbot_wrapper_jepa.py
+systemd/realtime_feed.service
+systemd/ai_bot.service
 ```
 
----
+The active package is:
 
-## Services
+```text
+neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/
+  event_option_policy.json
+  component_registry.json
+```
 
-Background daemons that run continuously to generate data.
+Policy id:
 
-### gex_daemon.py
+```text
+event_option_frozen2025_static_union_balanced_202607
+```
 
-Generates Greek exposure data files every minute during market hours.
+Validated research result:
+
+```text
+research_papers/JEPA/results/event_option_mh30trail_frozen2025_static_union_deploy202607_production_v1
+```
+
+The bot emits Discord trade alerts and writes paper order intents. It does not submit broker orders.
+
+## Live Trading Contract
+
+| Field | Current value |
+| --- | --- |
+| Tickers | SPX, QQQ, SPY |
+| Option symbols | SPX -> SPXW, QQQ -> QQQ, SPY -> SPY |
+| Expiry | 0DTE only |
+| Entry window | 10:00-14:30 ET |
+| EOD cleanup | 16:00 ET |
+| Risk capital | $5,000 per trade |
+| Exit | stop -60%, trail +50% / 25% giveback, emergency TP +1000% |
+| Hold bounds | min 30m, max 180m |
+| Runtime state | `trades_jepa/` |
+| Broker submission | Disabled; paper intents only |
+
+Per-ticker static policy caps:
+
+| Ticker | Delta bucket | Score gate | Max trades/day | Cooldown |
+| --- | --- | --- | ---: | --- |
+| QQQ | d35 | policy-defined | 2 | 30m |
+| SPXW | d25 | min score 0.34 | 4 | 0m |
+| SPY | d35 | policy-defined | 1 | 0m |
+
+## Production Validation Snapshot
+
+Completed-month validation over January-June 2026:
+
+| Scope | Trades | WR | PF | Min month trades |
+| --- | ---: | ---: | ---: | ---: |
+| Overall | 697 | 57.819% | 1.915 | 103 |
+| QQQ | 236 | 60.593% | 1.771 | 36 |
+| SPXW | 355 | 55.211% | 2.037 | 51 |
+| SPY | 106 | 60.377% | 1.769 | 12 |
+
+The active production gate accepts `--min-month-trades 12`. The stronger preferred target of 18 monthly trades per ticker is not met by SPY in this package.
+
+Validate the package with:
 
 ```bash
-python services/gex_daemon.py
+python3 neural/jepa/validate_event_option_production_package.py \
+  --policy neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/event_option_policy.json \
+  --registry neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/component_registry.json \
+  --require-live-ready \
+  --ignore-raw-thetadata-coverage \
+  --min-profit-factor 1.3 \
+  --min-win-rate 0.45 \
+  --min-month-trades 12
 ```
 
-**Output:** JSON files in `/home/.../json_data/`
-- `{TICKER}_0dte_ExposureData_{DATE}_{TIME}.json`
+## Data Layout
 
-**Data includes:**
-- Gamma, Vanna, Charm, Delta, DGEX exposures
-- Spot price
-- Strike-level breakdown
+Local historical ThetaData inputs:
 
----
+```text
+D:/ThetaData/data_options/SPXW
+D:/ThetaData/data_options/QQQ
+D:/ThetaData/data_options/SPY
+D:/ThetaData/data_underlying_derived/SPXW
+D:/ThetaData/data_underlying_derived/QQQ
+D:/ThetaData/data_underlying_derived/SPY
+```
 
-### ib_service.py
+VPS runtime data:
 
-Generates Initial Balance charts using TastyTrade candle data.
+```text
+rt_data/YYYYMMDD/
+  spot_{TICKER}_latest.parquet
+  {OPTION_SYMBOL}_greeks_0dte_latest.parquet
+  {OPTION_SYMBOL}_ohlc_0dte_latest.parquet
+  event_option_snapshots_latest.parquet
+  realtime_feed.log
+
+trades_jepa/
+  open_positions_jepa.json
+  event_option_runtime_state.json
+  event_option_candidate_audit_jepa.jsonl
+  paper_order_intents_jepa.jsonl
+  tradingbot_jepa.log
+```
+
+## Daily Operations
+
+Daily work is audit and monitoring, not retraining.
 
 ```bash
-python services/ib_service.py
+DAY=$(TZ=America/New_York date +%Y%m%d)
+python3 neural/jepa/audit_live_feature_drift.py --day-dir "rt_data/$DAY" --strict-features
+journalctl -u realtime_feed.service -n 120 --no-pager
+journalctl -u ai_bot.service -n 160 --no-pager
+tail -n 200 trades_jepa/tradingbot_jepa.log
 ```
 
-**Output:** 
-- JSON: `/home/.../ib_charts/ib_data_{TICKER}_{DATE}.json`
-- PNG: `/home/.../ib_charts/ib_chart_{TICKER}_{DATE}.png`
-
-**Features:**
-- IB range detection (9:30-10:30 NYSE)
-- Fibonacci extensions from IB range
-- Volume profile calculation
-
----
-
-### servidor.py
-
-HTTP API server exposing Greek data for the web dashboard, with authentication.
-
-```bash
-python services/servidor.py
-```
-
-**Port:** 8609
-
-**Public Endpoints (no auth):**
-- `POST /login` — Login with email/password, returns Bearer token
-- `GET /verify_token` — Check if a Bearer token is still valid
-- `GET /` — Serve web dashboard
-- `GET /generate_bit` — Quantum random bit (for Unity)
-
-**Protected Endpoints (require auth):**
-- `GET /get_latest?ticker=SPX&exp=0dte` — Latest Greek data from RAM cache
-- `GET /get_history?ticker=SPX&exp=0dte&time=0930` — Historical snapshot by time
-- `GET /list_files?ticker=SPX&exp=0dte&date=20260214` — List available JSON files
-- `POST /get_batch` — Batch fetch multiple tickers (used by dashboard refresh)
-
----
-
-## Authentication & API Keys
-
-The server uses a hybrid authentication system with two mechanisms:
-
-### 1. Bearer Tokens (Web Users)
-
-Tokens are **UUID4 strings** generated server-side when a user logs in via `POST /login`. They are stored in `SESSIONS` (server RAM) and sent back to the client.
-
-**How it works:**
-1. User submits email + password to `POST /login`
-2. Server validates against `USERS` dict → generates `uuid.uuid4()` token
-3. Token is stored in `SESSIONS = { token: {"email": ..., "role": ...} }`
-4. Client stores token in `sessionStorage` and sends it with every request as:
-   ```
-   Authorization: Bearer <token>
-   ```
-5. Server checks `SESSIONS[token]` on each protected request
-
-**Single-session enforcement:**
-- When a non-admin user logs in, any **previous token for that email is deleted**
-- The old session's next API request returns `401 Unauthorized` → auto-logout
-- **Admin users** are exempt — they can have multiple active sessions
-
-**Example login request:**
-```bash
-curl -X POST http://gex-dashboard.hopto.org:8609/login \
-  -H "Content-Type: application/json" \
-  -d '{"email": "user1@flowgreeks.com", "password": "FlowGreeksPlottingUser1"}'
-
-# Response: {"status": "ok", "token": "a1b2c3d4-...", "role": "USER"}
-```
-
-**Example authenticated request:**
-```bash
-curl http://gex-dashboard.hopto.org:8609/get_latest?ticker=SPX&exp=0dte \
-  -H "Authorization: Bearer a1b2c3d4-..."
-```
-
-### 2. API Keys (Scripts & Bots)
-
-API keys are **static strings** defined in `servidor.py` for automated scripts. Each key allows **one concurrent request** (rate limited via threading locks).
-
-**Adding API keys** — Edit `API_KEYS` in `services/servidor.py`:
-```python
-API_KEYS = {
-    "gex_bot_2026_xyz":  {"role": "BOT",  "owner": "trading_bot"},
-    "client_abc_secret": {"role": "USER", "owner": "client_abc"},
-}
-# IMPORTANT: Regenerate locks after changing keys
-API_KEY_LOCKS = {k: threading.Lock() for k in API_KEYS}
-```
-
-**Using an API key in a script:**
-```python
-import requests
-
-headers = {"X-API-Key": "gex_bot_2026_xyz"}
-resp = requests.get("http://your-server:8609/get_latest?ticker=SPX&exp=0dte", headers=headers)
-data = resp.json()
-```
-
-```bash
-# Or with curl:
-curl http://your-server:8609/get_latest?ticker=SPX&exp=0dte \
-  -H "X-API-Key: gex_bot_2026_xyz"
-```
-
-**Concurrency:** If two requests arrive simultaneously with the same API key, the second gets `429 Too Many Requests`. Use different keys for different scripts if you need parallel access.
-
-### Auth Summary
-
-| Method | Header | Who | Concurrency |
-|--------|--------|-----|-------------|
-| Bearer Token | `Authorization: Bearer <uuid>` | Web users | 1 session/email (admin exempt) |
-| API Key | `X-API-Key: <key>` | Scripts/bots | 1 request/key at a time |
-| None | — | — | `401 Unauthorized` |
-
-### Managing Users
-
-Web users are defined in `services/servidor.py`:
-```python
-USERS = {
-    "admin@flowgreeks.com":  {"pass": "admin123",          "role": "ADMIN"},
-    "flowgreeks@email.com":  {"pass": "FlowGreeksPlotting", "role": "USER"},
-    # Add more users here
-}
-```
-
-> **Note:** Tokens live only in server RAM (`SESSIONS` dict). Restarting the server invalidates all active sessions — users must log in again.
-
----
-
-## Authentication & API Keys
-
-The server uses a hybrid authentication system with two mechanisms:
-
-### 1. Bearer Tokens (Web Users)
-
-Tokens are **UUID4 strings** generated server-side when a user logs in via `POST /login`. They are stored in `SESSIONS` (server RAM) and sent back to the client.
-
-**How it works:**
-1. User submits email + password to `POST /login`
-2. Server validates against `USERS` dict → generates `uuid.uuid4()` token
-3. Token is stored in `SESSIONS = { token: {"email": ..., "role": ...} }`
-4. Client stores token in `sessionStorage` and sends it with every request as:
-   ```
-   Authorization: Bearer <token>
-   ```
-5. Server checks `SESSIONS[token]` on each protected request
-
-**Single-session enforcement:**
-- When a non-admin user logs in, any **previous token for that email is deleted**
-- The old session's next API request returns `401 Unauthorized` → auto-logout
-- **Admin users** are exempt — they can have multiple active sessions
-
-**Example login request:**
-```bash
-curl -X POST http://gex-dashboard.hopto.org:8609/login \
-  -H "Content-Type: application/json" \
-  -d '{"email": "user1@flowgreeks.com", "password": "FlowGreeksPlottingUser1"}'
-
-# Response: {"status": "ok", "token": "a1b2c3d4-...", "role": "USER"}
-```
-
-**Example authenticated request:**
-```bash
-curl http://gex-dashboard.hopto.org:8609/get_latest?ticker=SPX&exp=0dte \
-  -H "Authorization: Bearer a1b2c3d4-..."
-```
-
-### 2. API Keys (Scripts & Bots)
-
-API keys are **static strings** defined in `servidor.py` for automated scripts. Each key allows **one concurrent request** (rate limited via threading locks).
-
-**Adding API keys** — Edit `API_KEYS` in `services/servidor.py`:
-```python
-API_KEYS = {
-    "gex_bot_2026_xyz":  {"role": "BOT",  "owner": "trading_bot"},
-    "client_abc_secret": {"role": "USER", "owner": "client_abc"},
-}
-# IMPORTANT: Regenerate locks after changing keys
-API_KEY_LOCKS = {k: threading.Lock() for k in API_KEYS}
-```
-
-**Using an API key in a script:**
-```python
-import requests
-
-headers = {"X-API-Key": "gex_bot_2026_xyz"}
-resp = requests.get("http://your-server:8609/get_latest?ticker=SPX&exp=0dte", headers=headers)
-data = resp.json()
-```
-
-```bash
-# Or with curl:
-curl http://your-server:8609/get_latest?ticker=SPX&exp=0dte \
-  -H "X-API-Key: gex_bot_2026_xyz"
-```
-
-**Concurrency:** If two requests arrive simultaneously with the same API key, the second gets `429 Too Many Requests`. Use different keys for different scripts if you need parallel access.
-
-### Auth Summary
-
-| Method | Header | Who | Concurrency |
-|--------|--------|-----|-------------|
-| Bearer Token | `Authorization: Bearer <uuid>` | Web users | 1 session/email (admin exempt) |
-| API Key | `X-API-Key: <key>` | Scripts/bots | 1 request/key at a time |
-| None | — | — | `401 Unauthorized` |
-
-### Managing Users
-
-Web users are defined in `services/servidor.py`:
-```python
-USERS = {
-    "admin@flowgreeks.com":  {"pass": "admin123",          "role": "ADMIN"},
-    "flowgreeks@email.com":  {"pass": "FlowGreeksPlotting", "role": "USER"},
-    # Add more users here
-}
-```
-
-> **Note:** Tokens live only in server RAM (`SESSIONS` dict). Restarting the server invalidates all active sessions — users must log in again.
-
-### fourier_service.py / fourier_service_fast.py
-
-Performs Fourier analysis to detect market cycles.
-
-```bash
-python services/fourier_service.py      # Standard
-python services/fourier_service_fast.py # Faster updates
-```
-
----
-
-## Trading Bots
-
-Automated trading bots that execute based on Greek signals.
-
-### tradingbot1.py - Multi-Ticker Confluence Strategy
-
-Requires signal alignment across SPX, SPY, and QQQ before entering.
-
-```bash
-python bots/tradingbot1.py
-```
-
-**Strategy Logic:**
-1. **Positive Gamma:** Mean-reversion at support/resistance
-2. **Negative Gamma:** Momentum following with Vanna/Charm signals
-3. **Min Vanna Magnet:** Trades toward untouched Min Vanna levels
-
-**Trade Management:**
-| Parameter | Value |
-|-----------|-------|
-| Stop Loss | 0.3% |
-| Profit Target | 1.2% |
-| Emergency Stop | 0.5% |
-| Min Holding Time | 25 minutes |
-| Cooldown After Exit | 10 minutes |
-| Force Exit | 15:55 NYC |
-
-**State Persistence:**
-- Active trade saved to `bots/state_bot1.json`
-- Completed trades saved to `bots/trades_live/`
-- Logs written to `bots/tradingbot1.log`
-
-**Discord Notifications:**
-- Trade open with detailed reasoning (gamma regime, vanna signal, levels)
-- Trade close with P&L breakdown and duration
-
----
-
-### tradingbot2.py - Level Reversal Strategy
-
-Trades individual tickers based on level tests and momentum breakouts.
-
-```bash
-python bots/tradingbot2.py
-```
-
-**Strategy Types:**
-
-| Type | Trigger | Target |
-|------|---------|--------|
-| **REVERSAL** | Price at support/resistance | Untouched Min Vanna or opposite level |
-| **MOMENTUM** | Breakout of key level in negative gamma | DGEX accelerator level |
-
-**Trade Management:**
-| Parameter | Value |
-|-----------|-------|
-| Stop Loss | 0.3% (fixed) |
-| Breakeven Trigger | +0.25% |
-| Trailing Step | 0.2% |
-| Cooldown | 30 minutes |
-| Force Exit | 15:55 NYC |
-
-**State Persistence:**
-- Active trade: `bots/state_bot2.json`
-- Completed trades: `bots/trades_live2/`
-- Logs: `bots/tradingbot2.log`
-
----
-
-### check_trades.py - Trade Monitor
-
-Quick status check for active trades across both bots.
-
-```bash
-python bots/check_trades.py
-```
-
-**Features:**
-- Shows active trade details (entry, duration, unrealized P&L)
-- Fetches current spot from Greek data files
-- Detects and explains contradictory positions between bots
-- Displays entry reasoning and Greek signals
-
-**Example Output:**
-```
-============================================================
-  TRADINGBOT1: 📈 LONG SPX
-============================================================
-  Entry Price:  $6050.25
-  Duration:     1h 30m
-  ✅ Unrealized:  +5.75 pts (+0.09%) = $57.50
-
-  WHY THIS TRADE?
-  Reason: Pos Gamma Bounce at 6045.00
-  Gamma Regime: LONG
-  Min Vanna: $6065.00 - UNTOUCHED (magnet)
-```
-
----
-
-## Backtesting
-
-Scripts to test strategies on historical data.
-
-### backtest_hybrid.py (PRIMARY)
-
-Backtests the **Hybrid Attention-MLP** model on historical 1-minute data, simulating realistic execution with fees and slippage.
-
-```bash
-python neural/backtest_hybrid.py --data training_data/backtest_trades.csv --threshold 0.5
-```
-
-**Key Features:**
-- Uses actual 1-minute OHLC candles (IB Data) for accurate execution simulation
-- Comprehensive metrics: Sharpe, Profit Factor, Max Drawdown
-- Detailed logs: `logs/backtest_hybrid.log`
-- Feature Importance analysis for winning vs losing trades
-
-### backtest.py
-
-Backtests the multi-ticker confluence strategy.
-
-```bash
-python backtest/backtest.py
-```
-
-**Requires:** Historical IB data in `ib_backtest/`
-
----
-
-### backtest2.py
-
-Backtests the level reversal strategy.
-
-```bash
-python backtest/backtest2.py
-```
-
----
-
-### plot_backtest.py - Trade Visualizer
-
-Generates candlestick charts with trade markers and levels.
-
-```bash
-# Basic usage (backtest trades)
-python backtest/plot_backtest.py
-
-# Specify source
-python backtest/plot_backtest.py --source backtest  # Backtest trades
-python backtest/plot_backtest.py --source bot1      # TradingBot1 live trades
-python backtest/plot_backtest.py --source bot2      # TradingBot2 live trades
-python backtest/plot_backtest.py --source all       # All sources combined
-
-# Specific date
-python backtest/plot_backtest.py --source bot1 --date 20260127
-
-# Short flags
-python backtest/plot_backtest.py -s all -d 20260127
-```
-
-**Arguments:**
-| Flag | Options | Default | Description |
-|------|---------|---------|-------------|
-| `--source`, `-s` | `backtest`, `bot1`, `bot2`, `all` | `backtest` | Trade data source |
-| `--date`, `-d` | `YYYYMMDD` | All dates | Specific date to plot |
-
-**Output:** PNG files in `backtest/plots/`
-- `candles_{TICKER}_{DATE}_{SOURCE}.png` - Candlestick with trades
-- `volume_profile_{TICKER}_{DATE}.png` - Volume profile chart
-
-**Chart Features:**
-- 1-minute candlesticks
-- Entry/exit markers (O = Open, C = Close)
-- Support/resistance levels
-- IB high/low
-- Min Vanna magnet
-- Volume profile (VPOC, VAH, VAL)
-
----
-
-### ib_backtest.py
-
-Fetches and stores historical IB data for backtesting.
-
-```bash
-python backtest/ib_backtest.py
-```
-
-**Output:** JSON files in `ib_backtest/`
-
----
-
-## Discord Integration
-
-### main.py
-
-Entry point for the Discord bot. Runs both the command handler and plot scheduler.
-
-```bash
-python discord_app/main.py
-```
-
-**Features:**
-- Scheduled plot posting to channels
-- Interactive command responses
-- Systemd notify integration
-
----
-
-### bot.py
-
-Discord bot command handler.
-
-**Commands:**
-```
-#load SPX 0dte gamma    - Generate and post specific plot
-#load QQQ weekly vanna  - Weekly vanna exposure for QQQ
-```
-
-**Usage:**
-```
-#load <TICKER> <EXPIRATION> <GREEK>
-
-TICKER: SPX, SPY, QQQ, etc.
-EXPIRATION: 0dte, 1dte, weekly, opex, monthly, all
-GREEK: delta, gamma, vanna, charm
-```
-
----
-
-### discord_send_plots.py
-
-Handles scheduled plot posting and Discord API interactions.
-
-**Scheduled Posts:**
-- Greek exposure plots at configurable intervals
-- IB charts after market open
-- Summary reports at market close
-
----
-
-## Tools & Utilities
-
-### cli-app.py
-
-Manual data plotting from command line.
-
-```bash
-python tools/cli-app.py SPX 0dte gamma
-python tools/cli-app.py QQQ weekly vanna
-```
-
-**Arguments:**
-```
-python tools/cli-app.py <TICKER> <EXPIRATION> [GREEK]
-
-TICKER:     SPX, SPY, QQQ, etc.
-EXPIRATION: 0dte, 1dte, weekly, opex, monthly, all
-GREEK:      delta, gamma, vanna, charm (optional)
-```
-
----
-
-## Data Directories
-
-The system uses several data directories (configured with absolute paths):
-
-| Directory | Purpose | Generated By |
-|-----------|---------|--------------|
-| `json_data/` | Greek exposure JSON files | `gex_daemon.py` |
-| `ib_charts/` | Real-time IB data & charts | `ib_service.py` |
-| `ib_backtest/` | Historical IB data | `ib_backtest.py` |
-| `bots/trades_live/` | Bot1 completed trades | `tradingbot1.py` |
-| `bots/trades_live2/` | Bot2 completed trades | `tradingbot2.py` |
-| `backtest/trades/` | Backtest trade outputs | `backtest.py` |
-| `backtest/plots/` | Trade visualization PNGs | `plot_backtest.py` |
-
----
-
-## Configuration
-
-### Environment Variables
-
-Create a `.env` file in the project root:
-
-```bash
-# Discord
-DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...
-DISCORD_BOT_TOKEN=your_bot_token_here
-
-# TastyTrade API
-TT_USERNAME=your_tastytrade_username
-TT_PASSWORD=your_tastytrade_password
-```
-
-### Trading Parameters
-
-Trading parameters are configured as constants at the top of each bot file:
-
-**tradingbot1.py:**
-```python
-STOP_LOSS_PCT = 0.003           # 0.3%
-PROFIT_TARGET_PCT = 0.012       # 1.2%
-EMERGENCY_STOP_LOSS_PCT = 0.005 # 0.5%
-MIN_HOLDING_TIME_MINUTES = 25
-COOLDOWN_AFTER_EXIT_MINUTES = 10
-MIN_CONFIDENCE_THRESHOLD = 0.55
-```
-
-**tradingbot2.py:**
-```python
-STOP_LOSS_FIXED = 0.003        # 0.3%
-BREAKEVEN_TRIGGER = 0.0025     # 0.25%
-TRAILING_STEP = 0.002          # 0.2%
-COOLDOWN_MINUTES = 30
-MIN_RISK_REWARD = 1.2
-```
-
----
+If market data has not been produced yet for the day, `audit_live_feature_drift.py` can fail because `event_option_snapshots_latest.parquet` does not exist. That is expected before the feed has written its first event-option snapshot.
 
 ## Deployment
 
-### 1. Clone and Setup
+Deploy source and model/service changes with git and explicit service restarts. Do not use `reboot now` as the default deployment method.
 
 ```bash
-git clone https://github.com/kripta-studios/gex-dashboard-live.git
-cd gex-dashboard-live
-pip install -r requirements.txt
-cp .env.example .env  # Edit with your credentials
-```
+cd /home/Option-Greeks-Plotting-Discord-Bot
+git pull --ff-only
 
-### 2. Deploy to Server
+python3 -m py_compile \
+  services/realtime_feed.py \
+  bots/tradingbot_wrapper_jepa.py \
+  neural/jepa/event_option_live_snapshot.py \
+  neural/jepa/event_option_live_scorer.py \
+  neural/jepa/event_option_component_live.py \
+  neural/jepa/audit_live_feature_drift.py \
+  neural/jepa/validate_event_option_production_package.py
 
-```bash
-rsync -avz --exclude='.git' --exclude='__pycache__' --exclude='*.pyc' \
-  ./ root@your-server:/home/Option-Greeks-Plotting-Discord-Bot/
-```
+python3 neural/jepa/validate_event_option_production_package.py \
+  --policy neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/event_option_policy.json \
+  --registry neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/component_registry.json \
+  --require-live-ready \
+  --ignore-raw-thetadata-coverage \
+  --min-profit-factor 1.3 \
+  --min-win-rate 0.45 \
+  --min-month-trades 12
 
-### 3. Install Systemd Services
-
-```bash
-# Copy service files
-sudo cp systemd/*.service /etc/systemd/system/
-
-# Reload systemd
+sudo install -m 0644 systemd/realtime_feed.service /etc/systemd/system/realtime_feed.service
+sudo install -m 0644 systemd/ai_bot.service /etc/systemd/system/ai_bot.service
 sudo systemctl daemon-reload
-
-# Enable services to start on boot
-sudo systemctl enable gex_daemon ib discord-bot tradingbot1 tradingbot2
-
-# Start services
-sudo systemctl start gex_daemon ib discord-bot tradingbot1 tradingbot2
+sudo systemctl restart realtime_feed.service
+sudo systemctl restart ai_bot.service
+sudo systemctl status realtime_feed.service ai_bot.service --no-pager -l
 ```
 
-### 4. Monitor Services
+Use `systemctl status ... --no-pager -l`; do not append a bare number such as `50`, because systemd interprets it as a PID.
 
-```bash
-# Check status
-sudo systemctl status tradingbot1
+Expected live log markers:
 
-# View logs
-sudo journalctl -u tradingbot1 -f
-
-# Restart a service
-sudo systemctl restart tradingbot1
+```text
+[EVENT_OPTION] loaded policy=event_option_frozen2025_static_union_balanced_202607
+Loaded event-option component registry status=production_live_ready
+event_exit=stop=-60%/tp=1000%/trail=50%/25%/min_hold=30m/max_hold=180m
+Paper order intents enabled
 ```
 
-### 4. Monitor Services
+## Retraining Cadence
 
-```bash
-# Check status
-sudo systemctl status tradingbot1
+Do not retrain every day just because a new day of data exists.
 
-# View logs
-sudo journalctl -u tradingbot1 -f
+The normal cadence is:
 
-# Restart a service
-sudo systemctl restart tradingbot1
+1. Audit live behavior daily.
+2. After a month is complete, rebuild/evaluate the next deploy package.
+3. Promote only if validation, live feature equivalence, leakage audits, and service smoke tests pass.
+4. Deploy through git pull, validation, service install, and restart.
+
+## Other Services
+
+The repo still contains dashboard and plotting services:
+
+```text
+services/gex_daemon.py
+services/ib_service.py
+services/servidor.py
+discord_app/main.py
+discord_app/discord_send_plots.py
+tools/data_plotting.py
+modules/tasty_handler.py
 ```
 
----
+These are separate from the event-option trading bot. Recent systemd work also includes `gex_daemon.service`, `discord-bot.service`, timer/drop-in files, and dxLink handling improvements.
 
-## Development
+## Legacy Research
 
-### Code Style
+The following areas are useful research references but are not the current live trading contract:
 
-- Python 3.9+
-- Type hints encouraged
-- Docstrings for all functions
-- Constants in UPPER_CASE
-
-### Adding a New Strategy
-
-1. Create `bots/tradingbot3.py` based on existing templates
-2. Implement `generate_signal()` with your logic
-3. Create `systemd/tradingbot3.service`
-4. Update this README
-
-### Running Tests
-
-```bash
-# Verify all Python files compile
-find . -name "*.py" -exec python3 -m py_compile {} \;
-
-# Run a specific backtest
-python backtest/backtest.py
+```text
+neural/run_pipeline.ps1
+neural/train_walkforward.py
+neural/rl/
+neural/hybrid_model.py
+neural/jepa/jepa_production_final_180m
+neural/models/jepa/jepa_production_level_stability
+neural/models/jepa/jepa_production_structural_options
 ```
 
-### Project Dependencies
-
-Key dependencies (see `requirements.txt`):
-- `requests` - HTTP client
-- `numpy` - Numerical operations
-- `pandas` - Data manipulation
-- `matplotlib` - Chart generation
-- `discord.py` - Discord bot
-- `python-dotenv` - Environment variables
-- `pytz` / `zoneinfo` - Timezone handling
-
----
-
-## License
-
-MIT License - See [LICENSE](LICENSE) for details.
-
----
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/new-strategy`)
-3. Commit changes (`git commit -am 'Add new strategy'`)
-4. Push to branch (`git push origin feature/new-strategy`)
-5. Open a Pull Request
-
-For major changes, please open an issue first to discuss.
+Before promoting any legacy or new model, compare it against the current event-option static-union package with the same walk-forward, leakage, live-equivalence, and service-start checks.

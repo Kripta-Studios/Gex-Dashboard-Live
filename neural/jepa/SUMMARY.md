@@ -1,5 +1,16 @@
 # JEPA Summary
 
+## 2026-07-03 Active Production Package
+
+- Active live package: `neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607`.
+- Policy: `event_option_frozen2025_static_union_balanced_202607`.
+- Result: `research_papers/JEPA/results/event_option_mh30trail_frozen2025_static_union_deploy202607_production_v1`.
+- Runtime services: `services/realtime_feed.py`, `bots/tradingbot_wrapper_jepa.py`, `systemd/realtime_feed.service`, `systemd/ai_bot.service`.
+- Confirmed live exit contract: `stop=-60%/tp=1000%/trail=50%/25%/min_hold=30m/max_hold=180m`.
+- Completed Jan-Jun 2026 validation: 697 trades, WR `57.819%`, PF `1.915`; QQQ min month `36`, SPXW min month `51`, SPY min month `12`.
+- Production validation currently uses `--min-month-trades 12`; the preferred 18 trades/month/ticker target is not met by SPY.
+- Older `backfill19_spy_no_scorethr`, level-stability, structural-profile, 180m JEPA, OptionValue, and RL entries below are historical unless a service or validation command explicitly points to them.
+
 ## 2026-07-01 Dense15 Backfill19 SPY June-Positive Production Package
 
 - Promoted a new event-option production package: `neural/models/jepa/jepa_production_event_options_backfill19_spy_no_scorethr_wf2026_fullmayjun`.

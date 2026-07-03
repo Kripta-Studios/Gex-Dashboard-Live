@@ -1,31 +1,24 @@
-% ============================================================================
-%  Kripta Studios -- Scientific Architecture Document
-%  Current GBT+JEPA and 0DTE Option Execution Stack
-% ============================================================================
 \documentclass[11pt,a4paper]{article}
-
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{mathpazo}
-\usepackage{amsmath, amssymb, bm}
 \usepackage{geometry}
 \geometry{margin=1in}
-\usepackage{setspace}
-\onehalfspacing
+\usepackage{amsmath}
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{tabularx}
 \usepackage{array}
-\usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{hyperref}
-\hypersetup{colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue}
+\usepackage{listings}
+\hypersetup{colorlinks=true, linkcolor=blue, urlcolor=blue}
+\lstset{basicstyle=\ttfamily\small, breaklines=true, frame=single, columns=fullflexible}
 \setcounter{tocdepth}{2}
 \sloppy
 
-\title{\textbf{Architecture of the Current GBT+JEPA Market Direction System and 0DTE Option Execution Stack}}
+\title{\textbf{Production Architecture}\\GEX Dashboard Live Event-Option Stack}
 \author{Kripta Studios}
-\date{June 2026}
+\date{July 2026}
 
 \begin{document}
 \maketitle
@@ -33,418 +26,145 @@
 \newpage
 
 \begin{abstract}
-This document describes the current production-candidate architecture after the research migration from the legacy GBT+PPO/RL stack to a supervised GBT+JEPA stack.  The deployed idea is not ``JEPA instead of everything.''  The promoted model is a hybrid: a tabular LightGBM classifier predicts 180 minute market direction using both engineered market microstructure features and latent features learned by an explicit-input Joint-Embedding Predictive Architecture (XInputJEPA).  The option layer currently uses a deterministic 0DTE fixed-delta execution rule near $\Delta=0.70$.  OptionValueJEPA, learned strike selection, and learned 5 minute exits were evaluated as research extensions, but they are not yet promoted because they did not beat the fixed-delta baseline on the relevant out-of-sample gates.  The strict out-of-sample result is the April--May 2026 frozen-March test, where \texttt{base\_jepa} produced 105 trades, 68.6\% win rate, 1.945 profit factor, and \$9,132 proxy PnL at 1 bps cost.
+This document describes the current production architecture. The active trading path is the JEPA event-option static-union package for 0DTE SPXW, QQQ, and SPY options. The older Hybrid Attention-MLP, GBT+RL, level-stability, structural-profile, OptionValue, and 180 minute JEPA systems remain in the repository as research or legacy tooling, but they are not the active live contract unless a service file explicitly points to them.
 \end{abstract}
 
-\section{Research Question}
+\section{Active Runtime}
 
-The architectural question is whether a JEPA-style latent state adds predictive information to an already feature-rich GBT market model.  The specific trading question is:
-
-\[
-  \Pr(S_{t+180m} > S_t \mid \mathcal{F}_t),
-\]
-
-where $S_t$ is the underlying spot or proxy price and $\mathcal{F}_t$ is the information set available at timestamp $t$.  The system trades a fixed 180 minute horizon.  This horizon is not arbitrary: it matches the label produced by the data collector and the operational window used by the existing trading pipeline.
-
-\subsection{Hypothesis}
-
-The hypothesis is that option-market state is partially observable.  Hand-engineered features describe the current surface and exposure map, but they may not fully encode how the system is evolving.  JEPA is used to learn a compact latent transition model:
-
-\[
-  \mathrm{current\ state} + \mathrm{recent\ input} \rightarrow \mathrm{future\ latent\ state}.
-\]
-
-If the latent variables summarize transition dynamics that the GBT cannot easily reconstruct from static features, then adding JEPA features should improve out-of-sample trade metrics.  This is exactly what the strict April--May 2026 test shows for the combined \texttt{base\_jepa} model.
-
-\subsection{Non-Hypothesis}
-
-The research does not currently support replacing the entire trading system with an end-to-end JEPA-only model.  The JEPA-only model has signal, but it underperforms the combined model.  The production design therefore keeps the interpretable engineered state and uses JEPA as a representation layer.
-
-\section{High-Level System Diagram}
-
-\[
-\begin{array}{cccccc}
-\text{ThetaData and market data}
-&\rightarrow&
-\text{base feature parquet}
-&\rightarrow&
-\text{XInputJEPA append}
-&\rightarrow \\
-&&&&
-\text{GBT feature matrix}
-&\rightarrow
-\text{per-ticker 180m direction models}
-\rightarrow
-\text{0DTE option execution}.
-\end{array}
-\]
-
-The code-level orchestration is:
+The live trading stack has two cooperating services:
 
 \begin{center}
-\path{neural/jepa/run_pipeline.ps1}
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+Component & Role \\
+\midrule
+\path{services/realtime_feed.py} & Downloads and normalizes live spot and option-chain data. It writes 0DTE snapshots and feature files under \path{rt_data/YYYYMMDD/}. \\
+\path{bots/tradingbot_wrapper_jepa.py} & Loads the event-option policy and component registry, scores live candidates, manages open positions, and emits paper order intents. \\
+\path{systemd/realtime_feed.service} & Production unit for the feed. \\
+\path{systemd/ai_bot.service} & Production unit for the bot. \\
+\bottomrule
+\end{tabularx}
 \end{center}
 
-The production mode is:
+The bot is an alert and paper-intent process. It does not submit broker orders.
+
+\section{Production Package}
+
+The active model package is:
+
+\begin{lstlisting}
+neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/
+  event_option_policy.json
+  component_registry.json
+\end{lstlisting}
+
+The policy id is:
+
+\begin{lstlisting}
+event_option_frozen2025_static_union_balanced_202607
+\end{lstlisting}
+
+The validated result directory is:
+
+\begin{lstlisting}
+research_papers/JEPA/results/event_option_mh30trail_frozen2025_static_union_deploy202607_production_v1
+\end{lstlisting}
+
+\section{Data Flow}
 
 \begin{center}
-\texttt{.\textbackslash neural\textbackslash jepa\textbackslash run\_pipeline.ps1 -ProductionTrain}
+\begin{tabular}{c}
+ThetaData / live market data $\rightarrow$ realtime feed $\rightarrow$ event-option snapshot \\
+$\rightarrow$ live scorer $\rightarrow$ paper order intent $\rightarrow$ Discord / tracker
+\end{tabular}
 \end{center}
 
-When \texttt{-SkipCollect} is not supplied, this mode runs the data collector.  The collector itself decides whether to rebuild or append incrementally.
+The feed writes files such as:
 
-\section{Pipeline Stages}
+\begin{lstlisting}
+rt_data/YYYYMMDD/event_option_snapshots_latest.parquet
+rt_data/YYYYMMDD/spot_SPX_latest.parquet
+rt_data/YYYYMMDD/SPXW_greeks_0dte_latest.parquet
+rt_data/YYYYMMDD/SPXW_ohlc_0dte_latest.parquet
+\end{lstlisting}
 
-\begin{longtable}{p{0.16\textwidth}p{0.25\textwidth}p{0.49\textwidth}}
+The bot writes files such as:
+
+\begin{lstlisting}
+trades_jepa/open_positions_jepa.json
+trades_jepa/event_option_runtime_state.json
+trades_jepa/event_option_candidate_audit_jepa.jsonl
+trades_jepa/paper_order_intents_jepa.jsonl
+trades_jepa/tradingbot_jepa.log
+\end{lstlisting}
+
+\section{Execution Contract}
+
+\begin{center}
+\begin{tabularx}{\textwidth}{lX}
 \toprule
-Stage & Main script & Function \\
+Field & Current value \\
 \midrule
-\endhead
-Data collection & \path{neural/collect_training_data_spx_qqq.py} & Builds the base SPX/QQQ/SPY market-state parquet.  It can rebuild from 2022 or append only new dates when the collector script is older than the output parquet. \\
-Production cutoff & \path{neural/jepa/run_pipeline.ps1} & In production mode, creates a cutoff parquet using \texttt{TrainEndDate=20261230}; the real maximum date is the maximum date available in the source data. \\
-XInputJEPA training & \path{neural/jepa/train_xinput_jepa.py} & Trains a state/input JEPA using 24 five-minute contexts and multi-horizon latent prediction.  In production mode it selects a validation epoch and then refits on all available dates. \\
-Feature append & \path{neural/jepa/append_xinput_jepa_features.py} & Appends 42 \texttt{xjepa\_*} features to each live-safe row. \\
-180m GBT training & \path{neural/jepa/train_180m_production.py} & Trains per-ticker LightGBM classifiers for \texttt{base}, \texttt{jepa\_only}, and \texttt{base\_jepa}. \\
-180m backtesting & \path{neural/jepa/backtest_jepa_180m.py} & Scores a frozen model over a chosen date range and simulates fixed 180 minute holds with cooldown. \\
-Option policy research & \path{neural/jepa/train_backtest_option_policy.py} & Builds 0DTE option candidate labels and evaluates fixed delta, learned selectors, and oracle ceilings. \\
-OptionValueJEPA research & \path{neural/jepa/train_option_value_jepa.py} and \path{neural/jepa/walkforward_option_value_jepa.py} & Learns candidate option values and 5 minute continuation values.  This is research-only until it beats fixed delta in walk-forward. \\
+Tickers & SPX, QQQ, SPY \\
+Option symbols & SPX maps to SPXW; QQQ and SPY trade their own option chains. \\
+Expiry & 0DTE only \\
+Entry window & 10:00--14:30 ET \\
+EOD cleanup & 16:00 ET \\
+Risk capital & \$5,000 per trade \\
+Stop & -60\% \\
+Trail & Activate at +50\%, close after 25\% giveback from high water mark \\
+Emergency take profit & +1000\% \\
+Hold bounds & Minimum 30 minutes, maximum 180 minutes \\
+Broker mode & Paper intents only \\
 \bottomrule
-\end{longtable}
+\end{tabularx}
+\end{center}
 
-\section{Data Model}
+\section{Static Policy Caps}
 
-The base data object is a row-level intraday market state.  Required identifiers include ticker, date, time, and spot price.  The training rows are sorted by ticker, date, and timestamp or time.  The exact 180 minute label is built by shifting within each ticker-date group:
-
-\[
-  S_{t+180m} = S_{i+36},
-\]
-
-where one row step is five minutes.  Rows that do not have an exact 36-step future observation are excluded from 180 minute training.
-
-The latest production run used:
-
-\begin{itemize}
-  \item 221,832 rows in the production source parquet,
-  \item source maximum date May 29, 2026,
-  \item 56,160 rows after exact 180 minute label construction,
-  \item 960 production dates and 56,160 JEPA windows in the final-fit XInputJEPA run.
-\end{itemize}
-
-\section{XInputJEPA Architecture}
-
-\subsection{Motivation}
-
-The most important architectural change versus a conventional tabular model is the state/input split.  Market state is not treated as a single flat vector.  Instead, the model receives two synchronized sequences:
-
-\[
-  X_t = [x_{t-23}, \ldots, x_t],
-  \qquad
-  U_t = [u_{t-23}, \ldots, u_t],
-\]
-
-where $x$ is the state feature set and $u$ is the exogenous-input/change feature set.  In production:
-
-\begin{itemize}
-  \item $x$ has 155 dimensions,
-  \item $u$ has 25 dimensions,
-  \item the context length is 24 rows, or approximately two hours at five-minute spacing.
-\end{itemize}
-
-\subsection{Encoders}
-
-Both the state and input branches use the same sequence-encoder pattern:
-
-\[
-  \mathrm{LayerNorm} \rightarrow \mathrm{GRU}_{2\ layers} \rightarrow
-  \mathrm{LayerNorm} \rightarrow \mathrm{Linear} \rightarrow \mathrm{GELU}
-  \rightarrow \mathrm{Dropout} \rightarrow \mathrm{Linear}.
-\]
-
-The state encoder produces a 16-dimensional latent vector:
-
-\[
-  z_t = f_\theta(X_t) \in \mathbb{R}^{16}.
-\]
-
-The input encoder produces a 12-dimensional latent vector:
-
-\[
-  u_t = g_\phi(U_t) \in \mathbb{R}^{12}.
-\]
-
-\subsection{Multi-Horizon Latent Predictor}
-
-The predictor learns a separate head for each horizon.  For horizon index $h$, an embedding $e_h$ is concatenated with the state and input latents:
-
-\[
-  \hat{z}_{t+h} =
-  p_{\psi,h}\left([z_t, u_t, e_h]\right).
-\]
-
-The production horizons are:
-
-\[
-  h \in \{1,3,6,12,24,36\}.
-\]
-
-At five-minute spacing, the final horizon corresponds to 180 minutes.
-
-\subsection{Auxiliary Direction Head}
-
-The model also includes a three-class head over short, hold, and long:
-
-\[
-  \ell_t =
-  c_\omega\left([z_t,u_t,\mathrm{mean}_h(\hat{z}_{t+h})]\right)
-  \in \mathbb{R}^3.
-\]
-
-This head does not replace the GBT.  It regularizes the latent space toward trading-relevant state transitions and produces useful appended features such as \texttt{xjepa\_prob\_short}, \texttt{xjepa\_prob\_hold}, and \texttt{xjepa\_prob\_long}.
-
-\subsection{Training Objective}
-
-The loss is a weighted combination:
-
-\[
-  \mathcal{L}
-  =
-  \mathcal{L}_{\mathrm{pred}}
-  + \lambda_{\mathrm{sig}}\mathcal{L}_{\mathrm{sigreg}}
-  + \lambda_{\mathrm{vic}}\mathcal{L}_{\mathrm{vicreg}}
-  + \lambda_{\mathrm{ce}}\mathcal{L}_{\mathrm{ce}}.
-\]
-
-The predictive loss aligns predicted future latent states with encoded future contexts:
-
-\[
-  \mathcal{L}_{\mathrm{pred}}
-  =
-  \left\|
-  \hat{z}_{t+h} -
-  \mathrm{stopgrad}\left(f_\theta(X_{t+h})\right)
-  \right\|_2^2.
-\]
-
-The SIGReg and VICReg-style terms prevent latent collapse.  The cross-entropy term is weighted by class frequency and uses a balanced sampler when requested by the pipeline.  The production hyperparameters are:
-
-\begin{table}[h]
-\centering
-\begin{tabular}{lr}
+\begin{center}
+\begin{tabular}{lrrrr}
 \toprule
-Parameter & Value \\
+Ticker & Bucket & Min score & Max trades/day & Cooldown \\
 \midrule
-Hidden dimension & 96 \\
-GRU layers & 2 \\
-Dropout & 0.15 \\
-$z$ dimension & 16 \\
-$u$ dimension & 12 \\
-Learning rate & 0.0007 \\
-Weight decay & 0.02 \\
-Batch size & 512 \\
-$\lambda_{\mathrm{sig}}$ & 0.15 \\
-$\lambda_{\mathrm{vic}}$ & 0.20 \\
-$\lambda_{\mathrm{ce}}$ & 0.35 \\
+SPXW & d25 & 0.34 & 4 & 0m \\
+QQQ & d35 & policy & 2 & 30m \\
+SPY & d35 & policy & 1 & 0m \\
 \bottomrule
 \end{tabular}
-\caption{Production XInputJEPA hyperparameters from the production configuration artifact.}
-\end{table}
+\end{center}
 
-\section{JEPA Feature Export}
+\section{Validation Snapshot}
 
-After training, \path{append_xinput_jepa_features.py} appends 42 live-safe features.  These include latent components, latent velocities, prediction dispersion, lagged prediction errors, class probabilities, entropy, confidence, and context validity.
+Completed-month validation over January through June 2026:
 
-The lagged prediction error features are important because they measure whether the previous JEPA forecast matched the state that actually arrived:
-
-\[
-  e_{t,h} = \left\|\hat{z}_{t-h,h} - z_t\right\|_2.
-\]
-
-This is still live-safe at time $t$ because it uses a prediction made at $t-h$ and the current observed latent state.
-
-\section{GBT Direction Model}
-
-\subsection{Why LightGBM Remains the Final Predictor}
-
-The GBT has three advantages in this project:
-
-\begin{enumerate}
-  \item It handles heterogeneous tabular features well.
-  \item It can ignore weak or redundant features.
-  \item It gives stable per-ticker thresholding with modest data volume.
-\end{enumerate}
-
-The JEPA block produces a learned representation, but the final decision boundary is still learned by the GBT over both explicit features and latents.
-
-\subsection{Feature Modes}
-
-Three feature modes are trained:
-
-\begin{itemize}
-  \item \texttt{base}: original engineered market features only.
-  \item \texttt{jepa\_only}: JEPA features plus basic time context.
-  \item \texttt{base\_jepa}: base market features plus JEPA features.
-\end{itemize}
-
-The live model is \texttt{base\_jepa}.  The production artifact has 222 columns: 180 base columns present in the production training table plus 42 JEPA columns.
-
-\subsection{Classifier Specification}
-
-The 180 minute classifier is a per-ticker LightGBM binary classifier:
-
-\[
-  \hat{p}_t = \Pr(y_t=1 \mid \bm{x}_t).
-\]
-
-The implementation uses:
-
-\begin{itemize}
-  \item binary objective,
-  \item 0.035 learning rate,
-  \item 31 leaves,
-  \item 0.85 row subsampling,
-  \item 0.85 column subsampling,
-  \item minimum child samples of 40,
-  \item L1 regularization 0.05,
-  \item L2 regularization 0.50,
-  \item balanced class weights.
-\end{itemize}
-
-Missing values are imputed with training medians stored in the joblib artifact.  This matters for live inference because the bot can reproduce the exact training matrix behavior.
-
-\section{Thresholding and Trading Contract}
-
-The model does not trade merely because $\hat{p}_t > 0.5$.  Each ticker receives thresholds selected on validation data:
-
-\[
-  \mathrm{LONG}\quad \mathrm{if}\quad \hat{p}_t \geq \tau_L,
-\]
-
-\[
-  \mathrm{SHORT}\quad \mathrm{if}\quad \hat{p}_t \leq \tau_S,
-\]
-
-where $\tau_S=1-\tau_L$ in the threshold grid.  Candidate long thresholds include 0.52, 0.55, 0.57, 0.60, 0.62, 0.65, and 0.70.  The validation score is:
-
-\[
-  \mathrm{score} = \mathrm{PnL} - 0.25 |\mathrm{MaxDD}|,
-\]
-
-subject to a minimum validation trade count.
-
-The promoted contract is a fixed 180 minute hold with a 180 minute cooldown.  The cooldown prevents overlapping entries that are effectively the same forecast window.
-
-\section{0DTE Option Execution Layer}
-
-\subsection{Fixed-Delta Production Rule}
-
-The promoted 0DTE execution rule is deterministic:
-
-\begin{enumerate}
-  \item use \texttt{base\_jepa} to choose direction,
-  \item buy the 0DTE call for a long signal or put for a short signal,
-  \item choose the option with absolute delta closest to 0.70,
-  \item size contracts from fixed risk capital,
-  \item apply hard stop and take-profit rules.
-\end{enumerate}
-
-This rule is not a neural model.  It is promoted because it is robust and because learned alternatives did not beat it in the current tests.
-
-\subsection{Why Fixed Delta Can Beat Learned Selection}
-
-Option strike selection is path-dependent and extremely noisy.  A learned selector must infer premium response, spread sensitivity, gamma convexity, volatility change, and liquidation timing.  The fixed $\Delta=0.70$ rule is less flexible, but it avoids many degrees of freedom and therefore currently generalizes better.
-
-\section{OptionValueJEPA Research Architecture}
-
-OptionValueJEPA is a separate neural model for option candidate valuation.  It receives:
-
-\begin{itemize}
-  \item a market feature block, including \texttt{base\_jepa} signal features,
-  \item an option candidate block, including delta, premium, spread, strike distance, IV, theta, and gamma,
-  \item a dynamic state block during an open trade, including current PnL, premium ratio, MFE/MAE-like fields, delta drift, IV, gamma, spot return, and minutes remaining.
-\end{itemize}
-
-The architecture has three encoders:
-
-\[
-  z_m = E_m(x_m),\quad z_o = E_o(x_o),\quad z_d = E_d(x_d).
-\]
-
-The entry path predicts three candidate values:
-
-\[
-  \left[
-  \widehat{V}_{\mathrm{hold180}},
-  \widehat{V}_{\mathrm{rule}},
-  \widehat{V}_{\mathrm{best}}
-  \right]
-  =
-  H_{\mathrm{entry}}([z_m,z_o,T(z_m,z_o,h)]).
-\]
-
-The dynamic path predicts continuation value:
-
-\[
-  \widehat{V}_{\mathrm{continue}} =
-  H_{\mathrm{dyn}}([z_m,z_o,z_d,h_{\mathrm{remaining}}]).
-\]
-
-It is trained with SmoothL1 loss on clipped return-on-risk targets.  This architecture is conceptually correct, but the current experiments show it has not yet closed the gap to the oracle.
-
-\section{Oracle Definitions}
-
-The reports include oracle rows.  These are not models.  They use future information and serve only as upper bounds:
-
-\begin{itemize}
-  \item \textbf{oracle best delta hard}: chooses the best delta bucket after observing the future path, then exits with mechanical rules.
-  \item \textbf{oracle best delta oracle exit}: chooses both the best candidate and best future exit point.
-\end{itemize}
-
-Large oracle performance does not imply deployable edge.  It only indicates potential headroom if a learnable signal can approximate the oracle without using future information.
-
-\section{Live Runtime}
-
-The live runtime has two primary scripts:
-
-\begin{itemize}
-  \item \path{services/realtime_feed.py} generates live features compatible with the production \texttt{base\_jepa} model.
-  \item \path{bots/tradingbot_wrapper_jepa.py} loads the production direction model and applies the fixed-delta option execution rule.
-\end{itemize}
-
-Model artifacts are under \path{neural/models/jepa}.  They are ignored by git and deployed with \path{push_models.ps1}.  Source code and systemd service files are deployed through git.
-
-\section{Empirical Summary}
-
-\begin{table}[h]
-\centering
-\begin{tabular}{lrrrrrr}
+\begin{center}
+\begin{tabular}{lrrrr}
 \toprule
-Model & Trades & WR & PF & Avg bps & PnL & Max DD \\
+Scope & Trades & WR & PF & Min month trades \\
 \midrule
-base & 80 & 58.8\% & 1.389 & 4.40 & \$3,522 & -\$1,640 \\
-jepa\_only & 110 & 59.1\% & 1.333 & 3.86 & \$4,245 & -\$3,270 \\
-base\_jepa & 105 & 68.6\% & 1.945 & 8.70 & \$9,132 & -\$1,522 \\
+Overall & 697 & 57.819\% & 1.915 & 103 \\
+QQQ & 236 & 60.593\% & 1.771 & 36 \\
+SPXW & 355 & 55.211\% & 2.037 & 51 \\
+SPY & 106 & 60.377\% & 1.769 & 12 \\
 \bottomrule
 \end{tabular}
-\caption{Strict frozen-March April--May 2026 OOS 180 minute proxy backtest.}
-\end{table}
+\end{center}
 
-The architectural conclusion is specific: JEPA adds value as an auxiliary representation to the GBT.  JEPA-only and learned option selection are not currently sufficient replacements.
+The deployable gate uses a minimum of 12 trades per completed month. The stronger preferred target of 18 trades per month per ticker is not met by SPY in this package.
 
-\section{Risk Controls and Bias Controls}
+\section{Legacy Systems}
 
-The architecture contains explicit controls:
+The following systems are retained for research and comparison:
 
 \begin{itemize}
-  \item future return columns are excluded from feature selection,
-  \item JEPA context validity is required before a row can be scored,
-  \item strict OOS tests freeze training before April 2026,
-  \item production diagnostics are labelled as non-OOS,
-  \item oracle rows are labelled as non-deployable,
-  \item live artifacts store medians, features, thresholds, and metadata.
+  \item GBT and PPO/RL in \path{neural/} and \path{neural/rl/};
+  \item Hybrid Attention-MLP artifacts;
+  \item 180 minute JEPA direction models;
+  \item level-stability and structural-profile policies;
+  \item OptionValueJEPA strike/exit research.
 \end{itemize}
 
-\section{Conclusion}
-
-The current architecture is a supervised market-state predictor plus deterministic option execution, not an RL system.  The JEPA layer is valuable because it converts recent state/input dynamics into latent features that improve a tabular GBT.  The fixed-delta option execution rule remains the production choice because the learned option-value and exit models have not yet shown robust superiority.  Future work should focus on improving OptionValueJEPA with better path labels, ticker-specific calibration, slippage modelling, and walk-forward promotion gates rather than replacing the already-promoted \texttt{base\_jepa} direction model prematurely.
+They should not be treated as production unless a new promotion changes the systemd units and passes the live-ready validation contract.
 
 \end{document}

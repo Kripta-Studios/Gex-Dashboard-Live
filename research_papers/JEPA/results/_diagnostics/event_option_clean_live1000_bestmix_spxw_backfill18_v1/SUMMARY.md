@@ -1,0 +1,128 @@
+# Event Monthly Volume Backfill
+
+This result takes a primary causal OOS trade stream and adds fallback trades only when month-to-date selected count is below the deterministic pace needed to reach the monthly volume floor.
+
+## Overall
+
+```json
+{
+  "trades": 139,
+  "win_rate": 0.35251798561151076,
+  "profit_factor": 0.9074074074074076,
+  "pnl_return": -2.4999999999999996,
+  "avg_return": -0.017985611510791363,
+  "max_drawdown": -5.899999999999999,
+  "call_rate": 0.31654676258992803,
+  "days_with_trades": 115,
+  "daily_win_rate": 0.391304347826087,
+  "median_daily_return": -0.3,
+  "daily_max_drawdown": -5.899999999999999,
+  "top5_day_return": 4.5,
+  "top5_share_of_pnl": -1.8000000000000003,
+  "min_month_trades": 18,
+  "positive_month_rate": 0.5
+}
+```
+
+- Risk capital: $5,000
+- Net PnL: $-12,500
+
+## By Ticker
+
+```json
+{
+  "SPXW": {
+    "trades": 139,
+    "win_rate": 0.35251798561151076,
+    "profit_factor": 0.9074074074074076,
+    "pnl_return": -2.4999999999999996,
+    "avg_return": -0.017985611510791363,
+    "max_drawdown": -5.899999999999999,
+    "call_rate": 0.31654676258992803,
+    "days_with_trades": 115,
+    "daily_win_rate": 0.391304347826087,
+    "median_daily_return": -0.3,
+    "daily_max_drawdown": -5.899999999999999,
+    "top5_day_return": 4.5,
+    "top5_share_of_pnl": -1.8000000000000003,
+    "min_month_trades": 18,
+    "positive_month_rate": 0.5
+  }
+}
+```
+
+## By Source
+
+```json
+{
+  "spxw_d35_win": {
+    "trades": 84,
+    "win_rate": 0.40476190476190477,
+    "profit_factor": 1.1333333333333333,
+    "pnl_return": 1.9999999999999998,
+    "avg_return": 0.023809523809523808,
+    "max_drawdown": -3.199999999999998,
+    "call_rate": 0.5,
+    "days_with_trades": 63,
+    "daily_win_rate": 0.49206349206349204,
+    "median_daily_return": -0.3,
+    "daily_max_drawdown": -3.1999999999999984,
+    "top5_day_return": 4.0,
+    "top5_share_of_pnl": 2.0000000000000004,
+    "min_month_trades": 0,
+    "positive_month_rate": 0.3333333333333333
+  },
+  "spxw_d50_win": {
+    "trades": 55,
+    "win_rate": 0.2727272727272727,
+    "profit_factor": 0.625,
+    "pnl_return": -4.499999999999999,
+    "avg_return": -0.0818181818181818,
+    "max_drawdown": -6.799999999999997,
+    "call_rate": 0.03636363636363636,
+    "days_with_trades": 53,
+    "daily_win_rate": 0.2641509433962264,
+    "median_daily_return": -0.3,
+    "daily_max_drawdown": -6.799999999999997,
+    "top5_day_return": 3.0,
+    "top5_share_of_pnl": -0.6666666666666669,
+    "min_month_trades": 0,
+    "positive_month_rate": 0.16666666666666666
+  }
+}
+```
+
+## Monthly
+
+| Month | Trades | WR | PF | PnL Return | PnL $ |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 202601 | 21 | 33.3% | 0.833 | -0.700 | -3,500 |
+| 202602 | 18 | 5.6% | 0.098 | -4.600 | -23,000 |
+| 202603 | 22 | 50.0% | 1.667 | 2.200 | 11,000 |
+| 202604 | 42 | 38.1% | 1.026 | 0.200 | 1,000 |
+| 202605 | 18 | 44.4% | 1.333 | 1.000 | 5,000 |
+| 202606 | 18 | 33.3% | 0.833 | -0.600 | -3,000 |
+
+## Config
+
+```json
+{
+  "primary_trades": "research_papers\\JEPA\\results\\_diagnostics\\event_option_clean_live1000_nopool_d35_win_wf2026_v1\\event_option_gate_trades.csv",
+  "fallback_trades": "research_papers\\JEPA\\results\\_diagnostics\\event_option_clean_live1000_nopool_d50_win_wf2026_v1\\event_option_gate_trades.csv",
+  "output_dir": "research_papers\\JEPA\\results\\_diagnostics\\event_option_clean_live1000_bestmix_spxw_backfill18_v1",
+  "primary_name": "spxw_d35_win",
+  "fallback_name": "spxw_d50_win",
+  "ticker": "SPXW",
+  "start_month": "202601",
+  "end_month": "202606",
+  "exclude_months": [],
+  "min_month_trades": 18,
+  "auto_partial_month_target": false,
+  "partial_month_observed_floor": 0,
+  "backfill_only_partial_months": false,
+  "max_day": 3,
+  "cooldown_minutes": 30,
+  "min_entry_minute": 600,
+  "risk_capital": 5000.0
+}
+```

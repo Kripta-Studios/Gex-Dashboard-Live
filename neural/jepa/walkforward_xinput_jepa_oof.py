@@ -21,7 +21,13 @@ if str(PROJECT_ROOT) not in sys.path:
 from neural.jepa.append_xinput_jepa_features import build_contexts, infer_batches, pairwise_dispersion
 from neural.jepa.dataset import infer_sort_columns
 from neural.jepa.features import write_feature_names
-from neural.jepa.sigreg import SIGRegLoss, VarianceCovarianceLoss, latent_diagnostics
+from neural.jepa.sigreg import (
+    SIGRegLoss,
+    VISRegLoss,
+    VarianceCovarianceLoss,
+    latent_diagnostics,
+    latent_temporal_straightening_loss,
+)
 from neural.jepa.xinput_dataset import XInputJEPADataset, XInputNormalizers, fit_xinput_normalizers, prepare_xinput_frame
 from neural.jepa.xinput_model import XInputJEPAConfig, XInputMarketJEPA, save_xinput_model
 
@@ -86,6 +92,7 @@ def train_epoch(
     model: XInputMarketJEPA,
     loader: DataLoader,
     sigreg: SIGRegLoss,
+    visreg: VISRegLoss,
     vicreg: VarianceCovarianceLoss,
     ce_weight: torch.Tensor,
     opt: torch.optim.Optimizer,
@@ -93,7 +100,7 @@ def train_epoch(
     device: torch.device,
 ) -> dict:
     model.train()
-    sums = {"pred": 0.0, "sig": 0.0, "vic": 0.0, "ce": 0.0, "total": 0.0}
+    sums = {"pred": 0.0, "sig": 0.0, "vis": 0.0, "vic": 0.0, "straight": 0.0, "ce": 0.0, "total": 0.0}
     total = 0
     for state_ctx, input_ctx, targets, y in loader:
         state_ctx = state_ctx.to(device).float()
@@ -106,12 +113,19 @@ def train_epoch(
         pred_loss = F.mse_loss(pred_z, target_z.detach())
         z_all = torch.cat([z, target_z.reshape(b * h, -1)], dim=0)
         sig_loss = sigreg(z_all)
+        vis_loss = visreg(z_all)
         vic_loss = vicreg(z_all)
+        straight_loss = latent_temporal_straightening_loss(
+            torch.cat([z.unsqueeze(1), target_z], dim=1),
+            speed_weight=float(args.straightening_speed_weight),
+        )
         ce_loss = F.cross_entropy(logits, y, weight=ce_weight)
         loss = (
             pred_loss
             + float(args.lambda_sigreg) * sig_loss
+            + float(args.lambda_visreg) * vis_loss
             + float(args.lambda_vicreg) * vic_loss
+            + float(args.lambda_straightening) * straight_loss
             + float(args.lambda_ce) * ce_loss
         )
         opt.zero_grad(set_to_none=True)
@@ -122,7 +136,9 @@ def train_epoch(
         total += n
         sums["pred"] += float(pred_loss.item()) * n
         sums["sig"] += float(sig_loss.item()) * n
+        sums["vis"] += float(vis_loss.item()) * n
         sums["vic"] += float(vic_loss.item()) * n
+        sums["straight"] += float(straight_loss.item()) * n
         sums["ce"] += float(ce_loss.item()) * n
         sums["total"] += float(loss.item()) * n
     return {k: v / max(1, total) for k, v in sums.items()}
@@ -132,6 +148,7 @@ def evaluate_model(
     model: XInputMarketJEPA,
     loader: DataLoader,
     sigreg: SIGRegLoss,
+    visreg: VISRegLoss,
     vicreg: VarianceCovarianceLoss,
     ce_weight: torch.Tensor,
     args: argparse.Namespace,
@@ -139,7 +156,7 @@ def evaluate_model(
 ) -> dict:
     model.eval()
     total = 0
-    sums = {"pred": 0.0, "sig": 0.0, "vic": 0.0, "ce": 0.0, "total": 0.0}
+    sums = {"pred": 0.0, "sig": 0.0, "vis": 0.0, "vic": 0.0, "straight": 0.0, "ce": 0.0, "total": 0.0}
     logits_all, y_all, z_batches = [], [], []
     with torch.no_grad():
         for state_ctx, input_ctx, targets, y in loader:
@@ -153,19 +170,28 @@ def evaluate_model(
             pred_loss = F.mse_loss(pred_z, target_z.detach())
             z_all = torch.cat([z, target_z.reshape(b * h, -1)], dim=0)
             sig_loss = sigreg(z_all)
+            vis_loss = visreg(z_all)
             vic_loss = vicreg(z_all)
+            straight_loss = latent_temporal_straightening_loss(
+                torch.cat([z.unsqueeze(1), target_z], dim=1),
+                speed_weight=float(args.straightening_speed_weight),
+            )
             ce_loss = F.cross_entropy(logits, y, weight=ce_weight)
             loss = (
                 pred_loss
                 + float(args.lambda_sigreg) * sig_loss
+                + float(args.lambda_visreg) * vis_loss
                 + float(args.lambda_vicreg) * vic_loss
+                + float(args.lambda_straightening) * straight_loss
                 + float(args.lambda_ce) * ce_loss
             )
             n = len(state_ctx)
             total += n
             sums["pred"] += float(pred_loss.item()) * n
             sums["sig"] += float(sig_loss.item()) * n
+            sums["vis"] += float(vis_loss.item()) * n
             sums["vic"] += float(vic_loss.item()) * n
+            sums["straight"] += float(straight_loss.item()) * n
             sums["ce"] += float(ce_loss.item()) * n
             sums["total"] += float(loss.item()) * n
             logits_all.append(logits.cpu())
@@ -327,6 +353,13 @@ def train_fold(
     )
     model = XInputMarketJEPA(config).to(device)
     sigreg = SIGRegLoss(int(args.z_dim), num_projections=int(args.sigreg_projections)).to(device)
+    visreg = VISRegLoss(
+        int(args.z_dim),
+        num_slices=int(args.visreg_slices),
+        center_weight=float(args.visreg_center_weight),
+        scale_weight=float(args.visreg_scale_weight),
+        shape_weight=float(args.visreg_shape_weight),
+    ).to(device)
     vicreg = VarianceCovarianceLoss(min_std=float(args.vicreg_min_std), cov_weight=0.05, var_weight=1.0).to(device)
     ce_weight = class_weights(train_ds.labels, device)
     opt = torch.optim.AdamW(model.parameters(), lr=float(args.lr), weight_decay=float(args.weight_decay))
@@ -335,8 +368,8 @@ def train_fold(
     best_score = float("inf")
     history: list[dict] = []
     for epoch in range(1, int(args.epochs) + 1):
-        train_metrics = train_epoch(model, train_loader, sigreg, vicreg, ce_weight, opt, args, device)
-        val_metrics = evaluate_model(model, val_loader, sigreg, vicreg, ce_weight, args, device)
+        train_metrics = train_epoch(model, train_loader, sigreg, visreg, vicreg, ce_weight, opt, args, device)
+        val_metrics = evaluate_model(model, val_loader, sigreg, visreg, vicreg, ce_weight, args, device)
         health_penalty = max(0.0, 0.50 - float(val_metrics.get("z_effective_rank_ratio", 0.0)))
         score = float(val_metrics["total"]) + 0.25 * health_penalty
         row = {
@@ -370,6 +403,8 @@ def train_fold(
         "val_acc": float(history[best_epoch - 1].get("val_acc", float("nan"))) if best_epoch > 0 else float("nan"),
         "val_trade_precision": float(history[best_epoch - 1].get("val_trade_precision", float("nan"))) if best_epoch > 0 else float("nan"),
         "val_rank_ratio": float(history[best_epoch - 1].get("val_z_effective_rank_ratio", float("nan"))) if best_epoch > 0 else float("nan"),
+        "val_vis": float(history[best_epoch - 1].get("val_vis", float("nan"))) if best_epoch > 0 else float("nan"),
+        "val_straight": float(history[best_epoch - 1].get("val_straight", float("nan"))) if best_epoch > 0 else float("nan"),
     }
     if args.save_fold_models:
         model_dir = Path(args.output_dir) / "fold_models" / f"{ticker}_{test_month}"
@@ -453,7 +488,10 @@ def main() -> int:
     parser.add_argument("--num-layers", type=int, default=2)
     parser.add_argument("--dropout", type=float, default=0.15)
     parser.add_argument("--lambda-sigreg", type=float, default=0.15)
+    parser.add_argument("--lambda-visreg", type=float, default=0.0)
     parser.add_argument("--lambda-vicreg", type=float, default=0.20)
+    parser.add_argument("--lambda-straightening", type=float, default=0.0)
+    parser.add_argument("--straightening-speed-weight", type=float, default=0.0)
     parser.add_argument("--lambda-ce", type=float, default=0.15)
     parser.add_argument("--epochs", type=int, default=8)
     parser.add_argument("--batch-size", type=int, default=1024)
@@ -462,6 +500,10 @@ def main() -> int:
     parser.add_argument("--weight-decay", type=float, default=2e-2)
     parser.add_argument("--clip", type=float, default=10.0)
     parser.add_argument("--sigreg-projections", type=int, default=64)
+    parser.add_argument("--visreg-slices", type=int, default=64)
+    parser.add_argument("--visreg-center-weight", type=float, default=1.0)
+    parser.add_argument("--visreg-scale-weight", type=float, default=1.0)
+    parser.add_argument("--visreg-shape-weight", type=float, default=1.0)
     parser.add_argument("--vicreg-min-std", type=float, default=0.75)
     parser.add_argument("--balanced-sampler", action="store_true")
     parser.add_argument("--seed", type=int, default=20260616)

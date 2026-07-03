@@ -1,5 +1,19 @@
 # PLAN: Prove JEPA Latent Alpha, Then Promote to a Neural Trading Predictor
 
+## Current Production Note - 2026-07
+
+This document is an older JEPA research plan. The active live trading system is no longer the 180m JEPA replacement candidate or the GBT+RL path described below.
+
+Current production package:
+
+```text
+neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/
+policy: event_option_frozen2025_static_union_balanced_202607
+result: research_papers/JEPA/results/event_option_mh30trail_frozen2025_static_union_deploy202607_production_v1
+```
+
+The material below remains useful for representation-learning research, but production decisions should be judged against the static-union event-option package and the live-ready validation contract.
+
 ## 1. Objective
 
 Build a controlled research path that answers two questions without breaking the current profitable pipeline:

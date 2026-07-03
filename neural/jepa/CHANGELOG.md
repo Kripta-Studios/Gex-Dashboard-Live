@@ -1,5 +1,15 @@
 # JEPA Changelog
 
+## 2026-07-03 Frozen2025 Static-Union Live Package
+
+- Active production package is now `neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607`.
+- Active policy is `event_option_frozen2025_static_union_balanced_202607`.
+- `systemd/realtime_feed.service` and `systemd/ai_bot.service` point to the package policy and component registry with `--require-event-option-live-ready`.
+- Startup contract was fixed so realtime feed accepts packages whose live contract records `runtime_policy_replay` outside the old location.
+- Bot startup logs must show `event_exit=stop=-60%/tp=1000%/trail=50%/25%/min_hold=30m/max_hold=180m`.
+- Package validation passes with `--require-live-ready --min-profit-factor 1.3 --min-win-rate 0.45 --min-month-trades 12`.
+- Jan-Jun 2026 completed-month validation: 697 trades, WR `57.819%`, PF `1.915`; SPY remains the volume limiter with min month `12`.
+
 ## 2026-07-01 Dense15 Backfill19 SPY June-Positive Production Package
 
 - Promoted a new event-option production package: `neural/models/jepa/jepa_production_event_options_backfill19_spy_no_scorethr_wf2026_fullmayjun`.

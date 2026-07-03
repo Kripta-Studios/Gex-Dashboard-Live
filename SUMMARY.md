@@ -1,3 +1,19 @@
+# Current Production Status - 2026-07
+
+This root summary is historical RL debugging context. It does not describe the active live trading contract.
+
+The current live trading path is the JEPA event-option static-union package:
+
+```text
+neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/
+policy: event_option_frozen2025_static_union_balanced_202607
+services: services/realtime_feed.py + bots/tradingbot_wrapper_jepa.py
+systemd: realtime_feed.service + ai_bot.service
+exit: stop -60%, TP +1000%, trail +50%/25%, min_hold 30m, max_hold 180m
+```
+
+The GBT+RL material below is retained as legacy research/debugging history.
+
 # Bugfix Summary — RL Training Pipeline
 **Fecha:** 2026-05-24
 **Backtest analizado:** `gbt_only_20260524_144716.csv` vs `gbt_rl_20260524_144716.csv`

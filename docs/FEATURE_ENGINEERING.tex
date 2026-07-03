@@ -1,324 +1,107 @@
-% ============================================================================
-%  Kripta Studios -- Scientific Feature Engineering Document
-% ============================================================================
 \documentclass[11pt,a4paper]{article}
-
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{mathpazo}
-\usepackage{amsmath, amssymb, bm}
 \usepackage{geometry}
 \geometry{margin=1in}
-\usepackage{setspace}
-\onehalfspacing
+\usepackage{amsmath}
 \usepackage{booktabs}
-\usepackage{longtable}
 \usepackage{tabularx}
 \usepackage{array}
-\usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage{listings}
 \hypersetup{colorlinks=true, linkcolor=blue, urlcolor=blue}
+\lstset{basicstyle=\ttfamily\small, breaklines=true, frame=single, columns=fullflexible}
 \setcounter{tocdepth}{2}
 \sloppy
 
-\title{\textbf{Feature Engineering Methodology for the GBT+JEPA Trading System}}
+\title{\textbf{Feature Engineering Notes}\\Causal Event-Option Snapshot Construction}
 \author{Kripta Studios}
-\date{June 2026}
+\date{July 2026}
 
 \begin{document}
 \maketitle
 \tableofcontents
 \newpage
 
-\begin{abstract}
-The current feature engineering stack combines two philosophies.  The first is explicit domain engineering: option Greek exposure, strike geometry, volatility context, intraday location, and support/resistance descriptors are represented as tabular features.  The second is learned representation: XInputJEPA converts a two-hour sequence of state and input variables into latent transition features.  The final LightGBM model can then decide which explicit and latent features matter for each ticker and regime.
-\end{abstract}
+\section{Goal}
 
-\section{Core Principle: Live-Safe State Estimation}
+Feature engineering must make the training, backtest, replay, and live paths equivalent. A model can only be promoted if the live feed can reproduce the exact feature families used in validation without looking forward.
 
-Feature engineering is constrained by the live trading problem.  At timestamp $t$, the model may use only:
+\section{Snapshot Time}
 
-\[
-  \mathcal{F}_t =
-  \{ \mathrm{market\ data}_{\leq t}, \mathrm{option\ chain}_{\leq t}, \mathrm{calendar}_{t}, \mathrm{model\ state}_{\leq t} \}.
-\]
-
-It may not use future returns, future option paths, realized future MFE, realized future drawdown, oracle exit, or future best delta.  Those quantities are labels or diagnostics, not input features.
-
-\section{Normalization Philosophy}
-
-\subsection{Robust Normalization for JEPA}
-
-XInputJEPA uses robust normalization:
+For a snapshot at time $t$, allowed information is:
 
 \[
-  \tilde{x}_{i,j} =
-  \mathrm{clip}\left(
-  \frac{x_{i,j} - \mathrm{median}_j}{\mathrm{IQR}_j},
-  -c,
-  c
-  \right),
+\mathcal{F}_t = \{\text{spot, option chain, OHLC, Greeks, prior completed context observed at or before } t\}.
 \]
 
-with clip value $c=10$.  Median and interquartile range are fitted only on the training dates for validation experiments and on all available dates for final production fit.  Robust scaling is used because option-derived features have heavy tails and occasional extreme values.
+Forbidden information is anything in $(t,\infty)$, including exit prices, future option highs/lows, future spot returns, and future labels.
 
-\subsection{Median Imputation for GBT}
+\section{Training to Live Equivalence}
 
-The LightGBM direction model uses median imputation:
+The main files involved are:
 
-\[
-  x_{i,j}^{\mathrm{filled}} =
-  \begin{cases}
-  x_{i,j}, & x_{i,j}\ \mathrm{finite},\\
-  \mathrm{median}_j, & \mathrm{otherwise}.
-  \end{cases}
-\]
+\begin{lstlisting}
+neural/jepa/build_event_option_dataset.py
+neural/jepa/event_option_live_snapshot.py
+neural/jepa/event_option_live_scorer.py
+neural/jepa/event_option_component_live.py
+\end{lstlisting}
 
-The fitted medians are stored inside each per-ticker joblib artifact.  This keeps live inference deterministic and reproducible.
+The production contract requires that features exported by the dataset builder can be reconstructed by the live snapshot builder.
 
-\section{Feature Families}
+\section{Policy Replay}
 
-\subsection{Greek Exposure Features}
+Policy replay is a required validation step. It checks that runtime policy logic reproduces historical selected trades without missing or extra keys. A candidate should not be live-ready if the replay cannot explain the trades produced in validation.
 
-The most important engineered features are net Greek exposures:
+\section{Candidate Identity}
+
+Candidate identity is based on ticker, date, time, expiry mode, side, bucket, and policy family. This identity allows comparison between:
 
 \begin{itemize}
-  \item \texttt{net\_gamma}: convexity exposure; often associated with stabilizing or destabilizing dealer hedging depending on sign.
-  \item \texttt{net\_vanna}: sensitivity of delta exposure to volatility; relevant when implied volatility changes.
-  \item \texttt{net\_charm}: time decay of delta exposure; especially relevant intraday for 0DTE.
-  \item \texttt{net\_dgex}: delta-gamma exposure proxy used as a directional/hedging pressure descriptor.
-  \item \texttt{net\_zomma}: sensitivity of gamma to volatility.
-  \item \texttt{net\_delta}: aggregate directional option exposure.
-  \item \texttt{net\_vega} and \texttt{net\_vomma}: volatility exposure and volatility convexity.
+  \item historical candidate rows;
+  \item runtime replay rows;
+  \item live candidate audit rows;
+  \item paper order intents.
 \end{itemize}
 
-These fields are not used as isolated signals.  Their predictive value comes from interaction with price location, volatility regime, and recent changes.
+\section{Minute and Entry Alignment}
 
-\subsection{Weekly Versus 0DTE Exposure}
+Live entries are selected from event-option snapshots generated during the entry window. The bot uses regular trading hours and the policy entry window:
 
-The pipeline includes weekly exposure fields such as \texttt{wk\_net\_gamma}, \texttt{wk\_net\_vanna}, and \texttt{wk\_net\_dgex}.  Ratios such as \texttt{gamma\_0dte\_vs\_wk} and \texttt{vanna\_0dte\_vs\_wk} help distinguish a local 0DTE imbalance from a broader expiry structure.  This matters because a same-day imbalance may decay quickly, while weekly exposure can act as a larger magnetic or stabilizing structure.
+\begin{lstlisting}
+10:00-14:30 ET
+\end{lstlisting}
 
-\subsection{Regime Flags}
+No model should depend on future rows created later in the day.
 
-Regime features reduce the burden on the GBT to infer sign states repeatedly.  Examples include:
+\section{Exit Features}
 
-\begin{itemize}
-  \item \texttt{gamma\_regime},
-  \item \texttt{vanna\_bullish},
-  \item \texttt{charm\_bullish},
-  \item \texttt{dgex\_sticky},
-  \item \texttt{zomma\_stabilizing}.
-\end{itemize}
+Exit state for an already open live trade may use current premium, current PnL, elapsed hold time, and high water mark observed so far. It may not use the future maximum premium or future close price.
 
-These are compact encodings of nonlinear market-structure assumptions.  For example, a distance-to-level feature may be bullish in one gamma regime and mean-reverting in another.
+The current live exit is mechanical:
 
-\subsection{Strike Geometry}
+\begin{lstlisting}
+stop=-60%
+tp=1000%
+trail=50%/25%
+min_hold=30m
+max_hold=180m
+\end{lstlisting}
 
-The option chain creates a spatial field around spot.  The model encodes normalized distances from current spot to important strikes:
+\section{Audits}
 
-\[
-  d_{\mathrm{level}} =
-  \frac{S_t - K_{\mathrm{level}}}{S_t} \times 10{,}000.
-\]
+Run feature leakage and live drift checks when changing feature code:
 
-Examples include \texttt{dist\_to\_max\_gamma}, \texttt{dist\_to\_min\_gamma}, \texttt{dist\_to\_zero\_gamma}, \texttt{dist\_to\_max\_dgex}, and distances to vega/vomma extrema.  These features are important because option pressure is spatial: the same net exposure can matter differently when spot is near a large strike concentration.
+\begin{lstlisting}
+python neural/jepa/audit_event_option_feature_leakage.py ...
+python neural/jepa/audit_live_feature_drift.py --day-dir rt_data/YYYYMMDD --strict-features
+\end{lstlisting}
 
-\subsection{Intraday Price Map}
+Validation should fail closed when a required live feature is missing.
 
-The intraday map includes:
+\section{Practical Rule}
 
-\begin{itemize}
-  \item price relative to initial-balance high and low,
-  \item whether price is above, below, or inside the initial balance,
-  \item initial-balance range percentage,
-  \item distance to prior-day initial-balance levels,
-  \item gap percentage and gap direction,
-  \item minutes to close.
-\end{itemize}
-
-These features encode whether the market is extended, balanced, rejecting, or grinding.  They also allow the model to treat morning and afternoon signals differently.
-
-\subsection{Volatility Features}
-
-Volatility state is represented by:
-
-\begin{itemize}
-  \item \texttt{atm\_iv},
-  \item \texttt{iv\_zscore},
-  \item \texttt{iv\_percentile},
-  \item \texttt{vix\_spot},
-  \item \texttt{vix\_gamma},
-  \item \texttt{vix\_regime},
-  \item \texttt{atr\_5d\_norm}.
-\end{itemize}
-
-These variables condition the model on whether current option prices are rich, cheap, compressed, or expanding.  The same directional forecast can have different option payoff properties under different IV states.
-
-\subsection{Confluence Features}
-
-Confluence features combine level geometry with Greek concentrations.  Examples:
-
-\begin{itemize}
-  \item \texttt{confluence\_ib\_high\_max\_gamma},
-  \item \texttt{confluence\_ib\_low\_min\_gamma},
-  \item \texttt{confluence\_fib127\_bull\_max\_dgex},
-  \item \texttt{confluence\_fib161\_bear\_min\_dgex}.
-\end{itemize}
-
-These are engineered interaction terms.  They allow the GBT to split directly on a semantically meaningful condition instead of having to reconstruct it through multiple tree levels.
-
-\section{State/Input Split for JEPA}
-
-\subsection{State Features}
-
-State features describe what the system is now: exposure, volatility, location, levels, confluences, and calendar context.
-
-\subsection{Input Features}
-
-Input features describe recent perturbations:
-
-\[
-  \bm{u}_t =
-  [\Delta \Gamma_t, \Delta \mathrm{Vanna}_t, \Delta \mathrm{DGEX}_t,
-  \Delta S_t, \mathrm{momentum}_t, \Delta \mathrm{IV}_t,\ldots].
-\]
-
-This is the key JEPA design choice.  In the LeWorldModel-style interpretation, the model predicts future state from current latent state and an input.  In our market setting, variations in Greek exposure and spot are the input.
-
-\section{JEPA Feature Engineering}
-
-\subsection{Latent Coordinates}
-
-The first 28 JEPA features are raw latent coordinates:
-
-\[
-  z_t \in \mathbb{R}^{16}, \qquad u_t \in \mathbb{R}^{12}.
-\]
-
-These coordinates are not individually named economic variables.  They are learned factors.  Their value is assessed by whether the downstream GBT improves OOS performance when they are present.
-
-\subsection{Latent Velocity}
-
-Latent velocity is:
-
-\[
-  v^z_t = \|z_t - z_{t-1}\|_2,
-  \qquad
-  v^u_t = \|u_t - u_{t-1}\|_2.
-\]
-
-High velocity indicates that the latent market state or latent input is changing quickly.  This can be useful around regime transitions, volatility shocks, or rapid exposure changes.
-
-\subsection{Prediction Dispersion}
-
-Prediction dispersion measures disagreement among predicted future latent states.  Short dispersion compares horizons 1, 3, and 6.  Long dispersion compares horizons 12, 24, and 36:
-
-\[
-  D_{\mathrm{short}} =
-  \mathrm{mean}_{i<j,\ i,j\in\{1,3,6\}}
-  \|\hat{z}_{t+i}-\hat{z}_{t+j}\|_2.
-\]
-
-High dispersion means the model expects future state to vary by horizon; low dispersion means the projected state is more stable.
-
-\subsection{Lagged Prediction Error}
-
-Lagged prediction errors are computed when a previous forecast matures:
-
-\[
-  e_{t,h} = \|\hat{z}_{t-h,h} - z_t\|_2.
-\]
-
-This is live-safe because both terms are known at time $t$.  It is a measure of whether the recent latent world model has been surprised.
-
-\subsection{Directional Probabilities}
-
-The JEPA class head produces:
-
-\[
-  (p_{\mathrm{short}}, p_{\mathrm{hold}}, p_{\mathrm{long}}).
-\]
-
-The derived features are:
-
-\[
-  \mathrm{confidence} = \max(p_{\mathrm{short}}, p_{\mathrm{long}}),
-\]
-
-\[
-  \mathrm{direction\ score} = p_{\mathrm{long}} - p_{\mathrm{short}},
-\]
-
-\[
-  H(p) = -\sum_i p_i \log(p_i).
-\]
-
-These features are not final trade decisions.  They are inputs to the GBT.
-
-\section{Option Candidate Feature Engineering}
-
-The option layer adds features at the candidate level:
-
-\begin{itemize}
-  \item one-hot ticker and side,
-  \item \texttt{jepa180\_prob\_up}, confidence, direction, and edge,
-  \item entry minute, position in day, and minutes to close,
-  \item target delta and actual delta,
-  \item entry premium, raw premium, and spread-adjusted premium,
-  \item premium-to-spot in bps,
-  \item strike distance in points and bps,
-  \item actual IV, theta, gamma,
-  \item theta over premium,
-  \item gamma notional.
-\end{itemize}
-
-The spread adjustment is deliberately conservative.  The code increases the effective entry premium using a delta-dependent spread and a gamma-speed adjustment.  This penalizes fragile high-gamma entries.
-
-\section{Dynamic Exit Feature Engineering}
-
-For learned exits, each open trade is represented every 5 minutes by:
-
-\begin{itemize}
-  \item current PnL percentage,
-  \item current return on risk,
-  \item current premium and premium ratio,
-  \item peak PnL percentage,
-  \item drawdown from peak,
-  \item maximum adverse excursion proxy,
-  \item current delta, IV, and gamma,
-  \item spot return and signed spot return,
-  \item hold minutes and minutes remaining.
-\end{itemize}
-
-The target is future best return on risk from the current state:
-
-\[
-  V^*(s_t) =
-  \max_{\tau \in [t, t+T]}
-  \frac{\mathrm{PnL}_{\tau}}{\mathrm{risk\ capital}}.
-\]
-
-This is used to train a continuation-value model.  It is not a feature in live inference.
-
-\section{Why Many Base Features Can Coexist with JEPA}
-
-The user concern that ``the GBT already has many features and might ignore JEPA'' is correct in principle.  That is not a problem; it is the point of the experiment.  If the JEPA block adds no marginal signal, the GBT should ignore it.  The strict OOS result shows the opposite: \texttt{base\_jepa} improves trade metrics relative to \texttt{base}.  Therefore the JEPA features are not merely being ignored.
-
-\section{Feature Promotion Criteria}
-
-A feature or feature block should be promoted only if:
-
-\begin{enumerate}
-  \item it is live-safe,
-  \item it is produced identically in training and live inference,
-  \item it improves strict OOS or walk-forward results,
-  \item the improvement survives transaction-cost sensitivity,
-  \item it does not depend on a single ticker or a single lucky month,
-  \item it is documented in the artifact metadata or feature-name file.
-\end{enumerate}
-
-\section{Conclusion}
-
-The system uses explicit features to encode known market structure and JEPA features to encode latent temporal dynamics.  The combined approach is empirically stronger than either component alone.  Future feature engineering should prioritize better option-path state variables, liquidity/slippage realism, and robust learned exit targets rather than simply adding more static features to the already broad base set.
+If a feature is easy to compute in backtest but hard to compute live at the same timestamp, do not use it for production. The live feed is the authority for deployable feature availability.
 
 \end{document}

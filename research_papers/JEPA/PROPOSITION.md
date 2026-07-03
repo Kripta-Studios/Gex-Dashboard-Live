@@ -1,5 +1,16 @@
 # Proposition: Should We Use JEPA / LeWorldModel in This Trading Pipeline?
 
+## Current Production Note - 2026-07
+
+The conclusion still holds: do not replace the live stack with a literal LeWorldModel-style controller. The current production system is the event-option static-union package:
+
+```text
+neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/
+policy: event_option_frozen2025_static_union_balanced_202607
+```
+
+New JEPA, SIGReg, VISReg, XInputJEPA, or RL work must be evaluated as an auxiliary or replacement candidate against this package, using the same walk-forward, leakage, live-equivalence, and systemd smoke checks.
+
 ## Executive Conclusion
 
 Do not replace the current GBT + RL pipeline with a literal LeWorldModel architecture.

@@ -1,315 +1,120 @@
-% ============================================================================
-%  Kripta Studios -- Detailed Feature Catalogue
-% ============================================================================
 \documentclass[11pt,a4paper]{article}
-
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{mathpazo}
-\usepackage{amsmath, amssymb}
 \usepackage{geometry}
 \geometry{margin=1in}
-\usepackage{setspace}
-\onehalfspacing
 \usepackage{booktabs}
-\usepackage{longtable}
 \usepackage{tabularx}
 \usepackage{array}
-\usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage{listings}
 \hypersetup{colorlinks=true, linkcolor=blue, urlcolor=blue}
+\lstset{basicstyle=\ttfamily\small, breaklines=true, frame=single, columns=fullflexible}
 \setcounter{tocdepth}{2}
 \sloppy
 
-\title{\textbf{Detailed Feature Catalogue for the Current GBT+JEPA Models}}
+\title{\textbf{Feature Contract}\\Live-Observable Event-Option Features}
 \author{Kripta Studios}
-\date{June 2026}
+\date{July 2026}
 
 \begin{document}
 \maketitle
 \tableofcontents
 \newpage
 
-\begin{abstract}
-This document catalogues the feature blocks used by the current system.  It is intentionally more detailed than a summary report: it explains the economic meaning of the key engineered features, the state/input split used by XInputJEPA, the 42 JEPA features appended downstream, and the option-candidate features used by the 0DTE research models.  The machine-readable source of truth remains the model artifacts and feature-name JSON files.
-\end{abstract}
+\section{Principle}
 
-\section{Source of Truth}
+Every feature used by the live event-option scorer must be observable at or before the snapshot timestamp. Future option highs/lows, future spot movement, realized PnL, label columns, and post-entry outcomes are forbidden as model inputs.
 
-The definitive feature sources are:
+\section{Live Snapshot Surface}
+
+The feed builds event-option snapshots from:
 
 \begin{itemize}
-  \item base candidate features: \path{neural/hybrid_model.py}, variable \path{FEATURE_COLUMNS};
-  \item JEPA appended feature names: \path{neural/models/jepa/xinput_v3_production/jepa_feature_names.json};
-  \item production direction feature order: per-ticker joblib artifacts under \path{neural/models/jepa/jepa_production_final_180m/base_jepa};
-  \item option candidate feature definitions: \path{neural/jepa/train_backtest_option_policy.py};
-  \item OptionValueJEPA feature inference: \path{neural/jepa/train_option_value_jepa.py}.
+  \item current 0DTE option Greeks;
+  \item current 0DTE option OHLC/premium data;
+  \item current and historical spot candles;
+  \item prior completed trading-day context;
+  \item policy metadata and candidate identifiers.
 \end{itemize}
 
-\section{Feature Counts}
+The snapshot is written to:
 
-\begin{table}[h]
-\centering
-\begin{tabular}{lr}
+\begin{lstlisting}
+rt_data/YYYYMMDD/event_option_snapshots_latest.parquet
+\end{lstlisting}
+
+\section{Allowed Feature Families}
+
+\begin{center}
+\begin{tabularx}{\textwidth}{lX}
 \toprule
-Feature object & Count \\
+Family & Examples \\
 \midrule
-Base candidate features in loader & 182 \\
-Base features present in production \texttt{base\_jepa} artifact & 180 \\
-JEPA appended features & 42 \\
-Production \texttt{base\_jepa} GBT feature columns & 222 \\
-XInputJEPA state branch & 155 \\
-XInputJEPA input branch & 25 \\
-OptionValueJEPA market feature block & 222 \\
-OptionValueJEPA option feature block & 31 \\
-OptionValueJEPA dynamic feature block & 15 \\
+Contract state & delta, strike distance, side, expiry mode, premium, spread proxies. \\
+Spot state & current spot, intraday returns up to the snapshot, realized volatility up to the snapshot. \\
+Greek surface & live delta/gamma/theta/vega style fields from the current option chain. \\
+Time context & minute of day, entry window flags, days/month identifiers used causally. \\
+Prior history & backfilled spot history from previous completed days. \\
+Policy context & ticker, event delta bucket, policy id, runtime cap/cooldown state. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section{Forbidden Feature Families}
+
+\begin{itemize}
+  \item any column derived from a future exit price;
+  \item future option maximum favorable/adverse excursion;
+  \item future spot return after the snapshot;
+  \item labels such as win/loss, target-before-stop, realized return, future hold result;
+  \item same-month model selection evidence used as if it were out-of-sample;
+  \item any feature that exists in backtest/training but cannot be reproduced live.
+\end{itemize}
+
+\section{Feature Audits}
+
+Leakage and live-equivalence checks are performed by:
+
+\begin{lstlisting}
+neural/jepa/audit_event_option_feature_leakage.py
+neural/jepa/audit_live_feature_drift.py
+neural/jepa/validate_event_option_production_package.py
+\end{lstlisting}
+
+Live drift audit:
+
+\begin{lstlisting}
+DAY=$(TZ=America/New_York date +%Y%m%d)
+python3 neural/jepa/audit_live_feature_drift.py --day-dir "rt_data/$DAY" --strict-features
+\end{lstlisting}
+
+\section{Current Component Policies}
+
+\begin{center}
+\begin{tabular}{lrrrr}
+\toprule
+Ticker & Bucket & Min score & Max trades/day & Cooldown \\
+\midrule
+SPXW & d25 & 0.34 & 4 & 0m \\
+QQQ & d35 & policy & 2 & 30m \\
+SPY & d35 & policy & 1 & 0m \\
 \bottomrule
 \end{tabular}
-\caption{Feature counts from the current code and artifacts.}
-\end{table}
-
-The two base candidate features absent from the final production \texttt{base\_jepa} artifact are \path{charm_0dte_vs_wk} and \path{zomma_0dte_vs_wk}, because they were not present in the final production training table.
-
-\section{Key Engineered Market Features}
-
-\subsection{Net Greek Exposure}
-
-These are the core state variables.  The important features are:
-
-\begin{longtable}{p{0.23\textwidth}p{0.67\textwidth}}
-\toprule
-Feature & Interpretation \\
-\midrule
-\endhead
-\path{net_gamma} & Aggregate gamma exposure.  It describes how dealer delta changes with spot.  The sign and magnitude condition whether price movement is expected to be dampened or amplified. \\
-\path{net_vanna} & Aggregate vanna exposure.  It connects volatility movement to delta hedging pressure.  It becomes especially relevant when IV is moving. \\
-\path{net_charm} & Aggregate charm exposure.  It captures delta decay through time, particularly important for 0DTE because time decay is intraday and fast. \\
-\path{net_dgex} & Delta-gamma exposure proxy.  It is used as a directional hedging-pressure descriptor and as a source of DGEX magnet distances. \\
-\path{net_zomma} & Gamma sensitivity to volatility.  It helps distinguish gamma regimes that are stable from regimes where volatility changes can reshape gamma quickly. \\
-\path{net_delta} & Aggregate directional option exposure.  It is a direct state descriptor but is most useful in interaction with gamma and vanna. \\
-\path{net_vega} & Aggregate volatility exposure.  It conditions option payoff and volatility sensitivity. \\
-\path{net_vomma} & Convexity of vega.  It describes whether volatility exposure itself changes sharply as IV moves. \\
-\bottomrule
-\end{longtable}
-
-\subsection{Weekly Exposure Features}
-
-The weekly fields mirror the 0DTE fields:
-
-\begin{center}
-\path{wk_net_gamma}, \path{wk_net_vanna}, \path{wk_net_charm}, \path{wk_net_dgex}, \path{wk_net_zomma}, \path{wk_net_delta}, \path{wk_net_vega}, \path{wk_net_vomma}.
 \end{center}
 
-They exist because 0DTE exposure alone can be too local.  Weekly exposure can define broader support/resistance or magnetic zones.  Ratio fields such as \path{gamma_0dte_vs_wk}, \path{vanna_0dte_vs_wk}, \path{dgex_0dte_vs_wk}, \path{delta_0dte_vs_wk}, \path{vega_0dte_vs_wk}, and \path{vomma_0dte_vs_wk} compare short-expiry pressure to the wider expiry structure.
+\section{Open Interest and Coverage}
 
-\subsection{Regime and Boolean State Features}
+When a feature family requires open interest or historical coverage, the production package must record that coverage in its validation evidence. The current validation command uses \texttt{--ignore-raw-thetadata-coverage} only because the policy records the explicit raw-coverage assumption used for this package.
 
-Examples:
+\section{Live Feature Mismatch Handling}
 
-\begin{center}
-\path{gamma_regime}, \path{vanna_bullish}, \path{charm_bullish}, \path{dgex_sticky}, \path{zomma_stabilizing}, \path{wk_gamma_regime}, \path{wk_vanna_bullish}, \path{wk_dgex_sticky}, \path{wk_zomma_stabilizing}.
-\end{center}
+The bot runs with:
 
-These are not meant to be final trade rules.  They are compact regime descriptors.  A GBT can use them to learn different behavior in positive/negative gamma, sticky DGEX, or stabilizing zomma environments.
+\begin{lstlisting}
+--strict-event-option-features
+\end{lstlisting}
 
-\section{Location and Strike Geometry Features}
-
-\subsection{Distances to Option-Exposure Levels}
-
-Important level-distance fields include:
-
-\begin{center}
-\path{dist_to_max_gamma}, \path{dist_to_min_gamma}, \path{dist_to_min_vanna}, \path{dist_to_zero_gamma}, \path{dist_to_max_dgex}, \path{dist_to_min_dgex}, \path{dist_to_max_vega}, \path{dist_to_min_vega}, \path{dist_to_max_vomma}, \path{dist_to_min_vomma}.
-\end{center}
-
-The intuition is spatial.  A market near a large max-gamma or DGEX level may behave differently from a market far away from all large option concentrations.
-
-\subsection{Initial-Balance Features}
-
-The initial-balance family includes:
-
-\begin{center}
-\path{price_vs_ib_high}, \path{price_vs_ib_low}, \path{ib_range_pct}, \path{near_ib_high}, \path{near_ib_low}, \path{above_ib}, \path{below_ib}, \path{in_ib_range}.
-\end{center}
-
-These features encode whether the current price is inside balance, breaking out, rejecting, or extending.  Prior-day variants \path{dist_ib_high_D1} through \path{dist_ib_high_D5}, \path{dist_ib_low_D1} through \path{dist_ib_low_D5}, and \path{prev_close_vs_ib_D1} through \path{prev_close_vs_ib_D5} add multi-day context.
-
-\subsection{Fibonacci and Level Features}
-
-The model includes extension distances such as:
-
-\begin{center}
-\path{dist_fib_127_up}, \path{dist_fib_161_up}, \path{dist_fib_200_up}, \path{dist_fib_127_dn}, \path{dist_fib_161_dn}, \path{dist_fib_200_dn}.
-\end{center}
-
-It also includes support/resistance style variables:
-
-\begin{center}
-\path{nearest_level_dist}, \path{level_cluster_density}, \path{rejection_bullish}, \path{rejection_bearish}, \path{trend_grind_up}, \path{trend_flush_down}, \path{bouncing_from_support}, \path{rejecting_resistance}, \path{wall_at_fib}, \path{wall_at_ib}, \path{is_touching_fib}, \path{is_touching_max_gamma}, \path{is_touching_min_gamma}, \path{is_touching_max_dgex}.
-\end{center}
-
-\section{Volatility, Momentum, and Calendar Features}
-
-\subsection{Volatility State}
-
-Key volatility variables:
-
-\begin{center}
-\path{atm_iv}, \path{iv_zscore}, \path{iv_percentile}, \path{vix_spot}, \path{vix_gamma}, \path{vix_regime}, \path{vix_5d_mean}, \path{vix_5d_std}, \path{atr_5d_norm}, \path{rvol_iv_log}, \path{rvol_trend}, \path{rvol_regime}.
-\end{center}
-
-These features make the model conditional on option richness, realized/expected volatility, and volume/volatility regime.
-
-\subsection{Return and Momentum State}
-
-Return and momentum features include:
-
-\begin{center}
-\path{ret_1m_vol_adj}, \path{ret_5m_vol_adj}, \path{ret_15m_vol_adj}, \path{momentum_5m_bps}, \path{spot_change}, \path{gamma_momentum}, \path{rsi}.
-\end{center}
-
-They allow the model to distinguish a level touch during strong momentum from a level touch during mean reversion.
-
-\subsection{Calendar and Time of Day}
-
-Time features include:
-
-\begin{center}
-\path{time_sin}, \path{time_cos}, \path{minutes_to_close_norm}, \path{dow_sin}, \path{dow_cos}, \path{days_to_opex_norm}, \path{is_opex_week}, \path{is_quarterly_opex_week}.
-\end{center}
-
-Time encoding matters because 0DTE exposure, liquidity, and theta decay are highly intraday.
-
-\section{Interaction Features}
-
-\subsection{Greek Ratios}
-
-Ratio features include:
-
-\begin{center}
-\path{gamma_vanna_ratio}, \path{dgex_gamma_ratio}, \path{charm_vanna_ratio}, \path{delta_gamma_ratio}, \path{vega_gamma_ratio}, \path{vomma_vega_ratio}.
-\end{center}
-
-They describe which Greek channel is dominant.  For example, large gamma with small vanna is a different state from large vanna with small gamma.
-
-\subsection{Confluence Families}
-
-Confluence examples:
-
-\begin{center}
-\path{confluence_ib_high_max_gamma}, \path{confluence_ib_low_min_gamma}, \path{confluence_ib_high_max_vega}, \path{confluence_ib_low_max_dgex}, \path{confluence_fib127_bull_max_gamma}, \path{confluence_fib161_bull_max_vega}, \path{confluence_fib127_bear_min_gamma}, \path{confluence_fib161_bear_max_vomma}.
-\end{center}
-
-There are also prior-day initial-balance confluences:
-
-\begin{center}
-\path{confluence_d1ibh_max_gamma}, \path{confluence_d1ibl_min_gamma}, \path{confluence_d1ibh_max_dgex}, \path{confluence_d1ibl_min_dgex}, \path{confluence_d1ibh_max_vomma}.
-\end{center}
-
-These features encode multi-condition events directly.
-
-\section{JEPA Input Features}
-
-XInputJEPA input features are designed to behave like exogenous actions or perturbations.  The current input candidates are:
-
-\begin{longtable}{p{0.30\textwidth}p{0.60\textwidth}}
-\toprule
-Input group & Features \\
-\midrule
-\endhead
-Greek changes & \path{gamma_change}, \path{vanna_change}, \path{dgex_change}, \path{delta_change}, \path{vega_change}, \path{vomma_change}. \\
-Price and momentum changes & \path{spot_change}, \path{gamma_momentum}, \path{momentum_5m_bps}, \path{ret_1m_vol_adj}, \path{ret_5m_vol_adj}, \path{ret_15m_vol_adj}. \\
-Cross-market changes & \path{tlt_ret_1m}, \path{tlt_ret_5m}, \path{tlt_ret_15m}. \\
-Exposure dynamics & \path{gamma_speed}, \path{charm_accel_weighted}, \path{gamma_phase_delta}, \path{pcr_derivative_5m}. \\
-Volume and vol perturbations & \path{rvol_trend}, \path{rvol_regime}, \path{vol_relative}, \path{iv_zscore}, \path{iv_percentile}, \path{vix_5d_std}. \\
-Persistence & \path{signal_persistence_5m}. \\
-\bottomrule
-\end{longtable}
-
-The production artifact contains 25 input features because only columns present in both the parquet and base feature set are used.
-
-\section{JEPA Output Features}
-
-\subsection{Latent State}
-
-\begin{center}
-\path{xjepa_z_00}, \path{xjepa_z_01}, \path{xjepa_z_02}, \path{xjepa_z_03}, \path{xjepa_z_04}, \path{xjepa_z_05}, \path{xjepa_z_06}, \path{xjepa_z_07}, \path{xjepa_z_08}, \path{xjepa_z_09}, \path{xjepa_z_10}, \path{xjepa_z_11}, \path{xjepa_z_12}, \path{xjepa_z_13}, \path{xjepa_z_14}, \path{xjepa_z_15}.
-\end{center}
-
-These are 16 coordinates of the encoded market state.
-
-\subsection{Latent Input}
-
-\begin{center}
-\path{xjepa_u_00}, \path{xjepa_u_01}, \path{xjepa_u_02}, \path{xjepa_u_03}, \path{xjepa_u_04}, \path{xjepa_u_05}, \path{xjepa_u_06}, \path{xjepa_u_07}, \path{xjepa_u_08}, \path{xjepa_u_09}, \path{xjepa_u_10}, \path{xjepa_u_11}.
-\end{center}
-
-These are 12 coordinates of the recent perturbation/input sequence.
-
-\subsection{Derived JEPA Diagnostics}
-
-\begin{longtable}{p{0.30\textwidth}p{0.60\textwidth}}
-\toprule
-Feature & Meaning \\
-\midrule
-\endhead
-\path{xjepa_latent_velocity} & Norm of the change in $z$ from the previous valid context. \\
-\path{xjepa_input_velocity} & Norm of the change in $u$ from the previous valid context. \\
-\path{xjepa_pred_dispersion_short} & Pairwise dispersion among predicted latent states for horizons 1, 3, and 6. \\
-\path{xjepa_pred_dispersion_long} & Pairwise dispersion among predicted latent states for horizons 12, 24, and 36. \\
-\path{xjepa_lagged_pred_30m_err} & Error between the 30 minute old latent forecast and the current latent state. \\
-\path{xjepa_lagged_pred_60m_err} & Error between the 60 minute old latent forecast and the current latent state. \\
-\path{xjepa_lagged_pred_180m_err} & Error between the 180 minute old latent forecast and the current latent state. \\
-\path{xjepa_prob_short} & JEPA auxiliary head probability of short regime. \\
-\path{xjepa_prob_hold} & JEPA auxiliary head probability of hold/no-trade regime. \\
-\path{xjepa_prob_long} & JEPA auxiliary head probability of long regime. \\
-\path{xjepa_trade_confidence} & Maximum of short and long probabilities. \\
-\path{xjepa_direction_score} & Long probability minus short probability. \\
-\path{xjepa_entropy} & Entropy of the three-class auxiliary distribution. \\
-\path{xjepa_context_valid} & Indicator that enough history existed to produce a valid JEPA context. \\
-\bottomrule
-\end{longtable}
-
-\section{Option Candidate Features}
-
-The fixed-delta policy does not need a learned option-value feature matrix.  However, the research models use the following candidate families:
-
-\begin{longtable}{p{0.25\textwidth}p{0.65\textwidth}}
-\toprule
-Family & Features \\
-\midrule
-\endhead
-Ticker and side & \path{ticker_SPX}, \path{ticker_QQQ}, \path{ticker_SPY}, \path{side_LONG}, \path{side_SHORT}. \\
-Signal state & \path{jepa180_prob_up}, \path{jepa180_confidence}, \path{jepa180_direction}, \path{jepa180_edge}. \\
-Time state & \path{entry_minute}, \path{pos_in_day}, \path{minutes_to_close}. \\
-Delta/strike & \path{delta_target}, \path{actual_delta}, \path{actual_delta_abs}, \path{actual_strike}, \path{strike_distance_pts}, \path{strike_distance_bps}. \\
-Premium/spread & \path{entry_premium}, \path{raw_entry_premium}, \path{entry_spread_pct}, \path{premium_to_spot_bps}, \path{entry_cost_dollars}, \path{contracts}. \\
-Option Greeks & \path{actual_iv}, \path{actual_theta}, \path{actual_gamma}, \path{theta_over_premium}, \path{gamma_notional}. \\
-\bottomrule
-\end{longtable}
-
-\section{Dynamic Option Exit Features}
-
-Learned exit experiments use:
-
-\begin{center}
-\path{hold_minutes}, \path{hold_norm}, \path{current_pnl_pct}, \path{current_return_on_risk}, \path{current_premium}, \path{premium_ratio}, \path{peak_pnl_pct}, \path{drawdown_from_peak}, \path{mae_pnl_pct}, \path{current_delta}, \path{current_delta_abs}, \path{current_iv}, \path{current_gamma}, \path{spot_return_bps}, \path{signed_spot_return_bps}, \path{minutes_remaining}.
-\end{center}
-
-The OptionValueJEPA feature inference excludes \path{current_return_on_risk} from the dynamic feature block and uses it instead in the exit decision comparison.
-
-\section{Feature Interpretation Caveats}
-
-\begin{enumerate}
-  \item A feature name can be economically meaningful without being individually predictive.
-  \item A JEPA latent coordinate can be predictive without being human-interpretable.
-  \item The GBT may ignore most features.  That is acceptable if the retained splits improve OOS performance.
-  \item Option candidate labels are noisier than direction labels because option payoff includes spread, theta, IV, gamma, and liquidity.
-  \item Oracle-derived fields must never enter deployable features.
-\end{enumerate}
-
-\section{Conclusion}
-
-The key feature blocks are the net Greek state, strike geometry, volatility regime, intraday location, JEPA latent state/input, and option candidate path state.  The evidence supports using JEPA features as a complement to the base GBT features.  The next feature-development frontier is not more static market columns; it is better live-safe option-path and liquidity descriptors that can help a learned option selector beat fixed delta.
+This means missing or invalid live features should fail closed rather than silently falling back to a different feature set.
 
 \end{document}

@@ -1,47 +1,95 @@
 # JEPA Current Plan
 
-## Production Path
+## Production Priority
 
-1. Run the daily production pipeline:
+Keep the live event-option static-union package aligned between training, backtest, live snapshot generation, live scorer, and systemd.
 
-   ```powershell
-   .\neural\jepa\run_pipeline.ps1 -DailyProduction -Workers 32
-   ```
+Current production package:
 
-2. Upload generated model directories and manifest:
+```text
+neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/
+```
 
-   ```powershell
-   .\push_models.ps1 -HostAlias kripta
-   ```
+Current live policy:
 
-   Legacy JEPA 180m/OptionValue artifacts require `-IncludeLegacyFallback` and
-   are not part of the normal production upload.
+```text
+event_option_frozen2025_static_union_balanced_202607
+```
 
-3. On the VPS, pull source and restart services:
+## Daily Work
 
-   ```bash
-   cd /home/Option-Greeks-Plotting-Discord-Bot
-   git pull
-   sudo cp systemd/realtime_feed.service /etc/systemd/system/realtime_feed.service
-   sudo cp systemd/ai_bot.service /etc/systemd/system/ai_bot.service
-   sudo systemctl daemon-reload
-   sudo systemctl restart realtime_feed.service ai_bot.service
-   ```
+Daily work is audit, not retraining.
 
-## Current Research Priorities
+```bash
+DAY=$(TZ=America/New_York date +%Y%m%d)
+python3 neural/jepa/audit_live_feature_drift.py --day-dir "rt_data/$DAY" --strict-features
+journalctl -u realtime_feed.service -n 120 --no-pager
+journalctl -u ai_bot.service -n 160 --no-pager
+```
 
-- Keep the level-stability entry signal causal by fitting only on months before the deployment month.
-- Keep structural option-profile selection nested: for every test/deploy month, profiles must come from prior months only.
-- Improve SPX robustness without reducing sizing.
-- Develop a dense market JEPA/Var-JEPA encoder only after preserving out-of-fold export by ticker/month.
-- Do not promote OptionValue/RL until it improves the structural-profile baseline in walk-forward options.
+Check that both services show:
+
+```text
+[EVENT_OPTION] loaded policy=event_option_frozen2025_static_union_balanced_202607
+Loaded event-option component registry status=production_live_ready
+event_exit=stop=-60%/tp=1000%/trail=50%/25%/min_hold=30m/max_hold=180m
+```
+
+## Monthly Promotion Work
+
+After a completed month:
+
+1. Rebuild candidate datasets from ThetaData.
+2. Re-run leakage audits and walk-forward/fixed-holdout selection.
+3. Export a new production package only if selection evidence is prior to the deploy month.
+4. Validate the package with `--require-live-ready`.
+5. Smoke test realtime feed, live scorer, and bot startup.
+6. Deploy via git pull and explicit systemd restart.
+
+Production validation gate:
+
+```bash
+python3 neural/jepa/validate_event_option_production_package.py \
+  --policy neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/event_option_policy.json \
+  --registry neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/component_registry.json \
+  --require-live-ready \
+  --ignore-raw-thetadata-coverage \
+  --min-profit-factor 1.3 \
+  --min-win-rate 0.45 \
+  --min-month-trades 12
+```
+
+## Research Priorities
+
+1. Keep event-option features strictly live-observable.
+2. Keep policy replay reproducible: no missing/extra trades when replaying runtime logic against historical snapshots.
+3. Improve SPY monthly trade volume without weakening PF/WR gates.
+4. Evaluate VISReg/SIGReg/XInputJEPA only as auxiliary representation features until they improve the event-option baseline.
+5. Do not promote RL or OptionValue unless it beats the current static-union event-option package under the same live-ready checks.
 
 ## Files That Matter
 
-- Production signal: `fit_production_level_stability_signal.py`, `level_stability_live.py`.
-- Production option profiles: `fit_production_structural_option_profiles.py`.
-- Daily orchestration: `run_daily_production_pipeline.ps1`, `run_pipeline.ps1 -DailyProduction`.
-- Research validation: `walkforward_level_stability_ensemble.py`, `walkforward_structural_option_profiles.py`.
-- Result combiner/integrity checks: `combine_walkforward_option_results.py`.
-- Live execution: `bots/tradingbot_wrapper_jepa.py`, `services/realtime_feed.py`, `systemd/ai_bot.service`.
-- Formal report: `research_papers/JEPA/JEPA_PRODUCTION_REPORT.pdf`.
+Live runtime:
+
+```text
+services/realtime_feed.py
+bots/tradingbot_wrapper_jepa.py
+neural/jepa/event_option_live_snapshot.py
+neural/jepa/event_option_live_scorer.py
+neural/jepa/event_option_component_live.py
+```
+
+Validation and audits:
+
+```text
+neural/jepa/validate_event_option_production_package.py
+neural/jepa/audit_live_feature_drift.py
+neural/jepa/audit_event_option_feature_leakage.py
+```
+
+Systemd:
+
+```text
+systemd/realtime_feed.service
+systemd/ai_bot.service
+```
