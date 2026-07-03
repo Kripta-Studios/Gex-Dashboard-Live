@@ -42,7 +42,11 @@
     },
     "event_option_live_ready": true,
     "trailing_stop_activate_pct": 0.5,
-    "trailing_stop_giveback_pct": 0.25
+    "trailing_stop_giveback_pct": 0.25,
+    "runtime_policy_replay": {
+      "summary_path": "neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/runtime_policy_replay_summary.json",
+      "stateful_replay_passed": true
+    }
   },
   "completed_month_validation": {
     "result_dir": "research_papers/JEPA/results/event_option_mh30trail_frozen2025_static_union_deploy202607_production_v1",

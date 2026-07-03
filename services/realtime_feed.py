@@ -570,9 +570,19 @@ class RealtimeOptionsFeed:
                 raise ValueError(f"Event-option policy is not live-ready: {status}")
             if live_contract.get("event_option_live_ready") is not True:
                 raise ValueError("Event-option policy live_contract.event_option_live_ready is not true")
-            replay_path = str(live_contract.get("runtime_policy_replay", "")).strip()
+            replay = live_contract.get("runtime_policy_replay")
+            if replay is None:
+                live_equivalence = payload.get("live_equivalence") if isinstance(payload.get("live_equivalence"), dict) else {}
+                replay = live_equivalence.get("runtime_policy_replay")
+            replay_path = replay
+            if isinstance(replay, dict):
+                replay_path = replay.get("summary_path") or replay.get("path")
+            replay_path = str(replay_path or "").strip()
             if not replay_path:
-                raise ValueError("Event-option policy is missing live_contract.runtime_policy_replay")
+                raise ValueError(
+                    "Event-option policy is missing live_contract.runtime_policy_replay "
+                    "or live_equivalence.runtime_policy_replay"
+                )
             resolved_replay = Path(replay_path)
             if not resolved_replay.is_absolute():
                 resolved_replay = Path(PROJECT_ROOT) / resolved_replay

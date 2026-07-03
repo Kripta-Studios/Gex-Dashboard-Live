@@ -1775,38 +1775,36 @@ class JepaFixedDeltaBot:
 
     def _event_option_exit_contract(self) -> tuple[float, float, int, int]:
         payload = self.event_option_policy if isinstance(self.event_option_policy, dict) else {}
-        exit_validation = payload.get("exit_contract_validation")
-        has_exit_grid_validation = (
-            isinstance(exit_validation, dict)
-            and isinstance(exit_validation.get("contract"), dict)
-        )
         label_contract = {}
         live_contract = {}
-        if has_exit_grid_validation and isinstance(payload.get("validated_label_exit_contract"), dict):
+        if isinstance(payload.get("validated_label_exit_contract"), dict):
             label_contract = payload["validated_label_exit_contract"]
-        if has_exit_grid_validation and isinstance(payload.get("live_contract"), dict):
+        if isinstance(payload.get("live_contract"), dict):
             raw_live_exit = payload["live_contract"].get("event_option_exit_contract")
             if isinstance(raw_live_exit, dict):
                 live_contract = raw_live_exit
         take_profit = _safe_float(
-            label_contract.get("option_take_profit_pct", live_contract.get("take_profit_pct", EVENT_OPTION_TAKE_PROFIT_PCT)),
+            live_contract.get("take_profit_pct", label_contract.get("option_take_profit_pct", EVENT_OPTION_TAKE_PROFIT_PCT)),
             EVENT_OPTION_TAKE_PROFIT_PCT,
         )
         stop_loss = -abs(
             _safe_float(
-                label_contract.get("option_stop_loss_pct", abs(_safe_float(live_contract.get("stop_loss_pct", EVENT_OPTION_STOP_LOSS_PCT), EVENT_OPTION_STOP_LOSS_PCT))),
+                live_contract.get(
+                    "stop_loss_pct",
+                    label_contract.get("option_stop_loss_pct", abs(EVENT_OPTION_STOP_LOSS_PCT)),
+                ),
                 abs(EVENT_OPTION_STOP_LOSS_PCT),
             )
         )
         max_hold = int(
             _safe_float(
-                label_contract.get("horizon_minutes", live_contract.get("max_hold_minutes", EVENT_OPTION_MAX_HOLD_MINUTES)),
+                live_contract.get("max_hold_minutes", label_contract.get("horizon_minutes", EVENT_OPTION_MAX_HOLD_MINUTES)),
                 EVENT_OPTION_MAX_HOLD_MINUTES,
             )
         )
         min_hold = int(
             _safe_float(
-                label_contract.get("min_hold_minutes", live_contract.get("min_hold_minutes", EVENT_OPTION_MIN_HOLD_MINUTES)),
+                live_contract.get("min_hold_minutes", label_contract.get("min_hold_minutes", EVENT_OPTION_MIN_HOLD_MINUTES)),
                 EVENT_OPTION_MIN_HOLD_MINUTES,
             )
         )
@@ -2393,7 +2391,13 @@ class JepaFixedDeltaBot:
         event_exit = "none"
         if isinstance(self.event_option_policy, dict):
             tp, sl, max_hold, min_hold = self._event_option_exit_contract()
-            event_exit = f"stop={sl:.0%}/tp={tp:.0%}/min_hold={min_hold}m/max_hold={max_hold}m"
+            trailing_enabled, trail_activation, trail_drawdown = self._event_option_trailing_contract()
+            trail = (
+                f"/trail={trail_activation:.0%}/{trail_drawdown:.0%}"
+                if trailing_enabled
+                else "/trail=off"
+            )
+            event_exit = f"stop={sl:.0%}/tp={tp:.0%}{trail}/min_hold={min_hold}m/max_hold={max_hold}m"
         logging.info(
             "Starting JEPA live bot signal=%s selector=%s event_scorer=%s event_policy=%s event_components=%s event_exit=%s legacy_signal=%s rt_data=%s risk=%.0f entry_window=%s-%s legacy_stop=%.0f%% trail=%.0f%%/%.0f%% legacy_tp=%.0f%%",
             (
