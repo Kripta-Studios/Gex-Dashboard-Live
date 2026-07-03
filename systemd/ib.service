@@ -14,7 +14,9 @@ ExecStart=/usr/bin/python3 /home/Option-Greeks-Plotting-Discord-Bot/services/ib_
 Restart=always
 RestartSec=5
 Environment=PYTHONUNBUFFERED=1
+Environment=IB_POLL_INTERVAL_SECONDS=300
+Environment=IB_STARTUP_DELAY_SECONDS=240
+Environment=DXLINK_REVOKED_BACKOFF_SECONDS=900
 
 [Install]
 WantedBy=multi-user.target
-

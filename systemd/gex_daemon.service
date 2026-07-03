@@ -20,10 +20,12 @@ Restart=always
 RestartSec=5
 MemoryMax=1G
 MemorySwapMax=0
-Restart=always
+
 # Opcional: Para ver los print() en los logs inmediatamente
 Environment=PYTHONUNBUFFERED=1
+Environment=DXLINK_MAX_CONCURRENT=1
+Environment=GEX_DAEMON_INTERVAL_SECONDS=300
+Environment=DXLINK_REVOKED_BACKOFF_SECONDS=900
 
 [Install]
 WantedBy=multi-user.target
-

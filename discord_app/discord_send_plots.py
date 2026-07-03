@@ -491,14 +491,14 @@ async def start_scheduler():
     sched = BackgroundScheduler(daemon=True)
 
     # --- TRABAJO RÁPIDO (0DTE) ---
-    # Se ejecuta cada 2 MINUTOS. Solo procesa 0dte.
-    log("[SYSTEM] Programando 0DTE cada 2 minutos...")
+    # Se ejecuta cada 5 minutos. Solo procesa 0dte.
+    log("[SYSTEM] Programando 0DTE cada 5 minutos...")
     sched.add_job(
         lambda: asyncio.run_coroutine_threadsafe(
             request_plots(specific_exp="0dte"), discord_client.loop  # Solo pedimos 0dte
         ).result(),
         CronTrigger.from_crontab(
-            "*/2 3-16 * * 0-4",  # <--- CADA 2 MINUTOS
+            "0-59/5 3-16 * * 0-4",
             timezone=ZoneInfo("America/New_York"),
         ),
         id="fast_0dte_job",
@@ -507,16 +507,15 @@ async def start_scheduler():
     )
 
     # --- TRABAJO LENTO (1DTE y Weekly) ---
-    # Se ejecuta cada 10 MINUTOS. Procesan el resto.
-    # Esto libera ancho de banda para que el 0dte fluya rápido.
-    log("[SYSTEM] Programando 1DTE/Weekly cada 10 minutos...")
+    # Se ejecuta cada 5 minutos con offset para reducir solapes con 0dte.
+    log("[SYSTEM] Programando 1DTE/Weekly cada 5 minutos...")
     for slow_exp in ["1dte", "weekly"]:
         sched.add_job(
             lambda e=slow_exp: asyncio.run_coroutine_threadsafe(
                 request_plots(specific_exp=e), discord_client.loop
             ).result(),
             CronTrigger.from_crontab(
-                "*/9 3-16 * * 0-4",  # <--- CADA 10 MINUTOS
+                "2-59/5 3-16 * * 0-4",
                 timezone=ZoneInfo("America/New_York"),
             ),
             id=f"slow_{slow_exp}_job",

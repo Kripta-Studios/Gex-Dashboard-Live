@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import os
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 from calendar import monthrange
@@ -10,6 +11,29 @@ from os import getcwd, makedirs, path
 from re import compile
 import exchange_calendars as xcals
 import datetime
+
+
+def _env_flag(name: str) -> bool:
+    return os.getenv(name, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _is_trading_date(day: datetime.date) -> bool:
+    start = day - datetime.timedelta(days=1)
+    end = day + datetime.timedelta(days=1)
+    calendar = xcals.get_calendar("XNYS", start=pd.Timestamp(start), end=pd.Timestamp(end))
+    trading_days = [d.date() for d in calendar.sessions.to_pydatetime()]
+    return day in trading_days
+
+
+def _reference_today_date(tz: str) -> datetime.date:
+    forced = os.getenv("OGP_FORCE_TRADING_DATE", "").strip()
+    if forced:
+        return datetime.date.fromisoformat(forced)
+
+    today_date = datetime.datetime.now(ZoneInfo(tz)).date()
+    if _env_flag("OGP_FORCE_NEXT_OPEN_DAY") and not _is_trading_date(today_date):
+        return next_open_day(today_date)
+    return today_date
 
 
 def get_friday_of_this_week():
@@ -92,8 +116,12 @@ def is_third_friday(date, tz):
 
 def expir_to_datetime(expir: str):
     tz = "America/New_York"
-    today = datetime.datetime.now(ZoneInfo(tz))
-    today_date = today.date()
+    today_date = _reference_today_date(tz)
+    today = datetime.datetime.combine(
+        today_date,
+        datetime.datetime.now(ZoneInfo(tz)).time(),
+        tzinfo=ZoneInfo(tz),
+    )
 
     expir = expir.lower().strip()
 

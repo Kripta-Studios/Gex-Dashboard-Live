@@ -3,8 +3,12 @@ Description=Option Greeks Plotting Discord Bot
 After=network.target
 
 [Service]
-Environment="DXLINK_MAX_CONCURRENT=2"
-Type=notify
+Environment="DXLINK_MAX_CONCURRENT=1"
+Environment="DXLINK_MAX_MESSAGE_SIZE_BYTES=4194304"
+Environment="DXLINK_SYMBOL_BATCH_SIZE=40"
+Environment="DXLINK_REVOKED_BACKOFF_SECONDS=900"
+Environment="PYTHONUNBUFFERED=1"
+Type=simple
 WorkingDirectory=/home/Option-Greeks-Plotting-Discord-Bot
 User=root
 
@@ -14,7 +18,7 @@ ExecStart=/usr/bin/python3 /home/Option-Greeks-Plotting-Discord-Bot/discord_app/
 RuntimeMaxSec=21600
 Restart=always
 RestartSec=5
-WatchdogSec=30min
+WatchdogSec=0
 StandardOutput=append:/root/salida.log
 StandardError=append:/root/salida.log
 MemoryMax=80%

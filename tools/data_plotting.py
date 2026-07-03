@@ -47,6 +47,36 @@ def is_market_open(check_date) -> bool:
     """Verifica si el NYSE está abierto en una fecha específica."""
     schedule = NYSE_CALENDAR.schedule(start_date=check_date, end_date=check_date)
     return not schedule.empty
+
+
+def _env_flag(name: str) -> bool:
+    return getenv(name, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def resolve_effective_market_now(now_ny):
+    forced_date = getenv("OGP_FORCE_TRADING_DATE", "").strip()
+    if forced_date:
+        trading_date = datetime.date.fromisoformat(forced_date)
+        effective_now = datetime.datetime.combine(
+            trading_date, now_ny.time(), tzinfo=now_ny.tzinfo
+        )
+        return effective_now, trading_date, f"fecha forzada {trading_date}"
+
+    trading_date = now_ny.date()
+    if now_ny.time() < datetime.time(3, 0):
+        trading_date -= datetime.timedelta(days=1)
+
+    if not is_market_open(trading_date) and _env_flag("OGP_FORCE_NEXT_OPEN_DAY"):
+        next_date = next_open_day(trading_date)
+        effective_now = datetime.datetime.combine(
+            next_date, now_ny.time(), tzinfo=now_ny.tzinfo
+        )
+        return effective_now, next_date, f"próximo día abierto {next_date}"
+
+    effective_now = datetime.datetime.combine(
+        trading_date, now_ny.time(), tzinfo=now_ny.tzinfo
+    )
+    return effective_now, trading_date, None
 # --- CONFIGURACIÓN DE ESTILOS (TAMAÑOS AUMENTADOS Y ALTO CONTRASTE) ---
 STYLE_CONFIG = {
     "title_size": 26,
@@ -1919,15 +1949,15 @@ def calcular_spx_media(es_price, sofr_rate):
 def get_options_data(ticker, expir, greek_filter):
     async def _fetch_internal():
         ny_tz = ZoneInfo("America/New_York")
-        now_ny = datetime.datetime.now(ny_tz)
-        trading_date = now_ny.date()
-        
-        # Ajuste de madrugada: Si son antes de las 3 AM, cuenta como el día de ayer
-        if now_ny.time() < datetime.time(3, 0):
-            trading_date -= datetime.timedelta(days=1)
-            
+        real_now_ny = datetime.datetime.now(ny_tz)
+        now_ny, trading_date, forced_reason = resolve_effective_market_now(real_now_ny)
+        if forced_reason:
+            print(
+                f"[{real_now_ny.strftime('%H:%M:%S')}] MODO FORZADO: usando {forced_reason} para {ticker}."
+            )
+
         if not is_market_open(trading_date):
-            print(f"[{now_ny.strftime('%H:%M:%S')}] NYSE CERRADO. Omitiendo descarga y guardado de JSON para {ticker}.")
+            print(f"[{real_now_ny.strftime('%H:%M:%S')}] NYSE CERRADO. Omitiendo descarga y guardado de JSON para {ticker}.")
             # Retornamos vacío para abortar el proceso sin causar errores
             return [], [], []
         load_dotenv()
@@ -1960,8 +1990,6 @@ def get_options_data(ticker, expir, greek_filter):
         yield_val = (100 - sofr) / 100
 
         if "SPX" in ticker:
-            ny_tz = ZoneInfo("America/New_York")
-            now_ny = datetime.datetime.now(ny_tz)
             hora_ny = now_ny.time()
 
             rth_start = datetime.time(9, 30)
@@ -2005,7 +2033,7 @@ def get_options_data(ticker, expir, greek_filter):
         exp_dates, exp_strikes = await tasty_expirations_strikes(session, t_list_clean)
         t1 = time.time()
         print(f"📡 [RED] API Tastytrade exp dates strikes: {t1 - t0:.4f}s")
-        today = pd.Timestamp.now(tz="America/New_York")
+        today = pd.Timestamp(now_ny)
         exp_clean = expir.replace(" ", "").lower()
 
         all_dates = get_all_unique_expirations_timestamps(exp_dates)

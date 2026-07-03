@@ -9,19 +9,81 @@ Optimizaciones aplicadas:
 5. Early exit cuando todos los datos llegaron
 """
 
-import asyncio, os
+import asyncio
+import os
+import threading
+import time
 from collections import defaultdict
+from contextlib import asynccontextmanager
 from typing import TypedDict, List, Tuple, Dict
 import datetime
 
-_DXLINK_LIMIT = max(1, int(os.getenv("DXLINK_MAX_CONCURRENT", "2")))
-_DXLINK_SEMAPHORE = asyncio.Semaphore(_DXLINK_LIMIT)
+import tastytrade.streamer as tastytrade_streamer
+from httpx_ws import aconnect_ws as _httpx_aconnect_ws
+
+_DXLINK_LIMIT = max(1, int(os.getenv("DXLINK_MAX_CONCURRENT", "1")))
+_DXLINK_SEMAPHORE = threading.BoundedSemaphore(_DXLINK_LIMIT)
+_DXLINK_MAX_MESSAGE_SIZE_BYTES = max(65536, int(os.getenv("DXLINK_MAX_MESSAGE_SIZE_BYTES", "4194304")))
+_DXLINK_SYMBOL_BATCH_SIZE = max(1, int(os.getenv("DXLINK_SYMBOL_BATCH_SIZE", "40")))
+_DXLINK_LISTEN_TIMEOUT_SECONDS = max(0.5, float(os.getenv("DXLINK_LISTEN_TIMEOUT_SECONDS", "2.0")))
+DXLINK_REVOKED_BACKOFF_SECONDS = max(300, int(os.getenv("DXLINK_REVOKED_BACKOFF_SECONDS", "900")))
+_DXLINK_REVOKED_UNTIL = 0.0
 
 from tastytrade import Session, DXLinkStreamer
 from tastytrade.instruments import NestedOptionChain, NestedFutureOptionChain
 from tastytrade.market_data import get_market_data_by_type
 from tastytrade.dxfeed import Greeks, Summary
 from zoneinfo import ZoneInfo
+
+
+class DXLinkAccessRevoked(RuntimeError):
+    pass
+
+
+def _exception_text(exc: BaseException) -> str:
+    if isinstance(exc, BaseExceptionGroup):
+        return " ".join(_exception_text(child) for child in exc.exceptions)
+    return str(exc)
+
+
+def _is_dxlink_access_error(exc: BaseException) -> bool:
+    text = _exception_text(exc).lower()
+    return "access has been revoked" in text or "unauthorized" in text
+
+
+def _is_dxlink_frame_too_large(exc: BaseException) -> bool:
+    text = _exception_text(exc).lower()
+    return "max frame length" in text or "subscription message too long" in text
+
+
+def _mark_dxlink_revoked(context: str):
+    global _DXLINK_REVOKED_UNTIL
+    _DXLINK_REVOKED_UNTIL = time.monotonic() + DXLINK_REVOKED_BACKOFF_SECONDS
+    print(
+        f"[DXLINK BACKOFF] {context}: quote access rejected; "
+        f"skipping dxLink for {DXLINK_REVOKED_BACKOFF_SECONDS}s."
+    )
+
+
+def _raise_if_dxlink_backoff_active():
+    remaining = _DXLINK_REVOKED_UNTIL - time.monotonic()
+    if remaining > 0:
+        raise DXLinkAccessRevoked(f"dxLink backoff active for {remaining:.0f}s")
+
+
+def _install_dxlink_ws_limit():
+    current = tastytrade_streamer.aconnect_ws
+    if getattr(current, "_ogp_max_message_size_bytes", None) == _DXLINK_MAX_MESSAGE_SIZE_BYTES:
+        return
+
+    @asynccontextmanager
+    async def _aconnect_ws_with_limit(*args, **kwargs):
+        kwargs.setdefault("max_message_size_bytes", _DXLINK_MAX_MESSAGE_SIZE_BYTES)
+        async with _httpx_aconnect_ws(*args, **kwargs) as websocket:
+            yield websocket
+
+    _aconnect_ws_with_limit._ogp_max_message_size_bytes = _DXLINK_MAX_MESSAGE_SIZE_BYTES
+    tastytrade_streamer.aconnect_ws = _aconnect_ws_with_limit
 
 
 class OptionsRequest(TypedDict):
@@ -288,37 +350,80 @@ async def main_downloader(
     data_cache = defaultdict(dict)
     received_count = 0
 
-    async with _DXLINK_SEMAPHORE:
-        async with DXLinkStreamer(session) as streamer:
-            # Suscripción masiva
-            await streamer.subscribe(Greeks, tasty_symbols)
-            await streamer.subscribe(Summary, tasty_symbols)
-            
-            # Escucha con early exit
-            async def collect_with_early_exit():
-                nonlocal received_count
-                
-                async def collect_greeks():
-                    nonlocal received_count
-                    async for event in streamer.listen(Greeks):
-                        if event.event_symbol not in data_cache or "greeks" not in data_cache[event.event_symbol]:
-                            data_cache[event.event_symbol]["greeks"] = event
-                            received_count += 1
-                
-                async def collect_summary():
-                    nonlocal received_count
-                    async for event in streamer.listen(Summary):
-                        if event.event_symbol not in data_cache or "summary" not in data_cache[event.event_symbol]:
-                            data_cache[event.event_symbol]["summary"] = event
-                            received_count += 1
-                
-                await asyncio.gather(collect_greeks(), collect_summary())
-            
+    _raise_if_dxlink_backoff_active()
+    await asyncio.to_thread(_DXLINK_SEMAPHORE.acquire)
+    try:
+        async def collect_symbol_batch(symbol_batch):
+            nonlocal received_count
+            symbol_set = set(symbol_batch)
+            expected_batch = len(symbol_set) * 2
+            batch_received = 0
+            done = asyncio.Event()
+
             try:
-                # Timeout corto de 2 segundos (como el original)
-                await asyncio.wait_for(collect_with_early_exit(), timeout=2.0)
-            except asyncio.TimeoutError:
-                pass
+                _install_dxlink_ws_limit()
+                async with DXLinkStreamer(session) as streamer:
+                    await streamer.subscribe(Greeks, symbol_batch)
+                    await streamer.subscribe(Summary, symbol_batch)
+
+                    async def collect_greeks():
+                        nonlocal received_count, batch_received
+                        async for event in streamer.listen(Greeks):
+                            if event.event_symbol not in symbol_set:
+                                continue
+                            if event.event_symbol not in data_cache or "greeks" not in data_cache[event.event_symbol]:
+                                data_cache[event.event_symbol]["greeks"] = event
+                                received_count += 1
+                                batch_received += 1
+                                if batch_received >= expected_batch:
+                                    done.set()
+                                    break
+
+                    async def collect_summary():
+                        nonlocal received_count, batch_received
+                        async for event in streamer.listen(Summary):
+                            if event.event_symbol not in symbol_set:
+                                continue
+                            if event.event_symbol not in data_cache or "summary" not in data_cache[event.event_symbol]:
+                                data_cache[event.event_symbol]["summary"] = event
+                                received_count += 1
+                                batch_received += 1
+                                if batch_received >= expected_batch:
+                                    done.set()
+                                    break
+
+                    tasks = [
+                        asyncio.create_task(collect_greeks()),
+                        asyncio.create_task(collect_summary()),
+                    ]
+                    try:
+                        await asyncio.wait_for(done.wait(), timeout=_DXLINK_LISTEN_TIMEOUT_SECONDS)
+                    except asyncio.TimeoutError:
+                        pass
+                    finally:
+                        for task in tasks:
+                            task.cancel()
+                        await asyncio.gather(*tasks, return_exceptions=True)
+            except Exception as e:
+                if _is_dxlink_frame_too_large(e) and len(symbol_batch) > 1:
+                    midpoint = max(1, len(symbol_batch) // 2)
+                    print(
+                        f"[DXLINK BATCH] frame demasiado grande para {len(symbol_batch)} simbolos; "
+                        f"partiendo en {midpoint}/{len(symbol_batch) - midpoint}."
+                    )
+                    await collect_symbol_batch(symbol_batch[:midpoint])
+                    await collect_symbol_batch(symbol_batch[midpoint:])
+                    return
+                if _is_dxlink_access_error(e):
+                    _mark_dxlink_revoked("GREEKS/SUMMARY")
+                    raise DXLinkAccessRevoked(_exception_text(e)) from e
+                raise
+
+        for symbol_batch in chunks(tasty_symbols, _DXLINK_SYMBOL_BATCH_SIZE):
+            _install_dxlink_ws_limit()
+            await collect_symbol_batch(symbol_batch)
+    finally:
+        _DXLINK_SEMAPHORE.release()
         
     # Actualizar greeks_list con datos recibidos
     for tasty_symbol in tasty_symbols:

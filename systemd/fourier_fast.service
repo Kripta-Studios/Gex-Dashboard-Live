@@ -23,6 +23,9 @@ MemorySwapMax=0
 Restart=always
 # Opcional: Para ver los print() en los logs inmediatamente
 Environment=PYTHONUNBUFFERED=1
+Environment=FOURIER_FAST_POLL_INTERVAL_SECONDS=300
+Environment=FOURIER_FAST_STARTUP_DELAY_SECONDS=360
+Environment=DXLINK_REVOKED_BACKOFF_SECONDS=900
 
 [Install]
 WantedBy=multi-user.target
