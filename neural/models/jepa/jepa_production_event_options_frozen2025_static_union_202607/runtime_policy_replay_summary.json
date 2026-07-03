@@ -1,0 +1,33 @@
+{
+  "passed": true,
+  "stateful_replay_passed": true,
+  "profile": "balanced_cap4",
+  "source_trades": "research_papers/JEPA/results/event_option_mh30trail_frozen2025_static_union_deploy202607_production_v1/combined_trades.csv",
+  "comparison": {
+    "by_ticker": {
+      "QQQ": {
+        "passed": true
+      },
+      "SPXW": {
+        "passed": true
+      },
+      "SPY": {
+        "passed": true
+      }
+    }
+  },
+  "comparisons": [
+    {
+      "name": "QQQ",
+      "passed": true
+    },
+    {
+      "name": "SPXW",
+      "passed": true
+    },
+    {
+      "name": "SPY",
+      "passed": true
+    }
+  ]
+}

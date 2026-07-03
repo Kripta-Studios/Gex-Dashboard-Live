@@ -9,7 +9,7 @@ Group=root
 
 WorkingDirectory=/home/Option-Greeks-Plotting-Discord-Bot
 
-ExecStart=/usr/bin/python3 /home/Option-Greeks-Plotting-Discord-Bot/services/realtime_feed.py --interval 60 --jepa-model-dir /home/Option-Greeks-Plotting-Discord-Bot/neural/models/jepa/xinput_v3_production --jepa-device auto --event-option-policy-path /home/Option-Greeks-Plotting-Discord-Bot/neural/models/jepa/jepa_production_event_options_backfill19_spy_no_scorethr_wf2026_fullmayjun/event_option_policy.json --event-option-component-registry-path /home/Option-Greeks-Plotting-Discord-Bot/neural/models/jepa/jepa_production_event_options_backfill19_spy_no_scorethr_wf2026_fullmayjun/component_registry.json --require-event-option-live-ready
+ExecStart=/usr/bin/python3 /home/Option-Greeks-Plotting-Discord-Bot/services/realtime_feed.py --interval 60 --jepa-model-dir /home/Option-Greeks-Plotting-Discord-Bot/neural/models/jepa/xinput_v3_production --jepa-device auto --event-option-policy-path /home/Option-Greeks-Plotting-Discord-Bot/neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/event_option_policy.json --event-option-component-registry-path /home/Option-Greeks-Plotting-Discord-Bot/neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/component_registry.json --require-event-option-live-ready
 
 Restart=always
 RestartSec=5

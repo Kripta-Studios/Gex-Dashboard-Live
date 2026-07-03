@@ -79,7 +79,8 @@ def load_variant_trades(variant_specs: list[str]) -> tuple[list[str], pd.DataFra
     parsed = out["deploy_config"].map(parse_deploy_config)
     out["deploy_threshold"] = [item[0] for item in parsed]
     out["deploy_max_day"] = [item[1] for item in parsed]
-    out["score_rank_day_variant"] = out.groupby(["ticker", "date", "variant"])["score"].rank(method="first", ascending=False)
+    out = out.sort_values(["ticker", "date", "variant", "minute", "score"], ascending=[True, True, True, True, False], kind="stable")
+    out["event_seq_day_variant"] = out.groupby(["ticker", "date", "variant"]).cumcount().astype(float)
 
     group_cols = ["ticker", "date", "minute", "expiry_mode"]
     action_cols = group_cols + ["action"]
@@ -235,7 +236,7 @@ def build_model_frame(args: argparse.Namespace) -> tuple[pd.DataFrame, list[str]
         "pred_abs_edge",
         "deploy_threshold",
         "deploy_max_day",
-        "score_rank_day_variant",
+        "event_seq_day_variant",
         "same_event_total_votes",
         "same_event_action_votes",
         "same_event_action_score_mean",

@@ -1,0 +1,78 @@
+{
+  "risk_capital": 5000.0,
+  "net_pnl": 800629.3365463441,
+  "overall": {
+    "trades": 697,
+    "win_rate": 0.5781922525107605,
+    "profit_factor": 1.91525653981412,
+    "pnl_return": 160.1258673092688,
+    "avg_return": 0.22973582110368554,
+    "max_drawdown": -7.468604676951642,
+    "call_rate": 0.31420373027259685,
+    "days_with_trades": 121,
+    "daily_win_rate": 0.6033057851239669,
+    "median_daily_return": 0.8571264933487905,
+    "daily_max_drawdown": -12.022185463356386,
+    "top5_day_return": 62.56635192975472,
+    "top5_share_of_pnl": 0.39073232189845625,
+    "min_month_trades": 103,
+    "positive_month_rate": 1.0
+  },
+  "by_ticker": {
+    "QQQ": {
+      "trades": 236,
+      "win_rate": 0.6059322033898306,
+      "profit_factor": 1.7712762214371216,
+      "pnl_return": 42.36011280511728,
+      "avg_return": 0.17949200341151392,
+      "max_drawdown": -4.993274296011002,
+      "call_rate": 0.5127118644067796,
+      "days_with_trades": 119,
+      "daily_win_rate": 0.5714285714285714,
+      "median_daily_return": 0.26607131738291756,
+      "daily_max_drawdown": -4.993274296010988,
+      "top5_day_return": 17.26480959130341,
+      "top5_share_of_pnl": 0.4075723233016922,
+      "min_month_trades": 36,
+      "positive_month_rate": 1.0
+    },
+    "SPXW": {
+      "trades": 355,
+      "win_rate": 0.5521126760563381,
+      "profit_factor": 2.0374045222685813,
+      "pnl_return": 98.40522898361039,
+      "avg_return": 0.27719782812284616,
+      "max_drawdown": -7.468604676951731,
+      "call_rate": 0.21971830985915494,
+      "days_with_trades": 106,
+      "daily_win_rate": 0.5377358490566038,
+      "median_daily_return": 0.3549824538045218,
+      "daily_max_drawdown": -7.46860467695171,
+      "top5_day_return": 46.514081303566186,
+      "top5_share_of_pnl": 0.47267896009177734,
+      "min_month_trades": 51,
+      "positive_month_rate": 1.0
+    },
+    "SPY": {
+      "trades": 106,
+      "win_rate": 0.6037735849056604,
+      "profit_factor": 1.7691095638034273,
+      "pnl_return": 19.360525520541163,
+      "avg_return": 0.18264646717491664,
+      "max_drawdown": -3.283688554204459,
+      "call_rate": 0.18867924528301888,
+      "days_with_trades": 106,
+      "daily_win_rate": 0.6037735849056604,
+      "median_daily_return": 0.2911864781098909,
+      "daily_max_drawdown": -3.283688554204459,
+      "top5_day_return": 11.913913109250457,
+      "top5_share_of_pnl": 0.6153713697807435,
+      "min_month_trades": 12,
+      "positive_month_rate": 1.0
+    }
+  },
+  "integrity": {
+    "passed": true,
+    "issues": []
+  }
+}

@@ -132,7 +132,13 @@ def _latest_spot_at(spot: pd.DataFrame, dt: pd.Timestamp | None) -> tuple[float,
     return _as_float(row.get("close")), int(row.get("minute", -1))
 
 
-def _prepare_chain(greeks: pd.DataFrame, oi: pd.DataFrame, ohlc: pd.DataFrame) -> pd.DataFrame:
+def _prepare_chain(
+    greeks: pd.DataFrame,
+    oi: pd.DataFrame,
+    ohlc: pd.DataFrame,
+    *,
+    require_open_interest: bool = False,
+) -> pd.DataFrame:
     if greeks.empty:
         return pd.DataFrame()
     out = greeks.copy()
@@ -150,6 +156,14 @@ def _prepare_chain(greeks: pd.DataFrame, oi: pd.DataFrame, ohlc: pd.DataFrame) -
     if "expiration" in out.columns:
         out["expiration"] = out["expiration"].astype(str).str.replace(r"\D", "", regex=True).str[:8]
 
+    if require_open_interest and (
+        oi.empty
+        or "open_interest" not in oi.columns
+        or "strike" not in oi.columns
+        or "right" not in oi.columns
+    ):
+        return pd.DataFrame()
+
     if not oi.empty:
         oi_part = oi.copy()
         if "right" in oi_part.columns:
@@ -157,12 +171,24 @@ def _prepare_chain(greeks: pd.DataFrame, oi: pd.DataFrame, ohlc: pd.DataFrame) -
         if "strike" in oi_part.columns:
             oi_part["strike"] = pd.to_numeric(oi_part["strike"], errors="coerce").astype(float)
         if "open_interest" in oi_part.columns:
-            oi_part["open_interest"] = pd.to_numeric(oi_part["open_interest"], errors="coerce").fillna(0.0).astype(float)
+            oi_part["open_interest"] = pd.to_numeric(oi_part["open_interest"], errors="coerce").astype(float)
+            if require_open_interest:
+                oi_part = oi_part.dropna(subset=["strike", "right", "open_interest"])
+                if oi_part.empty:
+                    return pd.DataFrame()
             oi_part = oi_part.groupby(["strike", "right"], observed=True)["open_interest"].max().reset_index()
             out = out.merge(oi_part, on=["strike", "right"], how="left")
     if "open_interest" not in out.columns:
+        if require_open_interest:
+            return pd.DataFrame()
         out["open_interest"] = 0.0
-    out["open_interest"] = pd.to_numeric(out["open_interest"], errors="coerce").fillna(0.0).astype(float)
+    out["open_interest"] = pd.to_numeric(out["open_interest"], errors="coerce").astype(float)
+    if require_open_interest:
+        out = out.dropna(subset=["open_interest"]).copy()
+        if out.empty:
+            return pd.DataFrame()
+    else:
+        out["open_interest"] = out["open_interest"].fillna(0.0)
 
     if not ohlc.empty:
         opt = ohlc.copy()
@@ -189,11 +215,17 @@ def _prepare_chain(greeks: pd.DataFrame, oi: pd.DataFrame, ohlc: pd.DataFrame) -
     return out
 
 
-def latest_chain_snapshot(day_dir: Path, options_symbol: str, suffix: str) -> pd.DataFrame:
+def latest_chain_snapshot(
+    day_dir: Path,
+    options_symbol: str,
+    suffix: str,
+    *,
+    require_open_interest: bool = False,
+) -> pd.DataFrame:
     greeks = _read_parquet(day_dir / f"{options_symbol}_greeks_{suffix}_latest.parquet")
     oi = _read_parquet(day_dir / f"{options_symbol}_oi_{suffix}_latest.parquet")
     ohlc = _read_parquet(day_dir / f"{options_symbol}_ohlc_{suffix}_latest.parquet")
-    chain = _prepare_chain(greeks, oi, ohlc)
+    chain = _prepare_chain(greeks, oi, ohlc, require_open_interest=require_open_interest)
     if chain.empty:
         return chain
     latest = chain["dt"].max()
@@ -238,7 +270,7 @@ def build_snapshot_row(
 ) -> dict[str, Any] | None:
     options_symbol = OPTIONS_SYMBOLS.get(str(ticker).upper(), str(ticker).upper())
     underlying_ticker = UNDERLYING_SYMBOLS.get(options_symbol, str(ticker).upper())
-    snapshot = latest_chain_snapshot(day_dir, options_symbol, suffix)
+    snapshot = latest_chain_snapshot(day_dir, options_symbol, suffix, require_open_interest=True)
     if snapshot.empty:
         return None
     dt = pd.Timestamp(snapshot["dt"].max())

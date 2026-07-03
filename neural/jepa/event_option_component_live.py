@@ -15,6 +15,31 @@ TOPK_SCORE_COL = "topk_pred_return"
 DAILY_ROUTER_SCORE_COL = "daily_router_pred_return"
 META_GATE_SCORE_COL = "meta_score"
 EVENT_GATE_SCORE_COL = "score"
+LIVE_INCONSISTENT_INTRADAY_STATE_FEATURES = {
+    "phys_event_seq_in_day",
+    "phys_event_frac_in_day",
+    "phys_minutes_since_first_event",
+    "phys_spot_ret_from_first_event_bps",
+    "phys_same_day_event_count",
+}
+IB_LEVEL_FEATURE_PREFIXES = (
+    "dist_ib_",
+    "dist_fib_",
+    "phys_ib_",
+    "phys_fib_",
+    "nearest_level_name_",
+)
+IB_LEVEL_CONTEXT_SUFFIXES = (
+    "_ib_range_bps",
+    "_nearest_level_abs_bps",
+)
+IB_LEVEL_FEATURES = {
+    "ib_range_bps",
+    "nearest_level_abs_bps",
+    "phys_nearest_level_vs_ib_range",
+}
+IB_COMPLETE_MINUTE_ET = 10 * 60 + 30
+DEFAULT_ENTRY_START_MINUTE_ET = 10 * 60
 
 
 def _derive_minute(frame: pd.DataFrame) -> pd.Series:
@@ -81,6 +106,43 @@ def _read_json(path: Path) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise ValueError(f"JSON artifact must be an object: {path}")
     return payload
+
+
+def live_observable_feature_issues_for_columns(
+    component_name: str,
+    feature_cols: list[str],
+    *,
+    entry_start_minute_et: int = DEFAULT_ENTRY_START_MINUTE_ET,
+) -> list[str]:
+    """Return feature-contract issues for live event-option scoring.
+
+    These checks are about causal availability at the decision minute. They do
+    not replace distribution drift audits or strict missing-column checks.
+    """
+    issues: list[str] = []
+    feature_set = {str(col) for col in feature_cols}
+    bad_intraday = sorted(feature_set & LIVE_INCONSISTENT_INTRADAY_STATE_FEATURES)
+    if bad_intraday:
+        issues.append(
+            f"{component_name}: uses live-inconsistent intraday state features {bad_intraday}"
+        )
+    ib_features = sorted(
+        col
+        for col in feature_set
+        if (
+            col in IB_LEVEL_FEATURES
+            or any(col.startswith(prefix) for prefix in IB_LEVEL_FEATURE_PREFIXES)
+            or (col.startswith("ctx_") and any(col.endswith(suffix) for suffix in IB_LEVEL_CONTEXT_SUFFIXES))
+        )
+    )
+    if ib_features and int(entry_start_minute_et) < IB_COMPLETE_MINUTE_ET:
+        preview = ", ".join(ib_features[:12])
+        extra = "" if len(ib_features) <= 12 else f" ... +{len(ib_features) - 12}"
+        issues.append(
+            f"{component_name}: uses initial-balance/fib features before IB completion "
+            f"(entry_start_minute_et={int(entry_start_minute_et)}); features={preview}{extra}"
+        )
+    return issues
 
 
 def _discover_project_root(start: Path) -> Path:
@@ -339,6 +401,34 @@ class EventOptionComponentRegistry:
         if invalidated:
             raise ValueError(
                 "Event-option registry contains invalidated research-only components: " + "; ".join(invalidated)
+            )
+
+    def live_observable_feature_issues(
+        self,
+        *,
+        entry_start_minute_et: int = DEFAULT_ENTRY_START_MINUTE_ET,
+    ) -> list[str]:
+        issues: list[str] = []
+        for name in sorted(self.components):
+            issues.extend(
+                live_observable_feature_issues_for_columns(
+                    name,
+                    self.component_feature_cols(name),
+                    entry_start_minute_et=int(entry_start_minute_et),
+                )
+            )
+        return issues
+
+    def assert_live_observable_features(
+        self,
+        *,
+        entry_start_minute_et: int = DEFAULT_ENTRY_START_MINUTE_ET,
+    ) -> None:
+        issues = self.live_observable_feature_issues(entry_start_minute_et=int(entry_start_minute_et))
+        if issues:
+            raise ValueError(
+                "Event-option registry uses features that are not observable in the live decision context: "
+                + "; ".join(issues)
             )
 
     def summary(self) -> dict[str, Any]:

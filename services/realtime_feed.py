@@ -102,6 +102,14 @@ def dist_bps(spot: float, level: float) -> float:
         return 0.0
     return float(np.clip((spot - level) / spot * 10000.0, -BPS_CLIP, BPS_CLIP))
 
+
+def _parse_hhmm_to_minute(value, default: int) -> int:
+    try:
+        hour, minute = str(value).strip()[:5].split(":")
+        return int(hour) * 60 + int(minute)
+    except Exception:
+        return int(default)
+
 # ─────────────────────────────────────────────
 # LEVEL PROXIMITY THRESHOLD (mirrors bot)
 # ─────────────────────────────────────────────
@@ -603,6 +611,9 @@ class RealtimeOptionsFeed:
         registry_status = str(summary.get("status", ""))
         if self.require_event_option_live_ready and not _is_live_ready_status(registry_status):
             raise ValueError(f"Event-option component registry is not live-ready: {registry_status}")
+        if self.require_event_option_live_ready:
+            entry_start_minute = _parse_hhmm_to_minute(live_contract.get("entry_time_min_et", "10:00"), 10 * 60)
+            registry.assert_live_observable_features(entry_start_minute_et=entry_start_minute)
         self.event_option_registry_summary = summary
         logger.info(
             "[EVENT_OPTION] loaded component registry status=%s deploy_month=%s components=%d missing_live_equivalence=%d invalidated=%d",

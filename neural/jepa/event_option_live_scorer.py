@@ -286,6 +286,108 @@ def score_dense_monthly_backfill_candidates(
     return concat_frames(parts)
 
 
+def static_multi_delta_policy_names(registry: EventOptionComponentRegistry) -> list[str]:
+    names = [
+        name
+        for name, component in registry.components.items()
+        if component.kind == "event_static_multi_delta_union_policy"
+    ]
+    return sorted(names)
+
+
+def score_static_multi_delta_policy(
+    registry: EventOptionComponentRegistry,
+    snapshots: pd.DataFrame,
+    *,
+    policy_name: str,
+    strict: bool,
+    issues: list[str],
+) -> pd.DataFrame:
+    try:
+        policy = registry.json_component_payload(policy_name, "event_static_multi_delta_union_policy")
+    except Exception as exc:
+        issues.append(f"{policy_name}: static policy load failed: {type(exc).__name__}: {exc}")
+        return pd.DataFrame()
+
+    ticker = str(policy.get("ticker", policy_name.split(".", 1)[0])).upper()
+    expiry_modes = policy.get("expiry_modes", ["zero_dte"])
+    if not isinstance(expiry_modes, list) or not expiry_modes:
+        expiry_modes = ["zero_dte"]
+    snap = filter_snapshot(snapshots, ticker, [str(mode) for mode in expiry_modes])
+    if snap.empty:
+        issues.append(f"{ticker}: no {'/'.join(str(mode) for mode in expiry_modes)} snapshot row available")
+        return pd.DataFrame()
+
+    sources = policy.get("sources", [])
+    if not isinstance(sources, list) or not sources:
+        issues.append(f"{policy_name}: no sources configured")
+        return pd.DataFrame()
+
+    parts: list[pd.DataFrame] = []
+    for fallback_priority, raw_source in enumerate(sources):
+        if not isinstance(raw_source, dict):
+            issues.append(f"{policy_name}: invalid source entry at index {fallback_priority}")
+            continue
+        component = str(raw_source.get("component", "")).strip()
+        if not component:
+            issues.append(f"{policy_name}: source {fallback_priority} missing component")
+            continue
+        source = str(raw_source.get("source_name", raw_source.get("variant", component)))
+        priority = int(raw_source.get("priority", fallback_priority))
+        delta_bucket = int(float(raw_source.get("delta_bucket", policy.get("delta_bucket", 25))))
+        scored = gate_source(
+            registry,
+            snap,
+            component=component,
+            source=source,
+            priority=priority,
+            strict=strict,
+            issues=issues,
+            ticker=ticker,
+            delta_bucket=delta_bucket,
+        )
+        min_score = raw_source.get("min_score", policy.get("min_score"))
+        if min_score is not None and not scored.empty:
+            scored = apply_score_threshold(scored, "score", min_score)
+        if scored.empty:
+            continue
+        scored = annotate_contract_profile(
+            scored,
+            policy_ticker=ticker,
+            delta_bucket=delta_bucket,
+            policy_source=str(policy.get("policy_source", policy_name)),
+            policy_max_day=int(policy.get("max_day", 999)),
+            policy_cooldown_minutes=int(policy.get("cooldown_minutes", 0)),
+        )
+        scored["static_policy_component"] = str(policy_name)
+        scored["static_policy_profile"] = str(policy.get("profile", "static_multi_delta_union"))
+        scored["runtime_state_required"] = "per_day_count,cooldown,dedupe"
+        scored["live_ready_state"] = "needs_execution_state"
+        parts.append(scored)
+
+    return concat_frames(parts)
+
+
+def score_static_multi_delta_candidates(
+    registry: EventOptionComponentRegistry,
+    snapshots: pd.DataFrame,
+    *,
+    strict: bool,
+    issues: list[str],
+) -> pd.DataFrame:
+    parts = [
+        score_static_multi_delta_policy(
+            registry,
+            snapshots,
+            policy_name=name,
+            strict=strict,
+            issues=issues,
+        )
+        for name in static_multi_delta_policy_names(registry)
+    ]
+    return concat_frames(parts)
+
+
 def score_spxw(registry: EventOptionComponentRegistry, snapshots: pd.DataFrame, strict: bool, issues: list[str]) -> pd.DataFrame:
     snap = filter_snapshot(snapshots, "SPXW", ["front_weekly"])
     if snap.empty:
@@ -565,8 +667,17 @@ def score_event_option_live_candidates(
     strict_features: bool = False,
 ) -> tuple[pd.DataFrame, list[str], pd.DataFrame]:
     issues: list[str] = []
+    static_policy_names = static_multi_delta_policy_names(registry)
     dense_policy_names = monthly_backfill_policy_names(registry)
-    if dense_policy_names:
+    if static_policy_names:
+        enriched = append_required_encoders(registry, snapshots.copy(), issues)
+        candidates = score_static_multi_delta_candidates(
+            registry,
+            enriched,
+            strict=bool(strict_features),
+            issues=issues,
+        )
+    elif dense_policy_names:
         enriched = snapshots.copy()
         candidates = score_dense_monthly_backfill_candidates(
             registry,

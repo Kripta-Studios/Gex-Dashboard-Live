@@ -180,6 +180,9 @@ def audit_event_option(
         project_root=PROJECT_ROOT,
         require_complete_live_equivalence=True,
     )
+    live_contract_issues = registry.live_observable_feature_issues(
+        entry_start_minute_et=int(entry_start_minute)
+    )
     live_snapshots = pd.read_parquet(live_snapshots_path)
     audit_snapshots = live_snapshots.copy()
     if "minute" in audit_snapshots.columns:
@@ -266,8 +269,13 @@ def audit_event_option(
         "scored_candidate_rows": int(len(score_candidates)),
         "scored_candidate_tickers": sorted(score_candidates.get("ticker", pd.Series(dtype=str)).astype(str).str.upper().unique().tolist()) if not score_candidates.empty else [],
         "score_issues": list(score_issues),
+        "live_contract_issues": list(live_contract_issues),
         "component_audits": component_rows,
-        "passed": bool(not score_issues and all(row.get("status") not in bad_statuses for row in component_rows)),
+        "passed": bool(
+            not score_issues
+            and not live_contract_issues
+            and all(row.get("status") not in bad_statuses for row in component_rows)
+        ),
     }
 
 
@@ -391,6 +399,7 @@ def main() -> int:
         "diagnostic_xinput_jepa_passed": xinput_audit.get("passed"),
         "scored_candidate_rows": event_audit.get("scored_candidate_rows"),
         "event_score_issues": event_audit.get("score_issues"),
+        "event_live_contract_issues": event_audit.get("live_contract_issues"),
         "event_component_statuses": {row["component"]: row["status"] for row in event_audit.get("component_audits", [])},
         "xinput_statuses": {row["ticker"]: row["status"] for row in xinput_audit.get("ticker_audits", [])},
     }), indent=2, allow_nan=False))

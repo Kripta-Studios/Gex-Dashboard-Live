@@ -67,6 +67,8 @@ def role_args(args: argparse.Namespace, role: str) -> SimpleNamespace:
         "threshold_quantiles": [],
         "feature_include_prefixes": FEATURE_PREFIXES,
         "feature_exclude_prefixes": [],
+        "live_observable_features_only": not bool(args.allow_live_inconsistent_features),
+        "entry_time_min_et": str(args.entry_time_min_et),
         "allow_invalid_val_deploy": False,
         "deploy_month": str(args.deploy_month),
         "deploy_select_end_month": str(args.select_end_month),
@@ -309,6 +311,16 @@ def main() -> int:
     parser.add_argument("--risk-capital", type=float, default=5000.0)
     parser.add_argument("--lgb-jobs", type=int, default=32)
     parser.add_argument("--seed", type=int, default=20260617)
+    parser.add_argument(
+        "--entry-time-min-et",
+        default="10:00",
+        help="Earliest live entry time used to filter non-observable features.",
+    )
+    parser.add_argument(
+        "--allow-live-inconsistent-features",
+        action="store_true",
+        help="Diagnostic escape hatch: do not drop features unavailable in live at entry time.",
+    )
     args = parser.parse_args()
 
     output_dir = Path(args.output_dir)

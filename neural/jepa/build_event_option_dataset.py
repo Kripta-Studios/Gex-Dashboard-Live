@@ -84,7 +84,7 @@ def load_underlying(path: str | Path) -> pd.DataFrame:
     return df.sort_values("dt").reset_index(drop=True)
 
 
-def load_chain(row: pd.Series) -> tuple[pd.DataFrame, pd.DataFrame]:
+def load_chain(row: pd.Series, *, require_open_interest: bool = False) -> tuple[pd.DataFrame, pd.DataFrame]:
     greeks = safe_read_parquet(row["greeks_path"], GREEK_COLS)
     if greeks.empty:
         return pd.DataFrame(), pd.DataFrame()
@@ -95,15 +95,36 @@ def load_chain(row: pd.Series) -> tuple[pd.DataFrame, pd.DataFrame]:
             greeks[col] = pd.to_numeric(greeks[col], errors="coerce").astype(np.float32)
 
     oi = safe_read_parquet(row["oi_path"], OI_COLS)
+    if require_open_interest and (
+        oi.empty
+        or "open_interest" not in oi.columns
+        or "strike" not in oi.columns
+        or "right" not in oi.columns
+    ):
+        return pd.DataFrame(), pd.DataFrame()
     if not oi.empty:
         oi["right"] = oi["right"].map(normalize_right)
         oi["strike"] = pd.to_numeric(oi["strike"], errors="coerce").astype(np.float32)
-        oi["open_interest"] = pd.to_numeric(oi["open_interest"], errors="coerce").fillna(0.0).astype(np.float32)
+        oi["open_interest"] = pd.to_numeric(oi["open_interest"], errors="coerce").astype(np.float32)
+        if require_open_interest:
+            oi = oi.dropna(subset=["strike", "right", "open_interest"])
+            if oi.empty:
+                return pd.DataFrame(), pd.DataFrame()
+        else:
+            oi["open_interest"] = oi["open_interest"].fillna(0.0).astype(np.float32)
         oi = oi.groupby(["strike", "right"], observed=True)["open_interest"].max().reset_index()
         greeks = greeks.merge(oi, on=["strike", "right"], how="left")
+    elif require_open_interest:
+        return pd.DataFrame(), pd.DataFrame()
     else:
         greeks["open_interest"] = 0.0
-    greeks["open_interest"] = greeks["open_interest"].fillna(0.0).astype(np.float32)
+    greeks["open_interest"] = pd.to_numeric(greeks["open_interest"], errors="coerce").astype(np.float32)
+    if require_open_interest:
+        greeks = greeks.dropna(subset=["open_interest"]).copy()
+        if greeks.empty:
+            return pd.DataFrame(), pd.DataFrame()
+    else:
+        greeks["open_interest"] = greeks["open_interest"].fillna(0.0).astype(np.float32)
 
     ohlc = safe_read_parquet(row["ohlc_path"], OPT_OHLC_COLS)
     if not ohlc.empty:
@@ -392,7 +413,7 @@ def build_rows_for_manifest_row(row: dict, args_dict: dict) -> pd.DataFrame:
     underlying = load_underlying(row["underlying_path"])
     if underlying.empty or len(underlying) < 120:
         return pd.DataFrame()
-    greeks, ohlc = load_chain(pd.Series(row))
+    greeks, ohlc = load_chain(pd.Series(row), require_open_interest=bool(args.require_open_interest))
     if greeks.empty:
         return pd.DataFrame()
     levels = build_levels(underlying)
@@ -642,6 +663,12 @@ def main() -> int:
     parser.add_argument("--option-min-hold-minutes", type=int, default=0)
     parser.add_argument("--option-trail-activation-pct", type=float, default=0.50)
     parser.add_argument("--option-trail-drawdown-pct", type=float, default=0.25)
+    parser.add_argument(
+        "--require-open-interest",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Require real OI in the option chain, matching live event-option snapshot construction.",
+    )
     parser.add_argument("--chunk-by", choices=["none", "month", "ticker_month"], default="none")
     parser.add_argument("--skip-existing-chunks", action="store_true")
     args = parser.parse_args()

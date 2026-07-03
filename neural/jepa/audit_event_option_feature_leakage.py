@@ -16,8 +16,9 @@ for item in (PROJECT_ROOT, JEPA_DIR):
         sys.path.insert(0, str(item))
 
 from neural.jepa.evaluate_dense_candidate_fixed_holdout import FEATURE_PREFIXES
+from neural.jepa.event_option_component_live import live_observable_feature_issues_for_columns
 from neural.jepa.verify_event_option_result import audit_folds, parse_month_list
-from neural.jepa.walkforward_event_option_gate import LEAKY_PATTERNS, build_features, prepare_frame
+from neural.jepa.walkforward_event_option_gate import LEAKY_PATTERNS, build_features, parse_hhmm_to_minute, prepare_frame
 
 
 DEFAULT_DATA = Path(
@@ -164,6 +165,7 @@ def write_report(path: Path, payload: dict[str, Any]) -> None:
         f"- Raw leaky/outcome columns present: `{feature['raw_leaky_column_count']}`",
         f"- Selected features: `{feature['selected_feature_count']}`",
         f"- Selected leaky features: `{feature['selected_leaky_feature_count']}`",
+        f"- Live feature-contract issues: `{feature.get('live_contract_issue_count', 0)}`",
         "",
         "## Trade And Lineage",
         "",
@@ -187,6 +189,7 @@ def main() -> int:
     parser.add_argument("--end-month", default="202604")
     parser.add_argument("--delta-bucket", type=int, default=25)
     parser.add_argument("--clip-return", type=float, default=2.0)
+    parser.add_argument("--entry-time-min-et", default="10:00")
     parser.add_argument("--output-dir", default="")
     parser.add_argument("--exit-zero-on-fail", action="store_true")
     args = parser.parse_args()
@@ -205,12 +208,19 @@ def main() -> int:
         expiry_modes=["zero_dte"],
         feature_include_prefixes=FEATURE_PREFIXES,
         feature_exclude_prefixes=[],
+        live_observable_features_only=False,
+        entry_time_min_et=str(args.entry_time_min_et),
     )
     frame = prepare_frame(data, feature_args)
     _, features = build_features(frame, feature_args)
     leaky_patterns = tuple(LEAKY_PATTERNS) + tuple(EXTRA_LEAKY_TOKENS)
     selected_leaky = leaky_columns(features, leaky_patterns)
     raw_leaky = leaky_columns(raw_columns, leaky_patterns)
+    live_contract_issues = live_observable_feature_issues_for_columns(
+        "selected_features",
+        features,
+        entry_start_minute_et=parse_hhmm_to_minute(str(args.entry_time_min_et)),
+    )
 
     trade_path = find_existing(result_dir, TRADE_FILE_NAMES)
     fold_path = find_existing(result_dir, FOLD_FILE_NAMES)
@@ -221,6 +231,7 @@ def main() -> int:
     feature_issues = [f"selected leaky feature {name}" for name in selected_leaky]
     issues = [
         *feature_issues,
+        *[f"live feature contract: {issue}" for issue in live_contract_issues],
         *[f"trade audit: {issue}" for issue in trade_audit.get("issues", [])],
         *[f"lineage audit: {issue}" for issue in lineage_audit.get("issues", [])],
         *[f"verifier lineage: {issue}" for issue in verifier_lineage.get("issues", [])],
@@ -239,6 +250,8 @@ def main() -> int:
             "selected_feature_count": int(len(features)),
             "selected_leaky_feature_count": int(len(selected_leaky)),
             "selected_leaky_features": selected_leaky,
+            "live_contract_issue_count": int(len(live_contract_issues)),
+            "live_contract_issues": live_contract_issues,
             "selected_features_sample": features[:160],
             "leaky_patterns": list(leaky_patterns),
         },

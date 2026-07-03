@@ -12,6 +12,10 @@ import numpy as np
 import pandas as pd
 
 from evaluate_xinput_level_filter import month_add, month_range
+from event_option_component_live import (
+    DEFAULT_ENTRY_START_MINUTE_ET,
+    live_observable_feature_issues_for_columns,
+)
 
 
 LEAKY_PATTERNS = (
@@ -170,6 +174,12 @@ def score_selection_metrics(row: dict, args: argparse.Namespace) -> float:
 def prepare_frame(path: str | Path, args: argparse.Namespace) -> pd.DataFrame:
     df = pd.read_parquet(path)
     df["ticker"] = df["ticker"].astype(str).str.upper()
+    if "minute" in df.columns:
+        entry_start = parse_hhmm_to_minute(
+            str(getattr(args, "entry_time_min_et", "10:00")),
+            DEFAULT_ENTRY_START_MINUTE_ET,
+        )
+        df = df[pd.to_numeric(df["minute"], errors="coerce") >= int(entry_start)].copy()
     if getattr(args, "expiry_modes", None):
         allowed_expiry_modes = {str(mode) for mode in args.expiry_modes}
         df = df[df["expiry_mode"].astype(str).isin(allowed_expiry_modes)].copy()
@@ -182,6 +192,14 @@ def prepare_frame(path: str | Path, args: argparse.Namespace) -> pd.DataFrame:
         df["call_return"] = df["call_return"].clip(-float(args.clip_return), float(args.clip_return))
         df["put_return"] = df["put_return"].clip(-float(args.clip_return), float(args.clip_return))
     return df.reset_index(drop=True)
+
+
+def parse_hhmm_to_minute(value: str, default: int = DEFAULT_ENTRY_START_MINUTE_ET) -> int:
+    try:
+        hour, minute = str(value).strip()[:5].split(":")
+        return int(hour) * 60 + int(minute)
+    except Exception:
+        return int(default)
 
 
 def build_features(df: pd.DataFrame, args: argparse.Namespace) -> tuple[pd.DataFrame, list[str]]:
@@ -216,6 +234,20 @@ def build_features(df: pd.DataFrame, args: argparse.Namespace) -> tuple[pd.DataF
             continue
         if pd.api.types.is_numeric_dtype(work[col]):
             selected.append(col)
+    if bool(getattr(args, "live_observable_features_only", False)):
+        entry_start = parse_hhmm_to_minute(
+            str(getattr(args, "entry_time_min_et", "10:00")),
+            DEFAULT_ENTRY_START_MINUTE_ET,
+        )
+        selected = [
+            col
+            for col in selected
+            if not live_observable_feature_issues_for_columns(
+                "feature_filter",
+                [col],
+                entry_start_minute_et=entry_start,
+            )
+        ]
     return work, selected
 
 
@@ -299,6 +331,9 @@ def fit_predict_fold(
         n_jobs=int(args.lgb_jobs),
         verbose=-1,
     )
+    lgb_device_type = str(getattr(args, "lgb_device_type", "") or "").strip()
+    if lgb_device_type:
+        params["device_type"] = lgb_device_type
     if label_mode == "win":
         call_model = lgb.LGBMClassifier(**{**params, "objective": "binary"})
         put_model = lgb.LGBMClassifier(**{**params, "objective": "binary", "random_state": int(params["random_state"]) + 10_000})
@@ -462,6 +497,9 @@ def fit_direction_models(
         n_jobs=int(args.lgb_jobs),
         verbose=-1,
     )
+    lgb_device_type = str(getattr(args, "lgb_device_type", "") or "").strip()
+    if lgb_device_type:
+        params["device_type"] = lgb_device_type
     if label_mode == "win":
         call_model = lgb.LGBMClassifier(**{**params, "objective": "binary"})
         put_model = lgb.LGBMClassifier(**{**params, "objective": "binary", "random_state": int(params["random_state"]) + 10_000})
@@ -685,11 +723,27 @@ def main() -> int:
     parser.add_argument("--colsample-bytree", type=float, default=0.85)
     parser.add_argument("--reg-lambda", type=float, default=5.0)
     parser.add_argument("--lgb-jobs", type=int, default=8)
+    parser.add_argument(
+        "--lgb-device-type",
+        default="",
+        choices=["", "cpu", "gpu", "cuda"],
+        help="Optional LightGBM device_type override. Leave empty for package default.",
+    )
     parser.add_argument("--threshold-grid", nargs="+", type=float, default=[-0.05, 0.0, 0.05, 0.10, 0.15, 0.20, 0.25])
     parser.add_argument("--threshold-quantiles", nargs="+", type=float, default=[])
     parser.add_argument("--max-day-grid", nargs="+", type=int, default=[999, 8, 4, 2, 1])
     parser.add_argument("--feature-include-prefixes", nargs="*", default=[], help="If set, keep only feature columns with these prefixes plus categorical one-hot columns.")
     parser.add_argument("--feature-exclude-prefixes", nargs="*", default=[], help="Drop feature columns with these prefixes.")
+    parser.add_argument(
+        "--live-observable-features-only",
+        action="store_true",
+        help="Drop features whose offline construction is not causally observable at the live entry time.",
+    )
+    parser.add_argument(
+        "--entry-time-min-et",
+        default="10:00",
+        help="Earliest live entry time used by --live-observable-features-only.",
+    )
     parser.add_argument("--allow-invalid-val-deploy", action="store_true", help="Deploy the best validation config even if it fails validation constraints.")
     parser.add_argument("--deploy-month", default="")
     parser.add_argument(

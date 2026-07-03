@@ -559,6 +559,11 @@ class JepaFixedDeltaBot:
         )
         self.earliest_entry_time = self._resolve_earliest_entry_time()
         self.latest_entry_time = self._resolve_latest_entry_time()
+        if self.require_event_option_live_ready and self.event_option_components is not None:
+            entry_start_minute = int(self.earliest_entry_time.hour) * 60 + int(self.earliest_entry_time.minute)
+            self.event_option_components.assert_live_observable_features(
+                entry_start_minute_et=entry_start_minute
+            )
         self.option_value_selector = self._load_option_value_selector(option_value_model_dir, option_value_device)
         if self.event_option_scorer_enabled:
             if EVENT_OPTION_SCORER_IMPORT_ERROR is not None:
@@ -1809,7 +1814,32 @@ class JepaFixedDeltaBot:
 
     def _event_option_exit_contract_name(self) -> str:
         take_profit, stop_loss, max_hold, min_hold = self._event_option_exit_contract()
-        return f"event_option_tp{take_profit:.0%}_sl{abs(stop_loss):.0%}_min{min_hold}m_max{max_hold}m"
+        trailing_enabled, trail_activation, trail_drawdown = self._event_option_trailing_contract()
+        trail = (
+            f"_trail{trail_activation:.0%}_{trail_drawdown:.0%}"
+            if trailing_enabled
+            else "_trailoff"
+        )
+        return f"event_option_tp{take_profit:.0%}_sl{abs(stop_loss):.0%}{trail}_min{min_hold}m_max{max_hold}m"
+
+    def _event_option_trailing_contract(self) -> tuple[bool, float, float]:
+        payload = self.event_option_policy if isinstance(self.event_option_policy, dict) else {}
+        live_contract = payload.get("live_contract") if isinstance(payload.get("live_contract"), dict) else {}
+        raw_exit = (
+            live_contract.get("event_option_exit_contract")
+            if isinstance(live_contract.get("event_option_exit_contract"), dict)
+            else {}
+        )
+        trailing_enabled = bool(raw_exit.get("trailing_enabled", False))
+        activation = _safe_float(
+            raw_exit.get("trailing_activation_pct", live_contract.get("trailing_stop_activate_pct", TRAIL_ACTIVATION_PCT)),
+            TRAIL_ACTIVATION_PCT,
+        )
+        drawdown = _safe_float(
+            raw_exit.get("trailing_drawdown_pct", live_contract.get("trailing_stop_giveback_pct", TRAIL_DRAWDOWN_PCT)),
+            TRAIL_DRAWDOWN_PCT,
+        )
+        return trailing_enabled, max(0.0, activation), max(0.0, drawdown)
 
     def _current_option_premium(self, pos: JepaOptionPosition) -> float:
         suffix = self._option_snapshot_suffix_for_position(pos)
@@ -1978,7 +2008,13 @@ class JepaFixedDeltaBot:
         _send_discord(tracker)
         if self._is_event_option_position(pos):
             tp, sl, max_hold, min_hold = self._event_option_exit_contract()
-            exit_line = f"stop={sl:.0%} tp={tp:.0%} min_hold={min_hold}m max_hold={max_hold}m"
+            trailing_enabled, trail_activation, trail_drawdown = self._event_option_trailing_contract()
+            trail_line = (
+                f" trail={trail_activation:.0%}/{trail_drawdown:.0%}"
+                if trailing_enabled
+                else ""
+            )
+            exit_line = f"stop={sl:.0%}{trail_line} tp={tp:.0%} min_hold={min_hold}m max_hold={max_hold}m"
         else:
             exit_line = (
                 f"stop={HARD_STOP_PCT:.0%} trail={TRAIL_ACTIVATION_PCT:.0%}/"
@@ -2056,6 +2092,7 @@ class JepaFixedDeltaBot:
 
         if self._is_event_option_position(pos):
             take_profit, stop_loss, max_hold, min_hold = self._event_option_exit_contract()
+            trailing_enabled, trail_activation, trail_drawdown = self._event_option_trailing_contract()
             if hold_min >= max_hold:
                 self._close_position(ticker, premium, f"event_option_max_hold_{max_hold}m", now)
             elif now.time() >= EOD_CLEANUP_TIME:
@@ -2072,6 +2109,17 @@ class JepaFixedDeltaBot:
                 )
             elif pnl_pct <= stop_loss:
                 self._close_position(ticker, premium, f"event_option_stop_loss_{abs(stop_loss):.0%}", now)
+            elif (
+                trailing_enabled
+                and pos.peak_pnl_pct >= trail_activation
+                and pnl_pct <= pos.peak_pnl_pct - trail_drawdown
+            ):
+                self._close_position(
+                    ticker,
+                    premium,
+                    f"event_option_trail_stop_{trail_activation:.0%}_{trail_drawdown:.0%}_giveback",
+                    now,
+                )
             elif pnl_pct >= take_profit:
                 self._close_position(ticker, premium, f"event_option_take_profit_{take_profit:.0%}", now)
             else:

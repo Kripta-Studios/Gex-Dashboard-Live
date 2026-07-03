@@ -13,6 +13,30 @@ DEFAULT_REGISTRY = Path("neural/models/jepa/jepa_production_event_options/compon
 DEFAULT_RAW_THETADATA_COVERAGE = Path(
     "research_papers/JEPA/results/_diagnostics/thetadata_0dte_raw_coverage_spxw_spy_qqq/raw_coverage.json"
 )
+LIVE_INCONSISTENT_INTRADAY_STATE_FEATURES = {
+    "phys_event_seq_in_day",
+    "phys_event_frac_in_day",
+    "phys_minutes_since_first_event",
+    "phys_spot_ret_from_first_event_bps",
+    "phys_same_day_event_count",
+}
+IB_LEVEL_FEATURE_PREFIXES = (
+    "dist_ib_",
+    "dist_fib_",
+    "phys_ib_",
+    "phys_fib_",
+    "nearest_level_name_",
+)
+IB_LEVEL_CONTEXT_SUFFIXES = (
+    "_ib_range_bps",
+    "_nearest_level_abs_bps",
+)
+IB_LEVEL_FEATURES = {
+    "ib_range_bps",
+    "nearest_level_abs_bps",
+    "phys_nearest_level_vs_ib_range",
+}
+IB_COMPLETE_MINUTE_ET = 10 * 60 + 30
 
 
 def read_json(path: Path) -> dict[str, Any]:
@@ -25,6 +49,87 @@ def read_json(path: Path) -> dict[str, Any]:
 def resolve_repo_path(raw: str | Path) -> Path:
     path = Path(str(raw).replace("\\", "/"))
     return path if path.is_absolute() else Path.cwd() / path
+
+
+def parse_hhmm_to_minute(value: Any, default: int) -> int:
+    try:
+        parts = str(value).strip()[:5].split(":")
+        if len(parts) != 2:
+            return int(default)
+        return int(parts[0]) * 60 + int(parts[1])
+    except Exception:
+        return int(default)
+
+
+def load_component_feature_cols(registry: dict[str, Any]) -> dict[str, list[str]]:
+    components = registry.get("available_components")
+    if not isinstance(components, dict):
+        return {}
+    out: dict[str, list[str]] = {}
+    for name, entry in components.items():
+        if not isinstance(entry, dict):
+            continue
+        raw_paths = [entry.get("metadata"), entry.get("path")]
+        feature_cols: list[str] = []
+        for raw_path in raw_paths:
+            if not raw_path:
+                continue
+            path = resolve_repo_path(str(raw_path))
+            if not path.exists() or path.suffix.lower() != ".json":
+                continue
+            try:
+                payload = read_json(path)
+            except Exception:
+                continue
+            cols = payload.get("feature_cols", payload.get("features", []))
+            if isinstance(cols, list):
+                feature_cols = [str(col) for col in cols]
+                break
+        if feature_cols:
+            out[str(name)] = feature_cols
+    return out
+
+
+def assert_live_observable_feature_contract(
+    policy: dict[str, Any],
+    registry: dict[str, Any],
+    issues: list[str],
+) -> None:
+    """Reject live-ready packages that score on features not observable live.
+
+    These checks target feature construction contracts, not distribution drift:
+    - phys_event_* intraday-state features are not built from the same row
+      sequence in offline candidate datasets and live snapshot history.
+    - IB/fib level features are only fully observable once the 9:30-10:30 ET
+      initial balance is complete.
+    """
+    live_contract = policy.get("live_contract") if isinstance(policy.get("live_contract"), dict) else {}
+    entry_start = parse_hhmm_to_minute(live_contract.get("entry_time_min_et", "10:00"), 10 * 60)
+    by_component = load_component_feature_cols(registry)
+    for component, features in sorted(by_component.items()):
+        feature_set = set(features)
+        bad_intraday = sorted(feature_set & LIVE_INCONSISTENT_INTRADAY_STATE_FEATURES)
+        if bad_intraday:
+            issues.append(
+                f"{component}: uses live-inconsistent intraday state features {bad_intraday}"
+            )
+        ib_features = sorted(
+            col
+            for col in feature_set
+            if (
+                col in IB_LEVEL_FEATURES
+                or any(col.startswith(prefix) for prefix in IB_LEVEL_FEATURE_PREFIXES)
+                or (col.startswith("ctx_") and any(col.endswith(suffix) for suffix in IB_LEVEL_CONTEXT_SUFFIXES))
+            )
+        )
+        if ib_features and entry_start < IB_COMPLETE_MINUTE_ET:
+            preview = ", ".join(ib_features[:12])
+            extra = "" if len(ib_features) <= 12 else f" ... +{len(ib_features) - 12}"
+            issues.append(
+                f"{component}: uses initial-balance/fib features before IB completion "
+                f"(entry_time_min_et={live_contract.get('entry_time_min_et', '10:00')}); "
+                f"features={preview}{extra}"
+            )
 
 
 def same_path(left: Path, right: Path) -> bool:
@@ -286,6 +391,8 @@ def assert_event_option_package(args: argparse.Namespace) -> dict[str, Any]:
     if args.require_live_ready:
         if "_diagnostics" in str(result_dir).replace("\\", "/"):
             issues.append(f"live-ready result_dir must not be under _diagnostics: {result_dir}")
+        if not bool(args.allow_live_inconsistent_features):
+            assert_live_observable_feature_contract(policy, registry, issues)
         if missing_live:
             issues.append("registry missing_for_full_live_equivalence is not empty")
         if invalidated:
@@ -453,6 +560,11 @@ def main() -> int:
         "--allow-failed-curve-health",
         action="store_true",
         help="Research-only: validate metric/artifact consistency even when curve-health flags remain.",
+    )
+    parser.add_argument(
+        "--allow-live-inconsistent-features",
+        action="store_true",
+        help="Research-only: do not fail live-ready validation on noncausal or live-inconsistent feature columns.",
     )
     args = parser.parse_args()
 

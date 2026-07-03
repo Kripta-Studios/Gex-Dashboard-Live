@@ -1,0 +1,338 @@
+{
+  "schema_version": 1,
+  "status": "production_live_ready",
+  "deploy_month": "202607",
+  "completed_data_through_month": "202606",
+  "excluded_data_months": [],
+  "available_components": {
+    "QQQ.frozen_d35_return": {
+      "component": "event_option_gate_direction_model",
+      "path": "neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/components/QQQ_frozen_d35_return/deploy_model/event_option_gate_direction_model.pkl",
+      "metadata": "neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/components/QQQ_frozen_d35_return/deploy_model/event_option_gate_direction_model.json",
+      "train_months": [
+        "202501",
+        "202502",
+        "202503",
+        "202504",
+        "202505",
+        "202506",
+        "202507",
+        "202508",
+        "202509",
+        "202510",
+        "202511",
+        "202512"
+      ],
+      "select_months": [
+        "202601",
+        "202602",
+        "202603",
+        "202604",
+        "202605",
+        "202606"
+      ],
+      "deploy_month": "202607",
+      "deploy_select_end_month": "202606",
+      "deploy_config": {
+        "threshold": -0.2,
+        "max_trades_per_day": 2
+      },
+      "delta_bucket": 35,
+      "source_name": "d35",
+      "select_metrics": {
+        "trades": 236,
+        "win_rate": 0.6059322033898306,
+        "profit_factor": 1.7712762214371218,
+        "pnl_return": 42.36011280511728,
+        "avg_return": 0.17949200341151392,
+        "max_drawdown": -4.993274296011002,
+        "call_rate": 0.5127118644067796,
+        "days_with_trades": 119,
+        "daily_win_rate": 0.5714285714285714,
+        "median_daily_return": 0.26607131738291756,
+        "daily_max_drawdown": -4.993274296010988,
+        "top5_day_return": 17.26480959130341,
+        "top5_share_of_pnl": 0.4075723233016922,
+        "min_month_trades": 36,
+        "positive_month_rate": 1.0
+      },
+      "select_score": 9.755907316390058
+    },
+    "SPXW.frozen_d25_return": {
+      "component": "event_option_gate_direction_model",
+      "path": "neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/components/SPXW_frozen_d25_return/deploy_model/event_option_gate_direction_model.pkl",
+      "metadata": "neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/components/SPXW_frozen_d25_return/deploy_model/event_option_gate_direction_model.json",
+      "train_months": [
+        "202501",
+        "202502",
+        "202503",
+        "202504",
+        "202505",
+        "202506",
+        "202507",
+        "202508",
+        "202509",
+        "202510",
+        "202511",
+        "202512"
+      ],
+      "select_months": [
+        "202601",
+        "202602",
+        "202603",
+        "202604",
+        "202605",
+        "202606"
+      ],
+      "deploy_month": "202607",
+      "deploy_select_end_month": "202606",
+      "deploy_config": {
+        "threshold": 0.3,
+        "max_trades_per_day": 2
+      },
+      "delta_bucket": 25,
+      "source_name": "d25",
+      "select_metrics": {
+        "trades": 207,
+        "win_rate": 0.5169082125603864,
+        "profit_factor": 1.7017355233109428,
+        "pnl_return": 41.723189266991014,
+        "avg_return": 0.20156130080671988,
+        "max_drawdown": -4.510996527085119,
+        "call_rate": 0.23671497584541062,
+        "days_with_trades": 114,
+        "daily_win_rate": 0.5087719298245614,
+        "median_daily_return": 0.10363827079120935,
+        "daily_max_drawdown": -4.102815218127385,
+        "top5_day_return": 23.194424690822746,
+        "top5_share_of_pnl": 0.5559120742759912,
+        "min_month_trades": 30,
+        "positive_month_rate": 0.8333333333333334
+      },
+      "select_score": 9.487028149250134
+    },
+    "SPY.frozen_d35_return": {
+      "component": "event_option_gate_direction_model",
+      "path": "neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/components/SPY_frozen_d35_return/deploy_model/event_option_gate_direction_model.pkl",
+      "metadata": "neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/components/SPY_frozen_d35_return/deploy_model/event_option_gate_direction_model.json",
+      "train_months": [
+        "202501",
+        "202502",
+        "202503",
+        "202504",
+        "202505",
+        "202506",
+        "202507",
+        "202508",
+        "202509",
+        "202510",
+        "202511",
+        "202512"
+      ],
+      "select_months": [
+        "202601",
+        "202602",
+        "202603",
+        "202604",
+        "202605",
+        "202606"
+      ],
+      "deploy_month": "202607",
+      "deploy_select_end_month": "202606",
+      "deploy_config": {
+        "threshold": 0.3,
+        "max_trades_per_day": 3
+      },
+      "delta_bucket": 35,
+      "source_name": "d35",
+      "select_metrics": {
+        "trades": 265,
+        "win_rate": 0.5584905660377358,
+        "profit_factor": 1.4873501262535167,
+        "pnl_return": 34.18169830800302,
+        "avg_return": 0.12898754078491706,
+        "max_drawdown": -5.875634825132302,
+        "call_rate": 0.23018867924528302,
+        "days_with_trades": 106,
+        "daily_win_rate": 0.6037735849056604,
+        "median_daily_return": 0.23197317968480557,
+        "daily_max_drawdown": -5.224885411310645,
+        "top5_day_return": 18.558556427336597,
+        "top5_share_of_pnl": 0.5429383952812974,
+        "min_month_trades": 31,
+        "positive_month_rate": 0.8333333333333334
+      },
+      "select_score": 8.322603350508258
+    },
+    "QQQ.static_union_balanced": {
+      "component": "event_static_multi_delta_union_policy",
+      "path": "neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/components/QQQ_static_union_balanced/QQQ_static_union_balanced.json",
+      "metadata": "neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/components/QQQ_static_union_balanced/QQQ_static_union_balanced.json",
+      "train_months": [],
+      "select_months": [
+        "202601",
+        "202602",
+        "202603",
+        "202604",
+        "202605",
+        "202606"
+      ],
+      "deploy_month": "202607",
+      "deploy_select_end_month": "202606"
+    },
+    "SPXW.static_union_balanced": {
+      "component": "event_static_multi_delta_union_policy",
+      "path": "neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/components/SPXW_static_union_balanced/SPXW_static_union_balanced.json",
+      "metadata": "neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/components/SPXW_static_union_balanced/SPXW_static_union_balanced.json",
+      "train_months": [],
+      "select_months": [
+        "202601",
+        "202602",
+        "202603",
+        "202604",
+        "202605",
+        "202606"
+      ],
+      "deploy_month": "202607",
+      "deploy_select_end_month": "202606"
+    },
+    "SPY.static_union_balanced": {
+      "component": "event_static_multi_delta_union_policy",
+      "path": "neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/components/SPY_static_union_balanced/SPY_static_union_balanced.json",
+      "metadata": "neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/components/SPY_static_union_balanced/SPY_static_union_balanced.json",
+      "train_months": [],
+      "select_months": [
+        "202601",
+        "202602",
+        "202603",
+        "202604",
+        "202605",
+        "202606"
+      ],
+      "deploy_month": "202607",
+      "deploy_select_end_month": "202606"
+    }
+  },
+  "missing_for_full_live_equivalence": [],
+  "invalidated_components": {
+    "components": []
+  },
+  "policy_profile": "balanced_cap4",
+  "validation_metrics": {
+    "policy": {
+      "QQQ": {
+        "variants": [
+          "d35"
+        ],
+        "max_day": 2,
+        "cooldown": 30,
+        "order": "time_priority",
+        "threshold": null
+      },
+      "SPXW": {
+        "variants": [
+          "d25"
+        ],
+        "max_day": 4,
+        "cooldown": 0,
+        "order": "time_priority",
+        "threshold": 0.34
+      },
+      "SPY": {
+        "variants": [
+          "d35"
+        ],
+        "max_day": 1,
+        "cooldown": 0,
+        "order": "score_desc",
+        "threshold": null
+      }
+    },
+    "overall": {
+      "trades": 697,
+      "win_rate": 0.5781922525107605,
+      "profit_factor": 1.91525653981412,
+      "pnl_return": 160.1258673092688,
+      "avg_return": 0.22973582110368554,
+      "max_drawdown": -7.468604676951642,
+      "call_rate": 0.31420373027259685,
+      "days_with_trades": 121,
+      "daily_win_rate": 0.6033057851239669,
+      "median_daily_return": 0.8571264933487905,
+      "daily_max_drawdown": -12.022185463356386,
+      "top5_day_return": 62.56635192975472,
+      "top5_share_of_pnl": 0.39073232189845625,
+      "min_month_trades": 103,
+      "positive_month_rate": 1.0
+    },
+    "by_ticker": {
+      "QQQ": {
+        "trades": 236,
+        "win_rate": 0.6059322033898306,
+        "profit_factor": 1.7712762214371216,
+        "pnl_return": 42.36011280511728,
+        "avg_return": 0.17949200341151392,
+        "max_drawdown": -4.993274296011002,
+        "call_rate": 0.5127118644067796,
+        "days_with_trades": 119,
+        "daily_win_rate": 0.5714285714285714,
+        "median_daily_return": 0.26607131738291756,
+        "daily_max_drawdown": -4.993274296010988,
+        "top5_day_return": 17.26480959130341,
+        "top5_share_of_pnl": 0.4075723233016922,
+        "min_month_trades": 36,
+        "positive_month_rate": 1.0
+      },
+      "SPXW": {
+        "trades": 355,
+        "win_rate": 0.5521126760563381,
+        "profit_factor": 2.0374045222685813,
+        "pnl_return": 98.40522898361039,
+        "avg_return": 0.27719782812284616,
+        "max_drawdown": -7.468604676951731,
+        "call_rate": 0.21971830985915494,
+        "days_with_trades": 106,
+        "daily_win_rate": 0.5377358490566038,
+        "median_daily_return": 0.3549824538045218,
+        "daily_max_drawdown": -7.46860467695171,
+        "top5_day_return": 46.514081303566186,
+        "top5_share_of_pnl": 0.47267896009177734,
+        "min_month_trades": 51,
+        "positive_month_rate": 1.0
+      },
+      "SPY": {
+        "trades": 106,
+        "win_rate": 0.6037735849056604,
+        "profit_factor": 1.7691095638034273,
+        "pnl_return": 19.360525520541163,
+        "avg_return": 0.18264646717491664,
+        "max_drawdown": -3.283688554204459,
+        "call_rate": 0.18867924528301888,
+        "days_with_trades": 106,
+        "daily_win_rate": 0.6037735849056604,
+        "median_daily_return": 0.2911864781098909,
+        "daily_max_drawdown": -3.283688554204459,
+        "top5_day_return": 11.913913109250457,
+        "top5_share_of_pnl": 0.6153713697807435,
+        "min_month_trades": 12,
+        "positive_month_rate": 1.0
+      }
+    },
+    "month_returns": {
+      "202601": 31.612648603231275,
+      "202602": 14.246406564270602,
+      "202603": 28.17568192366613,
+      "202604": 24.673081539122354,
+      "202605": 17.684421755875587,
+      "202606": 43.733626923102875
+    },
+    "month_counts": {
+      "202601": 103,
+      "202602": 107,
+      "202603": 132,
+      "202604": 109,
+      "202605": 127,
+      "202606": 119
+    }
+  }
+}

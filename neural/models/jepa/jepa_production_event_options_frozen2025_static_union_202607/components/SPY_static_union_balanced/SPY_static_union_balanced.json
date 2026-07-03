@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "kind": "event_static_multi_delta_union_policy",
+  "ticker": "SPY",
+  "profile": "balanced_cap4",
+  "policy_source": "FROZEN2025_SELECT2026_BALANCED",
+  "expiry_modes": [
+    "zero_dte"
+  ],
+  "max_day": 1,
+  "cooldown_minutes": 0,
+  "sources": [
+    {
+      "component": "SPY.frozen_d35_return",
+      "variant": "d35",
+      "source_name": "d35",
+      "priority": 0,
+      "delta_bucket": 35
+    }
+  ]
+}
