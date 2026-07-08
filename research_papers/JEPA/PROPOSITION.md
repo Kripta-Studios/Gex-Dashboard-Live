@@ -13,23 +13,25 @@ New JEPA, SIGReg, VISReg, XInputJEPA, or RL work must be evaluated as an auxilia
 
 ## Executive Conclusion
 
-Do not replace the current GBT + RL pipeline with a literal LeWorldModel architecture.
+Do not replace the current event-option static-union live stack with a literal LeWorldModel architecture.
 
 LeWorldModel is designed for action-conditioned physical control from pixels: the agent chooses actions, those actions causally change the future observation, and the model plans action sequences in latent space. Our trading action does not causally change SPX, QQQ, SPY, VIX, or the option chain. It changes only our portfolio payoff. That breaks the core control assumption behind LeWorldModel-style MPC.
 
-However, JEPA is still relevant. The right adaptation is a small tabular/time-series LeJEPA used as an auxiliary representation learner. It should learn compact latent states from market/options trajectories, export latent features and prediction-surprise features, and feed those into the existing walk-forward LightGBM and, later, the RL state. This is a research add-on, not a production replacement.
+However, JEPA is still relevant. The right adaptation is a small tabular/time-series LeJEPA used as an auxiliary representation learner. It should learn compact latent states from market/options trajectories, export latent features and prediction-surprise features, and then be judged against the current event-option static-union package with the same production gates. This is a research add-on, not a production replacement.
 
 Recommended path:
 
-1. Keep the current GBT as the judge and baseline.
+1. Keep the current event-option static-union package as the production baseline.
 2. Pretrain a small Temporal Tabular LeJEPA on existing market/options feature sequences.
 3. Add its latent features to the GBT training data.
 4. Run the exact same strict walk-forward and true OOS backtests.
 5. Promote only if it improves PF/PnL without collapsing trade volume or increasing drawdown.
 
-## Current Pipeline Readout
+## Historical Pipeline Readout
 
-The orchestrator is `neural/run_pipeline.ps1`.
+The following GBT/RL details are retained to explain the origin of this research note. They are not the current production contract.
+
+The legacy orchestrator is `neural/run_pipeline.ps1`.
 
 The important flow is:
 
@@ -81,7 +83,7 @@ Important label detail: labels are not generic next-bar direction. A row becomes
 
 ## Current Model Architecture
 
-The current entry model is LightGBM, not the legacy PyTorch hybrid model.
+The historical entry model in this note was LightGBM, not the older PyTorch hybrid model.
 
 From `neural/train_walkforward.py` and `neural/run_pipeline.ps1`:
 
@@ -250,7 +252,7 @@ The only acceptable judge is the same backtest discipline already used by the pr
 
 Primary comparison:
 
-- Baseline: current GBT-only strict-WF.
+- Historical comparison baseline: GBT-only strict-WF.
 - Candidate: GBT-only strict-WF with JEPA features.
 
 Promotion criteria:
@@ -290,7 +292,7 @@ The expected value is positive because:
 
 - The data is sequential and mostly unlabeled.
 - The current labels are noisy and event-driven.
-- The current GBT can absorb additive latent features with low implementation risk.
+- The legacy GBT can absorb additive latent features with low implementation risk for research comparisons.
 - SIGReg gives a principled anti-collapse method.
 - Prediction surprise is directly useful as a confidence/risk filter.
 
@@ -298,8 +300,8 @@ The expected value of a full LeWorldModel port is low because:
 
 - It solves the wrong causal problem.
 - It requires a heavier architecture than the data supports.
-- It would complicate a pipeline whose current GBT baseline is already profitable.
+- It would complicate a legacy pipeline whose GBT baseline was already profitable, and it still would not be enough to bypass current live-ready promotion checks.
 
 Best first experiment:
 
-Train a sub-1M parameter, actionless Temporal LeJEPA on the March-2026 cutoff, append 32 latent and 4 surprise features, rerun the exact current GBT-only backtest, and accept or reject based on strict true OOS PF/PnL/drawdown.
+Train a sub-1M parameter, actionless Temporal LeJEPA on the March-2026 cutoff, append 32 latent and 4 surprise features, rerun the historical GBT-only backtest as a research comparison, and only consider promotion after beating the current static-union package under strict true-OOS/live-ready checks.

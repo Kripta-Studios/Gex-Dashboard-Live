@@ -119,4 +119,4 @@ Relevance for this project: this is a warning. Market trajectories are nonstatio
 
 4. Action-conditioned world modeling only applies when actions affect the environment. In this trading system, actions affect PnL, not market evolution. A LeWorldModel-style market model should be actionless or conditioned on exogenous state, not trade action.
 
-5. The most realistic use is additive: pretrain a small temporal LeJEPA on market/options sequences, export latent features and prediction-surprise features, and feed those into the existing walk-forward GBT/RL pipeline.
+5. The most realistic use is additive: pretrain a small temporal LeJEPA on market/options sequences, export latent features and prediction-surprise features, and test them against the current event-option static-union package under the same causal walk-forward, leakage, live-equivalence, and systemd checks. The old GBT/RL path is only a historical comparison point.

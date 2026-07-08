@@ -16,10 +16,10 @@ The material below remains useful for representation-learning research, but prod
 
 ## 1. Objective
 
-Build a controlled research path that answers two questions without breaking the current profitable pipeline:
+Build a controlled research path that originally answered two questions without breaking the legacy profitable pipeline. For current production, any candidate must now be judged against the event-option static-union package and live-ready contract:
 
-1. Does a JEPA-style latent market state add out-of-sample alpha to the existing LightGBM entry model?
-2. If yes, can the same JEPA encoder be promoted into a full neural predictor that replaces the current PPO/RL options decision layer and beats it in backtests?
+1. Does a JEPA-style latent market state add out-of-sample alpha versus the current event-option static-union baseline or, historically, the older LightGBM entry model?
+2. If yes, can the same JEPA encoder be promoted into a full neural predictor that beats the current static-union package under causal/live-ready checks, with the old PPO/RL layer only as a historical comparison?
 
 ## 2026-05-31 Addendum: Base+JEPA 180m Replacement Candidate
 
@@ -47,7 +47,7 @@ Strict frozen-candidate result:
 - Label: `spot_price(t+180m) > spot_price(t)`.
 - Execution proxy: SPX/SPY/QQQ fixed 180m hold, 36-sample cooldown, $100k notional, 1 bps cost.
 - `base_jepa` beat `base` on AUC (0.630 vs 0.622), PF (1.936 vs 1.389), win rate (68.3% vs 58.8%), and PnL (+9,044 vs +3,522).
-- Existing current GBT target/stop entries repriced under the same fixed-180m proxy produced only PF 1.239 and +909.
+- Legacy GBT target/stop entries repriced under the same fixed-180m proxy produced only PF 1.239 and +909.
 
 Decision: keep the old target/stop JEPA augmentation rejected, but treat frozen `base_jepa` 180m as a credible entry-model replacement candidate. The next implementation step is production-style integration of this candidate behind a separate runner, not promotion into `neural/run_pipeline.ps1` yet.
 
@@ -66,19 +66,19 @@ Cooldown policy:
 
 The first objective is additive and low risk: train a small actionless Temporal Tabular LeJEPA, append frozen latent features to the current parquet, and rerun the existing walk-forward GBT/backtest discipline.
 
-The second objective is a promotion path: reuse the proven JEPA encoder and add supervised trading heads for entry, direction, strike selection, exit timing, and expected value. This can replace PPO only if it beats both current baselines:
+The second objective is a promotion path: reuse the proven JEPA encoder and add supervised trading heads for entry, direction, strike selection, exit timing, and expected value. This could replace the old PPO path only if it beats both historical baselines and, for any real promotion, the current static-union package:
 
-- GBT-only, because local logs show it is currently stronger than GBT+RL.
-- GBT+RL, because that is the current architecture it would replace operationally.
+- Legacy GBT-only, because local logs showed it was stronger than GBT+RL.
+- Legacy GBT+RL, because that was the architecture this research plan originally targeted.
 
-## 2. Current Project Facts
+## 2. Historical Project Facts
 
 These constraints must drive the implementation:
 
 - The main orchestrator is `neural/run_pipeline.ps1`.
 - Data collection writes `training_data/training_data_spx_qqq_spy.parquet`.
 - The current March cutoff training file is `training_data/training_data_spx_qqq_spy_march_2026.parquet`.
-- The current entry model is LightGBM in `neural/train_walkforward.py`.
+- The historical entry model in this plan was LightGBM in `neural/train_walkforward.py`.
 - The feature list is `FEATURE_COLUMNS` in `neural/hybrid_model.py`, currently about 163 market features.
 - `train_walkforward.py` currently selects only columns in `FEATURE_COLUMNS`; appending JEPA columns to the parquet is not enough by itself.
 - `backtest/backtest_gbt_parquet.py` can use `normalizer.feature_names` from the saved model, which means GBT backtests can support expanded feature sets if training saves them correctly.
@@ -179,8 +179,8 @@ Purpose: freeze the reference numbers before introducing JEPA.
 
 Actions:
 
-1. Run the current GBT-only backtest with the existing `neural/run_pipeline.ps1` settings.
-2. Run the current GBT+RL backtest if the latest RL checkpoint is available.
+1. Run the historical GBT-only backtest with the old `neural/run_pipeline.ps1` settings if needed for comparison.
+2. Run the historical GBT+RL backtest if the latest RL checkpoint is available and comparison is still useful.
 3. Save exact command lines, model paths, thresholds, and metrics in:
    - `research_papers/JEPA/results/baseline_gbt_only.md`
    - `research_papers/JEPA/results/baseline_gbt_rl.md`
@@ -725,7 +725,7 @@ Candidate decision rule:
 Gate B backtest:
 
 - Use the same execution assumptions as `backtest/backtest_gbt_parquet.py`.
-- Compare to current GBT-only.
+- Compare to historical GBT-only, then to the current static-union event-option package before any promotion.
 - Require PF/PnL/drawdown improvement before replacing GBT entry.
 
 ## 9. Promotion to RL Replacement
@@ -815,7 +815,7 @@ Gate C backtest:
 
 - Compare against:
   - GBT-only
-  - current GBT+RL
+  - historical GBT+RL
   - fixed strike/fixed exit heuristics
 - Required report:
   - total trades
