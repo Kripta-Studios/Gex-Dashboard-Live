@@ -358,6 +358,15 @@ def fit_predict_fold(
         out["action"] = np.where(call_action, "CALL", "PUT")
         out["score"] = np.where(call_action, out["pred_call_return"], out["pred_put_return"])
         out["realized_return"] = np.where(call_action, out["call_return"], out["put_return"])
+        bucket = int(args.delta_bucket)
+        call_exit_minutes = f"call_d{bucket:02d}_opt_exit_minutes"
+        put_exit_minutes = f"put_d{bucket:02d}_opt_exit_minutes"
+        if call_exit_minutes in out.columns and put_exit_minutes in out.columns:
+            out["exit_minutes"] = np.where(call_action, out[call_exit_minutes], out[put_exit_minutes])
+        call_status = f"call_d{bucket:02d}_opt_status"
+        put_status = f"put_d{bucket:02d}_opt_status"
+        if call_status in out.columns and put_status in out.columns:
+            out["exit_status"] = np.where(call_action, out[call_status], out[put_status])
         return out
 
     val_scored = score_part(val)
@@ -430,6 +439,8 @@ def fit_predict_fold(
         "call_return",
         "put_return",
         "realized_return",
+        "exit_minutes",
+        "exit_status",
         "deploy_config",
         "test_month",
     ]

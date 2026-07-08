@@ -218,3 +218,9 @@ neural/models/jepa/jepa_production_structural_options
 ```
 
 Before promoting any legacy or new model, compare it against the current event-option static-union package with the same walk-forward, leakage, live-equivalence, and service-start checks.
+
+## Maintained Docs
+
+The maintained LaTeX/PDF documentation lives in [`docs/`](docs/README.md).
+Generated experiment summaries under `research_papers/JEPA/results/` are
+evidence artifacts, not the canonical production manual.

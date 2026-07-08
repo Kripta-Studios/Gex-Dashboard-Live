@@ -1148,110 +1148,98 @@
 
 ## Current State
 
-The production contract is now:
+This section supersedes the older `event_option_live_ready_current_sources_202607`,
+level-stability, structural-profile, and backfill19 notes above. Those sections
+remain as chronology, not as the live contract.
 
-- event-option live scorer `event_option_live_ready_current_sources_202607`
-  for entries;
-- level-stability ensemble signal and nested structural 0DTE option profiles
-  remain required guarded context artifacts;
-- risk capital `$5,000`;
-- bot requires event-option policy/registry live-ready metadata and runtime
-  replay evidence at startup.
-
-Primary artifacts:
+The active production package is:
 
 ```text
-neural/models/jepa/jepa_production_level_stability/level_stability_signal.json
-neural/models/jepa/jepa_production_structural_options/structural_option_profiles.json
-neural/models/jepa/jepa_production_event_options/event_option_policy.json
-neural/models/jepa/jepa_production_event_options/component_registry.json
-neural/models/jepa/production_manifest.json
+neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/
+  event_option_policy.json
+  component_registry.json
 ```
 
-The live bot no longer silently uses the legacy JEPA 180m signal or
-OptionValue fallback. Fallback requires explicit diagnostic flags.
-`push_models.ps1` also excludes legacy fallback artifacts unless
-`-IncludeLegacyFallback` is passed.
-
-Formal report:
+Policy:
 
 ```text
-research_papers/JEPA/JEPA_PRODUCTION_REPORT.pdf
+event_option_frozen2025_static_union_balanced_202607
 ```
 
-## Production Build
+Validated result:
 
-```powershell
-.\neural\jepa\run_pipeline.ps1 -DailyProduction -Workers 32
+```text
+research_papers/JEPA/results/event_option_mh30trail_frozen2025_static_union_deploy202607_production_v1
 ```
 
-For a fixed month:
+Runtime services:
 
-```powershell
-.\neural\jepa\run_pipeline.ps1 -DailyProduction -ProductionDeployMonth 202606 -Workers 32
+```text
+services/realtime_feed.py
+bots/tradingbot_wrapper_jepa.py
+systemd/realtime_feed.service
+systemd/ai_bot.service
 ```
 
-Verified command:
+Live contract:
 
-```powershell
-.\neural\jepa\run_daily_production_pipeline.ps1 -DeployMonth 202606 -Workers 32 -SkipSmoke
+- tickers: `SPX`, `QQQ`, `SPY`;
+- option symbols: `SPX -> SPXW`, `QQQ -> QQQ`, `SPY -> SPY`;
+- expiry: `0DTE` only;
+- entry window: `10:00-14:30 ET`;
+- risk: `$5,000` per paper trade;
+- exit: `stop=-60%/tp=1000%/trail=50%/25%/min_hold=30m/max_hold=180m`;
+- mode: Discord alerts plus paper order intents; no broker submission.
+
+Completed Jan-Jun 2026 validation:
+
+| Scope | Trades | WR | PF | Min month trades |
+| --- | ---: | ---: | ---: | ---: |
+| Overall | 697 | 57.819% | 1.915 | 103 |
+| QQQ | 236 | 60.593% | 1.771 | 36 |
+| SPXW | 355 | 55.211% | 2.037 | 51 |
+| SPY | 106 | 60.377% | 1.769 | 12 |
+
+The deployable gate is `--min-month-trades 12`. The stronger preferred target
+of 18 trades per month per ticker is not met by SPY in this package.
+
+Canonical validation:
+
+```bash
+python3 neural/jepa/validate_event_option_production_package.py \
+  --policy neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/event_option_policy.json \
+  --registry neural/models/jepa/jepa_production_event_options_frozen2025_static_union_202607/component_registry.json \
+  --require-live-ready \
+  --ignore-raw-thetadata-coverage \
+  --min-profit-factor 1.3 \
+  --min-win-rate 0.45 \
+  --min-month-trades 12
 ```
 
-## Validation Snapshot
+## Current Verification
 
-Live-ready event-option package:
+- `validate_event_option_production_package.py --require-live-ready` passes for
+  the frozen2025 static-union policy and component registry with the gates
+  shown above.
+- `systemd/realtime_feed.service` points to the frozen2025 policy and registry
+  and requires event-option live-ready metadata.
+- `systemd/ai_bot.service` disables legacy level-signal, structural-profile,
+  and OptionValue paths; it enables the event-option scorer, strict live
+  features, and paper intents.
+- Expected bot startup includes
+  `event_exit=stop=-60%/tp=1000%/trail=50%/25%/min_hold=30m/max_hold=180m`.
+- Daily live review should compare `rt_data/YYYYMMDD/`,
+  `event_option_candidate_audit_jepa.jsonl`, and
+  `paper_order_intents_jepa.jsonl` against runtime replay.
 
-- Policy: `event_option_live_ready_current_sources_202607`.
-- Strict validator:
-  `python neural\jepa\validate_event_option_production_package.py --require-live-ready`.
-- Completed-month validation window: `202601..202605`; June 2026 remains
-  partial and is excluded from promotion evidence.
-- Overall: 497 trades, WR 48.69%, PF 1.513, PnL +31.030R / +$155,148, min
-  monthly trades 75, positive months 5/5.
-- SPXW: 146 trades, WR 51.37%, PF 1.659, min monthly trades 18.
-- SPY: 177 trades, WR 45.20%, PF 1.412, min monthly trades 22.
-- QQQ: 174 trades, WR 50.00%, PF 1.517, min monthly trades 25.
-- Integrity: 30 folds and 2 backfill rows checked, no temporal leakage issues.
-- Runtime replay: stateful policy replay exactly matches expected SPXW, SPY,
-  QQQ, and combined trade rows.
-- Research-selection audit caveat: a strict retroactive audit of Jan-May fails
-  because no source-family freeze manifest existed before `202601`. The current
-  source pool is now frozen for forward validation from `202607` onward at
-  `research_papers/JEPA/results/event_option_live_ready_current_sources_202607_freeze_manifest/research_selection_manifest.json`;
-  June 2026 is partial and excluded from the freeze evidence.
+## Deprecated For Production
 
-Historical level-stability structural baseline:
+The following are research or historical unless a future promotion explicitly
+rewires services and passes the same live-ready validation:
 
-Clean Jan-May 2026 nested result:
-
-- Overall: 640 trades, WR 37.8%, PF 1.227, PnL +248,910.
-- Gates: PF >= 1.10, WR >= 35%, PnL > 0, min 15 trades/month, long-rate 20%-80%.
-- SPX: 227 trades, WR 37.9%, PF 1.181, PnL +69,884, min monthly trades 17.
-- SPY: 204 trades, WR 35.8%, PF 1.157, PnL +59,688, min monthly trades 17.
-- QQQ: 209 trades, WR 39.7%, PF 1.361, PnL +119,338, min monthly trades 22.
-- Integrity: 15 folds and 640 selected trades checked, no temporal leakage found.
-
-Production `deploy_month=202606` signal fit:
-
-- SPX: `L5_S5_maxday12`, validation PF 1.150.
-- SPY: `L1_S8_maxday12`, validation PF 1.271.
-- QQQ: `L8_S1_maxdayall`, validation PF 1.251.
-
-## Verification
-
-- `validate_event_option_production_package.py --require-live-ready` passes
-  for the current policy and component registry.
-- `py_compile` passes for production bot/feed/signal/profile/event-option
-  scripts.
-- `systemd/ai_bot.service` starts the bot with `--require-event-option-policy`,
-  `--require-event-option-component-registry`, `--require-event-option-live-ready`,
-  `--enable-event-option-scorer`, and `--strict-event-option-features`.
-- Bot dry-run loads the level-stability context artifacts with
-  `legacy_signal=disabled`; live entries use the event-option scorer.
-- Live rule smoke reproduces SPY `20260601 09:30` as LONG `fib_wall_t25-250_s20_m570`.
-- `production_manifest.json` uses repo-relative paths.
-- Non-canonical generated Markdown under `research_papers/JEPA/results` is archived as non-production evidence.
-
-## Deprecated
-
-Old Alpha/Temporal JEPA wrappers and ad hoc diagnostics were removed. Historical details remain in git history and in generated research result folders when needed.
+- `event_option_live_ready_current_sources_202607`;
+- `jepa_production_event_options_backfill19_spy_no_scorethr_wf2026_fullmayjun`;
+- level-stability and structural-profile production paths;
+- OptionValueJEPA;
+- 180 minute JEPA direction models;
+- GBT+PPO/RL.
