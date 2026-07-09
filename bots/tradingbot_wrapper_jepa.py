@@ -1487,6 +1487,48 @@ class JepaFixedDeltaBot:
         return True, reason
 
     @staticmethod
+    def _normalize_policy_ticker(value: Any) -> str:
+        ticker = str(value).upper()
+        return "SPXW" if ticker == "SPX" else ticker
+
+    def _event_intraday_stop_pause_config(self) -> dict[str, Any]:
+        payload = self.event_option_policy if isinstance(self.event_option_policy, dict) else {}
+        guards = payload.get("runtime_risk_guards") if isinstance(payload.get("runtime_risk_guards"), dict) else {}
+        cfg = guards.get("intraday_stop_pause") if isinstance(guards.get("intraday_stop_pause"), dict) else {}
+        if not bool(cfg.get("enabled", False)):
+            return {"enabled": False}
+        raw_tickers = cfg.get("tickers", ["SPXW"])
+        tickers = raw_tickers if isinstance(raw_tickers, list) else [raw_tickers]
+        raw_reasons = cfg.get("stop_reason_contains", ["event_option_stop_loss_60%"])
+        reason_needles = raw_reasons if isinstance(raw_reasons, list) else [raw_reasons]
+        return {
+            "enabled": True,
+            "tickers": sorted({self._normalize_policy_ticker(item) for item in tickers if str(item).strip()}),
+            "trigger_stop_losses": max(1, int(_safe_float(cfg.get("trigger_stop_losses", 1), 1))),
+            "stop_reason_contains": [str(item) for item in reason_needles if str(item).strip()],
+        }
+
+    def _event_intraday_stop_pause_blocked(self, policy_ticker: str, date_value: str, now: datetime) -> tuple[bool, str]:
+        cfg = self._event_intraday_stop_pause_config()
+        if not bool(cfg.get("enabled", False)):
+            return False, ""
+        ticker = self._normalize_policy_ticker(policy_ticker)
+        if ticker not in set(cfg.get("tickers", [])):
+            return False, ""
+        work = self._event_known_log_rows(policy_ticker=ticker, date_value=date_value, now=now)
+        if work.empty or "exit_reason" not in work.columns:
+            return False, ""
+        exit_reason = work["exit_reason"].astype(str)
+        stop_mask = pd.Series(False, index=work.index)
+        for needle in cfg.get("stop_reason_contains", []):
+            stop_mask = stop_mask | exit_reason.str.contains(str(needle), regex=False)
+        stop_count = int(stop_mask.sum())
+        trigger = int(cfg.get("trigger_stop_losses", 1))
+        if stop_count < trigger:
+            return False, ""
+        return True, f"intraday_stop_pause_{ticker}_after_{trigger}_stop"
+
+    @staticmethod
     def _event_action_from_log(work: pd.DataFrame) -> pd.Series:
         if "right" in work.columns:
             right = work["right"].astype(str).str.upper()
@@ -1595,6 +1637,9 @@ class JepaFixedDeltaBot:
         policy_ticker = str(row.get("policy_ticker", row.get("ticker", ""))).upper()
         date_value = str(row.get("date", row.get("trade_date", now.strftime("%Y%m%d"))))
         blocked, reason = self._event_daily_loss_guard_blocked(policy_ticker, date_value, now)
+        if blocked:
+            return False, reason
+        blocked, reason = self._event_intraday_stop_pause_blocked(policy_ticker, date_value, now)
         if blocked:
             return False, reason
         max_day = self._event_int(row, "policy_max_day", 999)

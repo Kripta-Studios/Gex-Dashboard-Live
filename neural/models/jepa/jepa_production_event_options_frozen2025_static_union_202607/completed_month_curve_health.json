@@ -1,9 +1,289 @@
 {
   "passed": true,
-  "result_dir": "research_papers/JEPA/results/event_option_mh30trail_frozen2025_static_union_deploy202607_production_v1",
-  "flags": {
-    "QQQ": [],
-    "SPXW": [],
-    "SPY": []
+  "result_dir": "research_papers\\JEPA\\results\\event_option_mh30trail_frozen2025_static_union_deploy202607_production_v1_spxw_stop_pause1",
+  "gates": {
+    "months": [
+      "202601",
+      "202602",
+      "202603",
+      "202604",
+      "202605",
+      "202606"
+    ],
+    "excluded_months": [],
+    "risk_capital": 5000.0,
+    "max_top1_share": 0.45,
+    "max_top5_share": 0.8,
+    "max_drawdown_to_pnl": 0.45,
+    "max_month_pnl_share": 0.65,
+    "max_negative_streak": 6,
+    "min_first_two_month_share": 0.1,
+    "min_first_three_month_share": 0.2
+  },
+  "tickers": {
+    "QQQ": {
+      "ticker": "QQQ",
+      "final_pnl": 211800.5640255864,
+      "daily_profit_factor": 2.2332362957462797,
+      "daily_win_rate_all_business_days": 0.53125,
+      "daily_win_rate_active_days": 0.5714285714285714,
+      "active_days": 119,
+      "positive_days": 68,
+      "max_drawdown": -24966.37148005495,
+      "max_drawdown_to_pnl": 0.1178767941195799,
+      "max_drawdown_business_days": 14,
+      "max_negative_day_streak": 6,
+      "top1_share": 0.1288493858384062,
+      "top3_share": 0.28894571832157623,
+      "top5_share": 0.40757232330169224,
+      "max_month_pnl": 56727.606012284894,
+      "max_month_pnl_month": "202601",
+      "max_month_pnl_share": 0.2678350091902114,
+      "curve_linear_r2": 0.9683765714738933,
+      "negative_months": 0,
+      "milestones": {
+        "first_1_months": {
+          "through_month": "202601",
+          "pnl_dollars": 56727.606012284894,
+          "share_of_final_pnl": 0.2678350091902114
+        },
+        "first_2_months": {
+          "through_month": "202602",
+          "pnl_dollars": 74145.27410860054,
+          "share_of_final_pnl": 0.35007118347259675
+        },
+        "first_3_months": {
+          "through_month": "202603",
+          "pnl_dollars": 118753.14650257025,
+          "share_of_final_pnl": 0.5606838067165126
+        },
+        "first_4_months": {
+          "through_month": "202604",
+          "pnl_dollars": 152213.00754826542,
+          "share_of_final_pnl": 0.7186619556399172
+        }
+      },
+      "monthly": [
+        {
+          "month": "202601",
+          "trades": 40,
+          "win_rate": 0.675,
+          "profit_factor": 2.53317854745884,
+          "pnl_return": 11.345521202456979
+        },
+        {
+          "month": "202602",
+          "trades": 37,
+          "win_rate": 0.6486486486486487,
+          "profit_factor": 1.4571953533483322,
+          "pnl_return": 3.4835336192631288
+        },
+        {
+          "month": "202603",
+          "trades": 44,
+          "win_rate": 0.5681818181818182,
+          "profit_factor": 1.7870068410878959,
+          "pnl_return": 8.921574478793943
+        },
+        {
+          "month": "202604",
+          "trades": 36,
+          "win_rate": 0.5833333333333334,
+          "profit_factor": 1.7633428383132617,
+          "pnl_return": 6.691972209139034
+        },
+        {
+          "month": "202605",
+          "trades": 40,
+          "win_rate": 0.65,
+          "profit_factor": 1.7942981043851811,
+          "pnl_return": 6.67210407683552
+        },
+        {
+          "month": "202606",
+          "trades": 39,
+          "win_rate": 0.5128205128205128,
+          "profit_factor": 1.4601234402305858,
+          "pnl_return": 5.245407218628678
+        }
+      ],
+      "health_flags": []
+    },
+    "SPXW": {
+      "ticker": "SPXW",
+      "final_pnl": 513798.6662860118,
+      "daily_profit_factor": 2.5660865948440565,
+      "daily_win_rate_all_business_days": 0.4296875,
+      "daily_win_rate_active_days": 0.5188679245283019,
+      "active_days": 106,
+      "positive_days": 55,
+      "max_drawdown": -28343.023384758562,
+      "max_drawdown_to_pnl": 0.055163676444775156,
+      "max_drawdown_business_days": 15,
+      "max_negative_day_streak": 5,
+      "top1_share": 0.14572952079269355,
+      "top3_share": 0.3140490323170182,
+      "top5_share": 0.45264891051384704,
+      "max_month_pnl": 172776.36997773283,
+      "max_month_pnl_month": "202606",
+      "max_month_pnl_share": 0.3362725155101024,
+      "curve_linear_r2": 0.9671655159572463,
+      "negative_months": 0,
+      "milestones": {
+        "first_1_months": {
+          "through_month": "202601",
+          "pnl_dollars": 87648.21278615187,
+          "share_of_final_pnl": 0.17058863429855908
+        },
+        "first_2_months": {
+          "through_month": "202602",
+          "pnl_dollars": 124312.60974639462,
+          "share_of_final_pnl": 0.24194809738411155
+        },
+        "first_3_months": {
+          "through_month": "202603",
+          "pnl_dollars": 199176.69107431488,
+          "share_of_final_pnl": 0.38765513447915595
+        },
+        "first_4_months": {
+          "through_month": "202604",
+          "pnl_dollars": 290599.13468196767,
+          "share_of_final_pnl": 0.5655895076228212
+        }
+      },
+      "monthly": [
+        {
+          "month": "202601",
+          "trades": 49,
+          "win_rate": 0.6530612244897959,
+          "profit_factor": 2.718592407571605,
+          "pnl_return": 17.529642557230375
+        },
+        {
+          "month": "202602",
+          "trades": 50,
+          "win_rate": 0.6,
+          "profit_factor": 1.6110732826707124,
+          "pnl_return": 7.33287939204855
+        },
+        {
+          "month": "202603",
+          "trades": 50,
+          "win_rate": 0.56,
+          "profit_factor": 2.134304262544247,
+          "pnl_return": 14.972816265584054
+        },
+        {
+          "month": "202604",
+          "trades": 54,
+          "win_rate": 0.5555555555555556,
+          "profit_factor": 2.319499184792543,
+          "pnl_return": 18.28448872153056
+        },
+        {
+          "month": "202605",
+          "trades": 62,
+          "win_rate": 0.4838709677419355,
+          "profit_factor": 1.5252412669407425,
+          "pnl_return": 10.084632325262257
+        },
+        {
+          "month": "202606",
+          "trades": 61,
+          "win_rate": 0.6229508196721312,
+          "profit_factor": 3.504005361996129,
+          "pnl_return": 34.555273995546564
+        }
+      ],
+      "health_flags": []
+    },
+    "SPY": {
+      "ticker": "SPY",
+      "final_pnl": 96802.62760270583,
+      "daily_profit_factor": 1.7691095638034275,
+      "daily_win_rate_all_business_days": 0.5,
+      "daily_win_rate_active_days": 0.6037735849056604,
+      "active_days": 106,
+      "positive_days": 64,
+      "max_drawdown": -16418.442771022303,
+      "max_drawdown_to_pnl": 0.1696074081625794,
+      "max_drawdown_business_days": 16,
+      "max_negative_day_streak": 5,
+      "top1_share": 0.13755015589790903,
+      "top3_share": 0.39100512249327973,
+      "top5_share": 0.6153713697807435,
+      "max_month_pnl": 20252.623709008716,
+      "max_month_pnl_month": "202603",
+      "max_month_pnl_share": 0.20921564022134678,
+      "curve_linear_r2": 0.9432598420944991,
+      "negative_months": 0,
+      "milestones": {
+        "first_1_months": {
+          "through_month": "202601",
+          "pnl_dollars": 19687.42421771964,
+          "share_of_final_pnl": 0.20337696099035782
+        },
+        "first_2_months": {
+          "through_month": "202602",
+          "pnl_dollars": 31409.97156087022,
+          "share_of_final_pnl": 0.3244743695365584
+        },
+        "first_3_months": {
+          "through_month": "202603",
+          "pnl_dollars": 51662.59526987893,
+          "share_of_final_pnl": 0.5336900097579051
+        },
+        "first_4_months": {
+          "through_month": "202604",
+          "pnl_dollars": 57499.472289178615,
+          "share_of_final_pnl": 0.5939866893403561
+        }
+      },
+      "monthly": [
+        {
+          "month": "202601",
+          "trades": 12,
+          "win_rate": 0.6666666666666666,
+          "profit_factor": 2.64061868480997,
+          "pnl_return": 3.937484843543928
+        },
+        {
+          "month": "202602",
+          "trades": 18,
+          "win_rate": 0.5555555555555556,
+          "profit_factor": 1.4912385543170663,
+          "pnl_return": 2.3445094686301164
+        },
+        {
+          "month": "202603",
+          "trades": 22,
+          "win_rate": 0.6363636363636364,
+          "profit_factor": 1.8438593212086962,
+          "pnl_return": 4.050524741801743
+        },
+        {
+          "month": "202604",
+          "trades": 15,
+          "win_rate": 0.6666666666666666,
+          "profit_factor": 1.3891251346199789,
+          "pnl_return": 1.167375403859936
+        },
+        {
+          "month": "202605",
+          "trades": 20,
+          "win_rate": 0.55,
+          "profit_factor": 1.7273491395884835,
+          "pnl_return": 3.927685353777809
+        },
+        {
+          "month": "202606",
+          "trades": 19,
+          "win_rate": 0.5789473684210527,
+          "profit_factor": 1.819363689359923,
+          "pnl_return": 3.9329457089276327
+        }
+      ],
+      "health_flags": []
+    }
   }
 }

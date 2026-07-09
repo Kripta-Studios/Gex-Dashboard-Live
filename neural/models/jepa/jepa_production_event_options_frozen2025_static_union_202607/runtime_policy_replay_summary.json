@@ -2,7 +2,7 @@
   "passed": true,
   "stateful_replay_passed": true,
   "profile": "balanced_cap4",
-  "source_trades": "research_papers/JEPA/results/event_option_mh30trail_frozen2025_static_union_deploy202607_production_v1/combined_trades.csv",
+  "source_trades": "research_papers/JEPA/results/event_option_mh30trail_frozen2025_static_union_deploy202607_production_v1_spxw_stop_pause1/combined_trades.csv",
   "comparison": {
     "by_ticker": {
       "QQQ": {
@@ -29,5 +29,7 @@
       "name": "SPY",
       "passed": true
     }
-  ]
+  ],
+  "runtime_risk_guard": "spxw_stop_pause_1",
+  "note": "Completed-month replay includes SPXW same-day pause after one known event_option_stop_loss_60% close."
 }
