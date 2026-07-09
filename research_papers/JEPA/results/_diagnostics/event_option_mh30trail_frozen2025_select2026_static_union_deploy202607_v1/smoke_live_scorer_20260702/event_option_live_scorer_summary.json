@@ -1,0 +1,35 @@
+{
+  "snapshot_path": "analysis_jepa_live_review_20260702_20260702T162839Z\\files\\rt_data_20260702\\event_option_snapshots_latest.parquet",
+  "snapshot_rows": 738,
+  "candidate_rows": 1,
+  "by_ticker": {
+    "QQQ": {
+      "candidate_rows": 1,
+      "sources": [
+        "d35"
+      ],
+      "actions": [
+        "CALL"
+      ]
+    }
+  },
+  "registry": {
+    "status": "production_live_ready",
+    "deploy_month": "202607",
+    "completed_data_through_month": "202606",
+    "component_count": 6,
+    "components": [
+      "QQQ.frozen_d35_return",
+      "QQQ.static_union_balanced",
+      "SPXW.frozen_d25_return",
+      "SPXW.static_union_balanced",
+      "SPY.frozen_d35_return",
+      "SPY.static_union_balanced"
+    ],
+    "missing_for_full_live_equivalence": [],
+    "invalidated_components": []
+  },
+  "issues": [],
+  "live_ready": false,
+  "live_ready_reason": "diagnostic scorer only; exact stateful bot replay equivalence is incomplete"
+}

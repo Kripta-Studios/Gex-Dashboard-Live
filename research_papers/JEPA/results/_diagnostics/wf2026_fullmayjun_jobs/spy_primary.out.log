@@ -1,0 +1,489 @@
+[EVENT_GATE] SPY 202601 cfg=thr0.393_maxday1 val_pf=3.500 test_trades=20 test_pf=1.364 test_ret=1.20
+[EVENT_GATE] SPY 202602 cfg=thr-999.000_maxday1 val_pf=1.667 test_trades=19 test_pf=1.852 test_ret=2.30
+[EVENT_GATE] SPY 202603 cfg=thr0.457_maxday1 val_pf=3.289 test_trades=20 test_pf=3.889 test_ret=5.20
+[EVENT_GATE] SPY 202604 cfg=thr0.504_maxday1 val_pf=3.385 test_trades=15 test_pf=1.458 test_ret=1.10
+[EVENT_GATE] SPY 202605 cfg=thr0.500_maxday3 val_pf=2.692 test_trades=11 test_pf=0.952 test_ret=-0.10
+[EVENT_GATE] SPY 202606 cfg=thr0.385_maxday1 val_pf=2.447 test_trades=20 test_pf=0.556 test_ret=-2.00
+# Event Option Gate Walk-Forward
+
+Causal diagnostic over event-level option-chain features. Models predict CALL/PUT option returns; thresholds are selected only on prior validation months.
+
+## Overall
+
+```json
+{
+  "trades": 105,
+  "win_rate": 0.4666666666666667,
+  "profit_factor": 1.4583333333333333,
+  "pnl_return": 7.700000000000002,
+  "avg_return": 0.07333333333333335,
+  "max_drawdown": -3.300000000000015,
+  "call_rate": 0.20952380952380953,
+  "days_with_trades": 102,
+  "daily_win_rate": 0.47058823529411764,
+  "median_daily_return": -0.3,
+  "daily_max_drawdown": -3.3000000000000114,
+  "top5_day_return": 3.0,
+  "top5_share_of_pnl": 0.3896103896103895,
+  "min_month_trades": 11,
+  "positive_month_rate": 0.6666666666666666
+}
+```
+
+## Per Ticker
+
+```json
+{
+  "SPY": {
+    "trades": 105,
+    "win_rate": 0.4666666666666667,
+    "profit_factor": 1.4583333333333333,
+    "pnl_return": 7.700000000000002,
+    "avg_return": 0.07333333333333335,
+    "max_drawdown": -3.300000000000015,
+    "call_rate": 0.20952380952380953,
+    "days_with_trades": 102,
+    "daily_win_rate": 0.47058823529411764,
+    "median_daily_return": -0.3,
+    "daily_max_drawdown": -3.3000000000000114,
+    "top5_day_return": 3.0,
+    "top5_share_of_pnl": 0.3896103896103895,
+    "min_month_trades": 11,
+    "positive_month_rate": 0.6666666666666666
+  }
+}
+```
+
+## Fold Configs
+
+```csv
+ticker,month,deploy_config,val_months,train_rows,val_rows,test_rows,val_score,abstained_invalid_val,val_trades,val_win_rate,val_profit_factor,val_pnl_return,val_avg_return,val_max_drawdown,val_call_rate,val_days_with_trades,val_daily_win_rate,val_median_daily_return,val_daily_max_drawdown,val_top5_day_return,val_top5_share_of_pnl,val_min_month_trades,val_positive_month_rate,test_trades,test_win_rate,test_profit_factor,test_pnl_return,test_avg_return,test_max_drawdown,test_call_rate,test_days_with_trades,test_daily_win_rate,test_median_daily_return,test_daily_max_drawdown,test_top5_day_return,test_top5_share_of_pnl,test_min_month_trades,test_positive_month_rate
+
+SPY,202601,thr0.393_maxday1,"202507,202508,202509,202510,202511,202512",46091,2411,380,10.444973372114857,False,124,0.6774193548387096,3.5,30.0,0.24193548387096775,-1.2000000000000028,0.27419354838709675,124,0.6774193548387096,0.5,-1.2000000000000028,2.5,0.08333333333333333,18,1.0,20,0.45,1.363636363636364,1.2000000000000002,0.06000000000000001,-1.6,0.25,20,0.45,-0.3,-1.6,2.5,2.083333333333333,20,1.0
+
+SPY,202602,thr-999.000_maxday1,"202508,202509,202510,202511,202512,202601",47326,2379,361,6.715705281274876,False,126,0.5,1.666666666666666,12.599999999999998,0.09999999999999998,-2.4999999999999982,0.1746031746031746,126,0.5,0.1,-2.4999999999999982,2.5,0.19841269841269846,19,0.8333333333333334,19,0.5263157894736842,1.851851851851852,2.3000000000000003,0.12105263157894738,-0.6999999999999993,0.21052631578947367,19,0.5263157894736842,0.5,-0.6999999999999993,2.5,1.0869565217391304,19,1.0
+
+SPY,202603,thr0.457_maxday1,"202509,202510,202511,202512,202601,202602",48523,2341,418,9.929781425018653,False,113,0.6637168141592921,3.289473684210525,26.1,0.23097345132743363,-0.9000000000000021,0.6017699115044248,113,0.6637168141592921,0.5,-0.9000000000000021,2.5,0.09578544061302681,14,1.0,20,0.7,3.888888888888889,5.2,0.26,-0.5999999999999996,0.45,20,0.7,0.5,-0.5999999999999996,2.5,0.4807692307692307,20,1.0
+
+SPY,202604,thr0.504_maxday1,"202510,202511,202512,202601,202602,202603",49720,2360,323,9.508089292045392,False,97,0.6701030927835051,3.385416666666667,22.900000000000006,0.23608247422680417,-1.4000000000000057,0.15463917525773196,97,0.6701030927835051,0.5,-1.4000000000000057,2.5,0.10917030567685587,14,1.0,15,0.4666666666666667,1.4583333333333335,1.0999999999999999,0.07333333333333332,-1.2000000000000002,0.06666666666666667,15,0.4666666666666667,-0.3,-1.2000000000000002,2.5,2.272727272727273,15,1.0
+
+SPY,202605,thr0.500_maxday3,"202511,202512,202601,202602,202603,202604",51029,2247,342,8.804383005042396,False,102,0.6176470588235294,2.692307692307691,19.8,0.19411764705882353,-0.9000000000000057,0.14705882352941177,70,0.6714285714285714,0.5,-0.9000000000000057,5.5,0.2777777777777778,12,1.0,11,0.36363636363636365,0.9523809523809523,-0.09999999999999992,-0.009090909090909084,-0.8999999999999999,0.09090909090909091,8,0.375,-0.3,-0.8999999999999999,1.4,-14.00000000000001,11,0.0
+
+SPY,202606,thr0.385_maxday1,"202512,202601,202602,202603,202604,202605",52091,2235,380,8.635324471225967,False,116,0.5948275862068966,2.446808510638297,20.4,0.17586206896551723,-1.299999999999999,0.22413793103448276,116,0.5948275862068966,0.5,-1.299999999999999,2.5,0.12254901960784315,17,1.0,20,0.25,0.5555555555555557,-1.9999999999999998,-0.09999999999999999,-2.2,0.1,20,0.25,-0.3,-2.2,2.5,-1.2500000000000002,20,0.0
+
+
+```
+
+## Config
+
+```json
+{
+  "args": {
+    "data": "research_papers\\JEPA\\results\\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_2022_20260630_full_v1_physics\\event_option_dataset.parquet",
+    "output_dir": "research_papers\\JEPA\\results\\_diagnostics\\event_option_gate_dense15_zero_dte_win_valthr_strict_d25_physctx_wf2026_fullmayjun_spy_v1",
+    "tickers": [
+      "SPY"
+    ],
+    "train_tickers": [
+      "SPXW",
+      "SPY",
+      "QQQ"
+    ],
+    "expiry_modes": [],
+    "start_month": "202601",
+    "end_month": "202606",
+    "val_months": 6,
+    "pooled_train": true,
+    "delta_bucket": 25,
+    "label_mode": "win",
+    "clip_return": 2.0,
+    "min_train_rows": 500,
+    "min_val_rows": 30,
+    "min_val_trades": 72,
+    "min_month_trades": 12,
+    "min_val_pf": 1.2,
+    "min_val_win_rate": 0.45,
+    "min_val_positive_month_rate": 0.0,
+    "min_val_daily_win_rate": 0.0,
+    "min_val_median_daily_return": -Infinity,
+    "max_val_top5_share": Infinity,
+    "max_val_daily_drawdown": Infinity,
+    "min_call_rate": 0.05,
+    "max_call_rate": 0.85,
+    "cooldown_minutes": 30,
+    "objective": "regression_l1",
+    "n_estimators": 180,
+    "learning_rate": 0.03,
+    "num_leaves": 31,
+    "min_child_samples": 100,
+    "subsample": 0.85,
+    "colsample_bytree": 0.85,
+    "reg_lambda": 8.0,
+    "lgb_jobs": 6,
+    "threshold_grid": [
+      -999.0,
+      0.48,
+      0.5,
+      0.52,
+      0.55,
+      0.58,
+      0.6,
+      0.62,
+      0.65,
+      0.68,
+      0.7,
+      0.75
+    ],
+    "threshold_quantiles": [
+      0.3,
+      0.4,
+      0.5,
+      0.6,
+      0.7,
+      0.8,
+      0.85,
+      0.9,
+      0.93,
+      0.95
+    ],
+    "max_day_grid": [
+      1,
+      2,
+      3
+    ],
+    "feature_include_prefixes": [
+      "phys_",
+      "ctx_",
+      "ret_",
+      "dist_",
+      "nearest",
+      "ib_range",
+      "minute",
+      "dte_days",
+      "underlying_volume",
+      "spot"
+    ],
+    "feature_exclude_prefixes": [],
+    "allow_invalid_val_deploy": false,
+    "deploy_month": "",
+    "deploy_select_end_month": "",
+    "export_deploy_model": false,
+    "exclude_months": [],
+    "skip_walkforward": false,
+    "resume": false,
+    "seed": 20260617
+  },
+  "feature_count": 162,
+  "features": [
+    "dte_days",
+    "minute",
+    "spot",
+    "underlying_volume",
+    "dist_ib_high_bps",
+    "dist_ib_low_bps",
+    "dist_fib_127_up_bps",
+    "dist_fib_161_up_bps",
+    "dist_fib_200_up_bps",
+    "dist_fib_127_dn_bps",
+    "dist_fib_161_dn_bps",
+    "dist_fib_200_dn_bps",
+    "nearest_level_abs_bps",
+    "ib_range_bps",
+    "ret_1m_bps",
+    "ret_5m_bps",
+    "ret_15m_bps",
+    "ret_30m_bps",
+    "phys_d15_iv_skew_put_minus_call",
+    "phys_d15_iv_mean",
+    "phys_d15_volume_skew_call_minus_put",
+    "phys_d15_oi_skew_call_minus_put",
+    "phys_d15_mid_skew_call_minus_put",
+    "phys_d15_spread_mean",
+    "phys_d15_theta_skew_call_minus_put",
+    "phys_d15_vega_skew_call_minus_put",
+    "phys_d15_abs_delta_gap",
+    "phys_d15_liquidity_score",
+    "phys_d25_iv_skew_put_minus_call",
+    "phys_d25_iv_mean",
+    "phys_d25_volume_skew_call_minus_put",
+    "phys_d25_oi_skew_call_minus_put",
+    "phys_d25_mid_skew_call_minus_put",
+    "phys_d25_spread_mean",
+    "phys_d25_theta_skew_call_minus_put",
+    "phys_d25_vega_skew_call_minus_put",
+    "phys_d25_abs_delta_gap",
+    "phys_d25_liquidity_score",
+    "phys_d35_iv_skew_put_minus_call",
+    "phys_d35_iv_mean",
+    "phys_d35_volume_skew_call_minus_put",
+    "phys_d35_oi_skew_call_minus_put",
+    "phys_d35_mid_skew_call_minus_put",
+    "phys_d35_spread_mean",
+    "phys_d35_theta_skew_call_minus_put",
+    "phys_d35_vega_skew_call_minus_put",
+    "phys_d35_abs_delta_gap",
+    "phys_d35_liquidity_score",
+    "phys_d50_iv_skew_put_minus_call",
+    "phys_d50_iv_mean",
+    "phys_d50_volume_skew_call_minus_put",
+    "phys_d50_oi_skew_call_minus_put",
+    "phys_d50_mid_skew_call_minus_put",
+    "phys_d50_spread_mean",
+    "phys_d50_theta_skew_call_minus_put",
+    "phys_d50_vega_skew_call_minus_put",
+    "phys_d50_abs_delta_gap",
+    "phys_d50_liquidity_score",
+    "phys_d65_iv_skew_put_minus_call",
+    "phys_d65_iv_mean",
+    "phys_d65_volume_skew_call_minus_put",
+    "phys_d65_oi_skew_call_minus_put",
+    "phys_d65_mid_skew_call_minus_put",
+    "phys_d65_spread_mean",
+    "phys_d65_theta_skew_call_minus_put",
+    "phys_d65_vega_skew_call_minus_put",
+    "phys_d65_abs_delta_gap",
+    "phys_d65_liquidity_score",
+    "phys_d80_iv_skew_put_minus_call",
+    "phys_d80_iv_mean",
+    "phys_d80_volume_skew_call_minus_put",
+    "phys_d80_oi_skew_call_minus_put",
+    "phys_d80_mid_skew_call_minus_put",
+    "phys_d80_spread_mean",
+    "phys_d80_theta_skew_call_minus_put",
+    "phys_d80_vega_skew_call_minus_put",
+    "phys_d80_abs_delta_gap",
+    "phys_d80_liquidity_score",
+    "phys_total_volume_skew_call_minus_put",
+    "phys_total_oi_skew_call_minus_put",
+    "phys_total_option_volume_log",
+    "phys_total_option_oi_log",
+    "phys_call_iv_slope_low_to_high",
+    "phys_put_iv_slope_low_to_high",
+    "phys_call_mid_slope_low_to_high",
+    "phys_put_mid_slope_low_to_high",
+    "phys_fib_up_min_abs_bps",
+    "phys_fib_up_mean_signed_bps",
+    "phys_fib_dn_min_abs_bps",
+    "phys_fib_dn_mean_signed_bps",
+    "phys_fib_any_min_abs_bps",
+    "phys_ib_edge_min_abs_bps",
+    "phys_ib_balance",
+    "phys_nearest_level_vs_ib_range",
+    "phys_momentum_accel_ret_1m_bps_minus_ret_5m_bps",
+    "phys_abs_ret_1m_bps",
+    "phys_momentum_accel_ret_5m_bps_minus_ret_15m_bps",
+    "phys_abs_ret_5m_bps",
+    "phys_momentum_accel_ret_15m_bps_minus_ret_30m_bps",
+    "phys_abs_ret_15m_bps",
+    "phys_abs_ret_30m_bps",
+    "phys_event_seq_in_day",
+    "phys_event_frac_in_day",
+    "phys_minutes_since_first_event",
+    "phys_spot_ret_from_first_event_bps",
+    "phys_same_day_event_count",
+    "ctx_spx_spot",
+    "ctx_spx_ret_1m_bps",
+    "ctx_spx_ret_1m_bps_minus_self",
+    "ctx_spx_ret_5m_bps",
+    "ctx_spx_ret_5m_bps_minus_self",
+    "ctx_spx_ret_15m_bps",
+    "ctx_spx_ret_15m_bps_minus_self",
+    "ctx_spx_ret_30m_bps",
+    "ctx_spx_ret_30m_bps_minus_self",
+    "ctx_spx_ib_range_bps",
+    "ctx_spx_nearest_level_abs_bps",
+    "ctx_spx_phys_d35_iv_skew_put_minus_call",
+    "ctx_spx_phys_total_volume_skew_call_minus_put",
+    "ctx_spx_phys_total_oi_skew_call_minus_put",
+    "ctx_spy_spot",
+    "ctx_spy_ret_1m_bps",
+    "ctx_spy_ret_1m_bps_minus_self",
+    "ctx_spy_ret_5m_bps",
+    "ctx_spy_ret_5m_bps_minus_self",
+    "ctx_spy_ret_15m_bps",
+    "ctx_spy_ret_15m_bps_minus_self",
+    "ctx_spy_ret_30m_bps",
+    "ctx_spy_ret_30m_bps_minus_self",
+    "ctx_spy_ib_range_bps",
+    "ctx_spy_nearest_level_abs_bps",
+    "ctx_spy_phys_d35_iv_skew_put_minus_call",
+    "ctx_spy_phys_total_volume_skew_call_minus_put",
+    "ctx_spy_phys_total_oi_skew_call_minus_put",
+    "ctx_qqq_spot",
+    "ctx_qqq_ret_1m_bps",
+    "ctx_qqq_ret_1m_bps_minus_self",
+    "ctx_qqq_ret_5m_bps",
+    "ctx_qqq_ret_5m_bps_minus_self",
+    "ctx_qqq_ret_15m_bps",
+    "ctx_qqq_ret_15m_bps_minus_self",
+    "ctx_qqq_ret_30m_bps",
+    "ctx_qqq_ret_30m_bps_minus_self",
+    "ctx_qqq_ib_range_bps",
+    "ctx_qqq_nearest_level_abs_bps",
+    "ctx_qqq_phys_d35_iv_skew_put_minus_call",
+    "ctx_qqq_phys_total_volume_skew_call_minus_put",
+    "ctx_qqq_phys_total_oi_skew_call_minus_put",
+    "ctx_spy_qqq_ret_5m_spread",
+    "ctx_spx_spy_ret_5m_spread",
+    "ticker_QQQ",
+    "ticker_SPXW",
+    "ticker_SPY",
+    "expiry_mode_zero_dte",
+    "nearest_level_name_fib_127_dn",
+    "nearest_level_name_fib_127_up",
+    "nearest_level_name_fib_161_dn",
+    "nearest_level_name_fib_161_up",
+    "nearest_level_name_fib_200_dn",
+    "nearest_level_name_fib_200_up",
+    "nearest_level_name_ib_high",
+    "nearest_level_name_ib_low"
+  ],
+  "grid": [
+    {
+      "threshold": -999.0,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": -999.0,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": -999.0,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": 0.48,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": 0.48,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.48,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": 0.5,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": 0.5,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.5,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": 0.52,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": 0.52,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.52,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": 0.55,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": 0.55,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.55,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": 0.58,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": 0.58,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.58,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": 0.6,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": 0.6,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.6,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": 0.62,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": 0.62,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.62,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": 0.65,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": 0.65,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.65,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": 0.68,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": 0.68,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.68,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": 0.7,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": 0.7,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.7,
+      "max_trades_per_day": 3
+    },
+    {
+      "threshold": 0.75,
+      "max_trades_per_day": 1
+    },
+    {
+      "threshold": 0.75,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.75,
+      "max_trades_per_day": 3
+    }
+  ],
+  "data_rows": 60032
+}
+```

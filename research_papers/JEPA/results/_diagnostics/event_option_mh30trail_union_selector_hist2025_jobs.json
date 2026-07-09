@@ -1,0 +1,23 @@
+[
+  {
+    "ticker": "QQQ",
+    "pid": 36412,
+    "out": "research_papers/JEPA/results/_diagnostics/event_option_mh30trail_union_selector_QQQ_wf2026_hist2025_v1",
+    "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_union_selector_QQQ_wf2026_hist2025_v1\\parallel_stdout.log",
+    "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_union_selector_QQQ_wf2026_hist2025_v1\\parallel_stderr.log"
+  },
+  {
+    "ticker": "SPXW",
+    "pid": 30480,
+    "out": "research_papers/JEPA/results/_diagnostics/event_option_mh30trail_union_selector_SPXW_wf2026_hist2025_v1",
+    "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_union_selector_SPXW_wf2026_hist2025_v1\\parallel_stdout.log",
+    "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_union_selector_SPXW_wf2026_hist2025_v1\\parallel_stderr.log"
+  },
+  {
+    "ticker": "SPY",
+    "pid": 44248,
+    "out": "research_papers/JEPA/results/_diagnostics/event_option_mh30trail_union_selector_SPY_wf2026_hist2025_v1",
+    "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_union_selector_SPY_wf2026_hist2025_v1\\parallel_stdout.log",
+    "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_union_selector_SPY_wf2026_hist2025_v1\\parallel_stderr.log"
+  }
+]

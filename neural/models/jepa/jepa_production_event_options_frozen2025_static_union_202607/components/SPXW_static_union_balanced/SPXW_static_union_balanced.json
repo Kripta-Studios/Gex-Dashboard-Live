@@ -2,13 +2,18 @@
   "schema_version": 1,
   "kind": "event_static_multi_delta_union_policy",
   "ticker": "SPXW",
-  "profile": "balanced_cap4",
-  "policy_source": "FROZEN2025_SELECT2026_BALANCED",
+  "profile": "causal1030_intersection_spxw_thr0_edge005_cap1_cd30",
+  "policy_source": "FROZEN2025_CAUSAL1030_INTERSECTION_GUARDED_V1",
   "expiry_modes": [
     "zero_dte"
   ],
-  "max_day": 4,
-  "cooldown_minutes": 0,
+  "candidate_universe_filter": {
+    "near_level_abs_bps_max": 20.0,
+    "min_entry_time_et": "10:30",
+    "requires_complete_initial_balance": true
+  },
+  "max_day": 1,
+  "cooldown_minutes": 30,
   "sources": [
     {
       "component": "SPXW.frozen_d25_return",
@@ -16,7 +21,16 @@
       "source_name": "d25",
       "priority": 0,
       "delta_bucket": 25,
-      "min_score": 0.34
+      "min_score": 0.0,
+      "min_edge_abs": 0.05,
+      "near_level_abs_bps_max": 20.0,
+      "min_entry_time_et": "10:30",
+      "max_entry_time_et": "14:30",
+      "allowed_actions": [
+        "CALL",
+        "PUT"
+      ],
+      "momentum_filter": "NONE"
     }
   ]
 }

@@ -1,0 +1,985 @@
+{
+  "schema_version": 1,
+  "audit": "existing_pre2026_lineage_robustness",
+  "passed": false,
+  "no_robust_candidate_found": true,
+  "scan_results": "research_papers\\JEPA\\results\\_diagnostics\\scan_existing_results_pre2026_select_2025_eval_202601_202604\\scan_results.csv",
+  "scan_summary": "research_papers\\JEPA\\results\\_diagnostics\\scan_existing_results_pre2026_select_2025_eval_202601_202604\\summary.json",
+  "selection_scan_caveat": "This scan prevents forward columns in ranking, but it cannot prove the result-directory universe was frozen before 2026. Use it as triage, not as final production proof.",
+  "thresholds": {
+    "min_win_rate": 0.45,
+    "min_profit_factor": 1.3,
+    "min_month_trades": 18,
+    "wilson_confidence": 0.95
+  },
+  "counts": {
+    "total_rows": 754,
+    "eligible_pre2026_selection": 11,
+    "test_pass_with_lineage": 13,
+    "strict_pre2026_lineage_candidates": 4,
+    "strict_pre2026_lineage_robust_passed": 0,
+    "any_lineage_robust_passed": 0,
+    "rejected_high_metric_non_lineage": 7
+  },
+  "best_strict_by_scan_rank": {
+    "scan_rank": 8,
+    "dir": "research_papers\\JEPA\\results\\event_static_union_longsrc_2024h2select_objpass_simpler_spy_daily_guard_l5p2_risk5000_v1",
+    "name": "event_static_union_longsrc_2024h2select_objpass_simpler_spy_daily_guard_l5p2_risk5000_v1",
+    "trade_file": "combined_trades.csv",
+    "eligible_pre2026_selection": true,
+    "test_pass": true,
+    "fold_2026_ok": true,
+    "test_pass_with_lineage": true,
+    "observed_ticker_gates_passed": true,
+    "all_ticker_wilson_lower_passed": false,
+    "strict_pre2026_lineage_candidate": true,
+    "strict_pre2026_lineage_robust_passed": false,
+    "any_lineage_robust_passed": false,
+    "test_wr_min": 0.5121951219512195,
+    "test_pf_min": 1.4351875826629967,
+    "test_min_month_min": 19,
+    "test_pnl_sum": 20.05137142637426,
+    "select_score": 8.021741868305572,
+    "fold_2026_checked": 24,
+    "fold_2026_issues": "",
+    "wilson_min": 0.4059077238820504,
+    "wilson_min_ticker": "SPXW",
+    "tickers": {
+      "SPXW": {
+        "ticker": "SPXW",
+        "trades": 82,
+        "wins": 42,
+        "win_rate": 0.5121951219512195,
+        "profit_factor": 1.7371907395113129,
+        "min_month_trades": 19,
+        "observed_gate_passed": true,
+        "wilson_95_win_rate": {
+          "lower": 0.4059077238820504,
+          "upper": 0.6173910413938009
+        },
+        "wilson_lower_passed": false
+      },
+      "SPY": {
+        "ticker": "SPY",
+        "trades": 196,
+        "wins": 105,
+        "win_rate": 0.5357142857142857,
+        "profit_factor": 1.4671969380345093,
+        "min_month_trades": 38,
+        "observed_gate_passed": true,
+        "wilson_95_win_rate": {
+          "lower": 0.46587875550092717,
+          "upper": 0.6041767779335108
+        },
+        "wilson_lower_passed": true
+      },
+      "QQQ": {
+        "ticker": "QQQ",
+        "trades": 148,
+        "wins": 76,
+        "win_rate": 0.5135135135135135,
+        "profit_factor": 1.4351875826629967,
+        "min_month_trades": 34,
+        "observed_gate_passed": true,
+        "wilson_95_win_rate": {
+          "lower": 0.4336714275713848,
+          "upper": 0.5926718388267831
+        },
+        "wilson_lower_passed": false
+      }
+    }
+  },
+  "best_strict_by_wilson": {
+    "scan_rank": 8,
+    "dir": "research_papers\\JEPA\\results\\event_static_union_longsrc_2024h2select_objpass_simpler_spy_daily_guard_l5p2_risk5000_v1",
+    "name": "event_static_union_longsrc_2024h2select_objpass_simpler_spy_daily_guard_l5p2_risk5000_v1",
+    "trade_file": "combined_trades.csv",
+    "eligible_pre2026_selection": true,
+    "test_pass": true,
+    "fold_2026_ok": true,
+    "test_pass_with_lineage": true,
+    "observed_ticker_gates_passed": true,
+    "all_ticker_wilson_lower_passed": false,
+    "strict_pre2026_lineage_candidate": true,
+    "strict_pre2026_lineage_robust_passed": false,
+    "any_lineage_robust_passed": false,
+    "test_wr_min": 0.5121951219512195,
+    "test_pf_min": 1.4351875826629967,
+    "test_min_month_min": 19,
+    "test_pnl_sum": 20.05137142637426,
+    "select_score": 8.021741868305572,
+    "fold_2026_checked": 24,
+    "fold_2026_issues": "",
+    "wilson_min": 0.4059077238820504,
+    "wilson_min_ticker": "SPXW",
+    "tickers": {
+      "SPXW": {
+        "ticker": "SPXW",
+        "trades": 82,
+        "wins": 42,
+        "win_rate": 0.5121951219512195,
+        "profit_factor": 1.7371907395113129,
+        "min_month_trades": 19,
+        "observed_gate_passed": true,
+        "wilson_95_win_rate": {
+          "lower": 0.4059077238820504,
+          "upper": 0.6173910413938009
+        },
+        "wilson_lower_passed": false
+      },
+      "SPY": {
+        "ticker": "SPY",
+        "trades": 196,
+        "wins": 105,
+        "win_rate": 0.5357142857142857,
+        "profit_factor": 1.4671969380345093,
+        "min_month_trades": 38,
+        "observed_gate_passed": true,
+        "wilson_95_win_rate": {
+          "lower": 0.46587875550092717,
+          "upper": 0.6041767779335108
+        },
+        "wilson_lower_passed": true
+      },
+      "QQQ": {
+        "ticker": "QQQ",
+        "trades": 148,
+        "wins": 76,
+        "win_rate": 0.5135135135135135,
+        "profit_factor": 1.4351875826629967,
+        "min_month_trades": 34,
+        "observed_gate_passed": true,
+        "wilson_95_win_rate": {
+          "lower": 0.4336714275713848,
+          "upper": 0.5926718388267831
+        },
+        "wilson_lower_passed": false
+      }
+    }
+  },
+  "best_any_lineage_by_wilson": {
+    "scan_rank": 236,
+    "dir": "research_papers\\JEPA\\results\\_diagnostics\\dense_candidate_frozen2025_2026_daily_guard_l4p1_vp0",
+    "name": "dense_candidate_frozen2025_2026_daily_guard_l4p1_vp0",
+    "trade_file": "combined_trades.csv",
+    "eligible_pre2026_selection": false,
+    "test_pass": true,
+    "fold_2026_ok": true,
+    "test_pass_with_lineage": true,
+    "observed_ticker_gates_passed": true,
+    "all_ticker_wilson_lower_passed": false,
+    "strict_pre2026_lineage_candidate": false,
+    "strict_pre2026_lineage_robust_passed": false,
+    "any_lineage_robust_passed": false,
+    "test_wr_min": 0.5357142857142857,
+    "test_pf_min": 1.9230769230769222,
+    "test_min_month_min": 20,
+    "test_pnl_sum": 40.4,
+    "select_score": -1000000000.0,
+    "fold_2026_checked": 24,
+    "fold_2026_issues": "",
+    "wilson_min": 0.42984715937637186,
+    "wilson_min_ticker": "QQQ",
+    "tickers": {
+      "SPXW": {
+        "ticker": "SPXW",
+        "trades": 85,
+        "wins": 52,
+        "win_rate": 0.611764705882353,
+        "profit_factor": 2.6262626262626263,
+        "min_month_trades": 20,
+        "observed_gate_passed": true,
+        "wilson_95_win_rate": {
+          "lower": 0.5054771123296355,
+          "upper": 0.7083870030531059
+        },
+        "wilson_lower_passed": true
+      },
+      "SPY": {
+        "ticker": "SPY",
+        "trades": 83,
+        "wins": 48,
+        "win_rate": 0.5783132530120482,
+        "profit_factor": 2.285714285714285,
+        "min_month_trades": 20,
+        "observed_gate_passed": true,
+        "wilson_95_win_rate": {
+          "lower": 0.4709282330502335,
+          "upper": 0.6787698509817465
+        },
+        "wilson_lower_passed": true
+      },
+      "QQQ": {
+        "ticker": "QQQ",
+        "trades": 84,
+        "wins": 45,
+        "win_rate": 0.5357142857142857,
+        "profit_factor": 1.9230769230769222,
+        "min_month_trades": 20,
+        "observed_gate_passed": true,
+        "wilson_95_win_rate": {
+          "lower": 0.42984715937637186,
+          "upper": 0.6384577171654381
+        },
+        "wilson_lower_passed": false
+      }
+    }
+  },
+  "strict_pre2026_lineage_candidates": [
+    {
+      "scan_rank": 8,
+      "dir": "research_papers\\JEPA\\results\\event_static_union_longsrc_2024h2select_objpass_simpler_spy_daily_guard_l5p2_risk5000_v1",
+      "name": "event_static_union_longsrc_2024h2select_objpass_simpler_spy_daily_guard_l5p2_risk5000_v1",
+      "trade_file": "combined_trades.csv",
+      "eligible_pre2026_selection": true,
+      "test_pass": true,
+      "fold_2026_ok": true,
+      "test_pass_with_lineage": true,
+      "observed_ticker_gates_passed": true,
+      "all_ticker_wilson_lower_passed": false,
+      "strict_pre2026_lineage_candidate": true,
+      "strict_pre2026_lineage_robust_passed": false,
+      "any_lineage_robust_passed": false,
+      "test_wr_min": 0.5121951219512195,
+      "test_pf_min": 1.4351875826629967,
+      "test_min_month_min": 19,
+      "test_pnl_sum": 20.05137142637426,
+      "select_score": 8.021741868305572,
+      "fold_2026_checked": 24,
+      "fold_2026_issues": "",
+      "wilson_min": 0.4059077238820504,
+      "wilson_min_ticker": "SPXW",
+      "tickers": {
+        "SPXW": {
+          "ticker": "SPXW",
+          "trades": 82,
+          "wins": 42,
+          "win_rate": 0.5121951219512195,
+          "profit_factor": 1.7371907395113129,
+          "min_month_trades": 19,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.4059077238820504,
+            "upper": 0.6173910413938009
+          },
+          "wilson_lower_passed": false
+        },
+        "SPY": {
+          "ticker": "SPY",
+          "trades": 196,
+          "wins": 105,
+          "win_rate": 0.5357142857142857,
+          "profit_factor": 1.4671969380345093,
+          "min_month_trades": 38,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.46587875550092717,
+            "upper": 0.6041767779335108
+          },
+          "wilson_lower_passed": true
+        },
+        "QQQ": {
+          "ticker": "QQQ",
+          "trades": 148,
+          "wins": 76,
+          "win_rate": 0.5135135135135135,
+          "profit_factor": 1.4351875826629967,
+          "min_month_trades": 34,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.4336714275713848,
+            "upper": 0.5926718388267831
+          },
+          "wilson_lower_passed": false
+        }
+      }
+    },
+    {
+      "scan_rank": 9,
+      "dir": "research_papers\\JEPA\\results\\event_static_union_longsrc_2024h2select_2025_2026janmay_risk5000_v1",
+      "name": "event_static_union_longsrc_2024h2select_2025_2026janmay_risk5000_v1",
+      "trade_file": "combined_trades.csv",
+      "eligible_pre2026_selection": true,
+      "test_pass": true,
+      "fold_2026_ok": true,
+      "test_pass_with_lineage": true,
+      "observed_ticker_gates_passed": true,
+      "all_ticker_wilson_lower_passed": false,
+      "strict_pre2026_lineage_candidate": true,
+      "strict_pre2026_lineage_robust_passed": false,
+      "any_lineage_robust_passed": false,
+      "test_wr_min": 0.506578947368421,
+      "test_pf_min": 1.3776982322348923,
+      "test_min_month_min": 19,
+      "test_pnl_sum": 22.162456108923184,
+      "select_score": 7.646809395858374,
+      "fold_2026_checked": 27,
+      "fold_2026_issues": "",
+      "wilson_min": 0.4059077238820504,
+      "wilson_min_ticker": "SPXW",
+      "tickers": {
+        "SPXW": {
+          "ticker": "SPXW",
+          "trades": 82,
+          "wins": 42,
+          "win_rate": 0.5121951219512195,
+          "profit_factor": 1.7371907395113129,
+          "min_month_trades": 19,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.4059077238820504,
+            "upper": 0.6173910413938009
+          },
+          "wilson_lower_passed": false
+        },
+        "SPY": {
+          "ticker": "SPY",
+          "trades": 208,
+          "wins": 113,
+          "win_rate": 0.5432692307692307,
+          "profit_factor": 1.5676464289458187,
+          "min_month_trades": 44,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.47540198257029914,
+            "upper": 0.6095672208151225
+          },
+          "wilson_lower_passed": true
+        },
+        "QQQ": {
+          "ticker": "QQQ",
+          "trades": 152,
+          "wins": 77,
+          "win_rate": 0.506578947368421,
+          "profit_factor": 1.3776982322348923,
+          "min_month_trades": 34,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.4279221522197677,
+            "upper": 0.5849114032097994
+          },
+          "wilson_lower_passed": false
+        }
+      }
+    },
+    {
+      "scan_rank": 10,
+      "dir": "research_papers\\JEPA\\results\\event_static_union_longsrc_2024h2select_2025_2026janmay_daily_guard_l5p2_risk5000_v1",
+      "name": "event_static_union_longsrc_2024h2select_2025_2026janmay_daily_guard_l5p2_risk5000_v1",
+      "trade_file": "combined_trades.csv",
+      "eligible_pre2026_selection": true,
+      "test_pass": true,
+      "fold_2026_ok": true,
+      "test_pass_with_lineage": true,
+      "observed_ticker_gates_passed": true,
+      "all_ticker_wilson_lower_passed": false,
+      "strict_pre2026_lineage_candidate": true,
+      "strict_pre2026_lineage_robust_passed": false,
+      "any_lineage_robust_passed": false,
+      "test_wr_min": 0.5121951219512195,
+      "test_pf_min": 1.4351875826629967,
+      "test_min_month_min": 19,
+      "test_pnl_sum": 22.68874054089781,
+      "select_score": 7.516919752807972,
+      "fold_2026_checked": 27,
+      "fold_2026_issues": "",
+      "wilson_min": 0.4059077238820504,
+      "wilson_min_ticker": "SPXW",
+      "tickers": {
+        "SPXW": {
+          "ticker": "SPXW",
+          "trades": 82,
+          "wins": 42,
+          "win_rate": 0.5121951219512195,
+          "profit_factor": 1.7371907395113129,
+          "min_month_trades": 19,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.4059077238820504,
+            "upper": 0.6173910413938009
+          },
+          "wilson_lower_passed": false
+        },
+        "SPY": {
+          "ticker": "SPY",
+          "trades": 208,
+          "wins": 113,
+          "win_rate": 0.5432692307692307,
+          "profit_factor": 1.5676464289458187,
+          "min_month_trades": 44,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.47540198257029914,
+            "upper": 0.6095672208151225
+          },
+          "wilson_lower_passed": true
+        },
+        "QQQ": {
+          "ticker": "QQQ",
+          "trades": 148,
+          "wins": 76,
+          "win_rate": 0.5135135135135135,
+          "profit_factor": 1.4351875826629967,
+          "min_month_trades": 34,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.4336714275713848,
+            "upper": 0.5926718388267831
+          },
+          "wilson_lower_passed": false
+        }
+      }
+    },
+    {
+      "scan_rank": 11,
+      "dir": "research_papers\\JEPA\\results\\event_static_union_longsrc_2024h2select_2025_2026janmay_objpass_simpler_spy_risk5000_v1",
+      "name": "event_static_union_longsrc_2024h2select_2025_2026janmay_objpass_simpler_spy_risk5000_v1",
+      "trade_file": "combined_trades.csv",
+      "eligible_pre2026_selection": true,
+      "test_pass": true,
+      "fold_2026_ok": true,
+      "test_pass_with_lineage": true,
+      "observed_ticker_gates_passed": true,
+      "all_ticker_wilson_lower_passed": false,
+      "strict_pre2026_lineage_candidate": true,
+      "strict_pre2026_lineage_robust_passed": false,
+      "any_lineage_robust_passed": false,
+      "test_wr_min": 0.506578947368421,
+      "test_pf_min": 1.3776982322348923,
+      "test_min_month_min": 19,
+      "test_pnl_sum": 19.60633824340003,
+      "select_score": 7.496401195944112,
+      "fold_2026_checked": 24,
+      "fold_2026_issues": "",
+      "wilson_min": 0.4059077238820504,
+      "wilson_min_ticker": "SPXW",
+      "tickers": {
+        "SPXW": {
+          "ticker": "SPXW",
+          "trades": 82,
+          "wins": 42,
+          "win_rate": 0.5121951219512195,
+          "profit_factor": 1.7371907395113129,
+          "min_month_trades": 19,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.4059077238820504,
+            "upper": 0.6173910413938009
+          },
+          "wilson_lower_passed": false
+        },
+        "SPY": {
+          "ticker": "SPY",
+          "trades": 201,
+          "wins": 108,
+          "win_rate": 0.5373134328358209,
+          "profit_factor": 1.4571417739649106,
+          "min_month_trades": 38,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.4683296336176688,
+            "upper": 0.604897730053521
+          },
+          "wilson_lower_passed": true
+        },
+        "QQQ": {
+          "ticker": "QQQ",
+          "trades": 152,
+          "wins": 77,
+          "win_rate": 0.506578947368421,
+          "profit_factor": 1.3776982322348923,
+          "min_month_trades": 34,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.4279221522197677,
+            "upper": 0.5849114032097994
+          },
+          "wilson_lower_passed": false
+        }
+      }
+    }
+  ],
+  "rejected_high_metric_non_lineage": [
+    {
+      "scan_rank": 1,
+      "dir": "research_papers\\JEPA\\results\\_diagnostics\\dense_candidate_daily_streak_guard_scan_best_t4p2_roll3m1_vp20",
+      "name": "dense_candidate_daily_streak_guard_scan_best_t4p2_roll3m1_vp20",
+      "trade_file": "combined_trades.csv",
+      "eligible_pre2026_selection": true,
+      "test_pass": true,
+      "fold_2026_ok": false,
+      "test_pass_with_lineage": false,
+      "observed_ticker_gates_passed": true,
+      "all_ticker_wilson_lower_passed": false,
+      "strict_pre2026_lineage_candidate": false,
+      "strict_pre2026_lineage_robust_passed": false,
+      "any_lineage_robust_passed": false,
+      "test_wr_min": 0.5227272727272727,
+      "test_pf_min": 1.8253968253968251,
+      "test_min_month_min": 19,
+      "test_pnl_sum": 31.5,
+      "select_score": 18.26925775530544,
+      "fold_2026_checked": 24,
+      "fold_2026_issues": "row38:val_months:after_202512|row39:val_months:after_202512|row40:val_months:after_202512|row79:val_months:after_202512|row80:val_months:after_202512|row81:val_months:after_202512|row121:val_months:after_202512|row122:val_months:after_202512|row123:val_months:after_202512|row162:val_months:after_202512|row163:val_months:after_202512|row164:val_months:after_202512|row204:val_months:after_202512|row205:val_months:after_202512|row206:val_months:after_202512|row245:val_months:after_202512|row246:val_months:after_202512|row247:val_months:after_202512",
+      "wilson_min": 0.41695642649729936,
+      "wilson_min_ticker": "SPY",
+      "tickers": {
+        "SPXW": {
+          "ticker": "SPXW",
+          "trades": 79,
+          "wins": 44,
+          "win_rate": 0.5569620253164557,
+          "profit_factor": 2.095238095238095,
+          "min_month_trades": 19,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.44731912948308383,
+            "upper": 0.6613221248854566
+          },
+          "wilson_lower_passed": false
+        },
+        "SPY": {
+          "ticker": "SPY",
+          "trades": 80,
+          "wins": 42,
+          "win_rate": 0.525,
+          "profit_factor": 1.842105263157894,
+          "min_month_trades": 19,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.41695642649729936,
+            "upper": 0.6307526670259243
+          },
+          "wilson_lower_passed": false
+        },
+        "QQQ": {
+          "ticker": "QQQ",
+          "trades": 88,
+          "wins": 46,
+          "win_rate": 0.5227272727272727,
+          "profit_factor": 1.8253968253968251,
+          "min_month_trades": 19,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.41961959494387296,
+            "upper": 0.6239337202077226
+          },
+          "wilson_lower_passed": false
+        }
+      }
+    },
+    {
+      "scan_rank": 2,
+      "dir": "research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_d25_strict_backfill_d50max3_causal_2023_2026_v1",
+      "name": "event_option_gate_dense15_zero_dte_win_d25_strict_backfill_d50max3_causal_2023_2026_v1",
+      "trade_file": "combined_trades.csv",
+      "eligible_pre2026_selection": true,
+      "test_pass": true,
+      "fold_2026_ok": false,
+      "test_pass_with_lineage": false,
+      "observed_ticker_gates_passed": true,
+      "all_ticker_wilson_lower_passed": false,
+      "strict_pre2026_lineage_candidate": false,
+      "strict_pre2026_lineage_robust_passed": false,
+      "any_lineage_robust_passed": false,
+      "test_wr_min": 0.5280898876404494,
+      "test_pf_min": 1.865079365079365,
+      "test_min_month_min": 19,
+      "test_pnl_sum": 31.599999999999994,
+      "select_score": 18.140856062092734,
+      "fold_2026_checked": 24,
+      "fold_2026_issues": "row37:val_months:after_202512|row38:val_months:after_202512|row39:val_months:after_202512|row78:val_months:after_202512|row79:val_months:after_202512|row80:val_months:after_202512|row119:val_months:after_202512|row120:val_months:after_202512|row121:val_months:after_202512|row160:val_months:after_202512|row161:val_months:after_202512|row162:val_months:after_202512|row201:val_months:after_202512|row202:val_months:after_202512|row203:val_months:after_202512|row242:val_months:after_202512|row243:val_months:after_202512|row244:val_months:after_202512",
+      "wilson_min": 0.42326718507834094,
+      "wilson_min_ticker": "SPY",
+      "tickers": {
+        "SPXW": {
+          "ticker": "SPXW",
+          "trades": 82,
+          "wins": 44,
+          "win_rate": 0.5365853658536586,
+          "profit_factor": 1.929824561403508,
+          "min_month_trades": 19,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.4294472560322624,
+            "upper": 0.6404490397952913
+          },
+          "wilson_lower_passed": false
+        },
+        "SPY": {
+          "ticker": "SPY",
+          "trades": 81,
+          "wins": 43,
+          "win_rate": 0.5308641975308642,
+          "profit_factor": 1.8859649122807012,
+          "min_month_trades": 19,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.42326718507834094,
+            "upper": 0.6356662664381767
+          },
+          "wilson_lower_passed": false
+        },
+        "QQQ": {
+          "ticker": "QQQ",
+          "trades": 89,
+          "wins": 47,
+          "win_rate": 0.5280898876404494,
+          "profit_factor": 1.865079365079365,
+          "min_month_trades": 19,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.4253754742950576,
+            "upper": 0.6284797759725685
+          },
+          "wilson_lower_passed": false
+        }
+      }
+    },
+    {
+      "scan_rank": 3,
+      "dir": "research_papers\\JEPA\\results\\_diagnostics\\dense_candidate_monthly_pnl_rescue_best_t-1_start10_max3_cd45",
+      "name": "dense_candidate_monthly_pnl_rescue_best_t-1_start10_max3_cd45",
+      "trade_file": "combined_trades.csv",
+      "eligible_pre2026_selection": true,
+      "test_pass": true,
+      "fold_2026_ok": false,
+      "test_pass_with_lineage": false,
+      "observed_ticker_gates_passed": true,
+      "all_ticker_wilson_lower_passed": false,
+      "strict_pre2026_lineage_candidate": false,
+      "strict_pre2026_lineage_robust_passed": false,
+      "any_lineage_robust_passed": false,
+      "test_wr_min": 0.5061728395061729,
+      "test_pf_min": 1.7083333333333333,
+      "test_min_month_min": 19,
+      "test_pnl_sum": 29.599999999999998,
+      "select_score": 18.07452391913026,
+      "fold_2026_checked": 24,
+      "fold_2026_issues": "row38:val_months:after_202512|row39:val_months:after_202512|row40:val_months:after_202512|row79:val_months:after_202512|row80:val_months:after_202512|row81:val_months:after_202512|row121:val_months:after_202512|row122:val_months:after_202512|row123:val_months:after_202512|row162:val_months:after_202512|row163:val_months:after_202512|row164:val_months:after_202512|row204:val_months:after_202512|row205:val_months:after_202512|row206:val_months:after_202512|row245:val_months:after_202512|row246:val_months:after_202512|row247:val_months:after_202512",
+      "wilson_min": 0.3995078470731793,
+      "wilson_min_ticker": "SPY",
+      "tickers": {
+        "SPXW": {
+          "ticker": "SPXW",
+          "trades": 79,
+          "wins": 44,
+          "win_rate": 0.5569620253164557,
+          "profit_factor": 2.095238095238095,
+          "min_month_trades": 19,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.44731912948308383,
+            "upper": 0.6613221248854566
+          },
+          "wilson_lower_passed": false
+        },
+        "SPY": {
+          "ticker": "SPY",
+          "trades": 81,
+          "wins": 41,
+          "win_rate": 0.5061728395061729,
+          "profit_factor": 1.7083333333333333,
+          "min_month_trades": 19,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.3995078470731793,
+            "upper": 0.6122788432301242
+          },
+          "wilson_lower_passed": false
+        },
+        "QQQ": {
+          "ticker": "QQQ",
+          "trades": 88,
+          "wins": 45,
+          "win_rate": 0.5113636363636364,
+          "profit_factor": 1.7441860465116277,
+          "min_month_trades": 19,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.40865530398151334,
+            "upper": 0.6131213535942844
+          },
+          "wilson_lower_passed": false
+        }
+      }
+    },
+    {
+      "scan_rank": 4,
+      "dir": "research_papers\\JEPA\\results\\_diagnostics\\dense_candidate_daily_streak_guard_l4p1_vp18",
+      "name": "dense_candidate_daily_streak_guard_l4p1_vp18",
+      "trade_file": "combined_trades.csv",
+      "eligible_pre2026_selection": true,
+      "test_pass": true,
+      "fold_2026_ok": false,
+      "test_pass_with_lineage": false,
+      "observed_ticker_gates_passed": true,
+      "all_ticker_wilson_lower_passed": false,
+      "strict_pre2026_lineage_candidate": false,
+      "strict_pre2026_lineage_robust_passed": false,
+      "any_lineage_robust_passed": false,
+      "test_wr_min": 0.5189873417721519,
+      "test_pf_min": 1.798245614035087,
+      "test_min_month_min": 19,
+      "test_pnl_sum": 31.499999999999993,
+      "select_score": 17.8888535990125,
+      "fold_2026_checked": 24,
+      "fold_2026_issues": "row38:val_months:after_202512|row39:val_months:after_202512|row40:val_months:after_202512|row79:val_months:after_202512|row80:val_months:after_202512|row81:val_months:after_202512|row121:val_months:after_202512|row122:val_months:after_202512|row123:val_months:after_202512|row162:val_months:after_202512|row163:val_months:after_202512|row164:val_months:after_202512|row204:val_months:after_202512|row205:val_months:after_202512|row206:val_months:after_202512|row245:val_months:after_202512|row246:val_months:after_202512|row247:val_months:after_202512",
+      "wilson_min": 0.4105110559940594,
+      "wilson_min_ticker": "SPY",
+      "tickers": {
+        "SPXW": {
+          "ticker": "SPXW",
+          "trades": 79,
+          "wins": 44,
+          "win_rate": 0.5569620253164557,
+          "profit_factor": 2.095238095238095,
+          "min_month_trades": 19,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.44731912948308383,
+            "upper": 0.6613221248854566
+          },
+          "wilson_lower_passed": false
+        },
+        "SPY": {
+          "ticker": "SPY",
+          "trades": 79,
+          "wins": 41,
+          "win_rate": 0.5189873417721519,
+          "profit_factor": 1.798245614035087,
+          "min_month_trades": 19,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.4105110559940594,
+            "upper": 0.6257026954621209
+          },
+          "wilson_lower_passed": false
+        },
+        "QQQ": {
+          "ticker": "QQQ",
+          "trades": 89,
+          "wins": 47,
+          "win_rate": 0.5280898876404494,
+          "profit_factor": 1.865079365079365,
+          "min_month_trades": 19,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.4253754742950576,
+            "upper": 0.6284797759725685
+          },
+          "wilson_lower_passed": false
+        }
+      }
+    },
+    {
+      "scan_rank": 5,
+      "dir": "research_papers\\JEPA\\results\\_diagnostics\\dense_candidate_walkforward_2026_completed_jan_may_v1",
+      "name": "dense_candidate_walkforward_2026_completed_jan_may_v1",
+      "trade_file": "combined_trades.csv",
+      "eligible_pre2026_selection": true,
+      "test_pass": true,
+      "fold_2026_ok": false,
+      "test_pass_with_lineage": false,
+      "observed_ticker_gates_passed": true,
+      "all_ticker_wilson_lower_passed": false,
+      "strict_pre2026_lineage_candidate": false,
+      "strict_pre2026_lineage_robust_passed": false,
+      "any_lineage_robust_passed": false,
+      "test_wr_min": 0.5280898876404494,
+      "test_pf_min": 1.865079365079365,
+      "test_min_month_min": 19,
+      "test_pnl_sum": 32.5,
+      "select_score": 17.88780707388246,
+      "fold_2026_checked": 24,
+      "fold_2026_issues": "row38:val_months:after_202512|row39:val_months:after_202512|row40:val_months:after_202512|row79:val_months:after_202512|row80:val_months:after_202512|row81:val_months:after_202512|row121:val_months:after_202512|row122:val_months:after_202512|row123:val_months:after_202512|row162:val_months:after_202512|row163:val_months:after_202512|row164:val_months:after_202512|row204:val_months:after_202512|row205:val_months:after_202512|row206:val_months:after_202512|row245:val_months:after_202512|row246:val_months:after_202512|row247:val_months:after_202512",
+      "wilson_min": 0.42326718507834094,
+      "wilson_min_ticker": "SPY",
+      "tickers": {
+        "SPXW": {
+          "ticker": "SPXW",
+          "trades": 79,
+          "wins": 44,
+          "win_rate": 0.5569620253164557,
+          "profit_factor": 2.095238095238095,
+          "min_month_trades": 19,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.44731912948308383,
+            "upper": 0.6613221248854566
+          },
+          "wilson_lower_passed": false
+        },
+        "SPY": {
+          "ticker": "SPY",
+          "trades": 81,
+          "wins": 43,
+          "win_rate": 0.5308641975308642,
+          "profit_factor": 1.8859649122807012,
+          "min_month_trades": 19,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.42326718507834094,
+            "upper": 0.6356662664381767
+          },
+          "wilson_lower_passed": false
+        },
+        "QQQ": {
+          "ticker": "QQQ",
+          "trades": 89,
+          "wins": 47,
+          "win_rate": 0.5280898876404494,
+          "profit_factor": 1.865079365079365,
+          "min_month_trades": 19,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.4253754742950576,
+            "upper": 0.6284797759725685
+          },
+          "wilson_lower_passed": false
+        }
+      }
+    },
+    {
+      "scan_rank": 6,
+      "dir": "research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_d25_strict_uniform_backfill_d50max3_causal_2023_2026_v1",
+      "name": "event_option_gate_dense15_zero_dte_win_d25_strict_uniform_backfill_d50max3_causal_2023_2026_v1",
+      "trade_file": "combined_trades.csv",
+      "eligible_pre2026_selection": true,
+      "test_pass": true,
+      "fold_2026_ok": false,
+      "test_pass_with_lineage": false,
+      "observed_ticker_gates_passed": true,
+      "all_ticker_wilson_lower_passed": false,
+      "strict_pre2026_lineage_candidate": false,
+      "strict_pre2026_lineage_robust_passed": false,
+      "any_lineage_robust_passed": false,
+      "test_wr_min": 0.5280898876404494,
+      "test_pf_min": 1.865079365079365,
+      "test_min_month_min": 19,
+      "test_pnl_sum": 32.5,
+      "select_score": 17.88780707388246,
+      "fold_2026_checked": 24,
+      "fold_2026_issues": "row38:val_months:after_202512|row39:val_months:after_202512|row40:val_months:after_202512|row79:val_months:after_202512|row80:val_months:after_202512|row81:val_months:after_202512|row121:val_months:after_202512|row122:val_months:after_202512|row123:val_months:after_202512|row162:val_months:after_202512|row163:val_months:after_202512|row164:val_months:after_202512|row204:val_months:after_202512|row205:val_months:after_202512|row206:val_months:after_202512|row245:val_months:after_202512|row246:val_months:after_202512|row247:val_months:after_202512",
+      "wilson_min": 0.42326718507834094,
+      "wilson_min_ticker": "SPY",
+      "tickers": {
+        "SPXW": {
+          "ticker": "SPXW",
+          "trades": 79,
+          "wins": 44,
+          "win_rate": 0.5569620253164557,
+          "profit_factor": 2.095238095238095,
+          "min_month_trades": 19,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.44731912948308383,
+            "upper": 0.6613221248854566
+          },
+          "wilson_lower_passed": false
+        },
+        "SPY": {
+          "ticker": "SPY",
+          "trades": 81,
+          "wins": 43,
+          "win_rate": 0.5308641975308642,
+          "profit_factor": 1.8859649122807012,
+          "min_month_trades": 19,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.42326718507834094,
+            "upper": 0.6356662664381767
+          },
+          "wilson_lower_passed": false
+        },
+        "QQQ": {
+          "ticker": "QQQ",
+          "trades": 89,
+          "wins": 47,
+          "win_rate": 0.5280898876404494,
+          "profit_factor": 1.865079365079365,
+          "min_month_trades": 19,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.4253754742950576,
+            "upper": 0.6284797759725685
+          },
+          "wilson_lower_passed": false
+        }
+      }
+    },
+    {
+      "scan_rank": 7,
+      "dir": "research_papers\\JEPA\\results\\_diagnostics\\dense_candidate_daily_streak_guard_l3p1_vp18",
+      "name": "dense_candidate_daily_streak_guard_l3p1_vp18",
+      "trade_file": "combined_trades.csv",
+      "eligible_pre2026_selection": true,
+      "test_pass": true,
+      "fold_2026_ok": false,
+      "test_pass_with_lineage": false,
+      "observed_ticker_gates_passed": true,
+      "all_ticker_wilson_lower_passed": false,
+      "strict_pre2026_lineage_candidate": false,
+      "strict_pre2026_lineage_robust_passed": false,
+      "any_lineage_robust_passed": false,
+      "test_wr_min": 0.5172413793103449,
+      "test_pf_min": 1.7857142857142856,
+      "test_min_month_min": 19,
+      "test_pnl_sum": 30.599999999999994,
+      "select_score": 16.222023978931322,
+      "fold_2026_checked": 24,
+      "fold_2026_issues": "row38:val_months:after_202512|row39:val_months:after_202512|row40:val_months:after_202512|row79:val_months:after_202512|row80:val_months:after_202512|row81:val_months:after_202512|row121:val_months:after_202512|row122:val_months:after_202512|row123:val_months:after_202512|row162:val_months:after_202512|row163:val_months:after_202512|row164:val_months:after_202512|row204:val_months:after_202512|row205:val_months:after_202512|row206:val_months:after_202512|row245:val_months:after_202512|row246:val_months:after_202512|row247:val_months:after_202512",
+      "wilson_min": 0.4137512133636875,
+      "wilson_min_ticker": "QQQ",
+      "tickers": {
+        "SPXW": {
+          "ticker": "SPXW",
+          "trades": 77,
+          "wins": 42,
+          "win_rate": 0.5454545454545454,
+          "profit_factor": 1.9999999999999996,
+          "min_month_trades": 19,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.43473084293295094,
+            "upper": 0.6518583911322823
+          },
+          "wilson_lower_passed": false
+        },
+        "SPY": {
+          "ticker": "SPY",
+          "trades": 78,
+          "wins": 42,
+          "win_rate": 0.5384615384615384,
+          "profit_factor": 1.944444444444444,
+          "min_month_trades": 19,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.4286364394039756,
+            "upper": 0.6446760367720094
+          },
+          "wilson_lower_passed": false
+        },
+        "QQQ": {
+          "ticker": "QQQ",
+          "trades": 87,
+          "wins": 45,
+          "win_rate": 0.5172413793103449,
+          "profit_factor": 1.7857142857142856,
+          "min_month_trades": 19,
+          "observed_gate_passed": true,
+          "wilson_95_win_rate": {
+            "lower": 0.4137512133636875,
+            "upper": 0.6192733553623774
+          },
+          "wilson_lower_passed": false
+        }
+      }
+    }
+  ],
+  "issues": [
+    "no strict pre-2026 lineage candidate passed Wilson robustness",
+    "no any-lineage candidate passed Wilson robustness"
+  ],
+  "note": "This audit does not select a model. It checks whether already scanned, lineage-clean candidates have enough sample support for a 45% WR lower-bound claim."
+}

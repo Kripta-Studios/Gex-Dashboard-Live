@@ -1,0 +1,38 @@
+{
+  "entries": [
+    {
+      "entry_time": "2026-06-22T15:34:00-04:00",
+      "date": "20260622",
+      "time": "15:34",
+      "policy_ticker": "SPY",
+      "bot_ticker": "SPY",
+      "event_candidate_id": "SPY|20260622|15:34|zero_dte|PUT||ptdj",
+      "event_option_policy_source": "SPY_PTDJ",
+      "mtd_source": "base",
+      "source_variant": "ptdj",
+      "expiry_mode": "zero_dte",
+      "event_delta_bucket": "d35",
+      "action": "PUT",
+      "score": 0.6513104091780131
+    },
+    {
+      "entry_time": "2026-06-22T15:34:00-04:00",
+      "date": "20260622",
+      "time": "15:34",
+      "policy_ticker": "QQQ",
+      "bot_ticker": "QQQ",
+      "event_candidate_id": "QQQ|20260622|15:34|zero_dte|PUT|meta_s1|ptdj_v1",
+      "event_option_policy_source": "QQQ_MTD_RESCUE",
+      "mtd_source": "meta_s1",
+      "source_variant": "ptdj_v1",
+      "expiry_mode": "zero_dte",
+      "event_delta_bucket": "d80",
+      "action": "PUT",
+      "score": 0.5775557656670663
+    }
+  ],
+  "candidate_ids": [
+    "SPY|20260622|15:34|zero_dte|PUT||ptdj",
+    "QQQ|20260622|15:34|zero_dte|PUT|meta_s1|ptdj_v1"
+  ]
+}

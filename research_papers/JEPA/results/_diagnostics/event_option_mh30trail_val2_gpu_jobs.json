@@ -1,0 +1,122 @@
+[
+  {
+    "delta": 25,
+    "ticker": "SPXW",
+    "pid": 39292,
+    "out": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d25_return_wf202504_202606_val2_gpu_v1_SPXW",
+    "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d25_return_wf202504_202606_val2_gpu_v1_SPXW\\parallel_stdout.log",
+    "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d25_return_wf202504_202606_val2_gpu_v1_SPXW\\parallel_stderr.log"
+  },
+  {
+    "delta": 25,
+    "ticker": "QQQ",
+    "pid": 47240,
+    "out": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d25_return_wf202504_202606_val2_gpu_v1_QQQ",
+    "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d25_return_wf202504_202606_val2_gpu_v1_QQQ\\parallel_stdout.log",
+    "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d25_return_wf202504_202606_val2_gpu_v1_QQQ\\parallel_stderr.log"
+  },
+  {
+    "delta": 25,
+    "ticker": "SPY",
+    "pid": 17588,
+    "out": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d25_return_wf202504_202606_val2_gpu_v1_SPY",
+    "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d25_return_wf202504_202606_val2_gpu_v1_SPY\\parallel_stdout.log",
+    "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d25_return_wf202504_202606_val2_gpu_v1_SPY\\parallel_stderr.log"
+  },
+  {
+    "delta": 35,
+    "ticker": "SPXW",
+    "pid": 60700,
+    "out": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d35_return_wf202504_202606_val2_gpu_v1_SPXW",
+    "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d35_return_wf202504_202606_val2_gpu_v1_SPXW\\parallel_stdout.log",
+    "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d35_return_wf202504_202606_val2_gpu_v1_SPXW\\parallel_stderr.log"
+  },
+  {
+    "delta": 35,
+    "ticker": "QQQ",
+    "pid": 49232,
+    "out": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d35_return_wf202504_202606_val2_gpu_v1_QQQ",
+    "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d35_return_wf202504_202606_val2_gpu_v1_QQQ\\parallel_stdout.log",
+    "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d35_return_wf202504_202606_val2_gpu_v1_QQQ\\parallel_stderr.log"
+  },
+  {
+    "delta": 35,
+    "ticker": "SPY",
+    "pid": 43528,
+    "out": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d35_return_wf202504_202606_val2_gpu_v1_SPY",
+    "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d35_return_wf202504_202606_val2_gpu_v1_SPY\\parallel_stdout.log",
+    "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d35_return_wf202504_202606_val2_gpu_v1_SPY\\parallel_stderr.log"
+  },
+  {
+    "delta": 50,
+    "ticker": "SPXW",
+    "pid": 53320,
+    "out": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d50_return_wf202504_202606_val2_gpu_v1_SPXW",
+    "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d50_return_wf202504_202606_val2_gpu_v1_SPXW\\parallel_stdout.log",
+    "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d50_return_wf202504_202606_val2_gpu_v1_SPXW\\parallel_stderr.log"
+  },
+  {
+    "delta": 50,
+    "ticker": "QQQ",
+    "pid": 46408,
+    "out": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d50_return_wf202504_202606_val2_gpu_v1_QQQ",
+    "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d50_return_wf202504_202606_val2_gpu_v1_QQQ\\parallel_stdout.log",
+    "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d50_return_wf202504_202606_val2_gpu_v1_QQQ\\parallel_stderr.log"
+  },
+  {
+    "delta": 50,
+    "ticker": "SPY",
+    "pid": 44720,
+    "out": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d50_return_wf202504_202606_val2_gpu_v1_SPY",
+    "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d50_return_wf202504_202606_val2_gpu_v1_SPY\\parallel_stdout.log",
+    "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d50_return_wf202504_202606_val2_gpu_v1_SPY\\parallel_stderr.log"
+  },
+  {
+    "delta": 65,
+    "ticker": "SPXW",
+    "pid": 63904,
+    "out": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d65_return_wf202504_202606_val2_gpu_v1_SPXW",
+    "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d65_return_wf202504_202606_val2_gpu_v1_SPXW\\parallel_stdout.log",
+    "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d65_return_wf202504_202606_val2_gpu_v1_SPXW\\parallel_stderr.log"
+  },
+  {
+    "delta": 65,
+    "ticker": "QQQ",
+    "pid": 37116,
+    "out": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d65_return_wf202504_202606_val2_gpu_v1_QQQ",
+    "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d65_return_wf202504_202606_val2_gpu_v1_QQQ\\parallel_stdout.log",
+    "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d65_return_wf202504_202606_val2_gpu_v1_QQQ\\parallel_stderr.log"
+  },
+  {
+    "delta": 65,
+    "ticker": "SPY",
+    "pid": 44248,
+    "out": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d65_return_wf202504_202606_val2_gpu_v1_SPY",
+    "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d65_return_wf202504_202606_val2_gpu_v1_SPY\\parallel_stdout.log",
+    "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d65_return_wf202504_202606_val2_gpu_v1_SPY\\parallel_stderr.log"
+  },
+  {
+    "delta": 80,
+    "ticker": "SPXW",
+    "pid": 43928,
+    "out": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d80_return_wf202504_202606_val2_gpu_v1_SPXW",
+    "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d80_return_wf202504_202606_val2_gpu_v1_SPXW\\parallel_stdout.log",
+    "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d80_return_wf202504_202606_val2_gpu_v1_SPXW\\parallel_stderr.log"
+  },
+  {
+    "delta": 80,
+    "ticker": "QQQ",
+    "pid": 44264,
+    "out": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d80_return_wf202504_202606_val2_gpu_v1_QQQ",
+    "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d80_return_wf202504_202606_val2_gpu_v1_QQQ\\parallel_stdout.log",
+    "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d80_return_wf202504_202606_val2_gpu_v1_QQQ\\parallel_stderr.log"
+  },
+  {
+    "delta": 80,
+    "ticker": "SPY",
+    "pid": 60964,
+    "out": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d80_return_wf202504_202606_val2_gpu_v1_SPY",
+    "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d80_return_wf202504_202606_val2_gpu_v1_SPY\\parallel_stdout.log",
+    "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d80_return_wf202504_202606_val2_gpu_v1_SPY\\parallel_stderr.log"
+  }
+]

@@ -1,0 +1,7 @@
+[EVENT_GATE] SPXW 202601 cfg=thr0.450_maxday1 val_pf=0.649 test_trades=7 test_pf=1.111 test_ret=0.20
+[EVENT_GATE] SPXW 202602 abstain invalid_val best_cfg=thr-999.000_maxday3 val_score=-999999999999999616.0
+[EVENT_GATE] SPXW 202603 cfg=thr0.300_maxday1 val_pf=0.941 test_trades=16 test_pf=0.648 test_ret=-1.90
+[EVENT_GATE] SPXW 202604 cfg=thr0.502_maxday1 val_pf=0.702 test_trades=7 test_pf=0.625 test_ret=-0.90
+[EVENT_GATE] SPXW 202605 cfg=thr0.500_maxday3 val_pf=0.875 test_trades=7 test_pf=0.625 test_ret=-0.90
+[EVENT_GATE] SPXW 202606 cfg=thr0.500_maxday2 val_pf=0.889 test_trades=7 test_pf=2.083 test_ret=1.30
+[EVENT_GATE] QQQ 202601 cfg=thr-0.070_maxday1 val_pf=0.809 test_trades=20 test_pf=1.019 test_ret=0.10

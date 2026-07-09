@@ -1,0 +1,2 @@
+ticker,month,val_months,fit_rows,val_rows,test_rows,train_windows,val_windows,best_epoch,best_score,context_valid_rate,val_total,val_acc,val_trade_precision,val_rank_ratio,val_vis,val_straight
+SPY,202606,"202603,202604,202605",68493,4503,1501,32946,2166,1,0.9364308527329401,0.9367088675498962,0.8917764386752085,0.38042473793029785,0.3717948794364929,0.3213823437690735,0.34684415052912354,1.9352565232186216

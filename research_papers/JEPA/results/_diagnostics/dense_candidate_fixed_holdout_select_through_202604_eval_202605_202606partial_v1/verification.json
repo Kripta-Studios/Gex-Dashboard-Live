@@ -1,0 +1,228 @@
+{
+  "passed": true,
+  "result_dir": "research_papers\\JEPA\\results\\_diagnostics\\dense_candidate_fixed_holdout_select_through_202604_eval_202605_202606partial_v1",
+  "gates": {
+    "tickers": [
+      "SPXW",
+      "SPY",
+      "QQQ"
+    ],
+    "months": [
+      "202605",
+      "202606"
+    ],
+    "min_win_rate": 0.45,
+    "min_profit_factor": 1.3,
+    "min_month_trades": 18,
+    "strict_month_trades": false,
+    "require_positive_months": false,
+    "min_call_rate": 0.2,
+    "max_call_rate": 0.8,
+    "disallow_weak_fold_modes": true
+  },
+  "tickers": {
+    "SPXW": {
+      "metrics": {
+        "trades": 38,
+        "win_rate": 0.47368421052631576,
+        "profit_factor": 1.5000000000000002,
+        "pnl_return": 3.000000000000001,
+        "avg_return": 0.07894736842105265,
+        "max_drawdown": -1.299999999999999,
+        "call_rate": 0.3684210526315789,
+        "days_with_trades": 34,
+        "daily_win_rate": 0.5294117647058824,
+        "median_daily_return": 0.2,
+        "daily_max_drawdown": -1.2999999999999994,
+        "top5_day_return": 2.5,
+        "top5_share_of_pnl": 0.833333333333333,
+        "min_month_trades": 18,
+        "positive_month_rate": 0.5
+      },
+      "monthly": {
+        "202605": {
+          "trades": 20,
+          "win_rate": 0.6,
+          "profit_factor": 2.5,
+          "pnl_return": 3.6000000000000005,
+          "avg_return": 0.18000000000000002,
+          "max_drawdown": -0.5999999999999996,
+          "call_rate": 0.4,
+          "days_with_trades": 17,
+          "daily_win_rate": 0.7058823529411765,
+          "median_daily_return": 0.5,
+          "daily_max_drawdown": -0.5999999999999996,
+          "top5_day_return": 2.5,
+          "top5_share_of_pnl": 0.6944444444444443,
+          "min_month_trades": 20,
+          "positive_month_rate": 1.0
+        },
+        "202606": {
+          "trades": 18,
+          "win_rate": 0.3333333333333333,
+          "profit_factor": 0.8333333333333335,
+          "pnl_return": -0.5999999999999999,
+          "avg_return": -0.033333333333333326,
+          "max_drawdown": -1.3,
+          "call_rate": 0.3333333333333333,
+          "days_with_trades": 17,
+          "daily_win_rate": 0.35294117647058826,
+          "median_daily_return": -0.3,
+          "daily_max_drawdown": -1.3,
+          "top5_day_return": 2.5,
+          "top5_share_of_pnl": -4.166666666666668,
+          "min_month_trades": 18,
+          "positive_month_rate": 0.0
+        }
+      },
+      "checks": {
+        "win_rate_ok": true,
+        "profit_factor_ok": true,
+        "volume_ok": true,
+        "pnl_ok": true,
+        "monthly_positive_ok": true,
+        "call_rate_ok": true,
+        "passed": true
+      }
+    },
+    "SPY": {
+      "metrics": {
+        "trades": 43,
+        "win_rate": 0.5581395348837209,
+        "profit_factor": 2.105263157894737,
+        "pnl_return": 6.3,
+        "avg_return": 0.14651162790697675,
+        "max_drawdown": -1.4999999999999991,
+        "call_rate": 0.3023255813953488,
+        "days_with_trades": 31,
+        "daily_win_rate": 0.6129032258064516,
+        "median_daily_return": 0.5,
+        "daily_max_drawdown": -1.1999999999999993,
+        "top5_day_return": 4.2,
+        "top5_share_of_pnl": 0.6666666666666667,
+        "min_month_trades": 19,
+        "positive_month_rate": 1.0
+      },
+      "monthly": {
+        "202605": {
+          "trades": 19,
+          "win_rate": 0.6842105263157895,
+          "profit_factor": 3.611111111111111,
+          "pnl_return": 4.7,
+          "avg_return": 0.2473684210526316,
+          "max_drawdown": -0.8999999999999995,
+          "call_rate": 0.42105263157894735,
+          "days_with_trades": 15,
+          "daily_win_rate": 0.7333333333333333,
+          "median_daily_return": 0.5,
+          "daily_max_drawdown": -0.8999999999999995,
+          "top5_day_return": 3.0,
+          "top5_share_of_pnl": 0.6382978723404255,
+          "min_month_trades": 19,
+          "positive_month_rate": 1.0
+        },
+        "202606": {
+          "trades": 24,
+          "win_rate": 0.4583333333333333,
+          "profit_factor": 1.4102564102564106,
+          "pnl_return": 1.6,
+          "avg_return": 0.06666666666666667,
+          "max_drawdown": -1.5000000000000002,
+          "call_rate": 0.20833333333333334,
+          "days_with_trades": 16,
+          "daily_win_rate": 0.5,
+          "median_daily_return": -0.04999999999999999,
+          "daily_max_drawdown": -1.2000000000000002,
+          "top5_day_return": 3.7,
+          "top5_share_of_pnl": 2.3125,
+          "min_month_trades": 24,
+          "positive_month_rate": 1.0
+        }
+      },
+      "checks": {
+        "win_rate_ok": true,
+        "profit_factor_ok": true,
+        "volume_ok": true,
+        "pnl_ok": true,
+        "monthly_positive_ok": true,
+        "call_rate_ok": true,
+        "passed": true
+      }
+    },
+    "QQQ": {
+      "metrics": {
+        "trades": 37,
+        "win_rate": 0.5135135135135135,
+        "profit_factor": 1.7592592592592595,
+        "pnl_return": 4.1000000000000005,
+        "avg_return": 0.11081081081081083,
+        "max_drawdown": -1.299999999999999,
+        "call_rate": 0.2702702702702703,
+        "days_with_trades": 35,
+        "daily_win_rate": 0.5142857142857142,
+        "median_daily_return": 0.5,
+        "daily_max_drawdown": -1.2999999999999994,
+        "top5_day_return": 3.0,
+        "top5_share_of_pnl": 0.7317073170731706,
+        "min_month_trades": 18,
+        "positive_month_rate": 1.0
+      },
+      "monthly": {
+        "202605": {
+          "trades": 19,
+          "win_rate": 0.631578947368421,
+          "profit_factor": 2.857142857142857,
+          "pnl_return": 3.9000000000000004,
+          "avg_return": 0.20526315789473687,
+          "max_drawdown": -0.6000000000000001,
+          "call_rate": 0.2631578947368421,
+          "days_with_trades": 18,
+          "daily_win_rate": 0.6111111111111112,
+          "median_daily_return": 0.5,
+          "daily_max_drawdown": -0.6000000000000001,
+          "top5_day_return": 3.0,
+          "top5_share_of_pnl": 0.7692307692307692,
+          "min_month_trades": 19,
+          "positive_month_rate": 1.0
+        },
+        "202606": {
+          "trades": 18,
+          "win_rate": 0.3888888888888889,
+          "profit_factor": 1.0606060606060608,
+          "pnl_return": 0.20000000000000012,
+          "avg_return": 0.011111111111111118,
+          "max_drawdown": -1.2,
+          "call_rate": 0.2777777777777778,
+          "days_with_trades": 17,
+          "daily_win_rate": 0.4117647058823529,
+          "median_daily_return": -0.3,
+          "daily_max_drawdown": -1.2,
+          "top5_day_return": 2.5,
+          "top5_share_of_pnl": 12.499999999999993,
+          "min_month_trades": 18,
+          "positive_month_rate": 1.0
+        }
+      },
+      "checks": {
+        "win_rate_ok": true,
+        "profit_factor_ok": true,
+        "volume_ok": true,
+        "pnl_ok": true,
+        "monthly_positive_ok": true,
+        "call_rate_ok": true,
+        "passed": true
+      }
+    }
+  },
+  "integrity": {
+    "passed": true,
+    "folds_checked": 12,
+    "issues": []
+  },
+  "backfill": {
+    "passed": true,
+    "rows_checked": 23,
+    "issues": []
+  },
+  "issues": []
+}

@@ -1,0 +1,303 @@
+{
+  "schema_version": 1,
+  "audit": "dense_candidate_anti_snooping",
+  "passed": true,
+  "result_dir": "research_papers\\JEPA\\results\\_diagnostics\\dense_candidate_frozen2025_2026_daily_guard_l4p1_vp0",
+  "checks": {
+    "historical_fold_chronology": true,
+    "raw_complete_frozen_pre2026_holdout": true,
+    "pre2026_guard_selection": true,
+    "frozen_pre2026_lineage": true,
+    "model_feature_leakage": true,
+    "strict_research_selection": true
+  },
+  "evidence": {
+    "historical_fold_lineage": {
+      "passed": true,
+      "path": "research_papers\\JEPA\\results\\_diagnostics\\dense_candidate_frozen2025_2026_daily_guard_l4p1_vp0\\combined_folds.csv",
+      "folds_checked": 30,
+      "issues": []
+    },
+    "frozen_pre2026_lineage": {
+      "passed": true,
+      "path": "research_papers\\JEPA\\results\\_diagnostics\\dense_candidate_frozen2025_2026_daily_guard_l4p1_vp0\\combined_folds.csv",
+      "folds_checked": 24,
+      "issues": []
+    },
+    "raw_complete_frozen_verification": {
+      "path": "research_papers\\JEPA\\results\\_diagnostics\\dense_candidate_frozen2025_2026_daily_guard_l4p1_vp0\\verification_raw_complete_202601_202604.json",
+      "passed": true
+    },
+    "pre2026_guard_selection": {
+      "path": "research_papers\\JEPA\\results\\_diagnostics\\dense_candidate_frozen2025_2026_daily_guard_l4p1_vp0\\pre2026_guard_selection_audit\\pre2026_guard_selection_audit.json",
+      "passed": true,
+      "checks": {
+        "recent_scan_exists": true,
+        "long_scan_exists": true,
+        "rank_fields_are_pre2026_only": true,
+        "recent_valid_pass_rows": 17,
+        "long_valid_pass_rows": 17,
+        "selected_config_matches_rank1": true,
+        "artifact_config_matches_selected": true,
+        "raw_complete_holdout_passed": true,
+        "raw_complete_integrity_passed": true,
+        "raw_complete_backfill_passed": true
+      },
+      "selected_row": {
+        "rank": 1,
+        "trigger_losses": 4,
+        "pause_days": 1,
+        "loss_threshold": 0.0,
+        "rolling_sum_window": 0,
+        "rolling_sum_threshold": 0.0,
+        "volume_protect_monthly_target": 0,
+        "valid_pass": true,
+        "valid_pf_min": 1.851851851851853,
+        "valid_wr_min": 0.5263157894736842,
+        "valid_min_month_min": 18,
+        "pretest_health_flag_count": 3,
+        "pretest_max_negative_day_streak": 4,
+        "forward_pass_diagnostic_only": true
+      },
+      "raw_complete_holdout": {
+        "passed": true,
+        "months": [
+          "202601",
+          "202602",
+          "202603",
+          "202604"
+        ],
+        "tickers": {
+          "QQQ": {
+            "passed": true,
+            "trades": 84,
+            "win_rate": 0.5357142857142857,
+            "profit_factor": 1.9230769230769222,
+            "min_month_trades": 20,
+            "pnl_return": 10.799999999999999
+          },
+          "SPXW": {
+            "passed": true,
+            "trades": 85,
+            "win_rate": 0.611764705882353,
+            "profit_factor": 2.6262626262626263,
+            "min_month_trades": 20,
+            "pnl_return": 16.099999999999998
+          },
+          "SPY": {
+            "passed": true,
+            "trades": 83,
+            "win_rate": 0.5783132530120482,
+            "profit_factor": 2.285714285714285,
+            "min_month_trades": 20,
+            "pnl_return": 13.5
+          }
+        },
+        "integrity": {
+          "passed": true,
+          "folds_checked": 24,
+          "issues": []
+        },
+        "backfill": {
+          "passed": true,
+          "rows_checked": 22,
+          "issues": []
+        }
+      },
+      "issues": []
+    },
+    "model_feature_audit": {
+      "passed": true,
+      "models_checked": 6,
+      "models": [
+        {
+          "path": "neural\\models\\jepa\\jepa_production_event_options_dense15_strict_uniform_candidate\\components\\qqq_d50_forcedmax3_complete_through202605\\deploy_model\\event_option_gate_direction_model.json",
+          "feature_count": 162,
+          "leaky_feature_count": 0,
+          "leaky_features": [],
+          "train_months_last": "202511",
+          "select_months": [
+            "202512",
+            "202601",
+            "202602",
+            "202603",
+            "202604",
+            "202605"
+          ]
+        },
+        {
+          "path": "neural\\models\\jepa\\jepa_production_event_options_dense15_strict_uniform_candidate\\components\\qqq_strict_d25_win_complete_through202605\\deploy_model\\event_option_gate_direction_model.json",
+          "feature_count": 162,
+          "leaky_feature_count": 0,
+          "leaky_features": [],
+          "train_months_last": "202511",
+          "select_months": [
+            "202512",
+            "202601",
+            "202602",
+            "202603",
+            "202604",
+            "202605"
+          ]
+        },
+        {
+          "path": "neural\\models\\jepa\\jepa_production_event_options_dense15_strict_uniform_candidate\\components\\spxw_d50_forcedmax3_complete_through202605\\deploy_model\\event_option_gate_direction_model.json",
+          "feature_count": 162,
+          "leaky_feature_count": 0,
+          "leaky_features": [],
+          "train_months_last": "202511",
+          "select_months": [
+            "202512",
+            "202601",
+            "202602",
+            "202603",
+            "202604",
+            "202605"
+          ]
+        },
+        {
+          "path": "neural\\models\\jepa\\jepa_production_event_options_dense15_strict_uniform_candidate\\components\\spxw_strict_d25_win_complete_through202605\\deploy_model\\event_option_gate_direction_model.json",
+          "feature_count": 162,
+          "leaky_feature_count": 0,
+          "leaky_features": [],
+          "train_months_last": "202511",
+          "select_months": [
+            "202512",
+            "202601",
+            "202602",
+            "202603",
+            "202604",
+            "202605"
+          ]
+        },
+        {
+          "path": "neural\\models\\jepa\\jepa_production_event_options_dense15_strict_uniform_candidate\\components\\spy_d50_forcedmax3_complete_through202605\\deploy_model\\event_option_gate_direction_model.json",
+          "feature_count": 162,
+          "leaky_feature_count": 0,
+          "leaky_features": [],
+          "train_months_last": "202511",
+          "select_months": [
+            "202512",
+            "202601",
+            "202602",
+            "202603",
+            "202604",
+            "202605"
+          ]
+        },
+        {
+          "path": "neural\\models\\jepa\\jepa_production_event_options_dense15_strict_uniform_candidate\\components\\spy_strict_d25_win_complete_through202605\\deploy_model\\event_option_gate_direction_model.json",
+          "feature_count": 162,
+          "leaky_feature_count": 0,
+          "leaky_features": [],
+          "train_months_last": "202511",
+          "select_months": [
+            "202512",
+            "202601",
+            "202602",
+            "202603",
+            "202604",
+            "202605"
+          ]
+        }
+      ],
+      "issues": []
+    },
+    "dataset_outcome_columns": {
+      "available": true,
+      "path": "research_papers\\JEPA\\results\\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_2022_2026_v1_physics\\event_option_dataset.parquet",
+      "column_count": 358,
+      "outcome_columns": [
+        "future_close_ret_bps",
+        "future_max_up_bps",
+        "future_max_down_bps",
+        "spot_long_win",
+        "spot_short_win",
+        "spot_long_exit_minutes",
+        "spot_short_exit_minutes",
+        "spot_best_side",
+        "call_d15_opt_win",
+        "call_d15_opt_status",
+        "call_d15_opt_exit_ret",
+        "call_d15_opt_exit_minutes",
+        "call_d15_opt_max_ret",
+        "call_d15_opt_min_ret",
+        "put_d15_opt_win",
+        "put_d15_opt_status",
+        "put_d15_opt_exit_ret",
+        "put_d15_opt_exit_minutes",
+        "put_d15_opt_max_ret",
+        "put_d15_opt_min_ret",
+        "call_d25_opt_win",
+        "call_d25_opt_status",
+        "call_d25_opt_exit_ret",
+        "call_d25_opt_exit_minutes",
+        "call_d25_opt_max_ret",
+        "call_d25_opt_min_ret",
+        "put_d25_opt_win",
+        "put_d25_opt_status",
+        "put_d25_opt_exit_ret",
+        "put_d25_opt_exit_minutes",
+        "put_d25_opt_max_ret",
+        "put_d25_opt_min_ret",
+        "call_d35_opt_win",
+        "call_d35_opt_status",
+        "call_d35_opt_exit_ret",
+        "call_d35_opt_exit_minutes",
+        "call_d35_opt_max_ret",
+        "call_d35_opt_min_ret",
+        "put_d35_opt_win",
+        "put_d35_opt_status",
+        "put_d35_opt_exit_ret",
+        "put_d35_opt_exit_minutes",
+        "put_d35_opt_max_ret",
+        "put_d35_opt_min_ret",
+        "call_d50_opt_win",
+        "call_d50_opt_status",
+        "call_d50_opt_exit_ret",
+        "call_d50_opt_exit_minutes",
+        "call_d50_opt_max_ret",
+        "call_d50_opt_min_ret",
+        "put_d50_opt_win",
+        "put_d50_opt_status",
+        "put_d50_opt_exit_ret",
+        "put_d50_opt_exit_minutes",
+        "put_d50_opt_max_ret",
+        "put_d50_opt_min_ret",
+        "call_d65_opt_win",
+        "call_d65_opt_status",
+        "call_d65_opt_exit_ret",
+        "call_d65_opt_exit_minutes",
+        "call_d65_opt_max_ret",
+        "call_d65_opt_min_ret",
+        "put_d65_opt_win",
+        "put_d65_opt_status",
+        "put_d65_opt_exit_ret",
+        "put_d65_opt_exit_minutes",
+        "put_d65_opt_max_ret",
+        "put_d65_opt_min_ret",
+        "call_d80_opt_win",
+        "call_d80_opt_status",
+        "call_d80_opt_exit_ret",
+        "call_d80_opt_exit_minutes",
+        "call_d80_opt_max_ret",
+        "call_d80_opt_min_ret",
+        "put_d80_opt_win",
+        "put_d80_opt_status",
+        "put_d80_opt_exit_ret",
+        "put_d80_opt_exit_minutes",
+        "put_d80_opt_max_ret",
+        "put_d80_opt_min_ret"
+      ],
+      "note": "Outcome/future columns may exist in the label dataset; this is acceptable only if excluded from feature_cols.",
+      "issues": []
+    },
+    "strict_research_selection": {
+      "path": "research_papers\\JEPA\\results\\_diagnostics\\dense_candidate_frozen2025_2026_daily_guard_l4p1_vp0\\research_selection_audit_strict\\research_selection_audit.json",
+      "passed": true,
+      "issues": [],
+      "warnings": []
+    }
+  },
+  "issues": []
+}

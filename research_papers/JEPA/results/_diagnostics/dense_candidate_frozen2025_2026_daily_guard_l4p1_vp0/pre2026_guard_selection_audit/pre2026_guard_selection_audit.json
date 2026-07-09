@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "audit": "dense_candidate_pre2026_guard_selection",
+  "passed": true,
+  "guard_dir": "research_papers\\JEPA\\results\\_diagnostics\\dense_candidate_frozen2025_2026_daily_guard_l4p1_vp0",
+  "source_result_dir": "research_papers\\JEPA\\results\\_diagnostics\\dense_candidate_frozen_through_202512_eval_202601_202605_v1",
+  "recent_scan": "research_papers\\JEPA\\results\\_diagnostics\\dense_candidate_pre2026_recent_daily_guard_selection_scan_v1.csv",
+  "long_scan": "research_papers\\JEPA\\results\\_diagnostics\\dense_candidate_pre2026_daily_guard_selection_scan_v1.csv",
+  "raw_complete_verification": "research_papers\\JEPA\\results\\_diagnostics\\dense_candidate_frozen2025_2026_daily_guard_l4p1_vp0\\verification_raw_complete_202601_202604.json",
+  "checks": {
+    "recent_scan_exists": true,
+    "long_scan_exists": true,
+    "rank_fields_are_pre2026_only": true,
+    "recent_valid_pass_rows": 17,
+    "long_valid_pass_rows": 17,
+    "selected_config_matches_rank1": true,
+    "artifact_config_matches_selected": true,
+    "raw_complete_holdout_passed": true,
+    "raw_complete_integrity_passed": true,
+    "raw_complete_backfill_passed": true
+  },
+  "selection_windows": {
+    "recent_select": "202407..202412",
+    "recent_validation": "202501..202512",
+    "recent_forward_columns": "diagnostic only, not used by rank_key",
+    "long_select": "202301..202406",
+    "long_validation": "202407..202512"
+  },
+  "rank_fields": [
+    "valid_pass",
+    "pretest_health_flag_count",
+    "pretest_max_negative_day_streak",
+    "valid_pf_min",
+    "valid_wr_min",
+    "valid_min_month_min",
+    "valid_overall_pnl_return",
+    "skipped_days",
+    "trigger_losses",
+    "pause_days",
+    "loss_threshold",
+    "rolling_sum_window",
+    "rolling_sum_threshold",
+    "volume_protect_monthly_target"
+  ],
+  "selected_row": {
+    "rank": 1,
+    "trigger_losses": 4,
+    "pause_days": 1,
+    "loss_threshold": 0.0,
+    "rolling_sum_window": 0,
+    "rolling_sum_threshold": 0.0,
+    "volume_protect_monthly_target": 0,
+    "valid_pass": true,
+    "valid_pf_min": 1.851851851851853,
+    "valid_wr_min": 0.5263157894736842,
+    "valid_min_month_min": 18,
+    "pretest_health_flag_count": 3,
+    "pretest_max_negative_day_streak": 4,
+    "forward_pass_diagnostic_only": true
+  },
+  "raw_complete_holdout": {
+    "passed": true,
+    "months": [
+      "202601",
+      "202602",
+      "202603",
+      "202604"
+    ],
+    "tickers": {
+      "QQQ": {
+        "passed": true,
+        "trades": 84,
+        "win_rate": 0.5357142857142857,
+        "profit_factor": 1.9230769230769222,
+        "min_month_trades": 20,
+        "pnl_return": 10.799999999999999
+      },
+      "SPXW": {
+        "passed": true,
+        "trades": 85,
+        "win_rate": 0.611764705882353,
+        "profit_factor": 2.6262626262626263,
+        "min_month_trades": 20,
+        "pnl_return": 16.099999999999998
+      },
+      "SPY": {
+        "passed": true,
+        "trades": 83,
+        "win_rate": 0.5783132530120482,
+        "profit_factor": 2.285714285714285,
+        "min_month_trades": 20,
+        "pnl_return": 13.5
+      }
+    },
+    "integrity": {
+      "passed": true,
+      "folds_checked": 24,
+      "issues": []
+    },
+    "backfill": {
+      "passed": true,
+      "rows_checked": 22,
+      "issues": []
+    }
+  },
+  "top_pre2026_ranked_rows": [
+    {
+      "rank": 1,
+      "trigger_losses": 4,
+      "pause_days": 1,
+      "loss_threshold": 0.0,
+      "rolling_sum_window": 0,
+      "rolling_sum_threshold": 0.0,
+      "volume_protect_monthly_target": 0,
+      "valid_pf_min": 1.851851851851853,
+      "valid_wr_min": 0.5263157894736842,
+      "valid_min_month_min": 18,
+      "pretest_health_flag_count": 3,
+      "pretest_max_negative_day_streak": 4,
+      "forward_pass_diagnostic_only": true
+    },
+    {
+      "rank": 2,
+      "trigger_losses": 5,
+      "pause_days": 1,
+      "loss_threshold": 0.0,
+      "rolling_sum_window": 0,
+      "rolling_sum_threshold": 0.0,
+      "volume_protect_monthly_target": 0,
+      "valid_pf_min": 1.851851851851853,
+      "valid_wr_min": 0.5263157894736842,
+      "valid_min_month_min": 18,
+      "pretest_health_flag_count": 6,
+      "pretest_max_negative_day_streak": 5,
+      "forward_pass_diagnostic_only": true
+    },
+    {
+      "rank": 3,
+      "trigger_losses": 4,
+      "pause_days": 1,
+      "loss_threshold": 0.0,
+      "rolling_sum_window": 0,
+      "rolling_sum_threshold": 0.0,
+      "volume_protect_monthly_target": 18,
+      "valid_pf_min": 1.8372703412073503,
+      "valid_wr_min": 0.5243445692883895,
+      "valid_min_month_min": 18,
+      "pretest_health_flag_count": 6,
+      "pretest_max_negative_day_streak": 7,
+      "forward_pass_diagnostic_only": true
+    },
+    {
+      "rank": 4,
+      "trigger_losses": 5,
+      "pause_days": 1,
+      "loss_threshold": 0.0,
+      "rolling_sum_window": 0,
+      "rolling_sum_threshold": 0.0,
+      "volume_protect_monthly_target": 18,
+      "valid_pf_min": 1.8372703412073503,
+      "valid_wr_min": 0.5243445692883895,
+      "valid_min_month_min": 18,
+      "pretest_health_flag_count": 6,
+      "pretest_max_negative_day_streak": 7,
+      "forward_pass_diagnostic_only": true
+    },
+    {
+      "rank": 5,
+      "trigger_losses": 0,
+      "pause_days": 0,
+      "loss_threshold": 0.0,
+      "rolling_sum_window": 0,
+      "rolling_sum_threshold": 0.0,
+      "volume_protect_monthly_target": 0,
+      "valid_pf_min": 1.822916666666667,
+      "valid_wr_min": 0.5223880597014925,
+      "valid_min_month_min": 19,
+      "pretest_health_flag_count": 6,
+      "pretest_max_negative_day_streak": 7,
+      "forward_pass_diagnostic_only": true
+    },
+    {
+      "rank": 6,
+      "trigger_losses": 0,
+      "pause_days": 0,
+      "loss_threshold": 0.0,
+      "rolling_sum_window": 0,
+      "rolling_sum_threshold": 0.0,
+      "volume_protect_monthly_target": 0,
+      "valid_pf_min": 1.822916666666667,
+      "valid_wr_min": 0.5223880597014925,
+      "valid_min_month_min": 19,
+      "pretest_health_flag_count": 6,
+      "pretest_max_negative_day_streak": 7,
+      "forward_pass_diagnostic_only": true
+    },
+    {
+      "rank": 7,
+      "trigger_losses": 0,
+      "pause_days": 0,
+      "loss_threshold": 0.0,
+      "rolling_sum_window": 0,
+      "rolling_sum_threshold": 0.0,
+      "volume_protect_monthly_target": 0,
+      "valid_pf_min": 1.822916666666667,
+      "valid_wr_min": 0.5223880597014925,
+      "valid_min_month_min": 19,
+      "pretest_health_flag_count": 6,
+      "pretest_max_negative_day_streak": 7,
+      "forward_pass_diagnostic_only": true
+    },
+    {
+      "rank": 8,
+      "trigger_losses": 0,
+      "pause_days": 0,
+      "loss_threshold": 0.0,
+      "rolling_sum_window": 0,
+      "rolling_sum_threshold": 0.0,
+      "volume_protect_monthly_target": 18,
+      "valid_pf_min": 1.822916666666667,
+      "valid_wr_min": 0.5223880597014925,
+      "valid_min_month_min": 19,
+      "pretest_health_flag_count": 6,
+      "pretest_max_negative_day_streak": 7,
+      "forward_pass_diagnostic_only": true
+    }
+  ],
+  "issues": []
+}

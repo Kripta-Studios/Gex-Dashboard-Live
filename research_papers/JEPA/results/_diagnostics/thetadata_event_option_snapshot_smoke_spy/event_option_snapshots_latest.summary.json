@@ -1,0 +1,12 @@
+{
+  "rows": 1,
+  "day_dir": "research_papers\\JEPA\\results\\_diagnostics\\thetadata_event_option_snapshot_smoke_spy",
+  "tickers": [
+    "SPY"
+  ],
+  "expiry_modes": {
+    "zero_dte": 1
+  },
+  "missing": [],
+  "columns": 248
+}

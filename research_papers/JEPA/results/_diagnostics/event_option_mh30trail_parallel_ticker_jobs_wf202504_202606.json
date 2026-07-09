@@ -1,0 +1,66 @@
+[
+  {
+    "delta": 35,
+    "ticker": "QQQ",
+    "pid": 34088,
+    "out": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d35_return_wf202504_202606_v1_QQQ",
+    "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d35_return_wf202504_202606_v1_QQQ\\parallel_stdout.log",
+    "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d35_return_wf202504_202606_v1_QQQ\\parallel_stderr.log"
+  },
+  {
+    "delta": 35,
+    "ticker": "SPY",
+    "pid": 3788,
+    "out": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d35_return_wf202504_202606_v1_SPY",
+    "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d35_return_wf202504_202606_v1_SPY\\parallel_stdout.log",
+    "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d35_return_wf202504_202606_v1_SPY\\parallel_stderr.log"
+  },
+  {
+    "delta": 50,
+    "ticker": "QQQ",
+    "pid": 62296,
+    "out": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d50_return_wf202504_202606_v1_QQQ",
+    "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d50_return_wf202504_202606_v1_QQQ\\parallel_stdout.log",
+    "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d50_return_wf202504_202606_v1_QQQ\\parallel_stderr.log"
+  },
+  {
+    "delta": 50,
+    "ticker": "SPY",
+    "pid": 41516,
+    "out": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d50_return_wf202504_202606_v1_SPY",
+    "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d50_return_wf202504_202606_v1_SPY\\parallel_stdout.log",
+    "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d50_return_wf202504_202606_v1_SPY\\parallel_stderr.log"
+  },
+  {
+    "delta": 65,
+    "ticker": "QQQ",
+    "pid": 39360,
+    "out": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d65_return_wf202504_202606_v1_QQQ",
+    "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d65_return_wf202504_202606_v1_QQQ\\parallel_stdout.log",
+    "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d65_return_wf202504_202606_v1_QQQ\\parallel_stderr.log"
+  },
+  {
+    "delta": 65,
+    "ticker": "SPY",
+    "pid": 34680,
+    "out": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d65_return_wf202504_202606_v1_SPY",
+    "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d65_return_wf202504_202606_v1_SPY\\parallel_stdout.log",
+    "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d65_return_wf202504_202606_v1_SPY\\parallel_stderr.log"
+  },
+  {
+    "delta": 80,
+    "ticker": "QQQ",
+    "pid": 40672,
+    "out": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d80_return_wf202504_202606_v1_QQQ",
+    "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d80_return_wf202504_202606_v1_QQQ\\parallel_stdout.log",
+    "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d80_return_wf202504_202606_v1_QQQ\\parallel_stderr.log"
+  },
+  {
+    "delta": 80,
+    "ticker": "SPY",
+    "pid": 6692,
+    "out": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d80_return_wf202504_202606_v1_SPY",
+    "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d80_return_wf202504_202606_v1_SPY\\parallel_stdout.log",
+    "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d80_return_wf202504_202606_v1_SPY\\parallel_stderr.log"
+  }
+]

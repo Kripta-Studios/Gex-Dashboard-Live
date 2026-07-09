@@ -1,0 +1,30 @@
+[
+  {
+    "delta": 35,
+    "pid": 44576,
+    "out": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d35_return_wf202504_202606_v1",
+    "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d35_return_wf202504_202606_v1\\parallel_stdout.log",
+    "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d35_return_wf202504_202606_v1\\parallel_stderr.log"
+  },
+  {
+    "delta": 50,
+    "pid": 16288,
+    "out": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d50_return_wf202504_202606_v1",
+    "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d50_return_wf202504_202606_v1\\parallel_stdout.log",
+    "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d50_return_wf202504_202606_v1\\parallel_stderr.log"
+  },
+  {
+    "delta": 65,
+    "pid": 62968,
+    "out": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d65_return_wf202504_202606_v1",
+    "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d65_return_wf202504_202606_v1\\parallel_stdout.log",
+    "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d65_return_wf202504_202606_v1\\parallel_stderr.log"
+  },
+  {
+    "delta": 80,
+    "pid": 41708,
+    "out": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d80_return_wf202504_202606_v1",
+    "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d80_return_wf202504_202606_v1\\parallel_stdout.log",
+    "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d80_return_wf202504_202606_v1\\parallel_stderr.log"
+  }
+]

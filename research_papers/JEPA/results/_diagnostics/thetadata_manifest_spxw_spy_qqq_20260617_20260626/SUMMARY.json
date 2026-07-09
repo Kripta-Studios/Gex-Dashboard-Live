@@ -1,0 +1,51 @@
+{
+  "rows": 38,
+  "tickers": [
+    "QQQ",
+    "SPXW",
+    "SPY"
+  ],
+  "date_min": "20260617",
+  "date_max": "20260626",
+  "by_expiry_mode": {
+    "front_weekly": 16,
+    "longer_dated": 3,
+    "zero_dte": 19
+  },
+  "complete_rows": 38,
+  "by_ticker": {
+    "QQQ": {
+      "rows": 12,
+      "complete_rows": 12,
+      "date_min": "20260618",
+      "date_max": "20260626",
+      "expiry_modes": {
+        "front_weekly": 5,
+        "longer_dated": 1,
+        "zero_dte": 6
+      }
+    },
+    "SPXW": {
+      "rows": 14,
+      "complete_rows": 14,
+      "date_min": "20260617",
+      "date_max": "20260626",
+      "expiry_modes": {
+        "front_weekly": 6,
+        "longer_dated": 1,
+        "zero_dte": 7
+      }
+    },
+    "SPY": {
+      "rows": 12,
+      "complete_rows": 12,
+      "date_min": "20260618",
+      "date_max": "20260626",
+      "expiry_modes": {
+        "front_weekly": 5,
+        "longer_dated": 1,
+        "zero_dte": 6
+      }
+    }
+  }
+}

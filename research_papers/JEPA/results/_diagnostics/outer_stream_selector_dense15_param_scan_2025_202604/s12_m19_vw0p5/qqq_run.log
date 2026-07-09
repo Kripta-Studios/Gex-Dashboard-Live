@@ -1,0 +1,160 @@
+# Event Stream Selector
+
+This result selects one precomputed causal OOS stream per evaluated month using only prior OOS months.
+
+## Overall
+
+```json
+{
+  "trades": 651,
+  "win_rate": 0.45622119815668205,
+  "profit_factor": 1.3993299133753354,
+  "pnl_return": 42.37777779880234,
+  "avg_return": 0.06509643287066412,
+  "max_drawdown": -5.499999999999995,
+  "call_rate": 0.3456221198156682,
+  "days_with_trades": 319,
+  "daily_win_rate": 0.6269592476489029,
+  "median_daily_return": 0.2,
+  "daily_max_drawdown": -4.7,
+  "top5_day_return": 6.5,
+  "top5_share_of_pnl": 0.15338227574980817,
+  "min_month_trades": 20,
+  "positive_month_rate": 0.875
+}
+```
+
+## By Ticker
+
+```json
+{
+  "QQQ": {
+    "trades": 651,
+    "win_rate": 0.45622119815668205,
+    "profit_factor": 1.3993299133753354,
+    "pnl_return": 42.37777779880234,
+    "avg_return": 0.06509643287066412,
+    "max_drawdown": -5.499999999999995,
+    "call_rate": 0.3456221198156682,
+    "days_with_trades": 319,
+    "daily_win_rate": 0.6269592476489029,
+    "median_daily_return": 0.2,
+    "daily_max_drawdown": -4.7,
+    "top5_day_return": 6.5,
+    "top5_share_of_pnl": 0.15338227574980817,
+    "min_month_trades": 20,
+    "positive_month_rate": 0.875
+  }
+}
+```
+
+- Risk capital: $5,000
+- Net PnL: $211,889
+
+## Folds
+
+```csv
+ticker,test_month,mode,selected_source,source_path,train_months,select_months,select_score,select_trades,select_win_rate,select_profit_factor,select_pnl_return,select_avg_return,select_max_drawdown,select_call_rate,select_days_with_trades,select_daily_win_rate,select_median_daily_return,select_daily_max_drawdown,select_top5_day_return,select_top5_share_of_pnl,select_min_month_trades,select_positive_month_rate,test_trades,test_win_rate,test_profit_factor,test_pnl_return,test_avg_return,test_max_drawdown,test_call_rate,test_days_with_trades,test_daily_win_rate,test_median_daily_return,test_daily_max_drawdown,test_top5_day_return,test_top5_share_of_pnl,test_min_month_trades,test_positive_month_rate
+
+QQQ,202501,SELECTED,event_option_gate_dense15_zero_dte_return_forcedmax3_d25_physctx_2023__event_option_gate,research_papers\JEPA\results\event_option_gate_dense15_zero_dte_return_forcedmax3_d25_physctx_2023_2026_qqq_v1\event_option_gate_trades.csv,"202301,202302,202303,202304,202305,202306,202307,202308,202309,202310,202311,202312","202401,202402,202403,202404,202405,202406,202407,202408,202409,202410,202411,202412",-1999967.319245676,756,0.41798941798941797,1.198206166639384,26.067890013360337,0.034481335996508385,-7.006793480325837,0.3584656084656085,252,0.38492063492063494,-0.09999999999999998,-6.80679348032583,7.5,0.28771028250296027,57,0.75,60,0.31666666666666665,0.7723577235772358,-2.8,-0.04666666666666666,-4.699999999999999,0.5166666666666667,20,0.3,-0.09999999999999998,-3.7,3.5,-1.25,60,0.0
+
+QQQ,202502,SELECTED,event_option_gate_dense15_zero_dte_return_forcedmax3_d25_physctx_2023__event_option_gate,research_papers\JEPA\results\event_option_gate_dense15_zero_dte_return_forcedmax3_d25_physctx_2023_2026_qqq_v1\event_option_gate_trades.csv,"202301,202302,202303,202304,202305,202306,202307,202308,202309,202310,202311,202312,202401","202402,202403,202404,202405,202406,202407,202408,202409,202410,202411,202412,202501",-1999979.0825929614,753,0.40106241699867196,1.116955935249271,15.76789001336034,0.020940092979230197,-7.006793480325828,0.3705179282868526,251,0.3745019920318725,-0.09999999999999998,-6.80679348032583,7.5,0.47565019756258775,57,0.6666666666666666,57,0.38596491228070173,1.0476190476190474,0.5000000000000002,0.008771929824561408,-2.4000000000000004,0.8070175438596491,19,0.42105263157894735,-0.09999999999999998,-2.0,3.5,6.999999999999997,57,1.0
+
+QQQ,202503,SELECTED,event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d_monthly_volume_backfill,research_papers\JEPA\results\event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d50max3_2023_2026_qqq_v1\monthly_volume_backfill_trades.csv,"202301,202302,202303,202304,202305,202306,202307,202308,202309,202310,202311,202312,202401,202402","202403,202404,202405,202406,202407,202408,202409,202410,202411,202412,202501,202502",-1999973.0927171097,455,0.45274725274725275,1.3679405764562032,27.485161061278365,0.06040694738742498,-3.8695652549493667,0.17142857142857143,238,0.5840336134453782,0.2,-3.469565254949366,7.5,0.27287451520763134,18,0.75,42,0.5238095238095238,1.8333333333333337,5.0,0.11904761904761904,-1.8,0.21428571428571427,21,0.6666666666666666,0.2,-1.5,5.0,1.0,42,1.0
+
+QQQ,202504,SELECTED,event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d_monthly_volume_backfill,research_papers\JEPA\results\event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d50max3_2023_2026_qqq_v1\monthly_volume_backfill_trades.csv,"202301,202302,202303,202304,202305,202306,202307,202308,202309,202310,202311,202312,202401,202402,202403","202404,202405,202406,202407,202408,202409,202410,202411,202412,202501,202502,202503",-1999971.6192188887,458,0.4672489082969432,1.4556656600577564,33.35472631622773,0.07282691335420903,-3.100000000000037,0.185589519650655,239,0.5899581589958159,0.2,-3.000000000000039,7.5,0.22485568998211514,18,0.8333333333333334,42,0.42857142857142855,1.2500000000000002,1.7999999999999996,0.04285714285714285,-2.9000000000000004,0.6190476190476191,21,0.6666666666666666,0.2,-2.8,4.2,2.333333333333334,42,1.0
+
+QQQ,202505,SELECTED,event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d_monthly_volume_backfill,research_papers\JEPA\results\event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d50max3_2023_2026_qqq_v1\monthly_volume_backfill_trades.csv,"202301,202302,202303,202304,202305,202306,202307,202308,202309,202310,202311,202312,202401,202402,202403,202404","202405,202406,202407,202408,202409,202410,202411,202412,202501,202502,202503,202504",-999971.6618270852,461,0.46637744034707157,1.4506060476453628,33.25472631622773,0.07213606576188228,-3.100000000000037,0.24078091106290672,239,0.5983263598326359,0.2,-3.000000000000039,7.5,0.22553185158345837,18,0.8333333333333334,42,0.38095238095238093,1.0256410256410258,0.20000000000000023,0.0047619047619047675,-2.3,0.2857142857142857,21,0.6666666666666666,0.2,-2.2,2.6000000000000005,12.999999999999988,42,1.0
+
+QQQ,202506,SELECTED,event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d_monthly_volume_backfill,research_papers\JEPA\results\event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d50max3_2023_2026_qqq_v1\monthly_volume_backfill_trades.csv,"202301,202302,202303,202304,202305,202306,202307,202308,202309,202310,202311,202312,202401,202402,202403,202404,202405","202406,202407,202408,202409,202410,202411,202412,202501,202502,202503,202504,202505",-999971.1591784586,468,0.46794871794871795,1.4599026280619511,34.35472631622773,0.07340753486373447,-3.100000000000037,0.2606837606837607,241,0.6141078838174274,0.2,-3.000000000000039,7.5,0.21831057336810494,18,0.9166666666666666,24,0.5416666666666666,1.9696969696969702,3.2,0.13333333333333333,-1.1999999999999993,0.3333333333333333,16,0.75,0.2,-0.9999999999999996,3.0,0.9375,24,1.0
+
+QQQ,202507,SELECTED,event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d_monthly_volume_backfill,research_papers\JEPA\results\event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d50max3_2023_2026_qqq_v1\monthly_volume_backfill_trades.csv,"202301,202302,202303,202304,202305,202306,202307,202308,202309,202310,202311,202312,202401,202402,202403,202404,202405,202406","202407,202408,202409,202410,202411,202412,202501,202502,202503,202504,202505,202506",-999970.8618195573,474,0.4704641350210971,1.4807436918990706,36.199999999999996,0.07637130801687762,-3.100000000000037,0.25316455696202533,240,0.6333333333333333,0.2,-3.000000000000039,7.5,0.20718232044198898,18,0.9166666666666666,44,0.45454545454545453,1.4040561663912179,2.8777777988023443,0.06540404088187146,-1.3000000000000003,0.20454545454545456,22,0.6818181818181818,0.2,-0.9999999999999999,5.0,1.7374517247582038,44,1.0
+
+QQQ,202508,SELECTED,event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d_monthly_volume_backfill,research_papers\JEPA\results\event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d50max3_2023_2026_qqq_v1\monthly_volume_backfill_trades.csv,"202301,202302,202303,202304,202305,202306,202307,202308,202309,202310,202311,202312,202401,202402,202403,202404,202405,202406,202407","202408,202409,202410,202411,202412,202501,202502,202503,202504,202505,202506,202507",-999971.34702536,460,0.4652173913043478,1.4513941224937978,33.27777779880234,0.0723429952147877,-3.100000000000037,0.28043478260869564,241,0.6473029045643154,0.2,-3.000000000000039,6.5,0.19532554244754688,18,0.9166666666666666,42,0.5714285714285714,2.2222222222222223,6.6,0.15714285714285714,-1.1999999999999993,0.16666666666666666,21,0.8095238095238095,0.2,-0.6000000000000001,5.0,0.7575757575757576,42,1.0
+
+QQQ,202509,SELECTED,event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d_monthly_volume_backfill,research_papers\JEPA\results\event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d50max3_2023_2026_qqq_v1\monthly_volume_backfill_trades.csv,"202301,202302,202303,202304,202305,202306,202307,202308,202309,202310,202311,202312,202401,202402,202403,202404,202405,202406,202407,202408","202409,202410,202411,202412,202501,202502,202503,202504,202505,202506,202507,202508",-999971.3942819262,475,0.4631578947368421,1.4393719108350678,33.577777798802344,0.07069005852379441,-3.100000000000037,0.27789473684210525,242,0.6528925619834711,0.2,-3.000000000000007,6.5,0.1935804102030791,18,0.9166666666666666,39,0.38461538461538464,1.0416666666666667,0.2999999999999999,0.007692307692307689,-4.0,0.28205128205128205,20,0.6,0.2,-3.7,3.7,12.33333333333334,39,1.0
+
+QQQ,202510,SELECTED,event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d_monthly_volume_backfill,research_papers\JEPA\results\event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d50max3_2023_2026_qqq_v1\monthly_volume_backfill_trades.csv,"202301,202302,202303,202304,202305,202306,202307,202308,202309,202310,202311,202312,202401,202402,202403,202404,202405,202406,202407,202408,202409","202410,202411,202412,202501,202502,202503,202504,202505,202506,202507,202508,202509",-999972.0719265406,454,0.45594713656387664,1.3982287605292327,29.477777798802343,0.06492902598855142,-4.000000000000011,0.24008810572687225,242,0.6652892561983471,0.2,-3.70000000000001,5.0,0.16961929878591953,18,0.9166666666666666,46,0.5434782608695652,1.9841269841269844,6.2,0.13478260869565217,-1.299999999999999,0.34782608695652173,23,0.8260869565217391,0.2,-1.1999999999999993,5.0,0.8064516129032258,46,1.0
+
+QQQ,202511,SELECTED,event_option_gate_dense15_zero_dte_win_d25_strict_backfill_d50max3_cau_combined,research_papers\JEPA\results\event_option_gate_dense15_zero_dte_win_d25_strict_backfill_d50max3_causal_2023_2026_v1\combined_trades.csv,"202301,202302,202303,202304,202305,202306,202307,202308,202309,202310,202311,202312,202401,202402,202403,202404,202405,202406,202407,202408,202409,202410","202411,202412,202501,202502,202503,202504,202505,202506,202507,202508,202509,202510",29.845285285285282,288,0.4861111111111111,1.5765765765765767,25.6,0.08888888888888889,-3.4000000000000004,0.2847222222222222,235,0.5659574468085107,0.2,-3.4,5.0,0.1953125,19,0.8333333333333334,20,0.6,2.5,3.6000000000000005,0.18000000000000002,-0.8999999999999999,0.1,18,0.6666666666666666,0.5,-0.8999999999999995,2.5,0.6944444444444443,20,1.0
+
+QQQ,202512,SELECTED,event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d_monthly_volume_backfill,research_papers\JEPA\results\event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d50max3_2023_2026_qqq_v1\monthly_volume_backfill_trades.csv,"202301,202302,202303,202304,202305,202306,202307,202308,202309,202310,202311,202312,202401,202402,202403,202404,202405,202406,202407,202408,202409,202410,202411","202412,202501,202502,202503,202504,202505,202506,202507,202508,202509,202510,202511",32.91559271980503,468,0.46794871794871795,1.467391304761259,34.87777779880234,0.07452516623675715,-4.000000000000011,0.25,241,0.6846473029045643,0.2,-3.70000000000001,5.0,0.143357757161114,24,0.9166666666666666,66,0.5151515151515151,1.7708333333333335,7.4,0.11212121212121212,-2.3000000000000007,0.19696969696969696,22,0.5,0.3,-2.0,5.9,0.7972972972972973,66,1.0
+
+QQQ,202601,SELECTED,event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d_monthly_volume_backfill,research_papers\JEPA\results\event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d50max3_2023_2026_qqq_v1\monthly_volume_backfill_trades.csv,"202301,202302,202303,202304,202305,202306,202307,202308,202309,202310,202311,202312,202401,202402,202403,202404,202405,202406,202407,202408,202409,202410,202411,202412","202501,202502,202503,202504,202505,202506,202507,202508,202509,202510,202511,202512",33.89077009447247,496,0.4778225806451613,1.5266246783407813,40.87777779880234,0.08241487459435956,-4.000000000000011,0.25806451612903225,243,0.6748971193415638,0.2,-3.70000000000001,6.5,0.15901060062493025,24,0.9166666666666666,40,0.35,0.8974358974358976,-0.7999999999999997,-0.019999999999999993,-3.6999999999999997,0.2,20,0.5,0.05000000000000002,-3.7,3.4000000000000004,-4.250000000000002,40,0.0
+
+QQQ,202602,SELECTED,event_option_gate_dense15_zero_dte_win_valthr_d25_physctx_2023_2026_qq_event_option_gate,research_papers\JEPA\results\event_option_gate_dense15_zero_dte_win_valthr_d25_physctx_2023_2026_qqq_v1\event_option_gate_trades.csv,"202301,202302,202303,202304,202305,202306,202307,202308,202309,202310,202311,202312,202401,202402,202403,202404,202405,202406,202407,202408,202409,202410,202411,202412,202501","202502,202503,202504,202505,202506,202507,202508,202509,202510,202511,202512,202601",34.22833341880775,491,0.48268839103869654,1.5567070504956386,42.37777779880234,0.08630911975316159,-4.299999999999898,0.2729124236252546,241,0.6804979253112033,0.2,-3.999999999999986,6.5,0.15338227574980817,24,0.9166666666666666,38,0.39473684210526316,1.0869565217391306,0.5999999999999999,0.015789473684210523,-2.1,0.07894736842105263,19,0.631578947368421,0.2,-1.8000000000000003,3.4000000000000004,5.666666666666669,38,1.0
+
+QQQ,202603,SELECTED,event_option_gate_dense15_zero_dte_win_d25_strict_backfill_d50max3_cau_combined,research_papers\JEPA\results\event_option_gate_dense15_zero_dte_win_d25_strict_backfill_d50max3_causal_2023_2026_v1\combined_trades.csv,"202301,202302,202303,202304,202305,202306,202307,202308,202309,202310,202311,202312,202401,202402,202403,202404,202405,202406,202407,202408,202409,202410,202411,202412,202501,202502","202503,202504,202505,202506,202507,202508,202509,202510,202511,202512,202601,202602",34.23955826794537,248,0.5524193548387096,2.057057057057058,35.199999999999996,0.14193548387096772,-2.0999999999999996,0.3185483870967742,233,0.5879828326180258,0.5,-2.0999999999999996,2.5,0.07102272727272728,19,1.0,29,0.5172413793103449,1.785714285714286,3.3000000000000003,0.11379310344827587,-1.0000000000000002,0.6206896551724138,19,0.631578947368421,0.2,-0.9000000000000002,4.0,1.212121212121212,29,1.0
+
+QQQ,202604,SELECTED,event_option_gate_dense15_zero_dte_win_d25_strict_backfill_d50max3_cau_combined,research_papers\JEPA\results\event_option_gate_dense15_zero_dte_win_d25_strict_backfill_d50max3_causal_2023_2026_v1\combined_trades.csv,"202301,202302,202303,202304,202305,202306,202307,202308,202309,202310,202311,202312,202401,202402,202403,202404,202405,202406,202407,202408,202409,202410,202411,202412,202501,202502,202503","202504,202505,202506,202507,202508,202509,202510,202511,202512,202601,202602,202603",34.2460597826087,256,0.55078125,2.043478260869566,36.0,0.140625,-2.1,0.35546875,231,0.5974025974025974,0.5,-2.1,4.0,0.1111111111111111,19,1.0,20,0.65,3.095238095238095,4.4,0.22000000000000003,-0.6000000000000001,0.3,17,0.7058823529411765,0.5,-0.6000000000000001,2.7,0.6136363636363636,20,1.0
+
+
+```
+
+## Config
+
+```json
+{
+  "source": [
+    "event_option_gate_dense15_zero_dte_return_forcedmax3_d25_physctx_2023__event_option_gate=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_return_forcedmax3_d25_physctx_2023_2026_qqq_v1\\event_option_gate_trades.csv",
+    "event_option_gate_dense15_zero_dte_return_forcedmax3_d35_physctx_2023__event_option_gate=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_return_forcedmax3_d35_physctx_2023_2026_qqq_v1\\event_option_gate_trades.csv",
+    "event_option_gate_dense15_zero_dte_return_forcedmax3_d50_physctx_2023__event_option_gate=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_return_forcedmax3_d50_physctx_2023_2026_qqq_v1\\event_option_gate_trades.csv",
+    "event_option_gate_dense15_zero_dte_return_forcedmax3_d50_physctx_2023__event_option_gate=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_return_forcedmax3_d50_physctx_2023_2026_spxw_v1\\event_option_gate_trades.csv",
+    "event_option_gate_dense15_zero_dte_return_forcedmax3_d50_physctx_2023__event_option_gate=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_return_forcedmax3_d50_physctx_2023_2026_spy_v1\\event_option_gate_trades.csv",
+    "event_option_gate_dense15_zero_dte_return_valthr_d25_monthly_backfill1_monthly_volume_backfill=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_return_valthr_d25_monthly_backfill18_max3_2023_2026_qqq_v1\\monthly_volume_backfill_trades.csv",
+    "event_option_gate_dense15_zero_dte_return_valthr_d25_physctx_2023_2026_event_option_gate=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_return_valthr_d25_physctx_2023_2026_qqq_v1\\event_option_gate_trades.csv",
+    "event_option_gate_dense15_zero_dte_return_valthr_d35_monthly_backfill1_monthly_volume_backfill=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_return_valthr_d35_monthly_backfill18_max3_2023_2026_qqq_v1\\monthly_volume_backfill_trades.csv",
+    "event_option_gate_dense15_zero_dte_return_valthr_d35_physctx_2023_2026_event_option_gate=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_return_valthr_d35_physctx_2023_2026_qqq_v1\\event_option_gate_trades.csv",
+    "event_option_gate_dense15_zero_dte_return_valthr_d50_monthly_backfill1_monthly_volume_backfill=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_return_valthr_d50_monthly_backfill18_max3_2023_2026_qqq_v1\\monthly_volume_backfill_trades.csv",
+    "event_option_gate_dense15_zero_dte_return_valthr_d50_monthly_backfill1_monthly_volume_backfill=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_return_valthr_d50_monthly_backfill18_max3_2023_2026_spxw_v1\\monthly_volume_backfill_trades.csv",
+    "event_option_gate_dense15_zero_dte_return_valthr_d50_monthly_backfill1_monthly_volume_backfill=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_return_valthr_d50_monthly_backfill18_max3_2023_2026_spy_v1\\monthly_volume_backfill_trades.csv",
+    "event_option_gate_dense15_zero_dte_return_valthr_d50_physctx_2023_2026_event_option_gate=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_return_valthr_d50_physctx_2023_2026_qqq_v1\\event_option_gate_trades.csv",
+    "event_option_gate_dense15_zero_dte_return_valthr_d50_physctx_2023_2026_event_option_gate=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_return_valthr_d50_physctx_2023_2026_spxw_v1\\event_option_gate_trades.csv",
+    "event_option_gate_dense15_zero_dte_return_valthr_d50_physctx_2023_2026_event_option_gate=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_return_valthr_d50_physctx_2023_2026_spy_v1\\event_option_gate_trades.csv",
+    "event_option_gate_dense15_zero_dte_win_d25_strict_backfill_d50max3_cau_combined=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_d25_strict_backfill_d50max3_causal_2023_2026_v1\\combined_trades.csv",
+    "event_option_gate_dense15_zero_dte_win_d25_strict_uniform_backfill_d50_combined=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_d25_strict_uniform_backfill_d50max3_causal_2023_2026_v1\\combined_trades.csv",
+    "event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d_monthly_volume_backfill=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d25max3_2023_2026_qqq_v1\\monthly_volume_backfill_trades.csv",
+    "event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d_monthly_volume_backfill=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d35max3_2023_2026_qqq_v1\\monthly_volume_backfill_trades.csv",
+    "event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d_monthly_volume_backfill=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d50max3_2023_2026_qqq_v1\\monthly_volume_backfill_trades.csv",
+    "event_option_gate_dense15_zero_dte_win_valthr_d25_physctx_2023_2026_qq_event_option_gate=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_d25_physctx_2023_2026_qqq_v1\\event_option_gate_trades.csv",
+    "event_option_gate_dense15_zero_dte_win_valthr_d25_physctx_2023_2026_sp_event_option_gate=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_d25_physctx_2023_2026_spxw_v1\\event_option_gate_trades.csv",
+    "event_option_gate_dense15_zero_dte_win_valthr_d25_physctx_2023_2026_sp_event_option_gate=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_d25_physctx_2023_2026_spy_v1\\event_option_gate_trades.csv",
+    "event_option_gate_dense15_zero_dte_win_valthr_strict_d25_monthly_backf_monthly_volume_backfill=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_strict_d25_monthly_backfill18_d50max3_2023_2026_qqq_v1\\monthly_volume_backfill_trades.csv",
+    "event_option_gate_dense15_zero_dte_win_valthr_strict_d25_monthly_backf_monthly_volume_backfill=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_strict_d25_monthly_backfill18_d50max3_2023_2026_spxw_v1\\monthly_volume_backfill_trades.csv",
+    "event_option_gate_dense15_zero_dte_win_valthr_strict_d25_monthly_backf_monthly_volume_backfill=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_strict_d25_monthly_backfill18_d50max3_2023_2026_spy_v1\\monthly_volume_backfill_trades.csv",
+    "event_option_gate_dense15_zero_dte_win_valthr_strict_d25_physctx_2023__event_option_gate=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_strict_d25_physctx_2023_2026_qqq_v1\\event_option_gate_trades.csv",
+    "event_option_gate_dense15_zero_dte_win_valthr_strict_d25_physctx_2023__event_option_gate=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_strict_d25_physctx_2023_2026_spxw_v1\\event_option_gate_trades.csv",
+    "event_option_gate_dense15_zero_dte_win_valthr_strict_d25_physctx_2023__event_option_gate=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_strict_d25_physctx_2023_2026_spy_v1\\event_option_gate_trades.csv",
+    "event_option_gate_dense15_zero_dte_win_valthr_wr45_d25_monthly_backfil_monthly_volume_backfill=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_wr45_d25_monthly_backfill18_d50max3_2023_2026_qqq_v1\\monthly_volume_backfill_trades.csv",
+    "event_option_gate_dense15_zero_dte_win_valthr_wr45_d25_monthly_backfil_monthly_volume_backfill=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_wr45_d25_monthly_backfill18_d50max3_2023_2026_spxw_v1\\monthly_volume_backfill_trades.csv",
+    "event_option_gate_dense15_zero_dte_win_valthr_wr45_d25_monthly_backfil_monthly_volume_backfill=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_wr45_d25_monthly_backfill18_d50max3_2023_2026_spy_v1\\monthly_volume_backfill_trades.csv",
+    "event_option_gate_dense15_zero_dte_win_valthr_wr45_d25_physctx_2023_20_event_option_gate=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_wr45_d25_physctx_2023_2026_qqq_v1\\event_option_gate_trades.csv",
+    "event_option_gate_dense15_zero_dte_win_valthr_wr45_d25_physctx_2023_20_event_option_gate=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_wr45_d25_physctx_2023_2026_spxw_v1\\event_option_gate_trades.csv",
+    "event_option_gate_dense15_zero_dte_win_valthr_wr45_d25_physctx_2023_20_event_option_gate=research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_wr45_d25_physctx_2023_2026_spy_v1\\event_option_gate_trades.csv"
+  ],
+  "output_dir": "research_papers\\JEPA\\results\\_diagnostics\\outer_stream_selector_dense15_param_scan_2025_202604\\s12_m19_vw0p5\\qqq",
+  "ticker": "QQQ",
+  "history_start_month": "202301",
+  "start_month": "202501",
+  "end_month": "202604",
+  "select_months": 12,
+  "frozen_select_start_month": "",
+  "frozen_select_end_month": "",
+  "risk_capital": 5000.0,
+  "min_select_trades": 216,
+  "min_select_month_trades": 19,
+  "min_select_win_rate": 0.45,
+  "min_select_pf": 1.3,
+  "require_select_positive_months": false,
+  "min_call_rate": 0.2,
+  "max_call_rate": 0.8,
+  "score_pf_weight": 3.0,
+  "score_pf_cap": 4.0,
+  "score_win_weight": 20.0,
+  "score_return_weight": 0.1,
+  "score_positive_month_weight": 4.0,
+  "score_volume_weight": 0.5,
+  "max_select_top5_share": Infinity,
+  "max_select_drawdown_to_pnl": Infinity
+}
+```

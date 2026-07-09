@@ -1,0 +1,91 @@
+[QUALITY_FILTER] 202601 fit/evaluate
+[QUALITY_FILTER] 202602 fit/evaluate
+[QUALITY_FILTER] 202603 fit/evaluate
+[QUALITY_FILTER] 202604 fit/evaluate
+[QUALITY_FILTER] 202605 fit/evaluate
+[QUALITY_FILTER] 202606 fit/evaluate
+{
+  "overall": {
+    "trades": 433,
+    "win_rate": 0.48729792147806006,
+    "profit_factor": 1.2510497639108407,
+    "pnl_return": 31.963518593240252,
+    "avg_return": 0.07381874963796825,
+    "max_drawdown": -11.85207894955564,
+    "call_rate": 0.42494226327944573,
+    "days_with_trades": 122,
+    "daily_win_rate": 0.45081967213114754,
+    "median_daily_return": -0.12178718837166116,
+    "daily_max_drawdown": -12.372838513687498,
+    "top5_day_return": 32.546072804745414,
+    "top5_share_of_pnl": 1.0182255970914404,
+    "min_month_trades": 53,
+    "positive_month_rate": 0.8333333333333334
+  },
+  "per_ticker": [
+    {
+      "ticker": "QQQ",
+      "trades": 118,
+      "win_rate": 0.4661016949152542,
+      "profit_factor": 0.9739119377019277,
+      "pnl_return": -0.9146413207024586,
+      "avg_return": -0.007751197633071683,
+      "max_drawdown": -8.354367169296498,
+      "call_rate": 0.5508474576271186,
+      "days_with_trades": 100,
+      "daily_win_rate": 0.46,
+      "median_daily_return": -0.22021438170939278,
+      "daily_max_drawdown": -8.354367169296498,
+      "top5_day_return": 8.791865368011518,
+      "top5_share_of_pnl": -9.612364069949551,
+      "min_month_trades": 11,
+      "positive_month_rate": 0.5
+    },
+    {
+      "ticker": "SPXW",
+      "trades": 181,
+      "win_rate": 0.47513812154696133,
+      "profit_factor": 1.4524999802527228,
+      "pnl_return": 25.463667883250622,
+      "avg_return": 0.14068324797376033,
+      "max_drawdown": -8.599949267203229,
+      "call_rate": 0.35359116022099446,
+      "days_with_trades": 112,
+      "daily_win_rate": 0.4732142857142857,
+      "median_daily_return": -0.10320362051156332,
+      "daily_max_drawdown": -7.842983412381806,
+      "top5_day_return": 23.322539488679496,
+      "top5_share_of_pnl": 0.9159143763424786,
+      "min_month_trades": 15,
+      "positive_month_rate": 0.6666666666666666
+    },
+    {
+      "ticker": "SPY",
+      "trades": 134,
+      "win_rate": 0.5223880597014925,
+      "profit_factor": 1.2060360236271945,
+      "pnl_return": 7.414492030692081,
+      "avg_return": 0.05533203007979165,
+      "max_drawdown": -4.692544418764577,
+      "call_rate": 0.41044776119402987,
+      "days_with_trades": 98,
+      "daily_win_rate": 0.5204081632653061,
+      "median_daily_return": 0.12372392610658714,
+      "daily_max_drawdown": -4.092544418764578,
+      "top5_day_return": 11.384409239907624,
+      "top5_share_of_pnl": 1.535426728194215,
+      "min_month_trades": 12,
+      "positive_month_rate": 0.6666666666666666
+    }
+  ],
+  "months": [
+    "202601",
+    "202602",
+    "202603",
+    "202604",
+    "202605",
+    "202606"
+  ],
+  "risk_capital": 5000.0,
+  "pnl": 159817.59296620125
+}

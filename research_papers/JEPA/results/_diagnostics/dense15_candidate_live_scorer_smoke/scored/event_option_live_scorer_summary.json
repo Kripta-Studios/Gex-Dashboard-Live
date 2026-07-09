@@ -1,0 +1,60 @@
+{
+  "snapshot_path": "research_papers\\JEPA\\results\\_diagnostics\\dense15_candidate_live_scorer_smoke\\event_option_snapshots_latest.parquet",
+  "snapshot_rows": 15,
+  "candidate_rows": 3,
+  "by_ticker": {
+    "QQQ": {
+      "candidate_rows": 1,
+      "sources": [
+        "forcedmax3_d50"
+      ],
+      "actions": [
+        "CALL"
+      ]
+    },
+    "SPXW": {
+      "candidate_rows": 1,
+      "sources": [
+        "forcedmax3_d50"
+      ],
+      "actions": [
+        "CALL"
+      ]
+    },
+    "SPY": {
+      "candidate_rows": 1,
+      "sources": [
+        "forcedmax3_d50"
+      ],
+      "actions": [
+        "CALL"
+      ]
+    }
+  },
+  "registry": {
+    "status": "forward_frozen_research_candidate_not_live_ready",
+    "deploy_month": "202607",
+    "completed_data_through_month": "202605",
+    "component_count": 9,
+    "components": [
+      "QQQ.d50_forcedmax3",
+      "QQQ.monthly_backfill18",
+      "QQQ.strict_d25_win",
+      "SPXW.d50_forcedmax3",
+      "SPXW.monthly_backfill18",
+      "SPXW.strict_d25_win",
+      "SPY.d50_forcedmax3",
+      "SPY.monthly_backfill18",
+      "SPY.strict_d25_win"
+    ],
+    "missing_for_full_live_equivalence": [
+      "Dense15 monthly-backfill candidates are now materialized by event_option_live_scorer.py, but exact stateful replay from live snapshots is still pending.",
+      "Monthly volume backfill needs live month-to-date selected-count, per-day max, cooldown and de-duplication state replayed end-to-end against bot execution state.",
+      "Strict curve-health report is not passed; policy remains research/forward-freeze candidate until forward evidence and runtime replay are complete."
+    ],
+    "invalidated_components": []
+  },
+  "issues": [],
+  "live_ready": false,
+  "live_ready_reason": "diagnostic scorer only; exact stateful bot replay equivalence is incomplete"
+}

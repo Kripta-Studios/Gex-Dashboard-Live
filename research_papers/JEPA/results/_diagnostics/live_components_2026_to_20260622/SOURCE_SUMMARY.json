@@ -1,0 +1,19 @@
+{
+  "date_min": "20260102",
+  "date_max": "20260622",
+  "snapshot_rows": 5402,
+  "stream_counts": {
+    "spx_base": 339,
+    "spx_wide": 394,
+    "spx_primary": 505,
+    "spx_fallback_circuit": 332,
+    "spx_selected": 185,
+    "spy_raw": 173,
+    "spy_selected": 173,
+    "qqq_meta_sel": 300,
+    "qqq_current_sel": 341,
+    "qqq_online_sel": 207,
+    "qqq_selected": 290
+  },
+  "combined_rows": 648
+}

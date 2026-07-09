@@ -1,0 +1,78 @@
+{
+  "overall": {
+    "trades": 39,
+    "win_rate": 0.4358974358974359,
+    "profit_factor": 1.15803007011003,
+    "pnl_return": 0.7222266577332435,
+    "avg_return": 0.018518632249570344,
+    "max_drawdown": -2.431971888787503,
+    "call_rate": 0.20512820512820512,
+    "days_with_trades": 39,
+    "daily_win_rate": 0.4358974358974359,
+    "median_daily_return": -0.0461996931471181,
+    "daily_max_drawdown": -2.431971888787503,
+    "top5_day_return": 2.5,
+    "top5_share_of_pnl": 3.461517202710873,
+    "min_month_trades": 19,
+    "positive_month_rate": 0.5
+  },
+  "net_pnl": 3611.133288666217,
+  "risk_capital": 5000.0,
+  "candidate_config_count": 3,
+  "args": {
+    "trade_source": [
+      "d80=research_papers\\JEPA\\results\\event_option_variant_streams_full20_2022_2026_v1\\d80",
+      "d65win=research_papers\\JEPA\\results\\event_option_variant_streams_full20_2022_2026_v1\\d65win",
+      "d80_zero=research_papers\\JEPA\\results\\event_option_variant_streams_full20_2022_2026_v1\\d80_zero"
+    ],
+    "output_dir": "research_papers\\JEPA\\results\\_diagnostics\\rolling_backfill_selector_smoke_spy_v1",
+    "ticker": "SPY",
+    "history_start_month": "202401",
+    "start_month": "202501",
+    "end_month": "202502",
+    "select_months": 6,
+    "max_source_group_size": 1,
+    "max_day_grid": [
+      1
+    ],
+    "cooldown_grid": [
+      0
+    ],
+    "min_score_grid": [
+      -999999.0
+    ],
+    "daily_order_grid": [
+      "score_desc"
+    ],
+    "fallback_name": [
+      "d80"
+    ],
+    "target_month_trades_grid": [
+      18
+    ],
+    "backfill_max_day_grid": [
+      1
+    ],
+    "backfill_cooldown_grid": [
+      0
+    ],
+    "workers": 4,
+    "chunksize": 8,
+    "min_select_trades": 30,
+    "min_select_month_trades": 1,
+    "min_select_win_rate": 0.35,
+    "min_select_profit_factor": 0.8,
+    "min_call_rate": 0.0,
+    "max_call_rate": 1.0,
+    "max_select_top5_share": Infinity,
+    "score_pf_weight": 3.0,
+    "score_pf_cap": 4.0,
+    "score_win_weight": 20.0,
+    "score_return_weight": 0.1,
+    "score_positive_month_weight": 4.0,
+    "score_volume_weight": 0.1,
+    "score_daily_dd_penalty": 0.05,
+    "score_top5_penalty": 0.25,
+    "risk_capital": 5000.0
+  }
+}

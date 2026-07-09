@@ -1,0 +1,175 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-06-30T18:20:00Z",
+  "frozen_before_month": "202501",
+  "source_result_dir": "research_papers/JEPA/results/_diagnostics/frozen_source_selector_dense15_pre2025_static_202501_202604_v1/combined",
+  "selection_method": "reconstructed_static_source_selector_pre2025",
+  "selection_rule": {
+    "script": "neural/jepa/apply_event_stream_selector.py",
+    "mode": "frozen_select",
+    "history_start_month": "202301",
+    "frozen_select_start_month": "202301",
+    "frozen_select_end_month": "202412",
+    "excluded_select_months": [
+      "202403"
+    ],
+    "min_select_trades": 414,
+    "min_select_month_trades": 18,
+    "min_select_win_rate": 0.45,
+    "min_select_profit_factor": 1.3,
+    "score_pf_weight": 3.0,
+    "score_win_weight": 20.0,
+    "score_return_weight": 0.1,
+    "score_positive_month_weight": 4.0,
+    "score_volume_weight": 0.1
+  },
+  "source_universe": "research_papers/JEPA/results/event_option_gate_dense15_zero_dte*2023_2026*",
+  "source_universe_caveat": "This manifest is a reproducibility record created after the historical test window. It proves the artifact's selection evidence months are pre-2025 and auditable, but it is not timestamp proof that this source universe was frozen before 2025.",
+  "selection_evidence_months_common": [
+    "202301",
+    "202302",
+    "202303",
+    "202304",
+    "202305",
+    "202306",
+    "202307",
+    "202308",
+    "202309",
+    "202310",
+    "202311",
+    "202312",
+    "202401",
+    "202402",
+    "202404",
+    "202405",
+    "202406",
+    "202407",
+    "202408",
+    "202409",
+    "202410",
+    "202411",
+    "202412"
+  ],
+  "tickers": {
+    "SPXW": {
+      "selection_method": "reconstructed_static_source_selector_pre2025",
+      "selection_evidence_months": [
+        "202301",
+        "202302",
+        "202303",
+        "202304",
+        "202305",
+        "202306",
+        "202307",
+        "202308",
+        "202309",
+        "202310",
+        "202311",
+        "202312",
+        "202401",
+        "202402",
+        "202404",
+        "202405",
+        "202406",
+        "202407",
+        "202408",
+        "202409",
+        "202410",
+        "202411",
+        "202412"
+      ],
+      "expected_source_streams": [
+        "SPXW"
+      ],
+      "allowed_source_streams": [
+        "SPXW"
+      ],
+      "observed_selected_sources": [
+        "event_option_gate_dense15_zero_dte_win_d25_strict_backfill_d50max3_causal_2023_2026_v1"
+      ],
+      "allowed_modes": [
+        "FROZEN_SELECTED"
+      ]
+    },
+    "SPY": {
+      "selection_method": "reconstructed_static_source_selector_pre2025",
+      "selection_evidence_months": [
+        "202301",
+        "202302",
+        "202303",
+        "202304",
+        "202305",
+        "202306",
+        "202307",
+        "202308",
+        "202309",
+        "202310",
+        "202311",
+        "202312",
+        "202401",
+        "202402",
+        "202404",
+        "202405",
+        "202406",
+        "202407",
+        "202408",
+        "202409",
+        "202410",
+        "202411",
+        "202412"
+      ],
+      "expected_source_streams": [
+        "SPY"
+      ],
+      "allowed_source_streams": [
+        "SPY"
+      ],
+      "observed_selected_sources": [
+        "event_option_gate_dense15_zero_dte_win_d25_strict_backfill_d50max3_causal_2023_2026_v1"
+      ],
+      "allowed_modes": [
+        "FROZEN_SELECTED"
+      ]
+    },
+    "QQQ": {
+      "selection_method": "reconstructed_static_source_selector_pre2025",
+      "selection_evidence_months": [
+        "202301",
+        "202302",
+        "202303",
+        "202304",
+        "202305",
+        "202306",
+        "202307",
+        "202308",
+        "202309",
+        "202310",
+        "202311",
+        "202312",
+        "202401",
+        "202402",
+        "202404",
+        "202405",
+        "202406",
+        "202407",
+        "202408",
+        "202409",
+        "202410",
+        "202411",
+        "202412"
+      ],
+      "expected_source_streams": [
+        "QQQ"
+      ],
+      "allowed_source_streams": [
+        "QQQ"
+      ],
+      "observed_selected_sources": [
+        "event_option_gate_dense15_zero_dte_win_valthr_wr45_d25_monthly_backfill18_d50max3_2023_2026_qqq_v1"
+      ],
+      "allowed_modes": [
+        "FROZEN_SELECTED"
+      ]
+    }
+  }
+}

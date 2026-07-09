@@ -1,0 +1,17 @@
+{
+  "rows": 6,
+  "day_dir": "research_papers\\JEPA\\results\\_diagnostics\\realtime_feed_dry_run_20260630",
+  "tickers": [
+    "QQQ",
+    "SPXW",
+    "SPY"
+  ],
+  "expiry_modes": {
+    "front_weekly": 3,
+    "zero_dte": 3
+  },
+  "missing": [],
+  "columns": 278,
+  "new_rows": 6,
+  "stored_rows": 6
+}

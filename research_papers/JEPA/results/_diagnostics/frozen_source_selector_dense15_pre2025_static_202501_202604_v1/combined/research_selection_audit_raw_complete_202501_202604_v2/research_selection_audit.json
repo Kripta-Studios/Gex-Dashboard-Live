@@ -1,0 +1,151 @@
+{
+  "passed": true,
+  "strict": true,
+  "result_dir": "research_papers\\JEPA\\results\\_diagnostics\\frozen_source_selector_dense15_pre2025_static_202501_202604_v1\\combined",
+  "months": [
+    "202501",
+    "202502",
+    "202503",
+    "202504",
+    "202505",
+    "202506",
+    "202507",
+    "202508",
+    "202509",
+    "202510",
+    "202511",
+    "202512",
+    "202601",
+    "202602",
+    "202603",
+    "202604"
+  ],
+  "manifest_path": "research_papers\\JEPA\\results\\_diagnostics\\frozen_source_selector_dense15_pre2025_static_202501_202604_v1\\combined\\research_selection_manifest.json",
+  "manifest_present": true,
+  "tickers": {
+    "QQQ": {
+      "ticker": "QQQ",
+      "fold_months": [
+        "202501",
+        "202502",
+        "202503",
+        "202504",
+        "202505",
+        "202506",
+        "202507",
+        "202508",
+        "202509",
+        "202510",
+        "202511",
+        "202512",
+        "202601",
+        "202602",
+        "202603",
+        "202604"
+      ],
+      "source_streams": [
+        "QQQ"
+      ],
+      "source_files": [
+        "research_papers\\JEPA\\results\\_diagnostics\\frozen_source_selector_dense15_pre2025_static_202501_202604_v1\\qqq\\stream_selector_folds.csv"
+      ],
+      "selected_sources": [
+        "event_option_gate_dense15_zero_dte_win_valthr_wr45_d25_monthly_backfill18_d50max3_2023_2026_qqq_v1"
+      ],
+      "modes": [
+        "FROZEN_SELECTED"
+      ],
+      "selector_evidence": true,
+      "causal_model_evidence": false,
+      "selection_status": "causal_outer_or_inner_selector_present"
+    },
+    "SPXW": {
+      "ticker": "SPXW",
+      "fold_months": [
+        "202501",
+        "202502",
+        "202503",
+        "202504",
+        "202505",
+        "202506",
+        "202507",
+        "202508",
+        "202509",
+        "202510",
+        "202511",
+        "202512",
+        "202601",
+        "202602",
+        "202603",
+        "202604"
+      ],
+      "source_streams": [
+        "SPXW"
+      ],
+      "source_files": [
+        "research_papers\\JEPA\\results\\_diagnostics\\frozen_source_selector_dense15_pre2025_static_202501_202604_v1\\spxw\\stream_selector_folds.csv"
+      ],
+      "selected_sources": [
+        "event_option_gate_dense15_zero_dte_win_d25_strict_backfill_d50max3_causal_2023_2026_v1"
+      ],
+      "modes": [
+        "FROZEN_SELECTED"
+      ],
+      "selector_evidence": true,
+      "causal_model_evidence": false,
+      "selection_status": "causal_outer_or_inner_selector_present"
+    },
+    "SPY": {
+      "ticker": "SPY",
+      "fold_months": [
+        "202501",
+        "202502",
+        "202503",
+        "202504",
+        "202505",
+        "202506",
+        "202507",
+        "202508",
+        "202509",
+        "202510",
+        "202511",
+        "202512",
+        "202601",
+        "202602",
+        "202603",
+        "202604"
+      ],
+      "source_streams": [
+        "SPY"
+      ],
+      "source_files": [
+        "research_papers\\JEPA\\results\\_diagnostics\\frozen_source_selector_dense15_pre2025_static_202501_202604_v1\\spy\\stream_selector_folds.csv"
+      ],
+      "selected_sources": [
+        "event_option_gate_dense15_zero_dte_win_d25_strict_backfill_d50max3_causal_2023_2026_v1"
+      ],
+      "modes": [
+        "FROZEN_SELECTED"
+      ],
+      "selector_evidence": true,
+      "causal_model_evidence": false,
+      "selection_status": "causal_outer_or_inner_selector_present"
+    }
+  },
+  "issues": [],
+  "warnings": [],
+  "sources": {
+    "trade_file": [
+      "SPXW=research_papers\\JEPA\\results\\_diagnostics\\frozen_source_selector_dense15_pre2025_static_202501_202604_v1/spxw/stream_selector_trades.csv",
+      "SPY=research_papers\\JEPA\\results\\_diagnostics\\frozen_source_selector_dense15_pre2025_static_202501_202604_v1/spy/stream_selector_trades.csv",
+      "QQQ=research_papers\\JEPA\\results\\_diagnostics\\frozen_source_selector_dense15_pre2025_static_202501_202604_v1/qqq/stream_selector_trades.csv"
+    ],
+    "fold_file": [
+      "SPXW=research_papers\\JEPA\\results\\_diagnostics\\frozen_source_selector_dense15_pre2025_static_202501_202604_v1/spxw/stream_selector_folds.csv",
+      "SPY=research_papers\\JEPA\\results\\_diagnostics\\frozen_source_selector_dense15_pre2025_static_202501_202604_v1/spy/stream_selector_folds.csv",
+      "QQQ=research_papers\\JEPA\\results\\_diagnostics\\frozen_source_selector_dense15_pre2025_static_202501_202604_v1/qqq/stream_selector_folds.csv"
+    ],
+    "start_month": "202501",
+    "end_month": "202604"
+  }
+}

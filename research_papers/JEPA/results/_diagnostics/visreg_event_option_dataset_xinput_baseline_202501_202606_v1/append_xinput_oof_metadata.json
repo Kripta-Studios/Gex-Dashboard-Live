@@ -1,0 +1,27 @@
+{
+  "event_data": "research_papers\\JEPA\\results\\_diagnostics\\visreg_event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_v1_physics\\event_option_dataset.parquet",
+  "xinput_features": "research_papers\\JEPA\\results\\_diagnostics\\visreg_xinput_oof_baseline_202601_202606_v1\\oof_xinput_features.parquet",
+  "output": "research_papers\\JEPA\\results\\_diagnostics\\visreg_event_option_dataset_xinput_baseline_202501_202606_v1\\event_option_dataset.parquet",
+  "rows": 39690,
+  "columns": 400,
+  "xinput_feature_count": 42,
+  "matched_rows": 12496,
+  "matched_rate": 0.3148400100781053,
+  "matched_by_ticker": {
+    "QQQ": {
+      "rows": 12477,
+      "matched_rows": 3805,
+      "matched_rate": 0.30496112847639656
+    },
+    "SPXW": {
+      "rows": 13671,
+      "matched_rows": 4500,
+      "matched_rate": 0.32916392363396973
+    },
+    "SPY": {
+      "rows": 13542,
+      "matched_rows": 4191,
+      "matched_rate": 0.3094816127603013
+    }
+  }
+}

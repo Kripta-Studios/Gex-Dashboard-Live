@@ -1,0 +1,54 @@
+{
+  "snapshot_path": "research_papers\\JEPA\\results\\_diagnostics\\thetadata_event_option_snapshot_smoke_spxw_weekly_fast\\event_option_snapshots_latest.parquet",
+  "snapshot_rows": 1,
+  "candidate_rows": 2,
+  "by_ticker": {
+    "SPXW": {
+      "candidate_rows": 2,
+      "sources": [
+        "base",
+        "base_fallback"
+      ],
+      "actions": [
+        "CALL"
+      ]
+    }
+  },
+  "registry": {
+    "status": "partial_component_export_runtime_state_incomplete",
+    "deploy_month": "202607",
+    "completed_data_through_month": "202605",
+    "component_count": 18,
+    "components": [
+      "PTDJ.core_encoder",
+      "QQQ.current_config_selector",
+      "QQQ.current_intraday_circuit",
+      "QQQ.d65_gate",
+      "QQQ.meta_s1_gate",
+      "QQQ.mtd_rescue",
+      "QQQ.online_threshold_regressor",
+      "QQQ.physics_gate",
+      "QQQ.ptdj_d80_gate",
+      "QQQ.tdvp_gate",
+      "SPXW.base_intraday_circuit",
+      "SPXW.cap4_monthly_backfill",
+      "SPXW.h2_union_selector",
+      "SPXW.vol25_gate",
+      "SPXW.wide_d35_gate",
+      "SPY.ptdj_delta35_gate",
+      "SPY.static_ptdj_delta35",
+      "TDVP.all13_encoder"
+    ],
+    "missing_for_full_live_equivalence": [
+      "Runtime event-option scorer still needs bot-side execution state for cooldown, daily/monthly trade counts, prior completed-day MTD, SPXW cap/backfill, QQQ MTD-rescue activation, and de-duplication before enabling live orders.",
+      "End-to-end live scorer replay must prove the registered QQQ meta_s1/current/online/TDVP path matches the frozen causal policy behavior before event-option policy status can become live-ready."
+    ],
+    "invalidated_components": []
+  },
+  "issues": [
+    "SPY: no zero_dte/front_weekly snapshot row available",
+    "QQQ: no zero_dte/front_weekly snapshot row available"
+  ],
+  "live_ready": false,
+  "live_ready_reason": "diagnostic scorer only; final bot-side execution state and replay equivalence are incomplete"
+}

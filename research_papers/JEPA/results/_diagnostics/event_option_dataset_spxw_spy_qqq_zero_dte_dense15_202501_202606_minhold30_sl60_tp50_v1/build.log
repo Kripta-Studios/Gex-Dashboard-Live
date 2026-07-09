@@ -1,0 +1,252 @@
+[EVENT_DATASET] manifest rows=1,113
+[EVENT_DATASET:QQQ_202501] chunk 1/54 manifest rows=20
+[EVENT_DATASET:QQQ_202501] processed 20/20 rows=631
+[EVENT_DATASET:QQQ_202501] wrote 631 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_QQQ_202501.parquet
+[EVENT_DATASET:QQQ_202502] chunk 2/54 manifest rows=19
+[EVENT_DATASET:QQQ_202502] processed 19/19 rows=567
+[EVENT_DATASET:QQQ_202502] wrote 567 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_QQQ_202502.parquet
+[EVENT_DATASET:QQQ_202503] chunk 3/54 manifest rows=21
+[EVENT_DATASET:QQQ_202503] processed 21/21 rows=658
+[EVENT_DATASET:QQQ_202503] wrote 658 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_QQQ_202503.parquet
+[EVENT_DATASET:QQQ_202504] chunk 4/54 manifest rows=21
+[EVENT_DATASET:QQQ_202504] processed 21/21 rows=589
+[EVENT_DATASET:QQQ_202504] wrote 589 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_QQQ_202504.parquet
+[EVENT_DATASET:QQQ_202505] chunk 5/54 manifest rows=21
+[EVENT_DATASET:QQQ_202505] processed 21/21 rows=761
+[EVENT_DATASET:QQQ_202505] wrote 761 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_QQQ_202505.parquet
+[EVENT_DATASET:QQQ_202506] chunk 6/54 manifest rows=20
+[EVENT_DATASET:QQQ_202506] processed 20/20 rows=768
+[EVENT_DATASET:QQQ_202506] wrote 768 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_QQQ_202506.parquet
+[EVENT_DATASET:QQQ_202507] chunk 7/54 manifest rows=22
+[EVENT_DATASET:QQQ_202507] processed 22/22 rows=798
+[EVENT_DATASET:QQQ_202507] wrote 798 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_QQQ_202507.parquet
+[EVENT_DATASET:QQQ_202508] chunk 8/54 manifest rows=21
+[EVENT_DATASET:QQQ_202508] processed 21/21 rows=755
+[EVENT_DATASET:QQQ_202508] wrote 755 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_QQQ_202508.parquet
+[EVENT_DATASET:QQQ_202509] chunk 9/54 manifest rows=21
+[EVENT_DATASET:QQQ_202509] processed 21/21 rows=797
+[EVENT_DATASET:QQQ_202509] wrote 797 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_QQQ_202509.parquet
+[EVENT_DATASET:QQQ_202510] chunk 10/54 manifest rows=23
+[EVENT_DATASET:QQQ_202510] processed 23/23 rows=803
+[EVENT_DATASET:QQQ_202510] wrote 803 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_QQQ_202510.parquet
+[EVENT_DATASET:QQQ_202511] chunk 11/54 manifest rows=19
+[EVENT_DATASET:QQQ_202511] processed 19/19 rows=628
+[EVENT_DATASET:QQQ_202511] wrote 628 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_QQQ_202511.parquet
+[EVENT_DATASET:QQQ_202512] chunk 12/54 manifest rows=22
+[EVENT_DATASET:QQQ_202512] processed 22/22 rows=747
+[EVENT_DATASET:QQQ_202512] wrote 747 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_QQQ_202512.parquet
+[EVENT_DATASET:QQQ_202601] chunk 13/54 manifest rows=20
+[EVENT_DATASET:QQQ_202601] processed 20/20 rows=692
+[EVENT_DATASET:QQQ_202601] wrote 692 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_QQQ_202601.parquet
+[EVENT_DATASET:QQQ_202602] chunk 14/54 manifest rows=19
+[EVENT_DATASET:QQQ_202602] processed 19/19 rows=550
+[EVENT_DATASET:QQQ_202602] wrote 550 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_QQQ_202602.parquet
+[EVENT_DATASET:QQQ_202603] chunk 15/54 manifest rows=22
+[EVENT_DATASET:QQQ_202603] processed 22/22 rows=765
+[EVENT_DATASET:QQQ_202603] wrote 765 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_QQQ_202603.parquet
+[EVENT_DATASET:QQQ_202604] chunk 16/54 manifest rows=18
+[EVENT_DATASET:QQQ_202604] processed 18/18 rows=637
+[EVENT_DATASET:QQQ_202604] wrote 637 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_QQQ_202604.parquet
+[EVENT_DATASET:QQQ_202605] chunk 17/54 manifest rows=20
+[EVENT_DATASET:QQQ_202605] processed 20/20 rows=712
+[EVENT_DATASET:QQQ_202605] wrote 712 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_QQQ_202605.parquet
+[EVENT_DATASET:QQQ_202606] chunk 18/54 manifest rows=21
+[EVENT_DATASET:QQQ_202606] processed 21/21 rows=619
+[EVENT_DATASET:QQQ_202606] wrote 619 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_QQQ_202606.parquet
+[EVENT_DATASET:SPXW_202501] chunk 19/54 manifest rows=20
+[EVENT_DATASET:SPXW_202501] processed 20/20 rows=765
+[EVENT_DATASET:SPXW_202501] wrote 765 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPXW_202501.parquet
+[EVENT_DATASET:SPXW_202502] chunk 20/54 manifest rows=19
+[EVENT_DATASET:SPXW_202502] processed 19/19 rows=627
+[EVENT_DATASET:SPXW_202502] wrote 627 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPXW_202502.parquet
+[EVENT_DATASET:SPXW_202503] chunk 21/54 manifest rows=21
+[EVENT_DATASET:SPXW_202503] processed 21/21 rows=724
+[EVENT_DATASET:SPXW_202503] wrote 724 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPXW_202503.parquet
+[EVENT_DATASET:SPXW_202504] chunk 22/54 manifest rows=21
+[EVENT_DATASET:SPXW_202504] processed 21/21 rows=649
+[EVENT_DATASET:SPXW_202504] wrote 649 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPXW_202504.parquet
+[EVENT_DATASET:SPXW_202505] chunk 23/54 manifest rows=21
+[EVENT_DATASET:SPXW_202505] processed 21/21 rows=820
+[EVENT_DATASET:SPXW_202505] wrote 820 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPXW_202505.parquet
+[EVENT_DATASET:SPXW_202506] chunk 24/54 manifest rows=20
+[EVENT_DATASET:SPXW_202506] processed 20/20 rows=777
+[EVENT_DATASET:SPXW_202506] wrote 777 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPXW_202506.parquet
+[EVENT_DATASET:SPXW_202507] chunk 25/54 manifest rows=22
+[EVENT_DATASET:SPXW_202507] processed 22/22 rows=867
+[EVENT_DATASET:SPXW_202507] wrote 867 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPXW_202507.parquet
+[EVENT_DATASET:SPXW_202508] chunk 26/54 manifest rows=21
+[EVENT_DATASET:SPXW_202508] processed 21/21 rows=778
+[EVENT_DATASET:SPXW_202508] wrote 778 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPXW_202508.parquet
+[EVENT_DATASET:SPXW_202509] chunk 27/54 manifest rows=21
+[EVENT_DATASET:SPXW_202509] processed 21/21 rows=814
+[EVENT_DATASET:SPXW_202509] wrote 814 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPXW_202509.parquet
+[EVENT_DATASET:SPXW_202510] chunk 28/54 manifest rows=23
+[EVENT_DATASET:SPXW_202510] processed 23/23 rows=852
+[EVENT_DATASET:SPXW_202510] wrote 852 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPXW_202510.parquet
+[EVENT_DATASET:SPXW_202511] chunk 29/54 manifest rows=19
+[EVENT_DATASET:SPXW_202511] processed 19/19 rows=652
+[EVENT_DATASET:SPXW_202511] wrote 652 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPXW_202511.parquet
+[EVENT_DATASET:SPXW_202512] chunk 30/54 manifest rows=22
+[EVENT_DATASET:SPXW_202512] processed 22/22 rows=846
+[EVENT_DATASET:SPXW_202512] wrote 846 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPXW_202512.parquet
+[EVENT_DATASET:SPXW_202601] chunk 31/54 manifest rows=20
+[EVENT_DATASET:SPXW_202601] processed 20/20 rows=779
+[EVENT_DATASET:SPXW_202601] wrote 779 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPXW_202601.parquet
+[EVENT_DATASET:SPXW_202602] chunk 32/54 manifest rows=19
+[EVENT_DATASET:SPXW_202602] processed 19/19 rows=616
+[EVENT_DATASET:SPXW_202602] wrote 616 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPXW_202602.parquet
+[EVENT_DATASET:SPXW_202603] chunk 33/54 manifest rows=22
+[EVENT_DATASET:SPXW_202603] processed 22/22 rows=793
+[EVENT_DATASET:SPXW_202603] wrote 793 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPXW_202603.parquet
+[EVENT_DATASET:SPXW_202604] chunk 34/54 manifest rows=21
+[EVENT_DATASET:SPXW_202604] processed 21/21 rows=793
+[EVENT_DATASET:SPXW_202604] wrote 793 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPXW_202604.parquet
+[EVENT_DATASET:SPXW_202605] chunk 35/54 manifest rows=20
+[EVENT_DATASET:SPXW_202605] processed 20/20 rows=783
+[EVENT_DATASET:SPXW_202605] wrote 783 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPXW_202605.parquet
+[EVENT_DATASET:SPXW_202606] chunk 36/54 manifest rows=21
+[EVENT_DATASET:SPXW_202606] processed 21/21 rows=736
+[EVENT_DATASET:SPXW_202606] wrote 736 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPXW_202606.parquet
+[EVENT_DATASET:SPY_202501] chunk 37/54 manifest rows=20
+[EVENT_DATASET:SPY_202501] processed 20/20 rows=740
+[EVENT_DATASET:SPY_202501] wrote 740 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPY_202501.parquet
+[EVENT_DATASET:SPY_202502] chunk 38/54 manifest rows=19
+[EVENT_DATASET:SPY_202502] processed 19/19 rows=633
+[EVENT_DATASET:SPY_202502] wrote 633 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPY_202502.parquet
+[EVENT_DATASET:SPY_202503] chunk 39/54 manifest rows=21
+[EVENT_DATASET:SPY_202503] processed 21/21 rows=721
+[EVENT_DATASET:SPY_202503] wrote 721 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPY_202503.parquet
+[EVENT_DATASET:SPY_202504] chunk 40/54 manifest rows=21
+[EVENT_DATASET:SPY_202504] processed 21/21 rows=646
+[EVENT_DATASET:SPY_202504] wrote 646 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPY_202504.parquet
+[EVENT_DATASET:SPY_202505] chunk 41/54 manifest rows=21
+[EVENT_DATASET:SPY_202505] processed 21/21 rows=814
+[EVENT_DATASET:SPY_202505] wrote 814 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPY_202505.parquet
+[EVENT_DATASET:SPY_202506] chunk 42/54 manifest rows=20
+[EVENT_DATASET:SPY_202506] processed 20/20 rows=777
+[EVENT_DATASET:SPY_202506] wrote 777 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPY_202506.parquet
+[EVENT_DATASET:SPY_202507] chunk 43/54 manifest rows=22
+[EVENT_DATASET:SPY_202507] processed 22/22 rows=871
+[EVENT_DATASET:SPY_202507] wrote 871 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPY_202507.parquet
+[EVENT_DATASET:SPY_202508] chunk 44/54 manifest rows=21
+[EVENT_DATASET:SPY_202508] processed 21/21 rows=786
+[EVENT_DATASET:SPY_202508] wrote 786 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPY_202508.parquet
+[EVENT_DATASET:SPY_202509] chunk 45/54 manifest rows=21
+[EVENT_DATASET:SPY_202509] processed 21/21 rows=820
+[EVENT_DATASET:SPY_202509] wrote 820 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPY_202509.parquet
+[EVENT_DATASET:SPY_202510] chunk 46/54 manifest rows=23
+[EVENT_DATASET:SPY_202510] processed 23/23 rows=852
+[EVENT_DATASET:SPY_202510] wrote 852 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPY_202510.parquet
+[EVENT_DATASET:SPY_202511] chunk 47/54 manifest rows=19
+[EVENT_DATASET:SPY_202511] processed 19/19 rows=650
+[EVENT_DATASET:SPY_202511] wrote 650 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPY_202511.parquet
+[EVENT_DATASET:SPY_202512] chunk 48/54 manifest rows=22
+[EVENT_DATASET:SPY_202512] processed 22/22 rows=851
+[EVENT_DATASET:SPY_202512] wrote 851 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPY_202512.parquet
+[EVENT_DATASET:SPY_202601] chunk 49/54 manifest rows=20
+[EVENT_DATASET:SPY_202601] processed 20/20 rows=779
+[EVENT_DATASET:SPY_202601] wrote 779 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPY_202601.parquet
+[EVENT_DATASET:SPY_202602] chunk 50/54 manifest rows=19
+[EVENT_DATASET:SPY_202602] processed 19/19 rows=615
+[EVENT_DATASET:SPY_202602] wrote 615 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPY_202602.parquet
+[EVENT_DATASET:SPY_202603] chunk 51/54 manifest rows=22
+[EVENT_DATASET:SPY_202603] processed 22/22 rows=799
+[EVENT_DATASET:SPY_202603] wrote 799 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPY_202603.parquet
+[EVENT_DATASET:SPY_202604] chunk 52/54 manifest rows=18
+[EVENT_DATASET:SPY_202604] processed 18/18 rows=689
+[EVENT_DATASET:SPY_202604] wrote 689 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPY_202604.parquet
+[EVENT_DATASET:SPY_202605] chunk 53/54 manifest rows=20
+[EVENT_DATASET:SPY_202605] processed 20/20 rows=775
+[EVENT_DATASET:SPY_202605] wrote 775 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPY_202605.parquet
+[EVENT_DATASET:SPY_202606] chunk 54/54 manifest rows=21
+[EVENT_DATASET:SPY_202606] processed 21/21 rows=724
+[EVENT_DATASET:SPY_202606] wrote 724 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\chunks\event_option_dataset_SPY_202606.parquet
+[EVENT_DATASET] wrote 39,690 rows to research_papers\JEPA\results\_diagnostics\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1\event_option_dataset.parquet
+{
+  "rows": 39690,
+  "args": {
+    "manifest": "research_papers\\JEPA\\results\\_diagnostics\\visreg_thetadata_manifest_spxw_spy_qqq_202501_202606\\thetadata_option_manifest.csv",
+    "output_dir": "research_papers\\JEPA\\results\\_diagnostics\\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp50_v1",
+    "tickers": [
+      "SPXW",
+      "SPY",
+      "QQQ"
+    ],
+    "expiry_modes": [
+      "zero_dte"
+    ],
+    "start_date": "20250101",
+    "end_date": "20260630",
+    "max_days_per_ticker": 0,
+    "sample_mode": "first",
+    "workers": 16,
+    "bar_minutes": 5,
+    "start_minute": 600,
+    "end_minute": 870,
+    "near_level_only": true,
+    "near_level_bps": 20.0,
+    "max_rows_per_day": 40,
+    "horizon_minutes": 180,
+    "spot_target_bps": 25.0,
+    "spot_stop_bps": 20.0,
+    "option_tp_pct": 0.5,
+    "option_sl_pct": 0.6,
+    "option_exit_mode": "fixed",
+    "option_min_hold_minutes": 30,
+    "option_trail_activation_pct": 0.5,
+    "option_trail_drawdown_pct": 0.25,
+    "require_open_interest": true,
+    "chunk_by": "ticker_month",
+    "skip_existing_chunks": true
+  },
+  "tickers": [
+    "QQQ",
+    "SPXW",
+    "SPY"
+  ],
+  "date_min": "20250102",
+  "date_max": "20260630",
+  "expiry_modes": {
+    "zero_dte": 39690
+  },
+  "spot_best_side": {
+    "-1": 14014,
+    "0": 12705,
+    "1": 12971
+  },
+  "by_ticker": {
+    "QQQ": {
+      "rows": 12477,
+      "expiry_modes": {
+        "zero_dte": 12477
+      },
+      "spot_best_side": {
+        "-1": 4676,
+        "0": 3271,
+        "1": 4530
+      }
+    },
+    "SPXW": {
+      "rows": 13671,
+      "expiry_modes": {
+        "zero_dte": 13671
+      },
+      "spot_best_side": {
+        "-1": 4668,
+        "0": 4751,
+        "1": 4252
+      }
+    },
+    "SPY": {
+      "rows": 13542,
+      "expiry_modes": {
+        "zero_dte": 13542
+      },
+      "spot_best_side": {
+        "-1": 4670,
+        "0": 4683,
+        "1": 4189
+      }
+    }
+  }
+}

@@ -1,0 +1,190 @@
+{
+  "stateful_replay_passed": false,
+  "strict_live_ready_passed": false,
+  "policy": "event_option_h2_spxw_cap4_qqq_mtdrescue1_spy_candidate_202607",
+  "policy_status": "research_candidate_formal_and_curve_gates_pass_runtime_incomplete",
+  "registry_status": "partial_component_export_runtime_state_incomplete",
+  "missing_live_equivalence_count": 2,
+  "invalidated_component_count": 0,
+  "comparisons": [
+    {
+      "name": "SPXW_CAP4_BACKFILL",
+      "passed": true,
+      "actual_rows": 146,
+      "expected_rows": 146,
+      "matched_rows": 146,
+      "missing_rows": 0,
+      "extra_rows": 0,
+      "max_abs_realized_return_diff": 0.0,
+      "max_abs_score_diff": 0.0,
+      "missing_preview": [],
+      "extra_preview": []
+    },
+    {
+      "name": "QQQ_MTD_RESCUE",
+      "passed": false,
+      "actual_rows": 177,
+      "expected_rows": 174,
+      "matched_rows": 171,
+      "missing_rows": 3,
+      "extra_rows": 6,
+      "max_abs_realized_return_diff": 0.0,
+      "max_abs_score_diff": 0.08398224654617681,
+      "missing_preview": [
+        "QQQ|20260514|12:30|CALL|zero_dte|0",
+        "QQQ|20260515|10:30|CALL|zero_dte|0",
+        "QQQ|20260518|13:15|PUT|zero_dte|0"
+      ],
+      "extra_preview": [
+        "QQQ|20260507|12:30|CALL|zero_dte|0",
+        "QQQ|20260514|12:15|CALL|zero_dte|0",
+        "QQQ|20260515|10:30|PUT|zero_dte|0",
+        "QQQ|20260518|12:45|PUT|zero_dte|0",
+        "QQQ|20260518|13:45|PUT|zero_dte|0",
+        "QQQ|20260526|14:45|PUT|zero_dte|0"
+      ]
+    },
+    {
+      "name": "SPY_PTDJ",
+      "passed": true,
+      "actual_rows": 177,
+      "expected_rows": 177,
+      "matched_rows": 177,
+      "missing_rows": 0,
+      "extra_rows": 0,
+      "max_abs_realized_return_diff": 0.0,
+      "max_abs_score_diff": 0.0,
+      "missing_preview": [],
+      "extra_preview": []
+    },
+    {
+      "name": "COMBINED",
+      "passed": false,
+      "actual_rows": 500,
+      "expected_rows": 497,
+      "matched_rows": 494,
+      "missing_rows": 3,
+      "extra_rows": 6,
+      "max_abs_realized_return_diff": 0.0,
+      "max_abs_score_diff": 0.08398224654617681,
+      "missing_preview": [
+        "QQQ|20260514|12:30|CALL|zero_dte|0",
+        "QQQ|20260515|10:30|CALL|zero_dte|0",
+        "QQQ|20260518|13:15|PUT|zero_dte|0"
+      ],
+      "extra_preview": [
+        "QQQ|20260507|12:30|CALL|zero_dte|0",
+        "QQQ|20260514|12:15|CALL|zero_dte|0",
+        "QQQ|20260515|10:30|PUT|zero_dte|0",
+        "QQQ|20260518|12:45|PUT|zero_dte|0",
+        "QQQ|20260518|13:45|PUT|zero_dte|0",
+        "QQQ|20260526|14:45|PUT|zero_dte|0"
+      ]
+    }
+  ],
+  "metrics": {
+    "overall": {
+      "trades": 500,
+      "win_rate": 0.482,
+      "profit_factor": 1.477902011233213,
+      "pnl_return": 29.48347675966506,
+      "avg_return": 0.058966953519330116,
+      "max_drawdown": -5.135897681714379,
+      "call_rate": 0.536,
+      "days_with_trades": 82,
+      "daily_win_rate": 0.6341463414634146,
+      "median_daily_return": 0.2917807973108998,
+      "daily_max_drawdown": -4.535897681714383,
+      "top5_day_return": 12.664335456860492,
+      "top5_share_of_pnl": 0.42954009664782705,
+      "min_month_trades": 78,
+      "positive_month_rate": 1.0
+    },
+    "by_ticker": {
+      "QQQ": {
+        "trades": 177,
+        "win_rate": 0.4858757062146893,
+        "profit_factor": 1.4279834699705372,
+        "pnl_return": 10.461963805559016,
+        "avg_return": 0.05910714014440122,
+        "max_drawdown": -3.273873888386814,
+        "call_rate": 0.480225988700565,
+        "days_with_trades": 53,
+        "daily_win_rate": 0.6037735849056604,
+        "median_daily_return": 0.1424315869983101,
+        "daily_max_drawdown": -2.9738738883868137,
+        "top5_day_return": 8.4,
+        "top5_share_of_pnl": 0.8029085319083803,
+        "min_month_trades": 27,
+        "positive_month_rate": 1.0
+      },
+      "SPXW": {
+        "trades": 146,
+        "win_rate": 0.5136986301369864,
+        "profit_factor": 1.6592134191903471,
+        "pnl_return": 9.783299862801794,
+        "avg_return": 0.0670089031698753,
+        "max_drawdown": -2.8784627632832667,
+        "call_rate": 0.6712328767123288,
+        "days_with_trades": 39,
+        "daily_win_rate": 0.6666666666666666,
+        "median_daily_return": 0.3310691045946287,
+        "daily_max_drawdown": -2.5784627632832606,
+        "top5_day_return": 7.793090633432193,
+        "top5_share_of_pnl": 0.7965707626997305,
+        "min_month_trades": 18,
+        "positive_month_rate": 1.0
+      },
+      "SPY": {
+        "trades": 177,
+        "win_rate": 0.4519774011299435,
+        "profit_factor": 1.412274694601744,
+        "pnl_return": 9.23821309130425,
+        "avg_return": 0.05219329430115395,
+        "max_drawdown": -3.774901063206182,
+        "call_rate": 0.480225988700565,
+        "days_with_trades": 67,
+        "daily_win_rate": 0.5223880597014925,
+        "median_daily_return": 0.0990384595545819,
+        "daily_max_drawdown": -3.286375016755489,
+        "top5_day_return": 6.984339541031996,
+        "top5_share_of_pnl": 0.7560271095723284,
+        "min_month_trades": 22,
+        "positive_month_rate": 1.0
+      }
+    },
+    "net_pnl": 147417.3837983253,
+    "risk_capital": 5000.0,
+    "months": [
+      "202601",
+      "202602",
+      "202603",
+      "202604",
+      "202605"
+    ]
+  },
+  "inputs": {
+    "policy": "neural\\models\\jepa\\jepa_production_event_options\\event_option_policy.json",
+    "registry": "neural\\models\\jepa\\jepa_production_event_options\\component_registry.json",
+    "output_dir": "research_papers\\JEPA\\results\\_diagnostics\\event_option_runtime_policy_replay_2026janmay_meta_wr0p4",
+    "start_month": "202601",
+    "end_month": "202605",
+    "risk_capital": 5000.0,
+    "spxw_primary": "research_papers\\JEPA\\results\\event_option_spxw_h2_union_selector_backfill_base_t18_cap4_cd15_2026janmay_risk5000\\combined_trades.csv",
+    "spxw_fallback": "research_papers\\JEPA\\results\\event_option_spxw_base_intraday_side_circuit_m19_2025h2_2026jun_risk5000\\intraday_circuit_trades.csv",
+    "spxw_expected": "research_papers\\JEPA\\results\\event_option_spxw_h2_union_selector_cap4_backfill_base_t18_2026janmay_risk5000\\monthly_volume_backfill_trades.csv",
+    "spxw_min_month_trades": 18,
+    "spxw_max_day": 4,
+    "spxw_cooldown_minutes": 15,
+    "spy_expected": "research_papers\\JEPA\\results\\event_option_spy_static_ptdj_delta35_2026janmay_risk5000\\combined_trades.csv",
+    "qqq_meta": "research_papers\\JEPA\\results\\event_trade_union_qqq_meta_grid_s1_pf0p0_wr0p4_2026jun\\trade_union_meta_trades.csv",
+    "qqq_current": "research_papers\\JEPA\\results\\event_option_qqq_nested_config_intraday_side_circuit_m18_pf11_wr42_2025h2hist_v2_2026janjun_risk5000\\intraday_circuit_trades.csv",
+    "qqq_online": "research_papers\\JEPA\\results\\event_option_qqq_union_d65_current_ptdjd80_scorethr_online_2026janmay_risk5000\\trade_union_topk_regressor_trades.csv",
+    "qqq_expected": "research_papers\\JEPA\\results\\event_option_qqq_static_union_metas1_current_online_mtdrescue1_cd45_2026janmay_risk5000\\combined_trades.csv",
+    "qqq_max_day": 4,
+    "qqq_cooldown_minutes": 45,
+    "qqq_trigger_threshold": 1.0,
+    "combined_expected": "research_papers\\JEPA\\results\\event_option_h2_spxw_cap4_qqq_mtdrescue1_spy_candidate_2026janmay_risk5000\\combined_trades.csv"
+  },
+  "note": "This is an exact replay of frozen stateful policy transforms. It does not prove that deploy-month model scores are identical to each historical walk-forward fold, because those fold models are intentionally not reused as deploy artifacts."
+}

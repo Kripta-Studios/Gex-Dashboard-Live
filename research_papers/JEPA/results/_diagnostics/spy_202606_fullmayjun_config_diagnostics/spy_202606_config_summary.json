@@ -1,0 +1,500 @@
+{
+  "test_month": "202606",
+  "train_month_max": "202511",
+  "val_months": [
+    "202512",
+    "202601",
+    "202602",
+    "202603",
+    "202604",
+    "202605"
+  ],
+  "grid_rows": 66,
+  "positive_test_configs": 22,
+  "grid_path": "research_papers\\JEPA\\results\\_diagnostics\\spy_202606_fullmayjun_config_diagnostics\\spy_202606_config_grid.csv",
+  "top_by_current_score": [
+    {
+      "config": "thr0.385_maxday1",
+      "score": 8.635324471225967,
+      "val_pf": 2.446808510638297,
+      "val_wr": 0.5948275862068966,
+      "val_pnl": 20.4,
+      "val_trades": 116,
+      "val_min_month": 17,
+      "test_pf": 0.5555555555555557,
+      "test_wr": 0.25,
+      "test_pnl": -1.9999999999999998,
+      "test_trades": 20
+    },
+    {
+      "config": "thr0.358_maxday1",
+      "score": 8.588772224735955,
+      "val_pf": 2.4305555555555554,
+      "val_wr": 0.5932203389830508,
+      "val_pnl": 20.6,
+      "val_trades": 118,
+      "val_min_month": 17,
+      "test_pf": 0.5555555555555557,
+      "test_wr": 0.25,
+      "test_pnl": -1.9999999999999998,
+      "test_trades": 20
+    },
+    {
+      "config": "thr0.371_maxday1",
+      "score": 8.494743961040903,
+      "val_pf": 2.346938775510204,
+      "val_wr": 0.5847457627118644,
+      "val_pnl": 19.799999999999997,
+      "val_trades": 118,
+      "val_min_month": 17,
+      "test_pf": 0.7142857142857144,
+      "test_wr": 0.3,
+      "test_pnl": -1.2,
+      "test_trades": 20
+    },
+    {
+      "config": "thr0.399_maxday1",
+      "score": 8.38940152412069,
+      "val_pf": 2.2916666666666665,
+      "val_wr": 0.5789473684210527,
+      "val_pnl": 18.6,
+      "val_trades": 114,
+      "val_min_month": 17,
+      "test_pf": 0.5555555555555557,
+      "test_wr": 0.25,
+      "test_pnl": -1.9999999999999998,
+      "test_trades": 20
+    },
+    {
+      "config": "thr0.371_maxday2",
+      "score": 8.20788781145239,
+      "val_pf": 1.6956521739130441,
+      "val_wr": 0.5043103448275862,
+      "val_pnl": 24.0,
+      "val_trades": 232,
+      "val_min_month": 34,
+      "test_pf": 0.9333333333333335,
+      "test_wr": 0.358974358974359,
+      "test_pnl": -0.4999999999999998,
+      "test_trades": 39
+    },
+    {
+      "config": "thr0.371_maxday3",
+      "score": 8.193799304603978,
+      "val_pf": 1.4652014652014653,
+      "val_wr": 0.4678362573099415,
+      "val_pnl": 25.4,
+      "val_trades": 342,
+      "val_min_month": 51,
+      "test_pf": 1.0952380952380951,
+      "test_wr": 0.39655172413793105,
+      "test_pnl": 0.9999999999999998,
+      "test_trades": 58
+    },
+    {
+      "config": "thr0.415_maxday1",
+      "score": 8.140487347999203,
+      "val_pf": 2.2340425531914887,
+      "val_wr": 0.5727272727272728,
+      "val_pnl": 17.4,
+      "val_trades": 110,
+      "val_min_month": 15,
+      "test_pf": 0.5555555555555557,
+      "test_wr": 0.25,
+      "test_pnl": -1.9999999999999998,
+      "test_trades": 20
+    },
+    {
+      "config": "thr0.464_maxday2",
+      "score": 8.074965570646603,
+      "val_pf": 2.06060606060606,
+      "val_wr": 0.5528455284552846,
+      "val_pnl": 17.500000000000004,
+      "val_trades": 123,
+      "val_min_month": 12,
+      "test_pf": 1.0185185185185186,
+      "test_wr": 0.3793103448275862,
+      "test_pnl": 0.10000000000000026,
+      "test_trades": 29
+    },
+    {
+      "config": "thr0.447_maxday2",
+      "score": 8.046501941069252,
+      "val_pf": 1.9651741293532337,
+      "val_wr": 0.541095890410959,
+      "val_pnl": 19.400000000000002,
+      "val_trades": 146,
+      "val_min_month": 16,
+      "test_pf": 0.9848484848484851,
+      "test_wr": 0.37142857142857144,
+      "test_pnl": -0.09999999999999976,
+      "test_trades": 35
+    },
+    {
+      "config": "thr0.358_maxday2",
+      "score": 7.999954594952488,
+      "val_pf": 1.6111111111111114,
+      "val_wr": 0.4915254237288136,
+      "val_pnl": 22.0,
+      "val_trades": 236,
+      "val_min_month": 34,
+      "test_pf": 0.8024691358024691,
+      "test_wr": 0.325,
+      "test_pnl": -1.5999999999999999,
+      "test_trades": 40
+    }
+  ],
+  "best_positive_test_by_current_score": [
+    {
+      "config": "thr0.371_maxday3",
+      "score": 8.193799304603978,
+      "val_pf": 1.4652014652014653,
+      "val_wr": 0.4678362573099415,
+      "val_pnl": 25.4,
+      "val_trades": 342,
+      "val_min_month": 51,
+      "test_pf": 1.0952380952380951,
+      "test_wr": 0.39655172413793105,
+      "test_pnl": 0.9999999999999998,
+      "test_trades": 58
+    },
+    {
+      "config": "thr0.464_maxday2",
+      "score": 8.074965570646603,
+      "val_pf": 2.06060606060606,
+      "val_wr": 0.5528455284552846,
+      "val_pnl": 17.500000000000004,
+      "val_trades": 123,
+      "val_min_month": 12,
+      "test_pf": 1.0185185185185186,
+      "test_wr": 0.3793103448275862,
+      "test_pnl": 0.10000000000000026,
+      "test_trades": 29
+    },
+    {
+      "config": "thr0.415_maxday3",
+      "score": 7.895657861038697,
+      "val_pf": 1.4827586206896552,
+      "val_wr": 0.4708029197080292,
+      "val_pnl": 21.0,
+      "val_trades": 274,
+      "val_min_month": 35,
+      "test_pf": 1.0294117647058822,
+      "test_wr": 0.38181818181818183,
+      "test_pnl": 0.29999999999999977,
+      "test_trades": 55
+    },
+    {
+      "config": "thr-999.000_maxday1",
+      "score": 7.750147685389387,
+      "val_pf": 2.0440251572327037,
+      "val_wr": 0.5508474576271186,
+      "val_pnl": 16.599999999999998,
+      "val_trades": 118,
+      "val_min_month": 17,
+      "test_pf": 1.666666666666667,
+      "test_wr": 0.5,
+      "test_pnl": 2.0,
+      "test_trades": 20
+    },
+    {
+      "config": "thr0.447_maxday3",
+      "score": 7.657718615241083,
+      "val_pf": 1.6847826086956523,
+      "val_wr": 0.5027027027027027,
+      "val_pnl": 18.900000000000006,
+      "val_trades": 185,
+      "val_min_month": 20,
+      "test_pf": 1.25,
+      "test_wr": 0.42857142857142855,
+      "test_pnl": 2.1,
+      "test_trades": 49
+    },
+    {
+      "config": "thr0.464_maxday3",
+      "score": 7.452505076904282,
+      "val_pf": 1.6891891891891893,
+      "val_wr": 0.5033557046979866,
+      "val_pnl": 15.3,
+      "val_trades": 149,
+      "val_min_month": 13,
+      "test_pf": 1.2318840579710149,
+      "test_wr": 0.425,
+      "test_pnl": 1.5999999999999996,
+      "test_trades": 40
+    },
+    {
+      "config": "thr-999.000_maxday2",
+      "score": 7.445402744041483,
+      "val_pf": 1.4800000000000009,
+      "val_wr": 0.4703389830508475,
+      "val_pnl": 18.0,
+      "val_trades": 236,
+      "val_min_month": 34,
+      "test_pf": 1.363636363636364,
+      "test_wr": 0.45,
+      "test_pnl": 2.4,
+      "test_trades": 40
+    },
+    {
+      "config": "thr0.434_maxday2",
+      "score": 6.955773520893799,
+      "val_pf": 1.5891472868217054,
+      "val_wr": 0.4880952380952381,
+      "val_pnl": 15.2,
+      "val_trades": 168,
+      "val_min_month": 20,
+      "test_pf": 1.0144927536231887,
+      "test_wr": 0.3783783783783784,
+      "test_pnl": 0.10000000000000026,
+      "test_trades": 37
+    },
+    {
+      "config": "thr0.434_maxday3",
+      "score": 6.717572139646316,
+      "val_pf": 1.4005602240896369,
+      "val_wr": 0.45662100456621,
+      "val_pnl": 14.3,
+      "val_trades": 219,
+      "val_min_month": 24,
+      "test_pf": 1.2643678160919538,
+      "test_wr": 0.43137254901960786,
+      "test_pnl": 2.3000000000000003,
+      "test_trades": 51
+    },
+    {
+      "config": "thr-999.000_maxday3",
+      "score": -9.999999999999996e+17,
+      "val_pf": 1.3131313131313134,
+      "val_wr": 0.4406779661016949,
+      "val_pnl": 18.599999999999998,
+      "val_trades": 354,
+      "val_min_month": 51,
+      "test_pf": 1.2745098039215685,
+      "test_wr": 0.43333333333333335,
+      "test_pnl": 2.8,
+      "test_trades": 60
+    }
+  ],
+  "variant_choices": {
+    "current": {
+      "config": "thr0.385_maxday1",
+      "score": 8.635324471225967,
+      "valid": true,
+      "val_pf": 2.446808510638297,
+      "val_wr": 0.5948275862068966,
+      "val_pnl": 20.4,
+      "val_trades": 116,
+      "val_min_month": 17,
+      "test_pf": 0.5555555555555557,
+      "test_wr": 0.25,
+      "test_pnl": -1.9999999999999998,
+      "test_trades": 20,
+      "overrides": {}
+    },
+    "posmonth_ge_0p833": {
+      "config": "thr0.385_maxday1",
+      "score": 8.635324471225967,
+      "valid": true,
+      "val_pf": 2.446808510638297,
+      "val_wr": 0.5948275862068966,
+      "val_pnl": 20.4,
+      "val_trades": 116,
+      "val_min_month": 17,
+      "test_pf": 0.5555555555555557,
+      "test_wr": 0.25,
+      "test_pnl": -1.9999999999999998,
+      "test_trades": 20,
+      "overrides": {
+        "min_val_positive_month_rate": 0.8333333333333333
+      }
+    },
+    "posmonth_1p0": {
+      "config": "thr0.385_maxday1",
+      "score": 8.635324471225967,
+      "valid": true,
+      "val_pf": 2.446808510638297,
+      "val_wr": 0.5948275862068966,
+      "val_pnl": 20.4,
+      "val_trades": 116,
+      "val_min_month": 17,
+      "test_pf": 0.5555555555555557,
+      "test_wr": 0.25,
+      "test_pnl": -1.9999999999999998,
+      "test_trades": 20,
+      "overrides": {
+        "min_val_positive_month_rate": 1.0
+      }
+    },
+    "dailywr_ge_0p55": {
+      "config": "thr0.385_maxday1",
+      "score": 8.635324471225967,
+      "valid": true,
+      "val_pf": 2.446808510638297,
+      "val_wr": 0.5948275862068966,
+      "val_pnl": 20.4,
+      "val_trades": 116,
+      "val_min_month": 17,
+      "test_pf": 0.5555555555555557,
+      "test_wr": 0.25,
+      "test_pnl": -1.9999999999999998,
+      "test_trades": 20,
+      "overrides": {
+        "min_val_daily_win_rate": 0.55
+      }
+    },
+    "dailywr_ge_0p60": {
+      "config": "thr0.371_maxday2",
+      "score": 8.20788781145239,
+      "valid": true,
+      "val_pf": 1.6956521739130441,
+      "val_wr": 0.5043103448275862,
+      "val_pnl": 24.0,
+      "val_trades": 232,
+      "val_min_month": 34,
+      "test_pf": 0.9333333333333335,
+      "test_wr": 0.358974358974359,
+      "test_pnl": -0.4999999999999998,
+      "test_trades": 39,
+      "overrides": {
+        "min_val_daily_win_rate": 0.6
+      }
+    },
+    "median_nonneg": {
+      "config": "thr0.385_maxday1",
+      "score": 8.635324471225967,
+      "valid": true,
+      "val_pf": 2.446808510638297,
+      "val_wr": 0.5948275862068966,
+      "val_pnl": 20.4,
+      "val_trades": 116,
+      "val_min_month": 17,
+      "test_pf": 0.5555555555555557,
+      "test_wr": 0.25,
+      "test_pnl": -1.9999999999999998,
+      "test_trades": 20,
+      "overrides": {
+        "min_val_median_daily_return": 0.0
+      }
+    },
+    "dd_le_1p0": {
+      "config": "thr0.399_maxday1",
+      "score": 8.38940152412069,
+      "valid": true,
+      "val_pf": 2.2916666666666665,
+      "val_wr": 0.5789473684210527,
+      "val_pnl": 18.6,
+      "val_trades": 114,
+      "val_min_month": 17,
+      "test_pf": 0.5555555555555557,
+      "test_wr": 0.25,
+      "test_pnl": -1.9999999999999998,
+      "test_trades": 20,
+      "overrides": {
+        "max_val_daily_drawdown": 1.0
+      }
+    },
+    "dd_le_1p5": {
+      "config": "thr0.385_maxday1",
+      "score": 8.635324471225967,
+      "valid": true,
+      "val_pf": 2.446808510638297,
+      "val_wr": 0.5948275862068966,
+      "val_pnl": 20.4,
+      "val_trades": 116,
+      "val_min_month": 17,
+      "test_pf": 0.5555555555555557,
+      "test_wr": 0.25,
+      "test_pnl": -1.9999999999999998,
+      "test_trades": 20,
+      "overrides": {
+        "max_val_daily_drawdown": 1.5
+      }
+    },
+    "top5_le_0p20": {
+      "config": "thr0.385_maxday1",
+      "score": 8.635324471225967,
+      "valid": true,
+      "val_pf": 2.446808510638297,
+      "val_wr": 0.5948275862068966,
+      "val_pnl": 20.4,
+      "val_trades": 116,
+      "val_min_month": 17,
+      "test_pf": 0.5555555555555557,
+      "test_wr": 0.25,
+      "test_pnl": -1.9999999999999998,
+      "test_trades": 20,
+      "overrides": {
+        "max_val_top5_share": 0.2
+      }
+    },
+    "top5_le_0p30": {
+      "config": "thr0.385_maxday1",
+      "score": 8.635324471225967,
+      "valid": true,
+      "val_pf": 2.446808510638297,
+      "val_wr": 0.5948275862068966,
+      "val_pnl": 20.4,
+      "val_trades": 116,
+      "val_min_month": 17,
+      "test_pf": 0.5555555555555557,
+      "test_wr": 0.25,
+      "test_pnl": -1.9999999999999998,
+      "test_trades": 20,
+      "overrides": {
+        "max_val_top5_share": 0.3
+      }
+    },
+    "pf_ge_1p5": {
+      "config": "thr0.385_maxday1",
+      "score": 8.635324471225967,
+      "valid": true,
+      "val_pf": 2.446808510638297,
+      "val_wr": 0.5948275862068966,
+      "val_pnl": 20.4,
+      "val_trades": 116,
+      "val_min_month": 17,
+      "test_pf": 0.5555555555555557,
+      "test_wr": 0.25,
+      "test_pnl": -1.9999999999999998,
+      "test_trades": 20,
+      "overrides": {
+        "min_val_pf": 1.5
+      }
+    },
+    "pf_ge_2p0": {
+      "config": "thr0.385_maxday1",
+      "score": 8.635324471225967,
+      "valid": true,
+      "val_pf": 2.446808510638297,
+      "val_wr": 0.5948275862068966,
+      "val_pnl": 20.4,
+      "val_trades": 116,
+      "val_min_month": 17,
+      "test_pf": 0.5555555555555557,
+      "test_wr": 0.25,
+      "test_pnl": -1.9999999999999998,
+      "test_trades": 20,
+      "overrides": {
+        "min_val_pf": 2.0
+      }
+    },
+    "wr_ge_0p55": {
+      "config": "thr0.385_maxday1",
+      "score": 8.635324471225967,
+      "valid": true,
+      "val_pf": 2.446808510638297,
+      "val_wr": 0.5948275862068966,
+      "val_pnl": 20.4,
+      "val_trades": 116,
+      "val_min_month": 17,
+      "test_pf": 0.5555555555555557,
+      "test_wr": 0.25,
+      "test_pnl": -1.9999999999999998,
+      "test_trades": 20,
+      "overrides": {
+        "min_val_win_rate": 0.55
+      }
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "rows": 6,
+  "tickers": [
+    "SPXW"
+  ],
+  "date_min": "20260617",
+  "date_max": "20260622",
+  "by_expiry_mode": {
+    "front_weekly": 2,
+    "longer_dated": 1,
+    "zero_dte": 3
+  },
+  "complete_rows": 6,
+  "by_ticker": {
+    "SPXW": {
+      "rows": 6,
+      "complete_rows": 6,
+      "date_min": "20260617",
+      "date_max": "20260622",
+      "expiry_modes": {
+        "front_weekly": 2,
+        "longer_dated": 1,
+        "zero_dte": 3
+      }
+    }
+  }
+}

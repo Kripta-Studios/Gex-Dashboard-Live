@@ -1,0 +1,58 @@
+{
+  "rows": 196,
+  "args": {
+    "manifest": "research_papers\\JEPA\\results\\_diagnostics\\spxw_june17_22_manifest\\thetadata_option_manifest.csv",
+    "output_dir": "research_papers\\JEPA\\results\\_diagnostics\\spxw_june17_22_event_dataset",
+    "tickers": [
+      "SPXW"
+    ],
+    "expiry_modes": [
+      "zero_dte",
+      "front_weekly"
+    ],
+    "start_date": "20260617",
+    "end_date": "20260622",
+    "max_days_per_ticker": 0,
+    "sample_mode": "first",
+    "workers": 6,
+    "bar_minutes": 5,
+    "start_minute": 630,
+    "end_minute": 930,
+    "near_level_only": true,
+    "near_level_bps": 20.0,
+    "max_rows_per_day": 40,
+    "horizon_minutes": 180,
+    "spot_target_bps": 25.0,
+    "spot_stop_bps": 20.0,
+    "option_tp_pct": 0.5,
+    "option_sl_pct": 0.3
+  },
+  "tickers": [
+    "SPXW"
+  ],
+  "date_min": "20260617",
+  "date_max": "20260622",
+  "expiry_modes": {
+    "front_weekly": 80,
+    "zero_dte": 116
+  },
+  "spot_best_side": {
+    "-1": 92,
+    "0": 86,
+    "1": 18
+  },
+  "by_ticker": {
+    "SPXW": {
+      "rows": 196,
+      "expiry_modes": {
+        "front_weekly": 80,
+        "zero_dte": 116
+      },
+      "spot_best_side": {
+        "-1": 92,
+        "0": 86,
+        "1": 18
+      }
+    }
+  }
+}

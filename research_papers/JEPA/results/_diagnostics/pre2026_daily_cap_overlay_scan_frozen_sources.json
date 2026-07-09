@@ -1,0 +1,61 @@
+{
+  "output": "research_papers\\JEPA\\results\\_diagnostics\\pre2026_daily_cap_overlay_scan_frozen_sources.csv",
+  "rows": 72,
+  "select_months": [
+    "202510",
+    "202511",
+    "202512"
+  ],
+  "test_months": [
+    "202601",
+    "202602",
+    "202603",
+    "202604",
+    "202605"
+  ],
+  "args": {
+    "source": [
+      "SPXW:vol25phys=research_papers\\JEPA\\results\\event_option_gate_spxw_front_weekly_delta35_return_vol25_physics_2025h2_2026\\event_option_gate_trades.csv",
+      "SPY:topk=research_papers\\JEPA\\results\\event_option_spy_topk_intraday_side_circuit_m19_2025h2hist_v2_2025h2_2026janjun_risk5000\\intraday_circuit_trades.csv",
+      "QQQ:balanced65=research_papers\\JEPA\\results\\event_option_qqq_branch_router_topk_balanced_call065_2025h2export_202510_202606_risk5000\\trade_union_topk_regressor_trades.csv"
+    ],
+    "output": "research_papers\\JEPA\\results\\_diagnostics\\pre2026_daily_cap_overlay_scan_frozen_sources.csv",
+    "select_start_month": "202510",
+    "select_end_month": "202512",
+    "test_start_month": "202601",
+    "test_end_month": "202605",
+    "cap_grid": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "orders": [
+      "score_desc",
+      "time_asc"
+    ],
+    "min_win_rate": 0.45,
+    "min_profit_factor": 1.3,
+    "min_month_trades": 18,
+    "min_call_rate": 0.2,
+    "max_call_rate": 0.8
+  },
+  "select_pass_counts": {
+    "QQQ": 0,
+    "SPXW": 20,
+    "SPY": 1
+  },
+  "test_pass_counts": {
+    "QQQ": 16,
+    "SPXW": 16,
+    "SPY": 19
+  }
+}

@@ -1,0 +1,80 @@
+[
+  {
+    "schema_version": 1,
+    "component": "event_monthly_volume_backfill_policy",
+    "policy": "SPXW.monthly_backfill18",
+    "ticker": "SPXW",
+    "primary_component": "SPXW.strict_d25_win",
+    "fallback_component": "SPXW.d50_forcedmax3",
+    "primary_name": "win_valthr_strict_d25",
+    "fallback_name": "forcedmax3_d50",
+    "primary_delta_bucket": 25,
+    "fallback_delta_bucket": 50,
+    "min_month_trades": 18,
+    "max_day": 3,
+    "cooldown_minutes": 30,
+    "backfill_only_partial_months": false,
+    "auto_partial_month_target": false,
+    "selection_rule": "Use primary candidate rows first; allow fallback rows only while month-to-date selected count is below the deterministic business-day pace required to reach 18 trades/month.",
+    "historical_replay_source": "research_papers/JEPA/results/event_option_gate_dense15_zero_dte_win_valthr_strict_d25_monthly_backfill18_d50max3_2023_2026_spxw_v1/monthly_volume_backfill_config.csv",
+    "runtime_state_required": [
+      "month_to_date_selected_count",
+      "per_day_count",
+      "per_day_cooldown",
+      "candidate_dedupe_key"
+    ],
+    "live_equivalence_status": "policy_exported_runtime_state_replay_pending"
+  },
+  {
+    "schema_version": 1,
+    "component": "event_monthly_volume_backfill_policy",
+    "policy": "SPY.monthly_backfill18",
+    "ticker": "SPY",
+    "primary_component": "SPY.strict_d25_win",
+    "fallback_component": "SPY.d50_forcedmax3",
+    "primary_name": "win_valthr_strict_d25",
+    "fallback_name": "forcedmax3_d50",
+    "primary_delta_bucket": 25,
+    "fallback_delta_bucket": 50,
+    "min_month_trades": 18,
+    "max_day": 3,
+    "cooldown_minutes": 30,
+    "backfill_only_partial_months": false,
+    "auto_partial_month_target": false,
+    "selection_rule": "Use primary candidate rows first; allow fallback rows only while month-to-date selected count is below the deterministic business-day pace required to reach 18 trades/month.",
+    "historical_replay_source": "research_papers/JEPA/results/event_option_gate_dense15_zero_dte_win_valthr_strict_d25_monthly_backfill18_d50max3_2023_2026_spy_v1/monthly_volume_backfill_config.csv",
+    "runtime_state_required": [
+      "month_to_date_selected_count",
+      "per_day_count",
+      "per_day_cooldown",
+      "candidate_dedupe_key"
+    ],
+    "live_equivalence_status": "policy_exported_runtime_state_replay_pending"
+  },
+  {
+    "schema_version": 1,
+    "component": "event_monthly_volume_backfill_policy",
+    "policy": "QQQ.monthly_backfill18",
+    "ticker": "QQQ",
+    "primary_component": "QQQ.strict_d25_win",
+    "fallback_component": "QQQ.d50_forcedmax3",
+    "primary_name": "win_valthr_strict_d25",
+    "fallback_name": "forcedmax3_d50",
+    "primary_delta_bucket": 25,
+    "fallback_delta_bucket": 50,
+    "min_month_trades": 18,
+    "max_day": 3,
+    "cooldown_minutes": 30,
+    "backfill_only_partial_months": false,
+    "auto_partial_month_target": false,
+    "selection_rule": "Use primary candidate rows first; allow fallback rows only while month-to-date selected count is below the deterministic business-day pace required to reach 18 trades/month.",
+    "historical_replay_source": "research_papers/JEPA/results/event_option_gate_dense15_zero_dte_win_valthr_strict_d25_monthly_backfill18_d50max3_2023_2026_qqq_v1/monthly_volume_backfill_config.csv",
+    "runtime_state_required": [
+      "month_to_date_selected_count",
+      "per_day_count",
+      "per_day_cooldown",
+      "candidate_dedupe_key"
+    ],
+    "live_equivalence_status": "policy_exported_runtime_state_replay_pending"
+  }
+]

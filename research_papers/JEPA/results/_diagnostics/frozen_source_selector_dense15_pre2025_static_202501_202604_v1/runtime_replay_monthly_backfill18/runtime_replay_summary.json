@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "check": "frozen_pre2025_monthly_backfill18_runtime_policy_replay",
+  "passed": true,
+  "start_month": "202501",
+  "end_month": "202604",
+  "tickers": [
+    "SPXW",
+    "SPY",
+    "QQQ"
+  ],
+  "candidate_streams": {
+    "SPXW": {
+      "primary": "research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_wr45_d25_physctx_2023_2026_spxw_v1\\event_option_gate_trades.csv",
+      "fallback": "research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_return_forcedmax3_d50_physctx_2023_2026_spxw_v1\\event_option_gate_trades.csv"
+    },
+    "SPY": {
+      "primary": "research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_strict_d25_physctx_2023_2026_spy_v1\\event_option_gate_trades.csv",
+      "fallback": "research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_return_forcedmax3_d50_physctx_2023_2026_spy_v1\\event_option_gate_trades.csv"
+    },
+    "QQQ": {
+      "primary": "research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_wr45_d25_physctx_2023_2026_qqq_v1\\event_option_gate_trades.csv",
+      "fallback": "research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_return_forcedmax3_d50_physctx_2023_2026_qqq_v1\\event_option_gate_trades.csv"
+    }
+  },
+  "expected_trades": "research_papers\\JEPA\\results\\_diagnostics\\frozen_source_selector_dense15_pre2025_static_202501_202604_v1\\combined\\combined_trades.csv",
+  "output_trades": "research_papers\\JEPA\\results\\_diagnostics\\frozen_source_selector_dense15_pre2025_static_202501_202604_v1\\runtime_replay_monthly_backfill18\\runtime_replay_trades.csv",
+  "policy_parameters": {
+    "primary_name": "win_valthr_wr45_d25",
+    "fallback_name": "forcedmax3_d50",
+    "min_month_trades": 18,
+    "max_day": 3,
+    "cooldown_minutes": 30
+  },
+  "comparison": {
+    "passed": true,
+    "expected_rows": 1162,
+    "replayed_rows": 1162,
+    "missing_count": 0,
+    "extra_count": 0,
+    "missing_examples": [],
+    "extra_examples": [],
+    "by_ticker": {
+      "QQQ": {
+        "expected_rows": 418,
+        "replayed_rows": 418,
+        "missing_count": 0,
+        "extra_count": 0,
+        "passed": true
+      },
+      "SPXW": {
+        "expected_rows": 358,
+        "replayed_rows": 358,
+        "missing_count": 0,
+        "extra_count": 0,
+        "passed": true
+      },
+      "SPY": {
+        "expected_rows": 386,
+        "replayed_rows": 386,
+        "missing_count": 0,
+        "extra_count": 0,
+        "passed": true
+      }
+    }
+  },
+  "metrics": {
+    "overall": {
+      "trades": 1162,
+      "win_rate": 0.5378657487091222,
+      "profit_factor": 1.938880562171559,
+      "pnl_return": 151.25365856583807,
+      "avg_return": 0.1301666596952135,
+      "max_drawdown": -4.7999999999999545,
+      "call_rate": 0.29862306368330466,
+      "days_with_trades": 330,
+      "daily_win_rate": 0.5848484848484848,
+      "median_daily_return": 0.7,
+      "daily_max_drawdown": -4.299999999999997,
+      "top5_day_return": 13.0,
+      "top5_share_of_pnl": 0.08594833423048295,
+      "min_month_trades": 57,
+      "positive_month_rate": 0.9375
+    },
+    "by_ticker": {
+      "QQQ": {
+        "trades": 418,
+        "win_rate": 0.5047846889952153,
+        "profit_factor": 1.698872785829308,
+        "pnl_return": 43.4,
+        "avg_return": 0.10382775119617224,
+        "max_drawdown": -2.6,
+        "call_rate": 0.29904306220095694,
+        "days_with_trades": 317,
+        "daily_win_rate": 0.583596214511041,
+        "median_daily_return": 0.2,
+        "daily_max_drawdown": -2.6,
+        "top5_day_return": 5.0,
+        "top5_share_of_pnl": 0.1152073732718894,
+        "min_month_trades": 19,
+        "positive_month_rate": 0.9375
+      },
+      "SPXW": {
+        "trades": 358,
+        "win_rate": 0.5782122905027933,
+        "profit_factor": 2.28476821192053,
+        "pnl_return": 58.199999999999996,
+        "avg_return": 0.16256983240223463,
+        "max_drawdown": -2.09999999999998,
+        "call_rate": 0.2988826815642458,
+        "days_with_trades": 327,
+        "daily_win_rate": 0.6055045871559633,
+        "median_daily_return": 0.5,
+        "daily_max_drawdown": -2.09999999999998,
+        "top5_day_return": 5.0,
+        "top5_share_of_pnl": 0.0859106529209622,
+        "min_month_trades": 19,
+        "positive_month_rate": 1.0
+      },
+      "SPY": {
+        "trades": 386,
+        "win_rate": 0.5362694300518135,
+        "profit_factor": 1.9246491353042479,
+        "pnl_return": 49.65365856583809,
+        "avg_return": 0.12863642115502097,
+        "max_drawdown": -2.4000000000000057,
+        "call_rate": 0.2979274611398964,
+        "days_with_trades": 321,
+        "daily_win_rate": 0.5638629283489096,
+        "median_daily_return": 0.5,
+        "daily_max_drawdown": -2.000000000000007,
+        "top5_day_return": 6.5,
+        "top5_share_of_pnl": 0.13090676876068152,
+        "min_month_trades": 19,
+        "positive_month_rate": 0.9375
+      }
+    }
+  },
+  "scope_note": "This is a deterministic runtime-policy replay using historical causal candidate streams. It does not use the 202607 deploy scorer to recreate historical fold scores, and it does not constitute paper/broker fill evidence."
+}

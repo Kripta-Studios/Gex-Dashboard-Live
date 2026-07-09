@@ -1,0 +1,12 @@
+{
+  "rows": 5402,
+  "date_min": "20260102",
+  "date_max": "20260622",
+  "by_ticker": {
+    "SPXW": 1942,
+    "SPY": 1795,
+    "QQQ": 1665
+  },
+  "ptdj_cols": 119,
+  "tdvp_cols": 167
+}

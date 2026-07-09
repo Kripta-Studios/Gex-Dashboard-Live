@@ -1,0 +1,169 @@
+{
+  "passed": false,
+  "strict": true,
+  "result_dir": "research_papers\\JEPA\\results\\_diagnostics\\outer_stream_selector_dense15_param_scan_2025_202604\\s12_m18_vw0p1\\combined",
+  "months": [
+    "202501",
+    "202502",
+    "202503",
+    "202504",
+    "202505",
+    "202506",
+    "202507",
+    "202508",
+    "202509",
+    "202510",
+    "202511",
+    "202512",
+    "202601",
+    "202602",
+    "202603",
+    "202604"
+  ],
+  "manifest_path": "research_papers\\JEPA\\results\\_diagnostics\\outer_stream_selector_dense15_param_scan_2025_202604\\s12_m18_vw0p1\\combined\\research_selection_manifest.json",
+  "manifest_present": false,
+  "tickers": {
+    "QQQ": {
+      "ticker": "QQQ",
+      "fold_months": [
+        "202501",
+        "202502",
+        "202503",
+        "202504",
+        "202505",
+        "202506",
+        "202507",
+        "202508",
+        "202509",
+        "202510",
+        "202511",
+        "202512",
+        "202601",
+        "202602",
+        "202603",
+        "202604"
+      ],
+      "source_streams": [
+        "QQQ"
+      ],
+      "source_files": [
+        "research_papers\\JEPA\\results\\_diagnostics\\outer_stream_selector_dense15_param_scan_2025_202604\\s12_m18_vw0p1\\qqq\\stream_selector_folds.csv"
+      ],
+      "selected_sources": [
+        "event_option_gate_dense15_zero_dte_win_d25_strict_backfill_d50max3_cau_combined",
+        "event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d_monthly_volume_backfill"
+      ],
+      "modes": [
+        "SELECTED"
+      ],
+      "selector_evidence": true,
+      "causal_model_evidence": true,
+      "selection_status": "causal_outer_or_inner_selector_present"
+    },
+    "SPXW": {
+      "ticker": "SPXW",
+      "fold_months": [
+        "202501",
+        "202502",
+        "202503",
+        "202504",
+        "202505",
+        "202506",
+        "202507",
+        "202508",
+        "202509",
+        "202510",
+        "202511",
+        "202512",
+        "202601",
+        "202602",
+        "202603",
+        "202604"
+      ],
+      "source_streams": [
+        "SPXW"
+      ],
+      "source_files": [
+        "research_papers\\JEPA\\results\\_diagnostics\\outer_stream_selector_dense15_param_scan_2025_202604\\s12_m18_vw0p1\\spxw\\stream_selector_folds.csv"
+      ],
+      "selected_sources": [
+        "event_option_gate_dense15_zero_dte_win_d25_strict_backfill_d50max3_cau_combined"
+      ],
+      "modes": [
+        "SELECTED"
+      ],
+      "selector_evidence": true,
+      "causal_model_evidence": true,
+      "selection_status": "causal_outer_or_inner_selector_present"
+    },
+    "SPY": {
+      "ticker": "SPY",
+      "fold_months": [
+        "202501",
+        "202502",
+        "202503",
+        "202504",
+        "202505",
+        "202506",
+        "202507",
+        "202508",
+        "202509",
+        "202510",
+        "202511",
+        "202512",
+        "202601",
+        "202602",
+        "202603",
+        "202604"
+      ],
+      "source_streams": [
+        "SPY"
+      ],
+      "source_files": [
+        "research_papers\\JEPA\\results\\_diagnostics\\outer_stream_selector_dense15_param_scan_2025_202604\\s12_m18_vw0p1\\spy\\stream_selector_folds.csv"
+      ],
+      "selected_sources": [
+        "event_option_gate_dense15_zero_dte_win_d25_strict_backfill_d50max3_cau_combined",
+        "event_option_gate_dense15_zero_dte_win_valthr_strict_d25_physctx_2023__event_option_gate",
+        "event_option_gate_dense15_zero_dte_win_valthr_wr45_d25_physctx_2023_20_event_option_gate"
+      ],
+      "modes": [
+        "SELECTED"
+      ],
+      "selector_evidence": true,
+      "causal_model_evidence": true,
+      "selection_status": "causal_outer_or_inner_selector_present"
+    }
+  },
+  "issues": [
+    "strict mode requires a valid research_selection_manifest.json"
+  ],
+  "warnings": [
+    "row 32 202501: source fold file lacks month/mode columns for research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d50max3_2023_2026_qqq_v1\\monthly_volume_backfill_trades.csv",
+    "row 33 202502: source fold file lacks month/mode columns for research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d50max3_2023_2026_qqq_v1\\monthly_volume_backfill_trades.csv",
+    "row 34 202503: source fold file lacks month/mode columns for research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d50max3_2023_2026_qqq_v1\\monthly_volume_backfill_trades.csv",
+    "row 35 202504: source fold file lacks month/mode columns for research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d50max3_2023_2026_qqq_v1\\monthly_volume_backfill_trades.csv",
+    "row 36 202505: source fold file lacks month/mode columns for research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d50max3_2023_2026_qqq_v1\\monthly_volume_backfill_trades.csv",
+    "row 37 202506: source fold file lacks month/mode columns for research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d50max3_2023_2026_qqq_v1\\monthly_volume_backfill_trades.csv",
+    "row 38 202507: source fold file lacks month/mode columns for research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d50max3_2023_2026_qqq_v1\\monthly_volume_backfill_trades.csv",
+    "row 39 202508: source fold file lacks month/mode columns for research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d50max3_2023_2026_qqq_v1\\monthly_volume_backfill_trades.csv",
+    "row 40 202509: source fold file lacks month/mode columns for research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d50max3_2023_2026_qqq_v1\\monthly_volume_backfill_trades.csv",
+    "row 41 202510: source fold file lacks month/mode columns for research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d50max3_2023_2026_qqq_v1\\monthly_volume_backfill_trades.csv",
+    "row 43 202512: source fold file lacks month/mode columns for research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_valthr_d25_monthly_backfill18_d50max3_2023_2026_qqq_v1\\monthly_volume_backfill_trades.csv",
+    "selection manifest missing: research_selection_manifest.json"
+  ],
+  "sources": {
+    "trade_file": [
+      "SPXW=research_papers\\JEPA\\results\\_diagnostics\\outer_stream_selector_dense15_param_scan_2025_202604\\s12_m18_vw0p1\\spxw\\stream_selector_trades.csv",
+      "SPY=research_papers\\JEPA\\results\\_diagnostics\\outer_stream_selector_dense15_param_scan_2025_202604\\s12_m18_vw0p1\\spy\\stream_selector_trades.csv",
+      "QQQ=research_papers\\JEPA\\results\\_diagnostics\\outer_stream_selector_dense15_param_scan_2025_202604\\s12_m18_vw0p1\\qqq\\stream_selector_trades.csv"
+    ],
+    "fold_file": [
+      "SPXW=research_papers\\JEPA\\results\\_diagnostics\\outer_stream_selector_dense15_param_scan_2025_202604\\s12_m18_vw0p1\\spxw\\stream_selector_folds.csv",
+      "SPY=research_papers\\JEPA\\results\\_diagnostics\\outer_stream_selector_dense15_param_scan_2025_202604\\s12_m18_vw0p1\\spy\\stream_selector_folds.csv",
+      "QQQ=research_papers\\JEPA\\results\\_diagnostics\\outer_stream_selector_dense15_param_scan_2025_202604\\s12_m18_vw0p1\\qqq\\stream_selector_folds.csv"
+    ],
+    "start_month": "202501",
+    "end_month": "202604"
+  }
+}

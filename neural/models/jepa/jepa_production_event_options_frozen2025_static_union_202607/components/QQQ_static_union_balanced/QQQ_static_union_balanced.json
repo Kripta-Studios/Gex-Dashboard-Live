@@ -2,20 +2,35 @@
   "schema_version": 1,
   "kind": "event_static_multi_delta_union_policy",
   "ticker": "QQQ",
-  "profile": "balanced_cap4",
-  "policy_source": "FROZEN2025_SELECT2026_BALANCED",
+  "profile": "causal1030_intersection_q_thr0_counter5m_cap2_cd45",
+  "policy_source": "FROZEN2025_CAUSAL1030_INTERSECTION_GUARDED_V1",
   "expiry_modes": [
     "zero_dte"
   ],
+  "candidate_universe_filter": {
+    "near_level_abs_bps_max": 20.0,
+    "min_entry_time_et": "10:30",
+    "requires_complete_initial_balance": true
+  },
   "max_day": 2,
-  "cooldown_minutes": 30,
+  "cooldown_minutes": 45,
   "sources": [
     {
       "component": "QQQ.frozen_d35_return",
       "variant": "d35",
       "source_name": "d35",
       "priority": 0,
-      "delta_bucket": 35
+      "delta_bucket": 35,
+      "min_score": 0.0,
+      "min_edge_abs": 0.0,
+      "near_level_abs_bps_max": 20.0,
+      "min_entry_time_et": "12:30",
+      "max_entry_time_et": "14:30",
+      "allowed_actions": [
+        "CALL",
+        "PUT"
+      ],
+      "momentum_filter": "SELF_COUNTER_5M"
     }
   ]
 }

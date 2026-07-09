@@ -1,0 +1,2 @@
+date,entry_time,exit_time,ticker,direction,right,strike,delta,entry_premium,exit_premium,contracts,pnl_pct,pnl_dollars,hold_minutes,exit_reason,peak_pnl_pct,trough_pnl_pct,option_snapshot_suffix,exit_contract,source_model
+20260622,11:40,12:00,SPY,SHORT,PUT,743.0,-0.35,1.0,1.5,1,0.5,50.0,20.0,event_option_take_profit_50%,0.5,0.0,weekly,event_option_tp50_sl30_max180,event_option:SPY:base:ptdj:front_weekly:d35:SPY_PTDJ

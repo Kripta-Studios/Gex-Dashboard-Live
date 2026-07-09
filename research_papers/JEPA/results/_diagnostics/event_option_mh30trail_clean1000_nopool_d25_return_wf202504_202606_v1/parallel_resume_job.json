@@ -1,0 +1,7 @@
+{
+  "delta": 25,
+  "pid": 49312,
+  "out": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d25_return_wf202504_202606_v1",
+  "stdout": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d25_return_wf202504_202606_v1\\parallel_resume_stdout.log",
+  "stderr": "research_papers\\JEPA\\results\\_diagnostics\\event_option_mh30trail_clean1000_nopool_d25_return_wf202504_202606_v1\\parallel_resume_stderr.log"
+}

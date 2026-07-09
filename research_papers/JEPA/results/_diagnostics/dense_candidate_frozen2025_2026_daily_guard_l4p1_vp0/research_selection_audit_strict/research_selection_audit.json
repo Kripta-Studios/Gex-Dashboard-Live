@@ -1,0 +1,75 @@
+{
+  "passed": true,
+  "strict": true,
+  "result_dir": "research_papers\\JEPA\\results\\_diagnostics\\dense_candidate_frozen2025_2026_daily_guard_l4p1_vp0",
+  "months": [
+    "202601",
+    "202602",
+    "202603",
+    "202604"
+  ],
+  "manifest_path": "research_papers\\JEPA\\results\\_diagnostics\\dense_candidate_frozen2025_2026_daily_guard_l4p1_vp0\\research_selection_manifest.json",
+  "manifest_present": true,
+  "tickers": {
+    "QQQ": {
+      "ticker": "QQQ",
+      "fold_months": [
+        "202601",
+        "202602",
+        "202603",
+        "202604"
+      ],
+      "source_streams": [
+        "forcedmax3_d50",
+        "win_valthr_strict_d25"
+      ],
+      "source_files": [],
+      "selected_sources": [],
+      "modes": [],
+      "selector_evidence": true,
+      "causal_model_evidence": false,
+      "selection_status": "fixed_multi_stream_external_freeze_manifest"
+    },
+    "SPXW": {
+      "ticker": "SPXW",
+      "fold_months": [
+        "202601",
+        "202602",
+        "202603",
+        "202604"
+      ],
+      "source_streams": [
+        "forcedmax3_d50",
+        "win_valthr_strict_d25"
+      ],
+      "source_files": [],
+      "selected_sources": [],
+      "modes": [],
+      "selector_evidence": true,
+      "causal_model_evidence": false,
+      "selection_status": "fixed_multi_stream_external_freeze_manifest"
+    },
+    "SPY": {
+      "ticker": "SPY",
+      "fold_months": [
+        "202601",
+        "202602",
+        "202603",
+        "202604"
+      ],
+      "source_streams": [
+        "forcedmax3_d50",
+        "win_valthr_strict_d25"
+      ],
+      "source_files": [],
+      "selected_sources": [],
+      "modes": [],
+      "selector_evidence": true,
+      "causal_model_evidence": false,
+      "selection_status": "fixed_multi_stream_external_freeze_manifest"
+    }
+  },
+  "issues": [],
+  "warnings": [],
+  "sources": {}
+}

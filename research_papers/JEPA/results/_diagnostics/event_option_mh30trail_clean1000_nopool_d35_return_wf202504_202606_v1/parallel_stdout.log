@@ -1,0 +1,11 @@
+[EVENT_GATE] SPXW 202508 cfg=thr0.168_maxday1 val_pf=1.113 test_trades=21 test_pf=0.263 test_ret=-6.74
+[EVENT_GATE] SPXW 202509 cfg=thr-0.100_maxday3 val_pf=1.428 test_trades=63 test_pf=0.967 test_ret=-0.61
+[EVENT_GATE] SPXW 202510 cfg=thr0.051_maxday3 val_pf=1.196 test_trades=64 test_pf=1.828 test_ret=12.76
+[EVENT_GATE] SPXW 202511 cfg=thr0.100_maxday3 val_pf=1.326 test_trades=51 test_pf=1.069 test_ret=1.16
+[EVENT_GATE] SPXW 202512 cfg=thr0.084_maxday3 val_pf=1.541 test_trades=63 test_pf=0.931 test_ret=-1.43
+[EVENT_GATE] SPXW 202601 cfg=thr-0.200_maxday3 val_pf=1.359 test_trades=60 test_pf=1.570 test_ret=8.21
+[EVENT_GATE] SPXW 202602 cfg=thr0.000_maxday3 val_pf=1.408 test_trades=56 test_pf=0.995 test_ret=-0.10
+[EVENT_GATE] SPXW 202603 cfg=thr0.125_maxday3 val_pf=1.513 test_trades=64 test_pf=1.289 test_ret=4.94
+[EVENT_GATE] SPXW 202604 cfg=thr0.200_maxday3 val_pf=1.606 test_trades=61 test_pf=0.914 test_ret=-1.85
+[EVENT_GATE] SPXW 202605 cfg=thr0.200_maxday3 val_pf=1.488 test_trades=59 test_pf=0.992 test_ret=-0.14
+[EVENT_GATE] SPXW 202606 cfg=thr0.300_maxday3 val_pf=1.714 test_trades=45 test_pf=1.950 test_ret=12.36

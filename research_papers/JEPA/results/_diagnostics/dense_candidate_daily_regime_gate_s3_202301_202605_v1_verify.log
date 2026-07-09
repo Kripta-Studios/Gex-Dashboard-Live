@@ -1,0 +1,101 @@
+# Event Option Result Verification
+
+- Passed: False
+- Result dir: `research_papers\JEPA\results\_diagnostics\dense_candidate_daily_regime_gate_s3_202301_202605_v1`
+
+## Gates
+
+```json
+{
+  "tickers": [
+    "SPXW",
+    "SPY",
+    "QQQ"
+  ],
+  "months": [
+    "202301",
+    "202302",
+    "202303",
+    "202304",
+    "202305",
+    "202306",
+    "202307",
+    "202308",
+    "202309",
+    "202310",
+    "202311",
+    "202312",
+    "202401",
+    "202402",
+    "202403",
+    "202404",
+    "202405",
+    "202406",
+    "202407",
+    "202408",
+    "202409",
+    "202410",
+    "202411",
+    "202412",
+    "202501",
+    "202502",
+    "202503",
+    "202504",
+    "202505",
+    "202506",
+    "202507",
+    "202508",
+    "202509",
+    "202510",
+    "202511",
+    "202512",
+    "202601",
+    "202602",
+    "202603",
+    "202604",
+    "202605"
+  ],
+  "min_win_rate": 0.45,
+  "min_profit_factor": 1.3,
+  "min_month_trades": 18,
+  "strict_month_trades": false,
+  "require_positive_months": false,
+  "min_call_rate": 0.2,
+  "max_call_rate": 0.8,
+  "disallow_weak_fold_modes": true
+}
+```
+
+## Tickers
+
+| Ticker | Passed | Trades | WR | PF | Min Month Trades | PnL Return | Call Rate | Positive Months |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| SPXW | False | 1017 | 49.36% | 1.628 | 15 | 96.437 | 25.57% | 33/41 |
+| SPY | False | 968 | 46.80% | 1.463 | 14 | 71.130 | 25.52% | 30/41 |
+| QQQ | False | 946 | 47.46% | 1.495 | 13 | 73.769 | 27.80% | 33/41 |
+
+## Integrity
+
+```json
+{
+  "passed": true,
+  "folds_checked": 123,
+  "issues": []
+}
+```
+
+## Backfill Audit
+
+```json
+{
+  "passed": true,
+  "rows_checked": 324,
+  "issues": []
+}
+```
+
+## Issues
+
+- SPXW failed checks: ['volume_ok']
+- SPY failed checks: ['volume_ok']
+- QQQ failed checks: ['volume_ok']

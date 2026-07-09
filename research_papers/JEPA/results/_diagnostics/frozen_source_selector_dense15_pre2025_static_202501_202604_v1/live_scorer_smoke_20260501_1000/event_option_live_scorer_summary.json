@@ -1,0 +1,65 @@
+{
+  "snapshot_path": "research_papers\\JEPA\\results\\event_option_gate_dense15_zero_dte_win_d25_strict_uniform_backfill_d50max3_causal_2023_2026_v1\\snapshot_to_order_batch_smoke\\cases\\20260501_1000\\event_option_snapshots_latest.parquet",
+  "snapshot_rows": 3,
+  "candidate_rows": 6,
+  "by_ticker": {
+    "QQQ": {
+      "candidate_rows": 2,
+      "sources": [
+        "forcedmax3_d50",
+        "win_valthr_wr45_d25"
+      ],
+      "actions": [
+        "PUT"
+      ]
+    },
+    "SPXW": {
+      "candidate_rows": 2,
+      "sources": [
+        "forcedmax3_d50",
+        "win_valthr_wr45_d25"
+      ],
+      "actions": [
+        "PUT"
+      ]
+    },
+    "SPY": {
+      "candidate_rows": 2,
+      "sources": [
+        "forcedmax3_d50",
+        "win_valthr_wr45_d25"
+      ],
+      "actions": [
+        "PUT"
+      ]
+    }
+  },
+  "registry": {
+    "status": "forward_frozen_research_candidate_not_live_ready",
+    "deploy_month": "202607",
+    "completed_data_through_month": "202604",
+    "component_count": 9,
+    "components": [
+      "QQQ.fallback_d50_return",
+      "QQQ.monthly_backfill18",
+      "QQQ.primary_d25_win",
+      "SPXW.fallback_d50_return",
+      "SPXW.monthly_backfill18",
+      "SPXW.primary_d25_win",
+      "SPY.fallback_d50_return",
+      "SPY.monthly_backfill18",
+      "SPY.primary_d25_win"
+    ],
+    "missing_for_full_live_equivalence": [
+      "stateful runtime replay for monthly_backfill18 is not yet proven",
+      "paper/broker order-fill evidence is not yet present",
+      "curve_health failed or is missing",
+      "statistical robustness failed",
+      "research manifest is reproducible but not timestamp proof of source-universe freeze"
+    ],
+    "invalidated_components": []
+  },
+  "issues": [],
+  "live_ready": false,
+  "live_ready_reason": "diagnostic scorer only; exact stateful bot replay equivalence is incomplete"
+}

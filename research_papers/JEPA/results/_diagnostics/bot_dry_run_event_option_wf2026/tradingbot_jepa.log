@@ -1,0 +1,22 @@
+2026-07-01 00:25:25,810 INFO Level-stability live signal disabled
+2026-07-01 00:25:25,877 INFO Loaded legacy JEPA 180m signal model model_dir=C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\neural\models\jepa\jepa_production_final_180m
+2026-07-01 00:25:25,877 INFO Structural option selector disabled
+2026-07-01 00:25:25,878 INFO Loaded event-option production policy=event_option_dense15_backfill18_wf2026_202607 deploy_month=202607 status=production_live_ready path=neural\models\jepa\jepa_production_event_options_backfill18_wf2026\event_option_policy.json
+2026-07-01 00:25:25,903 INFO Loaded event-option component registry status=production_live_ready deploy_month=202607 completed_through=202606 components=9 missing_live_equivalence=0 invalidated=0 path=neural\models\jepa\jepa_production_event_options_backfill18_wf2026\component_registry.json
+2026-07-01 00:25:25,904 INFO OptionValue live selector disabled; using fixed delta 0.70
+2026-07-01 00:25:25,904 INFO Starting JEPA live bot signal=legacy:base_jepa selector=base_jepa_180m_fixed_delta_0.70_trail050_025_cutoff1430 event_scorer=enabled event_policy=event_option_dense15_backfill18_wf2026_202607 event_components=production_live_ready:9 legacy_signal=enabled rt_data=rt_data risk=5000 cutoff=15:45 stop=-60% trail=50%/25% tp=1000%
+2026-07-01 00:25:25,904 INFO Paper order intents enabled: writing research_papers\JEPA\results\_diagnostics\bot_dry_run_event_option_wf2026\paper_order_intents_jepa.jsonl; no broker submission is performed
+2026-07-01 00:25:56,539 INFO Level-stability live signal disabled
+2026-07-01 00:25:56,539 INFO Structural option selector disabled
+2026-07-01 00:25:56,539 INFO Loaded event-option production policy=event_option_dense15_backfill18_wf2026_202607 deploy_month=202607 status=production_live_ready path=neural\models\jepa\jepa_production_event_options_backfill18_wf2026\event_option_policy.json
+2026-07-01 00:25:56,541 INFO Loaded event-option component registry status=production_live_ready deploy_month=202607 completed_through=202606 components=9 missing_live_equivalence=0 invalidated=0 path=neural\models\jepa\jepa_production_event_options_backfill18_wf2026\component_registry.json
+2026-07-01 00:25:56,541 INFO OptionValue live selector disabled; using fixed delta 0.70
+2026-07-01 00:25:56,541 INFO Starting JEPA live bot signal=none selector=base_jepa_180m_fixed_delta_0.70_trail050_025_cutoff1430 event_scorer=enabled event_policy=event_option_dense15_backfill18_wf2026_202607 event_components=production_live_ready:9 legacy_signal=disabled rt_data=rt_data risk=5000 cutoff=15:45 stop=-60% trail=50%/25% tp=1000%
+2026-07-01 00:25:56,541 INFO Paper order intents enabled: writing research_papers\JEPA\results\_diagnostics\bot_dry_run_event_option_wf2026\paper_order_intents_jepa.jsonl; no broker submission is performed
+2026-07-01 00:26:21,013 INFO Level-stability live signal disabled
+2026-07-01 00:26:21,014 INFO Structural option selector disabled
+2026-07-01 00:26:21,014 INFO Loaded event-option production policy=event_option_dense15_backfill18_wf2026_202607 deploy_month=202607 status=production_live_ready path=neural\models\jepa\jepa_production_event_options_backfill18_wf2026\event_option_policy.json
+2026-07-01 00:26:21,016 INFO Loaded event-option component registry status=production_live_ready deploy_month=202607 completed_through=202606 components=9 missing_live_equivalence=0 invalidated=0 path=neural\models\jepa\jepa_production_event_options_backfill18_wf2026\component_registry.json
+2026-07-01 00:26:21,016 INFO OptionValue live selector disabled; using fixed delta 0.70
+2026-07-01 00:26:21,016 INFO Starting JEPA live bot signal=none selector=base_jepa_180m_fixed_delta_0.70_trail050_025_cutoff1430 event_scorer=enabled event_policy=event_option_dense15_backfill18_wf2026_202607 event_components=production_live_ready:9 legacy_signal=disabled rt_data=rt_data risk=5000 cutoff=14:30 stop=-60% trail=50%/25% tp=1000%
+2026-07-01 00:26:21,016 INFO Paper order intents enabled: writing research_papers\JEPA\results\_diagnostics\bot_dry_run_event_option_wf2026\paper_order_intents_jepa.jsonl; no broker submission is performed

@@ -1,0 +1,86 @@
+{
+  "rows": 422,
+  "args": {
+    "manifest": "research_papers\\JEPA\\results\\_diagnostics\\core_june17_22_manifest\\thetadata_option_manifest.csv",
+    "output_dir": "research_papers\\JEPA\\results\\_diagnostics\\core_june17_22_event_dataset",
+    "tickers": [
+      "SPXW",
+      "SPY",
+      "QQQ"
+    ],
+    "expiry_modes": [
+      "zero_dte",
+      "front_weekly"
+    ],
+    "start_date": "20260617",
+    "end_date": "20260622",
+    "max_days_per_ticker": 0,
+    "sample_mode": "first",
+    "workers": 12,
+    "bar_minutes": 5,
+    "start_minute": 630,
+    "end_minute": 930,
+    "near_level_only": true,
+    "near_level_bps": 20.0,
+    "max_rows_per_day": 40,
+    "horizon_minutes": 180,
+    "spot_target_bps": 25.0,
+    "spot_stop_bps": 20.0,
+    "option_tp_pct": 0.5,
+    "option_sl_pct": 0.3
+  },
+  "tickers": [
+    "QQQ",
+    "SPXW",
+    "SPY"
+  ],
+  "date_min": "20260617",
+  "date_max": "20260622",
+  "expiry_modes": {
+    "front_weekly": 160,
+    "zero_dte": 262
+  },
+  "spot_best_side": {
+    "-1": 164,
+    "0": 177,
+    "1": 81
+  },
+  "by_ticker": {
+    "QQQ": {
+      "rows": 120,
+      "expiry_modes": {
+        "front_weekly": 40,
+        "zero_dte": 80
+      },
+      "spot_best_side": {
+        "-1": 42,
+        "0": 29,
+        "1": 49
+      }
+    },
+    "SPXW": {
+      "rows": 196,
+      "expiry_modes": {
+        "front_weekly": 80,
+        "zero_dte": 116
+      },
+      "spot_best_side": {
+        "-1": 92,
+        "0": 86,
+        "1": 18
+      }
+    },
+    "SPY": {
+      "rows": 106,
+      "expiry_modes": {
+        "front_weekly": 40,
+        "zero_dte": 66
+      },
+      "spot_best_side": {
+        "-1": 30,
+        "0": 62,
+        "1": 14
+      }
+    }
+  }
+}

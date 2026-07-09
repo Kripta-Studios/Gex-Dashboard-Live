@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "artifact": "frozen_pre2025_static_source_replay",
+  "trade_file": "research_papers\\JEPA\\results\\_diagnostics\\frozen_pre2025_static_source_replay_202501_202606_excl202605_v1\\combined_trades.csv",
+  "months": [
+    "202501",
+    "202502",
+    "202503",
+    "202504",
+    "202505",
+    "202506",
+    "202507",
+    "202508",
+    "202509",
+    "202510",
+    "202511",
+    "202512",
+    "202601",
+    "202602",
+    "202603",
+    "202604",
+    "202606"
+  ],
+  "excluded_months": [
+    "202605"
+  ],
+  "tickers": [
+    "SPXW",
+    "SPY",
+    "QQQ"
+  ],
+  "overall": {
+    "trades": 1162,
+    "win_rate": 0.5378657487091222,
+    "profit_factor": 1.938880562171559,
+    "pnl_return": 151.25365856583807,
+    "avg_return": 0.1301666596952135,
+    "max_drawdown": -4.7999999999999545,
+    "call_rate": 0.29862306368330466,
+    "days_with_trades": 330,
+    "daily_win_rate": 0.5848484848484848,
+    "median_daily_return": 0.7,
+    "daily_max_drawdown": -4.299999999999997,
+    "top5_day_return": 13.0,
+    "top5_share_of_pnl": 0.08594833423048295,
+    "min_month_trades": 0,
+    "positive_month_rate": 0.8823529411764706
+  },
+  "by_ticker": {
+    "QQQ": {
+      "trades": 418,
+      "win_rate": 0.5047846889952153,
+      "profit_factor": 1.698872785829308,
+      "pnl_return": 43.4,
+      "avg_return": 0.10382775119617224,
+      "max_drawdown": -2.6,
+      "call_rate": 0.29904306220095694,
+      "days_with_trades": 317,
+      "daily_win_rate": 0.583596214511041,
+      "median_daily_return": 0.2,
+      "daily_max_drawdown": -2.6,
+      "top5_day_return": 5.0,
+      "top5_share_of_pnl": 0.1152073732718894,
+      "min_month_trades": 0,
+      "positive_month_rate": 0.8823529411764706
+    },
+    "SPXW": {
+      "trades": 358,
+      "win_rate": 0.5782122905027933,
+      "profit_factor": 2.28476821192053,
+      "pnl_return": 58.199999999999996,
+      "avg_return": 0.16256983240223463,
+      "max_drawdown": -2.09999999999998,
+      "call_rate": 0.2988826815642458,
+      "days_with_trades": 327,
+      "daily_win_rate": 0.6055045871559633,
+      "median_daily_return": 0.5,
+      "daily_max_drawdown": -2.09999999999998,
+      "top5_day_return": 5.0,
+      "top5_share_of_pnl": 0.0859106529209622,
+      "min_month_trades": 0,
+      "positive_month_rate": 0.9411764705882353
+    },
+    "SPY": {
+      "trades": 386,
+      "win_rate": 0.5362694300518135,
+      "profit_factor": 1.9246491353042479,
+      "pnl_return": 49.65365856583809,
+      "avg_return": 0.12863642115502097,
+      "max_drawdown": -2.4000000000000057,
+      "call_rate": 0.2979274611398964,
+      "days_with_trades": 321,
+      "daily_win_rate": 0.5638629283489096,
+      "median_daily_return": 0.5,
+      "daily_max_drawdown": -2.000000000000007,
+      "top5_day_return": 6.5,
+      "top5_share_of_pnl": 0.13090676876068152,
+      "min_month_trades": 0,
+      "positive_month_rate": 0.8823529411764706
+    }
+  },
+  "risk_capital": 5000.0,
+  "policy_parameters": {
+    "min_month_trades": 18,
+    "max_day": 3,
+    "cooldown_minutes": 30
+  },
+  "scope_note": "This materializes the fixed pre-2025-selected source family over historical OOS candidate streams. It is an input for causal guard selection, not new production evidence by itself."
+}

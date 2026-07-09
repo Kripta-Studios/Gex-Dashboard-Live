@@ -1,0 +1,4 @@
+2026-07-03 00:55:39,914 INFO Level-stability live signal disabled
+2026-07-03 00:55:39,914 INFO Structural option selector disabled
+2026-07-03 00:55:39,915 INFO Loaded event-option production policy=event_option_dense15_backfill19_spy_no_scorethr_wf2026_fullmayjun_202607 deploy_month=202607 status=production_live_ready path=neural\models\jepa\jepa_production_event_options_backfill19_spy_no_scorethr_wf2026_fullmayjun\event_option_policy.json
+2026-07-03 00:55:39,918 INFO Loaded event-option component registry status=production_live_ready deploy_month=202607 completed_through=202606 components=9 missing_live_equivalence=0 invalidated=0 path=neural\models\jepa\jepa_production_event_options_backfill19_spy_no_scorethr_wf2026_fullmayjun\component_registry.json

@@ -1,0 +1,14 @@
+{
+  "rows": 3,
+  "day_dir": "research_papers\\JEPA\\results\\_diagnostics\\frozen_pre2025_live_snapshot_to_order_smoke_20260605_1000\\rt_day\\20260605",
+  "tickers": [
+    "QQQ",
+    "SPXW",
+    "SPY"
+  ],
+  "expiry_modes": {
+    "zero_dte": 3
+  },
+  "missing": [],
+  "columns": 278
+}

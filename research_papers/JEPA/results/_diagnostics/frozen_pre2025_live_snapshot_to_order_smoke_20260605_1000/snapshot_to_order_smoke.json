@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "smoke": "dense_live_snapshot_to_order",
+  "date": "20260605",
+  "cutoff": "10:00",
+  "day_dir": "research_papers\\JEPA\\results\\_diagnostics\\frozen_pre2025_live_snapshot_to_order_smoke_20260605_1000\\rt_day\\20260605",
+  "snapshot_summary": {
+    "rows": 3,
+    "day_dir": "research_papers\\JEPA\\results\\_diagnostics\\frozen_pre2025_live_snapshot_to_order_smoke_20260605_1000\\rt_day\\20260605",
+    "tickers": [
+      "QQQ",
+      "SPXW",
+      "SPY"
+    ],
+    "expiry_modes": {
+      "zero_dte": 3
+    },
+    "missing": [],
+    "columns": 278
+  },
+  "candidate_rows": 6,
+  "candidate_issues": [],
+  "selections": [
+    {
+      "ticker": "SPX",
+      "policy_ticker": "SPXW",
+      "selected": true,
+      "action": "CALL",
+      "source_stream": "win_valthr_wr45_d25",
+      "monthly_backfill_role": "primary",
+      "event_delta_bucket": "d25",
+      "score": 0.4527332719041271,
+      "strike": 7530.0,
+      "delta": 0.2467,
+      "raw_entry_premium": 6.35,
+      "entry_premium": 6.5405,
+      "expiration": "20260605",
+      "selector_policy": "event_option:SPXW::win_valthr_wr45_d25:zero_dte:d25:SPXW_DENSE15_BACKFILL18"
+    },
+    {
+      "ticker": "SPY",
+      "policy_ticker": "SPY",
+      "selected": true,
+      "action": "CALL",
+      "source_stream": "win_valthr_wr45_d25",
+      "monthly_backfill_role": "primary",
+      "event_delta_bucket": "d25",
+      "score": 0.47314076218822265,
+      "strike": 752.0,
+      "delta": 0.2316,
+      "raw_entry_premium": 0.595,
+      "entry_premium": 0.61285,
+      "expiration": "20260605",
+      "selector_policy": "event_option:SPY::win_valthr_wr45_d25:zero_dte:d25:SPY_DENSE15_BACKFILL18"
+    },
+    {
+      "ticker": "QQQ",
+      "policy_ticker": "QQQ",
+      "selected": true,
+      "action": "CALL",
+      "source_stream": "win_valthr_wr45_d25",
+      "monthly_backfill_role": "primary",
+      "event_delta_bucket": "d25",
+      "score": 0.4722772973829339,
+      "strike": 729.0,
+      "delta": 0.2343,
+      "raw_entry_premium": 0.985,
+      "entry_premium": 1.01455,
+      "expiration": "20260605",
+      "selector_policy": "event_option:QQQ::win_valthr_wr45_d25:zero_dte:d25:QQQ_DENSE15_BACKFILL18"
+    }
+  ],
+  "passed": true,
+  "scope": "ThetaData historical files -> live day_dir schema -> event snapshot builder -> candidate registry scorer -> bot delta contract selection",
+  "not_covered": [
+    "historical OOS fold model equivalence",
+    "future deploy-month trading quality",
+    "broker/order execution fills"
+  ]
+}

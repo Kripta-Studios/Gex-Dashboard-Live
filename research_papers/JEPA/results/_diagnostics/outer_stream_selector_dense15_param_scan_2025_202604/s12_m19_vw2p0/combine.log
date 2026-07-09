@@ -1,0 +1,184 @@
+# Combined Event Option Trade Streams
+
+This artifact combines already generated causal OOS trade streams. It does not train or select any new trade.
+
+## Overall
+
+```json
+{
+  "trades": 1604,
+  "win_rate": 0.4775561097256858,
+  "profit_factor": 1.5231681767050487,
+  "pnl_return": 131.4837887544615,
+  "avg_return": 0.08197243687934008,
+  "max_drawdown": -11.299999999999997,
+  "call_rate": 0.2986284289276808,
+  "days_with_trades": 330,
+  "daily_win_rate": 0.6181818181818182,
+  "median_daily_return": 0.4,
+  "daily_max_drawdown": -10.5,
+  "top5_day_return": 12.9,
+  "top5_share_of_pnl": 0.09811095437849009,
+  "min_month_trades": 66,
+  "positive_month_rate": 0.875
+}
+```
+
+- Risk capital: $5,000
+- Net PnL: $657,419
+
+## By Ticker
+
+```json
+{
+  "QQQ": {
+    "trades": 700,
+    "win_rate": 0.4228571428571429,
+    "profit_factor": 1.221906247345391,
+    "pnl_return": 26.87777779880235,
+    "avg_return": 0.0383968254268605,
+    "max_drawdown": -14.400000000000018,
+    "call_rate": 0.34714285714285714,
+    "days_with_trades": 315,
+    "daily_win_rate": 0.5682539682539682,
+    "median_daily_return": 0.2,
+    "daily_max_drawdown": -13.8,
+    "top5_day_return": 7.5,
+    "top5_share_of_pnl": 0.27904092578420653,
+    "min_month_trades": 20,
+    "positive_month_rate": 0.75
+  },
+  "SPXW": {
+    "trades": 358,
+    "win_rate": 0.5782122905027933,
+    "profit_factor": 2.28476821192053,
+    "pnl_return": 58.199999999999996,
+    "avg_return": 0.16256983240223463,
+    "max_drawdown": -2.09999999999998,
+    "call_rate": 0.2988826815642458,
+    "days_with_trades": 327,
+    "daily_win_rate": 0.6055045871559633,
+    "median_daily_return": 0.5,
+    "daily_max_drawdown": -2.09999999999998,
+    "top5_day_return": 5.0,
+    "top5_share_of_pnl": 0.0859106529209622,
+    "min_month_trades": 19,
+    "positive_month_rate": 1.0
+  },
+  "SPY": {
+    "trades": 546,
+    "win_rate": 0.4816849816849817,
+    "profit_factor": 1.5465961243304966,
+    "pnl_return": 46.406010955659156,
+    "avg_return": 0.0849926940579838,
+    "max_drawdown": -4.999999999999992,
+    "call_rate": 0.23626373626373626,
+    "days_with_trades": 323,
+    "daily_win_rate": 0.5232198142414861,
+    "median_daily_return": 0.2,
+    "daily_max_drawdown": -4.699999999999994,
+    "top5_day_return": 7.5,
+    "top5_share_of_pnl": 0.1616169941253135,
+    "min_month_trades": 19,
+    "positive_month_rate": 0.875
+  }
+}
+```
+
+## Monthly PnL Return
+
+| Month | Ticker | Trades | WR | PF | PnL Return | PnL $ |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| 202501 | QQQ | 60 | 31.7% | 0.772 | -2.800 | -14,000 |
+| 202501 | SPXW | 21 | 38.1% | 1.026 | 0.100 | 500 |
+| 202501 | SPY | 60 | 41.7% | 1.172 | 1.806 | 9,030 |
+| 202501 | TOTAL | 141 | 36.9% | 0.967 | -0.894 | -4,470 |
+| 202502 | QQQ | 57 | 38.6% | 1.048 | 0.500 | 2,500 |
+| 202502 | SPXW | 19 | 57.9% | 2.292 | 3.100 | 15,500 |
+| 202502 | SPY | 57 | 35.1% | 0.901 | -1.100 | -5,500 |
+| 202502 | TOTAL | 133 | 39.8% | 1.104 | 2.500 | 12,500 |
+| 202503 | QQQ | 63 | 31.7% | 0.775 | -2.900 | -14,500 |
+| 202503 | SPXW | 22 | 54.5% | 2.000 | 3.000 | 15,000 |
+| 202503 | SPY | 63 | 46.0% | 1.422 | 4.300 | 21,500 |
+| 202503 | TOTAL | 148 | 41.2% | 1.169 | 4.400 | 22,000 |
+| 202504 | QQQ | 63 | 25.4% | 0.567 | -6.100 | -30,500 |
+| 202504 | SPXW | 21 | 57.1% | 2.222 | 3.300 | 16,500 |
+| 202504 | SPY | 63 | 36.5% | 0.958 | -0.500 | -2,500 |
+| 202504 | TOTAL | 147 | 34.7% | 0.885 | -3.300 | -16,500 |
+| 202505 | QQQ | 42 | 38.1% | 1.026 | 0.200 | 1,000 |
+| 202505 | SPXW | 21 | 57.1% | 2.222 | 3.300 | 16,500 |
+| 202505 | SPY | 22 | 50.0% | 1.667 | 2.200 | 11,000 |
+| 202505 | TOTAL | 85 | 45.9% | 1.413 | 5.700 | 28,500 |
+| 202506 | QQQ | 24 | 54.2% | 1.970 | 3.200 | 16,000 |
+| 202506 | SPXW | 20 | 65.0% | 3.095 | 4.400 | 22,000 |
+| 202506 | SPY | 52 | 44.2% | 1.322 | 2.800 | 14,000 |
+| 202506 | TOTAL | 96 | 51.0% | 1.738 | 10.400 | 52,000 |
+| 202507 | QQQ | 44 | 45.5% | 1.404 | 2.878 | 14,389 |
+| 202507 | SPXW | 42 | 61.9% | 2.708 | 8.200 | 41,000 |
+| 202507 | SPY | 22 | 63.6% | 2.917 | 4.600 | 23,000 |
+| 202507 | TOTAL | 108 | 55.6% | 2.095 | 15.678 | 78,389 |
+| 202508 | QQQ | 42 | 57.1% | 2.222 | 6.600 | 33,000 |
+| 202508 | SPXW | 22 | 68.2% | 3.571 | 5.400 | 27,000 |
+| 202508 | SPY | 21 | 66.7% | 3.333 | 4.900 | 24,500 |
+| 202508 | TOTAL | 85 | 62.4% | 2.760 | 16.900 | 84,500 |
+| 202509 | QQQ | 39 | 38.5% | 1.042 | 0.300 | 1,500 |
+| 202509 | SPXW | 22 | 50.0% | 1.667 | 2.200 | 11,000 |
+| 202509 | SPY | 22 | 50.0% | 1.667 | 2.200 | 11,000 |
+| 202509 | TOTAL | 83 | 44.6% | 1.341 | 4.700 | 23,500 |
+| 202510 | QQQ | 21 | 66.7% | 3.333 | 4.900 | 24,500 |
+| 202510 | SPXW | 24 | 75.0% | 5.000 | 7.200 | 36,000 |
+| 202510 | SPY | 21 | 61.9% | 2.708 | 4.100 | 20,500 |
+| 202510 | TOTAL | 66 | 68.2% | 3.571 | 16.200 | 81,000 |
+| 202511 | QQQ | 20 | 60.0% | 2.500 | 3.600 | 18,000 |
+| 202511 | SPXW | 19 | 47.4% | 1.500 | 1.500 | 7,500 |
+| 202511 | SPY | 38 | 63.2% | 2.857 | 7.800 | 39,000 |
+| 202511 | TOTAL | 77 | 58.4% | 2.344 | 12.900 | 64,500 |
+| 202512 | QQQ | 66 | 51.5% | 1.771 | 7.400 | 37,000 |
+| 202512 | SPXW | 23 | 69.6% | 3.810 | 5.900 | 29,500 |
+| 202512 | SPY | 22 | 68.2% | 3.571 | 5.400 | 27,000 |
+| 202512 | TOTAL | 111 | 58.6% | 2.355 | 18.700 | 93,500 |
+| 202601 | QQQ | 40 | 35.0% | 0.897 | -0.800 | -4,000 |
+| 202601 | SPXW | 21 | 42.9% | 1.250 | 0.900 | 4,500 |
+| 202601 | SPY | 22 | 40.9% | 1.154 | 0.600 | 3,000 |
+| 202601 | TOTAL | 83 | 38.6% | 1.046 | 0.700 | 3,500 |
+| 202602 | QQQ | 38 | 39.5% | 1.087 | 0.600 | 3,000 |
+| 202602 | SPXW | 19 | 52.6% | 1.852 | 2.300 | 11,500 |
+| 202602 | SPY | 19 | 52.6% | 1.852 | 2.300 | 11,500 |
+| 202602 | TOTAL | 76 | 46.1% | 1.423 | 5.200 | 26,000 |
+| 202603 | QQQ | 46 | 47.8% | 1.528 | 3.800 | 19,000 |
+| 202603 | SPXW | 22 | 54.5% | 2.000 | 3.000 | 15,000 |
+| 202603 | SPY | 22 | 54.5% | 2.000 | 3.000 | 15,000 |
+| 202603 | TOTAL | 90 | 51.1% | 1.742 | 9.800 | 49,000 |
+| 202604 | QQQ | 35 | 57.1% | 2.222 | 5.500 | 27,500 |
+| 202604 | SPXW | 20 | 65.0% | 3.095 | 4.400 | 22,000 |
+| 202604 | SPY | 20 | 50.0% | 1.667 | 2.000 | 10,000 |
+| 202604 | TOTAL | 75 | 57.3% | 2.240 | 11.900 | 59,500 |
+
+## Integrity
+
+```json
+{
+  "passed": true,
+  "folds_checked": 48,
+  "issues": []
+}
+```
+
+## Sources
+
+```json
+{
+  "trade_file": [
+    "SPXW=research_papers\\JEPA\\results\\_diagnostics\\outer_stream_selector_dense15_param_scan_2025_202604\\s12_m19_vw2p0\\spxw\\stream_selector_trades.csv",
+    "SPY=research_papers\\JEPA\\results\\_diagnostics\\outer_stream_selector_dense15_param_scan_2025_202604\\s12_m19_vw2p0\\spy\\stream_selector_trades.csv",
+    "QQQ=research_papers\\JEPA\\results\\_diagnostics\\outer_stream_selector_dense15_param_scan_2025_202604\\s12_m19_vw2p0\\qqq\\stream_selector_trades.csv"
+  ],
+  "fold_file": [
+    "SPXW=research_papers\\JEPA\\results\\_diagnostics\\outer_stream_selector_dense15_param_scan_2025_202604\\s12_m19_vw2p0\\spxw\\stream_selector_folds.csv",
+    "SPY=research_papers\\JEPA\\results\\_diagnostics\\outer_stream_selector_dense15_param_scan_2025_202604\\s12_m19_vw2p0\\spy\\stream_selector_folds.csv",
+    "QQQ=research_papers\\JEPA\\results\\_diagnostics\\outer_stream_selector_dense15_param_scan_2025_202604\\s12_m19_vw2p0\\qqq\\stream_selector_folds.csv"
+  ],
+  "start_month": "202501",
+  "end_month": "202604"
+}
+```

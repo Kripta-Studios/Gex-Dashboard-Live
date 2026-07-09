@@ -2,20 +2,34 @@
   "schema_version": 1,
   "kind": "event_static_multi_delta_union_policy",
   "ticker": "SPY",
-  "profile": "balanced_cap4",
-  "policy_source": "FROZEN2025_SELECT2026_BALANCED",
+  "profile": "causal1030_intersection_spy_put_spx_counter_cd30_daily_pause",
+  "policy_source": "FROZEN2025_CAUSAL1030_INTERSECTION_GUARDED_V1",
   "expiry_modes": [
     "zero_dte"
   ],
-  "max_day": 1,
-  "cooldown_minutes": 0,
+  "candidate_universe_filter": {
+    "near_level_abs_bps_max": 20.0,
+    "min_entry_time_et": "10:30",
+    "requires_complete_initial_balance": true
+  },
+  "max_day": 4,
+  "cooldown_minutes": 30,
   "sources": [
     {
       "component": "SPY.frozen_d35_return",
       "variant": "d35",
       "source_name": "d35",
       "priority": 0,
-      "delta_bucket": 35
+      "delta_bucket": 35,
+      "min_score": -0.1,
+      "min_edge_abs": 0.1,
+      "near_level_abs_bps_max": 20.0,
+      "min_entry_time_et": "12:00",
+      "max_entry_time_et": "14:30",
+      "allowed_actions": [
+        "PUT"
+      ],
+      "momentum_filter": "SPX_COUNTER_5M"
     }
   ]
 }

@@ -1,0 +1,437 @@
+# Event Option Gate Walk-Forward
+
+Causal diagnostic over event-level option-chain features. Models predict CALL/PUT option returns; thresholds are selected only on prior validation months.
+
+## Overall
+
+```json
+{
+  "trades": 0,
+  "win_rate": NaN,
+  "profit_factor": NaN,
+  "pnl_return": 0.0,
+  "avg_return": NaN,
+  "max_drawdown": 0.0,
+  "call_rate": NaN,
+  "days_with_trades": 0,
+  "daily_win_rate": NaN,
+  "median_daily_return": NaN,
+  "daily_max_drawdown": 0.0,
+  "top5_day_return": 0.0,
+  "top5_share_of_pnl": NaN,
+  "min_month_trades": 0,
+  "positive_month_rate": NaN
+}
+```
+
+## Per Ticker
+
+```json
+{}
+```
+
+## Fold Configs
+
+```csv
+
+
+
+```
+
+## Config
+
+```json
+{
+  "args": {
+    "data": "research_papers\\JEPA\\results\\event_option_dataset_wide_even_2024_2026\\event_option_dataset.parquet",
+    "output_dir": "neural\\models\\jepa\\jepa_production_event_options\\components\\spxw_vol25_gate_complete_through202605",
+    "tickers": [
+      "SPXW"
+    ],
+    "train_tickers": [],
+    "expiry_modes": [
+      "front_weekly"
+    ],
+    "start_month": "202507",
+    "end_month": "202606",
+    "val_months": 3,
+    "pooled_train": true,
+    "delta_bucket": 35,
+    "label_mode": "return",
+    "clip_return": 2.0,
+    "min_train_rows": 500,
+    "min_val_rows": 30,
+    "min_val_trades": 75,
+    "min_month_trades": 25,
+    "min_val_pf": 0.0,
+    "min_val_win_rate": 0.0,
+    "min_call_rate": 0.15,
+    "max_call_rate": 0.85,
+    "cooldown_minutes": 30,
+    "objective": "regression_l1",
+    "n_estimators": 320,
+    "learning_rate": 0.035,
+    "num_leaves": 31,
+    "min_child_samples": 80,
+    "subsample": 0.85,
+    "colsample_bytree": 0.85,
+    "reg_lambda": 5.0,
+    "lgb_jobs": 16,
+    "threshold_grid": [
+      -0.1,
+      -0.05,
+      0.0,
+      0.05,
+      0.1,
+      0.15,
+      0.2
+    ],
+    "threshold_quantiles": [
+      0.4,
+      0.5,
+      0.6,
+      0.7,
+      0.8,
+      0.9
+    ],
+    "max_day_grid": [
+      999,
+      12,
+      8,
+      6,
+      4,
+      2
+    ],
+    "feature_include_prefixes": [],
+    "feature_exclude_prefixes": [],
+    "allow_invalid_val_deploy": false,
+    "deploy_month": "202607",
+    "deploy_select_end_month": "202605",
+    "export_deploy_model": true,
+    "skip_walkforward": true,
+    "seed": 20260617
+  },
+  "feature_count": 148,
+  "features": [
+    "dte_days",
+    "minute",
+    "spot",
+    "underlying_volume",
+    "dist_ib_high_bps",
+    "dist_ib_low_bps",
+    "dist_fib_127_up_bps",
+    "dist_fib_161_up_bps",
+    "dist_fib_200_up_bps",
+    "dist_fib_127_dn_bps",
+    "dist_fib_161_dn_bps",
+    "dist_fib_200_dn_bps",
+    "nearest_level_abs_bps",
+    "ib_range_bps",
+    "ret_1m_bps",
+    "ret_5m_bps",
+    "ret_15m_bps",
+    "ret_30m_bps",
+    "call_d15_available",
+    "call_d15_strike_bps",
+    "call_d15_abs_delta",
+    "call_d15_iv",
+    "call_d15_mid_bps",
+    "call_d15_spread_pct",
+    "call_d15_theta_over_mid",
+    "call_d15_vega",
+    "call_d15_oi",
+    "call_d15_volume",
+    "put_d15_available",
+    "put_d15_strike_bps",
+    "put_d15_abs_delta",
+    "put_d15_iv",
+    "put_d15_mid_bps",
+    "put_d15_spread_pct",
+    "put_d15_theta_over_mid",
+    "put_d15_vega",
+    "put_d15_oi",
+    "put_d15_volume",
+    "call_d25_available",
+    "call_d25_strike_bps",
+    "call_d25_abs_delta",
+    "call_d25_iv",
+    "call_d25_mid_bps",
+    "call_d25_spread_pct",
+    "call_d25_theta_over_mid",
+    "call_d25_vega",
+    "call_d25_oi",
+    "call_d25_volume",
+    "put_d25_available",
+    "put_d25_strike_bps",
+    "put_d25_abs_delta",
+    "put_d25_iv",
+    "put_d25_mid_bps",
+    "put_d25_spread_pct",
+    "put_d25_theta_over_mid",
+    "put_d25_vega",
+    "put_d25_oi",
+    "put_d25_volume",
+    "call_d35_available",
+    "call_d35_strike_bps",
+    "call_d35_abs_delta",
+    "call_d35_iv",
+    "call_d35_mid_bps",
+    "call_d35_spread_pct",
+    "call_d35_theta_over_mid",
+    "call_d35_vega",
+    "call_d35_oi",
+    "call_d35_volume",
+    "put_d35_available",
+    "put_d35_strike_bps",
+    "put_d35_abs_delta",
+    "put_d35_iv",
+    "put_d35_mid_bps",
+    "put_d35_spread_pct",
+    "put_d35_theta_over_mid",
+    "put_d35_vega",
+    "put_d35_oi",
+    "put_d35_volume",
+    "call_d50_available",
+    "call_d50_strike_bps",
+    "call_d50_abs_delta",
+    "call_d50_iv",
+    "call_d50_mid_bps",
+    "call_d50_spread_pct",
+    "call_d50_theta_over_mid",
+    "call_d50_vega",
+    "call_d50_oi",
+    "call_d50_volume",
+    "put_d50_available",
+    "put_d50_strike_bps",
+    "put_d50_abs_delta",
+    "put_d50_iv",
+    "put_d50_mid_bps",
+    "put_d50_spread_pct",
+    "put_d50_theta_over_mid",
+    "put_d50_vega",
+    "put_d50_oi",
+    "put_d50_volume",
+    "call_d65_available",
+    "call_d65_strike_bps",
+    "call_d65_abs_delta",
+    "call_d65_iv",
+    "call_d65_mid_bps",
+    "call_d65_spread_pct",
+    "call_d65_theta_over_mid",
+    "call_d65_vega",
+    "call_d65_oi",
+    "call_d65_volume",
+    "put_d65_available",
+    "put_d65_strike_bps",
+    "put_d65_abs_delta",
+    "put_d65_iv",
+    "put_d65_mid_bps",
+    "put_d65_spread_pct",
+    "put_d65_theta_over_mid",
+    "put_d65_vega",
+    "put_d65_oi",
+    "put_d65_volume",
+    "call_d80_available",
+    "call_d80_strike_bps",
+    "call_d80_abs_delta",
+    "call_d80_iv",
+    "call_d80_mid_bps",
+    "call_d80_spread_pct",
+    "call_d80_theta_over_mid",
+    "call_d80_vega",
+    "call_d80_oi",
+    "call_d80_volume",
+    "put_d80_available",
+    "put_d80_strike_bps",
+    "put_d80_abs_delta",
+    "put_d80_iv",
+    "put_d80_mid_bps",
+    "put_d80_spread_pct",
+    "put_d80_theta_over_mid",
+    "put_d80_vega",
+    "put_d80_oi",
+    "put_d80_volume",
+    "ticker_SPXW",
+    "expiry_mode_front_weekly",
+    "nearest_level_name_fib_127_dn",
+    "nearest_level_name_fib_127_up",
+    "nearest_level_name_fib_161_dn",
+    "nearest_level_name_fib_161_up",
+    "nearest_level_name_fib_200_dn",
+    "nearest_level_name_fib_200_up",
+    "nearest_level_name_ib_high",
+    "nearest_level_name_ib_low"
+  ],
+  "grid": [
+    {
+      "threshold": -0.1,
+      "max_trades_per_day": 999
+    },
+    {
+      "threshold": -0.1,
+      "max_trades_per_day": 12
+    },
+    {
+      "threshold": -0.1,
+      "max_trades_per_day": 8
+    },
+    {
+      "threshold": -0.1,
+      "max_trades_per_day": 6
+    },
+    {
+      "threshold": -0.1,
+      "max_trades_per_day": 4
+    },
+    {
+      "threshold": -0.1,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": -0.05,
+      "max_trades_per_day": 999
+    },
+    {
+      "threshold": -0.05,
+      "max_trades_per_day": 12
+    },
+    {
+      "threshold": -0.05,
+      "max_trades_per_day": 8
+    },
+    {
+      "threshold": -0.05,
+      "max_trades_per_day": 6
+    },
+    {
+      "threshold": -0.05,
+      "max_trades_per_day": 4
+    },
+    {
+      "threshold": -0.05,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.0,
+      "max_trades_per_day": 999
+    },
+    {
+      "threshold": 0.0,
+      "max_trades_per_day": 12
+    },
+    {
+      "threshold": 0.0,
+      "max_trades_per_day": 8
+    },
+    {
+      "threshold": 0.0,
+      "max_trades_per_day": 6
+    },
+    {
+      "threshold": 0.0,
+      "max_trades_per_day": 4
+    },
+    {
+      "threshold": 0.0,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.05,
+      "max_trades_per_day": 999
+    },
+    {
+      "threshold": 0.05,
+      "max_trades_per_day": 12
+    },
+    {
+      "threshold": 0.05,
+      "max_trades_per_day": 8
+    },
+    {
+      "threshold": 0.05,
+      "max_trades_per_day": 6
+    },
+    {
+      "threshold": 0.05,
+      "max_trades_per_day": 4
+    },
+    {
+      "threshold": 0.05,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.1,
+      "max_trades_per_day": 999
+    },
+    {
+      "threshold": 0.1,
+      "max_trades_per_day": 12
+    },
+    {
+      "threshold": 0.1,
+      "max_trades_per_day": 8
+    },
+    {
+      "threshold": 0.1,
+      "max_trades_per_day": 6
+    },
+    {
+      "threshold": 0.1,
+      "max_trades_per_day": 4
+    },
+    {
+      "threshold": 0.1,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.15,
+      "max_trades_per_day": 999
+    },
+    {
+      "threshold": 0.15,
+      "max_trades_per_day": 12
+    },
+    {
+      "threshold": 0.15,
+      "max_trades_per_day": 8
+    },
+    {
+      "threshold": 0.15,
+      "max_trades_per_day": 6
+    },
+    {
+      "threshold": 0.15,
+      "max_trades_per_day": 4
+    },
+    {
+      "threshold": 0.15,
+      "max_trades_per_day": 2
+    },
+    {
+      "threshold": 0.2,
+      "max_trades_per_day": 999
+    },
+    {
+      "threshold": 0.2,
+      "max_trades_per_day": 12
+    },
+    {
+      "threshold": 0.2,
+      "max_trades_per_day": 8
+    },
+    {
+      "threshold": 0.2,
+      "max_trades_per_day": 6
+    },
+    {
+      "threshold": 0.2,
+      "max_trades_per_day": 4
+    },
+    {
+      "threshold": 0.2,
+      "max_trades_per_day": 2
+    }
+  ],
+  "data_rows": 4625
+}
+```

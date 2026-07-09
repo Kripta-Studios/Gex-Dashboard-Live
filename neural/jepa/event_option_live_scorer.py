@@ -158,6 +158,183 @@ def apply_score_threshold(frame: pd.DataFrame, score_col: str, threshold: object
     return frame[pd.to_numeric(frame[score_col], errors="coerce").fillna(float("-inf")) >= value].copy()
 
 
+def parse_hhmm_to_minute(value: object) -> int | None:
+    text = str(value).strip()
+    if not text:
+        return None
+    parts = text.split(":", 1)
+    if len(parts) != 2:
+        return None
+    try:
+        hour = int(parts[0])
+        minute = int(parts[1])
+    except ValueError:
+        return None
+    if hour < 0 or minute < 0 or minute >= 60:
+        return None
+    return hour * 60 + minute
+
+
+def apply_candidate_universe_filter(
+    frame: pd.DataFrame,
+    filter_config: object,
+    *,
+    label: str,
+    issues: list[str],
+) -> pd.DataFrame:
+    if frame.empty or not isinstance(filter_config, dict) or not filter_config:
+        return frame.copy()
+    work = frame.copy()
+
+    near_level = filter_config.get("near_level_abs_bps_max")
+    if near_level is not None:
+        try:
+            max_bps = float(near_level)
+        except (TypeError, ValueError):
+            issues.append(f"{label}: invalid candidate_universe_filter.near_level_abs_bps_max={near_level!r}")
+            return work.iloc[0:0].copy()
+        if "nearest_level_abs_bps" not in work.columns:
+            issues.append(f"{label}: nearest_level_abs_bps missing for candidate universe filter")
+            return work.iloc[0:0].copy()
+        values = pd.to_numeric(work["nearest_level_abs_bps"], errors="coerce").abs()
+        work = work[values <= max_bps].copy()
+
+    min_time = filter_config.get("min_entry_time_et")
+    if min_time is not None:
+        min_minute = parse_hhmm_to_minute(min_time)
+        if min_minute is None:
+            issues.append(f"{label}: invalid candidate_universe_filter.min_entry_time_et={min_time!r}")
+            return work.iloc[0:0].copy()
+        if "minute" not in work.columns:
+            issues.append(f"{label}: minute missing for candidate universe filter")
+            return work.iloc[0:0].copy()
+        values = pd.to_numeric(work["minute"], errors="coerce")
+        work = work[values >= min_minute].copy()
+
+    max_time = filter_config.get("max_entry_time_et")
+    if max_time is not None:
+        max_minute = parse_hhmm_to_minute(max_time)
+        if max_minute is None:
+            issues.append(f"{label}: invalid candidate_universe_filter.max_entry_time_et={max_time!r}")
+            return work.iloc[0:0].copy()
+        if "minute" not in work.columns:
+            issues.append(f"{label}: minute missing for candidate universe filter")
+            return work.iloc[0:0].copy()
+        values = pd.to_numeric(work["minute"], errors="coerce")
+        work = work[values <= max_minute].copy()
+
+    return work
+
+
+def _filter_actions(raw: object) -> set[str]:
+    if raw is None:
+        return set()
+    values = raw if isinstance(raw, list) else [raw]
+    out = {str(item).upper() for item in values if str(item).strip()}
+    return {item for item in out if item in {"CALL", "PUT"}}
+
+
+def _momentum_mask(frame: pd.DataFrame, mode: str) -> pd.Series:
+    action = frame.get("action", pd.Series("", index=frame.index)).astype(str).str.upper()
+    mode_text = str(mode or "").upper()
+    if mode_text.startswith("SELF_"):
+        col = "ret_5m_bps"
+    elif mode_text.startswith("SPX_"):
+        col = "ctx_spx_ret_5m_bps"
+    elif mode_text.startswith("QQQ_"):
+        col = "ctx_qqq_ret_5m_bps"
+    else:
+        return pd.Series(True, index=frame.index)
+    if col not in frame.columns:
+        return pd.Series(False, index=frame.index)
+    values = pd.to_numeric(frame[col], errors="coerce")
+    finite = values.notna()
+    same = ((action == "CALL") & (values >= 0.0)) | ((action == "PUT") & (values <= 0.0))
+    counter = ((action == "CALL") & (values <= 0.0)) | ((action == "PUT") & (values >= 0.0))
+    if mode_text.endswith("_SAME_5M"):
+        return finite & same
+    if mode_text.endswith("_COUNTER_5M"):
+        return finite & counter
+    return pd.Series(True, index=frame.index)
+
+
+def apply_scored_trade_filter(
+    frame: pd.DataFrame,
+    filter_config: object,
+    *,
+    label: str,
+    issues: list[str],
+) -> pd.DataFrame:
+    if frame.empty or not isinstance(filter_config, dict) or not filter_config:
+        return frame.copy()
+    work = frame.copy()
+
+    min_time = filter_config.get("min_entry_time_et", filter_config.get("entry_time_min_et"))
+    if min_time is not None:
+        min_minute = parse_hhmm_to_minute(min_time)
+        if min_minute is None:
+            issues.append(f"{label}: invalid min_entry_time_et={min_time!r}")
+            return work.iloc[0:0].copy()
+        if "minute" not in work.columns:
+            issues.append(f"{label}: minute missing for scored trade filter")
+            return work.iloc[0:0].copy()
+        work = work[pd.to_numeric(work["minute"], errors="coerce") >= min_minute].copy()
+
+    max_time = filter_config.get("max_entry_time_et", filter_config.get("entry_time_max_et"))
+    if max_time is not None:
+        max_minute = parse_hhmm_to_minute(max_time)
+        if max_minute is None:
+            issues.append(f"{label}: invalid max_entry_time_et={max_time!r}")
+            return work.iloc[0:0].copy()
+        if "minute" not in work.columns:
+            issues.append(f"{label}: minute missing for scored trade filter")
+            return work.iloc[0:0].copy()
+        work = work[pd.to_numeric(work["minute"], errors="coerce") <= max_minute].copy()
+
+    near_level = filter_config.get("near_level_abs_bps_max")
+    if near_level is not None:
+        try:
+            max_bps = float(near_level)
+        except (TypeError, ValueError):
+            issues.append(f"{label}: invalid near_level_abs_bps_max={near_level!r}")
+            return work.iloc[0:0].copy()
+        if "nearest_level_abs_bps" not in work.columns:
+            issues.append(f"{label}: nearest_level_abs_bps missing for scored trade filter")
+            return work.iloc[0:0].copy()
+        work = work[pd.to_numeric(work["nearest_level_abs_bps"], errors="coerce").abs() <= max_bps].copy()
+
+    actions = _filter_actions(filter_config.get("allowed_actions", filter_config.get("action")))
+    if actions:
+        if "action" not in work.columns:
+            issues.append(f"{label}: action missing for scored trade filter")
+            return work.iloc[0:0].copy()
+        work = work[work["action"].astype(str).str.upper().isin(actions)].copy()
+
+    edge_min = filter_config.get("min_edge_abs", filter_config.get("edge_abs_min"))
+    if edge_min is not None:
+        try:
+            min_edge = float(edge_min)
+        except (TypeError, ValueError):
+            issues.append(f"{label}: invalid min_edge_abs={edge_min!r}")
+            return work.iloc[0:0].copy()
+        if "edge_abs" not in work.columns:
+            if {"pred_call_return", "pred_put_return"}.issubset(work.columns):
+                work["edge_abs"] = (
+                    pd.to_numeric(work["pred_call_return"], errors="coerce")
+                    - pd.to_numeric(work["pred_put_return"], errors="coerce")
+                ).abs()
+            else:
+                issues.append(f"{label}: prediction columns missing for edge_abs filter")
+                return work.iloc[0:0].copy()
+        work = work[pd.to_numeric(work["edge_abs"], errors="coerce") >= min_edge].copy()
+
+    momentum_filter = str(filter_config.get("momentum_filter", "NONE") or "NONE").upper()
+    if momentum_filter and momentum_filter != "NONE":
+        work = work[_momentum_mask(work, momentum_filter)].copy()
+
+    return work
+
+
 def gate_source(
     registry: EventOptionComponentRegistry,
     snapshots: pd.DataFrame,
@@ -169,6 +346,7 @@ def gate_source(
     issues: list[str],
     ticker: str,
     delta_bucket: int | None = None,
+    only_pass: bool = True,
 ) -> pd.DataFrame:
     if component not in registry.components:
         issues.append(f"{ticker}: missing component {component}")
@@ -180,7 +358,7 @@ def gate_source(
             source_variant=source,
             source_priority=priority,
             strict=strict,
-            only_pass=True,
+            only_pass=bool(only_pass),
         )
         if delta_bucket is not None:
             scored = annotate_contract_profile(scored, policy_ticker=ticker, delta_bucket=int(delta_bucket))
@@ -317,6 +495,14 @@ def score_static_multi_delta_policy(
     if snap.empty:
         issues.append(f"{ticker}: no {'/'.join(str(mode) for mode in expiry_modes)} snapshot row available")
         return pd.DataFrame()
+    snap = apply_candidate_universe_filter(
+        snap,
+        policy.get("candidate_universe_filter"),
+        label=policy_name,
+        issues=issues,
+    )
+    if snap.empty:
+        return pd.DataFrame()
 
     sources = policy.get("sources", [])
     if not isinstance(sources, list) or not sources:
@@ -335,6 +521,7 @@ def score_static_multi_delta_policy(
         source = str(raw_source.get("source_name", raw_source.get("variant", component)))
         priority = int(raw_source.get("priority", fallback_priority))
         delta_bucket = int(float(raw_source.get("delta_bucket", policy.get("delta_bucket", 25))))
+        min_score = raw_source.get("min_score", policy.get("min_score"))
         scored = gate_source(
             registry,
             snap,
@@ -342,13 +529,27 @@ def score_static_multi_delta_policy(
             source=source,
             priority=priority,
             strict=strict,
+            only_pass=min_score is None,
             issues=issues,
             ticker=ticker,
             delta_bucket=delta_bucket,
         )
-        min_score = raw_source.get("min_score", policy.get("min_score"))
         if min_score is not None and not scored.empty:
             scored = apply_score_threshold(scored, "score", min_score)
+        if not scored.empty:
+            scored = apply_scored_trade_filter(
+                scored,
+                policy.get("runtime_trade_filter"),
+                label=f"{policy_name}.policy_filter",
+                issues=issues,
+            )
+        if not scored.empty:
+            scored = apply_scored_trade_filter(
+                scored,
+                raw_source,
+                label=f"{policy_name}.{source}",
+                issues=issues,
+            )
         if scored.empty:
             continue
         scored = annotate_contract_profile(

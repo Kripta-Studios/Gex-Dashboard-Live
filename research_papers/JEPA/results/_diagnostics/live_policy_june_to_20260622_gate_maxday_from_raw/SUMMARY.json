@@ -1,0 +1,108 @@
+{
+  "date_min": "20260601",
+  "date_max": "20260622",
+  "snapshot_rows": 961,
+  "rows_by_ticker": {
+    "SPXW": 387,
+    "SPY": 294,
+    "QQQ": 280
+  },
+  "stream_counts": {
+    "spx_base": 58,
+    "spx_wide": 71,
+    "spx_primary": 78,
+    "spx_fallback_circuit": 57,
+    "spx_selected": 32,
+    "spy_raw": 24,
+    "spy_selected": 24,
+    "qqq_meta_sel": 38,
+    "qqq_current_sel": 38,
+    "qqq_online_sel": 18,
+    "qqq_selected": 34
+  },
+  "combined_rows": 90,
+  "gate_limits": {
+    "SPY.ptdj_delta35_gate": {
+      "max_day": 2,
+      "cooldown": 30
+    },
+    "SPXW.vol25_gate": {
+      "max_day": 8,
+      "cooldown": 30
+    },
+    "SPXW.wide_d35_gate": {
+      "max_day": 999,
+      "cooldown": 30
+    },
+    "QQQ.d65_gate": {
+      "max_day": 4,
+      "cooldown": 30
+    },
+    "QQQ.ptdj_d80_gate": {
+      "max_day": 4,
+      "cooldown": 30
+    },
+    "QQQ.physics_gate": {
+      "max_day": 4,
+      "cooldown": 30
+    },
+    "QQQ.tdvp_gate": {
+      "max_day": 4,
+      "cooldown": 30
+    }
+  },
+  "spxw_circuit_payload": {
+    "ticker": "SPXW",
+    "config": "streakoff_dayloss1p5_lossesoff",
+    "stop_after_loss_streak": 999,
+    "daily_loss_limit": -1.5,
+    "total_loss_limit": 999,
+    "min_trades_before_halt": 0,
+    "select_score": 5.254054600886207,
+    "select_metrics": {
+      "trades": 144,
+      "win_rate": 0.5208333333333334,
+      "profit_factor": 1.4721144977413132,
+      "pnl_return": 7.238327887947291,
+      "avg_return": 0.050266165888522854,
+      "max_drawdown": -5.007149712761447,
+      "call_rate": 0.5972222222222222,
+      "days_with_trades": 16,
+      "daily_win_rate": 0.5625,
+      "median_daily_return": 0.35659179612057823,
+      "daily_max_drawdown": -4.0869999716692575,
+      "top5_day_return": 10.008618281894508,
+      "top5_share_of_pnl": 1.382725186926126,
+      "min_month_trades": 68,
+      "positive_month_rate": 0.5
+    }
+  },
+  "spxw_circuit_side_specific": true,
+  "qqq_circuit_payload": {
+    "ticker": "QQQ",
+    "config": "streak1_daylossoff_lossesoff",
+    "stop_after_loss_streak": 1,
+    "daily_loss_limit": -999.0,
+    "total_loss_limit": 999,
+    "min_trades_before_halt": 0,
+    "select_score": 4.899849922918291,
+    "select_metrics": {
+      "trades": 67,
+      "win_rate": 0.4626865671641791,
+      "profit_factor": 1.3132943752161292,
+      "pnl_return": 3.265741539639093,
+      "avg_return": 0.04874241103938945,
+      "max_drawdown": -2.672713057346127,
+      "call_rate": 0.6567164179104478,
+      "days_with_trades": 14,
+      "daily_win_rate": 0.5714285714285714,
+      "median_daily_return": 0.30000000000000004,
+      "daily_max_drawdown": -1.8538461538461537,
+      "top5_day_return": 7.192300750831374,
+      "top5_share_of_pnl": 2.202348429455387,
+      "min_month_trades": 33,
+      "positive_month_rate": 0.5
+    }
+  },
+  "qqq_circuit_side_specific": true
+}

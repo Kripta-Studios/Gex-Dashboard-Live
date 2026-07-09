@@ -1381,8 +1381,11 @@ class JepaFixedDeltaBot:
         cfg = guards.get("daily_loss_streak_pause") if isinstance(guards.get("daily_loss_streak_pause"), dict) else {}
         if not bool(cfg.get("enabled", False)):
             return {"enabled": False}
+        raw_tickers = cfg.get("tickers", [])
+        tickers = raw_tickers if isinstance(raw_tickers, list) else [raw_tickers]
         return {
             "enabled": True,
+            "tickers": sorted({self._normalize_policy_ticker(item) for item in tickers if str(item).strip()}),
             "trigger_losses": max(1, int(_safe_float(cfg.get("trigger_losses", 4), 4))),
             "pause_days": max(1, int(_safe_float(cfg.get("pause_days", 1), 1))),
             "loss_threshold_return": _safe_float(cfg.get("loss_threshold_return", 0.0), 0.0),
@@ -1451,6 +1454,9 @@ class JepaFixedDeltaBot:
         if not bool(cfg.get("enabled", False)):
             return False, ""
         ticker = str(policy_ticker).upper()
+        configured_tickers = set(cfg.get("tickers", []))
+        if configured_tickers and self._normalize_policy_ticker(ticker) not in configured_tickers:
+            return False, ""
         date_text = str(date_value)
         skip_dates = self._event_daily_loss_guard_skip_dates(ticker, date_text)
         if date_text in skip_dates:

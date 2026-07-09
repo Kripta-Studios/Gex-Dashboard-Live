@@ -1,0 +1,6 @@
+2026-06-30 17:57:00,870 INFO Loaded level-stability signal policy=level_stability_ensemble_prod_202607 path=neural\models\jepa\jepa_production_level_stability\level_stability_signal.json
+2026-06-30 17:57:00,870 INFO Loaded structural option selector policy=level_stability_ensemble_nested_structural_profiles_risk5000 path=neural\models\jepa\jepa_production_structural_options\structural_option_profiles.json
+2026-06-30 17:57:00,870 INFO Event-option production policy disabled
+2026-06-30 17:57:00,870 INFO Event-option component registry disabled
+2026-06-30 17:57:00,870 INFO OptionValue live selector disabled; using fixed delta 0.70
+2026-06-30 17:57:00,871 INFO Starting JEPA live bot signal=level_stability_ensemble_prod_202607 selector=level_stability_ensemble_nested_structural_profiles_risk5000 event_scorer=disabled event_policy=none event_components=none legacy_signal=disabled rt_data=rt_data risk=5000 cutoff=14:30 stop=-60% trail=50%/25% tp=1000%

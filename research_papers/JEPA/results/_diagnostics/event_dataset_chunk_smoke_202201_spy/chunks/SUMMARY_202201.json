@@ -1,0 +1,42 @@
+{
+  "rows": 156,
+  "manifest_rows": 5,
+  "tickers": [
+    "SPY"
+  ],
+  "date_min": "20220103",
+  "date_max": "20220105",
+  "expiry_modes": {
+    "front_weekly": 98,
+    "zero_dte": 58
+  },
+  "args": {
+    "manifest": "research_papers\\JEPA\\results\\thetadata_multiticker_manifest_2022_2026\\thetadata_option_manifest.csv",
+    "output_dir": "research_papers\\JEPA\\results\\_diagnostics\\event_dataset_chunk_smoke_202201_spy",
+    "tickers": [
+      "SPY"
+    ],
+    "expiry_modes": [
+      "zero_dte",
+      "front_weekly"
+    ],
+    "start_date": "20220103",
+    "end_date": "20220105",
+    "max_days_per_ticker": 0,
+    "sample_mode": "first",
+    "workers": 4,
+    "bar_minutes": 5,
+    "start_minute": 630,
+    "end_minute": 930,
+    "near_level_only": true,
+    "near_level_bps": 20.0,
+    "max_rows_per_day": 40,
+    "horizon_minutes": 180,
+    "spot_target_bps": 25.0,
+    "spot_stop_bps": 20.0,
+    "option_tp_pct": 0.5,
+    "option_sl_pct": 0.3,
+    "chunk_by": "month",
+    "skip_existing_chunks": true
+  }
+}

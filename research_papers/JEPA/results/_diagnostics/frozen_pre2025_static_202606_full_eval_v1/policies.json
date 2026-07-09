@@ -1,0 +1,80 @@
+[
+  {
+    "schema_version": 1,
+    "component": "event_monthly_volume_backfill_policy",
+    "ticker": "SPXW",
+    "primary_component": "SPXW.primary_d25_win",
+    "primary_name": "win_valthr_wr45_d25",
+    "primary_delta_bucket": 25,
+    "fallback_component": "SPXW.fallback_d50_return",
+    "fallback_name": "forcedmax3_d50",
+    "fallback_delta_bucket": 50,
+    "min_month_trades": 18,
+    "max_day": 3,
+    "cooldown_minutes": 30,
+    "expiry_mode": "zero_dte",
+    "runtime_state_required": [
+      "month_to_date_count",
+      "per_day_count",
+      "cooldown",
+      "dedupe"
+    ],
+    "live_equivalence_status": "stateful_runtime_replay_passed_candidate_stream",
+    "live_equivalence_reason": "The deterministic runtime policy replay matched frozen causal candidate-stream selections. Live promotion still requires deploy-scorer/paper or broker order-fill evidence.",
+    "live_equivalence_evidence": {
+      "runtime_policy_replay": "research_papers/JEPA/results/_diagnostics/frozen_source_selector_dense15_pre2025_static_202501_202604_v1/runtime_replay_monthly_backfill18/runtime_replay_summary.json"
+    }
+  },
+  {
+    "schema_version": 1,
+    "component": "event_monthly_volume_backfill_policy",
+    "ticker": "SPY",
+    "primary_component": "SPY.primary_d25_win",
+    "primary_name": "win_valthr_wr45_d25",
+    "primary_delta_bucket": 25,
+    "fallback_component": "SPY.fallback_d50_return",
+    "fallback_name": "forcedmax3_d50",
+    "fallback_delta_bucket": 50,
+    "min_month_trades": 18,
+    "max_day": 3,
+    "cooldown_minutes": 30,
+    "expiry_mode": "zero_dte",
+    "runtime_state_required": [
+      "month_to_date_count",
+      "per_day_count",
+      "cooldown",
+      "dedupe"
+    ],
+    "live_equivalence_status": "stateful_runtime_replay_passed_candidate_stream",
+    "live_equivalence_reason": "The deterministic runtime policy replay matched frozen causal candidate-stream selections. Live promotion still requires deploy-scorer/paper or broker order-fill evidence.",
+    "live_equivalence_evidence": {
+      "runtime_policy_replay": "research_papers/JEPA/results/_diagnostics/frozen_source_selector_dense15_pre2025_static_202501_202604_v1/runtime_replay_monthly_backfill18/runtime_replay_summary.json"
+    }
+  },
+  {
+    "schema_version": 1,
+    "component": "event_monthly_volume_backfill_policy",
+    "ticker": "QQQ",
+    "primary_component": "QQQ.primary_d25_win",
+    "primary_name": "win_valthr_wr45_d25",
+    "primary_delta_bucket": 25,
+    "fallback_component": "QQQ.fallback_d50_return",
+    "fallback_name": "forcedmax3_d50",
+    "fallback_delta_bucket": 50,
+    "min_month_trades": 18,
+    "max_day": 3,
+    "cooldown_minutes": 30,
+    "expiry_mode": "zero_dte",
+    "runtime_state_required": [
+      "month_to_date_count",
+      "per_day_count",
+      "cooldown",
+      "dedupe"
+    ],
+    "live_equivalence_status": "stateful_runtime_replay_passed_candidate_stream",
+    "live_equivalence_reason": "The deterministic runtime policy replay matched frozen causal candidate-stream selections. Live promotion still requires deploy-scorer/paper or broker order-fill evidence.",
+    "live_equivalence_evidence": {
+      "runtime_policy_replay": "research_papers/JEPA/results/_diagnostics/frozen_source_selector_dense15_pre2025_static_202501_202604_v1/runtime_replay_monthly_backfill18/runtime_replay_summary.json"
+    }
+  }
+]

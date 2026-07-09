@@ -1,0 +1,77 @@
+{
+  "policy": "event_option_live_ready_current_sources_202607",
+  "entry_signal": "Production level-stability ensemble rules fit only on prior months",
+  "signal_artifact": "neural/models/jepa/jepa_production_level_stability/level_stability_signal.json",
+  "event_option_policy_artifact": "neural/models/jepa/jepa_production_event_options/event_option_policy.json",
+  "event_option_status": "live_ready_runtime_replay_verified",
+  "event_option_component_registry": "neural/models/jepa/jepa_production_event_options/component_registry.json",
+  "event_option_component_status": "live_ready_runtime_replay_verified",
+  "event_option_entry_runtime": "enabled_live_ready_stateful_scorer",
+  "event_option_exit_contract": {
+    "take_profit_pct": 0.5,
+    "stop_loss_pct": -0.3,
+    "max_hold_minutes": 180,
+    "trailing_enabled": false
+  },
+  "event_option_live_ready": true,
+  "event_option_live_ready_evidence": [
+    "research_papers/JEPA/results/event_option_live_ready_current_sources_2026janmay_risk5000/VERIFICATION.md",
+    "research_papers/JEPA/results/event_option_live_ready_current_sources_2026janmay_risk5000/CURVE_HEALTH.md",
+    "research_papers/JEPA/results/event_option_live_ready_current_sources_2026janmay_risk5000/runtime_policy_replay/runtime_policy_replay_summary.json"
+  ],
+  "entry_cutoff_et": "14:30",
+  "model_sample_minutes": 5,
+  "selector": "Nested structural option profiles over 0.10..0.70 delta candidates",
+  "selector_artifact": "neural/models/jepa/jepa_production_structural_options/structural_option_profiles.json",
+  "fallback_delta_target": 0.7,
+  "cooldown_minutes": 180,
+  "risk_capital_dollars": 5000.0,
+  "hard_stop_pct": -0.6,
+  "trail_activation_pct": 0.5,
+  "trail_drawdown_pct": 0.25,
+  "take_profit_pct": 10.0,
+  "max_hold_minutes": 180,
+  "eod_cleanup_et": "16:00",
+  "data_poll_stop_et": "16:01",
+  "written_at_et": "2026-06-30T11:17:12.601306-04:00",
+  "event_option_policy_path": "neural\\models\\jepa\\jepa_production_event_options\\event_option_policy.json",
+  "event_option_component_registry_path": "neural\\models\\jepa\\jepa_production_event_options\\component_registry.json",
+  "event_option_live_ready_required": false,
+  "event_option_loaded_policy": {
+    "policy": "event_option_live_ready_current_sources_202607",
+    "status": "raw_coverage_blocked_not_live_ready",
+    "deploy_month": "202607"
+  },
+  "event_option_registry_summary": {
+    "status": "raw_coverage_blocked_not_live_ready",
+    "deploy_month": "202607",
+    "completed_data_through_month": "202605",
+    "component_count": 18,
+    "components": [
+      "PTDJ.core_encoder",
+      "QQQ.current_config_selector",
+      "QQQ.current_intraday_circuit",
+      "QQQ.d65_gate",
+      "QQQ.meta_s1_gate",
+      "QQQ.mtd_rescue",
+      "QQQ.online_threshold_regressor",
+      "QQQ.physics_gate",
+      "QQQ.ptdj_d80_gate",
+      "QQQ.tdvp_gate",
+      "SPXW.base_intraday_circuit",
+      "SPXW.cap4_monthly_backfill",
+      "SPXW.h2_union_selector",
+      "SPXW.vol25_gate",
+      "SPXW.wide_d35_gate",
+      "SPY.ptdj_delta35_gate",
+      "SPY.static_ptdj_delta35",
+      "TDVP.all13_encoder"
+    ],
+    "missing_for_full_live_equivalence": [
+      "Event-option package validation is blocked: completed_month_validation includes 202605, but raw all-ticker 0DTE coverage marks 202605 as partial/non-official.",
+      "No official completed-month 202607+ forward-freeze evaluation has passed yet.",
+      "Broker/order execution fill validation is not proven."
+    ],
+    "invalidated_components": []
+  }
+}

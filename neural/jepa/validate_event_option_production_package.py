@@ -37,6 +37,7 @@ IB_LEVEL_FEATURES = {
     "phys_nearest_level_vs_ib_range",
 }
 IB_COMPLETE_MINUTE_ET = 10 * 60 + 30
+SUMMARY_FILE_NAME = "SUMMARY.json"
 
 
 def read_json(path: Path) -> dict[str, Any]:
@@ -44,6 +45,15 @@ def read_json(path: Path) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise ValueError(f"{path} must contain a JSON object")
     return payload
+
+
+def read_json_if_exists(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return {}
+    try:
+        return read_json(path)
+    except Exception:
+        return {}
 
 
 def resolve_repo_path(raw: str | Path) -> Path:
@@ -129,6 +139,114 @@ def assert_live_observable_feature_contract(
                 f"{component}: uses initial-balance/fib features before IB completion "
                 f"(entry_time_min_et={live_contract.get('entry_time_min_et', '10:00')}); "
                 f"features={preview}{extra}"
+            )
+
+
+def _dataset_summary_for_label_data(label_data: Path) -> dict[str, Any]:
+    """Return the build summary for the original event-option dataset, if present."""
+    direct = read_json_if_exists(label_data.parent / SUMMARY_FILE_NAME)
+    if isinstance(direct.get("args"), dict):
+        return direct
+    raw_input = direct.get("input")
+    if raw_input:
+        raw_path = resolve_repo_path(str(raw_input))
+        nested = read_json_if_exists(raw_path.parent / SUMMARY_FILE_NAME)
+        if isinstance(nested.get("args"), dict):
+            return nested
+    return direct
+
+
+def _candidate_universe_filter(policy: dict[str, Any]) -> dict[str, Any]:
+    live_contract = policy.get("live_contract") if isinstance(policy.get("live_contract"), dict) else {}
+    raw = live_contract.get("candidate_universe_filter")
+    return raw if isinstance(raw, dict) else {}
+
+
+def _read_trade_minutes(path: Path) -> pd.Series:
+    if not path.exists():
+        return pd.Series(dtype=float)
+    try:
+        trades = pd.read_csv(path, usecols=lambda c: c in {"minute", "entry_minute", "time"}, low_memory=False)
+    except Exception:
+        return pd.Series(dtype=float)
+    for col in ("minute", "entry_minute"):
+        if col in trades.columns:
+            values = pd.to_numeric(trades[col], errors="coerce")
+            if values.notna().any():
+                return values
+    if "time" in trades.columns:
+        parsed = pd.to_datetime(trades["time"].astype(str).str[:5], format="%H:%M", errors="coerce")
+        return parsed.dt.hour * 60 + parsed.dt.minute
+    return pd.Series(dtype=float)
+
+
+def assert_candidate_universe_causality(
+    policy: dict[str, Any],
+    validation: dict[str, Any],
+    trades_path: Path,
+    issues: list[str],
+) -> None:
+    """Reject live packages whose historical candidate universe cannot exist live.
+
+    A common trap is a dataset filtered with full initial-balance/fib levels while
+    also allowing entries before 10:30 ET. That leaks the final 9:30-10:30 range
+    through the row-selection process even when IB columns are not model inputs.
+    """
+    integrity = validation.get("integrity") if isinstance(validation.get("integrity"), dict) else {}
+    label_data_raw = integrity.get("label_data")
+    if not label_data_raw:
+        return
+    label_data = resolve_repo_path(str(label_data_raw))
+    summary = _dataset_summary_for_label_data(label_data)
+    args = summary.get("args") if isinstance(summary.get("args"), dict) else {}
+    near_level_only = bool(args.get("near_level_only", False))
+    if not near_level_only:
+        return
+
+    try:
+        source_start_minute = int(float(args.get("start_minute", 0)))
+    except (TypeError, ValueError):
+        source_start_minute = 0
+    try:
+        near_level_bps = float(args.get("near_level_bps", 20.0))
+    except (TypeError, ValueError):
+        near_level_bps = 20.0
+
+    candidate_filter = _candidate_universe_filter(policy)
+    raw_live_filter = candidate_filter.get("near_level_abs_bps_max")
+    try:
+        live_near_level_bps = float(raw_live_filter)
+    except (TypeError, ValueError):
+        live_near_level_bps = float("nan")
+    if not pd.notna(live_near_level_bps):
+        issues.append(
+            "candidate universe mismatch: label_data was built with near_level_only=true "
+            f"(near_level_bps={near_level_bps:g}) but live_contract.candidate_universe_filter."
+            "near_level_abs_bps_max is missing"
+        )
+    elif live_near_level_bps > near_level_bps:
+        issues.append(
+            "candidate universe mismatch: live near_level_abs_bps_max "
+            f"{live_near_level_bps:g} is wider than label_data near_level_bps {near_level_bps:g}"
+        )
+
+    live_contract = policy.get("live_contract") if isinstance(policy.get("live_contract"), dict) else {}
+    entry_start = parse_hhmm_to_minute(live_contract.get("entry_time_min_et", "10:00"), 10 * 60)
+    uses_ib_level_universe = source_start_minute < IB_COMPLETE_MINUTE_ET
+    if uses_ib_level_universe and entry_start < IB_COMPLETE_MINUTE_ET:
+        issues.append(
+            "candidate universe lookahead: label_data near_level_only uses complete IB/fib levels "
+            f"from 09:30-10:30 ET but live entry_time_min_et={live_contract.get('entry_time_min_et', '10:00')}; "
+            "earliest safe matching entry is 10:30 ET"
+        )
+
+    minutes = _read_trade_minutes(trades_path)
+    if uses_ib_level_universe and not minutes.empty:
+        pre_ib_count = int((pd.to_numeric(minutes, errors="coerce") < IB_COMPLETE_MINUTE_ET).sum())
+        if pre_ib_count > 0:
+            issues.append(
+                "candidate universe lookahead: completed-month trades include "
+                f"{pre_ib_count} entries before 10:30 ET from a near_level_only IB/fib-filtered dataset"
             )
 
 
@@ -393,6 +511,7 @@ def assert_event_option_package(args: argparse.Namespace) -> dict[str, Any]:
             issues.append(f"live-ready result_dir must not be under _diagnostics: {result_dir}")
         if not bool(args.allow_live_inconsistent_features):
             assert_live_observable_feature_contract(policy, registry, issues)
+            assert_candidate_universe_causality(policy, validation, trades_path, issues)
         if missing_live:
             issues.append("registry missing_for_full_live_equivalence is not empty")
         if invalidated:

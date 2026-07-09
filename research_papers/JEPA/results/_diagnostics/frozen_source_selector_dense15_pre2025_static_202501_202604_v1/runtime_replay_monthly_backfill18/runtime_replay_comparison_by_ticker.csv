@@ -1,0 +1,4 @@
+ticker,expected_rows,replayed_rows,missing_count,extra_count,passed
+QQQ,418,418,0,0,True
+SPXW,358,358,0,0,True
+SPY,386,386,0,0,True

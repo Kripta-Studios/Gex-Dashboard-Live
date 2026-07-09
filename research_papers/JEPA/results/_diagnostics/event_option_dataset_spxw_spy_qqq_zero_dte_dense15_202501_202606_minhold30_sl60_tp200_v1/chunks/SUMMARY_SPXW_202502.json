@@ -1,0 +1,47 @@
+{
+  "rows": 627,
+  "manifest_rows": 19,
+  "tickers": [
+    "SPXW"
+  ],
+  "date_min": "20250203",
+  "date_max": "20250228",
+  "expiry_modes": {
+    "zero_dte": 627
+  },
+  "args": {
+    "manifest": "research_papers\\JEPA\\results\\_diagnostics\\visreg_thetadata_manifest_spxw_spy_qqq_202501_202606\\thetadata_option_manifest.csv",
+    "output_dir": "research_papers\\JEPA\\results\\_diagnostics\\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_tp200_v1",
+    "tickers": [
+      "SPXW",
+      "SPY",
+      "QQQ"
+    ],
+    "expiry_modes": [
+      "zero_dte"
+    ],
+    "start_date": "20250101",
+    "end_date": "20260630",
+    "max_days_per_ticker": 0,
+    "sample_mode": "first",
+    "workers": 16,
+    "bar_minutes": 5,
+    "start_minute": 600,
+    "end_minute": 870,
+    "near_level_only": true,
+    "near_level_bps": 20.0,
+    "max_rows_per_day": 40,
+    "horizon_minutes": 180,
+    "spot_target_bps": 25.0,
+    "spot_stop_bps": 20.0,
+    "option_tp_pct": 2.0,
+    "option_sl_pct": 0.6,
+    "option_exit_mode": "fixed",
+    "option_min_hold_minutes": 30,
+    "option_trail_activation_pct": 0.5,
+    "option_trail_drawdown_pct": 0.25,
+    "require_open_interest": true,
+    "chunk_by": "ticker_month",
+    "skip_existing_chunks": true
+  }
+}

@@ -1,8 +1,38 @@
 {
-  "passed": true,
+  "schema_version": 1,
+  "policy": "event_option_frozen2025_causal1030_intersection_guarded_v1_202607",
   "stateful_replay_passed": true,
-  "profile": "balanced_cap4",
-  "source_trades": "research_papers/JEPA/results/event_option_mh30trail_frozen2025_static_union_deploy202607_production_v1_spxw_stop_pause1/combined_trades.csv",
+  "passed": true,
+  "source_trades": "research_papers/JEPA/results/event_option_mh30trail_causal1030_static_union_deploy202607_intersection_guarded_v1/combined_trades.csv",
+  "walkforward_trades": "research_papers/JEPA/results/event_option_mh30trail_causal1030_static_union_deploy202607_intersection_guarded_v1_walkforward/combined_trades.csv",
+  "candidate_universe_filter": {
+    "near_level_abs_bps_max": 20.0,
+    "min_entry_time_et": "10:30",
+    "requires_complete_initial_balance": true
+  },
+  "runtime_risk_guard": "spxw_stop_pause_1_plus_spy_daily_loss_pause_t3_p1",
+  "comparisons": [
+    {
+      "name": "completed_month_replay_verification",
+      "passed": true,
+      "result_dir": "research_papers/JEPA/results/event_option_mh30trail_causal1030_static_union_deploy202607_intersection_guarded_v1"
+    },
+    {
+      "name": "completed_month_curve_health",
+      "passed": true,
+      "result_dir": "research_papers/JEPA/results/event_option_mh30trail_causal1030_static_union_deploy202607_intersection_guarded_v1"
+    },
+    {
+      "name": "monthly_retrain_walkforward_verification",
+      "passed": true,
+      "result_dir": "research_papers/JEPA/results/event_option_mh30trail_causal1030_static_union_deploy202607_intersection_guarded_v1_walkforward"
+    },
+    {
+      "name": "monthly_retrain_walkforward_curve_health",
+      "passed": true,
+      "result_dir": "research_papers/JEPA/results/event_option_mh30trail_causal1030_static_union_deploy202607_intersection_guarded_v1_walkforward"
+    }
+  ],
   "comparison": {
     "by_ticker": {
       "QQQ": {
@@ -15,21 +45,5 @@
         "passed": true
       }
     }
-  },
-  "comparisons": [
-    {
-      "name": "QQQ",
-      "passed": true
-    },
-    {
-      "name": "SPXW",
-      "passed": true
-    },
-    {
-      "name": "SPY",
-      "passed": true
-    }
-  ],
-  "runtime_risk_guard": "spxw_stop_pause_1",
-  "note": "Completed-month replay includes SPXW same-day pause after one known event_option_stop_loss_60% close."
+  }
 }

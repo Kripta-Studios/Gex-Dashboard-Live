@@ -1,0 +1,70 @@
+{
+  "snapshot_path": "research_papers\\JEPA\\results\\_diagnostics\\thetadata_event_option_snapshot_smoke_all_fast\\event_option_snapshots_latest.parquet",
+  "snapshot_rows": 3,
+  "candidate_rows": 2,
+  "by_ticker": {
+    "QQQ": {
+      "candidate_rows": 1,
+      "sources": [
+        "ptdj_d80_direct"
+      ],
+      "actions": [
+        "PUT"
+      ]
+    },
+    "SPY": {
+      "candidate_rows": 1,
+      "sources": [
+        "ptdj"
+      ],
+      "actions": [
+        "PUT"
+      ]
+    }
+  },
+  "registry": {
+    "status": "partial_component_export_with_invalidated_monthly_topk",
+    "deploy_month": "202607",
+    "completed_data_through_month": "202605",
+    "component_count": 18,
+    "components": [
+      "PTDJ.core_encoder",
+      "QQQ.balanced",
+      "QQQ.d65_gate",
+      "QQQ.mtd_rescue",
+      "QQQ.ptdj_d80_gate",
+      "QQQ.topk_recent",
+      "SPXW.base_intraday_circuit",
+      "SPXW.base_tdvp",
+      "SPXW.cap4_monthly_backfill",
+      "SPXW.h2_union_selector",
+      "SPXW.maxday7export",
+      "SPXW.s1export",
+      "SPXW.vol25_gate",
+      "SPXW.wide_d35_gate",
+      "SPY.daily_source_router",
+      "SPY.ptdj_delta35_gate",
+      "SPY.relative_momentum",
+      "SPY.static_ptdj_delta35"
+    ],
+    "missing_for_full_live_equivalence": [
+      "Invalidated monthly top-k regressor components must be replaced with online threshold/pace selectors before event-option production promotion.",
+      "Live event-option market snapshots and the PTDJ encoder are exported, but source candidate rows are not yet production-equivalent.",
+      "QQQ remaining direct source artifacts below topk_recent/balanced/d65_gate/ptdj_d80_gate, including current, wide, and front-weekly d35 source generation.",
+      "SPY topk and nested source candidate generation/export.",
+      "Runtime event-option scorer that consumes these component models before trade entry."
+    ],
+    "invalidated_components": [
+      "QQQ.topk_recent",
+      "QQQ.balanced",
+      "SPXW.s1export",
+      "SPXW.maxday7export",
+      "SPXW.base_tdvp"
+    ]
+  },
+  "issues": [
+    "SPXW: no front_weekly snapshot row available"
+  ],
+  "live_ready": false,
+  "live_ready_reason": "diagnostic scorer only; final bot-side execution state and QQQ upstream live source generation are incomplete"
+}
