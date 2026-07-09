@@ -1,0 +1,107 @@
+{
+  "passed": true,
+  "result_dir": "research_papers\\JEPA\\results\\event_option_mh30trail_frozen2025_static_union_deploy202607_production_v1_spxw_stop_pause1",
+  "gates": {
+    "tickers": [
+      "QQQ",
+      "SPXW",
+      "SPY"
+    ],
+    "months": [
+      "202601",
+      "202602",
+      "202603",
+      "202604",
+      "202605",
+      "202606"
+    ],
+    "min_win_rate": 0.45,
+    "min_profit_factor": 1.3,
+    "min_month_trades": 12,
+    "require_positive_months": true,
+    "runtime_risk_guard": "spxw_stop_pause_1"
+  },
+  "overall": {
+    "trades": 668,
+    "win_rate": 0.5913173652694611,
+    "profit_factor": 2.013110257756803,
+    "pnl_return": 164.4803715828608,
+    "avg_return": 0.24622810117194732,
+    "max_drawdown": -5.668604676951659,
+    "call_rate": 0.3008982035928144,
+    "days_with_trades": 121,
+    "daily_win_rate": 0.6033057851239669,
+    "median_daily_return": 0.8438380586271103,
+    "daily_max_drawdown": -10.222185463356382,
+    "top5_day_return": 62.56635192975472,
+    "top5_share_of_pnl": 0.38038795345398074,
+    "min_month_trades": 101,
+    "positive_month_rate": 1.0
+  },
+  "by_ticker": {
+    "QQQ": {
+      "trades": 236,
+      "win_rate": 0.6059322033898306,
+      "profit_factor": 1.7712762214371216,
+      "pnl_return": 42.36011280511728,
+      "avg_return": 0.17949200341151392,
+      "max_drawdown": -4.993274296011002,
+      "call_rate": 0.5127118644067796,
+      "days_with_trades": 119,
+      "daily_win_rate": 0.5714285714285714,
+      "median_daily_return": 0.26607131738291756,
+      "daily_max_drawdown": -4.993274296010988,
+      "top5_day_return": 17.26480959130341,
+      "top5_share_of_pnl": 0.4075723233016922,
+      "min_month_trades": 36,
+      "positive_month_rate": 1.0
+    },
+    "SPXW": {
+      "trades": 326,
+      "win_rate": 0.5766871165644172,
+      "profit_factor": 2.2492499699223316,
+      "pnl_return": 102.75973325720236,
+      "avg_return": 0.31521390569693974,
+      "max_drawdown": -5.668604676951727,
+      "call_rate": 0.18404907975460122,
+      "days_with_trades": 106,
+      "daily_win_rate": 0.5188679245283019,
+      "median_daily_return": 0.28708792988041393,
+      "daily_max_drawdown": -5.668604676951713,
+      "top5_day_return": 46.514081303566186,
+      "top5_share_of_pnl": 0.4526489105138471,
+      "min_month_trades": 49,
+      "positive_month_rate": 1.0
+    },
+    "SPY": {
+      "trades": 106,
+      "win_rate": 0.6037735849056604,
+      "profit_factor": 1.7691095638034273,
+      "pnl_return": 19.360525520541163,
+      "avg_return": 0.18264646717491664,
+      "max_drawdown": -3.283688554204459,
+      "call_rate": 0.18867924528301888,
+      "days_with_trades": 106,
+      "daily_win_rate": 0.6037735849056604,
+      "median_daily_return": 0.2911864781098909,
+      "daily_max_drawdown": -3.283688554204459,
+      "top5_day_return": 11.913913109250457,
+      "top5_share_of_pnl": 0.6153713697807435,
+      "min_month_trades": 12,
+      "positive_month_rate": 1.0
+    }
+  },
+  "integrity": {
+    "passed": true,
+    "issues": [],
+    "runtime_risk_guard": "spxw_stop_pause_1",
+    "source_result_dir": "research_papers\\JEPA\\results\\event_option_mh30trail_frozen2025_static_union_deploy202607_production_v1",
+    "label_data": "research_papers\\JEPA\\results\\_diagnostics\\event_option_dataset_spxw_spy_qqq_zero_dte_dense15_202501_202606_minhold30_sl60_trail050_025_tp1000_v1_physics\\event_option_dataset.parquet",
+    "skipped_trades": 29,
+    "skip_reason": "known SPXW event_option_stop_loss_60% earlier same day"
+  },
+  "temporal_leakage_audit": {
+    "passed": true,
+    "issues": []
+  }
+}
