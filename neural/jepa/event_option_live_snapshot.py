@@ -81,7 +81,15 @@ def _as_float(value: Any, default: float = float("nan")) -> float:
 
 
 def _parse_datetime(series: pd.Series) -> pd.Series:
-    return pd.to_datetime(series, format="mixed", errors="coerce").dt.floor("min")
+    """Parse exchange timestamps without destroying sub-minute ordering.
+
+    Live ThetaData files contain one-second quotes.  Flooring them before
+    selecting a chain snapshot turns every quote in the minute into the same
+    key and can create many-to-many OHLC merges.  Minute bucketing belongs at
+    the feature layer, after the latest complete quote snapshot is selected.
+    """
+
+    return pd.to_datetime(series, format="mixed", errors="coerce")
 
 
 def _standardize_spot_frame(frame: pd.DataFrame) -> pd.DataFrame:
@@ -101,7 +109,10 @@ def _standardize_spot_frame(frame: pd.DataFrame) -> pd.DataFrame:
         if col not in out.columns:
             out[col] = out.get("close", np.nan)
     if "tick_count" not in out.columns:
-        out["tick_count"] = 0.0
+        # realtime_feed stores the number of observed one-second points under
+        # ``volume``; the historical derived-underlying files call the same
+        # causal quantity ``tick_count``.
+        out["tick_count"] = out["volume"] if "volume" in out.columns else 0.0
     for col in ("open", "high", "low", "close", "tick_count"):
         out[col] = pd.to_numeric(out[col], errors="coerce").astype(float)
     out = out.dropna(subset=["close"]).copy()
@@ -126,8 +137,9 @@ def _latest_spot_at(spot: pd.DataFrame, dt: pd.Timestamp | None) -> tuple[float,
     work = spot
     if dt is not None and pd.notna(dt):
         before = spot[spot["dt"] <= dt]
-        if not before.empty:
-            work = before
+        if before.empty:
+            return float("nan"), -1
+        work = before
     row = work.iloc[-1]
     return _as_float(row.get("close")), int(row.get("minute", -1))
 
@@ -190,6 +202,27 @@ def _prepare_chain(
     else:
         out["open_interest"] = out["open_interest"].fillna(0.0)
 
+    # Historical training quotes are sampled exactly at HH:MM:00.  Anchor live
+    # to the same observable cross-section; choosing the latest second inside
+    # the minute changes spot, Greeks and contract selection by up to 59s.
+    key_cols = [col for col in ("strike", "right") if col in out.columns]
+    if len(key_cols) == 2:
+        snapshot_sizes = out.drop_duplicates(["dt", *key_cols]).groupby("dt", sort=True).size()
+        if snapshot_sizes.empty:
+            return pd.DataFrame()
+        max_contracts = int(snapshot_sizes.max())
+        min_complete = max(12, int(np.ceil(max_contracts * 0.80)))
+        complete_times = snapshot_sizes[
+            (snapshot_sizes >= min_complete)
+            & (snapshot_sizes.index.second == 0)
+            & (snapshot_sizes.index.microsecond == 0)
+        ]
+        if complete_times.empty:
+            return pd.DataFrame()
+        snapshot_dt = pd.Timestamp(complete_times.index.max())
+        out = out[out["dt"] == snapshot_dt].copy()
+        out = out.sort_values(["dt", *key_cols], kind="stable").drop_duplicates(key_cols, keep="last")
+
     if not ohlc.empty:
         opt = ohlc.copy()
         if "timestamp" in opt.columns:
@@ -206,8 +239,18 @@ def _prepare_chain(
                 opt[col] = pd.to_numeric(opt[col], errors="coerce").fillna(0.0).astype(float)
         keep = [col for col in ("dt", "strike", "right", "close", "volume", "count") if col in opt.columns]
         if {"dt", "strike", "right"}.issubset(keep):
-            opt = opt[keep].rename(columns={"close": "opt_close", "volume": "opt_volume", "count": "opt_count"})
-            out = out.merge(opt, on=["dt", "strike", "right"], how="left")
+            latest_quote_dt = pd.Timestamp(out["dt"].max())
+            previous_start = latest_quote_dt.floor("min") - pd.Timedelta(minutes=1)
+            previous_end = latest_quote_dt.floor("min")
+            opt = opt[(opt["dt"] >= previous_start) & (opt["dt"] < previous_end)]
+            if not opt.empty:
+                opt = opt.sort_values("dt", kind="stable")
+                grouped = opt.groupby(["strike", "right"], as_index=False, observed=True).agg(
+                    opt_close=("close", "last"),
+                    opt_volume=("volume", "sum"),
+                    opt_count=("count", "sum"),
+                )
+                out = out.merge(grouped, on=["strike", "right"], how="left", validate="one_to_one")
     for col in ("opt_close", "opt_volume", "opt_count"):
         if col not in out.columns:
             out[col] = 0.0
@@ -232,6 +275,24 @@ def latest_chain_snapshot(
     if pd.notna(latest):
         chain = chain[chain["dt"] == latest].copy()
     return chain.reset_index(drop=True)
+
+
+def _initial_balance_complete(spot: pd.DataFrame) -> bool:
+    """Require every 09:30--10:29 ET minute used by the frozen IB contract."""
+
+    if spot.empty or "minute" not in spot.columns:
+        return False
+    minutes = pd.to_numeric(spot["minute"], errors="coerce").dropna().astype(int)
+    present = set(minutes[(minutes >= 570) & (minutes < 630)].tolist())
+    return all(minute in present for minute in range(570, 630))
+
+
+def _naive_wall_time(value: datetime | pd.Timestamp) -> pd.Timestamp:
+    stamp = pd.Timestamp(value)
+    if stamp.tzinfo is not None:
+        # ThetaData timestamps are naive US/Eastern wall-clock values.
+        stamp = stamp.tz_localize(None)
+    return stamp
 
 
 def _expiration_from_snapshot(snapshot: pd.DataFrame, trade_date: str) -> tuple[str, int]:
@@ -267,6 +328,8 @@ def build_snapshot_row(
     ticker: str,
     suffix: str,
     now: datetime | None = None,
+    max_snapshot_age_seconds: int = 180,
+    future_tolerance_seconds: int = 5,
 ) -> dict[str, Any] | None:
     options_symbol = OPTIONS_SYMBOLS.get(str(ticker).upper(), str(ticker).upper())
     underlying_ticker = UNDERLYING_SYMBOLS.get(options_symbol, str(ticker).upper())
@@ -274,30 +337,38 @@ def build_snapshot_row(
     if snapshot.empty:
         return None
     dt = pd.Timestamp(snapshot["dt"].max())
+    if now is not None and pd.notna(dt):
+        age_seconds = float((_naive_wall_time(now) - _naive_wall_time(dt)).total_seconds())
+        if age_seconds < -float(max(0, future_tolerance_seconds)):
+            return None
+        if age_seconds > float(max(0, max_snapshot_age_seconds)):
+            return None
     trade_date = dt.strftime("%Y%m%d") if pd.notna(dt) else (now or datetime.now()).strftime("%Y%m%d")
     spot_history = load_spot_history(day_dir, underlying_ticker)
-    spot_value, _minute_from_spot = _latest_spot_at(spot_history, dt)
+    if not spot_history.empty and pd.notna(dt):
+        spot_history = spot_history[
+            (spot_history["dt"].dt.normalize() == dt.normalize())
+            & (spot_history["dt"] <= dt)
+        ].copy().reset_index(drop=True)
+    snapshot_spot = pd.to_numeric(snapshot.get("underlying_price"), errors="coerce") if "underlying_price" in snapshot else pd.Series(dtype=float)
+    snapshot_spot = snapshot_spot[np.isfinite(snapshot_spot) & (snapshot_spot > 0.0)]
+    spot_value = float(snapshot_spot.median()) if not snapshot_spot.empty else float("nan")
     if not np.isfinite(spot_value) or spot_value <= 0.0:
-        spot_value = _as_float(snapshot["underlying_price"].dropna().iloc[-1] if "underlying_price" in snapshot.columns and snapshot["underlying_price"].notna().any() else np.nan)
+        spot_value, _minute_from_spot = _latest_spot_at(spot_history, dt)
     if not np.isfinite(spot_value) or spot_value <= 0.0:
         return None
 
-    if spot_history.empty:
-        minute = minutes_of_day(dt) if pd.notna(dt) else -1
-        spot_history = pd.DataFrame(
-            [{
-                "dt": dt,
-                "open": spot_value,
-                "high": spot_value,
-                "low": spot_value,
-                "close": spot_value,
-                "tick_count": 0.0,
-                "minute": minute,
-            }]
-        )
+    if not _initial_balance_complete(spot_history):
+        return None
     levels = build_levels(spot_history)
     minute = minutes_of_day(dt) if pd.notna(dt) else int(spot_history.iloc[-1]["minute"])
     current_pos = int(spot_history[spot_history["dt"] <= dt].index.max()) if not spot_history[spot_history["dt"] <= dt].empty else len(spot_history) - 1
+    completed_bars = spot_history[spot_history["dt"] < dt.floor("min")] if pd.notna(dt) else pd.DataFrame()
+    prior_volume = (
+        _as_float(completed_bars.iloc[-1].get("tick_count"), 0.0)
+        if not completed_bars.empty
+        else 0.0
+    )
     expiration, dte_days = _expiration_from_snapshot(snapshot, trade_date)
     row: dict[str, Any] = {
         "ticker": options_symbol,
@@ -310,15 +381,16 @@ def build_snapshot_row(
         "time": dt.strftime("%H:%M") if pd.notna(dt) else "",
         "minute": int(minute),
         "spot": float(spot_value),
-        "underlying_volume": _as_float(spot_history.iloc[current_pos].get("tick_count"), 0.0) if current_pos >= 0 else 0.0,
+        "initial_balance_complete": 1,
+        "underlying_volume": prior_volume,
         **level_features(float(spot_value), levels),
     }
     for lookback in (1, 5, 15, 30):
         row[f"ret_{lookback}m_bps"] = _ret_bps(spot_history, current_pos, float(spot_value), lookback)
     for delta in DELTA_BUCKETS:
         label = f"d{int(round(delta * 100)):02d}"
-        call = select_contract(snapshot, "CALL", delta)
-        put = select_contract(snapshot, "PUT", delta)
+        call = select_contract(snapshot, "CALL", delta, option_price_mode="executable_quote")
+        put = select_contract(snapshot, "PUT", delta, option_price_mode="executable_quote")
         row.update(contract_features(call, float(spot_value), f"call_{label}"))
         row.update(contract_features(put, float(spot_value), f"put_{label}"))
     return row
@@ -346,7 +418,7 @@ def build_live_event_option_snapshots(
         frame = add_option_physics(frame, DELTA_INT_BUCKETS)
         frame = add_level_physics(frame)
         frame = add_intraday_state(frame)
-        frame = add_cross_index_context(frame)
+        frame = add_live_cross_index_context_asof(frame)
         frame = frame.sort_values(["ticker", "expiry_mode", "minute"]).reset_index(drop=True)
     summary = {
         "rows": int(len(frame)),
@@ -389,6 +461,13 @@ def add_live_cross_index_context_asof(
 
     for ticker in ("SPXW", "SPY", "QQQ"):
         source = out[out["ticker"].astype(str).str.upper().eq(ticker)].copy()
+        # Training context is built from the zero-DTE dataset.  With both live
+        # expiry modes present, lexical sorting previously selected
+        # ``front_weekly`` for almost every timestamp.
+        if "expiry_mode" in source.columns:
+            zero_dte = source[source["expiry_mode"].astype(str).eq("zero_dte")].copy()
+            if not zero_dte.empty:
+                source = zero_dte
         if source.empty:
             continue
         source = source.sort_values(

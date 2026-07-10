@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 
 from evaluate_xinput_level_filter import month_range
-from walkforward_event_option_gate import metrics, score_metrics
+from walkforward_event_option_gate import metrics, position_exit_minute, score_metrics
 
 
 _WORKER_FRAME: pd.DataFrame | None = None
@@ -117,6 +117,8 @@ def apply_union(
     cooldown: int,
     min_score: float,
     daily_order: str,
+    *,
+    allow_overlapping_positions: bool = False,
 ) -> pd.DataFrame:
     if frame.empty:
         return frame.copy()
@@ -126,6 +128,11 @@ def apply_union(
         work = work[pd.to_numeric(work["score"], errors="coerce").fillna(float("-inf")) >= float(min_score)].copy()
     if work.empty:
         return work
+    if not bool(allow_overlapping_positions) and "exit_minutes" not in work.columns:
+        raise ValueError(
+            "static union selection requires exit_minutes for live-equivalent one-position replay; "
+            "use allow_overlapping_positions=True only for research diagnostics"
+        )
     work["config_priority"] = work["union_source"].map(priority).astype(int)
     if str(daily_order) == "score_desc":
         ordered = work.sort_values(
@@ -145,6 +152,7 @@ def apply_union(
     for (_, date), day in ordered.groupby(["ticker", "date"], sort=False):
         next_allowed = -1
         selected_minutes: list[int] = []
+        selected_intervals: list[tuple[int, int]] = []
         taken = 0
         seen: set[tuple[str, str, str]] = set()
         for row in day.itertuples(index=False):
@@ -160,16 +168,28 @@ def apply_union(
             elif minute < next_allowed:
                 continue
             rec = row._asdict()
+            position_until = position_exit_minute(
+                minute,
+                rec.get("exit_minutes"),
+                allow_overlapping_positions=bool(allow_overlapping_positions),
+            )
+            if not bool(allow_overlapping_positions) and any(
+                minute < prior_end and position_until > prior_start
+                for prior_start, prior_end in selected_intervals
+            ):
+                continue
             rec["union_config_sources"] = ",".join(order)
             rec["union_config_max_day"] = int(max_day)
             rec["union_config_cooldown"] = int(cooldown)
             rec["union_config_min_score"] = float(min_score)
             rec["union_config_daily_order"] = str(daily_order)
+            rec["union_config_position_exit_minute"] = int(position_until)
             rows.append(rec)
             seen.add(key)
             selected_minutes.append(minute)
+            selected_intervals.append((minute, position_until))
             taken += 1
-            next_allowed = minute + int(cooldown)
+            next_allowed = max(minute + int(cooldown), position_until)
     return pd.DataFrame(rows) if rows else work.iloc[0:0].copy()
 
 
@@ -262,7 +282,15 @@ def scan_candidate(
     test1_months = month_range(str(args.test1_start_month), str(args.test1_end_month))
     test2_months = month_range(str(args.test2_start_month), str(args.test2_end_month))
     order, max_day, cooldown, min_score, daily_order = config
-    selected = apply_union(frame, tuple(order), int(max_day), int(cooldown), float(min_score), str(daily_order))
+    selected = apply_union(
+        frame,
+        tuple(order),
+        int(max_day),
+        int(cooldown),
+        float(min_score),
+        str(daily_order),
+        allow_overlapping_positions=bool(args.allow_overlapping_positions),
+    )
     select = selected[selected["test_month"].astype(str).isin(select_months)].copy()
     test1 = selected[selected["test_month"].astype(str).isin(test1_months)].copy()
     test2 = selected[selected["test_month"].astype(str).isin(test2_months)].copy()
@@ -422,6 +450,11 @@ def main() -> int:
     parser.add_argument("--cooldown-grid", nargs="+", type=int, default=[0, 15, 30, 45])
     parser.add_argument("--min-score-grid", nargs="+", type=float, default=[float("-inf"), 0.0, 0.10, 0.20, 0.30, 0.40])
     parser.add_argument("--daily-order-grid", nargs="+", default=["time_asc"], choices=["time_asc", "score_desc"])
+    parser.add_argument(
+        "--allow-overlapping-positions",
+        action="store_true",
+        help="Research diagnostics only: ignore exit_minutes and permit overlapping same-ticker positions.",
+    )
     parser.add_argument("--workers", type=int, default=1)
     parser.add_argument("--chunksize", type=int, default=8)
     parser.add_argument("--min-win-rate", type=float, default=0.45)
@@ -470,6 +503,7 @@ def main() -> int:
                 int(cfg["cooldown"]),
                 float(cfg["min_score"]),
                 str(cfg["daily_order"]),
+                allow_overlapping_positions=bool(args.allow_overlapping_positions),
             )
             selected_trades["selected_by"] = "ranked_select_window"
             combined_parts.append(selected_trades)

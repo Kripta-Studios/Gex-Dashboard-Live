@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 
 from evaluate_xinput_level_filter import month_range
-from walkforward_event_option_gate import metrics
+from walkforward_event_option_gate import metrics, position_exit_minute
 
 
 def parse_named_path(value: str) -> tuple[str, Path]:
@@ -116,10 +116,17 @@ def materialize_union(
     max_trades_per_day: int,
     min_score: float,
     daily_order: str,
+    *,
+    allow_overlapping_positions: bool = False,
 ) -> pd.DataFrame:
     if frame.empty:
         return frame.copy()
     work = frame[pd.to_numeric(frame["_score"], errors="coerce").fillna(0.0) >= float(min_score)].copy()
+    if not bool(allow_overlapping_positions) and "exit_minutes" not in work.columns:
+        raise ValueError(
+            "static union materialization requires exit_minutes for live-equivalent one-position replay; "
+            "use allow_overlapping_positions=True only for research diagnostics"
+        )
     if daily_order == "score_desc":
         sort_cols = ["date", "_score", "_minute", "_source_priority", "_source_row"]
         ascending = [True, False, True, True, True]
@@ -127,12 +134,37 @@ def materialize_union(
         sort_cols = ["date", "_minute", "_source_priority", "_score", "_source_row"]
         ascending = [True, True, True, False, True]
     work = work.sort_values(sort_cols, ascending=ascending, kind="stable")
-    dedupe_cols = [col for col in ("date", "time", "action", "expiry_mode") if col in work.columns]
+    dedupe_cols = [col for col in ("ticker", "date", "time", "action", "expiry_mode") if col in work.columns]
     if dedupe_cols:
         work = work.drop_duplicates(dedupe_cols, keep="first")
-    if int(max_trades_per_day) > 0 and int(max_trades_per_day) < 999:
-        work = work.groupby("date", group_keys=False).head(int(max_trades_per_day))
-    return work.reset_index(drop=True)
+    rows: list[dict[str, Any]] = []
+    group_cols = [col for col in ("ticker", "date") if col in work.columns]
+    if "date" not in group_cols:
+        raise ValueError("static union materialization requires a date column")
+    grouper: str | list[str] = group_cols[0] if len(group_cols) == 1 else group_cols
+    limited = 0 < int(max_trades_per_day) < 999
+    for _, day in work.groupby(grouper, sort=False):
+        selected_intervals: list[tuple[int, int]] = []
+        taken = 0
+        for values in day.to_dict(orient="records"):
+            if limited and taken >= int(max_trades_per_day):
+                break
+            minute = int(math.floor(float(values["_minute"])))
+            position_until = position_exit_minute(
+                minute,
+                values.get("exit_minutes"),
+                allow_overlapping_positions=bool(allow_overlapping_positions),
+            )
+            if not bool(allow_overlapping_positions) and any(
+                minute < prior_end and position_until > prior_start
+                for prior_start, prior_end in selected_intervals
+            ):
+                continue
+            values["static_union_position_exit_minute"] = int(position_until)
+            rows.append(values)
+            selected_intervals.append((minute, position_until))
+            taken += 1
+    return pd.DataFrame(rows) if rows else work.iloc[0:0].copy()
 
 
 def monthly_metrics(trades: pd.DataFrame, months: list[str]) -> list[dict[str, Any]]:
@@ -249,6 +281,11 @@ def main() -> int:
     parser.add_argument("--max-trades-per-day", type=int, default=999)
     parser.add_argument("--min-score", type=float, default=-999999.0)
     parser.add_argument("--daily-order", choices=["time_asc", "score_desc"], default="time_asc")
+    parser.add_argument(
+        "--allow-overlapping-positions",
+        action="store_true",
+        help="Research diagnostics only: ignore exit_minutes and permit overlapping same-ticker positions.",
+    )
     args = parser.parse_args()
 
     ticker = str(args.ticker).upper()
@@ -270,7 +307,13 @@ def main() -> int:
         for priority, name in enumerate(sources_order)
     ]
     loaded = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
-    selected = materialize_union(loaded, int(args.max_trades_per_day), float(args.min_score), str(args.daily_order))
+    selected = materialize_union(
+        loaded,
+        int(args.max_trades_per_day),
+        float(args.min_score),
+        str(args.daily_order),
+        allow_overlapping_positions=bool(args.allow_overlapping_positions),
+    )
     select_trades = selected[selected["month"].astype(str).isin(select_months)].copy()
     test_trades = selected[selected["month"].astype(str).isin(test_months)].copy()
 
@@ -291,6 +334,7 @@ def main() -> int:
         "max_trades_per_day": int(args.max_trades_per_day),
         "min_score": float(args.min_score),
         "daily_order": str(args.daily_order),
+        "allow_overlapping_positions": bool(args.allow_overlapping_positions),
     }
     folds = source_contribution_rows(test_trades, source_specs, ticker, test_months, select_months, config)
     folds.to_csv(output_dir / "static_union_folds.csv", index=False)

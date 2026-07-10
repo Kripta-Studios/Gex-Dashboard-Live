@@ -186,6 +186,35 @@ def apply_candidate_universe_filter(
         return frame.copy()
     work = frame.copy()
 
+    if bool(filter_config.get("requires_complete_initial_balance", False)):
+        if "initial_balance_complete" not in work.columns:
+            issues.append(f"{label}: initial_balance_complete missing for required IB contract")
+            return work.iloc[0:0].copy()
+        complete = pd.to_numeric(work["initial_balance_complete"], errors="coerce").fillna(0.0) > 0.0
+        work = work[complete].copy()
+
+    sample_minutes = filter_config.get("entry_sample_minutes")
+    if sample_minutes is not None:
+        try:
+            cadence = int(float(sample_minutes))
+        except (TypeError, ValueError):
+            cadence = 0
+        if cadence <= 0:
+            issues.append(f"{label}: invalid candidate_universe_filter.entry_sample_minutes={sample_minutes!r}")
+            return work.iloc[0:0].copy()
+        if "minute" not in work.columns:
+            issues.append(f"{label}: minute missing for entry sampling contract")
+            return work.iloc[0:0].copy()
+        anchor_raw = filter_config.get("entry_sample_anchor_minute_et", "00:00")
+        anchor = parse_hhmm_to_minute(anchor_raw)
+        if anchor is None:
+            issues.append(
+                f"{label}: invalid candidate_universe_filter.entry_sample_anchor_minute_et={anchor_raw!r}"
+            )
+            return work.iloc[0:0].copy()
+        minute_values = pd.to_numeric(work["minute"], errors="coerce")
+        work = work[minute_values.notna() & (((minute_values - anchor) % cadence) == 0)].copy()
+
     near_level = filter_config.get("near_level_abs_bps_max")
     if near_level is not None:
         try:

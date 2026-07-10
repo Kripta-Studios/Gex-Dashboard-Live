@@ -660,11 +660,9 @@ class EventOptionComponentRegistry:
         if strict and not score_input.empty:
             bad_rows, row_features = _nonfinite_feature_rows(score_input, feature_cols)
             if bad_rows.any():
-                dropped = score_input.loc[bad_rows].copy()
-                score_input = score_input.loc[~bad_rows].copy()
                 preview = []
                 for idx, cols in list(row_features.items())[:5]:
-                    row = dropped.loc[idx] if idx in dropped.index else pd.Series(dtype=object)
+                    row = score_input.loc[idx] if idx in score_input.index else pd.Series(dtype=object)
                     preview.append(
                         {
                             "ticker": str(row.get("ticker", "")),
@@ -674,14 +672,13 @@ class EventOptionComponentRegistry:
                         }
                     )
                 dropped_nonfinite = {
-                    "dropped_rows": int(bad_rows.sum()),
+                    # Offline scoring imputes legitimate unavailable-contract
+                    # values with frozen training medians. Strict live mode
+                    # must reject missing columns/schema drift, not change the
+                    # row universe for ordinary NaNs.
+                    "imputed_rows": int(bad_rows.sum()),
                     "preview": preview,
                 }
-                if score_input.empty:
-                    raise ValueError(
-                        "All event-option snapshot rows have nonfinite required features; "
-                        f"examples={preview}"
-                    )
         x_score, missing = _prepare_feature_frame(score_input, feature_cols, medians, strict=strict)
         label_mode = str((metadata.get("args") or {}).get("label_mode", "return")).lower()
         out = score_input.copy()

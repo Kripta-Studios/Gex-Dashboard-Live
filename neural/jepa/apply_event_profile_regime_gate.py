@@ -160,6 +160,11 @@ def fit_and_score_fold(
         out["action"] = np.where(is_call, "CALL", "PUT")
         out["score"] = np.where(is_call, out["pred_call_return"], out["pred_put_return"])
         out["realized_return"] = np.where(is_call, out["call_return"], out["put_return"])
+        bucket = int(profile.delta_bucket)
+        call_exit = f"call_d{bucket:02d}_opt_exit_minutes"
+        put_exit = f"put_d{bucket:02d}_opt_exit_minutes"
+        if call_exit in out.columns and put_exit in out.columns:
+            out["exit_minutes"] = np.where(is_call, out[call_exit], out[put_exit])
         return add_action_context(out, int(profile.delta_bucket))
 
     cfg = parse_deploy_config(str(row["deploy_config"]))

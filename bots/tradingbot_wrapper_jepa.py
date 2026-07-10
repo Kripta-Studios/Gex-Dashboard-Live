@@ -12,11 +12,15 @@ Live contract:
     - Entry window: feature rows through 14:30 ET, with EOD cleanup at the close.
     - Strike selection: production structural option profiles over 0.10..0.70
       delta candidates. OptionValue/fixed-delta are diagnostics/fallback only.
+    - Execution: exact-expiration two-sided quotes are required; entries use
+      ask and marks/exits use bid. Policy risk capital is a sizing target; a
+      single indivisible contract may exceed it.
     - Exit: legacy structural path uses hard stop -60%, trail from +50% with
       25% giveback, emergency TP +1000%, max hold 180m, EOD cleanup.
       Event-option scorer positions use their validated option exit contract
       from the production policy, including any minimum hold, max hold, stop,
-      and take-profit settings.
+      and take-profit settings. Due 0DTE positions without a bid are closed
+      with a conservative zero mark at max-hold/EOD instead of persisting.
     - Cooldown: per-policy in event-option scorer mode; 180m in the legacy
       level-stability/structural path.
     - Optional event-option risk guard: policy-configured daily loss-streak
@@ -922,14 +926,42 @@ class JepaFixedDeltaBot:
             return 0.0
         return _safe_float(df["close"].iloc[-1])
 
-    def _latest_option_snapshot(self, ticker: str, suffix: str = "0dte") -> pd.DataFrame:
+    @staticmethod
+    def _filter_option_expiration(df: pd.DataFrame, expiration: str | None) -> pd.DataFrame:
+        target = _format_expiration(expiration or "")
+        if not target:
+            return df
+        if "expiration" not in df.columns:
+            logging.warning("[Feed] option snapshot missing expiration; refusing unverified contract match")
+            return pd.DataFrame(columns=df.columns)
+        normalized = df["expiration"].map(_format_expiration)
+        return df[normalized.eq(target)].copy()
+
+    def _latest_option_snapshot(
+        self,
+        ticker: str,
+        suffix: str = "0dte",
+        *,
+        expiration: str | None = None,
+    ) -> pd.DataFrame:
         symbol = OPTIONS_SYMBOLS.get(ticker, ticker)
         suffix = str(suffix or "0dte")
         df = self._read_parquet(f"{symbol}_greeks_{suffix}_latest.parquet")
         if df.empty:
             return df
-        if "underlying_timestamp" in df.columns:
-            dt = pd.to_datetime(df["underlying_timestamp"], format="mixed", errors="coerce")
+        df = self._filter_option_expiration(df, expiration)
+        if df.empty:
+            return df
+        time_col = "underlying_timestamp" if "underlying_timestamp" in df.columns else "timestamp" if "timestamp" in df.columns else ""
+        if time_col:
+            dt = pd.to_datetime(df[time_col], format="mixed", errors="coerce")
+            today = pd.Timestamp(_now_et().date())
+            current_day = dt.dt.normalize().eq(today)
+            df = df[current_day].copy()
+            dt = dt[current_day]
+            if df.empty:
+                logging.warning("[Feed] option snapshot has no rows for current ET trading date")
+                return df
             latest = dt.max()
             if pd.notna(latest):
                 df = df[dt == latest].copy()
@@ -937,15 +969,30 @@ class JepaFixedDeltaBot:
             df["right_norm"] = df["right"].map(_normalize_right)
         return df
 
-    def _latest_ohlc_snapshot(self, ticker: str, suffix: str = "0dte") -> pd.DataFrame:
+    def _latest_ohlc_snapshot(
+        self,
+        ticker: str,
+        suffix: str = "0dte",
+        *,
+        expiration: str | None = None,
+    ) -> pd.DataFrame:
         symbol = OPTIONS_SYMBOLS.get(ticker, ticker)
         suffix = str(suffix or "0dte")
         df = self._read_parquet(f"{symbol}_ohlc_{suffix}_latest.parquet")
         if df.empty:
             return df
+        df = self._filter_option_expiration(df, expiration)
+        if df.empty:
+            return df
         time_col = "timestamp" if "timestamp" in df.columns else "underlying_timestamp" if "underlying_timestamp" in df.columns else ""
         if time_col:
             dt = pd.to_datetime(df[time_col], format="mixed", errors="coerce")
+            today = pd.Timestamp(_now_et().date())
+            current_day = dt.dt.normalize().eq(today)
+            df = df[current_day].copy()
+            dt = dt[current_day]
+            if df.empty:
+                return df
             latest = dt.max()
             if pd.notna(latest):
                 df = df[dt == latest].copy()
@@ -965,8 +1012,24 @@ class JepaFixedDeltaBot:
                 return value
         return 0.0
 
-    def _option_price_from_ohlc(self, ticker: str, strike: float, right: str, suffix: str = "0dte") -> float:
-        df = self._latest_ohlc_snapshot(ticker, suffix=suffix)
+    @staticmethod
+    def _executable_quote(row: pd.Series) -> tuple[float, float] | None:
+        bid = _safe_float(row.get("bid", 0.0), 0.0)
+        ask = _safe_float(row.get("ask", 0.0), 0.0)
+        if bid <= 0.0 or ask < bid:
+            return None
+        return bid, ask
+
+    def _option_price_from_ohlc(
+        self,
+        ticker: str,
+        strike: float,
+        right: str,
+        suffix: str = "0dte",
+        *,
+        expiration: str | None = None,
+    ) -> float:
+        df = self._latest_ohlc_snapshot(ticker, suffix=suffix, expiration=expiration)
         if df.empty or "strike" not in df.columns or "right_norm" not in df.columns:
             return 0.0
         work = df[(df["right_norm"] == right) & (np.isclose(pd.to_numeric(df["strike"], errors="coerce"), strike))]
@@ -976,7 +1039,8 @@ class JepaFixedDeltaBot:
 
     def _select_fixed_delta_option(self, ticker: str, direction: str) -> dict | None:
         right = RIGHT_FOR_DIRECTION[direction]
-        df = self._latest_option_snapshot(ticker)
+        expiration = _now_et().strftime("%Y%m%d")
+        df = self._latest_option_snapshot(ticker, expiration=expiration)
         if df.empty or "delta" not in df.columns or "strike" not in df.columns or "right_norm" not in df.columns:
             return None
         work = df[df["right_norm"] == right].copy()
@@ -997,18 +1061,21 @@ class JepaFixedDeltaBot:
             strike = _safe_float(row.get("strike", 0.0))
             if strike <= 0:
                 continue
-            premium = self._row_price(row)
-            if premium <= 0:
-                premium = self._option_price_from_ohlc(ticker, strike, right)
-            if premium <= 0:
+            quote = self._executable_quote(row)
+            if quote is None:
                 continue
+            bid_premium, ask_premium = quote
+            raw_premium = (bid_premium + ask_premium) / 2.0
             return {
                 "ticker": ticker,
                 "right": right,
                 "strike": strike,
                 "delta": _safe_float(row.get("delta", 0.0)),
-                "premium": premium,
-                "expiration": _format_expiration(row.get("expiration", "")),
+                "premium": raw_premium,
+                "entry_premium": ask_premium,
+                "raw_entry_premium": raw_premium,
+                "entry_spread_pct": ask_premium / max(raw_premium, 1e-9) - 1.0,
+                "expiration": expiration,
                 "selector_policy": FIXED_POLICY_NAME,
             }
         return None
@@ -1023,15 +1090,35 @@ class JepaFixedDeltaBot:
         features: pd.DataFrame | None = None,
         selector_policy: str,
         selector_score: float = 0.0,
+        expiration: str = "",
+        strike_target: float | None = None,
     ) -> dict | None:
         right = _normalize_right(right)
         suffix = str(suffix or "0dte")
-        df = self._latest_option_snapshot(ticker, suffix=suffix)
+        target_expiration = _format_expiration(expiration)
+        if not target_expiration and suffix == "0dte":
+            target_expiration = _now_et().strftime("%Y%m%d")
+        if not target_expiration:
+            logging.warning("[%s] option candidate missing a target expiration suffix=%s", ticker, suffix)
+            return None
+        df = self._latest_option_snapshot(ticker, suffix=suffix, expiration=target_expiration)
         if df.empty or "delta" not in df.columns or "strike" not in df.columns or "right_norm" not in df.columns:
             return None
         work = df[df["right_norm"] == right].copy()
         if work.empty:
             return None
+        if strike_target is not None and np.isfinite(float(strike_target)) and float(strike_target) > 0.0:
+            strikes = pd.to_numeric(work["strike"], errors="coerce")
+            work = work[np.isclose(strikes, float(strike_target))].copy()
+            if work.empty:
+                logging.warning(
+                    "[%s] exact event-option strike unavailable expiration=%s right=%s strike=%.4f",
+                    ticker,
+                    target_expiration,
+                    right,
+                    float(strike_target),
+                )
+                return None
         work["delta_abs"] = pd.to_numeric(work["delta"], errors="coerce").abs()
         work = work[work["delta_abs"] > 0.01].copy()
         if "bid" in work.columns:
@@ -1044,18 +1131,13 @@ class JepaFixedDeltaBot:
             strike = _safe_float(row.get("strike", 0.0))
             if strike <= 0:
                 continue
-            raw_premium = self._row_price(row)
-            if raw_premium <= 0:
-                raw_premium = self._option_price_from_ohlc(ticker, strike, right, suffix=suffix)
-            if raw_premium <= 0:
+            quote = self._executable_quote(row)
+            if quote is None:
                 continue
+            bid_premium, ask_premium = quote
+            raw_premium = (bid_premium + ask_premium) / 2.0
             actual_delta = _safe_float(row.get("delta", 0.0))
-            feature_frame = features if features is not None else pd.DataFrame()
-            model_entry_spread_pct = self._entry_spread_pct(abs(actual_delta), feature_frame)
-            entry_premium = raw_premium * (1.0 + model_entry_spread_pct)
-            ask_premium = _safe_float(row.get("ask", 0.0), 0.0)
-            if ask_premium > 0.0:
-                entry_premium = max(entry_premium, ask_premium)
+            entry_premium = ask_premium
             entry_spread_pct = entry_premium / max(raw_premium, 1e-9) - 1.0
             return {
                 "ticker": ticker,
@@ -1066,7 +1148,7 @@ class JepaFixedDeltaBot:
                 "entry_premium": entry_premium,
                 "raw_entry_premium": raw_premium,
                 "entry_spread_pct": entry_spread_pct,
-                "expiration": _format_expiration(row.get("expiration", "")),
+                "expiration": target_expiration,
                 "selector_policy": selector_policy,
                 "selector_score": float(selector_score),
                 "option_snapshot_suffix": suffix,
@@ -1077,7 +1159,11 @@ class JepaFixedDeltaBot:
         if features.empty:
             return pd.DataFrame()
         right = RIGHT_FOR_DIRECTION[direction]
-        df = self._latest_option_snapshot(ticker)
+        feature_row = features.iloc[-1].to_dict()
+        expiration = _format_expiration(feature_row.get("expiration", feature_row.get("date", "")))
+        if not expiration:
+            expiration = _now_et().strftime("%Y%m%d")
+        df = self._latest_option_snapshot(ticker, expiration=expiration)
         if df.empty or "delta" not in df.columns or "strike" not in df.columns or "right_norm" not in df.columns:
             return pd.DataFrame()
         work = df[df["right_norm"] == right].copy()
@@ -1090,7 +1176,6 @@ class JepaFixedDeltaBot:
         if work.empty:
             return pd.DataFrame()
 
-        feature_row = features.iloc[-1].to_dict()
         spot = self._latest_spot(ticker)
         if spot <= 0:
             spot = _safe_float(feature_row.get("spot_price", 0.0), 0.0)
@@ -1108,15 +1193,15 @@ class JepaFixedDeltaBot:
                 strike = _safe_float(chain_row.get("strike", 0.0))
                 if strike <= 0:
                     continue
-                raw_premium = self._row_price(chain_row)
-                if raw_premium <= 0:
-                    raw_premium = self._option_price_from_ohlc(ticker, strike, right)
-                if raw_premium <= 0:
+                quote = self._executable_quote(chain_row)
+                if quote is None:
                     continue
+                bid_premium, ask_premium = quote
+                raw_premium = (bid_premium + ask_premium) / 2.0
                 actual_delta = _safe_float(chain_row.get("delta", 0.0))
                 actual_delta_abs = abs(actual_delta)
-                entry_spread_pct = self._entry_spread_pct(actual_delta_abs, features)
-                entry_premium = raw_premium * (1.0 + entry_spread_pct)
+                entry_premium = ask_premium
+                entry_spread_pct = entry_premium / max(raw_premium, 1e-9) - 1.0
                 contracts = self._contracts(entry_premium)
                 if contracts <= 0:
                     continue
@@ -1145,7 +1230,7 @@ class JepaFixedDeltaBot:
                         "actual_strike": strike,
                         "strike": strike,
                         "right": right,
-                        "expiration": _format_expiration(chain_row.get("expiration", "")),
+                        "expiration": expiration,
                         "contracts": int(contracts),
                         "entry_cost_dollars": entry_premium * CONTRACT_MULTIPLIER * contracts,
                         "actual_delta": actual_delta,
@@ -1789,6 +1874,14 @@ class JepaFixedDeltaBot:
         expiry_mode = str(row.get("expiry_mode", ""))
         bucket = str(row.get("event_delta_bucket", ""))
         selector_policy = f"event_option:{policy_ticker}:{mtd_source}:{source_variant}:{expiry_mode}:{bucket}:{source}"
+        expiration = _format_expiration(row.get("expiration", ""))
+        if not expiration and expiry_mode == "zero_dte":
+            expiration = _format_expiration(row.get("date", row.get("trade_date", "")))
+        strike_col = f"{action.lower()}_{bucket}_strike" if bucket else ""
+        selected_strike = _safe_float(row.get(strike_col, float("nan")), float("nan")) if strike_col else float("nan")
+        if not np.isfinite(selected_strike) or selected_strike <= 0.0:
+            logging.warning("[%s] event-option candidate missing selected contract strike field=%s", ticker, strike_col)
+            return None
         return self._select_delta_option(
             ticker,
             right=action,
@@ -1797,6 +1890,8 @@ class JepaFixedDeltaBot:
             features=features,
             selector_policy=selector_policy,
             selector_score=_safe_float(row.get("score", 0.0), 0.0),
+            expiration=expiration,
+            strike_target=selected_strike,
         )
 
     def _predict_entry_signal(self, ticker: str, features: pd.DataFrame) -> pd.Series | None:
@@ -1892,20 +1987,61 @@ class JepaFixedDeltaBot:
 
     def _current_option_premium(self, pos: JepaOptionPosition) -> float:
         suffix = self._option_snapshot_suffix_for_position(pos)
-        df = self._latest_option_snapshot(pos.ticker, suffix=suffix)
+        expiration = _format_expiration(pos.expiration)
+        if not expiration:
+            logging.warning("[%s] open position missing expiration; refusing ambiguous quote", pos.ticker)
+            return float("nan")
+        df = self._latest_option_snapshot(pos.ticker, suffix=suffix, expiration=expiration)
         if not df.empty and "strike" in df.columns and "right_norm" in df.columns:
             work = df[(df["right_norm"] == pos.right) & (np.isclose(pd.to_numeric(df["strike"], errors="coerce"), pos.strike))]
             if not work.empty:
-                price = self._row_price(work.iloc[-1])
-                if price > 0:
-                    return price
-        return self._option_price_from_ohlc(pos.ticker, pos.strike, pos.right, suffix=suffix)
+                row = work.iloc[-1]
+                bid = _safe_float(row.get("bid", float("nan")), float("nan"))
+                ask = _safe_float(row.get("ask", float("nan")), float("nan"))
+                # A present zero bid is a valid conservative mark (-100%), not
+                # a missing quote. Crossed/invalid quotes remain unavailable.
+                if np.isfinite(bid) and np.isfinite(ask) and bid >= 0.0 and ask > 0.0 and ask >= bid:
+                    return bid
+        return float("nan")
+
+    def _risk_capital_dollars(self) -> float:
+        raw_policy = getattr(self, "event_option_policy", None)
+        payload = raw_policy if isinstance(raw_policy, dict) else {}
+        if "risk_capital_dollars" in payload:
+            return max(0.0, _safe_float(payload.get("risk_capital_dollars"), 0.0))
+        return RISK_CAPITAL
+
+    def _scheduled_exit_reason(self, pos: JepaOptionPosition, now: datetime, hold_min: float) -> str:
+        if self._is_event_option_position(pos):
+            _take_profit, _stop_loss, max_hold, _min_hold = self._event_option_exit_contract()
+            if hold_min >= max_hold:
+                return f"event_option_max_hold_{max_hold}m"
+            if now.time() >= EOD_CLEANUP_TIME:
+                return "event_option_eod_cleanup"
+            return ""
+        if hold_min >= MAX_HOLD_MINUTES:
+            return "max_hold_180m"
+        if now.time() >= EOD_CLEANUP_TIME:
+            return "eod_cleanup"
+        return ""
+
+    @staticmethod
+    def _expiration_due(pos: JepaOptionPosition, now: datetime) -> bool:
+        expiration = _format_expiration(pos.expiration)
+        if expiration:
+            return expiration <= now.strftime("%Y%m%d")
+        return JepaFixedDeltaBot._option_snapshot_suffix_for_position(pos) == "0dte"
 
     def _contracts(self, premium: float) -> int:
-        cost = premium * CONTRACT_MULTIPLIER
-        if cost <= 0:
+        risk_capital = self._risk_capital_dollars()
+        premium_value = _safe_float(premium, 0.0)
+        if premium_value <= 0.0:
             return 0
-        return max(1, int(RISK_CAPITAL // cost))
+        rounded_premium = _ceil_cent(premium_value)
+        cost = rounded_premium * CONTRACT_MULTIPLIER
+        if cost <= 0.0 or risk_capital <= 0.0:
+            return 0
+        return max(1, int((risk_capital + 1e-9) // cost))
 
     def _record_paper_order_intent(
         self,
@@ -1959,7 +2095,8 @@ class JepaFixedDeltaBot:
                 "asset_class": "OPTION",
             },
             "risk": {
-                "risk_capital": RISK_CAPITAL,
+                "risk_capital": self._risk_capital_dollars(),
+                "risk_capital_is_hard_cap": False,
                 "contract_multiplier": CONTRACT_MULTIPLIER,
                 "max_debit": float(debit),
                 "estimated_credit": float(credit),
@@ -2129,14 +2266,24 @@ class JepaFixedDeltaBot:
         pos = self.positions.get(ticker)
         if pos is None:
             return
+        hold_min = (now - pos.entry_dt).total_seconds() / 60.0
         premium = self._current_option_premium(pos)
-        if premium <= 0:
+        if not np.isfinite(premium) or premium < 0.0:
+            scheduled_reason = self._scheduled_exit_reason(pos, now, hold_min)
+            if scheduled_reason and self._expiration_due(pos, now):
+                reason = f"{scheduled_reason}_no_bid_zero_mark"
+                logging.error(
+                    "[%s] closing due 0DTE position with conservative zero mark; bid unavailable reason=%s",
+                    ticker,
+                    scheduled_reason,
+                )
+                self._close_position(ticker, 0.0, reason, now)
+                return
             logging.warning("[%s] open position but current premium unavailable", ticker)
             return
         pnl_pct = premium / max(pos.entry_premium, 1e-9) - 1.0
         pos.peak_pnl_pct = max(pos.peak_pnl_pct, pnl_pct)
         pos.trough_pnl_pct = min(pos.trough_pnl_pct, pnl_pct)
-        hold_min = (now - pos.entry_dt).total_seconds() / 60.0
         self._save_positions()
 
         if self._is_event_option_position(pos):
@@ -2467,7 +2614,7 @@ class JepaFixedDeltaBot:
             event_exit,
             legacy_signal,
             self.rt_data_dir,
-            RISK_CAPITAL,
+            self._risk_capital_dollars(),
             self.earliest_entry_time.strftime("%H:%M"),
             self.latest_entry_time.strftime("%H:%M"),
             HARD_STOP_PCT * 100.0,

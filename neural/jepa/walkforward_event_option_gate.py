@@ -11,11 +11,18 @@ import lightgbm as lgb
 import numpy as np
 import pandas as pd
 
-from evaluate_xinput_level_filter import month_add, month_range
-from event_option_component_live import (
-    DEFAULT_ENTRY_START_MINUTE_ET,
-    live_observable_feature_issues_for_columns,
-)
+if __package__:
+    from .evaluate_xinput_level_filter import month_add, month_range
+    from .event_option_component_live import (
+        DEFAULT_ENTRY_START_MINUTE_ET,
+        live_observable_feature_issues_for_columns,
+    )
+else:
+    from evaluate_xinput_level_filter import month_add, month_range
+    from event_option_component_live import (
+        DEFAULT_ENTRY_START_MINUTE_ET,
+        live_observable_feature_issues_for_columns,
+    )
 
 
 LEAKY_PATTERNS = (
@@ -62,7 +69,10 @@ def metrics(trades: pd.DataFrame, expected_months: list[str] | None = None) -> d
             "min_month_trades": 0,
             "positive_month_rate": float("nan"),
         }
-    ret = trades["realized_return"].astype(float).to_numpy()
+    work = trades.copy()
+    work["date"] = work["date"].astype(str).str.replace(r"\.0$", "", regex=True)
+    work["month"] = work["month"].astype(str).str.replace(r"\.0$", "", regex=True)
+    ret = work["realized_return"].astype(float).to_numpy()
     ret = np.nan_to_num(ret, nan=0.0, posinf=0.0, neginf=0.0)
     wins = ret[ret > 0.0]
     losses = ret[ret < 0.0]
@@ -70,22 +80,22 @@ def metrics(trades: pd.DataFrame, expected_months: list[str] | None = None) -> d
     gross_loss = float(-losses.sum()) if len(losses) else 0.0
     equity = np.cumsum(ret)
     peak = np.maximum.accumulate(np.insert(equity, 0, 0.0))[1:]
-    by_month = trades.groupby("month")["realized_return"].agg(["count", "sum"])
+    by_month = work.groupby("month")["realized_return"].agg(["count", "sum"])
     if expected_months is not None:
         by_month = by_month.reindex([str(m) for m in expected_months], fill_value=0)
-    daily = trades.groupby("date")["realized_return"].sum().astype(float).sort_index()
+    daily = work.groupby("date")["realized_return"].sum().astype(float).sort_index()
     daily_equity = daily.cumsum().to_numpy(dtype=float)
     daily_peak = np.maximum.accumulate(np.insert(daily_equity, 0, 0.0))[1:] if len(daily_equity) else np.array([])
     top5_day_return = float(daily.nlargest(min(5, len(daily))).sum()) if len(daily) else 0.0
     total_return = float(ret.sum())
     return {
-        "trades": int(len(trades)),
+        "trades": int(len(work)),
         "win_rate": float((ret > 0.0).mean()),
         "profit_factor": float(gross_profit / gross_loss) if gross_loss > 0.0 else float("inf"),
         "pnl_return": total_return,
         "avg_return": float(ret.mean()),
         "max_drawdown": float((equity - peak).min()) if len(equity) else 0.0,
-        "call_rate": float((trades["action"].astype(str) == "CALL").mean()),
+        "call_rate": float((work["action"].astype(str) == "CALL").mean()),
         "days_with_trades": int(len(daily)),
         "daily_win_rate": float((daily > 0.0).mean()) if len(daily) else float("nan"),
         "median_daily_return": float(daily.median()) if len(daily) else float("nan"),
@@ -187,11 +197,32 @@ def prepare_frame(path: str | Path, args: argparse.Namespace) -> pd.DataFrame:
     df["date"] = df["trade_date"].astype(str)
     df["call_return"] = pd.to_numeric(df[f"call_d{int(args.delta_bucket):02d}_opt_exit_ret"], errors="coerce")
     df["put_return"] = pd.to_numeric(df[f"put_d{int(args.delta_bucket):02d}_opt_exit_ret"], errors="coerce")
-    df = df[np.isfinite(df["call_return"]) & np.isfinite(df["put_return"])].copy()
-    if float(args.clip_return) > 0.0:
-        df["call_return"] = df["call_return"].clip(-float(args.clip_return), float(args.clip_return))
-        df["put_return"] = df["put_return"].clip(-float(args.clip_return), float(args.clip_return))
+    finite_labels = np.isfinite(df["call_return"]) & np.isfinite(df["put_return"])
+    price_mode = df.get("option_price_mode", pd.Series("legacy_ohlc", index=df.index)).astype(str).str.lower()
+    executable = price_mode.eq("executable_quote")
+    if executable.any():
+        bucket = int(args.delta_bucket)
+        call_available = f"call_d{bucket:02d}_available"
+        put_available = f"put_d{bucket:02d}_available"
+        if call_available not in df.columns or put_available not in df.columns:
+            raise ValueError("executable_quote dataset is missing observable current-contract availability fields")
+        observable = (
+            pd.to_numeric(df[call_available], errors="coerce").fillna(0.0).gt(0.0)
+            & pd.to_numeric(df[put_available], errors="coerce").fillna(0.0).gt(0.0)
+        )
+        df = df[(~executable) | observable].copy()
+        finite_labels = np.isfinite(df["call_return"]) & np.isfinite(df["put_return"])
+        if (price_mode.reindex(df.index).eq("executable_quote") & ~finite_labels).any():
+            raise ValueError(
+                "executable_quote rows with observable entry contracts must have finite conservative outcomes"
+            )
+    df = df[finite_labels].copy()
     return df.reset_index(drop=True)
+
+
+def regression_training_target(values: pd.Series, clip_return: float) -> pd.Series:
+    target = values.astype(float)
+    return target.clip(-float(clip_return), float(clip_return)) if float(clip_return) > 0.0 else target
 
 
 def parse_hhmm_to_minute(value: str, default: int = DEFAULT_ENTRY_START_MINUTE_ET) -> int:
@@ -200,6 +231,36 @@ def parse_hhmm_to_minute(value: str, default: int = DEFAULT_ENTRY_START_MINUTE_E
         return int(hour) * 60 + int(minute)
     except Exception:
         return int(default)
+
+
+def position_exit_minute(
+    entry_minute: int | float,
+    exit_minutes: object,
+    *,
+    allow_overlapping_positions: bool = False,
+) -> int:
+    """Return the first whole minute at which another position may be opened.
+
+    ``exit_minutes`` is an outcome label and may only be used by the historical
+    simulator after a candidate has been selected.  It is required here because
+    live keeps exactly one position per ticker.  Silently treating a missing
+    duration as zero would recreate the optimistic overlapping-trade replay.
+    """
+    entry = float(entry_minute)
+    if not np.isfinite(entry):
+        raise ValueError(f"entry_minute must be finite, got {entry_minute!r}")
+    if bool(allow_overlapping_positions):
+        return int(math.ceil(entry))
+    try:
+        duration = float(exit_minutes)
+    except (TypeError, ValueError) as exc:
+        raise ValueError(
+            "exit_minutes is required for live-equivalent one-position replay; "
+            "use --allow-overlapping-positions only for research diagnostics"
+        ) from exc
+    if not np.isfinite(duration) or duration < 0.0:
+        raise ValueError(f"exit_minutes must be finite and non-negative, got {exit_minutes!r}")
+    return int(math.ceil(entry + duration))
 
 
 def build_features(df: pd.DataFrame, args: argparse.Namespace) -> tuple[pd.DataFrame, list[str]]:
@@ -251,26 +312,59 @@ def build_features(df: pd.DataFrame, args: argparse.Namespace) -> tuple[pd.DataF
     return work, selected
 
 
-def deploy(scored: pd.DataFrame, cfg: DeployConfig, cooldown_minutes: int) -> pd.DataFrame:
+def deploy(
+    scored: pd.DataFrame,
+    cfg: DeployConfig,
+    cooldown_minutes: int,
+    *,
+    allow_overlapping_positions: bool = False,
+) -> pd.DataFrame:
     candidates = scored[scored["score"].astype(float) >= float(cfg.threshold)].copy()
     if candidates.empty:
         return candidates
-    rows: list[dict] = []
-    for _, day in candidates.sort_values(["date", "minute", "score"], ascending=[True, True, False]).groupby("date", sort=False):
+    if not bool(allow_overlapping_positions) and "exit_minutes" not in candidates.columns:
+        raise ValueError(
+            "deploy requires exit_minutes for live-equivalent one-position replay; "
+            "use allow_overlapping_positions=True only for research diagnostics"
+        )
+    group_cols = [col for col in ("ticker", "date") if col in candidates.columns]
+    if "date" not in group_cols:
+        raise ValueError("deploy requires a date column")
+    sort_cols = [*group_cols, "minute", "score"]
+    ascending = [True] * len(group_cols) + [True, False]
+    ordered = candidates.sort_values(sort_cols, ascending=ascending, kind="stable").reset_index(drop=True)
+    grouper: str | list[str] = group_cols[0] if len(group_cols) == 1 else group_cols
+    grouped_positions = ordered.groupby(grouper, sort=False, observed=True).indices
+    minute_values = pd.to_numeric(ordered["minute"], errors="coerce").to_numpy(dtype=float)
+    if bool(allow_overlapping_positions):
+        exit_values = np.zeros(len(ordered), dtype=float)
+    else:
+        exit_values = pd.to_numeric(ordered["exit_minutes"], errors="coerce").to_numpy(dtype=float)
+    selected_positions: list[int] = []
+    for positions in grouped_positions.values():
         next_allowed = -1
         taken = 0
-        for row in day.itertuples(index=False):
-            minute = int(row.minute)
+        for raw_position in positions:
+            position = int(raw_position)
+            minute = int(minute_values[position])
             if minute < next_allowed:
                 continue
             if taken >= int(cfg.max_trades_per_day):
                 break
-            values = row._asdict()
-            values["deploy_config"] = cfg.name
-            rows.append(values)
+            selected_positions.append(position)
             taken += 1
-            next_allowed = minute + int(cooldown_minutes)
-    return pd.DataFrame(rows) if rows else candidates.iloc[0:0].copy()
+            cooldown_until = minute + int(cooldown_minutes)
+            position_until = position_exit_minute(
+                minute,
+                exit_values[position],
+                allow_overlapping_positions=bool(allow_overlapping_positions),
+            )
+            next_allowed = max(cooldown_until, position_until)
+    if not selected_positions:
+        return candidates.iloc[0:0].copy()
+    selected = ordered.iloc[selected_positions].copy()
+    selected["deploy_config"] = cfg.name
+    return selected
 
 
 def fit_predict_fold(
@@ -317,8 +411,8 @@ def fit_predict_fold(
         y_call = (train["call_return"].astype(float) > 0.0).astype(int)
         y_put = (train["put_return"].astype(float) > 0.0).astype(int)
     else:
-        y_call = train["call_return"].astype(float)
-        y_put = train["put_return"].astype(float)
+        y_call = regression_training_target(train["call_return"], float(args.clip_return))
+        y_put = regression_training_target(train["put_return"], float(args.clip_return))
     params = dict(
         n_estimators=int(args.n_estimators),
         learning_rate=float(args.learning_rate),
@@ -376,7 +470,12 @@ def fit_predict_fold(
     best_score = -1e18
     best_metrics: dict = {}
     for cfg in fold_grid:
-        val_trades = deploy(val_scored, cfg, int(args.cooldown_minutes))
+        val_trades = deploy(
+            val_scored,
+            cfg,
+            int(args.cooldown_minutes),
+            allow_overlapping_positions=bool(getattr(args, "allow_overlapping_positions", False)),
+        )
         row = metrics(val_trades, val_months)
         score = score_selection_metrics(row, args)
         if score > best_score:
@@ -402,7 +501,12 @@ def fit_predict_fold(
             flush=True,
         )
         return pd.DataFrame(), fold_row
-    test_trades = deploy(test_scored, best_cfg, int(args.cooldown_minutes))
+    test_trades = deploy(
+        test_scored,
+        best_cfg,
+        int(args.cooldown_minutes),
+        allow_overlapping_positions=bool(getattr(args, "allow_overlapping_positions", False)),
+    )
     test_metrics = metrics(test_trades, [str(test_month)])
     if not test_trades.empty:
         test_trades["test_month"] = str(test_month)
@@ -494,8 +598,8 @@ def fit_direction_models(
         y_call = (train["call_return"].astype(float) > 0.0).astype(int)
         y_put = (train["put_return"].astype(float) > 0.0).astype(int)
     else:
-        y_call = train["call_return"].astype(float)
-        y_put = train["put_return"].astype(float)
+        y_call = regression_training_target(train["call_return"], float(args.clip_return))
+        y_put = regression_training_target(train["put_return"], float(args.clip_return))
     params = dict(
         n_estimators=int(args.n_estimators),
         learning_rate=float(args.learning_rate),
@@ -546,6 +650,15 @@ def score_direction_models(
     out["score"] = np.where(call_action, out["pred_call_return"], out["pred_put_return"])
     if {"call_return", "put_return"}.issubset(out.columns):
         out["realized_return"] = np.where(call_action, out["call_return"], out["put_return"])
+    bucket = int(args.delta_bucket)
+    call_exit_minutes = f"call_d{bucket:02d}_opt_exit_minutes"
+    put_exit_minutes = f"put_d{bucket:02d}_opt_exit_minutes"
+    if call_exit_minutes in out.columns and put_exit_minutes in out.columns:
+        out["exit_minutes"] = np.where(call_action, out[call_exit_minutes], out[put_exit_minutes])
+    call_status = f"call_d{bucket:02d}_opt_status"
+    put_status = f"put_d{bucket:02d}_opt_status"
+    if call_status in out.columns and put_status in out.columns:
+        out["exit_status"] = np.where(call_action, out[call_status], out[put_status])
     return out
 
 
@@ -555,7 +668,12 @@ def choose_deploy_config(scored_select: pd.DataFrame, select_months: list[str], 
     best_score = -1e18
     best_metrics: dict = {}
     for cfg in fold_grid:
-        trades = deploy(scored_select, cfg, int(args.cooldown_minutes))
+        trades = deploy(
+            scored_select,
+            cfg,
+            int(args.cooldown_minutes),
+            allow_overlapping_positions=bool(getattr(args, "allow_overlapping_positions", False)),
+        )
         row = metrics(trades, select_months)
         score = score_selection_metrics(row, args)
         if score > best_score:
@@ -725,6 +843,14 @@ def main() -> int:
     parser.add_argument("--min-call-rate", type=float, default=0.20)
     parser.add_argument("--max-call-rate", type=float, default=0.80)
     parser.add_argument("--cooldown-minutes", type=int, default=30)
+    parser.add_argument(
+        "--allow-overlapping-positions",
+        action="store_true",
+        help=(
+            "Research diagnostics only: ignore exit_minutes and allow a new same-ticker entry "
+            "while a prior trade is still open."
+        ),
+    )
     parser.add_argument("--objective", default="regression_l1")
     parser.add_argument("--n-estimators", type=int, default=240)
     parser.add_argument("--learning-rate", type=float, default=0.035)

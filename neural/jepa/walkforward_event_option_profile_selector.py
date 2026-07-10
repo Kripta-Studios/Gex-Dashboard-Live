@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import hashlib
 import json
 import math
+import pickle
 import zlib
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -14,18 +16,265 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from evaluate_xinput_level_filter import month_add, month_range
-from walkforward_event_option_gate import (
-    DeployConfig,
-    LEAKY_PATTERNS,
-    build_fold_grid,
-    deploy,
-    metrics,
-    score_metrics,
-)
+if __package__:
+    from .event_option_component_live import (
+        DEFAULT_ENTRY_START_MINUTE_ET,
+        live_observable_feature_issues_for_columns,
+    )
+    from .evaluate_xinput_level_filter import month_add, month_range
+    from .walkforward_event_option_gate import (
+        DeployConfig,
+        LEAKY_PATTERNS,
+        build_fold_grid,
+        deploy,
+        metrics,
+        parse_hhmm_to_minute,
+        score_metrics,
+    )
+else:
+    from event_option_component_live import (
+        DEFAULT_ENTRY_START_MINUTE_ET,
+        live_observable_feature_issues_for_columns,
+    )
+    from evaluate_xinput_level_filter import month_add, month_range
+    from walkforward_event_option_gate import (
+        DeployConfig,
+        LEAKY_PATTERNS,
+        build_fold_grid,
+        deploy,
+        metrics,
+        parse_hhmm_to_minute,
+        score_metrics,
+    )
 
 
 INDEX_TICKERS = ("SPXW", "SPY", "QQQ")
+
+
+def parse_ticker_int_map(values: Iterable[str], *, field_name: str) -> dict[str, int]:
+    out: dict[str, int] = {}
+    for raw in values:
+        text = str(raw).strip()
+        if not text:
+            continue
+        if "=" not in text:
+            raise ValueError(f"{field_name} values must use TICKER=INTEGER, got {text!r}")
+        ticker, value = text.split("=", 1)
+        ticker = ticker.strip().upper()
+        if not ticker:
+            raise ValueError(f"{field_name} contains an empty ticker: {text!r}")
+        try:
+            parsed = int(value.strip())
+        except ValueError as exc:
+            raise ValueError(f"{field_name} contains a non-integer value: {text!r}") from exc
+        if parsed < 0:
+            raise ValueError(f"{field_name} values must be non-negative: {text!r}")
+        out[ticker] = parsed
+    return out
+
+
+def parse_ticker_int_grid_map(values: Iterable[str], *, field_name: str) -> dict[str, list[int]]:
+    out: dict[str, list[int]] = {}
+    for raw in values:
+        text = str(raw).strip()
+        if not text:
+            continue
+        if "=" not in text:
+            raise ValueError(f"{field_name} values must use TICKER=INT[,INT...], got {text!r}")
+        ticker, value = text.split("=", 1)
+        ticker = ticker.strip().upper()
+        try:
+            grid = sorted({int(item.strip()) for item in value.split(",") if item.strip()})
+        except ValueError as exc:
+            raise ValueError(f"{field_name} contains a non-integer grid: {text!r}") from exc
+        if not ticker or not grid or any(item <= 0 for item in grid):
+            raise ValueError(f"{field_name} requires a ticker and positive grid values: {text!r}")
+        out[ticker] = grid
+    return out
+
+
+def ticker_cooldown_minutes(args: argparse.Namespace, ticker: str) -> int:
+    overrides = getattr(args, "ticker_cooldown_map", {}) or {}
+    return int(overrides.get(str(ticker).upper(), int(args.cooldown_minutes)))
+
+
+def ticker_max_day_grid(args: argparse.Namespace, ticker: str) -> list[int]:
+    overrides = getattr(args, "ticker_max_day_grid_map", {}) or {}
+    return [int(value) for value in overrides.get(str(ticker).upper(), args.max_day_grid)]
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _split_months(value: object) -> list[str]:
+    if isinstance(value, (list, tuple)):
+        raw = value
+    else:
+        raw = str(value or "").split(",")
+    return sorted({str(item).strip() for item in raw if len(str(item).strip()) == 6 and str(item).strip().isdigit()})
+
+
+def freeze_fold_policy_artifact(
+    artifact_dir: Path,
+    *,
+    ticker: str,
+    test_month: str,
+    profile: "ProfileConfig",
+    train_months: list[str],
+    selection_months: list[str],
+    deploy_config: DeployConfig,
+    call_model: object,
+    put_model: object,
+    medians: pd.Series,
+    feature_cols: list[str],
+    args: argparse.Namespace,
+) -> dict[str, str]:
+    """Freeze the selected policy before any outer-fold outcome is scored."""
+    artifact_dir.mkdir(parents=True, exist_ok=True)
+    model_path = artifact_dir / "event_option_gate_direction_model.pkl"
+    manifest_path = artifact_dir / "fold_policy.json"
+    metadata = {
+        "schema_version": 1,
+        "component": "nested_event_option_gate_direction_model",
+        "ticker": str(ticker).upper(),
+        "evaluation_month": str(test_month),
+        "profile": asdict(profile),
+        "training_months": [str(month) for month in train_months],
+        "selection_months": [str(month) for month in selection_months],
+        "deploy_config": asdict(deploy_config),
+        "deploy_config_name": deploy_config.name,
+        "cooldown_minutes": ticker_cooldown_minutes(args, ticker),
+        "feature_cols": [str(col) for col in feature_cols],
+        "feature_medians": {
+            str(key): float(value) if np.isfinite(float(value)) else 0.0
+            for key, value in medians.fillna(0.0).items()
+        },
+        "policy_frozen_before_evaluation": True,
+    }
+    with model_path.open("wb") as handle:
+        pickle.dump(
+            {
+                "call_model": call_model,
+                "put_model": put_model,
+                "medians": medians,
+                "feature_cols": feature_cols,
+                "metadata": metadata,
+            },
+            handle,
+            protocol=pickle.HIGHEST_PROTOCOL,
+        )
+    manifest = {
+        **metadata,
+        "model_path": model_path.name,
+        "model_sha256": sha256_file(model_path),
+    }
+    manifest_path.write_text(
+        json.dumps(manifest, indent=2, sort_keys=True, allow_nan=False),
+        encoding="utf-8",
+    )
+    return {
+        "policy_artifact_path": manifest_path.as_posix(),
+        "policy_artifact_sha256": sha256_file(manifest_path),
+        "model_artifact_path": model_path.as_posix(),
+        "model_artifact_sha256": str(manifest["model_sha256"]),
+    }
+
+
+def write_policy_selection_provenance(
+    output_dir: Path,
+    folds: pd.DataFrame,
+    *,
+    expected_months: list[str],
+    expected_tickers: list[str],
+) -> dict:
+    fold_dir = output_dir / "fold_policy_artifacts"
+    fold_dir.mkdir(parents=True, exist_ok=True)
+    expected_ticker_set = {str(ticker).upper() for ticker in expected_tickers}
+    provenance_folds: list[dict] = []
+
+    for month in [str(value) for value in expected_months]:
+        part = folds[folds.get("month", pd.Series(dtype=str)).astype(str).eq(month)].copy()
+        policies: list[dict] = []
+        training_months: set[str] = set()
+        selection_months: set[str] = set()
+        observed_tickers: set[str] = set()
+        component_artifacts_ok = True
+        for row in part.to_dict("records"):
+            ticker = str(row.get("ticker", "")).upper()
+            if not ticker:
+                continue
+            observed_tickers.add(ticker)
+            row_training = _split_months(row.get("training_months", row.get("train_months", "")))
+            row_selection = _split_months(row.get("selection_months", row.get("val_months", "")))
+            training_months.update(row_training)
+            selection_months.update(row_selection)
+            selected = str(row.get("selected", "")).strip().lower() in {"true", "1"}
+            artifact_hash = str(row.get("policy_artifact_sha256", "") or "").strip()
+            if selected and not artifact_hash:
+                component_artifacts_ok = False
+            policies.append(
+                {
+                    "ticker": ticker,
+                    "selected": selected,
+                    "profile": str(row.get("profile", "")),
+                    "deploy_config": str(row.get("deploy_config", "")),
+                    "training_months": row_training,
+                    "selection_months": row_selection,
+                    "component_policy_artifact_path": str(row.get("policy_artifact_path", "") or ""),
+                    "component_policy_artifact_sha256": artifact_hash,
+                }
+            )
+
+        sources = sorted(training_months | selection_months)
+        complete = observed_tickers == expected_ticker_set
+        strictly_prior = bool(sources) and all(source < month for source in sources)
+        frozen = bool(complete and strictly_prior and component_artifacts_ok)
+        fold_payload = {
+            "schema_version": 1,
+            "evaluation_month": month,
+            "training_months": sorted(training_months),
+            "selection_months": sorted(selection_months),
+            "policy_frozen_before_evaluation": frozen,
+            "ticker_policies": sorted(policies, key=lambda row: row["ticker"]),
+        }
+        fold_path = fold_dir / f"fold_policy_{month}.json"
+        fold_path.write_text(
+            json.dumps(fold_payload, indent=2, sort_keys=True, allow_nan=False),
+            encoding="utf-8",
+        )
+        provenance_folds.append(
+            {
+                "evaluation_month": month,
+                "training_months": sorted(training_months),
+                "selection_months": sorted(selection_months),
+                "policy_frozen_before_evaluation": frozen,
+                "policy_artifact_path": fold_path.as_posix(),
+                "policy_artifact_sha256": sha256_file(fold_path),
+            }
+        )
+
+    passed = bool(provenance_folds) and all(
+        bool(fold["policy_frozen_before_evaluation"]) for fold in provenance_folds
+    )
+    provenance = {
+        "schema_version": 1,
+        "passed": passed,
+        "mode": "nested_walk_forward",
+        "evaluation_months": [str(month) for month in expected_months],
+        "selection_protocol_frozen_before_evaluation": True,
+        "trade_artifact_kind": "nested_walk_forward_fold_outputs",
+        "folds": provenance_folds,
+    }
+    (output_dir / "policy_selection_provenance.json").write_text(
+        json.dumps(provenance, indent=2, sort_keys=True, allow_nan=False),
+        encoding="utf-8",
+    )
+    return provenance
 
 
 @dataclass(frozen=True)
@@ -82,6 +331,15 @@ def default_profiles(kind: str, all_tickers: list[str]) -> list[ProfileConfig]:
             for expiry in (tuple(), ("zero_dte",)):
                 add(50, "win", expiry, scope)
                 add(80, "win", expiry, scope)
+    elif kind == "production_zero_dte":
+        # Compact, pre-declared production search space.  It varies only
+        # contract delta, target type, and target-vs-pooled training while
+        # keeping the executable 0DTE universe fixed.  This avoids duplicate
+        # mixed/zero-DTE profiles and seed-searching aliases of the same model.
+        for scope in ("target", "index"):
+            for delta in (15, 25, 35, 50, 65, 80):
+                for label_mode in ("return", "win"):
+                    add(delta, label_mode, ("zero_dte",), scope)
     elif kind == "broad":
         scopes = ("target", "index", "all")
         for scope in scopes:
@@ -115,11 +373,18 @@ def load_raw(path: str | Path, tickers: list[str]) -> pd.DataFrame:
     return df.reset_index(drop=True)
 
 
-def build_features(df: pd.DataFrame) -> tuple[pd.DataFrame, list[str]]:
+def build_features(
+    df: pd.DataFrame,
+    *,
+    live_observable_features_only: bool = True,
+    entry_start_minute_et: int = DEFAULT_ENTRY_START_MINUTE_ET,
+    feature_exclude_prefixes: Iterable[str] = (),
+) -> tuple[pd.DataFrame, list[str]]:
     work = df.copy()
     cats = [c for c in ["ticker", "expiry_mode", "nearest_level_name"] if c in work.columns]
     if cats:
         work = pd.concat([work, pd.get_dummies(work[cats].astype(str), prefix=cats, dtype=float)], axis=1)
+    exclude_prefixes = tuple(str(value).lower() for value in feature_exclude_prefixes if str(value).strip())
     selected: list[str] = []
     excluded = {
         "trade_date",
@@ -139,12 +404,32 @@ def build_features(df: pd.DataFrame) -> tuple[pd.DataFrame, list[str]]:
             continue
         if any(pattern in low for pattern in LEAKY_PATTERNS):
             continue
+        if exclude_prefixes and low.startswith(exclude_prefixes):
+            continue
         if pd.api.types.is_numeric_dtype(work[col]):
             selected.append(col)
+    if bool(live_observable_features_only):
+        selected = [
+            col
+            for col in selected
+            if not live_observable_feature_issues_for_columns(
+                "profile_selector",
+                [col],
+                entry_start_minute_et=int(entry_start_minute_et),
+            )
+        ]
     return work, selected
 
 
-def prepare_profile(raw: pd.DataFrame, profile: ProfileConfig, clip_return: float) -> PreparedProfile:
+def prepare_profile(
+    raw: pd.DataFrame,
+    profile: ProfileConfig,
+    clip_return: float,
+    *,
+    live_observable_features_only: bool = True,
+    entry_start_minute_et: int = DEFAULT_ENTRY_START_MINUTE_ET,
+    feature_exclude_prefixes: Iterable[str] = (),
+) -> PreparedProfile:
     df = raw
     if profile.expiry_modes:
         df = df[df["expiry_mode"].astype(str).isin(profile.expiry_modes)].copy()
@@ -156,11 +441,31 @@ def prepare_profile(raw: pd.DataFrame, profile: ProfileConfig, clip_return: floa
         raise KeyError(f"missing label columns for {profile.name}: {call_col}, {put_col}")
     df["call_return"] = pd.to_numeric(df[call_col], errors="coerce")
     df["put_return"] = pd.to_numeric(df[put_col], errors="coerce")
-    df = df[np.isfinite(df["call_return"]) & np.isfinite(df["put_return"])].copy()
-    if float(clip_return) > 0.0:
-        df["call_return"] = df["call_return"].clip(-float(clip_return), float(clip_return))
-        df["put_return"] = df["put_return"].clip(-float(clip_return), float(clip_return))
-    frame, feature_cols = build_features(df.reset_index(drop=True))
+    finite_labels = np.isfinite(df["call_return"]) & np.isfinite(df["put_return"])
+    price_mode = df.get("option_price_mode", pd.Series("legacy_ohlc", index=df.index)).astype(str).str.lower()
+    executable = price_mode.eq("executable_quote")
+    if executable.any():
+        call_available = f"call_d{int(profile.delta_bucket):02d}_available"
+        put_available = f"put_d{int(profile.delta_bucket):02d}_available"
+        if call_available not in df.columns or put_available not in df.columns:
+            raise ValueError("executable_quote dataset is missing observable current-contract availability fields")
+        observable = (
+            pd.to_numeric(df[call_available], errors="coerce").fillna(0.0).gt(0.0)
+            & pd.to_numeric(df[put_available], errors="coerce").fillna(0.0).gt(0.0)
+        )
+        df = df[(~executable) | observable].copy()
+        finite_labels = np.isfinite(df["call_return"]) & np.isfinite(df["put_return"])
+        if (price_mode.reindex(df.index).eq("executable_quote") & ~finite_labels).any():
+            raise ValueError(
+                "executable_quote rows with observable entry contracts must have finite conservative outcomes"
+            )
+    df = df[finite_labels].copy()
+    frame, feature_cols = build_features(
+        df.reset_index(drop=True),
+        live_observable_features_only=bool(live_observable_features_only),
+        entry_start_minute_et=int(entry_start_minute_et),
+        feature_exclude_prefixes=feature_exclude_prefixes,
+    )
     return PreparedProfile(config=profile, frame=frame, feature_cols=feature_cols)
 
 
@@ -175,7 +480,7 @@ def train_tickers_for(profile: ProfileConfig, target_ticker: str, all_tickers: l
     raise ValueError(f"unknown train_scope: {profile.train_scope}")
 
 
-def threshold_args_for(profile: ProfileConfig, args: argparse.Namespace) -> argparse.Namespace:
+def threshold_args_for(profile: ProfileConfig, args: argparse.Namespace, ticker: str) -> argparse.Namespace:
     cfg = argparse.Namespace(**vars(args))
     if profile.label_mode == "win":
         cfg.threshold_grid = [float(v) for v in args.win_threshold_grid]
@@ -183,7 +488,7 @@ def threshold_args_for(profile: ProfileConfig, args: argparse.Namespace) -> argp
     else:
         cfg.threshold_grid = [float(v) for v in args.return_threshold_grid]
         cfg.threshold_quantiles = [float(v) for v in args.return_threshold_quantiles]
-    cfg.max_day_grid = [int(v) for v in args.max_day_grid]
+    cfg.max_day_grid = ticker_max_day_grid(args, ticker)
     return cfg
 
 
@@ -194,6 +499,7 @@ def fit_profile_fold(
     all_tickers: list[str],
     args: argparse.Namespace,
     score_test: bool,
+    artifact_dir: Path | None = None,
 ) -> dict:
     profile = prepared.config
     frame = prepared.frame
@@ -211,6 +517,8 @@ def fit_profile_fold(
         (frame["ticker"].astype(str) == str(ticker))
         & (frame["month"].astype(str) == str(test_month))
     ].copy()
+    train_months = sorted(str(month) for month in train["month"].astype(str).unique())
+    cooldown_minutes = ticker_cooldown_minutes(args, ticker)
 
     base = {
         "ticker": str(ticker),
@@ -221,7 +529,10 @@ def fit_profile_fold(
         "expiry_modes": ",".join(profile.expiry_modes) if profile.expiry_modes else "mixed",
         "train_scope": profile.train_scope,
         "train_tickers": ",".join(train_tickers),
+        "training_months": ",".join(train_months),
         "val_months": ",".join(val_months),
+        "selection_months": ",".join(val_months),
+        "cooldown_minutes": int(cooldown_minutes),
         "train_rows": int(len(train)),
         "val_rows": int(len(val)),
         "test_rows": int(len(test)),
@@ -244,8 +555,9 @@ def fit_profile_fold(
         y_call = (train["call_return"].astype(float) > 0.0).astype(int)
         y_put = (train["put_return"].astype(float) > 0.0).astype(int)
     else:
-        y_call = train["call_return"].astype(float)
-        y_put = train["put_return"].astype(float)
+        clip = float(args.clip_return)
+        y_call = train["call_return"].astype(float).clip(-clip, clip) if clip > 0.0 else train["call_return"].astype(float)
+        y_put = train["put_return"].astype(float).clip(-clip, clip) if clip > 0.0 else train["put_return"].astype(float)
 
     params = dict(
         n_estimators=int(args.n_estimators),
@@ -259,6 +571,11 @@ def fit_profile_fold(
         n_jobs=int(args.lgb_jobs),
         verbose=-1,
     )
+    lgb_device_type = str(getattr(args, "lgb_device_type", "") or "").strip()
+    if lgb_device_type:
+        params["device_type"] = lgb_device_type
+    if lgb_device_type == "gpu":
+        params["gpu_use_dp"] = bool(getattr(args, "lgb_gpu_use_dp", True))
     if profile.label_mode == "win":
         call_model = lgb.LGBMClassifier(**{**params, "objective": "binary"})
         put_model = lgb.LGBMClassifier(**{**params, "objective": "binary", "random_state": int(params["random_state"]) + 10_000})
@@ -283,16 +600,21 @@ def fit_profile_fold(
         out["action"] = np.where(call_action, "CALL", "PUT")
         out["score"] = np.where(call_action, out["pred_call_return"], out["pred_put_return"])
         out["realized_return"] = np.where(call_action, out["call_return"], out["put_return"])
+        bucket = int(profile.delta_bucket)
+        call_exit = f"call_d{bucket:02d}_opt_exit_minutes"
+        put_exit = f"put_d{bucket:02d}_opt_exit_minutes"
+        if call_exit in out.columns and put_exit in out.columns:
+            out["exit_minutes"] = np.where(call_action, out[call_exit], out[put_exit])
         return out
 
     val_scored = score_part(val)
-    grid_args = threshold_args_for(profile, args)
+    grid_args = threshold_args_for(profile, args, ticker)
     fold_grid = build_fold_grid(val_scored, grid_args)
     best_cfg = fold_grid[0]
     best_score = -1e18
     best_metrics: dict = {}
     for cfg in fold_grid:
-        val_trades = deploy(val_scored, cfg, int(args.cooldown_minutes))
+        val_trades = deploy(val_scored, cfg, int(cooldown_minutes))
         row = metrics(val_trades, val_months)
         score = score_metrics(
             row,
@@ -303,6 +625,12 @@ def fit_profile_fold(
             float(args.min_call_rate),
             float(args.max_call_rate),
         )
+        positive_month_rate = float(row.get("positive_month_rate", float("nan")))
+        if (
+            not np.isfinite(positive_month_rate)
+            or positive_month_rate < float(args.min_val_positive_month_rate)
+        ):
+            score = -1e18 + int(row.get("trades", 0))
         if np.isfinite(float(row.get("daily_win_rate", float("nan")))):
             score += float(args.daily_win_weight) * float(row["daily_win_rate"])
         if np.isfinite(float(row.get("top5_share_of_pnl", float("nan")))):
@@ -324,11 +652,28 @@ def fit_profile_fold(
             "test_metrics": metrics(pd.DataFrame(), [str(test_month)]),
         }
 
+    artifact_fields: dict[str, str] = {}
+    if artifact_dir is not None:
+        artifact_fields = freeze_fold_policy_artifact(
+            artifact_dir,
+            ticker=ticker,
+            test_month=str(test_month),
+            profile=profile,
+            train_months=train_months,
+            selection_months=val_months,
+            deploy_config=best_cfg,
+            call_model=call_model,
+            put_model=put_model,
+            medians=medians,
+            feature_cols=feature_cols,
+            args=args,
+        )
+
     test_trades = pd.DataFrame()
     test_metrics = metrics(pd.DataFrame(), [str(test_month)])
     if score_test:
         test_scored = score_part(test)
-        test_trades = deploy(test_scored, best_cfg, int(args.cooldown_minutes))
+        test_trades = deploy(test_scored, best_cfg, int(cooldown_minutes))
         if not test_trades.empty:
             test_trades = test_trades.copy()
             test_trades["test_month"] = str(test_month)
@@ -348,6 +693,7 @@ def fit_profile_fold(
         "val_metrics": best_metrics,
         "test_trades": test_trades,
         "test_metrics": test_metrics,
+        **artifact_fields,
     }
 
 
@@ -450,11 +796,14 @@ def load_checkpoint(output_dir: Path) -> tuple[list[pd.DataFrame], list[dict], l
     completed: set[tuple[str, str]] = set()
 
     if trades_path.exists():
-        trades = pd.read_csv(trades_path)
+        trades = pd.read_csv(
+            trades_path,
+            dtype={"ticker": str, "date": str, "trade_date": str, "month": str, "test_month": str},
+        )
         if not trades.empty:
             all_trades.append(trades)
     if folds_path.exists():
-        folds = pd.read_csv(folds_path)
+        folds = pd.read_csv(folds_path, dtype={"ticker": str, "month": str})
         selected_rows = folds.to_dict("records")
         for row in selected_rows:
             ticker = str(row.get("ticker", "")).upper()
@@ -462,7 +811,7 @@ def load_checkpoint(output_dir: Path) -> tuple[list[pd.DataFrame], list[dict], l
             if ticker and month:
                 completed.add((ticker, month))
     if candidates_path.exists():
-        candidates = pd.read_csv(candidates_path)
+        candidates = pd.read_csv(candidates_path, dtype={"ticker": str, "month": str})
         candidate_rows = candidates.to_dict("records")
     return all_trades, selected_rows, candidate_rows, completed
 
@@ -473,7 +822,11 @@ def main() -> int:
     parser.add_argument("--output-dir", required=True)
     parser.add_argument("--tickers", nargs="+", default=["SPXW", "SPY", "QQQ"])
     parser.add_argument("--train-universe", nargs="+", default=["SPXW", "SPY", "QQQ"])
-    parser.add_argument("--profile-kind", choices=["narrow", "compact", "broad"], default="narrow")
+    parser.add_argument(
+        "--profile-kind",
+        choices=["narrow", "compact", "production_zero_dte", "broad"],
+        default="narrow",
+    )
     parser.add_argument("--start-month", default="202601")
     parser.add_argument("--end-month", default="202605")
     parser.add_argument("--val-months", type=int, default=3)
@@ -484,11 +837,19 @@ def main() -> int:
     parser.add_argument("--min-month-trades", type=int, default=18)
     parser.add_argument("--min-val-pf", type=float, default=0.0)
     parser.add_argument("--min-val-win-rate", type=float, default=0.0)
+    parser.add_argument("--min-val-positive-month-rate", type=float, default=0.0)
     parser.add_argument("--min-call-rate", type=float, default=0.15)
     parser.add_argument("--max-call-rate", type=float, default=0.85)
     parser.add_argument("--daily-win-weight", type=float, default=0.25)
     parser.add_argument("--top5-share-penalty", type=float, default=0.10)
     parser.add_argument("--cooldown-minutes", type=int, default=30)
+    parser.add_argument(
+        "--ticker-cooldown-minutes",
+        nargs="*",
+        default=[],
+        metavar="TICKER=MINUTES",
+        help="Per-ticker live-contract overrides, e.g. SPXW=0 QQQ=30 SPY=0.",
+    )
     parser.add_argument("--objective", default="regression_l1")
     parser.add_argument("--n-estimators", type=int, default=240)
     parser.add_argument("--learning-rate", type=float, default=0.035)
@@ -498,17 +859,61 @@ def main() -> int:
     parser.add_argument("--colsample-bytree", type=float, default=0.85)
     parser.add_argument("--reg-lambda", type=float, default=5.0)
     parser.add_argument("--lgb-jobs", type=int, default=8)
+    parser.add_argument(
+        "--lgb-device-type",
+        default="",
+        choices=["", "cpu", "gpu"],
+        help="Optional LightGBM training backend. The selected value is frozen in fold metadata.",
+    )
+    parser.add_argument(
+        "--lgb-gpu-use-dp",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Use double precision for the OpenCL GPU learner when --lgb-device-type=gpu.",
+    )
     parser.add_argument("--profile-workers", type=int, default=1)
+    parser.add_argument(
+        "--live-observable-features-only",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Exclude features whose offline value is unavailable or inconsistent at the live decision minute.",
+    )
+    parser.add_argument(
+        "--entry-time-min-et",
+        default="10:30",
+        help="Earliest decision time used by the live-observable feature contract.",
+    )
+    parser.add_argument(
+        "--feature-exclude-prefixes",
+        nargs="*",
+        default=[],
+        help="Drop numeric feature columns beginning with any of these prefixes.",
+    )
     parser.add_argument("--return-threshold-grid", nargs="+", type=float, default=[-0.10, -0.05, 0.0, 0.05, 0.10, 0.15, 0.20])
     parser.add_argument("--return-threshold-quantiles", nargs="+", type=float, default=[0.4, 0.5, 0.6, 0.7, 0.8, 0.9])
     parser.add_argument("--win-threshold-grid", nargs="+", type=float, default=[0.35, 0.40, 0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75])
     parser.add_argument("--win-threshold-quantiles", nargs="+", type=float, default=[0.4, 0.5, 0.6, 0.7, 0.8, 0.9])
     parser.add_argument("--max-day-grid", nargs="+", type=int, default=[999, 12, 8, 6, 4, 2])
+    parser.add_argument(
+        "--ticker-max-day-grids",
+        nargs="*",
+        default=[],
+        metavar="TICKER=N[,N...]",
+        help="Per-ticker predeclared daily-cap search spaces, e.g. SPXW=1,2,4 QQQ=1,2 SPY=1,2.",
+    )
     parser.add_argument("--allow-invalid-val-deploy", action="store_true")
     parser.add_argument("--risk-capital", type=float, default=5000.0)
     parser.add_argument("--seed", type=int, default=20260618)
     parser.add_argument("--no-resume", action="store_true")
     args = parser.parse_args()
+    args.ticker_cooldown_map = parse_ticker_int_map(
+        args.ticker_cooldown_minutes,
+        field_name="--ticker-cooldown-minutes",
+    )
+    args.ticker_max_day_grid_map = parse_ticker_int_grid_map(
+        args.ticker_max_day_grids,
+        field_name="--ticker-max-day-grids",
+    )
 
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -516,8 +921,24 @@ def main() -> int:
     train_universe = [str(t).upper() for t in args.train_universe]
     all_tickers = sorted(set(test_tickers) | set(train_universe))
     raw = load_raw(args.data, all_tickers)
+    entry_start_minute = parse_hhmm_to_minute(
+        str(args.entry_time_min_et),
+        DEFAULT_ENTRY_START_MINUTE_ET,
+    )
+    if bool(args.live_observable_features_only) and "minute" in raw.columns:
+        raw = raw[pd.to_numeric(raw["minute"], errors="coerce") >= int(entry_start_minute)].copy()
     profiles = default_profiles(args.profile_kind, all_tickers)
-    prepared_profiles = [prepare_profile(raw, profile, float(args.clip_return)) for profile in profiles]
+    prepared_profiles = [
+        prepare_profile(
+            raw,
+            profile,
+            float(args.clip_return),
+            live_observable_features_only=bool(args.live_observable_features_only),
+            entry_start_minute_et=int(entry_start_minute),
+            feature_exclude_prefixes=args.feature_exclude_prefixes,
+        )
+        for profile in profiles
+    ]
     months = [m for m in sorted(raw["month"].astype(str).unique()) if str(args.start_month) <= m <= str(args.end_month)]
 
     metadata = {
@@ -526,6 +947,10 @@ def main() -> int:
         "profile_count": len(profiles),
         "profiles": [asdict(p) for p in profiles],
         "data_rows": int(len(raw)),
+        "entry_start_minute_et": int(entry_start_minute),
+        "features_by_profile": {
+            prepared.config.name: prepared.feature_cols for prepared in prepared_profiles
+        },
     }
     if bool(args.no_resume):
         all_trades: list[pd.DataFrame] = []
@@ -563,7 +988,15 @@ def main() -> int:
             if valid:
                 selected = max(valid, key=lambda row: float(row.get("val_score", -1e18)))
                 selected_profile = next(p for p in prepared_profiles if p.config.name == selected["profile"])
-                selected = fit_profile_fold(selected_profile, ticker, str(test_month), all_tickers, args, score_test=True)
+                selected = fit_profile_fold(
+                    selected_profile,
+                    ticker,
+                    str(test_month),
+                    all_tickers,
+                    args,
+                    score_test=True,
+                    artifact_dir=output_dir / "fold_model_artifacts" / str(test_month) / str(ticker).upper(),
+                )
                 selected_row = flatten_result(selected, include_test=True)
                 selected_row["selected"] = True
                 if not selected["test_trades"].empty:
@@ -607,6 +1040,13 @@ def main() -> int:
         write_daily_plot(output_dir, trades, float(args.risk_capital))
     folds.to_csv(output_dir / "selected_folds.csv", index=False)
     candidates.to_csv(output_dir / "candidate_validation.csv", index=False)
+    provenance = write_policy_selection_provenance(
+        output_dir,
+        folds,
+        expected_months=months,
+        expected_tickers=test_tickers,
+    )
+    metadata["policy_selection_provenance"] = provenance
     write_summary(output_dir, trades, folds, candidates, metadata)
     print((output_dir / "SUMMARY.md").read_text(encoding="utf-8"))
     return 0

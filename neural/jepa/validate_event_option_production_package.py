@@ -250,6 +250,281 @@ def assert_candidate_universe_causality(
             )
 
 
+def _month_values(raw: Any) -> list[str]:
+    if not isinstance(raw, (list, tuple)):
+        return []
+    return [str(value) for value in raw if len(str(value)) == 6 and str(value).isdigit()]
+
+
+def assert_policy_selection_causality(
+    policy: dict[str, Any],
+    registry: dict[str, Any],
+    validation_months: list[str],
+    issues: list[str],
+) -> None:
+    """Require evidence that every reported month was unseen by its selector.
+
+    Model weights frozen before an evaluation window are insufficient when the
+    threshold, action, time window, cooldown, or risk guard was optimized on
+    that same window.  A live-ready package must describe either a single
+    fixed pre-OOS selection or a nested monthly walk-forward protocol.
+    """
+
+    provenance = policy.get("policy_selection_provenance")
+    if not isinstance(provenance, dict):
+        issues.append("policy_selection_provenance missing; cannot prove policy-selection OOS")
+        provenance = {}
+    if provenance.get("passed") is not True:
+        issues.append("policy_selection_provenance.passed is not true")
+
+    mode = str(provenance.get("mode", "")).strip().lower()
+    expected = [str(month) for month in validation_months]
+    declared_eval = _month_values(provenance.get("evaluation_months"))
+    if declared_eval != expected:
+        issues.append(
+            "policy_selection_provenance.evaluation_months does not match "
+            "completed_month_validation.months"
+        )
+
+    if mode == "fixed_pre_oos":
+        train_months = _month_values(provenance.get("training_months"))
+        select_months = _month_values(provenance.get("selection_months"))
+        source_months = sorted(set(train_months + select_months))
+        overlap = sorted(set(source_months) & set(expected))
+        if overlap:
+            issues.append(f"fixed policy selection uses reported OOS months: {overlap}")
+        if expected and any(month >= min(expected) for month in source_months):
+            issues.append("fixed policy training/selection months are not strictly before the OOS window")
+        if provenance.get("policy_frozen_before_evaluation") is not True:
+            issues.append("fixed policy was not declared frozen before evaluation")
+    elif mode == "nested_walk_forward":
+        if provenance.get("selection_protocol_frozen_before_evaluation") is not True:
+            issues.append("nested selection protocol was not frozen before evaluation")
+        if str(provenance.get("trade_artifact_kind", "")) != "nested_walk_forward_fold_outputs":
+            issues.append(
+                "nested policy selection must declare trade_artifact_kind=nested_walk_forward_fold_outputs"
+            )
+        raw_folds = provenance.get("folds")
+        folds = raw_folds if isinstance(raw_folds, list) else []
+        by_month = {
+            str(fold.get("evaluation_month")): fold
+            for fold in folds
+            if isinstance(fold, dict) and fold.get("evaluation_month") is not None
+        }
+        for month in expected:
+            fold = by_month.get(month)
+            if not isinstance(fold, dict):
+                issues.append(f"nested policy-selection fold missing for {month}")
+                continue
+            sources = _month_values(fold.get("training_months")) + _month_values(fold.get("selection_months"))
+            bad = sorted({source for source in sources if source >= month})
+            if bad:
+                issues.append(f"nested fold {month} uses non-prior training/selection months: {bad}")
+            if not sources:
+                issues.append(f"nested fold {month} has no declared training/selection months")
+            if fold.get("policy_frozen_before_evaluation") is not True:
+                issues.append(f"nested fold {month} was not frozen before its evaluation month")
+            if not str(fold.get("policy_artifact_sha256", "")).strip():
+                issues.append(f"nested fold {month} policy_artifact_sha256 missing")
+    else:
+        issues.append(f"unsupported policy_selection_provenance.mode={mode!r}")
+
+    # Registry metadata provides a second, independently inspectable signal.
+    # For fixed-policy evidence, any component selection overlap is fatal.
+    if mode != "nested_walk_forward":
+        components = registry.get("available_components")
+        if isinstance(components, dict):
+            for name, entry in sorted(components.items()):
+                if not isinstance(entry, dict):
+                    continue
+                overlap = sorted(set(_month_values(entry.get("select_months"))) & set(expected))
+                if overlap:
+                    issues.append(f"{name}: select_months overlap reported OOS months {overlap}")
+
+
+def assert_executable_quote_contract(
+    policy: dict[str, Any],
+    validation: dict[str, Any],
+    issues: list[str],
+) -> None:
+    label_contract = policy.get("validated_label_exit_contract")
+    label_contract = label_contract if isinstance(label_contract, dict) else {}
+    if str(label_contract.get("option_price_mode", "")).strip().lower() != "executable_quote":
+        issues.append("validated labels are not executable_quote (ask entry / bid mark and exit)")
+    if str(label_contract.get("entry_price_field", "")).strip().lower() != "ask":
+        issues.append("validated_label_exit_contract.entry_price_field must be ask")
+    if str(label_contract.get("mark_price_field", "")).strip().lower() != "bid":
+        issues.append("validated_label_exit_contract.mark_price_field must be bid")
+    if str(label_contract.get("exit_price_field", "")).strip().lower() != "bid":
+        issues.append("validated_label_exit_contract.exit_price_field must be bid")
+
+    live_contract = policy.get("live_contract") if isinstance(policy.get("live_contract"), dict) else {}
+    if str(live_contract.get("position_overlap_policy", "")).strip().lower() != "reject_while_open":
+        issues.append("live_contract.position_overlap_policy must be reject_while_open")
+
+    integrity = validation.get("integrity") if isinstance(validation.get("integrity"), dict) else {}
+    label_data_raw = integrity.get("label_data")
+    if label_data_raw:
+        summary = _dataset_summary_for_label_data(resolve_repo_path(str(label_data_raw)))
+        args = summary.get("args") if isinstance(summary.get("args"), dict) else {}
+        if str(args.get("option_price_mode", "")).strip().lower() != "executable_quote":
+            issues.append("label dataset SUMMARY.args.option_price_mode is not executable_quote")
+
+
+def _profit_factor(values: pd.Series) -> float:
+    numeric = pd.to_numeric(values, errors="coerce").dropna().astype(float)
+    gains = float(numeric[numeric > 0.0].sum())
+    losses = abs(float(numeric[numeric < 0.0].sum()))
+    if losses <= 0.0:
+        return float("inf") if gains > 0.0 else 0.0
+    return gains / losses
+
+
+def recompute_trade_metrics(
+    trades: pd.DataFrame,
+    *,
+    validation_months: list[str],
+) -> dict[str, dict[str, float]]:
+    out: dict[str, dict[str, float]] = {}
+    if trades.empty or "ticker" not in trades.columns or "realized_return" not in trades.columns:
+        return out
+    work = trades.copy()
+    work["ticker"] = work["ticker"].astype(str).str.upper()
+    if "month" in work.columns:
+        work["month"] = work["month"].astype(str).str.replace(r"\.0$", "", regex=True)
+    elif "trade_date" in work.columns:
+        work["month"] = work["trade_date"].astype(str).str.replace(r"\D", "", regex=True).str[:6]
+    else:
+        work["month"] = ""
+    work = work[work["month"].isin([str(month) for month in validation_months])].copy()
+    work["realized_return"] = pd.to_numeric(work["realized_return"], errors="coerce")
+    work = work.dropna(subset=["realized_return"])
+    for ticker, part in work.groupby("ticker", sort=True):
+        values = part["realized_return"].astype(float)
+        counts = part.groupby("month", sort=True).size().reindex(validation_months, fill_value=0)
+        pnl = part.groupby("month", sort=True)["realized_return"].sum().reindex(validation_months, fill_value=0.0)
+        out[str(ticker)] = {
+            "trades": float(len(part)),
+            "win_rate": float((values > 0.0).mean()) if len(part) else 0.0,
+            "profit_factor": float(_profit_factor(values)),
+            "pnl_return": float(values.sum()),
+            "min_month_trades": float(counts.min()) if len(counts) else 0.0,
+            "positive_month_rate": float((pnl > 0.0).mean()) if len(pnl) else 0.0,
+        }
+    return out
+
+
+def assert_trade_artifact_live_equivalence(
+    policy: dict[str, Any],
+    validation: dict[str, Any],
+    trades: pd.DataFrame,
+    validation_months: list[str],
+    required_tickers: list[str],
+    min_win_rate: float,
+    min_profit_factor: float,
+    min_month_trades: int,
+    issues: list[str],
+) -> None:
+    if trades.empty:
+        issues.append("combined trades are empty; metrics cannot be recomputed")
+        return
+    required = {"ticker", "minute", "exit_minutes", "realized_return"}
+    missing = sorted(required - set(trades.columns))
+    if missing:
+        issues.append(f"combined trades missing live-equivalence columns: {missing}")
+        return
+
+    if "month" in trades.columns:
+        artifact_month = trades["month"].astype(str).str.replace(r"\.0$", "", regex=True)
+    elif "trade_date" in trades.columns:
+        artifact_month = trades["trade_date"].astype(str).str.replace(r"\D", "", regex=True).str[:6]
+    else:
+        artifact_month = pd.Series("", index=trades.index)
+    extra_months = sorted(set(artifact_month) - set(str(month) for month in validation_months))
+    if extra_months:
+        issues.append(f"combined trades contain undeclared months outside validation window: {extra_months}")
+    trades = trades[artifact_month.isin([str(month) for month in validation_months])].copy()
+    if trades.empty:
+        issues.append("combined trades contain no rows in the declared validation months")
+        return
+
+    metrics = recompute_trade_metrics(trades, validation_months=validation_months)
+    advertised = validation.get("by_ticker") if isinstance(validation.get("by_ticker"), dict) else {}
+    for ticker in required_tickers:
+        row = metrics.get(ticker)
+        if not isinstance(row, dict):
+            issues.append(f"{ticker}: no recomputable trades")
+            continue
+        expected = advertised.get(ticker) if isinstance(advertised, dict) else None
+        if not isinstance(expected, dict):
+            issues.append(f"{ticker}: advertised completed-month metrics missing")
+        else:
+            assert_metric_payload_matches(
+                f"recomputed.{ticker}",
+                {key: row[key] for key in ("trades", "win_rate", "profit_factor", "pnl_return", "min_month_trades", "positive_month_rate")},
+                expected,
+                issues,
+            )
+        assert_strict_metric_gate(f"recomputed.{ticker}.win_rate", row["win_rate"], min_win_rate, issues)
+        assert_strict_metric_gate(f"recomputed.{ticker}.profit_factor", row["profit_factor"], min_profit_factor, issues)
+        if row["min_month_trades"] <= float(min_month_trades):
+            issues.append(
+                f"recomputed.{ticker}.min_month_trades {row['min_month_trades']:.0f} "
+                f"<= strict live target {min_month_trades}"
+            )
+        if row["positive_month_rate"] < 1.0:
+            issues.append(f"recomputed.{ticker}.positive_month_rate {row['positive_month_rate']:.6g} < 1")
+
+    live_contract = policy.get("live_contract") if isinstance(policy.get("live_contract"), dict) else {}
+    candidate_filter = _candidate_universe_filter(policy)
+    try:
+        cadence = int(float(live_contract.get("entry_sample_minutes", 0)))
+    except (TypeError, ValueError):
+        cadence = 0
+    try:
+        filter_cadence = int(float(candidate_filter.get("entry_sample_minutes", 0)))
+    except (TypeError, ValueError):
+        filter_cadence = 0
+    anchor = parse_hhmm_to_minute(candidate_filter.get("entry_sample_anchor_minute_et", ""), -1)
+    if cadence <= 0 or filter_cadence != cadence or anchor < 0:
+        issues.append("live entry sampling cadence/anchor is missing or inconsistent")
+    else:
+        minutes = pd.to_numeric(trades["minute"], errors="coerce")
+        off_grid = int((minutes.isna() | (((minutes - anchor) % cadence) != 0)).sum())
+        if off_grid:
+            issues.append(f"combined trades contain {off_grid} entries off the live {cadence}-minute grid")
+
+    work = trades.copy()
+    date_col = "trade_date" if "trade_date" in work.columns else "date" if "date" in work.columns else ""
+    if not date_col:
+        issues.append("combined trades missing trade_date/date for overlap audit")
+        return
+    work["_minute"] = pd.to_numeric(work["minute"], errors="coerce")
+    work["_exit_minutes"] = pd.to_numeric(work["exit_minutes"], errors="coerce")
+    invalid_durations = int(
+        (work["_minute"].isna() | work["_exit_minutes"].isna() | (work["_exit_minutes"] < 0.0)).sum()
+    )
+    if invalid_durations:
+        issues.append(f"combined trades contain {invalid_durations} invalid/missing entry or exit durations")
+    work = work.dropna(subset=["_minute", "_exit_minutes"]).copy()
+    work = work[work["_exit_minutes"] >= 0.0].copy()
+    overlap_count = 0
+    for (_ticker, _date), part in work.groupby(["ticker", date_col], sort=False):
+        open_until = float("-inf")
+        ordered = part.sort_values("_minute", kind="stable")[["_minute", "_exit_minutes"]]
+        for minute_raw, exit_raw in ordered.itertuples(index=False, name=None):
+            minute = float(minute_raw)
+            exit_minutes = max(0.0, float(exit_raw))
+            if minute < open_until:
+                overlap_count += 1
+                continue
+            open_until = minute + exit_minutes
+    if overlap_count:
+        issues.append(
+            f"combined trades contain {overlap_count} overlapping same-ticker entries rejected by live runtime"
+        )
+
+
 def same_path(left: Path, right: Path) -> bool:
     try:
         return left.resolve() == right.resolve()
@@ -493,8 +768,19 @@ def assert_event_option_package(args: argparse.Namespace) -> dict[str, Any]:
             if float(row.get("pnl_return", 0.0)) <= 0.0:
                 issues.append(f"{ticker}.pnl_return {row.get('pnl_return')} <= 0")
 
+    trades = pd.DataFrame()
     if trades_path.exists():
-        trades = pd.read_csv(trades_path, usecols=lambda c: c in {"ticker", "topk_mode"}, low_memory=False)
+        live_audit_cols = {
+            "ticker",
+            "date",
+            "trade_date",
+            "month",
+            "minute",
+            "exit_minutes",
+            "realized_return",
+            "topk_mode",
+        }
+        trades = pd.read_csv(trades_path, usecols=lambda c: c in live_audit_cols, low_memory=False)
         if "topk_mode" in trades.columns:
             bad = trades["topk_mode"].astype(str).eq("TOPK_REGRESSOR").sum()
             if int(bad) > 0 and not bool(args.allow_topk_regressor_rows):
@@ -512,6 +798,19 @@ def assert_event_option_package(args: argparse.Namespace) -> dict[str, Any]:
         if not bool(args.allow_live_inconsistent_features):
             assert_live_observable_feature_contract(policy, registry, issues)
             assert_candidate_universe_causality(policy, validation, trades_path, issues)
+        assert_policy_selection_causality(policy, registry, validation_months, issues)
+        assert_executable_quote_contract(policy, validation, issues)
+        assert_trade_artifact_live_equivalence(
+            policy,
+            validation,
+            trades,
+            validation_months,
+            required_tickers,
+            max(float(args.min_win_rate), 0.50),
+            max(float(args.min_profit_factor), 1.30),
+            max(int(args.min_month_trades), 18),
+            issues,
+        )
         if missing_live:
             issues.append("registry missing_for_full_live_equivalence is not empty")
         if invalidated:

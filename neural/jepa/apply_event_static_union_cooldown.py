@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 
 from evaluate_xinput_level_filter import month_range
-from walkforward_event_option_gate import metrics
+from walkforward_event_option_gate import metrics, position_exit_minute
 
 
 def parse_named_path(value: str) -> tuple[str, Path]:
@@ -91,16 +91,27 @@ def load_trade_source(value: str, ticker: str, priority: int) -> pd.DataFrame:
     return df
 
 
-def apply_static_union(trades: pd.DataFrame, max_day: int, cooldown_minutes: int) -> pd.DataFrame:
+def apply_static_union(
+    trades: pd.DataFrame,
+    max_day: int,
+    cooldown_minutes: int,
+    *,
+    allow_overlapping_positions: bool = False,
+) -> pd.DataFrame:
     if trades.empty:
         return trades.copy()
+    if not bool(allow_overlapping_positions) and "exit_minutes" not in trades.columns:
+        raise ValueError(
+            "static union requires exit_minutes for live-equivalent one-position replay; "
+            "use allow_overlapping_positions=True only for research diagnostics"
+        )
     rows: list[dict] = []
     ordered = trades.sort_values(
-        ["date", "entry_minute", "static_source_priority", "score"],
-        ascending=[True, True, True, False],
+        ["ticker", "date", "entry_minute", "static_source_priority", "score"],
+        ascending=[True, True, True, True, False],
         kind="stable",
     )
-    for _, day in ordered.groupby("date", sort=False):
+    for _, day in ordered.groupby(["ticker", "date"], sort=False):
         next_allowed = -1
         taken = 0
         seen: set[tuple[str, str, str, str]] = set()
@@ -117,10 +128,16 @@ def apply_static_union(trades: pd.DataFrame, max_day: int, cooldown_minutes: int
             values["static_union_max_day"] = int(max_day)
             values["static_union_cooldown_minutes"] = int(cooldown_minutes)
             values["static_union_count_before"] = int(taken)
+            position_until = position_exit_minute(
+                minute,
+                values.get("exit_minutes"),
+                allow_overlapping_positions=bool(allow_overlapping_positions),
+            )
+            values["static_union_position_exit_minute"] = int(position_until)
             rows.append(values)
             seen.add(key)
             taken += 1
-            next_allowed = minute + int(cooldown_minutes)
+            next_allowed = max(minute + int(cooldown_minutes), position_until)
     return pd.DataFrame(rows) if rows else trades.iloc[0:0].copy()
 
 
@@ -277,6 +294,11 @@ def main() -> int:
     parser.add_argument("--end-month", default="202605")
     parser.add_argument("--max-day", type=int, default=999)
     parser.add_argument("--cooldown-minutes", type=int, default=30)
+    parser.add_argument(
+        "--allow-overlapping-positions",
+        action="store_true",
+        help="Research diagnostics only: ignore exit_minutes and permit overlapping same-ticker positions.",
+    )
     parser.add_argument("--risk-capital", type=float, default=5000.0)
     args = parser.parse_args()
 
@@ -289,7 +311,12 @@ def main() -> int:
         raise RuntimeError("No trades after ticker filtering.")
     trades = pd.concat(parts, ignore_index=True, sort=False)
     trades = trades[trades["month"].astype(str).isin(months)].copy()
-    selected = apply_static_union(trades, int(args.max_day), int(args.cooldown_minutes))
+    selected = apply_static_union(
+        trades,
+        int(args.max_day),
+        int(args.cooldown_minutes),
+        allow_overlapping_positions=bool(args.allow_overlapping_positions),
+    )
     selected = selected.sort_values(["date", "entry_minute", "ticker", "static_source"], kind="stable").reset_index(drop=True)
     selected.to_csv(output_dir / "static_union_trades.csv", index=False)
     selected.to_csv(output_dir / "combined_trades.csv", index=False)

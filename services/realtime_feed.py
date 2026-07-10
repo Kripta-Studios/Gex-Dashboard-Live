@@ -771,8 +771,14 @@ class RealtimeOptionsFeed:
         exp_str = expiration.strftime("%Y%m%d")
         endpoint = OPTIONS_ENDPOINTS[endpoint_key]
 
-        window_start = (now_et - timedelta(seconds=60)).strftime("%H:%M:%S")
-        window_end   = now_et.strftime("%H:%M:%S")
+        # OHLC is used only from the previous completed calendar minute.  A
+        # 130-second request guarantees that bar remains available even when
+        # the poll happens late in the current minute; Greeks need only the
+        # latest synchronized quote cross-section.
+        lookback_seconds = 130 if endpoint_key == "ohlc" else 60
+        snapshot_end = now_et.replace(second=0, microsecond=0)
+        window_start = (snapshot_end - timedelta(seconds=lookback_seconds)).strftime("%H:%M:%S")
+        window_end = snapshot_end.strftime("%H:%M:%S")
 
         base_url = getattr(self.client, "base_url", "http://91.99.90.39:25503/v3")
         all_rows = []
@@ -2296,15 +2302,17 @@ class RealtimeOptionsFeed:
                     ticker, now_et, minutes_since_open, vix_spot, tlt_spot)
             except Exception as e:
                 logger.warning(f"[ML][{ticker}] Feature computation failed: {e}")
-        self._compute_and_save_event_option_snapshots(now_et)
+        self._compute_and_save_event_option_snapshots()
 
-    def _compute_and_save_event_option_snapshots(self, now_et):
+    def _compute_and_save_event_option_snapshots(self):
         """Build live event-option snapshot rows that mirror the offline event dataset schema."""
         if build_live_event_option_snapshots is None:
             logger.debug("[EVENT_OPTION] live snapshot builder unavailable: %s", EVENT_OPTION_SNAPSHOT_IMPORT_ERROR)
             return
         try:
-            result = build_live_event_option_snapshots(self.output_dir, now=now_et)
+            # Measure internal snapshot freshness at feature-build time rather
+            # than against a timestamp captured before per-ticker ML work.
+            result = build_live_event_option_snapshots(self.output_dir, now=datetime.now(ET))
             if result.rows.empty:
                 logger.info("[EVENT_OPTION] no live snapshot rows built; missing=%s", result.summary.get("missing", []))
                 return
