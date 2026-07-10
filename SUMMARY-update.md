@@ -224,4 +224,56 @@ Primer commit técnico creado:
 2f20055 fix: enforce causal executable event-option pipeline
 ```
 
-Incluye las correcciones de causalidad/live, selector nested, hashes/provenance, optimización del simulador y tests focalizados. No incluye los JSON del paquete legacy —sigue bloqueado— ni datasets/resultados grandes. El commit documental que contiene este hand-off y la auditoría académica se realizará y subirá a continuación.
+Incluye las correcciones de causalidad/live, selector nested, hashes/provenance, optimización del simulador y tests focalizados. No incluye los JSON del paquete legacy —sigue bloqueado— ni datasets/resultados grandes.
+
+El commit documental se creó como:
+
+```text
+940a043 docs: record causal audit and JEPA research status
+```
+
+Los commits `2f20055` y `940a043` fueron subidos correctamente a `origin/main` (`153f1a7..940a043`).
+
+## 8. Trainer Phys-TD-JEPA endurecido antes de usar GPU
+
+Archivo:
+
+```text
+neural/jepa/walkforward_event_phys_td_jepa_oof.py
+```
+
+Se detectaron y corrigieron tres riesgos que invalidaban una comparación SOTA:
+
+1. El selector numérico del trainer aceptaba cinco features intradía que el snapshot live no puede reconstruir (`phys_event_seq_in_day`, `phys_event_frac_in_day`, `phys_minutes_since_first_event`, `phys_spot_ret_from_first_event_bps`, `phys_same_day_event_count`). Ahora usa el mismo contrato `live_observable_feature_issues_for_columns` que selección/live.
+2. Las secuencias agrupaban filas adyacentes aunque entre ellas faltasen uno o más buckets. Ahora se dividen en tramos con diferencia exacta de cinco minutos, tanto para targets de training como para contextos y surprise OOF.
+3. El parquet consolidado podía conservar meses posteriores al rango OOF. Ahora `--data-cutoff-month` se aplica antes de cualquier fit/export y, en OOF, debe coincidir exactamente con `--end-month`; para esta investigación es `202605`.
+
+También se fija y registra la rejilla 10:30–14:30 ET, anchor 10:00 y paso cinco minutos. Se añadieron cinco regresiones en:
+
+```text
+tests/test_event_phys_td_jepa_causality.py
+```
+
+Validación:
+
+```text
+17 passed in 3.06s
+50 passed in 2.95s  (suite focalizada completa, incluyendo los cinco tests nuevos)
+```
+
+El primer intento de esta suite encontró un `PermissionError` al crear `tmp_path` bajo `%LOCALAPPDATA%`; al ejecutar con `--basetemp C:\tmp\pytest-jepa-causal-20260710a` pasaron los 17 tests. No fue un fallo funcional.
+
+Auditoría del dataset después del filtro:
+
+```text
+filas hasta 202605:             41.883
+features numéricas causales:       282
+features reproducibles live:       277
+features rechazadas:                 5
+segmentos contiguos:             2.660
+ventanas h<=60m:                19.685
+ventanas h<=120m:               10.728
+ventanas h<=180m:                3.638
+```
+
+La primera ablación queda predeclarada con horizontes 5/15/30/60m y mismo presupuesto para `flat` y `modal`. Junio sigue físicamente excluido.

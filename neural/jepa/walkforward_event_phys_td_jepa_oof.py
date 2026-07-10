@@ -23,6 +23,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from neural.jepa.dataset import RobustNormalizer, TickerRobustNormalizer
+from neural.jepa.event_option_component_live import live_observable_feature_issues_for_columns
 from neural.jepa.features import write_feature_names
 from neural.jepa.sigreg import (
     SIGRegLoss,
@@ -344,6 +345,7 @@ class EventPhysTDJEPADataset(Dataset):
         context_len: int,
         horizons: Sequence[int],
         group_cols: Sequence[str],
+        expected_step_minutes: int = 5,
     ) -> None:
         self.feature_cols = list(feature_cols)
         self.physical_cols = list(physical_cols)
@@ -351,20 +353,24 @@ class EventPhysTDJEPADataset(Dataset):
         self.context_len = int(context_len)
         self.horizons = [int(h) for h in horizons]
         self.max_horizon = max(self.horizons)
+        self.expected_step_minutes = int(expected_step_minutes)
+        if self.expected_step_minutes <= 0:
+            raise ValueError("expected_step_minutes must be positive")
         self.normalizer = normalizer
         self.sequences: list[np.ndarray] = []
         self.index: list[tuple[int, int]] = []
 
         for _, group in df.groupby(list(group_cols), sort=False):
-            if len(group) < self.context_len + self.max_horizon:
-                continue
-            arr = normalizer.transform_frame(group)
-            seq_id = len(self.sequences)
-            self.sequences.append(arr)
-            start = self.context_len - 1
-            stop = len(arr) - self.max_horizon
-            for pos in range(start, stop):
-                self.index.append((seq_id, pos))
+            for segment in split_contiguous_time_segments(group, self.expected_step_minutes):
+                if len(segment) < self.context_len + self.max_horizon:
+                    continue
+                arr = np.array(normalizer.transform_frame(segment), dtype=np.float32, copy=True, order="C")
+                seq_id = len(self.sequences)
+                self.sequences.append(arr)
+                start = self.context_len - 1
+                stop = len(arr) - self.max_horizon
+                for pos in range(start, stop):
+                    self.index.append((seq_id, pos))
 
         if not self.index:
             raise ValueError("No valid EventPhysTDJEPA windows were created")
@@ -434,10 +440,58 @@ def sanitize_name(name: str) -> str:
     return re.sub(r"[^a-zA-Z0-9_]+", "_", str(name)).strip("_").lower()
 
 
-def prepare_frame(path: str | Path, tickers: Sequence[str], expiry_modes: Sequence[str] | None) -> pd.DataFrame:
+def frame_months(df: pd.DataFrame) -> pd.Series:
+    if "month" in df.columns:
+        raw = df["month"]
+    elif "trade_date" in df.columns:
+        raw = df["trade_date"]
+    elif "date" in df.columns:
+        raw = df["date"]
+    else:
+        raise ValueError("Frame requires month, trade_date, or date for causal cutoff")
+    return raw.astype(str).str.replace(r"\.0$", "", regex=True).str[:6]
+
+
+def filter_frame_to_month_cutoff(df: pd.DataFrame, cutoff_month: str) -> pd.DataFrame:
+    cutoff = str(cutoff_month).strip()
+    if not cutoff:
+        return df.copy()
+    if not re.fullmatch(r"\d{6}", cutoff):
+        raise ValueError(f"Invalid cutoff month: {cutoff!r}")
+    return df.loc[frame_months(df) <= cutoff].copy()
+
+
+def split_contiguous_time_segments(group: pd.DataFrame, expected_step_minutes: int = 5) -> list[pd.DataFrame]:
+    if "minute" not in group.columns:
+        raise ValueError("Contiguous JEPA sequences require a minute column")
+    step = int(expected_step_minutes)
+    if step <= 0:
+        raise ValueError("expected_step_minutes must be positive")
+    work = group.copy()
+    minute = pd.to_numeric(work["minute"], errors="coerce")
+    if minute.isna().any():
+        raise ValueError("Contiguous JEPA sequences require finite minute values")
+    work["minute"] = minute.astype(int)
+    work = work.sort_values("minute", kind="stable")
+    breaks = work["minute"].diff().ne(step)
+    return [segment.copy() for _, segment in work.groupby(breaks.cumsum(), sort=False)]
+
+
+def prepare_frame(
+    path: str | Path,
+    tickers: Sequence[str],
+    expiry_modes: Sequence[str] | None,
+    *,
+    data_cutoff_month: str = "",
+    entry_start_minute_et: int = 630,
+    entry_end_minute_et: int = 870,
+    entry_grid_anchor_minute_et: int = 600,
+    expected_step_minutes: int = 5,
+) -> pd.DataFrame:
     df = pd.read_parquet(path)
+    df = filter_frame_to_month_cutoff(df, data_cutoff_month)
     df["ticker"] = df["ticker"].astype(str).str.upper()
-    df["date"] = df["trade_date"].astype(str)
+    df["date"] = df["trade_date"].astype(str).str.replace(r"\.0$", "", regex=True)
     df["month"] = df["date"].str[:6]
     if tickers:
         allowed = {str(t).upper() for t in tickers}
@@ -445,6 +499,21 @@ def prepare_frame(path: str | Path, tickers: Sequence[str], expiry_modes: Sequen
     if expiry_modes:
         modes = {str(x) for x in expiry_modes}
         df = df[df["expiry_mode"].astype(str).isin(modes)].copy()
+    if "minute" not in df.columns:
+        if "time" not in df.columns:
+            raise ValueError("Event JEPA input requires minute or time")
+        parsed = pd.to_datetime(df["time"].astype(str), format="%H:%M", errors="coerce")
+        df["minute"] = parsed.dt.hour * 60 + parsed.dt.minute
+    minute = pd.to_numeric(df["minute"], errors="coerce")
+    step = int(expected_step_minutes)
+    if step <= 0:
+        raise ValueError("expected_step_minutes must be positive")
+    grid_mask = (minute - int(entry_grid_anchor_minute_et)).mod(step).eq(0)
+    df = df[
+        minute.between(int(entry_start_minute_et), int(entry_end_minute_et), inclusive="both")
+        & grid_mask
+    ].copy()
+    df["minute"] = pd.to_numeric(df["minute"], errors="raise").astype(int)
     sort_cols = ["ticker", "date", "expiry_mode"]
     if "timestamp" in df.columns:
         sort_cols.append("timestamp")
@@ -453,7 +522,12 @@ def prepare_frame(path: str | Path, tickers: Sequence[str], expiry_modes: Sequen
     return df.sort_values(sort_cols).reset_index(drop=True)
 
 
-def select_feature_columns(df: pd.DataFrame) -> list[str]:
+def select_feature_columns(
+    df: pd.DataFrame,
+    *,
+    live_observable_features_only: bool = True,
+    entry_start_minute_et: int = 630,
+) -> list[str]:
     selected: list[str] = []
     for col in df.columns:
         low = str(col).lower()
@@ -462,6 +536,12 @@ def select_feature_columns(df: pd.DataFrame) -> list[str]:
         if any(pattern in low for pattern in LEAKY_PATTERNS):
             continue
         if pd.api.types.is_numeric_dtype(df[col]):
+            if bool(live_observable_features_only) and live_observable_feature_issues_for_columns(
+                "event_phys_td_jepa",
+                [str(col)],
+                entry_start_minute_et=int(entry_start_minute_et),
+            ):
+                continue
             selected.append(col)
     return selected
 
@@ -721,11 +801,27 @@ def evaluate_model(
     return out
 
 
-def build_contexts(arr: np.ndarray, context_len: int) -> tuple[np.ndarray, np.ndarray, list[int]]:
+def build_contexts(
+    arr: np.ndarray,
+    context_len: int,
+    *,
+    minutes: Sequence[int] | np.ndarray | None = None,
+    expected_step_minutes: int = 5,
+) -> tuple[np.ndarray, np.ndarray, list[int]]:
     contexts = []
     deltas = []
     positions = []
+    minute_values = None if minutes is None else np.asarray(minutes, dtype=np.int64)
+    if minute_values is not None and len(minute_values) != len(arr):
+        raise ValueError("minutes and arr must have the same length")
+    step = int(expected_step_minutes)
+    if step <= 0:
+        raise ValueError("expected_step_minutes must be positive")
     for pos in range(context_len - 1, len(arr)):
+        if minute_values is not None:
+            window_minutes = minute_values[pos - context_len + 1 : pos + 1]
+            if len(window_minutes) != context_len or not np.all(np.diff(window_minutes) == step):
+                continue
         ctx = arr[pos - context_len + 1 : pos + 1]
         contexts.append(ctx)
         deltas.append(np.diff(ctx, axis=0))
@@ -792,7 +888,13 @@ def export_month_features(
     with torch.no_grad():
         for _, group in work.groupby(group_cols, sort=False):
             arr = normalizer.transform_frame(group)
-            ctx, delta_ctx, positions = build_contexts(arr, int(model.config.context_len))
+            minutes = pd.to_numeric(group["minute"], errors="raise").to_numpy(dtype=np.int64)
+            ctx, delta_ctx, positions = build_contexts(
+                arr,
+                int(model.config.context_len),
+                minutes=minutes,
+                expected_step_minutes=int(args.expected_step_minutes),
+            )
             if len(ctx) == 0:
                 continue
             z_out, pred_out, q_out, q_pred_first_out = [], [], [], []
@@ -842,7 +944,7 @@ def export_month_features(
                 feature_data[f"{prefix}_pred_dispersion"][out_i] = pairwise_dispersion(pred_by_pos[pos])
                 feature_data[f"{prefix}_phys_transition_norm_h{first_h}"][out_i] = float(np.linalg.norm(q_delta))
                 src = pos - first_h
-                if src >= 0 and valid[src]:
+                if src >= 0 and valid[src] and int(minutes[pos] - minutes[src]) == first_h * int(args.expected_step_minutes):
                     feature_data[f"{prefix}_lagged_pred_h{first_h}_err"][out_i] = float(
                         np.linalg.norm(pred_by_pos[src, first_idx] - z_by_pos[pos])
                     )
@@ -880,6 +982,7 @@ def fit_encoder(
         int(args.context_len),
         parse_horizons(args.horizons),
         group_cols,
+        expected_step_minutes=int(args.expected_step_minutes),
     )
     loader = make_loader(ds, args, shuffle=True)
     config = EventPhysTDJEPAConfig(
@@ -1031,6 +1134,7 @@ def train_fold(
         int(args.context_len),
         parse_horizons(args.horizons),
         group_cols,
+        expected_step_minutes=int(args.expected_step_minutes),
     )
     loader = make_loader(ds, args, shuffle=True)
     config = EventPhysTDJEPAConfig(
@@ -1163,10 +1267,19 @@ def main() -> int:
     parser.add_argument("--expiry-modes", nargs="*", default=["zero_dte", "front_weekly"])
     parser.add_argument("--start-month", default="202407")
     parser.add_argument("--end-month", default="202605")
+    parser.add_argument(
+        "--data-cutoff-month",
+        default="",
+        help="Physical YYYYMM cutoff applied before training/export. Defaults to --end-month for OOF runs.",
+    )
     parser.add_argument("--min-train-months", type=int, default=4)
     parser.add_argument("--min-train-rows", type=int, default=2000)
     parser.add_argument("--context-len", type=int, default=6)
     parser.add_argument("--horizons", default="1,2,3,6")
+    parser.add_argument("--entry-start-minute-et", type=int, default=630)
+    parser.add_argument("--entry-end-minute-et", type=int, default=870)
+    parser.add_argument("--entry-grid-anchor-minute-et", type=int, default=600)
+    parser.add_argument("--expected-step-minutes", type=int, default=5)
     parser.add_argument("--z-dim", type=int, default=32)
     parser.add_argument("--phys-dim", type=int, default=12)
     parser.add_argument("--delta-dim", type=int, default=16)
@@ -1205,6 +1318,12 @@ def main() -> int:
     parser.add_argument("--vicreg-min-std", type=float, default=0.75)
     parser.add_argument("--normalizer-mode", choices=("global", "ticker"), default="global", help="Fit robust feature statistics globally or independently per ticker within each causal fold.")
     parser.add_argument("--encoder-input-mode", choices=("flat", "modal"), default="flat", help="Use the legacy flat feature encoder or modality-balanced input projections.")
+    parser.add_argument(
+        "--live-observable-features-only",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Reject features whose value cannot be reproduced by the live snapshot at the decision minute.",
+    )
     parser.add_argument("--modal-token-dim", type=int, default=32, help="Per-modality projection width when --encoder-input-mode modal is active.")
     parser.add_argument("--num-workers", type=int, default=0)
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
@@ -1225,16 +1344,54 @@ def main() -> int:
     chunk_dir = output_dir / "feature_chunks"
     chunk_dir.mkdir(parents=True, exist_ok=True)
 
-    full = pd.read_parquet(args.data)
+    cutoff_month = str(args.data_cutoff_month).strip()
+    if not cutoff_month:
+        if not bool(args.skip_oof):
+            cutoff_month = str(args.end_month)
+        elif str(args.deploy_train_end_month).strip():
+            cutoff_month = str(args.deploy_train_end_month).strip()
+        elif str(args.deploy_month).strip():
+            cutoff_month = month_add(str(args.deploy_month).strip(), -1)
+    if cutoff_month and not re.fullmatch(r"\d{6}", cutoff_month):
+        raise ValueError(f"Invalid --data-cutoff-month: {cutoff_month!r}")
+    if not bool(args.skip_oof) and cutoff_month != str(args.end_month):
+        raise ValueError(
+            "OOF runs require the physical data cutoff to equal --end-month; "
+            f"got cutoff={cutoff_month!r} end={str(args.end_month)!r}"
+        )
+
+    full_unfiltered = pd.read_parquet(args.data)
+    full = filter_frame_to_month_cutoff(full_unfiltered, cutoff_month)
     train_tickers = [str(t).upper() for t in args.train_tickers]
-    train_frame = prepare_frame(args.data, train_tickers, args.expiry_modes)
-    export_frame = prepare_frame(args.data, args.tickers, args.expiry_modes)
-    feature_cols = select_feature_columns(train_frame)
+    prepare_kwargs = {
+        "data_cutoff_month": cutoff_month,
+        "entry_start_minute_et": int(args.entry_start_minute_et),
+        "entry_end_minute_et": int(args.entry_end_minute_et),
+        "entry_grid_anchor_minute_et": int(args.entry_grid_anchor_minute_et),
+        "expected_step_minutes": int(args.expected_step_minutes),
+    }
+    train_frame = prepare_frame(args.data, train_tickers, args.expiry_modes, **prepare_kwargs)
+    export_frame = prepare_frame(args.data, args.tickers, args.expiry_modes, **prepare_kwargs)
+    all_causal_numeric_features = select_feature_columns(
+        train_frame,
+        live_observable_features_only=False,
+        entry_start_minute_et=int(args.entry_start_minute_et),
+    )
+    feature_cols = select_feature_columns(
+        train_frame,
+        live_observable_features_only=bool(args.live_observable_features_only),
+        entry_start_minute_et=int(args.entry_start_minute_et),
+    )
+    live_contract_excluded_features = sorted(set(all_causal_numeric_features) - set(feature_cols))
+    if not feature_cols:
+        raise ValueError("No live-observable numeric features remain after filtering")
     physical_cols = select_physical_columns(feature_cols, int(args.max_physical_features))
     feature_names = build_feature_names(args, physical_cols)
     modal_feature_groups = summarize_modal_feature_groups(feature_cols)
     metadata = {
         "args": vars(args),
+        "effective_data_cutoff_month": cutoff_month,
+        "input_rows_before_cutoff": int(len(full_unfiltered)),
         "input_rows": int(len(full)),
         "train_rows_after_filter": int(len(train_frame)),
         "export_rows_after_filter": int(len(export_frame)),
@@ -1242,6 +1399,7 @@ def main() -> int:
         "physical_cols": physical_cols,
         "feature_names": feature_names,
         "leaky_feature_names": [c for c in feature_cols if any(p in c.lower() for p in LEAKY_PATTERNS)],
+        "live_contract_excluded_features": live_contract_excluded_features,
         "modal_feature_group_counts": {name: len(cols) for name, cols in modal_feature_groups.items()},
         "modal_feature_groups": modal_feature_groups,
     }
