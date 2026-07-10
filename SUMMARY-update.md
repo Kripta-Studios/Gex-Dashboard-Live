@@ -277,3 +277,67 @@ ventanas h<=180m:                3.638
 ```
 
 La primera ablación queda predeclarada con horizontes 5/15/30/60m y mismo presupuesto para `flat` y `modal`. Junio sigue físicamente excluido.
+
+## 9. Ablación causal `flat` vs `modal`: inicio
+
+### Validación previa
+
+```text
+50 passed in 4.92s  (suite focalizada completa, incluyendo tests de causalidad)
+```
+
+No hay procesos Python activos del agente anterior. Git HEAD = `0458ff4`. Sin cambios sin commit relevantes para la ablación.
+
+### Diseño experimental
+
+- **Factor único:** `--encoder-input-mode` (`flat` vs `modal`)
+- **Dataset:** `tmp/event_option_dataset_execquote_causal1030_202501_202606_v3_physics/event_option_dataset.parquet` (44.169 filas, 371 cols)
+- **SHA-256 dataset:** `E6A19EFBA1EDB055C733AAB4967843F7A4B5F1D2C8238A7A243FC5BBC2251903`
+- **Seed:** `20260618`
+- **Horizontes:** `1,3,6,12` (5/15/30/60 minutos)
+- **OOF:** `--start-month 202501 --end-month 202605` (17 folds: May 2025 – May 2026)
+- **Data cutoff:** `202605` (junio excluido)
+- **Features:** live-observable only (277 de 282)
+- **Contiguidad:** 5 minutos
+- **Rejilla:** 10:30–14:30 ET
+- Mismos hiperparámetros en ambos arms: `z_dim=32, phys_dim=12, delta_dim=16, hidden_dim=128, num_layers=2, epochs=8, batch_size=1024, context_len=6, dropout=0.10`
+
+### Arm 1: `flat` (COMPLETADO)
+
+Comando:
+
+```powershell
+python neural/jepa/walkforward_event_phys_td_jepa_oof.py \
+  --data "tmp/event_option_dataset_execquote_causal1030_202501_202606_v3_physics/event_option_dataset.parquet" \
+  --output-dir "research_papers/JEPA/results/_diagnostics/ptdj_ablation_flat_h1_3_6_12_causal_202501_202605_v1" \
+  --tickers SPXW SPY QQQ --expiry-modes zero_dte \
+  --start-month 202501 --end-month 202605 \
+  --horizons 1,3,6,12 --encoder-input-mode flat \
+  --live-observable-features-only \
+  --entry-start-minute-et 630 --entry-end-minute-et 870 \
+  --entry-grid-anchor-minute-et 600 --expected-step-minutes 5 \
+  --seed 20260618 --device cpu --epochs 8 --batch-size 1024 \
+  --context-len 6 --z-dim 32 --phys-dim 12 --delta-dim 16 \
+  --hidden-dim 128 --num-layers 2
+```
+
+OOF Features extraídas exitosamente.
+Evaluación OOS con nested walk-forward `walkforward_event_option_profile_selector.py` completada en `ptdj_ablation_flat_h1_3_6_12_causal_202501_202605_v1_walkforward`.
+
+### Arm 2: `modal` (COMPLETADO)
+
+Mismo comando que Arm 1, reemplazando `--encoder-input-mode flat` por `--encoder-input-mode modal`.
+OOF Features extraídas exitosamente.
+Evaluación OOS con nested walk-forward completada en `ptdj_ablation_modal_h1_3_6_12_causal_202501_202605_v1_walkforward`.
+
+### Resultados de la ablación OOS (Nested Walk-forward Enero-Mayo 2026)
+
+| Experimento | Trades | WR | PF | PnL (R) | Max DD | QQQ PF | SPXW PF | SPY PF |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Baseline Exploratorio | 324 | 43,8% | 0,909 | -9,28 | - | 0,984 | 0,832 | 0,919 |
+| **Arm 1: Flat** | 643 | 43,7% | 0,860 | -28,94 | -39,8% | 0,876 | 0,839 | 0,867 |
+| **Arm 2: Modal** | 575 | 43,0% | 0,910 | -16,09 | -26,8% | 0,731 | 0,901 | 1,133 |
+
+**Conclusión:** 
+El encoder `modal` supera a `flat` en Profit Factor global (0,910 vs 0,860) y reduce el Max Drawdown (-26,8% vs -39,8%). A nivel de ticker, `modal` mejora significativamente SPY (1,133 vs 0,867) y SPXW (0,901 vs 0,839), pero degrada severamente QQQ (0,731 vs 0,876).
+Sin embargo, **ninguno de los dos supera la gate de producción** requerida para promoción a live (PF > 1,3 y WR > 50% en general). Junio de 2026 permanece completamente sellado y no se ha exportado política productiva.
