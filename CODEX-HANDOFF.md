@@ -2,7 +2,7 @@
 
 **Actualizado:** 11 de julio de 2026
 
-**Último checkpoint base publicado:** `93159a4 research: predeclare gex dex wall state dataset`
+**Último checkpoint publicado antes del preflight:** `6b443ec fix: audit wall coverage on frozen entry grid`
 
 **Producción:** intacta. **Junio de 2026:** sellado.
 
@@ -187,7 +187,7 @@ causales 5/15/30m. `tests/test_wall_state_features.py`: `4 passed`; suite wall
 combinada: `9 passed`. Incluye test de OI duplicado, orden determinista, walls
 separados, resets por gap/sesión y rechazo de columnas future/2026.
 
-Builder por sesión implementado; preflight real todavía pendiente:
+Builder por sesión implementado y preflight real aprobado:
 
 ```text
 neural/jepa/build_wall_state_dataset.py
@@ -198,12 +198,24 @@ Lee únicamente Greeks+OI, fuerza 0DTE/cutoff 2025, limita a 16 workers, persist
 errores por sesión y audita cobertura/spot contra la vista executable. Suite wall
 total tras el builder: `14 passed`.
 
+Preflight central 2024, una sesión por ticker: `144/144` filas, cero errores,
+cobertura de eventos `100%` overall/por ticker y diferencia spot máxima
+`0,000572 bps`. Delta wall no es alias de gamma: misma strike en `9,03%` CALL y
+`37,50%` PUT, con 8/10 strikes delta distintos. El primer runner falló antes de
+leer datos por `sys.path`; se corrigió y añadió test CLI. La auditoría también
+excluye explícitamente 10:30 porque el contrato congelado comienza 10:35 tras
+cerrar el IB. Suite final: `15 passed`.
+
+Evidencia compacta:
+
+```text
+research_papers/JEPA/results/_diagnostics/wall_state_gex_dex_preflight_v1/manifest.json
+```
+
 ### Siguientes acciones exactas
 
-1. Publicar el builder y ejecutar preflight con una sesión real por ticker;
-   auditar que el delta wall no sea un
-   alias de buckets fijos.
-2. Build completo y join contra el evento sellado; exigir >=99% cobertura overall,
+1. Publicar el preflight y ejecutar build completo 2022–2025 con 16 workers.
+2. Auditar el join contra el evento sellado; exigir >=99% cobertura overall,
    >=98% por ticker y <=1 bps de diferencia spot.
 3. Predeclarar labels físicos `magnet_hit/true_rejection/accepted_break` a
    30/60/120/180m. Future spot es label, nunca feature.
@@ -213,7 +225,7 @@ total tras el builder: `14 passed`.
 
 ## 10. Git y worktree
 
-Checkpoint base publicado: `93159a4`, `HEAD == origin/main` al iniciar el builder.
+Checkpoint publicado: `6b443ec`, `HEAD == origin/main` al ejecutar el preflight.
 Hay numerosos scripts y artefactos untracked de trabajos anteriores; no borrarlos,
 no añadirlos en masa y no asumir que son parte del checkpoint. Versionar cada hito
 con `git add` explícito, test, commit y push.

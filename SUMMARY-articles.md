@@ -119,9 +119,10 @@ timestamp/strike:
 - separación y balance CALL/PUT;
 - same/move/magnitude-change 5/15/30m y edad causal.
 
-Las primitivas ya pasan tests sintéticos de walls separados, deduplicación de OI,
-persistencia/resets y schema causal. La validación real de cobertura y paridad queda
-pendiente del builder ThetaData.
+Las primitivas pasan tests de walls separados, deduplicación de OI,
+persistencia/resets y schema causal. El preflight ThetaData real consiguió 100% de
+cobertura en tres sesiones, spot <=0,000572 bps y delta walls no equivalentes a
+gamma. Queda pendiente el build completo y la separabilidad física.
 
 Primera evaluación autorizada: física del subyacente, no PnL. Los future prices se
 usan solo como labels para `magnet_hit`, `true_rejection` y `accepted_break` a

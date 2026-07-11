@@ -181,10 +181,13 @@ Primitivas implementadas:
 neural/jepa/wall_state_features.py
 ```
 
-Primitivas y builder por sesión ya implementados: `14 passed` en la suite wall.
+Primitivas y builder por sesión ya implementados: `15 passed` en la suite wall.
 Se cubren duplicados OI, orden determinista, separación de walls, persistencia
 causal, cutoff future/2026, join de OI, selección de preflight y auditoría de
-cobertura. Falta ejecutar el preflight con ThetaData real.
+cobertura y entrada CLI directa. El preflight ThetaData real pasó: 144/144 filas,
+cero errores, cobertura de eventos 100% en los tres tickers, spot máximo a
+0,000572 bps y delta walls materialmente distintos de gamma. Siguiente paso: build
+completo 2022–2025 y gate >=99%/98% de cobertura.
 
 Debe producir, solo con snapshot actual:
 
