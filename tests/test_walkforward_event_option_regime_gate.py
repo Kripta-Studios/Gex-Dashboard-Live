@@ -54,11 +54,10 @@ def test_build_regime_gates_multiple_features():
 
 
 def test_build_regime_gates_missing_feature():
-    """Missing features are silently skipped."""
+    """Missing features must raise KeyError."""
     train = _make_train()
-    gates = build_regime_gates(train, ["nonexistent_feature"])
-    assert len(gates) == 1  # only no-gate
-    assert gates[0] is NO_REGIME_GATE
+    with pytest.raises(KeyError):
+        build_regime_gates(train, ["nonexistent_feature"])
 
 
 def test_build_regime_gates_empty_features():
@@ -135,7 +134,7 @@ def test_apply_regime_gate_below():
 
 
 def test_apply_regime_gate_missing_feature():
-    """Missing feature returns empty."""
+    """Missing feature must raise KeyError."""
     scored = _make_scored()
     gate = RegimeGateConfig(
         feature="nonexistent",
@@ -143,8 +142,8 @@ def test_apply_regime_gate_missing_feature():
         quantile=0.50,
         threshold=0.0,
     )
-    result = apply_regime_gate(scored, gate)
-    assert len(result) == 0
+    with pytest.raises(KeyError):
+        apply_regime_gate(scored, gate)
 
 
 def test_apply_regime_gate_empty_input():
@@ -224,3 +223,41 @@ def test_regime_gate_reduces_trades():
         result = apply_regime_gate(scored, gate)
         assert len(result) <= len(scored)
         assert len(result) > 0  # with 500 rows, no percentile gate should empty it
+
+
+def test_build_regime_gates_allowed_direction():
+    """Verify that build_regime_gates properly filters configurations by allowed direction."""
+    train = _make_train()
+    
+    # 1. Force 'below' direction
+    gates_below = build_regime_gates(train, ["phys_d25_spread_mean"], allowed_direction="below")
+    # Should only contain NO_REGIME_GATE and gates with direction == 'below'
+    for g in gates_below:
+        if g is not None:
+            assert g.direction == "below"
+            
+    # 2. Force 'above' direction
+    gates_above = build_regime_gates(train, ["phys_d25_spread_mean"], allowed_direction="above")
+    for g in gates_above:
+        if g is not None:
+            assert g.direction == "above"
+            
+    # 3. 'any' direction includes both
+    gates_any = build_regime_gates(train, ["phys_d25_spread_mean"], allowed_direction="any")
+    directions = {g.direction for g in gates_any if g is not None}
+    assert directions == {"above", "below"}
+
+
+def test_build_regime_gates_constant_feature():
+    """Verify that build_regime_gates handles constant features correctly without duplicate thresholds."""
+    train = pd.DataFrame({"constant_feat": [42.0] * 100})
+    gates = build_regime_gates(train, ["constant_feat"])
+    # 1 no-gate + 2 directions (above, below) with threshold=42.0 and quantile=0.50
+    assert len(gates) == 3
+    assert gates[0] is NO_REGIME_GATE
+    assert gates[1].threshold == 42.0
+    assert gates[1].quantile == 0.50
+    assert gates[2].threshold == 42.0
+    assert gates[2].quantile == 0.50
+
+

@@ -58,77 +58,21 @@ DIRECTION_MODES = (
     "spot_15m_counter",
 )
 
-REGIME_GATE_QUANTILES = (0.20, 0.40, 0.60, 0.80)
-REGIME_GATE_DIRECTIONS = ("above", "below")
 
-
-@dataclass(frozen=True)
-class RegimeGateConfig:
-    """A predeclared regime gate that abstains from trading outside a quantile band.
-
-    The percentile thresholds are computed on train data only.
-    ``direction='above'`` means: trade only when feature >= threshold.
-    ``direction='below'`` means: trade only when feature < threshold.
-    """
-    feature: str
-    direction: str  # 'above' or 'below'
-    quantile: float  # e.g. 0.20, 0.40, 0.60, 0.80
-    threshold: float  # actual percentile value from train
-
-    @property
-    def name(self) -> str:
-        return f"rg_{self.feature}_{self.direction}_q{self.quantile:.0%}".replace("%", "pct")
-
-
-NO_REGIME_GATE = None  # sentinel for "no gate applied"
-
-
-def build_regime_gates(
-    train: pd.DataFrame,
-    regime_features: list[str],
-) -> list[RegimeGateConfig | None]:
-    """Build regime gate configurations from train-only percentiles.
-
-    Returns a list starting with None (no gate) followed by all
-    (feature × direction × quantile) combinations with finite thresholds.
-    """
-    gates: list[RegimeGateConfig | None] = [NO_REGIME_GATE]
-    for feature in regime_features:
-        if feature not in train.columns:
-            continue
-        values = pd.to_numeric(train[feature], errors="coerce")
-        values = values[np.isfinite(values)]
-        if values.empty:
-            continue
-        for quantile in REGIME_GATE_QUANTILES:
-            threshold = float(values.quantile(quantile))
-            if not np.isfinite(threshold):
-                continue
-            for direction in REGIME_GATE_DIRECTIONS:
-                gates.append(RegimeGateConfig(
-                    feature=feature,
-                    direction=direction,
-                    quantile=quantile,
-                    threshold=threshold,
-                ))
-    return gates
-
-
-def apply_regime_gate(
-    scored: pd.DataFrame,
-    gate: RegimeGateConfig | None,
-) -> pd.DataFrame:
-    """Filter candidates by regime gate. Returns the full frame when gate is None."""
-    if gate is None:
-        return scored
-    if gate.feature not in scored.columns:
-        return scored.iloc[:0].copy()  # no matching feature → empty
-    values = pd.to_numeric(scored[gate.feature], errors="coerce")
-    if gate.direction == "above":
-        mask = values >= gate.threshold
-    else:
-        mask = values < gate.threshold
-    return scored.loc[mask].copy()
+if __package__:
+    from .walkforward_event_option_regime_gate import (
+        NO_REGIME_GATE,
+        RegimeGateConfig,
+        apply_regime_gate,
+        build_regime_gates,
+    )
+else:
+    from walkforward_event_option_regime_gate import (
+        NO_REGIME_GATE,
+        RegimeGateConfig,
+        apply_regime_gate,
+        build_regime_gates,
+    )
 
 
 def apply_direction_mode(scored: pd.DataFrame, mode: str, delta_bucket: int) -> pd.DataFrame:
@@ -669,6 +613,14 @@ def fit_profile_fold(
         (frame["ticker"].astype(str) == str(ticker))
         & (frame["month"].astype(str) == str(test_month))
     ].copy()
+
+    # Causal safety check: Exclude 10:30 entry candidates (minute <= 630) if ib_range_bps is used
+    regime_features = list(getattr(args, "regime_gate_features", []) or [])
+    if "ib_range_bps" in regime_features and "minute" in frame.columns:
+        train = train[pd.to_numeric(train["minute"], errors="coerce") > 630].copy()
+        val = val[pd.to_numeric(val["minute"], errors="coerce") > 630].copy()
+        test = test[pd.to_numeric(test["minute"], errors="coerce") > 630].copy()
+
     train_months = sorted(str(month) for month in train["month"].astype(str).unique())
     cooldown_minutes = ticker_cooldown_minutes(args, ticker)
 
@@ -758,11 +710,15 @@ def fit_profile_fold(
     best_regime_gate: RegimeGateConfig | None = NO_REGIME_GATE
     best_score = -1e18
     best_metrics: dict = {}
-    best_rank: tuple[float, int] | None = None
+    best_rank: tuple | None = None
 
     # Build regime gates from train-only percentiles (empty list + None = no gate)
     regime_features = list(getattr(args, "regime_gate_features", []) or [])
-    regime_gates = build_regime_gates(train, regime_features)
+    regime_gates = build_regime_gates(
+        train, 
+        regime_features, 
+        str(getattr(args, "regime_gate_direction", "any"))
+    )
 
     for direction_mode in args.direction_modes:
         val_scored = score_part(val, str(direction_mode))
@@ -774,6 +730,64 @@ def fit_profile_fold(
             for cfg in fold_grid:
                 val_trades = deploy(gated_val, cfg, int(cooldown_minutes))
                 row = metrics(val_trades, val_months)
+                
+                # Check overall gates
+                trades = int(row.get("trades", 0))
+                min_month = int(row.get("min_month_trades", 0))
+                pf = float(row.get("profit_factor", 0.0))
+                win_rate = float(row.get("win_rate", float("nan")))
+                call_rate = float(row.get("call_rate", float("nan")))
+                positive_month_rate = float(row.get("positive_month_rate", 0.0))
+                
+                passes = (
+                    trades >= int(args.min_val_trades) and
+                    min_month >= int(args.min_month_trades) and
+                    np.isfinite(pf) and pf >= float(args.min_val_pf) and
+                    np.isfinite(win_rate) and win_rate >= float(args.min_val_win_rate) and
+                    np.isfinite(call_rate) and call_rate >= float(args.min_call_rate) and call_rate <= float(args.max_call_rate) and
+                    np.isfinite(positive_month_rate) and positive_month_rate >= float(args.min_val_positive_month_rate)
+                )
+                passes_val = 1 if passes else 0
+                
+                # Calculate monthly metrics for lexicographical comparison
+                worst_month_pnl = -1e18
+                worst_month_pf = 0.0
+                worst_month_wr = 0.0
+                worst_month_trades = 0
+                
+                if not val_trades.empty:
+                    val_trades = val_trades.copy()
+                    val_trades["month"] = val_trades["month"].astype(str)
+                    monthly_stats = []
+                    for m in val_months:
+                        m_trades = val_trades[val_trades["month"] == m]
+                        if m_trades.empty:
+                            monthly_stats.append({"pnl": 0.0, "pf": 0.0, "wr": 0.0, "trades": 0})
+                        else:
+                            ret = m_trades["realized_return"].astype(float).to_numpy()
+                            wins = ret[ret > 0.0]
+                            losses = ret[ret < 0.0]
+                            gp = float(wins.sum()) if len(wins) else 0.0
+                            gl = float(-losses.sum()) if len(losses) else 0.0
+                            m_pf = float(gp / gl) if gl > 0.0 else (float("inf") if gp > 0.0 else 1.0)
+                            m_wr = float((ret > 0.0).mean())
+                            m_pnl = float(ret.sum())
+                            monthly_stats.append({
+                                "pnl": m_pnl,
+                                "pf": m_pf,
+                                "wr": m_wr,
+                                "trades": len(m_trades)
+                            })
+                    worst_month_pnl = min(s["pnl"] for s in monthly_stats)
+                    worst_month_pf = min(s["pf"] for s in monthly_stats)
+                    worst_month_wr = min(s["wr"] for s in monthly_stats)
+                    worst_month_trades = min(s["trades"] for s in monthly_stats)
+
+                # Tie-breaker key
+                gate_name = gate.name if gate is not None else ""
+                pf_comp = 1e9 if worst_month_pf == float("inf") else worst_month_pf
+                
+                # Calculate smooth score for selector logging
                 score = score_metrics(
                     row,
                     int(args.min_val_trades),
@@ -783,20 +797,28 @@ def fit_profile_fold(
                     float(args.min_call_rate),
                     float(args.max_call_rate),
                 )
-                positive_month_rate = float(row.get("positive_month_rate", float("nan")))
-                if (
-                    not np.isfinite(positive_month_rate)
-                    or positive_month_rate < float(args.min_val_positive_month_rate)
-                ):
-                    score = -1e18 + int(row.get("trades", 0))
-                if np.isfinite(float(row.get("daily_win_rate", float("nan")))):
-                    score += float(args.daily_win_weight) * float(row["daily_win_rate"])
-                if np.isfinite(float(row.get("top5_share_of_pnl", float("nan")))):
-                    score -= float(args.top5_share_penalty) * max(float(row["top5_share_of_pnl"]) - 1.0, 0.0)
-                # Keep a real diagnostic row even when every candidate is invalid.
-                # At the scale of -1e18, adding a small trade count can round back to
-                # exactly -1e18, so comparing the float alone loses every near-miss.
-                rank = (float(score), int(row.get("trades", 0)))
+                if score > -1e17:
+                    if np.isfinite(float(row.get("daily_win_rate", float("nan")))):
+                        score += float(args.daily_win_weight) * float(row["daily_win_rate"])
+                    if np.isfinite(float(row.get("top5_share_of_pnl", float("nan")))):
+                        score -= float(args.top5_share_penalty) * max(float(row["top5_share_of_pnl"]) - 1.0, 0.0)
+                else:
+                    score = -1e18 + trades
+
+                # The rank tuple we compare lexicographically
+                rank = (
+                    passes_val,
+                    worst_month_pnl,
+                    pf_comp,
+                    worst_month_wr,
+                    worst_month_trades,
+                    trades,
+                    # Preferred: no gate over gate
+                    1 if gate is None else 0,
+                    # Alphabetical gate name sorting for deterministic tie break
+                    gate_name
+                )
+                
                 if best_rank is None or rank > best_rank:
                     best_cfg = cfg
                     best_direction_mode = str(direction_mode)
@@ -1106,6 +1128,12 @@ def main() -> int:
         metavar="TICKER=N[,N...]",
         help="Per-ticker predeclared daily-cap search spaces, e.g. SPXW=1,2,4 QQQ=1,2 SPY=1,2.",
     )
+    parser.add_argument(
+        "--regime-gate-direction",
+        default="any",
+        choices=["any", "above", "below"],
+        help="Direction constraint for the regime gate. 'any' permits either, 'above'/'below' forces it.",
+    )
     parser.add_argument("--allow-invalid-val-deploy", action="store_true")
     parser.add_argument("--risk-capital", type=float, default=5000.0)
     parser.add_argument("--seed", type=int, default=20260618)
@@ -1130,6 +1158,16 @@ def main() -> int:
     train_universe = [str(t).upper() for t in args.train_universe]
     all_tickers = sorted(set(test_tickers) | set(train_universe))
     raw = load_raw(args.data, all_tickers)
+
+    # Physical sealing assertion: verify June 2026 is completely absent from the dataset
+    if "trade_date" in raw.columns:
+        max_date = int(raw["trade_date"].max())
+        if max_date > 20260531:
+            raise ValueError(
+                f"CRITICAL ERROR: Leakage detected. Dataset contains trade_date {max_date} > 20260531. "
+                "June must be physically sealed."
+            )
+
     entry_start_minute = parse_hhmm_to_minute(
         str(args.entry_time_min_et),
         DEFAULT_ENTRY_START_MINUTE_ET,

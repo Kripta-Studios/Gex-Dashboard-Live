@@ -1,13 +1,24 @@
 # run_regime_gate_ablation_v1.ps1
-# Regime gate ablation: control (no gate) vs variant (4 predeclared regime features)
+# Regime gate ablation: control (no gate) vs 4 isolated economic regime gates (R1, R2, R3, R4)
 # Predeclaration: research_papers/JEPA/REGIME_GATE_ABLATION_PREDECLARATION_V1.md
 
 $ErrorActionPreference = "Stop"
 Set-Location -Path $PSScriptRoot
 
-$dataset = "tmp/event_option_dataset_execquote_causal1030_202501_202606_v3_physics/event_option_dataset.parquet"
-$outputControl = "research_papers/JEPA/results/_diagnostics/regime_gate_ablation_control_202601_202605_seed20260618_v1"
-$outputVariant = "research_papers/JEPA/results/_diagnostics/regime_gate_ablation_gated_202601_202605_seed20260618_v1"
+# ── Physically Sealed Dataset ──
+$dataset = "tmp/event_option_dataset_execquote_causal1030_202501_202605_regime_v1.parquet"
+
+# Verify dataset exists, otherwise create it
+if (-not (Test-Path $dataset)) {
+    Write-Host "Creating physically sealed dataset (excluding June 2026)..."
+    python neural/jepa/create_sealed_regime_dataset.py
+}
+
+$outputC0 = "research_papers/JEPA/results/_diagnostics/regime_gate_ablation_c0_202601_202605_seed20260618_v1"
+$outputR1 = "research_papers/JEPA/results/_diagnostics/regime_gate_ablation_r1_ivskew_202601_202605_seed20260618_v1"
+$outputR2 = "research_papers/JEPA/results/_diagnostics/regime_gate_ablation_r2_spread_202601_202605_seed20260618_v1"
+$outputR3 = "research_papers/JEPA/results/_diagnostics/regime_gate_ablation_r3_absret_202601_202605_seed20260618_v1"
+$outputR4 = "research_papers/JEPA/results/_diagnostics/regime_gate_ablation_r4_ib_202601_202605_seed20260618_v1"
 
 # ── Common arguments ──
 $commonArgs = @(
@@ -34,53 +45,70 @@ $commonArgs = @(
     "--no-resume"
 )
 
-# ── Hash scripts before execution ──
-Write-Host "=== Hashing scripts ==="
+# ── Hash scripts and dataset before execution ──
+Write-Host "=== Hashing files ==="
 $selectorHash = (Get-FileHash "neural/jepa/walkforward_event_option_profile_selector.py" -Algorithm SHA256).Hash
+$datasetHash = (Get-FileHash $dataset -Algorithm SHA256).Hash
 Write-Host "selector_hash=$selectorHash"
+Write-Host "dataset_hash=$datasetHash"
 
-# ── ARM 1: Control (no regime gate) ──
+# ── ARM C0: Control (no regime gate) ──
 Write-Host ""
-Write-Host "=== ARM 1: CONTROL (no regime gate) ==="
-Write-Host "Output: $outputControl"
-
+Write-Host "=== ARM C0: CONTROL (no regime gate) ==="
+Write-Host "Output: $outputC0"
 python neural/jepa/walkforward_event_option_profile_selector.py `
     @commonArgs `
-    --output-dir $outputControl
-if ($LASTEXITCODE -ne 0) {
-    Write-Error "Control arm failed with exit code $LASTEXITCODE"
-    exit 1
-}
+    --output-dir $outputC0
+if ($LASTEXITCODE -ne 0) { Write-Error "C0 failed"; exit 1 }
 
-# ── ARM 2: Variant (4 predeclared regime features) ──
+# ── ARM R1: IV Skew (allowed direction: any) ──
 Write-Host ""
-Write-Host "=== ARM 2: VARIANT (regime gate with 4 features) ==="
-Write-Host "Output: $outputVariant"
-
-# Per-ticker regime features:
-# SPXW uses d25 bucket features, QQQ/SPY use d35
-# Common: phys_abs_ret_5m_bps, ib_range_bps
-# The selector runs per-ticker, so we include both d25 and d35 variants;
-# whichever column exists in the ticker's prepared frame will be used.
+Write-Host "=== ARM R1: IV Skew (any direction) ==="
+Write-Host "Output: $outputR1"
 python neural/jepa/walkforward_event_option_profile_selector.py `
     @commonArgs `
-    --output-dir $outputVariant `
-    --regime-gate-features `
-        phys_d25_iv_skew_put_minus_call `
-        phys_d35_iv_skew_put_minus_call `
-        phys_d25_spread_mean `
-        phys_d35_spread_mean `
-        phys_abs_ret_5m_bps `
-        ib_range_bps
-if ($LASTEXITCODE -ne 0) {
-    Write-Error "Variant arm failed with exit code $LASTEXITCODE"
-    exit 1
-}
+    --output-dir $outputR1 `
+    --regime-gate-features phys_d25_iv_skew_put_minus_call phys_d35_iv_skew_put_minus_call `
+    --regime-gate-direction any
+if ($LASTEXITCODE -ne 0) { Write-Error "R1 failed"; exit 1 }
 
-# ── Summary ──
+# ── ARM R2: Spread (allowed direction: below - Primary) ──
 Write-Host ""
-Write-Host "=== BOTH ARMS COMPLETE ==="
-Write-Host "Control: $outputControl"
-Write-Host "Variant: $outputVariant"
+Write-Host "=== ARM R2: Spread (below only - Primary) ==="
+Write-Host "Output: $outputR2"
+python neural/jepa/walkforward_event_option_profile_selector.py `
+    @commonArgs `
+    --output-dir $outputR2 `
+    --regime-gate-features phys_d25_spread_mean phys_d35_spread_mean `
+    --regime-gate-direction below
+if ($LASTEXITCODE -ne 0) { Write-Error "R2 failed"; exit 1 }
+
+# ── ARM R3: Abs Return 5m (allowed direction: below) ──
 Write-Host ""
-Write-Host "Next: run paired analysis comparing the two arms."
+Write-Host "=== ARM R3: Abs Return 5m (below only) ==="
+Write-Host "Output: $outputR3"
+python neural/jepa/walkforward_event_option_profile_selector.py `
+    @commonArgs `
+    --output-dir $outputR3 `
+    --regime-gate-features phys_abs_ret_5m_bps `
+    --regime-gate-direction below
+if ($LASTEXITCODE -ne 0) { Write-Error "R3 failed"; exit 1 }
+
+# ── ARM R4: IB Range (allowed direction: any) ──
+Write-Host ""
+Write-Host "=== ARM R4: IB Range (any direction) ==="
+Write-Host "Output: $outputR4"
+python neural/jepa/walkforward_event_option_profile_selector.py `
+    @commonArgs `
+    --output-dir $outputR4 `
+    --regime-gate-features ib_range_bps `
+    --regime-gate-direction any
+if ($LASTEXITCODE -ne 0) { Write-Error "R4 failed"; exit 1 }
+
+Write-Host ""
+Write-Host "=== ALL FIVE ARMS COMPLETE ==="
+Write-Host "C0: $outputC0"
+Write-Host "R1: $outputR1"
+Write-Host "R2: $outputR2"
+Write-Host "R3: $outputR3"
+Write-Host "R4: $outputR4"
