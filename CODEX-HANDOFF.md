@@ -1,5 +1,17 @@
 # CODEX-HANDOFF.md — Estado para continuación por otro agente
 
+## Actualización 2026-07-11 04:40 CEST — Portfolio Var-JEPA v1 listo para ejecutar
+
+- Se auditó el script/test sin registrar dejado por la automatización anterior y se completó el contrato antes de cualquier corrida completa. No quedan procesos Python/pytest/training activos. El smoke CUDA de enero/una época terminó y solo escribió en `tmp/portfolio_var_jepa_fold_smoke_20260711b`; no reutilizarlo como evidencia.
+- Nuevos artefactos: `neural/jepa/walkforward_event_option_portfolio_var_jepa.py`, `neural/jepa/analyze_event_option_portfolio_var_jepa.py`, sus dos tests, `run_portfolio_var_jepa_ablation_v1.ps1` y `research_papers/JEPA/PORTFOLIO_VAR_JEPA_PREDECLARATION_V1.md`.
+- Factor único: control payoff latent determinista frente al mismo backbone/decoder con prior/posterior Gaussianos, reparametrización y KL annealed. Encoder flat OOF congelado/actionless; incertidumbre solo diagnóstica. `HOLD` es abstención por threshold inner-validation, no una label construida con futuro.
+- Dataset SHA-256 `39203C83F47A60AFB2AB7951201CBEB3B9098F4238169F0D716649571667DA2F`: 22.037 eventos, 44.074 filas CALL/PUT, 85 features, `20250501..20260529`; 0DTE executable_quote ask→bid, junio físicamente ausente.
+- Folds/presupuesto: test `202601..202605`, tres meses internos, base seed común `20260618`, folds `base+YYYYMM`, CUDA determinista, 40 épocas, batch 512. Gates de validación: PF 1,3, WR 50%, 18 trades por mes y todos los meses positivos; threshold inválido implica abstain.
+- Runtime auditado por código: d25 SPXW/d35 QQQ-SPY, cupos `4/2/1`, cooldowns `0/30/0`, hold >=30m y una sola posición/ticker. El analizador verifica hashes/provenance y paridad de seeds/folds.
+- Hashes: runner `DAB6FA8F37D1EEF0AA2B1068BFDC6C964E083B99C6A8E0C4B887C44723106561`; trainer `21C011C6F66906E90B128E091794FC92497739568DC10F34EBB6F9175B45F0A1`; analizador `A5635C14FF39A66C4573A80F1C75165A30D50273F66887B25D8316606D9C35B2`.
+- Verificación: tests focalizados `9 passed in 2.13s`, `py_compile` y `git diff --check` PASS. No se tocó systemd, policy live ni cambios legacy.
+- Próximo paso exacto después de commitear/pushear esta predeclaración: comprobar procesos/GPU otra vez y ejecutar **una sola instancia** de `run_portfolio_var_jepa_ablation_v1.ps1`. No modificar código, hashes, seeds o gates después del lanzamiento. Después, conservar solo artefactos pequeños y actualizar los tres handoffs con resultado por ticker/mes.
+
 ## Actualización 2026-07-11 04:14 CEST — ablación de historia cerrada y rechazada
 
 - El runner predeclarado `run_flat_history_ablation_v1.ps1` terminó ambos arms y salió normalmente con el mensaje `Flat history ablation completed for both arms.`; stdout SHA-256 `A254625E41F90B73321F291C625CA91A7611E0EF3D5DB425C2B7EDADC62CE917`, stderr vacío. Ya no quedan trainer, selector, pytest ni proceso Python de esta ablación.

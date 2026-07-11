@@ -5,6 +5,16 @@
 
 > Esta bitácora se actualiza durante el trabajo. Solo se marca como completado lo reproducido en esta sesión. No implica despliegue, commit ni push salvo que se indique expresamente.
 
+## Actualización 2026-07-11 04:40 CEST — Portfolio Var-JEPA v1 implementado y predeclarado
+
+El primer punto pendiente de la cola ya tiene implementación causal auditada, tests, runner y analizador pareado. Todavía no se ha lanzado el nested walk-forward completo. Se comparará el mismo head MLP de payoff determinista con una única variante que añade prior/posterior Gaussianos diagonales, reparametrización y KL annealed. El market encoder flat OOF queda congelado y actionless; la incertidumbre se registra pero no participa en thresholds ni selección.
+
+Fuente sellada: 22.037 eventos/44.074 filas de acción `20250501..20260529`, 85 features, SHA-256 `39203C83F47A60AFB2AB7951201CBEB3B9098F4238169F0D716649571667DA2F`. Contrato revalidado: executable_quote ask→bid, d25 SPXW/d35 QQQ-SPY, hold >=30m, una posición por ticker, cupos `4/2/1`, cooldowns `0/30/0`, rejilla 10:30–14:30/5m y junio físicamente ausente.
+
+Se congelaron cinco folds externos `202601..202605`, tres meses internos, seed base común `20260618` y seed `base+YYYYMM`, CUDA determinista, 40 épocas, batch 512 y los mismos hiperparámetros/orden de datos en ambos arms. Las inner gates ahora exigen PF >=1,3, WR >=50%, >=18 trades por mes y todos los meses positivos; la ausencia de threshold válido produce abstención, no relajación posterior.
+
+Predeclaración: `research_papers/JEPA/PORTFOLIO_VAR_JEPA_PREDECLARATION_V1.md`. Runner `run_portfolio_var_jepa_ablation_v1.ps1`, SHA-256 `DAB6FA8F37D1EEF0AA2B1068BFDC6C964E083B99C6A8E0C4B887C44723106561`; trainer `21C011C6...F0A1`; analizador `A5635C14...35B2`. El analizador decide por MAE/RMSE OOS pareados y relación incertidumbre-error en 15 celdas ticker×mes, no por PnL agregado. Tests focalizados: `9 passed`; smoke CUDA de un fold determinista PASS. Ningún resultado será marcado `production_live_ready`.
+
 ## Actualización 2026-07-11 04:14 CEST — resultado final de `history_2022` vs `history_2025`
 
 La ablación predeclarada terminó completa y sin errores: 13 folds OOF y 15 folds nested por arm, provenance PASS, mismos folds/seeds/presupuesto y un solo factor cambiado (`encoder_training_history_start`). El runner salió normalmente y no quedan procesos de entrenamiento o evaluación activos.
