@@ -73,6 +73,8 @@ Resultado: weighting rechazado. Solo gana balanced accuracy en 48/99, mediana de
 
 Physics-side skip ya implementado y predeclarado: opportunity conserva 30 features y solo side amplía a 154 `phys_*`/`ctx_*` current-time, excluyendo cinco event-in-day no live, spots absolutos y outcomes. Smoke SPXW/202304 completa 562 filas científicas; `3 passed`. Full run aún no ejecutado en este checkpoint.
 
+Resultado physics skip: rechazado. Mejora BA en 55/99, mediana `+0,0039`, `p=0,3199`; Spearman positivo 61/99, pero 2024 es negativo. QQQ mejora en métrica de lado, pero su única policy outer pierde 38 trades, WR `34,21%`, PF `0,4086`, `-8,6909R`; SPY pierde 19 trades, WR `36,84%`, PF `0,8101`, `-1,2436R`. SPXW no selecciona. No se abrirá un sweep de sub-bloques sobre los mismos outer. Tras V1r1, weighting y physics, no hay modelo nuevo rentable/live-safe. Siguiente evidencia válida exige holdout realmente nuevo o nueva fuente causal de alpha, manteniendo producción intacta.
+
 ## Actualización 2026-07-11 15:45 CEST — Auditoría de Reproducibilidad y C0 Equivalence Terminadas con Éxito
 
 La auditoría de reproducibilidad se completó con éxito en 10 s (test PASS), arrojando las siguientes conclusiones fundamentales:

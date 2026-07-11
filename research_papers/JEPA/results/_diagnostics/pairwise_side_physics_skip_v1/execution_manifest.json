@@ -1,0 +1,9 @@
+{
+  "git_head": "dbd3c44ba68856e89961fcbacd75d6c584831f72",
+  "dataset_sha256": "d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408",
+  "script_sha256": "803a2da71be1bda6f46473cbb95c58110ae722d9ed4c30b674e1e0817528bf47",
+  "contains_2026": false,
+  "production_modified": false,
+  "adaptive_reuse_not_promotable": true,
+  "exit_code": 0
+}
