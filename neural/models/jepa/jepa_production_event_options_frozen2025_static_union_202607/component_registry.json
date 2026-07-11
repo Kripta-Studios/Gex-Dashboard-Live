@@ -491,6 +491,8 @@
     "candidate_universe_filter": {
       "near_level_abs_bps_max": 20.0,
       "min_entry_time_et": "10:30",
+      "entry_sample_minutes": 5,
+      "entry_sample_anchor_minute_et": "10:00",
       "requires_complete_initial_balance": true
     },
     "walkforward": {
