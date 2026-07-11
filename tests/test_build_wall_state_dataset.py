@@ -100,6 +100,14 @@ def test_event_coverage_deduplicates_event_profiles(tmp_path):
     assert audit["coverage_overall"] == 0.5
     assert audit["spot_diff_bps_max"] == 0.0
 
+    restricted = audit_event_coverage(
+        walls,
+        event_path,
+        session_filter=pd.DataFrame({"ticker": ["SPY"], "trade_date": ["20250102"]}),
+    )
+    assert restricted["event_unique_keys"] == 1
+    assert restricted["coverage_overall"] == 1.0
+
 
 def test_process_sessions_rejects_oversubscription():
     with pytest.raises(ValueError, match="1..16"):

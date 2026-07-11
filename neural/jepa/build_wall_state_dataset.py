@@ -258,7 +258,11 @@ def audit_wall_frame(frame: pd.DataFrame, requested_sessions: int) -> dict[str, 
     return result
 
 
-def audit_event_coverage(walls: pd.DataFrame, event_path: str | Path) -> dict[str, Any]:
+def audit_event_coverage(
+    walls: pd.DataFrame,
+    event_path: str | Path,
+    session_filter: pd.DataFrame | None = None,
+) -> dict[str, Any]:
     available = _available_parquet_columns(event_path)
     missing = set(KEY_COLUMNS).difference(available)
     if missing:
@@ -271,6 +275,11 @@ def audit_event_coverage(walls: pd.DataFrame, event_path: str | Path) -> dict[st
         events["ticker"].isin(TICKERS)
         & events["trade_date"].le(PHYSICAL_END_DATE)
     ].copy()
+    if session_filter is not None:
+        sessions = session_filter[["ticker", "trade_date"]].drop_duplicates().copy()
+        sessions["ticker"] = sessions["ticker"].astype(str).str.upper()
+        sessions["trade_date"] = sessions["trade_date"].astype(str)
+        events = events.merge(sessions, on=["ticker", "trade_date"], how="inner", validate="many_to_one")
     aggregation = {"spot": "median"} if "spot" in events else {}
     event_keys = events.groupby(list(KEY_COLUMNS), observed=True, as_index=False).agg(aggregation)
     wall_keys = walls[list(KEY_COLUMNS) + ["spot"]].rename(columns={"spot": "wall_spot"})
@@ -321,7 +330,11 @@ def main() -> int:
     selected = select_preflight_sessions(filtered) if args.preflight else filtered
     walls, errors = process_sessions(selected.to_dict("records"), args.workers)
     audit = audit_wall_frame(walls, len(selected))
-    coverage = audit_event_coverage(walls, args.event_view) if args.event_view else None
+    coverage = audit_event_coverage(
+        walls,
+        args.event_view,
+        session_filter=selected if args.preflight else None,
+    ) if args.event_view else None
 
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
