@@ -1,0 +1,57 @@
+[
+  {
+    "test_month": "202601",
+    "train_end_month": "202509",
+    "encoder_path": "research_papers\\JEPA\\results\\_diagnostics\\adajepa_shadow_coherent_spaces_202601_202605_seed20260618_v1\\fold_202601\\encoder\\event_phys_td_jepa_encoder.pt",
+    "encoder_sha256": "A7EDB5FEE0D90D6FEE448CED9E940C7B1BE7446F97170E93EC026C2A9F8948DA",
+    "transitions_path": "research_papers\\JEPA\\results\\_diagnostics\\adajepa_shadow_coherent_spaces_202601_202605_seed20260618_v1\\fold_202601\\transitions\\shadow_transitions.parquet",
+    "transitions_sha256": "FDBB7989201A83AE6A20226DCEA502AC844EB3844FDEDCA724AE0CCE258D7A60",
+    "transition_rows": 20361,
+    "date_min": "20250102",
+    "date_max": "20260130"
+  },
+  {
+    "test_month": "202602",
+    "train_end_month": "202510",
+    "encoder_path": "research_papers\\JEPA\\results\\_diagnostics\\adajepa_shadow_coherent_spaces_202601_202605_seed20260618_v1\\fold_202602\\encoder\\event_phys_td_jepa_encoder.pt",
+    "encoder_sha256": "7C235EEB1D6E08DAEA48B724863952C14161D8060BF6D898DF5AB72FCC7CEB99",
+    "transitions_path": "research_papers\\JEPA\\results\\_diagnostics\\adajepa_shadow_coherent_spaces_202601_202605_seed20260618_v1\\fold_202602\\transitions\\shadow_transitions.parquet",
+    "transitions_sha256": "37F077AE7A14885FFE470FE6822EB57673797C02911AC11E24F37557FEC1AFD4",
+    "transition_rows": 21470,
+    "date_min": "20250102",
+    "date_max": "20260227"
+  },
+  {
+    "test_month": "202603",
+    "train_end_month": "202511",
+    "encoder_path": "research_papers\\JEPA\\results\\_diagnostics\\adajepa_shadow_coherent_spaces_202601_202605_seed20260618_v1\\fold_202603\\encoder\\event_phys_td_jepa_encoder.pt",
+    "encoder_sha256": "9C3544E8407AB8E7B71F188410EB3DD7E3E78FB37EEB0E5E950DC1AA7A5BA615",
+    "transitions_path": "research_papers\\JEPA\\results\\_diagnostics\\adajepa_shadow_coherent_spaces_202601_202605_seed20260618_v1\\fold_202603\\transitions\\shadow_transitions.parquet",
+    "transitions_sha256": "091FBD7DBE5C5A7FF11F8EF02E82D09C7D1C24ECBFC394ED6C41FA6B8A470958",
+    "transition_rows": 22850,
+    "date_min": "20250102",
+    "date_max": "20260331"
+  },
+  {
+    "test_month": "202604",
+    "train_end_month": "202512",
+    "encoder_path": "research_papers\\JEPA\\results\\_diagnostics\\adajepa_shadow_coherent_spaces_202601_202605_seed20260618_v1\\fold_202604\\encoder\\event_phys_td_jepa_encoder.pt",
+    "encoder_sha256": "BA6863339902030EB4CDCFC020AC7084EB7AF253BA3790E0F23F46A1338F001C",
+    "transitions_path": "research_papers\\JEPA\\results\\_diagnostics\\adajepa_shadow_coherent_spaces_202601_202605_seed20260618_v1\\fold_202604\\transitions\\shadow_transitions.parquet",
+    "transitions_sha256": "15DCC33B07F1F1201453FF97C2335C672A4EE3DD0AA3B21BB026B3CD2D391C71",
+    "transition_rows": 24403,
+    "date_min": "20250102",
+    "date_max": "20260430"
+  },
+  {
+    "test_month": "202605",
+    "train_end_month": "202601",
+    "encoder_path": "research_papers\\JEPA\\results\\_diagnostics\\adajepa_shadow_coherent_spaces_202601_202605_seed20260618_v1\\fold_202605\\encoder\\event_phys_td_jepa_encoder.pt",
+    "encoder_sha256": "ABD8DD6944DBD6DA6D4183951B91FE94E8007981F089AB2873C67833071648E4",
+    "transitions_path": "research_papers\\JEPA\\results\\_diagnostics\\adajepa_shadow_coherent_spaces_202601_202605_seed20260618_v1\\fold_202605\\transitions\\shadow_transitions.parquet",
+    "transitions_sha256": "014559B5EBC96DCF9CDAE1CB8D7DB3C84E0A20334381E8A44F9EED867BB8F31E",
+    "transition_rows": 26038,
+    "date_min": "20250102",
+    "date_max": "20260529"
+  }
+]

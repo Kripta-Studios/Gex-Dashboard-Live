@@ -177,4 +177,6 @@ Actualización 2026-07-11 05:45 CEST: la precondición técnica ya está impleme
 
 El build de esos cinco espacios quedó predeclarado con train_end anterior a tres meses internos, arquitectura flat y presupuesto idéntico. Todavía no contiene adaptación ni downstream; solo habilita una comparación AdaJEPA fiel y causal.
 
+Actualización: los cinco checkpoints/espacios terminaron, con 1.109–1.635 transiciones OOS por mes y targets exactamente cinco minutos posteriores. Ya puede predeclararse frozen predictor frente a un adaptador shadow diario sin mezclar coordenadas.
+
 Informe, hashes y tablas de la ablación de historia quedaron publicados en `8da7a7a`.

@@ -15,6 +15,8 @@ Primer paso pendiente: predeclarar y generar cinco encoders flat congelados para
 
 El build quedó predeclarado en `research_papers/JEPA/ADAJEPA_COHERENT_SPACES_PREDECLARATION_V1.md`. Runner `run_adajepa_coherent_spaces_v1.ps1`, SHA-256 `0900B63B997B6136D09DB665187920262C89C23FCE4EFEA6478218674839E3BE`; fuente `AB144DBA...F720`. Folds train_end `202509/10/11/12/202601`, test `202601..202605`, mismo flat/8 epochs/batch1024/seed/CUDA determinista. Aún no lanzado en este checkpoint.
 
+El runner terminó los cinco espacios en 125 s. Checkpoints SHA `A7EDB5FE/7C235EEB/9C3544E8/BA686333/ABD8DD69`; transiciones SHA `FDBB7989/37F077AE/091FBD7D/15DCC33B/014559B5`, con 20.361/21.470/22.850/24.403/26.038 filas totales. Test rows por fold: 1.608/1.109/1.380/1.553/1.635; todos los targets están exactamente a +5m y los tres tickers aparecen. Manifest SHA `F398B1105C848C45D9BEAE0C156646B8B17207BEA5D08660BB359C099337F7B8`. Junio ausente.
+
 ## Actualización 2026-07-11 05:25 CEST — preflight AdaJEPA shadow y primer paso pendiente
 
 Se verificó el paper primario AdaJEPA: la adaptación ocurre después de observar una transición real, usa esa transición como señal self-supervised y actualiza el world model dentro del loop antes de replantear; no usa reward/PnL. La adaptación local admisible será predictor-only, shadow, con un paso por transición observada, reset diario y rollback por norma.

@@ -7,6 +7,7 @@
 - Tests: igualdad `target_z(t)=z_t(t+1)` dentro del mismo espacio, gaps no puenteados, target exactamente +5m, cutoff probado y junio rechazado. Resultado `17 passed in 2.12s`; compile PASS.
 - Siguiente paso exacto: hashear/commitear este bloque; luego predeclarar un runner de cinco folds que llame al trainer con `--skip-oof --export-deploy-model`, train_end `202509/202510/202511/202512/202601` para tests `202601..202605`, y aplique el nuevo exportador a `202501..test`.
 - Runner ya predeclarado: `run_adajepa_coherent_spaces_v1.ps1`, SHA `0900B63B997B6136D09DB665187920262C89C23FCE4EFEA6478218674839E3BE`; contrato en `research_papers/JEPA/ADAJEPA_COHERENT_SPACES_PREDECLARATION_V1.md`. Próximo paso ahora: commit/push, comprobar procesos/GPU y ejecutar una sola instancia.
+- Build completado: cinco encoders flat, train_end `202509/10/11/12/202601`, test rows `1608/1109/1380/1553/1635`, +5m exacto y tres tickers. Manifest SHA `F398B1105C848C45D9BEAE0C156646B8B17207BEA5D08660BB359C099337F7B8`. Versionar 31 ficheros pequeños (~572 KB); excluir 5 `.pt` + 5 parquets (~102 MB).
 
 ## Actualización 2026-07-11 05:25 CEST — AdaJEPA shadow bloqueado hasta re-encoding coherente
 

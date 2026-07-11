@@ -40,3 +40,7 @@ Tests previos: `17 passed`; parse PowerShell, compile y diff-check PASS.
 ## Paso posterior, no autorizado todavía
 
 Tras auditar los cinco espacios se predeclarará aparte la comparación frozen vs adapter. No se elegirán learning rate, número de pasos o norma mirando test/PnL.
+
+## Resultado del build
+
+Los cinco folds terminaron en 125 s, con cutoffs/seeds/presupuesto correctos. Filas OOS: `1608/1109/1380/1553/1635`; todos los pares son +5m, contienen SPXW/QQQ/SPY y no incluyen junio. Manifest SHA-256 `F398B1105C848C45D9BEAE0C156646B8B17207BEA5D08660BB359C099337F7B8`.
