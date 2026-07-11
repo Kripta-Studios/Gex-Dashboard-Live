@@ -3,7 +3,7 @@ from __future__ import annotations
 import pytest
 import pandas as pd
 
-from neural.jepa.analyze_exact_objective_ablation import passes, ticker_summary
+from neural.jepa.analyze_exact_objective_ablation import _months, passes, ticker_summary
 from neural.jepa.walkforward_event_option_profile_selector import (
     default_profiles,
     filter_profiles,
@@ -50,3 +50,8 @@ def test_exact_objective_gate_requires_every_month_and_minimum_hold() -> None:
     assert passes(summary)
     rows[0]["exit_minutes"] = 29
     assert not passes(ticker_summary(pd.DataFrame(rows)))
+
+
+def test_abstained_fold_nan_month_lists_are_empty() -> None:
+    assert _months(float("nan")) == []
+    assert _months("") == []

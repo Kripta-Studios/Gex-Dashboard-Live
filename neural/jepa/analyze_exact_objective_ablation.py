@@ -29,7 +29,9 @@ def sha256(path: Path) -> str:
 
 
 def _months(value: object) -> list[str]:
-    return [part.strip() for part in str(value or "").split(",") if part.strip()]
+    if value is None or pd.isna(value):
+        return []
+    return [part.strip() for part in str(value).split(",") if part.strip() and part.strip().lower() != "nan"]
 
 
 def load_cell(root: Path, arm: str, ticker: str) -> tuple[pd.DataFrame, pd.DataFrame, dict]:
@@ -96,15 +98,15 @@ def report(payload: dict) -> str:
         "",
         "Comparación de un solo factor: regresión del retorno ejecutable frente a probabilidad de win, con bucket y contrato fijos.",
         "",
-        "| Arm | Ticker | Trades | WR | PF | PnL (R) | Min/mes | Meses + | Hold min | Gate |",
-        "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |",
+        "| Arm | Ticker | Sel/Abs | Trades | WR | PF | PnL (R) | Min/mes | Meses + | Hold min | Gate |",
+        "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |",
     ]
     for arm in ARMS:
         for ticker in TICKERS:
             row = payload["arms"][arm]["tickers"][ticker]
             hold = "n/a" if row["min_hold_minutes"] is None else f"{row['min_hold_minutes']:.0f}"
             lines.append(
-                f"| {arm} | {ticker} | {row['trades']} | {100*row['win_rate']:.2f}% | "
+                f"| {arm} | {ticker} | {row['selected_folds']}/{row['abstained_folds']} | {row['trades']} | {100*row['win_rate']:.2f}% | "
                 f"{row['profit_factor']:.3f} | {row['pnl_return']:+.3f} | {row['min_month_trades']} | "
                 f"{100*row['positive_month_rate']:.0f}% | {hold} | {row['passes_full_gate']} |"
             )
@@ -114,6 +116,7 @@ def report(payload: dict) -> str:
         f"- Win arm full gate: `{payload['decision']['win_meets_full_ticker_gate']}`.",
         f"- Junio de 2026 sellado: `{payload['june_2026_sealed']}`.",
         "- Este resultado no altera ni promociona producción.",
+        "- Si ambos arms fallan, la predeclaración exige traducir el stream legacy a las mismas filas/exits antes de abrir otro modelo.",
         "",
     ]
     return "\n".join(lines)

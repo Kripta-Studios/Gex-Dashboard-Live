@@ -39,6 +39,8 @@ Actualización 2026-07-11 12:10 CEST: el skip directo de momentum 5/15/30m queda
 
 Actualización 2026-07-11 12:20 CEST: se predeclara el primer aislamiento del mecanismo: GBT de retorno ejecutable frente a GBT de probabilidad de win, manteniendo exactamente bucket live, features, folds, caps/cooldowns y selector. No hay JEPA ni búsqueda entre deltas/scopes. La prueba usa historia 2022–2025 y cinco meses externos sellados hasta mayo; solo si el objetivo recupera edge se estudiará backfill/guard.
 
+Actualización 2026-07-11 12:35 CEST: ambos objetivos exactos fallaron; return abstuvo 15/15 y win solo operó dos folds SPY, ambos OOS negativos. La comparación trade-level revela que toda la rentabilidad dense15 legacy se concentraba antes de 10:30, donde sus niveles IB/Fibonacci y el filtro near-level miraban hasta el final de la ventana 09:30–10:30. El siguiente experimento será una vista temprana verdaderamente causal sin ninguna feature ni selección derivada del IB incompleto; no se atribuirá ese edge filtrado al modelo.
+
 ## 2. Baseline causal a superar
 
 | Scope | Trades | WR | PF | PnL (R) | Min trades/mes | Meses positivos |

@@ -17,6 +17,14 @@ D:/ThetaData/data_underlying_derived/SPY
 
 Hardware local: RTX 5070 Ti con 12 GB VRAM, Ryzen 9 con 32 hilos y 32 GB RAM. Usar CUDA determinista y batches ajustados a VRAM para entrenamiento/inferencia; paralelizar carga y transformaciones CPU sin crear corridas duplicadas.
 
+## Actualización 2026-07-11 12:35 CEST — objetivo cerrado; edge legacy era pre-10:30 y no causal
+
+- Una sola ejecución completó 30 folds de entrenamiento en ~2 minutos usando 28 hilos. El analizador falló después por `NaN` en folds abstain; fix + test, sin relanzar modelos.
+- Return: `0/15` folds seleccionados. Win: SPXW/QQQ `0/10`; SPY solo `2/5`, con 42 OOS trades, WR `28,57%`, PF `0,602`, `-6,167R`, meses no operados y hold mínimo 30m. Ambos arms rechazados.
+- Causa localizada mediante traducción del stream dense15 legacy: 233/305 trades Jan-May entraban antes de 10:30. Esa franja produjo legacy `+14,7R/+14,4R/+11,4R` en QQQ/SPXW/SPY; después de 10:30 los tres fueron negativos (`-1,2/-0,9/-1,1R`) incluso con labels favorables.
+- El edge temprano no es promocionable: `build_event_option_dataset._session_levels` usa IB 09:30–10:30 completo, `near_level_only` selecciona con esos niveles y live snapshot rehúsa construir hasta completar IB. Usarlo a 10:00 filtra 30m futuros.
+- Próxima corrección: dataset separado 10:00–10:25 con `near_level_only=false` y allowlist que excluya todo IB/Fib/nearest-level/context-IB. Primero demostrar que las filas/features son prefix-only; después GBT win exacto. No tocar snapshot/live ni producción.
+
 ## Actualización 2026-07-11 12:20 CEST — objetivo exacto return vs win listo
 
 - Se aisló el primer mecanismo, no arquitectura: mismo GBT/features/filas/bucket/selector, cambiando solo regresión de retorno ejecutable frente a probabilidad de win.

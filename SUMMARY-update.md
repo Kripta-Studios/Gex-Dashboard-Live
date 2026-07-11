@@ -14,6 +14,14 @@ D:/ThetaData/data_underlying_derived/{SPXW,QQQ,SPY}
 
 Recursos locales: RTX 5070 Ti de 12 GB VRAM, Ryzen 9 de 32 hilos y 32 GB RAM. Los entrenamientos deben aprovechar CUDA determinista y la preparación de datos debe paralelizar CPU de forma reproducible.
 
+## Actualización 2026-07-11 12:35 CEST — return/win rechazado y causa temporal identificada
+
+La ablación exacta terminó los seis jobs y 30 folds en una sola ejecución. Un bug posterior interpretó campos vacíos de abstención como `nan`; se corrigió y se volvió a ejecutar solo el analizador. Return no seleccionó ningún fold. Win tampoco seleccionó SPXW/QQQ y en SPY seleccionó enero/marzo: 42 trades OOS, WR `28,57%`, PF `0,602`, `-6,167R`, hold mínimo 30m. Ningún arm cumple.
+
+La traducción trade-level del candidato dense15 histórico explica la discrepancia: de 305 operaciones Jan-May, 233 son anteriores a 10:30. Solo 10:00–10:29 genera el edge legacy: QQQ `+14,7R`, SPXW `+14,4R`, SPY `+11,4R`; desde 10:30, respectivamente `-1,2R/-0,9R/-1,1R`. Por tanto no era la arquitectura JEPA la que eliminaba una señal general: el dataset causal1030 eliminó exactamente la única franja rentable.
+
+Esa franja legacy usaba IB/Fibonacci calculados con la ventana completa 09:30–10:30 y `near_level_only`, por lo que a las 10:00 contiene hasta 30 minutos futuros; el snapshot live actual exige IB completo y no la puede reproducir. El siguiente trabajo no reutilizará ese leakage: se construirá una vista 10:00–10:25 sin filtro de cercanía y con exclusión física de todas las features IB/Fib/nearest/context-IB, se auditará prefix-only y solo entonces se probará el head win exacto. Junio y producción permanecen intactos.
+
 ## Actualización 2026-07-11 12:20 CEST — ablación de objetivo exacto predeclarada
 
 La primera corrección del mecanismo está lista sin abrir otra arquitectura: dos arms idénticos comparan `regression_l1` del retorno ask→bid frente a clasificación `return>0`. Se fijan entrenamiento target, features live, bucket SPXW d25 y QQQ/SPY d35, caps/cooldowns 4/2/1 y 0/30/0, 2022–2025 para train, tres meses inner y tests externos `202601..202605`.
