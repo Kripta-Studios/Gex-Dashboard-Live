@@ -1,0 +1,3 @@
+ticker,month,mode,trades,WR,PF,PnL,max_drawdown,min_hold
+QQQ,202602,ADMITTED_ONLY,21,0.609,1.444,2.956,-2.051,30
+QQQ,202602,REJECTED_ONLY,1,1.0,999.0,0.596,0.0,72

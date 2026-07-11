@@ -1,0 +1,2 @@
+artifact_path,status,resolution
+fold_policy_artifacts/fold_policy_202602.json,MISSING_GATE_INFO_IN_V1,Corrected for future runs in walkforward_event_option_profile_selector.py

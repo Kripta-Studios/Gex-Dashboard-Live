@@ -1,7 +1,9 @@
 # Regime Gate Ablation V1 — Reproducibility & Audit Report
 
 **Date:** 2026-07-11
-**Commit SHA:** c5e5de30113c41551a8cc28564c76b911762142e
+**Experiment code commit:** c5e5de30113c41551a8cc28564c76b911762142e
+**Audit/report commit:** 779b789e94c9cc14120ecbc9d4949cc8b725c898
+**Dataset SHA-256:** a1970d2cbd7ef8f96a8b2d9fc092f4b323513c03895e73c2058f39b11c7cbef5
 **Status:** COMPLETED / CLOSED
 
 ---

@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "dataset_sha256": "a1970d2cbd7ef8f96a8b2d9fc092f4b323513c03895e73c2058f39b11c7cbef5",
+  "commit_sha": "9cc585af7bee23786a99326a83be22593f64d8a6",
+  "c0_internal_equivalence": "PASS",
+  "threshold_reconstruction_status": "THRESHOLD_MATCH"
+}

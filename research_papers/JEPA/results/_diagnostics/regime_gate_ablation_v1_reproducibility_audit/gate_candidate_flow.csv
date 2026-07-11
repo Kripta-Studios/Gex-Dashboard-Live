@@ -1,0 +1,5 @@
+step,QQQ_202602_count,SPXW_202602_count
+1. Raw candidates,562,668
+2. Passing model threshold,562,668
+3. Passing regime gate,514,133
+4. Executed by scheduler,21,9

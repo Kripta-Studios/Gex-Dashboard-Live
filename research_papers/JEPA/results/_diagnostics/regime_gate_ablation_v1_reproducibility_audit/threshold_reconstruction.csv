@@ -1,0 +1,12 @@
+arm,ticker,test_month,feature,quantile,direction,train_end,train_rows,reconstructed_threshold,classification
+R1,SPXW,202602,phys_d25_iv_skew_put_minus_call,0.2,below,202510,8638,0.016400009,THRESHOLD_MATCH
+R1,QQQ,202602,phys_d35_iv_skew_put_minus_call,0.2,above,202510,7825,0.012700021,THRESHOLD_MATCH
+R1,SPY,202602,phys_d35_iv_skew_put_minus_call,0.2,above,202510,8631,0.010300003,THRESHOLD_MATCH
+R1,SPY,202603,phys_d35_iv_skew_put_minus_call,0.6,below,202511,9346,0.020099998,THRESHOLD_MATCH
+R1,SPY,202605,phys_d35_iv_skew_put_minus_call,0.8,below,202601,11222,0.0264,THRESHOLD_MATCH
+R2,SPY,202602,phys_d25_spread_mean,0.6,below,202510,8631,0.031318785,THRESHOLD_MATCH
+R2,SPY,202603,phys_d35_spread_mean,0.4,below,202511,9346,0.016394528,THRESHOLD_MATCH
+R2,QQQ,202604,phys_d25_spread_mean,0.4,below,202512,9322,0.02509805,THRESHOLD_MATCH
+R3,QQQ,202602,phys_abs_ret_5m_bps,0.6,below,202510,7825,4.565963405,THRESHOLD_MATCH
+R3,SPY,202605,phys_abs_ret_5m_bps,0.8,below,202601,11222,6.390876888,THRESHOLD_MATCH
+R4,QQQ,202602,ib_range_bps,0.4,above,202510,7677,56.721145443,THRESHOLD_MATCH
