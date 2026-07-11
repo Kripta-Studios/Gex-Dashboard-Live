@@ -5,6 +5,14 @@
 
 > Esta bitácora se actualiza durante el trabajo. Solo se marca como completado lo reproducido en esta sesión. No implica despliegue, commit ni push salvo que se indique expresamente.
 
+## Actualización 2026-07-11 07:00 CEST — auditoría payoff cerrada; ambas gates fallan
+
+La corrida única terminó 5/5 meses y 15/15 celdas por arm en 6,7 s, verificando hashes de los diez checkpoints. Frozen/adapted superaron el side constante solo en `7/15` y `8/15` celdas (requerido >=10); medianas de diferencia `-0,01349/+0,01877`. Spearman score-retorno fue positivo en `7/15` y `9/15`, medianas `-0,00684/+0,01505`, muy por debajo del requisito `>0,10`. No se autoriza una loss de calibración/ranking.
+
+El oracle-side no causal obtiene retorno medio `+0,38..+0,40`, y 71,95% de eventos tienen exactamente un lado positivo: hay headroom en labels pero no señal causal extraída. Adapted sigue con PF medio por ticker `0,813/0,828/0,891` y WR `41,02%/39,18%/43,72%`; ninguna celda alcanza PF1,3.
+
+El mismatch temporal queda identificado: payoff/hold mínimo 30m frente a única motion feature h1=5m, aunque los checkpoints ya contienen h6=30m. El siguiente factor permitido será reemplazar h1 por h6, manteniendo todo lo demás congelado y sin barrer h3/h12 ni combinar Ada. Informe `.../adajepa_payoff_separability_202601_202605_v1/REPORT.md`; summary SHA `984EFF37...A21B`.
+
 ## Actualización 2026-07-11 06:50 CEST — auditoría payoff predeclarada, aún no ejecutada
 
 Tras cerrar AdaJEPA downstream se implementó una auditoría no selectiva que recarga los diez checkpoints exactos y descompone side CALL/PUT, calibración/ranking y techo oracle sobre las mismas 15 celdas. No entrena, no busca threshold ni genera policy. La baseline constante usa únicamente train anterior a los tres meses internos; oracle-side queda explícitamente marcado no causal.

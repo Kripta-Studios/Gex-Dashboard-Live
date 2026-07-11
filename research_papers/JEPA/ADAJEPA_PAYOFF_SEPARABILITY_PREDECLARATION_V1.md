@@ -46,3 +46,9 @@ Ninguna rama autoriza relajar PF/WR/18 trades/mes/meses positivos, abrir junio, 
 | Runner | `4638FB1E1CBF4E6D8B20A4F8C0AE0C3F1C5A5875F59B23A481490D962F40A708` |
 
 El exportador rápido implementa algebraicamente el mismo SGD diagonal float32 y tiene paridad con la referencia Torch (`atol=2e-7`, `rtol=2e-6`). Tests focalizados `7 passed`; parse y compile PASS. La CPU Ryzen ejecuta la secuencia pequeña con menos overhead que miles de kernels GPU; no hay entrenamiento en esta auditoría.
+
+## Resultado final
+
+Frozen/adapted obtuvieron solo `7/15` y `8/15` wins de side frente a constante. Spearman score-retorno fue positivo en `7/15` y `9/15`, con medianas `-0,00684/+0,01505`; ambas gates fallan. `advance_to_calibration_or_ranking_loss=false`.
+
+El oracle no causal sí muestra headroom y 71,95% de eventos con exactamente un side positivo. El mecanismo pendiente es el mismatch h1=5m frente a hold>=30m; solo h1→h6 puede predeclararse como siguiente factor. Informe: `results/_diagnostics/adajepa_payoff_separability_202601_202605_v1/REPORT.md`.

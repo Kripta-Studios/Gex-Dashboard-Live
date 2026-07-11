@@ -187,6 +187,8 @@ Actualización final 2026-07-11 06:40 CEST: el downstream separado queda rechaza
 
 Actualización 2026-07-11 06:50 CEST: esa auditoría quedó predeclarada antes de ejecutarse. Reutiliza los checkpoints ya congelados y compara head, side constante train-only y oracle-side no causal en exactamente los mismos eventos. La decisión siguiente depende de dos gates diagnósticas fijadas de antemano: mejora de side frente a constante en >=10/15 celdas y Spearman score-retorno >0,10 con signo positivo en >=10/15. No hay nueva arquitectura, selección ni PnL promocionable en esta fase.
 
+Actualización final 2026-07-11 07:00 CEST: ambas gates fallaron. Frozen/adapted ganaron side en 7/15 y 8/15 celdas; Spearman fue positivo en 7/15 y 9/15 con medianas `-0,00684/+0,01505`. No se probará una loss de ranking/calibración. El oracle-side no causal confirma headroom, pero el predictor está casi al azar al escoger side. La nueva hipótesis causal es temporal y ajena a la cola de arquitecturas: el head usó solo h1=5m para outcomes con hold>=30m, pese a disponer de h6=30m en el checkpoint. Se permitirá exclusivamente una ablación h1→h6, sin h3/h12 ni otros cambios.
+
 El downstream quedó predeclarado cambiando exclusivamente frozen-delta por adapted-delta en el mismo payoff head exacto d25/d35. Targets/errores quedan excluidos de features y la decisión exige gates completas por ticker, no PnL agregado.
 
 Informe, hashes y tablas de la ablación de historia quedaron publicados en `8da7a7a`.

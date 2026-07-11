@@ -1,0 +1,48 @@
+{
+  "adapted_minus_frozen": {
+    "mean_return_wins": 9,
+    "median_mean_return": 0.007641197518439958,
+    "median_score_return_spearman": 0.02893387043342211,
+    "median_side_accuracy": 0.005181347150259086,
+    "side_accuracy_wins": 9
+  },
+  "args": {
+    "adapter_grad_clip": 1.0,
+    "adapter_learning_rate": 0.05,
+    "adapter_max_parameter_norm": 0.5,
+    "data": "tmp/event_option_dataset_execquote_causal1030_202501_202605_v1_physics/event_option_dataset.parquet",
+    "downstream_dir": "research_papers/JEPA/results/_diagnostics/adajepa_downstream_frozen_vs_adapted_202601_202605_v1",
+    "infer_batch_size": 4096,
+    "output_dir": "research_papers/JEPA/results/_diagnostics/adajepa_payoff_separability_202601_202605_v1",
+    "spaces_dir": "research_papers/JEPA/results/_diagnostics/adajepa_shadow_coherent_spaces_202601_202605_seed20260618_v1"
+  },
+  "arms": {
+    "adapted": {
+      "cells": 15,
+      "head_beats_constant_side_cells": 8,
+      "head_mean_return_beats_constant_cells": 12,
+      "median_exactly_one_side_positive_rate": 0.7195402298850575,
+      "median_head_minus_constant_mean_return": 0.02509237715897074,
+      "median_head_side_accuracy": 0.5094991364421416,
+      "median_oracle_side_headroom": 0.45008750623937727,
+      "median_score_return_spearman": 0.015047813418047673
+    },
+    "frozen": {
+      "cells": 15,
+      "head_beats_constant_side_cells": 7,
+      "head_mean_return_beats_constant_cells": 9,
+      "median_exactly_one_side_positive_rate": 0.7195402298850575,
+      "median_head_minus_constant_mean_return": 0.016097171422895497,
+      "median_head_side_accuracy": 0.5043177892918825,
+      "median_oracle_side_headroom": 0.46433560137865154,
+      "median_score_return_spearman": -0.006839020027169088
+    }
+  },
+  "data_sha256": "AB144DBAD1F6F103C771AE119A1172AC728BC11B6AA79DB5FB0648561673F720",
+  "diagnostic_only_no_policy_selection": true,
+  "downstream_summary_sha256": "9B7007DA7C25469FFF1971487D91E9435D7694475501D130F0753C00FD41BC0D",
+  "june_2026_sealed": true,
+  "production_live_ready": false,
+  "schema_version": 1,
+  "spaces_manifest_sha256": "F398B1105C848C45D9BEAE0C156646B8B17207BEA5D08660BB359C099337F7B8"
+}

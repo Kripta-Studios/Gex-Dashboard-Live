@@ -1,5 +1,14 @@
 # CODEX-HANDOFF.md — Estado para continuación por otro agente
 
+## Actualización 2026-07-11 07:00 CEST — separabilidad cerrada; siguiente factor h6
+
+- Runner terminó una sola vez en 6,7 s; no quedan procesos. Inputs/checkpoints/hash/junio PASS. Salida `.../adajepa_payoff_separability_202601_202605_v1/`.
+- Frozen/adapted: side wins vs constante `7/15` y `8/15`; medianas Δ `-0,01349/+0,01877`. Score-retorno positivo `7/15` y `9/15`; medianas `-0,00684/+0,01505`. Fallan ambas reglas predeclaradas; no probar ranking/calibration loss.
+- Por ticker adapted sigue negativo: PF medio QQQ/SPXW/SPY `0,813/0,828/0,891`, WR `41,02%/39,18%/43,72%`. Oracle no causal es fuerte y 71,95% de eventos tienen un solo side positivo: label headroom no equivale a predictibilidad.
+- Report `.../REPORT.md`; hashes summary/cells/manifest `984EFF37...A21B` / `A6EA9C62...8F4E` / `31CDEA81...A06`.
+- Mecanismo nuevo: downstream solo recibe motion h1=5m para holds 30–180m. Checkpoints flat contienen `horizons=[1,3,6,12]`; h6 alinea exactamente con mínimo 30m.
+- Primer paso pendiente: publicar cierre; después implementar/exportar predicción h6 sobre exactamente las mismas filas h1 y predeclarar h1 vs h6 con mismo z/head/folds/seeds/budget/gates. No incluir adapter, no probar h3/h12, no abrir junio ni tocar live/systemd.
+
 ## Actualización 2026-07-11 06:50 CEST — separabilidad payoff lista para ejecutar
 
 - Nuevo analizador `analyze_adajepa_payoff_separability.py`: carga/verifica los diez checkpoints downstream y mide side, baseline constante train-only, oracle-side, regret y score-retorno en test `202601..202605`; no selecciona policy.
