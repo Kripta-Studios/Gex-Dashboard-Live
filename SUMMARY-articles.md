@@ -129,6 +129,13 @@ claves executable con spot <=0,000572 bps. La auditoría detectó un riesgo caus
 transferible: floor-join de quotes sub-minuto puede incorporar `HH:MM:30` a una
 decisión `HH:MM:00`; el contrato corregido exige timestamp exacto.
 
+La evaluación física posterior separa magnet hit con distance/approach (D0 AUC
+mediana 0,805), pero wall strength/persistence/IB no añade mejora pareada y
+rejection vs break queda cerca de azar. Esto refina la hipótesis: la ubicación del
+wall atrae, pero OI diario no identifica el inventario dealer ni la presión
+intradía que decide defensa o ruptura. La siguiente fuente debe medir flujo de
+superficie observable, no aumentar capacidad del encoder.
+
 Primera evaluación autorizada: física del subyacente, no PnL. Los future prices se
 usan solo como labels para `magnet_hit`, `true_rejection` y `accepted_break` a
 30/60/120/180m. El wall state debe superar un control distance-only en los tres

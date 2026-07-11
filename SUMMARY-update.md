@@ -194,9 +194,15 @@ Cobertura de las 95.424 claves executable 100% por ticker y spot máximo
 entero, sin imputación ni eventos perdidos. Un primer build descubrió y corrigió
 uso futuro de quotes `:30` al redondearlos a minuto; ahora solo usa `HH:MM:00`.
 
-Separabilidad física V1 ya predeclarada, aún sin construir labels: cuatro walls
+Diseño congelado de separabilidad física V1: cuatro walls
 CALL/PUT gamma/delta, magnet/rejection/break a 30/60/120/180m, D0 vs S1 vs S2
 state+IB, holdouts 2024/2025 y gates fijas sobre 48 celdas por arm.
+
+Resultado ejecutado: REJECTED. 26.090 candidatos, 48/48 celdas válidas. S1 gana
+17/48 (mediana ΔAUC -0,00154); S2 gana 22/48 (mediana -0,000077; p=0,567), AP
+19/48 y log-loss 17/48. Magnet hit ya es separable por distancia (D0 mediana AUC
+0,805), pero rejection/break queda 0,511/0,519/0,516 para D0/S1/S2. Mínimo
+mensual resuelto 30m QQQ/SPXW/SPY 6/0/0; 60m 14/4/5. No se autoriza payoff.
 
 Debe producir, solo con snapshot actual:
 

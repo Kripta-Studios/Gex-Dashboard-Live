@@ -1,0 +1,21 @@
+{
+  "planned_cells": 48,
+  "valid_paired_cells": 48,
+  "s1_auc_wins": 17,
+  "s1_median_auc_delta": -0.0015405195563003016,
+  "s2_auc_wins": 22,
+  "s2_median_auc_delta": -0.00007719680583367916,
+  "wilcoxon_one_sided_p": 0.5672366874856878,
+  "average_precision_wins": 19,
+  "log_loss_wins": 17,
+  "aggregate_pass": false,
+  "frequency_pass": false,
+  "calibration_pass": false,
+  "ticker_summary": {
+    "QQQ": {"wins": 6, "median_auc_delta": -0.0067214419098162725, "median_s2_auc": 0.660788260270938, "primary_median_auc_delta": -0.002506223446745448, "passed": false},
+    "SPXW": {"wins": 8, "median_auc_delta": 0.002350428515352332, "median_s2_auc": 0.7150835008544816, "primary_median_auc_delta": -0.00007719680583367916, "passed": false},
+    "SPY": {"wins": 8, "median_auc_delta": 0.0010134792743488608, "median_s2_auc": 0.6638269557439798, "primary_median_auc_delta": -0.001496445940890434, "passed": false}
+  },
+  "advance_to_option_payoff": false,
+  "production_live_ready": false
+}

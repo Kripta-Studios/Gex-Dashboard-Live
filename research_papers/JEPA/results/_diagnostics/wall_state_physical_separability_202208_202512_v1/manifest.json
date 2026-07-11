@@ -1,0 +1,20 @@
+{
+  "schema": "wall_state_physical_separability_v1",
+  "status": "REJECTED",
+  "git_commit": "7eef7dd566c21a7dd0ed27def0eb0aa05254793c",
+  "input_hashes": {
+    "walls": "94e311e0e25ff7956347597a8734e82e07ab05753f42acaa26876c58752df8ef",
+    "events": "d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408",
+    "prior_ib": "5f908e11090ea6566e3eadeba0a436ab5d01cf99955d6acc5050eae264fe13b5",
+    "manifest": "5431c2bf932fef6ce1ba34117cc869feb78063fbc1aa3989017fdbcb5b66dc88"
+  },
+  "script_sha256": "a0405d3e22fede51823d7f9b24295de6d706ec428c60be3ec2a4bf0a09a71f9f",
+  "candidate_rows": 26090,
+  "candidate_rows_by_ticker": {"QQQ": 8132, "SPXW": 9102, "SPY": 8856},
+  "candidate_labels_sha256": "901604898691809eba261f2b9ada71a931446b495958ed73f784eae0327a34bb",
+  "cells_sha256": "bbe7386f4214d42383e1a3654e62d636fc234e88d3ccba818b161e7f93dc0377",
+  "summary_sha256": "046eed96835cf08a87ad0c153e53385d48d9e2d0fd50abe0e4abef0789c2d43b",
+  "label_errors": [],
+  "production_modified": false,
+  "june_2026_used": false
+}

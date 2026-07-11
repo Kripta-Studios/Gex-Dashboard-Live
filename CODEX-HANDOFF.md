@@ -236,9 +236,18 @@ research_papers/JEPA/results/_diagnostics/wall_state_gex_dex_202201_202512_v1/ma
 2. Ejecutar la separabilidad física ya congelada en
    `WALL_STATE_PHYSICAL_SEPARABILITY_PREDECLARATION_V1.md`: D0 distance-only,
    S1 state y S2 state+IB, holdouts anuales 2024/2025 y 48 celdas por arm.
-3. Solo si S2 supera todas las gates en los tres tickers, entrenar payoff
-   ask→bid nested. No abrir junio hasta congelar un único protocolo y recibir
-   autorización explícita.
+3. **Resultado:** REJECTED. 26.090 candidatos; S1 gana 17/48, mediana ΔAUC
+   `-0,00154`; S2 gana 22/48, mediana `-0,000077`, `p=0,567`. Rejection/break
+   queda cerca de azar y falla frecuencia mensual. No entrenar payoff.
+4. Auditar/predeclarar como nueva fuente un proxy intradía de surface flow con
+   OHLC `volume/count` completado en `t-1` y quotes bid/ask actuales cerca del
+   wall. Comparar contra D0 sin retunar el wall-state rechazado.
+
+Resultado completo:
+
+```text
+research_papers/JEPA/results/_diagnostics/wall_state_physical_separability_202208_202512_v1/
+```
 
 ## 10. Git y worktree
 
