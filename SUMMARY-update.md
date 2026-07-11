@@ -601,3 +601,41 @@ Dictamen: **no avanzar a objetivos MJEPA intra-modal/cross-modal**. Modal empeor
 Validación final: `py_compile` PASS y `64 passed in 3.88s` en la suite focalizada completa. No se modificó systemd, no se promovió ninguna policy y junio no se abrió.
 
 El siguiente experimento admisible debe volver al baseline flat y cambiar un solo factor. Dado el histórico 2022–2026 disponible, el primer paso futuro es auditar cobertura/hashes 2022–2024 y predeclarar una ablación `train desde 2022` frente a `train desde 2025`, con igual arquitectura, seeds y presupuesto, inner selection causal y evaluación enero–mayo de 2026. No ejecutar esa ablación hasta congelar el manifest y confirmar labels executable_quote reproducibles para todo el rango.
+
+## 13. Inicio de la ablación de historia flat: auditoría ThetaData 2022–2026
+
+Hardware disponible y contrato de cómputo:
+
+```text
+GPU: NVIDIA GeForce RTX 5070 Ti Laptop, 12.227 MiB VRAM
+CPU: Ryzen 9, 32 hilos
+RAM: 32 GB
+```
+
+CUDA y el paralelismo CPU se usarán de forma simétrica entre arms. En la auditoría inicial la GPU tenía unos 2,2 GB libres por procesos gráficos, por lo que antes de entrenar se exige un preflight de memoria; no se cambiará un solo arm a CPU por un OOM.
+
+Se generó un manifest físicamente limitado a `20220101..20260531`:
+
+```text
+research_papers/JEPA/results/_diagnostics/thetadata_manifest_spxw_spy_qqq_202201_202605_sealed_v1/
+rows = 6.425
+complete_rows = 6.425
+date_min = 20220103
+date_max = 20260529
+zero_dte rows = 3.116
+duplicate zero_dte keys = 0
+manifest SHA-256 = 88BE8A2FF44C18FB57FCA360D31DEF574DDBB0419A792FC88349942711D2974A
+summary SHA-256 = 5075E530CC8BBDF5613028B42071EFBFF21DCB73F586735AC483640339A14B19
+```
+
+Sesiones 0DTE completas:
+
+| Ticker | 2022 | 2023 | 2024 | 2025 | Ene–may 2026 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| QQQ | 170 | 250 | 252 | 250 | 99 |
+| SPXW | 220 | 250 | 252 | 250 | 102 |
+| SPY | 170 | 250 | 252 | 250 | 99 |
+
+Las menores cifras 0DTE de 2022 no son rutas incompletas: cada fila del manifest tiene Greeks, IV, OHLC, OI y spot, y existen 250 filas front-weekly por ticker ese año. Se tratará como cambio histórico del calendario de expiraciones, no se imputarán sesiones 0DTE inexistentes.
+
+Runner predeclarado: `run_flat_history_dataset_build_v1.ps1`. Verifica hashes del manifest, builder y enhancer, falla ante salidas existentes salvo reanudación explícita, usa 24 workers conocidos como seguros para 32 GB RAM y replica exactamente el contrato causal previo: executable_quote ask→bid, trailing 50%/25%, stop 60%, TP 1000%, hold mínimo 30m, horizonte 180m, rejilla 10:30–14:30/5m, OI obligatorio y cutoff mayo 2026.

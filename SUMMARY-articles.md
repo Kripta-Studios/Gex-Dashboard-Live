@@ -144,3 +144,9 @@ La mejora de loss in-sample de modal (12/13 folds) no se reproduce en representa
 **La condición de avance de la sección 6 no se cumple.** No se ejecutarán pérdidas intra/cross-modal de MJEPA, semantic masking, VISReg/prototipos/Gram ni la cola jerárquica a partir de este encoder modal. Las corridas SMM v1/v2 parciales quedan solo como diagnóstico inválido/incompleto.
 
 Siguiente hipótesis de un solo factor, todavía no lanzada: ampliar el histórico del baseline flat desde 2025 a 2022 usando los datos ThetaData disponibles, tras reconstruir y hashear labels executable_quote homogéneos. Mantener arquitectura, seeds, presupuesto, selector nested y evaluación 202601–202605; junio continúa sellado.
+
+### Ablación de historia predeclarada
+
+El manifest sellado `202201..202605` contiene 3.116 sesiones 0DTE completas: QQQ/SPY tienen 170 en 2022 y 250/252/250 en 2023/2024/2025; SPXW tiene 220 y luego 250/252/250. Todas las 6.425 filas del manifest disponen de Greeks, IV, OHLC, OI y spot. Hash: `88BE8A2FF44C18FB57FCA360D31DEF574DDBB0419A792FC88349942711D2974A`.
+
+Se comparará exclusivamente `train_start=202201` frente a `train_start=202501` sobre dos vistas del mismo dataset causal sellado. Arquitectura flat, features, folds, seed, epochs, batch, horizontes, selector y runtime serán idénticos. El build usará hasta 24 procesos CPU; el entrenamiento usará la RTX 5070 Ti 12 GB solo si un preflight confirma que ambos arms caben con el mismo batch, sin fallback asimétrico.

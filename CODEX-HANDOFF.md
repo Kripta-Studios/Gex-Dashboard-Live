@@ -59,6 +59,20 @@
 4. Si los labels executable_quote son homogéneos, predeclarar una única ablación de historia para el encoder flat: train desde 2022 frente a train desde 2025, igual arquitectura/seed/presupuesto y selector nested runtime-equivalente.
 5. No ejecutar hasta versionar el manifest, estimar coste y fijar folds. Usar CUDA/32 hilos solo de forma simétrica en ambos arms.
 
+## Actualización 2026-07-11 02:43 CEST — historia 2022 predeclarada
+
+- Objetivo activo: continuar hasta un candidato rentable, sin ampliar gates ni abrir junio.
+- Hardware: RTX 5070 Ti Laptop 12.227 MiB, Ryzen 9/32 hilos, 32 GB RAM. La GPU mostraba ~2,2 GB libres al auditar; comprobar de nuevo antes de CUDA.
+- Manifest nuevo sellado a mayo: `research_papers/JEPA/results/_diagnostics/thetadata_manifest_spxw_spy_qqq_202201_202605_sealed_v1/`.
+- Manifest: 6.425/6.425 filas completas, 3.116 zero_dte, fechas `20220103..20260529`, cero claves 0DTE duplicadas.
+- Hash manifest: `88BE8A2FF44C18FB57FCA360D31DEF574DDBB0419A792FC88349942711D2974A`; hash summary: `5075E530CC8BBDF5613028B42071EFBFF21DCB73F586735AC483640339A14B19`.
+- Zero-dte por año QQQ: `170/250/252/250/99`; SPXW: `220/250/252/250/102`; SPY: `170/250/252/250/99` para 2022/2023/2024/2025/ene–may 2026.
+- Runner creado: `run_flat_history_dataset_build_v1.ps1`; parse PowerShell PASS.
+- Hash runner final: `DE5E71AC6690BDDEEF497213E1657F4D3B15DCC9A3FC17CC86064CF941737F17`; tests del builder: `9 passed in 0.42s`.
+- Hash builder: `6E89AAFED8A2BB66AA8EE80DF70644ECA189D0CE1D8C56F3812895430DAC4307`.
+- Hash enhancer: `3E420DB49315AFD9363C45B9F0FEFFA38732EFC116889D3D69B4417A94D2CB36`.
+- Próximo paso: commitear/pushear manifest+runner+docs, ejecutar el build causal reanudable y auditar filas/hashes antes de entrenar.
+
 ### Objetivo cuantitativo obligatorio
 
 Para cada ticker (`SPXW`, `QQQ`, `SPY`) y no solo en agregado, cualquier candidato debe cumplir en el walk-forward:
