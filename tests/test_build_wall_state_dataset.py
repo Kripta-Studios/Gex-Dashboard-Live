@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from pathlib import Path
+import subprocess
+import sys
 
 import pandas as pd
 import pytest
@@ -102,3 +104,16 @@ def test_event_coverage_deduplicates_event_profiles(tmp_path):
 def test_process_sessions_rejects_oversubscription():
     with pytest.raises(ValueError, match="1..16"):
         process_sessions([], 17)
+
+
+def test_script_entrypoint_resolves_repo_package():
+    script = Path(__file__).resolve().parents[1] / "neural" / "jepa" / "build_wall_state_dataset.py"
+    result = subprocess.run(
+        [sys.executable, str(script), "--help"],
+        cwd=script.parents[2],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "sealed 2022-2025" in result.stdout
