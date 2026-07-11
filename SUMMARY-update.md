@@ -5,6 +5,12 @@
 
 > Esta bitácora se actualiza durante el trabajo. Solo se marca como completado lo reproducido en esta sesión. No implica despliegue, commit ni push salvo que se indique expresamente.
 
+## Actualización 2026-07-11 06:50 CEST — auditoría payoff predeclarada, aún no ejecutada
+
+Tras cerrar AdaJEPA downstream se implementó una auditoría no selectiva que recarga los diez checkpoints exactos y descompone side CALL/PUT, calibración/ranking y techo oracle sobre las mismas 15 celdas. No entrena, no busca threshold ni genera policy. La baseline constante usa únicamente train anterior a los tres meses internos; oracle-side queda explícitamente marcado no causal.
+
+El adaptador se reproduce con SGD diagonal analítico float32 y paridad contra Torch (`atol=2e-7`, `rtol=2e-6`), reduciendo overhead en el Ryzen; tests `7 passed`. Predeclaración `research_papers/JEPA/ADAJEPA_PAYOFF_SEPARABILITY_PREDECLARATION_V1.md`; analizador SHA `B2B8CB0C...A1C3`, runner `4638FB1E...A708`. Datos, checkpoints, folds y junio siguen sellados. En este checkpoint todavía no se ha ejecutado el runner.
+
 ## Actualización 2026-07-11 06:40 CEST — downstream AdaJEPA terminado y rechazado
 
 La corrida predeclarada terminó 5/5 folds por arm en ~675 s, sin OOM, fallback ni procesos huérfanos. Ambos arms preservaron datos/labels/head/folds/seeds/presupuesto y difirieron solo en `frozen_dz` frente a `adapted_dz`; provenance y runtime replay pasan, junio no aparece y ningún paquete se marcó live-ready.

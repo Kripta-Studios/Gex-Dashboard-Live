@@ -1,5 +1,13 @@
 # CODEX-HANDOFF.md — Estado para continuación por otro agente
 
+## Actualización 2026-07-11 06:50 CEST — separabilidad payoff lista para ejecutar
+
+- Nuevo analizador `analyze_adajepa_payoff_separability.py`: carga/verifica los diez checkpoints downstream y mide side, baseline constante train-only, oracle-side, regret y score-retorno en test `202601..202605`; no selecciona policy.
+- Predeclaración `ADAJEPA_PAYOFF_SEPARABILITY_PREDECLARATION_V1.md`; script SHA `B2B8CB0C...A1C3`, test SHA `60C27B4E...436A`, runner SHA `4638FB1E...A708`; `7 passed`, compile/parse PASS.
+- Fast adapter float32 tiene paridad con Torch. Se usa CPU/16 hilos porque esta secuencia de operaciones de 32 dimensiones sufría overhead de kernels diminutos en GPU; entrenamientos futuros seguirán usando la RTX 5070 Ti.
+- Gates diagnósticas congeladas: side head > constante en >=10/15; event score Spearman positivo en >=10/15 y mediana >0,10. Solo su patrón decide qué objetivo aislado podría probarse después.
+- Próximo paso exacto: commit/push de esta predeclaración, reauditar procesos y ejecutar una única instancia de `run_adajepa_payoff_separability_v1.ps1`. No cambiar métricas/reglas después de leer resultados y no relanzar el downstream.
+
 ## Actualización 2026-07-11 06:40 CEST — AdaJEPA downstream cerrado y rechazado
 
 - `run_adajepa_downstream_v1.ps1` terminó una sola instancia, 5/5 folds frozen y 5/5 adapted (~675 s). No queda Python/CUDA/pytest activo; no relanzar.

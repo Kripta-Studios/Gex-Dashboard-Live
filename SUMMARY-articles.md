@@ -185,6 +185,8 @@ Resultado: mejora reproducible en 15/15 celdas (`p=3,05e-05`) y 277/281 días (`
 
 Actualización final 2026-07-11 06:40 CEST: el downstream separado queda rechazado. Frozen y adapted evaluaron 210 candidatos internos cada uno y ninguno pasó conjuntamente PF1,3, WR50%, mínimo 18 trades por mes y todos los meses positivos; las 30 policies se abstuvieron y no hubo trades OOS. Adapted mejoró MAE en 13/15 celdas (`p=0,006226`) pero no RMSE (7/15, `p=0,680664`) ni el gate económico. `adapted_meets_full_ticker_gate=false`; no se retunará esta variante ni se usará para live. Con Var-JEPA, PatchCore y AdaJEPA cerrados, el siguiente trabajo no será otra arquitectura de la cola: primero debe auditarse la separabilidad/oracle del contrato exacto y localizar si el fallo está en elegir CALL/PUT, calibrar cola/payoff o en ausencia de señal. Solo después cabe predeclarar un cambio aislado del objetivo del payoff head.
 
+Actualización 2026-07-11 06:50 CEST: esa auditoría quedó predeclarada antes de ejecutarse. Reutiliza los checkpoints ya congelados y compara head, side constante train-only y oracle-side no causal en exactamente los mismos eventos. La decisión siguiente depende de dos gates diagnósticas fijadas de antemano: mejora de side frente a constante en >=10/15 celdas y Spearman score-retorno >0,10 con signo positivo en >=10/15. No hay nueva arquitectura, selección ni PnL promocionable en esta fase.
+
 El downstream quedó predeclarado cambiando exclusivamente frozen-delta por adapted-delta en el mismo payoff head exacto d25/d35. Targets/errores quedan excluidos de features y la decisión exige gates completas por ticker, no PnL agregado.
 
 Informe, hashes y tablas de la ablación de historia quedaron publicados en `8da7a7a`.
