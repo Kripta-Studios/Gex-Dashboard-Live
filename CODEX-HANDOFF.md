@@ -1,5 +1,12 @@
 # CODEX-HANDOFF.md — Estado para continuación por otro agente
 
+## Actualización 2026-07-11 05:45 CEST — exportador frozen-space listo
+
+- `walkforward_event_phys_td_jepa_oof.py` ahora expone `export_observed_transition_features`: emite `z_t`, `pred_z_*`, `target_z_*`, timestamp actual/target y disponibilidad explícita, solo sobre contextos contiguos dentro de sesión.
+- Nuevo CLI `neural/jepa/export_event_phys_td_shadow_transitions.py`: carga checkpoint exportado, state/config/normalizer, valida cutoff causal y fuente executable_quote, sella junio y escribe parquet+metadata con hashes.
+- Tests: igualdad `target_z(t)=z_t(t+1)` dentro del mismo espacio, gaps no puenteados, target exactamente +5m, cutoff probado y junio rechazado. Resultado `17 passed in 2.12s`; compile PASS.
+- Siguiente paso exacto: hashear/commitear este bloque; luego predeclarar un runner de cinco folds que llame al trainer con `--skip-oof --export-deploy-model`, train_end `202509/202510/202511/202512/202601` para tests `202601..202605`, y aplique el nuevo exportador a `202501..test`.
+
 ## Actualización 2026-07-11 05:25 CEST — AdaJEPA shadow bloqueado hasta re-encoding coherente
 
 - Se auditó paper/código tras cerrar PatchCore. AdaJEPA debe actualizar predictor con una transición ya observada, nunca PnL, y permanecer shadow con reset/rollback.

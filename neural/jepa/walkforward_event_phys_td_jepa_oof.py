@@ -10,7 +10,7 @@ import re
 import sys
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Sequence
+from typing import Any, Sequence
 
 import numpy as np
 import pandas as pd
@@ -1031,6 +1031,120 @@ def export_month_features(
     feature_frame = pd.DataFrame(feature_data, index=work.index)
     out = pd.concat([key, feature_frame], axis=1)
     return out.sort_values(["ticker", "trade_date", "expiry_mode", "timestamp" if "timestamp" in out.columns else "time"]).reset_index(drop=True)
+
+
+def export_observed_transition_features(
+    model: EventPhysTDJEPA,
+    normalizer: RobustNormalizer,
+    frame: pd.DataFrame,
+    feature_cols: Sequence[str],
+    args: argparse.Namespace,
+    device: torch.device,
+    *,
+    horizon_steps: int | None = None,
+) -> pd.DataFrame:
+    """Export frozen-space prediction/target pairs for shadow adaptation.
+
+    ``target_z`` is an evaluation/adaptation target that only becomes available
+    at ``target_timestamp``.  It must never be joined into a live feature row at
+    ``timestamp``.  Grouping and explicit minute checks prevent transitions from
+    crossing a ticker, session, expiry mode, or missing five-minute bar.
+    """
+
+    work = frame.copy().reset_index(drop=True)
+    sort_col = "timestamp" if "timestamp" in work.columns else "time"
+    sort_cols = ["ticker", "date", "expiry_mode", sort_col]
+    work = work.sort_values(sort_cols, kind="stable").reset_index(drop=True)
+    requested_horizon = int(horizon_steps if horizon_steps is not None else model.config.horizons[0])
+    if requested_horizon not in {int(value) for value in model.config.horizons}:
+        raise ValueError(f"horizon {requested_horizon} is not present in model horizons {model.config.horizons}")
+    horizon_index = [int(value) for value in model.config.horizons].index(requested_horizon)
+    step_minutes = int(args.expected_step_minutes)
+    batch_size = int(args.infer_batch_size)
+    z_dim = int(model.config.z_dim)
+    group_cols = ["ticker", "date", "expiry_mode"] if bool(args.group_expiry_mode) else ["ticker", "date"]
+    rows: list[dict[str, Any]] = []
+
+    model.eval()
+    with torch.no_grad():
+        for _, group in work.groupby(group_cols, sort=False):
+            group = group.reset_index(drop=True)
+            arr = normalizer.transform_frame(group)
+            minutes = pd.to_numeric(group["minute"], errors="raise").to_numpy(dtype=np.int64)
+            contexts, delta_contexts, positions = build_contexts(
+                arr,
+                int(model.config.context_len),
+                minutes=minutes,
+                expected_step_minutes=step_minutes,
+            )
+            if not positions:
+                continue
+            z_parts: list[np.ndarray] = []
+            pred_parts: list[np.ndarray] = []
+            for start in range(0, len(contexts), batch_size):
+                context = torch.from_numpy(contexts[start : start + batch_size]).to(device).float()
+                delta = torch.from_numpy(delta_contexts[start : start + batch_size]).to(device).float()
+                z, _, pred = model(context, delta)
+                z_parts.append(z.cpu().numpy())
+                pred_parts.append(pred[:, horizon_index].cpu().numpy())
+            encoded = np.concatenate(z_parts).astype(np.float32, copy=False)
+            predicted = np.concatenate(pred_parts).astype(np.float32, copy=False)
+            z_by_position = np.zeros((len(group), z_dim), dtype=np.float32)
+            pred_by_position = np.zeros((len(group), z_dim), dtype=np.float32)
+            valid = np.zeros(len(group), dtype=bool)
+            for row_index, position in enumerate(positions):
+                z_by_position[position] = encoded[row_index]
+                pred_by_position[position] = predicted[row_index]
+                valid[position] = True
+
+            for position in positions:
+                target_position = int(position) + requested_horizon
+                if target_position >= len(group) or not valid[target_position]:
+                    continue
+                if int(minutes[target_position] - minutes[position]) != requested_horizon * step_minutes:
+                    continue
+                current = group.iloc[int(position)]
+                target = group.iloc[target_position]
+                row: dict[str, Any] = {
+                    "ticker": str(current["ticker"]),
+                    "trade_date": str(current["trade_date"]),
+                    "expiration": str(current["expiration"]),
+                    "expiry_mode": str(current["expiry_mode"]),
+                    "timestamp": current[sort_col],
+                    "time": current["time"],
+                    "minute": int(minutes[position]),
+                    "target_timestamp": target[sort_col],
+                    "target_time": target["time"],
+                    "target_minute": int(minutes[target_position]),
+                    "target_available_after_timestamp": target[sort_col],
+                    "horizon_steps": requested_horizon,
+                    "horizon_minutes": requested_horizon * step_minutes,
+                }
+                for dimension in range(z_dim):
+                    row[f"z_t_{dimension:02d}"] = float(z_by_position[position, dimension])
+                    row[f"pred_z_{dimension:02d}"] = float(pred_by_position[position, dimension])
+                    row[f"target_z_{dimension:02d}"] = float(z_by_position[target_position, dimension])
+                rows.append(row)
+
+    columns = [
+        "ticker",
+        "trade_date",
+        "expiration",
+        "expiry_mode",
+        "timestamp",
+        "time",
+        "minute",
+        "target_timestamp",
+        "target_time",
+        "target_minute",
+        "target_available_after_timestamp",
+        "horizon_steps",
+        "horizon_minutes",
+        *[f"z_t_{dimension:02d}" for dimension in range(z_dim)],
+        *[f"pred_z_{dimension:02d}" for dimension in range(z_dim)],
+        *[f"target_z_{dimension:02d}" for dimension in range(z_dim)],
+    ]
+    return pd.DataFrame(rows, columns=columns)
 
 
 def fit_normalizer(train_df: pd.DataFrame, feature_cols: Sequence[str], args: argparse.Namespace) -> RobustNormalizer:

@@ -5,6 +5,14 @@
 
 > Esta bitácora se actualiza durante el trabajo. Solo se marca como completado lo reproducido en esta sesión. No implica despliegue, commit ni push salvo que se indique expresamente.
 
+## Actualización 2026-07-11 05:45 CEST — exportador de transiciones AdaJEPA implementado
+
+Se añadió `export_observed_transition_features` al trainer Phys-TD y el aplicador offline `export_event_phys_td_shadow_transitions.py`. Reconstruye state_dict/config/normalizer de un encoder congelado y exporta `z_t`, `pred_z_h1` y `target_z` solo cuando los dos contextos pertenecen al mismo ticker/día/expiry y están separados exactamente cinco minutos.
+
+El contrato etiqueta `target_available_after_timestamp=target_timestamp`; `target_z` es únicamente target de adaptación/evaluación, nunca feature live. El aplicador verifica cutoff causal del checkpoint, hash de fuente/modelo/salida, executable_quote, rejilla 10:30–14:30/5m y rechaza cualquier `end_month>202605`. Suite focalizada: `17 passed`, `py_compile` y `git diff --check` PASS.
+
+Primer paso pendiente: predeclarar y generar cinco encoders flat congelados para test `202601..202605`, entrenados solo hasta el mes anterior a sus tres meses internos; después re-encodear `202501..test_month` con el checkpoint único de cada fold.
+
 ## Actualización 2026-07-11 05:25 CEST — preflight AdaJEPA shadow y primer paso pendiente
 
 Se verificó el paper primario AdaJEPA: la adaptación ocurre después de observar una transición real, usa esa transición como señal self-supervised y actualiza el world model dentro del loop antes de replantear; no usa reward/PnL. La adaptación local admisible será predictor-only, shadow, con un paso por transición observada, reset diario y rollback por norma.

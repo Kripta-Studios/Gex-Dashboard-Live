@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from types import SimpleNamespace
+
 import numpy as np
 import pandas as pd
 import pytest
@@ -8,9 +10,12 @@ import torch
 from neural.jepa.event_option_component_live import LIVE_INCONSISTENT_INTRADAY_STATE_FEATURES
 from neural.jepa.walkforward_event_phys_td_jepa_oof import (
     EventPhysTDJEPADataset,
+    EventPhysTDJEPA,
+    EventPhysTDJEPAConfig,
     GramConsistencyLoss,
     ModalSequenceEncoder,
     build_contexts,
+    export_observed_transition_features,
     filter_frame_to_month_cutoff,
     fold_seed,
     select_feature_columns,
@@ -110,6 +115,70 @@ def test_export_contexts_require_exact_five_minute_continuity() -> None:
     )
 
     assert positions == [2, 5]
+
+
+def test_transition_export_pairs_only_observed_contiguous_same_session_targets() -> None:
+    torch.manual_seed(7)
+    model = EventPhysTDJEPA(
+        EventPhysTDJEPAConfig(
+            input_dim=1,
+            q_dim=1,
+            context_len=2,
+            horizons=[1],
+            z_dim=4,
+            phys_dim=1,
+            delta_dim=2,
+            horizon_dim=2,
+            hidden_dim=8,
+            num_layers=1,
+            dropout=0.0,
+        )
+    )
+    frame = pd.DataFrame(
+        {
+            "ticker": ["SPY"] * 7,
+            "date": ["20260102"] * 7,
+            "trade_date": ["20260102"] * 7,
+            "expiration": ["20260102"] * 7,
+            "expiry_mode": ["zero_dte"] * 7,
+            "timestamp": pd.to_datetime(
+                [
+                    "2026-01-02 10:30",
+                    "2026-01-02 10:35",
+                    "2026-01-02 10:40",
+                    "2026-01-02 10:50",
+                    "2026-01-02 10:55",
+                    "2026-01-02 11:00",
+                    "2026-01-02 11:05",
+                ]
+            ),
+            "time": ["10:30", "10:35", "10:40", "10:50", "10:55", "11:00", "11:05"],
+            "minute": [630, 635, 640, 650, 655, 660, 665],
+            "feature": np.arange(7, dtype=np.float32),
+        }
+    )
+    args = SimpleNamespace(
+        expected_step_minutes=5,
+        infer_batch_size=16,
+        group_expiry_mode=True,
+    )
+
+    exported = export_observed_transition_features(
+        model,
+        _IdentityNormalizer(),
+        frame,
+        ["feature"],
+        args,
+        torch.device("cpu"),
+    )
+
+    assert exported["minute"].tolist() == [635, 655, 660]
+    assert exported["target_minute"].tolist() == [640, 660, 665]
+    assert (exported["target_minute"] - exported["minute"]).eq(5).all()
+    target_cols = [f"target_z_{index:02d}" for index in range(4)]
+    z_cols = [f"z_t_{index:02d}" for index in range(4)]
+    assert np.allclose(exported.loc[1, target_cols].to_numpy(float), exported.loc[2, z_cols].to_numpy(float))
+    assert exported["target_available_after_timestamp"].equals(exported["target_timestamp"])
 
 
 def test_month_cutoff_physically_removes_sealed_holdout() -> None:

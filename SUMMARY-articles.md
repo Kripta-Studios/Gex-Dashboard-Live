@@ -173,4 +173,6 @@ Actualización final 2026-07-11 05:15 CEST: PatchCore queda rechazado como filtr
 
 Actualización 2026-07-11 05:25 CEST: el paper primario confirma adaptación self-supervised después de observar la transición y antes de replantear, con uno o pocos pasos de gradiente. El OOF local no es aún un sustrato válido: cada mes usa un encoder distinto y no exporta `pred_z`. La precondición de AdaJEPA será crear cinco espacios latentes congelados por fold y re-encodear en cada uno todo train/inner/test con el mismo checkpoint. Adaptar directamente el parquet OOF mezclaría coordenadas y queda prohibido.
 
+Actualización 2026-07-11 05:45 CEST: la precondición técnica ya está implementada. Un exportador separado produce pares causalmente auditables `z_t/pred_z/target_z` desde un checkpoint congelado, impide cruzar gaps/sesiones y marca el target como observable solo en el timestamp siguiente. Falta construir los cinco checkpoints/espacios coherentes antes de probar un único paso de adaptación shadow.
+
 Informe, hashes y tablas de la ablación de historia quedaron publicados en `8da7a7a`.
