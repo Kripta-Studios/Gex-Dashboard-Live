@@ -17,6 +17,15 @@ D:/ThetaData/data_underlying_derived/SPY
 
 Hardware local: RTX 5070 Ti con 12 GB VRAM, Ryzen 9 con 32 hilos y 32 GB RAM. Usar CUDA determinista y batches ajustados a VRAM para entrenamiento/inferencia; paralelizar carga y transformaciones CPU sin crear corridas duplicadas.
 
+## Actualización 2026-07-11 14:15 CEST — rentabilidad static-union atribuida a selección 2026
+
+- Auditoría inversa terminó en 8,8 s, test PASS, tres modelos 28 hilos, solo train ene–sep2025 y audit oct–dic2025.
+- QQQ: 75 trades, WR `41,33%`, PF `1,158`, min21, 2/3 meses positivos. SPXW: 64, WR `43,75%`, PF `1,686`, min19, 2/3 positivos. SPY: 125, WR `34,40%`, PF `0,794`, min26, 0/3 positivos.
+- Diciembre: QQQ PF `0,664`/WR `23,81%`; SPXW PF `0,712`/WR `40,91%`. SPY pierde los tres meses. Volumen no es el problema.
+- Conclusión: los filtros/thresholds seleccionados en 2026 no eran estables pre-2026. No tratar las métricas productivas 2026 como OOS del nuevo objetivo.
+- Informe `.../pre2026_frozen_static_mechanism_reverse_audit_202510_202512_v1/REPORT.md`; audit SHA `4A3C950E...ABC53`.
+- Siguiente trabajo: selección verdaderamente nested de mecanismos económicos en ventanas anteriores, seguida de meses posteriores no usados. No retocar reglas para diciembre ni volver a arquitecturas.
+
 ## Actualización 2026-07-11 14:05 CEST — baseline rentable no es OOS de selección; auditoría pre-2026 preparada
 
 - Metadata confirma: modelos frozen entrenan `202501..202512`, pero thresholds y reglas static-union declaran selección `202601..202606`. Sus PF/WR fuertes son in-sample de selección para esas reglas, no holdout causal.

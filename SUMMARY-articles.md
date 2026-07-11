@@ -35,6 +35,8 @@ D:/ThetaData/data_underlying_derived/{SPXW,QQQ,SPY}
 
 Hardware de investigación: RTX 5070 Ti de 12 GB VRAM, Ryzen 9 de 32 hilos y 32 GB RAM. Se debe aprovechar CUDA determinista para entrenar/inferir y paralelismo CPU reproducible para construir datasets; más cómputo no autoriza feature mining OOS ni abrir junio.
 
+Actualización 2026-07-11 14:15 CEST: la auditoría pre-2026 rechaza el mecanismo static-union actual. QQQ/SPXW conservan algo de payoff pero fallan WR y diciembre; SPY es negativo los tres meses. Como todos tienen >=19/21/26 trades en su peor mes, el problema es dirección y drift, no sample cadence ni volumen. Las cifras 2026 del paquete reflejan selección sobre 2026 y no sustituyen un nested walk-forward limpio.
+
 Actualización 2026-07-11 14:05 CEST: se localiza por qué el static-union parece mucho más rentable: modelos, thresholds y reglas declaran selección sobre los mismos meses 2026 reportados. Se predeclara una auditoría inversa en octubre–diciembre2025 con modelos entrenados solo hasta septiembre. Esto estudia estabilidad del mecanismo, no convierte la regla elegida con 2026 en causal ni promocionable.
 
 Actualización 2026-07-11 13:45 CEST: la ablación 1m queda rechazada con paridad exacta frente al control. Añadió 62.280 filas, pero solo SPXW/enero fue seleccionable y falló OOS (WR 40%, PF 1,220); QQQ/SPY abstuvieron en todos los folds. La densidad temporal no era el cuello de botella: el único inner fuerte sufrió drift inmediato al mes externo. No se hará un sweep de cadencias; el trabajo siguiente debe cambiar un mecanismo económico defendible y seleccionarlo solo en inner.

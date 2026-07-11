@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "audit": "reverse_pre2026_stability_of_2026_selected_static_rules",
+  "data": "tmp/event_option_dataset_execquote_causal1030_202501_202606_v3_physics/event_option_dataset.parquet",
+  "train_months": [
+    "202501",
+    "202502",
+    "202503",
+    "202504",
+    "202505",
+    "202506",
+    "202507",
+    "202508",
+    "202509"
+  ],
+  "select_months": [
+    "202510",
+    "202511",
+    "202512"
+  ],
+  "policies": {
+    "QQQ": {
+      "delta_bucket": 35,
+      "min_score": 0.0,
+      "max_day": 2,
+      "cooldown_minutes": 45,
+      "filter": {
+        "near_level_abs_bps_max": 20.0,
+        "min_entry_time_et": "12:30",
+        "max_entry_time_et": "14:30",
+        "allowed_actions": [
+          "CALL",
+          "PUT"
+        ],
+        "momentum_filter": "SELF_COUNTER_5M"
+      }
+    },
+    "SPXW": {
+      "delta_bucket": 25,
+      "min_score": 0.0,
+      "max_day": 1,
+      "cooldown_minutes": 30,
+      "filter": {
+        "near_level_abs_bps_max": 20.0,
+        "min_entry_time_et": "10:30",
+        "max_entry_time_et": "14:30",
+        "allowed_actions": [
+          "CALL",
+          "PUT"
+        ],
+        "min_edge_abs": 0.05,
+        "momentum_filter": "NONE"
+      }
+    },
+    "SPY": {
+      "delta_bucket": 35,
+      "min_score": -0.1,
+      "max_day": 4,
+      "cooldown_minutes": 30,
+      "filter": {
+        "near_level_abs_bps_max": 20.0,
+        "min_entry_time_et": "12:00",
+        "max_entry_time_et": "14:30",
+        "allowed_actions": [
+          "PUT"
+        ],
+        "min_edge_abs": 0.1,
+        "momentum_filter": "SPX_COUNTER_5M"
+      }
+    }
+  },
+  "tickers": {
+    "QQQ": {
+      "trades": 75,
+      "win_rate": 0.41333333333333333,
+      "profit_factor": 1.157826256675402,
+      "pnl_return": 4.193273370222059,
+      "avg_return": 0.05591031160296078,
+      "max_drawdown": -8.01357956960286,
+      "call_rate": 0.24,
+      "days_with_trades": 47,
+      "daily_win_rate": 0.40425531914893614,
+      "median_daily_return": -0.31934432871589524,
+      "daily_max_drawdown": -7.750421687249254,
+      "top5_day_return": 13.88677215451948,
+      "top5_share_of_pnl": 3.3116782352265512,
+      "min_month_trades": 21,
+      "positive_month_rate": 0.6666666666666666,
+      "ticker": "QQQ",
+      "train_rows": 6930,
+      "select_rows": 2392,
+      "scored_pass_min_score_rows": 1208,
+      "filtered_candidate_rows": 297,
+      "feature_count": 287,
+      "min_hold_minutes": 30.0,
+      "passes_full_gate": false
+    },
+    "SPXW": {
+      "trades": 64,
+      "win_rate": 0.4375,
+      "profit_factor": 1.6857199214910088,
+      "pnl_return": 14.48146198593251,
+      "avg_return": 0.22627284353019547,
+      "max_drawdown": -5.133517154994131,
+      "call_rate": 0.078125,
+      "days_with_trades": 64,
+      "daily_win_rate": 0.4375,
+      "median_daily_return": -0.48716531942888996,
+      "daily_max_drawdown": -5.133517154994131,
+      "top5_day_return": 21.756706557392125,
+      "top5_share_of_pnl": 1.5023832937949833,
+      "min_month_trades": 19,
+      "positive_month_rate": 0.6666666666666666,
+      "ticker": "SPXW",
+      "train_rows": 7662,
+      "select_rows": 2665,
+      "scored_pass_min_score_rows": 2085,
+      "filtered_candidate_rows": 2061,
+      "feature_count": 287,
+      "min_hold_minutes": 30.0,
+      "passes_full_gate": false
+    },
+    "SPY": {
+      "trades": 125,
+      "win_rate": 0.344,
+      "profit_factor": 0.7940621987713615,
+      "pnl_return": -10.172073878782914,
+      "avg_return": -0.08137659103026332,
+      "max_drawdown": -13.23996267603328,
+      "call_rate": 0.0,
+      "days_with_trades": 55,
+      "daily_win_rate": 0.34545454545454546,
+      "median_daily_return": -0.6140350849674678,
+      "daily_max_drawdown": -12.038045569558298,
+      "top5_day_return": 14.47771646267747,
+      "top5_share_of_pnl": -1.4232807031489754,
+      "min_month_trades": 26,
+      "positive_month_rate": 0.0,
+      "ticker": "SPY",
+      "train_rows": 7651,
+      "select_rows": 2676,
+      "scored_pass_min_score_rows": 2481,
+      "filtered_candidate_rows": 575,
+      "feature_count": 287,
+      "min_hold_minutes": 30.0,
+      "passes_full_gate": false
+    }
+  },
+  "all_tickers_pass_full_gate": false,
+  "production_live_ready": false,
+  "selection_caveat": "Rules were copied from policies selected on 202601..202606. Passing late 2025 is a reverse stability check, not proof that the rule family was selected without 2026 hindsight."
+}

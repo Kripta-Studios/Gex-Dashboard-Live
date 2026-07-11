@@ -14,6 +14,12 @@ D:/ThetaData/data_underlying_derived/{SPXW,QQQ,SPY}
 
 Recursos locales: RTX 5070 Ti de 12 GB VRAM, Ryzen 9 de 32 hilos y 32 GB RAM. Los entrenamientos deben aprovechar CUDA determinista y la preparación de datos debe paralelizar CPU de forma reproducible.
 
+## Actualización 2026-07-11 14:15 CEST — el mecanismo productivo no era estable antes de 2026
+
+La auditoría inversa terminó: QQQ obtiene 75 trades, WR 41,33%, PF 1,158 y un mes negativo; SPXW 64 trades, WR 43,75%, PF 1,686 y un mes negativo; SPY 125 trades, WR 34,40%, PF 0,794 y pierde los tres meses. Todos superan 18 operaciones/mes, así que la frecuencia no explica el fallo.
+
+Diciembre rompe QQQ/SPXW y SPY es consistentemente negativo. Las reglas seleccionadas en 2026 no muestran estabilidad en oct–dic2025 con modelos entrenados hasta septiembre. Por tanto el salto de las métricas productivas no constituye edge OOS bajo el nuevo contrato. Resultado e informe en `.../pre2026_frozen_static_mechanism_reverse_audit_202510_202512_v1/`.
+
 ## Actualización 2026-07-11 14:05 CEST — auditando la fuente real de la rentabilidad productiva
 
 La metadata demuestra que el baseline static-union rentable no ofrece un holdout 2026 limpio: sus modelos entrenan en 2025, pero thresholds, franjas, action/momentum filters y policies fueron seleccionados en `202601..202606`, los mismos meses reportados. Por eso no se usarán esas métricas para declarar conseguido el objetivo.
