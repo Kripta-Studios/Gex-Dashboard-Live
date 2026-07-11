@@ -651,3 +651,5 @@ La ablación cambia solo el inicio físico del train flat (`202201` frente a `20
 ### Ejecución activa 2026-07-11 03:26 CEST
 
 El primer PowerShell perdió su padre por timeout, pero el trainer control continuó y terminó sus 13 folds; no se duplicó ni se eliminó la salida. El runner se reanudó con `-Resume` mediante `-EncodedCommand` y logs persistentes en `tmp/`. PID padre `25112`; selector control PID `57784`. El control generó 29.046 filas OOF, join completo 29.046/29.046 y lleva 3/15 folds nested guardados. Tras completarlo, el mismo runner lanzará el arm 2022. No ejecutar otra instancia.
+
+El control terminó 15/15 folds con provenance PASS: 495 trades, WR `45,05%`, PF `0,863`, `-20,174R`, DD `-27,180R`; QQQ PF `0,893`, SPXW `0,711`, SPY `1,336`. Solo abril fue positivo overall y SPY fue el único ticker agregado rentable, por lo que `history_2025` queda rechazado. El runner ya inició `history_2022` y conserva stderr vacío.
