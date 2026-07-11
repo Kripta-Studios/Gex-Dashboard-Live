@@ -1,0 +1,18 @@
+{
+  "events_sha256": "d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408",
+  "features_sha256": "5f908e11090ea6566e3eadeba0a436ab5d01cf99955d6acc5050eae264fe13b5",
+  "joined_rows": 86729,
+  "m0_signal_rows": 86729,
+  "e1_signal_rows": 65497,
+  "trade_rows": 10247,
+  "parameters": {
+    "touch_bps": 15.0,
+    "buffer_bps": 5.0,
+    "magnet_max_bps": 80.0,
+    "min_approach_bps": 3.0,
+    "confluence_bps": 15.0,
+    "require_rejection_pierce": true
+  },
+  "contains_2026": false,
+  "production_modified": false
+}
