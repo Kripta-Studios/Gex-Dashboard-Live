@@ -1,0 +1,34 @@
+{
+  "arm": "deterministic",
+  "component": "portfolio_payoff_head",
+  "cooldown_minutes": 0,
+  "daily_cap": 4,
+  "delta_bucket": 25,
+  "deploy_config": "ABSTAIN_NO_VALID_THRESHOLD",
+  "evaluation_month": "202603",
+  "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\adajepa_downstream_frozen_vs_adapted_202601_202605_v1\\adapted\\fold_model_artifacts\\payoff_head_202603.pt",
+  "model_artifact_sha256": "87D39F713179F9EBB09704AF54DD6A0416B2C8C6C7C9F5937869D346B8A76B5C",
+  "policy_frozen_before_evaluation": true,
+  "schema_version": 1,
+  "seed": 20463221,
+  "selection_months": [
+    "202512",
+    "202601",
+    "202602"
+  ],
+  "ticker": "SPXW",
+  "training_months": [
+    "202501",
+    "202502",
+    "202503",
+    "202504",
+    "202505",
+    "202506",
+    "202507",
+    "202508",
+    "202509",
+    "202510",
+    "202511"
+  ],
+  "uncertainty_used_for_selection": false
+}

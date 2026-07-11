@@ -1,5 +1,15 @@
 # CODEX-HANDOFF.md — Estado para continuación por otro agente
 
+## Actualización 2026-07-11 06:40 CEST — AdaJEPA downstream cerrado y rechazado
+
+- `run_adajepa_downstream_v1.ps1` terminó una sola instancia, 5/5 folds frozen y 5/5 adapted (~675 s). No queda Python/CUDA/pytest activo; no relanzar.
+- Contrato íntegro: fuente SHA `AB144DBA...F720`, manifest `F398B110...F7B8`, exact d25/d35, ask→bid, hold>=30m, caps/cooldowns `4/2/1` y `0/30/0`, seeds `20463219..20463223`, CUDA determinista y junio sellado. Provenance/runtime PASS en ambos arms.
+- Resultado económico: 0/210 candidatos válidos por arm, 15/15 policies `ABSTAIN_NO_VALID_THRESHOLD` por arm y 0 trades OOS. No interpretar el cero como rentabilidad. `adapted_meets_full_ticker_gate=false`, `production_live_ready=false`.
+- Diagnóstico: adapted mejora MAE 13/15 (mediana `-0,005331`, `p=0,006226`) y directional accuracy 10/15, pero RMSE solo 7/15 (mediana `+0,003113`, `p=0,680664`). No hay traducción estable a payoff/policy.
+- Informe `research_papers/JEPA/results/_diagnostics/adajepa_downstream_frozen_vs_adapted_202601_202605_v1/REPORT.md`; summary SHA `9B7007DA7C25469FFF1971487D91E9435D7694475501D130F0753C00FD41BC0D`. Candidate grids frozen/adapted SHA `B3F43A30...D0F4` / `9118579D...813`.
+- Bug solo diagnóstico: los empates inválidos `-1e18` podían dejar métricas vacías en `selected_folds.csv`; candidate grid era correcto. Se añadió `best_seen` y test (`12 passed`), sin reentrenar ni alterar policies/trades.
+- No reabrir modal/MJEPA/SMM, historia 2022, Var, PatchCore ni retunar AdaJEPA. El primer paso real es una auditoría no selectiva de separabilidad/oracle sobre labels exactos y descomponer error de side CALL/PUT frente a calibración/colas. Después, y solo con un mecanismo identificado, predeclarar una ablación de un factor del objetivo del payoff head con todo lo demás congelado.
+
 ## Actualización 2026-07-11 06:25 CEST — downstream AdaJEPA listo para lanzar
 
 - Nuevo `walkforward_adajepa_downstream.py`: reusa trainer/selector/provenance Var auditado; control `z+frozen_dz`, variante `z+adapted_dz`, mismas 79 features estructurales/contrato, filas y labels.

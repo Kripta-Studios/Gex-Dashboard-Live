@@ -516,6 +516,7 @@ def select_threshold(
     best_cfg: DeployConfig | None = None
     best_metrics: dict[str, Any] = metrics(pd.DataFrame(), val_months)
     best_score = -1e18
+    best_seen = False
     for cfg in grid:
         trades = deploy(ticker_scored, cfg, int(COOLDOWNS[ticker]))
         row = metrics(trades, val_months)
@@ -542,8 +543,12 @@ def select_threshold(
         if np.isfinite(float(row.get("top5_share_of_pnl", float("nan")))):
             value -= float(args.top5_share_penalty) * max(float(row["top5_share_of_pnl"]) - 1.0, 0.0)
         rows.append({"ticker": ticker, "deploy_config": cfg.name, "score": float(value), **row})
-        if value > best_score:
+        # Invalid candidates can all round to the same -1e18 sentinel.  Keep
+        # the first one's real diagnostics even when no policy is selectable;
+        # the candidate grid remains authoritative and selection is unchanged.
+        if not best_seen or value > best_score:
             best_cfg, best_metrics, best_score = cfg, row, float(value)
+            best_seen = True
     if best_score <= -1e17:
         best_cfg = None
     return best_cfg, best_metrics, best_score, pd.DataFrame(rows)

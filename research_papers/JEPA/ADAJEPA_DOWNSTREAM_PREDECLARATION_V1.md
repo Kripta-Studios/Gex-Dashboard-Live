@@ -31,3 +31,9 @@ Si ningún threshold cumple inner gates, el fold hace abstain. No se relajarán 
 | Runner | `27180A2B70EE516F62A036D48119A17EAD29172C58419FEAB15C6D39B00E6EF5` |
 
 Tests focalizados `11 passed`; parse, compile y diff-check PASS.
+
+## Resultado final
+
+La corrida única terminó 5/5 folds por arm. Provenance/runtime pasan y junio permanece sellado, pero `frozen` y `adapted` obtuvieron `0/210` thresholds válidos: las 15 policies de cada arm hicieron abstain y no existen trades OOS. Adapted mejoró MAE en 13/15 celdas (mediana `-0,005331`, `p=0,006226`), pero RMSE solo 7/15 (mediana `+0,003113`, `p=0,680664`) y no satisfizo las gates económicas.
+
+Decisión: `adapted_meets_full_ticker_gate=false`, `production_live_ready=false`. No retunar esta variante. Informe y hashes en `results/_diagnostics/adajepa_downstream_frozen_vs_adapted_202601_202605_v1/REPORT.md`.

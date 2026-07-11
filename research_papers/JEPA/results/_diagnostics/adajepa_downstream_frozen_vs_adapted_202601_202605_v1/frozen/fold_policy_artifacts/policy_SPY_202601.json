@@ -1,0 +1,32 @@
+{
+  "arm": "deterministic",
+  "component": "portfolio_payoff_head",
+  "cooldown_minutes": 0,
+  "daily_cap": 1,
+  "delta_bucket": 35,
+  "deploy_config": "ABSTAIN_NO_VALID_THRESHOLD",
+  "evaluation_month": "202601",
+  "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\adajepa_downstream_frozen_vs_adapted_202601_202605_v1\\frozen\\fold_model_artifacts\\payoff_head_202601.pt",
+  "model_artifact_sha256": "3D545A336B5253454EDAD322530B2D09DAC9DC2371A8D6195FBF1F7BDF899C77",
+  "policy_frozen_before_evaluation": true,
+  "schema_version": 1,
+  "seed": 20463219,
+  "selection_months": [
+    "202510",
+    "202511",
+    "202512"
+  ],
+  "ticker": "SPY",
+  "training_months": [
+    "202501",
+    "202502",
+    "202503",
+    "202504",
+    "202505",
+    "202506",
+    "202507",
+    "202508",
+    "202509"
+  ],
+  "uncertainty_used_for_selection": false
+}

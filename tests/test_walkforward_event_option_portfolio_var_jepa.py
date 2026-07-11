@@ -17,6 +17,7 @@ from neural.jepa.walkforward_event_option_portfolio_var_jepa import (
     choose_action,
     gaussian_kl_diag,
     month_seed,
+    select_threshold,
 )
 
 
@@ -145,3 +146,40 @@ def test_runtime_replay_audit_enforces_hold_cap_and_single_position() -> None:
     result = audit_runtime_replay(overlapping)
     assert result["passed"] is False
     assert any("overlapping" in issue for issue in result["issues"])
+
+
+def test_invalid_threshold_retains_real_diagnostics_when_sentinel_ties() -> None:
+    scored = pd.DataFrame(
+        {
+            "ticker": ["SPY", "SPY", "SPY"],
+            "date": ["20251002", "20251103", "20251202"],
+            "month": ["202510", "202511", "202512"],
+            "minute": [630, 630, 630],
+            "action": ["CALL", "PUT", "CALL"],
+            "score": [0.1, 0.1, 0.1],
+            "realized_return": [0.2, -0.1, 0.3],
+            "exit_minutes": [30.0, 30.0, 30.0],
+        }
+    )
+    args = SimpleNamespace(
+        threshold_grid=[-1e9],
+        threshold_quantiles=[],
+        min_val_trades=999,
+        min_month_trades=999,
+        min_val_pf=99.0,
+        min_val_win_rate=0.99,
+        min_call_rate=0.0,
+        max_call_rate=1.0,
+        min_val_positive_month_rate=1.0,
+        daily_win_weight=0.25,
+        top5_share_penalty=0.1,
+    )
+
+    config, diagnostics, score, grid = select_threshold(
+        scored, "SPY", ["202510", "202511", "202512"], args
+    )
+
+    assert config is None
+    assert score <= -1e17
+    assert diagnostics["trades"] == 3
+    assert len(grid) == 1

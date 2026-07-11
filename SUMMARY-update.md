@@ -5,6 +5,18 @@
 
 > Esta bitácora se actualiza durante el trabajo. Solo se marca como completado lo reproducido en esta sesión. No implica despliegue, commit ni push salvo que se indique expresamente.
 
+## Actualización 2026-07-11 06:40 CEST — downstream AdaJEPA terminado y rechazado
+
+La corrida predeclarada terminó 5/5 folds por arm en ~675 s, sin OOM, fallback ni procesos huérfanos. Ambos arms preservaron datos/labels/head/folds/seeds/presupuesto y difirieron solo en `frozen_dz` frente a `adapted_dz`; provenance y runtime replay pasan, junio no aparece y ningún paquete se marcó live-ready.
+
+Ninguno de los 210 candidatos por arm superó simultáneamente PF>=1,3, WR>=50%, 18 trades en cada mes interno y todos los meses positivos. Las 15 policies frozen y las 15 adapted congelaron abstain, por lo que ambas tienen 0 trades OOS. Adapted sí mejoró MAE en 13/15 celdas (mediana `-0,005331`, Wilcoxon `p=0,006226`) y precisión direccional en 10/15, pero RMSE solo en 7/15 (mediana `+0,003113`, `p=0,680664`) y no produjo edge seleccionable.
+
+Por ticker, adapted tuvo candidatos que pasaban PF aisladamente en SPXW (2/70) y meses positivos aisladamente en SPY (5/70), pero WR no pasó en ninguna fila de QQQ/SPXW/SPY y el gate conjunto fue 0/70 en los tres. `adapted_meets_full_ticker_gate=false`, `production_live_ready=false`; no se retunarán adapter/head/thresholds/gates post hoc. Informe `.../adajepa_downstream_frozen_vs_adapted_202601_202605_v1/REPORT.md`; summary SHA `9B7007DA...BC0D`.
+
+Se corrigió después un fallo solo diagnóstico heredado del selector: empates inválidos exactamente en `-1e18` podían dejar vacías las métricas resumen SPY aunque el candidate grid fuese correcto. El nuevo `best_seen` retiene la primera métrica real sin seleccionar policy ni cambiar trades; suite focalizada `12 passed`.
+
+La cola literaria queda agotada y rechazada para trading. El primer paso seguro siguiente es una auditoría no selectiva de separabilidad/oracle y descomposición de error CALL/PUT frente a calibración de retorno en el contrato exacto. Solo esa evidencia podrá justificar una nueva ablación predeclarada de un factor en el objetivo del payoff head.
+
 ## Actualización 2026-07-11 06:25 CEST — downstream AdaJEPA predeclarado
 
 Se implementó la comparación económica separada autorizada: mismas filas/labels/contratos/head/folds/seeds/presupuesto, cambiando solo `frozen_dz` por `adapted_dz`. La exportación live-safe excluye por allowlist target/error/futuro/PnL y tiene test de invariancia ante targets futuros.
