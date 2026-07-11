@@ -1,5 +1,12 @@
 # CODEX-HANDOFF.md — Estado para continuación por otro agente
 
+## Actualización 2026-07-11 06:00 CEST — AdaJEPA shadow listo para lanzar
+
+- Evaluador `evaluate_adajepa_shadow_adapter.py`: control pred_z frozen vs adapter diagonal 64 params; init cero/reset ticker-día; update de transición anterior solo cuando target ya observable; LR.05, 1 paso, clip1, norm cap.5/rollback.
+- Tests causales: cambiar target futuro no cambia predicciones anteriores; primera predicción diaria siempre 0 updates/norma0; junio bloqueado por capa anterior. Suite combinada `19 passed`.
+- Predeclaración `research_papers/JEPA/ADAJEPA_SHADOW_ADAPTER_PREDECLARATION_V1.md`; runner SHA `5EA632B8AF4089B80F6FA4AE56D2F5F5F431722AF5FC07800368D80E3B701736`.
+- Próximo paso: commit/push código/test/runner/predeclaración, comprobar procesos y ejecutar una sola instancia. No variar LR/norma tras resultados y no ejecutar downstream salvo gate representacional.
+
 ## Actualización 2026-07-11 05:45 CEST — exportador frozen-space listo
 
 - `walkforward_event_phys_td_jepa_oof.py` ahora expone `export_observed_transition_features`: emite `z_t`, `pred_z_*`, `target_z_*`, timestamp actual/target y disponibilidad explícita, solo sobre contextos contiguos dentro de sesión.

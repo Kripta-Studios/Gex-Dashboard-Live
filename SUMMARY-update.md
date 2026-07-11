@@ -5,6 +5,12 @@
 
 > Esta bitácora se actualiza durante el trabajo. Solo se marca como completado lo reproducido en esta sesión. No implica despliegue, commit ni push salvo que se indique expresamente.
 
+## Actualización 2026-07-11 06:00 CEST — AdaJEPA shadow adapter predeclarado
+
+Con los cinco espacios auditados se implementó el control frozen frente a un adapter diagonal residual de 64 parámetros, init cero y reset ticker/día. Cada predicción ocurre antes de consumir su target; solo la transición inmediatamente anterior ya observable puede generar un paso SGD. LR `0,05`, un paso, clip1 y rollback sobre norma0,5 quedan fijados sin mirar test.
+
+Predeclaración `research_papers/JEPA/ADAJEPA_SHADOW_ADAPTER_PREDECLARATION_V1.md`; evaluador SHA `DE4BFBD9...ADEB`, runner `run_adajepa_shadow_adapter_v1.ps1` SHA `5EA632B8...1736`, manifest `F398B110...F7B8`. Avance solo por mejora latente pareada en celdas y días; no se mira PnL ni se toca policy. Tests `19 passed`. Aún no lanzado en este checkpoint.
+
 ## Actualización 2026-07-11 05:45 CEST — exportador de transiciones AdaJEPA implementado
 
 Se añadió `export_observed_transition_features` al trainer Phys-TD y el aplicador offline `export_event_phys_td_shadow_transitions.py`. Reconstruye state_dict/config/normalizer de un encoder congelado y exporta `z_t`, `pred_z_h1` y `target_z` solo cuando los dos contextos pertenecen al mismo ticker/día/expiry y están separados exactamente cinco minutos.

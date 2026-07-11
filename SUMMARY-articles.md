@@ -179,4 +179,6 @@ El build de esos cinco espacios quedó predeclarado con train_end anterior a tre
 
 Actualización: los cinco checkpoints/espacios terminaron, con 1.109–1.635 transiciones OOS por mes y targets exactamente cinco minutos posteriores. Ya puede predeclararse frozen predictor frente a un adaptador shadow diario sin mezclar coordenadas.
 
+AdaJEPA shadow v1 quedó predeclarado con un adapter diagonal residual de 64 parámetros, un solo paso tras la transición observada, reset diario y rollback. No modifica encoder, predictor base ni policy; el criterio de avance es exclusivamente error latente OOS pareado.
+
 Informe, hashes y tablas de la ablación de historia quedaron publicados en `8da7a7a`.
