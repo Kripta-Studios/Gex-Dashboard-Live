@@ -41,6 +41,14 @@ Cadencia confirmada en código: el live **recopila snapshots cada minuto** (`DEF
 - Informe `.../early_causal_directional_nested_1m_202601_202605_seed20260618_v1/REPORT.md`; audit SHA `740A3305...D821`.
 - La corrección de provenance conserva cronología de folds abstain y no cambió trades/PnL. Próximo trabajo: hipótesis económica distinta o cobertura full-session causal 1m, predeclarada; producción intacta.
 
+## Actualización 2026-07-11 16:30 CEST — Predeclaración y código listos para PAIRWISE_OPPORTUNITY_AND_SIDE_SELECTION_V1
+
+- **Dataset sellado (2022-2025):** Parquet generado en `tmp/event_option_dataset_execquote_causal1030_202201_202512_pairwise_v1/event_option_dataset.parquet` con 97,625 filas. La lectura excluye 2026 (SHA-256: `d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408`).
+- **Predeclaración:** Documento registrado en `research_papers/JEPA/PAIRWISE_OPPORTUNITY_AND_SIDE_SELECTION_PREDECLARATION_V1.md`. Hiperparámetros de LightGBM y semillas base congelados (`n_estimators=300`, `learning_rate=0.05`, `num_leaves=31`, `min_child_samples=20`, `subsample=0.8`, `colsample_bytree=0.8`, `reg_lambda=1.0`, seed `42`).
+- **Allowlist definitiva:** Excluidos `dte_days`, `spot` y `underlying_volume`. `nearest_level_abs_bps` y los IB ranges son validados como causales. Diferencias CALL-PUT y sus lags a 5m/15m/25m calculados sin leakage cross-session usando shift agrupado por `trade_date`.
+- **Ejecutor y Tests:** Implementado `walkforward_pairwise_opportunity_side.py` con paridad total de simulación/scheduler para C0 (control de dos heads absolutos) y P1 (opportunity + pairwise side classifiers). Test suite `tests/test_pairwise_opportunity_side.py` completado y verificado con éxito (6 passed).
+- **Ejecución congelada:** La corrida completa aún no ha sido iniciada. Todo está listo para recibir revisión del runner y predeclaración.
+
 ## Actualización 2026-07-11 15:45 CEST — Regime Gate Ablation V1 reproducible y auditado; C0 internal equivalence PASS
 
 - Auditoría de reproducibilidad finalizada en 10 s; test PASS; paridad del control C0 confirmada.

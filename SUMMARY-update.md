@@ -30,6 +30,22 @@ Al entrar enero en la ventana inner, ningún candidato vuelve a cumplir y febrer
 
 La corrección de provenance funcionó: incluso las abstenciones conservan train/selección y `passed=true`. Junio y producción permanecen intactos. Siguiente hipótesis admisible: un mecanismo económico diferente o cobertura full-session causal 1m predeclarada, no otro barrido de momentum sobre el mismo OOS.
 
+## Actualización 2026-07-11 16:30 CEST — Predeclaración y Preparación de Pairwise Opportunity and Side Selection V1
+
+Se ha completado la fase preliminar de la investigación `PAIRWISE_OPPORTUNITY_AND_SIDE_SELECTION_V1` de acuerdo con las correcciones obligatorias del plan técnico:
+
+1. **Datos físicamente sellados (2022-2025):** Se generó el parquet de datos restringido `tmp/event_option_dataset_execquote_causal1030_202201_202512_pairwise_v1/event_option_dataset.parquet` conteniendo 97,625 filas. La aserción causal impide la lectura de datos de 2026. Hash SHA-256 del dataset: `d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408`.
+2. **Predeclaración e Hiperparámetros:** Registrados en `research_papers/JEPA/PAIRWISE_OPPORTUNITY_AND_SIDE_SELECTION_PREDECLARATION_V1.md`. Los hiperparámetros LightGBM quedan congelados: `n_estimators=300`, `learning_rate=0.05`, `num_leaves=31`, `min_child_samples=20`, `subsample=0.8`, `colsample_bytree=0.8`, `reg_lambda=1.0`, y semilla base `42`.
+3. **Auditoría de Features y Allowlist Primaria:**
+   - Excluidos: `dte_days`, `spot`, y `underlying_volume` (este último contiene un valor único constante de 60.0).
+   - Incluido `nearest_level_abs_bps` tras verificar su naturaleza causal (cambia intradía como reflejo de la posición de spot pero se basa en niveles estáticos previos).
+   - Verificados `ib_range_bps`, `dist_ib_high_bps`, y `dist_ib_low_bps` como causalmente seguros (cerrados a las 10:29:59 antes del inicio de la ventana de entrada).
+   - Conservados los cambios de OI ya que el análisis de ceros determinó que no superan el 99% de ceros.
+4. **Mecanismo de Cambios Backward-looking:** Las diferencias y sus tasas de cambio a 5m/15m/25m se calculan usando `shift` agrupado por `trade_date`, impidiendo contaminación entre sesiones.
+5. **Código de Walk-Forward y Tests Unitarios:**
+   - Implementado script ejecutor `walkforward_pairwise_opportunity_side.py` que realiza las dos clasificaciones independientes (opportunity y pairwise side) para el brazo P1, y la clasificación absoluta para el control C0, empleando el mismo protocolo de deploy y simulación de contratos.
+   - Desarrollada suite de pruebas en `tests/test_pairwise_opportunity_side.py` para asegurar que las aserciones cronológicas (`len(train_months) == 12`, `len(inner_months) == 3`), el no-overlap de sesiones, y las gates mensuales de inner validation (`PF >= 1.3`, `WR >= 50%`, `trades >= 18`, `PnL > 0`) se aplican exactamente. Todos los tests (`6 passed`) se ejecutaron con éxito.
+
 ## Actualización 2026-07-11 15:45 CEST — Auditoría de Reproducibilidad y C0 Equivalence Terminadas con Éxito
 
 La auditoría de reproducibilidad se completó con éxito en 10 s (test PASS), arrojando las siguientes conclusiones fundamentales:
