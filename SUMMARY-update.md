@@ -71,6 +71,8 @@ Se implementa el siguiente factor sin cambiar arquitectura: P1 unweighted frente
 
 Resultado: weighting rechazado. Solo gana balanced accuracy en 48/99, mediana delta `-0,0001`, `p=0,6642`; weighted solo selecciona SPY/202410 y outer cae a 22 trades, WR `27,27%`, PF `0,4299`, `-5,1555R`. No se probarán otros caps/pesos. El problema no es solo desalineamiento de magnitud. La siguiente ablación aislada debe comprobar si el side head perdió información al limitarse a 30 columnas: añadirle el bloque físico/cross-asset causal ya existente, sin cambiar opportunity, objetivo, modelo o policy.
 
+Physics-side skip ya implementado y predeclarado: opportunity conserva 30 features y solo side amplía a 154 `phys_*`/`ctx_*` current-time, excluyendo cinco event-in-day no live, spots absolutos y outcomes. Smoke SPXW/202304 completa 562 filas científicas; `3 passed`. Full run aún no ejecutado en este checkpoint.
+
 ## Actualización 2026-07-11 15:45 CEST — Auditoría de Reproducibilidad y C0 Equivalence Terminadas con Éxito
 
 La auditoría de reproducibilidad se completó con éxito en 10 s (test PASS), arrojando las siguientes conclusiones fundamentales:

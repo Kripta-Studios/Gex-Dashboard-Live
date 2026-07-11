@@ -70,6 +70,7 @@ Cadencia confirmada en código: el live **recopila snapshots cada minuto** (`DEF
 - Próximo arm ya implementado/predeclarado, aún no ejecutado: `PAIRWISE_MAGNITUDE_WEIGHTED_SIDE_V1`. Mantiene P1/LightGBM/oportunidad/features/folds/grid/scheduler y solo pondera el side loss por `abs(side_advantage)` capped al q95 train-only y normalizado. Tests focalizados `30 passed`. Es discovery adaptativo sobre 2022–2025, nunca promocionable sin holdout nuevo.
 - Resultado weighted: `48/99` BA wins, mediana delta `-0,0001`, `p=0,6642`; solo SPY/202410 selecciona. Outer weighted 22 trades, WR `27,27%`, PF `0,4299`, `-5,1555R`, peor que P1. `REJECTED`; no barrer q90/q99 ni pesos.
 - Siguiente factor defendible: mantener P1 unweighted y opportunity con las 30 features, pero dar solo al side head el bloque `phys_*`/`ctx_*` current-time ya materializado y excluyendo las cinco features event-in-day no reproducibles y spots absolutos. Esto prueba pérdida de información direccional, no otra arquitectura.
+- `PAIRWISE_SIDE_PHYSICS_SKIP_V1` ya está implementado/predeclarado, aún sin corrida completa: side pasa 30→154 features current-time; opportunity permanece en 30. Smoke real SPXW/202304 completó 562 filas científicas. Tests `3 passed`; ningún outcome/future/exit entra en la allowlist.
 
 ## Actualización 2026-07-11 15:45 CEST — Regime Gate Ablation V1 reproducible y auditado; C0 internal equivalence PASS
 

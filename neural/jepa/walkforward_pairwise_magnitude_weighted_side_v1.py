@@ -36,7 +36,30 @@ def magnitude_weights(side_advantage: pd.Series, quantile: float = 0.95) -> tupl
     return weights, cap
 
 
-def run_fold(ticker: str, fold: dict[str, Any], prepared: pd.DataFrame, features: list[str]) -> dict[str, Any]:
+def physics_side_feature_cols(columns: list[str], base_features: list[str]) -> list[str]:
+    """Predeclared current-time physics/context side block."""
+    excluded = {
+        "phys_event_seq_in_day", "phys_event_frac_in_day", "phys_minutes_since_first_event",
+        "phys_spot_ret_from_first_event_bps", "phys_same_day_event_count",
+    }
+    extras = [
+        col for col in columns
+        if (col.startswith("phys_") and col not in excluded)
+        or (col.startswith("ctx_") and not col.endswith("_spot"))
+    ]
+    result = list(dict.fromkeys(base_features + extras))
+    if any("future" in col or "opt_exit" in col or "_opt_win" in col for col in result):
+        raise ValueError("Outcome/future column entered physics side features")
+    return result
+
+
+def run_fold(
+    ticker: str,
+    fold: dict[str, Any],
+    prepared: pd.DataFrame,
+    features: list[str],
+    variant: str = "weighted",
+) -> dict[str, Any]:
     config = TICKER_CONFIG[ticker]
     bucket = int(config["bucket"])
     work = prepared.copy()
@@ -50,6 +73,12 @@ def run_fold(ticker: str, fold: dict[str, Any], prepared: pd.DataFrame, features
     def x(frame: pd.DataFrame) -> pd.DataFrame:
         return frame[features].replace([np.inf, -np.inf], np.nan).fillna(medians).fillna(0.0)
 
+    rich_features = physics_side_feature_cols(list(prepared.columns), features)
+    rich_medians = train[rich_features].replace([np.inf, -np.inf], np.nan).median(numeric_only=True)
+
+    def x_rich(frame: pd.DataFrame) -> pd.DataFrame:
+        return frame[rich_features].replace([np.inf, -np.inf], np.nan).fillna(rich_medians).fillna(0.0)
+
     x_train, x_inner, x_outer = x(train), x(inner), x(outer)
     side_mask = (
         (train["opportunity_label"] == 1)
@@ -62,21 +91,27 @@ def run_fold(ticker: str, fold: dict[str, Any], prepared: pd.DataFrame, features
 
     opportunity = lgb.LGBMClassifier(**make_lgb_params(base_seed, HEAD_OFFSET_P1_OPP))
     side_control = lgb.LGBMClassifier(**make_lgb_params(base_seed, HEAD_OFFSET_P1_SIDE))
-    side_weighted = lgb.LGBMClassifier(**make_lgb_params(base_seed, HEAD_OFFSET_P1_SIDE))
+    side_variant = lgb.LGBMClassifier(**make_lgb_params(base_seed, HEAD_OFFSET_P1_SIDE))
     opportunity.fit(x_train, train["opportunity_label"].astype(int))
     side_control.fit(x_side, y_side)
-    side_weighted.fit(x_side, y_side, sample_weight=weights)
+    if variant == "weighted":
+        side_variant.fit(x_side, y_side, sample_weight=weights)
+    elif variant == "physics":
+        side_variant.fit(x_rich(train[side_mask]), y_side)
+    else:
+        raise ValueError(f"Unknown variant: {variant}")
 
     frames = {}
     for name, frame, matrix in (("inner", inner, x_inner), ("outer", outer, x_outer)):
         base = frame.copy()
         base["p_trade"] = opportunity.predict_proba(matrix)[:, 1]
         control = base.copy()
-        weighted = base.copy()
+        variant_frame = base.copy()
         control["p_call"] = side_control.predict_proba(matrix)[:, 1]
-        weighted["p_call"] = side_weighted.predict_proba(matrix)[:, 1]
+        variant_matrix = matrix if variant == "weighted" else x_rich(frame)
+        variant_frame["p_call"] = side_variant.predict_proba(variant_matrix)[:, 1]
         frames[(name, "control")] = control
-        frames[(name, "weighted")] = weighted
+        frames[(name, "variant")] = variant_frame
 
     result: dict[str, Any] = {
         "status": "completed", "ticker": ticker, "test_month": fold["test_month"],
@@ -85,9 +120,11 @@ def run_fold(ticker: str, fold: dict[str, Any], prepared: pd.DataFrame, features
         "feature_hash": compute_feature_hash(features),
         "weight_cap_q95_train": weight_cap,
         "weight_mean": float(weights.mean()),
+        "variant": variant,
+        "variant_side_feature_count": len(features) if variant == "weighted" else len(rich_features),
     }
     trade_records = {}
-    for arm in ("control", "weighted"):
+    for arm in ("control", "variant"):
         threshold, margin, valid, details = select_best_config_p1(
             frames[("inner", arm)], fold["inner_months"], config, bucket,
         )
@@ -122,7 +159,7 @@ def run_fold(ticker: str, fold: dict[str, Any], prepared: pd.DataFrame, features
     science = compute_scientific_side_metrics(
         outer["call_return"].to_numpy(), outer["put_return"].to_numpy(),
         2.0 * frames[("outer", "control")]["p_call"].to_numpy() - 1.0,
-        2.0 * frames[("outer", "weighted")]["p_call"].to_numpy() - 1.0,
+        2.0 * frames[("outer", "variant")]["p_call"].to_numpy() - 1.0,
     )
     result.update(science)
     return result
@@ -132,6 +169,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", required=True)
     parser.add_argument("--output-dir", required=True)
+    parser.add_argument("--variant", choices=("weighted", "physics"), default="weighted")
     args = parser.parse_args()
     dataset_path, output = Path(args.dataset), Path(args.output_dir)
     if output.exists():
@@ -157,26 +195,28 @@ def main() -> int:
             raise RuntimeError("Feature mismatch")
         for fold in generate_folds(FIRST_TEST_MONTH, LAST_TEST_MONTH):
             print(f"[{ticker} {fold['test_month']}]", flush=True)
-            results.append(run_fold(ticker, fold, prepared, feature_cols))
+            results.append(run_fold(ticker, fold, prepared, feature_cols, variant=args.variant))
 
     # Reuse audited criteria by mapping control -> c0 and weighted -> p1.
-    mapped = [{**r, "c0": r["control"], "p1": r["weighted"]} for r in results]
+    mapped = [{**r, "c0": r["control"], "p1": r["variant"]} for r in results]
     science = compute_scientific_criteria(results)
     raw_economic = compute_economic_criteria(mapped)
     economic = {
-        key.replace("c0_", "control_").replace("p1_", "weighted_"): value
+        key.replace("c0_", "control_").replace("p1_", f"{args.variant}_"): value
         for key, value in raw_economic.items()
     }
     pd.json_normalize(results, sep="_").to_csv(output / "all_folds.csv", index=False)
     trades = []
     for r in results:
-        for arm in ("control", "weighted"):
+        for arm in ("control", "variant"):
             for record in r[arm]["diagnostics"]["outer_trade_records"]:
-                trades.append({"arm": arm, "test_month": r["test_month"], **record})
+                label = "control" if arm == "control" else args.variant
+                trades.append({"arm": label, "test_month": r["test_month"], **record})
     pd.DataFrame(trades).to_csv(output / "outer_trades.csv", index=False)
     summary = {
         "dataset_sha256": EXPECTED_DATASET_SHA256, "feature_hash": feature_hash,
-        "cells": len(results), "science_control": "P1 unweighted", "science_variant": "W1 magnitude-weighted",
+        "cells": len(results), "science_control": "P1 unweighted",
+        "science_variant": "W1 magnitude-weighted" if args.variant == "weighted" else "S1 physics/context side skip",
         "scientific_criteria": science, "economic_criteria": economic,
         "adaptive_reuse_not_promotable": True, "contains_2026": False, "production_modified": False,
     }
@@ -185,7 +225,7 @@ def main() -> int:
         "# Magnitude-weighted pairwise side V1\n\n"
         f"- Cells: `{len(results)}`\n- Scientific pass: `{science['scientific_pass']}`\n"
         f"- Control valid folds: `{sum(r['control']['valid_inner'] for r in results)}`\n"
-        f"- Weighted valid folds: `{sum(r['weighted']['valid_inner'] for r in results)}`\n"
+        f"- Variant: `{args.variant}`\n- Variant valid folds: `{sum(r['variant']['valid_inner'] for r in results)}`\n"
         "- Adaptive reuse; not promotable without a new holdout.\n",
         encoding="utf-8",
     )
