@@ -1,0 +1,20 @@
+{
+  "c0_total_cells": 99,
+  "c0_passing_cells": 0,
+  "c0_pass_rate": 0.0,
+  "c0_worst_month_pf": 0.0,
+  "c0_worst_month_pnl": 0.0,
+  "c0_min_monthly_trades": 0,
+  "c0_positive_month_rate": 0.0,
+  "c0_pooled_pf": null,
+  "c0_max_drawdown": 0.0,
+  "p1_total_cells": 99,
+  "p1_passing_cells": 0,
+  "p1_pass_rate": 0.0,
+  "p1_worst_month_pf": 0.0,
+  "p1_worst_month_pnl": 0.0,
+  "p1_min_monthly_trades": 0,
+  "p1_positive_month_rate": 0.0,
+  "p1_pooled_pf": null,
+  "p1_max_drawdown": 0.0
+}

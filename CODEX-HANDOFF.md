@@ -54,6 +54,16 @@ Cadencia confirmada en código: el live **recopila snapshots cada minuto** (`DEF
 - **Estado honesto en este checkpoint:** el preflight final aún no se ha ejecutado desde commit limpio y la corrida completa tampoco. Los hashes antiguos `cacf...`/`448c...` son provisionales; el manifiesto generado por el próximo `-PreflightOnly` será la autoridad.
 - **Autorización posterior del usuario:** tras cerrar/pushear el preflight, ejecutar el protocolo pairwise congelado y diagnosticar el resultado económico. No abrir 2026, no tocar producción y no diseñar otra arquitectura antes de leer esta prueba.
 
+### Resultado ejecutado — REJECTED, no retunar V1
+
+- Preflight autoritativo en commit limpio `0d420fca54885f1b215ff4efec5e65bfe1aa8fab`: PASS, dataset 97.625 filas `20220103..20251231`, 27 tests, 0 modelos, output real ausente. Evidencia publicada después en `e8b6e8f`.
+- `-Execute` terminó una sola vez en 346,5 s usando 28 hilos LightGBM, 99/99 celdas y exit code 0; stderr contiene únicamente FutureWarning de la Logistic diagnóstica. No hubo GPU/fallback/proceso duplicado.
+- Ciencia: 99 válidas, 0 degeneradas. P1 gana balanced accuracy en 57/99 (`57,58%`, requerido >=60%), mediana delta `+0,0040`, Wilcoxon `p=0,1171`; Spearman P1 positivo en 58/99 (`58,59%`), mediana `+0,0303`. Median delta anual sí es positiva en 2023/24/25, pero el gate conjunto falla.
+- Por ticker, mediana delta BA P1−C0: QQQ `-0,0091`, SPXW `+0,0053`, SPY `+0,0104`; mediana BA P1 `0,492/0,506/0,518`. La elección de lado sigue prácticamente al azar y empeora QQQ.
+- Economía: C0 `0/99` y P1 `0/99` configs inner válidas; ambos abstienen en todos los outer. Trades `0`, pooled PF `undefined`, no `infinity`. Esto no es rentabilidad cero: es inanición total de selección.
+- Diagnóstico no causal posterior: always-CALL/PUT y momentum/contrarian 30m son negativos en los tres años/tickers, mientras oracle-side alcanza PF `4,55..11,73`, WR `73,5..86,7%`, mínimo mensual >=19 y todos los meses positivos. Hay headroom grande, pero las 30 features/labels de V1 no extraen la dirección.
+- Próximo paso no es otra arquitectura: auditar las 63 configs inner de cada fold y descomponer qué gate falla; después predeclarar como único factor un objetivo de lado alineado con magnitud económica (regresión directa de `side_advantage` frente a clasificación binaria), conservando oportunidad, features, folds y scheduler. V1 no debe retunarse.
+
 ## Actualización 2026-07-11 15:45 CEST — Regime Gate Ablation V1 reproducible y auditado; C0 internal equivalence PASS
 
 - Auditoría de reproducibilidad finalizada en 10 s; test PASS; paridad del control C0 confirmada.

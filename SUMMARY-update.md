@@ -51,6 +51,16 @@ Se ha completado la implementación necesaria para el preflight final de `PAIRWI
    - Suite focalizada previa al commit: `27 passed`; `py_compile`, parser PowerShell y `git diff --check` PASS. LightGBM usa 28 hilos por fold secuencial para aprovechar el Ryzen de 32 hilos.
    - Estado: preflight final aún no ejecutado desde commit limpio; full run aún no ejecutado. Los hashes definitivos se generarán únicamente después de commit/push con `HEAD == origin/main`.
 
+### Cierre ejecutado de Pairwise V1
+
+El preflight pasó desde `0d420fca...8fab` y quedó publicado en `e8b6e8f`: 27 tests, dataset/hash/fechas correctos, 33 folds, 99 celdas esperadas, cero modelos y `full_run_executed=false`. La ejecución autorizada posterior terminó en 346,5 s con 99/99 celdas y exit code 0, sin 2026 ni cambios de producción.
+
+P1 no supera C0 de forma suficiente: 57/99 deltas de balanced accuracy positivos (`57,58%`), mediana `+0,004`, Wilcoxon `p=0,117`; Spearman positivo 58/99 (`58,59%`), mediana `0,0303`. QQQ empeora (mediana delta `-0,0091`); SPXW/SPY apenas mejoran (`+0,0053/+0,0104`). Las 99 celdas fueron válidas y no hubo degeneradas.
+
+El fallo económico es anterior al outer: `0/99` folds C0 y `0/99` P1 encuentran una sola configuración que cumpla simultáneamente los tres meses inner. Ambos abstienen siempre y realizan 0 trades; pooled PF queda correctamente `undefined`, no infinito. Un diagnóstico oracle confirma que las labels contienen headroom (PF anual por ticker `4,55..11,73`, WR `73,5..86,7%`, todos los meses positivos), mientras always CALL/PUT y momentum/contrarian 30m son negativos. Por tanto el problema sigue siendo predecir el lado, no frecuencia física ni scheduler.
+
+Se cierra V1 como `REJECTED`; no se retunará su grid. La siguiente investigación debe primero persistir el grid inner completo para localizar las gates eliminatorias y luego aislar un único cambio de objetivo que dé peso a la magnitud de `side_advantage`, manteniendo oportunidad/features/folds/scheduler. Esta continuación es exploratoria sobre 2022–2025 y no autoriza live hasta un holdout realmente nuevo.
+
 ## Actualización 2026-07-11 15:45 CEST — Auditoría de Reproducibilidad y C0 Equivalence Terminadas con Éxito
 
 La auditoría de reproducibilidad se completó con éxito en 10 s (test PASS), arrojando las siguientes conclusiones fundamentales:

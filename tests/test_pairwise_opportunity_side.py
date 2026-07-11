@@ -578,6 +578,20 @@ def test_pf_not_averaged_for_promotion():
     assert "p1_mean_monthly_pf" not in econ
 
 
+def test_zero_trades_has_undefined_not_infinite_pooled_pf():
+    from walkforward_pairwise_opportunity_side import compute_economic_criteria
+
+    result = compute_economic_criteria([{
+        "status": "completed",
+        "ticker": "SPXW",
+        "test_month": "202304",
+        "c0": {"valid_inner": False},
+        "p1": {"valid_inner": False},
+    }])
+    assert result["c0_pooled_pf"] is None
+    assert result["p1_pooled_pf"] is None
+
+
 # ── 19. Seed offsets are correct per head ──────────────────────────
 
 def test_seed_offsets_per_head():

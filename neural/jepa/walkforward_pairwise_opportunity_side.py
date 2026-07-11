@@ -1353,10 +1353,14 @@ def compute_economic_criteria(all_results: list[dict]) -> dict:
         # Pooled PF uses gross trade profits/losses, never monthly net PnL.
         gross_profit = sum(float(c["gross_profit"]) for c in arm_cells)
         gross_loss = sum(float(c["gross_loss"]) for c in arm_cells)
-        econ[f"{arm}_pooled_pf"] = round(gross_profit / gross_loss, 4) if gross_loss > 0 else float("inf")
-
         records = [record for cell in arm_cells for record in cell["trade_records"]]
         records.sort(key=lambda x: (str(x["date"]), int(x["minute"]), str(x["ticker"])))
+        if not records:
+            econ[f"{arm}_pooled_pf"] = None
+        elif gross_loss > 0:
+            econ[f"{arm}_pooled_pf"] = round(gross_profit / gross_loss, 4)
+        else:
+            econ[f"{arm}_pooled_pf"] = float("inf")
         returns = np.asarray([float(record["realized_return"]) for record in records], dtype=float)
         if len(returns):
             equity = np.cumsum(returns)

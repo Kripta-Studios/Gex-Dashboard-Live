@@ -1,0 +1,291 @@
+Loading dataset: tmp\event_option_dataset_execquote_causal1030_202201_202512_pairwise_v1\event_option_dataset.parquet
+  Rows: 97,625, range: 20220103..20251231
+  SHA-256: d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408
+  Folds: 33 (202304..202512)
+  Feature allowlist: 9 common + 6 diffs + 15 changes = 30
+  First allowed minute: 635 (minute > 630, 5m grid)
+
+============================================================
+TICKER: SPXW (bucket=d25, cap=4, cooldown=0m)
+============================================================
+  Prepared: 33,971 rows, 30 features
+  Feature hash: fa2057653ed0327b7f84a165c25f6e6d31e31b3b05c5591593e9c0bd3056d50e
+  Features: ['minute', 'ib_range_bps', 'dist_ib_high_bps', 'dist_ib_low_bps', 'nearest_level_abs_bps'] ... (30 total)
+  [SPXW_202304] train=202201..202212 inner=202301..202303 test=202304
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202305] train=202202..202301 inner=202302..202304 test=202305
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202306] train=202203..202302 inner=202303..202305 test=202306
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202307] train=202204..202303 inner=202304..202306 test=202307
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202308] train=202205..202304 inner=202305..202307 test=202308
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202309] train=202206..202305 inner=202306..202308 test=202309
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202310] train=202207..202306 inner=202307..202309 test=202310
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202311] train=202208..202307 inner=202308..202310 test=202311
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202312] train=202209..202308 inner=202309..202311 test=202312
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202401] train=202210..202309 inner=202310..202312 test=202401
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202402] train=202211..202310 inner=202311..202401 test=202402
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202403] train=202212..202311 inner=202312..202402 test=202403
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202404] train=202301..202312 inner=202401..202403 test=202404
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202405] train=202302..202401 inner=202402..202404 test=202405
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202406] train=202303..202402 inner=202403..202405 test=202406
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202407] train=202304..202403 inner=202404..202406 test=202407
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202408] train=202305..202404 inner=202405..202407 test=202408
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202409] train=202306..202405 inner=202406..202408 test=202409
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202410] train=202307..202406 inner=202407..202409 test=202410
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202411] train=202308..202407 inner=202408..202410 test=202411
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202412] train=202309..202408 inner=202409..202411 test=202412
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202501] train=202310..202409 inner=202410..202412 test=202501
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202502] train=202311..202410 inner=202411..202501 test=202502
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202503] train=202312..202411 inner=202412..202502 test=202503
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202504] train=202401..202412 inner=202501..202503 test=202504
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202505] train=202402..202501 inner=202502..202504 test=202505
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202506] train=202403..202502 inner=202503..202505 test=202506
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202507] train=202404..202503 inner=202504..202506 test=202507
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202508] train=202405..202504 inner=202505..202507 test=202508
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202509] train=202406..202505 inner=202506..202508 test=202509
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202510] train=202407..202506 inner=202507..202509 test=202510
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202511] train=202408..202507 inner=202508..202510 test=202511
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPXW_202512] train=202409..202508 inner=202509..202511 test=202512
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+
+============================================================
+TICKER: QQQ (bucket=d35, cap=2, cooldown=30m)
+============================================================
+  Prepared: 29,063 rows, 30 features
+  Feature hash: fa2057653ed0327b7f84a165c25f6e6d31e31b3b05c5591593e9c0bd3056d50e
+  Features: ['minute', 'ib_range_bps', 'dist_ib_high_bps', 'dist_ib_low_bps', 'nearest_level_abs_bps'] ... (30 total)
+  [QQQ_202304] train=202201..202212 inner=202301..202303 test=202304
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202305] train=202202..202301 inner=202302..202304 test=202305
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202306] train=202203..202302 inner=202303..202305 test=202306
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202307] train=202204..202303 inner=202304..202306 test=202307
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202308] train=202205..202304 inner=202305..202307 test=202308
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202309] train=202206..202305 inner=202306..202308 test=202309
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202310] train=202207..202306 inner=202307..202309 test=202310
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202311] train=202208..202307 inner=202308..202310 test=202311
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202312] train=202209..202308 inner=202309..202311 test=202312
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202401] train=202210..202309 inner=202310..202312 test=202401
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202402] train=202211..202310 inner=202311..202401 test=202402
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202403] train=202212..202311 inner=202312..202402 test=202403
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202404] train=202301..202312 inner=202401..202403 test=202404
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202405] train=202302..202401 inner=202402..202404 test=202405
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202406] train=202303..202402 inner=202403..202405 test=202406
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202407] train=202304..202403 inner=202404..202406 test=202407
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202408] train=202305..202404 inner=202405..202407 test=202408
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202409] train=202306..202405 inner=202406..202408 test=202409
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202410] train=202307..202406 inner=202407..202409 test=202410
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202411] train=202308..202407 inner=202408..202410 test=202411
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202412] train=202309..202408 inner=202409..202411 test=202412
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202501] train=202310..202409 inner=202410..202412 test=202501
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202502] train=202311..202410 inner=202411..202501 test=202502
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202503] train=202312..202411 inner=202412..202502 test=202503
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202504] train=202401..202412 inner=202501..202503 test=202504
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202505] train=202402..202501 inner=202502..202504 test=202505
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202506] train=202403..202502 inner=202503..202505 test=202506
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202507] train=202404..202503 inner=202504..202506 test=202507
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202508] train=202405..202504 inner=202505..202507 test=202508
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202509] train=202406..202505 inner=202506..202508 test=202509
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202510] train=202407..202506 inner=202507..202509 test=202510
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202511] train=202408..202507 inner=202508..202510 test=202511
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [QQQ_202512] train=202409..202508 inner=202509..202511 test=202512
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+
+============================================================
+TICKER: SPY (bucket=d35, cap=1, cooldown=0m)
+============================================================
+  Prepared: 32,389 rows, 30 features
+  Feature hash: fa2057653ed0327b7f84a165c25f6e6d31e31b3b05c5591593e9c0bd3056d50e
+  Features: ['minute', 'ib_range_bps', 'dist_ib_high_bps', 'dist_ib_low_bps', 'nearest_level_abs_bps'] ... (30 total)
+  [SPY_202304] train=202201..202212 inner=202301..202303 test=202304
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202305] train=202202..202301 inner=202302..202304 test=202305
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202306] train=202203..202302 inner=202303..202305 test=202306
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202307] train=202204..202303 inner=202304..202306 test=202307
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202308] train=202205..202304 inner=202305..202307 test=202308
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202309] train=202206..202305 inner=202306..202308 test=202309
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202310] train=202207..202306 inner=202307..202309 test=202310
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202311] train=202208..202307 inner=202308..202310 test=202311
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202312] train=202209..202308 inner=202309..202311 test=202312
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202401] train=202210..202309 inner=202310..202312 test=202401
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202402] train=202211..202310 inner=202311..202401 test=202402
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202403] train=202212..202311 inner=202312..202402 test=202403
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202404] train=202301..202312 inner=202401..202403 test=202404
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202405] train=202302..202401 inner=202402..202404 test=202405
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202406] train=202303..202402 inner=202403..202405 test=202406
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202407] train=202304..202403 inner=202404..202406 test=202407
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202408] train=202305..202404 inner=202405..202407 test=202408
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202409] train=202306..202405 inner=202406..202408 test=202409
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202410] train=202307..202406 inner=202407..202409 test=202410
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202411] train=202308..202407 inner=202408..202410 test=202411
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202412] train=202309..202408 inner=202409..202411 test=202412
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202501] train=202310..202409 inner=202410..202412 test=202501
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202502] train=202311..202410 inner=202411..202501 test=202502
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202503] train=202312..202411 inner=202412..202502 test=202503
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202504] train=202401..202412 inner=202501..202503 test=202504
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202505] train=202402..202501 inner=202502..202504 test=202505
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202506] train=202403..202502 inner=202503..202505 test=202506
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202507] train=202404..202503 inner=202504..202506 test=202507
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202508] train=202405..202504 inner=202505..202507 test=202508
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202509] train=202406..202505 inner=202506..202508 test=202509
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202510] train=202407..202506 inner=202507..202509 test=202510
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202511] train=202408..202507 inner=202508..202510 test=202511
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+  [SPY_202512] train=202409..202508 inner=202509..202511 test=202512
+    C0: valid=False pnl=0.000 | P1: valid=False pnl=0.000
+
+============================================================
+AGGREGATE SUMMARY
+============================================================
+  dataset_sha256: d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408
+  feature_hash: fa2057653ed0327b7f84a165c25f6e6d31e31b3b05c5591593e9c0bd3056d50e
+  first_allowed_minute: 635
+  total_folds: 99
+  folds_completed: 99
+  scientific_criteria:
+    observed_scientific_cells: 99
+    missing_scientific_cells: 0
+    valid_scientific_cells: 99
+    degenerate_scientific_cells: 0
+    favorable_cells: 57
+    total_denominator: 99
+    ba_delta_positive_rate: 0.5758
+    ba_delta_median: 0.004
+    ba_delta_mean: 0.0039
+    spearman_positive_rate: 0.5859
+    spearman_median: 0.0303
+    wilcoxon_statistic: 2026.0
+    wilcoxon_pvalue: 0.11708194548711051
+    wilcoxon_n_nonzero: 99
+    wilcoxon_status: success
+    year_2023_ba_delta_median: 0.0087
+    year_2023_ba_delta_positive_rate: 0.6667
+    year_2023_cells: 27
+    year_2023_valid_cells: 27
+    year_2024_ba_delta_median: 0.0021
+    year_2024_ba_delta_positive_rate: 0.5556
+    year_2024_cells: 36
+    year_2024_valid_cells: 36
+    year_2025_ba_delta_median: 0.0029
+    year_2025_ba_delta_positive_rate: 0.5278
+    year_2025_cells: 36
+    year_2025_valid_cells: 36
+    favorable_years: 3
+    favorable_years_required: 3
+    scientific_pass: False
+  economic_criteria:
+    c0_total_cells: 99
+    c0_passing_cells: 0
+    c0_pass_rate: 0.0
+    c0_worst_month_pf: 0.0
+    c0_worst_month_pnl: 0.0
+    c0_min_monthly_trades: 0
+    c0_positive_month_rate: 0.0
+    c0_pooled_pf: inf
+    c0_max_drawdown: 0.0
+    p1_total_cells: 99
+    p1_passing_cells: 0
+    p1_pass_rate: 0.0
+    p1_worst_month_pf: 0.0
+    p1_worst_month_pnl: 0.0
+    p1_min_monthly_trades: 0
+    p1_positive_month_rate: 0.0
+    p1_pooled_pf: inf
+    p1_max_drawdown: 0.0
+  c0_valid_folds: 0
+  c0_pass_rate: 0.0
+  p1_valid_folds: 0
+  p1_pass_rate: 0.0
+
+Results written to: research_papers\JEPA\results\_diagnostics\pairwise_opportunity_side_v1
+

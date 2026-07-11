@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "experiment": "PAIRWISE_OPPORTUNITY_AND_SIDE_SELECTION_V1",
+  "mode": "Execute",
+  "git_head": "e8b6e8fcc765b05d5aebde4b6ac26683e9a842d2",
+  "dataset_sha256": "d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408",
+  "runner_sha256": "5a068ba6e8c580b09a68a23afc977acfe904aad8569fdb0a83bf6d4dd2e2cf60",
+  "walkforward_sha256": "cb157fe2eeb84af56314c9aa6bfc0b601548f858f7c2f311a50e25ac42f5f281",
+  "tests_sha256": "dcb24a44b134cbf5468f6e4e412225a674e3a62005e26e4453f24e55a97f1ad5",
+  "predeclaration_sha256": "7135f0e7b9a499881aa03e3c88645326776bea0c399052cb9f4508e5a1e23dce",
+  "feature_hash": "fa2057653ed0327b7f84a165c25f6e6d31e31b3b05c5591593e9c0bd3056d50e",
+  "preflight_manifest_sha256": "dfc2df0cf6985b2f2dd8a58886449444fecfcd0c2dbbf651548abc4c1b30d00b",
+  "full_run_executed": true,
+  "exit_code": 0
+}

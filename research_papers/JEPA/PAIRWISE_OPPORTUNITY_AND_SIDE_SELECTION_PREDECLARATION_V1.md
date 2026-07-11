@@ -1,6 +1,6 @@
 # PAIRWISE_OPPORTUNITY_AND_SIDE_SELECTION_V1 — Predeclaration
 
-**Status:** PREDECLARED — final preflight implementation ready; models not yet trained
+**Status:** EXECUTED ONCE — REJECTED; do not retune or relaunch V1
 **Date:** 2026-07-11  
 **Author:** AI Agent (supervised)  
 **Preparation baseline:** `b3c6af9a7fb54adecce6f6aff270d89cd52a42fe`
@@ -209,6 +209,20 @@ The real run produces `selected_folds.csv`, `selected_policies.json`,
 `fold_manifest.json`, `all_folds.csv`, `scientific_criteria.json`,
 `economic_criteria.json`, `aggregate_report.json`, `run_manifest.json`, `REPORT.md`
 and per-fold summaries/importances/trades.
+
+## Post-run result (protocol unchanged during execution)
+
+The single authorized execution completed 99/99 cells with zero scientific
+degeneracies. P1 failed the predeclared scientific thresholds: balanced-accuracy
+delta was positive in `57/99` cells (`57.58%`, median `+0.0040`, Wilcoxon
+`p=0.1171`) and P1 Spearman was positive in `58/99` (`58.59%`, median `+0.0303`).
+The annual median delta was positive in 2023, 2024 and 2025, but this does not
+compensate the two failed 60% gates.
+
+No C0 or P1 threshold/margin pair satisfied the complete three-month inner contract
+in any of the 99 cells. Both arms therefore abstained on every outer month and
+executed zero trades; pooled PF is undefined. V1 is rejected and cannot be retuned
+or relaunched as primary evidence. Production and 2026 remained untouched.
 Manifests contain:
 - `feature_hash` per arm
 - `model_label` definitions
