@@ -1,0 +1,20 @@
+{
+  "files": [
+    {
+      "path": "neural/jepa/walkforward_pairwise_opportunity_side.py",
+      "sha256": "cb157fe2eeb84af56314c9aa6bfc0b601548f858f7c2f311a50e25ac42f5f281"
+    },
+    {
+      "path": "tests/test_pairwise_opportunity_side.py",
+      "sha256": "dcb24a44b134cbf5468f6e4e412225a674e3a62005e26e4453f24e55a97f1ad5"
+    },
+    {
+      "path": "run_pairwise_opportunity_side_v1.ps1",
+      "sha256": "5a068ba6e8c580b09a68a23afc977acfe904aad8569fdb0a83bf6d4dd2e2cf60"
+    },
+    {
+      "path": "research_papers/JEPA/PAIRWISE_OPPORTUNITY_AND_SIDE_SELECTION_PREDECLARATION_V1.md",
+      "sha256": "7135f0e7b9a499881aa03e3c88645326776bea0c399052cb9f4508e5a1e23dce"
+    }
+  ]
+}

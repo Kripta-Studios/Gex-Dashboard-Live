@@ -1,0 +1,126 @@
+{
+  "dataset": "tmp\\event_option_dataset_execquote_causal1030_202201_202512_pairwise_v1\\event_option_dataset.parquet",
+  "dataset_sha256": "d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408",
+  "folds": 33,
+  "tickers": [
+    "SPXW",
+    "QQQ",
+    "SPY"
+  ],
+  "lgb_params": {
+    "n_estimators": 300,
+    "learning_rate": 0.05,
+    "num_leaves": 31,
+    "min_child_samples": 20,
+    "subsample": 0.8,
+    "subsample_freq": 1,
+    "colsample_bytree": 0.8,
+    "reg_lambda": 1.0,
+    "n_jobs": 28,
+    "verbose": -1,
+    "objective": "binary",
+    "importance_type": "gain",
+    "deterministic": true,
+    "force_col_wise": true
+  },
+  "seed": 42,
+  "head_offsets": {
+    "C0_CALL": 1,
+    "C0_PUT": 2,
+    "P1_OPP": 3,
+    "P1_SIDE": 4
+  },
+  "trade_thresholds": [
+    0.1,
+    0.2,
+    0.3,
+    0.4,
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.9
+  ],
+  "side_margins": [
+    0.0,
+    0.05,
+    0.1,
+    0.15,
+    0.2,
+    0.25,
+    0.3
+  ],
+  "inner_gates": {
+    "min_pf": 1.3,
+    "min_wr": 0.5,
+    "min_trades_per_month": 18,
+    "min_hold_minutes": 30
+  },
+  "ticker_config": {
+    "SPXW": {
+      "bucket": 25,
+      "max_trades_per_day": 4,
+      "cooldown_minutes": 0,
+      "ticker_offset": 100
+    },
+    "QQQ": {
+      "bucket": 35,
+      "max_trades_per_day": 2,
+      "cooldown_minutes": 30,
+      "ticker_offset": 200
+    },
+    "SPY": {
+      "bucket": 35,
+      "max_trades_per_day": 1,
+      "cooldown_minutes": 0,
+      "ticker_offset": 300
+    }
+  },
+  "common_features": [
+    "minute",
+    "ib_range_bps",
+    "dist_ib_high_bps",
+    "dist_ib_low_bps",
+    "nearest_level_abs_bps",
+    "ret_1m_bps",
+    "ret_5m_bps",
+    "ret_15m_bps",
+    "ret_30m_bps"
+  ],
+  "diff_metrics": [
+    "iv",
+    "spread_pct",
+    "volume",
+    "oi",
+    "abs_delta",
+    "vega"
+  ],
+  "change_lags": [
+    [
+      1,
+      "5m"
+    ],
+    [
+      3,
+      "15m"
+    ],
+    [
+      5,
+      "25m"
+    ]
+  ],
+  "first_allowed_minute": 635,
+  "c0_definition": "In-protocol nested absolute-head baseline. Labels: call_win_label=int(call_return>0), put_win_label=int(put_return>0).",
+  "p1_definition": "Pairwise opportunity + side classifier. Labels: opportunity_label=int(max(call_return,put_return)>0), side_label=int(call_return>put_return).",
+  "scientific_criteria": {
+    "ba_delta_positive_rate >= 0.60": true,
+    "ba_delta_median > 0": true,
+    "spearman_positive_rate >= 0.60": true,
+    "spearman_median > 0": true,
+    "favorable_evidence_2023_2024_2025": true
+  },
+  "economic_criteria": {
+    "per_ticker_per_month": "PF>=1.3, WR>=50%, trades>=18, PnL>0, hold>=30m",
+    "no_averaged_monthly_pf": true
+  }
+}
