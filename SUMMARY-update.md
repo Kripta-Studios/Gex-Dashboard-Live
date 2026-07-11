@@ -32,7 +32,7 @@ La corrección de provenance funcionó: incluso las abstenciones conservan train
 
 ## Actualización 2026-07-11 17:00 CEST — Predeclaración y Preparación de Pairwise Opportunity and Side Selection V1
 
-Se ha completado y auditado la fase de preflight y preparación de `PAIRWISE_OPPORTUNITY_AND_SIDE_SELECTION_V1` de acuerdo con todas las correcciones obligatorias del plan técnico:
+Se ha completado la implementación necesaria para el preflight final de `PAIRWISE_OPPORTUNITY_AND_SIDE_SELECTION_V1`. La ejecución autoritativa de `-PreflightOnly` queda pendiente hasta commitear/pushear este estado y obtener un working tree tracked limpio:
 
 1. **Datos físicamente sellados (2022-2025):** Se generó el parquet de datos restringido `tmp/event_option_dataset_execquote_causal1030_202201_202512_pairwise_v1/event_option_dataset.parquet` conteniendo 97,625 filas. Aserciones causales estrictas impiden la carga de cualquier dato de 2026. Hash SHA-256 del dataset: `d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408`.
 2. **Predeclaración e Hiperparámetros:** Registrados en `research_papers/JEPA/PAIRWISE_OPPORTUNITY_AND_SIDE_SELECTION_PREDECLARATION_V1.md`. Los hiperparámetros LightGBM quedan congelados: `n_estimators=300`, `learning_rate=0.05`, `num_leaves=31`, `min_child_samples=20`, `subsample=0.8`, `subsample_freq=1`, `colsample_bytree=0.8`, `reg_lambda=1.0`, y semillas deterministicas basadas en `FROZEN_SEED=42` + `test_month` + head offset.
@@ -43,10 +43,13 @@ Se ha completado y auditado la fase de preflight y preparación de `PAIRWISE_OPP
    - Hash de la allowlist: `fa2057653ed0327b7f84a165c25f6e6d31e31b3b05c5591593e9c0bd3056d50e`.
 4. **C0 Redefinido con Precisión:** Baseline absoluto nested entrenado in-protocol. Utiliza etiquetas `call_win_label = int(call_return > 0)` y `put_win_label = int(put_return > 0)`. Su política de ejecución evalúa la misma grid de P1 (`trade_threshold = 0.1..0.9`, `side_margin = 0.0..0.30`) y se basa en `trade_score = max(p_call, p_put)` y `side_gap = abs(p_call - p_put)`.
 5. **Mecanismo de Cambios Backward-looking:** Las diferencias y sus tasas de cambio a 5m/15m/25m se calculan usando `shift` agrupado por `(ticker, trade_date, bucket)` después de ordenar por minuto dentro de cada sesión, impidiendo contaminación cruzada.
-6. **Código de Walk-Forward y Tests Unitarios:**
-   - Implementado script ejecutor `walkforward_pairwise_opportunity_side.py` que realiza las dos clasificaciones para C0 y P1.
-   - Desarrollada y ejecutada la suite de pruebas en `tests/test_pairwise_opportunity_side.py` con 19 tests unitarios aprobados de forma limpia (`19 passed`).
-   - El script preflight `run_pairwise_opportunity_side_v1.ps1` fue ejecutado con éxito, generando manifiesto `pairwise_preflight_manifest.json` (SHA-256 del Runner: `cacf71c48daec8e4db9684d778ac94df4febe8d4018f9850d74d3a868a2a20b4`).
+6. **Corrección final del preflight antes de entrenar:**
+   - El runner exige ahora exactamente `-PreflightOnly` o `-Execute`; ya no cae silenciosamente a preflight. Los outputs `...pairwise_opportunity_side_v1_preflight/` y `...pairwise_opportunity_side_v1/` están aislados, y el real debe no existir.
+   - `-PreflightOnly` ejecuta `--dry-run`, que retorna antes de construir features por ticker o llamar `run_fold`; el test lo sustituye por una excepción para demostrar que no entrena.
+   - Se corrigió la comparación científica: scores C0/P1 sobre una única máscara finita outer, accuracy/balanced accuracy/ROC-AUC/Spearman aunque la policy abstenga, 99 celdas fijas y degeneradas preservadas como no favorables.
+   - Se corrigió el reporte económico para que pooled PF use gross profit/gross loss de trades, no la razón de PnL neto mensual; las abstenciones fallan frecuencia y worst-month, y se reporta drawdown sobre trades outer ordenados.
+   - Suite focalizada previa al commit: `27 passed`; `py_compile`, parser PowerShell y `git diff --check` PASS. LightGBM usa 28 hilos por fold secuencial para aprovechar el Ryzen de 32 hilos.
+   - Estado: preflight final aún no ejecutado desde commit limpio; full run aún no ejecutado. Los hashes definitivos se generarán únicamente después de commit/push con `HEAD == origin/main`.
 
 ## Actualización 2026-07-11 15:45 CEST — Auditoría de Reproducibilidad y C0 Equivalence Terminadas con Éxito
 

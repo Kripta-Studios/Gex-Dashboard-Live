@@ -4,6 +4,10 @@ Tests for PAIRWISE_OPPORTUNITY_AND_SIDE_SELECTION_V1 walkforward logic.
 from __future__ import annotations
 
 import hashlib
+import inspect
+import json
+import shutil
+import subprocess
 import sys
 from pathlib import Path
 import numpy as np
@@ -11,6 +15,8 @@ import pandas as pd
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "neural" / "jepa"))
+
+import walkforward_pairwise_opportunity_side as pairwise
 
 from walkforward_pairwise_opportunity_side import (
     COMMON_FEATURES,
@@ -38,6 +44,7 @@ from walkforward_pairwise_opportunity_side import (
     compute_feature_hash,
     make_lgb_params,
     compute_lr_diagnostics,
+    compute_scientific_side_metrics,
 )
 
 # ── 1. Allowlist and causal checks ──────────────────────────────────────
@@ -467,13 +474,17 @@ def test_scientific_criteria_no_inner_pass_rate():
     and Spearman, not inner pass rate."""
     from walkforward_pairwise_opportunity_side import compute_scientific_criteria
 
-    # Mock results with completed folds
+    # Mock results with completed folds. They are deliberately fewer than the
+    # fixed 99-cell denominator, so the remainder must stay as missing/degenerate.
     mock_results = []
     for i in range(10):
         mock_results.append({
             "status": "completed",
             "test_month": f"2024{(i + 3):02d}" if i + 3 <= 12 else f"2025{(i + 3 - 12):02d}",
             "ticker": "SPXW",
+            "sci_cell_degenerate": False,
+            "sci_ba_delta": 0.05,
+            "sci_p1_spearman": 0.10,
             "c0": {
                 "valid_inner": True,
                 "diagnostics": {"side_balanced_accuracy_A": 0.50},
@@ -497,6 +508,8 @@ def test_scientific_criteria_no_inner_pass_rate():
 
     # Inner pass rate is NOT a scientific criterion
     assert "inner_pass_rate" not in sci
+    assert sci["total_denominator"] == 99
+    assert sci["missing_scientific_cells"] == 89
 
 
 # ── 17. Economic success evaluated per ticker per month ─────────────
@@ -590,3 +603,194 @@ def test_seed_offsets_per_head():
     assert params["force_col_wise"] is True
     assert params["verbose"] == -1
     assert params["subsample_freq"] == 1
+
+
+# ── 20. Side score formulas and scientific evaluation mask ─────────────
+
+def test_side_score_formulas_and_scientific_mask():
+    """Verify side scores: C0 is p_call_win - p_put_win, P1 is 2*p_call - 1.
+    Verify they are evaluated on the exact same mask (opp == 1 and abs(diff) > 1e-9).
+    """
+    # Create fake test df
+    test_df = pd.DataFrame({
+        "call_return": [0.05, -0.01, 0.0, 0.10],
+        "put_return":  [-0.01, 0.02, 0.0, 0.10],
+        "p_call_win":  [0.8, 0.4, 0.5, 0.9],
+        "p_put_win":   [0.2, 0.7, 0.5, 0.8],
+        "p_call":      [0.75, 0.3, 0.5, 0.85],
+    })
+
+    # Calculations:
+    # row 0: max(0.05, -0.01)=0.05 > 0 (opp=1), diff=0.06 > 1e-9 (sci=True)
+    # row 1: max(-0.01, 0.02)=0.02 > 0 (opp=1), diff=-0.03 (abs=0.03 > 1e-9) (sci=True)
+    # row 2: max(0, 0)=0 (opp=0) (sci=False)
+    # row 3: max(0.1, 0.1)=0.1 > 0 (opp=1), diff=0.0 (abs=0 <= 1e-9) (sci=False)
+
+    call_ret = test_df["call_return"].to_numpy(dtype=float)
+    put_ret = test_df["put_return"].to_numpy(dtype=float)
+    c0_side_score = test_df["p_call_win"] - test_df["p_put_win"]
+    p1_side_score = 2 * test_df["p_call"] - 1
+
+    assert np.allclose(c0_side_score.iloc[0], 0.6)
+    assert np.allclose(p1_side_score.iloc[0], 0.5)
+    assert np.allclose(c0_side_score.iloc[1], -0.3)
+    assert np.allclose(p1_side_score.iloc[1], -0.4)
+
+    scientific = compute_scientific_side_metrics(
+        call_ret,
+        put_ret,
+        c0_side_score.to_numpy(),
+        p1_side_score.to_numpy(),
+    )
+    assert scientific["scientific_mask_rows"] == 2
+    assert scientific["sci_cell_degenerate"] is False
+    assert scientific["sci_c0_accuracy"] == 1.0
+    assert scientific["sci_p1_accuracy"] == 1.0
+    assert scientific["sci_c0_balanced_accuracy"] == 1.0
+    assert scientific["sci_p1_balanced_accuracy"] == 1.0
+
+
+# ── 21. Denominator 99 for scientific cells and degenerate handling ──
+
+from walkforward_pairwise_opportunity_side import compute_scientific_criteria
+
+def test_denominator_and_degenerate_scientific_cells():
+    """Verify that degenerate cells do not get deleted, and total denominator is 99.
+    Verify that median annual delta calculation uses only valid (non-degenerate) cells.
+    """
+    mock_results = []
+    # Generate 99 cells
+    tickers = ["SPXW", "QQQ", "SPY"]
+    months = [f"2024{m:02d}" for m in range(1, 13)] + [f"2025{m:02d}" for m in range(1, 13)] + [f"2023{m:02d}" for m in range(4, 13)] # 12 + 12 + 9 = 33 months
+
+    for t in tickers:
+        for m in months:
+            # Let's make some degenerate, some favorable, some unfavorable
+            # We have 99 cells total
+            is_degen = (m == "202401")  # 3 cells degenerate
+            mock_results.append({
+                "status": "completed",
+                "ticker": t,
+                "test_month": m,
+                "sci_cell_degenerate": is_degen,
+                "sci_ba_delta": 0.05 if not is_degen else float("nan"),
+                "sci_p1_spearman": 0.10 if not is_degen else float("nan"),
+            })
+
+    sci = compute_scientific_criteria(mock_results)
+
+    # Total denominator is strictly 99
+    assert sci["total_denominator"] == 99
+    # 3 cells are degenerate
+    assert sci["degenerate_scientific_cells"] == 3
+    # 96 cells are valid
+    assert sci["valid_scientific_cells"] == 96
+    # Favorable cells = 96 (all deltas are 0.05 > 0)
+    assert sci["favorable_cells"] == 96
+    # Rate is 96 / 99 = 0.9697
+    assert np.isclose(sci["ba_delta_positive_rate"], 0.9697)
+
+
+# ── 22. Policy-level metrics are isolated from model-level ──────────
+
+def test_policy_level_vs_model_level_independence():
+    """Verify that model-level metrics are computed for all opportunity-positive
+    non-tie rows, regardless of whether the policy chose to trade or abstain.
+    """
+    parameters = set(inspect.signature(compute_scientific_side_metrics).parameters)
+    assert parameters == {"call_return", "put_return", "c0_side_score", "p1_side_score"}
+    assert not parameters.intersection({"traded", "policy", "threshold", "side_margin"})
+
+    call_return = np.array([0.2, -0.1, 0.3, -0.2])
+    put_return = np.array([-0.1, 0.2, -0.2, 0.3])
+    c0_score = np.array([0.4, -0.2, 0.1, -0.5])
+    p1_score = np.array([0.3, -0.4, 0.2, -0.1])
+    first = compute_scientific_side_metrics(call_return, put_return, c0_score, p1_score)
+    second = compute_scientific_side_metrics(call_return, put_return, c0_score, p1_score)
+    assert first == second
+    assert first["scientific_mask_rows"] == 4
+
+
+def test_scientific_mask_is_common_finite_and_degenerate_is_preserved():
+    result = compute_scientific_side_metrics(
+        call_return=np.array([0.2, 0.3, 0.4, np.nan]),
+        put_return=np.array([-0.1, 0.3, -0.2, 0.1]),
+        c0_side_score=np.array([0.2, 0.1, np.nan, -0.1]),
+        p1_side_score=np.array([0.3, 0.2, -0.4, 0.1]),
+    )
+    # Only row 0 survives: row 1 is a return tie, row 2 has a nonfinite C0
+    # score, and row 3 has a nonfinite label. One class/row is degenerate.
+    assert result["scientific_mask_rows"] == 1
+    assert result["sci_cell_degenerate"] is True
+    assert result["sci_cell_degenerate_reason"].startswith("SCIENTIFIC_CELL_DEGENERATE")
+    assert np.isnan(result["sci_ba_delta"])
+
+
+# ── 23. Preflight and execution directory isolation ────────────────
+
+def test_preflight_vs_execution_directory_paths():
+    """Verify preflight and execution folders are separated as specified."""
+    # Preflight must output to pairwise_opportunity_side_v1_preflight
+    # Execution must output to pairwise_opportunity_side_v1
+    runner_text = (Path(__file__).resolve().parent.parent / "run_pairwise_opportunity_side_v1.ps1").read_text(encoding="utf-8")
+    preflight_dir = "research_papers/JEPA/results/_diagnostics/pairwise_opportunity_side_v1_preflight"
+    real_dir = "research_papers/JEPA/results/_diagnostics/pairwise_opportunity_side_v1"
+    assert preflight_dir != real_dir
+    assert f'$PreflightOutput = "{preflight_dir}"' in runner_text
+    assert f'$RealOutput = "{real_dir}"' in runner_text
+    assert 'if (Test-Path -LiteralPath $RealOutput)' in runner_text
+
+
+def test_dry_run_never_calls_training(monkeypatch, tmp_path):
+    """--dry-run must return before feature construction or fold training."""
+    fake = pd.DataFrame({"trade_date": ["20220103", "20251231"]})
+    monkeypatch.setattr(pairwise.pd, "read_parquet", lambda _path: fake.copy())
+    monkeypatch.setattr(pairwise, "sha256_file", lambda _path: "0" * 64)
+
+    def fail_if_called(*_args, **_kwargs):
+        raise AssertionError("training was called from --dry-run")
+
+    monkeypatch.setattr(pairwise, "run_fold", fail_if_called)
+    output = tmp_path / "preflight"
+    monkeypatch.setattr(sys, "argv", [
+        "walkforward_pairwise_opportunity_side.py",
+        "--dataset", str(tmp_path / "sealed.parquet"),
+        "--output-dir", str(output),
+        "--dry-run",
+    ])
+    assert pairwise.main() == 0
+    config = json.loads((output / "run_config.json").read_text(encoding="utf-8"))
+    assert config["folds"] == 33
+    assert not list(output.glob("SPXW_*"))
+
+
+def test_runner_requires_explicit_mode():
+    pwsh = shutil.which("pwsh")
+    if pwsh is None:
+        pytest.skip("pwsh is not installed")
+    repo = Path(__file__).resolve().parent.parent
+    completed = subprocess.run(
+        [pwsh, "-NoProfile", "-File", str(repo / "run_pairwise_opportunity_side_v1.ps1")],
+        cwd=repo,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        timeout=20,
+        check=False,
+    )
+    assert completed.returncode != 0
+    assert "exactly one explicit mode" in ((completed.stdout or "") + (completed.stderr or ""))
+
+
+def test_current_feature_hash_is_frozen():
+    diff_cols = [f"{name}_diff" for name in DIFF_METRICS]
+    change_cols = [
+        f"{name}_chg_{label}"
+        for name in diff_cols
+        if name != "oi_diff"
+        for _, label in CHANGE_LAGS
+    ]
+    assert compute_feature_hash(COMMON_FEATURES + diff_cols + change_cols) == (
+        "fa2057653ed0327b7f84a165c25f6e6d31e31b3b05c5591593e9c0bd3056d50e"
+    )

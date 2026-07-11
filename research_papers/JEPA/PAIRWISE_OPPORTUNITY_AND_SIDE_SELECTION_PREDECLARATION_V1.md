@@ -1,15 +1,18 @@
 # PAIRWISE_OPPORTUNITY_AND_SIDE_SELECTION_V1 — Predeclaration
 
-**Status:** PREDECLARED — not yet executed  
+**Status:** PREDECLARED — final preflight implementation ready; models not yet trained
 **Date:** 2026-07-11  
 **Author:** AI Agent (supervised)  
-**Commit (code):** 15121357f19d5f4a682da6cab97d67985f14464a  
+**Preparation baseline:** `b3c6af9a7fb54adecce6f6aff270d89cd52a42fe`
 
-## Hashes of Components
+## Hashes and final preflight authority
 - **Dataset SHA-256:** `d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408`
-- **Walkforward Runner SHA-256:** `5d285881a96b5dc1a4f79f389199d2c15b25272a856ceb39339bce0d0b38bee1`
-- **Unit Tests SHA-256:** `84b03b8325bb04db1b4fdd504cea53637808b8b99f8a20ab8e04a6f43bc3bb47`
 - **Feature Allowlist Hash:** `fa2057653ed0327b7f84a165c25f6e6d31e31b3b05c5591593e9c0bd3056d50e`
+
+Los hashes de runner, walk-forward, tests y esta predeclaración se regeneran desde un
+commit limpio con `HEAD == origin/main` mediante `-PreflightOnly`. El manifiesto
+`pairwise_opportunity_side_v1_preflight/pairwise_preflight_manifest.json` es la
+autoridad final; los hashes previos a ese commit no autorizan una ejecución.
 
 ## Hypothesis
 
@@ -80,6 +83,7 @@ side_label        = 1 if side_advantage > 0 else 0
 
 ### Primary: LightGBM Classifier
 - `n_estimators = 300`, `learning_rate = 0.05`, `num_leaves = 31`, `min_child_samples = 20`, `subsample = 0.8`, `subsample_freq = 1`, `colsample_bytree = 0.8`, `reg_lambda = 1.0`.
+- `n_jobs = 28`: un fold se ejecuta cada vez y LightGBM usa el Ryzen de 32 hilos dejando margen al sistema. No cambia la hipótesis ni el modelo estadístico.
 - Deterministic flags: `deterministic = True`, `force_col_wise = True`, `verbose = -1`.
 - Seeds (no python `hash()`):
   `base_seed = 42 + int(test_month) + ticker_offset`
@@ -145,7 +149,20 @@ Evaluated across all 99 cells (3 tickers × 33 outer test months):
 5. **Favorable evidence** (median delta > 0) in each year: 2023, 2024, and 2025.
 6. A paired Wilcoxon signed-rank test on balanced accuracy deltas (excluding zero-deltas) will be reported for significance.
 
-*Note: Inner validation pass rate is NOT a scientific criterion (only reported as diagnostic).*
+Side scores comparables:
+
+```text
+C0 side score = p_call_win - p_put_win
+P1 side score = 2 * p_call - 1
+```
+
+Accuracy, balanced accuracy, ROC-AUC and Spearman are computed on one shared outer
+mask: `opportunity_label == 1`, `abs(side_advantage) > 1e-9`, and finite labels plus
+both scores. This function receives no policy threshold or executed-trade mask, so
+model metrics remain available even when the economic policy abstains. A cell with
+insufficient classes/rows or a non-finite required metric is recorded explicitly as
+`SCIENTIFIC_CELL_DEGENERATE`, remains in the fixed denominator of 99 and counts as
+not favorable. Inner validation pass rate is diagnostic only.
 
 ## Economic Success Criteria (Contract)
 Valid for promotion only if every single ticker and outer month meets:
@@ -158,9 +175,40 @@ Valid for promotion only if every single ticker and outer month meets:
 An outer abstention fails the monthly trade count (0 trades < 18).
 Reports: pooled PF, worst-month PF (not averaged PF), worst-month PnL, minimum monthly trades, positive-month rate, maximum drawdown.
 
-## Manifest Outputs
-Run produces 11 files in `results/_diagnostics/pairwise_opportunity_side_v1/`:
-`selected_folds.csv`, `selected_policies.json`, `outer_metrics.csv`, `outer_trades.csv`, `diagnostic_metrics.csv`, `class_prevalence.csv`, `threshold_grid_results.csv`, `feature_manifest.json`, `fold_manifest.json`, `run_manifest.json`, `REPORT.md`.
+## Explicit runner modes and manifests
+
+The runner accepts exactly one mode; no implicit default is allowed:
+
+```powershell
+pwsh -File run_pairwise_opportunity_side_v1.ps1 -PreflightOnly
+pwsh -File run_pairwise_opportunity_side_v1.ps1 -Execute
+```
+
+`-PreflightOnly` reads only the sealed 2022–2025 parquet, compiles code, runs tests,
+validates 33 folds/99 cells and writes configuration/manifests without calling
+`run_fold` or fitting any model. Its isolated output is:
+
+```text
+research_papers/JEPA/results/_diagnostics/pairwise_opportunity_side_v1_preflight/
+```
+
+`-Execute` requires a matching PASS preflight and creates a new, previously absent:
+
+```text
+research_papers/JEPA/results/_diagnostics/pairwise_opportunity_side_v1/
+```
+
+The experiment hash scope contains only the walk-forward, its focused tests, the
+PowerShell runner and this predeclaration. The preparation commit also contained
+`backtest/backtest_gbt_parquet.py`; it is unrelated, must not be reverted or modified,
+and `included_in_experiment_hash_scope = false`.
+
+The real run produces `selected_folds.csv`, `selected_policies.json`,
+`outer_metrics.csv`, `outer_trades.csv`, `diagnostic_metrics.csv`,
+`class_prevalence.csv`, `threshold_grid_results.csv`, `feature_manifest.json`,
+`fold_manifest.json`, `all_folds.csv`, `scientific_criteria.json`,
+`economic_criteria.json`, `aggregate_report.json`, `run_manifest.json`, `REPORT.md`
+and per-fold summaries/importances/trades.
 Manifests contain:
 - `feature_hash` per arm
 - `model_label` definitions

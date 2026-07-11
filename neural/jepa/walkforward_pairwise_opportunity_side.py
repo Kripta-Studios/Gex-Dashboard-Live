@@ -33,6 +33,7 @@ from scipy.stats import spearmanr, wilcoxon
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (
+    accuracy_score,
     average_precision_score,
     balanced_accuracy_score,
     roc_auc_score,
@@ -57,7 +58,8 @@ FROZEN_LGB_PARAMS: dict[str, Any] = dict(
     subsample_freq=1,  # makes subsample=0.8 effective
     colsample_bytree=0.8,
     reg_lambda=1.0,
-    n_jobs=4,
+    # One fold runs at a time; use the Ryzen's available CPU parallelism.
+    n_jobs=28,
     verbose=-1,
     objective="binary",
     importance_type="gain",
@@ -626,6 +628,8 @@ def compute_diagnostics(
         diag["wr"] = round(float((ret > 0).mean()), 4)
         wins = ret[ret > 0]
         losses = ret[ret < 0]
+        diag["gross_profit"] = float(wins.sum()) if len(wins) else 0.0
+        diag["gross_loss"] = float(-losses.sum()) if len(losses) else 0.0
         diag["pf"] = round(float(wins.sum() / (-losses.sum())), 4) if len(losses) > 0 and losses.sum() < 0 else float("inf")
         diag["pnl"] = round(float(ret.sum()), 4)
         equity = np.cumsum(ret)
@@ -659,12 +663,26 @@ def compute_diagnostics(
         diag["min_monthly_trades"] = min(month_trades) if month_trades else 0
         diag["positive_month_rate"] = round(sum(1 for p in month_pnls if p > 0) / max(1, len(month_pnls)), 4)
         diag["pooled_pf"] = diag["pf"]
+        diag["outer_trade_records"] = [
+            {
+                "date": str(row["date"]),
+                "minute": int(row["minute"]),
+                "ticker": str(row.get("ticker", "")),
+                "realized_return": float(row["realized_return"]),
+            }
+            for _, row in traded.sort_values(["date", "minute"]).iterrows()
+        ]
     else:
         diag["executed_trades"] = 0
         diag["wr"] = float("nan")
         diag["pf"] = float("nan")
         diag["pnl"] = 0.0
         diag["abstention_rate"] = 1.0
+        diag["gross_profit"] = 0.0
+        diag["gross_loss"] = 0.0
+        diag["max_drawdown"] = 0.0
+        diag["min_hold_minutes"] = float("nan")
+        diag["outer_trade_records"] = []
 
     return diag
 
@@ -711,6 +729,89 @@ def compute_lr_diagnostics(
         diag["spearman"] = float("nan")
 
     return diag
+
+
+def compute_scientific_side_metrics(
+    call_return: np.ndarray,
+    put_return: np.ndarray,
+    c0_side_score: np.ndarray,
+    p1_side_score: np.ndarray,
+) -> dict[str, Any]:
+    """Evaluate C0 and P1 side scores on one immutable outer-test mask.
+
+    This is deliberately model-level: no policy threshold, scheduler output,
+    or executed-trade mask is accepted by the function.
+    """
+    call_return = np.asarray(call_return, dtype=float)
+    put_return = np.asarray(put_return, dtype=float)
+    c0_side_score = np.asarray(c0_side_score, dtype=float)
+    p1_side_score = np.asarray(p1_side_score, dtype=float)
+    lengths = {len(call_return), len(put_return), len(c0_side_score), len(p1_side_score)}
+    if len(lengths) != 1:
+        raise ValueError("Scientific side arrays must have identical lengths")
+
+    side_advantage = call_return - put_return
+    opportunity_label = (np.maximum(call_return, put_return) > 0.0).astype(int)
+    side_label = (side_advantage > 0.0).astype(int)
+    finite = (
+        np.isfinite(call_return)
+        & np.isfinite(put_return)
+        & np.isfinite(c0_side_score)
+        & np.isfinite(p1_side_score)
+    )
+    mask = (
+        finite
+        & (opportunity_label == 1)
+        & (np.abs(side_advantage) > SIDE_TIE_THRESHOLD_TRAINING)
+    )
+    mask_hash = hashlib.sha256(mask.astype(np.uint8).tobytes()).hexdigest()
+    result: dict[str, Any] = {
+        "scientific_mask_rows": int(mask.sum()),
+        "scientific_mask_sha256": mask_hash,
+        "sci_cell_degenerate": False,
+        "sci_cell_degenerate_reason": "",
+    }
+
+    y_true = side_label[mask]
+    advantage = side_advantage[mask]
+    c0_score = c0_side_score[mask]
+    p1_score = p1_side_score[mask]
+    if len(y_true) < 2 or len(np.unique(y_true)) < 2:
+        result.update({
+            "sci_cell_degenerate": True,
+            "sci_cell_degenerate_reason": (
+                f"SCIENTIFIC_CELL_DEGENERATE: rows={len(y_true)}, "
+                f"classes={len(np.unique(y_true)) if len(y_true) else 0}"
+            ),
+        })
+        for arm in ("c0", "p1"):
+            for metric_name in ("accuracy", "balanced_accuracy", "roc_auc", "spearman"):
+                result[f"sci_{arm}_{metric_name}"] = float("nan")
+        result["sci_ba_delta"] = float("nan")
+        return result
+
+    for arm, score in (("c0", c0_score), ("p1", p1_score)):
+        pred = (score >= 0.0).astype(int)
+        result[f"sci_{arm}_accuracy"] = float(accuracy_score(y_true, pred))
+        result[f"sci_{arm}_balanced_accuracy"] = float(balanced_accuracy_score(y_true, pred))
+        result[f"sci_{arm}_roc_auc"] = float(roc_auc_score(y_true, score))
+        correlation, _ = spearmanr(score, advantage)
+        result[f"sci_{arm}_spearman"] = float(correlation)
+
+    required = [
+        result[f"sci_{arm}_{metric_name}"]
+        for arm in ("c0", "p1")
+        for metric_name in ("accuracy", "balanced_accuracy", "roc_auc", "spearman")
+    ]
+    if not np.isfinite(required).all():
+        result["sci_cell_degenerate"] = True
+        result["sci_cell_degenerate_reason"] = "SCIENTIFIC_CELL_DEGENERATE: nonfinite_model_metric"
+        result["sci_ba_delta"] = float("nan")
+    else:
+        result["sci_ba_delta"] = (
+            result["sci_p1_balanced_accuracy"] - result["sci_c0_balanced_accuracy"]
+        )
+    return result
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -763,6 +864,15 @@ def run_fold(
         result["status"] = "insufficient_rows"
         result["c0"] = {"status": "insufficient_rows"}
         result["p1"] = {"status": "insufficient_rows"}
+        result["sci_cell_degenerate"] = True
+        result["sci_cell_degenerate_reason"] = "insufficient_rows"
+        result["sci_c0_balanced_accuracy"] = float("nan")
+        result["sci_c0_roc_auc"] = float("nan")
+        result["sci_c0_spearman"] = float("nan")
+        result["sci_p1_balanced_accuracy"] = float("nan")
+        result["sci_p1_roc_auc"] = float("nan")
+        result["sci_p1_spearman"] = float("nan")
+        result["sci_ba_delta"] = float("nan")
         return result
 
     # Prepare features — same for both C0 and P1
@@ -814,6 +924,15 @@ def run_fold(
         result["status"] = "ABSTAIN_MODEL_DEGENERATE"
         result["c0"] = {"status": "ABSTAIN_MODEL_DEGENERATE"}
         result["p1"] = {"status": "ABSTAIN_MODEL_DEGENERATE"}
+        result["sci_cell_degenerate"] = True
+        result["sci_cell_degenerate_reason"] = "train_labels_degenerate"
+        result["sci_c0_balanced_accuracy"] = float("nan")
+        result["sci_c0_roc_auc"] = float("nan")
+        result["sci_c0_spearman"] = float("nan")
+        result["sci_p1_balanced_accuracy"] = float("nan")
+        result["sci_p1_roc_auc"] = float("nan")
+        result["sci_p1_spearman"] = float("nan")
+        result["sci_ba_delta"] = float("nan")
         with open(fold_dir / "fold_summary.json", "w") as f:
             json.dump(result, f, indent=2, default=str)
         return result
@@ -876,6 +995,15 @@ def run_fold(
 
     if len(X_side_train) < 50:
         result["p1"] = {"status": "insufficient_side_train_rows", "side_train_rows": len(X_side_train)}
+        result["sci_cell_degenerate"] = True
+        result["sci_cell_degenerate_reason"] = "insufficient_side_train_rows"
+        result["sci_c0_balanced_accuracy"] = float("nan")
+        result["sci_c0_roc_auc"] = float("nan")
+        result["sci_c0_spearman"] = float("nan")
+        result["sci_p1_balanced_accuracy"] = float("nan")
+        result["sci_p1_roc_auc"] = float("nan")
+        result["sci_p1_spearman"] = float("nan")
+        result["sci_ba_delta"] = float("nan")
         with open(fold_dir / "fold_summary.json", "w") as f:
             json.dump(result, f, indent=2, default=str)
         return result
@@ -920,6 +1048,18 @@ def run_fold(
         "seed_opp": base_seed + HEAD_OFFSET_P1_OPP,
         "seed_side": base_seed + HEAD_OFFSET_P1_SIDE,
     }
+
+    # ── Scientific model-level side metrics (outer test; policy-independent) ──
+    call_ret_test = test["call_return"].astype(float).to_numpy()
+    put_ret_test = test["put_return"].astype(float).to_numpy()
+    c0_side_score_test = (test_c0["p_call_win"].astype(float) - test_c0["p_put_win"].astype(float)).to_numpy()
+    p1_side_score_test = (2 * test_p1["p_call"].astype(float) - 1.0).to_numpy()
+    result.update(compute_scientific_side_metrics(
+        call_ret_test,
+        put_ret_test,
+        c0_side_score_test,
+        p1_side_score_test,
+    ))
 
     # ── Logistic Regression diagnostic (no trades, no policy) ──────────
     try:
@@ -1019,87 +1159,119 @@ def run_fold(
 def compute_scientific_criteria(all_results: list[dict]) -> dict:
     """Compute predeclared scientific success criteria.
 
-    Over the 99 cells (ticker × outer month):
-    1. balanced accuracy delta(P1 vs C0) > 0 in >= 60% of cells
-    2. median of balanced accuracy delta > 0
-    3. Spearman(p_call, side_advantage) > 0 in >= 60% of cells
-    4. median of Spearman > 0
-    5. evidence favorable in 2023, 2024, and 2025
+    Denominator is strictly 99 cells (3 tickers × 33 outer months).
+    Cells that are degenerate or not completed are counted as degenerate and NOT favorable.
 
-    Also computes Wilcoxon signed-rank test on paired balanced accuracy deltas.
+    Requirements:
+    1. balanced accuracy delta (sci_ba_delta) > 0 in >= 60% of 99 cells.
+    2. median of delta > 0.
+    3. sci_p1_spearman > 0 in >= 60% of 99 cells.
+    4. median of Spearman > 0.
+    5. median delta > 0 in each year: 2023, 2024, 2025.
     """
+    total_denominator = 99
+    observed_cells = len(all_results)
+    missing_cells = max(0, total_denominator - observed_cells)
+    if observed_cells > total_denominator:
+        raise ValueError(f"Expected at most 99 scientific cells, got {observed_cells}")
+
+    valid_cells = 0
+    degenerate_cells = missing_cells
+    favorable_cells = 0
+    spearman_positive_cells = 0
+
     ba_deltas = []
     spearman_values = []
-    year_deltas = {}  # year -> [deltas]
+    year_deltas = {}  # year -> list of deltas (only valid ones)
 
     for r in all_results:
-        if r.get("status") != "completed":
-            continue
-        test_month = r["test_month"]
-        year = test_month[:4]
+        # A cell is defined by a ticker and outer test month
+        # Let's extract year
+        test_month = r.get("test_month", "")
+        year = test_month[:4] if test_month else ""
 
-        c0_diag = r.get("c0", {}).get("diagnostics", {})
-        p1_diag = r.get("p1", {}).get("diagnostics", {})
+        is_cell_degen = r.get("sci_cell_degenerate", True)
 
-        ba_c0 = c0_diag.get("side_balanced_accuracy_A")
-        ba_p1 = p1_diag.get("side_balanced_accuracy_A")
+        if is_cell_degen or r.get("status") != "completed":
+            degenerate_cells += 1
+            # Degenerate cell is NOT favorable, and delta is not recorded in the medians
+        else:
+            valid_cells += 1
+            delta = r.get("sci_ba_delta", 0.0)
+            if not np.isnan(delta):
+                ba_deltas.append(delta)
+                if year:
+                    year_deltas.setdefault(year, []).append(delta)
+                if delta > 0.0:
+                    favorable_cells += 1
 
-        if ba_c0 is not None and ba_p1 is not None and np.isfinite(ba_c0) and np.isfinite(ba_p1):
-            delta = ba_p1 - ba_c0
-            ba_deltas.append(delta)
-            year_deltas.setdefault(year, []).append(delta)
+            sp = r.get("sci_p1_spearman", 0.0)
+            if not np.isnan(sp):
+                spearman_values.append(sp)
+                if sp > 0.0:
+                    spearman_positive_cells += 1
 
-        sp = p1_diag.get("spearman_side_advantage_A")
-        if sp is not None and np.isfinite(sp):
-            spearman_values.append(sp)
+    # Wilcoxon signed-rank test on paired deltas (excluding zeros)
+    wilcoxon_stat = float("nan")
+    wilcoxon_pval = float("nan")
+    wilcoxon_n = 0
+    wilcoxon_status = "no_data"
 
-    sci = {}
     if ba_deltas:
-        sci["ba_delta_positive_rate"] = round(sum(1 for d in ba_deltas if d > 0) / len(ba_deltas), 4)
-        sci["ba_delta_median"] = round(float(np.median(ba_deltas)), 4)
-        sci["ba_delta_mean"] = round(float(np.mean(ba_deltas)), 4)
-        sci["ba_delta_cells"] = len(ba_deltas)
-
-        # Wilcoxon signed-rank test
         try:
             ba_arr = np.array(ba_deltas)
             nonzero = ba_arr[ba_arr != 0.0]
-            if len(nonzero) >= 10:
+            wilcoxon_n = len(nonzero)
+            if wilcoxon_n >= 10:
                 stat, pval = wilcoxon(nonzero)
-                sci["wilcoxon_statistic"] = round(float(stat), 4)
-                sci["wilcoxon_pvalue"] = round(float(pval), 6)
-                sci["wilcoxon_n_nonzero"] = int(len(nonzero))
+                wilcoxon_stat = float(stat)
+                wilcoxon_pval = float(pval)
+                wilcoxon_status = "success"
             else:
-                sci["wilcoxon_status"] = "insufficient_nonzero_pairs"
+                wilcoxon_status = "insufficient_nonzero_pairs"
         except Exception as e:
-            sci["wilcoxon_status"] = f"error: {e}"
+            wilcoxon_status = f"error: {e}"
 
-    if spearman_values:
-        sci["spearman_positive_rate"] = round(sum(1 for s in spearman_values if s > 0) / len(spearman_values), 4)
-        sci["spearman_median"] = round(float(np.median(spearman_values)), 4)
-        sci["spearman_cells"] = len(spearman_values)
+    sci = {
+        "observed_scientific_cells": observed_cells,
+        "missing_scientific_cells": missing_cells,
+        "valid_scientific_cells": valid_cells,
+        "degenerate_scientific_cells": degenerate_cells,
+        "favorable_cells": favorable_cells,
+        "total_denominator": total_denominator,
+        "ba_delta_positive_rate": round(favorable_cells / total_denominator, 4),
+        "ba_delta_median": round(float(np.median(ba_deltas)), 4) if ba_deltas else float("nan"),
+        "ba_delta_mean": round(float(np.mean(ba_deltas)), 4) if ba_deltas else float("nan"),
+        "spearman_positive_rate": round(spearman_positive_cells / total_denominator, 4),
+        "spearman_median": round(float(np.median(spearman_values)), 4) if spearman_values else float("nan"),
+        "wilcoxon_statistic": wilcoxon_stat,
+        "wilcoxon_pvalue": wilcoxon_pval,
+        "wilcoxon_n_nonzero": wilcoxon_n,
+        "wilcoxon_status": wilcoxon_status,
+    }
 
     # Per-year evidence
-    for year in sorted(year_deltas.keys()):
-        deltas = year_deltas[year]
-        sci[f"year_{year}_ba_delta_median"] = round(float(np.median(deltas)), 4)
-        sci[f"year_{year}_ba_delta_positive_rate"] = round(sum(1 for d in deltas if d > 0) / len(deltas), 4)
-        sci[f"year_{year}_cells"] = len(deltas)
+    favorable_years = 0
+    for y in ["2023", "2024", "2025"]:
+        deltas = year_deltas.get(y, [])
+        y_median = float(np.median(deltas)) if deltas else float("nan")
+        sci[f"year_{y}_ba_delta_median"] = round(y_median, 4) if deltas else float("nan")
+        y_denom = 27 if y == "2023" else 36
+        y_fav = sum(1 for d in deltas if d > 0.0)
+        sci[f"year_{y}_ba_delta_positive_rate"] = round(y_fav / y_denom, 4)
+        sci[f"year_{y}_cells"] = y_denom
+        sci[f"year_{y}_valid_cells"] = len(deltas)
+        if deltas and y_median > 0.0:
+            favorable_years += 1
 
-    # Check all-years evidence
-    favorable_years = sum(
-        1 for y in ["2023", "2024", "2025"]
-        if y in year_deltas and np.median(year_deltas[y]) > 0
-    )
     sci["favorable_years"] = favorable_years
     sci["favorable_years_required"] = 3
 
-    # Scientific pass
     sci["scientific_pass"] = (
-        sci.get("ba_delta_positive_rate", 0) >= 0.60
-        and sci.get("ba_delta_median", -1) > 0
-        and sci.get("spearman_positive_rate", 0) >= 0.60
-        and sci.get("spearman_median", -1) > 0
+        sci["ba_delta_positive_rate"] >= 0.60
+        and sci["ba_delta_median"] > 0.0
+        and sci["spearman_positive_rate"] >= 0.60
+        and sci["spearman_median"] > 0.0
         and favorable_years >= 3
     )
 
@@ -1121,10 +1293,21 @@ def compute_economic_criteria(all_results: list[dict]) -> dict:
         arm_cells = []
         for r in all_results:
             if r.get("status") != "completed":
+                arm_cells.append({
+                    "ticker": r.get("ticker", ""), "month": r.get("test_month", ""),
+                    "pf": float("nan"), "wr": float("nan"), "trades": 0, "pnl": 0.0,
+                    "min_hold": float("nan"), "gross_profit": 0.0, "gross_loss": 0.0,
+                    "trade_records": [], "pass": False, "reason": "not_completed",
+                })
                 continue
             arm_data = r.get(arm, {})
             if not arm_data.get("valid_inner", False):
-                arm_cells.append({"ticker": r["ticker"], "month": r["test_month"], "pass": False, "reason": "abstain"})
+                arm_cells.append({
+                    "ticker": r["ticker"], "month": r["test_month"],
+                    "pf": float("nan"), "wr": float("nan"), "trades": 0, "pnl": 0.0,
+                    "min_hold": float("nan"), "gross_profit": 0.0, "gross_loss": 0.0,
+                    "trade_records": [], "pass": False, "reason": "abstain",
+                })
                 continue
 
             tm = arm_data.get("test_metrics", {})
@@ -1139,32 +1322,48 @@ def compute_economic_criteria(all_results: list[dict]) -> dict:
                 (pf >= 1.3 or pf == float("inf"))
                 and wr >= 0.50
                 and trades >= 18
-                and pnl > 0
-                and min_hold >= 30
+                and pnl > 0.0
+                and min_hold >= 30.0
             )
             arm_cells.append({
                 "ticker": r["ticker"], "month": r["test_month"],
                 "pf": pf, "wr": wr, "trades": trades, "pnl": pnl,
-                "min_hold": min_hold, "pass": cell_pass,
+                "min_hold": min_hold,
+                "gross_profit": float(diag.get("gross_profit", 0.0)),
+                "gross_loss": float(diag.get("gross_loss", 0.0)),
+                "trade_records": list(diag.get("outer_trade_records", [])),
+                "pass": cell_pass,
             })
 
-        passing = [c for c in arm_cells if c["pass"]]
-        pfs_valid = [c["pf"] for c in arm_cells if "pf" in c and np.isfinite(c.get("pf", 0))]
-        pnls_valid = [c.get("pnl", 0) for c in arm_cells if "pnl" in c]
-        trades_valid = [c.get("trades", 0) for c in arm_cells if "trades" in c]
+        passing = [c for c in arm_cells if c.get("pass", False)]
+        # Abstentions have undefined mathematical PF, but are an economic
+        # failure; the effective worst-month PF is therefore reported as 0.
+        effective_pfs = [float(c["pf"]) if np.isfinite(c["pf"]) else 0.0 for c in arm_cells]
+        pnls_valid = [float(c["pnl"]) for c in arm_cells]
+        trades_valid = [int(c["trades"]) for c in arm_cells]
 
         econ[f"{arm}_total_cells"] = len(arm_cells)
         econ[f"{arm}_passing_cells"] = len(passing)
         econ[f"{arm}_pass_rate"] = round(len(passing) / max(1, len(arm_cells)), 4)
-        econ[f"{arm}_worst_month_pf"] = round(min(pfs_valid), 4) if pfs_valid else float("nan")
+        econ[f"{arm}_worst_month_pf"] = round(min(effective_pfs), 4) if effective_pfs else float("nan")
         econ[f"{arm}_worst_month_pnl"] = round(min(pnls_valid), 4) if pnls_valid else float("nan")
         econ[f"{arm}_min_monthly_trades"] = min(trades_valid) if trades_valid else 0
         econ[f"{arm}_positive_month_rate"] = round(sum(1 for p in pnls_valid if p > 0) / max(1, len(pnls_valid)), 4)
 
-        # Pooled PF (sum of all wins / sum of all losses)
-        all_pnl_positive = sum(c.get("pnl", 0) for c in arm_cells if c.get("pnl", 0) > 0)
-        all_pnl_negative = sum(c.get("pnl", 0) for c in arm_cells if c.get("pnl", 0) < 0)
-        econ[f"{arm}_pooled_pf"] = round(all_pnl_positive / (-all_pnl_negative), 4) if all_pnl_negative < 0 else float("inf")
+        # Pooled PF uses gross trade profits/losses, never monthly net PnL.
+        gross_profit = sum(float(c["gross_profit"]) for c in arm_cells)
+        gross_loss = sum(float(c["gross_loss"]) for c in arm_cells)
+        econ[f"{arm}_pooled_pf"] = round(gross_profit / gross_loss, 4) if gross_loss > 0 else float("inf")
+
+        records = [record for cell in arm_cells for record in cell["trade_records"]]
+        records.sort(key=lambda x: (str(x["date"]), int(x["minute"]), str(x["ticker"])))
+        returns = np.asarray([float(record["realized_return"]) for record in records], dtype=float)
+        if len(returns):
+            equity = np.cumsum(returns)
+            peak = np.maximum.accumulate(np.insert(equity, 0, 0.0))[1:]
+            econ[f"{arm}_max_drawdown"] = round(float((equity - peak).min()), 4)
+        else:
+            econ[f"{arm}_max_drawdown"] = 0.0
 
     return econ
 
@@ -1256,6 +1455,7 @@ def main() -> int:
     # ── Run all folds ───────────────────────────────────────────────────
     all_results = []
     global_feature_hash = None
+    global_feature_cols: list[str] = []
 
     for ticker in args.tickers:
         tcfg = TICKER_CONFIG[ticker]
@@ -1282,6 +1482,7 @@ def main() -> int:
         feature_hash = compute_feature_hash(feature_cols)
         if global_feature_hash is None:
             global_feature_hash = feature_hash
+            global_feature_cols = list(feature_cols)
         else:
             assert feature_hash == global_feature_hash, (
                 f"Feature hash mismatch across tickers! "
@@ -1309,6 +1510,93 @@ def main() -> int:
     # ── Write aggregate results ─────────────────────────────────────────
     all_folds_df = pd.json_normalize(all_results, sep="_")
     all_folds_df.to_csv(output_dir / "all_folds.csv", index=False)
+
+    selected_rows = []
+    outer_metric_rows = []
+    diagnostic_rows = []
+    prevalence_rows = []
+    outer_trade_rows = []
+    selected_policies: list[dict[str, Any]] = []
+    threshold_rows = []
+    for result in all_results:
+        common = {"ticker": result.get("ticker"), "test_month": result.get("test_month")}
+        prevalence_rows.append({
+            **common,
+            "opportunity_prevalence": result.get("opportunity_prevalence"),
+            "side_prevalence": result.get("side_prevalence"),
+            "call_win_prevalence": result.get("call_win_prevalence"),
+            "put_win_prevalence": result.get("put_win_prevalence"),
+        })
+        diagnostic_rows.append({
+            **common,
+            **{key: value for key, value in result.items() if key.startswith("sci_") or key.startswith("scientific_mask_")},
+        })
+        for arm in ("c0", "p1"):
+            arm_result = result.get(arm, {}) if isinstance(result.get(arm), dict) else {}
+            selected = {
+                **common,
+                "arm": arm.upper(),
+                "status": result.get("status"),
+                "valid_inner": bool(arm_result.get("valid_inner", False)),
+                "trade_threshold": arm_result.get("trade_threshold"),
+                "side_margin": arm_result.get("side_margin"),
+            }
+            selected_rows.append(selected)
+            selected_policies.append({
+                **selected,
+                "train_months": result.get("train_months"),
+                "inner_months": result.get("inner_months"),
+                "feature_hash": result.get("feature_hash"),
+                "seed_call": arm_result.get("seed_call"),
+                "seed_put": arm_result.get("seed_put"),
+                "seed_opp": arm_result.get("seed_opp"),
+                "seed_side": arm_result.get("seed_side"),
+            })
+            test_metrics = arm_result.get("test_metrics", {}) if isinstance(arm_result.get("test_metrics"), dict) else {}
+            diagnostics = arm_result.get("diagnostics", {}) if isinstance(arm_result.get("diagnostics"), dict) else {}
+            outer_metric_rows.append({
+                **common, "arm": arm.upper(), "valid_inner": selected["valid_inner"],
+                **{f"metric_{key}": value for key, value in test_metrics.items()},
+                **{f"diagnostic_{key}": value for key, value in diagnostics.items() if key != "outer_trade_records"},
+            })
+            details = arm_result.get("selection_details", {}) if isinstance(arm_result.get("selection_details"), dict) else {}
+            threshold_rows.append({
+                **selected,
+                "rank_key": json.dumps(details.get("rank_key"), default=str),
+                "inner_total_trades": details.get("total_trades"),
+                "inner_total_pnl": details.get("total_pnl"),
+                "gate_details": json.dumps(details.get("gate_details", {}), sort_keys=True, default=str),
+            })
+            for record in diagnostics.get("outer_trade_records", []):
+                outer_trade_rows.append({**common, "arm": arm.upper(), **record})
+
+    pd.DataFrame(selected_rows).to_csv(output_dir / "selected_folds.csv", index=False)
+    pd.DataFrame(outer_metric_rows).to_csv(output_dir / "outer_metrics.csv", index=False)
+    pd.DataFrame(diagnostic_rows).to_csv(output_dir / "diagnostic_metrics.csv", index=False)
+    pd.DataFrame(prevalence_rows).to_csv(output_dir / "class_prevalence.csv", index=False)
+    pd.DataFrame(threshold_rows).to_csv(output_dir / "threshold_grid_results.csv", index=False)
+    pd.DataFrame(outer_trade_rows).to_csv(output_dir / "outer_trades.csv", index=False)
+    with open(output_dir / "selected_policies.json", "w") as f:
+        json.dump(selected_policies, f, indent=2, default=str)
+    with open(output_dir / "feature_manifest.json", "w") as f:
+        json.dump({
+            "feature_hash": global_feature_hash,
+            "features": global_feature_cols,
+            "c0_p1_identical_matrix": True,
+            "first_allowed_minute": FIRST_ALLOWED_MINUTE,
+        }, f, indent=2)
+    with open(output_dir / "fold_manifest.json", "w") as f:
+        json.dump({
+            "scientific_cells_expected": 99,
+            "folds": [
+                {
+                    "ticker": r.get("ticker"), "test_month": r.get("test_month"),
+                    "train_months": r.get("train_months"), "inner_months": r.get("inner_months"),
+                    "status": r.get("status"), "sci_cell_degenerate": r.get("sci_cell_degenerate", True),
+                }
+                for r in all_results
+            ],
+        }, f, indent=2, default=str)
 
     # Scientific criteria
     sci = compute_scientific_criteria(all_results)
@@ -1347,6 +1635,23 @@ def main() -> int:
 
     with open(output_dir / "aggregate_report.json", "w") as f:
         json.dump(agg, f, indent=2, default=str)
+
+    report_lines = [
+        "# PAIRWISE_OPPORTUNITY_AND_SIDE_SELECTION_V1 — Results",
+        "",
+        f"- Dataset SHA-256: `{dataset_sha}`",
+        f"- Feature hash: `{global_feature_hash}`",
+        f"- Scientific cells: `{sci['total_denominator']}`",
+        f"- Degenerate scientific cells: `{sci['degenerate_scientific_cells']}`",
+        f"- Scientific pass: `{sci['scientific_pass']}`",
+        f"- C0 economic passing cells: `{econ['c0_passing_cells']}/99`",
+        f"- P1 economic passing cells: `{econ['p1_passing_cells']}/99`",
+        f"- C0 pooled PF: `{econ['c0_pooled_pf']}`",
+        f"- P1 pooled PF: `{econ['p1_pooled_pf']}`",
+        "- Production modified: `false`",
+        "- 2026 opened: `false`",
+    ]
+    (output_dir / "REPORT.md").write_text("\n".join(report_lines) + "\n", encoding="utf-8")
 
     print(f"\n{'='*60}")
     print("AGGREGATE SUMMARY")
