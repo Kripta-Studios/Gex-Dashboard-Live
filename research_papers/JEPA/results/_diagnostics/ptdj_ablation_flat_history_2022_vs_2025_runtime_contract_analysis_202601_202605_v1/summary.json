@@ -1,0 +1,170 @@
+{
+  "acceptance_gates": {
+    "history_2022": {
+      "failed_cells": [
+        {
+          "month": "202601",
+          "ticker": "QQQ"
+        },
+        {
+          "month": "202602",
+          "ticker": "QQQ"
+        },
+        {
+          "month": "202603",
+          "ticker": "QQQ"
+        },
+        {
+          "month": "202604",
+          "ticker": "QQQ"
+        },
+        {
+          "month": "202605",
+          "ticker": "QQQ"
+        },
+        {
+          "month": "202601",
+          "ticker": "SPXW"
+        },
+        {
+          "month": "202602",
+          "ticker": "SPXW"
+        },
+        {
+          "month": "202603",
+          "ticker": "SPXW"
+        },
+        {
+          "month": "202604",
+          "ticker": "SPXW"
+        },
+        {
+          "month": "202605",
+          "ticker": "SPXW"
+        },
+        {
+          "month": "202601",
+          "ticker": "SPY"
+        },
+        {
+          "month": "202602",
+          "ticker": "SPY"
+        },
+        {
+          "month": "202603",
+          "ticker": "SPY"
+        },
+        {
+          "month": "202605",
+          "ticker": "SPY"
+        }
+      ],
+      "minimum_hold_minutes": 30,
+      "passed": false,
+      "passed_cells": 1,
+      "total_cells": 15
+    },
+    "history_2025": {
+      "failed_cells": [
+        {
+          "month": "202601",
+          "ticker": "QQQ"
+        },
+        {
+          "month": "202602",
+          "ticker": "QQQ"
+        },
+        {
+          "month": "202603",
+          "ticker": "QQQ"
+        },
+        {
+          "month": "202601",
+          "ticker": "SPXW"
+        },
+        {
+          "month": "202602",
+          "ticker": "SPXW"
+        },
+        {
+          "month": "202603",
+          "ticker": "SPXW"
+        },
+        {
+          "month": "202604",
+          "ticker": "SPXW"
+        },
+        {
+          "month": "202605",
+          "ticker": "SPXW"
+        },
+        {
+          "month": "202601",
+          "ticker": "SPY"
+        },
+        {
+          "month": "202603",
+          "ticker": "SPY"
+        },
+        {
+          "month": "202605",
+          "ticker": "SPY"
+        }
+      ],
+      "minimum_hold_minutes": 30,
+      "passed": false,
+      "passed_cells": 4,
+      "total_cells": 15
+    }
+  },
+  "bootstrap_seed": 20260711,
+  "config_comparison": {
+    "declared_factor": "encoder_training_history_start",
+    "differences": {
+      "data": {
+        "history_2022": "tmp/event_option_dataset_execquote_causal1030_202201_202605_v1_physics/event_option_dataset.parquet",
+        "history_2025": "tmp/event_option_dataset_execquote_causal1030_202501_202605_v1_physics/event_option_dataset.parquet"
+      },
+      "output_dir": {
+        "history_2022": "research_papers/JEPA/results/_diagnostics/ptdj_ablation_flat_history_2022_h1_3_6_12_causal_202505_202605_v1",
+        "history_2025": "research_papers/JEPA/results/_diagnostics/ptdj_ablation_flat_history_2025_h1_3_6_12_causal_202505_202605_v1"
+      }
+    },
+    "identical_feature_count": 277,
+    "same_architecture_seed_and_epoch_budget": true
+  },
+  "daily_pnl_bootstrap": {
+    "bootstrap_seed": 20260711,
+    "ci95": [
+      -44.086505382666374,
+      20.825302926604284
+    ],
+    "days": 102,
+    "observed_pnl_difference_history_2022_minus_history_2025": -11.301952602958423,
+    "probability_difference_positive": 0.2478,
+    "resamples": 10000
+  },
+  "dataset_contract": "executable_quote_ask_to_bid",
+  "decision": {
+    "continue_from_history_2022": false,
+    "downstream_support": false,
+    "history_2022_improves_reproducibly": false,
+    "history_2022_passes_all_gates": false,
+    "reason": "History 2022 does not improve representation and downstream simultaneously; reject this history extension.",
+    "representation_support": true
+  },
+  "declared_factor": "encoder_training_history_start",
+  "evaluation_months": [
+    "202601",
+    "202602",
+    "202603",
+    "202604",
+    "202605"
+  ],
+  "provenance_passed": {
+    "history_2022": true,
+    "history_2025": true
+  },
+  "schema_version": 1,
+  "seed": 20260618
+}

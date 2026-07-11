@@ -5,6 +5,32 @@
 
 > Esta bitácora se actualiza durante el trabajo. Solo se marca como completado lo reproducido en esta sesión. No implica despliegue, commit ni push salvo que se indique expresamente.
 
+## Actualización 2026-07-11 04:14 CEST — resultado final de `history_2022` vs `history_2025`
+
+La ablación predeclarada terminó completa y sin errores: 13 folds OOF y 15 folds nested por arm, provenance PASS, mismos folds/seeds/presupuesto y un solo factor cambiado (`encoder_training_history_start`). El runner salió normalmente y no quedan procesos de entrenamiento o evaluación activos.
+
+| Arm | Trades | WR | PF | PnL (R) | Max DD | Gates ticker×mes |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `history_2025` | 495 | 45,051% | 0,863 | -20,174 | -27,180 | 4/15 |
+| `history_2022` | 440 | 42,273% | 0,764 | -31,476 | -34,403 | 1/15 |
+
+| Arm | Ticker | Trades | PF | PnL (R) | Mínimo trades/mes | Meses positivos |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| `history_2025` | QQQ | 161 | 0,893 | -4,819 | 22 | 40% |
+| `history_2025` | SPXW | 235 | 0,711 | -22,935 | 32 | 0% |
+| `history_2025` | SPY | 99 | 1,336 | +7,580 | 18 | 80% |
+| `history_2022` | QQQ | 163 | 0,764 | -10,638 | 26 | 0% |
+| `history_2022` | SPXW | 180 | 0,696 | -16,542 | 29 | 0% |
+| `history_2022` | SPY | 97 | 0,874 | -4,296 | 18 | 60% |
+
+Meses overall de la historia larga: enero `PF 0,514/-18,133R`, febrero `0,981/-0,417R`, marzo `0,682/-8,107R`, abril `1,002/+0,048R` y mayo `0,808/-4,868R`.
+
+Evidencia pareada: la historia larga mejora el ratio OOF error/persistencia en 13/15 celdas (Wilcoxon `p=0,000580`) y la tasa de batir persistencia en 11/15 (`p=0,003357`), pero no el downstream: PF 6/15 (`p=0,9527`) y PnL 7/15 (`p=0,7729`). Bootstrap diario: diferencia `-11,302R`, IC95% `[-44,087,+20,825]`, probabilidad positiva `0,248`.
+
+Decisión: `continue_from_history_2022=false`. La mejora de representación no se reproduce en el objetivo downstream; ambos arms quedan rechazados y no se promueve ninguno. El informe contiene métricas por fold, mes y ticker, seeds y hashes en `research_papers/JEPA/results/_diagnostics/ptdj_ablation_flat_history_2022_vs_2025_runtime_contract_analysis_202601_202605_v1/` (`summary.json` SHA-256 `A1AFC66158674F239DA027C614C83566817563F19DB32F1A6CAF57A13530BB1`).
+
+Se revalidaron executable_quote ask→bid, 0DTE, features live, secuencias contiguas, rejilla 10:30–14:30/5m, hold >=30m, cupos/cooldowns runtime y ausencia de solapamientos. Junio de 2026 sigue físicamente sellado. `py_compile` PASS; suite focalizada final: `70 passed in 4.88s`.
+
 ## Criterio canónico de investigación y promoción
 
 Toda variante debe entrenarse, seleccionarse y evaluarse buscando simultáneamente, **para cada ticker** (`SPXW`, `QQQ`, `SPY`):

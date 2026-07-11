@@ -1,0 +1,15 @@
+{
+  "declared_factor": "encoder_training_history_start",
+  "differences": {
+    "data": {
+      "history_2022": "tmp/event_option_dataset_execquote_causal1030_202201_202605_v1_physics/event_option_dataset.parquet",
+      "history_2025": "tmp/event_option_dataset_execquote_causal1030_202501_202605_v1_physics/event_option_dataset.parquet"
+    },
+    "output_dir": {
+      "history_2022": "research_papers/JEPA/results/_diagnostics/ptdj_ablation_flat_history_2022_h1_3_6_12_causal_202505_202605_v1",
+      "history_2025": "research_papers/JEPA/results/_diagnostics/ptdj_ablation_flat_history_2025_h1_3_6_12_causal_202505_202605_v1"
+    }
+  },
+  "identical_feature_count": 277,
+  "same_architecture_seed_and_epoch_budget": true
+}

@@ -1,5 +1,20 @@
 # CODEX-HANDOFF.md — Estado para continuación por otro agente
 
+## Actualización 2026-07-11 04:14 CEST — ablación de historia cerrada y rechazada
+
+- El runner predeclarado `run_flat_history_ablation_v1.ps1` terminó ambos arms y salió normalmente con el mensaje `Flat history ablation completed for both arms.`; stdout SHA-256 `A254625E41F90B73321F291C625CA91A7611E0EF3D5DB425C2B7EDADC62CE917`, stderr vacío. Ya no quedan trainer, selector, pytest ni proceso Python de esta ablación.
+- Ambos arms completaron 13/13 folds OOF `202505..202605`, join 29.046/29.046, 15/15 folds nested `202601..202605` y provenance PASS. Usaron arquitectura flat, CUDA determinista, 8 épocas, batch 1024, 277 features live, seed base `20260618` y seed de fold `base+YYYYMM`.
+- Factor único confirmado por el analizador: inicio de historia `202501` frente a `202201`; solo difieren `data` y `output_dir`. Dataset largo SHA-256 `11E26AADDD91FD441222D552E0362C1D4C2C4489A08D7A6DE66479D6EB454FB1`; control reciente `AB144DBAD1F6F103C771AE119A1172AC728BC11B6AA79DB5FB0648561673F720`.
+- Control `history_2025`: 495 trades, WR `45,051%`, PF `0,863`, `-20,174R`, DD `-27,180R`; QQQ/SPXW/SPY PF `0,893/0,711/1,336`, PnL `-4,819/-22,935/+7,580R`; 4/15 celdas ticker×mes pasan todos los gates.
+- Arm `history_2022`: 440 trades, WR `42,273%`, PF `0,764`, `-31,476R`, DD `-34,403R`; QQQ/SPXW/SPY PF `0,764/0,696/0,874`, PnL `-10,638/-16,542/-4,296R`; 1/15 celdas pasa.
+- Meses overall `history_2022`: enero PF `0,514`/`-18,133R`; febrero `0,981`/`-0,417R`; marzo `0,682`/`-8,107R`; abril `1,002`/`+0,048R`; mayo `0,808`/`-4,868R`. El CSV versionable contiene las 15 celdas ticker×mes de cada arm.
+- La historia larga sí mejora representación OOF: 13/15 wins en ratio error/persistencia (mediana `-0,07913`, Wilcoxon `p=0,000580`) y 11/15 en tasa de batir persistencia (mediana `+0,07973`, `p=0,003357`). No mejora downstream: PF 6/15 wins (`p=0,9527`), PnL 7/15 (`p=0,7729`); bootstrap diario 2022−2025 `-11,302R`, IC95% `[-44,087,+20,825]`, `P(diff>0)=0,248`.
+- Decisión congelada: `continue_from_history_2022=false`. La mejora representacional no se traduce en edge; se rechaza la extensión y no se reabre modal/MJEPA/SMM. Ningún arm cumple gates y ninguno es candidato de promoción.
+- Contrato revalidado por código: solo `executable_quote`, ask→bid, 0DTE, rejilla 10:30–14:30 ET/5m, hold mínimo 30m, una posición por ticker, cero solapamientos, cupos `SPXW=4/QQQ=2/SPY=1`, cooldowns `0/30/0`. Junio no aparece en datos, OOF, selección ni trades; fecha máxima del dataset `20260529`.
+- Informe autocontenido: `research_papers/JEPA/results/_diagnostics/ptdj_ablation_flat_history_2022_vs_2025_runtime_contract_analysis_202601_202605_v1/`. Hash `summary.json`: `A1AFC66158674F239DA027C614C83566817563F19DB32F1A6CAF57A13530BB1`; `REPORT.md`: `AFBA779FF33F9814A7147B7D9D43B0B787B1C0E9ED5CE36ADEA24621BA1BD99D`.
+- Verificación final: `py_compile` PASS y `70 passed in 4.88s` en la suite focalizada, incluido el analizador de historia.
+- Primer paso seguro siguiente: versionar este informe pequeño y los handoffs, hacer push, y después predeclarar —sin ejecutar una búsqueda masiva— el primer factor independiente del punto 4 de la cola (`Portfolio Var-JEPA`). Debe mantener congelado el market encoder flat/control y aislar la incertidumbre/abstención del payoff head; no usar PnL agregado como criterio ni abrir junio.
+
 ## Actualización 2026-07-11 03:23 CEST — ablación flat-history activa, no duplicar
 
 - `fd712e2` y los tres commits técnicos anteriores están subidos a `origin/main`.

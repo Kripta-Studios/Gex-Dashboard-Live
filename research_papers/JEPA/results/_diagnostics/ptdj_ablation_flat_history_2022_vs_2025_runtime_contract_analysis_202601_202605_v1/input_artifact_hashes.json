@@ -1,0 +1,82 @@
+{
+  "experiment_config": {
+    "bytes": 2222,
+    "path": "research_papers\\JEPA\\results\\_diagnostics\\flat_history_ablation_predeclared_202201_202605_v1\\experiment_config.json",
+    "sha256": "FFA7DCF86633A61B4DF5388F8A94785B1CF6723C6C76FF18040DB644A638E00C"
+  },
+  "history_2022_data": {
+    "bytes": 173903711,
+    "path": "tmp\\event_option_dataset_execquote_causal1030_202201_202605_v1_physics\\event_option_dataset.parquet",
+    "sha256": "11E26AADDD91FD441222D552E0362C1D4C2C4489A08D7A6DE66479D6EB454FB1"
+  },
+  "history_2022_encoder_fold_configs": {
+    "bytes": 5488,
+    "path": "research_papers\\JEPA\\results\\_diagnostics\\ptdj_ablation_flat_history_2022_h1_3_6_12_causal_202505_202605_v1\\fold_configs.csv",
+    "sha256": "4F935B1F693E9B35BE186C4A2A220B3C7385369CBA909DB4CD7630D3E5B87CF4"
+  },
+  "history_2022_encoder_metadata": {
+    "bytes": 28081,
+    "path": "research_papers\\JEPA\\results\\_diagnostics\\ptdj_ablation_flat_history_2022_h1_3_6_12_causal_202505_202605_v1\\metadata.json",
+    "sha256": "41922C1A0EF8500A9C255A15226727800E1FEB46BA68EBB0E4948F6EB1C1D8CD"
+  },
+  "history_2022_encoder_oof_features": {
+    "bytes": 22192044,
+    "path": "research_papers\\JEPA\\results\\_diagnostics\\ptdj_ablation_flat_history_2022_h1_3_6_12_causal_202505_202605_v1\\oof_event_phys_td_jepa_features.parquet",
+    "sha256": "34F442648E2DD19C63F56FBB5B1E196B6E47AAB62AD0A04A87208A126E3C8512"
+  },
+  "history_2022_provenance": {
+    "bytes": 4128,
+    "path": "research_papers\\JEPA\\results\\_diagnostics\\ptdj_ablation_flat_history_2022_h1_3_6_12_causal_202505_202605_v1_walkforward_runtime_contract_v1\\policy_selection_provenance.json",
+    "sha256": "AA0E21ED844C048F67381B02C73B4764C0C1AEE63FA2B07C94A74737C3FB837C"
+  },
+  "history_2022_selected_folds": {
+    "bytes": 19096,
+    "path": "research_papers\\JEPA\\results\\_diagnostics\\ptdj_ablation_flat_history_2022_h1_3_6_12_causal_202505_202605_v1_walkforward_runtime_contract_v1\\selected_folds.csv",
+    "sha256": "6343A5CE996786BD31E2202414A1012D93495BF0456D42A1D93AA97393AA778C"
+  },
+  "history_2022_trades": {
+    "bytes": 3023656,
+    "path": "research_papers\\JEPA\\results\\_diagnostics\\ptdj_ablation_flat_history_2022_h1_3_6_12_causal_202505_202605_v1_walkforward_runtime_contract_v1\\event_option_profile_trades.csv",
+    "sha256": "04483BC43ED1A98983B0EA0BCAAFF753FC510A7A133033273A7911FC5D9D6A8F"
+  },
+  "history_2025_data": {
+    "bytes": 62829449,
+    "path": "tmp\\event_option_dataset_execquote_causal1030_202501_202605_v1_physics\\event_option_dataset.parquet",
+    "sha256": "AB144DBAD1F6F103C771AE119A1172AC728BC11B6AA79DB5FB0648561673F720"
+  },
+  "history_2025_encoder_fold_configs": {
+    "bytes": 5457,
+    "path": "research_papers\\JEPA\\results\\_diagnostics\\ptdj_ablation_flat_history_2025_h1_3_6_12_causal_202505_202605_v1\\fold_configs.csv",
+    "sha256": "4692289A8A229C54D65D2296E96B76E2A27A344FBCC032C215A1CF95C8DD117B"
+  },
+  "history_2025_encoder_metadata": {
+    "bytes": 28077,
+    "path": "research_papers\\JEPA\\results\\_diagnostics\\ptdj_ablation_flat_history_2025_h1_3_6_12_causal_202505_202605_v1\\metadata.json",
+    "sha256": "600181EFF411D14D0CA8927DD4C3BB497E689207A6C1AA249C4ACEFCE4BF3709"
+  },
+  "history_2025_encoder_oof_features": {
+    "bytes": 22182067,
+    "path": "research_papers\\JEPA\\results\\_diagnostics\\ptdj_ablation_flat_history_2025_h1_3_6_12_causal_202505_202605_v1\\oof_event_phys_td_jepa_features.parquet",
+    "sha256": "AF23F7FDD4408157EF81E59F06D141CAD6376CDB9428EB750F11220223495B71"
+  },
+  "history_2025_provenance": {
+    "bytes": 4128,
+    "path": "research_papers\\JEPA\\results\\_diagnostics\\ptdj_ablation_flat_history_2025_h1_3_6_12_causal_202505_202605_v1_walkforward_runtime_contract_v1\\policy_selection_provenance.json",
+    "sha256": "EBC650413ABBBBDFDFD9A3012D2C42648B7EB152CF1710F645D4851ECF5674EC"
+  },
+  "history_2025_selected_folds": {
+    "bytes": 19181,
+    "path": "research_papers\\JEPA\\results\\_diagnostics\\ptdj_ablation_flat_history_2025_h1_3_6_12_causal_202505_202605_v1_walkforward_runtime_contract_v1\\selected_folds.csv",
+    "sha256": "2F401754FDDB68004D7E3A5D14CEEF50BA9CE683DA38C5380B0BC2B6B9F153D7"
+  },
+  "history_2025_trades": {
+    "bytes": 3448563,
+    "path": "research_papers\\JEPA\\results\\_diagnostics\\ptdj_ablation_flat_history_2025_h1_3_6_12_causal_202505_202605_v1_walkforward_runtime_contract_v1\\event_option_profile_trades.csv",
+    "sha256": "C5D257FB95E285B9E4032A1C8E30F8858A714437ED731B2A5CC570291631005E"
+  },
+  "runner": {
+    "bytes": 5884,
+    "path": "run_flat_history_ablation_v1.ps1",
+    "sha256": "A8DC76553B0573E8594939A60A81AB80C50C64B3DB42510834320EE8EDA1F63D"
+  }
+}
