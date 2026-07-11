@@ -192,16 +192,29 @@ def validate_walkforward_contract(directory: Path, months: list[str], arm: str) 
     selected_cells = set(zip(selected["ticker"], selected["month"]))
     if len(selected) != len(expected_cells) or selected_cells != expected_cells:
         raise RuntimeError(f"{arm} selected-fold coverage mismatch")
-    if not bool(provenance.get("passed")) or provenance.get("evaluation_months") != months:
-        raise RuntimeError(f"{arm} nested provenance is not a complete PASS")
+    if provenance.get("mode") != "nested_walk_forward" or provenance.get("evaluation_months") != months:
+        raise RuntimeError(f"{arm} nested provenance does not cover the frozen evaluation window")
     if set(trades["month"].astype(str)) - set(months):
         raise RuntimeError(f"{arm} trades contain a sealed month")
+    selected_mask = selected["selected"].astype(str).str.lower().eq("true")
+    abstained = selected.loc[~selected_mask]
+    if len(abstained):
+        if not abstained["profile"].astype(str).eq("ABSTAIN_NO_VALID_PROFILE").all():
+            raise RuntimeError(f"{arm} has an unrecognized non-selected fold")
+        if not pd.to_numeric(abstained["test_trades"], errors="coerce").fillna(0).eq(0).all():
+            raise RuntimeError(f"{arm} abstain folds contain test trades")
+        trade_cells = set(zip(trades["ticker"].astype(str), trades["month"].astype(str)))
+        abstain_cells = set(zip(abstained["ticker"], abstained["month"]))
+        if trade_cells & abstain_cells:
+            raise RuntimeError(f"{arm} trades exist in an explicit abstain fold")
+    active = selected.loc[selected_mask].copy()
     for ticker, cooldown in RUNTIME_COOLDOWNS.items():
-        observed = set(pd.to_numeric(selected.loc[selected["ticker"] == ticker, "cooldown_minutes"]).astype(int))
-        if observed != {cooldown}:
+        ticker_active = active.loc[active["ticker"] == ticker]
+        observed = set(pd.to_numeric(ticker_active["cooldown_minutes"], errors="raise").astype(int))
+        if observed and observed != {cooldown}:
             raise RuntimeError(f"{arm} {ticker} cooldown mismatch: {observed}")
-        caps = set(selected.loc[selected["ticker"] == ticker, "deploy_config"].map(max_day_from_config))
-        if caps != {RUNTIME_DAILY_CAPS[ticker]}:
+        caps = set(ticker_active["deploy_config"].map(max_day_from_config))
+        if caps and caps != {RUNTIME_DAILY_CAPS[ticker]}:
             raise RuntimeError(f"{arm} {ticker} daily-cap mismatch: {caps}")
     if set(trades["option_price_mode"].astype(str)) != {"executable_quote"}:
         raise RuntimeError(f"{arm} trades are not exclusively executable_quote")
@@ -291,7 +304,16 @@ def paired_tests(
         tests[f"representation_{column}"] = paired_summary(
             representation_wide[column]["flat"], representation_wide[column]["modal"], alternative=alternative
         )
-    selected_wide = selected.pivot(index=["ticker", "month"], columns="arm")
+    selected_for_tests = selected.copy()
+    for column in ("test_profit_factor", "test_pnl_return", "test_win_rate", "test_max_drawdown"):
+        selected_for_tests[column] = pd.to_numeric(selected_for_tests[column], errors="coerce")
+    # An inner-validation abstain is an operational zero-trade result.  PF/WR
+    # are set to zero for the paired downstream decision instead of silently
+    # dropping the failed cell; PnL and drawdown remain zero.
+    selected_for_tests[["test_profit_factor", "test_win_rate", "test_pnl_return", "test_max_drawdown"]] = (
+        selected_for_tests[["test_profit_factor", "test_win_rate", "test_pnl_return", "test_max_drawdown"]].fillna(0.0)
+    )
+    selected_wide = selected_for_tests.pivot(index=["ticker", "month"], columns="arm")
     for column in ("test_profit_factor", "test_pnl_return", "test_win_rate", "test_max_drawdown"):
         tests[f"downstream_{column}"] = paired_summary(
             selected_wide[column]["flat"], selected_wide[column]["modal"], alternative="greater"
@@ -552,6 +574,13 @@ def main() -> int:
     }
     hashes = artifact_hashes(input_files)
     write_json(output_dir / "input_artifact_hashes.json", hashes)
+    abstain_cells = {
+        arm: selected_all.loc[
+            (selected_all["arm"] == arm) & ~selected_all["selected"].astype(str).str.lower().eq("true"),
+            ["ticker", "month"],
+        ].to_dict("records")
+        for arm in ("flat", "modal")
+    }
     summary = {
         "schema_version": 1,
         "evaluation_months": months,
@@ -563,6 +592,7 @@ def main() -> int:
         "minimum_hold_minutes": MIN_HOLD_MINUTES,
         "config_comparison": config_comparison,
         "provenance_passed": {arm: bool(payload["passed"]) for arm, payload in provenance.items()},
+        "abstain_cells": abstain_cells,
         "acceptance_gates": gates,
         "daily_pnl_bootstrap": bootstrap,
         "decision": decision,
