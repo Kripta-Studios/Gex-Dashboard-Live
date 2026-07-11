@@ -17,6 +17,14 @@ D:/ThetaData/data_underlying_derived/SPY
 
 Hardware local: RTX 5070 Ti con 12 GB VRAM, Ryzen 9 con 32 hilos y 32 GB RAM. Usar CUDA determinista y batches ajustados a VRAM para entrenamiento/inferencia; paralelizar carga y transformaciones CPU sin crear corridas duplicadas.
 
+## Actualización 2026-07-11 12:10 CEST — spot skip rechazado; pivot a mecanismo rentable
+
+- La corrida que quedó activa antes de la interrupción terminó correctamente: `11 passed`, CUDA determinista, cinco folds y sin procesos residuales.
+- Control y spot skip: `0/210` candidatos válidos, `15/15` abstain y `0` trades OOS. Spot gana solo `5/15` MAE, `1/15` RMSE y `8/15` accuracy; medianas `+0,002683/+0,016080/+0,004266`, sin evidencia favorable.
+- No probar más arquitecturas o bloques por tanteo. El fallo económico no es falta de candidatos: QQQ/SPXW suelen superar volumen, pero fallan PF/WR/persistencia; SPY además roza el mínimo.
+- Pista recuperada del histórico: la familia dense15/GBT + d25/d50 backfill + guard causal sí alcanzó las gates observadas en una ventana anterior, pero su evidencia legacy no es promocionable por labels simplificados, solapes/lineage y falta de equivalencia executable-quote. El trabajo correcto es reconstruir y descomponer ese mecanismo sobre datos exactos 2022–2025, no inventar otra arquitectura.
+- Informe: `.../phys_td_spot_skip_202601_202605_seed20260618_v1/REPORT.md`. Próximo paso: congelar una ablación de mecanismo `return head exacto` vs `win-probability exacta`, manteniendo universo/bucket/selector, y después aislar backfill/guard solo si el objetivo recupera señal inner-OOS.
+
 ## Actualización 2026-07-11 07:45 CEST — spot skip listo para ejecutar
 
 - Auditoría sin labels/outcomes: `ret_5m_bps/ret_15m_bps/ret_30m_bps` son backward-looking (`minute <= current-lookback`), 36.796/36.796 finitas, variables, incluidas en los 277 features y reproducibles live.

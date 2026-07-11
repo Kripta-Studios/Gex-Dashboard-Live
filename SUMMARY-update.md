@@ -14,6 +14,14 @@ D:/ThetaData/data_underlying_derived/{SPXW,QQQ,SPY}
 
 Recursos locales: RTX 5070 Ti de 12 GB VRAM, Ryzen 9 de 32 hilos y 32 GB RAM. Los entrenamientos deben aprovechar CUDA determinista y la preparación de datos debe paralelizar CPU de forma reproducible.
 
+## Actualización 2026-07-11 12:10 CEST — spot skip cerrado y cambio de estrategia
+
+El runner interrumpido visualmente había terminado de forma válida: tests, CUDA determinista, hashes, cinco folds, provenance y replay pasaron; no quedan procesos. Control y variante evaluaron 210 candidatos internos cada uno y ninguno pasó simultáneamente PF/WR/18 trades por mes/meses positivos. Las 30 policies abstuvieron y realizaron 0 trades OOS.
+
+Añadir directamente momentum spot no recupera el payoff: mejora MAE en 5/15 celdas (mediana delta `+0,002683`, p `0,9156`), RMSE en 1/15 (`+0,016080`, p `0,9998`) y accuracy direccional en 8/15 (`+0,004266`, p `0,7193`). Se rechaza sin retuning. Informe `.../phys_td_spot_skip_202601_202605_seed20260618_v1/REPORT.md`.
+
+Se abandona la iteración de arquitecturas. La auditoría histórica identifica como pista el pipeline dense15/GBT con objetivo win, d25 primario, d50 backfill y guards causales: llegó a superar gates observadas, pero no es reutilizable directamente porque su retorno legacy `+0,5/-0,3`, solapes y/o lineage no prueban equivalencia ask→bid con hold>=30m. La siguiente fase reconstruirá ese mecanismo con labels executable-quote exactos y datos 2022–2025, aislando primero `return regression` frente a `win probability`; backfill y guard se probarán después y por separado. Junio continúa sellado y producción intacta.
+
 ## Actualización 2026-07-11 07:45 CEST — spot momentum skip predeclarado
 
 La auditoría de las 277 features, sin outcomes, identificó un bloque mínimo reproducible: retornos spot backward-looking 5/15/30m. `event_option_live_snapshot._ret_bps` usa solo spot anterior o igual al cutoff; las tres columnas están completas y variables en 36.796 filas y existen en el contrato live.

@@ -35,6 +35,8 @@ D:/ThetaData/data_underlying_derived/{SPXW,QQQ,SPY}
 
 Hardware de investigación: RTX 5070 Ti de 12 GB VRAM, Ryzen 9 de 32 hilos y 32 GB RAM. Se debe aprovechar CUDA determinista para entrenar/inferir y paralelismo CPU reproducible para construir datasets; más cómputo no autoriza feature mining OOS ni abrir junio.
 
+Actualización 2026-07-11 12:10 CEST: el skip directo de momentum 5/15/30m queda rechazado (`0/210` candidatos válidos por arm, 30 abstenciones, 0 OOS trades). Tampoco mejora de forma reproducible MAE/RMSE/dirección. Con esto se cierra la vía de iterar representaciones. La pista práctica vuelve a la familia dense15/GBT + backfill/guards, que mostró edge histórico pero bajo labels y lineage legacy no promocionables. La nueva agenda es reconstruir ese mecanismo con executable quotes, hold>=30m y datos 2022–2025, aislando objetivo, bucket, backfill y guard; no añadir otra arquitectura.
+
 ## 2. Baseline causal a superar
 
 | Scope | Trades | WR | PF | PnL (R) | Min trades/mes | Meses positivos |
