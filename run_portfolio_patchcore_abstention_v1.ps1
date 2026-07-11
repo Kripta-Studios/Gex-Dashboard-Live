@@ -12,7 +12,7 @@ $shared = "neural/jepa/walkforward_event_option_portfolio_var_jepa.py"
 $output = "research_papers/JEPA/results/_diagnostics/portfolio_patchcore_abstention_exact_runtime_202601_202605_seed20260618_v1"
 $expectedHashes = @{
     $data = "39203C83F47A60AFB2AB7951201CBEB3B9098F4238169F0D716649571667DA2F"
-    $script = "2649D8ED77A7A43F07BE0E67FC47B51FC5ADF6F5E9FC9D304DA4C09A693D29E9"
+    $script = "3106D6099B94985DA6BE8194192389649D5CEBCCF2C315B0910A8ED6C19331EF"
     $shared = "21C011C6F66906E90B128E091794FC92497739568DC10F34EBB6F9175B45F0A1"
 }
 foreach ($path in $expectedHashes.Keys) {

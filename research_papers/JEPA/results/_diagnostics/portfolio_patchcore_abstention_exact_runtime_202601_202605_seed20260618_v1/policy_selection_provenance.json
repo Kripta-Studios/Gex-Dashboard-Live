@@ -1,0 +1,247 @@
+{
+  "expected_rows": 30,
+  "passed": true,
+  "rows": [
+    {
+      "arm": "control",
+      "causal": true,
+      "hashes_ok": true,
+      "month": "202601",
+      "passed": true,
+      "ticker": "QQQ"
+    },
+    {
+      "arm": "control",
+      "causal": true,
+      "hashes_ok": true,
+      "month": "202602",
+      "passed": true,
+      "ticker": "QQQ"
+    },
+    {
+      "arm": "control",
+      "causal": true,
+      "hashes_ok": true,
+      "month": "202603",
+      "passed": true,
+      "ticker": "QQQ"
+    },
+    {
+      "arm": "control",
+      "causal": true,
+      "hashes_ok": true,
+      "month": "202604",
+      "passed": true,
+      "ticker": "QQQ"
+    },
+    {
+      "arm": "control",
+      "causal": true,
+      "hashes_ok": true,
+      "month": "202605",
+      "passed": true,
+      "ticker": "QQQ"
+    },
+    {
+      "arm": "control",
+      "causal": true,
+      "hashes_ok": true,
+      "month": "202601",
+      "passed": true,
+      "ticker": "SPXW"
+    },
+    {
+      "arm": "control",
+      "causal": true,
+      "hashes_ok": true,
+      "month": "202602",
+      "passed": true,
+      "ticker": "SPXW"
+    },
+    {
+      "arm": "control",
+      "causal": true,
+      "hashes_ok": true,
+      "month": "202603",
+      "passed": true,
+      "ticker": "SPXW"
+    },
+    {
+      "arm": "control",
+      "causal": true,
+      "hashes_ok": true,
+      "month": "202604",
+      "passed": true,
+      "ticker": "SPXW"
+    },
+    {
+      "arm": "control",
+      "causal": true,
+      "hashes_ok": true,
+      "month": "202605",
+      "passed": true,
+      "ticker": "SPXW"
+    },
+    {
+      "arm": "control",
+      "causal": true,
+      "hashes_ok": true,
+      "month": "202601",
+      "passed": true,
+      "ticker": "SPY"
+    },
+    {
+      "arm": "control",
+      "causal": true,
+      "hashes_ok": true,
+      "month": "202602",
+      "passed": true,
+      "ticker": "SPY"
+    },
+    {
+      "arm": "control",
+      "causal": true,
+      "hashes_ok": true,
+      "month": "202603",
+      "passed": true,
+      "ticker": "SPY"
+    },
+    {
+      "arm": "control",
+      "causal": true,
+      "hashes_ok": true,
+      "month": "202604",
+      "passed": true,
+      "ticker": "SPY"
+    },
+    {
+      "arm": "control",
+      "causal": true,
+      "hashes_ok": true,
+      "month": "202605",
+      "passed": true,
+      "ticker": "SPY"
+    },
+    {
+      "arm": "patchcore",
+      "causal": true,
+      "hashes_ok": true,
+      "month": "202601",
+      "passed": true,
+      "ticker": "QQQ"
+    },
+    {
+      "arm": "patchcore",
+      "causal": true,
+      "hashes_ok": true,
+      "month": "202602",
+      "passed": true,
+      "ticker": "QQQ"
+    },
+    {
+      "arm": "patchcore",
+      "causal": true,
+      "hashes_ok": true,
+      "month": "202603",
+      "passed": true,
+      "ticker": "QQQ"
+    },
+    {
+      "arm": "patchcore",
+      "causal": true,
+      "hashes_ok": true,
+      "month": "202604",
+      "passed": true,
+      "ticker": "QQQ"
+    },
+    {
+      "arm": "patchcore",
+      "causal": true,
+      "hashes_ok": true,
+      "month": "202605",
+      "passed": true,
+      "ticker": "QQQ"
+    },
+    {
+      "arm": "patchcore",
+      "causal": true,
+      "hashes_ok": true,
+      "month": "202601",
+      "passed": true,
+      "ticker": "SPXW"
+    },
+    {
+      "arm": "patchcore",
+      "causal": true,
+      "hashes_ok": true,
+      "month": "202602",
+      "passed": true,
+      "ticker": "SPXW"
+    },
+    {
+      "arm": "patchcore",
+      "causal": true,
+      "hashes_ok": true,
+      "month": "202603",
+      "passed": true,
+      "ticker": "SPXW"
+    },
+    {
+      "arm": "patchcore",
+      "causal": true,
+      "hashes_ok": true,
+      "month": "202604",
+      "passed": true,
+      "ticker": "SPXW"
+    },
+    {
+      "arm": "patchcore",
+      "causal": true,
+      "hashes_ok": true,
+      "month": "202605",
+      "passed": true,
+      "ticker": "SPXW"
+    },
+    {
+      "arm": "patchcore",
+      "causal": true,
+      "hashes_ok": true,
+      "month": "202601",
+      "passed": true,
+      "ticker": "SPY"
+    },
+    {
+      "arm": "patchcore",
+      "causal": true,
+      "hashes_ok": true,
+      "month": "202602",
+      "passed": true,
+      "ticker": "SPY"
+    },
+    {
+      "arm": "patchcore",
+      "causal": true,
+      "hashes_ok": true,
+      "month": "202603",
+      "passed": true,
+      "ticker": "SPY"
+    },
+    {
+      "arm": "patchcore",
+      "causal": true,
+      "hashes_ok": true,
+      "month": "202604",
+      "passed": true,
+      "ticker": "SPY"
+    },
+    {
+      "arm": "patchcore",
+      "causal": true,
+      "hashes_ok": true,
+      "month": "202605",
+      "passed": true,
+      "ticker": "SPY"
+    }
+  ],
+  "schema_version": 1
+}

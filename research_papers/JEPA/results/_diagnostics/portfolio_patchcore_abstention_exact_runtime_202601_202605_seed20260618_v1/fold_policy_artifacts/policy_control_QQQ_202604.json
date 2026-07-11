@@ -1,0 +1,31 @@
+{
+  "arm": "control",
+  "coreset_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_patchcore_abstention_exact_runtime_202601_202605_seed20260618_v1\\fold_coreset_artifacts\\patchcore_QQQ_202604.npz",
+  "coreset_rows": 128,
+  "coreset_sha256": "33655096BFC59FACB003D9D5CA3A20C9E92BF4780634A2B205982D803A668948",
+  "deploy_config": "ABSTAIN_NO_VALID_POLICY",
+  "distance_cap": null,
+  "distance_only_abstains": true,
+  "evaluation_month": "202604",
+  "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_patchcore_abstention_exact_runtime_202601_202605_seed20260618_v1\\fold_model_artifacts\\payoff_head_202604.pt",
+  "model_artifact_sha256": "956F915AECF2FA4510DE9236904698C5BDD70409EA36BC7EFD883661F610000B",
+  "policy_frozen_before_evaluation": true,
+  "schema_version": 1,
+  "seed": 20463222,
+  "selection_months": [
+    "202601",
+    "202602",
+    "202603"
+  ],
+  "ticker": "QQQ",
+  "training_months": [
+    "202505",
+    "202506",
+    "202507",
+    "202508",
+    "202509",
+    "202510",
+    "202511",
+    "202512"
+  ]
+}

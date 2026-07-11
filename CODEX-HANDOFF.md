@@ -1,5 +1,15 @@
 # CODEX-HANDOFF.md — Estado para continuación por otro agente
 
+## Actualización 2026-07-11 05:15 CEST — PatchCore cerrado y rechazado
+
+- Predeclaración subido en `06930ed`. Runner completó 5 modelos compartidos, 15 coresets, 30 policies y provenance/runtime PASS en 65 s. No quedan procesos activos.
+- Control: 15/15 `invalid_validation`, 0 trades. PatchCore: 15/15 `invalid_validation`, 0 trades. Candidate rows 210/1.470; ninguna cumple simultáneamente PF1,3, WR50%, 18 trades/mes y todos los meses positivos.
+- Distancia-error: 10/15 Spearman positivos, mediana `0,098982`; es diagnóstico útil pero no edge. Solo cuatro near-miss PatchCore de tres gates, todos SPY/202604 y con mínimo 3–4 trades/mes.
+- Decisión: `continue_from_patchcore=false`, `patchcore_meets_full_downstream_gate=false`, `production_live_ready=false`. No probar más coreset sizes, distancias o quantiles.
+- Resultado: `.../portfolio_patchcore_abstention_exact_runtime_202601_202605_seed20260618_v1/`; summary SHA `F9E9C27BA96043534DD153EA91905273B274B931038780E6CC5A1798AC5D56F7`; provenance `8B08554B3F9F250C620A7CFD77999EA95FF86B78001038D45F98188063592E3D`.
+- Bug diagnóstico post-run: sentinel `-1e18` podía no conservar la mejor métrica inválida SPY con <64 trades por redondeo. No afecta validez/policy/trades. v1r1 usa `-inf`; 10 tests PASS. Candidate grid original es autoritativo.
+- Próximo paso: publicar solo artefactos pequeños (excluir 5 `.pt` y 15 `.npz`). Después, si se continúa estrictamente la cola, predeclarar AdaJEPA solo shadow: bloque pequeño, transiciones observadas, sin PnL futuro, reset diario y sin tocar live/systemd. No reabrir Var/PatchCore/modal.
+
 ## Actualización 2026-07-11 05:05 CEST — PatchCore v1 listo para checkpoint/lanzamiento
 
 - Se detectó que `...flat_history_2025...walkforward_runtime_contract_v1` seleccionó buckets d50/d65/d80 en varios folds. Sus cupos/cooldowns sí eran runtime, pero no el bucket; no usar esas policies como control exacto. La comparación history 2022/2025 sigue siendo simétrica, pero no es candidata live.

@@ -50,3 +50,9 @@ No se seleccionará por PnL agregado. `production_live_ready=false` sin excepci�
 | Dataset | `39203C83F47A60AFB2AB7951201CBEB3B9098F4238169F0D716649571667DA2F` |
 
 Tests focalizados: `9 passed in 2.16s`; `py_compile`, parse PowerShell y `git diff --check` PASS.
+
+## Resultado y enmienda v1r1
+
+La corrida completó 30/30 folds, provenance PASS y runtime audit PASS. La distancia fue diagnóstica (10/15 Spearman positivos; mediana `0,098982`), pero ninguna de las 1.470 combinaciones PatchCore cumplió simultáneamente las cuatro gates; control tampoco tuvo policy válida. Ambos arms hicieron 0 trades OOS. Decisión: `continue_from_patchcore=false`, `production_live_ready=false`.
+
+Después de cerrar la decisión se corrigió solo la conservación de métricas de policies inválidas pequeñas: el sentinel `-1e18` podía redondear `+<64 trades` al mismo float en SPY. No afectó validez, selección ni trades. Script v1r1 SHA `3106D6099B94985DA6BE8194192389649D5CEBCCF2C315B0910A8ED6C19331EF`; test `59591220AD7C4AC1935CA5D8605E0E7EF0FA67607C43E14EBE8B894C761706D8`; runner actualizado `353695F880CB0B62CB6751DACFABC95B3D2FE342923B7E3D056862071C97DD35`; `10 passed`.

@@ -169,4 +169,6 @@ Actualización final 2026-07-11 04:47 CEST: Portfolio Var-JEPA v1 queda rechazad
 
 Actualización 2026-07-11 05:05 CEST: PatchCore abstention v1 quedó predeclarado. No se reutiliza el selector flat-history porque su espacio incluía buckets distintos del live exacto; el control es el payoff head d25/d35. Un único modelo mensual alimenta ambos arms y PatchCore solo añade un cap de distancia seleccionado en inner validation. Coreset k-center determinista de 128 latentes actionless por ticker, train-only; siete quantiles fijos, sin sweep. Continuar exige simultáneamente gates downstream completas por ticker y distancia-error positiva reproducible en 10/15 celdas.
 
+Actualización final 2026-07-11 05:15 CEST: PatchCore queda rechazado como filtro de trading. La distancia sí correlaciona con error en 10/15 celdas (mediana Spearman `0,099`), pero 0/1.470 combinaciones cumplieron simultáneamente las gates y las 15 policies se abstuvieron. No se explorarán tamaños/quantiles adicionales. La señal se conserva solo como diagnóstico de drift; `continue_from_patchcore=false`. El último punto de la cola es AdaJEPA solo en shadow, nunca adaptación de la policy productiva.
+
 Informe, hashes y tablas de la ablación de historia quedaron publicados en `8da7a7a`.

@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
+from types import SimpleNamespace
 
 from neural.jepa.walkforward_event_option_patchcore_abstention import (
     add_patchcore_distance,
     fit_patchcore_bank,
+    select_policy,
 )
 
 
@@ -30,3 +32,41 @@ def test_patchcore_distance_only_adds_an_abstention_feature() -> None:
     assert output["action"].tolist() == scored["action"].tolist()
     assert output["score"].tolist() == scored["score"].tolist()
     assert output.loc[1, "patchcore_distance"] > output.loc[0, "patchcore_distance"]
+
+
+def test_invalid_small_spy_policy_preserves_diagnostics_but_abstains() -> None:
+    rows = []
+    for month in ("202510", "202511", "202512"):
+        for day in range(1, 6):
+            rows.append(
+                {
+                    "ticker": "SPY",
+                    "month": month,
+                    "date": f"{month}{day:02d}",
+                    "minute": 630,
+                    "score": 0.1,
+                    "realized_return": -0.1,
+                    "action": "CALL",
+                    "exit_minutes": 30.0,
+                    "patchcore_distance": 1.0,
+                }
+            )
+    args = SimpleNamespace(
+        threshold_grid=[-1e9],
+        threshold_quantiles=[],
+        distance_quantiles=[1.0],
+        min_val_trades=54,
+        min_month_trades=18,
+        min_val_pf=1.3,
+        min_val_win_rate=0.5,
+        min_call_rate=0.0,
+        max_call_rate=1.0,
+        min_val_positive_month_rate=1.0,
+        daily_win_weight=0.25,
+        top5_share_penalty=0.1,
+    )
+    cfg, cap, diagnostics, _ = select_policy(
+        pd.DataFrame(rows), "SPY", ["202510", "202511", "202512"], args, use_patchcore=False
+    )
+    assert cfg is None and cap is None
+    assert diagnostics["trades"] == 15

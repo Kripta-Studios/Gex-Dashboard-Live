@@ -1,0 +1,28 @@
+{
+  "arm": "patchcore",
+  "coreset_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_patchcore_abstention_exact_runtime_202601_202605_seed20260618_v1\\fold_coreset_artifacts\\patchcore_SPXW_202601.npz",
+  "coreset_rows": 128,
+  "coreset_sha256": "FE934E3D11108CBBA6078D79EF802D452BC0E788EF20846D79EB42684DB4A321",
+  "deploy_config": "ABSTAIN_NO_VALID_POLICY",
+  "distance_cap": null,
+  "distance_only_abstains": true,
+  "evaluation_month": "202601",
+  "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_patchcore_abstention_exact_runtime_202601_202605_seed20260618_v1\\fold_model_artifacts\\payoff_head_202601.pt",
+  "model_artifact_sha256": "8112BD0F1AB512DCAD27B5C8E0A1788C196E56BAB4D24436EC0B0620E4F4A0E8",
+  "policy_frozen_before_evaluation": true,
+  "schema_version": 1,
+  "seed": 20463219,
+  "selection_months": [
+    "202510",
+    "202511",
+    "202512"
+  ],
+  "ticker": "SPXW",
+  "training_months": [
+    "202505",
+    "202506",
+    "202507",
+    "202508",
+    "202509"
+  ]
+}

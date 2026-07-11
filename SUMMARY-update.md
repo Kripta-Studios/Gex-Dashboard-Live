@@ -5,6 +5,16 @@
 
 > Esta bitácora se actualiza durante el trabajo. Solo se marca como completado lo reproducido en esta sesión. No implica despliegue, commit ni push salvo que se indique expresamente.
 
+## Actualización 2026-07-11 05:15 CEST — PatchCore terminado y rechazado
+
+PatchCore completó 5/5 modelos compartidos, 15 coresets y 30/30 policies en 65 segundos. Provenance y runtime replay pasaron; no hubo OOM ni fallback. Control tuvo 15/15 folds inválidos y PatchCore 15/15: ninguno produjo trades OOS bajo las gates canónicas.
+
+La distancia sí anticipó error absoluto: Spearman positivo en 10/15 celdas, mediana `0,098982`. Sin embargo, 0/210 candidatos control y 0/1.470 candidatos PatchCore cumplieron simultáneamente PF>=1,3, WR>=50%, 18 trades en cada mes interno y todos los meses positivos. Los cuatro near-miss PatchCore de tres gates fueron SPY/202604 y fallaron volumen (mínimo 3–4 trades/mes). QQQ/SPXW no adquirieron edge estable.
+
+Decisión: `distance_diagnostic_supported=true`, `patchcore_meets_full_downstream_gate=false`, `continue_from_patchcore=false`, `production_live_ready=false`. No se barrerán coresets/quantiles ni se relajarán gates. Summary SHA `F9E9C27BA96043534DD153EA91905273B274B931038780E6CC5A1798AC5D56F7`; folds `BF7E86F9...C104`; diagnostics `BA876D46...80E2`; provenance `8B08554B...2E3D`.
+
+Se corrigió después un sentinel de diagnósticos inválidos SPY (`-1e18+<64` podía redondear igual). No podía seleccionar policy ni cambiar trades; candidate grid es autoritativo. Código v1r1 y test pasan 10/10. La cola ya no autoriza uncertainty/PatchCore; el único punto literario restante es AdaJEPA estrictamente shadow, que debe predeclararse como adaptación de representación sin modificar policy live.
+
 ## Actualización 2026-07-11 05:05 CEST — PatchCore abstention v1 predeclarado
 
 La auditoría previa detectó que el selector flat-history llamado runtime-equivalente solo había fijado cupos/cooldowns: sus folds seleccionaron buckets variables d50/d65/d80. Esto no afecta la comparación simétrica de historia ya cerrada, pero impide reutilizar esas policies como control live exacto. PatchCore se ancla en cambio al payoff head determinista d25 SPXW/d35 QQQ-SPY de Portfolio Var-JEPA.

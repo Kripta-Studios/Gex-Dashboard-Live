@@ -169,7 +169,10 @@ def select_policy(
     best_cfg: DeployConfig | None = None
     best_cap: float | None = None
     best_metrics = metrics(pd.DataFrame(), val_months)
-    best_score = -1e18
+    # Start below the invalid-policy sentinel. At magnitudes near 1e18, adding
+    # fewer than ~64 trades can round back to exactly -1e18 in float64; using
+    # -inf preserves the best invalid diagnostics without ever deploying it.
+    best_score = -float("inf")
     rows: list[dict[str, Any]] = []
     for cfg in configs:
         for cap in distance_caps:

@@ -1,0 +1,32 @@
+{
+  "arm": "patchcore",
+  "coreset_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_patchcore_abstention_exact_runtime_202601_202605_seed20260618_v1\\fold_coreset_artifacts\\patchcore_SPY_202605.npz",
+  "coreset_rows": 128,
+  "coreset_sha256": "84EAB781CBB666F662D3417E28619E9D69BFCA43EA9171E0ABEC755048DE7BE5",
+  "deploy_config": "ABSTAIN_NO_VALID_POLICY",
+  "distance_cap": null,
+  "distance_only_abstains": true,
+  "evaluation_month": "202605",
+  "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_patchcore_abstention_exact_runtime_202601_202605_seed20260618_v1\\fold_model_artifacts\\payoff_head_202605.pt",
+  "model_artifact_sha256": "EA75DE4B8C19FD849CAF161CCA9125202021A4600F6666F852487669C3636038",
+  "policy_frozen_before_evaluation": true,
+  "schema_version": 1,
+  "seed": 20463223,
+  "selection_months": [
+    "202602",
+    "202603",
+    "202604"
+  ],
+  "ticker": "SPY",
+  "training_months": [
+    "202505",
+    "202506",
+    "202507",
+    "202508",
+    "202509",
+    "202510",
+    "202511",
+    "202512",
+    "202601"
+  ]
+}
