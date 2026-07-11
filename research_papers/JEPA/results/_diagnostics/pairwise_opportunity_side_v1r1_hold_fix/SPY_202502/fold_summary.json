@@ -1,0 +1,320 @@
+{
+  "ticker": "SPY",
+  "test_month": "202502",
+  "train_months": "202311,202312,202401,202402,202403,202404,202405,202406,202407,202408,202409,202410",
+  "inner_months": "202411,202412,202501",
+  "train_rows": 9268,
+  "val_rows": 2207,
+  "test_rows": 610,
+  "feature_hash": "fa2057653ed0327b7f84a165c25f6e6d31e31b3b05c5591593e9c0bd3056d50e",
+  "first_allowed_minute": 635,
+  "base_seed": 202844,
+  "opportunity_prevalence": 0.8099913681484678,
+  "side_prevalence": 0.5284401225522846,
+  "call_win_prevalence": 0.4432455761760898,
+  "put_win_prevalence": 0.40051791109192925,
+  "c0": {
+    "trade_threshold": 0.6,
+    "side_margin": 0.1,
+    "valid_inner": true,
+    "test_metrics": {
+      "trades": 19,
+      "win_rate": 0.5263157894736842,
+      "profit_factor": 1.2881158060051552,
+      "pnl_return": 1.439575292085736,
+      "avg_return": 0.07576712063609137,
+      "max_drawdown": -2.9528249931915767,
+      "call_rate": 0.5263157894736842,
+      "days_with_trades": 19,
+      "daily_win_rate": 0.5263157894736842,
+      "median_daily_return": 0.13888886129414701,
+      "daily_max_drawdown": -2.9528249931915767,
+      "top5_day_return": 4.953211438759235,
+      "top5_share_of_pnl": 3.4407449655396274,
+      "min_month_trades": 19,
+      "positive_month_rate": 1.0
+    },
+    "diagnostics": {
+      "arm": "C0",
+      "opportunity_prevalence": 0.818,
+      "call_prevalence_in_opp_positive": 0.483,
+      "tie_rate": 0.0016,
+      "side_balanced_accuracy_A": 0.5635,
+      "executed_trades": 19,
+      "wr": 0.5263,
+      "gross_profit": 6.436091491755736,
+      "gross_loss": 4.996516199669999,
+      "pf": 1.2881,
+      "pnl": 1.4396,
+      "max_drawdown": -2.9528,
+      "call_rate": 0.5263,
+      "abstention_rate": 0.9689,
+      "min_hold_minutes": 30.0,
+      "worst_monthly_pf": 1.2881,
+      "worst_monthly_pnl": 1.4396,
+      "min_monthly_trades": 19,
+      "positive_month_rate": 1.0,
+      "pooled_pf": 1.2881,
+      "outer_trade_records": [
+        {
+          "date": "20250203",
+          "minute": 635,
+          "ticker": "SPY",
+          "realized_return": 0.13888886129414701
+        },
+        {
+          "date": "20250204",
+          "minute": 655,
+          "ticker": "SPY",
+          "realized_return": -0.6555555437817983
+        },
+        {
+          "date": "20250205",
+          "minute": 635,
+          "ticker": "SPY",
+          "realized_return": 0.9016392449479202
+        },
+        {
+          "date": "20250206",
+          "minute": 645,
+          "ticker": "SPY",
+          "realized_return": -0.6133333444595337
+        },
+        {
+          "date": "20250207",
+          "minute": 660,
+          "ticker": "SPY",
+          "realized_return": 0.3799999952316284
+        },
+        {
+          "date": "20250210",
+          "minute": 655,
+          "ticker": "SPY",
+          "realized_return": -0.6346153757981292
+        },
+        {
+          "date": "20250211",
+          "minute": 650,
+          "ticker": "SPY",
+          "realized_return": 0.8225806234530433
+        },
+        {
+          "date": "20250212",
+          "minute": 670,
+          "ticker": "SPY",
+          "realized_return": 0.6470588029049669
+        },
+        {
+          "date": "20250213",
+          "minute": 640,
+          "ticker": "SPY",
+          "realized_return": 0.25
+        },
+        {
+          "date": "20250214",
+          "minute": 635,
+          "ticker": "SPY",
+          "realized_return": -0.6119403224077429
+        },
+        {
+          "date": "20250218",
+          "minute": 635,
+          "ticker": "SPY",
+          "realized_return": -0.6571428589674891
+        },
+        {
+          "date": "20250219",
+          "minute": 635,
+          "ticker": "SPY",
+          "realized_return": -0.6060606361639609
+        },
+        {
+          "date": "20250220",
+          "minute": 650,
+          "ticker": "SPY",
+          "realized_return": -0.44000001748402917
+        },
+        {
+          "date": "20250221",
+          "minute": 805,
+          "ticker": "SPY",
+          "realized_return": -0.6376811581683545
+        },
+        {
+          "date": "20250224",
+          "minute": 655,
+          "ticker": "SPY",
+          "realized_return": 1.8676470987833902
+        },
+        {
+          "date": "20250225",
+          "minute": 635,
+          "ticker": "SPY",
+          "realized_return": -0.1401869424389618
+        },
+        {
+          "date": "20250226",
+          "minute": 645,
+          "ticker": "SPY",
+          "realized_return": 0.7142856686699148
+        },
+        {
+          "date": "20250227",
+          "minute": 740,
+          "ticker": "SPY",
+          "realized_return": 0.3711340244194692
+        },
+        {
+          "date": "20250228",
+          "minute": 635,
+          "ticker": "SPY",
+          "realized_return": 0.3428571720512559
+        }
+      ]
+    },
+    "selection_details": {
+      "trade_threshold": 0.6,
+      "side_margin": 0.1,
+      "rank_key": [
+        3.878507127404303,
+        1.9875279111366528,
+        0.6111111111111112,
+        18,
+        20.46160949304472,
+        58,
+        0.1,
+        0.6
+      ],
+      "total_trades": 58,
+      "total_pnl": 20.46160949304472,
+      "gate_details": {
+        "months": {
+          "202411": {
+            "trades": 18,
+            "pf": 1.9875,
+            "wr": 0.6111,
+            "pnl": 3.8785,
+            "min_hold_minutes": 30.0,
+            "pass": true
+          },
+          "202412": {
+            "trades": 21,
+            "pf": 6.5198,
+            "wr": 0.8095,
+            "pnl": 11.3726,
+            "min_hold_minutes": 30.0,
+            "pass": true
+          },
+          "202501": {
+            "trades": 19,
+            "pf": 2.4176,
+            "wr": 0.6842,
+            "pnl": 5.2105,
+            "min_hold_minutes": 30.0,
+            "pass": true
+          }
+        }
+      }
+    },
+    "model_labels": {
+      "call": "call_win_label = int(call_return > 0)",
+      "put": "put_win_label = int(put_return > 0)"
+    },
+    "seed_call": 202845,
+    "seed_put": 202846
+  },
+  "p1": {
+    "trade_threshold": 0.5,
+    "side_margin": 0.0,
+    "valid_inner": false,
+    "test_metrics": {
+      "trades": 0,
+      "win_rate": NaN,
+      "profit_factor": NaN,
+      "pnl_return": 0.0,
+      "avg_return": NaN,
+      "max_drawdown": 0.0,
+      "call_rate": NaN,
+      "days_with_trades": 0,
+      "daily_win_rate": NaN,
+      "median_daily_return": NaN,
+      "daily_max_drawdown": 0.0,
+      "top5_day_return": 0.0,
+      "top5_share_of_pnl": NaN,
+      "min_month_trades": 0,
+      "positive_month_rate": NaN
+    },
+    "diagnostics": {
+      "arm": "P1",
+      "status": "abstain",
+      "reason": "no_valid_inner_config"
+    },
+    "selection_details": {
+      "reason": "no_valid_config"
+    },
+    "side_train_rows": 7507,
+    "model_labels": {
+      "opp": "opportunity_label = int(max(call_return, put_return) > 0)",
+      "side": "side_label = int(call_return > put_return)"
+    },
+    "seed_opp": 202847,
+    "seed_side": 202848
+  },
+  "scientific_mask_rows": 499,
+  "scientific_mask_sha256": "39adc4c4b685167d938e26971566c3ef211936403fa146a88c869f341bff1432",
+  "sci_cell_degenerate": false,
+  "sci_cell_degenerate_reason": "",
+  "sci_c0_accuracy": 0.5651302605210421,
+  "sci_c0_balanced_accuracy": 0.5634629611759786,
+  "sci_c0_roc_auc": 0.6098137604940654,
+  "sci_c0_spearman": 0.17228059023985884,
+  "sci_p1_accuracy": 0.5370741482965932,
+  "sci_p1_balanced_accuracy": 0.53564765672746,
+  "sci_p1_roc_auc": 0.5762970825693976,
+  "sci_p1_spearman": 0.09739002539368462,
+  "sci_ba_delta": -0.027815304448518652,
+  "logistic_regression": {
+    "call_win": {
+      "label": "call_win_train",
+      "roc_auc": 0.5637,
+      "pr_auc": 0.4993,
+      "balanced_accuracy": 0.5225,
+      "spearman": 0.1096
+    },
+    "put_win": {
+      "label": "put_win_train",
+      "roc_auc": 0.576,
+      "pr_auc": 0.4495,
+      "balanced_accuracy": 0.5041,
+      "spearman": 0.129
+    },
+    "call_win_test": {
+      "label": "call_win_test",
+      "roc_auc": 0.5157,
+      "pr_auc": 0.4018,
+      "balanced_accuracy": 0.4904,
+      "spearman": 0.0267
+    },
+    "put_win_test": {
+      "label": "put_win_test",
+      "roc_auc": 0.5634,
+      "pr_auc": 0.4737,
+      "balanced_accuracy": 0.4916,
+      "spearman": 0.1093
+    },
+    "opportunity_test": {
+      "label": "opportunity_test",
+      "roc_auc": 0.4991,
+      "pr_auc": 0.8058,
+      "balanced_accuracy": 0.5,
+      "spearman": -0.0013
+    },
+    "side_test": {
+      "label": "side_test",
+      "roc_auc": 0.5682,
+      "pr_auc": 0.5981,
+      "balanced_accuracy": 0.4932,
+      "spearman": 0.1181
+    }
+  }
+}

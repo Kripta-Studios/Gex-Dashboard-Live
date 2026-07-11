@@ -1,6 +1,6 @@
 # PAIRWISE V1R1 — hold-duration semantics correction
 
-Status: predeclared correction; not executed at this checkpoint.
+Status: executed once; correction verified; economic result rejected.
 
 ## Defect in V1
 
@@ -40,3 +40,17 @@ Canonical command after commit/push:
 ```powershell
 pwsh -File run_pairwise_opportunity_side_v1r1_hold_fix.ps1
 ```
+
+## Result
+
+V1r1 completed 99/99 cells in 282.3 seconds. Scientific metrics reproduced V1
+exactly, confirming that only policy validity changed. Valid inner policies:
+
+- C0: SPY outer identities `202409`, `202410`, `202502`.
+- P1: SPY `202410` only.
+- SPXW/QQQ: none in either arm.
+
+Outer C0: 61 trades, WR `45.90%`, pooled PF `0.9978`, PnL `-0.0396R`.
+Outer P1: 23 trades, WR `34.78%`, PF `0.4265`, PnL `-4.9301R`.
+No ticker/month cell passed the full outer contract. The correction is valid, but
+the model remains rejected. Do not retune V1r1.

@@ -1,0 +1,326 @@
+{
+  "ticker": "SPY",
+  "test_month": "202409",
+  "train_months": "202306,202307,202308,202309,202310,202311,202312,202401,202402,202403,202404,202405",
+  "inner_months": "202406,202407,202408",
+  "train_rows": 9360,
+  "val_rows": 2266,
+  "test_rows": 760,
+  "feature_hash": "fa2057653ed0327b7f84a165c25f6e6d31e31b3b05c5591593e9c0bd3056d50e",
+  "first_allowed_minute": 635,
+  "base_seed": 202751,
+  "opportunity_prevalence": 0.8164529914529914,
+  "side_prevalence": 0.5203507394320115,
+  "call_win_prevalence": 0.44326923076923075,
+  "put_win_prevalence": 0.4081196581196581,
+  "c0": {
+    "trade_threshold": 0.6,
+    "side_margin": 0.1,
+    "valid_inner": true,
+    "test_metrics": {
+      "trades": 20,
+      "win_rate": 0.4,
+      "profit_factor": 1.071327870462887,
+      "pnl_return": 0.4501595475237692,
+      "avg_return": 0.02250797737618846,
+      "max_drawdown": -2.6680459176169844,
+      "call_rate": 0.7,
+      "days_with_trades": 20,
+      "daily_win_rate": 0.4,
+      "median_daily_return": -0.2799134102038708,
+      "daily_max_drawdown": -2.6680459176169844,
+      "top5_day_return": 6.109163522770549,
+      "top5_share_of_pnl": 13.571107302679113,
+      "min_month_trades": 20,
+      "positive_month_rate": 1.0
+    },
+    "diagnostics": {
+      "arm": "C0",
+      "opportunity_prevalence": 0.8421,
+      "call_prevalence_in_opp_positive": 0.4922,
+      "tie_rate": 0.0,
+      "side_balanced_accuracy_A": 0.4775,
+      "executed_trades": 20,
+      "wr": 0.4,
+      "gross_profit": 6.761290730922734,
+      "gross_loss": 6.311131183398965,
+      "pf": 1.0713,
+      "pnl": 0.4502,
+      "max_drawdown": -2.668,
+      "call_rate": 0.7,
+      "abstention_rate": 0.9737,
+      "min_hold_minutes": 30.0,
+      "worst_monthly_pf": 1.0713,
+      "worst_monthly_pnl": 0.4502,
+      "min_monthly_trades": 20,
+      "positive_month_rate": 1.0,
+      "pooled_pf": 1.0713,
+      "outer_trade_records": [
+        {
+          "date": "20240903",
+          "minute": 635,
+          "ticker": "SPY",
+          "realized_return": -0.6133333444595337
+        },
+        {
+          "date": "20240904",
+          "minute": 670,
+          "ticker": "SPY",
+          "realized_return": 0.7710844074317944
+        },
+        {
+          "date": "20240905",
+          "minute": 655,
+          "ticker": "SPY",
+          "realized_return": 1.5540540018074704
+        },
+        {
+          "date": "20240906",
+          "minute": 655,
+          "ticker": "SPY",
+          "realized_return": -0.22935784582477137
+        },
+        {
+          "date": "20240909",
+          "minute": 635,
+          "ticker": "SPY",
+          "realized_return": -0.6052631633983976
+        },
+        {
+          "date": "20240910",
+          "minute": 655,
+          "ticker": "SPY",
+          "realized_return": 0.2857142509593915
+        },
+        {
+          "date": "20240911",
+          "minute": 660,
+          "ticker": "SPY",
+          "realized_return": 1.6595744748307655
+        },
+        {
+          "date": "20240912",
+          "minute": 645,
+          "ticker": "SPY",
+          "realized_return": -0.330097071085543
+        },
+        {
+          "date": "20240913",
+          "minute": 660,
+          "ticker": "SPY",
+          "realized_return": -0.22972974932219858
+        },
+        {
+          "date": "20240916",
+          "minute": 655,
+          "ticker": "SPY",
+          "realized_return": 0.31343279598709506
+        },
+        {
+          "date": "20240917",
+          "minute": 680,
+          "ticker": "SPY",
+          "realized_return": -0.6346153757981292
+        },
+        {
+          "date": "20240918",
+          "minute": 640,
+          "ticker": "SPY",
+          "realized_return": 0.05298016120569704
+        },
+        {
+          "date": "20240919",
+          "minute": 750,
+          "ticker": "SPY",
+          "realized_return": -0.6052631372560091
+        },
+        {
+          "date": "20240920",
+          "minute": 635,
+          "ticker": "SPY",
+          "realized_return": -0.6031746001710937
+        },
+        {
+          "date": "20240923",
+          "minute": 635,
+          "ticker": "SPY",
+          "realized_return": -0.6315789411768027
+        },
+        {
+          "date": "20240924",
+          "minute": 640,
+          "ticker": "SPY",
+          "realized_return": 1.2321428476395657
+        },
+        {
+          "date": "20240925",
+          "minute": 765,
+          "ticker": "SPY",
+          "realized_return": -0.600000014901161
+        },
+        {
+          "date": "20240926",
+          "minute": 655,
+          "ticker": "SPY",
+          "realized_return": -0.6153845955457906
+        },
+        {
+          "date": "20240927",
+          "minute": 645,
+          "ticker": "SPY",
+          "realized_return": 0.8923077910609536
+        },
+        {
+          "date": "20240930",
+          "minute": 685,
+          "ticker": "SPY",
+          "realized_return": -0.6133333444595337
+        }
+      ]
+    },
+    "selection_details": {
+      "trade_threshold": 0.6,
+      "side_margin": 0.1,
+      "rank_key": [
+        1.2589164178356065,
+        1.3288404281900423,
+        0.5714285714285714,
+        19,
+        7.397695593530671,
+        62,
+        0.1,
+        0.6
+      ],
+      "total_trades": 62,
+      "total_pnl": 7.397695593530671,
+      "gate_details": {
+        "months": {
+          "202406": {
+            "trades": 19,
+            "pf": 1.3288,
+            "wr": 0.6316,
+            "pnl": 1.2589,
+            "min_hold_minutes": 30.0,
+            "pass": true
+          },
+          "202407": {
+            "trades": 22,
+            "pf": 1.9281,
+            "wr": 0.6364,
+            "pnl": 3.904,
+            "min_hold_minutes": 30.0,
+            "pass": true
+          },
+          "202408": {
+            "trades": 21,
+            "pf": 1.4101,
+            "wr": 0.5714,
+            "pnl": 2.2347,
+            "min_hold_minutes": 30.0,
+            "pass": true
+          }
+        }
+      }
+    },
+    "model_labels": {
+      "call": "call_win_label = int(call_return > 0)",
+      "put": "put_win_label = int(put_return > 0)"
+    },
+    "seed_call": 202752,
+    "seed_put": 202753
+  },
+  "p1": {
+    "trade_threshold": 0.5,
+    "side_margin": 0.0,
+    "valid_inner": false,
+    "test_metrics": {
+      "trades": 0,
+      "win_rate": NaN,
+      "profit_factor": NaN,
+      "pnl_return": 0.0,
+      "avg_return": NaN,
+      "max_drawdown": 0.0,
+      "call_rate": NaN,
+      "days_with_trades": 0,
+      "daily_win_rate": NaN,
+      "median_daily_return": NaN,
+      "daily_max_drawdown": 0.0,
+      "top5_day_return": 0.0,
+      "top5_share_of_pnl": NaN,
+      "min_month_trades": 0,
+      "positive_month_rate": NaN
+    },
+    "diagnostics": {
+      "arm": "P1",
+      "status": "abstain",
+      "reason": "no_valid_inner_config"
+    },
+    "selection_details": {
+      "reason": "no_valid_config"
+    },
+    "side_train_rows": 7641,
+    "model_labels": {
+      "opp": "opportunity_label = int(max(call_return, put_return) > 0)",
+      "side": "side_label = int(call_return > put_return)"
+    },
+    "seed_opp": 202754,
+    "seed_side": 202755
+  },
+  "scientific_mask_rows": 640,
+  "scientific_mask_sha256": "2f5465004be5fabc91eefbc29a250729554c1a26e83251197baa224f556d21b3",
+  "sci_cell_degenerate": false,
+  "sci_cell_degenerate_reason": "",
+  "sci_c0_accuracy": 0.475,
+  "sci_c0_balanced_accuracy": 0.4774603174603175,
+  "sci_c0_roc_auc": 0.4848156288156288,
+  "sci_c0_spearman": -0.08038224093656306,
+  "sci_p1_accuracy": 0.4546875,
+  "sci_p1_balanced_accuracy": 0.45623931623931624,
+  "sci_p1_roc_auc": 0.4363174603174603,
+  "sci_p1_spearman": -0.14576950303805353,
+  "sci_ba_delta": -0.021221001221001234,
+  "logistic_regression": {
+    "call_win": {
+      "label": "call_win_train",
+      "roc_auc": 0.5569,
+      "pr_auc": 0.4979,
+      "balanced_accuracy": 0.5167,
+      "spearman": 0.0979
+    },
+    "put_win": {
+      "label": "put_win_train",
+      "roc_auc": 0.5658,
+      "pr_auc": 0.4516,
+      "balanced_accuracy": 0.5078,
+      "spearman": 0.112
+    },
+    "call_win_test": {
+      "label": "call_win_test",
+      "roc_auc": 0.5958,
+      "pr_auc": 0.4779,
+      "balanced_accuracy": 0.5264,
+      "spearman": 0.1641
+    },
+    "put_win_test": {
+      "label": "put_win_test",
+      "roc_auc": 0.4456,
+      "pr_auc": 0.4106,
+      "balanced_accuracy": 0.4792,
+      "spearman": -0.0936
+    },
+    "opportunity_test": {
+      "label": "opportunity_test",
+      "roc_auc": 0.5307,
+      "pr_auc": 0.8374,
+      "balanced_accuracy": 0.5,
+      "spearman": 0.0388
+    },
+    "side_test": {
+      "label": "side_test",
+      "roc_auc": 0.5556,
+      "pr_auc": 0.5381,
+      "balanced_accuracy": 0.501,
+      "spearman": 0.0963
+    }
+  }
+}

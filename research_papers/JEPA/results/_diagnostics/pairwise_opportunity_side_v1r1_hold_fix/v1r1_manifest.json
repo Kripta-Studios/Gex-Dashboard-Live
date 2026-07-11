@@ -1,0 +1,16 @@
+{
+  "correction": "PAIRWISE_V1R1_HOLD_DURATION_CORRECTION",
+  "git_head": "dc09edfc5759acdeef8b2830182c990950f1e7ba",
+  "dataset_sha256": "d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408",
+  "walkforward_sha256": "b82b12d0be692b4b771c1f4b8013eb731eb62e4cb0c61f18600dd0373b7f624e",
+  "tests_sha256": [
+    "b20f176a4bbb9699f5655541a79ea6dc15d20e6210263c85797819c586651ddd",
+    "3e2114775fc254c2215e3360177a65999fad296dc305571141bf236f276bdbb1"
+  ],
+  "runner_sha256": "e74553cd01b05cdce3250b0e80bf463b2a8b1e3a85c52bf39ff5336ebed7b065",
+  "exit_minutes_semantics": "elapsed_duration_minutes",
+  "full_run_executed": true,
+  "contains_2026": false,
+  "production_modified": false,
+  "exit_code": 0
+}

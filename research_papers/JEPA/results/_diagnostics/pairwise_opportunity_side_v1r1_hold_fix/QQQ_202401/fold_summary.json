@@ -1,0 +1,146 @@
+{
+  "ticker": "QQQ",
+  "test_month": "202401",
+  "train_months": "202210,202211,202212,202301,202302,202303,202304,202305,202306,202307,202308,202309",
+  "inner_months": "202310,202311,202312",
+  "train_rows": 7321,
+  "val_rows": 2082,
+  "test_rows": 706,
+  "feature_hash": "fa2057653ed0327b7f84a165c25f6e6d31e31b3b05c5591593e9c0bd3056d50e",
+  "first_allowed_minute": 635,
+  "base_seed": 202643,
+  "opportunity_prevalence": 0.8436006010107909,
+  "side_prevalence": 0.5578947368421052,
+  "call_win_prevalence": 0.48791148750170743,
+  "put_win_prevalence": 0.3921595410463051,
+  "c0": {
+    "trade_threshold": 0.5,
+    "side_margin": 0.0,
+    "valid_inner": false,
+    "test_metrics": {
+      "trades": 0,
+      "win_rate": NaN,
+      "profit_factor": NaN,
+      "pnl_return": 0.0,
+      "avg_return": NaN,
+      "max_drawdown": 0.0,
+      "call_rate": NaN,
+      "days_with_trades": 0,
+      "daily_win_rate": NaN,
+      "median_daily_return": NaN,
+      "daily_max_drawdown": 0.0,
+      "top5_day_return": 0.0,
+      "top5_share_of_pnl": NaN,
+      "min_month_trades": 0,
+      "positive_month_rate": NaN
+    },
+    "diagnostics": {
+      "arm": "C0",
+      "status": "abstain",
+      "reason": "no_valid_inner_config"
+    },
+    "selection_details": {
+      "reason": "no_valid_config"
+    },
+    "model_labels": {
+      "call": "call_win_label = int(call_return > 0)",
+      "put": "put_win_label = int(put_return > 0)"
+    },
+    "seed_call": 202644,
+    "seed_put": 202645
+  },
+  "p1": {
+    "trade_threshold": 0.5,
+    "side_margin": 0.0,
+    "valid_inner": false,
+    "test_metrics": {
+      "trades": 0,
+      "win_rate": NaN,
+      "profit_factor": NaN,
+      "pnl_return": 0.0,
+      "avg_return": NaN,
+      "max_drawdown": 0.0,
+      "call_rate": NaN,
+      "days_with_trades": 0,
+      "daily_win_rate": NaN,
+      "median_daily_return": NaN,
+      "daily_max_drawdown": 0.0,
+      "top5_day_return": 0.0,
+      "top5_share_of_pnl": NaN,
+      "min_month_trades": 0,
+      "positive_month_rate": NaN
+    },
+    "diagnostics": {
+      "arm": "P1",
+      "status": "abstain",
+      "reason": "no_valid_inner_config"
+    },
+    "selection_details": {
+      "reason": "no_valid_config"
+    },
+    "side_train_rows": 6175,
+    "model_labels": {
+      "opp": "opportunity_label = int(max(call_return, put_return) > 0)",
+      "side": "side_label = int(call_return > put_return)"
+    },
+    "seed_opp": 202646,
+    "seed_side": 202647
+  },
+  "scientific_mask_rows": 604,
+  "scientific_mask_sha256": "13bbccc2d1fabfc8e20021c5f7f0f3be11e51b6de6587d0a5dbacd6ea9cdd357",
+  "sci_cell_degenerate": false,
+  "sci_cell_degenerate_reason": "",
+  "sci_c0_accuracy": 0.49503311258278143,
+  "sci_c0_balanced_accuracy": 0.46565431348040043,
+  "sci_c0_roc_auc": 0.486244834070921,
+  "sci_c0_spearman": 0.004418251783714071,
+  "sci_p1_accuracy": 0.5099337748344371,
+  "sci_p1_balanced_accuracy": 0.485096224226659,
+  "sci_p1_roc_auc": 0.4975845410628019,
+  "sci_p1_spearman": 0.03032291081754472,
+  "sci_ba_delta": 0.01944191074625856,
+  "logistic_regression": {
+    "call_win": {
+      "label": "call_win_train",
+      "roc_auc": 0.5687,
+      "pr_auc": 0.5424,
+      "balanced_accuracy": 0.5424,
+      "spearman": 0.119
+    },
+    "put_win": {
+      "label": "put_win_train",
+      "roc_auc": 0.568,
+      "pr_auc": 0.4515,
+      "balanced_accuracy": 0.5117,
+      "spearman": 0.1149
+    },
+    "call_win_test": {
+      "label": "call_win_test",
+      "roc_auc": 0.5198,
+      "pr_auc": 0.533,
+      "balanced_accuracy": 0.5154,
+      "spearman": 0.0343
+    },
+    "put_win_test": {
+      "label": "put_win_test",
+      "roc_auc": 0.487,
+      "pr_auc": 0.3641,
+      "balanced_accuracy": 0.496,
+      "spearman": -0.0219
+    },
+    "opportunity_test": {
+      "label": "opportunity_test",
+      "roc_auc": 0.5622,
+      "pr_auc": 0.8686,
+      "balanced_accuracy": 0.5,
+      "spearman": 0.0758
+    },
+    "side_test": {
+      "label": "side_test",
+      "roc_auc": 0.5087,
+      "pr_auc": 0.6015,
+      "balanced_accuracy": 0.4648,
+      "spearman": 0.0148
+    }
+  }
+}

@@ -65,6 +65,8 @@ El diagnóstico de grid ya quedó implementado y predeclarado sin ejecutarse: re
 
 El diagnóstico se ejecutó y encontró un defecto, no una ausencia total de candidatos: `hold_pass` era cero para todas las filas porque Pairwise restaba `minute` a una columna que ya expresa duración. El builder guarda `elapsed`, el scheduler suma esa duración a la entrada y las labels válidas auditadas están todas en 30–180m. Sin el gate de hold defectuoso, 16 configs pasan PF/WR/trades/PnL en los tres inner meses, todas SPY (15 C0, 1 P1). Se predeclara V1r1 cambiando solo `min(exit_minutes)` y escribiendo en output nuevo. No interpretar todavía los 0 trades V1 como fallo económico autoritativo; la ciencia P1 débil sí permanece válida.
 
+V1r1 completó después 99/99 celdas. C0 solo seleccionó SPY en tres outer y terminó 61 trades, WR `45,90%`, PF `0,9978`, `-0,0396R`; P1 solo SPY/202410, 23 trades, WR `34,78%`, PF `0,4265`, `-4,9301R`. Ninguna celda outer cumple. SPXW/QQQ nunca obtienen una policy inner válida. La frecuencia inner sí pasa en 85–97% de las configs P1 según ticker; PF/WR casi nunca. El cuello queda localizado en dirección/payoff, no volumen ni hold. V1/V1r1 quedan rechazados.
+
 ## Actualización 2026-07-11 15:45 CEST — Auditoría de Reproducibilidad y C0 Equivalence Terminadas con Éxito
 
 La auditoría de reproducibilidad se completó con éxito en 10 s (test PASS), arrojando las siguientes conclusiones fundamentales:
