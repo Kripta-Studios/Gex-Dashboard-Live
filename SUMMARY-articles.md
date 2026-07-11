@@ -26,6 +26,15 @@ D:/ThetaData/data_underlying_derived
 
 La disponibilidad de más historia no autoriza a abrir junio de 2026 ni a usar meses externos para seleccionar arquitectura, policy o thresholds.
 
+Rutas por ticker disponibles para opciones y spot:
+
+```text
+D:/ThetaData/data_options/{SPXW,QQQ,SPY}
+D:/ThetaData/data_underlying_derived/{SPXW,QQQ,SPY}
+```
+
+Hardware de investigación: RTX 5070 Ti de 12 GB VRAM, Ryzen 9 de 32 hilos y 32 GB RAM. Se debe aprovechar CUDA determinista para entrenar/inferir y paralelismo CPU reproducible para construir datasets; más cómputo no autoriza feature mining OOS ni abrir junio.
+
 ## 2. Baseline causal a superar
 
 | Scope | Trades | WR | PF | PnL (R) | Min trades/mes | Meses positivos |

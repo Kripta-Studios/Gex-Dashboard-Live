@@ -1,9 +1,18 @@
 # SUMMARY-update.md — Continuación verificable del trabajo de `SUMMARY.md`
 
 **Inicio de esta continuación:** 10 de julio de 2026
-**Objetivo:** cerrar los pendientes de `SUMMARY.md` y determinar, con evidencia causal y reproducible, si existe un paquete JEPA apto para live.
+**Objetivo no negociable:** obtener una policy causal, reproducible y live-equivalente para cada ticker `SPXW`, `QQQ` y `SPY` 0DTE que demuestre en walk-forward `PF >= 1,3`, `WR >= 50%`, al menos `18 trades` en cada mes, `PnL > 0` en todos los meses evaluados y hold realizado mínimo `>= 30 minutos`.
 
 > Esta bitácora se actualiza durante el trabajo. Solo se marca como completado lo reproducido en esta sesión. No implica despliegue, commit ni push salvo que se indique expresamente.
+
+Junio de 2026 permanece sellado y la investigación no modifica el paquete productivo. Hay históricos locales de opciones y spot 2022–2026 para train/inner-validation causal en:
+
+```text
+D:/ThetaData/data_options/{SPXW,QQQ,SPY}
+D:/ThetaData/data_underlying_derived/{SPXW,QQQ,SPY}
+```
+
+Recursos locales: RTX 5070 Ti de 12 GB VRAM, Ryzen 9 de 32 hilos y 32 GB RAM. Los entrenamientos deben aprovechar CUDA determinista y la preparación de datos debe paralelizar CPU de forma reproducible.
 
 ## Actualización 2026-07-11 07:45 CEST — spot momentum skip predeclarado
 

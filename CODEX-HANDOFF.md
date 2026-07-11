@@ -1,5 +1,22 @@
 # CODEX-HANDOFF.md — Estado para continuación por otro agente
 
+## Contrato de éxito y recursos — no rebajar
+
+El objetivo de investigación es obtener una policy causal, reproducible y live-equivalente para **cada uno** de `SPXW`, `QQQ` y `SPY` 0DTE. Debe demostrar en walk-forward: `PF >= 1,3`, `WR >= 50%`, al menos `18 trades` en **cada mes**, `PnL > 0` en **todos** los meses evaluados y hold realizado mínimo `>= 30 minutos`. No basta PF/PnL agregado ni cumplir solo dos tickers. Junio de 2026 permanece sellado y no se modifica el paquete de producción mientras se investiga.
+
+Datos históricos locales 2022–2026 disponibles para train/inner-validation causal:
+
+```text
+D:/ThetaData/data_options/SPXW
+D:/ThetaData/data_options/QQQ
+D:/ThetaData/data_options/SPY
+D:/ThetaData/data_underlying_derived/SPXW
+D:/ThetaData/data_underlying_derived/QQQ
+D:/ThetaData/data_underlying_derived/SPY
+```
+
+Hardware local: RTX 5070 Ti con 12 GB VRAM, Ryzen 9 con 32 hilos y 32 GB RAM. Usar CUDA determinista y batches ajustados a VRAM para entrenamiento/inferencia; paralelizar carga y transformaciones CPU sin crear corridas duplicadas.
+
 ## Actualización 2026-07-11 07:45 CEST — spot skip listo para ejecutar
 
 - Auditoría sin labels/outcomes: `ret_5m_bps/ret_15m_bps/ret_30m_bps` son backward-looking (`minute <= current-lookback`), 36.796/36.796 finitas, variables, incluidas en los 277 features y reproducibles live.
