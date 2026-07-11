@@ -30,6 +30,20 @@ Al entrar enero en la ventana inner, ningún candidato vuelve a cumplir y febrer
 
 La corrección de provenance funcionó: incluso las abstenciones conservan train/selección y `passed=true`. Junio y producción permanecen intactos. Siguiente hipótesis admisible: un mecanismo económico diferente o cobertura full-session causal 1m predeclarada, no otro barrido de momentum sobre el mismo OOS.
 
+## Actualización 2026-07-11 15:35 CEST — Ablación de Gates de Régimen Completada
+
+La corrida única de los 5 arms (`task-254`) se completó de forma limpia. Se evaluaron las gates condicionales post-score y pre-scheduler seleccionadas exclusivamente en validación cruzada inner, sobre el dataset físicamente sellado `tmp/event_option_dataset_execquote_causal1030_202501_202605_regime_v1.parquet` (SHA-256: `a1970d2cbd7ef8f96a8b2d9fc092f4b323513c03895e73c2058f39b11c7cbef5`).
+
+Métricas clave obtenidas por arm:
+- **C0 (Control):** Se reproduce de forma exacta la ejecución sin gates. En febrero de 2026, QQQ y SPY lograron pasar todas las gates en validación y operaron OOS (QQQ: 21 trades, PF = 1.416, +2.771R; SPY: 19 trades, PF = 1.344, +2.207R), absteniendo en el resto.
+- **R1 (IV Skew):** Rescató el fold de `SPXW 202602` (que abstuvo en C0) seleccionando `rg_phys_d25_iv_skew_put_minus_call_below_q20pct` (9 trades, PF = 1.452, +1.170R). Además, mejoró las métricas de `QQQ 202602` (PF = 1.444 vs 1.416 en C0).
+- **R2 (Spread):** Seleccionó spread gate `below` para `SPY 202602` (PF = 1.486 vs 1.344 en C0) y `SPY 202603` (PF = 1.185), pero falló en `QQQ 202604` (PF = 0.968, PnL = -0.286R) mostrando drift de régimen.
+- **R3 (Abs Return) & R4 (IB Range):** Estructuralmente viables (el filtro temporal en R4 causó <3% de pérdida de candidatos, descartando la inanición física), pero económicamente inestables en test (QQQ Feb 2026 R3 PF = 0.746, R4 PF = 0.587).
+
+Conclusión científica: Los gates seleccionados de forma causal mejoraron el PnL y rescataron folds en situaciones específicas (como febrero de 2026), demostrando que la interacción pre-scheduler funciona correctamente y simula de forma equivalente la ejecución en live. Sin embargo, no consiguen generalizar a lo largo de todos los meses evaluados para cumplir simultáneamente con el riguroso contrato productivo (PF >= 1.3, WR >= 50%, >= 18 trades, PnL > 0 en cada mes).
+
+Informe detallado: `C:\Users\Álvaro Schwiedop\.gemini\antigravity-ide\brain\248f0f85-3bd2-48b9-a7cc-576d373827d5\ablation_report.md`.
+
 ## Actualización 2026-07-11 14:15 CEST — el mecanismo productivo no era estable antes de 2026
 
 La auditoría inversa terminó: QQQ obtiene 75 trades, WR 41,33%, PF 1,158 y un mes negativo; SPXW 64 trades, WR 43,75%, PF 1,686 y un mes negativo; SPY 125 trades, WR 34,40%, PF 0,794 y pierde los tres meses. Todos superan 18 operaciones/mes, así que la frecuencia no explica el fallo.

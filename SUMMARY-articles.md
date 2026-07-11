@@ -61,6 +61,8 @@ Actualización 2026-07-11 12:35 CEST: ambos objetivos exactos fallaron; return a
 
 Actualización 2026-07-11 12:50 CEST: la vista temprana causal quedó predeclarada. Reconstruye 10:00–10:25 sin filtro de niveles y entrena solo d25-win con una allowlist que excluye todas las derivaciones IB/Fib/nearest antes de 10:30. Es una prueba del mecanismo legacy corregido, no una nueva arquitectura; producción seguirá intacta incluso si pasa.
 
+Actualización 2026-07-11 15:35 CEST — La ablación condicional de gates de régimen terminó (task-254). Ninguno de los arms (C0 control, R1 IV Skew, R2 Spread, R3 Abs Return, R4 IB Range) cumple simultáneamente con las gates del contrato completo. C0 demostró validez cruzada operando en Feb 2026 (QQQ PF = 1.416, SPY PF = 1.344) pero abstuvo en el resto. R1 rescató el fold SPXW Feb 2026 usando `rg_phys_d25_iv_skew_put_minus_call_below_q20pct` (9 trades, PF = 1.452, +1.170R). El filtro temporal causal de R4 no causó inanición física (<3% pérdida de candidatos), descartando la hipótesis de limitación estructural. Todos los cuantiles y selecciones fueron estrictamente causales en inner. Informe de resultados e interpretación en el artifact del ID de conversación.
+
 ## 2. Baseline causal a superar
 
 | Scope | Trades | WR | PF | PnL (R) | Min trades/mes | Meses positivos |

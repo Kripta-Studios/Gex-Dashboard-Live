@@ -597,12 +597,19 @@ M neural/models/jepa/.../runtime_policy_replay_summary.json  (newline)
 ?? artefactos diagnósticos flat/modal/SMM y `tmp/` (grandes; no añadir sin selección explícita)
 ```
 
-Estos diffs son del agente anterior y solo añaden `entry_sample_minutes`/`entry_sample_anchor_minute_et` al policy JSON. No afectan la ablación en curso.
+### Actualización 2026-07-11 15:35 CEST — Ablación de Gates de Régimen Completada
+- **Corrida Única Completada (task-254):** Ejecución limpia de los 5 arms (C0, R1, R2, R3, R4) sobre la vista del dataset físicamente sellada `tmp/event_option_dataset_execquote_causal1030_202501_202605_regime_v1.parquet` (SHA-256: `a1970d2cbd7ef8f96a8b2d9fc092f4b323513c03895e73c2058f39b11c7cbef5`).
+- **Control C0:** Confirmado. En febrero de 2026, C0 seleccionó la configuración base `none` (no gate) para QQQ (21 trades, PF = 1.416, PnL = +2.771R) y SPY (19 trades, PF = 1.344, PnL = +2.207R), absteniendo en el resto de folds.
+- **R1 (IV Skew):** Rescató el fold `SPXW 202602` con el gate `rg_phys_d25_iv_skew_put_minus_call_below_q20pct` (9 trades, PF = 1.452, +1.170R). También mejoró `QQQ 202602` (PF = 1.444 vs 1.416 en C0) usando `rg_phys_d35_iv_skew_put_minus_call_above_q20pct`.
+- **R2 (Spread - Primary):** Seleccionó un spread gate `below` para `SPY 202602` (PF = 1.486 vs 1.344 en C0) y `SPY 202603` (PF = 1.185), pero sufrió drift en `QQQ 202604` (PF = 0.968).
+- **R3 (Abs Return) & R4 (IB Range):** Estructuralmente viables (10:30 filter causó <3% candidate loss), pero inestables OOS (QQQ Feb 2026 R3 PF = 0.746, R4 PF = 0.587).
+- **Conclusión General:** Ningún arm supera el contrato completo. Se confirman drift y near-misses por baja frecuencia.
+- **Informe Detallado:** `C:\Users\Álvaro Schwiedop\.gemini\antigravity-ide\brain\248f0f85-3bd2-48b9-a7cc-576d373827d5\ablation_report.md`.
 
 ### Último commit
-
 ```text
 cc5665f docs: record results of flat vs modal causal ablation
+f7ce2c6 research: implement regime-conditioned gate ablation v1
 ```
 
 ### Junio de 2026
@@ -611,8 +618,7 @@ Completamente sellado. El `--data-cutoff-month 202605` / `--end-month 202605` ex
 
 ### Primera acción del siguiente agente
 
-1. Confirmar que ninguna automatización del IDE ha relanzado un proceso sobre directorios v1.
-2. Lanzar el arm válido v2 predeclarado: CPU, `mask_modal_prob=0.15`, `mask_temporal_prob=0`, resto idéntico al control modal, salida nueva; junio excluido.
-3. Enriquecer con prefijo `ptdj_` y ejecutar selector solo `202601..202605` en salida nueva.
-4. Verificar 15 folds con hashes/provenance PASS y recomputar métricas por mes/ticker.
-5. Solo después decidir el arm temporal; implementar spans contiguos antes de probarlo, porque el v1 usaba Bernoulli por timestep.
+1. Leer el `ablation_report.md` en el directorio de artefactos para entender las dinámicas y desgloses mensuales de cada arm.
+2. Analizar por qué la señal de dirección CALL/PUT sigue sufriendo de drift inestable (el control C0 abstiene casi siempre, y los gates seleccionados en inner no garantizan PF > 1.0 en todos los meses outer).
+3. No lanzar ejecuciones sin predeclaración escrita con hash exacto.
+4. No alterar producción, no modificar los servicios de VPS systemd y mantener junio sellado.
