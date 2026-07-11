@@ -131,4 +131,6 @@ Se predeclara una única corrección común, sin reentrenar los encoders ni camb
 - datasets derivados físicamente truncados en `20260529`;
 - mismo espacio de perfiles, thresholds y presupuesto para ambos arms.
 
-El selector flat runtime-equivalente está activo en `...flat..._walkforward_runtime_contract_v2/` y no debe duplicarse. Modal se ejecutará solo cuando flat termine y será idéntico salvo por los embeddings OOF ya congelados. La evidencia de representación ya calculada es desfavorable a `modal`; por tanto, no se avanzará a pérdidas intra/cross-modal si el informe final no demuestra una mejora reproducible tanto representacional como downstream.
+El selector flat runtime-equivalente se lanzó en `...flat..._walkforward_runtime_contract_v2/`; modal se predeclaró idéntico salvo por los embeddings OOF ya congelados. La evidencia de representación ya calculada es desfavorable a `modal`; por tanto, no se avanzará a pérdidas intra/cross-modal si el informe final no demuestra una mejora reproducible tanto representacional como downstream.
+
+Actualización: flat terminó 15/15 folds con provenance PASS y contrato validado (hold mínimo observado 30m). Produjo 481 trades, WR 43,87%, PF 0,900 y -15,094R. QQQ quedó en PF 1,000, SPXW 0,813 y SPY 0,969; el mínimo mensual fue 28/17/17 respectivamente. Flat queda rechazado. Modal runtime-equivalente está ejecutándose con configuración idéntica y salida nueva; no se tomarán decisiones hasta completar la comparación pareada.

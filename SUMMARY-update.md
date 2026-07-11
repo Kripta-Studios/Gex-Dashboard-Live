@@ -524,3 +524,29 @@ research_papers/JEPA/results/_diagnostics/ptdj_ablation_flat_h1_3_6_12_causal_20
 Argumentos distintivos: `--start-month 202601 --end-month 202605`, `--ticker-cooldown-minutes SPXW=0 QQQ=30 SPY=0`, `--ticker-max-day-grids SPXW=4 QQQ=2 SPY=1`, `--lgb-device-type cpu`, `--seed 20260618`, `--no-resume`. PID observado: `8636`. El primer checkpoint guardó `SPXW/202601`; la corrida continúa activa y no debe duplicarse.
 
 En paralelo se reconstruyó la comparación de representación original. La evidencia provisional —todavía pendiente de persistirse como artefacto versionado— no apoya avanzar a MJEPA intra/cross-modal: en los 15 bloques ticker×mes de enero–mayo, `modal` mejoró el ratio medio error/persistencia solo en 2/15 y nunca mejoró la tasa de observaciones que baten persistencia. La decisión final esperará al downstream runtime-equivalente y a un informe reproducible con hashes.
+
+### Selector flat runtime-equivalente: completado
+
+La primera envoltura cerró stdout después del primer fold, pero el checkpoint quedó íntegro. Se reanudó la misma ruta sin `--no-resume`, conservando `SPXW/202601` y calculando solo los 14 folds pendientes. Resultado verificado:
+
+```text
+15/15 folds seleccionados
+policy_selection_provenance.passed = true
+trades = 481
+WR = 43,867%
+PF = 0,8996
+PnL = -15,094R
+Max DD = -26,009R
+min exit_minutes = 30
+max evaluation month = 202605
+```
+
+| Ticker | Trades | WR | PF | PnL (R) | Min trades/mes | Meses positivos |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| QQQ | 166 | 46,386% | 1,000 | -0,010 | 28 | 60% |
+| SPXW | 217 | 41,014% | 0,813 | -14,249 | 17 | 60% |
+| SPY | 98 | 45,918% | 0,969 | -0,835 | 17 | 40% |
+
+Flat queda rechazado: ningún ticker alcanza PF 1,3 y WR 50%; SPXW/SPY tampoco alcanzan 18 trades en su peor mes y no todos los meses son positivos.
+
+El selector modal runtime-equivalente se lanzó después de cerrar flat, en salida nueva `...modal..._walkforward_runtime_contract_v2/`, con PID `38064` y exactamente los mismos argumentos/seed/backend. No debe duplicarse mientras siga activo.

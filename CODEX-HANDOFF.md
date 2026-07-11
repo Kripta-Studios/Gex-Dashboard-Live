@@ -20,6 +20,18 @@
 - Próximo paso seguro: esperar a que PID `8636` termine; verificar 15 folds/hashes/provenance y solo entonces lanzar modal en otra ruta nueva con idénticos argumentos.
 - Junio de 2026 sigue sellado. No se modificó systemd, no se promovió ningún paquete y no se tocó la policy legacy.
 
+### Actualización incremental 2026-07-11 02:20 CEST
+
+- Flat runtime-equivalente terminó 15/15 folds en `ptdj_ablation_flat_h1_3_6_12_causal_202501_202605_v1_walkforward_runtime_contract_v2`.
+- Validación independiente: provenance PASS, 481 trades, `min(exit_minutes)=30`, mes máximo `202605`, sin off-grid, cupos excedidos ni solapamientos.
+- Overall flat: WR `43,867%`, PF `0,8996`, PnL `-15,094R`, Max DD `-26,009R`.
+- QQQ: 166 trades, PF `0,9998`, PnL `-0,010R`, mínimo mensual 28, 60% meses positivos.
+- SPXW: 217 trades, PF `0,8127`, PnL `-14,249R`, mínimo mensual 17, 60% meses positivos.
+- SPY: 98 trades, PF `0,9695`, PnL `-0,835R`, mínimo mensual 17, 40% meses positivos.
+- Flat queda rechazado por PF/WR, volumen en SPXW/SPY y meses negativos.
+- Modal runtime-equivalente está activo en PID `38064`, salida `ptdj_ablation_modal_h1_3_6_12_causal_202501_202605_v1_walkforward_runtime_contract_v2`, con los mismos argumentos, CPU/8 workers y seed `20260618`.
+- No lanzar otro modal mientras PID `38064` esté activo. Tras terminar: validar contrato, ejecutar `analyze_event_phys_td_flat_modal.py`, persistir el informe/hashes y decidir si se detiene MJEPA.
+
 ### Objetivo cuantitativo obligatorio
 
 Para cada ticker (`SPXW`, `QQQ`, `SPY`) y no solo en agregado, cualquier candidato debe cumplir en el walk-forward:
