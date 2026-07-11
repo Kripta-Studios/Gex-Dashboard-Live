@@ -211,11 +211,45 @@ def freeze_fold_policy_artifact(
     feature_cols: list[str],
     args: argparse.Namespace,
     direction_mode: str = "model",
+    regime_gate: object = None,
 ) -> dict[str, str]:
     """Freeze the selected policy before any outer-fold outcome is scored."""
     artifact_dir.mkdir(parents=True, exist_ok=True)
     model_path = artifact_dir / "event_option_gate_direction_model.pkl"
     manifest_path = artifact_dir / "fold_policy.json"
+    
+    # Calculate dataset SHA256 if possible
+    dataset_sha256 = "unknown"
+    if hasattr(args, "data") and args.data:
+        try:
+            import hashlib
+            data_path = Path(args.data)
+            if data_path.exists():
+                h = hashlib.sha256()
+                with data_path.open("rb") as f:
+                    for chunk in iter(lambda: f.read(65536), b""):
+                        h.update(chunk)
+                dataset_sha256 = h.hexdigest()
+        except Exception:
+            pass
+
+    # Retrieve current git commit SHA
+    commit_sha = "unknown"
+    try:
+        import subprocess
+        commit_sha = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+    except Exception:
+        pass
+
+    regime_gate_dict = None
+    if regime_gate is not None:
+        regime_gate_dict = {
+            "feature": getattr(regime_gate, "feature", ""),
+            "direction": getattr(regime_gate, "direction", ""),
+            "quantile": getattr(regime_gate, "quantile", 0.0),
+            "threshold": float(getattr(regime_gate, "threshold", 0.0)) if getattr(regime_gate, "threshold", None) is not None else None,
+        }
+
     metadata = {
         "schema_version": 1,
         "component": "nested_event_option_gate_direction_model",
@@ -234,6 +268,9 @@ def freeze_fold_policy_artifact(
             for key, value in medians.fillna(0.0).items()
         },
         "policy_frozen_before_evaluation": True,
+        "dataset_sha256": dataset_sha256,
+        "commit_sha": commit_sha,
+        "regime_gate": regime_gate_dict,
     }
     with model_path.open("wb") as handle:
         pickle.dump(
@@ -857,6 +894,7 @@ def fit_profile_fold(
             feature_cols=feature_cols,
             args=args,
             direction_mode=best_direction_mode,
+            regime_gate=best_regime_gate,
         )
 
     test_trades = pd.DataFrame()
