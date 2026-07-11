@@ -13,6 +13,8 @@ El contrato etiqueta `target_available_after_timestamp=target_timestamp`; `targe
 
 Primer paso pendiente: predeclarar y generar cinco encoders flat congelados para test `202601..202605`, entrenados solo hasta el mes anterior a sus tres meses internos; después re-encodear `202501..test_month` con el checkpoint único de cada fold.
 
+El build quedó predeclarado en `research_papers/JEPA/ADAJEPA_COHERENT_SPACES_PREDECLARATION_V1.md`. Runner `run_adajepa_coherent_spaces_v1.ps1`, SHA-256 `0900B63B997B6136D09DB665187920262C89C23FCE4EFEA6478218674839E3BE`; fuente `AB144DBA...F720`. Folds train_end `202509/10/11/12/202601`, test `202601..202605`, mismo flat/8 epochs/batch1024/seed/CUDA determinista. Aún no lanzado en este checkpoint.
+
 ## Actualización 2026-07-11 05:25 CEST — preflight AdaJEPA shadow y primer paso pendiente
 
 Se verificó el paper primario AdaJEPA: la adaptación ocurre después de observar una transición real, usa esa transición como señal self-supervised y actualiza el world model dentro del loop antes de replantear; no usa reward/PnL. La adaptación local admisible será predictor-only, shadow, con un paso por transición observada, reset diario y rollback por norma.

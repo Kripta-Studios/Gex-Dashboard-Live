@@ -175,4 +175,6 @@ Actualización 2026-07-11 05:25 CEST: el paper primario confirma adaptación sel
 
 Actualización 2026-07-11 05:45 CEST: la precondición técnica ya está implementada. Un exportador separado produce pares causalmente auditables `z_t/pred_z/target_z` desde un checkpoint congelado, impide cruzar gaps/sesiones y marca el target como observable solo en el timestamp siguiente. Falta construir los cinco checkpoints/espacios coherentes antes de probar un único paso de adaptación shadow.
 
+El build de esos cinco espacios quedó predeclarado con train_end anterior a tres meses internos, arquitectura flat y presupuesto idéntico. Todavía no contiene adaptación ni downstream; solo habilita una comparación AdaJEPA fiel y causal.
+
 Informe, hashes y tablas de la ablación de historia quedaron publicados en `8da7a7a`.
