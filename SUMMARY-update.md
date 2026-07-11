@@ -30,6 +30,15 @@ Al entrar enero en la ventana inner, ningún candidato vuelve a cumplir y febrer
 
 La corrección de provenance funcionó: incluso las abstenciones conservan train/selección y `passed=true`. Junio y producción permanecen intactos. Siguiente hipótesis admisible: un mecanismo económico diferente o cobertura full-session causal 1m predeclarada, no otro barrido de momentum sobre el mismo OOS.
 
+## Actualización 2026-07-11 15:45 CEST — Auditoría de Reproducibilidad y C0 Equivalence Terminadas con Éxito
+
+La auditoría de reproducibilidad se completó con éxito en 10 s (test PASS), arrojando las siguientes conclusiones fundamentales:
+1. **C0 Equivalence (PASS):** El replay completo de C0 (sin gates de régimen) generó una coincidencia exacta de trades y PnL trade-a-trade con la ejecución original de V1. El hash de trades normalizado (`9a59c1f7...7ab`) coincide en ambos entornos, confirmando equivalencia interna del control de la ablación.
+2. **Reconstrucción de Thresholds (MATCH):** Se verificó que el threshold aplicado por la lógica del selector in-memory para QQQ 202602 R1 fue exactamente `0.012700021`, el cual coincide con el quintil 20% del skew put-call en los datos de entrenamiento filtrados por outcomes finitos y contratos disponibles (`finite_labels & observable`). Se clasificaron todos los thresholds auditados de R1-R4 bajo `THRESHOLD_MATCH`.
+3. **Persistencia y Serialización Corregidas:** Se modificó `freeze_fold_policy_artifact` para almacenar el dict de `regime_gate`, el commit de Git, y el SHA-256 del dataset en `fold_policy.json`. Se validaron con pytest y basetemp `C:\tmp\pytest-regime-gate-audit` los 21 tests de la suite (incluyendo persistencia, causal checks de minute > 630 para R4 y filtrado de candidatos substitution en scheduler).
+4. **Scheduler Contrafactual:** Para QQQ 202602 R1, el scheduler ejecutó 21 trades admitidos (PF = 1.444, WR = 60.9%, PnL = +2.956R) y descartó 1 trade (PF = 999.0, PnL = +0.596R), demostrando que no hubo leakage ni scheduling inconsistente.
+5. **Directorio de Auditoría Generado:** Todos los archivos auditados se escribieron en `research_papers/JEPA/results/_diagnostics/regime_gate_ablation_v1_reproducibility_audit/` conteniendo `audit_manifest.json`, `all_75_folds.csv` y los demás reportes auxiliares de flujo y procedencia.
+
 ## Actualización 2026-07-11 15:35 CEST — Ablación de Gates de Régimen Completada
 
 La corrida única de los 5 arms (`task-254`) se completó de forma limpia. Se evaluaron las gates condicionales post-score y pre-scheduler seleccionadas exclusivamente en validación cruzada inner, sobre el dataset físicamente sellado `tmp/event_option_dataset_execquote_causal1030_202501_202605_regime_v1.parquet` (SHA-256: `a1970d2cbd7ef8f96a8b2d9fc092f4b323513c03895e73c2058f39b11c7cbef5`).

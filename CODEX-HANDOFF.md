@@ -41,6 +41,16 @@ Cadencia confirmada en código: el live **recopila snapshots cada minuto** (`DEF
 - Informe `.../early_causal_directional_nested_1m_202601_202605_seed20260618_v1/REPORT.md`; audit SHA `740A3305...D821`.
 - La corrección de provenance conserva cronología de folds abstain y no cambió trades/PnL. Próximo trabajo: hipótesis económica distinta o cobertura full-session causal 1m, predeclarada; producción intacta.
 
+## Actualización 2026-07-11 15:45 CEST — Regime Gate Ablation V1 reproducible y auditado; C0 internal equivalence PASS
+
+- Auditoría de reproducibilidad finalizada en 10 s; test PASS; paridad del control C0 confirmada.
+- **C0 internal equivalence: PASS**. Se corrió un replay exacto de C0 (sin gates de régimen) bajo idénticos parámetros y allowlists. La coincidencia trade-a-trade y mes-a-mes es absoluta (trades hash normalizado: `9a59c1f7...7ab` en ambos casos). Esto confirma equivalencia interna pero no necesariamente paridad histórica con el broad-profile legacy debido a diferencias metodológicas previas.
+- **Resolución de thresholds: MATCH**. El threshold de `0.015249997` no fue serializado ni aplicado en R1 QQQ 202602. La reconstrucción matemática sobre los datos de entrenamiento filtrados por disponibilidad de contratos e outcomes finitos (`finite_labels & observable`) arroja exactamente `0.012700021`, coincidiendo al 100% con la lógica del selector in-memory de V1. Todos los folds no abstencionistas audited se clasifican como `THRESHOLD_MATCH`.
+- **Serialización corregida**: Se actualizó `freeze_fold_policy_artifact` para persistir los metadatos completos de `regime_gate` (feature, direction, quantile, threshold), el commit hash de git y el hash del dataset en `fold_policy.json`. Se escribieron unit tests para validar esta persistencia, cutoffs temporales de IB Range (R4: exclusión de `minute <= 630`), y filtrado de candidatos substitution.
+- **Métricas de Scheduler Contrafactual**: Para QQQ 202602 R1, el scheduler ejecutó 21 trades admitidos (PF `1.444`, PnL `+2.956R`, WR `60.9%`) y rechazó 1 trade (PF `999.0` debido a un solo trade ganador, PnL `+0.596R`). Esto valida que el scheduler no sufrió fugas causales.
+- **Dictamen**: Se ratifica el estado exploratorio de R1. Al no alcanzar el mínimo de 18 trades mensuales requeridos por el contrato para todos los meses y tickers evaluados, **ninguna política cumple el contrato de producción**.
+- **Acción metodológica**: Se archivan los resultados de la auditoría en `research_papers/JEPA/results/_diagnostics/regime_gate_ablation_v1_reproducibility_audit/` con el manifiesto `audit_manifest.json` y la tabla completa de 75 folds (`all_75_folds.csv`). Se versionan los scripts y tests con commit determinista.
+
 ## Actualización 2026-07-11 14:15 CEST — rentabilidad static-union atribuida a selección 2026
 
 - Auditoría inversa terminó en 8,8 s, test PASS, tres modelos 28 hilos, solo train ene–sep2025 y audit oct–dic2025.
