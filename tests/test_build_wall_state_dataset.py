@@ -86,10 +86,10 @@ def test_preflight_selection_requires_one_session_per_ticker(tmp_path):
 def test_event_coverage_deduplicates_event_profiles(tmp_path):
     event_path = tmp_path / "events.parquet"
     pd.DataFrame({
-        "ticker": ["SPY", "SPY", "QQQ"],
-        "trade_date": ["20250102", "20250102", "20250102"],
-        "minute": [635, 635, 635],
-        "spot": [100.0, 100.0, 200.0],
+        "ticker": ["SPY", "SPY", "QQQ", "SPY"],
+        "trade_date": ["20250102", "20250102", "20250102", "20250102"],
+        "minute": [635, 635, 635, 630],
+        "spot": [100.0, 100.0, 200.0, 99.0],
     }).to_parquet(event_path, index=False)
     walls = pd.DataFrame({
         "ticker": ["SPY"], "trade_date": ["20250102"], "minute": [635], "spot": [100.0],

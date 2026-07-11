@@ -27,6 +27,9 @@ from neural.jepa.wall_state_features import (
 TICKERS = ("SPXW", "QQQ", "SPY")
 PHYSICAL_END_DATE = "20251231"
 MAX_WORKERS = 16
+FIRST_MINUTE = 635
+LAST_MINUTE = 870
+CADENCE_MINUTES = 5
 EXPECTED_SOURCE_MANIFEST_SHA256 = (
     "5431c2bf932fef6ce1ba34117cc869feb78063fbc1aa3989017fdbcb5b66dc88"
 )
@@ -274,6 +277,11 @@ def audit_event_coverage(
     events = events[
         events["ticker"].isin(TICKERS)
         & events["trade_date"].le(PHYSICAL_END_DATE)
+    ].copy()
+    event_minute = pd.to_numeric(events["minute"], errors="coerce")
+    events = events[
+        event_minute.between(FIRST_MINUTE, LAST_MINUTE)
+        & ((event_minute - FIRST_MINUTE) % CADENCE_MINUTES == 0)
     ].copy()
     if session_filter is not None:
         sessions = session_filter[["ticker", "trade_date"]].drop_duplicates().copy()
