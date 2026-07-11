@@ -204,6 +204,11 @@ Resultado ejecutado: REJECTED. 26.090 candidatos, 48/48 celdas válidas. S1 gana
 0,805), pero rejection/break queda 0,511/0,519/0,516 para D0/S1/S2. Mínimo
 mensual resuelto 30m QQQ/SPXW/SPY 6/0/0; 60m 14/4/5. No se autoriza payoff.
 
+Nueva fuente predeclarada, aún no ejecutada: flow-at-touch con bar de opción
+completado `[t-1,t)`, sign proxy close-vs-mid, agregación 1/5/15m full-surface y
+30 bps alrededor del wall. Feasibility de volumen capturado 96,98–99,58%. F1 debe
+superar F0 en 16/24 celdas y mantener >=18 resoluciones mensuales a 30/60m.
+
 Debe producir, solo con snapshot actual:
 
 - CALL/PUT gamma wall;

@@ -243,6 +243,11 @@ research_papers/JEPA/results/_diagnostics/wall_state_gex_dex_202201_202512_v1/ma
    OHLC `volume/count` completado en `t-1` y quotes bid/ask actuales cerca del
    wall. Comparar contra D0 sin retunar el wall-state rechazado.
 
+Factibilidad aprobada en tres sesiones: quote válido cubre 90,10%/95,44%/91,33%
+de filas activas SPXW/QQQ/SPY y 96,98%/97,32%/99,58% del volumen. Experimento
+at-touch congelado en `WALL_SURFACE_FLOW_AT_TOUCH_PREDECLARATION_V1.md`; pendiente
+implementar. El signo es proxy close-vs-mid, no aggressor observado.
+
 Resultado completo:
 
 ```text
