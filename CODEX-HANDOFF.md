@@ -1,5 +1,29 @@
 # CODEX-HANDOFF.md — Estado para continuación por otro agente
 
+## Actualización 2026-07-11 03:15 CEST — dataset auditado y ablación lista para lanzar
+
+- El runner de dataset terminó sin procesos huérfanos: 159/159 chunks, 108.156 filas base/physics, 371 columnas physics y fecha máxima `20260529`.
+- SHA-256 base: `DED31E49D70EC2525194497994E26FD6A6DD4BF502F7775EA547826B0FB879BF`; physics completo: `11E26AADDD91FD441222D552E0362C1D4C2C4489A08D7A6DE66479D6EB454FB1`.
+- Vista physics reciente común al downstream (`202501..202605`): 36.796 filas, SHA-256 `AB144DBAD1F6F103C771AE119A1172AC728BC11B6AA79DB5FB0648561673F720`.
+- Auditoría: solo `zero_dte`/`executable_quote`, 0 duplicados, 0 infinitos, 0 filas off-grid, 277 features live en ambos arms, junio físicamente ausente. Dos filas SPXW del `20220222` marcan PUT no disponible; ThetaData confirma 162 strikes PUT pero bid/ask cero en esos timestamps. El selector las excluye por disponibilidad observable; no se imputaron ni borraron.
+- Se fijaron 13 folds OOF idénticos `202505..202605`; evaluación nested `202601..202605`; flat, seed base `20260618`, seeds por fold `base+YYYYMM`, CUDA determinista, 8 épocas, batch 1024 y mismo contrato runtime.
+- Commits nuevos: `6de6aa6` (masking/targets y CUDA determinista), `bf42cd9` (liberación de memoria del selector), `670b2e3` (seed independiente por fold/resume reproducible).
+- Suite focalizada completa antes de predeclarar: `66 passed in 4.64s`; test Phys-TD posterior a fold seeds: `14 passed in 2.38s`.
+- Predeclaración: `research_papers/JEPA/results/_diagnostics/flat_history_ablation_predeclared_202201_202605_v1/`. Runner: `run_flat_history_ablation_v1.ps1`, SHA-256 `A8DC76553B0573E8594939A60A81AB80C50C64B3DB42510834320EE8EDA1F63D`, parse PASS.
+- Próximo paso exacto: commitear/pushear runner+predeclaración+handoffs; después comprobar de nuevo procesos/GPU y lanzar una sola vez el runner. No lanzar SMM/modal ni abrir junio.
+
+## Actualización 2026-07-11 02:53 CEST — build histórico activo, no duplicar
+
+- Se leyeron completos `SUMMARY-update.md`, `SUMMARY-articles.md`, `SUMMARY.md` y este handoff antes de ejecutar trabajo experimental.
+- Git auditado: `HEAD=73f1080`, `main` alineado con `origin/main`; se preservan los diffs y artefactos heredados del usuario/agentes previos. Los commits `ce796d9` y `73f1080` ya contienen la predeclaración del dataset histórico y el join Phys-TD explícito.
+- Los logs más recientes de `C:\CodexAutomation\logs` son las corridas del 10 de julio terminadas con error de capacidad del modelo; no contienen un entrenamiento posterior oculto.
+- La comparación `flat` frente a `modal` está cerrada: ambos arms completaron 13 folds OOF y el downstream nested runtime-equivalente de enero–mayo de 2026. Flat obtuvo PF `0,8996`/PnL `-15,094R`; modal PF `0,8579`/PnL `-21,989R`. Modal perdió también en representación OOF y permanece `advance_to_cross_modal=false`.
+- No se debe reanudar SMM/MJEPA modal, VISReg, proto o Gram. El primer paso pendiente real es la ablación de historia del encoder flat.
+- Build causal histórico activo y verificado, iniciado por `run_flat_history_dataset_build_v1.ps1`: PowerShell PID `45348`, Python padre PID `6764`, hasta 24 workers. Comando sellado `20220101..20260531`, `option_price_mode=executable_quote`, ask→bid, trailing `50%/25%`, stop `60%`, TP `1000%`, hold mínimo `30m`, horizonte `180m`, rejilla `630..870`/5m y OI obligatorio.
+- Hash del runner activo: `DE5E71AC6690BDDEEF497213E1657F4D3B15DCC9A3FC17CC86064CF941737F17`, coincidente con la predeclaración. A las 02:52 había 60 chunks parquet+JSON bajo `tmp/event_option_dataset_execquote_causal1030_202201_202605_v1/`; no lanzar otro build ni tocar esa salida.
+- GPU sin entrenamiento CUDA: unos `2.363 MiB` libres; el build actual es CPU. Tras terminar, el runner creará el parquet consolidado y `..._v1_physics`; auditar ambos hashes, filas, meses/tickers, continuidad y ausencia física de junio antes de definir/lanzar los dos arms de training.
+- No se tocó systemd, ninguna policy legacy ni ningún estado `production_live_ready`.
+
 **Fecha:** 2026-07-10T21:55 CEST (actualización incremental; colas v1 detenidas)
 **HEAD:** `cc5665f docs: record results of flat vs modal causal ablation` (`origin/main` en el mismo commit)
 **Estado de esta continuación:** auditoría inicial completada sin duplicar ni interrumpir las corridas heredadas.

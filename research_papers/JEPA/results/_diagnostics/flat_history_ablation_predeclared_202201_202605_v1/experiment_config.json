@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "declared_factor": "encoder_training_history_start",
+  "arms": {
+    "history_2022": {
+      "data_path": "tmp/event_option_dataset_execquote_causal1030_202201_202605_v1_physics/event_option_dataset.parquet",
+      "data_sha256": "11E26AADDD91FD441222D552E0362C1D4C2C4489A08D7A6DE66479D6EB454FB1",
+      "train_start_month": "202201"
+    },
+    "history_2025": {
+      "data_path": "tmp/event_option_dataset_execquote_causal1030_202501_202605_v1_physics/event_option_dataset.parquet",
+      "data_sha256": "AB144DBAD1F6F103C771AE119A1172AC728BC11B6AA79DB5FB0648561673F720",
+      "train_start_month": "202501"
+    }
+  },
+  "shared": {
+    "encoder_input_mode": "flat",
+    "oof_months": ["202505", "202506", "202507", "202508", "202509", "202510", "202511", "202512", "202601", "202602", "202603", "202604", "202605"],
+    "evaluation_months": ["202601", "202602", "202603", "202604", "202605"],
+    "data_cutoff_month": "202605",
+    "seed": 20260618,
+    "fold_seed_rule": "base_seed + int(test_month)",
+    "device": "cuda",
+    "deterministic": true,
+    "epochs": 8,
+    "batch_size": 1024,
+    "context_len": 6,
+    "horizons": [1, 3, 6, 12],
+    "z_dim": 32,
+    "phys_dim": 12,
+    "delta_dim": 16,
+    "hidden_dim": 128,
+    "num_layers": 2,
+    "selector_profile_workers": 2,
+    "selector_lgb_jobs_per_profile": 12,
+    "live_observable_feature_count": 277,
+    "entry_grid": {"start_minute_et": 630, "end_minute_et": 870, "anchor_minute_et": 600, "step_minutes": 5},
+    "option_price_mode": "executable_quote",
+    "entry_quote": "ask",
+    "trajectory_and_exit_quote": "bid",
+    "minimum_hold_minutes": 30,
+    "position_overlap_policy": "reject_while_open",
+    "runtime": {
+      "SPXW": {"max_trades_per_day": 4, "cooldown_minutes": 0},
+      "QQQ": {"max_trades_per_day": 2, "cooldown_minutes": 30},
+      "SPY": {"max_trades_per_day": 1, "cooldown_minutes": 0}
+    }
+  },
+  "code_sha256": {
+    "trainer": "703FFE983428283622CE92F95505C2E9DF352144359D3623D1856BEA33F23AF8",
+    "appender": "077E250DDF01C06E7647D03B43047F958F6BFF7C0C929B49D599DDB1BF674A7E",
+    "selector": "16A51B1C0DE6099A9D22DCDB26DFE28B4A3F3B4EBDD615F6AAD96C7691970300"
+  },
+  "june_2026_sealed": true
+}

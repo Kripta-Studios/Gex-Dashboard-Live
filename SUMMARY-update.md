@@ -639,3 +639,11 @@ Sesiones 0DTE completas:
 Las menores cifras 0DTE de 2022 no son rutas incompletas: cada fila del manifest tiene Greeks, IV, OHLC, OI y spot, y existen 250 filas front-weekly por ticker ese año. Se tratará como cambio histórico del calendario de expiraciones, no se imputarán sesiones 0DTE inexistentes.
 
 Runner predeclarado: `run_flat_history_dataset_build_v1.ps1`. Verifica hashes del manifest, builder y enhancer, falla ante salidas existentes salvo reanudación explícita, usa 24 workers conocidos como seguros para 32 GB RAM y replica exactamente el contrato causal previo: executable_quote ask→bid, trailing 50%/25%, stop 60%, TP 1000%, hold mínimo 30m, horizonte 180m, rejilla 10:30–14:30/5m, OI obligatorio y cutoff mayo 2026.
+
+## 14. Dataset histórico construido y ablación flat-history congelada
+
+El build terminó 159/159 chunks y produjo 108.156 filas `20220103..20260529`. Hash base `DED31E49D70EC2525194497994E26FD6A6DD4BF502F7775EA547826B0FB879BF`; hash physics `11E26AADDD91FD441222D552E0362C1D4C2C4489A08D7A6DE66479D6EB454FB1`. La vista común `202501..202605` contiene 36.796 filas y hash `AB144DBAD1F6F103C771AE119A1172AC728BC11B6AA79DB5FB0648561673F720`.
+
+Auditoría independiente: 0 duplicados, 0 infinitos, 0 off-grid, solo `zero_dte`/`executable_quote`, 277 features live idénticas y junio ausente. Dos snapshots SPXW de `20220222` tienen PUT no observable porque ThetaData publica bid/ask cero para todos los strikes; se conservan con availability cero y el selector las excluye causalmente.
+
+La ablación cambia solo el inicio físico del train flat (`202201` frente a `202501`). Ambos arms exportarán los mismos 13 folds `202505..202605`, con seed base `20260618`, seed independiente por fold, CUDA determinista, 8 épocas, batch 1024, horizontes `1/3/6/12` y nested selector runtime-equivalente `202601..202605`. Runner predeclarado `run_flat_history_ablation_v1.ps1`, hash `A8DC76553B0573E8594939A60A81AB80C50C64B3DB42510834320EE8EDA1F63D`. Todavía no se ha lanzado el entrenamiento.
