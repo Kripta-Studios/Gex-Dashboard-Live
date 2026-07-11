@@ -156,3 +156,5 @@ Actualización 2026-07-11 03:15 CEST: el dataset quedó construido y auditado (1
 Actualización 2026-07-11 03:26 CEST: la ablación está activa. `history_2025` terminó 13/13 folds OOF y el join completo; su selector nested lleva 3/15 folds. El runner persistente PID `25112` continuará después con `history_2022`. La cola modal/MJEPA no se reabrió y junio sigue sellado.
 
 Actualización 2026-07-11 03:39 CEST: `history_2025` terminó también 15/15 folds nested con provenance PASS, pero queda rechazado (495 trades, WR 45,05%, PF 0,863, -20,174R; QQQ/SPXW/SPY PF 0,893/0,711/1,336). `history_2022` está entrenando en el mismo runner y con seeds pareadas; no se tomará una decisión de historia hasta completar representación y downstream.
+
+Actualización 2026-07-11 03:51 CEST: `history_2022` completó 13/13 folds OOF y join idéntico; su selector nested está activo. El analizador pareado ya está versionado (`507af59`) y exige mejora simultánea de error/persistencia, tasa de batir persistencia, PF/PnL por celda y bootstrap diario antes de recomendar cualquier continuación.
