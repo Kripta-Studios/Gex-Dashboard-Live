@@ -41,6 +41,8 @@ Actualización 2026-07-11 12:20 CEST: se predeclara el primer aislamiento del me
 
 Actualización 2026-07-11 12:35 CEST: ambos objetivos exactos fallaron; return abstuvo 15/15 y win solo operó dos folds SPY, ambos OOS negativos. La comparación trade-level revela que toda la rentabilidad dense15 legacy se concentraba antes de 10:30, donde sus niveles IB/Fibonacci y el filtro near-level miraban hasta el final de la ventana 09:30–10:30. El siguiente experimento será una vista temprana verdaderamente causal sin ninguna feature ni selección derivada del IB incompleto; no se atribuirá ese edge filtrado al modelo.
 
+Actualización 2026-07-11 12:50 CEST: la vista temprana causal quedó predeclarada. Reconstruye 10:00–10:25 sin filtro de niveles y entrena solo d25-win con una allowlist que excluye todas las derivaciones IB/Fib/nearest antes de 10:30. Es una prueba del mecanismo legacy corregido, no una nueva arquitectura; producción seguirá intacta incluso si pasa.
+
 ## 2. Baseline causal a superar
 
 | Scope | Trades | WR | PF | PnL (R) | Min trades/mes | Meses positivos |

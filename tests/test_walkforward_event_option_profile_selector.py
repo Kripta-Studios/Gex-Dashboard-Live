@@ -4,6 +4,7 @@ import pytest
 import pandas as pd
 
 from neural.jepa.analyze_exact_objective_ablation import _months, passes, ticker_summary
+from neural.jepa.event_option_component_live import live_observable_feature_issues_for_columns
 from neural.jepa.walkforward_event_option_profile_selector import (
     default_profiles,
     filter_profiles,
@@ -55,3 +56,16 @@ def test_exact_objective_gate_requires_every_month_and_minimum_hold() -> None:
 def test_abstained_fold_nan_month_lists_are_empty() -> None:
     assert _months(float("nan")) == []
     assert _months("") == []
+
+
+def test_pre_ib_contract_rejects_ib_features_but_keeps_backward_returns() -> None:
+    assert live_observable_feature_issues_for_columns(
+        "early",
+        ["dist_ib_high_bps", "ret_5m_bps"],
+        entry_start_minute_et=600,
+    )
+    assert not live_observable_feature_issues_for_columns(
+        "early",
+        ["ret_5m_bps", "ret_15m_bps", "ret_30m_bps"],
+        entry_start_minute_et=600,
+    )

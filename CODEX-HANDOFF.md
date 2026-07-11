@@ -17,6 +17,14 @@ D:/ThetaData/data_underlying_derived/SPY
 
 Hardware local: RTX 5070 Ti con 12 GB VRAM, Ryzen 9 con 32 hilos y 32 GB RAM. Usar CUDA determinista y batches ajustados a VRAM para entrenamiento/inferencia; paralelizar carga y transformaciones CPU sin crear corridas duplicadas.
 
+## Actualización 2026-07-11 12:50 CEST — early causal no-IB listo para construir/ejecutar
+
+- Predeclarado un único test del mecanismo temprano: d25 win por ticker, 10:00–10:25, ask→bid/hold30, sin backfill/guard/otros deltas.
+- Dataset nuevo desde ThetaData 2022–mayo2026: `near_level_only=false`; el modelo excluye por contrato todas las columnas IB/Fib/nearest/context-IB y outcomes. Así no reutiliza el leakage que explicó el legacy.
+- Auditor nuevo verifica ventana, hash, executable quotes, allowlist live, meses y hold/gates finales. Runner usa 24 workers en build y 28 hilos LightGBM.
+- Predeclaración `EARLY_CAUSAL_NOIB_D25_WIN_PREDECLARATION_V1.md`; hashes completos congelados; `27 passed`, compile y parse PASS.
+- Próximo: commit/push, reauditar procesos/outputs y lanzar una sola instancia. No tocar snapshot/live aunque el arm pase; cualquier integración sería shadow posterior.
+
 ## Actualización 2026-07-11 12:35 CEST — objetivo cerrado; edge legacy era pre-10:30 y no causal
 
 - Una sola ejecución completó 30 folds de entrenamiento en ~2 minutos usando 28 hilos. El analizador falló después por `NaN` en folds abstain; fix + test, sin relanzar modelos.

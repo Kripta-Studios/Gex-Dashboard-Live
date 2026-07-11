@@ -14,6 +14,12 @@ D:/ThetaData/data_underlying_derived/{SPXW,QQQ,SPY}
 
 Recursos locales: RTX 5070 Ti de 12 GB VRAM, Ryzen 9 de 32 hilos y 32 GB RAM. Los entrenamientos deben aprovechar CUDA determinista y la preparación de datos debe paralelizar CPU de forma reproducible.
 
+## Actualización 2026-07-11 12:50 CEST — prueba early causal preparada
+
+Se ha convertido la causa encontrada en una prueba falsable. El dataset se reconstruirá desde ThetaData solo para 10:00–10:25, sin `near_level_only`; aunque el builder materialice niveles diarios, la allowlist de `entry_time_min_et=10:00` excluye físicamente IB/Fib/nearest/context-IB y estado intradía no reproducible. Un auditor independiente bloquea future/outcome features y verifica executable quote, junio sellado y hold.
+
+El modelo fijo es `target_zero_dte_d25_win` para los tres tickers, porque replica el primary legacy sin añadir backfill ni guard. Caps/cooldowns siguen 4/2/1 y 0/30/0. Build usa 24 workers y LightGBM 28 hilos. `27 passed`; predeclaración y hashes en `EARLY_CAUSAL_NOIB_D25_WIN_PREDECLARATION_V1.md`. Aún no ejecutado.
+
 ## Actualización 2026-07-11 12:35 CEST — return/win rechazado y causa temporal identificada
 
 La ablación exacta terminó los seis jobs y 30 folds en una sola ejecución. Un bug posterior interpretó campos vacíos de abstención como `nan`; se corrigió y se volvió a ejecutar solo el analizador. Return no seleccionó ningún fold. Win tampoco seleccionó SPXW/QQQ y en SPY seleccionó enero/marzo: 42 trades OOS, WR `28,57%`, PF `0,602`, `-6,167R`, hold mínimo 30m. Ningún arm cumple.
