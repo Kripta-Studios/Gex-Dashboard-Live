@@ -35,6 +35,8 @@ D:/ThetaData/data_underlying_derived/{SPXW,QQQ,SPY}
 
 Hardware de investigación: RTX 5070 Ti de 12 GB VRAM, Ryzen 9 de 32 hilos y 32 GB RAM. Se debe aprovechar CUDA determinista para entrenar/inferir y paralelismo CPU reproducible para construir datasets; más cómputo no autoriza feature mining OOS ni abrir junio.
 
+Actualización 2026-07-11 13:20 CEST: queda predeclarada la ablación de cadencia 5m→1m como factor operativo, no como arquitectura. No existía un dataset early 1m equivalente que reutilizar. Un auditor de paridad exigirá que el arm 1m sea una expansión estricta del control en las filas comunes; modelo, features, labels, ejecución, selector y gates permanecen congelados. No se probarán otras cadencias por barrido si falla.
+
 Actualización 2026-07-11 13:05 CEST: se corrige una ambigüedad operativa importante. El feed consulta cada 60 s y el bot recorre el loop cada ~65 s, pero la policy vigente aplica `entry_sample_minutes=5`; adquisición 1m y decisiones 5m son capas distintas. La prueba early 5m fue el control live-contract, no un intento de descartar los minutos intermedios. El siguiente factor será una rejilla de candidatos 1m sobre exactamente el mismo dataset/mecanismo causal, sin alterar producción hasta superar las gates.
 
 La familia `clean_live1000` previa no sustituye esta prueba: usa datasets `dense15` 2025–2026, labels/exits legacy y el IB completo. El dataset nuevo contiene 18.684 filas 2022–mayo2026, 10:00–10:25, executable ask→bid, trailing con hold>=30m, sin `near_level_only` y sin IB/Fib/nearest en el modelo. El control 5m terminó rechazado: SPXW 39 trades, WR 43,59%, PF 1,109, solo 2/5 folds seleccionados; QQQ y SPY 0/5. No se debe reconstruir ni reinterpretar como prueba 1m.

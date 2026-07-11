@@ -4,6 +4,7 @@ import pytest
 import pandas as pd
 
 from neural.jepa.analyze_exact_objective_ablation import _months, passes, ticker_summary
+from neural.jepa.audit_early_causal_option_dataset import minute_grid_issues
 from neural.jepa.event_option_component_live import live_observable_feature_issues_for_columns
 from neural.jepa.walkforward_event_option_profile_selector import (
     default_profiles,
@@ -69,3 +70,12 @@ def test_pre_ib_contract_rejects_ib_features_but_keeps_backward_returns() -> Non
         ["ret_5m_bps", "ret_15m_bps", "ret_30m_bps"],
         entry_start_minute_et=600,
     )
+
+
+def test_early_grid_auditor_distinguishes_one_and_five_minute_cadence() -> None:
+    one_minute = pd.Series(range(600, 626))
+    five_minute = pd.Series(range(600, 626, 5))
+    assert not minute_grid_issues(one_minute, 1)
+    assert minute_grid_issues(one_minute, 5)
+    assert not minute_grid_issues(five_minute, 5)
+    assert not minute_grid_issues(five_minute, 1)

@@ -14,6 +14,12 @@ D:/ThetaData/data_underlying_derived/{SPXW,QQQ,SPY}
 
 Recursos locales: RTX 5070 Ti de 12 GB VRAM, Ryzen 9 de 32 hilos y 32 GB RAM. Los entrenamientos deben aprovechar CUDA determinista y la preparación de datos debe paralelizar CPU de forma reproducible.
 
+## Actualización 2026-07-11 13:20 CEST — arm 1m congelado antes de ejecutar
+
+La búsqueda local confirma que no había una vista early executable-quote 1m ya construida; solo están el control 5m nuevo y los `dense15/clean1000` legacy. Se implementó una comparación 1m que mantiene todo salvo la cadencia: mismo d25-win, quotes, trailing/hold, no-IB allowlist, folds, thresholds, caps/cooldowns, seed y gates.
+
+Un auditor pareado bloqueará el entrenamiento si las filas 00/05/10/15/20/25 del dataset 1m no reproducen exactamente el dataset base 5m. El auditor causal ya distingue `expected_step_minutes=1` y exige que `bar_minutes` coincida. Tests `9 passed`, compile y parse PASS. Predeclaración `EARLY_CAUSAL_CADENCE_1M_PREDECLARATION_V2.md`; runner SHA `288BBF08...B87D`. En este checkpoint todavía no se ha lanzado.
+
 ## Actualización 2026-07-11 13:05 CEST — aclarada la cadencia live y cerrado el control 5m
 
 El live sí recibe datos minuto a minuto: `realtime_feed.py` usa polling de 60 segundos y `tradingbot_wrapper_jepa.py` un loop de unos 65 segundos. La entrada no se evalúa actualmente en todos esos minutos porque la policy productiva contiene `entry_sample_minutes=5` y el feed conserva `MODEL_SAMPLE_MINUTES=5`. Los 5m del experimento reproducen esa rejilla de candidatos; no significan que solo se recopilen datos cada cinco minutos.

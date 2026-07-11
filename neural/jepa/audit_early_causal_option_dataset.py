@@ -30,15 +30,27 @@ def sha256(path: Path) -> str:
     return digest.hexdigest().upper()
 
 
-def audit_dataset(path: Path) -> tuple[dict, list[str]]:
+def minute_grid_issues(minutes: pd.Series, expected_step_minutes: int) -> list[str]:
+    issues: list[str] = []
+    if expected_step_minutes <= 0:
+        return ["expected_step_minutes must be positive"]
+    numeric = pd.to_numeric(minutes, errors="coerce")
+    if not numeric.between(600, 625).all() or not numeric.mod(expected_step_minutes).eq(0).all():
+        issues.append(
+            "rows are outside the predeclared 10:00-10:25 "
+            f"{expected_step_minutes}-minute grid"
+        )
+    return issues
+
+
+def audit_dataset(path: Path, *, expected_step_minutes: int = 5) -> tuple[dict, list[str]]:
     frame = pd.read_parquet(path)
     issues: list[str] = []
     minutes = pd.to_numeric(frame["minute"], errors="coerce")
     months = frame["trade_date"].astype(str).str[:6]
     if frame.empty:
         issues.append("dataset is empty")
-    if not minutes.between(600, 625).all() or not minutes.mod(5).eq(0).all():
-        issues.append("rows are outside the predeclared 10:00-10:25 five-minute grid")
+    issues.extend(minute_grid_issues(minutes, expected_step_minutes))
     if months.max() > "202605" or months.min() < "202201":
         issues.append(f"unexpected month range {months.min()}..{months.max()}")
     if not frame["option_price_mode"].astype(str).eq("executable_quote").all():
@@ -78,6 +90,7 @@ def audit_dataset(path: Path) -> tuple[dict, list[str]]:
         "month_max": str(months.max()),
         "minute_min": int(minutes.min()),
         "minute_max": int(minutes.max()),
+        "expected_step_minutes": int(expected_step_minutes),
         "feature_count": int(len(prepared.feature_cols)),
         "feature_cols": prepared.feature_cols,
         "live_feature_issues": live_issues,
@@ -127,10 +140,20 @@ def main() -> int:
     parser.add_argument("--data", required=True)
     parser.add_argument("--build-summary", required=True)
     parser.add_argument("--result-dir")
+    parser.add_argument("--expected-step-minutes", type=int, default=5)
     parser.add_argument("--output", required=True)
     args = parser.parse_args()
     build_summary = json.loads(Path(args.build_summary).read_text(encoding="utf-8"))
-    dataset, issues = audit_dataset(Path(args.data))
+    dataset, issues = audit_dataset(
+        Path(args.data),
+        expected_step_minutes=args.expected_step_minutes,
+    )
+    build_step = int(build_summary.get("args", {}).get("bar_minutes", -1))
+    if build_step != args.expected_step_minutes:
+        issues.append(
+            f"build bar_minutes={build_step} does not match expected_step_minutes="
+            f"{args.expected_step_minutes}"
+        )
     if bool(build_summary.get("args", {}).get("near_level_only", True)):
         issues.append("build used near_level_only before IB completion")
     payload = {
@@ -138,6 +161,7 @@ def main() -> int:
         "audit": "early_causal_executable_no_ib",
         "dataset": dataset,
         "build_near_level_only": build_summary.get("args", {}).get("near_level_only"),
+        "build_bar_minutes": build_step,
         "june_2026_sealed": True,
         "production_unchanged": True,
     }

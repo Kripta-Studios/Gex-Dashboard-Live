@@ -17,6 +17,14 @@ D:/ThetaData/data_underlying_derived/SPY
 
 Hardware local: RTX 5070 Ti con 12 GB VRAM, Ryzen 9 con 32 hilos y 32 GB RAM. Usar CUDA determinista y batches ajustados a VRAM para entrenamiento/inferencia; paralelizar carga y transformaciones CPU sin crear corridas duplicadas.
 
+## Actualización 2026-07-11 13:20 CEST — ablación de cadencia 1m predeclarada, no ejecutada
+
+- No se encontró ningún dataset early executable 1m reutilizable. Solo existen el base/physics 5m creados en esta sesión y los `clean1000/dense15` legacy ya descartados como equivalentes.
+- Nuevo arm cambia solo `bar_minutes 5→1` en 10:00–10:25. Mantiene d25-win, quotes/exits, allowlist sin IB, caps/cooldowns, folds, thresholds, seed y gates.
+- Auditor pareado nuevo exige antes de entrenar que el subconjunto 1m en minutos múltiplos de cinco sea idéntico al control base; auditor causal ahora parametriza y verifica la cadencia declarada.
+- Predeclaración `EARLY_CAUSAL_CADENCE_1M_PREDECLARATION_V2.md`; runner `run_early_causal_noib_d25_win_1m_v2.ps1`; `9 passed`, compile/parse PASS. Hash runner `288BBF08...B87D`.
+- Próximo: commit/push **antes** de lanzar, comprobar que outputs no existen y ejecutar una sola instancia. Producción y junio siguen intactos.
+
 ## Actualización 2026-07-11 13:05 CEST — feed 1m, policy 5m; control early terminado y rechazado
 
 - **No confundir cadencias:** `services/realtime_feed.py` consulta cada 60 s y el bot itera cada ~65 s. Hay snapshots minuto a minuto. Sin embargo, el contrato productivo vigente filtra entradas con `candidate_universe_filter.entry_sample_minutes=5` y el feed declara `MODEL_SAMPLE_MINUTES=5`. Por eso el build early usó 5m: reproduce la rejilla de decisiones de la policy actual, no la frecuencia de adquisición.
