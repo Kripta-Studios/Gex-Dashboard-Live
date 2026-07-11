@@ -646,4 +646,8 @@ El build terminó 159/159 chunks y produjo 108.156 filas `20220103..20260529`. H
 
 Auditoría independiente: 0 duplicados, 0 infinitos, 0 off-grid, solo `zero_dte`/`executable_quote`, 277 features live idénticas y junio ausente. Dos snapshots SPXW de `20220222` tienen PUT no observable porque ThetaData publica bid/ask cero para todos los strikes; se conservan con availability cero y el selector las excluye causalmente.
 
-La ablación cambia solo el inicio físico del train flat (`202201` frente a `202501`). Ambos arms exportarán los mismos 13 folds `202505..202605`, con seed base `20260618`, seed independiente por fold, CUDA determinista, 8 épocas, batch 1024, horizontes `1/3/6/12` y nested selector runtime-equivalente `202601..202605`. Runner predeclarado `run_flat_history_ablation_v1.ps1`, hash `A8DC76553B0573E8594939A60A81AB80C50C64B3DB42510834320EE8EDA1F63D`. Todavía no se ha lanzado el entrenamiento.
+La ablación cambia solo el inicio físico del train flat (`202201` frente a `202501`). Ambos arms exportarán los mismos 13 folds `202505..202605`, con seed base `20260618`, seed independiente por fold, CUDA determinista, 8 épocas, batch 1024, horizontes `1/3/6/12` y nested selector runtime-equivalente `202601..202605`. Runner predeclarado `run_flat_history_ablation_v1.ps1`, hash `A8DC76553B0573E8594939A60A81AB80C50C64B3DB42510834320EE8EDA1F63D`. En el momento de congelar este contrato el entrenamiento aún no se había lanzado.
+
+### Ejecución activa 2026-07-11 03:26 CEST
+
+El primer PowerShell perdió su padre por timeout, pero el trainer control continuó y terminó sus 13 folds; no se duplicó ni se eliminó la salida. El runner se reanudó con `-Resume` mediante `-EncodedCommand` y logs persistentes en `tmp/`. PID padre `25112`; selector control PID `57784`. El control generó 29.046 filas OOF, join completo 29.046/29.046 y lleva 3/15 folds nested guardados. Tras completarlo, el mismo runner lanzará el arm 2022. No ejecutar otra instancia.

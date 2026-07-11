@@ -1,5 +1,14 @@
 # CODEX-HANDOFF.md — Estado para continuación por otro agente
 
+## Actualización 2026-07-11 03:23 CEST — ablación flat-history activa, no duplicar
+
+- `fd712e2` y los tres commits técnicos anteriores están subidos a `origin/main`.
+- El primer launch perdió su PowerShell padre por timeout, pero el trainer control PID `23084` siguió sano y terminó 13/13 folds. No se borró ni reinició la salida.
+- Runner reanudado de forma persistente con `-EncodedCommand`: PID `25112`; stdout `tmp/flat_history_ablation_v1_resume2.stdout.log`, stderr homónimo. El intento de quoting fallido previo queda preservado en logs `...resume.*.log` y no tocó artefactos.
+- Control `history_2025`: 13 folds OOF completos, 29.046 filas de features, join 29.046/29.046 sobre la vista común. Nested selector PID `57784`, 2×12 hilos, salida `...history_2025..._walkforward_runtime_contract_v1`; 3/15 folds guardados hasta `SPXW/202603`, stderr vacío.
+- No lanzar otro runner, trainer o selector mientras PID `25112` siga activo. Después del selector control el mismo runner iniciará `history_2022` y su selector.
+- Junio sigue sellado; no se tocó systemd ni ninguna policy.
+
 ## Actualización 2026-07-11 03:15 CEST — dataset auditado y ablación lista para lanzar
 
 - El runner de dataset terminó sin procesos huérfanos: 159/159 chunks, 108.156 filas base/physics, 371 columnas physics y fecha máxima `20260529`.
