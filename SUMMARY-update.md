@@ -5,6 +5,18 @@
 
 > Esta bitácora se actualiza durante el trabajo. Solo se marca como completado lo reproducido en esta sesión. No implica despliegue, commit ni push salvo que se indique expresamente.
 
+## Actualización 2026-07-11 04:47 CEST — Portfolio Var-JEPA v1 terminado y rechazado
+
+Ambos arms terminaron 5/5 modelos mensuales y 15/15 celdas ticker×mes, con policies persistidas antes del test, hashes/provenance PASS, seeds/folds idénticos y auditoría runtime PASS. El runner de train finalizó ambos arms; el primer análisis falló únicamente por un mapeo nominal `trades_per_month`/`min_month_trades`. Se corrigió con test, se hashearon los seis inputs congelados y se reanudó solo el análisis, sin repetir ni modificar modelos.
+
+La variante Gaussian/ELBO no superó el criterio representacional: MAE y RMSE mejoraron solo 9/15 celdas, con medianas `-0,013979/-0,004596` pero Wilcoxon `p=0,48898/0,38077`; directional accuracy ganó 7/15. El effective-rank ratio empeoró en 15/15 (mediana `-0,156054`, `p=1`) y Spearman incertidumbre-error fue positivo solo en 1/15, mediana `-0,180431`. El KL final fue bajo (`0,00264..0,00476`) y la reconstrucción peor que control, evidencia compatible con colapso/información probabilística poco útil.
+
+Con inner gates canónicas, ningún threshold de 210 candidatos por arm cumplió simultáneamente PF/WR/18 trades por mes/todos los meses positivos; por ello ambos policies hicieron abstain y produjeron 0 trades OOS. Esto no se reinterpretará relajando gates post hoc. En control solo 2/210 candidatos tuvieron todos los meses internos positivos; en Var, 4/210; ninguno pasó las cuatro gates. El near-miss Var de SPY alcanzó tres gates en algunos folds, pero falló volumen o meses positivos y no autoriza selección.
+
+Decisión: `advance_to_uncertainty_abstention_ablation=false`, `representation_improved_reproducibly=false`, `uncertainty_diagnostic_supported=false`, `production_live_ready=false`. No se hará sweep de KL, filtrado por incertidumbre ni promoción. Informe: `.../portfolio_var_jepa_deterministic_vs_variational_analysis_202601_202605_seed20260618_v1/`; SHA-256 summary `F2C333634F55829049DAD50C4406368439058F70E931A74291E20B85839CC5D8`, report `26692AA45139CC05E0963D1C43A890EF6581E07AC9E4EE3EEFB8E633DD989BCC`.
+
+El siguiente punto independiente de la cola es `Surprise + PatchCore de abstención` sobre el encoder flat/control congelado. Antes de ejecutarlo debe predeclararse un solo factor, coreset construido exclusivamente con train y threshold elegido en inner validation; surprise/distancia solo puede abstener, nunca dirigir CALL/PUT ni usar outcome futuro.
+
 ## Actualización 2026-07-11 04:40 CEST — Portfolio Var-JEPA v1 implementado y predeclarado
 
 El primer punto pendiente de la cola ya tiene implementación causal auditada, tests, runner y analizador pareado. Todavía no se ha lanzado el nested walk-forward completo. Se comparará el mismo head MLP de payoff determinista con una única variante que añade prior/posterior Gaussianos diagonales, reparametrización y KL annealed. El market encoder flat OOF queda congelado y actionless; la incertidumbre se registra pero no participa en thresholds ni selección.

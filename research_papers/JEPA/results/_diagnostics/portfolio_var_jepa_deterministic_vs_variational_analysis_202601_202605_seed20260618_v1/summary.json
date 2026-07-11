@@ -1,0 +1,293 @@
+{
+  "comparison": "deterministic_vs_variational_portfolio_payoff_head",
+  "contract": {
+    "base_seed": 20260618,
+    "control_parameter_count": 32401,
+    "data_sha256": "39203C83F47A60AFB2AB7951201CBEB3B9098F4238169F0D716649571667DA2F",
+    "june_2026_sealed": true,
+    "same_args_except_arm": true,
+    "same_data": true,
+    "same_folds_and_seeds": true,
+    "uncertainty_used_for_selection": false,
+    "variant_parameter_count": 55233
+  },
+  "decision": {
+    "advance_to_uncertainty_abstention_ablation": false,
+    "production_live_ready": false,
+    "representation_improved_reproducibly": false,
+    "uncertainty_diagnostic_supported": false,
+    "variational_meets_full_downstream_gate": false
+  },
+  "downstream_paired_tests": {
+    "max_drawdown": {
+      "control_wins": 0,
+      "mean_variant_minus_control": 0.0,
+      "median_variant_minus_control": 0.0,
+      "nonzero_pairs": 0,
+      "pairs": 15,
+      "ties": 15,
+      "variant_wins": 0,
+      "wilcoxon_one_sided_p": NaN
+    },
+    "pnl_return": {
+      "control_wins": 0,
+      "mean_variant_minus_control": 0.0,
+      "median_variant_minus_control": 0.0,
+      "nonzero_pairs": 0,
+      "pairs": 15,
+      "ties": 15,
+      "variant_wins": 0,
+      "wilcoxon_one_sided_p": NaN
+    },
+    "profit_factor": {
+      "control_wins": 0,
+      "mean_variant_minus_control": NaN,
+      "median_variant_minus_control": NaN,
+      "nonzero_pairs": 0,
+      "pairs": 0,
+      "ties": 0,
+      "variant_wins": 0,
+      "wilcoxon_one_sided_p": NaN
+    },
+    "win_rate": {
+      "control_wins": 0,
+      "mean_variant_minus_control": NaN,
+      "median_variant_minus_control": NaN,
+      "nonzero_pairs": 0,
+      "pairs": 0,
+      "ties": 0,
+      "variant_wins": 0,
+      "wilcoxon_one_sided_p": NaN
+    }
+  },
+  "input_hashes": {
+    "deterministic_diagnostics": "4DE4481361863617FD622AE0373F5E4447C4349330B78CB5BB80BB1A8C351271",
+    "deterministic_folds": "0D89FC8E22D8C65816CA16A473E1878D55F7C378FB8E8997A7F531DDC1070AD7",
+    "deterministic_metadata": "7417D6CC427E100607F05B96B8627C31FD979268A8333FF66648AB6EA3B0013A",
+    "variational_diagnostics": "E4D5E1C35EFBA0A6429EE62EF4A1D0AC801E024B768BF645FBC94633373B12DD",
+    "variational_folds": "F6A7E33EFDE8BFFF23F7927294595BE76B167519F11D8C9E1E74A42F84A9D45E",
+    "variational_metadata": "EC211E50CA541E8A9FB3373DFC7352D9F2C30163F307D853B59D104D92DE6FAC"
+  },
+  "representation_tests": {
+    "directional_accuracy": {
+      "control_wins": 8,
+      "mean_variant_minus_control": 0.009667307109295187,
+      "median_variant_minus_control": -0.0032414910858994395,
+      "nonzero_pairs": 15,
+      "pairs": 15,
+      "ties": 0,
+      "variant_wins": 7,
+      "wilcoxon_one_sided_p": 0.4234619140625
+    },
+    "effective_rank_ratio": {
+      "control_wins": 15,
+      "mean_variant_minus_control": -0.14712371575788305,
+      "median_variant_minus_control": -0.1560543066321322,
+      "nonzero_pairs": 15,
+      "pairs": 15,
+      "ties": 0,
+      "variant_wins": 0,
+      "wilcoxon_one_sided_p": 1.0
+    },
+    "mae": {
+      "control_wins": 6,
+      "mean_variant_minus_control": 0.0027460922468043325,
+      "median_variant_minus_control": -0.013979094754402843,
+      "nonzero_pairs": 15,
+      "pairs": 15,
+      "ties": 0,
+      "variant_wins": 9,
+      "wilcoxon_one_sided_p": 0.488983154296875
+    },
+    "mae_to_train_mean_ratio": {
+      "control_wins": 6,
+      "mean_variant_minus_control": 0.003623024919503822,
+      "median_variant_minus_control": -0.02268147752008165,
+      "nonzero_pairs": 15,
+      "pairs": 15,
+      "ties": 0,
+      "variant_wins": 9,
+      "wilcoxon_one_sided_p": 0.467041015625
+    },
+    "rmse": {
+      "control_wins": 6,
+      "mean_variant_minus_control": 0.009098667598705042,
+      "median_variant_minus_control": -0.004596435518951836,
+      "nonzero_pairs": 15,
+      "pairs": 15,
+      "ties": 0,
+      "variant_wins": 9,
+      "wilcoxon_one_sided_p": 0.380767822265625
+    }
+  },
+  "schema_version": 1,
+  "single_factor": "gaussian_prior_posterior_reparameterization_and_annealed_kl",
+  "ticker_gates": {
+    "deterministic": {
+      "QQQ": {
+        "checks": {
+          "min_month_trades": false,
+          "positive_month_rate": false,
+          "profit_factor": false,
+          "win_rate": false
+        },
+        "metrics": {
+          "avg_return": NaN,
+          "call_rate": NaN,
+          "daily_max_drawdown": 0.0,
+          "daily_win_rate": NaN,
+          "days_with_trades": 0,
+          "max_drawdown": 0.0,
+          "median_daily_return": NaN,
+          "min_month_trades": 0,
+          "pnl_return": 0.0,
+          "positive_month_rate": NaN,
+          "profit_factor": NaN,
+          "top5_day_return": 0.0,
+          "top5_share_of_pnl": NaN,
+          "trades": 0,
+          "win_rate": NaN
+        },
+        "passed": false
+      },
+      "SPXW": {
+        "checks": {
+          "min_month_trades": false,
+          "positive_month_rate": false,
+          "profit_factor": false,
+          "win_rate": false
+        },
+        "metrics": {
+          "avg_return": NaN,
+          "call_rate": NaN,
+          "daily_max_drawdown": 0.0,
+          "daily_win_rate": NaN,
+          "days_with_trades": 0,
+          "max_drawdown": 0.0,
+          "median_daily_return": NaN,
+          "min_month_trades": 0,
+          "pnl_return": 0.0,
+          "positive_month_rate": NaN,
+          "profit_factor": NaN,
+          "top5_day_return": 0.0,
+          "top5_share_of_pnl": NaN,
+          "trades": 0,
+          "win_rate": NaN
+        },
+        "passed": false
+      },
+      "SPY": {
+        "checks": {
+          "min_month_trades": false,
+          "positive_month_rate": false,
+          "profit_factor": false,
+          "win_rate": false
+        },
+        "metrics": {
+          "avg_return": NaN,
+          "call_rate": NaN,
+          "daily_max_drawdown": 0.0,
+          "daily_win_rate": NaN,
+          "days_with_trades": 0,
+          "max_drawdown": 0.0,
+          "median_daily_return": NaN,
+          "min_month_trades": 0,
+          "pnl_return": 0.0,
+          "positive_month_rate": NaN,
+          "profit_factor": NaN,
+          "top5_day_return": 0.0,
+          "top5_share_of_pnl": NaN,
+          "trades": 0,
+          "win_rate": NaN
+        },
+        "passed": false
+      }
+    },
+    "variational": {
+      "QQQ": {
+        "checks": {
+          "min_month_trades": false,
+          "positive_month_rate": false,
+          "profit_factor": false,
+          "win_rate": false
+        },
+        "metrics": {
+          "avg_return": NaN,
+          "call_rate": NaN,
+          "daily_max_drawdown": 0.0,
+          "daily_win_rate": NaN,
+          "days_with_trades": 0,
+          "max_drawdown": 0.0,
+          "median_daily_return": NaN,
+          "min_month_trades": 0,
+          "pnl_return": 0.0,
+          "positive_month_rate": NaN,
+          "profit_factor": NaN,
+          "top5_day_return": 0.0,
+          "top5_share_of_pnl": NaN,
+          "trades": 0,
+          "win_rate": NaN
+        },
+        "passed": false
+      },
+      "SPXW": {
+        "checks": {
+          "min_month_trades": false,
+          "positive_month_rate": false,
+          "profit_factor": false,
+          "win_rate": false
+        },
+        "metrics": {
+          "avg_return": NaN,
+          "call_rate": NaN,
+          "daily_max_drawdown": 0.0,
+          "daily_win_rate": NaN,
+          "days_with_trades": 0,
+          "max_drawdown": 0.0,
+          "median_daily_return": NaN,
+          "min_month_trades": 0,
+          "pnl_return": 0.0,
+          "positive_month_rate": NaN,
+          "profit_factor": NaN,
+          "top5_day_return": 0.0,
+          "top5_share_of_pnl": NaN,
+          "trades": 0,
+          "win_rate": NaN
+        },
+        "passed": false
+      },
+      "SPY": {
+        "checks": {
+          "min_month_trades": false,
+          "positive_month_rate": false,
+          "profit_factor": false,
+          "win_rate": false
+        },
+        "metrics": {
+          "avg_return": NaN,
+          "call_rate": NaN,
+          "daily_max_drawdown": 0.0,
+          "daily_win_rate": NaN,
+          "days_with_trades": 0,
+          "max_drawdown": 0.0,
+          "median_daily_return": NaN,
+          "min_month_trades": 0,
+          "pnl_return": 0.0,
+          "positive_month_rate": NaN,
+          "profit_factor": NaN,
+          "top5_day_return": 0.0,
+          "top5_share_of_pnl": NaN,
+          "trades": 0,
+          "win_rate": NaN
+        },
+        "passed": false
+      }
+    }
+  },
+  "uncertainty_diagnostic": {
+    "finite_cells": 15,
+    "mean_spearman": -0.160657438601119,
+    "median_spearman": -0.1804308031859779,
+    "positive_cells": 1
+  }
+}

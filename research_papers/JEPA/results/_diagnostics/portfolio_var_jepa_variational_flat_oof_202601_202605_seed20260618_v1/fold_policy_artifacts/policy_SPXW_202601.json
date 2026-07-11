@@ -1,0 +1,28 @@
+{
+  "arm": "variational",
+  "component": "portfolio_payoff_head",
+  "cooldown_minutes": 0,
+  "daily_cap": 4,
+  "delta_bucket": 25,
+  "deploy_config": "ABSTAIN_NO_VALID_THRESHOLD",
+  "evaluation_month": "202601",
+  "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_model_artifacts\\payoff_head_202601.pt",
+  "model_artifact_sha256": "62A4C659D72AC22B095ED3654952A6BE0651EE6C1689298331641904725FAF0C",
+  "policy_frozen_before_evaluation": true,
+  "schema_version": 1,
+  "seed": 20463219,
+  "selection_months": [
+    "202510",
+    "202511",
+    "202512"
+  ],
+  "ticker": "SPXW",
+  "training_months": [
+    "202505",
+    "202506",
+    "202507",
+    "202508",
+    "202509"
+  ],
+  "uncertainty_used_for_selection": false
+}

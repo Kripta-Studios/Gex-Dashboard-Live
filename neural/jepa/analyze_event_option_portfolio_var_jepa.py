@@ -14,6 +14,7 @@ from scipy.stats import wilcoxon
 TICKERS = ("SPXW", "QQQ", "SPY")
 MONTHS = ("202601", "202602", "202603", "202604", "202605")
 GATES = {"profit_factor": 1.3, "win_rate": 0.5, "min_month_trades": 18, "positive_month_rate": 1.0}
+VALIDATION_GATES = {"profit_factor": 1.3, "win_rate": 0.5, "trades_per_month": 18, "positive_month_rate": 1.0}
 
 
 def sha256_file(path: str | Path, chunk_size: int = 1024 * 1024) -> str:
@@ -91,7 +92,7 @@ def validate_contract(control_dir: Path, variant_dir: Path) -> dict[str, Any]:
         raise RuntimeError("June 2026 seal violated")
     if control_meta["dataset_contract"] != "executable_quote_ask_to_bid":
         raise RuntimeError("unexpected executable quote contract")
-    if control_meta["validation_acceptance_gates"] != GATES:
+    if control_meta["validation_acceptance_gates"] != VALIDATION_GATES:
         raise RuntimeError("validation gates do not match the predeclared research objective")
     if control_meta.get("uncertainty_used_for_selection") or variant_meta.get("uncertainty_used_for_selection"):
         raise RuntimeError("uncertainty contaminated first-stage selection")
@@ -326,8 +327,8 @@ def main() -> int:
     parser.add_argument("--output-dir", required=True)
     args = parser.parse_args()
     output_dir = Path(args.output_dir)
-    output_dir.mkdir(parents=True, exist_ok=False)
     result, cells = analyze(Path(args.deterministic_dir), Path(args.variational_dir))
+    output_dir.mkdir(parents=True, exist_ok=False)
     cells.to_csv(output_dir / "representation_paired_cells.csv", index=False)
     write_json(output_dir / "summary.json", result)
     (output_dir / "REPORT.md").write_text(render_report(result), encoding="utf-8")

@@ -1,5 +1,16 @@
 # CODEX-HANDOFF.md — Estado para continuación por otro agente
 
+## Actualización 2026-07-11 04:47 CEST — Portfolio Var-JEPA v1 cerrado y rechazado
+
+- Checkpoint de predeclaración subido en `de3e320`. El runner único completó deterministic y variational: cinco modelos mensuales/arm, 15 policies/arm, 15/15 folds con `invalid_validation` honesto, provenance PASS y runtime replay PASS. Ya no queda ningún proceso Python/CUDA de esta corrida.
+- El análisis v1 falló después de terminar train por comparar las claves equivalentes `trades_per_month` y `min_month_trades`. Se verificó que el directorio fallido estaba vacío, se corrigió solo el analizador/test, se congelaron hashes de metadata/folds/diagnósticos y `run_portfolio_var_jepa_analysis_v1r1.ps1` reanudó únicamente el análisis. No se reentrenó ni reseleccionó nada.
+- Resultado representacional Var-control: MAE 9/15 wins, mediana `-0,013979`, Wilcoxon unilateral `p=0,488983`; RMSE 9/15, `-0,004596`, `p=0,380768`; directional accuracy 7/15. Effective rank Var perdió 15/15, mediana `-0,156054`. Incertidumbre-error: 1/15 Spearman positivo, mediana `-0,180431`.
+- El KL final Var fue `0,00264..0,00476`, reconstruction `0,265..0,275` frente a MSE control `0,213..0,235`; no hay soporte para la representación probabilística. No probar KL weights ni uncertainty filtering a partir de este resultado.
+- Candidate validation: 210 filas por arm, 0 cumplen las cuatro gates. Control: PF 10/210, WR 22/210, volumen 73/210, todos los meses positivos 2/210 por separado. Var: 9/210, 19/210, 94/210 y 4/210. Como ningún threshold fue válido, ambos arms congelaron abstain y tuvieron 0 trades OOS; no relajar gates post hoc.
+- Decisión: `representation_improved_reproducibly=false`, `uncertainty_diagnostic_supported=false`, `advance_to_uncertainty_abstention_ablation=false`, `variational_meets_full_downstream_gate=false`, `production_live_ready=false`.
+- Informe final: `research_papers/JEPA/results/_diagnostics/portfolio_var_jepa_deterministic_vs_variational_analysis_202601_202605_seed20260618_v1/`; summary SHA `F2C333634F55829049DAD50C4406368439058F70E931A74291E20B85839CC5D8`, report SHA `26692AA45139CC05E0963D1C43A890EF6581E07AC9E4EE3EEFB8E633DD989BCC`, paired cells SHA `7A8AB35A64B499DECF13B8D7E5EDBB9BE27CC3FEA1774220D9A9F0E8E7018FA2`.
+- Siguiente paso exacto: cerrar este resultado con artefactos pequeños y push; luego predeclarar el punto 5, Surprise + PatchCore de abstención, sobre flat/control congelado. Coreset solo con train, threshold solo inner validation, distancia/surprise solo abstiene. No volver a Var, modal/MJEPA/SMM, no abrir junio y no tocar systemd/live.
+
 ## Actualización 2026-07-11 04:40 CEST — Portfolio Var-JEPA v1 listo para ejecutar
 
 - Se auditó el script/test sin registrar dejado por la automatización anterior y se completó el contrato antes de cualquier corrida completa. No quedan procesos Python/pytest/training activos. El smoke CUDA de enero/una época terminó y solo escribió en `tmp/portfolio_var_jepa_fold_smoke_20260711b`; no reutilizarlo como evidencia.

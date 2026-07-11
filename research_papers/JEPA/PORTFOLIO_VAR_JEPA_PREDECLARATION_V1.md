@@ -59,3 +59,18 @@ Se reportarán además PF, WR, trades, PnL y meses positivos por ticker/mes. El 
 | Dataset | `39203C83F47A60AFB2AB7951201CBEB3B9098F4238169F0D716649571667DA2F` |
 
 Tests focalizados previos a congelar: `9 passed in 2.13s`; `py_compile` y `git diff --check` PASS. Un smoke de un fold determinista/una época completó en CUDA sin alterar ninguna salida predeclarada.
+
+## Enmienda de análisis v1r1 posterior a la corrida
+
+Los diez modelos finalizaron sin error, pero el analizador v1 falló antes de leer métricas porque comparaba el nombre externo `trades_per_month` con el nombre de métrica final `min_month_trades`. No se modificó ni repitió ningún train, fold, policy o resultado. La corrección solo separa ambas constantes y hace que el directorio de análisis se cree después de validar inputs.
+
+- Analyzer v1r1 SHA-256: `EC213650670060170F18505C833CE54CA6FEE77DD4D778822092040C4C3E515C`.
+- Test analyzer v1r1 SHA-256: `6071752F17A5248804A4E6F2B05BE9B3A774963E18C487FA3CF7D8D523CAB9A8`.
+- Runner de solo análisis: `run_portfolio_var_jepa_analysis_v1r1.ps1`, SHA-256 `23330E9BA2FC518F88382CA174B662E8E23C8994A747225E41F8B2F3D024BE12` (hashea los seis inputs de resultados congelados antes de ejecutar).
+- Tests tras la corrección: `10 passed in 2.16s`.
+
+## Resultado final
+
+Los diez modelos y treinta policies quedaron completos con provenance PASS. Ningún threshold interno cumplió simultáneamente PF 1,3, WR 50%, 18 trades/mes y todos los meses positivos; ambos arms se abstuvieron en test. Var no mejoró MAE/RMSE de manera reproducible (9/15 wins; `p=0,489/0,381`), empeoró effective rank 15/15 y la incertidumbre-error solo fue positiva en 1/15 celdas.
+
+Decisión congelada: `advance_to_uncertainty_abstention_ablation=false` y `production_live_ready=false`. No se autoriza relajar gates, barrer KL ni usar la incertidumbre de este arm para filtrar trades.

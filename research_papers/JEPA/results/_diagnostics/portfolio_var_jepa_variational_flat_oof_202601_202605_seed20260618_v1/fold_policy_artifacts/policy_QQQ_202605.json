@@ -1,0 +1,32 @@
+{
+  "arm": "variational",
+  "component": "portfolio_payoff_head",
+  "cooldown_minutes": 30,
+  "daily_cap": 2,
+  "delta_bucket": 35,
+  "deploy_config": "ABSTAIN_NO_VALID_THRESHOLD",
+  "evaluation_month": "202605",
+  "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_model_artifacts\\payoff_head_202605.pt",
+  "model_artifact_sha256": "6DEB6E088D843CD47A97AA3ADC3FB1FCAB5DE6AC31E86525E326C980BBBDBC6F",
+  "policy_frozen_before_evaluation": true,
+  "schema_version": 1,
+  "seed": 20463223,
+  "selection_months": [
+    "202602",
+    "202603",
+    "202604"
+  ],
+  "ticker": "QQQ",
+  "training_months": [
+    "202505",
+    "202506",
+    "202507",
+    "202508",
+    "202509",
+    "202510",
+    "202511",
+    "202512",
+    "202601"
+  ],
+  "uncertainty_used_for_selection": false
+}

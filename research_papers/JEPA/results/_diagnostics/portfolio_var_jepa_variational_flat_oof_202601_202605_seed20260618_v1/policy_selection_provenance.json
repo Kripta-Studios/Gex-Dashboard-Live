@@ -1,0 +1,393 @@
+{
+  "arm": "variational",
+  "component": "portfolio_payoff_head",
+  "evaluation_months": [
+    "202601",
+    "202602",
+    "202603",
+    "202604",
+    "202605"
+  ],
+  "folds": [
+    {
+      "evaluation_month": "202601",
+      "passed": true,
+      "tickers": [
+        {
+          "evaluation_month": "202601",
+          "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_model_artifacts\\payoff_head_202601.pt",
+          "model_artifact_sha256": "62A4C659D72AC22B095ED3654952A6BE0651EE6C1689298331641904725FAF0C",
+          "policy_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_policy_artifacts\\policy_QQQ_202601.json",
+          "policy_artifact_sha256": "D44C2359322621EA42B6AB52F14A819231FCBA22A81F802C9858B069A7AA76AF",
+          "policy_frozen_before_evaluation": true,
+          "selection_months": [
+            "202510",
+            "202511",
+            "202512"
+          ],
+          "ticker": "QQQ",
+          "training_months": [
+            "202505",
+            "202506",
+            "202507",
+            "202508",
+            "202509"
+          ]
+        },
+        {
+          "evaluation_month": "202601",
+          "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_model_artifacts\\payoff_head_202601.pt",
+          "model_artifact_sha256": "62A4C659D72AC22B095ED3654952A6BE0651EE6C1689298331641904725FAF0C",
+          "policy_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_policy_artifacts\\policy_SPXW_202601.json",
+          "policy_artifact_sha256": "6381658984E6F9550879023025186DF5E54A566AF45CF8DBECC486FF69DC6FAD",
+          "policy_frozen_before_evaluation": true,
+          "selection_months": [
+            "202510",
+            "202511",
+            "202512"
+          ],
+          "ticker": "SPXW",
+          "training_months": [
+            "202505",
+            "202506",
+            "202507",
+            "202508",
+            "202509"
+          ]
+        },
+        {
+          "evaluation_month": "202601",
+          "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_model_artifacts\\payoff_head_202601.pt",
+          "model_artifact_sha256": "62A4C659D72AC22B095ED3654952A6BE0651EE6C1689298331641904725FAF0C",
+          "policy_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_policy_artifacts\\policy_SPY_202601.json",
+          "policy_artifact_sha256": "421525F378459CDA2EA854D4FC9215F5DE94DF06612588F8E1B027A5279CC959",
+          "policy_frozen_before_evaluation": true,
+          "selection_months": [
+            "202510",
+            "202511",
+            "202512"
+          ],
+          "ticker": "SPY",
+          "training_months": [
+            "202505",
+            "202506",
+            "202507",
+            "202508",
+            "202509"
+          ]
+        }
+      ]
+    },
+    {
+      "evaluation_month": "202602",
+      "passed": true,
+      "tickers": [
+        {
+          "evaluation_month": "202602",
+          "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_model_artifacts\\payoff_head_202602.pt",
+          "model_artifact_sha256": "4164EABE867BB0DAE5F2DC78913706519101F02EEB21988358338F1724A1569F",
+          "policy_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_policy_artifacts\\policy_QQQ_202602.json",
+          "policy_artifact_sha256": "2F240F43A5E5569627A7232BF229271EABF83C187766EED0766E99B4C8B3258A",
+          "policy_frozen_before_evaluation": true,
+          "selection_months": [
+            "202511",
+            "202512",
+            "202601"
+          ],
+          "ticker": "QQQ",
+          "training_months": [
+            "202505",
+            "202506",
+            "202507",
+            "202508",
+            "202509",
+            "202510"
+          ]
+        },
+        {
+          "evaluation_month": "202602",
+          "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_model_artifacts\\payoff_head_202602.pt",
+          "model_artifact_sha256": "4164EABE867BB0DAE5F2DC78913706519101F02EEB21988358338F1724A1569F",
+          "policy_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_policy_artifacts\\policy_SPXW_202602.json",
+          "policy_artifact_sha256": "D7974956D0C6FE027CB59A26F1F320CF7A877DF103B5CAAA9876E95E7B57A25B",
+          "policy_frozen_before_evaluation": true,
+          "selection_months": [
+            "202511",
+            "202512",
+            "202601"
+          ],
+          "ticker": "SPXW",
+          "training_months": [
+            "202505",
+            "202506",
+            "202507",
+            "202508",
+            "202509",
+            "202510"
+          ]
+        },
+        {
+          "evaluation_month": "202602",
+          "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_model_artifacts\\payoff_head_202602.pt",
+          "model_artifact_sha256": "4164EABE867BB0DAE5F2DC78913706519101F02EEB21988358338F1724A1569F",
+          "policy_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_policy_artifacts\\policy_SPY_202602.json",
+          "policy_artifact_sha256": "06B053FD0593376495E4DCCF0FB6E646DF2A8D358E5064821DB2AE2DCC96C9AE",
+          "policy_frozen_before_evaluation": true,
+          "selection_months": [
+            "202511",
+            "202512",
+            "202601"
+          ],
+          "ticker": "SPY",
+          "training_months": [
+            "202505",
+            "202506",
+            "202507",
+            "202508",
+            "202509",
+            "202510"
+          ]
+        }
+      ]
+    },
+    {
+      "evaluation_month": "202603",
+      "passed": true,
+      "tickers": [
+        {
+          "evaluation_month": "202603",
+          "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_model_artifacts\\payoff_head_202603.pt",
+          "model_artifact_sha256": "D2B86B60236F0B4A3AA9074661E7D9E3AC87433E4B8BFD889D34B7D972141CED",
+          "policy_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_policy_artifacts\\policy_QQQ_202603.json",
+          "policy_artifact_sha256": "E137118726E7EDCB3AA286DAC1FCC6E3F0A32CDEEEBC8F310F2929E5C90D0BE1",
+          "policy_frozen_before_evaluation": true,
+          "selection_months": [
+            "202512",
+            "202601",
+            "202602"
+          ],
+          "ticker": "QQQ",
+          "training_months": [
+            "202505",
+            "202506",
+            "202507",
+            "202508",
+            "202509",
+            "202510",
+            "202511"
+          ]
+        },
+        {
+          "evaluation_month": "202603",
+          "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_model_artifacts\\payoff_head_202603.pt",
+          "model_artifact_sha256": "D2B86B60236F0B4A3AA9074661E7D9E3AC87433E4B8BFD889D34B7D972141CED",
+          "policy_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_policy_artifacts\\policy_SPXW_202603.json",
+          "policy_artifact_sha256": "D05718BC7E8657EE01308F74F0FC92AF123CF75B52388F1FAACE307615750A14",
+          "policy_frozen_before_evaluation": true,
+          "selection_months": [
+            "202512",
+            "202601",
+            "202602"
+          ],
+          "ticker": "SPXW",
+          "training_months": [
+            "202505",
+            "202506",
+            "202507",
+            "202508",
+            "202509",
+            "202510",
+            "202511"
+          ]
+        },
+        {
+          "evaluation_month": "202603",
+          "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_model_artifacts\\payoff_head_202603.pt",
+          "model_artifact_sha256": "D2B86B60236F0B4A3AA9074661E7D9E3AC87433E4B8BFD889D34B7D972141CED",
+          "policy_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_policy_artifacts\\policy_SPY_202603.json",
+          "policy_artifact_sha256": "7A5D85CDFE885C653F98F4E0491FD3F6A9A6398B6DAF4C576732C7A23915A28E",
+          "policy_frozen_before_evaluation": true,
+          "selection_months": [
+            "202512",
+            "202601",
+            "202602"
+          ],
+          "ticker": "SPY",
+          "training_months": [
+            "202505",
+            "202506",
+            "202507",
+            "202508",
+            "202509",
+            "202510",
+            "202511"
+          ]
+        }
+      ]
+    },
+    {
+      "evaluation_month": "202604",
+      "passed": true,
+      "tickers": [
+        {
+          "evaluation_month": "202604",
+          "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_model_artifacts\\payoff_head_202604.pt",
+          "model_artifact_sha256": "D1776E623C3CFEE7164A662F6C619AF3A5EBAC1D9CCEB2CEECB939B04180C9AA",
+          "policy_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_policy_artifacts\\policy_QQQ_202604.json",
+          "policy_artifact_sha256": "0CCEA8296E58E785BE08A5255C2451CE54195847B11397E6681C247B1C74E8E1",
+          "policy_frozen_before_evaluation": true,
+          "selection_months": [
+            "202601",
+            "202602",
+            "202603"
+          ],
+          "ticker": "QQQ",
+          "training_months": [
+            "202505",
+            "202506",
+            "202507",
+            "202508",
+            "202509",
+            "202510",
+            "202511",
+            "202512"
+          ]
+        },
+        {
+          "evaluation_month": "202604",
+          "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_model_artifacts\\payoff_head_202604.pt",
+          "model_artifact_sha256": "D1776E623C3CFEE7164A662F6C619AF3A5EBAC1D9CCEB2CEECB939B04180C9AA",
+          "policy_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_policy_artifacts\\policy_SPXW_202604.json",
+          "policy_artifact_sha256": "4FAD6BFA78DB328F9A06E673F58198144AB934423797F053BE16C5C4D3EF1056",
+          "policy_frozen_before_evaluation": true,
+          "selection_months": [
+            "202601",
+            "202602",
+            "202603"
+          ],
+          "ticker": "SPXW",
+          "training_months": [
+            "202505",
+            "202506",
+            "202507",
+            "202508",
+            "202509",
+            "202510",
+            "202511",
+            "202512"
+          ]
+        },
+        {
+          "evaluation_month": "202604",
+          "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_model_artifacts\\payoff_head_202604.pt",
+          "model_artifact_sha256": "D1776E623C3CFEE7164A662F6C619AF3A5EBAC1D9CCEB2CEECB939B04180C9AA",
+          "policy_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_policy_artifacts\\policy_SPY_202604.json",
+          "policy_artifact_sha256": "1D797A26C11DE928FEC3F99365C04BB675E2DB1839E5D748561308699F0912E0",
+          "policy_frozen_before_evaluation": true,
+          "selection_months": [
+            "202601",
+            "202602",
+            "202603"
+          ],
+          "ticker": "SPY",
+          "training_months": [
+            "202505",
+            "202506",
+            "202507",
+            "202508",
+            "202509",
+            "202510",
+            "202511",
+            "202512"
+          ]
+        }
+      ]
+    },
+    {
+      "evaluation_month": "202605",
+      "passed": true,
+      "tickers": [
+        {
+          "evaluation_month": "202605",
+          "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_model_artifacts\\payoff_head_202605.pt",
+          "model_artifact_sha256": "6DEB6E088D843CD47A97AA3ADC3FB1FCAB5DE6AC31E86525E326C980BBBDBC6F",
+          "policy_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_policy_artifacts\\policy_QQQ_202605.json",
+          "policy_artifact_sha256": "87C699A03C142AA6DF17884D9FB30EAEA1925635EA9ECFAA5CA448CC843E262E",
+          "policy_frozen_before_evaluation": true,
+          "selection_months": [
+            "202602",
+            "202603",
+            "202604"
+          ],
+          "ticker": "QQQ",
+          "training_months": [
+            "202505",
+            "202506",
+            "202507",
+            "202508",
+            "202509",
+            "202510",
+            "202511",
+            "202512",
+            "202601"
+          ]
+        },
+        {
+          "evaluation_month": "202605",
+          "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_model_artifacts\\payoff_head_202605.pt",
+          "model_artifact_sha256": "6DEB6E088D843CD47A97AA3ADC3FB1FCAB5DE6AC31E86525E326C980BBBDBC6F",
+          "policy_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_policy_artifacts\\policy_SPXW_202605.json",
+          "policy_artifact_sha256": "A4EDB7799805273C17245DAE65099D5AC325DE53F9AFABC6D4C7D798CC8C9D52",
+          "policy_frozen_before_evaluation": true,
+          "selection_months": [
+            "202602",
+            "202603",
+            "202604"
+          ],
+          "ticker": "SPXW",
+          "training_months": [
+            "202505",
+            "202506",
+            "202507",
+            "202508",
+            "202509",
+            "202510",
+            "202511",
+            "202512",
+            "202601"
+          ]
+        },
+        {
+          "evaluation_month": "202605",
+          "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_model_artifacts\\payoff_head_202605.pt",
+          "model_artifact_sha256": "6DEB6E088D843CD47A97AA3ADC3FB1FCAB5DE6AC31E86525E326C980BBBDBC6F",
+          "policy_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1\\fold_policy_artifacts\\policy_SPY_202605.json",
+          "policy_artifact_sha256": "51FE980CCDB3FD72493CFFD770287DD83B3CCA9C8C7B76A9F59E1810BC0A073A",
+          "policy_frozen_before_evaluation": true,
+          "selection_months": [
+            "202602",
+            "202603",
+            "202604"
+          ],
+          "ticker": "SPY",
+          "training_months": [
+            "202505",
+            "202506",
+            "202507",
+            "202508",
+            "202509",
+            "202510",
+            "202511",
+            "202512",
+            "202601"
+          ]
+        }
+      ]
+    }
+  ],
+  "mode": "nested_walk_forward",
+  "output_dir": "research_papers\\JEPA\\results\\_diagnostics\\portfolio_var_jepa_variational_flat_oof_202601_202605_seed20260618_v1",
+  "passed": true,
+  "schema_version": 1,
+  "uncertainty_used_for_selection": false
+}
