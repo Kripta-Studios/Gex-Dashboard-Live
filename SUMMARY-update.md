@@ -22,6 +22,14 @@ Para construir datasets, entrenar y evaluar están disponibles opciones y spot d
 
 También queda confirmado en código que el feed adquiere cada minuto (`60s`) y guarda snapshots `ml_features_1m_*`, mientras que la policy productiva actual filtra decisiones cada 5 minutos. La vista experimental 1m ya fue materializada y auditada; no debe volver a construirse.
 
+## Checkpoint activo — mecanismo direccional nested sobre el dataset 1m existente
+
+Se ha predeclarado el siguiente test sin reconstruir datos. SPXW conserva d25 y QQQ/SPY d35; dentro de cada bucket, tres meses inner eligen `return` o `win` y una de cinco reglas de dirección: modelo, spot 5m trend/counter o spot 15m trend/counter. Los retornos spot son backward-looking y observables en el minuto; la calidad/threshold se evalúa para el lado CALL/PUT que realmente impone la regla.
+
+Se mantienen caps/cooldowns live, una posición por ticker, executable quotes, hold>=30m y todas las gates. Enero–mayo son tests externos de desarrollo y junio sigue físicamente ausente. El protocolo, runner y hashes están en `EARLY_CAUSAL_DIRECTIONAL_NESTED_1M_PREDECLARATION_V1.md`; `24 passed`, compile y parse PASS. Todavía no se ha ejecutado.
+
+Durante la preparación se corrigió solo provenance: una abstención ahora conserva sus meses de train/selección, evitando que una decisión causal de no operar aparezca como no congelada. No altera selección, trades ni PnL.
+
 ## Actualización 2026-07-11 14:15 CEST — el mecanismo productivo no era estable antes de 2026
 
 La auditoría inversa terminó: QQQ obtiene 75 trades, WR 41,33%, PF 1,158 y un mes negativo; SPXW 64 trades, WR 43,75%, PF 1,686 y un mes negativo; SPY 125 trades, WR 34,40%, PF 0,794 y pierde los tres meses. Todos superan 18 operaciones/mes, así que la frecuencia no explica el fallo.

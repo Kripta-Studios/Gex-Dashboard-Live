@@ -50,6 +50,49 @@ else:
 
 
 INDEX_TICKERS = ("SPXW", "SPY", "QQQ")
+DIRECTION_MODES = (
+    "model",
+    "spot_5m_trend",
+    "spot_5m_counter",
+    "spot_15m_trend",
+    "spot_15m_counter",
+)
+
+
+def apply_direction_mode(scored: pd.DataFrame, mode: str, delta_bucket: int) -> pd.DataFrame:
+    """Choose CALL/PUT causally, then bind score/outcome to that side.
+
+    Momentum modes use only backward-looking spot returns already observable at
+    the candidate timestamp. Rows without the required return are dropped
+    rather than silently falling back to the model.
+    """
+    normalized = str(mode).strip().lower()
+    if normalized not in DIRECTION_MODES:
+        raise ValueError(f"unknown direction mode: {mode!r}")
+
+    out = scored.copy()
+    if normalized == "model":
+        call_action = out["pred_call_return"].astype(float) >= out["pred_put_return"].astype(float)
+    else:
+        horizon = 5 if "_5m_" in normalized else 15
+        feature = f"ret_{horizon}m_bps"
+        if feature not in out.columns:
+            raise KeyError(f"direction mode {normalized!r} requires observable feature {feature!r}")
+        momentum = pd.to_numeric(out[feature], errors="coerce")
+        finite = np.isfinite(momentum)
+        out = out.loc[finite].copy()
+        momentum = momentum.loc[finite]
+        call_action = momentum.ge(0.0) if normalized.endswith("_trend") else momentum.le(0.0)
+
+    out["action"] = np.where(call_action, "CALL", "PUT")
+    out["score"] = np.where(call_action, out["pred_call_return"], out["pred_put_return"])
+    out["realized_return"] = np.where(call_action, out["call_return"], out["put_return"])
+    call_exit = f"call_d{int(delta_bucket):02d}_opt_exit_minutes"
+    put_exit = f"put_d{int(delta_bucket):02d}_opt_exit_minutes"
+    if call_exit in out.columns and put_exit in out.columns:
+        out["exit_minutes"] = np.where(call_action, out[call_exit], out[put_exit])
+    out["direction_mode"] = normalized
+    return out
 
 
 def parse_ticker_int_map(values: Iterable[str], *, field_name: str) -> dict[str, int]:
@@ -94,6 +137,23 @@ def parse_ticker_int_grid_map(values: Iterable[str], *, field_name: str) -> dict
     return out
 
 
+def parse_ticker_str_grid_map(values: Iterable[str], *, field_name: str) -> dict[str, list[str]]:
+    out: dict[str, list[str]] = {}
+    for raw in values:
+        text = str(raw).strip()
+        if not text:
+            continue
+        if "=" not in text:
+            raise ValueError(f"{field_name} values must use TICKER=VALUE[,VALUE...], got {text!r}")
+        ticker, value = text.split("=", 1)
+        ticker = ticker.strip().upper()
+        grid = [item.strip() for item in value.split(",") if item.strip()]
+        if not ticker or not grid:
+            raise ValueError(f"{field_name} requires a ticker and at least one value: {text!r}")
+        out[ticker] = list(dict.fromkeys(grid))
+    return out
+
+
 def ticker_cooldown_minutes(args: argparse.Namespace, ticker: str) -> int:
     overrides = getattr(args, "ticker_cooldown_map", {}) or {}
     return int(overrides.get(str(ticker).upper(), int(args.cooldown_minutes)))
@@ -134,6 +194,7 @@ def freeze_fold_policy_artifact(
     medians: pd.Series,
     feature_cols: list[str],
     args: argparse.Namespace,
+    direction_mode: str = "model",
 ) -> dict[str, str]:
     """Freeze the selected policy before any outer-fold outcome is scored."""
     artifact_dir.mkdir(parents=True, exist_ok=True)
@@ -149,6 +210,7 @@ def freeze_fold_policy_artifact(
         "selection_months": [str(month) for month in selection_months],
         "deploy_config": asdict(deploy_config),
         "deploy_config_name": deploy_config.name,
+        "direction_mode": str(direction_mode),
         "cooldown_minutes": ticker_cooldown_minutes(args, ticker),
         "feature_cols": [str(col) for col in feature_cols],
         "feature_medians": {
@@ -224,6 +286,7 @@ def write_policy_selection_provenance(
                     "selected": selected,
                     "profile": str(row.get("profile", "")),
                     "deploy_config": str(row.get("deploy_config", "")),
+                    "direction_mode": str(row.get("direction_mode", "model")),
                     "training_months": row_training,
                     "selection_months": row_selection,
                     "component_policy_artifact_path": str(row.get("policy_artifact_path", "") or ""),
@@ -554,6 +617,7 @@ def fit_profile_fold(
         "val_rows": int(len(val)),
         "test_rows": int(len(test)),
         "feature_count": int(len(feature_cols)),
+        "direction_modes": ",".join(str(mode) for mode in args.direction_modes),
     }
     if len(train) < int(args.min_train_rows) or len(val) < int(args.min_val_rows) or test.empty:
         return {
@@ -602,7 +666,7 @@ def fit_profile_fold(
     call_model.fit(x_train, y_call)
     put_model.fit(x_train, y_put)
 
-    def score_part(part: pd.DataFrame) -> pd.DataFrame:
+    def score_part(part: pd.DataFrame, direction_mode: str) -> pd.DataFrame:
         if part.empty:
             return part.copy()
         x = part[feature_cols].replace([np.inf, -np.inf], np.nan).fillna(medians).fillna(0.0)
@@ -613,55 +677,49 @@ def fit_profile_fold(
         else:
             out["pred_call_return"] = call_model.predict(x)
             out["pred_put_return"] = put_model.predict(x)
-        call_action = out["pred_call_return"].astype(float) >= out["pred_put_return"].astype(float)
-        out["action"] = np.where(call_action, "CALL", "PUT")
-        out["score"] = np.where(call_action, out["pred_call_return"], out["pred_put_return"])
-        out["realized_return"] = np.where(call_action, out["call_return"], out["put_return"])
-        bucket = int(profile.delta_bucket)
-        call_exit = f"call_d{bucket:02d}_opt_exit_minutes"
-        put_exit = f"put_d{bucket:02d}_opt_exit_minutes"
-        if call_exit in out.columns and put_exit in out.columns:
-            out["exit_minutes"] = np.where(call_action, out[call_exit], out[put_exit])
-        return out
+        return apply_direction_mode(out, direction_mode, int(profile.delta_bucket))
 
-    val_scored = score_part(val)
     grid_args = threshold_args_for(profile, args, ticker)
-    fold_grid = build_fold_grid(val_scored, grid_args)
-    best_cfg = fold_grid[0]
+    best_cfg = DeployConfig(0.0, ticker_max_day_grid(args, ticker)[0])
+    best_direction_mode = str(args.direction_modes[0])
     best_score = -1e18
     best_metrics: dict = {}
     best_rank: tuple[float, int] | None = None
-    for cfg in fold_grid:
-        val_trades = deploy(val_scored, cfg, int(cooldown_minutes))
-        row = metrics(val_trades, val_months)
-        score = score_metrics(
-            row,
-            int(args.min_val_trades),
-            int(args.min_month_trades),
-            float(args.min_val_pf),
-            float(args.min_val_win_rate),
-            float(args.min_call_rate),
-            float(args.max_call_rate),
-        )
-        positive_month_rate = float(row.get("positive_month_rate", float("nan")))
-        if (
-            not np.isfinite(positive_month_rate)
-            or positive_month_rate < float(args.min_val_positive_month_rate)
-        ):
-            score = -1e18 + int(row.get("trades", 0))
-        if np.isfinite(float(row.get("daily_win_rate", float("nan")))):
-            score += float(args.daily_win_weight) * float(row["daily_win_rate"])
-        if np.isfinite(float(row.get("top5_share_of_pnl", float("nan")))):
-            score -= float(args.top5_share_penalty) * max(float(row["top5_share_of_pnl"]) - 1.0, 0.0)
-        # Keep a real diagnostic row even when every candidate is invalid.
-        # At the scale of -1e18, adding a small trade count can round back to
-        # exactly -1e18, so comparing the float alone loses every near-miss.
-        rank = (float(score), int(row.get("trades", 0)))
-        if best_rank is None or rank > best_rank:
-            best_cfg = cfg
-            best_score = float(score)
-            best_metrics = row
-            best_rank = rank
+    for direction_mode in args.direction_modes:
+        val_scored = score_part(val, str(direction_mode))
+        fold_grid = build_fold_grid(val_scored, grid_args)
+        for cfg in fold_grid:
+            val_trades = deploy(val_scored, cfg, int(cooldown_minutes))
+            row = metrics(val_trades, val_months)
+            score = score_metrics(
+                row,
+                int(args.min_val_trades),
+                int(args.min_month_trades),
+                float(args.min_val_pf),
+                float(args.min_val_win_rate),
+                float(args.min_call_rate),
+                float(args.max_call_rate),
+            )
+            positive_month_rate = float(row.get("positive_month_rate", float("nan")))
+            if (
+                not np.isfinite(positive_month_rate)
+                or positive_month_rate < float(args.min_val_positive_month_rate)
+            ):
+                score = -1e18 + int(row.get("trades", 0))
+            if np.isfinite(float(row.get("daily_win_rate", float("nan")))):
+                score += float(args.daily_win_weight) * float(row["daily_win_rate"])
+            if np.isfinite(float(row.get("top5_share_of_pnl", float("nan")))):
+                score -= float(args.top5_share_penalty) * max(float(row["top5_share_of_pnl"]) - 1.0, 0.0)
+            # Keep a real diagnostic row even when every candidate is invalid.
+            # At the scale of -1e18, adding a small trade count can round back to
+            # exactly -1e18, so comparing the float alone loses every near-miss.
+            rank = (float(score), int(row.get("trades", 0)))
+            if best_rank is None or rank > best_rank:
+                best_cfg = cfg
+                best_direction_mode = str(direction_mode)
+                best_score = float(score)
+                best_metrics = row
+                best_rank = rank
 
     valid_val_selection = bool(best_score > -1e17)
     if not valid_val_selection and not bool(args.allow_invalid_val_deploy):
@@ -670,6 +728,7 @@ def fit_profile_fold(
             "status": "invalid_validation",
             "val_score": float(best_score),
             "deploy_config": getattr(best_cfg, "name", ""),
+            "direction_mode": best_direction_mode,
             "val_metrics": best_metrics or metrics(pd.DataFrame(), val_months),
             "test_trades": pd.DataFrame(),
             "test_metrics": metrics(pd.DataFrame(), [str(test_month)]),
@@ -690,12 +749,13 @@ def fit_profile_fold(
             medians=medians,
             feature_cols=feature_cols,
             args=args,
+            direction_mode=best_direction_mode,
         )
 
     test_trades = pd.DataFrame()
     test_metrics = metrics(pd.DataFrame(), [str(test_month)])
     if score_test:
-        test_scored = score_part(test)
+        test_scored = score_part(test, best_direction_mode)
         test_trades = deploy(test_scored, best_cfg, int(cooldown_minutes))
         if not test_trades.empty:
             test_trades = test_trades.copy()
@@ -706,6 +766,7 @@ def fit_profile_fold(
             test_trades["label_mode"] = profile.label_mode
             test_trades["profile_expiry_modes"] = ",".join(profile.expiry_modes) if profile.expiry_modes else "mixed"
             test_trades["train_scope"] = profile.train_scope
+            test_trades["direction_mode"] = best_direction_mode
         test_metrics = metrics(test_trades, [str(test_month)])
 
     gc.collect()
@@ -715,6 +776,7 @@ def fit_profile_fold(
         "status": "ok",
         "val_score": float(best_score),
         "deploy_config": best_cfg.name,
+        "direction_mode": best_direction_mode,
         "val_metrics": best_metrics,
         "test_trades": test_trades,
         "test_metrics": test_metrics,
@@ -858,6 +920,13 @@ def main() -> int:
         default=[],
         help="Optional exact profile names to retain from --profile-kind, preserving canonical order.",
     )
+    parser.add_argument(
+        "--ticker-profile-allowlists",
+        nargs="*",
+        default=[],
+        metavar="TICKER=PROFILE[,PROFILE...]",
+        help="Optional per-ticker subset of the global profile allowlist.",
+    )
     parser.add_argument("--start-month", default="202601")
     parser.add_argument("--end-month", default="202605")
     parser.add_argument("--val-months", type=int, default=3)
@@ -904,6 +973,13 @@ def main() -> int:
     )
     parser.add_argument("--profile-workers", type=int, default=1)
     parser.add_argument(
+        "--direction-modes",
+        nargs="+",
+        choices=list(DIRECTION_MODES),
+        default=["model"],
+        help="Predeclared causal CALL/PUT mechanisms selected only on inner validation.",
+    )
+    parser.add_argument(
         "--live-observable-features-only",
         action=argparse.BooleanOptionalAction,
         default=True,
@@ -945,6 +1021,10 @@ def main() -> int:
         args.ticker_max_day_grids,
         field_name="--ticker-max-day-grids",
     )
+    args.ticker_profile_allowlist_map = parse_ticker_str_grid_map(
+        args.ticker_profile_allowlists,
+        field_name="--ticker-profile-allowlists",
+    )
 
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -973,6 +1053,11 @@ def main() -> int:
         )
         for profile in profiles
     ]
+    known_profile_names = {prepared.config.name for prepared in prepared_profiles}
+    for ticker, requested in args.ticker_profile_allowlist_map.items():
+        unknown = sorted(set(requested).difference(known_profile_names))
+        if unknown:
+            raise ValueError(f"unknown per-ticker profiles for {ticker}: {unknown}")
     months = [m for m in sorted(raw["month"].astype(str).unique()) if str(args.start_month) <= m <= str(args.end_month)]
 
     metadata = {
@@ -997,6 +1082,14 @@ def main() -> int:
             print(f"[resume] loaded completed folds={len(completed)} from {output_dir}", flush=True)
 
     for ticker in test_tickers:
+        ticker_allowlist = set(args.ticker_profile_allowlist_map.get(str(ticker).upper(), []))
+        ticker_prepared_profiles = [
+            prepared
+            for prepared in prepared_profiles
+            if not ticker_allowlist or prepared.config.name in ticker_allowlist
+        ]
+        if not ticker_prepared_profiles:
+            raise ValueError(f"no profiles remain for ticker {ticker}")
         for test_month in months:
             fold_key = (str(ticker).upper(), str(test_month))
             if fold_key in completed:
@@ -1007,21 +1100,21 @@ def main() -> int:
                 with ThreadPoolExecutor(max_workers=int(args.profile_workers)) as pool:
                     futures = {
                         pool.submit(fit_profile_fold, prepared, ticker, str(test_month), all_tickers, args, False): prepared.config.name
-                        for prepared in prepared_profiles
+                        for prepared in ticker_prepared_profiles
                     }
                     for future in as_completed(futures):
                         result = future.result()
                         candidate_rows.append(flatten_result(result, include_test=False))
                         fold_candidates.append(result)
             else:
-                for prepared in prepared_profiles:
+                for prepared in ticker_prepared_profiles:
                     result = fit_profile_fold(prepared, ticker, str(test_month), all_tickers, args, score_test=False)
                     candidate_rows.append(flatten_result(result, include_test=False))
                     fold_candidates.append(result)
             valid = [row for row in fold_candidates if row.get("status") == "ok" and float(row.get("val_score", -1e18)) > -1e17]
             if valid:
                 selected = max(valid, key=lambda row: float(row.get("val_score", -1e18)))
-                selected_profile = next(p for p in prepared_profiles if p.config.name == selected["profile"])
+                selected_profile = next(p for p in ticker_prepared_profiles if p.config.name == selected["profile"])
                 selected = fit_profile_fold(
                     selected_profile,
                     ticker,
@@ -1037,18 +1130,25 @@ def main() -> int:
                     all_trades.append(selected["test_trades"])
                 print(
                     f"[PROFILE_SELECTOR] {ticker} {test_month} profile={selected['profile']} "
-                    f"cfg={selected['deploy_config']} val_pf={selected_row.get('val_profit_factor', float('nan')):.3f} "
+                    f"direction={selected['direction_mode']} cfg={selected['deploy_config']} "
+                    f"val_pf={selected_row.get('val_profit_factor', float('nan')):.3f} "
                     f"test_trades={selected_row.get('test_trades', 0)} "
                     f"test_pf={selected_row.get('test_profit_factor', float('nan')):.3f} "
                     f"test_ret={selected_row.get('test_pnl_return', 0.0):.2f}",
                     flush=True,
                 )
             else:
+                chronology = fold_candidates[0] if fold_candidates else {}
                 selected_row = {
                     "ticker": ticker,
                     "month": str(test_month),
                     "profile": "ABSTAIN_NO_VALID_PROFILE",
                     "selected": False,
+                    "status": "abstain_no_valid_profile",
+                    "training_months": chronology.get("training_months", ""),
+                    "selection_months": chronology.get("selection_months", chronology.get("val_months", "")),
+                    "val_months": chronology.get("val_months", ""),
+                    "direction_modes": chronology.get("direction_modes", ",".join(args.direction_modes)),
                     "test_trades": 0,
                     "test_pnl_return": 0.0,
                     "test_profit_factor": float("nan"),

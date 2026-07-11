@@ -7,8 +7,10 @@ from neural.jepa.analyze_exact_objective_ablation import _months, passes, ticker
 from neural.jepa.audit_early_causal_option_dataset import minute_grid_issues
 from neural.jepa.event_option_component_live import live_observable_feature_issues_for_columns
 from neural.jepa.walkforward_event_option_profile_selector import (
+    apply_direction_mode,
     default_profiles,
     filter_profiles,
+    parse_ticker_str_grid_map,
 )
 
 
@@ -33,6 +35,13 @@ def test_filter_profiles_rejects_unknown_name() -> None:
     profiles = default_profiles("production_zero_dte", ["SPXW", "QQQ", "SPY"])
     with pytest.raises(ValueError, match="unknown --profile-allowlist"):
         filter_profiles(profiles, ["target_zero_dte_d99_win"])
+
+
+def test_parse_ticker_profile_allowlists_preserves_declared_order() -> None:
+    assert parse_ticker_str_grid_map(
+        ["SPXW=target_zero_dte_d25_return,target_zero_dte_d25_win"],
+        field_name="profiles",
+    ) == {"SPXW": ["target_zero_dte_d25_return", "target_zero_dte_d25_win"]}
 
 
 def test_exact_objective_gate_requires_every_month_and_minimum_hold() -> None:
@@ -87,3 +96,42 @@ def test_invalid_candidate_rank_can_break_negative_1e18_float_ties() -> None:
     high = float(-1e18 + 20)
     assert low == high
     assert (high, 20) > (low, 10)
+
+
+def test_direction_modes_bind_score_and_outcome_to_causal_spot_side() -> None:
+    frame = pd.DataFrame(
+        [
+            {
+                "pred_call_return": 0.7,
+                "pred_put_return": 0.4,
+                "call_return": 0.5,
+                "put_return": -0.2,
+                "ret_5m_bps": -3.0,
+                "call_d25_opt_exit_minutes": 30,
+                "put_d25_opt_exit_minutes": 45,
+            }
+        ]
+    )
+    trend = apply_direction_mode(frame, "spot_5m_trend", 25).iloc[0]
+    counter = apply_direction_mode(frame, "spot_5m_counter", 25).iloc[0]
+    assert trend["action"] == "PUT"
+    assert trend["score"] == pytest.approx(0.4)
+    assert trend["realized_return"] == pytest.approx(-0.2)
+    assert trend["exit_minutes"] == pytest.approx(45)
+    assert counter["action"] == "CALL"
+    assert counter["score"] == pytest.approx(0.7)
+
+
+def test_direction_mode_drops_rows_without_required_observable_momentum() -> None:
+    frame = pd.DataFrame(
+        [
+            {
+                "pred_call_return": 0.6,
+                "pred_put_return": 0.4,
+                "call_return": 0.2,
+                "put_return": -0.1,
+                "ret_15m_bps": float("nan"),
+            }
+        ]
+    )
+    assert apply_direction_mode(frame, "spot_15m_trend", 35).empty

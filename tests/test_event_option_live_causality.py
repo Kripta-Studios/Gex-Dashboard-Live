@@ -145,6 +145,32 @@ def test_nested_profile_selector_writes_combined_month_provenance(tmp_path: Path
     assert len(provenance["folds"][0]["policy_artifact_sha256"]) == 64
 
 
+def test_nested_profile_selector_provenance_accepts_frozen_abstentions(tmp_path: Path) -> None:
+    folds = pd.DataFrame(
+        [
+            {
+                "ticker": ticker,
+                "month": "202601",
+                "selected": False,
+                "profile": "ABSTAIN_NO_VALID_PROFILE",
+                "training_months": "202501,202502",
+                "selection_months": "202511,202512",
+            }
+            for ticker in ("SPXW", "SPY", "QQQ")
+        ]
+    )
+
+    provenance = write_policy_selection_provenance(
+        tmp_path,
+        folds,
+        expected_months=["202601"],
+        expected_tickers=["SPXW", "SPY", "QQQ"],
+    )
+
+    assert provenance["passed"] is True
+    assert provenance["folds"][0]["policy_frozen_before_evaluation"] is True
+
+
 def test_candidate_filter_fails_closed_when_required_ib_flag_is_missing() -> None:
     issues: list[str] = []
     filtered = apply_candidate_universe_filter(

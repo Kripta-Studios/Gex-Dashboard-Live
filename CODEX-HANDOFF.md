@@ -31,6 +31,15 @@ Para construir datasets, entrenar y evaluar hay opciones y spot 2022–2026 en `
 
 Cadencia confirmada en código: el live **recopila snapshots cada minuto** (`DEFAULT_POLL_INTERVAL_SECONDS=60` y `ml_features_1m_*`). La policy actual decide en rejilla de 5m (`MODEL_SAMPLE_MINUTES=5`, `entry_sample_minutes=5`). El dataset 1m ya fue creado y auditado en la iteración anterior; no reconstruirlo ni confundir adquisición 1m con decisiones 5m.
 
+## Checkpoint activo — directional nested 1m predeclarado, aún no ejecutado
+
+- Se reutiliza el parquet early 1m existente de 80.964 filas, SHA `804BF0CC...B7CBE9`; el runner no contiene builder ni enhancer y rehúsa reutilizar el output.
+- Buckets congelados por ticker: SPXW d25, QQQ/SPY d35. Inner selecciona únicamente `return|win` y dirección `model|spot5 trend|spot5 counter|spot15 trend|spot15 counter`.
+- Los modos spot usan `ret_5m_bps`/`ret_15m_bps` backward-looking y atan score/retorno/hold al lado escogido. Sin momentum observable, la fila se elimina; no hay fallback.
+- Tres meses inner, tests de desarrollo `202601..202605`, junio ausente, caps/cooldowns live y gates completas. `24 passed`, compile y parse PowerShell PASS.
+- Corregida trazabilidad heredada: un fold que abstiene ahora conserva `training_months` y `selection_months`; antes el provenance podía marcar falsamente una abstención causal como no congelada. No cambia trades/PnL.
+- Predeclaración `EARLY_CAUSAL_DIRECTIONAL_NESTED_1M_PREDECLARATION_V1.md`; runner `run_early_causal_directional_nested_1m_v1.ps1`, SHA `5078D786...29B45`. Hacer commit/push antes de ejecutar una sola instancia.
+
 ## Actualización 2026-07-11 14:15 CEST — rentabilidad static-union atribuida a selección 2026
 
 - Auditoría inversa terminó en 8,8 s, test PASS, tres modelos 28 hilos, solo train ene–sep2025 y audit oct–dic2025.

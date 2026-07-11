@@ -39,6 +39,8 @@ Hardware de investigación: RTX 5070 Ti de 12 GB VRAM, Ryzen 9 de 32 hilos y 32 
 
 Ratificación operativa: el entorno live recopila cada minuto (poll de 60s y snapshots `ml_features_1m_*`); la policy vigente reduce candidatos a una rejilla de 5m. El dataset experimental 1m ya fue creado, emparejado contra el control 5m y evaluado en la iteración anterior. No reconstruirlo.
 
+Checkpoint activo: se predeclara una selección nested de mecanismo direccional sobre ese mismo parquet 1m, sin build nuevo. Mantiene SPXW d25 y QQQ/SPY d35 y compara solo objetivos `return|win` con dirección de modelo o spot backward-looking 5m/15m trend/counter. Perfil, dirección, threshold y cap se eligen en tres meses inner; `202601..202605` son externos de desarrollo y junio sigue sellado. La abstención conserva ahora su cronología en provenance. `24 passed`; todavía no ejecutado.
+
 Actualización 2026-07-11 14:15 CEST: la auditoría pre-2026 rechaza el mecanismo static-union actual. QQQ/SPXW conservan algo de payoff pero fallan WR y diciembre; SPY es negativo los tres meses. Como todos tienen >=19/21/26 trades en su peor mes, el problema es dirección y drift, no sample cadence ni volumen. Las cifras 2026 del paquete reflejan selección sobre 2026 y no sustituyen un nested walk-forward limpio.
 
 Actualización 2026-07-11 14:05 CEST: se localiza por qué el static-union parece mucho más rentable: modelos, thresholds y reglas declaran selección sobre los mismos meses 2026 reportados. Se predeclara una auditoría inversa en octubre–diciembre2025 con modelos entrenados solo hasta septiembre. Esto estudia estabilidad del mecanismo, no convierte la regla elegida con 2026 en causal ni promocionable.
