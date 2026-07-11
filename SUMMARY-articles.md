@@ -189,6 +189,8 @@ Actualización 2026-07-11 06:50 CEST: esa auditoría quedó predeclarada antes d
 
 Actualización final 2026-07-11 07:00 CEST: ambas gates fallaron. Frozen/adapted ganaron side en 7/15 y 8/15 celdas; Spearman fue positivo en 7/15 y 9/15 con medianas `-0,00684/+0,01505`. No se probará una loss de ranking/calibración. El oracle-side no causal confirma headroom, pero el predictor está casi al azar al escoger side. La nueva hipótesis causal es temporal y ajena a la cola de arquitecturas: el head usó solo h1=5m para outcomes con hold>=30m, pese a disponer de h6=30m en el checkpoint. Se permitirá exclusivamente una ablación h1→h6, sin h3/h12 ni otros cambios.
 
+Actualización 2026-07-11 07:15 CEST: la ablación h1 vs h6 quedó implementada y predeclarada sin ejecutar. h6 reemplaza h1 sobre las mismas filas y no necesita target a +30m; un smoke real reproduce z/h1 con diferencia cero. El criterio permanece estrictamente económico por ticker y mes, no PnL agregado. Si h6 falla no se abrirá un sweep h3/h12/multi-horizon.
+
 El downstream quedó predeclarado cambiando exclusivamente frozen-delta por adapted-delta en el mismo payoff head exacto d25/d35. Targets/errores quedan excluidos de features y la decisión exige gates completas por ticker, no PnL agregado.
 
 Informe, hashes y tablas de la ablación de historia quedaron publicados en `8da7a7a`.

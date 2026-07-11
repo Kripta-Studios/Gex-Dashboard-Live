@@ -1,5 +1,13 @@
 # CODEX-HANDOFF.md — Estado para continuación por otro agente
 
+## Actualización 2026-07-11 07:15 CEST — h1 vs h6 listo para ejecutar
+
+- Implementados `export_event_phys_td_current_horizons.py` y `walkforward_phys_td_horizon_downstream.py`, tests y runner. Factor único: reemplazar motion h1=5m por h6=30m; mismo z, filas h1, labels, head, folds, seeds, presupuesto y gates.
+- Export h6 es current-time y no usa target futuro. Downstream obliga paridad z/h1 <=1e-6 antes de entrenar. Smoke enero: 1.684 rows current, 1.608 h1 join, diferencias `0/0`.
+- Predeclaración `PHYS_TD_H1_VS_H6_PREDECLARATION_V1.md`; hashes exporter/downstream/runner `884E743E...5BAF` / `0ECFEA37...7F52` / `559CEFB8...D061`; `13 passed`, compile/parse PASS.
+- Runner usa RTX 5070 Ti/CUDA determinista para export y diez heads; Ryzen 16 threads para carga. Output nuevo `phys_td_current_h1_h6_features...` + `phys_td_h1_vs_h6_downstream...`; no existen aún.
+- Siguiente paso: commit/push, comprobar procesos/GPU y lanzar una sola instancia de `run_phys_td_h1_vs_h6_v1.ps1`. No variar hashes/gates, no h3/h12, no Ada, no abrir junio ni tocar live/systemd.
+
 ## Actualización 2026-07-11 07:00 CEST — separabilidad cerrada; siguiente factor h6
 
 - Runner terminó una sola vez en 6,7 s; no quedan procesos. Inputs/checkpoints/hash/junio PASS. Salida `.../adajepa_payoff_separability_202601_202605_v1/`.
