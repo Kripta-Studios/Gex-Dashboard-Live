@@ -1,5 +1,12 @@
 # CODEX-HANDOFF.md — Estado para continuación por otro agente
 
+## Actualización 2026-07-11 07:45 CEST — spot skip listo para ejecutar
+
+- Auditoría sin labels/outcomes: `ret_5m_bps/ret_15m_bps/ret_30m_bps` son backward-looking (`minute <= current-lookback`), 36.796/36.796 finitas, variables, incluidas en los 277 features y reproducibles live.
+- Nuevo `walkforward_phys_td_spot_skip.py`: control z+h1 vs mismo frame/head más bloque directo 5/15/30m. Un solo factor; no skew/flow/levels/cross/h6/Ada/loss.
+- Predeclaración `PHYS_TD_SPOT_SKIP_PREDECLARATION_V1.md`; script/test/runner hashes `EC4B6837...06B9` / `00A28EBD...C6A` / `3DCE5DAD...E173`; `11 passed`.
+- Próximo paso: commit/push, verificar procesos/GPU/output y lanzar una sola instancia de `run_phys_td_spot_skip_v1.ps1` bajo `pwsh`, no Windows PowerShell. No cambiar bloque/gates según resultados.
+
 ## Actualización 2026-07-11 07:30 CEST — h6 cerrado y rechazado
 
 - Ejecución real `pwsh` completó 5/5 folds h1+h6. El intento previo `powershell.exe` falló en preflight antes de outputs (`Get-FileHash`/Unicode), no duplicó experimento. No quedan procesos.

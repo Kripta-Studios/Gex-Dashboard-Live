@@ -5,6 +5,12 @@
 
 > Esta bitácora se actualiza durante el trabajo. Solo se marca como completado lo reproducido en esta sesión. No implica despliegue, commit ni push salvo que se indique expresamente.
 
+## Actualización 2026-07-11 07:45 CEST — spot momentum skip predeclarado
+
+La auditoría de las 277 features, sin outcomes, identificó un bloque mínimo reproducible: retornos spot backward-looking 5/15/30m. `event_option_live_snapshot._ret_bps` usa solo spot anterior o igual al cutoff; las tres columnas están completas y variables en 36.796 filas y existen en el contrato live.
+
+Se implementó control `z+h1` frente a la única variante que añade directamente ese bloque de tres escalas. No se añaden skew/flow/niveles/cross-asset/h6/Ada ni se cambia loss. Mismas filas, labels, head, folds, seeds, presupuesto y gates. Predeclaración `PHYS_TD_SPOT_SKIP_PREDECLARATION_V1.md`; script SHA `EC4B6837...06B9`, runner `3DCE5DAD...E173`; `11 passed`. Aún no ejecutado.
+
 ## Actualización 2026-07-11 07:30 CEST — h6 terminado y rechazado
 
 La corrida válida terminó 5/5 folds por arm, tras un primer launch de infraestructura que falló antes de crear outputs por usar Windows PowerShell sin `Get-FileHash`; se relanzó una sola ejecución real bajo `pwsh` con el runner/hash intacto. Tests, CUDA, hashes, provenance, runtime y paridad z/h1 `0/0` pasaron; no quedan procesos.

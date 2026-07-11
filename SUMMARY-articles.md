@@ -193,6 +193,8 @@ Actualización 2026-07-11 07:15 CEST: la ablación h1 vs h6 quedó implementada 
 
 Actualización final 2026-07-11 07:30 CEST: h6 queda rechazado. Ambos arms tuvieron 0/210 candidatos válidos y abstuvieron en las 15 celdas; h6 empeoró MAE/RMSE/dirección. Dos near-miss SPY fallaron condiciones distintas (PF1,119 en un fold; mínimo17 trades en otro) y no autorizan mezclar o retunar. No se abrirán otros horizontes. El siguiente mecanismo a auditar es si la compresión z pierde señales direccionales live observables que podrían entrar por una allowlist causal pequeña, sin feature mining OOS.
 
+Actualización 2026-07-11 07:45 CEST: la auditoría semántica eligió antes de outcomes un único bloque spot 5/15/30m, calculado backward-looking por el mismo código live. La ablación control vs direct spot skip quedó implementada/predeclarada; no mezcla modalidades adicionales ni cambia loss. Si falla no se encadenarán otros bloques por tanteo.
+
 El downstream quedó predeclarado cambiando exclusivamente frozen-delta por adapted-delta en el mismo payoff head exacto d25/d35. Targets/errores quedan excluidos de features y la decisión exige gates completas por ticker, no PnL agregado.
 
 Informe, hashes y tablas de la ablación de historia quedaron publicados en `8da7a7a`.
