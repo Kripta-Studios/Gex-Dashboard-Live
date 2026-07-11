@@ -15,7 +15,7 @@ Una idea académica solo contará para live si se prueba con:
 - enero–mayo de 2026 como zona exploratoria nested;
 - junio de 2026 intacto hasta congelar un único protocolo.
 
-Gates por ticker y mes: hold realizado `>=30m`, PnL > 0 en todos los meses walk-forward, WR `>=50%`, PF `>=1,3` y al menos 18 trades por mes.
+Gates simultáneas e individuales para **cada uno** de `SPXW`, `QQQ` y `SPY`: hold realizado de cada trade `>=30m`, PF walk-forward `>=1,3`, WR walk-forward `>=50%`, al menos 18 trades en cada mes evaluado y `PnL > 0` en todos los meses. Las métricas overall no compensan un ticker o mes fallido.
 
 El histórico local disponible para train/inner-validation causal cubre 2022–2026 en:
 
@@ -26,6 +26,8 @@ D:/ThetaData/data_underlying_derived
 
 La disponibilidad de más historia no autoriza a abrir junio de 2026 ni a usar meses externos para seleccionar arquitectura, policy o thresholds.
 
+Estas raíces son la fuente canónica para construir datasets, entrenar y evaluar. Contienen tanto opciones como precios spot desde 2022 hasta 2026 y deben consumirse con splits temporales causales/nested.
+
 Rutas por ticker disponibles para opciones y spot:
 
 ```text
@@ -34,6 +36,8 @@ D:/ThetaData/data_underlying_derived/{SPXW,QQQ,SPY}
 ```
 
 Hardware de investigación: RTX 5070 Ti de 12 GB VRAM, Ryzen 9 de 32 hilos y 32 GB RAM. Se debe aprovechar CUDA determinista para entrenar/inferir y paralelismo CPU reproducible para construir datasets; más cómputo no autoriza feature mining OOS ni abrir junio.
+
+Ratificación operativa: el entorno live recopila cada minuto (poll de 60s y snapshots `ml_features_1m_*`); la policy vigente reduce candidatos a una rejilla de 5m. El dataset experimental 1m ya fue creado, emparejado contra el control 5m y evaluado en la iteración anterior. No reconstruirlo.
 
 Actualización 2026-07-11 14:15 CEST: la auditoría pre-2026 rechaza el mecanismo static-union actual. QQQ/SPXW conservan algo de payoff pero fallan WR y diciembre; SPY es negativo los tres meses. Como todos tienen >=19/21/26 trades en su peor mes, el problema es dirección y drift, no sample cadence ni volumen. Las cifras 2026 del paquete reflejan selección sobre 2026 y no sustituyen un nested walk-forward limpio.
 

@@ -14,6 +14,14 @@ D:/ThetaData/data_underlying_derived/{SPXW,QQQ,SPY}
 
 Recursos locales: RTX 5070 Ti de 12 GB VRAM, Ryzen 9 de 32 hilos y 32 GB RAM. Los entrenamientos deben aprovechar CUDA determinista y la preparación de datos debe paralelizar CPU de forma reproducible.
 
+## Ratificación del contrato y de los datos disponibles
+
+El usuario confirma que las gates se exigen **por separado para SPXW, QQQ y SPY**: cada trade debe permanecer abierto al menos 30 minutos; cada ticker debe lograr `PF >= 1,3`, `WR >= 50%`, al menos 18 trades en cada mes evaluado y `PnL > 0` en todos los meses del walk-forward. No se admite aprobar por métricas overall ni promediar meses positivos y negativos.
+
+Para construir datasets, entrenar y evaluar están disponibles opciones y spot de 2022–2026 bajo `D:/ThetaData/data_options` y `D:/ThetaData/data_underlying_derived`. Deben usarse con splits temporales causales y selección nested; la presencia física de un mes no autoriza usarlo antes de su evaluación externa.
+
+También queda confirmado en código que el feed adquiere cada minuto (`60s`) y guarda snapshots `ml_features_1m_*`, mientras que la policy productiva actual filtra decisiones cada 5 minutos. La vista experimental 1m ya fue materializada y auditada; no debe volver a construirse.
+
 ## Actualización 2026-07-11 14:15 CEST — el mecanismo productivo no era estable antes de 2026
 
 La auditoría inversa terminó: QQQ obtiene 75 trades, WR 41,33%, PF 1,158 y un mes negativo; SPXW 64 trades, WR 43,75%, PF 1,686 y un mes negativo; SPY 125 trades, WR 34,40%, PF 0,794 y pierde los tres meses. Todos superan 18 operaciones/mes, así que la frecuencia no explica el fallo.

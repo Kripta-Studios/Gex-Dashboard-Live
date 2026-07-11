@@ -17,6 +17,20 @@ D:/ThetaData/data_underlying_derived/SPY
 
 Hardware local: RTX 5070 Ti con 12 GB VRAM, Ryzen 9 con 32 hilos y 32 GB RAM. Usar CUDA determinista y batches ajustados a VRAM para entrenamiento/inferencia; paralelizar carga y transformaciones CPU sin crear corridas duplicadas.
 
+### Ratificación del contrato por el usuario — aplicar en todo train/selección/evaluación
+
+Las gates son **individuales y simultáneas** para cada ticker; un agregado rentable no compensa el fallo de otro ticker ni de un mes:
+
+| Ticker | Hold de cada trade | PF walk-forward | WR walk-forward | Frecuencia | Estabilidad mensual |
+| --- | ---: | ---: | ---: | ---: | --- |
+| SPXW | `>=30m` | `>=1,3` | `>=50%` | `>=18 trades` en cada mes | `PnL > 0` en todos los meses evaluados |
+| QQQ | `>=30m` | `>=1,3` | `>=50%` | `>=18 trades` en cada mes | `PnL > 0` en todos los meses evaluados |
+| SPY | `>=30m` | `>=1,3` | `>=50%` | `>=18 trades` en cada mes | `PnL > 0` en todos los meses evaluados |
+
+Para construir datasets, entrenar y evaluar hay opciones y spot 2022–2026 en `D:/ThetaData/data_options` y `D:/ThetaData/data_underlying_derived`. Mantener splits temporales causales: disponer de 2026 en disco no permite usar el mes externo para elegir features, mecanismos, thresholds o policies.
+
+Cadencia confirmada en código: el live **recopila snapshots cada minuto** (`DEFAULT_POLL_INTERVAL_SECONDS=60` y `ml_features_1m_*`). La policy actual decide en rejilla de 5m (`MODEL_SAMPLE_MINUTES=5`, `entry_sample_minutes=5`). El dataset 1m ya fue creado y auditado en la iteración anterior; no reconstruirlo ni confundir adquisición 1m con decisiones 5m.
+
 ## Actualización 2026-07-11 14:15 CEST — rentabilidad static-union atribuida a selección 2026
 
 - Auditoría inversa terminó en 8,8 s, test PASS, tres modelos 28 hilos, solo train ene–sep2025 y audit oct–dic2025.
