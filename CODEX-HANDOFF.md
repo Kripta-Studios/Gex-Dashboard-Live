@@ -2,7 +2,7 @@
 
 **Actualizado:** 11 de julio de 2026
 
-**Último checkpoint publicado:** `b4b22d4 research: audit causal wall interaction edge`
+**Último checkpoint base publicado:** `93159a4 research: predeclare gex dex wall state dataset`
 
 **Producción:** intacta. **Junio de 2026:** sellado.
 
@@ -187,23 +187,33 @@ causales 5/15/30m. `tests/test_wall_state_features.py`: `4 passed`; suite wall
 combinada: `9 passed`. Incluye test de OI duplicado, orden determinista, walls
 separados, resets por gap/sesión y rechazo de columnas future/2026.
 
+Builder por sesión implementado; preflight real todavía pendiente:
+
+```text
+neural/jepa/build_wall_state_dataset.py
+tests/test_build_wall_state_dataset.py
+```
+
+Lee únicamente Greeks+OI, fuerza 0DTE/cutoff 2025, limita a 16 workers, persiste
+errores por sesión y audita cobertura/spot contra la vista executable. Suite wall
+total tras el builder: `14 passed`.
+
 ### Siguientes acciones exactas
 
-1. Implementar builder por sesión usando el manifest hash
-   `5431c2bf...dc88`, cutoff físico `<=20251231` y 16 workers.
-2. Preflight con una sesión real por ticker; auditar que el delta wall no sea un
+1. Publicar el builder y ejecutar preflight con una sesión real por ticker;
+   auditar que el delta wall no sea un
    alias de buckets fijos.
-3. Build completo y join contra el evento sellado; exigir >=99% cobertura overall,
+2. Build completo y join contra el evento sellado; exigir >=99% cobertura overall,
    >=98% por ticker y <=1 bps de diferencia spot.
-4. Predeclarar labels físicos `magnet_hit/true_rejection/accepted_break` a
+3. Predeclarar labels físicos `magnet_hit/true_rejection/accepted_break` a
    30/60/120/180m. Future spot es label, nunca feature.
-5. Solo si wall state supera distance-only en los tres tickers, entrenar payoff
+4. Solo si wall state supera distance-only en los tres tickers, entrenar payoff
    ask→bid nested. No abrir junio hasta congelar un único protocolo y recibir
    autorización explícita.
 
 ## 10. Git y worktree
 
-Checkpoint publicado: `b4b22d4`, `HEAD == origin/main` al iniciar el builder.
+Checkpoint base publicado: `93159a4`, `HEAD == origin/main` al iniciar el builder.
 Hay numerosos scripts y artefactos untracked de trabajos anteriores; no borrarlos,
 no añadirlos en masa y no asumir que son parte del checkpoint. Versionar cada hito
 con `git add` explícito, test, commit y push.

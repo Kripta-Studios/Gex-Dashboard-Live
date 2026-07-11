@@ -148,6 +148,7 @@ neural/jepa/audit_wall_interaction_execquote_v1.py
 neural/jepa/diagnose_wall_interaction_failure_v1.py
 research_papers/JEPA/WALL_STATE_GEX_DEX_DATASET_PREDECLARATION_V1.md
 neural/jepa/wall_state_features.py
+neural/jepa/build_wall_state_dataset.py
 ```
 
 Producción y junio de 2026 continúan intactos.
