@@ -1,5 +1,12 @@
 # CODEX-HANDOFF.md — Estado para continuación por otro agente
 
+## Actualización 2026-07-11 06:10 CEST — AdaJEPA shadow pasa representación
+
+- 7.285 filas OOS, 281 ticker-días, 15 celdas. Adapter gana 15/15, mediana RMSE diff `-0,0021206`, Wilcoxon `p=3,0518e-05`; 277/281 días, mediana `-0,0023479`, `p=9,1398e-48`.
+- QQQ/SPXW/SPY daily wins `88/90`, `96/97`, `93/94`. 0 rollbacks, norma máxima `0,0212977`, reset diario/orden causal PASS.
+- Resultado en `.../adajepa_shadow_adapter_202601_202605_lr005_v1/`; summary SHA `60F9DE6BD629974C8FDCB1282EA41259ABF68818E3FE3A3F48CD8056F4FB16DD`.
+- Decisión: `advance_to_separate_downstream_ablation=true`, pero `production_live_ready=false`. Próximo paso: exportar features current-time frozen/adapted (nunca target_z) y comparar el mismo payoff head exacto d25/d35 con mismos folds/seeds/presupuesto.
+
 ## Actualización 2026-07-11 06:00 CEST — AdaJEPA shadow listo para lanzar
 
 - Evaluador `evaluate_adajepa_shadow_adapter.py`: control pred_z frozen vs adapter diagonal 64 params; init cero/reset ticker-día; update de transición anterior solo cuando target ya observable; LR.05, 1 paso, clip1, norm cap.5/rollback.

@@ -1,0 +1,68 @@
+{
+  "adapter_resets_each_ticker_day": true,
+  "args": {
+    "device": "cuda",
+    "grad_clip": 1.0,
+    "learning_rate": 0.05,
+    "max_parameter_norm": 0.5,
+    "output_dir": "research_papers/JEPA/results/_diagnostics/adajepa_shadow_adapter_202601_202605_lr005_v1",
+    "spaces_dir": "research_papers/JEPA/results/_diagnostics/adajepa_shadow_coherent_spaces_202601_202605_seed20260618_v1"
+  },
+  "cell_paired_test": {
+    "adapted_wins": 15,
+    "frozen_wins": 0,
+    "mean_adapted_minus_frozen": -0.0022013609215653725,
+    "median_adapted_minus_frozen": -0.0021206210275640514,
+    "pairs": 15,
+    "ties": 0,
+    "wilcoxon_one_sided_p": 3.0517578125e-05
+  },
+  "comparison": "frozen_predictor_vs_daily_reset_diagonal_adapter",
+  "daily_paired_test": {
+    "adapted_wins": 277,
+    "frozen_wins": 2,
+    "mean_adapted_minus_frozen": -0.002374104505252491,
+    "median_adapted_minus_frozen": -0.002347944447627426,
+    "pairs": 281,
+    "ties": 2,
+    "wilcoxon_one_sided_p": 9.139845232127362e-48
+  },
+  "decision": {
+    "advance_to_separate_downstream_ablation": true,
+    "production_live_ready": false,
+    "representation_improved_reproducibly": true
+  },
+  "input_folds": [
+    {
+      "rows": 1608,
+      "test_month": "202601",
+      "transition_sha256": "FDBB7989201A83AE6A20226DCEA502AC844EB3844FDEDCA724AE0CCE258D7A60"
+    },
+    {
+      "rows": 1109,
+      "test_month": "202602",
+      "transition_sha256": "37F077AE7A14885FFE470FE6822EB57673797C02911AC11E24F37557FEC1AFD4"
+    },
+    {
+      "rows": 1380,
+      "test_month": "202603",
+      "transition_sha256": "091FBD7DBE5C5A7FF11F8EF02E82D09C7D1C24ECBFC394ED6C41FA6B8A470958"
+    },
+    {
+      "rows": 1553,
+      "test_month": "202604",
+      "transition_sha256": "15DCC33B07F1F1201453FF97C2335C672A4EE3DD0AA3B21BB026B3CD2D391C71"
+    },
+    {
+      "rows": 1635,
+      "test_month": "202605",
+      "transition_sha256": "014559B5EBC96DCF9CDAE1CB8D7DB3C84E0A20334381E8A44F9EED867BB8F31E"
+    }
+  ],
+  "june_2026_sealed": true,
+  "schema_version": 1,
+  "target_used_only_after_observation": true,
+  "total_days": 281,
+  "total_rollbacks": 0,
+  "total_rows": 7285
+}

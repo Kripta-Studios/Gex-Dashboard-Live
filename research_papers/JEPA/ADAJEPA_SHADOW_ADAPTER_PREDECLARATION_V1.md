@@ -37,3 +37,7 @@ Avanzar a una ablación downstream separada exige: adapter gana >=10/15 celdas, 
 | Manifest spaces | `F398B1105C848C45D9BEAE0C156646B8B17207BEA5D08660BB359C099337F7B8` |
 
 Tests focalizados antes de lanzar: `19 passed`; parse, compile y diff-check PASS.
+
+## Resultado final
+
+El adapter ganó 15/15 celdas ticker×mes (mediana RMSE `-0,002121`, Wilcoxon unilateral `p=3,0518e-05`) y 277/281 ticker-días (`p=9,1398e-48`). No hubo rollbacks; norma máxima `0,021298`. Se fija `representation_improved_reproducibly=true` y se autoriza una ablación downstream separada. Sigue `production_live_ready=false`.

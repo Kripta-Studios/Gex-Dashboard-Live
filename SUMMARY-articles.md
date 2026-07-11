@@ -181,4 +181,6 @@ Actualización: los cinco checkpoints/espacios terminaron, con 1.109–1.635 tra
 
 AdaJEPA shadow v1 quedó predeclarado con un adapter diagonal residual de 64 parámetros, un solo paso tras la transición observada, reset diario y rollback. No modifica encoder, predictor base ni policy; el criterio de avance es exclusivamente error latente OOS pareado.
 
+Resultado: mejora reproducible en 15/15 celdas (`p=3,05e-05`) y 277/281 días (`p=9,14e-48`), sin rollbacks. Es la primera hipótesis de esta cola que supera su gate representacional, por lo que se autoriza un downstream separado; no implica edge ni promoción.
+
 Informe, hashes y tablas de la ablación de historia quedaron publicados en `8da7a7a`.

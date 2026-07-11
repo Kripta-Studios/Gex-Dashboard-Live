@@ -5,6 +5,12 @@
 
 > Esta bitácora se actualiza durante el trabajo. Solo se marca como completado lo reproducido en esta sesión. No implica despliegue, commit ni push salvo que se indique expresamente.
 
+## Actualización 2026-07-11 06:10 CEST — AdaJEPA shadow mejora representación
+
+La evaluación terminó 7.285 transiciones/281 ticker-días. El adapter ganó las 15/15 celdas ticker×mes frente al predictor congelado: mediana RMSE `-0,002121`, Wilcoxon unilateral `p=3,0518e-05`. Ganó 277/281 días (QQQ 88/90, SPXW 96/97, SPY 93/94), mediana diaria `-0,002348`, `p=9,1398e-48`. Cero rollbacks; norma máxima `0,021298`; reset diario causal confirmado.
+
+Decisión: `representation_improved_reproducibly=true`, `advance_to_separate_downstream_ablation=true`, `production_live_ready=false`. Summary SHA `60F9DE6BD629974C8FDCB1282EA41259ABF68818E3FE3A3F48CD8056F4FB16DD`; cell metrics `76C8DA5B...A6F2`, daily `0AD1E723...A07D`. La mejora pequeña no demuestra rentabilidad; el siguiente experimento cambiará solo frozen→adapted prediction en el payoff head exacto d25/d35.
+
 ## Actualización 2026-07-11 06:00 CEST — AdaJEPA shadow adapter predeclarado
 
 Con los cinco espacios auditados se implementó el control frozen frente a un adapter diagonal residual de 64 parámetros, init cero y reset ticker/día. Cada predicción ocurre antes de consumir su target; solo la transición inmediatamente anterior ya observable puede generar un paso SGD. LR `0,05`, un paso, clip1 y rollback sobre norma0,5 quedan fijados sin mirar test.
