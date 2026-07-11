@@ -61,6 +61,8 @@ El fallo económico es anterior al outer: `0/99` folds C0 y `0/99` P1 encuentran
 
 Se cierra V1 como `REJECTED`; no se retunará su grid. La siguiente investigación debe primero persistir el grid inner completo para localizar las gates eliminatorias y luego aislar un único cambio de objetivo que dé peso a la magnitud de `side_advantage`, manteniendo oportunidad/features/folds/scheduler. Esta continuación es exploratoria sobre 2022–2025 y no autoriza live hasta un holdout realmente nuevo.
 
+El diagnóstico de grid ya quedó implementado y predeclarado sin ejecutarse: reconstruye los mismos cuatro heads V1, nunca puntúa el outer y escribe las `12.474` combinaciones inner con gates separadas. `tests/test_pairwise_inner_grid_diagnostic.py`: `3 passed`; compile/parser/diff PASS. Debe commitearse/pushearse antes de lanzar su única instancia.
+
 ## Actualización 2026-07-11 15:45 CEST — Auditoría de Reproducibilidad y C0 Equivalence Terminadas con Éxito
 
 La auditoría de reproducibilidad se completó con éxito en 10 s (test PASS), arrojando las siguientes conclusiones fundamentales:
