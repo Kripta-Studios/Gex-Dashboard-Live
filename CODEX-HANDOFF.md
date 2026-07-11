@@ -31,14 +31,15 @@ Para construir datasets, entrenar y evaluar hay opciones y spot 2022–2026 en `
 
 Cadencia confirmada en código: el live **recopila snapshots cada minuto** (`DEFAULT_POLL_INTERVAL_SECONDS=60` y `ml_features_1m_*`). La policy actual decide en rejilla de 5m (`MODEL_SAMPLE_MINUTES=5`, `entry_sample_minutes=5`). El dataset 1m ya fue creado y auditado en la iteración anterior; no reconstruirlo ni confundir adquisición 1m con decisiones 5m.
 
-## Checkpoint activo — directional nested 1m predeclarado, aún no ejecutado
+## Checkpoint cerrado — directional nested 1m ejecutado y rechazado
 
-- Se reutiliza el parquet early 1m existente de 80.964 filas, SHA `804BF0CC...B7CBE9`; el runner no contiene builder ni enhancer y rehúsa reutilizar el output.
-- Buckets congelados por ticker: SPXW d25, QQQ/SPY d35. Inner selecciona únicamente `return|win` y dirección `model|spot5 trend|spot5 counter|spot15 trend|spot15 counter`.
-- Los modos spot usan `ret_5m_bps`/`ret_15m_bps` backward-looking y atan score/retorno/hold al lado escogido. Sin momentum observable, la fila se elimina; no hay fallback.
-- Tres meses inner, tests de desarrollo `202601..202605`, junio ausente, caps/cooldowns live y gates completas. `24 passed`, compile y parse PowerShell PASS.
-- Corregida trazabilidad heredada: un fold que abstiene ahora conserva `training_months` y `selection_months`; antes el provenance podía marcar falsamente una abstención causal como no congelada. No cambia trades/PnL.
-- Predeclaración `EARLY_CAUSAL_DIRECTIONAL_NESTED_1M_PREDECLARATION_V1.md`; runner `run_early_causal_directional_nested_1m_v1.ps1`, SHA `5078D786...29B45`. Hacer commit/push antes de ejecutar una sola instancia.
+- Corrida única 117,9 s, `24 passed`, auditorías y provenance PASS; reutilizó el parquet 1m de 80.964 filas, sin build ni junio.
+- Solo enero tuvo policies inner válidas. SPXW d25-win/model: 20 trades, WR `40%`, PF `1,220`, `+1,700R`. QQQ d35-return/model: 20, WR `30%`, PF `0,987`, `-0,103R`. SPY d35-win/spot5-trend: 20, WR `40%`, PF `0,721`, `-2,169R`.
+- Febrero–mayo abstienen los tres: al incorporar enero al inner, ninguna combinación cumple gates. Overall 60 trades, WR `36,67%`, PF `0,976`, `-0,572R`; hold mínimo 30m.
+- No rescatar SPXW d25-return/spot5-counter aunque también pasara inner oct–dic: perdió la selección antes de enero. Elegirlo ahora sería OOS tuning.
+- La dirección spot 5m/15m simple no estabiliza el edge; frecuencia tampoco es el límite. No barrer signos/horizontes sobre estos meses.
+- Informe `.../early_causal_directional_nested_1m_202601_202605_seed20260618_v1/REPORT.md`; audit SHA `740A3305...D821`.
+- La corrección de provenance conserva cronología de folds abstain y no cambió trades/PnL. Próximo trabajo: hipótesis económica distinta o cobertura full-session causal 1m, predeclarada; producción intacta.
 
 ## Actualización 2026-07-11 14:15 CEST — rentabilidad static-union atribuida a selección 2026
 

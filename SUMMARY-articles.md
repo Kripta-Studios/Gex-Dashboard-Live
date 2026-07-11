@@ -39,7 +39,7 @@ Hardware de investigación: RTX 5070 Ti de 12 GB VRAM, Ryzen 9 de 32 hilos y 32 
 
 Ratificación operativa: el entorno live recopila cada minuto (poll de 60s y snapshots `ml_features_1m_*`); la policy vigente reduce candidatos a una rejilla de 5m. El dataset experimental 1m ya fue creado, emparejado contra el control 5m y evaluado en la iteración anterior. No reconstruirlo.
 
-Checkpoint activo: se predeclara una selección nested de mecanismo direccional sobre ese mismo parquet 1m, sin build nuevo. Mantiene SPXW d25 y QQQ/SPY d35 y compara solo objetivos `return|win` con dirección de modelo o spot backward-looking 5m/15m trend/counter. Perfil, dirección, threshold y cap se eligen en tres meses inner; `202601..202605` son externos de desarrollo y junio sigue sellado. La abstención conserva ahora su cronología en provenance. `24 passed`; todavía no ejecutado.
+Checkpoint cerrado: la selección direccional nested sobre el parquet 1m fue rechazada. Solo enero tuvo policies inner válidas; OOS SPXW quedó en WR 40%/PF 1,220, QQQ 30%/0,987 y SPY 40%/0,721. Al incorporar enero, los tres abstienen febrero–mayo. Overall 60 trades, WR 36,67%, PF 0,976 y -0,572R. Tests/auditorías/provenance PASS, holds>=30m y junio sellado. Momentum/contrarian spot 5m/15m no estabiliza la señal; no retocar esta familia sobre el mismo OOS.
 
 Actualización 2026-07-11 14:15 CEST: la auditoría pre-2026 rechaza el mecanismo static-union actual. QQQ/SPXW conservan algo de payoff pero fallan WR y diciembre; SPY es negativo los tres meses. Como todos tienen >=19/21/26 trades en su peor mes, el problema es dirección y drift, no sample cadence ni volumen. Las cifras 2026 del paquete reflejan selección sobre 2026 y no sustituyen un nested walk-forward limpio.
 

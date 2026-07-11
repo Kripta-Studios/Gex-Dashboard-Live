@@ -22,13 +22,13 @@ Para construir datasets, entrenar y evaluar están disponibles opciones y spot d
 
 También queda confirmado en código que el feed adquiere cada minuto (`60s`) y guarda snapshots `ml_features_1m_*`, mientras que la policy productiva actual filtra decisiones cada 5 minutos. La vista experimental 1m ya fue materializada y auditada; no debe volver a construirse.
 
-## Checkpoint activo — mecanismo direccional nested sobre el dataset 1m existente
+## Checkpoint cerrado — el mecanismo direccional 1m tampoco generaliza
 
-Se ha predeclarado el siguiente test sin reconstruir datos. SPXW conserva d25 y QQQ/SPY d35; dentro de cada bucket, tres meses inner eligen `return` o `win` y una de cinco reglas de dirección: modelo, spot 5m trend/counter o spot 15m trend/counter. Los retornos spot son backward-looking y observables en el minuto; la calidad/threshold se evalúa para el lado CALL/PUT que realmente impone la regla.
+La corrida única terminó en 117,9 s sin reconstruir el parquet 1m. Tests, auditorías y provenance pasan. Solo enero encontraba policies válidas con inner octubre–diciembre: SPXW eligió d25-win/model y obtuvo OOS WR 40%, PF 1,220 y +1,700R; QQQ d35-return/model, WR 30%, PF 0,987 y -0,103R; SPY d35-win/spot-5m-trend, WR 40%, PF 0,721 y -2,169R.
 
-Se mantienen caps/cooldowns live, una posición por ticker, executable quotes, hold>=30m y todas las gates. Enero–mayo son tests externos de desarrollo y junio sigue físicamente ausente. El protocolo, runner y hashes están en `EARLY_CAUSAL_DIRECTIONAL_NESTED_1M_PREDECLARATION_V1.md`; `24 passed`, compile y parse PASS. Todavía no se ha ejecutado.
+Al entrar enero en la ventana inner, ningún candidato vuelve a cumplir y febrero–mayo abstienen para los tres. Overall: 60 trades, WR 36,67%, PF 0,976 y -0,572R; todos los holds >=30m, pero min mensual cero. La dirección spot simple no corrige el drift y no se retocará usando enero. Informe `.../early_causal_directional_nested_1m_202601_202605_seed20260618_v1/REPORT.md`.
 
-Durante la preparación se corrigió solo provenance: una abstención ahora conserva sus meses de train/selección, evitando que una decisión causal de no operar aparezca como no congelada. No altera selección, trades ni PnL.
+La corrección de provenance funcionó: incluso las abstenciones conservan train/selección y `passed=true`. Junio y producción permanecen intactos. Siguiente hipótesis admisible: un mecanismo económico diferente o cobertura full-session causal 1m predeclarada, no otro barrido de momentum sobre el mismo OOS.
 
 ## Actualización 2026-07-11 14:15 CEST — el mecanismo productivo no era estable antes de 2026
 
