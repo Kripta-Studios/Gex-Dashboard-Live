@@ -1,0 +1,72 @@
+{
+  "flat_encoder_fold_configs": {
+    "bytes": 5281,
+    "path": "research_papers\\JEPA\\results\\_diagnostics\\ptdj_ablation_flat_h1_3_6_12_causal_202501_202605_v1\\fold_configs.csv",
+    "sha256": "6EC8C1F34A74191AEA7FBB7B9FD66BDE2994758C75725EFA84B8484743B878DE"
+  },
+  "flat_encoder_metadata": {
+    "bytes": 27943,
+    "path": "research_papers\\JEPA\\results\\_diagnostics\\ptdj_ablation_flat_h1_3_6_12_causal_202501_202605_v1\\metadata.json",
+    "sha256": "A68444CCF87CBCD29AAE51C5AADBDDA453FB52D3892380D7CFFEC0D6B3CF8A71"
+  },
+  "flat_encoder_oof_features": {
+    "bytes": 26381913,
+    "path": "research_papers\\JEPA\\results\\_diagnostics\\ptdj_ablation_flat_h1_3_6_12_causal_202501_202605_v1\\oof_event_phys_td_jepa_features.parquet",
+    "sha256": "805BFA278E05C5F685A690822A373EE8B053826BF885B13B1E89A0C6FB26405A"
+  },
+  "flat_provenance": {
+    "bytes": 4063,
+    "path": "research_papers\\JEPA\\results\\_diagnostics\\ptdj_ablation_flat_h1_3_6_12_causal_202501_202605_v1_walkforward_runtime_contract_v2\\policy_selection_provenance.json",
+    "sha256": "066A9AF2804C828F3B8B97FC9B2FDE8BA79EE34FDC65992A7B0714C296027363"
+  },
+  "flat_sealed_manifest": {
+    "bytes": 774,
+    "path": "tmp\\event_option_dataset_execquote_causal1030_202501_202605_v3_physics_flat_features_sealed_v1\\sealed_manifest.json",
+    "sha256": "153F2D3DEBFF7C5BADF933F6F81049AB11F461F0DEF62927B46579C88FCFE23F"
+  },
+  "flat_selected_folds": {
+    "bytes": 18849,
+    "path": "research_papers\\JEPA\\results\\_diagnostics\\ptdj_ablation_flat_h1_3_6_12_causal_202501_202605_v1_walkforward_runtime_contract_v2\\selected_folds.csv",
+    "sha256": "176FD69477747D142AE0EB730C392FB1638787FC8F17B0FF80B1B37BECCE6F63"
+  },
+  "flat_trades": {
+    "bytes": 3550437,
+    "path": "research_papers\\JEPA\\results\\_diagnostics\\ptdj_ablation_flat_h1_3_6_12_causal_202501_202605_v1_walkforward_runtime_contract_v2\\event_option_profile_trades.csv",
+    "sha256": "AC2D631A0FECFD78037A364EE1864A454E0AF1EEBC1F4B6DF9DD02F4B0B28A2C"
+  },
+  "modal_encoder_fold_configs": {
+    "bytes": 5298,
+    "path": "research_papers\\JEPA\\results\\_diagnostics\\ptdj_ablation_modal_h1_3_6_12_causal_202501_202605_v1\\fold_configs.csv",
+    "sha256": "6A774DC3A2671BDB997F3F235DBAE4C64FE5EEF7E91B78372FE98157916558AB"
+  },
+  "modal_encoder_metadata": {
+    "bytes": 27945,
+    "path": "research_papers\\JEPA\\results\\_diagnostics\\ptdj_ablation_modal_h1_3_6_12_causal_202501_202605_v1\\metadata.json",
+    "sha256": "0F1973E0C8989B3794BE9DB2A74F537AD3581E9C53B4490A27C31A5A27BB0538"
+  },
+  "modal_encoder_oof_features": {
+    "bytes": 26370684,
+    "path": "research_papers\\JEPA\\results\\_diagnostics\\ptdj_ablation_modal_h1_3_6_12_causal_202501_202605_v1\\oof_event_phys_td_jepa_features.parquet",
+    "sha256": "2B26ED404754D683541B955229763F4F628C3CA474D46E6C04328E06ADB3D7DC"
+  },
+  "modal_provenance": {
+    "bytes": 4068,
+    "path": "research_papers\\JEPA\\results\\_diagnostics\\ptdj_ablation_modal_h1_3_6_12_causal_202501_202605_v1_walkforward_runtime_contract_v2\\policy_selection_provenance.json",
+    "sha256": "CD935F922F20089FADC2606447CBA4C1D25C78158E59678617703832429B9EE6"
+  },
+  "modal_sealed_manifest": {
+    "bytes": 777,
+    "path": "tmp\\event_option_dataset_execquote_causal1030_202501_202605_v3_physics_modal_features_sealed_v1\\sealed_manifest.json",
+    "sha256": "E75544D0BAE6699402BDCAD3B149C7B9DEEB7A0AC8F98601391610392428A3A4"
+  },
+  "modal_selected_folds": {
+    "bytes": 18103,
+    "path": "research_papers\\JEPA\\results\\_diagnostics\\ptdj_ablation_modal_h1_3_6_12_causal_202501_202605_v1_walkforward_runtime_contract_v2\\selected_folds.csv",
+    "sha256": "E123DBFACB573F691A71863FDBF891061BCF72F9F89171EA65BDAFAF11DD4C41"
+  },
+  "modal_trades": {
+    "bytes": 3369239,
+    "path": "research_papers\\JEPA\\results\\_diagnostics\\ptdj_ablation_modal_h1_3_6_12_causal_202501_202605_v1_walkforward_runtime_contract_v2\\event_option_profile_trades.csv",
+    "sha256": "428333ACC180345264868C75EB49FD5A07F80B1A3EA1472BBD01C408ECC5D883"
+  }
+}

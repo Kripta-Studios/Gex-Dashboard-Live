@@ -1,0 +1,239 @@
+{
+  "abstain_cells": {
+    "flat": [],
+    "modal": [
+      {
+        "month": "202601",
+        "ticker": "SPY"
+      }
+    ]
+  },
+  "acceptance_gates": {
+    "flat": {
+      "failed_cells": [
+        {
+          "month": "202602",
+          "ticker": "QQQ"
+        },
+        {
+          "month": "202603",
+          "ticker": "QQQ"
+        },
+        {
+          "month": "202604",
+          "ticker": "QQQ"
+        },
+        {
+          "month": "202605",
+          "ticker": "QQQ"
+        },
+        {
+          "month": "202601",
+          "ticker": "SPXW"
+        },
+        {
+          "month": "202602",
+          "ticker": "SPXW"
+        },
+        {
+          "month": "202603",
+          "ticker": "SPXW"
+        },
+        {
+          "month": "202604",
+          "ticker": "SPXW"
+        },
+        {
+          "month": "202605",
+          "ticker": "SPXW"
+        },
+        {
+          "month": "202601",
+          "ticker": "SPY"
+        },
+        {
+          "month": "202602",
+          "ticker": "SPY"
+        },
+        {
+          "month": "202603",
+          "ticker": "SPY"
+        },
+        {
+          "month": "202604",
+          "ticker": "SPY"
+        },
+        {
+          "month": "202605",
+          "ticker": "SPY"
+        }
+      ],
+      "minimum_hold_minutes": 30,
+      "passed": false,
+      "passed_cells": 1,
+      "total_cells": 15
+    },
+    "modal": {
+      "failed_cells": [
+        {
+          "month": "202601",
+          "ticker": "QQQ"
+        },
+        {
+          "month": "202602",
+          "ticker": "QQQ"
+        },
+        {
+          "month": "202603",
+          "ticker": "QQQ"
+        },
+        {
+          "month": "202604",
+          "ticker": "QQQ"
+        },
+        {
+          "month": "202605",
+          "ticker": "QQQ"
+        },
+        {
+          "month": "202601",
+          "ticker": "SPXW"
+        },
+        {
+          "month": "202602",
+          "ticker": "SPXW"
+        },
+        {
+          "month": "202603",
+          "ticker": "SPXW"
+        },
+        {
+          "month": "202604",
+          "ticker": "SPXW"
+        },
+        {
+          "month": "202605",
+          "ticker": "SPXW"
+        },
+        {
+          "month": "202601",
+          "ticker": "SPY"
+        },
+        {
+          "month": "202602",
+          "ticker": "SPY"
+        },
+        {
+          "month": "202603",
+          "ticker": "SPY"
+        },
+        {
+          "month": "202604",
+          "ticker": "SPY"
+        },
+        {
+          "month": "202605",
+          "ticker": "SPY"
+        }
+      ],
+      "minimum_hold_minutes": 30,
+      "passed": false,
+      "passed_cells": 0,
+      "total_cells": 15
+    }
+  },
+  "bootstrap_seed": 20260711,
+  "config_comparison": {
+    "declared_factor": "encoder_input_mode",
+    "differences": {
+      "encoder_input_mode": {
+        "flat": "flat",
+        "modal": "modal"
+      },
+      "output_dir": {
+        "flat": "research_papers/JEPA/results/_diagnostics/ptdj_ablation_flat_h1_3_6_12_causal_202501_202605_v1",
+        "modal": "research_papers/JEPA/results/_diagnostics/ptdj_ablation_modal_h1_3_6_12_causal_202501_202605_v1"
+      }
+    },
+    "identical_feature_count": 277,
+    "same_budget_and_seed": true
+  },
+  "daily_pnl_bootstrap": {
+    "bootstrap_seed": 20260711,
+    "ci95": [
+      -31.536663536660512,
+      17.10923452405758
+    ],
+    "days": 101,
+    "observed_pnl_difference_modal_minus_flat": -6.895456654274624,
+    "probability_difference_positive": 0.2917,
+    "resamples": 10000
+  },
+  "dataset_contract": "executable_quote_ask_to_bid",
+  "decision": {
+    "advance_to_cross_modal": false,
+    "downstream_support": false,
+    "reason": "Modal no demuestra simult\u00e1neamente una mejora reproducible de representaci\u00f3n y downstream; se detiene la cola intra/cross-modal.",
+    "representation_support": false
+  },
+  "evaluation_months": [
+    "202601",
+    "202602",
+    "202603",
+    "202604",
+    "202605"
+  ],
+  "minimum_hold_minutes": 30,
+  "provenance_passed": {
+    "flat": true,
+    "modal": true
+  },
+  "runtime_cooldowns_minutes": {
+    "QQQ": 30,
+    "SPXW": 0,
+    "SPY": 0
+  },
+  "runtime_daily_caps": {
+    "QQQ": 2,
+    "SPXW": 4,
+    "SPY": 1
+  },
+  "schema_version": 1,
+  "sealed_datasets": {
+    "flat": {
+      "arm": "flat",
+      "columns": 538,
+      "entry_grid_anchor_minute_et": 600,
+      "entry_minute_max": 870,
+      "entry_minute_min": 630,
+      "entry_step_minutes": 5,
+      "max_trade_date": 20260529,
+      "min_trade_date": 20250102,
+      "option_price_mode": "executable_quote",
+      "output": "tmp\\event_option_dataset_execquote_causal1030_202501_202605_v3_physics_flat_features_sealed_v1\\event_option_dataset.parquet",
+      "output_sha256": "65CCD607A77AF65C71469A74EF76D71F40B56E6BCDD3DEE408E673A5FA59ECEB",
+      "rows": 41883,
+      "sealed_after_month": "202605",
+      "source": "tmp\\event_option_dataset_execquote_causal1030_202501_202606_v3_physics_flat_features\\event_option_dataset.parquet",
+      "source_sha256": "1E5903FA06209D9186AE2FB5C110DFC65E51AED280721FBFBCA993325B7B0282"
+    },
+    "modal": {
+      "arm": "modal",
+      "columns": 538,
+      "entry_grid_anchor_minute_et": 600,
+      "entry_minute_max": 870,
+      "entry_minute_min": 630,
+      "entry_step_minutes": 5,
+      "max_trade_date": 20260529,
+      "min_trade_date": 20250102,
+      "option_price_mode": "executable_quote",
+      "output": "tmp\\event_option_dataset_execquote_causal1030_202501_202605_v3_physics_modal_features_sealed_v1\\event_option_dataset.parquet",
+      "output_sha256": "FC99717F6C8B801C09C9F1B4F39FA1E9860505FDA2E112A9706746298CF0DD64",
+      "rows": 41883,
+      "sealed_after_month": "202605",
+      "source": "tmp\\event_option_dataset_execquote_causal1030_202501_202606_v3_physics_modal_features\\event_option_dataset.parquet",
+      "source_sha256": "1874AD0C5E64C4E7294A5F5F248E5D856324A00E5D4295AF370D4C909EFD41DA"
+    }
+  },
+  "seed": 20260618
+}

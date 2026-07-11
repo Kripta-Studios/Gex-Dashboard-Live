@@ -1,0 +1,15 @@
+{
+  "declared_factor": "encoder_input_mode",
+  "differences": {
+    "encoder_input_mode": {
+      "flat": "flat",
+      "modal": "modal"
+    },
+    "output_dir": {
+      "flat": "research_papers/JEPA/results/_diagnostics/ptdj_ablation_flat_h1_3_6_12_causal_202501_202605_v1",
+      "modal": "research_papers/JEPA/results/_diagnostics/ptdj_ablation_modal_h1_3_6_12_causal_202501_202605_v1"
+    }
+  },
+  "identical_feature_count": 277,
+  "same_budget_and_seed": true
+}
