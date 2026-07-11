@@ -365,6 +365,28 @@ def artifact_hashes(paths: dict[str, Path]) -> dict[str, dict[str, Any]]:
     return result
 
 
+def validate_sealed_manifests(paths: dict[str, Path]) -> dict[str, dict[str, Any]]:
+    manifests: dict[str, dict[str, Any]] = {}
+    for arm in ("flat", "modal"):
+        payload = json.loads(paths[f"{arm}_sealed_manifest"].read_text(encoding="utf-8"))
+        required = {
+            "sealed_after_month": "202605",
+            "option_price_mode": "executable_quote",
+            "entry_minute_min": 630,
+            "entry_minute_max": 870,
+            "entry_grid_anchor_minute_et": 600,
+            "entry_step_minutes": 5,
+            "rows": 41883,
+        }
+        bad = {key: payload.get(key) for key, expected in required.items() if payload.get(key) != expected}
+        if bad or int(payload.get("max_trade_date", 99999999)) >= 20260601:
+            raise RuntimeError(f"{arm} sealed dataset manifest violates the frozen contract: {bad}")
+        if not re.fullmatch(r"[0-9A-Fa-f]{64}", str(payload.get("output_sha256", ""))):
+            raise RuntimeError(f"{arm} sealed dataset manifest has no valid parquet SHA-256")
+        manifests[arm] = payload
+    return manifests
+
+
 def render_report(summary: dict, metrics_frame: pd.DataFrame, tests: dict) -> str:
     overall = metrics_frame[metrics_frame["scope"] == "overall"].set_index("arm")
     ticker = metrics_frame[metrics_frame["scope"] == "ticker"]
@@ -386,6 +408,8 @@ def render_report(summary: dict, metrics_frame: pd.DataFrame, tests: dict) -> st
         "- Hold mínimo realizado: 30 minutos.",
         "- SPXW: 4 trades/día, cooldown 0m; QQQ: 2/30m; SPY: 1/0m.",
         "- Nested walk-forward 202601–202605; seed 20260618 y mismo presupuesto.",
+        f"- SHA-256 parquet flat sellado: `{summary['sealed_datasets']['flat']['output_sha256']}`.",
+        f"- SHA-256 parquet modal sellado: `{summary['sealed_datasets']['modal']['output_sha256']}`.",
         "",
         "## Métricas agregadas",
         "",
@@ -473,6 +497,7 @@ def main() -> int:
 
     flat_meta = json.loads((paths["flat_encoder"] / "metadata.json").read_text(encoding="utf-8"))
     modal_meta = json.loads((paths["modal_encoder"] / "metadata.json").read_text(encoding="utf-8"))
+    sealed_manifests = validate_sealed_manifests(paths)
     config_comparison = compare_encoder_configs(flat_meta, modal_meta)
     write_json(output_dir / "config_comparison.json", config_comparison)
 
@@ -590,6 +615,7 @@ def main() -> int:
         "runtime_cooldowns_minutes": RUNTIME_COOLDOWNS,
         "runtime_daily_caps": RUNTIME_DAILY_CAPS,
         "minimum_hold_minutes": MIN_HOLD_MINUTES,
+        "sealed_datasets": sealed_manifests,
         "config_comparison": config_comparison,
         "provenance_passed": {arm: bool(payload["passed"]) for arm, payload in provenance.items()},
         "abstain_cells": abstain_cells,
