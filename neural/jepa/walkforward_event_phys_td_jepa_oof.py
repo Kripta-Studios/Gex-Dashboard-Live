@@ -493,6 +493,13 @@ def set_seed(seed: int, *, deterministic: bool = False) -> None:
         torch.cuda.manual_seed_all(seed)
 
 
+def fold_seed(base_seed: int, test_month: str) -> int:
+    month = str(test_month)
+    if not re.fullmatch(r"\d{6}", month):
+        raise ValueError(f"Invalid fold month for seed derivation: {test_month!r}")
+    return int(base_seed) + int(month)
+
+
 def sanitize_name(name: str) -> str:
     return re.sub(r"[^a-zA-Z0-9_]+", "_", str(name)).strip("_").lower()
 
@@ -1508,8 +1515,14 @@ def main() -> int:
             if len(train_months) < int(args.min_train_months) or len(train) < int(args.min_train_rows) or month_df.empty:
                 print(f"[skip] month={test_month} train_months={len(train_months)} train_rows={len(train)} export_rows={len(month_df)}")
                 continue
-            print(f"[fold] month={test_month} train_rows={len(train)} export_rows={len(month_df)} device={device}")
+            current_fold_seed = fold_seed(int(args.seed), str(test_month))
+            set_seed(current_fold_seed, deterministic=bool(args.deterministic))
+            print(
+                f"[fold] month={test_month} train_rows={len(train)} export_rows={len(month_df)} "
+                f"device={device} seed={current_fold_seed}"
+            )
             features, fold = train_fold(train, month_df, feature_cols, physical_cols, args, device)
+            fold["seed"] = current_fold_seed
             features.to_parquet(chunk_path, index=False)
             fold_rows = [r for r in fold_rows if str(r.get("month")) != str(test_month)]
             fold_rows.append(fold)

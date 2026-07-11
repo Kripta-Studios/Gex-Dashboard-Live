@@ -12,6 +12,7 @@ from neural.jepa.walkforward_event_phys_td_jepa_oof import (
     ModalSequenceEncoder,
     build_contexts,
     filter_frame_to_month_cutoff,
+    fold_seed,
     select_feature_columns,
     set_seed,
 )
@@ -36,6 +37,13 @@ def test_set_seed_can_require_deterministic_cuda(monkeypatch: pytest.MonkeyPatch
         torch.use_deterministic_algorithms(previous)
         torch.backends.cudnn.deterministic = previous_cudnn
         torch.backends.cudnn.benchmark = previous_benchmark
+
+
+def test_fold_seed_is_stable_per_month_and_shared_between_arms() -> None:
+    assert fold_seed(20260618, "202505") == fold_seed(20260618, "202505")
+    assert fold_seed(20260618, "202505") != fold_seed(20260618, "202506")
+    with pytest.raises(ValueError, match="Invalid fold month"):
+        fold_seed(20260618, "2025-05")
 
 
 def test_phys_td_feature_selection_rejects_live_inconsistent_state() -> None:
