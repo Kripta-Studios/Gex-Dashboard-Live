@@ -18,6 +18,7 @@ gate required before any executable option-payoff model.
   `tmp/event_option_dataset_execquote_causal1030_202201_202512_pairwise_v1/event_option_dataset.parquet`,
   SHA-256 `d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408`.
 - Prior-day IB distances: `training_data/training_data_spx_qqq_spy.parquet`;
+  SHA-256 `5f908e11090ea6566e3eadeba0a436ab5d01cf99955d6acc5050eae264fe13b5`;
   only keys, spot and `dist_ib_high_D1..D5`/`dist_ib_low_D1..D5` may be read.
 - Future labels: one-minute OHLC from the `underlying_path` in source manifest
   SHA-256 `5431c2bf932fef6ce1ba34117cc869feb78063fbc1aa3989017fdbcb5b66dc88`.
