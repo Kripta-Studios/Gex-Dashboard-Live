@@ -1,5 +1,14 @@
 # CODEX-HANDOFF.md — Estado para continuación por otro agente
 
+## Actualización 2026-07-11 05:25 CEST — AdaJEPA shadow bloqueado hasta re-encoding coherente
+
+- Se auditó paper/código tras cerrar PatchCore. AdaJEPA debe actualizar predictor con una transición ya observada, nunca PnL, y permanecer shadow con reset/rollback.
+- No adaptar directamente `event_option_dataset.parquet`: los `ptdj_z_*` OOF de cada mes vienen de encoders mensuales distintos; no comparten necesariamente coordenadas. El parquet tampoco contiene `pred_z_h1_*` y el trainer OOF no guardó checkpoints de fold.
+- El trainer sí soporta `--export-deploy-model` y guarda state_dict/config/normalizer. Primer paso exacto: añadir un aplicador offline causal de ese checkpoint que exporte `z_t`, `pred_z_h1` y target `z_{t+1}` sobre secuencias contiguas; testear paridad con `export_month_features`/live component.
+- Después generar cinco paquetes: encoder entrenado solo antes de la ventana interna de cada test `202601..202605`, mismo seed/presupuesto flat; re-encodear train/inner/test de ese fold en un único espacio. Junio no se lee.
+- Solo entonces predeclarar frozen predictor vs predictor+adapter pequeño, un gradiente tras cada transición observada, reset diario, límites de norma y rollback. Primer criterio es error latente OOS por ticker/día, no PnL; downstream será una ablación separada si mejora reproduciblemente.
+- Commits publicados de esta sesión: `de3e320` predecl Var, `7730eb7` cierre Var, `06930ed` predecl PatchCore, `c9eb092` cierre PatchCore. Ningún paquete se promovió ni se tocó systemd/live.
+
 ## Actualización 2026-07-11 05:15 CEST — PatchCore cerrado y rechazado
 
 - Predeclaración subido en `06930ed`. Runner completó 5 modelos compartidos, 15 coresets, 30 policies y provenance/runtime PASS en 65 s. No quedan procesos activos.

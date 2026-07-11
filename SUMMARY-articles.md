@@ -171,4 +171,6 @@ Actualización 2026-07-11 05:05 CEST: PatchCore abstention v1 quedó predeclarad
 
 Actualización final 2026-07-11 05:15 CEST: PatchCore queda rechazado como filtro de trading. La distancia sí correlaciona con error en 10/15 celdas (mediana Spearman `0,099`), pero 0/1.470 combinaciones cumplieron simultáneamente las gates y las 15 policies se abstuvieron. No se explorarán tamaños/quantiles adicionales. La señal se conserva solo como diagnóstico de drift; `continue_from_patchcore=false`. El último punto de la cola es AdaJEPA solo en shadow, nunca adaptación de la policy productiva.
 
+Actualización 2026-07-11 05:25 CEST: el paper primario confirma adaptación self-supervised después de observar la transición y antes de replantear, con uno o pocos pasos de gradiente. El OOF local no es aún un sustrato válido: cada mes usa un encoder distinto y no exporta `pred_z`. La precondición de AdaJEPA será crear cinco espacios latentes congelados por fold y re-encodear en cada uno todo train/inner/test con el mismo checkpoint. Adaptar directamente el parquet OOF mezclaría coordenadas y queda prohibido.
+
 Informe, hashes y tablas de la ablación de historia quedaron publicados en `8da7a7a`.

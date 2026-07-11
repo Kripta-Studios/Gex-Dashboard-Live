@@ -5,6 +5,14 @@
 
 > Esta bitácora se actualiza durante el trabajo. Solo se marca como completado lo reproducido en esta sesión. No implica despliegue, commit ni push salvo que se indique expresamente.
 
+## Actualización 2026-07-11 05:25 CEST — preflight AdaJEPA shadow y primer paso pendiente
+
+Se verificó el paper primario AdaJEPA: la adaptación ocurre después de observar una transición real, usa esa transición como señal self-supervised y actualiza el world model dentro del loop antes de replantear; no usa reward/PnL. La adaptación local admisible será predictor-only, shadow, con un paso por transición observada, reset diario y rollback por norma.
+
+El parquet OOF actual no permite todavía una comparación válida: cada mes `202505..202605` fue codificado por un encoder distinto y solo exporta `z`, `dz_h1` y resúmenes, no `pred_z`. Mezclar meses supondría comparar coordenadas latentes no alineadas. Tampoco se guardaron checkpoints por fold; solo existe export opcional de un deploy encoder.
+
+Por tanto, el primer paso verdaderamente pendiente no es adaptar esos OOF. Debe construirse para cada test `202601..202605` un encoder flat congelado entrenado hasta el corte anterior, re-encodear train/inner/test completos con ese mismo checkpoint y exportar `z_t`, `pred_z_{t+1}` y `z_{t+1}` sobre secuencias contiguas. Solo después se comparará frozen predictor frente a un adapter pequeño actualizado con transiciones ya observadas. Junio permanece cerrado y no se tocará la policy live.
+
 ## Actualización 2026-07-11 05:15 CEST — PatchCore terminado y rechazado
 
 PatchCore completó 5/5 modelos compartidos, 15 coresets y 30/30 policies en 65 segundos. Provenance y runtime replay pasaron; no hubo OOM ni fallback. Control tuvo 15/15 folds inválidos y PatchCore 15/15: ninguno produjo trades OOS bajo las gates canónicas.
