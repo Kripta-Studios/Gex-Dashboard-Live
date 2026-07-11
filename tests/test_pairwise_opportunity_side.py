@@ -220,7 +220,7 @@ def test_compute_monthly_inner_gates_duration():
     trades_pass = pd.DataFrame({
         "month": ["202301"] * 18,
         "minute": [650] * 18,
-        "exit_minutes": [680] * 18, # duration = 30m
+        "exit_minutes": [30] * 18,
         "realized_return": [0.05] * 10 + [-0.01] * 8,
     })
     passed, details = compute_monthly_inner_gates(trades_pass, inner_months)
@@ -230,7 +230,7 @@ def test_compute_monthly_inner_gates_duration():
     trades_fail = pd.DataFrame({
         "month": ["202301"] * 18,
         "minute": [650] * 18,
-        "exit_minutes": [679] * 18, # duration = 29m
+        "exit_minutes": [29] * 18,
         "realized_return": [0.05] * 10 + [-0.01] * 8,
     })
     passed, details = compute_monthly_inner_gates(trades_fail, inner_months)

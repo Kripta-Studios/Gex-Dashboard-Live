@@ -75,11 +75,8 @@ def evaluate_inner_configuration(
         pf = float(wins.sum() / (-losses.sum())) if len(losses) else (float("inf") if trades else float("nan"))
         wr = float((returns > 0.0).mean()) if trades else float("nan")
         pnl = float(returns.sum()) if trades else 0.0
-        if trades and {"minute", "exit_minutes"}.issubset(month_trades.columns):
-            hold = (
-                pd.to_numeric(month_trades["exit_minutes"], errors="coerce")
-                - pd.to_numeric(month_trades["minute"], errors="coerce")
-            )
+        if trades and "exit_minutes" in month_trades.columns:
+            hold = pd.to_numeric(month_trades["exit_minutes"], errors="coerce")
             min_hold = float(hold.min())
         else:
             min_hold = float("nan")

@@ -34,10 +34,11 @@ The pairwise formulation does not extract a stable CALL/PUT signal and degrades 
 
 ## Economic result
 
-No threshold/margin pair met PF, WR, frequency, positive-PnL and hold gates in all
-three inner months for any ticker/fold. C0 and P1 therefore have `0/99` valid inner
-policies and correctly abstain in all outer cells. Zero trades means pooled PF is
-undefined; it is not infinite and is not evidence of profitability.
+**INVALIDATED AFTER RUN.** V1 treated `opt_exit_minutes` as an absolute clock minute
+inside the inner gate and subtracted the entry minute, although the builder stores
+elapsed duration and the shared scheduler already adds it to entry. This forced all
+holds to fail. The scientific model-level section above is unaffected. Authoritative
+economic metrics require the separately predeclared V1r1 hold-duration correction.
 
 ## Failure localization
 

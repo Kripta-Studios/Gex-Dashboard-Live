@@ -11,7 +11,7 @@ from diagnose_pairwise_inner_grid_v1 import evaluate_inner_configuration
 from walkforward_pairwise_opportunity_side import apply_pairwise_policy
 
 
-def _scored(returns: list[float], exit_minute: int = 680) -> pd.DataFrame:
+def _scored(returns: list[float], exit_minute: int = 40) -> pd.DataFrame:
     n = len(returns)
     return pd.DataFrame({
         "ticker": ["QQQ"] * n,
@@ -42,7 +42,7 @@ def test_gate_decomposition_records_individual_passes():
 
 
 def test_short_hold_fails_only_hold_gate():
-    scored = _scored([0.1] * 10 + [-0.02] * 8, exit_minute=669)
+    scored = _scored([0.1] * 10 + [-0.02] * 8, exit_minute=29)
     result = evaluate_inner_configuration(
         scored, ["202301"], {"max_trades_per_day": 2, "cooldown_minutes": 30},
         35, 0.5, 0.0, apply_pairwise_policy,

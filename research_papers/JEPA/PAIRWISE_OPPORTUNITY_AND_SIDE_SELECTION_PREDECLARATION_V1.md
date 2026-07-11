@@ -219,10 +219,12 @@ delta was positive in `57/99` cells (`57.58%`, median `+0.0040`, Wilcoxon
 The annual median delta was positive in 2023, 2024 and 2025, but this does not
 compensate the two failed 60% gates.
 
-No C0 or P1 threshold/margin pair satisfied the complete three-month inner contract
-in any of the 99 cells. Both arms therefore abstained on every outer month and
-executed zero trades; pooled PF is undefined. V1 is rejected and cannot be retuned
-or relaunched as primary evidence. Production and 2026 remained untouched.
+The V1 scientific result remains valid and rejects P1. Its economic abstention result
+was later invalidated by a hold-duration semantics defect: the inner gate subtracted
+entry clock minute from an already elapsed duration. The frozen one-expression
+correction is predeclared separately as `PAIRWISE_V1R1_HOLD_DURATION_CORRECTION`;
+only V1r1 may provide authoritative economic metrics. Production and 2026 remained
+untouched.
 Manifests contain:
 - `feature_hash` per arm
 - `model_label` definitions

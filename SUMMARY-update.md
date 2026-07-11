@@ -63,6 +63,8 @@ Se cierra V1 como `REJECTED`; no se retunará su grid. La siguiente investigaci�
 
 El diagnóstico de grid ya quedó implementado y predeclarado sin ejecutarse: reconstruye los mismos cuatro heads V1, nunca puntúa el outer y escribe las `12.474` combinaciones inner con gates separadas. `tests/test_pairwise_inner_grid_diagnostic.py`: `3 passed`; compile/parser/diff PASS. Debe commitearse/pushearse antes de lanzar su única instancia.
 
+El diagnóstico se ejecutó y encontró un defecto, no una ausencia total de candidatos: `hold_pass` era cero para todas las filas porque Pairwise restaba `minute` a una columna que ya expresa duración. El builder guarda `elapsed`, el scheduler suma esa duración a la entrada y las labels válidas auditadas están todas en 30–180m. Sin el gate de hold defectuoso, 16 configs pasan PF/WR/trades/PnL en los tres inner meses, todas SPY (15 C0, 1 P1). Se predeclara V1r1 cambiando solo `min(exit_minutes)` y escribiendo en output nuevo. No interpretar todavía los 0 trades V1 como fallo económico autoritativo; la ciencia P1 débil sí permanece válida.
+
 ## Actualización 2026-07-11 15:45 CEST — Auditoría de Reproducibilidad y C0 Equivalence Terminadas con Éxito
 
 La auditoría de reproducibilidad se completó con éxito en 10 s (test PASS), arrojando las siguientes conclusiones fundamentales:

@@ -412,9 +412,9 @@ def compute_monthly_inner_gates(
         wr = float((ret > 0).mean())
         pnl = float(ret.sum())
 
-        # Check duration >= 30m
-        if "exit_minutes" in m_trades.columns and "minute" in m_trades.columns:
-            durations = pd.to_numeric(m_trades["exit_minutes"], errors="coerce") - pd.to_numeric(m_trades["minute"], errors="coerce")
+        # ``opt_exit_minutes`` is already elapsed duration, not clock time.
+        if "exit_minutes" in m_trades.columns:
+            durations = pd.to_numeric(m_trades["exit_minutes"], errors="coerce")
             min_dur = float(durations.min())
         else:
             min_dur = 30.0
