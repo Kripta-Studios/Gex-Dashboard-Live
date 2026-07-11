@@ -194,6 +194,10 @@ Cobertura de las 95.424 claves executable 100% por ticker y spot máximo
 entero, sin imputación ni eventos perdidos. Un primer build descubrió y corrigió
 uso futuro de quotes `:30` al redondearlos a minuto; ahora solo usa `HH:MM:00`.
 
+Separabilidad física V1 ya predeclarada, aún sin construir labels: cuatro walls
+CALL/PUT gamma/delta, magnet/rejection/break a 30/60/120/180m, D0 vs S1 vs S2
+state+IB, holdouts 2024/2025 y gates fijas sobre 48 celdas por arm.
+
 Debe producir, solo con snapshot actual:
 
 - CALL/PUT gamma wall;

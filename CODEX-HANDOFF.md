@@ -233,9 +233,10 @@ research_papers/JEPA/results/_diagnostics/wall_state_gex_dex_202201_202512_v1/ma
 ### Siguientes acciones exactas
 
 1. Publicar el data gate completo.
-2. Predeclarar labels físicos `magnet_hit/true_rejection/accepted_break` a
-   30/60/120/180m. Future spot es label, nunca feature.
-3. Solo si wall state supera distance-only en los tres tickers, entrenar payoff
+2. Ejecutar la separabilidad física ya congelada en
+   `WALL_STATE_PHYSICAL_SEPARABILITY_PREDECLARATION_V1.md`: D0 distance-only,
+   S1 state y S2 state+IB, holdouts anuales 2024/2025 y 48 celdas por arm.
+3. Solo si S2 supera todas las gates en los tres tickers, entrenar payoff
    ask→bid nested. No abrir junio hasta congelar un único protocolo y recibir
    autorización explícita.
 
