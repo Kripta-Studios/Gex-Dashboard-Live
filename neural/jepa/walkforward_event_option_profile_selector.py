@@ -58,6 +58,78 @@ DIRECTION_MODES = (
     "spot_15m_counter",
 )
 
+REGIME_GATE_QUANTILES = (0.20, 0.40, 0.60, 0.80)
+REGIME_GATE_DIRECTIONS = ("above", "below")
+
+
+@dataclass(frozen=True)
+class RegimeGateConfig:
+    """A predeclared regime gate that abstains from trading outside a quantile band.
+
+    The percentile thresholds are computed on train data only.
+    ``direction='above'`` means: trade only when feature >= threshold.
+    ``direction='below'`` means: trade only when feature < threshold.
+    """
+    feature: str
+    direction: str  # 'above' or 'below'
+    quantile: float  # e.g. 0.20, 0.40, 0.60, 0.80
+    threshold: float  # actual percentile value from train
+
+    @property
+    def name(self) -> str:
+        return f"rg_{self.feature}_{self.direction}_q{self.quantile:.0%}".replace("%", "pct")
+
+
+NO_REGIME_GATE = None  # sentinel for "no gate applied"
+
+
+def build_regime_gates(
+    train: pd.DataFrame,
+    regime_features: list[str],
+) -> list[RegimeGateConfig | None]:
+    """Build regime gate configurations from train-only percentiles.
+
+    Returns a list starting with None (no gate) followed by all
+    (feature × direction × quantile) combinations with finite thresholds.
+    """
+    gates: list[RegimeGateConfig | None] = [NO_REGIME_GATE]
+    for feature in regime_features:
+        if feature not in train.columns:
+            continue
+        values = pd.to_numeric(train[feature], errors="coerce")
+        values = values[np.isfinite(values)]
+        if values.empty:
+            continue
+        for quantile in REGIME_GATE_QUANTILES:
+            threshold = float(values.quantile(quantile))
+            if not np.isfinite(threshold):
+                continue
+            for direction in REGIME_GATE_DIRECTIONS:
+                gates.append(RegimeGateConfig(
+                    feature=feature,
+                    direction=direction,
+                    quantile=quantile,
+                    threshold=threshold,
+                ))
+    return gates
+
+
+def apply_regime_gate(
+    scored: pd.DataFrame,
+    gate: RegimeGateConfig | None,
+) -> pd.DataFrame:
+    """Filter candidates by regime gate. Returns the full frame when gate is None."""
+    if gate is None:
+        return scored
+    if gate.feature not in scored.columns:
+        return scored.iloc[:0].copy()  # no matching feature → empty
+    values = pd.to_numeric(scored[gate.feature], errors="coerce")
+    if gate.direction == "above":
+        mask = values >= gate.threshold
+    else:
+        mask = values < gate.threshold
+    return scored.loc[mask].copy()
+
 
 def apply_direction_mode(scored: pd.DataFrame, mode: str, delta_bucket: int) -> pd.DataFrame:
     """Choose CALL/PUT causally, then bind score/outcome to that side.
@@ -618,6 +690,7 @@ def fit_profile_fold(
         "test_rows": int(len(test)),
         "feature_count": int(len(feature_cols)),
         "direction_modes": ",".join(str(mode) for mode in args.direction_modes),
+        "regime_gate_features": ",".join(str(f) for f in getattr(args, "regime_gate_features", []) or []),
     }
     if len(train) < int(args.min_train_rows) or len(val) < int(args.min_val_rows) or test.empty:
         return {
@@ -682,44 +755,55 @@ def fit_profile_fold(
     grid_args = threshold_args_for(profile, args, ticker)
     best_cfg = DeployConfig(0.0, ticker_max_day_grid(args, ticker)[0])
     best_direction_mode = str(args.direction_modes[0])
+    best_regime_gate: RegimeGateConfig | None = NO_REGIME_GATE
     best_score = -1e18
     best_metrics: dict = {}
     best_rank: tuple[float, int] | None = None
+
+    # Build regime gates from train-only percentiles (empty list + None = no gate)
+    regime_features = list(getattr(args, "regime_gate_features", []) or [])
+    regime_gates = build_regime_gates(train, regime_features)
+
     for direction_mode in args.direction_modes:
         val_scored = score_part(val, str(direction_mode))
         fold_grid = build_fold_grid(val_scored, grid_args)
-        for cfg in fold_grid:
-            val_trades = deploy(val_scored, cfg, int(cooldown_minutes))
-            row = metrics(val_trades, val_months)
-            score = score_metrics(
-                row,
-                int(args.min_val_trades),
-                int(args.min_month_trades),
-                float(args.min_val_pf),
-                float(args.min_val_win_rate),
-                float(args.min_call_rate),
-                float(args.max_call_rate),
-            )
-            positive_month_rate = float(row.get("positive_month_rate", float("nan")))
-            if (
-                not np.isfinite(positive_month_rate)
-                or positive_month_rate < float(args.min_val_positive_month_rate)
-            ):
-                score = -1e18 + int(row.get("trades", 0))
-            if np.isfinite(float(row.get("daily_win_rate", float("nan")))):
-                score += float(args.daily_win_weight) * float(row["daily_win_rate"])
-            if np.isfinite(float(row.get("top5_share_of_pnl", float("nan")))):
-                score -= float(args.top5_share_penalty) * max(float(row["top5_share_of_pnl"]) - 1.0, 0.0)
-            # Keep a real diagnostic row even when every candidate is invalid.
-            # At the scale of -1e18, adding a small trade count can round back to
-            # exactly -1e18, so comparing the float alone loses every near-miss.
-            rank = (float(score), int(row.get("trades", 0)))
-            if best_rank is None or rank > best_rank:
-                best_cfg = cfg
-                best_direction_mode = str(direction_mode)
-                best_score = float(score)
-                best_metrics = row
-                best_rank = rank
+        for gate in regime_gates:
+            gated_val = apply_regime_gate(val_scored, gate)
+            if gated_val.empty:
+                continue
+            for cfg in fold_grid:
+                val_trades = deploy(gated_val, cfg, int(cooldown_minutes))
+                row = metrics(val_trades, val_months)
+                score = score_metrics(
+                    row,
+                    int(args.min_val_trades),
+                    int(args.min_month_trades),
+                    float(args.min_val_pf),
+                    float(args.min_val_win_rate),
+                    float(args.min_call_rate),
+                    float(args.max_call_rate),
+                )
+                positive_month_rate = float(row.get("positive_month_rate", float("nan")))
+                if (
+                    not np.isfinite(positive_month_rate)
+                    or positive_month_rate < float(args.min_val_positive_month_rate)
+                ):
+                    score = -1e18 + int(row.get("trades", 0))
+                if np.isfinite(float(row.get("daily_win_rate", float("nan")))):
+                    score += float(args.daily_win_weight) * float(row["daily_win_rate"])
+                if np.isfinite(float(row.get("top5_share_of_pnl", float("nan")))):
+                    score -= float(args.top5_share_penalty) * max(float(row["top5_share_of_pnl"]) - 1.0, 0.0)
+                # Keep a real diagnostic row even when every candidate is invalid.
+                # At the scale of -1e18, adding a small trade count can round back to
+                # exactly -1e18, so comparing the float alone loses every near-miss.
+                rank = (float(score), int(row.get("trades", 0)))
+                if best_rank is None or rank > best_rank:
+                    best_cfg = cfg
+                    best_direction_mode = str(direction_mode)
+                    best_regime_gate = gate
+                    best_score = float(score)
+                    best_metrics = row
+                    best_rank = rank
 
     valid_val_selection = bool(best_score > -1e17)
     if not valid_val_selection and not bool(args.allow_invalid_val_deploy):
@@ -729,6 +813,7 @@ def fit_profile_fold(
             "val_score": float(best_score),
             "deploy_config": getattr(best_cfg, "name", ""),
             "direction_mode": best_direction_mode,
+            "regime_gate": best_regime_gate.name if best_regime_gate is not None else "none",
             "val_metrics": best_metrics or metrics(pd.DataFrame(), val_months),
             "test_trades": pd.DataFrame(),
             "test_metrics": metrics(pd.DataFrame(), [str(test_month)]),
@@ -756,6 +841,7 @@ def fit_profile_fold(
     test_metrics = metrics(pd.DataFrame(), [str(test_month)])
     if score_test:
         test_scored = score_part(test, best_direction_mode)
+        test_scored = apply_regime_gate(test_scored, best_regime_gate)
         test_trades = deploy(test_scored, best_cfg, int(cooldown_minutes))
         if not test_trades.empty:
             test_trades = test_trades.copy()
@@ -767,6 +853,7 @@ def fit_profile_fold(
             test_trades["profile_expiry_modes"] = ",".join(profile.expiry_modes) if profile.expiry_modes else "mixed"
             test_trades["train_scope"] = profile.train_scope
             test_trades["direction_mode"] = best_direction_mode
+            test_trades["regime_gate"] = best_regime_gate.name if best_regime_gate is not None else "none"
         test_metrics = metrics(test_trades, [str(test_month)])
 
     gc.collect()
@@ -777,6 +864,7 @@ def fit_profile_fold(
         "val_score": float(best_score),
         "deploy_config": best_cfg.name,
         "direction_mode": best_direction_mode,
+        "regime_gate": best_regime_gate.name if best_regime_gate is not None else "none",
         "val_metrics": best_metrics,
         "test_trades": test_trades,
         "test_metrics": test_metrics,
@@ -980,6 +1068,16 @@ def main() -> int:
         help="Predeclared causal CALL/PUT mechanisms selected only on inner validation.",
     )
     parser.add_argument(
+        "--regime-gate-features",
+        nargs="*",
+        default=[],
+        help=(
+            "Predeclared regime features for abstention gate. "
+            "Train-only percentiles at 20/40/60/80%% are evaluated on inner validation. "
+            "Empty = no gate (identical to previous runs)."
+        ),
+    )
+    parser.add_argument(
         "--live-observable-features-only",
         action=argparse.BooleanOptionalAction,
         default=True,
@@ -1130,7 +1228,7 @@ def main() -> int:
                     all_trades.append(selected["test_trades"])
                 print(
                     f"[PROFILE_SELECTOR] {ticker} {test_month} profile={selected['profile']} "
-                    f"direction={selected['direction_mode']} cfg={selected['deploy_config']} "
+                    f"direction={selected['direction_mode']} gate={selected.get('regime_gate', 'none')} cfg={selected['deploy_config']} "
                     f"val_pf={selected_row.get('val_profit_factor', float('nan')):.3f} "
                     f"test_trades={selected_row.get('test_trades', 0)} "
                     f"test_pf={selected_row.get('test_profit_factor', float('nan')):.3f} "
