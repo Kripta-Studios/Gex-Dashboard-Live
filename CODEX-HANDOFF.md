@@ -1,8 +1,43 @@
 # CODEX-HANDOFF.md — Estado para continuación por otro agente
 
-**Fecha:** 2026-07-10T19:20 CEST
-**HEAD:** `0458ff4 fix: enforce causal JEPA training windows`
-**Agente anterior:** cerraron auditoría causal, selector nested, optimización del simulador, exploratory walk-forward (rechazado), y endurecimiento del trainer.
+**Fecha:** 2026-07-10T21:55 CEST (actualización incremental; colas v1 detenidas)
+**HEAD:** `cc5665f docs: record results of flat vs modal causal ablation` (`origin/main` en el mismo commit)
+**Estado de esta continuación:** auditoría inicial completada sin duplicar ni interrumpir las corridas heredadas.
+
+## Actualización 2026-07-11 02:04 CEST — selector flat runtime-equivalente activo
+
+- Se repitió la auditoría completa de handoffs, Git, logs y procesos.
+- No había Python/CUDA/pytest activo al comenzar. Se encontraron artefactos creados después del handoff: SMM v2r1 parcial (solo folds `202505..202507`) y colas v1 parciales/contaminadas. No se reanudaron.
+- `flat` y `modal` originales están completos: 13 folds OOF y 15 folds nested OOS por arm, provenance `passed=true`.
+- Hallazgo P0 nuevo: el selector downstream original usó cooldown 30m para SPXW/SPY/QQQ y cupos variables. No equivale al runtime `SPXW=4/0m`, `QQQ=2/30m`, `SPY=1/0m`.
+- Las métricas históricas flat/modal no deben usarse como comparación live-equivalente hasta terminar los nuevos selectores.
+- Se crearon dos parquets derivados bajo `tmp/`, físicamente sellados hasta `20260529`, con 41.883 filas, 538 columnas, ask→bid `executable_quote` y rejilla 10:30–14:30/5m.
+- Hash flat sellado: `65CCD607A77AF65C71469A74EF76D71F40B56E6BCDD3DEE408E673A5FA59ECEB`.
+- Hash modal sellado: `FC99717F6C8B801C09C9F1B4F39FA1E9860505FDA2E112A9706746298CF0DD64`.
+- Proceso activo que no debe duplicarse: PID `8636`, selector flat sobre salida nueva `ptdj_ablation_flat_h1_3_6_12_causal_202501_202605_v1_walkforward_runtime_contract_v2`.
+- Comando contractual: `--ticker-cooldown-minutes SPXW=0 QQQ=30 SPY=0 --ticker-max-day-grids SPXW=4 QQQ=2 SPY=1 --lgb-device-type cpu --seed 20260618 --no-resume`.
+- Primer checkpoint observado: `SPXW/202601`.
+- Próximo paso seguro: esperar a que PID `8636` termine; verificar 15 folds/hashes/provenance y solo entonces lanzar modal en otra ruta nueva con idénticos argumentos.
+- Junio de 2026 sigue sellado. No se modificó systemd, no se promovió ningún paquete y no se tocó la policy legacy.
+
+## Auditoría de reanudación de 2026-07-10 21:31 CEST
+
+- Se leyeron completos `SUMMARY-update.md`, `SUMMARY-articles.md`, `SUMMARY.md` y este handoff.
+- Se inspeccionaron `git status`, `git log`, todos los diffs tracked, los artefactos untracked relevantes y los logs recientes de `C:\CodexAutomation\logs`.
+- `flat` y `modal` están realmente completos; el primer paso pendiente es la cola SMM predeclarada.
+- La baseline SMM y su nested selector están completos. `sigreg_off` terminó 39/39 folds a las 21:38:51 y el wrapper avanzó a entrenamiento `visreg`.
+- Proceso padre: PID `58028`, `powershell -Command "$env:PYTHONPATH=\".\"; .\run_smm_ablations.ps1"`, iniciado a las 20:29:13.
+- Proceso activo: PID `18384`, trainer `...smm_visreg... --lambda-visreg 0.1 --device cuda --seed 20260618`, iniciado a las 21:38:51.
+- No hay otro entrenamiento/evaluador JEPA activo. El PID `66384` corresponde al wrapper de esta ejecución programada de Codex, no a un experimento.
+- Junio de 2026 continúa sellado: el trainer registra `effective_data_cutoff_month=202605`; el selector termina en `202605`.
+- Hallazgo metodológico: `modal` histórico se ejecutó en CPU, mientras SMM baseline usa CUDA y activa simultáneamente `mask_modal_prob=0.15` y `mask_temporal_prob=0.15`. Por ello, la comparación directa modal→SMM es exploratoria y no una ablación limpia de un único factor. Las comparaciones SMM baseline→`sigreg_off`/`visreg`/`proto`/`gram` sí parten de la misma baseline CUDA y cambian un regularizador por arm.
+- Hallazgo de ventana: `flat/modal` reportan únicamente `202601..202605`; los selectores SMM se lanzaron con `--start-month 202505`. La tabla SMM original mezclaba ventanas. Recomputación comparable: baseline SMM 341 trades, WR 41,35%, PF 0,778, -24,177R; `sigreg_off` 422 trades, WR 40,52%, PF 0,851, -20,951R. Ambos rechazados.
+- Los provenance extendidos de baseline y `sigreg_off` tienen `passed=false`: faltan policies/hashes para los tres tickers en 202511. Los 15 folds enero–mayo sí tienen hashes completos. Pendiente ejecutar selectores separados con `--start-month 202601 --end-month 202605` sobre cada dataset ya enriquecido.
+- Semántica auditada: `proto` no activa EMA (`use_ema_teacher=false`); `gram` es consistencia relacional Gram predicción–target, no anchoring contra teacher congelado; SMM baseline no añadió el predictor JEPA, que ya estaba en `modal`.
+- Fallo P0 experimental: el encoder v1 enmascaraba también `target_z` futuro porque se llamaba en modo train. Baseline/`sigreg_off`/`visreg` SMM v1 no prueban masking solo en prefijo y quedan invalidados para atribución.
+- Se detuvo PID `51972` (selector visreg) tras 8/39 folds y el wrapper `58028` salió. Automatizaciones paralelas del IDE relanzaron el selector `sigreg_off` sobre la misma ruta; se detuvieron PID `5268`/`28468` y `66588`/`30300` tras verificar comandos. El directorio `_walkforward` de `sigreg_off` quedó sobrescrito parcialmente con una fila.
+- Corrección aplicada: `apply_mask=False` explícito para target con/sin teacher, masking preservado en contexto, validación de probabilidades. Suite focalizada: 58/58 PASS.
+- No se ha tocado systemd, no se ha restaurado/promovido la policy legacy y no se ha abierto junio.
 
 ## Estado del experimento
 
@@ -62,14 +97,39 @@ python neural/jepa/walkforward_event_phys_td_jepa_oof.py \
 
 Output: `research_papers/JEPA/results/_diagnostics/ptdj_ablation_modal_h1_3_6_12_causal_202501_202605_v1/`
 
+#### 2. Verificación de la continuación
+
+```powershell
+python -m py_compile neural/jepa/walkforward_event_phys_td_jepa_oof.py neural/jepa/append_xinput_oof_to_event_option_dataset.py
+python -m pytest -q tests/test_build_event_option_dataset.py tests/test_event_option_live_causality.py tests/test_event_option_non_overlap.py tests/test_event_option_production_validator.py tests/test_jepa_bot_execution.py tests/test_event_phys_td_jepa_causality.py --basetemp C:\tmp\pytest-jepa-causal-20260710c
+```
+
+Resultado: `50 passed in 10.44s`.
+
+#### 3. Recomputación de métricas SMM
+
+Se leyó cada `event_option_profile_trades.csv` con `dtype={'date': str, 'month': str, 'ticker': str}` y se llamó a:
+
+```python
+from neural.jepa.walkforward_event_option_gate import metrics
+metrics(frame, expected_months=['202601', '202602', '202603', '202604', '202605'])
+```
+
+Se recomputaron scopes overall/ticker/mes/ticker-mes para baseline SMM y `sigreg_off`, además de la vista extendida `202505..202605`. No se leyó ni se puntuó junio.
+
 ### Procesos activos
 
-- Ninguno en curso (ambas tareas finalizadas).
+- Ningún proceso Python/entrenamiento/evaluador JEPA activo tras detener las colas v1 verificadas.
 
 ### Artefactos y checkpoints
 
 - Dataset: `tmp/event_option_dataset_execquote_causal1030_202501_202606_v3_physics/event_option_dataset.parquet`
 - Exploratory nested WF (rechazado): `research_papers/JEPA/results/_diagnostics/event_option_execquote_causal1030_nested_exploratory_202601_202605_v1/`
+- SMM baseline encoder/features: `research_papers/JEPA/results/_diagnostics/ptdj_ablation_smm_baseline_h1_3_6_12_causal_202501_202605_v1/`
+- SMM baseline selector extendido: mismo path con sufijo `_walkforward/`; 39 folds, 202511 sin policy en los tres tickers.
+- SMM `sigreg_off` encoder/features: `research_papers/JEPA/results/_diagnostics/ptdj_ablation_smm_sigreg_off_h1_3_6_12_causal_202501_202605_v1/`
+- SMM `sigreg_off` selector extendido: mismo path con sufijo `_walkforward/`; 39 folds, 202511 sin policy en los tres tickers.
+- SMM `visreg` activo: `research_papers/JEPA/results/_diagnostics/ptdj_ablation_smm_visreg_h1_3_6_12_causal_202501_202605_v1/`.
 
 ### Hashes y seeds
 
@@ -77,12 +137,46 @@ Output: `research_papers/JEPA/results/_diagnostics/ptdj_ablation_modal_h1_3_6_12
 | --- | --- |
 | Dataset base | `68AE45C89D521F71431261DEEA9BCC7E465FEB294D17BF122AFBDDBB30A4C8F8` |
 | Dataset physics | `E6A19EFBA1EDB055C733AAB4967843F7A4B5F1D2C8238A7A243FC5BBC2251903` |
+| Trainer cargado por la cola | `74DA6ECD9DEAB88719296A7DF37C1364B1CE4FDA041E3F7DFB4F3EE37FDFFCB7` |
+| Appender cargado por la cola | `DAAB0C1D9F6E42067D090996EBBB6CB256195177398FB45EBB3E496A8D8F2914` |
+| `run_smm_ablations.ps1` | `229F7F0333A4E47B49A468A164353485246040F44A0DAF12B7E39F1393FE9D1F` |
+| SMM baseline metadata | `2E659A9712B29765B1C18F45651146DDAC53D3C9F627EAB20EAB345F61602A8F` |
+| SMM baseline fold configs | `653A2B0880D48D94D9F375834E42AD67AEF3616ACC37B7FC91DFE96EEBC03C7E` |
+| SMM baseline OOF features | `9B1AD00835CAB570EDEF1FF46B632AD51FB184F6749939303E3B1C88E1636E0A` |
+| SMM baseline joined dataset | `A81D5F2F2CB010C1F729B6777B12EEDCA101B854A67286756903BE07F9DE7FA2` |
+| SMM baseline extended trades | `C89FD11A2480E3DEEDE697968B9F4D9C3BC38F144B52FDE0B33F7398AAC2B82A` |
+| SMM baseline extended metrics | `E829085A01720DFB7D895D5EB4EF5C57BC621BB47928B4FC83157CA0B8D06E10` |
+| SMM baseline selected folds | `E6D7DDE5883E78E40524CED2266A5E12A8A5CF995AE952147E2FAAE842F5EA33` |
+| SMM baseline provenance | `4B252477B3D767CC64281E17D58AB2C419DF33E69CC169673AD88EB0AF5CA1B9` |
+| `sigreg_off` metadata | `424C21F3A8A299F8A7B1E841568B352EA636CAF2D88FADF3CD6465F6FF16E9F7` |
+| `sigreg_off` fold configs | `873DC69F2356D2479B33BA2C607C634C07CE6E67587BE5B93AF61F6582961D23` |
+| `sigreg_off` OOF features | `0F9B2EE2243B489A96A636C3850D43E7E68E054E3EF741BB0F56517C337BFA16` |
+| `sigreg_off` joined dataset | `9A04B13D83B6ED1844B86F7E030F5D52FD06A1D2F5F6028E0A9BD85D728D2E30` |
+| `sigreg_off` extended trades (snapshot previo; ruta sobrescrita después) | `267454B20F09F8E489D800DA96FA7BD1A1D9CF54A44005C9BE7611C17B313566` |
+| `sigreg_off` extended metrics (snapshot previo; ruta sobrescrita después) | `6B3BD5439F125805B18A12BB659E1E9236AE6C1C12A24F4828D23AD5DC3A25D8` |
+| `sigreg_off` selected folds (snapshot previo; ruta sobrescrita después) | `B82B1C5E061B92F1BBFCC6D89C3C1F46428947C9B19C63830299DA534D8A35EF` |
+| `sigreg_off` provenance (snapshot previo; ruta sobrescrita después) | `3A1BF938CB07076EC33D62945CBFF2F80D28D48EE3542221EAF84EB15FADFD9B` |
 | Seed | `20260618` |
+
+Hashes v2 antes de lanzar:
+
+| Artefacto | SHA-256 |
+| --- | --- |
+| Trainer prefix-only corregido | `8196D9391AE32CE157C5162C5901E99BF346C79AFB7FCBF0EBFCD591973F8F03` |
+| Runner modal-mask-only v2r1 | `4236E47E52F7D203847EC74B46089E7D649AE7821D4E5D50C7C6D25D72157BEC` |
+| Test Phys-TD/SMM | `DD2DE9A1576B33B0EAB1E2D600B4D0B6C250E2294845A0B72D7B65C4A6A78A29` |
+| Test appender | `D779ED90FFE3F36F882ACE8D188CD4B3EC5BD181917EBC7A4E12BCB14FB7E1DD` |
 
 ### Tests ejecutados
 
 ```text
 50 passed in 4.92s (2026-07-10T19:17 CEST)
+50 passed in 10.44s (2026-07-10T21:39 CEST; py_compile previo PASS)
+8 passed in 2.20s (tests Phys-TD/SMM, después de corregir un fixture que omitía `output_dim`)
+53 passed in 3.79s (suite focalizada completa posterior, basetemp `C:\tmp\pytest-jepa-causal-20260710d`)
+1 passed in 0.52s (`tests/test_append_xinput_oof_to_event_option_dataset.py`)
+13 passed in 1.99s (target masking corregido + appender)
+58 passed in 3.91s (suite focalizada completa tras corrección, basetemp `C:\tmp\pytest-jepa-causal-20260710e`)
 ```
 
 Suite:
@@ -98,15 +192,33 @@ tests/test_event_phys_td_jepa_causality.py
 ### Métricas disponibles
 
 - Baseline nested exploratorio Jan–May rechazado: Overall PF 0,909, WR 43,8%
+- SMM baseline Jan–May: 341 trades, WR 41,35%, PF 0,778, `-24,177R`, Max DD `-27,33%`; rechazada.
+- SMM `sigreg_off` Jan–May: 422 trades, WR 40,52%, PF 0,851, `-20,951R`, Max DD `-33,31%`; rechazada.
+- Vista extendida baseline: 908 trades, PF 0,739, `-79,727R`, mínimo mensual 0; no comparable directamente con `flat/modal`.
+- Vista extendida `sigreg_off`: 1.025 trades, PF 0,743, `-90,675R`, mínimo mensual 0.
 - Legacy package: BLOCKED_FOR_PRODUCTION
 
 ### Fallos encontrados
 
-- Ninguno nuevo en esta sesión
+- La comparación SMM publicada usó métricas `202505..202605` contra `flat/modal` `202601..202605`; corregido en los resúmenes.
+- La comparación modal→SMM cambió dos máscaras y CPU→CUDA; no es atribución causal de un factor.
+- `policy_selection_provenance.json` de baseline/`sigreg_off` extendidos marca `passed=false` por tres folds sin policy en 202511. Los folds enero–mayo están completos, pero requieren un selector de ventana correcta para provenance autocontenido.
+- El primer intento de los tests SMM nuevos dio 2 fallos porque el fixture no pasaba `output_dim` a `ModalSequenceEncoder`; corregido en el test, sin cambiar código experimental. Resultado posterior 8/8 PASS.
+- SMM v1 enmascaraba targets futuros; colas invalidadas y detenidas.
+- `run_smm_ablations_202601.ps1` habría mezclado versiones de código y usa `--output` inválido en el appender de `proto/gram`.
+- La automatización paralela sobrescribió parcialmente el selector `sigreg_off`; no asumir que sus hashes snapshot siguen presentes en disco.
+- Primer launch v2 falló antes de cualquier fold porque el timeout corto cerró stdout (`OSError 22`); directorio `..._v2/` conserva solo metadata/nombres. Reintento debe usar `..._v2r1/`.
 
 ### Cambios sin commit
 
 ```text
+M CODEX-HANDOFF.md
+M SUMMARY-update.md
+M SUMMARY-articles.md
+M neural/jepa/append_xinput_oof_to_event_option_dataset.py
+M neural/jepa/walkforward_event_phys_td_jepa_oof.py
+M tests/test_event_phys_td_jepa_causality.py
+?? tests/test_append_xinput_oof_to_event_option_dataset.py
 M backtest/backtest_gbt_parquet.py  (solo line-ending)
 M neural/models/jepa/.../event_option_policy.json  (entry_sample_minutes/anchor additions)
 M neural/models/jepa/.../component_registry.json  (newline at end)
@@ -114,6 +226,10 @@ M neural/models/jepa/.../QQQ_static_union_balanced.json  (newline)
 M neural/models/jepa/.../SPXW_static_union_balanced.json  (newline)
 M neural/models/jepa/.../SPY_static_union_balanced.json  (newline)
 M neural/models/jepa/.../runtime_policy_replay_summary.json  (newline)
+?? run_smm_ablations.ps1
+?? run_smm_ablations_202601.ps1
+?? run_smm_modal_mask_only_v2.ps1
+?? artefactos diagnósticos flat/modal/SMM y `tmp/` (grandes; no añadir sin selección explícita)
 ```
 
 Estos diffs son del agente anterior y solo añaden `entry_sample_minutes`/`entry_sample_anchor_minute_et` al policy JSON. No afectan la ablación en curso.
@@ -121,7 +237,7 @@ Estos diffs son del agente anterior y solo añaden `entry_sample_minutes`/`entry
 ### Último commit
 
 ```text
-0458ff4 fix: enforce causal JEPA training windows
+cc5665f docs: record results of flat vs modal causal ablation
 ```
 
 ### Junio de 2026
@@ -130,9 +246,8 @@ Completamente sellado. El `--data-cutoff-month 202605` / `--end-month 202605` ex
 
 ### Primera acción del siguiente agente
 
-1. La ablación `flat` vs `modal` está terminada y documentada en `SUMMARY-update.md` y `SUMMARY-articles.md`. `modal` mejora ligeramente PF y fuertemente a SPY/SPXW, pero destruye QQQ. Ninguno llega a production-live.
-2. Iniciar el siguiente experimento en la cola: **Semantic-Masked Market JEPA** (ver `SUMMARY-articles.md` punto 2).
-   - Enmascarar modalidades completas y spans temporales solo dentro del prefijo observado.
-   - Predecir latentes futuros en horizontes rápidos y lentos.
-   - Ablaciones limpias de SIGReg, EMA/prototipos, VISReg y Gram anchoring cambiando un factor cada vez.
-3. No usar junio de 2026.
+1. Confirmar que ninguna automatización del IDE ha relanzado un proceso sobre directorios v1.
+2. Lanzar el arm válido v2 predeclarado: CPU, `mask_modal_prob=0.15`, `mask_temporal_prob=0`, resto idéntico al control modal, salida nueva; junio excluido.
+3. Enriquecer con prefijo `ptdj_` y ejecutar selector solo `202601..202605` en salida nueva.
+4. Verificar 15 folds con hashes/provenance PASS y recomputar métricas por mes/ticker.
+5. Solo después decidir el arm temporal; implementar spans contiguos antes de probarlo, porque el v1 usaba Bernoulli por timestep.

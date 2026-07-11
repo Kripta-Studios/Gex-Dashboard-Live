@@ -341,3 +341,174 @@ Evaluación OOS con nested walk-forward completada en `ptdj_ablation_modal_h1_3_
 **Conclusión:** 
 El encoder `modal` supera a `flat` en Profit Factor global (0,910 vs 0,860) y reduce el Max Drawdown (-26,8% vs -39,8%). A nivel de ticker, `modal` mejora significativamente SPY (1,133 vs 0,867) y SPXW (0,901 vs 0,839), pero degrada severamente QQQ (0,731 vs 0,876).
 Sin embargo, **ninguno de los dos supera la gate de producción** requerida para promoción a live (PF > 1,3 y WR > 50% en general). Junio de 2026 permanece completamente sellado y no se ha exportado política productiva.
+
+## 10. Semantic-Masked Market JEPA (SMM)
+
+Una vez confirmada la superioridad del encoder modal, se procedió con la cola de experimentación SMM (Semantic-Masked Market JEPA).
+
+### SMM-Baseline (COMPLETADO)
+
+Se integraron el enmascaramiento semántico (15% modal, 15% temporal) y la predicción en el espacio latente (`z`) manteniendo los mismos hiperparámetros y dataset:
+
+- `--mask-modal-prob 0.15 --mask-temporal-prob 0.15`
+- `lambda-sigreg 0.05` (por defecto)
+- `lambda-vicreg 0.10` (por defecto)
+
+**Resultados OOS de SMM-Baseline (corregidos a enero–mayo de 2026):**
+| Experimento | Trades | WR | PF | PnL (R) | Max DD | QQQ PF | SPXW PF | SPY PF |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| **Arm 2: Modal** (Solo Encoder) | 575 | 43,0% | 0,910 | -16,09 | -26,8% | 0,731 | 0,901 | 1,133 |
+| **SMM-Baseline** | 341 | 41,35% | 0,778 | -24,177 | -27,33% | 0,833 | 0,730 | 0,793 |
+
+**Conclusión SMM-Baseline:**
+SMM baseline queda rechazada: empeora PF y PnL frente a `modal`, no supera ninguna gate y solo febrero fue positivo. No obstante, el deterioro correcto en la ventana comparable es PF `0,910→0,778` y Max DD `-26,84%→-27,33%`; las cifras anteriores de PF `0,739`, `-79,727R` y DD `-82,71%` corresponden al rango extendido mayo de 2025–mayo de 2026 y no eran comparables con la tabla `flat/modal`.
+
+### Cola de Ablaciones SMM (EN PROCESO)
+
+Para determinar qué factor de la pérdida JEPA está degradando la representación, se han lanzado 4 ablaciones automatizadas, cambiando un regularizador a la vez respecto al SMM-Baseline:
+1. `sigreg_off`: Desactivar SIGReg (`--lambda-sigreg 0.0`)
+2. `visreg`: Activar VISReg (`--lambda-visreg 0.1`)
+3. `proto`: Activar Prototipos / EMA (`--lambda-proto 1.0`)
+4. `gram`: Activar Gram Anchoring (`--lambda-gram 0.1`)
+
+*(El proceso automatizado de extracción, cruce y evaluación OOS sigue corriendo en background.)*
+
+### Auditoría de reanudación (2026-07-10 21:37 CEST)
+
+Se comprobó el estado contra procesos y artefactos, no solo contra el handoff:
+
+- `flat` y `modal` están completos; no hay que repetirlos.
+- SMM baseline y su nested walk-forward están completos.
+- PID `58028` mantiene la cola secuencial. `sigreg_off` terminó sus 39 folds a las 21:38:51; el wrapper inició `visreg` en PID `18384` a las 21:38:51.
+- `proto` y `gram` aún no habían creado directorios de salida.
+- Junio sigue físicamente excluido (`effective_data_cutoff_month=202605`, selector `end_month=202605`).
+
+La comparación publicada entre `modal` y SMM baseline debe considerarse exploratoria, no una ablación limpia: además de activar conjuntamente máscara modal y temporal al 15%, cambió el backend de CPU a CUDA. Las cuatro comparaciones internas de la cola parten de la misma baseline SMM CUDA y modifican un único peso de regularización cada una. No se atribuirá causalmente el deterioro al masking hasta ejecutar controles de un solo factor con backend fijo.
+
+Se encontró además que el script SMM usa `--start-month 202505` en el selector, mientras `flat/modal` se evaluaron en `202601..202605`. Las métricas extendidas siguen siendo útiles como diagnóstico y son homogéneas dentro de la cola, pero no pueden ocupar la tabla exploratoria de cinco meses. Los trades se recomputaron con `walkforward_event_option_gate.metrics()` y `expected_months=202601..202605`.
+
+Resultado reproducido de `sigreg_off` en enero–mayo:
+
+| Scope | Trades | WR | PF | PnL (R) | Max DD | Min trades/mes | Meses positivos |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Overall | 422 | 40,52% | 0,851 | -20,951 | -33,31% | 57 | 20% |
+| QQQ | 132 | 41,67% | 0,840 | -6,300 | -12,12% | 18 | 20% |
+| SPXW | 161 | 37,89% | 0,857 | -8,367 | -18,55% | 20 | 20% |
+| SPY | 129 | 42,64% | 0,855 | -6,284 | -12,81% | 18 | 20% |
+
+Desactivar SIGReg mejora PF frente a la SMM baseline comparable (`0,851` frente a `0,778`), pero sigue por debajo de `modal` (`0,910`), pierde `20,951R`, tiene cuatro de cinco meses negativos y queda rechazado. En el rango extendido produjo 1.025 trades, WR 38,63%, PF 0,743, `-90,675R`, DD `-96,02%` y mínimo mensual cero.
+
+#### Métricas reproducidas por mes y ticker (`202601..202605`)
+
+Notación de cada celda: `trades / WR / PF / PnL(R)`. Todas las cifras se recomputaron desde el CSV de trades con la misma función `metrics()`; no provienen de copiar la tabla documental previa.
+
+| Ticker/mes | Flat | Modal | SMM baseline | SMM sigreg_off |
+| --- | --- | --- | --- | --- |
+| QQQ 202601 | 73 / 42,47% / 0,778 / -5,595 | 37 / 32,43% / 0,759 / -3,421 | 20 / 35,00% / 0,768 / -1,459 | 31 / 32,26% / 0,805 / -2,386 |
+| QQQ 202602 | 29 / 44,83% / 1,164 / +1,195 | 48 / 29,17% / 0,784 / -4,291 | 17 / 41,18% / 0,971 / -0,161 | 35 / 40,00% / 0,716 / -2,741 |
+| QQQ 202603 | 35 / 42,86% / 0,596 / -4,749 | 43 / 46,51% / 0,836 / -1,772 | 19 / 31,58% / 0,399 / -3,626 | 28 / 35,71% / 0,509 / -4,062 |
+| QQQ 202604 | 29 / 48,28% / 1,594 / +4,513 | 26 / 38,46% / 0,551 / -4,396 | 18 / 50,00% / 1,718 / +3,530 | 18 / 61,11% / 1,900 / +3,366 |
+| QQQ 202605 | 40 / 47,50% / 0,730 / -3,368 | 20 / 40,00% / 0,602 / -2,541 | 20 / 40,00% / 0,491 / -3,117 | 20 / 50,00% / 0,913 / -0,478 |
+| SPXW 202601 | 47 / 51,06% / 1,180 / +2,233 | 50 / 54,00% / 1,152 / +1,885 | 53 / 49,06% / 0,738 / -4,054 | 48 / 27,08% / 0,871 / -2,755 |
+| SPXW 202602 | 63 / 41,27% / 1,002 / +0,034 | 66 / 43,94% / 1,133 / +2,811 | 18 / 50,00% / 1,237 / +1,353 | 50 / 34,00% / 0,658 / -6,937 |
+| SPXW 202603 | 42 / 45,24% / 0,780 / -2,227 | 43 / 48,84% / 0,863 / -1,244 | 22 / 40,91% / 0,767 / -1,344 | 22 / 45,45% / 0,902 / -0,439 |
+| SPXW 202604 | 33 / 33,33% / 0,531 / -6,147 | 25 / 40,00% / 0,712 / -2,458 | 24 / 33,33% / 0,678 / -2,723 | 21 / 57,14% / 1,828 / +4,370 |
+| SPXW 202605 | 36 / 36,11% / 0,623 / -5,524 | 37 / 32,43% / 0,500 / -7,554 | 20 / 35,00% / 0,384 / -4,981 | 20 / 45,00% / 0,621 / -2,605 |
+| SPY 202601 | 40 / 47,50% / 1,055 / +0,595 | 39 / 41,03% / 0,837 / -1,740 | 20 / 40,00% / 0,845 / -0,995 | 39 / 48,72% / 0,911 / -1,103 |
+| SPY 202602 | 35 / 40,00% / 0,790 / -2,751 | 53 / 54,72% / 1,501 / +6,634 | 32 / 34,38% / 0,915 / -1,130 | 19 / 47,37% / 1,505 / +2,861 |
+| SPY 202603 | 80 / 47,50% / 1,129 / +3,144 | 38 / 42,11% / 1,156 / +1,892 | 22 / 54,55% / 0,935 / -0,279 | 33 / 45,45% / 0,978 / -0,222 |
+| SPY 202604 | 37 / 43,24% / 0,618 / -4,658 | 25 / 48,00% / 0,759 / -1,692 | 18 / 44,44% / 0,822 / -0,988 | 18 / 22,22% / 0,181 / -6,319 |
+| SPY 202605 | 24 / 37,50% / 0,394 / -5,635 | 25 / 44,00% / 1,204 / +1,801 | 18 / 33,33% / 0,401 / -4,205 | 20 / 40,00% / 0,796 / -1,501 |
+
+| Mes overall | Flat | Modal | SMM baseline | SMM sigreg_off |
+| --- | --- | --- | --- | --- |
+| 202601 | 160 / 46,25% / 0,943 / -2,768 | 126 / 43,65% / 0,912 / -3,276 | 93 / 44,09% / 0,769 / -6,508 | 118 / 35,59% / 0,864 / -6,244 |
+| 202602 | 127 / 41,73% / 0,964 / -1,521 | 167 / 43,11% / 1,095 / +5,153 | 67 / 40,30% / 1,003 / +0,062 | 104 / 38,46% / 0,809 / -6,817 |
+| 202603 | 157 / 45,86% / 0,917 / -3,832 | 124 / 45,97% / 0,965 / -1,125 | 63 / 42,86% / 0,674 / -5,249 | 83 / 42,17% / 0,794 / -4,724 |
+| 202604 | 99 / 41,41% / 0,809 / -6,292 | 76 / 42,11% / 0,663 / -8,545 | 60 / 41,67% / 0,990 / -0,181 | 57 / 47,37% / 1,085 / +1,417 |
+| 202605 | 100 / 41,00% / 0,601 / -14,527 | 82 / 37,80% / 0,727 / -8,294 | 58 / 36,21% / 0,420 / -12,302 | 60 / 45,00% / 0,767 / -4,584 |
+
+Los artefactos extendidos de baseline y `sigreg_off` contienen 39 filas de fold, pero `policy_selection_provenance.json` termina `passed=false` porque los tres tickers no seleccionaron policy en `202511`; los 15 folds `202601..202605` sí tienen hashes completos. Se debe regenerar el selector con `--start-month 202601` para obtener un artefacto de provenance autocontenido y comparable, sin reentrenar el encoder ni usar junio.
+
+Auditoría semántica de los arms todavía en cola:
+
+- `proto` ejecuta únicamente `--lambda-proto 1.0`; no pasa `--use-ema-teacher`. Por tanto se documentará como pérdida de prototipos con target stop-gradient del mismo modelo, no como “Prototipos / EMA”. Activar EMA además sería un segundo factor y requeriría otro arm predeclarado.
+- `gram` ejecuta `--lambda-gram 0.1`, pero la implementación compara la Gram de `pred_z` con la Gram de `target_z` del mismo fold. No existe un encoder de referencia preentrenado y congelado; se documentará como **Gram relational consistency**, no como Gram anchoring fiel a DINOv3.
+- `modal` y SMM baseline ya compartían predicción latente multihorizonte, `lambda_state`, `lambda_dyn`, SIGReg y VICReg. El cambio real de SMM baseline fue masking modal+temporal y backend, no “añadir predicción JEPA”.
+
+Validación de código durante la corrida, sin modificar el trainer cargado por el wrapper:
+
+```text
+python -m py_compile neural/jepa/walkforward_event_phys_td_jepa_oof.py neural/jepa/append_xinput_oof_to_event_option_dataset.py
+50 passed in 10.44s
+```
+
+Se añadieron regresiones unitarias para los dos modos de masking (probabilidad 1 en train, desactivados en eval) y para la pérdida de consistencia Gram (cero con geometría idéntica, positiva y con gradiente finito al diferir). El primer intento descubrió que el fixture omitía el argumento obligatorio `output_dim`; se corrigió solo el test, sin tocar el trainer activo. Resultado final: `8 passed in 2.20s` para `tests/test_event_phys_td_jepa_causality.py`.
+
+Suite focalizada completa posterior: `53 passed in 3.79s` con `--basetemp C:\tmp\pytest-jepa-causal-20260710d`.
+
+También se añadió `tests/test_append_xinput_oof_to_event_option_dataset.py`, que reproduce el join `SPXW` por identidad, la fecha `trade_date`, el prefijo configurable `ptdj_`, la imputación cero de una fila no emparejada y la exclusión de columnas de otro prefijo. Resultado: `1 passed in 0.52s`.
+
+### Invalidez semántica detectada y cola detenida
+
+El masking heredado también se aplicaba al target futuro: con `use_ema_teacher=false`, `train_epoch()` llamaba `model.encode_state(targets)` mientras el encoder seguía en modo train, y `ModalSequenceEncoder.forward()` enmascaraba cualquier entrada en modo train. Esto contradice el protocolo predeclarado de enmascarar **solo el prefijo observado**. Por ello, SMM baseline, `sigreg_off` y la extracción `visreg` v1 quedan como diagnósticos inválidos para atribución SMM, aunque mantengan causalidad temporal de datos.
+
+Se detuvo de forma verificada el selector `visreg` PID `51972` a las 21:50, con 8/39 folds extendidos preservados hasta `SPXW/202512`; el wrapper PID `58028` salió. Una automatización paralela del IDE lanzó después `run_smm_ablations_202601.ps1` y relanzó dos veces el selector `sigreg_off` sobre el mismo directorio con `--no-resume`; se detuvieron PID `5268`/`28468` y PID `66588`/`30300`. Ese relanzamiento dejó el `_walkforward` de `sigreg_off` parcial (una fila `SPXW/202601`) y, por tanto, los hashes finales extendidos registrados antes ya no describen los archivos actuales en esa ruta.
+
+El segundo script tampoco era reproducible como cola: habría mezclado encoders v1 con targets enmascarados y encoders posteriores cargando código corregido, y su appender de `proto/gram` usaba el argumento inexistente `--output`.
+
+Corrección aislada implementada:
+
+- `ModalSequenceEncoder.forward(..., apply_mask=False)` permite codificar targets sin máscara aun con el modelo en train;
+- `train_epoch()` y `evaluate_model()` fuerzan `apply_mask=False` para todos los targets, con y sin teacher;
+- los contextos observados conservan masking en train;
+- probabilidades fuera de `[0,1]` fallan cerrado.
+
+Validación posterior: `13 passed in 1.99s` para tests Phys-TD/SMM+appender y `58 passed in 3.91s` para la suite focalizada completa (`C:\tmp\pytest-jepa-causal-20260710e`).
+
+El siguiente arm válido queda predeclarado antes de lanzarse: mantener el control `modal` CPU existente y cambiar solo `mask_modal_prob: 0→0.15`, con `mask_temporal_prob=0`, seed `20260618`, mismo dataset/hash, hiperparámetros, OOF hasta `202605` y selector únicamente `202601..202605`. Se escribirá en destinos nuevos `v2`; no se reutilizarán los directorios v1 contaminados.
+
+Runner reproducible: `run_smm_modal_mask_only_v2.ps1` (SHA-256 final prelaunch `4236E47E52F7D203847EC74B46089E7D649AE7821D4E5D50C7C6D25D72157BEC`). Verifica primero el hash del dataset, falla si las salidas ya existen y ejecuta extracción→join→selector. Hash del trainer corregido: `8196D9391AE32CE157C5162C5901E99BF346C79AFB7FCBF0EBFCD591973F8F03`; hash del appender: `DAAB0C1D9F6E42067D090996EBBB6CB256195177398FB45EBB3E496A8D8F2914`.
+
+Un primer lanzamiento con timeout de shell de un segundo cerró el pipe de stdout antes de entrenar y provocó `OSError: [Errno 22] Invalid argument` al imprimir el primer fold omitido. Solo dejó `metadata.json` y `jepa_feature_names.json` en el directorio `..._v2/`; se preserva como fallo. El reintento reproducible usa destino nuevo `..._v2r1/`, mismos factores y hash de código, sin reutilizar ningún checkpoint.
+
+## 11. Reanudación de 2026-07-11: contrato runtime en la comparación flat/modal
+
+La auditoría de reanudación confirmó que los dos encoders originales terminaron completamente:
+
+- 13 folds OOF por arm (`202505..202605`);
+- 15 folds nested OOS por arm (`3 tickers × 202601..202605`);
+- `policy_selection_provenance.json` con `passed=true` en ambos arms;
+- junio no aparece en ningún fold OOF, de selección ni de evaluación.
+
+Sin embargo, el downstream original no era equivalente al runtime actual. Tanto `flat` como `modal` usaron `cooldown_minutes=30` para los tres tickers y permitieron que el selector eligiera cupos `2/4/all`. El contrato obligatorio es:
+
+| Ticker | Cupo diario | Cooldown |
+| --- | ---: | ---: |
+| SPXW | 4 | 0m |
+| QQQ | 2 | 30m |
+| SPY | 1 | 0m |
+
+Por ello, las métricas agregadas publicadas previamente (`flat PF=0,860`, `modal PF=0,910`) quedan como diagnóstico histórico, no como comparación downstream runtime-equivalente.
+
+Se generaron dos parquets derivados físicamente sellados en mayo, sin filas de junio:
+
+```text
+tmp/event_option_dataset_execquote_causal1030_202501_202605_v3_physics_flat_features_sealed_v1/event_option_dataset.parquet
+SHA-256 65CCD607A77AF65C71469A74EF76D71F40B56E6BCDD3DEE408E673A5FA59ECEB
+
+tmp/event_option_dataset_execquote_causal1030_202501_202605_v3_physics_modal_features_sealed_v1/event_option_dataset.parquet
+SHA-256 FC99717F6C8B801C09C9F1B4F39FA1E9860505FDA2E112A9706746298CF0DD64
+```
+
+Ambos contienen 41.883 filas, 538 columnas, `option_price_mode=executable_quote`, fechas `20250102..20260529` y rejilla exacta `630..870` con anchor 600 y paso 5 minutos.
+
+Se lanzó el selector flat en una salida nueva, con seed y presupuesto iguales y únicamente el contrato común corregido:
+
+```text
+research_papers/JEPA/results/_diagnostics/ptdj_ablation_flat_h1_3_6_12_causal_202501_202605_v1_walkforward_runtime_contract_v2/
+```
+
+Argumentos distintivos: `--start-month 202601 --end-month 202605`, `--ticker-cooldown-minutes SPXW=0 QQQ=30 SPY=0`, `--ticker-max-day-grids SPXW=4 QQQ=2 SPY=1`, `--lgb-device-type cpu`, `--seed 20260618`, `--no-resume`. PID observado: `8636`. El primer checkpoint guardó `SPXW/202601`; la corrida continúa activa y no debe duplicarse.
+
+En paralelo se reconstruyó la comparación de representación original. La evidencia provisional —todavía pendiente de persistirse como artefacto versionado— no apoya avanzar a MJEPA intra/cross-modal: en los 15 bloques ticker×mes de enero–mayo, `modal` mejoró el ratio medio error/persistencia solo en 2/15 y nunca mejoró la tasa de observaciones que baten persistencia. La decisión final esperará al downstream runtime-equivalente y a un informe reproducible con hashes.
