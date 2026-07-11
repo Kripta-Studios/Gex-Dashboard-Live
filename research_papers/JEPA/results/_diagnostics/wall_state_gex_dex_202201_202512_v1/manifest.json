@@ -1,0 +1,36 @@
+{
+  "schema": "wall_state_gex_dex_v1",
+  "status": "PASS_DATA_GATE",
+  "git_commit": "635d3e7fc5d7ffd08d4a6df9b68f347db0593cc6",
+  "production_modified": false,
+  "physical_cutoff": "20251231",
+  "source_manifest_sha256": "5431c2bf932fef6ce1ba34117cc869feb78063fbc1aa3989017fdbcb5b66dc88",
+  "event_view_sha256": "d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408",
+  "builder_sha256": "745491e3c54d53d01a8feab41b43f261f5390aba50fdf83ddeeedc099689e430",
+  "feature_module_sha256": "05133f68c9efe38c0f5c99a39e57c0882c9331a5b2dac709a2977acc3b20a64f",
+  "dataset_sha256": "94e311e0e25ff7956347597a8734e82e07ab05753f42acaa26876c58752df8ef",
+  "dataset_bytes": 109167919,
+  "rows": 135120,
+  "columns": 148,
+  "requested_sessions": 2816,
+  "built_sessions": 2815,
+  "date_range": ["20220103", "20251231"],
+  "rows_by_ticker": {"QQQ": 44208, "SPXW": 46656, "SPY": 44256},
+  "grid_coverage": 0.9996448863636364,
+  "event_unique_keys": 95424,
+  "event_coverage_overall": 1.0,
+  "event_coverage_by_ticker": {"QQQ": 1.0, "SPXW": 1.0, "SPY": 1.0},
+  "spot_diff_bps_max": 0.0005721710319903623,
+  "spot_diff_bps_p99": 0.000535586637594589,
+  "family_rows_below_two_active_strikes": 0,
+  "excluded_sessions": [
+    {
+      "ticker": "QQQ",
+      "trade_date": "20231227",
+      "reason": "Greeks strikes use .78 adjustment while OI strikes are integers; executable event view also has no rows. No OI imputation performed."
+    }
+  ],
+  "delta_gamma_same_wall_share": {"call": 0.28100947306098284, "put": 0.3852797513321492},
+  "unique_delta_wall_strikes": {"call": 874, "put": 883},
+  "tests": "15 passed"
+}

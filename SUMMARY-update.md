@@ -186,8 +186,13 @@ Se cubren duplicados OI, orden determinista, separación de walls, persistencia
 causal, cutoff future/2026, join de OI, selección de preflight y auditoría de
 cobertura y entrada CLI directa. El preflight ThetaData real pasó: 144/144 filas,
 cero errores, cobertura de eventos 100% en los tres tickers, spot máximo a
-0,000572 bps y delta walls materialmente distintos de gamma. Siguiente paso: build
-completo 2022–2025 y gate >=99%/98% de cobertura.
+0,000572 bps y delta walls materialmente distintos de gamma.
+
+Build completo aprobado: 135.120 × 148, 2.815 sesiones, SHA `94e311e0...df8ef`.
+Cobertura de las 95.424 claves executable 100% por ticker y spot máximo
+0,000572 bps. Se excluyó QQQ 2023-12-27 por strikes Greeks `.78` frente a OI
+entero, sin imputación ni eventos perdidos. Un primer build descubrió y corrigió
+uso futuro de quotes `:30` al redondearlos a minuto; ahora solo usa `HH:MM:00`.
 
 Debe producir, solo con snapshot actual:
 

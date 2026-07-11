@@ -2,7 +2,7 @@
 
 **Actualizado:** 11 de julio de 2026
 
-**Último checkpoint publicado antes del preflight:** `6b443ec fix: audit wall coverage on frozen entry grid`
+**Checkpoint de código del build:** `635d3e7 fix: align wall snapshots to executable decision time`
 
 **Producción:** intacta. **Junio de 2026:** sellado.
 
@@ -212,20 +212,37 @@ Evidencia compacta:
 research_papers/JEPA/results/_diagnostics/wall_state_gex_dex_preflight_v1/manifest.json
 ```
 
+### Build completo aprobado
+
+Commit de código `635d3e7`; 2.816 sesiones procesadas con 16 workers en 156 s.
+Dataset local de 135.120 filas × 148 columnas, 2022-01-03..2025-12-31, SHA
+`94e311e0...df8ef` (109.167.919 bytes). Cobertura de 95.424 claves executable:
+`100%` overall y por ticker; spot max `0,000572 bps`, rejilla total `99,964%`.
+
+Una sesión se excluye y reporta sin imputar: QQQ 2023-12-27 trae strikes Greeks
+`.78` pero strikes OI enteros; la vista executable tampoco tiene eventos ese día.
+El primer full build detectó además 23 desvíos spot QQQ 2022-06-17: el builder
+usaba el quote `:30` futuro dentro del mismo minuto. El fix exact-time `:00`
+eliminó todos los desvíos >1 bps y quedó cubierto por test.
+
+```text
+tmp/wall_state_gex_dex_202201_202512_v1/wall_state.parquet
+research_papers/JEPA/results/_diagnostics/wall_state_gex_dex_202201_202512_v1/manifest.json
+```
+
 ### Siguientes acciones exactas
 
-1. Publicar el preflight y ejecutar build completo 2022–2025 con 16 workers.
-2. Auditar el join contra el evento sellado; exigir >=99% cobertura overall,
-   >=98% por ticker y <=1 bps de diferencia spot.
-3. Predeclarar labels físicos `magnet_hit/true_rejection/accepted_break` a
+1. Publicar el data gate completo.
+2. Predeclarar labels físicos `magnet_hit/true_rejection/accepted_break` a
    30/60/120/180m. Future spot es label, nunca feature.
-4. Solo si wall state supera distance-only en los tres tickers, entrenar payoff
+3. Solo si wall state supera distance-only en los tres tickers, entrenar payoff
    ask→bid nested. No abrir junio hasta congelar un único protocolo y recibir
    autorización explícita.
 
 ## 10. Git y worktree
 
-Checkpoint publicado: `6b443ec`, `HEAD == origin/main` al ejecutar el preflight.
+Checkpoint de código publicado: `635d3e7`; consultar `git log -1` para el commit
+posterior que documenta el build.
 Hay numerosos scripts y artefactos untracked de trabajos anteriores; no borrarlos,
 no añadirlos en masa y no asumir que son parte del checkpoint. Versionar cada hito
 con `git add` explícito, test, commit y push.

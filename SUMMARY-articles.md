@@ -122,7 +122,12 @@ timestamp/strike:
 Las primitivas pasan tests de walls separados, deduplicación de OI,
 persistencia/resets y schema causal. El preflight ThetaData real consiguió 100% de
 cobertura en tres sesiones, spot <=0,000572 bps y delta walls no equivalentes a
-gamma. Queda pendiente el build completo y la separabilidad física.
+gamma. Tras aprobar el build completo, queda pendiente la separabilidad física.
+
+El build completo 2022–2025 materializó 135.120 filas y cubre 100% de las 95.424
+claves executable con spot <=0,000572 bps. La auditoría detectó un riesgo causal
+transferible: floor-join de quotes sub-minuto puede incorporar `HH:MM:30` a una
+decisión `HH:MM:00`; el contrato corregido exige timestamp exacto.
 
 Primera evaluación autorizada: física del subyacente, no PnL. Los future prices se
 usan solo como labels para `magnet_hit`, `true_rejection` y `accepted_break` a
