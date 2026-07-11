@@ -32,6 +32,32 @@
 - Modal runtime-equivalente está activo en PID `38064`, salida `ptdj_ablation_modal_h1_3_6_12_causal_202501_202605_v1_walkforward_runtime_contract_v2`, con los mismos argumentos, CPU/8 workers y seed `20260618`.
 - No lanzar otro modal mientras PID `38064` esté activo. Tras terminar: validar contrato, ejecutar `analyze_event_phys_td_flat_modal.py`, persistir el informe/hashes y decidir si se detiene MJEPA.
 
+## Actualización final 2026-07-11 02:35 CEST — flat/modal cerrado
+
+- No quedan procesos Python, pytest ni entrenamientos de esta comparación.
+- Flat runtime-equivalente: 481 trades, WR `43,867%`, PF `0,8996`, `-15,094R`, DD `-26,009R`, 1/15 celdas ticker×mes pasa todos los gates.
+- Modal runtime-equivalente: 491 trades, WR `42,974%`, PF `0,8579`, `-21,989R`, DD `-31,039R`, 0/15 celdas pasa; `SPY/202601` fue abstain.
+- Ambos provenance mensuales terminaron `passed=true`; contrato de ejecución validado, incluyendo hold mínimo observado 30m y ausencia de solapamientos.
+- Representación OOF rechaza modal: 2/15 wins en ratio error/persistencia y 0/15 en tasa de batir persistencia.
+- Downstream pareado rechaza modal: 7/15 wins en PF y 7/15 en PnL; bootstrap diario `-6,895R`, IC95% `[-31,537,+17,109]`.
+- Decisión congelada: `advance_to_cross_modal=false`. No reanudar SMM v1, v2r1, proto, VISReg o Gram; no avanzar a H-Market-JEPA desde esta rama modal.
+- Informe autocontenido: `research_papers/JEPA/results/_diagnostics/ptdj_ablation_flat_vs_modal_runtime_contract_analysis_202601_202605_v2/`.
+- Hash `summary.json`: `EB1D233E3FD65FE3384ADAD736117CD48766E6A953E85489DACDAAB5017D1C5C`.
+- Hash `REPORT.md`: `F7ACE4AA90594F6C7C06CEE7A216118B9303A1EB3157BA8A592FF97B106A4502`.
+- Hash parquet flat sellado: `65CCD607A77AF65C71469A74EF76D71F40B56E6BCDD3DEE408E673A5FA59ECEB`.
+- Hash parquet modal sellado: `FC99717F6C8B801C09C9F1B4F39FA1E9860505FDA2E112A9706746298CF0DD64`.
+- Tests: `py_compile` PASS; suite focalizada completa `64 passed in 3.88s`; test del analizador posterior `6 passed in 0.94s`.
+- Commits ya subidos durante la sesión: `d947b5b`, `f55550c`, `e863129`, `279e399`, `943fc40`.
+- No se tocó systemd, no se marcó ningún paquete live-ready, no se promovió/restauró legacy y junio de 2026 permaneció sellado.
+
+### Primer paso seguro para la siguiente continuación
+
+1. Confirmar Git/logs/procesos y leer este handoff completo.
+2. No relanzar flat/modal ni ninguna cola SMM: la decisión ya está cerrada.
+3. Auditar cobertura, consistencia y hashes de ThetaData 2022–2024 para opciones y spot, sin abrir junio.
+4. Si los labels executable_quote son homogéneos, predeclarar una única ablación de historia para el encoder flat: train desde 2022 frente a train desde 2025, igual arquitectura/seed/presupuesto y selector nested runtime-equivalente.
+5. No ejecutar hasta versionar el manifest, estimar coste y fijar folds. Usar CUDA/32 hilos solo de forma simétrica en ambos arms.
+
 ### Objetivo cuantitativo obligatorio
 
 Para cada ticker (`SPXW`, `QQQ`, `SPY`) y no solo en agregado, cualquier candidato debe cumplir en el walk-forward:

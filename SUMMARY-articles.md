@@ -134,3 +134,13 @@ Se predeclara una única corrección común, sin reentrenar los encoders ni camb
 El selector flat runtime-equivalente se lanzó en `...flat..._walkforward_runtime_contract_v2/`; modal se predeclaró idéntico salvo por los embeddings OOF ya congelados. La evidencia de representación ya calculada es desfavorable a `modal`; por tanto, no se avanzará a pérdidas intra/cross-modal si el informe final no demuestra una mejora reproducible tanto representacional como downstream.
 
 Actualización: flat terminó 15/15 folds con provenance PASS y contrato validado (hold mínimo observado 30m). Produjo 481 trades, WR 43,87%, PF 0,900 y -15,094R. QQQ quedó en PF 1,000, SPXW 0,813 y SPY 0,969; el mínimo mensual fue 28/17/17 respectivamente. Flat queda rechazado. Modal runtime-equivalente está ejecutándose con configuración idéntica y salida nueva; no se tomarán decisiones hasta completar la comparación pareada.
+
+### Dictamen final de la cola modal/MJEPA
+
+Modal terminó con 491 trades, WR 42,97%, PF 0,858, -21,989R y 0/15 celdas ticker×mes superando simultáneamente PnL/WR/PF/volumen. Flat obtuvo 481 trades, PF 0,900, -15,094R y 1/15 celdas. Modal además produjo abstain en `SPY/202601`.
+
+La mejora de loss in-sample de modal (12/13 folds) no se reproduce en representación OOF: solo gana 2/15 celdas en error/persistencia y 0/15 en tasa de batir persistencia. Tampoco mejora downstream de forma pareada: gana PF y PnL en 7/15, con medianas negativas y p-values 0,835/0,640. Bootstrap diario modal-flat: -6,895R, IC95% [-31,537,+17,109].
+
+**La condición de avance de la sección 6 no se cumple.** No se ejecutarán pérdidas intra/cross-modal de MJEPA, semantic masking, VISReg/prototipos/Gram ni la cola jerárquica a partir de este encoder modal. Las corridas SMM v1/v2 parciales quedan solo como diagnóstico inválido/incompleto.
+
+Siguiente hipótesis de un solo factor, todavía no lanzada: ampliar el histórico del baseline flat desde 2025 a 2022 usando los datos ThetaData disponibles, tras reconstruir y hashear labels executable_quote homogéneos. Mantener arquitectura, seeds, presupuesto, selector nested y evaluación 202601–202605; junio continúa sellado.

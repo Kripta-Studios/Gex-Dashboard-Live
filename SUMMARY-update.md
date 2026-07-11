@@ -550,3 +550,54 @@ max evaluation month = 202605
 Flat queda rechazado: ningún ticker alcanza PF 1,3 y WR 50%; SPXW/SPY tampoco alcanzan 18 trades en su peor mes y no todos los meses son positivos.
 
 El selector modal runtime-equivalente se lanzó después de cerrar flat, en salida nueva `...modal..._walkforward_runtime_contract_v2/`, con PID `38064` y exactamente los mismos argumentos/seed/backend. No debe duplicarse mientras siga activo.
+
+## 12. Comparación flat vs modal runtime-equivalente: cerrada y modal rechazado
+
+Modal terminó los 15 folds externos; 14 seleccionaron policy y `SPY/202601` produjo `ABSTAIN_NO_VALID_PROFILE`. La policy mensual combinada conserva provenance nested `passed=true`. El contrato fue validado sobre los trades: ask→bid `executable_quote`, hold mínimo observado 30m, rejilla 10:30–14:30/5m, cupos/cooldowns runtime, una posición por ticker, sin solapamientos y mes máximo `202605`.
+
+Artefacto autocontenido y versionable:
+
+```text
+research_papers/JEPA/results/_diagnostics/ptdj_ablation_flat_vs_modal_runtime_contract_analysis_202601_202605_v2/
+```
+
+Hashes principales:
+
+```text
+summary.json                         EB1D233E3FD65FE3384ADAD736117CD48766E6A953E85489DACDAAB5017D1C5C
+REPORT.md                            F7ACE4AA90594F6C7C06CEE7A216118B9303A1EB3157BA8A592FF97B106A4502
+paired_tests.json                    2E58FA51C9E8739AA702EF4DD6B1B587A05FA4F62630C0F398D2D4A4C5EACAF9
+downstream_metrics.csv               0471CC0EA1D1C89E71024F288892C2CA98C8E50285FB33ECB364F53FD1FED284
+representation_ticker_month.csv      C1520F4F970217002D36594ABA163D0CD6CD5DC9C6E98B937B5FDF86C0177AA9
+```
+
+### Resultado downstream
+
+| Arm | Trades | WR | PF | PnL (R) | Max DD | Celdas ticker×mes que pasan |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Flat | 481 | 43,867% | 0,900 | -15,094 | -26,009 | 1/15 |
+| Modal | 491 | 42,974% | 0,858 | -21,989 | -31,039 | 0/15 |
+
+| Arm/ticker | Trades | WR | PF | PnL (R) | Min trades/mes | Meses positivos |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Flat QQQ | 166 | 46,386% | 1,000 | -0,010 | 28 | 60% |
+| Flat SPXW | 217 | 41,014% | 0,813 | -14,249 | 17 | 60% |
+| Flat SPY | 98 | 45,918% | 0,969 | -0,835 | 17 | 40% |
+| Modal QQQ | 184 | 43,478% | 0,828 | -9,946 | 29 | 0% |
+| Modal SPXW | 228 | 42,544% | 0,822 | -12,724 | 32 | 40% |
+| Modal SPY | 79 | 43,038% | 1,027 | +0,681 | 0 | 60% |
+
+### Representación y evidencia pareada
+
+- Modal reduce la loss de training en 12/13 folds (`p=0,000854`), pero no generaliza mejor.
+- Ratio error de predicción/persistencia: modal mejora solo 2/15 celdas; mediana modal-flat `+0,1066`, `p=0,999237` en la dirección deseada.
+- Tasa de observaciones que baten persistencia: modal mejora 0/15; mediana `-0,2023`, `p=1,0` en la dirección deseada.
+- PF downstream: modal gana 7/15, mediana `-0,0278`, `p=0,834869`.
+- PnL downstream: modal gana 7/15, mediana `-0,348R`, `p=0,640137`.
+- Bootstrap diario modal-flat, seed `20260711`, 10.000 muestras: `-6,895R`, IC95% `[-31,537,+17,109]`, `P(diff>0)=0,2917`.
+
+Dictamen: **no avanzar a objetivos MJEPA intra-modal/cross-modal**. Modal empeora representación OOF y downstream y no cumple ninguna celda ticker×mes. Las colas SMM parciales no deben reanudarse.
+
+Validación final: `py_compile` PASS y `64 passed in 3.88s` en la suite focalizada completa. No se modificó systemd, no se promovió ninguna policy y junio no se abrió.
+
+El siguiente experimento admisible debe volver al baseline flat y cambiar un solo factor. Dado el histórico 2022–2026 disponible, el primer paso futuro es auditar cobertura/hashes 2022–2024 y predeclarar una ablación `train desde 2022` frente a `train desde 2025`, con igual arquitectura, seeds y presupuesto, inner selection causal y evaluación enero–mayo de 2026. No ejecutar esa ablación hasta congelar el manifest y confirmar labels executable_quote reproducibles para todo el rango.
