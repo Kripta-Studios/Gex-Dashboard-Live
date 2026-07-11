@@ -183,4 +183,6 @@ AdaJEPA shadow v1 quedó predeclarado con un adapter diagonal residual de 64 par
 
 Resultado: mejora reproducible en 15/15 celdas (`p=3,05e-05`) y 277/281 días (`p=9,14e-48`), sin rollbacks. Es la primera hipótesis de esta cola que supera su gate representacional, por lo que se autoriza un downstream separado; no implica edge ni promoción.
 
+El downstream quedó predeclarado cambiando exclusivamente frozen-delta por adapted-delta en el mismo payoff head exacto d25/d35. Targets/errores quedan excluidos de features y la decisión exige gates completas por ticker, no PnL agregado.
+
 Informe, hashes y tablas de la ablación de historia quedaron publicados en `8da7a7a`.

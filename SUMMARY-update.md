@@ -5,6 +5,12 @@
 
 > Esta bitácora se actualiza durante el trabajo. Solo se marca como completado lo reproducido en esta sesión. No implica despliegue, commit ni push salvo que se indique expresamente.
 
+## Actualización 2026-07-11 06:25 CEST — downstream AdaJEPA predeclarado
+
+Se implementó la comparación económica separada autorizada: mismas filas/labels/contratos/head/folds/seeds/presupuesto, cambiando solo `frozen_dz` por `adapted_dz`. La exportación live-safe excluye por allowlist target/error/futuro/PnL y tiene test de invariancia ante targets futuros.
+
+Predeclaración `research_papers/JEPA/ADAJEPA_DOWNSTREAM_PREDECLARATION_V1.md`; script SHA `B2ADE83D...886C`, exporter `692146DD...8BB1`, runner `run_adajepa_downstream_v1.ps1` SHA `27180A2B...6EF5`. Exact d25/d35, gates estrictas y junio sellado. Tests `11 passed`. Aún no lanzado en este checkpoint.
+
 ## Actualización 2026-07-11 06:10 CEST — AdaJEPA shadow mejora representación
 
 La evaluación terminó 7.285 transiciones/281 ticker-días. El adapter ganó las 15/15 celdas ticker×mes frente al predictor congelado: mediana RMSE `-0,002121`, Wilcoxon unilateral `p=3,0518e-05`. Ganó 277/281 días (QQQ 88/90, SPXW 96/97, SPY 93/94), mediana diaria `-0,002348`, `p=9,1398e-48`. Cero rollbacks; norma máxima `0,021298`; reset diario causal confirmado.

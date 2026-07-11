@@ -1,5 +1,13 @@
 # CODEX-HANDOFF.md — Estado para continuación por otro agente
 
+## Actualización 2026-07-11 06:25 CEST — downstream AdaJEPA listo para lanzar
+
+- Nuevo `walkforward_adajepa_downstream.py`: reusa trainer/selector/provenance Var auditado; control `z+frozen_dz`, variante `z+adapted_dz`, mismas 79 features estructurales/contrato, filas y labels.
+- Export live allowlist contiene solo current-time z/dz/estado adapter; test cambia target futuro y prueba invariancia de features anteriores. No target/error/outcome en model features.
+- Exact d25/d35, 30m, una posición, caps/cooldowns runtime, strict inner gates, folds/seeds/40epochs/batch512 simétricos.
+- Predeclaración `ADAJEPA_DOWNSTREAM_PREDECLARATION_V1.md`; runner SHA `27180A2B70EE516F62A036D48119A17EAD29172C58419FEAB15C6D39B00E6EF5`; tests `11 passed`.
+- Próximo paso: commit/push y ejecutar una sola instancia. No cambiar LR/head/gates según resultado.
+
 ## Actualización 2026-07-11 06:10 CEST — AdaJEPA shadow pasa representación
 
 - 7.285 filas OOS, 281 ticker-días, 15 celdas. Adapter gana 15/15, mediana RMSE diff `-0,0021206`, Wilcoxon `p=3,0518e-05`; 277/281 días, mediana `-0,0023479`, `p=9,1398e-48`.

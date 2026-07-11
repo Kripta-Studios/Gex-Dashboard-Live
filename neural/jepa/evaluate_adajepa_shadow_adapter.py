@@ -66,6 +66,7 @@ def evaluate_day(
     grad_clip: float,
     max_parameter_norm: float,
     device: torch.device,
+    include_live_vectors: bool = False,
 ) -> pd.DataFrame:
     ordered = day.sort_values(["timestamp", "target_timestamp"], kind="stable").reset_index(drop=True)
     z_cols = latent_columns(ordered, "z_t_")
@@ -102,12 +103,14 @@ def evaluate_day(
         base_error = float(torch.linalg.vector_norm(base - target).cpu())
         adapted_error = float(torch.linalg.vector_norm(adapted - target).cpu())
         persistence_error = float(torch.linalg.vector_norm(z_t - target).cpu())
-        records.append(
-            {
+        record: dict[str, Any] = {
                 "ticker": str(row.ticker),
                 "trade_date": str(row.trade_date),
+                "expiration": str(row.expiration),
+                "expiry_mode": str(row.expiry_mode),
                 "month": str(row.trade_date)[:6],
                 "timestamp": row.timestamp,
+                "time": row.time,
                 "target_timestamp": row.target_timestamp,
                 "minute": int(row.minute),
                 "updates_before_prediction": updates,
@@ -117,7 +120,14 @@ def evaluate_day(
                 "frozen_error": base_error,
                 "adapted_error": adapted_error,
             }
-        )
+        if include_live_vectors:
+            frozen_motion = base - z_t
+            adapted_motion = adapted - z_t
+            for dimension in range(len(z_cols)):
+                record[f"ada_z_{dimension:02d}"] = float(z_t[dimension].cpu())
+                record[f"ada_frozen_dz_{dimension:02d}"] = float(frozen_motion[dimension].cpu())
+                record[f"ada_adapted_dz_{dimension:02d}"] = float(adapted_motion[dimension].cpu())
+        records.append(record)
         previous = (z_t, base, target, pd.Timestamp(row.target_available_after_timestamp))
     return pd.DataFrame(records)
 
@@ -129,6 +139,7 @@ def evaluate_frame(
     grad_clip: float,
     max_parameter_norm: float,
     device: str,
+    include_live_vectors: bool = False,
 ) -> pd.DataFrame:
     work = frame.copy()
     work["trade_date"] = work["trade_date"].astype(str).str.replace(r"\.0$", "", regex=True)
@@ -144,9 +155,51 @@ def evaluate_frame(
                 grad_clip=grad_clip,
                 max_parameter_norm=max_parameter_norm,
                 device=target_device,
+                include_live_vectors=include_live_vectors,
             )
         )
     return pd.concat(outputs, ignore_index=True) if outputs else pd.DataFrame()
+
+
+def export_live_adapter_features(
+    frame: pd.DataFrame,
+    *,
+    learning_rate: float,
+    grad_clip: float,
+    max_parameter_norm: float,
+    device: str,
+) -> pd.DataFrame:
+    evaluated = evaluate_frame(
+        frame,
+        learning_rate=learning_rate,
+        grad_clip=grad_clip,
+        max_parameter_norm=max_parameter_norm,
+        device=device,
+        include_live_vectors=True,
+    )
+    vector_cols = sorted(
+        column
+        for column in evaluated.columns
+        if column.startswith(("ada_z_", "ada_frozen_dz_", "ada_adapted_dz_"))
+    )
+    causal_state = [
+        "ticker",
+        "trade_date",
+        "expiration",
+        "expiry_mode",
+        "timestamp",
+        "time",
+        "minute",
+        "updates_before_prediction",
+        "rollbacks_before_prediction",
+        "adapter_parameter_norm",
+    ]
+    output = evaluated[[*causal_state, *vector_cols]].copy()
+    forbidden = ("target", "error", "future", "pnl", "return", "outcome")
+    leaked = [column for column in output.columns if any(token in column.lower() for token in forbidden)]
+    if leaked:
+        raise RuntimeError(f"outcome-like columns entered AdaJEPA live feature export: {leaked}")
+    return output
 
 
 def paired_test(control: pd.Series, variant: pd.Series) -> dict[str, Any]:
