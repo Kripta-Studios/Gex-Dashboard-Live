@@ -48,6 +48,7 @@
 - Hash parquet modal sellado: `FC99717F6C8B801C09C9F1B4F39FA1E9860505FDA2E112A9706746298CF0DD64`.
 - Tests: `py_compile` PASS; suite focalizada completa `64 passed in 3.88s`; test del analizador posterior `6 passed in 0.94s`.
 - Commits ya subidos durante la sesión: `d947b5b`, `f55550c`, `e863129`, `279e399`, `943fc40`.
+- Commits finales también subidos: `13b9660` (manifests sellados en el analizador), `98311d3` (informe y handoffs) y `b5bb1c1` (ocho JSON/CSV pequeños con métricas, hashes y folds; añadidos explícitamente porque `_diagnostics` los ignora por defecto).
 - No se tocó systemd, no se marcó ningún paquete live-ready, no se promovió/restauró legacy y junio de 2026 permaneció sellado.
 
 ### Primer paso seguro para la siguiente continuación
