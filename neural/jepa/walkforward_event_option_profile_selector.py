@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import gc
 import hashlib
 import json
 import math
@@ -684,6 +685,8 @@ def fit_profile_fold(
             test_trades["profile_expiry_modes"] = ",".join(profile.expiry_modes) if profile.expiry_modes else "mixed"
             test_trades["train_scope"] = profile.train_scope
         test_metrics = metrics(test_trades, [str(test_month)])
+
+    gc.collect()
 
     return {
         **base,
