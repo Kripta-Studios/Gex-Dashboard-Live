@@ -14,6 +14,16 @@ D:/ThetaData/data_underlying_derived/{SPXW,QQQ,SPY}
 
 Recursos locales: RTX 5070 Ti de 12 GB VRAM, Ryzen 9 de 32 hilos y 32 GB RAM. Los entrenamientos deben aprovechar CUDA determinista y la preparación de datos debe paralelizar CPU de forma reproducible.
 
+## Actualización 2026-07-11 13:05 CEST — aclarada la cadencia live y cerrado el control 5m
+
+El live sí recibe datos minuto a minuto: `realtime_feed.py` usa polling de 60 segundos y `tradingbot_wrapper_jepa.py` un loop de unos 65 segundos. La entrada no se evalúa actualmente en todos esos minutos porque la policy productiva contiene `entry_sample_minutes=5` y el feed conserva `MODEL_SAMPLE_MINUTES=5`. Los 5m del experimento reproducen esa rejilla de candidatos; no significan que solo se recopilen datos cada cinco minutos.
+
+El dataset tampoco era una repetición exacta de los `clean_live1000` anteriores. Esos selectores leen `...zero_dte_dense15...` de 2025–2026, con labels/salidas legacy y niveles IB completos. La vista nueva cubre 2022–mayo2026, tiene 18.684 filas en 10:00–10:25, `near_level_only=false`, quotes ejecutables ask→bid, trailing/hold 30–180m y excluye IB/Fib/nearest por allowlist. SHA-256 del parquet: `5E916EFAAEA2D89B195E481FFD5948273E1D362F146EA4E8C05C3C61EFBBEF49`. Queda construida en `tmp/event_option_dataset_execquote_causal1000_noib_early_202201_202605_v1/`; no volver a construirla.
+
+El control d25-win 5m ya terminó. SPXW solo seleccionó enero y febrero: 39 trades, WR `43,59%`, PF `1,109`, `+1,394R`, mínimo mensual 0 y 20% de meses positivos. QQQ y SPY abstuvieron los cinco meses. Falla el objetivo completo y queda `production_live_ready=false`; hold mínimo observado 30m, junio sellado y producción sin cambios. Resultado: `.../early_causal_noib_d25_win_202601_202605_seed20260618_v1/`.
+
+La siguiente corrección será una ablación separada de cadencia 1m frente a este control 5m, usando exactamente el mismo mecanismo causal temprano. Se mantendrán quotes, exits, features, modelo, folds y gates; solo cambiará la rejilla de candidatos. Esto permite aprovechar los snapshots minuto a minuto sin confundir adquisición con la policy vigente ni cambiar live antes de demostrar rentabilidad.
+
 ## Actualización 2026-07-11 12:50 CEST — prueba early causal preparada
 
 Se ha convertido la causa encontrada en una prueba falsable. El dataset se reconstruirá desde ThetaData solo para 10:00–10:25, sin `near_level_only`; aunque el builder materialice niveles diarios, la allowlist de `entry_time_min_et=10:00` excluye físicamente IB/Fib/nearest/context-IB y estado intradía no reproducible. Un auditor independiente bloquea future/outcome features y verifica executable quote, junio sellado y hold.

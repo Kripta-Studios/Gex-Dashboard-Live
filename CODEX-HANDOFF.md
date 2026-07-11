@@ -17,6 +17,15 @@ D:/ThetaData/data_underlying_derived/SPY
 
 Hardware local: RTX 5070 Ti con 12 GB VRAM, Ryzen 9 con 32 hilos y 32 GB RAM. Usar CUDA determinista y batches ajustados a VRAM para entrenamiento/inferencia; paralelizar carga y transformaciones CPU sin crear corridas duplicadas.
 
+## Actualización 2026-07-11 13:05 CEST — feed 1m, policy 5m; control early terminado y rechazado
+
+- **No confundir cadencias:** `services/realtime_feed.py` consulta cada 60 s y el bot itera cada ~65 s. Hay snapshots minuto a minuto. Sin embargo, el contrato productivo vigente filtra entradas con `candidate_universe_filter.entry_sample_minutes=5` y el feed declara `MODEL_SAMPLE_MINUTES=5`. Por eso el build early usó 5m: reproduce la rejilla de decisiones de la policy actual, no la frecuencia de adquisición.
+- No asumir que "live minuto a minuto" implica que la policy puntúa entradas cada minuto. Si se investiga una policy 1m, debe ser un arm nuevo, predeclarado y comparado contra este control 5m; no cambiar producción silenciosamente.
+- El dataset nuevo **no duplica** los `clean_live1000` de ayer. Esos resultados apuntan a `...zero_dte_dense15...` de 2025–2026, conservan labels/salidas legacy y el IB diario completo. El nuevo parquet tiene 18.684 filas, 2022–mayo2026, 10:00–10:25, `near_level_only=false`, entrada ask/salida bid, trailing 50%/25%, stop -60%, TP 1000%, hold 30–180m y allowlist sin IB/Fib/nearest. SHA dataset `5E916EFA...BBEF49`. No reconstruirlo otra vez.
+- El control 5m terminó y queda rechazado: SPXW seleccionó solo enero/febrero (39 trades totales, WR `43,59%`, PF `1,109`, `+1,394R`, min mensual 0, 20% meses positivos); QQQ y SPY abstuvieron `5/5`. `production_live_ready=false`, junio sellado, producción intacta.
+- Artefacto pequeño: `research_papers/JEPA/results/_diagnostics/early_causal_noib_d25_win_202601_202605_seed20260618_v1/`; hashes metrics/selected/trades `3E8A6348...E2BA9` / `A02B3CB7...310CB` / `9EA5BE00...CC74`.
+- Siguiente prueba admisible por la corrección del usuario: aislar **cadencia de candidatos 5m→1m** sobre el mismo contrato early prefix-only. Debe construir/reutilizar todos los minutos 10:00–10:25, mantener labels/features/modelo/gates y comparar selección OOS. No reutilizar resultados `clean1000` como si fueran este control exacto.
+
 ## Actualización 2026-07-11 12:50 CEST — early causal no-IB listo para construir/ejecutar
 
 - Predeclarado un único test del mecanismo temprano: d25 win por ticker, 10:00–10:25, ask→bid/hold30, sin backfill/guard/otros deltas.

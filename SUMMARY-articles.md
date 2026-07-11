@@ -9,7 +9,7 @@ Una idea académica solo contará para live si se prueba con:
 
 - opciones 0DTE y labels executable_quote: entrada ask, mark/salida bid;
 - features observables hasta el minuto de decisión;
-- rejilla 10:30–14:30 ET cada cinco minutos;
+- snapshots live disponibles cada minuto; el baseline productivo actual filtra candidatos cada cinco minutos, y cualquier policy 1m debe compararse como una ablación separada;
 - una posición por ticker y cooldown/cupo idénticos a runtime;
 - train y selección anteriores al mes externo;
 - enero–mayo de 2026 como zona exploratoria nested;
@@ -34,6 +34,10 @@ D:/ThetaData/data_underlying_derived/{SPXW,QQQ,SPY}
 ```
 
 Hardware de investigación: RTX 5070 Ti de 12 GB VRAM, Ryzen 9 de 32 hilos y 32 GB RAM. Se debe aprovechar CUDA determinista para entrenar/inferir y paralelismo CPU reproducible para construir datasets; más cómputo no autoriza feature mining OOS ni abrir junio.
+
+Actualización 2026-07-11 13:05 CEST: se corrige una ambigüedad operativa importante. El feed consulta cada 60 s y el bot recorre el loop cada ~65 s, pero la policy vigente aplica `entry_sample_minutes=5`; adquisición 1m y decisiones 5m son capas distintas. La prueba early 5m fue el control live-contract, no un intento de descartar los minutos intermedios. El siguiente factor será una rejilla de candidatos 1m sobre exactamente el mismo dataset/mecanismo causal, sin alterar producción hasta superar las gates.
+
+La familia `clean_live1000` previa no sustituye esta prueba: usa datasets `dense15` 2025–2026, labels/exits legacy y el IB completo. El dataset nuevo contiene 18.684 filas 2022–mayo2026, 10:00–10:25, executable ask→bid, trailing con hold>=30m, sin `near_level_only` y sin IB/Fib/nearest en el modelo. El control 5m terminó rechazado: SPXW 39 trades, WR 43,59%, PF 1,109, solo 2/5 folds seleccionados; QQQ y SPY 0/5. No se debe reconstruir ni reinterpretar como prueba 1m.
 
 Actualización 2026-07-11 12:10 CEST: el skip directo de momentum 5/15/30m queda rechazado (`0/210` candidatos válidos por arm, 30 abstenciones, 0 OOS trades). Tampoco mejora de forma reproducible MAE/RMSE/dirección. Con esto se cierra la vía de iterar representaciones. La pista práctica vuelve a la familia dense15/GBT + backfill/guards, que mostró edge histórico pero bajo labels y lineage legacy no promocionables. La nueva agenda es reconstruir ese mecanismo con executable quotes, hold>=30m y datos 2022–2025, aislando objetivo, bucket, backfill y guard; no añadir otra arquitectura.
 
