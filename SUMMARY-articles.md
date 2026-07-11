@@ -15,7 +15,16 @@ Una idea académica solo contará para live si se prueba con:
 - enero–mayo de 2026 como zona exploratoria nested;
 - junio de 2026 intacto hasta congelar un único protocolo.
 
-Gates por ticker y mes: PnL > 0, WR > 50%, PF > 1,3 y más de 18 trades.
+Gates por ticker y mes: hold realizado `>=30m`, PnL > 0 en todos los meses walk-forward, WR `>=50%`, PF `>=1,3` y al menos 18 trades por mes.
+
+El histórico local disponible para train/inner-validation causal cubre 2022–2026 en:
+
+```text
+D:/ThetaData/data_options
+D:/ThetaData/data_underlying_derived
+```
+
+La disponibilidad de más historia no autoriza a abrir junio de 2026 ni a usar meses externos para seleccionar arquitectura, policy o thresholds.
 
 ## 2. Baseline causal a superar
 

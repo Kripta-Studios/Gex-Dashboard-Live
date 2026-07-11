@@ -5,6 +5,18 @@
 
 > Esta bitácora se actualiza durante el trabajo. Solo se marca como completado lo reproducido en esta sesión. No implica despliegue, commit ni push salvo que se indique expresamente.
 
+## Criterio canónico de investigación y promoción
+
+Toda variante debe entrenarse, seleccionarse y evaluarse buscando simultáneamente, **para cada ticker** (`SPXW`, `QQQ`, `SPY`):
+
+- hold realizado de al menos 30 minutos por trade;
+- profit factor `>= 1,30`;
+- win rate `>= 50%`;
+- al menos 18 trades en cada mes evaluado;
+- PnL positivo en todos los meses del walk-forward.
+
+Las fuentes históricas disponibles son `D:/ThetaData/data_options` y `D:/ThetaData/data_underlying_derived`, con opciones y spot entre 2022 y 2026. Ese histórico puede ampliar el train/inner-validation solo mediante folds causales; junio de 2026 continúa completamente sellado durante esta investigación y nunca puede entrar en train, selección de arquitectura o thresholds.
+
 ## 1. Baseline verificado antes de nuevos cambios
 
 ### Estado del worktree
@@ -71,7 +83,7 @@ Bloqueos reproducidos:
 - labels legacy, no `executable_quote` ask→bid;
 - falta `position_overlap_policy=reject_while_open`;
 - 55 entradas solapadas incompatibles con live;
-- `SPY.min_month_trades = 14`, por debajo del objetivo estricto `>18`.
+- `SPY.min_month_trades = 14`, por debajo del objetivo vigente de al menos 18.
 
 El paquete actual continúa siendo `BLOCKED_FOR_PRODUCTION`; no se modificará ni se desplegará mientras se construye una alternativa separada.
 

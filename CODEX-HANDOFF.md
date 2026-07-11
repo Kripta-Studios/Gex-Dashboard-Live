@@ -20,6 +20,18 @@
 - Próximo paso seguro: esperar a que PID `8636` termine; verificar 15 folds/hashes/provenance y solo entonces lanzar modal en otra ruta nueva con idénticos argumentos.
 - Junio de 2026 sigue sellado. No se modificó systemd, no se promovió ningún paquete y no se tocó la policy legacy.
 
+### Objetivo cuantitativo obligatorio
+
+Para cada ticker (`SPXW`, `QQQ`, `SPY`) y no solo en agregado, cualquier candidato debe cumplir en el walk-forward:
+
+- hold por trade `>=30m`;
+- PF `>=1,30`;
+- WR `>=50%`;
+- trades por mes `>=18`;
+- PnL mensual positivo en todos los meses de evaluación.
+
+Hay datos históricos de opciones y spot de 2022 a 2026 bajo `D:/ThetaData/data_options` y `D:/ThetaData/data_underlying_derived`. Deben usarse solo con ventanas causales y hashes/manifests reproducibles. Junio de 2026 permanece sellado hasta que exista un único protocolo congelado.
+
 ## Auditoría de reanudación de 2026-07-10 21:31 CEST
 
 - Se leyeron completos `SUMMARY-update.md`, `SUMMARY-articles.md`, `SUMMARY.md` y este handoff.
