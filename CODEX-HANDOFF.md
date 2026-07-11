@@ -68,6 +68,8 @@ Cadencia confirmada en código: el live **recopila snapshots cada minuto** (`DEF
 - V1r1 terminó 99/99 en 282,3 s y reprodujo exactamente la ciencia V1. Solo SPY habilita policies: C0 `202409/202410/202502`, P1 `202410`. Outer C0: 61 trades, WR `45,90%`, PF `0,9978`, `-0,0396R`; P1: 23, WR `34,78%`, PF `0,4265`, `-4,9301R`. SPXW/QQQ 0 folds y ninguna celda pasa el contrato. Corrección verificada pero modelo `REJECTED`; no retunar.
 - El diagnóstico de gates corregido localiza el cuello: frecuencia pasa en la gran mayoría de configs P1 (`QQQ 2026/2079`, `SPXW 2002/2079`, `SPY 1766/2079`), pero PF pasa solo `1/1/14` y WR `31/2/144`. No falta cadencia; falla dirección/payoff.
 - Próximo arm ya implementado/predeclarado, aún no ejecutado: `PAIRWISE_MAGNITUDE_WEIGHTED_SIDE_V1`. Mantiene P1/LightGBM/oportunidad/features/folds/grid/scheduler y solo pondera el side loss por `abs(side_advantage)` capped al q95 train-only y normalizado. Tests focalizados `30 passed`. Es discovery adaptativo sobre 2022–2025, nunca promocionable sin holdout nuevo.
+- Resultado weighted: `48/99` BA wins, mediana delta `-0,0001`, `p=0,6642`; solo SPY/202410 selecciona. Outer weighted 22 trades, WR `27,27%`, PF `0,4299`, `-5,1555R`, peor que P1. `REJECTED`; no barrer q90/q99 ni pesos.
+- Siguiente factor defendible: mantener P1 unweighted y opportunity con las 30 features, pero dar solo al side head el bloque `phys_*`/`ctx_*` current-time ya materializado y excluyendo las cinco features event-in-day no reproducibles y spots absolutos. Esto prueba pérdida de información direccional, no otra arquitectura.
 
 ## Actualización 2026-07-11 15:45 CEST — Regime Gate Ablation V1 reproducible y auditado; C0 internal equivalence PASS
 

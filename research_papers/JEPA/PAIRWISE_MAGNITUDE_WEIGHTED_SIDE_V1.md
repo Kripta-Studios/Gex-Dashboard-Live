@@ -1,6 +1,6 @@
 # PAIRWISE_MAGNITUDE_WEIGHTED_SIDE_V1
 
-Status: predeclared exploratory mechanism test; not executed at this checkpoint.
+Status: executed once; rejected; do not tune weight cap.
 
 ## Hypothesis and single factor
 
@@ -28,3 +28,11 @@ ticker/month PF>=1.3, WR>=50%, >=18 trades, PnL>0 and every hold>=30m.
 Because Pairwise V1/V1r1 results over 2022–2025 motivated this weighting, this run is
 adaptive mechanism discovery and cannot promote a live model even if it passes. A
 new untouched holdout would remain mandatory. 2026 and production stay untouched.
+
+## Result
+
+W1 improved balanced accuracy in only `48/99` cells, median delta `-0.0001`,
+Wilcoxon `p=0.6642`; annual median was negative in 2023 and zero in 2024.
+Unweighted and weighted each selected only SPY/202410. Weighted outer: 22 trades,
+WR `27.27%`, PF `0.4299`, PnL `-5.1555R`, worse than the already rejected control.
+No economic cell passed. Magnitude weighting is rejected; do not sweep quantiles.

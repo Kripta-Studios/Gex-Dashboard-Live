@@ -1,0 +1,11 @@
+{
+  "git_head": "b2a32ec26e5f6ee1c4d675f3093becceff52768b",
+  "dataset_sha256": "d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408",
+  "script_sha256": "b18413b97c335270e43e77c6939e3b733f6e29537eb6ee9d4757c15ebcebdff7",
+  "test_sha256": "33a43695c7f43d50c7cb5eecf4531057cbb51b33de73bff02fa8b169c6a0686a",
+  "runner_sha256": "f8507f3c2931f8858422ddd5bd1204caf30eb4d4a1f806f1b7b17d2a9d1a11db",
+  "contains_2026": false,
+  "production_modified": false,
+  "adaptive_reuse_not_promotable": true,
+  "exit_code": 0
+}
