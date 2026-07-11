@@ -5,6 +5,14 @@
 
 > Esta bitácora se actualiza durante el trabajo. Solo se marca como completado lo reproducido en esta sesión. No implica despliegue, commit ni push salvo que se indique expresamente.
 
+## Actualización 2026-07-11 05:05 CEST — PatchCore abstention v1 predeclarado
+
+La auditoría previa detectó que el selector flat-history llamado runtime-equivalente solo había fijado cupos/cooldowns: sus folds seleccionaron buckets variables d50/d65/d80. Esto no afecta la comparación simétrica de historia ya cerrada, pero impide reutilizar esas policies como control live exacto. PatchCore se ancla en cambio al payoff head determinista d25 SPXW/d35 QQQ-SPY de Portfolio Var-JEPA.
+
+El nuevo experimento comparte un único modelo/scores/acciones entre control y variante. Solo PatchCore puede abstener candidatos mediante distancia 1-NN a un coreset k-center de 128 eventos por ticker, construido exclusivamente con latentes flat actionless de train. El cap se elige en inner validation entre siete quantiles fijos; no se barre tamaño, métrica ni arquitectura. Se mantienen las gates estrictas y junio sellado.
+
+Predeclaración `research_papers/JEPA/PORTFOLIO_PATCHCORE_ABSTENTION_PREDECLARATION_V1.md`; script SHA `2649D8ED...D29E9`, runner `run_portfolio_patchcore_abstention_v1.ps1` SHA `A0F653D8...0795`, dataset `39203C83...DA2F`. Tests `9 passed`. La distancia solo puede abstener; no cambia CALL/PUT, score, riesgo ni contrato.
+
 ## Actualización 2026-07-11 04:47 CEST — Portfolio Var-JEPA v1 terminado y rechazado
 
 Ambos arms terminaron 5/5 modelos mensuales y 15/15 celdas ticker×mes, con policies persistidas antes del test, hashes/provenance PASS, seeds/folds idénticos y auditoría runtime PASS. El runner de train finalizó ambos arms; el primer análisis falló únicamente por un mapeo nominal `trades_per_month`/`min_month_trades`. Se corrigió con test, se hashearon los seis inputs congelados y se reanudó solo el análisis, sin repetir ni modificar modelos.

@@ -1,5 +1,13 @@
 # CODEX-HANDOFF.md — Estado para continuación por otro agente
 
+## Actualización 2026-07-11 05:05 CEST — PatchCore v1 listo para checkpoint/lanzamiento
+
+- Se detectó que `...flat_history_2025...walkforward_runtime_contract_v1` seleccionó buckets d50/d65/d80 en varios folds. Sus cupos/cooldowns sí eran runtime, pero no el bucket; no usar esas policies como control exacto. La comparación history 2022/2025 sigue siendo simétrica, pero no es candidata live.
+- Nuevo script `neural/jepa/walkforward_event_option_patchcore_abstention.py`: comparte un solo payoff head determinista exacto d25/d35 entre control/PatchCore; coreset k-center train-only, 128 centros/ticker, 70 latentes flat actionless, distancia 1-NN. PatchCore solo filtra; no modifica acción ni score.
+- Selección: mismos thresholds que control × siete quantiles de distancia predeclarados. Gates internas PF1,3/WR50%/18 trades por mes/todos los meses positivos. Folds `202601..202605`, seed `20260618+YYYYMM`, CUDA determinista, 40 epochs, batch512, junio sellado.
+- Hashes: script `2649D8ED77A7A43F07BE0E67FC47B51FC5ADF6F5E9FC9D304DA4C09A693D29E9`; runner `A0F653D8FDAF735641816A93A2D177DE42323488570B4FC75C8F17D584510795`; dataset `39203C83F47A60AFB2AB7951201CBEB3B9098F4238169F0D716649571667DA2F`. Tests focalizados `9 passed`.
+- Próximo paso: commitear/pushear script/test/runner/predeclaración/handoffs; reauditar procesos y ejecutar una sola instancia de `run_portfolio_patchcore_abstention_v1.ps1`. No cambiar coreset size/quantiles después de ver resultados.
+
 ## Actualización 2026-07-11 04:47 CEST — Portfolio Var-JEPA v1 cerrado y rechazado
 
 - Checkpoint de predeclaración subido en `de3e320`. El runner único completó deterministic y variational: cinco modelos mensuales/arm, 15 policies/arm, 15/15 folds con `invalid_validation` honesto, provenance PASS y runtime replay PASS. Ya no queda ningún proceso Python/CUDA de esta corrida.
