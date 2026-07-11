@@ -17,6 +17,14 @@ D:/ThetaData/data_underlying_derived/SPY
 
 Hardware local: RTX 5070 Ti con 12 GB VRAM, Ryzen 9 con 32 hilos y 32 GB RAM. Usar CUDA determinista y batches ajustados a VRAM para entrenamiento/inferencia; paralelizar carga y transformaciones CPU sin crear corridas duplicadas.
 
+## Actualización 2026-07-11 14:05 CEST — baseline rentable no es OOS de selección; auditoría pre-2026 preparada
+
+- Metadata confirma: modelos frozen entrenan `202501..202512`, pero thresholds y reglas static-union declaran selección `202601..202606`. Sus PF/WR fuertes son in-sample de selección para esas reglas, no holdout causal.
+- Solo existe un dataset 1m local: el creado en la prueba anterior. Reutilizables exactos: early5m y causal1030 5m; no reconstruir.
+- Predeclarada auditoría inversa barata: entrenar componentes enero–septiembre2025 y aplicar literalmente reglas actuales a octubre–diciembre2025. No usa 2026, pero tampoco borra el hindsight con que se eligieron las reglas; PASS sería estabilidad, no promoción.
+- Script `audit_pre2026_frozen_static_mechanism.py`, runner `run_pre2026_frozen_static_mechanism_audit_v1.ps1`, predeclaración `PRE2026_FROZEN_STATIC_MECHANISM_REVERSE_AUDIT_V1.md`; `9 passed`, compile/parse PASS.
+- Siguiente: commit/push antes de ejecutar una sola instancia. No tocar producción.
+
 ## Actualización 2026-07-11 13:45 CEST — 1m terminado y rechazado; no faltaban candidatos
 
 - Corrida única completa, 30 tests, 159 chunks, auditor de paridad y causal PASS, sin stderr/procesos residuales.

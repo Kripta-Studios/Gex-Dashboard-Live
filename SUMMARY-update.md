@@ -14,6 +14,12 @@ D:/ThetaData/data_underlying_derived/{SPXW,QQQ,SPY}
 
 Recursos locales: RTX 5070 Ti de 12 GB VRAM, Ryzen 9 de 32 hilos y 32 GB RAM. Los entrenamientos deben aprovechar CUDA determinista y la preparación de datos debe paralelizar CPU de forma reproducible.
 
+## Actualización 2026-07-11 14:05 CEST — auditando la fuente real de la rentabilidad productiva
+
+La metadata demuestra que el baseline static-union rentable no ofrece un holdout 2026 limpio: sus modelos entrenan en 2025, pero thresholds, franjas, action/momentum filters y policies fueron seleccionados en `202601..202606`, los mismos meses reportados. Por eso no se usarán esas métricas para declarar conseguido el objetivo.
+
+Se congeló una auditoría inversa sin leer 2026: entrenar enero–septiembre2025 y aplicar las reglas productivas sin cambios a octubre–diciembre2025. Exige las gates completas por ticker en los tres meses. Es solo una prueba de estabilidad retrospectiva porque las reglas nacieron con hindsight 2026. Script/runner/predeclaración listos, `9 passed`; aún no ejecutado.
+
 ## Actualización 2026-07-11 13:45 CEST — la cadencia 1m no generaliza
 
 El arm 1m terminó sin errores. Construyó 80.964 filas y añadió 62.280 timestamps intermedios; las 18.684 filas comunes y sus 239 columnas base son idénticas al control (`max_numeric_abs_diff=0`). Por tanto la comparación no está contaminada por un rebuild distinto.
