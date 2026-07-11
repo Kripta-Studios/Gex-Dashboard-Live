@@ -630,6 +630,7 @@ def fit_profile_fold(
     best_cfg = fold_grid[0]
     best_score = -1e18
     best_metrics: dict = {}
+    best_rank: tuple[float, int] | None = None
     for cfg in fold_grid:
         val_trades = deploy(val_scored, cfg, int(cooldown_minutes))
         row = metrics(val_trades, val_months)
@@ -652,10 +653,15 @@ def fit_profile_fold(
             score += float(args.daily_win_weight) * float(row["daily_win_rate"])
         if np.isfinite(float(row.get("top5_share_of_pnl", float("nan")))):
             score -= float(args.top5_share_penalty) * max(float(row["top5_share_of_pnl"]) - 1.0, 0.0)
-        if score > best_score:
+        # Keep a real diagnostic row even when every candidate is invalid.
+        # At the scale of -1e18, adding a small trade count can round back to
+        # exactly -1e18, so comparing the float alone loses every near-miss.
+        rank = (float(score), int(row.get("trades", 0)))
+        if best_rank is None or rank > best_rank:
             best_cfg = cfg
             best_score = float(score)
             best_metrics = row
+            best_rank = rank
 
     valid_val_selection = bool(best_score > -1e17)
     if not valid_val_selection and not bool(args.allow_invalid_val_deploy):

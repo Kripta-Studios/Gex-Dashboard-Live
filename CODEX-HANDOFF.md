@@ -17,6 +17,17 @@ D:/ThetaData/data_underlying_derived/SPY
 
 Hardware local: RTX 5070 Ti con 12 GB VRAM, Ryzen 9 con 32 hilos y 32 GB RAM. Usar CUDA determinista y batches ajustados a VRAM para entrenamiento/inferencia; paralelizar carga y transformaciones CPU sin crear corridas duplicadas.
 
+## Actualización 2026-07-11 13:45 CEST — 1m terminado y rechazado; no faltaban candidatos
+
+- Corrida única completa, 30 tests, 159 chunks, auditor de paridad y causal PASS, sin stderr/procesos residuales.
+- Dataset 1m: 80.964 filas; añade 62.280 filas y reproduce exactamente las 18.684 comunes/239 columnas base (`max diff=0`). No es duplicado de `clean1000`.
+- Resultado: SPXW 1/5 folds, 20 trades, WR `40%`, PF `1,220`, `+1,700R`, min mes 0; QQQ/SPY 0/5 y 0 trades. Rechazado, junio/live intactos.
+- Causa: inestabilidad, no volumen. SPXW valida oct–dic con PF `2,535`, WR `56,45%`, 62 trades y todos meses positivos, pero enero OOS cae a PF `1,220`/WR `40%`; al entrar enero en inner, deja de haber policy. QQQ/SPY nunca pasan las gates inner.
+- El control 5m fue mejor en cobertura (2 folds/39 trades SPXW), aunque también inválido. No barrer 2m/3m/4m ni minutos OOS.
+- Informe `.../early_causal_noib_d25_win_1m_202601_202605_seed20260618_v2/REPORT.md`; base SHA `66018CEE...CBD6`, physics `804BF0CC...CBE9`.
+- Bug solo diagnóstico localizado: empates float en `-1e18` dejaban vacía la métrica del mejor candidato inválido. Fix `(score,trades)` + test después de la corrida; no cambia selección/trades y no autoriza relanzar primary.
+- Antes del siguiente build, buscar cualquier parquet `bar_minutes=1` existente por metadata. El siguiente mecanismo no debe ser otra cadencia; estudiar cobertura de sesión/bucket solo con selección inner predeclarada, sin usar OOS para escoger.
+
 ## Actualización 2026-07-11 13:20 CEST — ablación de cadencia 1m predeclarada, no ejecutada
 
 - No se encontró ningún dataset early executable 1m reutilizable. Solo existen el base/physics 5m creados en esta sesión y los `clean1000/dense15` legacy ya descartados como equivalentes.

@@ -79,3 +79,11 @@ def test_early_grid_auditor_distinguishes_one_and_five_minute_cadence() -> None:
     assert minute_grid_issues(one_minute, 5)
     assert not minute_grid_issues(five_minute, 5)
     assert not minute_grid_issues(five_minute, 1)
+
+
+def test_invalid_candidate_rank_can_break_negative_1e18_float_ties() -> None:
+    # IEEE-754 rounds both additions to the same value at this magnitude.
+    low = float(-1e18 + 10)
+    high = float(-1e18 + 20)
+    assert low == high
+    assert (high, 20) > (low, 10)

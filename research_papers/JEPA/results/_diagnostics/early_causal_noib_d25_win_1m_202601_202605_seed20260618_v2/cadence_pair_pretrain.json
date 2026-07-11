@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "audit": "early_candidate_cadence_pair",
+  "control_path": "tmp\\event_option_dataset_execquote_causal1000_noib_early_202201_202605_v1\\event_option_dataset.parquet",
+  "control_sha256": "5E916EFAAEA2D89B195E481FFD5948273E1D362F146EA4E8C05C3C61EFBBEF49",
+  "candidate_path": "tmp\\event_option_dataset_execquote_causal1000_noib_early_1m_202201_202605_v2\\event_option_dataset.parquet",
+  "candidate_sha256": "66018CEE932F39BCDF42B4A9B7E0DB7F6F3D22DD701F8706BF83507DA49BCBD6",
+  "control_rows": 18684,
+  "candidate_rows": 80964,
+  "candidate_control_grid_rows": 18684,
+  "candidate_extra_rows": 62280,
+  "common_columns": 239,
+  "key_parity": true,
+  "max_numeric_abs_diff": 0.0,
+  "differing_columns": [],
+  "issues": [],
+  "passed": true
+}

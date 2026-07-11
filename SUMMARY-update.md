@@ -14,6 +14,14 @@ D:/ThetaData/data_underlying_derived/{SPXW,QQQ,SPY}
 
 Recursos locales: RTX 5070 Ti de 12 GB VRAM, Ryzen 9 de 32 hilos y 32 GB RAM. Los entrenamientos deben aprovechar CUDA determinista y la preparación de datos debe paralelizar CPU de forma reproducible.
 
+## Actualización 2026-07-11 13:45 CEST — la cadencia 1m no generaliza
+
+El arm 1m terminó sin errores. Construyó 80.964 filas y añadió 62.280 timestamps intermedios; las 18.684 filas comunes y sus 239 columnas base son idénticas al control (`max_numeric_abs_diff=0`). Por tanto la comparación no está contaminada por un rebuild distinto.
+
+SPXW selecciona solo enero: 20 trades, WR `40%`, PF `1,220`, `+1,700R`, min mes 0. QQQ y SPY abstienen los cinco folds. La explicación es inestabilidad: SPXW parecía fuerte en inner oct–dic (62 trades, WR 56,45%, PF 2,535, todos los meses positivos), pero pierde la gate en enero OOS; al incorporar enero, ya no hay selección válida. QQQ/SPY no superan las gates internas en ningún fold. Más minutos no resolvieron la ausencia de señal estable y empeoraron la cobertura del control 5m.
+
+No se explorarán 2m/3m/4m ni minutos concretos usando OOS. Informe `.../early_causal_noib_d25_win_1m_202601_202605_seed20260618_v2/REPORT.md`. Se corrige además un empate `-1e18` que ocultaba métricas del mejor candidato inválido; es solo diagnóstico, no cambia abstención ni PnL y la corrida primaria no se relanza.
+
 ## Actualización 2026-07-11 13:20 CEST — arm 1m congelado antes de ejecutar
 
 La búsqueda local confirma que no había una vista early executable-quote 1m ya construida; solo están el control 5m nuevo y los `dense15/clean1000` legacy. Se implementó una comparación 1m que mantiene todo salvo la cadencia: mismo d25-win, quotes, trailing/hold, no-IB allowlist, folds, thresholds, caps/cooldowns, seed y gates.

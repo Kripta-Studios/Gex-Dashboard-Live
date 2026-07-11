@@ -1,0 +1,106 @@
+{
+  "evaluation_months": [
+    "202601",
+    "202602",
+    "202603",
+    "202604",
+    "202605"
+  ],
+  "folds": [
+    {
+      "evaluation_month": "202601",
+      "policy_artifact_path": "research_papers/JEPA/results/_diagnostics/early_causal_noib_d25_win_1m_202601_202605_seed20260618_v2/fold_policy_artifacts/fold_policy_202601.json",
+      "policy_artifact_sha256": "5d33fd359f0a277204ac12d96ecc3aafea50e9f6b7edb324629c9dd661f87582",
+      "policy_frozen_before_evaluation": true,
+      "selection_months": [
+        "202510",
+        "202511",
+        "202512"
+      ],
+      "training_months": [
+        "202201",
+        "202202",
+        "202203",
+        "202204",
+        "202205",
+        "202206",
+        "202207",
+        "202208",
+        "202209",
+        "202210",
+        "202211",
+        "202212",
+        "202301",
+        "202302",
+        "202303",
+        "202304",
+        "202305",
+        "202306",
+        "202307",
+        "202308",
+        "202309",
+        "202310",
+        "202311",
+        "202312",
+        "202401",
+        "202402",
+        "202403",
+        "202404",
+        "202405",
+        "202406",
+        "202407",
+        "202408",
+        "202409",
+        "202410",
+        "202411",
+        "202412",
+        "202501",
+        "202502",
+        "202503",
+        "202504",
+        "202505",
+        "202506",
+        "202507",
+        "202508",
+        "202509"
+      ]
+    },
+    {
+      "evaluation_month": "202602",
+      "policy_artifact_path": "research_papers/JEPA/results/_diagnostics/early_causal_noib_d25_win_1m_202601_202605_seed20260618_v2/fold_policy_artifacts/fold_policy_202602.json",
+      "policy_artifact_sha256": "3e79622b7c90fd76e2dea767f3eaa37efebe777a52266bca0847134d276ba485",
+      "policy_frozen_before_evaluation": false,
+      "selection_months": [],
+      "training_months": []
+    },
+    {
+      "evaluation_month": "202603",
+      "policy_artifact_path": "research_papers/JEPA/results/_diagnostics/early_causal_noib_d25_win_1m_202601_202605_seed20260618_v2/fold_policy_artifacts/fold_policy_202603.json",
+      "policy_artifact_sha256": "d5720f81b4dbc09e2a57df93e321e2a4d1c0044688ee03e32f616bc387685b41",
+      "policy_frozen_before_evaluation": false,
+      "selection_months": [],
+      "training_months": []
+    },
+    {
+      "evaluation_month": "202604",
+      "policy_artifact_path": "research_papers/JEPA/results/_diagnostics/early_causal_noib_d25_win_1m_202601_202605_seed20260618_v2/fold_policy_artifacts/fold_policy_202604.json",
+      "policy_artifact_sha256": "ccce8b13cda38d0f3abe229c4a4c655bee3c6cb4bc3d09df40fdad7e10dd4e4e",
+      "policy_frozen_before_evaluation": false,
+      "selection_months": [],
+      "training_months": []
+    },
+    {
+      "evaluation_month": "202605",
+      "policy_artifact_path": "research_papers/JEPA/results/_diagnostics/early_causal_noib_d25_win_1m_202601_202605_seed20260618_v2/fold_policy_artifacts/fold_policy_202605.json",
+      "policy_artifact_sha256": "58011783cacd5f2b099eafaa8a160808ff7377870c3e2e2e59f19615022470db",
+      "policy_frozen_before_evaluation": false,
+      "selection_months": [],
+      "training_months": []
+    }
+  ],
+  "mode": "nested_walk_forward",
+  "passed": false,
+  "schema_version": 1,
+  "selection_protocol_frozen_before_evaluation": true,
+  "trade_artifact_kind": "nested_walk_forward_fold_outputs"
+}
