@@ -25,7 +25,7 @@ def manifest_row(tmp_path: Path, ticker: str = "SPY", trade_date: str = "2025010
     for strike in (99.0, 100.0, 101.0):
         for right in ("CALL", "PUT"):
             greeks.append({
-                "timestamp": f"{trade_date[:4]}-{trade_date[4:6]}-{trade_date[6:]} 10:35:15",
+                "timestamp": f"{trade_date[:4]}-{trade_date[4:6]}-{trade_date[6:]} 10:35:00",
                 "underlying_timestamp": None,
                 "strike": strike,
                 "right": right,
@@ -37,7 +37,8 @@ def manifest_row(tmp_path: Path, ticker: str = "SPY", trade_date: str = "2025010
                 "right": right,
                 "open_interest": 5000.0 if (strike, right) in {(101.0, "CALL"), (99.0, "PUT")} else 100.0,
             })
-    pd.DataFrame(greeks).to_parquet(greeks_path, index=False)
+    later_quotes = [{**item, "timestamp": item["timestamp"][:-2] + "30", "underlying_price": 101.0} for item in greeks]
+    pd.DataFrame(greeks + later_quotes).to_parquet(greeks_path, index=False)
     pd.DataFrame(oi).to_parquet(oi_path, index=False)
     return {
         "ticker": ticker,
@@ -67,6 +68,7 @@ def test_real_parquet_loader_joins_daily_oi_and_builds_current_wall(tmp_path):
     chain = load_wall_chain(row)
     assert len(chain) == 6
     assert chain["open_interest"].gt(0.0).all()
+    assert chain["underlying_price"].eq(100.0).all()
     state = build_session(row)
     assert len(state) == 1
     assert state.loc[0, "ticker"] == "SPY"

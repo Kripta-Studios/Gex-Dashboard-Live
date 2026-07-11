@@ -27,6 +27,9 @@ This is a data/mechanism experiment, not a model or architecture comparison.
 - Decision grid: `10:35..14:30 ET`, five-minute rows. Current-day IB is already
   complete, although IB/Fibonacci is joined in a later causal stage rather than
   recomputed inside the wall surface.
+- Historical decisions use only the exact `HH:MM:00` Greeks snapshot, matching
+  the executable event builder. A later sub-minute quote such as `HH:MM:30` is
+  future information for that row and is excluded rather than floor-joined.
 
 Open interest is required. Historical daily OI is treated as the value observable
 for that trading session, matching the existing collector/live convention.

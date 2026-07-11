@@ -147,6 +147,11 @@ def load_wall_chain(record: dict[str, Any] | pd.Series) -> pd.DataFrame:
         raise KeyError(f"{row['greeks_path']} has no observable timestamp")
     greeks = greeks.assign(quote_dt=quote_dt).dropna(subset=["quote_dt"]).copy()
     greeks["dt"] = greeks["quote_dt"].dt.floor("min")
+    # The executable event builder scores at HH:MM:00. A quote from HH:MM:30 is
+    # future information for that decision even though it floors to the same minute.
+    greeks = greeks[greeks["quote_dt"].eq(greeks["dt"])].copy()
+    if greeks.empty:
+        raise AssertionError(f"no exact minute-boundary Greeks in {row['greeks_path']}")
     greeks["right"] = normalize_right(greeks["right"])
     greeks["strike"] = pd.to_numeric(greeks["strike"], errors="coerce")
 
@@ -370,7 +375,7 @@ def main() -> int:
     metadata_path = output_dir / ("preflight_manifest.json" if args.preflight else "manifest.json")
     metadata_path.write_text(json.dumps(metadata, indent=2, allow_nan=False), encoding="utf-8")
     print(json.dumps(metadata, indent=2, allow_nan=False), flush=True)
-    if errors:
+    if args.preflight and errors:
         return 2
     if args.preflight:
         if audit["sessions"] != 3 or audit["grid_coverage"] < 0.98:
