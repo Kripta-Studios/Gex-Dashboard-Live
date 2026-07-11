@@ -2,19 +2,40 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
+import pytest
+import torch
 
 from neural.jepa.event_option_component_live import LIVE_INCONSISTENT_INTRADAY_STATE_FEATURES
 from neural.jepa.walkforward_event_phys_td_jepa_oof import (
     EventPhysTDJEPADataset,
+    GramConsistencyLoss,
+    ModalSequenceEncoder,
     build_contexts,
     filter_frame_to_month_cutoff,
     select_feature_columns,
+    set_seed,
 )
 
 
 class _IdentityNormalizer:
     def transform_frame(self, frame: pd.DataFrame) -> np.ndarray:
         return frame[["feature"]].to_numpy(dtype=np.float32)
+
+
+def test_set_seed_can_require_deterministic_cuda(monkeypatch: pytest.MonkeyPatch) -> None:
+    previous = torch.are_deterministic_algorithms_enabled()
+    previous_cudnn = torch.backends.cudnn.deterministic
+    previous_benchmark = torch.backends.cudnn.benchmark
+    monkeypatch.setenv("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
+    try:
+        set_seed(17, deterministic=True)
+        assert torch.are_deterministic_algorithms_enabled()
+        assert torch.backends.cudnn.deterministic
+        assert not torch.backends.cudnn.benchmark
+    finally:
+        torch.use_deterministic_algorithms(previous)
+        torch.backends.cudnn.deterministic = previous_cudnn
+        torch.backends.cudnn.benchmark = previous_benchmark
 
 
 def test_phys_td_feature_selection_rejects_live_inconsistent_state() -> None:
@@ -94,3 +115,85 @@ def test_month_cutoff_physically_removes_sealed_holdout() -> None:
     filtered = filter_frame_to_month_cutoff(frame, "202605")
 
     assert filtered["trade_date"].tolist() == [20260529]
+
+
+@pytest.mark.parametrize(
+    ("mask_modal_prob", "mask_temporal_prob"),
+    [(1.0, 0.0), (0.0, 1.0)],
+)
+def test_modal_encoder_masks_only_the_observed_context_tokens(
+    mask_modal_prob: float,
+    mask_temporal_prob: float,
+) -> None:
+    torch.manual_seed(7)
+    encoder = ModalSequenceEncoder(
+        input_dim=4,
+        hidden_dim=8,
+        output_dim=5,
+        num_layers=1,
+        dropout=0.0,
+        modal_feature_indices=[[0, 1], [2, 3]],
+        modal_token_dim=3,
+        mask_modal_prob=mask_modal_prob,
+        mask_temporal_prob=mask_temporal_prob,
+    )
+    observed = torch.arange(24, dtype=torch.float32).reshape(2, 3, 4)
+    captured: list[torch.Tensor] = []
+    hook = encoder.gru.register_forward_pre_hook(lambda _module, args: captured.append(args[0].detach().clone()))
+
+    encoder.train()
+    encoder(observed)
+    masked_fused = captured.pop()
+    expected = torch.cat(
+        [encoder.modal_mask_tokens[i].view(1, 1, -1).expand(2, 3, -1) for i in range(2)],
+        dim=-1,
+    )
+    assert torch.equal(masked_fused, expected)
+
+    encoder(observed, apply_mask=False)
+    explicitly_unmasked_fused = captured.pop()
+    assert not torch.equal(explicitly_unmasked_fused, expected)
+
+    encoder.eval()
+    encoder(observed)
+    unmasked_fused = captured.pop()
+    hook.remove()
+    assert torch.equal(unmasked_fused, explicitly_unmasked_fused)
+
+
+@pytest.mark.parametrize(
+    ("mask_modal_prob", "mask_temporal_prob"),
+    [(-0.01, 0.0), (1.01, 0.0), (0.0, -0.01), (0.0, 1.01)],
+)
+def test_modal_encoder_rejects_invalid_mask_probabilities(
+    mask_modal_prob: float,
+    mask_temporal_prob: float,
+) -> None:
+    with pytest.raises(ValueError, match="must be between 0 and 1"):
+        ModalSequenceEncoder(
+            input_dim=4,
+            hidden_dim=8,
+            output_dim=5,
+            num_layers=1,
+            dropout=0.0,
+            modal_feature_indices=[[0, 1], [2, 3]],
+            modal_token_dim=3,
+            mask_modal_prob=mask_modal_prob,
+            mask_temporal_prob=mask_temporal_prob,
+        )
+
+
+def test_gram_consistency_loss_is_zero_for_equal_geometry_and_backpropagates() -> None:
+    loss_fn = GramConsistencyLoss()
+    student = torch.tensor([[1.0, 0.0], [0.0, 1.0]], requires_grad=True)
+    same_target = student.detach().clone()
+
+    same_loss = loss_fn(student, same_target)
+    assert same_loss.item() == pytest.approx(0.0)
+
+    different_target = torch.tensor([[1.0, 0.0], [1.0, 0.0]])
+    different_loss = loss_fn(student, different_target)
+    assert different_loss.item() > 0.0
+    different_loss.backward()
+    assert student.grad is not None
+    assert torch.isfinite(student.grad).all()

@@ -4,6 +4,7 @@ import argparse
 import csv
 import json
 import math
+import os
 import random
 import re
 import sys
@@ -98,6 +99,9 @@ class EventPhysTDJEPAConfig:
     encoder_input_mode: str = "flat"
     modal_token_dim: int = 32
     modal_feature_indices: list[list[int]] | None = None
+    mask_modal_prob: float = 0.0
+    mask_temporal_prob: float = 0.0
+    lambda_gram: float = 0.0
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -140,8 +144,16 @@ class ModalSequenceEncoder(nn.Module):
         dropout: float,
         modal_feature_indices: Sequence[Sequence[int]],
         modal_token_dim: int,
+        mask_modal_prob: float = 0.0,
+        mask_temporal_prob: float = 0.0,
     ) -> None:
         super().__init__()
+        if not 0.0 <= float(mask_modal_prob) <= 1.0:
+            raise ValueError("mask_modal_prob must be between 0 and 1")
+        if not 0.0 <= float(mask_temporal_prob) <= 1.0:
+            raise ValueError("mask_temporal_prob must be between 0 and 1")
+        self.mask_modal_prob = float(mask_modal_prob)
+        self.mask_temporal_prob = float(mask_temporal_prob)
         groups = [[int(index) for index in group] for group in modal_feature_indices if group]
         flattened = [index for group in groups for index in group]
         if sorted(flattened) != list(range(int(input_dim))):
@@ -164,6 +176,8 @@ class ModalSequenceEncoder(nn.Module):
                     nn.LayerNorm(int(modal_token_dim)),
                 )
             )
+        self.modal_mask_tokens = nn.Parameter(torch.zeros(len(groups), modal_token_dim))
+        nn.init.normal_(self.modal_mask_tokens, std=0.02)
         fused_dim = len(groups) * int(modal_token_dim)
         self.gru = nn.GRU(
             input_size=fused_dim,
@@ -180,11 +194,24 @@ class ModalSequenceEncoder(nn.Module):
             nn.Linear(hidden_dim, output_dim),
         )
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
+    def forward(self, x: torch.Tensor, *, apply_mask: bool | None = None) -> torch.Tensor:
+        batch_size, seq_len, _ = x.shape
+        masking_enabled = self.training if apply_mask is None else bool(apply_mask)
         tokens = []
-        for buffer_name, norm, projector in zip(self.modal_buffer_names, self.norms, self.projectors):
+        for i, (buffer_name, norm, projector) in enumerate(zip(self.modal_buffer_names, self.norms, self.projectors)):
             indices = getattr(self, buffer_name)
-            tokens.append(projector(norm(torch.index_select(x, dim=-1, index=indices))))
+            t = projector(norm(torch.index_select(x, dim=-1, index=indices)))
+
+            if masking_enabled and self.mask_modal_prob > 0.0:
+                mask = torch.rand(batch_size, 1, 1, device=x.device) < self.mask_modal_prob
+                t = torch.where(mask, self.modal_mask_tokens[i].view(1, 1, -1).expand_as(t), t)
+            tokens.append(t)
+
+        if masking_enabled and self.mask_temporal_prob > 0.0:
+            temporal_mask = torch.rand(batch_size, seq_len, 1, device=x.device) < self.mask_temporal_prob
+            for i in range(len(tokens)):
+                tokens[i] = torch.where(temporal_mask, self.modal_mask_tokens[i].view(1, 1, -1).expand_as(tokens[i]), tokens[i])
+
         fused = torch.cat(tokens, dim=-1)
         _, h = self.gru(fused)
         return self.head(h[-1])
@@ -226,6 +253,8 @@ class EventPhysTDJEPA(nn.Module):
                 config.dropout,
                 config.modal_feature_indices,
                 config.modal_token_dim,
+                mask_modal_prob=config.mask_modal_prob,
+                mask_temporal_prob=config.mask_temporal_prob,
             )
             self.delta_encoder = ModalSequenceEncoder(
                 config.input_dim,
@@ -235,6 +264,8 @@ class EventPhysTDJEPA(nn.Module):
                 config.dropout,
                 config.modal_feature_indices,
                 config.modal_token_dim,
+                mask_modal_prob=config.mask_modal_prob,
+                mask_temporal_prob=config.mask_temporal_prob,
             )
         else:
             raise ValueError(f"Unsupported encoder input mode: {config.encoder_input_mode}")
@@ -267,10 +298,14 @@ class EventPhysTDJEPA(nn.Module):
             nn.Linear(config.hidden_dim, config.hidden_dim),
         )
 
-    def encode_state(self, ctx: torch.Tensor) -> torch.Tensor:
+    def encode_state(self, ctx: torch.Tensor, *, apply_mask: bool | None = None) -> torch.Tensor:
+        if isinstance(self.state_encoder, ModalSequenceEncoder):
+            return self.state_encoder(ctx, apply_mask=apply_mask)
         return self.state_encoder(ctx)
 
-    def encode_delta(self, delta_ctx: torch.Tensor) -> torch.Tensor:
+    def encode_delta(self, delta_ctx: torch.Tensor, *, apply_mask: bool | None = None) -> torch.Tensor:
+        if isinstance(self.delta_encoder, ModalSequenceEncoder):
+            return self.delta_encoder(delta_ctx, apply_mask=apply_mask)
         return self.delta_encoder(delta_ctx)
 
     def project_physics(self, z: torch.Tensor) -> torch.Tensor:
@@ -288,6 +323,17 @@ class EventPhysTDJEPA(nn.Module):
             dz = head(torch.cat([z, d, h], dim=-1))
             preds.append(z + dz)
         return z, d, torch.stack(preds, dim=1)
+class GramConsistencyLoss(nn.Module):
+    """Preserve pairwise geometry between predicted and target latents."""
+
+    def forward(self, student_z: torch.Tensor, teacher_z: torch.Tensor) -> torch.Tensor:
+        # Normalize along feature dimension
+        s = F.normalize(student_z, dim=-1)
+        t = F.normalize(teacher_z, dim=-1)
+        # Compute batch-wise Gram matrices
+        g_s = s @ s.T
+        g_t = t @ t.T
+        return F.mse_loss(g_s, g_t)
 
 
 class PrototypeDistillationLoss(nn.Module):
@@ -428,7 +474,18 @@ def parse_horizons(text: str) -> list[int]:
     return sorted(set(values))
 
 
-def set_seed(seed: int) -> None:
+def set_seed(seed: int, *, deterministic: bool = False) -> None:
+    if deterministic and torch.cuda.is_available():
+        workspace_config = os.environ.get("CUBLAS_WORKSPACE_CONFIG", "")
+        if workspace_config not in {":4096:8", ":16:8"}:
+            raise RuntimeError(
+                "Deterministic CUDA requires CUBLAS_WORKSPACE_CONFIG=:4096:8 or :16:8 "
+                "to be set before launching Python"
+            )
+    torch.use_deterministic_algorithms(bool(deterministic))
+    torch.backends.cudnn.deterministic = bool(deterministic)
+    if deterministic:
+        torch.backends.cudnn.benchmark = False
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -629,6 +686,7 @@ def train_epoch(
     sigreg: SIGRegLoss,
     visreg: VISRegLoss,
     vicreg: VarianceCovarianceLoss,
+    gram_loss_fn: GramConsistencyLoss,
     opt: torch.optim.Optimizer,
     args: argparse.Namespace,
     device: torch.device,
@@ -645,6 +703,7 @@ def train_epoch(
         "vis": 0.0,
         "vic": 0.0,
         "straight": 0.0,
+        "gram": 0.0,
         "total": 0.0,
     }
     total = 0
@@ -657,10 +716,10 @@ def train_epoch(
         b, h, l, f = targets.shape
         z, _, pred_z = model(ctx, delta_ctx)
         if teacher is None:
-            target_z = model.encode_state(targets.reshape(b * h, l, f)).reshape(b, h, -1)
+            target_z = model.encode_state(targets.reshape(b * h, l, f), apply_mask=False).reshape(b, h, -1)
         else:
             with torch.no_grad():
-                target_z = teacher.encode_state(targets.reshape(b * h, l, f)).reshape(b, h, -1)
+                target_z = teacher.encode_state(targets.reshape(b * h, l, f), apply_mask=False).reshape(b, h, -1)
         pred_loss = F.mse_loss(pred_z, target_z.detach())
         proto_loss = pred_loss.new_tensor(0.0)
         if proto_loss_fn is not None and float(args.lambda_proto) > 0.0:
@@ -682,6 +741,9 @@ def train_epoch(
             torch.cat([z[:, res_start:].unsqueeze(1), target_z[:, :, res_start:]], dim=1),
             speed_weight=float(args.straightening_speed_weight),
         )
+        gram_loss = pred_loss.new_tensor(0.0)
+        if float(args.lambda_gram) > 0.0:
+            gram_loss = gram_loss_fn(pred_z.reshape(b * h, -1), target_z.reshape(b * h, -1).detach())
         loss = (
             pred_loss
             + float(args.lambda_proto) * proto_loss
@@ -691,6 +753,7 @@ def train_epoch(
             + float(args.lambda_visreg) * vis_loss
             + float(args.lambda_vicreg) * vic_loss
             + float(args.lambda_straightening) * straight_loss
+            + float(args.lambda_gram) * gram_loss
         )
         opt.zero_grad(set_to_none=True)
         loss.backward()
@@ -708,6 +771,7 @@ def train_epoch(
         sums["vis"] += float(vis_loss.item()) * n
         sums["vic"] += float(vic_loss.item()) * n
         sums["straight"] += float(straight_loss.item()) * n
+        sums["gram"] += float(gram_loss.item()) * n
         sums["total"] += float(loss.item()) * n
     return {k: v / max(1, total) for k, v in sums.items()}
 
@@ -720,6 +784,7 @@ def evaluate_model(
     sigreg: SIGRegLoss,
     visreg: VISRegLoss,
     vicreg: VarianceCovarianceLoss,
+    gram_loss_fn: GramConsistencyLoss,
     args: argparse.Namespace,
     device: torch.device,
 ) -> dict:
@@ -735,6 +800,7 @@ def evaluate_model(
         "vis": 0.0,
         "vic": 0.0,
         "straight": 0.0,
+        "gram": 0.0,
         "total": 0.0,
     }
     total = 0
@@ -749,9 +815,9 @@ def evaluate_model(
             b, h, l, f = targets.shape
             z, _, pred_z = model(ctx, delta_ctx)
             if teacher is None:
-                target_z = model.encode_state(targets.reshape(b * h, l, f)).reshape(b, h, -1)
+                target_z = model.encode_state(targets.reshape(b * h, l, f), apply_mask=False).reshape(b, h, -1)
             else:
-                target_z = teacher.encode_state(targets.reshape(b * h, l, f)).reshape(b, h, -1)
+                target_z = teacher.encode_state(targets.reshape(b * h, l, f), apply_mask=False).reshape(b, h, -1)
             pred_loss = F.mse_loss(pred_z, target_z.detach())
             proto_loss = pred_loss.new_tensor(0.0)
             if proto_loss_fn is not None and float(args.lambda_proto) > 0.0:
@@ -772,6 +838,9 @@ def evaluate_model(
                 torch.cat([z[:, res_start:].unsqueeze(1), target_z[:, :, res_start:]], dim=1),
                 speed_weight=float(args.straightening_speed_weight),
             )
+            gram_loss = pred_loss.new_tensor(0.0)
+            if float(args.lambda_gram) > 0.0:
+                gram_loss = gram_loss_fn(pred_z.reshape(b * h, -1), target_z.reshape(b * h, -1))
             loss = (
                 pred_loss
                 + float(args.lambda_proto) * proto_loss
@@ -781,6 +850,7 @@ def evaluate_model(
                 + float(args.lambda_visreg) * vis_loss
                 + float(args.lambda_vicreg) * vic_loss
                 + float(args.lambda_straightening) * straight_loss
+                + float(args.lambda_gram) * gram_loss
             )
             n = len(ctx)
             total += n
@@ -792,6 +862,7 @@ def evaluate_model(
             sums["vis"] += float(vis_loss.item()) * n
             sums["vic"] += float(vic_loss.item()) * n
             sums["straight"] += float(straight_loss.item()) * n
+            sums["gram"] += float(gram_loss.item()) * n
             sums["total"] += float(loss.item()) * n
             if len(z_batches) < 12:
                 z_batches.append(z.detach().cpu())
@@ -1000,6 +1071,9 @@ def fit_encoder(
         encoder_input_mode=str(args.encoder_input_mode),
         modal_token_dim=int(args.modal_token_dim),
         modal_feature_indices=build_modal_feature_indices(feature_cols) if str(args.encoder_input_mode) == "modal" else None,
+        mask_modal_prob=float(args.mask_modal_prob),
+        mask_temporal_prob=float(args.mask_temporal_prob),
+        lambda_gram=float(args.lambda_gram),
     )
     model = EventPhysTDJEPA(config).to(device)
     teacher = make_ema_teacher(model) if bool(args.use_ema_teacher) else None
@@ -1023,17 +1097,18 @@ def fit_encoder(
         shape_weight=float(args.visreg_shape_weight),
     ).to(device)
     vicreg = VarianceCovarianceLoss(min_std=float(args.vicreg_min_std), cov_weight=0.05, var_weight=1.0).to(device)
+    gram_loss_fn = GramConsistencyLoss().to(device)
     params = list(model.parameters()) + (list(proto_loss_fn.parameters()) if proto_loss_fn is not None else [])
     opt = torch.optim.AdamW(params, lr=float(args.lr), weight_decay=float(args.weight_decay))
     history = []
     for epoch in range(1, int(args.epochs) + 1):
         row = {
             "epoch": epoch,
-            **train_epoch(model, teacher, proto_loss_fn, loader, sigreg, visreg, vicreg, opt, args, device),
+            **train_epoch(model, teacher, proto_loss_fn, loader, sigreg, visreg, vicreg, gram_loss_fn, opt, args, device),
         }
         history.append(row)
     eval_loader = make_loader(ds, args, shuffle=False)
-    train_eval = evaluate_model(model, teacher, proto_loss_fn, eval_loader, sigreg, visreg, vicreg, args, device)
+    train_eval = evaluate_model(model, teacher, proto_loss_fn, eval_loader, sigreg, visreg, vicreg, gram_loss_fn, args, device)
     export_model = teacher if teacher is not None and bool(args.export_teacher_features) else model
     return {
         "model": model,
@@ -1152,6 +1227,9 @@ def train_fold(
         encoder_input_mode=str(args.encoder_input_mode),
         modal_token_dim=int(args.modal_token_dim),
         modal_feature_indices=build_modal_feature_indices(feature_cols) if str(args.encoder_input_mode) == "modal" else None,
+        mask_modal_prob=float(args.mask_modal_prob),
+        mask_temporal_prob=float(args.mask_temporal_prob),
+        lambda_gram=float(args.lambda_gram),
     )
     model = EventPhysTDJEPA(config).to(device)
     teacher = make_ema_teacher(model) if bool(args.use_ema_teacher) else None
@@ -1175,17 +1253,18 @@ def train_fold(
         shape_weight=float(args.visreg_shape_weight),
     ).to(device)
     vicreg = VarianceCovarianceLoss(min_std=float(args.vicreg_min_std), cov_weight=0.05, var_weight=1.0).to(device)
+    gram_loss_fn = GramConsistencyLoss().to(device)
     params = list(model.parameters()) + (list(proto_loss_fn.parameters()) if proto_loss_fn is not None else [])
     opt = torch.optim.AdamW(params, lr=float(args.lr), weight_decay=float(args.weight_decay))
     history = []
     for epoch in range(1, int(args.epochs) + 1):
         row = {
             "epoch": epoch,
-            **train_epoch(model, teacher, proto_loss_fn, loader, sigreg, visreg, vicreg, opt, args, device),
+            **train_epoch(model, teacher, proto_loss_fn, loader, sigreg, visreg, vicreg, gram_loss_fn, opt, args, device),
         }
         history.append(row)
     eval_loader = make_loader(ds, args, shuffle=False)
-    train_eval = evaluate_model(model, teacher, proto_loss_fn, eval_loader, sigreg, visreg, vicreg, args, device)
+    train_eval = evaluate_model(model, teacher, proto_loss_fn, eval_loader, sigreg, visreg, vicreg, gram_loss_fn, args, device)
     export_model = teacher if teacher is not None and bool(args.export_teacher_features) else model
     features = export_month_features(export_model, normalizer, month_df, feature_cols, physical_cols, args, device)
     fold = {
@@ -1325,9 +1404,17 @@ def main() -> int:
         help="Reject features whose value cannot be reproduced by the live snapshot at the decision minute.",
     )
     parser.add_argument("--modal-token-dim", type=int, default=32, help="Per-modality projection width when --encoder-input-mode modal is active.")
+    parser.add_argument("--mask-modal-prob", type=float, default=0.0, help="Probability of masking an entire modality across all context steps.")
+    parser.add_argument("--mask-temporal-prob", type=float, default=0.0, help="Probability of masking all modalities at a given context step.")
+    parser.add_argument("--lambda-gram", type=float, default=0.0, help="Weight for prediction-target Gram consistency.")
     parser.add_argument("--num-workers", type=int, default=0)
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     parser.add_argument("--seed", type=int, default=20260618)
+    parser.add_argument(
+        "--deterministic",
+        action="store_true",
+        help="Use deterministic PyTorch algorithms; CUDA also requires CUBLAS_WORKSPACE_CONFIG before process start.",
+    )
     parser.add_argument("--feature-prefix", default="ptdj")
     parser.add_argument("--group-expiry-mode", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--no-resume", action="store_true")
@@ -1338,7 +1425,7 @@ def main() -> int:
     parser.add_argument("--skip-oof", action="store_true", help="Skip OOF feature export and only run requested deploy export.")
     args = parser.parse_args()
 
-    set_seed(int(args.seed))
+    set_seed(int(args.seed), deterministic=bool(args.deterministic))
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     chunk_dir = output_dir / "feature_chunks"
