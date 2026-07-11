@@ -13,7 +13,8 @@
 - Contrato revalidado por código: solo `executable_quote`, ask→bid, 0DTE, rejilla 10:30–14:30 ET/5m, hold mínimo 30m, una posición por ticker, cero solapamientos, cupos `SPXW=4/QQQ=2/SPY=1`, cooldowns `0/30/0`. Junio no aparece en datos, OOF, selección ni trades; fecha máxima del dataset `20260529`.
 - Informe autocontenido: `research_papers/JEPA/results/_diagnostics/ptdj_ablation_flat_history_2022_vs_2025_runtime_contract_analysis_202601_202605_v1/`. Hash `summary.json`: `A1AFC66158674F239DA027C614C83566817563F19DB32F1A6CAF57A13530BB1`; `REPORT.md`: `AFBA779FF33F9814A7147B7D9D43B0B787B1C0E9ED5CE36ADEA24621BA1BD99D`.
 - Verificación final: `py_compile` PASS y `70 passed in 4.88s` en la suite focalizada, incluido el analizador de historia.
-- Primer paso seguro siguiente: versionar este informe pequeño y los handoffs, hacer push, y después predeclarar —sin ejecutar una búsqueda masiva— el primer factor independiente del punto 4 de la cola (`Portfolio Var-JEPA`). Debe mantener congelado el market encoder flat/control y aislar la incertidumbre/abstención del payoff head; no usar PnL agregado como criterio ni abrir junio.
+- Cierre versionado y subido a `origin/main` en `8da7a7a` (`analysis: close flat history ablation`); contiene solo el informe pequeño y los handoffs, no datasets/checkpoints/trades masivos.
+- Primer paso seguro siguiente: predeclarar —sin ejecutar una búsqueda masiva— el primer factor independiente del punto 4 de la cola (`Portfolio Var-JEPA`). Debe mantener congelado el market encoder flat/control y aislar la incertidumbre/abstención del payoff head; no usar PnL agregado como criterio ni abrir junio.
 
 ## Actualización 2026-07-11 03:23 CEST — ablación flat-history activa, no duplicar
 

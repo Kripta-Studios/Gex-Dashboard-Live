@@ -31,6 +31,8 @@ Decisión: `continue_from_history_2022=false`. La mejora de representación no s
 
 Se revalidaron executable_quote ask→bid, 0DTE, features live, secuencias contiguas, rejilla 10:30–14:30/5m, hold >=30m, cupos/cooldowns runtime y ausencia de solapamientos. Junio de 2026 sigue físicamente sellado. `py_compile` PASS; suite focalizada final: `70 passed in 4.88s`.
 
+El cierre y sus nueve artefactos pequeños de evidencia fueron commiteados y subidos a `origin/main` en `8da7a7a`; no se incluyeron datasets, checkpoints, trades masivos ni `tmp`.
+
 ## Criterio canónico de investigación y promoción
 
 Toda variante debe entrenarse, seleccionarse y evaluarse buscando simultáneamente, **para cada ticker** (`SPXW`, `QQQ`, `SPY`):
