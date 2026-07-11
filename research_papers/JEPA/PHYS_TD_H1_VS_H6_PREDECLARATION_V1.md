@@ -40,3 +40,9 @@ Siempre `production_live_ready=false`; esta prueba no modifica live/systemd.
 | Runner único | `559CEFB80AA86464CA36AF49DA437ED7B2C462CB541E558058BB2901B5C4D061` |
 
 Tests focalizados `13 passed`; compile, PowerShell parse y diff-check PASS. Smoke CUDA de enero: 1.684 contextos current-time, 1.608 filas h1 alineadas, max diff z/h1 `0/0`, tres tickers, sin target futuro. El smoke vive solo en `tmp/phys_td_horizon_export_smoke_20260711` y no se reutiliza como evidencia.
+
+## Resultado final
+
+La corrida completó 5/5 folds por arm con paridad z/h1 `0/0`, provenance/runtime PASS y junio sellado. h1 y h6 obtuvieron `0/210` candidatos válidos; 15/15 policies por arm hicieron abstain. h6 empeoró MAE/RMSE/directional accuracy y solo produjo dos near-miss SPY incompatibles entre folds.
+
+Decisión: `h6_meets_full_ticker_gate=false`, `production_live_ready=false`. No h3/h12/multi-horizon/Ada-h6. Informe `results/_diagnostics/phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1/REPORT.md`.

@@ -1,0 +1,45 @@
+{
+  "component": "event_phys_td_current_horizon_features",
+  "date_max": "20260430",
+  "date_min": "20250102",
+  "encoder_deploy_month": "202604",
+  "encoder_training_months": [
+    "202501",
+    "202502",
+    "202503",
+    "202504",
+    "202505",
+    "202506",
+    "202507",
+    "202508",
+    "202509",
+    "202510",
+    "202511",
+    "202512"
+  ],
+  "end_month": "202604",
+  "horizon_minutes": [
+    5,
+    30
+  ],
+  "horizons": [
+    1,
+    6
+  ],
+  "june_2026_sealed": true,
+  "model_path": "research_papers\\JEPA\\results\\_diagnostics\\adajepa_shadow_coherent_spaces_202601_202605_seed20260618_v1\\fold_202604\\encoder\\event_phys_td_jepa_encoder.pt",
+  "model_sha256": "BA6863339902030EB4CDCFC020AC7084EB7AF253BA3790E0F23F46A1338F001C",
+  "output_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_current_h1_h6_features_202601_202605_v1\\fold_202604\\current_horizon_features.parquet",
+  "output_sha256": "CB6478A815CF63113303A0C207E6F1CF6AEF189C9BEA6D1A6178FA71196584DA",
+  "rows": 25640,
+  "schema_version": 1,
+  "source_path": "tmp\\event_option_dataset_execquote_causal1030_202501_202605_v1_physics\\event_option_dataset.parquet",
+  "source_sha256": "AB144DBAD1F6F103C771AE119A1172AC728BC11B6AA79DB5FB0648561673F720",
+  "start_month": "202501",
+  "tickers": [
+    "QQQ",
+    "SPXW",
+    "SPY"
+  ],
+  "uses_future_target": false
+}

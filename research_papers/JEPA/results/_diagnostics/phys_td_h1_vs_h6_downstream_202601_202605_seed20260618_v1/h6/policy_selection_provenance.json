@@ -1,0 +1,453 @@
+{
+  "arm": "deterministic",
+  "component": "portfolio_payoff_head",
+  "evaluation_months": [
+    "202601",
+    "202602",
+    "202603",
+    "202604",
+    "202605"
+  ],
+  "folds": [
+    {
+      "evaluation_month": "202601",
+      "passed": true,
+      "tickers": [
+        {
+          "evaluation_month": "202601",
+          "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6\\fold_model_artifacts\\payoff_head_202601.pt",
+          "model_artifact_sha256": "7752D4541BF8BE8A1A064C50891703ACE1B21B6FBEB6835FBFB751864D3C9F1C",
+          "policy_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6\\fold_policy_artifacts\\policy_QQQ_202601.json",
+          "policy_artifact_sha256": "AFACD167D0FF41CC80FED4DB1FA8F804BA0BF9259A1D526C1DB72AD7472F316A",
+          "policy_frozen_before_evaluation": true,
+          "selection_months": [
+            "202510",
+            "202511",
+            "202512"
+          ],
+          "ticker": "QQQ",
+          "training_months": [
+            "202501",
+            "202502",
+            "202503",
+            "202504",
+            "202505",
+            "202506",
+            "202507",
+            "202508",
+            "202509"
+          ]
+        },
+        {
+          "evaluation_month": "202601",
+          "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6\\fold_model_artifacts\\payoff_head_202601.pt",
+          "model_artifact_sha256": "7752D4541BF8BE8A1A064C50891703ACE1B21B6FBEB6835FBFB751864D3C9F1C",
+          "policy_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6\\fold_policy_artifacts\\policy_SPXW_202601.json",
+          "policy_artifact_sha256": "6CF672E4C2B76D030F23BDE95A478682DAF44CA14AF031EC48865F77E3DBC5F8",
+          "policy_frozen_before_evaluation": true,
+          "selection_months": [
+            "202510",
+            "202511",
+            "202512"
+          ],
+          "ticker": "SPXW",
+          "training_months": [
+            "202501",
+            "202502",
+            "202503",
+            "202504",
+            "202505",
+            "202506",
+            "202507",
+            "202508",
+            "202509"
+          ]
+        },
+        {
+          "evaluation_month": "202601",
+          "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6\\fold_model_artifacts\\payoff_head_202601.pt",
+          "model_artifact_sha256": "7752D4541BF8BE8A1A064C50891703ACE1B21B6FBEB6835FBFB751864D3C9F1C",
+          "policy_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6\\fold_policy_artifacts\\policy_SPY_202601.json",
+          "policy_artifact_sha256": "EC6919C425A2EDED1C6A5811810FBBE093D22DD0E5314D73EA7AC76F37C3E45D",
+          "policy_frozen_before_evaluation": true,
+          "selection_months": [
+            "202510",
+            "202511",
+            "202512"
+          ],
+          "ticker": "SPY",
+          "training_months": [
+            "202501",
+            "202502",
+            "202503",
+            "202504",
+            "202505",
+            "202506",
+            "202507",
+            "202508",
+            "202509"
+          ]
+        }
+      ]
+    },
+    {
+      "evaluation_month": "202602",
+      "passed": true,
+      "tickers": [
+        {
+          "evaluation_month": "202602",
+          "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6\\fold_model_artifacts\\payoff_head_202602.pt",
+          "model_artifact_sha256": "514C82B0EAA341D16E639FA71D72A01988FF680B202875BE9AB9526A628CA902",
+          "policy_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6\\fold_policy_artifacts\\policy_QQQ_202602.json",
+          "policy_artifact_sha256": "BADD29C351D816655E8717C73DFD53FF469D7904CDEE0360AF9C5F2022EDFD8F",
+          "policy_frozen_before_evaluation": true,
+          "selection_months": [
+            "202511",
+            "202512",
+            "202601"
+          ],
+          "ticker": "QQQ",
+          "training_months": [
+            "202501",
+            "202502",
+            "202503",
+            "202504",
+            "202505",
+            "202506",
+            "202507",
+            "202508",
+            "202509",
+            "202510"
+          ]
+        },
+        {
+          "evaluation_month": "202602",
+          "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6\\fold_model_artifacts\\payoff_head_202602.pt",
+          "model_artifact_sha256": "514C82B0EAA341D16E639FA71D72A01988FF680B202875BE9AB9526A628CA902",
+          "policy_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6\\fold_policy_artifacts\\policy_SPXW_202602.json",
+          "policy_artifact_sha256": "67EABB1A94604E6A626C3EF32F6C64283775B334D32FEE44D3ED4A65F483B66B",
+          "policy_frozen_before_evaluation": true,
+          "selection_months": [
+            "202511",
+            "202512",
+            "202601"
+          ],
+          "ticker": "SPXW",
+          "training_months": [
+            "202501",
+            "202502",
+            "202503",
+            "202504",
+            "202505",
+            "202506",
+            "202507",
+            "202508",
+            "202509",
+            "202510"
+          ]
+        },
+        {
+          "evaluation_month": "202602",
+          "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6\\fold_model_artifacts\\payoff_head_202602.pt",
+          "model_artifact_sha256": "514C82B0EAA341D16E639FA71D72A01988FF680B202875BE9AB9526A628CA902",
+          "policy_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6\\fold_policy_artifacts\\policy_SPY_202602.json",
+          "policy_artifact_sha256": "29E487D200674815E17D4D6809E988E6A7A2FF1F50AE2C79A5CFF3F060E228DC",
+          "policy_frozen_before_evaluation": true,
+          "selection_months": [
+            "202511",
+            "202512",
+            "202601"
+          ],
+          "ticker": "SPY",
+          "training_months": [
+            "202501",
+            "202502",
+            "202503",
+            "202504",
+            "202505",
+            "202506",
+            "202507",
+            "202508",
+            "202509",
+            "202510"
+          ]
+        }
+      ]
+    },
+    {
+      "evaluation_month": "202603",
+      "passed": true,
+      "tickers": [
+        {
+          "evaluation_month": "202603",
+          "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6\\fold_model_artifacts\\payoff_head_202603.pt",
+          "model_artifact_sha256": "5848E7D7B04C846604F6BA498D3D062CB606A8A1F97FB6F9594D80B4825E5D9B",
+          "policy_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6\\fold_policy_artifacts\\policy_QQQ_202603.json",
+          "policy_artifact_sha256": "F415E34C9943EF9615BF5EFCD3FC3C869D1CC4D6CA4E48EBFC60063E7E0F7182",
+          "policy_frozen_before_evaluation": true,
+          "selection_months": [
+            "202512",
+            "202601",
+            "202602"
+          ],
+          "ticker": "QQQ",
+          "training_months": [
+            "202501",
+            "202502",
+            "202503",
+            "202504",
+            "202505",
+            "202506",
+            "202507",
+            "202508",
+            "202509",
+            "202510",
+            "202511"
+          ]
+        },
+        {
+          "evaluation_month": "202603",
+          "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6\\fold_model_artifacts\\payoff_head_202603.pt",
+          "model_artifact_sha256": "5848E7D7B04C846604F6BA498D3D062CB606A8A1F97FB6F9594D80B4825E5D9B",
+          "policy_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6\\fold_policy_artifacts\\policy_SPXW_202603.json",
+          "policy_artifact_sha256": "F6C44A4FA7052CC2AB6D3EC10616939964F723FFC00D361A31F49935F8B2C9FA",
+          "policy_frozen_before_evaluation": true,
+          "selection_months": [
+            "202512",
+            "202601",
+            "202602"
+          ],
+          "ticker": "SPXW",
+          "training_months": [
+            "202501",
+            "202502",
+            "202503",
+            "202504",
+            "202505",
+            "202506",
+            "202507",
+            "202508",
+            "202509",
+            "202510",
+            "202511"
+          ]
+        },
+        {
+          "evaluation_month": "202603",
+          "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6\\fold_model_artifacts\\payoff_head_202603.pt",
+          "model_artifact_sha256": "5848E7D7B04C846604F6BA498D3D062CB606A8A1F97FB6F9594D80B4825E5D9B",
+          "policy_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6\\fold_policy_artifacts\\policy_SPY_202603.json",
+          "policy_artifact_sha256": "EEEF76D149CF0B8F570C4EB0CEA3299EBB8ECAE93F064AEC4AE9937ED372C22A",
+          "policy_frozen_before_evaluation": true,
+          "selection_months": [
+            "202512",
+            "202601",
+            "202602"
+          ],
+          "ticker": "SPY",
+          "training_months": [
+            "202501",
+            "202502",
+            "202503",
+            "202504",
+            "202505",
+            "202506",
+            "202507",
+            "202508",
+            "202509",
+            "202510",
+            "202511"
+          ]
+        }
+      ]
+    },
+    {
+      "evaluation_month": "202604",
+      "passed": true,
+      "tickers": [
+        {
+          "evaluation_month": "202604",
+          "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6\\fold_model_artifacts\\payoff_head_202604.pt",
+          "model_artifact_sha256": "70DBAD1739D408FCAD0A5DED6E32370F497CC4B98B66058EEA19C43887507AD1",
+          "policy_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6\\fold_policy_artifacts\\policy_QQQ_202604.json",
+          "policy_artifact_sha256": "BE8A992B3A9D22704BC8952D3E38A5BADFA8079BFD66907CF71A5759949C2526",
+          "policy_frozen_before_evaluation": true,
+          "selection_months": [
+            "202601",
+            "202602",
+            "202603"
+          ],
+          "ticker": "QQQ",
+          "training_months": [
+            "202501",
+            "202502",
+            "202503",
+            "202504",
+            "202505",
+            "202506",
+            "202507",
+            "202508",
+            "202509",
+            "202510",
+            "202511",
+            "202512"
+          ]
+        },
+        {
+          "evaluation_month": "202604",
+          "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6\\fold_model_artifacts\\payoff_head_202604.pt",
+          "model_artifact_sha256": "70DBAD1739D408FCAD0A5DED6E32370F497CC4B98B66058EEA19C43887507AD1",
+          "policy_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6\\fold_policy_artifacts\\policy_SPXW_202604.json",
+          "policy_artifact_sha256": "F8BB6AAF347C14FF7F8ABE228DBB287A79D6B6AB13CF6EE701911C9446794C69",
+          "policy_frozen_before_evaluation": true,
+          "selection_months": [
+            "202601",
+            "202602",
+            "202603"
+          ],
+          "ticker": "SPXW",
+          "training_months": [
+            "202501",
+            "202502",
+            "202503",
+            "202504",
+            "202505",
+            "202506",
+            "202507",
+            "202508",
+            "202509",
+            "202510",
+            "202511",
+            "202512"
+          ]
+        },
+        {
+          "evaluation_month": "202604",
+          "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6\\fold_model_artifacts\\payoff_head_202604.pt",
+          "model_artifact_sha256": "70DBAD1739D408FCAD0A5DED6E32370F497CC4B98B66058EEA19C43887507AD1",
+          "policy_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6\\fold_policy_artifacts\\policy_SPY_202604.json",
+          "policy_artifact_sha256": "9F7F20A5649FBBA3381921A39397A85B3577764CF530B94BD336FAAF7D1CCC99",
+          "policy_frozen_before_evaluation": true,
+          "selection_months": [
+            "202601",
+            "202602",
+            "202603"
+          ],
+          "ticker": "SPY",
+          "training_months": [
+            "202501",
+            "202502",
+            "202503",
+            "202504",
+            "202505",
+            "202506",
+            "202507",
+            "202508",
+            "202509",
+            "202510",
+            "202511",
+            "202512"
+          ]
+        }
+      ]
+    },
+    {
+      "evaluation_month": "202605",
+      "passed": true,
+      "tickers": [
+        {
+          "evaluation_month": "202605",
+          "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6\\fold_model_artifacts\\payoff_head_202605.pt",
+          "model_artifact_sha256": "A686793A14AF99178F656156FA694C4E7D6627A8B88A5A3847D88B25EEF7B068",
+          "policy_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6\\fold_policy_artifacts\\policy_QQQ_202605.json",
+          "policy_artifact_sha256": "407501C2D8380F04B7E23A29334CDA2B02A2F8B65F95EFCAD0F37B0183FDD6C1",
+          "policy_frozen_before_evaluation": true,
+          "selection_months": [
+            "202602",
+            "202603",
+            "202604"
+          ],
+          "ticker": "QQQ",
+          "training_months": [
+            "202501",
+            "202502",
+            "202503",
+            "202504",
+            "202505",
+            "202506",
+            "202507",
+            "202508",
+            "202509",
+            "202510",
+            "202511",
+            "202512",
+            "202601"
+          ]
+        },
+        {
+          "evaluation_month": "202605",
+          "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6\\fold_model_artifacts\\payoff_head_202605.pt",
+          "model_artifact_sha256": "A686793A14AF99178F656156FA694C4E7D6627A8B88A5A3847D88B25EEF7B068",
+          "policy_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6\\fold_policy_artifacts\\policy_SPXW_202605.json",
+          "policy_artifact_sha256": "B3599D84AB3023D2313A9033ED283BB6DC94B896F61E8BF439E1A31B9644401C",
+          "policy_frozen_before_evaluation": true,
+          "selection_months": [
+            "202602",
+            "202603",
+            "202604"
+          ],
+          "ticker": "SPXW",
+          "training_months": [
+            "202501",
+            "202502",
+            "202503",
+            "202504",
+            "202505",
+            "202506",
+            "202507",
+            "202508",
+            "202509",
+            "202510",
+            "202511",
+            "202512",
+            "202601"
+          ]
+        },
+        {
+          "evaluation_month": "202605",
+          "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6\\fold_model_artifacts\\payoff_head_202605.pt",
+          "model_artifact_sha256": "A686793A14AF99178F656156FA694C4E7D6627A8B88A5A3847D88B25EEF7B068",
+          "policy_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6\\fold_policy_artifacts\\policy_SPY_202605.json",
+          "policy_artifact_sha256": "9C538DA255D2554F823072E2162D01735E93254ECC98F049F2BA0473B403481A",
+          "policy_frozen_before_evaluation": true,
+          "selection_months": [
+            "202602",
+            "202603",
+            "202604"
+          ],
+          "ticker": "SPY",
+          "training_months": [
+            "202501",
+            "202502",
+            "202503",
+            "202504",
+            "202505",
+            "202506",
+            "202507",
+            "202508",
+            "202509",
+            "202510",
+            "202511",
+            "202512",
+            "202601"
+          ]
+        }
+      ]
+    }
+  ],
+  "mode": "nested_walk_forward",
+  "output_dir": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h6",
+  "passed": true,
+  "schema_version": 1,
+  "uncertainty_used_for_selection": false
+}

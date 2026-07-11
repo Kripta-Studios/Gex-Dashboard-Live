@@ -1,0 +1,67 @@
+[
+  {
+    "test_month": "202601",
+    "encoder_sha256": "A7EDB5FEE0D90D6FEE448CED9E940C7B1BE7446F97170E93EC026C2A9F8948DA",
+    "features_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_current_h1_h6_features_202601_202605_v1\\fold_202601\\current_horizon_features.parquet",
+    "features_sha256": "6FF68C6C63966D72428DC383EBD30345DE60AFEB58D7D4D45B181AB145BA8415",
+    "feature_rows": 21374,
+    "date_min": "20250102",
+    "date_max": "20260130",
+    "horizons": [
+      1,
+      6
+    ]
+  },
+  {
+    "test_month": "202602",
+    "encoder_sha256": "7C235EEB1D6E08DAEA48B724863952C14161D8060BF6D898DF5AB72FCC7CEB99",
+    "features_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_current_h1_h6_features_202601_202605_v1\\fold_202602\\current_horizon_features.parquet",
+    "features_sha256": "81AAB8DBDC103CD9050A74A9CB39E7ABE4706652D94EDD91D3DF9D95B2952F6F",
+    "feature_rows": 22551,
+    "date_min": "20250102",
+    "date_max": "20260227",
+    "horizons": [
+      1,
+      6
+    ]
+  },
+  {
+    "test_month": "202603",
+    "encoder_sha256": "9C3544E8407AB8E7B71F188410EB3DD7E3E78FB37EEB0E5E950DC1AA7A5BA615",
+    "features_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_current_h1_h6_features_202601_202605_v1\\fold_202603\\current_horizon_features.parquet",
+    "features_sha256": "0B194ABC888FB8F3DB5C99A9C382596320B4E7C07CCBC1371FF42F4271907C74",
+    "feature_rows": 24023,
+    "date_min": "20250102",
+    "date_max": "20260331",
+    "horizons": [
+      1,
+      6
+    ]
+  },
+  {
+    "test_month": "202604",
+    "encoder_sha256": "BA6863339902030EB4CDCFC020AC7084EB7AF253BA3790E0F23F46A1338F001C",
+    "features_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_current_h1_h6_features_202601_202605_v1\\fold_202604\\current_horizon_features.parquet",
+    "features_sha256": "CB6478A815CF63113303A0C207E6F1CF6AEF189C9BEA6D1A6178FA71196584DA",
+    "feature_rows": 25640,
+    "date_min": "20250102",
+    "date_max": "20260430",
+    "horizons": [
+      1,
+      6
+    ]
+  },
+  {
+    "test_month": "202605",
+    "encoder_sha256": "ABD8DD6944DBD6DA6D4183951B91FE94E8007981F089AB2873C67833071648E4",
+    "features_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_current_h1_h6_features_202601_202605_v1\\fold_202605\\current_horizon_features.parquet",
+    "features_sha256": "F20AE73EE65B08EFA50E264AA552432586BA1AA57CB767CDACBDFC03C67FA87D",
+    "feature_rows": 27347,
+    "date_min": "20250102",
+    "date_max": "20260529",
+    "horizons": [
+      1,
+      6
+    ]
+  }
+]

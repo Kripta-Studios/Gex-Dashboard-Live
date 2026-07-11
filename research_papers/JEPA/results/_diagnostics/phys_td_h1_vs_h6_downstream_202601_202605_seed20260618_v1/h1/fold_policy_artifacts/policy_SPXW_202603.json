@@ -1,0 +1,34 @@
+{
+  "arm": "deterministic",
+  "component": "portfolio_payoff_head",
+  "cooldown_minutes": 0,
+  "daily_cap": 4,
+  "delta_bucket": 25,
+  "deploy_config": "ABSTAIN_NO_VALID_THRESHOLD",
+  "evaluation_month": "202603",
+  "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h1\\fold_model_artifacts\\payoff_head_202603.pt",
+  "model_artifact_sha256": "42C5EF3A3F91C94848FF5A45D8886EC3C4DBC8A75BAE3A406B9AF9D825DB70F3",
+  "policy_frozen_before_evaluation": true,
+  "schema_version": 1,
+  "seed": 20463221,
+  "selection_months": [
+    "202512",
+    "202601",
+    "202602"
+  ],
+  "ticker": "SPXW",
+  "training_months": [
+    "202501",
+    "202502",
+    "202503",
+    "202504",
+    "202505",
+    "202506",
+    "202507",
+    "202508",
+    "202509",
+    "202510",
+    "202511"
+  ],
+  "uncertainty_used_for_selection": false
+}

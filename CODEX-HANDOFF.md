@@ -1,5 +1,14 @@
 # CODEX-HANDOFF.md — Estado para continuación por otro agente
 
+## Actualización 2026-07-11 07:30 CEST — h6 cerrado y rechazado
+
+- Ejecución real `pwsh` completó 5/5 folds h1+h6. El intento previo `powershell.exe` falló en preflight antes de outputs (`Get-FileHash`/Unicode), no duplicó experimento. No quedan procesos.
+- Paridad de inputs perfecta: filas 20.361/21.470/22.850/24.403/26.038, max diff z/h1 `0/0`; provenance/runtime PASS, junio sellado.
+- Resultado: h1 0/210 y h6 0/210 candidates válidos; 15/15 abstain cada arm; 0 OOS trades. h6 MAE/RMSE/accuracy wins `7/6/5` de 15, medianas `+0,011543/+0,009697/-0,018998`; claramente no mejora.
+- SPY h6 near-miss: fold202602 falla PF (`1,119`); fold202603 falla min mensual (`17`). No combinar ni retunar. No h3/h12/multi/Ada-h6.
+- Report `.../phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1/REPORT.md`; summary/horizon manifest `44003060...D632` / `F21336B1...1BDE`.
+- Próximo paso: publicar solo metadata/grids/histories pequeños, excluir 5 parquets horizon + 10 `.pt`. Después auditar nombres/semántica de las 277 features live para predefinir un skip direccional pequeño; no correlacionar contra test ni feature mining.
+
 ## Actualización 2026-07-11 07:15 CEST — h1 vs h6 listo para ejecutar
 
 - Implementados `export_event_phys_td_current_horizons.py` y `walkforward_phys_td_horizon_downstream.py`, tests y runner. Factor único: reemplazar motion h1=5m por h6=30m; mismo z, filas h1, labels, head, folds, seeds, presupuesto y gates.

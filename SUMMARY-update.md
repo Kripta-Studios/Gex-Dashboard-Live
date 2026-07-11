@@ -5,6 +5,16 @@
 
 > Esta bitácora se actualiza durante el trabajo. Solo se marca como completado lo reproducido en esta sesión. No implica despliegue, commit ni push salvo que se indique expresamente.
 
+## Actualización 2026-07-11 07:30 CEST — h6 terminado y rechazado
+
+La corrida válida terminó 5/5 folds por arm, tras un primer launch de infraestructura que falló antes de crear outputs por usar Windows PowerShell sin `Get-FileHash`; se relanzó una sola ejecución real bajo `pwsh` con el runner/hash intacto. Tests, CUDA, hashes, provenance, runtime y paridad z/h1 `0/0` pasaron; no quedan procesos.
+
+h1 y h6 tuvieron `0/210` candidatos internos válidos y 15/15 policies abstain, por lo que ambos realizaron 0 trades OOS. h6 empeoró MAE (7/15 wins, mediana `+0,011543`, `p=0,8961`), RMSE (6/15, `+0,009697`, `p=0,8738`) y directional accuracy (5/15, `-0,018998`, `p=0,9723`).
+
+h6 solo creó dos near-miss SPY: `202602` pasa volumen/WR/meses pero PF1,119; `202603` alcanza PF1,559/WR52,54%/meses positivos pero mínimo17 trades. No pueden combinarse y no autorizan retuning. `h6_meets_full_ticker_gate=false`; no se probarán h3/h12/multi-horizon/Ada-h6. Informe `.../phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1/REPORT.md`; summary SHA `44003060...D632`.
+
+El siguiente paso será auditar el schema live observable ya sellado y predefinir una pequeña allowlist direccional causal como posible skip connection al mismo head; no se seleccionarán columnas por correlación OOS ni se hará sweep.
+
 ## Actualización 2026-07-11 07:15 CEST — h1 vs h6 implementado y predeclarado
 
 Se aisló el mismatch temporal detectado: control `z+h1(5m)` frente a variante `z+h6(30m)`, reemplazando solo la motion. Ambos usan los mismos encoders ya entrenados `1/3/6/12`, filas h1, labels, contrato exacto, head, folds, seeds, presupuesto y gates. h6 current-time no necesita target futuro; no se incluyen h3/h12, multi-horizon, Ada ni nueva loss.

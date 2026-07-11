@@ -1,0 +1,35 @@
+{
+  "arm": "deterministic",
+  "component": "portfolio_payoff_head",
+  "cooldown_minutes": 30,
+  "daily_cap": 2,
+  "delta_bucket": 35,
+  "deploy_config": "ABSTAIN_NO_VALID_THRESHOLD",
+  "evaluation_month": "202604",
+  "model_artifact_path": "research_papers\\JEPA\\results\\_diagnostics\\phys_td_h1_vs_h6_downstream_202601_202605_seed20260618_v1\\h1\\fold_model_artifacts\\payoff_head_202604.pt",
+  "model_artifact_sha256": "6B044B64FE2BA2EBFFB3239550FD93AB5ACFD97FC12C9C0A04F9DDB1EA390250",
+  "policy_frozen_before_evaluation": true,
+  "schema_version": 1,
+  "seed": 20463222,
+  "selection_months": [
+    "202601",
+    "202602",
+    "202603"
+  ],
+  "ticker": "QQQ",
+  "training_months": [
+    "202501",
+    "202502",
+    "202503",
+    "202504",
+    "202505",
+    "202506",
+    "202507",
+    "202508",
+    "202509",
+    "202510",
+    "202511",
+    "202512"
+  ],
+  "uncertainty_used_for_selection": false
+}

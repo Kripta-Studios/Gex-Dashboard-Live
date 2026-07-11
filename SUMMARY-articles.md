@@ -191,6 +191,8 @@ Actualización final 2026-07-11 07:00 CEST: ambas gates fallaron. Frozen/adapted
 
 Actualización 2026-07-11 07:15 CEST: la ablación h1 vs h6 quedó implementada y predeclarada sin ejecutar. h6 reemplaza h1 sobre las mismas filas y no necesita target a +30m; un smoke real reproduce z/h1 con diferencia cero. El criterio permanece estrictamente económico por ticker y mes, no PnL agregado. Si h6 falla no se abrirá un sweep h3/h12/multi-horizon.
 
+Actualización final 2026-07-11 07:30 CEST: h6 queda rechazado. Ambos arms tuvieron 0/210 candidatos válidos y abstuvieron en las 15 celdas; h6 empeoró MAE/RMSE/dirección. Dos near-miss SPY fallaron condiciones distintas (PF1,119 en un fold; mínimo17 trades en otro) y no autorizan mezclar o retunar. No se abrirán otros horizontes. El siguiente mecanismo a auditar es si la compresión z pierde señales direccionales live observables que podrían entrar por una allowlist causal pequeña, sin feature mining OOS.
+
 El downstream quedó predeclarado cambiando exclusivamente frozen-delta por adapted-delta en el mismo payoff head exacto d25/d35. Targets/errores quedan excluidos de features y la decisión exige gates completas por ticker, no PnL agregado.
 
 Informe, hashes y tablas de la ablación de historia quedaron publicados en `8da7a7a`.
