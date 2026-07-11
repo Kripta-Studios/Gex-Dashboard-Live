@@ -1,0 +1,9 @@
+﻿{
+    "dataset_sha256":  "d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408",
+    "runner_sha256":  "cacf71c48daec8e4db9684d778ac94df4febe8d4018f9850d74d3a868a2a20b4",
+    "walkforward_sha256":  "5d285881a96b5dc1a4f79f389199d2c15b25272a856ceb39339bce0d0b38bee1",
+    "predeclaration_sha256":  "b321e62c025e045d0f5d12bad7f9ac39406b39556d483b6605b944146082fbd4",
+    "preflight_status":  "PASS",
+    "tests_sha256":  "84b03b8325bb04db1b4fdd504cea53637808b8b99f8a20ab8e04a6f43bc3bb47",
+    "git_head":  "15121357f19d5f4a682da6cab97d67985f14464a"
+}

@@ -3,8 +3,12 @@ PAIRWISE_OPPORTUNITY_AND_SIDE_SELECTION_V1
 Walk-forward evaluation: hierarchical opportunity + side classifier vs absolute baseline.
 
 Arms:
-  C0 — absolute CALL/PUT classifiers (current production logic)
+  C0 — In-protocol nested absolute-head baseline (call_win + put_win classifiers)
   P1 — opportunity classifier + pairwise side classifier
+
+C0 is NOT a frozen production artifact. It is trained within each fold with
+exactly the same data, features, hyperparameters, scheduler, and protocol as P1.
+The only difference is label definition and scoring policy.
 
 Usage:
   python neural/jepa/walkforward_pairwise_opportunity_side.py \
@@ -25,8 +29,14 @@ from typing import Any
 import lightgbm as lgb
 import numpy as np
 import pandas as pd
-from scipy.stats import spearmanr
+from scipy.stats import spearmanr, wilcoxon
+from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import (
+    average_precision_score,
+    balanced_accuracy_score,
+    roc_auc_score,
+)
 from sklearn.preprocessing import StandardScaler
 
 # ── Imports from existing codebase ──────────────────────────────────────
@@ -44,24 +54,38 @@ FROZEN_LGB_PARAMS: dict[str, Any] = dict(
     num_leaves=31,
     min_child_samples=20,
     subsample=0.8,
+    subsample_freq=1,  # makes subsample=0.8 effective
     colsample_bytree=0.8,
     reg_lambda=1.0,
     n_jobs=4,
     verbose=-1,
     objective="binary",
     importance_type="gain",
+    deterministic=True,
+    force_col_wise=True,
 )
 FROZEN_SEED = 42
 FROZEN_CLIP_RETURN = 10.0  # not used for classification but kept for parity
 
+# ── Head seed offsets ───────────────────────────────────────────────────
+# base_seed = FROZEN_SEED + int(test_month) + ticker_offset
+# C0 CALL        = base_seed + 1
+# C0 PUT         = base_seed + 2
+# P1 opportunity = base_seed + 3
+# P1 side        = base_seed + 4
+HEAD_OFFSET_C0_CALL = 1
+HEAD_OFFSET_C0_PUT = 2
+HEAD_OFFSET_P1_OPP = 3
+HEAD_OFFSET_P1_SIDE = 4
+
 # ── Ticker configuration ────────────────────────────────────────────────
 TICKER_CONFIG: dict[str, dict[str, Any]] = {
-    "SPXW": {"bucket": 25, "max_trades_per_day": 4, "cooldown_minutes": 0},
-    "QQQ":  {"bucket": 35, "max_trades_per_day": 2, "cooldown_minutes": 30},
-    "SPY":  {"bucket": 35, "max_trades_per_day": 1, "cooldown_minutes": 0},
+    "SPXW": {"bucket": 25, "max_trades_per_day": 4, "cooldown_minutes": 0, "ticker_offset": 100},
+    "QQQ":  {"bucket": 35, "max_trades_per_day": 2, "cooldown_minutes": 30, "ticker_offset": 200},
+    "SPY":  {"bucket": 35, "max_trades_per_day": 1, "cooldown_minutes": 0, "ticker_offset": 300},
 }
 
-# ── Threshold grid (predeclared) ────────────────────────────────────────
+# ── Threshold grid (predeclared — shared C0 and P1) ────────────────────
 TRADE_THRESHOLDS = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 SIDE_MARGINS = [0.0, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30]
 
@@ -73,11 +97,16 @@ LAST_TEST_MONTH = "202512"
 MIN_TRAIN_ROWS = 500
 MIN_VAL_ROWS = 50
 
+# ── First allowed minute ───────────────────────────────────────────────
+# With minute > 630 and a 5-minute grid, the first allowed candidate is
+# minute == 635 (10:35 ET). minute == 630 is excluded.
+FIRST_ALLOWED_MINUTE = 635
+
 # ── Inner validation gates ──────────────────────────────────────────────
 INNER_MIN_PF = 1.3
 INNER_MIN_WR = 0.50
 INNER_MIN_TRADES_PER_MONTH = 18
-INNER_MIN_HOLD_MINUTES = 30  # not applicable to classifier but documented
+INNER_MIN_HOLD_MINUTES = 30
 
 # ── Common causal feature allowlist ─────────────────────────────────────
 COMMON_FEATURES = [
@@ -96,6 +125,10 @@ COMMON_FEATURES = [
 
 DIFF_METRICS = ["iv", "spread_pct", "volume", "oi", "abs_delta", "vega"]
 CHANGE_LAGS = [(1, "5m"), (3, "15m"), (5, "25m")]
+
+# ── Tie thresholds ──────────────────────────────────────────────────────
+SIDE_TIE_THRESHOLD_TRAINING = 1e-9   # abs(side_advantage) <= this → exclude from side training
+C0_TIE_THRESHOLD_EXECUTION = 1e-12   # abs(p_call_win - p_put_win) <= this → ABSTAIN
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -140,14 +173,35 @@ def sha256_file(path: Path) -> str:
     return sha.hexdigest()
 
 
+def compute_feature_hash(feature_cols: list[str]) -> str:
+    """Deterministic hash of the sorted feature list."""
+    sorted_features = sorted(feature_cols)
+    feat_bytes = ",".join(sorted_features).encode("utf-8")
+    return hashlib.sha256(feat_bytes).hexdigest()
+
+
+def make_lgb_params(base_seed: int, head_offset: int) -> dict[str, Any]:
+    """Create LightGBM params with deterministic per-head seeds."""
+    seed = base_seed + head_offset
+    return {
+        **FROZEN_LGB_PARAMS,
+        "random_state": seed,
+        "bagging_seed": seed,
+        "feature_fraction_seed": seed,
+        "data_random_seed": seed,
+    }
+
+
 def build_diff_features(df: pd.DataFrame, ticker: str, bucket: int) -> tuple[pd.DataFrame, list[str]]:
     """Build call-put difference features and backward-looking changes.
-    
+
     Differences are computed per-row. Changes use shift grouped by
-    (ticker, trade_date) to avoid cross-session contamination.
+    (ticker, trade_date, bucket) to avoid cross-session contamination.
+    Sort by minute within each group before computing shifts.
     NaN initial values are left as NaN (filled with train median at fit time).
     """
     work = df.copy()
+    work["bucket"] = bucket
     diff_cols = []
 
     for metric in DIFF_METRICS:
@@ -159,12 +213,15 @@ def build_diff_features(df: pd.DataFrame, ticker: str, bucket: int) -> tuple[pd.
         work[diff_name] = pd.to_numeric(work[call_col], errors="coerce") - pd.to_numeric(work[put_col], errors="coerce")
         diff_cols.append(diff_name)
 
-    # Backward-looking changes grouped by (ticker, trade_date) — no cross-session
+    # Backward-looking changes grouped by (ticker, trade_date, bucket) — no cross-session
     change_cols = []
     # Must sort by minute within each day for correct shift
     work = work.sort_values(["trade_date", "minute"]).copy()
     for diff_name in diff_cols:
-        grouped = work.groupby(["trade_date"])[diff_name]
+        # Exclude OI change columns from features as requested
+        if diff_name == "oi_diff":
+            continue
+        grouped = work.groupby(["ticker", "trade_date", "bucket"])[diff_name]
         for lag, label in CHANGE_LAGS:
             chg_name = f"{diff_name}_chg_{label}"
             work[chg_name] = work[diff_name] - grouped.shift(lag)
@@ -175,27 +232,46 @@ def build_diff_features(df: pd.DataFrame, ticker: str, bucket: int) -> tuple[pd.
 
 
 def build_labels(df: pd.DataFrame, bucket: int) -> pd.DataFrame:
-    """Build opportunity and side labels from call/put exit returns."""
+    """Build opportunity, side, call_win, and put_win labels from call/put exit returns.
+
+    Labels:
+      - opportunity_label = int(max(call_return, put_return) > 0)
+      - side_advantage = call_return - put_return
+      - side_label = int(side_advantage > 0)
+      - call_win_label = int(call_return > 0)   [C0]
+      - put_win_label = int(put_return > 0)     [C0]
+
+    Filters out rows where target labels are non-finite (NaN, inf) before modeling.
+    """
     work = df.copy()
     call_ret_col = f"call_d{bucket:02d}_opt_exit_ret"
     put_ret_col = f"put_d{bucket:02d}_opt_exit_ret"
     call_exit_min_col = f"call_d{bucket:02d}_opt_exit_minutes"
     put_exit_min_col = f"put_d{bucket:02d}_opt_exit_minutes"
 
+    # Strict finite label filtering
+    work = work[pd.to_numeric(work[call_ret_col], errors="coerce").notna() & np.isfinite(pd.to_numeric(work[call_ret_col], errors="coerce"))].copy()
+    work = work[pd.to_numeric(work[put_ret_col], errors="coerce").notna() & np.isfinite(pd.to_numeric(work[put_ret_col], errors="coerce"))].copy()
+
     call_ret = pd.to_numeric(work[call_ret_col], errors="coerce")
     put_ret = pd.to_numeric(work[put_ret_col], errors="coerce")
 
     work["call_return"] = call_ret
     work["put_return"] = put_ret
-    work["opportunity_label"] = (np.maximum(call_ret, put_ret) > 0).astype(int)
+
+    # P1 labels
+    work["opportunity_label"] = (np.maximum(call_ret, put_ret) > 0.0).astype(int)
     work["side_advantage"] = call_ret - put_ret
-    work["side_label"] = (work["side_advantage"] > 0).astype(int)
+    work["side_label"] = (work["side_advantage"] > 0.0).astype(int)
+
+    # C0 labels — in-protocol absolute head baseline
+    work["call_win_label"] = (call_ret > 0.0).astype(int)
+    work["put_win_label"] = (put_ret > 0.0).astype(int)
 
     # exit_minutes for deploy (non-overlap logic)
     if call_exit_min_col in work.columns and put_exit_min_col in work.columns:
         call_exit = pd.to_numeric(work[call_exit_min_col], errors="coerce")
         put_exit = pd.to_numeric(work[put_exit_min_col], errors="coerce")
-        # Will be assigned per-trade based on chosen side
         work["call_exit_minutes"] = call_exit
         work["put_exit_minutes"] = put_exit
 
@@ -213,8 +289,9 @@ def apply_pairwise_policy(
     bucket: int,
 ) -> pd.DataFrame:
     """Apply P1 pairwise policy: opportunity threshold + side margin.
-    
+
     Sets score, action, realized_return, exit_minutes columns for deploy().
+    ABSTAIN if p_call is within the central band [0.5 - side_margin, 0.5 + side_margin].
     """
     work = scored.copy()
     p_trade = work["p_trade"].astype(float)
@@ -248,35 +325,60 @@ def apply_pairwise_policy(
     return work
 
 
-def apply_absolute_policy(
+def apply_c0_policy(
     scored: pd.DataFrame,
-    threshold: float,
+    trade_threshold: float,
+    side_margin: float,
     bucket: int,
 ) -> pd.DataFrame:
-    """Apply C0 absolute policy: pick side with higher predicted return, threshold on score.
-    
+    """Apply C0 in-protocol nested baseline policy.
+
+    C0 policy:
+      trade_score = max(p_call_win, p_put_win)
+      side_gap = abs(p_call_win - p_put_win)
+
+      CALL if trade_score >= trade_threshold AND side_gap >= side_margin AND p_call_win > p_put_win
+      PUT  if trade_score >= trade_threshold AND side_gap >= side_margin AND p_put_win > p_call_win
+      ABSTAIN otherwise (including ties: abs(p_call_win - p_put_win) <= 1e-12)
+
     Sets score, action, realized_return, exit_minutes columns for deploy().
     """
     work = scored.copy()
-    pred_call = work["pred_call_return"].astype(float)
-    pred_put = work["pred_put_return"].astype(float)
-    is_call = pred_call >= pred_put
+    p_call_win = work["p_call_win"].astype(float)
+    p_put_win = work["p_put_win"].astype(float)
 
-    work["action"] = np.where(is_call, "CALL", "PUT")
-    work["score"] = np.where(is_call, pred_call, pred_put)
-    work["realized_return"] = np.where(is_call, work["call_return"], work["put_return"])
+    trade_score = np.maximum(p_call_win, p_put_win)
+    side_gap = np.abs(p_call_win - p_put_win)
+
+    # Tie check: abs(p_call_win - p_put_win) <= 1e-12 → ABSTAIN
+    not_tied = side_gap > C0_TIE_THRESHOLD_EXECUTION
+
+    # Active conditions
+    score_ok = trade_score >= trade_threshold
+    gap_ok = side_gap >= side_margin
+    is_call = p_call_win > p_put_win
+
+    active_mask = score_ok & gap_ok & not_tied
+
+    if not active_mask.any():
+        return work.iloc[0:0].copy()
+
+    work = work[active_mask].copy()
+    is_call_active = work["p_call_win"].astype(float) > work["p_put_win"].astype(float)
+
+    work["action"] = np.where(is_call_active, "CALL", "PUT")
+    work["score"] = np.maximum(work["p_call_win"].astype(float), work["p_put_win"].astype(float))
+    work["realized_return"] = np.where(is_call_active, work["call_return"], work["put_return"])
 
     call_exit_col = f"call_d{bucket:02d}_opt_exit_minutes"
     put_exit_col = f"put_d{bucket:02d}_opt_exit_minutes"
     if call_exit_col in work.columns and put_exit_col in work.columns:
         work["exit_minutes"] = np.where(
-            is_call,
+            is_call_active,
             pd.to_numeric(work[call_exit_col], errors="coerce"),
             pd.to_numeric(work[put_exit_col], errors="coerce"),
         )
 
-    # Filter by threshold
-    work = work[work["score"].astype(float) >= threshold].copy()
     return work
 
 
@@ -308,15 +410,23 @@ def compute_monthly_inner_gates(
         wr = float((ret > 0).mean())
         pnl = float(ret.sum())
 
+        # Check duration >= 30m
+        if "exit_minutes" in m_trades.columns and "minute" in m_trades.columns:
+            durations = pd.to_numeric(m_trades["exit_minutes"], errors="coerce") - pd.to_numeric(m_trades["minute"], errors="coerce")
+            min_dur = float(durations.min())
+        else:
+            min_dur = 30.0
+
         passes = (
             n >= INNER_MIN_TRADES_PER_MONTH
             and pf >= INNER_MIN_PF
             and wr >= INNER_MIN_WR
-            and pnl > 0
+            and pnl > 0.0
+            and min_dur >= 30.0
         )
         month_details[m] = {
             "trades": n, "pf": round(pf, 4), "wr": round(wr, 4),
-            "pnl": round(pnl, 4), "pass": passes,
+            "pnl": round(pnl, 4), "min_hold_minutes": min_dur, "pass": passes,
         }
         if not passes:
             all_pass = False
@@ -324,33 +434,32 @@ def compute_monthly_inner_gates(
     return all_pass, {"months": month_details}
 
 
-def select_best_config_p1(
+def _sweep_configs(
     scored_val: pd.DataFrame,
     inner_months: list[str],
     config: dict,
     bucket: int,
-) -> tuple[float, float, bool, dict]:
-    """Sweep trade_threshold × side_margin for P1. Return best (trade_thr, side_margin, valid, details)."""
+    apply_fn,
+) -> list[dict]:
+    """Sweep trade_threshold × side_margin for a given policy. Returns candidate list."""
     cooldown = config["cooldown_minutes"]
     max_day = config["max_trades_per_day"]
-    
+
     candidates = []
     for tt in TRADE_THRESHOLDS:
         for sm in SIDE_MARGINS:
-            applied = apply_pairwise_policy(scored_val, tt, sm, bucket)
+            applied = apply_fn(scored_val, tt, sm, bucket)
             if applied.empty:
                 continue
             cfg = DeployConfig(threshold=0.0, max_trades_per_day=max_day)
-            # Score is already set; deploy uses it for ranking/filtering
-            # Set threshold to 0 since we already filtered by p_trade >= tt
             traded = deploy(applied, cfg, cooldown)
             if traded.empty:
                 continue
-            
+
             passes, gate_details = compute_monthly_inner_gates(traded, inner_months)
             if not passes:
                 continue
-            
+
             # Compute per-month metrics for lexicographic ranking
             traded_work = traded.copy()
             traded_work["month"] = traded_work["month"].astype(str)
@@ -391,7 +500,19 @@ def select_best_config_p1(
                 "total_pnl": total_pnl,
                 "gate_details": gate_details,
             })
-    
+
+    return candidates
+
+
+def select_best_config_p1(
+    scored_val: pd.DataFrame,
+    inner_months: list[str],
+    config: dict,
+    bucket: int,
+) -> tuple[float, float, bool, dict]:
+    """Sweep trade_threshold × side_margin for P1. Return best (trade_thr, side_margin, valid, details)."""
+    candidates = _sweep_configs(scored_val, inner_months, config, bucket, apply_pairwise_policy)
+
     if not candidates:
         return 0.5, 0.0, False, {"reason": "no_valid_config"}
 
@@ -406,70 +527,19 @@ def select_best_config_c0(
     inner_months: list[str],
     config: dict,
     bucket: int,
-) -> tuple[float, bool, dict]:
-    """Sweep threshold for C0 baseline. Return best (threshold, valid, details)."""
-    cooldown = config["cooldown_minutes"]
-    max_day = config["max_trades_per_day"]
-    
-    # C0 uses the same threshold grid as trade_threshold
-    candidates = []
-    for thr in TRADE_THRESHOLDS:
-        applied = apply_absolute_policy(scored_val, thr, bucket)
-        if applied.empty:
-            continue
-        cfg = DeployConfig(threshold=0.0, max_trades_per_day=max_day)
-        traded = deploy(applied, cfg, cooldown)
-        if traded.empty:
-            continue
-        
-        passes, gate_details = compute_monthly_inner_gates(traded, inner_months)
-        if not passes:
-            continue
-        
-        traded_work = traded.copy()
-        traded_work["month"] = traded_work["month"].astype(str)
-        monthly_pnl = []
-        monthly_pf = []
-        monthly_wr = []
-        monthly_trades = []
-        for m in inner_months:
-            mt = traded_work[traded_work["month"] == m]
-            ret = mt["realized_return"].astype(float).to_numpy() if not mt.empty else np.array([])
-            monthly_pnl.append(float(ret.sum()) if len(ret) > 0 else 0.0)
-            wins = ret[ret > 0] if len(ret) > 0 else np.array([])
-            losses = ret[ret < 0] if len(ret) > 0 else np.array([])
-            pf = float(wins.sum() / (-losses.sum())) if len(losses) > 0 and losses.sum() < 0 else float("inf")
-            monthly_pf.append(pf)
-            monthly_wr.append(float((ret > 0).mean()) if len(ret) > 0 else 0.0)
-            monthly_trades.append(int(len(mt)))
+) -> tuple[float, float, bool, dict]:
+    """Sweep trade_threshold × side_margin for C0. Return best (trade_thr, side_margin, valid, details).
 
-        total_pnl = float(traded["realized_return"].astype(float).sum())
-        total_trades = int(len(traded))
+    C0 now uses the same grid and lexicographic selection as P1.
+    """
+    candidates = _sweep_configs(scored_val, inner_months, config, bucket, apply_c0_policy)
 
-        rank_key = (
-            min(monthly_pnl),
-            min(monthly_pf),
-            min(monthly_wr),
-            min(monthly_trades),
-            total_pnl,
-            total_trades,
-            thr,
-        )
-
-        candidates.append({
-            "threshold": thr,
-            "rank_key": rank_key,
-            "total_trades": total_trades,
-            "total_pnl": total_pnl,
-            "gate_details": gate_details,
-        })
-    
     if not candidates:
-        return 0.5, False, {"reason": "no_valid_config"}
+        return 0.5, 0.0, False, {"reason": "no_valid_config"}
 
     candidates.sort(key=lambda c: c["rank_key"], reverse=True)
     best = candidates[0]
-    return best["threshold"], True, best
+    return best["trade_threshold"], best["side_margin"], True, best
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -499,12 +569,10 @@ def compute_diagnostics(
     else:
         diag["call_prevalence_in_opp_positive"] = float("nan")
 
-    tie_mask = side_adv.abs() <= 1e-9
+    tie_mask = side_adv.abs() <= SIDE_TIE_THRESHOLD_TRAINING
     diag["tie_rate"] = round(float(tie_mask.mean()), 4)
 
     if arm == "P1" and "p_trade" in scored.columns and "p_call" in scored.columns:
-        from sklearn.metrics import roc_auc_score, average_precision_score, precision_score, recall_score, balanced_accuracy_score
-
         # Opportunity metrics (all rows)
         p_trade = scored["p_trade"].astype(float)
         finite_mask = np.isfinite(p_trade) & np.isfinite(opp_label.astype(float))
@@ -530,7 +598,7 @@ def compute_diagnostics(
                 diag["side_roc_auc_A"] = round(float(roc_auc_score(side_true, p_call_opp)), 4)
             except Exception:
                 pass
-            
+
             side_adv_opp = side_adv[opp_pos_mask]
             finite_spearman = np.isfinite(p_call_opp) & np.isfinite(side_adv_opp)
             if finite_spearman.sum() > 10:
@@ -538,21 +606,18 @@ def compute_diagnostics(
                 diag["spearman_side_advantage_A"] = round(float(sp), 4)
                 diag["spearman_side_advantage_p_A"] = round(float(sp_p), 6)
 
-        # Side metrics — B: over traded candidates only
-        if not traded.empty and "p_call" in traded.columns:
-            traded_opp_pos = traded[
-                (np.maximum(traded["call_return"].astype(float), traded["put_return"].astype(float)) > 0)
-                & (traded["call_return"].astype(float) - traded["put_return"].astype(float)).abs() > 1e-9
-            ] if len(traded) > 0 else pd.DataFrame()
-            if len(traded_opp_pos) > 5:
-                p_call_traded = traded_opp_pos["p_call"].astype(float)
-                side_true_traded = (traded_opp_pos["call_return"].astype(float) > traded_opp_pos["put_return"].astype(float)).astype(int)
-                pred_side_traded = (p_call_traded >= 0.5).astype(int)
-                try:
-                    diag["side_accuracy_B"] = round(float((pred_side_traded == side_true_traded).mean()), 4)
-                    diag["side_balanced_accuracy_B"] = round(float(balanced_accuracy_score(side_true_traded, pred_side_traded)), 4)
-                except Exception:
-                    pass
+    if arm == "C0" and "p_call_win" in scored.columns and "p_put_win" in scored.columns:
+        # C0 balanced accuracy diagnostics
+        p_call_win = scored["p_call_win"].astype(float)
+        p_put_win = scored["p_put_win"].astype(float)
+        opp_pos_mask = (opp_label == 1) & (~tie_mask)
+        if opp_pos_mask.sum() > 10:
+            pred_side_c0 = (p_call_win[opp_pos_mask] > p_put_win[opp_pos_mask]).astype(int)
+            side_true = side_label[opp_pos_mask]
+            try:
+                diag["side_balanced_accuracy_A"] = round(float(balanced_accuracy_score(side_true, pred_side_c0)), 4)
+            except Exception:
+                pass
 
     # Post-PnL diagnostics (from traded)
     if not traded.empty:
@@ -592,6 +657,8 @@ def compute_diagnostics(
         diag["worst_monthly_pf"] = round(min(month_pfs), 4) if month_pfs else float("nan")
         diag["worst_monthly_pnl"] = round(min(month_pnls), 4) if month_pnls else float("nan")
         diag["min_monthly_trades"] = min(month_trades) if month_trades else 0
+        diag["positive_month_rate"] = round(sum(1 for p in month_pnls if p > 0) / max(1, len(month_pnls)), 4)
+        diag["pooled_pf"] = diag["pf"]
     else:
         diag["executed_trades"] = 0
         diag["wr"] = float("nan")
@@ -602,65 +669,48 @@ def compute_diagnostics(
     return diag
 
 
-# ═══════════════════════════════════════════════════════════════════════
-# CONSTANT-SIDE AND ORACLE-SIDE BASELINES
-# ═══════════════════════════════════════════════════════════════════════
+def compute_lr_diagnostics(
+    y_true: np.ndarray,
+    y_prob: np.ndarray,
+    label_name: str,
+) -> dict:
+    """Compute diagnostic-only metrics for Logistic Regression.
 
-def constant_side_baseline(
-    scored: pd.DataFrame,
-    train_data: pd.DataFrame,
-    threshold: float,
-    config: dict,
-    bucket: int,
-) -> pd.DataFrame:
-    """Constant-side baseline: fit best side from train data, apply to scored."""
-    # Determine dominant side from training data
-    call_wr_train = float((train_data["call_return"].astype(float) > 0).mean())
-    put_wr_train = float((train_data["put_return"].astype(float) > 0).mean())
-    best_side = "CALL" if call_wr_train >= put_wr_train else "PUT"
-    
-    work = scored.copy()
-    work["action"] = best_side
-    if best_side == "CALL":
-        work["score"] = work.get("p_trade", work.get("pred_call_return", pd.Series(0.5, index=work.index))).astype(float)
-        work["realized_return"] = work["call_return"]
-        exit_col = f"call_d{bucket:02d}_opt_exit_minutes"
-    else:
-        work["score"] = work.get("p_trade", work.get("pred_put_return", pd.Series(0.5, index=work.index))).astype(float)
-        work["realized_return"] = work["put_return"]
-        exit_col = f"put_d{bucket:02d}_opt_exit_minutes"
-    
-    if exit_col in work.columns:
-        work["exit_minutes"] = pd.to_numeric(work[exit_col], errors="coerce")
-    
-    work = work[work["score"].astype(float) >= threshold].copy()
-    return work
+    Reports only: ROC-AUC, PR-AUC, balanced accuracy (threshold=0.5), Spearman.
+    LR does NOT select thresholds, produce economic policies, enter the scheduler,
+    substitute LightGBM, participate in ensembles, or get selected retrospectively.
+    """
+    diag = {"label": label_name}
+    finite = np.isfinite(y_prob) & np.isfinite(y_true.astype(float))
+    if finite.sum() < 10:
+        return diag
 
+    y_t = y_true[finite]
+    y_p = y_prob[finite]
 
-def oracle_side_baseline(
-    scored: pd.DataFrame,
-    threshold: float,
-    config: dict,
-    bucket: int,
-) -> pd.DataFrame:
-    """Oracle-side baseline: always pick the better side (diagnostic only)."""
-    work = scored.copy()
-    is_call = work["call_return"].astype(float) >= work["put_return"].astype(float)
-    work["action"] = np.where(is_call, "CALL", "PUT")
-    work["score"] = work.get("p_trade", pd.Series(0.5, index=work.index)).astype(float)
-    work["realized_return"] = np.where(is_call, work["call_return"], work["put_return"])
-    
-    call_exit = f"call_d{bucket:02d}_opt_exit_minutes"
-    put_exit = f"put_d{bucket:02d}_opt_exit_minutes"
-    if call_exit in work.columns and put_exit in work.columns:
-        work["exit_minutes"] = np.where(
-            is_call,
-            pd.to_numeric(work[call_exit], errors="coerce"),
-            pd.to_numeric(work[put_exit], errors="coerce"),
-        )
-    
-    work = work[work["score"].astype(float) >= threshold].copy()
-    return work
+    try:
+        diag["roc_auc"] = round(float(roc_auc_score(y_t, y_p)), 4)
+    except Exception:
+        diag["roc_auc"] = float("nan")
+
+    try:
+        diag["pr_auc"] = round(float(average_precision_score(y_t, y_p)), 4)
+    except Exception:
+        diag["pr_auc"] = float("nan")
+
+    try:
+        pred = (y_p >= 0.5).astype(int)
+        diag["balanced_accuracy"] = round(float(balanced_accuracy_score(y_t, pred)), 4)
+    except Exception:
+        diag["balanced_accuracy"] = float("nan")
+
+    try:
+        sp, _ = spearmanr(y_p, y_t)
+        diag["spearman"] = round(float(sp), 4)
+    except Exception:
+        diag["spearman"] = float("nan")
+
+    return diag
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -672,6 +722,7 @@ def run_fold(
     fold: dict,
     prepared: pd.DataFrame,
     feature_cols: list[str],
+    feature_hash: str,
     config: dict,
     output_dir: Path,
 ) -> dict:
@@ -682,6 +733,7 @@ def run_fold(
     train_months = fold["train_months"]
     cooldown = config["cooldown_minutes"]
     max_day = config["max_trades_per_day"]
+    ticker_offset = config["ticker_offset"]
 
     fold_id = f"{ticker}_{test_month}"
     fold_dir = output_dir / fold_id
@@ -703,6 +755,8 @@ def run_fold(
         "train_months": ",".join(train_months),
         "inner_months": ",".join(inner_months),
         "train_rows": len(train), "val_rows": len(val), "test_rows": len(test),
+        "feature_hash": feature_hash,
+        "first_allowed_minute": FIRST_ALLOWED_MINUTE,
     }
 
     if len(train) < MIN_TRAIN_ROWS or len(val) < MIN_VAL_ROWS or test.empty:
@@ -711,9 +765,9 @@ def run_fold(
         result["p1"] = {"status": "insufficient_rows"}
         return result
 
-    # Prepare features
+    # Prepare features — same for both C0 and P1
     train_medians = train[feature_cols].replace([np.inf, -np.inf], np.nan).median(numeric_only=True)
-    
+
     def fill_features(df: pd.DataFrame) -> pd.DataFrame:
         return df[feature_cols].replace([np.inf, -np.inf], np.nan).fillna(train_medians).fillna(0.0)
 
@@ -721,36 +775,75 @@ def run_fold(
     X_val = fill_features(val)
     X_test = fill_features(test)
 
-    seed_offset = int(test_month[-2:]) + hash(ticker) % 10000
-    lgb_seed = FROZEN_SEED + seed_offset
+    # Deterministic seed calculation (no python hash())
+    base_seed = int(FROZEN_SEED) + int(test_month) + ticker_offset
+    result["base_seed"] = base_seed
 
-    # ── C0: Absolute baseline ───────────────────────────────────────────
-    # Train call and put classifiers
-    y_call_train = (train["call_return"].astype(float) > 0).astype(int)
-    y_put_train = (train["put_return"].astype(float) > 0).astype(int)
+    # ── y arrays for training ──────────────────────────────────────────
+    # C0 labels
+    y_call_win_train = train["call_win_label"].astype(int)
+    y_put_win_train = train["put_win_label"].astype(int)
 
-    c0_call_model = lgb.LGBMClassifier(**{**FROZEN_LGB_PARAMS, "random_state": lgb_seed})
-    c0_put_model = lgb.LGBMClassifier(**{**FROZEN_LGB_PARAMS, "random_state": lgb_seed + 10000})
-    c0_call_model.fit(X_train, y_call_train)
-    c0_put_model.fit(X_train, y_put_train)
+    # P1 labels
+    y_opp_train = train["opportunity_label"].astype(int)
+    side_train_mask = (
+        (train["opportunity_label"] == 1)
+        & (train["side_advantage"].astype(float).abs() > SIDE_TIE_THRESHOLD_TRAINING)
+    )
+    side_train = train[side_train_mask]
+    X_side_train = fill_features(side_train)
+    y_side_train = side_train["side_label"].astype(int)
+
+    # Prevalences
+    opp_prevalence = float(y_opp_train.mean()) if len(y_opp_train) > 0 else 0.0
+    side_prevalence = float(y_side_train.mean()) if len(y_side_train) > 0 else 0.0
+    result["opportunity_prevalence"] = opp_prevalence
+    result["side_prevalence"] = side_prevalence
+    result["call_win_prevalence"] = float(y_call_win_train.mean()) if len(y_call_win_train) > 0 else 0.0
+    result["put_win_prevalence"] = float(y_put_win_train.mean()) if len(y_put_win_train) > 0 else 0.0
+
+    # Class degeneracy checks
+    is_degenerate = (
+        len(np.unique(y_call_win_train)) < 2 or
+        len(np.unique(y_put_win_train)) < 2 or
+        len(np.unique(y_opp_train)) < 2 or
+        len(np.unique(y_side_train)) < 2
+    )
+
+    if is_degenerate:
+        result["status"] = "ABSTAIN_MODEL_DEGENERATE"
+        result["c0"] = {"status": "ABSTAIN_MODEL_DEGENERATE"}
+        result["p1"] = {"status": "ABSTAIN_MODEL_DEGENERATE"}
+        with open(fold_dir / "fold_summary.json", "w") as f:
+            json.dump(result, f, indent=2, default=str)
+        return result
+
+    # ── C0: In-protocol nested absolute-head baseline ───────────────────
+    lgb_params_c0_call = make_lgb_params(base_seed, HEAD_OFFSET_C0_CALL)
+    lgb_params_c0_put = make_lgb_params(base_seed, HEAD_OFFSET_C0_PUT)
+
+    c0_call_model = lgb.LGBMClassifier(**lgb_params_c0_call)
+    c0_put_model = lgb.LGBMClassifier(**lgb_params_c0_put)
+    c0_call_model.fit(X_train, y_call_win_train)
+    c0_put_model.fit(X_train, y_put_win_train)
 
     # Score validation and test
     val_c0 = val.copy()
-    val_c0["pred_call_return"] = c0_call_model.predict_proba(X_val)[:, 1]
-    val_c0["pred_put_return"] = c0_put_model.predict_proba(X_val)[:, 1]
+    val_c0["p_call_win"] = c0_call_model.predict_proba(X_val)[:, 1]
+    val_c0["p_put_win"] = c0_put_model.predict_proba(X_val)[:, 1]
 
     test_c0 = test.copy()
-    test_c0["pred_call_return"] = c0_call_model.predict_proba(X_test)[:, 1]
-    test_c0["pred_put_return"] = c0_put_model.predict_proba(X_test)[:, 1]
+    test_c0["p_call_win"] = c0_call_model.predict_proba(X_test)[:, 1]
+    test_c0["p_put_win"] = c0_put_model.predict_proba(X_test)[:, 1]
 
-    # Select best threshold for C0
-    best_thr_c0, valid_c0, c0_sel_details = select_best_config_c0(
+    # Select best threshold + side_margin for C0
+    best_thr_c0, best_sm_c0, valid_c0, c0_sel_details = select_best_config_c0(
         val_c0, inner_months, config, bucket,
     )
 
     # Deploy C0 on test
     if valid_c0:
-        test_c0_applied = apply_absolute_policy(test_c0, best_thr_c0, bucket)
+        test_c0_applied = apply_c0_policy(test_c0, best_thr_c0, best_sm_c0, bucket)
         c0_cfg = DeployConfig(threshold=0.0, max_trades_per_day=max_day)
         test_c0_traded = deploy(test_c0_applied, c0_cfg, cooldown) if not test_c0_applied.empty else test_c0_applied
         c0_test_metrics = metrics(test_c0_traded, [test_month])
@@ -761,32 +854,30 @@ def run_fold(
         c0_diag = {"arm": "C0", "status": "abstain", "reason": "no_valid_inner_config"}
 
     result["c0"] = {
-        "threshold": best_thr_c0,
+        "trade_threshold": best_thr_c0,
+        "side_margin": best_sm_c0,
         "valid_inner": valid_c0,
         "test_metrics": c0_test_metrics,
         "diagnostics": c0_diag,
         "selection_details": c0_sel_details if isinstance(c0_sel_details, dict) else {},
+        "model_labels": {"call": "call_win_label = int(call_return > 0)", "put": "put_win_label = int(put_return > 0)"},
+        "seed_call": base_seed + HEAD_OFFSET_C0_CALL,
+        "seed_put": base_seed + HEAD_OFFSET_C0_PUT,
     }
 
     # ── P1: Pairwise opportunity + side ─────────────────────────────────
-    # Train opportunity classifier (all rows)
-    y_opp_train = train["opportunity_label"].astype(int)
+    lgb_params_p1_opp = make_lgb_params(base_seed, HEAD_OFFSET_P1_OPP)
+    lgb_params_p1_side = make_lgb_params(base_seed, HEAD_OFFSET_P1_SIDE)
 
-    # Train side classifier (only opportunity-positive, no ties)
-    side_train_mask = (
-        (train["opportunity_label"] == 1)
-        & (train["side_advantage"].astype(float).abs() > 1e-9)
-    )
-    side_train = train[side_train_mask]
-    X_side_train = fill_features(side_train)
-    y_side_train = side_train["side_label"].astype(int)
+    p1_opp_model = lgb.LGBMClassifier(**lgb_params_p1_opp)
+    p1_side_model = lgb.LGBMClassifier(**lgb_params_p1_side)
 
-    p1_opp_model = lgb.LGBMClassifier(**{**FROZEN_LGB_PARAMS, "random_state": lgb_seed + 20000})
-    p1_side_model = lgb.LGBMClassifier(**{**FROZEN_LGB_PARAMS, "random_state": lgb_seed + 30000})
     p1_opp_model.fit(X_train, y_opp_train)
 
     if len(X_side_train) < 50:
         result["p1"] = {"status": "insufficient_side_train_rows", "side_train_rows": len(X_side_train)}
+        with open(fold_dir / "fold_summary.json", "w") as f:
+            json.dump(result, f, indent=2, default=str)
         return result
 
     p1_side_model.fit(X_side_train, y_side_train)
@@ -825,55 +916,61 @@ def run_fold(
         "diagnostics": p1_diag,
         "selection_details": p1_sel_details if isinstance(p1_sel_details, dict) else {},
         "side_train_rows": int(len(X_side_train)),
+        "model_labels": {"opp": "opportunity_label = int(max(call_return, put_return) > 0)", "side": "side_label = int(call_return > put_return)"},
+        "seed_opp": base_seed + HEAD_OFFSET_P1_OPP,
+        "seed_side": base_seed + HEAD_OFFSET_P1_SIDE,
     }
 
-    # ── Diagnostic baselines ────────────────────────────────────────────
-    # Constant-side (using C0 threshold if valid, else 0.5)
-    cs_thr = best_thr_c0 if valid_c0 else 0.5
-    cs_applied = constant_side_baseline(test_c0, train, cs_thr, config, bucket)
-    cs_cfg = DeployConfig(threshold=0.0, max_trades_per_day=max_day)
-    cs_traded = deploy(cs_applied, cs_cfg, cooldown) if not cs_applied.empty else cs_applied
-    cs_metrics_val = metrics(cs_traded, [test_month])
-    result["constant_side"] = cs_metrics_val
-
-    # Oracle-side (diagnostic)
-    oracle_thr = best_tt if valid_p1 else (best_thr_c0 if valid_c0 else 0.5)
-    oracle_applied = oracle_side_baseline(test_p1 if valid_p1 else test_c0, oracle_thr, config, bucket)
-    oracle_cfg = DeployConfig(threshold=0.0, max_trades_per_day=max_day)
-    oracle_traded = deploy(oracle_applied, oracle_cfg, cooldown) if not oracle_applied.empty else oracle_applied
-    oracle_metrics_val = metrics(oracle_traded, [test_month])
-    result["oracle_side"] = oracle_metrics_val
-
-    # ── Logistic Regression diagnostic ──────────────────────────────────
+    # ── Logistic Regression diagnostic (no trades, no policy) ──────────
     try:
+        imputer = SimpleImputer(strategy="median")
         scaler = StandardScaler()
-        X_train_scaled = scaler.fit_transform(X_train)
-        X_val_scaled = scaler.transform(X_val)
-        X_test_scaled = scaler.transform(X_test)
+        X_train_imp = imputer.fit_transform(X_train)
+        X_train_scaled = scaler.fit_transform(X_train_imp)
+        X_val_imp = imputer.transform(X_val)
+        X_val_scaled = scaler.transform(X_val_imp)
+        X_test_imp = imputer.transform(X_test)
+        X_test_scaled = scaler.transform(X_test_imp)
 
-        lr_opp = LogisticRegression(max_iter=1000, random_state=lgb_seed + 40000, C=1.0)
-        lr_side = LogisticRegression(max_iter=1000, random_state=lgb_seed + 50000, C=1.0)
+        lr_diag_results = {}
 
+        # C0 heads
+        lr_call = LogisticRegression(penalty="l2", C=1.0, solver="lbfgs", class_weight=None, max_iter=1000, random_state=base_seed)
+        lr_put = LogisticRegression(penalty="l2", C=1.0, solver="lbfgs", class_weight=None, max_iter=1000, random_state=base_seed)
+        lr_call.fit(X_train_scaled, y_call_win_train)
+        lr_put.fit(X_train_scaled, y_put_win_train)
+        lr_diag_results["call_win"] = compute_lr_diagnostics(y_call_win_train.to_numpy(), lr_call.predict_proba(X_train_scaled)[:, 1], "call_win_train")
+        lr_diag_results["put_win"] = compute_lr_diagnostics(y_put_win_train.to_numpy(), lr_put.predict_proba(X_train_scaled)[:, 1], "put_win_train")
+        lr_diag_results["call_win_test"] = compute_lr_diagnostics(
+            test["call_win_label"].astype(int).to_numpy(), lr_call.predict_proba(X_test_scaled)[:, 1], "call_win_test"
+        )
+        lr_diag_results["put_win_test"] = compute_lr_diagnostics(
+            test["put_win_label"].astype(int).to_numpy(), lr_put.predict_proba(X_test_scaled)[:, 1], "put_win_test"
+        )
+
+        # P1 heads
+        lr_opp = LogisticRegression(penalty="l2", C=1.0, solver="lbfgs", class_weight=None, max_iter=1000, random_state=base_seed)
         lr_opp.fit(X_train_scaled, y_opp_train)
+        lr_diag_results["opportunity_test"] = compute_lr_diagnostics(
+            test["opportunity_label"].astype(int).to_numpy(), lr_opp.predict_proba(X_test_scaled)[:, 1], "opportunity_test"
+        )
+
         if len(X_side_train) >= 50:
-            X_side_scaled = scaler.transform(X_side_train)
+            X_side_imp = imputer.transform(X_side_train)
+            X_side_scaled = scaler.transform(X_side_imp)
+            lr_side = LogisticRegression(penalty="l2", C=1.0, solver="lbfgs", class_weight=None, max_iter=1000, random_state=base_seed)
             lr_side.fit(X_side_scaled, y_side_train)
+            # Test-set side diagnostics (on opp-positive non-tie subset)
+            test_side_mask = (test["opportunity_label"] == 1) & (test["side_advantage"].astype(float).abs() > SIDE_TIE_THRESHOLD_TRAINING)
+            if test_side_mask.sum() >= 10:
+                X_test_side = X_test_scaled[test_side_mask.values]
+                y_test_side = test.loc[test_side_mask, "side_label"].astype(int).to_numpy()
+                lr_diag_results["side_test"] = compute_lr_diagnostics(
+                    y_test_side, lr_side.predict_proba(X_test_side)[:, 1], "side_test"
+                )
 
-            test_lr = test.copy()
-            test_lr["p_trade"] = lr_opp.predict_proba(X_test_scaled)[:, 1]
-            test_lr["p_call"] = lr_side.predict_proba(X_test_scaled)[:, 1]
+        result["logistic_regression"] = lr_diag_results
 
-            # Use P1's selected thresholds for LR diagnostic
-            if valid_p1:
-                lr_applied = apply_pairwise_policy(test_lr, best_tt, best_sm, bucket)
-                lr_cfg = DeployConfig(threshold=0.0, max_trades_per_day=max_day)
-                lr_traded = deploy(lr_applied, lr_cfg, cooldown) if not lr_applied.empty else lr_applied
-                lr_metrics_val = metrics(lr_traded, [test_month])
-                result["logistic_regression"] = lr_metrics_val
-            else:
-                result["logistic_regression"] = {"status": "p1_abstained"}
-        else:
-            result["logistic_regression"] = {"status": "insufficient_side_train"}
     except Exception as e:
         result["logistic_regression"] = {"status": "error", "error": str(e)}
 
@@ -890,15 +987,26 @@ def run_fold(
     }).sort_values("importance", ascending=False)
     side_imp.to_csv(fold_dir / "side_model_importances.csv", index=False)
 
+    c0_call_imp = pd.DataFrame({
+        "feature": feature_cols,
+        "importance": c0_call_model.feature_importances_,
+    }).sort_values("importance", ascending=False)
+    c0_call_imp.to_csv(fold_dir / "c0_call_model_importances.csv", index=False)
+
+    c0_put_imp = pd.DataFrame({
+        "feature": feature_cols,
+        "importance": c0_put_model.feature_importances_,
+    }).sort_values("importance", ascending=False)
+    c0_put_imp.to_csv(fold_dir / "c0_put_model_importances.csv", index=False)
+
     # Save fold trades
+    trade_export_cols = ["date", "month", "minute", "action", "score", "realized_return"]
     if not test_p1_traded.empty:
-        trade_export_cols = ["date", "month", "minute", "action", "score", "realized_return"]
-        trade_export_cols = [c for c in trade_export_cols if c in test_p1_traded.columns]
-        test_p1_traded[trade_export_cols].to_csv(fold_dir / "p1_trades.csv", index=False)
+        cols = [c for c in trade_export_cols if c in test_p1_traded.columns]
+        test_p1_traded[cols].to_csv(fold_dir / "p1_trades.csv", index=False)
     if not test_c0_traded.empty:
-        trade_export_cols = ["date", "month", "minute", "action", "score", "realized_return"]
-        trade_export_cols = [c for c in trade_export_cols if c in test_c0_traded.columns]
-        test_c0_traded[trade_export_cols].to_csv(fold_dir / "c0_trades.csv", index=False)
+        cols = [c for c in trade_export_cols if c in test_c0_traded.columns]
+        test_c0_traded[cols].to_csv(fold_dir / "c0_trades.csv", index=False)
 
     # Save fold summary
     with open(fold_dir / "fold_summary.json", "w") as f:
@@ -906,6 +1014,159 @@ def run_fold(
 
     result["status"] = "completed"
     return result
+
+
+def compute_scientific_criteria(all_results: list[dict]) -> dict:
+    """Compute predeclared scientific success criteria.
+
+    Over the 99 cells (ticker × outer month):
+    1. balanced accuracy delta(P1 vs C0) > 0 in >= 60% of cells
+    2. median of balanced accuracy delta > 0
+    3. Spearman(p_call, side_advantage) > 0 in >= 60% of cells
+    4. median of Spearman > 0
+    5. evidence favorable in 2023, 2024, and 2025
+
+    Also computes Wilcoxon signed-rank test on paired balanced accuracy deltas.
+    """
+    ba_deltas = []
+    spearman_values = []
+    year_deltas = {}  # year -> [deltas]
+
+    for r in all_results:
+        if r.get("status") != "completed":
+            continue
+        test_month = r["test_month"]
+        year = test_month[:4]
+
+        c0_diag = r.get("c0", {}).get("diagnostics", {})
+        p1_diag = r.get("p1", {}).get("diagnostics", {})
+
+        ba_c0 = c0_diag.get("side_balanced_accuracy_A")
+        ba_p1 = p1_diag.get("side_balanced_accuracy_A")
+
+        if ba_c0 is not None and ba_p1 is not None and np.isfinite(ba_c0) and np.isfinite(ba_p1):
+            delta = ba_p1 - ba_c0
+            ba_deltas.append(delta)
+            year_deltas.setdefault(year, []).append(delta)
+
+        sp = p1_diag.get("spearman_side_advantage_A")
+        if sp is not None and np.isfinite(sp):
+            spearman_values.append(sp)
+
+    sci = {}
+    if ba_deltas:
+        sci["ba_delta_positive_rate"] = round(sum(1 for d in ba_deltas if d > 0) / len(ba_deltas), 4)
+        sci["ba_delta_median"] = round(float(np.median(ba_deltas)), 4)
+        sci["ba_delta_mean"] = round(float(np.mean(ba_deltas)), 4)
+        sci["ba_delta_cells"] = len(ba_deltas)
+
+        # Wilcoxon signed-rank test
+        try:
+            ba_arr = np.array(ba_deltas)
+            nonzero = ba_arr[ba_arr != 0.0]
+            if len(nonzero) >= 10:
+                stat, pval = wilcoxon(nonzero)
+                sci["wilcoxon_statistic"] = round(float(stat), 4)
+                sci["wilcoxon_pvalue"] = round(float(pval), 6)
+                sci["wilcoxon_n_nonzero"] = int(len(nonzero))
+            else:
+                sci["wilcoxon_status"] = "insufficient_nonzero_pairs"
+        except Exception as e:
+            sci["wilcoxon_status"] = f"error: {e}"
+
+    if spearman_values:
+        sci["spearman_positive_rate"] = round(sum(1 for s in spearman_values if s > 0) / len(spearman_values), 4)
+        sci["spearman_median"] = round(float(np.median(spearman_values)), 4)
+        sci["spearman_cells"] = len(spearman_values)
+
+    # Per-year evidence
+    for year in sorted(year_deltas.keys()):
+        deltas = year_deltas[year]
+        sci[f"year_{year}_ba_delta_median"] = round(float(np.median(deltas)), 4)
+        sci[f"year_{year}_ba_delta_positive_rate"] = round(sum(1 for d in deltas if d > 0) / len(deltas), 4)
+        sci[f"year_{year}_cells"] = len(deltas)
+
+    # Check all-years evidence
+    favorable_years = sum(
+        1 for y in ["2023", "2024", "2025"]
+        if y in year_deltas and np.median(year_deltas[y]) > 0
+    )
+    sci["favorable_years"] = favorable_years
+    sci["favorable_years_required"] = 3
+
+    # Scientific pass
+    sci["scientific_pass"] = (
+        sci.get("ba_delta_positive_rate", 0) >= 0.60
+        and sci.get("ba_delta_median", -1) > 0
+        and sci.get("spearman_positive_rate", 0) >= 0.60
+        and sci.get("spearman_median", -1) > 0
+        and favorable_years >= 3
+    )
+
+    return sci
+
+
+def compute_economic_criteria(all_results: list[dict]) -> dict:
+    """Compute predeclared economic success criteria.
+
+    Per ticker × outer month, P1 must achieve:
+      PF >= 1.3, WR >= 50%, trades >= 18, PnL > 0, each hold >= 30m.
+
+    Reports: pooled PF, worst-month PF, worst-month PnL, minimum monthly trades,
+    positive-month rate, max drawdown.
+    Does NOT average monthly PFs as primary criterion.
+    """
+    econ = {}
+    for arm in ["c0", "p1"]:
+        arm_cells = []
+        for r in all_results:
+            if r.get("status") != "completed":
+                continue
+            arm_data = r.get(arm, {})
+            if not arm_data.get("valid_inner", False):
+                arm_cells.append({"ticker": r["ticker"], "month": r["test_month"], "pass": False, "reason": "abstain"})
+                continue
+
+            tm = arm_data.get("test_metrics", {})
+            diag = arm_data.get("diagnostics", {})
+            pf = tm.get("profit_factor", 0)
+            wr = tm.get("win_rate", 0)
+            trades = tm.get("trades", 0)
+            pnl = diag.get("pnl", 0)
+            min_hold = diag.get("min_hold_minutes", 0)
+
+            cell_pass = (
+                (pf >= 1.3 or pf == float("inf"))
+                and wr >= 0.50
+                and trades >= 18
+                and pnl > 0
+                and min_hold >= 30
+            )
+            arm_cells.append({
+                "ticker": r["ticker"], "month": r["test_month"],
+                "pf": pf, "wr": wr, "trades": trades, "pnl": pnl,
+                "min_hold": min_hold, "pass": cell_pass,
+            })
+
+        passing = [c for c in arm_cells if c["pass"]]
+        pfs_valid = [c["pf"] for c in arm_cells if "pf" in c and np.isfinite(c.get("pf", 0))]
+        pnls_valid = [c.get("pnl", 0) for c in arm_cells if "pnl" in c]
+        trades_valid = [c.get("trades", 0) for c in arm_cells if "trades" in c]
+
+        econ[f"{arm}_total_cells"] = len(arm_cells)
+        econ[f"{arm}_passing_cells"] = len(passing)
+        econ[f"{arm}_pass_rate"] = round(len(passing) / max(1, len(arm_cells)), 4)
+        econ[f"{arm}_worst_month_pf"] = round(min(pfs_valid), 4) if pfs_valid else float("nan")
+        econ[f"{arm}_worst_month_pnl"] = round(min(pnls_valid), 4) if pnls_valid else float("nan")
+        econ[f"{arm}_min_monthly_trades"] = min(trades_valid) if trades_valid else 0
+        econ[f"{arm}_positive_month_rate"] = round(sum(1 for p in pnls_valid if p > 0) / max(1, len(pnls_valid)), 4)
+
+        # Pooled PF (sum of all wins / sum of all losses)
+        all_pnl_positive = sum(c.get("pnl", 0) for c in arm_cells if c.get("pnl", 0) > 0)
+        all_pnl_negative = sum(c.get("pnl", 0) for c in arm_cells if c.get("pnl", 0) < 0)
+        econ[f"{arm}_pooled_pf"] = round(all_pnl_positive / (-all_pnl_negative), 4) if all_pnl_negative < 0 else float("inf")
+
+    return econ
 
 
 def main() -> int:
@@ -939,7 +1200,11 @@ def main() -> int:
     print(f"  Folds: {len(folds)} ({folds[0]['test_month']}..{folds[-1]['test_month']})")
 
     # ── Feature allowlist audit ─────────────────────────────────────────
-    print(f"  Feature allowlist: {len(COMMON_FEATURES)} common + 6 diffs + 18 changes = {len(COMMON_FEATURES) + 24}")
+    expected_diff = len(DIFF_METRICS)  # 6
+    expected_changes = (len(DIFF_METRICS) - 1) * len(CHANGE_LAGS)  # 5 metrics * 3 lags = 15 (oi excluded)
+    expected_total = len(COMMON_FEATURES) + expected_diff + expected_changes
+    print(f"  Feature allowlist: {len(COMMON_FEATURES)} common + {expected_diff} diffs + {expected_changes} changes = {expected_total}")
+    print(f"  First allowed minute: {FIRST_ALLOWED_MINUTE} (minute > 630, 5m grid)")
 
     if args.dry_run:
         print("\n[DRY RUN] Setup validated. Exiting without running folds.")
@@ -951,16 +1216,37 @@ def main() -> int:
             "tickers": args.tickers,
             "lgb_params": FROZEN_LGB_PARAMS,
             "seed": FROZEN_SEED,
+            "head_offsets": {
+                "C0_CALL": HEAD_OFFSET_C0_CALL,
+                "C0_PUT": HEAD_OFFSET_C0_PUT,
+                "P1_OPP": HEAD_OFFSET_P1_OPP,
+                "P1_SIDE": HEAD_OFFSET_P1_SIDE,
+            },
             "trade_thresholds": TRADE_THRESHOLDS,
             "side_margins": SIDE_MARGINS,
             "inner_gates": {
                 "min_pf": INNER_MIN_PF, "min_wr": INNER_MIN_WR,
                 "min_trades_per_month": INNER_MIN_TRADES_PER_MONTH,
+                "min_hold_minutes": INNER_MIN_HOLD_MINUTES,
             },
             "ticker_config": TICKER_CONFIG,
             "common_features": COMMON_FEATURES,
             "diff_metrics": DIFF_METRICS,
             "change_lags": CHANGE_LAGS,
+            "first_allowed_minute": FIRST_ALLOWED_MINUTE,
+            "c0_definition": "In-protocol nested absolute-head baseline. Labels: call_win_label=int(call_return>0), put_win_label=int(put_return>0).",
+            "p1_definition": "Pairwise opportunity + side classifier. Labels: opportunity_label=int(max(call_return,put_return)>0), side_label=int(call_return>put_return).",
+            "scientific_criteria": {
+                "ba_delta_positive_rate >= 0.60": True,
+                "ba_delta_median > 0": True,
+                "spearman_positive_rate >= 0.60": True,
+                "spearman_median > 0": True,
+                "favorable_evidence_2023_2024_2025": True,
+            },
+            "economic_criteria": {
+                "per_ticker_per_month": "PF>=1.3, WR>=50%, trades>=18, PnL>0, hold>=30m",
+                "no_averaged_monthly_pf": True,
+            },
         }
         with open(output_dir / "run_config.json", "w") as f:
             json.dump(config, f, indent=2, default=str)
@@ -969,6 +1255,8 @@ def main() -> int:
 
     # ── Run all folds ───────────────────────────────────────────────────
     all_results = []
+    global_feature_hash = None
+
     for ticker in args.tickers:
         tcfg = TICKER_CONFIG[ticker]
         bucket = tcfg["bucket"]
@@ -982,7 +1270,7 @@ def main() -> int:
             print(f"  No data for {ticker}, skipping")
             continue
 
-        # Entry window filter: minute > 630 (after 10:30 ET)
+        # Entry window filter: minute > 630 (first candidate = 635 on 5m grid)
         tdf["minute"] = pd.to_numeric(tdf["minute"], errors="coerce")
         tdf = tdf[tdf["minute"] > 630].copy()
 
@@ -990,11 +1278,23 @@ def main() -> int:
         tdf, feature_cols = build_diff_features(tdf, ticker, bucket)
         tdf = build_labels(tdf, bucket)
 
+        # Feature hash — assert parity across tickers (same allowlist)
+        feature_hash = compute_feature_hash(feature_cols)
+        if global_feature_hash is None:
+            global_feature_hash = feature_hash
+        else:
+            assert feature_hash == global_feature_hash, (
+                f"Feature hash mismatch across tickers! "
+                f"Expected {global_feature_hash}, got {feature_hash} for {ticker}. "
+                f"C0 and P1 must receive exactly the same feature allowlist."
+            )
+
         print(f"  Prepared: {len(tdf):,} rows, {len(feature_cols)} features")
+        print(f"  Feature hash: {feature_hash}")
         print(f"  Features: {feature_cols[:5]} ... ({len(feature_cols)} total)")
 
         for fold in folds:
-            result = run_fold(ticker, fold, tdf, feature_cols, tcfg, output_dir)
+            result = run_fold(ticker, fold, tdf, feature_cols, feature_hash, tcfg, output_dir)
             all_results.append(result)
 
             # Print summary
@@ -1010,11 +1310,25 @@ def main() -> int:
     all_folds_df = pd.json_normalize(all_results, sep="_")
     all_folds_df.to_csv(output_dir / "all_folds.csv", index=False)
 
+    # Scientific criteria
+    sci = compute_scientific_criteria(all_results)
+    with open(output_dir / "scientific_criteria.json", "w") as f:
+        json.dump(sci, f, indent=2, default=str)
+
+    # Economic criteria
+    econ = compute_economic_criteria(all_results)
+    with open(output_dir / "economic_criteria.json", "w") as f:
+        json.dump(econ, f, indent=2, default=str)
+
     # Aggregate report
     agg = {
         "dataset_sha256": dataset_sha,
+        "feature_hash": global_feature_hash,
+        "first_allowed_minute": FIRST_ALLOWED_MINUTE,
         "total_folds": len(all_results),
         "folds_completed": sum(1 for r in all_results if r.get("status") == "completed"),
+        "scientific_criteria": sci,
+        "economic_criteria": econ,
     }
     for arm in ["c0", "p1"]:
         valid_folds = [r for r in all_results if r.get(arm, {}).get("valid_inner", False)]
@@ -1024,10 +1338,7 @@ def main() -> int:
             wrs = [r[arm]["test_metrics"]["win_rate"] for r in valid_folds if np.isfinite(r[arm]["test_metrics"]["win_rate"])]
             trades = [r[arm]["test_metrics"]["trades"] for r in valid_folds]
             agg[f"{arm}_valid_folds"] = len(valid_folds)
-            agg[f"{arm}_mean_pnl"] = round(float(np.mean(pnls)), 4)
             agg[f"{arm}_median_pnl"] = round(float(np.median(pnls)), 4)
-            agg[f"{arm}_mean_pf"] = round(float(np.mean(pfs)), 4) if pfs else float("nan")
-            agg[f"{arm}_mean_wr"] = round(float(np.mean(wrs)), 4) if wrs else float("nan")
             agg[f"{arm}_total_trades"] = int(sum(trades))
             agg[f"{arm}_pass_rate"] = round(len(valid_folds) / max(1, len(all_results)), 4)
         else:
@@ -1041,7 +1352,12 @@ def main() -> int:
     print("AGGREGATE SUMMARY")
     print(f"{'='*60}")
     for key, val in agg.items():
-        print(f"  {key}: {val}")
+        if isinstance(val, dict):
+            print(f"  {key}:")
+            for k2, v2 in val.items():
+                print(f"    {k2}: {v2}")
+        else:
+            print(f"  {key}: {val}")
 
     print(f"\nResults written to: {output_dir}")
     return 0

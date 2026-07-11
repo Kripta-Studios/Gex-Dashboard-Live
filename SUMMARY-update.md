@@ -30,21 +30,23 @@ Al entrar enero en la ventana inner, ningún candidato vuelve a cumplir y febrer
 
 La corrección de provenance funcionó: incluso las abstenciones conservan train/selección y `passed=true`. Junio y producción permanecen intactos. Siguiente hipótesis admisible: un mecanismo económico diferente o cobertura full-session causal 1m predeclarada, no otro barrido de momentum sobre el mismo OOS.
 
-## Actualización 2026-07-11 16:30 CEST — Predeclaración y Preparación de Pairwise Opportunity and Side Selection V1
+## Actualización 2026-07-11 17:00 CEST — Predeclaración y Preparación de Pairwise Opportunity and Side Selection V1
 
-Se ha completado la fase preliminar de la investigación `PAIRWISE_OPPORTUNITY_AND_SIDE_SELECTION_V1` de acuerdo con las correcciones obligatorias del plan técnico:
+Se ha completado y auditado la fase de preflight y preparación de `PAIRWISE_OPPORTUNITY_AND_SIDE_SELECTION_V1` de acuerdo con todas las correcciones obligatorias del plan técnico:
 
-1. **Datos físicamente sellados (2022-2025):** Se generó el parquet de datos restringido `tmp/event_option_dataset_execquote_causal1030_202201_202512_pairwise_v1/event_option_dataset.parquet` conteniendo 97,625 filas. La aserción causal impide la lectura de datos de 2026. Hash SHA-256 del dataset: `d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408`.
-2. **Predeclaración e Hiperparámetros:** Registrados en `research_papers/JEPA/PAIRWISE_OPPORTUNITY_AND_SIDE_SELECTION_PREDECLARATION_V1.md`. Los hiperparámetros LightGBM quedan congelados: `n_estimators=300`, `learning_rate=0.05`, `num_leaves=31`, `min_child_samples=20`, `subsample=0.8`, `colsample_bytree=0.8`, `reg_lambda=1.0`, y semilla base `42`.
-3. **Auditoría de Features y Allowlist Primaria:**
-   - Excluidos: `dte_days`, `spot`, y `underlying_volume` (este último contiene un valor único constante de 60.0).
-   - Incluido `nearest_level_abs_bps` tras verificar su naturaleza causal (cambia intradía como reflejo de la posición de spot pero se basa en niveles estáticos previos).
-   - Verificados `ib_range_bps`, `dist_ib_high_bps`, y `dist_ib_low_bps` como causalmente seguros (cerrados a las 10:29:59 antes del inicio de la ventana de entrada).
-   - Conservados los cambios de OI ya que el análisis de ceros determinó que no superan el 99% de ceros.
-4. **Mecanismo de Cambios Backward-looking:** Las diferencias y sus tasas de cambio a 5m/15m/25m se calculan usando `shift` agrupado por `trade_date`, impidiendo contaminación entre sesiones.
-5. **Código de Walk-Forward y Tests Unitarios:**
-   - Implementado script ejecutor `walkforward_pairwise_opportunity_side.py` que realiza las dos clasificaciones independientes (opportunity y pairwise side) para el brazo P1, y la clasificación absoluta para el control C0, empleando el mismo protocolo de deploy y simulación de contratos.
-   - Desarrollada suite de pruebas en `tests/test_pairwise_opportunity_side.py` para asegurar que las aserciones cronológicas (`len(train_months) == 12`, `len(inner_months) == 3`), el no-overlap de sesiones, y las gates mensuales de inner validation (`PF >= 1.3`, `WR >= 50%`, `trades >= 18`, `PnL > 0`) se aplican exactamente. Todos los tests (`6 passed`) se ejecutaron con éxito.
+1. **Datos físicamente sellados (2022-2025):** Se generó el parquet de datos restringido `tmp/event_option_dataset_execquote_causal1030_202201_202512_pairwise_v1/event_option_dataset.parquet` conteniendo 97,625 filas. Aserciones causales estrictas impiden la carga de cualquier dato de 2026. Hash SHA-256 del dataset: `d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408`.
+2. **Predeclaración e Hiperparámetros:** Registrados en `research_papers/JEPA/PAIRWISE_OPPORTUNITY_AND_SIDE_SELECTION_PREDECLARATION_V1.md`. Los hiperparámetros LightGBM quedan congelados: `n_estimators=300`, `learning_rate=0.05`, `num_leaves=31`, `min_child_samples=20`, `subsample=0.8`, `subsample_freq=1`, `colsample_bytree=0.8`, `reg_lambda=1.0`, y semillas deterministicas basadas en `FROZEN_SEED=42` + `test_month` + head offset.
+3. **Auditoría de Features y Allowlist Primaria (30 features):**
+   - Excluidos: `dte_days`, `spot` y `underlying_volume` (este último contiene un valor único constante de 60.0).
+   - Excluidos: Cambios de OI (`oi_diff_chg_*`) para evitar ruido de rollover.
+   - Verificados como causales: `nearest_level_abs_bps`, `ib_range_bps`, `dist_ib_high_bps`, y `dist_ib_low_bps`.
+   - Hash de la allowlist: `fa2057653ed0327b7f84a165c25f6e6d31e31b3b05c5591593e9c0bd3056d50e`.
+4. **C0 Redefinido con Precisión:** Baseline absoluto nested entrenado in-protocol. Utiliza etiquetas `call_win_label = int(call_return > 0)` y `put_win_label = int(put_return > 0)`. Su política de ejecución evalúa la misma grid de P1 (`trade_threshold = 0.1..0.9`, `side_margin = 0.0..0.30`) y se basa en `trade_score = max(p_call, p_put)` y `side_gap = abs(p_call - p_put)`.
+5. **Mecanismo de Cambios Backward-looking:** Las diferencias y sus tasas de cambio a 5m/15m/25m se calculan usando `shift` agrupado por `(ticker, trade_date, bucket)` después de ordenar por minuto dentro de cada sesión, impidiendo contaminación cruzada.
+6. **Código de Walk-Forward y Tests Unitarios:**
+   - Implementado script ejecutor `walkforward_pairwise_opportunity_side.py` que realiza las dos clasificaciones para C0 y P1.
+   - Desarrollada y ejecutada la suite de pruebas en `tests/test_pairwise_opportunity_side.py` con 19 tests unitarios aprobados de forma limpia (`19 passed`).
+   - El script preflight `run_pairwise_opportunity_side_v1.ps1` fue ejecutado con éxito, generando manifiesto `pairwise_preflight_manifest.json` (SHA-256 del Runner: `cacf71c48daec8e4db9684d778ac94df4febe8d4018f9850d74d3a868a2a20b4`).
 
 ## Actualización 2026-07-11 15:45 CEST — Auditoría de Reproducibilidad y C0 Equivalence Terminadas con Éxito
 
@@ -52,7 +54,7 @@ La auditoría de reproducibilidad se completó con éxito en 10 s (test PASS), a
 1. **C0 Equivalence (PASS):** El replay completo de C0 (sin gates de régimen) generó una coincidencia exacta de trades y PnL trade-a-trade con la ejecución original de V1. El hash de trades normalizado (`9a59c1f7...7ab`) coincide en ambos entornos, confirmando equivalencia interna del control de la ablación.
 2. **Reconstrucción de Thresholds (MATCH):** Se verificó que el threshold aplicado por la lógica del selector in-memory para QQQ 202602 R1 fue exactamente `0.012700021`, el cual coincide con el quintil 20% del skew put-call en los datos de entrenamiento filtrados por outcomes finitos y contratos disponibles (`finite_labels & observable`). Se clasificaron todos los thresholds auditados de R1-R4 bajo `THRESHOLD_MATCH`.
 3. **Persistencia y Serialización Corregidas:** Se modificó `freeze_fold_policy_artifact` para almacenar el dict de `regime_gate`, el commit de Git, y el SHA-256 del dataset en `fold_policy.json`. Se validaron con pytest y basetemp `C:\tmp\pytest-regime-gate-audit` los 21 tests de la suite (incluyendo persistencia, causal checks de minute > 630 para R4 y filtrado de candidatos substitution en scheduler).
-4. **Scheduler Contrafactual:** Para QQQ 202602 R1, el scheduler ejecutó 21 trades admitidos (PF = 1.444, WR = 60.9%, PnL = +2.956R) y descartó 1 trade (PF = 999.0, PnL = +0.596R), demostrando que no hubo leakage ni scheduling inconsistente.
+4. **Scheduler Contrafactual:** Para QQQ 202602 R1, el scheduler ejecutó 21 trades admitidos (PF = 1.444, WR = 60.9%, PnL = +2.956R) y descartó 1 trade (PF = infinito/no definido por ausencia de pérdidas, PnL = +0.596R), demostrando que no hubo leakage ni scheduling inconsistente.
 5. **Directorio de Auditoría Generado:** Todos los archivos auditados se escribieron en `research_papers/JEPA/results/_diagnostics/regime_gate_ablation_v1_reproducibility_audit/` conteniendo `audit_manifest.json`, `all_75_folds.csv` y los demás reportes auxiliares de flujo y procedencia.
 
 ## Actualización 2026-07-11 15:35 CEST — Ablación de Gates de Régimen Completada
@@ -67,7 +69,7 @@ Métricas clave obtenidas por arm:
 
 Conclusión científica: Los gates seleccionados de forma causal mejoraron el PnL y rescataron folds en situaciones específicas (como febrero de 2026), demostrando que la interacción pre-scheduler funciona correctamente y simula de forma equivalente la ejecución en live. Sin embargo, no consiguen generalizar a lo largo de todos los meses evaluados para cumplir simultáneamente con el riguroso contrato productivo (PF >= 1.3, WR >= 50%, >= 18 trades, PnL > 0 en cada mes).
 
-Informe detallado: `C:\Users\Álvaro Schwiedop\.gemini\antigravity-ide\brain\248f0f85-3bd2-48b9-a7cc-576d373827d5\ablation_report.md`.
+Informe detallado: `research_papers/JEPA/results/_diagnostics/regime_gate_ablation_v1_reproducibility_audit/REPORT.md`.
 
 ## Actualización 2026-07-11 14:15 CEST — el mecanismo productivo no era estable antes de 2026
 
