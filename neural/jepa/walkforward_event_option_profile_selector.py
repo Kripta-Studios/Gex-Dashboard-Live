@@ -364,6 +364,22 @@ def default_profiles(kind: str, all_tickers: list[str]) -> list[ProfileConfig]:
     return unique
 
 
+def filter_profiles(
+    profiles: Iterable[ProfileConfig],
+    allowlist: Iterable[str] = (),
+) -> list[ProfileConfig]:
+    ordered = list(profiles)
+    requested = [str(value).strip() for value in allowlist if str(value).strip()]
+    if not requested:
+        return ordered
+    by_name = {profile.name: profile for profile in ordered}
+    unknown = sorted(set(requested).difference(by_name))
+    if unknown:
+        raise ValueError(f"unknown --profile-allowlist entries: {unknown}")
+    requested_set = set(requested)
+    return [profile for profile in ordered if profile.name in requested_set]
+
+
 def load_raw(path: str | Path, tickers: list[str]) -> pd.DataFrame:
     df = pd.read_parquet(path)
     df["ticker"] = df["ticker"].astype(str).str.upper()
@@ -830,6 +846,12 @@ def main() -> int:
         choices=["narrow", "compact", "production_zero_dte", "broad"],
         default="narrow",
     )
+    parser.add_argument(
+        "--profile-allowlist",
+        nargs="*",
+        default=[],
+        help="Optional exact profile names to retain from --profile-kind, preserving canonical order.",
+    )
     parser.add_argument("--start-month", default="202601")
     parser.add_argument("--end-month", default="202605")
     parser.add_argument("--val-months", type=int, default=3)
@@ -930,7 +952,10 @@ def main() -> int:
     )
     if bool(args.live_observable_features_only) and "minute" in raw.columns:
         raw = raw[pd.to_numeric(raw["minute"], errors="coerce") >= int(entry_start_minute)].copy()
-    profiles = default_profiles(args.profile_kind, all_tickers)
+    profiles = filter_profiles(
+        default_profiles(args.profile_kind, all_tickers),
+        args.profile_allowlist,
+    )
     prepared_profiles = [
         prepare_profile(
             raw,

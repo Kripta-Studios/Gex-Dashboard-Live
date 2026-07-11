@@ -37,6 +37,8 @@ Hardware de investigación: RTX 5070 Ti de 12 GB VRAM, Ryzen 9 de 32 hilos y 32 
 
 Actualización 2026-07-11 12:10 CEST: el skip directo de momentum 5/15/30m queda rechazado (`0/210` candidatos válidos por arm, 30 abstenciones, 0 OOS trades). Tampoco mejora de forma reproducible MAE/RMSE/dirección. Con esto se cierra la vía de iterar representaciones. La pista práctica vuelve a la familia dense15/GBT + backfill/guards, que mostró edge histórico pero bajo labels y lineage legacy no promocionables. La nueva agenda es reconstruir ese mecanismo con executable quotes, hold>=30m y datos 2022–2025, aislando objetivo, bucket, backfill y guard; no añadir otra arquitectura.
 
+Actualización 2026-07-11 12:20 CEST: se predeclara el primer aislamiento del mecanismo: GBT de retorno ejecutable frente a GBT de probabilidad de win, manteniendo exactamente bucket live, features, folds, caps/cooldowns y selector. No hay JEPA ni búsqueda entre deltas/scopes. La prueba usa historia 2022–2025 y cinco meses externos sellados hasta mayo; solo si el objetivo recupera edge se estudiará backfill/guard.
+
 ## 2. Baseline causal a superar
 
 | Scope | Trades | WR | PF | PnL (R) | Min trades/mes | Meses positivos |

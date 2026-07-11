@@ -14,6 +14,12 @@ D:/ThetaData/data_underlying_derived/{SPXW,QQQ,SPY}
 
 Recursos locales: RTX 5070 Ti de 12 GB VRAM, Ryzen 9 de 32 hilos y 32 GB RAM. Los entrenamientos deben aprovechar CUDA determinista y la preparación de datos debe paralelizar CPU de forma reproducible.
 
+## Actualización 2026-07-11 12:20 CEST — ablación de objetivo exacto predeclarada
+
+La primera corrección del mecanismo está lista sin abrir otra arquitectura: dos arms idénticos comparan `regression_l1` del retorno ask→bid frente a clasificación `return>0`. Se fijan entrenamiento target, features live, bucket SPXW d25 y QQQ/SPY d35, caps/cooldowns 4/2/1 y 0/30/0, 2022–2025 para train, tres meses inner y tests externos `202601..202605`.
+
+Se añadió `--profile-allowlist` al selector para impedir que una búsqueda de 24 perfiles confunda el efecto del objetivo. El analizador exige PF1,3/WR50%/18 por cada mes/todos positivos/hold>=30m y audita que todo train/selection sea anterior al test. Runner Ryzen de 28 hilos, tests `27 passed`, compile y parse PASS. Predeclaración `EXACT_OBJECTIVE_RETURN_VS_WIN_PREDECLARATION_V1.md`; todavía no ejecutado.
+
 ## Actualización 2026-07-11 12:10 CEST — spot skip cerrado y cambio de estrategia
 
 El runner interrumpido visualmente había terminado de forma válida: tests, CUDA determinista, hashes, cinco folds, provenance y replay pasaron; no quedan procesos. Control y variante evaluaron 210 candidatos internos cada uno y ninguno pasó simultáneamente PF/WR/18 trades por mes/meses positivos. Las 30 policies abstuvieron y realizaron 0 trades OOS.

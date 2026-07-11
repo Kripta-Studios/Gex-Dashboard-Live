@@ -17,6 +17,14 @@ D:/ThetaData/data_underlying_derived/SPY
 
 Hardware local: RTX 5070 Ti con 12 GB VRAM, Ryzen 9 con 32 hilos y 32 GB RAM. Usar CUDA determinista y batches ajustados a VRAM para entrenamiento/inferencia; paralelizar carga y transformaciones CPU sin crear corridas duplicadas.
 
+## Actualización 2026-07-11 12:20 CEST — objetivo exacto return vs win listo
+
+- Se aisló el primer mecanismo, no arquitectura: mismo GBT/features/filas/bucket/selector, cambiando solo regresión de retorno ejecutable frente a probabilidad de win.
+- Datos exactos 2022–2025 para train, tres meses inner y test `202601..202605`; buckets SPXW d25 y QQQ/SPY d35; caps/cooldowns `4/2/1` y `0/30/0`; gates completas y junio sellado.
+- El selector admite ahora `--profile-allowlist` exacta para evitar la confusión de escoger entre 24 perfiles. Analizador verifica cronología, hold>=30m y gates por ticker/mes.
+- Predeclaración `EXACT_OBJECTIVE_RETURN_VS_WIN_PREDECLARATION_V1.md`; hashes selector/analyzer/test/runner `95279496...C2AA` / `47FDEDAC...FB75` / `EA4F3A99...E3B3` / `14818994...F010`; `27 passed`, compile/parse PASS.
+- Runner usa 28 hilos Ryzen para LightGBM (medición previa: OpenCL era más lento). Próximo paso: commit/push, comprobar que no hay procesos ni output y ejecutar una sola instancia bajo `pwsh`.
+
 ## Actualización 2026-07-11 12:10 CEST — spot skip rechazado; pivot a mecanismo rentable
 
 - La corrida que quedó activa antes de la interrupción terminó correctamente: `11 passed`, CUDA determinista, cinco folds y sin procesos residuales.
