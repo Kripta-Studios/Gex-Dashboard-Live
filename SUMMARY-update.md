@@ -405,3 +405,6 @@ una fuente realmente nueva: ThetaData direct `/greeks/all` para migración de
 vanna/charm/vomma/zomma; OI diario es previo y causal según docs oficiales.
 Solo hay preflight 12 sesiones predeclarado, aún no ejecutado. IB/Fib estático no
 muestra alpha incremental; presión dinámica en los ocho niveles queda futura.
+
+Checkpoint captura H-QDYN V1R1R1: 5.257/9.833 (53,46%), PID 36564, cero errores;
+outcomes y PnL siguen cerrados hasta data gate y freeze.

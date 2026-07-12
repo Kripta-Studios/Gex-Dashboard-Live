@@ -335,3 +335,7 @@ reconstrucción del proveedor actual y no identifica signo dealer.
 En IB/Fibonacci, “algunas extensiones según el día” no es una hipótesis nueva si
 se eligen después de mirar resultados. Un test nuevo debe mantener los ocho
 niveles y medir presión dinámica con un modelo compartido, no escoger niveles.
+
+El contrato H-QDYN V1R1R1 ya sobrevivió auditoría de raw preservation, listing
+exacto, colisiones, size-only y exchanges finitos; 31 tests pasan. Esto certifica
+la implementación previa al outcome, no la existencia de edge.

@@ -452,3 +452,9 @@ extensiones según el día ya están representadas/cerradas; S2 no añadió valo
 físico estable. Solo sería nueva una medición dinámica H-IBQDYN1 sobre el set
 fijo completo de ocho niveles, con captura dirigida propia; no reutilizar ni
 re-etiquetar el sidecar Greek-wall H-QDYN.
+
+Checkpoint operativo 2026-07-13 00:24 Europe/Madrid: captura H-QDYN V1R1R1
+activa en `D:/ThetaData/wall_quote_tick_dynamics_at_touch_202208_202512_v1r1r1`,
+PID Python `36564`, 5.257/9.833 eventos (53,46%) y cero errores reportados. No
+arrancar otro capturador ni usar los directorios V1/V1R1 rechazados. Tras seal:
+data gate -> commit compactos -> freeze runner -> único one-shot físico.

@@ -623,3 +623,9 @@ previo) y ThetaData `/greeks/all` da directamente vanna/charm/vomma/zomma con
 timestamp. Tras H-QDYN, ejecutar solo preflight 12 sesiones y medir coste/paridad;
 no full build ni outcomes. IB/Fib estático/día-condicional está cerrado; solo
 presión dinámica sobre los ocho niveles fijos sería nueva y exige otra captura.
+
+Captura activa H-QDYN V1R1R1: output
+`D:/ThetaData/wall_quote_tick_dynamics_at_touch_202208_202512_v1r1r1`, PID
+`36564`, checkpoint 5.257/9.833 (53,46%), cero errores al 2026-07-13 00:24
+Europe/Madrid. No duplicar proceso. Siguiente secuencia: esperar seal, ejecutar
+builder/data gate outcome-free, versionar compactos, freeze y un one-shot físico.
