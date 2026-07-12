@@ -271,3 +271,27 @@ volume/count/close-notional firmado, full-surface y local, 1/5/15m cerca del
 wall; no falsifica quote size/depth, IV/skew deformation ni futuros porque no
 entraron en F1. Compactos versionados en
 `wall_surface_flow_at_touch_physical_202208_202512_v1r2r1/`.
+
+## Research activo — H-IVSURF1
+
+Tras cerrar H-FLOW1 se auditó sin outcomes una cartera de fuentes nuevas.
+H-QSIZE1 queda `DEFERRED_DATA_INCOMPLETE`: sizes en 0/2.519 Greeks y solo
+1.441 sesiones del sidecar; 38-40% bid_size=0, paridad live bloqueada. ES/NQ,
+VIX1D y VVIX carecen de histórico local; VIX es un proxy con contrato histórico
+distinto del live. TLT tiene 859/859 sesiones pero sería expansión cross-asset
+genérica y no se prioriza frente a una medición directa del mecanismo.
+
+H-IVSURF1 fue predeclarado en commit `52c169c`: deformación midpoint-IV local a
+un wall sobre contratos/strikes idénticos en `t,t-1,t-5,t-15`; 18 cambios de
+nivel/skew/curvatura y cinco campos de calidad, sin features H-FLOW. LR es el
+modelo físico primario; LightGBM solo sensibilidad no rescatable; p secuencial
+`<0,025`. Código commit `9719ec2`, suite focal `39 passed`.
+
+Build autoritativo V1R1: `PASS_DATA_GATE`, 10.683 filas/54 columnas, dataset SHA
+`9d9404fd721df927c30ce4d6edeee800f528df81cf14639c23da1dc4008bc2b3`,
+2.519 fuentes Greek revalidadas, minimum ticker-year both-valid `90,319%`,
+minimum ticker overall `96,673%`, distinctness/control coverage PASS. 2026,
+outcomes y producción intactos. Compactos en
+`wall_iv_surface_deformation_at_touch_202208_202512_v1r1_data_gate/`.
+Siguiente paso: commit compactos -> frozen runner commit -> una sola evaluación
+física LR/LGBM. Aún no existe rentabilidad nueva H-IVSURF1.

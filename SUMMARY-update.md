@@ -342,3 +342,14 @@ cero wins primarios 30/60m en QQQ, SPXW y SPY. QQQ 0/8, SPXW 3/8, SPY 1/8.
 entrenar payoff ni retunar subgrupos. La próxima búsqueda debe introducir una
 medición nueva ya separada del bloque: quote size/depth, IV/skew deformation o
 una fuente futures/vol-complex causal.
+
+La auditoría posterior seleccionó H-IVSURF1 sin outcomes: QSIZE está incompleto
+(1.441/2.519), ES/NQ/VIX1D/VVIX ausentes y VIX no tiene paridad histórica/live.
+H-IVSURF1 mide cambios fixed-strike de nivel/skew/curvatura a 1/5/15m y excluye
+H-FLOW/static skew. Predeclaración `52c169c`, código `9719ec2`.
+
+El build autoritativo pasó: 10.683x54, SHA
+`9d9404fd721df927c30ce4d6edeee800f528df81cf14639c23da1dc4008bc2b3`,
+minimum ticker-year valid 90,319%, minimum ticker 96,673%, 2.519 fuentes y todos
+los gates causales/coverage/distinctness/control PASS. Falta frozen runner y el
+one-shot físico LR/LGBM; todavía no hay rentabilidad nueva.

@@ -1,0 +1,220 @@
+{
+  "columns": [
+    {
+      "name": "ticker",
+      "dtype": "str"
+    },
+    {
+      "name": "trade_date",
+      "dtype": "str"
+    },
+    {
+      "name": "minute",
+      "dtype": "int64"
+    },
+    {
+      "name": "decision_dt",
+      "dtype": "datetime64[us]"
+    },
+    {
+      "name": "wall_identity",
+      "dtype": "str"
+    },
+    {
+      "name": "wall_role",
+      "dtype": "str"
+    },
+    {
+      "name": "candidate_right",
+      "dtype": "str"
+    },
+    {
+      "name": "candidate_wall_strike",
+      "dtype": "float64"
+    },
+    {
+      "name": "spot",
+      "dtype": "float64"
+    },
+    {
+      "name": "wall_alias_count",
+      "dtype": "int64"
+    },
+    {
+      "name": "episode_sequence",
+      "dtype": "int64"
+    },
+    {
+      "name": "episode_start_minute",
+      "dtype": "int64"
+    },
+    {
+      "name": "episode_id",
+      "dtype": "str"
+    },
+    {
+      "name": "minute_sin",
+      "dtype": "float64"
+    },
+    {
+      "name": "minute_cos",
+      "dtype": "float64"
+    },
+    {
+      "name": "role_resistance",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_distance_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_abs_distance_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "spot_ret_1m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "spot_abs_ret_1m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "spot_ret_5m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "spot_ret_15m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "spot_ret_30m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "realized_vol_5m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "realized_vol_15m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_distance_change_5m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_distance_change_15m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_distance_change_30m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_approach_5m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_approach_15m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_approach_30m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_level_change_1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_skew_change_1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_curvature_change_1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_level_change_1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_skew_change_1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_curvature_change_1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_level_change_5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_skew_change_5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_curvature_change_5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_level_change_5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_skew_change_5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_curvature_change_5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_level_change_15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_skew_change_15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_curvature_change_15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_level_change_15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_skew_change_15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_curvature_change_15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_valid",
+      "dtype": "bool"
+    },
+    {
+      "name": "surface_put_valid",
+      "dtype": "bool"
+    },
+    {
+      "name": "surface_both_valid",
+      "dtype": "bool"
+    },
+    {
+      "name": "surface_call_shared_strikes",
+      "dtype": "int64"
+    },
+    {
+      "name": "surface_put_shared_strikes",
+      "dtype": "int64"
+    }
+  ]
+}

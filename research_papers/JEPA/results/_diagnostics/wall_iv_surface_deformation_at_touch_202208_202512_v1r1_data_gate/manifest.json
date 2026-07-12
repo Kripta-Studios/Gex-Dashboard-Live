@@ -1,0 +1,121 @@
+{
+  "schema": "wall_iv_surface_deformation_at_touch_dataset_v1",
+  "status": "PASS_DATA_GATE",
+  "outcome_free": true,
+  "holdout_2026_used": false,
+  "production_modified": false,
+  "date_range": [
+    "20220801",
+    "20251231"
+  ],
+  "rows": 10683,
+  "columns": 54,
+  "dataset": "tmp\\wall_iv_surface_deformation_at_touch_202208_202512_v1r1\\wall_iv_surface_deformation_at_touch.parquet",
+  "dataset_sha256": "9d9404fd721df927c30ce4d6edeee800f528df81cf14639c23da1dc4008bc2b3",
+  "candidate_sha256": "6d27fdeb44422daa95aa79f777044e68276a2fe374c9bd847cd475d9dccfdb5b",
+  "candidate_rows": 10683,
+  "canonical_manifest_sha256": "5431c2bf932fef6ce1ba34117cc869feb78063fbc1aa3989017fdbcb5b66dc88",
+  "source_file_hashes_sha256": "2a305a2910f83c42a3c32b455d9b3a93907c7d762c5168d0946f9ce1eae306e8",
+  "full_session_universe_count": 2519,
+  "full_session_key_sha256": "ac7200fd96f2ef9afc2f9f09eff18804497a2f975a7454cccf5ed1c935653057",
+  "native_quote_provenance": {
+    "seal_sha256": "6c2ff5d6321bff5b62cbd19d2a503d05b69332bfa7b26d7c1f585bf617752eaa",
+    "index_sha256": "0abe0ac2f9dcccec4574ee10e4f10ef2904000c80a0cf5fb8f5a90ef333f754a",
+    "sessions": 1441,
+    "session_key_sha256": "4d4335005bb1ad29dd9f59a873a8902edcf17f1eb64c006792b29b57dea9a579",
+    "terminal_jar_sha256": "4f93cd745c8af53d8cf70096abb104edb22494f5c48408b9d732b51e51dfbbea",
+    "git_commit": "041b16ce25fb4d61ee2f3e7b9d42584d749705f1"
+  },
+  "exact_greek_repair_provenance": {
+    "schema": "wall_exact_greek_repair_artifacts_v1r2",
+    "status": "PASS_EXACT_GREEK_REPAIR_ARTIFACTS",
+    "manifest_path": "research_papers\\JEPA\\results\\_diagnostics\\wall_exact_greek_repair_artifacts_20221230_v1r2\\manifest.json",
+    "manifest_sha256": "47dffb255113a6604c33011e1dcd7c5e51301c3a4c61100099c8ed4f5a8aec5a",
+    "wall_repair_path": "research_papers\\JEPA\\results\\_diagnostics\\wall_exact_greek_repair_artifacts_20221230_v1r2\\wall_repair.parquet",
+    "wall_repair_sha256": "69a3d33080e5682b02070c6c1085ba6b1db7818cae8bd6f756994da139b9487d",
+    "event_control_repair_path": "research_papers\\JEPA\\results\\_diagnostics\\wall_exact_greek_repair_artifacts_20221230_v1r2\\event_control_repair.parquet",
+    "event_control_repair_sha256": "937aa95e4aadbc9f639a96a68f1390f118bcb22c01d259bba2ff88014340051e",
+    "frozen_hashes_match": true,
+    "target_sessions": [
+      {
+        "ticker": "QQQ",
+        "trade_date": "20221230"
+      },
+      {
+        "ticker": "SPY",
+        "trade_date": "20221230"
+      }
+    ],
+    "wall_target_rows": 96,
+    "full_control_grid_rows": 96,
+    "event_target_rows": 47,
+    "event_target_rows_by_ticker": {
+      "QQQ": 27,
+      "SPY": 20
+    },
+    "event_target_key_sha256": "41dae9ad53103019e0212a55915a18fe9854e21058c1d73b49d82c823a125201",
+    "build_git_commit": "65289e81a855d7714fd2cdb65b12702e057d8df0",
+    "historical_provenance": "CONDITIONAL_CURRENT_PROVIDER_RECONSTRUCTION",
+    "input_sha256": {
+      "events": "d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408",
+      "manifest": "5431c2bf932fef6ce1ba34117cc869feb78063fbc1aa3989017fdbcb5b66dc88",
+      "sidecar_index": "7e5475f36d2163e188d721ea2f015c9a636db5bfbfede41dd8d0065a9382100a",
+      "sidecar_seal": "3c267f83e5108c75c9f148624983b11f3f0708fde12cb58a8742278d194a8fc5",
+      "walls": "94e311e0e25ff7956347597a8734e82e07ab05753f42acaa26876c58752df8ef"
+    },
+    "builder_sha256": "20fb2838773df060ddf18873b19481ec412c43e22f41676a951c84a2023c5a39",
+    "sidecar_builder_sha256": "06cff160740c3984bf0cb3c648b395c971a7c1abfb9f8d6ac2cfa4f67a740550",
+    "wall_feature_module_sha256": "05133f68c9efe38c0f5c99a39e57c0882c9331a5b2dac709a2977acc3b20a64f",
+    "predeclaration_sha256": "aee678f21fb56ef260db6d905c151f7f28c8ad21024ed7ec3470e924b9280ba5",
+    "runtime_lock_sha256": "f026bfb512e17dfc1daaaecf998ba77a560aba83f1fdbf0c3a36136e33eeff7d",
+    "runtime_environment_sha256": "984a0e2c8a82e935295e4738c7758357175b488bb0fb11a4cd1a0bb5e8af8035",
+    "maximum_full_wall_control_spot_difference_bps": 0.0,
+    "maximum_event_wall_control_spot_difference_bps": 0.0
+  },
+  "exact_greek_capture_provenance": {
+    "index_sha256": "7e5475f36d2163e188d721ea2f015c9a636db5bfbfede41dd8d0065a9382100a",
+    "seal_sha256": "3c267f83e5108c75c9f148624983b11f3f0708fde12cb58a8742278d194a8fc5",
+    "contracts": 671,
+    "rows": 32208,
+    "historical_provenance": "CONDITIONAL_CURRENT_PROVIDER_RECONSTRUCTION"
+  },
+  "control_feature_hash": "10c15e60f1eba40ba6c8bacaa8d3e3ff45a679161cc633e67185826ed16c7e5e",
+  "iv_surface_feature_hash": "ed8d2182fdd53079378c8b252f356efc23db5c9f4d6db5242fb7d11e6d410b3a",
+  "predeclaration_sha256": "dc79c19e4855d3e9b6737082f1b057a8774ef57b1206c7430aa4d804b88c9166",
+  "git_commit": "9719ec271073d9477c0f0b5163bf0678cea2957e",
+  "code_hashes": {
+    "neural/jepa/build_wall_iv_surface_deformation_dataset.py": "c1117021598d8c3ac6f1ee0b2adeb41668ae141aa2488da1ff7fab6edf1b12c1",
+    "neural/jepa/iv_surface_deformation_features.py": "69838726f11631313de2a6829e62a9eb74d11c0b989e13491d140099d793e8a7",
+    "research_papers/JEPA/WALL_IV_SURFACE_DEFORMATION_AT_TOUCH_V1_PREDECLARATION.md": "dc79c19e4855d3e9b6737082f1b057a8774ef57b1206c7430aa4d804b88c9166",
+    "research_papers/JEPA/requirements-wall-surface-flow-v1r1.txt": "f026bfb512e17dfc1daaaecf998ba77a560aba83f1fdbf0c3a36136e33eeff7d"
+  },
+  "runtime_lock_sha256": "f026bfb512e17dfc1daaaecf998ba77a560aba83f1fdbf0c3a36136e33eeff7d",
+  "runtime_environment": {
+    "python_version": "3.14.2",
+    "python_implementation": "CPython",
+    "python_executable": "C:\\Program Files\\Python314\\python.exe",
+    "platform": "Windows-10-10.0-19041",
+    "platform_machine": "AMD64",
+    "packages": {
+      "lightgbm": "4.6.0",
+      "numpy": "2.3.5",
+      "pandas": "3.0.0",
+      "pyarrow": "23.0.1",
+      "scikit-learn": "1.8.0",
+      "scipy": "1.17.0"
+    }
+  },
+  "runtime_environment_sha256": "984a0e2c8a82e935295e4738c7758357175b488bb0fb11a4cd1a0bb5e8af8035",
+  "data_gate": {
+    "authoritative_inputs": true,
+    "authoritative_code": true,
+    "coverage_pass": true,
+    "distinctness_pass": true,
+    "control_coverage_pass": true,
+    "annual_cells": 12,
+    "minimum_annual_both_valid": 0.9031935736677117,
+    "minimum_ticker_both_valid": 0.9667312661498708,
+    "passed": true
+  },
+  "errors": []
+}

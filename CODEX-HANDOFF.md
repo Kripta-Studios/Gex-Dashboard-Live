@@ -485,3 +485,35 @@ Artefactos compactos:
 ```text
 research_papers/JEPA/results/_diagnostics/wall_surface_flow_at_touch_physical_202208_202512_v1r2r1/
 ```
+
+## Nueva familia H-IVSURF1
+
+Feasibility outcome-free comparó tres fuentes. H-QSIZE1 requiere recapturar
+1.078 sesiones y no tiene paridad live; ES/NQ/VIX1D/VVIX están ausentes; VIX
+histórico es un proxy contract-substitution-risky. Se eligió IV deformation
+porque existe en 2.519/2.519 sesiones y midpoint IV ya forma parte de first_order
+live. TLT está completo, pero queda como alternativa independiente y no se mezcla.
+
+Predeclaración `WALL_IV_SURFACE_DEFORMATION_AT_TOUCH_V1_PREDECLARATION.md`
+(commit `52c169c`). Compara los mismos strikes exactos CALL/PUT a
+`t,t-1,t-5,t-15` dentro de 150 bps del wall; solo cambios de nivel, skew y
+curvatura. No entran static skew, H-FLOW, bid/ask sizes ni outcomes. LR primaria
+con imputación/standardization train-only; LGBM sensibilidad no puede rescatar;
+Wilcoxon unilateral `p<0,025` por ser la segunda familia secuencial.
+
+Builder/evaluator/freezer commit `9719ec2`. Build autoritativo:
+
+```text
+status=PASS_DATA_GATE
+rows=10683
+columns=54
+dataset_sha256=9d9404fd721df927c30ce4d6edeee800f528df81cf14639c23da1dc4008bc2b3
+minimum_ticker_year_both_valid=0.9031935737
+minimum_ticker_overall_both_valid=0.9667312661
+```
+
+Todos los 2.519 Greek hashes, native clock y exact repair fueron revalidados;
+control coverage y distinctness pasan. Producción/2026/outcomes siguen intactos.
+Compactos: `_diagnostics/wall_iv_surface_deformation_at_touch_202208_202512_v1r1_data_gate/`.
+Pendiente inmediato: congelar runner y ejecutar una vez el experimento físico.
+No existe todavía PF/WR/PnL H-IVSURF1.

@@ -267,3 +267,11 @@ frente a distance/approach en 20/24 celdas; mediana ΔAUC `-0,029209` y
 específica: el signing quote-relative de barras agregadas no identifica defensa
 versus ruptura. No extrapolarla a profundidad/tamaño de quote, update intensity,
 deformación IV/skew o basis/futures, que no fueron features de F1.
+
+La fuente siguiente se separó precisamente por esa lección. H-IVSURF1 no usa
+flujo agregado ni skew estático por delta bucket: sigue la misma malla de strikes
+alrededor del wall y mide desplazamiento, cambio de pendiente y curvatura de la
+superficie midpoint-IV a 1/5/15m. El data gate completo pasó con validez mínima
+ticker-año 90,319%. La documentación ThetaData establece que Greeks intervalados
+usan la quote del timestamp; live aún debe registrar `feature_available_at`
+antes de entrada para probar el orden recepción->score->ask.
