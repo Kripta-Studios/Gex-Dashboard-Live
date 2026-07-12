@@ -1,0 +1,105 @@
+{
+  "schema": "wall_surface_flow_at_touch_physical_evaluation_v1r1",
+  "git_commit": "d49ed794e89f21f23c74a4da5929f2caa0e1ffeb",
+  "production_modified": false,
+  "holdout_2026_used": false,
+  "frozen_manifest_sha256": "e70d807a29cfadb8875b73c0314b3ae241a9caa37cb41239334958bad4334320",
+  "runner_sha256": "f7cadb3b13eab561fcd716c0f288cea92102088712086a4c6d34812c6fa6c6a5",
+  "feature_module_sha256": "892730fbf5a3185608f30b406c4cc69e156ce392b6a1eae1b9b73258fb23cb10",
+  "runtime_lock_sha256": "f026bfb512e17dfc1daaaecf998ba77a560aba83f1fdbf0c3a36136e33eeff7d",
+  "runtime_environment": {
+    "python_version": "3.14.2",
+    "python_implementation": "CPython",
+    "python_executable": "C:\\Program Files\\Python314\\python.exe",
+    "platform": "Windows-10-10.0-19041",
+    "platform_machine": "AMD64",
+    "packages": {
+      "lightgbm": "4.6.0",
+      "numpy": "2.3.5",
+      "pandas": "3.0.0",
+      "pyarrow": "23.0.1",
+      "scikit-learn": "1.8.0",
+      "scipy": "1.17.0"
+    }
+  },
+  "runtime_environment_sha256": "984a0e2c8a82e935295e4738c7758357175b488bb0fb11a4cd1a0bb5e8af8035",
+  "flow_dataset_sha256": "6d27fdeb44422daa95aa79f777044e68276a2fe374c9bd847cd475d9dccfdb5b",
+  "source_file_hashes_sha256": "2a305a2910f83c42a3c32b455d9b3a93907c7d762c5168d0946f9ce1eae306e8",
+  "labeled_rows": 10683,
+  "labeled_rows_by_ticker": {
+    "QQQ": 3096,
+    "SPXW": 3532,
+    "SPY": 4055
+  },
+  "label_errors": [],
+  "artifact_hashes": {
+    "labeled_physical_episodes": "88c6f02c87f5389d43399f47c2c72ba1069dc89bb638f7029d05384364c7ee6f",
+    "cells": "60c7e17ec079039b9df7017f726fba31232fb2b4cad971372889abf1550abfc2",
+    "paired_cells": "ee7f86959348444605e15ffae60d3d4227b3c78ce8b2b376ee574547e3b3a041",
+    "monthly_coverage": "f04b8b58f83e3e707c030a8b762eead94611bd3680c916d13eb7e7b0a36c9d7a",
+    "predictions": "e52bcf9c11fc9d68174a8caa42f0e1ca59d2736395a9452fdc106d21592cacc1",
+    "calibration": "f411f612a97ad310f930359071bccf159a623c2d58ff10ced78edea7aa561eaa",
+    "model_hashes": "92b8c0d471e214668e74a76f1cef5e50a85badd35e38bad19e3cfbd05d7380cf",
+    "summary": "276a6c05cb4dc190e3e7866f18f7c53997cf918554434f90a4c3c91e109d8522"
+  },
+  "model_count": 48,
+  "model_set_sha256": "01ce823e37a401206fb02ca0ed535a8729657a135552dadb291bb40cfb1d7b8c",
+  "seed": 20260711,
+  "bootstrap_replicates": 1000,
+  "summary": {
+    "planned_paired_cells": 24,
+    "valid_paired_cells": 24,
+    "favorable_outer_cells": 4,
+    "favorable_outer_cell_rate": 0.16666666666666666,
+    "median_auc_delta": -0.029208567992795864,
+    "wilcoxon_one_sided_p": 0.984375,
+    "wilcoxon_cluster_count": 6,
+    "wilcoxon_test_unit": "ticker_fold_median_across_horizons",
+    "joint_average_precision_logloss_losses": 14,
+    "aggregate_pass": false,
+    "ticker_pass": false,
+    "frequency_pass": true,
+    "calibration_pass": false,
+    "ticker_summary": {
+      "QQQ": {
+        "valid_cells": 8,
+        "wins": 0,
+        "median_auc_delta": -0.04554497689661402,
+        "median_f1_auc": 0.5272275374349455,
+        "primary_valid_cells": 4,
+        "primary_wins": 0,
+        "primary_median_auc_delta": -0.04554497689661402,
+        "primary_median_f1_auc": 0.5602426556273593,
+        "passed": false
+      },
+      "SPXW": {
+        "valid_cells": 8,
+        "wins": 3,
+        "median_auc_delta": -0.018642109528681783,
+        "median_f1_auc": 0.5574158663370308,
+        "primary_valid_cells": 4,
+        "primary_wins": 0,
+        "primary_median_auc_delta": -0.031104505206633548,
+        "primary_median_f1_auc": 0.5812316755476998,
+        "passed": false
+      },
+      "SPY": {
+        "valid_cells": 8,
+        "wins": 1,
+        "median_auc_delta": -0.02239021335765423,
+        "median_f1_auc": 0.5602750344143739,
+        "primary_valid_cells": 4,
+        "primary_wins": 0,
+        "primary_median_auc_delta": -0.027356525743443494,
+        "primary_median_f1_auc": 0.6009482887698949,
+        "passed": false
+      }
+    },
+    "physical_mechanism_pass": false,
+    "historical_timestamp_provenance_status": "CONDITIONAL",
+    "live_feature_parity_status": "BLOCKED",
+    "authoritative_physical_success": false,
+    "advance_to_option_payoff": false,
+    "production_live_ready": false
+  }
+}

@@ -458,3 +458,30 @@ El parquet sellado grande está en
 hasta versionar un runner manifest que persista también
 `exact_greek_repair_provenance`. A la fecha de este checkpoint no existe edge
 físico ni económico demostrado para H-FLOW.
+
+## Cierre one-shot H-FLOW1
+
+La evaluación congelada 2024/2025 terminó y la familia se cierra sin payoff ni
+retuning. Resultado: 24/24 celdas válidas; 4/24 favorables; mediana ΔAUC
+`-0,029209`; Wilcoxon unilateral agrupado por ticker-fold `p=0,984375`; 14
+pérdidas conjuntas AP/log-loss. Las 12 celdas primarias 30/60m fueron negativas.
+
+| Ticker | Wins/8 | Mediana ΔAUC | Mediana F1 AUC | Wins 30/60 |
+| --- | ---: | ---: | ---: | ---: |
+| QQQ | 0 | -0,045545 | 0,527228 | 0/4 |
+| SPXW | 3 | -0,018642 | 0,557416 | 0/4 |
+| SPY | 1 | -0,022390 | 0,560275 | 0/4 |
+
+`physical_mechanism_pass=false`, `authoritative_physical_success=false` y
+`advance_to_option_payoff=false`. No existe rentabilidad H-FLOW que reportar.
+No usar resultados aislados SPXW 120/180m o SPY 180m: serían selección post-hoc.
+La conclusión soportada es que volume/count/close-notional firmado 1/5/15m no
+añade información estable a distance/approach. H-QSIZE1 (quote size/depth),
+deformación IV/skew y confirmación futures/vol-complex permanecen sin probar y
+son mecanismos distintos.
+
+Artefactos compactos:
+
+```text
+research_papers/JEPA/results/_diagnostics/wall_surface_flow_at_touch_physical_202208_202512_v1r2r1/
+```

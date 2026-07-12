@@ -256,3 +256,18 @@ compactos se versionan en
 permanece en `tmp/`. Siguiente paso único: congelar runner manifest con la
 provenance exact-Greek y ejecutar F0/F1 una sola vez. Aún no hay resultado físico
 ni rentabilidad nueva.
+
+## Cierre científico H-FLOW1
+
+Runner congelado en `d49ed79`; evaluación one-shot sobre 2024/2025 completada
+sin tocar 2026 ni producción. H-FLOW1 queda **CERRADO**: 24/24 celdas válidas,
+solo 4/24 mejoras, mediana ΔAUC `-0,029209`, Wilcoxon unilateral por
+ticker-fold `p=0,984375`, 14 pérdidas conjuntas AP/log-loss y cero victorias en
+las 12 celdas primarias 30/60m. Por ticker: QQQ 0/8, SPXW 3/8, SPY 1/8;
+medianas ΔAUC `-0,045545/-0,018642/-0,022390`. `physical_mechanism_pass=false`,
+`advance_to_option_payoff=false`. No entrenar option payoff ni rescatar por
+horizonte/ticker/subgrupo. Esto falsifica el bloque predeclarado de
+volume/count/close-notional firmado, full-surface y local, 1/5/15m cerca del
+wall; no falsifica quote size/depth, IV/skew deformation ni futuros porque no
+entraron en F1. Compactos versionados en
+`wall_surface_flow_at_touch_physical_202208_202512_v1r2r1/`.

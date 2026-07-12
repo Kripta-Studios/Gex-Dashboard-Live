@@ -334,3 +334,11 @@ source inventory SHA `2a305a2910f83c42a3c32b455d9b3a93907c7d762c5168d0946f9ce1ea
 Los compactos están congelados en `_diagnostics`; el dataset grande queda en
 `tmp`. Siguiente hito: commit del runner manifest y una sola evaluación física
 F0/F1. Todavía no se ha observado outcome ni rentabilidad H-FLOW.
+
+El one-shot ya se ejecutó desde el runner congelado y H-FLOW1 queda cerrado:
+4/24 celdas favorables, mediana ΔAUC `-0,029209`, p unilateral `0,984375` y
+cero wins primarios 30/60m en QQQ, SPXW y SPY. QQQ 0/8, SPXW 3/8, SPY 1/8.
+`physical_mechanism_pass=false` y `advance_to_option_payoff=false`; no se permite
+entrenar payoff ni retunar subgrupos. La próxima búsqueda debe introducir una
+medición nueva ya separada del bloque: quote size/depth, IV/skew deformation o
+una fuente futures/vol-complex causal.

@@ -259,3 +259,11 @@ sola fila: V1R2R1 selló 10.683 eventos y 173 columnas con SHA
 Esto valida únicamente disponibilidad y causalidad de la medición; no constituye
 evidencia de alpha. La comparación F0 distance/approach contra F1 flow sigue sin
 abrirse hasta congelar el runner.
+
+La prueba congelada ya falsificó el bloque H-FLOW1: añadir volumen, count,
+close-notional y presión firmada local/full-surface en 1/5/15m empeoró el AUC
+frente a distance/approach en 20/24 celdas; mediana ΔAUC `-0,029209` y
+`p=0,984375`. En 30/60m no ganó ninguna celda de ningún ticker. La lección es
+específica: el signing quote-relative de barras agregadas no identifica defensa
+versus ruptura. No extrapolarla a profundidad/tamaño de quote, update intensity,
+deformación IV/skew o basis/futures, que no fueron features de F1.
