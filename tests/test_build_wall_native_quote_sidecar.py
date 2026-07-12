@@ -1,4 +1,5 @@
 import json
+import hashlib
 from pathlib import Path
 
 import pandas as pd
@@ -35,6 +36,21 @@ class FakeResponse:
     def json(self): return self.payload
 
 
+def fake_process_evidence(_base_url, jar):
+    jar_path = Path(jar).resolve()
+    digest = hashlib.sha256(jar_path.read_bytes()).hexdigest()
+    return {
+        "process_id": 1,
+        "command_line": f"java -jar {jar_path}",
+        "executable_path": "java",
+        "executable_sha256": "0" * 64,
+        "local_address": "127.0.0.1",
+        "local_port": 25503,
+        "terminal_jar_path": str(jar_path),
+        "terminal_jar_sha256": digest,
+    }
+
+
 def test_normalization_rejects_nonminute_duplicate_and_2026():
     assert len(normalize_quotes(response(), "SPY", "20240102")) == 1
     with pytest.raises(AssertionError, match="minute"):
@@ -55,7 +71,7 @@ def test_download_is_immutable_and_validate_detects_raw_tamper(tmp_path):
     manifest = download_session(ticker="SPY", trade_date="20240102", greeks_path=greeks,
                                 output_root=tmp_path / "out", base_url="http://127.0.0.1:25503/v3",
                                 terminal_jar=jar, start_time="10:30:00", end_time="10:30:00",
-                                requester=requester)
+                                requester=requester, process_evidence_provider=fake_process_evidence)
     session = tmp_path / "out" / "SPY" / "20240102"
     assert manifest["shared_exact_rows"] == 1
     assert calls[0][1]["interval"] == "1m" and calls[0][1]["strike"] == "*"
@@ -67,7 +83,8 @@ def test_download_is_immutable_and_validate_detects_raw_tamper(tmp_path):
     with pytest.raises(FileExistsError):
         download_session(ticker="SPY", trade_date="20240102", greeks_path=greeks,
                          output_root=tmp_path / "out", base_url="http://127.0.0.1:25503/v3", terminal_jar=jar,
-                         start_time="10:30:00", end_time="10:30:00", requester=requester)
+                         start_time="10:30:00", end_time="10:30:00", requester=requester,
+                         process_evidence_provider=fake_process_evidence)
     (session / "quote_response.json").write_text(json.dumps({"response": []}), encoding="utf-8")
     with pytest.raises(AssertionError, match="hash mismatch"):
         validate_session(session, greeks)
@@ -81,7 +98,8 @@ def test_crosscheck_rejects_bid_mismatch(tmp_path):
         download_session(ticker="SPY", trade_date="20240102", greeks_path=greeks,
                          output_root=tmp_path / "out", base_url="http://127.0.0.1:25503/v3", terminal_jar=jar,
                          start_time="10:30:00", end_time="10:30:00",
-                         requester=lambda *a, **k: FakeResponse(response()))
+                         requester=lambda *a, **k: FakeResponse(response()),
+                         process_evidence_provider=fake_process_evidence)
 
 
 def test_crosscheck_requires_full_exact_key_set_and_native_clock_equality(tmp_path):
@@ -96,6 +114,7 @@ def test_crosscheck_requires_full_exact_key_set_and_native_clock_equality(tmp_pa
             output_root=tmp_path / "out", base_url="http://127.0.0.1:25503/v3", terminal_jar=jar,
             start_time="10:30:00", end_time="10:30:00",
             requester=lambda *a, **k: FakeResponse(response()),
+            process_evidence_provider=fake_process_evidence,
         )
     mismatched = response()
     mismatched["response"][0]["data"][0]["underlying_timestamp"] = "2024-01-02 10:29:00"

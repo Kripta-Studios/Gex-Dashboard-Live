@@ -104,6 +104,44 @@ def research_end_time(ticker: str, trade_date: str) -> str:
     return f"{minute // 60:02d}:{minute % 60:02d}:00"
 
 
+def local_terminal_process_evidence(base_url: str, terminal_jar: str | Path) -> dict[str, Any]:
+    parsed = urlparse(base_url)
+    port = int(parsed.port or (443 if parsed.scheme == "https" else 80))
+    script = (
+        f"$c=Get-NetTCPConnection -LocalPort {port} -State Listen -ErrorAction Stop | Select-Object -First 1; "
+        "$p=Get-CimInstance Win32_Process -Filter \"ProcessId=$($c.OwningProcess)\"; "
+        "[PSCustomObject]@{process_id=$p.ProcessId;command_line=$p.CommandLine;"
+        "executable_path=$p.ExecutablePath;local_address=$c.LocalAddress;local_port=$c.LocalPort} "
+        "| ConvertTo-Json -Compress"
+    )
+    result = subprocess.run(
+        ["powershell", "-NoProfile", "-Command", script],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    evidence = json.loads(result.stdout)
+    jar_path = str(Path(terminal_jar).resolve())
+    command_line = str(evidence.get("command_line", ""))
+    if jar_path.lower() not in command_line.lower():
+        raise AssertionError(
+            f"port {port} is not served by the frozen Terminal JAR: command={command_line} jar={jar_path}"
+        )
+    executable = Path(str(evidence.get("executable_path", "")))
+    if not executable.is_file():
+        raise AssertionError(f"cannot hash active Java executable: {executable}")
+    return {
+        "process_id": int(evidence["process_id"]),
+        "command_line": command_line,
+        "executable_path": str(executable.resolve()),
+        "executable_sha256": sha256_file(executable),
+        "local_address": str(evidence["local_address"]),
+        "local_port": int(evidence["local_port"]),
+        "terminal_jar_path": jar_path,
+        "terminal_jar_sha256": sha256_file(jar_path),
+    }
+
+
 def _truthy(value: Any) -> bool:
     if isinstance(value, bool):
         return value
@@ -330,7 +368,9 @@ def download_session(*, ticker: str, trade_date: str, greeks_path: str | Path, o
                      base_url: str, terminal_jar: str | Path,
                      start_time: str = DEFAULT_START_TIME, end_time: str = DEFAULT_END_TIME,
                      timeout: float = 180.0,
-                     requester: Callable[..., Any] = requests.get) -> dict[str, Any]:
+                     requester: Callable[..., Any] = requests.get,
+                     process_evidence_provider: Callable[[str, str | Path], dict[str, Any]] = local_terminal_process_evidence,
+                     ) -> dict[str, Any]:
     day = "".join(ch for ch in str(trade_date) if ch.isdigit())[:8]
     host = (urlparse(base_url).hostname or "").lower()
     if host not in {"127.0.0.1", "localhost", "::1"}:
@@ -338,6 +378,9 @@ def download_session(*, ticker: str, trade_date: str, greeks_path: str | Path, o
     jar_path = Path(terminal_jar).resolve()
     if not jar_path.is_file():
         raise FileNotFoundError(f"Theta Terminal JAR not found: {jar_path}")
+    process_evidence = process_evidence_provider(base_url, jar_path)
+    if str(process_evidence.get("terminal_jar_sha256", "")) != sha256_file(jar_path):
+        raise AssertionError("active Terminal process evidence does not match supplied JAR")
     runtime = assert_runtime_lock(ENVIRONMENT_LOCK)
     params = {
         "symbol": ticker.upper(), "expiration": day, "date": day,
@@ -384,6 +427,7 @@ def download_session(*, ticker: str, trade_date: str, greeks_path: str | Path, o
         "http_status": int(getattr(response, "status_code", 200)),
         "response_headers": dict(sorted((str(k), str(v)) for k, v in getattr(response, "headers", {}).items())),
         "terminal_jar_path": str(jar_path), "terminal_jar_sha256": sha256_file(jar_path),
+        "terminal_process_evidence": process_evidence,
         "builder_sha256": sha256_file(__file__),
         "runtime_lock_sha256": runtime["lock_sha256"],
         "runtime_environment_sha256": runtime["environment_sha256"],
