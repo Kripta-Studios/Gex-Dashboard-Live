@@ -1,0 +1,699 @@
+"""Build the outcome-free ``WALL_SURFACE_FLOW_AT_TOUCH_V1`` feature dataset.
+
+The builder reads the already sealed wall/event views and exact 0DTE ThetaData
+option OHLC/Greeks files.  It never reads option outcomes or future underlying
+prices.  Every raw file that can affect this dataset or its later physical
+labels is content-hashed into a deterministic provenance inventory.
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import subprocess
+import sys
+from concurrent.futures import ProcessPoolExecutor, as_completed
+from pathlib import Path
+from typing import Any
+
+import numpy as np
+import pandas as pd
+import pyarrow.parquet as pq
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from neural.jepa.surface_flow_features import (  # noqa: E402
+    CONTROL_FEATURES,
+    END_DATE,
+    FLOW_FEATURES,
+    KEY_COLUMNS,
+    START_DATE,
+    attach_completed_underlying_controls,
+    attach_flow_features,
+    make_touch_candidates,
+    prepare_completed_bar_flow,
+)
+from neural.jepa.wall_surface_flow_environment import assert_runtime_lock  # noqa: E402
+
+
+TICKERS = ("SPXW", "QQQ", "SPY")
+MAX_WORKERS = 16
+EXPECTED_SESSION_COUNT = 2519
+EXPECTED_SESSION_KEY_SHA256 = "ac7200fd96f2ef9afc2f9f09eff18804497a2f975a7454cccf5ed1c935653057"
+EXPECTED_INPUT_HASHES = {
+    "walls": "94e311e0e25ff7956347597a8734e82e07ab05753f42acaa26876c58752df8ef",
+    "events": "d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408",
+    "manifest": "5431c2bf932fef6ce1ba34117cc869feb78063fbc1aa3989017fdbcb5b66dc88",
+}
+ENVIRONMENT_LOCK = PROJECT_ROOT / "research_papers/JEPA/requirements-wall-surface-flow-v1r1.txt"
+GREEK_REQUIRED_COLUMNS = (
+    "symbol", "expiration", "trade_date", "interval_used", "right", "strike", "bid", "ask",
+)
+GREEK_OPTIONAL_COLUMNS = ("timestamp", "underlying_timestamp")
+OHLC_COLUMNS = (
+    "timestamp", "right", "strike", "close", "volume", "count",
+    "symbol", "expiration", "trade_date", "interval_used",
+)
+UNDERLYING_COLUMNS = ("timestamp", "close")
+EVENT_COLUMNS = (
+    "ticker", "trade_date", "minute", "spot",
+    "ret_1m_bps", "ret_5m_bps", "ret_15m_bps", "ret_30m_bps",
+)
+
+
+def sha256_file(path: str | Path, chunk_size: int = 1 << 20) -> str:
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as handle:
+        for block in iter(lambda: handle.read(chunk_size), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def feature_hash(columns: tuple[str, ...] | list[str]) -> str:
+    payload = json.dumps(list(columns), separators=(",", ":"), ensure_ascii=True).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
+
+
+def session_key_hash(frame: pd.DataFrame) -> str:
+    ordered = frame.sort_values(["ticker", "trade_date"], kind="stable")
+    payload = "".join(
+        f"{str(row.ticker)},{str(row.trade_date)}\n"
+        for row in ordered[["ticker", "trade_date"]].itertuples(index=False)
+    ).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
+
+
+def current_git_commit() -> str:
+    result = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        cwd=PROJECT_ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return result.stdout.strip()
+
+
+def assert_authoritative_code_state() -> str:
+    tracked = (
+        "neural/jepa/build_wall_surface_flow_dataset.py",
+        "neural/jepa/surface_flow_features.py",
+        "neural/jepa/wall_surface_flow_environment.py",
+        "research_papers/JEPA/requirements-wall-surface-flow-v1r1.txt",
+    )
+    for relative in tracked:
+        subprocess.run(
+            ["git", "ls-files", "--error-unmatch", relative],
+            cwd=PROJECT_ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        dirty = subprocess.run(
+            ["git", "status", "--porcelain", "--", relative],
+            cwd=PROJECT_ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.strip()
+        if dirty:
+            raise AssertionError(f"authoritative build requires committed clean code: {relative}: {dirty}")
+    return current_git_commit()
+
+
+def read_parquet_columns(path: str | Path, required: tuple[str, ...]) -> pd.DataFrame:
+    available = set(pq.ParquetFile(path).schema_arrow.names)
+    missing = sorted(set(required).difference(available))
+    if missing:
+        raise KeyError(f"{path} missing required columns: {missing}")
+    return pd.read_parquet(path, columns=list(required))
+
+
+def read_greeks(path: str | Path) -> pd.DataFrame:
+    available = set(pq.ParquetFile(path).schema_arrow.names)
+    missing = sorted(set(GREEK_REQUIRED_COLUMNS).difference(available))
+    if missing:
+        raise KeyError(f"{path} missing required Greek columns: {missing}")
+    timestamp_columns = [column for column in ("timestamp", "underlying_timestamp") if column in available]
+    if not timestamp_columns:
+        raise KeyError(f"{path} has no option or underlying timestamp")
+    columns = [
+        *[column for column in GREEK_OPTIONAL_COLUMNS if column in available],
+        *GREEK_REQUIRED_COLUMNS,
+    ]
+    return pd.read_parquet(path, columns=list(dict.fromkeys(columns)))
+
+
+def _truthy(series: pd.Series) -> pd.Series:
+    return series.map(
+        lambda value: value
+        if isinstance(value, (bool, np.bool_))
+        else str(value).strip().lower() in {"1", "true", "yes", "y"}
+    ).astype(bool)
+
+
+def filter_manifest(
+    manifest: pd.DataFrame,
+    *,
+    start_date: str,
+    end_date: str,
+) -> pd.DataFrame:
+    required = {
+        "ticker", "trade_date", "dte_days", "expiry_mode", "has_greeks", "has_ohlc",
+        "has_underlying", "greeks_path", "ohlc_path", "underlying_path",
+    }
+    missing = sorted(required.difference(manifest.columns))
+    if missing:
+        raise KeyError(f"source manifest missing columns: {missing}")
+    work = manifest.copy()
+    work["ticker"] = work["ticker"].astype(str).str.upper()
+    work["trade_date"] = work["trade_date"].astype(str).str.replace(r"\.0$", "", regex=True)
+    work = work[
+        work["ticker"].isin(TICKERS)
+        & work["trade_date"].between(start_date, end_date)
+        & pd.to_numeric(work["dte_days"], errors="coerce").eq(0)
+        & work["expiry_mode"].astype(str).str.lower().eq("zero_dte")
+        & _truthy(work["has_greeks"])
+        & _truthy(work["has_ohlc"])
+        & _truthy(work["has_underlying"])
+    ].copy()
+    if work.empty:
+        raise AssertionError("no complete 0DTE source sessions in requested range")
+    if work.duplicated(["ticker", "trade_date"]).any():
+        raise AssertionError("source manifest has duplicate ticker/session keys")
+    if work["trade_date"].str.startswith("2026").any():
+        raise AssertionError("2026 entered the surface-flow source manifest")
+    expiration = work.get("expiration", pd.Series("", index=work.index)).astype(str).str.replace(r"\D", "", regex=True).str[:8]
+    if "expiration" not in work or not expiration.eq(work["trade_date"]).all():
+        raise AssertionError("source manifest must identify expiration == trade_date for every 0DTE session")
+    for column in ("greeks_path", "ohlc_path", "underlying_path"):
+        missing_paths = [str(path) for path in work[column] if not Path(path).is_file()]
+        if missing_paths:
+            raise FileNotFoundError(f"missing {column} files: {missing_paths[:5]}")
+    return work.sort_values(["ticker", "trade_date"], kind="stable").reset_index(drop=True)
+
+
+def select_preflight_sessions(manifest: pd.DataFrame) -> pd.DataFrame:
+    selected = []
+    for ticker in TICKERS:
+        part = manifest[manifest["ticker"].eq(ticker)]
+        if part.empty:
+            raise AssertionError(f"no preflight source session for {ticker}")
+        selected.append(part.iloc[len(part) // 2])
+    return pd.DataFrame(selected).reset_index(drop=True)
+
+
+def _source_fingerprint(record: dict[str, Any], kind: str, column: str) -> dict[str, Any]:
+    path = Path(record[column])
+    parquet = pq.ParquetFile(path)
+    schema_text = str(parquet.schema_arrow)
+    return {
+        "ticker": str(record["ticker"]),
+        "trade_date": str(record["trade_date"]),
+        "source_kind": kind,
+        "path": str(path),
+        "bytes": int(path.stat().st_size),
+        "rows": int(parquet.metadata.num_rows),
+        "schema_sha256": hashlib.sha256(schema_text.encode("utf-8")).hexdigest(),
+        "sha256": sha256_file(path),
+        "timestamp_min": "",
+        "timestamp_max": "",
+        "interval_values": "[]",
+        "symbol_values": "[]",
+        "expiration_values": "[]",
+        "trade_date_values": "[]",
+        "right_values": "[]",
+        "distinct_strikes": 0,
+    }
+
+
+def _set_timestamp_range(inventory: dict[str, Any], frame: pd.DataFrame, columns: tuple[str, ...]) -> None:
+    for column in columns:
+        if column in frame:
+            values = pd.to_datetime(frame[column], errors="coerce").dropna()
+            if len(values):
+                inventory["timestamp_min"] = values.min().isoformat()
+                inventory["timestamp_max"] = values.max().isoformat()
+                return
+
+
+def _set_contract_metadata(inventory: dict[str, Any], frame: pd.DataFrame) -> None:
+    mapping = {
+        "interval_values": "interval_used",
+        "symbol_values": "symbol",
+        "expiration_values": "expiration",
+        "trade_date_values": "trade_date",
+        "right_values": "right",
+    }
+    for output, column in mapping.items():
+        if column in frame:
+            values = sorted(set(frame[column].dropna().astype(str)))
+            inventory[output] = json.dumps(values, separators=(",", ":"))
+    if "strike" in frame:
+        inventory["distinct_strikes"] = int(pd.to_numeric(frame["strike"], errors="coerce").nunique(dropna=True))
+
+
+def _assert_sources_unchanged(inventory: list[dict[str, Any]]) -> None:
+    for row in inventory:
+        if sha256_file(row["path"]) != row["sha256"]:
+            raise AssertionError(f"source changed while being read: {row['path']}")
+
+
+def build_session(
+    record: dict[str, Any],
+    candidates: pd.DataFrame,
+) -> tuple[pd.DataFrame, dict[str, Any], list[dict[str, Any]]]:
+    inventory = [
+        _source_fingerprint(record, "greeks", "greeks_path"),
+        _source_fingerprint(record, "ohlc", "ohlc_path"),
+        _source_fingerprint(record, "underlying", "underlying_path"),
+    ]
+    greeks = read_greeks(record["greeks_path"])
+    ohlc = read_parquet_columns(record["ohlc_path"], OHLC_COLUMNS)
+    underlying = read_parquet_columns(record["underlying_path"], UNDERLYING_COLUMNS)
+    _set_timestamp_range(inventory[0], greeks, ("timestamp", "underlying_timestamp"))
+    _set_timestamp_range(inventory[1], ohlc, ("timestamp",))
+    _set_timestamp_range(inventory[2], underlying, ("timestamp",))
+    _set_contract_metadata(inventory[0], greeks)
+    _set_contract_metadata(inventory[1], ohlc)
+    _set_contract_metadata(inventory[2], underlying)
+    _assert_sources_unchanged(inventory)
+    flow, audit = prepare_completed_bar_flow(
+        greeks,
+        ohlc,
+        expected_ticker=str(record["ticker"]),
+        expected_trade_date=str(record["trade_date"]),
+    )
+    controlled = attach_completed_underlying_controls(
+        candidates,
+        underlying,
+        expected_trade_date=str(record["trade_date"]),
+    )
+    output = attach_flow_features(flow, controlled)
+    audit.update(
+        {
+            "ticker": str(record["ticker"]),
+            "trade_date": str(record["trade_date"]),
+            "candidate_rows": int(len(output)),
+            "candidate_decisions": int(output[["trade_date", "minute"]].drop_duplicates().shape[0]) if not output.empty else 0,
+        }
+    )
+    return output, audit, inventory
+
+
+def process_sessions(
+    records: list[dict[str, Any]],
+    candidates: pd.DataFrame,
+    workers: int,
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, list[dict[str, str]]]:
+    if not 1 <= int(workers) <= MAX_WORKERS:
+        raise ValueError(f"workers must be within 1..{MAX_WORKERS}")
+    candidate_map = {
+        (str(ticker), str(trade_date)): part.copy()
+        for (ticker, trade_date), part in candidates.groupby(["ticker", "trade_date"], observed=True, sort=False)
+    }
+    frames: list[pd.DataFrame] = []
+    audits: list[dict[str, Any]] = []
+    sources: list[dict[str, Any]] = []
+    errors: list[dict[str, str]] = []
+
+    def candidate_part(record: dict[str, Any]) -> pd.DataFrame:
+        return candidate_map.get((str(record["ticker"]), str(record["trade_date"])), candidates.iloc[0:0].copy())
+
+    if workers == 1:
+        for index, record in enumerate(records, start=1):
+            try:
+                frame, audit, inventory = build_session(record, candidate_part(record))
+                if not frame.empty:
+                    frames.append(frame)
+                audits.append(audit)
+                sources.extend(inventory)
+            except Exception as exc:
+                errors.append(
+                    {
+                        "ticker": str(record["ticker"]),
+                        "trade_date": str(record["trade_date"]),
+                        "error": f"{type(exc).__name__}: {exc}",
+                    }
+                )
+            if index % 100 == 0 or index == len(records):
+                print(f"[SURFACE_FLOW] sessions={index}/{len(records)} errors={len(errors)}", flush=True)
+    else:
+        with ProcessPoolExecutor(max_workers=workers) as pool:
+            futures = {
+                pool.submit(build_session, record, candidate_part(record)): record
+                for record in records
+            }
+            for index, future in enumerate(as_completed(futures), start=1):
+                record = futures[future]
+                try:
+                    frame, audit, inventory = future.result()
+                    if not frame.empty:
+                        frames.append(frame)
+                    audits.append(audit)
+                    sources.extend(inventory)
+                except Exception as exc:
+                    errors.append(
+                        {
+                            "ticker": str(record["ticker"]),
+                            "trade_date": str(record["trade_date"]),
+                            "error": f"{type(exc).__name__}: {exc}",
+                        }
+                    )
+                if index % 100 == 0 or index == len(futures):
+                    print(f"[SURFACE_FLOW] sessions={index}/{len(futures)} errors={len(errors)}", flush=True)
+    dataset = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
+    if not dataset.empty:
+        dataset = dataset.sort_values(list(KEY_COLUMNS), kind="stable").reset_index(drop=True)
+    audit_frame = pd.DataFrame(audits).sort_values(["ticker", "trade_date"], kind="stable").reset_index(drop=True)
+    source_frame = pd.DataFrame(sources).sort_values(["ticker", "trade_date", "source_kind"], kind="stable").reset_index(drop=True)
+    return dataset, audit_frame, source_frame, errors
+
+
+def build_coverage_profile(audit: pd.DataFrame) -> pd.DataFrame:
+    work = audit.copy()
+    work["month"] = work["trade_date"].astype(str).str[:6]
+    grouped = work.groupby(["ticker", "month"], observed=True, sort=True)
+    rows: list[dict[str, Any]] = []
+    for (ticker, month), part in grouped:
+        active_rows = float(part["active_rows"].sum())
+        active_volume = float(part["active_volume"].sum())
+        valid_rows = float(part["valid_quote_rows"].sum())
+        valid_volume = float(part["valid_quote_volume"].sum())
+        rows.append(
+            {
+                "ticker": str(ticker),
+                "month": str(month),
+                "sessions": int(len(part)),
+                "candidate_rows": int(part["candidate_rows"].sum()),
+                "active_rows": int(active_rows),
+                "active_volume": active_volume,
+                "valid_quote_rows": int(valid_rows),
+                "valid_quote_volume": valid_volume,
+                "quote_row_coverage": float(valid_rows / active_rows) if active_rows > 0 else 0.0,
+                "quote_volume_coverage": float(valid_volume / active_volume) if active_volume > 0 else 0.0,
+                "price_volume_coverage": float(part["priced_active_volume"].sum() / active_volume) if active_volume > 0 else 0.0,
+                "signable_volume_coverage": float(part["signable_volume"].sum() / active_volume) if active_volume > 0 else 0.0,
+                "greeks_subminute_rows": int(part["greeks_subminute_rows"].sum()),
+                "unmatched_active_rows": int(part["unmatched_active_rows"].sum()),
+                "zero_count_active_rows": int(part["zero_count_active_rows"].sum()),
+                "nonpositive_close_active_rows": int(part["nonpositive_close_active_rows"].sum()),
+                "nonpositive_close_active_volume": float(part["nonpositive_close_active_volume"].sum()),
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def build_feature_profile(dataset: pd.DataFrame) -> pd.DataFrame:
+    work = dataset.copy()
+    work["year"] = work["trade_date"].astype(str).str[:4]
+    rows: list[dict[str, Any]] = []
+    features = (*CONTROL_FEATURES, *FLOW_FEATURES)
+    for (ticker, year), part in work.groupby(["ticker", "year"], observed=True, sort=True):
+        for feature in features:
+            values = pd.to_numeric(part[feature], errors="coerce")
+            finite = values[np.isfinite(values)]
+            rows.append(
+                {
+                    "ticker": str(ticker),
+                    "year": str(year),
+                    "feature": feature,
+                    "rows": int(len(values)),
+                    "missing_rate": float(1.0 - len(finite) / len(values)) if len(values) else 1.0,
+                    "zero_rate": float((finite == 0.0).mean()) if len(finite) else 1.0,
+                    "distinct_values": int(finite.nunique(dropna=True)),
+                    "minimum": float(finite.min()) if len(finite) else None,
+                    "maximum": float(finite.max()) if len(finite) else None,
+                }
+            )
+    return pd.DataFrame(rows)
+
+
+def schema_payload(dataset: pd.DataFrame) -> dict[str, Any]:
+    return {
+        "columns": [
+            {"name": str(column), "dtype": str(dataset[column].dtype)}
+            for column in dataset.columns
+        ],
+        "key_columns": list(KEY_COLUMNS),
+        "control_features": list(CONTROL_FEATURES),
+        "flow_features": list(FLOW_FEATURES),
+        "control_feature_hash": feature_hash(CONTROL_FEATURES),
+        "flow_feature_hash": feature_hash(FLOW_FEATURES),
+    }
+
+
+def evaluate_data_gate(
+    audit: pd.DataFrame,
+    profile: pd.DataFrame,
+    *,
+    authoritative_inputs: bool,
+    authoritative_code: bool,
+) -> dict[str, Any]:
+    annual = audit.assign(year=audit["trade_date"].astype(str).str[:4]).groupby(
+        ["ticker", "year"], observed=True, sort=True
+    ).agg(
+        active_rows=("active_rows", "sum"),
+        active_volume=("active_volume", "sum"),
+        valid_quote_rows=("valid_quote_rows", "sum"),
+        valid_quote_volume=("valid_quote_volume", "sum"),
+        priced_active_volume=("priced_active_volume", "sum"),
+        signable_volume=("signable_volume", "sum"),
+        sessions=("trade_date", "size"),
+        candidates=("candidate_rows", "sum"),
+    ).reset_index()
+    annual["quote_row_coverage"] = annual["valid_quote_rows"] / annual["active_rows"].replace(0, np.nan)
+    annual["quote_volume_coverage"] = annual["valid_quote_volume"] / annual["active_volume"].replace(0, np.nan)
+    annual["price_volume_coverage"] = annual["priced_active_volume"] / annual["active_volume"].replace(0, np.nan)
+    annual["signable_volume_coverage"] = annual["signable_volume"] / annual["active_volume"].replace(0, np.nan)
+    coverage_pass = bool(
+        len(annual) == 12
+        and len(audit) == EXPECTED_SESSION_COUNT
+        and audit["greeks_required_window_minutes"].eq(audit["expected_required_window_minutes"]).all()
+        and audit["ohlc_required_window_minutes"].eq(audit["expected_required_window_minutes"]).all()
+        and audit["option_timestamp_fallback_used"].astype(bool).eq(False).all()
+        and audit["active_rows"].gt(0).all()
+        and audit["active_volume"].gt(0.0).all()
+        and annual["active_rows"].gt(0).all()
+        and annual["candidates"].gt(0).all()
+        and annual["quote_row_coverage"].ge(0.75).all()
+        and annual["quote_volume_coverage"].ge(0.90).all()
+        and annual["price_volume_coverage"].ge(0.99).all()
+        and annual["signable_volume_coverage"].ge(0.90).all()
+    )
+    core_features = {
+        *[f"surface_directional_pressure_w{window}m" for window in (1, 5, 15)],
+        *[f"role_break_pressure_w{window}m" for window in (1, 5, 15)],
+    }
+    core = profile[profile["feature"].isin(core_features)]
+    distinctness_pass = bool(
+        len(core) == 12 * len(core_features)
+        and core["distinct_values"].ge(10).all()
+        and core["zero_rate"].lt(0.995).all()
+    )
+    controls = profile[profile["feature"].isin({"realized_vol_5m_bps", "realized_vol_15m_bps"})]
+    control_coverage_pass = bool(len(controls) == 24 and controls["missing_rate"].eq(0.0).all())
+    passed = bool(
+        authoritative_inputs
+        and authoritative_code
+        and coverage_pass
+        and distinctness_pass
+        and control_coverage_pass
+    )
+    return {
+        "authoritative_inputs": bool(authoritative_inputs),
+        "authoritative_code": bool(authoritative_code),
+        "coverage_pass": coverage_pass,
+        "distinctness_pass": distinctness_pass,
+        "control_coverage_pass": control_coverage_pass,
+        "annual_cells": int(len(annual)),
+        "session_count": int(len(audit)),
+        "expected_session_count": EXPECTED_SESSION_COUNT,
+        "incomplete_greeks_grid_sessions": int(
+            audit["greeks_required_window_minutes"].ne(audit["expected_required_window_minutes"]).sum()
+        ),
+        "incomplete_ohlc_grid_sessions": int(
+            audit["ohlc_required_window_minutes"].ne(audit["expected_required_window_minutes"]).sum()
+        ),
+        "option_timestamp_fallback_sessions": int(audit["option_timestamp_fallback_used"].astype(bool).sum()),
+        "zero_active_sessions": int(audit["active_rows"].le(0).sum()),
+        "minimum_quote_row_coverage": float(annual["quote_row_coverage"].min()) if len(annual) else None,
+        "minimum_quote_volume_coverage": float(annual["quote_volume_coverage"].min()) if len(annual) else None,
+        "minimum_price_volume_coverage": float(annual["price_volume_coverage"].min()) if len(annual) else None,
+        "minimum_signable_volume_coverage": float(annual["signable_volume_coverage"].min()) if len(annual) else None,
+        "passed": passed,
+    }
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--walls", required=True)
+    parser.add_argument("--events", required=True)
+    parser.add_argument("--manifest", required=True)
+    parser.add_argument("--output-dir", required=True)
+    parser.add_argument("--start-date", default=START_DATE)
+    parser.add_argument("--end-date", default=END_DATE)
+    parser.add_argument("--workers", type=int, default=16)
+    parser.add_argument("--preflight", action="store_true")
+    parser.add_argument("--allow-input-hash-mismatch", action="store_true")
+    return parser.parse_args()
+
+
+def main() -> int:
+    args = parse_args()
+    if str(args.end_date) > END_DATE or str(args.end_date).startswith("2026"):
+        raise ValueError(f"end date must not exceed sealed physical cutoff {END_DATE}")
+    if args.allow_input_hash_mismatch and not args.preflight:
+        raise ValueError("--allow-input-hash-mismatch is restricted to non-authoritative preflight")
+    output_dir = Path(args.output_dir)
+    if output_dir.exists():
+        raise FileExistsError(f"immutable output target already exists: {output_dir}")
+    staging_dir = output_dir.with_name(f"{output_dir.name}.staging")
+    if staging_dir.exists():
+        raise FileExistsError(f"staging target already exists; inspect manually: {staging_dir}")
+    paths = {name: Path(getattr(args, name)) for name in ("walls", "events", "manifest")}
+    input_hashes = {name: sha256_file(path) for name, path in paths.items()}
+    if input_hashes != EXPECTED_INPUT_HASHES and not args.allow_input_hash_mismatch:
+        raise AssertionError(f"sealed input hash mismatch: {input_hashes}")
+    authoritative_inputs = bool(
+        input_hashes == EXPECTED_INPUT_HASHES and not args.allow_input_hash_mismatch
+    )
+    authoritative_code = False
+    build_commit = current_git_commit()
+    runtime = assert_runtime_lock(ENVIRONMENT_LOCK)
+    if not args.preflight:
+        build_commit = assert_authoritative_code_state()
+        authoritative_code = True
+    walls = pd.read_parquet(paths["walls"])
+    events = pd.read_parquet(paths["events"], columns=list(EVENT_COLUMNS))
+    candidates, candidate_universe_audit = make_touch_candidates(walls, events, return_audit=True)
+    manifest = pd.read_csv(paths["manifest"], dtype={"trade_date": str})
+    selected = filter_manifest(manifest, start_date=str(args.start_date), end_date=str(args.end_date))
+    selected_key_hash = session_key_hash(selected)
+    if str(args.start_date) == START_DATE and str(args.end_date) == END_DATE:
+        if len(selected) != EXPECTED_SESSION_COUNT or selected_key_hash != EXPECTED_SESSION_KEY_SHA256:
+            raise AssertionError(
+                "frozen session universe mismatch: "
+                f"rows={len(selected)}/{EXPECTED_SESSION_COUNT} hash={selected_key_hash}"
+            )
+    if args.preflight:
+        selected = select_preflight_sessions(selected)
+        keys = set(zip(selected["ticker"].astype(str), selected["trade_date"].astype(str)))
+        candidate_mask = [
+            (str(ticker), str(trade_date)) in keys
+            for ticker, trade_date in zip(candidates["ticker"], candidates["trade_date"])
+        ]
+        candidates = candidates[np.asarray(candidate_mask, dtype=bool)].copy()
+    records = selected.to_dict("records")
+    dataset, audit, source_hashes, errors = process_sessions(records, candidates, int(args.workers))
+    if errors:
+        raise AssertionError(f"surface-flow source errors: {errors[:10]}")
+    if dataset.empty:
+        raise AssertionError("surface-flow build produced no at-touch candidates")
+    expected_candidates = candidates.merge(
+        selected[["ticker", "trade_date"]],
+        on=["ticker", "trade_date"],
+        how="inner",
+        validate="many_to_one",
+    )
+    if len(dataset) != len(expected_candidates):
+        raise AssertionError(f"candidate coverage mismatch: {len(dataset)}/{len(expected_candidates)}")
+    if dataset.duplicated(list(KEY_COLUMNS)).any():
+        raise AssertionError("built surface-flow dataset contains duplicate keys")
+
+    staging_dir.mkdir(parents=True, exist_ok=False)
+    dataset_path = staging_dir / "wall_surface_flow_at_touch.parquet"
+    audit_path = staging_dir / "session_audit.csv"
+    source_hash_path = staging_dir / "source_file_hashes.csv"
+    coverage_path = staging_dir / "coverage_by_month.csv"
+    profile_path = staging_dir / "feature_profile.csv"
+    schema_path = staging_dir / "schema.json"
+    manifest_path = staging_dir / "manifest.json"
+    dataset.to_parquet(dataset_path, index=False)
+    audit.to_csv(audit_path, index=False)
+    source_hashes.to_csv(source_hash_path, index=False)
+    coverage = build_coverage_profile(audit)
+    coverage.to_csv(coverage_path, index=False)
+    profile = build_feature_profile(dataset)
+    profile.to_csv(profile_path, index=False)
+    schema_path.write_text(json.dumps(schema_payload(dataset), indent=2, allow_nan=False), encoding="utf-8")
+    data_gate = evaluate_data_gate(
+        audit,
+        profile,
+        authoritative_inputs=authoritative_inputs,
+        authoritative_code=authoritative_code,
+    )
+
+    aggregate_active_rows = float(audit["active_rows"].sum())
+    aggregate_active_volume = float(audit["active_volume"].sum())
+    aggregate_valid_rows = float(audit["valid_quote_rows"].sum())
+    aggregate_valid_volume = float(audit["valid_quote_volume"].sum())
+    manifest_out = {
+        "schema": "wall_surface_flow_at_touch_dataset_v1",
+        "status": (
+            "PREFLIGHT_COMPLETE"
+            if args.preflight
+            else "PASS_DATA_GATE" if data_gate["passed"] else "REJECTED_DATA_GATE"
+        ),
+        "preflight": bool(args.preflight),
+        "git_commit": build_commit,
+        "production_modified": False,
+        "holdout_2026_used": False,
+        "date_range": [str(dataset["trade_date"].min()), str(dataset["trade_date"].max())],
+        "physical_cutoff": END_DATE,
+        "input_hashes": input_hashes,
+        "builder_sha256": sha256_file(__file__),
+        "feature_module_sha256": sha256_file(Path(__file__).with_name("surface_flow_features.py")),
+        "runtime_lock_sha256": runtime["lock_sha256"],
+        "runtime_environment": runtime["environment"],
+        "runtime_environment_sha256": runtime["environment_sha256"],
+        "dataset": str(output_dir / dataset_path.name),
+        "dataset_sha256": sha256_file(dataset_path),
+        "dataset_bytes": int(dataset_path.stat().st_size),
+        "rows": int(len(dataset)),
+        "columns": int(len(dataset.columns)),
+        "rows_by_ticker": dataset.groupby("ticker", observed=True).size().astype(int).to_dict(),
+        "rows_by_ticker_year": {
+            f"{ticker}:{year}": int(len(part))
+            for (ticker, year), part in dataset.assign(year=dataset["trade_date"].astype(str).str[:4]).groupby(
+                ["ticker", "year"], observed=True, sort=True
+            )
+        },
+        "requested_sessions": int(len(records)),
+        "built_sessions": int(len(audit)),
+        "full_session_universe_count": int(EXPECTED_SESSION_COUNT),
+        "full_session_key_sha256": selected_key_hash,
+        "source_files": int(len(source_hashes)),
+        "source_file_hashes_sha256": sha256_file(source_hash_path),
+        "session_audit_sha256": sha256_file(audit_path),
+        "coverage_by_month_sha256": sha256_file(coverage_path),
+        "feature_profile_sha256": sha256_file(profile_path),
+        "schema_sha256": sha256_file(schema_path),
+        "control_feature_hash": feature_hash(CONTROL_FEATURES),
+        "flow_feature_hash": feature_hash(FLOW_FEATURES),
+        "quote_row_coverage": float(aggregate_valid_rows / aggregate_active_rows) if aggregate_active_rows > 0 else 0.0,
+        "quote_volume_coverage": float(aggregate_valid_volume / aggregate_active_volume) if aggregate_active_volume > 0 else 0.0,
+        "price_volume_coverage": float(audit["priced_active_volume"].sum() / aggregate_active_volume) if aggregate_active_volume > 0 else 0.0,
+        "signable_volume_coverage": float(audit["signable_volume"].sum() / aggregate_active_volume) if aggregate_active_volume > 0 else 0.0,
+        "greeks_subminute_rows": int(audit["greeks_subminute_rows"].sum()),
+        "option_timestamp_fallback_sessions": int(audit["option_timestamp_fallback_used"].astype(bool).sum()),
+        "unmatched_active_rows": int(audit["unmatched_active_rows"].sum()),
+        "nonpositive_close_active_rows": int(audit["nonpositive_close_active_rows"].sum()),
+        "nonpositive_close_active_volume": float(audit["nonpositive_close_active_volume"].sum()),
+        "data_gate": data_gate,
+        "candidate_universe_audit": candidate_universe_audit,
+        "errors": errors,
+        "args": vars(args),
+    }
+    manifest_path.write_text(json.dumps(manifest_out, indent=2, allow_nan=False), encoding="utf-8")
+    staging_dir.rename(output_dir)
+    print(json.dumps(manifest_out, indent=2, allow_nan=False), flush=True)
+    return 0 if args.preflight or data_gate["passed"] else 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

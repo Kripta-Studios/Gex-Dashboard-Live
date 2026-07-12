@@ -1,0 +1,9 @@
+# python_version=3.14.2
+# platform=Windows-10-10.0-19041
+# platform_machine=AMD64
+numpy==2.3.5
+pandas==3.0.0
+pyarrow==23.0.1
+lightgbm==4.6.0
+scipy==1.17.0
+scikit-learn==1.8.0

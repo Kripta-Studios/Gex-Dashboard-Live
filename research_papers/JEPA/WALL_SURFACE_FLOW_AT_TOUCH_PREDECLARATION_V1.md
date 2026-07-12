@@ -1,5 +1,11 @@
 # WALL_SURFACE_FLOW_AT_TOUCH_V1
 
+Status: superseded before any outcome build by
+`WALL_SURFACE_FLOW_AT_TOUCH_V1R1_CAUSAL_AMENDMENT.md`.  V1R1 fixes true-pierce
+labels, bar-open horizon alignment, physical-event duplication, exact feature
+formulas, the control allowlist and provenance/live-parity gates.  No V1
+outcome result may be reported.
+
 Status: predeclared before constructing at-touch outcomes or inspecting their
 association with option-surface flow.
 

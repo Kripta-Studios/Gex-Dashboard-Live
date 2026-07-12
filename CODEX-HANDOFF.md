@@ -1,6 +1,6 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
-**Actualizado:** 11 de julio de 2026
+**Actualizado:** 12 de julio de 2026
 
 **Checkpoint de código del build:** `635d3e7 fix: align wall snapshots to executable decision time`
 
@@ -261,3 +261,60 @@ posterior que documenta el build.
 Hay numerosos scripts y artefactos untracked de trabajos anteriores; no borrarlos,
 no añadirlos en masa y no asumir que son parte del checkpoint. Versionar cada hito
 con `git add` explícito, test, commit y push.
+
+## 11. WALL_SURFACE_FLOW_AT_TOUCH_V1R1 — estado exacto
+
+La predeclaración V1 fue sustituida antes de outcomes por
+`WALL_SURFACE_FLOW_AT_TOUCH_V1R1_CAUSAL_AMENDMENT.md`. Implementación outcome-free:
+
+```text
+neural/jepa/surface_flow_features.py
+neural/jepa/build_wall_surface_flow_dataset.py
+neural/jepa/evaluate_wall_surface_flow_at_touch_v1.py
+neural/jepa/freeze_wall_surface_flow_runner_v1r1.py
+neural/jepa/wall_surface_flow_environment.py
+neural/jepa/build_wall_native_quote_sidecar.py
+```
+
+La suite combinada relevante pasa `50 passed` (`36` pruebas nuevas de flow,
+provenance y runtime más `14` regresiones wall-state). El preflight real posterior
+a las correcciones produjo 8 filas × 173 columnas, 3/3 sesiones, cero errores,
+grid completo y hashes/runtime persistidos en
+`tmp/wall_surface_flow_at_touch_preflight_v1r1_schedulelock/`.
+
+Correcciones congeladas antes de outcomes:
+
+- barras OHLC `[s,s+1m)` y solo `bar_end<=t`;
+- quote exacta al inicio de barra, sin floor de subminuto;
+- colapso gamma/delta, exclusión dual-role y primer episodio contiguo;
+- true rejection requiere pierce y terminal exacto `t+h-1`;
+- horizontes no pueden cruzar cierre RTH del underlying (16:00; 13:00 half-day);
+- decisiones half-day terminan 12:55 aunque QQQ/SPY options cierren 13:15;
+- fechas de timestamps deben coincidir con la sesión declarada;
+- runtime exacto congelado en `requirements-wall-surface-flow-v1r1.txt`;
+- el data gate autoritativo exige cero relojes de opción no verificados.
+
+Bloqueo activo descubierto sin labels: solo 1.078/2.519 sesiones y
+128.362.954/325.753.830 filas Greek almacenan `timestamp` nativo. Las 1.441
+sesiones fallback (key SHA
+`4d4335005bb1ad29dd9f59a873a8902edcf17f1eb64c006792b29b57dea9a579`)
+no pueden pasar por regularidad de rejilla. Auditoría completa:
+`NATIVE_QUOTE_TIMESTAMP_PROVENANCE_AUDIT_20260712.md`.
+
+ThetaData `/option/history/quote` recuperó en muestras el reloj nativo, bid/ask
+exactos y `bid_size/ask_size`. El sidecar implementado exige builder commiteado,
+Terminal local/JAR hasheado, raw HTTP inmutable y key-set exacto Greek/quote en
+1.441/1.441 sesiones. Sizes quedan archivados pero fuera de H-FLOW1; serían
+H-QSIZE1 separado.
+
+Siguiente secuencia, sin abrir outcomes:
+
+1. commit/push del código, tests, predeclaración y ledger;
+2. arrancar Terminal local desde JAR congelado y ejecutar el backfill sidecar;
+3. sellar/commitear índice y hashes 1.441/1.441;
+4. conectar el índice nativo al builder y ejecutar full data gate;
+5. crear/commitear frozen runner manifest;
+6. solo entonces construir labels físicos y ejecutar una vez F0 contra F1.
+
+No existe resultado físico ni económico de H-FLOW1 todavía. Producción y todo
+2026 continúan intactos; no crear `PLAN.md` porque no hay dirección rentable clara.

@@ -1,6 +1,6 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
-**Corte:** 11 de julio de 2026. Los 29 trabajos aportados fueron auditados. Este
+**Corte:** 12 de julio de 2026. Los 29 trabajos aportados fueron auditados. Este
 resumen conserva únicamente las ideas que afectan la investigación actual y su
 evidencia local.
 
@@ -165,3 +165,20 @@ neural/jepa/build_wall_state_dataset.py
 ```
 
 Producción y junio de 2026 continúan intactos.
+
+## 10. Documentación primaria aplicada a flow V1R1
+
+- ThetaData OHLC define timestamp de apertura e intervalo `[s,s+interval)`;
+  por eso una decisión `t` solo consume barras con fin `<=t`.
+- ThetaData quote histórico expone un reloj de opción nativo y snapshots de
+  bid/ask/size; no autoriza equiparar silenciosamente `underlying_timestamp`.
+- La documentación de first-order Greeks conserva ambos relojes como campos
+  distintos. El censo local obliga a backfill nativo de 1.441 sesiones.
+- Avisos oficiales Cboe separan cierre RTH del underlying/expiring SPXW a 13:00
+  del cierre QQQ/SPY options a 13:15 en medias jornadas. Labels físicos usan el
+  cierre del underlying; una barra vendor posterior no completa un horizonte.
+
+Estas fuentes se materializan en assertions y tests, no en una estrategia
+copiada: timestamp exacto, grids schedule-aware, horizon same-session y sidecar
+raw-hashed. Referencias y censo exactos están en
+`NATIVE_QUOTE_TIMESTAMP_PROVENANCE_AUDIT_20260712.md`.

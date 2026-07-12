@@ -141,3 +141,29 @@ No usar `reboot now` como despliegue normal.
 ## Areas legacy
 
 `neural/rl/`, `backtest/backtest_rl.py`, `neural/train_walkforward.py`, `neural/hybrid_model.py`, `jepa_production_final_180m`, level-stability y structural profiles son utiles para investigacion y comparativas. No son el contrato live actual.
+
+## Research activo — WALL_SURFACE_FLOW_AT_TOUCH_V1R1
+
+Checkpoint 2026-07-12: implementación causal/pre-outcome completada; suite
+relevante `50 passed`; producción y 2026 intactos. No existe todavía resultado
+físico ni económico.
+
+Bloqueo autoritativo: 1.441/2.519 sesiones 2022-08..2025-12 carecen de option
+`timestamp` nativo. No aceptar `underlying_timestamp` por inferencia ni permitir
+`PASS_DATA_GATE` con fallbacks. Usar únicamente el backfill sellado de
+`neural/jepa/build_wall_native_quote_sidecar.py`, que exige Terminal local/JAR,
+raw response hashes, timestamp exacto y key-set/bid/ask idéntico contra Greeks.
+
+Contratos nuevos obligatorios:
+
+- decisiones normales hasta 14:30; medias jornadas hasta 12:55;
+- labels no cruzan cierre RTH 16:00/13:00;
+- QQQ/SPY option close 16:15/13:15 es un reloj distinto;
+- grid flow 10:20–14:29 normal, 10:20–12:54 half-day;
+- runtime exacto según `requirements-wall-surface-flow-v1r1.txt`;
+- sizes del sidecar pertenecen a H-QSIZE1 separado y no pueden entrar en F1.
+
+Secuencia: commit/push → backfill 1.441/1.441 → seal/index commit → integrar
+sidecar al builder → full data gate → frozen runner manifest commit → una única
+evaluación física F0/F1. No abrir outcomes antes del freeze ni crear `PLAN.md`
+sin una dirección rentable clara.

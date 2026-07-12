@@ -1,6 +1,6 @@
 # SUMMARY-update — ledger científico compacto
 
-**Corte:** 11 de julio de 2026
+**Corte:** 12 de julio de 2026
 
 **Objetivo:** policy 0DTE causal y live-equivalente para SPXW, QQQ y SPY.
 
@@ -234,3 +234,25 @@ supera distance-only en los tres tickers se autoriza un payoff head ask→bid.
 - No seleccionar con el mismo mes reportado como OOS.
 - Versionar predeclaración, tests, resultados compactos y handoff con commits
   explícitos; no añadir artefactos untracked ajenos.
+
+## 10. Wall-surface flow V1R1: implementación y bloqueo de procedencia
+
+V1R1 quedó implementado y predeclarado antes de outcomes. Introduce un único
+bloque F1 de volumen/count/close-notional quote-relative en ventanas completadas
+1/5/15m, comparado con F0 distance/approach/RV/time. La evaluación física sigue
+siendo rejection versus accepted break; no se ha conectado option payoff.
+
+La suite relevante pasa `50 passed`. Se corrigieron half-days, cierre RTH de
+labels, fechas de fuente, duplicados, alias, episodios, pierce verdadero,
+denominadores/missingness y lock exacto de Python/dependencias. Preflight real:
+8 × 173, 3/3 sesiones, cero errores.
+
+El censo de 325.753.830 filas Greek descubrió 1.441/2.519 sesiones sin timestamp
+nativo. Es una falla de procedencia, no evidencia contra el mecanismo. El data
+gate ahora las bloquea. El endpoint nativo de quotes permite backfill falsable y
+aporta bid_size/ask_size; se implementó sidecar inmutable con raw/JAR/source
+hashes y whole-key-set equality. No se autoriza label runner hasta sellar
+1.441/1.441 y luego congelar dataset+runner manifest.
+
+Estado científico: `H-FLOW1 = DATA_PROVENANCE_BLOCKED`, `H-QSIZE1 = AVAILABLE_NOT_TESTED`.
+No hay rentabilidad nueva que reportar; 2026 y producción siguen intactos.
