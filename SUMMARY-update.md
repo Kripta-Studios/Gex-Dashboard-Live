@@ -375,3 +375,8 @@ one-shot físico. Rentabilidad nueva: aún no demostrada.
 V1R1 ya pasó el data gate: 10.683x76, SHA dataset `f4ed7b23...6c49`, cobertura
 mínima ticker-año 98,477%, distinctness/control/exact-key PASS y cero errores.
 Falta únicamente commitear el sello, congelar runner y abrir el one-shot físico.
+
+El one-shot ya cerró H-QSIZE1R1: LR 6/24, mediana ΔAUC -0,014823, p 0,890625;
+LightGBM 5/24, mediana -0,020959. Ningún ticker pasa y no se autoriza payoff.
+La próxima medición debe ser dinámica intraminuto, no otra reformulación de
+snapshot size. Rentabilidad nueva: no demostrada.

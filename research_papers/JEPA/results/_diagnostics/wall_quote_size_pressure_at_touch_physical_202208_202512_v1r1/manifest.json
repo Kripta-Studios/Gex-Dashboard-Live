@@ -1,0 +1,166 @@
+{
+  "schema": "wall_quote_size_pressure_at_touch_physical_evaluation_v1",
+  "git_commit": "81f1ba809efa1d1fb7ee8036f1b4728aaee87cd6",
+  "production_modified": false,
+  "holdout_2026_used": false,
+  "seed": 20260712,
+  "dataset_sha256": "f4ed7b2360dd2ff3676a23ac2da297c73554ccfd0f5486314b85cc88d0ef6c49",
+  "frozen_manifest_sha256": "176b484d58cca23748fc11fd112262b3ef0cab460ecc4784bd3d57b2fbe5c7bc",
+  "runner_sha256": "16ca2bbaceb718dbc912f86f1d821f61bc97dae0de2058d56a8740c43ca8abae",
+  "runtime_lock_sha256": "f026bfb512e17dfc1daaaecf998ba77a560aba83f1fdbf0c3a36136e33eeff7d",
+  "runtime_environment": {
+    "python_version": "3.14.2",
+    "python_implementation": "CPython",
+    "python_executable": "C:\\Program Files\\Python314\\python.exe",
+    "platform": "Windows-10-10.0-19041",
+    "platform_machine": "AMD64",
+    "packages": {
+      "lightgbm": "4.6.0",
+      "numpy": "2.3.5",
+      "pandas": "3.0.0",
+      "pyarrow": "23.0.1",
+      "scikit-learn": "1.8.0",
+      "scipy": "1.17.0"
+    }
+  },
+  "runtime_environment_sha256": "984a0e2c8a82e935295e4738c7758357175b488bb0fb11a4cd1a0bb5e8af8035",
+  "labeled_rows": 10683,
+  "labeled_rows_by_ticker": {
+    "QQQ": 3096,
+    "SPXW": 3532,
+    "SPY": 4055
+  },
+  "label_errors": [],
+  "artifact_hashes": {
+    "labels": "ef9c47062338ab14bbc19d4c46ca6c88b38d30b90c1ddca5e9ba859b3aab09d9",
+    "cells": "c491a98976fcdb9fc7012b2a0673034c5bac18bcedd1a1bb6cc918be8bbaaa1d",
+    "paired_cells": "366e5d02561a4c34421ea7cbb66a02689d84c65b3b5f22971ec5020dbf72733b",
+    "monthly_coverage": "a5030b3201fa23e68d4584326c4e713a687f5e59964640c7296b437a841c19ae",
+    "predictions": "b5e2760992694d01200520a8ca4f92b3a63b243f4b4611eebb9d42d737952b80",
+    "calibration": "517cfbd7b0521643a6eff2da1987bc27ccca72806f54556ab5a4c2c17253f546",
+    "model_hashes": "0109ebdf52c4d42de58425e010487f40f1a8b6095fdb99e1b7e20b6bbf5f5b1c",
+    "summary": "7f3dc12db06eaca0abef8632cb8d2b263266068003414d7bae9f981850cbe6bc"
+  },
+  "model_count": 96,
+  "model_set_sha256": "736bce88ed3f2b70ddd0fa59e57d8cef342faf4aec07d85b839e40a31255dbc9",
+  "bootstrap_replicates": 1000,
+  "summary": {
+    "gate_spec": {
+      "planned_paired_cells": 24,
+      "minimum_auc_wins": 16,
+      "minimum_median_auc_delta": 0.01,
+      "maximum_wilcoxon_one_sided_p": 0.0167,
+      "paired_test_unit": "ticker_fold_median_across_horizons",
+      "ticker_minimum_wins": 5,
+      "ticker_minimum_median_f1_auc": 0.55,
+      "primary_horizons": [
+        30,
+        60
+      ],
+      "ticker_primary_minimum_wins": 3,
+      "minimum_monthly_resolved_episodes": 18,
+      "maximum_joint_ap_logloss_losses": 12,
+      "sensitivity_minimum_wins": 13,
+      "sensitivity_requires_positive_median_auc_delta": true,
+      "sensitivity_can_rescue_primary": false,
+      "expected_primary_month_cells": 144
+    },
+    "primary_lr": {
+      "valid_paired_cells": 24,
+      "wins": 6,
+      "median_auc_delta": -0.014823012258267848,
+      "wilcoxon_one_sided_p": 0.890625,
+      "ticker_summary": {
+        "QQQ": {
+          "valid_cells": 8,
+          "wins": 1,
+          "median_auc_delta": -0.014823012258267848,
+          "median_f1_auc": 0.5536218753325741,
+          "primary_valid_cells": 4,
+          "primary_wins": 1,
+          "primary_median_auc_delta": -0.017646502338830916,
+          "primary_median_f1_auc": 0.5589419726548981,
+          "passed": false
+        },
+        "SPXW": {
+          "valid_cells": 8,
+          "wins": 4,
+          "median_auc_delta": -0.0014017609132108144,
+          "median_f1_auc": 0.5773074705947714,
+          "primary_valid_cells": 4,
+          "primary_wins": 2,
+          "primary_median_auc_delta": -0.008037506527133254,
+          "primary_median_f1_auc": 0.6231624735708623,
+          "passed": false
+        },
+        "SPY": {
+          "valid_cells": 8,
+          "wins": 1,
+          "median_auc_delta": -0.016555133497085928,
+          "median_f1_auc": 0.5801612323979504,
+          "primary_valid_cells": 4,
+          "primary_wins": 0,
+          "primary_median_auc_delta": -0.018984193265063787,
+          "primary_median_f1_auc": 0.593785393511169,
+          "passed": false
+        }
+      },
+      "ticker_pass": false,
+      "joint_average_precision_logloss_losses": 16
+    },
+    "lgbm_sensitivity": {
+      "valid_paired_cells": 24,
+      "wins": 5,
+      "median_auc_delta": -0.020959005801386155,
+      "wilcoxon_one_sided_p": 0.84375,
+      "ticker_summary": {
+        "QQQ": {
+          "valid_cells": 8,
+          "wins": 0,
+          "median_auc_delta": -0.02685030653438264,
+          "median_f1_auc": 0.5503715557740019,
+          "primary_valid_cells": 4,
+          "primary_wins": 0,
+          "primary_median_auc_delta": -0.028581247165542778,
+          "primary_median_f1_auc": 0.5701580438938902,
+          "passed": false
+        },
+        "SPXW": {
+          "valid_cells": 8,
+          "wins": 4,
+          "median_auc_delta": -0.003463259031579624,
+          "median_f1_auc": 0.5710396452888161,
+          "primary_valid_cells": 4,
+          "primary_wins": 1,
+          "primary_median_auc_delta": -0.016843063296702654,
+          "primary_median_f1_auc": 0.6149937350398342,
+          "passed": false
+        },
+        "SPY": {
+          "valid_cells": 8,
+          "wins": 1,
+          "median_auc_delta": -0.01750608341872606,
+          "median_f1_auc": 0.5649738637934197,
+          "primary_valid_cells": 4,
+          "primary_wins": 0,
+          "primary_median_auc_delta": -0.03113180200970539,
+          "primary_median_f1_auc": 0.6027543967165301,
+          "passed": false
+        }
+      },
+      "ticker_pass": false,
+      "joint_average_precision_logloss_losses": 16
+    },
+    "frequency_pass": true,
+    "primary_physical_pass": false,
+    "sensitivity_pass": false,
+    "physical_mechanism_pass": false,
+    "sensitivity_can_rescue_primary": false,
+    "historical_timestamp_provenance_status": "CONDITIONAL",
+    "live_feature_parity_status": "BLOCKED",
+    "authoritative_physical_success": false,
+    "advance_to_option_payoff": false,
+    "production_live_ready": false,
+    "complete_case_pairing": "qsize_both_valid"
+  }
+}

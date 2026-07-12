@@ -568,3 +568,12 @@ exact keys y controls pasan. Compactos están en
 `_diagnostics/wall_quote_size_pressure_at_touch_202208_202512_v1r1_data_gate/`.
 Congelar runner solo después de commitear/pushear esos compactos; luego ejecutar
 una vez LR/LGBM. No abrir 2026 ni option payoff antes del physical PASS.
+
+El runner congelado `81f1ba8` ya ejecutó el one-shot y H-QSIZE1R1 falla: LR
+6/24, mediana ΔAUC -0,014823, p 0,890625; LGBM 5/24, mediana -0,020959.
+QQQ/SPXW/SPY LR wins 1/8, 4/8, 1/8 y primarias 1/4, 2/4, 0/4. Frequency pasa,
+pero physical/payoff son false. Cerrar snapshot QSIZE; no hay PF/WR/PnL nuevo.
+
+Próxima fuente realmente distinta: dinámica intraminuto local (quote update
+intensity, replenishment/withdrawal), solo tras preflight sin outcomes de API,
+coste y live parity. No reutilizar el mismo snapshot block con otro modelo.

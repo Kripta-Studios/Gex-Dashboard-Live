@@ -349,3 +349,20 @@ Coverage, distinctness de las 32 pressure features, controles, exact keys y
 `wall_quote_size_pressure_at_touch_202208_202512_v1r1_data_gate/`; parquet en
 `tmp/`. Siguiente paso único: commit compactos, generar frozen runner desde el
 nuevo HEAD y ejecutar el one-shot físico. Aún no hay outcomes/rentabilidad.
+
+### Cierre H-QSIZE1R1
+
+Frozen runner commit `81f1ba8`; one-shot completo sobre 96 modelos. H-QSIZE1R1
+queda **CERRADO sin payoff**: LR 6/24 wins, mediana ΔAUC `-0,014823`, p
+`0,890625`, 16 pérdidas conjuntas AP/log-loss. LightGBM 5/24, mediana
+`-0,020959`, p `0,843750`. Por ticker LR: QQQ 1/8 (`-0,014823`), SPXW 4/8
+(`-0,001402`), SPY 1/8 (`-0,016555`); primarias 30/60m 1/4, 2/4 y 0/4.
+`frequency_pass=true`, pero `physical_mechanism_pass=false` y
+`advance_to_option_payoff=false`. No entrenar payoff, seleccionar SPXW ni
+rescatar lags/subgrupos. Snapshot NBBO size/imbalance/depth 1m cerca del wall no
+añade información física estable.
+
+Siguiente hipótesis nueva permitida: H-QDYN1, reposición/retirada e intensidad
+intraminuto de quotes sobre contratos local-wall, si una auditoría outcome-free
+confirma captura 1s/tick reproducible. No confundirla con H-QSIZE snapshot ni
+descargar un wildcard 1s masivo sin una captura dirigida y predeclarada.

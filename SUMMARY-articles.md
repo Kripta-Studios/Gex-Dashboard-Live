@@ -296,3 +296,9 @@ Aplicada esa separación, V1R1 pasa el gate outcome-free con 32 pressure feature
 no degeneradas y 98,477% de cobertura mínima ticker-año. Esto valida medición y
 causalidad, no alpha; la comparación física F0/F1 sigue sellada hasta congelar
 el runner.
+
+El one-shot posterior falsifica también el bloque snapshot QSIZE: LR pierde
+18/24 comparaciones (mediana -0,014823) y LightGBM pierde 19/24. La conclusión
+es específica: nivel/cambio 1m de tamaño NBBO, imbalance y profundidad agregada
+cerca del wall no separa defensa de ruptura. No falsifica reposición de cola,
+cancelaciones/update intensity intraminuto ni libro profundo, que no se midieron.
