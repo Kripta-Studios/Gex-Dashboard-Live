@@ -14,6 +14,7 @@ from neural.jepa.build_wall_surface_flow_dataset import (  # noqa: E402
     build_session,
     evaluate_data_gate,
     filter_manifest,
+    sha256_file,
 )
 
 
@@ -151,6 +152,38 @@ def test_build_session_hashes_sources_and_preserves_exact_completed_bar(tmp_path
     assert {row["source_kind"] for row in inventory} == {"greeks", "ohlc", "underlying"}
     assert all(len(row["sha256"]) == 64 for row in inventory)
     assert all(row["rows"] > 0 for row in inventory)
+
+
+def test_build_session_replaces_missing_greek_clock_with_sealed_native_quote(tmp_path: Path) -> None:
+    paths = _write_sources(tmp_path)
+    greeks_path = Path(paths["greeks_path"])
+    greeks = pd.read_parquet(greeks_path)
+    greeks.drop(columns=["timestamp"]).to_parquet(greeks_path, index=False)
+    quote_path = tmp_path / "native_quotes.parquet"
+    pd.DataFrame(
+        {
+            "symbol": greeks["symbol"],
+            "expiration": greeks["expiration"],
+            "trade_date": greeks["trade_date"],
+            "timestamp": greeks["underlying_timestamp"],
+            "right": greeks["right"],
+            "strike": greeks["strike"],
+            "bid": greeks["bid"],
+            "ask": greeks["ask"],
+        }
+    ).to_parquet(quote_path, index=False)
+    record = {
+        **_manifest_row(paths),
+        "native_quote_path": str(quote_path),
+        "expected_native_quote_sha256": sha256_file(quote_path),
+        "expected_greeks_sha256": sha256_file(greeks_path),
+    }
+    output, audit, inventory = build_session(record, _candidate())
+    assert len(output) == 1
+    assert audit["option_timestamp_fallback_used"] is False
+    assert {row["source_kind"] for row in inventory} == {
+        "greeks", "ohlc", "underlying", "native_quote"
+    }
 
 
 def test_data_gate_uses_schedule_aware_grid_and_blocks_timestamp_fallback() -> None:

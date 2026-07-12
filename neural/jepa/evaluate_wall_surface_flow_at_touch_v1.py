@@ -54,6 +54,8 @@ BOOTSTRAP_REPLICATES = 1000
 MAX_WORKERS = 16
 EXPECTED_SESSION_COUNT = 2519
 EXPECTED_SESSION_KEY_SHA256 = "ac7200fd96f2ef9afc2f9f09eff18804497a2f975a7454cccf5ed1c935653057"
+EXPECTED_NATIVE_QUOTE_SESSIONS = 1441
+EXPECTED_NATIVE_QUOTE_KEY_SHA256 = "4d4335005bb1ad29dd9f59a873a8902edcf17f1eb64c006792b29b57dea9a579"
 EXPECTED_DATA_INPUT_HASHES = {
     "walls": "94e311e0e25ff7956347597a8734e82e07ab05753f42acaa26876c58752df8ef",
     "events": "d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408",
@@ -261,6 +263,14 @@ def verify_freeze(
         raise AssertionError("data manifest session count mismatch")
     if str(data_manifest.get("full_session_key_sha256")) != EXPECTED_SESSION_KEY_SHA256:
         raise AssertionError("data manifest session-key hash mismatch")
+    native_quote = data_manifest.get("native_quote_provenance") or {}
+    if (
+        int(native_quote.get("sessions", -1)) != EXPECTED_NATIVE_QUOTE_SESSIONS
+        or str(native_quote.get("session_key_sha256", "")) != EXPECTED_NATIVE_QUOTE_KEY_SHA256
+        or not str(native_quote.get("seal_sha256", ""))
+        or not str(native_quote.get("index_sha256", ""))
+    ):
+        raise AssertionError("data manifest native quote provenance mismatch")
     if str(data_manifest.get("feature_module_sha256")) != sha256_file(feature_module):
         raise AssertionError("data manifest feature module differs from frozen runner")
     if str(data_manifest.get("runtime_lock_sha256", "")) != runtime["lock_sha256"]:
@@ -308,13 +318,21 @@ def assert_source_inventory(frame: pd.DataFrame) -> None:
     work["trade_date"] = work["trade_date"].astype(str).str.replace(r"\.0$", "", regex=True)
     if work.duplicated(["ticker", "trade_date", "source_kind"]).any():
         raise AssertionError("source inventory has duplicate session/kind keys")
-    if len(work) != EXPECTED_SESSION_COUNT * 3:
+    if len(work) != EXPECTED_SESSION_COUNT * 3 + EXPECTED_NATIVE_QUOTE_SESSIONS:
         raise AssertionError(f"source inventory row count mismatch: {len(work)}")
     kinds = work.groupby(["ticker", "trade_date"], observed=True)["source_kind"].agg(
         lambda values: set(values.astype(str))
     )
-    if len(kinds) != EXPECTED_SESSION_COUNT or not kinds.map(lambda values: values == {"greeks", "ohlc", "underlying"}).all():
-        raise AssertionError("source inventory does not contain exactly three required sources per session")
+    allowed_kinds = {frozenset({"greeks", "ohlc", "underlying"}), frozenset({"greeks", "ohlc", "underlying", "native_quote"})}
+    if len(kinds) != EXPECTED_SESSION_COUNT or not kinds.map(lambda values: frozenset(values) in allowed_kinds).all():
+        raise AssertionError("source inventory has an invalid per-session source set")
+    native_sessions = work[work["source_kind"].eq("native_quote")][["ticker", "trade_date"]].copy()
+    native_payload = "".join(
+        f"{row.ticker},{row.trade_date}\n"
+        for row in native_sessions.sort_values(["ticker", "trade_date"], kind="stable").itertuples(index=False)
+    ).encode("utf-8")
+    if len(native_sessions) != EXPECTED_NATIVE_QUOTE_SESSIONS or hashlib.sha256(native_payload).hexdigest() != EXPECTED_NATIVE_QUOTE_KEY_SHA256:
+        raise AssertionError("source inventory native quote universe mismatch")
     sessions = work[["ticker", "trade_date"]].drop_duplicates().sort_values(["ticker", "trade_date"], kind="stable")
     payload = "".join(f"{row.ticker},{row.trade_date}\n" for row in sessions.itertuples(index=False)).encode("utf-8")
     if hashlib.sha256(payload).hexdigest() != EXPECTED_SESSION_KEY_SHA256:

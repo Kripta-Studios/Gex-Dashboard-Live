@@ -45,6 +45,8 @@ TICKERS = ("SPXW", "QQQ", "SPY")
 MAX_WORKERS = 16
 EXPECTED_SESSION_COUNT = 2519
 EXPECTED_SESSION_KEY_SHA256 = "ac7200fd96f2ef9afc2f9f09eff18804497a2f975a7454cccf5ed1c935653057"
+EXPECTED_NATIVE_QUOTE_SESSIONS = 1441
+EXPECTED_NATIVE_QUOTE_KEY_SHA256 = "4d4335005bb1ad29dd9f59a873a8902edcf17f1eb64c006792b29b57dea9a579"
 EXPECTED_INPUT_HASHES = {
     "walls": "94e311e0e25ff7956347597a8734e82e07ab05753f42acaa26876c58752df8ef",
     "events": "d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408",
@@ -55,6 +57,9 @@ GREEK_REQUIRED_COLUMNS = (
     "symbol", "expiration", "trade_date", "interval_used", "right", "strike", "bid", "ask",
 )
 GREEK_OPTIONAL_COLUMNS = ("timestamp", "underlying_timestamp")
+NATIVE_QUOTE_COLUMNS = (
+    "symbol", "expiration", "trade_date", "timestamp", "right", "strike", "bid", "ask",
+)
 OHLC_COLUMNS = (
     "timestamp", "right", "strike", "close", "volume", "count",
     "symbol", "expiration", "trade_date", "interval_used",
@@ -126,6 +131,29 @@ def assert_authoritative_code_state() -> str:
     return current_git_commit()
 
 
+def assert_committed_artifact(path: Path, label: str) -> None:
+    try:
+        relative = path.resolve().relative_to(PROJECT_ROOT).as_posix()
+    except ValueError as exc:
+        raise AssertionError(f"{label} must be copied into and committed in the repository: {path}") from exc
+    subprocess.run(
+        ["git", "ls-files", "--error-unmatch", relative],
+        cwd=PROJECT_ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    dirty = subprocess.run(
+        ["git", "status", "--porcelain", "--", relative],
+        cwd=PROJECT_ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    if dirty:
+        raise AssertionError(f"{label} must be committed and clean: {dirty}")
+
+
 def read_parquet_columns(path: str | Path, required: tuple[str, ...]) -> pd.DataFrame:
     available = set(pq.ParquetFile(path).schema_arrow.names)
     missing = sorted(set(required).difference(available))
@@ -147,6 +175,13 @@ def read_greeks(path: str | Path) -> pd.DataFrame:
         *GREEK_REQUIRED_COLUMNS,
     ]
     return pd.read_parquet(path, columns=list(dict.fromkeys(columns)))
+
+
+def read_native_quotes(path: str | Path) -> pd.DataFrame:
+    frame = read_parquet_columns(path, NATIVE_QUOTE_COLUMNS)
+    frame = frame.copy()
+    frame["interval_used"] = "1m"
+    return frame
 
 
 def _truthy(series: pd.Series) -> pd.Series:
@@ -206,6 +241,85 @@ def select_preflight_sessions(manifest: pd.DataFrame) -> pd.DataFrame:
             raise AssertionError(f"no preflight source session for {ticker}")
         selected.append(part.iloc[len(part) // 2])
     return pd.DataFrame(selected).reset_index(drop=True)
+
+
+def attach_native_quote_index(
+    sessions: pd.DataFrame,
+    index_path: str | Path,
+    seal_path: str | Path,
+) -> tuple[pd.DataFrame, dict[str, Any]]:
+    seal = json.loads(Path(seal_path).read_text(encoding="utf-8"))
+    if seal.get("schema") != "wall_native_quote_sidecar_seal_v1" or seal.get("status") != "PASS_NATIVE_TIMESTAMP_BACKFILL":
+        raise AssertionError("native quote sidecar is not a PASS seal")
+    if bool(seal.get("holdout_2026_used", True)) or not bool(seal.get("outcome_free", False)):
+        raise AssertionError("native quote seal violates outcome-free/pre-2026 scope")
+    if str(seal.get("source_manifest_sha256")) != EXPECTED_INPUT_HASHES["manifest"]:
+        raise AssertionError("native quote seal was not built from the canonical source manifest")
+    index_hash = sha256_file(index_path)
+    if str(seal.get("index_sha256")) != index_hash:
+        raise AssertionError("native quote index hash differs from its seal")
+    index = pd.read_csv(index_path, dtype={"trade_date": str})
+    required = {
+        "ticker", "trade_date", "greeks_path", "greeks_sha256", "quotes_path",
+        "quotes_sha256", "raw_response_path", "raw_response_sha256",
+        "session_manifest_path", "session_manifest_sha256", "rows", "end_time",
+        "terminal_jar_sha256", "key_set_exact", "timestamp_bid_ask_exact",
+    }
+    missing = sorted(required.difference(index.columns))
+    if missing:
+        raise KeyError(f"native quote index missing columns: {missing}")
+    index["ticker"] = index["ticker"].astype(str).str.upper()
+    index["trade_date"] = index["trade_date"].astype(str).str.replace(r"\D", "", regex=True).str[:8]
+    index = index.sort_values(["ticker", "trade_date"], kind="stable").reset_index(drop=True)
+    if (
+        len(index) != EXPECTED_NATIVE_QUOTE_SESSIONS
+        or index.duplicated(["ticker", "trade_date"]).any()
+        or session_key_hash(index) != EXPECTED_NATIVE_QUOTE_KEY_SHA256
+        or index["trade_date"].str.startswith("2026").any()
+        or not index["key_set_exact"].map(_truthy).all()
+        or not index["timestamp_bid_ask_exact"].map(_truthy).all()
+    ):
+        raise AssertionError("native quote index does not cover the frozen fallback universe exactly")
+    if int(seal.get("fallback_sessions", -1)) != len(index) or str(seal.get("fallback_session_key_sha256")) != EXPECTED_NATIVE_QUOTE_KEY_SHA256:
+        raise AssertionError("native quote seal session universe mismatch")
+    selected = sessions.merge(
+        index.rename(
+            columns={
+                "quotes_path": "native_quote_path",
+                "quotes_sha256": "expected_native_quote_sha256",
+                "greeks_sha256": "expected_greeks_sha256",
+            }
+        )[
+            [
+                "ticker", "trade_date", "greeks_path", "expected_greeks_sha256",
+                "native_quote_path", "expected_native_quote_sha256",
+            ]
+        ],
+        on=["ticker", "trade_date", "greeks_path"],
+        how="left",
+        validate="one_to_one",
+    )
+    fallback_detected = []
+    for row in selected.itertuples(index=False):
+        columns = set(pq.ParquetFile(str(row.greeks_path)).schema_arrow.names)
+        fallback_detected.append("timestamp" not in columns)
+    selected["greeks_timestamp_fallback"] = fallback_detected
+    needs_sidecar = selected["greeks_timestamp_fallback"].astype(bool)
+    has_sidecar = selected["native_quote_path"].notna()
+    if not needs_sidecar.equals(has_sidecar):
+        raise AssertionError("native quote index coverage differs from actual missing-timestamp Greek sessions")
+    for row in selected.loc[needs_sidecar].itertuples(index=False):
+        quote_path = Path(str(row.native_quote_path))
+        if not quote_path.is_file():
+            raise FileNotFoundError(f"missing sealed native quote Parquet: {quote_path}")
+    return selected, {
+        "seal_sha256": sha256_file(seal_path),
+        "index_sha256": index_hash,
+        "sessions": int(len(index)),
+        "session_key_sha256": session_key_hash(index),
+        "terminal_jar_sha256": str(seal.get("terminal_jar_sha256")),
+        "git_commit": str(seal.get("git_commit")),
+    }
 
 
 def _source_fingerprint(record: dict[str, Any], kind: str, column: str) -> dict[str, Any]:
@@ -274,6 +388,19 @@ def build_session(
         _source_fingerprint(record, "underlying", "underlying_path"),
     ]
     greeks = read_greeks(record["greeks_path"])
+    native_quote_path = record.get("native_quote_path")
+    use_native_sidecar = bool(native_quote_path) and not pd.isna(native_quote_path)
+    if use_native_sidecar:
+        native_inventory = _source_fingerprint(record, "native_quote", "native_quote_path")
+        expected_native_hash = str(record.get("expected_native_quote_sha256", ""))
+        if native_inventory["sha256"] != expected_native_hash:
+            raise AssertionError("native quote Parquet hash differs from sealed index")
+        if inventory[0]["sha256"] != str(record.get("expected_greeks_sha256", "")):
+            raise AssertionError("stored Greek hash differs from native quote index")
+        inventory.append(native_inventory)
+        quote_source = read_native_quotes(native_quote_path)
+    else:
+        quote_source = greeks
     ohlc = read_parquet_columns(record["ohlc_path"], OHLC_COLUMNS)
     underlying = read_parquet_columns(record["underlying_path"], UNDERLYING_COLUMNS)
     _set_timestamp_range(inventory[0], greeks, ("timestamp", "underlying_timestamp"))
@@ -282,9 +409,12 @@ def build_session(
     _set_contract_metadata(inventory[0], greeks)
     _set_contract_metadata(inventory[1], ohlc)
     _set_contract_metadata(inventory[2], underlying)
+    if use_native_sidecar:
+        _set_timestamp_range(inventory[3], quote_source, ("timestamp",))
+        _set_contract_metadata(inventory[3], quote_source)
     _assert_sources_unchanged(inventory)
     flow, audit = prepare_completed_bar_flow(
-        greeks,
+        quote_source,
         ohlc,
         expected_ticker=str(record["ticker"]),
         expected_trade_date=str(record["trade_date"]),
@@ -568,6 +698,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--walls", required=True)
     parser.add_argument("--events", required=True)
     parser.add_argument("--manifest", required=True)
+    parser.add_argument("--native-quote-index")
+    parser.add_argument("--native-quote-seal")
     parser.add_argument("--output-dir", required=True)
     parser.add_argument("--start-date", default=START_DATE)
     parser.add_argument("--end-date", default=END_DATE)
@@ -583,6 +715,10 @@ def main() -> int:
         raise ValueError(f"end date must not exceed sealed physical cutoff {END_DATE}")
     if args.allow_input_hash_mismatch and not args.preflight:
         raise ValueError("--allow-input-hash-mismatch is restricted to non-authoritative preflight")
+    if bool(args.native_quote_index) != bool(args.native_quote_seal):
+        raise ValueError("--native-quote-index and --native-quote-seal must be supplied together")
+    if not args.preflight and not args.native_quote_index:
+        raise ValueError("authoritative full build requires the sealed native quote index")
     output_dir = Path(args.output_dir)
     if output_dir.exists():
         raise FileExistsError(f"immutable output target already exists: {output_dir}")
@@ -607,6 +743,18 @@ def main() -> int:
     candidates, candidate_universe_audit = make_touch_candidates(walls, events, return_audit=True)
     manifest = pd.read_csv(paths["manifest"], dtype={"trade_date": str})
     selected = filter_manifest(manifest, start_date=str(args.start_date), end_date=str(args.end_date))
+    native_quote_provenance: dict[str, Any] | None = None
+    if args.native_quote_index:
+        native_index_path = Path(args.native_quote_index)
+        native_seal_path = Path(args.native_quote_seal)
+        if not args.preflight:
+            assert_committed_artifact(native_index_path, "native quote index")
+            assert_committed_artifact(native_seal_path, "native quote seal")
+        selected, native_quote_provenance = attach_native_quote_index(
+            selected,
+            native_index_path,
+            native_seal_path,
+        )
     selected_key_hash = session_key_hash(selected)
     if str(args.start_date) == START_DATE and str(args.end_date) == END_DATE:
         if len(selected) != EXPECTED_SESSION_COUNT or selected_key_hash != EXPECTED_SESSION_KEY_SHA256:
@@ -680,6 +828,7 @@ def main() -> int:
         "date_range": [str(dataset["trade_date"].min()), str(dataset["trade_date"].max())],
         "physical_cutoff": END_DATE,
         "input_hashes": input_hashes,
+        "native_quote_provenance": native_quote_provenance,
         "builder_sha256": sha256_file(__file__),
         "feature_module_sha256": sha256_file(Path(__file__).with_name("surface_flow_features.py")),
         "runtime_lock_sha256": runtime["lock_sha256"],
