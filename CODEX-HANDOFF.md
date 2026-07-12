@@ -2,7 +2,7 @@
 
 **Actualizado:** 12 de julio de 2026
 
-**Checkpoint de código del build:** `635d3e7 fix: align wall snapshots to executable decision time`
+**Checkpoint de captura nativa:** `041b16c research: freeze stored-universe native clock coverage`
 
 **Producción:** intacta. **Junio de 2026:** sellado.
 
@@ -256,8 +256,7 @@ research_papers/JEPA/results/_diagnostics/wall_state_physical_separability_20220
 
 ## 10. Git y worktree
 
-Checkpoint de código publicado: `635d3e7`; consultar `git log -1` para el commit
-posterior que documenta el build.
+Checkpoint de código publicado y sincronizado antes del seal: `041b16c`.
 Hay numerosos scripts y artefactos untracked de trabajos anteriores; no borrarlos,
 no añadirlos en masa y no asumir que son parte del checkpoint. Versionar cada hito
 con `git add` explícito, test, commit y push.
@@ -276,7 +275,7 @@ neural/jepa/wall_surface_flow_environment.py
 neural/jepa/build_wall_native_quote_sidecar.py
 ```
 
-La suite combinada relevante pasa `53 passed` (`39` pruebas nuevas de flow,
+La suite combinada relevante pasa `54 passed` (`40` pruebas nuevas de flow,
 provenance y runtime más `14` regresiones wall-state). El preflight real posterior
 a las correcciones produjo 8 filas × 173 columnas, 3/3 sesiones, cero errores,
 grid completo y hashes/runtime persistidos en
@@ -316,8 +315,9 @@ no pueden pasar por regularidad de rejilla. Auditoría completa:
 
 ThetaData `/option/history/quote` recuperó en muestras el reloj nativo, bid/ask
 exactos y `bid_size/ask_size`. El sidecar implementado exige builder commiteado,
-Terminal local/JAR hasheado, raw HTTP inmutable y key-set exacto Greek/quote en
-1.441/1.441 sesiones. Sizes quedan archivados pero fuera de H-FLOW1; serían
+Terminal local/JAR hasheado, raw HTTP inmutable y cobertura del 100% del universo
+Greek histórico almacenado en 1.441/1.441 sesiones. Keys nativas extra se auditan
+pero no se incorporan. Sizes quedan archivados pero fuera de H-FLOW1; serían
 H-QSIZE1 separado.
 
 Durante el backfill se corrigieron dos supuestos sin outcomes: crossed quotes se
@@ -331,14 +331,24 @@ Greek congelado: se archivan como `native_extra_key_rows` y no entran en F1.
 El gate exige cobertura 100% de keys históricas, no igualdad que permita ampliar
 retroactivamente el universo.
 
+Backfill completado el 12-07-2026 sobre el JAR
+`4f93cd745c8af53d8cf70096abb104edb22494f5c48408b9d732b51e51dfbbea`:
+
+- status `PASS_NATIVE_TIMESTAMP_BACKFILL`, 1.441/1.441 sesiones y cero errores;
+- 125.557.990 filas: QQQ 30.687.030, SPXW 59.051.140, SPY 35.819.820;
+- cero keys históricas faltantes; 500 extras (250 QQQ, 250 SPXW) archivadas;
+- 5.720 crossed quotes no-signable;
+- 2.915 filas revisadas en 24 sesiones, sin sustituir bid/ask Greek;
+- índice SHA `0abe0ac2f9dcccec4574ee10e4f10ef2904000c80a0cf5fb8f5a90ef333f754a`.
+
 Siguiente secuencia, sin abrir outcomes:
 
-1. commit/push del código, tests, predeclaración y ledger;
-2. arrancar Terminal local desde JAR congelado y ejecutar el backfill sidecar;
-3. sellar/commitear índice y hashes 1.441/1.441;
-4. el índice ya está integrado en commit `beb4435`; ejecutar full data gate;
-5. crear/commitear frozen runner manifest;
-6. solo entonces construir labels físicos y ejecutar una vez F0 contra F1.
+1. commitear/pushear el seal e índice compactos;
+2. ejecutar el full data gate con el índice ya integrado (`beb4435`);
+3. commitear los compactos del data gate;
+4. crear/commitear frozen runner manifest con provenance `CONDITIONAL` y live
+   parity `BLOCKED`;
+5. solo entonces construir labels físicos y ejecutar una vez F0 contra F1.
 
 No existe resultado físico ni económico de H-FLOW1 todavía. Producción y todo
 2026 continúan intactos; no crear `PLAN.md` porque no hay dirección rentable clara.

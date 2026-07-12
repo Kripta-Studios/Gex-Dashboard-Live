@@ -242,7 +242,7 @@ bloque F1 de volumen/count/close-notional quote-relative en ventanas completadas
 1/5/15m, comparado con F0 distance/approach/RV/time. La evaluación física sigue
 siendo rejection versus accepted break; no se ha conectado option payoff.
 
-La suite relevante pasa `53 passed`. Se corrigieron half-days, cierre RTH de
+La suite relevante pasa `54 passed`. Se corrigieron half-days, cierre RTH de
 labels, fechas de fuente, duplicados, alias, episodios, pierce verdadero,
 denominadores/missingness y lock exacto de Python/dependencias. Preflight real:
 8 × 173, 3/3 sesiones, cero errores.
@@ -251,8 +251,8 @@ El censo de 325.753.830 filas Greek descubrió 1.441/2.519 sesiones sin timestam
 nativo. Es una falla de procedencia, no evidencia contra el mecanismo. El data
 gate ahora las bloquea. El endpoint nativo de quotes permite backfill falsable y
 aporta bid_size/ask_size; se implementó sidecar inmutable con raw/JAR/source
-hashes y whole-key-set equality. No se autoriza label runner hasta sellar
-1.441/1.441 y luego congelar dataset+runner manifest.
+hashes, cobertura 100% de keys históricas y extras auditadas sin incorporación.
+No se autoriza label runner hasta congelar dataset+runner manifest.
 
 La auditoría del productor underlying confirmó 1s→floor-minute y un reparador
 con `bfill` para filas totalmente nulas. Los ficheros históricos carecen de hash
@@ -262,7 +262,13 @@ Preflight: 0 grids RTH incompletos, OHLC/tick_count válidos y spot máximo
 El audit completo pasó 2.519/2.519; registró tres ceros 09:54–09:56 de SPY
 2023-06-05 fuera del primer timestamp consumible 10:19, sin imputar ni excluir.
 
-Estado científico: `H-FLOW1 = DATA_PROVENANCE_BLOCKED`, `H-QSIZE1 = AVAILABLE_NOT_TESTED`.
+El backfill terminó con `PASS_NATIVE_TIMESTAMP_BACKFILL`: 1.441 sesiones,
+125.557.990 filas, cero missing keys/errores, 500 keys extra, 5.720 crossed y
+2.915 revisiones bid/ask en 24 sesiones. Índice SHA
+`0abe0ac2f9dcccec4574ee10e4f10ef2904000c80a0cf5fb8f5a90ef333f754a`.
+
+Estado científico: `H-FLOW1 = NATIVE_CLOCK_SEALED_DATA_GATE_PENDING`,
+`H-QSIZE1 = AVAILABLE_NOT_TESTED`.
 No hay rentabilidad nueva que reportar; 2026 y producción siguen intactos.
 
 Backfill counterexamples: crossed quotes son raw válido pero no-signable; precios

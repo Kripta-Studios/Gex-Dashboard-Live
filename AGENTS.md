@@ -145,7 +145,7 @@ No usar `reboot now` como despliegue normal.
 ## Research activo — WALL_SURFACE_FLOW_AT_TOUCH_V1R1
 
 Checkpoint 2026-07-12: implementación causal/pre-outcome completada; suite
-relevante `53 passed`; producción y 2026 intactos. No existe todavía resultado
+relevante `54 passed`; producción y 2026 intactos. No existe todavía resultado
 físico ni económico.
 
 Bloqueo autoritativo: 1.441/2.519 sesiones 2022-08..2025-12 carecen de option
@@ -173,7 +173,12 @@ Audit underlying completo: 2.519/2.519 pasan desde el primer timestamp consumibl
 10:19. Tres rows SPY 2023-06-05 09:54–09:56 son inválidos pero out-of-scope; se
 cuentan, no se bfill ni se usa el hallazgo para excluir la sesión.
 
-Secuencia: commit/push → backfill 1.441/1.441 → seal/index commit → integrar
-sidecar al builder → full data gate → frozen runner manifest commit → una única
-evaluación física F0/F1. No abrir outcomes antes del freeze ni crear `PLAN.md`
-sin una dirección rentable clara.
+Backfill nativo completado y sellado en commit base `041b16c`: 1.441/1.441
+sesiones, 125.557.990 filas, cero keys Greek históricas faltantes y cero errores.
+Se auditan 500 keys extra sin incorporarlas, 5.720 crossed no-signable y 2.915
+filas bid/ask revisadas en 24 sesiones; F1 conserva los precios Greek originales.
+
+Secuencia vigente: commit/push del seal/index → full data gate → commit de sus
+compactos → frozen runner manifest commit → una única evaluación física F0/F1.
+El sidecar ya está integrado en el builder (`beb4435`). No abrir outcomes antes
+del freeze ni crear `PLAN.md` sin una dirección rentable clara.

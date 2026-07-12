@@ -122,7 +122,7 @@ timestamp/strike:
 Las primitivas pasan tests de walls separados, deduplicación de OI,
 persistencia/resets y schema causal. El preflight ThetaData real consiguió 100% de
 cobertura en tres sesiones, spot <=0,000572 bps y delta walls no equivalentes a
-gamma. Tras aprobar el build completo, queda pendiente la separabilidad física.
+gamma. La separabilidad wall-state se ejecutó y fue rechazada.
 
 El build completo 2022–2025 materializó 135.120 filas y cubre 100% de las 95.424
 claves executable con spot <=0,000572 bps. La auditoría detectó un riesgo causal
@@ -136,13 +136,11 @@ wall atrae, pero OI diario no identifica el inventario dealer ni la presión
 intradía que decide defensa o ruptura. La siguiente fuente debe medir flujo de
 superficie observable, no aumentar capacidad del encoder.
 
-Primera evaluación autorizada: física del subyacente, no PnL. Los future prices se
-usan solo como labels para `magnet_hit`, `true_rejection` y `accepted_break` a
-30/60/120/180m. El wall state debe superar un control distance-only en los tres
-tickers mediante selección nested anterior al test.
-
-Solo después se permite un payoff head de opciones con ask→bid y el contrato
-30–180m. Si la física no es separable, otra arquitectura no está autorizada.
+El protocolo wall-state evaluó primero la física del subyacente, no PnL, usando
+future prices solo como labels. Al no superar distance-only no se autorizó payoff.
+La siguiente evaluación física es H-FLOW1: flujo de superficie observable frente
+a F0 distance/approach, congelada antes de labels. Solo si supera el control en los
+tres tickers se permite un payoff head ask→bid con contrato 30–180m.
 
 ## 8. Uso del hardware
 
@@ -162,6 +160,13 @@ neural/jepa/diagnose_wall_interaction_failure_v1.py
 research_papers/JEPA/WALL_STATE_GEX_DEX_DATASET_PREDECLARATION_V1.md
 neural/jepa/wall_state_features.py
 neural/jepa/build_wall_state_dataset.py
+research_papers/JEPA/WALL_SURFACE_FLOW_AT_TOUCH_V1R1_CAUSAL_AMENDMENT.md
+research_papers/JEPA/NATIVE_QUOTE_TIMESTAMP_PROVENANCE_AUDIT_20260712.md
+neural/jepa/surface_flow_features.py
+neural/jepa/build_wall_surface_flow_dataset.py
+neural/jepa/build_wall_native_quote_sidecar.py
+neural/jepa/freeze_wall_surface_flow_runner_v1r1.py
+neural/jepa/evaluate_wall_surface_flow_at_touch_v1.py
 ```
 
 Producción y junio de 2026 continúan intactos.
@@ -193,3 +198,8 @@ temporal, pero no debe reemplazar precios antiguos si el proveedor revisó datos
 El sidecar separa key-set de clock, price-revision audit y signability.
 La cobertura se define sobre el universo histórico congelado: contratos que el
 proveedor añade retrospectivamente se cuentan, no se incorporan al experimento.
+
+El backfill completo selló 1.441/1.441 sesiones y 125.557.990 filas con cero
+missing keys y cero errores. Las 500 keys extra, 5.720 crossed y 2.915 revisiones
+bid/ask permanecen como evidencia adversarial; el experimento conserva el precio
+Greek histórico y usa el sidecar únicamente para recuperar/verificar el reloj.
