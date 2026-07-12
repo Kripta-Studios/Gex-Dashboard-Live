@@ -203,7 +203,7 @@ def assert_qsize_source_inventory(frame: pd.DataFrame) -> None:
         or not work["ticker"].isin(["SPXW", "QQQ", "SPY"]).all()
         or work["trade_date"].ge("20260101").any()
         or session_key_hash(work) != EXPECTED_SESSION_KEY_SHA256
-        or origin_counts != {"fallback": 1441, "complement": 1078}
+        or origin_counts != {"fallback": 1441, "native_complement": 1078}
         or not hashes_valid
         or pd.to_numeric(work["rows"], errors="coerce").fillna(0).le(0).any()
     ):
