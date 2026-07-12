@@ -1,0 +1,277 @@
+{
+  "schema": "wall_iv_surface_at_touch_frozen_runner_v1",
+  "status": "PREEXECUTION_FROZEN",
+  "created_at_utc": "2026-07-12T15:08:04.261640+00:00",
+  "runner_commit": "adafe9fab64ea11ed478061750fa242fd109353f",
+  "code_hashes": {
+    "neural/jepa/build_wall_iv_surface_deformation_dataset.py": "c1117021598d8c3ac6f1ee0b2adeb41668ae141aa2488da1ff7fab6edf1b12c1",
+    "neural/jepa/evaluate_wall_iv_surface_at_touch_v1.py": "5490274f66b94c7d3c93b588cbba2e4b94b769a66968fbc9f6325c4b0e7dd76e",
+    "neural/jepa/freeze_wall_iv_surface_runner_v1.py": "de4bf7a1275532410460dc81a7516ff513088215fa0d3b3eb5269181663d22ca",
+    "neural/jepa/evaluate_wall_surface_flow_at_touch_v1.py": "f7cadb3b13eab561fcd716c0f288cea92102088712086a4c6d34812c6fa6c6a5",
+    "neural/jepa/surface_flow_features.py": "892730fbf5a3185608f30b406c4cc69e156ce392b6a1eae1b9b73258fb23cb10",
+    "neural/jepa/iv_surface_deformation_features.py": "69838726f11631313de2a6829e62a9eb74d11c0b989e13491d140099d793e8a7",
+    "neural/jepa/wall_surface_flow_environment.py": "b21a771a2982290d6c67513700f81d18de0e6c08c6ad9aba772d5305093d06ef"
+  },
+  "protocol_hashes": {
+    "research_papers/JEPA/WALL_IV_SURFACE_DEFORMATION_AT_TOUCH_V1_PREDECLARATION.md": "dc79c19e4855d3e9b6737082f1b057a8774ef57b1206c7430aa4d804b88c9166",
+    "research_papers/JEPA/requirements-wall-surface-flow-v1r1.txt": "f026bfb512e17dfc1daaaecf998ba77a560aba83f1fdbf0c3a36136e33eeff7d"
+  },
+  "runtime_lock_sha256": "f026bfb512e17dfc1daaaecf998ba77a560aba83f1fdbf0c3a36136e33eeff7d",
+  "runtime_environment": {
+    "python_version": "3.14.2",
+    "python_implementation": "CPython",
+    "python_executable": "C:\\Program Files\\Python314\\python.exe",
+    "platform": "Windows-10-10.0-19041",
+    "platform_machine": "AMD64",
+    "packages": {
+      "lightgbm": "4.6.0",
+      "numpy": "2.3.5",
+      "pandas": "3.0.0",
+      "pyarrow": "23.0.1",
+      "scikit-learn": "1.8.0",
+      "scipy": "1.17.0"
+    }
+  },
+  "runtime_environment_sha256": "984a0e2c8a82e935295e4738c7758357175b488bb0fb11a4cd1a0bb5e8af8035",
+  "inputs": {
+    "dataset": {
+      "path": "tmp\\wall_iv_surface_deformation_at_touch_202208_202512_v1r1\\wall_iv_surface_deformation_at_touch.parquet",
+      "sha256": "9d9404fd721df927c30ce4d6edeee800f528df81cf14639c23da1dc4008bc2b3"
+    },
+    "source_file_hashes": {
+      "path": "research_papers\\JEPA\\results\\_diagnostics\\wall_surface_flow_at_touch_202208_202512_v1r2r1_data_gate\\source_file_hashes.csv",
+      "sha256": "2a305a2910f83c42a3c32b455d9b3a93907c7d762c5168d0946f9ce1eae306e8"
+    },
+    "data_manifest": {
+      "path": "research_papers\\JEPA\\results\\_diagnostics\\wall_iv_surface_deformation_at_touch_202208_202512_v1r1_data_gate\\manifest.json",
+      "sha256": "e521ac4afeb8287e8d67a95321631269c57940af37095c3f54720470e60256b0"
+    }
+  },
+  "feature_names": {
+    "F0": [
+      "minute_sin",
+      "minute_cos",
+      "role_resistance",
+      "candidate_distance_bps",
+      "candidate_abs_distance_bps",
+      "spot_ret_1m_bps",
+      "spot_abs_ret_1m_bps",
+      "spot_ret_5m_bps",
+      "spot_ret_15m_bps",
+      "spot_ret_30m_bps",
+      "realized_vol_5m_bps",
+      "realized_vol_15m_bps",
+      "candidate_distance_change_5m_bps",
+      "candidate_distance_change_15m_bps",
+      "candidate_distance_change_30m_bps",
+      "candidate_approach_5m_bps",
+      "candidate_approach_15m_bps",
+      "candidate_approach_30m_bps",
+      "identity_call_delta",
+      "identity_call_gamma",
+      "identity_put_delta",
+      "identity_put_gamma"
+    ],
+    "F1": [
+      "minute_sin",
+      "minute_cos",
+      "role_resistance",
+      "candidate_distance_bps",
+      "candidate_abs_distance_bps",
+      "spot_ret_1m_bps",
+      "spot_abs_ret_1m_bps",
+      "spot_ret_5m_bps",
+      "spot_ret_15m_bps",
+      "spot_ret_30m_bps",
+      "realized_vol_5m_bps",
+      "realized_vol_15m_bps",
+      "candidate_distance_change_5m_bps",
+      "candidate_distance_change_15m_bps",
+      "candidate_distance_change_30m_bps",
+      "candidate_approach_5m_bps",
+      "candidate_approach_15m_bps",
+      "candidate_approach_30m_bps",
+      "surface_call_level_change_1m",
+      "surface_call_skew_change_1m",
+      "surface_call_curvature_change_1m",
+      "surface_put_level_change_1m",
+      "surface_put_skew_change_1m",
+      "surface_put_curvature_change_1m",
+      "surface_call_level_change_5m",
+      "surface_call_skew_change_5m",
+      "surface_call_curvature_change_5m",
+      "surface_put_level_change_5m",
+      "surface_put_skew_change_5m",
+      "surface_put_curvature_change_5m",
+      "surface_call_level_change_15m",
+      "surface_call_skew_change_15m",
+      "surface_call_curvature_change_15m",
+      "surface_put_level_change_15m",
+      "surface_put_skew_change_15m",
+      "surface_put_curvature_change_15m",
+      "surface_call_valid",
+      "surface_put_valid",
+      "surface_both_valid",
+      "surface_call_shared_strikes",
+      "surface_put_shared_strikes",
+      "identity_call_delta",
+      "identity_call_gamma",
+      "identity_put_delta",
+      "identity_put_gamma"
+    ]
+  },
+  "feature_hashes": {
+    "F0": "f8f951a66bb08143c77d253209b06051abc4960a84db0ec77a185282a6de944d",
+    "F1": "c1d211a3d1c18398a807209db085b19d7f2cd413a6d76996cc8f2f512105814b"
+  },
+  "iv_surface_allowlist": [
+    "surface_call_level_change_1m",
+    "surface_call_skew_change_1m",
+    "surface_call_curvature_change_1m",
+    "surface_put_level_change_1m",
+    "surface_put_skew_change_1m",
+    "surface_put_curvature_change_1m",
+    "surface_call_level_change_5m",
+    "surface_call_skew_change_5m",
+    "surface_call_curvature_change_5m",
+    "surface_put_level_change_5m",
+    "surface_put_skew_change_5m",
+    "surface_put_curvature_change_5m",
+    "surface_call_level_change_15m",
+    "surface_call_skew_change_15m",
+    "surface_call_curvature_change_15m",
+    "surface_put_level_change_15m",
+    "surface_put_skew_change_15m",
+    "surface_put_curvature_change_15m",
+    "surface_call_valid",
+    "surface_put_valid",
+    "surface_both_valid",
+    "surface_call_shared_strikes",
+    "surface_put_shared_strikes"
+  ],
+  "primary_model": {
+    "family": "logistic_regression",
+    "params": {
+      "C": 1.0,
+      "penalty": "l2",
+      "solver": "lbfgs",
+      "max_iter": 5000,
+      "random_state": 20260712
+    },
+    "preprocessing": [
+      "train_only_median_imputation",
+      "missing_indicators",
+      "train_only_standardization"
+    ]
+  },
+  "sensitivity_model": {
+    "family": "lightgbm",
+    "params": {
+      "objective": "binary",
+      "n_estimators": 300,
+      "learning_rate": 0.03,
+      "num_leaves": 15,
+      "min_child_samples": 100,
+      "colsample_bytree": 0.8,
+      "subsample": 0.8,
+      "subsample_freq": 1,
+      "reg_alpha": 0.0,
+      "reg_lambda": 1.0,
+      "random_state": 20260712,
+      "n_jobs": 28,
+      "deterministic": true,
+      "force_col_wise": true,
+      "verbosity": -1
+    },
+    "can_rescue_primary": false
+  },
+  "label_spec": {
+    "touch_universe_bps": 15.0,
+    "terminal_buffer_bps": 5.0,
+    "current_beyond_counts_as_pierced": true,
+    "future_bar_starts": "t <= s < t+h",
+    "terminal_price": "close of exact bar starting t+h-1m",
+    "same_session_horizon": "t+h <= underlying RTH close (16:00 regular, 13:00 frozen half days)",
+    "true_rejection": "pierced and terminal >=5bps on defended side",
+    "accepted_break": "pierced and terminal >=5bps beyond wall",
+    "neutral": "unresolved"
+  },
+  "gate_spec": {
+    "planned_paired_cells": 24,
+    "minimum_auc_wins": 16,
+    "minimum_median_auc_delta": 0.01,
+    "maximum_wilcoxon_one_sided_p": 0.025,
+    "paired_test_unit": "ticker_fold_median_across_horizons",
+    "ticker_minimum_wins": 5,
+    "ticker_minimum_median_f1_auc": 0.55,
+    "primary_horizons": [
+      30,
+      60
+    ],
+    "ticker_primary_minimum_wins": 3,
+    "minimum_monthly_resolved_episodes": 18,
+    "maximum_joint_ap_logloss_losses": 12,
+    "sensitivity_minimum_wins": 13,
+    "sensitivity_requires_positive_median_auc_delta": true,
+    "sensitivity_can_rescue_primary": false
+  },
+  "native_quote_provenance": {
+    "seal_sha256": "6c2ff5d6321bff5b62cbd19d2a503d05b69332bfa7b26d7c1f585bf617752eaa",
+    "index_sha256": "0abe0ac2f9dcccec4574ee10e4f10ef2904000c80a0cf5fb8f5a90ef333f754a",
+    "sessions": 1441,
+    "session_key_sha256": "4d4335005bb1ad29dd9f59a873a8902edcf17f1eb64c006792b29b57dea9a579",
+    "terminal_jar_sha256": "4f93cd745c8af53d8cf70096abb104edb22494f5c48408b9d732b51e51dfbbea",
+    "git_commit": "041b16ce25fb4d61ee2f3e7b9d42584d749705f1"
+  },
+  "exact_greek_repair_provenance": {
+    "schema": "wall_exact_greek_repair_artifacts_v1r2",
+    "status": "PASS_EXACT_GREEK_REPAIR_ARTIFACTS",
+    "manifest_path": "research_papers\\JEPA\\results\\_diagnostics\\wall_exact_greek_repair_artifacts_20221230_v1r2\\manifest.json",
+    "manifest_sha256": "47dffb255113a6604c33011e1dcd7c5e51301c3a4c61100099c8ed4f5a8aec5a",
+    "wall_repair_path": "research_papers\\JEPA\\results\\_diagnostics\\wall_exact_greek_repair_artifacts_20221230_v1r2\\wall_repair.parquet",
+    "wall_repair_sha256": "69a3d33080e5682b02070c6c1085ba6b1db7818cae8bd6f756994da139b9487d",
+    "event_control_repair_path": "research_papers\\JEPA\\results\\_diagnostics\\wall_exact_greek_repair_artifacts_20221230_v1r2\\event_control_repair.parquet",
+    "event_control_repair_sha256": "937aa95e4aadbc9f639a96a68f1390f118bcb22c01d259bba2ff88014340051e",
+    "frozen_hashes_match": true,
+    "target_sessions": [
+      {
+        "ticker": "QQQ",
+        "trade_date": "20221230"
+      },
+      {
+        "ticker": "SPY",
+        "trade_date": "20221230"
+      }
+    ],
+    "wall_target_rows": 96,
+    "full_control_grid_rows": 96,
+    "event_target_rows": 47,
+    "event_target_rows_by_ticker": {
+      "QQQ": 27,
+      "SPY": 20
+    },
+    "event_target_key_sha256": "41dae9ad53103019e0212a55915a18fe9854e21058c1d73b49d82c823a125201",
+    "build_git_commit": "65289e81a855d7714fd2cdb65b12702e057d8df0",
+    "historical_provenance": "CONDITIONAL_CURRENT_PROVIDER_RECONSTRUCTION",
+    "input_sha256": {
+      "events": "d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408",
+      "manifest": "5431c2bf932fef6ce1ba34117cc869feb78063fbc1aa3989017fdbcb5b66dc88",
+      "sidecar_index": "7e5475f36d2163e188d721ea2f015c9a636db5bfbfede41dd8d0065a9382100a",
+      "sidecar_seal": "3c267f83e5108c75c9f148624983b11f3f0708fde12cb58a8742278d194a8fc5",
+      "walls": "94e311e0e25ff7956347597a8734e82e07ab05753f42acaa26876c58752df8ef"
+    },
+    "builder_sha256": "20fb2838773df060ddf18873b19481ec412c43e22f41676a951c84a2023c5a39",
+    "sidecar_builder_sha256": "06cff160740c3984bf0cb3c648b395c971a7c1abfb9f8d6ac2cfa4f67a740550",
+    "wall_feature_module_sha256": "05133f68c9efe38c0f5c99a39e57c0882c9331a5b2dac709a2977acc3b20a64f",
+    "predeclaration_sha256": "aee678f21fb56ef260db6d905c151f7f28c8ad21024ed7ec3470e924b9280ba5",
+    "runtime_lock_sha256": "f026bfb512e17dfc1daaaecf998ba77a560aba83f1fdbf0c3a36136e33eeff7d",
+    "runtime_environment_sha256": "984a0e2c8a82e935295e4738c7758357175b488bb0fb11a4cd1a0bb5e8af8035",
+    "maximum_full_wall_control_spot_difference_bps": 0.0,
+    "maximum_event_wall_control_spot_difference_bps": 0.0
+  },
+  "historical_timestamp_provenance_status": "CONDITIONAL",
+  "live_feature_parity_status": "BLOCKED",
+  "holdout_2026_opened": false,
+  "production_modified": false,
+  "payoff_authorized_at_freeze": false
+}
