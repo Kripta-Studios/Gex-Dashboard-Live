@@ -247,3 +247,8 @@ PASS solo justificaría un componente de convicción dentro de una unión causal
 El overlay se aplica antes de construir candidatos: reparar después del touch
 mantendría un universo elegido con el spot corrupto y sería otra forma de
 hindsight. Los hashes del bundle forman parte del data-gate autoritativo.
+
+Un data gate debe distinguir degeneración de baja cardinalidad legítima. La
+presión local 1m puede saturar ±1 cuando solo negocia un lado; seis estados con
+rango completo y pocos ceros no es una constante. La regla aclarada exige
+variación real/missingness, no una cardinalidad arbitraria de diez.

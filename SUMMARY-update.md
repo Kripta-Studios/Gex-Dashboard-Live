@@ -320,3 +320,9 @@ Frecuencia estructural: 10.078 timestamps first-touch. QQQ máximo 14/9/9 en
 202208–10 y SPY <18 en 16/41 meses incluso antes de cooldown/no-overlap; SPXW
 min=30. H-FLOW debe ser señal prioritaria con fallback causal o ampliarse mediante
 un protocolo nuevo, nunca presentarse solo como policy que cumple 18/mes.
+
+Full V1R2 attempt: 2.519/2.519, cero source errors y todos los gates salvo uno.
+QQQ 2022 `role_break_pressure_w1m` posee 6 estados no degenerados, pero el código
+pedía 10. Antes de labels se congeló una aclaración objetiva: >=2 estados,
+zero<99,5%, missing=0. No se cambian features/candidatos ni se usa PnL; el output
+REJECTED se conserva y el relanzamiento usa target nuevo.

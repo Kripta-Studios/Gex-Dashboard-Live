@@ -424,5 +424,13 @@ Auditoría de frecuencia sin outcomes: H-FLOW first-touch tiene 10.078 timestamp
 policy final standalone. Un PASS físico autorizaría usarlo como componente de
 alta convicción con fallback causal OOS, no relajar la gate mensual.
 
+El primer full V1R2 procesó 2.519/2.519 sin errores y pasó coverage/grids/clocks/
+spot/controls. Solo falló distinctness: QQQ 2022 `role_break_pressure_w1m` tiene
+6 estados, [-1,1], zero 6,09%, missing 0; el código exigía 10 aunque el protocolo
+solo decía nondegenerate. Antes de labels se añadió el documento separado
+`WALL_SURFACE_FLOW_V1R2_DATA_GATE_CLARIFICATION.md` (no cambia el hash de la
+predeclaración repair): >=2 estados, zero<99,5%, missing=0. Relanzar en output
+inmutable nuevo; el primer manifest queda REJECTED como evidencia.
+
 No existe resultado físico ni económico de H-FLOW1 todavía. Producción y todo
 2026 continúan intactos; no crear `PLAN.md` porque no hay dirección rentable clara.

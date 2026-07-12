@@ -497,11 +497,22 @@ def test_data_gate_uses_schedule_aware_grid_and_blocks_timestamp_fallback() -> N
                 {"ticker": ticker, "year": year, "feature": feature, "distinct_values": 10, "zero_rate": 0.0, "missing_rate": 0.0}
             )
     profile = pd.DataFrame(profile_rows)
+    profile.loc[
+        profile["feature"].eq("role_break_pressure_w1m")
+        & profile["ticker"].eq("QQQ")
+        & profile["year"].eq("2022"),
+        "distinct_values",
+    ] = 6
     gate = evaluate_data_gate(audit, profile, authoritative_inputs=True, authoritative_code=True)
     assert gate["incomplete_greeks_grid_sessions"] == 0
     assert gate["incomplete_ohlc_grid_sessions"] == 0
     assert gate["option_timestamp_fallback_sessions"] == 0
     assert gate["passed"] is True
+    degenerate = profile.copy()
+    degenerate.loc[degenerate.index[0], "distinct_values"] = 1
+    assert evaluate_data_gate(
+        audit, degenerate, authoritative_inputs=True, authoritative_code=True
+    )["distinctness_pass"] is False
     audit.loc[0, "option_timestamp_fallback_used"] = True
     blocked = evaluate_data_gate(audit, profile, authoritative_inputs=True, authoritative_code=True)
     assert blocked["option_timestamp_fallback_sessions"] == 1

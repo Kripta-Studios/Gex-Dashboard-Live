@@ -234,3 +234,11 @@ Incluso con oracle/caps y sin cooldown, QQQ no puede llegar a 18 trades en
 202208–10 (14/9/9) y SPY falla 16/41 meses; SPXW min=30. H-FLOW no puede ser la
 policy completa. Si pasa física, debe ser componente prioritario de una unión
 fija con fallback causal OOS o evaluarse en un universo más amplio predeclarado.
+
+Primer full V1R2: 2.519/2.519 sesiones, cero errores; coverage, grids, clocks,
+spot y controls pasan. Único fallo: `distinctness_pass` porque QQQ 2022
+`role_break_pressure_w1m` tiene 6 estados, rango [-1,1], zero 6,09%, missing 0,
+y el código exigía 10 aunque la predeclaración solo decía nondegenerate. Antes de
+labels se congeló `WALL_SURFACE_FLOW_V1R2_DATA_GATE_CLARIFICATION.md`: >=2
+estados, zero<99,5%, missing=0. Relanzar a target nuevo; no reutilizar el manifest
+REJECTED ni modificar el dataset in-place.
