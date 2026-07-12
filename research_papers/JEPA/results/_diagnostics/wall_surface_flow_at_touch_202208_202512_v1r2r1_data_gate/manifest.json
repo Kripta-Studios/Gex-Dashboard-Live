@@ -1,0 +1,189 @@
+{
+  "schema": "wall_surface_flow_at_touch_dataset_v1",
+  "status": "PASS_DATA_GATE",
+  "preflight": false,
+  "git_commit": "a13d589c7a5502c23dc1ada4fe80e639245110ed",
+  "production_modified": false,
+  "holdout_2026_used": false,
+  "date_range": [
+    "20220801",
+    "20251231"
+  ],
+  "physical_cutoff": "20251231",
+  "input_hashes": {
+    "walls": "94e311e0e25ff7956347597a8734e82e07ab05753f42acaa26876c58752df8ef",
+    "events": "d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408",
+    "manifest": "5431c2bf932fef6ce1ba34117cc869feb78063fbc1aa3989017fdbcb5b66dc88"
+  },
+  "native_quote_provenance": {
+    "seal_sha256": "6c2ff5d6321bff5b62cbd19d2a503d05b69332bfa7b26d7c1f585bf617752eaa",
+    "index_sha256": "0abe0ac2f9dcccec4574ee10e4f10ef2904000c80a0cf5fb8f5a90ef333f754a",
+    "sessions": 1441,
+    "session_key_sha256": "4d4335005bb1ad29dd9f59a873a8902edcf17f1eb64c006792b29b57dea9a579",
+    "terminal_jar_sha256": "4f93cd745c8af53d8cf70096abb104edb22494f5c48408b9d732b51e51dfbbea",
+    "git_commit": "041b16ce25fb4d61ee2f3e7b9d42584d749705f1"
+  },
+  "exact_greek_repair_provenance": {
+    "schema": "wall_exact_greek_repair_artifacts_v1r2",
+    "status": "PASS_EXACT_GREEK_REPAIR_ARTIFACTS",
+    "manifest_path": "research_papers\\JEPA\\results\\_diagnostics\\wall_exact_greek_repair_artifacts_20221230_v1r2\\manifest.json",
+    "manifest_sha256": "47dffb255113a6604c33011e1dcd7c5e51301c3a4c61100099c8ed4f5a8aec5a",
+    "wall_repair_path": "research_papers\\JEPA\\results\\_diagnostics\\wall_exact_greek_repair_artifacts_20221230_v1r2\\wall_repair.parquet",
+    "wall_repair_sha256": "69a3d33080e5682b02070c6c1085ba6b1db7818cae8bd6f756994da139b9487d",
+    "event_control_repair_path": "research_papers\\JEPA\\results\\_diagnostics\\wall_exact_greek_repair_artifacts_20221230_v1r2\\event_control_repair.parquet",
+    "event_control_repair_sha256": "937aa95e4aadbc9f639a96a68f1390f118bcb22c01d259bba2ff88014340051e",
+    "frozen_hashes_match": true,
+    "target_sessions": [
+      {
+        "ticker": "QQQ",
+        "trade_date": "20221230"
+      },
+      {
+        "ticker": "SPY",
+        "trade_date": "20221230"
+      }
+    ],
+    "wall_target_rows": 96,
+    "full_control_grid_rows": 96,
+    "event_target_rows": 47,
+    "event_target_rows_by_ticker": {
+      "QQQ": 27,
+      "SPY": 20
+    },
+    "event_target_key_sha256": "41dae9ad53103019e0212a55915a18fe9854e21058c1d73b49d82c823a125201",
+    "build_git_commit": "65289e81a855d7714fd2cdb65b12702e057d8df0",
+    "historical_provenance": "CONDITIONAL_CURRENT_PROVIDER_RECONSTRUCTION",
+    "input_sha256": {
+      "events": "d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408",
+      "manifest": "5431c2bf932fef6ce1ba34117cc869feb78063fbc1aa3989017fdbcb5b66dc88",
+      "sidecar_index": "7e5475f36d2163e188d721ea2f015c9a636db5bfbfede41dd8d0065a9382100a",
+      "sidecar_seal": "3c267f83e5108c75c9f148624983b11f3f0708fde12cb58a8742278d194a8fc5",
+      "walls": "94e311e0e25ff7956347597a8734e82e07ab05753f42acaa26876c58752df8ef"
+    },
+    "builder_sha256": "20fb2838773df060ddf18873b19481ec412c43e22f41676a951c84a2023c5a39",
+    "sidecar_builder_sha256": "06cff160740c3984bf0cb3c648b395c971a7c1abfb9f8d6ac2cfa4f67a740550",
+    "wall_feature_module_sha256": "05133f68c9efe38c0f5c99a39e57c0882c9331a5b2dac709a2977acc3b20a64f",
+    "predeclaration_sha256": "aee678f21fb56ef260db6d905c151f7f28c8ad21024ed7ec3470e924b9280ba5",
+    "runtime_lock_sha256": "f026bfb512e17dfc1daaaecf998ba77a560aba83f1fdbf0c3a36136e33eeff7d",
+    "runtime_environment_sha256": "984a0e2c8a82e935295e4738c7758357175b488bb0fb11a4cd1a0bb5e8af8035",
+    "maximum_full_wall_control_spot_difference_bps": 0.0,
+    "maximum_event_wall_control_spot_difference_bps": 0.0
+  },
+  "builder_sha256": "46a86389308ba168cafa9ca85202ec3271698311462b6eab9132254e6ee05baf",
+  "feature_module_sha256": "892730fbf5a3185608f30b406c4cc69e156ce392b6a1eae1b9b73258fb23cb10",
+  "runtime_lock_sha256": "f026bfb512e17dfc1daaaecf998ba77a560aba83f1fdbf0c3a36136e33eeff7d",
+  "runtime_environment": {
+    "python_version": "3.14.2",
+    "python_implementation": "CPython",
+    "python_executable": "C:\\Program Files\\Python314\\python.exe",
+    "platform": "Windows-10-10.0-19041",
+    "platform_machine": "AMD64",
+    "packages": {
+      "lightgbm": "4.6.0",
+      "numpy": "2.3.5",
+      "pandas": "3.0.0",
+      "pyarrow": "23.0.1",
+      "scikit-learn": "1.8.0",
+      "scipy": "1.17.0"
+    }
+  },
+  "runtime_environment_sha256": "984a0e2c8a82e935295e4738c7758357175b488bb0fb11a4cd1a0bb5e8af8035",
+  "dataset": "tmp\\wall_surface_flow_at_touch_202208_202512_v1r2r1\\wall_surface_flow_at_touch.parquet",
+  "dataset_sha256": "6d27fdeb44422daa95aa79f777044e68276a2fe374c9bd847cd475d9dccfdb5b",
+  "dataset_bytes": 9009719,
+  "rows": 10683,
+  "columns": 173,
+  "rows_by_ticker": {
+    "QQQ": 3096,
+    "SPXW": 3532,
+    "SPY": 4055
+  },
+  "rows_by_ticker_year": {
+    "QQQ:2022": 197,
+    "QQQ:2023": 887,
+    "QQQ:2024": 1142,
+    "QQQ:2025": 870,
+    "SPXW:2022": 320,
+    "SPXW:2023": 1067,
+    "SPXW:2024": 1156,
+    "SPXW:2025": 989,
+    "SPY:2022": 258,
+    "SPY:2023": 1218,
+    "SPY:2024": 1295,
+    "SPY:2025": 1284
+  },
+  "requested_sessions": 2519,
+  "built_sessions": 2519,
+  "full_session_universe_count": 2519,
+  "full_session_key_sha256": "ac7200fd96f2ef9afc2f9f09eff18804497a2f975a7454cccf5ed1c935653057",
+  "source_files": 8998,
+  "source_file_hashes_sha256": "2a305a2910f83c42a3c32b455d9b3a93907c7d762c5168d0946f9ce1eae306e8",
+  "session_audit_sha256": "770340e2319de98167aead03dc33d5a88913a54679c9e7220df5c2b904ecd673",
+  "coverage_by_month_sha256": "f65688699e49077c5e290f9d9d2d21f1a0263c93b796e8c84fe339778608f0a3",
+  "feature_profile_sha256": "755af80e4ab51585cb2828bccc7916ddcfafd08be72c0132a88d3b88beab113c",
+  "schema_sha256": "6684df5529bb9952b1621254575a8ddf86f5a30b7ebf9e16ca5f08736b3bd468",
+  "control_feature_hash": "10c15e60f1eba40ba6c8bacaa8d3e3ff45a679161cc633e67185826ed16c7e5e",
+  "flow_feature_hash": "5746115f42b072b8ac9e86e32cac527bda78c06a28f5d79ed3ee8b6f0b3db77b",
+  "quote_row_coverage": 0.9312017625779372,
+  "quote_volume_coverage": 0.9862836954087935,
+  "price_volume_coverage": 0.9998277065632827,
+  "signable_volume_coverage": 0.9861467350688612,
+  "greeks_subminute_rows": 0,
+  "option_timestamp_fallback_sessions": 0,
+  "unmatched_active_rows": 192,
+  "nonpositive_close_active_rows": 23800,
+  "nonpositive_close_active_volume": 635138.0,
+  "underlying_out_of_scope_invalid_rows": 3,
+  "data_gate": {
+    "authoritative_inputs": true,
+    "authoritative_code": true,
+    "coverage_pass": true,
+    "distinctness_pass": true,
+    "control_coverage_pass": true,
+    "annual_cells": 12,
+    "session_count": 2519,
+    "expected_session_count": 2519,
+    "incomplete_greeks_grid_sessions": 0,
+    "incomplete_ohlc_grid_sessions": 0,
+    "incomplete_underlying_grid_sessions": 0,
+    "maximum_candidate_underlying_spot_bps": 0.0005716128490554274,
+    "underlying_out_of_scope_invalid_rows": 3,
+    "minimum_underlying_research_tick_count": 60.0,
+    "option_timestamp_fallback_sessions": 0,
+    "zero_active_sessions": 0,
+    "minimum_quote_row_coverage": 0.9035023930380865,
+    "minimum_quote_volume_coverage": 0.9673717553113205,
+    "minimum_price_volume_coverage": 0.9975824439323226,
+    "minimum_signable_volume_coverage": 0.9668206097404025,
+    "passed": true
+  },
+  "candidate_universe_audit": {
+    "raw_identity_touch_rows": 100551,
+    "same_role_level_rows": 77594,
+    "alias_rows_collapsed": 22957,
+    "ambiguous_opposite_role_levels": 20092,
+    "ambiguous_opposite_role_rows_excluded": 40184,
+    "unambiguous_repeated_touch_rows": 37410,
+    "first_touch_episode_rows": 10683,
+    "first_touch_episode_rows_by_ticker": {
+      "QQQ": 3096,
+      "SPXW": 3532,
+      "SPY": 4055
+    }
+  },
+  "errors": [],
+  "args": {
+    "walls": "tmp/wall_state_gex_dex_202201_202512_v1/wall_state.parquet",
+    "events": "tmp/event_option_dataset_execquote_causal1030_202201_202512_pairwise_v1/event_option_dataset.parquet",
+    "manifest": "tmp/event_option_dataset_execquote_causal1030_202201_202605_v1/filtered_manifest.csv",
+    "native_quote_index": "research_papers/JEPA/results/_diagnostics/wall_native_quote_sidecar_202208_202512_v1r1/native_quote_index.csv",
+    "native_quote_seal": "research_papers/JEPA/results/_diagnostics/wall_native_quote_sidecar_202208_202512_v1r1/manifest.json",
+    "exact_greek_repair_manifest": "research_papers/JEPA/results/_diagnostics/wall_exact_greek_repair_artifacts_20221230_v1r2/manifest.json",
+    "output_dir": "tmp\\wall_surface_flow_at_touch_202208_202512_v1r2r1",
+    "start_date": "20220801",
+    "end_date": "20251231",
+    "workers": 16,
+    "preflight": false,
+    "allow_input_hash_mismatch": false
+  }
+}

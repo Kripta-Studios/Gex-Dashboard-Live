@@ -242,3 +242,17 @@ y el código exigía 10 aunque la predeclaración solo decía nondegenerate. Ant
 labels se congeló `WALL_SURFACE_FLOW_V1R2_DATA_GATE_CLARIFICATION.md`: >=2
 estados, zero<99,5%, missing=0. Relanzar a target nuevo; no reutilizar el manifest
 REJECTED ni modificar el dataset in-place.
+
+Checkpoint posterior: el relanzamiento inmutable V1R2R1 completó
+`PASS_DATA_GATE` sobre commit `a13d589`, 2.519/2.519 sesiones y cero errores.
+Dataset 2022-08..2025-12: 10.683 filas, 173 columnas, SHA
+`6d27fdeb44422daa95aa79f777044e68276a2fe374c9bd847cd475d9dccfdb5b`;
+source inventory 8.998 ficheros, SHA
+`2a305a2910f83c42a3c32b455d9b3a93907c7d762c5168d0946f9ce1eae306e8`.
+Todos los gates de causalidad, cobertura, timestamps, completed bars, spot,
+controls y no-degeneración pasan. Producción y 2026 siguen intactos. Los
+compactos se versionan en
+`wall_surface_flow_at_touch_202208_202512_v1r2r1_data_gate/`; el parquet grande
+permanece en `tmp/`. Siguiente paso único: congelar runner manifest con la
+provenance exact-Greek y ejecutar F0/F1 una sola vez. Aún no hay resultado físico
+ni rentabilidad nueva.

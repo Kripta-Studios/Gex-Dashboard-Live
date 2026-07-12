@@ -252,3 +252,10 @@ Un data gate debe distinguir degeneración de baja cardinalidad legítima. La
 presión local 1m puede saturar ±1 cuando solo negocia un lado; seis estados con
 rango completo y pocos ceros no es una constante. La regla aclarada exige
 variación real/missingness, no una cardinalidad arbitraria de diez.
+
+La aplicación de esa regla predeclarada permitió cerrar el gate sin cambiar una
+sola fila: V1R2R1 selló 10.683 eventos y 173 columnas con SHA
+`6d27fdeb44422daa95aa79f777044e68276a2fe374c9bd847cd475d9dccfdb5b`.
+Esto valida únicamente disponibilidad y causalidad de la medición; no constituye
+evidencia de alpha. La comparación F0 distance/approach contra F1 flow sigue sin
+abrirse hasta congelar el runner.

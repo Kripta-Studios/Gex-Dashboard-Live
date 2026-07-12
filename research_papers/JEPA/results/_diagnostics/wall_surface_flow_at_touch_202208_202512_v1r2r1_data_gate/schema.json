@@ -1,0 +1,865 @@
+{
+  "columns": [
+    {
+      "name": "ticker",
+      "dtype": "str"
+    },
+    {
+      "name": "trade_date",
+      "dtype": "str"
+    },
+    {
+      "name": "minute",
+      "dtype": "int64"
+    },
+    {
+      "name": "decision_dt",
+      "dtype": "datetime64[us]"
+    },
+    {
+      "name": "wall_identity",
+      "dtype": "str"
+    },
+    {
+      "name": "wall_role",
+      "dtype": "str"
+    },
+    {
+      "name": "candidate_right",
+      "dtype": "str"
+    },
+    {
+      "name": "candidate_wall_strike",
+      "dtype": "float64"
+    },
+    {
+      "name": "spot",
+      "dtype": "float64"
+    },
+    {
+      "name": "wall_alias_count",
+      "dtype": "int64"
+    },
+    {
+      "name": "episode_sequence",
+      "dtype": "int64"
+    },
+    {
+      "name": "episode_start_minute",
+      "dtype": "int64"
+    },
+    {
+      "name": "episode_id",
+      "dtype": "str"
+    },
+    {
+      "name": "minute_sin",
+      "dtype": "float64"
+    },
+    {
+      "name": "minute_cos",
+      "dtype": "float64"
+    },
+    {
+      "name": "role_resistance",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_distance_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_abs_distance_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "spot_ret_1m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "spot_abs_ret_1m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "spot_ret_5m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "spot_ret_15m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "spot_ret_30m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "realized_vol_5m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "realized_vol_15m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_distance_change_5m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_distance_change_15m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_distance_change_30m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_approach_5m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_approach_15m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_approach_30m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_volume_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_count_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_close_notional_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_signed_volume_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_signed_count_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_signed_close_notional_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_quote_row_coverage_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_quote_volume_coverage_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_price_volume_coverage_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_signable_volume_coverage_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_count_volume_coverage_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_volume_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_count_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_close_notional_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_signed_volume_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_signed_count_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_signed_close_notional_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_quote_row_coverage_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_quote_volume_coverage_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_price_volume_coverage_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_signable_volume_coverage_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_count_volume_coverage_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_directional_pressure_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_volume_imbalance_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_count_imbalance_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_close_notional_imbalance_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_quote_row_coverage_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_quote_volume_coverage_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_price_volume_coverage_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_signable_volume_coverage_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_count_volume_coverage_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_volume_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_count_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_close_notional_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_signed_volume_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_signed_count_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_signed_close_notional_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_buy_sell_close_notional_log_ratio_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_signed_close_notional_ratio_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_quote_row_coverage_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_quote_volume_coverage_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_price_volume_coverage_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_signable_volume_coverage_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_count_volume_coverage_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "role_break_pressure_w1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_volume_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_count_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_close_notional_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_signed_volume_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_signed_count_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_signed_close_notional_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_quote_row_coverage_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_quote_volume_coverage_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_price_volume_coverage_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_signable_volume_coverage_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_count_volume_coverage_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_volume_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_count_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_close_notional_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_signed_volume_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_signed_count_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_signed_close_notional_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_quote_row_coverage_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_quote_volume_coverage_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_price_volume_coverage_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_signable_volume_coverage_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_count_volume_coverage_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_directional_pressure_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_volume_imbalance_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_count_imbalance_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_close_notional_imbalance_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_quote_row_coverage_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_quote_volume_coverage_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_price_volume_coverage_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_signable_volume_coverage_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_count_volume_coverage_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_volume_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_count_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_close_notional_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_signed_volume_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_signed_count_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_signed_close_notional_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_buy_sell_close_notional_log_ratio_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_signed_close_notional_ratio_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_quote_row_coverage_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_quote_volume_coverage_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_price_volume_coverage_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_signable_volume_coverage_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_count_volume_coverage_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "role_break_pressure_w5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_volume_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_count_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_close_notional_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_signed_volume_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_signed_count_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_signed_close_notional_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_quote_row_coverage_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_quote_volume_coverage_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_price_volume_coverage_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_signable_volume_coverage_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_call_count_volume_coverage_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_volume_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_count_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_close_notional_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_signed_volume_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_signed_count_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_signed_close_notional_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_quote_row_coverage_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_quote_volume_coverage_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_price_volume_coverage_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_signable_volume_coverage_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_put_count_volume_coverage_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_directional_pressure_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_volume_imbalance_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_count_imbalance_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_close_notional_imbalance_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_quote_row_coverage_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_quote_volume_coverage_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_price_volume_coverage_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_signable_volume_coverage_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_count_volume_coverage_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_volume_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_count_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_close_notional_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_signed_volume_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_signed_count_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_signed_close_notional_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_buy_sell_close_notional_log_ratio_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_signed_close_notional_ratio_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_quote_row_coverage_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_quote_volume_coverage_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_price_volume_coverage_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_signable_volume_coverage_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_count_volume_coverage_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "role_break_pressure_w15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_pressure_same_sign_1m_5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "surface_pressure_same_sign_5m_15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_pressure_same_sign_1m_5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "local_pressure_same_sign_5m_15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "flow_earliest_bar_start",
+      "dtype": "datetime64[us]"
+    },
+    {
+      "name": "flow_latest_bar_start",
+      "dtype": "datetime64[us]"
+    },
+    {
+      "name": "flow_latest_bar_end",
+      "dtype": "datetime64[us]"
+    }
+  ],
+  "key_columns": [
+    "ticker",
+    "trade_date",
+    "minute",
+    "wall_identity"
+  ],
+  "control_features": [
+    "minute_sin",
+    "minute_cos",
+    "role_resistance",
+    "candidate_distance_bps",
+    "candidate_abs_distance_bps",
+    "spot_ret_1m_bps",
+    "spot_abs_ret_1m_bps",
+    "spot_ret_5m_bps",
+    "spot_ret_15m_bps",
+    "spot_ret_30m_bps",
+    "realized_vol_5m_bps",
+    "realized_vol_15m_bps",
+    "candidate_distance_change_5m_bps",
+    "candidate_distance_change_15m_bps",
+    "candidate_distance_change_30m_bps",
+    "candidate_approach_5m_bps",
+    "candidate_approach_15m_bps",
+    "candidate_approach_30m_bps"
+  ],
+  "flow_features": [
+    "surface_call_volume_w1m",
+    "surface_call_count_w1m",
+    "surface_call_close_notional_w1m",
+    "surface_call_signed_volume_w1m",
+    "surface_call_signed_count_w1m",
+    "surface_call_signed_close_notional_w1m",
+    "surface_call_quote_row_coverage_w1m",
+    "surface_call_quote_volume_coverage_w1m",
+    "surface_call_price_volume_coverage_w1m",
+    "surface_call_signable_volume_coverage_w1m",
+    "surface_call_count_volume_coverage_w1m",
+    "surface_put_volume_w1m",
+    "surface_put_count_w1m",
+    "surface_put_close_notional_w1m",
+    "surface_put_signed_volume_w1m",
+    "surface_put_signed_count_w1m",
+    "surface_put_signed_close_notional_w1m",
+    "surface_put_quote_row_coverage_w1m",
+    "surface_put_quote_volume_coverage_w1m",
+    "surface_put_price_volume_coverage_w1m",
+    "surface_put_signable_volume_coverage_w1m",
+    "surface_put_count_volume_coverage_w1m",
+    "surface_directional_pressure_w1m",
+    "surface_volume_imbalance_w1m",
+    "surface_count_imbalance_w1m",
+    "surface_close_notional_imbalance_w1m",
+    "surface_quote_row_coverage_w1m",
+    "surface_quote_volume_coverage_w1m",
+    "surface_price_volume_coverage_w1m",
+    "surface_signable_volume_coverage_w1m",
+    "surface_count_volume_coverage_w1m",
+    "local_volume_w1m",
+    "local_count_w1m",
+    "local_close_notional_w1m",
+    "local_signed_volume_w1m",
+    "local_signed_count_w1m",
+    "local_signed_close_notional_w1m",
+    "local_buy_sell_close_notional_log_ratio_w1m",
+    "local_signed_close_notional_ratio_w1m",
+    "local_quote_row_coverage_w1m",
+    "local_quote_volume_coverage_w1m",
+    "local_price_volume_coverage_w1m",
+    "local_signable_volume_coverage_w1m",
+    "local_count_volume_coverage_w1m",
+    "role_break_pressure_w1m",
+    "surface_call_volume_w5m",
+    "surface_call_count_w5m",
+    "surface_call_close_notional_w5m",
+    "surface_call_signed_volume_w5m",
+    "surface_call_signed_count_w5m",
+    "surface_call_signed_close_notional_w5m",
+    "surface_call_quote_row_coverage_w5m",
+    "surface_call_quote_volume_coverage_w5m",
+    "surface_call_price_volume_coverage_w5m",
+    "surface_call_signable_volume_coverage_w5m",
+    "surface_call_count_volume_coverage_w5m",
+    "surface_put_volume_w5m",
+    "surface_put_count_w5m",
+    "surface_put_close_notional_w5m",
+    "surface_put_signed_volume_w5m",
+    "surface_put_signed_count_w5m",
+    "surface_put_signed_close_notional_w5m",
+    "surface_put_quote_row_coverage_w5m",
+    "surface_put_quote_volume_coverage_w5m",
+    "surface_put_price_volume_coverage_w5m",
+    "surface_put_signable_volume_coverage_w5m",
+    "surface_put_count_volume_coverage_w5m",
+    "surface_directional_pressure_w5m",
+    "surface_volume_imbalance_w5m",
+    "surface_count_imbalance_w5m",
+    "surface_close_notional_imbalance_w5m",
+    "surface_quote_row_coverage_w5m",
+    "surface_quote_volume_coverage_w5m",
+    "surface_price_volume_coverage_w5m",
+    "surface_signable_volume_coverage_w5m",
+    "surface_count_volume_coverage_w5m",
+    "local_volume_w5m",
+    "local_count_w5m",
+    "local_close_notional_w5m",
+    "local_signed_volume_w5m",
+    "local_signed_count_w5m",
+    "local_signed_close_notional_w5m",
+    "local_buy_sell_close_notional_log_ratio_w5m",
+    "local_signed_close_notional_ratio_w5m",
+    "local_quote_row_coverage_w5m",
+    "local_quote_volume_coverage_w5m",
+    "local_price_volume_coverage_w5m",
+    "local_signable_volume_coverage_w5m",
+    "local_count_volume_coverage_w5m",
+    "role_break_pressure_w5m",
+    "surface_call_volume_w15m",
+    "surface_call_count_w15m",
+    "surface_call_close_notional_w15m",
+    "surface_call_signed_volume_w15m",
+    "surface_call_signed_count_w15m",
+    "surface_call_signed_close_notional_w15m",
+    "surface_call_quote_row_coverage_w15m",
+    "surface_call_quote_volume_coverage_w15m",
+    "surface_call_price_volume_coverage_w15m",
+    "surface_call_signable_volume_coverage_w15m",
+    "surface_call_count_volume_coverage_w15m",
+    "surface_put_volume_w15m",
+    "surface_put_count_w15m",
+    "surface_put_close_notional_w15m",
+    "surface_put_signed_volume_w15m",
+    "surface_put_signed_count_w15m",
+    "surface_put_signed_close_notional_w15m",
+    "surface_put_quote_row_coverage_w15m",
+    "surface_put_quote_volume_coverage_w15m",
+    "surface_put_price_volume_coverage_w15m",
+    "surface_put_signable_volume_coverage_w15m",
+    "surface_put_count_volume_coverage_w15m",
+    "surface_directional_pressure_w15m",
+    "surface_volume_imbalance_w15m",
+    "surface_count_imbalance_w15m",
+    "surface_close_notional_imbalance_w15m",
+    "surface_quote_row_coverage_w15m",
+    "surface_quote_volume_coverage_w15m",
+    "surface_price_volume_coverage_w15m",
+    "surface_signable_volume_coverage_w15m",
+    "surface_count_volume_coverage_w15m",
+    "local_volume_w15m",
+    "local_count_w15m",
+    "local_close_notional_w15m",
+    "local_signed_volume_w15m",
+    "local_signed_count_w15m",
+    "local_signed_close_notional_w15m",
+    "local_buy_sell_close_notional_log_ratio_w15m",
+    "local_signed_close_notional_ratio_w15m",
+    "local_quote_row_coverage_w15m",
+    "local_quote_volume_coverage_w15m",
+    "local_price_volume_coverage_w15m",
+    "local_signable_volume_coverage_w15m",
+    "local_count_volume_coverage_w15m",
+    "role_break_pressure_w15m",
+    "surface_pressure_same_sign_1m_5m",
+    "surface_pressure_same_sign_5m_15m",
+    "local_pressure_same_sign_1m_5m",
+    "local_pressure_same_sign_5m_15m"
+  ],
+  "control_feature_hash": "10c15e60f1eba40ba6c8bacaa8d3e3ff45a679161cc633e67185826ed16c7e5e",
+  "flow_feature_hash": "5746115f42b072b8ac9e86e32cac527bda78c06a28f5d79ed3ee8b6f0b3db77b"
+}

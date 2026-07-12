@@ -434,3 +434,27 @@ inmutable nuevo; el primer manifest queda REJECTED como evidencia.
 
 No existe resultado físico ni económico de H-FLOW1 todavía. Producción y todo
 2026 continúan intactos; no crear `PLAN.md` porque no hay dirección rentable clara.
+
+## PASS_DATA_GATE V1R2R1
+
+El relanzamiento desde `a13d589` terminó `PASS_DATA_GATE`: 2.519/2.519 sesiones,
+10.683 first-touch rows, 173 columnas y cero errores. Dataset SHA
+`6d27fdeb44422daa95aa79f777044e68276a2fe374c9bd847cd475d9dccfdb5b`;
+source-hash inventory SHA
+`2a305a2910f83c42a3c32b455d9b3a93907c7d762c5168d0946f9ce1eae306e8`.
+Pasaron coverage, exact native timestamp, completed-bar, schedule/half-day,
+spot <=0,001 bps, control coverage y distinctness predeclarada. El dataset es
+idéntico byte a byte al attempt REJECTED; solo cambió la interpretación del gate
+congelada antes de outcomes.
+
+Compactos autoritativos:
+
+```text
+research_papers/JEPA/results/_diagnostics/wall_surface_flow_at_touch_202208_202512_v1r2r1_data_gate/
+```
+
+El parquet sellado grande está en
+`tmp/wall_surface_flow_at_touch_202208_202512_v1r2r1/`. No abrir labels ni PnL
+hasta versionar un runner manifest que persista también
+`exact_greek_repair_provenance`. A la fecha de este checkpoint no existe edge
+físico ni económico demostrado para H-FLOW.

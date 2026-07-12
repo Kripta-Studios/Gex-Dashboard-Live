@@ -326,3 +326,11 @@ QQQ 2022 `role_break_pressure_w1m` posee 6 estados no degenerados, pero el códi
 pedía 10. Antes de labels se congeló una aclaración objetiva: >=2 estados,
 zero<99,5%, missing=0. No se cambian features/candidatos ni se usa PnL; el output
 REJECTED se conserva y el relanzamiento usa target nuevo.
+
+V1R2R1 ya superó el data gate completo desde `a13d589`: 2.519 sesiones,
+10.683 filas, 173 columnas, cero errores, dataset SHA
+`6d27fdeb44422daa95aa79f777044e68276a2fe374c9bd847cd475d9dccfdb5b` y
+source inventory SHA `2a305a2910f83c42a3c32b455d9b3a93907c7d762c5168d0946f9ce1eae306e8`.
+Los compactos están congelados en `_diagnostics`; el dataset grande queda en
+`tmp`. Siguiente hito: commit del runner manifest y una sola evaluación física
+F0/F1. Todavía no se ha observado outcome ni rentabilidad H-FLOW.
