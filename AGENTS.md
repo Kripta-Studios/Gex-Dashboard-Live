@@ -218,10 +218,11 @@ Builder de bundle implementado en
 reconstruye 96 wall rows y un grid físico completo de 96 controles desde
 `open(t)/open(t-lag)`. El event view solo contiene 47 keys congeladas (QQQ27,
 SPY20; SHA `41dae9ad...5201`), por lo que el output event-control/overlay debe ser
-47 y jamás añadir las 49 ausentes. Suite relevante: `73 passed`.
+47 y jamás añadir las 49 ausentes. Bundle integrado en el surface builder antes
+de `make_touch_candidates`, con hashes frozen y provenance persistida. Suite
+relevante: `76 passed`.
 
-Secuencia actual: commit/push del seal exact-Greek → reconstrucción de walls y
-controles completos de ambas sesiones → full data gate. No parchear solo spot: IV/delta 1m también son
+Secuencia actual: commit/push de la integración V1R2 → full data gate. No parchear solo spot: IV/delta 1m también son
 incoherentes con el spot de t.
 
 Bundle real PASS sobre commit `65289e8`: wall repair 96 rows SHA `69a3d330...487d`,

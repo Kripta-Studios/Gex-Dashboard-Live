@@ -39,6 +39,10 @@ from neural.jepa.surface_flow_features import (  # noqa: E402
     prepare_completed_bar_flow,
     validate_underlying_session,
 )
+from neural.jepa.build_wall_exact_greek_repair_artifacts import (  # noqa: E402
+    apply_repair_overlay,
+    load_repair_bundle,
+)
 from neural.jepa.wall_surface_flow_environment import assert_runtime_lock  # noqa: E402
 
 
@@ -53,6 +57,14 @@ EXPECTED_INPUT_HASHES = {
     "walls": "94e311e0e25ff7956347597a8734e82e07ab05753f42acaa26876c58752df8ef",
     "events": "d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408",
     "manifest": "5431c2bf932fef6ce1ba34117cc869feb78063fbc1aa3989017fdbcb5b66dc88",
+}
+# The committed V1R2 bundle is indivisible.  An authoritative build binds all
+# three immutable files rather than trusting hashes self-declared by a mutable
+# repair manifest.
+EXPECTED_EXACT_GREEK_REPAIR_HASHES = {
+    "manifest": "47dffb255113a6604c33011e1dcd7c5e51301c3a4c61100099c8ed4f5a8aec5a",
+    "wall_repair": "69a3d33080e5682b02070c6c1085ba6b1db7818cae8bd6f756994da139b9487d",
+    "event_control_repair": "937aa95e4aadbc9f639a96a68f1390f118bcb22c01d259bba2ff88014340051e",
 }
 ENVIRONMENT_LOCK = PROJECT_ROOT / "research_papers/JEPA/requirements-wall-surface-flow-v1r1.txt"
 GREEK_REQUIRED_COLUMNS = (
@@ -109,9 +121,13 @@ def current_git_commit() -> str:
 def assert_authoritative_code_state() -> str:
     tracked = (
         "neural/jepa/build_wall_surface_flow_dataset.py",
+        "neural/jepa/build_wall_exact_greek_repair_artifacts.py",
+        "neural/jepa/build_wall_exact_greek_repair_sidecar.py",
         "neural/jepa/surface_flow_features.py",
+        "neural/jepa/wall_state_features.py",
         "neural/jepa/wall_surface_flow_environment.py",
         "research_papers/JEPA/requirements-wall-surface-flow-v1r1.txt",
+        "research_papers/JEPA/WALL_SURFACE_FLOW_V1R2_EXACT_SPOT_REPAIR_PREDECLARATION.md",
     )
     for relative in tracked:
         subprocess.run(
@@ -154,6 +170,81 @@ def assert_committed_artifact(path: Path, label: str) -> None:
     ).stdout.strip()
     if dirty:
         raise AssertionError(f"{label} must be committed and clean: {dirty}")
+
+
+def attach_exact_greek_repair_bundle(
+    walls: pd.DataFrame,
+    events: pd.DataFrame,
+    manifest_path: str | Path,
+    *,
+    enforce_frozen: bool = True,
+    require_committed: bool = True,
+) -> tuple[pd.DataFrame, pd.DataFrame, dict[str, Any]]:
+    """Validate and apply the indivisible V1R2 exact-Greek repair bundle.
+
+    The original wall/event files remain the frozen base inputs. Exactly 96 wall
+    keys and the 47 executable event keys for QQQ/SPY 2022-12-30 are replaced in
+    memory before touch candidates are constructed. No repaired file can expand
+    the historical universe or alter any non-target row.
+    """
+
+    manifest_path = Path(manifest_path)
+    wall_path = manifest_path.parent / "wall_repair.parquet"
+    event_path = manifest_path.parent / "event_control_repair.parquet"
+    observed_hashes = {
+        "manifest": sha256_file(manifest_path),
+        "wall_repair": sha256_file(wall_path),
+        "event_control_repair": sha256_file(event_path),
+    }
+    frozen_hashes_match = observed_hashes == EXPECTED_EXACT_GREEK_REPAIR_HASHES
+    if enforce_frozen and not frozen_hashes_match:
+        raise AssertionError(
+            "frozen exact-Greek repair bundle hash mismatch: "
+            f"observed={observed_hashes} expected={EXPECTED_EXACT_GREEK_REPAIR_HASHES}"
+        )
+    repair_walls, repair_events, repair_manifest = load_repair_bundle(
+        manifest_path,
+        enforce_frozen=enforce_frozen,
+        require_committed=require_committed,
+    )
+    if list(repair_walls.columns) != list(walls.columns):
+        raise AssertionError("wall repair schema/order differs from the frozen base wall view")
+    if list(repair_events.columns) != list(events.columns):
+        raise AssertionError("event-control repair schema/order differs from the causal base event view")
+    repaired_walls = apply_repair_overlay(walls, repair_walls, label="walls")
+    repaired_events = apply_repair_overlay(events, repair_events, label="event controls")
+    return repaired_walls, repaired_events, {
+        "schema": str(repair_manifest.get("schema")),
+        "status": str(repair_manifest.get("status")),
+        "manifest_path": str(manifest_path),
+        "manifest_sha256": observed_hashes["manifest"],
+        "wall_repair_path": str(wall_path),
+        "wall_repair_sha256": observed_hashes["wall_repair"],
+        "event_control_repair_path": str(event_path),
+        "event_control_repair_sha256": observed_hashes["event_control_repair"],
+        "frozen_hashes_match": bool(frozen_hashes_match),
+        "target_sessions": repair_manifest.get("target_sessions"),
+        "wall_target_rows": int(repair_manifest.get("wall_target_rows", -1)),
+        "full_control_grid_rows": int(repair_manifest.get("full_control_grid_rows", -1)),
+        "event_target_rows": int(repair_manifest.get("event_target_rows", -1)),
+        "event_target_rows_by_ticker": repair_manifest.get("event_target_rows_by_ticker"),
+        "event_target_key_sha256": str(repair_manifest.get("event_target_key_sha256")),
+        "build_git_commit": str(repair_manifest.get("git_commit")),
+        "historical_provenance": str(repair_manifest.get("historical_provenance")),
+        "input_sha256": repair_manifest.get("input_sha256"),
+        "builder_sha256": str(repair_manifest.get("builder_sha256")),
+        "sidecar_builder_sha256": str(repair_manifest.get("sidecar_builder_sha256")),
+        "wall_feature_module_sha256": str(repair_manifest.get("wall_feature_module_sha256")),
+        "predeclaration_sha256": str(repair_manifest.get("predeclaration_sha256")),
+        "runtime_lock_sha256": str(repair_manifest.get("runtime_lock_sha256")),
+        "runtime_environment_sha256": str(repair_manifest.get("runtime_environment_sha256")),
+        "maximum_full_wall_control_spot_difference_bps": float(
+            repair_manifest.get("maximum_full_wall_control_spot_difference_bps", np.nan)
+        ),
+        "maximum_event_wall_control_spot_difference_bps": float(
+            repair_manifest.get("maximum_event_wall_control_spot_difference_bps", np.nan)
+        ),
+    }
 
 
 def read_parquet_columns(path: str | Path, required: tuple[str, ...]) -> pd.DataFrame:
@@ -780,6 +871,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--manifest", required=True)
     parser.add_argument("--native-quote-index")
     parser.add_argument("--native-quote-seal")
+    parser.add_argument(
+        "--exact-greek-repair-manifest",
+        help=(
+            "Committed V1R2 bundle manifest; wall_repair.parquet and "
+            "event_control_repair.parquet must be immutable siblings"
+        ),
+    )
     parser.add_argument("--output-dir", required=True)
     parser.add_argument("--start-date", default=START_DATE)
     parser.add_argument("--end-date", default=END_DATE)
@@ -799,6 +897,13 @@ def main() -> int:
         raise ValueError("--native-quote-index and --native-quote-seal must be supplied together")
     if not args.preflight and not args.native_quote_index:
         raise ValueError("authoritative full build requires the sealed native quote index")
+    if not args.exact_greek_repair_manifest and not (
+        args.preflight and args.allow_input_hash_mismatch
+    ):
+        raise ValueError(
+            "the V1R2 exact-Greek repair bundle is required unless running a "
+            "non-authoritative hash-mismatch preflight"
+        )
     output_dir = Path(args.output_dir)
     if output_dir.exists():
         raise FileExistsError(f"immutable output target already exists: {output_dir}")
@@ -809,7 +914,7 @@ def main() -> int:
     input_hashes = {name: sha256_file(path) for name, path in paths.items()}
     if input_hashes != EXPECTED_INPUT_HASHES and not args.allow_input_hash_mismatch:
         raise AssertionError(f"sealed input hash mismatch: {input_hashes}")
-    authoritative_inputs = bool(
+    authoritative_base_inputs = bool(
         input_hashes == EXPECTED_INPUT_HASHES and not args.allow_input_hash_mismatch
     )
     authoritative_code = False
@@ -820,6 +925,20 @@ def main() -> int:
         authoritative_code = True
     walls = pd.read_parquet(paths["walls"])
     events = pd.read_parquet(paths["events"], columns=list(EVENT_COLUMNS))
+    exact_greek_repair_provenance: dict[str, Any] | None = None
+    if args.exact_greek_repair_manifest:
+        walls, events, exact_greek_repair_provenance = attach_exact_greek_repair_bundle(
+            walls,
+            events,
+            args.exact_greek_repair_manifest,
+            enforce_frozen=not args.allow_input_hash_mismatch,
+            require_committed=not args.preflight,
+        )
+    authoritative_inputs = bool(
+        authoritative_base_inputs
+        and exact_greek_repair_provenance is not None
+        and exact_greek_repair_provenance["frozen_hashes_match"]
+    )
     candidates, candidate_universe_audit = make_touch_candidates(walls, events, return_audit=True)
     manifest = pd.read_csv(paths["manifest"], dtype={"trade_date": str})
     selected = filter_manifest(manifest, start_date=str(args.start_date), end_date=str(args.end_date))
@@ -909,6 +1028,7 @@ def main() -> int:
         "physical_cutoff": END_DATE,
         "input_hashes": input_hashes,
         "native_quote_provenance": native_quote_provenance,
+        "exact_greek_repair_provenance": exact_greek_repair_provenance,
         "builder_sha256": sha256_file(__file__),
         "feature_module_sha256": sha256_file(Path(__file__).with_name("surface_flow_features.py")),
         "runtime_lock_sha256": runtime["lock_sha256"],

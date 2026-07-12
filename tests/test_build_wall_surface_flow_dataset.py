@@ -12,6 +12,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from neural.jepa.build_wall_surface_flow_dataset import (  # noqa: E402
+    attach_exact_greek_repair_bundle,
     attach_native_quote_index,
     build_session,
     evaluate_data_gate,
@@ -20,6 +21,8 @@ from neural.jepa.build_wall_surface_flow_dataset import (  # noqa: E402
     sha256_file,
 )
 from neural.jepa import build_wall_surface_flow_dataset as flow_builder  # noqa: E402
+from neural.jepa.build_wall_exact_greek_repair_artifacts import expected_repair_keys  # noqa: E402
+from neural.jepa.surface_flow_features import make_touch_candidates  # noqa: E402
 
 
 def _write_sources(root: Path, *, trade_date: str = "20240102") -> dict[str, str]:
@@ -87,6 +90,146 @@ def _manifest_row(paths: dict[str, str], *, trade_date: str = "20240102") -> dic
         "has_underlying": "True",
         **paths,
     }
+
+
+def _repair_integration_frames() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    keys = expected_repair_keys()
+    wall_columns: dict[str, object] = {
+        "spot": 90.0,
+        "wall_call_gamma_strike": 90.0,
+        "wall_put_gamma_strike": 80.0,
+        "wall_call_delta_strike": 90.0,
+        "wall_put_delta_strike": 80.0,
+    }
+    base_walls = keys.assign(**wall_columns)
+    repair_walls = keys.assign(
+        spot=100.0,
+        wall_call_gamma_strike=100.0,
+        wall_put_gamma_strike=80.0,
+        wall_call_delta_strike=100.0,
+        wall_put_delta_strike=80.0,
+    )
+    event_values: dict[str, object] = {
+        "spot": 90.0,
+        "ret_1m_bps": 0.0,
+        "ret_5m_bps": 0.0,
+        "ret_15m_bps": 0.0,
+        "ret_30m_bps": 0.0,
+    }
+    # The physical wall/control repair has all 96 scheduled snapshots, while
+    # the frozen executable event view contains only 27 QQQ + 20 SPY keys.
+    event_keys = pd.concat(
+        [
+            keys[keys["ticker"].eq("QQQ")].head(27),
+            keys[keys["ticker"].eq("SPY")].head(20),
+        ],
+        ignore_index=True,
+    )
+    base_events = event_keys.assign(**event_values)[list(flow_builder.EVENT_COLUMNS)]
+    repair_events = event_keys.assign(**{**event_values, "spot": 100.0})[list(flow_builder.EVENT_COLUMNS)]
+    non_target_wall = pd.DataFrame(
+        [{
+            "ticker": "SPXW", "trade_date": "20221229", "minute": 635,
+            "spot": 4000.0, "wall_call_gamma_strike": 4000.0,
+            "wall_put_gamma_strike": 3900.0, "wall_call_delta_strike": 4000.0,
+            "wall_put_delta_strike": 3900.0,
+        }]
+    )
+    non_target_event = pd.DataFrame(
+        [{
+            "ticker": "SPXW", "trade_date": "20221229", "minute": 635,
+            "spot": 4000.0, "ret_1m_bps": 0.0, "ret_5m_bps": 0.0,
+            "ret_15m_bps": 0.0, "ret_30m_bps": 0.0,
+        }]
+    )[list(flow_builder.EVENT_COLUMNS)]
+    return (
+        pd.concat([base_walls, non_target_wall], ignore_index=True),
+        pd.concat([base_events, non_target_event], ignore_index=True),
+        repair_walls,
+        repair_events,
+    )
+
+
+def test_exact_greek_repair_bundle_applies_before_candidate_selection_and_preserves_scope(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    manifest_path = tmp_path / "manifest.json"
+    wall_path = tmp_path / "wall_repair.parquet"
+    event_path = tmp_path / "event_control_repair.parquet"
+    manifest_path.write_text("{}", encoding="utf-8")
+    base_walls, base_events, repair_walls, repair_events = _repair_integration_frames()
+    repair_walls.to_parquet(wall_path, index=False)
+    repair_events.to_parquet(event_path, index=False)
+    expected_hashes = {
+        "manifest": sha256_file(manifest_path),
+        "wall_repair": sha256_file(wall_path),
+        "event_control_repair": sha256_file(event_path),
+    }
+    monkeypatch.setattr(flow_builder, "EXPECTED_EXACT_GREEK_REPAIR_HASHES", expected_hashes)
+    repair_manifest = {
+        "schema": "wall_exact_greek_repair_artifacts_v1r2",
+        "status": "PASS_EXACT_GREEK_REPAIR_ARTIFACTS",
+        "target_sessions": [
+            {"ticker": "QQQ", "trade_date": "20221230"},
+            {"ticker": "SPY", "trade_date": "20221230"},
+        ],
+        "wall_target_rows": 96,
+        "full_control_grid_rows": 96,
+        "event_target_rows": 47,
+        "event_target_rows_by_ticker": {"QQQ": 27, "SPY": 20},
+        "event_target_key_sha256": "synthetic",
+        "historical_provenance": "CONDITIONAL_CURRENT_PROVIDER_RECONSTRUCTION",
+        "maximum_full_wall_control_spot_difference_bps": 0.0,
+        "maximum_event_wall_control_spot_difference_bps": 0.0,
+    }
+    monkeypatch.setattr(
+        flow_builder,
+        "load_repair_bundle",
+        lambda *_args, **_kwargs: (repair_walls, repair_events, repair_manifest),
+    )
+
+    overlaid_walls, overlaid_events, provenance = attach_exact_greek_repair_bundle(
+        base_walls,
+        base_events,
+        manifest_path,
+        enforce_frozen=True,
+        require_committed=False,
+    )
+
+    assert provenance["frozen_hashes_match"] is True
+    assert provenance["wall_target_rows"] == 96
+    assert provenance["event_target_rows"] == 47
+    untouched_wall = overlaid_walls[overlaid_walls["ticker"].eq("SPXW")].iloc[0]
+    untouched_event = overlaid_events[overlaid_events["ticker"].eq("SPXW")].iloc[0]
+    assert untouched_wall["spot"] == untouched_event["spot"] == 4000.0
+    repaired = overlaid_walls[overlaid_walls["trade_date"].eq("20221230")]
+    assert repaired["spot"].eq(100.0).all()
+    candidates = make_touch_candidates(overlaid_walls, overlaid_events)
+    target = candidates[candidates["trade_date"].eq("20221230")]
+    assert not target.empty
+    assert target["spot"].eq(100.0).all()
+    assert target["candidate_wall_strike"].eq(100.0).all()
+
+
+def test_exact_greek_repair_bundle_rejects_nonfrozen_hash_before_loading(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    manifest_path = tmp_path / "manifest.json"
+    manifest_path.write_text("{}", encoding="utf-8")
+    (tmp_path / "wall_repair.parquet").write_bytes(b"wall")
+    (tmp_path / "event_control_repair.parquet").write_bytes(b"event")
+    monkeypatch.setattr(
+        flow_builder,
+        "load_repair_bundle",
+        lambda *_args, **_kwargs: pytest.fail("loader must not run after a frozen hash mismatch"),
+    )
+    with pytest.raises(AssertionError, match="bundle hash mismatch"):
+        attach_exact_greek_repair_bundle(
+            pd.DataFrame(), pd.DataFrame(), manifest_path,
+            enforce_frozen=True, require_committed=False,
+        )
 
 
 def test_attach_native_quote_index_accepts_csv_boolean_coverage(

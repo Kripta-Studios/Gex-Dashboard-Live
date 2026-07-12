@@ -243,3 +243,7 @@ También hay una separación importante entre mecanismo y policy: un mecanismo
 físico puede ser real y aun así no tener frecuencia suficiente. First-touch
 H-FLOW no alcanza matemáticamente 18/mes en varios meses QQQ/SPY, por lo que un
 PASS solo justificaría un componente de convicción dentro de una unión causal.
+
+El overlay se aplica antes de construir candidatos: reparar después del touch
+mantendría un universo elegido con el spot corrupto y sería otra forma de
+hindsight. Los hashes del bundle forman parte del data-gate autoritativo.

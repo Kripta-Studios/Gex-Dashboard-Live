@@ -297,7 +297,7 @@ unresolved (census SHA `24d86299...ff832`, commit `5c037ee`).
 No se sustituye solo spot: se recapturan S/IV/delta first-order 1s coherentes para
 los 671 contratos Greek∩OI positivo (285/386), 48 timestamps exactos cada uno.
 Bid/ask debe permanecer idéntico al histórico; cualquier revision bloquea. Los
-builders dejan la suite relevante en `73 passed`.
+builders dejan la suite relevante en `76 passed`.
 
 La captura ya selló 671/671 y 32.208 exact rows con cero errores y diferencia
 máxima `0.0` en spot/bid/ask. Raw: 671 respuestas/4,013 GiB; index SHA
@@ -313,6 +313,8 @@ congelar los tres hashes.
 Bundle real PASS: 96 walls SHA `69a3d330...487d`, 47 controls SHA
 `937aa95e...051e`, manifest `47dffb25...aec5a`; spot parity `0.0`, non-target
 changed `0`.
+La integración aplica el bundle antes de seleccionar touches y exige los tres
+SHA frozen; ninguna key nueva entra al event view.
 
 Frecuencia estructural: 10.078 timestamps first-touch. QQQ máximo 14/9/9 en
 202208–10 y SPY <18 en 16/41 meses incluso antes de cooldown/no-overlap; SPXW

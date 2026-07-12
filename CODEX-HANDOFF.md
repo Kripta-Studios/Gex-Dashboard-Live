@@ -275,7 +275,7 @@ neural/jepa/wall_surface_flow_environment.py
 neural/jepa/build_wall_native_quote_sidecar.py
 ```
 
-La suite combinada relevante pasa `73 passed` tras añadir el censo semántico,
+La suite combinada relevante pasa `76 passed` tras añadir el censo semántico,
 el builder de bundle y
 el sidecar exact-Greek V1R2, además de las regresiones wall-state. El preflight real posterior
 provenance y runtime más `14` regresiones wall-state). El preflight real posterior
@@ -415,6 +415,8 @@ las otras 49 decisiones. Pendiente commit y relanzamiento autoritativo.
 El relanzamiento pasó sobre commit `65289e8`: manifest/wall/event SHA
 `47dffb25...aec5a` / `69a3d330...487d` / `937aa95e...051e`; 96 walls, 47 event
 controls, full physical control grid 96, paridades `0.0` y cero cambios non-target.
+El surface builder ya exige el bundle indivisible, congela los tres SHA y aplica
+96/47 antes de `make_touch_candidates`; `authoritative_inputs` no puede pasar sin él.
 
 Auditoría de frecuencia sin outcomes: H-FLOW first-touch tiene 10.078 timestamps
 únicos. Aun con oracle, caps y sin no-overlap/cooldown, QQQ 202208–10 solo admite
