@@ -301,12 +301,7 @@ def main() -> None:
         args.complement_index,
         args.complement_seal,
     )
-    needed = combined.merge(
-        candidates[["ticker", "trade_date"]].drop_duplicates(),
-        on=["ticker", "trade_date"],
-        how="inner",
-        validate="one_to_one",
-    )
+    needed = combined.copy()
     if len(needed) != 2519:
         raise AssertionError("H-QDYN1R1 requires all 2,519 frozen sessions")
 
