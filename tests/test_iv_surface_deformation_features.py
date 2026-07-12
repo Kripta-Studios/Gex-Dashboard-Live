@@ -180,4 +180,3 @@ def test_future_rows_are_not_consumed_and_2026_fails_closed() -> None:
     raw["underlying_timestamp"] = raw["timestamp"]
     with pytest.raises(AssertionError, match="2026"):
         prepare_iv_surface_source(raw, expected_ticker="SPY", expected_trade_date="20260102")
-

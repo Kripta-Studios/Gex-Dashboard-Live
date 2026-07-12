@@ -295,4 +295,3 @@ def attach_iv_surface_features(candidates: pd.DataFrame, surface: pd.DataFrame) 
         index=candidates.index,
     )
     return pd.concat([candidates.copy(), features[list(IV_SURFACE_ALLOWLIST)]], axis=1)
-
