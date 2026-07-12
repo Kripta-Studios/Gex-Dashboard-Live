@@ -191,3 +191,5 @@ anomalías tempranas fuera de scope y no las imputa.
 Otra regla transferible: una reconsulta histórica sirve para recuperar identidad
 temporal, pero no debe reemplazar precios antiguos si el proveedor revisó datos.
 El sidecar separa key-set de clock, price-revision audit y signability.
+La cobertura se define sobre el universo histórico congelado: contratos que el
+proveedor añade retrospectivamente se cuentan, no se incorporan al experimento.

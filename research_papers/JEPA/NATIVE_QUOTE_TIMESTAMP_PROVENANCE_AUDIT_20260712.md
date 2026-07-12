@@ -79,6 +79,12 @@ H-FLOW1 always uses original hashed Greek bid/ask; the sidecar supplies only the
 verified native clock. Price revisions remain audited and keep provenance
 conditional rather than silently rewriting history.
 
+QQQ 2025-08-28 adds a third revision pattern: all 50,750 stored Greek keys are
+present, while the current quote endpoint returns 250 additional rows (one
+contract across the complete window). The recovery gate therefore requires
+100% coverage of the frozen stored universe and reports native extras; it never
+adds those retrospective contracts to H-FLOW1. Missing stored keys still fail.
+
 ## Derived-underlying producer audit
 
 The current external producer candidates were read in full and content-hashed:

@@ -270,3 +270,5 @@ revisados por el proveedor no sustituyen el histórico. QQQ 2024-03-11 conserva
 65.500/65.500 keys de clock y solo 77 bid/ask distintos. El builder combina clock
 sidecar con bid/ask Greek originales; `timestamp_key_set_exact` y
 `stored_bid_ask_exact` quedan separados.
+QQQ 2025-08-28 mostró 250 keys nativas extra pero cubrió las 50.750 históricas;
+extras se auditan y no amplían el universo F1.

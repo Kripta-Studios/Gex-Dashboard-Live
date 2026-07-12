@@ -326,6 +326,10 @@ sobrescribir Greeks. Ejemplos: QQQ 2024-02-06, 2.437/65.500 crossed; QQQ
 2024-03-11, keys 65.500/65.500 pero 77 precios revisados. El sidecar aporta solo
 clock nativo; F1 usa bid/ask originales. Provenance histórica sigue
 `CONDITIONAL` si hay revisiones, aunque el clock key-set sea completo.
+QQQ 2025-08-28 añadió 250 rows actuales de un contrato que no existía en el
+Greek congelado: se archivan como `native_extra_key_rows` y no entran en F1.
+El gate exige cobertura 100% de keys históricas, no igualdad que permita ampliar
+retroactivamente el universo.
 
 Siguiente secuencia, sin abrir outcomes:
 

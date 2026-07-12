@@ -155,6 +155,8 @@ Bloqueo autoritativo: 1.441/2.519 sesiones 2022-08..2025-12 carecen de option
 raw response hashes y timestamp/contract key-set exacto contra Greeks. Si el
 proveedor revisa bid/ask, auditar mismatch sin reemplazar el histórico; F1 usa
 bid/ask Greek originales. Crossed quotes se preservan pero son no-signable.
+El sidecar debe cubrir 100% de keys Greek históricas; `native_extra_key_rows`
+se archiva pero jamás amplía retrospectivamente el universo de F1.
 
 Contratos nuevos obligatorios:
 

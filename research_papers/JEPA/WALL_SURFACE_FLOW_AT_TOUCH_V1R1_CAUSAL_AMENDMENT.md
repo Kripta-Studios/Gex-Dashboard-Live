@@ -81,6 +81,9 @@ raw response hashes and exact whole-key-set equality against stored
 are counted but never replace the original hashed Greek bid/ask used by F1.
 Only a sealed 1,441/1,441 timestamp-key PASS may replace the fallback clock. Quote sizes are archived but
 are excluded from H-FLOW1; they define a separate future H-QSIZE1 experiment.
+Every stored Greek key must be covered. Native keys added by a current provider
+revision are counted and archived but never expand the frozen historical
+contract universe.
 
 Two clocks remain distinct.  The physical underlying RTH close is 16:00 on
 regular days and 13:00 on the listed half days for all tickers.  Expiring SPXW

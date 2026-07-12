@@ -347,9 +347,12 @@ def crosscheck_greeks(
         suffixes=("_quote", "_greek"),
         how="inner",
     )
-    if len(merged) != len(quotes) or len(merged) != len(greeks):
+    missing_stored_rows = int(len(greeks) - len(merged))
+    native_extra_rows = int(len(quotes) - len(merged))
+    if missing_stored_rows != 0:
         raise AssertionError(
-            f"native quote/stored Greek exact key-set mismatch: shared={len(merged)} quotes={len(quotes)} greeks={len(greeks)}"
+            "native quote is missing stored Greek timestamp keys: "
+            f"shared={len(merged)} quotes={len(quotes)} greeks={len(greeks)}"
         )
     bid_match = (merged["bid_quote"] - merged["bid_greek"]).abs().le(tolerance)
     ask_match = (merged["ask_quote"] - merged["ask_greek"]).abs().le(tolerance)
@@ -362,8 +365,10 @@ def crosscheck_greeks(
         "shared_exact_fraction": float(len(merged) / len(greeks)),
         "greeks_sha256": greeks_hash_before,
         "stored_greek_clock_source": str(greeks.attrs["clock_source"]),
-        "key_set_exact": True,
-        "timestamp_key_set_exact": True,
+        "key_set_exact": bool(native_extra_rows == 0),
+        "stored_timestamp_key_coverage_exact": True,
+        "missing_stored_key_rows": missing_stored_rows,
+        "native_extra_key_rows": native_extra_rows,
         "stored_bid_ask_exact": bool(not either_mismatch.any()),
         "stored_bid_mismatch_rows": int((~bid_match).sum()),
         "stored_ask_mismatch_rows": int((~ask_match).sum()),
@@ -555,7 +560,9 @@ def backfill_native_quotes(
             "end_time": str(manifest["request_params"]["end_time"]),
             "terminal_jar_sha256": str(manifest["terminal_jar_sha256"]),
             "key_set_exact": bool(manifest["key_set_exact"]),
-            "timestamp_key_set_exact": bool(manifest["timestamp_key_set_exact"]),
+            "stored_timestamp_key_coverage_exact": bool(manifest["stored_timestamp_key_coverage_exact"]),
+            "missing_stored_key_rows": int(manifest["missing_stored_key_rows"]),
+            "native_extra_key_rows": int(manifest["native_extra_key_rows"]),
             "stored_bid_ask_exact": bool(manifest["stored_bid_ask_exact"]),
             "stored_either_mismatch_rows": int(manifest["stored_either_mismatch_rows"]),
             "stored_either_mismatch_rate": float(manifest["stored_either_mismatch_rate"]),
@@ -600,8 +607,8 @@ def backfill_native_quotes(
     if (
         len(index) != EXPECTED_FALLBACK_SESSIONS
         or index.duplicated(["ticker", "trade_date"]).any()
-        or not index["key_set_exact"].astype(bool).all()
-        or not index["timestamp_key_set_exact"].astype(bool).all()
+        or not index["stored_timestamp_key_coverage_exact"].astype(bool).all()
+        or not index["missing_stored_key_rows"].eq(0).all()
         or set(index["terminal_jar_sha256"].astype(str)) != {jar_hash_before}
     ):
         raise AssertionError("native quote backfill index failed exact-coverage gate")
@@ -630,6 +637,8 @@ def backfill_native_quotes(
         "stored_bid_ask_revised_sessions": int((~index["stored_bid_ask_exact"].astype(bool)).sum()),
         "stored_either_mismatch_rows": int(index["stored_either_mismatch_rows"].sum()),
         "stored_either_mismatch_rate": float(index["stored_either_mismatch_rows"].sum() / index["rows"].sum()),
+        "native_extra_key_rows": int(index["native_extra_key_rows"].sum()),
+        "native_exact_key_set_sessions": int(index["key_set_exact"].astype(bool).sum()),
         "rows_by_ticker": index.groupby("ticker", observed=True)["rows"].sum().astype(int).to_dict(),
         "index_path": str(seal / index_path.name),
         "index_sha256": sha256_file(index_path),

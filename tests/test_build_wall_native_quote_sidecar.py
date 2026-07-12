@@ -79,7 +79,7 @@ def test_download_is_immutable_and_validate_detects_raw_tamper(tmp_path):
     assert calls[0][1]["interval"] == "1m" and calls[0][1]["strike"] == "*"
     assert calls[0][1]["right"] == "both" and calls[0][1]["expiration"] == "20240102"
     assert calls[0][2] == {"Accept-Encoding": "identity"}
-    assert manifest["key_set_exact"] is True and manifest["timestamp_key_set_exact"] is True
+    assert manifest["key_set_exact"] is True and manifest["stored_timestamp_key_coverage_exact"] is True
     assert manifest["stored_bid_ask_exact"] is True
     assert len(manifest["terminal_jar_sha256"]) == 64
     validate_session(session, greeks)
@@ -104,18 +104,18 @@ def test_crosscheck_preserves_and_audits_provider_bid_revision(tmp_path):
         requester=lambda *a, **k: FakeResponse(response()),
         process_evidence_provider=fake_process_evidence,
     )
-    assert manifest["timestamp_key_set_exact"] is True
+    assert manifest["stored_timestamp_key_coverage_exact"] is True
     assert manifest["stored_bid_ask_exact"] is False
     assert manifest["stored_bid_mismatch_rows"] == 1
 
 
-def test_crosscheck_requires_full_exact_key_set_and_native_clock_equality(tmp_path):
+def test_crosscheck_requires_all_stored_keys_and_native_clock_equality(tmp_path):
     greeks = tmp_path / "greeks.parquet"; write_greeks(greeks)
     jar = tmp_path / "ThetaTerminal.jar"; jar.write_bytes(b"frozen-terminal")
     frame = pd.read_parquet(greeks)
     extra = frame.copy(); extra["strike"] = 471.0
     pd.concat([frame, extra], ignore_index=True).to_parquet(greeks, index=False)
-    with pytest.raises(AssertionError, match="key-set mismatch"):
+    with pytest.raises(AssertionError, match="missing stored Greek"):
         download_session(
             ticker="SPY", trade_date="20240102", greeks_path=greeks,
             output_root=tmp_path / "out", base_url="http://127.0.0.1:25503/v3", terminal_jar=jar,
@@ -123,6 +123,28 @@ def test_crosscheck_requires_full_exact_key_set_and_native_clock_equality(tmp_pa
             requester=lambda *a, **k: FakeResponse(response()),
             process_evidence_provider=fake_process_evidence,
         )
+
+
+def test_current_provider_extra_contract_is_archived_not_added_to_historical_universe(tmp_path):
+    greeks = tmp_path / "greeks.parquet"; write_greeks(greeks)
+    jar = tmp_path / "ThetaTerminal.jar"; jar.write_bytes(b"frozen-terminal")
+    payload = response()
+    payload["response"].append(
+        {
+            "contract": {"symbol": "SPY", "expiration": "20240102", "strike": 471.0, "right": "C"},
+            "data": [{"timestamp": "2024-01-02 10:30:00", "bid": 1.0, "ask": 1.1, "bid_size": 1, "ask_size": 1}],
+        }
+    )
+    manifest = download_session(
+        ticker="SPY", trade_date="20240102", greeks_path=greeks,
+        output_root=tmp_path / "out", base_url="http://127.0.0.1:25503/v3", terminal_jar=jar,
+        start_time="10:30:00", end_time="10:30:00",
+        requester=lambda *a, **k: FakeResponse(payload),
+        process_evidence_provider=fake_process_evidence,
+    )
+    assert manifest["stored_timestamp_key_coverage_exact"] is True
+    assert manifest["key_set_exact"] is False
+    assert manifest["native_extra_key_rows"] == 1
     native_mismatch = pd.read_parquet(greeks)
     native_mismatch["underlying_timestamp"] = "2024-01-02 10:29:00"
     native_mismatch.to_parquet(greeks, index=False)

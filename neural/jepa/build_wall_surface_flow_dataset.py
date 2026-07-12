@@ -206,9 +206,9 @@ def apply_native_quote_clock(greeks: pd.DataFrame, native_quotes: pd.DataFrame) 
         raise AssertionError("native quote clock bridge contains missing normalized keys")
     if left.duplicated(keys).any() or right.duplicated(keys).any():
         raise AssertionError("native quote clock bridge contains duplicate keys")
-    parity = left[keys].merge(right[keys], on=keys, how="outer", indicator=True, validate="one_to_one")
-    if len(parity) != len(left) or len(parity) != len(right) or not parity["_merge"].eq("both").all():
-        raise AssertionError("native quote clock bridge key-set mismatch")
+    parity = left[keys].merge(right[keys], on=keys, how="left", indicator=True, validate="one_to_one")
+    if len(parity) != len(left) or not parity["_merge"].eq("both").all():
+        raise AssertionError("native quote clock bridge is missing stored Greek keys")
     # Restore the original metadata/price columns and add the verified native
     # clock.  Current-provider bid/ask is deliberately not copied.
     output = greeks.copy()
@@ -295,7 +295,8 @@ def attach_native_quote_index(
         "ticker", "trade_date", "greeks_path", "greeks_sha256", "quotes_path",
         "quotes_sha256", "raw_response_path", "raw_response_sha256",
         "session_manifest_path", "session_manifest_sha256", "rows", "end_time",
-        "terminal_jar_sha256", "key_set_exact", "timestamp_key_set_exact",
+        "terminal_jar_sha256", "key_set_exact", "stored_timestamp_key_coverage_exact",
+        "missing_stored_key_rows", "native_extra_key_rows",
         "stored_bid_ask_exact", "stored_either_mismatch_rows", "stored_either_mismatch_rate",
     }
     missing = sorted(required.difference(index.columns))
@@ -309,8 +310,8 @@ def attach_native_quote_index(
         or index.duplicated(["ticker", "trade_date"]).any()
         or session_key_hash(index) != EXPECTED_NATIVE_QUOTE_KEY_SHA256
         or index["trade_date"].str.startswith("2026").any()
-        or not index["key_set_exact"].map(_truthy).all()
-        or not index["timestamp_key_set_exact"].map(_truthy).all()
+        or not index["stored_timestamp_key_coverage_exact"].map(_truthy).all()
+        or not pd.to_numeric(index["missing_stored_key_rows"], errors="coerce").eq(0).all()
     ):
         raise AssertionError("native quote index does not cover the frozen fallback universe exactly")
     if int(seal.get("fallback_sessions", -1)) != len(index) or str(seal.get("fallback_session_key_sha256")) != EXPECTED_NATIVE_QUOTE_KEY_SHA256:
