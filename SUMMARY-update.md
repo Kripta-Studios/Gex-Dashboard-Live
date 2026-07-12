@@ -291,10 +291,11 @@ errores quedan QQQ/SPY 2022-12-30. QQQ mezcla `underlying_price` de t-1 con quot
 de t (máximo 19,688 bps); SPY difiere 0,01 punto. No se autoriza tolerancia,
 exclusión ni label runner hasta reconstruir y auditar un spot/wall consistente.
 
-V1R2 predeclara esa reconstrucción sin outcomes. Un censo reproducible debe
-confirmar 2.518 sesiones/120.864 wall rows, con solo QQQ/SPY 2022-12-30 híbridas.
+V1R2 predeclara esa reconstrucción sin outcomes. El censo reproducible confirmó
+2.518 sesiones/120.864 wall rows, con solo QQQ/SPY 2022-12-30 híbridas y cero
+unresolved (census SHA `24d86299...ff832`, commit `5c037ee`).
 No se sustituye solo spot: se recapturan S/IV/delta first-order 1s coherentes para
 los 671 contratos Greek∩OI positivo (285/386), 48 timestamps exactos cada uno.
 Bid/ask debe permanecer idéntico al histórico; cualquier revision bloquea. Los
-builders y 13 tests nuevos dejan la suite relevante en `68 passed`; falta
-commit/censo real/captura antes de volver al full data gate.
+builders y 13 tests nuevos dejan la suite relevante en `68 passed`; falta la
+captura/seal 671/671 antes de reconstruir walls/controles y volver al full gate.

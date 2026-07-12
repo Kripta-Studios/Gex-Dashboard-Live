@@ -377,9 +377,11 @@ si no es posible, V1R1 queda bloqueada por procedencia.
 
 La regla general se congeló antes de labels en
 `WALL_SURFACE_FLOW_V1R2_EXACT_SPOT_REPAIR_PREDECLARATION.md`. El auditor
-`audit_wall_spot_semantics_v1.py` compara todas las 120.864 rows wall in-scope
-contra derived `open(t)` y `open(t-1)` y exige 2.516/2/0 sesiones
-`exact_t/hybrid/unresolved`. El builder
+`audit_wall_spot_semantics_v1.py` comparó todas las 120.864 rows wall in-scope
+contra derived `open(t)` y `open(t-1)`. La ejecución autoritativa pasó exactamente
+2.516/2/0 sesiones `exact_t/hybrid/unresolved`, cero unknown, manifest commit
+`5c037ee`, census SHA `24d86299bd6b778b6f7042e985ca19f7790d13e89fc2731d8fbd17b14b9ff832`
+e inventory SHA `7e7022d5...cf3d2`. El builder
 `build_wall_exact_greek_repair_sidecar.py` captura la superficie coherente
 first-order 1s de los 671 contratos positivos-OI almacenados (QQQ 285/SPY 386,
 key SHA `57c99891a37fcde939df4a88de7f45a7dffd5be544c8730046bae45e109846c0`).

@@ -199,14 +199,15 @@ una reconstrucción causal de spot/exposiciones antes de otro full gate.
 
 V1R2 queda predeclarada en
 `WALL_SURFACE_FLOW_V1R2_EXACT_SPOT_REPAIR_PREDECLARATION.md`. El censo general
-`audit_wall_spot_semantics_v1.py` debe probar 2.518 sesiones/120.864 rows:
+`audit_wall_spot_semantics_v1.py` pasó 2.518 sesiones/120.864 rows:
 2.516 `exact_t`, dos `hybrid_spot_tm1` (QQQ/SPY 2022-12-30), cero unresolved.
+Manifest commit `5c037ee`, census SHA `24d86299...ff832`, inventory underlying
+SHA `7e7022d5...cf3d2`; compactos quedan versionados en `_diagnostics`.
 El builder `build_wall_exact_greek_repair_sidecar.py` congela 671 contratos con
 OI positivo (285/386; SHA `57c998...46c0`) y exige 48 snapshots first-order 1s
 exactos por contrato, spot=open(t), bid/ask iguales al vintage almacenado y raw
 HTTP/JAR/runtime/source hashes. Suite relevante ampliada: `68 passed`.
 
-Secuencia actual: commit/push de predeclaración+código → censo autoritativo y
-commit → captura/seal 671/671 → reconstrucción de walls y controles completos de
+Secuencia actual: captura/seal 671/671 → reconstrucción de walls y controles completos de
 ambas sesiones → full data gate. No parchear solo spot: IV/delta 1m también son
 incoherentes con el spot de t.
