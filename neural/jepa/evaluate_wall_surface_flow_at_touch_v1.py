@@ -42,6 +42,7 @@ from neural.jepa.surface_flow_features import (  # noqa: E402
     WALL_SPECS,
     assert_surface_flow_schema,
     underlying_market_close_minute,
+    validate_underlying_session,
 )
 from neural.jepa.wall_surface_flow_environment import assert_runtime_lock  # noqa: E402
 
@@ -277,31 +278,20 @@ def verify_freeze(
     return freeze
 
 
-def _read_underlying_exact(path: str | Path, *, expected_trade_date: str | None = None) -> pd.DataFrame:
-    required = ["timestamp", "open", "high", "low", "close"]
+def _read_underlying_exact(
+    path: str | Path,
+    *,
+    expected_ticker: str,
+    expected_trade_date: str,
+) -> pd.DataFrame:
+    required = ["symbol", "date", "timestamp", "open", "high", "low", "close", "tick_count"]
     frame = pd.read_parquet(path, columns=required)
-    frame["bar_start"] = pd.to_datetime(frame["timestamp"], errors="coerce")
-    frame = frame.dropna(subset=["bar_start"]).copy()
-    expected_date = str(expected_trade_date or "").replace("-", "")[:8]
-    if expected_date and not frame["bar_start"].dt.strftime("%Y%m%d").eq(expected_date).all():
-        raise AssertionError(f"underlying timestamps do not belong to {expected_date}: {path}")
-    boundary = frame["bar_start"].dt.second.eq(0) & frame["bar_start"].dt.microsecond.eq(0)
-    if not bool(boundary.all()):
-        raise AssertionError(f"underlying source has non-minute-boundary timestamps: {path}")
-    if frame.duplicated(["bar_start"]).any():
-        raise AssertionError(f"underlying source has duplicate minute keys: {path}")
-    for column in ("open", "high", "low", "close"):
-        frame[column] = pd.to_numeric(frame[column], errors="coerce")
-    if not np.isfinite(frame[["open", "high", "low", "close"]].to_numpy(dtype=float)).all():
-        raise AssertionError(f"underlying source contains non-finite OHLC: {path}")
-    if (frame[["open", "high", "low", "close"]] <= 0.0).any().any():
-        raise AssertionError(f"underlying source contains nonpositive OHLC: {path}")
-    envelope = frame["high"].ge(frame[["open", "close"]].max(axis=1)) & frame["low"].le(
-        frame[["open", "close"]].min(axis=1)
+    validated, _ = validate_underlying_session(
+        frame,
+        expected_ticker=expected_ticker,
+        expected_trade_date=expected_trade_date,
     )
-    if not bool(envelope.all()):
-        raise AssertionError(f"underlying source violates OHLC envelope: {path}")
-    return frame.sort_values("bar_start", kind="stable").reset_index(drop=True)
+    return validated
 
 
 def assert_source_inventory(frame: pd.DataFrame) -> None:
@@ -395,7 +385,11 @@ def _load_label_session(
     expected_hash = str(source["sha256"])
     if sha256_file(path) != expected_hash:
         raise AssertionError(f"underlying source hash mismatch: {path}")
-    underlying = _read_underlying_exact(path, expected_trade_date=str(source["trade_date"]))
+    underlying = _read_underlying_exact(
+        path,
+        expected_ticker=str(source["ticker"]),
+        expected_trade_date=str(source["trade_date"]),
+    )
     if sha256_file(path) != expected_hash:
         raise AssertionError(f"underlying source changed while labeling: {path}")
     return label_candidate_session(candidates, underlying)

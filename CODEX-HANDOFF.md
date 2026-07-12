@@ -276,11 +276,19 @@ neural/jepa/wall_surface_flow_environment.py
 neural/jepa/build_wall_native_quote_sidecar.py
 ```
 
-La suite combinada relevante pasa `50 passed` (`36` pruebas nuevas de flow,
+La suite combinada relevante pasa `52 passed` (`38` pruebas nuevas de flow,
 provenance y runtime más `14` regresiones wall-state). El preflight real posterior
 a las correcciones produjo 8 filas × 173 columnas, 3/3 sesiones, cero errores,
 grid completo y hashes/runtime persistidos en
 `tmp/wall_surface_flow_at_touch_preflight_v1r1_schedulelock/`.
+
+Tras auditar completos `options_bulk.py`, `script4_underlying_from_options.py` y
+`thetadata_utils.py`, se añadió un segundo preflight en
+`tmp/wall_surface_flow_at_touch_preflight_v1r1_underlyinggate/`: 3/3 sesiones,
+cero grids RTH incompletos y spot máximo 0,000519 bps. El productor underlying
+actual usa 1s→floor-minute y contiene zero-repair con `bfill`; los Parquets
+históricos no guardan hash/strike/right de productor, así que esa limitación de
+linaje queda explícita aunque el gate de contenido pase.
 
 Correcciones congeladas antes de outcomes:
 

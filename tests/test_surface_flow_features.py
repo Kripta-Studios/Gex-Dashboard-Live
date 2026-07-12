@@ -19,6 +19,7 @@ from neural.jepa.surface_flow_features import (
     option_market_close_minute,
     prepare_completed_bar_flow,
     underlying_market_close_minute,
+    validate_underlying_session,
 )
 
 
@@ -358,6 +359,43 @@ def test_underlying_control_timestamps_must_match_expected_session_date() -> Non
             underlying,
             expected_trade_date="20240102",
         )
+
+
+def test_derived_underlying_requires_exact_metadata_grid_and_envelope() -> None:
+    times = pd.date_range("2024-01-02 09:30:00", "2024-01-02 15:59:00", freq="1min")
+    source = pd.DataFrame(
+        {
+            "symbol": "SPY", "date": "2024-01-02", "timestamp": times,
+            "open": 100.0, "high": 100.1, "low": 99.9, "close": 100.0,
+            "tick_count": 60,
+        }
+    )
+    validated, audit = validate_underlying_session(
+        source, expected_ticker="SPY", expected_trade_date="20240102"
+    )
+    assert len(validated) == 390
+    assert audit["underlying_required_window_minutes"] == 390
+    missing = source[source["timestamp"].ne(pd.Timestamp("2024-01-02 12:00:00"))]
+    with pytest.raises(AssertionError, match="grid is incomplete"):
+        validate_underlying_session(missing, expected_ticker="SPY", expected_trade_date="20240102")
+    invalid = source.copy(); invalid.loc[0, "high"] = 99.0
+    with pytest.raises(AssertionError, match="OHLC envelope"):
+        validate_underlying_session(invalid, expected_ticker="SPY", expected_trade_date="20240102")
+
+
+def test_derived_underlying_half_day_requires_only_cash_rth_grid() -> None:
+    times = pd.date_range("2024-07-03 09:30:00", "2024-07-03 12:59:00", freq="1min")
+    source = pd.DataFrame(
+        {
+            "symbol": "QQQ", "date": "2024-07-03", "timestamp": times,
+            "open": 100.0, "high": 100.0, "low": 100.0, "close": 100.0,
+            "tick_count": 1,
+        }
+    )
+    _, audit = validate_underlying_session(
+        source, expected_ticker="QQQ", expected_trade_date="20240703"
+    )
+    assert audit["expected_underlying_required_window_minutes"] == 210
 
 
 def test_empty_candidate_session_keeps_control_schema() -> None:

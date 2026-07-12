@@ -185,6 +185,61 @@ def _safe_ratio(numerator: float, denominator: float) -> float:
     return value if np.isfinite(value) else 0.0
 
 
+def validate_underlying_session(
+    underlying: pd.DataFrame,
+    *,
+    expected_ticker: str,
+    expected_trade_date: str,
+) -> tuple[pd.DataFrame, dict[str, Any]]:
+    """Validate the complete structural contract of a derived 1m spot source."""
+
+    required = ("symbol", "date", "timestamp", "open", "high", "low", "close", "tick_count")
+    _require_columns(underlying, required, "derived underlying")
+    ticker = str(expected_ticker).upper()
+    day = str(expected_trade_date).replace("-", "")[:8]
+    frame = underlying[list(required)].copy()
+    frame["symbol"] = frame["symbol"].astype(str).str.upper()
+    source_day = frame["date"].astype(str).str.replace(r"\D", "", regex=True).str[:8]
+    if set(frame["symbol"].unique()) != {ticker} or not source_day.eq(day).all():
+        raise AssertionError("derived underlying symbol/date metadata mismatch")
+    frame["bar_start"] = pd.to_datetime(frame["timestamp"], errors="coerce")
+    if frame["bar_start"].isna().any() or not frame["bar_start"].dt.strftime("%Y%m%d").eq(day).all():
+        raise AssertionError("derived underlying timestamps do not belong to expected trade date")
+    boundary = frame["bar_start"].dt.second.eq(0) & frame["bar_start"].dt.microsecond.eq(0)
+    if not bool(boundary.all()) or frame.duplicated(["bar_start"]).any():
+        raise AssertionError("derived underlying contains non-boundary or duplicate minute keys")
+    numeric_columns = ["open", "high", "low", "close", "tick_count"]
+    for column in numeric_columns:
+        frame[column] = pd.to_numeric(frame[column], errors="coerce")
+    values = frame[numeric_columns].to_numpy(dtype=float)
+    if not np.isfinite(values).all() or (frame[["open", "high", "low", "close"]] <= 0.0).any().any():
+        raise AssertionError("derived underlying contains non-finite/nonpositive OHLC")
+    if not frame["tick_count"].gt(0.0).all():
+        raise AssertionError("derived underlying contains nonpositive tick_count")
+    envelope = frame["high"].ge(frame[["open", "close"]].max(axis=1)) & frame["low"].le(
+        frame[["open", "close"]].min(axis=1)
+    )
+    if not bool(envelope.all()):
+        raise AssertionError("derived underlying violates OHLC envelope")
+    close_minute = underlying_market_close_minute(day)
+    session_start = pd.Timestamp(f"{day[:4]}-{day[4:6]}-{day[6:]} 09:30:00")
+    session_end = pd.Timestamp(day) + pd.Timedelta(minutes=close_minute - 1)
+    required_grid = pd.date_range(session_start, session_end, freq="1min")
+    observed = pd.Index(frame["bar_start"])
+    missing = required_grid.difference(observed)
+    if len(missing):
+        raise AssertionError(f"derived underlying regular-session grid is incomplete: missing={len(missing)}")
+    frame = frame.sort_values("bar_start", kind="stable").reset_index(drop=True)
+    return frame, {
+        "underlying_rows": int(len(frame)),
+        "underlying_required_window_minutes": int(observed.isin(required_grid).sum()),
+        "expected_underlying_required_window_minutes": int(len(required_grid)),
+        "underlying_timestamp_min": frame["bar_start"].min(),
+        "underlying_timestamp_max": frame["bar_start"].max(),
+        "underlying_min_tick_count": float(frame["tick_count"].min()),
+    }
+
+
 def prepare_completed_bar_flow(
     greeks: pd.DataFrame,
     ohlc: pd.DataFrame,

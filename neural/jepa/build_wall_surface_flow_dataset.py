@@ -36,6 +36,7 @@ from neural.jepa.surface_flow_features import (  # noqa: E402
     attach_flow_features,
     make_touch_candidates,
     prepare_completed_bar_flow,
+    validate_underlying_session,
 )
 from neural.jepa.wall_surface_flow_environment import assert_runtime_lock  # noqa: E402
 
@@ -58,7 +59,7 @@ OHLC_COLUMNS = (
     "timestamp", "right", "strike", "close", "volume", "count",
     "symbol", "expiration", "trade_date", "interval_used",
 )
-UNDERLYING_COLUMNS = ("timestamp", "close")
+UNDERLYING_COLUMNS = ("symbol", "date", "timestamp", "open", "high", "low", "close", "tick_count")
 EVENT_COLUMNS = (
     "ticker", "trade_date", "minute", "spot",
     "ret_1m_bps", "ret_5m_bps", "ret_15m_bps", "ret_30m_bps",
@@ -288,6 +289,28 @@ def build_session(
         expected_ticker=str(record["ticker"]),
         expected_trade_date=str(record["trade_date"]),
     )
+    validated_underlying, underlying_audit = validate_underlying_session(
+        underlying,
+        expected_ticker=str(record["ticker"]),
+        expected_trade_date=str(record["trade_date"]),
+    )
+    audit.update(underlying_audit)
+    if not candidates.empty:
+        opens = validated_underlying.set_index("bar_start")["open"].reindex(
+            pd.to_datetime(candidates["decision_dt"], errors="coerce")
+        )
+        if opens.isna().any():
+            raise AssertionError("candidate spot has no exact derived-underlying decision bar")
+        event_spot = pd.to_numeric(candidates["spot"], errors="coerce").to_numpy(dtype=float)
+        spot_diff = np.abs(opens.to_numpy(dtype=float) - event_spot) / event_spot * 10_000.0
+        max_spot_diff = float(np.max(spot_diff)) if len(spot_diff) else 0.0
+        if not np.isfinite(spot_diff).all() or max_spot_diff > 0.001:
+            raise AssertionError(
+                f"candidate/derived-underlying exact spot parity failed: max_bps={max_spot_diff}"
+            )
+        audit["candidate_underlying_spot_max_bps"] = max_spot_diff
+    else:
+        audit["candidate_underlying_spot_max_bps"] = 0.0
     controlled = attach_completed_underlying_controls(
         candidates,
         underlying,
@@ -475,6 +498,9 @@ def evaluate_data_gate(
         and len(audit) == EXPECTED_SESSION_COUNT
         and audit["greeks_required_window_minutes"].eq(audit["expected_required_window_minutes"]).all()
         and audit["ohlc_required_window_minutes"].eq(audit["expected_required_window_minutes"]).all()
+        and audit["underlying_required_window_minutes"].eq(
+            audit["expected_underlying_required_window_minutes"]
+        ).all()
         and audit["option_timestamp_fallback_used"].astype(bool).eq(False).all()
         and audit["active_rows"].gt(0).all()
         and audit["active_volume"].gt(0.0).all()
@@ -518,6 +544,14 @@ def evaluate_data_gate(
         ),
         "incomplete_ohlc_grid_sessions": int(
             audit["ohlc_required_window_minutes"].ne(audit["expected_required_window_minutes"]).sum()
+        ),
+        "incomplete_underlying_grid_sessions": int(
+            audit["underlying_required_window_minutes"].ne(
+                audit["expected_underlying_required_window_minutes"]
+            ).sum()
+        ),
+        "maximum_candidate_underlying_spot_bps": float(
+            audit["candidate_underlying_spot_max_bps"].max()
         ),
         "option_timestamp_fallback_sessions": int(audit["option_timestamp_fallback_used"].astype(bool).sum()),
         "zero_active_sessions": int(audit["active_rows"].le(0).sum()),

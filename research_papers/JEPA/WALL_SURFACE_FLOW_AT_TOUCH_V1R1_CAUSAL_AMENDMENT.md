@@ -53,6 +53,14 @@ reading, reject duplicate normalized keys, reject non-1m option inputs, require
 `expiration == trade_date`, and reject all 2026 rows.  An authoritative output
 directory is immutable and written by atomic staging/rename.
 
+Derived-underlying files additionally require exact symbol/date metadata,
+minute-boundary unique timestamps, positive finite OHLC, a valid OHLC envelope,
+positive tick count and every regular-session minute through the physical close.
+Candidate spot must match the exact underlying bar open within 0.001 bps.  The
+external historical producer version is not embedded in old Parquets; current
+producer hashes and its floor/zero-repair caveat are frozen in the provenance
+audit rather than silently treated as a committed build lineage.
+
 ThetaData OHLC timestamp `s` is the bar open and the bar contains trades in
 `[s,s+1m)`.  Quote/Greeks `timestamp` is preferred.  Older files lacking it may
 use `underlying_timestamp` only as an explicitly tagged reconstructed interval

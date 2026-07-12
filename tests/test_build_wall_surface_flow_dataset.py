@@ -50,10 +50,19 @@ def _write_sources(root: Path, *, trade_date: str = "20240102") -> dict[str, str
             "count": [2],
         }
     ).to_parquet(ohlc_path, index=False)
-    times = pd.date_range(f"{date_text} 10:18:00", f"{date_text} 10:35:00", freq="1min")
-    pd.DataFrame({"timestamp": times, "close": range(100, 100 + len(times))}).to_parquet(
-        underlying_path, index=False
-    )
+    times = pd.date_range(f"{date_text} 09:30:00", f"{date_text} 15:59:00", freq="1min")
+    pd.DataFrame(
+        {
+            "symbol": "SPY",
+            "date": date_text,
+            "timestamp": times,
+            "open": 100.0,
+            "high": 100.0,
+            "low": 100.0,
+            "close": 100.0,
+            "tick_count": 1,
+        }
+    ).to_parquet(underlying_path, index=False)
     return {
         "greeks_path": str(greeks_path),
         "ohlc_path": str(ohlc_path),
@@ -165,6 +174,9 @@ def test_data_gate_uses_schedule_aware_grid_and_blocks_timestamp_fallback() -> N
                     "greeks_required_window_minutes": expected,
                     "ohlc_required_window_minutes": expected,
                     "expected_required_window_minutes": expected,
+                    "underlying_required_window_minutes": 390,
+                    "expected_underlying_required_window_minutes": 390,
+                    "candidate_underlying_spot_max_bps": 0.0,
                     "option_timestamp_fallback_used": False,
                 }
             )
