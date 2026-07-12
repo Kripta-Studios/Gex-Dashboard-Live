@@ -188,3 +188,11 @@ leer `stored_timestamp_key_coverage_exact` desde CSV. Se corrigió fail-closed y
 se añadió validación de booleanos JSON estrictos, hashes de los 1.441 raw responses
 y manifests de sesión, consistencia de JAR y capturas no vacías. Relanzar solo
 desde el commit que contiene este fix.
+
+Segundo full-gate attempt también se detuvo antes de outcomes. El bridge comparaba
+Greeks full-session con el sidecar research-only; ahora exige el grid explícito
+10:20–14:29/12:54 y conserva 125.557.490 keys Greek compartidas más 500 extras
+auditadas. Quedan dos fallos de spot reales: QQQ y SPY 2022-12-30. QQQ es un
+snapshot vendor híbrido (`underlying_price(t)=open(t-1)` mientras bid/ask son de
+`t`); SPY difiere 0,01 punto. No ampliar tolerancia ni excluir los días. Auditar
+una reconstrucción causal de spot/exposiciones antes de otro full gate.

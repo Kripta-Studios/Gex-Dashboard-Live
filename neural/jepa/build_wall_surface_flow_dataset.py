@@ -34,6 +34,7 @@ from neural.jepa.surface_flow_features import (  # noqa: E402
     START_DATE,
     attach_completed_underlying_controls,
     attach_flow_features,
+    last_scheduled_decision_minute,
     make_touch_candidates,
     prepare_completed_bar_flow,
     validate_underlying_session,
@@ -42,6 +43,7 @@ from neural.jepa.wall_surface_flow_environment import assert_runtime_lock  # noq
 
 
 TICKERS = ("SPXW", "QQQ", "SPY")
+NATIVE_QUOTE_FIRST_MINUTE = 10 * 60 + 20
 MAX_WORKERS = 16
 EXPECTED_SESSION_COUNT = 2519
 EXPECTED_SESSION_KEY_SHA256 = "ac7200fd96f2ef9afc2f9f09eff18804497a2f975a7454cccf5ed1c935653057"
@@ -201,6 +203,27 @@ def apply_native_quote_clock(greeks: pd.DataFrame, native_quotes: pd.DataFrame) 
         frame["trade_date"] = frame["trade_date"].astype(str).str.replace(r"\D", "", regex=True).str[:8]
         frame["right"] = frame["right"].astype(str).str.upper().replace({"C": "CALL", "P": "PUT"})
         frame["strike"] = pd.to_numeric(frame["strike"], errors="coerce")
+    # The sealed sidecar intentionally contains only the frozen research window
+    # (10:20..14:29, or 12:54 on half-days).  Assert the explicit scheduled grid
+    # rather than deriving scope from observed min/max, which could silently
+    # accept a missing first or last minute.
+    if right["timestamp"].isna().any() or right.empty:
+        raise AssertionError("sealed native quote clock is empty or invalid")
+    ticker_values = sorted(right["symbol"].dropna().astype(str).unique().tolist())
+    date_values = sorted(right["trade_date"].dropna().astype(str).unique().tolist())
+    if len(ticker_values) != 1 or len(date_values) != 1:
+        raise AssertionError("sealed native quote clock spans multiple sessions")
+    final_minute = last_scheduled_decision_minute(ticker_values[0], date_values[0]) - 1
+    day = pd.Timestamp(date_values[0])
+    expected_clock = pd.date_range(
+        day + pd.Timedelta(minutes=NATIVE_QUOTE_FIRST_MINUTE),
+        day + pd.Timedelta(minutes=final_minute),
+        freq="1min",
+    )
+    observed_clock = pd.DatetimeIndex(sorted(right["timestamp"].unique()))
+    if not observed_clock.equals(expected_clock):
+        raise AssertionError("sealed native quote clock does not cover the exact scheduled research grid")
+    left = left[left["timestamp"].isin(expected_clock)].copy()
     keys = ["symbol", "expiration", "trade_date", "timestamp", "right", "strike"]
     if left[keys].isna().any().any() or right[keys].isna().any().any():
         raise AssertionError("native quote clock bridge contains missing normalized keys")
@@ -211,8 +234,8 @@ def apply_native_quote_clock(greeks: pd.DataFrame, native_quotes: pd.DataFrame) 
         raise AssertionError("native quote clock bridge is missing stored Greek keys")
     # Restore the original metadata/price columns and add the verified native
     # clock.  Current-provider bid/ask is deliberately not copied.
-    output = greeks.copy()
-    output["timestamp"] = pd.to_datetime(output["underlying_timestamp"], errors="coerce")
+    output = greeks.loc[left.index].copy()
+    output["timestamp"] = left["timestamp"]
     return output
 
 

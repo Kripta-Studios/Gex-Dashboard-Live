@@ -258,16 +258,26 @@ def test_build_session_replaces_missing_greek_clock_with_sealed_native_quote(tmp
     paths = _write_sources(tmp_path)
     greeks_path = Path(paths["greeks_path"])
     greeks = pd.read_parquet(greeks_path)
-    greeks.drop(columns=["timestamp"]).to_parquet(greeks_path, index=False)
+    early = greeks.copy()
+    early["timestamp"] = "2024-01-02 09:30:00"
+    early["underlying_timestamp"] = early["timestamp"]
+    clock = pd.date_range("2024-01-02 10:20:00", "2024-01-02 14:29:00", freq="1min")
+    window = pd.concat([greeks] * len(clock), ignore_index=True)
+    window["timestamp"] = clock.astype(str)
+    window["underlying_timestamp"] = window["timestamp"]
+    pd.concat([early, window], ignore_index=True).drop(columns=["timestamp"]).to_parquet(
+        greeks_path,
+        index=False,
+    )
     quote_path = tmp_path / "native_quotes.parquet"
     pd.DataFrame(
         {
-            "symbol": greeks["symbol"],
-            "expiration": greeks["expiration"],
-            "trade_date": greeks["trade_date"],
-            "timestamp": greeks["underlying_timestamp"],
-            "right": greeks["right"],
-            "strike": greeks["strike"],
+            "symbol": window["symbol"],
+            "expiration": window["expiration"],
+            "trade_date": window["trade_date"],
+            "timestamp": window["underlying_timestamp"],
+            "right": window["right"],
+            "strike": window["strike"],
             "bid": 9.0,
             "ask": 10.0,
         }
@@ -287,6 +297,15 @@ def test_build_session_replaces_missing_greek_clock_with_sealed_native_quote(tmp
     assert {row["source_kind"] for row in inventory} == {
         "greeks", "ohlc", "underlying", "native_quote"
     }
+    truncated = pd.read_parquet(quote_path)
+    truncated = truncated[pd.to_datetime(truncated["timestamp"]) != pd.Timestamp("2024-01-02 10:20:00")]
+    truncated.to_parquet(quote_path, index=False)
+    truncated_record = {
+        **record,
+        "expected_native_quote_sha256": sha256_file(quote_path),
+    }
+    with pytest.raises(AssertionError, match="exact scheduled research grid"):
+        build_session(truncated_record, _candidate())
 
 
 def test_data_gate_uses_schedule_aware_grid_and_blocks_timestamp_fallback() -> None:

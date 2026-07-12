@@ -208,3 +208,9 @@ Lección adicional de procedencia: un booleano leído de CSV no debe pasar por u
 helper vectorizado mediante `Series.map(helper)`. El primer full gate lo detectó
 antes de outcomes; ahora el attach prueba el CSV real y vuelve a verificar hashes
 de raw responses/manifests, JAR y booleanos JSON estrictos antes del build.
+
+Otra lección: igualdad de timestamps no prueba que cada columna tenga la misma
+semántica temporal. QQQ 2022-12-30 trae bid/ask de t pero `underlying_price` de
+t-1 dentro de la misma fila 1m; desplazar la fila completa sería incorrecto.
+El gate debe comparar cada columna contra una fuente 1s exacta y bloquear o
+reconstruir el campo, nunca relajar bps ni asumir que todo el snapshot está lagged.

@@ -283,3 +283,10 @@ El primer full-gate attempt detectó un bug pre-outcome al aplicar `_truthy` a
 escalares CSV aunque su contrato era vectorizado. El fix queda cubierto por un
 test de attach real y el gate verifica además booleanos estrictos del seal,
 consistencia del JAR, capturas positivas y hashes de raw/session manifests.
+
+El segundo attempt detectó dos defectos pre-outcome. El bridge usaba todo el día
+Greek contra un sidecar limitado al research window; se corrigió con grid
+programado exacto y test de truncamiento inicial. Después de descontar sus 1.441
+errores quedan QQQ/SPY 2022-12-30. QQQ mezcla `underlying_price` de t-1 con quote
+de t (máximo 19,688 bps); SPY difiere 0,01 punto. No se autoriza tolerancia,
+exclusión ni label runner hasta reconstruir y auditar un spot/wall consistente.

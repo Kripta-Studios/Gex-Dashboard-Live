@@ -357,5 +357,20 @@ attach: booleanos del seal deben ser JSON `true/false` exactos; JAR del índice
 debe coincidir con el seal; rows deben ser positivas; los 1.441 raw responses y
 manifests de sesión deben existir y conservar sus hashes sellados.
 
+El segundo intento procesó 2.519/2.519 y fue rechazado, también antes de labels.
+De 1.443 errores, 1.441 eran un bug de alcance: Greek full-session frente a
+sidecar sellado solo para 10:20–14:29/12:54. El bridge corregido exige el grid
+programado exacto (no min/max), filtra únicamente esa ventana y prueba el
+contraejemplo de primer minuto ausente. Auditoría completa: 125.557.490 keys
+Greek in-window compartidas y 500 extras; cero missing.
+
+Los dos fallos restantes son QQQ/SPY 2022-12-30. En QQQ, los cinco candidatos
+difieren 0,757–19,688 bps del derived open(t). El campo `underlying_price` de la
+fila Greek 1m estampada t coincide 390/390 con el open 1s de t-1, mientras bid/ask
+coinciden con t: snapshot híbrido del vendor, no sidecar. SPY tiene una diferencia
+de 0,01 punto (0,264 bps) a 13:40. No tolerar ni excluir. Antes de relanzar hay que
+predeclarar/probar una reconstrucción de spot y walls causalmente consistente;
+si no es posible, V1R1 queda bloqueada por procedencia.
+
 No existe resultado físico ni económico de H-FLOW1 todavía. Producción y todo
 2026 continúan intactos; no crear `PLAN.md` porque no hay dirección rentable clara.
