@@ -302,3 +302,16 @@ El one-shot posterior falsifica también el bloque snapshot QSIZE: LR pierde
 es específica: nivel/cambio 1m de tamaño NBBO, imbalance y profundidad agregada
 cerca del wall no separa defensa de ruptura. No falsifica reposición de cola,
 cancelaciones/update intensity intraminuto ni libro profundo, que no se midieron.
+
+H-QDYN1 separa esa pregunta: usa reportes NBBO tick previos a decisión. Los
+timestamps duplicados sin sequence solo cuentan intensidad; se excluyen de
+transiciones ordenadas. Así replenishment/withdrawal no depende de inventar un
+orden intramilisegundo. Sigue siendo NBBO top-of-book, no profundidad completa.
+
+La auditoría de profitability añade dos falsos positivos históricos que deben
+recordarse: (1) IB/Fibonacci completo usado antes de terminar el IB, fuga que
+afectó 338/697 trades del resultado original; (2) buena curva sobre labels
+`legacy_ohlc` y políticas escogidas con los mismos meses luego reportados. La
+única comparación económica admisible parte de `executable_quote` (ask->bid) y
+un scheduler no-overlap. El benchmark nested disponible cumple ese pricing pero
+da PF inferior a 1 en los tres tickers, por lo que no confirma alpha económico.

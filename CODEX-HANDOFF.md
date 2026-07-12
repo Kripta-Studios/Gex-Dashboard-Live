@@ -577,3 +577,27 @@ pero physical/payoff son false. Cerrar snapshot QSIZE; no hay PF/WR/PnL nuevo.
 Próxima fuente realmente distinta: dinámica intraminuto local (quote update
 intensity, replenishment/withdrawal), solo tras preflight sin outcomes de API,
 coste y live parity. No reutilizar el mismo snapshot block con otro modelo.
+
+H-QDYN1 está predeclarado: tick NBBO exact-wall durante `[t-32s,t-2s)`, CALL+PUT,
+28 features de intensidad/replenishment/withdrawal, sin snapshot levels. Un
+preflight determinista 24/24 obtuvo wall exacto y timestamp causal; estimación
+37,4M rows/6,34GB. Builder outcome-free e immutable listo; commit/push antes de
+capturar. La allowlist causal `t-5m` cubre 9.833/10.683. Same-ms duplicates no
+ordenan deltas. p secuencial `<0,0125`, 2026 y
+live parity bloqueados.
+
+Gate económica aceptada por el usuario el 2026-07-12: PF >=1,30, WR >=45% y
+>=12 trades/mes pueden valer, pero solo en WF cronológico puro con ask->bid,
+no-overlap y contrato live reproducible. La auditoría de lineage invalida los
+697 trades antiguos: 338 usaban IB/Fibonacci completo futuro antes de 10:30.
+El paquete causal actual de 416 trades también falla el validator actual por
+selección 2026 solapada, `legacy_ohlc`, 55 overlaps y contrato no declarado.
+
+El benchmark exacto existente
+`event_option_execquote_causal1030_nested_exploratory_202601_202605_v1` sí usa
+ask->bid, 0DTE, min/max hold y cero overlaps, pero pierde en los tres tickers:
+QQQ PF0,984/WR44,68/min15; SPXW PF0,832/WR42,99/min10; SPY
+PF0,919/WR43,90/min19. No existe artefacto que pase simultáneamente todos los
+contratos. La curva legacy WF Jan-Jun no es OOS de policy y no es repricing
+ejecutable. Continuar desde datos `executable_quote`; H-QDYN1 sigue siendo la
+nueva medición causal predeclarada, no una rentabilidad demostrada.

@@ -366,3 +366,53 @@ Siguiente hipótesis nueva permitida: H-QDYN1, reposición/retirada e intensidad
 intraminuto de quotes sobre contratos local-wall, si una auditoría outcome-free
 confirma captura 1s/tick reproducible. No confundirla con H-QSIZE snapshot ni
 descargar un wildcard 1s masivo sin una captura dirigida y predeclarada.
+
+### Research activo — H-QDYN1
+
+Preflight outcome-free de 24 contratos (primera decisión por ticker-año) confirma
+tick NBBO causal: 100% exact-wall y timestamps predecisión, mediana
+aprox. 1.750 rows/right/30s. Estimación completa: 37,4M rows y 6,34 GB raw.
+H-QDYN1 queda predeclarado como fuente nueva. La allowlist conocida en `t-5m`
+cubre 9.833/10.683 eventos; se captura exact wall `right=both` en `[t-32,t-2)`,
+sin sustitución. Mide update intensity
+y replenishment/withdrawal; same-millisecond collisions cuentan intensidad pero
+no ordered deltas. Gate secuencial p `<0,0125`; live parity bloqueada.
+
+Builder `build_wall_quote_tick_dynamics_sidecar.py` es inmutable/resumable,
+raw+parquet+manifest hashed y exige Terminal/JAR local. Siguiente paso: commit y
+push de predeclaración/builder/tests, captura completa outcome-free, data gate,
+freeze y one-shot físico. No se ha abierto outcome H-QDYN1.
+
+### Auditoría de rentabilidad y gate relajada — 2026-07-12
+
+El usuario acepta como gate económica prospectiva `PF >= 1,30`, `WR >= 45%` y
+`>=12 trades/mes`, siempre con walk-forward cronológico puro, ask de entrada,
+bid de salida, hold 30–180m, no-overlap y scheduler live exacto. Esta relajación
+no valida retrospectivamente resultados seleccionados con los meses reportados.
+
+Los 697 trades/PF 1,915 del commit histórico `47fccbf` quedan invalidados como
+evidencia causal: 338/697 decisiones eran 10:00–10:25 pero consumían el IB
+completo 09:30–10:29 y sus Fibonacci. Filtrar post-hoc a >=10:30 deja 359 trades
+y rompe SPY (PF 1,267) y SPXW mayo. No rescatar este resultado.
+
+El paquete actual fue sustituido en `66731f6` y reporta 416 trades/PF 1,749,
+pero el validador endurecido lo rechaza: selección 202601–202606 solapa los meses
+reportados, labels `legacy_ohlc` en vez de `executable_quote`, 55 overlaps y falta
+`position_overlap_policy=reject_while_open`. Su contrato empaquetado además es
+QQQ 2/45m, SPXW 1/30m y SPY 4/30m con guards, distinto de la tabla declarada
+4/0m, 2/30m, 1/0m; verificar el VPS antes de afirmar paridad.
+
+Benchmark limpio más cercano:
+`event_option_execquote_causal1030_nested_exploratory_202601_202605_v1` usa
+0DTE, ask->bid, hold 30–180m, cero overlaps y folds cronológicos. Falla:
+QQQ 94 trades/WR 44,68%/PF 0,984/min15; SPXW 107/42,99%/0,832/min10;
+SPY 123/43,90%/0,919/min19. Con cap SPY=1, PF 0,972/min14. El artefacto está
+untracked y el dataset en `tmp`, por lo que es benchmark diagnóstico, no seal.
+
+El walk-forward legacy `intersection_guarded_v1_walkforward` muestra una curva
+atractiva bajo gates relajadas, pero no es prueba: el overlay/policy se eligió
+después de inspeccionar Jan–Jun 2026 y sus labels no certifican ask->bid. No hay
+hoy una policy rentable que pase simultáneamente causalidad, selección y
+ejecución. El único replayer económico válido debe partir del parquet
+`executable_quote`, usar `walkforward_event_option_profile_selector.py` y el
+scheduler común sin `--allow-overlapping-positions`.

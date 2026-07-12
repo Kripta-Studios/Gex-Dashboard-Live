@@ -380,3 +380,17 @@ El one-shot ya cerró H-QSIZE1R1: LR 6/24, mediana ΔAUC -0,014823, p 0,890625;
 LightGBM 5/24, mediana -0,020959. Ningún ticker pasa y no se autoriza payoff.
 La próxima medición debe ser dinámica intraminuto, no otra reformulación de
 snapshot size. Rentabilidad nueva: no demostrada.
+
+Nueva fuente H-QDYN1 predeclarada sin outcomes: todos los NBBO ticks del contrato
+CALL/PUT en el wall durante `[t-32s,t-2s)`, solo si el strike ya pertenecía a
+la allowlist causal conocida en `t-5m` (9.833/10.683 candidatos).
+Preflight 24/24 exact/causal; coste estimado 37,4M rows y 6,34GB. Próximo hito:
+captura sellada y data gate, no payoff.
+
+Auditoría económica 2026-07-12: se acepta prospectivamente PF>=1,30, WR>=45% y
+12 trades/mes, sin relajar ask->bid/no-overlap/hold/scheduler. Los 697 trades
+antiguos tenían fuga IB: 338 decisiones anteriores a 10:30 consumían el IB
+completo 09:30–10:29. El paquete actual de 416 trades tampoco prueba edge por
+selección sobre Jan-Jun, labels legacy y 55 overlaps. El benchmark exacto nested
+ask->bid da PF QQQ/SPXW/SPY 0,984/0,832/0,919: aún no rentable. La buena curva
+WF legacy queda solo como hipótesis, no como policy promotable.
