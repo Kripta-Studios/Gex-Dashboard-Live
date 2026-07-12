@@ -210,6 +210,8 @@ def test_data_gate_uses_schedule_aware_grid_and_blocks_timestamp_fallback() -> N
                     "underlying_required_window_minutes": 390,
                     "expected_underlying_required_window_minutes": 390,
                     "candidate_underlying_spot_max_bps": 0.0,
+                    "underlying_out_of_scope_invalid_rows": 0,
+                    "underlying_min_research_tick_count": 60.0,
                     "option_timestamp_fallback_used": False,
                 }
             )
