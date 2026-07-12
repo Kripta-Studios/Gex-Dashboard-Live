@@ -395,5 +395,13 @@ reconstruir tanto wall state como spot/returns del event control y rehacer todos
 los touches; un overlay solo de spot es físicamente inválido porque IV/delta 1m
 pertenecen al snapshot híbrido.
 
+La captura terminó PASS sobre commit `4de62f5`: 671/671 contratos, 32.208 exact
+rows, cero errores y diferencias máximas spot/bid/ask `0.0`. Raw archivado:
+671 respuestas, 4,013 GiB. QQQ aporta 285/13.680 y SPY 386/18.528. Index SHA
+`7e5475f36d2163e188d721ea2f015c9a636db5bfbfede41dd8d0065a9382100a`;
+seal SHA `3c267f83e5108c75c9f148624983b11f3f0708fde12cb58a8742278d194a8fc5`.
+Siguiente: commitear compactos, construir 96 wall rows + control causal, congelar
+sus hashes e integrar el overlay antes del full data gate.
+
 No existe resultado físico ni económico de H-FLOW1 todavía. Producción y todo
 2026 continúan intactos; no crear `PLAN.md` porque no hay dirección rentable clara.

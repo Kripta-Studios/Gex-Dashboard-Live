@@ -224,3 +224,8 @@ los controles/touches. Es una reconstrucción condicional, no una promoción.
 El censo general confirmó que no era una regla elegida sobre dos ejemplos:
 2.516/2.518 sesiones son exactas en t y únicamente QQQ/SPY 2022-12-30 son
 exactas en t-1; no apareció ninguna sesión unresolved.
+
+La viabilidad de recaptura también quedó probada: 671/671 contratos positivos-OI
+aportaron 48 snapshots exactos cada uno y conservaron spot y bid/ask con
+diferencia cero frente a sus anclas. Esto repara coherencia física para esas dos
+sesiones, aunque la reconsulta 2026 mantiene provenance condicional.

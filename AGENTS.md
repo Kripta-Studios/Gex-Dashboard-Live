@@ -208,6 +208,11 @@ OI positivo (285/386; SHA `57c998...46c0`) y exige 48 snapshots first-order 1s
 exactos por contrato, spot=open(t), bid/ask iguales al vintage almacenado y raw
 HTTP/JAR/runtime/source hashes. Suite relevante ampliada: `68 passed`.
 
-Secuencia actual: captura/seal 671/671 → reconstrucción de walls y controles completos de
-ambas sesiones → full data gate. No parchear solo spot: IV/delta 1m también son
+Captura exact-Greek completada y sellada sobre commit `4de62f5`: 671/671,
+32.208 rows (QQQ 13.680, SPY 18.528), cero errores, spot/bid/ask max difference
+`0.0`, 671 raw responses/4,013 GiB. Index SHA `7e5475f3...2100a`, seal SHA
+`3c267f83...a8fc5`; provenance `CONDITIONAL_CURRENT_PROVIDER_RECONSTRUCTION`.
+
+Secuencia actual: commit/push del seal exact-Greek → reconstrucción de walls y
+controles completos de ambas sesiones → full data gate. No parchear solo spot: IV/delta 1m también son
 incoherentes con el spot de t.

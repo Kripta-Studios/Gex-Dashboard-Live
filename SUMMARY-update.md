@@ -297,5 +297,9 @@ unresolved (census SHA `24d86299...ff832`, commit `5c037ee`).
 No se sustituye solo spot: se recapturan S/IV/delta first-order 1s coherentes para
 los 671 contratos Greek∩OI positivo (285/386), 48 timestamps exactos cada uno.
 Bid/ask debe permanecer idéntico al histórico; cualquier revision bloquea. Los
-builders y 13 tests nuevos dejan la suite relevante en `68 passed`; falta la
-captura/seal 671/671 antes de reconstruir walls/controles y volver al full gate.
+builders y 13 tests nuevos dejan la suite relevante en `68 passed`.
+
+La captura ya selló 671/671 y 32.208 exact rows con cero errores y diferencia
+máxima `0.0` en spot/bid/ask. Raw: 671 respuestas/4,013 GiB; index SHA
+`7e5475f3...2100a`, provenance condicional. Falta construir/commitear las 96
+wall rows y controles causales, luego repetir el full gate.
