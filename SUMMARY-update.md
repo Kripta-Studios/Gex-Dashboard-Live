@@ -371,3 +371,7 @@ features de qimb/depth/relative-qimb, con mínimo 158 valores distintos por
 ticker-año. La reparación no cambia datos, clocks, contratos, labels, folds ni
 gates y conserva p secuencial `<0,0167`. Próximo paso: rebuild V1R1, freeze y
 one-shot físico. Rentabilidad nueva: aún no demostrada.
+
+V1R1 ya pasó el data gate: 10.683x76, SHA dataset `f4ed7b23...6c49`, cobertura
+mínima ticker-año 98,477%, distinctness/control/exact-key PASS y cero errores.
+Falta únicamente commitear el sello, congelar runner y abrir el one-shot físico.

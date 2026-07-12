@@ -560,3 +560,11 @@ indicators/native missing branches. V1 rejected queda versionado en
 Siguiente acción exacta: commit/push V1R1, rebuild a target nuevo, congelar data
 manifest/runner y ejecutar una sola evaluación física LR/LGBM. 2026 y producción
 siguen sin tocar; todavía no hay rentabilidad H-QSIZE.
+
+H-QSIZE1R1 data gate ya es PASS: 10.683x76, dataset SHA `f4ed7b23...6c49`,
+source SHA `9128ac47...e8a3`, minimum ticker-year both-valid 0,984772 y minimum
+ticker 0,988372. Todos los 32 pressure fields pasan distinctness; 2.519 fuentes,
+exact keys y controls pasan. Compactos están en
+`_diagnostics/wall_quote_size_pressure_at_touch_202208_202512_v1r1_data_gate/`.
+Congelar runner solo después de commitear/pushear esos compactos; luego ejecutar
+una vez LR/LGBM. No abrir 2026 ni option payoff antes del physical PASS.

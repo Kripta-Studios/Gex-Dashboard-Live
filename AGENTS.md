@@ -338,3 +338,14 @@ Código causal commits `950d724` y `d1d48e3`; suite focal `14 passed`.
 Secuencia única: commit/push de la reparación y compactos V1 -> rebuild inmutable
 V1R1 -> commit compactos -> frozen runner commit -> one-shot físico. 2026,
 producción y outcomes siguen intactos. No existe PF/WR/PnL nuevo todavía.
+
+H-QSIZE1R1 ya superó `PASS_DATA_GATE` desde commit `0298578`: 10.683 filas,
+76 columnas, dataset SHA
+`f4ed7b2360dd2ff3676a23ac2da297c73554ccfd0f5486314b85cc88d0ef6c49`,
+source inventory SHA
+`9128ac471ef2061a7b27db19d3886d23b4d3ae492727af69d8a44c05c61ee8a3`.
+Coverage, distinctness de las 32 pressure features, controles, exact keys y
+2.519-session provenance pasan. Compactos en
+`wall_quote_size_pressure_at_touch_202208_202512_v1r1_data_gate/`; parquet en
+`tmp/`. Siguiente paso único: commit compactos, generar frozen runner desde el
+nuevo HEAD y ejecutar el one-shot físico. Aún no hay outcomes/rentabilidad.

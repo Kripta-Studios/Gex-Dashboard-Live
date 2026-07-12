@@ -291,3 +291,8 @@ congelada antes de outcomes, compara F0/F1 en complete cases idénticos y limita
 alpha a imbalance y tamaño bid/ask relativo. También exige pertenencia de
 contrato Greek exacta por timestamp; una unión diaria puede introducir un strike
 antes de su primera observación histórica.
+
+Aplicada esa separación, V1R1 pasa el gate outcome-free con 32 pressure features
+no degeneradas y 98,477% de cobertura mínima ticker-año. Esto valida medición y
+causalidad, no alpha; la comparación física F0/F1 sigue sellada hasta congelar
+el runner.

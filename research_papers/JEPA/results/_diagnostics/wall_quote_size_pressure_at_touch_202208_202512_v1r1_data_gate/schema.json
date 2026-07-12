@@ -1,0 +1,308 @@
+{
+  "columns": [
+    {
+      "name": "ticker",
+      "dtype": "str"
+    },
+    {
+      "name": "trade_date",
+      "dtype": "str"
+    },
+    {
+      "name": "minute",
+      "dtype": "int64"
+    },
+    {
+      "name": "decision_dt",
+      "dtype": "datetime64[us]"
+    },
+    {
+      "name": "wall_identity",
+      "dtype": "str"
+    },
+    {
+      "name": "wall_role",
+      "dtype": "str"
+    },
+    {
+      "name": "candidate_right",
+      "dtype": "str"
+    },
+    {
+      "name": "candidate_wall_strike",
+      "dtype": "float64"
+    },
+    {
+      "name": "spot",
+      "dtype": "float64"
+    },
+    {
+      "name": "wall_alias_count",
+      "dtype": "int64"
+    },
+    {
+      "name": "episode_sequence",
+      "dtype": "int64"
+    },
+    {
+      "name": "episode_start_minute",
+      "dtype": "int64"
+    },
+    {
+      "name": "episode_id",
+      "dtype": "str"
+    },
+    {
+      "name": "minute_sin",
+      "dtype": "float64"
+    },
+    {
+      "name": "minute_cos",
+      "dtype": "float64"
+    },
+    {
+      "name": "role_resistance",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_distance_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_abs_distance_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "spot_ret_1m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "spot_abs_ret_1m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "spot_ret_5m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "spot_ret_15m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "spot_ret_30m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "realized_vol_5m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "realized_vol_15m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_distance_change_5m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_distance_change_15m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_distance_change_30m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_approach_5m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_approach_15m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_approach_30m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_call_local_qimb",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_call_local_log_bid_depth",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_call_local_log_ask_depth",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_call_relative_qimb",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_call_local_qimb_change_1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_call_local_log_bid_depth_change_1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_call_local_log_ask_depth_change_1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_call_relative_qimb_change_1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_call_local_qimb_change_5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_call_local_log_bid_depth_change_5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_call_local_log_ask_depth_change_5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_call_relative_qimb_change_5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_call_local_qimb_change_15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_call_local_log_bid_depth_change_15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_call_local_log_ask_depth_change_15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_call_relative_qimb_change_15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_put_local_qimb",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_put_local_log_bid_depth",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_put_local_log_ask_depth",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_put_relative_qimb",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_put_local_qimb_change_1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_put_local_log_bid_depth_change_1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_put_local_log_ask_depth_change_1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_put_relative_qimb_change_1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_put_local_qimb_change_5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_put_local_log_bid_depth_change_5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_put_local_log_ask_depth_change_5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_put_relative_qimb_change_5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_put_local_qimb_change_15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_put_local_log_bid_depth_change_15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_put_local_log_ask_depth_change_15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_put_relative_qimb_change_15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_call_local_signable_fraction",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_call_local_signable_fraction_change_1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_call_local_signable_fraction_change_5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_call_local_signable_fraction_change_15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_put_local_signable_fraction",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_put_local_signable_fraction_change_1m",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_put_local_signable_fraction_change_5m",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_put_local_signable_fraction_change_15m",
+      "dtype": "float64"
+    },
+    {
+      "name": "qsize_call_valid",
+      "dtype": "bool"
+    },
+    {
+      "name": "qsize_put_valid",
+      "dtype": "bool"
+    },
+    {
+      "name": "qsize_both_valid",
+      "dtype": "bool"
+    },
+    {
+      "name": "qsize_call_shared_local_contracts",
+      "dtype": "int64"
+    },
+    {
+      "name": "qsize_put_shared_local_contracts",
+      "dtype": "int64"
+    }
+  ]
+}
