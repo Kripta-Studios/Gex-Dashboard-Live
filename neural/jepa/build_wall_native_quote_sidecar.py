@@ -279,7 +279,6 @@ def normalize_quotes(
         not np.isfinite(numeric).all()
         or not (numeric[:, 0] > 0.0).all()
         or (numeric[:, 1:] < 0.0).any()
-        or (out["ask"] < out["bid"]).any()
     ):
         raise AssertionError("invalid quote price/size values")
     return out.sort_values(list(KEYS), kind="stable").reset_index(drop=True)
@@ -435,7 +434,10 @@ def download_session(*, ticker: str, trade_date: str, greeks_path: str | Path, o
         "runtime_lock_sha256": runtime["lock_sha256"],
         "runtime_environment_sha256": runtime["environment_sha256"],
         "raw_response_sha256": sha256_bytes(raw_bytes), "quote_parquet_sha256": sha256_file(parquet_path),
-        "rows": int(len(quotes)), "columns": list(quotes.columns), **audit,
+        "rows": int(len(quotes)), "columns": list(quotes.columns),
+        "crossed_quote_rows": int(quotes["ask"].lt(quotes["bid"]).sum()),
+        "crossed_quote_rate": float(quotes["ask"].lt(quotes["bid"]).mean()),
+        **audit,
     }
     manifest_path.write_bytes(canonical_json_bytes(manifest))
     staging_dir.rename(session_dir)
@@ -472,6 +474,9 @@ def validate_session(session_dir: str | Path, greeks_path: str | Path) -> dict[s
     runtime = assert_runtime_lock(ENVIRONMENT_LOCK)
     if runtime["lock_sha256"] != manifest["runtime_lock_sha256"] or runtime["environment_sha256"] != manifest["runtime_environment_sha256"]:
         raise AssertionError("sidecar runtime provenance mismatch")
+    manifest = dict(manifest)
+    manifest.setdefault("crossed_quote_rows", int(stored["ask"].lt(stored["bid"]).sum()))
+    manifest.setdefault("crossed_quote_rate", float(stored["ask"].lt(stored["bid"]).mean()))
     return manifest
 
 
@@ -536,6 +541,8 @@ def backfill_native_quotes(
             "session_manifest_path": str(manifest_path_session),
             "session_manifest_sha256": sha256_file(manifest_path_session),
             "rows": int(manifest["rows"]),
+            "crossed_quote_rows": int(manifest["crossed_quote_rows"]),
+            "crossed_quote_rate": float(manifest["crossed_quote_rate"]),
             "end_time": str(manifest["request_params"]["end_time"]),
             "terminal_jar_sha256": str(manifest["terminal_jar_sha256"]),
             "key_set_exact": bool(manifest["key_set_exact"]),
@@ -605,6 +612,8 @@ def backfill_native_quotes(
         "fallback_sessions": int(len(index)),
         "fallback_session_key_sha256": observed_key_hash,
         "rows": int(index["rows"].sum()),
+        "crossed_quote_rows": int(index["crossed_quote_rows"].sum()),
+        "crossed_quote_rate": float(index["crossed_quote_rows"].sum() / index["rows"].sum()),
         "rows_by_ticker": index.groupby("ticker", observed=True)["rows"].sum().astype(int).to_dict(),
         "index_path": str(seal / index_path.name),
         "index_sha256": sha256_file(index_path),

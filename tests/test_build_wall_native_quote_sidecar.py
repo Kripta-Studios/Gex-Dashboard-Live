@@ -59,6 +59,9 @@ def test_normalization_rejects_nonminute_duplicate_and_2026():
         normalize_quotes(duplicate, "SPY", "20240102")
     with pytest.raises(ValueError, match="pre-2026"):
         normalize_quotes(response(day="20260102"), "SPY", "20260102")
+    crossed = response(); crossed["response"][0]["data"][0].update({"bid": 1.2, "ask": 1.1})
+    preserved = normalize_quotes(crossed, "SPY", "20240102")
+    assert preserved["ask"].lt(preserved["bid"]).all()
 
 
 def test_download_is_immutable_and_validate_detects_raw_tamper(tmp_path):
