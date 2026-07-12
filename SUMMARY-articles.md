@@ -229,3 +229,8 @@ La viabilidad de recaptura también quedó probada: 671/671 contratos positivos-
 aportaron 48 snapshots exactos cada uno y conservaron spot y bid/ask con
 diferencia cero frente a sus anclas. Esto repara coherencia física para esas dos
 sesiones, aunque la reconsulta 2026 mantiene provenance condicional.
+
+La reconstrucción conserva el mecanismo original de walls: exact-1s S/IV se une
+al OI diario congelado y reutiliza las mismas fórmulas; el control se deriva
+independientemente de `open(t)` y `open(t-lag)`. El overlay se audita sin modificar
+ninguna fila fuera de QQQ/SPY 2022-12-30.

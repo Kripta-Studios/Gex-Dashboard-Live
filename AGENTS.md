@@ -213,6 +213,12 @@ Captura exact-Greek completada y sellada sobre commit `4de62f5`: 671/671,
 `0.0`, 671 raw responses/4,013 GiB. Index SHA `7e5475f3...2100a`, seal SHA
 `3c267f83...a8fc5`; provenance `CONDITIONAL_CURRENT_PROVIDER_RECONSTRUCTION`.
 
+Builder de bundle implementado en
+`build_wall_exact_greek_repair_artifacts.py`: revalida los 671 raw/snapshots,
+reconstruye 96 wall rows con el wall-state original y 96 controles desde
+`open(t)/open(t-lag)`, prueba overlay sin cambios fuera del target y emite bundle
+PASS inmutable. Suite relevante actual: `73 passed`. Falta commit y ejecución real.
+
 Secuencia actual: commit/push del seal exact-Greek → reconstrucción de walls y
 controles completos de ambas sesiones → full data gate. No parchear solo spot: IV/delta 1m también son
 incoherentes con el spot de t.

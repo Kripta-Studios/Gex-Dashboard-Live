@@ -275,7 +275,8 @@ neural/jepa/wall_surface_flow_environment.py
 neural/jepa/build_wall_native_quote_sidecar.py
 ```
 
-La suite combinada relevante pasa `68 passed` tras añadir el censo semántico y
+La suite combinada relevante pasa `73 passed` tras añadir el censo semántico,
+el builder de bundle y
 el sidecar exact-Greek V1R2, además de las regresiones wall-state. El preflight real posterior
 provenance y runtime más `14` regresiones wall-state). El preflight real posterior
 a las correcciones produjo 8 filas × 173 columnas, 3/3 sesiones, cero errores,
@@ -402,6 +403,11 @@ rows, cero errores y diferencias máximas spot/bid/ask `0.0`. Raw archivado:
 seal SHA `3c267f83e5108c75c9f148624983b11f3f0708fde12cb58a8742278d194a8fc5`.
 Siguiente: commitear compactos, construir 96 wall rows + control causal, congelar
 sus hashes e integrar el overlay antes del full data gate.
+
+`build_wall_exact_greek_repair_artifacts.py` ya implementa y prueba esa fase:
+revalida todos los raw/contract/snapshot hashes, recompone walls con OI congelado,
+reconstruye 96 controles desde `open(t)/open(t-lag)` y prueba que el overlay no
+cambia filas ajenas. Pendiente commit y ejecución autoritativa del bundle.
 
 No existe resultado físico ni económico de H-FLOW1 todavía. Producción y todo
 2026 continúan intactos; no crear `PLAN.md` porque no hay dirección rentable clara.
