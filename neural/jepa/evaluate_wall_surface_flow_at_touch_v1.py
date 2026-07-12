@@ -61,6 +61,31 @@ EXPECTED_DATA_INPUT_HASHES = {
     "events": "d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408",
     "manifest": "5431c2bf932fef6ce1ba34117cc869feb78063fbc1aa3989017fdbcb5b66dc88",
 }
+CODE_CLOSURE = (
+    "neural/jepa/evaluate_wall_surface_flow_at_touch_v1.py",
+    "neural/jepa/surface_flow_features.py",
+    "neural/jepa/freeze_wall_surface_flow_runner_v1r1.py",
+    "neural/jepa/wall_surface_flow_environment.py",
+    "neural/jepa/build_wall_surface_flow_dataset.py",
+    "neural/jepa/build_wall_native_quote_sidecar.py",
+    "neural/jepa/build_wall_exact_greek_repair_sidecar.py",
+    "neural/jepa/build_wall_exact_greek_repair_artifacts.py",
+    "neural/jepa/wall_state_features.py",
+)
+PROTOCOL_CLOSURE = (
+    "research_papers/JEPA/WALL_SURFACE_FLOW_AT_TOUCH_PREDECLARATION_V1.md",
+    "research_papers/JEPA/WALL_SURFACE_FLOW_AT_TOUCH_V1R1_CAUSAL_AMENDMENT.md",
+    "research_papers/JEPA/WALL_SURFACE_FLOW_V1R2_EXACT_SPOT_REPAIR_PREDECLARATION.md",
+    "research_papers/JEPA/WALL_SURFACE_FLOW_V1R2_DATA_GATE_CLARIFICATION.md",
+    "research_papers/JEPA/requirements-wall-surface-flow-v1r1.txt",
+)
+EXACT_REPAIR_EVENT_KEY_SHA256 = "41dae9ad53103019e0212a55915a18fe9854e21058c1d73b49d82c823a125201"
+EXACT_REPAIR_HISTORICAL_PROVENANCE = "CONDITIONAL_CURRENT_PROVIDER_RECONSTRUCTION"
+NATIVE_QUOTE_SEAL = (
+    PROJECT_ROOT
+    / "research_papers/JEPA/results/_diagnostics/wall_native_quote_sidecar_202208_202512_v1r1/manifest.json"
+)
+NATIVE_QUOTE_INDEX = NATIVE_QUOTE_SEAL.with_name("native_quote_index.csv")
 ENVIRONMENT_LOCK = PROJECT_ROOT / "research_papers/JEPA/requirements-wall-surface-flow-v1r1.txt"
 FOLDS = (
     {"fold": "2024", "train_end": "20231231", "test_start": "20240101", "test_end": "20241231"},
@@ -130,12 +155,7 @@ def current_git_commit() -> str:
 
 
 def assert_committed_runner() -> str:
-    tracked = (
-        "neural/jepa/evaluate_wall_surface_flow_at_touch_v1.py",
-        "neural/jepa/surface_flow_features.py",
-        "neural/jepa/wall_surface_flow_environment.py",
-        "research_papers/JEPA/requirements-wall-surface-flow-v1r1.txt",
-    )
+    tracked = (*CODE_CLOSURE, *PROTOCOL_CLOSURE)
     for relative in tracked:
         subprocess.run(
             ["git", "ls-files", "--error-unmatch", relative],
@@ -154,6 +174,146 @@ def assert_committed_runner() -> str:
         if dirty:
             raise AssertionError(f"frozen runner must be committed and clean: {relative}: {dirty}")
     return current_git_commit()
+
+
+def hash_inventory(relative_paths: tuple[str, ...]) -> dict[str, str]:
+    return {relative: sha256_file(PROJECT_ROOT / relative) for relative in relative_paths}
+
+
+def assert_evaluation_metadata_committed(
+    freeze_path: Path,
+    source_hashes_path: Path,
+    data_manifest_path: Path,
+) -> None:
+    assert_tracked_clean(freeze_path, "frozen manifest")
+    assert_tracked_clean(source_hashes_path, "source hash inventory")
+    assert_tracked_clean(data_manifest_path, "data manifest")
+
+
+def assert_strict_pass_data_gate(data_manifest: dict[str, Any]) -> None:
+    if data_manifest.get("status") != "PASS_DATA_GATE":
+        raise AssertionError(f"flow data gate is not PASS_DATA_GATE: {data_manifest.get('status')}")
+    gate = data_manifest.get("data_gate")
+    if not isinstance(gate, dict):
+        raise AssertionError("PASS data manifest has no structured data_gate")
+    required_true = (
+        "authoritative_inputs",
+        "authoritative_code",
+        "coverage_pass",
+        "distinctness_pass",
+        "control_coverage_pass",
+        "passed",
+    )
+    invalid = [field for field in required_true if gate.get(field) is not True]
+    if invalid:
+        raise AssertionError(f"PASS data manifest has non-true data-gate fields: {invalid}")
+
+
+def assert_frozen_hash_closure(freeze: dict[str, Any]) -> tuple[dict[str, str], dict[str, str]]:
+    code_hashes = hash_inventory(CODE_CLOSURE)
+    protocol_hashes = hash_inventory(PROTOCOL_CLOSURE)
+    if freeze.get("code_hashes") != code_hashes:
+        raise AssertionError("frozen code hash closure differs from active committed code")
+    if freeze.get("protocol_hashes") != protocol_hashes:
+        raise AssertionError("frozen protocol hash closure differs from active committed protocol")
+    return code_hashes, protocol_hashes
+
+
+def assert_exact_greek_repair_provenance(
+    value: Any,
+    *,
+    code_hashes: dict[str, str],
+    protocol_hashes: dict[str, str],
+) -> dict[str, Any]:
+    if not isinstance(value, dict):
+        raise AssertionError("PASS data manifest requires exact_greek_repair_provenance")
+    exact_static = {
+        "schema": "wall_exact_greek_repair_artifacts_v1r2",
+        "status": "PASS_EXACT_GREEK_REPAIR_ARTIFACTS",
+        "frozen_hashes_match": True,
+        "historical_provenance": EXACT_REPAIR_HISTORICAL_PROVENANCE,
+        "wall_target_rows": 96,
+        "full_control_grid_rows": 96,
+        "event_target_rows": 47,
+        "event_target_key_sha256": EXACT_REPAIR_EVENT_KEY_SHA256,
+    }
+    mismatches = [field for field, expected in exact_static.items() if value.get(field) != expected]
+    if mismatches:
+        raise AssertionError(f"exact Greek repair provenance mismatch: {mismatches}")
+    if value.get("target_sessions") != [
+        {"ticker": "QQQ", "trade_date": "20221230"},
+        {"ticker": "SPY", "trade_date": "20221230"},
+    ]:
+        raise AssertionError("exact Greek repair target sessions mismatch")
+    if value.get("event_target_rows_by_ticker") != {"QQQ": 27, "SPY": 20}:
+        raise AssertionError("exact Greek repair per-ticker event rows mismatch")
+    expected_code_links = {
+        "builder_sha256": code_hashes["neural/jepa/build_wall_exact_greek_repair_artifacts.py"],
+        "sidecar_builder_sha256": code_hashes["neural/jepa/build_wall_exact_greek_repair_sidecar.py"],
+        "wall_feature_module_sha256": code_hashes["neural/jepa/wall_state_features.py"],
+    }
+    expected_protocol_links = {
+        "predeclaration_sha256": protocol_hashes[
+            "research_papers/JEPA/WALL_SURFACE_FLOW_V1R2_EXACT_SPOT_REPAIR_PREDECLARATION.md"
+        ],
+        "runtime_lock_sha256": protocol_hashes[
+            "research_papers/JEPA/requirements-wall-surface-flow-v1r1.txt"
+        ],
+    }
+    for field, expected in {**expected_code_links, **expected_protocol_links}.items():
+        if str(value.get(field, "")) != expected:
+            raise AssertionError(f"exact Greek repair {field} is not linked to frozen closure")
+    for path_field, hash_field in (
+        ("manifest_path", "manifest_sha256"),
+        ("wall_repair_path", "wall_repair_sha256"),
+        ("event_control_repair_path", "event_control_repair_sha256"),
+    ):
+        path = PROJECT_ROOT / str(value.get(path_field, ""))
+        assert_tracked_clean(path, f"exact Greek repair {path_field}")
+        if sha256_file(path) != str(value.get(hash_field, "")):
+            raise AssertionError(f"exact Greek repair artifact hash mismatch: {path_field}")
+    return value
+
+
+def assert_native_quote_provenance(value: Any, *, code_hashes: dict[str, str]) -> None:
+    if not isinstance(value, dict):
+        raise AssertionError("PASS data manifest requires native_quote_provenance")
+    assert_tracked_clean(NATIVE_QUOTE_SEAL, "native quote seal")
+    assert_tracked_clean(NATIVE_QUOTE_INDEX, "native quote index")
+    if sha256_file(NATIVE_QUOTE_SEAL) != str(value.get("seal_sha256", "")):
+        raise AssertionError("data manifest native quote seal hash mismatch")
+    if sha256_file(NATIVE_QUOTE_INDEX) != str(value.get("index_sha256", "")):
+        raise AssertionError("data manifest native quote index hash mismatch")
+    seal = json.loads(NATIVE_QUOTE_SEAL.read_text(encoding="utf-8"))
+    required = {
+        "schema": "wall_native_quote_sidecar_seal_v1",
+        "status": "PASS_NATIVE_TIMESTAMP_BACKFILL",
+        "fallback_sessions": EXPECTED_NATIVE_QUOTE_SESSIONS,
+        "fallback_session_key_sha256": EXPECTED_NATIVE_QUOTE_KEY_SHA256,
+        "holdout_2026_used": False,
+        "outcome_free": True,
+        "production_modified": False,
+        "builder_sha256": code_hashes["neural/jepa/build_wall_native_quote_sidecar.py"],
+    }
+    invalid = [field for field, expected in required.items() if seal.get(field) != expected]
+    if invalid:
+        raise AssertionError(f"native quote seal provenance mismatch: {invalid}")
+    if str(seal.get("index_sha256", "")) != str(value.get("index_sha256", "")):
+        raise AssertionError("native quote seal/index provenance mismatch")
+
+
+def assert_data_builder_link(data_manifest: dict[str, Any], code_hashes: dict[str, str]) -> None:
+    expected = code_hashes["neural/jepa/build_wall_surface_flow_dataset.py"]
+    if str(data_manifest.get("builder_sha256", "")) != expected:
+        raise AssertionError("data manifest builder hash is not linked to frozen code closure")
+
+
+def assert_conditional_repair_status(exact_repair: dict[str, Any], freeze: dict[str, Any]) -> None:
+    if (
+        exact_repair["historical_provenance"] == EXACT_REPAIR_HISTORICAL_PROVENANCE
+        and freeze.get("historical_timestamp_provenance_status") == "PASS"
+    ):
+        raise AssertionError("conditional exact Greek repair cannot support authoritative historical provenance")
 
 
 def assert_tracked_clean(path: Path, label: str) -> str:
@@ -210,12 +370,22 @@ def verify_freeze(
     source_hashes_path: Path,
     data_manifest_path: Path,
 ) -> dict[str, Any]:
-    assert_tracked_clean(freeze_path, "frozen manifest")
-    assert_tracked_clean(data_manifest_path, "data manifest")
+    assert_evaluation_metadata_committed(freeze_path, source_hashes_path, data_manifest_path)
     freeze = json.loads(freeze_path.read_text(encoding="utf-8"))
     runtime = assert_runtime_lock(ENVIRONMENT_LOCK)
     if freeze.get("schema") != "wall_surface_flow_at_touch_frozen_runner_v1r1":
         raise AssertionError("wrong or missing frozen runner schema")
+    if freeze.get("status") != "PREEXECUTION_FROZEN":
+        raise AssertionError("frozen runner is not PREEXECUTION_FROZEN")
+    safety_flags = {
+        "holdout_2026_opened": False,
+        "production_modified": False,
+        "payoff_authorized_at_freeze": False,
+    }
+    invalid_safety = [field for field, expected in safety_flags.items() if freeze.get(field) is not expected]
+    if invalid_safety:
+        raise AssertionError(f"frozen runner safety flags mismatch: {invalid_safety}")
+    code_hashes, protocol_hashes = assert_frozen_hash_closure(freeze)
     expected_inputs = freeze.get("inputs", {})
     observed = {
         "flow_dataset": sha256_file(flow_path),
@@ -251,8 +421,9 @@ def verify_freeze(
     verify_status_evidence(freeze, "historical_timestamp_provenance_status", "timestamp_provenance_evidence")
     verify_status_evidence(freeze, "live_feature_parity_status", "live_parity_evidence")
     data_manifest = json.loads(data_manifest_path.read_text(encoding="utf-8"))
-    if data_manifest.get("status") != "PASS_DATA_GATE":
-        raise AssertionError(f"flow data gate is not PASS_DATA_GATE: {data_manifest.get('status')}")
+    assert_strict_pass_data_gate(data_manifest)
+    if data_manifest.get("holdout_2026_used") is not False or data_manifest.get("production_modified") is not False:
+        raise AssertionError("data manifest safety flags mismatch")
     if str(data_manifest.get("dataset_sha256")) != observed["flow_dataset"]:
         raise AssertionError("flow data manifest does not identify the supplied dataset")
     if str(data_manifest.get("source_file_hashes_sha256")) != observed["source_file_hashes"]:
@@ -271,6 +442,16 @@ def verify_freeze(
         or not str(native_quote.get("index_sha256", ""))
     ):
         raise AssertionError("data manifest native quote provenance mismatch")
+    assert_native_quote_provenance(native_quote, code_hashes=code_hashes)
+    exact_repair = assert_exact_greek_repair_provenance(
+        data_manifest.get("exact_greek_repair_provenance"),
+        code_hashes=code_hashes,
+        protocol_hashes=protocol_hashes,
+    )
+    if freeze.get("exact_greek_repair_provenance") != exact_repair:
+        raise AssertionError("frozen exact Greek repair provenance differs from data manifest")
+    assert_conditional_repair_status(exact_repair, freeze)
+    assert_data_builder_link(data_manifest, code_hashes)
     if str(data_manifest.get("feature_module_sha256")) != sha256_file(feature_module):
         raise AssertionError("data manifest feature module differs from frozen runner")
     if str(data_manifest.get("runtime_lock_sha256", "")) != runtime["lock_sha256"]:
@@ -283,8 +464,6 @@ def verify_freeze(
         raise AssertionError("data manifest control allowlist hash mismatch")
     if str(data_manifest.get("flow_feature_hash")) != hash_list(FLOW_FEATURES):
         raise AssertionError("data manifest flow allowlist hash mismatch")
-    if not bool((data_manifest.get("data_gate") or {}).get("passed", False)):
-        raise AssertionError("data manifest embeds a failed data gate")
     return freeze
 
 
