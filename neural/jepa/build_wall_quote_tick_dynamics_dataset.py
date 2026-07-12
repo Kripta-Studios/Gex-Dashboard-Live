@@ -207,7 +207,10 @@ def load_sidecar(index_path: str | Path, seal_path: str | Path, proof: pd.DataFr
 
 def _valid_rows(frame: pd.DataFrame) -> pd.Series:
     numeric = frame[["bid", "ask", "bid_size", "ask_size"]].apply(pd.to_numeric, errors="coerce")
-    exchanges = frame[["bid_exchange", "ask_exchange"]].notna().all(axis=1)
+    exchange_values = frame[["bid_exchange", "ask_exchange"]].apply(
+        pd.to_numeric, errors="coerce"
+    )
+    exchanges = np.isfinite(exchange_values).all(axis=1)
     return (np.isfinite(numeric).all(axis=1) & numeric["bid"].gt(0)
             & numeric["ask"].ge(numeric["bid"]) & numeric["bid_size"].ge(0)
             & numeric["ask_size"].ge(0) & exchanges)

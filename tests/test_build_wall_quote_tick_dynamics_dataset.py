@@ -89,6 +89,14 @@ def test_crossed_rows_do_not_form_valid_pairs() -> None:
     assert result["qdyn_call_unambiguous_pair_count"] == 27
 
 
+def test_nonfinite_exchange_does_not_form_valid_pairs() -> None:
+    frame = ticks()
+    frame["bid_exchange"] = frame["bid_exchange"].astype(float)
+    frame.loc[10, "bid_exchange"] = np.inf
+    result = right_features(frame, DECISION, "CALL")
+    assert result["qdyn_call_unambiguous_pair_count"] == 27
+
+
 def test_exchange_change_is_not_mislabeled_as_size_only() -> None:
     frame = ticks()
     frame.loc[10, "bid_exchange"] = 9
