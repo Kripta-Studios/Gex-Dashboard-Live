@@ -406,8 +406,11 @@ sus hashes e integrar el overlay antes del full data gate.
 
 `build_wall_exact_greek_repair_artifacts.py` ya implementa y prueba esa fase:
 revalida todos los raw/contract/snapshot hashes, recompone walls con OI congelado,
-reconstruye 96 controles desde `open(t)/open(t-lag)` y prueba que el overlay no
-cambia filas ajenas. Pendiente commit y ejecución autoritativa del bundle.
+reconstruye el grid físico de 96 controles desde `open(t)/open(t-lag)` y prueba
+que el overlay no cambia filas ajenas. El primer build real reveló que el event
+view solo tiene 47 keys objetivo (QQQ27/SPY20), no 96. La corrección congela SHA
+`41dae9ad...5201`: walls/full-control siguen 96, event repair es 47 y no inventa
+las otras 49 decisiones. Pendiente commit y relanzamiento autoritativo.
 
 No existe resultado físico ni económico de H-FLOW1 todavía. Producción y todo
 2026 continúan intactos; no crear `PLAN.md` porque no hay dirección rentable clara.

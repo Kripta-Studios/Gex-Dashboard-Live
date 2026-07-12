@@ -234,3 +234,7 @@ La reconstrucción conserva el mecanismo original de walls: exact-1s S/IV se une
 al OI diario congelado y reutiliza las mismas fórmulas; el control se deriva
 independientemente de `open(t)` y `open(t-lag)`. El overlay se audita sin modificar
 ninguna fila fuera de QQQ/SPY 2022-12-30.
+
+La cardinalidad también debe preservar el universo ejecutable: hay 96 snapshots
+wall, pero solo 47 decisiones presentes en el event view. Los otros 49 controles
+sirven para auditar la física, no pueden añadirse retrospectivamente como trades.

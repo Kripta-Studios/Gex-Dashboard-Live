@@ -6,14 +6,17 @@ import numpy as np
 import pandas as pd
 import pytest
 
+import neural.jepa.build_wall_exact_greek_repair_artifacts as repair_module
 from neural.jepa.build_wall_exact_greek_repair_artifacts import (
     EVENT_COLUMNS,
     INDEX_COLUMNS,
     OUTPUT_STATUS,
     apply_repair_overlay,
     build_repair_artifacts,
+    event_repair_keys_from_base,
     expected_repair_keys,
     load_repair_bundle,
+    repair_key_hash,
     validate_sealed_sidecar,
 )
 from neural.jepa.build_wall_exact_greek_repair_sidecar import (
@@ -254,7 +257,7 @@ def _write_synthetic_bundle(root: Path) -> dict[str, Path]:
         for lag in (1, 5, 15, 30):
             prior = lookup.reindex(timestamps - pd.Timedelta(minutes=lag)).to_numpy(float)
             controls[f"ret_{lag}m_bps"] = (current / prior - 1.0) * 10_000.0
-        event_frames.append(controls)
+        event_frames.append(controls.iloc[:27].copy() if ticker == "QQQ" else controls.iloc[:20].copy())
     walls_path = root / "base_walls.parquet"
     pd.concat(wall_frames, ignore_index=True).to_parquet(walls_path, index=False)
     events_path = root / "base_events.parquet"
@@ -283,12 +286,19 @@ def test_builds_exact_96_wall_and_control_rows_with_causal_returns(tmp_path):
     )
     assert manifest["status"] == OUTPUT_STATUS
     assert manifest["outcome_free"] is True and manifest["holdout_2026_used"] is False
-    assert manifest["wall_repair_rows"] == manifest["event_control_repair_rows"] == 96
-    assert manifest["maximum_wall_control_spot_difference_bps"] == 0.0
+    assert manifest["wall_repair_rows"] == 96
+    assert manifest["event_control_repair_rows"] == 47
+    assert manifest["event_target_rows_by_ticker"] == {"QQQ": 27, "SPY": 20}
+    assert manifest["full_control_grid_rows"] == 96
+    assert manifest["maximum_full_wall_control_spot_difference_bps"] == 0.0
+    assert manifest["maximum_event_wall_control_spot_difference_bps"] == 0.0
     walls = pd.read_parquet(output / "wall_repair.parquet")
     controls = pd.read_parquet(output / "event_control_repair.parquet")
     assert walls[["ticker", "trade_date", "minute"]].equals(expected_repair_keys())
-    assert controls[["ticker", "trade_date", "minute"]].equals(expected_repair_keys())
+    expected_event_keys = pd.read_parquet(paths["events"], columns=["ticker", "trade_date", "minute"])
+    pd.testing.assert_frame_equal(
+        controls[["ticker", "trade_date", "minute"]], expected_event_keys, check_dtype=False
+    )
     assert list(controls.columns) == list(EVENT_COLUMNS)
     assert np.isfinite(controls.select_dtypes(include=np.number).to_numpy()).all()
     assert json.loads((output / "manifest.json").read_text())["status"] == OUTPUT_STATUS
@@ -385,6 +395,12 @@ def test_overlay_rejects_scope_expansion_and_preserves_non_target_rows():
     with pytest.raises(AssertionError):
         apply_repair_overlay(base, incomplete, label="synthetic")
 
+    event_base = pd.concat([repair.iloc[:27], repair.iloc[48:68], extra], ignore_index=True)
+    event_repair = event_base[event_base["ticker"].ne("SPXW")].assign(value=5.0)
+    event_overlay = apply_repair_overlay(event_base, event_repair, label="event controls")
+    assert len(event_overlay) == len(event_base)
+    assert event_overlay.loc[event_overlay["ticker"].ne("SPXW"), "value"].eq(5.0).all()
+
 
 def test_non_pass_seal_is_rejected_before_artifact_reads(tmp_path):
     paths = _write_synthetic_bundle(tmp_path / "bundle")
@@ -393,3 +409,22 @@ def test_non_pass_seal_is_rejected_before_artifact_reads(tmp_path):
     paths["seal"].write_bytes(canonical_json_bytes(seal))
     with pytest.raises(AssertionError, match="not a PASS"):
         validate_sealed_sidecar(paths["index"], paths["seal"], paths["manifest"], enforce_frozen=False)
+
+
+def test_event_executable_subset_count_and_hash_are_fail_closed(tmp_path, monkeypatch):
+    paths = _write_synthetic_bundle(tmp_path / "bundle")
+    events = pd.read_parquet(paths["events"])
+    counts = events.groupby("ticker").size().astype(int).to_dict()
+    digest = repair_key_hash(events)
+    monkeypatch.setattr(repair_module, "EXPECTED_EVENT_REPAIR_ROWS", len(events))
+    monkeypatch.setattr(repair_module, "EXPECTED_EVENT_REPAIR_ROWS_BY_TICKER", counts)
+    monkeypatch.setattr(repair_module, "EXPECTED_EVENT_REPAIR_KEY_SHA256", digest)
+    accepted = event_repair_keys_from_base(events, enforce_frozen=True)
+    assert len(accepted) == 47
+
+    extra = expected_repair_keys().query("ticker == 'SPY'").iloc[[20]].copy()
+    for column in EVENT_COLUMNS[3:]:
+        extra[column] = 0.0
+    expanded = pd.concat([events, extra[list(EVENT_COLUMNS)]], ignore_index=True)
+    with pytest.raises(AssertionError, match="frozen executable subset"):
+        event_repair_keys_from_base(expanded, enforce_frozen=True)

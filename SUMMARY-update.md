@@ -305,5 +305,7 @@ máxima `0.0` en spot/bid/ask. Raw: 671 respuestas/4,013 GiB; index SHA
 wall rows y controles causales, luego repetir el full gate.
 
 El builder de bundle ya está implementado: valida todo el sidecar, reconstruye
-96 walls y 96 controles, y comprueba overlay inmutable fuera del target. Pendiente
-commit/ejecución real y congelar sus tres hashes.
+96 walls y el grid físico completo de 96 controles. El event view contiene solo
+47 keys objetivo (27/20; SHA `41dae9ad...5201`), así que el patch/overlay se
+restringe a esas 47 y no añade 49 decisiones inexistentes. Pendiente relanzar y
+congelar los tres hashes.

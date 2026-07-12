@@ -71,7 +71,10 @@ EVENT_COLUMNS = (
     "ret_1m_bps", "ret_5m_bps", "ret_15m_bps", "ret_30m_bps",
 )
 RETURN_LAGS = (1, 5, 15, 30)
-EXPECTED_REPAIR_ROWS = len(TARGET_TICKERS) * EXPECTED_TIMESTAMPS
+EXPECTED_WALL_REPAIR_ROWS = len(TARGET_TICKERS) * EXPECTED_TIMESTAMPS
+EXPECTED_EVENT_REPAIR_ROWS = 47
+EXPECTED_EVENT_REPAIR_ROWS_BY_TICKER = {"QQQ": 27, "SPY": 20}
+EXPECTED_EVENT_REPAIR_KEY_SHA256 = "41dae9ad53103019e0212a55915a18fe9854e21058c1d73b49d82c823a125201"
 FORBIDDEN_COLUMN_TOKENS = ("future", "outcome", "exit", "pnl", "return_label", "win_label")
 INDEX_COLUMNS = (
     "ticker", "trade_date", "strike", "right", "contract_dir",
@@ -153,6 +156,7 @@ def _normalize_keys(frame: pd.DataFrame, label: str) -> pd.DataFrame:
 
 
 def expected_repair_keys() -> pd.DataFrame:
+    """Return the complete 96-row physical wall/control grid."""
     minutes = [timestamp.hour * 60 + timestamp.minute for timestamp in decision_timestamps()]
     return pd.DataFrame(
         [(ticker, TARGET_DATE, minute) for ticker in TARGET_TICKERS for minute in minutes],
@@ -165,6 +169,36 @@ def _assert_exact_repair_keys(frame: pd.DataFrame, label: str) -> pd.DataFrame:
     observed = out[list(KEY_COLUMNS)].sort_values(list(KEY_COLUMNS), kind="stable").reset_index(drop=True)
     pd.testing.assert_frame_equal(observed, expected_repair_keys(), check_dtype=False, obj=f"{label} key scope")
     return out
+
+
+def repair_key_hash(frame: pd.DataFrame) -> str:
+    ordered = _normalize_keys(frame, "repair key hash input").sort_values(list(KEY_COLUMNS), kind="stable")
+    payload = "".join(
+        f"{row.ticker},{row.trade_date},{int(row.minute)}\n"
+        for row in ordered[list(KEY_COLUMNS)].itertuples(index=False)
+    ).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
+
+
+def event_repair_keys_from_base(base_events: pd.DataFrame, *, enforce_frozen: bool) -> pd.DataFrame:
+    normalized = _normalize_keys(base_events, "base event controls")
+    full = expected_repair_keys().assign(_physical_grid=True)
+    target = normalized.merge(full, on=list(KEY_COLUMNS), how="inner", validate="one_to_one")
+    target = target[list(KEY_COLUMNS)].sort_values(list(KEY_COLUMNS), kind="stable").reset_index(drop=True)
+    if target.empty:
+        raise AssertionError("base event view has no executable keys in the frozen repair sessions")
+    counts = target.groupby("ticker", observed=True).size().astype(int).to_dict()
+    observed_hash = repair_key_hash(target)
+    if enforce_frozen and (
+        len(target) != EXPECTED_EVENT_REPAIR_ROWS
+        or counts != EXPECTED_EVENT_REPAIR_ROWS_BY_TICKER
+        or observed_hash != EXPECTED_EVENT_REPAIR_KEY_SHA256
+    ):
+        raise AssertionError(
+            "base event repair universe differs from the frozen executable subset: "
+            f"rows={len(target)} counts={counts} hash={observed_hash}"
+        )
+    return target
 
 
 def current_git_commit() -> str:
@@ -503,7 +537,7 @@ def _read_base_walls(path: Path, *, enforce_frozen: bool) -> pd.DataFrame:
     assert_wall_state_schema(frame)
     _assert_no_forbidden_columns(frame, "base walls")
     target = frame.merge(expected_repair_keys(), on=list(KEY_COLUMNS), how="inner", validate="one_to_one")
-    if len(target) != EXPECTED_REPAIR_ROWS:
+    if len(target) != EXPECTED_WALL_REPAIR_ROWS:
         raise AssertionError("base walls do not contain the exact 96 repair keys")
     return frame
 
@@ -520,9 +554,7 @@ def _read_base_events(path: Path, *, enforce_frozen: bool) -> pd.DataFrame:
     frame = pd.read_parquet(path, columns=list(EVENT_COLUMNS))
     frame = _normalize_keys(frame, "base event controls")
     _assert_no_forbidden_columns(frame, "base event controls")
-    target = frame.merge(expected_repair_keys(), on=list(KEY_COLUMNS), how="inner", validate="one_to_one")
-    if len(target) != EXPECTED_REPAIR_ROWS:
-        raise AssertionError("base events do not contain the exact 96 repair keys")
+    event_repair_keys_from_base(frame, enforce_frozen=enforce_frozen)
     return frame
 
 
@@ -594,7 +626,12 @@ def build_event_control_repair(manifest_path: str | Path) -> tuple[pd.DataFrame,
     output = _assert_exact_repair_keys(output, "event control repair")
     output = output[list(EVENT_COLUMNS)]
     _assert_no_forbidden_columns(output, "event control repair")
-    return output, {"underlying_sources": sources, "causal_return_formula": "(open(t)/open(t-lag)-1)*10000"}
+    return output, {
+        "underlying_sources": sources,
+        "causal_return_formula": "(open(t)/open(t-lag)-1)*10000",
+        "full_control_grid_rows": int(len(output)),
+        "full_control_grid_key_sha256": repair_key_hash(output),
+    }
 
 
 def build_wall_repair(
@@ -685,15 +722,21 @@ def audit_exact_spot_against_controls(exact_rows: pd.DataFrame, controls: pd.Dat
 
 
 def apply_repair_overlay(base: pd.DataFrame, repair: pd.DataFrame, *, label: str) -> pd.DataFrame:
-    """Replace exactly the frozen 96 keys while preserving every other row."""
+    """Replace exactly the base's frozen-session keys, preserving every other row."""
     base_normalized = _normalize_keys(base, f"base {label}")
-    repair_normalized = _assert_exact_repair_keys(repair, f"{label} repair")
+    repair_normalized = _normalize_keys(repair, f"{label} repair")
     if list(base_normalized.columns) != list(repair_normalized.columns):
         raise AssertionError(f"{label} overlay schema/order mismatch")
-    target_keys = expected_repair_keys()
-    target = base_normalized.merge(target_keys, on=list(KEY_COLUMNS), how="inner", validate="one_to_one")
-    if len(target) != EXPECTED_REPAIR_ROWS:
-        raise AssertionError(f"base {label} does not contain exactly the frozen 96 keys")
+    full_grid = expected_repair_keys().assign(_physical_grid=True)
+    target_keys = base_normalized[list(KEY_COLUMNS)].merge(
+        full_grid, on=list(KEY_COLUMNS), how="inner", validate="one_to_one"
+    )[list(KEY_COLUMNS)].sort_values(list(KEY_COLUMNS), kind="stable").reset_index(drop=True)
+    observed_repair_keys = repair_normalized[list(KEY_COLUMNS)].sort_values(
+        list(KEY_COLUMNS), kind="stable"
+    ).reset_index(drop=True)
+    pd.testing.assert_frame_equal(
+        observed_repair_keys, target_keys, check_dtype=False, obj=f"{label} overlay target keys"
+    )
     marker = base_normalized[list(KEY_COLUMNS)].merge(
         target_keys.assign(_repair_target=True), on=list(KEY_COLUMNS), how="left", validate="one_to_one"
     )
@@ -731,7 +774,11 @@ def load_repair_bundle(
     if str(manifest.get("historical_provenance")) != "CONDITIONAL_CURRENT_PROVIDER_RECONSTRUCTION":
         raise AssertionError("exact-Greek repair bundle has unexpected historical provenance")
     expected_sessions = [{"ticker": ticker, "trade_date": TARGET_DATE} for ticker in TARGET_TICKERS]
-    if manifest.get("target_sessions") != expected_sessions or int(manifest.get("target_rows", -1)) != EXPECTED_REPAIR_ROWS:
+    if (
+        manifest.get("target_sessions") != expected_sessions
+        or int(manifest.get("wall_target_rows", -1)) != EXPECTED_WALL_REPAIR_ROWS
+        or int(manifest.get("full_control_grid_rows", -1)) != EXPECTED_WALL_REPAIR_ROWS
+    ):
         raise AssertionError("exact-Greek repair bundle target scope differs from the frozen 96 keys")
     if float(manifest.get("spot_tolerance_bps", np.nan)) != SPOT_TOLERANCE_BPS:
         raise AssertionError("exact-Greek repair bundle changes the frozen spot tolerance")
@@ -750,6 +797,18 @@ def load_repair_bundle(
         or int(sidecar_audit.get("exact_rows", -1)) != EXPECTED_CONTRACTS * EXPECTED_TIMESTAMPS
     ):
         raise AssertionError("exact-Greek repair bundle lacks the frozen 671-contract sidecar coverage")
+    control_audit = manifest.get("control_audit")
+    exact_spot_audit = manifest.get("exact_spot_audit")
+    if (
+        not isinstance(control_audit, dict)
+        or int(control_audit.get("full_control_grid_rows", -1)) != EXPECTED_WALL_REPAIR_ROWS
+        or str(control_audit.get("full_control_grid_key_sha256")) != repair_key_hash(expected_repair_keys())
+        or not isinstance(exact_spot_audit, dict)
+        or int(exact_spot_audit.get("rows_compared", -1)) != int(sidecar_audit.get("exact_rows", -2))
+        or float(exact_spot_audit.get("maximum_exact_greek_control_spot_difference_bps", np.inf)) > SPOT_TOLERANCE_BPS
+        or float(manifest.get("maximum_full_wall_control_spot_difference_bps", np.inf)) > SPOT_TOLERANCE_BPS
+    ):
+        raise AssertionError("exact-Greek repair bundle lacks valid full 96-row physical control evidence")
     runtime = assert_runtime_lock(ENVIRONMENT_LOCK)
     code_hashes = {
         "builder_sha256": sha256_file(__file__),
@@ -779,7 +838,23 @@ def load_repair_bundle(
     walls = pd.read_parquet(wall_path)
     controls = pd.read_parquet(event_path)
     walls = _assert_exact_repair_keys(walls, "wall repair bundle")
-    controls = _assert_exact_repair_keys(controls, "event-control repair bundle")
+    controls = _normalize_keys(controls, "event-control repair bundle")
+    if controls.merge(expected_repair_keys(), on=list(KEY_COLUMNS), how="inner", validate="one_to_one").shape[0] != len(controls):
+        raise AssertionError("event-control repair bundle contains a key outside the 96-row physical grid")
+    event_counts = controls.groupby("ticker", observed=True).size().astype(int).to_dict()
+    event_hash = repair_key_hash(controls)
+    if (
+        int(manifest.get("event_target_rows", -1)) != len(controls)
+        or manifest.get("event_target_rows_by_ticker") != event_counts
+        or str(manifest.get("event_target_key_sha256")) != event_hash
+    ):
+        raise AssertionError("event-control repair bundle executable key inventory differs from its manifest")
+    if enforce_frozen and (
+        len(controls) != EXPECTED_EVENT_REPAIR_ROWS
+        or event_counts != EXPECTED_EVENT_REPAIR_ROWS_BY_TICKER
+        or event_hash != EXPECTED_EVENT_REPAIR_KEY_SHA256
+    ):
+        raise AssertionError("event-control repair bundle differs from the frozen 47-key executable subset")
     assert_wall_state_schema(walls)
     _assert_no_forbidden_columns(walls, "wall repair bundle")
     _assert_no_forbidden_columns(controls, "event-control repair bundle")
@@ -803,7 +878,7 @@ def load_repair_bundle(
     if not np.isfinite(difference).all() or float(difference.max()) > SPOT_TOLERANCE_BPS:
         raise AssertionError("exact-Greek repair bundle wall/control spot parity failed")
     if not np.isclose(
-        float(manifest.get("maximum_wall_control_spot_difference_bps", np.nan)),
+        float(manifest.get("maximum_event_wall_control_spot_difference_bps", np.nan)),
         float(difference.max()), rtol=0.0, atol=1e-15,
     ):
         raise AssertionError("exact-Greek repair bundle spot audit differs from its manifest")
@@ -844,11 +919,28 @@ def build_repair_artifacts(
     )
     walls = _read_base_walls(paths["walls"], enforce_frozen=enforce_frozen)
     events = _read_base_events(paths["events"], enforce_frozen=enforce_frozen)
-    event_repair, control_audit = build_event_control_repair(paths["manifest"])
-    exact_spot_audit = audit_exact_spot_against_controls(exact_rows, event_repair)
+    full_controls, control_audit = build_event_control_repair(paths["manifest"])
+    exact_spot_audit = audit_exact_spot_against_controls(exact_rows, full_controls)
     wall_repair, wall_audit = build_wall_repair(exact_rows, universe, walls)
+    full_joined = wall_repair[list(KEY_COLUMNS) + ["spot"]].merge(
+        full_controls[list(KEY_COLUMNS) + ["spot"]],
+        on=list(KEY_COLUMNS), suffixes=("_wall", "_control"), validate="one_to_one",
+    )
+    full_spot_diff = (
+        (pd.to_numeric(full_joined["spot_wall"], errors="coerce") - pd.to_numeric(full_joined["spot_control"], errors="coerce")).abs()
+        / pd.to_numeric(full_joined["spot_control"], errors="coerce") * 10_000.0
+    )
+    if (
+        len(full_joined) != EXPECTED_WALL_REPAIR_ROWS or not np.isfinite(full_spot_diff).all()
+        or float(full_spot_diff.max()) > SPOT_TOLERANCE_BPS
+    ):
+        raise AssertionError(f"repaired wall/full-control spot parity failed: max_bps={full_spot_diff.max()}")
+    event_keys = event_repair_keys_from_base(events, enforce_frozen=enforce_frozen)
+    event_repair = full_controls.merge(event_keys, on=list(KEY_COLUMNS), how="inner", validate="one_to_one")
     event_repair = event_repair.astype({column: events[column].dtype for column in EVENT_COLUMNS})
-    event_repair = _assert_exact_repair_keys(event_repair, "event control repair")[list(EVENT_COLUMNS)]
+    event_repair = _normalize_keys(event_repair, "event control repair")[list(EVENT_COLUMNS)]
+    event_counts = event_repair.groupby("ticker", observed=True).size().astype(int).to_dict()
+    event_key_sha256 = repair_key_hash(event_repair)
     joined = wall_repair[list(KEY_COLUMNS) + ["spot"]].merge(
         event_repair[list(KEY_COLUMNS) + ["spot"]],
         on=list(KEY_COLUMNS), suffixes=("_wall", "_control"), validate="one_to_one",
@@ -857,7 +949,7 @@ def build_repair_artifacts(
         (pd.to_numeric(joined["spot_wall"], errors="coerce") - pd.to_numeric(joined["spot_control"], errors="coerce")).abs()
         / pd.to_numeric(joined["spot_control"], errors="coerce") * 10_000.0
     )
-    if len(joined) != EXPECTED_REPAIR_ROWS or not np.isfinite(spot_diff).all() or float(spot_diff.max()) > SPOT_TOLERANCE_BPS:
+    if len(joined) != len(event_keys) or not np.isfinite(spot_diff).all() or float(spot_diff.max()) > SPOT_TOLERANCE_BPS:
         raise AssertionError(f"repaired wall/control spot parity failed: max_bps={spot_diff.max()}")
     # Exercise the overlay invariant now, without writing a modified base file.
     wall_overlay = apply_repair_overlay(walls, wall_repair, label="walls")
@@ -880,9 +972,14 @@ def build_repair_artifacts(
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
         "git_commit": build_commit,
         "target_sessions": [{"ticker": ticker, "trade_date": TARGET_DATE} for ticker in TARGET_TICKERS],
-        "target_rows": EXPECTED_REPAIR_ROWS,
+        "wall_target_rows": EXPECTED_WALL_REPAIR_ROWS,
+        "full_control_grid_rows": int(len(full_controls)),
+        "event_target_rows": int(len(event_repair)),
+        "event_target_rows_by_ticker": event_counts,
+        "event_target_key_sha256": event_key_sha256,
         "spot_tolerance_bps": SPOT_TOLERANCE_BPS,
-        "maximum_wall_control_spot_difference_bps": float(spot_diff.max()),
+        "maximum_full_wall_control_spot_difference_bps": float(full_spot_diff.max()),
+        "maximum_event_wall_control_spot_difference_bps": float(spot_diff.max()),
         "input_paths": {label: str(path) for label, path in paths.items()},
         "input_sha256": input_hashes,
         "builder_sha256": sha256_file(__file__),

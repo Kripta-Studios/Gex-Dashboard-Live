@@ -215,9 +215,10 @@ Captura exact-Greek completada y sellada sobre commit `4de62f5`: 671/671,
 
 Builder de bundle implementado en
 `build_wall_exact_greek_repair_artifacts.py`: revalida los 671 raw/snapshots,
-reconstruye 96 wall rows con el wall-state original y 96 controles desde
-`open(t)/open(t-lag)`, prueba overlay sin cambios fuera del target y emite bundle
-PASS inmutable. Suite relevante actual: `73 passed`. Falta commit y ejecución real.
+reconstruye 96 wall rows y un grid físico completo de 96 controles desde
+`open(t)/open(t-lag)`. El event view solo contiene 47 keys congeladas (QQQ27,
+SPY20; SHA `41dae9ad...5201`), por lo que el output event-control/overlay debe ser
+47 y jamás añadir las 49 ausentes. Suite relevante: `73 passed`.
 
 Secuencia actual: commit/push del seal exact-Greek → reconstrucción de walls y
 controles completos de ambas sesiones → full data gate. No parchear solo spot: IV/delta 1m también son
