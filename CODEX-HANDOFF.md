@@ -275,7 +275,8 @@ neural/jepa/wall_surface_flow_environment.py
 neural/jepa/build_wall_native_quote_sidecar.py
 ```
 
-La suite combinada relevante pasa `55 passed` (`41` pruebas nuevas de flow,
+La suite combinada relevante pasa `68 passed` tras añadir el censo semántico y
+el sidecar exact-Greek V1R2, además de las regresiones wall-state. El preflight real posterior
 provenance y runtime más `14` regresiones wall-state). El preflight real posterior
 a las correcciones produjo 8 filas × 173 columnas, 3/3 sesiones, cero errores,
 grid completo y hashes/runtime persistidos en
@@ -371,6 +372,26 @@ coinciden con t: snapshot híbrido del vendor, no sidecar. SPY tiene una diferen
 de 0,01 punto (0,264 bps) a 13:40. No tolerar ni excluir. Antes de relanzar hay que
 predeclarar/probar una reconstrucción de spot y walls causalmente consistente;
 si no es posible, V1R1 queda bloqueada por procedencia.
+
+### V1R2 pre-outcome
+
+La regla general se congeló antes de labels en
+`WALL_SURFACE_FLOW_V1R2_EXACT_SPOT_REPAIR_PREDECLARATION.md`. El auditor
+`audit_wall_spot_semantics_v1.py` compara todas las 120.864 rows wall in-scope
+contra derived `open(t)` y `open(t-1)` y exige 2.516/2/0 sesiones
+`exact_t/hybrid/unresolved`. El builder
+`build_wall_exact_greek_repair_sidecar.py` captura la superficie coherente
+first-order 1s de los 671 contratos positivos-OI almacenados (QQQ 285/SPY 386,
+key SHA `57c99891a37fcde939df4a88de7f45a7dffd5be544c8730046bae45e109846c0`).
+
+Cada contrato debe aportar las 48 decisiones exactas 10:35..14:30, dual clocks
+iguales, spot<=0,001 bps de derived open(t), bid/ask<=1e-9 del Greek congelado,
+sin floor/asof ni sustitución de contrato. Raw HTTP, proceso/JAR/Java, runtime y
+fuentes quedan hashados; seal solo 671/671. La procedencia seguirá
+`CONDITIONAL_CURRENT_PROVIDER_RECONSTRUCTION`. Después del seal hay que
+reconstruir tanto wall state como spot/returns del event control y rehacer todos
+los touches; un overlay solo de spot es físicamente inválido porque IV/delta 1m
+pertenecen al snapshot híbrido.
 
 No existe resultado físico ni económico de H-FLOW1 todavía. Producción y todo
 2026 continúan intactos; no crear `PLAN.md` porque no hay dirección rentable clara.

@@ -214,3 +214,9 @@ semántica temporal. QQQ 2022-12-30 trae bid/ask de t pero `underlying_price` de
 t-1 dentro de la misma fila 1m; desplazar la fila completa sería incorrecto.
 El gate debe comparar cada columna contra una fuente 1s exacta y bloquear o
 reconstruir el campo, nunca relajar bps ni asumir que todo el snapshot está lagged.
+
+La auditoría de consistencia confirmó que IV/delta almacenados explican el spot
+stale, no el spot corregido; sustituir únicamente S generaría una superficie
+sintética. V1R2 exige recapturar juntos S/IV/delta a 1s exacto para todo contrato
+con OI positivo, conservar OI y bid/ask históricos como anclas y rehacer también
+los controles/touches. Es una reconstrucción condicional, no una promoción.
