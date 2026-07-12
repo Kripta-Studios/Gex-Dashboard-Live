@@ -28,8 +28,8 @@ import requests
 TICKERS = ("SPXW", "QQQ", "SPY")
 ENDPOINT = "/option/history/quote"
 KEYS = ("symbol", "expiration", "trade_date", "timestamp", "strike", "right")
-SOURCE_COLUMNS = ("symbol", "expiration", "timestamp", "underlying_timestamp", "strike", "right", "bid", "ask", "bid_size", "ask_size")
-OUTPUT_COLUMNS = (*KEYS, "underlying_timestamp", "bid", "ask", "bid_size", "ask_size")
+SOURCE_COLUMNS = ("symbol", "expiration", "timestamp", "strike", "right", "bid", "ask", "bid_size", "ask_size")
+OUTPUT_COLUMNS = (*KEYS, "bid", "ask", "bid_size", "ask_size")
 DEFAULT_START_TIME = "10:20:00"
 DEFAULT_END_TIME = "14:29:00"
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -255,8 +255,7 @@ def normalize_quotes(
     out["symbol"] = out["symbol"].astype(str).str.upper()
     out["right"] = out["right"].astype(str).str.upper().replace({"CALL": "C", "PUT": "P"})
     out["expiration"] = out["expiration"].astype(str).str.replace(r"\D", "", regex=True).str[:8]
-    for column in ("timestamp", "underlying_timestamp"):
-        out[column] = pd.to_datetime(out[column], errors="coerce")
+    out["timestamp"] = pd.to_datetime(out["timestamp"], errors="coerce")
     for column in ("strike", "bid", "ask", "bid_size", "ask_size"):
         out[column] = pd.to_numeric(out[column], errors="coerce")
     if out.empty or out.isna().any().any():
@@ -267,10 +266,6 @@ def normalize_quotes(
         raise AssertionError("invalid option right")
     if not out["timestamp"].dt.strftime("%Y%m%d").eq(day).all():
         raise AssertionError("quote timestamp is outside requested session")
-    if not out["underlying_timestamp"].dt.strftime("%Y%m%d").eq(day).all():
-        raise AssertionError("underlying timestamp is outside requested session")
-    if not out["timestamp"].eq(out["underlying_timestamp"]).all():
-        raise AssertionError("native quote timestamp differs from underlying timestamp")
     if not (out["timestamp"].dt.second.eq(0) & out["timestamp"].dt.microsecond.eq(0)).all():
         raise AssertionError("quote timestamps are not exact minute boundaries")
     start = pd.Timestamp(f"{day[:4]}-{day[4:6]}-{day[6:]} {start_time}")
@@ -316,8 +311,11 @@ def _normalize_greeks(
     start = pd.Timestamp(f"{day[:4]}-{day[4:6]}-{day[6:]} {start_time}")
     end = pd.Timestamp(f"{day[:4]}-{day[4:6]}-{day[6:]} {end_time}")
     out = out[out["timestamp"].between(start, end, inclusive="both")].copy()
+    if time_col == "timestamp" and not out["timestamp"].eq(out["underlying_timestamp"]).all():
+        raise AssertionError("stored native Greek timestamp differs from underlying_timestamp")
     if out.empty or out.duplicated(list(KEYS)).any():
         raise AssertionError("stored Greeks cross-check keys are empty or duplicated")
+    out.attrs["clock_source"] = time_col
     return out
 
 
@@ -344,21 +342,26 @@ def crosscheck_greeks(
     greeks_hash_after = sha256_file(greeks_path)
     if greeks_hash_after != greeks_hash_before:
         raise AssertionError("stored Greeks changed while cross-checking native quotes")
-    merged = quotes.merge(greeks[list(KEYS) + ["underlying_timestamp", "bid", "ask"]], on=list(KEYS), suffixes=("_quote", "_greek"), how="inner")
+    merged = quotes.merge(
+        greeks[list(KEYS) + ["bid", "ask"]],
+        on=list(KEYS),
+        suffixes=("_quote", "_greek"),
+        how="inner",
+    )
     if len(merged) != len(quotes) or len(merged) != len(greeks):
         raise AssertionError(
             f"native quote/stored Greek exact key-set mismatch: shared={len(merged)} quotes={len(quotes)} greeks={len(greeks)}"
         )
-    time_match = merged["underlying_timestamp_quote"].eq(merged["underlying_timestamp_greek"])
     bid_match = (merged["bid_quote"] - merged["bid_greek"]).abs().le(tolerance)
     ask_match = (merged["ask_quote"] - merged["ask_greek"]).abs().le(tolerance)
-    if not (time_match & bid_match & ask_match).all():
+    if not (bid_match & ask_match).all():
         raise AssertionError("native quote versus stored Greek timestamp/bid/ask mismatch")
     return {
         "greek_rows": int(len(greeks)),
         "shared_exact_rows": int(len(merged)),
         "shared_exact_fraction": float(len(merged) / len(greeks)),
         "greeks_sha256": greeks_hash_before,
+        "stored_greek_clock_source": str(greeks.attrs["clock_source"]),
         "key_set_exact": True,
         "timestamp_bid_ask_exact": True,
     }

@@ -13,8 +13,7 @@ from neural.jepa.build_wall_native_quote_sidecar import (
 
 def response(day="20240102", timestamp="2024-01-02 10:30:00"):
     return {"response": [{"contract": {"symbol": "SPY", "expiration": day, "strike": 470.0, "right": "C"}, "data": [{
-        "timestamp": timestamp, "underlying_timestamp": timestamp,
-        "bid": 1.0, "ask": 1.1, "bid_size": 10, "ask_size": 12,
+        "timestamp": timestamp, "bid": 1.0, "ask": 1.1, "bid_size": 10, "ask_size": 12,
     }]}]}
 
 
@@ -116,11 +115,16 @@ def test_crosscheck_requires_full_exact_key_set_and_native_clock_equality(tmp_pa
             requester=lambda *a, **k: FakeResponse(response()),
             process_evidence_provider=fake_process_evidence,
         )
-    mismatched = response()
-    mismatched["response"][0]["data"][0]["underlying_timestamp"] = "2024-01-02 10:29:00"
-    with pytest.raises(AssertionError, match="differs"):
-        normalize_quotes(
-            mismatched, "SPY", "20240102", start_time="10:30:00", end_time="10:30:00"
+    native_mismatch = pd.read_parquet(greeks)
+    native_mismatch["underlying_timestamp"] = "2024-01-02 10:29:00"
+    native_mismatch.to_parquet(greeks, index=False)
+    with pytest.raises(AssertionError, match="stored native Greek timestamp differs"):
+        download_session(
+            ticker="SPY", trade_date="20240102", greeks_path=greeks,
+            output_root=tmp_path / "out2", base_url="http://127.0.0.1:25503/v3", terminal_jar=jar,
+            start_time="10:30:00", end_time="10:30:00",
+            requester=lambda *a, **k: FakeResponse(response()),
+            process_evidence_provider=fake_process_evidence,
         )
 
 
