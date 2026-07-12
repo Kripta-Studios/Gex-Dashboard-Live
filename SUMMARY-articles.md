@@ -321,3 +321,7 @@ estar suscrito. H-QDYN1R1 exige presencia exacta de ambos rights en `t-5m`. El
 audit sellado confirmó esa condición en los 10.683 candidatos; los 9.833 eventos
 de radio sobreviven con identificación causal más fuerte. Esto valida
 disponibilidad, no alpha ni rentabilidad.
+
+La captura debe preservar quotes raw inválidas y decidir validez solo en el
+cálculo de transiciones. `Size-only` excluye cambios simultáneos de exchange;
+conditions cuentan como reportes/dedup pero quedan fuera de las 28 mediciones.

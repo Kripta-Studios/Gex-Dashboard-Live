@@ -36,13 +36,17 @@ EXPECTED_SUBSCRIPTION_PROOF_SHA256 = (
     "083a77f3a24225e9ad38b6c401b4382c17b8621f69b0af4563f1eadcf927623c"
 )
 EXPECTED_SUBSCRIPTION_PROOF_MANIFEST_SHA256 = (
-    "59ead62fd66064bda07e7594de82e21e49dad213b29275993f0b48ed318df342"
+    "2188a2cf6003c340a692220c24beeacc1be621aa171b88b2639d5a0593c021a5"
 )
 ENDPOINT = "/option/history/quote"
 PREDECLARATION = "research_papers/JEPA/WALL_QUOTE_TICK_DYNAMICS_AT_TOUCH_V1_PREDECLARATION.md"
 CAUSAL_AMENDMENT = (
     "research_papers/JEPA/"
     "WALL_QUOTE_TICK_DYNAMICS_AT_TOUCH_V1R1_CAUSAL_AMENDMENT.md"
+)
+CAPTURE_CLARIFICATION = (
+    "research_papers/JEPA/"
+    "WALL_QUOTE_TICK_DYNAMICS_AT_TOUCH_V1R1R1_CAPTURE_CLARIFICATION.md"
 )
 RUNTIME_LOCK = "research_papers/JEPA/requirements-wall-surface-flow-v1r1.txt"
 CODE_CLOSURE = (
@@ -52,6 +56,7 @@ CODE_CLOSURE = (
     "neural/jepa/wall_surface_flow_environment.py",
     PREDECLARATION,
     CAUSAL_AMENDMENT,
+    CAPTURE_CLARIFICATION,
     RUNTIME_LOCK,
 )
 OUTPUT_COLUMNS = (
@@ -225,7 +230,7 @@ def load_candidates(
         raise AssertionError("H-QDYN1R1 subscription proof hash mismatch")
     proof_manifest = json.loads(Path(proof_manifest_path).read_text(encoding="utf-8"))
     if (
-        proof_manifest.get("status") != "PASS_SUBSCRIPTION_ALLOWLIST_V1R1"
+        proof_manifest.get("status") != "PASS_SUBSCRIPTION_ALLOWLIST_V1R1R1"
         or proof_manifest.get("outcome_free") is not True
         or proof_manifest.get("holdout_2026_used") is not False
         or proof_manifest.get("candidate_sha256") != EXPECTED_CANDIDATE_SHA256
@@ -328,7 +333,7 @@ def normalize_tick_response(
             or expiration != day
             or right not in {"CALL", "PUT"}
             or not np.isfinite(strike)
-            or abs(strike - wall) > 1e-9
+            or strike != wall
         ):
             raise AssertionError("H-QDYN1 response contract substitution")
         data = block.get("data", [])
@@ -371,15 +376,10 @@ def normalize_tick_response(
         "ask_condition",
     ):
         frame[column] = pd.to_numeric(frame[column], errors="coerce")
-    numeric = frame[
-        ["bid", "ask", "bid_size", "ask_size", "bid_exchange", "ask_exchange"]
-    ].to_numpy(dtype=float)
     if (
         frame["timestamp"].isna().any()
         or not frame["timestamp"].ge(start).all()
         or not frame["timestamp"].le(end).all()
-        or not np.isfinite(numeric).all()
-        or (frame[["bid", "ask", "bid_size", "ask_size"]].to_numpy(dtype=float) < 0).any()
     ):
         raise AssertionError("H-QDYN1 response violates causal tick contract")
     for _, part in frame.groupby("right", sort=False):
@@ -406,7 +406,7 @@ def contract_block_audit(raw: dict[str, Any], candidate: dict[str, Any]) -> dict
             or expiration != str(candidate["trade_date"])
             or right not in counts
             or not np.isfinite(strike)
-            or abs(strike - float(candidate["candidate_wall_strike"])) > 1e-9
+            or strike != float(candidate["candidate_wall_strike"])
         ):
             raise AssertionError("H-QDYN1 response contract substitution")
         counts[right] += 1
@@ -546,7 +546,7 @@ def capture_event(
     frame.to_parquet(parquet_path, index=False)
     counts = frame["right"].value_counts().to_dict() if len(frame) else {}
     manifest = {
-        "schema": "wall_quote_tick_dynamics_event_v1r1",
+        "schema": "wall_quote_tick_dynamics_event_v1r1r1",
         "status": "PASS_QDYN_EVENT",
         "outcome_free": True,
         "holdout_2026_used": False,
@@ -733,7 +733,7 @@ def main() -> int:
     index_path = seal_dir / "quote_tick_dynamics_index.csv"
     index.to_csv(index_path, index=False)
     seal = {
-        "schema": "wall_quote_tick_dynamics_seal_v1r1",
+        "schema": "wall_quote_tick_dynamics_seal_v1r1r1",
         "status": "PASS_QDYN_CAPTURE",
         "outcome_free": True,
         "holdout_2026_used": False,

@@ -89,6 +89,22 @@ def test_crossed_rows_do_not_form_valid_pairs() -> None:
     assert result["qdyn_call_unambiguous_pair_count"] == 27
 
 
+def test_exchange_change_is_not_mislabeled_as_size_only() -> None:
+    frame = ticks()
+    frame.loc[10, "bid_exchange"] = 9
+    result = right_features(frame, DECISION, "CALL")
+    assert result["qdyn_call_unambiguous_size_only_change_fraction"] == 27 / 29
+
+
+def test_condition_change_is_not_an_alpha_state_change() -> None:
+    frame = ticks()
+    frame[["bid_size", "ask_size"]] = [10, 20]
+    frame.loc[10, "bid_condition"] = 99
+    result = right_features(frame, DECISION, "CALL")
+    assert result["qdyn_call_unambiguous_state_change_fraction"] == 0.0
+    assert result["qdyn_call_unambiguous_size_only_change_fraction"] == 0.0
+
+
 def test_tick_at_guard_boundary_is_rejected() -> None:
     frame = ticks()
     frame.loc[0, "timestamp"] = DECISION - pd.Timedelta(seconds=2)
@@ -122,7 +138,7 @@ def test_actual_v1r1_subscription_proof_schema_is_enforced(tmp_path, monkeypatch
     proof.to_parquet(proof_path, index=False)
     monkeypatch.setattr(builder, "EXPECTED_CANDIDATES", 2)
     manifest = {
-        "status": "PASS_SUBSCRIPTION_ALLOWLIST_V1R1",
+        "status": "PASS_SUBSCRIPTION_ALLOWLIST_V1R1R1",
         "outcome_free": True,
         "holdout_2026_used": False,
         "candidate_sha256": EXPECTED_CANDIDATE_SHA256,

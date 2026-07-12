@@ -425,8 +425,12 @@ CALL+PUT 0DTE en los sidecars nativos sellados a `t-5m`, sin as-of ni nearest
 strike. Audit completo 2.519/2.519: los 10.683 sí tenían ambos rights; 9.833
 pasan también radio 150 bps. Proof SHA
 `083a77f3a24225e9ad38b6c401b4382c17b8621f69b0af4563f1eadcf927623c`,
-manifest SHA `59ead62fd66064bda07e7594de82e21e49dad213b29275993f0b48ed318df342`,
+manifest SHA `2188a2cf6003c340a692220c24beeacc1be621aa171b88b2639d5a0593c021a5`,
 eligible IDs SHA `f77dc2231f410679ad97737cc8a4af057e917224e31d2c5df3b6f1f8366a2eca`.
 La captura parcial V1 en `D:/ThetaData/wall_quote_tick_dynamics_at_touch_202208_202512_v1`
 es `REJECTED_CAUSAL_ALLOWLIST` y no puede reanudarse. Capturar solo a output
-V1R1 nuevo con esos hashes; suite H-QDYN focal `20 passed`.
+V1R1R1 nuevo con esos hashes; suite H-QDYN focal `30 passed`. El parcial V1R1
+también queda `REJECTED_CAPTURE_SEMANTICS`: preservaba incorrectamente raw
+non-finite y llamaba size-only a transiciones con cambio de exchange. V1R1R1
+preserva raw, filtra solo al medir, exige strike exacto y excluye conditions de
+alpha.

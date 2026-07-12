@@ -37,6 +37,10 @@ CAUSAL_AMENDMENT = (
     "research_papers/JEPA/"
     "WALL_QUOTE_TICK_DYNAMICS_AT_TOUCH_V1R1_CAUSAL_AMENDMENT.md"
 )
+CAPTURE_CLARIFICATION = (
+    "research_papers/JEPA/"
+    "WALL_QUOTE_TICK_DYNAMICS_AT_TOUCH_V1R1R1_CAPTURE_CLARIFICATION.md"
+)
 RUNTIME_LOCK = "research_papers/JEPA/requirements-wall-surface-flow-v1r1.txt"
 AUTHORITATIVE_CODE = (
     "neural/jepa/build_wall_quote_tick_dynamics_dataset.py",
@@ -47,6 +51,7 @@ AUTHORITATIVE_CODE = (
     "neural/jepa/wall_surface_flow_environment.py",
     PREDECLARATION,
     CAUSAL_AMENDMENT,
+    CAPTURE_CLARIFICATION,
     RUNTIME_LOCK,
 )
 RIGHTS = ("CALL", "PUT")
@@ -140,7 +145,7 @@ def load_candidates(path: str | Path, manifest_path: str | Path) -> pd.DataFrame
 def load_subscription_proof(proof_path: str | Path, proof_manifest_path: str | Path) -> tuple[pd.DataFrame, dict[str, Any]]:
     """Load a frozen t-5 listing proof; geometry alone is never eligibility."""
     proof_manifest = json.loads(Path(proof_manifest_path).read_text(encoding="utf-8"))
-    if (proof_manifest.get("status") != "PASS_SUBSCRIPTION_ALLOWLIST_V1R1"
+    if (proof_manifest.get("status") != "PASS_SUBSCRIPTION_ALLOWLIST_V1R1R1"
             or proof_manifest.get("outcome_free") is not True
             or proof_manifest.get("holdout_2026_used") is not False
             or proof_manifest.get("candidate_sha256") != EXPECTED_CANDIDATE_SHA256
@@ -264,7 +269,13 @@ def right_features(rows: pd.DataFrame, decision_dt: pd.Timestamp, right: str) ->
         state_changed = price_changed or size_changed or previous["bid_exchange"] != current["bid_exchange"] or previous["ask_exchange"] != current["ask_exchange"]
         changes.append(state_changed)
         price_changes += int(price_changed)
-        size_only_changes += int(size_changed and not price_changed)
+        exchange_changed = (
+            previous["bid_exchange"] != current["bid_exchange"]
+            or previous["ask_exchange"] != current["ask_exchange"]
+        )
+        size_only_changes += int(
+            size_changed and not price_changed and not exchange_changed
+        )
         bid_ex += int(previous["bid_exchange"] != current["bid_exchange"])
         ask_ex += int(previous["ask_exchange"] != current["ask_exchange"])
         if previous["bid"] == current["bid"] and previous["bid_exchange"] == current["bid_exchange"]:
@@ -408,7 +419,7 @@ def main() -> None:
     schema = {"columns": [{"name": name, "dtype": str(dataset[name].dtype)} for name in dataset]}
     (out / "schema.json").write_text(json.dumps(schema, indent=2), encoding="utf-8")
     manifest = {
-        "schema": "wall_quote_tick_dynamics_at_touch_dataset_v1",
+        "schema": "wall_quote_tick_dynamics_at_touch_dataset_v1r1r1",
         "status": "PASS_DATA_GATE" if data_gate_pass else "REJECTED_DATA_GATE",
         "outcome_free": True, "holdout_2026_used": False, "production_modified": False,
         "git_commit": commit, "code_hashes": code_hashes,
@@ -422,12 +433,16 @@ def main() -> None:
         "subscription_proof_sha256": sha256_file(args.subscription_proof),
         "subscription_proof_manifest_sha256": sha256_file(args.subscription_proof_manifest),
         "eligible_event_id_sha256": proof_manifest["eligible_event_id_sha256"],
+        "eligible_events": int(proof_manifest["eligible_events"]),
         "historical_provenance": seal["historical_provenance"], "live_parity": "BLOCKED",
         "control_feature_hash": feature_hash(CONTROL_FEATURES),
         "qdyn_feature_hash": feature_hash(QDYN_FEATURES),
         "qdyn_quality_hash": feature_hash(QDYN_QUALITY_FIELDS),
         "predeclaration_sha256": sha256_file(PROJECT_ROOT / PREDECLARATION),
         "causal_amendment_sha256": sha256_file(PROJECT_ROOT / CAUSAL_AMENDMENT),
+        "capture_clarification_sha256": sha256_file(
+            PROJECT_ROOT / CAPTURE_CLARIFICATION
+        ),
         "source_inventory_sha256": sha256_file(out / "source_hashes.csv"),
         "data_gate": {"coverage_pass": coverage_pass, "distinctness_pass": distinctness_pass,
                       "minimum_annual_both_valid": float(annual["both_valid"].min()),

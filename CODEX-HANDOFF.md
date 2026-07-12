@@ -606,7 +606,10 @@ Checkpoint H-QDYN1R1: auditor adversarial paró la captura V1 porque el radio
 `t-5m` no probaba listing exacto. Amendment y builder exacto versionados; audit
 2.519/2.519 PASS. Todos los 10.683 candidatos tenían CALL+PUT exactos en
 `t-5m`; 9.833 sobreviven el radio. Proof SHA `083a77f3...927623c`, manifest
-`59ead62f...df342`, eligible IDs `f77dc223...6a2eca`. El parcial V1 queda
-rechazado. Capturador V1R1 requiere proof, evidencia Terminal completa,
+`2188a2cf...021a5`, eligible IDs `f77dc223...6a2eca`. Los parciales V1 y V1R1
+quedan rechazados. Capturador V1R1R1 requiere proof, evidencia Terminal completa,
 contract-block audit, quarantine de staging y revalidación integral. Feature
-builder outcome-free listo. Suite focal `20 passed`; sin labels ni PnL H-QDYN.
+builder outcome-free y runner físico congelable listos. Suite focal `30 passed`;
+sin labels ni PnL H-QDYN. Clarificación: raw non-finite/crossed se preserva,
+size-only excluye cambios de exchange, conditions no entran como alpha y strike
+usa igualdad literal.

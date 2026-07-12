@@ -397,5 +397,5 @@ WF legacy queda solo como hipótesis, no como policy promotable.
 
 H-QDYN V1 se detuvo antes de outcomes por una brecha de listing en `t-5m`.
 V1R1 auditó exact CALL+PUT en 2.519 sidecars: 10.683/10.683 listados y 9.833
-elegibles tras el radio congelado. Proof `083a77f3...927623c`, suite `20 passed`.
-El capturador parcial V1 es rechazado; relanzar a output V1R1 nuevo. Sin PnL.
+elegibles tras el radio congelado. Proof `083a77f3...927623c`, suite `30 passed`.
+Los parciales V1/V1R1 son rechazados; relanzar a output V1R1R1 nuevo. Sin PnL.

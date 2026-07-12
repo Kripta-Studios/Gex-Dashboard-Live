@@ -88,6 +88,26 @@ def test_tick_response_rejects_contract_substitution() -> None:
         normalize_tick_response(value, candidate())
 
 
+def test_tick_response_rejects_near_but_nonidentical_strike() -> None:
+    value = raw()
+    value["response"][0]["contract"]["strike"] = 475.0 + 5e-10
+    with pytest.raises(AssertionError, match="substitution"):
+        normalize_tick_response(value, candidate())
+
+
+def test_raw_invalid_quote_fields_are_preserved_for_quality_filtering() -> None:
+    value = raw()
+    value["response"][0]["data"][0].update(
+        {"bid": None, "ask": -1.0, "bid_size": -2, "bid_exchange": None}
+    )
+    frame = normalize_tick_response(value, candidate())
+    call = frame[frame["right"].eq("CALL")].iloc[0]
+    assert pd.isna(call["bid"])
+    assert call["ask"] == -1.0
+    assert call["bid_size"] == -2
+    assert pd.isna(call["bid_exchange"])
+
+
 def test_contract_block_audit_rejects_duplicate_right() -> None:
     value = raw()
     value["response"].append(value["response"][0].copy())
