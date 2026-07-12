@@ -601,3 +601,12 @@ PF0,919/WR43,90/min19. No existe artefacto que pase simultáneamente todos los
 contratos. La curva legacy WF Jan-Jun no es OOS de policy y no es repricing
 ejecutable. Continuar desde datos `executable_quote`; H-QDYN1 sigue siendo la
 nueva medición causal predeclarada, no una rentabilidad demostrada.
+
+Checkpoint H-QDYN1R1: auditor adversarial paró la captura V1 porque el radio
+`t-5m` no probaba listing exacto. Amendment y builder exacto versionados; audit
+2.519/2.519 PASS. Todos los 10.683 candidatos tenían CALL+PUT exactos en
+`t-5m`; 9.833 sobreviven el radio. Proof SHA `083a77f3...927623c`, manifest
+`59ead62f...df342`, eligible IDs `f77dc223...6a2eca`. El parcial V1 queda
+rechazado. Capturador V1R1 requiere proof, evidencia Terminal completa,
+contract-block audit, quarantine de staging y revalidación integral. Feature
+builder outcome-free listo. Suite focal `20 passed`; sin labels ni PnL H-QDYN.

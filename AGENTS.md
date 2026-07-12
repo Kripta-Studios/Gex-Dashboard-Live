@@ -416,3 +416,17 @@ hoy una policy rentable que pase simultáneamente causalidad, selección y
 ejecución. El único replayer económico válido debe partir del parquet
 `executable_quote`, usar `walkforward_event_option_profile_selector.py` y el
 scheduler común sin `--allow-overlapping-positions`.
+
+### Checkpoint causal H-QDYN1R1
+
+H-QDYN1 V1 fue detenido outcome-free al descubrir que proximidad a un wall en
+`t-5m` no demostraba listing del contrato exacto. V1R1 exige presencia exacta
+CALL+PUT 0DTE en los sidecars nativos sellados a `t-5m`, sin as-of ni nearest
+strike. Audit completo 2.519/2.519: los 10.683 sí tenían ambos rights; 9.833
+pasan también radio 150 bps. Proof SHA
+`083a77f3a24225e9ad38b6c401b4382c17b8621f69b0af4563f1eadcf927623c`,
+manifest SHA `59ead62fd66064bda07e7594de82e21e49dad213b29275993f0b48ed318df342`,
+eligible IDs SHA `f77dc2231f410679ad97737cc8a4af057e917224e31d2c5df3b6f1f8366a2eca`.
+La captura parcial V1 en `D:/ThetaData/wall_quote_tick_dynamics_at_touch_202208_202512_v1`
+es `REJECTED_CAUSAL_ALLOWLIST` y no puede reanudarse. Capturar solo a output
+V1R1 nuevo con esos hashes; suite H-QDYN focal `20 passed`.

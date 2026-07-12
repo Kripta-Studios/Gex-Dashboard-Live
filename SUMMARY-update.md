@@ -394,3 +394,8 @@ completo 09:30–10:29. El paquete actual de 416 trades tampoco prueba edge por
 selección sobre Jan-Jun, labels legacy y 55 overlaps. El benchmark exacto nested
 ask->bid da PF QQQ/SPXW/SPY 0,984/0,832/0,919: aún no rentable. La buena curva
 WF legacy queda solo como hipótesis, no como policy promotable.
+
+H-QDYN V1 se detuvo antes de outcomes por una brecha de listing en `t-5m`.
+V1R1 auditó exact CALL+PUT en 2.519 sidecars: 10.683/10.683 listados y 9.833
+elegibles tras el radio congelado. Proof `083a77f3...927623c`, suite `20 passed`.
+El capturador parcial V1 es rechazado; relanzar a output V1R1 nuevo. Sin PnL.

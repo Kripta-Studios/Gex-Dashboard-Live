@@ -315,3 +315,9 @@ afectó 338/697 trades del resultado original; (2) buena curva sobre labels
 única comparación económica admisible parte de `executable_quote` (ask->bid) y
 un scheduler no-overlap. El benchmark nested disponible cumple ese pricing pero
 da PF inferior a 1 en los tres tickers, por lo que no confirma alpha económico.
+
+Para dinámica NBBO, cercanía a un wall conocido no prueba que el contrato podía
+estar suscrito. H-QDYN1R1 exige presencia exacta de ambos rights en `t-5m`. El
+audit sellado confirmó esa condición en los 10.683 candidatos; los 9.833 eventos
+de radio sobreviven con identificación causal más fuerte. Esto valida
+disponibilidad, no alpha ni rentabilidad.

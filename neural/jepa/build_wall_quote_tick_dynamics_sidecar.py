@@ -32,14 +32,26 @@ EXPECTED_CANDIDATES = 10683
 EXPECTED_WALL_STATE_SHA256 = "94e311e0e25ff7956347597a8734e82e07ab05753f42acaa26876c58752df8ef"
 EXPECTED_ELIGIBLE_EVENTS = 9833
 EXPECTED_ELIGIBLE_EVENT_ID_SHA256 = "f77dc2231f410679ad97737cc8a4af057e917224e31d2c5df3b6f1f8366a2eca"
+EXPECTED_SUBSCRIPTION_PROOF_SHA256 = (
+    "083a77f3a24225e9ad38b6c401b4382c17b8621f69b0af4563f1eadcf927623c"
+)
+EXPECTED_SUBSCRIPTION_PROOF_MANIFEST_SHA256 = (
+    "59ead62fd66064bda07e7594de82e21e49dad213b29275993f0b48ed318df342"
+)
 ENDPOINT = "/option/history/quote"
 PREDECLARATION = "research_papers/JEPA/WALL_QUOTE_TICK_DYNAMICS_AT_TOUCH_V1_PREDECLARATION.md"
+CAUSAL_AMENDMENT = (
+    "research_papers/JEPA/"
+    "WALL_QUOTE_TICK_DYNAMICS_AT_TOUCH_V1R1_CAUSAL_AMENDMENT.md"
+)
 RUNTIME_LOCK = "research_papers/JEPA/requirements-wall-surface-flow-v1r1.txt"
 CODE_CLOSURE = (
     "neural/jepa/build_wall_quote_tick_dynamics_sidecar.py",
+    "neural/jepa/build_wall_qdyn_subscription_allowlist.py",
     "neural/jepa/build_wall_native_quote_sidecar.py",
     "neural/jepa/wall_surface_flow_environment.py",
     PREDECLARATION,
+    CAUSAL_AMENDMENT,
     RUNTIME_LOCK,
 )
 OUTPUT_COLUMNS = (
@@ -120,7 +132,12 @@ def committed_code_state() -> tuple[str, dict[str, str]]:
     return commit, hashes
 
 
-def load_candidates(path: str | Path, wall_state_path: str | Path) -> pd.DataFrame:
+def load_candidates(
+    path: str | Path,
+    wall_state_path: str | Path,
+    proof_path: str | Path,
+    proof_manifest_path: str | Path,
+) -> pd.DataFrame:
     if sha256_file(path) != EXPECTED_CANDIDATE_SHA256:
         raise AssertionError("H-QDYN1 candidate dataset hash mismatch")
     columns = [
@@ -187,11 +204,11 @@ def load_candidates(path: str | Path, wall_state_path: str | Path) -> pd.DataFra
         distances[finite_distance], axis=1
     )
     frame["subscription_min_wall_distance_bps"] = minimum_distance
-    frame["causal_subscription_eligible"] = frame[
+    frame["wall_proximity_eligible_v1"] = frame[
         "subscription_min_wall_distance_bps"
     ].le(150.0 + 1e-9)
     eligible_ids = sorted(
-        frame.loc[frame["causal_subscription_eligible"], "event_id"].astype(str)
+        frame.loc[frame["wall_proximity_eligible_v1"], "event_id"].astype(str)
     )
     eligible_hash = sha256_bytes("\n".join(eligible_ids).encode("utf-8"))
     if (
@@ -199,6 +216,91 @@ def load_candidates(path: str | Path, wall_state_path: str | Path) -> pd.DataFra
         or eligible_hash != EXPECTED_ELIGIBLE_EVENT_ID_SHA256
     ):
         raise AssertionError("H-QDYN1 causal subscription allowlist changed")
+
+    if (
+        sha256_file(proof_path) != EXPECTED_SUBSCRIPTION_PROOF_SHA256
+        or sha256_file(proof_manifest_path)
+        != EXPECTED_SUBSCRIPTION_PROOF_MANIFEST_SHA256
+    ):
+        raise AssertionError("H-QDYN1R1 subscription proof hash mismatch")
+    proof_manifest = json.loads(Path(proof_manifest_path).read_text(encoding="utf-8"))
+    if (
+        proof_manifest.get("status") != "PASS_SUBSCRIPTION_ALLOWLIST_V1R1"
+        or proof_manifest.get("outcome_free") is not True
+        or proof_manifest.get("holdout_2026_used") is not False
+        or proof_manifest.get("candidate_sha256") != EXPECTED_CANDIDATE_SHA256
+        or proof_manifest.get("wall_state_sha256") != EXPECTED_WALL_STATE_SHA256
+        or proof_manifest.get("proof_sha256")
+        != EXPECTED_SUBSCRIPTION_PROOF_SHA256
+        or int(proof_manifest.get("candidates", -1)) != EXPECTED_CANDIDATES
+        or int(proof_manifest.get("eligible_events", -1))
+        != EXPECTED_ELIGIBLE_EVENTS
+        or proof_manifest.get("eligible_event_id_sha256")
+        != EXPECTED_ELIGIBLE_EVENT_ID_SHA256
+        or proof_manifest.get("errors") != []
+    ):
+        raise AssertionError("H-QDYN1R1 subscription proof contract mismatch")
+    proof = pd.read_parquet(proof_path)
+    required = {
+        "event_id",
+        "ticker",
+        "trade_date",
+        "wall_proximity_eligible_v1",
+        "exact_call_listed_tminus5m",
+        "exact_put_listed_tminus5m",
+        "causal_subscription_eligible_v1r1",
+    }
+    if required.difference(proof.columns):
+        raise KeyError(
+            f"H-QDYN1R1 subscription proof missing: {sorted(required.difference(proof.columns))}"
+        )
+    proof = proof[list(required)].copy()
+    proof["ticker"] = proof["ticker"].astype(str).str.upper()
+    proof["trade_date"] = (
+        proof["trade_date"].astype(str).str.replace(r"\D", "", regex=True).str[:8]
+    )
+    boolean_columns = (
+        "wall_proximity_eligible_v1",
+        "exact_call_listed_tminus5m",
+        "exact_put_listed_tminus5m",
+        "causal_subscription_eligible_v1r1",
+    )
+    for column in boolean_columns:
+        if not pd.api.types.is_bool_dtype(proof[column]):
+            raise AssertionError(f"H-QDYN1R1 proof has non-boolean {column}")
+    derived = (
+        proof["wall_proximity_eligible_v1"]
+        & proof["exact_call_listed_tminus5m"]
+        & proof["exact_put_listed_tminus5m"]
+    )
+    proof_ids = sorted(proof.loc[derived, "event_id"].astype(str))
+    if (
+        len(proof) != EXPECTED_CANDIDATES
+        or proof["event_id"].duplicated().any()
+        or not proof["causal_subscription_eligible_v1r1"].eq(derived).all()
+        or len(proof_ids) != EXPECTED_ELIGIBLE_EVENTS
+        or sha256_bytes("\n".join(proof_ids).encode("utf-8"))
+        != EXPECTED_ELIGIBLE_EVENT_ID_SHA256
+    ):
+        raise AssertionError("H-QDYN1R1 subscription proof universe changed")
+    frame = frame.merge(
+        proof,
+        on=["event_id", "ticker", "trade_date"],
+        how="left",
+        validate="one_to_one",
+        suffixes=("", "_proof"),
+    )
+    if (
+        frame["causal_subscription_eligible_v1r1"].isna().any()
+        or not frame["wall_proximity_eligible_v1"].eq(
+            frame["wall_proximity_eligible_v1_proof"]
+        ).all()
+    ):
+        raise AssertionError("H-QDYN1R1 proof does not match frozen geometry")
+    frame = frame.drop(columns=["wall_proximity_eligible_v1_proof"])
+    frame["causal_subscription_eligible"] = frame[
+        "causal_subscription_eligible_v1r1"
+    ]
     return frame.sort_values(keys, kind="stable").reset_index(drop=True)
 
 
@@ -286,6 +388,38 @@ def normalize_tick_response(
     return frame.reset_index(drop=True)
 
 
+def contract_block_audit(raw: dict[str, Any], candidate: dict[str, Any]) -> dict[str, Any]:
+    response = raw.get("response")
+    if not isinstance(response, list):
+        raise AssertionError("H-QDYN1 response lacks contract list")
+    counts = {"CALL": 0, "PUT": 0}
+    for block in response:
+        contract = block.get("contract", {})
+        symbol = str(contract.get("symbol", "")).upper()
+        expiration = "".join(
+            char for char in str(contract.get("expiration", "")) if char.isdigit()
+        )[:8]
+        right = str(contract.get("right", "")).upper()
+        strike = float(contract.get("strike", np.nan))
+        if (
+            symbol != str(candidate["ticker"]).upper()
+            or expiration != str(candidate["trade_date"])
+            or right not in counts
+            or not np.isfinite(strike)
+            or abs(strike - float(candidate["candidate_wall_strike"])) > 1e-9
+        ):
+            raise AssertionError("H-QDYN1 response contract substitution")
+        counts[right] += 1
+    if any(value > 1 for value in counts.values()):
+        raise AssertionError("H-QDYN1 duplicate contract block")
+    missing = [right for right, count in counts.items() if count == 0]
+    return {
+        "call_contract_blocks": int(counts["CALL"]),
+        "put_contract_blocks": int(counts["PUT"]),
+        "missing_rights": missing,
+    }
+
+
 def request_params(candidate: dict[str, Any]) -> dict[str, str]:
     decision = pd.Timestamp(candidate["decision_dt"])
     start = decision - pd.Timedelta(seconds=32)
@@ -323,16 +457,18 @@ def validate_event_dir(
         or manifest.get("parquet_sha256") != sha256_file(parquet_path)
         or manifest.get("request_params") != request_params(candidate)
         or manifest.get("code_hashes") != code_hashes
-        or not isinstance(manifest.get("terminal_process_evidence"), dict)
-        or manifest["terminal_process_evidence"].get("terminal_jar_sha256")
-        != terminal_evidence.get("terminal_jar_sha256")
+        or manifest.get("terminal_process_evidence") != terminal_evidence
         or manifest.get("runtime_lock_sha256") != runtime["lock_sha256"]
         or manifest.get("runtime_environment_sha256")
         != runtime["environment_sha256"]
     ):
         raise AssertionError(f"invalid immutable H-QDYN1 event: {path}")
+    raw = json.loads(raw_path.read_bytes())
+    block_audit = contract_block_audit(raw, candidate)
+    if manifest.get("contract_block_audit") != block_audit:
+        raise AssertionError("H-QDYN1 contract-block audit mismatch")
     stored = pd.read_parquet(parquet_path)
-    rebuilt = normalize_tick_response(json.loads(raw_path.read_bytes()), candidate)
+    rebuilt = normalize_tick_response(raw, candidate)
     try:
         pd.testing.assert_frame_equal(stored, rebuilt, check_dtype=True)
     except AssertionError as exc:
@@ -373,7 +509,9 @@ def capture_event(
         )
     staging = path.with_name(path.name + ".staging")
     if staging.exists():
-        raise FileExistsError(f"stale H-QDYN1 staging dir: {staging}")
+        suffix = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+        quarantine = staging.with_name(staging.name + f".rejected-{suffix}")
+        staging.rename(quarantine)
     decision = pd.Timestamp(candidate["decision_dt"])
     params = request_params(candidate)
     response = None
@@ -392,7 +530,9 @@ def capture_event(
             raw_bytes = bytes(response.content)
             if not raw_bytes:
                 raise AssertionError("empty H-QDYN1 raw response")
-            frame = normalize_tick_response(json.loads(raw_bytes), candidate)
+            raw = json.loads(raw_bytes)
+            block_audit = contract_block_audit(raw, candidate)
+            frame = normalize_tick_response(raw, candidate)
             break
         except Exception as exc:
             last_error = exc
@@ -406,7 +546,7 @@ def capture_event(
     frame.to_parquet(parquet_path, index=False)
     counts = frame["right"].value_counts().to_dict() if len(frame) else {}
     manifest = {
-        "schema": "wall_quote_tick_dynamics_event_v1",
+        "schema": "wall_quote_tick_dynamics_event_v1r1",
         "status": "PASS_QDYN_EVENT",
         "outcome_free": True,
         "holdout_2026_used": False,
@@ -427,6 +567,7 @@ def capture_event(
         "rows": len(frame),
         "call_rows": int(counts.get("CALL", 0)),
         "put_rows": int(counts.get("PUT", 0)),
+        "contract_block_audit": block_audit,
         "max_timestamp": frame["timestamp"].max().isoformat() if len(frame) else None,
     }
     (staging / "manifest.json").write_bytes(canonical_bytes(manifest))
@@ -439,6 +580,8 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--candidates", required=True)
     parser.add_argument("--wall-state", required=True)
+    parser.add_argument("--subscription-proof", required=True)
+    parser.add_argument("--subscription-proof-manifest", required=True)
     parser.add_argument("--output-root", required=True)
     parser.add_argument("--base-url", default="http://127.0.0.1:25503/v3")
     parser.add_argument("--terminal-jar", required=True)
@@ -463,7 +606,12 @@ def main() -> int:
     terminal_evidence = local_terminal_process_evidence(args.base_url, jar)
     if terminal_evidence.get("terminal_jar_sha256") != sha256_file(jar):
         raise AssertionError("active Terminal/JAR mismatch")
-    candidates = load_candidates(args.candidates, args.wall_state)
+    candidates = load_candidates(
+        args.candidates,
+        args.wall_state,
+        args.subscription_proof,
+        args.subscription_proof_manifest,
+    )
     eligibility_path = output / "candidate_subscription_eligibility.csv"
     eligibility_columns = [
         "ticker",
@@ -477,6 +625,10 @@ def main() -> int:
         "wall_call_delta_strike",
         "wall_put_delta_strike",
         "subscription_min_wall_distance_bps",
+        "wall_proximity_eligible_v1",
+        "exact_call_listed_tminus5m",
+        "exact_put_listed_tminus5m",
+        "causal_subscription_eligible_v1r1",
         "causal_subscription_eligible",
     ]
     eligibility_csv = candidates[eligibility_columns].to_csv(index=False)
@@ -555,11 +707,33 @@ def main() -> int:
     )
     if index["event_id"].duplicated().any() or index["rows"].lt(0).any():
         raise AssertionError("H-QDYN1 final index invalid")
+    revalidated_rows: list[dict[str, Any]] = []
+    candidate_by_id = {
+        str(row["event_id"]): row for row in capture_candidates.to_dict("records")
+    }
+    for row in index.to_dict("records"):
+        candidate = candidate_by_id[str(row["event_id"])]
+        manifest = validate_event_dir(
+            Path(row["event_dir"]),
+            candidate,
+            code_hashes=code_hashes,
+            terminal_evidence=terminal_evidence,
+            runtime=runtime,
+        )
+        revalidated_rows.append(
+            {
+                "event_id": str(row["event_id"]),
+                "raw_sha256": str(manifest["raw_sha256"]),
+                "parquet_sha256": str(manifest["parquet_sha256"]),
+            }
+        )
+    if len(revalidated_rows) != EXPECTED_ELIGIBLE_EVENTS:
+        raise AssertionError("H-QDYN1 final integral revalidation incomplete")
     seal_dir.mkdir(parents=True, exist_ok=False)
     index_path = seal_dir / "quote_tick_dynamics_index.csv"
     index.to_csv(index_path, index=False)
     seal = {
-        "schema": "wall_quote_tick_dynamics_seal_v1",
+        "schema": "wall_quote_tick_dynamics_seal_v1r1",
         "status": "PASS_QDYN_CAPTURE",
         "outcome_free": True,
         "holdout_2026_used": False,
@@ -572,6 +746,10 @@ def main() -> int:
         "eligible_events": len(index),
         "ineligible_events": int((~candidates["causal_subscription_eligible"]).sum()),
         "eligible_event_id_sha256": EXPECTED_ELIGIBLE_EVENT_ID_SHA256,
+        "subscription_proof_sha256": sha256_file(args.subscription_proof),
+        "subscription_proof_manifest_sha256": sha256_file(
+            args.subscription_proof_manifest
+        ),
         "eligibility_sha256": sha256_file(eligibility_path),
         "rows": int(index["rows"].sum()),
         "call_rows": int(index["call_rows"].sum()),
