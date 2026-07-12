@@ -77,8 +77,9 @@ authorized by regular-grid inference.  They must be recovered from the native
 `/option/history/quote` endpoint by
 `neural/jepa/build_wall_native_quote_sidecar.py`, with a frozen local Terminal,
 raw response hashes and exact whole-key-set equality against stored
-`underlying_timestamp`, bid and ask in the research window.  Only a sealed
-1,441/1,441 PASS may replace the fallback clock.  Quote sizes are archived but
+`underlying_timestamp` in the research window. Reconsulted bid/ask revisions
+are counted but never replace the original hashed Greek bid/ask used by F1.
+Only a sealed 1,441/1,441 timestamp-key PASS may replace the fallback clock. Quote sizes are archived but
 are excluded from H-FLOW1; they define a separate future H-QSIZE1 experiment.
 
 Two clocks remain distinct.  The physical underlying RTH close is 16:00 on

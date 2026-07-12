@@ -79,7 +79,8 @@ def test_download_is_immutable_and_validate_detects_raw_tamper(tmp_path):
     assert calls[0][1]["interval"] == "1m" and calls[0][1]["strike"] == "*"
     assert calls[0][1]["right"] == "both" and calls[0][1]["expiration"] == "20240102"
     assert calls[0][2] == {"Accept-Encoding": "identity"}
-    assert manifest["key_set_exact"] is True and manifest["timestamp_bid_ask_exact"] is True
+    assert manifest["key_set_exact"] is True and manifest["timestamp_key_set_exact"] is True
+    assert manifest["stored_bid_ask_exact"] is True
     assert len(manifest["terminal_jar_sha256"]) == 64
     validate_session(session, greeks)
     with pytest.raises(FileExistsError):
@@ -92,16 +93,20 @@ def test_download_is_immutable_and_validate_detects_raw_tamper(tmp_path):
         validate_session(session, greeks)
 
 
-def test_crosscheck_rejects_bid_mismatch(tmp_path):
+def test_crosscheck_preserves_and_audits_provider_bid_revision(tmp_path):
     greeks = tmp_path / "greeks.parquet"; write_greeks(greeks)
     jar = tmp_path / "ThetaTerminal.jar"; jar.write_bytes(b"frozen-terminal")
     frame = pd.read_parquet(greeks); frame.loc[0, "bid"] = 0.99; frame.to_parquet(greeks, index=False)
-    with pytest.raises(AssertionError, match="mismatch"):
-        download_session(ticker="SPY", trade_date="20240102", greeks_path=greeks,
-                         output_root=tmp_path / "out", base_url="http://127.0.0.1:25503/v3", terminal_jar=jar,
-                         start_time="10:30:00", end_time="10:30:00",
-                         requester=lambda *a, **k: FakeResponse(response()),
-                         process_evidence_provider=fake_process_evidence)
+    manifest = download_session(
+        ticker="SPY", trade_date="20240102", greeks_path=greeks,
+        output_root=tmp_path / "out", base_url="http://127.0.0.1:25503/v3", terminal_jar=jar,
+        start_time="10:30:00", end_time="10:30:00",
+        requester=lambda *a, **k: FakeResponse(response()),
+        process_evidence_provider=fake_process_evidence,
+    )
+    assert manifest["timestamp_key_set_exact"] is True
+    assert manifest["stored_bid_ask_exact"] is False
+    assert manifest["stored_bid_mismatch_rows"] == 1
 
 
 def test_crosscheck_requires_full_exact_key_set_and_native_clock_equality(tmp_path):

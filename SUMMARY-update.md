@@ -264,3 +264,9 @@ El audit completo pasó 2.519/2.519; registró tres ceros 09:54–09:56 de SPY
 
 Estado científico: `H-FLOW1 = DATA_PROVENANCE_BLOCKED`, `H-QSIZE1 = AVAILABLE_NOT_TESTED`.
 No hay rentabilidad nueva que reportar; 2026 y producción siguen intactos.
+
+Backfill counterexamples: crossed quotes son raw válido pero no-signable; precios
+revisados por el proveedor no sustituyen el histórico. QQQ 2024-03-11 conserva
+65.500/65.500 keys de clock y solo 77 bid/ask distintos. El builder combina clock
+sidecar con bid/ask Greek originales; `timestamp_key_set_exact` y
+`stored_bid_ask_exact` quedan separados.

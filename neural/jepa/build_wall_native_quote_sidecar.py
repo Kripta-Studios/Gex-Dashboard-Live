@@ -353,8 +353,9 @@ def crosscheck_greeks(
         )
     bid_match = (merged["bid_quote"] - merged["bid_greek"]).abs().le(tolerance)
     ask_match = (merged["ask_quote"] - merged["ask_greek"]).abs().le(tolerance)
-    if not (bid_match & ask_match).all():
-        raise AssertionError("native quote versus stored Greek timestamp/bid/ask mismatch")
+    either_mismatch = ~(bid_match & ask_match)
+    bid_difference = (merged["bid_quote"] - merged["bid_greek"]).abs()
+    ask_difference = (merged["ask_quote"] - merged["ask_greek"]).abs()
     return {
         "greek_rows": int(len(greeks)),
         "shared_exact_rows": int(len(merged)),
@@ -362,7 +363,14 @@ def crosscheck_greeks(
         "greeks_sha256": greeks_hash_before,
         "stored_greek_clock_source": str(greeks.attrs["clock_source"]),
         "key_set_exact": True,
-        "timestamp_bid_ask_exact": True,
+        "timestamp_key_set_exact": True,
+        "stored_bid_ask_exact": bool(not either_mismatch.any()),
+        "stored_bid_mismatch_rows": int((~bid_match).sum()),
+        "stored_ask_mismatch_rows": int((~ask_match).sum()),
+        "stored_either_mismatch_rows": int(either_mismatch.sum()),
+        "stored_either_mismatch_rate": float(either_mismatch.mean()),
+        "stored_max_bid_abs_difference": float(bid_difference.max()),
+        "stored_max_ask_abs_difference": float(ask_difference.max()),
     }
 
 
@@ -463,7 +471,7 @@ def validate_session(session_dir: str | Path, greeks_path: str | Path) -> dict[s
     )
     stored = pd.read_parquet(parquet_path)
     pd.testing.assert_frame_equal(stored, quotes, check_dtype=True)
-    crosscheck_greeks(
+    crosscheck_audit = crosscheck_greeks(
         stored,
         greeks_path,
         start_time=str(params["start_time"]),
@@ -475,6 +483,7 @@ def validate_session(session_dir: str | Path, greeks_path: str | Path) -> dict[s
     if runtime["lock_sha256"] != manifest["runtime_lock_sha256"] or runtime["environment_sha256"] != manifest["runtime_environment_sha256"]:
         raise AssertionError("sidecar runtime provenance mismatch")
     manifest = dict(manifest)
+    manifest.update(crosscheck_audit)
     manifest.setdefault("crossed_quote_rows", int(stored["ask"].lt(stored["bid"]).sum()))
     manifest.setdefault("crossed_quote_rate", float(stored["ask"].lt(stored["bid"]).mean()))
     return manifest
@@ -546,7 +555,10 @@ def backfill_native_quotes(
             "end_time": str(manifest["request_params"]["end_time"]),
             "terminal_jar_sha256": str(manifest["terminal_jar_sha256"]),
             "key_set_exact": bool(manifest["key_set_exact"]),
-            "timestamp_bid_ask_exact": bool(manifest["timestamp_bid_ask_exact"]),
+            "timestamp_key_set_exact": bool(manifest["timestamp_key_set_exact"]),
+            "stored_bid_ask_exact": bool(manifest["stored_bid_ask_exact"]),
+            "stored_either_mismatch_rows": int(manifest["stored_either_mismatch_rows"]),
+            "stored_either_mismatch_rate": float(manifest["stored_either_mismatch_rate"]),
         }
 
     rows: list[dict[str, Any]] = []
@@ -589,7 +601,7 @@ def backfill_native_quotes(
         len(index) != EXPECTED_FALLBACK_SESSIONS
         or index.duplicated(["ticker", "trade_date"]).any()
         or not index["key_set_exact"].astype(bool).all()
-        or not index["timestamp_bid_ask_exact"].astype(bool).all()
+        or not index["timestamp_key_set_exact"].astype(bool).all()
         or set(index["terminal_jar_sha256"].astype(str)) != {jar_hash_before}
     ):
         raise AssertionError("native quote backfill index failed exact-coverage gate")
@@ -614,6 +626,10 @@ def backfill_native_quotes(
         "rows": int(index["rows"].sum()),
         "crossed_quote_rows": int(index["crossed_quote_rows"].sum()),
         "crossed_quote_rate": float(index["crossed_quote_rows"].sum() / index["rows"].sum()),
+        "stored_bid_ask_exact_sessions": int(index["stored_bid_ask_exact"].astype(bool).sum()),
+        "stored_bid_ask_revised_sessions": int((~index["stored_bid_ask_exact"].astype(bool)).sum()),
+        "stored_either_mismatch_rows": int(index["stored_either_mismatch_rows"].sum()),
+        "stored_either_mismatch_rate": float(index["stored_either_mismatch_rows"].sum() / index["rows"].sum()),
         "rows_by_ticker": index.groupby("ticker", observed=True)["rows"].sum().astype(int).to_dict(),
         "index_path": str(seal / index_path.name),
         "index_sha256": sha256_file(index_path),

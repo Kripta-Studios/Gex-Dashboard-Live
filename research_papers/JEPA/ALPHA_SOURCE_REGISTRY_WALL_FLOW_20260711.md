@@ -81,7 +81,8 @@ positive-close bars was SPXW 92.20%/97.109%, QQQ 94.914%/98.609% and SPY
 | Gamma/delta alias duplication | High | Same physical level counted twice | Collapse same-role same-strike aliases |
 | Dual support/resistance role | High | Complementary labels for one path | Exclude simultaneous opposite-role same-strike levels |
 | Repeated five-minute touch | High | Serial rows inflate sample/significance | First causal episode only; day-block bootstrap |
-| Missing native option timestamp | Critical | Underlying time substituted for quote time | PASS requires native timestamp or exact sealed quote-sidecar recovery for all 1,441 fallback sessions |
+| Missing native option timestamp | Critical | Underlying time substituted for quote time | Require exact timestamp/contract key-set recovery for all 1,441; use original Greek bid/ask |
+| Provider historical revision | High | Current requery silently replaces old bid/ask | Preserve both hashes; sidecar supplies clock only; report mismatch rows/sessions |
 | Contract/expiration substitution | Critical | Different expiry/strike appears as flow | Include symbol/expiration/right/strike/time in keys; exact 0DTE only |
 | Duplicate API rows | High | Volume/count double-counted | Fail closed; never sum duplicate normalized raw keys |
 | Nonpositive close or missing count | Medium | Missingness masquerades as pressure | Retain unsigned volume; separate price/count/signable coverage |

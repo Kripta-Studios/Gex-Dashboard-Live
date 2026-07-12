@@ -320,6 +320,13 @@ Terminal local/JAR hasheado, raw HTTP inmutable y key-set exacto Greek/quote en
 1.441/1.441 sesiones. Sizes quedan archivados pero fuera de H-FLOW1; serían
 H-QSIZE1 separado.
 
+Durante el backfill se corrigieron dos supuestos sin outcomes: crossed quotes se
+preservan pero son no-signable; revisiones bid/ask del proveedor se auditan sin
+sobrescribir Greeks. Ejemplos: QQQ 2024-02-06, 2.437/65.500 crossed; QQQ
+2024-03-11, keys 65.500/65.500 pero 77 precios revisados. El sidecar aporta solo
+clock nativo; F1 usa bid/ask originales. Provenance histórica sigue
+`CONDITIONAL` si hay revisiones, aunque el clock key-set sea completo.
+
 Siguiente secuencia, sin abrir outcomes:
 
 1. commit/push del código, tests, predeclaración y ledger;

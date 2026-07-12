@@ -184,6 +184,38 @@ def read_native_quotes(path: str | Path) -> pd.DataFrame:
     return frame
 
 
+def apply_native_quote_clock(greeks: pd.DataFrame, native_quotes: pd.DataFrame) -> pd.DataFrame:
+    """Attach only the sealed native clock; retain original stored Greek bid/ask."""
+
+    if "timestamp" in greeks:
+        raise AssertionError("native quote sidecar is only allowed for Greek sources missing timestamp")
+    if "underlying_timestamp" not in greeks:
+        raise AssertionError("stored Greek source has no fallback clock to verify")
+    left = greeks.copy()
+    left["timestamp"] = pd.to_datetime(left["underlying_timestamp"], errors="coerce")
+    right = native_quotes.copy()
+    right["timestamp"] = pd.to_datetime(right["timestamp"], errors="coerce")
+    for frame in (left, right):
+        frame["symbol"] = frame["symbol"].astype(str).str.upper()
+        frame["expiration"] = frame["expiration"].astype(str).str.replace(r"\D", "", regex=True).str[:8]
+        frame["trade_date"] = frame["trade_date"].astype(str).str.replace(r"\D", "", regex=True).str[:8]
+        frame["right"] = frame["right"].astype(str).str.upper().replace({"C": "CALL", "P": "PUT"})
+        frame["strike"] = pd.to_numeric(frame["strike"], errors="coerce")
+    keys = ["symbol", "expiration", "trade_date", "timestamp", "right", "strike"]
+    if left[keys].isna().any().any() or right[keys].isna().any().any():
+        raise AssertionError("native quote clock bridge contains missing normalized keys")
+    if left.duplicated(keys).any() or right.duplicated(keys).any():
+        raise AssertionError("native quote clock bridge contains duplicate keys")
+    parity = left[keys].merge(right[keys], on=keys, how="outer", indicator=True, validate="one_to_one")
+    if len(parity) != len(left) or len(parity) != len(right) or not parity["_merge"].eq("both").all():
+        raise AssertionError("native quote clock bridge key-set mismatch")
+    # Restore the original metadata/price columns and add the verified native
+    # clock.  Current-provider bid/ask is deliberately not copied.
+    output = greeks.copy()
+    output["timestamp"] = pd.to_datetime(output["underlying_timestamp"], errors="coerce")
+    return output
+
+
 def _truthy(series: pd.Series) -> pd.Series:
     return series.map(
         lambda value: value
@@ -263,7 +295,8 @@ def attach_native_quote_index(
         "ticker", "trade_date", "greeks_path", "greeks_sha256", "quotes_path",
         "quotes_sha256", "raw_response_path", "raw_response_sha256",
         "session_manifest_path", "session_manifest_sha256", "rows", "end_time",
-        "terminal_jar_sha256", "key_set_exact", "timestamp_bid_ask_exact",
+        "terminal_jar_sha256", "key_set_exact", "timestamp_key_set_exact",
+        "stored_bid_ask_exact", "stored_either_mismatch_rows", "stored_either_mismatch_rate",
     }
     missing = sorted(required.difference(index.columns))
     if missing:
@@ -277,7 +310,7 @@ def attach_native_quote_index(
         or session_key_hash(index) != EXPECTED_NATIVE_QUOTE_KEY_SHA256
         or index["trade_date"].str.startswith("2026").any()
         or not index["key_set_exact"].map(_truthy).all()
-        or not index["timestamp_bid_ask_exact"].map(_truthy).all()
+        or not index["timestamp_key_set_exact"].map(_truthy).all()
     ):
         raise AssertionError("native quote index does not cover the frozen fallback universe exactly")
     if int(seal.get("fallback_sessions", -1)) != len(index) or str(seal.get("fallback_session_key_sha256")) != EXPECTED_NATIVE_QUOTE_KEY_SHA256:
@@ -398,7 +431,8 @@ def build_session(
         if inventory[0]["sha256"] != str(record.get("expected_greeks_sha256", "")):
             raise AssertionError("stored Greek hash differs from native quote index")
         inventory.append(native_inventory)
-        quote_source = read_native_quotes(native_quote_path)
+        native_quotes = read_native_quotes(native_quote_path)
+        quote_source = apply_native_quote_clock(greeks, native_quotes)
     else:
         quote_source = greeks
     ohlc = read_parquet_columns(record["ohlc_path"], OHLC_COLUMNS)
@@ -410,8 +444,8 @@ def build_session(
     _set_contract_metadata(inventory[1], ohlc)
     _set_contract_metadata(inventory[2], underlying)
     if use_native_sidecar:
-        _set_timestamp_range(inventory[3], quote_source, ("timestamp",))
-        _set_contract_metadata(inventory[3], quote_source)
+        _set_timestamp_range(inventory[3], native_quotes, ("timestamp",))
+        _set_contract_metadata(inventory[3], native_quotes)
     _assert_sources_unchanged(inventory)
     flow, audit = prepare_completed_bar_flow(
         quote_source,

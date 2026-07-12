@@ -152,7 +152,9 @@ Bloqueo autoritativo: 1.441/2.519 sesiones 2022-08..2025-12 carecen de option
 `timestamp` nativo. No aceptar `underlying_timestamp` por inferencia ni permitir
 `PASS_DATA_GATE` con fallbacks. Usar únicamente el backfill sellado de
 `neural/jepa/build_wall_native_quote_sidecar.py`, que exige Terminal local/JAR,
-raw response hashes, timestamp exacto y key-set/bid/ask idéntico contra Greeks.
+raw response hashes y timestamp/contract key-set exacto contra Greeks. Si el
+proveedor revisa bid/ask, auditar mismatch sin reemplazar el histórico; F1 usa
+bid/ask Greek originales. Crossed quotes se preservan pero son no-signable.
 
 Contratos nuevos obligatorios:
 

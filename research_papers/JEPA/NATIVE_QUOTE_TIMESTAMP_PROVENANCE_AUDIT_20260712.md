@@ -60,14 +60,24 @@ code against a local frozen Theta Terminal.  For every fallback session it:
 3. hashes the Terminal JAR, builder, runtime, raw response, normalized Parquet
    and stored Greek source;
 4. rejects non-minute/wrong-day/duplicate/invalid rows;
-5. requires whole-key-set equality and exact native timestamp/bid/ask equality
-   against the stored Greek research window;
+5. requires whole-key-set equality against the stored Greek research window;
+   bid/ask revisions are counted and never overwrite stored Greek prices;
 6. writes immutable per-session artifacts and seals only at 1,441/1,441 PASS.
 
 Until that seal exists, H-FLOW1 historical timestamp provenance is
 `CONDITIONAL`, `PASS_DATA_GATE` is forbidden and no physical outcome runner may
 claim authoritative success.  Sizes are archived for H-QSIZE1 but cannot enter
 the already-frozen H-FLOW1 allowlist.
+
+The backfill exposed two pre-outcome counterexamples to the initial strict
+validator. QQQ 2024-02-06 contains 2,437 crossed native snapshots among 65,500
+rows. They are preserved raw but invalid for signing/execution. QQQ 2024-03-11
+has an exact 65,500/65,500 timestamp/contract key set but 77 current-provider
+bid/ask values differ from the stored Parquet (0.1176% across 11 minutes).
+Therefore `timestamp_key_set_exact` and `stored_bid_ask_exact` are distinct.
+H-FLOW1 always uses original hashed Greek bid/ask; the sidecar supplies only the
+verified native clock. Price revisions remain audited and keep provenance
+conditional rather than silently rewriting history.
 
 ## Derived-underlying producer audit
 

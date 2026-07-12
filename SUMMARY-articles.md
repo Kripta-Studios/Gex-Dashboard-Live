@@ -187,3 +187,7 @@ La auditoría del productor local añade una regla transferible: un `floor("min"
 es seguro solo si la barra se consume tras completarse, y cualquier `bfill` debe
 quedar fuera del research window o rechazarse. El audit 2.519/2.519 cuenta tres
 anomalías tempranas fuera de scope y no las imputa.
+
+Otra regla transferible: una reconsulta histórica sirve para recuperar identidad
+temporal, pero no debe reemplazar precios antiguos si el proveedor revisó datos.
+El sidecar separa key-set de clock, price-revision audit y signability.

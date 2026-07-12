@@ -168,8 +168,8 @@ def test_build_session_replaces_missing_greek_clock_with_sealed_native_quote(tmp
             "timestamp": greeks["underlying_timestamp"],
             "right": greeks["right"],
             "strike": greeks["strike"],
-            "bid": greeks["bid"],
-            "ask": greeks["ask"],
+            "bid": 9.0,
+            "ask": 10.0,
         }
     ).to_parquet(quote_path, index=False)
     record = {
@@ -180,6 +180,9 @@ def test_build_session_replaces_missing_greek_clock_with_sealed_native_quote(tmp
     }
     output, audit, inventory = build_session(record, _candidate())
     assert len(output) == 1
+    # The current-provider sidecar price is deliberately different.  Signing
+    # must retain the original stored Greek 0.9/1.1 quote.
+    assert output["surface_call_signed_volume_w1m"].iloc[0] == 10.0
     assert audit["option_timestamp_fallback_used"] is False
     assert {row["source_kind"] for row in inventory} == {
         "greeks", "ohlc", "underlying", "native_quote"
