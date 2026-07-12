@@ -242,7 +242,7 @@ bloque F1 de volumen/count/close-notional quote-relative en ventanas completadas
 1/5/15m, comparado con F0 distance/approach/RV/time. La evaluación física sigue
 siendo rejection versus accepted break; no se ha conectado option payoff.
 
-La suite relevante pasa `54 passed`. Se corrigieron half-days, cierre RTH de
+La suite relevante pasa `55 passed`. Se corrigieron half-days, cierre RTH de
 labels, fechas de fuente, duplicados, alias, episodios, pierce verdadero,
 denominadores/missingness y lock exacto de Python/dependencias. Preflight real:
 8 × 173, 3/3 sesiones, cero errores.
@@ -278,3 +278,8 @@ sidecar con bid/ask Greek originales; `timestamp_key_set_exact` y
 `stored_bid_ask_exact` quedan separados.
 QQQ 2025-08-28 mostró 250 keys nativas extra pero cubrió las 50.750 históricas;
 extras se auditan y no amplían el universo F1.
+
+El primer full-gate attempt detectó un bug pre-outcome al aplicar `_truthy` a
+escalares CSV aunque su contrato era vectorizado. El fix queda cubierto por un
+test de attach real y el gate verifica además booleanos estrictos del seal,
+consistencia del JAR, capturas positivas y hashes de raw/session manifests.

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -11,11 +12,14 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from neural.jepa.build_wall_surface_flow_dataset import (  # noqa: E402
+    attach_native_quote_index,
     build_session,
     evaluate_data_gate,
     filter_manifest,
+    session_key_hash,
     sha256_file,
 )
+from neural.jepa import build_wall_surface_flow_dataset as flow_builder  # noqa: E402
 
 
 def _write_sources(root: Path, *, trade_date: str = "20240102") -> dict[str, str]:
@@ -83,6 +87,102 @@ def _manifest_row(paths: dict[str, str], *, trade_date: str = "20240102") -> dic
         "has_underlying": "True",
         **paths,
     }
+
+
+def test_attach_native_quote_index_accepts_csv_boolean_coverage(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    greeks_path = tmp_path / "greeks_fallback.parquet"
+    quote_path = tmp_path / "native_quotes.parquet"
+    pd.DataFrame(
+        {
+            "underlying_timestamp": ["2024-01-02 10:34:00"],
+            "right": ["CALL"],
+            "strike": [100.0],
+            "bid": [0.9],
+            "ask": [1.1],
+        }
+    ).to_parquet(greeks_path, index=False)
+    pd.DataFrame(
+        {
+            "timestamp": ["2024-01-02 10:34:00"],
+            "right": ["CALL"],
+            "strike": [100.0],
+            "bid": [0.9],
+            "ask": [1.1],
+        }
+    ).to_parquet(quote_path, index=False)
+
+    index = pd.DataFrame(
+        [
+            {
+                "ticker": "SPY",
+                "trade_date": "20240102",
+                "greeks_path": str(greeks_path),
+                "greeks_sha256": sha256_file(greeks_path),
+                "quotes_path": str(quote_path),
+                "quotes_sha256": sha256_file(quote_path),
+                "raw_response_path": str(tmp_path / "raw.json"),
+                "raw_response_sha256": "pending",
+                "session_manifest_path": str(tmp_path / "session_manifest.json"),
+                "session_manifest_sha256": "pending",
+                "rows": 1,
+                "end_time": "16:00:00",
+                "terminal_jar_sha256": "jar",
+                "key_set_exact": True,
+                "stored_timestamp_key_coverage_exact": True,
+                "missing_stored_key_rows": 0,
+                "native_extra_key_rows": 0,
+                "stored_bid_ask_exact": True,
+                "stored_either_mismatch_rows": 0,
+                "stored_either_mismatch_rate": 0.0,
+            }
+        ]
+    )
+    raw_path = Path(index.loc[0, "raw_response_path"])
+    session_manifest_path = Path(index.loc[0, "session_manifest_path"])
+    raw_path.write_text('{"response": []}', encoding="utf-8")
+    session_manifest_path.write_text('{"outcome_free": true}', encoding="utf-8")
+    index.loc[0, "raw_response_sha256"] = sha256_file(raw_path)
+    index.loc[0, "session_manifest_sha256"] = sha256_file(session_manifest_path)
+    index_path = tmp_path / "native_quote_index.csv"
+    index.to_csv(index_path, index=False)
+    key_hash = session_key_hash(index)
+    source_manifest_hash = "source-manifest"
+    seal_path = tmp_path / "seal.json"
+    seal_path.write_text(
+        json.dumps(
+            {
+                "schema": "wall_native_quote_sidecar_seal_v1",
+                "status": "PASS_NATIVE_TIMESTAMP_BACKFILL",
+                "holdout_2026_used": False,
+                "outcome_free": True,
+                "source_manifest_sha256": source_manifest_hash,
+                "index_sha256": sha256_file(index_path),
+                "fallback_sessions": 1,
+                "fallback_session_key_sha256": key_hash,
+                "terminal_jar_sha256": "jar",
+                "git_commit": "commit",
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(flow_builder, "EXPECTED_NATIVE_QUOTE_SESSIONS", 1)
+    monkeypatch.setattr(flow_builder, "EXPECTED_NATIVE_QUOTE_KEY_SHA256", key_hash)
+    monkeypatch.setitem(flow_builder.EXPECTED_INPUT_HASHES, "manifest", source_manifest_hash)
+
+    selected, provenance = attach_native_quote_index(
+        pd.DataFrame(
+            [{"ticker": "SPY", "trade_date": "20240102", "greeks_path": str(greeks_path)}]
+        ),
+        index_path,
+        seal_path,
+    )
+
+    assert selected["greeks_timestamp_fallback"].tolist() == [True]
+    assert selected["native_quote_path"].tolist() == [str(quote_path)]
+    assert provenance["sessions"] == 1
 
 
 def _candidate(trade_date: str = "20240102") -> pd.DataFrame:

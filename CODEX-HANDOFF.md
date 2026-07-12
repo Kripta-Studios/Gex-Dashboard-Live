@@ -275,7 +275,7 @@ neural/jepa/wall_surface_flow_environment.py
 neural/jepa/build_wall_native_quote_sidecar.py
 ```
 
-La suite combinada relevante pasa `54 passed` (`40` pruebas nuevas de flow,
+La suite combinada relevante pasa `55 passed` (`41` pruebas nuevas de flow,
 provenance y runtime más `14` regresiones wall-state). El preflight real posterior
 a las correcciones produjo 8 filas × 173 columnas, 3/3 sesiones, cero errores,
 grid completo y hashes/runtime persistidos en
@@ -349,6 +349,13 @@ Siguiente secuencia, sin abrir outcomes:
 4. crear/commitear frozen runner manifest con provenance `CONDITIONAL` y live
    parity `BLOCKED`;
 5. solo entonces construir labels físicos y ejecutar una vez F0 contra F1.
+
+El primer intento de full data gate falló antes de crear output por
+`Series.map(_truthy)`: `_truthy` ya esperaba la Series completa. El fix usa
+`_truthy(series).all()` y añade test CSV real. La misma auditoría endureció el
+attach: booleanos del seal deben ser JSON `true/false` exactos; JAR del índice
+debe coincidir con el seal; rows deben ser positivas; los 1.441 raw responses y
+manifests de sesión deben existir y conservar sus hashes sellados.
 
 No existe resultado físico ni económico de H-FLOW1 todavía. Producción y todo
 2026 continúan intactos; no crear `PLAN.md` porque no hay dirección rentable clara.

@@ -283,7 +283,7 @@ def attach_native_quote_index(
     seal = json.loads(Path(seal_path).read_text(encoding="utf-8"))
     if seal.get("schema") != "wall_native_quote_sidecar_seal_v1" or seal.get("status") != "PASS_NATIVE_TIMESTAMP_BACKFILL":
         raise AssertionError("native quote sidecar is not a PASS seal")
-    if bool(seal.get("holdout_2026_used", True)) or not bool(seal.get("outcome_free", False)):
+    if seal.get("holdout_2026_used") is not False or seal.get("outcome_free") is not True:
         raise AssertionError("native quote seal violates outcome-free/pre-2026 scope")
     if str(seal.get("source_manifest_sha256")) != EXPECTED_INPUT_HASHES["manifest"]:
         raise AssertionError("native quote seal was not built from the canonical source manifest")
@@ -310,12 +310,28 @@ def attach_native_quote_index(
         or index.duplicated(["ticker", "trade_date"]).any()
         or session_key_hash(index) != EXPECTED_NATIVE_QUOTE_KEY_SHA256
         or index["trade_date"].str.startswith("2026").any()
-        or not index["stored_timestamp_key_coverage_exact"].map(_truthy).all()
+        or not _truthy(index["stored_timestamp_key_coverage_exact"]).all()
         or not pd.to_numeric(index["missing_stored_key_rows"], errors="coerce").eq(0).all()
     ):
         raise AssertionError("native quote index does not cover the frozen fallback universe exactly")
     if int(seal.get("fallback_sessions", -1)) != len(index) or str(seal.get("fallback_session_key_sha256")) != EXPECTED_NATIVE_QUOTE_KEY_SHA256:
         raise AssertionError("native quote seal session universe mismatch")
+    terminal_jar_hash = str(seal.get("terminal_jar_sha256", ""))
+    if not terminal_jar_hash or set(index["terminal_jar_sha256"].astype(str)) != {terminal_jar_hash}:
+        raise AssertionError("native quote index Terminal JAR provenance differs from its seal")
+    quote_rows = pd.to_numeric(index["rows"], errors="coerce")
+    if quote_rows.isna().any() or quote_rows.le(0).any():
+        raise AssertionError("native quote index contains empty/invalid captures")
+    for path_column, hash_column, description in (
+        ("raw_response_path", "raw_response_sha256", "raw native quote response"),
+        ("session_manifest_path", "session_manifest_sha256", "native quote session manifest"),
+    ):
+        for path_value, expected_hash in index[[path_column, hash_column]].itertuples(index=False, name=None):
+            evidence_path = Path(str(path_value))
+            if not evidence_path.is_file():
+                raise FileNotFoundError(f"missing {description}: {evidence_path}")
+            if sha256_file(evidence_path) != str(expected_hash):
+                raise AssertionError(f"{description} hash differs from sealed index: {evidence_path}")
     selected = sessions.merge(
         index.rename(
             columns={

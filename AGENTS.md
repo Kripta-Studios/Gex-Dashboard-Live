@@ -145,7 +145,7 @@ No usar `reboot now` como despliegue normal.
 ## Research activo — WALL_SURFACE_FLOW_AT_TOUCH_V1R1
 
 Checkpoint 2026-07-12: implementación causal/pre-outcome completada; suite
-relevante `54 passed`; producción y 2026 intactos. No existe todavía resultado
+relevante `55 passed`; producción y 2026 intactos. No existe todavía resultado
 físico ni económico.
 
 Bloqueo autoritativo: 1.441/2.519 sesiones 2022-08..2025-12 carecen de option
@@ -182,3 +182,9 @@ Secuencia vigente: commit/push del seal/index → full data gate → commit de s
 compactos → frozen runner manifest commit → una única evaluación física F0/F1.
 El sidecar ya está integrado en el builder (`beb4435`). No abrir outcomes antes
 del freeze ni crear `PLAN.md` sin una dirección rentable clara.
+
+Primer full-gate attempt falló antes de outcomes por un bug escalar/Series al
+leer `stored_timestamp_key_coverage_exact` desde CSV. Se corrigió fail-closed y
+se añadió validación de booleanos JSON estrictos, hashes de los 1.441 raw responses
+y manifests de sesión, consistencia de JAR y capturas no vacías. Relanzar solo
+desde el commit que contiene este fix.

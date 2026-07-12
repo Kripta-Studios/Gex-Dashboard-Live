@@ -203,3 +203,8 @@ El backfill completo selló 1.441/1.441 sesiones y 125.557.990 filas con cero
 missing keys y cero errores. Las 500 keys extra, 5.720 crossed y 2.915 revisiones
 bid/ask permanecen como evidencia adversarial; el experimento conserva el precio
 Greek histórico y usa el sidecar únicamente para recuperar/verificar el reloj.
+
+Lección adicional de procedencia: un booleano leído de CSV no debe pasar por un
+helper vectorizado mediante `Series.map(helper)`. El primer full gate lo detectó
+antes de outcomes; ahora el attach prueba el CSV real y vuelve a verificar hashes
+de raw responses/manifests, JAR y booleanos JSON estrictos antes del build.
