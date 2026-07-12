@@ -36,6 +36,10 @@ AMENDMENT = (
     "research_papers/JEPA/"
     "WALL_QUOTE_TICK_DYNAMICS_AT_TOUCH_V1R1_CAUSAL_AMENDMENT.md"
 )
+CAPTURE_CLARIFICATION = (
+    "research_papers/JEPA/"
+    "WALL_QUOTE_TICK_DYNAMICS_AT_TOUCH_V1R1R1_CAPTURE_CLARIFICATION.md"
+)
 PREDECLARATION = (
     "research_papers/JEPA/WALL_QUOTE_TICK_DYNAMICS_AT_TOUCH_V1_PREDECLARATION.md"
 )
@@ -50,6 +54,7 @@ CODE_CLOSURE = (
     "neural/jepa/wall_surface_flow_environment.py",
     PREDECLARATION,
     AMENDMENT,
+    CAPTURE_CLARIFICATION,
     RUNTIME_LOCK,
 )
 WALL_COLUMNS = (
@@ -210,12 +215,7 @@ def audit_session(
     for row in candidates.itertuples(index=False):
         at_time = quotes[quotes["timestamp"].eq(row.subscription_dt)]
         at_contract = at_time[
-            np.isclose(
-                at_time["strike"].to_numpy(dtype=float),
-                float(row.candidate_wall_strike),
-                rtol=0.0,
-                atol=1e-9,
-            )
+            at_time["strike"].eq(float(row.candidate_wall_strike))
         ]
         rights = set(at_contract["right"].astype(str))
         call = "C" in rights
@@ -377,8 +377,8 @@ def main() -> None:
     coverage.to_csv(coverage_path, index=False)
     eligible = proof[proof["causal_subscription_eligible_v1r1"].astype(bool)]
     manifest = {
-        "schema": "wall_qdyn_subscription_allowlist_v1r1",
-        "status": "PASS_SUBSCRIPTION_ALLOWLIST_V1R1",
+        "schema": "wall_qdyn_subscription_allowlist_v1r1r1",
+        "status": "PASS_SUBSCRIPTION_ALLOWLIST_V1R1R1",
         "outcome_free": True,
         "holdout_2026_used": False,
         "production_modified": False,

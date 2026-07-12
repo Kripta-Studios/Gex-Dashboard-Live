@@ -99,5 +99,14 @@ def test_wall_proximity_is_required_even_when_contract_is_listed(tmp_path: Path)
     assert row["eligibility_reason"] == "wall_not_in_tminus5_radius"
 
 
+def test_near_but_nonidentical_strike_is_not_listed(tmp_path: Path) -> None:
+    quotes = _quotes(("C", "P"))
+    quotes["strike"] = 400.0 + 5e-10
+    result, _ = audit_session(_source(tmp_path, quotes), _candidate())
+    row = result.iloc[0]
+    assert not bool(row["exact_both_rights_listed_tminus5m"])
+    assert row["eligibility_reason"] == "exact_strike_not_listed"
+
+
 def test_line_hash_is_order_invariant() -> None:
     assert line_hash(["b", "a"]) == line_hash(["a", "b"])
