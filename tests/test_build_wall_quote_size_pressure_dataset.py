@@ -3,7 +3,10 @@ from __future__ import annotations
 import pandas as pd
 import pytest
 
-from neural.jepa.build_wall_quote_size_pressure_dataset import _normalize_index
+from neural.jepa.build_wall_quote_size_pressure_dataset import (
+    _normalize_index,
+    annual_both_valid_profile,
+)
 
 
 def test_quote_index_requires_exact_coverage() -> None:
@@ -51,3 +54,15 @@ def test_quote_index_rejects_2026() -> None:
     )
     with pytest.raises(AssertionError, match="exact coverage"):
         _normalize_index(frame, "test")
+
+
+def test_annual_coverage_is_candidate_weighted_not_month_weighted() -> None:
+    frame = pd.DataFrame(
+        {
+            "ticker": ["SPY"] * 10,
+            "trade_date": ["20240102"] + ["20240201"] * 9,
+            "qsize_both_valid": [True] + [False] * 9,
+        }
+    )
+    annual = annual_both_valid_profile(frame)
+    assert annual.loc[0, "qsize_both_valid"] == pytest.approx(0.1)

@@ -367,6 +367,13 @@ def profile_dataset(
     )
 
 
+def annual_both_valid_profile(dataset: pd.DataFrame) -> pd.DataFrame:
+    work = dataset.assign(year=dataset["trade_date"].astype(str).str[:4])
+    return work.groupby(["ticker", "year"], as_index=False).agg(
+        qsize_both_valid=("qsize_both_valid", "mean")
+    )
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--candidates", required=True)
@@ -452,10 +459,7 @@ def main() -> None:
     ):
         raise AssertionError("H-QSIZE1 terminal unavailable-candidate contract changed")
     coverage, feature_profile, monthly_feature_profile = profile_dataset(dataset)
-    annual_source = dataset.assign(year=dataset["trade_date"].str[:4])
-    annual = annual_source.groupby(["ticker", "year"], as_index=False).agg(
-        qsize_both_valid=("qsize_both_valid", "mean")
-    )
+    annual = annual_both_valid_profile(dataset)
     overall = dataset.groupby("ticker")["qsize_both_valid"].mean()
     coverage_pass = bool(annual["qsize_both_valid"].ge(0.60).all() and overall.ge(0.70).all())
     distinctness_pass = bool(
@@ -518,6 +522,17 @@ def main() -> None:
         "qsize_quality_hash": feature_hash(QSIZE_QUALITY_FIELDS),
         "predeclaration_sha256": sha256_file(PROJECT_ROOT / PREDECLARATION),
         "causal_amendment_sha256": sha256_file(PROJECT_ROOT / CAUSAL_AMENDMENT),
+        "audit_artifact_hashes": {
+            name: sha256_file(output_dir / name)
+            for name in (
+                "session_audit.csv",
+                "coverage_by_month.csv",
+                "feature_profile.csv",
+                "feature_profile_by_month.csv",
+                "source_origin_profile.csv",
+                "schema.json",
+            )
+        },
         "data_gate": {
             "authoritative_inputs": True,
             "authoritative_code": True,

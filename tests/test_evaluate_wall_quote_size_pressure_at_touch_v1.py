@@ -12,6 +12,7 @@ from neural.jepa.evaluate_wall_quote_size_pressure_at_touch_v1 import (
     fit_model,
     make_lr_pipeline,
     summarize_gate,
+    assert_qsize_source_inventory,
 )
 from neural.jepa.iv_surface_deformation_features import IV_SURFACE_FEATURES
 from neural.jepa.quote_size_pressure_features import (
@@ -103,3 +104,8 @@ def test_gate_uses_third_sequential_p_threshold(monkeypatch) -> None:
     )
     assert summary["primary_physical_pass"] is False
     assert summary["physical_mechanism_pass"] is False
+
+
+def test_qsize_inventory_rejects_incomplete_or_swapped_source() -> None:
+    with pytest.raises(AssertionError, match="schema"):
+        assert_qsize_source_inventory(pd.DataFrame({"ticker": ["SPY"]}))

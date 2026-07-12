@@ -122,6 +122,8 @@ def main() -> int:
         or manifest.get("production_modified") is not False
         or manifest.get("errors") != []
         or int(manifest.get("rows", -1)) != 10683
+        or manifest.get("candidate_sha256")
+        != "6d27fdeb44422daa95aa79f777044e68276a2fe374c9bd847cd475d9dccfdb5b"
     ):
         raise AssertionError("cannot freeze a failed H-QSIZE1 data gate")
     gate = manifest.get("data_gate")
