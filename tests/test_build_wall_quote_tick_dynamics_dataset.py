@@ -7,6 +7,7 @@ import json
 import neural.jepa.build_wall_quote_tick_dynamics_dataset as builder
 from neural.jepa.build_wall_quote_tick_dynamics_dataset import (
     QDYN_FEATURES,
+    index_events,
     right_features,
 )
 from neural.jepa.build_wall_quote_tick_dynamics_sidecar import (
@@ -44,6 +45,17 @@ def ticks(count: int = 30, *, right: str = "CALL") -> pd.DataFrame:
 def test_frozen_feature_block_has_exactly_28_dynamic_measurements() -> None:
     assert len(QDYN_FEATURES) == 28
     assert len(set(QDYN_FEATURES)) == 28
+
+
+def test_event_index_preserves_audited_identity_and_rejects_duplicates() -> None:
+    indexed = index_events(pd.DataFrame({"event_id": ["a", "b"], "rows": [1, 2]}))
+    assert indexed.loc["a"].to_dict()["event_id"] == "a"
+    try:
+        index_events(pd.DataFrame({"event_id": ["a", "a"], "rows": [1, 2]}))
+    except AssertionError as exc:
+        assert "duplicate event_id" in str(exc)
+    else:
+        raise AssertionError("duplicate event_id was accepted")
 
 
 def test_completed_window_and_size_transition_formulas() -> None:

@@ -341,6 +341,14 @@ def build_event(row: dict[str, Any], candidate: pd.Series, seal: dict[str, Any])
     return result
 
 
+def index_events(index: pd.DataFrame) -> pd.DataFrame:
+    """Index sealed event sources without dropping the identity being audited."""
+    indexed = index.set_index("event_id", drop=False)
+    if not indexed.index.is_unique:
+        raise AssertionError("H-QDYN1 index has duplicate event_id")
+    return indexed
+
+
 def profile(dataset: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     work = dataset.assign(year=dataset["trade_date"].str[:4], month=dataset["trade_date"].str[:6])
     coverage = work.groupby(["ticker", "year", "month"], as_index=False).agg(
@@ -386,7 +394,7 @@ def main() -> None:
     dataset = candidates.merge(eligibility, on="event_id", how="left", validate="one_to_one")
     if dataset["causal_subscription_eligible"].isna().any():
         raise AssertionError("H-QDYN1 eligibility failed exact candidate join")
-    index_by_id = index.set_index("event_id", verify_integrity=True)
+    index_by_id = index_events(index)
     feature_rows = []
     for _, candidate in dataset.iterrows():
         if candidate["causal_subscription_eligible"]:
