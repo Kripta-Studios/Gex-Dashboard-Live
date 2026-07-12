@@ -30,8 +30,8 @@ def test_frozen_model_allowlist_excludes_closed_and_quality_fields() -> None:
     identities = [f"identity_{name}" for name in sorted(WALL_SPECS)]
     assert feature_names("F0") == [*CONTROL_FEATURES, *identities]
     assert feature_names("F1") == [*CONTROL_FEATURES, *QSIZE_FEATURES, *identities]
-    assert len(QSIZE_FEATURES) == 40
-    assert len(QSIZE_QUALITY_FIELDS) == 5
+    assert len(QSIZE_FEATURES) == 32
+    assert len(QSIZE_QUALITY_FIELDS) == 13
     assert not set(feature_names("F1")).intersection(QSIZE_QUALITY_FIELDS)
     assert not set(feature_names("F1")).intersection(FLOW_FEATURES)
     assert not set(feature_names("F1")).intersection(IV_SURFACE_FEATURES)

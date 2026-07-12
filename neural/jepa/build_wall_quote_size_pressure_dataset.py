@@ -57,6 +57,15 @@ CAUSAL_AMENDMENT = (
     "research_papers/JEPA/"
     "WALL_QUOTE_SIZE_PRESSURE_AT_TOUCH_V1_CAUSAL_AMENDMENT.md"
 )
+QUALITY_REPAIR = (
+    "research_papers/JEPA/"
+    "WALL_QUOTE_SIZE_PRESSURE_AT_TOUCH_V1R1_QUALITY_REPAIR_PREDECLARATION.md"
+)
+REJECTED_V1_MANIFEST = (
+    "research_papers/JEPA/results/_diagnostics/"
+    "wall_quote_size_pressure_at_touch_202208_202512_v1_rejected_data_gate/"
+    "manifest.json"
+)
 RUNTIME_LOCK = "research_papers/JEPA/requirements-wall-surface-flow-v1r1.txt"
 AUTHORITATIVE_CODE = (
     "neural/jepa/build_wall_quote_size_pressure_dataset.py",
@@ -68,6 +77,8 @@ AUTHORITATIVE_CODE = (
     "neural/jepa/wall_surface_flow_environment.py",
     PREDECLARATION,
     CAUSAL_AMENDMENT,
+    QUALITY_REPAIR,
+    REJECTED_V1_MANIFEST,
     RUNTIME_LOCK,
 )
 CANDIDATE_METADATA = (
@@ -499,7 +510,7 @@ def main() -> None:
     schema = {"columns": [{"name": name, "dtype": str(dataset[name].dtype)} for name in dataset]}
     (output_dir / "schema.json").write_text(json.dumps(schema, indent=2), encoding="utf-8")
     manifest = {
-        "schema": "wall_quote_size_pressure_at_touch_dataset_v1",
+        "schema": "wall_quote_size_pressure_at_touch_dataset_v1r1",
         "status": "PASS_DATA_GATE" if data_gate_pass else "REJECTED_DATA_GATE",
         "outcome_free": True,
         "holdout_2026_used": False,
@@ -522,6 +533,10 @@ def main() -> None:
         "qsize_quality_hash": feature_hash(QSIZE_QUALITY_FIELDS),
         "predeclaration_sha256": sha256_file(PROJECT_ROOT / PREDECLARATION),
         "causal_amendment_sha256": sha256_file(PROJECT_ROOT / CAUSAL_AMENDMENT),
+        "quality_repair_sha256": sha256_file(PROJECT_ROOT / QUALITY_REPAIR),
+        "rejected_v1_manifest_sha256": sha256_file(
+            PROJECT_ROOT / REJECTED_V1_MANIFEST
+        ),
         "audit_artifact_hashes": {
             name: sha256_file(output_dir / name)
             for name in (

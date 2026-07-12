@@ -1,0 +1,80 @@
+{
+  "schema": "wall_quote_size_pressure_at_touch_dataset_v1",
+  "status": "REJECTED_DATA_GATE",
+  "outcome_free": true,
+  "holdout_2026_used": false,
+  "production_modified": false,
+  "git_commit": "d1d48e39045c5f104f886023b86a6d8f79fd76d8",
+  "code_hashes": {
+    "neural/jepa/build_wall_quote_size_pressure_dataset.py": "8eaacc3d8a3f2fad507f6c3d681efa2e5dbf275be41f0764ddbfc12395bde6ce",
+    "neural/jepa/build_wall_native_quote_sidecar.py": "c729990f1b0e460ab13731040df20087d177ee4cbdb8aa33750d977563633f23",
+    "neural/jepa/build_wall_quote_size_complement_sidecar.py": "6390463707189734b5d7a97fcd268c53a048a8f84572e20e145e73018e0676cc",
+    "neural/jepa/build_wall_surface_flow_dataset.py": "46a86389308ba168cafa9ca85202ec3271698311462b6eab9132254e6ee05baf",
+    "neural/jepa/quote_size_pressure_features.py": "4f3962e36f83010e5103b96057a00f405f387db9df1d32a49c6d76cca8c4aed5",
+    "neural/jepa/surface_flow_features.py": "892730fbf5a3185608f30b406c4cc69e156ce392b6a1eae1b9b73258fb23cb10",
+    "neural/jepa/wall_surface_flow_environment.py": "b21a771a2982290d6c67513700f81d18de0e6c08c6ad9aba772d5305093d06ef",
+    "research_papers/JEPA/WALL_QUOTE_SIZE_PRESSURE_AT_TOUCH_V1_PREDECLARATION.md": "347a36fa96a54f410ccaeb94678a8bc8175b763170f44cb623c10ee8ef205b5e",
+    "research_papers/JEPA/WALL_QUOTE_SIZE_PRESSURE_AT_TOUCH_V1_CAUSAL_AMENDMENT.md": "fc921d7f06755f70ee3b4d3f7cb6f0795e037e20717832f94ec33bfd42108765",
+    "research_papers/JEPA/requirements-wall-surface-flow-v1r1.txt": "f026bfb512e17dfc1daaaecf998ba77a560aba83f1fdbf0c3a36136e33eeff7d"
+  },
+  "runtime_lock_sha256": "f026bfb512e17dfc1daaaecf998ba77a560aba83f1fdbf0c3a36136e33eeff7d",
+  "runtime_environment": {
+    "python_version": "3.14.2",
+    "python_implementation": "CPython",
+    "python_executable": "C:\\Program Files\\Python314\\python.exe",
+    "platform": "Windows-10-10.0-19041",
+    "platform_machine": "AMD64",
+    "packages": {
+      "lightgbm": "4.6.0",
+      "numpy": "2.3.5",
+      "pandas": "3.0.0",
+      "pyarrow": "23.0.1",
+      "scikit-learn": "1.8.0",
+      "scipy": "1.17.0"
+    }
+  },
+  "runtime_environment_sha256": "984a0e2c8a82e935295e4738c7758357175b488bb0fb11a4cd1a0bb5e8af8035",
+  "rows": 10683,
+  "columns": 76,
+  "dataset": "tmp\\wall_quote_size_pressure_at_touch_202208_202512_v1\\wall_quote_size_pressure_at_touch.parquet",
+  "dataset_sha256": "d2883abfc5fb218cdee55773715ef8ad3d3223a28df14dca48e331c7ebee637c",
+  "candidate_sha256": "6d27fdeb44422daa95aa79f777044e68276a2fe374c9bd847cd475d9dccfdb5b",
+  "source_inventory": "tmp\\wall_quote_size_pressure_at_touch_202208_202512_v1\\quote_size_source_hashes.csv",
+  "source_inventory_sha256": "9128ac471ef2061a7b27db19d3886d23b4d3ae492727af69d8a44c05c61ee8a3",
+  "sidecar_provenance": {
+    "fallback_seal_sha256": "6c2ff5d6321bff5b62cbd19d2a503d05b69332bfa7b26d7c1f585bf617752eaa",
+    "fallback_index_sha256": "0abe0ac2f9dcccec4574ee10e4f10ef2904000c80a0cf5fb8f5a90ef333f754a",
+    "complement_seal_sha256": "dd5744b108b4b1e8e43713337480e019f68ae107940627d2a46ab27702998603",
+    "complement_index_sha256": "a9c3a8c03d806cbf6b844b2754eb3925e74c8020116da414e0c3b005ab45eef9",
+    "sessions": 2519,
+    "fallback_sessions": 1441,
+    "complement_sessions": 1078,
+    "session_key_sha256": "ac7200fd96f2ef9afc2f9f09eff18804497a2f975a7454cccf5ed1c935653057",
+    "historical_provenance": "CONDITIONAL_CURRENT_PROVIDER_RECONSTRUCTION"
+  },
+  "control_feature_hash": "10c15e60f1eba40ba6c8bacaa8d3e3ff45a679161cc633e67185826ed16c7e5e",
+  "qsize_feature_hash": "8d7c00f9a0c52b666dcf2176839548eb7a83fe2d8ada2382e7561c3b7e7fed54",
+  "qsize_quality_hash": "3ab5deddc87a26d7c6e151a64ba3ad74b978b9a03aad6760d54e4d3ec40aee81",
+  "predeclaration_sha256": "347a36fa96a54f410ccaeb94678a8bc8175b763170f44cb623c10ee8ef205b5e",
+  "causal_amendment_sha256": "fc921d7f06755f70ee3b4d3f7cb6f0795e037e20717832f94ec33bfd42108765",
+  "audit_artifact_hashes": {
+    "session_audit.csv": "4fb2d9bd3477d6cde282550049ed9c54bd8726c4d58775abf7c7a5852f8bad7a",
+    "coverage_by_month.csv": "4b9da80bf9c91a59c338b7952b4e057cbfc107da1f7e92c43e7bf88a4d7a12fd",
+    "feature_profile.csv": "3dd557e9e84dff6b5de30dfae98dc594b4d7f6b9f0dac8e6cff20c837d0f1620",
+    "feature_profile_by_month.csv": "9a41002c0350abdcb505e6c308435284ac3417ed1658a7d81fa1cc2a3ec1c368",
+    "source_origin_profile.csv": "12da8650e1110dbe9789121b7ec50e360e050272b31428ccc4e9a1e8c0350aa1",
+    "schema.json": "67a7cba0d7636da8bf8fff23066d86cdd6edc6dd4af5c3aa9cbb106373e2a6b8"
+  },
+  "data_gate": {
+    "authoritative_inputs": true,
+    "authoritative_code": true,
+    "coverage_pass": true,
+    "distinctness_pass": false,
+    "control_coverage_pass": true,
+    "annual_cells": 12,
+    "minimum_annual_both_valid": 0.9847715736040609,
+    "minimum_ticker_both_valid": 0.9883720930232558,
+    "passed": false
+  },
+  "errors": []
+}

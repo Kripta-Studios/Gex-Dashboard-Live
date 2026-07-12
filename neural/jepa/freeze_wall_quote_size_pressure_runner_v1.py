@@ -50,6 +50,8 @@ CODE_CLOSURE = (
 PROTOCOL_CLOSURE = (
     "research_papers/JEPA/WALL_QUOTE_SIZE_PRESSURE_AT_TOUCH_V1_PREDECLARATION.md",
     "research_papers/JEPA/WALL_QUOTE_SIZE_PRESSURE_AT_TOUCH_V1_CAUSAL_AMENDMENT.md",
+    "research_papers/JEPA/WALL_QUOTE_SIZE_PRESSURE_AT_TOUCH_V1R1_QUALITY_REPAIR_PREDECLARATION.md",
+    "research_papers/JEPA/results/_diagnostics/wall_quote_size_pressure_at_touch_202208_202512_v1_rejected_data_gate/manifest.json",
     "research_papers/JEPA/requirements-wall-surface-flow-v1r1.txt",
 )
 
@@ -115,7 +117,7 @@ def main() -> int:
         pd.read_csv(qsize_source, dtype={"trade_date": str})
     )
     if (
-        manifest.get("schema") != "wall_quote_size_pressure_at_touch_dataset_v1"
+        manifest.get("schema") != "wall_quote_size_pressure_at_touch_dataset_v1r1"
         or manifest.get("status") != "PASS_DATA_GATE"
         or manifest.get("outcome_free") is not True
         or manifest.get("holdout_2026_used") is not False
@@ -193,6 +195,10 @@ def main() -> int:
         != protocol_hashes["research_papers/JEPA/WALL_QUOTE_SIZE_PRESSURE_AT_TOUCH_V1_PREDECLARATION.md"]
         or manifest.get("causal_amendment_sha256")
         != protocol_hashes["research_papers/JEPA/WALL_QUOTE_SIZE_PRESSURE_AT_TOUCH_V1_CAUSAL_AMENDMENT.md"]
+        or manifest.get("quality_repair_sha256")
+        != protocol_hashes["research_papers/JEPA/WALL_QUOTE_SIZE_PRESSURE_AT_TOUCH_V1R1_QUALITY_REPAIR_PREDECLARATION.md"]
+        or manifest.get("rejected_v1_manifest_sha256")
+        != protocol_hashes["research_papers/JEPA/results/_diagnostics/wall_quote_size_pressure_at_touch_202208_202512_v1_rejected_data_gate/manifest.json"]
     ):
         raise AssertionError("H-QSIZE1 build feature/protocol hashes differ from freeze")
     payload = {

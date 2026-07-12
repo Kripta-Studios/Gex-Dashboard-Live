@@ -23,6 +23,9 @@ MEASURES = (
     "relative_qimb",
     "local_signable_fraction",
 )
+PRESSURE_MEASURES = tuple(
+    measure for measure in MEASURES if measure != "local_signable_fraction"
+)
 REQUIRED_COLUMNS = (
     "symbol",
     "expiration",
@@ -37,18 +40,20 @@ REQUIRED_COLUMNS = (
 )
 
 
-def _measurement_names() -> tuple[str, ...]:
+def _measurement_names(measures: tuple[str, ...]) -> tuple[str, ...]:
     names: list[str] = []
     for right in RIGHTS:
         prefix = f"qsize_{right.lower()}"
-        names.extend(f"{prefix}_{measure}" for measure in MEASURES)
+        names.extend(f"{prefix}_{measure}" for measure in measures)
         for window in WINDOWS_MINUTES:
-            names.extend(f"{prefix}_{measure}_change_{window}m" for measure in MEASURES)
+            names.extend(f"{prefix}_{measure}_change_{window}m" for measure in measures)
     return tuple(names)
 
 
-QSIZE_FEATURES = _measurement_names()
+QSIZE_RAW_FEATURES = _measurement_names(MEASURES)
+QSIZE_FEATURES = _measurement_names(PRESSURE_MEASURES)
 QSIZE_QUALITY_FIELDS = (
+    *(name for name in QSIZE_RAW_FEATURES if "local_signable_fraction" in name),
     "qsize_call_valid",
     "qsize_put_valid",
     "qsize_both_valid",
@@ -180,7 +185,7 @@ def prepare_quote_size_source(
 
 
 def _empty() -> dict[str, Any]:
-    result: dict[str, Any] = {name: np.nan for name in QSIZE_FEATURES}
+    result: dict[str, Any] = {name: np.nan for name in QSIZE_RAW_FEATURES}
     result.update(
         {
             "qsize_call_valid": False,

@@ -539,3 +539,24 @@ bid/ask top-of-book size e innovación exact-contract. El sidecar actual cubre
 1.441 sesiones; faltan 1.078. Completar y sellar esas sesiones antes de cualquier
 label. No llamar update intensity a snapshots 1m. Provenance seguirá
 `CONDITIONAL_CURRENT_PROVIDER_RECONSTRUCTION` y live parity está bloqueada.
+
+## H-QSIZE1 data gate y reparación pre-outcome
+
+El complemento quedó sellado 1.078/1.078, 81.824.260 rows, index SHA
+`a9c3a8c0...eef9`; combinado 2.519/2.519. Se excluyen 63.500 provider-added
+keys mediante pertenencia Greek exacta por timestamp. El primer build V1
+preservó 10.683 candidatos y pasó coverage/control, pero fue `REJECTED_DATA_GATE`
+porque seis ticker-year de `local_signable_fraction_change` eran constantes
+cero. Minimum annual both-valid 0,984772; minimum ticker 0,988372. No labels ni
+outcomes se abrieron.
+
+La causa es un bug de contrato: signable fraction es calidad y contradecía el
+amendment audit-only. V1R1 se predeclara sin outcomes y mueve los 8 campos de
+signability al audit; F1 usa 32 qimb/depth fields, todos con >=158 valores por
+ticker-año. La evaluación usa complete cases iguales F0/F1, sin missing
+indicators/native missing branches. V1 rejected queda versionado en
+`_diagnostics/wall_quote_size_pressure_at_touch_202208_202512_v1_rejected_data_gate/`.
+
+Siguiente acción exacta: commit/push V1R1, rebuild a target nuevo, congelar data
+manifest/runner y ejecutar una sola evaluación física LR/LGBM. 2026 y producción
+siguen sin tocar; todavía no hay rentabilidad H-QSIZE.

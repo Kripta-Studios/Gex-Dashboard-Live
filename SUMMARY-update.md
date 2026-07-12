@@ -359,3 +359,15 @@ LightGBM 9/24, mediana -0,005822. QQQ/SPXW fallan; SPY pasa solo LR pero no la
 sensibilidad, por lo que no puede seleccionarse post-hoc. No se autorizó payoff
 y no existe rentabilidad nueva. Próxima medición nueva: H-QSIZE1; completar
 1.078 sesiones para llegar a 2.519/2.519 antes de labels.
+
+El backfill QSIZE ya completó 1.078/1.078 sesiones y 81.824.260 rows. El data
+gate V1 fue rechazado sin outcomes: coverage mínimo ticker-año 98,477% y control
+PASS, pero seis celdas de cambios de `local_signable_fraction` son constantes
+cero. No se entrenó ningún modelo ni se calculó PnL.
+
+Esto descubrió un bug semántico pre-outcome: signable fraction es calidad, aunque
+V1 aún la incluía entre las 40 mediciones. V1R1 la mueve a audit-only; quedan 32
+features de qimb/depth/relative-qimb, con mínimo 158 valores distintos por
+ticker-año. La reparación no cambia datos, clocks, contratos, labels, folds ni
+gates y conserva p secuencial `<0,0167`. Próximo paso: rebuild V1R1, freeze y
+one-shot físico. Rentabilidad nueva: aún no demostrada.

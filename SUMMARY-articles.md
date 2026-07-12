@@ -282,3 +282,12 @@ midpoint-IV no añade señal estable en los tres tickers. SPY aislado mejora en 
 pero no replica con el modelo de sensibilidad y no es seleccionable tras abrir
 outer. La siguiente medición distinta es tamaño NBBO; requiere completar el
 reloj histórico y no debe confundirse con profundidad completa/update intensity.
+
+H-QSIZE aporta otra lección transferible: disponibilidad de quote no es presión
+de mercado. El primer data gate encontró cambios de signable fraction constantes
+en seis ticker-año; esos campos deben ser quality-only y no entrar explícita ni
+implícitamente mediante missing indicators o ramas nativas. La reparación V1R1,
+congelada antes de outcomes, compara F0/F1 en complete cases idénticos y limita
+alpha a imbalance y tamaño bid/ask relativo. También exige pertenencia de
+contrato Greek exacta por timestamp; una unión diaria puede introducir un strike
+antes de su primera observación histórica.

@@ -17,3 +17,7 @@ def test_freeze_closure_contains_qsize_code_and_protocol() -> None:
         "research_papers/JEPA/WALL_QUOTE_SIZE_PRESSURE_AT_TOUCH_V1_CAUSAL_AMENDMENT.md"
         in PROTOCOL_CLOSURE
     )
+    assert (
+        "research_papers/JEPA/WALL_QUOTE_SIZE_PRESSURE_AT_TOUCH_V1R1_QUALITY_REPAIR_PREDECLARATION.md"
+        in PROTOCOL_CLOSURE
+    )

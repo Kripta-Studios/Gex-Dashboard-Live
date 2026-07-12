@@ -60,7 +60,7 @@ def candidate() -> pd.Series:
 
 def test_frozen_feature_count_and_exact_contract_changes() -> None:
     values = candidate_quote_size_features(prepared(), candidate())
-    assert len(QSIZE_FEATURES) == 40
+    assert len(QSIZE_FEATURES) == 32
     assert len(QSIZE_ALLOWLIST) == 45
     assert values["qsize_both_valid"]
     assert values["qsize_call_shared_local_contracts"] == 7

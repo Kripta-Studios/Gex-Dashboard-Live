@@ -311,3 +311,30 @@ captura sellada de las 1.078 sesiones no presentes en el sidecar para completar
 2.519/2.519. Es top-of-book NBBO size snapshot, no update intensity ni depth de
 libro. Debe predeclararse con corrección secuencial antes de labels y su live
 parity sigue bloqueada hasta implementar/medir recepción de sizes.
+
+### H-QSIZE1 / reparación H-QSIZE1R1
+
+Captura complementaria sellada: 1.078/1.078 sesiones, 81.824.260 filas,
+índice SHA `a9c3a8c0...eef9`, cero errores. Al combinarla con el sidecar previo
+se cubren 2.519/2.519 sesiones. Provenance sigue
+`CONDITIONAL_CURRENT_PROVIDER_RECONSTRUCTION`: se excluyen por clave Greek
+exacta 63.500 filas añadidas retrospectivamente y se auditan 1.485.169 filas
+bid/ask revisadas. Live parity permanece `BLOCKED`.
+
+H-QSIZE1 V1 queda **CERRADO antes de outcomes**: data gate 10.683x76, cobertura
+PASS (mínimo ticker-año 98,477%), controles PASS, pero distinctness FAIL en seis
+celdas de `local_signable_fraction_change_{1,5}m`, todas exactamente cero. No
+se abrió label, AUC ni PnL. Compactos preservados en
+`wall_quote_size_pressure_at_touch_202208_202512_v1_rejected_data_gate/`.
+
+El fallo reveló un bug semántico concreto: el amendment prohibía calidad como
+alpha pero aún dejaba signable fraction dentro del modelo. H-QSIZE1R1 queda
+predeclarado antes de outcomes para mover sus 8 campos a audit-only y conservar
+solo 32 mediciones reales qimb/bid-depth/ask-depth/relative-qimb. Las 32 pasan
+distinctness outcome-free (mínimo 158 estados por ticker-año). No cambia ningún
+row, reloj, contrato, radio, label, fold, modelo o gate; p sigue `<0,0167`.
+Código causal commits `950d724` y `d1d48e3`; suite focal `14 passed`.
+
+Secuencia única: commit/push de la reparación y compactos V1 -> rebuild inmutable
+V1R1 -> commit compactos -> frozen runner commit -> one-shot físico. 2026,
+producción y outcomes siguen intactos. No existe PF/WR/PnL nuevo todavía.
