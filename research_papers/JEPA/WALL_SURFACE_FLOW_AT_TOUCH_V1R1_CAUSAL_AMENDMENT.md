@@ -54,12 +54,15 @@ reading, reject duplicate normalized keys, reject non-1m option inputs, require
 directory is immutable and written by atomic staging/rename.
 
 Derived-underlying files additionally require exact symbol/date metadata,
-minute-boundary unique timestamps, positive finite OHLC, a valid OHLC envelope,
-positive tick count and every regular-session minute through the physical close.
+minute-boundary unique timestamps, every regular-session minute through the
+physical close, and positive finite OHLC/envelope/tick count from 10:19 onward
+(the first timestamp any frozen F0/label can consume).
 Candidate spot must match the exact underlying bar open within 0.001 bps.  The
 external historical producer version is not embedded in old Parquets; current
 producer hashes and its floor/zero-repair caveat are frozen in the provenance
 audit rather than silently treated as a committed build lineage.
+The full structural audit passed 2,519/2,519 usable sessions and records three
+invalid pre-10:19 rows without repair or data-driven session exclusion.
 
 ThetaData OHLC timestamp `s` is the bar open and the bar contains trades in
 `[s,s+1m)`.  Quote/Greeks `timestamp` is preferred.  Older files lacking it may

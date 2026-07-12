@@ -145,7 +145,7 @@ No usar `reboot now` como despliegue normal.
 ## Research activo — WALL_SURFACE_FLOW_AT_TOUCH_V1R1
 
 Checkpoint 2026-07-12: implementación causal/pre-outcome completada; suite
-relevante `52 passed`; producción y 2026 intactos. No existe todavía resultado
+relevante `53 passed`; producción y 2026 intactos. No existe todavía resultado
 físico ni económico.
 
 Bloqueo autoritativo: 1.441/2.519 sesiones 2022-08..2025-12 carecen de option
@@ -164,6 +164,10 @@ Contratos nuevos obligatorios:
 - sizes del sidecar pertenecen a H-QSIZE1 separado y no pueden entrar en F1.
 - underlying derivado debe pasar metadata/date, grid RTH, OHLC envelope,
   tick_count y spot parity <=0,001 bps; su productor histórico no está embebido.
+
+Audit underlying completo: 2.519/2.519 pasan desde el primer timestamp consumible
+10:19. Tres rows SPY 2023-06-05 09:54–09:56 son inválidos pero out-of-scope; se
+cuentan, no se bfill ni se usa el hallazgo para excluir la sesión.
 
 Secuencia: commit/push → backfill 1.441/1.441 → seal/index commit → integrar
 sidecar al builder → full data gate → frozen runner manifest commit → una única

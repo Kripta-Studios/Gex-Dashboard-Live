@@ -211,16 +211,6 @@ def validate_underlying_session(
     numeric_columns = ["open", "high", "low", "close", "tick_count"]
     for column in numeric_columns:
         frame[column] = pd.to_numeric(frame[column], errors="coerce")
-    values = frame[numeric_columns].to_numpy(dtype=float)
-    if not np.isfinite(values).all() or (frame[["open", "high", "low", "close"]] <= 0.0).any().any():
-        raise AssertionError("derived underlying contains non-finite/nonpositive OHLC")
-    if not frame["tick_count"].gt(0.0).all():
-        raise AssertionError("derived underlying contains nonpositive tick_count")
-    envelope = frame["high"].ge(frame[["open", "close"]].max(axis=1)) & frame["low"].le(
-        frame[["open", "close"]].min(axis=1)
-    )
-    if not bool(envelope.all()):
-        raise AssertionError("derived underlying violates OHLC envelope")
     close_minute = underlying_market_close_minute(day)
     session_start = pd.Timestamp(f"{day[:4]}-{day[4:6]}-{day[6:]} 09:30:00")
     session_end = pd.Timestamp(day) + pd.Timedelta(minutes=close_minute - 1)
@@ -229,6 +219,24 @@ def validate_underlying_session(
     missing = required_grid.difference(observed)
     if len(missing):
         raise AssertionError(f"derived underlying regular-session grid is incomplete: missing={len(missing)}")
+    # The earliest frozen decision is 10:35 and RV15 needs N+1 completed
+    # closes, hence 10:19 is the first value that can enter F0.  Earlier source
+    # anomalies are counted but never repaired or allowed to reject/select a
+    # session whose experiment inputs and labels remain unaffected.
+    value_start = pd.Timestamp(f"{day[:4]}-{day[4:6]}-{day[6:]} 10:19:00")
+    relevant = frame[frame["bar_start"].between(value_start, session_end, inclusive="both")].copy()
+    finite = np.isfinite(frame[numeric_columns].to_numpy(dtype=float)).all(axis=1)
+    positive_ohlc = frame[["open", "high", "low", "close"]].gt(0.0).all(axis=1)
+    positive_ticks = frame["tick_count"].gt(0.0)
+    envelope = frame["high"].ge(frame[["open", "close"]].max(axis=1)) & frame["low"].le(
+        frame[["open", "close"]].min(axis=1)
+    )
+    structurally_valid = finite & positive_ohlc & positive_ticks & envelope
+    relevant_valid = structurally_valid.loc[relevant.index]
+    if not bool(relevant_valid.all()):
+        raise AssertionError(
+            f"derived underlying contains invalid research-window rows: {(~relevant_valid).sum()}"
+        )
     frame = frame.sort_values("bar_start", kind="stable").reset_index(drop=True)
     return frame, {
         "underlying_rows": int(len(frame)),
@@ -236,7 +244,8 @@ def validate_underlying_session(
         "expected_underlying_required_window_minutes": int(len(required_grid)),
         "underlying_timestamp_min": frame["bar_start"].min(),
         "underlying_timestamp_max": frame["bar_start"].max(),
-        "underlying_min_tick_count": float(frame["tick_count"].min()),
+        "underlying_min_research_tick_count": float(relevant["tick_count"].min()),
+        "underlying_out_of_scope_invalid_rows": int((~structurally_valid & frame["bar_start"].lt(value_start)).sum()),
     }
 
 

@@ -378,9 +378,15 @@ def test_derived_underlying_requires_exact_metadata_grid_and_envelope() -> None:
     missing = source[source["timestamp"].ne(pd.Timestamp("2024-01-02 12:00:00"))]
     with pytest.raises(AssertionError, match="grid is incomplete"):
         validate_underlying_session(missing, expected_ticker="SPY", expected_trade_date="20240102")
-    invalid = source.copy(); invalid.loc[0, "high"] = 99.0
-    with pytest.raises(AssertionError, match="OHLC envelope"):
+    invalid = source.copy()
+    invalid.loc[invalid["timestamp"].eq(pd.Timestamp("2024-01-02 10:20:00")), "high"] = 99.0
+    with pytest.raises(AssertionError, match="invalid research-window rows"):
         validate_underlying_session(invalid, expected_ticker="SPY", expected_trade_date="20240102")
+    early_only = source.copy(); early_only.loc[0, ["open", "high", "low", "close"]] = 0.0
+    _, early_audit = validate_underlying_session(
+        early_only, expected_ticker="SPY", expected_trade_date="20240102"
+    )
+    assert early_audit["underlying_out_of_scope_invalid_rows"] == 1
 
 
 def test_derived_underlying_half_day_requires_only_cash_rth_grid() -> None:

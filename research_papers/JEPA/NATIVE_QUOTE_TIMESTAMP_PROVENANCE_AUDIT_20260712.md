@@ -96,12 +96,18 @@ source expiration, strike or right, these current script hashes do not prove the
 exact historical producer version.
 
 The flow builder therefore fails every derived-underlying session unless it has
-exact symbol/date metadata, minute-boundary unique keys, positive finite OHLC,
-a valid OHLC envelope, positive tick count, a complete 09:30–15:59 RTH grid
-(09:30–12:59 half day), and candidate/event spot parity within 0.001 bps.  A
-three-session real preflight passed with zero incomplete grids and maximum spot
-difference 0.000519 bps.  This establishes content consistency, while the
-unrecorded historical producer identity remains an explicit provenance caveat.
+exact symbol/date metadata, minute-boundary unique keys, a complete
+09:30–15:59 RTH grid (09:30–12:59 half day), candidate/event spot parity within
+0.001 bps, and positive finite OHLC/envelope/tick count throughout the exact
+research-consumable interval beginning 10:19.  Earlier anomalies are counted,
+never filled, and cannot select a session whose F0/labels do not consume them.
+
+The complete 2,519-session structural audit found zero research-window failures,
+minimum research tick count 60 and exactly three out-of-scope invalid rows: SPY
+2023-06-05 at 09:54–09:56.  A three-session real feature preflight separately
+passed with zero incomplete grids and maximum spot difference 0.000519 bps.
+This establishes content consistency, while the unrecorded historical producer
+identity remains an explicit provenance caveat.
 
 Half-day physical decisions and labels use the underlying 13:00 close.  QQQ/SPY
 option trading to 13:15 is recorded as a distinct clock, consistent with Cboe's

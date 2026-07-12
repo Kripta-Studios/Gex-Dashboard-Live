@@ -242,7 +242,7 @@ bloque F1 de volumen/count/close-notional quote-relative en ventanas completadas
 1/5/15m, comparado con F0 distance/approach/RV/time. La evaluación física sigue
 siendo rejection versus accepted break; no se ha conectado option payoff.
 
-La suite relevante pasa `52 passed`. Se corrigieron half-days, cierre RTH de
+La suite relevante pasa `53 passed`. Se corrigieron half-days, cierre RTH de
 labels, fechas de fuente, duplicados, alias, episodios, pierce verdadero,
 denominadores/missingness y lock exacto de Python/dependencias. Preflight real:
 8 × 173, 3/3 sesiones, cero errores.
@@ -259,6 +259,8 @@ con `bfill` para filas totalmente nulas. Los ficheros históricos carecen de has
 de productor/contrato fuente; por ello se añadió gate de contenido completo.
 Preflight: 0 grids RTH incompletos, OHLC/tick_count válidos y spot máximo
 0,000519 bps. La limitación de linaje se conserva, no se oculta.
+El audit completo pasó 2.519/2.519; registró tres ceros 09:54–09:56 de SPY
+2023-06-05 fuera del primer timestamp consumible 10:19, sin imputar ni excluir.
 
 Estado científico: `H-FLOW1 = DATA_PROVENANCE_BLOCKED`, `H-QSIZE1 = AVAILABLE_NOT_TESTED`.
 No hay rentabilidad nueva que reportar; 2026 y producción siguen intactos.

@@ -683,6 +683,12 @@ def evaluate_data_gate(
         "maximum_candidate_underlying_spot_bps": float(
             audit["candidate_underlying_spot_max_bps"].max()
         ),
+        "underlying_out_of_scope_invalid_rows": int(
+            audit["underlying_out_of_scope_invalid_rows"].sum()
+        ),
+        "minimum_underlying_research_tick_count": float(
+            audit["underlying_min_research_tick_count"].min()
+        ),
         "option_timestamp_fallback_sessions": int(audit["option_timestamp_fallback_used"].astype(bool).sum()),
         "zero_active_sessions": int(audit["active_rows"].le(0).sum()),
         "minimum_quote_row_coverage": float(annual["quote_row_coverage"].min()) if len(annual) else None,
@@ -867,6 +873,9 @@ def main() -> int:
         "unmatched_active_rows": int(audit["unmatched_active_rows"].sum()),
         "nonpositive_close_active_rows": int(audit["nonpositive_close_active_rows"].sum()),
         "nonpositive_close_active_volume": float(audit["nonpositive_close_active_volume"].sum()),
+        "underlying_out_of_scope_invalid_rows": int(
+            audit["underlying_out_of_scope_invalid_rows"].sum()
+        ),
         "data_gate": data_gate,
         "candidate_universe_audit": candidate_universe_audit,
         "errors": errors,

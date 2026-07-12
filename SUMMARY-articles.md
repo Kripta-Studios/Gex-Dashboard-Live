@@ -182,3 +182,8 @@ Estas fuentes se materializan en assertions y tests, no en una estrategia
 copiada: timestamp exacto, grids schedule-aware, horizon same-session y sidecar
 raw-hashed. Referencias y censo exactos están en
 `NATIVE_QUOTE_TIMESTAMP_PROVENANCE_AUDIT_20260712.md`.
+
+La auditoría del productor local añade una regla transferible: un `floor("min")`
+es seguro solo si la barra se consume tras completarse, y cualquier `bfill` debe
+quedar fuera del research window o rechazarse. El audit 2.519/2.519 cuenta tres
+anomalías tempranas fuera de scope y no las imputa.

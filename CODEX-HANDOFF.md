@@ -276,7 +276,7 @@ neural/jepa/wall_surface_flow_environment.py
 neural/jepa/build_wall_native_quote_sidecar.py
 ```
 
-La suite combinada relevante pasa `52 passed` (`38` pruebas nuevas de flow,
+La suite combinada relevante pasa `53 passed` (`39` pruebas nuevas de flow,
 provenance y runtime más `14` regresiones wall-state). El preflight real posterior
 a las correcciones produjo 8 filas × 173 columnas, 3/3 sesiones, cero errores,
 grid completo y hashes/runtime persistidos en
@@ -289,6 +289,11 @@ cero grids RTH incompletos y spot máximo 0,000519 bps. El productor underlying
 actual usa 1s→floor-minute y contiene zero-repair con `bfill`; los Parquets
 históricos no guardan hash/strike/right de productor, así que esa limitación de
 linaje queda explícita aunque el gate de contenido pase.
+
+Auditoría estructural completa underlying: 2.519/2.519 sesiones utilizables,
+minimum tick_count desde 10:19 = 60. Única anomalía: tres rows SPY 2023-06-05
+09:54–09:56, antes de cualquier timestamp que pueda entrar en F0/labels. Se
+cuentan en manifest, no se rellenan ni excluyen el día post hoc.
 
 Correcciones congeladas antes de outcomes:
 
@@ -320,7 +325,7 @@ Siguiente secuencia, sin abrir outcomes:
 1. commit/push del código, tests, predeclaración y ledger;
 2. arrancar Terminal local desde JAR congelado y ejecutar el backfill sidecar;
 3. sellar/commitear índice y hashes 1.441/1.441;
-4. conectar el índice nativo al builder y ejecutar full data gate;
+4. el índice ya está integrado en commit `beb4435`; ejecutar full data gate;
 5. crear/commitear frozen runner manifest;
 6. solo entonces construir labels físicos y ejecutar una vez F0 contra F1.
 
