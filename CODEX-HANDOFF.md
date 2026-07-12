@@ -609,7 +609,17 @@ Checkpoint H-QDYN1R1: auditor adversarial paró la captura V1 porque el radio
 `2188a2cf...021a5`, eligible IDs `f77dc223...6a2eca`. Los parciales V1 y V1R1
 quedan rechazados. Capturador V1R1R1 requiere proof, evidencia Terminal completa,
 contract-block audit, quarantine de staging y revalidación integral. Feature
-builder outcome-free y runner físico congelable listos. Suite focal `30 passed`;
+builder outcome-free y runner físico congelable listos. Suite focal `31 passed`;
 sin labels ni PnL H-QDYN. Clarificación: raw non-finite/crossed se preserva,
 size-only excluye cambios de exchange, conditions no entran como alpha y strike
 usa igualdad literal.
+
+Último audit: exchanges `inf` también quedan fuera de pares válidos; suite focal
+`31 passed`, sin blockers materiales conocidos. H-QDYN V1R1R1 continúa captura.
+
+H-GREEK2WALL-DIRECT-ALL-V1 queda predeclarado outcome-free como siguiente fuente
+independiente. OI previo está resuelto por docs oficiales (~06:30, cierre día
+previo) y ThetaData `/greeks/all` da directamente vanna/charm/vomma/zomma con
+timestamp. Tras H-QDYN, ejecutar solo preflight 12 sesiones y medir coste/paridad;
+no full build ni outcomes. IB/Fib estático/día-condicional está cerrado; solo
+presión dinámica sobre los ocho niveles fijos sería nueva y exige otra captura.

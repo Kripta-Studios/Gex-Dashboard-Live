@@ -399,3 +399,9 @@ H-QDYN V1 se detuvo antes de outcomes por una brecha de listing en `t-5m`.
 V1R1 auditó exact CALL+PUT en 2.519 sidecars: 10.683/10.683 listados y 9.833
 elegibles tras el radio congelado. Proof `083a77f3...927623c`, suite `30 passed`.
 Los parciales V1/V1R1 son rechazados; relanzar a output V1R1R1 nuevo. Sin PnL.
+
+H-QDYN V1R1R1 está capturando con suite `31 passed`. En paralelo se identificó
+una fuente realmente nueva: ThetaData direct `/greeks/all` para migración de
+vanna/charm/vomma/zomma; OI diario es previo y causal según docs oficiales.
+Solo hay preflight 12 sesiones predeclarado, aún no ejecutado. IB/Fib estático no
+muestra alpha incremental; presión dinámica en los ocho niveles queda futura.

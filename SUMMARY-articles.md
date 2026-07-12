@@ -325,3 +325,13 @@ disponibilidad, no alpha ni rentabilidad.
 La captura debe preservar quotes raw inválidas y decidir validez solo en el
 cálculo de transiciones. `Size-only` excluye cambios simultáneos de exchange;
 conditions cuentan como reportes/dedup pero quedan fuera de las 28 mediciones.
+
+ThetaData documenta que OI publicado por la mañana representa el cierre del día
+previo y que `/v3/option/history/greeks/all` ofrece griegas de orden superior
+timestamped. Esto abre una fuente mejor que recalcular fórmulas locales para
+estudiar deformación/migración vanna/charm/vomma/zomma, aunque sigue siendo una
+reconstrucción del proveedor actual y no identifica signo dealer.
+
+En IB/Fibonacci, “algunas extensiones según el día” no es una hipótesis nueva si
+se eligen después de mirar resultados. Un test nuevo debe mantener los ocho
+niveles y medir presión dinámica con un modelo compartido, no escoger niveles.

@@ -433,4 +433,22 @@ V1R1R1 nuevo con esos hashes; suite H-QDYN focal `30 passed`. El parcial V1R1
 también queda `REJECTED_CAPTURE_SEMANTICS`: preservaba incorrectamente raw
 non-finite y llamaba size-only a transiciones con cambio de exchange. V1R1R1
 preserva raw, filtra solo al medir, exige strike exacto y excluye conditions de
-alpha.
+alpha. Auditoría posterior corrigió también exchanges infinitos en transiciones;
+suite focal `31 passed`, sin blockers materiales conocidos.
+
+Nueva fuente independiente outcome-free registrada: H-GREEK2WALL-DIRECT-ALL-V1.
+ThetaData v3 ofrece `/option/history/greeks/all` con gamma, vanna, charm, vomma,
+zomma y otros campos nativos a 1m. La documentación oficial confirma que OI se
+publica ~06:30 ET y representa el cierre del día previo, por lo que es causal
+después de 10:20. Se permite solo un preflight de 12 sesiones congeladas tras
+terminar H-QDYN; no outcomes ni full download. La hipótesis autorizable es
+deformación/migración del perfil vanna/charm/vomma/zomma, no niveles estáticos,
+totales o confluencia Fib. Protocolo en
+`H_GREEK2WALL_DIRECT_ALL_V1_FEASIBILITY_PREDECLARATION.md`.
+
+IB/Fibonacci: la construcción causal requiere las 60 barras 09:30–10:29 y no
+puede decidir antes de 10:30. Proximidad/confluencia estática y elección de
+extensiones según el día ya están representadas/cerradas; S2 no añadió valor
+físico estable. Solo sería nueva una medición dinámica H-IBQDYN1 sobre el set
+fijo completo de ocho niveles, con captura dirigida propia; no reutilizar ni
+re-etiquetar el sidecar Greek-wall H-QDYN.
