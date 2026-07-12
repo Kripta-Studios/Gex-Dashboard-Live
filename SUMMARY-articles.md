@@ -275,3 +275,10 @@ superficie midpoint-IV a 1/5/15m. El data gate completo pasó con validez mínim
 ticker-año 90,319%. La documentación ThetaData establece que Greeks intervalados
 usan la quote del timestamp; live aún debe registrar `feature_available_at`
 antes de entrada para probar el orden recepción->score->ask.
+
+El resultado físico de esa prueba también fue negativo: LR mediana ΔAUC
+-0,001203 (12/24) y LightGBM -0,005822 (9/24). La superficie fixed-strike
+midpoint-IV no añade señal estable en los tres tickers. SPY aislado mejora en LR,
+pero no replica con el modelo de sensibilidad y no es seleccionable tras abrir
+outer. La siguiente medición distinta es tamaño NBBO; requiere completar el
+reloj histórico y no debe confundirse con profundidad completa/update intensity.

@@ -517,3 +517,25 @@ control coverage y distinctness pasan. Producción/2026/outcomes siguen intactos
 Compactos: `_diagnostics/wall_iv_surface_deformation_at_touch_202208_202512_v1r1_data_gate/`.
 Pendiente inmediato: congelar runner y ejecutar una vez el experimento físico.
 No existe todavía PF/WR/PnL H-IVSURF1.
+
+## Cierre H-IVSURF1 y siguiente fuente
+
+El one-shot congelado entrenó 96 modelos y falla. LR primaria: 12/24 wins,
+mediana ΔAUC `-0,001203`, p `0,890625`, 14 pérdidas conjuntas AP/log-loss.
+LightGBM: 9/24, mediana `-0,005822`, p `0,921875`.
+
+| Ticker | LR wins/8 | LR mediana ΔAUC | LR wins 30/60 | Dictamen |
+| --- | ---: | ---: | ---: | --- |
+| QQQ | 3 | -0,013621 | 1/4 | fail |
+| SPXW | 4 | -0,003605 | 1/4 | fail |
+| SPY | 5 | +0,001772 | 3/4 | LR ticker pass, no confirmación LGBM |
+
+No promover SPY post-hoc. `physical_mechanism_pass=false` y
+`advance_to_option_payoff=false`; no hay PF/WR/PnL H-IVSURF1. Compactos:
+`_diagnostics/wall_iv_surface_at_touch_physical_202208_202512_v1r1/`.
+
+La siguiente fuente autorizable es H-QSIZE1, preexistente como bloque separado:
+bid/ask top-of-book size e innovación exact-contract. El sidecar actual cubre
+1.441 sesiones; faltan 1.078. Completar y sellar esas sesiones antes de cualquier
+label. No llamar update intensity a snapshots 1m. Provenance seguirá
+`CONDITIONAL_CURRENT_PROVIDER_RECONSTRUCTION` y live parity está bloqueada.

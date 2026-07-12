@@ -1,0 +1,164 @@
+{
+  "schema": "wall_iv_surface_at_touch_physical_evaluation_v1",
+  "git_commit": "035e402816f7c8c56e8926257476bac3a4da85b4",
+  "production_modified": false,
+  "holdout_2026_used": false,
+  "seed": 20260712,
+  "dataset_sha256": "9d9404fd721df927c30ce4d6edeee800f528df81cf14639c23da1dc4008bc2b3",
+  "frozen_manifest_sha256": "854cafd96a6f7213a88a84f9267dffb2143373e63b226329c635dc960bf26bee",
+  "runner_sha256": "5490274f66b94c7d3c93b588cbba2e4b94b769a66968fbc9f6325c4b0e7dd76e",
+  "runtime_lock_sha256": "f026bfb512e17dfc1daaaecf998ba77a560aba83f1fdbf0c3a36136e33eeff7d",
+  "runtime_environment": {
+    "python_version": "3.14.2",
+    "python_implementation": "CPython",
+    "python_executable": "C:\\Program Files\\Python314\\python.exe",
+    "platform": "Windows-10-10.0-19041",
+    "platform_machine": "AMD64",
+    "packages": {
+      "lightgbm": "4.6.0",
+      "numpy": "2.3.5",
+      "pandas": "3.0.0",
+      "pyarrow": "23.0.1",
+      "scikit-learn": "1.8.0",
+      "scipy": "1.17.0"
+    }
+  },
+  "runtime_environment_sha256": "984a0e2c8a82e935295e4738c7758357175b488bb0fb11a4cd1a0bb5e8af8035",
+  "labeled_rows": 10683,
+  "labeled_rows_by_ticker": {
+    "QQQ": 3096,
+    "SPXW": 3532,
+    "SPY": 4055
+  },
+  "label_errors": [],
+  "artifact_hashes": {
+    "labels": "16d217607ea0e31891fe9c468368c9b69e889a9717c2c72a12c132e85aa1f720",
+    "cells": "cc4d0c9a20ab6fe35959a64eed3ef1158ef130d49af7da117acf4969cb5acaf5",
+    "paired_cells": "fc7f008a1a45f340f60e6b1984ab408982c33ba9c9283fd2edc5dc799dc3aa7a",
+    "monthly_coverage": "f04b8b58f83e3e707c030a8b762eead94611bd3680c916d13eb7e7b0a36c9d7a",
+    "predictions": "9fc6aa53e34c49c1e222b10d4ccaf35c6e518665c27a1758236ad780debfac0c",
+    "calibration": "b6acfab92dd47fe902e3b608b24a53379abef176232e069304d9e50c86253aed",
+    "model_hashes": "fffecb6338366a68cf6db2724c7c86281ad565cff82a16f68e1f184d9ad936a1",
+    "summary": "e5ff760f6594fcd654f2749ec58e31cfa7513d0a8e026663046a758f37d9b6ef"
+  },
+  "model_count": 96,
+  "model_set_sha256": "000730762be9ff9e45aedc5a44a62d252adcf756a7ef486a5b116550de5784cf",
+  "bootstrap_replicates": 1000,
+  "summary": {
+    "gate_spec": {
+      "planned_paired_cells": 24,
+      "minimum_auc_wins": 16,
+      "minimum_median_auc_delta": 0.01,
+      "maximum_wilcoxon_one_sided_p": 0.025,
+      "paired_test_unit": "ticker_fold_median_across_horizons",
+      "ticker_minimum_wins": 5,
+      "ticker_minimum_median_f1_auc": 0.55,
+      "primary_horizons": [
+        30,
+        60
+      ],
+      "ticker_primary_minimum_wins": 3,
+      "minimum_monthly_resolved_episodes": 18,
+      "maximum_joint_ap_logloss_losses": 12,
+      "sensitivity_minimum_wins": 13,
+      "sensitivity_requires_positive_median_auc_delta": true,
+      "sensitivity_can_rescue_primary": false
+    },
+    "primary_lr": {
+      "valid_paired_cells": 24,
+      "wins": 12,
+      "median_auc_delta": -0.0012026726001968246,
+      "wilcoxon_one_sided_p": 0.890625,
+      "ticker_summary": {
+        "QQQ": {
+          "valid_cells": 8,
+          "wins": 3,
+          "median_auc_delta": -0.013620609890600655,
+          "median_f1_auc": 0.5376579307020926,
+          "primary_valid_cells": 4,
+          "primary_wins": 1,
+          "primary_median_auc_delta": -0.013620609890600655,
+          "primary_median_f1_auc": 0.5710553516698376,
+          "passed": false
+        },
+        "SPXW": {
+          "valid_cells": 8,
+          "wins": 4,
+          "median_auc_delta": -0.0036052383552616085,
+          "median_f1_auc": 0.567586494344249,
+          "primary_valid_cells": 4,
+          "primary_wins": 1,
+          "primary_median_auc_delta": -0.023232893201337423,
+          "primary_median_f1_auc": 0.6066752631562162,
+          "passed": false
+        },
+        "SPY": {
+          "valid_cells": 8,
+          "wins": 5,
+          "median_auc_delta": 0.0017723412794874438,
+          "median_f1_auc": 0.5914583578703378,
+          "primary_valid_cells": 4,
+          "primary_wins": 3,
+          "primary_median_auc_delta": 0.002760559957448394,
+          "primary_median_f1_auc": 0.6137992295535948,
+          "passed": true
+        }
+      },
+      "ticker_pass": false,
+      "joint_average_precision_logloss_losses": 14
+    },
+    "lgbm_sensitivity": {
+      "valid_paired_cells": 24,
+      "wins": 9,
+      "median_auc_delta": -0.005822380361692636,
+      "wilcoxon_one_sided_p": 0.921875,
+      "ticker_summary": {
+        "QQQ": {
+          "valid_cells": 8,
+          "wins": 2,
+          "median_auc_delta": -0.026870855667606663,
+          "median_f1_auc": 0.540993237741306,
+          "primary_valid_cells": 4,
+          "primary_wins": 1,
+          "primary_median_auc_delta": -0.026870855667606663,
+          "primary_median_f1_auc": 0.5697292312836391,
+          "passed": false
+        },
+        "SPXW": {
+          "valid_cells": 8,
+          "wins": 4,
+          "median_auc_delta": 2.671841482526638e-05,
+          "median_f1_auc": 0.5768261987628515,
+          "primary_valid_cells": 4,
+          "primary_wins": 1,
+          "primary_median_auc_delta": -0.0021422134328704656,
+          "primary_median_f1_auc": 0.6096218831776541,
+          "passed": false
+        },
+        "SPY": {
+          "valid_cells": 8,
+          "wins": 3,
+          "median_auc_delta": -0.013882205230253353,
+          "median_f1_auc": 0.5751345785608464,
+          "primary_valid_cells": 4,
+          "primary_wins": 0,
+          "primary_median_auc_delta": -0.02266384210981226,
+          "primary_median_f1_auc": 0.6078087595382056,
+          "passed": false
+        }
+      },
+      "ticker_pass": false,
+      "joint_average_precision_logloss_losses": 10
+    },
+    "frequency_pass": true,
+    "primary_physical_pass": false,
+    "sensitivity_pass": false,
+    "physical_mechanism_pass": false,
+    "sensitivity_can_rescue_primary": false,
+    "historical_timestamp_provenance_status": "CONDITIONAL",
+    "live_feature_parity_status": "BLOCKED",
+    "authoritative_physical_success": false,
+    "advance_to_option_payoff": false,
+    "production_live_ready": false
+  }
+}

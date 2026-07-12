@@ -353,3 +353,9 @@ El build autoritativo pasó: 10.683x54, SHA
 minimum ticker-year valid 90,319%, minimum ticker 96,673%, 2.519 fuentes y todos
 los gates causales/coverage/distinctness/control PASS. Falta frozen runner y el
 one-shot físico LR/LGBM; todavía no hay rentabilidad nueva.
+
+El one-shot H-IVSURF1 falló: LR 12/24, mediana ΔAUC -0,001203, p 0,890625;
+LightGBM 9/24, mediana -0,005822. QQQ/SPXW fallan; SPY pasa solo LR pero no la
+sensibilidad, por lo que no puede seleccionarse post-hoc. No se autorizó payoff
+y no existe rentabilidad nueva. Próxima medición nueva: H-QSIZE1; completar
+1.078 sesiones para llegar a 2.519/2.519 antes de labels.

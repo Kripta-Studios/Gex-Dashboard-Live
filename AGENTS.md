@@ -295,3 +295,19 @@ outcomes y producción intactos. Compactos en
 `wall_iv_surface_deformation_at_touch_202208_202512_v1r1_data_gate/`.
 Siguiente paso: commit compactos -> frozen runner commit -> una sola evaluación
 física LR/LGBM. Aún no existe rentabilidad nueva H-IVSURF1.
+
+### Cierre H-IVSURF1
+
+Runner congelado `035e402`; one-shot 2024/2025 completado sobre 96 modelos.
+H-IVSURF1 queda **CERRADO** sin payoff: LR 12/24 wins, mediana ΔAUC
+`-0,001203`, p unilateral `0,890625`, 14 pérdidas conjuntas AP/log-loss.
+LightGBM sensibilidad 9/24, mediana `-0,005822`, p `0,921875`. QQQ LR 3/8,
+SPXW 4/8, SPY 5/8; solo SPY pasa la gate LR por ticker, pero LGBM SPY 3/8 y
+0/4 primarias no confirma. No seleccionar SPY, lags, horizontes ni subgrupos
+post-hoc. `physical_mechanism_pass=false`, `advance_to_option_payoff=false`.
+
+Siguiente fuente: H-QSIZE1, ya separada antes de estos outcomes. Requiere una
+captura sellada de las 1.078 sesiones no presentes en el sidecar para completar
+2.519/2.519. Es top-of-book NBBO size snapshot, no update intensity ni depth de
+libro. Debe predeclararse con corrección secuencial antes de labels y su live
+parity sigue bloqueada hasta implementar/medir recepción de sizes.
