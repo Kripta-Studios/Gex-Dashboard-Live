@@ -309,3 +309,12 @@ El builder de bundle ya está implementado: valida todo el sidecar, reconstruye
 47 keys objetivo (27/20; SHA `41dae9ad...5201`), así que el patch/overlay se
 restringe a esas 47 y no añade 49 decisiones inexistentes. Pendiente relanzar y
 congelar los tres hashes.
+
+Bundle real PASS: 96 walls SHA `69a3d330...487d`, 47 controls SHA
+`937aa95e...051e`, manifest `47dffb25...aec5a`; spot parity `0.0`, non-target
+changed `0`.
+
+Frecuencia estructural: 10.078 timestamps first-touch. QQQ máximo 14/9/9 en
+202208–10 y SPY <18 en 16/41 meses incluso antes de cooldown/no-overlap; SPXW
+min=30. H-FLOW debe ser señal prioritaria con fallback causal o ampliarse mediante
+un protocolo nuevo, nunca presentarse solo como policy que cumple 18/mes.

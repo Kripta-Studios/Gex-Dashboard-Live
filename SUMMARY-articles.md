@@ -238,3 +238,8 @@ ninguna fila fuera de QQQ/SPY 2022-12-30.
 La cardinalidad también debe preservar el universo ejecutable: hay 96 snapshots
 wall, pero solo 47 decisiones presentes en el event view. Los otros 49 controles
 sirven para auditar la física, no pueden añadirse retrospectivamente como trades.
+
+También hay una separación importante entre mecanismo y policy: un mecanismo
+físico puede ser real y aun así no tener frecuencia suficiente. First-touch
+H-FLOW no alcanza matemáticamente 18/mes en varios meses QQQ/SPY, por lo que un
+PASS solo justificaría un componente de convicción dentro de una unión causal.

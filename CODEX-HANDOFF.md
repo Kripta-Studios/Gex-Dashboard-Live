@@ -412,5 +412,15 @@ view solo tiene 47 keys objetivo (QQQ27/SPY20), no 96. La corrección congela SH
 `41dae9ad...5201`: walls/full-control siguen 96, event repair es 47 y no inventa
 las otras 49 decisiones. Pendiente commit y relanzamiento autoritativo.
 
+El relanzamiento pasó sobre commit `65289e8`: manifest/wall/event SHA
+`47dffb25...aec5a` / `69a3d330...487d` / `937aa95e...051e`; 96 walls, 47 event
+controls, full physical control grid 96, paridades `0.0` y cero cambios non-target.
+
+Auditoría de frecuencia sin outcomes: H-FLOW first-touch tiene 10.078 timestamps
+únicos. Aun con oracle, caps y sin no-overlap/cooldown, QQQ 202208–10 solo admite
+14/9/9 y SPY queda <18 en 16/41 meses; SPXW min=30. Por tanto no puede ser una
+policy final standalone. Un PASS físico autorizaría usarlo como componente de
+alta convicción con fallback causal OOS, no relajar la gate mensual.
+
 No existe resultado físico ni económico de H-FLOW1 todavía. Producción y todo
 2026 continúan intactos; no crear `PLAN.md` porque no hay dirección rentable clara.

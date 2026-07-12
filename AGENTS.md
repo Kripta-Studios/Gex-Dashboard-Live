@@ -223,3 +223,13 @@ SPY20; SHA `41dae9ad...5201`), por lo que el output event-control/overlay debe s
 Secuencia actual: commit/push del seal exact-Greek → reconstrucción de walls y
 controles completos de ambas sesiones → full data gate. No parchear solo spot: IV/delta 1m también son
 incoherentes con el spot de t.
+
+Bundle real PASS sobre commit `65289e8`: wall repair 96 rows SHA `69a3d330...487d`,
+event repair 47 rows SHA `937aa95e...051e`, manifest SHA `47dffb25...aec5a`;
+paridad exact-Greek/control y wall/control `0.0`, non-target rows changed `0`.
+
+Límite económico pre-outcome: first-touch H-FLOW tiene 10.078 timestamps únicos.
+Incluso con oracle/caps y sin cooldown, QQQ no puede llegar a 18 trades en
+202208–10 (14/9/9) y SPY falla 16/41 meses; SPXW min=30. H-FLOW no puede ser la
+policy completa. Si pasa física, debe ser componente prioritario de una unión
+fija con fallback causal OOS o evaluarse en un universo más amplio predeclarado.
