@@ -591,3 +591,10 @@ Full capture única activa en
 frozen physical F0/F1 -> solo si PASS, un payoff ask-to-bid walk-forward. No
 abrir otra familia/sweep. Enero-mayo 2026 solo final-fit tras PASS histórico;
 junio cerrado y julio shadow. Aún no existe PF/WR/PnL H-IBQDYN1.
+
+Contrato final de data gate ya congelado antes de labels: F0 son exactamente 18
+controles distancia/aproximación/RV/hora y F1 añade solo las 20 variables tick.
+Builder `build_h_ibqdyn1_dataset.py` revalida los 33.704 raw/parquet/manifests,
+preserva los 74 eventos ineligibles y falla cerrado por cobertura, distinctness
+o complete-case. Suite focal `19 passed`. Checkpoint de captura 11:28: 2.200/
+33.704, cero errores; PID 44892 sigue activo. Aún no se abrió outcome.

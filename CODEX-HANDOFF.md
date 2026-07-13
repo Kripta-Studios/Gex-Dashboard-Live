@@ -730,3 +730,9 @@ después del seal: full feature/data gate -> commit compactos -> frozen LR/LGBM
 F0/F1 -> un outcome físico -> si PASS completo, un payoff ask->bid. No otra
 familia. Amendment 2026: Jan-May solo final fit/estrés tras PASS; junio sellado;
 julio shadow. Todavía no hay modelo económico ni PF/WR/PnL H-IBQDYN1.
+
+Data-gate contract/code quedaron preparados pre-outcome: F0=18 controles
+distancia/aproximación/RV/hora; F1=F0+20 ticks. El builder rehashará 33.704
+contratos, mantendrá 16.926 filas incluidas las 74 no listadas y exigirá >=80%
+both-valid ticker-año, >=85% ticker, distinctness y máscara idéntica. Suite
+focal `19 passed`. Captura PID44892 llegó a 2.200/33.704 a las 11:28, errors=0.

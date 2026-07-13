@@ -469,3 +469,8 @@ distinctness min4, >=597 states y >=488 pairs. Full capturer resumible `62b3d98`
 activo en D: PID44892, checkpoint inicial 100/33.704, cero errores. Secuencia
 cerrada a data gate -> F0/F1 -> payoff solo si PASS. Jan-May 2026 final-fit solo
 después de PASS, junio cerrado, julio shadow. Aún no hay rentabilidad nueva.
+
+El último puente outcome-free ya está congelado: F0 tiene 18 controles y F1
+añade exactamente las 20 mediciones tick; el data gate revalida todos los
+artefactos y no permite reparaciones. Suite `19 passed`. Captura 2.200/33.704,
+cero errores a las 11:28; todavía sin labels, PF, WR o PnL.

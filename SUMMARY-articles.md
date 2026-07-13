@@ -408,3 +408,9 @@ descargar todo: 24/24 contratos aportan rows, las 20 variables son finitas y las
 que el instrumento mide algo; el edge exige que F1 supere F0 y después sobreviva
 ask->bid, no-overlap y meses completos. Por eso la siguiente acción es una sola
 captura/one-shot, no otra expansión de fuentes o arquitecturas.
+
+La prueba queda reducida a una comparación interpretable: una logística L2 con
+18 controles causales frente a la misma logística con 20 variables tick
+adicionales; LightGBM es confirmación no rescatable. El data gate conserva los
+fallos de listing y usa todos los eventos en el denominador, evitando fabricar
+edge al eliminar retrospectivamente los casos difíciles.
