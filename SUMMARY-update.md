@@ -478,3 +478,7 @@ cero errores a las 11:28; todavía sin labels, PF, WR o PnL.
 Runner físico/freezer preparados y bloqueados por PASS committed; arquitectura
 LR L2 + LightGBM confirmatorio, 24 celdas y p<0,0125. Suite `26 passed`; captura
 3.200/33.704, cero errores. Outcomes siguen cerrados.
+
+Traducción económica única predeclarada: F1 LR 60m/0,5, mapping físico a side,
+sin threshold ni payoff fit; replay ask->bid/no-overlap y gates estrictas. Sigue
+dormida hasta physical PASS y no se ha leído rentabilidad.

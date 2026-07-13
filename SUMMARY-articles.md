@@ -414,3 +414,8 @@ La prueba queda reducida a una comparación interpretable: una logística L2 con
 adicionales; LightGBM es confirmación no rescatable. El data gate conserva los
 fallos de listing y usa todos los eventos en el denominador, evitando fabricar
 edge al eliminar retrospectivamente los casos difíciles.
+
+Si el mecanismo pasa, la prueba económica no buscará otra configuración: la
+probabilidad física de rechazo a 60m se convierte mecánicamente en CALL/PUT con
+boundary 0,5 y se ejecuta cronológicamente. Así un PF rentable mediría la misma
+hipótesis causal, no una segunda optimización sobre los retornos reportados.

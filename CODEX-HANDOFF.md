@@ -740,3 +740,8 @@ focal `19 passed`. Captura PID44892 llegó a 2.200/33.704 a las 11:28, errors=0.
 Evaluator/freezer físico también quedan listos pero bloqueados hasta compactos
 PASS committed: LR L2 primario, LightGBM no rescatable, 24 celdas, p<0,0125.
 Suite focal ahora `26 passed`. Captura 3.200/33.704, errors=0. No AUC/labels/PnL.
+
+Payoff one-shot ya está predeclarado pero dormido hasta physical PASS: usa solo
+LR F1 60m, boundary 0,5 y mapeo físico rejection/break a CALL/PUT; no entrena ni
+selecciona con retornos. Scheduler causal ask->bid y gates del usuario exactas;
+cualquier fallo cierra la traducción sin tuning.

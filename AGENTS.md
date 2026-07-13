@@ -604,3 +604,9 @@ Runner físico y freezer ya están implementados pre-outcome en
 ejecutarse sin manifest/compactos `PASS_DATA_GATE` committed. Arquitectura única
 LR L2 primaria + LightGBM confirmatorio, 24 celdas 2024/2025 y p<0,0125. Suite
 H-IBQDYN focal `26 passed`; captura checkpoint 3.200/33.704, cero errores.
+
+La traducción económica única quedó predeclarada antes de outcomes en
+`H_IBQDYN1_ECONOMIC_TRANSLATION_PREDECLARATION.md`: LR F1 físico 60m, umbral
+0,5, mapeo rechazo/break a CALL/PUT, sin fit de payoff ni threshold; scheduler
+cronológico exacto, ask->bid, hold 30..180m, caps/cooldown actuales y gates
+estrictas PF1,30/WR50%/18/mes/PnL mensual positivo. No admite rescate post-hoc.
