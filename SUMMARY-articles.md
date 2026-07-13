@@ -387,3 +387,16 @@ transformaciones deterministas del spot/IV ya disponible. La dirección nueva
 separada es H-IBQDYN1, presión/reposición NBBO intraminuto sobre los ocho niveles
 IB/Fibonacci fijos después de completar el IB. Exige universo, listing y captura
 propios; los ticks dirigidos a Greek walls de H-QDYN no pueden reutilizarse.
+
+H-IBQDYN1 materializa esa separación: el evento nace de los ocho niveles IB/Fib
+completados, pero la medición se dirige a los contratos realmente ejecutables
+d25/d35. El proof t-5m sobre 2.519 sesiones conserva 16.852/16.926 eventos y
+rechaza 74 QQQ sin remap; SPXW y SPY tienen listing exacto total. La lección es
+que disponibilidad de una fila futura de candidato no prueba buffering causal:
+se debe demostrar la identidad de cada CALL/PUT antes de su ventana tick.
+
+El adelgazamiento a la primera oportunidad por bloque fijo de 30 minutos reduce
+coste sin seleccionar outcomes y aún deja capacidad mensual 2024/2025 de
+35/69/19 para QQQ/SPXW/SPY bajo el scheduler actual. Es solo una cota superior:
+especialmente SPY debe convertir casi todos sus días activos para cumplir 18;
+ningún recuento de candidatos prueba PF, WR o PnL.

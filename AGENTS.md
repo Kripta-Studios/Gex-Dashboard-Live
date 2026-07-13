@@ -548,3 +548,26 @@ y captura propios; no reutilizar ni relabelar ticks Greek-wall H-QDYN.
 Objetivo económico vigente del usuario, más estricto que la antigua gate
 deployable: por ticker PF>=1,30, WR>=50%, >=18 trades en cada mes, hold>=30m y
 PnL positivo en todos los meses walk-forward; junio 2026 permanece cerrado.
+
+### Checkpoint H-IBQDYN1 listing feasibility
+
+H-IBQDYN1 fue predeclarado y pushed en `9464c08` antes de leer un tick nuevo;
+suite focal `6 passed`, Ruff clean. Usa el universo nuevo de los ocho niveles
+IB/Fibonacci actuales completos desde 10:35, primera oportunidad por bloque fijo
+de 30m y contratos ejecutables SPXW d25 / QQQ-SPY d35. Son 16.926 eventos
+outcome-free (5.408/5.858/5.660 QQQ/SPXW/SPY); no reutiliza H-QDYN.
+
+El proof exacto t-5m terminó `PASS_H_IBQDYN1_LISTING_FEASIBILITY`: 2.519/2.519
+sesiones, cero errores, 16.852 elegibles. SPXW 5.858/5.858 y SPY 5.660/5.660;
+QQQ 5.334/5.408, con 74 fallos explícitos sin as-of/nearest (21 both, 31 CALL,
+22 PUT). Los 12 eventos congelados de preflight pasan ambos rights. Proof SHA
+`b1fc6613...306d2`, eligible IDs SHA `8e68c12c...652e`, inventory SHA
+`35a569bd...01c2`. Capacidad 2024/2025 bajo hold30/no-overlap/caps actuales:
+mínimos mensuales QQQ35, SPXW69, SPY19; pasa frecuencia matemática, no alpha.
+
+Compactos en
+`h_ibqdyn1_listing_feasibility_202208_202512_v1/`. Siguiente acción única:
+implementar y congelar captura inmutable de solo los 12 eventos/24 contratos,
+capturar quotes tick `[t-32s,t-2s)` con provenance remota, sellar coste/campos y
+autorizar full capture solo si <=150M rows, <=20GiB raw y ambos rights no vacíos.
+No labels, payoff, 2026 ni producción; aún no existe rentabilidad H-IBQDYN1.

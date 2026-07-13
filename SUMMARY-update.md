@@ -451,3 +451,13 @@ con predeclaración/listing/captura propios y sin reutilizar H-QDYN.
 
 Objetivo económico vigente: PF>=1,30, WR>=50%, >=18 trades por mes y ticker,
 hold>=30m y PnL positivo en cada mes walk-forward; junio 2026 continúa cerrado.
+
+H-IBQDYN1 está predeclarado/pushed `9464c08`, `6 passed`, Ruff clean. Nuevo
+universo outcome-free de ocho niveles IB/Fib completos desde 10:35, primera
+oportunidad por bloque 30m y buckets SPXW d25/QQQ-SPY d35: 16.926 eventos.
+Listing exacto t-5m PASS 2.519/2.519, cero errores, 16.852 elegibles; SPXW/SPY
+100%, QQQ 5.334/5.408 con 74 ineligibles explícitos. Los 12 eventos congelados
+pasan. Proof SHA `b1fc6613...306d2`, eligible IDs `8e68c12c...652e`. Capacidad
+OOS mínima QQQ35/SPXW69/SPY19 trades/mes bajo caps/hold30. Compactos versionados;
+siguiente: captura sellada 12 eventos/24 contratos y gate de coste <=150M rows/
+20GiB. No ticks nuevos, labels, PnL, 2026 ni producción todavía.

@@ -695,3 +695,20 @@ Objetivo económico actual del usuario: cada ticker debe cumplir PF>=1,30,
 WR>=50%, mínimo 18 trades en todos los meses, hold>=30m y PnL mensual positivo
 en walk-forward; junio 2026 sigue cerrado. Esto sustituye como objetivo de esta
 investigación la antigua relajación WR45%/min12, sin validar nada retroactivamente.
+
+H-IBQDYN1 quedó predeclarado/pushed `9464c08` antes de cualquier tick nuevo;
+`6 passed`, Ruff clean. Universo causal separado: ocho niveles IB/Fib completos,
+10:35+, primera oportunidad por bloque de 30m, SPXW d25 y QQQ/SPY d35; 16.926
+eventos sin outcomes. Listing proof completo PASS en 2.519/2.519 sesiones:
+16.852 elegibles, SPXW 5.858/5.858, SPY 5.660/5.660 y QQQ 5.334/5.408. Los 74
+QQQ ineligibles quedan explícitos (21 both, 31 CALL, 22 PUT), sin sustitución.
+Los 12 eventos del preflight pasan. Proof SHA `b1fc6613...306d2`, eligible IDs
+`8e68c12c...652e`, inventory `35a569bd...01c2`.
+
+Capacidad OOS 2024/2025 con hold30/no-overlap y caps actuales: min mensual
+QQQ35/SPXW69/SPY19, por lo que no está matemáticamente bloqueado aunque SPY solo
+tiene margen uno. Compactos:
+`research_papers/JEPA/results/_diagnostics/h_ibqdyn1_listing_feasibility_202208_202512_v1/`.
+Siguiente: código commit/push para capturar únicamente 12 eventos/24 contratos,
+then remote tick preflight and cost seal. Full capture solo si <=150M rows,
+<=20GiB raw y ningún right vacío. Sin labels/PnL/2026/producción.
