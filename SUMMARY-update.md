@@ -517,3 +517,8 @@ elegibilidad one-to-one, falla ante missing/mismatch y conserva una sola columna
 Suite focal `43 passed`, Ruff clean. Relanzar a
 `tmp/h_ibqdyn1_features_202208_202512_v1r1`; solo un `PASS_DATA_GATE` autoriza
 freeze físico. Rentabilidad nueva: todavía no demostrada.
+
+El V1R1 con 16 workers completó RV y 12.000/16.926 eventos, pero se detuvo
+pre-output con `MemoryError` al rehashear raw. No dejó target/staging ni abrió
+outcomes. Relanzar solo como V1R2 con 8 workers; es una corrección de paralelismo
+por RAM, sin cambio científico. Aún no hay resultado del gate ni rentabilidad.

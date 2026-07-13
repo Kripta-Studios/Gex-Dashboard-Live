@@ -444,3 +444,10 @@ one-to-one antes de conservar una versión; de lo contrario un sufijo mecánico
 puede detener la cadena o, peor, ocultar una discrepancia. H-IBQDYN1 ahora hace
 esa comprobación fail-closed. El fallo ocurrió antes de output y outcomes, por lo
 que no informa sobre alpha; solo endurece el puente entre procedencia y dataset.
+
+El paralelismo también forma parte de una ejecución reproducible, aunque no de
+la hipótesis: 16 procesos simultáneos agotaron memoria al rehashear los raws
+grandes tras 12.000 eventos. Como no hubo output y cada evento se calcula de
+forma independiente, reducir a ocho workers conserva exactamente los datos y
+gates; solo limita el pico de RAM. Un fallo de recursos no debe reinterpretarse
+como fallo o evidencia del mecanismo.

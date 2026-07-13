@@ -670,3 +670,10 @@ exacta de elegibilidad antes de eliminar la copia redundante; suite focal
 `43 passed`, Ruff clean. Relanzar solo a target inmutable nuevo
 `tmp/h_ibqdyn1_features_202208_202512_v1r1`; no reutilizar V1 ni congelar runner
 hasta `PASS_DATA_GATE`. Sigue sin existir PF/WR/PnL H-IBQDYN1.
+
+El relaunch V1R1 con 16 workers llegó a 2.506/2.506 sesiones RV y
+12.000/16.926 eventos, pero un worker lanzó `MemoryError` al rehashear raw. El
+proceso terminó sin target ni staging; no es data-gate rejection ni abrió
+outcomes. Relanzar a target nuevo V1R2 con `--workers 8`. Es solo una reducción
+de paralelismo por pico RAM; universo, bytes, hashes, features y gates quedan
+idénticos. No volver a ejecutar V1/V1R1 ni usar 16 workers en este build.

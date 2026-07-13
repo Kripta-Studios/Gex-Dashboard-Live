@@ -828,3 +828,11 @@ measurements y rechaza missing/mismatch. La regresión y toda la suite focal pas
 limpio al target nuevo `tmp/h_ibqdyn1_features_202208_202512_v1r1`, publicar el
 compacto solo si resulta `PASS_DATA_GATE`, y abortar si falla coverage,
 distinctness, identidad o complete-case. Aún no hay AUC, PF, WR ni PnL.
+
+El relaunch V1R1 a 16 workers completó RV y alcanzó 12.000/16.926 eventos,
+pero murió pre-output por `MemoryError` dentro de un worker al rehashear un raw.
+No existe target/staging V1R1, no es `REJECTED_DATA_GATE` y no se abrieron
+outcomes. La siguiente ejecución debe usar target inmutable
+`tmp/h_ibqdyn1_features_202208_202512_v1r2` y `--workers 8`. Solo cambia el
+paralelismo para limitar el pico RAM; no cambia ninguna observación, hash,
+feature, gate o contrato. No repetir V1/V1R1 ni 16 workers.
