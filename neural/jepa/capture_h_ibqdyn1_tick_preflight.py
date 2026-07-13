@@ -7,6 +7,7 @@ import hashlib
 import json
 import subprocess
 import sys
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
@@ -54,6 +55,7 @@ EXPECTED_EVENTS = 16_926
 EXPECTED_ELIGIBLE_EVENTS = 16_852
 EXPECTED_SAMPLE_EVENTS = 12
 EXPECTED_CONTRACTS = 24
+EXPECTED_FULL_CONTRACTS = EXPECTED_ELIGIBLE_EVENTS * 2
 MAX_PROJECTED_ROWS = 150_000_000
 MAX_PROJECTED_RAW_BYTES = 20 * 2**30
 PREDECLARATION = "research_papers/JEPA/H_IBQDYN1_FEASIBILITY_PREDECLARATION.md"
@@ -148,7 +150,9 @@ def committed_code_state() -> tuple[str, dict[str, str]]:
     return commit, hashes
 
 
-def load_frozen_contracts(proof_dir: str | Path = PROOF_DIR) -> pd.DataFrame:
+def load_frozen_contracts(
+    proof_dir: str | Path = PROOF_DIR, *, sample_only: bool = True
+) -> pd.DataFrame:
     root = Path(proof_dir)
     manifest_path = root / "manifest.json"
     proof_path = root / "subscription_listing_proof.parquet"
@@ -189,6 +193,7 @@ def load_frozen_contracts(proof_dir: str | Path = PROOF_DIR) -> pd.DataFrame:
         "causal_subscription_eligible",
     )
     proof = pd.read_parquet(proof_path, columns=list(columns))
+    proof["decision_dt"] = pd.to_datetime(proof["decision_dt"], errors="coerce")
     sample = proof[proof["preflight_sample"].astype(bool)].copy()
     if (
         len(proof) != EXPECTED_EVENTS
@@ -199,13 +204,19 @@ def load_frozen_contracts(proof_dir: str | Path = PROOF_DIR) -> pd.DataFrame:
         or sample["event_id"].duplicated().any()
     ):
         raise AssertionError("H-IBQDYN1 frozen sample changed")
-    sample["decision_dt"] = pd.to_datetime(sample["decision_dt"], errors="coerce")
-    if sample["decision_dt"].isna().any() or sample["trade_date"].astype(str).str.startswith(
+    if proof["decision_dt"].isna().any() or proof["trade_date"].astype(str).str.startswith(
         "2026"
     ).any():
         raise AssertionError("invalid H-IBQDYN1 sample clock")
+    selected = (
+        sample
+        if sample_only
+        else proof[proof["causal_subscription_eligible"].astype(bool)].copy()
+    )
     rows: list[dict[str, Any]] = []
-    for event in sample.sort_values(["ticker", "trade_date"]).to_dict("records"):
+    for event in selected.sort_values(
+        ["ticker", "trade_date", "decision_dt"], kind="stable"
+    ).to_dict("records"):
         for right in ("CALL", "PUT"):
             strike = event["call_strike" if right == "CALL" else "put_strike"]
             contract_id = hashlib.sha256(
@@ -226,7 +237,8 @@ def load_frozen_contracts(proof_dir: str | Path = PROOF_DIR) -> pd.DataFrame:
                 }
             )
     contracts = pd.DataFrame(rows)
-    if len(contracts) != EXPECTED_CONTRACTS or contracts["contract_id"].duplicated().any():
+    expected = EXPECTED_CONTRACTS if sample_only else EXPECTED_FULL_CONTRACTS
+    if len(contracts) != expected or contracts["contract_id"].duplicated().any():
         raise AssertionError("H-IBQDYN1 frozen contract expansion changed")
     return contracts
 
@@ -361,6 +373,15 @@ def validate_contract_directory(
     raw_path = directory / "response.json"
     parquet_path = directory / "ticks.parquet"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    stored_provenance = manifest.get("source_provenance", {})
+    provenance_fields = (
+        "kind",
+        "base_url",
+        "status_endpoint",
+        "status_value",
+        "historical_provenance",
+        "live_parity",
+    )
     if (
         manifest.get("status") != "PASS_H_IBQDYN1_PREFLIGHT_CONTRACT"
         or manifest.get("outcome_free") is not True
@@ -370,7 +391,10 @@ def validate_contract_directory(
         or manifest.get("event_id") != str(contract["event_id"])
         or manifest.get("base_url") != base_url.rstrip("/")
         or manifest.get("request_params") != request_params(contract)
-        or manifest.get("source_provenance") != provenance
+        or any(
+            stored_provenance.get(field) != provenance.get(field)
+            for field in provenance_fields
+        )
         or manifest.get("code_hashes") != code_hashes
         or manifest.get("runtime_lock_sha256") != runtime["lock_sha256"]
         or manifest.get("runtime_environment_sha256")
@@ -388,6 +412,36 @@ def validate_contract_directory(
     if len(stored) != int(manifest.get("rows", -1)):
         raise AssertionError("H-IBQDYN1 stored row count mismatch")
     return manifest
+
+
+def contract_index_row(
+    contract: dict[str, Any], directory: Path, manifest: dict[str, Any]
+) -> dict[str, Any]:
+    raw_path = directory / "response.json"
+    parquet_path = directory / "ticks.parquet"
+    manifest_path = directory / "manifest.json"
+    return {
+        "contract_id": str(contract["contract_id"]),
+        "event_id": str(contract["event_id"]),
+        "ticker": str(contract["ticker"]),
+        "trade_date": str(contract["trade_date"]),
+        "decision_dt": pd.Timestamp(contract["decision_dt"]).isoformat(),
+        "right": str(contract["right"]),
+        "strike": float(contract["strike"]),
+        "contract_dir": str(directory),
+        "raw_path": str(raw_path),
+        "raw_sha256": manifest["raw_sha256"],
+        "parquet_path": str(parquet_path),
+        "parquet_sha256": manifest["parquet_sha256"],
+        "manifest_path": str(manifest_path),
+        "manifest_sha256": sha256_file(manifest_path),
+        "provenance_sha256": sha256_bytes(
+            canonical_bytes(manifest["source_provenance"])
+        ),
+        "rows": int(manifest["rows"]),
+        "raw_bytes": int(manifest["raw_bytes"]),
+        "parquet_bytes": int(manifest["parquet_bytes"]),
+    }
 
 
 def capture_contract(
@@ -408,21 +462,48 @@ def capture_contract(
         / str(contract["event_id"])
         / str(contract["right"]).lower()
     )
+    if directory.exists():
+        manifest = validate_contract_directory(
+            directory,
+            contract,
+            base_url=base_url,
+            provenance=provenance,
+            code_hashes=code_hashes,
+            runtime=runtime,
+        )
+        return contract_index_row(contract, directory, manifest)
+    working = directory.with_name(directory.name + ".staging")
+    if working.exists():
+        suffix = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+        working.rename(working.with_name(working.name + f".rejected-{suffix}"))
     params = request_params(contract)
-    response = requester(
-        base_url.rstrip("/") + ENDPOINT,
-        params=params,
-        headers={"Accept-Encoding": "identity"},
-        timeout=timeout,
-    )
-    response.raise_for_status()
-    raw = bytes(response.content)
-    if not raw:
-        raise AssertionError("empty H-IBQDYN1 tick response")
-    frame = normalize_tick_response(json.loads(raw), contract)
-    directory.mkdir(parents=True, exist_ok=False)
-    raw_path = directory / "response.json"
-    parquet_path = directory / "ticks.parquet"
+    response = None
+    raw = b""
+    frame: pd.DataFrame | None = None
+    last_error: Exception | None = None
+    for attempt in range(3):
+        try:
+            response = requester(
+                base_url.rstrip("/") + ENDPOINT,
+                params=params,
+                headers={"Accept-Encoding": "identity"},
+                timeout=timeout,
+            )
+            response.raise_for_status()
+            raw = bytes(response.content)
+            if not raw:
+                raise AssertionError("empty H-IBQDYN1 tick response")
+            frame = normalize_tick_response(json.loads(raw), contract)
+            break
+        except Exception as exc:
+            last_error = exc
+            if attempt < 2:
+                time.sleep(1.0 + attempt)
+    if response is None or not response.ok or frame is None:
+        raise RuntimeError(f"H-IBQDYN1 request failed: {last_error}")
+    working.mkdir(parents=True, exist_ok=False)
+    raw_path = working / "response.json"
+    parquet_path = working / "ticks.parquet"
     raw_path.write_bytes(raw)
     frame.to_parquet(parquet_path, index=False)
     schema = [
@@ -470,35 +551,19 @@ def capture_contract(
         "response_schema_sha256": sha256_bytes(canonical_bytes({"schema": schema})),
         "field_profile": field_profile(frame),
     }
-    manifest_path = directory / "manifest.json"
+    manifest_path = working / "manifest.json"
     manifest_path.write_bytes(canonical_bytes(manifest))
     manifest = validate_contract_directory(
-        directory,
+        working,
         contract,
         base_url=base_url,
         provenance=provenance,
         code_hashes=code_hashes,
         runtime=runtime,
     )
-    return {
-        "contract_id": str(contract["contract_id"]),
-        "event_id": str(contract["event_id"]),
-        "ticker": str(contract["ticker"]),
-        "trade_date": str(contract["trade_date"]),
-        "decision_dt": pd.Timestamp(contract["decision_dt"]).isoformat(),
-        "right": str(contract["right"]),
-        "strike": float(contract["strike"]),
-        "contract_dir": str(directory),
-        "raw_path": str(raw_path),
-        "raw_sha256": manifest["raw_sha256"],
-        "parquet_path": str(parquet_path),
-        "parquet_sha256": manifest["parquet_sha256"],
-        "manifest_path": str(manifest_path),
-        "manifest_sha256": sha256_file(manifest_path),
-        "rows": int(manifest["rows"]),
-        "raw_bytes": int(manifest["raw_bytes"]),
-        "parquet_bytes": int(manifest["parquet_bytes"]),
-    }
+    directory.parent.mkdir(parents=True, exist_ok=True)
+    working.rename(directory)
+    return contract_index_row(contract, directory, manifest)
 
 
 def projected_cost(index: pd.DataFrame) -> dict[str, Any]:

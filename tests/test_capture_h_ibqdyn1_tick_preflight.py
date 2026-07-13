@@ -61,6 +61,13 @@ def test_frozen_real_sample_expands_to_24_exact_contracts() -> None:
     assert not contracts["trade_date"].astype(str).str.startswith("2026").any()
 
 
+def test_frozen_full_proof_expands_only_eligible_contracts() -> None:
+    contracts = mod.load_frozen_contracts(sample_only=False)
+    assert len(contracts) == mod.EXPECTED_FULL_CONTRACTS
+    assert contracts["event_id"].nunique() == mod.EXPECTED_ELIGIBLE_EVENTS
+    assert set(contracts["right"]) == {"CALL", "PUT"}
+
+
 def test_request_window_is_completed_and_guarded() -> None:
     params = mod.request_params(contract())
     assert params["start_time"] == "10:34:28.000"
