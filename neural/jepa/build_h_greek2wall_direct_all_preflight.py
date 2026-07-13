@@ -43,11 +43,20 @@ from training_data.stats import (  # noqa: E402
 )
 
 ENDPOINT = "/option/history/greeks/all"
+OI_ENDPOINT = "/option/history/open_interest"
 START_TIME = "10:19:00.000"
 END_TIME = "14:30:00.000"
 PREDECLARATION = (
     PROJECT_ROOT
     / "research_papers/JEPA/H_GREEK2WALL_DIRECT_ALL_V1_FEASIBILITY_PREDECLARATION.md"
+)
+SOURCE_CLARIFICATION = (
+    PROJECT_ROOT
+    / "research_papers/JEPA/H_GREEK2WALL_DIRECT_ALL_V1_SOURCE_CLARIFICATION.md"
+)
+DIRECT_OI_AMENDMENT = (
+    PROJECT_ROOT
+    / "research_papers/JEPA/H_GREEK2WALL_DIRECT_OI_V1_PREFLIGHT_AMENDMENT.md"
 )
 ENVIRONMENT_LOCK = (
     PROJECT_ROOT / "research_papers/JEPA/requirements-wall-surface-flow-v1r1.txt"
@@ -108,6 +117,62 @@ def request_params(ticker: str, day: str) -> dict[str, str]:
         "version": "latest",
         "format": "json",
     }
+
+
+def oi_request_params(ticker: str, day: str) -> dict[str, str]:
+    key = (str(ticker).upper(), _day(day))
+    if key not in FROZEN_SESSIONS:
+        raise AssertionError(f"session outside frozen 12-session preflight: {key}")
+    return {
+        "symbol": key[0],
+        "expiration": key[1],
+        "date": key[1],
+        "strike": "*",
+        "right": "both",
+        "format": "json",
+    }
+
+
+def normalize_direct_oi(raw: Any, *, ticker: str, trade_date: str) -> pd.DataFrame:
+    ticker, day = str(ticker).upper(), _day(trade_date)
+    oi_request_params(ticker, day)
+    frame = _flatten(raw)
+    required = {"symbol", "expiration", "strike", "right", "timestamp", "open_interest"}
+    if missing := sorted(required.difference(frame.columns)):
+        raise KeyError(f"direct OI response missing fields: {missing}")
+    out = frame.loc[:, sorted(required)].copy()
+    out.insert(2, "trade_date", day)
+    out["symbol"] = out["symbol"].astype(str).str.upper()
+    out["expiration"] = out["expiration"].map(_day)
+    out["right"] = out["right"].map(_right)
+    out["strike"] = pd.to_numeric(out["strike"], errors="coerce")
+    out["open_interest"] = pd.to_numeric(out["open_interest"], errors="coerce")
+    out["timestamp"] = pd.to_datetime(out["timestamp"], errors="coerce")
+    if (
+        out.empty
+        or out[
+            ["symbol", "expiration", "right", "strike", "timestamp", "open_interest"]
+        ]
+        .isna()
+        .any()
+        .any()
+    ):
+        raise AssertionError("direct OI has empty/invalid rows")
+    if not out["symbol"].eq(ticker).all() or not out["expiration"].eq(day).all():
+        raise AssertionError("direct OI identity substitution")
+    if not out["timestamp"].dt.strftime("%Y%m%d").eq(day).all():
+        raise AssertionError("direct OI timestamp outside native date")
+    values = out["open_interest"].to_numpy(float)
+    if (
+        not np.isfinite(values).all()
+        or (values < 0).any()
+        or not np.equal(values, np.floor(values)).all()
+    ):
+        raise AssertionError("direct OI must be nonnegative integer")
+    keys = ["symbol", "expiration", "trade_date", "strike", "right"]
+    if out.duplicated(keys, keep=False).any():
+        raise AssertionError("duplicate direct OI contract key")
+    return out.sort_values(keys, kind="stable").reset_index(drop=True)
 
 
 def _flatten(raw: Any) -> pd.DataFrame:
@@ -220,7 +285,11 @@ def field_profiles(frame: pd.DataFrame) -> list[dict[str, Any]]:
 
 
 def audit_sources(
-    frame: pd.DataFrame, *, greeks_path: str | Path, oi_path: str | Path
+    frame: pd.DataFrame,
+    *,
+    greeks_path: str | Path,
+    oi_path: str | Path,
+    direct_oi: pd.DataFrame | None = None,
 ) -> dict[str, Any]:
     """Audit provider revisions and positive-OI coverage; never replace values."""
     greek_path, oi_path = Path(greeks_path), Path(oi_path)
@@ -282,7 +351,6 @@ def audit_sources(
         "strike",
         "right",
         "open_interest",
-        "timestamp",
     }
     if "trade_date" in oi_available:
         oi_needed.add("trade_date")
@@ -294,17 +362,18 @@ def audit_sources(
     oi["right"] = oi["right"].map(_right)
     oi["strike"] = pd.to_numeric(oi["strike"], errors="coerce")
     oi["open_interest"] = pd.to_numeric(oi["open_interest"], errors="coerce")
-    oi["timestamp"] = pd.to_datetime(oi["timestamp"], errors="coerce")
+    if "timestamp" in oi_available:
+        oi["timestamp"] = pd.to_datetime(
+            pd.read_parquet(oi_path, columns=["timestamp"])["timestamp"],
+            errors="coerce",
+        )
+    else:
+        oi["timestamp"] = pd.Series(pd.NaT, index=oi.index, dtype="datetime64[ns]")
     expected_symbol = str(frame["symbol"].iloc[0])
     expected_day = str(frame["trade_date"].iloc[0])
     if "trade_date" in oi:
         oi["trade_date"] = oi["trade_date"].map(_day)
-    if (
-        oi[["symbol", "expiration", "right", "strike", "open_interest", "timestamp"]]
-        .isna()
-        .any()
-        .any()
-    ):
+    if oi[["symbol", "expiration", "right", "strike"]].isna().any().any():
         raise AssertionError("OI contains invalid identity/value/timestamp")
     if (
         not oi["symbol"].eq(expected_symbol).all()
@@ -312,39 +381,65 @@ def audit_sources(
         or ("trade_date" in oi and not oi["trade_date"].eq(expected_day).all())
     ):
         raise AssertionError("OI symbol/expiration/trade-date identity mismatch")
-    if not np.isfinite(oi["open_interest"]).all() or oi["open_interest"].lt(0).any():
-        raise AssertionError("OI must be finite and nonnegative")
-    if not oi["timestamp"].dt.strftime("%Y%m%d").eq(expected_day).all():
+    finite_oi = np.isfinite(oi["open_interest"])
+    if (finite_oi & oi["open_interest"].lt(0)).any():
+        raise AssertionError("OI contains negative values")
+    valid_oi_clock = oi["timestamp"].notna()
+    if (
+        not oi.loc[valid_oi_clock, "timestamp"]
+        .dt.strftime("%Y%m%d")
+        .eq(expected_day)
+        .all()
+    ):
         raise AssertionError("OI timestamp is outside its native trading day")
-    oi_cutoff = pd.Timestamp(
-        f"{expected_day[:4]}-{expected_day[4:6]}-{expected_day[6:]} {START_TIME}"
-    )
-    future_oi_rows = int(oi["timestamp"].gt(oi_cutoff).sum())
-    if future_oi_rows:
-        raise AssertionError(f"future OI rows after 10:19: {future_oi_rows}")
     oi_keys = ["symbol", "expiration", "strike", "right"]
     duplicate_oi_rows = int(oi.duplicated(oi_keys, keep=False).sum())
     if duplicate_oi_rows:
         raise AssertionError(f"duplicate OI contract keys: rows={duplicate_oi_rows}")
-    contracts = frame[["symbol", "expiration", "strike", "right"]].drop_duplicates()
-    oi_join = contracts.merge(
-        oi,
+    availability_oi = direct_oi.copy() if direct_oi is not None else oi
+    parity["oi_availability_source"] = (
+        "direct_oi_primary" if direct_oi is not None else "local_vintage_test_only"
+    )
+    oi_join = frame[["symbol", "expiration", "strike", "right", "timestamp"]].merge(
+        availability_oi,
         on=["symbol", "expiration", "strike", "right"],
         how="left",
-        validate="one_to_one",
+        validate="many_to_one",
+        suffixes=("_direct", "_oi"),
+        indicator=True,
     )
-    parity["contracts"] = int(len(contracts))
-    parity["oi_future_rows"] = future_oi_rows
+    missing_key = oi_join["_merge"].eq("left_only")
+    null_value = ~missing_key & ~np.isfinite(oi_join["open_interest"])
+    null_clock = ~missing_key & oi_join["timestamp_oi"].isna()
+    late = (
+        ~missing_key
+        & ~null_clock
+        & oi_join["timestamp_oi"].gt(oi_join["timestamp_direct"])
+    )
+    available = ~missing_key & ~null_value & ~null_clock & ~late
+    zero = available & oi_join["open_interest"].eq(0)
+    positive = available & oi_join["open_interest"].gt(0)
+    parity["contracts"] = int(
+        frame[["symbol", "expiration", "strike", "right"]].drop_duplicates().shape[0]
+    )
+    parity["direct_rows_for_oi"] = int(len(oi_join))
+    parity["oi_future_rows"] = int(late.sum())
     parity["oi_duplicate_contract_key_rows"] = duplicate_oi_rows
-    parity["missing_oi_contracts"] = int(oi_join["open_interest"].isna().sum())
-    parity["zero_oi_contracts"] = int(oi_join["open_interest"].eq(0).sum())
-    parity["positive_oi_contracts"] = int(oi_join["open_interest"].gt(0).sum())
-    parity["oi_key_coverage"] = float(oi_join["open_interest"].notna().mean())
-    parity["positive_oi_coverage"] = float(oi_join["open_interest"].gt(0).mean())
+    parity["missing_oi_rows"] = int(missing_key.sum())
+    parity["null_value_oi_rows"] = int(null_value.sum())
+    parity["null_timestamp_oi_rows"] = int(null_clock.sum())
+    parity["late_unavailable_oi_rows"] = int(late.sum())
+    parity["zero_oi_rows_available"] = int(zero.sum())
+    parity["positive_oi_rows_available"] = int(positive.sum())
+    parity["oi_available_coverage"] = float(available.mean())
+    parity["positive_oi_coverage"] = float(positive.mean())
     parity["oi_missing_reasons"] = {
-        "missing_contract_key": parity["missing_oi_contracts"],
-        "present_zero_open_interest": parity["zero_oi_contracts"],
-        "present_positive_open_interest": parity["positive_oi_contracts"],
+        "missing_contract_key": parity["missing_oi_rows"],
+        "null_or_nonfinite_value": parity["null_value_oi_rows"],
+        "null_availability_timestamp": parity["null_timestamp_oi_rows"],
+        "late_unavailable_at_direct_row": parity["late_unavailable_oi_rows"],
+        "available_zero": parity["zero_oi_rows_available"],
+        "available_positive": parity["positive_oi_rows_available"],
     }
     formula = frame.loc[frame["implied_vol"].gt(0)].copy()
     parity["local_formula_rows"] = int(len(formula))
@@ -471,10 +566,12 @@ def _audit_canonical_source_pair(
         "trade_date",
         "strike",
         "right",
-        "timestamp",
         "underlying_timestamp",
         "implied_vol",
     }
+    native_greek_timestamp = "timestamp" in greek_schema
+    if native_greek_timestamp:
+        greek_required.add("timestamp")
     if missing := sorted(greek_required.difference(greek_schema)):
         raise KeyError(f"canonical Greeks schema missing: {missing}")
     greeks = pd.read_parquet(paths["greeks"], columns=sorted(greek_required))
@@ -483,7 +580,8 @@ def _audit_canonical_source_pair(
     greeks["trade_date"] = greeks["trade_date"].map(_day)
     greeks["right"] = greeks["right"].map(_right)
     greeks["strike"] = pd.to_numeric(greeks["strike"], errors="coerce")
-    greeks["timestamp"] = pd.to_datetime(greeks["timestamp"], errors="coerce")
+    if native_greek_timestamp:
+        greeks["timestamp"] = pd.to_datetime(greeks["timestamp"], errors="coerce")
     greeks["underlying_timestamp"] = pd.to_datetime(
         greeks["underlying_timestamp"], errors="coerce"
     )
@@ -493,9 +591,10 @@ def _audit_canonical_source_pair(
         "trade_date",
         "right",
         "strike",
-        "timestamp",
         "underlying_timestamp",
     ]
+    if native_greek_timestamp:
+        identities.append("timestamp")
     if greeks.empty or greeks[identities].isna().any().any():
         raise AssertionError("canonical Greeks has empty/invalid identity clock")
     if (
@@ -508,11 +607,15 @@ def _audit_canonical_source_pair(
         raise AssertionError("canonical Greeks does not contain exactly both rights")
     if not np.isfinite(greeks["strike"]).all() or not greeks["strike"].gt(0).all():
         raise AssertionError("canonical Greeks contains invalid strikes")
-    if not greeks["timestamp"].eq(greeks["underlying_timestamp"]).all():
+    if (
+        native_greek_timestamp
+        and not greeks["timestamp"].eq(greeks["underlying_timestamp"]).all()
+    ):
         raise AssertionError("canonical native and underlying timestamps differ")
-    if not greeks["timestamp"].dt.strftime("%Y%m%d").eq(day).all():
+    greek_clock = "timestamp" if native_greek_timestamp else "underlying_timestamp"
+    if not greeks[greek_clock].dt.strftime("%Y%m%d").eq(day).all():
         raise AssertionError("canonical Greeks contains another trade date")
-    greek_keys = ["symbol", "expiration", "timestamp", "strike", "right"]
+    greek_keys = ["symbol", "expiration", greek_clock, "strike", "right"]
     if greeks.duplicated(greek_keys, keep=False).any():
         raise AssertionError("canonical Greeks contains duplicate native keys")
 
@@ -523,7 +626,6 @@ def _audit_canonical_source_pair(
         "strike",
         "right",
         "open_interest",
-        "timestamp",
     }
     if "trade_date" in oi_schema:
         oi_required.add("trade_date")
@@ -535,7 +637,13 @@ def _audit_canonical_source_pair(
     oi["right"] = oi["right"].map(_right)
     oi["strike"] = pd.to_numeric(oi["strike"], errors="coerce")
     oi["open_interest"] = pd.to_numeric(oi["open_interest"], errors="coerce")
-    oi["timestamp"] = pd.to_datetime(oi["timestamp"], errors="coerce")
+    if "timestamp" in oi_schema:
+        oi["timestamp"] = pd.to_datetime(
+            pd.read_parquet(paths["oi"], columns=["timestamp"])["timestamp"],
+            errors="coerce",
+        )
+    else:
+        oi["timestamp"] = pd.Series(pd.NaT, index=oi.index, dtype="datetime64[ns]")
     if "trade_date" in oi:
         oi["trade_date"] = oi["trade_date"].map(_day)
     required_values = [
@@ -543,8 +651,6 @@ def _audit_canonical_source_pair(
         "expiration",
         "right",
         "strike",
-        "open_interest",
-        "timestamp",
     ]
     if oi.empty or oi[required_values].isna().any().any():
         raise AssertionError("canonical OI has empty/invalid rows")
@@ -554,13 +660,14 @@ def _audit_canonical_source_pair(
         or ("trade_date" in oi and not oi["trade_date"].eq(day).all())
     ):
         raise AssertionError("canonical OI identity substitution")
-    if not np.isfinite(oi["open_interest"]).all() or oi["open_interest"].lt(0).any():
-        raise AssertionError("canonical OI must be finite and nonnegative")
-    if not oi["timestamp"].dt.strftime("%Y%m%d").eq(day).all():
+    finite_oi = np.isfinite(oi["open_interest"])
+    if (finite_oi & oi["open_interest"].lt(0)).any():
+        raise AssertionError("canonical OI contains negative values")
+    valid_oi_clock = oi["timestamp"].notna()
+    if not oi.loc[valid_oi_clock, "timestamp"].dt.strftime("%Y%m%d").eq(day).all():
         raise AssertionError("canonical OI timestamp outside native day")
     cutoff = pd.Timestamp(f"{day[:4]}-{day[4:6]}-{day[6:]} {START_TIME}")
-    if oi["timestamp"].gt(cutoff).any():
-        raise AssertionError("canonical OI contains future rows after 10:19")
+    late_oi = oi["timestamp"].gt(cutoff)
     oi_keys = ["symbol", "expiration", "strike", "right"]
     if oi.duplicated(oi_keys, keep=False).any():
         raise AssertionError("canonical OI contains duplicate contract keys")
@@ -573,16 +680,25 @@ def _audit_canonical_source_pair(
         "greeks_path": str(paths["greeks"]),
         "greeks_sha256": before["greeks"],
         "greeks_rows": int(len(greeks)),
-        "greeks_clock": "timestamp",
-        "greeks_first_timestamp": greeks["timestamp"].min().isoformat(),
-        "greeks_last_timestamp": greeks["timestamp"].max().isoformat(),
+        "greeks_clock": greek_clock,
+        "greeks_native_timestamp": bool(native_greek_timestamp),
+        "greeks_underlying_timestamp_proxy": bool(not native_greek_timestamp),
+        "greeks_first_timestamp": greeks[greek_clock].min().isoformat(),
+        "greeks_last_timestamp": greeks[greek_clock].max().isoformat(),
         "oi_path": str(paths["oi"]),
         "oi_sha256": before["oi"],
         "oi_rows": int(len(oi)),
-        "oi_first_timestamp": oi["timestamp"].min().isoformat(),
-        "oi_last_timestamp": oi["timestamp"].max().isoformat(),
+        "oi_first_timestamp": oi["timestamp"].min().isoformat()
+        if valid_oi_clock.any()
+        else None,
+        "oi_last_timestamp": oi["timestamp"].max().isoformat()
+        if valid_oi_clock.any()
+        else None,
         "oi_zero_rows": int(oi["open_interest"].eq(0).sum()),
-        "oi_positive_rows": int(oi["open_interest"].gt(0).sum()),
+        "oi_positive_rows": int((finite_oi & oi["open_interest"].gt(0)).sum()),
+        "oi_null_or_nonfinite_value_rows": int((~finite_oi).sum()),
+        "oi_null_timestamp_rows": int((~valid_oi_clock).sum()),
+        "oi_late_after_1019_rows": int(late_oi.sum()),
     }
 
 
@@ -620,6 +736,8 @@ def freeze_source_inventory(
         "git_commit": current_git_commit(),
         "builder_sha256": sha256_file(__file__),
         "predeclaration_sha256": sha256_file(PREDECLARATION),
+        "source_clarification_sha256": sha256_file(SOURCE_CLARIFICATION),
+        "direct_oi_amendment_sha256": sha256_file(DIRECT_OI_AMENDMENT),
         "runtime_lock_sha256": runtime["lock_sha256"],
         "runtime_environment_sha256": runtime["environment_sha256"],
         "inventory_csv_sha256": sha256_file(csv_path),
@@ -649,6 +767,8 @@ def validate_source_inventory(inventory_dir: str | Path) -> pd.DataFrame:
     if (
         sha256_file(__file__) != manifest["builder_sha256"]
         or sha256_file(PREDECLARATION) != manifest["predeclaration_sha256"]
+        or sha256_file(SOURCE_CLARIFICATION) != manifest["source_clarification_sha256"]
+        or sha256_file(DIRECT_OI_AMENDMENT) != manifest["direct_oi_amendment_sha256"]
     ):
         raise AssertionError("source inventory code/predeclaration mismatch")
     if current_git_commit() != manifest["git_commit"]:
@@ -738,16 +858,38 @@ def capture_session(
     if not raw:
         raise AssertionError("empty provider response")
     normalized = normalize_response(json.loads(raw), ticker=ticker, trade_date=day)
-    audit = audit_sources(normalized, greeks_path=greeks_path, oi_path=oi_path)
+    oi_params = oi_request_params(ticker, day)
+    oi_response = requester(
+        base_url.rstrip("/") + OI_ENDPOINT,
+        params=oi_params,
+        headers={"Accept-Encoding": "identity"},
+        timeout=timeout,
+    )
+    oi_response.raise_for_status()
+    oi_raw = bytes(oi_response.content)
+    if not oi_raw:
+        raise AssertionError("empty direct OI provider response")
+    direct_oi = normalize_direct_oi(json.loads(oi_raw), ticker=ticker, trade_date=day)
+    audit = audit_sources(
+        normalized, greeks_path=greeks_path, oi_path=oi_path, direct_oi=direct_oi
+    )
     if any(sha256_file(path) != source_hashes[k] for k, path in source_paths.items()):
         raise AssertionError("source changed during capture")
     staging.mkdir(parents=True)
     raw_path = staging / "response.json"
     parquet = staging / "direct_all_greeks.parquet"
+    oi_raw_path = staging / "oi_response.json"
+    oi_parquet = staging / "direct_oi.parquet"
     raw_path.write_bytes(raw)
     normalized.to_parquet(parquet, index=False)
+    oi_raw_path.write_bytes(oi_raw)
+    direct_oi.to_parquet(oi_parquet, index=False)
     schema = [
         (field.name, str(field.type)) for field in pq.ParquetFile(parquet).schema_arrow
+    ]
+    oi_schema = [
+        (field.name, str(field.type))
+        for field in pq.ParquetFile(oi_parquet).schema_arrow
     ]
     manifest = {
         "schema": "h_greek2wall_direct_all_preflight_session_v1",
@@ -760,6 +902,8 @@ def capture_session(
         "expiration": day,
         "endpoint": ENDPOINT,
         "request_params": params,
+        "oi_endpoint": OI_ENDPOINT,
+        "oi_request_params": oi_params,
         "source_inventory_path": str(Path(source_inventory).resolve()),
         "source_inventory_manifest_sha256": sha256_file(
             Path(source_inventory) / "manifest.json"
@@ -768,6 +912,8 @@ def capture_session(
         "git_commit": current_git_commit(),
         "builder_sha256": sha256_file(__file__),
         "predeclaration_sha256": sha256_file(PREDECLARATION),
+        "source_clarification_sha256": sha256_file(SOURCE_CLARIFICATION),
+        "direct_oi_amendment_sha256": sha256_file(DIRECT_OI_AMENDMENT),
         "runtime_lock_sha256": runtime["lock_sha256"],
         "runtime_environment_sha256": runtime["environment_sha256"],
         "terminal_jar_path": str(jar),
@@ -775,6 +921,9 @@ def capture_session(
         "terminal_process_evidence": evidence,
         "raw_response_sha256": sha256_bytes(raw),
         "parquet_sha256": sha256_file(parquet),
+        "oi_raw_response_sha256": sha256_bytes(oi_raw),
+        "oi_parquet_sha256": sha256_file(oi_parquet),
+        "oi_rows": int(len(direct_oi)),
         "raw_bytes": len(raw),
         "parquet_bytes": parquet.stat().st_size,
         "rows": len(normalized),
@@ -782,6 +931,8 @@ def capture_session(
         "last_timestamp": normalized.timestamp.max().isoformat(),
         "response_schema": schema,
         "response_schema_sha256": sha256_bytes(canonical_json_bytes(schema)),
+        "oi_response_schema": oi_schema,
+        "oi_response_schema_sha256": sha256_bytes(canonical_json_bytes(oi_schema)),
         "field_profiles": field_profiles(normalized),
         **{
             f"source_{name}_path": str(path.resolve())
@@ -820,6 +971,9 @@ def validate_session(
     if (
         manifest.get("endpoint") != ENDPOINT
         or manifest.get("request_params") != expected_request
+        or manifest.get("oi_endpoint") != OI_ENDPOINT
+        or manifest.get("oi_request_params")
+        != oi_request_params(manifest["ticker"], manifest["trade_date"])
         or _day(manifest.get("expiration")) != _day(manifest["trade_date"])
     ):
         raise AssertionError("manifest request/endpoint differs from frozen contract")
@@ -833,16 +987,26 @@ def validate_session(
         raise AssertionError("invalid build commit provenance")
     raw = (root / "response.json").read_bytes()
     parquet = root / "direct_all_greeks.parquet"
+    oi_raw = (root / "oi_response.json").read_bytes()
+    oi_parquet = root / "direct_oi.parquet"
     if (
         sha256_bytes(raw) != manifest["raw_response_sha256"]
         or sha256_file(parquet) != manifest["parquet_sha256"]
+        or sha256_bytes(oi_raw) != manifest["oi_raw_response_sha256"]
+        or sha256_file(oi_parquet) != manifest["oi_parquet_sha256"]
     ):
         raise AssertionError("artifact hash mismatch")
     rebuilt = normalize_response(
         json.loads(raw), ticker=manifest["ticker"], trade_date=manifest["trade_date"]
     )
     pd.testing.assert_frame_equal(pd.read_parquet(parquet), rebuilt)
-    audit = audit_sources(rebuilt, greeks_path=greeks_path, oi_path=oi_path)
+    direct_oi = normalize_direct_oi(
+        json.loads(oi_raw), ticker=manifest["ticker"], trade_date=manifest["trade_date"]
+    )
+    pd.testing.assert_frame_equal(pd.read_parquet(oi_parquet), direct_oi)
+    audit = audit_sources(
+        rebuilt, greeks_path=greeks_path, oi_path=oi_path, direct_oi=direct_oi
+    )
     source_arguments = {"greeks": Path(greeks_path), "oi": Path(oi_path)}
     for name in ("greeks", "oi"):
         if str(Path(manifest[f"source_{name}_path"]).resolve()) != str(
@@ -858,6 +1022,10 @@ def validate_session(
         raise AssertionError("stored field profiles mismatch")
     if sha256_file(PREDECLARATION) != manifest["predeclaration_sha256"]:
         raise AssertionError("predeclaration changed")
+    if sha256_file(SOURCE_CLARIFICATION) != manifest["source_clarification_sha256"]:
+        raise AssertionError("source clarification changed")
+    if sha256_file(DIRECT_OI_AMENDMENT) != manifest["direct_oi_amendment_sha256"]:
+        raise AssertionError("direct OI amendment changed")
     if sha256_file(__file__) != manifest["builder_sha256"]:
         raise AssertionError("builder changed")
     if sha256_file(manifest["terminal_jar_path"]) != manifest["terminal_jar_sha256"]:
@@ -892,6 +1060,15 @@ def validate_session(
     ]
     if sha256_bytes(canonical_json_bytes(schema)) != manifest["response_schema_sha256"]:
         raise AssertionError("response schema hash mismatch")
+    oi_schema = [
+        (field.name, str(field.type))
+        for field in pq.ParquetFile(oi_parquet).schema_arrow
+    ]
+    if (
+        sha256_bytes(canonical_json_bytes(oi_schema))
+        != manifest["oi_response_schema_sha256"]
+    ):
+        raise AssertionError("direct OI response schema hash mismatch")
     return manifest
 
 
@@ -950,6 +1127,8 @@ def seal_preflight(
                 "session_manifest_sha256": sha256_file(manifest_path),
                 "raw_response_sha256": manifest["raw_response_sha256"],
                 "parquet_sha256": manifest["parquet_sha256"],
+                "oi_raw_response_sha256": manifest["oi_raw_response_sha256"],
+                "oi_parquet_sha256": manifest["oi_parquet_sha256"],
                 "rows": int(manifest["rows"]),
                 "raw_bytes": int(manifest["raw_bytes"]),
                 "parquet_bytes": int(manifest["parquet_bytes"]),
@@ -960,6 +1139,8 @@ def seal_preflight(
                 "git_commit": manifest["git_commit"],
                 "builder_sha256": manifest["builder_sha256"],
                 "predeclaration_sha256": manifest["predeclaration_sha256"],
+                "source_clarification_sha256": manifest["source_clarification_sha256"],
+                "direct_oi_amendment_sha256": manifest["direct_oi_amendment_sha256"],
                 "runtime_lock_sha256": manifest["runtime_lock_sha256"],
                 "runtime_environment_sha256": manifest["runtime_environment_sha256"],
                 "terminal_jar_sha256": manifest["terminal_jar_sha256"],
@@ -971,6 +1152,8 @@ def seal_preflight(
         "git_commit",
         "builder_sha256",
         "predeclaration_sha256",
+        "source_clarification_sha256",
+        "direct_oi_amendment_sha256",
         "runtime_lock_sha256",
         "runtime_environment_sha256",
         "terminal_jar_sha256",

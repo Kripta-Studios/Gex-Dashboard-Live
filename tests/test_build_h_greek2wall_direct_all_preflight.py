@@ -50,6 +50,23 @@ def payload(ticker="QQQ"):
     return {"response": contracts}
 
 
+def oi_payload(ticker="QQQ", timestamp="2022-08-01 06:30:00"):
+    return {
+        "response": [
+            {
+                "symbol": ticker,
+                "expiration": DAY,
+                "strike": strike,
+                "right": right,
+                "timestamp": timestamp,
+                "open_interest": 10,
+            }
+            for strike in (300.0, 301.0)
+            for right in ("C", "P")
+        ]
+    }
+
+
 def write_sources(root: Path):
     rows = []
     for strike in (300.0, 301.0):
@@ -108,9 +125,7 @@ def write_canonical_options_root(root: Path, *, omit=None):
                     "timestamp": timestamp,
                 }
                 if kind == "greeks":
-                    base.update(
-                        {"underlying_timestamp": timestamp, "implied_vol": 0.2}
-                    )
+                    base.update({"underlying_timestamp": timestamp, "implied_vol": 0.2})
                 else:
                     base["open_interest"] = 10
                 rows.append(base)
@@ -141,6 +156,9 @@ def test_frozen_canonical_source_inventory_rejects_missing_substitution_and_tamp
     runtime = {"lock_sha256": "1" * 64, "environment_sha256": "2" * 64}
     monkeypatch.setattr(mod, "assert_runtime_lock", lambda _path: runtime)
     options = write_canonical_options_root(tmp_path / "options")
+    proxy_path = mod.canonical_source_paths(options, "SPXW", "20240102")["greeks"]
+    proxy = pd.read_parquet(proxy_path).drop(columns="timestamp")
+    proxy.to_parquet(proxy_path, index=False)
     inventory = tmp_path / "inventory"
     manifest = mod.freeze_source_inventory(
         options_root=options, inventory_dir=inventory
@@ -148,6 +166,11 @@ def test_frozen_canonical_source_inventory_rejects_missing_substitution_and_tamp
     assert manifest["sessions"] == 12
     frame = mod.validate_source_inventory(inventory)
     assert len(frame) == 12
+    proxy_row = frame[
+        frame["ticker"].eq("SPXW") & frame["trade_date"].eq("20240102")
+    ].iloc[0]
+    assert bool(proxy_row["greeks_native_timestamp"]) is False
+    assert bool(proxy_row["greeks_underlying_timestamp_proxy"]) is True
 
     target = mod.canonical_source_paths(options, "QQQ", DAY)["oi"]
     original = target.read_bytes()
@@ -246,19 +269,49 @@ def test_source_audit_reports_revisions_and_positive_oi_without_replacement(tmp_
 @pytest.mark.parametrize(
     ("mutation", "message"),
     [
-        (lambda oi: oi.assign(timestamp="2022-08-01 10:20:00"), "future OI"),
         (lambda oi: pd.concat([oi, oi.iloc[[0]]], ignore_index=True), "duplicate OI"),
-        (lambda oi: oi.assign(open_interest=[-1, 10, 10, 10]), "nonnegative"),
+        (lambda oi: oi.assign(open_interest=[-1, 10, 10, 10]), "negative"),
     ],
 )
-def test_oi_audit_rejects_future_duplicate_and_negative_rows(
-    tmp_path, mutation, message
-):
+def test_oi_audit_rejects_duplicate_and_negative_rows(tmp_path, mutation, message):
     greeks, oi_path = write_sources(tmp_path)
     frame = mod.normalize_response(payload(), ticker="QQQ", trade_date=DAY)
     mutation(pd.read_parquet(oi_path)).to_parquet(oi_path, index=False)
     with pytest.raises(AssertionError, match=message):
         mod.audit_sources(frame, greeks_path=greeks, oi_path=oi_path)
+
+
+def test_oi_availability_is_per_direct_row_without_backfill(tmp_path):
+    greeks, oi_path = write_sources(tmp_path)
+    frame = mod.normalize_response(payload(), ticker="QQQ", trade_date=DAY)
+    oi = pd.read_parquet(oi_path)
+    oi.loc[oi["strike"].eq(300.0), "timestamp"] = "2022-08-01 10:20:00"
+    oi.loc[oi["strike"].eq(301.0), "open_interest"] = float("nan")
+    oi.to_parquet(oi_path, index=False)
+    audit = mod.audit_sources(frame, greeks_path=greeks, oi_path=oi_path)
+    assert audit["late_unavailable_oi_rows"] == 2
+    assert audit["positive_oi_rows_available"] == 4
+    assert audit["null_value_oi_rows"] == 6
+    assert audit["oi_missing_reasons"]["late_unavailable_at_direct_row"] == 2
+
+
+def test_direct_oi_normalization_and_primary_row_availability(tmp_path):
+    direct = mod.normalize_direct_oi(
+        oi_payload(timestamp="2022-08-01 10:20:00"), ticker="QQQ", trade_date=DAY
+    )
+    assert len(direct) == 4 and direct["open_interest"].eq(10).all()
+    greeks, local_oi = write_sources(tmp_path)
+    frame = mod.normalize_response(payload(), ticker="QQQ", trade_date=DAY)
+    audit = mod.audit_sources(
+        frame, greeks_path=greeks, oi_path=local_oi, direct_oi=direct
+    )
+    assert audit["oi_availability_source"] == "direct_oi_primary"
+    assert audit["late_unavailable_oi_rows"] == 4
+    assert audit["positive_oi_rows_available"] == 8
+    duplicate = oi_payload()
+    duplicate["response"].append(dict(duplicate["response"][0]))
+    with pytest.raises(AssertionError, match="duplicate direct OI"):
+        mod.normalize_direct_oi(duplicate, ticker="QQQ", trade_date=DAY)
 
 
 def test_field_profiles_and_cost_projection_are_outcome_free_and_exact_scope():
@@ -279,7 +332,9 @@ def test_field_profiles_and_cost_projection_are_outcome_free_and_exact_scope():
 class FakeResponse:
     status_code = 200
     headers = {"content-type": "application/json"}
-    content = json.dumps(payload(), separators=(",", ":")).encode()
+
+    def __init__(self, value=None):
+        self.content = json.dumps(value or payload(), separators=(",", ":")).encode()
 
     def raise_for_status(self):
         return None
@@ -311,7 +366,9 @@ def test_capture_writes_immutable_hashed_raw_parquet_manifest(monkeypatch, tmp_p
 
     def requester(url, params, headers, timeout):
         calls.append((url, params))
-        return FakeResponse()
+        return FakeResponse(
+            oi_payload() if url.endswith(mod.OI_ENDPOINT) else payload()
+        )
 
     def evidence(_url, path):
         return {
@@ -343,6 +400,7 @@ def test_capture_writes_immutable_hashed_raw_parquet_manifest(monkeypatch, tmp_p
     assert calls[0][0].endswith(mod.ENDPOINT) and calls[0][1] == mod.request_params(
         "QQQ", DAY
     )
+    assert calls[1][0].endswith(mod.OI_ENDPOINT)
     assert result["provenance"] == mod.PROVENANCE and result["outcome_free"] is True
     root = tmp_path / "out" / "QQQ" / DAY
     assert (root / "response.json").is_file() and (
@@ -394,11 +452,15 @@ def test_seal_requires_exact_unique_sessions_and_revalidates_tampering(
             "parquet_bytes": 50,
             "raw_response_sha256": "a" * 64,
             "parquet_sha256": "b" * 64,
+            "oi_raw_response_sha256": "5" * 64,
+            "oi_parquet_sha256": "6" * 64,
             "source_greeks_sha256": hashlib.sha256(b"g").hexdigest(),
             "source_oi_sha256": hashlib.sha256(b"o").hexdigest(),
             "git_commit": "c" * 40,
             "builder_sha256": "d" * 64,
             "predeclaration_sha256": "e" * 64,
+            "source_clarification_sha256": "3" * 64,
+            "direct_oi_amendment_sha256": "4" * 64,
             "runtime_lock_sha256": "f" * 64,
             "runtime_environment_sha256": "1" * 64,
             "terminal_jar_sha256": "2" * 64,
