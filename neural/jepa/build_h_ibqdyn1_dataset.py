@@ -31,8 +31,18 @@ from neural.jepa.capture_h_ibqdyn1_tick_preflight import (  # noqa: E402
     EXPECTED_FULL_CONTRACTS,
     EXPECTED_PROOF_MANIFEST_SHA256,
     EXPECTED_PROOF_SHA256,
+    OUTPUT_COLUMNS,
 )
-from neural.jepa.capture_h_ibqdyn1_full import CODE_CLOSURE as CAPTURE_CODE_CLOSURE  # noqa: E402
+from neural.jepa.seal_h_ibqdyn1_full_capture_v1r1 import (  # noqa: E402
+    EXPECTED_LEGACY_CAPTURE_CODE_HASHES,
+    EXPECTED_NO_DATA_CONTRACTS,
+    EXPECTED_NO_DATA_ID_SHA256,
+    FIRST_ATTEMPT_ERRORS_SHA256,
+    NO_DATA_BODY,
+    NO_DATA_BODY_SHA256,
+    SEALER_CODE_CLOSURE as CAPTURE_CODE_CLOSURE,
+    newline_hash,
+)
 from neural.jepa.evaluate_wall_surface_flow_at_touch_v1 import (  # noqa: E402
     EXPECTED_SESSION_COUNT,
     assert_source_inventory,
@@ -51,6 +61,7 @@ FEATURE_CLARIFICATION = (
     "research_papers/JEPA/H_IBQDYN1_FEATURE_SEMANTICS_CLARIFICATION.md"
 )
 DATA_GATE_CONTRACT = "research_papers/JEPA/H_IBQDYN1_DATA_GATE_CONTRACT.md"
+NO_DATA_AMENDMENT = "research_papers/JEPA/H_IBQDYN1_HTTP472_NO_DATA_AMENDMENT.md"
 RUNTIME_LOCK = "research_papers/JEPA/requirements-wall-surface-flow-v1r1.txt"
 PROOF_MANIFEST = (
     "research_papers/JEPA/results/_diagnostics/"
@@ -76,9 +87,7 @@ LEVEL_DISTANCE_COLUMNS = {
     "fib_161_dn": "dist_fib_161_dn_bps",
     "fib_200_dn": "dist_fib_200_dn_bps",
 }
-RESISTANCE_LEVELS = frozenset(
-    {"ib_high", "fib_127_up", "fib_161_up", "fib_200_up"}
-)
+RESISTANCE_LEVELS = frozenset({"ib_high", "fib_127_up", "fib_161_up", "fib_200_up"})
 SOURCE_CONTROL_COLUMNS = (
     "ticker",
     "trade_date",
@@ -132,12 +141,14 @@ AUTHORITATIVE_CODE = (
     "neural/jepa/build_h_ibqdyn1_feasibility.py",
     "neural/jepa/capture_h_ibqdyn1_full.py",
     "neural/jepa/capture_h_ibqdyn1_tick_preflight.py",
+    "neural/jepa/seal_h_ibqdyn1_full_capture_v1r1.py",
     "neural/jepa/surface_flow_features.py",
     "neural/jepa/evaluate_wall_surface_flow_at_touch_v1.py",
     "neural/jepa/wall_surface_flow_environment.py",
     PREDECLARATION,
     FEATURE_CLARIFICATION,
     DATA_GATE_CONTRACT,
+    NO_DATA_AMENDMENT,
     PROOF_MANIFEST,
     RUNTIME_LOCK,
 )
@@ -224,7 +235,9 @@ def load_control_universe(events_path: str | Path) -> pd.DataFrame:
     keys = ["ticker", "trade_date", "decision_dt"]
     if source["decision_dt"].isna().any() or source.duplicated(keys).any():
         raise AssertionError("H-IBQDYN1 control source has ambiguous decision keys")
-    controls = identity.merge(source, on=keys, how="left", suffixes=("", "_source"), validate="one_to_one")
+    controls = identity.merge(
+        source, on=keys, how="left", suffixes=("", "_source"), validate="one_to_one"
+    )
     if len(controls) != EXPECTED_EVENTS:
         raise AssertionError("H-IBQDYN1 control universe cardinality changed")
     for column in ("minute", "spot", "nearest_level_name", "nearest_level_abs_bps"):
@@ -249,9 +262,16 @@ def load_control_universe(events_path: str | Path) -> pd.DataFrame:
     for level, column in LEVEL_DISTANCE_COLUMNS.items():
         mask = levels.eq(level)
         distance.loc[mask] = pd.to_numeric(controls.loc[mask, column], errors="coerce")
-    numeric = controls[["spot", "nearest_level_abs_bps", "ret_1m_bps", "ret_5m_bps", "ret_15m_bps", "ret_30m_bps"]].apply(
-        pd.to_numeric, errors="coerce"
-    )
+    numeric = controls[
+        [
+            "spot",
+            "nearest_level_abs_bps",
+            "ret_1m_bps",
+            "ret_5m_bps",
+            "ret_15m_bps",
+            "ret_30m_bps",
+        ]
+    ].apply(pd.to_numeric, errors="coerce")
     if (
         not np.isfinite(numeric.to_numpy(dtype=float)).all()
         or not np.isfinite(distance.to_numpy(dtype=float)).all()
@@ -264,25 +284,37 @@ def load_control_universe(events_path: str | Path) -> pd.DataFrame:
     ):
         raise AssertionError("H-IBQDYN1 selected-level geometry is not exact")
     controls["wall_identity"] = levels
-    controls["wall_role"] = np.where(levels.isin(RESISTANCE_LEVELS), "resistance", "support")
-    controls["candidate_right"] = np.where(controls["wall_role"].eq("resistance"), "CALL", "PUT")
+    controls["wall_role"] = np.where(
+        levels.isin(RESISTANCE_LEVELS), "resistance", "support"
+    )
+    controls["candidate_right"] = np.where(
+        controls["wall_role"].eq("resistance"), "CALL", "PUT"
+    )
     controls["candidate_distance_bps"] = distance
     controls["candidate_abs_distance_bps"] = distance.abs()
     controls["candidate_wall_strike"] = controls["spot"] * (1.0 - distance / 10_000.0)
     controls["role_resistance"] = controls["wall_role"].eq("resistance").astype(float)
-    controls["minute_sin"] = np.sin(2.0 * np.pi * controls["minute"].astype(float) / 1440.0)
-    controls["minute_cos"] = np.cos(2.0 * np.pi * controls["minute"].astype(float) / 1440.0)
+    controls["minute_sin"] = np.sin(
+        2.0 * np.pi * controls["minute"].astype(float) / 1440.0
+    )
+    controls["minute_cos"] = np.cos(
+        2.0 * np.pi * controls["minute"].astype(float) / 1440.0
+    )
     controls["spot_ret_1m_bps"] = numeric["ret_1m_bps"]
     controls["spot_abs_ret_1m_bps"] = numeric["ret_1m_bps"].abs()
     for lag in (5, 15, 30):
         ret = numeric[f"ret_{lag}m_bps"]
         prior_spot = controls["spot"] / (1.0 + ret / 10_000.0)
         prior_distance = (
-            (prior_spot - controls["candidate_wall_strike"]) / controls["spot"] * 10_000.0
+            (prior_spot - controls["candidate_wall_strike"])
+            / controls["spot"]
+            * 10_000.0
         )
         controls[f"spot_ret_{lag}m_bps"] = ret
         controls[f"candidate_distance_change_{lag}m_bps"] = distance - prior_distance
-        controls[f"candidate_approach_{lag}m_bps"] = prior_distance.abs() - distance.abs()
+        controls[f"candidate_approach_{lag}m_bps"] = (
+            prior_distance.abs() - distance.abs()
+        )
     controls["episode_id"] = controls["event_id"].astype(str)
     return controls
 
@@ -294,33 +326,52 @@ def attach_realized_volatility(
         raise AssertionError("H-IBQDYN1 underlying inventory hash mismatch")
     source_hashes = pd.read_csv(source_hashes_path, dtype={"trade_date": str})
     assert_source_inventory(source_hashes)
-    underlying = source_hashes[source_hashes["source_kind"].astype(str).eq("underlying")].copy()
-    if len(underlying) != EXPECTED_SESSION_COUNT or underlying.duplicated(["ticker", "trade_date"]).any():
+    underlying = source_hashes[
+        source_hashes["source_kind"].astype(str).eq("underlying")
+    ].copy()
+    if (
+        len(underlying) != EXPECTED_SESSION_COUNT
+        or underlying.duplicated(["ticker", "trade_date"]).any()
+    ):
         raise AssertionError("H-IBQDYN1 underlying session inventory changed")
     source_map = {
         (str(row.ticker).upper(), str(row.trade_date)): row._asdict()
         for row in underlying.itertuples(index=False)
     }
     tasks: list[tuple[pd.DataFrame, dict[str, Any]]] = []
-    for key, part in controls.groupby(["ticker", "trade_date"], observed=True, sort=True):
+    for key, part in controls.groupby(
+        ["ticker", "trade_date"], observed=True, sort=True
+    ):
         source = source_map.get((str(key[0]).upper(), str(key[1])))
         if source is None:
             raise AssertionError(f"missing H-IBQDYN1 underlying source: {key}")
         tasks.append((part.copy(), source))
     frames: list[pd.DataFrame] = []
     with ProcessPoolExecutor(max_workers=workers) as pool:
-        futures = {pool.submit(_attach_session_rv, part, source): (part.iloc[0]["ticker"], part.iloc[0]["trade_date"]) for part, source in tasks}
+        futures = {
+            pool.submit(_attach_session_rv, part, source): (
+                part.iloc[0]["ticker"],
+                part.iloc[0]["trade_date"],
+            )
+            for part, source in tasks
+        }
         for count, future in enumerate(as_completed(futures), start=1):
             key = futures[future]
             try:
                 frames.append(future.result())
             except Exception as exc:
-                raise AssertionError(f"H-IBQDYN1 RV session failed {key}: {exc}") from exc
+                raise AssertionError(
+                    f"H-IBQDYN1 RV session failed {key}: {exc}"
+                ) from exc
             if count % 100 == 0 or count == len(futures):
-                print(f"[H-IBQDYN1_DATA:RV] sessions={count}/{len(futures)}", flush=True)
-    out = pd.concat(frames, ignore_index=True).sort_values(
-        ["ticker", "trade_date", "decision_dt"], kind="stable"
-    ).reset_index(drop=True)
+                print(
+                    f"[H-IBQDYN1_DATA:RV] sessions={count}/{len(futures)}", flush=True
+                )
+    out = (
+        pd.concat(frames, ignore_index=True)
+        .sort_values(["ticker", "trade_date", "decision_dt"], kind="stable")
+        .reset_index(drop=True)
+    )
     if len(out) != EXPECTED_EVENTS or out["event_id"].duplicated().any():
         raise AssertionError("H-IBQDYN1 RV join changed event universe")
     return out
@@ -353,24 +404,34 @@ def validate_capture(
     root = Path(capture_root)
     seal_path = root / "_seal" / "manifest.json"
     index_path = root / "_seal" / "contract_index.csv"
+    first_errors_path = root / "_seal" / "first_attempt_errors.json"
     candidate_path = root / "candidate_contracts.csv"
     seal = json.loads(seal_path.read_text(encoding="utf-8"))
     expected_capture_hashes = {
-        relative: sha256_file(PROJECT_ROOT / relative) for relative in CAPTURE_CODE_CLOSURE
+        relative: sha256_file(PROJECT_ROOT / relative)
+        for relative in CAPTURE_CODE_CLOSURE
     }
     if (
-        seal.get("schema") != "h_ibqdyn1_full_capture_seal_v1"
+        seal.get("schema") != "h_ibqdyn1_full_capture_seal_v1r1"
         or seal.get("status") != "PASS_H_IBQDYN1_FULL_CAPTURE"
         or seal.get("outcome_free") is not True
         or seal.get("holdout_2026_used") is not False
         or seal.get("production_modified") is not False
         or not commit_is_ancestor(str(seal.get("git_commit", "")))
         or seal.get("code_hashes") != expected_capture_hashes
+        or seal.get("legacy_capture_code_hashes") != EXPECTED_LEGACY_CAPTURE_CODE_HASHES
         or seal.get("proof_manifest_sha256") != EXPECTED_PROOF_MANIFEST_SHA256
         or seal.get("proof_sha256") != EXPECTED_PROOF_SHA256
         or seal.get("eligible_event_id_sha256") != EXPECTED_ELIGIBLE_ID_SHA256
         or int(seal.get("eligible_events", -1)) != EXPECTED_ELIGIBLE_EVENTS
         or int(seal.get("contracts", -1)) != EXPECTED_FULL_CONTRACTS
+        or int(seal.get("zero_row_contracts", -1)) != len(EXPECTED_NO_DATA_CONTRACTS)
+        or int(seal.get("no_data_contracts", -1)) != len(EXPECTED_NO_DATA_CONTRACTS)
+        or seal.get("no_data_contract_ids_sha256") != EXPECTED_NO_DATA_ID_SHA256
+        or seal.get("no_data_body_sha256") != NO_DATA_BODY_SHA256
+        or int(seal.get("unresolved_errors", -1)) != 0
+        or seal.get("first_attempt_errors_sha256") != FIRST_ATTEMPT_ERRORS_SHA256
+        or sha256_file(first_errors_path) != FIRST_ATTEMPT_ERRORS_SHA256
         or seal.get("errors") != []
         or seal.get("candidate_contracts_sha256") != sha256_file(candidate_path)
         or seal.get("contract_index_sha256") != sha256_file(index_path)
@@ -378,18 +439,38 @@ def validate_capture(
         raise AssertionError("H-IBQDYN1 full capture seal contract mismatch")
     index = pd.read_csv(index_path, dtype={"trade_date": str})
     required = {
-        "contract_id", "event_id", "ticker", "trade_date", "decision_dt",
-        "right", "strike", "raw_path", "raw_sha256", "parquet_path",
-        "parquet_sha256", "manifest_path", "manifest_sha256", "rows",
+        "contract_id",
+        "event_id",
+        "ticker",
+        "trade_date",
+        "decision_dt",
+        "right",
+        "strike",
+        "raw_path",
+        "raw_sha256",
+        "parquet_path",
+        "parquet_sha256",
+        "manifest_path",
+        "manifest_sha256",
+        "rows",
+        "capture_kind",
     }
     if required.difference(index.columns):
-        raise KeyError(f"H-IBQDYN1 capture index missing: {sorted(required.difference(index.columns))}")
+        raise KeyError(
+            f"H-IBQDYN1 capture index missing: {sorted(required.difference(index.columns))}"
+        )
     index["ticker"] = index["ticker"].astype(str).str.upper()
     index["trade_date"] = _normalized_day(index["trade_date"])
     index["right"] = index["right"].astype(str).str.upper()
     index["decision_dt"] = pd.to_datetime(index["decision_dt"], errors="coerce")
-    counts = index.groupby("event_id", observed=True)["right"].agg(lambda values: sorted(values.astype(str).tolist()))
-    eligible_ids = controls.loc[controls["causal_subscription_eligible"].astype(bool), "event_id"].astype(str)
+    counts = index.groupby("event_id", observed=True)["right"].agg(
+        lambda values: sorted(values.astype(str).tolist())
+    )
+    eligible_ids = controls.loc[
+        controls["causal_subscription_eligible"].astype(bool), "event_id"
+    ].astype(str)
+    no_data = index["capture_kind"].astype(str).eq("HTTP_472_NO_DATA")
+    no_data_ids = index.loc[no_data, "contract_id"].astype(str).tolist()
     if (
         len(index) != EXPECTED_FULL_CONTRACTS
         or index["contract_id"].duplicated().any()
@@ -397,7 +478,16 @@ def validate_capture(
         or index["trade_date"].ge("20260101").any()
         or set(index["event_id"].astype(str)) != set(eligible_ids)
         or not counts.map(lambda rights: rights == ["CALL", "PUT"]).all()
-        or line_hash(index["event_id"].astype(str).drop_duplicates().tolist()) != EXPECTED_ELIGIBLE_ID_SHA256
+        or line_hash(index["event_id"].astype(str).drop_duplicates().tolist())
+        != EXPECTED_ELIGIBLE_ID_SHA256
+        or not index["capture_kind"]
+        .astype(str)
+        .isin({"HTTP_200_TICKS", "HTTP_472_NO_DATA"})
+        .all()
+        or set(no_data_ids) != set(EXPECTED_NO_DATA_CONTRACTS)
+        or newline_hash(no_data_ids) != EXPECTED_NO_DATA_ID_SHA256
+        or not index.loc[no_data, "rows"].eq(0).all()
+        or int(index["rows"].eq(0).sum()) != len(EXPECTED_NO_DATA_CONTRACTS)
     ):
         raise AssertionError("H-IBQDYN1 capture index universe changed")
     return index, seal
@@ -406,7 +496,10 @@ def validate_capture(
 def _empty_measurements(eligible: bool) -> dict[str, Any]:
     values: dict[str, Any] = {field: np.nan for field in ALPHA_FIELDS}
     for field in QUALITY_FIELDS:
-        if field.endswith("_valid") or field in {"causal_subscription_eligible", "ibqdyn_both_valid"}:
+        if field.endswith("_valid") or field in {
+            "causal_subscription_eligible",
+            "ibqdyn_both_valid",
+        }:
             values[field] = False
         elif field not in {"causal_subscription_eligible", "ibqdyn_both_valid"}:
             values[field] = 0
@@ -427,20 +520,36 @@ def _build_event_measurements(
     tick_parts: dict[str, pd.DataFrame] = {}
     for row in rows:
         right = str(row["right"]).upper()
-        expected_strike = float(candidate["call_strike" if right == "CALL" else "put_strike"])
+        expected_strike = float(
+            candidate["call_strike" if right == "CALL" else "put_strike"]
+        )
         for path_field, hash_field in (
             ("raw_path", "raw_sha256"),
             ("parquet_path", "parquet_sha256"),
             ("manifest_path", "manifest_sha256"),
         ):
             if sha256_file(row[path_field]) != str(row[hash_field]):
-                raise AssertionError(f"H-IBQDYN1 contract source hash mismatch: {path_field}")
-        manifest = json.loads(Path(str(row["manifest_path"])).read_text(encoding="utf-8"))
+                raise AssertionError(
+                    f"H-IBQDYN1 contract source hash mismatch: {path_field}"
+                )
+        manifest = json.loads(
+            Path(str(row["manifest_path"])).read_text(encoding="utf-8")
+        )
         source = manifest.get("source_provenance", {})
         source_identity = seal.get("source_identity", {})
-        if (
-            manifest.get("status") != "PASS_H_IBQDYN1_PREFLIGHT_CONTRACT"
-            or manifest.get("outcome_free") is not True
+        capture_kind = str(row.get("capture_kind", ""))
+        is_no_data = capture_kind == "HTTP_472_NO_DATA"
+        expected_no_data = EXPECTED_NO_DATA_CONTRACTS.get(str(row["contract_id"]))
+        observed_no_data = {
+            "event_id": str(candidate["event_id"]),
+            "ticker": str(candidate["ticker"]),
+            "trade_date": str(candidate["trade_date"]),
+            "decision_dt": pd.Timestamp(candidate["decision_dt"]).isoformat(),
+            "right": right,
+            "strike": expected_strike,
+        }
+        common_invalid = (
+            manifest.get("outcome_free") is not True
             or manifest.get("holdout_2026_used") is not False
             or manifest.get("production_modified") is not False
             or manifest.get("contract_id") != str(row["contract_id"])
@@ -449,24 +558,55 @@ def _build_event_measurements(
             or manifest.get("trade_date") != str(candidate["trade_date"])
             or manifest.get("right") != right
             or float(manifest.get("strike", np.nan)) != expected_strike
-            or pd.Timestamp(manifest.get("decision_dt")) != pd.Timestamp(candidate["decision_dt"])
+            or pd.Timestamp(manifest.get("decision_dt"))
+            != pd.Timestamp(candidate["decision_dt"])
             or manifest.get("raw_sha256") != str(row["raw_sha256"])
             or manifest.get("parquet_sha256") != str(row["parquet_sha256"])
-            or manifest.get("code_hashes") != seal.get("code_hashes")
             or manifest.get("runtime_lock_sha256") != seal.get("runtime_lock_sha256")
-            or manifest.get("runtime_environment_sha256") != seal.get("runtime_environment_sha256")
-            or any(source.get(field) != source_identity.get(field) for field in source_identity)
-        ):
+            or manifest.get("runtime_environment_sha256")
+            != seal.get("runtime_environment_sha256")
+            or any(
+                source.get(field) != source_identity.get(field)
+                for field in source_identity
+            )
+        )
+        regular_invalid = not is_no_data and (
+            capture_kind != "HTTP_200_TICKS"
+            or manifest.get("status") != "PASS_H_IBQDYN1_PREFLIGHT_CONTRACT"
+            or manifest.get("code_hashes") != seal.get("legacy_capture_code_hashes")
+        )
+        no_data_invalid = is_no_data and (
+            manifest.get("schema") != "h_ibqdyn1_http472_no_data_contract_v1"
+            or manifest.get("status") != "PASS_H_IBQDYN1_HTTP472_NO_DATA_CONTRACT"
+            or manifest.get("capture_kind") != "HTTP_472_NO_DATA"
+            or manifest.get("legacy_capture_code_hashes")
+            != seal.get("legacy_capture_code_hashes")
+            or manifest.get("sealer_code_hashes") != seal.get("code_hashes")
+            or int(manifest.get("http_status", -1)) != 472
+            or manifest.get("http_error_name") != "NO_DATA"
+            or Path(str(row["raw_path"])).read_bytes() != NO_DATA_BODY
+            or expected_no_data is None
+            or observed_no_data != expected_no_data
+            or int(row["rows"]) != 0
+        )
+        if common_invalid or regular_invalid or no_data_invalid:
             raise AssertionError("H-IBQDYN1 contract manifest mismatch")
         ticks = pd.read_parquet(row["parquet_path"])
-        if (
-            len(ticks) != int(row["rows"])
-            or len(ticks) != int(manifest.get("rows", -1))
-            or set(ticks["event_id"].astype(str).unique()) != {str(candidate["event_id"])}
-            or set(ticks["ticker"].astype(str).str.upper().unique()) != {str(candidate["ticker"])}
+        row_count_invalid = len(ticks) != int(row["rows"]) or len(ticks) != int(
+            manifest.get("rows", -1)
+        )
+        identity_invalid = not is_no_data and (
+            set(ticks["event_id"].astype(str).unique()) != {str(candidate["event_id"])}
+            or set(ticks["ticker"].astype(str).str.upper().unique())
+            != {str(candidate["ticker"])}
             or set(ticks["right"].astype(str).str.upper().unique()) != {right}
-            or set(pd.to_numeric(ticks["strike"], errors="coerce").unique()) != {expected_strike}
-        ):
+            or set(pd.to_numeric(ticks["strike"], errors="coerce").unique())
+            != {expected_strike}
+        )
+        empty_invalid = is_no_data and (
+            len(ticks) != 0 or list(ticks.columns) != list(OUTPUT_COLUMNS)
+        )
+        if row_count_invalid or identity_invalid or empty_invalid:
             raise AssertionError("H-IBQDYN1 contract parquet identity mismatch")
         tick_parts[right] = ticks
     values = event_features(
@@ -502,38 +642,74 @@ def build_measurements(
             try:
                 outputs.append(future.result())
             except Exception as exc:
-                raise AssertionError(f"H-IBQDYN1 feature event failed {event}: {exc}") from exc
+                raise AssertionError(
+                    f"H-IBQDYN1 feature event failed {event}: {exc}"
+                ) from exc
             if count % 100 == 0 or count == len(futures):
-                print(f"[H-IBQDYN1_DATA:FEATURE] events={count}/{len(futures)}", flush=True)
+                print(
+                    f"[H-IBQDYN1_DATA:FEATURE] events={count}/{len(futures)}",
+                    flush=True,
+                )
     frame = pd.DataFrame(outputs)
     if len(frame) != EXPECTED_EVENTS or frame["event_id"].duplicated().any():
         raise AssertionError("H-IBQDYN1 measurement cardinality changed")
     return frame
 
 
-def data_gate_profile(dataset: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, dict[str, Any]]:
+def data_gate_profile(
+    dataset: pd.DataFrame,
+) -> tuple[pd.DataFrame, pd.DataFrame, dict[str, Any]]:
     work = dataset.copy()
     work["year"] = work["trade_date"].astype(str).str[:4]
     coverage_rows: list[dict[str, Any]] = []
-    for (ticker, year), part in work.groupby(["ticker", "year"], observed=True, sort=True):
+    for (ticker, year), part in work.groupby(
+        ["ticker", "year"], observed=True, sort=True
+    ):
         valid = part["ibqdyn_both_valid"].astype(bool)
         coverage_rows.append(
-            {"scope": "ticker_year", "ticker": ticker, "year": year, "events": len(part), "eligible": int(part["causal_subscription_eligible"].sum()), "both_valid": int(valid.sum()), "coverage": float(valid.mean())}
+            {
+                "scope": "ticker_year",
+                "ticker": ticker,
+                "year": year,
+                "events": len(part),
+                "eligible": int(part["causal_subscription_eligible"].sum()),
+                "both_valid": int(valid.sum()),
+                "coverage": float(valid.mean()),
+            }
         )
     for ticker, part in work.groupby("ticker", observed=True, sort=True):
         valid = part["ibqdyn_both_valid"].astype(bool)
         coverage_rows.append(
-            {"scope": "ticker", "ticker": ticker, "year": "ALL", "events": len(part), "eligible": int(part["causal_subscription_eligible"].sum()), "both_valid": int(valid.sum()), "coverage": float(valid.mean())}
+            {
+                "scope": "ticker",
+                "ticker": ticker,
+                "year": "ALL",
+                "events": len(part),
+                "eligible": int(part["causal_subscription_eligible"].sum()),
+                "both_valid": int(valid.sum()),
+                "coverage": float(valid.mean()),
+            }
         )
     coverage = pd.DataFrame(coverage_rows)
     distinct_rows: list[dict[str, Any]] = []
-    for (ticker, year), part in work.groupby(["ticker", "year"], observed=True, sort=True):
+    for (ticker, year), part in work.groupby(
+        ["ticker", "year"], observed=True, sort=True
+    ):
         valid_part = part[part["ibqdyn_both_valid"].astype(bool)]
         for feature in ALPHA_FIELDS:
             values = pd.to_numeric(valid_part[feature], errors="coerce")
             finite = values[np.isfinite(values)]
             distinct_rows.append(
-                {"ticker": ticker, "year": year, "feature": feature, "both_valid_rows": len(valid_part), "finite": len(finite), "distinct_finite": int(finite.nunique()), "minimum": float(finite.min()) if len(finite) else np.nan, "maximum": float(finite.max()) if len(finite) else np.nan}
+                {
+                    "ticker": ticker,
+                    "year": year,
+                    "feature": feature,
+                    "both_valid_rows": len(valid_part),
+                    "finite": len(finite),
+                    "distinct_finite": int(finite.nunique()),
+                    "minimum": float(finite.min()) if len(finite) else np.nan,
+                    "maximum": float(finite.max()) if len(finite) else np.nan,
+                }
             )
     distinct = pd.DataFrame(distinct_rows)
     annual = coverage[coverage["scope"].eq("ticker_year")]
@@ -544,16 +720,39 @@ def data_gate_profile(dataset: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame
     finite_alpha = np.isfinite(alpha.to_numpy(dtype=float)).all(axis=1)
     complete = work["ibqdyn_both_valid"].astype(bool).to_numpy()
     gate = {
-        "rows_preserved": bool(len(work) == EXPECTED_EVENTS and not work["event_id"].duplicated().any()),
-        "coverage_pass": bool(annual["coverage"].ge(MIN_ANNUAL_BOTH_VALID_COVERAGE).all() and ticker["coverage"].ge(MIN_TICKER_BOTH_VALID_COVERAGE).all()),
-        "distinctness_pass": bool(len(distinct) == 12 * len(ALPHA_FIELDS) and distinct["distinct_finite"].ge(2).all()),
+        "rows_preserved": bool(
+            len(work) == EXPECTED_EVENTS and not work["event_id"].duplicated().any()
+        ),
+        "coverage_pass": bool(
+            annual["coverage"].ge(MIN_ANNUAL_BOTH_VALID_COVERAGE).all()
+            and ticker["coverage"].ge(MIN_TICKER_BOTH_VALID_COVERAGE).all()
+        ),
+        "distinctness_pass": bool(
+            len(distinct) == 12 * len(ALPHA_FIELDS)
+            and distinct["distinct_finite"].ge(2).all()
+        ),
         "control_coverage_pass": bool(finite_f0.all()),
-        "identical_complete_case_pass": bool(np.array_equal(complete, finite_f0 & finite_alpha)),
+        "identical_complete_case_pass": bool(
+            np.array_equal(complete, finite_f0 & finite_alpha)
+        ),
         "minimum_annual_both_valid_coverage": float(annual["coverage"].min()),
         "minimum_ticker_both_valid_coverage": float(ticker["coverage"].min()),
-        "minimum_feature_distinctness": int(distinct["distinct_finite"].min()) if len(distinct) else 0,
+        "minimum_feature_distinctness": int(distinct["distinct_finite"].min())
+        if len(distinct)
+        else 0,
     }
-    gate["passed"] = bool(all(gate[name] for name in ("rows_preserved", "coverage_pass", "distinctness_pass", "control_coverage_pass", "identical_complete_case_pass")))
+    gate["passed"] = bool(
+        all(
+            gate[name]
+            for name in (
+                "rows_preserved",
+                "coverage_pass",
+                "distinctness_pass",
+                "control_coverage_pass",
+                "identical_complete_case_pass",
+            )
+        )
+    )
     return coverage, distinct, gate
 
 
@@ -580,7 +779,9 @@ def main() -> None:
     controls = load_control_universe(args.events)
     proof = pd.read_parquet(PROJECT_ROOT / PROOF_PATH)
     proof["event_id"] = proof["event_id"].astype(str)
-    proof["causal_subscription_eligible"] = proof["causal_subscription_eligible"].astype(bool)
+    proof["causal_subscription_eligible"] = proof[
+        "causal_subscription_eligible"
+    ].astype(bool)
     if (
         sha256_file(PROJECT_ROOT / PROOF_PATH) != EXPECTED_PROOF_SHA256
         or len(proof) != EXPECTED_EVENTS
@@ -588,7 +789,9 @@ def main() -> None:
         or set(proof["event_id"]) != set(controls["event_id"].astype(str))
     ):
         raise AssertionError("H-IBQDYN1 listing proof changed before data gate")
-    controls = controls.drop(columns=["causal_subscription_eligible"], errors="ignore").merge(
+    controls = controls.drop(
+        columns=["causal_subscription_eligible"], errors="ignore"
+    ).merge(
         proof[["event_id", "causal_subscription_eligible"]],
         on="event_id",
         how="left",
@@ -601,14 +804,18 @@ def main() -> None:
     )
     index, seal = validate_capture(args.capture_root, controls)
     measurements = build_measurements(controls, index, seal, int(args.workers))
-    dataset = controls.merge(measurements, on="event_id", how="left", validate="one_to_one")
+    dataset = controls.merge(
+        measurements, on="event_id", how="left", validate="one_to_one"
+    )
     keep = [*OUTPUT_IDENTITY_COLUMNS, *CONTROL_FEATURES, *ALPHA_FIELDS, *QUALITY_FIELDS]
     missing = sorted(set(keep).difference(dataset.columns))
     if missing:
         raise KeyError(f"H-IBQDYN1 final dataset missing: {missing}")
-    dataset = dataset[keep].sort_values(
-        ["ticker", "trade_date", "decision_dt"], kind="stable"
-    ).reset_index(drop=True)
+    dataset = (
+        dataset[keep]
+        .sort_values(["ticker", "trade_date", "decision_dt"], kind="stable")
+        .reset_index(drop=True)
+    )
     if (
         len(dataset) != EXPECTED_EVENTS
         or dataset["event_id"].duplicated().any()
@@ -629,7 +836,12 @@ def main() -> None:
     index.to_csv(source_path, index=False)
     schema_path.write_bytes(
         canonical_bytes(
-            {"columns": [{"name": name, "dtype": str(dtype)} for name, dtype in dataset.dtypes.items()]}
+            {
+                "columns": [
+                    {"name": name, "dtype": str(dtype)}
+                    for name, dtype in dataset.dtypes.items()
+                ]
+            }
         )
     )
     manifest = {
@@ -647,9 +859,15 @@ def main() -> None:
         "event_source_sha256": sha256_file(args.events),
         "proof_manifest_sha256": sha256_file(PROJECT_ROOT / PROOF_MANIFEST),
         "proof_sha256": sha256_file(PROJECT_ROOT / PROOF_PATH),
-        "underlying_source_inventory_sha256": sha256_file(args.underlying_source_hashes),
-        "capture_seal_sha256": sha256_file(Path(args.capture_root) / "_seal" / "manifest.json"),
-        "capture_index_sha256": sha256_file(Path(args.capture_root) / "_seal" / "contract_index.csv"),
+        "underlying_source_inventory_sha256": sha256_file(
+            args.underlying_source_hashes
+        ),
+        "capture_seal_sha256": sha256_file(
+            Path(args.capture_root) / "_seal" / "manifest.json"
+        ),
+        "capture_index_sha256": sha256_file(
+            Path(args.capture_root) / "_seal" / "contract_index.csv"
+        ),
         "capture_git_commit": seal["git_commit"],
         "capture_code_hashes": seal["code_hashes"],
         "historical_provenance": seal["source_identity"]["historical_provenance"],

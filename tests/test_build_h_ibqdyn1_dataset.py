@@ -97,10 +97,14 @@ def test_f0_and_f1_are_exactly_frozen_and_outcome_free() -> None:
     assert len(mod.ALPHA_FIELDS) == 20
     names = [*mod.SOURCE_CONTROL_COLUMNS, *mod.OUTPUT_IDENTITY_COLUMNS]
     forbidden = ("future", "target", "status", "win", "exit", "max_ret", "min_ret")
-    assert not [name for name in names if any(token in name.lower() for token in forbidden)]
+    assert not [
+        name for name in names if any(token in name.lower() for token in forbidden)
+    ]
 
 
-def test_control_geometry_uses_exact_selected_level(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_control_geometry_uses_exact_selected_level(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     events = [
         {
             "event_id": "resistance",
@@ -122,7 +126,9 @@ def test_control_geometry_uses_exact_selected_level(monkeypatch: pytest.MonkeyPa
     monkeypatch.setattr(mod, "EXPECTED_EVENTS", 2)
     monkeypatch.setattr(mod, "sha256_file", lambda _: mod.EXPECTED_SOURCE_SHA256)
     monkeypatch.setattr(mod, "load_opportunity_universe", lambda _: _identity(events))
-    monkeypatch.setattr(mod.pd, "read_parquet", lambda *_args, **_kwargs: _source(events))
+    monkeypatch.setattr(
+        mod.pd, "read_parquet", lambda *_args, **_kwargs: _source(events)
+    )
     frame = mod.load_control_universe("frozen.parquet").set_index("event_id")
     assert frame.loc["resistance", "wall_role"] == "resistance"
     assert frame.loc["resistance", "candidate_right"] == "CALL"
@@ -176,7 +182,7 @@ def _write_contract(
         "raw_sha256": sha256_file(raw_path),
         "parquet_sha256": sha256_file(parquet_path),
         "rows": len(ticks),
-        "code_hashes": seal["code_hashes"],
+        "code_hashes": seal.get("legacy_capture_code_hashes", seal["code_hashes"]),
         "runtime_lock_sha256": seal["runtime_lock_sha256"],
         "runtime_environment_sha256": seal["runtime_environment_sha256"],
         "source_provenance": seal["source_identity"],
@@ -193,12 +199,16 @@ def _write_contract(
         "manifest_path": str(manifest_path),
         "manifest_sha256": sha256_file(manifest_path),
         "rows": len(ticks),
+        "capture_kind": "HTTP_200_TICKS",
     }
 
 
-def test_eligible_event_revalidates_two_contracts_and_builds_features(tmp_path: Path) -> None:
+def test_eligible_event_revalidates_two_contracts_and_builds_features(
+    tmp_path: Path,
+) -> None:
     seal: dict[str, object] = {
         "code_hashes": {"capture.py": "a" * 64},
+        "legacy_capture_code_hashes": {"capture.py": "a" * 64},
         "runtime_lock_sha256": "b" * 64,
         "runtime_environment_sha256": "c" * 64,
         "source_identity": {
@@ -221,6 +231,108 @@ def test_eligible_event_revalidates_two_contracts_and_builds_features(tmp_path: 
     assert result["ibqdyn_both_valid"]
     assert result["causal_subscription_eligible"]
     assert np.isfinite([result[field] for field in mod.ALPHA_FIELDS]).all()
+
+
+def _write_no_data_contract(
+    root: Path, right: str, seal: dict[str, object]
+) -> dict[str, object]:
+    directory = root / right.lower()
+    directory.mkdir(parents=True)
+    raw_path = directory / "response.txt"
+    parquet_path = directory / "ticks.parquet"
+    manifest_path = directory / "manifest.json"
+    raw_path.write_bytes(mod.NO_DATA_BODY)
+    ticks = _ticks(right).iloc[0:0]
+    ticks.to_parquet(parquet_path, index=False)
+    contract_id = "call" if right == "CALL" else "put"
+    manifest = {
+        "schema": "h_ibqdyn1_http472_no_data_contract_v1",
+        "status": "PASS_H_IBQDYN1_HTTP472_NO_DATA_CONTRACT",
+        "capture_kind": "HTTP_472_NO_DATA",
+        "outcome_free": True,
+        "holdout_2026_used": False,
+        "production_modified": False,
+        "contract_id": contract_id,
+        "event_id": "event",
+        "ticker": "SPY",
+        "trade_date": "20240102",
+        "right": right,
+        "strike": 101.0 if right == "CALL" else 99.0,
+        "decision_dt": "2024-01-02T10:35:00",
+        "raw_sha256": sha256_file(raw_path),
+        "parquet_sha256": sha256_file(parquet_path),
+        "rows": 0,
+        "legacy_capture_code_hashes": seal["legacy_capture_code_hashes"],
+        "sealer_code_hashes": seal["code_hashes"],
+        "runtime_lock_sha256": seal["runtime_lock_sha256"],
+        "runtime_environment_sha256": seal["runtime_environment_sha256"],
+        "source_provenance": seal["source_identity"],
+        "http_status": 472,
+        "http_error_name": "NO_DATA",
+    }
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    return {
+        "contract_id": contract_id,
+        "event_id": "event",
+        "right": right,
+        "raw_path": str(raw_path),
+        "raw_sha256": sha256_file(raw_path),
+        "parquet_path": str(parquet_path),
+        "parquet_sha256": sha256_file(parquet_path),
+        "manifest_path": str(manifest_path),
+        "manifest_sha256": sha256_file(manifest_path),
+        "rows": 0,
+        "capture_kind": "HTTP_472_NO_DATA",
+    }
+
+
+def test_http472_rights_remain_eligible_but_both_invalid(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    seal: dict[str, object] = {
+        "code_hashes": {"sealer.py": "a" * 64},
+        "legacy_capture_code_hashes": {"capture.py": "b" * 64},
+        "runtime_lock_sha256": "c" * 64,
+        "runtime_environment_sha256": "d" * 64,
+        "source_identity": {
+            "kind": "remote",
+            "base_url": "http://example/v3",
+            "status_value": "CONNECTED",
+        },
+    }
+    candidate = {
+        "event_id": "event",
+        "causal_subscription_eligible": True,
+        "ticker": "SPY",
+        "trade_date": "20240102",
+        "decision_dt": pd.Timestamp("2024-01-02 10:35:00"),
+        "call_strike": 101.0,
+        "put_strike": 99.0,
+    }
+    expected = {
+        "call": {
+            "event_id": "event",
+            "ticker": "SPY",
+            "trade_date": "20240102",
+            "decision_dt": "2024-01-02T10:35:00",
+            "right": "CALL",
+            "strike": 101.0,
+        },
+        "put": {
+            "event_id": "event",
+            "ticker": "SPY",
+            "trade_date": "20240102",
+            "decision_dt": "2024-01-02T10:35:00",
+            "right": "PUT",
+            "strike": 99.0,
+        },
+    }
+    monkeypatch.setattr(mod, "EXPECTED_NO_DATA_CONTRACTS", expected)
+    rows = [_write_no_data_contract(tmp_path, right, seal) for right in ("CALL", "PUT")]
+    result = mod._build_event_measurements(candidate, rows, seal)
+    assert result["causal_subscription_eligible"]
+    assert not result["ibqdyn_both_valid"]
+    assert np.isnan(result[mod.ALPHA_FIELDS[0]])
 
 
 def _gate_frame() -> pd.DataFrame:
