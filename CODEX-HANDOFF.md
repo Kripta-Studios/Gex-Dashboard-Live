@@ -745,3 +745,7 @@ Payoff one-shot ya está predeclarado pero dormido hasta physical PASS: usa solo
 LR F1 60m, boundary 0,5 y mapeo físico rejection/break a CALL/PUT; no entrena ni
 selecciona con retornos. Scheduler causal ask->bid y gates del usuario exactas;
 cualquier fallo cierra la traducción sin tuning.
+
+Economic evaluator/freezer ya implementados y testados; verifican physical PASS
+antes de outcomes, rehash de seis modelos LR y replay causal sin ranking/backfill.
+Tests economic+physical+data `19 passed`. Captura 4.900/33.704, errors=0.

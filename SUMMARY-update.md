@@ -482,3 +482,6 @@ LR L2 + LightGBM confirmatorio, 24 celdas y p<0,0125. Suite `26 passed`; captura
 Traducción económica única predeclarada: F1 LR 60m/0,5, mapping físico a side,
 sin threshold ni payoff fit; replay ask->bid/no-overlap y gates estrictas. Sigue
 dormida hasta physical PASS y no se ha leído rentabilidad.
+
+Replayer/freezer económico ya listos y bloqueados por physical PASS; tests de
+la cadena data+physical+economic `19 passed`. Captura 4.900/33.704, cero errores.

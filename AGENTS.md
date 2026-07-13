@@ -610,3 +610,9 @@ La traducción económica única quedó predeclarada antes de outcomes en
 0,5, mapeo rechazo/break a CALL/PUT, sin fit de payoff ni threshold; scheduler
 cronológico exacto, ask->bid, hold 30..180m, caps/cooldown actuales y gates
 estrictas PF1,30/WR50%/18/mes/PnL mensual positivo. No admite rescate post-hoc.
+
+Replayer/freezer económico implementados en
+`evaluate_h_ibqdyn1_economic.py`/`freeze_h_ibqdyn1_economic_runner.py`. Verifican
+physical PASS y hashes antes del primer acceso a `opt_exit_ret`, cargan solo los
+seis LR F1 60m OOS, y aplican scheduler cronológico sin ranking futuro. Tests
+focales economic+physical+data `19 passed`. Captura 4.900/33.704, errors=0.
