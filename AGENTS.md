@@ -458,3 +458,22 @@ activa en `D:/ThetaData/wall_quote_tick_dynamics_at_touch_202208_202512_v1r1r1`,
 PID Python `36564`, 5.257/9.833 eventos (53,46%) y cero errores reportados. No
 arrancar otro capturador ni usar los directorios V1/V1R1 rechazados. Tras seal:
 data gate -> commit compactos -> freeze runner -> único one-shot físico.
+
+### Checkpoint sellado H-QDYN1R1R1 — 2026-07-13
+
+La captura V1R1R1 terminó `PASS_QDYN_CAPTURE`: 9.833/9.833 eventos elegibles
+de 10.683 candidatos, 37.846.658 ticks (CALL 18.915.243; PUT 18.931.415), cero
+errores y cero eventos sin algún right. Index SHA
+`9a4924df1f60203d3f6ee1217520d4a0b0d287a82b816b898be3d2579e1b4f03`;
+eligibility SHA
+`09df83191ba83f0fe8db86e2a8bcc59b278c03668c1fd4506480123a585ee2e1`.
+Provenance: `CONDITIONAL_CURRENT_PROVIDER_RECONSTRUCTION`; 2026, outcomes y
+producción siguen intactos.
+
+El primer data-gate se detuvo antes de outcomes porque `set_index` eliminaba
+`event_id` y el revalidador intentaba leerlo como columna. El fix fail-closed y
+su regression test están en `85de313`, suite focal `26 passed`, ya pushed. El
+relaunch a target inmutable está ejecutándose. No existe aún resultado físico
+ni económico. Secuencia única: esperar `PASS_DATA_GATE` -> commit de compactos
+-> commit del frozen runner -> un solo one-shot físico F0/F1. No abrir payoff
+salvo physical PASS.

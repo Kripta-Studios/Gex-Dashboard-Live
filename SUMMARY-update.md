@@ -408,3 +408,13 @@ muestra alpha incremental; presión dinámica en los ocho niveles queda futura.
 
 Checkpoint captura H-QDYN V1R1R1: 5.257/9.833 (53,46%), PID 36564, cero errores;
 outcomes y PnL siguen cerrados hasta data gate y freeze.
+
+H-QDYN1R1R1 ya completó y selló la captura `PASS_QDYN_CAPTURE`: 9.833/9.833
+eventos elegibles de 10.683 y 37.846.658 ticks (CALL 18.915.243; PUT
+18.931.415), sin errores ni zero-right. Index SHA `9a4924df...1b4f03` y
+eligibility SHA `09df8319...ee2e1`; provenance
+`CONDITIONAL_CURRENT_PROVIDER_RECONSTRUCTION`. 2026/outcomes/producción siguen
+cerrados. El primer data gate se detuvo pre-outcome por `set_index` eliminando
+`event_id`; fix fail-closed `85de313`, `26 passed`, pushed. Relaunch inmutable
+activo. Falta PASS_DATA_GATE -> compactos -> frozen runner -> único F0/F1; no
+hay resultado físico, PF, WR o PnL nuevo.

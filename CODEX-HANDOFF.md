@@ -629,3 +629,19 @@ Captura activa H-QDYN V1R1R1: output
 `36564`, checkpoint 5.257/9.833 (53,46%), cero errores al 2026-07-13 00:24
 Europe/Madrid. No duplicar proceso. Siguiente secuencia: esperar seal, ejecutar
 builder/data gate outcome-free, versionar compactos, freeze y un one-shot físico.
+
+Checkpoint H-QDYN1R1R1 sellado: `PASS_QDYN_CAPTURE`, 9.833/9.833 eventos
+elegibles de 10.683, 37.846.658 ticks (CALL 18.915.243; PUT 18.931.415), cero
+errores y cero zero-right. Index SHA
+`9a4924df1f60203d3f6ee1217520d4a0b0d287a82b816b898be3d2579e1b4f03`;
+eligibility SHA
+`09df83191ba83f0fe8db86e2a8bcc59b278c03668c1fd4506480123a585ee2e1`.
+Provenance `CONDITIONAL_CURRENT_PROVIDER_RECONSTRUCTION`; no se abrió 2026,
+outcomes ni producción.
+
+El primer intento de data gate falló cerrado y pre-outcome: `set_index` quitaba
+`event_id` antes de la revalidación. Fix + regression test commit `85de313`,
+suite focal `26 passed`, pushed. El relaunch inmutable está corriendo. Esperar
+`PASS_DATA_GATE`, commitear compactos, congelar runner en otro commit y ejecutar
+una sola vez F0/F1. No hay resultado físico/económico y no se autoriza payoff
+sin physical PASS.

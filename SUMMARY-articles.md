@@ -339,3 +339,14 @@ niveles y medir presión dinámica con un modelo compartido, no escoger niveles.
 El contrato H-QDYN V1R1R1 ya sobrevivió auditoría de raw preservation, listing
 exacto, colisiones, size-only y exchanges finitos; 31 tests pasan. Esto certifica
 la implementación previa al outcome, no la existencia de edge.
+
+La captura completa posterior quedó sellada `PASS_QDYN_CAPTURE`: 9.833 eventos
+elegibles, 37.846.658 ticks balanceados entre CALL (18.915.243) y PUT
+(18.931.415), sin errores ni rights ausentes. Los hashes del índice
+(`9a4924df...1b4f03`) y eligibility (`09df8319...ee2e1`) fijan el universo,
+pero la provenance continúa siendo reconstrucción condicional del proveedor
+actual. El primer data gate falló cerrado, antes de outcomes, por un bug de
+plomería (`set_index` eliminó `event_id`), no por una propiedad de la señal; se
+corrigió en `85de313` con `26 passed`. Hasta que el relaunch pase, se congele el
+runner y se ejecute el único F0/F1, esto sigue siendo evidencia de disponibilidad
+y causalidad, no de alpha ni rentabilidad.
