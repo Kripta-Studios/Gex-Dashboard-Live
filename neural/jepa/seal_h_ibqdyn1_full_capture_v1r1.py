@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import io
 import json
 import subprocess
 import sys
@@ -188,6 +189,24 @@ def contract_directory(root: Path, contract: dict[str, Any]) -> Path:
         / str(contract["event_id"])
         / str(contract["right"]).lower()
     )
+
+
+def validate_candidate_contracts(path: Path, contracts: pd.DataFrame) -> None:
+    stored = pd.read_csv(path, dtype={"trade_date": str}, keep_default_na=False)
+    expected = pd.read_csv(
+        io.StringIO(candidate_csv(contracts)),
+        dtype={"trade_date": str},
+        keep_default_na=False,
+    )
+    try:
+        pd.testing.assert_frame_equal(stored, expected, check_exact=True)
+    except AssertionError as exc:
+        raise AssertionError("H-IBQDYN1 candidate contracts changed") from exc
+    if (
+        len(stored) != EXPECTED_FULL_CONTRACTS
+        or stored["contract_id"].duplicated().any()
+    ):
+        raise AssertionError("H-IBQDYN1 candidate contract identity invalid")
 
 
 def assert_expected_no_data_contract(contract: dict[str, Any]) -> None:
@@ -553,8 +572,7 @@ def main() -> None:
     if len(contracts) != EXPECTED_FULL_CONTRACTS:
         raise AssertionError("H-IBQDYN1 full contract universe changed")
     candidates_path = root / "candidate_contracts.csv"
-    if candidates_path.read_text(encoding="utf-8") != candidate_csv(contracts):
-        raise AssertionError("H-IBQDYN1 candidate contracts changed")
+    validate_candidate_contracts(candidates_path, contracts)
     first_attempt_raw = assert_first_attempt_errors(root / "errors_latest.json")
     provenance, status_raw = source_provenance(
         args.base_url,

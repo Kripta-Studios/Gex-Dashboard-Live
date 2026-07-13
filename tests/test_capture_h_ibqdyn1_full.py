@@ -92,3 +92,32 @@ def test_unapproved_missing_contract_is_rejected() -> None:
     contract["strike"] = 420.0
     with pytest.raises(AssertionError, match="unapproved"):
         seal_mod.assert_expected_no_data_contract(contract)
+
+
+def test_candidate_validation_accepts_windows_crcrlf_without_content_change(
+    tmp_path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    contracts = pd.DataFrame(
+        [
+            {
+                "contract_id": "c1",
+                "event_id": "e1",
+                "ticker": "SPY",
+                "trade_date": "20240102",
+                "decision_dt": pd.Timestamp("2024-01-02 10:35:00"),
+                "minute": 635,
+                "nearest_level_name": "ib_low",
+                "bucket": "d35",
+                "right": "CALL",
+                "strike": 472.0,
+            }
+        ]
+    )
+    monkeypatch.setattr(seal_mod, "EXPECTED_FULL_CONTRACTS", 1)
+    path = tmp_path / "candidate_contracts.csv"
+    raw = mod.candidate_csv(contracts).encode("utf-8").replace(b"\r\n", b"\r\r\n")
+    path.write_bytes(raw)
+    seal_mod.validate_candidate_contracts(path, contracts)
+    path.write_bytes(raw.replace(b",472.0", b",473.0"))
+    with pytest.raises(AssertionError, match="changed"):
+        seal_mod.validate_candidate_contracts(path, contracts)
