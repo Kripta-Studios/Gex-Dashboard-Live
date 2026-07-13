@@ -640,3 +640,24 @@ V1R1 -> revalidar los 33.700 existentes y materializar solo los cuatro 472 ->
 exigir index 33.704, cuatro zero-row exactos, cero unresolved/staging y seal ->
 commit/push -> data gate. Aún no se abrieron labels, AUC, PF, WR, PnL, 2026 ni
 producción.
+
+### H-IBQDYN1 full capture V1R1 sellada
+
+El sealer versionado en `7a58259` revalidó raw/parquet/manifest de los 33.700
+contratos originales y materializó los cuatro 472 exactos como raw text real y
+parquet vacío, tras tres nuevos retries por contrato. Resultado
+`PASS_H_IBQDYN1_FULL_CAPTURE`: 33.704 contratos/16.852 eventos, 58.212.529 ticks
+(CALL 28.761.918; PUT 29.450.611), cuatro zero-row `HTTP_472_NO_DATA`, cero
+unresolved/errors/staging. Index SHA
+`a3841779c8603a96d4863a4e1495feec4a6c98d4fee490a204881b05d146e14c`;
+candidate SHA `684f68b1...431e5`. Raw 9.841.523.910 bytes, parquet
+1.177.902.621 bytes. Provenance sigue
+`CONDITIONAL_REMOTE_TERMINAL_RECONSTRUCTION`, live parity `BLOCKED`.
+
+Una auditoría independiente contó 33.704 ids/parquets/manifests, 33.700
+`response.json` + cuatro `response.txt`, verificó body/hash 472, filas cero y
+ausencia de staging/`errors_latest`. Compactos en
+`h_ibqdyn1_ticks_202208_202512_v1r1_capture_seal/`. Siguiente paso único:
+commit/push de compactos/handoffs -> ejecutar `build_h_ibqdyn1_dataset.py` al
+target inmutable -> abortar si cualquier gate outcome-free falla. Todavía no se
+abrieron labels, AUC, PF, WR, PnL, 2026 ni producción.

@@ -1,6 +1,6 @@
 # SUMMARY-update — ledger científico compacto
 
-**Corte:** 12 de julio de 2026
+**Corte:** 13 de julio de 2026
 
 **Objetivo:** policy 0DTE causal y live-equivalente para SPXW, QQQ y SPY.
 
@@ -499,3 +499,12 @@ parquet vacío y manifest auditable. Los dos eventos permanecen both-invalid y
 en el denominador; coverage/distinctness/modelos no cambian. Falta implementar
 y congelar el sealer V1R1, revalidar los 33.700, producir seal 33.704/33.704 y
 solo entonces ejecutar el data gate. No hay AUC, PF, WR o PnL H-IBQDYN1.
+
+El seal V1R1 ya es PASS desde `7a58259`: 33.704/33.704 contratos, 16.852
+eventos, 58.212.529 ticks (28.761.918 CALL/29.450.611 PUT), cuatro NO_DATA
+zero-row y cero errors/unresolved/staging. Index SHA `a3841779...46e14c`,
+candidate SHA `684f68b1...431e5`; raw/parquet 9.841.523.910/1.177.902.621
+bytes. La auditoría independiente volvió a contar todos los artefactos y hashes.
+Compactos en `_diagnostics/h_ibqdyn1_ticks_202208_202512_v1r1_capture_seal/`.
+Siguiente hito: commit/push y data gate outcome-free; aún no hay labels ni
+rentabilidad H-IBQDYN1.

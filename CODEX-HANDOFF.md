@@ -1,6 +1,6 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
-**Actualizado:** 12 de julio de 2026
+**Actualizado:** 13 de julio de 2026
 
 **Checkpoint de captura nativa:** `041b16c research: freeze stored-universe native clock coverage`
 
@@ -781,3 +781,33 @@ Próximo paso único: commit/push del protocolo; implementar/testar el sealer y
 validator V1R1; producir index exacto 33.704 con cuatro zero-row, cero unresolved
 y cero staging; luego actualizar handoffs/commit/push y ejecutar el data gate.
 No hay outcome físico, PF/WR/PnL, acceso 2026 o cambio de producción.
+
+## H-IBQDYN1 capture seal V1R1 PASS
+
+El sealer committed `7a58259` terminó en 702,7s y publicó
+`PASS_H_IBQDYN1_FULL_CAPTURE`. Revalidó integralmente los 33.700 artefactos
+originales sin reescribirlos; los cuatro contratos congelados devolvieron tres
+veces más HTTP472 exacto y quedaron como raw `response.txt` de 30 bytes,
+parquet vacío con schema original y manifest V1R1.
+
+Evidencia final:
+
+- 33.704 contratos únicos y 16.852 eventos exactos;
+- 58.212.529 ticks: CALL 28.761.918, PUT 29.450.611;
+- cuatro `HTTP_472_NO_DATA`, cuatro zero-row, cero unresolved/errors;
+- 33.704 parquets y manifests, 33.700 raw JSON + cuatro raw text;
+- cero directorios staging y sin `errors_latest.json` residual;
+- index SHA
+  `a3841779c8603a96d4863a4e1495feec4a6c98d4fee490a204881b05d146e14c`;
+- candidate SHA
+  `684f68b1737a4c7cf82aa1974c9656946ffe79d92dfd6b0b2f04914fab4431e5`;
+- raw/parquet bytes `9.841.523.910/1.177.902.621`;
+- capture commit `7a58259ebd08936daa83370a24b8022e45b504a4`;
+- provenance condicional remota y live parity bloqueada.
+
+Compactos copiados a
+`research_papers/JEPA/results/_diagnostics/h_ibqdyn1_ticks_202208_202512_v1r1_capture_seal/`.
+La próxima acción es commit/push de esos compactos y los cuatro handoffs, luego
+build/data gate outcome-free al target nuevo
+`tmp/h_ibqdyn1_features_202208_202512_v1`. No congelar runner ni abrir labels
+hasta `PASS_DATA_GATE`. No hay rentabilidad nueva ni acceso a 2026/producción.

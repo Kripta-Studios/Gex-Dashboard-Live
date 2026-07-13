@@ -1,6 +1,6 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
-**Corte:** 12 de julio de 2026. Los 29 trabajos aportados fueron auditados. Este
+**Corte:** 13 de julio de 2026. Los 29 trabajos aportados fueron auditados. Este
 resumen conserva únicamente las ideas que afectan la investigación actual y su
 evidencia local.
 
@@ -429,3 +429,10 @@ inventar una quote, ampliar la ventana ni usar as-of. H-IBQDYN1 encontró cuatro
 casos exactos entre 33.704 contratos, ambos rights de dos eventos SPXW/SPY; el
 tratamiento congelado es parquet vacío, evento both-invalid y cobertura
 penalizada. Esto valida semántica de missingness, no alpha.
+
+La implementación V1R1 confirmó esa separación sin pérdida de universo:
+33.700 respuestas 200 y cuatro respuestas 472 forman un índice único de
+33.704 contratos, con el raw de error conservado y cero filas sintéticas. Los
+58,21M ticks restantes se reconstruyeron desde raw y coincidieron con sus
+parquets antes del seal. Una ausencia correctamente representada puede pasar la
+gate de procedencia; sigue contando contra cobertura y no demuestra edge.
