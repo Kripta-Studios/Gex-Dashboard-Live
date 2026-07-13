@@ -400,3 +400,11 @@ coste sin seleccionar outcomes y aún deja capacidad mensual 2024/2025 de
 35/69/19 para QQQ/SPXW/SPY bajo el scheduler actual. Es solo una cota superior:
 especialmente SPY debe convertir casi todos sus días activos para cumplir 18;
 ningún recuento de candidatos prueba PF, WR o PnL.
+
+El preflight tick confirma que esta vez la medición no está bloqueada antes de
+descargar todo: 24/24 contratos aportan rows, las 20 variables son finitas y las
+60 celdas ticker-feature de la muestra varían. La proyección de 61,34M rows y
+9,64GiB raw es operable. Aun así, distinctness y volumen de mensajes solo prueban
+que el instrumento mide algo; el edge exige que F1 supere F0 y después sobreviva
+ask->bid, no-overlap y meses completos. Por eso la siguiente acción es una sola
+captura/one-shot, no otra expansión de fuentes o arquitecturas.

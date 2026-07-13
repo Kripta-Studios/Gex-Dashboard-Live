@@ -461,3 +461,11 @@ pasan. Proof SHA `b1fc6613...306d2`, eligible IDs `8e68c12c...652e`. Capacidad
 OOS mínima QQQ35/SPXW69/SPY19 trades/mes bajo caps/hold30. Compactos versionados;
 siguiente: captura sellada 12 eventos/24 contratos y gate de coste <=150M rows/
 20GiB. No ticks nuevos, labels, PnL, 2026 ni producción todavía.
+
+Preflight tick H-IBQDYN1 PASS: 24/24 contratos, 43.680 rows, cero errores y
+zero-right; proyecta 61,34M rows/9,64GiB raw/1,16GiB parquet. Las 20 features
+congeladas son finitas en 12/12 eventos; 0/60 celdas ticker-feature degeneradas,
+distinctness min4, >=597 states y >=488 pairs. Full capturer resumible `62b3d98`
+activo en D: PID44892, checkpoint inicial 100/33.704, cero errores. Secuencia
+cerrada a data gate -> F0/F1 -> payoff solo si PASS. Jan-May 2026 final-fit solo
+después de PASS, junio cerrado, julio shadow. Aún no hay rentabilidad nueva.

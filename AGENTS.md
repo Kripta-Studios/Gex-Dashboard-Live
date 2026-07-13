@@ -571,3 +571,23 @@ implementar y congelar captura inmutable de solo los 12 eventos/24 contratos,
 capturar quotes tick `[t-32s,t-2s)` con provenance remota, sellar coste/campos y
 autorizar full capture solo si <=150M rows, <=20GiB raw y ambos rights no vacíos.
 No labels, payoff, 2026 ni producción; aún no existe rentabilidad H-IBQDYN1.
+
+### H-IBQDYN1 tick preflight PASS y full capture activo
+
+Capturador preflight commit `c823d86`; semántica de 20 features congelada en
+`68ed6b3`; full capturer resumible commit `62b3d98`. El preflight remoto terminó
+24/24 contratos, 43.680 rows (CALL 21.297/PUT 22.383), cero errores y cero
+rights vacíos. Proyección full: 61.341.280 rows, 9,6427 GiB raw y 1,1551 GiB
+parquet, PASS frente a 150M/20GiB. Index SHA `d0275e2d...06c5f`, cost SHA
+`20c34643...2731`.
+
+Audit outcome-free de features: 12/12 CALL y PUT válidos, 20/20 alpha fields
+finitos, cero de 60 celdas ticker-feature degeneradas; distinctness mínima 4,
+mínimos 597 estados y 488 pares. Esto valida medición/coste, no alpha.
+
+Full capture única activa en
+`D:/ThetaData/h_ibqdyn1_ticks_202208_202512_v1`, PID `44892`; checkpoint inicial
+100/33.704 contratos, cero errores. No lanzar duplicado. Tras seal: data gate ->
+frozen physical F0/F1 -> solo si PASS, un payoff ask-to-bid walk-forward. No
+abrir otra familia/sweep. Enero-mayo 2026 solo final-fit tras PASS histórico;
+junio cerrado y julio shadow. Aún no existe PF/WR/PnL H-IBQDYN1.

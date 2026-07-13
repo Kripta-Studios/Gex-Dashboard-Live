@@ -712,3 +712,21 @@ tiene margen uno. Compactos:
 Siguiente: código commit/push para capturar únicamente 12 eventos/24 contratos,
 then remote tick preflight and cost seal. Full capture solo si <=150M rows,
 <=20GiB raw y ningún right vacío. Sin labels/PnL/2026/producción.
+
+H-IBQDYN1 tick preflight ya es PASS. Captura commit `c823d86`, features commit
+`68ed6b3`, full resumible commit `62b3d98`. Resultado: 24/24 contratos, 43.680
+rows (21.297 CALL/22.383 PUT), cero errores/zero-right. Proyección 61.341.280
+rows, 9,6427GiB raw, 1,1551GiB parquet, bajo gates 150M/20GiB. Index
+`d0275e2d...06c5f`, cost `20c34643...2731`.
+
+Audit de las 20 features outcome-free: 12/12 both-valid, todas finitas, 0/60
+celdas ticker-feature degeneradas, distinctness min4; mínimos 597 alpha states
+y 488 ordered pairs. Compactos en
+`_diagnostics/h_ibqdyn1_tick_preflight_202208_202501_v1/`.
+
+Full capture activa en `D:/ThetaData/h_ibqdyn1_ticks_202208_202512_v1`, PID
+44892; inicio confirmado 100/33.704, cero errores. No duplicar. Secuencia única
+después del seal: full feature/data gate -> commit compactos -> frozen LR/LGBM
+F0/F1 -> un outcome físico -> si PASS completo, un payoff ask->bid. No otra
+familia. Amendment 2026: Jan-May solo final fit/estrés tras PASS; junio sellado;
+julio shadow. Todavía no hay modelo económico ni PF/WR/PnL H-IBQDYN1.
