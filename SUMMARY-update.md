@@ -522,3 +522,11 @@ El V1R1 con 16 workers completó RV y 12.000/16.926 eventos, pero se detuvo
 pre-output con `MemoryError` al rehashear raw. No dejó target/staging ni abrió
 outcomes. Relanzar solo como V1R2 con 8 workers; es una corrección de paralelismo
 por RAM, sin cambio científico. Aún no hay resultado del gate ni rentabilidad.
+
+V1R2 terminó `PASS_DATA_GATE` desde `619ac5a`: 16.926x72, dataset SHA
+`675a7603...3d9a09`, source SHA `70ff4cf6...763c4`, 16.852 elegibles y 16.849
+both-valid. Cobertura mínima ticker-año/ticker `96,312%/98,613%`, distinctness
+mínima 79, controles y complete-case parity PASS. Compactos versionables en
+`h_ibqdyn1_features_202208_202512_v1r2_data_gate/`; dataset en `tmp/`. Falta
+commit del data seal -> freeze commit -> one-shot físico. Outcomes, PF/WR/PnL,
+2026 y producción siguen cerrados/intactos.

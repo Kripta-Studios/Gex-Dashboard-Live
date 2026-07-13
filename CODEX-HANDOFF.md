@@ -836,3 +836,27 @@ outcomes. La siguiente ejecución debe usar target inmutable
 `tmp/h_ibqdyn1_features_202208_202512_v1r2` y `--workers 8`. Solo cambia el
 paralelismo para limitar el pico RAM; no cambia ninguna observación, hash,
 feature, gate o contrato. No repetir V1/V1R1 ni 16 workers.
+
+## H-IBQDYN1 data gate V1R2 PASS
+
+El relaunch con 8 workers completó en 2.590,4s y publicó `PASS_DATA_GATE` desde
+commit `619ac5afcc85d885e159d9dd858768a93630fc21`. Resultado exacto: 16.926 filas,
+72 columnas, 16.852 eventos causalmente elegibles y 16.849 both-valid. Dataset
+SHA `675a760335b5d03085b3a66daec34598e95842fcd11899dde66a7c6e163d9a09`;
+source inventory SHA
+`70ff4cf6d8703dd22fbc20a4881d84bb0f0f5c43906c0cd968eaa789b04763c4`;
+underlying inventory SHA `2a305a29...ae306e8` y capture index SHA
+`a3841779...46e14c`.
+
+Todos los gates outcome-free pasan: rows preservadas, cobertura, 18 controles,
+20 alpha features, distinctness y complete-case parity F0/F1. Mínimo anual
+both-valid `0,9631171921` (QQQ 2024), mínimo ticker `0,9861316568` (QQQ) y
+distinctness mínima 79. Las tres invalidaciones explícitas son una QQQ 2025 y
+los dos eventos 472 SPXW/SPY 2023; permanecen en el denominador.
+
+Compactos copiados byte-identical a
+`research_papers/JEPA/results/_diagnostics/h_ibqdyn1_features_202208_202512_v1r2_data_gate/`;
+el parquet de 5,54MB permanece en `tmp/h_ibqdyn1_features_202208_202512_v1r2/`.
+Siguiente secuencia: commit/push compactos+handoffs; generar manifest del runner
+físico desde ese HEAD limpio; commit/push del freeze; ejecutar exactamente una
+evaluación F0/F1. Todavía no se abrió label, AUC, PF, WR, PnL ni 2026.

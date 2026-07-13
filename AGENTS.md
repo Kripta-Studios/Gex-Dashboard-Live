@@ -677,3 +677,16 @@ proceso terminó sin target ni staging; no es data-gate rejection ni abrió
 outcomes. Relanzar a target nuevo V1R2 con `--workers 8`. Es solo una reducción
 de paralelismo por pico RAM; universo, bytes, hashes, features y gates quedan
 idénticos. No volver a ejecutar V1/V1R1 ni usar 16 workers en este build.
+
+V1R2 con 8 workers terminó `PASS_DATA_GATE` desde commit base `619ac5a`:
+16.926 filas x 72 columnas, dataset SHA
+`675a760335b5d03085b3a66daec34598e95842fcd11899dde66a7c6e163d9a09`,
+source inventory SHA
+`70ff4cf6d8703dd22fbc20a4881d84bb0f0f5c43906c0cd968eaa789b04763c4`.
+Se preservan 16.852 elegibles y 16.849 both-valid; mínimos de cobertura
+ticker-año/ticker `0,963117/0,986132`, distinctness mínima 79, controles y
+complete-case parity PASS. Compactos en
+`h_ibqdyn1_features_202208_202512_v1r2_data_gate/`; parquet grande queda en
+`tmp/`. Siguiente paso único: commit/push compactos y handoffs -> congelar
+runner físico desde HEAD limpio -> abrir labels F0/F1 una sola vez. Aún no hay
+AUC, PF, WR o PnL; 2026 y producción siguen intactos.

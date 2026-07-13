@@ -451,3 +451,12 @@ grandes tras 12.000 eventos. Como no hubo output y cada evento se calcula de
 forma independiente, reducir a ocho workers conserva exactamente los datos y
 gates; solo limita el pico de RAM. Un fallo de recursos no debe reinterpretarse
 como fallo o evidencia del mecanismo.
+
+Con ocho workers, el mismo cálculo completó y separó disponibilidad de validez:
+16.852 eventos tenían listing causal, pero solo tres de 16.926 no produjeron
+ambos rights medibles. Esas ausencias permanecen visibles y en el denominador;
+la cobertura mínima anual sigue siendo 96,31%. Las 20 variables tick conservan
+al menos 79 estados finitos distintos por ticker-año y F0/F1 comparten
+exactamente las mismas complete cases. `PASS_DATA_GATE` prueba que la medición
+es reproducible, cubierta y no degenerada; todavía no prueba que prediga el
+mecanismo ni que sobreviva al spread ask-to-bid.
