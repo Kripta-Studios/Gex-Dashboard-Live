@@ -361,3 +361,15 @@ no se hayan abierto outcomes. La lección es que mayor granularidad de mensajes
 no garantiza variación identificable: este feed reconstruido no mide dinámica
 de exchange/state útil de forma no degenerada para SPXW. El siguiente test
 independiente es el preflight directo de higher-order Greeks H-GREEK2WALL.
+
+H-GREEK2 convierte esa siguiente pregunta en un test de disponibilidad antes de
+outcomes: 12 sesiones fijas y respuestas direct all-Greeks + direct OI capturadas
+atómicamente, con provenance del Terminal. El inventory V1R2 ya pasa y el código
+está congelado, pero no se obtuvo ninguna respuesta utilizable. El Terminal local
+tiene entitlement STANDARD y el endpoint exige PROFESSIONAL (HTTP 403); el
+remoto conectó a MDDS pero rechazó la sesión duplicada/stale (478). Esto es un
+bloqueo de fuente/servicio, no evidencia contra ni a favor del mecanismo.
+Restaurar una única sesión remota y sellar las 12 capturas es requisito previo;
+si el feed o entitlement no existen, H-GREEK2 debe cerrarse como fuente ausente.
+No inferir alpha o rentabilidad de la disponibilidad del endpoint ni relajar la
+gate económica PF1,3/WR45%/mínimo12, que sigue sin ser probada por esta fuente.

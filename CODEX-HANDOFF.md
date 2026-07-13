@@ -657,3 +657,21 @@ menos de dos estados por ticker-año. No freeze, labels, modelo, payoff, retirad
 de features ni rescate. `85de313` arregló un bug previo no causal; capture seal
 válido. HEAD del cierre `d2c23ec`. Próxima acción única: preflight H-GREEK2WALL
 de 12 sesiones.
+
+H-QDYN closure ya está commit/push `30ba9d5`. El preflight H-GREEK2 fue
+implementado y pushed en `2f6f262`, `e0a8116`, `54c6fb4`, `7201cfd`; `12 passed`.
+Contrato: 12 sesiones congeladas, direct all-Greeks y direct OI atómicos, source
+clarification y provenance remota. Inventory V1R2 PASS sobre `7201cfd`, hashes
+CSV `829ef754...`, JSON `88b84f2a...`, builder `f8937f68...`; sin 2026,
+outcomes ni cambios de producción.
+
+Bloqueo operativo actual: local all-Greeks responde HTTP 403 porque STANDARD no
+incluye el endpoint PROFESSIONAL. Remoto `91.99.90.39` llegó a MDDS CONNECTED,
+pero devolvió 478 invalid session por sesión duplicada/stale. Ninguno creó
+output. Terminal local detenido. En VPS había un launcher systemd
+`thetadata_feed` PID 916/worker 1828 y realtime/ai activos. Sin sudo no se pudo
+reiniciar; shutdown oficial OK mató solo el worker, launcher siguió activo y no
+hubo restart systemd. Luego la IP origen perdió TCP 22/25503 con ping aún vivo,
+posible filtro temporal. Restaurar servicio/Terminal remoto y capturar exactamente
+12; si no hay entitlement/datos, marcar H-GREEK2 bloqueado. No hay alpha/PnL.
+Gate económica PF1,3/WR45%/min12 aceptada pero todavía intocada.

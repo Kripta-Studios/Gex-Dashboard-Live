@@ -497,3 +497,28 @@ quitar features. El bug `set_index` corregido en `85de313` no causó este fallo 
 el capture seal sigue válido. Cierre detallado en
 `WALL_QUOTE_TICK_DYNAMICS_AT_TOUCH_V1R1R1_DATA_GATE_CLOSURE.md`. Siguiente paso:
 preflight predeclarado de 12 sesiones H-GREEK2WALL.
+
+### Checkpoint H-GREEK2WALL preflight — 2026-07-13
+
+El cierre H-QDYN quedó commit/push `30ba9d5`. H-GREEK2 preflight está
+versionado/pushed en `2f6f262`, `e0a8116`, `54c6fb4` y `7201cfd`; suite focal
+`12 passed`. Congela 12 sesiones y exige captura atómica de direct all-Greeks +
+direct OI, source clarification y provenance remota. El source inventory V1R2
+es PASS sobre `7201cfd`: CSV SHA `829ef754...`, JSON SHA `88b84f2a...`, builder
+SHA `f8937f68...`; no 2026, outcomes ni producción.
+
+No existe captura aún. Terminal local devolvió HTTP 403: entitlement STANDARD,
+endpoint all-Greeks requiere PROFESSIONAL, y no produjo output. En remoto
+`91.99.90.39`, MDDS conectó pero all-Greeks devolvió 478 invalid session por
+sesión duplicada/stale; tampoco produjo output. El Terminal local quedó parado.
+En remoto se observó un único launcher systemd `thetadata_feed` PID 916 con
+worker 1828; realtime/ai seguían activos. No había sudo para restart. El shutdown
+oficial respondió OK pero solo terminó el worker; el launcher siguió vivo y
+systemd no reinició. Poco después la IP de origen perdió TCP 22/25503 aunque el
+host seguía respondiendo ping, posiblemente filtrado temporal.
+
+Siguiente acción: restaurar Terminal/servicio remoto y después capturar y sellar
+exactamente las 12 sesiones. Si entitlement o datos siguen ausentes, bloquear
+H-GREEK2. No afirmar captura, alpha, PF, WR o PnL. La gate deployable aceptada
+PF>=1,30, WR>=45% y mínimo 12 trades/mes permanece intacta y no se ha evaluado
+con esta fuente.

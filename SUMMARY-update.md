@@ -427,3 +427,14 @@ fractions constante uno en 2025. La gate exigía >=2 estados por feature y
 ticker-año. H-QDYN1 queda cerrado sin labels/modelo/payoff ni rescate; no existe
 rentabilidad H-QDYN. El capture seal sigue válido y el bug `85de313` no causó el
 fallo. Siguiente: preflight H-GREEK2WALL de 12 sesiones.
+
+H-QDYN closure fue pushed en `30ba9d5`. H-GREEK2 preflight code está pushed
+(`2f6f262`, `e0a8116`, `54c6fb4`, `7201cfd`), `12 passed`; inventory V1R2 PASS
+en `7201cfd` (CSV `829ef754...`, JSON `88b84f2a...`, builder `f8937f68...`).
+Congela 12 sesiones y direct all-Greeks+OI atómicos, sin 2026/outcomes/prod.
+No hay captura: local STANDARD recibió 403 (requiere PROFESSIONAL); remoto MDDS
+CONNECTED recibió 478 por sesión duplicada/stale. Shutdown remoto terminó solo
+worker 1828, no launcher systemd PID 916, y sin sudo no hubo restart; después
+TCP22/25503 quedó inaccesible desde la IP origen aunque ping funciona. Restaurar
+servicio y capturar/sellar 12 o bloquear por entitlement/datos. Sin alpha/PnL;
+gate PF1,3/WR45%/min12 permanece aceptada pero no evaluada.
