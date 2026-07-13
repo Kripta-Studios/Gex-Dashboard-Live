@@ -17,8 +17,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from neural.jepa.build_wall_quote_tick_dynamics_sidecar import sha256_file
-from neural.jepa.capture_h_ibqdyn1_tick_preflight import (
+from neural.jepa.build_wall_quote_tick_dynamics_sidecar import sha256_file  # noqa: E402
+from neural.jepa.capture_h_ibqdyn1_tick_preflight import (  # noqa: E402
     EXPECTED_ELIGIBLE_ID_SHA256,
     EXPECTED_ELIGIBLE_EVENTS,
     EXPECTED_FULL_CONTRACTS,
@@ -32,7 +32,7 @@ from neural.jepa.capture_h_ibqdyn1_tick_preflight import (
     load_frozen_contracts,
     source_provenance,
 )
-from neural.jepa.wall_surface_flow_environment import assert_runtime_lock
+from neural.jepa.wall_surface_flow_environment import assert_runtime_lock  # noqa: E402
 
 PREDECLARATION = "research_papers/JEPA/H_IBQDYN1_FEASIBILITY_PREDECLARATION.md"
 FEATURE_CLARIFICATION = (
