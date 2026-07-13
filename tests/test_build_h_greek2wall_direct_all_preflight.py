@@ -320,11 +320,19 @@ def test_field_profiles_and_cost_projection_are_outcome_free_and_exact_scope():
     assert {p["field"] for p in profiles} == set(mod.PROFILE_GREEKS)
     assert all("label" not in p and "pnl" not in p for p in profiles)
     manifests = [
-        {"ticker": t, "trade_date": d, "raw_bytes": 100, "parquet_bytes": 50}
+        {
+            "ticker": t,
+            "trade_date": d,
+            "raw_bytes": 100,
+            "parquet_bytes": 50,
+            "oi_raw_bytes": 10,
+            "oi_parquet_bytes": 5,
+        }
         for t, d in mod.FROZEN_SESSIONS
     ]
     cost = mod.projected_cost(manifests)
     assert cost["preflight_sessions"] == 12 and cost["projected_sessions"] == 2519
+    assert cost["projected_total_gib"] > 0
     with pytest.raises(AssertionError, match="exactly"):
         mod.projected_cost(manifests[:-1])
 
@@ -450,6 +458,8 @@ def test_seal_requires_exact_unique_sessions_and_revalidates_tampering(
             "rows": 10,
             "raw_bytes": 100,
             "parquet_bytes": 50,
+            "oi_raw_bytes": 10,
+            "oi_parquet_bytes": 5,
             "raw_response_sha256": "a" * 64,
             "parquet_sha256": "b" * 64,
             "oi_raw_response_sha256": "5" * 64,

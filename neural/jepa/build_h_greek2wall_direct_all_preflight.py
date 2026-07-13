@@ -669,7 +669,8 @@ def _audit_canonical_source_pair(
     cutoff = pd.Timestamp(f"{day[:4]}-{day[4:6]}-{day[6:]} {START_TIME}")
     late_oi = oi["timestamp"].gt(cutoff)
     oi_keys = ["symbol", "expiration", "strike", "right"]
-    if oi.duplicated(oi_keys, keep=False).any():
+    duplicate_oi_rows = int(oi.duplicated(oi_keys, keep=False).sum())
+    if duplicate_oi_rows:
         raise AssertionError("canonical OI contains duplicate contract keys")
     after = {kind: sha256_file(path) for kind, path in paths.items()}
     if before != after:
@@ -699,6 +700,8 @@ def _audit_canonical_source_pair(
         "oi_null_or_nonfinite_value_rows": int((~finite_oi).sum()),
         "oi_null_timestamp_rows": int((~valid_oi_clock).sum()),
         "oi_late_after_1019_rows": int(late_oi.sum()),
+        "oi_negative_rows": 0,
+        "oi_duplicate_contract_key_rows": duplicate_oi_rows,
     }
 
 
@@ -728,6 +731,7 @@ def freeze_source_inventory(
     json_path.write_bytes(canonical_json_bytes(frame.to_dict("records")))
     manifest = {
         "schema": "h_greek2wall_direct_all_source_inventory_v1",
+        "status": "PASS_FROZEN_SOURCE_INVENTORY",
         "outcome_free": True,
         "holdout_2026_used": False,
         "production_modified": False,
@@ -757,6 +761,7 @@ def validate_source_inventory(inventory_dir: str | Path) -> pd.DataFrame:
         or manifest.get("holdout_2026_used") is not False
         or manifest.get("production_modified") is not False
         or manifest.get("sessions") != 12
+        or manifest.get("status") != "PASS_FROZEN_SOURCE_INVENTORY"
     ):
         raise AssertionError("invalid frozen source inventory scope")
     if (
@@ -926,6 +931,8 @@ def capture_session(
         "oi_rows": int(len(direct_oi)),
         "raw_bytes": len(raw),
         "parquet_bytes": parquet.stat().st_size,
+        "oi_raw_bytes": len(oi_raw),
+        "oi_parquet_bytes": oi_parquet.stat().st_size,
         "rows": len(normalized),
         "first_timestamp": normalized.timestamp.min().isoformat(),
         "last_timestamp": normalized.timestamp.max().isoformat(),
@@ -1083,8 +1090,28 @@ def projected_cost(manifests: Iterable[dict[str, Any]]) -> dict[str, Any]:
         "projected_sessions": 2519,
         "preflight_raw_gib": sum(r["raw_bytes"] for r in rows) / 2**30,
         "preflight_parquet_gib": sum(r["parquet_bytes"] for r in rows) / 2**30,
+        "preflight_oi_raw_gib": sum(r["oi_raw_bytes"] for r in rows) / 2**30,
+        "preflight_oi_parquet_gib": sum(r["oi_parquet_bytes"] for r in rows)
+        / 2**30,
         "projected_raw_gib": np.mean([r["raw_bytes"] for r in rows]) * 2519 / 2**30,
         "projected_parquet_gib": np.mean([r["parquet_bytes"] for r in rows])
+        * 2519
+        / 2**30,
+        "projected_oi_raw_gib": np.mean([r["oi_raw_bytes"] for r in rows])
+        * 2519
+        / 2**30,
+        "projected_oi_parquet_gib": np.mean([r["oi_parquet_bytes"] for r in rows])
+        * 2519
+        / 2**30,
+        "projected_total_gib": np.mean(
+            [
+                r["raw_bytes"]
+                + r["parquet_bytes"]
+                + r["oi_raw_bytes"]
+                + r["oi_parquet_bytes"]
+                for r in rows
+            ]
+        )
         * 2519
         / 2**30,
     }
@@ -1132,6 +1159,8 @@ def seal_preflight(
                 "rows": int(manifest["rows"]),
                 "raw_bytes": int(manifest["raw_bytes"]),
                 "parquet_bytes": int(manifest["parquet_bytes"]),
+                "oi_raw_bytes": int(manifest["oi_raw_bytes"]),
+                "oi_parquet_bytes": int(manifest["oi_parquet_bytes"]),
                 "greeks_path": str(greek_path),
                 "greeks_sha256": manifest["source_greeks_sha256"],
                 "oi_path": str(oi_path),
