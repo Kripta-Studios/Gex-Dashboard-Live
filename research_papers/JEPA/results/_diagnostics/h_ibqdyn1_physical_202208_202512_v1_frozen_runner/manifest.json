@@ -1,0 +1,292 @@
+{
+  "schema": "h_ibqdyn1_frozen_physical_runner_v1",
+  "status": "PREEXECUTION_FROZEN",
+  "created_at_utc": "2026-07-13T14:51:18.967456+00:00",
+  "runner_commit": "3f19eb4ee02ba0ba92b23a0c1f6a92c386eeec33",
+  "code_hashes": {
+    "neural/jepa/build_h_ibqdyn1_dataset.py": "0bf91b88cd9a2d52ef8e867bbb00dc27532d4f6f52b41f221351475862b6ac35",
+    "neural/jepa/h_ibqdyn1_features.py": "84d49f2d8aabdcf95ac1628802406d43fd27e2107b70af56200e25a33dbb6fd4",
+    "neural/jepa/build_h_ibqdyn1_feasibility.py": "e181d176ed62db688fcf9cab6857700193f882a5fac9c735e5434bafcecf1c35",
+    "neural/jepa/capture_h_ibqdyn1_full.py": "e05d176bc6583f1e8bf2ff03311fa2454648b29d8806e4d0e3c128f30d2c26c9",
+    "neural/jepa/capture_h_ibqdyn1_tick_preflight.py": "afb3330d5aa8a7daf2dc36f2472cba657f82c0dd54808e118679a104258994f1",
+    "neural/jepa/seal_h_ibqdyn1_full_capture_v1r1.py": "9dd00e2e494f24279fddf0536ae497a5a7314628c362a28d098e3fdab33a1098",
+    "neural/jepa/surface_flow_features.py": "892730fbf5a3185608f30b406c4cc69e156ce392b6a1eae1b9b73258fb23cb10",
+    "neural/jepa/evaluate_wall_surface_flow_at_touch_v1.py": "f7cadb3b13eab561fcd716c0f288cea92102088712086a4c6d34812c6fa6c6a5",
+    "neural/jepa/wall_surface_flow_environment.py": "b21a771a2982290d6c67513700f81d18de0e6c08c6ad9aba772d5305093d06ef",
+    "research_papers/JEPA/H_IBQDYN1_FEASIBILITY_PREDECLARATION.md": "4e1d025bba23ee98155b971490a6f80b71b49b440887271e76b9f5ca2def6b37",
+    "research_papers/JEPA/H_IBQDYN1_FEATURE_SEMANTICS_CLARIFICATION.md": "e6e516efdd6c977ebc352fae0e3fe1fde4a11560d3838911aebd273761cbc8fc",
+    "research_papers/JEPA/H_IBQDYN1_DATA_GATE_CONTRACT.md": "451065acda881f9e4476f1c17d0762c5fe1ecb88b71f0cffddea4797c6f73d4c",
+    "research_papers/JEPA/H_IBQDYN1_HTTP472_NO_DATA_AMENDMENT.md": "18c80329b3d67f6a6dacb39e4eb50b4b60eb5ad0cf39a8e02e1f9ffc5b838386",
+    "research_papers/JEPA/results/_diagnostics/h_ibqdyn1_listing_feasibility_202208_202512_v1/manifest.json": "2095c75dce813368ea13a9fcaf0170c3087db806eec13212b069884119c867e9",
+    "research_papers/JEPA/requirements-wall-surface-flow-v1r1.txt": "f026bfb512e17dfc1daaaecf998ba77a560aba83f1fdbf0c3a36136e33eeff7d",
+    "neural/jepa/evaluate_h_ibqdyn1_physical.py": "aecd42c894fa2f462d7195ce65f0b75df5516b669bbbd27b71fda5595bd8d9ea",
+    "neural/jepa/freeze_h_ibqdyn1_physical_runner.py": "501a5bea3d7e2c3be5995959ec44e478199cc5dd4481d5c9f9e42d43e030baf3",
+    "neural/jepa/evaluate_wall_quote_size_pressure_at_touch_v1.py": "16ca2bbaceb718dbc912f86f1d821f61bc97dae0de2058d56a8740c43ca8abae",
+    "neural/jepa/iv_surface_deformation_features.py": "69838726f11631313de2a6829e62a9eb74d11c0b989e13491d140099d793e8a7",
+    "neural/jepa/quote_size_pressure_features.py": "4590e493900153cf1c9923f88c10f47ee60c7b36fbcbfc0715e03a90b60e5279"
+  },
+  "protocol_hashes": {
+    "research_papers/JEPA/H_IBQDYN1_FEASIBILITY_PREDECLARATION.md": "4e1d025bba23ee98155b971490a6f80b71b49b440887271e76b9f5ca2def6b37",
+    "research_papers/JEPA/H_IBQDYN1_FEATURE_SEMANTICS_CLARIFICATION.md": "e6e516efdd6c977ebc352fae0e3fe1fde4a11560d3838911aebd273761cbc8fc",
+    "research_papers/JEPA/H_IBQDYN1_DATA_GATE_CONTRACT.md": "451065acda881f9e4476f1c17d0762c5fe1ecb88b71f0cffddea4797c6f73d4c",
+    "research_papers/JEPA/H_IBQDYN1_2026_FINAL_FIT_AMENDMENT.md": "a890100f8cd3b5f362421522edfda1b93b722a6b7c5b89005dad474a901dd82a",
+    "research_papers/JEPA/requirements-wall-surface-flow-v1r1.txt": "f026bfb512e17dfc1daaaecf998ba77a560aba83f1fdbf0c3a36136e33eeff7d"
+  },
+  "runtime_lock_sha256": "f026bfb512e17dfc1daaaecf998ba77a560aba83f1fdbf0c3a36136e33eeff7d",
+  "runtime_environment": {
+    "python_version": "3.14.2",
+    "python_implementation": "CPython",
+    "python_executable": "C:\\Program Files\\Python314\\python.exe",
+    "platform": "Windows-10-10.0-19041",
+    "platform_machine": "AMD64",
+    "packages": {
+      "lightgbm": "4.6.0",
+      "numpy": "2.3.5",
+      "pandas": "3.0.0",
+      "pyarrow": "23.0.1",
+      "scikit-learn": "1.8.0",
+      "scipy": "1.17.0"
+    }
+  },
+  "runtime_environment_sha256": "984a0e2c8a82e935295e4738c7758357175b488bb0fb11a4cd1a0bb5e8af8035",
+  "inputs": {
+    "dataset": {
+      "path": "tmp\\h_ibqdyn1_features_202208_202512_v1r2\\h_ibqdyn1_features.parquet",
+      "sha256": "675a760335b5d03085b3a66daec34598e95842fcd11899dde66a7c6e163d9a09"
+    },
+    "label_source_hashes": {
+      "path": "research_papers\\JEPA\\results\\_diagnostics\\wall_surface_flow_at_touch_202208_202512_v1r2r1_data_gate\\source_file_hashes.csv",
+      "sha256": "2a305a2910f83c42a3c32b455d9b3a93907c7d762c5168d0946f9ce1eae306e8"
+    },
+    "contract_source_hashes": {
+      "path": "research_papers\\JEPA\\results\\_diagnostics\\h_ibqdyn1_features_202208_202512_v1r2_data_gate\\contract_source_hashes.csv",
+      "sha256": "70ff4cf6d8703dd22fbc20a4881d84bb0f0f5c43906c0cd968eaa789b04763c4"
+    },
+    "data_manifest": {
+      "path": "research_papers\\JEPA\\results\\_diagnostics\\h_ibqdyn1_features_202208_202512_v1r2_data_gate\\manifest.json",
+      "sha256": "f932cb05a7cd2749aca6d67b41f40a2f05d1ec82219a8f681fe54ef7acf3f235"
+    }
+  },
+  "feature_names": {
+    "F0": [
+      "minute_sin",
+      "minute_cos",
+      "role_resistance",
+      "candidate_distance_bps",
+      "candidate_abs_distance_bps",
+      "spot_ret_1m_bps",
+      "spot_abs_ret_1m_bps",
+      "spot_ret_5m_bps",
+      "spot_ret_15m_bps",
+      "spot_ret_30m_bps",
+      "realized_vol_5m_bps",
+      "realized_vol_15m_bps",
+      "candidate_distance_change_5m_bps",
+      "candidate_distance_change_15m_bps",
+      "candidate_distance_change_30m_bps",
+      "candidate_approach_5m_bps",
+      "candidate_approach_15m_bps",
+      "candidate_approach_30m_bps",
+      "identity_fib_127_dn",
+      "identity_fib_127_up",
+      "identity_fib_161_dn",
+      "identity_fib_161_up",
+      "identity_fib_200_dn",
+      "identity_fib_200_up",
+      "identity_ib_high",
+      "identity_ib_low"
+    ],
+    "F1": [
+      "minute_sin",
+      "minute_cos",
+      "role_resistance",
+      "candidate_distance_bps",
+      "candidate_abs_distance_bps",
+      "spot_ret_1m_bps",
+      "spot_abs_ret_1m_bps",
+      "spot_ret_5m_bps",
+      "spot_ret_15m_bps",
+      "spot_ret_30m_bps",
+      "realized_vol_5m_bps",
+      "realized_vol_15m_bps",
+      "candidate_distance_change_5m_bps",
+      "candidate_distance_change_15m_bps",
+      "candidate_distance_change_30m_bps",
+      "candidate_approach_5m_bps",
+      "candidate_approach_15m_bps",
+      "candidate_approach_30m_bps",
+      "ibqdyn_call_log_update_count",
+      "ibqdyn_call_update_acceleration_10s_vs_prior20s",
+      "ibqdyn_call_signed_mid_change_pressure",
+      "ibqdyn_call_signed_spread_narrowing_pressure",
+      "ibqdyn_call_log_bid_replenishment",
+      "ibqdyn_call_log_bid_withdrawal",
+      "ibqdyn_call_log_ask_replenishment",
+      "ibqdyn_call_log_ask_withdrawal",
+      "ibqdyn_put_log_update_count",
+      "ibqdyn_put_update_acceleration_10s_vs_prior20s",
+      "ibqdyn_put_signed_mid_change_pressure",
+      "ibqdyn_put_signed_spread_narrowing_pressure",
+      "ibqdyn_put_log_bid_replenishment",
+      "ibqdyn_put_log_bid_withdrawal",
+      "ibqdyn_put_log_ask_replenishment",
+      "ibqdyn_put_log_ask_withdrawal",
+      "ibqdyn_call_minus_put_log_update_count",
+      "ibqdyn_call_minus_put_signed_mid_change_pressure",
+      "ibqdyn_call_minus_put_bid_replenishment_balance",
+      "ibqdyn_call_minus_put_ask_withdrawal_balance",
+      "identity_fib_127_dn",
+      "identity_fib_127_up",
+      "identity_fib_161_dn",
+      "identity_fib_161_up",
+      "identity_fib_200_dn",
+      "identity_fib_200_up",
+      "identity_ib_high",
+      "identity_ib_low"
+    ]
+  },
+  "feature_hashes": {
+    "F0": "84e3ee908350084ce47e863fb5b28a71bcd9a613d7eafe5c1475dd544432fdd1",
+    "F1": "3ff1b81e941c67ce8a0d1cae1047dafdd24410fd8a35f6f1cb132aa5597363a6"
+  },
+  "alpha_model_allowlist": [
+    "ibqdyn_call_log_update_count",
+    "ibqdyn_call_update_acceleration_10s_vs_prior20s",
+    "ibqdyn_call_signed_mid_change_pressure",
+    "ibqdyn_call_signed_spread_narrowing_pressure",
+    "ibqdyn_call_log_bid_replenishment",
+    "ibqdyn_call_log_bid_withdrawal",
+    "ibqdyn_call_log_ask_replenishment",
+    "ibqdyn_call_log_ask_withdrawal",
+    "ibqdyn_put_log_update_count",
+    "ibqdyn_put_update_acceleration_10s_vs_prior20s",
+    "ibqdyn_put_signed_mid_change_pressure",
+    "ibqdyn_put_signed_spread_narrowing_pressure",
+    "ibqdyn_put_log_bid_replenishment",
+    "ibqdyn_put_log_bid_withdrawal",
+    "ibqdyn_put_log_ask_replenishment",
+    "ibqdyn_put_log_ask_withdrawal",
+    "ibqdyn_call_minus_put_log_update_count",
+    "ibqdyn_call_minus_put_signed_mid_change_pressure",
+    "ibqdyn_call_minus_put_bid_replenishment_balance",
+    "ibqdyn_call_minus_put_ask_withdrawal_balance"
+  ],
+  "quality_fields": [
+    "ibqdyn_call_raw_rows",
+    "ibqdyn_call_raw_dedup_rows",
+    "ibqdyn_call_alpha_state_rows",
+    "ibqdyn_call_raw_exact_duplicate_rows",
+    "ibqdyn_call_condition_exchange_only_rows",
+    "ibqdyn_call_collision_rows",
+    "ibqdyn_call_ordered_pair_count",
+    "ibqdyn_call_valid",
+    "ibqdyn_put_raw_rows",
+    "ibqdyn_put_raw_dedup_rows",
+    "ibqdyn_put_alpha_state_rows",
+    "ibqdyn_put_raw_exact_duplicate_rows",
+    "ibqdyn_put_condition_exchange_only_rows",
+    "ibqdyn_put_collision_rows",
+    "ibqdyn_put_ordered_pair_count",
+    "ibqdyn_put_valid",
+    "causal_subscription_eligible",
+    "ibqdyn_both_valid"
+  ],
+  "physical_sample_filter": "ibqdyn_both_valid == True",
+  "primary_model": {
+    "family": "logistic_regression",
+    "params": {
+      "C": 1.0,
+      "penalty": "l2",
+      "solver": "lbfgs",
+      "max_iter": 5000,
+      "random_state": 20260713
+    },
+    "preprocessing": [
+      "train_only_median_imputation",
+      "no_missing_indicators",
+      "train_only_standardization"
+    ]
+  },
+  "sensitivity_model": {
+    "family": "lightgbm",
+    "params": {
+      "objective": "binary",
+      "n_estimators": 300,
+      "learning_rate": 0.03,
+      "num_leaves": 15,
+      "min_child_samples": 100,
+      "colsample_bytree": 0.8,
+      "subsample": 0.8,
+      "subsample_freq": 1,
+      "reg_alpha": 0.0,
+      "reg_lambda": 1.0,
+      "random_state": 20260713,
+      "n_jobs": 28,
+      "deterministic": true,
+      "force_col_wise": true,
+      "verbosity": -1
+    },
+    "preprocessing": [
+      "train_only_median_imputation",
+      "no_native_missing_branches"
+    ],
+    "can_rescue_primary": false
+  },
+  "label_spec": {
+    "touch_universe_bps": 20.0,
+    "terminal_buffer_bps": 5.0,
+    "current_beyond_counts_as_pierced": true,
+    "future_bar_starts": "t <= s < t+h",
+    "terminal_price": "close of exact bar starting t+h-1m",
+    "same_session_horizon": "t+h <= underlying RTH close (16:00 regular, 13:00 frozen half days)",
+    "true_rejection": "pierced and terminal >=5bps on defended side",
+    "accepted_break": "pierced and terminal >=5bps beyond wall",
+    "neutral": "unresolved",
+    "event_universe": "first executable event in each frozen 30-minute clock block"
+  },
+  "gate_spec": {
+    "planned_paired_cells": 24,
+    "minimum_auc_wins": 16,
+    "minimum_median_auc_delta": 0.01,
+    "maximum_wilcoxon_one_sided_p": 0.0125,
+    "paired_test_unit": "ticker_fold_median_across_horizons",
+    "ticker_minimum_wins": 5,
+    "ticker_minimum_median_f1_auc": 0.55,
+    "primary_horizons": [
+      30,
+      60
+    ],
+    "ticker_primary_minimum_wins": 3,
+    "minimum_monthly_resolved_episodes": 18,
+    "maximum_joint_ap_logloss_losses": 12,
+    "sensitivity_minimum_wins": 13,
+    "sensitivity_requires_positive_median_auc_delta": true,
+    "sensitivity_can_rescue_primary": false,
+    "expected_primary_month_cells": 144
+  },
+  "folds": [
+    {
+      "fold": "2024",
+      "train_end": "20231231",
+      "test_start": "20240101",
+      "test_end": "20241231"
+    },
+    {
+      "fold": "2025",
+      "train_end": "20241231",
+      "test_start": "20250101",
+      "test_end": "20251231"
+    }
+  ],
+  "horizons": [
+    30,
+    60,
+    120,
+    180
+  ],
+  "historical_timestamp_provenance_status": "CONDITIONAL",
+  "live_feature_parity_status": "BLOCKED",
+  "holdout_2026_opened": false,
+  "production_modified": false,
+  "payoff_authorized_at_freeze": false
+}

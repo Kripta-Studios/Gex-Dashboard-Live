@@ -460,3 +460,10 @@ al menos 79 estados finitos distintos por ticker-año y F0/F1 comparten
 exactamente las mismas complete cases. `PASS_DATA_GATE` prueba que la medición
 es reproducible, cubierta y no degenerada; todavía no prueba que prediga el
 mecanismo ni que sobreviva al spread ask-to-bid.
+
+El freeze físico hace explícita la comparación que puede contestar esa pregunta:
+la base no son solo 18 variables continuas, sino también las ocho identidades
+predeclaradas del nivel, para que F0 y F1 compartan la geometría completa. F1
+añade exactamente 20 dinámicas tick y nada más. Al congelar hashes, folds,
+horizontes, LR/LightGBM y gates antes de labels, una mejora posterior no puede
+atribuirse a seleccionar retrospectivamente una extensión Fibonacci o modelo.

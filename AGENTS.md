@@ -690,3 +690,12 @@ complete-case parity PASS. Compactos en
 `tmp/`. Siguiente paso único: commit/push compactos y handoffs -> congelar
 runner físico desde HEAD limpio -> abrir labels F0/F1 una sola vez. Aún no hay
 AUC, PF, WR o PnL; 2026 y producción siguen intactos.
+
+Runner físico H-IBQDYN1 congelado `PREEXECUTION_FROZEN` sobre commit
+`3f19eb4`: manifest SHA
+`f80f967a17a7b30fa7c6f728d620d343d1dd076c36dba8790a0e0f9c407ac85a`.
+F0=18 controles continuos + 8 identidades de nivel (26 columnas); F1=F0 + 20
+variables tick (46). LR L2 primaria, LightGBM solo sensibilidad; folds 2024/2025
+y horizontes 30/60/120/180 exactos. `holdout_2026_opened=false`, producción
+intacta y payoff no autorizado al freeze. Tras commit/push del manifest,
+ejecutar exactamente un physical one-shot; no modificar código/protocolo.

@@ -860,3 +860,12 @@ el parquet de 5,54MB permanece en `tmp/h_ibqdyn1_features_202208_202512_v1r2/`.
 Siguiente secuencia: commit/push compactos+handoffs; generar manifest del runner
 físico desde ese HEAD limpio; commit/push del freeze; ejecutar exactamente una
 evaluación F0/F1. Todavía no se abrió label, AUC, PF, WR, PnL ni 2026.
+
+El freezer ya produjo el manifest `PREEXECUTION_FROZEN` sobre HEAD `3f19eb4` en
+`_diagnostics/h_ibqdyn1_physical_202208_202512_v1_frozen_runner/manifest.json`;
+SHA `f80f967a17a7b30fa7c6f728d620d343d1dd076c36dba8790a0e0f9c407ac85a`.
+Congela F0=26 columnas (18 controles + 8 level identities), F1=46 (F0+20 tick),
+LR L2 primaria, LightGBM confirmatorio no rescatable, folds 2024/2025 y
+horizontes 30/60/120/180. Registra 2026 cerrado, producción intacta y payoff no
+autorizado. Siguiente acción: force-add/commit/push del manifest y ejecutar una
+sola vez `evaluate_h_ibqdyn1_physical.py`; ese será el primer acceso a labels.

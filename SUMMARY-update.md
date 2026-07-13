@@ -530,3 +530,9 @@ mínima 79, controles y complete-case parity PASS. Compactos versionables en
 `h_ibqdyn1_features_202208_202512_v1r2_data_gate/`; dataset en `tmp/`. Falta
 commit del data seal -> freeze commit -> one-shot físico. Outcomes, PF/WR/PnL,
 2026 y producción siguen cerrados/intactos.
+
+Frozen runner físico ya generado sobre `3f19eb4`, manifest SHA
+`f80f967a...7ac85a`: F0=26 (18 controles+8 identidades), F1=46 (F0+20 ticks),
+LR L2 primaria/LightGBM sensibilidad, folds 2024/2025 y 30/60/120/180m. 2026,
+producción y payoff permanecen cerrados. Commit/push del manifest y luego un
+único physical F0/F1; aún no se abrieron labels ni rentabilidad.
