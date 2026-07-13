@@ -339,7 +339,10 @@ def test_field_profiles_and_cost_projection_are_outcome_free_and_exact_scope():
 
 class FakeResponse:
     status_code = 200
-    headers = {"content-type": "application/json"}
+    headers = {
+        "content-type": "application/json",
+        "Date": "Mon, 01 Jan 2024 00:00:00 GMT",
+    }
 
     def __init__(self, value=None):
         self.content = json.dumps(value or payload(), separators=(",", ":")).encode()
@@ -430,6 +433,84 @@ def test_capture_writes_immutable_hashed_raw_parquet_manifest(monkeypatch, tmp_p
         )
 
 
+def test_exact_remote_provenance_and_status_tamper(monkeypatch, tmp_path):
+    greeks, oi = write_sources(tmp_path)
+    inventory_dir = tmp_path / "inventory"
+    inventory_dir.mkdir()
+    (inventory_dir / "manifest.json").write_text("{}", encoding="utf-8")
+    monkeypatch.setattr(
+        mod,
+        "validate_source_inventory",
+        lambda _path: pd.DataFrame(
+            [
+                {
+                    "ticker": "QQQ",
+                    "trade_date": DAY,
+                    "greeks_path": str(greeks),
+                    "oi_path": str(oi),
+                }
+            ]
+        ),
+    )
+    monkeypatch.setattr(
+        mod,
+        "assert_runtime_lock",
+        lambda _p: {"lock_sha256": "1" * 64, "environment_sha256": "2" * 64},
+    )
+    calls = []
+
+    def requester(url, params, headers, timeout):
+        calls.append(url)
+        if url.endswith(mod.REMOTE_STATUS_ENDPOINT):
+            return FakeResponse({"status": "CONNECTED"})
+        return FakeResponse(
+            oi_payload() if url.endswith(mod.OI_ENDPOINT) else payload()
+        )
+
+    result = mod.capture_session(
+        ticker="QQQ",
+        trade_date=DAY,
+        source_inventory=inventory_dir,
+        output_root=tmp_path / "remote",
+        base_url=mod.REMOTE_BASE_URL,
+        terminal_jar=None,
+        requester=requester,
+    )
+    assert calls[0].endswith(mod.REMOTE_STATUS_ENDPOINT)
+    assert result["provenance"] == mod.REMOTE_PROVENANCE
+    assert result["evidence_kind"] == mod.REMOTE_EVIDENCE_KIND
+    assert result["live_parity"] == "BLOCKED"
+    root = tmp_path / "remote" / "QQQ" / DAY
+    mod.validate_session(root, source_inventory=inventory_dir)
+    (root / "remote_terminal_status.json").write_bytes(b"tampered")
+    with pytest.raises(AssertionError, match="remote Terminal provenance"):
+        mod.validate_session(root, source_inventory=inventory_dir)
+    with pytest.raises(AssertionError, match="exact frozen remote"):
+        mod.capture_session(
+            ticker="QQQ",
+            trade_date=DAY,
+            source_inventory=inventory_dir,
+            output_root=tmp_path / "bad",
+            base_url="http://example.com:25503/v3",
+            requester=requester,
+        )
+
+    def disconnected(url, params, headers, timeout):
+        if url.endswith(mod.REMOTE_STATUS_ENDPOINT):
+            return FakeResponse({"status": "UNVERIFIED"})
+        return FakeResponse(payload())
+
+    with pytest.raises(AssertionError, match="not CONNECTED"):
+        mod.capture_session(
+            ticker="QQQ",
+            trade_date=DAY,
+            source_inventory=inventory_dir,
+            output_root=tmp_path / "disconnected",
+            base_url=mod.REMOTE_BASE_URL,
+            requester=disconnected,
+        )
+
+
 def test_seal_requires_exact_unique_sessions_and_revalidates_tampering(
     monkeypatch, tmp_path
 ):
@@ -471,9 +552,14 @@ def test_seal_requires_exact_unique_sessions_and_revalidates_tampering(
             "predeclaration_sha256": "e" * 64,
             "source_clarification_sha256": "3" * 64,
             "direct_oi_amendment_sha256": "4" * 64,
+            "remote_provenance_amendment_sha256": "7" * 64,
             "runtime_lock_sha256": "f" * 64,
             "runtime_environment_sha256": "1" * 64,
             "terminal_jar_sha256": "2" * 64,
+            "provenance": mod.PROVENANCE,
+            "base_url": "http://127.0.0.1:25503/v3",
+            "evidence_kind": "LOCAL_FROZEN_JAR_PROCESS",
+            "remote_status_raw_sha256": None,
             "terminal_process_evidence": {"process_id": 7},
             "field_profiles": [
                 {

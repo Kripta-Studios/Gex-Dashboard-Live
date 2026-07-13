@@ -58,10 +58,18 @@ DIRECT_OI_AMENDMENT = (
     PROJECT_ROOT
     / "research_papers/JEPA/H_GREEK2WALL_DIRECT_OI_V1_PREFLIGHT_AMENDMENT.md"
 )
+REMOTE_PROVENANCE_AMENDMENT = (
+    PROJECT_ROOT
+    / "research_papers/JEPA/H_GREEK2WALL_REMOTE_TERMINAL_PROVENANCE_AMENDMENT.md"
+)
 ENVIRONMENT_LOCK = (
     PROJECT_ROOT / "research_papers/JEPA/requirements-wall-surface-flow-v1r1.txt"
 )
 PROVENANCE = "CONDITIONAL_CURRENT_PROVIDER_RECONSTRUCTION"
+REMOTE_BASE_URL = "http://91.99.90.39:25503/v3"
+REMOTE_EVIDENCE_KIND = "USER_SUPPLIED_REMOTE_THETA_TERMINAL"
+REMOTE_PROVENANCE = "CONDITIONAL_REMOTE_TERMINAL_RECONSTRUCTION"
+REMOTE_STATUS_ENDPOINT = "/terminal/mdds/status"
 FROZEN_SESSIONS = tuple(
     (ticker, day)
     for ticker in ("SPXW", "QQQ", "SPY")
@@ -131,6 +139,20 @@ def oi_request_params(ticker: str, day: str) -> dict[str, str]:
         "right": "both",
         "format": "json",
     }
+
+
+def terminal_status_value(raw: bytes) -> str:
+    """Normalize the documented MDDS status without accepting arbitrary 200s."""
+    try:
+        value: Any = json.loads(raw)
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        value = raw.decode("utf-8", errors="strict")
+    if isinstance(value, dict):
+        for key in ("status", "response", "value"):
+            if key in value:
+                value = value[key]
+                break
+    return str(value).strip().strip('"').upper()
 
 
 def normalize_direct_oi(raw: Any, *, ticker: str, trade_date: str) -> pd.DataFrame:
@@ -742,6 +764,7 @@ def freeze_source_inventory(
         "predeclaration_sha256": sha256_file(PREDECLARATION),
         "source_clarification_sha256": sha256_file(SOURCE_CLARIFICATION),
         "direct_oi_amendment_sha256": sha256_file(DIRECT_OI_AMENDMENT),
+        "remote_provenance_amendment_sha256": sha256_file(REMOTE_PROVENANCE_AMENDMENT),
         "runtime_lock_sha256": runtime["lock_sha256"],
         "runtime_environment_sha256": runtime["environment_sha256"],
         "inventory_csv_sha256": sha256_file(csv_path),
@@ -774,6 +797,8 @@ def validate_source_inventory(inventory_dir: str | Path) -> pd.DataFrame:
         or sha256_file(PREDECLARATION) != manifest["predeclaration_sha256"]
         or sha256_file(SOURCE_CLARIFICATION) != manifest["source_clarification_sha256"]
         or sha256_file(DIRECT_OI_AMENDMENT) != manifest["direct_oi_amendment_sha256"]
+        or sha256_file(REMOTE_PROVENANCE_AMENDMENT)
+        != manifest["remote_provenance_amendment_sha256"]
     ):
         raise AssertionError("source inventory code/predeclaration mismatch")
     if current_git_commit() != manifest["git_commit"]:
@@ -813,7 +838,7 @@ def capture_session(
     source_inventory: str | Path,
     output_root: str | Path,
     base_url: str,
-    terminal_jar: str | Path,
+    terminal_jar: str | Path | None = None,
     timeout: float = 600,
     requester: Callable[..., Any] = requests.get,
     process_evidence_provider: Callable[
@@ -832,28 +857,76 @@ def capture_session(
         )
     greeks_path = Path(selected.iloc[0]["greeks_path"])
     oi_path = Path(selected.iloc[0]["oi_path"])
-    if (urlparse(base_url).hostname or "").lower() not in {
+    normalized_base = base_url.rstrip("/")
+    host = (urlparse(normalized_base).hostname or "").lower()
+    is_local = host in {
         "127.0.0.1",
         "localhost",
         "::1",
-    }:
-        raise AssertionError("preflight requires the local frozen Theta Terminal")
-    jar = Path(terminal_jar).resolve()
-    if not jar.is_file():
-        raise FileNotFoundError(jar)
+    }
+    is_remote = normalized_base == REMOTE_BASE_URL
+    if not is_local and not is_remote:
+        raise AssertionError(
+            "base URL is neither localhost nor the exact frozen remote Terminal"
+        )
+    remote_status_response = None
+    remote_status_raw = b""
+    if is_local:
+        if terminal_jar is None:
+            raise AssertionError("local capture requires terminal-jar")
+        jar = Path(terminal_jar).resolve()
+        if not jar.is_file():
+            raise FileNotFoundError(jar)
+        evidence = process_evidence_provider(normalized_base, jar)
+        jar_hash = sha256_file(jar)
+        if evidence.get("terminal_jar_sha256") != jar_hash:
+            raise AssertionError("active JAR mismatch")
+        historical_provenance = PROVENANCE
+        live_parity = "BLOCKED_PENDING_PROSPECTIVE_PARITY"
+    else:
+        jar = None
+        jar_hash = None
+        remote_status_response = requester(
+            normalized_base + REMOTE_STATUS_ENDPOINT,
+            params={},
+            headers={"Accept-Encoding": "identity"},
+            timeout=timeout,
+        )
+        remote_status_response.raise_for_status()
+        remote_status_raw = bytes(remote_status_response.content)
+        if not remote_status_raw:
+            raise AssertionError("empty remote Terminal status response")
+        status_value = terminal_status_value(remote_status_raw)
+        if status_value != "CONNECTED":
+            raise AssertionError(f"remote Terminal MDDS is not CONNECTED: {status_value}")
+        evidence = {
+            "kind": REMOTE_EVIDENCE_KIND,
+            "base_url": normalized_base,
+            "status_endpoint": REMOTE_STATUS_ENDPOINT,
+            "status_raw_sha256": sha256_bytes(remote_status_raw),
+            "http_status": int(getattr(remote_status_response, "status_code", 200)),
+            "http_headers": dict(
+                sorted(
+                    (str(k), str(v))
+                    for k, v in getattr(remote_status_response, "headers", {}).items()
+                )
+            ),
+            "server_date": str(
+                getattr(remote_status_response, "headers", {}).get("Date", "")
+            ),
+            "status_value": status_value,
+        }
+        historical_provenance = REMOTE_PROVENANCE
+        live_parity = "BLOCKED"
     final = session_directory(output_root, ticker, day)
     staging = final.with_name(final.name + ".staging")
     if final.exists() or staging.exists():
         raise FileExistsError(f"immutable session exists: {final}")
     source_paths = {"greeks": Path(greeks_path), "oi": Path(oi_path)}
     source_hashes = {k: sha256_file(v) for k, v in source_paths.items()}
-    evidence = process_evidence_provider(base_url, jar)
-    jar_hash = sha256_file(jar)
-    if evidence.get("terminal_jar_sha256") != jar_hash:
-        raise AssertionError("active JAR mismatch")
     runtime = assert_runtime_lock(ENVIRONMENT_LOCK)
     response = requester(
-        base_url.rstrip("/") + ENDPOINT,
+        normalized_base + ENDPOINT,
         params=params,
         headers={"Accept-Encoding": "identity"},
         timeout=timeout,
@@ -865,7 +938,7 @@ def capture_session(
     normalized = normalize_response(json.loads(raw), ticker=ticker, trade_date=day)
     oi_params = oi_request_params(ticker, day)
     oi_response = requester(
-        base_url.rstrip("/") + OI_ENDPOINT,
+        normalized_base + OI_ENDPOINT,
         params=oi_params,
         headers={"Accept-Encoding": "identity"},
         timeout=timeout,
@@ -889,6 +962,9 @@ def capture_session(
     normalized.to_parquet(parquet, index=False)
     oi_raw_path.write_bytes(oi_raw)
     direct_oi.to_parquet(oi_parquet, index=False)
+    remote_status_path = staging / "remote_terminal_status.json"
+    if is_remote:
+        remote_status_path.write_bytes(remote_status_raw)
     schema = [
         (field.name, str(field.type)) for field in pq.ParquetFile(parquet).schema_arrow
     ]
@@ -901,7 +977,10 @@ def capture_session(
         "outcome_free": True,
         "holdout_2026_used": False,
         "production_modified": False,
-        "provenance": PROVENANCE,
+        "provenance": historical_provenance,
+        "live_parity": live_parity,
+        "base_url": normalized_base,
+        "evidence_kind": evidence.get("kind", "LOCAL_FROZEN_JAR_PROCESS"),
         "ticker": ticker,
         "trade_date": day,
         "expiration": day,
@@ -919,11 +998,29 @@ def capture_session(
         "predeclaration_sha256": sha256_file(PREDECLARATION),
         "source_clarification_sha256": sha256_file(SOURCE_CLARIFICATION),
         "direct_oi_amendment_sha256": sha256_file(DIRECT_OI_AMENDMENT),
+        "remote_provenance_amendment_sha256": sha256_file(REMOTE_PROVENANCE_AMENDMENT),
         "runtime_lock_sha256": runtime["lock_sha256"],
         "runtime_environment_sha256": runtime["environment_sha256"],
-        "terminal_jar_path": str(jar),
+        "terminal_jar_path": str(jar) if jar is not None else None,
         "terminal_jar_sha256": jar_hash,
         "terminal_process_evidence": evidence,
+        "remote_status_raw_sha256": sha256_bytes(remote_status_raw)
+        if is_remote
+        else None,
+        "greeks_http_status": int(getattr(response, "status_code", 200)),
+        "greeks_http_headers": dict(
+            sorted(
+                (str(k), str(v)) for k, v in getattr(response, "headers", {}).items()
+            )
+        ),
+        "greeks_server_date": str(getattr(response, "headers", {}).get("Date", "")),
+        "oi_http_status": int(getattr(oi_response, "status_code", 200)),
+        "oi_http_headers": dict(
+            sorted(
+                (str(k), str(v)) for k, v in getattr(oi_response, "headers", {}).items()
+            )
+        ),
+        "oi_server_date": str(getattr(oi_response, "headers", {}).get("Date", "")),
         "raw_response_sha256": sha256_bytes(raw),
         "parquet_sha256": sha256_file(parquet),
         "oi_raw_response_sha256": sha256_bytes(oi_raw),
@@ -961,7 +1058,7 @@ def validate_session(
         manifest.get("outcome_free") is not True
         or manifest.get("holdout_2026_used") is not False
         or manifest.get("production_modified") is not False
-        or manifest.get("provenance") != PROVENANCE
+        or manifest.get("provenance") not in {PROVENANCE, REMOTE_PROVENANCE}
     ):
         raise AssertionError("invalid scope/provenance")
     expected_request = request_params(manifest["ticker"], manifest["trade_date"])
@@ -1033,10 +1130,13 @@ def validate_session(
         raise AssertionError("source clarification changed")
     if sha256_file(DIRECT_OI_AMENDMENT) != manifest["direct_oi_amendment_sha256"]:
         raise AssertionError("direct OI amendment changed")
+    if (
+        sha256_file(REMOTE_PROVENANCE_AMENDMENT)
+        != manifest["remote_provenance_amendment_sha256"]
+    ):
+        raise AssertionError("remote provenance amendment changed")
     if sha256_file(__file__) != manifest["builder_sha256"]:
         raise AssertionError("builder changed")
-    if sha256_file(manifest["terminal_jar_path"]) != manifest["terminal_jar_sha256"]:
-        raise AssertionError("JAR changed")
     evidence = manifest.get("terminal_process_evidence")
     required_evidence = {
         "process_id",
@@ -1048,15 +1148,48 @@ def validate_session(
         "terminal_jar_path",
         "terminal_jar_sha256",
     }
-    if (
-        not isinstance(evidence, dict)
-        or not required_evidence.issubset(evidence)
-        or evidence.get("terminal_jar_sha256") != manifest["terminal_jar_sha256"]
-        or int(evidence.get("process_id", 0)) <= 0
-        or int(evidence.get("local_port", 0)) <= 0
-    ):
-        raise AssertionError("invalid Terminal process evidence")
+    if manifest["provenance"] == REMOTE_PROVENANCE:
+        status_path = root / "remote_terminal_status.json"
+        if (
+            manifest.get("base_url") != REMOTE_BASE_URL
+            or manifest.get("evidence_kind") != REMOTE_EVIDENCE_KIND
+            or manifest.get("live_parity") != "BLOCKED"
+            or not isinstance(evidence, dict)
+            or evidence.get("kind") != REMOTE_EVIDENCE_KIND
+            or evidence.get("base_url") != REMOTE_BASE_URL
+            or evidence.get("status_endpoint") != REMOTE_STATUS_ENDPOINT
+            or int(evidence.get("http_status", 0)) != 200
+            or not evidence.get("server_date")
+            or evidence.get("status_value") != "CONNECTED"
+            or terminal_status_value(status_path.read_bytes()) != "CONNECTED"
+            or sha256_file(status_path) != manifest["remote_status_raw_sha256"]
+            or evidence.get("status_raw_sha256") != manifest["remote_status_raw_sha256"]
+            or manifest.get("terminal_jar_path") is not None
+            or manifest.get("terminal_jar_sha256") is not None
+        ):
+            raise AssertionError("invalid remote Terminal provenance evidence")
+    else:
+        if (
+            sha256_file(manifest["terminal_jar_path"])
+            != manifest["terminal_jar_sha256"]
+        ):
+            raise AssertionError("JAR changed")
+        if (
+            not isinstance(evidence, dict)
+            or not required_evidence.issubset(evidence)
+            or evidence.get("terminal_jar_sha256") != manifest["terminal_jar_sha256"]
+            or int(evidence.get("process_id", 0)) <= 0
+            or int(evidence.get("local_port", 0)) <= 0
+        ):
+            raise AssertionError("invalid Terminal process evidence")
     runtime = assert_runtime_lock(ENVIRONMENT_LOCK)
+    if (
+        int(manifest.get("greeks_http_status", 0)) != 200
+        or int(manifest.get("oi_http_status", 0)) != 200
+        or not isinstance(manifest.get("greeks_http_headers"), dict)
+        or not isinstance(manifest.get("oi_http_headers"), dict)
+    ):
+        raise AssertionError("invalid provider HTTP evidence")
     if (
         runtime["lock_sha256"] != manifest["runtime_lock_sha256"]
         or runtime["environment_sha256"] != manifest["runtime_environment_sha256"]
@@ -1091,8 +1224,7 @@ def projected_cost(manifests: Iterable[dict[str, Any]]) -> dict[str, Any]:
         "preflight_raw_gib": sum(r["raw_bytes"] for r in rows) / 2**30,
         "preflight_parquet_gib": sum(r["parquet_bytes"] for r in rows) / 2**30,
         "preflight_oi_raw_gib": sum(r["oi_raw_bytes"] for r in rows) / 2**30,
-        "preflight_oi_parquet_gib": sum(r["oi_parquet_bytes"] for r in rows)
-        / 2**30,
+        "preflight_oi_parquet_gib": sum(r["oi_parquet_bytes"] for r in rows) / 2**30,
         "projected_raw_gib": np.mean([r["raw_bytes"] for r in rows]) * 2519 / 2**30,
         "projected_parquet_gib": np.mean([r["parquet_bytes"] for r in rows])
         * 2519
@@ -1143,7 +1275,10 @@ def seal_preflight(
                 "session directory identity differs from seal inventory"
             )
         evidence = manifest["terminal_process_evidence"]
-        if int(evidence.get("process_id", 0)) <= 0:
+        if (
+            manifest["provenance"] != REMOTE_PROVENANCE
+            and int(evidence.get("process_id", 0)) <= 0
+        ):
             raise AssertionError("invalid Terminal process id in session evidence")
         manifest_path = directory / "manifest.json"
         records.append(
@@ -1170,10 +1305,19 @@ def seal_preflight(
                 "predeclaration_sha256": manifest["predeclaration_sha256"],
                 "source_clarification_sha256": manifest["source_clarification_sha256"],
                 "direct_oi_amendment_sha256": manifest["direct_oi_amendment_sha256"],
+                "remote_provenance_amendment_sha256": manifest[
+                    "remote_provenance_amendment_sha256"
+                ],
                 "runtime_lock_sha256": manifest["runtime_lock_sha256"],
                 "runtime_environment_sha256": manifest["runtime_environment_sha256"],
                 "terminal_jar_sha256": manifest["terminal_jar_sha256"],
-                "terminal_process_id": int(evidence["process_id"]),
+                "terminal_process_id": int(evidence["process_id"])
+                if "process_id" in evidence
+                else None,
+                "provenance": manifest["provenance"],
+                "base_url": manifest["base_url"],
+                "evidence_kind": manifest["evidence_kind"],
+                "remote_status_raw_sha256": manifest["remote_status_raw_sha256"],
             }
         )
         manifests.append(manifest)
@@ -1183,9 +1327,13 @@ def seal_preflight(
         "predeclaration_sha256",
         "source_clarification_sha256",
         "direct_oi_amendment_sha256",
+        "remote_provenance_amendment_sha256",
         "runtime_lock_sha256",
         "runtime_environment_sha256",
         "terminal_jar_sha256",
+        "provenance",
+        "base_url",
+        "evidence_kind",
     )
     for field in invariant_fields:
         if len({str(record[field]) for record in records}) != 1:
@@ -1242,7 +1390,7 @@ def main(argv: Iterable[str] | None = None) -> None:
     fetch.add_argument("--date", required=True)
     fetch.add_argument("--source-inventory", required=True)
     fetch.add_argument("--output-root", required=True)
-    fetch.add_argument("--terminal-jar", required=True)
+    fetch.add_argument("--terminal-jar")
     fetch.add_argument("--base-url", default="http://127.0.0.1:25503/v3")
     freeze = sub.add_parser("freeze-source-inventory")
     freeze.add_argument("--options-root", required=True)
