@@ -496,3 +496,17 @@ ni orientar. Los controles de lado constante o aleatorio siguen perdiendo, por
 lo que no basta un sesgo direccional trivial. A la vez, no existe una label
 midpoint/no-spread emparejada que permita aislar execution drag; reportarlo como
 número sería mezclar un contrafactual inexistente con evidencia ejecutable.
+
+La unión existente puede construirse sin inventar una geometría nueva. Los
+bloques touch H-FLOW/IVSURF/QSIZE no tienen clave única contra el universo full;
+agregarlos ahora sería una decisión de representación posterior, así que se
+omiten. Wall-state y H-IBQDYN sí admiten igualdad exacta y expresan la no
+aplicabilidad geométrica con un único flag por bloque, manteniendo nulls en vez
+de ceros sintéticos. La vista resultante conserva todas las oportunidades.
+
+El smoke 2023 también verificó la disciplina de abstención: ni hurdle ni Huber,
+con base o unión, encontró un umbral que pasara PF, WR, frecuencia y PnL en cada
+uno de tres meses inner. En vez de escoger el menos malo, los 12 folds abstienen
+por completo. Esto no anticipa el veredicto 2024/2025, pero prueba que el runner
+puede terminar honestamente sin forzar trades. Dos outcomes PUT ausentes de 2022
+se tratan como target missing por lado, nunca como retorno cero.

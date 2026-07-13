@@ -922,3 +922,22 @@ artefactos disponibles porque no existe payoff midpoint emparejado. Código,
 manifest, trades y métricas están en
 `existing_data_edge_sprint_v1_benchmark_oracle/`; suite `4 passed`, Ruff clean.
 2026 y producción permanecen intactos.
+
+## EDGE-FIRST V1 — predeclaración y runner dev
+
+La única familia `EXISTING_DATA_EXECUTABLE_UTILITY_V1` está predeclarada. E0
+conserva los 30 features Pairwise ordenados; E1 tiene 527 al añadir bloques
+existentes completos y exactos. H-FLOW1/H-IVSURF1/H-QSIZE1R1 quedan fuera por
+join one-to-many no congelado; H-QDYN1/H-GREEK2 quedan fuera por rejected gate/
+source missing. La vista outcome-free exacta conserva 97.625 keys, SHA
+`52bac061216dd8aac7423449c442577882484aad0c4220bddaabc14544faad36`, y es la
+única transformación temporal autorizada.
+
+El runner implementa hurdle expected utility primario y Huber return directo
+alternativo, percentiles train-only, tres meses inner estrictos, expanding train,
+scheduler contractual y `ABSTAIN_OUTER` cuando ninguna pareja pasa. El smoke
+2023-12 completó 12 folds ticker/arm/modelo; todos abstuvieron porque cero grids
+pasaron los tres inner. Dos PUT outcomes SPXW 2022-02-22 faltan solo en train:
+no se rellenan ni se elimina el universo; los heads se ajustan por lado con
+targets finitos. Inner/outer falla cerrado ante cualquier missing. No se abrió
+2024/2025 ni 2026. Falta freeze manifest committed antes del one-shot outer.

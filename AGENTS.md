@@ -738,3 +738,21 @@ error de lado y +1.159,030R por error de oportunidad. Execution drag no es
 identificable sin una label midpoint/no-spread emparejada y no se inventa.
 Siguiente secuencia: predeclarar `EXISTING_DATA_EXECUTABLE_UTILITY_V1`, congelar
 E0/E1 y validar el runner en 2022-2023 antes del único nested 2024-2025.
+
+`EXISTING_DATA_EXECUTABLE_UTILITY_V1` ya está predeclarado y el runner pasó un
+smoke nested completo en outer 2023-12 para E0/E1, hurdle LightGBM y Huber
+directo. Ningún arm/modelo tuvo una pareja threshold/margin que pasara los tres
+meses inner, por lo que los 12 ticker-arm-model folds fueron `ABSTAIN_OUTER`; es
+diagnóstico de desarrollo, no resultado 2024/2025. La vista temporal outcome-free
+preserva 97.625/97.625 keys y pesa 235.156.345 bytes, SHA
+`52bac061216dd8aac7423449c442577882484aad0c4220bddaabc14544faad36`.
+
+Join audit congelable: base/pairwise current-time/legacy live/wall-state son
+exactos; H-IBQDYN entra solo en sus 16.926 keys exactas con un flag causal de
+aplicabilidad. H-FLOW1/H-IVSURF1/H-QSIZE1R1 son `UNSAFE_JOIN` por multiplicidad
+sin `wall_identity`; H-QDYN1 se omite por gate rechazada y H-GREEK2 por source
+missing. Se detectaron dos PUT outcomes ausentes de SPXW 2022-02-22 solo en
+train: se preservan y jamás se rellenan; cada head usa sus targets finitos y
+inner/outer exige ambos lados. E0=30 SHA `b68b6c2e...6cbe38`; E1=527 SHA
+`e15469c0...8986abc`. Siguiente paso único: commit del runner/predeclaración,
+freeze manifest E0/E1 desde HEAD limpio y luego one-shot 2024-2025.

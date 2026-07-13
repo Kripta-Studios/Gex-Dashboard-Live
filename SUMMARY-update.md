@@ -556,3 +556,12 @@ headroom grande tanto en selección de oportunidad como de lado, mientras
 always-CALL/PUT/random pierden. No se cuantifica execution drag porque falta un
 payoff midpoint/no-spread emparejado. Siguiente hito: freeze económico E0/E1 y
 runner nested; 2026 y producción siguen intactos.
+
+`EXISTING_DATA_EXECUTABLE_UTILITY_V1` está predeclarado y ejecutable en 2023.
+E0=30 features (`b68b6c2e...6cbe38`); E1=527 (`e15469c0...8986abc`). La vista
+temporal outcome-free preserva las 97.625 keys exactas, SHA `52bac061...aad36`.
+H-FLOW/IVSURF/QSIZE se omiten por joins one-to-many no congelados; QDYN/GREEK2
+por rejected gate/source missing. El smoke outer 2023-12 terminó: hurdle y Huber,
+E0/E1, los tres tickers, todos `ABSTAIN_OUTER` al no pasar ningún grid los tres
+meses inner. Dos PUT 2022 training-only ausentes no se rellenan. 2024/2025 y
+2026 siguen cerrados; falta freeze E0/E1 committed y one-shot económico.
