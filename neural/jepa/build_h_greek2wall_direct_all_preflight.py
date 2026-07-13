@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -153,6 +154,19 @@ def terminal_status_value(raw: bytes) -> str:
                 value = value[key]
                 break
     return str(value).strip().strip('"').upper()
+
+
+def commit_is_ancestor(commit: str) -> bool:
+    if len(str(commit)) != 40:
+        return False
+    result = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", str(commit), "HEAD"],
+        cwd=PROJECT_ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    return result.returncode == 0
 
 
 def normalize_direct_oi(raw: Any, *, ticker: str, trade_date: str) -> pd.DataFrame:
@@ -801,8 +815,8 @@ def validate_source_inventory(inventory_dir: str | Path) -> pd.DataFrame:
         != manifest["remote_provenance_amendment_sha256"]
     ):
         raise AssertionError("source inventory code/predeclaration mismatch")
-    if current_git_commit() != manifest["git_commit"]:
-        raise AssertionError("source inventory build commit mismatch")
+    if not commit_is_ancestor(str(manifest.get("git_commit", ""))):
+        raise AssertionError("source inventory build commit is not an ancestor of HEAD")
     runtime = assert_runtime_lock(ENVIRONMENT_LOCK)
     if (
         runtime["lock_sha256"] != manifest["runtime_lock_sha256"]

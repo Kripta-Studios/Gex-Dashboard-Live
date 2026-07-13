@@ -150,6 +150,11 @@ def test_request_is_exactly_frozen_direct_all_contract():
         mod.request_params("QQQ", "20220802")
 
 
+def test_inventory_commit_must_be_an_ancestor_not_exact_head_only():
+    assert mod.commit_is_ancestor(mod.current_git_commit())
+    assert not mod.commit_is_ancestor("0" * 40)
+
+
 def test_frozen_canonical_source_inventory_rejects_missing_substitution_and_tamper(
     monkeypatch, tmp_path
 ):
