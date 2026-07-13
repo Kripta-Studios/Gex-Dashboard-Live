@@ -811,3 +811,20 @@ La próxima acción es commit/push de esos compactos y los cuatro handoffs, lueg
 build/data gate outcome-free al target nuevo
 `tmp/h_ibqdyn1_features_202208_202512_v1`. No congelar runner ni abrir labels
 hasta `PASS_DATA_GATE`. No hay rentabilidad nueva ni acceso a 2026/producción.
+
+## H-IBQDYN1: primer build detenido pre-output y reparado
+
+El primer build leyó/revalidó las 2.506 sesiones subyacentes y construyó los
+16.926 measurement rows, pero falló antes de escribir staging/output con
+`final dataset missing ['causal_subscription_eligible']`. La causa fue una
+colisión de la misma columna outcome-free en controls y measurements, que el
+merge convertía en dos columnas sufijadas. No fue `REJECTED_DATA_GATE`, no hay
+dataset parcial y no se abrió ningún label/outcome.
+
+El commit pushed `781806d` añade un merge fail-closed: conserva la elegibilidad
+del proof solo tras comprobar igualdad exacta one-to-one con la vista de
+measurements y rechaza missing/mismatch. La regresión y toda la suite focal pasan
+`43 passed`; Ruff está limpio. Siguiente comando único: relanzar desde HEAD
+limpio al target nuevo `tmp/h_ibqdyn1_features_202208_202512_v1r1`, publicar el
+compacto solo si resulta `PASS_DATA_GATE`, y abortar si falla coverage,
+distinctness, identidad o complete-case. Aún no hay AUC, PF, WR ni PnL.

@@ -508,3 +508,12 @@ bytes. La auditoría independiente volvió a contar todos los artefactos y hashe
 Compactos en `_diagnostics/h_ibqdyn1_ticks_202208_202512_v1r1_capture_seal/`.
 Siguiente hito: commit/push y data gate outcome-free; aún no hay labels ni
 rentabilidad H-IBQDYN1.
+
+El primer build completo se detuvo antes de output tras procesar 2.506 sesiones
+y 16.926 eventos: la elegibilidad causal existía en ambas ramas del merge y
+quedó sufijada, por lo que faltaba el nombre canónico. No se abrieron outcomes ni
+se produjo dataset parcial. Fix fail-closed pushed en `781806d`: compara
+elegibilidad one-to-one, falla ante missing/mismatch y conserva una sola columna.
+Suite focal `43 passed`, Ruff clean. Relanzar a
+`tmp/h_ibqdyn1_features_202208_202512_v1r1`; solo un `PASS_DATA_GATE` autoriza
+freeze físico. Rentabilidad nueva: todavía no demostrada.

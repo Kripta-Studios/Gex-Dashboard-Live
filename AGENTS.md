@@ -661,3 +661,12 @@ ausencia de staging/`errors_latest`. Compactos en
 commit/push de compactos/handoffs -> ejecutar `build_h_ibqdyn1_dataset.py` al
 target inmutable -> abortar si cualquier gate outcome-free falla. Todavía no se
 abrieron labels, AUC, PF, WR, PnL, 2026 ni producción.
+
+El primer build outcome-free procesó las 2.506 sesiones de RV y los 16.926
+eventos, pero se detuvo antes de crear output porque control y measurement
+aportaban ambos `causal_subscription_eligible` y pandas la sufijaba. No fue un
+fallo de datos ni se abrieron labels. El fix fail-closed `781806d` exige paridad
+exacta de elegibilidad antes de eliminar la copia redundante; suite focal
+`43 passed`, Ruff clean. Relanzar solo a target inmutable nuevo
+`tmp/h_ibqdyn1_features_202208_202512_v1r1`; no reutilizar V1 ni congelar runner
+hasta `PASS_DATA_GATE`. Sigue sin existir PF/WR/PnL H-IBQDYN1.

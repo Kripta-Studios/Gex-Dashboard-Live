@@ -436,3 +436,11 @@ La implementación V1R1 confirmó esa separación sin pérdida de universo:
 58,21M ticks restantes se reconstruyeron desde raw y coincidieron con sus
 parquets antes del seal. Una ausencia correctamente representada puede pasar la
 gate de procedencia; sigue contando contra cobertura y no demuestra edge.
+
+El primer ensamblado completo aportó otra protección reproducible: cuando una
+propiedad de calidad aparece tanto en el proof como en la medición, no basta con
+dejar que el dataframe resuelva nombres duplicados. Debe probarse igualdad
+one-to-one antes de conservar una versión; de lo contrario un sufijo mecánico
+puede detener la cadena o, peor, ocultar una discrepancia. H-IBQDYN1 ahora hace
+esa comprobación fail-closed. El fallo ocurrió antes de output y outcomes, por lo
+que no informa sobre alpha; solo endurece el puente entre procedencia y dataset.
