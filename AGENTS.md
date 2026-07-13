@@ -756,3 +756,13 @@ train: se preservan y jamás se rellenan; cada head usa sus targets finitos y
 inner/outer exige ambos lados. E0=30 SHA `b68b6c2e...6cbe38`; E1=527 SHA
 `e15469c0...8986abc`. Siguiente paso único: commit del runner/predeclaración,
 freeze manifest E0/E1 desde HEAD limpio y luego one-shot 2024-2025.
+
+Freeze económico `PREEXECUTION_FROZEN` generado sobre `c1dee47`: manifest SHA
+`579fe8ce6759b8f235c5a4f63c7710acfa6280a09444c922878035f83c8a0c0b`,
+runner protocol SHA
+`22a87b18801289eef1b48107f2f72ab9d6f2b9d985f2b34bcbfdbedfcb3f498f`.
+Congela los 30/527 nombres ordenados, dos formulaciones, grid train-only, ranking
+inner, scheduler, ejecución, 24 outer months y hashes de todo el código activo.
+El smoke 2023-12 se repitió byte-for-metric con el protocolo final. Tras
+commit/push de este manifest, la única acción autorizada es el one-shot nested
+2024-01..2025-12; no modificar runner, features o thresholds.

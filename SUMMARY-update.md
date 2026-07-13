@@ -565,3 +565,9 @@ por rejected gate/source missing. El smoke outer 2023-12 terminó: hurdle y Hube
 E0/E1, los tres tickers, todos `ABSTAIN_OUTER` al no pasar ningún grid los tres
 meses inner. Dos PUT 2022 training-only ausentes no se rellenan. 2024/2025 y
 2026 siguen cerrados; falta freeze E0/E1 committed y one-shot económico.
+
+Freeze `PREEXECUTION_FROZEN` listo sobre `c1dee47`: manifest SHA
+`579fe8ce...a0c0b`, protocol SHA `22a87b18...3f498f`, E0/E1 completos y dos
+modelos económicos exactos. El smoke final 2023-12 fue determinista. Tras
+commit/push, solo queda el one-shot nested 2024-2025; no se permite retocar
+features, modelo, grid, ranking o scheduler. 2026/producción siguen intactos.

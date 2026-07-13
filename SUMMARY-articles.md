@@ -510,3 +510,9 @@ uno de tres meses inner. En vez de escoger el menos malo, los 12 folds abstienen
 por completo. Esto no anticipa el veredicto 2024/2025, pero prueba que el runner
 puede terminar honestamente sin forzar trades. Dos outcomes PUT ausentes de 2022
 se tratan como target missing por lado, nunca como retorno cero.
+
+El freeze convierte esa disciplina en un contrato verificable: el evaluator
+rehúsa abrir outer si cambia un byte del view, allowlists, modelos, scheduler,
+predeclaración o runner. También congela por anticipado los meses 2024-2025 y
+marca 2026 como cerrado. Así, un eventual mes malo no puede provocar una nueva
+regla de selección sin invalidar formalmente el experimento.

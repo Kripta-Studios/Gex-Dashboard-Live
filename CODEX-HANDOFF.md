@@ -941,3 +941,11 @@ pasaron los tres inner. Dos PUT outcomes SPXW 2022-02-22 faltan solo en train:
 no se rellenan ni se elimina el universo; los heads se ajustan por lado con
 targets finitos. Inner/outer falla cerrado ante cualquier missing. No se abrió
 2024/2025 ni 2026. Falta freeze manifest committed antes del one-shot outer.
+
+El freeze ya fue materializado sobre HEAD/origin `c1dee47` con status
+`PREEXECUTION_FROZEN`. Manifest SHA `579fe8ce...a0c0b`; protocol SHA
+`22a87b18...3f498f`. Contiene allowlists completos, hashes de sources/view,
+model specs, código, grid, selección inner, scheduler y los 24 meses outer. El
+smoke 2023-12 final volvió a ser determinista y todos los folds abstuvieron.
+Siguiente paso único tras commit/push: ejecutar una sola vez el modo
+`frozen_outer`; no editar ningún archivo de la closure antes de terminar.
