@@ -474,3 +474,7 @@ El último puente outcome-free ya está congelado: F0 tiene 18 controles y F1
 añade exactamente las 20 mediciones tick; el data gate revalida todos los
 artefactos y no permite reparaciones. Suite `19 passed`. Captura 2.200/33.704,
 cero errores a las 11:28; todavía sin labels, PF, WR o PnL.
+
+Runner físico/freezer preparados y bloqueados por PASS committed; arquitectura
+LR L2 + LightGBM confirmatorio, 24 celdas y p<0,0125. Suite `26 passed`; captura
+3.200/33.704, cero errores. Outcomes siguen cerrados.

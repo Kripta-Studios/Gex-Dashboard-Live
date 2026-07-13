@@ -736,3 +736,7 @@ distancia/aproximación/RV/hora; F1=F0+20 ticks. El builder rehashará 33.704
 contratos, mantendrá 16.926 filas incluidas las 74 no listadas y exigirá >=80%
 both-valid ticker-año, >=85% ticker, distinctness y máscara idéntica. Suite
 focal `19 passed`. Captura PID44892 llegó a 2.200/33.704 a las 11:28, errors=0.
+
+Evaluator/freezer físico también quedan listos pero bloqueados hasta compactos
+PASS committed: LR L2 primario, LightGBM no rescatable, 24 celdas, p<0,0125.
+Suite focal ahora `26 passed`. Captura 3.200/33.704, errors=0. No AUC/labels/PnL.

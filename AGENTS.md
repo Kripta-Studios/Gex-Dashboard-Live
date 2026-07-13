@@ -598,3 +598,9 @@ Builder `build_h_ibqdyn1_dataset.py` revalida los 33.704 raw/parquet/manifests,
 preserva los 74 eventos ineligibles y falla cerrado por cobertura, distinctness
 o complete-case. Suite focal `19 passed`. Checkpoint de captura 11:28: 2.200/
 33.704, cero errores; PID 44892 sigue activo. Aún no se abrió outcome.
+
+Runner físico y freezer ya están implementados pre-outcome en
+`evaluate_h_ibqdyn1_physical.py`/`freeze_h_ibqdyn1_physical_runner.py`; no pueden
+ejecutarse sin manifest/compactos `PASS_DATA_GATE` committed. Arquitectura única
+LR L2 primaria + LightGBM confirmatorio, 24 celdas 2024/2025 y p<0,0125. Suite
+H-IBQDYN focal `26 passed`; captura checkpoint 3.200/33.704, cero errores.
