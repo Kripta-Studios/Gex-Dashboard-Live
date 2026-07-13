@@ -5,12 +5,17 @@ from __future__ import annotations
 import argparse
 import json
 import subprocess
+import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 import pandas as pd
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 from neural.jepa.build_wall_quote_tick_dynamics_sidecar import sha256_file
 from neural.jepa.capture_h_ibqdyn1_tick_preflight import (
@@ -29,7 +34,6 @@ from neural.jepa.capture_h_ibqdyn1_tick_preflight import (
 )
 from neural.jepa.wall_surface_flow_environment import assert_runtime_lock
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
 PREDECLARATION = "research_papers/JEPA/H_IBQDYN1_FEASIBILITY_PREDECLARATION.md"
 FEATURE_CLARIFICATION = (
     "research_papers/JEPA/H_IBQDYN1_FEATURE_SEMANTICS_CLARIFICATION.md"
