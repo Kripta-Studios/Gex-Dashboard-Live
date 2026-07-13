@@ -153,6 +153,30 @@ def test_ineligible_event_rejects_any_captured_contract() -> None:
         mod._build_event_measurements(candidate, [{"right": "CALL"}], {})
 
 
+def test_final_merge_requires_exact_eligibility_parity() -> None:
+    controls = pd.DataFrame(
+        {
+            "event_id": ["eligible", "blocked"],
+            "causal_subscription_eligible": [True, False],
+            "control": [1.0, 2.0],
+        }
+    )
+    measurements = pd.DataFrame(
+        {
+            "event_id": ["eligible", "blocked"],
+            "causal_subscription_eligible": [True, False],
+            "measurement": [3.0, np.nan],
+        }
+    )
+    merged = mod.merge_controls_and_measurements(controls, measurements)
+    assert merged["causal_subscription_eligible"].tolist() == [True, False]
+    assert "causal_subscription_eligible_measurement" not in merged.columns
+
+    measurements.loc[measurements["event_id"].eq("blocked"), "causal_subscription_eligible"] = True
+    with pytest.raises(AssertionError, match="eligibility disagree"):
+        mod.merge_controls_and_measurements(controls, measurements)
+
+
 def _write_contract(
     root: Path,
     right: str,

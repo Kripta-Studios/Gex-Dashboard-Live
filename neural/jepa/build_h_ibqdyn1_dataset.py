@@ -656,6 +656,35 @@ def build_measurements(
     return frame
 
 
+def merge_controls_and_measurements(
+    controls: pd.DataFrame, measurements: pd.DataFrame
+) -> pd.DataFrame:
+    """Merge the two outcome-free views after proving eligibility parity."""
+    eligibility = "causal_subscription_eligible"
+    required = {"event_id", eligibility}
+    if not required.issubset(controls.columns) or not required.issubset(
+        measurements.columns
+    ):
+        raise KeyError("H-IBQDYN1 eligibility field missing before final merge")
+    dataset = controls.merge(
+        measurements,
+        on="event_id",
+        how="left",
+        validate="one_to_one",
+        suffixes=("", "_measurement"),
+    )
+    measurement_field = f"{eligibility}_measurement"
+    if dataset[measurement_field].isna().any():
+        raise AssertionError("H-IBQDYN1 measurement eligibility join incomplete")
+    if not dataset[eligibility].astype(bool).equals(
+        dataset[measurement_field].astype(bool)
+    ):
+        raise AssertionError(
+            "H-IBQDYN1 proof and measurement eligibility disagree"
+        )
+    return dataset.drop(columns=[measurement_field])
+
+
 def data_gate_profile(
     dataset: pd.DataFrame,
 ) -> tuple[pd.DataFrame, pd.DataFrame, dict[str, Any]]:
@@ -804,9 +833,7 @@ def main() -> None:
     )
     index, seal = validate_capture(args.capture_root, controls)
     measurements = build_measurements(controls, index, seal, int(args.workers))
-    dataset = controls.merge(
-        measurements, on="event_id", how="left", validate="one_to_one"
-    )
+    dataset = merge_controls_and_measurements(controls, measurements)
     keep = [*OUTPUT_IDENTITY_COLUMNS, *CONTROL_FEATURES, *ALPHA_FIELDS, *QUALITY_FIELDS]
     missing = sorted(set(keep).difference(dataset.columns))
     if missing:
