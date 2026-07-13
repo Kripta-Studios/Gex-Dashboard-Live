@@ -616,3 +616,27 @@ Replayer/freezer económico implementados en
 physical PASS y hashes antes del primer acceso a `opt_exit_ret`, cargan solo los
 seis LR F1 60m OOS, y aplican scheduler cronológico sin ranking futuro. Tests
 focales economic+physical+data `19 passed`. Captura 4.900/33.704, errors=0.
+
+### H-IBQDYN1 full capture: cierre de primera pasada y NO_DATA V1R1
+
+La primera pasada outcome-free terminó los 33.704 intentos: existen 33.700
+raw/parquet/manifests válidos, cero staging y cuatro fallos HTTP 472. Son ambos
+rights de SPXW y SPY del 2023-10-25 10:35, nivel `ib_low`: SPXW CALL4230/
+PUT4185 y SPY CALL421/PUT418. QQQ quedó 10.668/10.668. El error JSON SHA es
+`e4dc5819...59af7`; los cuatro contract ids SHA `4a44551f...38a7`.
+
+MDDS seguía CONNECTED y el retry exacto devolvió otra vez 472 con cuerpo
+`No data found for your request` (SHA `101a4aa8...3708c`). ThetaData define
+472 como `NO_DATA`. El full contract ya admite rows=0 y el data gate usa
+coverage explícita; el bug es que la capa HTTP no materializaba la ventana
+vacía. El amendment pre-outcome
+`H_IBQDYN1_HTTP472_NO_DATA_AMENDMENT.md` congela una reparación V1R1 solo para
+esos cuatro: raw text exacto + parquet vacío tipado + manifest versionado,
+sin filas sintéticas, ampliar ventana ni sustituir contratos. Los dos eventos
+quedan both-invalid y cuentan contra coverage.
+
+Secuencia: commit/push del amendment y handoffs -> implementar/testar sealer
+V1R1 -> revalidar los 33.700 existentes y materializar solo los cuatro 472 ->
+exigir index 33.704, cuatro zero-row exactos, cero unresolved/staging y seal ->
+commit/push -> data gate. Aún no se abrieron labels, AUC, PF, WR, PnL, 2026 ni
+producción.

@@ -749,3 +749,35 @@ cualquier fallo cierra la traducción sin tuning.
 Economic evaluator/freezer ya implementados y testados; verifican physical PASS
 antes de outcomes, rehash de seis modelos LR y replay causal sin ranking/backfill.
 Tests economic+physical+data `19 passed`. Captura 4.900/33.704, errors=0.
+
+## H-IBQDYN1: primera pasada full y reparación 472 congelada
+
+La primera pasada finalizó los 33.704 futures sin seal porque cuatro requests
+agotaron tres intentos con HTTP 472. El directorio contiene exactamente 33.700
+raw, 33.700 parquets y 33.700 manifests, todos sin staging; no queda capturador
+Python activo y el túnel SOCKS `127.0.0.1:1081` sigue vivo. QQQ está completo.
+
+Los cuatro ausentes son los dos rights de dos eventos `ib_low` a 10:35 ET del
+2023-10-25: SPXW event `60d8c2b0bec9c102a94d851b` CALL4230/PUT4185 y SPY event
+`f4a0e57699fbd8b67cee8937` CALL421/PUT418. Error file SHA
+`e4dc58192b18944778fe819a397d03c9e4e5fb2a29870b7de63ca1b500859af7`;
+inventory SHA `4a44551fde020af61174b9e70162122441b6c5736f3e274b988f6f66104238a7`.
+
+Con MDDS CONNECTED se reintentaron las cuatro URLs exactas por el mismo túnel:
+todas repitieron status 472 y cuerpo `No data found for your request`, body SHA
+`101a4aa84466574e08fbb09d1405a816323a4674fd107dc28f3f0d29e3e3708c`.
+La documentación oficial clasifica 472 como `NO_DATA`. No es válido ampliar 30s,
+usar at-time/as-of, nearest strike ni otro contrato.
+
+El full sealer ya permitía rows=0 y registra `zero_row_contracts`; el data gate
+espera both-valid <100%. Se congeló antes de outcomes
+`H_IBQDYN1_HTTP472_NO_DATA_AMENDMENT.md`: conservar byte-exact raw 472, parquet
+vacío con schema, manifest V1R1 y `capture_kind=HTTP_472_NO_DATA` solo para esos
+cuatro. Los 33.700 existentes no se reescriben y deben revalidarse con sus
+hashes originales. Los dos eventos quedan explicitamente both-invalid, no son
+missingness alpha y cuentan contra cobertura.
+
+Próximo paso único: commit/push del protocolo; implementar/testar el sealer y
+validator V1R1; producir index exacto 33.704 con cuatro zero-row, cero unresolved
+y cero staging; luego actualizar handoffs/commit/push y ejecutar el data gate.
+No hay outcome físico, PF/WR/PnL, acceso 2026 o cambio de producción.

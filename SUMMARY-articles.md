@@ -419,3 +419,13 @@ Si el mecanismo pasa, la prueba económica no buscará otra configuración: la
 probabilidad física de rechazo a 60m se convierte mecánicamente en CALL/PUT con
 boundary 0,5 y se ejecuta cronológicamente. Así un PF rentable mediría la misma
 hipótesis causal, no una segunda optimización sobre los retornos reportados.
+
+La primera captura full aporta otra lección de fuente: listing exacto a `t-5m`
+no garantiza que OPRA haya emitido un update dentro de cada ventana posterior de
+30 segundos. ThetaData expresa esa ausencia con HTTP 472 `NO_DATA`, no con un
+JSON 200 vacío. Un capturador causal debe distinguir una ventana observada sin
+mensajes de un fallo de conexión y conservar el raw de error, pero no puede
+inventar una quote, ampliar la ventana ni usar as-of. H-IBQDYN1 encontró cuatro
+casos exactos entre 33.704 contratos, ambos rights de dos eventos SPXW/SPY; el
+tratamiento congelado es parquet vacío, evento both-invalid y cobertura
+penalizada. Esto valida semántica de missingness, no alpha.

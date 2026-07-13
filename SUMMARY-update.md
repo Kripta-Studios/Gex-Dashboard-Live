@@ -485,3 +485,17 @@ dormida hasta physical PASS y no se ha leído rentabilidad.
 
 Replayer/freezer económico ya listos y bloqueados por physical PASS; tests de
 la cadena data+physical+economic `19 passed`. Captura 4.900/33.704, cero errores.
+
+La primera pasada full H-IBQDYN1 ya terminó: 33.700/33.704 contratos tienen
+raw/parquet/manifest y no existe staging. Cuatro requests exactos del
+2023-10-25 10:35 (CALL+PUT de SPXW y SPY) devolvieron 472 tras tres intentos;
+un retry posterior con MDDS CONNECTED repitió el cuerpo oficial `NO_DATA`.
+Hashes: errors `e4dc5819...59af7`, cuatro ids `4a44551f...38a7`, body
+`101a4aa8...3708c`. No es un error de permiso/conexión ni autoriza sustitución.
+
+El contrato full ya admite filas cero. El amendment pre-outcome HTTP472 V1R1
+congela materializar exclusivamente esas cuatro ventanas como raw text real,
+parquet vacío y manifest auditable. Los dos eventos permanecen both-invalid y
+en el denominador; coverage/distinctness/modelos no cambian. Falta implementar
+y congelar el sealer V1R1, revalidar los 33.700, producir seal 33.704/33.704 y
+solo entonces ejecutar el data gate. No hay AUC, PF, WR o PnL H-IBQDYN1.
