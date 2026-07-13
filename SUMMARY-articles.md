@@ -467,3 +467,19 @@ predeclaradas del nivel, para que F0 y F1 compartan la geometría completa. F1
 añade exactamente 20 dinámicas tick y nada más. Al congelar hashes, folds,
 horizontes, LR/LightGBM y gates antes de labels, una mejora posterior no puede
 atribuirse a seleccionar retrospectivamente una extensión Fibonacci o modelo.
+
+El resultado one-shot muestra por qué esa disciplina importa: pese a una muestra
+mensual holgada (mínimo 45 episodios resueltos), las dinámicas tick reducen la
+AUC mediana de la LR en 0,004 y solo ganan 7/24 celdas. La señal no falla por
+escasez ni por un único ticker; las medianas son negativas en QQQ, SPXW y SPY.
+LightGBM tampoco confirma y su mediana empeora 0,00585. Algunas celdas aisladas
+—QQQ 120m LR o SPXW 30/60m LightGBM— parecen favorables, pero elegirlas después
+del resultado convertiría ruido en una nueva policy sin evidencia.
+
+La conclusión acotada es que update intensity, aceleración, presión de mid/
+spread y replenishment/withdrawal durante 30 segundos en los CALL/PUT ejecutables
+no identifican de forma estable defensa/aceptación de los ocho niveles IB/Fib
+por encima de distancia, aproximación, volatilidad, hora e identidad del nivel.
+No se abrió payoff porque hacerlo tras este fallo solo permitiría seleccionar una
+traducción económica sobre una representación física falsificada. Por eso no hay
+PF, WR o PnL que reportar para H-IBQDYN1.

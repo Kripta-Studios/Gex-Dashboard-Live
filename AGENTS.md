@@ -699,3 +699,22 @@ variables tick (46). LR L2 primaria, LightGBM solo sensibilidad; folds 2024/2025
 y horizontes 30/60/120/180 exactos. `holdout_2026_opened=false`, producción
 intacta y payoff no autorizado al freeze. Tras commit/push del manifest,
 ejecutar exactamente un physical one-shot; no modificar código/protocolo.
+
+### Cierre H-IBQDYN1 — `CLOSED_PHYSICAL_GATE`
+
+El one-shot congelado corrió desde `72dff1c` sobre 96 modelos y cerró la familia.
+LR primaria: 7/24 wins frente a 16 requeridos, mediana ΔAUC `-0,004032`
+frente a `+0,01` y Wilcoxon unilateral `p=0,921875` frente a `<0,0125`.
+QQQ/SPXW/SPY: 3/8, 3/8 y 1/8 wins; medianas ΔAUC
+`-0,001953/-0,002884/-0,008276`; primarias 30/60m 1/4, 2/4 y 0/4. Ningún
+ticker pasa. LightGBM tampoco confirma: 8/24, mediana `-0,005847`, p `0,890625`.
+
+La frecuencia física sí pasa (mínimo mensual resuelto 45), pero
+`physical_mechanism_pass=false`, `research_payoff_authorized=false` y
+`advance_to_option_payoff=false`. Por tanto no ejecutar economic replayer, no
+reportar PF/WR/PnL y no abrir Jan-May/junio 2026. No rescatar seleccionando QQQ
+120m, SPXW LightGBM 30/60m, ticker, nivel Fibonacci, horizonte o subgrupo.
+Compactos en `h_ibqdyn1_physical_202208_202512_v1/`; parquets/predictions/modelos
+grandes quedan en `tmp/`. H-IBQDYN1 queda cerrado: la dinámica NBBO de 30s en
+los contratos ejecutables alrededor de la geometría IB/Fib completa no añade
+separación física estable a F0. No hay modelo rentable nuevo.

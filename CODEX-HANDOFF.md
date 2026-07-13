@@ -869,3 +869,38 @@ LR L2 primaria, LightGBM confirmatorio no rescatable, folds 2024/2025 y
 horizontes 30/60/120/180. Registra 2026 cerrado, producción intacta y payoff no
 autorizado. Siguiente acción: force-add/commit/push del manifest y ejecutar una
 sola vez `evaluate_h_ibqdyn1_physical.py`; ese será el primer acceso a labels.
+
+## Cierre científico H-IBQDYN1
+
+El único one-shot se ejecutó desde commit `72dff1c` y publicó 96 modelos, 24/24
+celdas pareadas válidas y `CLOSED_PHYSICAL_GATE`. La LR primaria falla de forma
+clara: 7 wins (gate 16), mediana ΔAUC `-0,0040319288` (gate `>=0,01`) y
+Wilcoxon unilateral `p=0,921875` (gate `<0,0125`). Tuvo 10 pérdidas conjuntas
+AP/log-loss; esto queda dentro del máximo 12 pero no compensa los otros fallos.
+
+| Ticker | Wins | Mediana ΔAUC | Mediana AUC F1 | Wins 30/60m |
+| --- | ---: | ---: | ---: | ---: |
+| QQQ | 3/8 | -0,001953 | 0,549042 | 1/4 |
+| SPXW | 3/8 | -0,002884 | 0,532689 | 2/4 |
+| SPY | 1/8 | -0,008276 | 0,543853 | 0/4 |
+
+LightGBM sensibilidad también falla: 8/24, mediana ΔAUC `-0,0058472586`,
+p `0,890625`; QQQ/SPXW/SPY 2/8, 4/8, 2/8. El aparente SPXW 3/4 en 30/60m
+LightGBM no pasa el ticker completo y no puede rescatar la LR.
+
+Frequency gate pasa: 288 month cells, todas con dos clases y mínimo 45 episodios
+resueltos frente a 18. El fallo no es falta de oportunidades; es ausencia de
+mejora física estable de F1 sobre F0. Resultado final:
+`physical_mechanism_pass=false`, `authoritative_physical_success=false`,
+`research_payoff_authorized=false`, `advance_to_option_payoff=false` y
+`production_live_ready=false`.
+
+No ejecutar el economic replayer ni inventar PF/WR/PnL. Jan-May 2026, junio
+2026 y producción permanecen intactos. No rescatar por QQQ 120m, SPXW LGBM,
+nivel/ticker/horizonte/subgrupo. Compactos byte-identical en
+`research_papers/JEPA/results/_diagnostics/h_ibqdyn1_physical_202208_202512_v1/`;
+manifest SHA `13cd1e35b7b17bc59ff40496cc71482a0cd9cb202962d8c8c9a9efe38bc7af41`,
+summary SHA `4c0b651d...e701566`. H-IBQDYN1 queda cerrado y no existe un modelo
+rentable nuevo. No hay otra familia activa autorizada; la siguiente investigación
+debe ser una hipótesis causal realmente distinta y predeclarada, no una variante
+de las familias cerradas enumeradas en este handoff.

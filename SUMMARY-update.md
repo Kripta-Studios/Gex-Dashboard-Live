@@ -536,3 +536,13 @@ Frozen runner físico ya generado sobre `3f19eb4`, manifest SHA
 LR L2 primaria/LightGBM sensibilidad, folds 2024/2025 y 30/60/120/180m. 2026,
 producción y payoff permanecen cerrados. Commit/push del manifest y luego un
 único physical F0/F1; aún no se abrieron labels ni rentabilidad.
+
+H-IBQDYN1 queda `CLOSED_PHYSICAL_GATE` tras el one-shot `72dff1c`. LR: 7/24
+wins, mediana ΔAUC `-0,004032`, p `0,921875`; por ticker QQQ/SPXW/SPY
+3/8, 3/8, 1/8 y primarias 30/60m 1/4, 2/4, 0/4. LightGBM: 8/24, mediana
+`-0,005847`, p `0,890625`. Ningún ticker ni modelo pasa. Frequency sí pasa con
+mínimo 45 episodios resueltos por month-cell, así que falla alpha, no capacidad.
+`advance_to_option_payoff=false`: no se ejecutó replay, no hay PF/WR/PnL y 2026/
+producción siguen intactos. Compactos en
+`h_ibqdyn1_physical_202208_202512_v1/`. No rescatar por horizonte, ticker, nivel
+o SPXW LightGBM. Rentabilidad nueva: no demostrada.
