@@ -675,3 +675,23 @@ hubo restart systemd. Luego la IP origen perdió TCP 22/25503 con ping aún vivo
 posible filtro temporal. Restaurar servicio/Terminal remoto y capturar exactamente
 12; si no hay entitlement/datos, marcar H-GREEK2 bloqueado. No hay alpha/PnL.
 Gate económica PF1,3/WR45%/min12 aceptada pero todavía intocada.
+
+H-GREEK2WALL queda cerrado `BLOCKED_SOURCE_ENTITLEMENT`. El remoto volvió con
+un único Terminal PID 954, MDDS CONNECTED y los tres servicios
+thetadata/realtime/ai activos. Inventory V1R3 PASS sobre `20b9325` (CSV
+`829ef754...dce53`, JSON `88b84f2a...220f`, builder `bf8fda05...bad0`),
+`13 passed` y Ruff clean. La primera sesión congelada SPXW 2022-08-01 recibió
+HTTP 403 en el host remoto exacto: STANDARD no autoriza `/greeks/all`
+PROFESSIONAL. Status SHA `1f914c43...dcc5`; error SHA `13650acb...1bb9`.
+Falló antes de direct OI y no existe output/staging/raw/parquet que reanudar.
+No hubo labels, modelo, payoff, acceso a 2026 ni cambios de producción.
+
+No rescatar H-GREEK2 con fórmulas locales presentadas como fuente directa. La
+siguiente fuente independiente ya separada es H-IBQDYN1: dinámica NBBO dirigida
+sobre los ocho niveles IB/Fibonacci fijos, disponibles solo desde 10:30. Debe
+tener predeclaración, listing proof y captura propios; no reutilizar H-QDYN.
+
+Objetivo económico actual del usuario: cada ticker debe cumplir PF>=1,30,
+WR>=50%, mínimo 18 trades en todos los meses, hold>=30m y PnL mensual positivo
+en walk-forward; junio 2026 sigue cerrado. Esto sustituye como objetivo de esta
+investigación la antigua relajación WR45%/min12, sin validar nada retroactivamente.

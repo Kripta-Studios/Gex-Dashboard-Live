@@ -373,3 +373,17 @@ Restaurar una única sesión remota y sellar las 12 capturas es requisito previo
 si el feed o entitlement no existen, H-GREEK2 debe cerrarse como fuente ausente.
 No inferir alpha o rentabilidad de la disponibilidad del endpoint ni relajar la
 gate económica PF1,3/WR45%/mínimo12, que sigue sin ser probada por esta fuente.
+
+La recuperación del servicio separó definitivamente operación de entitlement:
+con un único Terminal remoto, MDDS CONNECTED y los bots activos, la primera
+sesión congelada volvió a responder HTTP 403 porque la cuenta remota también es
+STANDARD. H-GREEK2 queda cerrado por ausencia de fuente Professional antes de
+capturar una sola griega directa. Un endpoint documentado no equivale a un dato
+disponible, y un transporte SSH al mismo host no cambia la identidad de fuente.
+
+Tampoco es científicamente válido reemplazar vanna/charm/vomma/zomma directas
+por fórmulas locales y conservar el nombre de la hipótesis: esas fórmulas son
+transformaciones deterministas del spot/IV ya disponible. La dirección nueva
+separada es H-IBQDYN1, presión/reposición NBBO intraminuto sobre los ocho niveles
+IB/Fibonacci fijos después de completar el IB. Exige universo, listing y captura
+propios; los ticks dirigidos a Greek walls de H-QDYN no pueden reutilizarse.

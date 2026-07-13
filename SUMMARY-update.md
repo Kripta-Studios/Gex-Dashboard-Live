@@ -438,3 +438,16 @@ worker 1828, no launcher systemd PID 916, y sin sudo no hubo restart; después
 TCP22/25503 quedó inaccesible desde la IP origen aunque ping funciona. Restaurar
 servicio y capturar/sellar 12 o bloquear por entitlement/datos. Sin alpha/PnL;
 gate PF1,3/WR45%/min12 permanece aceptada pero no evaluada.
+
+H-GREEK2WALL cerró `BLOCKED_SOURCE_ENTITLEMENT`: remoto sano, Terminal único
+PID954 y MDDS CONNECTED, pero la primera sesión congelada SPXW 2022-08-01
+devolvió HTTP403 porque la suscripción remota también es STANDARD y
+`/greeks/all` requiere PROFESSIONAL. Inventory V1R3 PASS sobre `20b9325`,
+`13 passed`; status SHA `1f914c43...dcc5`, error SHA `13650acb...1bb9`.
+No se creó output/staging/raw/parquet ni se abrió direct OI, labels, modelos,
+payoff, 2026 o producción. No sustituir direct higher Greeks por fórmulas
+locales. Siguiente fuente separada: H-IBQDYN1 sobre ocho niveles IB/Fib fijos,
+con predeclaración/listing/captura propios y sin reutilizar H-QDYN.
+
+Objetivo económico vigente: PF>=1,30, WR>=50%, >=18 trades por mes y ticker,
+hold>=30m y PnL positivo en cada mes walk-forward; junio 2026 continúa cerrado.

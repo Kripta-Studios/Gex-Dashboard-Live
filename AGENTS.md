@@ -522,3 +522,29 @@ exactamente las 12 sesiones. Si entitlement o datos siguen ausentes, bloquear
 H-GREEK2. No afirmar captura, alpha, PF, WR o PnL. La gate deployable aceptada
 PF>=1,30, WR>=45% y mínimo 12 trades/mes permanece intacta y no se ha evaluado
 con esta fuente.
+
+### Cierre H-GREEK2WALL — `BLOCKED_SOURCE_ENTITLEMENT`
+
+El Terminal remoto se recuperó con PID único `954`, MDDS `CONNECTED`, y
+`thetadata_feed`, `realtime_feed` y `ai_bot` activos. Source inventory V1R3
+PASS sobre `20b9325`: CSV SHA `829ef754...dce53`, JSON SHA
+`88b84f2a...220f`, builder SHA `bf8fda05...bad0`; suite `13 passed` y Ruff
+clean. La primera captura congelada, SPXW 2022-08-01, llegó al host remoto exacto
+mediante transporte SSH y devolvió HTTP 403: tanto local como remoto tienen
+suscripción STANDARD y `/greeks/all` exige PROFESSIONAL. Error SHA
+`13650acb...1bb9`; status CONNECTED SHA `1f914c43...dcc5`.
+
+El fallo ocurrió antes de direct OI y no creó output, staging, raw ni parquet.
+H-GREEK2 queda cerrado por fuente ausente, sin datos, labels, modelos, payoff,
+2026 o cambios de producción. No sustituir por higher Greeks derivados y
+llamarlos directos. Una futura licencia Professional sería un cambio externo y
+solo permitiría continuar prospectivamente el protocolo ya congelado.
+
+Siguiente fuente independiente permitida: H-IBQDYN1, presión NBBO intraminuto
+dirigida sobre el conjunto fijo completo de ocho niveles IB/Fibonacci calculados
+solo después de completar 09:30–10:29. Requiere predeclaración, proof de listing
+y captura propios; no reutilizar ni relabelar ticks Greek-wall H-QDYN.
+
+Objetivo económico vigente del usuario, más estricto que la antigua gate
+deployable: por ticker PF>=1,30, WR>=50%, >=18 trades en cada mes, hold>=30m y
+PnL positivo en todos los meses walk-forward; junio 2026 permanece cerrado.
