@@ -645,3 +645,15 @@ suite focal `26 passed`, pushed. El relaunch inmutable está corriendo. Esperar
 `PASS_DATA_GATE`, commitear compactos, congelar runner en otro commit y ejecutar
 una sola vez F0/F1. No hay resultado físico/económico y no se autoriza payoff
 sin physical PASS.
+
+H-QDYN1R1R1 queda `CLOSED_DATA_GATE` sin outcomes. El target inmutable
+`tmp/wall_quote_tick_dynamics_at_touch_202208_202512_v1r1r1` produjo 10.683x67,
+dataset SHA `2a7147cc...fb265a`, source SHA `a65f4435...73398` y
+`REJECTED_DATA_GATE`. Coverage sí pasa (mínimos anual/ticker
+`0,8942084942084942/0,9072749691738594`); distinctness no: 16 fracciones de
+cambio de exchange SPXW 2022–2025 son cero constante y dos state-change SPXW
+2025 son uno constante. El contrato congela cierre ante cualquier feature con
+menos de dos estados por ticker-año. No freeze, labels, modelo, payoff, retirada
+de features ni rescate. `85de313` arregló un bug previo no causal; capture seal
+válido. HEAD del cierre `d2c23ec`. Próxima acción única: preflight H-GREEK2WALL
+de 12 sesiones.

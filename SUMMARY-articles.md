@@ -350,3 +350,14 @@ plomería (`set_index` eliminó `event_id`), no por una propiedad de la señal; 
 corrigió en `85de313` con `26 passed`. Hasta que el relaunch pase, se congele el
 runner y se ejecute el único F0/F1, esto sigue siendo evidencia de disponibilidad
 y causalidad, no de alpha ni rentabilidad.
+
+El data gate final impidió precisamente convertir disponibilidad en una falsa
+señal: aunque both-valid supera 89,4% en cada ticker-año, 18 mediciones SPXW son
+constantes. Las fracciones CALL/PUT de cambio de exchange son cero en los cuatro
+años y las fracciones de cualquier cambio de estado son uno en SPXW 2025. Como
+la hipótesis congeló >=2 estados por feature/ticker-año, H-QDYN1 se cierra antes
+de labels. Eliminar ahora esas features sería selección post-resultado, aunque
+no se hayan abierto outcomes. La lección es que mayor granularidad de mensajes
+no garantiza variación identificable: este feed reconstruido no mide dinámica
+de exchange/state útil de forma no degenerada para SPXW. El siguiente test
+independiente es el preflight directo de higher-order Greeks H-GREEK2WALL.

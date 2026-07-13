@@ -1,0 +1,272 @@
+{
+  "columns": [
+    {
+      "name": "ticker",
+      "dtype": "str"
+    },
+    {
+      "name": "trade_date",
+      "dtype": "str"
+    },
+    {
+      "name": "minute",
+      "dtype": "int64"
+    },
+    {
+      "name": "wall_identity",
+      "dtype": "str"
+    },
+    {
+      "name": "decision_dt",
+      "dtype": "datetime64[us]"
+    },
+    {
+      "name": "candidate_wall_strike",
+      "dtype": "float64"
+    },
+    {
+      "name": "minute_sin",
+      "dtype": "float64"
+    },
+    {
+      "name": "minute_cos",
+      "dtype": "float64"
+    },
+    {
+      "name": "role_resistance",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_distance_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_abs_distance_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "spot_ret_1m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "spot_abs_ret_1m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "spot_ret_5m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "spot_ret_15m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "spot_ret_30m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "realized_vol_5m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "realized_vol_15m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_distance_change_5m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_distance_change_15m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_distance_change_30m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_approach_5m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_approach_15m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "candidate_approach_30m_bps",
+      "dtype": "float64"
+    },
+    {
+      "name": "event_id",
+      "dtype": "str"
+    },
+    {
+      "name": "causal_subscription_eligible",
+      "dtype": "bool"
+    },
+    {
+      "name": "qdyn_call_log_update_count",
+      "dtype": "float64"
+    },
+    {
+      "name": "qdyn_call_log_unique_timestamp_count",
+      "dtype": "float64"
+    },
+    {
+      "name": "qdyn_call_timestamp_collision_fraction",
+      "dtype": "float64"
+    },
+    {
+      "name": "qdyn_call_update_acceleration_10s_vs_prior20s",
+      "dtype": "float64"
+    },
+    {
+      "name": "qdyn_call_unambiguous_state_change_fraction",
+      "dtype": "float64"
+    },
+    {
+      "name": "qdyn_call_unambiguous_price_change_fraction",
+      "dtype": "float64"
+    },
+    {
+      "name": "qdyn_call_unambiguous_size_only_change_fraction",
+      "dtype": "float64"
+    },
+    {
+      "name": "qdyn_call_log_bid_size_increase",
+      "dtype": "float64"
+    },
+    {
+      "name": "qdyn_call_log_bid_size_decrease",
+      "dtype": "float64"
+    },
+    {
+      "name": "qdyn_call_log_ask_size_increase",
+      "dtype": "float64"
+    },
+    {
+      "name": "qdyn_call_log_ask_size_decrease",
+      "dtype": "float64"
+    },
+    {
+      "name": "qdyn_call_bid_exchange_change_fraction",
+      "dtype": "float64"
+    },
+    {
+      "name": "qdyn_call_ask_exchange_change_fraction",
+      "dtype": "float64"
+    },
+    {
+      "name": "qdyn_call_log_last_update_age_ms",
+      "dtype": "float64"
+    },
+    {
+      "name": "qdyn_call_raw_rows",
+      "dtype": "int64"
+    },
+    {
+      "name": "qdyn_call_dedup_rows",
+      "dtype": "int64"
+    },
+    {
+      "name": "qdyn_call_exact_duplicate_rows",
+      "dtype": "int64"
+    },
+    {
+      "name": "qdyn_call_collision_rows",
+      "dtype": "int64"
+    },
+    {
+      "name": "qdyn_call_unambiguous_pair_count",
+      "dtype": "int64"
+    },
+    {
+      "name": "qdyn_call_valid",
+      "dtype": "bool"
+    },
+    {
+      "name": "qdyn_put_log_update_count",
+      "dtype": "float64"
+    },
+    {
+      "name": "qdyn_put_log_unique_timestamp_count",
+      "dtype": "float64"
+    },
+    {
+      "name": "qdyn_put_timestamp_collision_fraction",
+      "dtype": "float64"
+    },
+    {
+      "name": "qdyn_put_update_acceleration_10s_vs_prior20s",
+      "dtype": "float64"
+    },
+    {
+      "name": "qdyn_put_unambiguous_state_change_fraction",
+      "dtype": "float64"
+    },
+    {
+      "name": "qdyn_put_unambiguous_price_change_fraction",
+      "dtype": "float64"
+    },
+    {
+      "name": "qdyn_put_unambiguous_size_only_change_fraction",
+      "dtype": "float64"
+    },
+    {
+      "name": "qdyn_put_log_bid_size_increase",
+      "dtype": "float64"
+    },
+    {
+      "name": "qdyn_put_log_bid_size_decrease",
+      "dtype": "float64"
+    },
+    {
+      "name": "qdyn_put_log_ask_size_increase",
+      "dtype": "float64"
+    },
+    {
+      "name": "qdyn_put_log_ask_size_decrease",
+      "dtype": "float64"
+    },
+    {
+      "name": "qdyn_put_bid_exchange_change_fraction",
+      "dtype": "float64"
+    },
+    {
+      "name": "qdyn_put_ask_exchange_change_fraction",
+      "dtype": "float64"
+    },
+    {
+      "name": "qdyn_put_log_last_update_age_ms",
+      "dtype": "float64"
+    },
+    {
+      "name": "qdyn_put_raw_rows",
+      "dtype": "int64"
+    },
+    {
+      "name": "qdyn_put_dedup_rows",
+      "dtype": "int64"
+    },
+    {
+      "name": "qdyn_put_exact_duplicate_rows",
+      "dtype": "int64"
+    },
+    {
+      "name": "qdyn_put_collision_rows",
+      "dtype": "int64"
+    },
+    {
+      "name": "qdyn_put_unambiguous_pair_count",
+      "dtype": "int64"
+    },
+    {
+      "name": "qdyn_put_valid",
+      "dtype": "bool"
+    },
+    {
+      "name": "qdyn_both_valid",
+      "dtype": "bool"
+    }
+  ]
+}

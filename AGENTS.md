@@ -477,3 +477,23 @@ relaunch a target inmutable está ejecutándose. No existe aún resultado físic
 ni económico. Secuencia única: esperar `PASS_DATA_GATE` -> commit de compactos
 -> commit del frozen runner -> un solo one-shot físico F0/F1. No abrir payoff
 salvo physical PASS.
+
+### Cierre H-QDYN1R1R1 — `CLOSED_DATA_GATE`
+
+El relaunch inmutable terminó `REJECTED_DATA_GATE` sin abrir outcomes. Dataset
+`tmp/wall_quote_tick_dynamics_at_touch_202208_202512_v1r1r1`: 10.683x67, SHA
+`2a7147ccaa60bb41419a3c1b100e1857a701249c970dc276a602f10147fb265a`;
+source inventory SHA
+`a65f4435820f504529f5684055c50db8428b095f837238e0f8ffe86291673398`.
+Coverage pasa (mínimo anual both-valid `0,8942084942084942`, ticker
+`0,9072749691738594`), pero distinctness falla en 18 celdas: SPXW 2022–2025
+tiene constantes cero las cuatro fracciones CALL/PUT de cambio de exchange
+(16), y SPXW 2025 tiene constantes uno las dos
+`unambiguous_state_change_fraction` CALL/PUT (2).
+
+La predeclaración exige >=2 estados finitos/distintos por feature y ticker-año;
+por tanto H-QDYN1 queda cerrado sin freeze, labels, modelo, payoff ni rescate por
+quitar features. El bug `set_index` corregido en `85de313` no causó este fallo y
+el capture seal sigue válido. Cierre detallado en
+`WALL_QUOTE_TICK_DYNAMICS_AT_TOUCH_V1R1R1_DATA_GATE_CLOSURE.md`. Siguiente paso:
+preflight predeclarado de 12 sesiones H-GREEK2WALL.

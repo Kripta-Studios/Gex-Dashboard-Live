@@ -418,3 +418,12 @@ cerrados. El primer data gate se detuvo pre-outcome por `set_index` eliminando
 `event_id`; fix fail-closed `85de313`, `26 passed`, pushed. Relaunch inmutable
 activo. Falta PASS_DATA_GATE -> compactos -> frozen runner -> único F0/F1; no
 hay resultado físico, PF, WR o PnL nuevo.
+
+El relaunch final H-QDYN1R1R1 cerró `REJECTED_DATA_GATE` pre-outcome: 10.683x67,
+SHA dataset `2a7147cc...fb265a`, source `a65f4435...73398`. Coverage pasa
+(mínimos anual/ticker 89,421%/90,727%), pero 18 celdas SPXW son degeneradas:
+16 exchange-change fractions constante cero en 2022–2025 y dos state-change
+fractions constante uno en 2025. La gate exigía >=2 estados por feature y
+ticker-año. H-QDYN1 queda cerrado sin labels/modelo/payoff ni rescate; no existe
+rentabilidad H-QDYN. El capture seal sigue válido y el bug `85de313` no causó el
+fallo. Siguiente: preflight H-GREEK2WALL de 12 sesiones.
