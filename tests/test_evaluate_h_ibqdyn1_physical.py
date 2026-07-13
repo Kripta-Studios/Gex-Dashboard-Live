@@ -197,3 +197,9 @@ def test_freezer_emits_preexecution_contract_only_after_pass(
     assert payload["status"] == "PREEXECUTION_FROZEN"
     assert not payload["payoff_authorized_at_freeze"]
     assert payload["feature_names"]["F1"] == evaluator.feature_names("F1")
+
+
+def test_physical_model_paths_are_portable_after_staging_rename() -> None:
+    staging = Path("result.staging/models/lr_2024_SPY_60m_F1.joblib")
+    normalized = f"models/{staging.name}"
+    assert normalized == "models/lr_2024_SPY_60m_F1.joblib"

@@ -428,6 +428,26 @@ def main() -> None:
         freeze["historical_timestamp_provenance_status"],
         freeze["live_feature_parity_status"],
     )
+    if "model_path" in cells:
+        cells["model_path"] = cells["model_path"].map(
+            lambda value: (
+                f"models/{Path(str(value)).name}"
+                if pd.notna(value) and str(value)
+                else value
+            )
+        )
+    if "path" in models:
+        models["path"] = models["path"].map(
+            lambda value: f"models/{Path(str(value)).name}"
+        )
+    if "preprocessor_path" in models:
+        models["preprocessor_path"] = models["preprocessor_path"].map(
+            lambda value: (
+                f"models/{Path(str(value)).name}"
+                if pd.notna(value) and str(value)
+                else value
+            )
+        )
     paths = {
         "cells": staging / "cells.csv",
         "paired_cells": staging / "paired_cells.csv",
