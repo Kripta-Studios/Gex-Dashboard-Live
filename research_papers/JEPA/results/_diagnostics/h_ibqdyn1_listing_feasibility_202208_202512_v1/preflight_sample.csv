@@ -1,0 +1,13 @@
+event_id,ticker,trade_date,year,decision_dt,subscription_dt,minute,nearest_level_name,bucket,call_strike,put_strike,preflight_sample,subscription_timestamp_covered,full_chain_contracts_tminus5m,exact_call_listed_tminus5m,exact_put_listed_tminus5m,causal_subscription_eligible,eligibility_reason
+82e2256e260cef6f4ca771e5,QQQ,20220801,2022,2022-08-01 10:45:00,2022-08-01 10:40:00,645,ib_high,d35,319.0,316.0,True,True,236,True,True,True,eligible
+21ae7f18e78a5a57ab8a1eb2,QQQ,20230103,2023,2023-01-03 10:35:00,2023-01-03 10:30:00,635,ib_low,d35,265.0,263.0,True,True,188,True,True,True,eligible
+4e58f57bc91dcead3db90b55,QQQ,20240102,2024,2024-01-02 10:35:00,2024-01-02 10:30:00,635,ib_low,d35,403.0,401.0,True,True,328,True,True,True,eligible
+d05e18a30ff476e6aebd1980,QQQ,20250102,2025,2025-01-02 11:05:00,2025-01-02 11:00:00,665,ib_low,d35,512.0,509.0,True,True,278,True,True,True,eligible
+7fa05bc269a0bad1fbb06b07,SPXW,20220801,2022,2022-08-01 10:45:00,2022-08-01 10:40:00,645,ib_high,d25,4155.0,4110.0,True,True,326,True,True,True,eligible
+f8e85c4eb1026f340c62eb96,SPXW,20230103,2023,2023-01-03 10:35:00,2023-01-03 10:30:00,635,ib_low,d25,3845.0,3795.0,True,True,288,True,True,True,eligible
+d6d5f0f0c246653aed627676,SPXW,20240102,2024,2024-01-02 10:35:00,2024-01-02 10:30:00,635,ib_low,d25,4745.0,4720.0,True,True,332,True,True,True,eligible
+014a641e42fa72f1ec48931e,SPXW,20250102,2025,2025-01-02 10:35:00,2025-01-02 10:30:00,635,ib_low,d25,5925.0,5870.0,True,True,422,True,True,True,eligible
+debc80f4d282db8b97d70c25,SPY,20220801,2022,2022-08-01 10:45:00,2022-08-01 10:40:00,645,ib_high,d35,413.0,411.0,True,True,306,True,True,True,eligible
+de6967c33adc3b3564ad6500,SPY,20230103,2023,2023-01-03 10:35:00,2023-01-03 10:30:00,635,ib_low,d35,382.0,379.0,True,True,244,True,True,True,eligible
+e4aadcaf181993b3874605c9,SPY,20240102,2024,2024-01-02 10:35:00,2024-01-02 10:30:00,635,ib_low,d35,472.0,471.0,True,True,216,True,True,True,eligible
+caf3fa9e42bb5d5a202bf83b,SPY,20250102,2025,2025-01-02 10:35:00,2025-01-02 10:30:00,635,ib_low,d35,589.0,586.0,True,True,222,True,True,True,eligible
