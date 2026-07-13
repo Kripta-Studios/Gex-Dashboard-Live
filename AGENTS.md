@@ -718,3 +718,23 @@ Compactos en `h_ibqdyn1_physical_202208_202512_v1/`; parquets/predictions/modelo
 grandes quedan en `tmp/`. H-IBQDYN1 queda cerrado: la dinámica NBBO de 30s en
 los contratos ejecutables alrededor de la geometría IB/Fib completa no añade
 separación física estable a F0. No hay modelo rentable nuevo.
+
+### EDGE-FIRST EXISTING-DATA SPRINT V1 — benchmark/oracle
+
+El sprint económico reutiliza exclusivamente el parquet executable-quote
+2022-01..2025-12 existente; no abrió outcomes 2024/2025 ni leyó labels nuevos de
+2026 en este checkpoint. El benchmark publicado fue reproducido exactamente:
+QQQ 94 trades/WR 44,68%/PF 0,983707/PnL -0,492R; SPXW 107/42,99%/
+0,831520/-5,816R; SPY 123/43,90%/0,919499/-2,979R. El artefacto publicado usaba
+cap SPY=2; al imponer el contrato vigente SPY=1 quedan 93 trades, PF 0,971936,
+PnL -0,773R y mínimo mensual 14.
+
+La descomposición oracle se ejecutó solo en abril-diciembre 2023 con el control
+Pairwise C0 congelado. El baseline causal pierde en los tres tickers (PF
+SPXW/QQQ/SPY 0,828/0,794/0,862); conservar oportunidades causales y usar lado
+oracle eleva PF a 5,838/9,811/8,315. Los controles always-CALL, always-PUT y
+random seed fijo también pierden. Headroom pooled diagnosticado: +573,553R por
+error de lado y +1.159,030R por error de oportunidad. Execution drag no es
+identificable sin una label midpoint/no-spread emparejada y no se inventa.
+Siguiente secuencia: predeclarar `EXISTING_DATA_EXECUTABLE_UTILITY_V1`, congelar
+E0/E1 y validar el runner en 2022-2023 antes del único nested 2024-2025.

@@ -546,3 +546,13 @@ mínimo 45 episodios resueltos por month-cell, así que falla alpha, no capacida
 producción siguen intactos. Compactos en
 `h_ibqdyn1_physical_202208_202512_v1/`. No rescatar por horizonte, ticker, nivel
 o SPXW LightGBM. Rentabilidad nueva: no demostrada.
+
+EDGE-FIRST V1 ya completó su primer diagnóstico económico sin abrir 2024/2025.
+El benchmark existente se reproduce exactamente: PF QQQ/SPXW/SPY
+0,983707/0,831520/0,919499 y PnL negativo en los tres. El benchmark publicado
+usaba cap SPY=2; con el cap contractual SPY=1 queda PF 0,971936 y mínimo mensual
+14. En 2023 dev-only, el baseline causal también pierde; los oracles muestran
+headroom grande tanto en selección de oportunidad como de lado, mientras
+always-CALL/PUT/random pierden. No se cuantifica execution drag porque falta un
+payoff midpoint/no-spread emparejado. Siguiente hito: freeze económico E0/E1 y
+runner nested; 2026 y producción siguen intactos.

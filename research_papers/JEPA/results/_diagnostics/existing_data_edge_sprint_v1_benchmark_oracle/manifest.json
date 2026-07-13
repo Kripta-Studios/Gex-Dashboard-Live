@@ -1,0 +1,883 @@
+{
+  "audit": "EXISTING_DATA_EDGE_SPRINT_V1_BENCHMARK_ORACLE",
+  "dataset": {
+    "path": "tmp\\event_option_dataset_execquote_causal1030_202201_202512_pairwise_v1\\event_option_dataset.parquet",
+    "sha256": "d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408"
+  },
+  "development_materialization": "20220101..20231231 only",
+  "development_outer_months": [
+    "202304",
+    "202305",
+    "202306",
+    "202307",
+    "202308",
+    "202309",
+    "202310",
+    "202311",
+    "202312"
+  ],
+  "published_benchmark_months": [
+    "202601",
+    "202602",
+    "202603",
+    "202604",
+    "202605"
+  ],
+  "june_2026_opened": false,
+  "outer_2024_2025_opened_by_this_audit": false,
+  "production_modified": false,
+  "oracle_promotable": false,
+  "random_seed": 20260714,
+  "causal_opportunity_threshold": 0.5,
+  "scheduler": {
+    "one_open_position_per_ticker": true,
+    "equal_exit_next_entry_allowed": true,
+    "caps": {
+      "SPXW": 4,
+      "QQQ": 2,
+      "SPY": 1
+    },
+    "cooldowns_minutes": {
+      "SPXW": 0,
+      "QQQ": 30,
+      "SPY": 0
+    }
+  },
+  "pairwise_c0": {
+    "feature_hash": "fa2057653ed0327b7f84a165c25f6e6d31e31b3b05c5591593e9c0bd3056d50e",
+    "features": [
+      "minute",
+      "ib_range_bps",
+      "dist_ib_high_bps",
+      "dist_ib_low_bps",
+      "nearest_level_abs_bps",
+      "ret_1m_bps",
+      "ret_5m_bps",
+      "ret_15m_bps",
+      "ret_30m_bps",
+      "iv_diff",
+      "spread_pct_diff",
+      "volume_diff",
+      "oi_diff",
+      "abs_delta_diff",
+      "vega_diff",
+      "iv_diff_chg_5m",
+      "iv_diff_chg_15m",
+      "iv_diff_chg_25m",
+      "spread_pct_diff_chg_5m",
+      "spread_pct_diff_chg_15m",
+      "spread_pct_diff_chg_25m",
+      "volume_diff_chg_5m",
+      "volume_diff_chg_15m",
+      "volume_diff_chg_25m",
+      "abs_delta_diff_chg_5m",
+      "abs_delta_diff_chg_15m",
+      "abs_delta_diff_chg_25m",
+      "vega_diff_chg_5m",
+      "vega_diff_chg_15m",
+      "vega_diff_chg_25m"
+    ],
+    "folds": [
+      {
+        "ticker": "SPXW",
+        "outer_month": "202304",
+        "train_months": [
+          "202201",
+          "202202",
+          "202203",
+          "202204",
+          "202205",
+          "202206",
+          "202207",
+          "202208",
+          "202209",
+          "202210",
+          "202211",
+          "202212"
+        ],
+        "inner_months_identity_only_not_used_for_threshold_selection": [
+          "202301",
+          "202302",
+          "202303"
+        ],
+        "train_rows": 6929,
+        "outer_rows": 726,
+        "call_seed": 202447,
+        "put_seed": 202448,
+        "max_train_date": "20221230",
+        "min_outer_date": "20230403"
+      },
+      {
+        "ticker": "SPXW",
+        "outer_month": "202305",
+        "train_months": [
+          "202202",
+          "202203",
+          "202204",
+          "202205",
+          "202206",
+          "202207",
+          "202208",
+          "202209",
+          "202210",
+          "202211",
+          "202212",
+          "202301"
+        ],
+        "inner_months_identity_only_not_used_for_threshold_selection": [
+          "202302",
+          "202303",
+          "202304"
+        ],
+        "train_rows": 7268,
+        "outer_rows": 748,
+        "call_seed": 202448,
+        "put_seed": 202449,
+        "max_train_date": "20230131",
+        "min_outer_date": "20230501"
+      },
+      {
+        "ticker": "SPXW",
+        "outer_month": "202306",
+        "train_months": [
+          "202203",
+          "202204",
+          "202205",
+          "202206",
+          "202207",
+          "202208",
+          "202209",
+          "202210",
+          "202211",
+          "202212",
+          "202301",
+          "202302"
+        ],
+        "inner_months_identity_only_not_used_for_threshold_selection": [
+          "202303",
+          "202304",
+          "202305"
+        ],
+        "train_rows": 7448,
+        "outer_rows": 781,
+        "call_seed": 202449,
+        "put_seed": 202450,
+        "max_train_date": "20230228",
+        "min_outer_date": "20230601"
+      },
+      {
+        "ticker": "SPXW",
+        "outer_month": "202307",
+        "train_months": [
+          "202204",
+          "202205",
+          "202206",
+          "202207",
+          "202208",
+          "202209",
+          "202210",
+          "202211",
+          "202212",
+          "202301",
+          "202302",
+          "202303"
+        ],
+        "inner_months_identity_only_not_used_for_threshold_selection": [
+          "202304",
+          "202305",
+          "202306"
+        ],
+        "train_rows": 7775,
+        "outer_rows": 761,
+        "call_seed": 202450,
+        "put_seed": 202451,
+        "max_train_date": "20230331",
+        "min_outer_date": "20230703"
+      },
+      {
+        "ticker": "SPXW",
+        "outer_month": "202308",
+        "train_months": [
+          "202205",
+          "202206",
+          "202207",
+          "202208",
+          "202209",
+          "202210",
+          "202211",
+          "202212",
+          "202301",
+          "202302",
+          "202303",
+          "202304"
+        ],
+        "inner_months_identity_only_not_used_for_threshold_selection": [
+          "202305",
+          "202306",
+          "202307"
+        ],
+        "train_rows": 8032,
+        "outer_rows": 815,
+        "call_seed": 202451,
+        "put_seed": 202452,
+        "max_train_date": "20230428",
+        "min_outer_date": "20230801"
+      },
+      {
+        "ticker": "SPXW",
+        "outer_month": "202309",
+        "train_months": [
+          "202206",
+          "202207",
+          "202208",
+          "202209",
+          "202210",
+          "202211",
+          "202212",
+          "202301",
+          "202302",
+          "202303",
+          "202304",
+          "202305"
+        ],
+        "inner_months_identity_only_not_used_for_threshold_selection": [
+          "202306",
+          "202307",
+          "202308"
+        ],
+        "train_rows": 8239,
+        "outer_rows": 780,
+        "call_seed": 202452,
+        "put_seed": 202453,
+        "max_train_date": "20230531",
+        "min_outer_date": "20230901"
+      },
+      {
+        "ticker": "SPXW",
+        "outer_month": "202310",
+        "train_months": [
+          "202207",
+          "202208",
+          "202209",
+          "202210",
+          "202211",
+          "202212",
+          "202301",
+          "202302",
+          "202303",
+          "202304",
+          "202305",
+          "202306"
+        ],
+        "inner_months_identity_only_not_used_for_threshold_selection": [
+          "202307",
+          "202308",
+          "202309"
+        ],
+        "train_rows": 8388,
+        "outer_rows": 815,
+        "call_seed": 202453,
+        "put_seed": 202454,
+        "max_train_date": "20230630",
+        "min_outer_date": "20231002"
+      },
+      {
+        "ticker": "SPXW",
+        "outer_month": "202311",
+        "train_months": [
+          "202208",
+          "202209",
+          "202210",
+          "202211",
+          "202212",
+          "202301",
+          "202302",
+          "202303",
+          "202304",
+          "202305",
+          "202306",
+          "202307"
+        ],
+        "inner_months_identity_only_not_used_for_threshold_selection": [
+          "202308",
+          "202309",
+          "202310"
+        ],
+        "train_rows": 8544,
+        "outer_rows": 764,
+        "call_seed": 202454,
+        "put_seed": 202455,
+        "max_train_date": "20230731",
+        "min_outer_date": "20231101"
+      },
+      {
+        "ticker": "SPXW",
+        "outer_month": "202312",
+        "train_months": [
+          "202209",
+          "202210",
+          "202211",
+          "202212",
+          "202301",
+          "202302",
+          "202303",
+          "202304",
+          "202305",
+          "202306",
+          "202307",
+          "202308"
+        ],
+        "inner_months_identity_only_not_used_for_threshold_selection": [
+          "202309",
+          "202310",
+          "202311"
+        ],
+        "train_rows": 8536,
+        "outer_rows": 733,
+        "call_seed": 202455,
+        "put_seed": 202456,
+        "max_train_date": "20230831",
+        "min_outer_date": "20231201"
+      },
+      {
+        "ticker": "QQQ",
+        "outer_month": "202304",
+        "train_months": [
+          "202201",
+          "202202",
+          "202203",
+          "202204",
+          "202205",
+          "202206",
+          "202207",
+          "202208",
+          "202209",
+          "202210",
+          "202211",
+          "202212"
+        ],
+        "inner_months_identity_only_not_used_for_threshold_selection": [
+          "202301",
+          "202302",
+          "202303"
+        ],
+        "train_rows": 4588,
+        "outer_rows": 693,
+        "call_seed": 202547,
+        "put_seed": 202548,
+        "max_train_date": "20221230",
+        "min_outer_date": "20230403"
+      },
+      {
+        "ticker": "QQQ",
+        "outer_month": "202305",
+        "train_months": [
+          "202202",
+          "202203",
+          "202204",
+          "202205",
+          "202206",
+          "202207",
+          "202208",
+          "202209",
+          "202210",
+          "202211",
+          "202212",
+          "202301"
+        ],
+        "inner_months_identity_only_not_used_for_threshold_selection": [
+          "202302",
+          "202303",
+          "202304"
+        ],
+        "train_rows": 4800,
+        "outer_rows": 777,
+        "call_seed": 202548,
+        "put_seed": 202549,
+        "max_train_date": "20230131",
+        "min_outer_date": "20230501"
+      },
+      {
+        "ticker": "QQQ",
+        "outer_month": "202306",
+        "train_months": [
+          "202203",
+          "202204",
+          "202205",
+          "202206",
+          "202207",
+          "202208",
+          "202209",
+          "202210",
+          "202211",
+          "202212",
+          "202301",
+          "202302"
+        ],
+        "inner_months_identity_only_not_used_for_threshold_selection": [
+          "202303",
+          "202304",
+          "202305"
+        ],
+        "train_rows": 5009,
+        "outer_rows": 614,
+        "call_seed": 202549,
+        "put_seed": 202550,
+        "max_train_date": "20230228",
+        "min_outer_date": "20230601"
+      },
+      {
+        "ticker": "QQQ",
+        "outer_month": "202307",
+        "train_months": [
+          "202204",
+          "202205",
+          "202206",
+          "202207",
+          "202208",
+          "202209",
+          "202210",
+          "202211",
+          "202212",
+          "202301",
+          "202302",
+          "202303"
+        ],
+        "inner_months_identity_only_not_used_for_threshold_selection": [
+          "202304",
+          "202305",
+          "202306"
+        ],
+        "train_rows": 5262,
+        "outer_rows": 547,
+        "call_seed": 202550,
+        "put_seed": 202551,
+        "max_train_date": "20230331",
+        "min_outer_date": "20230703"
+      },
+      {
+        "ticker": "QQQ",
+        "outer_month": "202308",
+        "train_months": [
+          "202205",
+          "202206",
+          "202207",
+          "202208",
+          "202209",
+          "202210",
+          "202211",
+          "202212",
+          "202301",
+          "202302",
+          "202303",
+          "202304"
+        ],
+        "inner_months_identity_only_not_used_for_threshold_selection": [
+          "202305",
+          "202306",
+          "202307"
+        ],
+        "train_rows": 5591,
+        "outer_rows": 760,
+        "call_seed": 202551,
+        "put_seed": 202552,
+        "max_train_date": "20230428",
+        "min_outer_date": "20230801"
+      },
+      {
+        "ticker": "QQQ",
+        "outer_month": "202309",
+        "train_months": [
+          "202206",
+          "202207",
+          "202208",
+          "202209",
+          "202210",
+          "202211",
+          "202212",
+          "202301",
+          "202302",
+          "202303",
+          "202304",
+          "202305"
+        ],
+        "inner_months_identity_only_not_used_for_threshold_selection": [
+          "202306",
+          "202307",
+          "202308"
+        ],
+        "train_rows": 6097,
+        "outer_rows": 697,
+        "call_seed": 202552,
+        "put_seed": 202553,
+        "max_train_date": "20230531",
+        "min_outer_date": "20230901"
+      },
+      {
+        "ticker": "QQQ",
+        "outer_month": "202310",
+        "train_months": [
+          "202207",
+          "202208",
+          "202209",
+          "202210",
+          "202211",
+          "202212",
+          "202301",
+          "202302",
+          "202303",
+          "202304",
+          "202305",
+          "202306"
+        ],
+        "inner_months_identity_only_not_used_for_threshold_selection": [
+          "202307",
+          "202308",
+          "202309"
+        ],
+        "train_rows": 6434,
+        "outer_rows": 743,
+        "call_seed": 202553,
+        "put_seed": 202554,
+        "max_train_date": "20230630",
+        "min_outer_date": "20231002"
+      },
+      {
+        "ticker": "QQQ",
+        "outer_month": "202311",
+        "train_months": [
+          "202208",
+          "202209",
+          "202210",
+          "202211",
+          "202212",
+          "202301",
+          "202302",
+          "202303",
+          "202304",
+          "202305",
+          "202306",
+          "202307"
+        ],
+        "inner_months_identity_only_not_used_for_threshold_selection": [
+          "202308",
+          "202309",
+          "202310"
+        ],
+        "train_rows": 6680,
+        "outer_rows": 708,
+        "call_seed": 202554,
+        "put_seed": 202555,
+        "max_train_date": "20230731",
+        "min_outer_date": "20231101"
+      },
+      {
+        "ticker": "QQQ",
+        "outer_month": "202312",
+        "train_months": [
+          "202209",
+          "202210",
+          "202211",
+          "202212",
+          "202301",
+          "202302",
+          "202303",
+          "202304",
+          "202305",
+          "202306",
+          "202307",
+          "202308"
+        ],
+        "inner_months_identity_only_not_used_for_threshold_selection": [
+          "202309",
+          "202310",
+          "202311"
+        ],
+        "train_rows": 6978,
+        "outer_rows": 631,
+        "call_seed": 202555,
+        "put_seed": 202556,
+        "max_train_date": "20230831",
+        "min_outer_date": "20231201"
+      },
+      {
+        "ticker": "SPY",
+        "outer_month": "202304",
+        "train_months": [
+          "202201",
+          "202202",
+          "202203",
+          "202204",
+          "202205",
+          "202206",
+          "202207",
+          "202208",
+          "202209",
+          "202210",
+          "202211",
+          "202212"
+        ],
+        "inner_months_identity_only_not_used_for_threshold_selection": [
+          "202301",
+          "202302",
+          "202303"
+        ],
+        "train_rows": 5336,
+        "outer_rows": 732,
+        "call_seed": 202647,
+        "put_seed": 202648,
+        "max_train_date": "20221230",
+        "min_outer_date": "20230403"
+      },
+      {
+        "ticker": "SPY",
+        "outer_month": "202305",
+        "train_months": [
+          "202202",
+          "202203",
+          "202204",
+          "202205",
+          "202206",
+          "202207",
+          "202208",
+          "202209",
+          "202210",
+          "202211",
+          "202212",
+          "202301"
+        ],
+        "inner_months_identity_only_not_used_for_threshold_selection": [
+          "202302",
+          "202303",
+          "202304"
+        ],
+        "train_rows": 5665,
+        "outer_rows": 771,
+        "call_seed": 202648,
+        "put_seed": 202649,
+        "max_train_date": "20230131",
+        "min_outer_date": "20230501"
+      },
+      {
+        "ticker": "SPY",
+        "outer_month": "202306",
+        "train_months": [
+          "202203",
+          "202204",
+          "202205",
+          "202206",
+          "202207",
+          "202208",
+          "202209",
+          "202210",
+          "202211",
+          "202212",
+          "202301",
+          "202302"
+        ],
+        "inner_months_identity_only_not_used_for_threshold_selection": [
+          "202303",
+          "202304",
+          "202305"
+        ],
+        "train_rows": 5848,
+        "outer_rows": 741,
+        "call_seed": 202649,
+        "put_seed": 202650,
+        "max_train_date": "20230228",
+        "min_outer_date": "20230601"
+      },
+      {
+        "ticker": "SPY",
+        "outer_month": "202307",
+        "train_months": [
+          "202204",
+          "202205",
+          "202206",
+          "202207",
+          "202208",
+          "202209",
+          "202210",
+          "202211",
+          "202212",
+          "202301",
+          "202302",
+          "202303"
+        ],
+        "inner_months_identity_only_not_used_for_threshold_selection": [
+          "202304",
+          "202305",
+          "202306"
+        ],
+        "train_rows": 6176,
+        "outer_rows": 780,
+        "call_seed": 202650,
+        "put_seed": 202651,
+        "max_train_date": "20230331",
+        "min_outer_date": "20230703"
+      },
+      {
+        "ticker": "SPY",
+        "outer_month": "202308",
+        "train_months": [
+          "202205",
+          "202206",
+          "202207",
+          "202208",
+          "202209",
+          "202210",
+          "202211",
+          "202212",
+          "202301",
+          "202302",
+          "202303",
+          "202304"
+        ],
+        "inner_months_identity_only_not_used_for_threshold_selection": [
+          "202305",
+          "202306",
+          "202307"
+        ],
+        "train_rows": 6475,
+        "outer_rows": 816,
+        "call_seed": 202651,
+        "put_seed": 202652,
+        "max_train_date": "20230428",
+        "min_outer_date": "20230801"
+      },
+      {
+        "ticker": "SPY",
+        "outer_month": "202309",
+        "train_months": [
+          "202206",
+          "202207",
+          "202208",
+          "202209",
+          "202210",
+          "202211",
+          "202212",
+          "202301",
+          "202302",
+          "202303",
+          "202304",
+          "202305"
+        ],
+        "inner_months_identity_only_not_used_for_threshold_selection": [
+          "202306",
+          "202307",
+          "202308"
+        ],
+        "train_rows": 6878,
+        "outer_rows": 774,
+        "call_seed": 202652,
+        "put_seed": 202653,
+        "max_train_date": "20230531",
+        "min_outer_date": "20230901"
+      },
+      {
+        "ticker": "SPY",
+        "outer_month": "202310",
+        "train_months": [
+          "202207",
+          "202208",
+          "202209",
+          "202210",
+          "202211",
+          "202212",
+          "202301",
+          "202302",
+          "202303",
+          "202304",
+          "202305",
+          "202306"
+        ],
+        "inner_months_identity_only_not_used_for_threshold_selection": [
+          "202307",
+          "202308",
+          "202309"
+        ],
+        "train_rows": 7216,
+        "outer_rows": 816,
+        "call_seed": 202653,
+        "put_seed": 202654,
+        "max_train_date": "20230630",
+        "min_outer_date": "20231002"
+      },
+      {
+        "ticker": "SPY",
+        "outer_month": "202311",
+        "train_months": [
+          "202208",
+          "202209",
+          "202210",
+          "202211",
+          "202212",
+          "202301",
+          "202302",
+          "202303",
+          "202304",
+          "202305",
+          "202306",
+          "202307"
+        ],
+        "inner_months_identity_only_not_used_for_threshold_selection": [
+          "202308",
+          "202309",
+          "202310"
+        ],
+        "train_rows": 7595,
+        "outer_rows": 760,
+        "call_seed": 202654,
+        "put_seed": 202655,
+        "max_train_date": "20230731",
+        "min_outer_date": "20231101"
+      },
+      {
+        "ticker": "SPY",
+        "outer_month": "202312",
+        "train_months": [
+          "202209",
+          "202210",
+          "202211",
+          "202212",
+          "202301",
+          "202302",
+          "202303",
+          "202304",
+          "202305",
+          "202306",
+          "202307",
+          "202308"
+        ],
+        "inner_months_identity_only_not_used_for_threshold_selection": [
+          "202309",
+          "202310",
+          "202311"
+        ],
+        "train_rows": 7921,
+        "outer_rows": 736,
+        "call_seed": 202655,
+        "put_seed": 202656,
+        "max_train_date": "20230831",
+        "min_outer_date": "20231201"
+      }
+    ],
+    "causal_policy": {
+      "source": "existing Pairwise-V1 C0 absolute win-probability heads",
+      "opportunity": "max(p_call_win,p_put_win) >= 0.50 (fixed, no outcome selection)",
+      "side": "argmax(p_call_win,p_put_win); exact ties abstain"
+    }
+  },
+  "output_hashes": {
+    "benchmark_fixed_cap_diagnostic.csv": "c8a60788ec1d541291ffe44f1741f21894a26b2ea4feb4feaa70442ab4415a54",
+    "benchmark_monthly.csv": "9faa97dc22076657cbe48f81175351a8cb06718311b63c4f5c4d3846393ad079",
+    "benchmark_reproduction.json": "25b5cc4f0eb38aecdbad94cfc9effd72f07da250bcbd2e7dee930dddd6d8f5a7",
+    "benchmark_ticker_summary.csv": "af926120a8cc9504ea6c4ed25c25e1d7009c1e46492a6761c19ef3e8da844f29",
+    "benchmark_trades_reproduced.csv": "ec02048c67ad24a059cf70df62ff4f63c4001c65cd0260f9b713a22332899128",
+    "oracle_attribution_2023_dev.json": "d2da8f56169cd23c627e10ba5e5f8118f874636c89361718f2d55ed7c77605cb",
+    "oracle_monthly_2023_dev.csv": "e68257e7e92fa9ef305c2425f9b681e1cc48905b7bb12e77d5a25e7bc09b3186",
+    "oracle_summary_2023_dev.csv": "6069229d491b733d82116d47d044725ea887f3ba278207629e9f41ab555d6893",
+    "oracle_trades_2023_dev.csv": "1209f2cbb9c8e272a4eb47bdfb4471fea209795ecfd819d7c36ebc58764053ca",
+    "REPORT.md": "2d8d89f04f8b1e38095f57fa2c67243696bebba433e84749f4ee8c77442ac891"
+  }
+}

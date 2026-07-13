@@ -904,3 +904,21 @@ summary SHA `4c0b651d...e701566`. H-IBQDYN1 queda cerrado y no existe un modelo
 rentable nuevo. No hay otra familia activa autorizada; la siguiente investigación
 debe ser una hipótesis causal realmente distinta y predeclarada, no una variante
 de las familias cerradas enumeradas en este handoff.
+
+## EDGE-FIRST EXISTING-DATA SPRINT V1 — checkpoint económico 1
+
+Se reprodujo byte-for-metric el benchmark executable-quote publicado sin abrir
+outcomes 2024/2025: QQQ PF 0,983707 (94 trades), SPXW 0,831520 (107) y SPY
+0,919499 (123). La búsqueda publicada permitía dos SPY/día; el replay diagnóstico
+con el scheduler actual de uno/día deja SPY en 93 trades, PF 0,971936, PnL
+-0,773R y mínimo mensual 14. No hay solapes, holds fuera de 30-180m ni violaciones
+de cooldown en las trades reproducidas.
+
+El oracle dev-only abril-diciembre 2023 separó error de oportunidad y lado. El
+baseline causal pierde en los tres tickers; lado oracle sobre oportunidades
+causales produce PF 5,838/9,811/8,315 (SPXW/QQQ/SPY). Always CALL, always PUT y
+random congelado pierden. El drag de ejecución no puede estimarse con los
+artefactos disponibles porque no existe payoff midpoint emparejado. Código,
+manifest, trades y métricas están en
+`existing_data_edge_sprint_v1_benchmark_oracle/`; suite `4 passed`, Ruff clean.
+2026 y producción permanecen intactos.

@@ -483,3 +483,16 @@ por encima de distancia, aproximación, volatilidad, hora e identidad del nivel.
 No se abrió payoff porque hacerlo tras este fallo solo permitiría seleccionar una
 traducción económica sobre una representación física falsificada. Por eso no hay
 PF, WR o PnL que reportar para H-IBQDYN1.
+
+El primer resultado de EDGE-FIRST V1 demuestra una separación útil entre
+reproducción y diagnóstico. Las métricas del benchmark ask-to-bid se recalculan
+sin diferencia, pero su scheduler histórico permitía dos SPY por día; aplicar el
+cap actual de uno mejora algo el PF y reduce frecuencia, sin volverlo rentable.
+Esto evita atribuir al modelo una discrepancia puramente contractual.
+
+El oracle se limita a 2023 y no es una policy: muestra que las oportunidades
+observadas contienen trades ganadoras que el clasificador causal no sabe elegir
+ni orientar. Los controles de lado constante o aleatorio siguen perdiendo, por
+lo que no basta un sesgo direccional trivial. A la vez, no existe una label
+midpoint/no-spread emparejada que permita aislar execution drag; reportarlo como
+número sería mezclar un contrafactual inexistente con evidencia ejecutable.

@@ -1,0 +1,326 @@
+{
+  "reference_reproduced_exactly": true,
+  "maximum_absolute_metric_difference": 7.105427357601002e-15,
+  "recomputed_reference": {
+    "SPXW": {
+      "trades": 107,
+      "win_rate": 0.42990654205607476,
+      "profit_factor": 0.8315197270870288,
+      "pnl_return": -5.8163892428416775,
+      "avg_return": -0.05435877797048297,
+      "max_drawdown": -9.656035883683495,
+      "call_rate": 0.22429906542056074,
+      "days_with_trades": 89,
+      "daily_win_rate": 0.42696629213483145,
+      "median_daily_return": -0.2941176470588235,
+      "daily_max_drawdown": -9.656035883683495,
+      "top5_day_return": 10.224090548702225,
+      "top5_share_of_pnl": -1.7578071414813194,
+      "min_month_trades": 10,
+      "positive_month_rate": 0.4
+    },
+    "QQQ": {
+      "trades": 94,
+      "win_rate": 0.44680851063829785,
+      "profit_factor": 0.9837072721985844,
+      "pnl_return": -0.4923628160600793,
+      "avg_return": -0.005237902298511482,
+      "max_drawdown": -6.5499096974568705,
+      "call_rate": 0.2765957446808511,
+      "days_with_trades": 94,
+      "daily_win_rate": 0.44680851063829785,
+      "median_daily_return": -0.38511925938799596,
+      "daily_max_drawdown": -6.5499096974568705,
+      "top5_day_return": 11.711990033547604,
+      "top5_share_of_pnl": -23.78731628693601,
+      "min_month_trades": 15,
+      "positive_month_rate": 0.4
+    },
+    "SPY": {
+      "trades": 123,
+      "win_rate": 0.43902439024390244,
+      "profit_factor": 0.9194988639816358,
+      "pnl_return": -2.978658683702216,
+      "avg_return": -0.024216737265871674,
+      "max_drawdown": -6.695922096544528,
+      "call_rate": 0.17073170731707318,
+      "days_with_trades": 93,
+      "daily_win_rate": 0.43010752688172044,
+      "median_daily_return": -0.12686573415477703,
+      "daily_max_drawdown": -6.695922096544528,
+      "top5_day_return": 11.764226633937701,
+      "top5_share_of_pnl": -3.949504754709184,
+      "min_month_trades": 19,
+      "positive_month_rate": 0.4
+    }
+  },
+  "stored_metric_differences": {
+    "SPXW": {
+      "trades": 0.0,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "pnl_return": 0.0,
+      "avg_return": 0.0,
+      "max_drawdown": 0.0,
+      "call_rate": 0.0,
+      "days_with_trades": 0.0,
+      "daily_win_rate": 0.0,
+      "median_daily_return": 0.0,
+      "daily_max_drawdown": 0.0,
+      "top5_day_return": 0.0,
+      "top5_share_of_pnl": 0.0,
+      "min_month_trades": 0.0,
+      "positive_month_rate": 0.0
+    },
+    "QQQ": {
+      "trades": 0.0,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "pnl_return": -1.6653345369377348e-16,
+      "avg_return": -1.734723475976807e-18,
+      "max_drawdown": 0.0,
+      "call_rate": 0.0,
+      "days_with_trades": 0.0,
+      "daily_win_rate": 0.0,
+      "median_daily_return": 0.0,
+      "daily_max_drawdown": 0.0,
+      "top5_day_return": 0.0,
+      "top5_share_of_pnl": 7.105427357601002e-15,
+      "min_month_trades": 0.0,
+      "positive_month_rate": 0.0
+    },
+    "SPY": {
+      "trades": 0.0,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "pnl_return": 0.0,
+      "avg_return": 0.0,
+      "max_drawdown": 0.0,
+      "call_rate": 0.0,
+      "days_with_trades": 0.0,
+      "daily_win_rate": 0.0,
+      "median_daily_return": 0.0,
+      "daily_max_drawdown": 0.0,
+      "top5_day_return": 0.0,
+      "top5_share_of_pnl": 0.0,
+      "min_month_trades": 0.0,
+      "positive_month_rate": 0.0
+    }
+  },
+  "overall_metric_differences": {
+    "trades": 0.0,
+    "win_rate": 0.0,
+    "profit_factor": 0.0,
+    "pnl_return": 0.0,
+    "avg_return": 0.0,
+    "max_drawdown": 0.0,
+    "call_rate": 0.0,
+    "days_with_trades": 0.0,
+    "daily_win_rate": 0.0,
+    "median_daily_return": 0.0,
+    "daily_max_drawdown": 0.0,
+    "top5_day_return": 0.0,
+    "top5_share_of_pnl": 0.0,
+    "min_month_trades": 0.0,
+    "positive_month_rate": 0.0
+  },
+  "overlap_or_cooldown_violations": [],
+  "fixed_cap_breach_days": [
+    {
+      "ticker": "SPY",
+      "trade_date": "20260102",
+      "trades": 2,
+      "fixed_cap": 1
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20260105",
+      "trades": 2,
+      "fixed_cap": 1
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20260106",
+      "trades": 2,
+      "fixed_cap": 1
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20260107",
+      "trades": 2,
+      "fixed_cap": 1
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20260108",
+      "trades": 2,
+      "fixed_cap": 1
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20260109",
+      "trades": 2,
+      "fixed_cap": 1
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20260112",
+      "trades": 2,
+      "fixed_cap": 1
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20260113",
+      "trades": 2,
+      "fixed_cap": 1
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20260114",
+      "trades": 2,
+      "fixed_cap": 1
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20260115",
+      "trades": 2,
+      "fixed_cap": 1
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20260116",
+      "trades": 2,
+      "fixed_cap": 1
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20260120",
+      "trades": 2,
+      "fixed_cap": 1
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20260121",
+      "trades": 2,
+      "fixed_cap": 1
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20260123",
+      "trades": 2,
+      "fixed_cap": 1
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20260126",
+      "trades": 2,
+      "fixed_cap": 1
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20260127",
+      "trades": 2,
+      "fixed_cap": 1
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20260128",
+      "trades": 2,
+      "fixed_cap": 1
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20260129",
+      "trades": 2,
+      "fixed_cap": 1
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20260130",
+      "trades": 2,
+      "fixed_cap": 1
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20260402",
+      "trades": 2,
+      "fixed_cap": 1
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20260408",
+      "trades": 2,
+      "fixed_cap": 1
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20260410",
+      "trades": 2,
+      "fixed_cap": 1
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20260413",
+      "trades": 2,
+      "fixed_cap": 1
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20260414",
+      "trades": 2,
+      "fixed_cap": 1
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20260416",
+      "trades": 2,
+      "fixed_cap": 1
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20260417",
+      "trades": 2,
+      "fixed_cap": 1
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20260420",
+      "trades": 2,
+      "fixed_cap": 1
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20260422",
+      "trades": 2,
+      "fixed_cap": 1
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20260427",
+      "trades": 2,
+      "fixed_cap": 1
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20260429",
+      "trades": 2,
+      "fixed_cap": 1
+    }
+  ],
+  "fixed_cap_contract_matches_published_stream": false,
+  "contract_discrepancy": "Published selector searched ticker-specific max-day grids; 30 SPY days used a second trade. The reference PF values are exact, but that stream is not the fixed SPY=1/day contract.",
+  "published_inputs": {
+    "trades": {
+      "path": "research_papers\\JEPA\\results\\_diagnostics\\event_option_execquote_causal1030_nested_exploratory_202601_202605_v1\\event_option_profile_trades.csv",
+      "sha256": "f5216ed8eacafe7f7cd4f6c5d50bd70064b60bc03c96526c4117268d6aab9fd5"
+    },
+    "folds": {
+      "path": "research_papers\\JEPA\\results\\_diagnostics\\event_option_execquote_causal1030_nested_exploratory_202601_202605_v1\\selected_folds.csv",
+      "sha256": "03154fbaeffa8ed30b30aff22216fb46d9bedeb2345f064a40544ea39bc74086"
+    },
+    "metrics": {
+      "path": "research_papers\\JEPA\\results\\_diagnostics\\event_option_execquote_causal1030_nested_exploratory_202601_202605_v1\\metrics.json",
+      "sha256": "98b472b4432300ef86f39b4d1396889c204a2e33c972d38eb49a21a2a0cca8eb"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "side_error_headroom_r_on_causal_opportunities": 573.5528037681438,
+  "opportunity_error_headroom_r_with_causal_side": 1159.0300395783952,
+  "joint_oracle_headroom_r": 1556.213897619398,
+  "scheduler_drag_upper_bound_r": 9898.564139466569,
+  "execution_drag": {
+    "status": "UNAVAILABLE_FROM_EXISTING_LABELS",
+    "reason": "The sealed modeling parquet contains ask-entry/bid-exit returns but no matched midpoint-exit path label. Reconstructing a no-spread counterfactual would require a forbidden new path/source."
+  },
+  "interpretation_guard": "All oracle quantities use future executable outcomes and are non-promotable."
+}
