@@ -22,6 +22,12 @@ reconstruir utilidad y probabilidad de retorno positivo. El desarrollo se limita
 a 2022-2023. 2024/2025, todo 2026 y producción continúan cerrados en este
 checkpoint; todavía no existe resultado económico de esta familia.
 
+V1 no pasó el data gate: el master contiene decisiones post-cierre en medias
+jornadas y produce RV cero/paths stale. El build se detuvo sin vista ni outcome.
+V1R1 predeclara la única reparación causal: excluir completas nueve sesiones
+early-close por calendario (1.072 filas), conservando 96.553 sesiones normales.
+No se modifica el mecanismo ni se abre 2024/2025.
+
 Este documento conserva resultados y decisiones. La operación live y los pasos de
 reanudación están en `CODEX-HANDOFF.md`; la literatura está resumida en
 `SUMMARY-articles.md`.

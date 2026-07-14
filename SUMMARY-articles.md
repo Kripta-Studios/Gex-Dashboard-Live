@@ -544,3 +544,11 @@ scheduler no llegó a ocultar una policy marginal; la selección nested ya exigi
 abstención completa antes de outer. Huber tampoco rescata el resultado. Por eso
 no se justifican stress ni 2026, y el cierre correcto es ausencia de edge en la
 información existente bajo este protocolo, no ausencia de oportunidades oracle.
+mecanismo.
+
+El primer data gate añadió otra lección: un parquet marcado `executable_quote`
+no prueba ejecutabilidad si el calendario de sesión no limita los paths. En una
+media jornada, closes subyacentes planos y exits que cruzaban el cierre revelaron
+eventos stale. No se estabiliza beta con epsilon ni se filtran filas por su exit
+futuro; se rechaza V1 y se excluye la sesión completa mediante calendario
+predeclarado en V1R1.

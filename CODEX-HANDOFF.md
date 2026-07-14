@@ -24,6 +24,15 @@ Predeclaración:
 `research_papers/JEPA/CROSS_MARKET_TRANSMISSION_V1_PREDECLARATION.md`.
 No hay capturas, sidecars, cambios live, apertura 2026 ni runner económico activo.
 
+V1 fue detenido por causalidad antes de outcomes: el master conserva eventos y
+paths stale tras el cierre de la media jornada 2022-11-25. El primer vector
+indefinido fue SPXW 13:35 con RV=0. En dev 2022-2023, 126/357 filas de medias
+jornadas cruzan el cierre en al menos un lado. V1 queda `FAILED_CAUSALITY`.
+
+V1R1, única activa, excluye las nueve sesiones early-close completas por lista
+calendar-only: 1.072 filas, dejando 96.553. No selecciona por outcome ni cambia
+las 28 features, cuantiles, inner, scheduler o gates. 2024/2025 siguen cerrados.
+
 ## 1. Objetivo y gates no negociables
 
 Obtener una policy causal, reproducible y live-equivalente para opciones 0DTE de

@@ -805,3 +805,14 @@ integrada y p(win) >=50%, con grid inner train-only y scheduler exacto.
 2022-2023 son desarrollo; 2024-2025 siguen cerrados hasta commit/freeze; 2026 y
 producción intactos. Si el único outer falla, cerrar y rotar sin cambiar pares,
 ventanas, features, modelo, grid o gates.
+
+V1 abortó outcome-free: SPXW 2022-11-25 a las 13:35 tenía 30 closes idénticos
+después del cierre de media jornada. El master incluye paths no certificables
+post-cierre; en 2022-2023, 126/357 filas de tres medias jornadas cruzan el cierre
+en al menos un lado. No usar epsilon ni seleccionar por exit. V1 queda
+`FAILED_CAUSALITY`.
+
+V1R1 omite completas y por calendario congelado las nueve medias jornadas
+2022-2025: 1.072 filas, dejando 96.553. Es la única reparación autorizada; no
+cambia features/modelo/folds/grid/scheduler. Predeclaración:
+`CROSS_MARKET_TRANSMISSION_V1R1_HALF_DAY_REPAIR.md`.
