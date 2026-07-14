@@ -949,3 +949,20 @@ model specs, código, grid, selección inner, scheduler y los 24 meses outer. El
 smoke 2023-12 final volvió a ser determinista y todos los folds abstuvieron.
 Siguiente paso único tras commit/push: ejecutar una sola vez el modo
 `frozen_outer`; no editar ningún archivo de la closure antes de terminar.
+
+## Cierre EDGE-FIRST EXISTING_DATA SPRINT V1
+
+El nested frozen terminó y la familia queda `NO_EDGE_IN_EXISTING_DATA`. E1
+hurdle/Huber: 72/72 outer cells abstain por modelo, cero trades, porque ningún
+grid pasó simultáneamente los tres inner meses. E0 hurdle operó solo SPXW
+202403, QQQ 202409 y SPY 202502; únicamente QQQ pasó la gate outer. E0 Huber
+solo operó SPY 202502 y perdió. Pooled E0 hurdle parece positivo (68 trades,
+PF 1,464809, WR 54,41%, +8,342R), pero tiene mínimo mensual 0, solo 3/72 cells
+trade y 4,17% positive months; no puede promocionarse.
+
+Auditoría independiente PASS sobre 288 folds, 12.096 grids, 288 month cells y
+87 trades: selección inner exacta, expanding chronology, payoff ask-to-bid,
+scheduler y métricas coinciden. Solo 1/288 cells pasa outer. Resultados en
+`existing_data_executable_utility_v1_202401_202512/`; SUMMARY SHA
+`52b83fdb...a3871`, AUDIT SHA `0a013154...0337bf`. Stress y 2026 no se abrieron;
+junio sigue sellado y producción intacta. No retunar ni iniciar otro dataset.

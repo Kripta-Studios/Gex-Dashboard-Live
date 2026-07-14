@@ -1,0 +1,39 @@
+{
+  "schema": "existing_data_executable_utility_v1_independent_audit",
+  "status": "PASS_RESULT_AUDIT",
+  "verdict": "NO_EDGE_IN_EXISTING_DATA",
+  "summary_sha256": "52b83fdbd3780ae6947bd9f3678b31c26336d38f2d2318976b044cc1c79a3871",
+  "freeze_manifest_sha256": "579fe8ce6759b8f235c5a4f63c7710acfa6280a09444c922878035f83c8a0c0b",
+  "fold_cells": 288,
+  "inner_grid_rows": 12096,
+  "outer_monthly_cells": 288,
+  "published_trades": 87,
+  "trade_outer_cells": 4,
+  "abstain_outer_cells": 284,
+  "passing_inner_grids": {
+    "E0/direct_huber_executable_return_v1": 3,
+    "E0/lightgbm_hurdle_expected_utility_v1": 20,
+    "E1/direct_huber_executable_return_v1": 0,
+    "E1/lightgbm_hurdle_expected_utility_v1": 0
+  },
+  "outer_gate_pass_cells": 1,
+  "E1_trade_cells": 0,
+  "E1_trades": 0,
+  "stress_authorized": false,
+  "stress_reason": "base candidate contract failed; execution stress is forbidden before base pass",
+  "holdout_2026_opened": false,
+  "june_2026_sealed": true,
+  "production_modified": false,
+  "checks": [
+    "file hashes and sizes",
+    "288 fold/month cells",
+    "42 train-only grids per fold",
+    "frozen lexicographic inner selection",
+    "expanding train/three-inner/one-outer chronology",
+    "ask-to-bid side payoff binding",
+    "daily caps/cooldown/no overlap/equal-exit convention",
+    "monthly metric recomputation",
+    "full E1 abstention",
+    "2026 exclusion"
+  ]
+}

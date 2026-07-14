@@ -1,0 +1,20 @@
+{
+  "schema": "existing_data_executable_utility_v1_result_manifest",
+  "status": "CLOSED_ECONOMIC",
+  "verdict": "NO_EDGE_IN_EXISTING_DATA",
+  "frozen_runner_manifest_sha256": "579fe8ce6759b8f235c5a4f63c7710acfa6280a09444c922878035f83c8a0c0b",
+  "summary_sha256": "52b83fdbd3780ae6947bd9f3678b31c26336d38f2d2318976b044cc1c79a3871",
+  "audit_sha256": "0a013154dcc73f8ae23e94802f7a68a02360ad64364e03be630fc64ceb0337bf",
+  "report_sha256": "5a65bc546a964901c6406ac806fc4079e0e80bffd0c5d9d4559636e50ca809ae",
+  "result_files": {
+    "fold_selections.csv": "421c5fb141a09026f31670c89969b422eecc1fcc7b807f9cad848dd4a1f422fc",
+    "inner_grid.csv": "577a5cdea2bd8352b39601ada6178638cf7781fbb8902425ac04f661dc0f134a",
+    "monthly_metrics.csv": "7b593caf492bd6b3a15474924fd0bb9a720152ca8f26b4268ca23f623bfd1e26",
+    "outer_trades.csv": "8068ed66f573d0e39475f2cdda5c56b3030b2531e69432d285c7d5bc1f2e3ec9",
+    "portfolio_summary.csv": "9dfcf7fa5a4baa1e635f663204760da194d3d256c6ddbafda79db04ed7aec277"
+  },
+  "holdout_2026_opened": false,
+  "june_2026_sealed": true,
+  "production_modified": false,
+  "stress_authorized": false
+}

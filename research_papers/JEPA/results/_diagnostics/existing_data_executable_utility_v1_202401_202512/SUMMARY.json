@@ -1,0 +1,61 @@
+{
+  "schema": "existing_data_executable_utility_v1_results",
+  "mode": "frozen_outer",
+  "outer_months": [
+    "202401",
+    "202402",
+    "202403",
+    "202404",
+    "202405",
+    "202406",
+    "202407",
+    "202408",
+    "202409",
+    "202410",
+    "202411",
+    "202412",
+    "202501",
+    "202502",
+    "202503",
+    "202504",
+    "202505",
+    "202506",
+    "202507",
+    "202508",
+    "202509",
+    "202510",
+    "202511",
+    "202512"
+  ],
+  "runner_protocol_sha256": "22a87b18801289eef1b48107f2f72ab9d6f2b9d985f2b34bcbfdbedfcb3f498f",
+  "view_sha256": "52bac061216dd8aac7423449c442577882484aad0c4220bddaabc14544faad36",
+  "E0_sha256": "b68b6c2e17b333597281a7d7fa27237b1f1e2640deb8952867d25eced26cbe38",
+  "E1_sha256": "e15469c0d1dce8176afd5c7fd48af4c477f830b4fc58651fb982f89fb8986abc",
+  "candidate_found": false,
+  "verdict": "NO_EDGE_IN_EXISTING_DATA",
+  "holdout_2026_opened": false,
+  "june_2026_sealed": true,
+  "production_modified": false,
+  "files": {
+    "fold_selections.csv": {
+      "sha256": "421c5fb141a09026f31670c89969b422eecc1fcc7b807f9cad848dd4a1f422fc",
+      "bytes": 39532
+    },
+    "inner_grid.csv": {
+      "sha256": "577a5cdea2bd8352b39601ada6178638cf7781fbb8902425ac04f661dc0f134a",
+      "bytes": 11956454
+    },
+    "monthly_metrics.csv": {
+      "sha256": "7b593caf492bd6b3a15474924fd0bb9a720152ca8f26b4268ca23f623bfd1e26",
+      "bytes": 49779
+    },
+    "portfolio_summary.csv": {
+      "sha256": "9dfcf7fa5a4baa1e635f663204760da194d3d256c6ddbafda79db04ed7aec277",
+      "bytes": 1125
+    },
+    "outer_trades.csv": {
+      "sha256": "8068ed66f573d0e39475f2cdda5c56b3030b2531e69432d285c7d5bc1f2e3ec9",
+      "bytes": 702067
+    }
+  }
+}

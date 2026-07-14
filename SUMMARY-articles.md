@@ -516,3 +516,16 @@ rehúsa abrir outer si cambia un byte del view, allowlists, modelos, scheduler,
 predeclaración o runner. También congela por anticipado los meses 2024-2025 y
 marca 2026 como cerrado. Así, un eventual mes malo no puede provocar una nueva
 regla de selección sin invalidar formalmente el experimento.
+
+El resultado final distingue una métrica pooled atractiva de una policy
+desplegable. E0 hurdle suma PF 1,465 y +8,34R, pero esa ganancia proviene de solo
+tres de 72 ticker-meses; 69 meses abstienen, uno de los tres operados no alcanza
+18 trades y otro no alcanza 50% WR. Solo QQQ septiembre 2024 pasa. El pooled no
+compensa una frecuencia mensual mínima de cero.
+
+La unión E1 ofrece una conclusión todavía más limpia: ningún threshold/margin
+pasó los tres inner meses en ninguno de sus 144 folds de modelo/ticker/mes. El
+scheduler no llegó a ocultar una policy marginal; la selección nested ya exigió
+abstención completa antes de outer. Huber tampoco rescata el resultado. Por eso
+no se justifican stress ni 2026, y el cierre correcto es ausencia de edge en la
+información existente bajo este protocolo, no ausencia de oportunidades oracle.

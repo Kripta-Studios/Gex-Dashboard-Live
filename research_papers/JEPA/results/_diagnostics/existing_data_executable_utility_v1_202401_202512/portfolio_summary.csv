@@ -1,0 +1,5 @@
+arm,model_family,trades,win_rate,profit_factor,pnl,minimum_hold,maximum_hold,max_drawdown,call_rate,put_rate,outer_month_cells,abstain_outer_cells,positive_month_rate,minimum_monthly_trades,worst_month_pf,worst_month_pnl,mean_abstention_rate,profit_concentration_top5_trades,profit_concentration_top5_days,all_ticker_month_gates_pass,scientific_candidate
+E0,lightgbm_hurdle_expected_utility_v1,68,0.5441176470588235,1.4648091850578038,8.342072673478945,30.0,180.0,3.381136287797508,0.5441176470588235,0.45588235294117646,72,69,0.041666666666666664,0,0.0,0.0,0.9919177330701471,0.3255247579875533,0.35819596830996486,False,False
+E0,direct_huber_executable_return_v1,19,0.3157894736842105,0.5893760809576077,-3.1557348799922442,30.0,180.0,3.4661454289194067,0.21052631578947367,0.7894736842105263,72,71,0.0,0,0.0,-3.1557348799922442,0.9951777777777777,0.9286381802932862,0.9286381802932862,False,False
+E1,lightgbm_hurdle_expected_utility_v1,0,0.0,0.0,0.0,,,0.0,0.0,0.0,72,72,0.0,0,0.0,0.0,1.0,0.0,0.0,False,False
+E1,direct_huber_executable_return_v1,0,0.0,0.0,0.0,,,0.0,0.0,0.0,72,72,0.0,0,0.0,0.0,1.0,0.0,0.0,False,False

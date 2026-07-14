@@ -571,3 +571,11 @@ Freeze `PREEXECUTION_FROZEN` listo sobre `c1dee47`: manifest SHA
 modelos económicos exactos. El smoke final 2023-12 fue determinista. Tras
 commit/push, solo queda el one-shot nested 2024-2025; no se permite retocar
 features, modelo, grid, ranking o scheduler. 2026/producción siguen intactos.
+
+EDGE-FIRST V1 queda cerrado `NO_EDGE_IN_EXISTING_DATA`. E1 hurdle y Huber
+abstuvieron los 144 cells: cero grids inner completos y cero trades. E0 hurdle
+solo operó 3/72 cells (68 trades pooled, PF 1,464809, +8,342R), pero únicamente
+QQQ 202409 pasó outer; mínimo mensual 0 y positive-month rate 4,17%. E0 Huber
+operó un cell y perdió PF 0,589/-3,156R. Auditoría PASS: 288 folds, 12.096
+grids, 87 trades, cronología/scheduler/payoffs/métricas exactos. Stress y 2026
+no autorizados; producción intacta. No abrir otra familia de datos como rescate.

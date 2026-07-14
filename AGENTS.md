@@ -766,3 +766,23 @@ inner, scheduler, ejecución, 24 outer months y hashes de todo el código activo
 El smoke 2023-12 se repitió byte-for-metric con el protocolo final. Tras
 commit/push de este manifest, la única acción autorizada es el one-shot nested
 2024-01..2025-12; no modificar runner, features o thresholds.
+
+### Cierre EXISTING_DATA_EXECUTABLE_UTILITY_V1 — `NO_EDGE_IN_EXISTING_DATA`
+
+El one-shot frozen 2024-01..2025-12 completó 288 folds y 12.096 grids inner.
+E1, único candidato, tuvo cero grids que pasaran los tres meses inner tanto en
+hurdle como Huber: 144/144 cells `ABSTAIN_OUTER`, cero trades. E0 produjo solo
+cuatro cells trade de 144: hurdle SPXW 202403 17 trades/PF 1,404/WR 58,82%/
++1,761R (falla frecuencia), QQQ 202409 33/1,516/57,58%/+4,080R (único PASS),
+SPY 202502 18/1,440/44,44%/+2,501R (falla WR); Huber SPY 202502
+19/0,589/31,58%/-3,156R. Los otros 284 cells abstienen.
+
+Pooled E0 hurdle: 68 trades, PF 1,464809, WR 54,41%, +8,342R, pero mínimo
+mensual 0, positive-month rate 4,17% y 69/72 cells abstain; no es candidato.
+E0 Huber pierde. Auditoría independiente `PASS_RESULT_AUDIT`: hashes, 288
+folds/month cells, selección frozen, cronología, payoffs ask-to-bid, caps,
+cooldown/no-overlap y métricas recomputadas. SUMMARY SHA
+`52b83fdbd3780ae6947bd9f3678b31c26336d38f2d2318976b044cc1c79a3871`;
+AUDIT SHA `0a013154dcc73f8ae23e94802f7a68a02360ad64364e03be630fc64ceb0337bf`.
+Stress no autorizado, 2026 cerrado y producción intacta. No iniciar otra familia
+de datos para rescatar este sprint.
