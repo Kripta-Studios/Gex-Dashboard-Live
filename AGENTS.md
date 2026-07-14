@@ -826,3 +826,7 @@ Familia activa: H-TPOVALUE1. Usa 36 campos de developing TPO/POC/VAH/VAL sobre
 el propio underlying, master elegible 96.553, X0 vs X0+TPO y el modelo quantile
 ya predeclarado. Fuente exacta 09:30..t-1, sin cross-market. Predeclaración:
 `H_TPOVALUE1_EXECUTABLE_PREDECLARATION.md`. 2024/2025 y 2026 siguen cerrados.
+
+Clarificación outcome-free previa al builder: TPO period=1m; lattice por floor
+inclusivo sin tolerancia; igualdad/denominadores de value, tails y crosses
+exactos; gate 100% finite, >=2 estados y valor modal <99,5% por ticker-año.

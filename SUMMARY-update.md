@@ -33,6 +33,10 @@ queda `BLOCKED_DATA` sin desarrollo. La rotación activa es H-TPOVALUE1:
 developing POC/VAH/VAL y migración TPO target-only, 36 campos en bloque, mismo
 modelo quantile y mismo contrato económico. Aún no hay resultado económico.
 
+La semántica TPO quedó completa antes del build: bins, fronteras, touches,
+denominadores, period=1m y distinctness están congelados; no se seleccionarán
+después de ver labels.
+
 Este documento conserva resultados y decisiones. La operación live y los pasos de
 reanudación están en `CODEX-HANDOFF.md`; la literatura está resumida en
 `SUMMARY-articles.md`.

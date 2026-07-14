@@ -51,6 +51,15 @@ Los snapshots lag son retrospectivos al tiempo t y pueden usar la rejilla IB
 completa porque toda ella es observable antes de la decisión; nunca consumen
 una barra >=t.
 
+El periodo TPO es exactamente una barra de un minuto; no se presenta como el
+bracket AMT tradicional de 30 minutos. Para cada barra, los índices enteros
+incluidos son desde `floor((low-IB_low)/bin_width)` hasta
+`floor((high-IB_low)/bin_width)`, ambos extremos incluidos. Esto cuenta ambos
+bins cuando un rango llega a una frontera desde el bin inferior. El lattice del
+perfil contiene todos los índices entre el mínimo y máximo observado, incluidos
+los bins intermedios con count cero. No se usa tolerancia, rounding ni clipping
+al rango IB.
+
 ## Bloque completo de 36 features
 
 Orden congelado:
@@ -105,15 +114,23 @@ fracción de bins del rango con count uno; tails son fracciones de TPO fuera de
 VA; skew es `(weighted_mean_price-POC)/IB_range`; developing range usa high-low
 consumido / IB range.
 
-Inside/above/below usan closes completados contra VA actual. Cross rate cuenta
-cambios de lado o touches entre closes consecutivos. IB position es
+Inside usa igualdad inclusiva `[VAL,VAH]`; above es estrictamente `>VAH` y
+below estrictamente `<VAL`, por lo que las tres fracciones suman uno. Tails
+usan TPO counts de bins con índice estrictamente fuera del intervalo de bins VA
+divididos por TPO total. Single-print usa número de bins con count exactamente
+uno dividido por todos los bins del lattice, incluidos los de count cero.
+
+Cross rate transforma cada close en estado `-1/0/+1` respecto al nivel y cuenta
+`state[i] != state[i-1]`, incluidos entrada/salida de touch; touch->touch no
+cuenta. El denominador es `n_closes-1`. IB position es
 `(reference-IB_low)/IB_range`. Directional efficiency es desplazamiento
 absoluto dividido por suma de desplazamientos absolutos en 15/30 barras y vale
 cero cuando no hubo movimiento.
 
 ## Brazos, modelo y protocolo
 
-- X0: 30 features Pairwise exactos, SHA `b68b6c2e...6cbe38`.
+- X0: 30 features Pairwise exactos, SHA
+  `b68b6c2e17b333597281a7d7fa27237b1f1e2640deb8952867d25eced26cbe38`.
 - X1: X0 más los 36 TPO en bloque. No pruning, SHAP, ablation, screening ni
   allowlist por ticker.
 
@@ -132,3 +149,17 @@ top-5: 20% de gross profit por trades y 30% por días, pooled y por ticker.
 
 Un base economic PASS todavía queda pendiente de stress y de implementar
 paridad live exacta del perfil TPO. 2026 no se abre antes de todo ello.
+
+## Data gate outcome-free y live
+
+Antes de leer labels, las 96.553 filas y las 36 features deben ser 100% finitas.
+Cada feature por ticker-año debe tener al menos dos valores finitos distintos y
+la frecuencia del valor modal debe ser <99,5%. Cualquier fallo cierra la familia;
+no permite quitar features. El inventario debe contener exactamente 2.777 pares
+ticker-sesión consumidos. Las tres barras SPY inválidas del 05-jun-2023 no se
+cargan porque no existe ninguna decisión SPY master ese día.
+
+Paridad live queda `BLOCKED_IMPLEMENTATION`: histórico SPXW corresponde a
+`spot_SPX_latest.parquet`; QQQ/SPY son homónimos. Un candidato requiere un
+barrier que exija todas las barras exactas cerradas y abstenga ante falta/stale;
+se prohíben fallback local y contexto as-of.

@@ -558,3 +558,7 @@ una de las dos secuencias lag queda constante, aunque la ventana total tenga un
 movimiento. Asignar cero o epsilon cambiaría el mecanismo tras ver el gate. La
 familia se cierra y se rota a aceptación por tiempo-precio TPO, que no depende
 de covarianzas cross-market.
+
+En TPO, términos de mercado no bastan como especificación: periodo, lattice,
+fronteras, ties, touches y denominadores deben quedar matemáticamente fijados
+antes del data gate para que una implementación distinta no cambie el alpha.

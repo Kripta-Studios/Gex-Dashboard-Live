@@ -41,6 +41,10 @@ impide cero/epsilon/remoción/exclusión. Estado `BLOCKED_DATA`; no hubo dev/fre
 36 features congeladas (SHA `73903b48...7c9f5`) al E0; cuantiles/scheduler/gates
 se mantienen. Fuente exacta 09:30..t-1, 96.553 filas normales. 2024/2025 cerrado.
 
+Antes del builder se congelaron también lattice floor inclusivo, TPO de 1m,
+igualdades/denominadores y distinctness por ticker-año; no quedan decisiones
+semánticas abiertas autorizadas.
+
 ## 1. Objetivo y gates no negociables
 
 Obtener una policy causal, reproducible y live-equivalente para opciones 0DTE de
