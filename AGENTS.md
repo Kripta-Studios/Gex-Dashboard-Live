@@ -786,3 +786,22 @@ cooldown/no-overlap y métricas recomputadas. SUMMARY SHA
 AUDIT SHA `0a013154dcc73f8ae23e94802f7a68a02360ad64364e03be630fc64ceb0337bf`.
 Stress no autorizado, 2026 cerrado y producción intacta. No iniciar otra familia
 de datos para rescatar este sprint.
+
+### Sprint persistente — CROSS_MARKET_TRANSMISSION_V1
+
+El cierre anterior no autoriza retuning, pero el objetivo económico persistente
+rota a mecanismos causales materialmente nuevos. Registro autoritativo en
+`ECONOMIC_FAMILY_REGISTRY.md`. La única familia ejecutable ahora es
+`CROSS_MARKET_TRANSMISSION_V1`; H-TPOVALUE1 queda solo en cola.
+
+La nueva familia reutiliza barras 1m existentes SPXW/SPY/QQQ/TLT y el master
+ask-to-bid, sin capturas ni datasets fuente nuevos. Exige las 30 barras cerradas
+exactas `[t-30,t)` y añade al E0 Pairwise el bloque completo de 28 campos:
+beta, residuo 1/5/15m, RV relativa, lead/lag y basis z-score para SPXW-SPY,
+QQQ-SPY, QQQ-SPXW y target-TLT. No reutilizar los `ctx_*` as-of live ni añadir
+VIX. Modelo único predeclarado: nueve LightGBM cuantiles por lado, utilidad
+integrada y p(win) >=50%, con grid inner train-only y scheduler exacto.
+
+2022-2023 son desarrollo; 2024-2025 siguen cerrados hasta commit/freeze; 2026 y
+producción intactos. Si el único outer falla, cerrar y rotar sin cambiar pares,
+ventanas, features, modelo, grid o gates.

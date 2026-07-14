@@ -9,6 +9,19 @@ positivos y cada hold `>=30m`.
 
 **Junio 2026:** sellado. **Producción:** intacta.
 
+## Rotación posterior a EXISTING_DATA_EXECUTABLE_UTILITY_V1
+
+La unión causal general quedó `FAILED_ECONOMIC`; no se retunea. La siguiente
+familia focal es `CROSS_MARKET_TRANSMISSION_V1`: E0 Pairwise frente a E0 más 28
+dinámicas exactas beta-neutral/lead-lag sobre SPXW-SPY, QQQ-SPY, QQQ-SPXW y
+target-TLT. La fuente son parquets underlying 1m ya existentes; cada decisión
+exige 30 barras cerradas exactas y no permite as-of/floor/nearest.
+
+El modelo económico predeclarado usa nueve cuantiles LightGBM por lado para
+reconstruir utilidad y probabilidad de retorno positivo. El desarrollo se limita
+a 2022-2023. 2024/2025, todo 2026 y producción continúan cerrados en este
+checkpoint; todavía no existe resultado económico de esta familia.
+
 Este documento conserva resultados y decisiones. La operación live y los pasos de
 reanudación están en `CODEX-HANDOFF.md`; la literatura está resumida en
 `SUMMARY-articles.md`.

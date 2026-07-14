@@ -6,6 +6,24 @@
 
 **Producción:** intacta. **Junio de 2026:** sellado.
 
+## Checkpoint 14-jul-2026 — rotación económica persistente
+
+`EXISTING_DATA_EXECUTABLE_UTILITY_V1` está cerrada y no se reabre. El registro
+de familias está en `research_papers/JEPA/ECONOMIC_FAMILY_REGISTRY.md`.
+La única familia autorizada para trabajo es `CROSS_MARKET_TRANSMISSION_V1`.
+
+Hipótesis: transmisión/underreaction intradía entre SPXW, SPY, QQQ y TLT,
+medida sobre 30 barras 1m completadas exactas, puede cambiar la distribución
+ask-to-bid CALL/PUT. X0 son los 30 Pairwise; X1 añade enteros 28 beta/residual/
+relative-RV/lead-lag/basis-z. No usar `ctx_*`, as-of, VIX ni outcomes para
+construirlos. Modelo congelable: nueve cuantiles LightGBM por lado, utilidad
+integrada y p(win)>=0,50. Desarrollo solo 2023-04..12; outer 2024-2025 permanece
+cerrado hasta manifest committed. H-TPOVALUE1 queda en cola, no activa.
+
+Predeclaración:
+`research_papers/JEPA/CROSS_MARKET_TRANSMISSION_V1_PREDECLARATION.md`.
+No hay capturas, sidecars, cambios live, apertura 2026 ni runner económico activo.
+
 ## 1. Objetivo y gates no negociables
 
 Obtener una policy causal, reproducible y live-equivalente para opciones 0DTE de

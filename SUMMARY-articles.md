@@ -4,6 +4,21 @@
 resumen conserva únicamente las ideas que afectan la investigación actual y su
 evidencia local.
 
+## Actualización de mecanismo económico — transmisión cross-market
+
+El contexto contemporáneo cross-market ya fue parte de una unión económica que
+abstuvo; repetir returns/spreads no es una hipótesis nueva. Sí lo es medir
+transmisión dinámica: beta rolling, residuo beta-neutral, liderazgo temporal,
+volatilidad relativa y desviación del basis, todos sobre barras 1m cerradas
+exactas. Esta representación contrasta impulso líder con absorción del rezagado
+y se evalúa directamente sobre distribuciones executable CALL/PUT, no mediante
+otro proxy físico.
+
+La inferencia metodológica es predeclarada, no un resultado: si el bloque falla
+el nested mensual, no se rescata seleccionando pares, lags o tickers. TPO/value
+migration permanece como mecanismo distinto en cola y no se mezcla con esta
+prueba.
+
 ## 1. Principio rector
 
 Una mejora de representación no es alpha. Toda idea académica debe terminar en el
