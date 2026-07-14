@@ -816,3 +816,13 @@ V1R1 omite completas y por calendario congelado las nueve medias jornadas
 2022-2025: 1.072 filas, dejando 96.553. Es la única reparación autorizada; no
 cambia features/modelo/folds/grid/scheduler. Predeclaración:
 `CROSS_MARKET_TRANSMISSION_V1R1_HALF_DAY_REPAIR.md`.
+
+V1R1 volvió a parar outcome-free en QQQ event 2024-05-30 11:10: SPXW tenía un
+solo retorno no cero y `std(returns[1:])=0`, por lo que lead/lag no existe. No
+usar epsilon, cero, remover feature o excluir fila. Cross-market queda
+`BLOCKED_DATA` sin desarrollo económico.
+
+Familia activa: H-TPOVALUE1. Usa 36 campos de developing TPO/POC/VAH/VAL sobre
+el propio underlying, master elegible 96.553, X0 vs X0+TPO y el modelo quantile
+ya predeclarado. Fuente exacta 09:30..t-1, sin cross-market. Predeclaración:
+`H_TPOVALUE1_EXECUTABLE_PREDECLARATION.md`. 2024/2025 y 2026 siguen cerrados.

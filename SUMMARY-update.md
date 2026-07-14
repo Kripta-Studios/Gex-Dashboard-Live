@@ -28,6 +28,11 @@ V1R1 predeclara la única reparación causal: excluir completas nueve sesiones
 early-close por calendario (1.072 filas), conservando 96.553 sesiones normales.
 No se modifica el mecanismo ni se abre 2024/2025.
 
+V1R1 encontró además lead/lag indefinido por SPXW plano en una ventana normal;
+queda `BLOCKED_DATA` sin desarrollo. La rotación activa es H-TPOVALUE1:
+developing POC/VAH/VAL y migración TPO target-only, 36 campos en bloque, mismo
+modelo quantile y mismo contrato económico. Aún no hay resultado económico.
+
 Este documento conserva resultados y decisiones. La operación live y los pasos de
 reanudación están en `CODEX-HANDOFF.md`; la literatura está resumida en
 `SUMMARY-articles.md`.

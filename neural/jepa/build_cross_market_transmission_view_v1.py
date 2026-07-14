@@ -38,8 +38,52 @@ DEFAULT_MANIFEST = OUTPUT_ROOT / "manifest.json"
 
 MASTER_SHA256 = "d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408"
 MASTER_ROWS = 97_625
+ELIGIBLE_ROWS_V1R1 = 96_553
 KEY = ["ticker", "trade_date", "timestamp", "minute"]
 MARKETS = ("SPXW", "SPY", "QQQ", "TLT")
+EARLY_CLOSE_DATES = (
+    "20221125",
+    "20230703",
+    "20231124",
+    "20240703",
+    "20241129",
+    "20241224",
+    "20250703",
+    "20251128",
+    "20251224",
+)
+PAIRWISE_E0_FEATURES = (
+    "minute",
+    "ib_range_bps",
+    "dist_ib_high_bps",
+    "dist_ib_low_bps",
+    "nearest_level_abs_bps",
+    "ret_1m_bps",
+    "ret_5m_bps",
+    "ret_15m_bps",
+    "ret_30m_bps",
+    "iv_diff",
+    "spread_pct_diff",
+    "volume_diff",
+    "oi_diff",
+    "abs_delta_diff",
+    "vega_diff",
+    "iv_diff_chg_5m",
+    "iv_diff_chg_15m",
+    "iv_diff_chg_25m",
+    "spread_pct_diff_chg_5m",
+    "spread_pct_diff_chg_15m",
+    "spread_pct_diff_chg_25m",
+    "volume_diff_chg_5m",
+    "volume_diff_chg_15m",
+    "volume_diff_chg_25m",
+    "abs_delta_diff_chg_5m",
+    "abs_delta_diff_chg_15m",
+    "abs_delta_diff_chg_25m",
+    "vega_diff_chg_5m",
+    "vega_diff_chg_15m",
+    "vega_diff_chg_25m",
+)
 FIXED_PAIRS = (("spxw_spy", "SPXW", "SPY"), ("qqq_spy", "QQQ", "SPY"), ("qqq_spxw", "QQQ", "SPXW"))
 PAIR_FIELDS = (
     "beta_30",
@@ -130,9 +174,15 @@ def load_master_e0(master_path: Path, *, enforce_authoritative: bool = True) -> 
         parts.append(part[list(dict.fromkeys([*KEY, *features]))])
     if expected_features is None:
         raise AssertionError("master contains no supported ticker rows")
+    if tuple(expected_features) != PAIRWISE_E0_FEATURES:
+        raise AssertionError("Pairwise E0 differs from the predeclared ordered allowlist")
     view = pd.concat(parts, ignore_index=True).sort_values(KEY, kind="stable").reset_index(drop=True)
     if len(view) != len(master) or view.duplicated(["ticker", "trade_date", "minute"]).any():
         raise AssertionError("E0 construction did not preserve the master universe")
+    excluded = view["trade_date"].isin(EARLY_CLOSE_DATES)
+    if enforce_authoritative and (int(excluded.sum()) != 1_072 or int((~excluded).sum()) != ELIGIBLE_ROWS_V1R1):
+        raise AssertionError("V1R1 frozen early-close exclusion census changed")
+    view = view.loc[~excluded].reset_index(drop=True)
     return view, expected_features
 
 
@@ -316,14 +366,15 @@ def build_view(
     inventory.to_csv(inventory_path, index=False, lineterminator="\n")
     master_session_count = int(view["trade_date"].nunique())
     source_sessions = int(len(inventory))
-    if enforce_authoritative and (master_session_count != 971 or source_sessions != 3_884):
+    if enforce_authoritative and (master_session_count != 962 or source_sessions != 3_848):
         raise AssertionError(
             f"authoritative session counts changed: master={master_session_count}, sources={source_sessions}"
         )
     x0_features = list(e0_features)
     x1_features = [*x0_features, *CROSS_FEATURES]
     manifest = {
-        "schema": "cross_market_transmission_view_v1",
+        "schema": "cross_market_transmission_view_v1r1",
+        "experiment": "CROSS_MARKET_TRANSMISSION_V1R1",
         "status": "PASS_EXACT_CROSS_MARKET_VIEW",
         "outcomes_in_view": False,
         "outcomes_read": False,
@@ -333,6 +384,10 @@ def build_view(
         "master_sha256": sha256_file(master_path),
         "master_rows_preserved": int(len(view)),
         "master_session_count": master_session_count,
+        "master_physical_rows": MASTER_ROWS,
+        "excluded_early_close_dates": list(EARLY_CLOSE_DATES),
+        "excluded_early_close_rows": 1_072,
+        "exclusion_contract": "calendar-only full-session exclusion; no outcome or exit inspected",
         "date_min": str(view["trade_date"].min()),
         "date_max": str(view["trade_date"].max()),
         "join_contract": "exact timestamp equality; exactly 30 completed bars [t-30m,t)",

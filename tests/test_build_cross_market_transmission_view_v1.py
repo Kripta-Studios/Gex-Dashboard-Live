@@ -8,8 +8,10 @@ import pytest
 
 from neural.jepa.build_cross_market_transmission_view_v1 import (
     CROSS_FEATURES,
+    EARLY_CLOSE_DATES,
     OUTPUT_ROOT,
     PAIR_FIELDS,
+    PAIRWISE_E0_FEATURES,
     _assert_output_path,
     _master_read_columns,
     cross_features_for_event,
@@ -30,6 +32,22 @@ def test_allowlist_is_exactly_28_ordered_fields() -> None:
     assert len(CROSS_FEATURES) == 28
     assert hash_ordered(CROSS_FEATURES) == "5df3d817d12c5d938427eabeca145f1d4e59420e1283fa3cf3bdaeef6b112058"
     assert len(CROSS_FEATURES) == len(set(CROSS_FEATURES))
+    assert len(PAIRWISE_E0_FEATURES) == 30
+    assert hash_ordered(PAIRWISE_E0_FEATURES) == "b68b6c2e17b333597281a7d7fa27237b1f1e2640deb8952867d25eced26cbe38"
+
+
+def test_v1r1_early_close_exclusion_is_exact_and_calendar_only() -> None:
+    assert EARLY_CLOSE_DATES == (
+        "20221125",
+        "20230703",
+        "20231124",
+        "20240703",
+        "20241129",
+        "20241224",
+        "20250703",
+        "20251128",
+        "20251224",
+    )
 
 
 def test_master_projection_rejects_outcome_columns() -> None:

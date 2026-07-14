@@ -552,3 +552,9 @@ media jornada, closes subyacentes planos y exits que cruzaban el cierre revelaro
 eventos stale. No se estabiliza beta con epsilon ni se filtran filas por su exit
 futuro; se rechaza V1 y se excluye la sesión completa mediante calendario
 predeclarado en V1R1.
+
+V1R1 mostró un límite distinto: una correlación lead/lag no está definida si
+una de las dos secuencias lag queda constante, aunque la ventana total tenga un
+movimiento. Asignar cero o epsilon cambiaría el mecanismo tras ver el gate. La
+familia se cierra y se rota a aceptación por tiempo-precio TPO, que no depende
+de covarianzas cross-market.

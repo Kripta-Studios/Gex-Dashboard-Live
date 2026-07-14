@@ -33,6 +33,14 @@ V1R1, única activa, excluye las nueve sesiones early-close completas por lista
 calendar-only: 1.072 filas, dejando 96.553. No selecciona por outcome ni cambia
 las 28 features, cuantiles, inner, scheduler o gates. 2024/2025 siguen cerrados.
 
+V1R1 también cerró antes de outcomes: en 2024-05-30 11:10, SPXW solo tenía un
+retorno no cero y el lead/lag del par SPXW/SPY era indefinido. La predeclaración
+impide cero/epsilon/remoción/exclusión. Estado `BLOCKED_DATA`; no hubo dev/freeze.
+
+Única familia activa: H-TPOVALUE1, developing value TPO target-only. X1 añade
+36 features congeladas (SHA `73903b48...7c9f5`) al E0; cuantiles/scheduler/gates
+se mantienen. Fuente exacta 09:30..t-1, 96.553 filas normales. 2024/2025 cerrado.
+
 ## 1. Objetivo y gates no negociables
 
 Obtener una policy causal, reproducible y live-equivalente para opciones 0DTE de
