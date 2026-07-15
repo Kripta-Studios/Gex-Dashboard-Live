@@ -42,6 +42,14 @@ DATA_GATE_CLARIFICATION = (
     ROOT / "research_papers/JEPA/KING_GEX_MANAGE30_V1_DATA_GATE_CLARIFICATION.md"
 )
 DATA_GATE_CLARIFICATION_SHA256 = "931fc27d74b05760abf9c8a8907fe64ba5d0d046bfb8f64cf16a5d4b16229e46"
+SNAPSHOT_CLARIFICATION = (
+    ROOT
+    / "research_papers/JEPA/"
+    "KING_GEX_MANAGE30_V1_DATA_GATE_CLARIFICATION_V1R2.md"
+)
+SNAPSHOT_CLARIFICATION_SHA256 = (
+    "35e09f5a2679e2ce807a9439dcf9fa051c3e629fa95003975e02d5f39e39a844"
+)
 SOURCE_MANIFEST = (
     ROOT
     / "research_papers/JEPA/results/_diagnostics/"
@@ -51,7 +59,17 @@ SOURCE_MANIFEST = (
 SOURCE_MANIFEST_SHA256 = "88be8a2ff44c18fb57fca360d31def574ddbb0419a792fc88349942711d2974a"
 START_DATE = "20220101"
 END_DATE = "20231231"
-EXPECTED_CANDIDATES = 22_273
+EXPECTED_SOURCE_CANDIDATES = 22_273
+EXPECTED_EXECUTABLE_CANDIDATES = 22_272
+FROZEN_ENTRY_REJECTIONS = (
+    {
+        "ticker": "SPXW",
+        "trade_date": "20220222",
+        "minute": 680,
+        "action": "PUT",
+        "reason": "exact_entry_contract_not_executable",
+    },
+)
 FIRST_ENTRY_MINUTE = 680
 LAST_ENTRY_MINUTE = 870
 DECISION_MINIMUM = 30
@@ -221,6 +239,8 @@ def load_candidates() -> pd.DataFrame:
         raise AssertionError("MANAGE30 predeclaration changed")
     if sha256_file(DATA_GATE_CLARIFICATION) != DATA_GATE_CLARIFICATION_SHA256:
         raise AssertionError("MANAGE30 data-gate clarification changed")
+    if sha256_file(SNAPSHOT_CLARIFICATION) != SNAPSHOT_CLARIFICATION_SHA256:
+        raise AssertionError("MANAGE30 snapshot clarification changed")
     if sha256_file(MASTER) != MASTER_SHA256:
         raise AssertionError("authoritative executable master changed")
     if sha256_file(WALL_STATE) != WALL_STATE_SHA256:
@@ -276,8 +296,10 @@ def load_candidates() -> pd.DataFrame:
     out["month"] = out["trade_date"].str[:6]
     out["year"] = out["trade_date"].str[:4]
     out = out.sort_values(KEY, kind="stable").reset_index(drop=True)
-    if len(out) != EXPECTED_CANDIDATES:
-        raise AssertionError(f"K1 train/dev census changed: {len(out)} != {EXPECTED_CANDIDATES}")
+    if len(out) != EXPECTED_SOURCE_CANDIDATES:
+        raise AssertionError(
+            f"K1 train/dev census changed: {len(out)} != {EXPECTED_SOURCE_CANDIDATES}"
+        )
     if not out["trade_date"].between(START_DATE, END_DATE).all():
         raise AssertionError("candidate loader opened a forbidden date")
     return out
@@ -320,9 +342,12 @@ def run_identity() -> dict[str, Any]:
         "experiment": EXPERIMENT,
         "start_date": START_DATE,
         "end_date": END_DATE,
-        "expected_candidates": EXPECTED_CANDIDATES,
+        "expected_source_candidates": EXPECTED_SOURCE_CANDIDATES,
+        "expected_executable_candidates": EXPECTED_EXECUTABLE_CANDIDATES,
+        "frozen_entry_rejections": list(FROZEN_ENTRY_REJECTIONS),
         "predeclaration_sha256": PREDECLARATION_SHA256,
         "data_gate_clarification_sha256": DATA_GATE_CLARIFICATION_SHA256,
+        "snapshot_clarification_sha256": SNAPSHOT_CLARIFICATION_SHA256,
         "master_sha256": MASTER_SHA256,
         "wall_state_sha256": WALL_STATE_SHA256,
         "source_manifest_sha256": SOURCE_MANIFEST_SHA256,
@@ -367,6 +392,50 @@ def _valid_contract_quotes(quotes: pd.DataFrame, ts: pd.Timestamp) -> pd.DataFra
     return path.sort_values("quote_time", kind="stable").drop_duplicates(
         "quote_time", keep="last"
     )
+
+
+def _exact_snapshot_groups(greeks: pd.DataFrame) -> dict[pd.Timestamp, pd.DataFrame]:
+    if "quote_dt" not in greeks.columns:
+        raise KeyError("exact snapshots require native quote_dt")
+    quote_time = pd.to_datetime(greeks["quote_dt"], errors="coerce")
+    if quote_time.isna().any():
+        raise AssertionError("exact snapshot source contains invalid quote_dt")
+    work = greeks.copy()
+    work["quote_dt"] = quote_time
+    return {
+        pd.Timestamp(stamp): part
+        for stamp, part in work.groupby("quote_dt", sort=False, observed=True)
+    }
+
+
+def _frozen_rejection_key(
+    ticker: str, trade_date: str, minute: int, action: str
+) -> bool:
+    key = (str(ticker), str(trade_date), int(minute), str(action).upper())
+    allowed = {
+        (
+            str(item["ticker"]),
+            str(item["trade_date"]),
+            int(item["minute"]),
+            str(item["action"]).upper(),
+        )
+        for item in FROZEN_ENTRY_REJECTIONS
+    }
+    return key in allowed
+
+
+def _assert_frozen_rejection_master(event: Any, action: str, bucket: int) -> None:
+    prefix = f"{str(action).lower()}_d{int(bucket):02d}"
+    if np.isfinite(float(getattr(event, f"{prefix}_strike"))):
+        raise AssertionError("frozen entry rejection gained a master strike")
+    expected = _expected_baseline(event, action, bucket)
+    if int(expected["exit_minutes"]) != 0 or int(expected["status"]) != 0:
+        raise AssertionError("frozen entry rejection gained a master outcome state")
+    if any(
+        np.isfinite(float(expected[name]))
+        for name in ("realized_return", "max_ret", "min_ret")
+    ):
+        raise AssertionError("frozen entry rejection gained a master payoff")
 
 
 def _spread_pct(bid: float, ask: float) -> float:
@@ -556,7 +625,7 @@ def build_session(events: pd.DataFrame, source: pd.Series) -> pd.DataFrame:
     greeks, _ = load_chain(source, require_open_interest=True, option_price_mode="executable_quote")
     if greeks.empty:
         raise AssertionError(f"empty executable chain: {ticker} {trade_date}")
-    snapshots = {stamp: part for stamp, part in greeks.groupby("dt", sort=False, observed=True)}
+    snapshots = _exact_snapshot_groups(greeks)
     quote_groups = {
         (str(right), float(strike)): part
         for (right, strike), part in greeks.groupby(["right", "strike"], sort=False, observed=True)
@@ -569,6 +638,14 @@ def build_session(events: pd.DataFrame, source: pd.Series) -> pd.DataFrame:
             raise AssertionError(f"missing exact entry snapshot: {ticker} {trade_date} {event.minute}")
         action = str(event.action).upper()
         contract = select_contract(snapshot, action, bucket / 100.0, "executable_quote")
+        frozen_rejection = _frozen_rejection_key(
+            ticker, trade_date, int(event.minute), action
+        )
+        if frozen_rejection:
+            if contract is not None:
+                raise AssertionError("frozen entry rejection gained an executable contract")
+            _assert_frozen_rejection_master(event, action, bucket)
+            continue
         if contract is None:
             raise AssertionError("frozen K1 event lost its executable contract")
         prefix = f"{action.lower()}_d{bucket:02d}"
@@ -585,7 +662,11 @@ def build_session(events: pd.DataFrame, source: pd.Series) -> pd.DataFrame:
         entry_features = _entry_features(event, contract, action)
         decision_features, decision_row = _decision_features(contract_path, entry_ask, entry_features, ts)
         decision_ts = pd.Timestamp(decision_row["quote_time"]) if decision_row is not None else None
-        decision_snapshot = snapshots.get(decision_ts.floor("min"), pd.DataFrame()) if decision_ts is not None else pd.DataFrame()
+        decision_snapshot = (
+            snapshots.get(decision_ts, pd.DataFrame())
+            if decision_ts is not None
+            else pd.DataFrame()
+        )
         surface = _surface_features(snapshot, decision_snapshot, ts, decision_ts)
         row: dict[str, Any] = {
             "ticker": ticker,
@@ -618,7 +699,13 @@ def build_session(events: pd.DataFrame, source: pd.Series) -> pd.DataFrame:
             row["outcome_E30_exit_reason"] = "decision_exit"
         rows.append(row)
     output = pd.DataFrame(rows).sort_values(KEY, kind="stable").reset_index(drop=True)
-    if len(output) != len(events) or output.duplicated(KEY).any():
+    expected_rejections = sum(
+        _frozen_rejection_key(
+            ticker, trade_date, int(event.minute), str(event.action)
+        )
+        for event in events.itertuples(index=False)
+    )
+    if len(output) != len(events) - expected_rejections or output.duplicated(KEY).any():
         raise AssertionError("session output census/key contract failed")
     if output["trade_date"].str[:4].astype(int).gt(2023).any():
         raise AssertionError("builder opened an outer year")
@@ -721,6 +808,9 @@ def _dataset_summary(frame: pd.DataFrame) -> dict[str, Any]:
         "schema": DATASET_SCHEMA,
         "status": "PASS_DATA_GATE",
         "rows": len(frame),
+        "source_candidate_rows": EXPECTED_SOURCE_CANDIDATES,
+        "entry_rejected_rows": len(FROZEN_ENTRY_REJECTIONS),
+        "entry_rejections": list(FROZEN_ENTRY_REJECTIONS),
         "columns": len(frame.columns),
         "date_min": str(frame["trade_date"].min()),
         "date_max": str(frame["trade_date"].max()),
@@ -769,7 +859,11 @@ def build(output_dir: Path, workers: int) -> dict[str, Any]:
     paths = sorted(Path(result["path"]) for result in results)
     parts = [pd.read_parquet(path) for path in paths]
     dataset = pd.concat(parts, ignore_index=True).sort_values(KEY, kind="stable").reset_index(drop=True)
-    if len(dataset) != EXPECTED_CANDIDATES or dataset.duplicated(KEY).any():
+    if (
+        len(candidates) != EXPECTED_SOURCE_CANDIDATES
+        or len(dataset) != EXPECTED_EXECUTABLE_CANDIDATES
+        or dataset.duplicated(KEY).any()
+    ):
         raise AssertionError("combined dataset census/key contract failed")
     if dataset["trade_date"].str[:4].astype(int).gt(2023).any():
         raise AssertionError("combined dataset opened outer years")

@@ -10,15 +10,22 @@ from neural.jepa.build_king_gex_manage30_v1 import (
     DECISION_MAXIMUM,
     DECISION_MINIMUM,
     END_DATE,
+    EXPECTED_EXECUTABLE_CANDIDATES,
+    EXPECTED_SOURCE_CANDIDATES,
     FIRST_ENTRY_MINUTE,
+    FROZEN_ENTRY_REJECTIONS,
     M0_FEATURES,
     M1_EXTRA_FEATURES,
     M1_FEATURES,
     PREDECLARATION,
     PREDECLARATION_SHA256,
+    SNAPSHOT_CLARIFICATION,
+    SNAPSHOT_CLARIFICATION_SHA256,
     LAST_ENTRY_MINUTE,
     START_DATE,
     _decision_features,
+    _exact_snapshot_groups,
+    _frozen_rejection_key,
     _missing_decision_features,
     _signed_log,
     _spot_return,
@@ -75,6 +82,10 @@ def test_protocol_is_frozen_to_train_development_only() -> None:
     assert sha256_file(PREDECLARATION) == PREDECLARATION_SHA256
     assert ACTION_IDS[-1] == "E30"
     assert len(ACTION_IDS) == 17
+    assert EXPECTED_SOURCE_CANDIDATES == 22_273
+    assert EXPECTED_EXECUTABLE_CANDIDATES == 22_272
+    assert len(FROZEN_ENTRY_REJECTIONS) == 1
+    assert sha256_file(SNAPSHOT_CLARIFICATION) == SNAPSHOT_CLARIFICATION_SHA256
     assert all(int(config["min_hold_minutes"]) == 30 for config in EXIT_CONFIGS)
 
 
@@ -139,3 +150,24 @@ def test_signed_log_preserves_sign_and_zero() -> None:
     assert _signed_log(10.0) > 0.0
     assert _signed_log(-10.0) < 0.0
     assert math.isnan(_signed_log(float("nan")))
+
+
+def test_exact_snapshot_never_includes_later_quote_from_same_minute() -> None:
+    stamp = pd.Timestamp("2022-06-17 13:55:00")
+    later = stamp + pd.Timedelta(seconds=30)
+    source = pd.DataFrame(
+        {
+            "quote_dt": [stamp, later],
+            "strike": [277.0, 277.0],
+            "ask": [0.71, 0.74],
+        }
+    )
+    snapshots = _exact_snapshot_groups(source)
+    assert snapshots[stamp]["ask"].tolist() == [0.71]
+    assert snapshots[later]["ask"].tolist() == [0.74]
+
+
+def test_only_frozen_train_entry_rejection_is_allowed() -> None:
+    assert _frozen_rejection_key("SPXW", "20220222", 680, "PUT")
+    assert not _frozen_rejection_key("SPXW", "20220222", 680, "CALL")
+    assert not _frozen_rejection_key("SPXW", "20220222", 685, "PUT")

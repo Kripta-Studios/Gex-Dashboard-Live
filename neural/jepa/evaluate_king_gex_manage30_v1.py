@@ -24,6 +24,8 @@ from neural.jepa.build_king_gex_manage30_v1 import (
     M1_FEATURES,
     PREDECLARATION,
     PREDECLARATION_SHA256,
+    SNAPSHOT_CLARIFICATION,
+    SNAPSHOT_CLARIFICATION_SHA256,
 )
 from neural.jepa.evaluate_king_gex_exit_v1 import EXIT_CONFIGS
 from neural.jepa.evaluate_king_gex_slope_v1 import (
@@ -169,6 +171,7 @@ def protocol() -> dict[str, Any]:
             "top5_trade_max": MAX_TOP5_TRADE_GROSS_PROFIT_SHARE,
             "top5_day_max": MAX_TOP5_DAY_GROSS_PROFIT_SHARE,
         },
+        "snapshot_clarification_sha256": SNAPSHOT_CLARIFICATION_SHA256,
         "outer_2024_2025_opened": False,
         "holdout_2026_opened": False,
     }
@@ -193,6 +196,8 @@ def _load_dataset(dataset_path: Path, summary_path: Path) -> tuple[pd.DataFrame,
         raise AssertionError("MANAGE30 predeclaration changed")
     if sha256_file(DATA_GATE_CLARIFICATION) != DATA_GATE_CLARIFICATION_SHA256:
         raise AssertionError("MANAGE30 clarification changed")
+    if sha256_file(SNAPSHOT_CLARIFICATION) != SNAPSHOT_CLARIFICATION_SHA256:
+        raise AssertionError("MANAGE30 snapshot clarification changed")
     summary = json.loads(summary_path.read_text(encoding="utf-8"))
     if summary.get("status") != "PASS_DATA_GATE":
         raise AssertionError("MANAGE30 dataset has not passed its data gate")
@@ -235,6 +240,7 @@ def _run_identity(dataset_path: Path, summary_path: Path) -> dict[str, Any]:
         "protocol_sha256": protocol_sha256(),
         "predeclaration_sha256": PREDECLARATION_SHA256,
         "data_gate_clarification_sha256": DATA_GATE_CLARIFICATION_SHA256,
+        "snapshot_clarification_sha256": SNAPSHOT_CLARIFICATION_SHA256,
         "dataset_sha256": sha256_file(dataset_path),
         "dataset_summary_sha256": sha256_file(summary_path),
         "code_hashes": _code_hashes(),

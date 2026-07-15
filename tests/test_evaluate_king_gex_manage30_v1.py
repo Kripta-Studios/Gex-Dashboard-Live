@@ -57,6 +57,7 @@ def test_protocol_freezes_development_before_outer_and_2026() -> None:
     assert payload["initial_train"] == "202201..202212"
     assert payload["outer_2024_2025_opened"] is False
     assert payload["holdout_2026_opened"] is False
+    assert len(payload["snapshot_clarification_sha256"]) == 64
     assert MODEL_PARAMS["objective"] == "huber"
     assert MODEL_PARAMS["n_estimators"] == 300
 
