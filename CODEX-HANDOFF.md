@@ -1191,3 +1191,41 @@ antes de la ventana King. `KING_GEX_MANAGE30_V1_DATA_GATE_CLARIFICATION.md`
 congela master minute 680..870 antes del exact join. Censo outcome-free:
 33.902/33.902 joins, 22.273 K1 sin cambio. V1 tiene solo RUN_CHECKPOINT y es
 `REJECTED_PRE_PATH_LABEL`; relanzar tras commit a target V1R1. Suite `7 passed`.
+
+## MANAGE30 runner y build activo — 2026-07-15 16:47
+
+El evaluador causal/resumible está implementado en
+`neural/jepa/evaluate_king_gex_manage30_v1.py` y pushed en `b8fa50c8`. No abre
+outer: entrena 2022 para 202301 y expande exclusivamente con meses anteriores
+hasta 202312. Son 72 folds por ticker/M0-M1. Modela 17 contrafactuales como
+ventaja clipped vs B00; B00 se fija a cero y solo cambia por predicción >0.
+Después rehace scheduler con el hold seleccionado, por lo que la duración
+afecta causalmente qué oportunidades posteriores sobreviven.
+
+Checkpoints fold manifest-last contienen `model.txt`, medianas, predicciones,
+trades y métricas; identidad incluye hashes de dataset, resumen, código y ambos
+documentos congelados. Tests combinados builder/runner/EXIT1: `22 passed`; Ruff
+y compilación clean. No hay resultado económico aún.
+
+El builder V1R1 sigue activo en
+`tmp/king_gex_manage30_v1/train_dev_202201_202312_v1r1`; checkpoint observado:
+843 manifests de sesión, cero errores, última escritura 16:47. No lanzar otra
+instancia. Si el proceso muere, relanzar exactamente:
+
+```powershell
+python neural/jepa/build_king_gex_manage30_v1.py `
+  --output-dir tmp/king_gex_manage30_v1/train_dev_202201_202312_v1r1 `
+  --workers 4
+```
+
+Al terminar, exigir `SUMMARY.json status=PASS_DATA_GATE`, dataset 22.273 rows,
+keys únicas y B00 finito/hold30..180. Revisar `decision_coverage` y
+`synth_complete_coverage`; no asumir que existencia de fuentes equivale a
+cobertura. Solo después ejecutar el runner al target nuevo
+`research_papers/JEPA/results/_diagnostics/king_gex_manage30_development_2023_v1`.
+
+`SUMMARY.md` en raíz es ahora el handoff canónico compacto/detallado. Mantenerlo
+sincronizado con AGENTS, este archivo, SUMMARY-update y SUMMARY-articles tras
+cada data seal, resultado o cierre. El Excel King se inspeccionará read-only con
+la skill disponible; no git-add, no modificar y no usar hallazgos para retocar
+el protocolo MANAGE30 ya congelado.

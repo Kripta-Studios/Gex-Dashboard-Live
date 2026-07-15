@@ -673,3 +673,24 @@ La ventana también forma parte de la identidad: exigir wall state a las filas
 10:30–11:15 del master era un error de universo, no ausencia de datos. Aplicar
 11:20–14:30 antes del join conserva exactamente las oportunidades K1 y evita
 que filas nunca elegibles bloqueen o alteren el experimento.
+
+La traducción live del oracle requiere aprender valor, no copiar una etiqueta
+ganadora. Las 17 acciones comparten estructura: stop, activación/drawdown de
+trail y horizonte. Representarlas con esos parámetros permite estimar una
+superficie de ventaja condicionada al estado; una clasificación plana perdería
+esa relación y exageraría diferencias pequeñas entre acciones casi equivalentes.
+
+La duración elegida también modifica el universo futuro. Un H60 puede liberar
+una oportunidad que B00 bloquearía hasta 180m; por eso no basta medir el retorno
+de cada fila y agregar. Primero se asigna gestión usando solo el estado +30 y
+después se reproduce secuencialmente caps, cooldown y posición abierta. El
+oracle actual maximiza retorno por evento, no valor global con coste de bloqueo;
+esa diferencia explica por qué PF2,357 es headroom, no el techo exacto de una
+policy de cartera.
+
+La implementación en `b8fa50c8` convierte estas restricciones en checkpoints
+auditables por fold. La prueba 2023 aún no ha comenzado: el builder V1R1 tenía
+843 sesiones selladas al último checkpoint. Hasta que existan data gate y 72
+folds completos, cualquier PF atribuido a M0/M1 sería inventado. Un Excel King
+auditado en el futuro puede inspirar otra hipótesis, pero no alterar este examen
+después de congelarlo.

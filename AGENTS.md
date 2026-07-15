@@ -1032,3 +1032,23 @@ aplicar la ventana King 11:20–14:30. Aclaración V1R1 congela filtrar 680..870
 antes del join: 33.902/33.902 master keys y los mismos 22.273 K1. Target V1 solo
 tiene RUN_CHECKPOINT y queda rechazado. Fix suite `7 passed`, Ruff/compile clean;
 commit/push y relanzar a `train_dev_202201_202312_v1r1`.
+
+### Checkpoint operativo KING-GEX-MANAGE30-V1 — 2026-07-15 16:47
+
+Runner walk-forward reanudable ya pushed en `b8fa50c8`. Congela 72 folds de
+desarrollo (12 meses 2023 x 3 tickers x M0/M1), LightGBM Huber y selección de
+17 gestiones por ventaja vs B00. Cada fold persiste modelo, medianas,
+predicciones, trades, métricas y manifest hash-last. Suite combinada
+builder/runner/EXIT1 `22 passed`, Ruff y `py_compile` clean.
+
+Build válido activo en
+`tmp/king_gex_manage30_v1/train_dev_202201_202312_v1r1`: 843 sesiones selladas
+al checkpoint y cero errores reportados. No lanzar duplicado; si muere, el mismo
+comando con `--workers 4` revalida/reutiliza manifests. Debe terminar en 22.273
+rows y `PASS_DATA_GATE`; auditar cobertura decision/M1 antes de ejecutar el
+runner. Aún no existe PF/WR/PnL causal de M0/M1 y 2024-2026 siguen cerrados.
+
+Nuevo handoff canónico detallado en `SUMMARY.md`. El workbook
+`MASTER_KING_NODE_RECORD_V5.xlsx` se auditará read-only con el runtime de
+spreadsheets ahora disponible, pero cualquier idea será una hipótesis separada:
+no puede modificar MANAGE30 ni seleccionarse con sus outcomes.

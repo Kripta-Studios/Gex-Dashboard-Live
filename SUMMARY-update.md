@@ -720,3 +720,19 @@ antes del primer build real.
 Primer build MANAGE30 paró pre-path: faltaba filtrar master a 11:20–14:30 antes
 del join. Aclaración V1R1 preserva 22.273 K1 y logra 33.902/33.902 exact joins.
 V1 rechazado con solo RUN_CHECKPOINT; fix `7 passed`. Commit/push -> target V1R1.
+
+MANAGE30 ya tiene runner mensual reanudable pushed en `b8fa50c8`. Son 72 folds
+2023, por ticker y M0/M1, LightGBM Huber fijo, target de ventaja por acción y
+scheduler rehecho tras seleccionar hold. Cada fold sella modelo/medianas/
+predicciones/trades/métricas. Suite combinada `22 passed`, Ruff/compile clean.
+
+Build train/dev V1R1 activo: 843 checkpoints de sesión a las 16:47 del
+2026-07-15, cero errores reportados. No duplicar. Debe producir 22.273 rows y
+`PASS_DATA_GATE`; después auditar coverage y ejecutar una única evaluación
+2023. Rentabilidad causal nueva: aún no existe. Los valores PF2,357/WR54,67%
+son oracle futuro y no una policy. 2024-2026 y producción permanecen cerrados.
+
+Se añadió `SUMMARY.md` de continuidad con evidencia, fallos, commits, comandos,
+gates y próximos pasos. Mantenerlo junto a los cuatro handoffs. El workbook King
+puede auditarse ahora con la runtime de spreadsheets, siempre read-only y como
+fuente separada de hipótesis, nunca para retunar MANAGE30.

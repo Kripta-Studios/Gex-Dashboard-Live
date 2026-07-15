@@ -1,3 +1,224 @@
+# SUMMARY.md — Continuidad de la investigación de rentabilidad
+
+**Actualizado:** 2026-07-15 16:47 Europe/Madrid
+**Rama:** \`main\`
+**HEAD pushed:** \`b8fa50c8\`
+**Experimento activo:** \`KING-GEX-MANAGE30-V1\`
+
+## 1. Estado ejecutivo
+
+No existe todavía una policy nueva que haya demostrado rentabilidad causal. Los
+PF altos del oracle usan futuro y no son operables. La investigación activa
+intenta aprender causalmente en +30m qué gestión conviene, preservando entrada al
+ask, salida al bid, 0DTE, hold 30..180m, caps/cooldown live y rechazo mientras
+exista una posición abierta.
+
+Gate MANAGE30 congelada para cada una de las 36 celdas ticker-mes de 2023:
+
+- PF estrictamente mayor que 1,30;
+- WR estrictamente mayor que 45%;
+- más de 12 trades;
+- PnL positivo;
+- hold mínimo de 30m;
+- concentración top-5 trades <=20% y top-5 días <=30%.
+
+Una métrica pooled atractiva no compensa meses sin trades o perdedores. Nunca se
+entrena con el mismo mes que luego se reporta.
+
+## 2. Evidencia económica vigente
+
+| Evidencia | Trades | WR | PF | PnL/R | Gate |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Benchmark limpio QQQ | 94 | 44,68% | 0,984 | negativo | FAIL |
+| Benchmark limpio SPXW | 107 | 42,99% | 0,832 | negativo | FAIL |
+| Benchmark limpio SPY | 123 | 43,90% | 0,919 | negativo | FAIL |
+| KING K0 nivel 2023 | 1.443 | 43,10% | 0,810 | -94,144R | FAIL |
+| KING K1 nivel+pendiente | 1.324 | 42,22% | 0,804 | -89,845R | 2/36 |
+| KING invertido B00 | 1.304 | 43,02% | 0,850 | -67,677R | 1/36 |
+| Mejor exit fijo D1/S30 | 1.496 | 35,96% | 0,925 | -30,131R | FAIL |
+| Oracle B00/S30 no causal | 1.429 | 43,60% | 1,190 | +65,326R | 13/36 |
+| Oracle 16 exits no causal | 1.337 | 54,67% | 2,357 | +324,783R | 32/36 |
+
+Los oracles son techos retrospectivos, no políticas. No atribuir PF2,357 al
+modelo ni al sistema live.
+
+## 3. Utilidad real de las referencias King
+
+\`live_king_node.py\` sí sirvió: permitió fijar el universo de oportunidades,
+dirección y contrato y traducirlo a un replay executable. La regla simple
+\`GEX negativo=momentum / GEX positivo=reversión\`, incluso condicionada por
+pendiente 45m, no orienta establemente: el right elegido supera al contrario solo
+49,02%. Invertir todo también pierde.
+
+\`MASTER_KING_NODE_RECORD_V5.xlsx\` aún no está auditado celda a celda. El runtime
+de spreadsheet ahora está disponible y debe inspeccionarse read-only. No
+modificar ni git-add el workbook. Cualquier hallazgo sería una hipótesis nueva;
+no puede retocar MANAGE30 después de congelar su protocolo.
+
+## 4. Familias cerradas relevantes
+
+### Existing-data E1
+
+E1 ya usó 527 features de entrada: higher Greeks sintéticas, cambios/ratios,
+walls, IB/Fibonacci, precio, OI y volumen. Sus 144 celdas de modelos económicos
+abstuvieron porque ningún grid pasó tres meses inner. Repetir las mismas
+variables en entry está cerrado; observar su evolución post-entry es otra
+pregunta.
+
+### KING-GEX-SLOPE1
+
+K0 y K1 perdieron. Frecuencia y concentración pasaron; falló alpha direccional.
+No rescatar por CALL-only, PUT-only, ticker, signo, threshold o mes.
+
+### KING-GEX-EXIT1
+
+Se sellaron 36 source checkpoints, 425.152 contrafactuales, 32 policies y 1.152
+celdas auditadas. Ninguna salida fija alcanzó PF1. Stops estrechos reducen cola
+pero destruyen recuperaciones; trails tempranos aumentan WR recortando winners.
+No ejecutar otro sweep de stops/trails.
+
+Evidencia:
+\`research_papers/JEPA/results/_diagnostics/king_gex_exit1_executable_development_2023_v1r1/\`
+
+### Hipótesis físicas
+
+H-FLOW1, H-IVSURF1, H-QSIZE1R1 y H-IBQDYN1 fallaron gates físicas congeladas.
+H-QDYN1 cerró en data gate y H-GREEK2WALL quedó bloqueado por entitlement
+STANDARD. No rescatar tickers/horizontes post-hoc ni atribuirles PF.
+
+## 5. Hipótesis activa MANAGE30
+
+La entrada queda fija en dirección \`D1_INVERTED\`, mismo contrato 0DTE
+(SPXW d25, QQQ/SPY d35) y ask. La decisión ocurre en la primera quote exacta del
+mismo contrato con elapsed 30..31m. Si falta, conserva B00; nunca se usa as-of.
+
+Acciones: las 16 gestiones EXIT1 más \`E30\`, salida inmediata al bid de decisión.
+
+\`M0_PATH\` contiene estado observable hasta +30: retorno actual, MFE, MAE,
+drawdown, marks 5/15/30m, slopes, número de quotes, spot returns/RV, spread,
+delta, IV, theta, vega, strike y reloj.
+
+\`M1_SYNTH_GREEKS\` añade cambios entrada->+30 de gamma, vanna, charm, DGEX,
+zomma, delta, vega y vomma y migración de walls. Siempre marcar
+\`SYNTHETIC_MODEL_DERIVED\`: OI unsigned no prueba inventario dealer y estas
+variables no son \`/greeks/all\` nativas.
+
+Cada evento produce 17 filas de acción. Target:
+
+\`clip(return_action - return_B00, -2, +2)\`
+
+Modelo fijo: LightGBM Huber por ticker. B00 se fuerza a predicción cero; solo se
+cambia por una ventaja predicha >0. Se modela valor contextual, no una etiqueta
+oracle plana.
+
+## 6. Walk-forward y traducción live
+
+Cronología de desarrollo:
+
+\`\`\`text
+train 2022              -> predice enero 2023
+train 2022 + enero      -> predice febrero 2023
+...
+train hasta noviembre   -> predice diciembre 2023
+\`\`\`
+
+Son 72 folds: 12 meses x 3 tickers x M0/M1. Tras puntuar cada oportunidad se
+rehace el scheduler cronológico; el hold elegido determina qué entradas
+posteriores quedan bloqueadas.
+
+Solo un PASS 36/36 congela un brazo antes de abrir una única evaluación
+2024-2025. Si outer pasa, 2026 se evalúa mes a mes: para un mes M solo se
+entrena con meses completados <M. Entrenar con todo 2022-2026 y reportar 2026
+sería leakage.
+
+Un futuro paquete live debe sellar modelos por ticker, medianas train-only,
+orden/allowlist de features, 17 acciones, cutoff, hashes de código/protocolo,
+caps/cooldown y state machine stop/trail/horizonte. Snapshots live grabados deben
+reproducir exactamente features, acción y salida offline antes de promoción.
+
+## 7. Commits y contratos congelados
+
+Commits relevantes:
+
+- \`649932b3\`: cierre/auditoría KING-GEX-EXIT1.
+- \`2529cad5\`: predeclaración MANAGE30.
+- \`a8ff2651\`: builder reanudable train/dev.
+- \`ed5d7d17\`: aclaración pre-outcome de ventana/join.
+- \`b8fa50c8\`: evaluador walk-forward reanudable y tests.
+
+Documentos:
+
+- \`research_papers/JEPA/KING_GEX_MANAGE30_V1_PREDECLARATION.md\`
+- SHA \`b534cd8857833285010dccc0ae440f89a4ca8235dd4d2e7c99dd17a731d74948\`
+- \`research_papers/JEPA/KING_GEX_MANAGE30_V1_DATA_GATE_CLARIFICATION.md\`
+- SHA \`931fc27d74b05760abf9c8a8907fe64ba5d0d046bfb8f64cf16a5d4b16229e46\`
+
+El primer target \`train_dev_202201_202312_v1\` queda rechazado antes de paths y
+labels. No reutilizarlo.
+
+Target válido reanudable:
+
+\`tmp/king_gex_manage30_v1/train_dev_202201_202312_v1r1\`
+
+Checkpoint 2026-07-15 16:47: 843 manifests de sesión, cero errores reportados y
+proceso activo. El PID es efímero; verificar command line antes de asumir estado.
+No lanzar duplicado.
+
+Comando de resume, solo si el original murió:
+
+\`\`\`powershell
+python neural/jepa/build_king_gex_manage30_v1.py \`
+  --output-dir tmp/king_gex_manage30_v1/train_dev_202201_202312_v1r1 \`
+  --workers 4
+\`\`\`
+
+Debe terminar con 22.273 rows únicas, B00 finito/hold30..180 y
+\`SUMMARY.json status=PASS_DATA_GATE\`. Auditar \`decision_coverage\` y
+\`synth_complete_coverage\` antes del modelo.
+
+Runner:
+
+\`\`\`powershell
+python neural/jepa/evaluate_king_gex_manage30_v1.py \`
+  --dataset tmp/king_gex_manage30_v1/train_dev_202201_202312_v1r1/king_gex_manage30_train_dev.parquet \`
+  --dataset-summary tmp/king_gex_manage30_v1/train_dev_202201_202312_v1r1/SUMMARY.json \`
+  --output-dir research_papers/JEPA/results/_diagnostics/king_gex_manage30_development_2023_v1 \`
+  --lgb-jobs 4
+\`\`\`
+
+El runner pasó 22 tests combinados builder/runner/EXIT1, Ruff y py_compile antes
+del commit. Cada fold persiste modelo, medianas, predicciones, trades, métricas y
+manifest-last con hashes; un relaunch solo reutiliza identidad byte-exacta.
+
+## 8. Siguiente secuencia exacta
+
+1. Comprobar si el builder V1R1 existente sigue vivo; esperar, no duplicar.
+2. Auditar el data gate, 22.273 keys, paridad B00 y coberturas M0/M1.
+3. Commit/push de compactos del seal y los cinco handoffs; no versionar el parquet
+   grande salvo política explícita.
+4. Ejecutar una vez los 72 folds 2023 al target inmutable.
+5. Recalcular independientemente scheduler, métricas mensuales y concentración.
+6. Si ninguna policy pasa 36/36, cerrar MANAGE30 y no abrir 2024-2026.
+7. Si una pasa, commit/push y congelar runner outer antes de leer 2024-2025.
+8. Auditar el Excel King read-only como fuente separada de ideas futuras.
+
+## 9. Límite científico
+
+El oracle 16-exits pasa 32/36, no 36/36. Además maximiza retorno por evento, no
+valor de cartera ajustado por cuánto tiempo bloquea oportunidades. V1 prueba la
+pregunta congelada más simple. Si falla, una V2 requeriría predeclaración nueva
+para valor ajustado por duración/oportunidad o una policy secuencial/Q-function;
+no se permite convertir ese concepto en rescate post-hoc.
+
+La evidencia auditable son protocolos, código, checkpoints, tests y métricas
+persistidas; no razonamiento privado ni un PF sin provenance.
+
+---
+
+## Archivo histórico conservado — auditoría 2026-07-10
+
+El handoff anterior completo se conserva literalmente a continuación. Los checkpoints fechados arriba lo sustituyen cuando el estado haya cambiado.
+
 # SUMMARY.md — Auditoría causal, backtest/live y estado de correcciones JEPA
 
 **Fecha del registro auditado:** 10 de julio de 2026
