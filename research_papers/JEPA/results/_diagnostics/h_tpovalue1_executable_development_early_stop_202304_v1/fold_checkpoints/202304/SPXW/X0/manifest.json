@@ -1,0 +1,41 @@
+{
+  "arm": "X0",
+  "atomic_manifest_last": true,
+  "code_hashes": {
+    "neural/jepa/evaluate_tpo_value_migration_v1.py": "ae114446d1d1dcc202a547bcbd138ff5cc9b82e8da92caab037ec4c9605d76d5",
+    "neural/jepa/existing_data_edge_scheduler_v1.py": "3a6283addbcd3e1a8bd7e75e193ddbaae1b9106048bb2e4766a620499ae96a0d",
+    "neural/jepa/existing_data_quantile_distribution_v1.py": "2d70c7c082cfb5352760760c655feeb5516378ab1b145df1cd6d89381e5048d6"
+  },
+  "experiment": "H_TPOVALUE1_EXECUTABLE_V1",
+  "files": {
+    "inner_grid.csv": {
+      "bytes": 43075,
+      "rows": 42,
+      "sha256": "90f801bc62a4a1c346d0faf8fc9ae34c11aafa626bbe6481199ca2f47038304b"
+    },
+    "monthly.csv": {
+      "bytes": 452,
+      "rows": 1,
+      "sha256": "efe6c225643f875b083682544c43f86dbe3a49538277ffc98eef5869dd328064"
+    },
+    "selection.csv": {
+      "bytes": 253,
+      "rows": 1,
+      "sha256": "f2fd4e1f1da507022bc6abd1bef06e83c39eff5db55d945036f791ab1480921e"
+    },
+    "trades.csv": {
+      "bytes": 111,
+      "rows": 0,
+      "sha256": "202bced880a77b7ebf931021f448722b884f737d2905410f24f835fe3588188e"
+    }
+  },
+  "master_sha256": "d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408",
+  "mode": "development",
+  "model_spec_sha256": "53940684518834bed0f45272151f030d740428516ce5c86443d92cf318245499",
+  "outer_month": "202304",
+  "runner_protocol_sha256": "3915af67a4bc4d1d737cab4538ea5159d9c5a27e6619813fc037f68fa929ac40",
+  "schema": "h_tpovalue1_economic_fold_checkpoint_v1",
+  "status": "COMPLETE",
+  "ticker": "SPXW",
+  "view_sha256": "fded87a10bdf038cb3c0d9fdd03de7e62f1f4dab987d8fbc25d93a0b9f3078fe"
+}

@@ -29,6 +29,17 @@ Ese test económico queda operacionalmente protegido con checkpoints atómicos
 por fold; una interrupción no autoriza cambiar hipótesis ni recomenzar con otro
 grid. La persistencia sirve a la evaluación económica, no cuenta como evidencia.
 
+El resultado fue negativo ya en la primera celda H-TPO: 0/42 grids X1 pasaron
+los tres meses inner y el near-miss pooled quedó PF 0,922/-1,831R. Por gate
+conjuntiva se aplicó early stop sin abrir outer ni holdouts. La lección vuelve a
+ser que una representación microestructural plausible no sustituye la utilidad
+ask-to-bid mensual.
+
+King Node aporta como hipótesis independiente la dinámica de net GEX —pendiente
+y sign flip—, no el nivel estático. Antes de evaluarla deben eliminarse
+dependencias de reloj/calibración 2026 y demostrarse OI, signos, timestamps y
+paridad histórica. VIX1D/VVIX, skew y vomma no se mezclarán en el primer test.
+
 ## 1. Principio rector
 
 Una mejora de representación no es alpha. Toda idea académica debe terminar en el

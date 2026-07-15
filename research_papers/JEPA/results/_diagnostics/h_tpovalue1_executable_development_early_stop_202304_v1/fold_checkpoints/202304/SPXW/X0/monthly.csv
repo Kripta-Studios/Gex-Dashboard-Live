@@ -1,0 +1,2 @@
+mode,outer_month,ticker,arm,model_family,train_date_min,train_date_max,inner_months,outer_rows,status,trades,win_rate,profit_factor,pnl,minimum_hold,maximum_hold,max_drawdown,call_rate,put_rate,policy_candidates,scheduler_rejections,abstention_rate,positive_month,gate_pass
+development,202304,SPXW,X0,lightgbm_quantile_distribution_utility_v1,20220103,20221230,"202301,202302,202303",745,ABSTAIN_OUTER,0,0.0,0.0,0.0,,,0.0,0.0,0.0,0,0,1.0,False,False

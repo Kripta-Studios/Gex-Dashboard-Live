@@ -58,6 +58,16 @@ por manifest-last y hashes de inputs, código y outputs. Una prueba construyó 6
 folds y la repetición reutilizó 6/6; suite focal `33 passed`. Ya no hay una fase
 de datos pendiente antes de medir rentabilidad.
 
+La medición económica ya ocurrió y H-TPO falló en la primera celda obligatoria:
+SPXW 2023-04 X1, 0/42 grids pasan inner enero-marzo. El near-miss tuvo 68 trades,
+PF pooled 0,922 y -1,831R; enero y febrero perdieron. Outer abstuvo. Como el
+criterio exigía todos los ticker-mes, el desarrollo se cerró matemáticamente y
+se detuvo tras 2/54 folds; no se abrieron 2024/2025/2026.
+
+La única idea en cola es `KING-GEX-SLOPE1`: pendiente/sign flip de net GEX como
+mecanismo, tomada conceptualmente de `live_king_node.py`, no sus calibraciones o
+defectos de implementación. Todavía no es evidencia ni familia activa.
+
 Este documento conserva resultados y decisiones. La operación live y los pasos de
 reanudación están en `CODEX-HANDOFF.md`; la literatura está resumida en
 `SUMMARY-articles.md`.

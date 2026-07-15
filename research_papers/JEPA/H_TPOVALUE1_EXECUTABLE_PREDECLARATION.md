@@ -1,7 +1,14 @@
 # H-TPOVALUE1 — Developing TPO Value Migration executable
 
-Estado: `PASS_DATA_GATE_DEVELOPMENT_NOT_RUN`. Ningún outcome 2024/2025 de esta
-familia ha sido abierto. H-TPOVALUE1 es la única familia activa.
+Estado: `FAILED_ECONOMIC_DEVELOPMENT_EARLY_STOP`. Ningún outcome 2024/2025 de
+esta familia fue abierto. H-TPOVALUE1 está cerrada y no se retunea.
+
+La primera celda requerida, SPXW outer 2023-04, terminó X0/X1
+`ABSTAIN_OUTER`: 0/42 grids pasaron simultáneamente inner enero-marzo. En X1,
+ningún grid pasó enero o febrero y solo 6/42 pasaron marzo. El mejor near-miss
+tuvo 68 trades, PF pooled `0,921718`, PnL `-1,831R`; por ello el PASS conjunto
+ya era imposible y se aplicó early stop tras 2/54 folds sellados. No se abrió
+outer, QQQ/SPY, meses posteriores ni holdout.
 
 ## Checkpoint outcome-free del data gate
 

@@ -72,6 +72,19 @@ sellada por hashes. La repetición de prueba reutilizó 6/6 folds; suite focal
 `33 passed`, Ruff clean. Tras commit/push, ejecutar directamente el desarrollo
 2023-04..12 en el mismo target reanudable.
 
+El desarrollo se cerró económicamente en la primera celda requerida. SPXW
+2023-04 X1 tuvo 0/42 grids que pasaran inner enero-marzo: enero y febrero 0/42,
+marzo 6/42. Near-miss 70/50 pooled: 68 trades, PF 0,921718, -1,831R. El outer
+abstuvo y no se abrió; como todos los ticker-mes eran obligatorios, se detuvo
+tras 2/54 folds. H-TPO queda `FAILED_ECONOMIC_DEVELOPMENT_EARLY_STOP`, sin
+2024/2025/2026 ni cambios live.
+
+Rotación única en cola: `KING-GEX-SLOPE1`. Primero auditar sin outcomes si las
+fuentes 2022-2025 permiten net-GEX slope/sign flip causal y paridad. No copiar
+del script King Node el reloj UTC-4, IV CALL para ambos rights, signs dealer,
+derived Greeks o calibraciones 2026. El workbook no fue auditado porque el
+runtime spreadsheet requerido no está disponible; no inventar conclusiones.
+
 ## 1. Objetivo y gates no negociables
 
 Obtener una policy causal, reproducible y live-equivalente para opciones 0DTE de

@@ -858,3 +858,23 @@ mes/ticker/brazo, manifest-last y hashes de vista/master/protocolo/modelo/códig
 outputs. Regression real construye 6/6 folds y un segundo run reutiliza 6/6;
 suite conjunta builder/runner/modelo `33 passed`, Ruff clean. Debe commit/push
 antes de ejecutar desarrollo.
+
+### Cierre económico H-TPOVALUE1 — 2026-07-15
+
+La primera celda requerida, SPXW outer 2023-04 con inner 2023-01..03, cerró X0
+y X1 `ABSTAIN_OUTER`: 0/42 grids pasan los tres meses. En X1 ningún grid pasa
+enero o febrero y 6/42 pasan marzo. Near-miss 70/50: 68 trades, PF pooled
+0,921718 y -1,831R; enero PF 0,529/WR44,44%/-3,228R, febrero
+0,759/33,33%/-2,366R, marzo 1,560/61,54%/+3,763R. La gate exige cada celda, por
+lo que desarrollo ya era imposible y se detuvo tras 2/54 folds sellados.
+
+Estado `FAILED_ECONOMIC_DEVELOPMENT_EARLY_STOP`. No se abrió outer porque el
+inner abstuvo; QQQ/SPY, meses siguientes, 2024/2025 y 2026 permanecen cerrados.
+Compactos en `h_tpovalue1_executable_development_early_stop_202304_v1/`. No
+rescatar TPO por grid/ticker/mes.
+
+Siguiente rotación permitida: factibilidad outcome-free `KING-GEX-SLOPE1`,
+inspirada por net GEX slope/sign flip de `live_king_node.py`. No usar sus
+calibraciones Jan-Jun 2026, fixed UTC-4, CALL-IV compartida, signs dealer
+supuestos ni higher Greeks derivados como si fueran nativos. El Excel sigue
+siendo referencia no auditada hasta disponer del runtime spreadsheet exigido.
