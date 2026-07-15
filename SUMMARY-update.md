@@ -664,3 +664,11 @@ solo 49,02%; invertir también pierde PF 0,904. El oracle de lado PF 7,320 indic
 headroom de movimiento, no una policy. 2024-2026 y producción siguen intactos.
 No rescatar King por ticker/side/threshold; siguiente hipótesis debe resolver o
 eliminar la decisión CALL/PUT bajo ejecución ask-to-bid.
+
+La primera diagnosis de gestión KING-GEX localiza el PF bajo: K1 tiene payoff
+ratio 1,0965 (+66,11% win medio / -60,29% loss medio), 749 negative triggers
+aportan -455,108R y 96,51% del gross loss viene de exits <=-55%. Invertir todo
+y rehacer scheduler mejora a PF 0,850 pero sigue -67,677R y solo 1/36 celdas
+pasa. `KING-GEX-EXIT1` congela 16 variantes globales de stop/trail/horizonte,
+min hold 30m y max 180m, con replay raw ask->bid y checkpoints. Aún no existe
+resultado alternativo; 2024-2026 siguen cerrados.

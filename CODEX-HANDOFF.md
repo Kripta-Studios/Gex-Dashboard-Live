@@ -1089,3 +1089,19 @@ SUMMARY JSON SHA `4e568618...3290cb`, trades SHA `72f779ce...1534e`. La
 siguiente familia rentable debe resolver selección de lado o monetizar
 movimiento sin escoger lado, con contrato fijo ask-to-bid y checkpoints. El
 workbook King continúa no auditado por ausencia del runtime spreadsheet.
+
+## Research activo KING-GEX-EXIT1
+
+El usuario señaló correctamente que WR ~44% puede ser rentable si PF alcanza
+1,30. La descomposición identifica el fallo: K1 gana en promedio +66,11% y
+pierde -60,29%, payoff ratio 1,0965; requiere aproximadamente 1,78 al mismo WR.
+Los 749 negative triggers concentran -455,108R y el 96,51% del gross loss está
+en exits <=-55%. Los horizons baseline no son el problema: 29 trades, PF 1,513
+y +2,187R.
+
+La inversión exacta completa, con scheduler rehecho, tampoco renta: 1.304 trades,
+WR 43,02%, PF 0,850, -67,677R y 1/36 celdas. Se congela ahora un grid pequeño de
+16 contratos de exit que separa stop 30-100%, horizonte 60-180m y trails más
+tempranos/estrechos o tardíos/anchos. Ambos lados D0/D1 son desarrollo 2023 ya
+abierto, no OOS. Replayer debe usar raw Greeks ask->bid, reproducir B00 exacto y
+tener checkpoints por ticker-mes y policy. 2024-2026 permanecen cerrados.

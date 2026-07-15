@@ -930,3 +930,18 @@ celdas por falta del runtime spreadsheet requerido; no afirmar que sus fórmulas
 o resultados hayan sido validados. Una siguiente prueba debe atacar el cuello
 de botella CALL/PUT con una hipótesis nueva y predeclarada, no ampliar esta
 familia post-hoc.
+
+### Research activo — KING-GEX-EXIT1
+
+El diagnóstico exacto muestra que WR 42-43% podría ser viable, pero el payoff
+ratio es solo 1,10-1,12. En K1, 749 negative triggers restan -455,108R y 546
+positive triggers suman +363,076R; 96,51% del gross loss viene de exits <=-55%.
+El brazo totalmente invertido también pierde tras rehacer scheduler: 1.304
+trades, WR 43,02%, PF 0,850 y -67,677R; solo 1/36 celdas pasa.
+
+`KING_GEX_EXIT1_EXECUTABLE_PREDECLARATION.md` congela antes de recalcular paths
+16 configuraciones globales de stop/trail/horizonte, siempre min hold 30m,
+max 180m, entry ask, exit bid y mismo scheduler. Debe reproducir exactamente
+el baseline por evento/right antes de cualquier alternativa y checkpoint por
+ticker-mes y dirección/config. Solo una pareja que pase las 36 celdas puede
+congelarse para outer 2024/2025. No seleccionar exit por ticker/mes/signo/side.
