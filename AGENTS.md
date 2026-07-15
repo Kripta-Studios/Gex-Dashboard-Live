@@ -951,3 +951,8 @@ Greeks/OI/OHLC por ticker-mes, revalida contrato exacto y paridad B00 de return,
 hold, status, max/min para ambos rights antes de persistir las 16 alternativas.
 Checkpoints manifest-last: 36 source cells y 32 direction/config policies. Suite
 King exit+slope `13 passed`, Ruff/compile clean. Commit/push antes de ejecutar.
+
+Primer run V1 detenido tras solo SPXW-202301 source checkpoint, antes de policy
+metrics: el loop pandas por config proyectaba horas. Aclaración runtime V1R1
+autoriza solo vectorización semánticamente equivalente, con test escalar vs array
+y nuevo target `development_2023_v1r1`. No reutilizar el target V1.

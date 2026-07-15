@@ -677,3 +677,7 @@ El runner KING-GEX-EXIT1 ya implementa checkpoints manifest-last para 36 source
 cells y 32 policies. Hashea raw, exige paridad exacta B00 por evento/right y
 rehace scheduler para cada exit; tests focales `13 passed`. Todavía no se ha
 ejecutado un path alternativo y debe commit/push antes de hacerlo.
+
+V1 se detuvo tras un único source checkpoint SPXW-202301 y antes de PF/WR/PnL
+por policy: el loop pandas era demasiado lento. V1R1 permite solo vectorizar el
+mismo algoritmo con equivalencia testada y exige target nuevo; no cambia el grid.

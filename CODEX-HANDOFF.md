@@ -1111,3 +1111,9 @@ sella hashes raw Greeks/OI/OHLC y falla si el contrato o cualquiera de las cinco
 métricas B00 difiere del master. Tras construir 36 ticker-meses, rehace scheduler
 para 32 direction/config policies y solo promueve 36/36. Suite focal `13 passed`,
 Ruff/compile clean. Debe commit/push antes del primer source cell real.
+
+La ejecución V1 fue detenida tras el único checkpoint SPXW-202301, antes de
+cualquier policy metric/ranking. Era correcto pero demasiado lento por repetir
+pandas 16 veces por path. `KING_GEX_EXIT1_RUNTIME_CLARIFICATION.md` congela una
+optimización array-only con equivalencia escalar y relanzamiento a V1R1; el
+target V1 no se reutiliza.
