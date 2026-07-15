@@ -694,3 +694,15 @@ auditables por fold. La prueba 2023 aún no ha comenzado: el builder V1R1 tenía
 folds completos, cualquier PF atribuido a M0/M1 sería inventado. Un Excel King
 auditado en el futuro puede inspirar otra hipótesis, pero no alterar este examen
 después de congelarlo.
+
+El fallo posterior demuestra por qué “mismo minuto” no equivale a causalidad.
+En feeds sub-minute, floor a un minuto puede incorporar una quote treinta
+segundos posterior a la decisión y una superficie compuesta por estados que
+nunca coexistieron. La unidad causal es el timestamp nativo exacto. V1R2 obliga
+esa igualdad tanto en entrada como en decisión y rechaza explícitamente la única
+señal train-only sin contrato; no la rellena con nearest strike ni payoff cero.
+
+Por ello los 1.265 checkpoints aparentemente correctos de V1R1 no son
+reutilizables: su B00 podía coincidir mientras M1 seguía mezclando instantes.
+La reanudación es válida solo cuando también la semántica temporal forma parte
+del hash del checkpoint. V1R2 se relanzó antes de cualquier modelo o PF.

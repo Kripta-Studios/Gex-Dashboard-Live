@@ -1229,3 +1229,29 @@ sincronizado con AGENTS, este archivo, SUMMARY-update y SUMMARY-articles tras
 cada data seal, resultado o cierre. El Excel King se inspeccionará read-only con
 la skill disponible; no git-add, no modificar y no usar hallazgos para retocar
 el protocolo MANAGE30 ya congelado.
+
+## MANAGE30 V1R2 exact snapshots
+
+V1R1 terminó antes de combinar dataset: 1.265/1.267 manifests, sin SUMMARY,
+modelos o métricas. Falló paridad en QQQ 2022-06-17 porque `dt=floor(quote_dt)`
+unía :00 y :30; por ejemplo entry 13:55 debía usar ask 0,71 pero eligió la
+quote futura :30 ask 0,74. Esto es leakage causal. No reutilizar ningún
+checkpoint V1R1 aunque individualmente pasara B00.
+
+La auditoría exacta detectó además solo `SPXW/20220222/680/PUT` sin contrato
+ejecutable; master strike/returns ya eran NaN. Aclaración V1R2 commit
+`9a8e0b41`, SHA `35e09f5a...e39a844`: exact snapshots entry/decision, una
+rejection allowlisted, 22.273 source y 22.272 executable. Cualquier otra
+rejection falla cerrado.
+
+Código commit `a996f260`; QQQ 6/6 y SPXW 30/31 reales pasan, suite `24 passed`.
+Nuevo build activo:
+
+```powershell
+python neural/jepa/build_king_gex_manage30_v1.py `
+  --output-dir tmp/king_gex_manage30_v1/train_dev_202201_202312_v1r2 `
+  --workers 4
+```
+
+No ejecutar evaluator hasta `PASS_DATA_GATE` V1R2 y auditoría de coberturas.
+2024-2026/producción intactos; PF M0/M1 inexistente todavía.

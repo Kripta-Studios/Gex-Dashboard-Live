@@ -1052,3 +1052,17 @@ Nuevo handoff canónico detallado en `SUMMARY.md`. El workbook
 `MASTER_KING_NODE_RECORD_V5.xlsx` se auditará read-only con el runtime de
 spreadsheets ahora disponible, pero cualquier idea será una hipótesis separada:
 no puede modificar MANAGE30 ni seleccionarse con sus outcomes.
+
+### Corrección causal MANAGE30 V1R2 — 2026-07-15
+
+V1R1 se detuvo fail-closed con 1.265/1.267 sesiones y queda
+`REJECTED_CAUSAL_SNAPSHOT_SEMANTICS`: QQQ 2022-06-17 tiene quotes :00/:30 y el
+builder agrupaba por minuto, pudiendo usar hasta 30s futuros y mezclar superficies
+M1. Exact `quote_dt==timestamp` reproduce 6/6 eventos QQQ. SPXW 2022-02-22
+11:20 PUT no tiene contrato d25 ejecutable y es la única rejection train-only;
+censo fuente 22.273, rows esperadas 22.272, cero exclusiones 2023.
+
+Aclaración frozen `9a8e0b41`, SHA `35e09f5a...e39a844`; implementación pushed
+`a996f260`, suite `24 passed`, Ruff/compile clean. V1R2 activo en
+`tmp/king_gex_manage30_v1/train_dev_202201_202312_v1r2`. No duplicar ni usar
+los 1.265 checkpoints V1R1. Aún no hay data gate o rentabilidad M0/M1.

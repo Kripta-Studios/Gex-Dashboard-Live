@@ -736,3 +736,12 @@ Se añadió `SUMMARY.md` de continuidad con evidencia, fallos, commits, comandos
 gates y próximos pasos. Mantenerlo junto a los cuatro handoffs. El workbook King
 puede auditarse ahora con la runtime de spreadsheets, siempre read-only y como
 fuente separada de hipótesis, nunca para retunar MANAGE30.
+
+MANAGE30 V1R1 falló correctamente antes de dataset/modelos: 1.265/1.267
+sesiones. Agrupar quotes :00/:30 por minuto introducía hasta 30s futuros en QQQ
+2022-06-17 y superficie M1. Exact timestamp corrige 6/6 eventos. Una sola señal
+train-only SPXW 2022-02-22 11:20 PUT carece de contrato ejecutable y se rechaza
+sin sustitución: 22.273 source -> 22.272 executable; desarrollo 2023 intacto.
+
+Aclaración `9a8e0b41`, código `a996f260`, suite `24 passed`. Build V1R2 activo
+en target nuevo; V1R1 completo rechazado/no reusable. Aún no hay data gate ni PF.

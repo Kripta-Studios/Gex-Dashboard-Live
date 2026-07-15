@@ -213,6 +213,30 @@ no se permite convertir ese concepto en rescate post-hoc.
 La evidencia auditable son protocolos, código, checkpoints, tests y métricas
 persistidas; no razonamiento privado ni un PF sin provenance.
 
+## 10. Checkpoint posterior — snapshot exacto V1R2
+
+El build V1R1 terminó fail-closed tras 1.265/1.267 sesiones, antes del dataset y
+de cualquier modelo. QQQ 2022-06-17 contiene quotes a `hh:mm:00` y
+`hh:mm:30`; agrupar por minuto permitía que una entrada a `hh:mm:00` eligiera la
+quote futura `hh:mm:30` y que M1 mezclara superficies de ambos timestamps. El
+master causal usa snapshots exactos. V1R1 queda
+`REJECTED_CAUSAL_SNAPSHOT_SEMANTICS` completo.
+
+La segunda sesión reveló una única señal train-only no ejecutable:
+`SPXW/20220222/680/PUT`. El master ya tenía strike y outcome ausentes. La
+aclaración V1R2, frozen/pushed en `9a8e0b41`, exige `quote_dt == timestamp`,
+prohíbe floor/as-of/nearest y registra esa única rejection. Censo fuente 22.273;
+dataset executable esperado 22.272. SHA de aclaración:
+`35e09f5a2679e2ce807a9439dcf9fa051c3e629fa95003975e02d5f39e39a844`.
+
+Implementación y tests pushed en `a996f260`: QQQ reproduce 6/6 eventos; SPXW
+produce 30/31 exactos; `24 passed`, Ruff/compile clean. Target V1R2 activo:
+
+`tmp/king_gex_manage30_v1/train_dev_202201_202312_v1r2`
+
+No lanzar duplicado. Si muere, relanzar el builder anterior cambiando solo el
+suffix a `v1r2`. Aún no existe `PASS_DATA_GATE` ni PF/WR/PnL M0/M1.
+
 ---
 
 ## Archivo histórico conservado — auditoría 2026-07-10
