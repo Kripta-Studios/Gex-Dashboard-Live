@@ -46,6 +46,13 @@ El builder TPO es reanudable por ticker-sesión: parquet atómico y manifest
 Una segunda pasada real reutilizó el checkpoint exacto; los full runs no deben
 reiniciarse desde cero tras una interrupción.
 
+El build completo terminó `PASS_EXACT_TPO_VALUE_VIEW`: 96.553x69 y
+2.777/2.777 sesiones, vista SHA `fded87a...078fe`, manifest SHA
+`693a1708...1331`. Las 36 variables pasan 432 celdas de finite/distinctness
+(mínimo 4 estados; máximo modal `0,9243992606`). Esto es solo un gate causal:
+no se han calculado PF, WR, frecuencia ni PnL. La investigación pasa ahora al
+desarrollo económico reanudable 2023-04..12; no se abrirá otro dataset.
+
 Este documento conserva resultados y decisiones. La operación live y los pasos de
 reanudación están en `CODEX-HANDOFF.md`; la literatura está resumida en
 `SUMMARY-articles.md`.

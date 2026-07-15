@@ -835,3 +835,20 @@ sin clipping y efficiency 15/30m sobre exactamente h transiciones. Cualquier
 denominador no definido aborta; todavía no se ha construido ninguna fila TPO.
 El builder debe usar checkpoints atómicos por ticker-sesión y revalidar hashes
 de source/keys/código/protocolo/features al reanudar; no relanzar desde cero.
+
+### Checkpoint H-TPOVALUE1 data gate — 2026-07-15
+
+El build outcome-free terminó `PASS_EXACT_TPO_VALUE_VIEW` sobre `5cca9e0`:
+96.553 filas, 69 columnas y 2.777 sesiones fuente. Vista SHA
+`fded87a10bdf038cb3c0d9fdd03de7e62f1f4dab987d8fbc25d93a0b9f3078fe`;
+manifest SHA
+`693a1708084b6157164c8fe87e763f23f30458969b2163ef3e1c5dd9074b1331`.
+Las 36 features son finitas; las 432 celdas ticker-año-feature pasan con mínimo
+4 estados y máximo modal `0,9243992606284658`. Auditoría independiente: 2.777
+hashes source/checkpoint exactos. El parquet grande queda en `tmp/`; compactos
+en `h_tpovalue1_executable_202201_202512_v1_data_gate/`.
+
+Esto no es rentabilidad: aún no se abrió PF/WR/PnL. Acción única: hacer
+reanudable y commit/push del runner económico, ejecutar desarrollo causal
+2023-04..12 y cerrar la familia si no cumple gates. Solo si desarrollo pasa se
+permite congelar y abrir una vez 2024-2025. 2026 y producción siguen intactos.

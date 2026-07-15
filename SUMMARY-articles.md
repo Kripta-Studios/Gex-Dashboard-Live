@@ -19,6 +19,12 @@ el nested mensual, no se rescata seleccionando pares, lags o tickers. TPO/value
 migration permanece como mecanismo distinto en cola y no se mezcla con esta
 prueba.
 
+Cross-market quedó bloqueado por ventanas causalmente indefinidas y la rotación
+activa es TPO/value migration target-only. Su vista outcome-free ya pasó
+causalidad, cobertura y distinctness (96.553 filas; 36 features), pero ese PASS
+no es evidencia de alpha. La siguiente evidencia válida es exclusivamente PF,
+WR, frecuencia y PnL mensual del desarrollo nested 2023-04..12.
+
 ## 1. Principio rector
 
 Una mejora de representación no es alpha. Toda idea académica debe terminar en el

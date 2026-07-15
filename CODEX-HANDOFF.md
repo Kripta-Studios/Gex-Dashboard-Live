@@ -54,6 +54,18 @@ debe persistir checkpoints atómicos y reanudables. H-TPO lo hace por
 ticker-sesión, revalidando source, keys, código, protocolo y output antes de
 reutilizar. Mantener `.md`, commit y push en cada hito recuperable.
 
+El data gate H-TPOVALUE1 ya terminó `PASS_EXACT_TPO_VALUE_VIEW`: 96.553x69,
+2.777/2.777 sesiones, vista SHA `fded87a...078fe`, manifest SHA
+`693a1708...1331`; mínimo distinctness 4 y máximo modal `0,9243992606`.
+Una auditoría separada revalidó todos los source/checkpoint hashes. No se leyó
+ningún outcome durante el build: todavía no existe PF, WR o PnL H-TPO.
+
+Siguiente paso único: añadir checkpoints atómicos por fold al runner económico,
+commit/push y ejecutar desarrollo nested 2023-04..12. No crear otra fuente ni
+abrir 2024/2025 salvo que desarrollo cumpla todos los gates. Los archivos
+`live_king_node.py` y `MASTER_KING_NODE_RECORD_V5.xlsx` son referencias
+separadas y no autorizan modificar post-hoc H-TPO.
+
 ## 1. Objetivo y gates no negociables
 
 Obtener una policy causal, reproducible y live-equivalente para opciones 0DTE de

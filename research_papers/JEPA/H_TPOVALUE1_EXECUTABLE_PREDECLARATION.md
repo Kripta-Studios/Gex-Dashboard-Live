@@ -1,7 +1,22 @@
 # H-TPOVALUE1 — Developing TPO Value Migration executable
 
-Estado: `PREDECLARED_DEVELOPMENT_ONLY`. Ningún outcome 2024/2025 de esta familia
-ha sido abierto. H-TPOVALUE1 es la única familia activa.
+Estado: `PASS_DATA_GATE_DEVELOPMENT_NOT_RUN`. Ningún outcome 2024/2025 de esta
+familia ha sido abierto. H-TPOVALUE1 es la única familia activa.
+
+## Checkpoint outcome-free del data gate
+
+El build autoritativo desde `5cca9e0` terminó `PASS_EXACT_TPO_VALUE_VIEW`:
+96.553 filas, 69 columnas, 2.777 sesiones fuente y las 36 features TPO finitas.
+La vista SHA es
+`fded87a10bdf038cb3c0d9fdd03de7e62f1f4dab987d8fbc25d93a0b9f3078fe`;
+el manifest SHA es
+`693a1708084b6157164c8fe87e763f23f30458969b2163ef3e1c5dd9074b1331`.
+
+Las 432 celdas ticker-año-feature pasan distinctness: mínimo 4 valores y máxima
+frecuencia modal `0,9243992606284658`. La auditoría independiente revalidó los
+2.777 hashes de source y checkpoint. Este PASS solo certifica causalidad y
+disponibilidad; no se ha calculado PF, WR, frecuencia ni PnL. El siguiente paso
+es el desarrollo económico nested 2023-04..12 con checkpoints por fold.
 
 ## Hipótesis
 
