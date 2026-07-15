@@ -53,6 +53,11 @@ El build completo terminó `PASS_EXACT_TPO_VALUE_VIEW`: 96.553x69 y
 no se han calculado PF, WR, frecuencia ni PnL. La investigación pasa ahora al
 desarrollo económico reanudable 2023-04..12; no se abrirá otro dataset.
 
+El backtest económico también es reanudable: cada mes/ticker/brazo queda sellado
+por manifest-last y hashes de inputs, código y outputs. Una prueba construyó 6
+folds y la repetición reutilizó 6/6; suite focal `33 passed`. Ya no hay una fase
+de datos pendiente antes de medir rentabilidad.
+
 Este documento conserva resultados y decisiones. La operación live y los pasos de
 reanudación están en `CODEX-HANDOFF.md`; la literatura está resumida en
 `SUMMARY-articles.md`.

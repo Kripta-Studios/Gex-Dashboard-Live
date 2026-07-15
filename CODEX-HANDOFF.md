@@ -66,6 +66,12 @@ abrir 2024/2025 salvo que desarrollo cumpla todos los gates. Los archivos
 `live_king_node.py` y `MASTER_KING_NODE_RECORD_V5.xlsx` son referencias
 separadas y no autorizan modificar post-hoc H-TPO.
 
+Checkpointing económico ya implementado y probado antes de outcomes: unidad
+`outer_month/ticker/arm`, cuatro CSV atómicos y manifest último, con identidad
+sellada por hashes. La repetición de prueba reutilizó 6/6 folds; suite focal
+`33 passed`, Ruff clean. Tras commit/push, ejecutar directamente el desarrollo
+2023-04..12 en el mismo target reanudable.
+
 ## 1. Objetivo y gates no negociables
 
 Obtener una policy causal, reproducible y live-equivalente para opciones 0DTE de

@@ -852,3 +852,9 @@ Esto no es rentabilidad: aún no se abrió PF/WR/PnL. Acción única: hacer
 reanudable y commit/push del runner económico, ejecutar desarrollo causal
 2023-04..12 y cerrar la familia si no cumple gates. Solo si desarrollo pasa se
 permite congelar y abrir una vez 2024-2025. 2026 y producción siguen intactos.
+
+Runner económico reanudable implementado pre-outcome: checkpoint atómico por
+mes/ticker/brazo, manifest-last y hashes de vista/master/protocolo/modelo/código/
+outputs. Regression real construye 6/6 folds y un segundo run reutiliza 6/6;
+suite conjunta builder/runner/modelo `33 passed`, Ruff clean. Debe commit/push
+antes de ejecutar desarrollo.

@@ -186,6 +186,12 @@ Modelo único: `lightgbm_quantile_distribution_utility_v1`, spec SHA
 Son nueve cuantiles por lado, utility integral q10-q90, p(win)>=0,50 y grid
 train-only utility 50/60/70/80/85/90/95 x margin 0/10/20/30/40/50.
 
+El runner persiste un checkpoint atómico por `outer_month/ticker/arm` y escribe
+el manifest al final. Antes de reutilizarlo exige hashes exactos de vista,
+master, protocolo, spec del modelo, código activo y cuatro outputs del fold.
+Una identidad distinta aborta y exige target inmutable nuevo; un fold incompleto
+se recalcula, sin perder los folds ya sellados.
+
 Desarrollo es exactamente outer 2023-04..2023-12. Inner son los tres meses
 previos y train termina antes de inner. Cada par debe pasar los tres inner:
 PF>=1,30, WR>=50%, >=18 trades, PnL>0, hold>=30m; si no, ABSTAIN_OUTER.

@@ -25,6 +25,10 @@ causalidad, cobertura y distinctness (96.553 filas; 36 features), pero ese PASS
 no es evidencia de alpha. La siguiente evidencia válida es exclusivamente PF,
 WR, frecuencia y PnL mensual del desarrollo nested 2023-04..12.
 
+Ese test económico queda operacionalmente protegido con checkpoints atómicos
+por fold; una interrupción no autoriza cambiar hipótesis ni recomenzar con otro
+grid. La persistencia sirve a la evaluación económica, no cuenta como evidencia.
+
 ## 1. Principio rector
 
 Una mejora de representación no es alpha. Toda idea académica debe terminar en el
