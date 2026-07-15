@@ -1,0 +1,40 @@
+{
+  "eligible_policies": 0,
+  "experiment": "KING_GEX_EXIT1_EXECUTABLE_V1",
+  "files": {
+    "concentration.csv": {
+      "bytes": 8876,
+      "rows": 128,
+      "sha256": "32a1406c249ea43c3409aec63957cf597402a867bed29eb52284e1d9b7b95c36"
+    },
+    "monthly_metrics.csv": {
+      "bytes": 181812,
+      "rows": 1152,
+      "sha256": "5a3e54a4df36523c046cd212c4b9897d4fcef820515fab1317e0156ddbf087e9"
+    },
+    "policy_summary.csv": {
+      "bytes": 7718,
+      "rows": 32,
+      "sha256": "3d09e32bb646bb79165bac28cff0a42d7fe6f3d1a6482e6398365387e4634073"
+    },
+    "trades.csv": {
+      "bytes": 21934082,
+      "rows": 43352,
+      "sha256": "07b63375fbb641140e0c383ebda9cb4af8a66dc9d601b727dfccfa4ecf751d89"
+    }
+  },
+  "holdout_2026_opened": false,
+  "june_2026_sealed": true,
+  "outer_2024_2025_opened": false,
+  "policy_checkpoint": {
+    "built_this_run": 8,
+    "reused_this_run": 24,
+    "total": 32
+  },
+  "production_modified": false,
+  "protocol_sha256": "228c3651e0d2be24f183683d96a14efaa7d032d998fb0e0ec3217b553e6d901a",
+  "schema": "king_gex_exit1_development_results_v1",
+  "selected": null,
+  "source_checkpoint_seal_sha256": "432b0fd57067493626582e0a1b63515a433a97c76f0389724eebd097c4cc53e4",
+  "status": "FAILED_ECONOMIC"
+}

@@ -960,3 +960,34 @@ y nuevo target `development_2023_v1r1`. No reutilizar el target V1.
 V1R1 vectorizada implementada: igualdad escalar/array `1e-12` sobre 160 paths-
 config aleatorios, además de la paridad obligatoria con master. Suite focal
 `14 passed`, Ruff/compile clean. Commit/push y relanzar solo al target V1R1.
+
+### Cierre económico KING-GEX-EXIT1 — 2026-07-15
+
+El replay V1R1 completó 36/36 source checkpoints, 425.152 outcomes por
+evento/right y 32/32 policy checkpoints. Auditoría independiente revalidó los
+hashes, 1.152 celdas ticker-mes y el scheduler. Estado `FAILED_ECONOMIC`: cero
+parejas pasan 36/36; 2024/2025/2026 y producción permanecen cerrados/intactos.
+
+La inversión B00 queda en 1.304 trades, WR 43,02%, PF 0,850 y -67,677R. El
+mejor PF, stop 30%, mejora a 0,925 y -30,131R pero hunde WR a 35,96%. Stop 50%
+maximiza celdas aprobadas con solo 6/36 y PF 0,873. Trail temprano alcanza WR
+48,13% pero PF 0,799. Ninguna de las 32 variantes llega siquiera a PF 1,0.
+
+El tradeoff queda localizado: S30 reduce pérdidas y mejora 24,275R en las
+1.083 entradas comunes frente a B00, pero convierte 96 ganadoras B00 en
+perdedoras y cero perdedoras en ganadoras. Un oracle no causal B00-vs-S30 llega
+solo a PF 1,239. Los exits fijos quedan cerrados; la siguiente pregunta permitida
+es una decisión causal en +30m entre cerrar y continuar, no otro sweep de stops.
+Resultados/checkpoints versionados en
+`king_gex_exit1_executable_development_2023_v1r1/`; source seal
+`432b0fd5...c4cc53e4`.
+
+`neural/stats.py` sí permite derivar gamma/vanna/charm/vomma/zomma desde los
+inputs históricos de ThetaData. No confundir estas variables
+`SYNTHETIC_MODEL_DERIVED` con `/greeks/all` nativo ni con inventario dealer:
+OI/volumen no contienen el signo comprador/vendedor. Además, la unión E1 de
+527 features ya incluyó niveles, cambios y ratios de esas griegas sintéticas,
+walls, IB/Fibonacci y movimiento de precio; sus 144 celdas GBT
+hurdle/Huber abstuvieron por falta de estabilidad inner. Repetirlas en entry no
+es fuente nueva. Su uso a +30m para decidir continuación sí sería una pregunta
+distinta y debe predeclararse antes de abrir outer.

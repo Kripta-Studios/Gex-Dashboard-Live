@@ -1,0 +1,111 @@
+{
+  "atomic_manifest_last": true,
+  "candidate_keys_sha256": "faed683e1bbaac70f0e429c0915901c5f4ebaacd635f5477a54b3d7c4f0911a5",
+  "code_hashes": {
+    "neural/jepa/build_event_option_dataset.py": "6e89aafed8a2bb66aa8ee80df70644eca189d0ce1d8c56f3812895430dac4307",
+    "neural/jepa/evaluate_king_gex_exit_v1.py": "f3be2b093b9c31cd063e7050345ad092293edaea9e3f7053fb4530073dbd3d6b",
+    "neural/jepa/evaluate_king_gex_slope_v1.py": "14198055826065493d37ddc8011fd909d2b30e469213e87cdb6c182fc4b188ea",
+    "neural/jepa/existing_data_edge_scheduler_v1.py": "3a6283addbcd3e1a8bd7e75e193ddbaae1b9106048bb2e4766a620499ae96a0d"
+  },
+  "experiment": "KING_GEX_EXIT1_EXECUTABLE_V1",
+  "files": {
+    "outcomes.parquet": {
+      "bytes": 79235,
+      "rows": 10176,
+      "sha256": "c3a41acff08e459779c1ce999d129e782315441bb2cc87ca70868c20a4be05cb"
+    }
+  },
+  "king_runner_protocol_sha256": "c8690db32269e3c8deafdff652cdfd3634d71bc130abfd59a4a02dea0aa03f0f",
+  "master_sha256": "d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408",
+  "month": "202302",
+  "predeclaration_sha256": "4cb58b26f772a52ad7f7599cc70daa851f7cb6e38fff596a2b6dbe7e39db79c4",
+  "protocol_sha256": "228c3651e0d2be24f183683d96a14efaa7d032d998fb0e0ec3217b553e6d901a",
+  "raw_source_hashes": {
+    "20230201": {
+      "greeks_path": "4211f4e5aecefa5337083beb9c8926b844ba991069d9b786e5b7ffc2cf93da11",
+      "ohlc_path": "f6a95221fbecce5d9d746671210f18e5a6d7e2bbbb8d5c1cd7b2c474c0fdebba",
+      "oi_path": "2d9f79c4fa6600eed02274d180091c8688b7a3e99ab66b335c284baf14255c69"
+    },
+    "20230202": {
+      "greeks_path": "264ac302c64d6aa80b5f58f08bd6afbdb8337992ed664e1e2065efbd6f093a5e",
+      "ohlc_path": "0aa9f073bf485a5fe5d633ef95e94014d72ab9f3507edc4704178800cf23de8c",
+      "oi_path": "e7f0ae3ea14b952d07a6b196fcde3d9c007d6c72e80ffea430baf94d440254e8"
+    },
+    "20230203": {
+      "greeks_path": "b25eb6844e3ec15dacfabcae37df0edc9cb78fdba7677f7a4fdf058f3303b7f2",
+      "ohlc_path": "7851b09386a27d9c01dd03d50ed063fd02d24955a3b51a58b28f12de8938031a",
+      "oi_path": "5c189a067bc704bee5504b1fc6e64e6791f3dd19d5cb35ab303a54dcc732fcbb"
+    },
+    "20230207": {
+      "greeks_path": "93082d53c365e750008df377ca1ec230c17ed64794744a492b13612f5379d6c8",
+      "ohlc_path": "36235cea8235b683d965b4adf66b400d5eb7b64d45969310c9bd8166591f603d",
+      "oi_path": "58f81c25e195e6cd63e4624682bf3fb4ae93abc1227d27e48f94a605516d91e2"
+    },
+    "20230208": {
+      "greeks_path": "773d271abd38307d4b1ccd4811becdf47c3395ba73f47008ba396496482520c2",
+      "ohlc_path": "7e08caabe98a402cd8c61cba3f7989855696f9e537f69bfb860dfb6cb551d44d",
+      "oi_path": "63416456915261e85036af1a88e97779f5569d3dfeb2ee195014e684620dd59a"
+    },
+    "20230209": {
+      "greeks_path": "e03eb44c08937eda6cd686561fb538995dea0e6e29c6c675714264d379e61eb5",
+      "ohlc_path": "9c1b11e03e59f82431ec84166167c4267b71dc5a910d9e864fd0f7b6d96aca51",
+      "oi_path": "a1402a5841035004c323824dd94011a888fa2ad60568408224594ddc94aa82cd"
+    },
+    "20230210": {
+      "greeks_path": "236c2785b31f841f43c61ce56511f7c3da0d23d5d0ff79516bc3ceeab968886c",
+      "ohlc_path": "fa5634d42824be4a35d3088ed45dfc4bec81207992c174f7ee4f18a991241bce",
+      "oi_path": "e8e951209399e3a40a59c399a2546f0bf089c4a1de3f5810a7aa755c08e71fcf"
+    },
+    "20230213": {
+      "greeks_path": "83954163fe9c4d84cfadce8d2c6c714903d0dd3890a92bfc94db2d06303c4675",
+      "ohlc_path": "7a0def64972e50ca3a8669a6ba95e1299ba9dd70849f6a5b2ecffaa9a8054827",
+      "oi_path": "d625ebfba51be27ef01dad91c4a835f905d2fd62aac8782b96fb14d027470b93"
+    },
+    "20230215": {
+      "greeks_path": "26fad75673fa1acd8f6b6a66a52a189fea680c7584445098f9ccb8ff20cdb56e",
+      "ohlc_path": "4a698872d850ea36117806f6481cce7d73345c90bdb02c5c05f9d70d092f6430",
+      "oi_path": "21847dd011ac7a076104b82691ea961f897881ef0c56a5754433d80e444bde4c"
+    },
+    "20230216": {
+      "greeks_path": "c6c11c73abcaa87a0fbf361b938207737937f7497e1949383f14ba6802148656",
+      "ohlc_path": "55c6f2f13b9475578e4b50f738f29745bcdeb4a4e61ecd26effd0c4bd9692139",
+      "oi_path": "5b2eaad5cec9e07e9d39b1bd2851ed6ca958ab4c9b6da64d061af3c9f11f5b0f"
+    },
+    "20230217": {
+      "greeks_path": "05df2e9aea4de81c4aa7327836af69c7d677d3923ab9c73e8b2a98ade0b5a7f9",
+      "ohlc_path": "b86d3dc99560deb05be4fb04304b2da33d3ef80e598484d52ea95624c58e1b8c",
+      "oi_path": "91b4ef8d4c895876f02676ca0b3dbb8e197c14fd344466ca362b5615e7b11f3b"
+    },
+    "20230221": {
+      "greeks_path": "4a359662e4b8e41c9116e1dbb6cddbcc3f85ed80a49c19824db8863961b2b23f",
+      "ohlc_path": "7d7de6a1222212c3785df25f3fe7662710f987f8e5513bd9fde4014c9ef7be26",
+      "oi_path": "d7dc031b561e3e1fea9615bcb4ab6eb62f9037e055430f3370c2d320818977b5"
+    },
+    "20230223": {
+      "greeks_path": "2a84b015aa707be2ad5a57144f465b5bf448b02c8e7bbc19ac289a9b9f80f95b",
+      "ohlc_path": "4f98c0e8d0e395655b0e309d3051ca6b1d755d5ac349e781ca1e05174ebdf1e3",
+      "oi_path": "b9f90a84f84350469d1eed304cb224fe6979fe8bc1704eef12331ebd83c48124"
+    },
+    "20230224": {
+      "greeks_path": "9f10945e32b5eb860ba55aedcff5690a733a328891bc1eebc0937b7602a573df",
+      "ohlc_path": "87fa2f613ba2e39b172dcc70f7b375313c41d69ecca97a516dfea1fcba08d53b",
+      "oi_path": "d0c58c0d195ea58216af85ea51955c5f7c83cc710a47468f493605447dcdacbd"
+    },
+    "20230227": {
+      "greeks_path": "61697cf903ce17aa27c1a41901f84963fc7901bef11ee2a6cd9bee4bcc7b6469",
+      "ohlc_path": "78c5affd0d628137a3edec8b34e788f7fd6694028f8f36e7a0a87ff82b6066cd",
+      "oi_path": "5028a085edcc0c77dab37ea72cce22ef5383451e5579cb00053698498f81a1b7"
+    },
+    "20230228": {
+      "greeks_path": "b14a18904881a692e04aa55651b7872c7449d6225915ba5b70acaa68878fc303",
+      "ohlc_path": "c2859890b040f3f9f4fe3941b23be0665ac378945d28270b77525c58f3c6da52",
+      "oi_path": "11f49009cf8f46e5fe3dd2748c051fe00768509bbb697898f0fdcd2b9201ae16"
+    }
+  },
+  "runtime_clarification_sha256": "a60ad8e273d1aca5b707703be42241bad0f8474cc891ea9598596632d1dd6c20",
+  "schema": "king_gex_exit1_source_cell_checkpoint_v1",
+  "source_manifest_sha256": "88be8a2ff44c18fb57fca360d31def574ddbb0419a792fc88349942711d2974a",
+  "status": "COMPLETE",
+  "ticker": "QQQ",
+  "wall_state_sha256": "94e311e0e25ff7956347597a8734e82e07ab05753f42acaa26876c58752df8ef"
+}

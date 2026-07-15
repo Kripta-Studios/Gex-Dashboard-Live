@@ -618,3 +618,26 @@ Eso no autoriza usar el oracle; muestra que el universo contiene movimiento pero
 que nivel/pendiente GEX y momentum 15m no lo convierten en una elección causal
 de lado. La siguiente idea debe cambiar el mecanismo de orientación o probar un
 payoff realmente no direccional, no retocar thresholds tras ver los meses.
+
+El replay de gestión cierra otra salida fácil: un stop fijo distinto no corrige
+el King. El stop 30% corta la cola y eleva el payoff ratio, pero reduce WR hasta
+35,96%; stops amplios elevan WR a costa de pérdidas mayores; trails tempranos
+aproximan 50% WR recortando demasiado las ganadoras. Las 32 combinaciones quedan
+por debajo de PF1,0. Esto demuestra que PF no puede repararse optimizando una
+sola palanca global cuando recuperación y deterioro comparten el mismo estado.
+
+La comparación matched B00/S30 localiza información potencialmente útil: el
+stop reduce 24,275R de pérdida sobre entradas comunes, pero sacrifica 96 trades
+que habrían recuperado. Incluso un oracle ex-post queda en PF1,239, por debajo
+del objetivo. Un test siguiente debe observar el estado a +30m y estimar valor
+de continuación causal; no puede prometer que la clasificación cierre el gap.
+
+Las higher Greeks sintéticas no son una fuente olvidada. `neural/stats.py` y el
+collector histórico ya derivan gamma, vanna, charm, vomma y zomma desde IV/spot/
+strike/tiempo, y E1 incorporó sus niveles, cambios, ratios 0DTE-weekly, walls,
+confluencias IB/Fib, OI, volumen y contexto del precio. La abstención de los 144
+folds E1 falsifica esa representación como selector de entrada estable, no toda
+utilidad posible de las griegas. Su dinámica posterior a la entrada plantea una
+label distinta —continuar versus realizar al minuto 30— y evita repetir el mismo
+experimento. Debe etiquetarse como sensibilidad de modelo: OI no revela el lado
+del cliente ni el inventario real del dealer.

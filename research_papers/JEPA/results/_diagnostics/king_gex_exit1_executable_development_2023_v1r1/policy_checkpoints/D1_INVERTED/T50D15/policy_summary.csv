@@ -1,0 +1,2 @@
+direction,config_id,trades,win_rate,profit_factor,pnl,minimum_hold,maximum_hold,max_drawdown,call_rate,put_rate,passing_cells,minimum_monthly_trades,worst_month_pf,worst_month_wr,worst_month_pnl,positive_month_rate,concentration_pass,eligible_36_of_36
+D1_INVERTED,T50D15,1308,0.43119266055045874,0.857115269884863,-64.69527794561913,30.0,180.0,66.31054952419815,0.7530581039755352,0.24694189602446484,4,19,0.20387704658904893,0.21052631578947367,-8.17296145101652,0.2777777777777778,True,False

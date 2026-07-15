@@ -1,0 +1,2 @@
+direction,config_id,trades,win_rate,profit_factor,pnl,minimum_hold,maximum_hold,max_drawdown,call_rate,put_rate,passing_cells,minimum_monthly_trades,worst_month_pf,worst_month_wr,worst_month_pnl,positive_month_rate,concentration_pass,eligible_36_of_36
+D0_K1,H120,1358,0.41237113402061853,0.7819248315949643,-99.26846436194828,30.0,120.0,103.85838420390321,0.24889543446244478,0.7511045655375552,3,19,0.23838703980600384,0.1875,-14.39979673163386,0.25,True,False

@@ -1121,3 +1121,34 @@ target V1 no se reutiliza.
 La vectorización V1R1 ya está implementada y compara las 16 configuraciones
 contra el algoritmo escalar en paths aleatorios con tolerancia `1e-12`; suite
 total `14 passed`. Falta commit/push y relaunch inmutable V1R1.
+
+## Cierre KING-GEX-EXIT1 y siguiente pregunta
+
+V1R1 completó y queda `FAILED_ECONOMIC`. Se sellaron 36 source checkpoints
+(425.152 rows) y 32 policy checkpoints; auditoría independiente recomputó
+1.152 ticker-meses y el scheduler sin diferencias. Cero policies son elegibles;
+outer 2024/2025, 2026 y producción no se abrieron.
+
+Near-miss principales D1 invertido: B00 1.304 trades/WR43,02%/PF0,850/
+-67,677R; S30 1.496/35,96%/0,925/-30,131R; S40
+1.431/38,92%/0,914/-35,679R; H60 1.450/40,28%/0,896/-41,562R. Stop 50% pasa
+más celdas, solo 6/36. T30D15 sube WR a 48,13% pero baja PF a 0,799. Ninguna
+variante llega a PF1,0. No rescatar exits/tickers/meses.
+
+En 1.083 entradas comunes, S30 mejora +24,275R frente a B00 pero sacrifica 96
+ganadoras y rescata cero perdedoras; el oracle ex-post entre ambas alcanza PF
+1,239. Esto justifica estudiar un selector causal `exit_now` vs `continue` a
++30m, no un grid mayor.
+
+ThetaData local y `neural/stats.py` permiten calcular higher Greeks sintéticas,
+pero E1 ya usó gamma/vanna/charm/vomma/zomma/vega/delta, cambios, ratios
+0DTE-weekly, walls, IB/Fib y precio dentro de 527 features. Los 144 cells E1
+GBT abstuvieron. Nueva hipótesis: evolución observable de contrato/precio/griegas
+entre entrada y +30m para continuación. Marcar siempre
+`SYNTHETIC_MODEL_DERIVED`; OI unsigned no demuestra presión dealer.
+
+Resultados completos en
+`research_papers/JEPA/results/_diagnostics/king_gex_exit1_executable_development_2023_v1r1/`.
+El workbook `MASTER_KING_NODE_RECORD_V5.xlsx` continúa sin inspección de celdas:
+el runtime obligatorio `@oai/artifact-tool` no está disponible; no atribuirle
+ninguna métrica.

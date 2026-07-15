@@ -1,0 +1,2 @@
+direction,config_id,trades,win_rate,profit_factor,pnl,minimum_hold,maximum_hold,max_drawdown,call_rate,put_rate,passing_cells,minimum_monthly_trades,worst_month_pf,worst_month_wr,worst_month_pnl,positive_month_rate,concentration_pass,eligible_36_of_36
+D1_INVERTED,S40_T50D40,1421,0.3736805066854328,0.8676710514822552,-55.55939522306966,30.0,180.0,56.328887170619765,0.7114707952146376,0.2885292047853624,3,19,0.2548682755815344,0.21052631578947367,-8.74434375799098,0.2777777777777778,False,False

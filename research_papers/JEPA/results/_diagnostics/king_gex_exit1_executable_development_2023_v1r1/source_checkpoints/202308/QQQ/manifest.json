@@ -1,0 +1,146 @@
+{
+  "atomic_manifest_last": true,
+  "candidate_keys_sha256": "f038e84ba0385b548dca2e8ebe2d2ee408a5ab0b4aeb0e82a076b0e0f4f5e142",
+  "code_hashes": {
+    "neural/jepa/build_event_option_dataset.py": "6e89aafed8a2bb66aa8ee80df70644eca189d0ce1d8c56f3812895430dac4307",
+    "neural/jepa/evaluate_king_gex_exit_v1.py": "f3be2b093b9c31cd063e7050345ad092293edaea9e3f7053fb4530073dbd3d6b",
+    "neural/jepa/evaluate_king_gex_slope_v1.py": "14198055826065493d37ddc8011fd909d2b30e469213e87cdb6c182fc4b188ea",
+    "neural/jepa/existing_data_edge_scheduler_v1.py": "3a6283addbcd3e1a8bd7e75e193ddbaae1b9106048bb2e4766a620499ae96a0d"
+  },
+  "experiment": "KING_GEX_EXIT1_EXECUTABLE_V1",
+  "files": {
+    "outcomes.parquet": {
+      "bytes": 93336,
+      "rows": 13184,
+      "sha256": "efa8c1f27c0dde159e8e3d1741dd5cc90afcb45a614e455f68bfc3ac598f81d2"
+    }
+  },
+  "king_runner_protocol_sha256": "c8690db32269e3c8deafdff652cdfd3634d71bc130abfd59a4a02dea0aa03f0f",
+  "master_sha256": "d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408",
+  "month": "202308",
+  "predeclaration_sha256": "4cb58b26f772a52ad7f7599cc70daa851f7cb6e38fff596a2b6dbe7e39db79c4",
+  "protocol_sha256": "228c3651e0d2be24f183683d96a14efaa7d032d998fb0e0ec3217b553e6d901a",
+  "raw_source_hashes": {
+    "20230801": {
+      "greeks_path": "87c30ac6926eafd76737c1a2617d766545a42ce2aa1080f1f7024f6ccd8d7d80",
+      "ohlc_path": "fa33d7d01b227860a060e693aad32fc2db2fbdb4e8181404e0e57c3aba1f5104",
+      "oi_path": "9bb7e470ff515163251466368b93da3d2db2ecb428fcda23ea2860e81d059886"
+    },
+    "20230802": {
+      "greeks_path": "f28ed2d9f1854e6cff82a4196055ef27ac1e9a9900c12e826ea620883971d5c5",
+      "ohlc_path": "47d0d8df05a870950f7e0df52ac18641cce8f23740bb43da620dbba7b5e4ab96",
+      "oi_path": "a170feb81beaa528932c88372647a88b2dde5baced3dc37d0e60399905ee2704"
+    },
+    "20230803": {
+      "greeks_path": "ac1782a655e90f52b5741ee381d1e9ec0f0776d37a44ea3cb57b357a81535011",
+      "ohlc_path": "20b294e79a179ffcb6523e569fe1b35f62ba73b3feaad93d442eea1b5c8a0ef1",
+      "oi_path": "843a4a2460d60e22c06839eafe4b3e6b7442114697adb121211585cb9419ad31"
+    },
+    "20230804": {
+      "greeks_path": "992f5f235ab1da816928e4e53cee5d1391c91aa4ab6dbad211ad35004a15a0fc",
+      "ohlc_path": "23a1589e2f3f3353d05dcba82fa0fca57e2bf92089934fa2a057af68b345fe53",
+      "oi_path": "09c9be88505ffac261ce1fba5d116590bd897847fc7e55cfe897027c2f52b46f"
+    },
+    "20230807": {
+      "greeks_path": "293fd5a09039d81128b992d72641f0454fc89a94015a5d8f36e2497ebf4e3fa7",
+      "ohlc_path": "d4cd047085767120936aedf9a33d14b5ef2590decbcc5bcefe227039f1f6a58d",
+      "oi_path": "1fa94a3422ffbf059bbc0fb59928385c8d847535e9696c3f9ebeac4000711a4b"
+    },
+    "20230808": {
+      "greeks_path": "5a0267626c3a9c5d49bcf8cbb2cf1445ac5b048a7dfc3612c2fc9f488540ff08",
+      "ohlc_path": "36793848de514280cd6bd1d93aba90796e1a0d8c240541da59117b410fab6e6b",
+      "oi_path": "60da02d592db8ecd6d5ddf85ee8747331eac4eaa6956b96ef4548f68f4ee7ed2"
+    },
+    "20230809": {
+      "greeks_path": "9006424bb95c629970f067cd595e0c109095e868c9a16fbcd3092a3f1881e929",
+      "ohlc_path": "d327aad47303abd6b49c447e32a226101693aeb0796ab92488d0c140290c946c",
+      "oi_path": "b20dd82a98f71f2132bb550b72da67702ac1ba8685366d6cb9e4dfced68b73a4"
+    },
+    "20230810": {
+      "greeks_path": "14a5593c3b4c9cd2a138bdeae5a174f52106f3216e3691e6063168fe3893a866",
+      "ohlc_path": "c19efffc0ed4d7d5663db214f75ba20ce7d85f13607832472a3d3feda4b2fd84",
+      "oi_path": "74b0b4e9c04c2c01e5e5a9b86a6de13d82b75a930ed4cd6682b17e16edaf947e"
+    },
+    "20230811": {
+      "greeks_path": "dfa51a4802948a8300fe06417a3e969e7d96db8f4e9d681272d6caa21889d27d",
+      "ohlc_path": "a176bb0990563ffe30e4a6e23b944d7eea24ffcf3e6bea53cc9d6594cbd82794",
+      "oi_path": "00fd73973d594353456fa9b2357d5ef357ab8bcad20e4c4382405a45041c8bc7"
+    },
+    "20230814": {
+      "greeks_path": "20fee269f4f998e6d36995e83e425cc27dd51a1afe4ab03926b55ecdcc315776",
+      "ohlc_path": "c201e1c77d138d1eb8349933e3b0057c99d6fa64afa7f1f9068246dc80e6ca32",
+      "oi_path": "f2b6747b56cdd1d0f7fe78452ff491e55a9e658057f15d71f0d06b974c766eab"
+    },
+    "20230815": {
+      "greeks_path": "8f0f4eb54d26b0563f764f01740e09fe43629454ed5070cb0512a04542b5f0f2",
+      "ohlc_path": "40e6db250c695aae0474aa03f26fe90f5988cea242901c196d31506a92b4d4fc",
+      "oi_path": "b73d33cade63216ae9cdaea3a0b6bf884ca6709bef8072a3e73ddee17fd8e07a"
+    },
+    "20230816": {
+      "greeks_path": "61bbb11890625e260fd020671cd4b3a1a63f7f86b0eb7620b0b7240f824d0f38",
+      "ohlc_path": "cdb864b404c9925894fa13c850b0f835899ae2a8b03b40558fd7e5c8bbb2c20e",
+      "oi_path": "1d05118927c785caba180b38dc0bbae60a5259f86616a3852ddbb014d4fc8bbe"
+    },
+    "20230817": {
+      "greeks_path": "0ff2e401045b119ef015463d561272e86690ac2196c80f4c9b780a14f8c381ba",
+      "ohlc_path": "0a640b83e02ed85522fa456c1353fc01fbe1e3a6b5f6e867bcbc8051d38f227e",
+      "oi_path": "cb9c08f970dc335f17e6761b6d4a9cfc29aae09f9e332f5b756bca052162eab4"
+    },
+    "20230818": {
+      "greeks_path": "80d9738b67ceea0049517ba292f1790f5c26c96e0c6ca05b245337d51b8b5a52",
+      "ohlc_path": "3a574bbc039a9385b696a1c2f0d0b370ca8831dc6e21895bfb4478284bed83f8",
+      "oi_path": "ce0a0600a133134b4e03dc872fc66ecc3e70e3cb8378276b86b2446884f8f607"
+    },
+    "20230821": {
+      "greeks_path": "aebe4405717e6642b3fc56983f02050745605c20226b73becbe27fc2aff7346a",
+      "ohlc_path": "5b9cb430c4a42d44cb4439640188214703af262cc71d431eba0af97ab7b71fe6",
+      "oi_path": "924ba2dbdd71582b6e13e96637eb73ae306462fe1860e00f356efb9d362a7790"
+    },
+    "20230822": {
+      "greeks_path": "87770a33f8e5f606a73b45b2121a8c084bc41048c9cac53d5c96f03bcea60196",
+      "ohlc_path": "0b701516665604e1437afe0cd6001ef59b9958d295887ae6ef20663e54fd5baf",
+      "oi_path": "3b242afa3d3c59de836badc7f8b9c59e748a605d46628c25e60c3f69702656cd"
+    },
+    "20230823": {
+      "greeks_path": "d9f7078fc8cc0325c7703eba27a214186fb731f8f5d41de3cef6aa6ab4ececbd",
+      "ohlc_path": "18507bb7b1cb1ceebf8a80121782c73475106d46a4b708e4fa7d44832c7a5d9c",
+      "oi_path": "680e31eb062959e1c14b4edcf86ad61aed7666a66f6a95a3e1cbc80bbc74a96d"
+    },
+    "20230824": {
+      "greeks_path": "98a7338b9bbc763bffe8403ed67cc03db58c313dc2bd611019c58205d9dfd7cb",
+      "ohlc_path": "30f7aaf0e55a4469af5a0997a55246ca1d723ac066de7058d29938501c01bf5d",
+      "oi_path": "cf6fbc663737bbf3dce792a3bc4328382d5e5c480b2359b1523c12af368afaf1"
+    },
+    "20230825": {
+      "greeks_path": "1b5721373225a516cdaa2b65b6a003257fb443bc5e83ba8aab804f666ef804f1",
+      "ohlc_path": "857cd4adaee2c2eaf13710e6326073c760535b7dbfce038bd5c154282a953f2c",
+      "oi_path": "8d93560640dee90b8d68945b4ee8de0a3055d563b4224097b2ccd563f4713fb6"
+    },
+    "20230828": {
+      "greeks_path": "c52e48eb56871dc91b3eb1c2ea5ab00ee54eb8d7dacd8d451a56229babe09c8f",
+      "ohlc_path": "3e6b4b837d1319561a10d9c7bc6e228567298ce11312e786cb90374536a92b87",
+      "oi_path": "3dea05a367e47a14920f5ef1432b2e47abc91813decb9a770205ed2e0a4a43f0"
+    },
+    "20230829": {
+      "greeks_path": "7b705686593f0520c8b5aa54808c3f049972b312e4d0a8627943fb7a0bc6fb38",
+      "ohlc_path": "b065b495078806c2335f92faefee2404cd8f172fe2790d8f9f058c2a7521c856",
+      "oi_path": "8ad923ddd94dc49c7b1ddb80edd378a131653c5d4623134e4520a3ba805cabf3"
+    },
+    "20230830": {
+      "greeks_path": "89c2de0b9fb8d2406c0861cf8bd6643d3d6eaf121a713d2300574e97e813b7b0",
+      "ohlc_path": "b4cecf4148f565f8d42b02b97e636d46b5eccd3508e7f451cd447df05c06c85b",
+      "oi_path": "5871bf1d9dc96ad779a654342b208a01237675295acdc38cd1fcb4d6b1fadb11"
+    },
+    "20230831": {
+      "greeks_path": "2614d392bf1fe680c79e20ce1dc2d200f64dfdaea1eb18184eeef04df5080b84",
+      "ohlc_path": "8f4fadd137e7041eb36ad1ffc9cf44fdf73e5cc98947158b66ce7e7de3ddd9b1",
+      "oi_path": "8285ce8cb13f58087ce3dbf968c26724f988fe9975d9025a3e0727491b29f3ed"
+    }
+  },
+  "runtime_clarification_sha256": "a60ad8e273d1aca5b707703be42241bad0f8474cc891ea9598596632d1dd6c20",
+  "schema": "king_gex_exit1_source_cell_checkpoint_v1",
+  "source_manifest_sha256": "88be8a2ff44c18fb57fca360d31def574ddbb0419a792fc88349942711d2974a",
+  "status": "COMPLETE",
+  "ticker": "QQQ",
+  "wall_state_sha256": "94e311e0e25ff7956347597a8734e82e07ab05753f42acaa26876c58752df8ef"
+}

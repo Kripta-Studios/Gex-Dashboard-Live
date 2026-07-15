@@ -1,0 +1,52 @@
+{
+  "atomic_manifest_last": true,
+  "code_hashes": {
+    "neural/jepa/build_event_option_dataset.py": "6e89aafed8a2bb66aa8ee80df70644eca189d0ce1d8c56f3812895430dac4307",
+    "neural/jepa/evaluate_king_gex_exit_v1.py": "f3be2b093b9c31cd063e7050345ad092293edaea9e3f7053fb4530073dbd3d6b",
+    "neural/jepa/evaluate_king_gex_slope_v1.py": "14198055826065493d37ddc8011fd909d2b30e469213e87cdb6c182fc4b188ea",
+    "neural/jepa/existing_data_edge_scheduler_v1.py": "3a6283addbcd3e1a8bd7e75e193ddbaae1b9106048bb2e4766a620499ae96a0d"
+  },
+  "config": {
+    "config_id": "S40_H90",
+    "horizon_minutes": 90,
+    "min_hold_minutes": 30,
+    "stop_loss": 0.4,
+    "take_profit": 10.0,
+    "trail_activation": 0.5,
+    "trail_drawdown": 0.25
+  },
+  "direction": "D0_K1",
+  "experiment": "KING_GEX_EXIT1_EXECUTABLE_V1",
+  "files": {
+    "concentration.csv": {
+      "bytes": 386,
+      "rows": 4,
+      "sha256": "85f230f842486b818226eec0060b86882d708f2a502ff6ec6f7dfacdf0760581"
+    },
+    "monthly_metrics.csv": {
+      "bytes": 5763,
+      "rows": 36,
+      "sha256": "090ba2c6de4d8285599723ebc791483e52d8d3b0e6a435e4293e7c8bec2aae18"
+    },
+    "policy_summary.csv": {
+      "bytes": 495,
+      "rows": 1,
+      "sha256": "7d3ed2bf06376559763c411062aff52f0ff1349a844ddfc4a3fc6ea341d3be59"
+    },
+    "trades.csv": {
+      "bytes": 761950,
+      "rows": 1501,
+      "sha256": "00d06e26f4f9369818f457d8f7741a0a72767a449ac2a61396e1d1b34fec3190"
+    }
+  },
+  "king_runner_protocol_sha256": "c8690db32269e3c8deafdff652cdfd3634d71bc130abfd59a4a02dea0aa03f0f",
+  "master_sha256": "d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408",
+  "predeclaration_sha256": "4cb58b26f772a52ad7f7599cc70daa851f7cb6e38fff596a2b6dbe7e39db79c4",
+  "protocol_sha256": "228c3651e0d2be24f183683d96a14efaa7d032d998fb0e0ec3217b553e6d901a",
+  "runtime_clarification_sha256": "a60ad8e273d1aca5b707703be42241bad0f8474cc891ea9598596632d1dd6c20",
+  "schema": "king_gex_exit1_policy_checkpoint_v1",
+  "source_checkpoint_seal_sha256": "432b0fd57067493626582e0a1b63515a433a97c76f0389724eebd097c4cc53e4",
+  "source_manifest_sha256": "88be8a2ff44c18fb57fca360d31def574ddbb0419a792fc88349942711d2974a",
+  "status": "COMPLETE",
+  "wall_state_sha256": "94e311e0e25ff7956347597a8734e82e07ab05753f42acaa26876c58752df8ef"
+}

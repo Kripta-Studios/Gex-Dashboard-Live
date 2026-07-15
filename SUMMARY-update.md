@@ -684,3 +684,18 @@ mismo algoritmo con equivalencia testada y exige target nuevo; no cambia el grid
 
 V1R1 vectorizada ya pasa equivalencia escalar/array `1e-12`, 14 tests y Ruff/
 compile. Falta commit/push y relanzar el desarrollo completo.
+
+KING-GEX-EXIT1 completó V1R1 y queda `FAILED_ECONOMIC`: 36 source checkpoints,
+425.152 outcome rows, 32 policies y 1.152 ticker-meses auditados. Cero elegibles.
+El mejor PF es D1/S30 0,925 (WR35,96%, -30,131R); B00 invertido queda PF0,850,
+WR43,02%, -67,677R. Trail temprano sube WR48,13% pero PF cae a 0,799. Ninguna
+variante alcanza PF1,0; 2024-2026 y producción no se abrieron.
+
+El oracle no causal entre B00/S30 sobre entradas comunes llega PF1,239: existe
+tradeoff de continuación, no una policy rentable. Siguiente hipótesis permitida:
+decidir en +30m `cerrar/continuar` con evolución causal del precio, contrato y
+griegas sintéticas. Estas pueden derivarse con `neural/stats.py`, pero entry-E1
+ya probó 527 features con higher Greeks/walls/IB-Fib/precio y sus 144 celdas GBT
+abstuvieron. No repetir la misma representación ni presentar OI unsigned como
+inventario dealer. El Excel King sigue no auditado por runtime spreadsheet
+ausente.

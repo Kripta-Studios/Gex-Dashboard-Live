@@ -1,0 +1,24 @@
+{
+  "audit_status": "PASS",
+  "experiment_status": "FAILED_ECONOMIC",
+  "schema": "king_gex_exit1_independent_audit_v1",
+  "source_checkpoints": 36,
+  "source_outcome_rows": 425152,
+  "policy_checkpoints": 32,
+  "monthly_cells_recomputed": 1152,
+  "scheduler_policies_verified": 32,
+  "eligible_policies": 0,
+  "years_observed": [2023],
+  "outer_2024_2025_opened": false,
+  "holdout_2026_opened": false,
+  "june_2026_sealed": true,
+  "production_modified": false,
+  "source_checkpoint_seal_sha256": "432b0fd57067493626582e0a1b63515a433a97c76f0389724eebd097c4cc53e4",
+  "protocol_sha256": "228c3651e0d2be24f183683d96a14efaa7d032d998fb0e0ec3217b553e6d901a",
+  "final_file_sha256": {
+    "monthly_metrics.csv": "5a3e54a4df36523c046cd212c4b9897d4fcef820515fab1317e0156ddbf087e9",
+    "trades.csv": "07b63375fbb641140e0c383ebda9cb4af8a66dc9d601b727dfccfa4ecf751d89",
+    "concentration.csv": "32a1406c249ea43c3409aec63957cf597402a867bed29eb52284e1d9b7b95c36",
+    "policy_summary.csv": "3d09e32bb646bb79165bac28cff0a42d7fe6f3d1a6482e6398365387e4634073"
+  }
+}
