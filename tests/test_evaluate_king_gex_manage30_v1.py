@@ -101,6 +101,18 @@ def test_score_selects_positive_e30_but_defaults_to_b00_without_state() -> None:
     assert negative.iloc[0]["manage_action"] == "B00"
 
 
+def test_inference_action_availability_never_reads_future_outcomes() -> None:
+    event = _event()
+    for action in ACTION_IDS:
+        event[f"outcome_{action}_realized_return"] = np.nan
+    expanded = _expand_actions(event, M0_FEATURES, include_target=False)
+    assert set(expanded["manage_action"]) == set(ACTION_IDS)
+
+    event["decision_state_available"] = 0
+    unavailable = _expand_actions(event, M0_FEATURES, include_target=False)
+    assert unavailable["manage_action"].tolist() == ["B00"]
+
+
 def test_attach_selected_outcome_uses_only_chosen_management_action() -> None:
     scored = _event()
     scored["manage_action"] = "E30"

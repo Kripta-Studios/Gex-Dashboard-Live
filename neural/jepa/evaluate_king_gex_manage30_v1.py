@@ -172,6 +172,10 @@ def protocol() -> dict[str, Any]:
         "target": "clip(return_action-return_B00,-2,+2)",
         "B00_prediction": 0.0,
         "switch_rule": "argmax predicted advantage only when >0; otherwise B00",
+        "action_availability": (
+            "B00 always; non-B00 only when decision_state_available=1; "
+            "inference never reads outcome columns"
+        ),
         "model": MODEL_PARAMS,
         "initial_train": "202201..202212",
         "development_months": list(DEVELOPMENT_MONTHS),
@@ -315,18 +319,26 @@ def _expand_actions(
     *,
     include_target: bool,
 ) -> pd.DataFrame:
-    baseline = pd.to_numeric(events["outcome_B00_realized_return"], errors="coerce")
-    if not np.isfinite(baseline.to_numpy(dtype=float)).all():
-        raise AssertionError("B00 target is missing/non-finite")
+    baseline: pd.Series | None = None
+    if include_target:
+        baseline = pd.to_numeric(events["outcome_B00_realized_return"], errors="coerce")
+        if not np.isfinite(baseline.to_numpy(dtype=float)).all():
+            raise AssertionError("B00 target is missing/non-finite")
     frames: list[pd.DataFrame] = []
     base_columns = [*KEY, "decision_state_available", *features]
     base_columns = list(dict.fromkeys(base_columns))
+    decision_available = events["decision_state_available"].astype(int).eq(1).to_numpy()
     for action in ACTION_IDS:
         part = events[base_columns].copy()
-        realized = pd.to_numeric(events[f"outcome_{action}_realized_return"], errors="coerce")
-        available = np.isfinite(realized.to_numpy(dtype=float))
-        if action == "E30":
-            available &= events["decision_state_available"].astype(int).eq(1).to_numpy()
+        available = np.ones(len(events), dtype=bool)
+        realized: pd.Series | None = None
+        if include_target:
+            realized = pd.to_numeric(
+                events[f"outcome_{action}_realized_return"], errors="coerce"
+            )
+            available &= np.isfinite(realized.to_numpy(dtype=float))
+        if action != "B00":
+            available &= decision_available
         if not available.any():
             continue
         part = part.loc[available].copy()
@@ -334,6 +346,8 @@ def _expand_actions(
         for name, value in ACTION_SPECS[action].items():
             part[name] = float(value)
         if include_target:
+            if realized is None or baseline is None:
+                raise AssertionError("training action expansion lacks targets")
             advantage = realized.loc[available].to_numpy(dtype=float) - baseline.loc[available].to_numpy(dtype=float)
             part["target_advantage"] = np.clip(advantage, -TARGET_CLIP, TARGET_CLIP)
             part["sample_weight"] = 1.0 / float(len(ACTION_IDS))
