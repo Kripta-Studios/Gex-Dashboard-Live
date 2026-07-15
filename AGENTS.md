@@ -991,3 +991,30 @@ walls, IB/Fibonacci y movimiento de precio; sus 144 celdas GBT
 hurdle/Huber abstuvieron por falta de estabilidad inner. Repetirlas en entry no
 es fuente nueva. Su uso a +30m para decidir continuación sí sería una pregunta
 distinta y debe predeclararse antes de abrir outer.
+
+### Research activo — KING-GEX-MANAGE30-V1
+
+El oracle exacto posterior al cierre EXIT1 corrige el diagnóstico matched:
+D1 B00-vs-S30 con scheduler real da PF 1,190/WR43,60%/+65,326R y solo 13/36
+celdas; este selector binario queda descartado incluso como oracle. El oracle
+entre las 16 gestiones da PF 2,357/WR54,67%/+324,783R y 32/36 celdas. No es una
+policy, pero autoriza investigar elección de gestión en +30m.
+
+`KING_GEX_MANAGE30_V1_PREDECLARATION.md` congela D1 invertido, mismo contrato
+ask->bid y una decisión a la primera quote exacta elapsed 30..31 entre las 16
+gestiones más E30. Dos brazos fijos: M0 path/contrato y M1 con dinámica de
+higher Greeks sintéticas; LightGBM Huber por ticker, target de ventaja vs B00,
+train expandido y ningún threshold/grid. Desarrollo walk-forward 2023 entrena
+solo con meses previos desde 2022; outer 2024/2025 y 2026 siguen cerrados.
+
+Censo outcome-free 2022-2025: 49.400 K1 (QQQ15.475/SPXW17.033/SPY16.892),
+2.721 sesiones con Greeks/OI/OHLC presentes. El data gate debe validar snapshot,
+contrato y quote de decisión; existencia de fichero no basta. Gate económica
+vigente del objetivo: PF>1,30, WR>45%, trades>12 y PnL>0 en cada ticker-mes.
+
+Antecedente cerrado: `walkforward_option_path_exit_model.py` sobre otro universo
+dio PF0,811/WR33,85%/-89.652 y no tenía contrato live equivalente. No reutilizar
+sus thresholds/delta/holds. MANAGE30 usa contrafactuales King exactos y min hold
+30. Siguiente secuencia: commit/push de predeclaración -> builder/test resumible
+-> data gate train/dev -> commit -> runner walk-forward 2023. No abrir outer si
+ninguno de M0/M1 pasa las 36 celdas.

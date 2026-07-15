@@ -699,3 +699,15 @@ ya probó 527 features con higher Greeks/walls/IB-Fib/precio y sus 144 celdas GB
 abstuvieron. No repetir la misma representación ni presentar OI unsigned como
 inventario dealer. El Excel King sigue no auditado por runtime spreadsheet
 ausente.
+
+KING-GEX-MANAGE30-V1 queda predeclarado tras medir el techo exacto: oracle D1
+B00/S30 PF1,190/WR43,60% y 13/36, por lo que se descarta ese binario; oracle
+16-exits PF2,357/WR54,67%/+324,783R y 32/36 autoriza una gestión causal más
+amplia. Se congela decisión +30m entre 16 exits+E30, M0 path y M1 higher Greeks
+sintéticas, LGBM Huber fijo por ticker y train expandido 2022->cada mes 2023.
+49.400 eventos/2.721 sesiones tienen fuentes raw presentes. Gate: PF>1,30,
+WR>45%, trades>12 y PnL>0 en las 36 celdas. Outer 2024-2026 cerrado.
+
+No repetir el legacy path-exit: en otro universo dio 1.690 trades, PF0,811,
+WR33,85% y -89.652. Siguiente: commit del freeze, builder/test con checkpoints
+de sesión y data gate train/dev; después runner mensual 2023.

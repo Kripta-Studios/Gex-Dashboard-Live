@@ -641,3 +641,24 @@ utilidad posible de las griegas. Su dinámica posterior a la entrada plantea una
 label distinta —continuar versus realizar al minuto 30— y evita repetir el mismo
 experimento. Debe etiquetarse como sensibilidad de modelo: OI no revela el lado
 del cliente ni el inventario real del dealer.
+
+El oracle con scheduler completo delimita mejor la oportunidad. Escoger solo
+B00 o S30 no cruza PF1,30 ni con futuro; la mejora matched exageraba el valor al
+omitir entradas que cambian cuando cambia el hold. El menú completo de 16 exits
+sí eleva PF a 2,357 y WR a 54,67%. La diferencia implica que el estado no solo
+separa stop/continue: también contiene información sobre horizonte y cuándo
+proteger una ganancia.
+
+MANAGE30 formula esa idea como un problema contrafactual estrecho. Para cada
+trade se conocen los 17 payoffs bajo el mismo path, así que el modelo no debe
+aprender primero si la entrada era buena; estima la ventaja relativa de una
+gestión frente a B00. La elección ocurre justo al primer instante en que un exit
+es legal, después de observar retorno actual, MFE/MAE, cambio de IV/delta y
+deformación sintética de la superficie.
+
+La disciplina temporal sigue siendo decisiva. Entrenar con todo 2022-2026 y
+reportar 2026 memorizaría el examen; expandir mes a mes permite que cada mes sea
+predicho antes de incorporar su label. Si la policy supera 2023, se congela
+antes de 2024/2025 y solo después puede llegar a 2026. El fit para operar julio
+sí puede usar todos los meses ya completados, pero no convierte esos meses en
+evidencia OOS.

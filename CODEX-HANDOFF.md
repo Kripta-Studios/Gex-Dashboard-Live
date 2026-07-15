@@ -1152,3 +1152,28 @@ Resultados completos en
 El workbook `MASTER_KING_NODE_RECORD_V5.xlsx` continúa sin inspección de celdas:
 el runtime obligatorio `@oai/artifact-tool` no está disponible; no atribuirle
 ninguna métrica.
+
+## Research activo KING-GEX-MANAGE30-V1
+
+Se amplió el oracle con scheduler exacto. D1 eligiendo solo B00/S30 no puede
+cumplir el objetivo ni con futuro: 1.429 trades, PF1,190, WR43,60%, +65,326R y
+13/36 cells. No construir ese clasificador. El oracle D1 de las 16 gestiones sí
+tiene techo: 1.337, PF2,357, WR54,67%, +324,783R y 32/36; falla SPXW 202306,
+QQQ 202306/202308 y SPY 202307.
+
+Predeclaración nueva en `KING_GEX_MANAGE30_V1_PREDECLARATION.md`, SHA
+`b534cd8857833285010dccc0ae440f89a4ca8235dd4d2e7c99dd17a731d74948`.
+Dirección D1 fija, contrato original, estado exacto +30m y 17 acciones
+(EXIT1+E30). M0 usa path/contrato; M1 añade exposiciones sintéticas entrada/+30.
+Target es ventaja clipped vs B00; LGBM Huber fijo por ticker. Train inicial
+2022, folds expandidos 2023; solo un PASS 36/36 abre 2024/2025.
+
+Inventario outcome-free: 49.400 eventos K1 y 2.721 sesiones 2022-2025; todos
+los paths Greeks/OI/OHLC existen. El modeling view existente solo tiene exact
++30 para 36.452/49.400, por lo que el builder debe usar raw y no as-of/zeros.
+
+El legacy path exit debe constar como fracaso separado: metrics SHA
+`d122cc30...c14c5eb6`, 1.690 trades/PF0,811/WR33,85%/-89.652. Mezclaba delta,
+hold 5/15/30, otro universo y otra ejecución. No es evidencia contra MANAGE30
+ni fuente de calibración. Siguiente trabajo: commit/push predeclaración y luego
+builder resumible con tests de causalidad/paridad; no abrir outer/2026.
