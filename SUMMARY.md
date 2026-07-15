@@ -1607,3 +1607,46 @@ Una parte sustancial de las defensas ya fue implementada en el worktree y cubier
 - hacer commit y push.
 
 **Estado recomendado: `BLOCKED_FOR_PRODUCTION`.**
+
+---
+
+## 23. Cierre KING-GEX-MANAGE30-V1 — 2026-07-16
+
+V1R2 terminó `PASS_DATA_GATE`: 22.273 source, 22.272 executable, 1.267
+sesiones, 186 columnas, cobertura decision/M1 100% y dataset SHA
+`2c7ff0485c5f5c8b99fea6c6209c1e56dcb37ee479a684f3a7dc3cff67df000b`.
+El fix de inferencia causal quedó pushed en `8587bc7e`: la disponibilidad de
+acciones ya no consulta outcomes; B00 siempre existe y las demás requieren
+estado observable +30m.
+
+El one-shot walk-forward 2023 cerró `FAILED_ECONOMIC_DEVELOPMENT` sin abrir
+2024–2026. M0: 1.478 trades, WR38,90%, PF0,905, -34,942R y 3/36 celdas. M1:
+1.502, WR39,08%, PF0,901, -36,299R y 5/36; además falla concentración SPY.
+Ningún brazo elegible. No abrir outer, neural net, otro target ni rescate
+post-hoc 0DTE.
+
+## 24. Cierre WEEKLY-MULTIDAY-ORACLE-V1 — 2026-07-16
+
+Para evitar una cadena de datasets se congeló un único audit sin features ni
+modelo en commit `cf536c53`: delta 0,50, entrada 10:35 ask, mismo contrato,
+salida bid dos sesiones después y scheduler no-overlap. Histórico 2022–2025:
+2.364 oportunidades físicas y 2.361 executable; cobertura PASS.
+
+El `NON_OVERLAP_ORACLE` futuro muestra headroom direccional pero queda
+`CLOSED_ORACLE_GATE`: QQQ 416 trades/WR71,88%/PF12,277/+248,521R; SPXW
+417/73,62%/13,960/+257,564R; SPY 417/74,10%/13,876/+254,866R. PF y PnL pasan
+todos los meses, pero 16/144 ticker-meses tienen WR <=50% y la capacidad es
+solo 8–10 trades/mes. Con hold de dos sesiones y `reject_while_open`, 18
+trades/mes es matemáticamente imposible.
+
+Los controles desplegables no demuestran edge: always-CALL PF1,042–1,056 y
+WR40,63–41,73%; always-PUT PF0,771–0,808. El spread de entrada mediano sí baja
+a 0,46–0,82%, pero theta de dos noches equivale aproximadamente al 26–31% de
+la prima y CALL/PUT pierden simultáneamente en ~26,6–27,1% de oportunidades.
+Toda la rentabilidad grande exige resolver dirección futura. Según la gate
+predeclarada no se abre dataset/modelo weekly ni se barren horizontes/deltas.
+
+Producción y 2026 permanecen intactos. Estado: no existe hoy una policy causal
+rentable/promovible bajo las metas estrictas; la investigación queda cerrada,
+no “activa”, hasta que el usuario cambie prospectivamente frecuencia/WR o
+autorice una hipótesis realmente nueva.

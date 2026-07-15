@@ -1256,3 +1256,23 @@ python neural/jepa/build_king_gex_manage30_v1.py `
 
 No ejecutar evaluator hasta `PASS_DATA_GATE` V1R2 y auditoría de coberturas.
 2024-2026/producción intactos; PF M0/M1 inexistente todavía.
+
+## Cierres 2026-07-16 — MANAGE30 y weekly multi-día
+
+MANAGE30 V1R2 pasó data gate con 22.272 executable rows y SHA
+`2c7ff048...000b`, pero el único desarrollo 2023 falló: M0 PF0,905/WR38,90%/
+-34,942R/3 de 36 celdas; M1 PF0,901/WR39,08%/-36,299R/5 de 36. Status
+`FAILED_ECONOMIC_DEVELOPMENT`, cero brazos elegibles, outer 2024–2026 cerrado.
+No reintentar con una red neuronal ni rescatar acciones/tickers post-hoc.
+
+El usuario pidió evitar generar datasets sin fin. Se hizo un único audit weekly
+sin dataset de features, congelado en `cf536c53`: delta 0,50, exact contract,
+ask 10:35 -> bid 10:35 dos sesiones después, no-overlap, 2022–2025. Cobertura
+2.361/2.364. El oracle de side tiene PF12,277/13,960/13,876 para QQQ/SPXW/SPY
+y PnL positivo todos los meses, pero falla WR>50% en 16/144 celdas y solo
+permite 8–10 trades/mes. `CLOSED_ORACLE_GATE`; no abrir policy/dataset weekly,
+ni variar hold/delta/clock. Always-CALL apenas PF1,042–1,056; always-PUT pierde.
+
+2026 y producción intactos. No hay policy causal rentable/promovible. Los
+compactos están en `weekly_multiday_oracle_202201_202512_v1/` y
+`king_gex_manage30_development_2023_v1/`.

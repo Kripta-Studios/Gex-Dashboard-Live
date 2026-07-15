@@ -706,3 +706,22 @@ Por ello los 1.265 checkpoints aparentemente correctos de V1R1 no son
 reutilizables: su B00 podía coincidir mientras M1 seguía mezclando instantes.
 La reanudación es válida solo cuando también la semántica temporal forma parte
 del hash del checkpoint. V1R2 se relanzó antes de cualquier modelo o PF.
+
+El resultado V1R2 confirma que más representación no sustituye una ventaja
+económica. M0 y M1 terminaron cerca de PF0,90 y WR39%; las higher Greeks
+sintéticas no rescataron la gestión y no justifican una red más compleja.
+
+El único examen weekly multi-día separa dos preguntas. La microestructura mejora:
+spread mediano 0,46–0,82% y el mismo contrato puede seguirse dos sesiones en
+2.361/2.364 casos. Pero la prima aún pierde aproximadamente 26–31% por dos días
+de theta en la mediana y ambos rights pierden a la vez en ~27% de eventos. El
+oracle de dirección convierte la convexidad restante en PF12–14, mientras un
+CALL fijo apenas llega a PF1,04–1,06 y PUT fijo pierde. Por tanto el problema
+no era solo “las griegas 0DTE”: al dar más tiempo reaparece un techo atractivo,
+pero la dirección causal sigue sin estar resuelta.
+
+Con ocho a diez posiciones mensuales no-overlap, exigir WR>50% en cada mes es
+estadísticamente y físicamente mucho más duro; exigir además 18 trades es
+incompatible con sostener dos sesiones. Cambiar esas gates después de ver el
+oracle sería selección post-hoc. El cierre correcto es preservar el hallazgo y
+no crear otra familia de datasets hasta una decisión prospectiva del usuario.

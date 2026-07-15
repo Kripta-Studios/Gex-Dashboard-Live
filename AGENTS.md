@@ -1067,3 +1067,19 @@ Aclaración frozen `9a8e0b41`, SHA `35e09f5a...e39a844`; implementación pushed
 `a996f260`, suite `24 passed`, Ruff/compile clean. V1R2 activo en
 `tmp/king_gex_manage30_v1/train_dev_202201_202312_v1r2`. No duplicar ni usar
 los 1.265 checkpoints V1R1. Aún no hay data gate o rentabilidad M0/M1.
+
+### Cierre MANAGE30 y weekly multi-día — 2026-07-16
+
+MANAGE30 V1R2 terminó data gate (22.272 executable, SHA `2c7ff048...000b`) y
+falló el único desarrollo 2023. M0 PF0,905/WR38,90%/-34,942R/3 de 36 celdas;
+M1 PF0,901/WR39,08%/-36,299R/5 de 36. Ningún brazo elegible; no abrir
+2024–2026, neural net o rescate post-hoc.
+
+Por petición explícita anti-bucle, weeklies se limitó a un oracle sellado sin
+dataset/modelo: delta 0,50, ask 10:35, exact contract, bid dos sesiones después,
+no-overlap, 2022–2025. Cobertura 2.361/2.364. El oracle futuro obtiene PF
+12,277/13,960/13,876 y PnL positivo en todos los meses para QQQ/SPXW/SPY, pero
+falla WR>50% en 16/144 ticker-meses y solo hay 8–10 trades/mes; 18 es
+incompatible con hold dos sesiones y una sola posición. Always-CALL queda en
+PF1,042–1,056 y always-PUT <0,81. Status `CLOSED_ORACLE_GATE`; no barrer otros
+horizontes/deltas ni abrir dataset weekly. Producción y 2026 siguen intactos.

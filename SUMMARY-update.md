@@ -746,3 +746,14 @@ sin sustitución: 22.273 source -> 22.272 executable; desarrollo 2023 intacto.
 
 Aclaración `9a8e0b41`, código `a996f260`, suite `24 passed`. Build V1R2 activo
 en target nuevo; V1R1 completo rechazado/no reusable. Aún no hay data gate ni PF.
+
+Actualización 2026-07-16: V1R2 pasó data gate (22.272 executable, SHA
+`2c7ff048...000b`) pero MANAGE30 falló el one-shot 2023: M0 PF0,905/WR38,90%/
+-34,942R y M1 PF0,901/WR39,08%/-36,299R; cero brazos elegibles y outer cerrado.
+
+Se aplicó el límite anti-datasets del usuario. Un único oracle weekly multi-día
+sellado en `cf536c53` validó exact contract ask->bid dos sesiones, delta0,50 y
+no-overlap sobre 2022–2025. Cobertura 2.361/2.364; PF oracle 12,277–13,960 y
+PnL mensual siempre positivo, pero 16/144 celdas no superan WR50% y la capacidad
+es 8–10 trades/mes. Always-CALL solo PF1,042–1,056; always-PUT pierde. Gate
+cerrada: no dataset/modelo semanal ni sweep. No existe policy promovible nueva.
