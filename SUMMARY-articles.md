@@ -46,6 +46,10 @@ momentum, positiva reversión, y el candidato solo actúa cuando la pendiente de
 declara proxy histórico y live parity bloqueada. La evidencia siguiente debe ser
 PF/WR/PnL ask-to-bid, no otra métrica física.
 
+El replayer implementa exactamente esa comparación K0/K1 sin aprendizaje ni
+sweep, por lo que un resultado negativo distinguirá un fallo del mecanismo de
+un fallo de optimización. Sus celdas se sellan individualmente para diagnóstico.
+
 ## 1. Principio rector
 
 Una mejora de representación no es alpha. Toda idea académica debe terminar en el

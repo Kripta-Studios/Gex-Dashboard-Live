@@ -92,6 +92,11 @@ wall-state existente SHA `94e311...8ef`, invierte su signed-log y calcula slope
 slope y nivel coinciden, con momentum/reversión por ret15. Sin entrenamiento,
 grid ni threshold. Siguiente: runner checkpointed commit/push y desarrollo 2023.
 
+Runner ya implementado: 72 celdas mensuales, carga física limitada a 2023 y
+checkpoint por month/ticker/arm con hashes de código/source/protocolo/output.
+Suite conjunta `26 passed`, Ruff y py_compile clean. Tras commit/push, ejecutar
+una vez a `tmp/king_gex_slope_v1/development_2023_v1`.
+
 ## 1. Objetivo y gates no negociables
 
 Obtener una policy causal, reproducible y live-equivalente para opciones 0DTE de

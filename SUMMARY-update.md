@@ -73,6 +73,10 @@ observaciones con lag45 exacto y mínimo 19 sesiones de señal/mes en 2023. La
 prueba económica es fixed-rule, no otro modelo: K0 nivel de gamma; K1 exige nivel
 y pendiente alineados y decide momentum/reversión con ret15. No hay payoff aún.
 
+El replayer ya está implementado y testeado (`26 passed`), con 72 checkpoints
+mensuales reanudables y lectura limitada físicamente a outcomes 2023. Falta
+únicamente commit/push del código y su ejecución económica.
+
 Este documento conserva resultados y decisiones. La operación live y los pasos de
 reanudación están en `CODEX-HANDOFF.md`; la literatura está resumida en
 `SUMMARY-articles.md`.

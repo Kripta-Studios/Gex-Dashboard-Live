@@ -891,3 +891,8 @@ reversión (positivo); K1, único candidato, exige además signo de pendiente 45
 alineado con el nivel. Momentum es ret15 causal. Desarrollo fixed-rule completo
 2023, ask->bid y scheduler común; cualquier celda fallida cierra. Runner siempre
 checkpoint por mes/ticker/brazo antes de outcomes.
+
+Runner económico `evaluate_king_gex_slope_v1.py` implementado pre-outcome:
+revalida source/protocolo, solo carga outcomes 2023, deriva acciones fijas y
+persiste 72 checkpoints manifest-last. Tests conjuntos King/TPO/quantile
+`26 passed`; Ruff/py_compile clean. Debe commit/push antes de ejecutar.
