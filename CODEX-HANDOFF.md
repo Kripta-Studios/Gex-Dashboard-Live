@@ -1226,9 +1226,10 @@ cobertura. Solo después ejecutar el runner al target nuevo
 
 `SUMMARY.md` en raíz es ahora el handoff canónico compacto/detallado. Mantenerlo
 sincronizado con AGENTS, este archivo, SUMMARY-update y SUMMARY-articles tras
-cada data seal, resultado o cierre. El Excel King se inspeccionará read-only con
-la skill disponible; no git-add, no modificar y no usar hallazgos para retocar
-el protocolo MANAGE30 ya congelado.
+cada data seal, resultado o cierre. El Excel King sigue bloqueado: la skill
+exige `load_workspace_dependencies/@oai/artifact-tool`, no expuesto en esta
+sesión, y prohíbe rutas/instalación/librerías alternativas. No git-add ni
+modificar; una futura auditoría read-only no puede retocar MANAGE30.
 
 ## MANAGE30 V1R2 exact snapshots
 

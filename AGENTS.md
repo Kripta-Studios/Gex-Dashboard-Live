@@ -1049,9 +1049,10 @@ rows y `PASS_DATA_GATE`; auditar cobertura decision/M1 antes de ejecutar el
 runner. Aún no existe PF/WR/PnL causal de M0/M1 y 2024-2026 siguen cerrados.
 
 Nuevo handoff canónico detallado en `SUMMARY.md`. El workbook
-`MASTER_KING_NODE_RECORD_V5.xlsx` se auditará read-only con el runtime de
-spreadsheets ahora disponible, pero cualquier idea será una hipótesis separada:
-no puede modificar MANAGE30 ni seleccionarse con sus outcomes.
+`MASTER_KING_NODE_RECORD_V5.xlsx` sigue no auditado: la skill está presente pero
+su dependencia obligatoria `load_workspace_dependencies/@oai/artifact-tool` no
+está expuesta. No buscar/installar sustitutos. Cuando exista, la auditoría será
+read-only y cualquier idea separada de MANAGE30/outcomes.
 
 ### Corrección causal MANAGE30 V1R2 — 2026-07-15
 

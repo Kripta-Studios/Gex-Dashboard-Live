@@ -734,8 +734,9 @@ son oracle futuro y no una policy. 2024-2026 y producción permanecen cerrados.
 
 Se añadió `SUMMARY.md` de continuidad con evidencia, fallos, commits, comandos,
 gates y próximos pasos. Mantenerlo junto a los cuatro handoffs. El workbook King
-puede auditarse ahora con la runtime de spreadsheets, siempre read-only y como
-fuente separada de hipótesis, nunca para retunar MANAGE30.
+sigue no auditado: la skill exige `load_workspace_dependencies` y
+`@oai/artifact-tool`, no expuestos; prohíbe instalar/buscar/sustituir. Una futura
+auditoría read-only será separada y nunca podrá retunar MANAGE30.
 
 MANAGE30 V1R1 falló correctamente antes de dataset/modelos: 1.265/1.267
 sesiones. Agrupar quotes :00/:30 por minuto introducía hasta 30s futuros en QQQ

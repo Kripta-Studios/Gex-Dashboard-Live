@@ -50,10 +50,13 @@ dirección y contrato y traducirlo a un replay executable. La regla simple
 pendiente 45m, no orienta establemente: el right elegido supera al contrario solo
 49,02%. Invertir todo también pierde.
 
-\`MASTER_KING_NODE_RECORD_V5.xlsx\` aún no está auditado celda a celda. El runtime
-de spreadsheet ahora está disponible y debe inspeccionarse read-only. No
-modificar ni git-add el workbook. Cualquier hallazgo sería una hipótesis nueva;
-no puede retocar MANAGE30 después de congelar su protocolo.
+\`MASTER_KING_NODE_RECORD_V5.xlsx\` aún no está auditado celda a celda. La skill
+de spreadsheets está disponible, pero su dependencia obligatoria
+\`load_workspace_dependencies/@oai/artifact-tool\` no está expuesta en esta
+sesión. La propia skill prohíbe buscar rutas, instalar o sustituirla por otra
+librería. No modificar ni git-add el workbook. Cuando el loader exista, la
+auditoría será read-only y cualquier hallazgo será una hipótesis nueva; no puede
+retocar MANAGE30 después de congelar su protocolo.
 
 ## 4. Familias cerradas relevantes
 
@@ -200,7 +203,8 @@ manifest-last con hashes; un relaunch solo reutiliza identidad byte-exacta.
 5. Recalcular independientemente scheduler, métricas mensuales y concentración.
 6. Si ninguna policy pasa 36/36, cerrar MANAGE30 y no abrir 2024-2026.
 7. Si una pasa, commit/push y congelar runner outer antes de leer 2024-2025.
-8. Auditar el Excel King read-only como fuente separada de ideas futuras.
+8. Cuando se exponga el loader oficial, auditar el Excel King read-only como
+   fuente separada de ideas futuras; no usar una librería alternativa.
 
 ## 9. Límite científico
 
