@@ -907,3 +907,26 @@ cap2 capacidad 32, SPY mínimo 19. No existe aún PF/WR/PnL King.
 Fix master-left implementado con census hard 20.309 y K1 13.286 señales; hash
 del amendment forma parte del checkpoint. Regression `5 passed`, Ruff/compile
 clean. Commit/push antes del relaunch; target anterior inexistente.
+
+### Cierre económico KING-GEX-SLOPE1 — 2026-07-15
+
+La idea de `live_king_node.py` se tradujo a una regla fija executable sobre el
+proxy histórico de net GEX: K0 usa nivel y K1 exige además pendiente 45m alineada
+con el signo. El replay 2023 está cerrado `CLOSED_FAILED_ECONOMIC`. K1: 1.324
+trades, WR 42,22%, PF 0,804 y -89,845R; pasa solo 2/36 ticker-meses. K0:
+1.443 trades, WR 43,10%, PF 0,810 y -94,144R. Frecuencia y concentración pasan;
+el fallo es alpha direccional.
+
+Auditoría independiente revalidó 72/72 checkpoints, hashes/filas, scheduler y
+métricas. En los mismos timestamps K1, el lado elegido bate al contrario solo
+49,02%; invertir también pierde (PF 0,904). El oracle de lado da PF 7,320, por
+lo que existe movimiento potencial pero no una orientación causal demostrada.
+No rescatar por CALL-only, signo/ticker, thresholds o meses favorables. 2024,
+2025, todo 2026 y producción permanecen cerrados/intactos. Seal en
+`king_gex_slope1_executable_development_2023_v1/`.
+
+El workbook `MASTER_KING_NODE_RECORD_V5.xlsx` permanece no auditado a nivel de
+celdas por falta del runtime spreadsheet requerido; no afirmar que sus fórmulas
+o resultados hayan sido validados. Una siguiente prueba debe atacar el cuello
+de botella CALL/PUT con una hipótesis nueva y predeclarada, no ampliar esta
+familia post-hoc.

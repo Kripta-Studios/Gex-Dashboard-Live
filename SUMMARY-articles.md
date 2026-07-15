@@ -605,3 +605,16 @@ La reanudación también es parte de la reproducibilidad: un checkpoint solo es
 evidencia reutilizable si sella conjuntamente inputs, universo, código,
 protocolo y output. Guardar únicamente pesos o un contador permite mezclar dos
 experimentos distintos después de una muerte de proceso.
+
+La prueba KING-GEX separa de nuevo oportunidad y dirección. Exigir que la
+pendiente de 45 minutos refuerce el signo de net GEX reduce algo las pérdidas en
+21/36 meses, pero pooled continúa en PF 0,804 y WR 42,22%. El mecanismo simple
+`gamma negativa = momentum, gamma positiva = reversión` no orienta opciones
+0DTE de forma estable: acierta el mejor right menos de la mitad de las veces.
+
+La comparación contrafactual evita una conclusión equivocada. Invertir CALL/PUT
+en los mismos timestamps también pierde, mientras un oracle de right gana mucho.
+Eso no autoriza usar el oracle; muestra que el universo contiene movimiento pero
+que nivel/pendiente GEX y momentum 15m no lo convierten en una elección causal
+de lado. La siguiente idea debe cambiar el mecanismo de orientación o probar un
+payoff realmente no direccional, no retocar thresholds tras ver los meses.

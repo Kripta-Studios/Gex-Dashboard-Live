@@ -1067,3 +1067,25 @@ scheduler y métricas coinciden. Solo 1/288 cells pasa outer. Resultados en
 `existing_data_executable_utility_v1_202401_202512/`; SUMMARY SHA
 `52b83fdb...a3871`, AUDIT SHA `0a013154...0337bf`. Stress y 2026 no se abrieron;
 junio sigue sellado y producción intacta. No retunar ni iniciar otro dataset.
+
+## Cierre KING-GEX-SLOPE1
+
+La primera traducción executable de `live_king_node.py` ya tiene resultado
+económico y queda cerrada. En desarrollo 2023, K0 nivel produce 1.443 trades,
+WR 43,10%, PF 0,810 y -94,144R; K1 nivel+pendiente alineada produce 1.324,
+42,22%, 0,804 y -89,845R. K1 solo pasa QQQ 202310 y SPY 202307: 2/36 celdas.
+No se abrieron 2024/2025/2026.
+
+El runner es resumible y la auditoría revalidó 72/72 manifests, todos los
+hashes/rows, las 72 métricas y el scheduler por brazo. El diagnóstico central es
+dirección, no frecuencia: K1 cumple >=19 trades/mes y concentración, pero el
+lado elegido supera al contrario solo 49,02%. El contrario también pierde
+(PF 0,904/-42,624R); el oracle de lado no causal llega a PF 7,320/+657,492R.
+No invertir por ticker, elegir CALL-only ni rescatar signos/meses.
+
+Compactos y checkpoints en
+`research_papers/JEPA/results/_diagnostics/king_gex_slope1_executable_development_2023_v1/`.
+SUMMARY JSON SHA `4e568618...3290cb`, trades SHA `72f779ce...1534e`. La
+siguiente familia rentable debe resolver selección de lado o monetizar
+movimiento sin escoger lado, con contrato fijo ask-to-bid y checkpoints. El
+workbook King continúa no auditado por ausencia del runtime spreadsheet.

@@ -1,0 +1,2 @@
+month,ticker,arm,source_rows,policy_candidates,scheduler_rejections,trades,win_rate,profit_factor,pnl,minimum_hold,maximum_hold,max_drawdown,call_rate,put_rate,positive_month,gate_pass
+202303,SPXW,K0_LEVEL,646,646,579,67,0.373134328358209,0.7419750803413568,-6.731620813133878,30.0,180.0,9.419118861380994,0.44776119402985076,0.5522388059701493,False,False

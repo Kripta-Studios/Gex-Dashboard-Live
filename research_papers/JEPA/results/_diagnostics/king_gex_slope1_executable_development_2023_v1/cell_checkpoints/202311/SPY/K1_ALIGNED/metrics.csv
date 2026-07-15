@@ -1,0 +1,2 @@
+month,ticker,arm,source_rows,policy_candidates,scheduler_rejections,trades,win_rate,profit_factor,pnl,minimum_hold,maximum_hold,max_drawdown,call_rate,put_rate,positive_month,gate_pass
+202311,SPY,K1_ALIGNED,556,365,346,19,0.5263157894736842,1.0930086764616447,0.48655024062621466,30.0,158.0,2.9803866991791264,0.15789473684210525,0.8421052631578947,True,False

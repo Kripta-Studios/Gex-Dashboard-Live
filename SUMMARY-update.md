@@ -655,3 +655,12 @@ QQQ 202409 pasó outer; mínimo mensual 0 y positive-month rate 4,17%. E0 Huber
 operó un cell y perdió PF 0,589/-3,156R. Auditoría PASS: 288 folds, 12.096
 grids, 87 trades, cronología/scheduler/payoffs/métricas exactos. Stress y 2026
 no autorizados; producción intacta. No abrir otra familia de datos como rescate.
+
+KING-GEX-SLOPE1 cerró `FAILED_ECONOMIC` en desarrollo 2023. K1 pendiente
+alineada: 1.324 trades, WR 42,22%, PF 0,804, -89,845R y solo 2/36 meses/ticker
+pasan; K0: 1.443, 43,10%, 0,810, -94,144R. Los 72 checkpoints y métricas fueron
+auditados. Frecuencia/concentración pasan, pero el lado elegido bate al contrario
+solo 49,02%; invertir también pierde PF 0,904. El oracle de lado PF 7,320 indica
+headroom de movimiento, no una policy. 2024-2026 y producción siguen intactos.
+No rescatar King por ticker/side/threshold; siguiente hipótesis debe resolver o
+eliminar la decisión CALL/PUT bajo ejecución ask-to-bid.

@@ -1,0 +1,2 @@
+month,ticker,arm,source_rows,policy_candidates,scheduler_rejections,trades,win_rate,profit_factor,pnl,minimum_hold,maximum_hold,max_drawdown,call_rate,put_rate,positive_month,gate_pass
+202303,SPXW,K1_ALIGNED,646,344,293,51,0.35294117647058826,0.5625688870309679,-8.956192882005247,30.0,158.0,8.956192882005247,0.23529411764705882,0.7647058823529411,False,False

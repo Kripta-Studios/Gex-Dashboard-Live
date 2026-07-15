@@ -1,0 +1,2 @@
+month,ticker,arm,source_rows,policy_candidates,scheduler_rejections,trades,win_rate,profit_factor,pnl,minimum_hold,maximum_hold,max_drawdown,call_rate,put_rate,positive_month,gate_pass
+202304,SPY,K0_LEVEL,579,575,556,19,0.42105263157894735,0.5268872805391573,-2.9872156241032295,30.0,180.0,3.513051543046851,0.3684210526315789,0.631578947368421,False,False

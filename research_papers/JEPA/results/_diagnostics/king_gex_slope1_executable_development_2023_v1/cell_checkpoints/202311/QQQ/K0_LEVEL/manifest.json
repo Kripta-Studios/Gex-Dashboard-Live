@@ -1,0 +1,44 @@
+{
+  "arm": "K0_LEVEL",
+  "atomic_manifest_last": true,
+  "clarification_document_sha256": "17d00155c315f007f25d87b22220c161a8360f9ea54128df665224ae5422c504",
+  "code_hashes": {
+    "neural/jepa/evaluate_king_gex_slope_v1.py": "14198055826065493d37ddc8011fd909d2b30e469213e87cdb6c182fc4b188ea",
+    "neural/jepa/existing_data_edge_scheduler_v1.py": "3a6283addbcd3e1a8bd7e75e193ddbaae1b9106048bb2e4766a620499ae96a0d"
+  },
+  "experiment": "KING_GEX_SLOPE1_EXECUTABLE_V1",
+  "files": {
+    "metrics.csv": {
+      "bytes": 345,
+      "rows": 1,
+      "sha256": "09fadaa81b816b966befdcfde8a59573ed047864b93c8e8b50226505a2e57f2b"
+    },
+    "trades.csv": {
+      "bytes": 12856,
+      "rows": 36,
+      "sha256": "1e4b617d7ebff16585236a0dcba4f2eb4f0f68c3265bee7cba9cc91c028fef84"
+    }
+  },
+  "master_sha256": "d3c37b5f4511787ec19cf4478790377562b2b6c913185a2425f1b0cef7a3a408",
+  "month": "202311",
+  "months": [
+    "202301",
+    "202302",
+    "202303",
+    "202304",
+    "202305",
+    "202306",
+    "202307",
+    "202308",
+    "202309",
+    "202310",
+    "202311",
+    "202312"
+  ],
+  "protocol_document_sha256": "f9e19f83f13e3eae44a4c4cd6b9c92801564dede507e5ed29184575f9b4c5dd6",
+  "runner_protocol_sha256": "c8690db32269e3c8deafdff652cdfd3634d71bc130abfd59a4a02dea0aa03f0f",
+  "schema": "king_gex_slope1_cell_checkpoint_v1",
+  "status": "COMPLETE",
+  "ticker": "QQQ",
+  "wall_state_sha256": "94e311e0e25ff7956347597a8734e82e07ab05753f42acaa26876c58752df8ef"
+}

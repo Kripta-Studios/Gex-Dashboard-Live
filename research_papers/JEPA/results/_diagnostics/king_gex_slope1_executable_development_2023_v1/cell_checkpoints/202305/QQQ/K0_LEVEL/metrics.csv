@@ -1,0 +1,2 @@
+month,ticker,arm,source_rows,policy_candidates,scheduler_rejections,trades,win_rate,profit_factor,pnl,minimum_hold,maximum_hold,max_drawdown,call_rate,put_rate,positive_month,gate_pass
+202305,QQQ,K0_LEVEL,621,615,573,42,0.5714285714285714,1.0105282742613693,0.1125044501638569,30.0,180.0,2.754320199295396,0.47619047619047616,0.5238095238095238,True,False

@@ -1,0 +1,2 @@
+month,ticker,arm,source_rows,policy_candidates,scheduler_rejections,trades,win_rate,profit_factor,pnl,minimum_hold,maximum_hold,max_drawdown,call_rate,put_rate,positive_month,gate_pass
+202306,QQQ,K1_ALIGNED,502,321,283,38,0.5526315789473685,1.0408881948165418,0.44373785294095347,30.0,169.0,2.902592040882978,0.21052631578947367,0.7894736842105263,True,False

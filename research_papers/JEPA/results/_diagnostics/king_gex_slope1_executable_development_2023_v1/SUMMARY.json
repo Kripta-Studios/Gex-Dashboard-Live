@@ -1,0 +1,40 @@
+{
+  "base_economic_pass": false,
+  "candidate_arm": "K1_ALIGNED",
+  "candidate_found": false,
+  "checkpoint": {
+    "atomic_manifest_last": true,
+    "cells_built_this_run": 72,
+    "cells_reused_this_run": 0,
+    "cells_total": 72,
+    "schema": "king_gex_slope1_cell_checkpoint_v1"
+  },
+  "development_promising": false,
+  "experiment": "KING_GEX_SLOPE1_EXECUTABLE_V1",
+  "files": {
+    "concentration.csv": {
+      "bytes": 616,
+      "sha256": "a66ce65b24000fe8a0e55bee50e70a501b4f1f99865efe7f479499551b95c207"
+    },
+    "monthly_metrics.csv": {
+      "bytes": 12179,
+      "sha256": "fcf8f40eded1d45721369aa538cedbf44c586969052c56ba8fd36a5709156009"
+    },
+    "portfolio_summary.csv": {
+      "bytes": 757,
+      "sha256": "60d3b50e42b69e5f11ec1bce51c1e55659d2ed936788f2bf3933f2fbf11b62a5"
+    },
+    "trades.csv": {
+      "bytes": 965882,
+      "sha256": "72f779ce6d08ead5f796aac86348c98342550f8034f388fbb5b9a8b01281534e"
+    }
+  },
+  "holdout_2026_opened": false,
+  "june_2026_sealed": true,
+  "live_parity": "RESEARCH_PROXY_LIVE_PARITY_BLOCKED",
+  "outer_2024_2025_opened": false,
+  "production_modified": false,
+  "runner_protocol_sha256": "c8690db32269e3c8deafdff652cdfd3634d71bc130abfd59a4a02dea0aa03f0f",
+  "schema": "king_gex_slope1_development_results_v1",
+  "status": "FAILED_ECONOMIC"
+}
