@@ -11,6 +11,7 @@ from neural.jepa.walkforward_event_option_profile_selector import (
     default_profiles,
     filter_profiles,
     parse_ticker_str_grid_map,
+    validate_physical_data_cutoff,
 )
 
 
@@ -135,3 +136,16 @@ def test_direction_mode_drops_rows_without_required_observable_momentum() -> Non
         ]
     )
     assert apply_direction_mode(frame, "spot_15m_trend", 35).empty
+
+
+def test_physical_data_cutoff_defaults_fail_closed_but_can_advance_explicitly() -> None:
+    frame = pd.DataFrame({"trade_date": [20260529, 20260630]})
+    with pytest.raises(ValueError, match="physical data seal exceeded"):
+        validate_physical_data_cutoff(frame, "202605")
+    assert validate_physical_data_cutoff(frame, "202606") == "202606"
+
+
+@pytest.mark.parametrize("cutoff", ["", "20261", "202613", "not-a-month"])
+def test_physical_data_cutoff_rejects_invalid_month(cutoff: str) -> None:
+    with pytest.raises(ValueError, match="invalid --physical-data-cutoff-month"):
+        validate_physical_data_cutoff(pd.DataFrame({"trade_date": [20260529]}), cutoff)

@@ -32,7 +32,11 @@ Passing the aggregate gate while one month fails is a rejection.
 - Runner:
   `neural/jepa/walkforward_event_option_profile_selector.py`
 - Runner SHA-256:
-  `14e1742c822b179a8272bffe717f2daaced21dd70d8c79854f41095e7ee2646f`
+  `082c19e34fa9158c4d7ca62f9511b32318f7936c2c3d1d9d50b04e045337c9d3`
+
+The first launch stopped before folds/outcomes because the runner contained a
+hard-coded historical June seal. The committed runner keeps `202605` as the
+fail-closed default and requires the explicit cutoff in the frozen command.
 
 ## Frozen folds and model family
 
@@ -77,7 +81,7 @@ python neural/jepa/walkforward_event_option_profile_selector.py `
   --profile-kind production_zero_dte `
   --profile-allowlist target_zero_dte_d25_return target_zero_dte_d25_win target_zero_dte_d35_return target_zero_dte_d35_win `
   --ticker-profile-allowlists SPXW=target_zero_dte_d25_return,target_zero_dte_d25_win QQQ=target_zero_dte_d35_return,target_zero_dte_d35_win SPY=target_zero_dte_d35_return,target_zero_dte_d35_win `
-  --start-month 202601 --end-month 202606 --val-months 6 `
+  --start-month 202601 --end-month 202606 --physical-data-cutoff-month 202606 --val-months 6 `
   --clip-return 2.0 --min-train-rows 500 --min-val-rows 30 `
   --min-val-trades 78 --min-month-trades 13 `
   --min-val-pf 1.20 --min-val-win-rate 0.45 --min-val-positive-month-rate 1.0 `

@@ -5,7 +5,6 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import gc
 import hashlib
 import json
-import math
 import pickle
 import zlib
 from dataclasses import asdict, dataclass
@@ -57,6 +56,7 @@ DIRECTION_MODES = (
     "spot_15m_trend",
     "spot_15m_counter",
 )
+DEFAULT_PHYSICAL_DATA_CUTOFF_MONTH = "202605"
 
 
 if __package__:
@@ -109,6 +109,26 @@ def apply_direction_mode(scored: pd.DataFrame, mode: str, delta_bucket: int) -> 
         out["exit_minutes"] = np.where(call_action, out[call_exit], out[put_exit])
     out["direction_mode"] = normalized
     return out
+
+
+def validate_physical_data_cutoff(raw: pd.DataFrame, cutoff_month: str) -> str:
+    """Fail closed when the materialized input extends beyond its declared seal."""
+
+    cutoff = str(cutoff_month).strip()
+    if len(cutoff) != 6 or not cutoff.isdigit() or not 1 <= int(cutoff[4:]) <= 12:
+        raise ValueError(f"invalid --physical-data-cutoff-month: {cutoff_month!r}")
+    if "trade_date" not in raw.columns or raw.empty:
+        raise ValueError("physical data cutoff requires a non-empty trade_date column")
+    months = raw["trade_date"].astype(str).str.replace(r"\.0$", "", regex=True).str[:6]
+    if months.str.len().ne(6).any() or ~months.str.isdigit().all():
+        raise ValueError("physical data cutoff found an invalid trade_date")
+    max_month = str(months.max())
+    if max_month > cutoff:
+        raise ValueError(
+            "CRITICAL ERROR: physical data seal exceeded; "
+            f"dataset max month is {max_month}, declared cutoff is {cutoff}"
+        )
+    return max_month
 
 
 def parse_ticker_int_map(values: Iterable[str], *, field_name: str) -> dict[str, int]:
@@ -1077,6 +1097,14 @@ def main() -> int:
     )
     parser.add_argument("--start-month", default="202601")
     parser.add_argument("--end-month", default="202605")
+    parser.add_argument(
+        "--physical-data-cutoff-month",
+        default=DEFAULT_PHYSICAL_DATA_CUTOFF_MONTH,
+        help=(
+            "Latest YYYYMM physically authorized in the input dataset. "
+            "Defaults to the historical June-2026 seal; advancing it must be explicit."
+        ),
+    )
     parser.add_argument("--val-months", type=int, default=3)
     parser.add_argument("--clip-return", type=float, default=2.0)
     parser.add_argument("--min-train-rows", type=int, default=500)
@@ -1197,14 +1225,7 @@ def main() -> int:
     all_tickers = sorted(set(test_tickers) | set(train_universe))
     raw = load_raw(args.data, all_tickers)
 
-    # Physical sealing assertion: verify June 2026 is completely absent from the dataset
-    if "trade_date" in raw.columns:
-        max_date = int(raw["trade_date"].max())
-        if max_date > 20260531:
-            raise ValueError(
-                f"CRITICAL ERROR: Leakage detected. Dataset contains trade_date {max_date} > 20260531. "
-                "June must be physically sealed."
-            )
+    validate_physical_data_cutoff(raw, args.physical_data_cutoff_month)
 
     entry_start_minute = parse_hhmm_to_minute(
         str(args.entry_time_min_et),
