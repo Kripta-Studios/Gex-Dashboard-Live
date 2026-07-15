@@ -945,3 +945,9 @@ max 180m, entry ask, exit bid y mismo scheduler. Debe reproducir exactamente
 el baseline por evento/right antes de cualquier alternativa y checkpoint por
 ticker-mes y dirección/config. Solo una pareja que pase las 36 celdas puede
 congelarse para outer 2024/2025. No seleccionar exit por ticker/mes/signo/side.
+
+Runner `evaluate_king_gex_exit_v1.py` implementado pre-alternate-outcome. Hashea
+Greeks/OI/OHLC por ticker-mes, revalida contrato exacto y paridad B00 de return,
+hold, status, max/min para ambos rights antes de persistir las 16 alternativas.
+Checkpoints manifest-last: 36 source cells y 32 direction/config policies. Suite
+King exit+slope `13 passed`, Ruff/compile clean. Commit/push antes de ejecutar.

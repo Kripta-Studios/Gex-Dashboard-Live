@@ -672,3 +672,8 @@ y rehacer scheduler mejora a PF 0,850 pero sigue -67,677R y solo 1/36 celdas
 pasa. `KING-GEX-EXIT1` congela 16 variantes globales de stop/trail/horizonte,
 min hold 30m y max 180m, con replay raw ask->bid y checkpoints. Aún no existe
 resultado alternativo; 2024-2026 siguen cerrados.
+
+El runner KING-GEX-EXIT1 ya implementa checkpoints manifest-last para 36 source
+cells y 32 policies. Hashea raw, exige paridad exacta B00 por evento/right y
+rehace scheduler para cada exit; tests focales `13 passed`. Todavía no se ha
+ejecutado un path alternativo y debe commit/push antes de hacerlo.

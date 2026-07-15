@@ -1105,3 +1105,9 @@ WR 43,02%, PF 0,850, -67,677R y 1/36 celdas. Se congela ahora un grid pequeño d
 tempranos/estrechos o tardíos/anchos. Ambos lados D0/D1 son desarrollo 2023 ya
 abierto, no OOS. Replayer debe usar raw Greeks ask->bid, reproducir B00 exacto y
 tener checkpoints por ticker-mes y policy. 2024-2026 permanecen cerrados.
+
+El replayer ya está implementado pre-outcome alternativo. Cada source checkpoint
+sella hashes raw Greeks/OI/OHLC y falla si el contrato o cualquiera de las cinco
+métricas B00 difiere del master. Tras construir 36 ticker-meses, rehace scheduler
+para 32 direction/config policies y solo promueve 36/36. Suite focal `13 passed`,
+Ruff/compile clean. Debe commit/push antes del primer source cell real.
