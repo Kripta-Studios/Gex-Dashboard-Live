@@ -711,3 +711,8 @@ WR>45%, trades>12 y PnL>0 en las 36 celdas. Outer 2024-2026 cerrado.
 No repetir el legacy path-exit: en otro universo dio 1.690 trades, PF0,811,
 WR33,85% y -89.652. Siguiente: commit del freeze, builder/test con checkpoints
 de sesión y data gate train/dev; después runner mensual 2023.
+
+Builder MANAGE30 implementado pre-label y resumible por sesión: universo
+hardcoded 2022-2023/22.273 eventos, hashes raw, paridad B00, estado exacto
+30..31 y M0/M1+17 outcomes. `16 passed`, Ruff/compile clean. Falta commit/push
+antes del primer build real.

@@ -1177,3 +1177,11 @@ El legacy path exit debe constar como fracaso separado: metrics SHA
 hold 5/15/30, otro universo y otra ejecución. No es evidencia contra MANAGE30
 ni fuente de calibración. Siguiente trabajo: commit/push predeclaración y luego
 builder resumible con tests de causalidad/paridad; no abrir outer/2026.
+
+Builder ya implementado pre-label: `build_king_gex_manage30_v1.py`. Solo acepta
+2022/2023, espera 22.273 eventos, selecciona el right D1/strike frozen, exige
+paridad B00 y persiste una sesión de forma atómica con hashes Greeks/OI/OHLC.
+Extrae features solo hasta primera quote 30..31, 16 outcomes+E30 y exposiciones
+sintéticas compartidas. Missing exact lag permanece NaN; missing decision usa
+B00. Suite focal `16 passed`, Ruff/compile clean. Debe commit/push antes del
+primer build real.

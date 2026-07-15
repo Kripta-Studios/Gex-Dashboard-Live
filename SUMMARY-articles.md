@@ -662,3 +662,9 @@ predicho antes de incorporar su label. Si la policy supera 2023, se congela
 antes de 2024/2025 y solo después puede llegar a 2026. El fit para operar julio
 sí puede usar todos los meses ya completados, pero no convierte esos meses en
 evidencia OOS.
+
+La implementación evita un leakage sutil: si falta el mark exacto de un lag no
+se sustituye por la última quote. La decisión solo existe si el mismo contrato
+tiene quote válida entre 30 y 31 minutos; de lo contrario la política conserva
+B00. Cada sesión sella por separado inputs, features y contrafactuales para que
+una reanudación no mezcle dos versiones del experimento.

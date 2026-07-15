@@ -1018,3 +1018,11 @@ sus thresholds/delta/holds. MANAGE30 usa contrafactuales King exactos y min hold
 30. Siguiente secuencia: commit/push de predeclaración -> builder/test resumible
 -> data gate train/dev -> commit -> runner walk-forward 2023. No abrir outer si
 ninguno de M0/M1 pasa las 36 celdas.
+
+Builder train/dev implementado pre-label en
+`build_king_gex_manage30_v1.py`: hard-stop 2022-01..2023-12, 22.273 K1,
+checkpoint manifest-last por sesión con hashes raw/código/protocolo, paridad
+B00 obligatoria, estado exacto 30..31, E30 y 16 contrafactuales. Calcula M0 y
+M1 desde quotes observadas; los lags ausentes quedan NaN, nunca as-of. Suite
+builder+EXIT1 `16 passed`, Ruff/compile clean. Commit/push antes de cualquier
+build real; target previsto `tmp/king_gex_manage30_v1/train_dev_202201_202312_v1`.
