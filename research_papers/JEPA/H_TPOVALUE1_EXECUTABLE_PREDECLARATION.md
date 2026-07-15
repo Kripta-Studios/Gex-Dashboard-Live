@@ -30,6 +30,12 @@ La vista temporal outcome-free vive solo en
 `tmp/existing_data_edge_sprint_v1/tpo_value_migration_v1/`. No es una fuente
 nueva y contiene exclusivamente keys, X0 y X1.
 
+El build completo es reanudable por ticker-sesión. Cada checkpoint se escribe
+parquet-atómico + manifest-last y solo se reutiliza si coinciden hashes de raw
+source, event keys, builder, predeclaración, allowlist y parquet derivado. Un
+proceso muerto puede relanzarse al mismo target sin recomputar sesiones válidas;
+un cambio de cualquier input invalida y reconstruye únicamente lo afectado.
+
 ## TPO y value area exactos
 
 IB usa las 60 barras 09:30..10:29. `bin_width=(IB_high-IB_low)/20` y los bins

@@ -41,6 +41,11 @@ V1R1 explicita también el centro de POC, los bordes VAL/VAH,
 `value_location=(close-VAL)/(VAH-VAL)` y efficiency sobre h transiciones 1m.
 No hay fallback para denominadores inválidos.
 
+El builder TPO es reanudable por ticker-sesión: parquet atómico y manifest
+último, con hashes de source, claves, builder, protocolo, allowlist y features.
+Una segunda pasada real reutilizó el checkpoint exacto; los full runs no deben
+reiniciarse desde cero tras una interrupción.
+
 Este documento conserva resultados y decisiones. La operación live y los pasos de
 reanudación están en `CODEX-HANDOFF.md`; la literatura está resumida en
 `SUMMARY-articles.md`.

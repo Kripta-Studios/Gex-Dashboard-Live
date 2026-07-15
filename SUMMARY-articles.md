@@ -564,3 +564,8 @@ fronteras, ties, touches y denominadores deben quedar matemáticamente fijados
 antes del data gate para que una implementación distinta no cambie el alpha.
 La aclaración V1R1 añade centro/bordes exactos, value location no clipped y
 efficiency sobre h transiciones; cualquier caso indefinido falla cerrado.
+
+La reanudación también es parte de la reproducibilidad: un checkpoint solo es
+evidencia reutilizable si sella conjuntamente inputs, universo, código,
+protocolo y output. Guardar únicamente pesos o un contador permite mezclar dos
+experimentos distintos después de una muerte de proceso.

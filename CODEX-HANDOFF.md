@@ -49,6 +49,11 @@ La aclaración V1R1 fija el centro de POC y bordes VA, `value_location` sin
 clipping y efficiency sobre 15/30 transiciones exactas; denominadores inválidos
 fallan cerrado. Se versionó antes de materializar una sola feature TPO.
 
+Requisito operativo añadido por el usuario: todo build/training/backtest largo
+debe persistir checkpoints atómicos y reanudables. H-TPO lo hace por
+ticker-sesión, revalidando source, keys, código, protocolo y output antes de
+reutilizar. Mantener `.md`, commit y push en cada hito recuperable.
+
 ## 1. Objetivo y gates no negociables
 
 Obtener una policy causal, reproducible y live-equivalente para opciones 0DTE de

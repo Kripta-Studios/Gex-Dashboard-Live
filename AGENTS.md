@@ -833,3 +833,5 @@ exactos; gate 100% finite, >=2 estados y valor modal <99,5% por ticker-año.
 V1R1 fija además centros/bordes POC-VA, `value_location=(close-VAL)/(VAH-VAL)`
 sin clipping y efficiency 15/30m sobre exactamente h transiciones. Cualquier
 denominador no definido aborta; todavía no se ha construido ninguna fila TPO.
+El builder debe usar checkpoints atómicos por ticker-sesión y revalidar hashes
+de source/keys/código/protocolo/features al reanudar; no relanzar desde cero.
