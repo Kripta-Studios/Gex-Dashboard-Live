@@ -1,0 +1,44 @@
+{
+  "dataset_sha256": "2c7ff0485c5f5c8b99fea6c6209c1e56dcb37ee479a684f3a7dc3cff67df000b",
+  "eligible_arms": [],
+  "experiment": "KING_GEX_MANAGE30_V1",
+  "files": {
+    "concentration.csv": {
+      "bytes": 629,
+      "rows": 8,
+      "sha256": "d3b334626a39a5c432d63b7907889a06501ce86c8bdf45c92775df9b0acde9b1"
+    },
+    "monthly_metrics.csv": {
+      "bytes": 12372,
+      "rows": 72,
+      "sha256": "886f7af95b5287aab93125cea06f7fc3d7af5b930604ed7baa0defd64572861a"
+    },
+    "policy_summary.csv": {
+      "bytes": 712,
+      "rows": 2,
+      "sha256": "81b6cf622d60631830f51f862c2f8bd72d571898aa812e1b5c833a0d8dad717f"
+    },
+    "predictions.parquet": {
+      "bytes": 359130,
+      "rows": 26572,
+      "sha256": "c9a22afc1db19c8cd363a674bcb44b054f885c2fe10ba4cb6ba169e5082f3e18"
+    },
+    "trades.csv": {
+      "bytes": 7960995,
+      "rows": 2980,
+      "sha256": "98ddc8d358c9ed828c3136825bf8976b1a6801943ec74728df2700e55260697d"
+    }
+  },
+  "fold_checkpoints": {
+    "built_this_run": 72,
+    "reused_this_run": 0,
+    "total": 72
+  },
+  "holdout_2026_opened": false,
+  "outer_2024_2025_opened": false,
+  "production_modified": false,
+  "protocol_sha256": "6347262ca303a16b9d4a934380b344e97025e2827fa033975ecc86d6b620e4c8",
+  "schema": "king_gex_manage30_development_results_v1",
+  "selected": null,
+  "status": "FAILED_ECONOMIC_DEVELOPMENT"
+}

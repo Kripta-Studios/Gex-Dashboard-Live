@@ -1,0 +1,103 @@
+{
+  "schema": "weekly_multiday_oracle_v1",
+  "status": "CLOSED_ORACLE_GATE",
+  "advance_to_single_weekly_development": false,
+  "hold_sessions": 2,
+  "target_delta": 0.5,
+  "entry_clock": "10:35",
+  "date_min": "20220101",
+  "date_max": "20251231",
+  "holdout_2026_opened": false,
+  "production_modified": false,
+  "physical_opportunities": 2364,
+  "executable_opportunities": 2361,
+  "gates": {
+    "coverage_gte_0_90": true,
+    "all_months_pf_gt_1_30_wr_gt_0_50_pnl_positive_trades_gte_6": false,
+    "top5_gross_profit_share_lte_0_35": true
+  },
+  "concentration": {
+    "QQQ": 0.06919855881633302,
+    "SPXW": 0.07386424313243901,
+    "SPY": 0.07160495692562943,
+    "POOLED": 0.026735968082401824
+  },
+  "oracle_policy_summary": [
+    {
+      "policy": "NON_OVERLAP_ORACLE",
+      "ticker": "QQQ",
+      "trades": 416,
+      "win_rate": 0.71875,
+      "profit_factor": 12.27720836633128,
+      "pnl_r": 248.52060824699305,
+      "mean_return": 0.597405308286041,
+      "median_return": 0.32874827315328986,
+      "months": 48,
+      "minimum_monthly_trades": 8,
+      "worst_month_pf": 1.6378129081583777,
+      "worst_month_wr": 0.375,
+      "worst_month_pnl_r": 0.8321613579588099,
+      "passing_months": 41
+    },
+    {
+      "policy": "NON_OVERLAP_ORACLE",
+      "ticker": "SPXW",
+      "trades": 417,
+      "win_rate": 0.7362110311750599,
+      "profit_factor": 13.960069004239958,
+      "pnl_r": 257.56387380784054,
+      "mean_return": 0.6176591698029749,
+      "median_return": 0.3234421364985163,
+      "months": 48,
+      "minimum_monthly_trades": 8,
+      "worst_month_pf": 2.299231996911728,
+      "worst_month_wr": 0.3333333333333333,
+      "worst_month_pnl_r": 1.6698729254923965,
+      "passing_months": 43
+    },
+    {
+      "policy": "NON_OVERLAP_ORACLE",
+      "ticker": "SPY",
+      "trades": 417,
+      "win_rate": 0.7410071942446043,
+      "profit_factor": 13.875859314214832,
+      "pnl_r": 254.86645768672787,
+      "mean_return": 0.6111905460113378,
+      "median_return": 0.32440476190476203,
+      "months": 48,
+      "minimum_monthly_trades": 8,
+      "worst_month_pf": 2.240841186973166,
+      "worst_month_wr": 0.3333333333333333,
+      "worst_month_pnl_r": 1.527052586785238,
+      "passing_months": 44
+    }
+  ],
+  "predeclaration_sha256": "09eb3b152393d090e90d268c36a4c5b13654cb3c56864e3c2a15ab853a65c135",
+  "files": {
+    "opportunities.csv": {
+      "rows": 2361,
+      "bytes": 894391,
+      "sha256": "aa1ded7a1ed0ee6fd2d0037734d2e818010b30deaf7906d9b1a377dc174829ec"
+    },
+    "policy_trades.csv": {
+      "rows": 6111,
+      "bytes": 625147,
+      "sha256": "7ba257595b7e21e1060e0b3c9d3f98165deaf9f6a7864a5485c4bd92973b0157"
+    },
+    "monthly_metrics.csv": {
+      "rows": 576,
+      "bytes": 69192,
+      "sha256": "4a4a6fd33c5f4b67ca3a065d05c94702d89fc2b17852cfe532009efb568e031c"
+    },
+    "policy_summary.csv": {
+      "rows": 12,
+      "bytes": 2162,
+      "sha256": "829d38015ead0f32321a620a748b922aeeb9962cd495c28dd0f5b49b45d33b87"
+    },
+    "coverage.csv": {
+      "rows": 12,
+      "bytes": 368,
+      "sha256": "35df720ae57ae7d7b3e5cceadf318384b8c68b7bb2bf1cc3c93470869070a560"
+    }
+  }
+}
