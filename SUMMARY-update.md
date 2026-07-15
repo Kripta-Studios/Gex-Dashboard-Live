@@ -37,6 +37,10 @@ La semántica TPO quedó completa antes del build: bins, fronteras, touches,
 denominadores, period=1m y distinctness están congelados; no se seleccionarán
 después de ver labels.
 
+V1R1 explicita también el centro de POC, los bordes VAL/VAH,
+`value_location=(close-VAL)/(VAH-VAL)` y efficiency sobre h transiciones 1m.
+No hay fallback para denominadores inválidos.
+
 Este documento conserva resultados y decisiones. La operación live y los pasos de
 reanudación están en `CODEX-HANDOFF.md`; la literatura está resumida en
 `SUMMARY-articles.md`.

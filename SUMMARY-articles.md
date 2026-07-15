@@ -562,3 +562,5 @@ de covarianzas cross-market.
 En TPO, términos de mercado no bastan como especificación: periodo, lattice,
 fronteras, ties, touches y denominadores deben quedar matemáticamente fijados
 antes del data gate para que una implementación distinta no cambie el alpha.
+La aclaración V1R1 añade centro/bordes exactos, value location no clipped y
+efficiency sobre h transiciones; cualquier caso indefinido falla cerrado.

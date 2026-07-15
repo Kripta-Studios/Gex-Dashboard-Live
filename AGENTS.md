@@ -830,3 +830,6 @@ ya predeclarado. Fuente exacta 09:30..t-1, sin cross-market. Predeclaración:
 Clarificación outcome-free previa al builder: TPO period=1m; lattice por floor
 inclusivo sin tolerancia; igualdad/denominadores de value, tails y crosses
 exactos; gate 100% finite, >=2 estados y valor modal <99,5% por ticker-año.
+V1R1 fija además centros/bordes POC-VA, `value_location=(close-VAL)/(VAH-VAL)`
+sin clipping y efficiency 15/30m sobre exactamente h transiciones. Cualquier
+denominador no definido aborta; todavía no se ha construido ninguna fila TPO.

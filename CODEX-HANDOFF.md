@@ -45,6 +45,10 @@ Antes del builder se congelaron también lattice floor inclusivo, TPO de 1m,
 igualdades/denominadores y distinctness por ticker-año; no quedan decisiones
 semánticas abiertas autorizadas.
 
+La aclaración V1R1 fija el centro de POC y bordes VA, `value_location` sin
+clipping y efficiency sobre 15/30 transiciones exactas; denominadores inválidos
+fallan cerrado. Se versionó antes de materializar una sola feature TPO.
+
 ## 1. Objetivo y gates no negociables
 
 Obtener una policy causal, reproducible y live-equivalente para opciones 0DTE de

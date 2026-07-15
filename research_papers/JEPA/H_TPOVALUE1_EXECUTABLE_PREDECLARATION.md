@@ -60,6 +60,13 @@ perfil contiene todos los índices entre el mínimo y máximo observado, incluid
 los bins intermedios con count cero. No se usa tolerancia, rounding ni clipping
 al rango IB.
 
+Clarificación V1R1 outcome-free previa al primer builder: el precio de un bin
+es su centro `IB_low + (i+0,5)*bin_width`. POC usa ese centro; VAL es el borde
+inferior del menor índice incluido en value y VAH el borde superior del mayor.
+La media ponderada del perfil usa centros y TPO counts, nunca volumen ni
+`tick_count`. Todos los cálculos se conservan en `float64`, sin redondear
+niveles antes de derivar features.
+
 ## Bloque completo de 36 features
 
 Orden congelado:
@@ -126,6 +133,25 @@ cuenta. El denominador es `n_closes-1`. IB position es
 `(reference-IB_low)/IB_range`. Directional efficiency es desplazamiento
 absoluto dividido por suma de desplazamientos absolutos en 15/30 barras y vale
 cero cuando no hubo movimiento.
+
+Definiciones cerradas V1R1:
+
+- `tpo_value_location=(reference-VAL)/(VAH-VAL)`, sin clipping; cero ancho de
+  value aborta el build;
+- overlap usa longitud continua
+  `max(0,min(VAHc,VAHl)-max(VALc,VALl)) /
+  (max(VAHc,VAHl)-min(VALc,VALl))`; unión cero aborta;
+- `last3_*` usa exactamente los tres últimos closes completados contra el value
+  actual; `session_inside` usa todos los closes 09:30..t-1 contra ese mismo
+  value actual;
+- cada cross rate usa todos esos closes contra el nivel actual correspondiente;
+- directional efficiency de horizonte `h` usa los `h+1` últimos closes
+  completados, `abs(c[-1]-c[-1-h]) / sum(abs(diff(c[-1-h:])))`: son exactamente
+  `h` transiciones de un minuto; si el denominador es cero devuelve cero;
+- `IB_range<=0`, referencia no positiva, perfil vacío, total TPO no positivo o
+  cualquier denominador no definido fuera de las excepciones explícitas aborta
+  el build completo. No se imputa, no se elimina la feature y no se elimina la
+  fila.
 
 ## Brazos, modelo y protocolo
 
