@@ -40,6 +40,12 @@ y sign flip—, no el nivel estático. Antes de evaluarla deben eliminarse
 dependencias de reloj/calibración 2026 y demostrarse OI, signos, timestamps y
 paridad histórica. VIX1D/VVIX, skew y vomma no se mezclarán en el primer test.
 
+La traducción congelada usa una regla falsable pequeña: gamma negativa implica
+momentum, positiva reversión, y el candidato solo actúa cuando la pendiente de
+45m refuerza el signo actual. La fuente pasa timestamps/OI/frecuencia, pero se
+declara proxy histórico y live parity bloqueada. La evidencia siguiente debe ser
+PF/WR/PnL ask-to-bid, no otra métrica física.
+
 ## 1. Principio rector
 
 Una mejora de representación no es alpha. Toda idea académica debe terminar en el

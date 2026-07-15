@@ -85,6 +85,13 @@ del script King Node el reloj UTC-4, IV CALL para ambos rights, signs dealer,
 derived Greeks o calibraciones 2026. El workbook no fue auditado porque el
 runtime spreadsheet requerido no está disponible; no inventar conclusiones.
 
+La factibilidad outcome-free pasó y la familia está predeclarada. Usa el
+wall-state existente SHA `94e311...8ef`, invierte su signed-log y calcula slope
+45m exacta desde 11:20. 109.785 filas; todos los meses 2023 conservan al menos
+19 sesiones de señal por ticker. K0 nivel; K1 candidato solo cuando signo de
+slope y nivel coinciden, con momentum/reversión por ret15. Sin entrenamiento,
+grid ni threshold. Siguiente: runner checkpointed commit/push y desarrollo 2023.
+
 ## 1. Objetivo y gates no negociables
 
 Obtener una policy causal, reproducible y live-equivalente para opciones 0DTE de

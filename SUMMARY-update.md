@@ -68,6 +68,11 @@ La única idea en cola es `KING-GEX-SLOPE1`: pendiente/sign flip de net GEX como
 mecanismo, tomada conceptualmente de `live_king_node.py`, no sus calibraciones o
 defectos de implementación. Todavía no es evidencia ni familia activa.
 
+El preflight causal ya la activó: fuente wall-state existente, 109.785
+observaciones con lag45 exacto y mínimo 19 sesiones de señal/mes en 2023. La
+prueba económica es fixed-rule, no otro modelo: K0 nivel de gamma; K1 exige nivel
+y pendiente alineados y decide momentum/reversión con ret15. No hay payoff aún.
+
 Este documento conserva resultados y decisiones. La operación live y los pasos de
 reanudación están en `CODEX-HANDOFF.md`; la literatura está resumida en
 `SUMMARY-articles.md`.

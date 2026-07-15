@@ -23,9 +23,8 @@ Estados permitidos: `QUEUED`, `ACTIVE`, `FAILED_CAUSALITY`,
 | CROSS_MARKET_TRANSMISSION_V1 | transmisión beta-neutral y lead/lag exacta | `FAILED_CAUSALITY` | master contiene paths post-cierre en medias jornadas; build abortó antes de outcomes |
 | CROSS_MARKET_TRANSMISSION_V1R1 | misma hipótesis, exclusión calendar-only de medias jornadas no certificables | `BLOCKED_DATA` | lead/lag indefinido en sesión normal; no epsilon/remoción post-gate |
 | H-TPOVALUE1 | migración de valor TPO/POC/VAH/VAL | `FAILED_ECONOMIC` | primera celda X1 SPXW 202304: 0/42 grids inner pasan; PF pooled del near-miss 0,922 y PnL -1,831R |
-| KING-GEX-SLOPE1 | pendiente net-GEX/sign flip y tensión de volatilidad inspirada por King Node | `QUEUED` | solo idea; requiere predeclaración outcome-free y fuente histórica causal antes de cualquier outcome |
+| KING-GEX-SLOPE1 | signo net-GEX y pendiente 45m alineada como régimen momentum/reversión | `ACTIVE` | predeclarada sin outcomes; 109.785 filas exactas y mínimo 19 sesiones/mes en 2023 |
 
-No hay familia activa tras el cierre H-TPOVALUE1. La única rotación permitida
-es auditar outcome-free la factibilidad de `KING-GEX-SLOPE1`; no descargar ni
-abrir outcomes hasta predeclarar una definición causal que no copie los defectos
-runtime de `live_king_node.py` ni use calibraciones 2026.
+Solo `KING-GEX-SLOPE1` está activa. Se autoriza implementar y commit/push de su
+runner reanudable, seguido por un único desarrollo fixed-rule 2023. No se
+autoriza añadir VIX/skew/vomma/DEX, thresholds o calibraciones 2026.

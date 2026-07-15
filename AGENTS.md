@@ -878,3 +878,16 @@ inspirada por net GEX slope/sign flip de `live_king_node.py`. No usar sus
 calibraciones Jan-Jun 2026, fixed UTC-4, CALL-IV compartida, signs dealer
 supuestos ni higher Greeks derivados como si fueran nativos. El Excel sigue
 siendo referencia no auditada hasta disponer del runtime spreadsheet exigido.
+
+### KING-GEX-SLOPE1 predeclarada — 2026-07-15
+
+Fuente existente wall-state exacta, sin download: 109.785 decisiones con lag45
+contiguo; QQQ/SPXW/SPY 35.919/37.908/35.958. Mínimo 19 sesiones con señal por
+mes/ticker en 2023; capacidad hold30/caps mínima 38/76/19. Live parity sigue
+`RESEARCH_PROXY_LIVE_PARITY_BLOCKED` por diferencias frente a King Node.
+
+Reglas sin fit ni sweep: K0 usa signo de net GEX para momentum (negativo) o
+reversión (positivo); K1, único candidato, exige además signo de pendiente 45m
+alineado con el nivel. Momentum es ret15 causal. Desarrollo fixed-rule completo
+2023, ask->bid y scheduler común; cualquier celda fallida cierra. Runner siempre
+checkpoint por mes/ticker/brazo antes de outcomes.
