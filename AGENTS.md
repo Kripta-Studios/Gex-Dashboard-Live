@@ -903,3 +903,7 @@ sin wall, 28.977 wall válidas y 8.668 extras sin oportunidad executable. Freeze
 `KING_GEX_SLOPE1_DATA_GATE_CLARIFICATION.md`: master LEFT exact wall, exigir
 20.309 both y omitir extras. K1 queda 13.286 señales; QQQ mínimo 16 días pero
 cap2 capacidad 32, SPY mínimo 19. No existe aún PF/WR/PnL King.
+
+Fix master-left implementado con census hard 20.309 y K1 13.286 señales; hash
+del amendment forma parte del checkpoint. Regression `5 passed`, Ruff/compile
+clean. Commit/push antes del relaunch; target anterior inexistente.

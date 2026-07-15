@@ -103,6 +103,10 @@ son oportunidades. Aclaración congelada: master-left exacto, sin fallback. El
 target no llegó a crearse. Corregir runner, incluir hash del amendment, tests,
 commit/push y relanzar. Todavía no hay métrica King.
 
+Fix ya listo: master-left exacto, census 20.309 y signal census K1 13.286
+fail-closed; amendment incluido en protocolo/checkpoint. `5 passed`, Ruff y
+compile clean. Falta solo commit/push y relaunch.
+
 ## 1. Objetivo y gates no negociables
 
 Obtener una policy causal, reproducible y live-equivalente para opciones 0DTE de

@@ -31,6 +31,9 @@ def test_protocol_is_fixed_rule_and_keeps_holdouts_closed() -> None:
     assert protocol["fit"] is None
     assert protocol["threshold"] is None
     assert protocol["grid"]["first_minute"] == 680
+    assert protocol["source_hashes"]["data_gate_clarification"] == (
+        "17d00155c315f007f25d87b22220c161a8360f9ea54128df665224ae5422c504"
+    )
     assert protocol["outer_2024_2025_opened"] is False
     assert protocol["holdout_2026_opened"] is False
 

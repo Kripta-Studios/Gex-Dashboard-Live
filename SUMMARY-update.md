@@ -82,6 +82,9 @@ wall extra existieran en el master. Las 20.309 oportunidades master sí tienen
 wall exacto 100%. Se congeló master-left one-to-one como única corrección; no
 hay aún PF/WR/PnL King.
 
+El fix revalida además el census K1 de 13.286 señales y el hash del amendment;
+regression `5 passed`. Sigue pendiente el relanzamiento económico.
+
 Este documento conserva resultados y decisiones. La operación live y los pasos de
 reanudación están en `CODEX-HANDOFF.md`; la literatura está resumida en
 `SUMMARY-articles.md`.

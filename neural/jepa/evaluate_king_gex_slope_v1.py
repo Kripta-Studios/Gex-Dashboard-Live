@@ -35,8 +35,12 @@ MASTER = ROOT / "tmp/event_option_dataset_execquote_causal1030_202201_202512_pai
 WALL_STATE = ROOT / "tmp/wall_state_gex_dex_202201_202512_v1/wall_state.parquet"
 BUILD_SUMMARY = ROOT / "tmp/event_option_dataset_execquote_causal1030_202201_202605_v1/SUMMARY.json"
 PROTOCOL_DOCUMENT = ROOT / "research_papers/JEPA/KING_GEX_SLOPE1_EXECUTABLE_PREDECLARATION.md"
+CLARIFICATION_DOCUMENT = ROOT / "research_papers/JEPA/KING_GEX_SLOPE1_DATA_GATE_CLARIFICATION.md"
 WALL_STATE_SHA256 = "94e311e0e25ff7956347597a8734e82e07ab05753f42acaa26876c58752df8ef"
 PROTOCOL_DOCUMENT_SHA256 = "f9e19f83f13e3eae44a4c4cd6b9c92801564dede507e5ed29184575f9b4c5dd6"
+CLARIFICATION_DOCUMENT_SHA256 = "17d00155c315f007f25d87b22220c161a8360f9ea54128df665224ae5422c504"
+EXPECTED_DEVELOPMENT_ROWS = 20_309
+EXPECTED_ALIGNED_SIGNALS = 13_286
 SLOPE_LAG_MINUTES = 45
 SLOPE_NORMALIZATION_MINUTES = 15
 FIRST_DECISION_MINUTE = 680
@@ -75,6 +79,7 @@ def runner_protocol() -> dict[str, Any]:
             "master": MASTER_SHA256,
             "wall_state": WALL_STATE_SHA256,
             "predeclaration": PROTOCOL_DOCUMENT_SHA256,
+            "data_gate_clarification": CLARIFICATION_DOCUMENT_SHA256,
         },
         "grid": {
             "first_minute": FIRST_DECISION_MINUTE,
@@ -136,6 +141,8 @@ def load_development_data() -> pd.DataFrame:
         raise AssertionError("wall-state source hash changed")
     if sha256_file(PROTOCOL_DOCUMENT) != PROTOCOL_DOCUMENT_SHA256:
         raise AssertionError("active predeclaration differs from committed protocol")
+    if sha256_file(CLARIFICATION_DOCUMENT) != CLARIFICATION_DOCUMENT_SHA256:
+        raise AssertionError("active data-gate clarification differs from committed protocol")
     verify_executable_build_summary(BUILD_SUMMARY)
     master = pd.read_parquet(
         MASTER,
@@ -154,6 +161,9 @@ def load_development_data() -> pd.DataFrame:
         frame.drop(frame.index[frame["trade_date"].isin(EARLY_CLOSE_DATES)], inplace=True)
         if frame.duplicated(KEY).any():
             raise AssertionError("source keys must be unique")
+    master = master.loc[
+        master["minute"].between(FIRST_DECISION_MINUTE, LAST_DECISION_MINUTE)
+    ].copy()
     wall = wall.sort_values(KEY, kind="stable").reset_index(drop=True)
     grouped = wall.groupby(["ticker", "trade_date"], observed=True, sort=False)
     wall["lag_minute"] = grouped["minute"].shift(SLOPE_LAG_MINUTES // 5)
@@ -184,15 +194,24 @@ def load_development_data() -> pd.DataFrame:
         atol=1e-12,
     ):
         raise AssertionError("signed-log GEX inversion failed")
-    joined = wall.merge(master, on=KEY, how="left", validate="one_to_one", indicator=True)
+    joined = master.merge(wall, on=KEY, how="left", validate="one_to_one", indicator=True)
     if not joined["_merge"].eq("both").all():
-        raise AssertionError("exact wall/master development join is incomplete")
+        raise AssertionError("an executable master key lacks exact wall state")
     joined = joined.drop(columns="_merge")
+    if len(joined) != EXPECTED_DEVELOPMENT_ROWS:
+        raise AssertionError(
+            f"development master census changed: {len(joined)} != {EXPECTED_DEVELOPMENT_ROWS}"
+        )
     if not joined["option_price_mode"].astype(str).eq("executable_quote").all():
         raise AssertionError("non-executable payoff source")
     if joined["trade_date"].str[:4].ne("2023").any():
         raise AssertionError("development loader opened a non-2023 outcome")
     joined["month"] = joined["trade_date"].str[:6]
+    aligned = policy_candidates(joined, CANDIDATE_ARM)
+    if len(aligned) != EXPECTED_ALIGNED_SIGNALS:
+        raise AssertionError(
+            f"aligned-signal census changed: {len(aligned)} != {EXPECTED_ALIGNED_SIGNALS}"
+        )
     return joined.sort_values(KEY, kind="stable").reset_index(drop=True)
 
 
@@ -311,6 +330,7 @@ def _run_identity() -> dict[str, Any]:
         "master_sha256": MASTER_SHA256,
         "wall_state_sha256": WALL_STATE_SHA256,
         "protocol_document_sha256": PROTOCOL_DOCUMENT_SHA256,
+        "clarification_document_sha256": CLARIFICATION_DOCUMENT_SHA256,
         "code_hashes": _code_hashes(),
     }
 
