@@ -16,7 +16,9 @@ from neural.jepa.evaluate_king_gex_exit_v1 import (
     _write_source_checkpoint,
     assert_baseline_parity,
     protocol,
+    simulate_all_configs,
     simulate_quote_path,
+    simulate_quote_path_reference,
 )
 
 
@@ -100,3 +102,27 @@ def test_simulation_never_uses_nonfinite_exit() -> None:
     result = simulate_quote_path(path, 1.0, ts, CONFIG_BY_ID["S100"])
     assert np.isfinite(result["realized_return"])
     assert 30 <= result["exit_minutes"] <= 180
+
+
+def test_vectorized_simulator_matches_scalar_reference() -> None:
+    rng = np.random.default_rng(20260715)
+    ts = pd.Timestamp("2023-06-01 11:20")
+    minutes = np.arange(1, 181, dtype=int)
+    for _ in range(10):
+        bids = np.exp(np.cumsum(rng.normal(0.0, 0.12, size=len(minutes))))
+        path = pd.DataFrame(
+            {
+                "quote_time": [ts + pd.Timedelta(minutes=int(value)) for value in minutes],
+                "exit_bid": bids,
+            }
+        )
+        vectorized = simulate_all_configs(path, 1.0, ts)
+        for config in EXIT_CONFIGS:
+            config_id = str(config["config_id"])
+            reference = simulate_quote_path_reference(path, 1.0, ts, config)
+            actual = vectorized[config_id]
+            assert actual["exit_minutes"] == reference["exit_minutes"]
+            assert actual["status"] == reference["status"]
+            assert actual["exit_reason"] == reference["exit_reason"]
+            for key in ("realized_return", "max_ret", "min_ret"):
+                assert actual[key] == pytest.approx(reference[key], rel=0.0, abs=1e-12)

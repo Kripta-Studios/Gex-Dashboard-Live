@@ -46,6 +46,8 @@ DIRECTIONS = ("D0_K1", "D1_INVERTED")
 MONTHS = tuple(f"2023{month:02d}" for month in range(1, 13))
 PREDECLARATION = ROOT / "research_papers/JEPA/KING_GEX_EXIT1_EXECUTABLE_PREDECLARATION.md"
 PREDECLARATION_SHA256 = "4cb58b26f772a52ad7f7599cc70daa851f7cb6e38fff596a2b6dbe7e39db79c4"
+RUNTIME_CLARIFICATION = ROOT / "research_papers/JEPA/KING_GEX_EXIT1_RUNTIME_CLARIFICATION.md"
+RUNTIME_CLARIFICATION_SHA256 = "a60ad8e273d1aca5b707703be42241bad0f8474cc891ea9598596632d1dd6c20"
 SOURCE_MANIFEST = (
     ROOT
     / "research_papers/JEPA/results/_diagnostics/"
@@ -151,6 +153,7 @@ def _run_identity() -> dict[str, Any]:
         "wall_state_sha256": WALL_STATE_SHA256,
         "source_manifest_sha256": SOURCE_MANIFEST_SHA256,
         "predeclaration_sha256": PREDECLARATION_SHA256,
+        "runtime_clarification_sha256": RUNTIME_CLARIFICATION_SHA256,
         "code_hashes": _code_hashes(),
     }
 
@@ -210,6 +213,8 @@ def _extra_columns() -> list[str]:
 def load_exit_candidates() -> pd.DataFrame:
     if sha256_file(PREDECLARATION) != PREDECLARATION_SHA256:
         raise AssertionError("KING-GEX-EXIT1 predeclaration changed")
+    if sha256_file(RUNTIME_CLARIFICATION) != RUNTIME_CLARIFICATION_SHA256:
+        raise AssertionError("KING-GEX-EXIT1 runtime clarification changed")
     if sha256_file(SOURCE_MANIFEST) != SOURCE_MANIFEST_SHA256:
         raise AssertionError("ThetaData source manifest changed")
     base = load_development_data()
@@ -292,7 +297,7 @@ def _raw_quote_path(
     return entry_ask, path[["quote_time", "exit_bid"]].reset_index(drop=True)
 
 
-def simulate_quote_path(
+def simulate_quote_path_reference(
     raw_path: pd.DataFrame,
     entry_ask: float,
     ts: pd.Timestamp,
@@ -355,6 +360,107 @@ def simulate_quote_path(
         "max_ret": max_ret,
         "min_ret": min_ret,
         "exit_reason": exit_reason,
+    }
+
+
+def _horizon_arrays(
+    raw_path: pd.DataFrame,
+    ts: pd.Timestamp,
+    horizon: int,
+) -> tuple[np.ndarray, np.ndarray]:
+    quote_time = pd.to_datetime(raw_path["quote_time"], errors="raise")
+    elapsed_all = ((quote_time - ts).dt.total_seconds() // 60).to_numpy(dtype=np.int64)
+    bids_all = pd.to_numeric(raw_path["exit_bid"], errors="raise").to_numpy(dtype=float)
+    keep = elapsed_all <= int(horizon)
+    elapsed = elapsed_all[keep]
+    bids = bids_all[keep]
+    forced_ts = min(
+        ts + pd.Timedelta(minutes=int(horizon)),
+        ts.normalize() + pd.Timedelta(hours=16),
+    )
+    forced_elapsed = int((forced_ts - ts).total_seconds() // 60)
+    if len(elapsed) == 0 or int(elapsed[-1]) < forced_elapsed:
+        elapsed = np.append(elapsed, forced_elapsed)
+        bids = np.append(bids, 0.0)
+    return elapsed, bids
+
+
+def _simulate_arrays(
+    elapsed: np.ndarray,
+    bids: np.ndarray,
+    entry_ask: float,
+    config: dict[str, Any],
+) -> dict[str, Any]:
+    returns = bids.astype(float, copy=False) / float(entry_ask) - 1.0
+    if len(returns) == 0 or not np.isfinite(returns).all():
+        raise AssertionError("alternate path arrays are empty/non-finite")
+    cumulative_peak = np.maximum.accumulate(returns)
+    peak_before = np.empty_like(cumulative_peak)
+    peak_before[0] = -float("inf")
+    peak_before[1:] = cumulative_peak[:-1]
+    eligible = elapsed >= int(config["min_hold_minutes"])
+    stop = eligible & (returns <= -float(config["stop_loss"]))
+    trail = (
+        eligible
+        & (peak_before >= float(config["trail_activation"]))
+        & (returns <= peak_before - float(config["trail_drawdown"]))
+    )
+    take_profit = eligible & (returns >= float(config["take_profit"]))
+    triggered = stop | trail | take_profit
+    positions = np.flatnonzero(triggered)
+    if len(positions):
+        position = int(positions[0])
+        if bool(stop[position]):
+            reason = "stop"
+            status = -1
+        elif bool(trail[position]):
+            reason = "trail"
+            status = 1 if float(returns[position]) > 0.0 else -1
+        else:
+            reason = "take_profit"
+            status = 1
+    else:
+        position = len(returns) - 1
+        reason = "horizon"
+        status = 0
+    exit_ret = float(returns[position])
+    exit_minutes = int(elapsed[position])
+    if not np.isfinite(exit_ret) or not MIN_HOLD_MINUTES <= exit_minutes <= 180:
+        raise AssertionError("alternate exit produced invalid return/hold")
+    return {
+        "realized_return": exit_ret,
+        "exit_minutes": exit_minutes,
+        "status": status,
+        "max_ret": float(returns.max()),
+        "min_ret": float(returns.min()),
+        "exit_reason": reason,
+    }
+
+
+def simulate_quote_path(
+    raw_path: pd.DataFrame,
+    entry_ask: float,
+    ts: pd.Timestamp,
+    config: dict[str, Any],
+) -> dict[str, Any]:
+    elapsed, bids = _horizon_arrays(raw_path, ts, int(config["horizon_minutes"]))
+    return _simulate_arrays(elapsed, bids, entry_ask, config)
+
+
+def simulate_all_configs(
+    raw_path: pd.DataFrame,
+    entry_ask: float,
+    ts: pd.Timestamp,
+) -> dict[str, dict[str, Any]]:
+    arrays = {
+        horizon: _horizon_arrays(raw_path, ts, horizon)
+        for horizon in sorted({int(item["horizon_minutes"]) for item in EXIT_CONFIGS})
+    }
+    return {
+        str(config["config_id"]): _simulate_arrays(
+            *arrays[int(config["horizon_minutes"])], entry_ask, config
+        )
+        for config in EXIT_CONFIGS
     }
 
 
@@ -423,8 +529,9 @@ def build_source_cell(
                     raise AssertionError("selected contract has no quote path")
                 entry_ask, raw_path = _raw_quote_path(quotes, contract, ts)
                 expected = _expected_baseline(event, side, bucket)
+                outcomes = simulate_all_configs(raw_path, entry_ask, ts)
                 for config in EXIT_CONFIGS:
-                    outcome = simulate_quote_path(raw_path, entry_ask, ts, config)
+                    outcome = outcomes[str(config["config_id"])]
                     if str(config["config_id"]) == "B00":
                         assert_baseline_parity(outcome, expected)
                     rows.append(

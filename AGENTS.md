@@ -956,3 +956,7 @@ Primer run V1 detenido tras solo SPXW-202301 source checkpoint, antes de policy
 metrics: el loop pandas por config proyectaba horas. Aclaración runtime V1R1
 autoriza solo vectorización semánticamente equivalente, con test escalar vs array
 y nuevo target `development_2023_v1r1`. No reutilizar el target V1.
+
+V1R1 vectorizada implementada: igualdad escalar/array `1e-12` sobre 160 paths-
+config aleatorios, además de la paridad obligatoria con master. Suite focal
+`14 passed`, Ruff/compile clean. Commit/push y relanzar solo al target V1R1.

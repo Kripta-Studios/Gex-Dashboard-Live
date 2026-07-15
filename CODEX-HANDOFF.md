@@ -1117,3 +1117,7 @@ cualquier policy metric/ranking. Era correcto pero demasiado lento por repetir
 pandas 16 veces por path. `KING_GEX_EXIT1_RUNTIME_CLARIFICATION.md` congela una
 optimización array-only con equivalencia escalar y relanzamiento a V1R1; el
 target V1 no se reutiliza.
+
+La vectorización V1R1 ya está implementada y compara las 16 configuraciones
+contra el algoritmo escalar en paths aleatorios con tolerancia `1e-12`; suite
+total `14 passed`. Falta commit/push y relaunch inmutable V1R1.

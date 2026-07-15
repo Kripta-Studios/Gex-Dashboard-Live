@@ -681,3 +681,6 @@ ejecutado un path alternativo y debe commit/push antes de hacerlo.
 V1 se detuvo tras un único source checkpoint SPXW-202301 y antes de PF/WR/PnL
 por policy: el loop pandas era demasiado lento. V1R1 permite solo vectorizar el
 mismo algoritmo con equivalencia testada y exige target nuevo; no cambia el grid.
+
+V1R1 vectorizada ya pasa equivalencia escalar/array `1e-12`, 14 tests y Ruff/
+compile. Falta commit/push y relanzar el desarrollo completo.
