@@ -38,6 +38,10 @@ from services.compute_features import calculate_exact_t, get_net_exposures_from_
 EXPERIMENT = "KING_GEX_MANAGE30_V1"
 PREDECLARATION = ROOT / "research_papers/JEPA/KING_GEX_MANAGE30_V1_PREDECLARATION.md"
 PREDECLARATION_SHA256 = "b534cd8857833285010dccc0ae440f89a4ca8235dd4d2e7c99dd17a731d74948"
+DATA_GATE_CLARIFICATION = (
+    ROOT / "research_papers/JEPA/KING_GEX_MANAGE30_V1_DATA_GATE_CLARIFICATION.md"
+)
+DATA_GATE_CLARIFICATION_SHA256 = "931fc27d74b05760abf9c8a8907fe64ba5d0d046bfb8f64cf16a5d4b16229e46"
 SOURCE_MANIFEST = (
     ROOT
     / "research_papers/JEPA/results/_diagnostics/"
@@ -48,6 +52,8 @@ SOURCE_MANIFEST_SHA256 = "88be8a2ff44c18fb57fca360d31def574ddbb0419a792fc8834994
 START_DATE = "20220101"
 END_DATE = "20231231"
 EXPECTED_CANDIDATES = 22_273
+FIRST_ENTRY_MINUTE = 680
+LAST_ENTRY_MINUTE = 870
 DECISION_MINIMUM = 30
 DECISION_MAXIMUM = 31
 RUN_SCHEMA = "king_gex_manage30_build_run_v1"
@@ -213,6 +219,8 @@ def load_candidates() -> pd.DataFrame:
 
     if sha256_file(PREDECLARATION) != PREDECLARATION_SHA256:
         raise AssertionError("MANAGE30 predeclaration changed")
+    if sha256_file(DATA_GATE_CLARIFICATION) != DATA_GATE_CLARIFICATION_SHA256:
+        raise AssertionError("MANAGE30 data-gate clarification changed")
     if sha256_file(MASTER) != MASTER_SHA256:
         raise AssertionError("authoritative executable master changed")
     if sha256_file(WALL_STATE) != WALL_STATE_SHA256:
@@ -234,6 +242,7 @@ def load_candidates() -> pd.DataFrame:
         frame.drop(frame.index[frame["trade_date"].isin(EARLY_CLOSE_DATES)], inplace=True)
         if frame.duplicated(KEY).any():
             raise AssertionError("source keys are not unique")
+    master = master.loc[master["minute"].between(FIRST_ENTRY_MINUTE, LAST_ENTRY_MINUTE)].copy()
     wall = wall.sort_values(KEY, kind="stable").reset_index(drop=True)
     grouped = wall.groupby(["ticker", "trade_date"], observed=True, sort=False)
     wall["lag_minute"] = grouped["minute"].shift(9)
@@ -313,6 +322,7 @@ def run_identity() -> dict[str, Any]:
         "end_date": END_DATE,
         "expected_candidates": EXPECTED_CANDIDATES,
         "predeclaration_sha256": PREDECLARATION_SHA256,
+        "data_gate_clarification_sha256": DATA_GATE_CLARIFICATION_SHA256,
         "master_sha256": MASTER_SHA256,
         "wall_state_sha256": WALL_STATE_SHA256,
         "source_manifest_sha256": SOURCE_MANIFEST_SHA256,

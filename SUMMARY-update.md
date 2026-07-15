@@ -716,3 +716,7 @@ Builder MANAGE30 implementado pre-label y resumible por sesión: universo
 hardcoded 2022-2023/22.273 eventos, hashes raw, paridad B00, estado exacto
 30..31 y M0/M1+17 outcomes. `16 passed`, Ruff/compile clean. Falta commit/push
 antes del primer build real.
+
+Primer build MANAGE30 paró pre-path: faltaba filtrar master a 11:20–14:30 antes
+del join. Aclaración V1R1 preserva 22.273 K1 y logra 33.902/33.902 exact joins.
+V1 rechazado con solo RUN_CHECKPOINT; fix `7 passed`. Commit/push -> target V1R1.

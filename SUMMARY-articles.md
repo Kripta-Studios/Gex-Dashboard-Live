@@ -668,3 +668,8 @@ se sustituye por la última quote. La decisión solo existe si el mismo contrato
 tiene quote válida entre 30 y 31 minutos; de lo contrario la política conserva
 B00. Cada sesión sella por separado inputs, features y contrafactuales para que
 una reanudación no mezcle dos versiones del experimento.
+
+La ventana también forma parte de la identidad: exigir wall state a las filas
+10:30–11:15 del master era un error de universo, no ausencia de datos. Aplicar
+11:20–14:30 antes del join conserva exactamente las oportunidades K1 y evita
+que filas nunca elegibles bloqueen o alteren el experimento.

@@ -1026,3 +1026,9 @@ B00 obligatoria, estado exacto 30..31, E30 y 16 contrafactuales. Calcula M0 y
 M1 desde quotes observadas; los lags ausentes quedan NaN, nunca as-of. Suite
 builder+EXIT1 `16 passed`, Ruff/compile clean. Commit/push antes de cualquier
 build real; target previsto `tmp/king_gex_manage30_v1/train_dev_202201_202312_v1`.
+
+Primer intento detenido pre-path/pre-label: el master 10:30 se unía antes de
+aplicar la ventana King 11:20–14:30. Aclaración V1R1 congela filtrar 680..870
+antes del join: 33.902/33.902 master keys y los mismos 22.273 K1. Target V1 solo
+tiene RUN_CHECKPOINT y queda rechazado. Fix suite `7 passed`, Ruff/compile clean;
+commit/push y relanzar a `train_dev_202201_202312_v1r1`.

@@ -1185,3 +1185,9 @@ Extrae features solo hasta primera quote 30..31, 16 outcomes+E30 y exposiciones
 sintéticas compartidas. Missing exact lag permanece NaN; missing decision usa
 B00. Suite focal `16 passed`, Ruff/compile clean. Debe commit/push antes del
 primer build real.
+
+Primer build no abrió paths/outcomes: join falló porque master incluía 10:30
+antes de la ventana King. `KING_GEX_MANAGE30_V1_DATA_GATE_CLARIFICATION.md`
+congela master minute 680..870 antes del exact join. Censo outcome-free:
+33.902/33.902 joins, 22.273 K1 sin cambio. V1 tiene solo RUN_CHECKPOINT y es
+`REJECTED_PRE_PATH_LABEL`; relanzar tras commit a target V1R1. Suite `7 passed`.

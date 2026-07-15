@@ -10,11 +10,13 @@ from neural.jepa.build_king_gex_manage30_v1 import (
     DECISION_MAXIMUM,
     DECISION_MINIMUM,
     END_DATE,
+    FIRST_ENTRY_MINUTE,
     M0_FEATURES,
     M1_EXTRA_FEATURES,
     M1_FEATURES,
     PREDECLARATION,
     PREDECLARATION_SHA256,
+    LAST_ENTRY_MINUTE,
     START_DATE,
     _decision_features,
     _missing_decision_features,
@@ -68,6 +70,8 @@ def _entry() -> dict[str, float]:
 def test_protocol_is_frozen_to_train_development_only() -> None:
     assert START_DATE == "20220101"
     assert END_DATE == "20231231"
+    assert FIRST_ENTRY_MINUTE == 680
+    assert LAST_ENTRY_MINUTE == 870
     assert sha256_file(PREDECLARATION) == PREDECLARATION_SHA256
     assert ACTION_IDS[-1] == "E30"
     assert len(ACTION_IDS) == 17
