@@ -896,3 +896,10 @@ Runner económico `evaluate_king_gex_slope_v1.py` implementado pre-outcome:
 revalida source/protocolo, solo carga outcomes 2023, deriva acciones fijas y
 persiste 72 checkpoints manifest-last. Tests conjuntos King/TPO/quantile
 `26 passed`; Ruff/py_compile clean. Debe commit/push antes de ejecutar.
+
+Primer intento detenido antes de acción/payoff/scheduler/métrica: el runner
+exigía wall->master total. Censo correcto: 20.309 claves master elegibles, cero
+sin wall, 28.977 wall válidas y 8.668 extras sin oportunidad executable. Freeze
+`KING_GEX_SLOPE1_DATA_GATE_CLARIFICATION.md`: master LEFT exact wall, exigir
+20.309 both y omitir extras. K1 queda 13.286 señales; QQQ mínimo 16 días pero
+cap2 capacidad 32, SPY mínimo 19. No existe aún PF/WR/PnL King.

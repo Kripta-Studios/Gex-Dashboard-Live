@@ -97,6 +97,12 @@ checkpoint por month/ticker/arm con hashes de código/source/protocolo/output.
 Suite conjunta `26 passed`, Ruff y py_compile clean. Tras commit/push, ejecutar
 una vez a `tmp/king_gex_slope_v1/development_2023_v1`.
 
+Primer run paró antes de payoff por join invertido. El master tiene 20.309 keys
+elegibles y coverage wall exacta 100%; wall tiene 8.668 keys adicionales que no
+son oportunidades. Aclaración congelada: master-left exacto, sin fallback. El
+target no llegó a crearse. Corregir runner, incluir hash del amendment, tests,
+commit/push y relanzar. Todavía no hay métrica King.
+
 ## 1. Objetivo y gates no negociables
 
 Obtener una policy causal, reproducible y live-equivalente para opciones 0DTE de

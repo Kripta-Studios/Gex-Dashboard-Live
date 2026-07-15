@@ -50,6 +50,11 @@ El replayer implementa exactamente esa comparación K0/K1 sin aprendizaje ni
 sweep, por lo que un resultado negativo distinguirá un fallo del mecanismo de
 un fallo de optimización. Sus celdas se sellan individualmente para diagnóstico.
 
+El data gate aclaró el universo sin mirar payoff: toda oportunidad executable
+tiene wall exacto, mientras el wall contiene timestamps adicionales que no son
+trades posibles. La evaluación preserva el master y no expande el universo por
+disponibilidad de la señal.
+
 ## 1. Principio rector
 
 Una mejora de representación no es alpha. Toda idea académica debe terminar en el

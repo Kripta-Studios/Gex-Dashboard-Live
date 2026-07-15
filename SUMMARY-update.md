@@ -77,6 +77,11 @@ El replayer ya está implementado y testeado (`26 passed`), con 72 checkpoints
 mensuales reanudables y lectura limitada físicamente a outcomes 2023. Falta
 únicamente commit/push del código y su ejecución económica.
 
+El primer intento no calculó payoff: falló porque exigía que 8.668 timestamps
+wall extra existieran en el master. Las 20.309 oportunidades master sí tienen
+wall exacto 100%. Se congeló master-left one-to-one como única corrección; no
+hay aún PF/WR/PnL King.
+
 Este documento conserva resultados y decisiones. La operación live y los pasos de
 reanudación están en `CODEX-HANDOFF.md`; la literatura está resumida en
 `SUMMARY-articles.md`.
