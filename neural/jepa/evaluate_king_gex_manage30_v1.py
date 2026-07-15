@@ -20,6 +20,9 @@ from neural.jepa.build_king_gex_manage30_v1 import (
     ACTION_IDS,
     DATA_GATE_CLARIFICATION,
     DATA_GATE_CLARIFICATION_SHA256,
+    EXPECTED_EXECUTABLE_CANDIDATES,
+    EXPECTED_SOURCE_CANDIDATES,
+    FROZEN_ENTRY_REJECTIONS,
     M0_FEATURES,
     M1_FEATURES,
     PREDECLARATION,
@@ -121,6 +124,13 @@ def _atomic_json(path: Path, payload: dict[str, Any]) -> None:
     temporary.replace(path)
 
 
+def _atomic_text(path: Path, payload: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(f".{path.name}.tmp")
+    temporary.write_text(payload, encoding="utf-8")
+    temporary.replace(path)
+
+
 def _atomic_csv(path: Path, frame: pd.DataFrame) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_name(f".{path.name}.tmp")
@@ -198,6 +208,29 @@ def _load_dataset(dataset_path: Path, summary_path: Path) -> tuple[pd.DataFrame,
         raise AssertionError("MANAGE30 clarification changed")
     if sha256_file(SNAPSHOT_CLARIFICATION) != SNAPSHOT_CLARIFICATION_SHA256:
         raise AssertionError("MANAGE30 snapshot clarification changed")
+    build_checkpoint_path = dataset_path.parent / "RUN_CHECKPOINT.json"
+    if not build_checkpoint_path.is_file():
+        raise AssertionError("MANAGE30 dataset has no build run checkpoint")
+    build_checkpoint = json.loads(build_checkpoint_path.read_text(encoding="utf-8"))
+    expected_build_fields = {
+        "expected_source_candidates": EXPECTED_SOURCE_CANDIDATES,
+        "expected_executable_candidates": EXPECTED_EXECUTABLE_CANDIDATES,
+        "frozen_entry_rejections": list(FROZEN_ENTRY_REJECTIONS),
+        "predeclaration_sha256": PREDECLARATION_SHA256,
+        "data_gate_clarification_sha256": DATA_GATE_CLARIFICATION_SHA256,
+        "snapshot_clarification_sha256": SNAPSHOT_CLARIFICATION_SHA256,
+        "outer_2024_2025_opened": False,
+        "holdout_2026_opened": False,
+    }
+    for key, expected in expected_build_fields.items():
+        if build_checkpoint.get(key) != expected:
+            raise AssertionError(f"MANAGE30 build checkpoint mismatch: {key}")
+    code_hashes = build_checkpoint.get("code_hashes")
+    if not isinstance(code_hashes, dict) or not code_hashes:
+        raise AssertionError("MANAGE30 build checkpoint has no code hashes")
+    for relative_path, expected_sha in code_hashes.items():
+        if sha256_file(ROOT / str(relative_path)) != str(expected_sha):
+            raise AssertionError(f"MANAGE30 build dependency changed: {relative_path}")
     summary = json.loads(summary_path.read_text(encoding="utf-8"))
     if summary.get("status") != "PASS_DATA_GATE":
         raise AssertionError("MANAGE30 dataset has not passed its data gate")
@@ -206,6 +239,12 @@ def _load_dataset(dataset_path: Path, summary_path: Path) -> tuple[pd.DataFrame,
         raise AssertionError("MANAGE30 dataset hash differs from data-gate summary")
     if summary.get("outer_2024_2025_opened") is not False or summary.get("holdout_2026_opened") is not False:
         raise AssertionError("development dataset claims an outer period was opened")
+    if int(summary.get("source_candidate_rows", -1)) != EXPECTED_SOURCE_CANDIDATES:
+        raise AssertionError("MANAGE30 source candidate census differs from freeze")
+    if int(summary.get("entry_rejected_rows", -1)) != len(FROZEN_ENTRY_REJECTIONS):
+        raise AssertionError("MANAGE30 entry rejection count differs from freeze")
+    if summary.get("entry_rejections") != list(FROZEN_ENTRY_REJECTIONS):
+        raise AssertionError("MANAGE30 entry rejection identity differs from freeze")
     frame = pd.read_parquet(dataset_path)
     frame["ticker"] = frame["ticker"].astype(str).str.upper()
     frame["trade_date"] = frame["trade_date"].astype(str).str.replace("-", "", regex=False).str[:8]
@@ -213,11 +252,11 @@ def _load_dataset(dataset_path: Path, summary_path: Path) -> tuple[pd.DataFrame,
     frame["minute"] = pd.to_numeric(frame["minute"], errors="raise").astype(int)
     if frame.duplicated(KEY).any():
         raise AssertionError("MANAGE30 dataset keys are not unique")
-    if len(frame) != int(summary.get("rows", -1)):
+    if len(frame) != EXPECTED_EXECUTABLE_CANDIDATES or len(frame) != int(summary.get("rows", -1)):
         raise AssertionError("MANAGE30 dataset row count differs from summary")
     if frame["trade_date"].str[:4].astype(int).gt(2023).any():
         raise AssertionError("development evaluator opened outer data")
-    required = set(KEY) | set(M1_FEATURES)
+    required = set(KEY) | {"action", "decision_state_available"} | set(M1_FEATURES)
     for action in ACTION_IDS:
         required.update(
             {
@@ -243,6 +282,9 @@ def _run_identity(dataset_path: Path, summary_path: Path) -> dict[str, Any]:
         "snapshot_clarification_sha256": SNAPSHOT_CLARIFICATION_SHA256,
         "dataset_sha256": sha256_file(dataset_path),
         "dataset_summary_sha256": sha256_file(summary_path),
+        "build_run_checkpoint_sha256": sha256_file(
+            dataset_path.parent / "RUN_CHECKPOINT.json"
+        ),
         "code_hashes": _code_hashes(),
         "outer_2024_2025_opened": False,
         "holdout_2026_opened": False,
@@ -432,9 +474,7 @@ def _write_fold_checkpoint(
     manifest_path = directory / "manifest.json"
     manifest_path.unlink(missing_ok=True)
     model_path = directory / "model.txt"
-    model_tmp = directory / ".model.txt.tmp"
-    model.booster_.save_model(str(model_tmp))
-    model_tmp.replace(model_path)
+    _atomic_text(model_path, model.booster_.model_to_string())
     medians_path = directory / "medians.json"
     _atomic_json(medians_path, {str(key): float(value) for key, value in medians.items()})
     outputs = {

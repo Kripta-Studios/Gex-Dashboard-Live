@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
+import pytest
 
 from neural.jepa.build_king_gex_manage30_v1 import ACTION_IDS, M0_FEATURES
 from neural.jepa.evaluate_king_gex_manage30_v1 import (
@@ -11,7 +14,10 @@ from neural.jepa.evaluate_king_gex_manage30_v1 import (
     MODEL_PARAMS,
     _attach_selected_outcome,
     _expand_actions,
+    _read_fold_checkpoint,
+    _run_fold,
     _score_events,
+    _write_fold_checkpoint,
     protocol,
     user_gate_pass,
 )
@@ -123,3 +129,51 @@ def test_user_gates_are_strict_at_pf_wr_trades_and_pnl_boundaries() -> None:
     ):
         failing = {**passing, key: boundary}
         assert not user_gate_pass(failing)
+
+
+def test_real_lightgbm_fold_scheduler_and_checkpoint_smoke(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    rows: list[dict[str, object]] = []
+    for year, count in ((2022, 60), (2023, 20)):
+        for index in range(count):
+            day = index // 2 + 1
+            row = _event().iloc[0].to_dict()
+            row["trade_date"] = f"{year}01{day:02d}"
+            row["month"] = f"{year}01"
+            row["minute"] = 680 + (index % 2) * 120
+            row["action"] = "CALL" if index % 2 == 0 else "PUT"
+            for offset, feature in enumerate(M0_FEATURES):
+                row[feature] = float((index + offset) % 11) / 10.0
+            row["decision_state_available"] = 1
+            baseline = 0.10 if index % 3 == 0 else -0.05
+            for action in ACTION_IDS:
+                realized = baseline
+                if action == "E30":
+                    realized += 0.20 if index % 2 == 0 else -0.20
+                elif action != "B00":
+                    realized -= 0.02
+                row[f"outcome_{action}_realized_return"] = realized
+                row[f"outcome_{action}_exit_minutes"] = 30 if action == "E30" else 60
+                row[f"outcome_{action}_status"] = int(np.sign(realized))
+                row[f"outcome_{action}_exit_reason"] = (
+                    "decision" if action == "E30" else "horizon"
+                )
+            rows.append(row)
+    data = pd.DataFrame(rows)
+    monkeypatch.setitem(MODEL_PARAMS, "n_estimators", 3)
+    monkeypatch.setitem(MODEL_PARAMS, "min_child_samples", 5)
+    model, medians, predictions, trades, metrics = _run_fold(
+        data, "202301", "QQQ", "M0_PATH", 1
+    )
+    assert len(predictions) == 20
+    assert len(trades) == 20
+    assert len(metrics) == 1
+    assert metrics.iloc[0]["train_events"] == 60
+    identity = {"schema": "test_fold", "month": "202301"}
+    _write_fold_checkpoint(
+        tmp_path, identity, model, medians, predictions, trades, metrics
+    )
+    cached = _read_fold_checkpoint(tmp_path, identity)
+    assert cached is not None
+    assert [len(frame) for frame in cached] == [20, 20, 1]
