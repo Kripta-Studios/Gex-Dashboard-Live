@@ -8,7 +8,9 @@ from neural.jepa.build_option_parity_pressure_v1 import (
     compute_parity_event,
     evaluate_data_gate,
     normalize_option_keys,
+    read_target_greeks,
     target_datetimes,
+    target_timestamp_strings,
 )
 
 
@@ -134,6 +136,47 @@ def test_data_gate_rejects_twelve_events_and_degenerate_pressure() -> None:
 def test_target_clocks_are_frozen() -> None:
     times = target_datetimes("20230301")
     assert tuple(timestamp.strftime("%H:%M:%S") for timestamp in times) == CLOCKS
+
+
+def test_target_reader_accepts_exact_millisecond_string_encoding(tmp_path) -> None:
+    trade_date = "20230301"
+    path = tmp_path / "QQQ_20230301_20230301_greeks.parquet"
+    rows = []
+    for clock in CLOCKS:
+        rows.append(
+            {
+                "symbol": "QQQ",
+                "expiration": "2023-03-01",
+                "trade_date": "2023-03-01",
+                "timestamp": f"2023-03-01T{clock}.000",
+                "strike": 100.0,
+                "right": "CALL",
+                "bid": 1.0,
+                "ask": 1.1,
+            }
+        )
+    pd.DataFrame(rows).to_parquet(path, index=False)
+    output, audit = read_target_greeks(
+        {
+            "ticker": "QQQ",
+            "trade_date": trade_date,
+            "greeks_path": str(path),
+            "greeks_timestamp_fallback": False,
+        }
+    )
+    assert len(output) == 2
+    assert set(output["timestamp"]) == set(target_datetimes(trade_date))
+    assert audit["used_native_sidecar"] is False
+
+
+def test_target_filter_allowlist_has_only_two_exact_encodings_per_clock() -> None:
+    values = target_timestamp_strings("20230301")
+    assert values == [
+        "2023-03-01T10:30:00",
+        "2023-03-01T10:30:00.000",
+        "2023-03-01T10:35:00",
+        "2023-03-01T10:35:00.000",
+    ]
 
 
 def test_no_2026_constant_enters_builder_scope() -> None:

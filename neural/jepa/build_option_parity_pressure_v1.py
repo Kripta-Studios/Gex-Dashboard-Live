@@ -60,6 +60,9 @@ CAPACITY_HASHES = {
 PREDECLARATION = Path("research_papers/JEPA/OPTION_PARITY_PRESSURE_V1_PREDECLARATION.md")
 SCOPE_AMENDMENT = Path("research_papers/JEPA/OPTION_PARITY_PRESSURE_V1_SCOPE_AMENDMENT.md")
 CAPACITY_RESULT = Path("research_papers/JEPA/OPTION_PARITY_PRESSURE_V1_CAPACITY_RESULT.md")
+CLOCK_CLARIFICATION = Path(
+    "research_papers/JEPA/OPTION_PARITY_PRESSURE_V1_NATIVE_STRING_CLOCK_CLARIFICATION.md"
+)
 NATIVE_INDEX = Path(
     "D:/ThetaData/wall_native_quote_sidecar_202208_202512_v1r1/_seal/native_quote_index.csv"
 )
@@ -200,6 +203,14 @@ def target_datetimes(trade_date: str) -> tuple[pd.Timestamp, pd.Timestamp]:
     return tuple(pd.Timestamp(f"{day} {clock}") for clock in CLOCKS)  # type: ignore[return-value]
 
 
+def target_timestamp_strings(trade_date: str) -> list[str]:
+    values: list[str] = []
+    for timestamp in target_datetimes(trade_date):
+        base = timestamp.strftime("%Y-%m-%dT%H:%M:%S")
+        values.extend((base, f"{base}.000"))
+    return values
+
+
 def read_target_greeks(record: dict[str, Any]) -> tuple[pd.DataFrame, dict[str, Any]]:
     greek_path = Path(str(record["greeks_path"]))
     schema = set(pq.ParquetFile(greek_path).schema_arrow.names)
@@ -209,7 +220,7 @@ def read_target_greeks(record: dict[str, Any]) -> tuple[pd.DataFrame, dict[str, 
         raise KeyError(f"Greek source missing parity columns: {sorted(required.difference(schema))}")
     trade_date = str(record["trade_date"])
     times = target_datetimes(trade_date)
-    iso_times = [stamp.strftime("%Y-%m-%dT%H:%M:%S") for stamp in times]
+    iso_times = target_timestamp_strings(trade_date)
     use_sidecar = bool(record.get("greeks_timestamp_fallback"))
     if use_sidecar:
         if "timestamp" in schema or "underlying_timestamp" not in schema:
@@ -580,6 +591,7 @@ def run(underlying_root: Path, output_dir: Path, workers: int) -> dict[str, Any]
             PREDECLARATION,
             SCOPE_AMENDMENT,
             CAPACITY_RESULT,
+            CLOCK_CLARIFICATION,
             *(CAPACITY_DIR / name for name in CAPACITY_HASHES),
         )
     )
@@ -660,6 +672,7 @@ def run(underlying_root: Path, output_dir: Path, workers: int) -> dict[str, Any]
         "capacity_manifest_payload_sha256": json_hash(capacity_manifest),
         "predeclaration_sha256": sha256_file(PREDECLARATION),
         "scope_amendment_sha256": sha256_file(SCOPE_AMENDMENT),
+        "native_string_clock_clarification_sha256": sha256_file(CLOCK_CLARIFICATION),
         "runner_sha256": sha256_file(__file__),
         "native_quote_provenance": native_provenance,
         "runtime_environment": environment,
