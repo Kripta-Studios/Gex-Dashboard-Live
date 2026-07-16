@@ -1140,3 +1140,27 @@ insuficientes. La fuente termina 2026-06-05. Además el resumen frozen de 179
 trades/PF1,405 está desincronizado de sus artefactos actuales (20/PF0,267).
 Dictamen `PROMISING_BUT_NOT_VALIDATED`; detalle en
 `DIRECTIONAL_180M_LEGACY_AUDIT_20260716.md`.
+
+### Freeze DIRECTIONAL_SEMANTIC_JEPA_V1 — 2026-07-16
+
+Nueva prueba price-first predeclarada antes de abrir sus outcomes. Lee en
+memoria `data_underlying_derived`, decide con barras hasta 10:35, usa open 10:36
+→ open 13:36, hold exacto 180m, una posición/día y 1bp. Features técnicas
+incluyen tendencia/RV, sesión previa, IB completo 09:30–10:29 y ocho extensiones
+Fib fijas. JEPA GRU student/teacher EMA aprende ventanas +15/+60/+180m con
+masking temporal, ticker y canal; no usa direction label, target 0DTE o PnL.
+
+El encoder se selecciona train 2022-2024/val 2025 y se final-fit solo hasta
+2025. Downstream residual TECH vs SEMANTIC se elige por ticker únicamente en
+walk-forward 2025; selección y hashes deben committed antes de abrir 2026.
+Después, one-shot enero-junio y julio MTD con retrain mensual causal. No se crea
+dataset de features y no hay sweep/threshold/abstención. Es señal spot, no fills
+de futuros.
+
+Preflight físico outcome-free: 2.976 ficheros, 992 sesiones por ticker hasta
+2026-07-15, inventory digest `66f8954f...ddd7ec`; grid exacto y OHLC pasan en
+991 sesiones comunes. Se excluye causalmente 2023-06-05 para los tres tickers:
+las tres barras SPY 09:54–09:56 inválidas conocidas sí caen dentro de esta
+secuencia, por lo que no se imputan. Suite focal `8 passed`, Ruff/compile clean.
+Siguiente secuencia única: commit/push freeze → fase development hasta 2025 →
+commit manifest/selección → one-shot 2026. Aún no existe resultado V1.
