@@ -1,5 +1,10 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+El manifest calendar-RR ya hace inmutable la traducción económica de la curva:
+signo directo, una observación diaria, 180 minutos y 1bp. Así un resultado
+negativo no puede rescatarse eligiendo el otro lado de la term structure y un
+resultado PF>1 no se confunde con estabilidad mensual completa.
+
 El ledger calendar-RR codifica de nuevo la diferencia entre progreso agregado y
 estabilidad: PF>1 en los tres tickers solo produce estado incremental; no abre
 outer si una celda mensual falla. El freezer sella esa regla y evita convertir

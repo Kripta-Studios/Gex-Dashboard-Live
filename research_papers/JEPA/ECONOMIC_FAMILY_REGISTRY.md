@@ -33,7 +33,7 @@ Estados permitidos: `QUEUED`, `ACTIVE`, `FAILED_CAUSALITY`,
 | OPENING_RELATIVE_MOMENTUM_V1 | continuación QQQ-SPY del impulso relativo cash 09:30–10:34 | `FAILED_ECONOMIC` | 497 trades, PF 0,831/WR 50,91%/-927,7 bps; 4/24 meses PASS |
 | OPTION_PARITY_PRESSURE_V1 | cambio 5m del synthetic forward CALL/PUT 0DTE frente al spot | `FAILED_ECONOMIC` | 730 trades, PF0,875/WR48,63%/-1.689bps; 10/36 celdas, outer cerrado |
 | EXACT_EXPIRY_OI_DELTA_V1 | cambio OI del mismo contrato antes de expiry | `FAILED_FREQUENCY` | 156 pares/36 meses, mínimo4 eventos/mes; sin outcomes |
-| CALENDAR_RISK_REVERSAL_PRESSURE_V1 | Δ5m del RR25 0DTE menos next-expiry | `ACTIVE` | PASS data gate; evaluator/freezer 12 passed, manifest freeze pendiente |
+| CALENDAR_RISK_REVERSAL_PRESSURE_V1 | Δ5m del RR25 0DTE menos next-expiry | `ACTIVE` | runner frozen SHA `f00a7ef0...35f79`; one-shot 2023 pendiente |
 
 `CALENDAR_RISK_REVERSAL_PRESSURE_V1` queda activa solo en data gate outcome-free
 2023. No se abre economía ni 2024–2026 antes de cobertura, reloj nativo y freeze;

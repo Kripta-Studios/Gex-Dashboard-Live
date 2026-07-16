@@ -1,5 +1,8 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1
 
+> The independent calendar-RR runner manifest is frozen before its 2023 cash
+> outcome read; compact V1 remains immutable.
+
 > The calendar-RR evaluator/freezer remains a separate cash-proxy protocol and
 > has not changed this frozen compact-V1 contract.
 

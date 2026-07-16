@@ -1,0 +1,65 @@
+{
+  "schema": "calendar_risk_reversal_pressure_v1_frozen_development_runner",
+  "status": "PREEXECUTION_FROZEN",
+  "created_at_utc": "2026-07-16T23:44:24.852235+00:00",
+  "runner_commit": "79dfe4167ca679d500f55dbbd78dab3f715634fa",
+  "phase": "development_2023",
+  "scope": {
+    "start_date": "20230101",
+    "end_date": "20231231",
+    "tickers": [
+      "QQQ",
+      "SPXW",
+      "SPY"
+    ],
+    "eligible_events": 741,
+    "underlying_sources": 741,
+    "excluded_half_days": [
+      "20230703",
+      "20231124"
+    ]
+  },
+  "policy": {
+    "feature": "calendar_rr_pressure",
+    "action": "sign(calendar_rr_pressure)",
+    "zero_action": "NO_TRADE",
+    "entry": "derived_underlying_open_10:36:00",
+    "exit": "derived_underlying_open_13:36:00",
+    "hold_minutes": 180,
+    "round_trip_cost_bps": 1.0,
+    "positions_per_ticker_per_day": 1,
+    "overlap_policy": "one_fixed_nonoverlapping_position_per_ticker_day"
+  },
+  "gate_spec": {
+    "profit_factor_strictly_greater_than": 1.2,
+    "win_rate_strictly_greater_than": 0.45,
+    "trades_per_month_strictly_greater_than": 12,
+    "monthly_net_bps_strictly_greater_than": 0.0
+  },
+  "code_hashes": {
+    "neural/jepa/evaluate_calendar_risk_reversal_pressure_v1.py": "a1d0e917be0f3b0e78351e2b879fe6d74efa301b9e2a533f5ac9fd5f664261dd",
+    "neural/jepa/freeze_calendar_risk_reversal_pressure_v1_runner.py": "6505273f977bda91353126a8743e9a0460f51b030ae31caf3d1bdc5b651d9528",
+    "research_papers/JEPA/CALENDAR_RISK_REVERSAL_PRESSURE_V1_PREDECLARATION.md": "409d93d843f61921c9c4902b48394e1c4106393010de5b9eb976977726688d23",
+    "research_papers/JEPA/CALENDAR_RISK_REVERSAL_PRESSURE_V1_DATA_GATE_RESULT.md": "1104cdc80298e270c15d00a564879a402d6e98703f322f4da745be30258723e9"
+  },
+  "data_gate_inputs": {
+    "manifest.json": {
+      "path": "research_papers/JEPA/results/_diagnostics/calendar_risk_reversal_pressure_v1_202301_202312_v1_data_gate/manifest.json",
+      "sha256": "604f53b2f036d0ac7743883b1ae9fe21e0cab2f9405a8facd4ebe2720615a9c1"
+    },
+    "calendar_rr_features.parquet": {
+      "path": "research_papers/JEPA/results/_diagnostics/calendar_risk_reversal_pressure_v1_202301_202312_v1_data_gate/calendar_rr_features.parquet",
+      "sha256": "de0ec4b3251505b763dff3dc8baee2f3462ca7a5833d70ed6db014b03112858b"
+    },
+    "source_inventory.csv": {
+      "path": "research_papers/JEPA/results/_diagnostics/calendar_risk_reversal_pressure_v1_202301_202312_v1_data_gate/source_inventory.csv",
+      "sha256": "6f81e4f8cc102f63c60e23c04d0c13d7a5be4af535c745f2dc5ec2646a2184d8"
+    }
+  },
+  "data_gate_source_commit": "ef489baceb164de89ce40f1c86278d094c553570",
+  "outcome_accessed": false,
+  "execution_started": false,
+  "outer_2024_2025_opened": false,
+  "holdout_2026_opened": false,
+  "production_modified": false
+}

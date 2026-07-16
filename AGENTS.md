@@ -1,5 +1,12 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Calendar RR runner frozen preejecución
+
+Manifest desde commit limpio `79dfe416`, SHA `f00a7ef0...35f79`: 741 eventos
+2023, dos medias jornadas y tres sesiones de calidad ya excluidas por el gate,
+policy/gates/código/inputs hasheados, `outcome_accessed=false`. Debe force-add,
+commit/push con handoffs antes del único run. 2024–2026 siguen cerrados.
+
 ### Calendar RR evaluator/freezer listos pre-outcome
 
 Implementados `evaluate_calendar_risk_reversal_pressure_v1.py` y

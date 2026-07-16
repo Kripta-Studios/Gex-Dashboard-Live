@@ -1,5 +1,8 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1 — CLOSED_NO_EDGE
 
+> Calendar-RR is now preexecution-frozen at manifest SHA `f00a7ef0...35f79`,
+> still without outcome access and without altering compact V1.
+
 > The separate calendar-RR 2023 evaluator/freezer is implemented and tested
 > pre-outcome. It cannot read compact-V1 artifacts or 2024–2026 outcomes.
 

@@ -1,5 +1,11 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+Manifest calendar-RR generado en
+`calendar_risk_reversal_pressure_v1_development_runner_frozen/manifest.json`,
+SHA `f00a7ef096a70c6bb3dd9496c84137d54dcef6da163f2762dc3b3a7193d35f79`,
+runner commit `79dfe416`, 741 eventos, outcome false. Force-add manifest+siete
+handoffs+registry, commit/push; solo entonces ejecutar evaluator default una vez.
+
 Calendar-RR evaluator/freezer pre-outcome listos: 12 passed/Ruff/compile.
 Archivos `evaluate_calendar_risk_reversal_pressure_v1.py`,
 `freeze_calendar_risk_reversal_pressure_v1_runner.py` y dos tests. Añadirlos con

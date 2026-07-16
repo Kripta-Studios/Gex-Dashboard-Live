@@ -1,5 +1,9 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+Calendar-RR tiene ya manifest frozen `f00a7ef0...35f79` sobre `79dfe416`, aún
+sin outcomes. El siguiente paso es versionar el manifest y ejecutar exactamente
+una vez el ledger 2023; no hay permiso para abrir otros años.
+
 El runner económico calendar-RR ya está implementado pero no ejecutado. Su suite
 12/12 pasa y no expone scope/policy mutable. Debe quedar committed, generar otro
 manifest frozen y commitearlo antes del único outcome read 2023.

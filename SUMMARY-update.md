@@ -1,5 +1,9 @@
 # SUMMARY-update — ledger científico compacto
 
+Calendar-RR runner manifest preejecución SHA `f00a7ef0...35f79`, base
+`79dfe416`, 741 eventos, outcome false. Falta commit/push del seal; después un
+solo development 2023. Outer/2026/producción intactos.
+
 Calendar-RR evaluator/freezer implementados pre-outcome, `12 passed` y checks
 clean. Scope fijo 741 eventos 2023, hash gate, sign pressure, open10:36→13:36,
 hold180/coste1 y 36 gates. Pendiente commit y manifest freeze; aún no hay PnL.
