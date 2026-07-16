@@ -30,9 +30,9 @@ Estados permitidos: `QUEUED`, `ACTIVE`, `FAILED_CAUSALITY`,
 | DIRECTIONAL_GLOBEX_CROSS_ASSET_V1 y adaptaciones | dirección cash con siete continuos Globex | `FAILED_ECONOMIC` | near-miss 2025 revierte a PF <0,90 en 2026; adaptaciones no pasan desarrollo |
 | Payoffs alternativos long-vol/short-premium/IB | payoff no direccional o reglas IB/Fib | `CLOSED` | long-vol e IB pierden; short premium falla gates de ejecución exacta |
 | CROSS_SESSION_RELATIVE_VALUE_V1 | reversión QQQ-SPY de divergencia cross-session con SPXW como ancla | `FAILED_ECONOMIC` | 496 trades, PF 0,627/WR 41,53%/-2.349 bps; 2/24 meses PASS |
-| OPENING_RELATIVE_MOMENTUM_V1 | continuación QQQ-SPY del impulso relativo cash 09:30–10:34 | `ACTIVE` | predeclarada antes de outcomes; desarrollo ledger-only 2022–2023 pendiente |
+| OPENING_RELATIVE_MOMENTUM_V1 | continuación QQQ-SPY del impulso relativo cash 09:30–10:34 | `FAILED_ECONOMIC` | 497 trades, PF 0,831/WR 50,91%/-927,7 bps; 4/24 meses PASS |
 
-Solo `OPENING_RELATIVE_MOMENTUM_V1` está activa. No reabre ni invierte el shock
-cross-session: elimina por contrato el gap/cierre previo y prueba únicamente
-continuidad del impulso cash-open. No se autoriza beta/z-score/thresholds/ML ni
-abrir 2024–2026 sin PASS mensual completo.
+No hay familia activa. La siguiente hipótesis debe predeclararse como mecanismo
+independiente y no puede rescatar el momentum de apertura mediante selección de
+mes, beta/z-score/threshold, signo, stop, ML o nuevo reloj. 2024–2026 y
+producción permanecen intactos.

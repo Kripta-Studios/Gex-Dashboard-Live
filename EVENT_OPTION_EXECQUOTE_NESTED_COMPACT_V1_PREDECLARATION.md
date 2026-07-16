@@ -167,3 +167,7 @@ it does not reopen or modify this option protocol.
 The new ledger runner remains source-isolated from compact V1.
 
 An entrypoint import fix for that runner has no effect on compact V1.
+
+That separate cash-session experiment later closed in its frozen 2022–2023
+development phase at PF 0.831, WR 50.905% and 4/24 passing months. Its outer
+remained unopened. Compact V1 remains immutable and production is unchanged.

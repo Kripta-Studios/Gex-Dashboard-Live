@@ -135,3 +135,9 @@ without any compact-V1 option feature or outcome. Compact V1 remains closed.
 Its runner is now implemented independently and cannot read compact-V1 data.
 
 Its first launch stopped at Python import before any source or outcome access.
+
+The repaired opening-relative runner subsequently completed only its frozen
+2022–2023 development scope. It closed `NO_AGGREGATE_EDGE` with 497 trades,
+50.905% WR, 0.831 PF and -927.689 bps; only 4/24 months passed all gates. No
+2024–2026 data or compact-V1 artifact was opened or changed. This result closes
+that independent cash-ledger family and does not modify the compact-V1 verdict.

@@ -1466,3 +1466,22 @@ Primer launch detenido antes de imports de fuente/output/outcomes por
 Fix runtime-only añade repo root a `sys.path` antes del import y una regresión
 subprocess `script --help`; no cambia señal/universo/gates. Commit/push antes del
 relaunch al mismo target aún virgen.
+
+### Cierre OPENING_RELATIVE_MOMENTUM_V1 — 2026-07-17
+
+El relaunch desde `ca9bb9c2` completó el único desarrollo autorizado y cerró
+`NO_AGGREGATE_EDGE`: 497 trades, WR 50,905%, PF 0,831462, -927,689 bps,
+mínimo 19 trades/mes, 7/24 meses positivos y 4/24 PASS. Mean-reversion control
+PF0,812876 y long-QQQ/short-SPY fijo PF0,924384; ninguno es elegible ni rentable.
+
+Auditoría independiente confirmó 2022–2023 únicamente, hold180 y coste2bps
+únicos, cero overlaps y las cuatro exclusiones predeclaradas. Trades SHA
+`b119ab24...750384`, monthly SHA `48070dad...9a474`, inventario SHA
+`0311dc5c...9eb57`. Cierre en
+`OPENING_RELATIVE_MOMENTUM_V1_CLOSURE.md`; compactos en
+`opening_relative_momentum_v1_development_202201_202312/`.
+
+No abrir 2024–2026 ni rescatar con signo, beta/z-score, threshold, stop, ML o
+nuevo reloj. Estado `NO_PROFITABLE_CAUSAL_POLICY`, producción intacta y ninguna
+familia activa. La siguiente hipótesis debe ser independiente y explicar la
+asimetría de pérdidas: el agregado supera 50% WR pero no PF1.

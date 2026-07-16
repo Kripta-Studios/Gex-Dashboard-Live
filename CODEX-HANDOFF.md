@@ -1426,3 +1426,23 @@ target inmutable `opening_relative_momentum_v1_development_202201_202312`.
 El primer launch falló antes de fuente/output por `ModuleNotFoundError: neural`;
 target inexistente. Fix permitido: bootstrap de repo root + test subprocess de
 CLI directa. Commit/push y relanzar el mismo comando solo tras suite verde.
+
+## Cierre OPENING_RELATIVE_MOMENTUM_V1 — autoritativo
+
+El fix fue committed/pushed en `ca9bb9c2`; el único relaunch 2022–2023 completó
+`NO_AGGREGATE_EDGE`. Resultado: 497 trades, WR50,905%, PF0,831462,
+-927,689bps, min19, 7/24 meses positivos y 4/24 PASS. Controles:
+mean-reversion PF0,812876/-1.060,311bps y long-QQQ/short-SPY fijo
+PF0,924384/-398,799bps.
+
+Auditoría independiente confirmó fechas 20220103..20231229 con exclusiones
+predeclaradas, hold180, coste2, cero overlaps/future rows y métricas exactas.
+Trades SHA `b119ab24...750384`, monthly `48070dad...9a474`, inventory
+`0311dc5c...9eb57`. Evidencia en
+`opening_relative_momentum_v1_development_202201_202312/`; cierre en
+`OPENING_RELATIVE_MOMENTUM_V1_CLOSURE.md`.
+
+No abrir 2024–2026 ni rescatar signo, beta/z-score, threshold, stop, ML o reloj.
+Registry queda sin familia activa. Próximo trabajo permitido: predeclarar un
+mecanismo independiente que ataque asimetría de pérdidas de forma causal; no
+confundir WR50,9% con edge porque PF y PnL son negativos. Producción intacta.

@@ -1815,3 +1815,22 @@ sin autorizarlos como PASS. Debe commit/push antes del desarrollo real.
 Primer launch: stop pre-source/pre-output por import directo del paquete. El
 target no existe. Se añade bootstrap de repo root y regresión subprocess CLI;
 no se reutiliza ningún resultado ni cambia el protocolo.
+
+## 29. Cierre OPENING_RELATIVE_MOMENTUM_V1
+
+El desarrollo único 2022–2023 terminó `NO_AGGREGATE_EDGE`:
+
+| Trades | WR | PF | PnL bps | Mín/mes | Meses + | Meses PASS |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 497 | 50,905% | 0,831462 | -927,689 | 19 | 7/24 | 4/24 |
+
+La auditoría independiente reprodujo métricas, reloj 10:36→13:36, hold180,
+coste2bps, exclusiones, cero overlaps y cero filas posteriores a 2023. Los
+controles mean-reversion y long-QQQ/short-SPY fijo también pierden: PF0,813 y
+PF0,924. Cierre detallado en
+`research_papers/JEPA/OPENING_RELATIVE_MOMENTUM_V1_CLOSURE.md`.
+
+No se abre outer ni se selecciona signo/mes/threshold/stop. El hallazgo útil es
+que WR agregado supera 50% pero PF queda bajo uno: una hipótesis nueva debe
+explicar causalmente la asimetría de pérdidas. Estado actual:
+`NO_PROFITABLE_CAUSAL_POLICY`, ninguna familia activa y producción intacta.

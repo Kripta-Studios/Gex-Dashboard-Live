@@ -857,3 +857,11 @@ Una prueba importada por pytest no certifica que el entrypoint directo arranque:
 el primer launch falló antes de fuentes porque `sys.path` difería. La regresión
 correcta debe ejecutar el script en subprocess; este tipo de fallo conserva el
 freeze si no creó output ni alcanzó outcomes.
+
+El resultado cash-open también es negativo, pero aporta una separación útil:
+497 operaciones alcanzan WR50,905% y aun así PF0,831, con solo 7/24 meses
+positivos. No falla la frecuencia ni principalmente el porcentaje de acierto;
+fallan la magnitud de las pérdidas y la estabilidad. Los controles de reversión
+y lado fijo también quedan bajo PF1. Esto cierra la selección de signo sobre
+este impulso y orienta una hipótesis futura hacia asimetría de riesgo causal,
+sin autorizar stops o filtros elegidos después de ver el ledger.

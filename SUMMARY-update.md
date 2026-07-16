@@ -845,3 +845,9 @@ solo después ejecutar datos reales.
 El primer comando real no abrió datos: falló al importar `neural` desde el path
 directo y no creó target. El fix añade repo root antes del import y testea la CLI
 en subprocess; es una reparación de arranque pre-outcome, sin cambio científico.
+
+El relaunch committed completó 2022–2023 y cerró `NO_AGGREGATE_EDGE`: 497
+trades, WR50,905%, PF0,831462, -927,689 bps, mínimo19, 7/24 meses positivos y
+4/24 PASS. Los controles mean-reversion y lado fijo dan PF0,813/0,924. Auditoría
+independiente confirmó hold180, coste2bps, cero overlap/futuro y hashes exactos.
+No se abrió 2024–2026. Registry queda sin familias activas y producción intacta.
