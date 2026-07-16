@@ -1,0 +1,3 @@
+control,trades,win_rate,profit_factor,net_bps
+momentum_control_net_bps,496,0.5120967741935484,1.0753395661592564,365.32938755381974
+fixed_long_qqq_short_spy_net_bps,496,0.4798387096774194,0.921643734776273,-413.2489104042794

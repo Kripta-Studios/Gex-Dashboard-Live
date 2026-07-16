@@ -1,0 +1,83 @@
+{
+  "schema_version": "cross_session_relative_value_v1.development.v1",
+  "status": "FAILED_ECONOMIC_DEVELOPMENT",
+  "created_at_utc": "2026-07-16T22:25:02.710114+00:00",
+  "phase": "development_202201_202312",
+  "development_pass": false,
+  "outer_2024_2025_opened": false,
+  "holdout_2026_opened": false,
+  "production_changed": false,
+  "predeclaration_sha256": "6d8bdef12985a498d03379d3337bb0f395d6a94efc609fc895c9e5115ac17978",
+  "data_gate_clarification_sha256": "fa725e0674adbddd4cd188a21f2972234360a11d866c2efb366dd3266f8e3493",
+  "runner_sha256": "348e8dcf97abe924a024c9eaaf7c87b10969cde5ec840212e45c8460f12508f7",
+  "source_inventory_sha256": "0311dc5ce66e09f4af9bda249f3c9e2e377cbe65fa1376229357ffcd75f9eb57",
+  "trades_sha256": "48459a8c97bfb5b88c3a8b17cebb4ab3655910eeda89a91be0a746da8080dfc0",
+  "monthly_sha256": "75c76e2aa987368b17fd9f13c658507e236951cde79a329d4fc19aaec915a9af",
+  "controls_sha256": "c23ecd72963ca07a22bd440f54d199a3f76f2be764d3abcd48a09dafc4600a54",
+  "source_sessions_per_ticker": {
+    "QQQ": 501,
+    "SPXW": 501,
+    "SPY": 501
+  },
+  "trade_clock": {
+    "decision_bar_time": "10:34",
+    "entry_time": "10:36",
+    "exit_time": "13:36",
+    "hold_minutes": 180,
+    "cost_per_leg_bps": 1.0,
+    "total_cost_bps": 2.0
+  },
+  "gates": {
+    "profit_factor_strictly_greater_than": 1.2,
+    "win_rate_strictly_greater_than": 0.45,
+    "trades_per_month_strictly_greater_than": 12,
+    "monthly_net_bps_strictly_greater_than": 0.0
+  },
+  "primary_aggregate": {
+    "trades": 496,
+    "win_rate": 0.4153225806451613,
+    "profit_factor": 0.6272762008412053,
+    "net_bps": -2349.3293875538193,
+    "min_month_trades": 19,
+    "positive_months": 5,
+    "months_passing": 2
+  },
+  "excluded_sessions": [
+    {
+      "trade_date": "20220103",
+      "reason": "NO_PRIOR_SESSION_IN_SCOPE"
+    },
+    {
+      "trade_date": "20221125",
+      "reason": "CURRENT_HALF_DAY"
+    },
+    {
+      "trade_date": "20230605",
+      "reason": "KNOWN_INVALID_SIGNAL_WINDOW"
+    },
+    {
+      "trade_date": "20230703",
+      "reason": "CURRENT_HALF_DAY"
+    },
+    {
+      "trade_date": "20231124",
+      "reason": "CURRENT_HALF_DAY"
+    }
+  ],
+  "control_diagnostics": [
+    {
+      "control": "momentum_control_net_bps",
+      "trades": 496,
+      "win_rate": 0.5120967741935484,
+      "profit_factor": 1.0753395661592564,
+      "net_bps": 365.32938755381974
+    },
+    {
+      "control": "fixed_long_qqq_short_spy_net_bps",
+      "trades": 496,
+      "win_rate": 0.4798387096774194,
+      "profit_factor": 0.921643734776273,
+      "net_bps": -413.2489104042794
+    }
+  ]
+}
