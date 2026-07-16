@@ -1164,3 +1164,18 @@ las tres barras SPY 09:54–09:56 inválidas conocidas sí caen dentro de esta
 secuencia, por lo que no se imputan. Suite focal `8 passed`, Ruff/compile clean.
 Siguiente secuencia única: commit/push freeze → fase development hasta 2025 →
 commit manifest/selección → one-shot 2026. Aún no existe resultado V1.
+
+### Freeze de desarrollo DIRECTIONAL_SEMANTIC_JEPA_V1
+
+Fase development completada sin leer 2026: `PASS_DEVELOPMENT_FREEZE`. Encoder
+train 602 fechas 2022-2024/val 247 fechas 2025, `best_epoch=2`, loss val
+0,170433; final-fit 8.490 ventanas solo hasta 2025. Inventario 2.577 fuentes SHA
+`dc19b72e...058c2`; modelo SHA `876f36c2...bc607`; ledger 2.964 rows/4 perfiles
+SHA `e0b4be91...8b8a2`. Hold exacto 180m y min mensual 18.
+
+JEPA mejora al residual técnico en desarrollo, pero sigue débil: QQQ 247 trades/
+WR53,85%/PF1,063/+346,4bps/7 de 12 meses; SPX 51,82%/1,033/+152,3/4 de 12;
+SPY 53,04%/1,038/+175,7/4 de 12. La regla frozen selecciona
+`SEMANTIC_RESIDUAL` para los tres. No reinterpretar esto como rentabilidad; el
+valor es que la elección queda fijada antes del holdout. Siguiente paso único:
+commit/push de artefactos y one-shot 2026, sin cambiar perfil o parámetros.
