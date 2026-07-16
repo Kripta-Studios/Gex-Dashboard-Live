@@ -1,0 +1,14 @@
+{
+  "adaptive_after_prior_2026_diagnostics": true,
+  "created_at_utc": "2026-07-16T13:43:41.406249+00:00",
+  "new_dataset_created": false,
+  "parent_runner_sha256": "d8e9f64a1708e533454818b4f0a612f21f4f1ad1f224034d6d56eb2be7b6a073",
+  "predeclaration_path": "research_papers\\JEPA\\DIRECTIONAL_BREADTH_TRANSMISSION_V1_PREDECLARATION.md",
+  "predeclaration_sha256": "b77903fb1e83264d96c12da70c3323ea963b93d82674717e5ea3a62c41acdc46",
+  "production_modified": false,
+  "runner_path": "neural\\jepa\\evaluate_directional_breadth_transmission_v1.py",
+  "runner_sha256": "20f71873a90551d093db500ad96c5fb648077820e2c814f66824ee962f18d4a6",
+  "schema": "directional_breadth_transmission_v1_provenance",
+  "source_inventory_rows": 12852,
+  "source_inventory_sha256": "7eb28ff7d439898fdc1628c87be5fc66f70412a459b259abc5982246236d137a"
+}

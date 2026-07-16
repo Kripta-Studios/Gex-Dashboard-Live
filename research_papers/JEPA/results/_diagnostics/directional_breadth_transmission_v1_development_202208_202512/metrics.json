@@ -1,0 +1,39 @@
+{
+  "adaptive_design_after_prior_2026_diagnostics": true,
+  "breadth_feature_count": 297,
+  "created_at_utc": "2026-07-16T13:43:41.437651+00:00",
+  "daily_rows": 4914,
+  "eligible_common_sessions": 829,
+  "holdout_2026_used_for_training_or_selection": false,
+  "production_modified": false,
+  "provenance_sha256": "3b59fcf3a2da02a82471ddbed940d1a967ec6993998ed35a606d39395f9af3b2",
+  "schema": "directional_breadth_transmission_v1_development_metrics",
+  "scope": {
+    "end_date": "20251231",
+    "start_date": "20220801"
+  },
+  "selected_profiles": {
+    "QQQ": "BREADTH_TRANSMISSION",
+    "SPX": "BREADTH_TRANSMISSION",
+    "SPY": "BREADTH_TRANSMISSION"
+  },
+  "source_sessions_by_ticker": {
+    "AAPL": 859,
+    "AMZN": 854,
+    "GLD": 854,
+    "GOOGL": 849,
+    "IWM": 859,
+    "META": 856,
+    "MSFT": 859,
+    "NFLX": 854,
+    "NVDA": 859,
+    "QQQ": 859,
+    "SLV": 859,
+    "SPXW": 859,
+    "SPY": 859,
+    "TLT": 859,
+    "TSLA": 854
+  },
+  "status": "PASS_DEVELOPMENT_FREEZE",
+  "target_feature_count": 27
+}
