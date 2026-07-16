@@ -61,8 +61,14 @@ def validate_payload(name: str, payload: bytes) -> dict:
             & (values["HIGH"] + 1e-9 >= values[["OPEN", "CLOSE"]].max(axis=1))
             & (values["HIGH"] >= values["LOW"])
         )
-        if not envelope.all():
-            raise AssertionError(f"{name}: OHLC envelope failure")
+        in_scope = dates.between(REQUIRED_START_DATE, REQUIRED_END_DATE, inclusive="both")
+        historical_failures = int((~envelope).sum())
+        in_scope_failures = int((~envelope & in_scope).sum())
+        if in_scope_failures:
+            raise AssertionError(f"{name}: {in_scope_failures} in-scope OHLC envelope failures")
+    else:
+        historical_failures = 0
+        in_scope_failures = 0
     if dates.min() > REQUIRED_START_DATE or dates.max() < REQUIRED_END_DATE:
         raise AssertionError(f"{name}: insufficient frozen date coverage {dates.min()}..{dates.max()}")
     return {
@@ -70,6 +76,8 @@ def validate_payload(name: str, payload: bytes) -> dict:
         "columns": list(frame.columns),
         "date_min": dates.min().strftime("%Y%m%d"),
         "date_max": dates.max().strftime("%Y%m%d"),
+        "historical_ohlc_envelope_failures": historical_failures,
+        "in_scope_ohlc_envelope_failures": in_scope_failures,
     }
 
 
@@ -138,4 +146,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

@@ -1212,3 +1212,9 @@ points. Profiles únicos: `VIX_INTRADAY_RESIDUAL` y `VOL_COMPLEX_RESIDUAL`;
 selección walk-forward 2025, commit y one-shot 2026. Live parity sigue BLOCKED.
 Predeclaración/capturador/test listos; suite capture `4 passed`, Ruff/compile
 clean. No se abrió asociación VIX→outcome nueva todavía.
+
+Primer capture attempt se detuvo en memoria y no creó output: VIX official tiene
+47 envelopes inválidos antiguos (desde 1992); VIX3M/VIX6M/VIX1Y uno cada uno.
+Todos tienen cero fallos en el scope 2022-08..2026-07-15. Aclaración pre-outcome
+congela preservar bytes completos, contar fallos históricos y exigir cero
+in-scope. No cambia features/modelo/gates. Relanzar solo tras commit/push.

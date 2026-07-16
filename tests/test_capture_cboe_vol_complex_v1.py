@@ -45,12 +45,27 @@ def test_rejects_duplicate_date() -> None:
 def test_rejects_invalid_ohlc_envelope() -> None:
     raw = payload(
         {
-            "DATE": ["01/03/2022", "07/15/2026"],
-            "OPEN": [20.0, 18.0],
-            "HIGH": [19.0, 19.0],
-            "LOW": [18.0, 17.0],
-            "CLOSE": [20.5, 18.5],
+            "DATE": ["01/03/2022", "08/02/2022", "07/15/2026"],
+            "OPEN": [20.0, 20.0, 18.0],
+            "HIGH": [21.0, 19.0, 19.0],
+            "LOW": [18.0, 18.0, 17.0],
+            "CLOSE": [20.5, 20.5, 18.5],
         }
     )
-    with pytest.raises(AssertionError, match="envelope"):
+    with pytest.raises(AssertionError, match="in-scope"):
         validate_payload("VIX_History.csv", raw)
+
+
+def test_preserves_but_counts_out_of_scope_envelope_failure() -> None:
+    raw = payload(
+        {
+            "DATE": ["01/03/2022", "08/02/2022", "07/15/2026"],
+            "OPEN": [20.0, 20.0, 18.0],
+            "HIGH": [19.0, 21.0, 19.0],
+            "LOW": [18.0, 19.0, 17.0],
+            "CLOSE": [20.5, 20.5, 18.5],
+        }
+    )
+    result = validate_payload("VIX_History.csv", raw)
+    assert result["historical_ohlc_envelope_failures"] == 1
+    assert result["in_scope_ohlc_envelope_failures"] == 0
