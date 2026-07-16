@@ -171,3 +171,7 @@ An entrypoint import fix for that runner has no effect on compact V1.
 That separate cash-session experiment later closed in its frozen 2022–2023
 development phase at PF 0.831, WR 50.905% and 4/24 passing months. Its outer
 remained unopened. Compact V1 remains immutable and production is unchanged.
+
+The next protocol is an outcome-free feasibility audit of same-strike 0DTE
+CALL/PUT parity pressure. It has no compact-V1 model, label, profile or outcome;
+compact V1 remains closed.

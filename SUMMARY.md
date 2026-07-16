@@ -1834,3 +1834,17 @@ No se abre outer ni se selecciona signo/mes/threshold/stop. El hallazgo útil es
 que WR agregado supera 50% pero PF queda bajo uno: una hipótesis nueva debe
 explicar causalmente la asimetría de pérdidas. Estado actual:
 `NO_PROFITABLE_CAUSAL_POLICY`, ninguna familia activa y producción intacta.
+
+## 30. Predeclaración OPTION_PARITY_PRESSURE_V1
+
+La siguiente medición es independiente de precio-only, IV/skew y walls. Para
+cada ticker empareja CALL/PUT 0DTE del mismo strike a 10:30 y 10:35, conserva
+strikes comunes dentro de 100bps y calcula el cambio de
+`(K+Cmid-Pmid-spot)` normalizado por el spread conjunto. El signo de la mediana
+cross-strike será la única acción futura; no hay modelo, threshold o grid.
+
+La fase actual es exclusivamente data gate 2022–2023. Bid/ask permanecen los
+del Greek vintage; el sidecar nativo solo aporta timestamp/keys y el spot procede
+del underlying derivado exacto. PASS exige >=3 strikes, >=90% coverage por
+ticker-año, >12 eventos mensuales y no-degeneración. No se puede abrir ningún
+retorno, 2024–2026 o producción hasta commit del gate y runner posterior.

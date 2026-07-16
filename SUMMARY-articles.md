@@ -865,3 +865,10 @@ fallan la magnitud de las pérdidas y la estabilidad. Los controles de reversió
 y lado fijo también quedan bajo PF1. Esto cierra la selección de signo sobre
 este impulso y orienta una hipótesis futura hacia asimetría de riesgo causal,
 sin autorizar stops o filtros elegidos después de ver el ledger.
+
+La rotación siguiente cambia la medición, no el clasificador. La paridad
+CALL/PUT del mismo strike elimina gran parte del valor intrínseco compartido y
+expresa presión relativa directamente en quotes. Usar su cambio sobre strikes
+idénticos evita convertir financiación/dividendos o el desplazamiento del ATM en
+señal. Antes de preguntarle al retorno debe probar que bid/ask vintage,
+timestamp nativo y spot causal producen una variable completa y no degenerada.

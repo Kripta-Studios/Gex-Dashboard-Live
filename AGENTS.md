@@ -1485,3 +1485,22 @@ No abrir 2024–2026 ni rescatar con signo, beta/z-score, threshold, stop, ML o
 nuevo reloj. Estado `NO_PROFITABLE_CAUSAL_POLICY`, producción intacta y ninguna
 familia activa. La siguiente hipótesis debe ser independiente y explicar la
 asimetría de pérdidas: el agregado supera 50% WR pero no PF1.
+
+### Research activo — OPTION_PARITY_PRESSURE_V1
+
+El workbook `MASTER_KING_NODE_RECORD_V5.xlsx` sigue sin poder auditarse: la
+skill obligatoria exige `@oai/artifact-tool` y el runtime no está expuesto; no
+usar openpyxl/XML como sustituto ni atribuirle métricas.
+
+La nueva familia predeclarada outcome-free mide una fuente económica distinta:
+el cambio 10:30→10:35 del synthetic forward `K+Cmid-Pmid` frente al spot,
+normalizado por el spread CALL+PUT, sobre los mismos strikes 0DTE dentro de
+100bps. Bid/ask son siempre Greek vintage; el sidecar sellado solo certifica
+timestamps/keys. Spot usa underlying derivado exacto, no el snapshot híbrido de
+2022-12-30. Acción futura fija: signo de la mediana cross-strike por ticker.
+
+Siguiente paso único: commit/push de predeclaración y handoffs -> implementar
+builder outcome-free -> full data gate 2022–2023. Exige >=3 strikes comunes,
+coverage ticker-año >=90%, >12 eventos/mes y distinctness; no abrir labels,
+2024–2026 ni producción. Cierre/protocolo en
+`OPTION_PARITY_PRESSURE_V1_PREDECLARATION.md`.

@@ -1446,3 +1446,22 @@ No abrir 2024–2026 ni rescatar signo, beta/z-score, threshold, stop, ML o relo
 Registry queda sin familia activa. Próximo trabajo permitido: predeclarar un
 mecanismo independiente que ataque asimetría de pérdidas de forma causal; no
 confundir WR50,9% con edge porque PF y PnL son negativos. Producción intacta.
+
+## Nueva familia activa — OPTION_PARITY_PRESSURE_V1
+
+El audit del workbook King volvió a quedar bloqueado: la skill de spreadsheets
+requiere `@oai/artifact-tool` y el loader/runtime no está disponible. No usar
+otra librería ni inferir fórmulas del XLSX.
+
+Predeclaración outcome-free:
+`research_papers/JEPA/OPTION_PARITY_PRESSURE_V1_PREDECLARATION.md`. La señal
+empareja CALL/PUT 0DTE exactos por strike/timestamp, usa los mismos strikes
+<=100bps a 10:30/10:35 y toma la mediana del cambio de synthetic-forward basis
+normalizado por spread. Greek vintage conserva bid/ask; native sidecar solo
+certifica reloj/keys; spot viene del underlying derivado.
+
+Fase autorizada: commit/push docs -> builder/tests outcome-free -> data gate
+2022–2023. Requisitos: >=3 strikes comunes, coverage >=90% por ticker-año,
+>12 eventos cada mes, presión finita/no degenerada y cero timestamps inferidos.
+No labels/PnL/2024–2026/producción. Si PASS, congelar runner deterministic sign,
+open10:36→13:36/180m/1bp antes del único desarrollo.

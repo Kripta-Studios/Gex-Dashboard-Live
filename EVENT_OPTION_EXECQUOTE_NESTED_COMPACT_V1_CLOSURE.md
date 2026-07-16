@@ -141,3 +141,8 @@ The repaired opening-relative runner subsequently completed only its frozen
 50.905% WR, 0.831 PF and -927.689 bps; only 4/24 months passed all gates. No
 2024–2026 data or compact-V1 artifact was opened or changed. This result closes
 that independent cash-ledger family and does not modify the compact-V1 verdict.
+
+A later outcome-free protocol, `OPTION_PARITY_PRESSURE_V1`, studies only the
+five-minute change in same-strike 0DTE CALL/PUT quote parity. It is currently at
+its native-timestamp/data-coverage gate and has not read any return. It neither
+reopens compact V1 nor changes its selector, payoff or evidence.

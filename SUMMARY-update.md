@@ -851,3 +851,9 @@ trades, WR50,905%, PF0,831462, -927,689 bps, mínimo19, 7/24 meses positivos y
 4/24 PASS. Los controles mean-reversion y lado fijo dan PF0,813/0,924. Auditoría
 independiente confirmó hold180, coste2bps, cero overlap/futuro y hashes exactos.
 No se abrió 2024–2026. Registry queda sin familias activas y producción intacta.
+
+Nueva familia activa solo outcome-free: `OPTION_PARITY_PRESSURE_V1`. Congela el
+cambio 10:30→10:35 de `(K+Cmid-Pmid-spot)/joint_half_spread` sobre pares
+CALL/PUT 0DTE exactos y strikes comunes <=100bps. No usa IV/walls/ML ni outcomes.
+Primero debe pasar cobertura, >12 eventos/mes, distinctness, timestamp nativo y
+paridad bid/ask vintage; 2024–2026 siguen cerrados.
