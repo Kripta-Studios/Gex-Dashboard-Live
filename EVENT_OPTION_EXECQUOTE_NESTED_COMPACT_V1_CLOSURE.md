@@ -131,3 +131,5 @@ state without changing any compact-V1 conclusion.
 
 A subsequent predeclared test now isolates cash-session relative momentum
 without any compact-V1 option feature or outcome. Compact V1 remains closed.
+
+Its runner is now implemented independently and cannot read compact-V1 data.

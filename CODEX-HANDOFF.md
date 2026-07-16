@@ -1415,3 +1415,10 @@ pero no abrir outer salvo que los 24 meses pasen PF>1,20, WR>45%, >12 trades y
 PnL>0. Secuencia: predeclaración commit/push -> implementar runner/tests ->
 commit/push -> one-shot development -> auditoría/handoffs. Todo 2024–2026 y
 producción siguen cerrados.
+
+Runner listo pre-outcome:
+`neural/jepa/evaluate_opening_relative_momentum_v1.py`; tests en
+`tests/test_opening_relative_momentum_v1.py`. Importa solo validación/hash/IO del
+runner anterior y sella su SHA como dependencia; no importa su señal. No expone
+cutoff mutable. Ejecutar pytest/Ruff/compile, commit/push y solo entonces el
+target inmutable `opening_relative_momentum_v1_development_202201_202312`.

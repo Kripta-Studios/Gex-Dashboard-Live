@@ -1453,3 +1453,10 @@ Desarrollo único 2022–2023; 2024–2026 cerrado. Se registra `INCREMENTAL_EDG
 si PF agregado>1 pero cualquier mes falla, sin autorizar outer ni tuning. Solo
 24/24 meses con PF>1,20, WR>45%, >12 trades y PnL>0 permiten freeze posterior.
 Siguiente acción: commit/push de predeclaración, luego runner/tests sintéticos.
+
+Runner pre-outcome implementado en `evaluate_opening_relative_momentum_v1.py`.
+Reutiliza únicamente el loader causal hasheado del ledger anterior, no su señal
+ni outcomes; el manifest sella ambos códigos. Tests sintéticos verifican señal
+cash-only, acción/payoff, primera sesión elegible, exclusiones, cutoff inmutable
+y diferencia entre PF>1 incremental y PASS mensual completo. Commit/push antes
+del run real.

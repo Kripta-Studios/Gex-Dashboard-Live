@@ -835,3 +835,9 @@ impulso QQQ frente a SPY/SPXW entre 09:30 y el close 10:34. Opera momentum
 QQQ-SPY 10:36→13:36, 180m/2bps, sin fit o filtros. Desarrollo 2022–2023;
 2024–2026 cerrado. PF agregado>1 se registra como avance incremental, pero solo
 24/24 meses completos autorizan outer.
+
+Runner/tests ya implementados pre-outcome. El runner no acepta end-date, hashea
+predeclaración, dependency de carga y 1.503 fuentes development, y materializa
+solo ledger/meses/controles. Los tests separan explícitamente
+`INCREMENTAL_EDGE_ONLY` de `PASS_DEVELOPMENT_GATE`; falta validar, commit/push y
+solo después ejecutar datos reales.

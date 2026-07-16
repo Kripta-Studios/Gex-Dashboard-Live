@@ -847,3 +847,8 @@ mide solo 09:30–10:34 y pregunta por continuación posterior. Esta separación
 evita convertir el control momentum PF1,075 en una promoción; el control solo
 motiva una hipótesis con señal nueva y outer aún intacto. Se distingue progreso
 agregado PF>1 de la gate mensual completa, sin confundirlos.
+
+El runner conserva esa distinción como estado de máquina, no como narrativa:
+PF agregado>1 nunca activa outer si un mes falla. Además hashea el loader
+compartido para evitar que reutilizar validación de fuente oculte un cambio en
+la semántica de timestamps.

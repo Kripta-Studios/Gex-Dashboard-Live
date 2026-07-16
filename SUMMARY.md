@@ -1806,3 +1806,8 @@ No previous close, gap, beta, z-score, threshold, ML ni abstención. Desarrollo
 2022–2023. `INCREMENTAL_EDGE_ONLY` registra PF agregado>1 sin rebajar la gate;
 solo PF>1,20/WR>45%/>12/PnL>0 en cada uno de 24 meses abre un freeze outer.
 2024–2026 y producción permanecen cerrados.
+
+Implementación pre-outcome: `evaluate_opening_relative_momentum_v1.py` y tests
+sintéticos. El runner hereda solo validación/source hashing del ledger cerrado,
+calcula una señal distinta, fija cutoff 2023 y persiste estados incrementales
+sin autorizarlos como PASS. Debe commit/push antes del desarrollo real.

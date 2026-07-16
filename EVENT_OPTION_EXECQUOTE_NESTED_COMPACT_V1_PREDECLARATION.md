@@ -163,3 +163,5 @@ open 2024–2026. This historical note does not alter compact V1.
 
 The next research protocol uses only underlying cash-session relative momentum;
 it does not reopen or modify this option protocol.
+
+The new ledger runner remains source-isolated from compact V1.
