@@ -1,5 +1,9 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+El runner parity ya tiene manifest preejecución SHA `f3819d88...26972` sobre
+`5cc1c936`, con 744 eventos 2023 y todos los parámetros/hashes sellados. Aún no
+se ejecutó. El manifest debe quedar committed/pushed antes del outcome one-shot.
+
 El runner determinista de desarrollo 2023 ya está implementado y probado
 pre-outcome (`13 passed`, Ruff clean). Rechaza rutas 2024+, parámetros de scope
 mutables y ejecución sin manifest committed. Aún no ha leído precios futuros:

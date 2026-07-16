@@ -1,5 +1,8 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1
 
+> The separate parity runner manifest is frozen before its 2023 outcome read;
+> this has no bearing on the immutable compact-V1 experiment.
+
 > Separate parity note: the 2023-only evaluator/freezer now exists pre-outcome.
 > It does not reuse this protocol's model, labels, selector or option payoff.
 

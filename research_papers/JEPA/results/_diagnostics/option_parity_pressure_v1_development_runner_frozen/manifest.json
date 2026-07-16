@@ -1,0 +1,61 @@
+{
+  "schema": "option_parity_pressure_v1_frozen_development_runner",
+  "status": "PREEXECUTION_FROZEN",
+  "created_at_utc": "2026-07-16T23:19:32.353735+00:00",
+  "runner_commit": "5cc1c9366fef9d54174a4e838ec497f98bd1d9c7",
+  "phase": "development_2023",
+  "scope": {
+    "start_date": "20230101",
+    "end_date": "20231231",
+    "tickers": [
+      "QQQ",
+      "SPXW",
+      "SPY"
+    ],
+    "feature_events": 744,
+    "excluded_half_days": [
+      "20230703",
+      "20231124"
+    ]
+  },
+  "policy": {
+    "feature": "parity_pressure",
+    "action": "sign(parity_pressure)",
+    "zero_action": "NO_TRADE",
+    "entry": "derived_underlying_open_10:36:00",
+    "exit": "derived_underlying_open_13:36:00",
+    "hold_minutes": 180,
+    "round_trip_cost_bps": 1.0,
+    "positions_per_ticker_per_day": 1,
+    "overlap_policy": "one_fixed_nonoverlapping_position_per_ticker_day"
+  },
+  "gate_spec": {
+    "profit_factor_strictly_greater_than": 1.2,
+    "win_rate_strictly_greater_than": 0.45,
+    "trades_per_month_strictly_greater_than": 12,
+    "monthly_net_bps_strictly_greater_than": 0.0
+  },
+  "code_hashes": {
+    "neural/jepa/evaluate_option_parity_pressure_v1.py": "0d65589789d298764f590849dced4d22e49d16a65ca5d32699521cb3a4639147",
+    "neural/jepa/freeze_option_parity_pressure_v1_runner.py": "677309cd2bb08858938531443a1550bebeb5ea275aaeef1e311bfe482bea03b7",
+    "research_papers/JEPA/OPTION_PARITY_PRESSURE_V1_PREDECLARATION.md": "96d100e901fb44c3d7858447b590258fbec10bd2ca15fe05321e090e5be114cf",
+    "research_papers/JEPA/OPTION_PARITY_PRESSURE_V1_SCOPE_AMENDMENT.md": "9c41da4c1eec7e39151a6a617c9d97219f695a7cf097b01fe8ae41a7d5937e3c",
+    "research_papers/JEPA/OPTION_PARITY_PRESSURE_V1_DATA_GATE_RESULT.md": "435730201447904978bb671b95623c464d72977001af37a3637238b5586163c8"
+  },
+  "data_gate_inputs": {
+    "manifest.json": {
+      "path": "research_papers/JEPA/results/_diagnostics/option_parity_pressure_v1_202301_202512_v1r1_data_gate/manifest.json",
+      "sha256": "2b36e5765ee56677225437bd60c3a24e443e8b2c1e32ff35d3f6a493b665fbc7"
+    },
+    "parity_features.parquet": {
+      "path": "research_papers/JEPA/results/_diagnostics/option_parity_pressure_v1_202301_202512_v1r1_data_gate/parity_features.parquet",
+      "sha256": "45bca098588fa7bafefaf9a134e2f7de19f5d5d256d5d388766b5d33a38d5100"
+    }
+  },
+  "data_gate_source_commit": "e560d0262a91b01c7c7c4c03bf5c922d459d0531",
+  "outcome_accessed": false,
+  "execution_started": false,
+  "outer_2024_2025_opened": false,
+  "holdout_2026_opened": false,
+  "production_modified": false
+}

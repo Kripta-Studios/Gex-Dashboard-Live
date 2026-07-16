@@ -1,5 +1,13 @@
 # AI Agent Hand-off: Current Production Reality
 
+### OPTION_PARITY_PRESSURE_V1 runner frozen — preejecución
+
+Manifest generado desde commit limpio `5cc1c936`: 744 eventos físicos normales
+2023, dos medias jornadas excluidas, código/policy/gates/data gate hasheados y
+`outcome_accessed=false`. Manifest SHA `f3819d88...26972`. Debe commit/push antes
+del único run. Después ejecutar solo development 2023 al target inmutable; no
+abrir 2024–2026 cualquiera que sea el resultado hasta auditar las 36 celdas.
+
 ### Runner económico parity pre-outcome — pendiente de freeze
 
 Implementados `evaluate_option_parity_pressure_v1.py` y

@@ -1,5 +1,8 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1 — CLOSED_NO_EDGE
 
+> The separate parity 2023 runner is now preexecution-frozen at manifest SHA
+> `f3819d88...26972`, still without outcome access. Compact V1 is unchanged.
+
 > Separate parity note: its deterministic 2023 evaluator and preexecution
 > freezer are implemented and tested but have not run on outcomes. They remain
 > isolated from compact V1 and cannot read 2024–2026 outcome paths.

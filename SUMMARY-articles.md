@@ -1,5 +1,10 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+El manifest preejecución de paridad congela 744 eventos normales de 2023 y las
+dos medias jornadas excluidas, además de hashes de código, protocolo y feature
+view. Así el próximo acceso a retornos queda identificable como un único ensayo,
+no como una búsqueda sucesiva sobre relojes, costes o años.
+
 ### Separación adicional entre medición y outcome
 
 El ledger de paridad queda diseñado para que el scope sea una propiedad del

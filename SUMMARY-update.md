@@ -1,5 +1,10 @@
 # SUMMARY-update — ledger científico compacto
 
+Manifest de runner parity generado pre-outcome desde `5cc1c936`, SHA
+`f3819d88...26972`: 744 eventos 2023, scope/policy/gates/hashes fijos,
+`execution_started=false`. Falta commit/push del manifest; después procede un
+solo desarrollo 2023. 2024–2026 siguen cerrados.
+
 Runner económico parity implementado, aún pre-outcome: evaluator+freezer,
 `13 passed` y Ruff clean. Hash-check del data gate, rutas de retorno limitadas a
 2023, manifest frozen obligatorio, ledger signo/10:36→13:36/180m/1bp y 36

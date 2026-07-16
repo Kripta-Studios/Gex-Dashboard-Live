@@ -1,5 +1,12 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+Manifest frozen generado en
+`option_parity_pressure_v1_development_runner_frozen/manifest.json`, SHA
+`f3819d881fa86c10002f35e943f6b893ddff03cf33f418dea8bca166d6526972`, runner
+commit `5cc1c936`, 744 eventos 2023, outcome false. Force-add solo este manifest
+y los siete handoffs, commit/push. Luego ejecutar una vez el evaluator al target
+default inmutable y auditar antes de actualizar cualquier otra fase.
+
 Implementación parity pendiente de commit/freeze: evaluator
 `evaluate_option_parity_pressure_v1.py`, freezer
 `freeze_option_parity_pressure_v1_runner.py` y dos tests nuevos pasan `13/13`;
