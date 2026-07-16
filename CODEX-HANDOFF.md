@@ -1,5 +1,13 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+Implementación parity pendiente de commit/freeze: evaluator
+`evaluate_option_parity_pressure_v1.py`, freezer
+`freeze_option_parity_pressure_v1_runner.py` y dos tests nuevos pasan `13/13`;
+Ruff clean. El run real no ocurrió. Hacer commit/push explícito de estos archivos
+y los siete handoffs; desde HEAD limpio ejecutar freezer a
+`option_parity_pressure_v1_development_runner_frozen/manifest.json`, force-add,
+commit/push, y solo entonces ejecutar el one-shot 2023.
+
 ## Acción inmediata — OPTION_PARITY_PRESSURE_V1
 
 V1R1 completó `PASS_DATA_GATE` desde `e560d026`: 2.256/2.256 sesiones, cero

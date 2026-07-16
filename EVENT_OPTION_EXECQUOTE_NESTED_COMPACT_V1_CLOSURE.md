@@ -1,5 +1,9 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1 — CLOSED_NO_EDGE
 
+> Separate parity note: its deterministic 2023 evaluator and preexecution
+> freezer are implemented and tested but have not run on outcomes. They remain
+> isolated from compact V1 and cannot read 2024–2026 outcome paths.
+
 > Separate research note, 2026-07-17: the immutable parity V1R1 relaunch
 > passed its outcome-free data gate on all 2,256 sessions. Its next permitted
 > step is a 2023-only deterministic cash-proxy development ledger; 2024–2026

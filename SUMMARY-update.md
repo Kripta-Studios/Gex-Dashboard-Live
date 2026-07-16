@@ -1,5 +1,10 @@
 # SUMMARY-update — ledger científico compacto
 
+Runner económico parity implementado, aún pre-outcome: evaluator+freezer,
+`13 passed` y Ruff clean. Hash-check del data gate, rutas de retorno limitadas a
+2023, manifest frozen obligatorio, ledger signo/10:36→13:36/180m/1bp y 36
+celdas exactas. Falta commit/push y freeze; no existe resultado económico.
+
 ## Checkpoint OPTION_PARITY_PRESSURE_V1 V1R1
 
 `PASS_DATA_GATE`: 2.256/2.256 sesiones, cero errores, mínimo 18 eventos/mes,

@@ -1,5 +1,10 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+El runner determinista de desarrollo 2023 ya está implementado y probado
+pre-outcome (`13 passed`, Ruff clean). Rechaza rutas 2024+, parámetros de scope
+mutables y ejecución sin manifest committed. Aún no ha leído precios futuros:
+primero debe quedar commit/push y después sellarse su manifest de freeze.
+
 ## Checkpoint actual — OPTION_PARITY_PRESSURE_V1
 
 El relanzamiento V1R1 pasó el data gate completo: 2.256/2.256 sesiones

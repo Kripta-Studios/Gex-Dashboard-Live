@@ -1,5 +1,12 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+### Separación adicional entre medición y outcome
+
+El ledger de paridad queda diseñado para que el scope sea una propiedad del
+código, no un argumento mutable: solo puede construir rutas underlying 2023 y
+requiere un manifest de runner congelado y committed. Este patrón impide que un
+resultado inicial abra silenciosamente 2024–2026 o cambie coste/reloj/gates.
+
 ## Nota 2026-07-17 — paridad física medible
 
 El relanzamiento confirma que la corrección `.000` era de representación y no

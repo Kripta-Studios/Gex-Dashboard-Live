@@ -1,5 +1,15 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Runner económico parity pre-outcome — pendiente de freeze
+
+Implementados `evaluate_option_parity_pressure_v1.py` y
+`freeze_option_parity_pressure_v1_runner.py`; suite focal `13 passed`, Ruff
+clean. El evaluator exige data-gate por hashes, manifest de runner committed,
+solo construye paths underlying 2023 y congela sign(pressure), open10:36→13:36,
+180m, 1bp, 36 celdas ticker-mes y controles inverse/always-long no elegibles.
+Todavía no se ejecutó ni leyó retorno. Secuencia: commit/push código+hándoffs ->
+generar/commit/push manifest frozen -> único development 2023.
+
 ## Checkpoint OPTION_PARITY_PRESSURE_V1 V1R1 — 2026-07-17
 
 El relanzamiento inmutable desde `e560d026` es `PASS_DATA_GATE`:

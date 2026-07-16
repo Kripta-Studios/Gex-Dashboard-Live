@@ -1,5 +1,8 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1
 
+> Separate parity note: the 2023-only evaluator/freezer now exists pre-outcome.
+> It does not reuse this protocol's model, labels, selector or option payoff.
+
 > Separate research note, 2026-07-17: parity V1R1 passed 2,256/2,256 sessions
 > without outcomes. Only its separate 2023 development ledger may now be
 > frozen; compact V1 and 2024–2026 remain closed and unchanged.
