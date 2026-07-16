@@ -1,5 +1,13 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+### Calendar skew aporta información parcial, no estabilidad
+
+La diferencia front/back de RR25 es la primera rotación reciente que conserva
+PF pooled>1 después de costes: 1,058 y +730bps. QQQ/SPY quedan >1; SPXW <1. El
+inverso pierde claramente, señal de que la dirección no es arbitraria, pero solo
+12/36 meses pasan. La información temporal IV mejora sobre paridad same-expiry,
+sin resolver heterogeneidad entre índices ni persistencia mensual.
+
 El manifest calendar-RR ya hace inmutable la traducción económica de la curva:
 signo directo, una observación diaria, 180 minutos y 1bp. Así un resultado
 negativo no puede rescatarse eligiendo el otro lado de la term structure y un

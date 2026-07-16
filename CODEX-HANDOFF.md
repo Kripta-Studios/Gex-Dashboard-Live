@@ -1,5 +1,12 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+Calendar-RR cerrado con progreso parcial: pooled 739/PF1,058294/WR0,500676/
++729,690bps/12 de 36 cells; QQQ1,173476, SPXW0,912372, SPY1,072835. Auditoría
+rehasheó 741 sources y recomputó todo. No rerun/outer/rescate sobre esta señal.
+Force-add ocho outputs+independent audit, closure+siete handoffs+registry,
+commit/push. Próxima familia debe aportar un mecanismo independiente que mejore
+SPXW y estabilidad, no filtrar calendar-RR post-hoc.
+
 Manifest calendar-RR generado en
 `calendar_risk_reversal_pressure_v1_development_runner_frozen/manifest.json`,
 SHA `f00a7ef096a70c6bb3dd9496c84137d54dcef6da163f2762dc3b3a7193d35f79`,

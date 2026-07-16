@@ -1,5 +1,10 @@
 # SUMMARY-update — ledger científico compacto
 
+Calendar RR cerrado `PARTIAL_INCREMENTAL_EDGE`: 739 trades, WR50,07%, PF1,0583,
++729,69bps y 12/36 cells. QQQ PF1,173, SPY1,073, SPXW0,912; min19/mes. Auditoría
+independiente PASS. Es progreso PF>1, pero no abre outer ni permite rescatar
+ticker/mes/signo/delta. 2024–2026/producción intactos.
+
 Calendar-RR runner manifest preejecución SHA `f00a7ef0...35f79`, base
 `79dfe416`, 741 eventos, outcome false. Falta commit/push del seal; después un
 solo development 2023. Outer/2026/producción intactos.

@@ -1,5 +1,8 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1
 
+> The independent calendar-RR family later closed with insufficient monthly
+> stability despite pooled PF above one. Compact V1 remains unchanged.
+
 > The independent calendar-RR runner manifest is frozen before its 2023 cash
 > outcome read; compact V1 remains immutable.
 

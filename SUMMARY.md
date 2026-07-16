@@ -1,5 +1,9 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+Calendar-RR avanza el agregado desde PF<1 a PF1,058 y +729,69bps; QQQ y SPY
+también superan PF1. SPXW queda PF0,912 y solo pasan 12/36 meses. Resultado
+auditado y familia cerrada por estabilidad; no se abrió 2024–2026.
+
 Calendar-RR tiene ya manifest frozen `f00a7ef0...35f79` sobre `79dfe416`, aún
 sin outcomes. El siguiente paso es versionar el manifest y ejecutar exactamente
 una vez el ledger 2023; no hay permiso para abrir otros años.

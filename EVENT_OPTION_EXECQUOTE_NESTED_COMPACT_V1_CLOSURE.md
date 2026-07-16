@@ -1,5 +1,9 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1 — CLOSED_NO_EDGE
 
+> The separate calendar-RR family closed with partial cash-proxy edge: pooled
+> PF 1.058, QQQ/SPY above one, SPXW below one and 12/36 passing months. It did
+> not open 2024–2026 or alter compact V1.
+
 > Calendar-RR is now preexecution-frozen at manifest SHA `f00a7ef0...35f79`,
 > still without outcome access and without altering compact V1.
 

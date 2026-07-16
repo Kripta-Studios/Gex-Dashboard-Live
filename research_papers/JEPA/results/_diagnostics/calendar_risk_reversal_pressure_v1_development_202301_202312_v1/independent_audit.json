@@ -1,0 +1,41 @@
+{
+  "schema": "calendar_risk_reversal_pressure_v1_independent_development_audit",
+  "status": "PASS_INDEPENDENT_AUDIT",
+  "evaluated_status": "PARTIAL_INCREMENTAL_EDGE_ONLY",
+  "execution_commit": "8fe170d1fe5ede79a0131b0d404db6aeb8fb7651",
+  "frozen_manifest_sha256": "f00a7ef096a70c6bb3dd9496c84137d54dcef6da163f2762dc3b3a7193d35f79",
+  "checks": {
+    "development_2023_only": true,
+    "source_files_rehashed": 741,
+    "eligible_events": 741,
+    "executed_trades": 739,
+    "unique_ticker_dates": true,
+    "sign_recomputed": true,
+    "entry_exit_return_recomputed": true,
+    "cost_recomputed": true,
+    "ticker_month_cells_recomputed": 36,
+    "source_grid_contract_pass": true,
+    "out_of_scope_invalid_rows": 3,
+    "outer_2024_2025_opened": false,
+    "holdout_2026_opened": false,
+    "production_modified": false
+  },
+  "primary": {
+    "trades": 739,
+    "win_rate": 0.5006765899864682,
+    "profit_factor": 1.0582940152432894,
+    "net_bps": 729.690273513122,
+    "ticker_month_cells_passing": 12,
+    "ticker_month_cells_total": 36
+  },
+  "artifact_sha256": {
+    "SUMMARY.json": "7b92f182eacb5c6b69a0f3d20c7a2deb84d6e2b1c61fd8b94ecc2db5654629b6",
+    "SUMMARY.md": "568239051e15fdab13c72e7c51e35ea14d261a517b9f213010fd3197f49a8e6e",
+    "controls_summary.csv": "8b62b18ea5c66c090f133ae737dfbbfa423a1455c8bd7c3da1d248c97d7571a7",
+    "monthly_metrics.csv": "8eb7d6299537c3d5efd714f3b5bb648c9c0018f7c559a1c35f38d63e3db938fa",
+    "source_audit.csv": "a44ae67e2a3e19f84d747e9a276df55db6d9c04079c9a4278d7cc14952c0460c",
+    "source_inventory.csv": "92e40d2bafe0a38db5f6c5e99a63122dba6f788ae1caf0abfdb42cccbcac60c8",
+    "ticker_summary.csv": "dfc0d9cab68825db309c313f46a7fbb0c94dfb5118e3f5503a2a862dc9156d0c",
+    "trades.csv": "9c5178045e4172e6bfaf6d7bf30eb07a6ae68ff66a3bb8b738965de1e0d0fa66"
+  }
+}

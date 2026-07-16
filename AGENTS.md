@@ -1,5 +1,15 @@
 # AI Agent Hand-off: Current Production Reality
 
+## Cierre CALENDAR_RISK_REVERSAL_PRESSURE_V1 — edge incremental parcial
+
+One-shot 2023 desde `8fe170d1`, auditoría independiente PASS. Pooled 739 trades,
+WR50,068%, PF1,058294 y +729,690bps; 12/36 meses PASS. QQQ PF1,173/+812,5/5
+meses; SPY1,073/+274,0/3; SPXW0,912/-356,8/4. Frecuencia PASS min19. Gross
+QQQ/SPY positivos y SPXW negativo. Inverse pierde los tres; always-long es solo
+control. No abrir 2024–2026 ni rescatar ticker/mes/delta/signo/threshold/modelo.
+Se registra progreso PF pooled>1 y dos tickers>1, pero no cumple la gate conjunta.
+Evidencia en `calendar_risk_reversal_pressure_v1_development_202301_202312_v1/`.
+
 ### Calendar RR runner frozen preejecución
 
 Manifest desde commit limpio `79dfe416`, SHA `f00a7ef0...35f79`: 741 eventos
