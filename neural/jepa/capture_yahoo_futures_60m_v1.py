@@ -48,8 +48,17 @@ def validate_payload(payload: bytes, symbol: str) -> dict:
     timestamps = [int(value) for value in result.get("timestamp") or []]
     if len(timestamps) < 10_000 or timestamps != sorted(set(timestamps)):
         raise AssertionError(f"{symbol}: invalid timestamp coverage")
-    if min(timestamps) < PERIOD1 or max(timestamps) >= PERIOD2:
-        raise AssertionError(f"{symbol}: timestamp outside frozen interval")
+    outside = [value for value in timestamps if value < PERIOD1 or value >= PERIOD2]
+    # Yahoo currently includes the bar starting exactly at the exclusive period2
+    # boundary. Preserve the raw response for provenance, audit that one known row,
+    # and require every downstream consumer to filter to the frozen half-open range.
+    if outside not in ([], [PERIOD2]):
+        raise AssertionError(f"{symbol}: unexpected timestamp outside frozen interval")
+    frozen_indexes = [
+        index for index, value in enumerate(timestamps) if PERIOD1 <= value < PERIOD2
+    ]
+    if len(frozen_indexes) < 10_000:
+        raise AssertionError(f"{symbol}: insufficient frozen timestamp coverage")
     quote_list = result.get("indicators", {}).get("quote") or []
     if len(quote_list) != 1:
         raise AssertionError(f"{symbol}: expected one quote array")
@@ -59,7 +68,7 @@ def validate_payload(payload: bytes, symbol: str) -> dict:
             raise AssertionError(f"{symbol}: {column} length mismatch")
     complete = 0
     nonzero_volume = 0
-    for index in range(len(timestamps)):
+    for index in frozen_indexes:
         values = [quote[column][index] for column in ("open", "high", "low", "close")]
         if any(value is None for value in values):
             continue
@@ -74,6 +83,9 @@ def validate_payload(payload: bytes, symbol: str) -> dict:
     return {
         "symbol": symbol,
         "rows": len(timestamps),
+        "frozen_rows": len(frozen_indexes),
+        "outside_frozen_rows": len(outside),
+        "outside_frozen_timestamps": outside,
         "complete_ohlc_rows": complete,
         "nonzero_volume_rows": nonzero_volume,
         "timestamp_min": min(timestamps),

@@ -52,6 +52,33 @@ def test_payload_contract_accepts_complete_futures_source() -> None:
     assert audit["rows"] == 10_001
     assert audit["complete_ohlc_rows"] == 10_001
     assert audit["nonzero_volume_rows"] == 10_001
+    assert audit["outside_frozen_rows"] == 0
+
+
+def test_payload_contract_audits_period2_boundary_row() -> None:
+    document = json.loads(make_payload("ES=F"))
+    result = document["chart"]["result"][0]
+    result["timestamp"].append(module.PERIOD2)
+    quote = result["indicators"]["quote"][0]
+    for column, value in {
+        "open": 100.0,
+        "high": 101.0,
+        "low": 99.0,
+        "close": 100.5,
+        "volume": 10.0,
+    }.items():
+        quote[column].append(value)
+    audit = module.validate_payload(json.dumps(document).encode(), "ES=F")
+    assert audit["rows"] == 10_002
+    assert audit["frozen_rows"] == 10_001
+    assert audit["outside_frozen_timestamps"] == [module.PERIOD2]
+
+
+def test_payload_contract_rejects_other_outside_row() -> None:
+    document = json.loads(make_payload("ES=F"))
+    document["chart"]["result"][0]["timestamp"][0] = module.PERIOD1 - 3600
+    with pytest.raises(AssertionError, match="unexpected timestamp outside"):
+        module.validate_payload(json.dumps(document).encode(), "ES=F")
 
 
 def test_payload_contract_rejects_bad_envelope() -> None:

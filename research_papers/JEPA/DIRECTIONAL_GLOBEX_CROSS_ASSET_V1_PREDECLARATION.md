@@ -23,6 +23,12 @@ captura preservará bytes HTTP exactos, URL, SHA-256, timestamps, metadatos y
 arrays OHLCV. Será inmutable y se almacenará fuera del repo en
 `D:/ThetaData/futures_yahoo_60m_20240717_20260715_v1`.
 
+Clarificación outcome-free tras el primer intento fail-closed: Yahoo incluye en
+la respuesta una única barra que empieza exactamente en `period2`, aunque el
+parámetro sea exclusivo. El raw se conserva íntegro y el manifest audita esa
+fila, pero el runner aplica estrictamente `timestamp < period2`; cualquier otra
+fila fuera de `[period1, period2)` invalida la captura.
+
 Limitación: son continuos de investigación, no contratos/fills broker-grade.
 Los retornos horarios se recortan a ±300 bps y se añade flag de salto >200 bps
 para reducir contaminación de roll. Esta prueba no autoriza trading de futuros.
