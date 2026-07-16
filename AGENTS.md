@@ -1122,3 +1122,21 @@ subyacente a 180–240m, primero como señal spot/futuros sin theta. Debe reutil
 datos ya existentes, probar causalidad/live parity y walk-forward por
 ticker-mes; no crear sucesivos datasets ni presentar el viejo
 `jepa_production_final_180m` legacy como evidencia validada.
+
+### Auditoría direccional 180m legacy — 2026-07-16
+
+El ledger local de 1.649 trades confirma un mecanismo prometedor pero no una
+policy validada. Su 2026 enero–mayo con holds EOD truncados da QQQ PF1,138/min11/
+3 de 5 meses positivos; SPX PF1,451/min29/4 de 5; SPY PF1,253/min17/3 de 5.
+Solo 894/1.649 trades duran 180m; hay 755 entradas después de 13:00 y 50 holds
+<30m. Restringido diagnósticamente a 180m exactos, 2026 da QQQ PF1,333/min5/5
+de 5, SPX PF1,619/min15/4 de 5 y SPY PF1,526/min10/5 de 5. Es mejor que 0DTE
+long pero falla frecuencia/todos los meses y usa spot+1bp, no fills futuros.
+
+El encoder `xinput_v3_pipeline` fue entrenado hasta 2025-09-11 y seleccionado
+con validación 2025-09-12..2026-03-31, incluyendo CE sobre `target`; 2025 y
+enero-marzo 2026 no son holdout JEPA limpio. Abril-mayo son posteriores pero
+insuficientes. La fuente termina 2026-06-05. Además el resumen frozen de 179
+trades/PF1,405 está desincronizado de sus artefactos actuales (20/PF0,267).
+Dictamen `PROMISING_BUT_NOT_VALIDATED`; detalle en
+`DIRECTIONAL_180M_LEGACY_AUDIT_20260716.md`.
