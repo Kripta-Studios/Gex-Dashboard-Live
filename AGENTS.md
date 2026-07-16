@@ -1230,3 +1230,13 @@ solo con VIX exacto y en test missing usa la predicción padre
 `SEMANTIC_RESIDUAL`, registrando fallback. Ficheros VIX en festivos se ignoran.
 Commit/push del compact seal/amendment antes de implementar desarrollo; aún no
 se abrió asociación VOL→outcome.
+
+Runner VOL implementado pre-outcome en
+`neural/jepa/evaluate_directional_vol_complex_v1.py`: reutiliza exactamente el
+encoder/normalizer padre, construye 30 features VIX hasta 10:35 y 33 de curva
+Cboe estrictamente lagged, y conserva fallback padre para VIX missing. Dos
+profiles únicos, LightGBM/Ridge/reloj/coste idénticos a V1. Tests de no-futuro,
+lag estricto, feature contract y fallback: suite conjunta `18 passed`; Ruff y
+compile clean. Siguiente secuencia: commit/push del runner congelado -> desarrollo
+walk-forward 2025 -> commit selección -> one-shot 2026. Outcomes VOL siguen
+cerrados hasta el commit del runner.
