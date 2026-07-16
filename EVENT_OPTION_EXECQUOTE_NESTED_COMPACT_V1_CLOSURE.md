@@ -107,3 +107,12 @@ The expanded evidence strengthens, rather than changes, this closure: neither
 adding model capacity/market context nor switching to long-vol, short-premium
 or IB/Fibonacci created a stable causal policy. The current state is
 `NO_PROFITABLE_CAUSAL_POLICY`; production remains unchanged.
+
+## Research continuation note — 2026-07-17
+
+This closure remains final and is not being rescued. The next predeclared test,
+`CROSS_SESSION_RELATIVE_VALUE_V1`, changes both target and payoff: a ledger-only
+QQQ-SPY equal-notional spread based on cross-session relative divergence, with
+SPXW used only as a market anchor. It does not reuse the compact selector,
+options outcomes, deltas, thresholds or 2026 results. Development is restricted
+to 2022–2023 and production remains unchanged.

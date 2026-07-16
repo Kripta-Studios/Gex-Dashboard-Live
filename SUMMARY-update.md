@@ -793,3 +793,21 @@ Diagnóstico final: VISReg/factorización corrigió el rango latente (z 53,54%, 
 42,67%) sin corregir PF. No era solo colapso JEPA ni solo theta 0DTE. La fuente,
 el objetivo y la relación causal son inestables. Estado actual:
 `NO_PROFITABLE_CAUSAL_POLICY`, producción intacta y ninguna familia activa.
+
+## Checkpoint 17-jul-2026 — relative-value predeclarado
+
+Tras reconciliar los siete handoffs, `main`/`origin/main` estaban en `d02b1ad9`
+y el worktree tracked limpio. Los untracked históricos se preservan. El registro
+de familias se corrigió: King, Globex, compact 0DTE y payoffs alternativos siguen
+cerrados; no existe rentabilidad nueva.
+
+`CROSS_SESSION_RELATIVE_VALUE_V1` queda predeclarado pre-outcome como mecanismo
+independiente y ledger-only. Usa 1.003 sesiones underlying existentes por ticker
+en 2022–2025. La policy única revierte el shock QQQ frente al promedio SPY/SPXW
+medido desde el cierre previo hasta el close 10:34; opera QQQ-SPY equal-notional
+open 10:36 -> open 13:36, coste 1 bp por pata. No crea dataset, no usa ML,
+threshold, z-score, beta ni options outcomes.
+
+Solo se autoriza desarrollo 2022–2023. Debe cumplir PF>1,20, WR>45%, >12 trades
+y PnL positivo en cada mes. 2024–2026 y producción permanecen cerrados hasta un
+PASS completo y un freeze posterior; cualquier mes fallido cierra V1 sin rescate.

@@ -141,3 +141,13 @@ in the closure addendum and root hand-off documents.
 This section records subsequent state only. It must never be used to claim that
 the original grid, selector or stop rule was predeclared with knowledge of those
 later outcomes.
+
+## Research continuation note — 2026-07-17
+
+The compact V1 protocol and `CLOSED_NO_EDGE` verdict remain immutable. A new
+pre-outcome family, `CROSS_SESSION_RELATIVE_VALUE_V1`, is now active only because
+it is economically independent: spot relative-value rather than long-option
+0DTE selection. It uses no compact-V1 feature, profile, threshold, option label
+or 2026 outcome. Its sole authorized phase is a 2022–2023 ledger-only
+development replay; this note does not retroactively alter the compact V1 stop
+rule.

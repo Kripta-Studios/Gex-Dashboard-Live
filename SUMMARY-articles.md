@@ -807,3 +807,17 @@ de las mismas features ni un sweep de memoria/stop/delta. Debe aportar un
 mecanismo económico independiente —por ejemplo relative-value/cross-session— o
 una fuente nueva broker-grade que pueda observarse igual en histórico y live.
 Estado del programa: `NO_PROFITABLE_CAUSAL_POLICY`.
+
+## Actualización 17-jul-2026 — hipótesis relative-value falsable
+
+La continuación no intenta volver a predecir el signo absoluto ni comprar otra
+prima. `CROSS_SESSION_RELATIVE_VALUE_V1` cambia simultáneamente target y payoff:
+pregunta si el exceso QQQ frente a un ancla SPY/SPXW acumulado entre el cierre
+previo y 10:34 revierte de 10:36 a 13:36 en un spread QQQ-SPY equal-notional.
+
+La inferencia transferible es que una hipótesis nueva debe poder escribirse sin
+un nuevo dataset ni un selector: un reloj, una ecuación de shock, una acción y
+un coste. Aquí no hay beta rolling, z-score, threshold o ML; la regla opuesta
+solo es control y no puede rescatar el primario. El desarrollo 2022–2023 exige
+todos los meses positivos además de PF/WR/frecuencia. Un PASS seguiría siendo
+feasibility spot, no ejecución broker-grade ni autorización de opciones.

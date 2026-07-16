@@ -1350,3 +1350,24 @@ independiente o una fuente broker-grade con paridad live. Candidatos conceptuale
 no autorizados todavía: cross-session/overnight o relative-value entre índices.
 No descargar otra fuente ni abrir 2026 para uno de ellos sin freeze y desarrollo
 pre-2026. Estado final: `NO_PROFITABLE_CAUSAL_POLICY`, producción intacta.
+
+## Checkpoint autoritativo 2026-07-17 — CROSS_SESSION_RELATIVE_VALUE_V1
+
+Se completó la lectura/reconciliación de AGENTS, los tres SUMMARY, este handoff y
+el cierre/predeclaración compact V1. HEAD/origin parten de `d02b1ad9`, tracked
+clean. No tocar los untracked históricos. El family registry stale se corrige:
+King ya no está activo.
+
+La nueva predeclaración está en
+`research_papers/JEPA/CROSS_SESSION_RELATIVE_VALUE_V1_PREDECLARATION.md`.
+Contrato: una operación diaria equal-notional QQQ-SPY que revierte la divergencia
+QQQ frente a `0,5*(SPY+SPXW)` acumulada desde el cierre RTH previo hasta el
+close 10:34. Entrada open 10:36, salida open 13:36, hold 180m y 2 bps de coste
+total. SPXW es ancla, no pata ejecutada. No hay dataset, model, threshold,
+z-score, beta fit, stop ni abstention.
+
+Inventario outcome-free: 1.003 Parquets por ticker 2022–2025 con schema 1m
+común. Próximo paso único: implementar tests de reloj/source/payoff sin abrir
+2024+, commit/push del runner y ejecutar una sola vez desarrollo 2022–2023.
+Gate mensual: PF>1,20, WR>45%, >12 trades y PnL>0. Si cualquier mes falla,
+cerrar y no abrir 2024–2026 ni opciones. Producción permanece intacta.

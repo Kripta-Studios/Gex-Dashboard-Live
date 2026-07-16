@@ -1394,3 +1394,23 @@ predeclarar un mecanismo económicamente independiente (p. ej. cross-session o
 relative-value) o incorporar una fuente broker-grade con paridad live; no puede
 ser otro dataset de las mismas features, una memoria Globex adicional, otro
 stop/Fib, otro delta/horizonte weekly ni selección de ticker/mes observada.
+
+### Research activo — CROSS_SESSION_RELATIVE_VALUE_V1 (2026-07-17)
+
+Se leyó y reconcilió el handoff completo sobre `d02b1ad9`. El worktree tracked
+estaba limpio/sincronizado; los numerosos untracked históricos pertenecen al
+usuario y no deben añadirse. El registry estaba stale al marcar King activo;
+queda corregido sin reabrir resultados.
+
+La nueva familia económicamente independiente está predeclarada antes de abrir
+retornos futuros en `CROSS_SESSION_RELATIVE_VALUE_V1_PREDECLARATION.md`. Usa
+solo los Parquets underlying existentes (1.003 sesiones por ticker 2022–2025),
+no crea dataset: una operación diaria QQQ-SPY equal-notional que revierte la
+divergencia desde el cierre previo hasta 10:34, con SPXW solo como ancla. Entrada
+10:36, salida 13:36, hold 180m y coste 2 bps total. No hay modelo, threshold,
+grid, z-score, beta fit ni abstención.
+
+Fase autorizada única: implementar/testar runner ledger-only y ejecutar desarrollo
+2022–2023. Gate mensual del spread: PF>1,20, WR>45%, >12 trades y PnL>0 en
+todos los meses. 2024–2026, opciones y producción permanecen cerrados. Si falla
+un mes, cerrar sin invertir la regla ni rescatar clocks/costes/anclas.

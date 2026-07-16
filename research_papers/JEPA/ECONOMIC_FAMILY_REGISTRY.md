@@ -23,8 +23,15 @@ Estados permitidos: `QUEUED`, `ACTIVE`, `FAILED_CAUSALITY`,
 | CROSS_MARKET_TRANSMISSION_V1 | transmisión beta-neutral y lead/lag exacta | `FAILED_CAUSALITY` | master contiene paths post-cierre en medias jornadas; build abortó antes de outcomes |
 | CROSS_MARKET_TRANSMISSION_V1R1 | misma hipótesis, exclusión calendar-only de medias jornadas no certificables | `BLOCKED_DATA` | lead/lag indefinido en sesión normal; no epsilon/remoción post-gate |
 | H-TPOVALUE1 | migración de valor TPO/POC/VAH/VAL | `FAILED_ECONOMIC` | primera celda X1 SPXW 202304: 0/42 grids inner pasan; PF pooled del near-miss 0,922 y PnL -1,831R |
-| KING-GEX-SLOPE1 | signo net-GEX y pendiente 45m alineada como régimen momentum/reversión | `ACTIVE` | 20.309 claves master cubiertas 100%; join direction fix congelado antes del primer payoff |
+| KING-GEX-SLOPE1 | signo net-GEX y pendiente 45m alineada como régimen momentum/reversión | `FAILED_ECONOMIC` | K1 PF 0,804/WR 42,22% y 2/36 celdas; K0 también pierde |
+| KING-GEX-EXIT1 | gestión fija de stops/trails/horizontes | `FAILED_ECONOMIC` | 0/32 policies elegibles; ninguna alcanza PF 1,0 |
+| KING-GEX-MANAGE30-V1 | selección causal de gestión a +30m | `FAILED_ECONOMIC` | M0/M1 PF 0,905/0,901; outer cerrado |
+| EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1 | selector compacto long-option 0DTE ask-to-bid | `FAILED_ECONOMIC` | PF 0,794–0,804 y WR 35,5–39,7% por ticker |
+| DIRECTIONAL_GLOBEX_CROSS_ASSET_V1 y adaptaciones | dirección cash con siete continuos Globex | `FAILED_ECONOMIC` | near-miss 2025 revierte a PF <0,90 en 2026; adaptaciones no pasan desarrollo |
+| Payoffs alternativos long-vol/short-premium/IB | payoff no direccional o reglas IB/Fib | `CLOSED` | long-vol e IB pierden; short premium falla gates de ejecución exacta |
+| CROSS_SESSION_RELATIVE_VALUE_V1 | reversión QQQ-SPY de divergencia cross-session con SPXW como ancla | `ACTIVE` | predeclarada 2026-07-17 antes de outcomes; ledger-only 2022–2023 pendiente |
 
-Solo `KING-GEX-SLOPE1` está activa. Se autoriza implementar y commit/push de su
-runner reanudable, seguido por un único desarrollo fixed-rule 2023. No se
-autoriza añadir VIX/skew/vomma/DEX, thresholds o calibraciones 2026.
+Solo `CROSS_SESSION_RELATIVE_VALUE_V1` está activa. Se autoriza implementar y
+commit/push de su runner ledger-only, seguido por un único desarrollo
+2022–2023. No se autoriza añadir beta fit, z-score, thresholds, ML, opciones o
+calibraciones 2024–2026.

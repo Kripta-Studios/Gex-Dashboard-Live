@@ -1728,3 +1728,33 @@ Estado: `NO_PROFITABLE_CAUSAL_POLICY`. Producción/paper-intents intactos. No
 hay experimento activo. No continuar con variantes post-hoc de estas familias ni
 con datasets repetidos. Una hipótesis futura debe ser económicamente independiente
 o usar una fuente broker-grade nueva y predeclarada con paridad live.
+
+## 26. Checkpoint autoritativo — 2026-07-17
+
+`main` y `origin/main` parten sincronizados de `d02b1ad9`; el worktree tracked
+estaba limpio. Los untracked antiguos del usuario se preservan y no forman parte
+de la nueva investigación. `ECONOMIC_FAMILY_REGISTRY.md` estaba desfasado al
+marcar King activo y queda reconciliado con sus cierres económicos.
+
+Nueva familia activa: `CROSS_SESSION_RELATIVE_VALUE_V1`, predeclarada antes de
+abrir outcomes. Es un test spot ledger-only, no otro dataset ni una policy 0DTE:
+
+```text
+shock_i = log(close_i(10:34) / prior_RTH_close_i) * 10.000
+relative_shock = shock_QQQ - 0,5 * (shock_SPY + shock_SPXW)
+relative_shock > 0 -> short QQQ / long SPY
+relative_shock < 0 -> long QQQ / short SPY
+entry/exit = open 10:36 / open 13:36
+cost = 1 bp por pata; hold = 180m
+```
+
+Fuente outcome-free: 1.003 Parquets por ticker en 2022–2025, schema exacto
+underlying 1m. Se excluyen por calendario las medias jornadas y por defecto de
+fuente conocido el 2023-06-05; no se excluye ningún retorno. No hay beta fit,
+z-score, threshold, grid, modelo o abstención.
+
+La única fase autorizada es implementar/testar el ledger y ejecutar desarrollo
+2022–2023. Gate por cada mes del spread: PF>1,20, WR>45%, >12 trades, PnL>0 y
+cero fallos de reloj/overlap. Solo un PASS permitiría congelar antes de abrir
+2024–2025. Todo 2026, opciones y producción siguen cerrados. Un fallo cierra V1
+sin invertir la regla ni retocar ancla/reloj/coste.
