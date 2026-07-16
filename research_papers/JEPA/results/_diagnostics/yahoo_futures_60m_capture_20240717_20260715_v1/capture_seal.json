@@ -1,0 +1,19 @@
+{
+  "created_at_utc": "2026-07-16T14:32:02.639440+00:00",
+  "manifest_sha256": "dad8dc52c08ea29cbea35aedcc706c7cf51fb937436b88706642141236c2dcb7",
+  "outcome_free": true,
+  "period1": 1721174400,
+  "period2": 1784160000,
+  "production_modified": false,
+  "schema": "yahoo_futures_60m_capture_seal_v1",
+  "sources": [
+    {"bytes": 786494, "complete_ohlc_rows": 11481, "filename": "raw/ES_F.json", "frozen_rows": 14536, "outside_frozen_rows": 1, "rows": 14537, "sha256": "1faab96b2b0796eabb7dc8a29f945a64c74312238857d5a2f0a94366e473549c", "symbol": "ES=F"},
+    {"bytes": 826712, "complete_ohlc_rows": 11481, "filename": "raw/NQ_F.json", "frozen_rows": 14536, "outside_frozen_rows": 1, "rows": 14537, "sha256": "b1b6a7c38109176e823741d577b4bc9fdedcbf2609dd92c8ccdd6fda2a914c22", "symbol": "NQ=F"},
+    {"bytes": 798038, "complete_ohlc_rows": 11477, "filename": "raw/YM_F.json", "frozen_rows": 14536, "outside_frozen_rows": 1, "rows": 14537, "sha256": "c1ae059f42f7d0a6056ff8fc4412fbf6b072b37ec3b3de98c0190090b053a7da", "symbol": "YM=F"},
+    {"bytes": 1140490, "complete_ohlc_rows": 11503, "filename": "raw/RTY_F.json", "frozen_rows": 14536, "outside_frozen_rows": 1, "rows": 14537, "sha256": "9aa0a5c119ac0b8a75d0d15ba0622203d367d643c39eff286b132ea4e5b2e410", "symbol": "RTY=F"},
+    {"bytes": 905780, "complete_ohlc_rows": 11442, "filename": "raw/ZN_F.json", "frozen_rows": 14539, "outside_frozen_rows": 1, "rows": 14540, "sha256": "adb6024fede0b9742583b1852905cc300215f57474cef2a247374d37abbb08e4", "symbol": "ZN=F"},
+    {"bytes": 1120322, "complete_ohlc_rows": 11514, "filename": "raw/GC_F.json", "frozen_rows": 14541, "outside_frozen_rows": 1, "rows": 14542, "sha256": "d66eb1b6e8698af7e8c1f65c39f19d6d5a29b3e953100a01b8fb99f50b262ec0", "symbol": "GC=F"},
+    {"bytes": 1227648, "complete_ohlc_rows": 11311, "filename": "raw/CL_F.json", "frozen_rows": 14541, "outside_frozen_rows": 1, "rows": 14542, "sha256": "c297f84189a5ed84c33736a317c588fe3ad87dad68974a65a5c12d33d8529c8e", "symbol": "CL=F"}
+  ],
+  "status": "PASS_YAHOO_FUTURES_CAPTURE"
+}
