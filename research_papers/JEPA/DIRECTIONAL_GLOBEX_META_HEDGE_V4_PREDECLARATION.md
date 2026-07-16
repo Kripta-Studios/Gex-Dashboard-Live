@@ -27,6 +27,13 @@ Antes de cada decisión, la recompensa histórica de cada experto es
 `eta=sqrt(2*log(18)/N)` y solo fechas anteriores en el mismo ticker/ventana. El
 voto ponderado siempre emite LONG/SHORT. Memorias candidatas únicas: 21, 42, 63.
 
+Clarificación cold-start outcome-free tras el primer lanzamiento fail-closed:
+los ledgers de predicciones componentes comienzan en enero de 2025 y no existe
+una señal componente común anterior. Antes de llenar N, Hedge usa todas las
+observaciones anteriores disponibles; con cero observaciones parte de pesos
+uniformes. `eta` conserva el denominador N congelado. No se elimina enero ni se
+abre un outcome actual para inicializar pesos.
+
 No hay dataset ni descarga nueva. W1/W2, intersección estricta, coste 1 bp,
 no-solape y fills proxy cash no cambian. Gate 2025 por ticker: PF>1,10, WR>45%,
 >=8/12 meses positivos y >12 trades/mes. La memoria global se ordena por peor y

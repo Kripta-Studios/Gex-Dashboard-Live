@@ -122,16 +122,26 @@ def build_candidate_ledger(
 
 
 def meta_probability(
-    history: pd.DataFrame, current: pd.DataFrame, expert_names: list[str]
+    history: pd.DataFrame,
+    current: pd.DataFrame,
+    expert_names: list[str],
+    memory_horizon: int,
 ) -> float:
-    memory = len(history)
-    if memory not in set(PROFILES.values()) or len(expert_names) != EXPERT_COUNT:
+    if (
+        memory_horizon not in set(PROFILES.values())
+        or len(expert_names) != EXPERT_COUNT
+    ):
         raise AssertionError("V4 meta memory or expert contract changed")
-    historical_signals = history[expert_names].to_numpy(dtype=np.float64)
-    returns = history["future_return_bps"].to_numpy(dtype=np.float64)
-    rewards = np.clip(historical_signals * returns[:, None] / 50.0, -1.0, 1.0)
-    scores = rewards.sum(axis=0)
-    eta = math.sqrt(2.0 * math.log(EXPERT_COUNT) / memory)
+    if len(history) > memory_horizon:
+        raise AssertionError("V4 history exceeds frozen memory")
+    if history.empty:
+        scores = np.zeros(EXPERT_COUNT, dtype=np.float64)
+    else:
+        historical_signals = history[expert_names].to_numpy(dtype=np.float64)
+        returns = history["future_return_bps"].to_numpy(dtype=np.float64)
+        rewards = np.clip(historical_signals * returns[:, None] / 50.0, -1.0, 1.0)
+        scores = rewards.sum(axis=0)
+    eta = math.sqrt(2.0 * math.log(EXPERT_COUNT) / memory_horizon)
     logits = eta * scores
     weights = np.exp(logits - float(logits.max()))
     weights /= weights.sum()
@@ -182,11 +192,9 @@ def run_meta_walkforward(
                 for profile_id in requested:
                     memory = PROFILES[str(profile_id)]
                     history = available.tail(memory)
-                    if len(history) != memory:
-                        raise AssertionError(
-                            f"{ticker} {window_id} {test_row.trade_date}: insufficient V4 history"
-                        )
-                    probability = meta_probability(history, current, expert_names)
+                    probability = meta_probability(
+                        history, current, expert_names, memory
+                    )
                     rows.append(
                         prediction_row(
                             current.iloc[0], probability, str(profile_id), memory

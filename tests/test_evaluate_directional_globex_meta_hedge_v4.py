@@ -51,10 +51,20 @@ def test_meta_probability_does_not_use_current_outcome() -> None:
     history["future_return_bps"] = 50.0
     current = pd.DataFrame({name: [1.0] for name in experts})
     current["future_return_bps"] = -9999.0
-    before = module.meta_probability(history, current, experts)
+    before = module.meta_probability(history, current, experts, 21)
     current["future_return_bps"] = 9999.0
-    after = module.meta_probability(history, current, experts)
+    after = module.meta_probability(history, current, experts, 21)
     assert before == after == 1.0
+
+
+def test_meta_cold_start_uses_uniform_paired_vote() -> None:
+    experts = [f"expert_{index}" for index in range(18)]
+    history = pd.DataFrame(columns=[*experts, "future_return_bps"])
+    current = pd.DataFrame(
+        {name: [1.0 if index < 9 else -1.0] for index, name in enumerate(experts)}
+    )
+    probability = module.meta_probability(history, current, experts, 63)
+    assert probability == 0.5
 
 
 def test_meta_memories_are_frozen() -> None:
