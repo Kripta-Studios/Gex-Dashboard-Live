@@ -1,5 +1,9 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1 — CLOSED_NO_EDGE
 
+> The separate calendar-RR outcome-free builder now passes its synthetic suite
+> and three-session source smoke. It still has no option payoff or compact-V1
+> dependency.
+
 > Separate research now predeclares a 2023 front-versus-next-expiry 25-delta
 > risk-reversal pressure data gate. It has no compact-V1 model, selector or
 > payoff and has not accessed outcomes.

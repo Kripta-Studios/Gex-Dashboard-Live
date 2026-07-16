@@ -1,5 +1,11 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+El preflight calendar-RR confirma que la comparación front/back es materializable
+sin interpolar: 250 sesiones por ticker en 2023, dos expiraciones por día, clocks
+nativos y cuatro contratos 25-delta que persisten cinco minutos en las muestras.
+La factibilidad de fuente no implica alpha; el siguiente gate comprueba cobertura
+y no-degeneración en las 750 sesiones antes de cualquier retorno.
+
 ### Nueva separación: skew de calendario
 
 El OI exacto no tiene frecuencia diaria para medir cambios del mismo contrato:

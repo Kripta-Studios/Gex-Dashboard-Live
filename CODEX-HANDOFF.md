@@ -1,5 +1,13 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+Builder calendar-RR listo sin outcomes:
+`neural/jepa/build_calendar_risk_reversal_pressure_v1.py` y
+`tests/test_build_calendar_risk_reversal_pressure_v1.py`, 8 passed/Ruff/compile.
+Discovery 750 rows (250/ticker, min19/mes); smoke 20230103 de los tres tickers
+válido. Hacer git add explícito de builder/test+siete handoffs+registry,
+commit/push; luego ejecutar default target
+`tmp/calendar_risk_reversal_pressure_v1_data_gate_202301_202312_v1` una vez.
+
 Nueva familia pre-outcome: `CALENDAR_RISK_REVERSAL_PRESSURE_V1_PREDECLARATION.md`.
 Antes se cerró exact-expiry OI delta por capacidad: 752 0DTE/ticker pero solo
 156 con observación del mismo expiry el día previo, min4/mes. Calendar RR usa

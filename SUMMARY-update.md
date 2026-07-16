@@ -1,5 +1,10 @@
 # SUMMARY-update — ledger científico compacto
 
+Builder calendar-RR implementado pre-outcome: `8 passed`, Ruff/compile clean.
+Inventario 2023 750 sesiones/250 por ticker/min19 mensual; smoke real de tres
+tickers pasa clocks/joins/contratos. Falta commit/push y full data gate inmutable;
+no hay PnL ni acceso a 2024–2026.
+
 Nueva rotación outcome-free. `EXACT_EXPIRY_OI_DELTA_V1` falla frecuencia:
 156 pares exactos 2023–2025, mínimo4/mes, sin outcomes. Se predeclara
 `CALENDAR_RISK_REVERSAL_PRESSURE_V1`: cambio 5m del RR25 0DTE menos next-expiry,

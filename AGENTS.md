@@ -1,5 +1,14 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Calendar RR builder pre-outcome listo
+
+`build_calendar_risk_reversal_pressure_v1.py` y su suite focal están listos:
+`8 passed`, Ruff/py_compile clean. Inventario real 2023: 750 sesiones, 250 por
+ticker y mínimo19/mes; smoke de QQQ/SPXW/SPY 20230103 valida exact native clocks,
+Greek/IV one-to-one y cuatro contratos persistentes sin outcome. Siguiente:
+commit/push builder/tests+hándoffs y ejecutar una sola vez el data gate 2023 a
+target inmutable. No leer 10:36/13:36 ni 2024–2026 antes de PASS y freeze.
+
 ## Research activo — CALENDAR_RISK_REVERSAL_PRESSURE_V1
 
 Tras cerrar parity, el inventario OI exact-contract quedó `FAILED_FREQUENCY`

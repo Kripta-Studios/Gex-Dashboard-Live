@@ -1,5 +1,8 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1
 
+> The separate calendar-RR builder is implemented pre-outcome and remains
+> isolated from this protocol's feature, model and payoff contract.
+
 > A later independent protocol studies calendar risk-reversal pressure with
 > native 2023 clocks. It does not reopen or modify compact V1.
 

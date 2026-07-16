@@ -1,5 +1,10 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+La implementación outcome-free de calendar RR ya valida inventario, timestamps
+nativos, Greek/IV exactos y selección fija 25d. Hay 750 sesiones 2023, mínimo19
+por ticker-mes, y el smoke real pasa. Suite `8 passed`; el full data gate solo
+puede ejecutarse después de commit/push.
+
 El siguiente mecanismo activo es calendar-skew, no una variante de parity. El
 cambio OI exacto se descartó por frecuencia (mínimo4/mes). La nueva hipótesis
 congela `Δ5m[(CALL25-PUT25)_0DTE-(CALL25-PUT25)_next]`, exact native clocks y
