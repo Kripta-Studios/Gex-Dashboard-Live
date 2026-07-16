@@ -1,0 +1,4 @@
+profile_id,worst_positive_months,total_positive_months,worst_profit_factor,worst_monthly_q25,rank,selected
+META_HEDGE42,4,14,0.9332718194532587,-231.05960784373804,1,True
+META_HEDGE63,4,14,0.9329409330480322,-255.25800220153081,2,False
+META_HEDGE21,4,14,0.8877545064606068,-268.2459481064982,3,False

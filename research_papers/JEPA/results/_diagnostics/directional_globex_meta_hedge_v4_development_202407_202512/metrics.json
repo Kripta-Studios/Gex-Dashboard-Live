@@ -1,0 +1,45 @@
+{
+  "adaptive_after_v1_2026": true,
+  "advance_to_2026": false,
+  "created_at_utc": "2026-07-16T15:15:06.288448+00:00",
+  "expert_count": 18,
+  "holdout_2026_used_for_selection": false,
+  "production_modified": false,
+  "provenance_sha256": "e877773f21867e754404592fff69b1abfcd00d688d837c120a9f524a5ef73335",
+  "schema": "directional_globex_meta_hedge_v4_development_metrics",
+  "scope": {
+    "end_date": "20251231",
+    "start_date": "20240717"
+  },
+  "selected_profile": "META_HEDGE42",
+  "status": "CLOSED_DEVELOPMENT_GATE",
+  "ticker_metrics": {
+    "QQQ": {
+      "gate_pass": false,
+      "min_month_trades": 22,
+      "net_bps": 1316.0212189130057,
+      "positive_months": 4,
+      "profit_factor": 1.1610860911110217,
+      "trades": 412,
+      "win_rate": 0.5315533980582524
+    },
+    "SPX": {
+      "gate_pass": false,
+      "min_month_trades": 22,
+      "net_bps": -506.0503563250388,
+      "positive_months": 5,
+      "profit_factor": 0.9332718194532587,
+      "trades": 412,
+      "win_rate": 0.47815533980582525
+    },
+    "SPY": {
+      "gate_pass": false,
+      "min_month_trades": 22,
+      "net_bps": -263.35447362687137,
+      "positive_months": 5,
+      "profit_factor": 0.9646811760560092,
+      "trades": 412,
+      "win_rate": 0.47815533980582525
+    }
+  }
+}
