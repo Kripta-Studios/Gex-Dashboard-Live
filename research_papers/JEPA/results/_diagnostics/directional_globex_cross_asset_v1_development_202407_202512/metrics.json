@@ -1,0 +1,59 @@
+{
+  "adaptive_design_after_prior_2026_diagnostics": true,
+  "advance_to_2026": true,
+  "cash_feature_count": 327,
+  "coverage": {
+    "candidate_common_cash_decisions": 1638,
+    "drop_reasons": {
+      "ES=F:missing_asia_endpoint": 7,
+      "ES=F:missing_overnight_endpoint": 71,
+      "ES=F:missing_recent_hour": 941,
+      "ES=F:missing_volume_history": 2
+    },
+    "dropped_joint_decisions": 1021,
+    "eligible_joint_decisions": 617,
+    "eligible_rows_all_targets": 1851
+  },
+  "created_at_utc": "2026-07-16T14:43:51.689845+00:00",
+  "daily_rows": 1851,
+  "futures_feature_count": 103,
+  "holdout_2026_used_for_training_or_selection": false,
+  "production_modified": false,
+  "provenance_sha256": "421447cfa8a6a9fb110516a3df66f8d749c0dc61e860512718c5a6b432b49cad",
+  "schema": "directional_globex_cross_asset_v1_development_metrics",
+  "scope": {
+    "end_date": "20251231",
+    "start_date": "20240717"
+  },
+  "selected_profile": "POOLED_GLOBEX_CROSS_ASSET",
+  "status": "PASS_DEVELOPMENT_SELECTION",
+  "ticker_metrics": {
+    "QQQ": {
+      "gate_pass": true,
+      "min_month_trades": 22,
+      "net_bps": 1609.0459919343575,
+      "positive_months": 9,
+      "profit_factor": 1.2004140055761836,
+      "trades": 412,
+      "win_rate": 0.5218446601941747
+    },
+    "SPX": {
+      "gate_pass": true,
+      "min_month_trades": 22,
+      "net_bps": 1369.3659463807196,
+      "positive_months": 9,
+      "profit_factor": 1.2064830238008892,
+      "trades": 412,
+      "win_rate": 0.5121359223300971
+    },
+    "SPY": {
+      "gate_pass": true,
+      "min_month_trades": 22,
+      "net_bps": 1387.7998622008236,
+      "positive_months": 9,
+      "profit_factor": 1.2097493938570638,
+      "trades": 412,
+      "win_rate": 0.5121359223300971
+    }
+  }
+}
