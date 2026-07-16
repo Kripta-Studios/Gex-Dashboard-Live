@@ -160,3 +160,6 @@ has no effect on any compact-V1 input, fold or metric.
 
 The independent family later closed in development with PF 0.627 and did not
 open 2024–2026. This historical note does not alter compact V1.
+
+The next research protocol uses only underlying cash-session relative momentum;
+it does not reopen or modify this option protocol.

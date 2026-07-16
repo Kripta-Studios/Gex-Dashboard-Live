@@ -1788,3 +1788,21 @@ No se abrió 2024–2026 ni se tocaron opciones/producción. Cierre detallado:
 `research_papers/JEPA/CROSS_SESSION_RELATIVE_VALUE_V1_CLOSURE.md`. El programa
 queda `NO_PROFITABLE_CAUSAL_POLICY` y sin familia activa; no retunar esta
 divergencia con beta, z-score, thresholds o ML.
+
+## 28. Nueva familia activa — OPENING_RELATIVE_MOMENTUM_V1
+
+La meta completa por ticker sigue intacta. Como paso incremental se prueba una
+señal relative-value nueva, no el signo inverso del cross-session cerrado:
+
+```text
+opening_i = log(close_i(10:34) / open_i(09:30)) * 10.000
+impulse = opening_QQQ - 0,5*(opening_SPY + opening_SPXW)
+impulse > 0 -> long QQQ / short SPY
+impulse < 0 -> short QQQ / long SPY
+entry/exit 10:36/13:36, hold180, cost2bps
+```
+
+No previous close, gap, beta, z-score, threshold, ML ni abstención. Desarrollo
+2022–2023. `INCREMENTAL_EDGE_ONLY` registra PF agregado>1 sin rebajar la gate;
+solo PF>1,20/WR>45%/>12/PnL>0 en cada uno de 24 meses abre un freeze outer.
+2024–2026 y producción permanecen cerrados.

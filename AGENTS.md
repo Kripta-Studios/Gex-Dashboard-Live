@@ -1440,3 +1440,16 @@ El momentum opuesto fue solo control y tampoco pasa PF (1,075340); no invertir
 post-hoc. No abrir 2024–2026, options o producción. Estado de nuevo:
 `NO_PROFITABLE_CAUSAL_POLICY`, sin familia activa. Una continuación debe ser un
 mecanismo nuevo, no beta/z-score/threshold/ML sobre esta divergencia.
+
+### Research activo — OPENING_RELATIVE_MOMENTUM_V1
+
+El objetivo persistente exige avanzar desde PF>1 hasta la gate completa sin
+redefinir éxito. Se predeclara una señal distinta del cross-session cerrado:
+solo movimiento relativo cash `open(09:30)->close(10:34)`, momentum QQQ-SPY con
+SPXW como ancla, entrada 10:36, salida 13:36, hold180 y coste2bps. No usa prior
+close/gap, threshold, beta, z-score, modelo o abstención.
+
+Desarrollo único 2022–2023; 2024–2026 cerrado. Se registra `INCREMENTAL_EDGE_ONLY`
+si PF agregado>1 pero cualquier mes falla, sin autorizar outer ni tuning. Solo
+24/24 meses con PF>1,20, WR>45%, >12 trades y PnL>0 permiten freeze posterior.
+Siguiente acción: commit/push de predeclaración, luego runner/tests sintéticos.

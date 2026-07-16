@@ -840,3 +840,10 @@ alcanza la gate y era un control no seleccionable. La lección es que cambiar de
 dirección absoluta a spread relativo elimina parte del beta, pero no garantiza
 reversión; observar después que momentum es menos malo no autoriza añadir un
 z-score/beta/threshold ni invertir la policy sobre los mismos meses.
+
+La siguiente falsificación separa precisamente overnight de price discovery
+cash. `OPENING_RELATIVE_MOMENTUM_V1` no usa el shock cross-session observado:
+mide solo 09:30–10:34 y pregunta por continuación posterior. Esta separación
+evita convertir el control momentum PF1,075 en una promoción; el control solo
+motiva una hipótesis con señal nueva y outer aún intacto. Se distingue progreso
+agregado PF>1 de la gate mensual completa, sin confundirlos.

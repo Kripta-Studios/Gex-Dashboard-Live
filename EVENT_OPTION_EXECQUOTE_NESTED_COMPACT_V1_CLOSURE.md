@@ -128,3 +128,6 @@ unchanged.
 The independent relative-value development subsequently failed (PF 0.627,
 5/24 positive months). Its outer remained closed. This reinforces the program
 state without changing any compact-V1 conclusion.
+
+A subsequent predeclared test now isolates cash-session relative momentum
+without any compact-V1 option feature or outcome. Compact V1 remains closed.

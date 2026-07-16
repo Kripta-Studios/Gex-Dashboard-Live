@@ -828,3 +828,10 @@ WR41,532%, PF0,627276, -2.349,329 bps, min19 y 5/24 meses positivos; solo
 y no existe fila posterior a 2023. Momentum opuesto PF1,075 fue control
 predeclarado/no elegible y tampoco cruza PF1,20. No outer, options, 2026 o
 producción. Registry vuelve a cero familias activas.
+
+Nueva rotación pre-outcome: `OPENING_RELATIVE_MOMENTUM_V1`. No invierte la
+misma señal cerrada: elimina completamente prior close/overnight y usa solo el
+impulso QQQ frente a SPY/SPXW entre 09:30 y el close 10:34. Opera momentum
+QQQ-SPY 10:36→13:36, 180m/2bps, sin fit o filtros. Desarrollo 2022–2023;
+2024–2026 cerrado. PF agregado>1 se registra como avance incremental, pero solo
+24/24 meses completos autorizan outer.

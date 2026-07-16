@@ -1401,3 +1401,17 @@ Auditoría independiente: fechas 20220104..20231229, hold único 180, coste úni
 No abrir outer/2026, no invertir policy ni añadir beta/z-score/threshold/ML.
 Actualizar registry/handoffs, commit/push y dejar estado
 `NO_PROFITABLE_CAUSAL_POLICY`, producción intacta, ninguna familia activa.
+
+## Nueva familia activa — OPENING_RELATIVE_MOMENTUM_V1
+
+Predeclaración:
+`research_papers/JEPA/OPENING_RELATIVE_MOMENTUM_V1_PREDECLARATION.md`.
+La señal usa exclusivamente la divergencia cash 09:30→close10:34; no consume
+prior close ni overnight y por ello no reabre el cross-session mean-reversion.
+Acción momentum QQQ-SPY, SPXW ancla, opens 10:36/13:36, hold180, coste2bps.
+
+Solo desarrollo 2022–2023. Registrar PF agregado>1 como progreso diagnóstico,
+pero no abrir outer salvo que los 24 meses pasen PF>1,20, WR>45%, >12 trades y
+PnL>0. Secuencia: predeclaración commit/push -> implementar runner/tests ->
+commit/push -> one-shot development -> auditoría/handoffs. Todo 2024–2026 y
+producción siguen cerrados.
