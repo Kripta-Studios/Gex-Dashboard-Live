@@ -1324,3 +1324,17 @@ Terminal local no puede autenticarse no-interactivamente. No descargar ni abrir
 otra familia hasta disponer de una fuente externa de futuros/order flow con
 histórico y live parity. El proceso local de preflight fue cerrado; VPS y
 producción no se tocaron.
+
+### Cierre DIRECTIONAL_IB_BREAKOUT_FADE_V1 — 2026-07-16
+
+La ejecución directa de Initial Balance/Fibonacci no existía en los cierres
+previos y se congeló en `b0f0bdcf`: IB exacto 09:30–10:29, dos ventanas no
+solapadas, entrada al open siguiente, stops/targets 0,236/0,618 para breakout y
+0,272/0,500 para fade, objetivo no antes de 30m, stop-first y coste 1 bp. Usa
+el panel común de 15 tickers; cualquier día faltante se quita para todos.
+
+El one-shot walk-forward 2025 queda `CLOSED_DEVELOPMENT_GATE` sin abrir 2026:
+QQQ 406 trades/WR 31,281%/PF 0,779/2 meses positivos/min25; SPX 432/32,407%/
+0,785/3/min24; SPY 432/31,944%/0,819/4/min24. Frecuencia PASS pero economía
+claramente negativa. No rescatar post-hoc quitando stops, cambiando Fib,
+seleccionando meses o usando solo breakout. Producción intacta.
