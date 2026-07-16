@@ -1,0 +1,50 @@
+{
+  "QQQ": [
+    "always_long",
+    "target_ret_1m",
+    "target_ret_5m",
+    "target_ret_15m",
+    "target_ret_30m",
+    "target_ret_since_open",
+    "target_previous_return",
+    "nq_ret_1h",
+    "nq_ret_3h",
+    "nq_ret_6h",
+    "nq_overnight_return",
+    "nq_asia_return",
+    "nq_europe_return",
+    "nq_premarket_return"
+  ],
+  "SPX": [
+    "always_long",
+    "target_ret_1m",
+    "target_ret_5m",
+    "target_ret_15m",
+    "target_ret_30m",
+    "target_ret_since_open",
+    "target_previous_return",
+    "es_ret_1h",
+    "es_ret_3h",
+    "es_ret_6h",
+    "es_overnight_return",
+    "es_asia_return",
+    "es_europe_return",
+    "es_premarket_return"
+  ],
+  "SPY": [
+    "always_long",
+    "target_ret_1m",
+    "target_ret_5m",
+    "target_ret_15m",
+    "target_ret_30m",
+    "target_ret_since_open",
+    "target_previous_return",
+    "es_ret_1h",
+    "es_ret_3h",
+    "es_ret_6h",
+    "es_overnight_return",
+    "es_asia_return",
+    "es_europe_return",
+    "es_premarket_return"
+  ]
+}

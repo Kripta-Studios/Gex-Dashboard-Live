@@ -1,0 +1,57 @@
+{
+  "adaptive_after_v1_2026": true,
+  "advance_to_2026": false,
+  "coverage": {
+    "candidate_common_cash_decisions": 1638,
+    "drop_reasons": {
+      "ES=F:missing_asia_endpoint": 7,
+      "ES=F:missing_overnight_endpoint": 71,
+      "ES=F:missing_recent_hour": 941,
+      "ES=F:missing_volume_history": 2
+    },
+    "dropped_joint_decisions": 1021,
+    "eligible_joint_decisions": 617,
+    "eligible_rows_all_targets": 1851
+  },
+  "created_at_utc": "2026-07-16T15:08:15.905046+00:00",
+  "expert_count": 28,
+  "holdout_2026_used_for_selection": false,
+  "production_modified": false,
+  "provenance_sha256": "ea6682071ba4a56107d196590d274d5eb97bdf74003b5317579fbba8c4739a23",
+  "schema": "directional_globex_online_expert_v3_development_metrics",
+  "scope": {
+    "end_date": "20251231",
+    "start_date": "20240717"
+  },
+  "selected_profile": "ONLINE_EXPERT_HEDGE42",
+  "status": "CLOSED_DEVELOPMENT_GATE",
+  "ticker_metrics": {
+    "QQQ": {
+      "gate_pass": false,
+      "min_month_trades": 22,
+      "net_bps": 1155.1184987325287,
+      "positive_months": 5,
+      "profit_factor": 1.1397919223682402,
+      "trades": 412,
+      "win_rate": 0.5
+    },
+    "SPX": {
+      "gate_pass": false,
+      "min_month_trades": 22,
+      "net_bps": 938.2652157085126,
+      "positive_months": 6,
+      "profit_factor": 1.1368534216566883,
+      "trades": 412,
+      "win_rate": 0.4878640776699029
+    },
+    "SPY": {
+      "gate_pass": false,
+      "min_month_trades": 22,
+      "net_bps": 684.315950078092,
+      "positive_months": 5,
+      "profit_factor": 1.098045758447538,
+      "trades": 412,
+      "win_rate": 0.4854368932038835
+    }
+  }
+}
