@@ -1083,3 +1083,24 @@ falla WR>50% en 16/144 ticker-meses y solo hay 8–10 trades/mes; 18 es
 incompatible con hold dos sesiones y una sola posición. Always-CALL queda en
 PF1,042–1,056 y always-PUT <0,81. Status `CLOSED_ORACLE_GATE`; no barrer otros
 horizontes/deltas ni abrir dataset weekly. Producción y 2026 siguen intactos.
+
+### Cierre EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1 — 2026-07-16
+
+El one-shot compacto reutilizó sin rebuild el parquet sellado ask-to-bid de
+44.169 eventos y completó 18 folds nested Jan-Jun 2026 con seis meses inner,
+hold 30–180m, cero overlaps y gates PF>=1,20, WR>=45%, >=13 trades/mes y todos
+los meses positivos. Queda `CLOSED_NO_EDGE`: QQQ 121 trades/WR39,67%/PF0,804/
+-8,365R/min0/2 de 6 meses positivos; SPXW 110/38,18%/0,794/-8,223R/min14/2 de
+6; SPY 107/35,51%/0,797/-8,324R/min0/1 de 6. Cuatro folds abstuvieron. La
+recomputación independiente coincide y no hay fallos de cronología, hold o
+scheduler. Freeze `3722cbc9`; cierre en
+`EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1_CLOSURE.md`.
+
+No rescatar compras 0DTE con más datasets, deltas, thresholds, features IB/Fib,
+IV/skew ni filtros de tendencia. El oracle weekly dos sesiones solo permite
+8–10 trades/mes sin overlap y no puede cumplir frecuencia; las policies weekly
+causales always-CALL/PUT no tienen edge. Los credit spreads direccionales ya
+cerrados tienen PF<1. La única factibilidad económica distinta permitida es
+short premium simétrico de riesgo definido (iron condor/iron fly) leído
+directamente de bid/ask y materializado solo como ledger de trades, con gate
+pre-2026 antes de abrir 2026/Julio. No crear otro feature dataset.

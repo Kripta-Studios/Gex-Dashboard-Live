@@ -1,0 +1,164 @@
+{
+  "evaluation_months": [
+    "202601",
+    "202602",
+    "202603",
+    "202604",
+    "202605",
+    "202606"
+  ],
+  "folds": [
+    {
+      "evaluation_month": "202601",
+      "policy_artifact_path": "research_papers/JEPA/results/_diagnostics/event_option_execquote_nested_compact_v1_202601_202606/fold_policy_artifacts/fold_policy_202601.json",
+      "policy_artifact_sha256": "e986cd73e4635652ae50acda8a4839a4f2619ce9afd9ee48bb811bb47813cd10",
+      "policy_frozen_before_evaluation": true,
+      "selection_months": [
+        "202507",
+        "202508",
+        "202509",
+        "202510",
+        "202511",
+        "202512"
+      ],
+      "training_months": [
+        "202501",
+        "202502",
+        "202503",
+        "202504",
+        "202505",
+        "202506"
+      ]
+    },
+    {
+      "evaluation_month": "202602",
+      "policy_artifact_path": "research_papers/JEPA/results/_diagnostics/event_option_execquote_nested_compact_v1_202601_202606/fold_policy_artifacts/fold_policy_202602.json",
+      "policy_artifact_sha256": "f8d68854620720a837a15e74f0de2b6d58da3b41bfdf3567051647806f2191e1",
+      "policy_frozen_before_evaluation": true,
+      "selection_months": [
+        "202508",
+        "202509",
+        "202510",
+        "202511",
+        "202512",
+        "202601"
+      ],
+      "training_months": [
+        "202501",
+        "202502",
+        "202503",
+        "202504",
+        "202505",
+        "202506",
+        "202507"
+      ]
+    },
+    {
+      "evaluation_month": "202603",
+      "policy_artifact_path": "research_papers/JEPA/results/_diagnostics/event_option_execquote_nested_compact_v1_202601_202606/fold_policy_artifacts/fold_policy_202603.json",
+      "policy_artifact_sha256": "574878e7376dda5c60dde68a3e90dfc77a6526344b86918b98cdd9b1f6e9a805",
+      "policy_frozen_before_evaluation": true,
+      "selection_months": [
+        "202509",
+        "202510",
+        "202511",
+        "202512",
+        "202601",
+        "202602"
+      ],
+      "training_months": [
+        "202501",
+        "202502",
+        "202503",
+        "202504",
+        "202505",
+        "202506",
+        "202507",
+        "202508"
+      ]
+    },
+    {
+      "evaluation_month": "202604",
+      "policy_artifact_path": "research_papers/JEPA/results/_diagnostics/event_option_execquote_nested_compact_v1_202601_202606/fold_policy_artifacts/fold_policy_202604.json",
+      "policy_artifact_sha256": "238ced1badbf26ddee9e0a279df6938d2d5db2cdaa658596502b8bf36d0daa84",
+      "policy_frozen_before_evaluation": true,
+      "selection_months": [
+        "202510",
+        "202511",
+        "202512",
+        "202601",
+        "202602",
+        "202603"
+      ],
+      "training_months": [
+        "202501",
+        "202502",
+        "202503",
+        "202504",
+        "202505",
+        "202506",
+        "202507",
+        "202508",
+        "202509"
+      ]
+    },
+    {
+      "evaluation_month": "202605",
+      "policy_artifact_path": "research_papers/JEPA/results/_diagnostics/event_option_execquote_nested_compact_v1_202601_202606/fold_policy_artifacts/fold_policy_202605.json",
+      "policy_artifact_sha256": "ab27bb52e724edc4c765d6b7be9424c49500358dac94d9497c7c598594c4431d",
+      "policy_frozen_before_evaluation": true,
+      "selection_months": [
+        "202511",
+        "202512",
+        "202601",
+        "202602",
+        "202603",
+        "202604"
+      ],
+      "training_months": [
+        "202501",
+        "202502",
+        "202503",
+        "202504",
+        "202505",
+        "202506",
+        "202507",
+        "202508",
+        "202509",
+        "202510"
+      ]
+    },
+    {
+      "evaluation_month": "202606",
+      "policy_artifact_path": "research_papers/JEPA/results/_diagnostics/event_option_execquote_nested_compact_v1_202601_202606/fold_policy_artifacts/fold_policy_202606.json",
+      "policy_artifact_sha256": "833d93e48bd509b0d08ecbd142039ac6fed932c0d1e5ea76640cf6e833ef2ab1",
+      "policy_frozen_before_evaluation": true,
+      "selection_months": [
+        "202512",
+        "202601",
+        "202602",
+        "202603",
+        "202604",
+        "202605"
+      ],
+      "training_months": [
+        "202501",
+        "202502",
+        "202503",
+        "202504",
+        "202505",
+        "202506",
+        "202507",
+        "202508",
+        "202509",
+        "202510",
+        "202511"
+      ]
+    }
+  ],
+  "mode": "nested_walk_forward",
+  "passed": true,
+  "schema_version": 1,
+  "selection_protocol_frozen_before_evaluation": true,
+  "trade_artifact_kind": "nested_walk_forward_fold_outputs"
+}
