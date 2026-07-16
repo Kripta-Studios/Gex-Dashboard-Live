@@ -33,18 +33,47 @@ def exact_exit(
     hold_minutes: int,
 ) -> dict | None:
     exit_dt = entry_dt + pd.Timedelta(minutes=hold_minutes)
-    path = v1.close_path(greeks, structure, entry_dt, exit_dt)
-    exit_rows = path.loc[path["qdt"].eq(exit_dt)]
-    if len(exit_rows) != 1:
+    exit_frame = greeks.loc[greeks["qdt"].eq(exit_dt)]
+    return exact_exit_snapshot(exit_frame, structure, exit_dt, hold_minutes)
+
+
+def exact_exit_snapshot(
+    exit_frame: pd.DataFrame,
+    structure: v1.Structure,
+    exit_dt: pd.Timestamp,
+    hold_minutes: int,
+) -> dict | None:
+    specs = (
+        ("short_call", "C", structure.short_call_strike),
+        ("short_put", "P", structure.short_put_strike),
+        ("long_call", "C", structure.long_call_strike),
+        ("long_put", "P", structure.long_put_strike),
+    )
+    legs: dict[str, pd.Series] = {}
+    for name, right, strike in specs:
+        rows = exit_frame.loc[
+            exit_frame["right"].eq(right)
+            & np.isclose(exit_frame["strike"], strike, rtol=0.0, atol=1e-9)
+        ]
+        rows = rows.loc[v1.valid_quotes(rows)]
+        if len(rows) != 1:
+            return None
+        legs[name] = rows.iloc[0]
+    close_debit = (
+        float(legs["short_call"]["ask"])
+        + float(legs["short_put"]["ask"])
+        - float(legs["long_call"]["bid"])
+        - float(legs["long_put"]["bid"])
+    )
+    if not np.isfinite(close_debit) or close_debit < 0.0:
         return None
-    row = exit_rows.iloc[0]
-    gross_points = float(row["gross_pnl_points"])
+    gross_points = structure.entry_credit - close_debit
     net_points = gross_points - v1.ROUND_TRIP_FRICTION_POINTS
     return {
         "exit_dt": exit_dt,
         "exit_reason": "time",
         "hold_minutes": hold_minutes,
-        "close_debit": float(row["close_debit"]),
+        "close_debit": close_debit,
         "gross_pnl_points": gross_points,
         "net_pnl_points": net_points,
         "net_pnl_R": net_points / structure.max_risk_points,
@@ -59,6 +88,12 @@ def build_session_candidates(
     if native_clock["qdt"].max() < required_exit:
         raise AssertionError(f"{ticker} {day}: native clock cannot support TIME120")
     entry = greeks.loc[greeks["qdt"].eq(entry_dt)].copy()
+    exit_snapshots = {
+        hold_minutes: greeks.loc[
+            greeks["qdt"].eq(entry_dt + pd.Timedelta(minutes=hold_minutes))
+        ].copy()
+        for hold_minutes in HOLD_MINUTES
+    }
     structures: list[v1.Structure] = []
     for delta in v1.CONDOR_DELTAS:
         for width in v1.WIDTHS[ticker]:
@@ -78,7 +113,10 @@ def build_session_candidates(
     for structure in structures:
         for hold_minutes in HOLD_MINUTES:
             profile_id = f"{structure.structure_id}__TIME{hold_minutes}"
-            result = exact_exit(greeks, structure, entry_dt, hold_minutes)
+            exit_dt = entry_dt + pd.Timedelta(minutes=hold_minutes)
+            result = exact_exit_snapshot(
+                exit_snapshots[hold_minutes], structure, exit_dt, hold_minutes
+            )
             if result is None:
                 unresolved.append(
                     {"ticker": ticker, "trade_date": day, "profile_id": profile_id}

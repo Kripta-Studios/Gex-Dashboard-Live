@@ -43,3 +43,10 @@ WR>45%, PF>1,20, >=13 trades en cada mes y PnL positivo en 12/12. Si pasa, se
 congela la selección antes de auditar/capturar 2026. Gate final del usuario:
 WR>45%, PF>1,20, >12 trades/mes y PnL positivo en enero–julio MTD para los tres.
 La provenance histórica sigue condicionada y un PASS requiere paper/shadow.
+
+Clarificación de implementación previa a resultados: el primer lanzamiento fue
+detenido sin completar 50 sesiones y sin escribir output porque llamaba a
+`close_path` 44 veces por sesión. El cálculo se reemplaza por lookup directo de
+las cuatro patas en el único timestamp de cada TIME; conserva exactamente las
+mismas gates `valid_quotes`, debit no negativo, fills y PnL. Una regresión exige
+igualdad numérica contra `close_path` en el caso de referencia.

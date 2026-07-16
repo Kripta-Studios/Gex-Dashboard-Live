@@ -41,12 +41,20 @@ def greek_path(crossed_exit: bool = False) -> pd.DataFrame:
 
 
 def test_exact_exit_uses_executable_four_leg_debit() -> None:
-    result = module.exact_exit(
-        greek_path(), structure(), pd.Timestamp("2025-01-02 10:35"), 30
-    )
+    contract = structure()
+    source = greek_path()
+    result = module.exact_exit(source, contract, pd.Timestamp("2025-01-02 10:35"), 30)
     assert result is not None
     assert result["hold_minutes"] == 30
     assert result["exit_dt"] == pd.Timestamp("2025-01-02 11:05")
+    reference = v1.close_path(
+        source,
+        contract,
+        pd.Timestamp("2025-01-02 10:35"),
+        pd.Timestamp("2025-01-02 11:05"),
+    ).iloc[-1]
+    assert result["close_debit"] == float(reference["close_debit"])
+    assert result["gross_pnl_points"] == float(reference["gross_pnl_points"])
 
 
 def test_crossed_required_exit_is_unresolved() -> None:
