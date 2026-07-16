@@ -1,6 +1,6 @@
 # SUMMARY-update — ledger científico compacto
 
-**Corte:** 16 de julio de 2026, 18:30 Europe/Madrid
+**Corte:** 17 de julio de 2026, 00:30 Europe/Madrid
 
 **Objetivo:** policy 0DTE causal y live-equivalente para SPXW, QQQ y SPY.
 
@@ -821,3 +821,10 @@ Antes del run se congeló una aclaración de procedencia: el día SPY 2023-06-05
 queda fuera del ledger, las tres barras 09:54–09:56 siguen inválidas/sin imputar,
 pero su close 16:00 válido conserva el prior session exacto para 06-06. Solo esa
 terna puede exceptuar el envelope; una cuarta anomalía falla cerrado.
+
+El desarrollo único ya cerró `FAILED_ECONOMIC_DEVELOPMENT`: 496 trades,
+WR41,532%, PF0,627276, -2.349,329 bps, min19 y 5/24 meses positivos; solo
+202210 y 202306 pasan las cuatro gates. La recomputación independiente coincide
+y no existe fila posterior a 2023. Momentum opuesto PF1,075 fue control
+predeclarado/no elegible y tampoco cruza PF1,20. No outer, options, 2026 o
+producción. Registry vuelve a cero familias activas.

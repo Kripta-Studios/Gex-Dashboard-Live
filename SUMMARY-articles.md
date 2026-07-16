@@ -833,3 +833,10 @@ está localizada dentro de la ventana de señal, puede prohibirse la decisión d
 ese día y conservarse un close posterior válido como estado previo del día
 siguiente. Esto requiere una allowlist exacta de filas adversariales, no una
 tolerancia general ni imputación.
+
+El resultado falsifica la versión fija de esa hipótesis: mean-reversion obtiene
+PF0,627 y solo 5/24 meses positivos. El signo opuesto mejora a PF1,075 pero no
+alcanza la gate y era un control no seleccionable. La lección es que cambiar de
+dirección absoluta a spread relativo elimina parte del beta, pero no garantiza
+reversión; observar después que momentum es menos malo no autoriza añadir un
+z-score/beta/threshold ni invertir la policy sobre los mismos meses.

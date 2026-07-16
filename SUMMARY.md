@@ -1,12 +1,12 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
-**Actualizado:** 2026-07-16 18:30 Europe/Madrid
+**Actualizado:** 2026-07-17 00:30 Europe/Madrid
 
 **Rama:** `main`
 
-**Base auditada:** `6dbe157d`
+**Base de ejecución más reciente:** `5e2dc677`
 
-**Experimento activo:** ninguno; último cierre `DIRECTIONAL_IB_BREAKOUT_FADE_V1`
+**Experimento activo:** ninguno; último cierre `CROSS_SESSION_RELATIVE_VALUE_V1`
 
 > Las secciones MANAGE30 de este documento conservan la cronología histórica,
 > pero ya no describen trabajo activo. El checkpoint autoritativo actual está
@@ -1770,3 +1770,21 @@ Commit/push del código es obligatorio antes del desarrollo real.
 de 2023-06-05: sin trade, sin imputar las tres barras SPY inválidas, pero usando
 solo el close 16:00 válido como prior close del 06-06. El loader exige que no
 exista ninguna anomalía adicional. La aclaración queda hasheada en el manifest.
+
+## 27. Cierre CROSS_SESSION_RELATIVE_VALUE_V1
+
+El único ledger development 2022–2023 terminó `FAILED_ECONOMIC_DEVELOPMENT`:
+
+| Trades | WR | PF | PnL bps | Mín/mes | Meses + | Meses PASS |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 496 | 41,532% | 0,627276 | -2.349,329 | 19 | 5/24 | 2/24 |
+
+La auditoría independiente reprodujo métricas, 180m exactos, coste 2 bps, cero
+overlaps y cero fechas posteriores a 2023. Solo octubre 2022 y junio 2023 pasan
+todas las gates. Momentum opuesto fue PF1,075/+365,329 bps, pero estaba
+congelado como control, no pasa PF1,20 y no puede rescatar la familia.
+
+No se abrió 2024–2026 ni se tocaron opciones/producción. Cierre detallado:
+`research_papers/JEPA/CROSS_SESSION_RELATIVE_VALUE_V1_CLOSURE.md`. El programa
+queda `NO_PROFITABLE_CAUSAL_POLICY` y sin familia activa; no retunar esta
+divergencia con beta, z-score, thresholds o ML.

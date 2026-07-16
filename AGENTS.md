@@ -1427,3 +1427,16 @@ su close 16:00 válido puede servir como prior close del 06-06. El loader permit
 únicamente las tres anomalías SPY conocidas 09:54–09:56, sin consumirlas ni
 imputarlas; cualquier otra fila inválida aborta. Suite sintética ampliada a
 seis regresiones.
+
+### Cierre CROSS_SESSION_RELATIVE_VALUE_V1 — 2026-07-17
+
+El one-shot committed en `5e2dc677` cerró `FAILED_ECONOMIC_DEVELOPMENT`:
+496 trades, WR 41,532%, PF 0,627276, -2.349,329 bps, mínimo 19 trades/mes,
+5/24 meses positivos y solo 2/24 PASS. Frecuencia pasa; falla alpha. Auditoría
+independiente confirmó clocks, coste 2 bps, hold 180m, cero overlaps y cero filas
+post-2023. Hash trades `48459a8c...80dfc0`, monthly `75c76e2a...15a9af`.
+
+El momentum opuesto fue solo control y tampoco pasa PF (1,075340); no invertir
+post-hoc. No abrir 2024–2026, options o producción. Estado de nuevo:
+`NO_PROFITABLE_CAUSAL_POLICY`, sin familia activa. Una continuación debe ser un
+mecanismo nuevo, no beta/z-score/threshold/ML sobre esta divergencia.

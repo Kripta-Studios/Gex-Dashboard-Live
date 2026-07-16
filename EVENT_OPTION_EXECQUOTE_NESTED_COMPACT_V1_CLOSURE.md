@@ -124,3 +124,7 @@ reopen the compact-V1 evidence.
 An outcome-free data clarification for the new family preserves the known
 2023-06-05 source anomaly without using or repairing it. Compact V1 is still
 unchanged.
+
+The independent relative-value development subsequently failed (PF 0.627,
+5/24 positive months). Its outer remained closed. This reinforces the program
+state without changing any compact-V1 conclusion.

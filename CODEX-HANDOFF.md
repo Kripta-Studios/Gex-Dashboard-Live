@@ -1,6 +1,6 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
-**Actualizado:** 16 de julio de 2026, 18:30 Europe/Madrid
+**Actualizado:** 17 de julio de 2026, 00:30 Europe/Madrid
 
 **Checkpoint de captura nativa:** `041b16c research: freeze stored-universe native clock coverage`
 
@@ -1383,3 +1383,21 @@ Aclaración pre-outcome adicional:
 excluye como trade; solo sus tres rows SPY 09:54–09:56 pueden fallar envelope y
 no se usan. El close 16:00 válido se conserva como prior close de 06-06. Runner
 hashea ambos documentos y cualquier anomalía extra aborta.
+
+## Cierre CROSS_SESSION_RELATIVE_VALUE_V1 — autoritativo
+
+Runner committed/pushed `5e2dc677`; development real 2022–2023:
+`FAILED_ECONOMIC_DEVELOPMENT`. Resultado 496 trades, WR 41,532%, PF 0,627276,
+-2.349,329 bps, min19 trades/mes, 5/24 meses positivos y 2/24 PASS. Control
+momentum PF1,075340/+365,329 bps; fijo long QQQ/short SPY PF0,921644. Ningún
+control es elegible y momentum tampoco pasa PF1,20.
+
+Auditoría independiente: fechas 20220104..20231229, hold único 180, coste único
+2 bps, cero overlap/future rows y métricas/hash exactos. Trades SHA
+`48459a8c...80dfc0`, monthly SHA `75c76e2a...15a9af`, source inventory SHA
+`0311dc5c...9eb57`. Compactos en
+`cross_session_relative_value_v1_development_202201_202312/`.
+
+No abrir outer/2026, no invertir policy ni añadir beta/z-score/threshold/ML.
+Actualizar registry/handoffs, commit/push y dejar estado
+`NO_PROFITABLE_CAUSAL_POLICY`, producción intacta, ninguna familia activa.

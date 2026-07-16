@@ -157,3 +157,6 @@ does not import this selector or its outcomes. Compact V1 remains closed.
 
 The new runner also hashes a separate outcome-free source clarification; this
 has no effect on any compact-V1 input, fold or metric.
+
+The independent family later closed in development with PF 0.627 and did not
+open 2024–2026. This historical note does not alter compact V1.

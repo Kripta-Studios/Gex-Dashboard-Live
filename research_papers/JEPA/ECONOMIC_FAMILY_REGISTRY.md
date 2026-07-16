@@ -29,9 +29,8 @@ Estados permitidos: `QUEUED`, `ACTIVE`, `FAILED_CAUSALITY`,
 | EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1 | selector compacto long-option 0DTE ask-to-bid | `FAILED_ECONOMIC` | PF 0,794–0,804 y WR 35,5–39,7% por ticker |
 | DIRECTIONAL_GLOBEX_CROSS_ASSET_V1 y adaptaciones | dirección cash con siete continuos Globex | `FAILED_ECONOMIC` | near-miss 2025 revierte a PF <0,90 en 2026; adaptaciones no pasan desarrollo |
 | Payoffs alternativos long-vol/short-premium/IB | payoff no direccional o reglas IB/Fib | `CLOSED` | long-vol e IB pierden; short premium falla gates de ejecución exacta |
-| CROSS_SESSION_RELATIVE_VALUE_V1 | reversión QQQ-SPY de divergencia cross-session con SPXW como ancla | `ACTIVE` | predeclarada 2026-07-17 antes de outcomes; ledger-only 2022–2023 pendiente |
+| CROSS_SESSION_RELATIVE_VALUE_V1 | reversión QQQ-SPY de divergencia cross-session con SPXW como ancla | `FAILED_ECONOMIC` | 496 trades, PF 0,627/WR 41,53%/-2.349 bps; 2/24 meses PASS |
 
-Solo `CROSS_SESSION_RELATIVE_VALUE_V1` está activa. Se autoriza implementar y
-commit/push de su runner ledger-only, seguido por un único desarrollo
-2022–2023. No se autoriza añadir beta fit, z-score, thresholds, ML, opciones o
-calibraciones 2024–2026.
+No hay familia activa. Una continuación requiere una hipótesis económicamente
+independiente y otra predeclaración; no se autoriza invertir relative-value,
+añadir beta/z-score/thresholds/ML ni abrir 2024–2026 como rescate.
