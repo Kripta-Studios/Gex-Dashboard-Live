@@ -1,5 +1,9 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1 — CLOSED_NO_EDGE
 
+> The separate parity family later closed in 2023 development at PF 0.875,
+> WR 48.63%, -1,689 bps and 10/36 passing ticker-month cells. It did not open
+> 2024–2026 and does not alter or rescue compact V1.
+
 > The separate parity 2023 runner is now preexecution-frozen at manifest SHA
 > `f3819d88...26972`, still without outcome access. Compact V1 is unchanged.
 

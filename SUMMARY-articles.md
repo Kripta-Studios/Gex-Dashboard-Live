@@ -1,5 +1,13 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+### Paridad cross-right: medible no significa direccional
+
+La presión de paridad se midió con alta cobertura, pero su signo fijo perdió en
+los tres tickers y antes de costes. Pooled PF0,875; 10/36 meses pasan. El control
+always-long capturó drift 2023 que la señal destruyó, mientras invertir el signo
+tampoco alcanzó PF1,20. La identidad CALL/PUT ofrece una coordenada física
+estable, no una semántica direccional a tres horas bajo esta formulación.
+
 El manifest preejecución de paridad congela 744 eventos normales de 2023 y las
 dos medias jornadas excluidas, además de hashes de código, protocolo y feature
 view. Así el próximo acceso a retornos queda identificable como un único ensayo,

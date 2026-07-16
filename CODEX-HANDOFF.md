@@ -1,5 +1,13 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+`OPTION_PARITY_PRESSURE_V1` está cerrado. Resultado one-shot/auditado: pooled
+730 trades, WR0,486301, PF0,874751, net -1689,310bps, 10/36 cells. Por ticker:
+QQQ PF0,946778/4 meses; SPXW 0,842979/5; SPY 0,819330/1. Los 744 sources y todas
+las identidades fueron rehasheadas/recalculadas. No ejecutar otra vez ni abrir
+2024–2026; no usar inverse o always-long como rescate. Force-add los nueve
+archivos de evidencia más `independent_audit.json`, closure y siete handoffs;
+commit/push. Luego elegir una familia físicamente independiente pre-outcome.
+
 Manifest frozen generado en
 `option_parity_pressure_v1_development_runner_frozen/manifest.json`, SHA
 `f3819d881fa86c10002f35e943f6b893ddff03cf33f418dea8bca166d6526972`, runner

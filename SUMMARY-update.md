@@ -1,5 +1,11 @@
 # SUMMARY-update — ledger científico compacto
 
+`OPTION_PARITY_PRESSURE_V1` cerrado `NO_AGGREGATE_EDGE`. One-shot 2023: 730
+trades, WR48,63%, PF0,874751, -1.689,31bps, 10/36 celdas. QQQ/SPXW/SPY PF
+0,947/0,843/0,819 y todos gross negativos. Auditoría independiente rehasheó
+744 fuentes y reprodujo ledger/gates. Stop: no invertir/rescatar ni abrir
+2024–2026. Producción intacta.
+
 Manifest de runner parity generado pre-outcome desde `5cc1c936`, SHA
 `f3819d88...26972`: 744 eventos 2023, scope/policy/gates/hashes fijos,
 `execution_started=false`. Falta commit/push del manifest; después procede un

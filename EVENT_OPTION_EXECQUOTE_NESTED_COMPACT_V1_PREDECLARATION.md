@@ -1,5 +1,8 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1
 
+> The separate parity family is now closed after failing its 2023 development
+> gate. It never opened 2024–2026 and remains unrelated to compact V1.
+
 > The separate parity runner manifest is frozen before its 2023 outcome read;
 > this has no bearing on the immutable compact-V1 experiment.
 

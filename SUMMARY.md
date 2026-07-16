@@ -1,5 +1,10 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+La familia parity queda cerrada en desarrollo 2023: 730 trades, PF0,874751,
+WR48,630%, -1.689,310bps y solo 10/36 meses PASS. Ningún ticker supera PF1 y
+todos pierden gross. Auditoría independiente PASS sobre 744 fuentes. Outer
+2024–2025 y holdout 2026 no se abrieron; no se permite rescate post-hoc.
+
 El runner parity ya tiene manifest preejecución SHA `f3819d88...26972` sobre
 `5cc1c936`, con 744 eventos 2023 y todos los parámetros/hashes sellados. Aún no
 se ejecutó. El manifest debe quedar committed/pushed antes del outcome one-shot.

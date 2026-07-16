@@ -1,0 +1,42 @@
+{
+  "schema": "option_parity_pressure_v1_independent_development_audit",
+  "status": "PASS_INDEPENDENT_AUDIT",
+  "evaluated_status": "NO_AGGREGATE_EDGE",
+  "execution_commit": "dd9e10ad149fd94a0e5081788413dda8466decd8",
+  "frozen_manifest_sha256": "f3819d881fa86c10002f35e943f6b893ddff03cf33f418dea8bca166d6526972",
+  "checks": {
+    "development_year_only": true,
+    "source_files_rehashed": 744,
+    "eligible_events": 744,
+    "executed_trades": 730,
+    "unique_ticker_dates": true,
+    "sign_recomputed": true,
+    "entry_exit_return_recomputed": true,
+    "cost_recomputed": true,
+    "controls_recomputed": true,
+    "ticker_month_cells_recomputed": 36,
+    "source_grid_contract_pass": true,
+    "out_of_scope_invalid_rows": 3,
+    "outer_2024_2025_opened": false,
+    "holdout_2026_opened": false,
+    "production_modified": false
+  },
+  "primary": {
+    "trades": 730,
+    "win_rate": 0.4863013698630137,
+    "profit_factor": 0.8747514811880063,
+    "net_bps": -1689.309718627976,
+    "ticker_month_cells_passing": 10,
+    "ticker_month_cells_total": 36
+  },
+  "artifact_sha256": {
+    "SUMMARY.json": "2597ef2f803ad961df4aac39238e02815f8066e69a439811deac023b2fcf498f",
+    "SUMMARY.md": "a18f434034d5c83d300bd26e254e6fb9f5afbf2fd732c00055b7bcfd67d1694d",
+    "controls_summary.csv": "3e02e3eaef20a329be792121b977bd15e5af16cec77cfc77a36e5a9ed1e8a087",
+    "monthly_metrics.csv": "d83ff1fbf5a60f4a94a805a16106ec8fd96f845c04371f599b156884692a7a60",
+    "source_audit.csv": "8d195345c94ca442971b255afd23d9163da7dd1ad6485d6c6cd30b3c43b726bc",
+    "source_inventory.csv": "b4d4c7d193d98dc0b0638e1ac278966768fa09056e86e25867badb9afc92c309",
+    "ticker_summary.csv": "97bfd5da64da476f1cb600b6dbe319894a221a800eb7844731ea64e6b6bbcaaa",
+    "trades.csv": "31c95f4524ea6a13112282f355b6eaabc4f9670a37e01a7276d25c715494552b"
+  }
+}

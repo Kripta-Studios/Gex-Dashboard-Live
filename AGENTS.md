@@ -1,5 +1,17 @@
 # AI Agent Hand-off: Current Production Reality
 
+## Cierre OPTION_PARITY_PRESSURE_V1 — `CLOSED_NO_AGGREGATE_EDGE`
+
+One-shot 2023 ejecutado desde `dd9e10ad` y auditado independientemente. Pooled:
+730 trades, WR48,630%, PF0,874751 y -1.689,310bps; 10/36 celdas pasan. QQQ
+240/PF0,946778/-270,296bps/4 meses; SPXW 248/0,842979/-665,608/5; SPY
+242/0,819330/-753,406/1. Los tres pierden incluso antes de coste. Frequency sí
+pasa (mínimos 18/19/18). Inverse PF0,958/1,044/1,074 y no se rescata; always-long
+solo diagnostica drift 2023. Auditoría: 744 sources rehashed, relojes/hold/coste/
+36 gates exactos PASS. No abrir 2024–2026 ni variar signo/reloj/radio/modelo.
+Producción intacta. Evidencia en
+`option_parity_pressure_v1_development_202301_202312_v1/`.
+
 ### OPTION_PARITY_PRESSURE_V1 runner frozen — preejecución
 
 Manifest generado desde commit limpio `5cc1c936`: 744 eventos físicos normales

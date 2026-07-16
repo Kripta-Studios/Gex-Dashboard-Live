@@ -1,0 +1,137 @@
+{
+  "schema": "option_parity_pressure_v1_development_evaluation",
+  "status": "NO_AGGREGATE_EDGE",
+  "created_at_utc": "2026-07-16T23:20:20.223799+00:00",
+  "phase": "development_2023",
+  "development_pass": false,
+  "incremental_edge_all_tickers_pf_gt_1": false,
+  "ticker_month_cells_passing": 10,
+  "ticker_month_cells_total": 36,
+  "outer_2024_2025_opened": false,
+  "holdout_2026_opened": false,
+  "production_modified": false,
+  "policy": {
+    "feature": "parity_pressure",
+    "action": "sign(parity_pressure)",
+    "zero_action": "NO_TRADE",
+    "entry": "derived_underlying_open_10:36:00",
+    "exit": "derived_underlying_open_13:36:00",
+    "hold_minutes": 180,
+    "round_trip_cost_bps": 1.0,
+    "positions_per_ticker_per_day": 1,
+    "overlap_policy": "one_fixed_nonoverlapping_position_per_ticker_day"
+  },
+  "gate_spec": {
+    "profit_factor_strictly_greater_than": 1.2,
+    "win_rate_strictly_greater_than": 0.45,
+    "trades_per_month_strictly_greater_than": 12,
+    "monthly_net_bps_strictly_greater_than": 0.0
+  },
+  "frozen_manifest_sha256": "f3819d881fa86c10002f35e943f6b893ddff03cf33f418dea8bca166d6526972",
+  "frozen_runner_commit": "5cc1c9366fef9d54174a4e838ec497f98bd1d9c7",
+  "execution_commit": "dd9e10ad149fd94a0e5081788413dda8466decd8",
+  "data_gate_commit": "e560d0262a91b01c7c7c4c03bf5c922d459d0531",
+  "data_gate_manifest_sha256": "2b36e5765ee56677225437bd60c3a24e443e8b2c1e32ff35d3f6a493b665fbc7",
+  "feature_sha256": "45bca098588fa7bafefaf9a134e2f7de19f5d5d256d5d388766b5d33a38d5100",
+  "runner_sha256": "0d65589789d298764f590849dced4d22e49d16a65ca5d32699521cb3a4639147",
+  "source_inventory_sha256": "b4d4c7d193d98dc0b0638e1ac278966768fa09056e86e25867badb9afc92c309",
+  "source_audit_sha256": "8d195345c94ca442971b255afd23d9163da7dd1ad6485d6c6cd30b3c43b726bc",
+  "trades_sha256": "31c95f4524ea6a13112282f355b6eaabc4f9670a37e01a7276d25c715494552b",
+  "monthly_sha256": "d83ff1fbf5a60f4a94a805a16106ec8fd96f845c04371f599b156884692a7a60",
+  "ticker_summary_sha256": "97bfd5da64da476f1cb600b6dbe319894a221a800eb7844731ea64e6b6bbcaaa",
+  "controls_sha256": "3e02e3eaef20a329be792121b977bd15e5af16cec77cfc77a36e5a9ed1e8a087",
+  "source_sessions": 744,
+  "eligible_events": 744,
+  "executed_trades": 730,
+  "pooled_primary": {
+    "trades": 730,
+    "win_rate": 0.4863013698630137,
+    "profit_factor": 0.8747514811880063,
+    "net_bps": -1689.309718627976
+  },
+  "per_ticker": [
+    {
+      "ticker": "QQQ",
+      "trades": 240,
+      "win_rate": 0.49166666666666664,
+      "profit_factor": 0.9467777198647689,
+      "net_bps": -270.2957455971409,
+      "min_month_trades": 18,
+      "positive_months": 4,
+      "months_passing": 4,
+      "all_months_pass": false
+    },
+    {
+      "ticker": "SPXW",
+      "trades": 248,
+      "win_rate": 0.4798387096774194,
+      "profit_factor": 0.8429790940604568,
+      "net_bps": -665.6075017763313,
+      "min_month_trades": 19,
+      "positive_months": 6,
+      "months_passing": 5,
+      "all_months_pass": false
+    },
+    {
+      "ticker": "SPY",
+      "trades": 242,
+      "win_rate": 0.48760330578512395,
+      "profit_factor": 0.8193299445610954,
+      "net_bps": -753.4064712545041,
+      "min_month_trades": 18,
+      "positive_months": 3,
+      "months_passing": 1,
+      "all_months_pass": false
+    }
+  ],
+  "controls": [
+    {
+      "ticker": "QQQ",
+      "control": "inverse_sign",
+      "trades": 240,
+      "win_rate": 0.4875,
+      "profit_factor": 0.9584687534759067,
+      "net_bps": -209.7042544028592
+    },
+    {
+      "ticker": "QQQ",
+      "control": "always_long",
+      "trades": 248,
+      "win_rate": 0.5604838709677419,
+      "profit_factor": 1.3286354945290666,
+      "net_bps": 1453.6054707945282
+    },
+    {
+      "ticker": "SPXW",
+      "control": "inverse_sign",
+      "trades": 248,
+      "win_rate": 0.5080645161290323,
+      "profit_factor": 1.0444776553381616,
+      "net_bps": 169.60750177633136
+    },
+    {
+      "ticker": "SPXW",
+      "control": "always_long",
+      "trades": 248,
+      "win_rate": 0.5604838709677419,
+      "profit_factor": 1.0973745471046277,
+      "net_bps": 360.74824938630326
+    },
+    {
+      "ticker": "SPY",
+      "control": "inverse_sign",
+      "trades": 242,
+      "win_rate": 0.49586776859504134,
+      "profit_factor": 1.0736884163621858,
+      "net_bps": 269.4064712545041
+    },
+    {
+      "ticker": "SPY",
+      "control": "always_long",
+      "trades": 248,
+      "win_rate": 0.5564516129032258,
+      "profit_factor": 1.1010875859591605,
+      "net_bps": 373.81387886129323
+    }
+  ]
+}
