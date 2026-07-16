@@ -1240,3 +1240,17 @@ lag estricto, feature contract y fallback: suite conjunta `18 passed`; Ruff y
 compile clean. Siguiente secuencia: commit/push del runner congelado -> desarrollo
 walk-forward 2025 -> commit selección -> one-shot 2026. Outcomes VOL siguen
 cerrados hasta el commit del runner.
+
+### Development freeze DIRECTIONAL_VOL_COMPLEX_V1
+
+Runner congelado/pushed en `f6f3e8e9`; desarrollo walk-forward 2025 completado
+sin consultar 2026. Son 247 trades por ticker/profile, mínimo mensual 18 y cero
+fallbacks en 2025. Selecciones: QQQ `VIX_INTRADAY_RESIDUAL` (WR 53,04%, PF
+1,031, +172,7 bps, 6/12 meses positivos); SPX `VOL_COMPLEX_RESIDUAL` (52,23%,
+1,061, +280,4, 6/12); SPY `VIX_INTRADAY_RESIDUAL` (52,63%, 1,074, +338,9,
+7/12). Ledger SHA `16092230...9f284`; provenance SHA `c80019a1...86a0d`.
+
+La mejora es débil: QQQ empeora al JEPA padre y SPX/SPY solo mejoran agregado,
+sin estabilidad mensual. La predeclaración no tenía gate de desarrollo; congelar
+y commit/push de todos los artefactos antes del único one-shot 2026. No cambiar
+profiles, ventanas, features ni modelo tras estos resultados.

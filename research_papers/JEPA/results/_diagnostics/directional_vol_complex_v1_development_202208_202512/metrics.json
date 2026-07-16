@@ -1,0 +1,41 @@
+{
+  "created_at_utc": "2026-07-16T12:52:02.438076+00:00",
+  "daily_rows": 2544,
+  "development_fallback_trades": 0,
+  "feature_counts": {
+    "cboe_term": 33,
+    "semantic": 54,
+    "technical": 105,
+    "vix_intraday": 30
+  },
+  "holdout_2026_used": false,
+  "production_modified": false,
+  "provenance_sha256": "c80019a1d507d77fcbec1e9bbf41790ce425d8ec4837e90c8b0a8e0c4b086a0d",
+  "schema": "directional_vol_complex_v1_development_metrics",
+  "scope": {
+    "end_date": "20251231",
+    "months": [
+      "202501",
+      "202502",
+      "202503",
+      "202504",
+      "202505",
+      "202506",
+      "202507",
+      "202508",
+      "202509",
+      "202510",
+      "202511",
+      "202512"
+    ],
+    "start_date": "20220801"
+  },
+  "selected_profiles": {
+    "QQQ": "VIX_INTRADAY_RESIDUAL",
+    "SPX": "VOL_COMPLEX_RESIDUAL",
+    "SPY": "VIX_INTRADAY_RESIDUAL"
+  },
+  "status": "PASS_DEVELOPMENT_FREEZE",
+  "vix_available_daily_rows": 2493,
+  "vix_missing_daily_rows": 51
+}
