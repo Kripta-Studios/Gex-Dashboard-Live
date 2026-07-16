@@ -1,5 +1,13 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+Calendar RR full data gate PASS desde `ef489bac`. Compactos copiados a
+`calendar_risk_reversal_pressure_v1_202301_202312_v1_data_gate/`: feature SHA
+`de0ec4b3...2858b`, manifest file `604f53b2...a9c1`, source inventory
+`6f81e4f8...184d8`. 747/750, min19/mes, 3 errors causales documentados. No
+outcomes. Force-add los nueve compactos (incluido independent audit), result doc
+y siete handoffs, commit/push. Luego implementar evaluator/freezer análogo al
+parity runner pero con estos hashes; no ejecutar antes de otro commit+manifest.
+
 Builder calendar-RR listo sin outcomes:
 `neural/jepa/build_calendar_risk_reversal_pressure_v1.py` y
 `tests/test_build_calendar_risk_reversal_pressure_v1.py`, 8 passed/Ruff/compile.

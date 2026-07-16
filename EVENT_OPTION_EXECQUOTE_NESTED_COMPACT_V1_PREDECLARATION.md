@@ -1,5 +1,8 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1
 
+> The separate calendar-RR data gate passed outcome-free; any later 2023 cash
+> proxy ledger remains isolated from compact V1.
+
 > The separate calendar-RR builder is implemented pre-outcome and remains
 > isolated from this protocol's feature, model and payoff contract.
 

@@ -1,5 +1,12 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+El data gate calendar-RR demuestra que una estructura temporal IV causal puede
+medirse con 99,2–100% de cobertura y sin as-of. Los tres fallos muestran por qué
+el join exacto importa: crossed quote y dos diferencias de key Greek/IV se
+preservan como missing, sin convertir calidad en alpha. La variable tiene al
+menos 233 estados por ticker y frecuencia suficiente; todavía no dice nada de
+dirección o rentabilidad.
+
 El preflight calendar-RR confirma que la comparación front/back es materializable
 sin interpolar: 250 sesiones por ticker en 2023, dos expiraciones por día, clocks
 nativos y cuatro contratos 25-delta que persisten cinco minutos en las muestras.

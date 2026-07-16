@@ -1,5 +1,15 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Calendar RR `PASS_DATA_GATE`
+
+Full gate 2023 desde `ef489bac`: 750 sesiones, 747 válidas, coverage
+QQQ/SPXW/SPY 99,6/99,2/100%, mínimo19 eventos/mes, mínimo233 estados y zero
+fraction máxima0,8097%. Inventario 3.750 fuentes rehasheadas; auditoría de
+fórmulas/contratos PASS. Tres fallos preservados: QQQ20230626 crossed CALL;
+SPXW20230628 key PUT falta en IV; SPXW20230814 key CALL extra en IV. No outcomes.
+Feature SHA `de0ec4b3...2858b`, manifest `604f53b2...a9c1`. Siguiente: commit
+compactos -> runner económico 2023 -> manifest freeze -> un solo outcome read.
+
 ### Calendar RR builder pre-outcome listo
 
 `build_calendar_risk_reversal_pressure_v1.py` y su suite focal están listos:

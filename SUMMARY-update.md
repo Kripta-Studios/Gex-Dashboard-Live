@@ -1,5 +1,11 @@
 # SUMMARY-update — ledger científico compacto
 
+Calendar RR `PASS_DATA_GATE`: 747/750, coverage mínima99,2%, min19/mes,
+distinct states min233, 3.750 fuentes rehasheadas y 3 fallos explícitos de
+quote/key. Feature SHA `de0ec4b3...2858b`, manifest `604f53b2...a9c1`.
+`outcome_accessed=false`; siguiente etapa es commit compactos y freeze del
+runner 2023. 2024–2026 intactos.
+
 Builder calendar-RR implementado pre-outcome: `8 passed`, Ruff/compile clean.
 Inventario 2023 750 sesiones/250 por ticker/min19 mensual; smoke real de tres
 tickers pasa clocks/joins/contratos. Falta commit/push y full data gate inmutable;

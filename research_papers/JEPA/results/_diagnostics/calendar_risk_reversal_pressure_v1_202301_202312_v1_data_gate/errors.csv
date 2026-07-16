@@ -1,0 +1,4 @@
+ticker,trade_date,invalid_reason
+QQQ,20230626,AssertionError: no persistent signable CALL 25-delta contract
+SPXW,20230628,AssertionError: Greek/IV exact key sets differ
+SPXW,20230814,AssertionError: Greek/IV exact key sets differ

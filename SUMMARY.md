@@ -1,5 +1,10 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+Calendar risk reversal ya supera su gate físico 2023: 747/750 eventos, mínimo
+99,2% coverage y 19 eventos mensuales, señal no degenerada. La auditoría
+independiente reprodujo fórmulas y 3.750 hashes. Aún no existe PF/WR/PnL; el
+runner económico debe escribirse y congelarse antes de abrir retornos.
+
 La implementación outcome-free de calendar RR ya valida inventario, timestamps
 nativos, Greek/IV exactos y selección fija 25d. Hay 750 sesiones 2023, mínimo19
 por ticker-mes, y el smoke real pasa. Suite `8 passed`; el full data gate solo

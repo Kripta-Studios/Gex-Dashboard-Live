@@ -1,0 +1,86 @@
+{
+  "schema": "calendar_risk_reversal_pressure_v1_outcome_free_data_gate",
+  "status": "PASS_DATA_GATE",
+  "created_at_utc": "2026-07-16T23:37:40.612679+00:00",
+  "git_commit": "ef489baceb164de89ce40f1c86278d094c553570",
+  "scope": {
+    "start_date": "20230101",
+    "end_date": "20231231",
+    "sessions": 750
+  },
+  "tickers": [
+    "QQQ",
+    "SPXW",
+    "SPY"
+  ],
+  "rows": 750,
+  "valid_rows": 747,
+  "source_inventory_rows": 3750,
+  "feature_contract": {
+    "clocks": [
+      "10:30:00",
+      "10:35:00"
+    ],
+    "target_abs_delta": 0.25,
+    "maximum_delta_gap": 0.1,
+    "front": "expiration=trade_date",
+    "back": "minimum expiration>trade_date",
+    "same_contract_t0_t1": true,
+    "feature": "delta5m[(call25-put25)_front-(call25-put25)_back]"
+  },
+  "data_gate": {
+    "coverage_pass": true,
+    "distinctness_pass": true,
+    "frequency_pass": true,
+    "minimum_coverage": 0.992,
+    "minimum_distinct_states": 233,
+    "maximum_zero_fraction": 0.008097165991902834,
+    "minimum_monthly_valid_events": 19,
+    "source_session_errors": 3,
+    "passed": true
+  },
+  "predeclaration_sha256": "409d93d843f61921c9c4902b48394e1c4106393010de5b9eb976977726688d23",
+  "builder_sha256": "c2f07b4ed175127717261a717b254914e595333b210572633853d51eec34cb49",
+  "runtime_environment": {
+    "python_version": "3.14.2",
+    "python_implementation": "CPython",
+    "platform": "Windows-10-10.0-19041",
+    "packages": {
+      "numpy": "2.3.5",
+      "pandas": "3.0.0",
+      "pyarrow": "23.0.1"
+    }
+  },
+  "runtime_environment_sha256": "d80e00af2589301af684217e0597182c8459f13d759a0abbc5b91f8939d84162",
+  "output_sha256": {
+    "calendar_rr_features.parquet": "de0ec4b3251505b763dff3dc8baee2f3462ca7a5833d70ed6db014b03112858b",
+    "session_audit.csv": "52df87c674d79ebe4f0a0de6f1ae4825e67f16c9e89131b271a63ce3dbab5605",
+    "source_inventory.csv": "6f81e4f8cc102f63c60e23c04d0c13d7a5be4af535c745f2dc5ec2646a2184d8",
+    "coverage.csv": "ba6d270a559877bad366c734737935eaf331847efc044bb16cd7c99c69710aab",
+    "distinctness.csv": "75b0f6e419fbf3cd9e0d5db0b760f9a0b5bfa9c3736f1981b5837ddfaca41a6e",
+    "monthly_capacity.csv": "665697dda996af79ac25723aa66b4d73e59e6c9e8d7e8acbfcf9a2dfd2c77119",
+    "errors.csv": "fb2345e2e2d83acbccbf0f5911fe6d0cd7c3124def0499b6b975fd1a27084fea"
+  },
+  "labels_built": false,
+  "outcome_accessed": false,
+  "outer_2024_2025_opened": false,
+  "holdout_2026_opened": false,
+  "production_modified": false,
+  "errors": [
+    {
+      "ticker": "QQQ",
+      "trade_date": "20230626",
+      "invalid_reason": "AssertionError: no persistent signable CALL 25-delta contract"
+    },
+    {
+      "ticker": "SPXW",
+      "trade_date": "20230628",
+      "invalid_reason": "AssertionError: Greek/IV exact key sets differ"
+    },
+    {
+      "ticker": "SPXW",
+      "trade_date": "20230814",
+      "invalid_reason": "AssertionError: Greek/IV exact key sets differ"
+    }
+  ]
+}

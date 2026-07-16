@@ -1,0 +1,4 @@
+ticker,eligible_sessions,distinct_states,zero_fraction,missing,min_month_events
+QQQ,247,235,0.008097165991902834,0,19
+SPXW,246,233,0.0,0,19
+SPY,248,233,0.0,0,19
