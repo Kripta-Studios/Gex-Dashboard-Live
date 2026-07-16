@@ -80,3 +80,30 @@ The only economically distinct next feasibility test is symmetric defined-risk
 short premium (iron condor/iron fly) replayed directly from native bid/ask
 quotes. It must produce only a trade ledger, not another feature dataset, and
 must pass on pre-2026 months before 2026 or July is evaluated.
+
+## Post-closure program evidence — 2026-07-16
+
+The proposed economically distinct tests were executed or stopped by their
+frozen data gates. This addendum does not rescue or alter the compact V1 result.
+
+- Defined-risk short premium V1 encountered crossed native exits. V2 replaced
+  path-dependent exits with fixed TIME30/60/90/120 while preserving exact
+  four-leg bid/ask execution. After 100/1,506 sessions it already contained
+  4,271 candidates and 13 unresolved exits, concentrated in QQQ 2024-02-06.
+  Because the protocol forbids silently dropping an entry-resolvable structure,
+  V2 is `REJECTED_DATA_GATE`; no PF/WR/PnL was opened.
+- Equal-dollar long CALL+PUT 0DTE (`DUAL_LEG_EVENT_VOLATILITY_V1`) eliminated
+  the side classifier but lost directly in 2025: 613 trades per ticker, PF
+  QQQ/SPX/SPY 0.629/0.661/0.605 and WR 35.07/33.28/36.22%. Only 2/2/1 months
+  were positive despite at least 40 trades per month.
+- A new seven-futures Globex source produced a genuine 2025 near-miss (PF
+  1.200–1.210, 9/12 positive months) but the frozen policy reversed in
+  January–15 July 2026 (PF 0.873–0.899, only 2–3 positive months). Three online
+  adaptations failed pre-2026 stability gates.
+- Direct Initial-Balance breakout/fade execution retained 24–25 minimum monthly
+  trades but failed in 2025 with PF 0.779–0.819 and WR 31–32%.
+
+The expanded evidence strengthens, rather than changes, this closure: neither
+adding model capacity/market context nor switching to long-vol, short-premium
+or IB/Fibonacci created a stable causal policy. The current state is
+`NO_PROFITABLE_CAUSAL_POLICY`; production remains unchanged.

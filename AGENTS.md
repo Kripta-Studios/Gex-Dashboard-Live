@@ -1338,3 +1338,59 @@ QQQ 406 trades/WR 31,281%/PF 0,779/2 meses positivos/min25; SPX 432/32,407%/
 0,785/3/min24; SPY 432/31,944%/0,819/4/min24. Frecuencia PASS pero economía
 claramente negativa. No rescatar post-hoc quitando stops, cambiando Fib,
 seleccionando meses o usando solo breakout. Producción intacta.
+
+### Checkpoint consolidado posterior — Globex, payoffs alternativos e IB
+
+Estado autoritativo al 2026-07-16: no existe una policy nueva rentable ni
+promovible. La gate económica solicitada más reciente es, por ticker, PF>1,20,
+WR>45%, más de 12 trades en cada mes y PnL positivo en todos los meses
+walk-forward hasta 2026-07-15. La antigua meta PF>=1,30/WR>=50%/>=18 sigue
+siendo un objetivo más estricto, no debe confundirse con la gate vigente.
+
+Fuente externa nueva sellada: Yahoo continuous futures 60m, periodo exacto
+2024-07-17..2026-07-15, `ES=F/NQ=F/YM=F/RTY=F/ZN=F/GC=F/CL=F`. Manifest SHA
+`dad8dc52...dcb7`; captura commit `eaa56342`. `VX=F` no existía (HTTP 404) y
+Yahoo rechazó ampliar 60m más allá de 730 días. Son continuos de investigación,
+no contratos ni fills broker-grade. Cada decisión exigió los siete futuros y
+los 15 tickers cash exactos; cualquier falta se eliminó conjuntamente.
+
+`DIRECTIONAL_GLOBEX_CROSS_ASSET_V1` fue el único near-miss serio: desarrollo
+2025 seleccionó Globex con 412 trades/ticker, min22, 9/12 meses positivos y PF
+QQQ/SPX/SPY 1,200/1,206/1,210. El one-shot enero–15 julio 2026 cambió de signo:
+251 trades/ticker, min20, PF 0,873/0,899/0,888, WR 46,61/47,81/47,81%, PnL
+-804/-455/-503 bps y solo 2/3/3 meses positivos. Cierre `f7f09f93`.
+
+Las reparaciones adaptativas no abrieron 2026: V2 logistic online queda en
+desarrollo PF 0,980/0,976/0,996 y 5/6/6 meses positivos; V3 Hedge de reglas
+mejora agregado a 1,140/1,137/1,098 pero solo 5/6/5 meses; V4 meta-Hedge queda
+1,161/0,933/0,965 y 4/5/5. Cierres `bec721d8`, `0b0cf093`, `e3e17bd0`. No
+rescatar memorias, ventanas, expertos o inversas post-hoc.
+
+Payoffs no direccionales también quedan cerrados:
+
+- `SHORT_PREMIUM_FIXED_HORIZON_V2` preservó cuatro patas exactas y exits
+  30/60/90/120m. Tras 100/1.506 sesiones ya había 4.271 candidatos y 13 exits
+  no ejecutables, concentrados en QQQ 2024-02-06. Su contrato declaraba que una
+  estructura resoluble al entrar pero no al salir invalida el run; por tanto es
+  `REJECTED_DATA_GATE`, sin PF/WR/PnL ni exclusión del día.
+- `DUAL_LEG_EVENT_VOLATILITY_V1`, CALL+PUT 0DTE equal-dollar y scheduler global
+  sin solape, falla 2025 con 613 trades/ticker: PF QQQ/SPX/SPY
+  0,629/0,661/0,605, WR 35,07/33,28/36,22%, 2/2/1 meses positivos y min40.
+  Cierre `edcd18c3`; 2026 no se abrió.
+- `DIRECTIONAL_IB_BREAKOUT_FADE_V1` queda cerrado en `6dbe157d` con las métricas
+  de la sección anterior. El Initial Balance/Fibonacci directo no arregló la
+  dirección y falló antes de 2026.
+
+Diagnóstico JEPA final: el colapso espectral era real pero no suficiente. La
+arquitectura factorized innovation+VISReg elevó rango efectivo z/dz a
+53,54%/42,67% y aun así dio PF<1 en los tres tickers en 2026. No aplicar más
+VISReg, corrupciones o capacidad sobre las mismas features como rescate. La
+evidencia conjunta apunta a no estacionariedad/falta de información causal
+estable, no solo a theta 0DTE.
+
+Estado: `NO_PROFITABLE_CAUSAL_POLICY`. No hay familia activa autorizada ni
+cambio de producción. Una continuación debe
+predeclarar un mecanismo económicamente independiente (p. ej. cross-session o
+relative-value) o incorporar una fuente broker-grade con paridad live; no puede
+ser otro dataset de las mismas features, una memoria Globex adicional, otro
+stop/Fib, otro delta/horizonte weekly ni selección de ticker/mes observada.

@@ -1,5 +1,11 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1
 
+> **Nota de estado posterior, 2026-07-16:** este protocolo congelado ya fue
+> ejecutado y cerró `CLOSED_NO_EDGE`. La nota no cambia retrospectivamente
+> inputs, folds, grids ni gates. El resultado y las pruebas económicamente
+> distintas posteriores se registran en la adenda final y en
+> `EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1_CLOSURE.md`.
+
 ## Purpose
 
 This is the last authorized model-family test on the existing long-option 0DTE
@@ -117,3 +123,21 @@ pristine untouched holdout at the research-program level. The first prospective
 period after this freeze is July 2026. On 2026-07-16 only July MTD can be
 evaluated; the full-month frequency/PnL gate cannot be claimed before the month
 is complete.
+
+## Post-run addendum — historical record only
+
+The frozen command completed and produced `CLOSED_NO_EDGE`: pooled 338 trades,
+WR 37.870%, PF 0.798224 and -24.9112R. Per ticker PF was 0.804 QQQ, 0.794 SPXW
+and 0.797 SPY; four of 18 outer cells abstained. Exact chronology, ask-entry,
+bid-mark/exit, 30–180m hold, daily caps and same-ticker non-overlap were audited.
+
+The predeclared next family, symmetric defined-risk short premium, did not yield
+an economic result: fixed-horizon V2 proved 13 non-executable exact four-leg
+exits within the first 100 of 1,506 sessions and therefore failed its data gate.
+Long CALL+PUT, explicit Globex direction and direct IB/Fibonacci execution were
+also tested as independent mechanisms and closed. Their results are summarized
+in the closure addendum and root hand-off documents.
+
+This section records subsequent state only. It must never be used to claim that
+the original grid, selector or stop rule was predeclared with knowledge of those
+later outcomes.

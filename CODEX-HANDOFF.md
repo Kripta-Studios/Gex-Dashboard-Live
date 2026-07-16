@@ -1,10 +1,11 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
-**Actualizado:** 13 de julio de 2026
+**Actualizado:** 16 de julio de 2026, 18:30 Europe/Madrid
 
 **Checkpoint de captura nativa:** `041b16c research: freeze stored-universe native clock coverage`
 
-**Producción:** intacta. **Junio de 2026:** sellado.
+**Producción:** intacta. **Estado económico:** ninguna policy nueva cumple la
+gate vigente. **Checkpoint autoritativo más reciente:** sección final.
 
 ## Checkpoint 14-jul-2026 — rotación económica persistente
 
@@ -1276,3 +1277,76 @@ ni variar hold/delta/clock. Always-CALL apenas PF1,042–1,056; always-PUT pierd
 2026 y producción intactos. No hay policy causal rentable/promovible. Los
 compactos están en `weekly_multiday_oracle_202201_202512_v1/` y
 `king_gex_manage30_development_2023_v1/`.
+
+## Checkpoint autoritativo 2026-07-16 18:30 — no hay familia activa
+
+Todo lo anterior conserva cronología, pero los bloques que dicen “research
+activo” están cerrados. No existe hoy una policy que cumpla simultáneamente por
+QQQ/SPX/SPY PF>1,20, WR>45%, >12 trades en cada mes y PnL positivo en todos
+los meses enero–15 julio 2026. El paquete live/paper no fue sustituido.
+
+### Fuente Globex sellada
+
+Bundle externo inmutable:
+
+```text
+D:/ThetaData/futures_yahoo_60m_20240717_20260715_v1
+```
+
+Símbolos `ES=F,NQ=F,YM=F,RTY=F,ZN=F,GC=F,CL=F`; capture manifest SHA
+`dad8dc52c08ea29cbea35aedcc706c7cf51fb937436b88706642141236c2dcb7`.
+Seal commit `eaa56342`. La fila Yahoo exactamente en `period2` se conserva en
+raw y se excluye del periodo congelado. No usar `VX=F` (404), no inventar VIX y
+no llamar a estos continuos fills de futuros. Yahoo impidió extender 60m antes
+de 2024-07-17 por su límite de 730 días.
+
+El runner exige intersección exacta de siete futuros y 15 cash tickers. Faltas
+de barra/día/semana se eliminan para todos, sin forward fill. V1 seleccionó
+Globex en 2025 (PF 1,200/1,206/1,210; 9/12 meses positivos) y falló el one-shot
+2026-julio (PF 0,873/0,899/0,888; 2/3/3 meses positivos). Commits principales:
+`73320dd8`, `5de742ec`, `eaa56342`, `a0154724`, `b679919c`, `f7f09f93`.
+
+V2/V3/V4 quedaron cerrados en desarrollo y no abrieron 2026:
+
+- V2 online linear: PF 0,980/0,976/0,996; commits `fdf63b59`,`bec721d8`;
+- V3 online expert: PF 1,140/1,137/1,098, 5/6/5 meses; `9c7f1707`,`0b0cf093`;
+- V4 meta-Hedge: PF 1,161/0,933/0,965, 4/5/5 meses; `30145354`,`e3e17bd0`.
+
+No abrir memorias adicionales, seleccionar W1/W2, invertir un ticker o mezclar
+expertos post-hoc.
+
+### Payoffs alternativos cerrados
+
+`SHORT_PREMIUM_FIXED_HORIZON_V2` (`d1f86f7b`,`cb3966b4`) usa exits exactos
+TIME30/60/90/120 y exige cuatro patas ejecutables. El log externo
+`D:/ThetaData/short_premium_fixed_horizon_v2.stdout.log` alcanzó 100/1.506
+sesiones, 4.271 candidatos y 13 unresolved ya invalidantes. No hay output dir,
+PF, WR o PnL. Estado: `REJECTED_DATA_GATE`; no reanudar para descartar filas.
+
+`DUAL_LEG_EVENT_VOLATILITY_V1` (`d96b4530`,`edcd18c3`) cerró 2025 con 613
+trades/ticker, PF 0,629/0,661/0,605, WR 35,07/33,28/36,22% y min40. Artefactos:
+`results/_diagnostics/dual_leg_event_volatility_v1_development_2025/`.
+
+`DIRECTIONAL_IB_BREAKOUT_FADE_V1` (`b0f0bdcf`,`6dbe157d`) cerró 2025 con PF
+0,779/0,785/0,819, WR 31,28/32,41/31,94% y min25/24/24. Usa 829 sesiones
+comunes de 15 tickers y no creó dataset nuevo. Artefactos en
+`directional_ib_breakout_fade_v1_development_202208_202512/`.
+
+### Diagnóstico y disciplina de continuación
+
+Factorized innovation+VISReg corrigió el colapso espectral (rango efectivo
+z/dz 53,54%/42,67%) sin rentabilidad. No repetir VISReg, JEPA corruption,
+breadth, option surface, memoria Globex, stop/Fib, weekly hold/delta o selección
+de meses sobre los mismos outcomes.
+
+No hay proceso de captura/research relevante que deba reanudarse. Los procesos
+Python observados al redactar este checkpoint pertenecen a otro workspace.
+Preservar todos los untracked del usuario, especialmente
+`MASTER_KING_NODE_RECORD_V5.xlsx`, `live_king_node.py`, tarballs, `tmp/` y los
+artefactos JEPA existentes; no hacer reset/clean.
+
+La siguiente familia solo puede activarse con predeclaración de un mecanismo
+independiente o una fuente broker-grade con paridad live. Candidatos conceptuales
+no autorizados todavía: cross-session/overnight o relative-value entre índices.
+No descargar otra fuente ni abrir 2026 para uno de ellos sin freeze y desarrollo
+pre-2026. Estado final: `NO_PROFITABLE_CAUSAL_POLICY`, producción intacta.

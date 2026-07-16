@@ -1,13 +1,16 @@
 # SUMMARY-update — ledger científico compacto
 
-**Corte:** 13 de julio de 2026
+**Corte:** 16 de julio de 2026, 18:30 Europe/Madrid
 
 **Objetivo:** policy 0DTE causal y live-equivalente para SPXW, QQQ y SPY.
 
-**Gates por ticker:** PF `>=1,3`, WR `>=50%`, `>=18` trades/mes, todos los meses
-positivos y cada hold `>=30m`.
+**Gate económica vigente por ticker:** PF `>1,20`, WR `>45%`, más de 12
+trades/mes y PnL positivo en todos los meses walk-forward. La antigua gate
+PF `>=1,3`, WR `>=50%`, `>=18` trades/mes y hold `>=30m` se conserva como
+objetivo estricto, pero no debe mezclarse con la gate solicitada más reciente.
 
-**Junio 2026:** sellado. **Producción:** intacta.
+**Enero–15 julio 2026:** ya consultado por varias familias adaptativas; no es un
+holdout confirmatorio nuevo. **Producción:** intacta.
 
 ## Rotación posterior a EXISTING_DATA_EXECUTABLE_UTILITY_V1
 
@@ -757,3 +760,36 @@ no-overlap sobre 2022–2025. Cobertura 2.361/2.364; PF oracle 12,277–13,960 y
 PnL mensual siempre positivo, pero 16/144 celdas no superan WR50% y la capacidad
 es 8–10 trades/mes. Always-CALL solo PF1,042–1,056; always-PUT pierde. Gate
 cerrada: no dataset/modelo semanal ni sweep. No existe policy promovible nueva.
+
+## Checkpoint 16-jul-2026 — fuente Globex y cierres posteriores
+
+Se incorporó una sola fuente externa outcome-free: continuos Yahoo 60m
+`ES/NQ/YM/RTY/ZN/GC/CL`, 2024-07-17..2026-07-15, seal `eaa56342`, manifest SHA
+`dad8dc52...dcb7`. `VX=F` no existe en esa API y el histórico 60m anterior al
+límite de 730 días fue rechazado por Yahoo. Los siete futuros y 15 tickers cash
+se exigen exactos; faltantes se quitan conjuntamente, sin imputación.
+
+El primer modelo Globex pasó desarrollo 2025 con 412 trades/ticker, min22,
+9/12 meses positivos y PF QQQ/SPX/SPY 1,200/1,206/1,210. Al abrir una vez
+enero–15 julio 2026 cayó a PF 0,873/0,899/0,888, WR 46,61/47,81/47,81%,
+2/3/3 meses positivos y PnL -804/-455/-503 bps. La frecuencia pasa; falla la
+estabilidad direccional.
+
+V2 online linear cerró 2025 en PF 0,980/0,976/0,996; V3 expert Hedge llegó a
+1,140/1,137/1,098 pero solo 5/6/5 meses positivos; V4 meta-Hedge quedó
+1,161/0,933/0,965 y 4/5/5. Ninguno abrió 2026. No seleccionar memorias,
+ventanas, inversas o expertos después de ver estos resultados.
+
+El short-premium V2 de exits fijos quedó `REJECTED_DATA_GATE`: tras 100/1.506
+sesiones había 4.271 candidatos y 13 salidas de cuatro patas no ejecutables,
+principalmente QQQ 2024-02-06. No se excluye el día ni se reporta economía.
+
+El payoff long-vol dual-leg 0DTE también falla 2025: 613 trades/ticker, PF
+0,629/0,661/0,605, WR 35,07/33,28/36,22% y solo 2/2/1 meses positivos.
+Finalmente, IB breakout/fade directo conserva min24–25 trades/mes pero queda PF
+0,779/0,785/0,819 y WR ~31–32%. Ambos cerraron antes de 2026.
+
+Diagnóstico final: VISReg/factorización corrigió el rango latente (z 53,54%, dz
+42,67%) sin corregir PF. No era solo colapso JEPA ni solo theta 0DTE. La fuente,
+el objetivo y la relación causal son inestables. Estado actual:
+`NO_PROFITABLE_CAUSAL_POLICY`, producción intacta y ninguna familia activa.

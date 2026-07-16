@@ -1,19 +1,27 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
-**Actualizado:** 2026-07-15 16:47 Europe/Madrid
-**Rama:** \`main\`
-**HEAD pushed:** \`b8fa50c8\`
-**Experimento activo:** \`KING-GEX-MANAGE30-V1\`
+**Actualizado:** 2026-07-16 18:30 Europe/Madrid
+
+**Rama:** `main`
+
+**Base auditada:** `6dbe157d`
+
+**Experimento activo:** ninguno; último cierre `DIRECTIONAL_IB_BREAKOUT_FADE_V1`
+
+> Las secciones MANAGE30 de este documento conservan la cronología histórica,
+> pero ya no describen trabajo activo. El checkpoint autoritativo actual está
+> en la sección 25.
 
 ## 1. Estado ejecutivo
 
-No existe todavía una policy nueva que haya demostrado rentabilidad causal. Los
-PF altos del oracle usan futuro y no son operables. La investigación activa
-intenta aprender causalmente en +30m qué gestión conviene, preservando entrada al
-ask, salida al bid, 0DTE, hold 30..180m, caps/cooldown live y rechazo mientras
-exista una posición abierta.
+No existe una policy nueva que haya demostrado rentabilidad causal bajo la gate
+vigente. Los PF altos de los oracles usan futuro y no son operables. MANAGE30,
+weeklies, long-option 0DTE nested, short premium, long-vol dual-leg, dirección
+cash/Globex y ejecución directa IB/Fibonacci ya tienen resultado negativo o gate
+de datos cerrada. Producción no fue modificada.
 
-Gate MANAGE30 congelada para cada una de las 36 celdas ticker-mes de 2023:
+Gate histórica MANAGE30, ya evaluada y cerrada, para cada una de las 36 celdas
+ticker-mes de 2023:
 
 - PF estrictamente mayor que 1,30;
 - WR estrictamente mayor que 45%;
@@ -89,7 +97,7 @@ H-FLOW1, H-IVSURF1, H-QSIZE1R1 y H-IBQDYN1 fallaron gates físicas congeladas.
 H-QDYN1 cerró en data gate y H-GREEK2WALL quedó bloqueado por entitlement
 STANDARD. No rescatar tickers/horizontes post-hoc ni atribuirles PF.
 
-## 5. Hipótesis activa MANAGE30
+## 5. Hipótesis histórica MANAGE30 — cerrada
 
 La entrada queda fija en dirección \`D1_INVERTED\`, mismo contrato 0DTE
 (SPXW d25, QQQ/SPY d35) y ask. La decisión ocurre en la primera quote exacta del
@@ -193,7 +201,7 @@ El runner pasó 22 tests combinados builder/runner/EXIT1, Ruff y py_compile ante
 del commit. Cada fold persiste modelo, medianas, predicciones, trades, métricas y
 manifest-last con hashes; un relaunch solo reutiliza identidad byte-exacta.
 
-## 8. Siguiente secuencia exacta
+## 8. Secuencia histórica ya completada
 
 1. Comprobar si el builder V1R1 existente sigue vivo; esperar, no duplicar.
 2. Auditar el data gate, 22.273 keys, paridad B00 y coberturas M0/M1.
@@ -1650,3 +1658,73 @@ Producción y 2026 permanecen intactos. Estado: no existe hoy una policy causal
 rentable/promovible bajo las metas estrictas; la investigación queda cerrada,
 no “activa”, hasta que el usuario cambie prospectivamente frecuencia/WR o
 autorice una hipótesis realmente nueva.
+
+## 25. Checkpoint autoritativo posterior — 2026-07-16
+
+### Gate vigente y validez de 2026
+
+La solicitud económica más reciente exige por ticker PF>1,20, WR>45%, más de
+12 trades en cada mes y PnL mensual positivo, cubriendo enero–15 julio 2026.
+Enero–julio ya fue consultado por varias familias adaptativas y no constituye un
+holdout prístino. Un PASS futuro necesitaría shadow/prospectivo; no autorizaría
+por sí solo producción.
+
+### Futuros Globex: near-miss que no generaliza
+
+Se capturaron y sellaron, sin tocar live, siete continuos Yahoo 60m entre
+2024-07-17 y 2026-07-15: ES, NQ, YM, RTY, ZN, GC y CL. Manifest SHA
+`dad8dc52...dcb7`, seal `eaa56342`. `VX=F` devolvió 404 y el proveedor limita
+60m a 730 días. El panel final exige simultáneamente esos siete futuros y los
+15 cash tickers; los faltantes se eliminan para todos.
+
+V1 fue prometedor solo en desarrollo 2025:
+
+| Ticker | Trades | WR | PF | Meses + | Mín/mes |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| QQQ | 412 | 52,18% | 1,200 | 9/12 | 22 |
+| SPX | 412 | 51,21% | 1,206 | 9/12 | 22 |
+| SPY | 412 | 51,21% | 1,210 | 9/12 | 22 |
+
+El freeze se preservó antes del one-shot 2026, donde falló:
+
+| Ticker | Trades | WR | PF | PnL bps | Meses + | Mín/mes |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| QQQ | 251 | 46,61% | 0,873 | -804,11 | 2/7 | 20 |
+| SPX | 251 | 47,81% | 0,899 | -455,04 | 3/7 | 20 |
+| SPY | 251 | 47,81% | 0,888 | -502,84 | 3/7 | 20 |
+
+Tres intentos adaptativos quedaron cerrados antes de 2026: online linear V2 PF
+0,980/0,976/0,996; expert Hedge V3 1,140/1,137/1,098 pero solo 5/6/5 meses
+positivos; meta-Hedge V4 1,161/0,933/0,965 y 4/5/5. Esto falsifica estabilidad,
+no la mera existencia de algún mes o regla rentable.
+
+### Payoffs alternativos y ejecución técnica
+
+`SHORT_PREMIUM_FIXED_HORIZON_V2` no llegó a economía. A 100/1.506 sesiones,
+4.271 candidatos incluían 13 salidas exactas no ejecutables en QQQ 2024-02-06.
+Como el protocolo prohibía omitir una estructura resoluble en entrada, queda
+`REJECTED_DATA_GATE` sin PF/WR/PnL.
+
+`DUAL_LEG_EVENT_VOLATILITY_V1` compró CALL+PUT 0DTE equal-dollar con ask->bid,
+haircut y scheduler global no-overlap. En 2025 produjo 613 trades/ticker y
+falló: PF QQQ/SPX/SPY 0,629/0,661/0,605, WR 35,07/33,28/36,22%, solo 2/2/1
+meses positivos. No se abrió 2026.
+
+`DIRECTIONAL_IB_BREAKOUT_FADE_V1` usó el panel común de 15 tickers, IB exacto
+09:30–10:29, dos ventanas, entrada al open siguiente, stop-first y escala Fib.
+En 2025 dio PF 0,779/0,785/0,819, WR 31,28/32,41/31,94%, aunque conservó
+24–25 trades mínimos por mes. Tampoco abrió 2026.
+
+### Diagnóstico científico acumulado
+
+JEPA sí sufría colapso espectral parcial, pero arreglarlo no creó alpha: el
+factorized innovation JEPA con VISReg alcanzó rango efectivo z 53,54% y dz
+42,67% y siguió con PF<1 en QQQ/SPX/SPY. Breadth, superficie de opciones,
+futuros, reglas online y Fib tampoco estabilizaron meses. El problema observado
+no es solo decay de opciones; la dirección causal cambia de régimen y las
+features actuales no contienen una ventaja estable suficiente.
+
+Estado: `NO_PROFITABLE_CAUSAL_POLICY`. Producción/paper-intents intactos. No
+hay experimento activo. No continuar con variantes post-hoc de estas familias ni
+con datasets repetidos. Una hipótesis futura debe ser económicamente independiente
+o usar una fuente broker-grade nueva y predeclarada con paridad live.

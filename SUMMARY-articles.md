@@ -1,8 +1,13 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
-**Corte:** 13 de julio de 2026. Los 29 trabajos aportados fueron auditados. Este
+**Corte:** 16 de julio de 2026. Los 29 trabajos aportados fueron auditados. Este
 resumen conserva únicamente las ideas que afectan la investigación actual y su
 evidencia local.
+
+**Conclusión actual:** mejorar la representación, corregir el colapso espectral,
+añadir breadth, superficie de opciones o siete futuros Globex y cambiar el
+payoff no ha producido estabilidad mensual. La sección final incorpora la
+evidencia posterior a MANAGE30/weeklies.
 
 ## Actualización de mecanismo económico — transmisión cross-market
 
@@ -725,3 +730,80 @@ estadísticamente y físicamente mucho más duro; exigir además 18 trades es
 incompatible con sostener dos sesiones. Cambiar esas gates después de ver el
 oracle sería selección post-hoc. El cierre correcto es preservar el hallazgo y
 no crear otra familia de datasets hasta una decisión prospectiva del usuario.
+
+## Actualización 16-jul-2026 — qué enseñan Globex y los payoffs alternativos
+
+### El colapso JEPA no era la explicación completa
+
+El diagnóstico espectral fue correcto: el encoder anterior comprimía demasiado
+la variación. Factorizar common/residuos/innovaciones y aplicar VISReg elevó el
+rango efectivo de `z` a 53,54% y de `dz` a 42,67%, superando la gate física.
+Sin embargo, el backtest 2026 siguió con PF inferior a uno en los tres tickers.
+VISReg arregla geometría latente; no inventa información predictiva ni corrige
+un target económico no estacionario.
+
+Esto refina la lección de la literatura: evitar collapse es necesario para que
+un world model represente el mercado, pero no suficiente para que la semántica
+aprendida sea la que determina retorno ejecutable. Un latente puede tener rango,
+innovaciones y buen loss y aun no separar qué lado sobrevive spread, theta y
+cambio de régimen.
+
+### Una fuente genuinamente nueva también puede sobreajustar el régimen
+
+La captura sellada de ES/NQ/YM/RTY/ZN/GC/CL aportó información Globex, rates y
+commodities que no estaba en las barras RTH. El primer modelo logró en 2025 PF
+1,200–1,210, WR 51–52%, frecuencia suficiente y 9/12 meses positivos. Ese es el
+near-miss más convincente de la rama direccional porque la fuente era nueva y
+la selección se congeló antes de 2026.
+
+Precisamente por eso el fallo posterior es informativo: enero–15 julio 2026 cayó
+a PF 0,873–0,899 y solo 2–3 meses positivos. Regresión logística online, Hedge
+de reglas y meta-Hedge no recuperaron estabilidad en 2025. El patrón no encaja
+con “faltaba un modelo más adaptativo”; encaja con señales débiles cuya relación
+con el target cambia más rápido de lo que puede estimarse con pocos meses.
+
+Los continuos Yahoo sirven para investigación, no para certificar fills de
+futuros: contienen rolls, solo ofrecen 60m durante 730 días y no equivalen a un
+contrato broker/live. Un futuro PASS necesitaría datos contract-level y paridad
+prospectiva; no puede promoverse desde este proxy.
+
+### Cambiar theta por otro payoff no resolvió la economía
+
+El short-premium defined-risk era la prueba simétrica natural tras cerrar long
+options, pero los exits exactos de cuatro patas no estaban siempre ejecutables.
+V2 encontró 13 faltas invalidantes en las primeras 100 sesiones auditadas y se
+cerró antes de PnL. Omitir esos trades habría convertido calidad de datos en un
+filtro alfa retrospectivo.
+
+La compra simultánea CALL+PUT elimina la necesidad de escoger lado, pero no el
+coste de comprar dos spreads y dos curvas de decay. Con 613 trades/ticker y
+mínimo 40/mes, PF quedó 0,605–0,661 y WR 33–36%. Aquí no falla frecuencia ni
+clasificador: falla directamente el payoff long-vol bajo ask->bid.
+
+### IB/Fibonacci es geometría, no una ventaja por sí sola
+
+La ejecución directa de la primera salida del Initial Balance, con clasificación
+breakout/fade, entradas al minuto siguiente, stops conservadores y objetivos
+Fib, conservó 24–25 trades mensuales mínimos pero dio PF 0,779–0,819 y WR
+31–32%. El resultado no invalida todo uso de niveles; invalida esa traducción
+fija y el intento de aprender continuación/fallo con el panel actual.
+
+Modificar los stops al observar que concentran pérdidas no sería descubrimiento:
+sería optimizar sobre el examen. Una hipótesis posterior debe cambiar el
+mecanismo, no desplazar 0,236 a otro Fibonacci o seleccionar solo los meses de
+breakout.
+
+### Conclusión transferible
+
+Los resultados separan cuatro fallos que antes se confundían:
+
+1. `representation failure`: existía y fue corregido, sin alpha;
+2. `directional information failure`: persiste en cash, options y Globex;
+3. `payoff failure`: long-vol pierde aun sin elegir lado;
+4. `execution/data failure`: short premium no puede evaluarse omitiendo patas.
+
+Por tanto, el siguiente trabajo no debe ser otra corrupción JEPA, otro dataset
+de las mismas features ni un sweep de memoria/stop/delta. Debe aportar un
+mecanismo económico independiente —por ejemplo relative-value/cross-session— o
+una fuente nueva broker-grade que pueda observarse igual en histórico y live.
+Estado del programa: `NO_PROFITABLE_CAUSAL_POLICY`.
