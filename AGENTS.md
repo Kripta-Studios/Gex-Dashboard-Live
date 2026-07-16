@@ -1254,3 +1254,26 @@ La mejora es débil: QQQ empeora al JEPA padre y SPX/SPY solo mejoran agregado,
 sin estabilidad mensual. La predeclaración no tenía gate de desarrollo; congelar
 y commit/push de todos los artefactos antes del único one-shot 2026. No cambiar
 profiles, ventanas, features ni modelo tras estos resultados.
+
+### Cierre DIRECTIONAL_VOL_COMPLEX_V1 y diagnóstico de colapso
+
+One-shot 2026 desde selección commit `3c5f41e9`: `CLOSED_2026_GATE`. Jan–Jun:
+QQQ 123 trades/WR 55,28%/PF 1,039/+113,6bps/min19/3 de 6 meses positivos;
+SPX 123/51,22%/0,993/-13,9/min19/4 de 6; SPY
+123/50,41%/0,898/-219,6/min19/3 de 6. Julio MTD 10 trades: PF
+1,133/1,098/1,888 QQQ/SPX/SPY. Seis fallbacks exactos en 2026-05-18/19.
+No rescatar: el overlay solo cambió el lado 3/2/1 días sobre 133 por ticker.
+
+Diagnóstico post-holdout: el contexto input tiene rango efectivo 86,77, pero z
+solo 3,44–3,72 de 24 (14,3–15,5%) y dz 11,2–11,8%; no hay dims muertas y la
+proyección/GRU tienen rango matricial completo. Es colapso espectral aprendido,
+no colapso constante. Aun así no explica todo: probe JEPA corr 2025
++0,046..+0,052 cambia a -0,041..-0,068 en 2026; PF probe 2026
+0,788/0,930/0,927. Raw Ridge post-hoc conserva QQQ (PF 1,337) pero falla
+SPX/SPY (0,857/0,869) y tiene R² muy negativo; no es promocionable.
+
+VISReg previo elevó rango mediano SMM 10,73%→14,68%, todavía bajo gate 40% y
+sin alpha. No aplicar VISReg solo: una futura reparación debe separar common y
+residuos por ticker/modalidad, predecir innovaciones, usar corruption semántica
+y exigir rango z/dz >=40% outcome-free antes de labels. Diagnóstico:
+`PARTIAL_SPECTRAL_COLLAPSE_PLUS_OBJECTIVE_MISALIGNMENT`.

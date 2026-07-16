@@ -1,0 +1,33 @@
+{
+  "capture_seal_sha256": "29ca19c8448518f800f91a3577aab1c5220199b1a4af09fd9e32a2a70d31d4ab",
+  "cboe_file_sha256": {
+    "VIX1D_History.csv": "eea02196f50478dddeffd949ffad31120a53803e05015e510ea2eb7bf44a889e",
+    "VIX1Y_History.csv": "7bfdccd530282133ca4c690f5dc097650618cb4796d5626aedfe5a5f67a3684a",
+    "VIX3M_History.csv": "4f65c3fe109bd7069e1458125d83f40daf07c7bc2efe9c9c5241c24b6d30e9c7",
+    "VIX6M_History.csv": "d27cd4fc1a8e715b2d73d5fa73f62c0972384221a100661543e41f8d69fc3544",
+    "VIX9D_History.csv": "c97de274e586d66435655b6044be303933637e87091bfbbc40c5339cbaaa65bc",
+    "VIX_History.csv": "5c8ff5d3480a202ed8b273198f4b2f7759c03ec1ec5f9f3fe30c4699916fc95c",
+    "VVIX_History.csv": "b8086c53bb24fd48f7a644986f048a117bc43cb0324652f88df7790babc2e05f"
+  },
+  "cboe_manifest_sha256": "5c5e5c8b65ba7e8fe552049f12900b22d0581827f0b6190b066cd4fcc5c473ce",
+  "coverage_amendment_sha256": "69187e48f5b5a9211c7cf5984488ad6511cc8bec433d23a1cc90cae972e93113",
+  "created_at_utc": "2026-07-16T12:55:25.341055+00:00",
+  "development_metrics_sha256": "ebeeb22c90046fad3b20c1a4cd105a7fdcde45e074cc3863beeaa2b4ffe7d941",
+  "development_provenance_sha256": "c80019a1d507d77fcbec1e9bbf41790ce425d8ec4837e90c8b0a8e0c4b086a0d",
+  "futures_fills_validated": false,
+  "holdout_2026_used_for_selection": false,
+  "missing_vix_imputed": false,
+  "parent_metrics_sha256": "3696b77c5344111dbf55b9f54d00a034f440d317d8e426f8664a58cda543c8f2",
+  "parent_model_sha256": "876f36c28f4872b836bb751f93fc4c3baa09d302044b03a75d35567f0aebc607",
+  "parent_provenance_sha256": "ebfd2356a73a6bcee894d124a1faad595074160c78b7707c889e0c13d129063e",
+  "predeclaration_sha256": "e928b37ee6f68a93c1c7b92597d508399ecf36e3d35064198d8f721819f59345",
+  "production_modified": false,
+  "runner_path": "neural\\jepa\\evaluate_directional_vol_complex_v1.py",
+  "runner_sha256": "5de583a04f7e5e620a65310b593021899a6572e9384bcb4c121ef70360915105",
+  "same_day_cboe_close_used": false,
+  "schema": "directional_vol_complex_v1_provenance",
+  "underlying_inventory_rows": 2976,
+  "underlying_inventory_sha256": "66f8954f13f1aaa095b7b3c521fc989bb053b78ec65bf95c4545fef0ebddd7ec",
+  "vix_inventory_rows": 988,
+  "vix_inventory_sha256": "2420e49b4f8f2c003a05083fbc323adc4872c628de2e77254d40faf2be0b3d38"
+}
