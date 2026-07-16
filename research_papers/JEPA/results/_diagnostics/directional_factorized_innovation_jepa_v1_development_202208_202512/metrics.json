@@ -1,0 +1,148 @@
+{
+  "adaptive_design_after_parent_2026_diagnosis": true,
+  "created_at_utc": "2026-07-16T13:23:01.464458+00:00",
+  "daily_rows": 2544,
+  "development_months": [
+    "202501",
+    "202502",
+    "202503",
+    "202504",
+    "202505",
+    "202506",
+    "202507",
+    "202508",
+    "202509",
+    "202510",
+    "202511",
+    "202512"
+  ],
+  "holdout_2026_used_for_training_or_profile_selection": false,
+  "jepa": {
+    "best_epoch": 6,
+    "best_validation_loss": 0.3287559712946656,
+    "final_windows": 8490,
+    "train_windows": 6020,
+    "validation_windows": 2470
+  },
+  "latent_health": {
+    "blocks": {
+      "common": {
+        "effective_rank": 3.9325997829437256,
+        "effective_rank_ratio": 0.4915749728679657,
+        "max_pc_var_ratio": 0.4149337410926819,
+        "mean_abs": 0.15604820847511292,
+        "median_dim_std": 0.8745337724685669,
+        "min_dim_std": 0.6859593391418457,
+        "n": 849,
+        "near_zero_std_dims": 0,
+        "z_dim": 8
+      },
+      "qqq_residual": {
+        "effective_rank": 3.7268733978271484,
+        "effective_rank_ratio": 0.9317183494567871,
+        "max_pc_var_ratio": 0.3595712184906006,
+        "mean_abs": 0.14818140864372253,
+        "median_dim_std": 0.8300284743309021,
+        "min_dim_std": 0.8045098781585693,
+        "n": 849,
+        "near_zero_std_dims": 0,
+        "z_dim": 4
+      },
+      "spxw_residual": {
+        "effective_rank": 3.780489206314087,
+        "effective_rank_ratio": 0.9451223015785217,
+        "max_pc_var_ratio": 0.38275250792503357,
+        "mean_abs": 0.06463712453842163,
+        "median_dim_std": 0.7792648673057556,
+        "min_dim_std": 0.7486910820007324,
+        "n": 849,
+        "near_zero_std_dims": 0,
+        "z_dim": 4
+      },
+      "spy_residual": {
+        "effective_rank": 3.796290636062622,
+        "effective_rank_ratio": 0.9490726590156555,
+        "max_pc_var_ratio": 0.36527207493782043,
+        "mean_abs": 0.17763714492321014,
+        "median_dim_std": 0.777918815612793,
+        "min_dim_std": 0.6405861973762512,
+        "n": 849,
+        "near_zero_std_dims": 0,
+        "z_dim": 4
+      },
+      "volatility": {
+        "effective_rank": 2.9790430068969727,
+        "effective_rank_ratio": 0.7447607517242432,
+        "max_pc_var_ratio": 0.4818284213542938,
+        "mean_abs": 0.3516855239868164,
+        "median_dim_std": 0.706670343875885,
+        "min_dim_std": 0.6906576752662659,
+        "n": 849,
+        "near_zero_std_dims": 0,
+        "z_dim": 4
+      }
+    },
+    "checks": {
+      "common_rank": true,
+      "dz_no_dead": true,
+      "dz_pc1": true,
+      "dz_rank": true,
+      "qqq_residual_rank": true,
+      "spxw_residual_rank": true,
+      "spy_residual_rank": true,
+      "volatility_rank": true,
+      "z_no_dead": true,
+      "z_pc1": true,
+      "z_rank": true
+    },
+    "full": {
+      "dz": {
+        "effective_rank": 10.240079879760742,
+        "effective_rank_ratio": 0.42666999499003094,
+        "max_pc_var_ratio": 0.20971247553825378,
+        "mean_abs": 0.06798385828733444,
+        "median_dim_std": 0.9850781559944153,
+        "min_dim_std": 0.4474313259124756,
+        "n": 849,
+        "near_zero_std_dims": 0,
+        "z_dim": 24
+      },
+      "z": {
+        "effective_rank": 12.850707054138184,
+        "effective_rank_ratio": 0.5354461272557577,
+        "max_pc_var_ratio": 0.1543697714805603,
+        "mean_abs": 0.17570625245571136,
+        "median_dim_std": 0.8300284743309021,
+        "min_dim_std": 0.6405861973762512,
+        "n": 849,
+        "near_zero_std_dims": 0,
+        "z_dim": 24
+      }
+    },
+    "pass": true,
+    "thresholds": {
+      "maximum_pc1_ratio": 0.7,
+      "minimum_effective_rank_ratio": 0.4
+    }
+  },
+  "production_modified": false,
+  "provenance_sha256": "5f6e320502a9e8fbc02866978e61c876a1aa36af7efedf30f3f571b4f4997ae5",
+  "schema": "directional_factorized_innovation_jepa_v1_development_metrics",
+  "scope": {
+    "end_date": "20251231",
+    "start_date": "20220801"
+  },
+  "selected_profiles": {
+    "QQQ": "TECH_RESIDUAL",
+    "SPX": "TECH_RESIDUAL",
+    "SPY": "SEMANTIC_RESIDUAL"
+  },
+  "semantic_feature_count": 90,
+  "source_sessions_by_ticker": {
+    "QQQ": 859,
+    "SPXW": 859,
+    "SPY": 859
+  },
+  "status": "PASS_DEVELOPMENT_FREEZE",
+  "technical_feature_count": 105
+}
