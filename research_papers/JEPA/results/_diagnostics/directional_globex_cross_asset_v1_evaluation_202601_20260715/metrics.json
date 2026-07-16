@@ -1,0 +1,87 @@
+{
+  "confirmatory_evidence": false,
+  "coverage": {
+    "candidate_common_cash_decisions": 1904,
+    "drop_reasons": {
+      "ES=F:missing_asia_endpoint": 7,
+      "ES=F:missing_overnight_endpoint": 82,
+      "ES=F:missing_recent_hour": 945,
+      "ES=F:missing_volume_history": 2
+    },
+    "dropped_joint_decisions": 1036,
+    "eligible_joint_decisions": 868,
+    "eligible_rows_all_targets": 2604
+  },
+  "created_at_utc": "2026-07-16T14:49:04.490874+00:00",
+  "execution": {
+    "cost_bps": 1.0,
+    "fill_kind": "underlying_open_spot_proxy_not_futures_fill",
+    "maximum_concurrent_positions": 1,
+    "windows": {
+      "W1": {
+        "decision_time": "10:00",
+        "entry_time": "10:01",
+        "exit_time": "13:01",
+        "hold_minutes": 180
+      },
+      "W2": {
+        "decision_time": "13:01",
+        "entry_time": "13:02",
+        "exit_time": "15:59",
+        "hold_minutes": 177
+      }
+    }
+  },
+  "joint_gate_pass": false,
+  "production_modified": false,
+  "provenance_sha256": "5ead9c944d4661c60786171d3785a2ac300a8f9e66781a45f17b9ecfc5c09e7b",
+  "schema": "directional_globex_cross_asset_v1_evaluation_metrics",
+  "scope": {
+    "end_date": "20260715",
+    "july_status": "MTD_THROUGH_20260715",
+    "months": [
+      "202601",
+      "202602",
+      "202603",
+      "202604",
+      "202605",
+      "202606",
+      "202607"
+    ],
+    "start_date": "20260101"
+  },
+  "selected_profile": "POOLED_GLOBEX_CROSS_ASSET",
+  "status": "CLOSED_2026_JUL_GATE",
+  "ticker_metrics": {
+    "QQQ": {
+      "evaluated_months": 7,
+      "gate_pass": false,
+      "min_month_trades": 20,
+      "net_bps": -804.1097434617459,
+      "positive_months": 2,
+      "profit_factor": 0.8734906734025253,
+      "trades": 251,
+      "win_rate": 0.46613545816733065
+    },
+    "SPX": {
+      "evaluated_months": 7,
+      "gate_pass": false,
+      "min_month_trades": 20,
+      "net_bps": -455.04166306543067,
+      "positive_months": 3,
+      "profit_factor": 0.8986123667503763,
+      "trades": 251,
+      "win_rate": 0.47808764940239046
+    },
+    "SPY": {
+      "evaluated_months": 7,
+      "gate_pass": false,
+      "min_month_trades": 20,
+      "net_bps": -502.8397846633199,
+      "positive_months": 3,
+      "profit_factor": 0.8881882080821916,
+      "trades": 251,
+      "win_rate": 0.47808764940239046
+    }
+  }
+}

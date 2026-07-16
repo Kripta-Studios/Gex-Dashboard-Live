@@ -1,0 +1,69 @@
+{
+  "capture_manifest_sha256": "dad8dc52c08ea29cbea35aedcc706c7cf51fb937436b88706642141236c2dcb7",
+  "capture_runner_sha256": "46bcb19744267b4d661d05c7e6dfe297344e6a0f25826f5c6bac300ff9420934",
+  "capture_seal_sha256": "8ebe483570b3f8256b3d5b4a0e73f565efe61f0429f5af03e0e384241fc9e21c",
+  "cash_inventory_rows": 14847,
+  "cash_inventory_sha256": "7df8b936272698da89c080c9af4955511d273639f75efdbdb7c6da8fe5f8b4c1",
+  "created_at_utc": "2026-07-16T14:49:04.490889+00:00",
+  "development_metrics_sha256": "e6cbf97bc7eee9b72175b3a158ed67e0eee0c5791e6edd27a2c3dbc2b36ad4b6",
+  "development_provenance_sha256": "421447cfa8a6a9fb110516a3df66f8d749c0dc61e860512718c5a6b432b49cad",
+  "futures_inventory": [
+    {
+      "complete_rows_with_volume": 11311,
+      "path": "D:\\ThetaData\\futures_yahoo_60m_20240717_20260715_v1\\raw\\CL_F.json",
+      "sha256": "c297f84189a5ed84c33736a317c588fe3ad87dad68974a65a5c12d33d8529c8e",
+      "size_bytes": 1227648,
+      "symbol": "CL=F"
+    },
+    {
+      "complete_rows_with_volume": 11481,
+      "path": "D:\\ThetaData\\futures_yahoo_60m_20240717_20260715_v1\\raw\\ES_F.json",
+      "sha256": "1faab96b2b0796eabb7dc8a29f945a64c74312238857d5a2f0a94366e473549c",
+      "size_bytes": 786494,
+      "symbol": "ES=F"
+    },
+    {
+      "complete_rows_with_volume": 11514,
+      "path": "D:\\ThetaData\\futures_yahoo_60m_20240717_20260715_v1\\raw\\GC_F.json",
+      "sha256": "d66eb1b6e8698af7e8c1f65c39f19d6d5a29b3e953100a01b8fb99f50b262ec0",
+      "size_bytes": 1120322,
+      "symbol": "GC=F"
+    },
+    {
+      "complete_rows_with_volume": 11481,
+      "path": "D:\\ThetaData\\futures_yahoo_60m_20240717_20260715_v1\\raw\\NQ_F.json",
+      "sha256": "b1b6a7c38109176e823741d577b4bc9fdedcbf2609dd92c8ccdd6fda2a914c22",
+      "size_bytes": 826712,
+      "symbol": "NQ=F"
+    },
+    {
+      "complete_rows_with_volume": 11503,
+      "path": "D:\\ThetaData\\futures_yahoo_60m_20240717_20260715_v1\\raw\\RTY_F.json",
+      "sha256": "9aa0a5c119ac0b8a75d0d15ba0622203d367d643c39eff286b132ea4e5b2e410",
+      "size_bytes": 1140490,
+      "symbol": "RTY=F"
+    },
+    {
+      "complete_rows_with_volume": 11477,
+      "path": "D:\\ThetaData\\futures_yahoo_60m_20240717_20260715_v1\\raw\\YM_F.json",
+      "sha256": "c1ae059f42f7d0a6056ff8fc4412fbf6b072b37ec3b3de98c0190090b053a7da",
+      "size_bytes": 798038,
+      "symbol": "YM=F"
+    },
+    {
+      "complete_rows_with_volume": 11442,
+      "path": "D:\\ThetaData\\futures_yahoo_60m_20240717_20260715_v1\\raw\\ZN_F.json",
+      "sha256": "adb6024fede0b9742583b1852905cc300215f57474cef2a247374d37abbb08e4",
+      "size_bytes": 905780,
+      "symbol": "ZN=F"
+    }
+  ],
+  "futures_source_kind": "Yahoo continuous futures 60m research proxy",
+  "holdout_2026_used_for_selection": false,
+  "new_feature_dataset_created": false,
+  "panel_runner_sha256": "20f71873a90551d093db500ad96c5fb648077820e2c814f66824ee962f18d4a6",
+  "predeclaration_sha256": "7bf93fc08da5fe3e507b3bf2a25dbd5c2e80bd8b7a19c0c9dfcd3c15b186537b",
+  "production_modified": false,
+  "runner_sha256": "8277fa6da5128994093288896cf6d1d0d1a0419ab1bab6536816dd07eae4fa57",
+  "schema": "directional_globex_cross_asset_v1_provenance"
+}
