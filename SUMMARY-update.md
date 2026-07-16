@@ -1,5 +1,11 @@
 # SUMMARY-update — ledger científico compacto
 
+Nueva rotación outcome-free. `EXACT_EXPIRY_OI_DELTA_V1` falla frecuencia:
+156 pares exactos 2023–2025, mínimo4/mes, sin outcomes. Se predeclara
+`CALENDAR_RISK_REVERSAL_PRESSURE_V1`: cambio 5m del RR25 0DTE menos next-expiry,
+contratos t0 fijos, data gate/desarrollo 2023 y 2024–2026 cerrados. No existe aún
+feature válida ni PF/WR/PnL.
+
 `OPTION_PARITY_PRESSURE_V1` cerrado `NO_AGGREGATE_EDGE`. One-shot 2023: 730
 trades, WR48,63%, PF0,874751, -1.689,31bps, 10/36 celdas. QQQ/SPXW/SPY PF
 0,947/0,843/0,819 y todos gross negativos. Auditoría independiente rehasheó

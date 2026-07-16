@@ -1,5 +1,14 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+### Nueva separación: skew de calendario
+
+El OI exacto no tiene frecuencia diaria para medir cambios del mismo contrato:
+solo los vencimientos semanales aparecen el día previo. La alternativa causal
+no debe cruzar contratos; compara simultáneamente el risk reversal 25-delta del
+0DTE con el siguiente vencimiento. Es una estructura temporal de demanda IV,
+no otro nivel estático, wall o panel 0DTE genérico. Primero debe demostrar reloj
+nativo, persistencia de contratos y cobertura sin outcomes.
+
 ### Paridad cross-right: medible no significa direccional
 
 La presión de paridad se midió con alta cobertura, pero su signo fijo perdió en

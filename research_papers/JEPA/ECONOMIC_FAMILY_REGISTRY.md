@@ -32,7 +32,9 @@ Estados permitidos: `QUEUED`, `ACTIVE`, `FAILED_CAUSALITY`,
 | CROSS_SESSION_RELATIVE_VALUE_V1 | reversión QQQ-SPY de divergencia cross-session con SPXW como ancla | `FAILED_ECONOMIC` | 496 trades, PF 0,627/WR 41,53%/-2.349 bps; 2/24 meses PASS |
 | OPENING_RELATIVE_MOMENTUM_V1 | continuación QQQ-SPY del impulso relativo cash 09:30–10:34 | `FAILED_ECONOMIC` | 497 trades, PF 0,831/WR 50,91%/-927,7 bps; 4/24 meses PASS |
 | OPTION_PARITY_PRESSURE_V1 | cambio 5m del synthetic forward CALL/PUT 0DTE frente al spot | `FAILED_ECONOMIC` | 730 trades, PF0,875/WR48,63%/-1.689bps; 10/36 celdas, outer cerrado |
+| EXACT_EXPIRY_OI_DELTA_V1 | cambio OI del mismo contrato antes de expiry | `FAILED_FREQUENCY` | 156 pares/36 meses, mínimo4 eventos/mes; sin outcomes |
+| CALENDAR_RISK_REVERSAL_PRESSURE_V1 | Δ5m del RR25 0DTE menos next-expiry | `ACTIVE` | predeclarado; data gate native-clock 2023 pendiente |
 
-No queda una familia económica activa. `OPTION_PARITY_PRESSURE_V1` cerró sin
-edge agregado y no abre 2024–2026. Una continuación requiere predeclarar una
-medición físicamente independiente antes de leer outcomes; producción no cambia.
+`CALENDAR_RISK_REVERSAL_PRESSURE_V1` queda activa solo en data gate outcome-free
+2023. No se abre economía ni 2024–2026 antes de cobertura, reloj nativo y freeze;
+producción no cambia.

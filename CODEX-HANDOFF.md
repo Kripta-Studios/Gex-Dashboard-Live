@@ -1,5 +1,13 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+Nueva familia pre-outcome: `CALENDAR_RISK_REVERSAL_PRESSURE_V1_PREDECLARATION.md`.
+Antes se cerró exact-expiry OI delta por capacidad: 752 0DTE/ticker pero solo
+156 con observación del mismo expiry el día previo, min4/mes. Calendar RR usa
+front0DTE/next-expiry, t0 10:30 selection CALL/PUT25d, mismos contratos t1 10:35
+y presión de diferencia de RR. 2023 tiene schema native para ambos; 2024–2025
+mezcla fallback y queda cerrado. Siguiente: git add explícito/commit/push, luego
+auditor outcome-free de inventory/native clocks/coverage. No outcomes todavía.
+
 `OPTION_PARITY_PRESSURE_V1` está cerrado. Resultado one-shot/auditado: pooled
 730 trades, WR0,486301, PF0,874751, net -1689,310bps, 10/36 cells. Por ticker:
 QQQ PF0,946778/4 meses; SPXW 0,842979/5; SPY 0,819330/1. Los 744 sources y todas

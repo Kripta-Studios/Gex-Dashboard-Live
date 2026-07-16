@@ -1,5 +1,9 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1 — CLOSED_NO_EDGE
 
+> Separate research now predeclares a 2023 front-versus-next-expiry 25-delta
+> risk-reversal pressure data gate. It has no compact-V1 model, selector or
+> payoff and has not accessed outcomes.
+
 > The separate parity family later closed in 2023 development at PF 0.875,
 > WR 48.63%, -1,689 bps and 10/36 passing ticker-month cells. It did not open
 > 2024–2026 and does not alter or rescue compact V1.

@@ -1,5 +1,11 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+El siguiente mecanismo activo es calendar-skew, no una variante de parity. El
+cambio OI exacto se descartó por frecuencia (mínimo4/mes). La nueva hipótesis
+congela `Δ5m[(CALL25-PUT25)_0DTE-(CALL25-PUT25)_next]`, exact native clocks y
+contratos persistentes t0→t1. Solo se autoriza data gate 2023 sin outcomes;
+2024–2026 siguen cerrados.
+
 La familia parity queda cerrada en desarrollo 2023: 730 trades, PF0,874751,
 WR48,630%, -1.689,310bps y solo 10/36 meses PASS. Ningún ticker supera PF1 y
 todos pierden gross. Auditoría independiente PASS sobre 744 fuentes. Outer

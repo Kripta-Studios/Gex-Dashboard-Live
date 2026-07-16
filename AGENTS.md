@@ -1,5 +1,16 @@
 # AI Agent Hand-off: Current Production Reality
 
+## Research activo — CALENDAR_RISK_REVERSAL_PRESSURE_V1
+
+Tras cerrar parity, el inventario OI exact-contract quedó `FAILED_FREQUENCY`
+antes de outcomes: 156 pares/36 meses y mínimo4 por mes; no comparar contratos
+0DTE de expiraciones distintas. Nueva familia predeclarada sobre `90c08d5e`:
+cambio 10:30→10:35 del risk reversal 25d front 0DTE menos siguiente expiry,
+contratos t0 fijos hasta t1, timestamps nativos, sin OI/wall/ML/threshold.
+Data gate/desarrollo solo 2023; 2024–2025 requiere sidecar nativo front+back si
+2023 pasa y 2026 sigue holdout. Próximo paso: commit/push docs, implementar
+capacity/data-gate outcome-free y no leer retornos.
+
 ## Cierre OPTION_PARITY_PRESSURE_V1 — `CLOSED_NO_AGGREGATE_EDGE`
 
 One-shot 2023 ejecutado desde `dd9e10ad` y auditado independientemente. Pooled:

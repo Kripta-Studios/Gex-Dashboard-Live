@@ -1,5 +1,8 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1
 
+> A later independent protocol studies calendar risk-reversal pressure with
+> native 2023 clocks. It does not reopen or modify compact V1.
+
 > The separate parity family is now closed after failing its 2023 development
 > gate. It never opened 2024–2026 and remains unrelated to compact V1.
 
