@@ -1218,3 +1218,15 @@ Primer capture attempt se detuvo en memoria y no creó output: VIX official tien
 Todos tienen cero fallos en el scope 2022-08..2026-07-15. Aclaración pre-outcome
 congela preservar bytes completos, contar fallos históricos y exigir cero
 in-scope. No cambia features/modelo/gates. Relanzar solo tras commit/push.
+
+Captura oficial completada `PASS_CBOE_VOL_COMPLEX_CAPTURE`: manifest externo
+SHA `5c5e5c8b...473ce`, siete CSV hasta 2026-07-15 con hashes compactos
+versionados. Paridad VIX local 16:00 vs Cboe sobre 856 sesiones: mediana abs
+0,07, p99 0,58, PASS frente a 0,25/1,50.
+
+Coverage amendment pre-outcome: VIX local falta en 18 sesiones 2022 y
+2026-05-18/19; 2025 completo. No as-of/imputar/excluir. El modelo VOL entrena
+solo con VIX exacto y en test missing usa la predicción padre
+`SEMANTIC_RESIDUAL`, registrando fallback. Ficheros VIX en festivos se ignoran.
+Commit/push del compact seal/amendment antes de implementar desarrollo; aún no
+se abrió asociación VOL→outcome.

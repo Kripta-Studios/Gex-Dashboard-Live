@@ -1,0 +1,28 @@
+{
+  "schema": "cboe_vol_complex_directional_v1_compact_seal",
+  "status": "PASS_CBOE_VOL_COMPLEX_CAPTURE",
+  "external_root": "D:/ThetaData/cboe_vol_complex_directional_v1_20260716",
+  "external_manifest_sha256": "5c5e5c8b65ba7e8fe552049f12900b22d0581827f0b6190b066cd4fcc5c473ce",
+  "required_start_date": "20220801",
+  "required_end_date": "20260715",
+  "outcome_free": true,
+  "holdout_2026_outcomes_used": false,
+  "production_modified": false,
+  "files": {
+    "VIX1D_History.csv": "eea02196f50478dddeffd949ffad31120a53803e05015e510ea2eb7bf44a889e",
+    "VIX9D_History.csv": "c97de274e586d66435655b6044be303933637e87091bfbbc40c5339cbaaa65bc",
+    "VIX_History.csv": "5c8ff5d3480a202ed8b273198f4b2f7759c03ec1ec5f9f3fe30c4699916fc95c",
+    "VIX3M_History.csv": "4f65c3fe109bd7069e1458125d83f40daf07c7bc2efe9c9c5241c24b6d30e9c7",
+    "VIX6M_History.csv": "d27cd4fc1a8e715b2d73d5fa73f62c0972384221a100661543e41f8d69fc3544",
+    "VIX1Y_History.csv": "7bfdccd530282133ca4c690f5dc097650618cb4796d5626aedfe5a5f67a3684a",
+    "VVIX_History.csv": "b8086c53bb24fd48f7a644986f048a117bc43cb0324652f88df7790babc2e05f"
+  },
+  "vix_local_parity": {
+    "shared_sessions_202208_202512": 856,
+    "median_abs_points": 0.07000000000000028,
+    "p95_abs_points": 0.32250000000000023,
+    "p99_abs_points": 0.5799999999999998,
+    "max_abs_points": 3.530000000000001,
+    "gate_pass": true
+  }
+}
