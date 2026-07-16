@@ -1,0 +1,14 @@
+{
+  "advance_to_2026_evaluation": false,
+  "common_decisions": 1917,
+  "created_at_utc": "2026-07-16T14:18:01.768757+00:00",
+  "event_dataset_sha256": "11e26aaddd91fd441222d552e0362c1d4c2c4489a08d7a6de66479d6eb454fb1",
+  "holdout_2026_opened": false,
+  "labeled_rows": 5751,
+  "price_feature_count": 30,
+  "production_modified": false,
+  "schema": "directional_option_surface_spot_v1_development_metrics",
+  "selected_profile": "OPTION_SURFACE",
+  "status": "CLOSED_DEVELOPMENT_NO_EDGE",
+  "surface_feature_count": 289
+}

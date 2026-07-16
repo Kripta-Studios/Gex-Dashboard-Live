@@ -1,0 +1,3 @@
+profile_id,worst_positive_months,total_positive_months,worst_profit_factor,worst_monthly_q25,rank,selected
+OPTION_SURFACE,4,14,0.8036405510359534,-188.31469471514953,1,True
+PRICE_LEVEL_CONTROL,2,14,0.7465519792082653,-198.84315142321353,2,False

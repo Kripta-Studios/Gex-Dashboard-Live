@@ -1,0 +1,9 @@
+{
+  "event_dataset_sha256": "11e26aaddd91fd441222d552e0362c1d4c2c4489a08d7a6de66479d6eb454fb1",
+  "new_feature_dataset_created": false,
+  "predeclaration_sha256": "59d3f2cf6306babd867668b8bd09a073b28171c00130661b5e3b3f1b1a1b3ad7",
+  "runner_sha256": "b71e25e04bc796ab76d11c47ae4a44b19c9274440370c9e534a948c3d177970d",
+  "schema": "directional_option_surface_spot_v1_provenance",
+  "underlying_inventory_rows": 2577,
+  "underlying_inventory_sha256": "dc19b72e67c3ca383428b30cd7f4fb6f45adf4f38f06e1bf5783d69bc16058c2"
+}
