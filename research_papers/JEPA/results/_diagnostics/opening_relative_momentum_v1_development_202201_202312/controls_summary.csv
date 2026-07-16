@@ -1,0 +1,3 @@
+control,trades,win_rate,profit_factor,net_bps
+mean_reversion_control_net_bps,497,0.41851106639839036,0.8128761326048723,-1060.311145183048
+fixed_long_qqq_short_spy_net_bps,497,0.48088531187122735,0.924383602006435,-398.7989216984124
