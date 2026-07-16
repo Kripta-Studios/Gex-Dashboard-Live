@@ -1,0 +1,82 @@
+{
+  "coverage": {
+    "common_dates": 1008,
+    "common_event_keys": 29331,
+    "eligible_rows_before_intersection": {
+      "QQQ": 32922,
+      "SPXW": 38478,
+      "SPY": 36754
+    }
+  },
+  "created_at_utc": "2026-07-16T15:58:13.805379+00:00",
+  "execution": {
+    "delta_bucket": {
+      "QQQ": "d35",
+      "SPXW": "d25",
+      "SPY": "d35"
+    },
+    "entry_window_minutes": [
+      630,
+      870
+    ],
+    "max_hold_minutes": 180,
+    "min_hold_minutes": 30,
+    "position_overlap_policy": "global_reject_while_any_leg_open",
+    "return_haircut": 0.002
+  },
+  "holdout_2026_used": false,
+  "joint_gate_pass": false,
+  "production_modified": false,
+  "scheduler_decisions_all_years": 2423,
+  "scheduler_trade_rows_all_years": 7269,
+  "schema": "dual_leg_event_volatility_v1_development_metrics",
+  "scope": {
+    "evaluation_months": [
+      "202501",
+      "202502",
+      "202503",
+      "202504",
+      "202505",
+      "202506",
+      "202507",
+      "202508",
+      "202509",
+      "202510",
+      "202511",
+      "202512"
+    ]
+  },
+  "status": "CLOSED_PRE2026_GATE",
+  "ticker_metrics": {
+    "QQQ": {
+      "evaluated_months": 12,
+      "gate_pass": false,
+      "min_month_trades": 40,
+      "net_return_sum": -38.58513870823504,
+      "positive_months": 2,
+      "profit_factor": 0.6285988454353542,
+      "trades": 613,
+      "win_rate": 0.35073409461663946
+    },
+    "SPX": {
+      "evaluated_months": 12,
+      "gate_pass": false,
+      "min_month_trades": 40,
+      "net_return_sum": -41.06757565742616,
+      "positive_months": 2,
+      "profit_factor": 0.6608409299672764,
+      "trades": 613,
+      "win_rate": 0.33278955954323003
+    },
+    "SPY": {
+      "evaluated_months": 12,
+      "gate_pass": false,
+      "min_month_trades": 40,
+      "net_return_sum": -39.260425686798555,
+      "positive_months": 1,
+      "profit_factor": 0.6046788913736664,
+      "trades": 613,
+      "win_rate": 0.3621533442088091
+    }
+  }
+}

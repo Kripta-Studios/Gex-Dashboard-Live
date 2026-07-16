@@ -1,0 +1,10 @@
+{
+  "dataset_path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\tmp\\event_option_dataset_execquote_causal1030_202201_202605_v1_physics\\event_option_dataset.parquet",
+  "dataset_sha256": "11e26aaddd91fd441222d552e0362c1d4c2c4489a08d7a6de66479d6eb454fb1",
+  "new_dataset_created": false,
+  "predeclaration_sha256": "e6a44f0d78089d64cf4a48446372494b6f90752762ef863c7cf0b4dbbd6679ae",
+  "production_modified": false,
+  "runner_sha256": "fd96ea28c482f20dad1df3d01de928b194f14200404b3cb439a86cd25d4d292e",
+  "schema": "dual_leg_event_volatility_v1_provenance",
+  "source_label": "executable_quote_ask_to_bid"
+}
