@@ -1196,3 +1196,19 @@ fracaso 0DTE no era solo theta: el JEPA price-only apenas domina el signo y no
 los tamaños adversos. No rescatar seeds/máscaras/horas/thresholds/subsets. Una
 hipótesis posterior debe incorporar una fuente causal nueva (options surface,
 VIX o futuros) con paridad real; no otro dataset price-only.
+
+### Predeclaración DIRECTIONAL_VOL_COMPLEX_V1
+
+Siguiente hipótesis independiente: añadir al encoder price-only ya sealed el
+VIX intradía local y estructura oficial Cboe lagged de VIX1D/VIX9D/VIX/VIX3M/
+VIX6M/VIX1Y/VVIX. No reentrena JEPA ni cambia reloj/label/coste: open 10:36→
+13:36, 180m, 1bp. Cboe daily close siempre usa `source_date<trade_date`; no se
+usa close/high/low del mismo día ni VIX1D intradía licenciado.
+
+La captura inmutable conserva los siete CSV HTTP exactos y manifest. Data gate
+antes de outcomes exige cobertura 2022-08..2026-07-15, OHLC/fechas válidas y
+paridad VIX local 16:00 vs Cboe 2022-2025 con mediana abs<=0,25 y p99<=1,50 vol
+points. Profiles únicos: `VIX_INTRADAY_RESIDUAL` y `VOL_COMPLEX_RESIDUAL`;
+selección walk-forward 2025, commit y one-shot 2026. Live parity sigue BLOCKED.
+Predeclaración/capturador/test listos; suite capture `4 passed`, Ruff/compile
+clean. No se abrió asociación VIX→outcome nueva todavía.
