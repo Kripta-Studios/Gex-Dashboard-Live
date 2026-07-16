@@ -1,5 +1,14 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+## Checkpoint actual — OPTION_PARITY_PRESSURE_V1
+
+El relanzamiento V1R1 pasó el data gate completo: 2.256/2.256 sesiones
+2023–2025, cero errores, mínimo 18 eventos por mes, cobertura anual total y
+señal no degenerada. El parquet físico 2.256x28 tiene SHA
+`45bca098...d5100`; se revalidaron 5.953 fuentes. Esto no es evidencia
+económica: no se han leído retornos ni 2026. La única etapa autorizada es
+congelar y ejecutar el ledger fijo sobre desarrollo 2023.
+
 **Actualizado:** 2026-07-17 00:30 Europe/Madrid
 
 **Rama:** `main`

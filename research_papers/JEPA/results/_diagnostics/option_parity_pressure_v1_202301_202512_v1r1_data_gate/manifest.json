@@ -1,0 +1,81 @@
+{
+  "capacity_manifest_payload_sha256": "11460a53faa65d3bf0b0ead71812d870c2903e609beeb5e894c6b566e88775b6",
+  "capacity_manifest_sha256": "eebdc7d9f31ff623aef95d3e1b5b93c0c3957ec8bad4950f1e1c61f7eab4f590",
+  "created_at_utc": "2026-07-16T23:08:14.795969+00:00",
+  "data_gate": {
+    "coverage_pass": true,
+    "distinctness_pass": true,
+    "frequency_pass": true,
+    "maximum_zero_fraction": 0.044534412955465584,
+    "minimum_annual_coverage": 1.0,
+    "minimum_distinct_states": 199,
+    "minimum_monthly_valid_events": 18,
+    "passed": true,
+    "source_session_errors": 0
+  },
+  "errors": [],
+  "feature_contract": {
+    "clocks": [
+      "10:30:00",
+      "10:35:00"
+    ],
+    "feature": "median_K(parity_z_1035-parity_z_1030)",
+    "minimum_common_strikes": 3,
+    "moneyness_radius_bps": 100.0
+  },
+  "git_commit": "e560d0262a91b01c7c7c4c03bf5c922d459d0531",
+  "holdout_2026_opened": false,
+  "labels_built": false,
+  "native_quote_provenance": {
+    "git_commit": "041b16ce25fb4d61ee2f3e7b9d42584d749705f1",
+    "index_sha256": "0abe0ac2f9dcccec4574ee10e4f10ef2904000c80a0cf5fb8f5a90ef333f754a",
+    "seal_sha256": "6c2ff5d6321bff5b62cbd19d2a503d05b69332bfa7b26d7c1f585bf617752eaa",
+    "session_key_sha256": "4d4335005bb1ad29dd9f59a873a8902edcf17f1eb64c006792b29b57dea9a579",
+    "sessions": 1441,
+    "terminal_jar_sha256": "4f93cd745c8af53d8cf70096abb104edb22494f5c48408b9d732b51e51dfbbea"
+  },
+  "native_string_clock_clarification_sha256": "8a423e3dbb1aa6fc8e04559852cd40ef7c1fbc5e1a46b059cdbf0227d41c0f53",
+  "outcome_accessed": false,
+  "output_sha256": {
+    "coverage.csv": "db4e815039939d72b49abf88fec7900830ac8530e89fc9ede7f53fc3b7751352",
+    "distinctness.csv": "cc9d11c54ab3dcb8a35f95a1dc90cf77a3b5cc1b8b093e965c1849c74a3712b7",
+    "errors.csv": "0f8f4995b83c9769d308a873f208c12ec9350eec0ff79a4f21fcc279dac1ea1c",
+    "monthly_capacity.csv": "65f531b6c346f4408a8e848ac7cac0e12c880c58b71a232ec21b42d39680938b",
+    "parity_features.parquet": "45bca098588fa7bafefaf9a134e2f7de19f5d5d256d5d388766b5d33a38d5100",
+    "session_audit.csv": "efcc173e3ad3a82e3980a2e1c568998bf97590428796c70e89236e2283a2b4ac",
+    "source_inventory.csv": "4a1fe920dd0b01cb140d999cdc74c3e1d3e0b4216afdde7bd9bcb96595b0f556"
+  },
+  "predeclaration_sha256": "96d100e901fb44c3d7858447b590258fbec10bd2ca15fe05321e090e5be114cf",
+  "production_modified": false,
+  "rows": 2256,
+  "runner_sha256": "c796b5e9f25a154794d7f066e06cabeb8aad729722e73d4f1962802fe42a9f62",
+  "runtime_environment": {
+    "packages": {
+      "lightgbm": "4.6.0",
+      "numpy": "2.3.5",
+      "pandas": "3.0.0",
+      "pyarrow": "23.0.1",
+      "scikit-learn": "1.8.0",
+      "scipy": "1.17.0"
+    },
+    "platform": "Windows-10-10.0-19041",
+    "python_implementation": "CPython",
+    "python_version": "3.14.2"
+  },
+  "runtime_environment_sha256": "937b15e858df540fe6b793d9f4778cb94e31a4d2d7cbac1c156020eacf1cc35c",
+  "schema": "option_parity_pressure_v1_outcome_free_data_gate",
+  "scope": {
+    "end_date": "20251231",
+    "sessions": 2256,
+    "start_date": "20230101"
+  },
+  "scope_amendment_sha256": "9c41da4c1eec7e39151a6a617c9d97219f695a7cf097b01fe8ae41a7d5937e3c",
+  "source_inventory_rows": 5953,
+  "status": "PASS_DATA_GATE",
+  "tickers": [
+    "QQQ",
+    "SPXW",
+    "SPY"
+  ],
+  "valid_rows": 2256
+}

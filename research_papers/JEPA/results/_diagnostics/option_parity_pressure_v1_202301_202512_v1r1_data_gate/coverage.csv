@@ -1,0 +1,10 @@
+ticker,year,source_events,valid_events,coverage,coverage_pass
+QQQ,2023,248,248,1.0,True
+QQQ,2024,249,249,1.0,True
+QQQ,2025,247,247,1.0,True
+SPXW,2023,248,248,1.0,True
+SPXW,2024,249,249,1.0,True
+SPXW,2025,247,247,1.0,True
+SPY,2023,248,248,1.0,True
+SPY,2024,249,249,1.0,True
+SPY,2025,247,247,1.0,True

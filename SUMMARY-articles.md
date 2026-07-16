@@ -1,5 +1,14 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+## Nota 2026-07-17 — paridad física medible
+
+El relanzamiento confirma que la corrección `.000` era de representación y no
+de contenido: las 2.256 sesiones pasan equality temporal, paridad de keys,
+cobertura y distinctness, con mínimo 18 eventos mensuales y cuatro strikes
+comunes. Esto habilita una prueba económica, pero no la valida. La siguiente
+lectura de outcomes queda limitada a 2023 y a una regla de signo ya congelada;
+2024–2026 conservan su función de falsificación fuera de muestra.
+
 **Corte:** 16 de julio de 2026. Los 29 trabajos aportados fueron auditados. Este
 resumen conserva únicamente las ideas que afectan la investigación actual y su
 evidencia local.

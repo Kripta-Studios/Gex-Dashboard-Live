@@ -1,5 +1,10 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1 — CLOSED_NO_EDGE
 
+> Separate research note, 2026-07-17: the immutable parity V1R1 relaunch
+> passed its outcome-free data gate on all 2,256 sessions. Its next permitted
+> step is a 2023-only deterministic cash-proxy development ledger; 2024–2026
+> remain unopened. This does not alter, rescue or reopen compact V1.
+
 ## Verdict
 
 The frozen one-shot on commit `3722cbc9` completed all 18 ticker-month folds.

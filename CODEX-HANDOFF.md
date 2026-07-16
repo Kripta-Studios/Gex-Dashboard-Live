@@ -1,5 +1,17 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+## Acción inmediata — OPTION_PARITY_PRESSURE_V1
+
+V1R1 completó `PASS_DATA_GATE` desde `e560d026`: 2.256/2.256 sesiones, cero
+errores, 2.256x28, mínimo 18 eventos mensuales, mínimo 4 strikes comunes y
+coverage/distinctness PASS. Hash feature `45bca098...d5100`; inventario 5.953
+fuentes `4a1fe920...f556`; manifest file `2b36e576...5fbc7`. Compactos en
+`option_parity_pressure_v1_202301_202512_v1r1_data_gate/`. No hay PF/WR/PnL.
+Secuencia estricta: commit/push compactos+handoffs, implementar y commit/push
+runner 2023, one-shot desarrollo. Si cualquiera de las 36 celdas ticker-mes
+falla PF>1,20, WR>45%, trades>12 o PnL>0, cerrar sin abrir 2024–2026. Si todas
+pasan, freeze outer 2024–2025; 2026 permanece holdout.
+
 **Actualizado:** 17 de julio de 2026, 00:30 Europe/Madrid
 
 **Checkpoint de captura nativa:** `041b16c research: freeze stored-universe native clock coverage`

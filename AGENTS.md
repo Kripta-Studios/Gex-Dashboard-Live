@@ -1,5 +1,16 @@
 # AI Agent Hand-off: Current Production Reality
 
+## Checkpoint OPTION_PARITY_PRESSURE_V1 V1R1 — 2026-07-17
+
+El relanzamiento inmutable desde `e560d026` es `PASS_DATA_GATE`:
+2.256/2.256 sesiones 2023–2025 válidas, cero errores, cobertura anual 100%,
+mínimo 18 eventos/mes, mínimo 4 strikes comunes y no-degeneración PASS.
+Dataset físico 2.256x28 SHA `45bca098...d5100`; inventario 5.953 fuentes SHA
+`4a1fe920...f556`. No se abrió outcome ni 2026. Siguiente acción única:
+commit/push de compactos y handoffs, congelar runner determinista 2023 y
+ejecutar un solo desarrollo. 2024–2025 solo se abre si las 36 celdas 2023
+pasan; 2026 solo después de PASS outer y otro freeze.
+
 Este repo ya no debe entenderse principalmente como el viejo pipeline GBT+RL. El sistema live actual es un stack de alertas/paper-trading para opciones 0DTE usando el paquete JEPA event-option static-union.
 
 ## Objetivo actual

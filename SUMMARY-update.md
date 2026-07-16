@@ -1,5 +1,14 @@
 # SUMMARY-update — ledger científico compacto
 
+## Checkpoint OPTION_PARITY_PRESSURE_V1 V1R1
+
+`PASS_DATA_GATE`: 2.256/2.256 sesiones, cero errores, mínimo 18 eventos/mes,
+cobertura anual 1,0 y mínimo 199 estados distintos por ticker-año. Feature
+parquet 2.256x28 SHA `45bca098...d5100`; inventario de 5.953 fuentes SHA
+`4a1fe920...f556`. Outcomes y 2026 siguen cerrados. Próximo paso: congelar
+runner determinista y ejecutar una sola evaluación de desarrollo 2023; outer
+2024–2025 exige PASS en las 36 celdas mensuales y 2026 exige después PASS outer.
+
 **Corte:** 17 de julio de 2026, 00:30 Europe/Madrid
 
 **Objetivo:** policy 0DTE causal y live-equivalente para SPXW, QQQ y SPY.
