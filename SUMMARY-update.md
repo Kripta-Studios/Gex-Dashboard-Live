@@ -811,3 +811,13 @@ threshold, z-score, beta ni options outcomes.
 Solo se autoriza desarrollo 2022–2023. Debe cumplir PF>1,20, WR>45%, >12 trades
 y PnL positivo en cada mes. 2024–2026 y producción permanecen cerrados hasta un
 PASS completo y un freeze posterior; cualquier mes fallido cierra V1 sin rescate.
+
+El runner ledger-only y cinco regresiones sintéticas ya están implementados sin
+abrir datos reales de salida. Verifican señal 10:34, fill 10:36/13:36, coste por
+pata, close 13:00 de la sesión previa half-day, exclusiones y gates estrictas con
+meses cero. El código debe commit/push antes del one-shot de desarrollo.
+
+Antes del run se congeló una aclaración de procedencia: el día SPY 2023-06-05
+queda fuera del ledger, las tres barras 09:54–09:56 siguen inválidas/sin imputar,
+pero su close 16:00 válido conserva el prior session exacto para 06-06. Solo esa
+terna puede exceptuar el envelope; una cuarta anomalía falla cerrado.

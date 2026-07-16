@@ -116,3 +116,11 @@ QQQ-SPY equal-notional spread based on cross-session relative divergence, with
 SPXW used only as a market anchor. It does not reuse the compact selector,
 options outcomes, deltas, thresholds or 2026 results. Development is restricted
 to 2022–2023 and production remains unchanged.
+
+The relative-value runner is implemented pre-outcome and hard-stops its source
+inventory at 2023. This is operational provenance only; it does not change or
+reopen the compact-V1 evidence.
+
+An outcome-free data clarification for the new family preserves the known
+2023-06-05 source anomaly without using or repairing it. Compact V1 is still
+unchanged.

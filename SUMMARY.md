@@ -1758,3 +1758,15 @@ La única fase autorizada es implementar/testar el ledger y ejecutar desarrollo
 cero fallos de reloj/overlap. Solo un PASS permitiría congelar antes de abrir
 2024–2025. Todo 2026, opciones y producción siguen cerrados. Un fallo cierra V1
 sin invertir la regla ni retocar ancla/reloj/coste.
+
+Runner pre-outcome implementado en
+`neural/jepa/evaluate_cross_session_relative_value_v1.py`. No expone `end-date`:
+el cutoff 2023 está hardcoded, rehashea las fuentes y escribe atómicamente solo
+inventario, ledger, meses, controles y manifest. Cinco tests sintéticos cubren
+no-futuro de 10:35, payoff/coste, prior close half-day, exclusiones y meses cero.
+Commit/push del código es obligatorio antes del desarrollo real.
+
+`CROSS_SESSION_RELATIVE_VALUE_V1_DATA_GATE_CLARIFICATION.md` fija el tratamiento
+de 2023-06-05: sin trade, sin imputar las tres barras SPY inválidas, pero usando
+solo el close 16:00 válido como prior close del 06-06. El loader exige que no
+exista ninguna anomalía adicional. La aclaración queda hasheada en el manifest.

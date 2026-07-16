@@ -1371,3 +1371,15 @@ común. Próximo paso único: implementar tests de reloj/source/payoff sin abrir
 2024+, commit/push del runner y ejecutar una sola vez desarrollo 2022–2023.
 Gate mensual: PF>1,20, WR>45%, >12 trades y PnL>0. Si cualquier mes falla,
 cerrar y no abrir 2024–2026 ni opciones. Producción permanece intacta.
+
+Implementación pre-outcome lista: `evaluate_cross_session_relative_value_v1.py`
+y `test_cross_session_relative_value_v1.py`. El runner fija cutoff 20231231 sin
+CLI mutable, valida/rehashea cada Parquet, usa solo close 10:34 y opens exactos,
+escribe outputs atómicos y separa controles no elegibles. Antes del run real:
+pytest focal, Ruff, py_compile, git add explícito, commit y push.
+
+Aclaración pre-outcome adicional:
+`CROSS_SESSION_RELATIVE_VALUE_V1_DATA_GATE_CLARIFICATION.md`. El 2023-06-05 se
+excluye como trade; solo sus tres rows SPY 09:54–09:56 pueden fallar envelope y
+no se usan. El close 16:00 válido se conserva como prior close de 06-06. Runner
+hashea ambos documentos y cualquier anomalía extra aborta.

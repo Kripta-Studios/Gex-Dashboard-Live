@@ -1414,3 +1414,16 @@ Fase autorizada única: implementar/testar runner ledger-only y ejecutar desarro
 2022–2023. Gate mensual del spread: PF>1,20, WR>45%, >12 trades y PnL>0 en
 todos los meses. 2024–2026, opciones y producción permanecen cerrados. Si falla
 un mes, cerrar sin invertir la regla ni rescatar clocks/costes/anclas.
+
+Runner y tests sintéticos implementados pre-outcome en
+`evaluate_cross_session_relative_value_v1.py` y
+`test_cross_session_relative_value_v1.py`. El runner no acepta cutoff mutable,
+hashea cada fuente, exige grid/metadata/OHLC exactos, materializa solo ledger y
+controles no rescatables, incluye meses sin trades y mantiene 2024+ cerrado.
+Debe pasar tests/Ruff/compile y commit/push antes de ejecutarse sobre datos reales.
+
+Aclaración data-gate congelada pre-outcome: `2023-06-05` no genera trade, pero
+su close 16:00 válido puede servir como prior close del 06-06. El loader permite
+únicamente las tres anomalías SPY conocidas 09:54–09:56, sin consumirlas ni
+imputarlas; cualquier otra fila inválida aborta. Suite sintética ampliada a
+seis regresiones.

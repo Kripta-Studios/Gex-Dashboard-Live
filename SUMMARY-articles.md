@@ -821,3 +821,15 @@ un coste. Aquí no hay beta rolling, z-score, threshold o ML; la regla opuesta
 solo es control y no puede rescatar el primario. El desarrollo 2022–2023 exige
 todos los meses positivos además de PF/WR/frecuencia. Un PASS seguiría siendo
 feasibility spot, no ejecución broker-grade ni autorización de opciones.
+
+La implementación traduce esas restricciones en un runner sin cutoff externo:
+rehúsa fuentes posteriores a 2023 por construcción, valida la malla completa y
+registra por separado controles momentum/fijo. Los controles se calculan para
+diagnóstico de signo, pero el código no puede usarlos para sustituir la regla
+mean-reversion ni para decidir abrir el outer.
+
+Una exclusión de trade no implica borrar toda la sesión fuente: si la anomalía
+está localizada dentro de la ventana de señal, puede prohibirse la decisión de
+ese día y conservarse un close posterior válido como estado previo del día
+siguiente. Esto requiere una allowlist exacta de filas adversariales, no una
+tolerancia general ni imputación.

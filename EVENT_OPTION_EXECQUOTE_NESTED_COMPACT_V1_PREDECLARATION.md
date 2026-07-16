@@ -151,3 +151,9 @@ it is economically independent: spot relative-value rather than long-option
 or 2026 outcome. Its sole authorized phase is a 2022–2023 ledger-only
 development replay; this note does not retroactively alter the compact V1 stop
 rule.
+
+Its ledger runner was implemented only after the new family was committed and
+does not import this selector or its outcomes. Compact V1 remains closed.
+
+The new runner also hashes a separate outcome-free source clarification; this
+has no effect on any compact-V1 input, fold or metric.
