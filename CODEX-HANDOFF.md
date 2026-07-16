@@ -1,5 +1,11 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+Calendar-RR evaluator/freezer pre-outcome listos: 12 passed/Ruff/compile.
+Archivos `evaluate_calendar_risk_reversal_pressure_v1.py`,
+`freeze_calendar_risk_reversal_pressure_v1_runner.py` y dos tests. Añadirlos con
+los siete handoffs+registry, commit/push. Después ejecutar freezer default desde
+HEAD limpio; no ejecutar evaluator hasta force-add/commit/push de ese manifest.
+
 Calendar RR full data gate PASS desde `ef489bac`. Compactos copiados a
 `calendar_risk_reversal_pressure_v1_202301_202312_v1_data_gate/`: feature SHA
 `de0ec4b3...2858b`, manifest file `604f53b2...a9c1`, source inventory

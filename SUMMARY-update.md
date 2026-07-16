@@ -1,5 +1,9 @@
 # SUMMARY-update — ledger científico compacto
 
+Calendar-RR evaluator/freezer implementados pre-outcome, `12 passed` y checks
+clean. Scope fijo 741 eventos 2023, hash gate, sign pressure, open10:36→13:36,
+hold180/coste1 y 36 gates. Pendiente commit y manifest freeze; aún no hay PnL.
+
 Calendar RR `PASS_DATA_GATE`: 747/750, coverage mínima99,2%, min19/mes,
 distinct states min233, 3.750 fuentes rehasheadas y 3 fallos explícitos de
 quote/key. Feature SHA `de0ec4b3...2858b`, manifest `604f53b2...a9c1`.

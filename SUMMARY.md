@@ -1,5 +1,9 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+El runner económico calendar-RR ya está implementado pero no ejecutado. Su suite
+12/12 pasa y no expone scope/policy mutable. Debe quedar committed, generar otro
+manifest frozen y commitearlo antes del único outcome read 2023.
+
 Calendar risk reversal ya supera su gate físico 2023: 747/750 eventos, mínimo
 99,2% coverage y 19 eventos mensuales, señal no degenerada. La auditoría
 independiente reprodujo fórmulas y 3.750 hashes. Aún no existe PF/WR/PnL; el

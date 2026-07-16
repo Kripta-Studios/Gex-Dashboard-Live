@@ -1,5 +1,8 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1
 
+> The calendar-RR evaluator/freezer remains a separate cash-proxy protocol and
+> has not changed this frozen compact-V1 contract.
+
 > The separate calendar-RR data gate passed outcome-free; any later 2023 cash
 > proxy ledger remains isolated from compact V1.
 

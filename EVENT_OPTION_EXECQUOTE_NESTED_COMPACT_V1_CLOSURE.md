@@ -1,5 +1,8 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1 — CLOSED_NO_EDGE
 
+> The separate calendar-RR 2023 evaluator/freezer is implemented and tested
+> pre-outcome. It cannot read compact-V1 artifacts or 2024–2026 outcomes.
+
 > The separate calendar-RR physical data gate passed 747/750 2023 sessions
 > without outcomes. It still has no compact-V1 model or payoff dependency.
 

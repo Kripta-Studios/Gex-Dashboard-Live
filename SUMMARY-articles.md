@@ -1,5 +1,10 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+El ledger calendar-RR codifica de nuevo la diferencia entre progreso agregado y
+estabilidad: PF>1 en los tres tickers solo produce estado incremental; no abre
+outer si una celda mensual falla. El freezer sella esa regla y evita convertir
+un primer resultado prometedor en permiso para variar signo o años.
+
 El data gate calendar-RR demuestra que una estructura temporal IV causal puede
 medirse con 99,2–100% de cobertura y sin as-of. Los tres fallos muestran por qué
 el join exacto importa: crossed quote y dos diferencias de key Greek/IV se

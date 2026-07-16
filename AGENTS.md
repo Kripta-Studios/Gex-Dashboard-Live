@@ -1,5 +1,14 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Calendar RR evaluator/freezer listos pre-outcome
+
+Implementados `evaluate_calendar_risk_reversal_pressure_v1.py` y
+`freeze_calendar_risk_reversal_pressure_v1_runner.py`; suite `12 passed`, Ruff y
+py_compile clean. Verifican hashes del gate, seleccionan exactamente 741 eventos
+válidos/normales 2023, rehashean underlying y fijan sign/10:36→13:36/180m/1bp,
+36 celdas y controles. No hubo outcome read. Secuencia: commit/push código ->
+generar manifest frozen desde HEAD limpio -> commit/push -> único development.
+
 ### Calendar RR `PASS_DATA_GATE`
 
 Full gate 2023 desde `ef489bac`: 750 sesiones, 747 válidas, coverage
