@@ -841,3 +841,7 @@ predeclaración, dependency de carga y 1.503 fuentes development, y materializa
 solo ledger/meses/controles. Los tests separan explícitamente
 `INCREMENTAL_EDGE_ONLY` de `PASS_DEVELOPMENT_GATE`; falta validar, commit/push y
 solo después ejecutar datos reales.
+
+El primer comando real no abrió datos: falló al importar `neural` desde el path
+directo y no creó target. El fix añade repo root antes del import y testea la CLI
+en subprocess; es una reparación de arranque pre-outcome, sin cambio científico.

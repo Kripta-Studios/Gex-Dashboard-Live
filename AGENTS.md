@@ -1460,3 +1460,9 @@ ni outcomes; el manifest sella ambos códigos. Tests sintéticos verifican seña
 cash-only, acción/payoff, primera sesión elegible, exclusiones, cutoff inmutable
 y diferencia entre PF>1 incremental y PASS mensual completo. Commit/push antes
 del run real.
+
+Primer launch detenido antes de imports de fuente/output/outcomes por
+`ModuleNotFoundError: neural` al ejecutar el path directo. Target inexistente.
+Fix runtime-only añade repo root a `sys.path` antes del import y una regresión
+subprocess `script --help`; no cambia señal/universo/gates. Commit/push antes del
+relaunch al mismo target aún virgen.

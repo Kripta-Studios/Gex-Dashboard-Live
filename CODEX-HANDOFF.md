@@ -1422,3 +1422,7 @@ Runner listo pre-outcome:
 runner anterior y sella su SHA como dependencia; no importa su señal. No expone
 cutoff mutable. Ejecutar pytest/Ruff/compile, commit/push y solo entonces el
 target inmutable `opening_relative_momentum_v1_development_202201_202312`.
+
+El primer launch falló antes de fuente/output por `ModuleNotFoundError: neural`;
+target inexistente. Fix permitido: bootstrap de repo root + test subprocess de
+CLI directa. Commit/push y relanzar el mismo comando solo tras suite verde.

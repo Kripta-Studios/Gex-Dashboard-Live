@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import importlib
 import json
 import sys
 from datetime import datetime, timezone
@@ -12,10 +13,14 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from neural.jepa import evaluate_cross_session_relative_value_v1 as source
+SCRIPT_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(SCRIPT_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_REPO_ROOT))
+
+source = importlib.import_module("neural.jepa.evaluate_cross_session_relative_value_v1")
 
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
+REPO_ROOT = SCRIPT_REPO_ROOT
 PREDECLARATION = REPO_ROOT / "research_papers/JEPA/OPENING_RELATIVE_MOMENTUM_V1_PREDECLARATION.md"
 DEFAULT_DATA_ROOT = source.DEFAULT_DATA_ROOT
 DEFAULT_OUTPUT = (

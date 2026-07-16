@@ -165,3 +165,5 @@ The next research protocol uses only underlying cash-session relative momentum;
 it does not reopen or modify this option protocol.
 
 The new ledger runner remains source-isolated from compact V1.
+
+An entrypoint import fix for that runner has no effect on compact V1.

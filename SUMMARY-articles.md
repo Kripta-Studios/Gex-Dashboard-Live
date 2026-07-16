@@ -852,3 +852,8 @@ El runner conserva esa distinción como estado de máquina, no como narrativa:
 PF agregado>1 nunca activa outer si un mes falla. Además hashea el loader
 compartido para evitar que reutilizar validación de fuente oculte un cambio en
 la semántica de timestamps.
+
+Una prueba importada por pytest no certifica que el entrypoint directo arranque:
+el primer launch falló antes de fuentes porque `sys.path` difería. La regresión
+correcta debe ejecutar el script en subprocess; este tipo de fallo conserva el
+freeze si no creó output ni alcanzó outcomes.

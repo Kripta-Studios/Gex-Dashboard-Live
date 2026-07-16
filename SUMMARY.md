@@ -1811,3 +1811,7 @@ Implementación pre-outcome: `evaluate_opening_relative_momentum_v1.py` y tests
 sintéticos. El runner hereda solo validación/source hashing del ledger cerrado,
 calcula una señal distinta, fija cutoff 2023 y persiste estados incrementales
 sin autorizarlos como PASS. Debe commit/push antes del desarrollo real.
+
+Primer launch: stop pre-source/pre-output por import directo del paquete. El
+target no existe. Se añade bootstrap de repo root y regresión subprocess CLI;
+no se reutiliza ningún resultado ni cambia el protocolo.

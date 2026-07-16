@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import math
+import subprocess
+import sys
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -110,3 +113,16 @@ def test_cli_does_not_expose_mutable_cutoff() -> None:
     assert not hasattr(args, "end_date")
     with pytest.raises(SystemExit):
         opening.parse_args(["--end-date", "20251231"])
+
+
+def test_direct_script_cli_imports_from_repo_root() -> None:
+    script = Path(opening.__file__).resolve()
+    completed = subprocess.run(
+        [sys.executable, str(script), "--help"],
+        cwd=script.parents[2],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert completed.returncode == 0, completed.stderr
+    assert "--output-dir" in completed.stdout
