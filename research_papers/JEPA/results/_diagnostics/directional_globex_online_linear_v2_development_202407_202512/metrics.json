@@ -1,0 +1,57 @@
+{
+  "adaptive_after_v1_2026": true,
+  "advance_to_2026": false,
+  "compact_feature_count": 37,
+  "coverage": {
+    "candidate_common_cash_decisions": 1638,
+    "drop_reasons": {
+      "ES=F:missing_asia_endpoint": 7,
+      "ES=F:missing_overnight_endpoint": 71,
+      "ES=F:missing_recent_hour": 941,
+      "ES=F:missing_volume_history": 2
+    },
+    "dropped_joint_decisions": 1021,
+    "eligible_joint_decisions": 617,
+    "eligible_rows_all_targets": 1851
+  },
+  "created_at_utc": "2026-07-16T14:59:26.512624+00:00",
+  "holdout_2026_used_for_selection": false,
+  "production_modified": false,
+  "provenance_sha256": "341427a63ab82a4b82b894ccb5a49015ab1800a6c92aede0104f32dcf612c634",
+  "schema": "directional_globex_online_linear_v2_development_metrics",
+  "scope": {
+    "end_date": "20251231",
+    "start_date": "20240717"
+  },
+  "selected_profile": "ONLINE_LINEAR_EXPANDING",
+  "status": "CLOSED_DEVELOPMENT_GATE",
+  "ticker_metrics": {
+    "QQQ": {
+      "gate_pass": false,
+      "min_month_trades": 22,
+      "net_bps": -175.95043027252734,
+      "positive_months": 5,
+      "profit_factor": 0.9803304009192165,
+      "trades": 412,
+      "win_rate": 0.46116504854368934
+    },
+    "SPX": {
+      "gate_pass": false,
+      "min_month_trades": 22,
+      "net_bps": -175.11931152699742,
+      "positive_months": 6,
+      "profit_factor": 0.9764208562382711,
+      "trades": 412,
+      "win_rate": 0.4563106796116505
+    },
+    "SPY": {
+      "gate_pass": false,
+      "min_month_trades": 22,
+      "net_bps": -31.632027981977103,
+      "positive_months": 6,
+      "profit_factor": 0.9956938119526967,
+      "trades": 412,
+      "win_rate": 0.46359223300970875
+    }
+  }
+}
