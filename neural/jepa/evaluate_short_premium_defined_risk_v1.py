@@ -32,7 +32,7 @@ DEFAULT_NATIVE_SEAL = (
     "wall_native_quote_sidecar_202208_202512_v1r1/manifest.json"
 )
 DEFAULT_COMPLEMENT_SEAL = Path(
-    "D:/ThetaData/wall_quote_size_native_complement_202208_202512_v1/manifest.json"
+    "D:/ThetaData/wall_quote_size_native_complement_202208_202512_v1/_seal/manifest.json"
 )
 DEFAULT_OUTPUT = (
     REPO_ROOT

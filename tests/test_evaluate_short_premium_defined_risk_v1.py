@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 
 from neural.jepa.evaluate_short_premium_defined_risk_v1 import (
+    DEFAULT_COMPLEMENT_SEAL,
     MAX_HOLD_MINUTES,
     ROUND_TRIP_FRICTION_POINTS,
     apply_exit_rule,
@@ -38,6 +39,11 @@ def test_valid_quotes_rejects_crossed_and_zero_short_bid() -> None:
     frame = pd.DataFrame({"bid": [1.0, 2.0, 0.0], "ask": [1.1, 1.9, 0.1]})
     assert valid_quotes(frame).tolist() == [True, False, True]
     assert valid_quotes(frame, short=True).tolist() == [True, False, False]
+
+
+def test_complement_seal_path_is_inside_sealed_directory() -> None:
+    assert DEFAULT_COMPLEMENT_SEAL.name == "manifest.json"
+    assert DEFAULT_COMPLEMENT_SEAL.parent.name == "_seal"
 
 
 def test_clock_coverage_stops_at_sealed_half_day_end() -> None:
