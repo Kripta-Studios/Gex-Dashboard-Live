@@ -1480,3 +1480,11 @@ leyó quotes/outcomes. Compactos en
 `eebdc7d9...4f590`, monthly `e8dfc2e4...c5e7`, inventory
 `9c6ddb40...9392d`. Siguiente: commit/push compactos/handoffs -> builder
 outcome-free con timestamp nativo y pares exactos. No abrir economía todavía.
+
+Full V1 desde `b0cbba80` terminó REJECTED con 104 errores pre-label
+(QQQ103/SPXW1). Causa auditada: strings `.000` no coincidían con el filtro sin
+milisegundos; los minutos exactos existen. V1 manifest SHA `47cb9ad2...91869`,
+errors `ee68d9eb...235c`, preservado en `tmp`. Clarificación:
+`OPTION_PARITY_PRESSURE_V1_NATIVE_STRING_CLOCK_CLARIFICATION.md`. Siguiente:
+commit doc -> fix/regresión -> commit/push -> target nuevo V1R1. No retocar
+formula/gates ni usar V1 parcial.

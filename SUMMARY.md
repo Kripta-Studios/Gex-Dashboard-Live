@@ -1858,3 +1858,9 @@ El censo reproducible de capacidad queda `PASS_FREQUENCY_CAPACITY`: 752 fuentes
 exact-0DTE por ticker, 2.256 total y mínimo18 sesiones elegibles en cada mes de
 2023–2025. No leyó quotes ni outcomes. El data gate de la variable física sigue
 pendiente; aún no existe rentabilidad `OPTION_PARITY_PRESSURE_V1`.
+
+El primer data-gate no llegó a evaluar coverage: 104 sesiones quedaron vacías
+por comparar strings sin `.000` contra timestamps con milisegundos. Una lectura
+datetime confirmó 10:30/10:35 exactos. V1 se preserva REJECTED; la aclaración
+permite solo ambas codificaciones equivalentes y ordena relaunch V1R1 tras
+commit. No cambia ninguna feature/gate ni abre outcomes.

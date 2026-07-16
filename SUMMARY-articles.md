@@ -883,3 +883,9 @@ El censo formal confirma que el nuevo eje ya no está limitado por listings:
 752 sesiones por ticker y mínimo 18 en cualquiera de los 36 meses 2023–2025.
 Todavía no dice que la paridad sea medible o predictiva; separa correctamente
 capacidad de producto, calidad de quotes y alpha en gates sucesivas.
+
+El primer quote gate mostró otra distinción útil: pushdown de strings no es
+validación temporal. Ciento cuatro sesiones parecían vacías porque almacenaban
+`.000`; el datetime exacto sí estaba. La reparación válida enumera ambas
+codificaciones y vuelve a exigir equality/key parity, en vez de relajar el reloj
+o aceptar un as-of.

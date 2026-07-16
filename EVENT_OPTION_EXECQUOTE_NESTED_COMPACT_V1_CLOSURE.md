@@ -154,3 +154,7 @@ development/outer/holdout ordering remains independent of compact V1.
 Its filename-only capacity audit passed with 752 exact-0DTE sessions per ticker
 and a minimum of 18 per month. No quote or outcome was accessed, so compact V1
 remains unaffected.
+
+The parity data gate's first attempt stopped on an exact timestamp string
+serialization mismatch (`.000`) before outcomes. Its narrowly frozen relaunch
+does not alter or reopen compact V1.

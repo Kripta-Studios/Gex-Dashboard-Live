@@ -1518,3 +1518,11 @@ celdas <=12 tras ocho medias jornadas. No abrió contenido de quotes/outcomes.
 Hashes manifest/monthly/inventory `eebdc7d9...4f590`/`e8dfc2e4...c5e7`/
 `9c6ddb40...9392d`. Siguiente paso: builder de pares exactos y data gate
 outcome-free; 2024–2026 y producción siguen cerrados.
+
+Primer full gate desde `b0cbba80` preservado `REJECTED_DATA_GATE`: 104 errores
+(QQQ103/SPXW1) antes de labels, porque el pushdown pedía timestamps sin
+milisegundos y esas fuentes usan `.000`. Lectura completa confirma filas exactas
+10:30/10:35; no es ausencia de reloj. Clarificación pre-outcome:
+`OPTION_PARITY_PRESSURE_V1_NATIVE_STRING_CLOCK_CLARIFICATION.md`. Permite solo
+las dos codificaciones equivalentes, mantiene join one-to-one sidecar y bid/ask
+vintage. Commit/push fix+regresión y relaunch a V1R1 nuevo; V1 no se edita.

@@ -182,3 +182,6 @@ V1 or reuse its outcomes.
 
 The separate parity protocol's outcome-free listing audit passed frequency; its
 quote-level data gate is still pending. Compact V1 remains closed.
+
+Its first quote-gate attempt stopped on `.000` timestamp serialization, before
+any payoff. The exact-string clarification has no effect on compact V1.

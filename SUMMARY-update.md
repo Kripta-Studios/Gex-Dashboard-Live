@@ -867,3 +867,8 @@ El capacity audit committed `314d16e1` pasó: 2.256 exact-0DTE, 752 por ticker y
 mínimo18 sesiones/mes en 2023–2025. `outcome_accessed=false` y
 `quote_content_accessed=false`. Próximo gate: pares CALL/PUT/timestamp/spot y
 distinctness; no hay PF/WR/PnL nuevo.
+
+Primer full gate V1 detenido outcome-free con 104 errores de filtro: 103 QQQ y
+uno SPXW serializan timestamps con `.000`. Las filas exactas existen; no es un
+data gap. Aclaración congelada permite solo con/sin `.000`, conserva sidecar
+one-to-one y exige relaunch inmutable V1R1. No se abrió economía/2026.
