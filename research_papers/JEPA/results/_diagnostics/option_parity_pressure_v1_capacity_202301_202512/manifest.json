@@ -1,0 +1,50 @@
+{
+  "calendar_half_days_excluded": [
+    "20230703",
+    "20231124",
+    "20240703",
+    "20241129",
+    "20241224",
+    "20250703",
+    "20251128",
+    "20251224"
+  ],
+  "created_at_utc": "2026-07-16T22:51:51.649280+00:00",
+  "exact_zero_dte_source_files": 2256,
+  "failed_cells": [],
+  "frequency_gate": {
+    "one_trade_per_session": true,
+    "trades_per_month_strictly_greater_than": 12
+  },
+  "holdout_2024_2025_opened": false,
+  "holdout_2026_opened": false,
+  "minimum_monthly_sessions_by_ticker": {
+    "QQQ": 18,
+    "SPXW": 18,
+    "SPY": 18
+  },
+  "monthly_capacity_sha256": "e8dfc2e404adc0dee130e4d5bc81480b0df6ee697cd2e18aed04598d0485c5e7",
+  "outcome_accessed": false,
+  "predeclaration_sha256": "96d100e901fb44c3d7858447b590258fbec10bd2ca15fe05321e090e5be114cf",
+  "production_modified": false,
+  "quote_content_accessed": false,
+  "runner_sha256": "da5e513aa5ad06fc469a4338e8ba8efb2127ac9d9c4e222edd6e4541e7694dae",
+  "schema": "option_parity_pressure_v1_capacity_audit",
+  "scope": {
+    "end_month": "202512",
+    "start_month": "202301"
+  },
+  "scope_amendment_sha256": "9c41da4c1eec7e39151a6a617c9d97219f695a7cf097b01fe8ae41a7d5937e3c",
+  "source_files_by_ticker": {
+    "QQQ": 752,
+    "SPXW": 752,
+    "SPY": 752
+  },
+  "source_inventory_sha256": "9c6ddb40dd1e90fdde5c89222103a0b3b6e446dbdb7b0e834e150ca6d009392d",
+  "status": "PASS_FREQUENCY_CAPACITY",
+  "tickers": [
+    "QQQ",
+    "SPXW",
+    "SPY"
+  ]
+}

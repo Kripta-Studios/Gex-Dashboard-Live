@@ -150,3 +150,7 @@ reopens compact V1 nor changes its selector, payoff or evidence.
 Before any parity outcome was read, the user narrowed that separate protocol to
 2023–2026 because February 2022 had only twelve 0DTE expirations. Its staged
 development/outer/holdout ordering remains independent of compact V1.
+
+Its filename-only capacity audit passed with 752 exact-0DTE sessions per ticker
+and a minimum of 18 per month. No quote or outcome was accessed, so compact V1
+remains unaffected.

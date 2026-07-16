@@ -179,3 +179,6 @@ compact V1 remains closed.
 That parity protocol was subsequently amended, still pre-outcome, to stage 2023
 development, 2024–2025 outer and 2026 final holdout. This does not alter compact
 V1 or reuse its outcomes.
+
+The separate parity protocol's outcome-free listing audit passed frequency; its
+quote-level data gate is still pending. Compact V1 remains closed.

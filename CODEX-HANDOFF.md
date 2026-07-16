@@ -1472,3 +1472,11 @@ ignorar todo 2022 y usar 2023–2026 en fases. Motivo físico: febrero 2022 ofre
 orden: data gate 2023–2025 -> desarrollo 2023 -> outer 2024–2025 si PASS ->
 freeze -> 2026 si PASS. No abrir etapas posteriores anticipadamente. Documento:
 `OPTION_PARITY_PRESSURE_V1_SCOPE_AMENDMENT.md`.
+
+Capacity audit committed/pushed `314d16e1` y ejecutado una vez: PASS, 2.256
+fuentes exactas/752 por ticker, mínimo18 sesiones mensuales, cero fallos. No
+leyó quotes/outcomes. Compactos en
+`option_parity_pressure_v1_capacity_202301_202512/`; hashes manifest
+`eebdc7d9...4f590`, monthly `e8dfc2e4...c5e7`, inventory
+`9c6ddb40...9392d`. Siguiente: commit/push compactos/handoffs -> builder
+outcome-free con timestamp nativo y pares exactos. No abrir economía todavía.

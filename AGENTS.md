@@ -1511,3 +1511,10 @@ vencimientos 0DTE por ticker en 2022-02, capacidad insuficiente para `>12` con
 una posición/día. Nuevo eje: data gate 2023–2025, desarrollo 2023, outer
 2024–2025 solo si 2023 pasa y holdout 2026 solo tras otro freeze. Señal/gates no
 cambian. Autoridad: `OPTION_PARITY_PRESSURE_V1_SCOPE_AMENDMENT.md`.
+
+Capacity audit frozen `314d16e1`: `PASS_FREQUENCY_CAPACITY`, 2.256 fuentes
+exact-0DTE (752/ticker) 2023–2025, mínimo 18 sesiones elegibles/mes y cero
+celdas <=12 tras ocho medias jornadas. No abrió contenido de quotes/outcomes.
+Hashes manifest/monthly/inventory `eebdc7d9...4f590`/`e8dfc2e4...c5e7`/
+`9c6ddb40...9392d`. Siguiente paso: builder de pares exactos y data gate
+outcome-free; 2024–2026 y producción siguen cerrados.

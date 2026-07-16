@@ -1853,3 +1853,8 @@ Amendment pre-outcome autorizado: 2022 se elimina completo porque febrero solo
 tiene 12 vencimientos 0DTE, capacidad incompatible con `>12`. La secuencia pasa
 a data gate 2023–2025, desarrollo 2023, outer 2024–2025 y holdout 2026 únicamente
 después de dos PASS/freezes. No cambian señal, reloj, coste ni gates.
+
+El censo reproducible de capacidad queda `PASS_FREQUENCY_CAPACITY`: 752 fuentes
+exact-0DTE por ticker, 2.256 total y mínimo18 sesiones elegibles en cada mes de
+2023–2025. No leyó quotes ni outcomes. El data gate de la variable física sigue
+pendiente; aún no existe rentabilidad `OPTION_PARITY_PRESSURE_V1`.

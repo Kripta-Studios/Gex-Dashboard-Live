@@ -878,3 +878,8 @@ solo ofrecía 12 vencimientos 0DTE y no podía superar una gate estricta `>12`
 con una operación diaria. Por autorización explícita, el protocolo elimina todo
 2022 antes de outcomes y separa 2023 desarrollo, 2024–2025 outer y 2026 final.
 Eso evita tanto inventar frecuencia como usar el holdout para seleccionar.
+
+El censo formal confirma que el nuevo eje ya no está limitado por listings:
+752 sesiones por ticker y mínimo 18 en cualquiera de los 36 meses 2023–2025.
+Todavía no dice que la paridad sea medible o predictiva; separa correctamente
+capacidad de producto, calidad de quotes y alpha en gates sucesivas.

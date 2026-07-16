@@ -862,3 +862,8 @@ Scope enmendado por orden explícita, todavía pre-outcome: se ignora 2022 porqu
 2022-02 tiene exactamente 12 expiraciones 0DTE y no puede cumplir `>12` con una
 operación/día. Data gate pasa a 2023–2025; desarrollo es 2023, outer 2024–2025
 y 2026 solo se abre tras PASS y freeze de las dos fases anteriores.
+
+El capacity audit committed `314d16e1` pasó: 2.256 exact-0DTE, 752 por ticker y
+mínimo18 sesiones/mes en 2023–2025. `outcome_accessed=false` y
+`quote_content_accessed=false`. Próximo gate: pares CALL/PUT/timestamp/spot y
+distinctness; no hay PF/WR/PnL nuevo.
