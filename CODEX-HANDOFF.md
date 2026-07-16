@@ -1,5 +1,23 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+Familia activa: `CROSS_VENUE_CALENDAR_RR_LEADER_V1_PREDECLARATION.md`. Se crea
+por orden del usuario tras diagnóstico post-outcome; 2023 no es OOS. SPXW/SPY
+ret corr0,999733/sign246/246, pero pressure corr0,580247/action same148/246.
+Mapping fijo QQQ←QQQ, SPY←SPY, SPXW←SPY produce en design PF
+1,173476/1,072835/1,071604, WR>50 aproximadamente, netos positivos y min19.
+Solo7/5/5 meses positivos: progreso PF>1, no promoción.
+
+Siguiente acción estricta: commit/push predeclaración+cierres+handoffs; luego
+implementar capturador outcome-free y tests para 12 sesiones congeladas (primera
+y última normal por ticker-año 2024–2025), dos expiries cada una, quote wildcard
+1m 10:30–10:35. Exigir exact vintage Greek/IV key set, raw/parquet/manifest
+hashes, JAR/runtime/provenance y auditar revisions sin reemplazar precios. Solo
+después de preflight PASS autorizar full sidecar/data gate; no outcomes todavía.
+
+Component breadth e index-ETF calendar sources ya cerraron sin outcomes. El
+calendar-RR base a 2bps es PF0,999. No abrir 2024 hasta data gate y runner
+committed; 2025/2026 permanecen cerrados. Producción intacta.
+
 Calendar-RR cerrado con progreso parcial: pooled 739/PF1,058294/WR0,500676/
 +729,690bps/12 de 36 cells; QQQ1,173476, SPXW0,912372, SPY1,072835. Auditoría
 rehasheó 741 sources y recomputó todo. No rerun/outer/rescate sobre esta señal.

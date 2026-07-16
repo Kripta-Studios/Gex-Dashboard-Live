@@ -1,5 +1,11 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1 — CLOSED_NO_EDGE
 
+> Separate later research now predeclares a cross-venue calendar-RR leader:
+> QQQ uses QQQ, SPY uses SPY and SPXW uses SPY. The 2023 diagnostic leaves all
+> three aggregate PF above one but is explicitly post-outcome design evidence.
+> Native front/back clocks must be restored before a first 2024 validation;
+> 2025–2026 remain closed. This does not reopen or alter compact V1.
+
 > The separate calendar-RR family closed with partial cash-proxy edge: pooled
 > PF 1.058, QQQ/SPY above one, SPXW below one and 12/36 passing months. It did
 > not open 2024–2026 or alter compact V1.

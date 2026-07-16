@@ -1,5 +1,10 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1
 
+> A subsequent cross-venue SPY→SPXW calendar-RR mapping is a separately
+> predeclared family generated from already-open 2023 diagnostics. Its first
+> valid test would be 2024 only after an outcome-free native-clock sidecar. It
+> does not reuse or modify compact V1 inputs, folds, selector or payoff.
+
 > The independent calendar-RR family later closed with insufficient monthly
 > stability despite pooled PF above one. Compact V1 remains unchanged.
 

@@ -1,5 +1,28 @@
 # AI Agent Hand-off: Current Production Reality
 
+## Research activo — CROSS_VENUE_CALENDAR_RR_LEADER_V1
+
+Por petición explícita del usuario se investiga la vía SPY→SPXW, pero como
+familia nueva generada post-outcome, no como rescate validado. En 2023 SPXW/SPY
+cash correlaciona 0,999733 y coincide de signo 246/246; sus pressures solo
+correlacionan0,580 y sus acciones coinciden148/246. Usar SPY como sensor fijo de
+SPXW habría dado SPXW PF1,071604/WR50%/+268,657bps/min19, dejando por primera
+vez PF>1 agregado en los tres: QQQ1,173, SPY1,073, SPXW1,072. Solo 7/5/5 meses
+son positivos y aún no es promoción.
+
+Mapping V1 congelado: QQQ←QQQ pressure, SPY←SPY, SPXW←SPY; sin grid, ML,
+threshold o consenso. 2023 es design contaminado; 2024 será la primera
+validación, 2025 queda cerrado para V1/V2 secuencial y 2026 holdout. Bloqueo:
+Greek/IV 2024–2025 carece a menudo de option `timestamp`. Primero capturar solo
+12 sesiones/24 front-back mediante quote sidecar exacto 10:30–10:35; vintage
+bid/ask/IV no se reemplaza. Autoridad:
+`CROSS_VENUE_CALENDAR_RR_LEADER_V1_PREDECLARATION.md`.
+
+Dos fuentes alternativas ya cerraron sin outcomes: component calendar breadth
+min3/mes e IWM min12 (`FAILED_FREQUENCY`); NDX/NDXP sin Greeks y SPX sin fechas
+front0DTE+back (`BLOCKED_LOCAL_SOURCE`). No forward-fill/nearest. Calendar-RR
+original sigue no promocionable y a 2bps pooled cae de PF1,058 a PF0,999.
+
 ## Cierre CALENDAR_RISK_REVERSAL_PRESSURE_V1 — edge incremental parcial
 
 One-shot 2023 desde `8fe170d1`, auditoría independiente PASS. Pooled 739 trades,

@@ -42,6 +42,36 @@ El inverso pierde en los tres tickers, lo que apoya que el signo directo contien
 algo de información. Always-long refleja el drift favorable de 2023, pero era
 solo control y no puede sustituir la policy ni autorizar selección post-hoc.
 
+## Diagnóstico SPXW frente a SPY
+
+El fallo de SPXW no procede de que su subyacente se mueva de forma materialmente
+distinta a SPY. En las 246 fechas comunes:
+
+- la correlación de retornos 10:36→13:36 es `0,999733`;
+- el signo del retorno coincide en 246/246 y la diferencia absoluta mediana es
+  solo `0,523` bps;
+- la correlación de las presiones calendar-RR es bastante menor, `0,580247`;
+- las acciones emitidas coinciden solo en 148/246 fechas, `60,163%`.
+
+Cuando las acciones coinciden, ambos ledgers son casi idénticos: SPXW PF
+`1,022360`/+53,925bps y SPY PF `1,021306`/+51,472bps. En las 98 fechas de
+desacuerdo, SPXW cae a PF `0,752601`/-410,733bps mientras SPY alcanza PF
+`1,170042`/+226,215bps. La diferencia económica se origina en el signo producido
+por las dos superficies de opciones, no en el path del cash subyacente.
+
+Copiar retrospectivamente la señal SPY a SPXW es diagnóstico de desarrollo, no
+validación: habría producido PF `1,071604`, WR `50,0%`, +268,657bps, mínimo 19
+trades/mes y 5/12 meses positivos. Cualquier arquitectura compartida debe
+predeclararse como familia nueva y validarse por primera vez en 2024–2025.
+
+## Sensibilidad al coste
+
+El edge pooled también es pequeño frente a ejecución. Sobre los 739 trades, el
+gross sin coste es PF `1,120868` y +1.468,690bps. Con 1bp queda el resultado
+reportado PF `1,058294`; con 2bps pasa a PF `0,999278` y -9,310bps; con 3bps a
+PF `0,943579` y -748,310bps. Esta fragilidad refuerza que PF>1 agregado a 1bp no
+es una base suficiente para promover.
+
 ## Auditoría independiente
 
 - 741 eventos válidos/normales y 739 trades; dos presiones cero no operan.

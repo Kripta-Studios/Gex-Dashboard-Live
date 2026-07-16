@@ -1,5 +1,24 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+## Nueva vía: liderazgo calendar-RR SPY→SPXW
+
+El audit pareado explica el PF0,912 de SPXW aunque se mueva como SPY: retorno
+corr0,999733 y mismo signo246/246, pero pressure corr0,580247 y solo148/246
+acciones iguales. En días iguales ambos PF≈1,022; en desacuerdo SPXW0,753 y
+SPY1,170. Usar el sensor SPY fijo para el payoff SPXW habría dado en 2023
+PF1,071604, WR50%, +268,657bps y min19. Junto a QQQ1,173 y SPY1,073, los tres
+superan PF1 agregado por primera vez, aunque solo 7/5/5 meses son positivos.
+
+Esto genera `CROSS_VENUE_CALENDAR_RR_LEADER_V1`, no demuestra rentabilidad:
+2023 ya está visto. Mapping sin variantes QQQ←QQQ/SPY←SPY/SPXW←SPY; 2024
+será primera validación, 2025 queda para secuencia frozen y 2026 holdout. Antes
+se exige sidecar nativo front/back 2024–2025; preflight solo 12 sesiones. La gate
+de promoción PF>1,20/WR>45%/>12/todos meses positivos no cambia.
+
+Breadth calendar-RR de 14 componentes falla min3/mes, IWM min12; NDX/NDXP no
+tienen Greeks y SPX no tiene fechas 0DTE+back. Cierres outcome-free versionados.
+El base pooled PF1,058 a 1bp cae a PF0,999/-9,31bps con 2bps.
+
 Calendar-RR avanza el agregado desde PF<1 a PF1,058 y +729,69bps; QQQ y SPY
 también superan PF1. SPXW queda PF0,912 y solo pasan 12/36 meses. Resultado
 auditado y familia cerrada por estabilidad; no se abrió 2024–2026.

@@ -1,5 +1,24 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+### Arquitectura cross-venue generada por SPY/SPXW
+
+SPXW y SPY separan claramente movimiento y sensor: sus retornos cash a 180m
+correlacionan 0,999733 y tienen el mismo signo en 246/246 fechas, mientras sus
+presiones calendar-RR correlacionan solo 0,580 y sus acciones coinciden 60,2%.
+Cuando coinciden ambos PF≈1,022; en desacuerdo SPXW PF0,753 y SPY1,170. La
+superficie local no es un proxy intercambiable del mismo factor subyacente.
+
+Usar SPY como sensor líder fijo para SPXW eleva el diagnóstico 2023 de SPXW a
+PF1,072/WR50%, por lo que QQQ, SPY y SPXW quedan todos por encima de PF1. Es una
+hipótesis prometedora generada después de ver outcomes, no validación. La
+arquitectura debe congelarse sin variantes y probarse por primera vez en 2024;
+solo una secuencia 2024→2025→2026 puede separar liderazgo real de selección.
+
+El edge calendar-RR original es además cost-fragile: pooled PF1,058 a 1bp cae a
+PF0,999 a 2bps. Breadth de componentes no aporta frecuencia (min3; IWM min12),
+y faltan NDX/NDXP/SPX front-back locales. La paridad live futura depende de un
+sidecar de reloj front/back; `underlying_timestamp` no sustituye option time.
+
 ### Calendar skew aporta información parcial, no estabilidad
 
 La diferencia front/back de RR25 es la primera rotación reciente que conserva

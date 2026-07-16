@@ -1,5 +1,18 @@
 # SUMMARY-update — ledger científico compacto
 
+Nueva familia autorizada: `CROSS_VENUE_CALENDAR_RR_LEADER_V1`. Diagnóstico
+2023 post-outcome: cash SPXW/SPY corr0,999733/sign246/246, pressure corr0,580247
+y acciones iguales148/246. Mapping fijo QQQ←QQQ, SPY←SPY, SPXW←SPY deja
+PF1,173/1,073/1,072, WR51,82/50,40/50,00%, netos positivos y min19; meses
+positivos7/5/5, aún no promoción. 2023 es design, 2024 primera validación,
+2025 secuencial y 2026 holdout.
+
+Antes de outcomes: preflight quote-sidecar de 12 sesiones/24 front-back para
+reparar option timestamps 2024–2025, exact clocks 10:30/10:35, full vintage key
+set y raw/JAR/runtime hashes. No inferir `underlying_timestamp` ni reemplazar
+vintage bid/ask. Alternativas breadth e index-ETF cerradas sin outcomes por
+min3/min12 y ausencia NDX/NDXP/SPX-pairs. Calendar-RR base a 2bps PF0,999.
+
 Calendar RR cerrado `PARTIAL_INCREMENTAL_EDGE`: 739 trades, WR50,07%, PF1,0583,
 +729,69bps y 12/36 cells. QQQ PF1,173, SPY1,073, SPXW0,912; min19/mes. Auditoría
 independiente PASS. Es progreso PF>1, pero no abre outer ni permite rescatar

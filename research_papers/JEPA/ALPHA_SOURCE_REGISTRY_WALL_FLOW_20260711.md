@@ -149,3 +149,36 @@ Current live parity remains blocked.  `realtime_feed.py` omits explicit option
 quote, applies an ATR strike filter and does not share frozen wall identities.
 A separate append-only shadow collector is required; production is not modified
 during this research stage.
+
+## 7. Rotación calendar-RR posterior — 2026-07-17
+
+La familia `CALENDAR_RISK_REVERSAL_PRESSURE_V1` cerró desarrollo 2023 con edge
+parcial, no promocionable: pooled PF `1,058294`, QQQ `1,173476`, SPY `1,072835`
+y SPXW `0,912372`; solo 12/36 celdas pasan. No se abre 2024–2026 ni se selecciona
+un ticker o mes post-hoc.
+
+Dos extensiones independientes se auditaron sin outcomes y quedan cerradas:
+
+| ID | Fuente propuesta | Estado | Razón autoritativa |
+| --- | --- | --- | --- |
+| COMPONENT-CALENDAR-RR-BREADTH-V1 | RR calendarizado de 14 componentes/ETF e IWM | `FAILED_FREQUENCY` | Componentes min3/mes; IWM min12, pero la gate exige >12 |
+| INDEX-ETF-CALENDAR-RR-PARITY-V1 | NDX/NDXP↔QQQ y SPX↔SPY | `BLOCKED_LOCAL_SOURCE` | NDX/NDXP sin Greeks; SPX sin ninguna fecha front0DTE+back |
+
+Los cierres autoritativos son
+`COMPONENT_CALENDAR_RR_BREADTH_V1_FEASIBILITY_CLOSURE.md` e
+`INDEX_ETF_CALENDAR_RR_PARITY_V1_FEASIBILITY_CLOSURE.md`. No hacer forward-fill
+semanal, nearest-expiry ni reutilizar SPXW/QQQ/SPY como si fueran una fuente
+nueva. El universo temporal vigente empieza en 2023; 2026 permanece holdout
+hasta superar desarrollo 2023 y outer 2024–2025.
+
+Por instrucción posterior del usuario se autoriza una única continuación
+cross-venue, registrada como hipótesis generada post-outcome:
+
+| ID | Mapping | Evidencia de diseño | Estado |
+| --- | --- | --- | --- |
+| CROSS-VENUE-CALENDAR-RR-LEADER-V1 | QQQ←QQQ, SPY←SPY, SPXW←SPY | 2023 PF 1,173/1,073/1,072, pero solo 7/5/5 meses positivos | `PREDECLARED_NATIVE_CLOCK_FEASIBILITY` |
+
+2023 no puede validar esta regla. La primera prueba es 2024 tras construir un
+sidecar exacto front/back; 2025 y 2026 siguen cerrados. Predeclaración:
+`CROSS_VENUE_CALENDAR_RR_LEADER_V1_PREDECLARATION.md`. No abrir grids
+own/leader/consensus ni reemplazar los precios vintage con una recaptura actual.
