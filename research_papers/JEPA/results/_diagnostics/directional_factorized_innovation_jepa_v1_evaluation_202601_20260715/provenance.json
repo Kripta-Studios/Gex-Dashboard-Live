@@ -1,0 +1,17 @@
+{
+  "adaptive_after_2026_parent_diagnosis": true,
+  "created_at_utc": "2026-07-16T13:24:56.740022+00:00",
+  "development_metrics_sha256": "f13f0c63be3496bc36764bcc952091ffa520f9ed45b3436429df011b6a22140f",
+  "development_model_sha256": "210f8793b93e7784848817a78bc80af682fb8f9f4d981012d53d399442c6f398",
+  "new_dataset_created": false,
+  "parent_runner_sha256": "d8e9f64a1708e533454818b4f0a612f21f4f1ad1f224034d6d56eb2be7b6a073",
+  "predeclaration_path": "research_papers\\JEPA\\DIRECTIONAL_FACTORIZED_INNOVATION_JEPA_V1_PREDECLARATION.md",
+  "predeclaration_sha256": "881b05a6d7dcdd90ec83c873440478ff38e631f961b1bd693f37e59e4de6f5fe",
+  "production_modified": false,
+  "runner_path": "neural\\jepa\\evaluate_directional_factorized_innovation_jepa_v1.py",
+  "runner_sha256": "0dbc9202468d1a23655ea648f24150c9a641c09560207cfb289e7e0f1fcd4376",
+  "schema": "directional_factorized_innovation_jepa_v1_provenance",
+  "source_inventory_rows": 2976,
+  "source_inventory_sha256": "66f8954f13f1aaa095b7b3c521fc989bb053b78ec65bf95c4545fef0ebddd7ec",
+  "source_kind": "existing_underlying_derived_minute_ohlc"
+}

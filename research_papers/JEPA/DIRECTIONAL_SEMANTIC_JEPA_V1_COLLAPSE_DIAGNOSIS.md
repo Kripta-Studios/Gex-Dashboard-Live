@@ -152,3 +152,16 @@ Por tanto el colapso perjudica al JEPA V1 —especialmente al perder señal QQQ�
 pero **no es el cuello de botella dominante de la rentabilidad conjunta**. El
 cuello dominante es que el objetivo aprende estados suaves no direccionales y
 las fuentes disponibles no aportan una relación estable común a SPX, SPY y QQQ.
+
+## 6. Intervención confirmatoria del mecanismo
+
+`DIRECTIONAL_FACTORIZED_INNOVATION_JEPA_V1` ejecutó después la única reparación
+propuesta sobre el mismo panel, sin nuevas fuentes. El latent pasó de 14–15% a
+53,54% de rango efectivo y dz de 11–12% a 42,67%; los tres residuales por ticker
+alcanzaron 93–95% y no hubo dimensiones muertas. Aun así, desarrollo 2025 eligió
+TECH para QQQ/SPX y JEPA solo para SPY. Enero–junio 2026 produjo PF
+`0,846/0,906/0,835`, net `-493/-202/-367` bps y solo `2/3/3` meses positivos.
+
+La familia price-only queda cerrada para el reloj 10:35→13:36. La reparación
+falsifica de forma directa que el cuello de botella económico fuese únicamente
+el colapso; no se permiten rescates por pesos VISReg, seed, bloques u horizonte.
