@@ -1,0 +1,104 @@
+{
+  "created_at_utc": "2026-07-16T12:26:25.298041+00:00",
+  "excluded_source_days": [
+    "20230605"
+  ],
+  "execution": {
+    "cost_bps": 1.0,
+    "decision_time": "10:35",
+    "entry_time": "10:36",
+    "exit_time": "13:36",
+    "fill_kind": "underlying_open_spot_proxy_not_futures_fill",
+    "hold_minutes": 180,
+    "overlap_count": 0
+  },
+  "joint_gate_pass": false,
+  "july_mtd": [
+    {
+      "month": "202607_MTD",
+      "net_bps": 37.965834137803384,
+      "profile_id": "SEMANTIC_RESIDUAL",
+      "profit_factor": 1.1328806272612093,
+      "ticker": "QQQ",
+      "trades": 10,
+      "win_rate": 0.5
+    },
+    {
+      "month": "202607_MTD",
+      "net_bps": 111.07051794992017,
+      "profile_id": "SEMANTIC_RESIDUAL",
+      "profit_factor": 1.9216343398006162,
+      "ticker": "SPX",
+      "trades": 10,
+      "win_rate": 0.6
+    },
+    {
+      "month": "202607_MTD",
+      "net_bps": 107.1477450252599,
+      "profile_id": "SEMANTIC_RESIDUAL",
+      "profit_factor": 1.8879101518595987,
+      "ticker": "SPY",
+      "trades": 10,
+      "win_rate": 0.6
+    }
+  ],
+  "production_modified": false,
+  "provenance_sha256": "f2243b2ffac0d1fb76b74b93d9da7ff1259f74ea18ef72d702e9383e1e9cc6d3",
+  "schema": "directional_semantic_jepa_v1_evaluation_metrics",
+  "scope": {
+    "complete_months": [
+      "202601",
+      "202602",
+      "202603",
+      "202604",
+      "202605",
+      "202606"
+    ],
+    "end_date": "20260715",
+    "july_status": "MTD",
+    "start_date": "20260101"
+  },
+  "selected_profiles": {
+    "QQQ": "SEMANTIC_RESIDUAL",
+    "SPX": "SEMANTIC_RESIDUAL",
+    "SPY": "SEMANTIC_RESIDUAL"
+  },
+  "source_sessions_by_ticker": {
+    "QQQ": 992,
+    "SPXW": 992,
+    "SPY": 992
+  },
+  "status": "CLOSED_2026_GATE",
+  "ticker_metrics": {
+    "QQQ": {
+      "evaluated_months": 6,
+      "gate_pass": false,
+      "min_month_trades": 19,
+      "net_bps": -678.2379288761035,
+      "positive_months": 2,
+      "profit_factor": 0.7942700583500659,
+      "trades": 123,
+      "win_rate": 0.5284552845528455
+    },
+    "SPX": {
+      "evaluated_months": 6,
+      "gate_pass": false,
+      "min_month_trades": 19,
+      "net_bps": -202.0869160707647,
+      "positive_months": 3,
+      "profit_factor": 0.9059486366801444,
+      "trades": 123,
+      "win_rate": 0.5040650406504065
+    },
+    "SPY": {
+      "evaluated_months": 6,
+      "gate_pass": false,
+      "min_month_trades": 19,
+      "net_bps": -468.9395266689434,
+      "positive_months": 2,
+      "profit_factor": 0.7939346010613866,
+      "trades": 123,
+      "win_rate": 0.4959349593495935
+    }
+  }
+}

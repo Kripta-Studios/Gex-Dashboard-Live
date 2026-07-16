@@ -1179,3 +1179,20 @@ SPY 53,04%/1,038/+175,7/4 de 12. La regla frozen selecciona
 `SEMANTIC_RESIDUAL` para los tres. No reinterpretar esto como rentabilidad; el
 valor es que la elección queda fijada antes del holdout. Siguiente paso único:
 commit/push de artefactos y one-shot 2026, sin cambiar perfil o parámetros.
+
+### Cierre DIRECTIONAL_SEMANTIC_JEPA_V1 — `CLOSED_2026_GATE`
+
+One-shot 2026 ejecutado con `SEMANTIC_RESIDUAL` frozen para los tres, open
+10:36→13:36, hold 180m exactos, 1bp y cero overlaps. Enero–junio: QQQ 123
+trades/WR52,85%/PF0,794/-678,2bps/min19/2 de 6 meses positivos; SPX 123/
+50,41%/0,906/-202,1/min19/3 de 6; SPY 123/49,59%/0,794/-468,9/min19/2 de 6.
+Frecuencia pasa, economía falla claramente. Julio MTD (10 trades) es positivo:
+QQQ PF1,133/+38,0bps, SPX 1,922/+111,1, SPY 1,888/+107,1; no repara la gate ni
+cumple aún frecuencia mensual.
+
+Ledger 399 rows SHA `0f08765d...2ab3a`; monthly SHA `024019f6...7b98`;
+inventory 2.976 fuentes SHA `66f8954f...ddd7ec`. Este cierre demuestra que el
+fracaso 0DTE no era solo theta: el JEPA price-only apenas domina el signo y no
+los tamaños adversos. No rescatar seeds/máscaras/horas/thresholds/subsets. Una
+hipótesis posterior debe incorporar una fuente causal nueva (options surface,
+VIX o futuros) con paridad real; no otro dataset price-only.
