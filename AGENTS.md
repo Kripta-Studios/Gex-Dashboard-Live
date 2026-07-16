@@ -1104,3 +1104,21 @@ cerrados tienen PF<1. La única factibilidad económica distinta permitida es
 short premium simétrico de riesgo definido (iron condor/iron fly) leído
 directamente de bid/ask y materializado solo como ledger de trades, con gate
 pre-2026 antes de abrir 2026/Julio. No crear otro feature dataset.
+
+### Cierre SHORT_PREMIUM_DEFINED_RISK_V1 — 2026-07-16
+
+El one-shot sobre `ff4fb06f` revalidó 1.506/1.506 sesiones selladas y acumuló
+65.512 candidatos en memoria, pero cerró `CLOSED_DATA_EXECUTION_GATE` antes de
+selección, métricas u output. QQQ y SPY 2025-10-22 tienen los bid/ask Greek
+originales cruzados en 13:35; sus once estructuras de entrada por ticker dejan
+44 perfiles unresolved cada una, 88 total. El reloj/contrato exacto existe y
+SPXW no falla, pero una pata no-signable invalida el cierre simultáneo. No usar
+quote previo, midpoint, exclusión del día ni precios revisados del sidecar como
+rescate post-hoc. No existen PF/WR/PnL de V1 y 2026/producción siguen intactos.
+Cierre detallado en `SHORT_PREMIUM_DEFINED_RISK_V1_CLOSURE.md`.
+
+La siguiente vía permitida por petición explícita es auditar direccionalidad del
+subyacente a 180–240m, primero como señal spot/futuros sin theta. Debe reutilizar
+datos ya existentes, probar causalidad/live parity y walk-forward por
+ticker-mes; no crear sucesivos datasets ni presentar el viejo
+`jepa_production_final_180m` legacy como evidencia validada.
