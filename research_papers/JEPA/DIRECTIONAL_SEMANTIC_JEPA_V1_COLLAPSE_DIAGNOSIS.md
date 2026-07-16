@@ -81,7 +81,74 @@ Una prueba nueva solo tendría sentido con gates outcome-free antes de payoff:
 5. VISReg/SIGReg o whitening como constraint de salud, con stop antes de labels
    si no pasa rango; solo después un probe físico predeclarado.
 
-Diagnóstico final: `PARTIAL_SPECTRAL_COLLAPSE_PLUS_OBJECTIVE_MISALIGNMENT`.
-VISReg puede reparar parte del primer término; no resuelve por sí solo la pobreza
-e inestabilidad de la información direccional, especialmente en SPX/SPY.
+### Contrafactual ya ejecutado: representación sana, dirección nula
 
+El repositorio ya contiene un contrafactual más fuerte que evita especular. En
+`visreg_xinput_oof_compare_202601_202606_v2`, sobre 27.887 filas OOF, la variante
+`visreg_straight` alcanzó rango efectivo `15,19/16 = 94,92%` y PC1 `10,16%`.
+También redujo el error de rollout latente frente a `baseline_sigvic`. A pesar de
+esa geometría saludable, el probe cronológico de retorno a 30 minutos produjo:
+
+| Variante | Rango efectivo | PC1 | R² retorno 30m | Acierto direccional |
+| --- | ---: | ---: | ---: | ---: |
+| baseline SIG/VIC | 85,68% | 14,14% | -0,0793 | 48,14% |
+| VISReg + straightening | 94,92% | 10,16% | -0,0712 | 48,60% |
+
+VISReg mejora claramente la representación y apenas mueve la predicción; sigue
+por debajo de azar direccional y con R² negativo. No es exactamente el mismo
+encoder price-only V1, por lo que no demuestra que una arquitectura direccional
+factorizada vaya a fallar. Sí falsifica la afirmación general de que «el alpha
+está oculto únicamente por colapso y aparecerá al aplicar VISReg».
+
+## 4. Auditoría de la fuente derivada de griegas existente
+
+Se revisó `D:/ThetaData/data_training_input` como posible fuente independiente,
+sin construir otro dataset ni abrir un payoff. Sus valores 0DTE a las 10:35 son
+finitos y no degenerados en 534 sesiones completas por ticker: gamma, vanna,
+charm, ATM IV y niveles cambian entre sesiones. El problema no es una columna
+constante. El artefacto, sin embargo, no pasa causalidad ni paridad:
+
+- `mega_data_factory.py` usa `underlying_timestamp` como reloj de la opción y
+  termina con `ffill().bfill().fillna(0)` sobre griegas, VIX e IB. El `bfill`
+  autoriza que un estado futuro rellene un minuto anterior y el `except` global
+  oculta fallos de cálculo.
+- En los ficheros 0DTE originales, SPXW y SPY carecen por completo de
+  `timestamp` nativo durante 2024–2025 (502/502 sesiones por ticker). QQQ solo lo
+  conserva en 65/502. `underlying_timestamp` no puede promoverse por inferencia
+  a timestamp de la opción según el contrato causal del proyecto.
+- Cuando ambos relojes existen en las muestras auditadas, coinciden exactamente;
+  esto valida esas sesiones concretas, no las sesiones donde falta el campo.
+- La llamada `wk` es simplemente la segunda expiración encontrada, con distancia
+  variable de 1–8 días. No es una weekly estandarizada. Además sus columnas no
+  existen cada viernes: 111 sesiones completas por ticker; el último fichero
+  2026-02-19 solo contiene 09:30–09:37. Solo 423/535 artefactos tienen estado
+  `wk` finito a las 10:35.
+- El productor offline calcula menos griegas y usa semántica distinta del runtime
+  `services/compute_features.py`; por tanto tampoco hay equivalencia training/live.
+
+La materia prima de opciones sí llega hasta 2026-07-15, pero este agregado no se
+puede introducir directamente en otro JEPA. Reutilizarlo sin reparar el reloj y
+la semántica confundiría «más features» con información causal.
+
+## 5. Diagnóstico y decisión
+
+Diagnóstico final:
+`PARTIAL_SPECTRAL_COLLAPSE_PLUS_OBJECTIVE_MISALIGNMENT_PLUS_SOURCE_WEAKNESS`.
+
+La prioridad causal es:
+
+1. **No ejecutar VISReg solo.** Es una condición de salud, no una fuente de alpha.
+2. **No entrenar con `data_training_input`.** Sus valores son variados, pero el
+   contrato temporal y weekly está roto.
+3. Si se hace una última intervención price-only, debe reutilizar exactamente el
+   panel existente y cambiar simultáneamente objetivo y factorización: bloques
+   common/residual por ticker, targets de innovación y gate de rango antes de
+   labels. No necesita otro dataset.
+4. SPX/SPY necesitan probablemente una medición causal nueva del mecanismo, no
+   más capacidad de red: H-FLOW1, H-IVSURF1 y H-QSIZE1R1 ya fallaron sus pruebas
+   físicas, mientras que el control raw-price solo retuvo señal en QQQ.
+
+Por tanto el colapso perjudica al JEPA V1 —especialmente al perder señal QQQ—,
+pero **no es el cuello de botella dominante de la rentabilidad conjunta**. El
+cuello dominante es que el objetivo aprende estados suaves no direccionales y
+las fuentes disponibles no aportan una relación estable común a SPX, SPY y QQQ.
