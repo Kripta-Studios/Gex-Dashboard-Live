@@ -1,6 +1,6 @@
 # OPTION_PARITY_PRESSURE_V1 — predeclaración
 
-**Estado:** `PREDECLARED_OUTCOME_FREE_DATA_GATE`
+**Estado:** `AMENDED_PRE_OUTCOME_DATA_GATE`
 
 **Fecha:** 2026-07-17 Europe/Madrid
 
@@ -114,6 +114,15 @@ mes. Solo un PASS completo autoriza un freeze separado para 2024–2025.
 
 Un PASS spot seguiría sin ser una policy live: requeriría traducción ejecutable
 ask-to-bid o fills de futuros con paridad histórica/live antes de promoción.
+
+## Amendment de scope posterior, todavía pre-outcome
+
+`OPTION_PARITY_PRESSURE_V1_SCOPE_AMENDMENT.md` sustituye únicamente el eje
+temporal por autorización explícita del usuario: data gate 2023–2025,
+desarrollo 2023, outer 2024–2025 y holdout 2026 solo tras dos freezes. La señal,
+gates y stop rule económica no cambian. La razón es exclusivamente capacidad:
+febrero de 2022 tiene 12 vencimientos 0DTE y no puede superar `>12` con una
+operación diaria. No se había leído ningún outcome.
 
 ## Stop rule
 

@@ -1848,3 +1848,8 @@ del Greek vintage; el sidecar nativo solo aporta timestamp/keys y el spot proced
 del underlying derivado exacto. PASS exige >=3 strikes, >=90% coverage por
 ticker-año, >12 eventos mensuales y no-degeneración. No se puede abrir ningún
 retorno, 2024–2026 o producción hasta commit del gate y runner posterior.
+
+Amendment pre-outcome autorizado: 2022 se elimina completo porque febrero solo
+tiene 12 vencimientos 0DTE, capacidad incompatible con `>12`. La secuencia pasa
+a data gate 2023–2025, desarrollo 2023, outer 2024–2025 y holdout 2026 únicamente
+después de dos PASS/freezes. No cambian señal, reloj, coste ni gates.

@@ -872,3 +872,9 @@ expresa presión relativa directamente en quotes. Usar su cambio sobre strikes
 idénticos evita convertir financiación/dividendos o el desplazamiento del ATM en
 señal. Antes de preguntarle al retorno debe probar que bid/ask vintage,
 timestamp nativo y spot causal producen una variable completa y no degenerada.
+
+La capacidad de producto también es parte de la causalidad: febrero de 2022
+solo ofrecía 12 vencimientos 0DTE y no podía superar una gate estricta `>12`
+con una operación diaria. Por autorización explícita, el protocolo elimina todo
+2022 antes de outcomes y separa 2023 desarrollo, 2024–2025 outer y 2026 final.
+Eso evita tanto inventar frecuencia como usar el holdout para seleccionar.

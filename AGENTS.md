@@ -1499,8 +1499,15 @@ normalizado por el spread CALL+PUT, sobre los mismos strikes 0DTE dentro de
 timestamps/keys. Spot usa underlying derivado exacto, no el snapshot híbrido de
 2022-12-30. Acción futura fija: signo de la mediana cross-strike por ticker.
 
-Siguiente paso único: commit/push de predeclaración y handoffs -> implementar
-builder outcome-free -> full data gate 2022–2023. Exige >=3 strikes comunes,
+Secuencia original antes del amendment: commit/push de predeclaración/handoffs
+-> builder outcome-free -> data gate. Exige >=3 strikes comunes,
 coverage ticker-año >=90%, >12 eventos/mes y distinctness; no abrir labels,
 2024–2026 ni producción. Cierre/protocolo en
 `OPTION_PARITY_PRESSURE_V1_PREDECLARATION.md`.
+
+Amendment explícito posterior, aún sin outcomes: el usuario ordena ignorar 2022
+y usar 2023–2026. El censo de filenames había encontrado exactamente 12
+vencimientos 0DTE por ticker en 2022-02, capacidad insuficiente para `>12` con
+una posición/día. Nuevo eje: data gate 2023–2025, desarrollo 2023, outer
+2024–2025 solo si 2023 pasa y holdout 2026 solo tras otro freeze. Señal/gates no
+cambian. Autoridad: `OPTION_PARITY_PRESSURE_V1_SCOPE_AMENDMENT.md`.

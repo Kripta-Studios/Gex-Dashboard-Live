@@ -146,3 +146,7 @@ A later outcome-free protocol, `OPTION_PARITY_PRESSURE_V1`, studies only the
 five-minute change in same-strike 0DTE CALL/PUT quote parity. It is currently at
 its native-timestamp/data-coverage gate and has not read any return. It neither
 reopens compact V1 nor changes its selector, payoff or evidence.
+
+Before any parity outcome was read, the user narrowed that separate protocol to
+2023–2026 because February 2022 had only twelve 0DTE expirations. Its staged
+development/outer/holdout ordering remains independent of compact V1.

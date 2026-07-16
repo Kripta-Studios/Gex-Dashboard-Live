@@ -1465,3 +1465,10 @@ Fase autorizada: commit/push docs -> builder/tests outcome-free -> data gate
 >12 eventos cada mes, presión finita/no degenerada y cero timestamps inferidos.
 No labels/PnL/2024–2026/producción. Si PASS, congelar runner deterministic sign,
 open10:36→13:36/180m/1bp antes del único desarrollo.
+
+Scope amendment por orden explícita del usuario, congelado antes de outcomes:
+ignorar todo 2022 y usar 2023–2026 en fases. Motivo físico: febrero 2022 ofrece
+12 0DTE exactos por ticker y una operación/día no puede superar `>12`. Nuevo
+orden: data gate 2023–2025 -> desarrollo 2023 -> outer 2024–2025 si PASS ->
+freeze -> 2026 si PASS. No abrir etapas posteriores anticipadamente. Documento:
+`OPTION_PARITY_PRESSURE_V1_SCOPE_AMENDMENT.md`.

@@ -175,3 +175,7 @@ remained unopened. Compact V1 remains immutable and production is unchanged.
 The next protocol is an outcome-free feasibility audit of same-strike 0DTE
 CALL/PUT parity pressure. It has no compact-V1 model, label, profile or outcome;
 compact V1 remains closed.
+
+That parity protocol was subsequently amended, still pre-outcome, to stage 2023
+development, 2024–2025 outer and 2026 final holdout. This does not alter compact
+V1 or reuse its outcomes.

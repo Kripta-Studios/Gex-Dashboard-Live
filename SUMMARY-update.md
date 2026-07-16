@@ -857,3 +857,8 @@ cambio 10:30→10:35 de `(K+Cmid-Pmid-spot)/joint_half_spread` sobre pares
 CALL/PUT 0DTE exactos y strikes comunes <=100bps. No usa IV/walls/ML ni outcomes.
 Primero debe pasar cobertura, >12 eventos/mes, distinctness, timestamp nativo y
 paridad bid/ask vintage; 2024–2026 siguen cerrados.
+
+Scope enmendado por orden explícita, todavía pre-outcome: se ignora 2022 porque
+2022-02 tiene exactamente 12 expiraciones 0DTE y no puede cumplir `>12` con una
+operación/día. Data gate pasa a 2023–2025; desarrollo es 2023, outer 2024–2025
+y 2026 solo se abre tras PASS y freeze de las dos fases anteriores.
