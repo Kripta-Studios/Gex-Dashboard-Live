@@ -1,0 +1,51 @@
+{
+  "created_at_utc": "2026-07-16T12:22:46.062731+00:00",
+  "daily_rows": 2544,
+  "excluded_source_days": [
+    "20230605"
+  ],
+  "holdout_2026_used": false,
+  "jepa": {
+    "best_epoch": 2,
+    "best_validation_loss": 0.1704333191458513,
+    "final_windows": 8490,
+    "train_dates": 602,
+    "train_windows": 6020,
+    "validation_dates": 247,
+    "validation_windows": 2470
+  },
+  "production_modified": false,
+  "provenance_sha256": "ebfd2356a73a6bcee894d124a1faad595074160c78b7707c889e0c13d129063e",
+  "schema": "directional_semantic_jepa_v1_development_metrics",
+  "scope": {
+    "development_months": [
+      "202501",
+      "202502",
+      "202503",
+      "202504",
+      "202505",
+      "202506",
+      "202507",
+      "202508",
+      "202509",
+      "202510",
+      "202511",
+      "202512"
+    ],
+    "end_date": "20251231",
+    "start_date": "20220801"
+  },
+  "selected_profiles": {
+    "QQQ": "SEMANTIC_RESIDUAL",
+    "SPX": "SEMANTIC_RESIDUAL",
+    "SPY": "SEMANTIC_RESIDUAL"
+  },
+  "semantic_feature_count": 54,
+  "source_sessions_by_ticker": {
+    "QQQ": 859,
+    "SPXW": 859,
+    "SPY": 859
+  },
+  "status": "PASS_DEVELOPMENT_FREEZE",
+  "technical_feature_count": 105
+}
