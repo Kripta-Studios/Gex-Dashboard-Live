@@ -1277,3 +1277,50 @@ sin alpha. No aplicar VISReg solo: una futura reparación debe separar common y
 residuos por ticker/modalidad, predecir innovaciones, usar corruption semántica
 y exigir rango z/dz >=40% outcome-free antes de labels. Diagnóstico:
 `PARTIAL_SPECTRAL_COLLAPSE_PLUS_OBJECTIVE_MISALIGNMENT`.
+
+### Cierres direccionales posteriores — 2026-07-16
+
+`DIRECTIONAL_FACTORIZED_INNOVATION_JEPA_V1` corrigió el colapso espectral con
+common/residuos/innovaciones y VISReg por bloques: rango efectivo z 53,54% y dz
+42,67%, sin dims muertas. Aun así el one-shot 2026 enero–junio falla: QQQ
+PF0,846/-492,8bps/2 de 6 meses positivos; SPX PF0,906/-202,1/3 de 6; SPY
+PF0,835/-366,8/3 de 6. Julio MTD es positivo pero tiene 10 trades. Dictamen: el
+colapso era real pero no era la causa económica suficiente; price-only queda
+cerrado para el hold 180m.
+
+`DIRECTIONAL_BREADTH_TRANSMISSION_V1` incorporó todas las fuentes locales
+disponibles: QQQ/SPXW/SPY + AAPL/AMZN/GOOGL/META/MSFT/NFLX/NVDA/TSLA/IWM/TLT/
+GLD/SLV. Se usó intersección estricta: cualquier fecha faltante o inválida se
+eliminó para los 15 tickers, sin imputar ni descargar. Quedaron 962 sesiones
+comunes hasta 2026-07-15. Breadth fue elegido para los tres solo con 2025, pero
+2026–julio cierra: QQQ 266 trades/WR48,87%/PF0,956/-282,2bps/3 de 7 meses;
+SPX 48,87%/0,964/-162,5/3 de 7; SPY 50,38%/1,049/+214,7/3 de 7. Min20
+trades/mes. Freeze/cierre commits `fe5ac97a`, `aa9107ad`, `df08a1a3`.
+
+`DIRECTIONAL_INTRADAY_POOLED_V1` probó el mismo panel en seis ventanas no
+solapadas de 53–60m y fit pooled. Se cerró antes de 2026: el perfil breadth
+seleccionado da en 2025 QQQ PF0,986/3 de 12 meses, SPX 0,954/3 y SPY 0,964/3,
+con 1.434 trades/ticker. No rescatar H2–H4 post-hoc. Commit de cierre
+`171d9d6e`.
+
+`DIRECTIONAL_OPTION_SURFACE_SPOT_V1` reutilizó, sin crear dataset nuevo, el
+parquet 0DTE executable-quote SHA `11e26aad...54fb1`; 289 features
+live-observable de superficie/contexto y labels spot 60m calculados en memoria.
+Intersección exacta por `(fecha,reloj)` para QQQ/SPXW/SPY: 1.917 decisiones/
+5.751 filas pre-2026. Cerrado antes de 2026: OPTION_SURFACE 2025 QQQ 589
+trades/WR46,69%/PF0,853/5 de 12 meses; SPX 47,20%/0,816/5; SPY
+47,71%/0,804/4. Invertir la predicción también queda bajo PF1. Commit cierre
+`62eb20d2`.
+
+Conclusión acumulada: corregir colapso, cambiar a 60m, usar breadth de 15
+tickers y añadir IV/delta/theta/vega/OI/volumen/spreads no produce dirección
+estable. El problema no es solo decay 0DTE; es falta de información causal
+direccional estable en las fuentes actuales.
+
+Fuente nueva auditada: ThetaData no ofrece futuros ES/NQ en su catálogo. El
+endpoint stock `trade_quote` sería una vía outcome-free de order flow, pero el
+Terminal remoto devuelve HTTP 403 para SPY/QQQ (sin entitlement stocks) y el
+Terminal local no puede autenticarse no-interactivamente. No descargar ni abrir
+otra familia hasta disponer de una fuente externa de futuros/order flow con
+histórico y live parity. El proceso local de preflight fue cerrado; VPS y
+producción no se tocaron.
