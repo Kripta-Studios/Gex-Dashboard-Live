@@ -1,0 +1,14 @@
+{
+  "adaptive_after_prior_2026_diagnostics": true,
+  "created_at_utc": "2026-07-16T14:07:53.136465+00:00",
+  "new_dataset_created": false,
+  "panel_runner_sha256": "20f71873a90551d093db500ad96c5fb648077820e2c814f66824ee962f18d4a6",
+  "predeclaration_path": "research_papers\\JEPA\\DIRECTIONAL_INTRADAY_POOLED_V1_PREDECLARATION.md",
+  "predeclaration_sha256": "e5a45f37913afcfc469abb012bc9aa6af403c97210d8f02029ea96091914f9e7",
+  "production_modified": false,
+  "runner_path": "neural\\jepa\\evaluate_directional_intraday_pooled_v1.py",
+  "runner_sha256": "008fdcd6109553f4fcb88f0949be44da28dcb4a508b8bd7f74a5d5076fa7a633",
+  "schema": "directional_intraday_pooled_v1_provenance",
+  "source_inventory_rows": 12852,
+  "source_inventory_sha256": "7eb28ff7d439898fdc1628c87be5fc66f70412a459b259abc5982246236d137a"
+}

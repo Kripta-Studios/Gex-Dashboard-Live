@@ -1,0 +1,18 @@
+{
+  "adaptive_design_after_prior_2026_diagnostics": true,
+  "breadth_feature_count": 297,
+  "created_at_utc": "2026-07-16T14:07:53.185329+00:00",
+  "daily_rows": 14742,
+  "eligible_common_sessions": 829,
+  "holdout_2026_used_for_training_or_selection": false,
+  "production_modified": false,
+  "provenance_sha256": "c3415d8320539b26c17a868f6aa5fa730b5b7aa4003d014f454c15903fa483f2",
+  "schema": "directional_intraday_pooled_v1_development_metrics",
+  "scope": {
+    "end_date": "20251231",
+    "start_date": "20220801"
+  },
+  "selected_profile": "POOLED_BREADTH_TRANSMISSION",
+  "status": "PASS_DEVELOPMENT_FREEZE",
+  "target_feature_count": 30
+}

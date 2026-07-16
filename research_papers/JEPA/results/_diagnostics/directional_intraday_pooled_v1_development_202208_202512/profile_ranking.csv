@@ -1,0 +1,3 @@
+profile_id,worst_positive_months,total_positive_months,worst_profit_factor,worst_monthly_q25,rank,selected
+POOLED_BREADTH_TRANSMISSION,3,9,0.9544187620287669,-358.35073352611676,1,True
+POOLED_TARGET_ONLY,0,4,0.7762460075121677,-515.7524044398652,2,False
