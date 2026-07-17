@@ -1,5 +1,15 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1
 
+> June/July-2026 clarification: the later active cross-venue family has no 2026
+> result yet. The already closed VOL_COMPLEX cash proxy was positive in June
+> (PF QQQ/SPX/SPY 1.249/1.779/1.764) and July MTD, but July had 10 trades and
+> PF 1.133/1.098/1.888, while its full Jan–Jun stability gate failed. These
+> observations neither change this predeclaration nor permit a live promotion.
+
+> A separate independent auditor for the later outer-2024 one-shot is prepared
+> pre-outcome and passes the 50-test cross-venue suite. It is not executed until
+> capture, data gate and frozen runner complete; it cannot open 2025 or 2026.
+
 > The later cross-venue family now has a separately frozen outcome-free data
 > gate. Its exact-clock certification and SPY→SPXW mapping do not modify this
 > immutable compact-V1 protocol.

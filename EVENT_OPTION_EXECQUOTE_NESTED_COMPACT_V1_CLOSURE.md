@@ -1,5 +1,15 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1 — CLOSED_NO_EDGE
 
+> Status clarification on 2026-07-17: no active cross-venue model has yet been
+> evaluated on June/July 2026. A separate closed cash model, VOL_COMPLEX, was
+> positive in June for QQQ/SPX/SPY (PF 1.249/1.779/1.764) and positive in July
+> MTD, but July had only 10 trades and PF 1.133/1.098/1.888; its Jan–Jun gate
+> also failed. This does not reopen compact V1 or authorize deployment.
+
+> The later cross-venue outer-2024 independent auditor is now implemented and
+> its combined suite passes 50 tests. It remains unexecuted and cannot read
+> 2025/2026; the full native-clock capture is still partial.
+
 > A separate cross-venue data-gate contract is now frozen before 2024 outcomes.
 > It uses the native sidecar only to certify timestamps/keys while preserving
 > vintage economic values. It cannot read compact-V1 artifacts or reopen this

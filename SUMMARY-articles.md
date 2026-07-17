@@ -1,5 +1,19 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+### Rentabilidad mensual no equivale a promoción
+
+`DIRECTIONAL_VOL_COMPLEX_V1` muestra el caso exacto: junio 2026 fue positivo en
+QQQ/SPX/SPY (PF1,249/1,779/1,764, 21 trades cada uno), y julio MTD también tuvo
+PnL positivo, pero QQQ/SPX quedaron en PF1,133/1,098 y solo hubo 10 trades.
+Peor aún, Jan–Jun agregado quedó en PF1,039/0,993/0,898 y solo 3/4/3 meses
+positivos. Una celda mensual prometedora no compensa inestabilidad cronológica,
+frecuencia incompleta ni ausencia de fills SPXW. La familia cross-venue activa
+aún no ha abierto 2026 y no puede heredar esas cifras.
+
+El auditor económico outer-2024 cross-venue queda implementado antes del
+outcome: revalida acción SPY→SPXW, retorno logarítmico, 1/2/3bps, resúmenes y
+fuentes. Suite focal/combinada cross-venue `50 passed`; todavía no se ejecutó.
+
 ### Separar validación económica de integración live
 
 Una mejora de diseño 2023 no autoriza producción. La arquitectura cross-venue

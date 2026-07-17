@@ -1,5 +1,25 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Estado exacto junio/julio 2026 — 2026-07-17
+
+No existe todavía una policy promovible para esos dos meses. La familia activa
+`CROSS_VENUE_CALENDAR_RR_LEADER_V1` no ha abierto 2026: su captura 2024–2025
+seguía activa a las 03:09 Europe/Madrid en PID42112, 424/3.012 captures y cero
+errores. Debe pasar 2024 y 2025 antes de consultar junio/julio 2026.
+
+El candidato cerrado `DIRECTIONAL_VOL_COMPLEX_V1` sí fue positivo aisladamente
+en junio: QQQ 21 trades/WR57,14%/PF1,249/+161,459bps; SPX cash proxy 21/
+61,90%/1,779/+237,701; SPY 21/61,90%/1,764/+233,476. Julio MTD hasta el 15
+también fue positivo, pero solo tuvo 10 trades/ticker y PF QQQ/SPX/SPY
+1,133/1,098/1,888; QQQ y SPX no llegan a PF1,20 y ninguno llega a 13 trades.
+Además Jan–Jun agregado fue PF1,039/0,993/0,898 con solo 3/4/3 meses
+positivos. Por tanto no desplegarlo ni confundir SPX cash con fills SPXW.
+
+Auditor independiente del futuro outer 2024 preparado en
+`audit_cross_venue_calendar_rr_leader_v1_outer_2024.py`: recompone ledger,
+costes, gates y hashes sin abrir 2025/2026. Suite cross-venue `50 passed`; el
+auditor no se ejecuta hasta que exista el one-shot 2024.
+
 ### Condición de integración live — 2026-07-17
 
 El usuario autoriza integrar `CROSS_VENUE_CALENDAR_RR_LEADER_V1` en

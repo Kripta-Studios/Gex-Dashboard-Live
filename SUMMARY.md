@@ -1,5 +1,26 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+## Respuesta concreta sobre junio y julio de 2026
+
+La arquitectura activa `CROSS_VENUE_CALENDAR_RR_LEADER_V1` todavía no tiene
+resultado 2026. Su sidecar 2024–2025 iba por 424/3.012 captures, cero errores,
+en PID42112 a las 03:09 del 17/07. La secuencia congelada obliga a evaluar 2024
+y 2025 antes de abrir 2026; por tanto hoy no puede llamarse rentable en junio o
+julio.
+
+Entre las arquitecturas ya cerradas, `DIRECTIONAL_VOL_COMPLEX_V1` fue positiva
+en junio para los tres: QQQ 21 trades, WR57,14%, PF1,249, +161,459bps; SPX cash
+proxy 21, 61,90%, 1,779, +237,701; SPY 21, 61,90%, 1,764, +233,476. Julio MTD
+hasta el 15 fue positivo, pero con solo 10 trades y PF1,133/1,098/1,888; QQQ y
+SPX fallan PF1,20 y todos fallan >=13 trades. La policy completa tampoco pasa:
+Jan–Jun PF1,039/0,993/0,898 y solo 3/4/3 meses positivos. No es desplegable y
+SPX cash no prueba ejecución SPXW ask→bid.
+
+Se implementó antes de outcomes un auditor independiente para el futuro outer
+2024 cross-venue. Recalcula trades, costes1/2/3bps, meses/tickers/gates, hashes
+de fuentes e identidad SPY→SPXW; suite cross-venue `50 passed`. Sigue inactivo
+hasta completar seal→data gate→frozen runner→one-shot 2024.
+
 ## Regla nueva de promoción live — 2026-07-17
 
 El usuario pide implementar la arquitectura rentable en los entornos

@@ -1,5 +1,24 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+## Respuesta y checkpoint 2026-07-17 03:09 Europe/Madrid
+
+No afirmar rentabilidad de `CROSS_VENUE_CALENDAR_RR_LEADER_V1` en junio/julio
+2026: no se ha abierto 2026. Captura PID42112 viva, 424/3.012 y errors0; no
+duplicarla. Tras seal: full audit→data gate→commit compactos→freeze→outer 2024.
+
+La celda histórica que puede causar confusión es `DIRECTIONAL_VOL_COMPLEX_V1`:
+junio sí fue positivo QQQ/SPX/SPY (21 trades, PF1,249/1,779/1,764,
++161,459/+237,701/+233,476bps). Julio MTD fue positivo pero PF1,133/1,098/1,888
+y 10 trades: QQQ/SPX fallan PF1,20 y todos frecuencia. Jan–Jun agregado
+PF1,039/0,993/0,898 con meses positivos3/4/3. No promover ni traducir SPX cash
+proxy como evidencia de fills SPXW.
+
+Nuevo auditor pre-outcome
+`neural/jepa/audit_cross_venue_calendar_rr_leader_v1_outer_2024.py` y test:
+recalcula ledger/costes/tablas/gates, rehashea underlying y valida source-audit.
+Suite cross-venue `50 passed`, Ruff/compile PASS. No ejecutarlo sin el output
+one-shot outer 2024 comprometido.
+
 Contrato siguiente ya congelado en
 `CROSS_VENUE_CALENDAR_RR_LEADER_V1_DATA_GATE_CONTRACT.md`. Implementar
 `build_cross_venue_calendar_rr_leader_v1.py` y tests sin modificar full/preflight

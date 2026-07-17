@@ -1,5 +1,19 @@
 # Alpha-source registry and Stage 0/1 audit — 2026-07-11
 
+## 2026-07-17 profitability clarification
+
+`CROSS_VENUE_CALENDAR_RR_LEADER_V1` has not opened 2026; its 2024–2025 exact
+clock capture was 424/3,012 with zero errors at 03:09 Europe/Madrid. The closed
+`DIRECTIONAL_VOL_COMPLEX_V1` was profitable in June 2026 for QQQ/SPX/SPY (PF
+1.249/1.779/1.764, 21 trades each) and net-positive July MTD, but July had only
+10 trades and PF 1.133/1.098/1.888. Jan–Jun stability failed, so this is not a
+promotable source. SPX cash proxy is not SPXW executable-option evidence.
+
+An independent post-one-shot outer-2024 auditor is now implemented before any
+new outcome access. It recomputes economics and gates and rehashes sources; the
+cross-venue suite passes 50 tests. It remains unexecuted until the frozen 2024
+ledger exists.
+
 This registry was built without reading outcomes, option PnL or any 2026 market
 data.  Production files are unchanged.  It separates economic mechanisms and
 prevents a model/feature sweep from masquerading as a new source.

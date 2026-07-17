@@ -1,5 +1,17 @@
 # SUMMARY-update — ledger científico compacto
 
+Respuesta autoritativa junio/julio 2026: la familia activa cross-venue sigue
+sin outcomes 2026 (captura 2024–2025 PID42112: 424/3.012, errors0 a las 03:09).
+No se puede afirmar que sea rentable. El cerrado `DIRECTIONAL_VOL_COMPLEX_V1`
+fue positivo en junio QQQ/SPX/SPY con 21 trades, WR57,14/61,90/61,90%,
+PF1,249/1,779/1,764 y +161,459/+237,701/+233,476bps. Julio MTD tuvo 10 trades,
+PF1,133/1,098/1,888 y PnL positivo; falla frecuencia y QQQ/SPX PF1,20. Jan–Jun
+agregado PF1,039/0,993/0,898 y meses positivos3/4/3: no promovible.
+
+Auditor outer-2024 independiente implementado pre-outcome: recompone economía,
+tablas/gates, hashes de inventario/source-audit y contrato SPY→SPXW. Suite
+cross-venue `50 passed`, Ruff/compile clean. No ejecutar antes del one-shot 2024.
+
 Contrato data gate cross-venue congelado pre-outcome: 1.506 sesiones/3.012
 captures, full seal obligatorio, revalidación offline raw/parquet/manifest y
 sources. Sidecar certifica key+option timestamp 10:30/10:35; delta/IV/bid/ask
