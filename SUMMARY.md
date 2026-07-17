@@ -1,5 +1,10 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+La captura native-clock terminó materialmente 24/24 con key coverage perfecta y
+cero revisiones, pero no está sellada: el timeout del wrapper rompió stdout antes
+del resumen final. Staging queda inmutable, sin `errors.json` y sin outcomes. Se
+predeclara un sealer offline ligado a `167118b0`; nunca se recapturan respuestas.
+
 El sidecar preflight de la nueva arquitectura ya está implementado, no
 ejecutado. Congela cuatro fechas por ticker en 2024–2025, 24 expiraciones
 front/back, clocks 10:30/10:35 y coverage completa contra Greek/IV vintage.

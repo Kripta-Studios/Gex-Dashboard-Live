@@ -1,5 +1,11 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+Una captura completa no equivale a un seal: el preflight obtuvo las 24
+respuestas y coverage exacta, pero una rotura del canal de progreso impidió el
+manifest agregado. La reparación científica correcta es validar offline los raw
+ya capturados contra el commit original, no consultar de nuevo al proveedor ni
+tratar manifests parciales como PASS.
+
 El preflight cross-venue convierte la ausencia de option timestamp 2024–2025 en
 un test falsable: quote nativa debe cubrir cada key vintage de dos clocks y dos
 expiraciones, mientras sus precios revisados solo se cuentan. Esto separa

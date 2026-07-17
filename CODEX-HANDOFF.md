@@ -1,5 +1,13 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+Capture preflight materialmente completo pero no sellado. PID42584 acabó 24/24
+después del timeout del wrapper; staging default contiene manifests/raw/parquet,
+sin errors, missing/extra/revised/crossed=0 en todos. Output final/index/seal no
+existen. No relanzar ni borrar. Seguir exactamente
+`CROSS_VENUE_CALENDAR_RR_NATIVE_CLOCK_PREFLIGHT_SEAL_CLARIFICATION.md`: commit
+doc; implementar/testear modo offline sobre staging, pin capture base
+`167118b0`, commit/push, ejecutar seal sin red, auditar. No outcomes.
+
 Preflight implementado en
 `neural/jepa/capture_cross_venue_calendar_rr_native_clock_preflight.py`, tests
 `test_capture_cross_venue_calendar_rr_native_clock_preflight.py`: 9 passed,

@@ -1,5 +1,10 @@
 # SUMMARY-update — ledger científico compacto
 
+Cross-venue preflight: 24/24 captures desde `167118b0`, missing/extra/revised/
+crossed todos0, sin errors ni outcomes. Timeout externo cerró stdout antes de
+index/cost/seal; staging preservado y aún no PASS. Única reparación autorizada:
+sealer offline committed que rehash/rebuild todo sin red y renombra atómicamente.
+
 Capturador cross-venue native-clock listo preejecución: 12 sesiones/24
 front-back, exact wildcard1m 10:30–10:35, full vintage Greek/IV key coverage,
 raw/parquet/manifest/JAR/runtime hashes y cost projection 3.006 captures.

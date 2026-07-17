@@ -1,5 +1,8 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1
 
+> The separate cross-venue clock capture now awaits an offline seal after an
+> external stdout timeout. This operational repair cannot alter compact V1.
+
 > The later cross-venue native-clock preflight code is ready preexecution. It
 > remains source- and outcome-isolated from this immutable protocol.
 

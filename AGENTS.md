@@ -1,5 +1,16 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Cross-venue preflight capturado; seal offline pendiente
+
+Run único desde `167118b0`: el wrapper timeout cerró stdout, pero PID42584
+continuó sin duplicado y completó 24/24 raw/parquet/manifests. Todos reportan
+missing keys0, extras0, revised bid/ask0 y crossed0; no `errors.json`, pero no
+hay index/seal/output final, así que aún no es PASS. Aclaración autoritativa:
+`CROSS_VENUE_CALENDAR_RR_NATIVE_CLOCK_PREFLIGHT_SEAL_CLARIFICATION.md`.
+Prohibido requery/borrar/mover. Siguiente: commit/push aclaración; implementar
+modo offline `--seal-existing-staging`, tests, commit/push; rehash/rebuild de
+todo y solo entonces renombrar staging. Outcomes/2026 intactos.
+
 ### Cross-venue native-clock preflight listo, aún no ejecutado
 
 Implementado `capture_cross_venue_calendar_rr_native_clock_preflight.py` y test

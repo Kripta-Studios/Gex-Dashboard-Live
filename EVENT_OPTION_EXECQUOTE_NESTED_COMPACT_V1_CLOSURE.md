@@ -1,5 +1,9 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1 — CLOSED_NO_EDGE
 
+> The later cross-venue clock preflight captured all 24 source responses but is
+> not yet sealed because its stdout wrapper expired. An offline-only seal repair
+> is predeclared; no compact-V1 artifact or outcome was accessed.
+
 > The separate cross-venue native-clock preflight capturer is now implemented
 > and tested, but not executed. It queries no compact-V1 data or outcome and has
 > no effect on this closure.
