@@ -71,13 +71,21 @@ clean. No ejecutarlo aún. Tras terminar capture: ejecutar auditor default,
 versionar su evidencia y solo después lanzar data gate; no saltar directo al
 builder ni reutilizar output parcial.
 
+Auditor independiente del data gate también listo en
+`audit_cross_venue_calendar_rr_leader_v1_data_gate.py`. Exige PASS, revalida los
+16.566 paths por size/hash, compara las 15 columnas de las 3.012 captures con el
+seal, recomputa coverage/distinctness/frequency y prueba exact-date SPY→SPXW.
+Veta columnas outcome/10:36/13:36 y no lee valores underlying. Suite combinada
+`53 passed`, Ruff/compile clean. No ejecutarlo hasta que exista el data gate
+real; orden: full audit -> data gate -> independent data-gate audit -> compactos.
+
 ### Full cross-venue capture activo — 2026-07-17
 
 Proceso único PID `42112`, arrancado hidden desde commit `d013a299` con
 workers2. Output
 `D:/ThetaData/cross_venue_calendar_rr_native_clock_2024_2025_v1`; logs stdout/
 stderr homónimos en D:/ThetaData. Contrato/universe 3.012 creados. Checkpoint
-02:56 Europe/Madrid: 298/3.012 captures, resumed0, errors0, stderr0. No arrancar
+03:01 Europe/Madrid: 334/3.012 captures, resumed0, errors0, stderr0. No arrancar
 duplicado ni modificar código/dependencias del capture mientras corre. Tras
 terminar: auditar `_seal`, versionar compactos, luego data gate; no outcomes.
 

@@ -46,6 +46,11 @@ rehace offline raw→parquet, revalida los hashes vintage y compara cada fila co
 el índice sellado antes de crear compactos. Así el data gate no confía en que
 “3.012 completadas” implique por sí solo 3.012 unidades reproducibles.
 
+La auditoría del data gate comprueba propiedades semánticas además de hashes:
+reconstruye el mapping exact-date, verifica que SPXW recibe literalmente la
+presión SPY y busca columnas outcome prohibidas. Integridad de bytes y fidelidad
+del experimento son gates distintas y ambas deben pasar.
+
 El full sidecar cross-venue ya está en captura outcome-free. Su progreso no es
 evidencia económica: solo demuestra materialización causal del reloj que hará
 posible un verdadero outer 2024 posterior.

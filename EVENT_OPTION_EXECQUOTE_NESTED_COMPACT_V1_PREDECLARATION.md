@@ -19,6 +19,9 @@
 > The later sidecar also has a tested post-seal auditor; it remains outcome- and
 > compact-V1-isolated.
 
+> Its later data gate also has an independent pre-outcome auditor. This frozen
+> protocol is unaffected.
+
 > A later deployment instruction applies only to the separate cross-venue
 > architecture: integrate it into the live systemd stack only after per-ticker
 > causal gates pass through 2026, with closed June profitable and incomplete

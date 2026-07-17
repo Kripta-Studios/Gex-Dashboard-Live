@@ -23,6 +23,9 @@
 > A separate post-seal auditor now passes its tests and will revalidate all
 > later sidecar captures before their data gate. It has no compact-V1 input.
 
+> A second separate auditor now verifies the later data gate's hashes, mapping
+> and outcome-free schema. Compact V1 remains closed and unused.
+
 > The user later authorized live integration of the separate cross-venue
 > architecture only after causal 2024→2025→2026 validation passes per ticker,
 > including profitable closed June 2026 and positive July-2026 MTD shadow.

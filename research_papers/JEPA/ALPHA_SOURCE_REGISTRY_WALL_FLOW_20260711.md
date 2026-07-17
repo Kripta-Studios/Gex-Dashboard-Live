@@ -219,6 +219,10 @@ Auditor full post-seal implementado en
 `audit_cross_venue_calendar_rr_native_clock_full.py`; revalida 3.012 captures y
 6.024 sources antes del data gate. Suite combinada `48 passed`; no ejecutado.
 
+Auditor independiente del data gate implementado: 16.566 source hashes, full
+index equality, mapping/gates/schema recomputation. Suite combinada `53 passed`;
+no ejecutado y sin acceso a underlying values/outcomes.
+
 Full capturer preejecución implementado: universo hash locked, capture atómica,
 resume con revalidation y seal solo 3.012/3.012. Suite combinada `16 passed`.
 Aún no existe full sidecar ni outcome 2024; commit/push precede al launch.

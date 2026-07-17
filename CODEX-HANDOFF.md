@@ -48,6 +48,14 @@ handoffs y registry en este checkpoint. No ejecutar hasta `_seal`. Al completar:
 auditar summary/compactos -> force-add/commit/push evidencia -> data gate. El
 auditor revalida raw/parquet/manifest y fuentes; no underlying/outcome.
 
+Auditor data-gate nuevo:
+`neural/jepa/audit_cross_venue_calendar_rr_leader_v1_data_gate.py` + test. Suite
+combinada `53 passed`, Ruff/compile. Rehash 16.566 paths sin leer underlying,
+recomputa gates/mapping y compara full capture index. Queda versionado con este
+checkpoint. No ejecutar antes del builder real. Secuencia futura exacta: full
+auditor -> commit compactos -> builder gate -> auditor gate -> commit compactos
+-> freezer -> commit manifest -> outer 2024.
+
 Condición live añadida por el usuario: no desplegar el mapping cross-venue por
 su diseño 2023. Tras el full sidecar/data gate/freeze, probar 2024 primero, 2025
 secuencial y 2026 al final. Solo si cada ticker cumple PF>=1,20, WR>=45%, >=13
@@ -62,7 +70,7 @@ comandos VPS exactos. Si falla, documentar cierre y no tocar producción.
 No lanzar full capturer: ya corre PID42112 desde d013a299, workers2, output
 `D:/ThetaData/cross_venue_calendar_rr_native_clock_2024_2025_v1`. Logs
 `cross_venue_calendar_rr_native_clock_full_2024_2025_v1.{stdout,stderr}.log`.
-Checkpoint 02:56:298/3012,errors0. Monitorizar PID/progress.json/stderr. No tocar
+Checkpoint 03:01:334/3012,errors0. Monitorizar PID/progress.json/stderr. No tocar
 capture code/dependencies. Si termina PASS, auditar y compactar; si muere,
 inspeccionar `.staging` y contrato antes de cualquier resume. No outcomes.
 
