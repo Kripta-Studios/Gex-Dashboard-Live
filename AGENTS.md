@@ -43,13 +43,21 @@ gate objetivo PF>1,20 y todos los meses positivos no se rebaja. Implementar
 evaluator/freezer/tests ahora, pero no generar manifest ni leer returns antes de
 data gate PASS committed.
 
+Evaluator/freezer ya implementados en
+`evaluate_cross_venue_calendar_rr_leader_v1.py` y
+`freeze_cross_venue_calendar_rr_leader_v1_runner.py`. El evaluator solo puede
+leer los dos rows 10:36/13:36 de underlying 2024 hasheado, verifica sign/event
+IDs/frozen manifest y reporta 1/2/3bps sin seleccionar. Suite cross-venue
+combinada `45 passed`, Ruff/py_compile clean. No generar todavía el manifest:
+faltan full seal, data gate real PASS y compactos committed; outcomes intactos.
+
 ### Full cross-venue capture activo — 2026-07-17
 
 Proceso único PID `42112`, arrancado hidden desde commit `d013a299` con
 workers2. Output
 `D:/ThetaData/cross_venue_calendar_rr_native_clock_2024_2025_v1`; logs stdout/
 stderr homónimos en D:/ThetaData. Contrato/universe 3.012 creados. Checkpoint
-02:43 Europe/Madrid: 150/3.012 captures, resumed0, errors0, stderr0. No arrancar
+02:50 Europe/Madrid: 236/3.012 captures, resumed0, errors0, stderr0. No arrancar
 duplicado ni modificar código/dependencias del capture mientras corre. Tras
 terminar: auditar `_seal`, versionar compactos, luego data gate; no outcomes.
 

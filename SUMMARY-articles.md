@@ -30,6 +30,11 @@ positivo cada mes siguen siendo la gate de promoción. Congelar ambas antes de
 2024 evita tanto matar prematuramente una señal débil como rebajar después el
 objetivo live.
 
+El runner refuerza el principio de mínimo acceso al outcome: aunque el parquet
+underlying contiene toda la sesión, el lector económico solicita por predicate
+pushdown únicamente 10:36 y 13:36. El hash del fichero conserva integridad y el
+scope semántico queda reducido a los dos valores declarados.
+
 El full sidecar cross-venue ya está en captura outcome-free. Su progreso no es
 evidencia económica: solo demuestra materialización causal del reloj que hará
 posible un verdadero outer 2024 posterior.

@@ -35,8 +35,13 @@ open 10:36→13:36, 180m y coste 1bp. La gate PF>1 solo permite avanzar a 2025;
 la promoción continúa exigiendo PF>1,20 y todos los meses positivos por ticker.
 No se ha generado el frozen manifest ni leído retorno 2024.
 
+Evaluator y freezer ya implementan ese contrato y pasan la suite combinada
+45/45. El acceso futuro al underlying se limita a los dos rows exactos de entry
+y exit y revalida el source hash. Siguen inactivos hasta que full capture y data
+gate estén sellados/committed.
+
 Captura completa 2024–2025 activa en PID42112: universo3.012, workers2,
-checkpoint150 y cero errores. Es solo sidecar de reloj; no existe aún PF OOS.
+checkpoint236 y cero errores. Es solo sidecar de reloj; no existe aún PF OOS.
 
 El capturador completo está listo y probado: 3.012 unidades atómicas, resumibles
 solo si revalidan raw/source keys, y seal 100% obligatorio. `16 passed`; aún no

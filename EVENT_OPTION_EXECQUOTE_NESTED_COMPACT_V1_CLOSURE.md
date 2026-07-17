@@ -12,6 +12,10 @@
 > The later cross-venue 2024 cash-proxy runner is separately predeclared with a
 > fixed sign, 180-minute clock and costs. It cannot alter or reopen compact V1.
 
+> Its evaluator/freezer now pass the combined 45-test suite but remain
+> preexecution because their separate data gate is not sealed. Compact V1 stays
+> closed and untouched.
+
 > The user later authorized live integration of the separate cross-venue
 > architecture only after causal 2024→2025→2026 validation passes per ticker,
 > including profitable closed June 2026 and positive July-2026 MTD shadow.

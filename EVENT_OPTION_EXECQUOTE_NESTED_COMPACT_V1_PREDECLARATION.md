@@ -10,6 +10,9 @@
 > A separate outer-2024 runner contract now freezes the later family's cash
 > proxy and progression gates. It has no compact-V1 dependency.
 
+> That later evaluator/freezer is now implemented and tested but has no frozen
+> manifest or outcome access. This protocol remains unchanged.
+
 > A later deployment instruction applies only to the separate cross-venue
 > architecture: integrate it into the live systemd stack only after per-ticker
 > causal gates pass through 2026, with closed June profitable and incomplete

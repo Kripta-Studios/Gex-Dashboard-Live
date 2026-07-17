@@ -16,7 +16,9 @@ compile clean. No se ejecutó sobre captura parcial ni abrió outcomes.
 Runner 2024 predeclarado: única policy sign/sensor ya congelados, cash
 10:36→13:36/180m/1bp, 2–3bps solo sensibilidad. PF>1/WR>45/neto>0/min13 por
 ticker permite abrir 2025; promoción conserva PF>1,20 y todos meses positivos.
-Freezer/evaluator aún no implementados ni ejecutados; 2024 outcomes cerrados.
+Freezer/evaluator implementados, aún no ejecutados: exact two-row outcome read,
+frozen event IDs y costes1/2/3. Suite combinada `45 passed`, checks clean. No
+manifest hasta data gate PASS committed; 2024 outcomes cerrados.
 
 Nueva condición de promoción del usuario: si y solo si el mapping cross-venue
 pasa causalmente 2024→2025→2026 en los tres tickers, integrar el contrato en
@@ -27,7 +29,7 @@ siendo shadow incompleto. Primer despliegue `paper_order_intents=true`, con
 paridad/validador/smoke systemd y comandos VPS exactos. Producción no se toca
 antes de PASS.
 
-Full capture activo PID42112 desde d013a299/workers2. Checkpoint 02:43 150/3012,
+Full capture activo PID42112 desde d013a299/workers2. Checkpoint 02:50 236/3012,
 errors0/stderr0. Output/logs D:/ThetaData. No duplicar; outcomes cerrados.
 
 Full capturer cross-venue implementado pre-run: universo SHA exacto3.012,

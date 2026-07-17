@@ -208,6 +208,9 @@ Runner one-shot 2024 predeclarado en
 `CROSS_VENUE_CALENDAR_RR_LEADER_V1_OUTER_2024_RUNNER_CONTRACT.md`; PF>1 es gate
 incremental para abrir 2025, no promoción. No existe manifest ni outcome.
 
+Evaluator/freezer implementados pre-outcome; suite combinada `45 passed` y
+target-only read 10:36/13:36. Siguen sin manifest hasta data gate PASS committed.
+
 Full capturer preejecución implementado: universo hash locked, capture atómica,
 resume con revalidation y seal solo 3.012/3.012. Suite combinada `16 passed`.
 Aún no existe full sidecar ni outcome 2024; commit/push precede al launch.
