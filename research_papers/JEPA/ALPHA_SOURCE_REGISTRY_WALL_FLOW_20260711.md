@@ -204,6 +204,10 @@ Builder implementado pre-outcome en
 3.012-capture offline revalidation, target-only spot reads y exact-date mapping.
 Suite combinada `34 passed`; no se ejecutó sobre el sidecar parcial.
 
+Runner one-shot 2024 predeclarado en
+`CROSS_VENUE_CALENDAR_RR_LEADER_V1_OUTER_2024_RUNNER_CONTRACT.md`; PF>1 es gate
+incremental para abrir 2025, no promoción. No existe manifest ni outcome.
+
 Full capturer preejecución implementado: universo hash locked, capture atómica,
 resume con revalidation y seal solo 3.012/3.012. Suite combinada `16 passed`.
 Aún no existe full sidecar ni outcome 2024; commit/push precede al launch.

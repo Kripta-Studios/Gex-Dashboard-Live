@@ -24,6 +24,12 @@ las 3.012 filas de auditoría con el capture index sellado antes de producir una
 feature. La reanudación operativa y el consumo científico quedan así separados
 por una segunda verificación independiente y outcome-free.
 
+La progresión separa dos decisiones: PF>1 estable por ticker es evidencia
+incremental suficiente para autorizar el siguiente año, mientras PF>1,20 y PnL
+positivo cada mes siguen siendo la gate de promoción. Congelar ambas antes de
+2024 evita tanto matar prematuramente una señal débil como rebajar después el
+objetivo live.
+
 El full sidecar cross-venue ya está en captura outcome-free. Su progreso no es
 evidencia económica: solo demuestra materialización causal del reloj que hará
 posible un verdadero outer 2024 posterior.

@@ -9,6 +9,9 @@
 > source/data-gate suite. It refuses a partial sidecar and still does not access
 > compact-V1 evidence or outcomes.
 
+> The later cross-venue 2024 cash-proxy runner is separately predeclared with a
+> fixed sign, 180-minute clock and costs. It cannot alter or reopen compact V1.
+
 > The user later authorized live integration of the separate cross-venue
 > architecture only after causal 2024→2025→2026 validation passes per ticker,
 > including profitable closed June 2026 and positive July-2026 MTD shadow.

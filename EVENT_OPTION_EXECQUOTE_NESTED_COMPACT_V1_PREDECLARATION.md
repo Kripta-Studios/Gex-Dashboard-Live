@@ -7,6 +7,9 @@
 > The corresponding later builder is implemented and tested but cannot run
 > without a full native-clock PASS seal. It remains isolated from compact V1.
 
+> A separate outer-2024 runner contract now freezes the later family's cash
+> proxy and progression gates. It has no compact-V1 dependency.
+
 > A later deployment instruction applies only to the separate cross-venue
 > architecture: integrate it into the live systemd stack only after per-ticker
 > causal gates pass through 2026, with closed June profitable and incomplete

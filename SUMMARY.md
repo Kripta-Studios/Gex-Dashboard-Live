@@ -30,6 +30,11 @@ rehash/reconstruye las 3.012 capturas, conserva valores vintage, carga solo los
 dos spots predecisión y genera el mapping exact-date. La suite relacionada pasa
 34/34. Aún no se ejecutó el data gate real y por tanto no existe resultado OOS.
 
+El ensayo posterior 2024 también queda predeclarado: una sola dirección diaria,
+open 10:36→13:36, 180m y coste 1bp. La gate PF>1 solo permite avanzar a 2025;
+la promoción continúa exigiendo PF>1,20 y todos los meses positivos por ticker.
+No se ha generado el frozen manifest ni leído retorno 2024.
+
 Captura completa 2024–2025 activa en PID42112: universo3.012, workers2,
 checkpoint150 y cero errores. Es solo sidecar de reloj; no existe aún PF OOS.
 

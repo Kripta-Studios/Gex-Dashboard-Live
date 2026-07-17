@@ -35,6 +35,14 @@ mapping exact-date. Suite combinada calendar/captures/builder `34 passed`, Ruff
 y py_compile clean. No ejecutarlo sobre el output parcial; código no leyó
 outcomes. Tras commit/push, esperar al seal y ejecutar default una sola vez.
 
+Runner outer 2024 predeclarado antes de outcomes en
+`CROSS_VENUE_CALENDAR_RR_LEADER_V1_OUTER_2024_RUNNER_CONTRACT.md`: sign fijo,
+cash open10:36→13:36, hold180, 1bp primario y sensibilidades2/3 no selectivas.
+Gate incremental por ticker PF>1/WR>45%/neto>0/min13 mensual para abrir 2025;
+gate objetivo PF>1,20 y todos los meses positivos no se rebaja. Implementar
+evaluator/freezer/tests ahora, pero no generar manifest ni leer returns antes de
+data gate PASS committed.
+
 ### Full cross-venue capture activo — 2026-07-17
 
 Proceso único PID `42112`, arrancado hidden desde commit `d013a299` con

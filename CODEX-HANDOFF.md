@@ -16,6 +16,14 @@ siete handoffs y registry; commit/push. No ejecutar aún: full output parcial.
 Cuando exista seal, auditar primero el capture y después lanzar el builder
 default desde su commit limpio; si PASS, compactar antes del runner 2024.
 
+El runner posterior está fijado en
+`CROSS_VENUE_CALENDAR_RR_LEADER_V1_OUTER_2024_RUNNER_CONTRACT.md`. Se puede
+implementar evaluator/freezer/tests pre-outcome, pero no ejecutar freezer hasta
+que el gate real PASS esté committed. Outer 2024: sign fijo, open10:36→13:36,
+hold180, 1bp; 2/3bps diagnóstico. Avance a 2025 requiere en los tres tickers
+PF>1, WR>45%, neto>0 y min13/mes. La gate live PF>1,20/todos meses positivos
+sigue separada.
+
 Condición live añadida por el usuario: no desplegar el mapping cross-venue por
 su diseño 2023. Tras el full sidecar/data gate/freeze, probar 2024 primero, 2025
 secuencial y 2026 al final. Solo si cada ticker cumple PF>=1,20, WR>=45%, >=13

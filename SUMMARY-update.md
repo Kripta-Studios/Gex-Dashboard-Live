@@ -13,6 +13,11 @@ del capturador, revalida 3.012 raw/parquet/manifests/sources, lee solo spots
 10:30/10:35 y aplica exact-date SPY→SPXW. Suite combinada `34 passed`, Ruff y
 compile clean. No se ejecutó sobre captura parcial ni abrió outcomes.
 
+Runner 2024 predeclarado: única policy sign/sensor ya congelados, cash
+10:36→13:36/180m/1bp, 2–3bps solo sensibilidad. PF>1/WR>45/neto>0/min13 por
+ticker permite abrir 2025; promoción conserva PF>1,20 y todos meses positivos.
+Freezer/evaluator aún no implementados ni ejecutados; 2024 outcomes cerrados.
+
 Nueva condición de promoción del usuario: si y solo si el mapping cross-venue
 pasa causalmente 2024→2025→2026 en los tres tickers, integrar el contrato en
 `realtime_feed`/`ai_bot` y systemd. Gate vigente: PF>=1,20, WR>=45%, >=13 por
