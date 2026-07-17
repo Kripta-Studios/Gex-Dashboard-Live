@@ -1,5 +1,11 @@
 # CROSS_VENUE CALENDAR-RR — resultado del preflight de reloj nativo
 
+> **Erratum outcome-free:** el seal histórico proyectó 1.503 sesiones/3.006
+> captures. El discovery full posterior cuenta 1.506/3.012; la corrección
+> autoritativa y su inventario están en
+> `CROSS_VENUE_CALENDAR_RR_FULL_UNIVERSE_COUNT_CLARIFICATION.md`. La gate de
+> coste sigue PASS y el seal original no se reescribe.
+
 ## Veredicto
 
 `PASS_CROSS_VENUE_CALENDAR_RR_NATIVE_CLOCK_PREFLIGHT`.
@@ -32,10 +38,10 @@ reconstruir el reloj, no la rentabilidad ni la paridad live prospectiva.
 
 | Medida | Proyección |
 | --- | ---: |
-| Sesiones | 1.503 |
-| Capturas | 3.006 |
-| Filas | 8.095.158 |
-| Raw | 1,425 GiB |
+| Sesiones | 1.506 |
+| Capturas | 3.012 |
+| Filas | 8.111.316 |
+| Raw | 1,428 GiB |
 | Parquet | 0,102 GiB |
 
 Pasa los límites congelados de 50M filas y 20GiB raw. El full backfill queda

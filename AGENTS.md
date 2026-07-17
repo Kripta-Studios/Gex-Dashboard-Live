@@ -1,5 +1,14 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Corrección outcome-free del universo full cross-venue
+
+El seal preflight usó una constante errónea 1.503/3.006. Discovery real
+Greek∩IV: 502 sesiones por ticker (252 en 2024,250 en 2025), total1.506/3.012,
+min19/mes. Proyección corregida 8.111.316 rows/1,428GiB raw; cost gate sigue
+PASS. IDs SHA `447e771b...5ce4`, inventory lógico `e685affd...b07b0`.
+Autoridad: `CROSS_VENUE_CALENDAR_RR_FULL_UNIVERSE_COUNT_CLARIFICATION.md`.
+No excluir tres días para imitar el seal; full capturer debe exigir 3.012.
+
 ### Cross-venue native-clock preflight PASS
 
 Seal offline PASS: 12/12 sesiones, 24/24 front-back, 64.632 rows, missing keys0,

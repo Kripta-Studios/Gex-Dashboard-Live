@@ -188,3 +188,8 @@ missing/extra/revisions/crossed. Full 2024–2025 proyectado 8,095M rows/1,425Gi
 raw para 3.006 requests. Esto desbloquea solo el full sidecar/data gate; no hay
 outcome OOS nuevo. Resultado autoritativo:
 `CROSS_VENUE_CALENDAR_RR_NATIVE_CLOCK_PREFLIGHT_RESULT.md`.
+
+Erratum pre-full: discovery completo cuenta 1.506 sesiones/3.012 captures, no
+1.503/3.006. ID SHA `447e771b...5ce4`; proyección corregida 8,111M rows/1,428GiB
+raw, aún PASS. No excluir sesiones para reproducir la constante antigua. Véase
+`CROSS_VENUE_CALENDAR_RR_FULL_UNIVERSE_COUNT_CLARIFICATION.md`.

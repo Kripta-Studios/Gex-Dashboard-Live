@@ -1,5 +1,8 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1
 
+> The later cross-venue full inventory count was corrected outcome-free. This
+> has no relation to the immutable compact-V1 universe.
+
 > The later cross-venue native-clock preflight passed outcome-free. It remains
 > independent of this frozen protocol and has not evaluated 2024–2026 returns.
 

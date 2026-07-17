@@ -1,5 +1,9 @@
 # SUMMARY-update — ledger científico compacto
 
+Erratum full count sin outcomes: no1.503/3.006 sino1.506 sesiones/3.012
+captures (502/ticker). Proyección 8.111.316 rows/1,428GiB, gate PASS. IDs SHA
+`447e771b...5ce4`. Full capturer debe exigir el conteo corregido; no excluir.
+
 Cross-venue native-clock `PASS_PREFLIGHT`: 12 sessions,24 captures,64.632 rows,
 missing/extra/revised/crossed=0; independent hash audit PASS. Full projection
 1.503/3.006,8,095M rows,1,425GiB raw. Capture167118b0/seal8828bd72; seal SHA

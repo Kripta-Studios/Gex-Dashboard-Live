@@ -1,5 +1,9 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+Corrección de capacidad: el universo completo real son 1.506 sesiones/3.012
+capturas, no 1.503/3.006. La diferencia de 0,2% no cambia viabilidad (8,11M
+filas/1,43GiB), pero queda congelada antes del full para evitar exclusiones.
+
 El preflight de reloj cross-venue pasa: 24/24 capturas y 64.632 filas con
 coverage exacta, sin extras, revisiones o crossed. El full 2024–2025 proyecta
 8,10M filas y 1,43GiB, viable. Esto desbloquea el backfill causal que permitirá

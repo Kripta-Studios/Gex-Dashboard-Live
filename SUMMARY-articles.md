@@ -1,5 +1,11 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+Las constantes de capacidad también requieren discovery reproducible: el
+preflight subestimó el full por seis captures. El inventario filename-only
+corrige a 1.506 sesiones/3.012 y mantiene la cost gate. No se debe excluir datos
+para hacer coincidir una proyección histórica; el manifest posterior debe
+registrar el erratum sin reescribir el seal previo.
+
 El preflight demuestra que el déficit de timestamp 2024–2025 es reparable sin
 reescribir el histórico: en 64.632 filas, el proveedor actual cubre exactamente
 el universo vintage y no revisa un solo bid/ask de la muestra. La proyección

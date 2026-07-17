@@ -1,5 +1,11 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+Antes del full: usar count correction, no la constante del seal. Exactamente
+502 sesiones/ticker=1.506 y 3.012 role captures; ID SHA
+`447e771b391f12dcfd7cba3692e65a7586dd4db2f3205311034616ddc7de5ce4`.
+Commit/push aclaración+handoffs antes de implementar. Full script debe descubrir
+este universo, ser atomic/resumable y fallar si el count/hash cambia.
+
 Preflight sellado PASS y auditado. Output D:/ThetaData, seal
 `d33e01a6...eee6d`, index `c0eadebf...42ad`; 24 captures/64.632 rows, cero
 missing/extra/revised/crossed. Full projection 3.006 captures/8,095M/1,425GiB.

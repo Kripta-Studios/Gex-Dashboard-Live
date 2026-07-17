@@ -1,5 +1,8 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1 — CLOSED_NO_EDGE
 
+> A filename-only correction changes the later cross-venue full-source count
+> from 3,006 to 3,012 captures. It uses no outcome and does not affect compact V1.
+
 > The separate cross-venue native-clock preflight passed 24/24 captures and an
 > independent hash audit, still without outcomes. This source feasibility result
 > does not alter compact V1.
