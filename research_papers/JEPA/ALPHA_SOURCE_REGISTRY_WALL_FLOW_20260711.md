@@ -215,6 +215,10 @@ Live audit: `NOT_LIVE_READY`. Weekly≠next-expiry, first-order IV≠bid/ask-IV 
 hay estado de contratos t0→t1. Payoff option ask→bid queda requerido después de
 cash PASS; servicios/producción intactos.
 
+Auditor full post-seal implementado en
+`audit_cross_venue_calendar_rr_native_clock_full.py`; revalida 3.012 captures y
+6.024 sources antes del data gate. Suite combinada `48 passed`; no ejecutado.
+
 Full capturer preejecución implementado: universo hash locked, capture atómica,
 resume con revalidation y seal solo 3.012/3.012. Suite combinada `16 passed`.
 Aún no existe full sidecar ni outcome 2024; commit/push precede al launch.

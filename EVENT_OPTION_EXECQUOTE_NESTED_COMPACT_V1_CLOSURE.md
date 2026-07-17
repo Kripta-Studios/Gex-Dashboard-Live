@@ -20,6 +20,9 @@
 > t0→t1 state are absent from the current stack. No compact-V1 or live artifact
 > was modified.
 
+> A separate post-seal auditor now passes its tests and will revalidate all
+> later sidecar captures before their data gate. It has no compact-V1 input.
+
 > The user later authorized live integration of the separate cross-venue
 > architecture only after causal 2024→2025→2026 validation passes per ticker,
 > including profitable closed June 2026 and positive July-2026 MTD shadow.

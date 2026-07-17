@@ -46,8 +46,13 @@ actual tampoco representa una única decisión diaria cross-venue. No se cambia
 producción hasta validar dirección y después una traducción ejecutable de
 opciones; la integración inicial seguirá siendo paper-only.
 
+También está preparado el auditor del full sidecar: exige seal PASS, reconstruye
+cada captura y revalida todas las fuentes antes de permitir el data gate. La
+suite completa relacionada pasa 48/48. Todavía no se ejecutó porque el sidecar
+sigue parcial.
+
 Captura completa 2024–2025 activa en PID42112: universo3.012, workers2,
-checkpoint256 y cero errores. Es solo sidecar de reloj; no existe aún PF OOS.
+checkpoint298 y cero errores. Es solo sidecar de reloj; no existe aún PF OOS.
 
 El capturador completo está listo y probado: 3.012 unidades atómicas, resumibles
 solo si revalidan raw/source keys, y seal 100% obligatorio. `16 passed`; aún no

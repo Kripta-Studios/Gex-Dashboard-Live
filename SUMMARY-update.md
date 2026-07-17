@@ -26,6 +26,11 @@ distintos. El cash proxy tampoco prueba payoff de opción ask→bid. No se tocó
 live. Si pasa toda la secuencia, integrar paquete nuevo/paper-only con builder
 compartido, next-expiry, IV exacta y un signal diario sincronizado.
 
+Auditor full post-seal implementado: reconstruye/revalida 3.012 captures y
+6.024 Greek/IV sources, compara capture index y produce evidencia compacta sin
+underlying/outcomes. Falla antes de `_seal`. Suite combinada `48 passed`, checks
+clean. Queda versionado en este checkpoint; no ejecutar durante capture.
+
 Nueva condición de promoción del usuario: si y solo si el mapping cross-venue
 pasa causalmente 2024→2025→2026 en los tres tickers, integrar el contrato en
 `realtime_feed`/`ai_bot` y systemd. Gate vigente: PF>=1,20, WR>=45%, >=13 por
@@ -35,7 +40,7 @@ siendo shadow incompleto. Primer despliegue `paper_order_intents=true`, con
 paridad/validador/smoke systemd y comandos VPS exactos. Producción no se toca
 antes de PASS.
 
-Full capture activo PID42112 desde d013a299/workers2. Checkpoint 02:53 256/3012,
+Full capture activo PID42112 desde d013a299/workers2. Checkpoint 02:56 298/3012,
 errors0/stderr0. Output/logs D:/ThetaData. No duplicar; outcomes cerrados.
 
 Full capturer cross-venue implementado pre-run: universo SHA exacto3.012,

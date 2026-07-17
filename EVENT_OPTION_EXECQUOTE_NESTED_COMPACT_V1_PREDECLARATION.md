@@ -16,6 +16,9 @@
 > A later read-only live-parity audit is `NOT_LIVE_READY` and requires a separate
 > executable option translation. It does not change compact V1.
 
+> The later sidecar also has a tested post-seal auditor; it remains outcome- and
+> compact-V1-isolated.
+
 > A later deployment instruction applies only to the separate cross-venue
 > architecture: integrate it into the live systemd stack only after per-ticker
 > causal gates pass through 2026, with closed June profitable and incomplete

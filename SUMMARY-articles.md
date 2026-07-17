@@ -41,6 +41,11 @@ feature temporal también necesita persistir la identidad del contrato elegido,
 no solo conservar dos snapshots agregados. Estos tres puntos son parte del
 modelo, no detalles de infraestructura.
 
+El seal agregado tampoco sustituye una auditoría de consumo. El auditor full
+rehace offline raw→parquet, revalida los hashes vintage y compara cada fila con
+el índice sellado antes de crear compactos. Así el data gate no confía en que
+“3.012 completadas” implique por sí solo 3.012 unidades reproducibles.
+
 El full sidecar cross-venue ya está en captura outcome-free. Su progreso no es
 evidencia económica: solo demuestra materialización causal del reloj que hará
 posible un verdadero outer 2024 posterior.

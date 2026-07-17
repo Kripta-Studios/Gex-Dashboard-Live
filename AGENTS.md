@@ -61,13 +61,23 @@ payoff de opción ask→bid predeclarado. No modificar live ahora. Si toda la
 secuencia pasa: añadir next-expiry e IV sin romper weekly, estado durable t0→t1,
 builder compartido, paquete/registry nuevos, una señal diaria y paper intents.
 
+### Auditor post-seal full listo
+
+`audit_cross_venue_calendar_rr_native_clock_full.py` revalida offline los 3.012
+raw/parquet/manifests y 6.024 fuentes vintage contra el seal/index, y genera
+compactos sin underlying/outcomes. Falla sin `_seal` PASS y exige auditor,
+builder y contrato committed/clean. Suite combinada `48 passed`, Ruff/compile
+clean. No ejecutarlo aún. Tras terminar capture: ejecutar auditor default,
+versionar su evidencia y solo después lanzar data gate; no saltar directo al
+builder ni reutilizar output parcial.
+
 ### Full cross-venue capture activo — 2026-07-17
 
 Proceso único PID `42112`, arrancado hidden desde commit `d013a299` con
 workers2. Output
 `D:/ThetaData/cross_venue_calendar_rr_native_clock_2024_2025_v1`; logs stdout/
 stderr homónimos en D:/ThetaData. Contrato/universe 3.012 creados. Checkpoint
-02:53 Europe/Madrid: 256/3.012 captures, resumed0, errors0, stderr0. No arrancar
+02:56 Europe/Madrid: 298/3.012 captures, resumed0, errors0, stderr0. No arrancar
 duplicado ni modificar código/dependencias del capture mientras corre. Tras
 terminar: auditar `_seal`, versionar compactos, luego data gate; no outcomes.
 
