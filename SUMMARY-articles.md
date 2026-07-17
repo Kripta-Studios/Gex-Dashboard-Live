@@ -1,5 +1,9 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+El full sidecar cross-venue ya está en captura outcome-free. Su progreso no es
+evidencia económica: solo demuestra materialización causal del reloj que hará
+posible un verdadero outer 2024 posterior.
+
 El full sidecar aplica una arquitectura operativa reusable: contrato raíz
 inmutable, unidad de captura atómica y reanudación solo tras reconstrucción
 completa. Esto separa tolerancia a interrupciones de tolerancia a datos malos:

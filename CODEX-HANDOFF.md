@@ -1,5 +1,12 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+No lanzar full capturer: ya corre PID42112 desde d013a299, workers2, output
+`D:/ThetaData/cross_venue_calendar_rr_native_clock_2024_2025_v1`. Logs
+`cross_venue_calendar_rr_native_clock_full_2024_2025_v1.{stdout,stderr}.log`.
+Checkpoint 02:24:4/3012,errors0. Monitorizar PID/progress.json/stderr. No tocar
+capture code/dependencies. Si termina PASS, auditar y compactar; si muere,
+inspeccionar `.staging` y contrato antes de cualquier resume. No outcomes.
+
 Full code listo: `capture_cross_venue_calendar_rr_native_clock_full.py` y test
 nuevo, suite combinada16/Ruff/compile. Add explícito ambos códigos/tests+siete
 handoffs, commit/push. Desde HEAD limpio verificar output default inexistente y

@@ -1,5 +1,8 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1
 
+> The later full clock capture is active without outcomes and remains isolated
+> from this immutable protocol.
+
 > The separate full clock sidecar code is frozen preexecution and remains
 > isolated from this protocol.
 

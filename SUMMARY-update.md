@@ -1,5 +1,8 @@
 # SUMMARY-update — ledger científico compacto
 
+Full capture activo PID42112 desde d013a299/workers2. Checkpoint inicial4/3012,
+errors0/stderr0. Output/logs D:/ThetaData. No duplicar; outcomes cerrados.
+
 Full capturer cross-venue implementado pre-run: universo SHA exacto3.012,
 atomic dirs, resume con revalidation, root contract/code/runtime/provenance y
 seal solo 100%. Suite total16/Ruff/compile PASS. Falta commit/push y launch

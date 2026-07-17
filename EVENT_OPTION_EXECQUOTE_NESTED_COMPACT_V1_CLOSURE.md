@@ -1,5 +1,8 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1 — CLOSED_NO_EDGE
 
+> The separate full native-clock sidecar is now capturing outcome-free under a
+> single process. This operational work does not change compact V1.
+
 > The later full cross-venue clock capturer is implemented and tested before
 > execution. It is outcome-free and cannot modify compact V1.
 

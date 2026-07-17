@@ -1,5 +1,15 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Full cross-venue capture activo — 2026-07-17
+
+Proceso único PID `42112`, arrancado hidden desde commit `d013a299` con
+workers2. Output
+`D:/ThetaData/cross_venue_calendar_rr_native_clock_2024_2025_v1`; logs stdout/
+stderr homónimos en D:/ThetaData. Contrato/universe 3.012 creados. Checkpoint
+02:24 Europe/Madrid: 4/3.012 captures, resumed0, errors0, stderr0. No arrancar
+duplicado ni modificar código/dependencias del capture mientras corre. Tras
+terminar: auditar `_seal`, versionar compactos, luego data gate; no outcomes.
+
 ### Full capturer cross-venue listo preejecución
 
 Implementado `capture_cross_venue_calendar_rr_native_clock_full.py`: descubre y

@@ -1,5 +1,8 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+Captura completa 2024–2025 activa en PID42112: universo3.012, workers2,
+checkpoint4 y cero errores. Es solo sidecar de reloj; no existe aún PF OOS.
+
 El capturador completo está listo y probado: 3.012 unidades atómicas, resumibles
 solo si revalidan raw/source keys, y seal 100% obligatorio. `16 passed`; aún no
 se ejecutó ni se abrió rentabilidad 2024.
