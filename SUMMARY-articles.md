@@ -1,5 +1,11 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+El preflight cross-venue convierte la ausencia de option timestamp 2024–2025 en
+un test falsable: quote nativa debe cubrir cada key vintage de dos clocks y dos
+expiraciones, mientras sus precios revisados solo se cuentan. Esto separa
+reconstrucción de reloj de reescritura histórica. Doce sesiones extremas de año
+proyectan el coste de las 3.006 capturas antes de autorizar el full backfill.
+
 ### Arquitectura cross-venue generada por SPY/SPXW
 
 SPXW y SPY separan claramente movimiento y sensor: sus retornos cash a 180m

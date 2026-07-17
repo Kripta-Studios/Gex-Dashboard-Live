@@ -1,5 +1,9 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1 — CLOSED_NO_EDGE
 
+> The separate cross-venue native-clock preflight capturer is now implemented
+> and tested, but not executed. It queries no compact-V1 data or outcome and has
+> no effect on this closure.
+
 > Separate later research now predeclares a cross-venue calendar-RR leader:
 > QQQ uses QQQ, SPY uses SPY and SPXW uses SPY. The 2023 diagnostic leaves all
 > three aggregate PF above one but is explicitly post-outcome design evidence.

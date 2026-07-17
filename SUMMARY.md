@@ -1,5 +1,11 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+El sidecar preflight de la nueva arquitectura ya está implementado, no
+ejecutado. Congela cuatro fechas por ticker en 2024–2025, 24 expiraciones
+front/back, clocks 10:30/10:35 y coverage completa contra Greek/IV vintage.
+Revisiones actuales no sustituyen prices; extras se archivan. Suite `9 passed`.
+Primero commit/push; después un único capture outcome-free desde remoto CONNECTED.
+
 ## Nueva vía: liderazgo calendar-RR SPY→SPXW
 
 El audit pareado explica el PF0,912 de SPXW aunque se mueva como SPY: retorno

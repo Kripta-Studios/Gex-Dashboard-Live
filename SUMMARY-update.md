@@ -1,5 +1,11 @@
 # SUMMARY-update — ledger científico compacto
 
+Capturador cross-venue native-clock listo preejecución: 12 sesiones/24
+front-back, exact wildcard1m 10:30–10:35, full vintage Greek/IV key coverage,
+raw/parquet/manifest/JAR/runtime hashes y cost projection 3.006 captures.
+`9 passed`, Ruff/compile clean; remoto CONNECTED. Falta commit/push antes del
+único preflight. Outcomes/2026/producción intactos.
+
 Nueva familia autorizada: `CROSS_VENUE_CALENDAR_RR_LEADER_V1`. Diagnóstico
 2023 post-outcome: cash SPXW/SPY corr0,999733/sign246/246, pressure corr0,580247
 y acciones iguales148/246. Mapping fijo QQQ←QQQ, SPY←SPY, SPXW←SPY deja

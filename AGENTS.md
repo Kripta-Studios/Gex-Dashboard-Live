@@ -1,5 +1,16 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Cross-venue native-clock preflight listo, aún no ejecutado
+
+Implementado `capture_cross_venue_calendar_rr_native_clock_preflight.py` y test
+focal: `9 passed`, Ruff/py_compile clean. Congela 12 sesiones (20240102,
+20241231, 20250102, 20251231 por ticker), front+back=24 requests wildcard 1m
+10:30–10:35. Requiere coverage exacta de todas las keys Greek/IV vintage de
+10:30/10:35; extras/revisiones se auditan sin reemplazar precios. Proyecta las
+3.006 capturas full y falla sobre 50M rows/20GiB. Terminal remoto exacto responde
+CONNECTED. Secuencia: commit/push código/tests+handoffs, luego ejecutar una sola
+vez al output default inmutable. No outcomes ni 2026.
+
 ## Research activo — CROSS_VENUE_CALENDAR_RR_LEADER_V1
 
 Por petición explícita del usuario se investiga la vía SPY→SPXW, pero como

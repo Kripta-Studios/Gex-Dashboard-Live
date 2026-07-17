@@ -1,5 +1,15 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+Preflight implementado en
+`neural/jepa/capture_cross_venue_calendar_rr_native_clock_preflight.py`, tests
+`test_capture_cross_venue_calendar_rr_native_clock_preflight.py`: 9 passed,
+Ruff/compile clean. Sample real exacto 12 sessions/24 captures; source inventory
+hashes se calculan al run. Remoto `91.99.90.39:25503/v3` CONNECTED. Hacer
+git-add explícito de código/test+siete handoffs, commit/push. Solo desde HEAD
+limpio ejecutar default con `--workers 2`; no usar output alternativo ni abrir
+underlying outcomes. Si PASS, compactar evidencia y diseñar full capturer desde
+el seal; si error, preservar staging y cerrar/auditar antes de reintentar.
+
 Familia activa: `CROSS_VENUE_CALENDAR_RR_LEADER_V1_PREDECLARATION.md`. Se crea
 por orden del usuario tras diagnóstico post-outcome; 2023 no es OOS. SPXW/SPY
 ret corr0,999733/sign246/246, pero pressure corr0,580247/action same148/246.
