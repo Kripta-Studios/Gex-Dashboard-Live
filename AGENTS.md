@@ -17,6 +17,16 @@ smoke de arranque de `realtime_feed.service` y `ai_bot.service`; documentar el
 bloque exacto de despliegue VPS. No tocar producción antes de esos gates. El
 diagnóstico post-outcome de 2023 no autoriza despliegue.
 
+### Data-gate contract cross-venue congelado
+
+`CROSS_VENUE_CALENDAR_RR_LEADER_V1_DATA_GATE_CONTRACT.md` congela antes de
+outcomes el puente exacto de reloj, los valores vintage, mapping QQQ←QQQ,
+SPY←SPY, SPXW←SPY y gates por ticker-año/mes. El builder debe revalidar offline
+full seal, índice y las 3.012 capturas; no puede correr antes de seal PASS ni
+leer opens 10:36/13:36. Sidecar solo certifica timestamp/key; no reemplaza
+delta/IV/bid/ask ni añade native extras. Implementar builder/tests sin tocar el
+capturador activo; después de PASS se versionan compactos y se congela 2024.
+
 ### Full cross-venue capture activo — 2026-07-17
 
 Proceso único PID `42112`, arrancado hidden desde commit `d013a299` con

@@ -16,6 +16,15 @@ Si se satisfacen las gates, integrar con paridad exacta offline/live, artefacto
 La primera promoción mantiene `paper_order_intents=true`; al cerrar la labor se
 entregan comandos VPS reproducibles. Hasta entonces producción queda intacta.
 
+## Contrato del próximo data gate
+
+Antes de abrir 2024 se congeló el data gate cross-venue: exige full seal
+3.012/3.012 y reconstrucción offline de cada captura. El sidecar nativo solo
+prueba timestamps/keys 10:30 y 10:35; los valores de delta, IV, bid y ask siguen
+siendo los vintage. El join SPY→SPXW es de la misma fecha y no permite as-of,
+thresholds ni variantes. Cobertura y distinctness se evalúan por ticker-año y
+la frecuencia >12 por ticker-mes. No se leen opens de outcome.
+
 Captura completa 2024–2025 activa en PID42112: universo3.012, workers2,
 checkpoint25 y cero errores. Es solo sidecar de reloj; no existe aún PF OOS.
 

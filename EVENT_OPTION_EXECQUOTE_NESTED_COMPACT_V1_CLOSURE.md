@@ -1,5 +1,10 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1 — CLOSED_NO_EDGE
 
+> A separate cross-venue data-gate contract is now frozen before 2024 outcomes.
+> It uses the native sidecar only to certify timestamps/keys while preserving
+> vintage economic values. It cannot read compact-V1 artifacts or reopen this
+> closed experiment.
+
 > The user later authorized live integration of the separate cross-venue
 > architecture only after causal 2024→2025→2026 validation passes per ticker,
 > including profitable closed June 2026 and positive July-2026 MTD shadow.

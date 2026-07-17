@@ -1,5 +1,9 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1
 
+> The later cross-venue family now has a separately frozen outcome-free data
+> gate. Its exact-clock certification and SPY→SPXW mapping do not modify this
+> immutable compact-V1 protocol.
+
 > A later deployment instruction applies only to the separate cross-venue
 > architecture: integrate it into the live systemd stack only after per-ticker
 > causal gates pass through 2026, with closed June profitable and incomplete

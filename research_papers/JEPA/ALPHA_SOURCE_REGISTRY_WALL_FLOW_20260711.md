@@ -194,6 +194,11 @@ Erratum pre-full: discovery completo cuenta 1.506 sesiones/3.012 captures, no
 raw, aún PASS. No excluir sesiones para reproducir la constante antigua. Véase
 `CROSS_VENUE_CALENDAR_RR_FULL_UNIVERSE_COUNT_CLARIFICATION.md`.
 
+El data gate outcome-free posterior queda congelado en
+`CROSS_VENUE_CALENDAR_RR_LEADER_V1_DATA_GATE_CONTRACT.md`: full seal 3.012,
+revalidación offline, option-clock key proof y valores económicos vintage. No
+autoriza outcomes ni producción.
+
 Full capturer preejecución implementado: universo hash locked, capture atómica,
 resume con revalidation y seal solo 3.012/3.012. Suite combinada `16 passed`.
 Aún no existe full sidecar ni outcome 2024; commit/push precede al launch.

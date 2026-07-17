@@ -1,5 +1,14 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+Contrato siguiente ya congelado en
+`CROSS_VENUE_CALENDAR_RR_LEADER_V1_DATA_GATE_CONTRACT.md`. Implementar
+`build_cross_venue_calendar_rr_leader_v1.py` y tests sin modificar full/preflight
+capturers. Debe negarse a correr sin `_seal` PASS, revalidar 3.012 captures
+offline, certificar cada key vintage contra option timestamp nativo y usar solo
+delta/IV/bid/ask vintage. Spot solo rows 10:30/10:35; prohibido cargar outcome
+10:36/13:36. Aplicar exact-date SPY→SPXW y gates por ticker-año/mes. No ejecutar
+el builder real hasta terminar/auditar la captura.
+
 Condición live añadida por el usuario: no desplegar el mapping cross-venue por
 su diseño 2023. Tras el full sidecar/data gate/freeze, probar 2024 primero, 2025
 secuencial y 2026 al final. Solo si cada ticker cumple PF>=1,20, WR>=45%, >=13

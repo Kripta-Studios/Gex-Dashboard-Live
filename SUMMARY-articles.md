@@ -11,6 +11,13 @@ La primera integración, si se autoriza, debe seguir generando paper intents y
 demostrar paridad de features, acción, scheduler y salida antes del restart
 systemd.
 
+El puente causal de fuentes queda definido como una certificación, no una
+imputación: el `underlying_timestamp` vintage solo identifica una fila después
+de un join exacto uno-a-uno con la misma key y option timestamp nativo. El
+sidecar no aporta precios al alpha. Este patrón permite restaurar provenance de
+reloj sin convertir una reconstrucción actual del proveedor en un histórico
+económico revisado.
+
 El full sidecar cross-venue ya está en captura outcome-free. Su progreso no es
 evidencia económica: solo demuestra materialización causal del reloj que hará
 posible un verdadero outer 2024 posterior.

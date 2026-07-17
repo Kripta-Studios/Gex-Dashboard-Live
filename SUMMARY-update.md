@@ -1,5 +1,12 @@
 # SUMMARY-update — ledger científico compacto
 
+Contrato data gate cross-venue congelado pre-outcome: 1.506 sesiones/3.012
+captures, full seal obligatorio, revalidación offline raw/parquet/manifest y
+sources. Sidecar certifica key+option timestamp 10:30/10:35; delta/IV/bid/ask
+siguen vintage y native extras/sizes se excluyen. Mapping fijo QQQ←QQQ,
+SPY←SPY, SPXW←SPY exact-date. Gates >=90% coverage ticker-año, >=50 estados,
+zero<99,5%, >12 cada mes. Builder pendiente; no outcomes.
+
 Nueva condición de promoción del usuario: si y solo si el mapping cross-venue
 pasa causalmente 2024→2025→2026 en los tres tickers, integrar el contrato en
 `realtime_feed`/`ai_bot` y systemd. Gate vigente: PF>=1,20, WR>=45%, >=13 por
