@@ -193,3 +193,7 @@ Erratum pre-full: discovery completo cuenta 1.506 sesiones/3.012 captures, no
 1.503/3.006. ID SHA `447e771b...5ce4`; proyección corregida 8,111M rows/1,428GiB
 raw, aún PASS. No excluir sesiones para reproducir la constante antigua. Véase
 `CROSS_VENUE_CALENDAR_RR_FULL_UNIVERSE_COUNT_CLARIFICATION.md`.
+
+Full capturer preejecución implementado: universo hash locked, capture atómica,
+resume con revalidation y seal solo 3.012/3.012. Suite combinada `16 passed`.
+Aún no existe full sidecar ni outcome 2024; commit/push precede al launch.

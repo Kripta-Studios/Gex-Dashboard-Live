@@ -1,5 +1,8 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1 — CLOSED_NO_EDGE
 
+> The later full cross-venue clock capturer is implemented and tested before
+> execution. It is outcome-free and cannot modify compact V1.
+
 > A filename-only correction changes the later cross-venue full-source count
 > from 3,006 to 3,012 captures. It uses no outcome and does not affect compact V1.
 

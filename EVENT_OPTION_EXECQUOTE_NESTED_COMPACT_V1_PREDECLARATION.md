@@ -1,5 +1,8 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1
 
+> The separate full clock sidecar code is frozen preexecution and remains
+> isolated from this protocol.
+
 > The later cross-venue full inventory count was corrected outcome-free. This
 > has no relation to the immutable compact-V1 universe.
 

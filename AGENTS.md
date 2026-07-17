@@ -1,5 +1,15 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Full capturer cross-venue listo preejecución
+
+Implementado `capture_cross_venue_calendar_rr_native_clock_full.py`: descubre y
+exige IDs SHA `447e771b...5ce4`, 1.506 sessions/3.012 captures, valida preflight
+seal, hashes/código/runtime/provenance, escribe cada role a `.staging` y renombra
+atómicamente. Resume solo captures completos revalidados; un parcial falla
+cerrado. Suite combinada `16 passed`, Ruff/compile clean. Siguiente: commit/push
+código/tests+handoffs; solo desde HEAD limpio arrancar default con workers2 en
+ventana oculta/log persistente. No outcomes, no segundo proceso.
+
 ### Corrección outcome-free del universo full cross-venue
 
 El seal preflight usó una constante errónea 1.503/3.006. Discovery real

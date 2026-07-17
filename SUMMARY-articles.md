@@ -1,5 +1,11 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+El full sidecar aplica una arquitectura operativa reusable: contrato raíz
+inmutable, unidad de captura atómica y reanudación solo tras reconstrucción
+completa. Esto separa tolerancia a interrupciones de tolerancia a datos malos:
+un HTTP transitorio puede reintentarse, pero un directorio parcial o una key
+faltante detiene el experimento.
+
 Las constantes de capacidad también requieren discovery reproducible: el
 preflight subestimó el full por seis captures. El inventario filename-only
 corrige a 1.506 sesiones/3.012 y mantiene la cost gate. No se debe excluir datos

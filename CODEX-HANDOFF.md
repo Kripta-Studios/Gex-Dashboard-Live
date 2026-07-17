@@ -1,5 +1,12 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+Full code listo: `capture_cross_venue_calendar_rr_native_clock_full.py` y test
+nuevo, suite combinada16/Ruff/compile. Add explícito ambos códigos/tests+siete
+handoffs, commit/push. Desde HEAD limpio verificar output default inexistente y
+ningún mismo proceso; lanzar con `Start-Process -WindowStyle Hidden`, workers2,
+stdout/stderr a D:/ThetaData logs separados. Registrar PID/checkpoint. No
+ejecutar builder económico durante captura ni abrir 2024 outcomes.
+
 Antes del full: usar count correction, no la constante del seal. Exactamente
 502 sesiones/ticker=1.506 y 3.012 role captures; ID SHA
 `447e771b391f12dcfd7cba3692e65a7586dd4db2f3205311034616ddc7de5ce4`.

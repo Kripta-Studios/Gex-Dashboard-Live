@@ -514,9 +514,12 @@ def capture_one(
     directory = (
         staging / str(spec["ticker"]) / str(spec["trade_date"]) / str(spec["role"])
     )
-    directory.mkdir(parents=True, exist_ok=False)
-    raw_path = directory / "response.json"
-    parquet_path = directory / "quotes.parquet"
+    working = directory.with_name(directory.name + ".staging")
+    if directory.exists() or working.exists():
+        raise FileExistsError(f"immutable capture directory exists: {directory}")
+    working.mkdir(parents=True, exist_ok=False)
+    raw_path = working / "response.json"
+    parquet_path = working / "quotes.parquet"
     raw_path.write_bytes(raw)
     quotes.to_parquet(parquet_path, index=False)
     manifest = {
@@ -548,12 +551,16 @@ def capture_one(
         "retrieved_at_utc": datetime.now(timezone.utc).isoformat(),
         **audit,
     }
-    manifest_path = directory / "manifest.json"
+    manifest_path = working / "manifest.json"
     manifest_path.write_bytes(canonical_bytes(manifest))
     rebuilt = normalize_quote_response(json.loads(raw_path.read_bytes()), spec)
     pd.testing.assert_frame_equal(
         pd.read_parquet(parquet_path), rebuilt, check_dtype=True
     )
+    manifest_hash = sha256_file(manifest_path)
+    working.rename(directory)
+    raw_path = directory / "response.json"
+    parquet_path = directory / "quotes.parquet"
     return {
         "capture_id": str(spec["capture_id"]),
         "ticker": str(spec["ticker"]),
@@ -569,7 +576,7 @@ def capture_one(
         "crossed_native_rows": int(audit["crossed_native_rows"]),
         "raw_sha256": sha256_file(raw_path),
         "parquet_sha256": sha256_file(parquet_path),
-        "manifest_sha256": sha256_file(manifest_path),
+        "manifest_sha256": manifest_hash,
     }
 
 

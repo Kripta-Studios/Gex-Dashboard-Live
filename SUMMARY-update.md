@@ -1,5 +1,10 @@
 # SUMMARY-update — ledger científico compacto
 
+Full capturer cross-venue implementado pre-run: universo SHA exacto3.012,
+atomic dirs, resume con revalidation, root contract/code/runtime/provenance y
+seal solo 100%. Suite total16/Ruff/compile PASS. Falta commit/push y launch
+único workers2; no hay outcome 2024.
+
 Erratum full count sin outcomes: no1.503/3.006 sino1.506 sesiones/3.012
 captures (502/ticker). Proyección 8.111.316 rows/1,428GiB, gate PASS. IDs SHA
 `447e771b...5ce4`. Full capturer debe exigir el conteo corregido; no excluir.

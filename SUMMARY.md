@@ -1,5 +1,9 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+El capturador completo está listo y probado: 3.012 unidades atómicas, resumibles
+solo si revalidan raw/source keys, y seal 100% obligatorio. `16 passed`; aún no
+se ejecutó ni se abrió rentabilidad 2024.
+
 Corrección de capacidad: el universo completo real son 1.506 sesiones/3.012
 capturas, no 1.503/3.006. La diferencia de 0,2% no cambia viabilidad (8,11M
 filas/1,43GiB), pero queda congelada antes del full para evitar exclusiones.
