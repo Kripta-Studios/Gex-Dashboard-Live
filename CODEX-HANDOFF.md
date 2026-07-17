@@ -32,6 +32,14 @@ explícito con siete handoffs+registry, commit/push. No ejecutar freezer: no
 existe aún data gate PASS committed. Cuando exista, el orden es compactos ->
 commit -> freezer -> force-add manifest -> commit -> único evaluator 2024.
 
+Live audit read-only registrada en
+`CROSS_VENUE_CALENDAR_RR_LEADER_V1_LIVE_PARITY_AUDIT.md`. No tocar servicios:
+current feed back=weekly-Friday, no next-expiry; no endpoint bid/ask-IV; no
+persistencia exacta de cuatro contratos 10:30→10:35; bot no tiene scheduler
+one-shot cross-venue. Incluso cash PASS requiere después payoff option ask→bid
+frozen. La futura implementación debe crear paquete/registry nuevo y conservar
+paper intents, no reemplazar el package actual in-place.
+
 Condición live añadida por el usuario: no desplegar el mapping cross-venue por
 su diseño 2023. Tras el full sidecar/data gate/freeze, probar 2024 primero, 2025
 secuencial y 2026 al final. Solo si cada ticker cumple PF>=1,20, WR>=45%, >=13
@@ -46,7 +54,7 @@ comandos VPS exactos. Si falla, documentar cierre y no tocar producción.
 No lanzar full capturer: ya corre PID42112 desde d013a299, workers2, output
 `D:/ThetaData/cross_venue_calendar_rr_native_clock_2024_2025_v1`. Logs
 `cross_venue_calendar_rr_native_clock_full_2024_2025_v1.{stdout,stderr}.log`.
-Checkpoint 02:50:236/3012,errors0. Monitorizar PID/progress.json/stderr. No tocar
+Checkpoint 02:53:256/3012,errors0. Monitorizar PID/progress.json/stderr. No tocar
 capture code/dependencies. Si termina PASS, auditar y compactar; si muere,
 inspeccionar `.staging` y contrato antes de cualquier resume. No outcomes.
 

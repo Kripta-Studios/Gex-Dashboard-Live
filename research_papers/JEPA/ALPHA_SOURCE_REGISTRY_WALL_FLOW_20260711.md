@@ -211,6 +211,10 @@ incremental para abrir 2025, no promoción. No existe manifest ni outcome.
 Evaluator/freezer implementados pre-outcome; suite combinada `45 passed` y
 target-only read 10:36/13:36. Siguen sin manifest hasta data gate PASS committed.
 
+Live audit: `NOT_LIVE_READY`. Weekly≠next-expiry, first-order IV≠bid/ask-IV y no
+hay estado de contratos t0→t1. Payoff option ask→bid queda requerido después de
+cash PASS; servicios/producción intactos.
+
 Full capturer preejecución implementado: universo hash locked, capture atómica,
 resume con revalidation y seal solo 3.012/3.012. Suite combinada `16 passed`.
 Aún no existe full sidecar ni outcome 2024; commit/push precede al launch.

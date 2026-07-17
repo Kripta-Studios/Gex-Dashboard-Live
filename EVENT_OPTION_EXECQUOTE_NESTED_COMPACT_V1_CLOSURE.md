@@ -16,6 +16,10 @@
 > preexecution because their separate data gate is not sealed. Compact V1 stays
 > closed and untouched.
 
+> A read-only live audit found the later family's next-expiry, bid/ask-IV and
+> t0→t1 state are absent from the current stack. No compact-V1 or live artifact
+> was modified.
+
 > The user later authorized live integration of the separate cross-venue
 > architecture only after causal 2024→2025→2026 validation passes per ticker,
 > including profitable closed June 2026 and positive July-2026 MTD shadow.

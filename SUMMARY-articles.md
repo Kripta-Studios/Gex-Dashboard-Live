@@ -35,6 +35,12 @@ underlying contiene toda la sesión, el lector económico solicita por predicate
 pushdown únicamente 10:36 y 13:36. El hash del fichero conserva integridad y el
 scope semántico queda reducido a los dos valores declarados.
 
+La paridad live no se deduce de nombres parecidos: `weekly` no equivale a
+next-expiry y el IV puntual first-order no equivale al midpoint bid/ask-IV. Una
+feature temporal también necesita persistir la identidad del contrato elegido,
+no solo conservar dos snapshots agregados. Estos tres puntos son parte del
+modelo, no detalles de infraestructura.
+
 El full sidecar cross-venue ya está en captura outcome-free. Su progreso no es
 evidencia económica: solo demuestra materialización causal del reloj que hará
 posible un verdadero outer 2024 posterior.

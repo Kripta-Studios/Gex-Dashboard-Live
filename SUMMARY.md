@@ -40,8 +40,14 @@ Evaluator y freezer ya implementan ese contrato y pasan la suite combinada
 y exit y revalida el source hash. Siguen inactivos hasta que full capture y data
 gate estén sellados/committed.
 
+La auditoría del stack live concluye `NOT_LIVE_READY` para esta familia: el
+vencimiento back, la IV y la memoria t0→t1 no coinciden con research. El bot
+actual tampoco representa una única decisión diaria cross-venue. No se cambia
+producción hasta validar dirección y después una traducción ejecutable de
+opciones; la integración inicial seguirá siendo paper-only.
+
 Captura completa 2024–2025 activa en PID42112: universo3.012, workers2,
-checkpoint236 y cero errores. Es solo sidecar de reloj; no existe aún PF OOS.
+checkpoint256 y cero errores. Es solo sidecar de reloj; no existe aún PF OOS.
 
 El capturador completo está listo y probado: 3.012 unidades atómicas, resumibles
 solo si revalidan raw/source keys, y seal 100% obligatorio. `16 passed`; aún no

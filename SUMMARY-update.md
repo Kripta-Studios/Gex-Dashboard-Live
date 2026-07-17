@@ -20,6 +20,12 @@ Freezer/evaluator implementados, aún no ejecutados: exact two-row outcome read,
 frozen event IDs y costes1/2/3. Suite combinada `45 passed`, checks clean. No
 manifest hasta data gate PASS committed; 2024 outcomes cerrados.
 
+Live parity audit `NOT_LIVE_READY`: feed usa weekly-Friday en vez de next-expiry,
+no consulta bid/ask-IV y no persiste contratos t0→t1; bot tiene scheduler/caps
+distintos. El cash proxy tampoco prueba payoff de opción ask→bid. No se tocó
+live. Si pasa toda la secuencia, integrar paquete nuevo/paper-only con builder
+compartido, next-expiry, IV exacta y un signal diario sincronizado.
+
 Nueva condición de promoción del usuario: si y solo si el mapping cross-venue
 pasa causalmente 2024→2025→2026 en los tres tickers, integrar el contrato en
 `realtime_feed`/`ai_bot` y systemd. Gate vigente: PF>=1,20, WR>=45%, >=13 por
@@ -29,7 +35,7 @@ siendo shadow incompleto. Primer despliegue `paper_order_intents=true`, con
 paridad/validador/smoke systemd y comandos VPS exactos. Producción no se toca
 antes de PASS.
 
-Full capture activo PID42112 desde d013a299/workers2. Checkpoint 02:50 236/3012,
+Full capture activo PID42112 desde d013a299/workers2. Checkpoint 02:53 256/3012,
 errors0/stderr0. Output/logs D:/ThetaData. No duplicar; outcomes cerrados.
 
 Full capturer cross-venue implementado pre-run: universo SHA exacto3.012,

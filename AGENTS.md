@@ -51,13 +51,23 @@ IDs/frozen manifest y reporta 1/2/3bps sin seleccionar. Suite cross-venue
 combinada `45 passed`, Ruff/py_compile clean. No generar todavía el manifest:
 faltan full seal, data gate real PASS y compactos committed; outcomes intactos.
 
+### Auditoría live cross-venue — NOT_LIVE_READY
+
+`CROSS_VENUE_CALENDAR_RR_LEADER_V1_LIVE_PARITY_AUDIT.md` documenta una auditoría
+read-only. El feed actual descarga weekly-Friday, no `min(expiry>today)`; omite
+bid/ask-IV; sobrescribe `*_latest` sin congelar los contratos t0 10:30; y el bot
+usa un scheduler/caps distintos. Además el runner es cash proxy y aún requiere
+payoff de opción ask→bid predeclarado. No modificar live ahora. Si toda la
+secuencia pasa: añadir next-expiry e IV sin romper weekly, estado durable t0→t1,
+builder compartido, paquete/registry nuevos, una señal diaria y paper intents.
+
 ### Full cross-venue capture activo — 2026-07-17
 
 Proceso único PID `42112`, arrancado hidden desde commit `d013a299` con
 workers2. Output
 `D:/ThetaData/cross_venue_calendar_rr_native_clock_2024_2025_v1`; logs stdout/
 stderr homónimos en D:/ThetaData. Contrato/universe 3.012 creados. Checkpoint
-02:50 Europe/Madrid: 236/3.012 captures, resumed0, errors0, stderr0. No arrancar
+02:53 Europe/Madrid: 256/3.012 captures, resumed0, errors0, stderr0. No arrancar
 duplicado ni modificar código/dependencias del capture mientras corre. Tras
 terminar: auditar `_seal`, versionar compactos, luego data gate; no outcomes.
 
