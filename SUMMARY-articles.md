@@ -1,5 +1,10 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+El sealer reparado distingue provenance de captura y provenance de sellado:
+rehash del blob Git original y reconstrucción raw prueban que una validación
+offline posterior no cambió las respuestas. Esta separación evita que un fix
+operativo reescriba silenciosamente evidencia de mercado.
+
 Una captura completa no equivale a un seal: el preflight obtuvo las 24
 respuestas y coverage exacta, pero una rotura del canal de progreso impidió el
 manifest agregado. La reparación científica correcta es validar offline los raw

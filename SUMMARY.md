@@ -1,5 +1,9 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+La reparación de seal ya tiene modo offline tested (`11 passed`): fija el código
+de captura original, reconstruye los 24 parquets y no toca red. Debe commit/push
+antes de validar el staging y crear el PASS agregado.
+
 La captura native-clock terminó materialmente 24/24 con key coverage perfecta y
 cero revisiones, pero no está sellada: el timeout del wrapper rompió stdout antes
 del resumen final. Staging queda inmutable, sin `errors.json` y sin outcomes. Se

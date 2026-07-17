@@ -54,6 +54,11 @@ PREDECLARATION = (
     PROJECT_ROOT
     / "research_papers/JEPA/CROSS_VENUE_CALENDAR_RR_LEADER_V1_PREDECLARATION.md"
 )
+SEAL_CLARIFICATION = (
+    PROJECT_ROOT
+    / "research_papers/JEPA/CROSS_VENUE_CALENDAR_RR_NATIVE_CLOCK_PREFLIGHT_SEAL_CLARIFICATION.md"
+)
+CAPTURE_BASE_COMMIT = "167118b0e22c8f76208fed32fc555c4d06148039"
 EXPECTED_SESSIONS = 12
 EXPECTED_CAPTURES = 24
 EXPECTED_FULL_SESSIONS = 1_503
@@ -68,6 +73,10 @@ CODE_CLOSURE = (
     "neural/jepa/wall_surface_flow_environment.py",
     "research_papers/JEPA/CROSS_VENUE_CALENDAR_RR_LEADER_V1_PREDECLARATION.md",
     "research_papers/JEPA/requirements-wall-surface-flow-v1r1.txt",
+)
+SEAL_CODE_CLOSURE = (
+    *CODE_CLOSURE,
+    "research_papers/JEPA/CROSS_VENUE_CALENDAR_RR_NATIVE_CLOCK_PREFLIGHT_SEAL_CLARIFICATION.md",
 )
 
 
@@ -98,9 +107,11 @@ def terminal_status_value(raw: bytes) -> str:
     return str(value).strip().strip('"').upper()
 
 
-def committed_code_state() -> tuple[str, dict[str, str]]:
+def committed_code_state(
+    paths: tuple[str, ...] = CODE_CLOSURE,
+) -> tuple[str, dict[str, str]]:
     hashes: dict[str, str] = {}
-    for relative in CODE_CLOSURE:
+    for relative in paths:
         subprocess.run(
             ["git", "ls-files", "--error-unmatch", relative],
             cwd=PROJECT_ROOT,
@@ -128,6 +139,19 @@ def committed_code_state() -> tuple[str, dict[str, str]]:
         text=True,
     ).stdout.strip()
     return commit, hashes
+
+
+def committed_blob_hashes(commit: str, paths: tuple[str, ...]) -> dict[str, str]:
+    hashes: dict[str, str] = {}
+    for relative in paths:
+        result = subprocess.run(
+            ["git", "show", f"{commit}:{relative}"],
+            cwd=PROJECT_ROOT,
+            check=True,
+            capture_output=True,
+        )
+        hashes[relative] = sha256_bytes(result.stdout)
+    return hashes
 
 
 def source_file(
@@ -549,6 +573,112 @@ def capture_one(
     }
 
 
+def validate_existing_capture(
+    spec: dict[str, Any],
+    *,
+    staging: Path,
+    capture_code_hashes: dict[str, str],
+    runtime: dict[str, Any],
+) -> dict[str, Any]:
+    directory = (
+        staging / str(spec["ticker"]) / str(spec["trade_date"]) / str(spec["role"])
+    )
+    raw_path = directory / "response.json"
+    parquet_path = directory / "quotes.parquet"
+    manifest_path = directory / "manifest.json"
+    if not (raw_path.is_file() and parquet_path.is_file() and manifest_path.is_file()):
+        raise FileNotFoundError(f"incomplete existing capture: {directory}")
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    required_identity = {
+        "schema": "cross_venue_calendar_rr_native_clock_capture_v1",
+        "status": "PASS_NATIVE_CLOCK_CAPTURE",
+        "outcome_free": True,
+        "holdout_2026_used": False,
+        "production_modified": False,
+        "capture_id": str(spec["capture_id"]),
+        "ticker": str(spec["ticker"]),
+        "trade_date": str(spec["trade_date"]),
+        "role": str(spec["role"]),
+        "expiration": str(spec["expiration"]),
+        "request_params": request_params(spec),
+        "endpoint": ENDPOINT,
+        "greeks_path": str(spec["greeks_path"]),
+        "greeks_sha256": str(spec["greeks_sha256"]),
+        "iv_path": str(spec["iv_path"]),
+        "iv_sha256": str(spec["iv_sha256"]),
+        "runtime_lock_sha256": runtime["lock_sha256"],
+        "runtime_environment_sha256": runtime["environment_sha256"],
+        "code_hashes": capture_code_hashes,
+    }
+    if any(manifest.get(key) != value for key, value in required_identity.items()):
+        raise AssertionError(f"existing capture identity changed: {spec['capture_id']}")
+    if (
+        sha256_file(spec["greeks_path"]) != str(spec["greeks_sha256"])
+        or sha256_file(spec["iv_path"]) != str(spec["iv_sha256"])
+        or sha256_file(raw_path) != manifest.get("raw_sha256")
+        or sha256_file(parquet_path) != manifest.get("parquet_sha256")
+    ):
+        raise AssertionError(
+            f"existing capture/source hash changed: {spec['capture_id']}"
+        )
+    raw = raw_path.read_bytes()
+    rebuilt = normalize_quote_response(json.loads(raw), spec)
+    stored = pd.read_parquet(parquet_path)
+    try:
+        pd.testing.assert_frame_equal(stored, rebuilt, check_dtype=True)
+    except AssertionError as exc:
+        raise AssertionError(
+            f"raw/parquet reconstruction changed: {spec['capture_id']}"
+        ) from exc
+    greeks = read_vintage_targets(spec["greeks_path"], spec, "greeks")
+    iv = read_vintage_targets(spec["iv_path"], spec, "iv")
+    audit = crosscheck_vintage(rebuilt, greeks, iv)
+    if any(manifest.get(key) != value for key, value in audit.items()):
+        raise AssertionError(f"existing vintage audit changed: {spec['capture_id']}")
+    if int(manifest.get("rows", -1)) != len(rebuilt):
+        raise AssertionError(
+            f"existing capture row count changed: {spec['capture_id']}"
+        )
+    return {
+        "capture_id": str(spec["capture_id"]),
+        "ticker": str(spec["ticker"]),
+        "trade_date": str(spec["trade_date"]),
+        "role": str(spec["role"]),
+        "expiration": str(spec["expiration"]),
+        "rows": int(len(rebuilt)),
+        "raw_bytes": int(raw_path.stat().st_size),
+        "parquet_bytes": int(parquet_path.stat().st_size),
+        "greek_rows": int(audit["greek_rows"]),
+        "native_extra_target_key_rows": int(audit["native_extra_target_key_rows"]),
+        "revised_bid_ask_rows": int(audit["revised_bid_ask_rows"]),
+        "crossed_native_rows": int(audit["crossed_native_rows"]),
+        "raw_sha256": sha256_file(raw_path),
+        "parquet_sha256": sha256_file(parquet_path),
+        "manifest_sha256": sha256_file(manifest_path),
+    }
+
+
+def existing_staging_provenance(specs: pd.DataFrame, staging: Path) -> dict[str, Any]:
+    values: list[dict[str, Any]] = []
+    for spec in specs.to_dict("records"):
+        path = (
+            staging
+            / str(spec["ticker"])
+            / str(spec["trade_date"])
+            / str(spec["role"])
+            / "manifest.json"
+        )
+        manifest = json.loads(path.read_text(encoding="utf-8"))
+        provenance = manifest.get("source_provenance")
+        if not isinstance(provenance, dict):
+            raise AssertionError("existing capture lacks source provenance")
+        values.append(provenance)
+    first = values[0]
+    if any(canonical_bytes(value) != canonical_bytes(first) for value in values[1:]):
+        raise AssertionError("existing capture provenance is not uniform")
+    return first
+
+
 def projected_cost(index: pd.DataFrame) -> dict[str, Any]:
     if len(index) != EXPECTED_CAPTURES:
         raise AssertionError("cost projection requires all preflight captures")
@@ -576,6 +706,81 @@ def projected_cost(index: pd.DataFrame) -> dict[str, Any]:
     }
 
 
+def finalize_staging(
+    *,
+    output: Path,
+    staging: Path,
+    specs: pd.DataFrame,
+    rows: list[dict[str, Any]],
+    provenance: dict[str, Any],
+    runtime: dict[str, Any],
+    capture_git_commit: str,
+    capture_code_hashes: dict[str, str],
+    seal_git_commit: str,
+    seal_code_hashes: dict[str, str],
+) -> dict[str, Any]:
+    if output.exists() or not staging.is_dir():
+        raise AssertionError(
+            "offline finalizer requires existing staging and absent output"
+        )
+    index = (
+        pd.DataFrame(rows)
+        .sort_values(["ticker", "trade_date", "role"], kind="stable")
+        .reset_index(drop=True)
+    )
+    if len(index) != EXPECTED_CAPTURES or index["capture_id"].duplicated().any():
+        raise AssertionError("offline finalizer capture index is incomplete")
+    cost = projected_cost(index)
+    status = (
+        "PASS_CROSS_VENUE_CALENDAR_RR_NATIVE_CLOCK_PREFLIGHT"
+        if bool(cost["cost_gate_pass"])
+        else "REJECTED_CROSS_VENUE_CALENDAR_RR_NATIVE_CLOCK_PREFLIGHT"
+    )
+    index_path = staging / "capture_index.csv"
+    cost_path = staging / "cost_projection.json"
+    seal_path = staging / "seal.json"
+    if index_path.exists() or cost_path.exists() or seal_path.exists():
+        raise FileExistsError("aggregate staging artifact unexpectedly exists")
+    index.to_csv(index_path, index=False)
+    cost_path.write_bytes(canonical_bytes(cost))
+    seal = {
+        "schema": "cross_venue_calendar_rr_native_clock_preflight_seal_v1",
+        "status": status,
+        "outcome_free": True,
+        "holdout_2026_used": False,
+        "production_modified": False,
+        "offline_existing_staging_seal": True,
+        "capture_git_commit": capture_git_commit,
+        "capture_code_hashes": capture_code_hashes,
+        "seal_git_commit": seal_git_commit,
+        "seal_code_hashes": seal_code_hashes,
+        "seal_clarification_sha256": sha256_file(SEAL_CLARIFICATION),
+        "sessions": EXPECTED_SESSIONS,
+        "captures": int(len(index)),
+        "rows": int(index["rows"].sum()),
+        "missing_vintage_key_rows": 0,
+        "native_extra_target_key_rows": int(
+            index["native_extra_target_key_rows"].sum()
+        ),
+        "revised_bid_ask_rows": int(index["revised_bid_ask_rows"].sum()),
+        "crossed_native_rows": int(index["crossed_native_rows"].sum()),
+        "capture_index_sha256": sha256_file(index_path),
+        "cost_projection_sha256": sha256_file(cost_path),
+        "cost_projection": cost,
+        "sample_spec_sha256": sha256_bytes(
+            specs.to_csv(index=False, lineterminator="\n").encode("utf-8")
+        ),
+        "source_provenance": provenance,
+        "runtime_lock_sha256": runtime["lock_sha256"],
+        "runtime_environment": runtime["environment"],
+        "runtime_environment_sha256": runtime["environment_sha256"],
+        "created_at_utc": datetime.now(timezone.utc).isoformat(),
+    }
+    seal_path.write_bytes(canonical_bytes(seal))
+    staging.rename(output)
+    return seal
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--options-root", type=Path, default=DEFAULT_OPTIONS_ROOT)
@@ -584,6 +789,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--terminal-jar")
     parser.add_argument("--workers", type=int, default=2)
     parser.add_argument("--timeout", type=float, default=180.0)
+    parser.add_argument("--seal-existing-staging", action="store_true")
     return parser.parse_args()
 
 
@@ -593,11 +799,44 @@ def main() -> None:
         raise ValueError("workers must be within 1..4")
     output = args.output_root.resolve()
     staging = output.with_name(output.name + ".staging")
+    runtime = assert_runtime_lock(RUNTIME_LOCK)
+    specs = discover_frozen_specs(args.options_root)
+    if args.seal_existing_staging:
+        if output.exists() or not staging.is_dir():
+            raise FileExistsError(
+                "offline seal requires absent output and existing default staging"
+            )
+        if (staging / "errors.json").exists():
+            raise AssertionError("offline seal refuses staging with errors.json")
+        seal_commit, seal_code_hashes = committed_code_state(SEAL_CODE_CLOSURE)
+        capture_code_hashes = committed_blob_hashes(CAPTURE_BASE_COMMIT, CODE_CLOSURE)
+        provenance = existing_staging_provenance(specs, staging)
+        rows = [
+            validate_existing_capture(
+                spec,
+                staging=staging,
+                capture_code_hashes=capture_code_hashes,
+                runtime=runtime,
+            )
+            for spec in specs.to_dict("records")
+        ]
+        seal = finalize_staging(
+            output=output,
+            staging=staging,
+            specs=specs,
+            rows=rows,
+            provenance=provenance,
+            runtime=runtime,
+            capture_git_commit=CAPTURE_BASE_COMMIT,
+            capture_code_hashes=capture_code_hashes,
+            seal_git_commit=seal_commit,
+            seal_code_hashes=seal_code_hashes,
+        )
+        print(json.dumps(seal, indent=2, sort_keys=True))
+        return
     if output.exists() or staging.exists():
         raise FileExistsError("immutable calendar-RR preflight output already exists")
     commit, code_hashes = committed_code_state()
-    runtime = assert_runtime_lock(RUNTIME_LOCK)
-    specs = discover_frozen_specs(args.options_root)
     provenance, status_raw = source_provenance(
         args.base_url,
         terminal_jar=args.terminal_jar,
@@ -643,52 +882,18 @@ def main() -> None:
     if errors or len(rows) != EXPECTED_CAPTURES:
         (staging / "errors.json").write_bytes(canonical_bytes({"errors": errors}))
         raise AssertionError(f"calendar-RR native-clock preflight failed: {errors[:5]}")
-    index = (
-        pd.DataFrame(rows)
-        .sort_values(["ticker", "trade_date", "role"], kind="stable")
-        .reset_index(drop=True)
+    seal = finalize_staging(
+        output=output,
+        staging=staging,
+        specs=specs,
+        rows=rows,
+        provenance=provenance,
+        runtime=runtime,
+        capture_git_commit=commit,
+        capture_code_hashes=code_hashes,
+        seal_git_commit=commit,
+        seal_code_hashes=code_hashes,
     )
-    cost = projected_cost(index)
-    status = (
-        "PASS_CROSS_VENUE_CALENDAR_RR_NATIVE_CLOCK_PREFLIGHT"
-        if bool(cost["cost_gate_pass"])
-        else "REJECTED_CROSS_VENUE_CALENDAR_RR_NATIVE_CLOCK_PREFLIGHT"
-    )
-    index_path = staging / "capture_index.csv"
-    cost_path = staging / "cost_projection.json"
-    index.to_csv(index_path, index=False)
-    cost_path.write_bytes(canonical_bytes(cost))
-    seal = {
-        "schema": "cross_venue_calendar_rr_native_clock_preflight_seal_v1",
-        "status": status,
-        "outcome_free": True,
-        "holdout_2026_used": False,
-        "production_modified": False,
-        "git_commit": commit,
-        "sessions": EXPECTED_SESSIONS,
-        "captures": int(len(index)),
-        "rows": int(index["rows"].sum()),
-        "missing_vintage_key_rows": 0,
-        "native_extra_target_key_rows": int(
-            index["native_extra_target_key_rows"].sum()
-        ),
-        "revised_bid_ask_rows": int(index["revised_bid_ask_rows"].sum()),
-        "crossed_native_rows": int(index["crossed_native_rows"].sum()),
-        "capture_index_sha256": sha256_file(index_path),
-        "cost_projection_sha256": sha256_file(cost_path),
-        "cost_projection": cost,
-        "sample_spec_sha256": sha256_bytes(
-            specs.to_csv(index=False, lineterminator="\n").encode("utf-8")
-        ),
-        "source_provenance": provenance,
-        "runtime_lock_sha256": runtime["lock_sha256"],
-        "runtime_environment": runtime["environment"],
-        "runtime_environment_sha256": runtime["environment_sha256"],
-        "code_hashes": code_hashes,
-        "created_at_utc": datetime.now(timezone.utc).isoformat(),
-    }
-    (staging / "seal.json").write_bytes(canonical_bytes(seal))
-    staging.rename(output)
     print(json.dumps(seal, indent=2, sort_keys=True))
 
 

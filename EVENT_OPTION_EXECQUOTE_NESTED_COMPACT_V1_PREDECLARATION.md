@@ -1,5 +1,8 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1
 
+> A tested offline sealer for the later clock capture remains isolated from
+> this protocol and cannot change its evidence.
+
 > The separate cross-venue clock capture now awaits an offline seal after an
 > external stdout timeout. This operational repair cannot alter compact V1.
 

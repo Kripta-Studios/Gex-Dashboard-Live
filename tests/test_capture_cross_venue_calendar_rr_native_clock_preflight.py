@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import json
 
 import pandas as pd
 import pytest
@@ -208,3 +209,83 @@ def test_source_provenance_rejects_unfrozen_remote() -> None:
 def test_terminal_status_shapes() -> None:
     assert mod.terminal_status_value(b"CONNECTED") == "CONNECTED"
     assert mod.terminal_status_value(b'{"status":"connected"}') == "CONNECTED"
+
+
+def test_capture_base_hash_is_pinned_to_original_committed_code() -> None:
+    hashes = mod.committed_blob_hashes(mod.CAPTURE_BASE_COMMIT, mod.CODE_CLOSURE)
+    assert (
+        hashes["neural/jepa/capture_cross_venue_calendar_rr_native_clock_preflight.py"]
+        == "97d0a166e1d65f27cd1f044b0b5d402a3f9d8e5d80826760c56ee83b9d79dba7"
+    )
+
+
+def test_offline_validator_rebuilds_raw_and_vintage_without_network(
+    tmp_path: Path,
+) -> None:
+    source = vintage_frame().rename(columns={"timestamp": "underlying_timestamp"})
+    source["underlying_timestamp"] = source["underlying_timestamp"].dt.strftime(
+        "%Y-%m-%dT%H:%M:%S.000"
+    )
+    greek_path = tmp_path / "greeks.parquet"
+    iv_path = tmp_path / "iv.parquet"
+    source.to_parquet(greek_path, index=False)
+    source.to_parquet(iv_path, index=False)
+    capture_spec = spec(
+        greeks_path=str(greek_path),
+        greeks_sha256=mod.sha256_file(greek_path),
+        iv_path=str(iv_path),
+        iv_sha256=mod.sha256_file(iv_path),
+    )
+    staging = tmp_path / "output.staging"
+    directory = staging / "SPY" / "20240102" / "front"
+    directory.mkdir(parents=True)
+    raw = mod.canonical_bytes(response_rows())
+    raw_path = directory / "response.json"
+    parquet_path = directory / "quotes.parquet"
+    raw_path.write_bytes(raw)
+    quotes = mod.normalize_quote_response(json.loads(raw), capture_spec)
+    quotes.to_parquet(parquet_path, index=False)
+    greeks = mod.read_vintage_targets(greek_path, capture_spec, "greeks")
+    iv = mod.read_vintage_targets(iv_path, capture_spec, "iv")
+    audit = mod.crosscheck_vintage(quotes, greeks, iv)
+    runtime = {
+        "lock_sha256": "lock",
+        "environment_sha256": "environment",
+    }
+    code_hashes = {"capture.py": "hash"}
+    manifest = {
+        "schema": "cross_venue_calendar_rr_native_clock_capture_v1",
+        "status": "PASS_NATIVE_CLOCK_CAPTURE",
+        "outcome_free": True,
+        "holdout_2026_used": False,
+        "production_modified": False,
+        "capture_id": "capture",
+        "ticker": "SPY",
+        "trade_date": "20240102",
+        "role": "front",
+        "expiration": "20240102",
+        "request_params": mod.request_params(capture_spec),
+        "endpoint": mod.ENDPOINT,
+        "source_provenance": {"kind": "test"},
+        "greeks_path": str(greek_path),
+        "greeks_sha256": mod.sha256_file(greek_path),
+        "iv_path": str(iv_path),
+        "iv_sha256": mod.sha256_file(iv_path),
+        "raw_sha256": mod.sha256_file(raw_path),
+        "parquet_sha256": mod.sha256_file(parquet_path),
+        "rows": len(quotes),
+        "runtime_lock_sha256": "lock",
+        "runtime_environment_sha256": "environment",
+        "code_hashes": code_hashes,
+        **audit,
+    }
+    manifest_path = directory / "manifest.json"
+    manifest_path.write_bytes(mod.canonical_bytes(manifest))
+    row = mod.validate_existing_capture(
+        capture_spec,
+        staging=staging,
+        capture_code_hashes=code_hashes,
+        runtime=runtime,
+    )
+    assert row["rows"] == 4
+    assert row["revised_bid_ask_rows"] == 0

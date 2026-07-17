@@ -1,5 +1,12 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+Implementado offline sealer en el mismo capturador con flag
+`--seal-existing-staging`; test suite11/Ruff/compile PASS. Usa `git show` para
+hashes exactos del capture base167118b0 y valida/reconstruye 24 captures sin
+requester. Hacer add explícito código/test+siete handoffs, commit/push. Después
+ejecutar `python neural/jepa/capture_cross_venue_calendar_rr_native_clock_preflight.py --seal-existing-staging`
+con timeout suficiente. No lanzar workers de red. Auditar seal/index/cost.
+
 Capture preflight materialmente completo pero no sellado. PID42584 acabó 24/24
 después del timeout del wrapper; staging default contiene manifests/raw/parquet,
 sin errors, missing/extra/revised/crossed=0 en todos. Output final/index/seal no

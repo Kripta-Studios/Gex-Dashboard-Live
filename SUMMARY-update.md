@@ -1,5 +1,9 @@
 # SUMMARY-update — ledger científico compacto
 
+Sealer offline cross-venue listo: valida blob/hash base `167118b0`, 48 fuentes,
+24 raw/parquet/manifests y exact keys, sin network. `11 passed`, Ruff/compile.
+Falta commit/push y un único `--seal-existing-staging`; aún no PASS agregado.
+
 Cross-venue preflight: 24/24 captures desde `167118b0`, missing/extra/revised/
 crossed todos0, sin errors ni outcomes. Timeout externo cerró stdout antes de
 index/cost/seal; staging preservado y aún no PASS. Única reparación autorizada:

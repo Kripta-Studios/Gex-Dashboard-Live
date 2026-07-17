@@ -1,5 +1,14 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Sealer offline cross-venue implementado preejecución
+
+Modo `--seal-existing-staging` añadido sin requery: pin exacto del blob Git
+`167118b0`, rehash 48 sources+24 raw/parquet/manifests, raw reconstruction y
+repetición del crosscheck vintage. Registra capture/seal commits por separado y
+solo renombra staging al final. Suite ampliada `11 passed`, Ruff/compile clean.
+Siguiente: commit/push código/test+handoffs; ejecutar una vez con default output
+y flag offline usando timeout amplio. No usar modo capture ni abrir outcomes.
+
 ### Cross-venue preflight capturado; seal offline pendiente
 
 Run único desde `167118b0`: el wrapper timeout cerró stdout, pero PID42584

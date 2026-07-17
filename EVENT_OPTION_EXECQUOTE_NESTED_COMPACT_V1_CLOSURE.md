@@ -1,5 +1,8 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1 — CLOSED_NO_EDGE
 
+> The separate clock preflight now has a tested offline-only sealer. It still
+> accesses neither compact-V1 artifacts nor market outcomes.
+
 > The later cross-venue clock preflight captured all 24 source responses but is
 > not yet sealed because its stdout wrapper expired. An offline-only seal repair
 > is predeclared; no compact-V1 artifact or outcome was accessed.
