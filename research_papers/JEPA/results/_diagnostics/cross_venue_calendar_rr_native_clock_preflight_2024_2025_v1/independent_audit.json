@@ -1,0 +1,23 @@
+{
+  "all_raw_parquet_manifest_hashes_match": true,
+  "capture_git_commit": "167118b0e22c8f76208fed32fc555c4d06148039",
+  "capture_index_sha256": "c0eadebff11678f073ef372390aaaee00352acf32e052ab97d7b1966f0fe42ad",
+  "captures": 24,
+  "cost_projection_sha256": "9458bd781c8a69fa946f1ba139fb83c6d59798e2e46775dfbee3330565e7f9d9",
+  "crossed_native_rows": 0,
+  "errors": [],
+  "holdout_2026_used": false,
+  "missing_vintage_key_rows": 0,
+  "native_extra_target_key_rows": 0,
+  "outcome_free": true,
+  "parquet_bytes": 873050,
+  "production_modified": false,
+  "raw_bytes": 12217809,
+  "remote_status_sha256": "1f914c4386c0676ee418458a20c91d9db7c5cd18e88324b4908fdf27ec91dcc5",
+  "revised_bid_ask_rows": 0,
+  "rows": 64632,
+  "seal_git_commit": "8828bd7239f57506c39434449a894d5acf126097",
+  "seal_sha256": "d33e01a6226eb89083be7aa77ed5e8554a1a7babe6342a9a7d9d243881feee6d",
+  "sessions": 12,
+  "status": "PASS_INDEPENDENT_PREFLIGHT_AUDIT"
+}
