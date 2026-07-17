@@ -18,6 +18,12 @@ sidecar no aporta precios al alpha. Este patrón permite restaurar provenance de
 reloj sin convertir una reconstrucción actual del proveedor en un histórico
 económico revisado.
 
+El builder añade otra defensa transferible: no confía solo en el seal agregado.
+Revalida los blobs de código congelados, reconstruye cada raw/parquet y compara
+las 3.012 filas de auditoría con el capture index sellado antes de producir una
+feature. La reanudación operativa y el consumo científico quedan así separados
+por una segunda verificación independiente y outcome-free.
+
 El full sidecar cross-venue ya está en captura outcome-free. Su progreso no es
 evidencia económica: solo demuestra materialización causal del reloj que hará
 posible un verdadero outer 2024 posterior.

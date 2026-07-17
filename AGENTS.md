@@ -27,13 +27,21 @@ leer opens 10:36/13:36. Sidecar solo certifica timestamp/key; no reemplaza
 delta/IV/bid/ask ni añade native extras. Implementar builder/tests sin tocar el
 capturador activo; después de PASS se versionan compactos y se congela 2024.
 
+Builder pre-outcome ya implementado en
+`neural/jepa/build_cross_venue_calendar_rr_leader_v1.py` con test focal. Se
+niega sin `_seal` PASS, revalida blobs de código/contrato/índice y cada raw,
+parquet, manifest y fuente vintage, lee solo spots 10:30/10:35 y materializa el
+mapping exact-date. Suite combinada calendar/captures/builder `34 passed`, Ruff
+y py_compile clean. No ejecutarlo sobre el output parcial; código no leyó
+outcomes. Tras commit/push, esperar al seal y ejecutar default una sola vez.
+
 ### Full cross-venue capture activo — 2026-07-17
 
 Proceso único PID `42112`, arrancado hidden desde commit `d013a299` con
 workers2. Output
 `D:/ThetaData/cross_venue_calendar_rr_native_clock_2024_2025_v1`; logs stdout/
 stderr homónimos en D:/ThetaData. Contrato/universe 3.012 creados. Checkpoint
-02:28 Europe/Madrid: 25/3.012 captures, resumed0, errors0, stderr0. No arrancar
+02:43 Europe/Madrid: 150/3.012 captures, resumed0, errors0, stderr0. No arrancar
 duplicado ni modificar código/dependencias del capture mientras corre. Tras
 terminar: auditar `_seal`, versionar compactos, luego data gate; no outcomes.
 

@@ -5,6 +5,10 @@
 > vintage economic values. It cannot read compact-V1 artifacts or reopen this
 > closed experiment.
 
+> Its separate builder is now implemented and passes the combined 34-test
+> source/data-gate suite. It refuses a partial sidecar and still does not access
+> compact-V1 evidence or outcomes.
+
 > The user later authorized live integration of the separate cross-venue
 > architecture only after causal 2024→2025→2026 validation passes per ticker,
 > including profitable closed June 2026 and positive July-2026 MTD shadow.

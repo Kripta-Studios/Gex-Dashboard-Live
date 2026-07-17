@@ -9,6 +9,13 @@ delta/IV/bid/ask vintage. Spot solo rows 10:30/10:35; prohibido cargar outcome
 10:36/13:36. Aplicar exact-date SPY→SPXW y gates por ticker-año/mes. No ejecutar
 el builder real hasta terminar/auditar la captura.
 
+Builder y test ya implementados con ese contrato. Suite combinada
+`python -m pytest -q tests/test_build_cross_venue_calendar_rr_leader_v1.py tests/test_build_calendar_risk_reversal_pressure_v1.py tests/test_capture_cross_venue_calendar_rr_native_clock_preflight.py tests/test_capture_cross_venue_calendar_rr_native_clock_full.py`
+da `34 passed`; Ruff/py_compile clean. Hacer add explícito del builder, test,
+siete handoffs y registry; commit/push. No ejecutar aún: full output parcial.
+Cuando exista seal, auditar primero el capture y después lanzar el builder
+default desde su commit limpio; si PASS, compactar antes del runner 2024.
+
 Condición live añadida por el usuario: no desplegar el mapping cross-venue por
 su diseño 2023. Tras el full sidecar/data gate/freeze, probar 2024 primero, 2025
 secuencial y 2026 al final. Solo si cada ticker cumple PF>=1,20, WR>=45%, >=13
@@ -23,7 +30,7 @@ comandos VPS exactos. Si falla, documentar cierre y no tocar producción.
 No lanzar full capturer: ya corre PID42112 desde d013a299, workers2, output
 `D:/ThetaData/cross_venue_calendar_rr_native_clock_2024_2025_v1`. Logs
 `cross_venue_calendar_rr_native_clock_full_2024_2025_v1.{stdout,stderr}.log`.
-Checkpoint 02:28:25/3012,errors0. Monitorizar PID/progress.json/stderr. No tocar
+Checkpoint 02:43:150/3012,errors0. Monitorizar PID/progress.json/stderr. No tocar
 capture code/dependencies. Si termina PASS, auditar y compactar; si muere,
 inspeccionar `.staging` y contrato antes de cualquier resume. No outcomes.
 

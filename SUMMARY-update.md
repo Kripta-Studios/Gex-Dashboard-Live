@@ -5,7 +5,13 @@ captures, full seal obligatorio, revalidación offline raw/parquet/manifest y
 sources. Sidecar certifica key+option timestamp 10:30/10:35; delta/IV/bid/ask
 siguen vintage y native extras/sizes se excluyen. Mapping fijo QQQ←QQQ,
 SPY←SPY, SPXW←SPY exact-date. Gates >=90% coverage ticker-año, >=50 estados,
-zero<99,5%, >12 cada mes. Builder pendiente; no outcomes.
+zero<99,5%, >12 cada mes. El builder posterior debe respetarlo; no outcomes.
+
+Builder cross-venue implementado pre-outcome:
+`build_cross_venue_calendar_rr_leader_v1.py`. Exige seal PASS, verifica blobs
+del capturador, revalida 3.012 raw/parquet/manifests/sources, lee solo spots
+10:30/10:35 y aplica exact-date SPY→SPXW. Suite combinada `34 passed`, Ruff y
+compile clean. No se ejecutó sobre captura parcial ni abrió outcomes.
 
 Nueva condición de promoción del usuario: si y solo si el mapping cross-venue
 pasa causalmente 2024→2025→2026 en los tres tickers, integrar el contrato en
@@ -16,7 +22,7 @@ siendo shadow incompleto. Primer despliegue `paper_order_intents=true`, con
 paridad/validador/smoke systemd y comandos VPS exactos. Producción no se toca
 antes de PASS.
 
-Full capture activo PID42112 desde d013a299/workers2. Checkpoint 02:28 25/3012,
+Full capture activo PID42112 desde d013a299/workers2. Checkpoint 02:43 150/3012,
 errors0/stderr0. Output/logs D:/ThetaData. No duplicar; outcomes cerrados.
 
 Full capturer cross-venue implementado pre-run: universo SHA exacto3.012,

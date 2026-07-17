@@ -199,6 +199,11 @@ El data gate outcome-free posterior queda congelado en
 revalidación offline, option-clock key proof y valores económicos vintage. No
 autoriza outcomes ni producción.
 
+Builder implementado pre-outcome en
+`neural/jepa/build_cross_venue_calendar_rr_leader_v1.py`: full-seal required,
+3.012-capture offline revalidation, target-only spot reads y exact-date mapping.
+Suite combinada `34 passed`; no se ejecutó sobre el sidecar parcial.
+
 Full capturer preejecución implementado: universo hash locked, capture atómica,
 resume con revalidation y seal solo 3.012/3.012. Suite combinada `16 passed`.
 Aún no existe full sidecar ni outcome 2024; commit/push precede al launch.

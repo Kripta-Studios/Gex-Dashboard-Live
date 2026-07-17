@@ -25,8 +25,13 @@ siendo los vintage. El join SPY→SPXW es de la misma fecha y no permite as-of,
 thresholds ni variantes. Cobertura y distinctness se evalúan por ticker-año y
 la frecuencia >12 por ticker-mes. No se leen opens de outcome.
 
+El builder que implementa ese contrato ya está probado: falla sin full seal,
+rehash/reconstruye las 3.012 capturas, conserva valores vintage, carga solo los
+dos spots predecisión y genera el mapping exact-date. La suite relacionada pasa
+34/34. Aún no se ejecutó el data gate real y por tanto no existe resultado OOS.
+
 Captura completa 2024–2025 activa en PID42112: universo3.012, workers2,
-checkpoint25 y cero errores. Es solo sidecar de reloj; no existe aún PF OOS.
+checkpoint150 y cero errores. Es solo sidecar de reloj; no existe aún PF OOS.
 
 El capturador completo está listo y probado: 3.012 unidades atómicas, resumibles
 solo si revalidan raw/source keys, y seal 100% obligatorio. `16 passed`; aún no
