@@ -1,5 +1,12 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1
 
+> A later deployment instruction applies only to the separate cross-venue
+> architecture: integrate it into the live systemd stack only after per-ticker
+> causal gates pass through 2026, with closed June profitable and incomplete
+> July MTD positive in shadow. The first deployment remains paper-intent only
+> and requires backtest/live parity and startup smokes. This later condition
+> does not modify this immutable compact-V1 protocol or its closed result.
+
 > The later full clock capture is active without outcomes and remains isolated
 > from this immutable protocol.
 

@@ -1,12 +1,29 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Condición de integración live — 2026-07-17
+
+El usuario autoriza integrar `CROSS_VENUE_CALENDAR_RR_LEADER_V1` en
+`services/realtime_feed.py`, `bots/tradingbot_wrapper_jepa.py` y los dos
+servicios systemd solo si la secuencia causal 2024→2025→2026 demuestra
+rentabilidad en los tres tickers. La gate vigente por ticker es PF>=1,20,
+WR>=45%, >=13 trades en cada mes completado y PnL positivo en cada mes, con
+ask→bid, hold30–180m y `reject_while_open`. Además junio 2026 cerrado debe ser
+positivo y julio 2026 MTD debe seguir positivo como shadow no usado para
+selección. A 17 de julio, julio no puede declararse un mes validado completo.
+
+Si pasa, la primera integración conserva `paper_order_intents=true`, exige
+paridad exacta backtest/live, paquete `production_live_ready`, validación y
+smoke de arranque de `realtime_feed.service` y `ai_bot.service`; documentar el
+bloque exacto de despliegue VPS. No tocar producción antes de esos gates. El
+diagnóstico post-outcome de 2023 no autoriza despliegue.
+
 ### Full cross-venue capture activo — 2026-07-17
 
 Proceso único PID `42112`, arrancado hidden desde commit `d013a299` con
 workers2. Output
 `D:/ThetaData/cross_venue_calendar_rr_native_clock_2024_2025_v1`; logs stdout/
 stderr homónimos en D:/ThetaData. Contrato/universe 3.012 creados. Checkpoint
-02:24 Europe/Madrid: 4/3.012 captures, resumed0, errors0, stderr0. No arrancar
+02:28 Europe/Madrid: 25/3.012 captures, resumed0, errors0, stderr0. No arrancar
 duplicado ni modificar código/dependencias del capture mientras corre. Tras
 terminar: auditar `_seal`, versionar compactos, luego data gate; no outcomes.
 

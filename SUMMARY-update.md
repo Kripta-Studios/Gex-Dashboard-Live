@@ -1,6 +1,15 @@
 # SUMMARY-update — ledger científico compacto
 
-Full capture activo PID42112 desde d013a299/workers2. Checkpoint inicial4/3012,
+Nueva condición de promoción del usuario: si y solo si el mapping cross-venue
+pasa causalmente 2024→2025→2026 en los tres tickers, integrar el contrato en
+`realtime_feed`/`ai_bot` y systemd. Gate vigente: PF>=1,20, WR>=45%, >=13 por
+mes completado, todos los meses positivos, ask→bid, hold30–180m y cero overlap.
+Junio 2026 cerrado y julio 2026 MTD deben ser positivos; julio a día17 sigue
+siendo shadow incompleto. Primer despliegue `paper_order_intents=true`, con
+paridad/validador/smoke systemd y comandos VPS exactos. Producción no se toca
+antes de PASS.
+
+Full capture activo PID42112 desde d013a299/workers2. Checkpoint 02:28 25/3012,
 errors0/stderr0. Output/logs D:/ThetaData. No duplicar; outcomes cerrados.
 
 Full capturer cross-venue implementado pre-run: universo SHA exacto3.012,

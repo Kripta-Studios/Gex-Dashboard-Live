@@ -1,5 +1,16 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+### Separar validación económica de integración live
+
+Una mejora de diseño 2023 no autoriza producción. La arquitectura cross-venue
+solo puede entrar en `realtime_feed`/`ai_bot` tras una secuencia 2024→2025→2026
+con ejecución ask→bid, no-overlap y gates por ticker. Junio 2026 debe ser un mes
+cerrado rentable; julio 2026, todavía incompleto a día 17, solo aporta evidencia
+shadow MTD y no puede presentarse como mes completo ni usarse para seleccionar.
+La primera integración, si se autoriza, debe seguir generando paper intents y
+demostrar paridad de features, acción, scheduler y salida antes del restart
+systemd.
+
 El full sidecar cross-venue ya está en captura outcome-free. Su progreso no es
 evidencia económica: solo demuestra materialización causal del reloj que hará
 posible un verdadero outer 2024 posterior.

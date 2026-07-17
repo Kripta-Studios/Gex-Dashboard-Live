@@ -1,5 +1,13 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1 — CLOSED_NO_EDGE
 
+> The user later authorized live integration of the separate cross-venue
+> architecture only after causal 2024→2025→2026 validation passes per ticker,
+> including profitable closed June 2026 and positive July-2026 MTD shadow.
+> July is incomplete as of July 17 and cannot be reported as a completed-month
+> validation. Any first integration must remain paper-intent only and pass
+> backtest/live parity plus both systemd startup smokes. This condition neither
+> reopens compact V1 nor changes its closed evidence.
+
 > The separate full native-clock sidecar is now capturing outcome-free under a
 > single process. This operational work does not change compact V1.
 

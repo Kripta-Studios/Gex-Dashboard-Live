@@ -1,7 +1,23 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+## Regla nueva de promoción live — 2026-07-17
+
+El usuario pide implementar la arquitectura rentable en los entornos
+`systemd/realtime_feed.service` y `systemd/ai_bot.service`, incluyendo los
+wrappers Python necesarios, solo si supera la validación causal de 2026 con
+énfasis en junio y julio. Esto no es autorización para desplegar el diagnóstico
+2023. Primero deben pasar 2024, 2025 y después 2026 con la gate por ticker
+PF>=1,20, WR>=45%, >=13 trades/mes completado, PnL positivo cada mes, ask→bid,
+hold30–180m y no-overlap. Junio debe pasar cerrado; julio 2026, incompleto a
+17/07, solo puede exigirse positivo MTD/shadow sin usarlo para selección.
+
+Si se satisfacen las gates, integrar con paridad exacta offline/live, artefacto
+`production_live_ready`, pruebas del scheduler y arranque de ambos servicios.
+La primera promoción mantiene `paper_order_intents=true`; al cerrar la labor se
+entregan comandos VPS reproducibles. Hasta entonces producción queda intacta.
+
 Captura completa 2024–2025 activa en PID42112: universo3.012, workers2,
-checkpoint4 y cero errores. Es solo sidecar de reloj; no existe aún PF OOS.
+checkpoint25 y cero errores. Es solo sidecar de reloj; no existe aún PF OOS.
 
 El capturador completo está listo y probado: 3.012 unidades atómicas, resumibles
 solo si revalidan raw/source keys, y seal 100% obligatorio. `16 passed`; aún no
