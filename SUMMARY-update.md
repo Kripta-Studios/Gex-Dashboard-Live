@@ -1,5 +1,10 @@
 # SUMMARY-update — ledger científico compacto
 
+Cross-venue native-clock `PASS_PREFLIGHT`: 12 sessions,24 captures,64.632 rows,
+missing/extra/revised/crossed=0; independent hash audit PASS. Full projection
+1.503/3.006,8,095M rows,1,425GiB raw. Capture167118b0/seal8828bd72; seal SHA
+`d33e01a6...eee6d`. Autoriza full capture, no outcomes ni rentabilidad.
+
 Sealer offline cross-venue listo: valida blob/hash base `167118b0`, 48 fuentes,
 24 raw/parquet/manifests y exact keys, sin network. `11 passed`, Ruff/compile.
 Falta commit/push y un único `--seal-existing-staging`; aún no PASS agregado.

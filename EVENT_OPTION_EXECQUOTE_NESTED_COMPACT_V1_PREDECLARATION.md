@@ -1,5 +1,8 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1
 
+> The later cross-venue native-clock preflight passed outcome-free. It remains
+> independent of this frozen protocol and has not evaluated 2024–2026 returns.
+
 > A tested offline sealer for the later clock capture remains isolated from
 > this protocol and cannot change its evidence.
 

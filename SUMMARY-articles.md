@@ -1,5 +1,11 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+El preflight demuestra que el déficit de timestamp 2024–2025 es reparable sin
+reescribir el histórico: en 64.632 filas, el proveedor actual cubre exactamente
+el universo vintage y no revisa un solo bid/ask de la muestra. La proyección
+full es pequeña (8,10M filas/1,43GiB raw), por lo que la validación cross-venue
+puede avanzar con provenance fuerte. Sigue siendo factibilidad, no alpha.
+
 El sealer reparado distingue provenance de captura y provenance de sellado:
 rehash del blob Git original y reconstrucción raw prueban que una validación
 offline posterior no cambió las respuestas. Esta separación evita que un fix

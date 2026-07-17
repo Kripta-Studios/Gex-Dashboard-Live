@@ -1,5 +1,9 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1 — CLOSED_NO_EDGE
 
+> The separate cross-venue native-clock preflight passed 24/24 captures and an
+> independent hash audit, still without outcomes. This source feasibility result
+> does not alter compact V1.
+
 > The separate clock preflight now has a tested offline-only sealer. It still
 > accesses neither compact-V1 artifacts nor market outcomes.
 

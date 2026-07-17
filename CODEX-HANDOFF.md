@@ -1,5 +1,12 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+Preflight sellado PASS y auditado. Output D:/ThetaData, seal
+`d33e01a6...eee6d`, index `c0eadebf...42ad`; 24 captures/64.632 rows, cero
+missing/extra/revised/crossed. Full projection 3.006 captures/8,095M/1,425GiB.
+Versionar compactos+`CROSS_VENUE_CALENDAR_RR_NATIVE_CLOCK_PREFLIGHT_RESULT.md`
+y siete handoffs, commit/push. Después implementar full capturer inmutable y
+resumible reutilizando exact semantics; commit/push antes de lanzar. No outcomes.
+
 Implementado offline sealer en el mismo capturador con flag
 `--seal-existing-staging`; test suite11/Ruff/compile PASS. Usa `git show` para
 hashes exactos del capture base167118b0 y valida/reconstruye 24 captures sin

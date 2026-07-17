@@ -182,3 +182,9 @@ cross-venue, registrada como hipótesis generada post-outcome:
 sidecar exacto front/back; 2025 y 2026 siguen cerrados. Predeclaración:
 `CROSS_VENUE_CALENDAR_RR_LEADER_V1_PREDECLARATION.md`. No abrir grids
 own/leader/consensus ni reemplazar los precios vintage con una recaptura actual.
+
+Preflight native-clock posterior: `PASS`, 24/24 captures y 64.632 rows con cero
+missing/extra/revisions/crossed. Full 2024–2025 proyectado 8,095M rows/1,425GiB
+raw para 3.006 requests. Esto desbloquea solo el full sidecar/data gate; no hay
+outcome OOS nuevo. Resultado autoritativo:
+`CROSS_VENUE_CALENDAR_RR_NATIVE_CLOCK_PREFLIGHT_RESULT.md`.

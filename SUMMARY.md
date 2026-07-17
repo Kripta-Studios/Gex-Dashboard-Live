@@ -1,5 +1,10 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+El preflight de reloj cross-venue pasa: 24/24 capturas y 64.632 filas con
+coverage exacta, sin extras, revisiones o crossed. El full 2024–2025 proyecta
+8,10M filas y 1,43GiB, viable. Esto desbloquea el backfill causal que permitirá
+la primera validación 2024 del mapping SPY→SPXW; aún no hay nuevo PF OOS.
+
 La reparación de seal ya tiene modo offline tested (`11 passed`): fija el código
 de captura original, reconstruye los 24 parquets y no toca red. Debe commit/push
 antes de validar el staging y crear el PASS agregado.

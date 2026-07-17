@@ -1,5 +1,15 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Cross-venue native-clock preflight PASS
+
+Seal offline PASS: 12/12 sesiones, 24/24 front-back, 64.632 rows, missing keys0,
+extras0, revised bid/ask0, crossed0. Capture base `167118b0`, sealer `8828bd72`;
+audit independiente rehasheó todo PASS. Proyección full 1.503 sesiones/3.006
+captures: 8.095.158 rows, 1,425GiB raw, 0,102GiB parquet; cost gate PASS.
+Seal SHA `d33e01a6...eee6d`, index `c0eadebf...42ad`. No outcomes/2026.
+Siguiente: versionar compactos/result; implementar full capturer resumible desde
+HEAD committed, luego full data gate. No evaluar 2024 antes del gate/freeze.
+
 ### Sealer offline cross-venue implementado preejecución
 
 Modo `--seal-existing-staging` añadido sin requery: pin exacto del blob Git
