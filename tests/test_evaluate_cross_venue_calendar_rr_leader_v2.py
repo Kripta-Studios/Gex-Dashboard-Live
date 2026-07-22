@@ -5,6 +5,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
+import pandas as pd
 import pytest
 
 from neural.jepa import evaluate_cross_venue_calendar_rr_leader_v2 as module
@@ -35,6 +36,24 @@ def test_early_cash_features_use_exact_open_indices() -> None:
 def test_missing_early_cash_clock_fails_closed() -> None:
     with pytest.raises(AssertionError, match="opens are invalid"):
         module.early_cash_features_from_opens(np.ones(65))
+
+
+def test_sealed_ledger_pressure_is_namespaced_before_sensor_join(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "trades.csv"
+    pd.DataFrame(
+        {
+            "ticker": ["QQQ", "SPXW", "SPY"],
+            "trade_date": ["20240102"] * 3,
+            "month": ["202401"] * 3,
+            "underlying_return_bps": [1.0, 2.0, 3.0],
+            "signal_pressure": [0.1, 0.2, 0.2],
+        }
+    ).to_csv(path, index=False)
+    ledger = module._read_ledger(path, "2024")
+    assert "signal_pressure" not in ledger.columns
+    assert ledger["sealed_signal_pressure"].tolist() == [0.1, 0.2, 0.2]
 
 
 def test_model_contract_is_single_fixed_logistic() -> None:

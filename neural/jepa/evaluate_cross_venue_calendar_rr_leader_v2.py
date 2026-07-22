@@ -260,6 +260,11 @@ def _read_ledger(path: Path, year: str) -> pd.DataFrame:
     frame["underlying_return_bps"] = pd.to_numeric(
         frame["underlying_return_bps"], errors="coerce"
     )
+    frame["sealed_signal_pressure"] = (
+        pd.to_numeric(frame["signal_pressure"], errors="raise")
+        if "signal_pressure" in frame.columns
+        else np.nan
+    )
     if (
         frame.empty
         or frame.duplicated(["ticker", "trade_date"]).any()
@@ -268,7 +273,15 @@ def _read_ledger(path: Path, year: str) -> pd.DataFrame:
         or not np.isfinite(frame["underlying_return_bps"].to_numpy()).all()
     ):
         raise AssertionError(f"V2 sealed {year} ledger identity failed")
-    return frame
+    return frame[
+        [
+            "ticker",
+            "trade_date",
+            "month",
+            "underlying_return_bps",
+            "sealed_signal_pressure",
+        ]
+    ].copy()
 
 
 def load_development_rows(option_features: pd.DataFrame) -> pd.DataFrame:
@@ -294,16 +307,9 @@ def load_development_rows(option_features: pd.DataFrame) -> pd.DataFrame:
     )
     output["direct_win"] = (output["base_gross_bps"] > 0.0).astype(np.int64)
 
-    stored_2024 = ledger_2024[["ticker", "trade_date"]].copy()
-    if "signal_pressure" in ledger_2024.columns:
-        stored_2024["stored_signal_pressure"] = ledger_2024["signal_pressure"]
-    else:
-        source = pd.read_csv(
-            RESULT_2024 / "trades.csv", dtype={"trade_date": str, "month": str}
-        )
-        stored_2024["stored_signal_pressure"] = pd.to_numeric(
-            source["signal_pressure"], errors="raise"
-        )
+    stored_2024 = ledger_2024[
+        ["ticker", "trade_date", "sealed_signal_pressure"]
+    ].copy()
     check = output.loc[output["trade_date"].str.startswith("2024")].merge(
         stored_2024,
         on=["ticker", "trade_date"],
@@ -311,7 +317,7 @@ def load_development_rows(option_features: pd.DataFrame) -> pd.DataFrame:
     )
     if not np.allclose(
         check["signal_pressure"],
-        check["stored_signal_pressure"],
+        check["sealed_signal_pressure"],
         rtol=0.0,
         atol=1e-12,
     ):

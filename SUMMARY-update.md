@@ -10,6 +10,10 @@ Evaluator V2 outcome-scoped implementado y aún no ejecutado: input/runtime SHA,
 source rehash, pushdown 66 opens, dataset/modelos/ledger y gates inmutables.
 Focal7/cross-venue74/Ruff/compile PASS. Commit/push antes del único run default.
 
+Primer run V2: fail-closed pre-cash por colisión `signal_pressure` entre ledger
+y sensor, output inexistente. Fix namespacea `sealed_signal_pressure` para
+auditar paridad; focal8/cross-venue75/checks PASS. Cero nuevos opens/outcomes.
+
 2026-07-22: runner frozen committed `b53dcaa3`; único V1 outer2024 cerrado
 `NO_AGGREGATE_EDGE`. Pooled 743/PF0,761071/WR42,665%/-3.130,133bps. Por ticker:
 QQQ249/PF0,866939/-662,668/min19/6 meses positivos; SPXW247/0,698912/

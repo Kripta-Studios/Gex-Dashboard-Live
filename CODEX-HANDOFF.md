@@ -17,6 +17,11 @@ inputs SHA, exact-date mapping, 66 clocks open-only por fuente, modelo/predicci�
 y gates; escribe output inmutable. Focal7, cross-venue74, Ruff/compile PASS.
 Commit/push explícito antes del único default run. Un fallo cierra 2025.
 
+Primer run V2 falló antes del loader cash y no creó output: colisión de nombre
+`signal_pressure` ledger/sensor. Fix namespaced `sealed_signal_pressure`, usado
+solo para comprobar la paridad del mapping 2024. Focal8/cross-venue75 y checks
+PASS. No se leyó ningún open nuevo; commit/push antes de reintentar.
+
 ## Cierre autoritativo — outer 2024 V1 sin edge
 
 Freeze committed/pushed `b53dcaa3`; one-shot 2024:

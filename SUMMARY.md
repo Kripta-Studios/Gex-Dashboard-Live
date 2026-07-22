@@ -14,6 +14,11 @@ underlying, hace pushdown de 66 opens exactos, materializa 29 columnas y sella
 los dos modelos/logs. Pasa 74 tests cross-venue y checks estáticos. Debe quedar
 committed/pushed antes del único development run; 2025 sigue cerrado.
 
+El primer run se cerró antes de fuentes cash por una colisión de columna entre
+ledger y sensor. El fix mantiene la presión sellada bajo namespace de auditoría
+y deja la feature del modelo inequívoca; 75 tests pasan. No hubo nuevo dato ni
+output económico antes del fix committed.
+
 ## Resultado causal nuevo — V1 falla outer 2024
 
 El runner congelado en `b53dcaa3` ejecutó su único 2024: pooled 743 trades,

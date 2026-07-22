@@ -20,6 +20,13 @@ cross-venue74, Ruff/compile PASS. Todavía no ejecutado sobre datos cash: primer
 commit/push de código/tests+hándoffs desde HEAD limpio; después un único run
 default. No abrir 2025 cualquiera que sea el resultado sin PASS+auditor+freeze.
 
+Primer intento V2 detenido antes del cash/source loader y sin output: el ledger
+sellado 2024 y el sensor compartían `signal_pressure`, por lo que pandas creó
+sufijos y el validator falló. Fix: el ledger se reduce al label y conserva esa
+columna como `sealed_signal_pressure` solo para auditar paridad 2024. Regresión
+nueva; focal8/cross-venue75/Ruff/compile PASS. Commit/push del fix antes del
+reintento; ningún open temprano ni outcome nuevo fue leído.
+
 ### Checkpoint 2026-07-22 — V1 outer 2024 cerrado sin edge
 
 El freeze quedó committed/pushed en `b53dcaa3` y el único outer 2024 terminó
