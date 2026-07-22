@@ -16,6 +16,23 @@ handoffs. Cualquier familia nueva usa 2023–2025 solo como development ya visto
 2026 es su primer outer posible y requiere predeclaración+freeze nuevos. No
 live/systemd ni integración de opciones.
 
+### Checkpoint 2026-07-22 — V4 full-history logistic predeclarada
+
+Exploración post-outcome 2023–2025: ventanas online no superan PF≈1 estable;
+confidence filters rompen frecuencia; weighted-logistic/ridge empeoran 2024.
+La vía más prometedora es V2R1 pooled sin cambios, fit 2023+2024 completo y
+test development2025: PF QQQ/SPXW/SPY 1,204/1,248/1,346, WR51,8/52,0/53,3%,
+net +1.060/+1.030/+1.382bps, min18/17/17, pero solo7/8/8 meses positivos.
+
+Contrato nuevo
+`CROSS_VENUE_CALENDAR_RR_LEADER_V4_FULL_HISTORY_LOGISTIC_PREDECLARATION.md`.
+2023–2025 queda development visto; 2026 permanece totalmente cerrado. V4 fija
+el mismo pooled logistic29/C0,1/reloj10:00–10:35, sin filtros/refit/weights.
+Primero commit/push predeclaración; luego evaluator development2025+auditor.
+Solo un PASS incremental auditado autoriza construir data gate 2026 outcome-free.
+Greek∩IV sigue solo en los cuatro repair IDs; cualquier discrepancia 2026 es
+quinta y falla cerrado. No live/systemd.
+
 ### Checkpoint 2026-07-22 — V2 temporal orientation predeclarada
 
 Tras cerrar V1 se autoriza una familia post-outcome nueva. Documento:

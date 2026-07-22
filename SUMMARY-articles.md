@@ -9,6 +9,13 @@ pueden dominar muchos aciertos pequeños. SPXW/SPY resistieron cerca de PF1,04,
 pero solo fueron positivos en 6/12 meses. La siguiente hipótesis debe modelar
 riesgo/magnitud causalmente, no cambiar el threshold después de ver 2025.
 
+El resultado posterior matiza esa conclusión: ponderar directamente por magnitud
+o hacer ridge no transportó mejor el walk-forward 2024. En cambio, conservar el
+target binario y ampliar el train hasta diciembre2024 elevó los tres PF 2025 por
+encima de1,20. Más historia ayudó al agregado, pero no eliminó los 4–5 meses
+negativos por ticker. La estabilidad mensual debe seguir siendo una gate, no
+una métrica que se presupone por un PF anual bueno.
+
 ### Más contexto no corrige una relación de signo inestable
 
 Un logistic pooled causal con 29 variables option/cash, dos fits temporales y

@@ -13,6 +13,19 @@ la cadena mensual y todos los retornos/costes/gates. V3 queda cerrada; 2026 no
 fue consultado. Una familia posterior debe tratar 2023–2025 como development y
 congelarse de nuevo antes del primer outer 2026.
 
+## Vía V4 predeclarada
+
+La exploración posterior encuentra una mejora agregada real al reentrenar el
+logistic pooled V2R1 con 2023+2024 completos: sobre el 2025 ya visto obtiene PF
+1,204/1,248/1,346 y PnL +1.060/+1.030/+1.382bps para QQQ/SPXW/SPY, con WR>51%
+y frecuencia mínima18/17/17. No alcanza estabilidad mensual: 7/8/8 meses son
+positivos. Ventanas online, confidence filtering y targets ponderados/ridge no
+mejoran conjuntamente 2024, 2025 y capacidad.
+
+V4 congela el modelo pooled original sin filtros ni refit. Como nació tras ver
+2025, todo 2023–2025 es development; 2026 sigue intacto y solo podrá abrirse
+después de development reproducible, auditoría, data gate outcome-free y freeze.
+
 ## Hipótesis V2 congelada antes del nuevo estado cash
 
 La exploración sobre los artefactos ya abiertos descarta un clasificador ancho

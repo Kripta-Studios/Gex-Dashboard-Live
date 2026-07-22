@@ -13,6 +13,19 @@ summary `99346b5b...1dd5`. Force-add/commit/push outer+audit+hándoffs. Después
 solo puede explorarse una familia nueva declarando 2023–2025 development y
 reservando 2026 como primer outer; no rescatar V3 ni tocar live/systemd.
 
+## V4 elegida antes de cualquier dato 2026
+
+Diagnóstico ya contaminado 2025: el pooled V2R1 fit 2023+2024 es la única
+variante simple que pasa incremental en los tres: PF1,204/1,248/1,346,
+WR51,8/52,0/53,3%, net +1.060/+1.030/+1.382 y min18/17/17; objetivo falla por
+7/8/8 meses positivos. Online windows, confidence, weighted-logistic y ridge no
+mejoran estabilidad/frecuencia.
+
+Predeclaración V4 full-history logistic creada. Mismo modelo V2R1 pooled29/C0,1,
+sin cambios ni refit. Commit/push doc antes de implementar development2025.
+Después evaluator → auditor → solo data gate 2026 outcome-free. No leer 2026;
+cualquier discrepancia Greek/IV nueva falla cerrado y no amplía los cuatro IDs.
+
 ## V2 temporal orientation — predeclaración antes del nuevo feature read
 
 Contrato nuevo post-outcome:
