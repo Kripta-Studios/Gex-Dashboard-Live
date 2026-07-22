@@ -1,5 +1,14 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+### El hit-rate de signo no controla la asimetría de las pérdidas
+
+V3 mostró la diferencia en el primer outer intacto: QQQ acertó el signo en
+50,6% de 247 operaciones, pero terminó en PF0,655 y -2.381bps. Una orientación
+mensual basada solo en majority hit ignora que pocos errores de gran magnitud
+pueden dominar muchos aciertos pequeños. SPXW/SPY resistieron cerca de PF1,04,
+pero solo fueron positivos en 6/12 meses. La siguiente hipótesis debe modelar
+riesgo/magnitud causalmente, no cambiar el threshold después de ver 2025.
+
 ### Más contexto no corrige una relación de signo inestable
 
 Un logistic pooled causal con 29 variables option/cash, dos fits temporales y

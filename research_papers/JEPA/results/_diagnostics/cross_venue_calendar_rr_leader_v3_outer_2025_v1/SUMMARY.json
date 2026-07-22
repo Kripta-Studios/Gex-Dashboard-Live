@@ -1,0 +1,76 @@
+{
+  "schema": "cross_venue_calendar_rr_leader_v3_outer_2025_v1",
+  "status": "FAILED_OUTER_2025_2026_CLOSED",
+  "created_at_utc": "2026-07-22T15:44:10.732170+00:00",
+  "execution_commit": "91584706248e3a1b177a81ab573f56cd4dee57f4",
+  "frozen_manifest_sha256": "f45e7f1bd50d4f3cbd28750d374abeec3491873a0d743447db839a15497646ed",
+  "frozen_runner_commit": "5fe51e70cc7a37f2ccb9915dcfdd78fb61e0b600",
+  "mapping": {
+    "QQQ": "QQQ",
+    "SPXW": "SPY",
+    "SPY": "SPY"
+  },
+  "rule": {
+    "state_source": "immediately_previous_calendar_month",
+    "statistic": "pooled_physical_trade_direct_hit_rate",
+    "threshold": 0.5,
+    "tie": "DIRECT",
+    "zero_pressure": "NO_TRADE",
+    "state_constant_within_month": true
+  },
+  "outer_year": "2025",
+  "eligible_events": 735,
+  "executed_trades": 735,
+  "per_ticker": [
+    {
+      "ticker": "QQQ",
+      "trades": 247,
+      "win_rate": 0.5060728744939271,
+      "profit_factor": 0.655468729393722,
+      "net_bps": -2381.476477061017,
+      "min_month_trades": 18,
+      "positive_months": 5,
+      "objective_gate_pass": false
+    },
+    {
+      "ticker": "SPXW",
+      "trades": 244,
+      "win_rate": 0.5368852459016393,
+      "profit_factor": 1.0355668632638828,
+      "net_bps": 163.02617355080724,
+      "min_month_trades": 17,
+      "positive_months": 6,
+      "objective_gate_pass": false
+    },
+    {
+      "ticker": "SPY",
+      "trades": 244,
+      "win_rate": 0.5368852459016393,
+      "profit_factor": 1.0397774890182736,
+      "net_bps": 182.45622599407324,
+      "min_month_trades": 17,
+      "positive_months": 6,
+      "objective_gate_pass": false
+    }
+  ],
+  "objective_gate_pass": false,
+  "advance_to_2026_freeze": false,
+  "outer_2025_opened": true,
+  "holdout_2026_opened": false,
+  "production_modified": false,
+  "live_or_systemd_modified": false,
+  "output_sha256": {
+    "monthly_orientation_states.csv": "167f4d00483825381a37d75a3eb419a0ba06fe7e0eaf54fbbc24a77003fa2b41",
+    "source_audit.csv": "5f7bc2a10b8ffbf9771ae82443ab6e1b42e1ae944a2fb7d51670b555477b6b0c",
+    "trades.csv": "a45a6eb4af6010ece49f4dc0b42c0e21f3442765a13578f2874d8e2a8a6e73f5",
+    "monthly_metrics.csv": "4f8db4c64dc6e8027d97427a5bad344cccdfb4350282b442ab743df84c946bb6",
+    "ticker_summary.csv": "ffef44f8352dd43b50ddb1a0f33e1165306dda8b3b464a27d39c8f49ac418af2",
+    "cost_sensitivity.csv": "5b197cebd8b516db7275883bbbef3639eb29aa4dbc942235a616b9656d76439c",
+    "SUMMARY.md": "5eda5f7178057c83938da0f4325fb624be4b2501be45fbfa2a86289edf6ca8df"
+  },
+  "states_recomputed_sha256": "de6e572a22f517fdaeee89cf7758267bfd1013366a9169d7a2c134e46af3649c",
+  "trades_recomputed_sha256": "cee6d0ddc50dec5adc0979b2d71cdb8c143146dbea2b8b69daff638b06cde9cd",
+  "monthly_recomputed_sha256": "60a9f6138f7d38f4acdc4864652fb0070ca55b9f0add1eef79897dd56fa422ad",
+  "ticker_summary_recomputed_sha256": "cc927dfdac35fd5a9a01c074effe0d9f5d950637bf114a1ee06f3ae7549db088",
+  "cost_sensitivity_recomputed_sha256": "dac8ae41a2826d4be1d21d2dc915f766981a31cfd53164e8914c99f30022e44b"
+}

@@ -1,5 +1,18 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+## V3 outer 2025 — cerrado y auditado
+
+Freeze committed `91584706`; one-shot2025 `FAILED_OUTER_2025_2026_CLOSED`.
+QQQ: 247 trades, WR50,607%, PF0,655469, -2.381,476bps, min18, 5/12 meses.
+SPXW: 244, 53,689%, 1,035567, +163,026bps, min17, 6/12. SPY: 244, 53,689%,
+1,039777, +182,456bps, min17, 6/12. No ticker llega a PF>1,20 y 12/12 meses;
+2026 sigue sin abrir.
+
+Auditor real PASS: 735 sources rehashed/mismatch0 y digests exactos; evaluation
+summary `99346b5b...1dd5`. Force-add/commit/push outer+audit+hándoffs. Después,
+solo puede explorarse una familia nueva declarando 2023–2025 development y
+reservando 2026 como primer outer; no rescatar V3 ni tocar live/systemd.
+
 ## V2 temporal orientation — predeclaración antes del nuevo feature read
 
 Contrato nuevo post-outcome:

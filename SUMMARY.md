@@ -1,5 +1,18 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+## Resultado causal V3 — 2025 no generaliza
+
+Tras el manifest committed `91584706`, el one-shot secuencial 2025 ejecutó 735
+trades y cerró 2026. QQQ obtuvo WR50,607% pero PF0,655469 y -2.381,476bps;
+SPXW/SPY quedaron en PF1,035567/1,039777 y +163,026/+182,456bps. Los tres
+conservaron capacidad mensual (mínimo18/17/17), pero solo tuvieron 5/6/6 meses
+positivos. Ninguno alcanza simultáneamente PF>1,20 y 12/12 meses positivos.
+
+La auditoría independiente rehasheó las 735 fuentes sin diferencias y reprodujo
+la cadena mensual y todos los retornos/costes/gates. V3 queda cerrada; 2026 no
+fue consultado. Una familia posterior debe tratar 2023–2025 como development y
+congelarse de nuevo antes del primer outer 2026.
+
 ## Hipótesis V2 congelada antes del nuevo estado cash
 
 La exploración sobre los artefactos ya abiertos descarta un clasificador ancho

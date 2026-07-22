@@ -1,5 +1,21 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-07-22 — V3 outer 2025 cerrado
+
+Manifest V3 versionado en `91584706`; one-shot 2025 desde ese HEAD:
+`FAILED_OUTER_2025_2026_CLOSED`. 735 trades. QQQ 247/WR50,607%/PF0,655469/
+-2.381,476bps/min18/5 meses positivos; SPXW 244/53,689%/1,035567/
++163,026/min17/6; SPY 244/53,689%/1,039777/+182,456/min17/6. La frecuencia
+y WR pasan, pero ninguno cumple PF>1,20 + 12/12 meses positivos. 2026 no se
+abrió y V3 no puede rescatar ticker/mes/orientación.
+
+Auditor independiente real `PASS_INDEPENDENT_V3_OUTER_2025_AUDIT`: rehasheó
+735 fuentes, mismatch0 y reprodujo estados/ledger/meses/costes/gates. Evaluation
+summary SHA `99346b5b...1dd5`. Siguiente: force-add/commit/push resultado+audit+
+handoffs. Cualquier familia nueva usa 2023–2025 solo como development ya visto;
+2026 es su primer outer posible y requiere predeclaración+freeze nuevos. No
+live/systemd ni integración de opciones.
+
 ### Checkpoint 2026-07-22 — V2 temporal orientation predeclarada
 
 Tras cerrar V1 se autoriza una familia post-outcome nueva. Documento:

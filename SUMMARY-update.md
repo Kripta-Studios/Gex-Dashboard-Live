@@ -1,5 +1,11 @@
 # SUMMARY-update — ledger científico compacto
 
+2026-07-22: V3 outer2025 desde manifest committed `91584706` cerró
+`FAILED_OUTER_2025_2026_CLOSED`. QQQ 247/PF0,655/WR50,6%/-2.381,5bps/min18/
+5 meses; SPXW244/1,036/53,7%/+163,0/min17/6; SPY244/1,040/53,7%/+182,5/
+min17/6. Auditor PASS: sources735/mismatch0/digests exactos, summary
+`99346b5b...1dd5`. 2026/live/systemd cerrados; versionar evidencia antes de V4.
+
 2026-07-22: V2 post-outcome predeclarada antes de nuevos opens cash. Modelo
 único pooled logistic L2 C0,1, 29 features fijas y target direct-vs-inverse.
 DEV_A train2023/test2024H1; DEV_B train2023+H1/testH2. Cash feature clocks
