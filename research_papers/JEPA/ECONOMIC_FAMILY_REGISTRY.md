@@ -34,7 +34,13 @@ Estados permitidos: `QUEUED`, `ACTIVE`, `FAILED_CAUSALITY`,
 | OPTION_PARITY_PRESSURE_V1 | cambio 5m del synthetic forward CALL/PUT 0DTE frente al spot | `FAILED_ECONOMIC` | 730 trades, PF0,875/WR48,63%/-1.689bps; 10/36 celdas, outer cerrado |
 | EXACT_EXPIRY_OI_DELTA_V1 | cambio OI del mismo contrato antes de expiry | `FAILED_FREQUENCY` | 156 pares/36 meses, mínimo4 eventos/mes; sin outcomes |
 | CALENDAR_RISK_REVERSAL_PRESSURE_V1 | Δ5m del RR25 0DTE menos next-expiry | `FAILED_ECONOMIC` | partial edge: pooled PF1,058/+730bps; QQQ/SPY>1, SPXW0,912; 12/36 cells |
+| CROSS_VENUE_CALENDAR_RR_LEADER_V1/V3 | mapping QQQ←QQQ, SPY←SPY, SPXW←SPY con signo fijo/mensual | `FAILED_ECONOMIC` | V1 outer2024 PF0,867/0,699/0,693; V3 outer2025 PF0,655/1,036/1,040; 2026 cerrado |
+| CROSS_VENUE_CALENDAR_RR_LEADER_V4 | logistic pooled V2R1 fit 2023–2024 | `BLOCKED_DATA` | development2025 PF1,204/1,248/1,346, pero gate vintage2026 encuentra cinco nuevos IDs Greek/IV y falla cerrado antes de outcomes |
+| CROSS_VENUE post-V4 cash-only | summaries/spot/cross-cash/shallow trees/raw35x1m | `FAILED_ECONOMIC` | ningún candidato pasa los seis bloques ticker-año 2024–2025; no V5 ni acceso 2026 |
 
-No queda familia activa. Calendar-RR aporta PF agregado>1 pero falla SPXW y 24
-celdas mensuales; outer 2024–2026 permanece cerrado. La siguiente prueba debe
-añadir un mecanismo independiente, no seleccionar calendar-RR post-hoc.
+No queda familia activa. Calendar-RR V4 aporta PF>1,20 en development2025 para
+los tres, pero es post-outcome y no puede materializar 2026 sin violar el gate
+Greek/IV; su sustituto cash-only no transporta entre 2024 y 2025. Los outcomes
+2026 de esta familia permanecen cerrados. La siguiente prueba necesita una
+fuente causal nueva con histórico y paridad live, no seleccionar ticker/año ni
+relajar la whitelist calendar-RR post-hoc.
