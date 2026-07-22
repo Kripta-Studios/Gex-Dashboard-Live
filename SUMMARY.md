@@ -24,6 +24,12 @@ tempranas sin mismatch; el auditor reproduce exactamente modelo, dataset,
 ledger y gates. Summary auditada `a2beced1...21b`. Ningún path 2026 fue abierto;
 el PASS incremental solo autoriza preparar su data gate outcome-free.
 
+Ese data gate no puede construirse. El censo vintage 2026 encontró cinco nuevas
+discrepancias Greek/IV en 508 capturas: 92 filas Greek-only y 516 IV-only,
+todas en fronts QQQ/SPY del 24–26 de junio. La excepción `Greek∩IV` estaba
+cerrada a cuatro IDs históricos; por ello V4 falla antes de captura y 2026 no se
+abre. No se descartaron fechas ni se consultaron retornos para tomar la decisión.
+
 ## Vía V4 predeclarada
 
 La exploración posterior encuentra una mejora agregada real al reentrenar el

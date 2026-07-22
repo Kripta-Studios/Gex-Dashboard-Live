@@ -39,6 +39,13 @@ digests exactos; summary `a2beced1...21b`. Dataset/model/trades SHA
 `87413fb1...d04b`/`f8412730...c98b`/`9742c229...335c`. Force-add/commit/push
 evidencia. Luego solo data gate 2026 outcome-free; no outcomes 2026.
 
+El censo vintage outcome-free 2026 cerró V4 antes del data gate: 508 capturas,
+391.556 shared rows, pero cinco IDs nuevos suman Greek-only92/IV-only516 (QQQ
+20260624/26 front y SPY 20260624/25/26 front). El contrato prohíbe ampliar los
+cuatro repairs V1R1; no intersection/exclusión/recaptura. Documento autoritativo
+`CROSS_VENUE_CALENDAR_RR_LEADER_V4_2026_VINTAGE_KEY_GATE_FAILURE.md`. Ningún
+underlying value/outcome 2026 ni red fue abierto. Versionar handoffs; V4 closed.
+
 ## V2 temporal orientation — predeclaración antes del nuevo feature read
 
 Contrato nuevo post-outcome:

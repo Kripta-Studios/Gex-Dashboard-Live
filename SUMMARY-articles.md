@@ -29,6 +29,13 @@ métricas; un segundo refit independiente coincide en modelo, ledger y gates.
 Esto mejora la confianza de reproducibilidad, no la condición OOS: 2026 sigue
 siendo la primera prueba nueva posible.
 
+La calidad de datos puede impedir incluso esa primera prueba. El censo 2026
+halló cinco nuevos capture IDs con 608 claves unilaterales Greek/IV. Aplicar la
+intersección habría producido features, pero también habría ampliado después del
+development una excepción congelada a cuatro IDs históricos. El fallo cerrado
+preserva la validez causal: un PF prometedor no justifica cambiar la población
+de contratos justo antes del holdout.
+
 ### Más contexto no corrige una relación de signo inestable
 
 Un logistic pooled causal con 29 variables option/cash, dos fits temporales y

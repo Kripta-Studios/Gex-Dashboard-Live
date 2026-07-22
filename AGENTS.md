@@ -49,6 +49,15 @@ dev735, cash sources738/mismatch0; dataset/model/trades SHA
 data gate 2026 outcome-free. Force-add/commit/push evidencia+hándoffs antes;
 2026 features/outcomes y live/systemd siguen intactos.
 
+Gate vintage V4 2026 falló cerrado outcome-free antes de captura/data gate:
+127 sesiones por sensor QQQ/SPY, 508 captures, shared391.556, pero cinco IDs
+nuevos tienen 92 Greek-only+516 IV-only. Son QQQ 20260624 front g80, QQQ
+20260626 front i28, SPY 20260624 front g12, SPY 20260625 front i484 y SPY
+20260626 front i4. Autoridad:
+`CROSS_VENUE_CALENDAR_RR_LEADER_V4_2026_VINTAGE_KEY_GATE_FAILURE.md`.
+Greek∩IV no puede ampliarse más allá de los cuatro V1R1 IDs; no intersectar,
+reparar, excluir ni capturar. V4 queda cerrada y outcomes 2026 siguen sin abrir.
+
 ### Checkpoint 2026-07-22 — V2 temporal orientation predeclarada
 
 Tras cerrar V1 se autoriza una familia post-outcome nueva. Documento:

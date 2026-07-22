@@ -21,6 +21,11 @@ train1482/dev735/sources738/mismatch0. Auditor independiente PASS, refit/model/
 dataset/ledger/gates exactos; summary `a2beced1...21b`. Evidencia pendiente de
 commit/push; después solo data gate 2026 outcome-free. 2026 intacto.
 
+Gate vintage2026 V4 `FAILED...CLOSED`: sensors QQQ/SPY 127 sesiones cada uno,
+508 captures/shared391.556; cinco fronts nuevos con Greek-only92/IV-only516
+(QQQ 20260624/26, SPY 20260624/25/26). Greek∩IV está limitado a los cuatro
+repairs V1R1, así que no capture/data gate/outcomes2026. V4 cerrada outcome-free.
+
 2026-07-22: V2 post-outcome predeclarada antes de nuevos opens cash. Modelo
 único pooled logistic L2 C0,1, 29 features fijas y target direct-vs-inverse.
 DEV_A train2023/test2024H1; DEV_B train2023+H1/testH2. Cash feature clocks
