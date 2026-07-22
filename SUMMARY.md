@@ -24,6 +24,11 @@ el ledger 2023. La aclaración congela sus IDs y los elimina solo del fit porque
 el target directo/inverso es indefinido; 2024 tiene cero casos y no cambia.
 Una tercera key falla cerrado. 2025 continúa intacto.
 
+El primer censo cash encontró un único defecto entre 1.487 fuentes: dos opens
+cero de SPY 20230605 antes de 10:00. V2R1 no imputa ni excluye la fecha; mueve
+uniformemente todos los cash blocks a 10:00–10:35 y conserva seis métricas con
+horizontes35m/15m/5m. No hubo fit ni resultado antes de congelar el cambio.
+
 ## Resultado causal nuevo — V1 falla outer 2024
 
 El runner congelado en `b53dcaa3` ejecutó su único 2024: pooled 743 trades,

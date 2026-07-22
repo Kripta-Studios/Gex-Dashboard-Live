@@ -43,6 +43,13 @@ Tercer intento pre-cash detectó un segundo merge redundante de la presión
 sellada; sin output. Ahora compara directamente las 743 filas ya unidas. Nueva
 regresión, focal11/cross-venue78/Ruff/compile PASS. Commit/push antes de retry.
 
+Cuarto intento alcanzó por primera vez el cash loader pero no el fit/output.
+Censo: 1/1.487 fuentes inválida, `SPY|20230605`, opens0 a 09:55/09:56; defecto
+upstream ya conocido. No fill ni exclusión. V2R1 congelada en
+`CROSS_VENUE_CALENDAR_RR_LEADER_V2R1_EARLY_CLOCK_REPAIR_CLARIFICATION.md`:
+ventana uniforme10:00–10:35, 36 opens/35 returns, horizontes35m/15m/5m y vector
+29 intacto. Commit/push aclaración antes de código/censo nuevo. 2025 cerrado.
+
 ### Checkpoint 2026-07-22 — V1 outer 2024 cerrado sin edge
 
 El freeze quedó committed/pushed en `b53dcaa3` y el único outer 2024 terminó

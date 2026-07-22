@@ -85,6 +85,12 @@ de leerlo. Se exigen exactamente 66 clocks, símbolo/fecha exactos, opens finito
 y positivos. Un clock ausente o duplicado invalida la ejecución completa; no
 hay nearest, forward-fill ni exclusión post-outcome.
 
+La primera lectura cash encontró una única fuente con dos opens cero antes de
+10:00. V2R1 aplica a todas las fechas la reparación de reloj congelada en
+`CROSS_VENUE_CALENDAR_RR_LEADER_V2R1_EARLY_CLOCK_REPAIR_CLARIFICATION.md`:
+36 opens/35 retornos de 10:00 a 10:35 y horizontes 35m/15m/5m. Este texto
+original de 66 clocks queda reemplazado por la aclaración para V2R1.
+
 ## Target y modelo único
 
 El target de entrenamiento es:

@@ -36,6 +36,13 @@ Tercer run también pre-cash: merge redundante del campo ya namespaced. Fix
 compara directamente la paridad 2024; focal11/cross-venue78/checks PASS, target
 inexistente. Commit/push antes del siguiente intento.
 
+Cuarto run llegó a cash y falló antes del fit: única fuente inválida
+`SPY|20230605`, open0 09:55/09:56, entre 1.487. V2R1 repara uniformemente a
+10:00–10:35 (36/35 clocks/returns, horizons35m/15m/5m), sin fill ni excluir
+fecha. Autoridad:
+`CROSS_VENUE_CALENDAR_RR_LEADER_V2R1_EARLY_CLOCK_REPAIR_CLARIFICATION.md`.
+Commit doc antes de código; no prediction/output/2025.
+
 ## Cierre autoritativo — outer 2024 V1 sin edge
 
 Freeze committed/pushed `b53dcaa3`; one-shot 2024:
