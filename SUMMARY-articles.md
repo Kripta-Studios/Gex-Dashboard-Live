@@ -57,6 +57,11 @@ join económico. Además deriva raw/parquet/manifest desde el path sellado de ca
 role. Así, soportar un overlay no convierte al builder en un selector libre de
 fuentes.
 
+La auditoría posterior confirmó que el índice lógico no es solo metadata: tras
+reconstruir 3.012 capturas, el dataframe canónico revalidado produjo exactamente
+el mismo digest que el índice sellado. Esta igualdad completa detecta cambios de
+root, generación, cardinalidad o hash antes de que el builder lea una feature.
+
 Una consecuencia importante es que el consumidor debe entender el composite:
 un seal PASS no basta si auditor y builder siguen suponiendo un solo directorio
 o igualdad Greek=IV universal. La compatibilidad correcta resuelve cada capture

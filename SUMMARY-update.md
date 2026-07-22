@@ -34,6 +34,12 @@ multi-root y `align_vintage_modalities` con conteos frozen. Test real composite
 y fallo estricto V1 incluidos. Focal15/combinada65, Ruff/compile PASS. Pendiente
 commit/push → full audit default; data gate no ejecutado.
 
+Full audit one-shot desde `2b33fe5a` PASS: captures3012, sessions1506,
+rows7246230, raw bytes1369860204, sources6024, shared2415402, Greek-only2,
+IV-only6, missing0. Revalidation SHA=index `e5a669b7...3a0e`; audit summary file
+SHA `437483b0...4769`. Sin underlying/outcomes. Pendiente commit/push compactos
+→ ejecutar builder default una vez; no outer2024.
+
 Respuesta autoritativa junio/julio 2026: la familia activa cross-venue sigue
 sin outcomes 2026 (captura 2024–2025 PID42112: 424/3.012, errors0 a las 03:09).
 No se puede afirmar que sea rentable. El cerrado `DIRECTIONAL_VOL_COMPLEX_V1`

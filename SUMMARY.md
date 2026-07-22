@@ -44,6 +44,12 @@ acepta discrepancias y V1R1 elimina solo las unilaterales declaradas. Focal
 15/15, cross-venue 65/65, checks clean. Falta commit/push y el full audit real;
 el data gate aún no se ejecuta.
 
+El full audit real ya es PASS: revalidó 3.012 captures, 1.506 sesiones, 6.024
+fuentes vintage y 1,370 GB raw; shared2.415.402, exclusivas2+6 y missing0. El
+revalidation digest coincide exactamente con el índice composite. Todos los
+flags outcome/underlying/2026/producción son false. Falta versionar/commit/push
+esta evidencia; después puede ejecutarse una vez el data gate outcome-free.
+
 ## Respuesta concreta sobre junio y julio de 2026
 
 La arquitectura activa `CROSS_VENUE_CALENDAR_RR_LEADER_V1` todavía no tiene

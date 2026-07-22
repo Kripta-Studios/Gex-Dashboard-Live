@@ -53,6 +53,13 @@ unilaterales. Focal `15 passed`, suite cross-venue `65 passed`, Ruff/compile
 PASS. Commit/push antes de ejecutar el full audit; builder/data gate sigue
 dormido hasta que ese audit PASS se versione.
 
+El full audit real ya pasó desde `2b33fe5a`: 3.012/3.012, sessions1.506,
+rows7.246.230, raw bytes1.369.860.204, vintage sources6.024, shared2.415.402,
+Greek-only2, IV-only6, missing0. `capture_revalidation` reproduce el index SHA
+`e5a669b7...3a0e`; summary/inventory file SHA `ebd508d4...5d6e`/
+`1ca51c14...0240`. No underlying ni outcomes. Versionar compactos y handoffs,
+commit/push, y solo entonces ejecutar el builder default; outer 2024 cerrado.
+
 ## Respuesta y checkpoint 2026-07-17 03:09 Europe/Madrid
 
 No afirmar rentabilidad de `CROSS_VENUE_CALENDAR_RR_LEADER_V1` en junio/julio

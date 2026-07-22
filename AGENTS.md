@@ -62,6 +62,15 @@ el chain alinea Greek/IV solo según los conteos sellados. Tests focales15 y
 suite cross-venue65 pasan; Ruff/compile clean. No ejecutado: commit/push
 código/tests+handoffs y solo después full auditor default una vez.
 
+Full auditor ejecutado una vez desde `2b33fe5a`:
+`PASS_COMPOSITE_CAPTURE_AUDIT_V1R1`. Revalidó 3.012 captures/1.506 sesiones/
+7.246.230 rows, 1.369.860.204 raw bytes, 6.024 fuentes vintage,
+shared2.415.402, Greek-only2, IV-only6 y missing0. El digest canónico reproduce
+el capture index `e5a669b7...3a0e`; outcome/underlying/2026/live siguen false.
+Compactos en `cross_venue_calendar_rr_native_clock_full_audit_2024_2025_v1r1/`.
+Siguiente: commit/push evidencia+hándoffs; solo entonces builder data gate
+default una vez. No abrir outer 2024.
+
 ### Estado exacto junio/julio 2026 — 2026-07-17
 
 No existe todavía una policy promovible para esos dos meses. La familia activa

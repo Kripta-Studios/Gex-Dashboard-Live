@@ -52,6 +52,12 @@ and enforce the exact modality counts before economic joins. Focused tests pass
 15/15 and the full cross-venue suite 65/65; Ruff/compile pass. Commit/push is
 required before the one full audit. The data gate remains unexecuted.
 
+The one full audit from `2b33fe5a` now passes: 3,012 captures, 1,506 sessions,
+7,246,230 rows, 6,024 vintage sources, 2,415,402 shared keys, 2 Greek-only,
+6 IV-only and zero missing shared keys. The canonical revalidation digest equals
+the sealed index `e5a669b7...3a0e`. No underlying or outcome was accessed.
+Commit/push compact evidence before the single outcome-free builder run.
+
 ## 2026-07-17 profitability clarification
 
 `CROSS_VENUE_CALENDAR_RR_LEADER_V1` has not opened 2026; its 2024–2025 exact

@@ -19,6 +19,9 @@
 > The later composite-aware source consumers are implemented and tested but
 > remain unexecuted; they do not import compact-V1 evidence.
 
+> The later full source audit passed independently and remains wholly isolated
+> from this protocol and its economic evidence.
+
 > 2026-07-22: the later cross-venue family remains isolated from this protocol.
 > Its V1 capture stopped at 3,008/3,012 on four outcome-free Greek/IV key-set
 > mismatches. The separately frozen V1R1 overlay uses exact shared keys only;

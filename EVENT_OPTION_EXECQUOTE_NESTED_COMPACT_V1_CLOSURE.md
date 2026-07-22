@@ -19,6 +19,9 @@
 > The separate composite-aware auditor/builder now pass 65 cross-venue tests
 > but remain preexecution. Compact V1 stays closed and unused.
 
+> The separate composite full audit later passed 3,012/3,012 without underlying
+> or outcome access. It does not alter or reopen compact V1.
+
 > 2026-07-22: the separate cross-venue full capture ended without a seal at
 > 3,008/3,012 because four Greek/IV key sets each contain one unilateral
 > contract at both clocks. A pre-outcome V1R1 repair freezes exact intersection
