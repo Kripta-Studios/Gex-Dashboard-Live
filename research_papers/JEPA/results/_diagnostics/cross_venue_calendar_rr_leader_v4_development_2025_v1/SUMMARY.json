@@ -1,0 +1,81 @@
+{
+  "schema": "cross_venue_calendar_rr_leader_v4_development_2025_v1",
+  "status": "PASS_INCREMENTAL_DEVELOPMENT_2026_DATA_NOT_OPENED",
+  "created_at_utc": "2026-07-22T16:03:07.266407+00:00",
+  "execution_commit": "b421acd3361fe94aa4ae28cf204fc3170d38f227",
+  "mapping": {
+    "QQQ": "QQQ",
+    "SPXW": "SPY",
+    "SPY": "SPY"
+  },
+  "training_rows": 1482,
+  "development_rows": 735,
+  "early_cash_sources_rehashed": 738,
+  "source_mismatches": 0,
+  "per_ticker": [
+    {
+      "ticker": "QQQ",
+      "trades": 247,
+      "win_rate": 0.5182186234817814,
+      "profit_factor": 1.204351428046685,
+      "net_bps": 1060.2786550505286,
+      "min_month_trades": 18,
+      "positive_months": 7,
+      "incremental_gate_pass": true,
+      "objective_gate_pass": false
+    },
+    {
+      "ticker": "SPXW",
+      "trades": 244,
+      "win_rate": 0.5204918032786885,
+      "profit_factor": 1.2479453537482896,
+      "net_bps": 1030.0905800044536,
+      "min_month_trades": 17,
+      "positive_months": 8,
+      "incremental_gate_pass": true,
+      "objective_gate_pass": false
+    },
+    {
+      "ticker": "SPY",
+      "trades": 244,
+      "win_rate": 0.5327868852459017,
+      "profit_factor": 1.3463415562391026,
+      "net_bps": 1381.5559788757496,
+      "min_month_trades": 17,
+      "positive_months": 8,
+      "incremental_gate_pass": true,
+      "objective_gate_pass": false
+    }
+  ],
+  "incremental_gate_pass": true,
+  "objective_gate_pass": false,
+  "advance_to_2026_data_gate": true,
+  "development_2025_post_outcome": true,
+  "features_2026_opened": false,
+  "outcomes_2026_opened": false,
+  "production_modified": false,
+  "live_or_systemd_modified": false,
+  "input_sha256": {
+    "research_papers/JEPA/results/_diagnostics/cross_venue_calendar_rr_leader_v2_development_202301_202412_v1/development_dataset.parquet": "459979c11ad5b7ba1ed44ef3add42142d0eab40982882bc52031982e22778f0b",
+    "research_papers/JEPA/results/_diagnostics/cross_venue_calendar_rr_leader_v3_outer_2025_v1/trades.csv": "a45a6eb4af6010ece49f4dc0b42c0e21f3442765a13578f2874d8e2a8a6e73f5",
+    "research_papers/JEPA/results/_diagnostics/cross_venue_calendar_rr_leader_v3_outer_2025_v1/SUMMARY.json": "99346b5b041b127b35d79a0ba1e0a176335ae5c4057d3518b29b03605ca21dd5",
+    "research_papers/JEPA/results/_diagnostics/cross_venue_calendar_rr_leader_v1_data_gate_202401_202512_v1r1/cross_venue_calendar_rr_features.parquet": "fd2953bd9bc918b95079d494663cf7ca2fc9dfe141604b8e8803cc2bf605d268",
+    "research_papers/JEPA/results/_diagnostics/cross_venue_calendar_rr_leader_v1_data_gate_202401_202512_v1r1/source_inventory.csv": "b63ca25185627528b1bc22ad937dcb834dbb4846d03b451aa395a62003d4c56c",
+    "neural/jepa/evaluate_cross_venue_calendar_rr_leader_v2.py": "1bdc768ca4a72d99be1394d18107750abb228024fc56555ebe4d7b13c5c89d2a"
+  },
+  "output_sha256": {
+    "development_dataset.parquet": "87413fb1c605c221aa8f225ad9877ccbdb6d5eca45877f4fa97a5b60d321d04b",
+    "source_audit.csv": "c110fb06732c50384b65a577a08398ecd69293102473d6c7730db7eceef434d7",
+    "trades.csv": "9742c2296221bc3888627d18c78806a2feffa58896e41057258edaa4800e335c",
+    "monthly_metrics.csv": "efdbf0980babfe85d9b64203b6f8b7de46ddd8dd2a924bda9dadae94d7b2ddef",
+    "ticker_summary.csv": "de4de9574931703d28073170e66eea13884d8b655616fd65ec90ea14648d23dd",
+    "cost_sensitivity.csv": "e7a01374a0256aa8f6ef598523d9411d7b3e808444a4e6e5518a7bd9fdc6a6b3",
+    "model.json": "f8412730509d4bfea6cb226c8dbfb4781139b4d675eaa47d1d267a0ad052c98b",
+    "SUMMARY.md": "a57d97d76caf956d733dfa21d4184ed227e3e91df1b0234b3d27180f4da6ba9d"
+  },
+  "dataset_recomputed_sha256": "6dcdadf9a7bd364022748a792b9aa84c546249842131d2ed1f4ff9171ed83c6b",
+  "trades_recomputed_sha256": "5c388bd150bef9da4a3ad6f80433269d53f1f6e769175de4a511ef69ebcf1728",
+  "monthly_recomputed_sha256": "6dc4c7c2c63af6a6c43ebce5b456161f8cf77ec0bbf5ffe30aab37d523d58cd1",
+  "ticker_summary_recomputed_sha256": "d98625793b310de1dcd549c5fd5c7020962abe8395071dedd8b67067c4755d72",
+  "cost_sensitivity_recomputed_sha256": "5b77f4a2b4c7f8b202aded3521685eab7f51839648eff1a836de50cb53ddbc32"
+}

@@ -1,0 +1,29 @@
+{
+  "schema": "cross_venue_calendar_rr_leader_v4_development_audit_v1",
+  "status": "PASS_INDEPENDENT_V4_DEVELOPMENT_AUDIT",
+  "created_at_utc": "2026-07-22T16:03:26.128810+00:00",
+  "evaluation_commit": "b421acd3361fe94aa4ae28cf204fc3170d38f227",
+  "audit_commit": "b421acd3361fe94aa4ae28cf204fc3170d38f227",
+  "training_rows": 1482,
+  "development_rows": 735,
+  "source_files_rehashed": 738,
+  "source_mismatches": 0,
+  "model_refit_exact": true,
+  "incremental_gate_pass": true,
+  "objective_gate_pass": false,
+  "advance_to_2026_data_gate": true,
+  "features_2026_opened": false,
+  "outcomes_2026_opened": false,
+  "production_modified": false,
+  "live_or_systemd_modified": false,
+  "evaluation_summary_sha256": "a2beced1f021e156b53deaed3932dafc0af18f18f582d0b9af5db1a0762bd21b",
+  "dataset_recomputed_sha256": "6dcdadf9a7bd364022748a792b9aa84c546249842131d2ed1f4ff9171ed83c6b",
+  "trades_recomputed_sha256": "5c388bd150bef9da4a3ad6f80433269d53f1f6e769175de4a511ef69ebcf1728",
+  "monthly_recomputed_sha256": "6dc4c7c2c63af6a6c43ebce5b456161f8cf77ec0bbf5ffe30aab37d523d58cd1",
+  "ticker_summary_recomputed_sha256": "d98625793b310de1dcd549c5fd5c7020962abe8395071dedd8b67067c4755d72",
+  "cost_sensitivity_recomputed_sha256": "5b77f4a2b4c7f8b202aded3521685eab7f51839648eff1a836de50cb53ddbc32",
+  "output_sha256": {
+    "ticker_summary_recomputed.csv": "de4de9574931703d28073170e66eea13884d8b655616fd65ec90ea14648d23dd",
+    "cost_sensitivity_recomputed.csv": "e7a01374a0256aa8f6ef598523d9411d7b3e808444a4e6e5518a7bd9fdc6a6b3"
+  }
+}

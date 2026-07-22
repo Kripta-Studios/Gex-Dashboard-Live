@@ -16,9 +16,10 @@ SPXW 1,247945/52,0492%/+1.030,091/min17/8m; SPY
 1,346342/53,2787%/+1.381,556/min17/8m. Mejor resultado actual, pendiente de
 reproducción/auditoría formal y no promocionable por ser post-outcome.
 
-Evaluator+auditor V4 listos/unexecuted: train1482/dev735/cash sources738,
-refit/model/dataset/ledger/gates exactos; focal8, cross-venue108, checks PASS.
-Commit/push antes del default development. 2026 intacto.
+V4 real desde `b421acd3`: `PASS_INCREMENTAL_DEVELOPMENT_2026_DATA_NOT_OPENED`,
+train1482/dev735/sources738/mismatch0. Auditor independiente PASS, refit/model/
+dataset/ledger/gates exactos; summary `a2beced1...21b`. Evidencia pendiente de
+commit/push; después solo data gate 2026 outcome-free. 2026 intacto.
 
 2026-07-22: V2 post-outcome predeclarada antes de nuevos opens cash. Modelo
 único pooled logistic L2 C0,1, 29 features fijas y target direct-vs-inverse.

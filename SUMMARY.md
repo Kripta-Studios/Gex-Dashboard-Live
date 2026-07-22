@@ -18,10 +18,11 @@ Checkpoint exacto a preservar, coste1bp: QQQ PF1,204351, WR51,8219%,
 +1.030,091bps, min17 y 8/12; SPY PF1,346342, WR53,2787%, +1.381,556bps,
 min17 y 8/12. Es el mejor resultado de development, no una validación OOS.
 
-El evaluator reproducible y su auditor independiente ya están implementados
-pre-ejecución: fijan 1.482 filas train, 735 predicciones y 738 fuentes tempranas,
-con refit y comparación exacta posterior. Pasan 108 tests de la familia; deben
-publicarse antes del único run. Ningún path 2026 ha sido abierto.
+El evaluator reproducible y su auditor independiente se publicaron en
+`b421acd3` y ya pasaron. Fijan 1.482 filas train, 735 predicciones y 738 fuentes
+tempranas sin mismatch; el auditor reproduce exactamente modelo, dataset,
+ledger y gates. Summary auditada `a2beced1...21b`. Ningún path 2026 fue abierto;
+el PASS incremental solo autoriza preparar su data gate outcome-free.
 
 ## Vía V4 predeclarada
 

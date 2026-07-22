@@ -40,12 +40,14 @@ PF1,346342/53,2787%/+1.381,556/min17/8. Son prometedoras y pasan incremental,
 pero aún son diagnóstico post-outcome pendiente de evaluator+auditor; no llamar
 OOS ni rentabilidad promocionable y no abrir 2026 por estas cifras solas.
 
-Evaluator+auditor V4 development implementados y aún no ejecutados:
-`evaluate_cross_venue_calendar_rr_leader_v4.py` recompone 735 rows, rehashea
-738 fuentes cash 2025 y fittea una vez las 1.482 rows train; el auditor refittea
-y compara dataset/modelo/ledger/gates. Focal8, suite cross-venue/native-clock
-108, Ruff/compile PASS. Commit/push código/tests+hándoffs antes del único run
-development; después commit auditor y evidencia. 2026 sigue intacto.
+Evaluator+auditor V4 publicados en `b421acd3` y ejecutados una vez.
+Development: `PASS_INCREMENTAL_DEVELOPMENT_2026_DATA_NOT_OPENED`, train1.482,
+dev735, cash sources738/mismatch0; dataset/model/trades SHA
+`87413fb1...d04b`/`f8412730...c98b`/`9742c229...335c`. Auditor:
+`PASS_INDEPENDENT_V4_DEVELOPMENT_AUDIT`, refit exacto y evaluation summary
+`a2beced1...21b`. Objetivo mensual sigue FAIL 7/8/8; solo se autoriza preparar
+data gate 2026 outcome-free. Force-add/commit/push evidencia+hándoffs antes;
+2026 features/outcomes y live/systemd siguen intactos.
 
 ### Checkpoint 2026-07-22 — V2 temporal orientation predeclarada
 

@@ -23,6 +23,12 @@ PF1,346342/53,2787%/+1.381,556/min17/8, todo a1bp. Es el mejor development
 actual y justifica investigar V4, pero fue hallado tras abrir 2025; su valor es
 direccional hasta que un outer 2026 precongelado lo confirme o lo rechace.
 
+La reproducción formal confirma que no era un error del diagnóstico: 1.482 filas
+de train, 735 decisiones y 738 fuentes tempranas producen exactamente esas
+métricas; un segundo refit independiente coincide en modelo, ledger y gates.
+Esto mejora la confianza de reproducibilidad, no la condición OOS: 2026 sigue
+siendo la primera prueba nueva posible.
+
 ### Más contexto no corrige una relación de signo inestable
 
 Un logistic pooled causal con 29 variables option/cash, dos fits temporales y
