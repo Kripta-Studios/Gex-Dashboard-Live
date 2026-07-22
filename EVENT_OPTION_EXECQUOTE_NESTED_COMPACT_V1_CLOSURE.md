@@ -17,6 +17,9 @@
 > A subsequent source-only path correction makes that separate freezer consume
 > its committed V1R1 directory. It does not alias, read or reopen compact V1.
 
+> That separate outer-2024 runner is now frozen with 743 events and no outcome
+> access. Its manifest and future execution remain independent of compact V1.
+
 > The source-only retry from `963f91c9` passed all 3,012 captures with zero
 > missing shared keys. Its compact seal is versioned separately; no compact-V1
 > artifact or outcome was read and this closure remains final.

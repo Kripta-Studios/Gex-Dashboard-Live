@@ -26,6 +26,13 @@ aún nombraba el antiguo compacto V1. Corregir solo `DATA_GATE_DIR` al seal V1R1
 versionado, añadir test, ejecutar suite cross-venue y commit/push antes del
 freezer. No copiar los compactos a un alias y no abrir outcomes durante el fix.
 
+Fix `811e729f` ya pushed, cross-venue `66 passed`, checks clean. El freezer
+posterior creó el manifest único con status `PREEXECUTION_FROZEN`, 743 eventos
+2024/743 sources, event IDs `2d56cf96...b124c4` y SHA de manifest
+`339c0793...126b72c`. Runner commit y hashes de los tres inputs data-gate están
+sellados; outcomes/ejecución/outer2024+ siguen false. Force-add/commit/push del
+manifest y handoffs antes de ejecutar evaluator default una sola vez.
+
 ## Checkpoint autoritativo — 2026-07-22
 
 V1 terminó `NO_SEAL` con 3.008 capturas atómicas y cuatro diferencias

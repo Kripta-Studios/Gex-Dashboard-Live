@@ -1,0 +1,273 @@
+{
+  "schema": "cross_venue_calendar_rr_leader_v1_frozen_outer_2024_runner",
+  "status": "PREEXECUTION_FROZEN",
+  "created_at_utc": "2026-07-22T14:36:27.131382+00:00",
+  "runner_commit": "811e729f1f6d35b2ce4e8ba892b2a736e28f11fc",
+  "phase": "outer_2024",
+  "scope": {
+    "start_date": "20240101",
+    "end_date": "20241231",
+    "tickers": [
+      "QQQ",
+      "SPXW",
+      "SPY"
+    ],
+    "eligible_events": 743,
+    "underlying_sources": 743,
+    "excluded_half_days": [
+      "20240703",
+      "20241129",
+      "20241224",
+      "20250703",
+      "20251128",
+      "20251224"
+    ],
+    "monthly_counts": [
+      {
+        "ticker": "QQQ",
+        "month": "202401",
+        "events": 21
+      },
+      {
+        "ticker": "QQQ",
+        "month": "202402",
+        "events": 20
+      },
+      {
+        "ticker": "QQQ",
+        "month": "202403",
+        "events": 20
+      },
+      {
+        "ticker": "QQQ",
+        "month": "202404",
+        "events": 22
+      },
+      {
+        "ticker": "QQQ",
+        "month": "202405",
+        "events": 22
+      },
+      {
+        "ticker": "QQQ",
+        "month": "202406",
+        "events": 19
+      },
+      {
+        "ticker": "QQQ",
+        "month": "202407",
+        "events": 21
+      },
+      {
+        "ticker": "QQQ",
+        "month": "202408",
+        "events": 22
+      },
+      {
+        "ticker": "QQQ",
+        "month": "202409",
+        "events": 20
+      },
+      {
+        "ticker": "QQQ",
+        "month": "202410",
+        "events": 23
+      },
+      {
+        "ticker": "QQQ",
+        "month": "202411",
+        "events": 19
+      },
+      {
+        "ticker": "QQQ",
+        "month": "202412",
+        "events": 20
+      },
+      {
+        "ticker": "SPXW",
+        "month": "202401",
+        "events": 21
+      },
+      {
+        "ticker": "SPXW",
+        "month": "202402",
+        "events": 20
+      },
+      {
+        "ticker": "SPXW",
+        "month": "202403",
+        "events": 20
+      },
+      {
+        "ticker": "SPXW",
+        "month": "202404",
+        "events": 22
+      },
+      {
+        "ticker": "SPXW",
+        "month": "202405",
+        "events": 22
+      },
+      {
+        "ticker": "SPXW",
+        "month": "202406",
+        "events": 19
+      },
+      {
+        "ticker": "SPXW",
+        "month": "202407",
+        "events": 21
+      },
+      {
+        "ticker": "SPXW",
+        "month": "202408",
+        "events": 22
+      },
+      {
+        "ticker": "SPXW",
+        "month": "202409",
+        "events": 20
+      },
+      {
+        "ticker": "SPXW",
+        "month": "202410",
+        "events": 23
+      },
+      {
+        "ticker": "SPXW",
+        "month": "202411",
+        "events": 19
+      },
+      {
+        "ticker": "SPXW",
+        "month": "202412",
+        "events": 18
+      },
+      {
+        "ticker": "SPY",
+        "month": "202401",
+        "events": 21
+      },
+      {
+        "ticker": "SPY",
+        "month": "202402",
+        "events": 20
+      },
+      {
+        "ticker": "SPY",
+        "month": "202403",
+        "events": 20
+      },
+      {
+        "ticker": "SPY",
+        "month": "202404",
+        "events": 22
+      },
+      {
+        "ticker": "SPY",
+        "month": "202405",
+        "events": 22
+      },
+      {
+        "ticker": "SPY",
+        "month": "202406",
+        "events": 19
+      },
+      {
+        "ticker": "SPY",
+        "month": "202407",
+        "events": 21
+      },
+      {
+        "ticker": "SPY",
+        "month": "202408",
+        "events": 22
+      },
+      {
+        "ticker": "SPY",
+        "month": "202409",
+        "events": 20
+      },
+      {
+        "ticker": "SPY",
+        "month": "202410",
+        "events": 23
+      },
+      {
+        "ticker": "SPY",
+        "month": "202411",
+        "events": 19
+      },
+      {
+        "ticker": "SPY",
+        "month": "202412",
+        "events": 18
+      }
+    ]
+  },
+  "event_id_sha256": "2d56cf965e7e13ce5785d44ef54dc4246af7aced8aa97fb824f2fc9133b124c4",
+  "policy": {
+    "feature": "signal_pressure",
+    "action": "sign(signal_pressure)",
+    "sensor_map": {
+      "QQQ": "QQQ",
+      "SPXW": "SPY",
+      "SPY": "SPY"
+    },
+    "zero_action": "NO_TRADE",
+    "decision_time": "after_10:35:00",
+    "entry": "derived_underlying_open_10:36:00",
+    "exit": "derived_underlying_open_13:36:00",
+    "hold_minutes": 180,
+    "primary_round_trip_cost_bps": 1.0,
+    "cost_sensitivity_bps": [
+      1.0,
+      2.0,
+      3.0
+    ],
+    "positions_per_ticker_per_day": 1,
+    "overlap_policy": "one_fixed_nonoverlapping_position_per_ticker_day"
+  },
+  "incremental_gate_spec": {
+    "profit_factor_strictly_greater_than": 1.0,
+    "win_rate_strictly_greater_than": 0.45,
+    "aggregate_net_bps_strictly_greater_than": 0.0,
+    "trades_per_month_strictly_greater_than": 12,
+    "all_tickers_required": true
+  },
+  "promotion_gate_spec": {
+    "profit_factor_strictly_greater_than": 1.2,
+    "win_rate_strictly_greater_than": 0.45,
+    "trades_per_month_strictly_greater_than": 12,
+    "monthly_net_bps_strictly_greater_than": 0.0,
+    "all_tickers_required": true
+  },
+  "code_hashes": {
+    "neural/jepa/evaluate_cross_venue_calendar_rr_leader_v1.py": "17d49922ad5cf1d466b4c57d4dd6af894b7d51d888ea656ec45fe96c9b539d2b",
+    "neural/jepa/freeze_cross_venue_calendar_rr_leader_v1_runner.py": "47e5dbbf5f8015c5d013b5c8066fd6e989677508f9cfc03a731f4b0292123239",
+    "research_papers/JEPA/CROSS_VENUE_CALENDAR_RR_LEADER_V1_PREDECLARATION.md": "411e55854fcdd9acc8e49b4456d10a31990e4485508659b7d5ce634e1d893b51",
+    "research_papers/JEPA/CROSS_VENUE_CALENDAR_RR_LEADER_V1_DATA_GATE_CONTRACT.md": "9d9d7d55286fc08e6b2614dc410fee9ee672f641649db37669d704bb253b1dfb",
+    "research_papers/JEPA/CROSS_VENUE_CALENDAR_RR_LEADER_V1_OUTER_2024_RUNNER_CONTRACT.md": "bca33659a863125da564e2c799b36703a2f80d87655ae3482dc4f6b696daca3c"
+  },
+  "data_gate_inputs": {
+    "manifest.json": {
+      "path": "research_papers/JEPA/results/_diagnostics/cross_venue_calendar_rr_leader_v1_data_gate_202401_202512_v1r1/manifest.json",
+      "sha256": "492f51c8a80b5e03c453486da185bd6cad85ef1c913a9510366cb19455d0452e"
+    },
+    "cross_venue_calendar_rr_features.parquet": {
+      "path": "research_papers/JEPA/results/_diagnostics/cross_venue_calendar_rr_leader_v1_data_gate_202401_202512_v1r1/cross_venue_calendar_rr_features.parquet",
+      "sha256": "fd2953bd9bc918b95079d494663cf7ca2fc9dfe141604b8e8803cc2bf605d268"
+    },
+    "source_inventory.csv": {
+      "path": "research_papers/JEPA/results/_diagnostics/cross_venue_calendar_rr_leader_v1_data_gate_202401_202512_v1r1/source_inventory.csv",
+      "sha256": "b63ca25185627528b1bc22ad937dcb834dbb4846d03b451aa395a62003d4c56c"
+    }
+  },
+  "data_gate_source_commit": "90ffd155292801230d9a20bdb0dc15be03deb34f",
+  "outcome_accessed": false,
+  "execution_started": false,
+  "outer_2024_opened": false,
+  "outer_2025_opened": false,
+  "holdout_2026_opened": false,
+  "production_modified": false
+}

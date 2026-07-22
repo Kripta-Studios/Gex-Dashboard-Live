@@ -18,6 +18,11 @@ El primer precheck del freezer identificó una ruta antigua al compacto V1. Se
 corrige únicamente ese nombre para consumir el directorio V1R1 versionado y se
 prueba antes de congelar; no cambia ningún elemento científico del runner.
 
+La ruta se corrigió y publicó en `811e729f` con 66 tests cross-venue. El freezer
+ya generó `PREEXECUTION_FROZEN`: 743 eventos 2024, 743 fuentes, manifest SHA
+`339c0793...126b72c` y ningún acceso a outcomes. Falta commit/push del manifest;
+el outer no se ejecuta antes de ese límite.
+
 ## Estado nuevo — 2026-07-22
 
 La captura masiva V1 se conserva inmutable con 3.008/3.012 unidades y cuatro

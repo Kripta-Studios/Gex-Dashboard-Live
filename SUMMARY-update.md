@@ -16,6 +16,11 @@ Pre-freeze: evaluator apuntaba al nombre compacto V1 obsoleto. Fix permitido y
 outcome-free: `DATA_GATE_DIR` → V1R1 committed + regresión; commit/push antes de
 crear manifest. Cero cambios de señal/eventos/gates.
 
+Fix pushed `811e729f`, suite66/checks PASS. Frozen runner ya generado:
+`PREEXECUTION_FROZEN`, events/sources743/743, event IDs `2d56cf96...b124c4`,
+manifest `339c0793...126b72c`, outcome/execution/outer flags false. Falta
+force-add/commit/push antes del único outer2024.
+
 2026-07-22: V1 queda inmutable `NO_SEAL` con 3.008 capturas y cuatro errores
 Greek/IV congelados. V1R1 ya pasó 4/4 desde `0b7cc6dd`: shared2828,
 unilateral8 audit-only, missing0, extras8, revised0, crossed0. Seal/index/audit

@@ -8,6 +8,9 @@
 > Its subsequent input-path correction only identifies the committed V1R1
 > source seal and remains isolated from this protocol and its outcomes.
 
+> The separate outer-2024 manifest was then frozen for 743 events without
+> execution or outcome access. This immutable compact-V1 protocol is unchanged.
+
 > The later cross-venue family now has a tested, unexecuted composite sealer
 > for its 3,008 V1 plus four V1R1 captures. It uses a logical multi-root index,
 > opens no outcomes and cannot consume or alter compact V1. Its downstream

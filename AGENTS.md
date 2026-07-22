@@ -28,6 +28,15 @@ al directorio V1R1 committed y añade una regresión de identidad; no altera
 policy, mapping, eventos, clocks, costes o gates. Commit/push del fix antes del
 freezer; no crear alias ni duplicar el seal.
 
+El fix quedó committed/pushed en `811e729f`; suite cross-venue `66 passed`,
+Ruff y pycompile PASS. Desde ese HEAD limpio se generó una sola vez el runner
+outer2024 `PREEXECUTION_FROZEN`: 743 eventos/743 fuentes, event IDs SHA
+`2d56cf96...b124c4`, manifest SHA `339c0793...126b72c`. Fija mapping, signo,
+10:36→13:36, hold180, coste primario1bp y sensibilidades2/3, gate incremental
+PF>1/WR>45%/neto>0/min13 y gate objetivo PF>1,20/todos meses positivos.
+`outcome_accessed=false`, `execution_started=false`. Siguiente: force-add/
+commit/push del manifest+hándoffs; solo después único outer 2024.
+
 ### Checkpoint 2026-07-22 — composite native-clock V1R1 PASS
 
 El full native-clock V1 recorrió 3.012 unidades y quedó `NO_SEAL`: preserva

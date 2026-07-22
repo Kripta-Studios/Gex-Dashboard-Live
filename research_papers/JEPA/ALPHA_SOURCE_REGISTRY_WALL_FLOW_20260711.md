@@ -21,6 +21,11 @@ evaluator. The only permitted fix points `DATA_GATE_DIR` at the committed V1R1
 seal and regression-tests that identity before freeze. No alias, signal or gate
 change is introduced.
 
+The fix is published in `811e729f` with 66 cross-venue tests passing. The
+subsequent outer-2024 manifest is `PREEXECUTION_FROZEN` for 743 events/sources;
+manifest SHA `339c0793...126b72c`, event IDs `2d56cf96...b124c4`, and all
+outcome/execution flags are false. It must be committed before the one-shot.
+
 ## 2026-07-22 cross-venue source repair
 
 The full native-clock source ended unsealed at 3,008/3,012 captures. Four

@@ -16,6 +16,11 @@ nombre legacy no debe resolverse copiando archivos a un alias; debe fijarse al
 directorio committed autoritativo y probarse antes del manifest, conservando
 una única cadena de provenance.
 
+El manifest resultante demuestra la separación: enumera 743 decisiones 2024 y
+743 fuentes, fija el event-ID digest y conserva `execution_started=false`. El
+freeze es una frontera auditable entre medir una señal y abrir su retorno, no
+una afirmación de PF o alpha.
+
 ### Reparar fuentes por intersección, no por imputación
 
 El full cross-venue reveló cuatro discrepancias Greek/IV entre 3.012 captures.
