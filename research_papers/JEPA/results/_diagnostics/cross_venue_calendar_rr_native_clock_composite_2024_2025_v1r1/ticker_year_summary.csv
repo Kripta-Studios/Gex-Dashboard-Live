@@ -1,0 +1,10 @@
+ticker,year,storage_generation,captures,sessions,rows,shared_key_rows,greek_only_key_rows,iv_only_key_rows,native_extra_target_key_rows,revised_bid_ask_rows,crossed_native_rows,unilateral_key_rows
+QQQ,2024,V1,504,252,985788,328596,0,0,0,57,0,0
+QQQ,2025,V1,498,250,976716,325572,0,0,0,0,70,0
+QQQ,2025,V1R1_REPAIR,2,2,3348,1112,2,2,4,0,0,4
+SPXW,2024,V1,503,252,1577946,525982,0,0,0,22,0,0
+SPXW,2024,V1R1_REPAIR,1,1,2580,858,0,2,2,0,0,2
+SPXW,2025,V1,499,250,1754940,584980,0,0,0,0,0,0
+SPXW,2025,V1R1_REPAIR,1,1,2580,858,0,2,2,0,0,2
+SPY,2024,V1,504,252,893544,297848,0,0,0,0,0,0
+SPY,2025,V1,500,250,1048788,349596,0,0,0,0,65,0

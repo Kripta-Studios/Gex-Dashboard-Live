@@ -8,7 +8,7 @@ diferencias Greek/IV outcome-free. El overlay V1R1 ya pasó 4/4 desde
 revised0 y crossed0. Seal SHA `81ded7dd...bd9d`; sus compactos están
 versionados en `53872c39`. Esto repara la fuente, no demuestra alpha.
 
-El sellador composite ya está implementado y probado, pero aún no ejecutado.
+El sellador composite ya está implementado, probado y ejecutado.
 Revalida offline las 3.008 capturas V1 y las cuatro V1R1 desde sus roots
 separados, fija endpoint/request/provenance/runtime y crea un índice lógico
 3.012/3.012 sin copiar raw ni leer underlying, labels o outcomes. Suite
@@ -16,9 +16,13 @@ repairs+composite `13 passed`; suite cross-venue `63 passed`; Ruff y pycompile
 PASS. El primer run desde `a352d544` falló cerrado antes de escribir output por
 una diferencia exclusiva de índice DataFrame en el CSV audit-only, no de
 valores ni hashes. El validator ya normaliza ese índice y revalida los cuatro
-repairs reales. Debe commit/push el fix antes del reintento default workers8.
+repairs reales. El fix se publicó en `963f91c9` y el reintento terminó PASS:
+3.012 captures/1.506 sesiones, 7.246.230 rows, 2.415.402 shared keys, ocho
+unilaterales audit-only y missing0. Seal SHA `5b97ebc5...cf84f`; contract/index/
+summary `68714d77...8c046`/`e5a669b7...3a0e`/`41deb014...df65`. No se leyó
+outcome ni 2026. Compactos listos para versionar.
 
-El bloqueo posterior es explícito: el auditor full y el builder actuales todavía
+El bloqueo siguiente es explícito: el auditor full y el builder actuales todavía
 presuponen un único root y Greek=IV para las 3.012 unidades. Tras sellar y
 versionar el composite hay que adaptarlos al índice multi-root y permitir la
 intersección solo en los cuatro IDs congelados. Hasta entonces no ejecutar data

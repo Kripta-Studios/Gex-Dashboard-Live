@@ -39,6 +39,12 @@ coincidían; normalizar solo el índice antes de comparar preserva el contrato d
 valores. Una regresión sobre los cuatro repairs reales eleva la suite a
 `63 passed` antes del reintento.
 
+El reintento produjo un composite PASS de 3.012 capturas sin copiar raws:
+2.415.402 keys Greek/IV compartidas, ocho unilaterales excluidas y cero shared
+faltantes. El índice lógico conserva 3.008 rutas V1 y cuatro rutas repair. Es un
+resultado de provenance, no de rentabilidad; su valor es permitir que la
+primera lectura outer 2024 ocurra sobre una fuente causal y reproducible.
+
 Una consecuencia importante es que el consumidor debe entender el composite:
 un seal PASS no basta si auditor y builder siguen suponiendo un solo directorio
 o igualdad Greek=IV universal. La compatibilidad correcta resuelve cada capture

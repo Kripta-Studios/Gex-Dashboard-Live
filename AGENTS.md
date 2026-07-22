@@ -1,6 +1,6 @@
 # AI Agent Hand-off: Current Production Reality
 
-### Checkpoint 2026-07-22 — repairs PASS; composite listo preejecución
+### Checkpoint 2026-07-22 — composite native-clock V1R1 PASS
 
 El full native-clock V1 recorrió 3.012 unidades y quedó `NO_SEAL`: preserva
 3.008 capturas atómicas, cero stagers y cuatro errores Greek/IV outcome-free.
@@ -15,7 +15,7 @@ revised bid/ask0 y crossed0. Root
 seal/index/unilateral SHA `81ded7dd...bd9d`/`670dd0ce...2fe0`/
 `910bac85...1c6a`. La evidencia compacta está versionada en `53872c39`.
 
-Implementado, pero aún **no ejecutado**, el sellador outcome-free
+Implementado el sellador outcome-free
 `seal_cross_venue_calendar_rr_native_clock_composite_v1r1.py`. Revalida offline
 las 3.008 capturas V1 con su contrato original y las cuatro V1R1 con endpoint,
 request params, source provenance, runtime y hashes congelados; no copia raw ni
@@ -27,12 +27,20 @@ crear output: el CSV de claves unilaterales recarga con RangeIndex mientras la
 recomputación conservaba el índice original. Valores y hashes no discrepaban.
 El validator ahora hace `reset_index(drop=True)` solo para esa comparación y
 un test revalida los cuatro repairs reales. Repairs+composite `13 passed`, suite
-cross-venue `63 passed`, Ruff y pycompile PASS. Commit/push del fix antes del
-segundo y único reintento admisible; no existe root composite ni stager.
+cross-venue `63 passed`, Ruff y pycompile PASS. Fix committed/pushed en
+`963f91c9`; no quedó root ni stager del intento fallido.
 
-Secuencia obligatoria: commit/push del sellador, test y handoffs → ejecutar una
-sola vez el composite default con workers8 → inspeccionar/versionar seal,
-índice y resumen → adaptar auditor full y builder al índice multi-root y a
+El reintento desde `963f91c9` terminó
+`PASS_CROSS_VENUE_CALENDAR_RR_NATIVE_CLOCK_COMPOSITE_V1R1`: 3.012/3.012
+captures, 1.506 sesiones, V1=3.008, V1R1=4, rows7.246.230,
+shared keys2.415.402, unilaterales8, missing0, revised79 y crossed135. Seal SHA
+`5b97ebc5...cf84f`, contract `68714d77...8c046`, index
+`e5a669b7...3a0e`, summary `41deb014...df65`. No red, underlying, outcome,
+2026 ni producción. Compactos en
+`cross_venue_calendar_rr_native_clock_composite_2024_2025_v1r1/`.
+
+Secuencia obligatoria: versionar/commit/push el PASS composite → adaptar auditor
+full y builder al índice multi-root y a
 `Greek∩IV` solo en los cuatro IDs → full audit → data gate → auditoría del
 gate → freeze → outer 2024. Los auditor/builder actuales asumen un solo root
 y key-set exacto en las 3.012; **no ejecutarlos sin esa adaptación**. Outcomes

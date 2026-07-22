@@ -18,9 +18,17 @@ falló cerrado antes del output por comparar RangeIndex CSV contra los índices
 originales de las ocho rows audit-only; no hubo diferencia de valores/hashes.
 Se normaliza solo ese índice y un test nuevo revalida los cuatro repairs reales.
 Repairs+composite `13 passed`, suite cross-venue `63 passed`, Ruff/pycompile
-PASS. Commit/push del fix antes de reintentar al output default con workers8.
+PASS. El fix se publicó antes de reintentar el output default con workers8.
 
-Tras PASS, versionar `_state/composite_contract.json`, `_seal/seal.json`,
+El fix quedó committed/pushed en `963f91c9` y el reintento terminó PASS:
+3.012 captures, 1.506 sesiones, 7.246.230 rows, 2.415.402 shared keys, ocho
+unilaterales audit-only, missing0, revised79 y crossed135. Seal/contract/index/
+summary SHA `5b97ebc5...cf84f`/`68714d77...8c046`/
+`e5a669b7...3a0e`/`41deb014...df65`. Root
+`D:/ThetaData/cross_venue_calendar_rr_native_clock_2024_2025_v1r1_composite`;
+2026/outcomes/live intactos.
+
+Versionar/commit/push `_state/composite_contract.json`, `_seal/seal.json`,
 `capture_index.csv`, `ticker_year_summary.csv` y el universo/resultado compacto.
 Luego adaptar **antes de ejecutar** `audit_cross_venue_calendar_rr_native_clock_full.py`
 y `build_cross_venue_calendar_rr_leader_v1.py`: hoy asumen root único y key-set

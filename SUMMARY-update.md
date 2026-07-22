@@ -12,8 +12,11 @@ un índice lógico multi-root sin copiar raws. Primer intento desde `a352d544`
 falló cerrado pre-output por RangeIndex del CSV unilateral frente al índice
 original recomputado; valores/hashes iguales. Fix `reset_index(drop=True)` y
 regresión sobre los cuatro repairs reales: repairs+composite `13 passed`, suite
-cross-venue `63 passed`, Ruff/compile PASS. Pendiente: commit/push → reintento
-composite default workers8 → versionar evidencia.
+cross-venue `63 passed`, Ruff/compile PASS. Fix committed `963f91c9`; reintento
+PASS 3.012/3.012, sessions1.506, rows7.246.230, shared2.415.402, unilateral8,
+missing0, revised79, crossed135. Seal/contract/index/summary SHA
+`5b97ebc5...cf84f`/`68714d77...8c046`/`e5a669b7...3a0e`/
+`41deb014...df65`. Pendiente inmediato: versionar/commit/push evidencia.
 
 No ejecutar todavía full auditor ni data gate: ambos asumen un root único y
 Greek=IV. Tras el composite hay que adaptarlos a `storage_root` por capture y a

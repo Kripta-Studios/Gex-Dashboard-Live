@@ -8,6 +8,10 @@
 > input, and the full auditor/data gate must be adapted before use. This closed
 > experiment remains unchanged.
 
+> The source-only retry from `963f91c9` passed all 3,012 captures with zero
+> missing shared keys. Its compact seal is versioned separately; no compact-V1
+> artifact or outcome was read and this closure remains final.
+
 > 2026-07-22: the separate cross-venue full capture ended without a seal at
 > 3,008/3,012 because four Greek/IV key sets each contain one unilateral
 > contract at both clocks. A pre-outcome V1R1 repair freezes exact intersection

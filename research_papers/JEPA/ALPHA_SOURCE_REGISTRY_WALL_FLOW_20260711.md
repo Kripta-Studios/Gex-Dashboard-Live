@@ -27,9 +27,15 @@ now pass 13/13 and the full cross-venue suite 63/63; Ruff/compile pass. The
 first run from `a352d544` failed closed before output because the audit CSV's
 RangeIndex differed from the recomputed source indices although values/hashes
 matched. The validator now normalizes only that non-serialized index and the
-regression reads all four real repairs. Commit/push before the retry. After PASS the existing
-full auditor and data-gate builder must be adapted to resolve per-row roots and
+regression reads all four real repairs; the fix was committed before retrying.
+The existing full auditor and data-gate builder must be adapted to resolve per-row roots and
 apply `Greek∩IV` only to the four frozen IDs; do not run them unchanged.
+
+The retry from `963f91c9` now passes 3,012/3,012 captures and 1,506 sessions:
+7,246,230 rows, 2,415,402 shared keys, eight unilateral audit-only keys and zero
+missing shared keys. Seal/contract/index/summary SHA are
+`5b97ebc5...cf84f`/`68714d77...8c046`/`e5a669b7...3a0e`/
+`41deb014...df65`. This remains a source-provenance result, not alpha or PnL.
 
 ## 2026-07-17 profitability clarification
 

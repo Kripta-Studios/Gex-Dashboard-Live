@@ -10,6 +10,9 @@
 > a four-repair regression now passes, with 63 cross-venue tests. This has no
 > bearing on compact V1.
 
+> The corrected retry passed its 3,012-capture source seal. This provenance
+> checkpoint is isolated from compact V1 and still contains no economic result.
+
 > 2026-07-22: the later cross-venue family remains isolated from this protocol.
 > Its V1 capture stopped at 3,008/3,012 on four outcome-free Greek/IV key-set
 > mismatches. The separately frozen V1R1 overlay uses exact shared keys only;
