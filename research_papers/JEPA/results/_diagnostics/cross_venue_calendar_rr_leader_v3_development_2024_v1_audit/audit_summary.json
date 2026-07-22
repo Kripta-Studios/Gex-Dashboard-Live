@@ -1,0 +1,26 @@
+{
+  "schema": "cross_venue_calendar_rr_leader_v3_development_audit_v1",
+  "status": "PASS_INDEPENDENT_V3_DEVELOPMENT_AUDIT",
+  "created_at_utc": "2026-07-22T15:30:58.189325+00:00",
+  "evaluation_commit": "71a9802c927dd164b3cffd321fd01ba07282c6e4",
+  "audit_commit": "64eb91bf824862e14760b488b06dce969bb9680d",
+  "development_trades": 743,
+  "orientation_states": 12,
+  "incremental_gate_pass": true,
+  "objective_gate_pass": false,
+  "advance_to_2025_freeze": true,
+  "outer_2025_opened": false,
+  "holdout_2026_opened": false,
+  "production_modified": false,
+  "evaluation_summary_sha256": "6a688225e1eda2ee5f3dacb04db6ac7bb7b6cff3d36812012c06649f481850f5",
+  "states_recomputed_sha256": "57bf8c2de89668be3b51e32bc2b85e6dd1ade47d879ec7b69f8aed171ae50969",
+  "trades_recomputed_sha256": "987673c5404fd4205fb42fbff1ab09b52c87584401aae15d20b8267f52bb2c61",
+  "monthly_recomputed_sha256": "33efa0fe04b1146adccac09314eacb70adcd527e2a39ac1ae42808cc7be10878",
+  "ticker_summary_recomputed_sha256": "78c7ffedfccf61f5acfab3c7fa88a94f9079bd64f544df70181bce800b26fbb7",
+  "cost_sensitivity_recomputed_sha256": "867b87a823f084ded47af7c05feed0b44f2e8cd68f504e422cc53cbcbacdde5f",
+  "output_sha256": {
+    "states_recomputed.csv": "18c04fc9fe0b0fab25fc0f6053c9f92a67cad772b03d0984c7a999b49fc9eecd",
+    "ticker_summary_recomputed.csv": "1c0429e2316d84db64211f073e3a1163841fe2ba83dda6206aa3a836aea3ddc1",
+    "cost_sensitivity_recomputed.csv": "a64726dcdfce9fcb01f9e6e52dc5e615e7c869bbf9ad868a8de327c8b8488764"
+  }
+}

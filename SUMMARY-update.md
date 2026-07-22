@@ -50,6 +50,9 @@ V3 dev real PASS incremental: PF1,232/1,396/1,408, WR51,4/55,9/56,7%, net
 positivo, min19/18/18; solo8/12 meses positivos. Auditor listo suite90; commit/
 push antes de audit y freezer. 2025 intacto.
 
+Auditor V3 real PASS: states12/trades743/hashes/gates exactos, summary
+`6a688225...50f5`. Compactos listos; commit/push antes de freezer 2025.
+
 2026-07-22: runner frozen committed `b53dcaa3`; único V1 outer2024 cerrado
 `NO_AGGREGATE_EDGE`. Pooled 743/PF0,761071/WR42,665%/-3.130,133bps. Por ticker:
 QQQ249/PF0,866939/-662,668/min19/6 meses positivos; SPXW247/0,698912/

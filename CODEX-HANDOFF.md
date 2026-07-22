@@ -81,6 +81,10 @@ focal3/cross-venue90/checks PASS. Commit/push auditor antes de run; no 2025.
 Primer audit run falló sin output por dtype int de `prior_month`; valores
 coinciden. Fix string explícito + test, commit/push antes de rerun. No 2025.
 
+Auditor posterior PASS desde `64eb91bf`: 12 states/743 trades/gates exactos;
+evaluation summary `6a688225...50f5`. Compactos V3 dev+audit listos para
+force-add/commit/push. Solo después freezer 2025 outcome-free; no outcomes aún.
+
 ## Cierre autoritativo — outer 2024 V1 sin edge
 
 Freeze committed/pushed `b53dcaa3`; one-shot 2024:

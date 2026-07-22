@@ -102,6 +102,13 @@ Primer auditor V3 falló sin output al inferir `prior_month` CSV como int; valor
 idénticos. Fix limita dtype string a trade_date/month/prior_month y añade test.
 Commit/push antes de rerun; 2025 permanece cerrado.
 
+Auditor V3 real desde `64eb91bf`:
+`PASS_INDEPENDENT_V3_DEVELOPMENT_AUDIT`, 12 states/743 trades y hashes exactos.
+Evaluation summary SHA `6a688225...50f5`; states/trades recomputed
+`57bf8c2d...0969`/`987673c5...2c61`. Compactos dev+audit preparados en
+directorios diagnósticos V3. Force-add/commit/push evidencia+hándoffs antes de
+implementar/generar freezer 2025. Outcomes 2025 siguen cerrados.
+
 ### Checkpoint 2026-07-22 — V1 outer 2024 cerrado sin edge
 
 El freeze quedó committed/pushed en `b53dcaa3` y el único outer 2024 terminó
