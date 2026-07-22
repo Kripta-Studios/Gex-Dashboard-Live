@@ -34,6 +34,7 @@ OUTPUT_HASH_FILES = (
     "cost_sensitivity.csv",
 )
 REQUIRED_FILES = (*OUTPUT_HASH_FILES, "SUMMARY.json", "SUMMARY.md")
+TRADE_DTYPES = {"trade_date": str, "month": str, "prior_month": str}
 
 
 def validate_output_hashes(summary: dict[str, Any], input_dir: Path) -> None:
@@ -108,7 +109,7 @@ def run(input_dir: Path, output_dir: Path) -> dict[str, Any]:
     )
     _compare(
         ledger,
-        pd.read_csv(input_dir / "trades.csv", dtype={"trade_date": str, "month": str}),
+        pd.read_csv(input_dir / "trades.csv", dtype=TRADE_DTYPES),
         ["ticker", "trade_date"],
         "trades",
     )

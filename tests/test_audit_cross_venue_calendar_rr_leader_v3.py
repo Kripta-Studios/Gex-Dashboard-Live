@@ -27,6 +27,14 @@ def test_cli_has_no_scientific_overrides() -> None:
         assert not hasattr(args, forbidden)
 
 
+def test_all_trade_temporal_keys_reload_as_strings() -> None:
+    assert module.TRADE_DTYPES == {
+        "trade_date": str,
+        "month": str,
+        "prior_month": str,
+    }
+
+
 def test_direct_cli_imports() -> None:
     script = Path(module.__file__).resolve()
     completed = subprocess.run(

@@ -98,6 +98,10 @@ Auditor V3 implementado: recompone mapping/history, 12 states, ledger, costes y
 gates; focal3/cross-venue90/Ruff/compile PASS. No ejecutado: commit/push antes
 del auditor default. Después versionar V3+audit y solo entonces freezer 2025.
 
+Primer auditor V3 falló sin output al inferir `prior_month` CSV como int; valores
+idénticos. Fix limita dtype string a trade_date/month/prior_month y añade test.
+Commit/push antes de rerun; 2025 permanece cerrado.
+
 ### Checkpoint 2026-07-22 — V1 outer 2024 cerrado sin edge
 
 El freeze quedó committed/pushed en `b53dcaa3` y el único outer 2024 terminó

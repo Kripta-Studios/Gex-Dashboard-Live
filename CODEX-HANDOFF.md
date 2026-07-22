@@ -78,6 +78,9 @@ V3 dev real `PASS_DEVELOPMENT_INCREMENTAL_2025_NOT_FROZEN`: PF
 solo8/12 meses positivos, objetivo FAIL. Auditor V3 listo/unexecuted,
 focal3/cross-venue90/checks PASS. Commit/push auditor antes de run; no 2025.
 
+Primer audit run falló sin output por dtype int de `prior_month`; valores
+coinciden. Fix string explícito + test, commit/push antes de rerun. No 2025.
+
 ## Cierre autoritativo — outer 2024 V1 sin edge
 
 Freeze committed/pushed `b53dcaa3`; one-shot 2024:
