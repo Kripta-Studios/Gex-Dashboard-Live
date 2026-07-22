@@ -11,6 +11,12 @@ SPXW activas solo para target SPXW y tres one-hot. Los cash inputs usan solo 66
 opens 09:30–10:35. DEV_A train2023/testH1; DEV_B train2023+H1/testH2. Commit/
 push antes de leer los opens o implementar el runner. No 2025/2026/live.
 
+Implementación V2 lista pero no ejecutada:
+`neural/jepa/evaluate_cross_venue_calendar_rr_leader_v2.py`. Verifica runtime e
+inputs SHA, exact-date mapping, 66 clocks open-only por fuente, modelo/predicción
+y gates; escribe output inmutable. Focal7, cross-venue74, Ruff/compile PASS.
+Commit/push explícito antes del único default run. Un fallo cierra 2025.
+
 ## Cierre autoritativo — outer 2024 V1 sin edge
 
 Freeze committed/pushed `b53dcaa3`; one-shot 2024:

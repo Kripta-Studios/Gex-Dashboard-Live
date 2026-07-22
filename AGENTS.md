@@ -12,6 +12,14 @@ outcome rolling. Commit/push del contrato antes de leer esos opens. Si cualquier
 bloque/ticker falla PF>1/WR>45%/neto>0/min13, cerrar sin abrir 2025. Mantener
 mapping y cuatro repairs exactos; 2026/live cerrados.
 
+Evaluator V2 ya implementado en
+`evaluate_cross_venue_calendar_rr_leader_v2.py`: revalida los seis inputs y
+runtime congelados, hashea cada underlying, lee por pushdown exactamente 66
+opens y persiste dataset/modelos/ledger/gates. Tests focales7 y suite
+cross-venue74, Ruff/compile PASS. Todavía no ejecutado sobre datos cash: primero
+commit/push de código/tests+hándoffs desde HEAD limpio; después un único run
+default. No abrir 2025 cualquiera que sea el resultado sin PASS+auditor+freeze.
+
 ### Checkpoint 2026-07-22 — V1 outer 2024 cerrado sin edge
 
 El freeze quedó committed/pushed en `b53dcaa3` y el único outer 2024 terminó

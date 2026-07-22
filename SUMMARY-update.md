@@ -6,6 +6,10 @@ DEV_A train2023/test2024H1; DEV_B train2023+H1/testH2. Cash feature clocks
 09:30..10:35 open-only; mapping QQQ←QQQ/SPY←SPY/SPXW←SPY intacto. 2024 es
 solo development; 2025/2026/live cerrados hasta gates+freeze.
 
+Evaluator V2 outcome-scoped implementado y aún no ejecutado: input/runtime SHA,
+source rehash, pushdown 66 opens, dataset/modelos/ledger y gates inmutables.
+Focal7/cross-venue74/Ruff/compile PASS. Commit/push antes del único run default.
+
 2026-07-22: runner frozen committed `b53dcaa3`; único V1 outer2024 cerrado
 `NO_AGGREGATE_EDGE`. Pooled 743/PF0,761071/WR42,665%/-3.130,133bps. Por ticker:
 QQQ249/PF0,866939/-662,668/min19/6 meses positivos; SPXW247/0,698912/

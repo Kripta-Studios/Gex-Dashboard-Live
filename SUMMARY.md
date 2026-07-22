@@ -9,6 +9,11 @@ fija logistic L2 C0,1 con estado option-sensor y opens cash causales hasta
 development contaminado; 2025 permanece primer outer. El contrato debe quedar
 committed antes de leer esos nuevos clocks.
 
+El evaluator correspondiente ya está implementado sin ejecutar: rehashea cada
+underlying, hace pushdown de 66 opens exactos, materializa 29 columnas y sella
+los dos modelos/logs. Pasa 74 tests cross-venue y checks estáticos. Debe quedar
+committed/pushed antes del único development run; 2025 sigue cerrado.
+
 ## Resultado causal nuevo — V1 falla outer 2024
 
 El runner congelado en `b53dcaa3` ejecutó su único 2024: pooled 743 trades,
