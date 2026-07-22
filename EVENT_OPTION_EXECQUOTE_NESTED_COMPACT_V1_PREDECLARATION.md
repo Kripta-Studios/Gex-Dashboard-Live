@@ -5,6 +5,9 @@
 > mismatches. The separately frozen V1R1 overlay uses exact shared keys only;
 > no compact-V1 artifact, label or policy is used or altered.
 
+> The overlay capturer is implemented and tested (6 focused/56 combined) but
+> has not yet executed. It cannot read compact-V1 or outer outcomes.
+
 > June/July-2026 clarification: the later active cross-venue family has no 2026
 > result yet. The already closed VOL_COMPLEX cash proxy was positive in June
 > (PF QQQ/SPX/SPY 1.249/1.779/1.764) and July MTD, but July had 10 trades and

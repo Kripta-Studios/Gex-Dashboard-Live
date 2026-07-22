@@ -10,6 +10,11 @@ and captures the four missing quote responses to a separate immutable overlay.
 The 3,008 V1 captures must not be modified. A composite 3,012 seal is required
 before data gate or outer 2024. No new alpha/PF/WR/PnL exists yet.
 
+The dedicated V1R1 capturer and tests are implemented preexecution. It pins the
+four IDs and all V1/vintage hashes, audits the eight unilateral rows, requires
+100% shared-key coverage and seals only 4/4. Focused6/combined56 tests pass; no
+remote repair capture or outcome has run yet.
+
 ## 2026-07-17 profitability clarification
 
 `CROSS_VENUE_CALENDAR_RR_LEADER_V1` has not opened 2026; its 2024–2025 exact

@@ -6,6 +6,9 @@
 > semantics and a four-capture overlay. This does not reopen compact V1, reuse
 > its outcomes or change this closure.
 
+> The four-capture overlay implementation now passes 6 focused and 56 combined
+> cross-venue tests. It remains preexecution and independent of compact V1.
+
 > Status clarification on 2026-07-17: no active cross-venue model has yet been
 > evaluated on June/July 2026. A separate closed cash model, VOL_COMPLEX, was
 > positive in June for QQQ/SPX/SPY (PF 1.249/1.779/1.764) and positive in July

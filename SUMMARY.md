@@ -20,6 +20,12 @@ Se capturan solo cuatro respuestas a un root nuevo; luego un composite seal
 revalida 3.008 V1 + 4 V1R1 sin modificar el V1. Todavía no existe data gate,
 outer 2024 ni PF nuevo; 2024–2026 y producción continúan cerrados.
 
+El capturador/auditor del overlay ya está implementado preejecución. Falla si
+cambia un hash V1/source, aparece una quinta discrepancia, falta una shared key
+nativa o se intenta sellar menos de 4/4. Conserva raw/parquet/manifest y CSV de
+las keys unilaterales. Suite nueva6/6 y combinada56/56, checks clean. Falta
+commit/push y el único capture remoto; no hay resultado de seal todavía.
+
 ## Respuesta concreta sobre junio y julio de 2026
 
 La arquitectura activa `CROSS_VENUE_CALENDAR_RR_LEADER_V1` todavía no tiene

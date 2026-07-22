@@ -12,6 +12,11 @@ reescritura V1. Luego composite seal3.012, full audit, data gate, freeze y
 outer2024. Contract/universe/errors SHA `f40947b5...ea623`/
 `98d416ea...45f4`/`01c6c2f3...95f2`. Sin PF nuevo ni outcome 2024–2026.
 
+Capturador V1R1 + tests implementados pre-run: revalidación exacta, atomicidad,
+resume y seal4/4; suite focal6/combinada56, Ruff/compile PASS. Pendiente
+commit/push → único capture remoto al root V1R1. No ejecutar composite/data
+gate antes del seal.
+
 Respuesta autoritativa junio/julio 2026: la familia activa cross-venue sigue
 sin outcomes 2026 (captura 2024–2025 PID42112: 424/3.012, errors0 a las 03:09).
 No se puede afirmar que sea rentable. El cerrado `DIRECTIONAL_VOL_COMPLEX_V1`

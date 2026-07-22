@@ -28,6 +28,14 @@ capturador/auditor V1R1 → commit/push → captura 4/4 → compact seal →
 composite audit/seal → full audit → data gate → frozen outer 2024. No
 abrir 2025/2026 ni tocar live antes de sus gates.
 
+Capturador V1R1 ya implementado en
+`capture_cross_venue_calendar_rr_native_clock_repairs_v1r1.py`. Verifica hashes
+del estado V1, conteo atómico3.008, conjunto exacto de cuatro errores, source
+hashes y las ocho keys unilaterales; escribe raw/parquet/unilateral audit/
+manifest atómicos y solo sella 4/4. No expone whitelist ni switch de semántica
+por CLI. Suite focal6 y combinada cross-venue56 pasan; Ruff/compile clean. Aún
+no ejecutado: primero commit/push de código/tests y estos handoffs.
+
 ### Estado exacto junio/julio 2026 — 2026-07-17
 
 No existe todavía una policy promovible para esos dos meses. La familia activa

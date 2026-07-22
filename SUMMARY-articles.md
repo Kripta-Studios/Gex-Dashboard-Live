@@ -15,6 +15,11 @@ inmutables y solo cuatro se recapturan a un overlay separado. Un composite seal
 debe revalidar ambos roots antes del data gate. Este patrón evita tanto perder
 provenance como relajar silenciosamente la población después de ver outcomes.
 
+El capturador overlay implementa esta invariancia en código: whitelist cerrada
+sin CLI, hashes de V1 y vintage, discrepancia contractual exacta, cobertura
+shared 100% y seal solo4/4. Sus seis tests elevan la suite cross-venue a 56; no
+se ha consultado ningún retorno.
+
 ### Rentabilidad mensual no equivale a promoción
 
 `DIRECTIONAL_VOL_COMPLEX_V1` muestra el caso exacto: junio 2026 fue positivo en

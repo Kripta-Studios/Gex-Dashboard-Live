@@ -27,6 +27,14 @@ data gate → audit data gate → freeze runner → one-shot 2024. Solo PF>1,
 WR>45%, neto>0 y min13/ticker permite abrir 2025; la meta final sigue PF>1,20,
 WR>45%, min13 y todos los meses positivos.
 
+Implementación lista, todavía no ejecutada:
+`neural/jepa/capture_cross_venue_calendar_rr_native_clock_repairs_v1r1.py` y
+`tests/test_capture_cross_venue_calendar_rr_native_clock_repairs_v1r1.py`.
+Revalida V1/source/diferencias exactas, captura atómica y seal4/4. Suite focal
+`6 passed`, combinada cross-venue `56 passed`, Ruff/py_compile PASS. Commit/push
+estos ficheros antes de hacer la única llamada remota default; no crear output
+manual ni usar el capturador V1 original.
+
 ## Respuesta y checkpoint 2026-07-17 03:09 Europe/Madrid
 
 No afirmar rentabilidad de `CROSS_VENUE_CALENDAR_RR_LEADER_V1` en junio/julio
