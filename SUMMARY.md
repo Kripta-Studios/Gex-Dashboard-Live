@@ -14,6 +14,10 @@ paridad exacta SPY→SPXW y todas las gates recomputadas. Summary SHA
 abierto. La próxima acción no es evaluar: primero versionar estos dos compactos,
 después congelar y versionar el runner outer2024 desde HEAD limpio.
 
+El primer precheck del freezer identificó una ruta antigua al compacto V1. Se
+corrige únicamente ese nombre para consumir el directorio V1R1 versionado y se
+prueba antes de congelar; no cambia ningún elemento científico del runner.
+
 ## Estado nuevo — 2026-07-22
 
 La captura masiva V1 se conserva inmutable con 3.008/3.012 unidades y cuatro

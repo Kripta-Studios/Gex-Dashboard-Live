@@ -22,6 +22,12 @@ false y outer2024/2025/2026/live siguen cerrados. Compactos copiados a
 Siguiente orden obligatorio: commit/push de ambos seals+hándoffs → freezer del
 runner desde HEAD limpio → commit/push del manifest → único outer 2024.
 
+Precheck del freezer tras ese commit detectó una ruta compacta antigua hardcoded
+en el evaluator. La corrección outcome-free cambia únicamente `DATA_GATE_DIR`
+al directorio V1R1 committed y añade una regresión de identidad; no altera
+policy, mapping, eventos, clocks, costes o gates. Commit/push del fix antes del
+freezer; no crear alias ni duplicar el seal.
+
 ### Checkpoint 2026-07-22 — composite native-clock V1R1 PASS
 
 El full native-clock V1 recorrió 3.012 unidades y quedó `NO_SEAL`: preserva

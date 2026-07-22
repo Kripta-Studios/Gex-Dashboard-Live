@@ -21,6 +21,11 @@ Commit/push explícito antes de ejecutar
 push del manifest y solo entonces el one-shot outer2024. No abrir 2025/2026 ni
 tocar live/systemd antes de las gates secuenciales.
 
+El precheck posterior encontró que `evaluate_cross_venue_calendar_rr_leader_v1.py`
+aún nombraba el antiguo compacto V1. Corregir solo `DATA_GATE_DIR` al seal V1R1
+versionado, añadir test, ejecutar suite cross-venue y commit/push antes del
+freezer. No copiar los compactos a un alias y no abrir outcomes durante el fix.
+
 ## Checkpoint autoritativo — 2026-07-22
 
 V1 terminó `NO_SEAL` con 3.008 capturas atómicas y cuatro diferencias

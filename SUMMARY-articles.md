@@ -11,6 +11,11 @@ presión SPXW era literalmente la presión SPY de la misma fecha. La lección es
 que igualdad de bytes, cobertura de clock y fidelidad del mapping son pruebas
 distintas: las tres deben pasar antes de congelar un outcome runner.
 
+La ruta del seal es también parte de esa identidad. Un freezer que apunta a un
+nombre legacy no debe resolverse copiando archivos a un alias; debe fijarse al
+directorio committed autoritativo y probarse antes del manifest, conservando
+una única cadena de provenance.
+
 ### Reparar fuentes por intersección, no por imputación
 
 El full cross-venue reveló cuatro discrepancias Greek/IV entre 3.012 captures.

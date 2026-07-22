@@ -12,6 +12,10 @@ PASS, source audit `6d3180f1...08194`, audit summary `7700b087...e85dac`.
 Outcomes/underlying/outer2024+/live false. Compactos V1R1 listos para
 commit/push; solo después freezer → commit manifest → one-shot outer2024.
 
+Pre-freeze: evaluator apuntaba al nombre compacto V1 obsoleto. Fix permitido y
+outcome-free: `DATA_GATE_DIR` → V1R1 committed + regresión; commit/push antes de
+crear manifest. Cero cambios de señal/eventos/gates.
+
 2026-07-22: V1 queda inmutable `NO_SEAL` con 3.008 capturas y cuatro errores
 Greek/IV congelados. V1R1 ya pasó 4/4 desde `0b7cc6dd`: shared2828,
 unilateral8 audit-only, missing0, extras8, revised0, crossed0. Seal/index/audit

@@ -145,6 +145,12 @@ def test_data_gate_is_required_before_any_outcome(tmp_path: Path) -> None:
         module.validate_data_gate(tmp_path)
 
 
+def test_default_data_gate_is_the_versioned_composite_v1r1_pass() -> None:
+    assert module.DATA_GATE_DIR.name == (
+        "cross_venue_calendar_rr_leader_v1_data_gate_202401_202512_v1r1"
+    )
+
+
 def test_cli_has_no_year_outcome_or_policy_arguments() -> None:
     assert module.OUTER_YEAR == "2024"
     assert module.POLICY["sensor_map"] == {

@@ -51,7 +51,7 @@ MIN_TRADES_EXCLUSIVE = 12
 
 DATA_GATE_DIR = PROJECT_ROOT / (
     "research_papers/JEPA/results/_diagnostics/"
-    "cross_venue_calendar_rr_leader_v1_202401_202512_v1_data_gate"
+    "cross_venue_calendar_rr_leader_v1_data_gate_202401_202512_v1r1"
 )
 DATA_GATE_FILES = (
     "manifest.json",

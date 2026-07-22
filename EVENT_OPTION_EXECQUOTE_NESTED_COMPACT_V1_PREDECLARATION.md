@@ -5,6 +5,9 @@
 > isolated from compact V1; its own outer runner cannot execute until a
 > separately committed freeze.
 
+> Its subsequent input-path correction only identifies the committed V1R1
+> source seal and remains isolated from this protocol and its outcomes.
+
 > The later cross-venue family now has a tested, unexecuted composite sealer
 > for its 3,008 V1 plus four V1R1 captures. It uses a logical multi-root index,
 > opens no outcomes and cannot consume or alter compact V1. Its downstream

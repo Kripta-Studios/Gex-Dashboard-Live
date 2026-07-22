@@ -16,6 +16,11 @@ underlying values or outcomes were read. These results validate a measurable
 source, not alpha; compact artifacts must be committed before freezing the
 outer-2024 runner.
 
+The freezer precheck then found a legacy compact directory name in the outer
+evaluator. The only permitted fix points `DATA_GATE_DIR` at the committed V1R1
+seal and regression-tests that identity before freeze. No alias, signal or gate
+change is introduced.
+
 ## 2026-07-22 cross-venue source repair
 
 The full native-clock source ended unsealed at 3,008/3,012 captures. Four
