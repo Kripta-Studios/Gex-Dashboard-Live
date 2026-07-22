@@ -45,6 +45,12 @@ faltantes. El índice lógico conserva 3.008 rutas V1 y cuatro rutas repair. Es 
 resultado de provenance, no de rentabilidad; su valor es permitir que la
 primera lectura outer 2024 ocurra sobre una fuente causal y reproducible.
 
+La excepción debe viajar como dato sellado, no como conocimiento implícito del
+consumidor. Por eso el builder recibe por capture la generación, el root y los
+conteos exclusivos esperados. La regla general sigue siendo igualdad modal;
+solo una tabla cerrada de cuatro IDs activa intersección. Este diseño hace que
+una quinta diferencia futura falle en lugar de convertirse en una relajación.
+
 Una consecuencia importante es que el consumidor debe entender el composite:
 un seal PASS no basta si auditor y builder siguen suponiendo un solo directorio
 o igualdad Greek=IV universal. La compatibilidad correcta resuelve cada capture

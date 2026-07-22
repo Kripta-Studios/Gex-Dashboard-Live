@@ -46,6 +46,13 @@ gate → freeze → outer 2024. Los auditor/builder actuales asumen un solo root
 y key-set exacto en las 3.012; **no ejecutarlos sin esa adaptación**. Outcomes
 2024–2026 y producción permanecen cerrados.
 
+Compatibilidad downstream congelada pre-outcome en
+`CROSS_VENUE_CALENDAR_RR_LEADER_V1_COMPOSITE_CONSUMER_CLARIFICATION.md`: fija
+los cinco hashes composite, resolución por `storage_root/generation`, igualdad
+Greek=IV para V1 y los conteos exactos `Greek∩IV` solo para cuatro repairs.
+Siguiente: commit/push de la aclaración; implementar tests+auditor+builder; no
+ejecutar ninguno hasta un segundo commit limpio.
+
 ### Estado exacto junio/julio 2026 — 2026-07-17
 
 No existe todavía una policy promovible para esos dos meses. La familia activa

@@ -29,6 +29,13 @@ intersección solo en los cuatro IDs congelados. Hasta entonces no ejecutar data
 gate ni abrir outer 2024. No existe PF nuevo ni resultado 2024–2026; producción
 sigue intacta.
 
+La compatibilidad se congela en una aclaración nueva antes de outcomes: valida
+los hashes exactos del composite, resuelve cada capture por root/generación,
+mantiene Greek=IV en las 3.008 V1 y acepta los ocho unilaterales exactos solo
+como audit de los cuatro repairs. No cambia ninguna regla económica. Tras
+commit/push se implementan auditor/builder y se vuelven a publicar antes de
+ejecutarlos.
+
 ## Respuesta concreta sobre junio y julio de 2026
 
 La arquitectura activa `CROSS_VENUE_CALENDAR_RR_LEADER_V1` todavía no tiene

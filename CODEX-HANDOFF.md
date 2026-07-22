@@ -38,6 +38,13 @@ unilaterales sin incorporarlas. Después: full audit → data gate → auditorí
 independiente → freeze → one-shot 2024. Solo PF>1/WR>45%/neto>0/min13 por
 ticker abre 2025; meta final PF>1,20/WR>45%/min13/todos meses positivos.
 
+La adaptación exacta ya está congelada pre-outcome en
+`CROSS_VENUE_CALENDAR_RR_LEADER_V1_COMPOSITE_CONSUMER_CLARIFICATION.md`:
+validar blobs compactos byte a byte, resolver `storage_root/generation`, exigir
+Greek=IV en 3.008 V1 y aplicar los conteos exactos de intersección solo en los
+cuatro IDs. Commit/push del documento antes de implementar; código committed
+antes de ejecutar full audit o builder.
+
 ## Respuesta y checkpoint 2026-07-17 03:09 Europe/Madrid
 
 No afirmar rentabilidad de `CROSS_VENUE_CALENDAR_RR_LEADER_V1` en junio/julio

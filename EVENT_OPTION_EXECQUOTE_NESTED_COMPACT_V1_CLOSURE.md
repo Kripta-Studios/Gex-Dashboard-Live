@@ -12,6 +12,10 @@
 > missing shared keys. Its compact seal is versioned separately; no compact-V1
 > artifact or outcome was read and this closure remains final.
 
+> A composite-consumer clarification for that separate source freezes its
+> multi-root and four-ID intersection semantics before outcomes. It has no
+> compact-V1 dependency and does not reopen this result.
+
 > 2026-07-22: the separate cross-venue full capture ended without a seal at
 > 3,008/3,012 because four Greek/IV key sets each contain one unilateral
 > contract at both clocks. A pre-outcome V1R1 repair freezes exact intersection

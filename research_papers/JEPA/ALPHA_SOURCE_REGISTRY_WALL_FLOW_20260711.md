@@ -37,6 +37,14 @@ missing shared keys. Seal/contract/index/summary SHA are
 `5b97ebc5...cf84f`/`68714d77...8c046`/`e5a669b7...3a0e`/
 `41deb014...df65`. This remains a source-provenance result, not alpha or PnL.
 
+Consumer semantics are now frozen before outcomes in
+`CROSS_VENUE_CALENDAR_RR_LEADER_V1_COMPOSITE_CONSUMER_CLARIFICATION.md`.
+The full auditor and builder must validate compact byte parity, resolve each
+capture through its sealed generation/root, keep exact Greek=IV for all V1
+units and apply the four exact intersection counts only to V1R1. No downstream
+execution is allowed until this clarification and then its implementation are
+committed separately.
+
 ## 2026-07-17 profitability clarification
 
 `CROSS_VENUE_CALENDAR_RR_LEADER_V1` has not opened 2026; its 2024–2025 exact

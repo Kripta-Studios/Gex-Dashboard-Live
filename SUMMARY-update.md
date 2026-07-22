@@ -23,6 +23,11 @@ Greek=IV. Tras el composite hay que adaptarlos a `storage_root` por capture y a
 `Greek∩IV` solo para los cuatro IDs; luego full audit → gate → auditoría →
 freeze → outer2024. 2024–2026 y live siguen cerrados.
 
+Clarificación composite-consumer congelada pre-outcome: hashes exactos, compact
+byte-parity, rutas por capture, V1 Greek=IV y cuatro excepciones `Greek∩IV` con
+conteos 0/2,2/0,0/2,0/2. Commit/push documento → implementar/testear auditor y
+builder → commit/push código → ejecutar full audit; no outcomes.
+
 Respuesta autoritativa junio/julio 2026: la familia activa cross-venue sigue
 sin outcomes 2026 (captura 2024–2025 PID42112: 424/3.012, errors0 a las 03:09).
 No se puede afirmar que sea rentable. El cerrado `DIRECTIONAL_VOL_COMPLEX_V1`
