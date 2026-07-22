@@ -34,6 +34,10 @@ positivo (PF1,123/+228,5bps); QQQ PF0,667/0,738, SPXW0,928/0,992 y SPY H1
 0,772. La frecuencia pasa, la orientación aprendida no. 2025 queda cerrado.
 Auditor de refit/source rehash implementado y probado antes de ejecución.
 
+La auditoría real también pasa: recompone los 743 trades y rehashea 1.487
+fuentes sin diferencias. No cambia el cierre; V2R1 queda archivada como ejemplo
+de complejidad que no generaliza y 2025 permanece sin outcomes.
+
 ## Resultado causal nuevo — V1 falla outer 2024
 
 El runner congelado en `b53dcaa3` ejecutó su único 2024: pooled 743 trades,

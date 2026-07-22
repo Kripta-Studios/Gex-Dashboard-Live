@@ -1,0 +1,25 @@
+{
+  "schema": "cross_venue_calendar_rr_leader_v2_development_audit_v1",
+  "status": "PASS_INDEPENDENT_V2_DEVELOPMENT_AUDIT",
+  "created_at_utc": "2026-07-22T15:20:45.807886+00:00",
+  "evaluation_status": "PARTIAL_DEVELOPMENT_EDGE_2025_CLOSED",
+  "evaluation_commit": "d2df1a611d31fdeb8b86fc004f37e061b7bbcf01",
+  "audit_commit": "32f77c12fdc457051fe1e8489b15d95ae9d8e1da",
+  "development_trades": 743,
+  "source_rows_rehashed": 1487,
+  "source_hash_mismatches": 0,
+  "source_size_mismatches": 0,
+  "advance_to_2025_freeze": false,
+  "outer_2025_opened": false,
+  "holdout_2026_opened": false,
+  "production_modified": false,
+  "evaluation_summary_sha256": "c79bddfe476a3fa8670a38d79480d4727d195d091aa5e206c013e357338f03a7",
+  "trades_recomputed_sha256": "4527d7b60af927f02c7b9511b198e0e0906885d2e88ee71d795ae432f93bc6c7",
+  "models_recomputed_sha256": "ea758c0dadaf1ec11916f468c302033436b0891a9911a89d8f113c0bb4969472",
+  "source_rehash_sha256": "b2c8bdaceccfb4adf479c84059d0db66e615f370fbe9f270ebae00c94c70a40c",
+  "output_sha256": {
+    "monthly_recomputed.csv": "e5550b0f79e605b8897e3904de89c636a272f8bba01f6c82c58984b9a6fb18ce",
+    "block_summary_recomputed.csv": "7c8dfbd22977ebf498cb572347c1685a8bdacc900eaddccb4b21e6fb8ce6b15c",
+    "cost_sensitivity_recomputed.csv": "44ec722aecaf7e9edcf9de2756630d1e8b50e8f7474b4237f3df6da5fb816e4e"
+  }
+}

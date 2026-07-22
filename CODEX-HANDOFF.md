@@ -56,6 +56,11 @@ Auditor V2 listo/unexecuted en
 rehash; focal3/cross-venue82/checks PASS. Commit/push antes de auditar default;
 luego versionar resultado+audit y cerrar V2.
 
+Auditor real PASS desde `32f77c12`: refit/predictions/ledger/gates exactos,
+1.487 source rehashes y mismatch0. Audit summary SHA de evaluación
+`c79bddfe...f03a7`, source rehash `b2c8bdac...0a40c`. Compactos V2+audit listos
+para force-add/commit/push. Solo después predeclarar V3; no abrir 2025 aún.
+
 ## Cierre autoritativo — outer 2024 V1 sin edge
 
 Freeze committed/pushed `b53dcaa3`; one-shot 2024:

@@ -67,6 +67,13 @@ el censo V2R1. Focal3, cross-venue82, Ruff/compile PASS. Aún no ejecutado:
 commit/push código/tests+hándoffs, después auditor default una vez y versionar
 V2+audit. V2 queda cerrada cualquiera que sea el audit; no abrir 2025.
 
+Auditor real desde `32f77c12` terminó
+`PASS_INDEPENDENT_V2_DEVELOPMENT_AUDIT`: trades743, sources1.487,
+hash/size mismatch0, modelo/ledger/meses/costes/gates idénticos. Evaluation
+summary SHA `c79bddfe...f03a7`, source rehash `b2c8bdac...0a40c`. Compactos
+V2+audit preparados en directorios diagnósticos homónimos. Commit/push explícito
+de evidencia+hándoffs antes de iniciar cualquier V3; 2025/2026 siguen cerrados.
+
 ### Checkpoint 2026-07-22 — V1 outer 2024 cerrado sin edge
 
 El freeze quedó committed/pushed en `b53dcaa3` y el único outer 2024 terminó

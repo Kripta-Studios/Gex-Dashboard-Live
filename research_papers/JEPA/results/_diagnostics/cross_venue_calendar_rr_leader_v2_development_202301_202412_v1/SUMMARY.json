@@ -1,0 +1,196 @@
+{
+  "schema": "cross_venue_calendar_rr_leader_v2_development_v1",
+  "status": "PARTIAL_DEVELOPMENT_EDGE_2025_CLOSED",
+  "created_at_utc": "2026-07-22T15:16:58.930162+00:00",
+  "execution_commit": "d2df1a611d31fdeb8b86fc004f37e061b7bbcf01",
+  "predeclaration_sha256": "f9004c00db6ef7978155f794dc13fac7623ce2461fca7f99bbf47353f3304732",
+  "evaluator_sha256": "1bdc768ca4a72d99be1394d18107750abb228024fc56555ebe4d7b13c5c89d2a",
+  "input_sha256": {
+    "research_papers/JEPA/results/_diagnostics/calendar_risk_reversal_pressure_v1_202301_202312_v1_data_gate/calendar_rr_features.parquet": "de0ec4b3251505b763dff3dc8baee2f3462ca7a5833d70ed6db014b03112858b",
+    "research_papers/JEPA/results/_diagnostics/calendar_risk_reversal_pressure_v1_202301_202312_v1_data_gate/source_inventory.csv": "6f81e4f8cc102f63c60e23c04d0c13d7a5be4af535c745f2dc5ec2646a2184d8",
+    "research_papers/JEPA/results/_diagnostics/calendar_risk_reversal_pressure_v1_development_202301_202312_v1/trades.csv": "9c5178045e4172e6bfaf6d7bf30eb07a6ae68ff66a3bb8b738965de1e0d0fa66",
+    "research_papers/JEPA/results/_diagnostics/cross_venue_calendar_rr_leader_v1_data_gate_202401_202512_v1r1/cross_venue_calendar_rr_features.parquet": "fd2953bd9bc918b95079d494663cf7ca2fc9dfe141604b8e8803cc2bf605d268",
+    "research_papers/JEPA/results/_diagnostics/cross_venue_calendar_rr_leader_v1_data_gate_202401_202512_v1r1/source_inventory.csv": "b63ca25185627528b1bc22ad937dcb834dbb4846d03b451aa395a62003d4c56c",
+    "research_papers/JEPA/results/_diagnostics/cross_venue_calendar_rr_leader_v1_outer_2024_v1/trades.csv": "d989f586749738b75bb3c62c69d189d0e6e29b3106d060a1332c956af2917aa4"
+  },
+  "mapping": {
+    "QQQ": "QQQ",
+    "SPXW": "SPY",
+    "SPY": "SPY"
+  },
+  "feature_columns": [
+    "signal_pressure",
+    "abs_signal_pressure",
+    "calendar_rr_t0",
+    "front_rr_t0",
+    "back_rr_t0",
+    "front_rr_change",
+    "back_rr_change",
+    "option_spot_return_5m_bps",
+    "qqq_return_1000_1035_bps",
+    "qqq_return_1020_1035_bps",
+    "qqq_return_1030_1035_bps",
+    "qqq_open_return_std_bps",
+    "qqq_open_range_bps",
+    "qqq_positive_open_return_fraction",
+    "spy_return_1000_1035_bps",
+    "spy_return_1020_1035_bps",
+    "spy_return_1030_1035_bps",
+    "spy_open_return_std_bps",
+    "spy_open_range_bps",
+    "spy_positive_open_return_fraction",
+    "spxw_return_1000_1035_bps",
+    "spxw_return_1020_1035_bps",
+    "spxw_return_1030_1035_bps",
+    "spxw_open_return_std_bps",
+    "spxw_open_range_bps",
+    "spxw_positive_open_return_fraction",
+    "ticker_QQQ",
+    "ticker_SPXW",
+    "ticker_SPY"
+  ],
+  "feature_count": 29,
+  "blocks": {
+    "DEV_A": {
+      "train_start": "202301",
+      "train_end": "202312",
+      "test_start": "202401",
+      "test_end": "202406"
+    },
+    "DEV_B": {
+      "train_start": "202301",
+      "train_end": "202406",
+      "test_start": "202407",
+      "test_end": "202412"
+    }
+  },
+  "model": {
+    "kind": "pooled_logistic_direct_orientation",
+    "penalty": "l2",
+    "C": 0.1,
+    "solver": "liblinear",
+    "threshold": 0.5,
+    "class_weight": null,
+    "random_state": 0
+  },
+  "cash_clock": {
+    "column": "open",
+    "audit_first": "09:30:00",
+    "model_first": "10:00:00",
+    "last": "10:35:00",
+    "audit_rows_per_source": 66,
+    "model_rows_per_source": 36,
+    "model_returns_per_source": 35,
+    "original_invalid_source_keys": [
+      "SPY|20230605"
+    ],
+    "original_invalid_open_rows": 2,
+    "outcome_clock_read_by_cash_builder": false
+  },
+  "runtime": {
+    "python": "3.14.2",
+    "numpy": "2.3.5",
+    "pandas": "3.0.0",
+    "pyarrow": "23.0.1",
+    "scikit_learn": "1.8.0"
+  },
+  "train_rows_2023": 739,
+  "development_trades_2024": 743,
+  "source_rows_revalidated": 1487,
+  "source_hash_mismatches": 0,
+  "source_size_mismatches": 0,
+  "block_ticker": [
+    {
+      "block": "DEV_A",
+      "ticker": "QQQ",
+      "trades": 124,
+      "win_rate": 0.4435483870967742,
+      "profit_factor": 0.6671271540527145,
+      "net_bps": -794.7069398482398,
+      "min_month_trades": 19,
+      "positive_months": 1,
+      "incremental_gate_pass": false,
+      "objective_gate_pass": false
+    },
+    {
+      "block": "DEV_A",
+      "ticker": "SPXW",
+      "trades": 124,
+      "win_rate": 0.5,
+      "profit_factor": 0.9275260051994366,
+      "net_bps": -108.28200384717651,
+      "min_month_trades": 19,
+      "positive_months": 3,
+      "incremental_gate_pass": false,
+      "objective_gate_pass": false
+    },
+    {
+      "block": "DEV_A",
+      "ticker": "SPY",
+      "trades": 124,
+      "win_rate": 0.4596774193548387,
+      "profit_factor": 0.7719433213483389,
+      "net_bps": -371.2994308241168,
+      "min_month_trades": 19,
+      "positive_months": 1,
+      "incremental_gate_pass": false,
+      "objective_gate_pass": false
+    },
+    {
+      "block": "DEV_B",
+      "ticker": "QQQ",
+      "trades": 125,
+      "win_rate": 0.448,
+      "profit_factor": 0.7378909362883704,
+      "net_bps": -805.4744190991686,
+      "min_month_trades": 19,
+      "positive_months": 1,
+      "incremental_gate_pass": false,
+      "objective_gate_pass": false
+    },
+    {
+      "block": "DEV_B",
+      "ticker": "SPXW",
+      "trades": 123,
+      "win_rate": 0.5691056910569106,
+      "profit_factor": 0.991590348060564,
+      "net_bps": -16.635113139068316,
+      "min_month_trades": 18,
+      "positive_months": 3,
+      "incremental_gate_pass": false,
+      "objective_gate_pass": false
+    },
+    {
+      "block": "DEV_B",
+      "ticker": "SPY",
+      "trades": 123,
+      "win_rate": 0.5609756097560976,
+      "profit_factor": 1.1229643149650628,
+      "net_bps": 228.5166342205366,
+      "min_month_trades": 18,
+      "positive_months": 3,
+      "incremental_gate_pass": true,
+      "objective_gate_pass": false
+    }
+  ],
+  "advance_to_2025_freeze": false,
+  "objective_gate_pass": false,
+  "outer_2025_opened": false,
+  "holdout_2026_opened": false,
+  "production_modified": false,
+  "live_or_systemd_modified": false,
+  "output_sha256": {
+    "development_dataset.parquet": "459979c11ad5b7ba1ed44ef3add42142d0eab40982882bc52031982e22778f0b",
+    "source_audit.csv": "6cdb2b85fe8182e7860188c8ceb22f51d7d0f740144c845b5ab631c881b247d2",
+    "trades.csv": "4527d7b60af927f02c7b9511b198e0e0906885d2e88ee71d795ae432f93bc6c7",
+    "monthly_metrics.csv": "574c3482ae5c48e428ee238de08b7f7d745c11ddc65eae548be856183c8d4b08",
+    "block_ticker_summary.csv": "12f10e8b9dda4fb23efc9e87e12993aedd35ba19d6ea127c7b798ff42f6460ce",
+    "cost_sensitivity.csv": "3988ec517a7016b3f3df264190e05f3e28468a26d1c4695956e3ccd195357534",
+    "models.json": "8a323cc2a900b0fa3fcd270f0543b2a3cc19db7bc4555aecb359aa3fac8ef78b"
+  },
+  "development_dataset_sha256": "81c10a2ac65cd76b8f2eb9a2b49bb3515e1cce34621e4f50a97f57dee93e91cf",
+  "trades_recomputed_sha256": "4527d7b60af927f02c7b9511b198e0e0906885d2e88ee71d795ae432f93bc6c7",
+  "monthly_recomputed_sha256": "574c3482ae5c48e428ee238de08b7f7d745c11ddc65eae548be856183c8d4b08",
+  "block_summary_recomputed_sha256": "12f10e8b9dda4fb23efc9e87e12993aedd35ba19d6ea127c7b798ff42f6460ce",
+  "cost_sensitivity_recomputed_sha256": "3988ec517a7016b3f3df264190e05f3e28468a26d1c4695956e3ccd195357534"
+}
