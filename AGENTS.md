@@ -40,6 +40,13 @@ PF1,346342/53,2787%/+1.381,556/min17/8. Son prometedoras y pasan incremental,
 pero aún son diagnóstico post-outcome pendiente de evaluator+auditor; no llamar
 OOS ni rentabilidad promocionable y no abrir 2026 por estas cifras solas.
 
+Evaluator+auditor V4 development implementados y aún no ejecutados:
+`evaluate_cross_venue_calendar_rr_leader_v4.py` recompone 735 rows, rehashea
+738 fuentes cash 2025 y fittea una vez las 1.482 rows train; el auditor refittea
+y compara dataset/modelo/ledger/gates. Focal8, suite cross-venue/native-clock
+108, Ruff/compile PASS. Commit/push código/tests+hándoffs antes del único run
+development; después commit auditor y evidencia. 2026 sigue intacto.
+
 ### Checkpoint 2026-07-22 — V2 temporal orientation predeclarada
 
 Tras cerrar V1 se autoriza una familia post-outcome nueva. Documento:

@@ -16,6 +16,10 @@ SPXW 1,247945/52,0492%/+1.030,091/min17/8m; SPY
 1,346342/53,2787%/+1.381,556/min17/8m. Mejor resultado actual, pendiente de
 reproducción/auditoría formal y no promocionable por ser post-outcome.
 
+Evaluator+auditor V4 listos/unexecuted: train1482/dev735/cash sources738,
+refit/model/dataset/ledger/gates exactos; focal8, cross-venue108, checks PASS.
+Commit/push antes del default development. 2026 intacto.
+
 2026-07-22: V2 post-outcome predeclarada antes de nuevos opens cash. Modelo
 único pooled logistic L2 C0,1, 29 features fijas y target direct-vs-inverse.
 DEV_A train2023/test2024H1; DEV_B train2023+H1/testH2. Cash feature clocks

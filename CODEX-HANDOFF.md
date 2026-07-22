@@ -32,6 +32,11 @@ PF1,204351/WR51,8219%/+1.060,279bps/min18/7 meses; SPXW
 1,346342/53,2787%/+1.381,556/min17/8. Es el mejor resultado actual, pero fue
 descubierto después de abrir 2025: reproducir y auditar antes del data gate 2026.
 
+V4 evaluator y auditor listos/unexecuted. El primero revalida 1.482 train rows,
+735 development rows y 738 early-cash sources; el segundo refittea y exige
+paridad exacta de modelo/dataset/ledger/gates. Focal8, cross-venue/native-clock
+108, Ruff/compile PASS. Commit/push antes de development default; no 2026.
+
 ## V2 temporal orientation — predeclaración antes del nuevo feature read
 
 Contrato nuevo post-outcome:
