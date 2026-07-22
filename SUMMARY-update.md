@@ -14,6 +14,10 @@ Primer run V2: fail-closed pre-cash por colisión `signal_pressure` entre ledger
 y sensor, output inexistente. Fix namespacea `sealed_signal_pressure` para
 auditar paridad; focal8/cross-venue75/checks PASS. Cero nuevos opens/outcomes.
 
+Segundo run pre-cash: zeros QQQ 20231116/20231215, ya no-trade en V1. Nueva
+clarificación congela el set y los excluye solo del train; 739 filas fit, 743
+predicciones 2024 sin cambio. Cualquier cero adicional falla. No output/cash.
+
 2026-07-22: runner frozen committed `b53dcaa3`; único V1 outer2024 cerrado
 `NO_AGGREGATE_EDGE`. Pooled 743/PF0,761071/WR42,665%/-3.130,133bps. Por ticker:
 QQQ249/PF0,866939/-662,668/min19/6 meses positivos; SPXW247/0,698912/

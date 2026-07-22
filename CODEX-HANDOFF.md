@@ -22,6 +22,12 @@ Primer run V2 falló antes del loader cash y no creó output: colisión de nombr
 solo para comprobar la paridad del mapping 2024. Focal8/cross-venue75 y checks
 PASS. No se leyó ningún open nuevo; commit/push antes de reintentar.
 
+Segundo run falló en el mismo tramo pre-cash: zeros exactos QQQ 20231116 y
+20231215, ambos `NO_TRADE_ZERO_PRESSURE` ya sellados. Clarificación congelada
+en `CROSS_VENUE_CALENDAR_RR_LEADER_V2_ZERO_PRESSURE_TRAINING_CLARIFICATION.md`:
+excluir solo esos dos del fit, exigir set exacto y fallar cualquier tercero.
+Train esperado739, predicciones2024 intactas. Commit doc antes del código.
+
 ## Cierre autoritativo — outer 2024 V1 sin edge
 
 Freeze committed/pushed `b53dcaa3`; one-shot 2024:

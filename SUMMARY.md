@@ -19,6 +19,11 @@ ledger y sensor. El fix mantiene la presión sellada bajo namespace de auditorí
 y deja la feature del modelo inequívoca; 75 tests pasan. No hubo nuevo dato ni
 output económico antes del fix committed.
 
+El segundo intento también cerró pre-cash: dos ceros QQQ ya eran no-trades en
+el ledger 2023. La aclaración congela sus IDs y los elimina solo del fit porque
+el target directo/inverso es indefinido; 2024 tiene cero casos y no cambia.
+Una tercera key falla cerrado. 2025 continúa intacto.
+
 ## Resultado causal nuevo — V1 falla outer 2024
 
 El runner congelado en `b53dcaa3` ejecutó su único 2024: pooled 743 trades,

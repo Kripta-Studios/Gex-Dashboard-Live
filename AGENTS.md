@@ -27,6 +27,14 @@ columna como `sealed_signal_pressure` solo para auditar paridad 2024. Regresión
 nueva; focal8/cross-venue75/Ruff/compile PASS. Commit/push del fix antes del
 reintento; ningún open temprano ni outcome nuevo fue leído.
 
+Segundo intento también pre-cash y sin output: QQQ 20231116/20231215 son las
+dos únicas pressures cero y el ledger sellado las marca no-trade. Clarificación
+autoritaria:
+`CROSS_VENUE_CALENDAR_RR_LEADER_V2_ZERO_PRESSURE_TRAINING_CLARIFICATION.md`.
+Exigir exactamente esas dos keys, excluirlas solo del fit (train queda739) y
+fallar ante cualquier tercera. No cambia ningún evento/predicción 2024. Commit/
+push de la aclaración antes de implementar el fix; 2025 sigue cerrado.
+
 ### Checkpoint 2026-07-22 — V1 outer 2024 cerrado sin edge
 
 El freeze quedó committed/pushed en `b53dcaa3` y el único outer 2024 terminó

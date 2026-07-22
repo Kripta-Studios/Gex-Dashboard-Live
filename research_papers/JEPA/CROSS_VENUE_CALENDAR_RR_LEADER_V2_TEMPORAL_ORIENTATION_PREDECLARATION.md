@@ -110,6 +110,12 @@ orientación directa; <0,50 invierte el signo. No hay abstención: un evento
 válido produce una operación y preserva frecuencia. No se calibra probabilidad
 ni se prueba otro C/modelo/feature set después del resultado.
 
+Clarificación pre-cash posterior: dos filas QQQ 2023 tienen presión exactamente
+cero y ya eran `NO_TRADE_ZERO_PRESSURE` en el ledger sellado. Directo/inverso no
+está definido para ellas. Se congelan y excluyen solo del train según
+`CROSS_VENUE_CALENDAR_RR_LEADER_V2_ZERO_PRESSURE_TRAINING_CLARIFICATION.md`;
+no existe cero en 2024 y cualquier tercera key inesperada falla cerrado.
+
 Runtime de predeclaración: Python3.14.2, numpy2.3.5, pandas3.0.0,
 pyarrow23.0.1 y scikit-learn1.8.0.
 
