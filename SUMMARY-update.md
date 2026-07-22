@@ -26,6 +26,10 @@ Gate vintage2026 V4 `FAILED...CLOSED`: sensors QQQ/SPY 127 sesiones cada uno,
 (QQQ 20260624/26, SPY 20260624/25/26). Greek∩IV está limitado a los cuatro
 repairs V1R1, así que no capture/data gate/outcomes2026. V4 cerrada outcome-free.
 
+Cash-only post-V4 cerrado: logistic summaries/spot/cross-cash, shallow HistGB/RF
+y raw35x1m no pasan seis ticker-año. Mejor raw pooled PF2024
+1,169/0,903/0,916; PF2025 0,985/1,480/1,483. Cambio de régimen; no V5 ni 2026.
+
 2026-07-22: V2 post-outcome predeclarada antes de nuevos opens cash. Modelo
 único pooled logistic L2 C0,1, 29 features fijas y target direct-vs-inverse.
 DEV_A train2023/test2024H1; DEV_B train2023+H1/testH2. Cash feature clocks

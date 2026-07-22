@@ -46,6 +46,13 @@ cuatro repairs V1R1; no intersection/exclusión/recaptura. Documento autoritativ
 `CROSS_VENUE_CALENDAR_RR_LEADER_V4_2026_VINTAGE_KEY_GATE_FAILURE.md`. Ningún
 underlying value/outcome 2026 ni red fue abierto. Versionar handoffs; V4 closed.
 
+Cash-only post-V4 también `CLOSED_NO_STABLE_CASH_ONLY_EDGE`. Resúmenes lineales,
+spot, cross-cash, shallow HistGB/RF y secuencia35x1m fallan transportabilidad.
+La secuencia pooled da PF2024 QQQ/SPXW/SPY 1,169/0,903/0,916 y PF2025
+0,985/1,480/1,483; separar sensores no corrige 2024. Documento homónimo
+`CROSS_VENUE_CALENDAR_RR_POST_V4_CASH_ONLY_DIAGNOSTIC.md`. No crear V5 ni
+abrir 2026 desde estos resultados.
+
 ## V2 temporal orientation — predeclaración antes del nuevo feature read
 
 Contrato nuevo post-outcome:

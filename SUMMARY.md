@@ -30,6 +30,12 @@ todas en fronts QQQ/SPY del 24–26 de junio. La excepción `Greek∩IV` estaba
 cerrada a cuatro IDs históricos; por ello V4 falla antes de captura y 2026 no se
 abre. No se descartaron fechas ni se consultaron retornos para tomar la decisión.
 
+La alternativa cash-only tampoco transporta. La mejor secuencia de 35 retornos
+minuto logra PF QQQ1,169 en 2024 y SPXW/SPY1,480/1,483 en 2025, pero los bloques
+opuestos quedan bajo1. Separar modelos por sensor conserva el mismo cambio de
+régimen. Resúmenes cash, spot5m y dos modelos shallow también fallan. No existe
+V5 promovible ni motivo causal para abrir 2026.
+
 ## Vía V4 predeclarada
 
 La exploración posterior encuentra una mejora agregada real al reentrenar el

@@ -58,6 +58,14 @@ nuevos tienen 92 Greek-only+516 IV-only. Son QQQ 20260624 front g80, QQQ
 Greek∩IV no puede ampliarse más allá de los cuatro V1R1 IDs; no intersectar,
 reparar, excluir ni capturar. V4 queda cerrada y outcomes 2026 siguen sin abrir.
 
+Diagnóstico cash-only posterior también cerrado, documentado en
+`CROSS_VENUE_CALENDAR_RR_POST_V4_CASH_ONLY_DIAGNOSTIC.md`. Se probaron folds
+causales 2024/2025 con seis resúmenes, spot5m, cross-cash, HistGB/RF shallow y
+secuencia cruda35x1m. Mejor contraste: pooled sequence PF 2024
+1,169/0,903/0,916 y 2025 0,985/1,480/1,483; por sensor queda
+1,023/0,868/0,874 y 0,992/1,398/1,397. Es cambio de régimen, no edge conjunto.
+No V5, no selección por ticker/año y no outcomes2026.
+
 ### Checkpoint 2026-07-22 — V2 temporal orientation predeclarada
 
 Tras cerrar V1 se autoriza una familia post-outcome nueva. Documento:

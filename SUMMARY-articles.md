@@ -36,6 +36,12 @@ development una excepción congelada a cuatro IDs históricos. El fallo cerrado
 preserva la validez causal: un PF prometedor no justifica cambiar la población
 de contratos justo antes del holdout.
 
+Eliminar la superficie tampoco preservó el edge. Una secuencia cash granular
+pasó QQQ en 2024 y SPY/SPXW en 2025, pero nunca ambos años; los resúmenes y
+modelos no lineales pequeños mostraron el mismo problema. Una feature disponible
+no es necesariamente una alternativa equivalente: quitar la fuente bloqueada
+cambia la información y puede destruir la relación causal que generaba el PF.
+
 ### Más contexto no corrige una relación de signo inestable
 
 Un logistic pooled causal con 29 variables option/cash, dos fits temporales y
