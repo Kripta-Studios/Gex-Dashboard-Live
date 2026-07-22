@@ -33,6 +33,13 @@ Solo un PASS incremental auditado autoriza construir data gate 2026 outcome-free
 Greek∩IV sigue solo en los cuatro repair IDs; cualquier discrepancia 2026 es
 quinta y falla cerrado. No live/systemd.
 
+Métricas V4 development2025 que deben preservarse y reproducirse, a 1bp:
+QQQ PF1,204351/WR51,8219%/+1.060,279bps/min18/7 meses positivos; SPXW
+PF1,247945/52,0492%/+1.030,091/min17/8; SPY
+PF1,346342/53,2787%/+1.381,556/min17/8. Son prometedoras y pasan incremental,
+pero aún son diagnóstico post-outcome pendiente de evaluator+auditor; no llamar
+OOS ni rentabilidad promocionable y no abrir 2026 por estas cifras solas.
+
 ### Checkpoint 2026-07-22 — V2 temporal orientation predeclarada
 
 Tras cerrar V1 se autoriza una familia post-outcome nueva. Documento:

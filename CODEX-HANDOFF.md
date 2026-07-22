@@ -26,6 +26,12 @@ sin cambios ni refit. Commit/push doc antes de implementar development2025.
 Después evaluator → auditor → solo data gate 2026 outcome-free. No leer 2026;
 cualquier discrepancia Greek/IV nueva falla cerrado y no amplía los cuatro IDs.
 
+Guardar como checkpoint numérico V4 development2025 a 1bp: QQQ
+PF1,204351/WR51,8219%/+1.060,279bps/min18/7 meses; SPXW
+1,247945/52,0492%/+1.030,091/min17/8; SPY
+1,346342/53,2787%/+1.381,556/min17/8. Es el mejor resultado actual, pero fue
+descubierto después de abrir 2025: reproducir y auditar antes del data gate 2026.
+
 ## V2 temporal orientation — predeclaración antes del nuevo feature read
 
 Contrato nuevo post-outcome:

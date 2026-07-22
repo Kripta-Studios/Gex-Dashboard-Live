@@ -13,6 +13,11 @@ la cadena mensual y todos los retornos/costes/gates. V3 queda cerrada; 2026 no
 fue consultado. Una familia posterior debe tratar 2023–2025 como development y
 congelarse de nuevo antes del primer outer 2026.
 
+Checkpoint exacto a preservar, coste1bp: QQQ PF1,204351, WR51,8219%,
++1.060,279bps, min18 y 7/12 meses positivos; SPXW PF1,247945, WR52,0492%,
++1.030,091bps, min17 y 8/12; SPY PF1,346342, WR53,2787%, +1.381,556bps,
+min17 y 8/12. Es el mejor resultado de development, no una validación OOS.
+
 ## Vía V4 predeclarada
 
 La exploración posterior encuentra una mejora agregada real al reentrenar el

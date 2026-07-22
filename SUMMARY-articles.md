@@ -16,6 +16,13 @@ encima de1,20. Más historia ayudó al agregado, pero no eliminó los 4–5 mese
 negativos por ticker. La estabilidad mensual debe seguir siendo una gate, no
 una métrica que se presupone por un PF anual bueno.
 
+El checkpoint cuantitativo que debe conservarse es: QQQ
+PF1,204351/WR51,8219%/+1.060,279bps/min18/7 meses positivos; SPXW
+PF1,247945/52,0492%/+1.030,091/min17/8; SPY
+PF1,346342/53,2787%/+1.381,556/min17/8, todo a1bp. Es el mejor development
+actual y justifica investigar V4, pero fue hallado tras abrir 2025; su valor es
+direccional hasta que un outer 2026 precongelado lo confirme o lo rechace.
+
 ### Más contexto no corrige una relación de signo inestable
 
 Un logistic pooled causal con 29 variables option/cash, dos fits temporales y

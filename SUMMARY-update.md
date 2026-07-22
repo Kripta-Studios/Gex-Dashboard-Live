@@ -11,6 +11,11 @@ development2025 PF1,204/1,248/1,346, WR>51%, net positivo y min18/17/17; solo
 7/8/8 meses positivos. 2025 es development visto, no OOS. Commit doc → evaluator
 reproducible → auditor → data gate 2026 outcome-free. 2026 sigue sin abrir.
 
+Checkpoint V4 exacto 1bp: QQQ PF1,204351/WR51,8219%/+1.060,279bps/min18/7m;
+SPXW 1,247945/52,0492%/+1.030,091/min17/8m; SPY
+1,346342/53,2787%/+1.381,556/min17/8m. Mejor resultado actual, pendiente de
+reproducción/auditoría formal y no promocionable por ser post-outcome.
+
 2026-07-22: V2 post-outcome predeclarada antes de nuevos opens cash. Modelo
 único pooled logistic L2 C0,1, 29 features fijas y target direct-vs-inverse.
 DEV_A train2023/test2024H1; DEV_B train2023+H1/testH2. Cash feature clocks
