@@ -82,6 +82,12 @@ y cuatro repairs intactos. 2024 es development post-outcome; 2025 primer outer.
 Implementar evaluator+auditor development, commit/push resultados y solo si
 PF>1/WR>45%/neto>0/min13 por ticker preparar freezer 2025. No leer 2025 antes.
 
+Evaluator development V3 implementado en
+`evaluate_cross_venue_calendar_rr_leader_v3.py`: reconstruye mapping 2023,
+exige los dos zeros históricos, deriva cada state desde M-1, recalcula
+acciones/costes/gates y no tiene path 2025. Focal5/cross-venue87, Ruff/compile
+PASS. No ejecutado: commit/push código/tests+hándoffs y luego default una vez.
+
 ### Checkpoint 2026-07-22 — V1 outer 2024 cerrado sin edge
 
 El freeze quedó committed/pushed en `b53dcaa3` y el único outer 2024 terminó

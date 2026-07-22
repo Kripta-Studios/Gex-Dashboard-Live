@@ -68,6 +68,11 @@ completo; no modelo/grid/feature cash. Development 2024, 2025 intacto. Siguiente
 commit doc → evaluator/auditor dev → evidencia committed → freezer 2025. No
 outcome 2025 antes del manifest.
 
+Evaluator V3 development listo/unexecuted:
+`evaluate_cross_venue_calendar_rr_leader_v3.py`. Reproduce history/mapping,
+states M-1, ledger1/2/3bps y gates; focal5/cross-venue87/checks PASS. Commit/
+push antes del único default. No 2025.
+
 ## Cierre autoritativo — outer 2024 V1 sin edge
 
 Freeze committed/pushed `b53dcaa3`; one-shot 2024:

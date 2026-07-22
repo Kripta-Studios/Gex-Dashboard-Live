@@ -43,6 +43,9 @@ V2 evidence committed `3bdb389c`. V3 predeclarada: orientation mensual pooled
 por hit-rate directo del mes anterior >=0,50; 2024 development, 2025 primer
 outer. Sin ML/grid/cash extra. Implementar dev+audit+freeze antes de 2025.
 
+Evaluator V3 dev listo/unexecuted, focal5/cross-venue87/checks PASS. Commit/
+push antes de default; no path outcomes2025.
+
 2026-07-22: runner frozen committed `b53dcaa3`; único V1 outer2024 cerrado
 `NO_AGGREGATE_EDGE`. Pooled 743/PF0,761071/WR42,665%/-3.130,133bps. Por ticker:
 QQQ249/PF0,866939/-662,668/min19/6 meses positivos; SPXW247/0,698912/
