@@ -1,5 +1,14 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+## Hipótesis V2 congelada antes del nuevo estado cash
+
+La exploración sobre los artefactos ya abiertos descarta un clasificador ancho
+de superficie y conserva una hipótesis mínima: aprender directo/inverso. V2
+fija logistic L2 C0,1 con estado option-sensor y opens cash causales hasta
+10:35. Entrena 2023 para H1-2024 y 2023+H1 para H2-2024. Todo 2024 es
+development contaminado; 2025 permanece primer outer. El contrato debe quedar
+committed antes de leer esos nuevos clocks.
+
 ## Resultado causal nuevo — V1 falla outer 2024
 
 El runner congelado en `b53dcaa3` ejecutó su único 2024: pooled 743 trades,

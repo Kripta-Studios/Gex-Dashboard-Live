@@ -1,5 +1,11 @@
 # SUMMARY-update — ledger científico compacto
 
+2026-07-22: V2 post-outcome predeclarada antes de nuevos opens cash. Modelo
+único pooled logistic L2 C0,1, 29 features fijas y target direct-vs-inverse.
+DEV_A train2023/test2024H1; DEV_B train2023+H1/testH2. Cash feature clocks
+09:30..10:35 open-only; mapping QQQ←QQQ/SPY←SPY/SPXW←SPY intacto. 2024 es
+solo development; 2025/2026/live cerrados hasta gates+freeze.
+
 2026-07-22: runner frozen committed `b53dcaa3`; único V1 outer2024 cerrado
 `NO_AGGREGATE_EDGE`. Pooled 743/PF0,761071/WR42,665%/-3.130,133bps. Por ticker:
 QQQ249/PF0,866939/-662,668/min19/6 meses positivos; SPXW247/0,698912/

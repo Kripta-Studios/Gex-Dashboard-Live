@@ -1,5 +1,16 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+## V2 temporal orientation — predeclaración antes del nuevo feature read
+
+Contrato nuevo post-outcome:
+`CROSS_VENUE_CALENDAR_RR_LEADER_V2_TEMPORAL_ORIENTATION_PREDECLARATION.md`.
+2023–2024 queda development; 2025 es el primer outer aún intacto. Un único
+logistic L2 C0,1 predice si conservar/invertir `sign(signal_pressure)` usando
+29 inputs fijos: ocho option-sensor, seis cash QQQ, seis cash SPY, seis cash
+SPXW activas solo para target SPXW y tres one-hot. Los cash inputs usan solo 66
+opens 09:30–10:35. DEV_A train2023/testH1; DEV_B train2023+H1/testH2. Commit/
+push antes de leer los opens o implementar el runner. No 2025/2026/live.
+
 ## Cierre autoritativo — outer 2024 V1 sin edge
 
 Freeze committed/pushed `b53dcaa3`; one-shot 2024:

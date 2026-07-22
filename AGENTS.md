@@ -1,5 +1,17 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-07-22 — V2 temporal orientation predeclarada
+
+Tras cerrar V1 se autoriza una familia post-outcome nueva. Documento:
+`CROSS_VENUE_CALENDAR_RR_LEADER_V2_TEMPORAL_ORIENTATION_PREDECLARATION.md`.
+2024 ya fue visto y solo puede ser development. V2 fija un único logistic L2
+pooled que aprende directo/inverso con ocho features option-sensor, cash opens
+09:30–10:35 de QQQ/SPY y cash SPXW solo para target SPXW, más one-hot ticker.
+DEV_A train2023/test2024H1; DEV_B train2023+H1/testH2. No sweep, abstención ni
+outcome rolling. Commit/push del contrato antes de leer esos opens. Si cualquier
+bloque/ticker falla PF>1/WR>45%/neto>0/min13, cerrar sin abrir 2025. Mantener
+mapping y cuatro repairs exactos; 2026/live cerrados.
+
 ### Checkpoint 2026-07-22 — V1 outer 2024 cerrado sin edge
 
 El freeze quedó committed/pushed en `b53dcaa3` y el único outer 2024 terminó
