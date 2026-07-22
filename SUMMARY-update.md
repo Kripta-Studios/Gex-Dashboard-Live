@@ -1,5 +1,17 @@
 # SUMMARY-update — ledger científico compacto
 
+2026-07-22: full cross-venue V1 finalizó `NO_SEAL`, 3.008/3.012 capturas
+atómicas, errors4, staging0, proceso0. QQQ1002/SPXW1002/SPY1004. Causa exacta:
+una key Greek/IV unilateral a 10:30+10:35 en QQQ20250828 front IV-only C650,
+QQQ20251121 back Greek-only P680, SPXW20240122 back IV-only C4575 y
+SPXW20250225 front IV-only C6045; shared rows406/706/858/858.
+
+V1R1 predeclarada outcome-free: capturar solo 4/4 a root nuevo, signable keys
+`Greek∩IV`, ocho rows unilaterales audit-only, no exclusión de días ni
+reescritura V1. Luego composite seal3.012, full audit, data gate, freeze y
+outer2024. Contract/universe/errors SHA `f40947b5...ea623`/
+`98d416ea...45f4`/`01c6c2f3...95f2`. Sin PF nuevo ni outcome 2024–2026.
+
 Respuesta autoritativa junio/julio 2026: la familia activa cross-venue sigue
 sin outcomes 2026 (captura 2024–2025 PID42112: 424/3.012, errors0 a las 03:09).
 No se puede afirmar que sea rentable. El cerrado `DIRECTIONAL_VOL_COMPLEX_V1`

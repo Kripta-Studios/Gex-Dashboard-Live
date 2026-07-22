@@ -1,5 +1,25 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+## Estado nuevo — 2026-07-22
+
+La captura cross-venue V1 terminó sin seal: procesó las 3.012 unidades,
+preservó 3.008 capturas atómicas y falló en cuatro por key-set Greek/IV
+desigual. No hay proceso activo ni stagers. No se perdió la captura masiva y no
+se debe repetir.
+
+Cada fallo es un solo contrato unilateral a ambos relojes: QQQ20250828/front
+IV-only C650; QQQ20251121/back Greek-only P680; SPXW20240122/back IV-only
+C4575; SPXW20250225/front IV-only C6045. La hipótesis necesita a la vez delta e
+IV, por lo que la única reparación causal es usar la intersección exacta de
+keys para esas cuatro unidades, archivar las ocho rows unilaterales y no
+permitirles entrar en features.
+
+La regla está predeclarada en
+`CROSS_VENUE_CALENDAR_RR_NATIVE_CLOCK_V1R1_KEY_INTERSECTION_REPAIR_PREDECLARATION.md`.
+Se capturan solo cuatro respuestas a un root nuevo; luego un composite seal
+revalida 3.008 V1 + 4 V1R1 sin modificar el V1. Todavía no existe data gate,
+outer 2024 ni PF nuevo; 2024–2026 y producción continúan cerrados.
+
 ## Respuesta concreta sobre junio y julio de 2026
 
 La arquitectura activa `CROSS_VENUE_CALENDAR_RR_LEADER_V1` todavía no tiene

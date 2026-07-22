@@ -1,5 +1,33 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-07-22 — full capture V1 detenido, reparación V1R1 congelada
+
+El proceso PID42112 ya terminó. El intento full native-clock recorrió 3.012/
+3.012 unidades, materializó 3.008 directorios atómicos completos (raw/parquet/
+manifest; QQQ1.002, SPXW1.002, SPY1.004), cero `*.staging`, y cerró con cuatro
+errores. No hay `_seal`; `progress.json` conserva 3.008/3.012, errors4. No
+relanzar el capturador V1 ni borrar/mover/reescribir esas 3.008 capturas.
+
+Los cuatro fallos son outcome-free y no son de red: Greek/IV difieren en una
+sola clave contractual por unidad, repetida a 10:30/10:35. Son QQQ 20250828
+front IV-only C650; QQQ 20251121 back Greek-only P680; SPXW 20240122 back
+IV-only C4575; SPXW 20250225 front IV-only C6045. Las intersecciones exactas
+conservan 406/706/858/858 rows. Estado V1: contract SHA `f40947b5...ea623`,
+universe `98d416ea...45f4`, errors `01c6c2f3...95f2`.
+
+La reparación está congelada antes de outcomes en
+`CROSS_VENUE_CALENDAR_RR_NATIVE_CLOCK_V1R1_KEY_INTERSECTION_REPAIR_PREDECLARATION.md`.
+Solo esos cuatro IDs pueden usar `Greek keys ∩ IV keys`; las ocho rows
+unilaterales son audit-only y jamás entran en selección/features. Capturar 4/4
+a un root nuevo, preservar V1, sellar overlay y después crear un composite seal
+3.012/3.012. Cualquier quinta discrepancia falla cerrado. 2024–2026 outcomes y
+producción siguen intactos.
+
+Próxima secuencia: commit/push predeclaración+hándoffs → implementar/testear
+capturador/auditor V1R1 → commit/push → captura 4/4 → compact seal →
+composite audit/seal → full audit → data gate → frozen outer 2024. No
+abrir 2025/2026 ni tocar live antes de sus gates.
+
 ### Estado exacto junio/julio 2026 — 2026-07-17
 
 No existe todavía una policy promovible para esos dos meses. La familia activa

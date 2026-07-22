@@ -1,5 +1,11 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1 — CLOSED_NO_EDGE
 
+> 2026-07-22: the separate cross-venue full capture ended without a seal at
+> 3,008/3,012 because four Greek/IV key sets each contain one unilateral
+> contract at both clocks. A pre-outcome V1R1 repair freezes exact intersection
+> semantics and a four-capture overlay. This does not reopen compact V1, reuse
+> its outcomes or change this closure.
+
 > Status clarification on 2026-07-17: no active cross-venue model has yet been
 > evaluated on June/July 2026. A separate closed cash model, VOL_COMPLEX, was
 > positive in June for QQQ/SPX/SPY (PF 1.249/1.779/1.764) and positive in July

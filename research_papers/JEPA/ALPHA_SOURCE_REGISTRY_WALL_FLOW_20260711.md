@@ -1,5 +1,15 @@
 # Alpha-source registry and Stage 0/1 audit — 2026-07-11
 
+## 2026-07-22 cross-venue source repair
+
+The full native-clock source ended unsealed at 3,008/3,012 captures. Four
+captures contain exactly one Greek/IV unilateral contract repeated at 10:30
+and 10:35; this was discovered before any outer outcome. V1R1 freezes an exact
+`Greek∩IV` signable set for only those IDs, keeps all unilateral rows audit-only
+and captures the four missing quote responses to a separate immutable overlay.
+The 3,008 V1 captures must not be modified. A composite 3,012 seal is required
+before data gate or outer 2024. No new alpha/PF/WR/PnL exists yet.
+
 ## 2026-07-17 profitability clarification
 
 `CROSS_VENUE_CALENDAR_RR_LEADER_V1` has not opened 2026; its 2024–2025 exact

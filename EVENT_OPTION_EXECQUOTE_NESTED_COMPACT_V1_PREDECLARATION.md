@@ -1,5 +1,10 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1
 
+> 2026-07-22: the later cross-venue family remains isolated from this protocol.
+> Its V1 capture stopped at 3,008/3,012 on four outcome-free Greek/IV key-set
+> mismatches. The separately frozen V1R1 overlay uses exact shared keys only;
+> no compact-V1 artifact, label or policy is used or altered.
+
 > June/July-2026 clarification: the later active cross-venue family has no 2026
 > result yet. The already closed VOL_COMPLEX cash proxy was positive in June
 > (PF QQQ/SPX/SPY 1.249/1.779/1.764) and July MTD, but July had 10 trades and

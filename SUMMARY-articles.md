@@ -1,5 +1,20 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+### Reparar fuentes por intersección, no por imputación
+
+El full cross-venue reveló cuatro discrepancias Greek/IV entre 3.012 captures.
+Cada una es una sola clave unilateral repetida en los dos clocks; el resto de
+cada superficie coincide (406–858 rows compartidas). Como calendar-RR requiere
+delta e IV simultáneas, una clave presente en una sola modalidad no contiene la
+medición completa y no puede ser alpha. La reparación causal predeclarada usa
+solo `Greek∩IV`, conserva las unilaterales como audit y prohíbe as-of, nearest,
+imputación o sustitución por valores actuales.
+
+La captura parcial masiva no se desecha: 3.008 unidades atómicas quedan
+inmutables y solo cuatro se recapturan a un overlay separado. Un composite seal
+debe revalidar ambos roots antes del data gate. Este patrón evita tanto perder
+provenance como relajar silenciosamente la población después de ver outcomes.
+
 ### Rentabilidad mensual no equivale a promoción
 
 `DIRECTIONAL_VOL_COMPLEX_V1` muestra el caso exacto: junio 2026 fue positivo en

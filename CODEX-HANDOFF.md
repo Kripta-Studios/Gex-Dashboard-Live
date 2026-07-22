@@ -1,5 +1,32 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+## Checkpoint autoritativo — 2026-07-22
+
+PID42112 ya no existe. El full native-clock V1 recorrió todo el universo pero
+terminó `NO_SEAL`: 3.008/3.012 capturas completas, errors4, cero staging. No
+reanudar V1: su root contract fija `d013a299` y la causa no es transitoria.
+
+Fallos exactos: `4b5b...` QQQ20250828/front IV-only C650 (shared406),
+`839a...` QQQ20251121/back Greek-only P680 (shared706), `2074...`
+SPXW20240122/back IV-only C4575 (shared858), `8993...`
+SPXW20250225/front IV-only C6045 (shared858). Cada unilateral aparece a 10:30 y
+10:35. Contract/universe/errors SHA: `f40947b5...ea623`,
+`98d416ea...45f4`, `01c6c2f3...95f2`.
+
+Autoridad nueva:
+`CROSS_VENUE_CALENDAR_RR_NATIVE_CLOCK_V1R1_KEY_INTERSECTION_REPAIR_PREDECLARATION.md`.
+Implementar un capturador separado para solo esos cuatro IDs, output nuevo y
+key-set signable `Greek∩IV`; las ocho rows unilaterales quedan audit-only.
+Después sellar un composite 3.012/3.012 revalidando las 3.008 originales, sin
+modificarlas. Aún no ejecutar builder/data gate/evaluator. Outcomes 2024–2026 y
+producción no se han abierto.
+
+Orden exacto: commit de esta congelación → capturador/tests committed →
+capture4/4 → commit compact seal → composite sealer/audit → full audit →
+data gate → audit data gate → freeze runner → one-shot 2024. Solo PF>1,
+WR>45%, neto>0 y min13/ticker permite abrir 2025; la meta final sigue PF>1,20,
+WR>45%, min13 y todos los meses positivos.
+
 ## Respuesta y checkpoint 2026-07-17 03:09 Europe/Madrid
 
 No afirmar rentabilidad de `CROSS_VENUE_CALENDAR_RR_LEADER_V1` en junio/julio
