@@ -56,8 +56,9 @@ Auditor V3 real PASS: states12/trades743/hashes/gates exactos, summary
 V3 dev+audit committed `627f3b20`. Freezer, runner secuencial outer2025 y
 auditor independiente listos pre-outcome; manifest/inputs/código/events/counts/
 estado inicial quedan fail-closed. Focal9, cross-venue/native-clock100 y checks
-PASS. Commit/push código → freeze/commit manifest → one-shot2025 → audit. No
-2026/live/systemd.
+PASS; código committed `5fe51e70`. Freeze real: 735 eventos/min17, enero
+INVERSE desde 25/56 hits diciembre2024; manifest `f45e7f1b...646ed`, outcomes
+false. Commit manifest → one-shot2025 → audit. No 2026/live/systemd.
 
 2026-07-22: runner frozen committed `b53dcaa3`; único V1 outer2024 cerrado
 `NO_AGGREGATE_EDGE`. Pooled 743/PF0,761071/WR42,665%/-3.130,133bps. Por ticker:

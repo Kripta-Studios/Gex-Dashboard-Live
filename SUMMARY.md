@@ -47,8 +47,11 @@ V3 development y su auditor independiente ya están sellados en `627f3b20`.
 El runner outer2025, su freezer outcome-free y un auditor independiente se han
 implementado antes de outcomes: fijan el estado diciembre2024, los eventos y
 fuentes 2025, los counts mensuales y todos los hashes de código/input. Pasan 100
-tests cross-venue/native-clock y checks estáticos. Falta publicar este código,
-generar y publicar el manifest; solo entonces puede abrirse 2025 una vez.
+tests cross-venue/native-clock y checks estáticos; código publicado en
+`5fe51e70`. El freeze real enumeró 735 eventos, con mínimo17/mes, y fijó enero
+`INVERSE` desde 25/56 hits de diciembre2024. Manifest SHA
+`f45e7f1b...646ed`, sin outcomes. Falta publicar el manifest; solo entonces
+puede abrirse 2025 una vez.
 
 ## Resultado causal nuevo — V1 falla outer 2024
 

@@ -91,8 +91,13 @@ secuencial y `audit_cross_venue_calendar_rr_leader_v3_outer_2025.py`. El freeze
 enumera solo paths/hashes 2025 y deriva enero desde diciembre2024; el runner
 revalida hashes/código/event IDs/inventario/counts/estado antes de outcomes y
 encadena cada M solo desde M-1. Focal9, suite cross-venue/native-clock100,
-Ruff/compile PASS. Secuencia: commit/push código → freezer default → commit/push
-manifest → one-shot2025 → auditor. No 2026/live/systemd.
+Ruff/compile PASS. Código publicado en `5fe51e70`.
+
+Freezer default real PASS desde ese commit: 735 eventos, 36 ticker-meses,
+mínimo17. Estado inicial 202412: 25/56 hits=0,446429 e `INVERSE`; manifest SHA
+`f45e7f1b...646ed`, event/source digests `87d18fd6...cb8`/
+`8308ef36...49e6`. `outcome_accessed=false`. Force-add/commit/push manifest y
+handoffs; solo después one-shot2025 → auditor. No 2026/live/systemd.
 
 ## Cierre autoritativo — outer 2024 V1 sin edge
 

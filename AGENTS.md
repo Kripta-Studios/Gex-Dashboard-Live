@@ -114,9 +114,14 @@ outer2025, freezer outcome-free y auditor independiente implementados antes de
 outcomes. El manifest fija hashes de data gate/development/código, inventario
 de eventos, counts mensuales, estado inicial diciembre2024 y mapping; el runner
 revalida todo antes del primer open10:36/13:36. Suite cross-venue/native-clock
-`100 passed`, Ruff/compile PASS. Aún no ejecutar ni freeze: primero commit/push
-de código/tests+hándoffs; luego freezer default una vez, commit/push manifest y
-solo entonces outer2025 one-shot. 2026/live/systemd siguen cerrados.
+`100 passed`, Ruff/compile PASS. Código publicado en `5fe51e70`.
+
+Freeze V3 outer2025 real desde `5fe51e70`: `PREEXECUTION_FROZEN`, 735 eventos,
+36 celdas y mínimo17/mes. Estado enero derivado de diciembre2024: 56 trades,
+25 hits, rate0,446429, `INVERSE`. Event/index SHA `87d18fd6...cb8`/
+`8308ef36...49e6`; manifest SHA `f45e7f1b...646ed`. Outcomes 2025/2026 false.
+Siguiente: force-add/commit/push manifest+hándoffs; solo después ejecutar una
+vez outer2025 y su auditor. No abrir 2026 salvo gate objetivo de los tres.
 
 ### Checkpoint 2026-07-22 — V1 outer 2024 cerrado sin edge
 
