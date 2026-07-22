@@ -32,6 +32,10 @@ Código ya aplica el set exacto y falla cualquier tercero; focal10,
 cross-venue77, Ruff/compile PASS. Aún no alcanzó cash ni creó output. Commit/
 push del fix antes de reintentar default.
 
+Tercer run también pre-cash: merge redundante del campo ya namespaced. Fix
+compara directamente la paridad 2024; focal11/cross-venue78/checks PASS, target
+inexistente. Commit/push antes del siguiente intento.
+
 ## Cierre autoritativo — outer 2024 V1 sin edge
 
 Freeze committed/pushed `b53dcaa3`; one-shot 2024:

@@ -316,21 +316,7 @@ def load_development_rows(option_features: pd.DataFrame) -> pd.DataFrame:
     )
     output["direct_win"] = (output["base_gross_bps"] > 0.0).astype(np.int64)
 
-    stored_2024 = ledger_2024[
-        ["ticker", "trade_date", "sealed_signal_pressure"]
-    ].copy()
-    check = output.loc[output["trade_date"].str.startswith("2024")].merge(
-        stored_2024,
-        on=["ticker", "trade_date"],
-        validate="one_to_one",
-    )
-    if not np.allclose(
-        check["signal_pressure"],
-        check["sealed_signal_pressure"],
-        rtol=0.0,
-        atol=1e-12,
-    ):
-        raise AssertionError("V2 does not reproduce the sealed V1 2024 mapping")
+    validate_sealed_2024_signal_parity(output)
     return output.sort_values(["trade_date", "ticker"], kind="stable").reset_index(
         drop=True
     )
@@ -347,6 +333,21 @@ def drop_frozen_zero_pressure_train(rows: pd.DataFrame) -> pd.DataFrame:
     if len(rows) - len(output) != len(ZERO_PRESSURE_TRAIN_KEYS):
         raise AssertionError("V2 zero-pressure train exclusion count changed")
     return output
+
+
+def validate_sealed_2024_signal_parity(rows: pd.DataFrame) -> None:
+    check = rows.loc[rows["trade_date"].astype(str).str.startswith("2024")]
+    if (
+        check.empty
+        or check["sealed_signal_pressure"].isna().any()
+        or not np.allclose(
+            check["signal_pressure"],
+            check["sealed_signal_pressure"],
+            rtol=0.0,
+            atol=1e-12,
+        )
+    ):
+        raise AssertionError("V2 does not reproduce the sealed V1 2024 mapping")
 
 
 def load_underlying_inventory() -> pd.DataFrame:

@@ -21,6 +21,9 @@ predicciones 2024 sin cambio. Cualquier cero adicional falla. No output/cash.
 Fix exact-set listo: focal10/cross-venue77/checks PASS; todavía pre-cash. Debe
 commit/push antes del próximo default run.
 
+Tercer run pre-cash/sin output: segundo merge redundante de pressure. Fix
+direct-parity listo; focal11/cross-venue78/checks PASS.
+
 2026-07-22: runner frozen committed `b53dcaa3`; único V1 outer2024 cerrado
 `NO_AGGREGATE_EDGE`. Pooled 743/PF0,761071/WR42,665%/-3.130,133bps. Por ticker:
 QQQ249/PF0,866939/-662,668/min19/6 meses positivos; SPXW247/0,698912/

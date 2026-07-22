@@ -81,6 +81,20 @@ def test_any_third_zero_pressure_key_fails_closed() -> None:
         module.drop_frozen_zero_pressure_train(rows)
 
 
+def test_sealed_2024_signal_parity_is_checked_without_second_merge() -> None:
+    rows = pd.DataFrame(
+        {
+            "trade_date": ["20230103", "20240102"],
+            "signal_pressure": [0.2, 0.1],
+            "sealed_signal_pressure": [np.nan, 0.1],
+        }
+    )
+    module.validate_sealed_2024_signal_parity(rows)
+    rows.loc[1, "sealed_signal_pressure"] = -0.1
+    with pytest.raises(AssertionError, match="sealed V1 2024 mapping"):
+        module.validate_sealed_2024_signal_parity(rows)
+
+
 def test_model_contract_is_single_fixed_logistic() -> None:
     model = module.make_model()
     classifier = model.named_steps["classifier"]

@@ -39,6 +39,10 @@ Fix implementado: exige el frozenset exacto, elimina solo esas dos filas antes
 del cash loader y mantiene 743 predicciones 2024. Focal10/cross-venue77,
 Ruff/compile PASS. Commit/push del código/test antes del siguiente reintento.
 
+Tercer intento pre-cash detectó un segundo merge redundante de la presión
+sellada; sin output. Ahora compara directamente las 743 filas ya unidas. Nueva
+regresión, focal11/cross-venue78/Ruff/compile PASS. Commit/push antes de retry.
+
 ### Checkpoint 2026-07-22 — V1 outer 2024 cerrado sin edge
 
 El freeze quedó committed/pushed en `b53dcaa3` y el único outer 2024 terminó
