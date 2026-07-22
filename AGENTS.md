@@ -88,6 +88,16 @@ exige los dos zeros históricos, deriva cada state desde M-1, recalcula
 acciones/costes/gates y no tiene path 2025. Focal5/cross-venue87, Ruff/compile
 PASS. No ejecutado: commit/push código/tests+hándoffs y luego default una vez.
 
+Development V3 real desde `71a9802c`:
+`PASS_DEVELOPMENT_INCREMENTAL_2025_NOT_FROZEN`. QQQ/SPXW/SPY
+PF1,231750/1,395967/1,408300, WR51,406%/55,870%/56,680%, net
++964,402/+1.124,966/+1.153,375bps, min19/18/18 y meses positivos8/8/8.
+Incremental PASS, objetivo mensual FAIL; 2025 aún cerrado.
+
+Auditor V3 implementado: recompone mapping/history, 12 states, ledger, costes y
+gates; focal3/cross-venue90/Ruff/compile PASS. No ejecutado: commit/push antes
+del auditor default. Después versionar V3+audit y solo entonces freezer 2025.
+
 ### Checkpoint 2026-07-22 — V1 outer 2024 cerrado sin edge
 
 El freeze quedó committed/pushed en `b53dcaa3` y el único outer 2024 terminó

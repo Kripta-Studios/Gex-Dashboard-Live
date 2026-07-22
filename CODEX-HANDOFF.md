@@ -73,6 +73,11 @@ Evaluator V3 development listo/unexecuted:
 states M-1, ledger1/2/3bps y gates; focal5/cross-venue87/checks PASS. Commit/
 push antes del único default. No 2025.
 
+V3 dev real `PASS_DEVELOPMENT_INCREMENTAL_2025_NOT_FROZEN`: PF
+1,231750/1,395967/1,408300, WR51,406/55,870/56,680%, net positivo y min19/18/18;
+solo8/12 meses positivos, objetivo FAIL. Auditor V3 listo/unexecuted,
+focal3/cross-venue90/checks PASS. Commit/push auditor antes de run; no 2025.
+
 ## Cierre autoritativo — outer 2024 V1 sin edge
 
 Freeze committed/pushed `b53dcaa3`; one-shot 2024:
