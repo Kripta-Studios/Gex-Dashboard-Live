@@ -36,6 +36,14 @@ como audit de los cuatro repairs. No cambia ninguna regla económica. Tras
 commit/push se implementan auditor/builder y se vuelven a publicar antes de
 ejecutarlos.
 
+La implementación composite-aware ya está terminada preejecución. Auditor y
+builder validan los blobs exactos, revalidan cada generación con su contrato,
+usan el root sellado por role y alinean modalidades con conteos congelados. Una
+prueba contra el composite real y una regresión Greek/IV demuestran que V1 no
+acepta discrepancias y V1R1 elimina solo las unilaterales declaradas. Focal
+15/15, cross-venue 65/65, checks clean. Falta commit/push y el full audit real;
+el data gate aún no se ejecuta.
+
 ## Respuesta concreta sobre junio y julio de 2026
 
 La arquitectura activa `CROSS_VENUE_CALENDAR_RR_LEADER_V1` todavía no tiene

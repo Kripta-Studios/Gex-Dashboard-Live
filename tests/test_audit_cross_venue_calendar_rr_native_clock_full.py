@@ -16,9 +16,14 @@ def test_ticker_year_summary_preserves_capture_totals() -> None:
                 "capture_id": "a",
                 "ticker": "QQQ",
                 "trade_date": "20240102",
+                "storage_generation": "V1",
                 "rows": 10,
                 "raw_bytes": 100,
                 "parquet_bytes": 20,
+                "shared_key_rows": 4,
+                "greek_only_key_rows": 0,
+                "iv_only_key_rows": 0,
+                "missing_shared_key_rows": 0,
                 "native_extra_target_key_rows": 1,
                 "revised_bid_ask_rows": 2,
                 "crossed_native_rows": 3,
@@ -27,9 +32,14 @@ def test_ticker_year_summary_preserves_capture_totals() -> None:
                 "capture_id": "b",
                 "ticker": "QQQ",
                 "trade_date": "20240102",
+                "storage_generation": "V1R1_REPAIR",
                 "rows": 11,
                 "raw_bytes": 110,
                 "parquet_bytes": 21,
+                "shared_key_rows": 3,
+                "greek_only_key_rows": 0,
+                "iv_only_key_rows": 2,
+                "missing_shared_key_rows": 0,
                 "native_extra_target_key_rows": 4,
                 "revised_bid_ask_rows": 5,
                 "crossed_native_rows": 6,
@@ -38,9 +48,14 @@ def test_ticker_year_summary_preserves_capture_totals() -> None:
                 "capture_id": "c",
                 "ticker": "QQQ",
                 "trade_date": "20250102",
+                "storage_generation": "V1",
                 "rows": 12,
                 "raw_bytes": 120,
                 "parquet_bytes": 22,
+                "shared_key_rows": 4,
+                "greek_only_key_rows": 0,
+                "iv_only_key_rows": 0,
+                "missing_shared_key_rows": 0,
                 "native_extra_target_key_rows": 7,
                 "revised_bid_ask_rows": 8,
                 "crossed_native_rows": 9,
@@ -48,11 +63,12 @@ def test_ticker_year_summary_preserves_capture_totals() -> None:
         ]
     )
     summary = module.summarize_capture_index(index)
-    row_2024 = summary.loc[summary["year"].eq("2024")].iloc[0]
-    assert row_2024["captures"] == 2
-    assert row_2024["sessions"] == 1
-    assert row_2024["rows"] == 21
-    assert row_2024["native_extra_target_key_rows"] == 5
+    rows_2024 = summary.loc[summary["year"].eq("2024")]
+    assert rows_2024["captures"].sum() == 2
+    assert set(rows_2024["storage_generation"]) == {"V1", "V1R1_REPAIR"}
+    assert rows_2024["rows"].sum() == 21
+    assert rows_2024["iv_only_key_rows"].sum() == 2
+    assert rows_2024["native_extra_target_key_rows"].sum() == 5
     assert summary["captures"].sum() == 3
 
 

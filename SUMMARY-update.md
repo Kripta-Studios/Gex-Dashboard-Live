@@ -28,6 +28,12 @@ byte-parity, rutas por capture, V1 Greek=IV y cuatro excepciones `Greek∩IV` co
 conteos 0/2,2/0,0/2,0/2. Commit/push documento → implementar/testear auditor y
 builder → commit/push código → ejecutar full audit; no outcomes.
 
+Auditor+builder composite-aware implementados: default V1R1, compact/local
+byte parity, revalidación por contrato, sidecar paths por role/root, inventario
+multi-root y `align_vintage_modalities` con conteos frozen. Test real composite
+y fallo estricto V1 incluidos. Focal15/combinada65, Ruff/compile PASS. Pendiente
+commit/push → full audit default; data gate no ejecutado.
+
 Respuesta autoritativa junio/julio 2026: la familia activa cross-venue sigue
 sin outcomes 2026 (captura 2024–2025 PID42112: 424/3.012, errors0 a las 03:09).
 No se puede afirmar que sea rentable. El cerrado `DIRECTIONAL_VOL_COMPLEX_V1`

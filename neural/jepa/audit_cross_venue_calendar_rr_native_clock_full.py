@@ -23,6 +23,7 @@ if str(SCRIPT_REPO_ROOT) not in sys.path:
 from neural.jepa.build_cross_venue_calendar_rr_leader_v1 import (  # noqa: E402
     DEFAULT_OPTIONS_ROOT,
     DEFAULT_SIDECAR_ROOT,
+    COMPOSITE_CLARIFICATION,
     revalidate_all_captures,
     sha256_file,
     tracked_clean,
@@ -37,7 +38,7 @@ from neural.jepa.capture_cross_venue_calendar_rr_native_clock_full import (  # n
 
 PROJECT_ROOT = SCRIPT_REPO_ROOT
 DEFAULT_OUTPUT = PROJECT_ROOT / (
-    "tmp/cross_venue_calendar_rr_native_clock_full_2024_2025_v1_audit"
+    "tmp/cross_venue_calendar_rr_native_clock_full_2024_2025_v1r1_audit"
 )
 DATA_GATE_CONTRACT = PROJECT_ROOT / (
     "research_papers/JEPA/CROSS_VENUE_CALENDAR_RR_LEADER_V1_DATA_GATE_CONTRACT.md"
@@ -70,6 +71,10 @@ def summarize_capture_index(index: pd.DataFrame) -> pd.DataFrame:
         "rows",
         "raw_bytes",
         "parquet_bytes",
+        "shared_key_rows",
+        "greek_only_key_rows",
+        "iv_only_key_rows",
+        "missing_shared_key_rows",
         "native_extra_target_key_rows",
         "revised_bid_ask_rows",
         "crossed_native_rows",
@@ -77,19 +82,23 @@ def summarize_capture_index(index: pd.DataFrame) -> pd.DataFrame:
     for column in numeric:
         frame[column] = pd.to_numeric(frame[column], errors="raise")
     summary = (
-        frame.groupby(["ticker", "year"], observed=True)
+        frame.groupby(["ticker", "year", "storage_generation"], observed=True)
         .agg(
             captures=("capture_id", "size"),
             sessions=("trade_date", "nunique"),
             rows=("rows", "sum"),
             raw_bytes=("raw_bytes", "sum"),
             parquet_bytes=("parquet_bytes", "sum"),
+            shared_key_rows=("shared_key_rows", "sum"),
+            greek_only_key_rows=("greek_only_key_rows", "sum"),
+            iv_only_key_rows=("iv_only_key_rows", "sum"),
+            missing_shared_key_rows=("missing_shared_key_rows", "sum"),
             native_extra_target_key_rows=("native_extra_target_key_rows", "sum"),
             revised_bid_ask_rows=("revised_bid_ask_rows", "sum"),
             crossed_native_rows=("crossed_native_rows", "sum"),
         )
         .reset_index()
-        .sort_values(["ticker", "year"], kind="stable")
+        .sort_values(["ticker", "year", "storage_generation"], kind="stable")
         .reset_index(drop=True)
     )
     return summary
@@ -139,6 +148,7 @@ def run(
         (Path(__file__).resolve(), "full capture auditor"),
         (DATA_GATE_BUILDER, "capture revalidation builder"),
         (DATA_GATE_CONTRACT, "data gate contract"),
+        (COMPOSITE_CLARIFICATION, "composite consumer clarification"),
     ):
         tracked_clean(path, label)
     contract, seal, index = validate_full_capture_seal(sidecar_root)
@@ -156,7 +166,12 @@ def run(
         len(revalidated) != EXPECTED_CAPTURES
         or revalidated["capture_id"].duplicated().any()
         or int(aggregate["captures"].sum()) != EXPECTED_CAPTURES
-        or int(aggregate["sessions"].sum()) != EXPECTED_SESSIONS
+        or int(
+            revalidated.groupby("ticker", observed=True)["trade_date"]
+            .nunique()
+            .sum()
+        )
+        != EXPECTED_SESSIONS
     ):
         raise AssertionError("revalidated capture aggregate changed")
 
@@ -174,8 +189,8 @@ def run(
             sidecar_root / "_seal/capture_index.csv", staging / "capture_index.csv"
         )
         shutil.copyfile(
-            sidecar_root / "_state/capture_contract.json",
-            staging / "capture_contract.json",
+            sidecar_root / "_state/composite_contract.json",
+            staging / "composite_contract.json",
         )
         shutil.copyfile(sidecar_root / "_state/universe.csv", staging / "universe.csv")
         output_names = (
@@ -184,22 +199,29 @@ def run(
             "vintage_source_inventory.csv",
             "seal.json",
             "capture_index.csv",
-            "capture_contract.json",
+            "composite_contract.json",
             "universe.csv",
         )
         summary = {
-            "schema": "cross_venue_calendar_rr_native_clock_full_audit_v1",
-            "status": "PASS_FULL_CAPTURE_AUDIT",
+            "schema": "cross_venue_calendar_rr_native_clock_composite_audit_v1r1",
+            "status": "PASS_COMPOSITE_CAPTURE_AUDIT_V1R1",
             "created_at_utc": datetime.now(timezone.utc).isoformat(),
             "audit_commit": current_git_commit(),
-            "capture_commit": contract["git_commit"],
+            "composite_capture_commit": contract["git_commit"],
             "capture_seal_created_at_utc": seal["created_at_utc"],
             "sessions": EXPECTED_SESSIONS,
             "captures": EXPECTED_CAPTURES,
             "rows": int(revalidated["rows"].sum()),
             "raw_bytes": int(revalidated["raw_bytes"].sum()),
             "parquet_bytes": int(revalidated["parquet_bytes"].sum()),
-            "missing_vintage_key_rows": 0,
+            "shared_key_rows": int(revalidated["shared_key_rows"].sum()),
+            "greek_only_key_rows": int(
+                revalidated["greek_only_key_rows"].sum()
+            ),
+            "iv_only_key_rows": int(revalidated["iv_only_key_rows"].sum()),
+            "missing_shared_key_rows": int(
+                revalidated["missing_shared_key_rows"].sum()
+            ),
             "native_extra_target_key_rows": int(
                 revalidated["native_extra_target_key_rows"].sum()
             ),
@@ -210,6 +232,9 @@ def run(
             "ticker_year_summary_sha256": dataframe_digest(aggregate),
             "vintage_source_inventory_sha256": dataframe_digest(sources),
             "data_gate_contract_sha256": sha256_file(DATA_GATE_CONTRACT),
+            "composite_clarification_sha256": sha256_file(
+                COMPOSITE_CLARIFICATION
+            ),
             "data_gate_builder_sha256": sha256_file(DATA_GATE_BUILDER),
             "auditor_sha256": sha256_file(Path(__file__).resolve()),
             "output_sha256": {

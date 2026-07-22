@@ -43,7 +43,9 @@ from neural.jepa.capture_cross_venue_calendar_rr_native_clock_full import (  # n
 from neural.jepa.capture_cross_venue_calendar_rr_native_clock_preflight import (  # noqa: E402
     sha256_file,
     target_timestamp_values,
-    validate_existing_capture,
+)
+from neural.jepa import (  # noqa: E402
+    seal_cross_venue_calendar_rr_native_clock_composite_v1r1 as composite,
 )
 from neural.jepa.surface_flow_features import normalize_right  # noqa: E402
 
@@ -76,14 +78,36 @@ PREDECLARATION = PROJECT_ROOT / (
 DATA_GATE_CONTRACT = PROJECT_ROOT / (
     "research_papers/JEPA/CROSS_VENUE_CALENDAR_RR_LEADER_V1_DATA_GATE_CONTRACT.md"
 )
+COMPOSITE_CLARIFICATION = PROJECT_ROOT / (
+    "research_papers/JEPA/"
+    "CROSS_VENUE_CALENDAR_RR_LEADER_V1_COMPOSITE_CONSUMER_CLARIFICATION.md"
+)
+COMPOSITE_EVIDENCE = PROJECT_ROOT / (
+    "research_papers/JEPA/results/_diagnostics/"
+    "cross_venue_calendar_rr_native_clock_composite_2024_2025_v1r1"
+)
 DEFAULT_OPTIONS_ROOT = Path("D:/ThetaData/data_options")
 DEFAULT_UNDERLYING_ROOT = Path("D:/ThetaData/data_underlying_derived")
-DEFAULT_SIDECAR_ROOT = Path(
-    "D:/ThetaData/cross_venue_calendar_rr_native_clock_2024_2025_v1"
-)
+DEFAULT_SIDECAR_ROOT = composite.DEFAULT_OUTPUT
 DEFAULT_OUTPUT = PROJECT_ROOT / (
-    "tmp/cross_venue_calendar_rr_leader_v1_data_gate_202401_202512_v1"
+    "tmp/cross_venue_calendar_rr_leader_v1_data_gate_202401_202512_v1r1"
 )
+
+EXPECTED_COMPOSITE_HASHES = {
+    "seal.json": "5b97ebc5fc867e06ef51d0fcd2956a48a4c06d2291828f5e3ca0e8ae1c9cf84f",
+    "composite_contract.json": (
+        "68714d77ec693028f61b3cf08396ff896ff2415c24f7c21f169872916fd8c046"
+    ),
+    "capture_index.csv": (
+        "e5a669b7bf5fc17ac1dff62284b9d5c63751554812c0085cf23fc089f1943a0e"
+    ),
+    "ticker_year_summary.csv": (
+        "41deb0149075908052bfaf8f6069b10ae55760e8cf21639251a5e9fe6cf6df65"
+    ),
+    "universe.csv": (
+        "98d416ea810c5bde657b6c23a9d7c599885d5eedfef3e332cd1885f6ddee45f4"
+    ),
+}
 
 KEY_COLUMNS = ("symbol", "expiration", "trade_date", "timestamp", "strike", "right")
 GREEK_VALUE_COLUMNS = ("delta", "bid", "ask")
@@ -94,16 +118,40 @@ CAPTURE_INDEX_COLUMNS = (
     "trade_date",
     "role",
     "expiration",
+    "storage_generation",
+    "storage_root",
     "rows",
     "raw_bytes",
     "parquet_bytes",
     "greek_rows",
+    "iv_rows",
+    "shared_key_rows",
+    "greek_only_key_rows",
+    "iv_only_key_rows",
+    "missing_shared_key_rows",
     "native_extra_target_key_rows",
     "revised_bid_ask_rows",
     "crossed_native_rows",
     "raw_sha256",
     "parquet_sha256",
     "manifest_sha256",
+)
+CAPTURE_INDEX_STRING_COLUMNS = (
+    "capture_id",
+    "ticker",
+    "trade_date",
+    "role",
+    "expiration",
+    "storage_generation",
+    "storage_root",
+    "raw_sha256",
+    "parquet_sha256",
+    "manifest_sha256",
+)
+CAPTURE_INDEX_NUMERIC_COLUMNS = tuple(
+    column
+    for column in CAPTURE_INDEX_COLUMNS
+    if column not in CAPTURE_INDEX_STRING_COLUMNS
 )
 
 
@@ -135,12 +183,10 @@ def _canonical_capture_index(frame: pd.DataFrame) -> pd.DataFrame:
     if missing:
         raise KeyError(f"capture index lacks columns: {missing}")
     output = frame.loc[:, CAPTURE_INDEX_COLUMNS].copy()
-    for column in ("capture_id", "ticker", "trade_date", "role", "expiration"):
+    for column in CAPTURE_INDEX_STRING_COLUMNS:
         output[column] = output[column].astype(str)
-    for column in CAPTURE_INDEX_COLUMNS[5:12]:
+    for column in CAPTURE_INDEX_NUMERIC_COLUMNS:
         output[column] = pd.to_numeric(output[column], errors="raise").astype(np.int64)
-    for column in CAPTURE_INDEX_COLUMNS[12:]:
-        output[column] = output[column].astype(str)
     return output.sort_values(["ticker", "trade_date", "role"], kind="stable").reset_index(
         drop=True
     )
@@ -150,30 +196,49 @@ def validate_full_capture_seal(
     sidecar_root: str | Path,
 ) -> tuple[dict[str, Any], dict[str, Any], pd.DataFrame]:
     root = Path(sidecar_root)
-    contract_path = root / "_state/capture_contract.json"
+    contract_path = root / "_state/composite_contract.json"
     universe_path = root / "_state/universe.csv"
     seal_path = root / "_seal/seal.json"
     index_path = root / "_seal/capture_index.csv"
-    for path in (contract_path, universe_path, seal_path, index_path):
+    summary_path = root / "_seal/ticker_year_summary.csv"
+    for path in (contract_path, universe_path, seal_path, index_path, summary_path):
         if not path.is_file():
-            raise FileNotFoundError(f"full native-clock PASS artifact missing: {path}")
+            raise FileNotFoundError(f"composite native-clock PASS artifact missing: {path}")
+    local_paths = {
+        "seal.json": seal_path,
+        "composite_contract.json": contract_path,
+        "capture_index.csv": index_path,
+        "ticker_year_summary.csv": summary_path,
+        "universe.csv": universe_path,
+    }
+    for name, expected in EXPECTED_COMPOSITE_HASHES.items():
+        evidence = COMPOSITE_EVIDENCE / name
+        if (
+            not evidence.is_file()
+            or sha256_file(evidence) != expected
+            or sha256_file(local_paths[name]) != expected
+            or evidence.read_bytes() != local_paths[name].read_bytes()
+        ):
+            raise AssertionError(f"composite compact/local evidence changed: {name}")
     contract = _read_json(contract_path)
     seal = _read_json(seal_path)
     required_contract = {
-        "schema": "cross_venue_calendar_rr_native_clock_full_contract_v1",
+        "schema": "cross_venue_calendar_rr_native_clock_composite_v1r1_contract",
+        "status": "PASS_COMPOSITE_REVALIDATION",
         "outcome_free": True,
         "holdout_2026_used": False,
         "production_modified": False,
+        "git_commit": "963f91c9fde298a8820e7dafa55c625f1220f88f",
     }
     if any(contract.get(key) != value for key, value in required_contract.items()):
-        raise AssertionError("full capture root contract is not outcome-free")
+        raise AssertionError("composite capture contract identity changed")
     code_hashes = contract.get("code_hashes")
     if not isinstance(code_hashes, dict) or not code_hashes:
         raise AssertionError("full capture code-hash closure is missing")
     for relative, expected_sha256 in code_hashes.items():
         source_path = PROJECT_ROOT / str(relative)
         if not source_path.is_file() or sha256_file(source_path) != expected_sha256:
-            raise AssertionError(f"full capture code blob changed: {relative}")
+            raise AssertionError(f"composite capture code blob changed: {relative}")
     universe = contract.get("universe_audit", {})
     if (
         universe.get("sessions") != EXPECTED_SESSIONS
@@ -183,33 +248,59 @@ def validate_full_capture_seal(
         != EXPECTED_LOGICAL_INVENTORY_SHA256
         or universe.get("sessions_per_ticker")
         != {ticker: EXPECTED_SESSIONS_PER_TICKER for ticker in TICKERS}
-        or contract.get("universe_file_sha256") != sha256_file(universe_path)
+        or contract.get("universe_sha256") != sha256_file(universe_path)
     ):
-        raise AssertionError("full capture universe contract changed")
+        raise AssertionError("composite capture universe contract changed")
     required_seal = {
-        "schema": "cross_venue_calendar_rr_native_clock_full_seal_v1",
-        "status": "PASS_CROSS_VENUE_CALENDAR_RR_NATIVE_CLOCK_FULL_CAPTURE",
+        "schema": "cross_venue_calendar_rr_native_clock_composite_v1r1_seal",
+        "status": "PASS_CROSS_VENUE_CALENDAR_RR_NATIVE_CLOCK_COMPOSITE_V1R1",
         "outcome_free": True,
         "holdout_2026_used": False,
         "production_modified": False,
         "sessions": EXPECTED_SESSIONS,
         "captures": EXPECTED_CAPTURES,
-        "missing_vintage_key_rows": 0,
+        "v1_captures": composite.EXPECTED_V1_CAPTURES,
+        "repair_captures": composite.EXPECTED_REPAIR_CAPTURES,
+        "unilateral_key_rows": 8,
+        "missing_shared_key_rows": 0,
     }
     if any(seal.get(key) != value for key, value in required_seal.items()):
         raise AssertionError("full native-clock seal is not a valid PASS")
     if (
         seal.get("git_commit") != contract.get("git_commit")
         or seal.get("code_hashes") != contract.get("code_hashes")
-        or seal.get("source_provenance") != contract.get("source_provenance")
-        or seal.get("runtime_lock_sha256") != contract.get("runtime_lock_sha256")
-        or seal.get("runtime_environment_sha256")
-        != contract.get("runtime_environment_sha256")
         or seal.get("capture_index_sha256") != sha256_file(index_path)
+        or seal.get("ticker_year_summary_sha256") != sha256_file(summary_path)
+        or seal.get("composite_contract_sha256") != sha256_file(contract_path)
+        or seal.get("universe_sha256") != sha256_file(universe_path)
     ):
-        raise AssertionError("full seal provenance/hash contract changed")
+        raise AssertionError("composite seal provenance/hash contract changed")
     index = _canonical_capture_index(pd.read_csv(index_path, dtype=str))
     counts = index.groupby("ticker", observed=True)["trade_date"].nunique().to_dict()
+    generation_counts = index["storage_generation"].value_counts().to_dict()
+    roots = {
+        "V1": str(Path(str(contract["v1_root"]))),
+        "V1R1_REPAIR": str(Path(str(contract["repair_root"]))),
+    }
+    storage_ok = all(
+        index.loc[index["storage_generation"].eq(generation), "storage_root"].eq(
+            expected_root
+        ).all()
+        for generation, expected_root in roots.items()
+    )
+    repair_rows = index.loc[index["storage_generation"].eq("V1R1_REPAIR")]
+    expected_repairs = {
+        capture_id: {
+            "shared_key_rows": values["shared_key_rows"],
+            "greek_only_key_rows": (
+                2 if values["unilateral_source"] == "greek_only" else 0
+            ),
+            "iv_only_key_rows": (
+                2 if values["unilateral_source"] == "iv_only" else 0
+            ),
+        }
+        for capture_id, values in composite.repair.EXPECTED_REPAIRS.items()
+    }
     if (
         len(index) != EXPECTED_CAPTURES
         or index["capture_id"].duplicated().any()
@@ -217,9 +308,29 @@ def validate_full_capture_seal(
         or set(index["ticker"]) != set(TICKERS)
         or set(index["role"]) != {"front", "back"}
         or counts != {ticker: EXPECTED_SESSIONS_PER_TICKER for ticker in TICKERS}
+        or generation_counts
+        != {
+            "V1": composite.EXPECTED_V1_CAPTURES,
+            "V1R1_REPAIR": composite.EXPECTED_REPAIR_CAPTURES,
+        }
+        or not storage_ok
+        or set(repair_rows["capture_id"]) != set(expected_repairs)
+        or int(index["missing_shared_key_rows"].sum()) != 0
+        or int(index["greek_only_key_rows"].sum()) != 2
+        or int(index["iv_only_key_rows"].sum()) != 6
+        or not index.loc[index["storage_generation"].eq("V1"), "greek_only_key_rows"].eq(0).all()
+        or not index.loc[index["storage_generation"].eq("V1"), "iv_only_key_rows"].eq(0).all()
         or not index["trade_date"].str[:4].isin(YEARS).all()
     ):
-        raise AssertionError("full capture index identity changed")
+        raise AssertionError("composite capture index identity changed")
+    for record in repair_rows.to_dict("records"):
+        frozen = expected_repairs[str(record["capture_id"])]
+        if (
+            int(record["greek_only_key_rows"]) != int(frozen["greek_only_key_rows"])
+            or int(record["iv_only_key_rows"]) != int(frozen["iv_only_key_rows"])
+            or int(record["shared_key_rows"]) != int(frozen["shared_key_rows"])
+        ):
+            raise AssertionError("repair capture intersection counts changed")
     return contract, seal, index
 
 
@@ -231,10 +342,6 @@ def revalidate_all_captures(
     expected_index: pd.DataFrame,
     workers: int,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
-    runtime = {
-        "lock_sha256": str(contract["runtime_lock_sha256"]),
-        "environment_sha256": str(contract["runtime_environment_sha256"]),
-    }
     prepared: list[dict[str, Any]] = []
     with ThreadPoolExecutor(max_workers=max(1, workers)) as executor:
         futures = {
@@ -248,30 +355,48 @@ def revalidate_all_captures(
         .sort_values(["ticker", "trade_date", "role"], kind="stable")
         .reset_index(drop=True)
     )
-    rows: list[dict[str, Any]] = []
-    with ThreadPoolExecutor(max_workers=max(1, workers)) as executor:
-        futures = {
-            executor.submit(
-                validate_existing_capture,
-                record,
-                staging=sidecar_root,
-                capture_code_hashes=dict(contract["code_hashes"]),
-                runtime=runtime,
-            ): record
-            for record in prepared_frame.to_dict(orient="records")
-        }
-        for future in as_completed(futures):
-            rows.append(future.result())
-    actual = _canonical_capture_index(pd.DataFrame(rows))
+    v1_root = Path(str(contract["v1_root"]))
+    repair_root = Path(str(contract["repair_root"]))
+    if not (Path(sidecar_root) / "_seal/seal.json").is_file():
+        raise FileNotFoundError("composite seal disappeared during revalidation")
+    v1_contract = _read_json(v1_root / "_state/capture_contract.json")
+    repair_contract, _repair_seal = composite.validate_repair_root(repair_root)
+    actual = _canonical_capture_index(
+        composite.revalidate_composite(
+            prepared_frame,
+            v1_root=v1_root,
+            repair_root=repair_root,
+            v1_contract=v1_contract,
+            repair_contract=repair_contract,
+            workers=workers,
+        )
+    )
     try:
         pd.testing.assert_frame_equal(expected_index, actual, check_dtype=True)
     except AssertionError as exc:
-        raise AssertionError("full capture revalidation differs from sealed index") from exc
+        raise AssertionError("composite capture revalidation differs from sealed index") from exc
+    metadata_columns = (
+        "capture_id",
+        "storage_generation",
+        "storage_root",
+        "shared_key_rows",
+        "greek_only_key_rows",
+        "iv_only_key_rows",
+        "missing_shared_key_rows",
+    )
+    prepared_frame = prepared_frame.merge(
+        actual.loc[:, metadata_columns],
+        on="capture_id",
+        how="left",
+        validate="one_to_one",
+    )
+    if prepared_frame[list(metadata_columns[1:])].isna().any().any():
+        raise AssertionError("prepared capture metadata lacks composite provenance")
     return prepared_frame, actual
 
 
 def build_session_table(
-    specs: pd.DataFrame, underlying_root: str | Path, sidecar_root: str | Path
+    specs: pd.DataFrame, underlying_root: str | Path
 ) -> pd.DataFrame:
     role_frames: dict[str, pd.DataFrame] = {}
     for role in ("front", "back"):
@@ -285,6 +410,12 @@ def build_session_table(
                 "iv_path",
                 "greeks_sha256",
                 "iv_sha256",
+                "storage_generation",
+                "storage_root",
+                "shared_key_rows",
+                "greek_only_key_rows",
+                "iv_only_key_rows",
+                "missing_shared_key_rows",
             )
         }
         role_frames[role] = role_frame.rename(columns=rename).drop(columns=["role"])
@@ -304,7 +435,6 @@ def build_session_table(
     sessions["calendar_half_day"] = sessions["trade_date"].isin(HALF_DAYS)
     sessions["economic_clock_eligible"] = ~sessions["calendar_half_day"]
     underlying_root = Path(underlying_root)
-    sidecar_root = Path(sidecar_root)
     sessions["underlying_path"] = sessions.apply(
         lambda row: str(
             (
@@ -321,7 +451,7 @@ def build_session_table(
         sessions[f"{role}_sidecar_path"] = sessions.apply(
             lambda row, capture_role=role: str(
                 (
-                    sidecar_root
+                    Path(str(row[f"{capture_role}_storage_root"]))
                     / str(row["ticker"])
                     / str(row["trade_date"])
                     / capture_role
@@ -463,6 +593,66 @@ def certify_vintage_clock(
     }
 
 
+def align_vintage_modalities(
+    greeks: pd.DataFrame,
+    iv: pd.DataFrame,
+    *,
+    storage_generation: str,
+    expected_shared_key_rows: int,
+    expected_greek_only_key_rows: int,
+    expected_iv_only_key_rows: int,
+) -> tuple[pd.DataFrame, pd.DataFrame, dict[str, int]]:
+    if storage_generation not in {"V1", "V1R1_REPAIR"}:
+        raise AssertionError("unknown composite storage generation")
+    greek_keys = greeks.loc[:, KEY_COLUMNS]
+    iv_keys = iv.loc[:, KEY_COLUMNS]
+    comparison = greek_keys.merge(
+        iv_keys,
+        on=list(KEY_COLUMNS),
+        how="outer",
+        indicator=True,
+        validate="one_to_one",
+    )
+    shared = comparison.loc[
+        comparison["_merge"].eq("both"), list(KEY_COLUMNS)
+    ].copy()
+    greek_only = int(comparison["_merge"].eq("left_only").sum())
+    iv_only = int(comparison["_merge"].eq("right_only").sum())
+    if (
+        len(shared) != int(expected_shared_key_rows)
+        or greek_only != int(expected_greek_only_key_rows)
+        or iv_only != int(expected_iv_only_key_rows)
+    ):
+        raise AssertionError("vintage Greek/IV intersection differs from composite")
+    if storage_generation == "V1" and (greek_only or iv_only):
+        raise AssertionError("V1 capture lost exact Greek/IV key equality")
+    if storage_generation == "V1R1_REPAIR" and not (greek_only or iv_only):
+        raise AssertionError("V1R1 repair no longer has its frozen unilateral keys")
+    aligned_greeks = greeks.merge(
+        shared,
+        on=list(KEY_COLUMNS),
+        how="inner",
+        validate="one_to_one",
+    )
+    aligned_iv = iv.merge(
+        shared,
+        on=list(KEY_COLUMNS),
+        how="inner",
+        validate="one_to_one",
+    )
+    aligned_greeks = aligned_greeks.sort_values(
+        list(KEY_COLUMNS), kind="stable"
+    ).reset_index(drop=True)
+    aligned_iv = aligned_iv.sort_values(
+        list(KEY_COLUMNS), kind="stable"
+    ).reset_index(drop=True)
+    return aligned_greeks, aligned_iv, {
+        "shared_key_rows": int(len(shared)),
+        "greek_only_key_rows": greek_only,
+        "iv_only_key_rows": iv_only,
+    }
+
+
 def read_certified_chain(
     *,
     greeks_path: Path,
@@ -471,6 +661,10 @@ def read_certified_chain(
     ticker: str,
     trade_date: str,
     expiration: str,
+    storage_generation: str,
+    expected_shared_key_rows: int,
+    expected_greek_only_key_rows: int,
+    expected_iv_only_key_rows: int,
 ) -> tuple[pd.DataFrame, dict[str, Any]]:
     greeks = _read_vintage_values(
         greeks_path,
@@ -485,6 +679,14 @@ def read_certified_chain(
         ticker=ticker,
         trade_date=trade_date,
         expiration=expiration,
+    )
+    greeks, iv, modality_audit = align_vintage_modalities(
+        greeks,
+        iv,
+        storage_generation=storage_generation,
+        expected_shared_key_rows=expected_shared_key_rows,
+        expected_greek_only_key_rows=expected_greek_only_key_rows,
+        expected_iv_only_key_rows=expected_iv_only_key_rows,
     )
     native = _read_native_keys(
         sidecar_path,
@@ -502,6 +704,8 @@ def read_certified_chain(
         "native_extra_vs_greek_rows": int(greek_clock["native_extra_target_rows"]),
         "native_extra_vs_iv_rows": int(iv_clock["native_extra_target_rows"]),
         "clock_key_coverage_exact": True,
+        "storage_generation": storage_generation,
+        **modality_audit,
     }
 
 
@@ -556,6 +760,12 @@ def process_local_session(record: dict[str, Any]) -> tuple[dict[str, Any], dict[
             ticker=ticker,
             trade_date=trade_date,
             expiration=str(record[f"{role}_expiration"]),
+            storage_generation=str(record[f"{role}_storage_generation"]),
+            expected_shared_key_rows=int(record[f"{role}_shared_key_rows"]),
+            expected_greek_only_key_rows=int(
+                record[f"{role}_greek_only_key_rows"]
+            ),
+            expected_iv_only_key_rows=int(record[f"{role}_iv_only_key_rows"]),
         )
         role_audits.update({f"{role}_{key}": value for key, value in role_audit.items()})
     feature = calculate_session_feature(
@@ -795,18 +1005,11 @@ def evaluate_data_gate(
     return coverage, distinctness, monthly, gate
 
 
-def build_source_inventory(
-    sessions: pd.DataFrame, sidecar_root: Path, workers: int
-) -> pd.DataFrame:
+def build_source_inventory(sessions: pd.DataFrame, workers: int) -> pd.DataFrame:
     rows: list[dict[str, Any]] = []
     for record in sessions.to_dict(orient="records"):
         for role in ("front", "back"):
-            capture_dir = (
-                sidecar_root
-                / str(record["ticker"])
-                / str(record["trade_date"])
-                / role
-            )
+            capture_dir = Path(str(record[f"{role}_sidecar_path"])).parent
             for kind, path in (
                 ("greeks", Path(str(record[f"{role}_greeks_path"]))),
                 ("iv", Path(str(record[f"{role}_iv_path"]))),
@@ -888,6 +1091,7 @@ def run(
     for path, label in (
         (PREDECLARATION, "predeclaration"),
         (DATA_GATE_CONTRACT, "data gate contract"),
+        (COMPOSITE_CLARIFICATION, "composite consumer clarification"),
         (Path(__file__).resolve(), "builder"),
     ):
         tracked_clean(path, label)
@@ -900,8 +1104,8 @@ def run(
         expected_index=expected_index,
         workers=workers,
     )
-    sessions = build_session_table(prepared_specs, underlying_root, sidecar_root)
-    source_inventory = build_source_inventory(sessions, sidecar_root, workers)
+    sessions = build_session_table(prepared_specs, underlying_root)
+    source_inventory = build_source_inventory(sessions, workers)
     local_features, session_audit = build_local_features(sessions, workers)
     features = apply_cross_venue_mapping(local_features)
     coverage, distinctness, monthly, gate = evaluate_data_gate(features)
@@ -966,6 +1170,11 @@ def run(
                 "sidecar_role": "native option timestamp/key certification only",
                 "economic_values": "vintage Greek/IV sources only",
                 "same_contract_t0_t1": True,
+                "composite_multi_root": True,
+                "v1_exact_greek_iv_keys": True,
+                "v1r1_intersection_capture_ids": sorted(
+                    composite.repair.EXPECTED_REPAIR_IDS
+                ),
                 "target_abs_delta": 0.25,
                 "maximum_delta_gap": 0.10,
                 "mapping": SENSOR_MAP,
@@ -973,7 +1182,7 @@ def run(
             },
             "data_gate": gate,
             "full_capture_contract_sha256": sha256_file(
-                sidecar_root / "_state/capture_contract.json"
+                sidecar_root / "_state/composite_contract.json"
             ),
             "full_capture_seal_sha256": sha256_file(sidecar_root / "_seal/seal.json"),
             "full_capture_index_sha256": sha256_file(
@@ -983,6 +1192,9 @@ def run(
             "capture_seal_created_at_utc": seal["created_at_utc"],
             "predeclaration_sha256": sha256_file(PREDECLARATION),
             "data_gate_contract_sha256": sha256_file(DATA_GATE_CONTRACT),
+            "composite_clarification_sha256": sha256_file(
+                COMPOSITE_CLARIFICATION
+            ),
             "builder_sha256": sha256_file(Path(__file__).resolve()),
             "runtime_environment": environment,
             "runtime_environment_sha256": hashlib.sha256(

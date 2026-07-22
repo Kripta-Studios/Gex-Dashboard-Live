@@ -206,6 +206,75 @@ def test_full_seal_is_mandatory(tmp_path: Path) -> None:
         module.validate_full_capture_seal(tmp_path)
 
 
+def test_real_composite_seal_and_roots_are_frozen() -> None:
+    contract, seal, index = module.validate_full_capture_seal(
+        module.DEFAULT_SIDECAR_ROOT
+    )
+    assert seal["status"] == (
+        "PASS_CROSS_VENUE_CALENDAR_RR_NATIVE_CLOCK_COMPOSITE_V1R1"
+    )
+    assert len(index) == module.EXPECTED_CAPTURES
+    assert index["storage_generation"].value_counts().to_dict() == {
+        "V1": 3_008,
+        "V1R1_REPAIR": 4,
+    }
+    assert set(index.loc[index["storage_generation"].eq("V1"), "storage_root"]) == {
+        contract["v1_root"]
+    }
+    assert set(
+        index.loc[index["storage_generation"].eq("V1R1_REPAIR"), "storage_root"]
+    ) == {contract["repair_root"]}
+
+
+def test_v1r1_alignment_excludes_only_frozen_unilateral_keys() -> None:
+    shared_keys = pd.DataFrame(
+        {
+            "symbol": ["QQQ", "QQQ"],
+            "expiration": ["20240102", "20240102"],
+            "trade_date": ["20240102", "20240102"],
+            "timestamp": pd.to_datetime(
+                ["2024-01-02 10:30:00", "2024-01-02 10:35:00"]
+            ),
+            "strike": [400.0, 400.0],
+            "right": ["CALL", "CALL"],
+        }
+    )
+    unilateral = shared_keys.assign(strike=[405.0, 405.0])
+    greeks = pd.concat([shared_keys, unilateral], ignore_index=True).assign(
+        delta=0.25, bid=1.0, ask=1.1
+    )
+    iv = shared_keys.assign(
+        bid=1.0,
+        ask=1.1,
+        bid_implied_vol=0.2,
+        ask_implied_vol=0.21,
+    )
+    aligned_greeks, aligned_iv, audit = module.align_vintage_modalities(
+        greeks,
+        iv,
+        storage_generation="V1R1_REPAIR",
+        expected_shared_key_rows=2,
+        expected_greek_only_key_rows=2,
+        expected_iv_only_key_rows=0,
+    )
+    assert len(aligned_greeks) == len(aligned_iv) == 2
+    assert aligned_greeks["strike"].eq(400.0).all()
+    assert audit == {
+        "shared_key_rows": 2,
+        "greek_only_key_rows": 2,
+        "iv_only_key_rows": 0,
+    }
+    with pytest.raises(AssertionError, match="V1 capture lost"):
+        module.align_vintage_modalities(
+            greeks,
+            iv,
+            storage_generation="V1",
+            expected_shared_key_rows=2,
+            expected_greek_only_key_rows=2,
+            expected_iv_only_key_rows=0,
+        )
+
+
 def test_scope_and_cli_cannot_open_outcomes_or_2026() -> None:
     assert module.YEARS == ("2024", "2025")
     assert "2026" not in module.YEARS

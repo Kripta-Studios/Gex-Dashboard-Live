@@ -45,6 +45,13 @@ units and apply the four exact intersection counts only to V1R1. No downstream
 execution is allowed until this clarification and then its implementation are
 committed separately.
 
+The composite-aware full auditor and data-gate builder are now implemented
+preexecution. They validate local/committed byte parity, revalidate each storage
+generation under its own contract, derive every role path from the sealed index
+and enforce the exact modality counts before economic joins. Focused tests pass
+15/15 and the full cross-venue suite 65/65; Ruff/compile pass. Commit/push is
+required before the one full audit. The data gate remains unexecuted.
+
 ## 2026-07-17 profitability clarification
 
 `CROSS_VENUE_CALENDAR_RR_LEADER_V1` has not opened 2026; its 2024–2025 exact

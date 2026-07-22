@@ -53,6 +53,15 @@ Greek=IV para V1 y los conteos exactos `Greek∩IV` solo para cuatro repairs.
 Siguiente: commit/push de la aclaración; implementar tests+auditor+builder; no
 ejecutar ninguno hasta un segundo commit limpio.
 
+Implementación composite-aware lista preejecución en
+`build_cross_venue_calendar_rr_leader_v1.py` y
+`audit_cross_venue_calendar_rr_native_clock_full.py`. El validator exige
+paridad byte local/compacta, revalida ambos contratos y enriquece cada spec con
+root/generación/conteos. Session table e inventario ya no suponen root único;
+el chain alinea Greek/IV solo según los conteos sellados. Tests focales15 y
+suite cross-venue65 pasan; Ruff/compile clean. No ejecutado: commit/push
+código/tests+handoffs y solo después full auditor default una vez.
+
 ### Estado exacto junio/julio 2026 — 2026-07-17
 
 No existe todavía una policy promovible para esos dos meses. La familia activa

@@ -45,6 +45,14 @@ Greek=IV en 3.008 V1 y aplicar los conteos exactos de intersección solo en los
 cuatro IDs. Commit/push del documento antes de implementar; código committed
 antes de ejecutar full audit o builder.
 
+Auditor y builder ya implementan esa aclaración pre-run. Cambios clave:
+default composite V1R1, validación de blobs compactos/locales, revalidación
+V1/V1R1 por contrato, paths por role/root, inventario multi-root y alineación
+modal con conteos exactos. El auditor resume también generación/shared/
+unilaterales. Focal `15 passed`, suite cross-venue `65 passed`, Ruff/compile
+PASS. Commit/push antes de ejecutar el full audit; builder/data gate sigue
+dormido hasta que ese audit PASS se versione.
+
 ## Respuesta y checkpoint 2026-07-17 03:09 Europe/Madrid
 
 No afirmar rentabilidad de `CROSS_VENUE_CALENDAR_RR_LEADER_V1` en junio/julio
