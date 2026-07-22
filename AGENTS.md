@@ -109,6 +109,15 @@ Evaluation summary SHA `6a688225...50f5`; states/trades recomputed
 directorios diagnósticos V3. Force-add/commit/push evidencia+hándoffs antes de
 implementar/generar freezer 2025. Outcomes 2025 siguen cerrados.
 
+Evidencia V3 development+audit ya versionada en `627f3b20`. Runner secuencial
+outer2025, freezer outcome-free y auditor independiente implementados antes de
+outcomes. El manifest fija hashes de data gate/development/código, inventario
+de eventos, counts mensuales, estado inicial diciembre2024 y mapping; el runner
+revalida todo antes del primer open10:36/13:36. Suite cross-venue/native-clock
+`100 passed`, Ruff/compile PASS. Aún no ejecutar ni freeze: primero commit/push
+de código/tests+hándoffs; luego freezer default una vez, commit/push manifest y
+solo entonces outer2025 one-shot. 2026/live/systemd siguen cerrados.
+
 ### Checkpoint 2026-07-22 — V1 outer 2024 cerrado sin edge
 
 El freeze quedó committed/pushed en `b53dcaa3` y el único outer 2024 terminó

@@ -43,6 +43,13 @@ anterior decide conservar/invertir el signo durante todo el siguiente. V3 se
 declara post-outcome; 2024 solo development y 2025 primer outer intacto. No se
 puede consultar 2025 hasta evaluator, auditor y freeze committed.
 
+V3 development y su auditor independiente ya están sellados en `627f3b20`.
+El runner outer2025, su freezer outcome-free y un auditor independiente se han
+implementado antes de outcomes: fijan el estado diciembre2024, los eventos y
+fuentes 2025, los counts mensuales y todos los hashes de código/input. Pasan 100
+tests cross-venue/native-clock y checks estáticos. Falta publicar este código,
+generar y publicar el manifest; solo entonces puede abrirse 2025 una vez.
+
 ## Resultado causal nuevo — V1 falla outer 2024
 
 El runner congelado en `b53dcaa3` ejecutó su único 2024: pooled 743 trades,

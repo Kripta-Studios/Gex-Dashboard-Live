@@ -9,6 +9,12 @@ los hashes pasaron. Esto indica que la dificultad no era ausencia de covariates
 tempranos sino generalización del target directo/inverso con una muestra corta.
 El siguiente candidato debe reducir grados de libertad, no añadir features.
 
+La reducción a un estado mensual también exige congelar la máquina de estados,
+no solo la fórmula. Para que un outer secuencial sea causal, el manifest debe
+fijar el estado inicial, cada evento/fuente y el orden mensual; el runner solo
+puede calcular M+1 después de cerrar M. Revalidar esos elementos antes del
+primer outcome evita que una regla simple oculte una selección retrospectiva.
+
 ### Un buen sensor puede invertir su relación temporal
 
 El mapping fijo que parecía prometedor en el diseño 2023 no transportó al

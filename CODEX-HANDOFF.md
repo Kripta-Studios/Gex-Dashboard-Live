@@ -85,6 +85,15 @@ Auditor posterior PASS desde `64eb91bf`: 12 states/743 trades/gates exactos;
 evaluation summary `6a688225...50f5`. Compactos V3 dev+audit listos para
 force-add/commit/push. Solo después freezer 2025 outcome-free; no outcomes aún.
 
+V3 dev+audit quedaron versionados en `627f3b20`. Implementados antes de abrir
+2025: `freeze_cross_venue_calendar_rr_leader_v3_runner.py`, el runner outer
+secuencial y `audit_cross_venue_calendar_rr_leader_v3_outer_2025.py`. El freeze
+enumera solo paths/hashes 2025 y deriva enero desde diciembre2024; el runner
+revalida hashes/código/event IDs/inventario/counts/estado antes de outcomes y
+encadena cada M solo desde M-1. Focal9, suite cross-venue/native-clock100,
+Ruff/compile PASS. Secuencia: commit/push código → freezer default → commit/push
+manifest → one-shot2025 → auditor. No 2026/live/systemd.
+
 ## Cierre autoritativo — outer 2024 V1 sin edge
 
 Freeze committed/pushed `b53dcaa3`; one-shot 2024:
