@@ -36,6 +36,14 @@ manifest atómicos y solo sella 4/4. No expone whitelist ni switch de semántica
 por CLI. Suite focal6 y combinada cross-venue56 pasan; Ruff/compile clean. Aún
 no ejecutado: primero commit/push de código/tests y estos handoffs.
 
+Ejecución posterior desde commit `0b7cc6dd`: `PASS` 4/4, shared keys2.828,
+unilaterales8, missing shared0, native extras8, revisiones bid/ask0 y crossed0.
+Seal SHA `81ded7dd...bd9d`, index `670dd0ce...2fe0`, unilateral audit
+`910bac85...1c6a`. Compactos en
+`cross_venue_calendar_rr_native_clock_repairs_2024_2025_v1r1/`. El PASS solo
+repara reloj/cobertura; no es alpha. Siguiente acción: commit/push compactos y
+handoffs, implementar composite sealer/audit 3.008+4; no lanzar data gate aún.
+
 ### Estado exacto junio/julio 2026 — 2026-07-17
 
 No existe todavía una policy promovible para esos dos meses. La familia activa

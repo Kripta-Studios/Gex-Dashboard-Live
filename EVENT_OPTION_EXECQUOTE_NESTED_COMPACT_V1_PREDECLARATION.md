@@ -8,6 +8,9 @@
 > The overlay capturer is implemented and tested (6 focused/56 combined) but
 > has not yet executed. It cannot read compact-V1 or outer outcomes.
 
+> The later overlay subsequently sealed 4/4 with exact shared-key coverage. It
+> remains source-only and has not accessed this experiment or outer outcomes.
+
 > June/July-2026 clarification: the later active cross-venue family has no 2026
 > result yet. The already closed VOL_COMPLEX cash proxy was positive in June
 > (PF QQQ/SPX/SPY 1.249/1.779/1.764) and July MTD, but July had 10 trades and

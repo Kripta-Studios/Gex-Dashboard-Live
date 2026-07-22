@@ -20,6 +20,11 @@ sin CLI, hashes de V1 y vintage, discrepancia contractual exacta, cobertura
 shared 100% y seal solo4/4. Sus seis tests elevan la suite cross-venue a 56; no
 se ha consultado ningún retorno.
 
+El capture real confirmó el contrato: shared coverage100%, ocho native extras
+iguales en cardinalidad a las ocho unilaterales, revised0 y crossed0. La
+intersección preserva la medición completa sin fingir que una modalidad ausente
+puede reconstruirse con la otra.
+
 ### Rentabilidad mensual no equivale a promoción
 
 `DIRECTIONAL_VOL_COMPLEX_V1` muestra el caso exacto: junio 2026 fue positivo en

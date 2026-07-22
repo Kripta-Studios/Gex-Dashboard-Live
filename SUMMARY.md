@@ -26,6 +26,12 @@ nativa o se intenta sellar menos de 4/4. Conserva raw/parquet/manifest y CSV de
 las keys unilaterales. Suite nueva6/6 y combinada56/56, checks clean. Falta
 commit/push y el único capture remoto; no hay resultado de seal todavía.
 
+La ejecución única ya produjo `PASS_REPAIRS_V1R1`: 4/4, 2.828 keys
+compartidas, ocho unilaterales audit-only, cero faltantes, cero revisiones y
+cero crossed; los ocho native extras corresponden a las unilaterales excluidas.
+Seal SHA `81ded7dd...bd9d`. Esto desbloquea el composite seal, pero todavía no
+autoriza data gate ni outcome.
+
 ## Respuesta concreta sobre junio y julio de 2026
 
 La arquitectura activa `CROSS_VENUE_CALENDAR_RR_LEADER_V1` todavía no tiene

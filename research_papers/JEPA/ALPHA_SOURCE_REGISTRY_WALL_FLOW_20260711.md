@@ -15,6 +15,11 @@ four IDs and all V1/vintage hashes, audits the eight unilateral rows, requires
 100% shared-key coverage and seals only 4/4. Focused6/combined56 tests pass; no
 remote repair capture or outcome has run yet.
 
+The single remote run now passes 4/4: shared keys2,828, unilateral8,
+missing0, native extras8, revised0 and crossed0. Seal SHA
+`81ded7dd...bd9d`. A composite 3,012 audit/seal remains mandatory before the
+source can enter the data gate.
+
 ## 2026-07-17 profitability clarification
 
 `CROSS_VENUE_CALENDAR_RR_LEADER_V1` has not opened 2026; its 2024–2025 exact

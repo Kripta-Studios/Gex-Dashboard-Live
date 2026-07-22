@@ -35,6 +35,13 @@ Revalida V1/source/diferencias exactas, captura atómica y seal4/4. Suite focal
 estos ficheros antes de hacer la única llamada remota default; no crear output
 manual ni usar el capturador V1 original.
 
+Actualización: el capture único ya terminó `PASS` desde `0b7cc6dd`. Resultado
+4/4, shared2828, unilateral8, missing0, extras8, revised0, crossed0. Root:
+`D:/ThetaData/cross_venue_calendar_rr_native_clock_2024_2025_v1r1_repairs`;
+seal/index/unilateral SHA `81ded7dd...bd9d`/`670dd0ce...2fe0`/
+`910bac85...1c6a`. Versionar los compactos presentes y luego implementar
+composite sealer; no volver a ejecutar el capturador ya sellado.
+
 ## Respuesta y checkpoint 2026-07-17 03:09 Europe/Madrid
 
 No afirmar rentabilidad de `CROSS_VENUE_CALENDAR_RR_LEADER_V1` en junio/julio
