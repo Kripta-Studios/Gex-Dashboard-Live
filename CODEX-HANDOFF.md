@@ -46,6 +46,16 @@ Commit doc antes de código; no prediction/output/2025.
 Código V2R1 listo: censo original exacto + matriz solo10:00–10:35, vector29
 sin otros cambios. Focal12/cross-venue79/checks PASS; commit/push antes de run.
 
+Run real desde `d2df1a61`: `PARTIAL_DEVELOPMENT_EDGE_2025_CLOSED`. DEV_A PF
+QQQ0,667127/SPXW0,927526/SPY0,771943; DEV_B0,737891/0,991590/1,122964. Solo
+SPY DEV_B pasa incremental; advance false. 743 trades, train739, sources1.487,
+mismatches0. No 2025/2026.
+
+Auditor V2 listo/unexecuted en
+`audit_cross_venue_calendar_rr_leader_v2.py`: refit y paridad total más source
+rehash; focal3/cross-venue82/checks PASS. Commit/push antes de auditar default;
+luego versionar resultado+audit y cerrar V2.
+
 ## Cierre autoritativo — outer 2024 V1 sin edge
 
 Freeze committed/pushed `b53dcaa3`; one-shot 2024:

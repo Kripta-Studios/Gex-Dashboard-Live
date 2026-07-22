@@ -29,6 +29,11 @@ cero de SPY 20230605 antes de 10:00. V2R1 no imputa ni excluye la fecha; mueve
 uniformemente todos los cash blocks a 10:00–10:35 y conserva seis métricas con
 horizontes35m/15m/5m. No hubo fit ni resultado antes de congelar el cambio.
 
+V2R1 completó después y falla cinco de seis ticker-bloques. Solo SPY H2 es
+positivo (PF1,123/+228,5bps); QQQ PF0,667/0,738, SPXW0,928/0,992 y SPY H1
+0,772. La frecuencia pasa, la orientación aprendida no. 2025 queda cerrado.
+Auditor de refit/source rehash implementado y probado antes de ejecución.
+
 ## Resultado causal nuevo — V1 falla outer 2024
 
 El runner congelado en `b53dcaa3` ejecutó su único 2024: pooled 743 trades,

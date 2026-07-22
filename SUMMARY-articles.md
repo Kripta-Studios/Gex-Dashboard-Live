@@ -1,5 +1,14 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+### Más contexto no corrige una relación de signo inestable
+
+Un logistic pooled causal con 29 variables option/cash, dos fits temporales y
+739 filas de train no superó al orientador mensual mínimo: cinco de seis
+ticker-bloques quedaron bajo PF1 y QQQ perdió en ambas mitades. La frecuencia y
+los hashes pasaron. Esto indica que la dificultad no era ausencia de covariates
+tempranos sino generalización del target directo/inverso con una muestra corta.
+El siguiente candidato debe reducir grados de libertad, no añadir features.
+
 ### Un buen sensor puede invertir su relación temporal
 
 El mapping fijo que parecía prometedor en el diseño 2023 no transportó al

@@ -54,6 +54,19 @@ V2R1 implementada: audita aún los 66 clocks originales para exigir exactamente
 la fuente/2 rows inválidos, pero el modelo consume solo 36 opens desde10:00.
 Focal12/cross-venue79/Ruff/compile PASS. Commit/push antes del siguiente run.
 
+Development V2R1 real completado desde `d2df1a61`:
+`PARTIAL_DEVELOPMENT_EDGE_2025_CLOSED`. DEV_A QQQ/SPXW/SPY PF
+0,667127/0,927526/0,771943 y net -794,707/-108,282/-371,299bps. DEV_B
+0,737891/0,991590/1,122964 y -805,474/-16,635/+228,517bps; solo SPY DEV_B pasa
+incremental. Frecuencia min18/19, pero `advance_to_2025_freeze=false`.
+Sources1.487 revalidadas, mismatches0; no 2025/2026/live.
+
+Auditor independiente V2 implementado: rehashea outputs/fuentes, refittea ambos
+modelos, compara coeficientes/predicciones/ledger/meses/costes/gates y reproduce
+el censo V2R1. Focal3, cross-venue82, Ruff/compile PASS. Aún no ejecutado:
+commit/push código/tests+hándoffs, después auditor default una vez y versionar
+V2+audit. V2 queda cerrada cualquiera que sea el audit; no abrir 2025.
+
 ### Checkpoint 2026-07-22 — V1 outer 2024 cerrado sin edge
 
 El freeze quedó committed/pushed en `b53dcaa3` y el único outer 2024 terminó
