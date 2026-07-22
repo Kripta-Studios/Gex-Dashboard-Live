@@ -74,6 +74,14 @@ summary SHA `c79bddfe...f03a7`, source rehash `b2c8bdac...0a40c`. Compactos
 V2+audit preparados en directorios diagnósticos homónimos. Commit/push explícito
 de evidencia+hándoffs antes de iniciar cualquier V3; 2025/2026 siguen cerrados.
 
+Tras el cierre versionado V2, V3 queda predeclarada en
+`CROSS_VENUE_CALENDAR_RR_LEADER_V3_MONTHLY_ORIENTATION_PREDECLARATION.md`.
+Regla única: orientación mensual pooled DIRECT si el hit-rate directo del mes
+anterior >=0,50, INVERSE si menor; constante todo el mes, zero=no-trade. Mapping
+y cuatro repairs intactos. 2024 es development post-outcome; 2025 primer outer.
+Implementar evaluator+auditor development, commit/push resultados y solo si
+PF>1/WR>45%/neto>0/min13 por ticker preparar freezer 2025. No leer 2025 antes.
+
 ### Checkpoint 2026-07-22 — V1 outer 2024 cerrado sin edge
 
 El freeze quedó committed/pushed en `b53dcaa3` y el único outer 2024 terminó

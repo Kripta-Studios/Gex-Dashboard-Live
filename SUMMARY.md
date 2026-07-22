@@ -38,6 +38,11 @@ La auditoría real también pasa: recompone los 743 trades y rehashea 1.487
 fuentes sin diferencias. No cambia el cierre; V2R1 queda archivada como ejemplo
 de complejidad que no generaliza y 2025 permanece sin outcomes.
 
+La siguiente familia reduce a un bit mensual: majority hit directo del mes
+anterior decide conservar/invertir el signo durante todo el siguiente. V3 se
+declara post-outcome; 2024 solo development y 2025 primer outer intacto. No se
+puede consultar 2025 hasta evaluator, auditor y freeze committed.
+
 ## Resultado causal nuevo — V1 falla outer 2024
 
 El runner congelado en `b53dcaa3` ejecutó su único 2024: pooled 743 trades,

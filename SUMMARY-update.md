@@ -39,6 +39,10 @@ commit/push antes de audit default. 2025/2026/live cerrados.
 Auditor V2 real PASS: refit/ledger/gates exactos, sources1.487 mismatch0,
 evaluation summary `c79bddfe...f03a7`. Compactos listos; commit/push antes V3.
 
+V2 evidence committed `3bdb389c`. V3 predeclarada: orientation mensual pooled
+por hit-rate directo del mes anterior >=0,50; 2024 development, 2025 primer
+outer. Sin ML/grid/cash extra. Implementar dev+audit+freeze antes de 2025.
+
 2026-07-22: runner frozen committed `b53dcaa3`; único V1 outer2024 cerrado
 `NO_AGGREGATE_EDGE`. Pooled 743/PF0,761071/WR42,665%/-3.130,133bps. Por ticker:
 QQQ249/PF0,866939/-662,668/min19/6 meses positivos; SPXW247/0,698912/

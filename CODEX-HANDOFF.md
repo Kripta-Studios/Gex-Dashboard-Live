@@ -61,6 +61,13 @@ Auditor real PASS desde `32f77c12`: refit/predictions/ledger/gates exactos,
 `c79bddfe...f03a7`, source rehash `b2c8bdac...0a40c`. Compactos V2+audit listos
 para force-add/commit/push. Solo después predeclarar V3; no abrir 2025 aún.
 
+V2 ya cerrada/versionada en `3bdb389c`. Nueva V3 predeclarada:
+`CROSS_VENUE_CALENDAR_RR_LEADER_V3_MONTHLY_ORIENTATION_PREDECLARATION.md`.
+Usa solo majority hit pooled del mes anterior para DIRECT/INVERSE del mes
+completo; no modelo/grid/feature cash. Development 2024, 2025 intacto. Siguiente:
+commit doc → evaluator/auditor dev → evidencia committed → freezer 2025. No
+outcome 2025 antes del manifest.
+
 ## Cierre autoritativo — outer 2024 V1 sin edge
 
 Freeze committed/pushed `b53dcaa3`; one-shot 2024:
