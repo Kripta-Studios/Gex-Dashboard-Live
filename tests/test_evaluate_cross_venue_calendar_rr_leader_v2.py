@@ -56,6 +56,31 @@ def test_sealed_ledger_pressure_is_namespaced_before_sensor_join(
     assert ledger["sealed_signal_pressure"].tolist() == [0.1, 0.2, 0.2]
 
 
+def test_only_frozen_zero_pressure_train_keys_are_removed() -> None:
+    rows = pd.DataFrame(
+        {
+            "ticker": ["QQQ", "QQQ", "SPY"],
+            "trade_date": ["20231116", "20231215", "20240102"],
+            "signal_pressure": [0.0, 0.0, 0.1],
+        }
+    )
+    output = module.drop_frozen_zero_pressure_train(rows)
+    assert len(output) == 1
+    assert output.iloc[0]["trade_date"] == "20240102"
+
+
+def test_any_third_zero_pressure_key_fails_closed() -> None:
+    rows = pd.DataFrame(
+        {
+            "ticker": ["QQQ", "QQQ", "SPY"],
+            "trade_date": ["20231116", "20231215", "20240102"],
+            "signal_pressure": [0.0, 0.0, 0.0],
+        }
+    )
+    with pytest.raises(AssertionError, match="key set changed"):
+        module.drop_frozen_zero_pressure_train(rows)
+
+
 def test_model_contract_is_single_fixed_logistic() -> None:
     model = module.make_model()
     classifier = model.named_steps["classifier"]

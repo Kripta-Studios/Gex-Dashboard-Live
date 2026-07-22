@@ -28,6 +28,10 @@ en `CROSS_VENUE_CALENDAR_RR_LEADER_V2_ZERO_PRESSURE_TRAINING_CLARIFICATION.md`:
 excluir solo esos dos del fit, exigir set exacto y fallar cualquier tercero.
 Train esperado739, predicciones2024 intactas. Commit doc antes del código.
 
+Código ya aplica el set exacto y falla cualquier tercero; focal10,
+cross-venue77, Ruff/compile PASS. Aún no alcanzó cash ni creó output. Commit/
+push del fix antes de reintentar default.
+
 ## Cierre autoritativo — outer 2024 V1 sin edge
 
 Freeze committed/pushed `b53dcaa3`; one-shot 2024:

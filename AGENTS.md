@@ -35,6 +35,10 @@ Exigir exactamente esas dos keys, excluirlas solo del fit (train queda739) y
 fallar ante cualquier tercera. No cambia ningún evento/predicción 2024. Commit/
 push de la aclaración antes de implementar el fix; 2025 sigue cerrado.
 
+Fix implementado: exige el frozenset exacto, elimina solo esas dos filas antes
+del cash loader y mantiene 743 predicciones 2024. Focal10/cross-venue77,
+Ruff/compile PASS. Commit/push del código/test antes del siguiente reintento.
+
 ### Checkpoint 2026-07-22 — V1 outer 2024 cerrado sin edge
 
 El freeze quedó committed/pushed en `b53dcaa3` y el único outer 2024 terminó

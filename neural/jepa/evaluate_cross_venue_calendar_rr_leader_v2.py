@@ -56,6 +56,13 @@ PREDECLARATION = PROJECT_ROOT / (
     "research_papers/JEPA/"
     "CROSS_VENUE_CALENDAR_RR_LEADER_V2_TEMPORAL_ORIENTATION_PREDECLARATION.md"
 )
+ZERO_PRESSURE_CLARIFICATION = PROJECT_ROOT / (
+    "research_papers/JEPA/"
+    "CROSS_VENUE_CALENDAR_RR_LEADER_V2_ZERO_PRESSURE_TRAINING_CLARIFICATION.md"
+)
+ZERO_PRESSURE_TRAIN_KEYS = frozenset(
+    {"QQQ|20231116", "QQQ|20231215"}
+)
 DATA_2023 = PROJECT_ROOT / (
     "research_papers/JEPA/results/_diagnostics/"
     "calendar_risk_reversal_pressure_v1_202301_202312_v1_data_gate"
@@ -171,6 +178,7 @@ def current_git_commit() -> str:
 def verify_inputs() -> None:
     tracked_clean(Path(__file__).resolve(), "V2 evaluator")
     tracked_clean(PREDECLARATION, "V2 predeclaration")
+    tracked_clean(ZERO_PRESSURE_CLARIFICATION, "V2 zero-pressure clarification")
     for path, expected in INPUTS.items():
         if not path.is_file() or sha256_file(path) != expected:
             raise AssertionError(f"V2 frozen input changed: {path}")
@@ -298,6 +306,7 @@ def load_development_rows(option_features: pd.DataFrame) -> pd.DataFrame:
     )
     if output[list(OPTION_FEATURES)].isna().any().any():
         raise AssertionError("V2 exact-date option sensor mapping is incomplete")
+    output = drop_frozen_zero_pressure_train(output)
     base_side = np.sign(output["signal_pressure"]).astype(np.int64)
     if not np.isin(base_side, [-1, 1]).all():
         raise AssertionError("V2 signal pressure contains a zero action")
@@ -325,6 +334,19 @@ def load_development_rows(option_features: pd.DataFrame) -> pd.DataFrame:
     return output.sort_values(["trade_date", "ticker"], kind="stable").reset_index(
         drop=True
     )
+
+
+def drop_frozen_zero_pressure_train(rows: pd.DataFrame) -> pd.DataFrame:
+    zero = rows.loc[pd.to_numeric(rows["signal_pressure"], errors="raise").eq(0.0)]
+    keys = frozenset(zero["ticker"].astype(str) + "|" + zero["trade_date"].astype(str))
+    if keys != ZERO_PRESSURE_TRAIN_KEYS:
+        raise AssertionError(f"V2 zero-pressure key set changed: {sorted(keys)}")
+    if not zero["trade_date"].astype(str).str.startswith("2023").all():
+        raise AssertionError("V2 zero pressure appeared outside the frozen train")
+    output = rows.loc[~rows.index.isin(zero.index)].copy()
+    if len(rows) - len(output) != len(ZERO_PRESSURE_TRAIN_KEYS):
+        raise AssertionError("V2 zero-pressure train exclusion count changed")
+    return output
 
 
 def load_underlying_inventory() -> pd.DataFrame:
