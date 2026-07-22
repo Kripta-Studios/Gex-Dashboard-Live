@@ -40,6 +40,14 @@ REQUIRED_FILES = (
     "SUMMARY.json",
     "SUMMARY.md",
 )
+SUMMARY_OUTPUT_HASHES = {
+    "source_inventory_sha256": "source_inventory.csv",
+    "source_audit_sha256": "source_audit.csv",
+    "trades_sha256": "trades.csv",
+    "monthly_sha256": "monthly_metrics.csv",
+    "ticker_summary_sha256": "ticker_summary.csv",
+    "cost_sensitivity_sha256": "cost_sensitivity.csv",
+}
 
 
 def current_git_commit() -> str:
@@ -64,6 +72,12 @@ def sha256_file(path: str | Path) -> str:
 def dataframe_digest(frame: pd.DataFrame) -> str:
     payload = frame.to_csv(index=False, lineterminator="\n").encode("utf-8")
     return hashlib.sha256(payload).hexdigest()
+
+
+def validate_summary_output_hashes(summary: dict[str, Any], input_dir: Path) -> None:
+    for field, name in SUMMARY_OUTPUT_HASHES.items():
+        if summary.get(field) != sha256_file(input_dir / name):
+            raise AssertionError(f"outer summary output hash mismatch: {name}")
 
 
 def profit_factor(values: Iterable[float]) -> float:
@@ -321,6 +335,7 @@ def run(input_dir: Path, output_dir: Path, workers: int) -> dict[str, Any]:
         or summary.get("promotion_gate_spec") != evaluate.PROMOTION_GATE_SPEC
     ):
         raise AssertionError("outer-2024 evaluation summary contract changed")
+    validate_summary_output_hashes(summary, input_dir)
     frozen_path = evaluate.DEFAULT_FROZEN_MANIFEST
     if (
         not frozen_path.is_file()
@@ -363,18 +378,12 @@ def run(input_dir: Path, output_dir: Path, workers: int) -> dict[str, Any]:
         or summary.get("advance_to_2025") is not advance
         or summary.get("promotion_gate_pass") is not promotion
         or int(summary.get("executed_trades", -1)) != len(ledger)
-        or summary.get("trades_sha256") != dataframe_digest(raw_ledger)
-        or summary.get("monthly_sha256") != dataframe_digest(monthly)
-        or summary.get("ticker_summary_sha256") != dataframe_digest(ticker_summary)
-        or summary.get("cost_sensitivity_sha256") != dataframe_digest(sensitivity)
     ):
         raise AssertionError("outer summary metrics/hashes differ from independent audit")
     inventory = pd.read_csv(
         input_dir / "source_inventory.csv",
         dtype={"trade_date": str, "sha256": str},
     )
-    if summary.get("source_inventory_sha256") != dataframe_digest(inventory):
-        raise AssertionError("outer source inventory digest changed")
     source_hash_audit = rehash_underlying_sources(inventory, workers)
     if len(source_hash_audit) != len(ledger):
         raise AssertionError("outer source inventory/trade count mismatch")
@@ -400,9 +409,6 @@ def run(input_dir: Path, output_dir: Path, workers: int) -> dict[str, Any]:
         ["ticker", "trade_date"],
         "source audit",
     )
-    if summary.get("source_audit_sha256") != dataframe_digest(stored_source_audit):
-        raise AssertionError("outer source audit digest changed")
-
     output_dir.parent.mkdir(parents=True, exist_ok=True)
     staging = output_dir.with_name(f".{output_dir.name}.staging-{os.getpid()}")
     if staging.exists():

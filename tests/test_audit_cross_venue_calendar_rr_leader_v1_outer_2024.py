@@ -60,6 +60,21 @@ def test_wrong_spxw_sensor_fails_closed() -> None:
         module.validate_and_recompute_trades(pd.DataFrame([row]))
 
 
+def test_summary_hashes_bind_exact_output_bytes(tmp_path: Path) -> None:
+    summary: dict[str, str] = {}
+    for field, name in module.SUMMARY_OUTPUT_HASHES.items():
+        path = tmp_path / name
+        path.write_text("value\n0.12345678901234567\n", encoding="utf-8")
+        summary[field] = module.sha256_file(path)
+    module.validate_summary_output_hashes(summary, tmp_path)
+
+    (tmp_path / "trades.csv").write_text(
+        "value\n0.12345678901234568\n", encoding="utf-8"
+    )
+    with pytest.raises(AssertionError, match="trades.csv"):
+        module.validate_summary_output_hashes(summary, tmp_path)
+
+
 def test_cli_cannot_change_year_policy_or_cost() -> None:
     args = module.parse_args([])
     for forbidden in ("year", "policy", "cost", "sensor", "outcome"):
