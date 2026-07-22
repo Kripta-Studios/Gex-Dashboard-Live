@@ -1,0 +1,5 @@
+ticker,trade_date,local_feature_valid,local_invalid_reason,sensor_ticker,sensor_local_feature_valid,mapped_invalid_reason
+SPXW,20241209,True,,SPY,False,AssertionError: no persistent signable CALL 25-delta contract
+SPXW,20241216,True,,SPY,False,AssertionError: no persistent signable CALL 25-delta contract
+SPY,20241209,False,AssertionError: no persistent signable CALL 25-delta contract,SPY,False,AssertionError: no persistent signable CALL 25-delta contract
+SPY,20241216,False,AssertionError: no persistent signable CALL 25-delta contract,SPY,False,AssertionError: no persistent signable CALL 25-delta contract

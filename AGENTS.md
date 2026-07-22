@@ -1,5 +1,27 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-07-22 — data gate composite V1R1 PASS y auditoría PASS
+
+El full audit ya quedó versionado/pushed en `90ffd155`. Después se ejecutó una
+sola vez el builder outcome-free desde ese HEAD y terminó `PASS_DATA_GATE`:
+1.506 sesiones/3.012 captures revalidadas, 1.504 filas local-valid, 1.502
+mapped-valid y 1.478 eventos económicos; inventario16.566, coverage mínima
+local/mapped 0,992063, distinct states mínima237, zero fraction máxima
+0,012146 y mínimo17 eventos/mes. Feature view SHA `d4335ad8...566062`,
+manifest `492f51c8...0452e`. Las únicas faltas son SPY 20241209/20241216 sin
+CALL25 persistente; SPXW hereda esas dos faltas por el mapping exacto SPY.
+
+El auditor independiente posterior pasó desde el mismo commit:
+`PASS_INDEPENDENT_DATA_GATE_AUDIT`, 16.566 hashes/sizes sin discrepancias,
+mapping parity PASS y gates reproducidas. Audit summary SHA
+`7700b087...e85dac`, mapping parity `b19cb9eb...5f8ac`, source audit
+`6d3180f1...08194`. `outcome_accessed=false`, underlying values/outcome clocks
+false y outer2024/2025/2026/live siguen cerrados. Compactos copiados a
+`cross_venue_calendar_rr_leader_v1_data_gate_202401_202512_v1r1/` y
+`cross_venue_calendar_rr_leader_v1_data_gate_audit_202401_202512_v1r1/`.
+Siguiente orden obligatorio: commit/push de ambos seals+hándoffs → freezer del
+runner desde HEAD limpio → commit/push del manifest → único outer 2024.
+
 ### Checkpoint 2026-07-22 — composite native-clock V1R1 PASS
 
 El full native-clock V1 recorrió 3.012 unidades y quedó `NO_SEAL`: preserva

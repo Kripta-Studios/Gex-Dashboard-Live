@@ -1,5 +1,16 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+### Un PASS de fuente necesita un PASS semántico independiente
+
+El composite auditado permitió construir 1.506 features outcome-free, pero el
+data gate mantuvo visibles dos días SPY sin contrato CALL25 persistente y los
+propagó a SPXW por el mapping congelado. Aun con esas faltas, coverage mínima
+99,206%, distinctness237 y frecuencia17 pasan sin imputar ni excluir días. La
+auditoría independiente volvió a hashear las 16.566 fuentes y comprobó que cada
+presión SPXW era literalmente la presión SPY de la misma fecha. La lección es
+que igualdad de bytes, cobertura de clock y fidelidad del mapping son pruebas
+distintas: las tres deben pasar antes de congelar un outcome runner.
+
 ### Reparar fuentes por intersección, no por imputación
 
 El full cross-venue reveló cuatro discrepancias Greek/IV entre 3.012 captures.

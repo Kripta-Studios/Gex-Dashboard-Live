@@ -1,0 +1,4 @@
+ticker,sensor_ticker,rows,valid_rows,maximum_abs_pressure_difference,action_mismatches
+QQQ,QQQ,502,502,0.0,0
+SPXW,SPY,502,500,0.0,0
+SPY,SPY,502,500,0.0,0

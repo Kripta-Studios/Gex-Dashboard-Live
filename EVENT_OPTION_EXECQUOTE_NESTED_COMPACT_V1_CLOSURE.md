@@ -1,5 +1,11 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1 — CLOSED_NO_EDGE
 
+> The separate cross-venue V1R1 data gate and its independent audit now pass
+> without underlying or outcome access. They preserve the exact QQQ/QQQ,
+> SPY/SPY and SPXW/SPY mapping and do not consume or reopen compact V1. Its
+> outer-2024 runner remains frozen-off until these source artifacts are
+> committed separately.
+
 > The separate cross-venue composite sealer is now implemented preexecution.
 > It revalidates 3,008 original plus four repaired captures through a logical
 > multi-root index. Its first source-only run failed closed before output on a

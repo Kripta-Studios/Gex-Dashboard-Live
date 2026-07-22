@@ -1,5 +1,19 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+## Estado posterior — data gate V1R1 auditado
+
+El full audit composite se versionó en `90ffd155`. El builder outcome-free se
+ejecutó una sola vez después y pasó: 1.506 filas, 1.504 válidas locales, 1.502
+válidas tras mapping y 1.478 eventos económicos; 16.566 fuentes revalidadas,
+coverage mínima99,206%, 237 estados mínimos y 17 eventos mensuales mínimos.
+Feature view SHA `d4335ad8...566062`, manifest SHA `492f51c8...0452e`.
+
+La auditoría independiente también pasó, con cero diferencias de hash/size,
+paridad exacta SPY→SPXW y todas las gates recomputadas. Summary SHA
+`7700b087...e85dac`. Ningún outcome, valor underlying, 2026 o producción fue
+abierto. La próxima acción no es evaluar: primero versionar estos dos compactos,
+después congelar y versionar el runner outer2024 desde HEAD limpio.
+
 ## Estado nuevo — 2026-07-22
 
 La captura masiva V1 se conserva inmutable con 3.008/3.012 unidades y cuatro

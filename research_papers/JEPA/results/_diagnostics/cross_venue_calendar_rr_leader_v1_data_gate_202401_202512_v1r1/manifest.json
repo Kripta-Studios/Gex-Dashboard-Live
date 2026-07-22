@@ -1,0 +1,156 @@
+{
+  "schema": "cross_venue_calendar_rr_leader_v1_outcome_free_data_gate",
+  "status": "PASS_DATA_GATE",
+  "created_at_utc": "2026-07-22T14:12:38.561916+00:00",
+  "git_commit": "90ffd155292801230d9a20bdb0dc15be03deb34f",
+  "scope": {
+    "start_date": "20240101",
+    "end_date": "20251231",
+    "sessions": 1506,
+    "captures": 3012
+  },
+  "tickers": [
+    "QQQ",
+    "SPXW",
+    "SPY"
+  ],
+  "rows": 1506,
+  "local_valid_rows": 1504,
+  "mapped_valid_rows": 1502,
+  "economic_event_rows": 1478,
+  "source_inventory_rows": 16566,
+  "universe_audit": {
+    "sessions_per_ticker": {
+      "QQQ": 502,
+      "SPXW": 502,
+      "SPY": 502
+    },
+    "sessions": 1506,
+    "captures": 3012,
+    "logical_source_rows": 6024,
+    "capture_id_sha256": "447e771b391f12dcfd7cba3692e65a7586dd4db2f3205311034616ddc7de5ce4",
+    "logical_inventory_sha256": "e685affdc09715085e80f9828a36e71ebbd52d5e5da4a25e43f7e8ff2f4b07b0"
+  },
+  "feature_contract": {
+    "clocks": [
+      "10:30:00",
+      "10:35:00"
+    ],
+    "sidecar_role": "native option timestamp/key certification only",
+    "economic_values": "vintage Greek/IV sources only",
+    "same_contract_t0_t1": true,
+    "composite_multi_root": true,
+    "v1_exact_greek_iv_keys": true,
+    "v1r1_intersection_capture_ids": [
+      "207459dd60dbfe7dd06da8cf",
+      "4b5b53cd7bce4944364d631d",
+      "839ad0588cc9ee1309cd8c6f",
+      "8993033a23f2068d7a25d3c2"
+    ],
+    "target_abs_delta": 0.25,
+    "maximum_delta_gap": 0.1,
+    "mapping": {
+      "QQQ": "QQQ",
+      "SPXW": "SPY",
+      "SPY": "SPY"
+    },
+    "half_days_excluded_from_economic_clock": [
+      "20240703",
+      "20241129",
+      "20241224",
+      "20250703",
+      "20251128",
+      "20251224"
+    ]
+  },
+  "data_gate": {
+    "local_coverage_pass": true,
+    "mapped_coverage_pass": true,
+    "distinctness_pass": true,
+    "frequency_pass": true,
+    "minimum_local_coverage": 0.9920634920634921,
+    "minimum_mapped_coverage": 0.9920634920634921,
+    "minimum_distinct_states": 237,
+    "maximum_zero_fraction": 0.012145748987854251,
+    "minimum_monthly_valid_events": 17,
+    "local_source_errors": 2,
+    "mapped_source_errors": 4,
+    "passed": true
+  },
+  "full_capture_contract_sha256": "68714d77ec693028f61b3cf08396ff896ff2415c24f7c21f169872916fd8c046",
+  "full_capture_seal_sha256": "5b97ebc5fc867e06ef51d0fcd2956a48a4c06d2291828f5e3ca0e8ae1c9cf84f",
+  "full_capture_index_sha256": "e5a669b7bf5fc17ac1dff62284b9d5c63751554812c0085cf23fc089f1943a0e",
+  "capture_contract_git_commit": "963f91c9fde298a8820e7dafa55c625f1220f88f",
+  "capture_seal_created_at_utc": "2026-07-22T13:29:38.811663+00:00",
+  "predeclaration_sha256": "411e55854fcdd9acc8e49b4456d10a31990e4485508659b7d5ce634e1d893b51",
+  "data_gate_contract_sha256": "9d9d7d55286fc08e6b2614dc410fee9ee672f641649db37669d704bb253b1dfb",
+  "composite_clarification_sha256": "9ad55677049cae92d9c4a9dbaef704ae87aa836efede752ca0dee7e47b2ae3fd",
+  "builder_sha256": "f9aedfbb61797a2538bf3d738207725c909e334e8013a69c98124460cad9b448",
+  "runtime_environment": {
+    "python_version": "3.14.2",
+    "python_implementation": "CPython",
+    "platform": "Windows-10-10.0-19041",
+    "packages": {
+      "numpy": "2.3.5",
+      "pandas": "3.0.0",
+      "pyarrow": "23.0.1"
+    }
+  },
+  "runtime_environment_sha256": "d80e00af2589301af684217e0597182c8459f13d759a0abbc5b91f8939d84162",
+  "output_sha256": {
+    "cross_venue_calendar_rr_features.parquet": "fd2953bd9bc918b95079d494663cf7ca2fc9dfe141604b8e8803cc2bf605d268",
+    "session_audit.csv": "62f3fb00cdcaf885f1f54e6e2be2adad0fc01c9e4d010a84408d587196ab4e40",
+    "capture_revalidation.csv": "e5a669b7bf5fc17ac1dff62284b9d5c63751554812c0085cf23fc089f1943a0e",
+    "source_inventory.csv": "b63ca25185627528b1bc22ad937dcb834dbb4846d03b451aa395a62003d4c56c",
+    "coverage.csv": "6b0cac569cf9bf9b3c02629a68b7698a442e2bd20c110abc1bb36152acd0ee24",
+    "distinctness.csv": "082025dc2c55506f55483f29793954cfa4c8811838ed9134d6a593a1d5d3ee47",
+    "monthly_capacity.csv": "ed2b1aa7753a5d378b4eb9c4b85de801066cc80a931065b806f71d4fe15422be",
+    "errors.csv": "911f5289619f3ccd698c570c37ce041070a9e3aea2024cb379badc86c676de9b"
+  },
+  "feature_view_sha256": "d4335ad85e3242f45dad3708f2a6f571ad8b2f820fa3c66d1cf2e7003a566062",
+  "labels_built": false,
+  "outcome_accessed": false,
+  "underlying_outcome_clocks_read": false,
+  "outer_2024_opened": false,
+  "outer_2025_opened": false,
+  "holdout_2026_opened": false,
+  "production_modified": false,
+  "errors": [
+    {
+      "ticker": "SPXW",
+      "trade_date": "20241209",
+      "local_feature_valid": true,
+      "local_invalid_reason": "",
+      "sensor_ticker": "SPY",
+      "sensor_local_feature_valid": false,
+      "mapped_invalid_reason": "AssertionError: no persistent signable CALL 25-delta contract"
+    },
+    {
+      "ticker": "SPXW",
+      "trade_date": "20241216",
+      "local_feature_valid": true,
+      "local_invalid_reason": "",
+      "sensor_ticker": "SPY",
+      "sensor_local_feature_valid": false,
+      "mapped_invalid_reason": "AssertionError: no persistent signable CALL 25-delta contract"
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20241209",
+      "local_feature_valid": false,
+      "local_invalid_reason": "AssertionError: no persistent signable CALL 25-delta contract",
+      "sensor_ticker": "SPY",
+      "sensor_local_feature_valid": false,
+      "mapped_invalid_reason": "AssertionError: no persistent signable CALL 25-delta contract"
+    },
+    {
+      "ticker": "SPY",
+      "trade_date": "20241216",
+      "local_feature_valid": false,
+      "local_invalid_reason": "AssertionError: no persistent signable CALL 25-delta contract",
+      "sensor_ticker": "SPY",
+      "sensor_local_feature_valid": false,
+      "mapped_invalid_reason": "AssertionError: no persistent signable CALL 25-delta contract"
+    }
+  ]
+}

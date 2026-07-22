@@ -1,5 +1,10 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1
 
+> The separate cross-venue V1R1 source data gate and independent semantic audit
+> later passed with no underlying values or outcomes read. This remains wholly
+> isolated from compact V1; its own outer runner cannot execute until a
+> separately committed freeze.
+
 > The later cross-venue family now has a tested, unexecuted composite sealer
 > for its 3,008 V1 plus four V1R1 captures. It uses a logical multi-root index,
 > opens no outcomes and cannot consume or alter compact V1. Its downstream

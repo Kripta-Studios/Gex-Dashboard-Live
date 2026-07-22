@@ -1,5 +1,26 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+## Checkpoint autoritativo — data gate V1R1 y auditor independiente PASS
+
+El full audit está committed/pushed en `90ffd155`. El único builder posterior
+terminó `PASS_DATA_GATE` desde ese mismo HEAD: rows/sessions1.506,
+local-valid1.504, mapped-valid1.502, economic events1.478, sources16.566,
+coverage mínima0,992063, distinct states237 y mínimo17 eventos/mes. Manifest
+SHA `492f51c8...0452e`, feature view `d4335ad8...566062`, parquet
+`fd2953bd...5d268`. Los dos errores locales son SPY 20241209/20241216 sin
+CALL25 persistente; por QQQ←QQQ, SPY←SPY y SPXW←SPY se registran cuatro errores
+mapped. No se excluye ningún otro día ni se acepta una quinta discrepancia.
+
+El auditor independiente ejecutado después terminó
+`PASS_INDEPENDENT_DATA_GATE_AUDIT`: 16.566 size/hash matches, gates y mapping
+exact-date reproducidos, source-audit SHA `6d3180f1...08194`, mapping parity
+`b19cb9eb...5f8ac` y audit summary `7700b087...e85dac`. No leyó underlying ni
+outcomes. Compactos están preparados en los dos directorios diagnósticos V1R1.
+Commit/push explícito antes de ejecutar
+`freeze_cross_venue_calendar_rr_leader_v1_runner.py`; luego force-add/commit/
+push del manifest y solo entonces el one-shot outer2024. No abrir 2025/2026 ni
+tocar live/systemd antes de las gates secuenciales.
+
 ## Checkpoint autoritativo — 2026-07-22
 
 V1 terminó `NO_SEAL` con 3.008 capturas atómicas y cuatro diferencias

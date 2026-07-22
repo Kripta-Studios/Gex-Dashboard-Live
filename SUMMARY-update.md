@@ -1,5 +1,17 @@
 # SUMMARY-update — ledger científico compacto
 
+2026-07-22: data gate cross-venue V1R1 ejecutado una sola vez desde `90ffd155`
+y `PASS_DATA_GATE`. Sessions/rows1.506, captures3.012, local-valid1.504,
+mapped-valid1.502, economic1.478, inventory16.566; min coverage0,992063,
+distinct237, min month17. Manifest/feature SHA `492f51c8...0452e`/
+`d4335ad8...566062`. Errores exactos: SPY 20241209/20241216 sin CALL25
+persistente y su propagación mapped a SPXW; no hay quinta discrepancia.
+
+Auditor independiente posterior PASS: hash/size mismatches0, mapping parity
+PASS, source audit `6d3180f1...08194`, audit summary `7700b087...e85dac`.
+Outcomes/underlying/outer2024+/live false. Compactos V1R1 listos para
+commit/push; solo después freezer → commit manifest → one-shot outer2024.
+
 2026-07-22: V1 queda inmutable `NO_SEAL` con 3.008 capturas y cuatro errores
 Greek/IV congelados. V1R1 ya pasó 4/4 desde `0b7cc6dd`: shared2828,
 unilateral8 audit-only, missing0, extras8, revised0, crossed0. Seal/index/audit

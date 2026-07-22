@@ -1,5 +1,21 @@
 # Alpha-source registry and Stage 0/1 audit — 2026-07-11
 
+## 2026-07-22 cross-venue data gate and independent audit
+
+After the composite full audit was committed in `90ffd155`, the single
+outcome-free builder run passed: 1,506 sessions, 1,478 economic events, 16,566
+hashed source rows, minimum mapped coverage 0.992063, minimum 237 distinct
+states and minimum 17 events/month. Feature/manifest SHA are
+`d4335ad8...566062`/`492f51c8...0452e`. The only local source failures are SPY
+2024-12-09 and 2024-12-16; the frozen SPY→SPXW mapping propagates them rather
+than substituting another sensor.
+
+The independent audit then passed with zero size/hash mismatches, exact mapping
+parity and recomputed gates. Audit summary SHA is `7700b087...e85dac`. No
+underlying values or outcomes were read. These results validate a measurable
+source, not alpha; compact artifacts must be committed before freezing the
+outer-2024 runner.
+
 ## 2026-07-22 cross-venue source repair
 
 The full native-clock source ended unsealed at 3,008/3,012 captures. Four

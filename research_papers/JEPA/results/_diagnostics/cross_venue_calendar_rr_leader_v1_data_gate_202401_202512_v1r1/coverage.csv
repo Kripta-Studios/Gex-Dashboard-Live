@@ -1,0 +1,7 @@
+ticker,year,total_sessions,local_valid_sessions,mapped_valid_sessions,local_coverage,mapped_coverage
+QQQ,2024,252,252,252,1.0,1.0
+QQQ,2025,250,250,250,1.0,1.0
+SPXW,2024,252,252,250,1.0,0.9920634920634921
+SPXW,2025,250,250,250,1.0,1.0
+SPY,2024,252,250,250,0.9920634920634921,0.9920634920634921
+SPY,2025,250,250,250,1.0,1.0
