@@ -22,8 +22,13 @@ request params, source provenance, runtime y hashes congelados; no copia raw ni
 consulta red/underlying/outcomes. Debe producir un índice lógico 3.012/3.012 con
 `storage_generation` y `storage_root` en el nuevo root inmutable
 `D:/ThetaData/cross_venue_calendar_rr_native_clock_2024_2025_v1r1_composite`.
-Suite repairs+composite `12 passed`, suite cross-venue `62 passed`, Ruff y
-py_compile PASS.
+Primer intento desde `a352d544` falló cerrado tras revalidar fuentes y antes de
+crear output: el CSV de claves unilaterales recarga con RangeIndex mientras la
+recomputación conservaba el índice original. Valores y hashes no discrepaban.
+El validator ahora hace `reset_index(drop=True)` solo para esa comparación y
+un test revalida los cuatro repairs reales. Repairs+composite `13 passed`, suite
+cross-venue `63 passed`, Ruff y pycompile PASS. Commit/push del fix antes del
+segundo y único reintento admisible; no existe root composite ni stager.
 
 Secuencia obligatoria: commit/push del sellador, test y handoffs → ejecutar una
 sola vez el composite default con workers8 → inspeccionar/versionar seal,

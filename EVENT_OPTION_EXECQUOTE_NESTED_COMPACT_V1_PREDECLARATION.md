@@ -5,6 +5,11 @@
 > opens no outcomes and cannot consume or alter compact V1. Its downstream
 > auditor/data gate still require explicit composite compatibility.
 
+> Its first source-only execution failed closed before output because a CSV
+> RangeIndex was compared with recomputed source indices. Values/hashes agreed;
+> a four-repair regression now passes, with 63 cross-venue tests. This has no
+> bearing on compact V1.
+
 > 2026-07-22: the later cross-venue family remains isolated from this protocol.
 > Its V1 capture stopped at 3,008/3,012 on four outcome-free Greek/IV key-set
 > mismatches. The separately frozen V1R1 overlay uses exact shared keys only;

@@ -8,8 +8,11 @@ en `53872c39`. Sin outcomes ni PF nuevo.
 
 Composite sealer V1R1 implementado pre-run. Revalida offline 3.008 V1 + 4
 repairs, incluyendo endpoint/request params/provenance/runtime/hashes, y genera
-un índice lógico multi-root sin copiar raws. Repairs+composite `12 passed`, suite
-cross-venue `62 passed`, Ruff/compile PASS. Pendiente: commit/push → one-shot
+un índice lógico multi-root sin copiar raws. Primer intento desde `a352d544`
+falló cerrado pre-output por RangeIndex del CSV unilateral frente al índice
+original recomputado; valores/hashes iguales. Fix `reset_index(drop=True)` y
+regresión sobre los cuatro repairs reales: repairs+composite `13 passed`, suite
+cross-venue `63 passed`, Ruff/compile PASS. Pendiente: commit/push → reintento
 composite default workers8 → versionar evidencia.
 
 No ejecutar todavía full auditor ni data gate: ambos asumen un root único y

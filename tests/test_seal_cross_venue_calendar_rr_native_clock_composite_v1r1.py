@@ -49,6 +49,31 @@ def test_real_repair_root_and_scope_are_frozen() -> None:
     assert set(specs.loc[specs["capture_id"].isin(module.repair.EXPECTED_REPAIR_IDS), "capture_id"]) == module.repair.EXPECTED_REPAIR_IDS
 
 
+def test_real_repairs_revalidate_against_frozen_provenance() -> None:
+    contract, _seal = module.validate_repair_root(module.DEFAULT_REPAIR_ROOT)
+    specs, _audit = module.full.discover_full_specs()
+    repairs = specs.loc[
+        specs["capture_id"].isin(module.repair.EXPECTED_REPAIR_IDS)
+    ]
+    rows = [
+        module.repair.validate_existing_repair(
+            module.full.prepare_spec(spec),
+            output=module.DEFAULT_REPAIR_ROOT,
+            runtime={
+                "lock_sha256": contract["runtime_lock_sha256"],
+                "environment_sha256": contract["runtime_environment_sha256"],
+            },
+            code_hashes=dict(contract["code_hashes"]),
+            provenance=dict(contract["source_provenance"]),
+        )
+        for spec in repairs.to_dict("records")
+    ]
+    assert len(rows) == 4
+    assert sum(int(row["shared_key_rows"]) for row in rows) == 2_828
+    assert sum(int(row["greek_only_key_rows"]) for row in rows) == 2
+    assert sum(int(row["iv_only_key_rows"]) for row in rows) == 6
+
+
 def test_normalize_v1_row_sets_zero_unilateral_counts(tmp_path: Path) -> None:
     raw = {
         "capture_id": "x",

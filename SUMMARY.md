@@ -12,8 +12,11 @@ El sellador composite ya está implementado y probado, pero aún no ejecutado.
 Revalida offline las 3.008 capturas V1 y las cuatro V1R1 desde sus roots
 separados, fija endpoint/request/provenance/runtime y crea un índice lógico
 3.012/3.012 sin copiar raw ni leer underlying, labels o outcomes. Suite
-repairs+composite `12 passed`; suite cross-venue `62 passed`; Ruff y pycompile
-PASS. Debe commit/push antes del one-shot default con workers8.
+repairs+composite `13 passed`; suite cross-venue `63 passed`; Ruff y pycompile
+PASS. El primer run desde `a352d544` falló cerrado antes de escribir output por
+una diferencia exclusiva de índice DataFrame en el CSV audit-only, no de
+valores ni hashes. El validator ya normaliza ese índice y revalida los cuatro
+repairs reales. Debe commit/push el fix antes del reintento default workers8.
 
 El bloqueo posterior es explícito: el auditor full y el builder actuales todavía
 presuponen un único root y Greek=IV para las 3.012 unidades. Tras sellar y

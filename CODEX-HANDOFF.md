@@ -13,9 +13,12 @@ El próximo artefacto ya está implementado preejecución:
 `neural/jepa/seal_cross_venue_calendar_rr_native_clock_composite_v1r1.py` y su
 test. Revalida offline V1 3.008 + V1R1 4 con contratos, runtime, endpoint,
 request params, provenance y hashes exactos; crea un índice lógico multi-root,
-sin copiar raw ni leer underlying/outcomes. Repairs+composite `12 passed`, suite
-cross-venue completa `62 passed`, Ruff/pycompile PASS. Ejecutarlo solo después
-de commit/push, una vez, al output default inmutable con `--workers 8`.
+sin copiar raw ni leer underlying/outcomes. El primer run desde `a352d544`
+falló cerrado antes del output por comparar RangeIndex CSV contra los índices
+originales de las ocho rows audit-only; no hubo diferencia de valores/hashes.
+Se normaliza solo ese índice y un test nuevo revalida los cuatro repairs reales.
+Repairs+composite `13 passed`, suite cross-venue `63 passed`, Ruff/pycompile
+PASS. Commit/push del fix antes de reintentar al output default con workers8.
 
 Tras PASS, versionar `_state/composite_contract.json`, `_seal/seal.json`,
 `capture_index.csv`, `ticker_year_summary.csv` y el universo/resultado compacto.

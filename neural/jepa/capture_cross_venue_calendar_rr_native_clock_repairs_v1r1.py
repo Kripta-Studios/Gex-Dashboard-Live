@@ -414,7 +414,11 @@ def validate_existing_repair(
         dtype={"capture_id": str, "trade_date": str, "expiration": str},
         parse_dates=["timestamp"],
     )
-    pd.testing.assert_frame_equal(stored_unilateral, unilateral, check_dtype=False)
+    pd.testing.assert_frame_equal(
+        stored_unilateral,
+        unilateral.reset_index(drop=True),
+        check_dtype=False,
+    )
     if any(manifest.get(key) != value for key, value in audit.items()):
         raise AssertionError("existing repair vintage audit changed")
     return index_row(directory, manifest)

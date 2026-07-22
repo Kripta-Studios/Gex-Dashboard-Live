@@ -2,7 +2,9 @@
 
 > The separate cross-venue composite sealer is now implemented preexecution.
 > It revalidates 3,008 original plus four repaired captures through a logical
-> multi-root index; 62 cross-venue tests pass. It has no compact-V1 or outcome
+> multi-root index. Its first source-only run failed closed before output on a
+> non-serialized pandas index; the fixed validator now has 63 passing
+> cross-venue tests. It has no compact-V1 or outcome
 > input, and the full auditor/data gate must be adapted before use. This closed
 > experiment remains unchanged.
 

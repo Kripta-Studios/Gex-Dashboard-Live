@@ -29,8 +29,15 @@ El composite no debe fusionar físicamente los roots. Un índice lógico con
 `storage_generation` y `storage_root` conserva qué bytes pertenecen a la
 captura original y cuáles al repair, mientras revalida ambos contratos antes de
 sellar 3.012/3.012. El sellador implementado también fija endpoint, request
-params y source provenance de los repairs; `62 passed` en la suite cross-venue.
-Sigue preejecución y sin outcomes.
+params y source provenance de los repairs; tras la regresión descrita debajo,
+la suite cross-venue alcanza `63 passed`. Sigue sin outcomes.
+
+El primer recorrido completo destapó otra distinción útil: igualdad de una
+tabla no debe depender del índice interno de pandas cuando el formato CSV no lo
+serializa. El run falló cerrado, sin output, aunque las ocho filas y sus hashes
+coincidían; normalizar solo el índice antes de comparar preserva el contrato de
+valores. Una regresión sobre los cuatro repairs reales eleva la suite a
+`63 passed` antes del reintento.
 
 Una consecuencia importante es que el consumidor debe entender el composite:
 un seal PASS no basta si auditor y builder siguen suponiendo un solo directorio
