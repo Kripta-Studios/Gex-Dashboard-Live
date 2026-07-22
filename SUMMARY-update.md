@@ -28,6 +28,9 @@ Cuarto run: primer cash censo, fallo pre-fit por única fuente SPY20230605 con
 opens0 09:55/09:56 (1/1.487). V2R1 predeclara ventana uniforme10:00–10:35,
 36/35 clocks/returns y horizons35m/15m/5m. Sin fill/exclusión/output/2025.
 
+V2R1 code ready: reproduce censo inválido original y usa solo36 opens válidos;
+focal12/cross-venue79/checks PASS. Pendiente commit/push y run.
+
 2026-07-22: runner frozen committed `b53dcaa3`; único V1 outer2024 cerrado
 `NO_AGGREGATE_EDGE`. Pooled 743/PF0,761071/WR42,665%/-3.130,133bps. Por ticker:
 QQQ249/PF0,866939/-662,668/min19/6 meses positivos; SPXW247/0,698912/

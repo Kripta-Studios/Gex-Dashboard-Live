@@ -43,6 +43,9 @@ fecha. Autoridad:
 `CROSS_VENUE_CALENDAR_RR_LEADER_V2R1_EARLY_CLOCK_REPAIR_CLARIFICATION.md`.
 Commit doc antes de código; no prediction/output/2025.
 
+Código V2R1 listo: censo original exacto + matriz solo10:00–10:35, vector29
+sin otros cambios. Focal12/cross-venue79/checks PASS; commit/push antes de run.
+
 ## Cierre autoritativo — outer 2024 V1 sin edge
 
 Freeze committed/pushed `b53dcaa3`; one-shot 2024:

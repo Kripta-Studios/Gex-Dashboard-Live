@@ -50,6 +50,10 @@ upstream ya conocido. No fill ni exclusión. V2R1 congelada en
 ventana uniforme10:00–10:35, 36 opens/35 returns, horizontes35m/15m/5m y vector
 29 intacto. Commit/push aclaración antes de código/censo nuevo. 2025 cerrado.
 
+V2R1 implementada: audita aún los 66 clocks originales para exigir exactamente
+la fuente/2 rows inválidos, pero el modelo consume solo 36 opens desde10:00.
+Focal12/cross-venue79/Ruff/compile PASS. Commit/push antes del siguiente run.
+
 ### Checkpoint 2026-07-22 — V1 outer 2024 cerrado sin edge
 
 El freeze quedó committed/pushed en `b53dcaa3` y el único outer 2024 terminó

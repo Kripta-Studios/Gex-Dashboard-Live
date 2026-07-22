@@ -47,10 +47,13 @@ MIN_MONTH_TRADES_EXCLUSIVE = 12
 COSTS_BPS = (1.0, 2.0, 3.0)
 MODEL_C = 0.1
 MODEL_THRESHOLD = 0.5
-EARLY_START = "09:30:00"
+ORIGINAL_EARLY_START = "09:30:00"
+EARLY_START = "10:00:00"
 EARLY_END = "10:35:00"
-EARLY_CLOCK_COUNT = 66
-EARLY_RETURN_COUNT = 65
+ORIGINAL_EARLY_CLOCK_COUNT = 66
+EARLY_CLOCK_COUNT = 36
+EARLY_RETURN_COUNT = 35
+ORIGINAL_INVALID_EARLY_SOURCE_KEYS = frozenset({"SPY|20230605"})
 
 PREDECLARATION = PROJECT_ROOT / (
     "research_papers/JEPA/"
@@ -59,6 +62,10 @@ PREDECLARATION = PROJECT_ROOT / (
 ZERO_PRESSURE_CLARIFICATION = PROJECT_ROOT / (
     "research_papers/JEPA/"
     "CROSS_VENUE_CALENDAR_RR_LEADER_V2_ZERO_PRESSURE_TRAINING_CLARIFICATION.md"
+)
+EARLY_CLOCK_CLARIFICATION = PROJECT_ROOT / (
+    "research_papers/JEPA/"
+    "CROSS_VENUE_CALENDAR_RR_LEADER_V2R1_EARLY_CLOCK_REPAIR_CLARIFICATION.md"
 )
 ZERO_PRESSURE_TRAIN_KEYS = frozenset(
     {"QQQ|20231116", "QQQ|20231215"}
@@ -116,8 +123,8 @@ OPTION_FEATURES = (
     "option_spot_return_5m_bps",
 )
 CASH_METRICS = (
-    "return_0930_1035_bps",
     "return_1000_1035_bps",
+    "return_1020_1035_bps",
     "return_1030_1035_bps",
     "open_return_std_bps",
     "open_range_bps",
@@ -179,6 +186,7 @@ def verify_inputs() -> None:
     tracked_clean(Path(__file__).resolve(), "V2 evaluator")
     tracked_clean(PREDECLARATION, "V2 predeclaration")
     tracked_clean(ZERO_PRESSURE_CLARIFICATION, "V2 zero-pressure clarification")
+    tracked_clean(EARLY_CLOCK_CLARIFICATION, "V2R1 early-clock clarification")
     for path, expected in INPUTS.items():
         if not path.is_file() or sha256_file(path) != expected:
             raise AssertionError(f"V2 frozen input changed: {path}")
@@ -389,20 +397,20 @@ def early_cash_features_from_opens(opens: Iterable[float]) -> dict[str, float]:
     if returns.shape != (EARLY_RETURN_COUNT,):
         raise AssertionError("V2 early cash return count changed")
     return {
-        "return_0930_1035_bps": float(math.log(values[-1] / values[0]) * 10_000.0),
-        "return_1000_1035_bps": float(math.log(values[-1] / values[30]) * 10_000.0),
-        "return_1030_1035_bps": float(math.log(values[-1] / values[60]) * 10_000.0),
+        "return_1000_1035_bps": float(math.log(values[-1] / values[0]) * 10_000.0),
+        "return_1020_1035_bps": float(math.log(values[-1] / values[20]) * 10_000.0),
+        "return_1030_1035_bps": float(math.log(values[-1] / values[30]) * 10_000.0),
         "open_return_std_bps": float(np.std(returns, ddof=0)),
         "open_range_bps": float(math.log(values.max() / values.min()) * 10_000.0),
         "positive_open_return_fraction": float(np.mean(returns > 0.0)),
     }
 
 
-def _early_timestamp_values(day: str) -> tuple[list[pd.Timestamp], list[str]]:
+def _timestamp_values(
+    day: str, start: str, end: str
+) -> tuple[list[pd.Timestamp], list[str]]:
     date = f"{day[:4]}-{day[4:6]}-{day[6:]}"
-    expected = list(
-        pd.date_range(f"{date} {EARLY_START}", f"{date} {EARLY_END}", freq="min")
-    )
+    expected = list(pd.date_range(f"{date} {start}", f"{date} {end}", freq="min"))
     values: list[str] = []
     for timestamp in expected:
         base_t = timestamp.strftime("%Y-%m-%dT%H:%M:%S")
@@ -423,7 +431,7 @@ def read_early_cash_source(record: Any) -> tuple[tuple[str, str], dict[str, floa
     required = {"symbol", "date", "timestamp", "open"}
     if not required.issubset(set(pq.read_schema(path).names)):
         raise KeyError(f"V2 underlying schema changed: {path}")
-    expected, values = _early_timestamp_values(day)
+    expected, values = _timestamp_values(day, ORIGINAL_EARLY_START, EARLY_END)
     frame = pd.read_parquet(
         path,
         columns=["symbol", "date", "timestamp", "open"],
@@ -435,7 +443,7 @@ def read_early_cash_source(record: Any) -> tuple[tuple[str, str], dict[str, floa
     frame["open"] = pd.to_numeric(frame["open"], errors="coerce")
     frame = frame.sort_values("timestamp", kind="stable")
     if (
-        len(frame) != EARLY_CLOCK_COUNT
+        len(frame) != ORIGINAL_EARLY_CLOCK_COUNT
         or frame.isna().any().any()
         or not frame["symbol"].eq(ticker).all()
         or not frame["date"].eq(day).all()
@@ -443,15 +451,25 @@ def read_early_cash_source(record: Any) -> tuple[tuple[str, str], dict[str, floa
         or list(frame["timestamp"]) != expected
     ):
         raise AssertionError(f"V2 exact early clocks failed: {path}")
-    features = early_cash_features_from_opens(frame["open"].to_numpy())
+    model_start = pd.Timestamp(
+        f"{day[:4]}-{day[4:6]}-{day[6:]} {EARLY_START}"
+    )
+    model_frame = frame.loc[frame["timestamp"].ge(model_start)].copy()
+    original_invalid_rows = int(
+        (~np.isfinite(frame["open"].to_numpy(dtype=float)) | frame["open"].le(0.0)).sum()
+    )
+    features = early_cash_features_from_opens(model_frame["open"].to_numpy())
     audit = {
         "ticker": ticker,
         "trade_date": day,
         "path": str(path),
         "size_bytes": int(record.size_bytes),
         "sha256": actual_hash,
-        "rows_read": EARLY_CLOCK_COUNT,
-        "first_clock": EARLY_START,
+        "audit_rows_read": ORIGINAL_EARLY_CLOCK_COUNT,
+        "model_rows_used": EARLY_CLOCK_COUNT,
+        "original_invalid_open_rows": original_invalid_rows,
+        "audit_first_clock": ORIGINAL_EARLY_START,
+        "model_first_clock": EARLY_START,
         "last_clock": EARLY_END,
     }
     return (ticker, day), features, audit
@@ -489,7 +507,19 @@ def load_early_cash_cache(
     audit_frame = pd.DataFrame(audits).sort_values(
         ["ticker", "trade_date"], kind="stable"
     ).reset_index(drop=True)
+    validate_original_invalid_census(audit_frame)
     return cache, audit_frame
+
+
+def validate_original_invalid_census(source_audit: pd.DataFrame) -> None:
+    invalid = source_audit.loc[source_audit["original_invalid_open_rows"].gt(0)]
+    keys = frozenset(
+        invalid["ticker"].astype(str) + "|" + invalid["trade_date"].astype(str)
+    )
+    if keys != ORIGINAL_INVALID_EARLY_SOURCE_KEYS:
+        raise AssertionError(f"V2R1 original invalid source census changed: {sorted(keys)}")
+    if int(invalid["original_invalid_open_rows"].sum()) != 2:
+        raise AssertionError("V2R1 original invalid open-row count changed")
 
 
 def attach_cash_features(
@@ -833,9 +863,16 @@ def run(output_dir: Path, workers: int) -> dict[str, Any]:
             },
             "cash_clock": {
                 "column": "open",
-                "first": EARLY_START,
+                "audit_first": ORIGINAL_EARLY_START,
+                "model_first": EARLY_START,
                 "last": EARLY_END,
-                "rows_per_source": EARLY_CLOCK_COUNT,
+                "audit_rows_per_source": ORIGINAL_EARLY_CLOCK_COUNT,
+                "model_rows_per_source": EARLY_CLOCK_COUNT,
+                "model_returns_per_source": EARLY_RETURN_COUNT,
+                "original_invalid_source_keys": sorted(
+                    ORIGINAL_INVALID_EARLY_SOURCE_KEYS
+                ),
+                "original_invalid_open_rows": 2,
                 "outcome_clock_read_by_cash_builder": False,
             },
             "runtime": {

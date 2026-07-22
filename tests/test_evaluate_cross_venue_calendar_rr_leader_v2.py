@@ -25,17 +25,31 @@ def test_frozen_feature_vector_and_mapping() -> None:
 def test_early_cash_features_use_exact_open_indices() -> None:
     opens = np.exp(np.arange(module.EARLY_CLOCK_COUNT, dtype=float) / 10_000.0)
     features = module.early_cash_features_from_opens(opens)
-    assert features["return_0930_1035_bps"] == pytest.approx(65.0)
     assert features["return_1000_1035_bps"] == pytest.approx(35.0)
+    assert features["return_1020_1035_bps"] == pytest.approx(15.0)
     assert features["return_1030_1035_bps"] == pytest.approx(5.0)
-    assert features["open_return_std_bps"] == pytest.approx(0.0, abs=1e-12)
-    assert features["open_range_bps"] == pytest.approx(65.0)
+    assert features["open_return_std_bps"] == pytest.approx(0.0, abs=2e-12)
+    assert features["open_range_bps"] == pytest.approx(35.0)
     assert features["positive_open_return_fraction"] == 1.0
 
 
 def test_missing_early_cash_clock_fails_closed() -> None:
     with pytest.raises(AssertionError, match="opens are invalid"):
-        module.early_cash_features_from_opens(np.ones(65))
+        module.early_cash_features_from_opens(np.ones(35))
+
+
+def test_v2r1_original_invalid_source_census_is_exact() -> None:
+    audit = pd.DataFrame(
+        {
+            "ticker": ["QQQ", "SPY"],
+            "trade_date": ["20230605", "20230605"],
+            "original_invalid_open_rows": [0, 2],
+        }
+    )
+    module.validate_original_invalid_census(audit)
+    audit.loc[0, "original_invalid_open_rows"] = 1
+    with pytest.raises(AssertionError, match="census changed"):
+        module.validate_original_invalid_census(audit)
 
 
 def test_sealed_ledger_pressure_is_namespaced_before_sensor_join(
