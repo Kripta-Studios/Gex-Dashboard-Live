@@ -1,5 +1,19 @@
 # Alpha-source registry and Stage 0/1 audit — 2026-07-11
 
+## 2026-07-22 cross-venue V1 outer closure
+
+The frozen one-shot 2024 evaluation closed `NO_AGGREGATE_EDGE`: 743 trades,
+42.665% WR, 0.761071 PF and -3,130.133 bps. QQQ/SPXW/SPY PF was
+0.866939/0.698912/0.693382 with minimum monthly frequency 19/18/18, so no
+ticker passed the incremental gate and 2025/2026 remained unopened.
+
+The independent auditor revalidated all economics and all 743 underlying
+sources with zero hash/size mismatches. Its initial fail-closed run exposed a
+CSV round-trip digest bug; commit `95609e21` now binds exact file bytes while
+recomputing semantic tables separately, with 67 cross-venue tests passing.
+V1 is closed. A learned successor may use 2023–2024 only as development and
+must freeze before the still-intact 2025 outer; production remains unchanged.
+
 ## 2026-07-22 cross-venue data gate and independent audit
 
 After the composite full audit was committed in `90ffd155`, the single

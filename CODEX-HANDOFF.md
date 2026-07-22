@@ -1,5 +1,26 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+## Cierre autoritativo — outer 2024 V1 sin edge
+
+Freeze committed/pushed `b53dcaa3`; one-shot 2024:
+`NO_AGGREGATE_EDGE_OUTER_2024_CLOSED`. Pooled 743 trades, WR42,665%,
+PF0,761071, -3.130,133bps. QQQ PF0,866939/-662,668bps/min19; SPXW
+PF0,698912/-1.220,988/min18; SPY PF0,693382/-1.246,477/min18. Meses positivos
+6/5/5. `advance_to_2025=false`, así que V1 no puede abrir 2025 ni 2026.
+
+El primer intento del auditor falló cerrado sin artefacto por comparar hashes
+post-parse con los bytes CSV originales. Fix de identidad `95609e21` pushed;
+suite cross-venue67, Ruff/compile PASS. Segundo intento
+`PASS_INDEPENDENT_OUTER_2024_AUDIT`: trades743, fuentes743, size/hash
+mismatches0, métricas/gates reproducidas. Versionar evaluación+auditoría y
+hándoffs; producción permanece intacta.
+
+El usuario pide continuar con aprendizaje 2023+parte de 2024. Nueva frontera:
+V1 no se rescata. Debido a que ya se observó su agregado 2024, cualquier V2 usa
+2023–2024 como development causal/walk-forward y reserva 2025 como primer outer
+intacto; 2026 solo tras PASS+freeze. Predeclarar V2 antes de analizar variantes
+y no tocar live/systemd.
+
 ## Checkpoint autoritativo — data gate V1R1 y auditor independiente PASS
 
 El full audit está committed/pushed en `90ffd155`. El único builder posterior

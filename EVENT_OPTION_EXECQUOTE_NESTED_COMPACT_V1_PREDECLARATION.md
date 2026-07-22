@@ -1,5 +1,10 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1
 
+> The separate cross-venue V1 later failed its frozen outer 2024 at PF 0.761,
+> WR 42.665% and -3,130.133 bps across 743 trades; its independent audit passed.
+> It did not open 2025/2026 and has no effect on this immutable compact-V1
+> protocol. Any learned successor is a new post-outcome family.
+
 > The separate cross-venue V1R1 source data gate and independent semantic audit
 > later passed with no underlying values or outcomes read. This remains wholly
 > isolated from compact V1; its own outer runner cannot execute until a

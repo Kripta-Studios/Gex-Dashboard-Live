@@ -1,5 +1,16 @@
 # SUMMARY-update — ledger científico compacto
 
+2026-07-22: runner frozen committed `b53dcaa3`; único V1 outer2024 cerrado
+`NO_AGGREGATE_EDGE`. Pooled 743/PF0,761071/WR42,665%/-3.130,133bps. Por ticker:
+QQQ249/PF0,866939/-662,668/min19/6 meses positivos; SPXW247/0,698912/
+-1.220,988/min18/5; SPY247/0,693382/-1.246,477/min18/5. No advance a 2025.
+
+Auditor inicial falló sin output por hash DataFrame post-CSV; fix `95609e21`
+separa hash de bytes y recomputación semántica, suite67/checks PASS. Auditor
+posterior `PASS_INDEPENDENT_OUTER_2024_AUDIT`, sources743, mismatches0. V1
+cerrado; futura V2 trata 2023–2024 como development y mantiene 2025/2026
+intactos hasta predeclaración+freeze secuencial. Live/systemd intactos.
+
 2026-07-22: data gate cross-venue V1R1 ejecutado una sola vez desde `90ffd155`
 y `PASS_DATA_GATE`. Sessions/rows1.506, captures3.012, local-valid1.504,
 mapped-valid1.502, economic1.478, inventory16.566; min coverage0,992063,

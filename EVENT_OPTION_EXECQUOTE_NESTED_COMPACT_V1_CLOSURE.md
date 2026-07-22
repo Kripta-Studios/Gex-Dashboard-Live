@@ -1,5 +1,10 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1 — CLOSED_NO_EDGE
 
+> The separate cross-venue V1 one-shot outer 2024 subsequently closed with no
+> aggregate edge: 743 trades, 42.665% WR, 0.761 PF and -3,130.133 bps. Its
+> independent audit passed after an exact CSV-byte hash repair. It did not open
+> 2025/2026 or alter compact V1, production, live code or systemd.
+
 > The separate cross-venue V1R1 data gate and its independent audit now pass
 > without underlying or outcome access. They preserve the exact QQQ/QQQ,
 > SPY/SPY and SPXW/SPY mapping and do not consume or reopen compact V1. Its

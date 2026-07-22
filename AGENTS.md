@@ -1,5 +1,28 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-07-22 — V1 outer 2024 cerrado sin edge
+
+El freeze quedó committed/pushed en `b53dcaa3` y el único outer 2024 terminó
+`NO_AGGREGATE_EDGE_OUTER_2024_CLOSED`: 743 trades, WR42,665%, PF0,761071 y
+-3.130,133bps a 1bp. QQQ fue 249/PF0,866939/WR48,594%/-662,668bps/min19;
+SPXW 247/0,698912/39,271%/-1.220,988/min18; SPY
+247/0,693382/40,081%/-1.246,477/min18. Meses positivos 6/5/5. Ningún ticker
+pasa PF>1/neto>0, por lo que `advance_to_2025=false`; no abrir 2025/2026.
+
+El primer auditor cerró antes de output porque comparaba digests de DataFrames
+tras round-trip CSV. Las tablas económicas coincidían. El fix separa SHA de
+bytes escritos de recomputación semántica, está pushed en `95609e21` y pasa 67
+tests cross-venue, Ruff y compile. El relanzamiento del auditor dio
+`PASS_INDEPENDENT_OUTER_2024_AUDIT`: 743 fuentes rehasheadas, mismatch0 y gates
+reproducidas. Producción/live/systemd intactos.
+
+Dirección posterior autorizada: V1 queda cerrado e inmutable. Una V2 puede
+aprender temporalmente con 2023+2024, pero como el agregado 2024 ya fue visto,
+2024 solo puede ser development/walk-forward, nunca outer de promoción. La
+primera validación intacta de V2 será 2025 después de predeclaración, data gate,
+runner frozen y commit; 2026 sigue holdout final. Mantener QQQ←QQQ, SPY←SPY y
+SPXW←SPY salvo una nueva predeclaración explícita, y no tocar live.
+
 ### Checkpoint 2026-07-22 — data gate composite V1R1 PASS y auditoría PASS
 
 El full audit ya quedó versionado/pushed en `90ffd155`. Después se ejecutó una

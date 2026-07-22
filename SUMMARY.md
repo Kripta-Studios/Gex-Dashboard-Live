@@ -1,5 +1,19 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+## Resultado causal nuevo — V1 falla outer 2024
+
+El runner congelado en `b53dcaa3` ejecutó su único 2024: pooled 743 trades,
+WR42,665%, PF0,761071 y -3.130,133bps. QQQ/SPXW/SPY quedaron respectivamente
+en PF0,866939/0,698912/0,693382 y PnL -662,668/-1.220,988/-1.246,477bps; la
+frecuencia mínima fue 19/18/18, pero solo hubo 6/5/5 meses positivos. Ningún
+ticker pasa el gate incremental; 2025 y 2026 no se abren para V1.
+
+La auditoría independiente pasa tras corregir en `95609e21` una comparación de
+hashes CSV post-round-trip: 743 fuentes sin cambios y economía/gates exactos.
+V1 queda cerrado. La investigación posterior puede usar 2023–2024 como
+development temporal, pero reserva 2025 como primer outer intacto y 2026 como
+holdout; no hay autorización live.
+
 ## Estado posterior — data gate V1R1 auditado
 
 El full audit composite se versionó en `90ffd155`. El builder outcome-free se

@@ -1,5 +1,19 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+### Un buen sensor puede invertir su relación temporal
+
+El mapping fijo que parecía prometedor en el diseño 2023 no transportó al
+outer 2024: los tres tickers pierden, con PF pooled0,761 y PF individual
+0,867/0,699/0,693 pese a frecuencia mensual suficiente. Esto separa capacidad
+de alpha: 743 decisiones causalmente disponibles no compensan un signo o
+régimen inestable. Un learner posterior debe estimar esa estabilidad solo con
+historia previa; no puede seleccionar la inversión mirando el mismo periodo.
+
+Como el agregado 2024 ya fue observado, un modelo nacido ahora no puede llamar
+OOS a ninguna partición de 2024. Puede usar walk-forward 2023–2024 como
+development honesto y congelarse antes de abrir 2025, que permanece como la
+primera prueba de promoción. Esta frontera es más importante que el algoritmo.
+
 ### Un PASS de fuente necesita un PASS semántico independiente
 
 El composite auditado permitió construir 1.506 features outcome-free, pero el

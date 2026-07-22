@@ -1,0 +1,30 @@
+{
+  "schema": "cross_venue_calendar_rr_leader_v1_outer_2024_audit_v1",
+  "status": "PASS_INDEPENDENT_OUTER_2024_AUDIT",
+  "created_at_utc": "2026-07-22T14:41:46.818920+00:00",
+  "audit_commit": "95609e21a9c5a8dc48d4e87a308a781b3c8d76b3",
+  "evaluation_commit": "b53dcaa3b5c2523febb41fcceed54c9a08409009",
+  "evaluation_status": "NO_AGGREGATE_EDGE_OUTER_2024_CLOSED",
+  "advance_to_2025": false,
+  "promotion_gate_pass": false,
+  "trades": 743,
+  "source_hash_mismatches": 0,
+  "source_size_mismatches": 0,
+  "trades_recomputed_sha256": "2274032f88e79570f594688d5046c10b666e319eac385c63c162bf9374ebe88c",
+  "monthly_recomputed_sha256": "2177e6a270ad2dac6ffdd06874e31f43fc3b4c5a38e1cf8afeca7cff3c7083bb",
+  "ticker_summary_recomputed_sha256": "b91d37e9fa6b979cd6e53556311f2863174e8109d98e7aa6cfc2eaa6aec48918",
+  "cost_sensitivity_recomputed_sha256": "c69a6610c097b68858455d90161d10ab9f0e9a19177ca1a906244fe03c816a16",
+  "source_hash_audit_sha256": "23faf67006d6fbde9fdae50ce4f1e76974d5997423fdbfcb86717fa749ef1ab9",
+  "evaluation_summary_sha256": "d30f3e67a34fe6a507077f89f06681858531ba84f2c2a86621ec966fafa1f963",
+  "auditor_sha256": "42e8e1120655ea666a4344947b632557de43fcd440ffaadc92eb1523f7989a44",
+  "output_sha256": {
+    "monthly_recomputed.csv": "c82ea82df3196397d8cc14854d4c2f4ab27e16d19c7ff9f3f4243c0e9f382981",
+    "ticker_summary_recomputed.csv": "fe9e9aecb5de7568ee960748ff8bd87abc17551735062ee74e7d785df6d0ea2d",
+    "cost_sensitivity_recomputed.csv": "5010426215090b4a97efe77c19aacb6627257189e4bc164c56bf6bebf3350dfd"
+  },
+  "outer_2024_outcomes_reused": true,
+  "new_outcome_source_read": false,
+  "outer_2025_opened": false,
+  "holdout_2026_opened": false,
+  "production_modified": false
+}

@@ -1,0 +1,202 @@
+{
+  "schema": "cross_venue_calendar_rr_leader_v1_outer_2024_evaluation",
+  "status": "NO_AGGREGATE_EDGE_OUTER_2024_CLOSED",
+  "created_at_utc": "2026-07-22T14:39:01.636030+00:00",
+  "phase": "outer_2024",
+  "outcome_accessed": true,
+  "outer_2024_opened": true,
+  "advance_to_2025": false,
+  "promotion_gate_pass": false,
+  "outer_2025_opened": false,
+  "holdout_2026_opened": false,
+  "production_modified": false,
+  "policy": {
+    "feature": "signal_pressure",
+    "action": "sign(signal_pressure)",
+    "sensor_map": {
+      "QQQ": "QQQ",
+      "SPXW": "SPY",
+      "SPY": "SPY"
+    },
+    "zero_action": "NO_TRADE",
+    "decision_time": "after_10:35:00",
+    "entry": "derived_underlying_open_10:36:00",
+    "exit": "derived_underlying_open_13:36:00",
+    "hold_minutes": 180,
+    "primary_round_trip_cost_bps": 1.0,
+    "cost_sensitivity_bps": [
+      1.0,
+      2.0,
+      3.0
+    ],
+    "positions_per_ticker_per_day": 1,
+    "overlap_policy": "one_fixed_nonoverlapping_position_per_ticker_day"
+  },
+  "incremental_gate_spec": {
+    "profit_factor_strictly_greater_than": 1.0,
+    "win_rate_strictly_greater_than": 0.45,
+    "aggregate_net_bps_strictly_greater_than": 0.0,
+    "trades_per_month_strictly_greater_than": 12,
+    "all_tickers_required": true
+  },
+  "promotion_gate_spec": {
+    "profit_factor_strictly_greater_than": 1.2,
+    "win_rate_strictly_greater_than": 0.45,
+    "trades_per_month_strictly_greater_than": 12,
+    "monthly_net_bps_strictly_greater_than": 0.0,
+    "all_tickers_required": true
+  },
+  "frozen_manifest_sha256": "339c079343d42b172de402cf0d8281a3beca0aa6622a9a3c049c1c08e126b72c",
+  "frozen_runner_commit": "811e729f1f6d35b2ce4e8ba892b2a736e28f11fc",
+  "execution_commit": "b53dcaa3b5c2523febb41fcceed54c9a08409009",
+  "data_gate_commit": "90ffd155292801230d9a20bdb0dc15be03deb34f",
+  "runner_sha256": "17d49922ad5cf1d466b4c57d4dd6af894b7d51d888ea656ec45fe96c9b539d2b",
+  "event_id_sha256": "2d56cf965e7e13ce5785d44ef54dc4246af7aced8aa97fb824f2fc9133b124c4",
+  "source_inventory_sha256": "dcdd833014744b5e85e745cd2bd0ca635e5f90724ab7409d9a37df167ca71cd7",
+  "source_audit_sha256": "5f15a54923b19a33f832007190b300d2b735e9e0d9ca65863363a7e4b90f0b3d",
+  "trades_sha256": "d989f586749738b75bb3c62c69d189d0e6e29b3106d060a1332c956af2917aa4",
+  "monthly_sha256": "e6325a47e9b850d833b683a267df98b77c38ca0b729cfe9dd272684985214292",
+  "ticker_summary_sha256": "d347e789fd9f199c02b9cd07ceb42ceec7b551c247ea5618845bfc1ab3518e32",
+  "cost_sensitivity_sha256": "22e4f6e33a439176916726b92d3540b3ec1bdcac247664a1a12b4f976131cd32",
+  "eligible_events": 743,
+  "executed_trades": 743,
+  "pooled_primary": {
+    "trades": 743,
+    "win_rate": 0.4266487213997308,
+    "profit_factor": 0.7610708922926472,
+    "net_bps": -3130.132935853352
+  },
+  "per_ticker": [
+    {
+      "ticker": "QQQ",
+      "trades": 249,
+      "win_rate": 0.4859437751004016,
+      "profit_factor": 0.8669392560076941,
+      "net_bps": -662.66784755815,
+      "min_month_trades": 19,
+      "positive_months": 6,
+      "incremental_gate_pass": false,
+      "promotion_gate_pass": false
+    },
+    {
+      "ticker": "SPXW",
+      "trades": 247,
+      "win_rate": 0.39271255060728744,
+      "profit_factor": 0.6989116329075331,
+      "net_bps": -1220.987976644322,
+      "min_month_trades": 18,
+      "positive_months": 5,
+      "incremental_gate_pass": false,
+      "promotion_gate_pass": false
+    },
+    {
+      "ticker": "SPY",
+      "trades": 247,
+      "win_rate": 0.4008097165991903,
+      "profit_factor": 0.6933815215250518,
+      "net_bps": -1246.4771116508803,
+      "min_month_trades": 18,
+      "positive_months": 5,
+      "incremental_gate_pass": false,
+      "promotion_gate_pass": false
+    }
+  ],
+  "cost_sensitivity": [
+    {
+      "scope": "QQQ",
+      "cost_bps": 1.0,
+      "trades": 249,
+      "win_rate": 0.4859437751004016,
+      "profit_factor": 0.8669392560076941,
+      "net_bps": -662.66784755815
+    },
+    {
+      "scope": "QQQ",
+      "cost_bps": 2.0,
+      "trades": 249,
+      "win_rate": 0.4859437751004016,
+      "profit_factor": 0.8215282192269516,
+      "net_bps": -911.6678475581499
+    },
+    {
+      "scope": "QQQ",
+      "cost_bps": 3.0,
+      "trades": 249,
+      "win_rate": 0.4738955823293173,
+      "profit_factor": 0.7784115808571787,
+      "net_bps": -1160.6678475581498
+    },
+    {
+      "scope": "SPXW",
+      "cost_bps": 1.0,
+      "trades": 247,
+      "win_rate": 0.39271255060728744,
+      "profit_factor": 0.6989116329075331,
+      "net_bps": -1220.987976644322
+    },
+    {
+      "scope": "SPXW",
+      "cost_bps": 2.0,
+      "trades": 247,
+      "win_rate": 0.38461538461538464,
+      "profit_factor": 0.6510002920942266,
+      "net_bps": -1467.987976644322
+    },
+    {
+      "scope": "SPXW",
+      "cost_bps": 3.0,
+      "trades": 247,
+      "win_rate": 0.38461538461538464,
+      "profit_factor": 0.6064982488434859,
+      "net_bps": -1714.9879766443219
+    },
+    {
+      "scope": "SPY",
+      "cost_bps": 1.0,
+      "trades": 247,
+      "win_rate": 0.4008097165991903,
+      "profit_factor": 0.6933815215250518,
+      "net_bps": -1246.4771116508803
+    },
+    {
+      "scope": "SPY",
+      "cost_bps": 2.0,
+      "trades": 247,
+      "win_rate": 0.38461538461538464,
+      "profit_factor": 0.6457636323396057,
+      "net_bps": -1493.47711165088
+    },
+    {
+      "scope": "SPY",
+      "cost_bps": 3.0,
+      "trades": 247,
+      "win_rate": 0.3805668016194332,
+      "profit_factor": 0.6016242784680684,
+      "net_bps": -1740.4771116508805
+    },
+    {
+      "scope": "POOLED",
+      "cost_bps": 1.0,
+      "trades": 743,
+      "win_rate": 0.4266487213997308,
+      "profit_factor": 0.7610708922926472,
+      "net_bps": -3130.132935853352
+    },
+    {
+      "scope": "POOLED",
+      "cost_bps": 2.0,
+      "trades": 743,
+      "win_rate": 0.4185733512786003,
+      "profit_factor": 0.7137481946415248,
+      "net_bps": -3873.132935853352
+    },
+    {
+      "scope": "POOLED",
+      "cost_bps": 3.0,
+      "trades": 743,
+      "win_rate": 0.41318977119784656,
+      "profit_factor": 0.6694534179262532,
+      "net_bps": -4616.132935853351
+    }
+  ]
+}
