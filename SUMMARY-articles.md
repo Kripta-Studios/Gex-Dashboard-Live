@@ -25,6 +25,19 @@ iguales en cardinalidad a las ocho unilaterales, revised0 y crossed0. La
 intersección preserva la medición completa sin fingir que una modalidad ausente
 puede reconstruirse con la otra.
 
+El composite no debe fusionar físicamente los roots. Un índice lógico con
+`storage_generation` y `storage_root` conserva qué bytes pertenecen a la
+captura original y cuáles al repair, mientras revalida ambos contratos antes de
+sellar 3.012/3.012. El sellador implementado también fija endpoint, request
+params y source provenance de los repairs; `62 passed` en la suite cross-venue.
+Sigue preejecución y sin outcomes.
+
+Una consecuencia importante es que el consumidor debe entender el composite:
+un seal PASS no basta si auditor y builder siguen suponiendo un solo directorio
+o igualdad Greek=IV universal. La compatibilidad correcta resuelve cada capture
+por su índice y aplica la excepción exacta solo a los cuatro IDs predeclarados;
+cualquier quinta discrepancia continúa fallando cerrada.
+
 ### Rentabilidad mensual no equivale a promoción
 
 `DIRECTIONAL_VOL_COMPLEX_V1` muestra el caso exacto: junio 2026 fue positivo en

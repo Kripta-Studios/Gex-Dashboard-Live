@@ -1,48 +1,37 @@
 # AI Agent Hand-off: Current Production Reality
 
-### Checkpoint 2026-07-22 — full capture V1 detenido, reparación V1R1 congelada
+### Checkpoint 2026-07-22 — repairs PASS; composite listo preejecución
 
-El proceso PID42112 ya terminó. El intento full native-clock recorrió 3.012/
-3.012 unidades, materializó 3.008 directorios atómicos completos (raw/parquet/
-manifest; QQQ1.002, SPXW1.002, SPY1.004), cero `*.staging`, y cerró con cuatro
-errores. No hay `_seal`; `progress.json` conserva 3.008/3.012, errors4. No
-relanzar el capturador V1 ni borrar/mover/reescribir esas 3.008 capturas.
+El full native-clock V1 recorrió 3.012 unidades y quedó `NO_SEAL`: preserva
+3.008 capturas atómicas, cero stagers y cuatro errores Greek/IV outcome-free.
+No relanzar ni modificar V1. Las diferencias congeladas son QQQ 20250828 front
+IV-only C650, QQQ 20251121 back Greek-only P680, SPXW 20240122 back IV-only
+C4575 y SPXW 20250225 front IV-only C6045; aparecen a 10:30 y 10:35.
 
-Los cuatro fallos son outcome-free y no son de red: Greek/IV difieren en una
-sola clave contractual por unidad, repetida a 10:30/10:35. Son QQQ 20250828
-front IV-only C650; QQQ 20251121 back Greek-only P680; SPXW 20240122 back
-IV-only C4575; SPXW 20250225 front IV-only C6045. Las intersecciones exactas
-conservan 406/706/858/858 rows. Estado V1: contract SHA `f40947b5...ea623`,
-universe `98d416ea...45f4`, errors `01c6c2f3...95f2`.
+La reparación V1R1 predeclarada ya se ejecutó una sola vez desde `0b7cc6dd` y
+pasó 4/4: 2.828 shared rows, ocho unilaterales audit-only, missing0, extras8,
+revised bid/ask0 y crossed0. Root
+`D:/ThetaData/cross_venue_calendar_rr_native_clock_2024_2025_v1r1_repairs`;
+seal/index/unilateral SHA `81ded7dd...bd9d`/`670dd0ce...2fe0`/
+`910bac85...1c6a`. La evidencia compacta está versionada en `53872c39`.
 
-La reparación está congelada antes de outcomes en
-`CROSS_VENUE_CALENDAR_RR_NATIVE_CLOCK_V1R1_KEY_INTERSECTION_REPAIR_PREDECLARATION.md`.
-Solo esos cuatro IDs pueden usar `Greek keys ∩ IV keys`; las ocho rows
-unilaterales son audit-only y jamás entran en selección/features. Capturar 4/4
-a un root nuevo, preservar V1, sellar overlay y después crear un composite seal
-3.012/3.012. Cualquier quinta discrepancia falla cerrado. 2024–2026 outcomes y
-producción siguen intactos.
+Implementado, pero aún **no ejecutado**, el sellador outcome-free
+`seal_cross_venue_calendar_rr_native_clock_composite_v1r1.py`. Revalida offline
+las 3.008 capturas V1 con su contrato original y las cuatro V1R1 con endpoint,
+request params, source provenance, runtime y hashes congelados; no copia raw ni
+consulta red/underlying/outcomes. Debe producir un índice lógico 3.012/3.012 con
+`storage_generation` y `storage_root` en el nuevo root inmutable
+`D:/ThetaData/cross_venue_calendar_rr_native_clock_2024_2025_v1r1_composite`.
+Suite repairs+composite `12 passed`, suite cross-venue `62 passed`, Ruff y
+py_compile PASS.
 
-Próxima secuencia: commit/push predeclaración+hándoffs → implementar/testear
-capturador/auditor V1R1 → commit/push → captura 4/4 → compact seal →
-composite audit/seal → full audit → data gate → frozen outer 2024. No
-abrir 2025/2026 ni tocar live antes de sus gates.
-
-Capturador V1R1 ya implementado en
-`capture_cross_venue_calendar_rr_native_clock_repairs_v1r1.py`. Verifica hashes
-del estado V1, conteo atómico3.008, conjunto exacto de cuatro errores, source
-hashes y las ocho keys unilaterales; escribe raw/parquet/unilateral audit/
-manifest atómicos y solo sella 4/4. No expone whitelist ni switch de semántica
-por CLI. Suite focal6 y combinada cross-venue56 pasan; Ruff/compile clean. Aún
-no ejecutado: primero commit/push de código/tests y estos handoffs.
-
-Ejecución posterior desde commit `0b7cc6dd`: `PASS` 4/4, shared keys2.828,
-unilaterales8, missing shared0, native extras8, revisiones bid/ask0 y crossed0.
-Seal SHA `81ded7dd...bd9d`, index `670dd0ce...2fe0`, unilateral audit
-`910bac85...1c6a`. Compactos en
-`cross_venue_calendar_rr_native_clock_repairs_2024_2025_v1r1/`. El PASS solo
-repara reloj/cobertura; no es alpha. Siguiente acción: commit/push compactos y
-handoffs, implementar composite sealer/audit 3.008+4; no lanzar data gate aún.
+Secuencia obligatoria: commit/push del sellador, test y handoffs → ejecutar una
+sola vez el composite default con workers8 → inspeccionar/versionar seal,
+índice y resumen → adaptar auditor full y builder al índice multi-root y a
+`Greek∩IV` solo en los cuatro IDs → full audit → data gate → auditoría del
+gate → freeze → outer 2024. Los auditor/builder actuales asumen un solo root
+y key-set exacto en las 3.012; **no ejecutarlos sin esa adaptación**. Outcomes
+2024–2026 y producción permanecen cerrados.
 
 ### Estado exacto junio/julio 2026 — 2026-07-17
 

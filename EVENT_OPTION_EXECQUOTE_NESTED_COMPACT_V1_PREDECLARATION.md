@@ -1,5 +1,10 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1
 
+> The later cross-venue family now has a tested, unexecuted composite sealer
+> for its 3,008 V1 plus four V1R1 captures. It uses a logical multi-root index,
+> opens no outcomes and cannot consume or alter compact V1. Its downstream
+> auditor/data gate still require explicit composite compatibility.
+
 > 2026-07-22: the later cross-venue family remains isolated from this protocol.
 > Its V1 capture stopped at 3,008/3,012 on four outcome-free Greek/IV key-set
 > mismatches. The separately frozen V1R1 overlay uses exact shared keys only;

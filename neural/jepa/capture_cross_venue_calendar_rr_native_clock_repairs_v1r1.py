@@ -360,6 +360,7 @@ def validate_existing_repair(
     output: Path,
     runtime: dict[str, Any],
     code_hashes: dict[str, str],
+    provenance: dict[str, Any],
 ) -> dict[str, Any]:
     directory = capture_directory(output, spec)
     paths = {
@@ -385,6 +386,9 @@ def validate_existing_repair(
         "trade_date": str(spec["trade_date"]),
         "role": str(spec["role"]),
         "expiration": str(spec["expiration"]),
+        "request_params": pre.request_params(spec),
+        "endpoint": pre.ENDPOINT,
+        "source_provenance": provenance,
         "greeks_path": str(spec["greeks_path"]),
         "greeks_sha256": str(spec["greeks_sha256"]),
         "iv_path": str(spec["iv_path"]),
@@ -432,7 +436,11 @@ def capture_or_resume(
         raise AssertionError(f"interrupted repair requires audit: {working}")
     if directory.exists():
         return validate_existing_repair(
-            spec, output=output, runtime=runtime, code_hashes=code_hashes
+            spec,
+            output=output,
+            runtime=runtime,
+            code_hashes=code_hashes,
+            provenance=provenance,
         ), True
     last_error: Exception | None = None
     for attempt in range(3):

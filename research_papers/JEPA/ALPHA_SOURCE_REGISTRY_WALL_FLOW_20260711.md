@@ -17,8 +17,16 @@ remote repair capture or outcome has run yet.
 
 The single remote run now passes 4/4: shared keys2,828, unilateral8,
 missing0, native extras8, revised0 and crossed0. Seal SHA
-`81ded7dd...bd9d`. A composite 3,012 audit/seal remains mandatory before the
-source can enter the data gate.
+`81ded7dd...bd9d`; its compact evidence is committed in `53872c39`.
+
+The composite sealer is now implemented but unexecuted. It independently
+revalidates the 3,008 V1 and four V1R1 units from their immutable roots,
+including repair endpoint/request/provenance/runtime, and writes a logical
+3,012-row multi-root index without copying raw data. Repairs+composite tests
+pass 12/12; the full cross-venue suite passes 62/62; Ruff/compile pass. Commit
+and push this checkpoint before the one-shot composite. After PASS the existing
+full auditor and data-gate builder must be adapted to resolve per-row roots and
+apply `Greek∩IV` only to the four frozen IDs; do not run them unchanged.
 
 ## 2026-07-17 profitability clarification
 

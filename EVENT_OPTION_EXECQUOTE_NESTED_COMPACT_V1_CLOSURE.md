@@ -1,5 +1,11 @@
 # EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1 — CLOSED_NO_EDGE
 
+> The separate cross-venue composite sealer is now implemented preexecution.
+> It revalidates 3,008 original plus four repaired captures through a logical
+> multi-root index; 62 cross-venue tests pass. It has no compact-V1 or outcome
+> input, and the full auditor/data gate must be adapted before use. This closed
+> experiment remains unchanged.
+
 > 2026-07-22: the separate cross-venue full capture ended without a seal at
 > 3,008/3,012 because four Greek/IV key sets each contain one unilateral
 > contract at both clocks. A pre-outcome V1R1 repair freezes exact intersection

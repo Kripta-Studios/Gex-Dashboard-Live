@@ -2,35 +2,25 @@
 
 ## Estado nuevo — 2026-07-22
 
-La captura cross-venue V1 terminó sin seal: procesó las 3.012 unidades,
-preservó 3.008 capturas atómicas y falló en cuatro por key-set Greek/IV
-desigual. No hay proceso activo ni stagers. No se perdió la captura masiva y no
-se debe repetir.
+La captura masiva V1 se conserva inmutable con 3.008/3.012 unidades y cuatro
+diferencias Greek/IV outcome-free. El overlay V1R1 ya pasó 4/4 desde
+`0b7cc6dd`: 2.828 keys compartidas, ocho unilaterales audit-only, missing0,
+revised0 y crossed0. Seal SHA `81ded7dd...bd9d`; sus compactos están
+versionados en `53872c39`. Esto repara la fuente, no demuestra alpha.
 
-Cada fallo es un solo contrato unilateral a ambos relojes: QQQ20250828/front
-IV-only C650; QQQ20251121/back Greek-only P680; SPXW20240122/back IV-only
-C4575; SPXW20250225/front IV-only C6045. La hipótesis necesita a la vez delta e
-IV, por lo que la única reparación causal es usar la intersección exacta de
-keys para esas cuatro unidades, archivar las ocho rows unilaterales y no
-permitirles entrar en features.
+El sellador composite ya está implementado y probado, pero aún no ejecutado.
+Revalida offline las 3.008 capturas V1 y las cuatro V1R1 desde sus roots
+separados, fija endpoint/request/provenance/runtime y crea un índice lógico
+3.012/3.012 sin copiar raw ni leer underlying, labels o outcomes. Suite
+repairs+composite `12 passed`; suite cross-venue `62 passed`; Ruff y pycompile
+PASS. Debe commit/push antes del one-shot default con workers8.
 
-La regla está predeclarada en
-`CROSS_VENUE_CALENDAR_RR_NATIVE_CLOCK_V1R1_KEY_INTERSECTION_REPAIR_PREDECLARATION.md`.
-Se capturan solo cuatro respuestas a un root nuevo; luego un composite seal
-revalida 3.008 V1 + 4 V1R1 sin modificar el V1. Todavía no existe data gate,
-outer 2024 ni PF nuevo; 2024–2026 y producción continúan cerrados.
-
-El capturador/auditor del overlay ya está implementado preejecución. Falla si
-cambia un hash V1/source, aparece una quinta discrepancia, falta una shared key
-nativa o se intenta sellar menos de 4/4. Conserva raw/parquet/manifest y CSV de
-las keys unilaterales. Suite nueva6/6 y combinada56/56, checks clean. Falta
-commit/push y el único capture remoto; no hay resultado de seal todavía.
-
-La ejecución única ya produjo `PASS_REPAIRS_V1R1`: 4/4, 2.828 keys
-compartidas, ocho unilaterales audit-only, cero faltantes, cero revisiones y
-cero crossed; los ocho native extras corresponden a las unilaterales excluidas.
-Seal SHA `81ded7dd...bd9d`. Esto desbloquea el composite seal, pero todavía no
-autoriza data gate ni outcome.
+El bloqueo posterior es explícito: el auditor full y el builder actuales todavía
+presuponen un único root y Greek=IV para las 3.012 unidades. Tras sellar y
+versionar el composite hay que adaptarlos al índice multi-root y permitir la
+intersección solo en los cuatro IDs congelados. Hasta entonces no ejecutar data
+gate ni abrir outer 2024. No existe PF nuevo ni resultado 2024–2026; producción
+sigue intacta.
 
 ## Respuesta concreta sobre junio y julio de 2026
 

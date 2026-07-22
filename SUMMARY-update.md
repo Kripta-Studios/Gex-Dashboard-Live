@@ -1,26 +1,21 @@
 # SUMMARY-update — ledger científico compacto
 
-2026-07-22: full cross-venue V1 finalizó `NO_SEAL`, 3.008/3.012 capturas
-atómicas, errors4, staging0, proceso0. QQQ1002/SPXW1002/SPY1004. Causa exacta:
-una key Greek/IV unilateral a 10:30+10:35 en QQQ20250828 front IV-only C650,
-QQQ20251121 back Greek-only P680, SPXW20240122 back IV-only C4575 y
-SPXW20250225 front IV-only C6045; shared rows406/706/858/858.
+2026-07-22: V1 queda inmutable `NO_SEAL` con 3.008 capturas y cuatro errores
+Greek/IV congelados. V1R1 ya pasó 4/4 desde `0b7cc6dd`: shared2828,
+unilateral8 audit-only, missing0, extras8, revised0, crossed0. Seal/index/audit
+SHA `81ded7dd...bd9d`/`670dd0ce...2fe0`/`910bac85...1c6a`; compactos committed
+en `53872c39`. Sin outcomes ni PF nuevo.
 
-V1R1 predeclarada outcome-free: capturar solo 4/4 a root nuevo, signable keys
-`Greek∩IV`, ocho rows unilaterales audit-only, no exclusión de días ni
-reescritura V1. Luego composite seal3.012, full audit, data gate, freeze y
-outer2024. Contract/universe/errors SHA `f40947b5...ea623`/
-`98d416ea...45f4`/`01c6c2f3...95f2`. Sin PF nuevo ni outcome 2024–2026.
+Composite sealer V1R1 implementado pre-run. Revalida offline 3.008 V1 + 4
+repairs, incluyendo endpoint/request params/provenance/runtime/hashes, y genera
+un índice lógico multi-root sin copiar raws. Repairs+composite `12 passed`, suite
+cross-venue `62 passed`, Ruff/compile PASS. Pendiente: commit/push → one-shot
+composite default workers8 → versionar evidencia.
 
-Capturador V1R1 + tests implementados pre-run: revalidación exacta, atomicidad,
-resume y seal4/4; suite focal6/combinada56, Ruff/compile PASS. Pendiente
-commit/push → único capture remoto al root V1R1. No ejecutar composite/data
-gate antes del seal.
-
-Capture V1R1 real PASS desde `0b7cc6dd`: 4/4, shared2828, unilateral8,
-missing0, extras8, revised0, crossed0. Seal/index/unilateral hashes
-`81ded7dd...bd9d`/`670dd0ce...2fe0`/`910bac85...1c6a`. Compactos listos para
-commit; siguiente único paso composite sealer/audit 3.012.
+No ejecutar todavía full auditor ni data gate: ambos asumen un root único y
+Greek=IV. Tras el composite hay que adaptarlos a `storage_root` por capture y a
+`Greek∩IV` solo para los cuatro IDs; luego full audit → gate → auditoría →
+freeze → outer2024. 2024–2026 y live siguen cerrados.
 
 Respuesta autoritativa junio/julio 2026: la familia activa cross-venue sigue
 sin outcomes 2026 (captura 2024–2025 PID42112: 424/3.012, errors0 a las 03:09).

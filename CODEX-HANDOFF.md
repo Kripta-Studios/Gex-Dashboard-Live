@@ -2,45 +2,30 @@
 
 ## Checkpoint autoritativo — 2026-07-22
 
-PID42112 ya no existe. El full native-clock V1 recorrió todo el universo pero
-terminó `NO_SEAL`: 3.008/3.012 capturas completas, errors4, cero staging. No
-reanudar V1: su root contract fija `d013a299` y la causa no es transitoria.
+V1 terminó `NO_SEAL` con 3.008 capturas atómicas y cuatro diferencias
+Greek/IV ya identificadas; no modificarlo ni relanzarlo. V1R1 se capturó una
+sola vez desde `0b7cc6dd` y pasó 4/4 con 2.828 shared rows, ocho unilaterales
+audit-only y cero missing/revised/crossed. Seal/index/audit SHA
+`81ded7dd...bd9d`/`670dd0ce...2fe0`/`910bac85...1c6a`; evidencia compacta
+committed en `53872c39`. Ningún outcome fue abierto.
 
-Fallos exactos: `4b5b...` QQQ20250828/front IV-only C650 (shared406),
-`839a...` QQQ20251121/back Greek-only P680 (shared706), `2074...`
-SPXW20240122/back IV-only C4575 (shared858), `8993...`
-SPXW20250225/front IV-only C6045 (shared858). Cada unilateral aparece a 10:30 y
-10:35. Contract/universe/errors SHA: `f40947b5...ea623`,
-`98d416ea...45f4`, `01c6c2f3...95f2`.
+El próximo artefacto ya está implementado preejecución:
+`neural/jepa/seal_cross_venue_calendar_rr_native_clock_composite_v1r1.py` y su
+test. Revalida offline V1 3.008 + V1R1 4 con contratos, runtime, endpoint,
+request params, provenance y hashes exactos; crea un índice lógico multi-root,
+sin copiar raw ni leer underlying/outcomes. Repairs+composite `12 passed`, suite
+cross-venue completa `62 passed`, Ruff/pycompile PASS. Ejecutarlo solo después
+de commit/push, una vez, al output default inmutable con `--workers 8`.
 
-Autoridad nueva:
-`CROSS_VENUE_CALENDAR_RR_NATIVE_CLOCK_V1R1_KEY_INTERSECTION_REPAIR_PREDECLARATION.md`.
-Implementar un capturador separado para solo esos cuatro IDs, output nuevo y
-key-set signable `Greek∩IV`; las ocho rows unilaterales quedan audit-only.
-Después sellar un composite 3.012/3.012 revalidando las 3.008 originales, sin
-modificarlas. Aún no ejecutar builder/data gate/evaluator. Outcomes 2024–2026 y
-producción no se han abierto.
-
-Orden exacto: commit de esta congelación → capturador/tests committed →
-capture4/4 → commit compact seal → composite sealer/audit → full audit →
-data gate → audit data gate → freeze runner → one-shot 2024. Solo PF>1,
-WR>45%, neto>0 y min13/ticker permite abrir 2025; la meta final sigue PF>1,20,
-WR>45%, min13 y todos los meses positivos.
-
-Implementación lista, todavía no ejecutada:
-`neural/jepa/capture_cross_venue_calendar_rr_native_clock_repairs_v1r1.py` y
-`tests/test_capture_cross_venue_calendar_rr_native_clock_repairs_v1r1.py`.
-Revalida V1/source/diferencias exactas, captura atómica y seal4/4. Suite focal
-`6 passed`, combinada cross-venue `56 passed`, Ruff/py_compile PASS. Commit/push
-estos ficheros antes de hacer la única llamada remota default; no crear output
-manual ni usar el capturador V1 original.
-
-Actualización: el capture único ya terminó `PASS` desde `0b7cc6dd`. Resultado
-4/4, shared2828, unilateral8, missing0, extras8, revised0, crossed0. Root:
-`D:/ThetaData/cross_venue_calendar_rr_native_clock_2024_2025_v1r1_repairs`;
-seal/index/unilateral SHA `81ded7dd...bd9d`/`670dd0ce...2fe0`/
-`910bac85...1c6a`. Versionar los compactos presentes y luego implementar
-composite sealer; no volver a ejecutar el capturador ya sellado.
+Tras PASS, versionar `_state/composite_contract.json`, `_seal/seal.json`,
+`capture_index.csv`, `ticker_year_summary.csv` y el universo/resultado compacto.
+Luego adaptar **antes de ejecutar** `audit_cross_venue_calendar_rr_native_clock_full.py`
+y `build_cross_venue_calendar_rr_leader_v1.py`: hoy asumen root único y key-set
+Greek=IV en todas las capturas. Deben resolver `storage_root` por fila y aceptar
+`Greek∩IV` exclusivamente en los cuatro repair IDs, auditando las ocho
+unilaterales sin incorporarlas. Después: full audit → data gate → auditoría
+independiente → freeze → one-shot 2024. Solo PF>1/WR>45%/neto>0/min13 por
+ticker abre 2025; meta final PF>1,20/WR>45%/min13/todos meses positivos.
 
 ## Respuesta y checkpoint 2026-07-17 03:09 Europe/Madrid
 
