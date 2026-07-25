@@ -1,5 +1,27 @@
 # SUMMARY-update — ledger científico compacto
 
+2026-07-25, consolidado autoritativo. Los `pendiente` anteriores ya se
+ejecutaron y no deben relanzarse. A 1bp y en orden QQQ/SPXW/SPY: design2023
+PF1,173476/1,071604/1,072835, WR51,822/50,000/50,403%, neto
++812,500/+268,657/+273,999bps, min19/19/19, meses7/5/5; outer V1 2024
+PF0,866939/0,698912/0,693382, neto negativo en los tres, min19/18/18,
+meses6/5/5; V3 development2024 PF1,231750/1,395967/1,408300, WR>51%, neto
+positivo, min19/18/18, meses8/8/8; outer V3 2025 PF
+0,655469/1,035567/1,039777, neto -2.381,476/+163,026/+182,456bps,
+min18/17/17, meses5/6/6; V4 development2025 auditado PF
+1,204351/1,247945/1,346342, WR51,8219/52,0492/53,2787%, neto
++1.060,279/+1.030,091/+1.381,556bps, min18/17/17, meses7/8/8.
+
+Ninguno pasa el objetivo mensual completo. V4 no abrió outcomes2026: gate
+outcome-free falla por cinco IDs nuevos con Greek-only92/IV-only516. Whitelist
+Greek∩IV limitada a los cuatro repairs V1R1; no intersectar/reparar/excluir/
+recapturar. Cash-only no transporta 2024→2025, por tanto no hay V5 activa.
+Siguiente: inventario outcome-free de una fuente causal nueva con historia y
+paridad live; luego predeclaración → development walk-forward 2023–2025 → data
+gate/auditor/freeze → primer outer posible 2026. Mapping QQQ←QQQ, SPY←SPY,
+SPXW←SPY intacto. No live/systemd; ask→bid/no-overlap/hold30–180m/
+`reject_while_open` antes de paper-only.
+
 2026-07-22: V3 outer2025 desde manifest committed `91584706` cerró
 `FAILED_OUTER_2025_2026_CLOSED`. QQQ 247/PF0,655/WR50,6%/-2.381,5bps/min18/
 5 meses; SPXW244/1,036/53,7%/+163,0/min17/6; SPY244/1,040/53,7%/+182,5/

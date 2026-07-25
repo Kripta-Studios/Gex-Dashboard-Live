@@ -1,5 +1,56 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-07-25 — estado causal consolidado y siguiente frontera
+
+Este bloque sustituye los `Siguiente:` históricos de checkpoints inferiores.
+Toda la evidencia cross-venue hasta 2025 ya fue ejecutada, auditada, versionada
+y pushed. No queda un runner pendiente de V1–V4 ni una familia activa autorizada.
+Commits de evidencia: outer2024 `00bf96c4`, V3 development `627f3b20`, V3
+outer2025 `cea5e076`, V4 development `6c858533`, gate2026 `58facc5f`, cierre
+cash-only `3e4603e0` y registro causal `051a71bd`.
+
+Evidencia económica a 1bp, siempre en orden QQQ/SPXW/SPY:
+
+- 2023, diseño post-outcome del mapping QQQ←QQQ, SPY←SPY, SPXW←SPY:
+  PF `1,173476/1,071604/1,072835`, WR `51,822/50,000/50,403%`, neto
+  `+812,500/+268,657/+273,999bps`, mínimo mensual `19/19/19` y meses
+  positivos `7/5/5`. Genera la hipótesis, pero no la valida.
+- 2024, primer outer V1 inmutable y auditado: PF
+  `0,866939/0,698912/0,693382`, WR `48,594/39,271/40,081%`, neto
+  `-662,668/-1.220,988/-1.246,477bps`, mínimo `19/18/18` y meses positivos
+  `6/5/5`. `advance_to_2025=false`.
+- 2024, V3 development posterior ya contaminado: PF
+  `1,231750/1,395967/1,408300`, WR `51,406/55,870/56,680%`, neto
+  `+964,402/+1.124,966/+1.153,375bps`, mínimo `19/18/18` y meses positivos
+  `8/8/8`. Pasa incremental, no el objetivo mensual.
+- 2025, primer outer V3 auditado: PF `0,655469/1,035567/1,039777`, WR
+  `50,607/53,689/53,689%`, neto `-2.381,476/+163,026/+182,456bps`, mínimo
+  `18/17/17` y meses positivos `5/6/6`. `advance_to_2026=false`.
+- 2025, mejor development V4 post-outcome, reproducido y auditado: PF
+  `1,204351/1,247945/1,346342`, WR `51,8219/52,0492/53,2787%`, neto
+  `+1.060,279/+1.030,091/+1.381,556bps`, mínimo `18/17/17` y meses positivos
+  `7/8/8`. Es la mejor señal agregada, pero no OOS ni promocionable.
+- 2026 no tiene resultado económico V4. El gate outcome-free cerró antes de
+  captura/outcomes: cinco IDs nuevos suman Greek-only92/IV-only516. La
+  whitelist `Greek∩IV` permanece limitada a los cuatro repairs V1R1; no
+  intersectar, reparar, excluir fechas ni recapturar esos cinco IDs.
+
+Conclusión: ningún modelo satisface todavía por ticker PF>1,20, WR>45%,
+mínimo13 trades cada mes y PnL positivo en todos los meses. El diagnóstico
+cash-only posterior tampoco transporta simultáneamente 2024 y 2025. Como ambos
+años ya están vistos, una familia nacida ahora debe tratarlos solo como
+development walk-forward; 2026 es su siguiente outer posible únicamente tras
+predeclaración, data gate outcome-free, auditor independiente, freeze y commit.
+
+Siguiente trabajo autorizado: inventariar una fuente causal nueva con histórico
+2023–2026 y paridad live que no dependa de ampliar los cinco IDs Greek/IV ni de
+rescatar un ticker/año cash-only. Si existe, predeclarar una sola V5 con mapping
+intacto y evaluación cronológica 2024→2025 antes de abrir 2026. Si no existe,
+el bloqueo es de fuente externa, no de optimización. No tocar `services/`,
+`bots/`, `systemd/` ni integrar paper-only. Antes de cualquier integración se
+exige payoff de opción ask→bid, no-overlap, hold30–180m, `reject_while_open`,
+paridad backtest/live y los gates completos en QQQ/SPXW/SPY.
+
 ### Checkpoint 2026-07-22 — V3 outer 2025 cerrado
 
 Manifest V3 versionado en `91584706`; one-shot 2025 desde ese HEAD:

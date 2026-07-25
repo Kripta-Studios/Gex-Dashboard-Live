@@ -1,5 +1,44 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+## Estado consolidado 2026-07-25 — leer antes que los checkpoints históricos
+
+Los `Siguiente:` inferiores describen la secuencia que ya se completó; no se
+deben volver a ejecutar. `main` contiene los outers, auditors, V4 development,
+fallo outcome-free 2026 y cierre cash-only.
+Cadena compacta: `00bf96c4` outer2024, `627f3b20` V3 development,
+`cea5e076` outer2025, `6c858533` V4 development, `58facc5f` gate2026,
+`3e4603e0` cash-only y `051a71bd` registro causal.
+
+Ledger causal a 1bp, orden QQQ/SPXW/SPY:
+
+- 2023 design ya visto: PF `1,173476/1,071604/1,072835`, WR
+  `51,822/50,000/50,403%`, neto `+812,500/+268,657/+273,999bps`, min
+  `19/19/19`, meses positivos `7/5/5`.
+- 2024 outer V1 auditado: PF `0,866939/0,698912/0,693382`, WR
+  `48,594/39,271/40,081%`, neto `-662,668/-1.220,988/-1.246,477bps`, min
+  `19/18/18`, meses `6/5/5`; cerrado sin avance.
+- 2024 V3 development post-outcome: PF `1,231750/1,395967/1,408300`, WR
+  `51,406/55,870/56,680%`, neto `+964,402/+1.124,966/+1.153,375bps`, min
+  `19/18/18`, meses `8/8/8`; incremental PASS, objetivo FAIL.
+- 2025 outer V3 auditado: PF `0,655469/1,035567/1,039777`, WR
+  `50,607/53,689/53,689%`, neto `-2.381,476/+163,026/+182,456bps`, min
+  `18/17/17`, meses `5/6/6`; 2026 no se abrió.
+- 2025 V4 development post-outcome auditado: PF
+  `1,204351/1,247945/1,346342`, WR `51,8219/52,0492/53,2787%`, neto
+  `+1.060,279/+1.030,091/+1.381,556bps`, min `18/17/17`, meses `7/8/8`.
+  Es reproducible y prometedor, pero no OOS ni estable todos los meses.
+- 2026 V4: sin outcomes. Gate vintage falla cerrado por cinco capture IDs
+  nuevos, Greek-only92/IV-only516. Mantener `Greek∩IV` solo en los cuatro
+  repairs V1R1 y fallar ante cualquier quinta discrepancia.
+
+No hay policy promovible ni V5 activa. Cash-only falla transporte entre
+2024/2025. La siguiente investigación debe comenzar por un inventario
+outcome-free de una fuente causal nueva con histórico y contrato live, mantener
+QQQ←QQQ, SPY←SPY, SPXW←SPY y predeclarar antes de materializar outcomes.
+2024–2025 son development visto; 2026 solo puede abrirse como siguiente outer
+después de gate, auditoría, freeze y commit. No tocar live/systemd. Ask→bid,
+no-overlap, hold30–180m y `reject_while_open` preceden cualquier paper-only.
+
 ## V3 outer 2025 — cerrado y auditado
 
 Freeze committed `91584706`; one-shot2025 `FAILED_OUTER_2025_2026_CLOSED`.

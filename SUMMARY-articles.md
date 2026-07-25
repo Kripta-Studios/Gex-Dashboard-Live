@@ -1,5 +1,31 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+### Frontera causal consolidada — 2026-07-25
+
+La historia completa evita confundir mejora de desarrollo con generalización.
+En orden QQQ/SPXW/SPY y a 1bp: el diseño 2023 dio PF
+`1,173476/1,071604/1,072835` pero solo `7/5/5` meses positivos; el outer V1
+2024 cayó a `0,866939/0,698912/0,693382`; V3 aprendió sobre 2024 y alcanzó
+`1,231750/1,395967/1,408300`, pero su outer 2025 dio
+`0,655469/1,035567/1,039777`. El refit full-history V4 recuperó en el 2025 ya
+visto `1,204351/1,247945/1,346342`, con WR>51%, neto positivo y min
+`18/17/17`, aunque solo `7/8/8` meses positivos. Por eso el mejor PF observado
+no prueba todavía un modelo rentable para el entorno real.
+
+La auditoría independiente confirma que V4 es reproducible, pero la causalidad
+también depende de poder materializar el mismo feature en el siguiente periodo.
+El gate 2026 encontró cinco IDs nuevos con 92 claves Greek-only y 516 IV-only;
+ampliar la intersección congelada de cuatro repairs convertiría el holdout en
+una reparación post-selección. V4 debe permanecer cerrada sin outcomes 2026.
+
+Quitar la superficie tampoco resuelve el problema: todos los candidatos
+cash-only cambian de régimen entre 2024 y 2025. La siguiente hipótesis debe
+aportar información causal nueva con el mismo contrato histórico/live, no otro
+sweep del mismo ledger. Como 2024–2025 ya están vistos, son development para
+cualquier V5; 2026 solo puede abrirse tras predeclaración, gate, auditoría y
+freeze. La prueba económica final debe usar opciones ask→bid, impedir overlaps y
+respetar hold30–180m/`reject_while_open` antes de cualquier paper-only.
+
 ### El hit-rate de signo no controla la asimetría de las pérdidas
 
 V3 mostró la diferencia en el primer outer intacto: QQQ acertó el signo en

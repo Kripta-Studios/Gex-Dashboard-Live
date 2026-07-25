@@ -1,5 +1,34 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+## Resumen causal autoritativo — 2026-07-25
+
+Ninguna familia cumple aún simultáneamente, por ticker, PF>1,20, WR>45%,
+mínimo13 trades en cada mes y PnL positivo todos los meses. Las instrucciones
+pendientes de secciones antiguas ya fueron ejecutadas y son solo historial.
+
+Resultados a 1bp, orden QQQ/SPXW/SPY:
+
+| Año y papel | PF | WR | Neto bps | Mín/mes | Meses positivos |
+| --- | --- | --- | --- | --- | --- |
+| 2023 design mapping, no OOS | 1,173476 / 1,071604 / 1,072835 | 51,822 / 50,000 / 50,403% | +812,500 / +268,657 / +273,999 | 19 / 19 / 19 | 7 / 5 / 5 |
+| 2024 outer V1 auditado | 0,866939 / 0,698912 / 0,693382 | 48,594 / 39,271 / 40,081% | -662,668 / -1.220,988 / -1.246,477 | 19 / 18 / 18 | 6 / 5 / 5 |
+| 2024 V3 development visto | 1,231750 / 1,395967 / 1,408300 | 51,406 / 55,870 / 56,680% | +964,402 / +1.124,966 / +1.153,375 | 19 / 18 / 18 | 8 / 8 / 8 |
+| 2025 outer V3 auditado | 0,655469 / 1,035567 / 1,039777 | 50,607 / 53,689 / 53,689% | -2.381,476 / +163,026 / +182,456 | 18 / 17 / 17 | 5 / 6 / 6 |
+| 2025 V4 development visto | 1,204351 / 1,247945 / 1,346342 | 51,8219 / 52,0492 / 53,2787% | +1.060,279 / +1.030,091 / +1.381,556 | 18 / 17 / 17 | 7 / 8 / 8 |
+
+V4 es el mejor resultado agregado y su auditor reprodujo exactamente modelo,
+dataset, ledger y gates, pero fue diseñado tras ver 2025 y falla estabilidad
+mensual. No existe resultado económico V4 de 2026: el censo outcome-free cerró
+por cinco IDs Greek/IV nuevos (92 Greek-only y 516 IV-only). No se puede ampliar
+la excepción de cuatro repairs, intersectar, excluir fechas ni recapturar.
+
+El reemplazo cash-only tampoco pasa conjuntamente 2024 y 2025. Por tanto el
+siguiente avance real requiere una fuente causal nueva, disponible tanto en el
+histórico como en live. Una familia nueva usará 2023–2025 solo como development
+walk-forward y deberá quedar predeclarada, gateada, auditada y congelada antes
+de abrir 2026. Mantener QQQ←QQQ, SPY←SPY y SPXW←SPY. No paper/live hasta
+validar además ask→bid, no-overlap, hold30–180m y `reject_while_open`.
+
 ## Resultado causal V3 — 2025 no generaliza
 
 Tras el manifest committed `91584706`, el one-shot secuencial 2025 ejecutó 735
