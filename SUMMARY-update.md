@@ -1,5 +1,14 @@
 # SUMMARY-update — ledger científico compacto
 
+2026-07-25, V5 predeclarada y aún sin datos. Inventario outcome-free: única
+fuente nueva materialmente compatible = prints OPRA 0DTE QQQ/SPY con NBBO
+estrictamente anterior, histórico `trade_quote` y Quote/Trade Stream Standard.
+No se inició Terminal ni se consultó endpoint/valor/open/outcome. Contrato V5:
+mapping QQQ←QQQ, SPY←SPY, SPXW←SPY; features09:30–10:35; logistic pooled
+L2/C0,1; development fit2023→2024 y fit2023+2024→2025; gate conjunta estricta
+en seis ticker-año y todos los meses. Commit/push documental precede al data
+gate y auditor outcome-free. Greek/IV junio2026, outcomes y live siguen cerrados.
+
 2026-07-25, consolidado autoritativo. Los `pendiente` anteriores ya se
 ejecutaron y no deben relanzarse. A 1bp y en orden QQQ/SPXW/SPY: design2023
 PF1,173476/1,071604/1,072835, WR51,822/50,000/50,403%, neto

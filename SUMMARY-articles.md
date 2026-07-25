@@ -1,5 +1,16 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+### Nueva hipótesis predeclarada — OPRA trade tape, 2026-07-25
+
+La nueva información no es otra transformación de Greeks/IV ni de cash: es la
+cinta de prints OPRA 0DTE ejecutados, con tamaño y el NBBO estrictamente previo.
+Esto permite medir presión realmente transada sin afirmar un aggressor oculto;
+el lado se define mecánicamente contra bid/ask/mid y se congela antes de leer
+un valor. Histórico y live proceden del mismo proveedor Standard. El contrato
+V5 mantiene mapping QQQ←QQQ, SPY←SPY, SPXW←SPY y somete un único logistic
+pooled a la gate completa en 2024 y 2025. Todavía no existe data gate ni
+resultado económico; 2026 y producción siguen cerrados.
+
 ### Frontera causal consolidada — 2026-07-25
 
 La historia completa evita confundir mejora de desarrollo con generalización.

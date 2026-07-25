@@ -1,5 +1,21 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+## V5 OPRA trade_quote predeclarada — 2026-07-25, sin datos
+
+El inventario outcome-free encontró una sola fuente nueva compatible con
+histórico y live: prints OPRA 0DTE de QQQ/SPY con tamaño/precio/condición y el
+NBBO estrictamente anterior, servidos históricamente y por streams Standard del
+mismo proveedor. No se inició Terminal ni se consultó endpoint, valor, feature,
+open económico u outcome. Greek/IV no forma parte de V5 y los cinco IDs nuevos
+de junio2026 permanecen fail-closed e intactos.
+
+`CROSS_VENUE_OPRA_TRADE_QUOTE_FLOW_V5_PREDECLARATION.md` congela mapping
+QQQ←QQQ, SPY←SPY, SPXW←SPY, clocks de features 09:30–10:35, 24 features,
+logistic pooled L2 C0,1, folds development 2024/2025 y la gate conjuntiva
+completa por ticker-año/mes. Siguiente autoritativo: commit/push de estos
+documentos; después data gate 2023–2025 y auditor independientes outcome-free,
+versionados antes de abrir opens10:36/13:36. 2026 y producción siguen cerrados.
+
 ## Estado consolidado 2026-07-25 — leer antes que los checkpoints históricos
 
 Los `Siguiente:` inferiores describen la secuencia que ya se completó; no se

@@ -1,5 +1,27 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-07-25 — V5 OPRA trade_quote predeclarada, sin datos
+
+El inventario outcome-free `CAUSAL_SOURCE_INVENTORY_20260725.md` identifica una
+sola fuente causal nueva materialmente compatible: prints OPRA 0DTE ejecutados
+emparejados con el NBBO estrictamente anterior mediante ThetaData Standard,
+con traducción live por Quote/Trade Stream por contrato. No se arrancó Terminal,
+no se llamó a ningún endpoint ni se leyó precio, feature, outcome o reloj de
+outcome. Los archivos no rastreados del usuario y producción siguen intactos.
+
+Contrato único:
+`CROSS_VENUE_OPRA_TRADE_QUOTE_FLOW_V5_PREDECLARATION.md`. Fija cadena completa
+QQQ/SPY 09:30–10:35, mapping QQQ←QQQ, SPY←SPY, SPXW←SPY, 24 features de
+print-side/premium/contratos en tres ventanas, pooled logistic L2 C0,1 y folds
+fit2023→development2024 y fit2023+2024→development2025. Para avanzar exige en
+los seis ticker-año PF>1,20, WR>45%, neto>0, mínimo13 trades cada mes y 12/12
+meses positivos. No usa Greek/IV y no toca ni sortea los cinco IDs de junio2026.
+
+Siguiente autoritativo: commit/push del inventario, contrato, registro y cinco
+handoffs; solo desde ese HEAD implementar/capturar el data gate 2023–2025 y su
+auditor independiente outcome-free, y versionar ambos antes de outcomes. 2026,
+opens10:36/13:36, payoff de opción y live/systemd permanecen cerrados.
+
 ### Checkpoint 2026-07-25 — estado causal consolidado y siguiente frontera
 
 Este bloque sustituye los `Siguiente:` históricos de checkpoints inferiores.

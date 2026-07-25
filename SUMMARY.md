@@ -1,5 +1,20 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+## V5 predeclarada sin acceso a datos — 2026-07-25
+
+El inventario outcome-free halló una fuente causal nueva con contrato
+histórico/live bajo ThetaData Standard: prints OPRA 0DTE ejecutados de QQQ/SPY
+emparejados con el NBBO estrictamente anterior. Es distinta del OHLC flow y de
+la dinámica de quotes ya cerrados. No se arrancó Terminal ni se consultó un
+endpoint, precio, feature, open económico u outcome.
+
+V5 fija QQQ←QQQ, SPY←SPY, SPXW←SPY, tres ventanas hasta 10:35, 24 features de
+prints/premium/contratos y un solo logistic pooled L2 C0,1. 2024 y 2025 son
+development walk-forward ya visto y solo avanzan si los tres tickers pasan en
+ambos años PF>1,20, WR>45%, neto>0, mínimo13/mes y PnL positivo 12/12 meses.
+Primero se versionan predeclaración e inventario; luego gate y auditor
+outcome-free. 2026, payoff físico y producción permanecen cerrados.
+
 ## Resumen causal autoritativo — 2026-07-25
 
 Ninguna familia cumple aún simultáneamente, por ticker, PF>1,20, WR>45%,
