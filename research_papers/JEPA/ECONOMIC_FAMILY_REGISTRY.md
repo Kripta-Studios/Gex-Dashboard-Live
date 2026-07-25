@@ -37,7 +37,7 @@ Estados permitidos: `QUEUED`, `ACTIVE`, `FAILED_CAUSALITY`,
 | CROSS_VENUE_CALENDAR_RR_LEADER_V1/V3 | mapping QQQ←QQQ, SPY←SPY, SPXW←SPY con signo fijo/mensual | `FAILED_ECONOMIC` | V1 outer2024 PF0,867/0,699/0,693; V3 outer2025 PF0,655/1,036/1,040; 2026 cerrado |
 | CROSS_VENUE_CALENDAR_RR_LEADER_V4 | logistic pooled V2R1 fit 2023–2024 | `BLOCKED_DATA` | development2025 PF1,204/1,248/1,346, pero gate vintage2026 encuentra cinco nuevos IDs Greek/IV y falla cerrado antes de outcomes |
 | CROSS_VENUE post-V4 cash-only | summaries/spot/cross-cash/shallow trees/raw35x1m | `FAILED_ECONOMIC` | ningún candidato pasa los seis bloques ticker-año 2024–2025; no V5 ni acceso 2026 |
-| CROSS_VENUE_OPRA_TRADE_QUOTE_FLOW_V5 | desequilibrio de prints OPRA 0DTE ejecutados frente al NBBO estrictamente anterior | `ACTIVE` | inventario outcome-free identifica histórico/stream Standard bajo el mismo proveedor; predeclarada antes de consultar valores, endpoints u outcomes |
+| CROSS_VENUE_OPRA_TRADE_QUOTE_FLOW_V5 | desequilibrio de prints OPRA 0DTE ejecutados frente al NBBO estrictamente anterior | `ACTIVE` | predeclarada; capturador/gate/auditor preejecución listos sobre 1.504 captures, todavía sin llamar `trade_quote` ni leer valores/outcomes |
 
 V5 es la única familia activa y todavía no tiene dato materializado ni resultado
 económico. Calendar-RR V4 aporta PF>1,20 en development2025 para los tres, pero

@@ -2,6 +2,14 @@
 
 ## V5 predeclarada sin acceso a datos — 2026-07-25
 
+La fase preejecución ya tiene capturador atómico/resumible, builder del gate y
+auditor raw independiente. El universo exact-0DTE por metadatos contiene 752
+fechas comunes QQQ/SPY (250/252/250) y 1.504 captures; SHA de fechas
+`e7786a1a...b8f9`. Suite cross-venue113, Ruff y compile pasan. El único request
+real fue el estado del Terminal (`CONNECTED`); aún no se llamó `trade_quote` ni
+se leyó ningún valor. Debe versionarse este código antes de capturar y después
+versionarse gate+auditor antes de opens10:36/13:36.
+
 El inventario outcome-free halló una fuente causal nueva con contrato
 histórico/live bajo ThetaData Standard: prints OPRA 0DTE ejecutados de QQQ/SPY
 emparejados con el NBBO estrictamente anterior. Es distinta del OHLC flow y de

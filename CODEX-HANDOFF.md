@@ -2,6 +2,14 @@
 
 ## V5 OPRA trade_quote predeclarada — 2026-07-25, sin datos
 
+Implementación preejecución lista: capturador inmutable/resumible, builder y
+auditor que reparsea raw sin importar el builder. El censo por nombres exact-0DTE
+es QQQ=SPY=752 fechas, 250/252/250 por año, 1.504 captures, date SHA
+`e7786a1a...b8f9`. Suite cross-venue: 113 PASS; Ruff/compile
+PASS. Solo se consultó `/terminal/mdds/status=CONNECTED`; cero llamadas
+`trade_quote`, valores o outcomes. Commit/push del código precede a la captura
+workers2; gate+audit se versionan antes de cualquier open económico.
+
 El inventario outcome-free encontró una sola fuente nueva compatible con
 histórico y live: prints OPRA 0DTE de QQQ/SPY con tamaño/precio/condición y el
 NBBO estrictamente anterior, servidos históricamente y por streams Standard del

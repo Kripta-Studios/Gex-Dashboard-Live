@@ -2,6 +2,21 @@
 
 ### Checkpoint 2026-07-25 — V5 OPRA trade_quote predeclarada, sin datos
 
+Capturador, builder del data gate y auditor independiente ya están
+implementados preejecución en
+`capture_cross_venue_opra_trade_quote_flow_v5.py`,
+`build_cross_venue_opra_trade_quote_flow_v5.py` y
+`audit_cross_venue_opra_trade_quote_flow_v5.py`. El universo por metadatos fija
+752 fechas comunes por sensor (2023/2024/2025=250/252/250), 1.504 captures y
+SHA de fechas `e7786a1a...b8f9`; suite cross-venue113 pasa junto a Ruff/compile. El
+Terminal remoto solo se consultó en su endpoint de estado y respondió
+`CONNECTED`; todavía no se llamó `history/trade_quote` ni se leyó un valor.
+
+Orden inmediato obligatorio: commit/push explícito del código/tests/runtime y
+handoffs desde HEAD limpio; después una sola captura resumible con workers2,
+builder outcome-free y auditor. No leer opens10:36/13:36 hasta versionar gate y
+audit. Si el gate falla, cerrar V5 sin evaluar ni cambiar filtros/features.
+
 El inventario outcome-free `CAUSAL_SOURCE_INVENTORY_20260725.md` identifica una
 sola fuente causal nueva materialmente compatible: prints OPRA 0DTE ejecutados
 emparejados con el NBBO estrictamente anterior mediante ThetaData Standard,

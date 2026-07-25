@@ -9,6 +9,12 @@ L2/C0,1; development fit2023→2024 y fit2023+2024→2025; gate conjunta estrict
 en seis ticker-año y todos los meses. Commit/push documental precede al data
 gate y auditor outcome-free. Greek/IV junio2026, outcomes y live siguen cerrados.
 
+Implementación V5 preejecución: universe QQQ/SPY=752 fechas cada uno,
+2023/2024/2025=250/252/250, captures1.504, date SHA `e7786a1a...b8f9`;
+capturador atómico/resumible + builder + auditor raw independiente listos.
+Suite cross-venue113, Ruff y compile PASS. Terminal status CONNECTED, pero
+`trade_quote`/valores/outcomes siguen sin consultar. Commit/push antes del run.
+
 2026-07-25, consolidado autoritativo. Los `pendiente` anteriores ya se
 ejecutaron y no deben relanzarse. A 1bp y en orden QQQ/SPXW/SPY: design2023
 PF1,173476/1,071604/1,072835, WR51,822/50,000/50,403%, neto

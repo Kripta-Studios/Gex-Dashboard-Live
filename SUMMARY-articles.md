@@ -2,6 +2,13 @@
 
 ### Nueva hipótesis predeclarada — OPRA trade tape, 2026-07-25
 
+La implementación mantiene la separación causal: primero fija por metadatos
+752 fechas comunes QQQ/SPY y 1.504 requests, luego preserva cada NDJSON/raw de
+forma atómica, y solo el builder deriva features. Un auditor separado reparsea
+los raw y repite features, coverage, distinctness y firmability. El código y
+113 pruebas cross-venue existen antes del primer valor `trade_quote`; el único contacto real
+ha sido comprobar que el Terminal está `CONNECTED`.
+
 La nueva información no es otra transformación de Greeks/IV ni de cash: es la
 cinta de prints OPRA 0DTE ejecutados, con tamaño y el NBBO estrictamente previo.
 Esto permite medir presión realmente transada sin afirmar un aggressor oculto;
