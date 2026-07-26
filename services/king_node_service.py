@@ -361,7 +361,11 @@ class ThetaOptionsVolatilityClient:
                         row.get("rate", row.get("close", row.get("value")))
                     )
                     timestamp = parse_timestamp(
-                        row.get("timestamp", row.get("date")), default_zone=ET
+                        row.get(
+                            "created",
+                            row.get("timestamp", row.get("date")),
+                        ),
+                        default_zone=ET,
                     )
                     if rate is not None and timestamp is not None:
                         candidates.append((timestamp, rate))
@@ -413,8 +417,6 @@ class ThetaOptionsVolatilityClient:
         try:
             spxw_expirations = self.list_expirations("SPXW", now)
             vix_expirations = self.list_expirations("VIX", now)
-            rate = self.fetch_rate(now)
-            holidays = self.fetch_holidays(now)
         except Exception as exc:
             unavailable = {
                 "vix": _unavailable(
@@ -429,7 +431,26 @@ class ThetaOptionsVolatilityClient:
             }
             return unavailable, volatility_state, {**diagnostics, "error": str(exc)}
 
-        rate_decimal = float(rate["value_decimal"])
+        try:
+            holidays = self.fetch_holidays(now)
+        except Exception as exc:
+            # Holiday metadata improves expiration handling but must not suppress
+            # VIX spot derived directly from VIX option Greeks.
+            holidays = set()
+            diagnostics["holidays"] = {"status": "unavailable", "error": str(exc)}
+
+        rate: dict[str, Any] | None
+        rate_error: Exception | None = None
+        try:
+            rate = self.fetch_rate(now)
+        except Exception as exc:
+            rate = None
+            rate_error = exc
+            diagnostics["rate"] = {"status": "unavailable", "error": str(exc)}
+
+        rate_decimal = (
+            float(rate["value_decimal"]) if isinstance(rate, dict) else None
+        )
         results: dict[str, dict[str, Any]] = {}
 
         # SPX underlying is diagnostic/validation input. Tastytrade spot remains the
@@ -465,7 +486,6 @@ class ThetaOptionsVolatilityClient:
                 "expirations": [live_vix_exp.isoformat()],
                 "quote_count": underlying.count,
                 "valid_strike_count": underlying.count,
-                "rate": rate,
                 "diagnostics": {
                     "mad": underlying.mad,
                     "dispersion_pct": underlying.dispersion_pct,
@@ -477,6 +497,10 @@ class ThetaOptionsVolatilityClient:
             )
 
         try:
+            if rate_decimal is None:
+                raise VolatilityDataError(
+                    f"risk-free rate unavailable: {rate_error}"
+                )
             near_exp, next_exp = choose_vix1d_expirations(spxw_expirations, now)
             near_quotes = self.fetch_quotes("SPXW", near_exp, now)
             next_quotes = self.fetch_quotes("SPXW", next_exp, now)
@@ -530,6 +554,10 @@ class ThetaOptionsVolatilityClient:
             )
 
         try:
+            if rate_decimal is None:
+                raise VolatilityDataError(
+                    f"risk-free rate unavailable: {rate_error}"
+                )
             near_exp, next_exp = choose_vvix_expirations(vix_expirations, now)
             near_quotes = self.fetch_quotes("VIX", near_exp, now)
             next_quotes = self.fetch_quotes("VIX", next_exp, now)
@@ -568,7 +596,8 @@ class ThetaOptionsVolatilityClient:
                 "VVIX", "cboe_vvix_reconstruction_from_vix_nbbo", "VIX", exc
             )
 
-        diagnostics["rate"] = rate
+        if rate is not None:
+            diagnostics["rate"] = rate
         diagnostics["spxw_expiration_count"] = len(spxw_expirations)
         diagnostics["vix_expiration_count"] = len(vix_expirations)
         return results, volatility_state, diagnostics

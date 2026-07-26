@@ -237,7 +237,7 @@ def test_options_client_never_uses_index_endpoint() -> None:
         if path.endswith("/calendar/year_holidays"):
             return httpx.Response(200, json=[])
         if path.endswith("/interest_rate/history/eod"):
-            return httpx.Response(200, json=[{"date": today.isoformat(), "rate": 4.33}])
+            return httpx.Response(200, json=[{"created": today.isoformat(), "rate": 4.33}])
         if path.endswith("/option/snapshot/greeks/first_order"):
             value = 6000.0 if symbol == "SPXW" else 18.5
             return httpx.Response(
@@ -274,3 +274,55 @@ def test_options_client_never_uses_index_endpoint() -> None:
     assert result["vvix"]["status"] == "reconstructed"
     assert metadata["direct_index_subscription"] is False
     assert paths and all("/index/" not in path for path in paths)
+
+
+def test_vix_remains_available_when_rate_is_unavailable() -> None:
+    today = NOW.date()
+    tomorrow = today + timedelta(days=1)
+    vix_near = today + timedelta(days=20)
+    vix_far = today + timedelta(days=40)
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        path = request.url.path
+        symbol = request.url.params.get("symbol")
+        if path.endswith("/option/list/expirations"):
+            exps = [today, tomorrow] if symbol == "SPXW" else [today, vix_near, vix_far]
+            return httpx.Response(
+                200,
+                json=[{"expiration": item.strftime("%Y%m%d")} for item in exps],
+            )
+        if path.endswith("/calendar/year_holidays"):
+            return httpx.Response(200, json=[])
+        if path.endswith("/interest_rate/history/eod"):
+            return httpx.Response(200, json=[])
+        if path.endswith("/option/snapshot/greeks/first_order"):
+            value = 6000.0 if symbol == "SPXW" else 18.5
+            return httpx.Response(
+                200,
+                json=[
+                    {
+                        "underlying_price": value + offset,
+                        "underlying_timestamp": NOW.isoformat(),
+                    }
+                    for offset in (-0.001, 0.0, 0.001, 0.0)
+                ],
+            )
+        raise AssertionError(path)
+
+    http_client = httpx.Client(transport=httpx.MockTransport(handler))
+    client = ThetaOptionsVolatilityClient(
+        "http://theta.test/v3",
+        client=http_client,
+        max_age_seconds=60,
+        max_underlying_dispersion_pct=0.1,
+    )
+    try:
+        result, _, metadata = client.fetch_all(now=NOW, state={})
+    finally:
+        http_client.close()
+
+    assert result["vix"]["status"] == "observed_from_option_feed"
+    assert "rate" not in result["vix"]
+    assert result["vix1d"]["status"] == "unavailable"
+    assert result["vvix"]["status"] == "unavailable"
+    assert metadata["rate"]["status"] == "unavailable"

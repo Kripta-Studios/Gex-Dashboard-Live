@@ -200,10 +200,12 @@ def inspect_snapshot(
                 "valid_strike_count", 0
             ) <= 0:
                 item_errors.append("valid_strike_count is missing or non-positive")
-            rate = item.get("rate")
-            if not isinstance(rate, dict) or not _finite(rate.get("value_decimal")):
-                item_errors.append("risk-free rate provenance is missing")
             if symbol in {"vix1d", "vvix"}:
+                rate = item.get("rate")
+                if not isinstance(rate, dict) or not _finite(
+                    rate.get("value_decimal")
+                ):
+                    item_errors.append("risk-free rate provenance is missing")
                 diagnostics = item.get("diagnostics")
                 if not isinstance(diagnostics, dict):
                     item_errors.append("reconstruction diagnostics are missing")
