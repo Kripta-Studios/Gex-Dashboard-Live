@@ -7,6 +7,7 @@
 107/1,083921/47,664%/+2,619171/min12/2. Auditor PASS refit36,
 pred-hash36,winners18,ledger exacto, hold30–180/overlap0. Summary/audit SHA
 `01074ce9...97c8`/`aa496662...e42c`. Familia cerrada; no live, no retune H1.
+Evidencia completa publicada en `6b5fb863`.
 
 2026-07-26, implementación preejecución del full nested lista. Evaluator carga
 features sin outcomes futuros, ajusta cada fold con train, escanea select6m,

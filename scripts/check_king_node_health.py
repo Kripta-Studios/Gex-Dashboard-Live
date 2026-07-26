@@ -1,22 +1,40 @@
 #!/usr/bin/env python3
-"""Validate the published KING NODE snapshot without contacting providers."""
+"""Validate a published KING NODE snapshot without contacting providers."""
 
 from __future__ import annotations
 
 import argparse
+from datetime import UTC, datetime
 import json
 import math
 import os
-import sys
-from datetime import UTC, datetime
 from pathlib import Path
+import sys
 from typing import Any
-
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_SCHEMA = "king-node.v1"
 EXPECTED_STRIKES = 47
-REQUIRED_INDICES = ("vix", "vvix", "vix1d")
+EXPECTED_INDEX_CONTRACT = {
+    "vix": (
+        "observed_from_option_feed",
+        "thetadata_option_first_order_underlying_median",
+        "VIX",
+        1,
+    ),
+    "vix1d": (
+        "reconstructed",
+        "cboe_vix1d_reconstruction_from_spxw_nbbo",
+        "SPXW",
+        2,
+    ),
+    "vvix": (
+        "reconstructed",
+        "cboe_vvix_reconstruction_from_vix_nbbo",
+        "VIX",
+        2,
+    ),
+}
 
 
 def _finite(value: Any) -> bool:
@@ -42,6 +60,18 @@ def _parse_utc(value: Any) -> datetime | None:
     return parsed.astimezone(UTC)
 
 
+def _validate_term(name: str, term: Any, errors: list[str]) -> None:
+    if not isinstance(term, dict):
+        errors.append(f"{name} term diagnostics are missing")
+        return
+    for key in ("forward", "k0", "variance", "minutes"):
+        if not _finite(term.get(key)) or float(term[key]) <= 0:
+            errors.append(f"{name} term {key} is missing or invalid")
+    strikes = term.get("included_strikes")
+    if not isinstance(strikes, list) or len(strikes) < 3:
+        errors.append(f"{name} term has insufficient included strikes")
+
+
 def inspect_snapshot(
     payload: Any,
     *,
@@ -51,7 +81,6 @@ def inspect_snapshot(
     now: datetime | None = None,
 ) -> dict[str, Any]:
     """Return an auditable health report for one parsed snapshot."""
-
     errors: list[str] = []
     warnings: list[str] = []
     now = now or datetime.now(UTC)
@@ -61,7 +90,6 @@ def inspect_snapshot(
             "errors": ["snapshot root must be an object"],
             "warnings": [],
         }
-
     if payload.get("schema_version") != EXPECTED_SCHEMA:
         errors.append(f"schema_version must be {EXPECTED_SCHEMA}")
     if payload.get("status") == "error":
@@ -121,24 +149,84 @@ def inspect_snapshot(
     indices = source.get("indices")
     if not isinstance(indices, dict):
         indices = {}
-    for symbol in REQUIRED_INDICES:
+    for symbol, (expected_status, expected_method, input_symbol, expiration_count) in (
+        EXPECTED_INDEX_CONTRACT.items()
+    ):
         item = indices.get(symbol)
-        observed = (
-            isinstance(item, dict)
-            and item.get("status") == "observed"
-            and _finite(item.get("value"))
-        )
-        if not observed:
-            message = f"{symbol.upper()} is not an observed ThetaData value"
+        item_errors: list[str] = []
+        if not isinstance(item, dict):
+            item_errors.append("metadata is missing")
+        else:
+            if item.get("status") != expected_status:
+                item_errors.append(
+                    f"status is {item.get('status')!r}, expected {expected_status!r}"
+                )
+            if not _finite(item.get("value")) or float(item.get("value", 0)) <= 0:
+                item_errors.append("value is missing, non-finite or non-positive")
+            if item.get("method") != expected_method:
+                item_errors.append(
+                    f"method is {item.get('method')!r}, expected {expected_method!r}"
+                )
+            if item.get("input_symbol") != input_symbol:
+                item_errors.append(
+                    f"input_symbol is {item.get('input_symbol')!r}, expected {input_symbol!r}"
+                )
+            if item.get("entitlement") != "options_standard":
+                item_errors.append("entitlement is not options_standard")
+            if item.get("direct_index_subscription") is not False:
+                item_errors.append("direct_index_subscription must be false")
+            age = item.get("age_seconds")
+            if not _finite(age):
+                item_errors.append("age_seconds is missing or invalid")
+            else:
+                item_limit = item.get("max_age_seconds", max_age_seconds)
+                if not _finite(item_limit) or float(item_limit) <= 0:
+                    item_limit = max_age_seconds
+                if float(age) > float(item_limit):
+                    item_errors.append(
+                        f"age {float(age):.1f}s exceeds {float(item_limit):.1f}s"
+                    )
+            source_text = json.dumps(item, sort_keys=True).lower()
+            if "/index/" in source_text or "index/snapshot" in source_text:
+                item_errors.append("provenance contains a forbidden ThetaData index endpoint")
+            expirations = item.get("expirations")
+            if not isinstance(expirations, list) or len(expirations) < expiration_count:
+                item_errors.append(
+                    f"requires at least {expiration_count} expiration(s)"
+                )
+            if not _finite(item.get("quote_count")) or item.get("quote_count", 0) <= 0:
+                item_errors.append("quote_count is missing or non-positive")
+            if not _finite(item.get("valid_strike_count")) or item.get(
+                "valid_strike_count", 0
+            ) <= 0:
+                item_errors.append("valid_strike_count is missing or non-positive")
+            rate = item.get("rate")
+            if not isinstance(rate, dict) or not _finite(rate.get("value_decimal")):
+                item_errors.append("risk-free rate provenance is missing")
+            if symbol in {"vix1d", "vvix"}:
+                diagnostics = item.get("diagnostics")
+                if not isinstance(diagnostics, dict):
+                    item_errors.append("reconstruction diagnostics are missing")
+                else:
+                    _validate_term(f"{symbol.upper()} near", diagnostics.get("near"), item_errors)
+                    _validate_term(f"{symbol.upper()} next", diagnostics.get("next"), item_errors)
+
+        if item_errors:
+            message = f"{symbol.upper()} invalid: " + "; ".join(item_errors)
             if allow_missing_indices:
                 warnings.append(message)
             else:
                 errors.append(message)
 
+    theta_options = source.get("theta_options")
+    if isinstance(theta_options, dict):
+        if theta_options.get("direct_index_subscription") is not False:
+            errors.append("Theta options provenance does not explicitly disable index access")
+        if theta_options.get("entitlement") not in {None, "options_standard"}:
+            errors.append("Theta options provenance has an unexpected entitlement")
+
     regime = payload.get("regime")
-    reference_mode = (
-        regime.get("reference_mode") if isinstance(regime, dict) else None
-    )
+    reference_mode = regime.get("reference_mode") if isinstance(regime, dict) else None
     if reference_mode != "workbook_static_export":
         message = (
             "Matrix/IV Regime reference uses semantic fallback instead of an "
@@ -182,17 +270,13 @@ def build_parser() -> argparse.ArgumentParser:
         type=int,
         default=int(os.getenv("KING_NODE_WEB_MAX_AGE_SECONDS", "900")),
     )
-    parser.add_argument(
-        "--require-reference-export",
-        action="store_true",
-        help="Fail while Matrix/IV Regime maps use the semantic fallback",
-    )
+    parser.add_argument("--require-reference-export", action="store_true")
     parser.add_argument(
         "--allow-missing-indices",
         action="store_true",
         help="Diagnostic only: warn instead of failing for missing VIX family",
     )
-    parser.add_argument("--json", action="store_true", help="Print JSON report")
+    parser.add_argument("--json", action="store_true")
     return parser
 
 
@@ -218,7 +302,6 @@ def main(argv: list[str] | None = None) -> int:
             allow_missing_indices=args.allow_missing_indices,
         )
         report["snapshot"] = str(args.snapshot)
-
     if args.json:
         print(json.dumps(report, indent=2, sort_keys=True, allow_nan=False))
     else:

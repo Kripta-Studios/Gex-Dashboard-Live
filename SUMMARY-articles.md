@@ -9,6 +9,9 @@ de selección medianos cercanos a 1,13/1,30/1,40 y aun así cayeron en test a
 el ranking premie el peor mes. El siguiente mes intacto, no la belleza del
 in-sample seleccionado, decide si existe edge.
 
+La falsificación completa, incluidos modelos y auditoría, quedó preservada en
+`6b5fb863` para impedir repetir el sweep con otro nombre.
+
 ### Física de ejecución puede falsificar una rentabilidad legacy — 2026-07-26
 
 Un resultado retrospectivo con labels no certificados y cooldown desde entry

@@ -72,6 +72,9 @@ Audit summary SHA-256:
 
 `aa49666265635382a73d8289e8352bcbc430402648ddc2548adb345a3480e42c`
 
+Resultado, 18 policies, 36 modelos, ledger, auditoría y handoffs versionados y
+pushed en `6b5fb863`.
+
 ## Diagnóstico causal
 
 El barrido exhaustivo no arregla la falta de transporte. Las medianas de PF en

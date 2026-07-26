@@ -22,6 +22,10 @@ usuario no se cumplió. Siguiente: versionar resultado+audit+cinco handoffs. No
 queda un outer intacto en este parquet; una promoción exige policy congelada
 antes de un mes futuro.
 
+Evidencia completa, policies, modelos, ledger, audit y handoffs ya versionados
+y pushed en `6b5fb863`; el “Siguiente: versionar” anterior queda satisfecho.
+No queda una familia activa autorizada sobre este parquet.
+
 ### Checkpoint 2026-07-26 — runner nested preejecución implementado
 
 Runner:

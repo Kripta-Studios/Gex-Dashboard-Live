@@ -12,8 +12,9 @@ Auditor PASS: fuente/features reconstruidas, 36 modelos y 36 prediction hashes
 exactos, 18 winners y 370 trades reproducidos, hold válido y overlap0.
 Hashes summary/audit `01074ce9...97c8`/`aa496662...e42c`. Cierre:
 `EVENT_OPTION_EXECQUOTE_FULL_NESTED_MONTHLY_OVERLAY_V1_FAILURE.md`.
-Versionar evidencia completa y handoffs. No live/services/bots/systemd porque
-el condicional de rentabilidad falló; no retunear H1 ni reabrir GroupDRO.
+Evidencia completa y handoffs publicados en `6b5fb863`. No
+live/services/bots/systemd porque el condicional de rentabilidad falló; no
+retunear H1 ni reabrir GroupDRO. No queda familia activa sobre este parquet.
 
 ## Runner y auditor nested listos preejecución — 2026-07-26
 

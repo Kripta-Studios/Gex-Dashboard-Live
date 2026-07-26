@@ -11,6 +11,9 @@ live. El edge retrospectivo de intersection_guarded no era una expectativa
 causal: se había seleccionado sobre los mismos meses y con labels/scheduler no
 equivalentes a ejecución.
 
+La evidencia reproducible completa quedó publicada en `6b5fb863`; no queda
+integración ni ejecución pendiente de esta familia.
+
 ## Implementación nested congelada antes del run — 2026-07-26
 
 Evaluator y auditor están listos sin haber evaluado un fold real. El runner

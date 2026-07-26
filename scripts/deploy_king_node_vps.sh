@@ -11,8 +11,11 @@ if [[ "${EUID}" -ne 0 ]]; then
 fi
 
 required_files=(
+    "${APP_DIR}/modules/volatility_indices.py"
     "${APP_DIR}/services/king_node_service.py"
     "${APP_DIR}/services/servidor.py"
+    "${APP_DIR}/scripts/check_king_node_health.py"
+    "${APP_DIR}/scripts/check_thetadata_options_standard.py"
     "${APP_DIR}/config/king_node_reference.json"
     "${APP_DIR}/systemd/king-node.service"
     "${APP_DIR}/systemd/financial-server.service"
@@ -35,11 +38,31 @@ else
     echo "Preserved existing ${ENV_FILE}."
 fi
 
+ensure_env_key() {
+    local key="$1"
+    local value="$2"
+    if ! grep -qE "^[[:space:]]*${key}=" "${ENV_FILE}"; then
+        printf '%s=%s\n' "${key}" "${value}" >> "${ENV_FILE}"
+        echo "Added ${key} to ${ENV_FILE}."
+    fi
+}
+
+ensure_env_key KING_NODE_THETA_OPTION_MAX_AGE_SECONDS 180
+ensure_env_key KING_NODE_THETA_EXPIRATION_CACHE_SECONDS 21600
+ensure_env_key KING_NODE_THETA_MIN_UNDERLYING_OBSERVATIONS 3
+ensure_env_key KING_NODE_THETA_MAX_UNDERLYING_DISPERSION_PCT 0.10
+ensure_env_key KING_NODE_THETA_MIN_VALID_STRIKES_PER_TERM 8
+ensure_env_key KING_NODE_RATE_SYMBOL SOFR
+ensure_env_key KING_NODE_RATE_LOOKBACK_DAYS 10
+ensure_env_key KING_NODE_RISK_FREE_RATE_PERCENT ""
+
 /usr/bin/python3 -m compileall -q \
     "${APP_DIR}/modules/king_node_engine.py" \
+    "${APP_DIR}/modules/volatility_indices.py" \
     "${APP_DIR}/services/king_node_service.py" \
     "${APP_DIR}/services/servidor.py" \
-    "${APP_DIR}/scripts/check_king_node_health.py"
+    "${APP_DIR}/scripts/check_king_node_health.py" \
+    "${APP_DIR}/scripts/check_thetadata_options_standard.py"
 
 install -m 0644 \
     "${APP_DIR}/systemd/king-node.service" \
@@ -70,5 +93,7 @@ for service in \
 done
 
 echo "KING NODE units installed and active."
-echo "Validate once live data has arrived:"
+echo "Probe Options STANDARD during market hours:"
+echo "  sudo -u root /usr/bin/python3 ${APP_DIR}/scripts/check_thetadata_options_standard.py --base-url http://127.0.0.1:25503/v3 --json"
+echo "Validate the published snapshot:"
 echo "  sudo -u root /usr/bin/python3 ${APP_DIR}/scripts/check_king_node_health.py --snapshot /var/lib/king-node/latest.json"
