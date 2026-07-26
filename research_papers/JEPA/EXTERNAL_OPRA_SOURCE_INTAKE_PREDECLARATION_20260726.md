@@ -89,6 +89,12 @@ no profesional. Es información documental, no autorización de compra. Un
 cambio de plan, entitlement, límite o schema antes del preflight obliga a
 actualizar y versionar este contrato sin leer valores.
 
+Antes del primer mensaje de mercado también debe existir un
+`preflight_universe.json` dentro del repositorio, committed y pushed desde
+`main`, con exactamente cinco sesiones futuras ordenadas. El capturador exige
+la siguiente fecha pendiente y el gate consume las cinco; no se pueden
+sustituir o escoger fechas después de ver cobertura, paridad o actividad.
+
 ## Universo de admisión
 
 La admisión usa únicamente sensores QQQ y SPY. El mapping económico posterior
@@ -163,6 +169,27 @@ unilaterales, deduplicación económica ni exclusión retrospectiva de fechas.
 Correcciones/cancelaciones se preservan. Si el mensaje live no permite
 reproducir la semántica histórica de corrección, la fuente falla paridad aunque
 la cobertura aparente sea suficiente.
+
+La semántica de correcciones no se acredita con una nota creada por el
+investigador. Antes del gate debe existir un manifest JSON acompañado por el
+documento oficial raw que declara:
+
+```text
+provider=Massive
+scope=OPTIONS_TRADES_WEBSOCKET_AND_REST
+status=PROVIDER_CERTIFIED
+source_url=https://massive.com/...
+retrieved_at_utc=<timestamp timezone-aware>
+historical_correction_field=correction
+live_correction_semantics=
+  EXPLICIT_FIELD | REPLAYED_CORRECTED_EVENT_WITH_STABLE_ID
+evidence_file=<basename local>
+evidence_sha256=<sha256 del raw>
+```
+
+Manifest y evidencia quedan hasheados en gate y auditor. Una URL sin raw, una
+afirmación local, un schema distinto o ausencia de semántica live falla
+cerrado. Cinco sesiones sin correcciones observadas no sustituyen esta prueba.
 
 ## Preflight outcome-free
 
