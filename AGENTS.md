@@ -13,11 +13,16 @@ Hashes errors/universe/contract: `3f575746...bc3d3`/`cf6fe71f...02254`/
 Autoridad:
 `CROSS_VENUE_OPRA_TRADE_QUOTE_FLOW_V5_SOURCE_CAPTURE_GATE_FAILURE.md`. No
 reconsultar, deduplicar, relajar validator, excluir fechas ni evaluar solo las
-1.364 completas. Auditor de fallo independiente implementado; cross-venue115,
-Ruff/compile PASS. Orden inmediato: commit/push código+autoridad+handoffs,
-ejecutar auditor una vez, versionar evidencia y cerrar V5 `BLOCKED_DATA`.
-2026, Greek/IV, outcomes, payoff físico y live/systemd permanecen intactos. La
-siguiente frontera es una fuente externa nueva con histórico/live auditables.
+1.364 completas. Auditor independiente real desde `c4318884`:
+`PASS_INDEPENDENT_AUDIT_OF_FAILED_SOURCE_CAPTURE_GATE`, rehash/reparse1.364,
+mismatch0, IDs sin explicar0 y mínimo mensual0. Summary/seal SHA
+`39b417e0...fc77`/`20f322c5...0297`; source rehash `40096610...e12`.
+
+V5 queda `BLOCKED_DATA`; no implementar/ejectuar builder/evaluator. Autoridad
+terminal: `CAUSAL_SOURCE_EXTERNAL_DEPENDENCY_BLOCK_20260726.md`. 2026,
+Greek/IV, outcomes, payoff físico y live/systemd permanecen intactos. No queda
+trabajo interno autorizado: hace falta una fuente externa nueva con credencial,
+histórico y live auditables antes de predeclarar otra familia.
 
 ### Checkpoint 2026-07-25 — V5 OPRA trade_quote predeclarada, sin datos
 

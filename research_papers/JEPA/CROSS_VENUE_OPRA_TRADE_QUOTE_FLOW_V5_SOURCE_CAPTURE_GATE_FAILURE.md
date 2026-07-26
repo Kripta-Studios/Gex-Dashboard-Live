@@ -75,12 +75,29 @@ del builder; no se puede seleccionar fechas/ticker/año, deduplicar, relajar
 `exclusive`, cambiar condiciones, recapturar fallos ni evaluar el subconjunto
 de 1.364 sesiones.
 
-El auditor independiente de fallo se prepara en
-`audit_cross_venue_opra_trade_quote_flow_v5_capture_failure.py`. Debe quedar
-committed/pushed antes de ejecutarse; rehasheará y reparseará los 1.364 raw
-válidos y probará que los 140 fallos son exactamente el complemento del
-universo. Un PASS de auditoría confirmará el cierre, nunca autorizará el feature
-gate ni outcomes.
+## Auditoría independiente
+
+El auditor de fallo quedó committed en `c4318884` antes de ejecutarse y terminó:
+
+```text
+PASS_INDEPENDENT_AUDIT_OF_FAILED_SOURCE_CAPTURE_GATE
+completed_captures_rehashed_and_reparsed=1364
+failed_captures=140
+source_hash_mismatches=0
+unaccounted_capture_ids=0
+minimum_completed_captures_in_any_sensor_month=0
+advance_to_feature_gate=false
+advance_to_outcomes=false
+```
+
+Rehasheó cada raw/parquet/manifest válido, reparseó los NDJSON sin importar el
+capturador y probó que captures válidos y fallos particionan exactamente los
+1.504 IDs. Compactos:
+`cross_venue_opra_trade_quote_flow_v5_capture_failure_audit_2023_2025_v1/`.
+
+Hashes auditados: summary `39b417e0...fc77`, seal `20f322c5...0297`, failure
+inventory `f6612c8f...2416`, source rehash `40096610...e12`, annual gate
+`fb786062...cecb` y monthly gate `d29e5dc0...b6954`.
 
 ## Dependencia externa
 

@@ -6,9 +6,12 @@ Desde `e6bdac64`, 1.504 requests completos: 1.364 captures válidos y 140
 fallos uniformes `invalid or duplicate V5 trade_quote response`; QQQ
 32/25/8 y SPY38/30/7 por 2023/2024/2025. Enero2024 falla21/21 por sensor.
 Stagers0, no seal, sin builder/features/opens/outcomes. No requery, dedup,
-exclusión ni evaluación parcial. Auditor de fallo y cross-venue115 PASS;
-commit/push antes de ejecutarlo. Tras audit+evidencia, V5 queda `BLOCKED_DATA`
-y la dependencia es una fuente externa histórica/live nueva.
+exclusión ni evaluación parcial. Auditor real desde `c4318884`:
+`PASS_INDEPENDENT_AUDIT_OF_FAILED_SOURCE_CAPTURE_GATE`, rehash/reparse1.364,
+mismatch0/unaccounted0/min mensual0; summary/seal `39b417e0...fc77`/
+`20f322c5...0297`. V5 queda `BLOCKED_DATA`; no builder/evaluator. Bloqueo
+terminal en `CAUSAL_SOURCE_EXTERNAL_DEPENDENCY_BLOCK_20260726.md`: se necesita
+una fuente externa histórica/live nueva antes de cualquier familia posterior.
 
 ## V5 OPRA trade_quote predeclarada — 2026-07-25, sin datos
 

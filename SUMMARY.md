@@ -6,9 +6,10 @@ La captura outcome-free procesó 1.504 requests y conservó 1.364 completos; 140
 respuestas fallaron el validator como inválidas o duplicadas. Enero2024 queda
 sin una sola fuente válida en QQQ y SPY. No existe capture seal y no se abrió
 feature view, open económico ni outcome. V5 es `BLOCKED_DATA`; no se permite
-requery/dedup/exclusión ni evaluar el subconjunto. Auditor independiente de
-fallo listo y pendiente de ejecución tras commit. La continuidad depende de
-una fuente externa nueva con tape histórico y live realmente equivalentes.
+requery/dedup/exclusión ni evaluar el subconjunto. Auditor independiente PASS:
+rehash/reparse1.364, mismatch0, unaccounted0 y mínimo mensual0; summary/seal
+`39b417e0...fc77`/`20f322c5...0297`. La continuidad queda formalmente bloqueada
+por dependencia externa hasta aportar tape histórico y live equivalentes.
 
 ## V5 predeclarada sin acceso a datos — 2026-07-25
 

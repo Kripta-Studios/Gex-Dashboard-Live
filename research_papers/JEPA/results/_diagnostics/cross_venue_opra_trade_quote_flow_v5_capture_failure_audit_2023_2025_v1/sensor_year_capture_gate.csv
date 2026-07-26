@@ -1,0 +1,7 @@
+sensor,year,expected_captures,completed_captures,failed_captures,source_coverage,zero_missing_pass,pre_feature_coverage_90_pass
+QQQ,2023,250,218,32,0.872,False,False
+QQQ,2024,252,227,25,0.9007936507936508,False,True
+QQQ,2025,250,242,8,0.968,False,True
+SPY,2023,250,212,38,0.848,False,False
+SPY,2024,252,222,30,0.8809523809523809,False,False
+SPY,2025,250,243,7,0.972,False,True

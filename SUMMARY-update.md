@@ -4,8 +4,10 @@
 captures válidos1.364, fallos140 uniformes invalid/duplicate; QQQ32/25/8 y
 SPY38/30/7 por año, enero2024=0/21 completo en ambos. Stagers0/no seal; no
 features, opens ni outcomes. No requery/dedup/exclusión/evaluación parcial.
-Auditor de fallo listo, cross-venue115/Ruff/compile PASS; commit/push antes de run.
-Dependencia siguiente: fuente externa histórica/live nueva.
+Auditor real PASS desde `c4318884`: rehash/reparse1.364, mismatch0,
+unaccounted0, mínimo mensual0; summary/seal `39b417e0...fc77`/
+`20f322c5...0297`. V5 `BLOCKED_DATA`, sin builder/evaluator. Bloqueo externo
+formal: `CAUSAL_SOURCE_EXTERNAL_DEPENDENCY_BLOCK_20260726.md`.
 
 2026-07-25, V5 predeclarada y aún sin datos. Inventario outcome-free: única
 fuente nueva materialmente compatible = prints OPRA 0DTE QQQ/SPY con NBBO

@@ -8,6 +8,9 @@ y enero2024 quedó sin coverage en ambos sensores. El cierre ocurre antes del
 modelo y evita convertir deduplicación, exclusiones o recaptura en tuning
 post-dato. La lección transferible es exigir un source gate completo antes de
 interpretar una API historical/live como una feature realmente reproducible.
+El auditor independiente reparseó las 1.364 respuestas promovidas con mismatch0
+y demostró que los 140 fallos completan exactamente el universo; el cierre no
+es una inferencia de un log parcial.
 
 ### Nueva hipótesis predeclarada — OPRA trade tape, 2026-07-25
 
