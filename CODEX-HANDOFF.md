@@ -1,5 +1,15 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+## Contextual bandit executable predeclarado — 2026-07-26
+
+El intake Massive/OPRA se cierra sin ejecución por orden del usuario: cero
+endpoints/datos. La única prueba activa reutiliza el parquet ask-to-bid existente
+de 44.169 filas hasta junio2026. Contrato:
+`EXECUTABLE_CONTEXTUAL_BANDIT_GROUPDRO_V1_PREDECLARATION.md`; red pooled de 12
+acciones, GroupDRO ticker-mes, folds expanding mensuales y scheduler
+reject_while_open. Todo 2026 es development ya visto. Versionar runner+auditor
+antes de una única evaluación; no live/VPS aunque pase hasta un shadow futuro.
+
 ## Admisión externa OPRA: candidato condicionado — 2026-07-26
 
 Massive Options Advanced es el candidato documental con cobertura completa de

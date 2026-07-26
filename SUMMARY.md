@@ -1,5 +1,15 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+## Contextual bandit sobre executable_quote — 2026-07-26
+
+Se abandona OPRA externo sin ejecutar nada. La nueva falsificación no genera
+datos: usa el parquet 0DTE ask→bid sellado hasta junio2026 y aprende
+conjuntamente doce acciones CALL/PUT y seis deltas mediante una Q-network
+GroupDRO por ticker-mes. Enero–junio se evalúa con training expanding
+estrictamente anterior y scheduler no-overlap. No es PPO porque cada evento es
+una decisión con contrafactuales completos. 2026 está visto: incluso un PASS es
+development y solo permitiría congelar un shadow futuro.
+
 ## Fuente externa: contrato de admisión, no V8 — 2026-07-26
 
 Massive Options Advanced queda seleccionado solo como candidato documental:

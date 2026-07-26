@@ -1,5 +1,15 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+### Un evento con contrafactuales completos no necesita PPO — 2026-07-26
+
+Si cada fila contiene, después del cierre, el payoff ejecutable de todas las
+acciones y la acción no altera el siguiente estado de mercado, el problema es
+un contextual bandit con feedback completo. Un Q-model multiacción puede usar
+supervisión directa; Bellman backups, replay de transiciones o PPO añaden
+complejidad y riesgo de memorizar sin aportar identificación causal. La
+robustez relevante se mide contra ticker-meses anteriores, no contra episodios
+artificiales.
+
 ### La paridad histórica/live es una propiedad medible — 2026-07-26
 
 Que un proveedor publique REST histórico y WebSocket live no prueba que ambos

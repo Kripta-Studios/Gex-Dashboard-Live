@@ -39,14 +39,17 @@ Estados permitidos: `QUEUED`, `ACTIVE`, `FAILED_CAUSALITY`,
 | CROSS_VENUE_CALENDAR_RR_LEADER_V4/V4R1/V4R2 | logistic pooled final fit 2023–2025 con retries y cuatro exclusiones outcome-free | `FAILED_ECONOMIC` | outer2026 H1 PF0,970/0,951/0,956, neto negativo y 2/6 meses positivos; julio MTD solo QQQ positivo; auditor independiente PASS |
 | CROSS_VENUE post-V4 cash-only | summaries/spot/cross-cash/shallow trees/raw35x1m | `FAILED_ECONOMIC` | ningún candidato pasa los seis bloques ticker-año 2024–2025; no V5 ni acceso 2026 |
 | CROSS_VENUE_OPRA_TRADE_QUOTE_FLOW_V5 | desequilibrio de prints OPRA 0DTE ejecutados frente al NBBO estrictamente anterior | `BLOCKED_DATA` | source gate: 1.364/1.504, 140 invalid/duplicate, enero2024=0/21 ambos; auditor PASS rehash/reparse1.364, mismatch0; sin features/outcomes |
-| EXTERNAL_OPRA_SOURCE_INTAKE | admisión de tape/NBBO OPRA histórico-live antes de cualquier familia económica | `BLOCKED_DATA` | Massive Advanced es candidato documental; falta credencial y shadow live↔REST de cinco sesiones; divergencia de timestamps/correcciones falla cerrado; no V8/modelo |
+| EXTERNAL_OPRA_SOURCE_INTAKE | admisión de tape/NBBO OPRA histórico-live antes de cualquier familia económica | `CLOSED` | cierre sin ejecución por orden del usuario: sin credencial, endpoint, captura, seal, feature ni outcome |
+| EXECUTABLE_CONTEXTUAL_BANDIT_GROUPDRO_V1 | Q-network pooled de 12 acciones con GroupDRO ticker-mes sobre executable_quote existente | `ACTIVE` | predeclarada development-only; 2026 ya visto, sin descarga ni autorización live |
 | CROSS_VENUE_CALENDAR_RR_LEADER_V6 | continuación no lineal depth2 sobre las 29 features V4 selladas | `CLOSED` | cerrada sin implementación, predicción ni métrica al priorizar el V4 inmutable |
 | CROSS_VENUE_CALENDAR_RR_LEADER_V7 | logistic pooled rolling12 con refit al inicio de mes | `FAILED_ECONOMIC` | H1 PF0,812/1,080/1,032 y 1/2/3 meses positivos; junio falla SPXW/SPY y julio MTD falla SPXW/SPY; auditor PASS |
 
-No hay una policy promocionable ni familia cross-venue activa. V7 falla incluso
+No hay una policy promocionable. V7 falla incluso
 al incorporar 2026 pasado en walk-forward mensual y no restaura virginidad a
-2026. Payoff físico y producción/live/systemd permanecen cerrados. Autoridades
+2026. La única familia activa es una falsificación development-only sobre el
+parquet ask-to-bid existente; un PASS no convierte 2026 en outer. Payoff físico
+y producción/live/systemd permanecen cerrados. Autoridades
 terminales: `CROSS_VENUE_CALENDAR_RR_LEADER_V4R2_OUTER_2026_FAILURE.md` y
 `CROSS_VENUE_CALENDAR_RR_LEADER_V7_ROLLING12_MONTHLY_LOGISTIC_FAILURE.md`.
-El inventario post-V7 `CAUSAL_SOURCE_POST_V7_INVENTORY_20260726.md` confirma
-dependencia externa; no se crea V8 con fuentes/outcomes ya cerrados.
+El intake OPRA externo queda `CLOSED_NO_EXECUTION_BY_USER`; no se ejecuta ni se
+usa como V8.

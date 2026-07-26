@@ -1,5 +1,26 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-07-26 — contextual bandit executable predeclarado
+
+Por orden del usuario se cierra sin ejecución la admisión Massive/OPRA: no hubo
+credencial, endpoint, captura, seal, feature ni outcome. No ejecutar sus tres
+scripts.
+
+Única falsificación activa:
+`EXECUTABLE_CONTEXTUAL_BANDIT_GROUPDRO_V1_PREDECLARATION.md`. Reutiliza el
+parquet ask-to-bid/0DTE ya sellado de 44.169 filas 20250102–20260630, sin
+descarga o rebuild. Modelo único pooled: Q-network 289→128→64→12, doce acciones
+CALL/PUT d15/25/35/50/65/80, SmoothL1+ranking y GroupDRO por ticker-mes. Folds
+expanding Jan–Jun2026; cada mes usa solo meses anteriores, scheduler
+reject_while_open y hold30–180m. No sweep ni selección por ticker/mes.
+
+2026 ya está visto, por lo que todo resultado es development. Primero
+commit/push contrato+hándoffs; luego implementar y versionar runner+auditor
+antes de una sola ejecución. Exige simultáneamente PF>1,20, WR>45%, neto>0,
+min13/mes y seis meses positivos en los tres tickers. Aun con PASS, solo se
+puede congelar un shadow futuro; `services/`, `bots/`, `systemd/` y VPS siguen
+cerrados.
+
 ### Checkpoint 2026-07-26 — admisión externa OPRA predeclarada
 
 La búsqueda documental oficial concreta la dependencia post-V7. Massive

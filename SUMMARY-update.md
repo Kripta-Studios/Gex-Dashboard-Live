@@ -1,5 +1,14 @@
 # SUMMARY-update — ledger científico compacto
 
+2026-07-26, intake OPRA cerrado sin ejecución por orden del usuario: no key,
+endpoint, captura, seal, feature u outcome. Predeclarada una única falsificación
+con el parquet executable_quote existente SHA `e6a19ef...51903`, 44.169 filas
+20250102–20260630. Q-network pooled 289→128→64→12, acciones CALL/PUT
+d15/25/35/50/65/80, GroupDRO ticker-mes, folds Jan–Jun expanding, argmax Q>0 y
+scheduler reject_while_open/hold30–180. Gates simultáneos PF>1,20/WR>45%/
+neto>0/min13 y 6/6 meses positivos por ticker. 2026 es development visto; no
+live/VPS aunque pase sin shadow futuro.
+
 2026-07-26, predeclaración de admisión externa: Massive Options Advanced es el
 candidato documental por trades desde2014, quotes desde2022-03-07 y
 REST+WebSocket. No está admitido: falta `MASSIVE_API_KEY`/plan y shadow
