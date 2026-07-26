@@ -1,5 +1,13 @@
 # SUMMARY-update — ledger científico compacto
 
+2026-07-26, V4R2 outer one-shot FAIL auditado. H1 QQQ/SPXW/SPY:
+PF0,969729/0,950957/0,955718, WR52,542/50,420/49,580%, net
+-86,880/-97,917/-87,839bps, min18 y 2/6 meses positivos. Junio net positivo
+pero QQQ/SPXW PF<1,20. Julio MTD: QQQ +341,973/PF3,453/12; SPXW
+-39,351/PF0,807; SPY -123,162/PF0,496. Auditor refit/predictions exactos,
+sources394/mismatch0, evaluation SHA `8de7e886...f12b`. Physical/live cerrado;
+2026 consumido.
+
 2026-07-26, reseal V4R1 PASS desde `46971a80`: Greek/IV/shared3.432,
 unilaterales0, exclusiones retry0, red/outcomes false. Builder posterior cerró
 sin output: QQQ 20260310 no CALL25, SPY 20260319 no PUT25, QQQ 20260630 asks

@@ -1,0 +1,30 @@
+{
+  "schema": "cross_venue_calendar_rr_leader_v4r2_outer_2026_audit_v1",
+  "status": "PASS_INDEPENDENT_V4R2_OUTER_2026_AUDIT",
+  "created_at_utc": "2026-07-26T11:54:21.839266+00:00",
+  "evaluation_commit": "e826eb1e0adab1718b500636d57c1bf5e266420e",
+  "audit_commit": "e826eb1e0adab1718b500636d57c1bf5e266420e",
+  "outer_status": "FAILED_OUTER_2026_NOT_PROMOTABLE",
+  "eligible_events": 394,
+  "source_files_rehashed": 394,
+  "source_mismatches": 0,
+  "model_refit_exact": true,
+  "prediction_vector_exact": true,
+  "closed_h1_objective_gate_pass": false,
+  "july_mtd_all_tickers_net_positive": false,
+  "advance_to_physical_payoff": false,
+  "outer_2026_opened": true,
+  "physical_option_payoff_opened": false,
+  "production_modified": false,
+  "live_or_systemd_modified": false,
+  "evaluation_summary_sha256": "8de7e8865b57d0ed36fd7a065bb8b87a9dac7e02d0a0db2d7c051e4f223f12b2",
+  "trades_recomputed_sha256": "3db6f767282c308c7c87f3d0d74e29890e9809cdbe3621edee66f2562780e19c",
+  "monthly_recomputed_sha256": "d1b57a6eb34235a4eee71643dd58c18250aff8868aa9c1a05d581a0c9f86fc73",
+  "ticker_summary_recomputed_sha256": "936726b04329425718c687d0073c2bbfcbf1025ac837458e3fbf34e6308a120d",
+  "july_mtd_recomputed_sha256": "1075b616180bddba79d72e5101659c8aaf0dcff99ff4ef4f450b30efa724438e",
+  "cost_sensitivity_recomputed_sha256": "110517202a3804cb1acf34d7206000f0ffbf22a8c39dcf4880d4a4716cc17fe2",
+  "output_sha256": {
+    "ticker_summary_recomputed.csv": "936726b04329425718c687d0073c2bbfcbf1025ac837458e3fbf34e6308a120d",
+    "july_mtd_recomputed.csv": "1075b616180bddba79d72e5101659c8aaf0dcff99ff4ef4f450b30efa724438e"
+  }
+}

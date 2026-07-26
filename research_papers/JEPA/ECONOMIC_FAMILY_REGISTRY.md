@@ -1,8 +1,9 @@
 # Registro de familias económicas causales
 
 Estado autoritativo del sprint persistente. Una familia cerrada no puede
-reabrirse, retunearse ni renombrarse sobre los mismos outcomes. Junio de 2026
-permanece sellado y producción permanece intacta.
+reabrirse, retunearse ni renombrarse sobre los mismos outcomes. El outer V4R2
+abrió 2026 una sola vez y ese periodo queda consumido; producción permanece
+intacta.
 
 Estados permitidos: `QUEUED`, `ACTIVE`, `FAILED_CAUSALITY`,
 `FAILED_FREQUENCY`, `FAILED_ECONOMIC`, `BLOCKED_DATA`, `PROMOTABLE`, `CLOSED`.
@@ -35,18 +36,14 @@ Estados permitidos: `QUEUED`, `ACTIVE`, `FAILED_CAUSALITY`,
 | EXACT_EXPIRY_OI_DELTA_V1 | cambio OI del mismo contrato antes de expiry | `FAILED_FREQUENCY` | 156 pares/36 meses, mínimo4 eventos/mes; sin outcomes |
 | CALENDAR_RISK_REVERSAL_PRESSURE_V1 | Δ5m del RR25 0DTE menos next-expiry | `FAILED_ECONOMIC` | partial edge: pooled PF1,058/+730bps; QQQ/SPY>1, SPXW0,912; 12/36 cells |
 | CROSS_VENUE_CALENDAR_RR_LEADER_V1/V3 | mapping QQQ←QQQ, SPY←SPY, SPXW←SPY con signo fijo/mensual | `FAILED_ECONOMIC` | V1 outer2024 PF0,867/0,699/0,693; V3 outer2025 PF0,655/1,036/1,040; 2026 cerrado |
-| CROSS_VENUE_CALENDAR_RR_LEADER_V4 | logistic pooled V2R1 fit 2023–2024 | `BLOCKED_DATA` | development2025 PF1,204/1,248/1,346, pero gate vintage2026 encuentra cinco nuevos IDs Greek/IV y falla cerrado antes de outcomes |
+| CROSS_VENUE_CALENDAR_RR_LEADER_V4/V4R1/V4R2 | logistic pooled final fit 2023–2025 con retries y cuatro exclusiones outcome-free | `FAILED_ECONOMIC` | outer2026 H1 PF0,970/0,951/0,956, neto negativo y 2/6 meses positivos; julio MTD solo QQQ positivo; auditor independiente PASS |
 | CROSS_VENUE post-V4 cash-only | summaries/spot/cross-cash/shallow trees/raw35x1m | `FAILED_ECONOMIC` | ningún candidato pasa los seis bloques ticker-año 2024–2025; no V5 ni acceso 2026 |
 | CROSS_VENUE_OPRA_TRADE_QUOTE_FLOW_V5 | desequilibrio de prints OPRA 0DTE ejecutados frente al NBBO estrictamente anterior | `BLOCKED_DATA` | source gate: 1.364/1.504, 140 invalid/duplicate, enero2024=0/21 ambos; auditor PASS rehash/reparse1.364, mismatch0; sin features/outcomes |
 | CROSS_VENUE_CALENDAR_RR_LEADER_V6 | continuación no lineal depth2 sobre las 29 features V4 selladas | `CLOSED` | cerrada sin implementación, predicción ni métrica al priorizar el V4 inmutable |
-| CROSS_VENUE_CALENDAR_RR_LEADER_V4R1 | V4 inmutable con retry exacto de fuente y exclusión sensor-fecha fail-closed | `ACTIVE` | usuario autoriza diez requests exactos; si siguen inválidos, exclusión outcome-free de solo cinco IDs antes del outer2026 |
 
-V4R1 es la única familia activa. V6 cerró sin evaluación y V5 cerró en source
-gate antes de features/outcomes.
-Calendar-RR V4 aporta PF>1,20 en development2025 para los tres, pero
-es post-outcome y no puede materializar 2026 sin violar el gate Greek/IV; su
-sustituto cash-only no transporta entre 2024 y 2025. Los outcomes 2026 de ambas
-familias permanecían cerrados hasta la autorización posterior. V4R1 debe
-versionar capturador, gate y auditor antes de red; después freeze committed y
-un único outer2026 sin selección por ticker/mes. Autoridad:
-`CROSS_VENUE_CALENDAR_RR_LEADER_V4R1_2026_SOURCE_RETRY_EXCLUSION_PREDECLARATION.md`.
+No queda una familia activa ni una policy promocionable. V6 cerró sin
+evaluación, V5 está bloqueada en source gate y V4R2 falló su único outer
+auditado. 2026 debe tratarse como development visto para cualquier hipótesis
+posterior. Payoff físico y producción/live/systemd permanecen cerrados.
+Autoridad terminal:
+`CROSS_VENUE_CALENDAR_RR_LEADER_V4R2_OUTER_2026_FAILURE.md`.

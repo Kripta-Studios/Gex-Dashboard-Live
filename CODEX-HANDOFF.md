@@ -1,5 +1,13 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+## V4R2 outer 2026 FAIL auditado — 2026-07-26
+
+One-shot desde manifest `e826eb1e`, 394 trades: H1 PF QQQ/SPXW/SPY
+0,970/0,951/0,956, net -86,9/-97,9/-87,8bps y solo2/6 meses positivos cada uno.
+Junio positivo en tres pero QQQ/SPXW PF<1,20; julio MTD solo QQQ positivo,
+SPXW/SPY pierden. Auditor PASS con refit/predictions exactos y 394 fuentes
+mismatch0. No physical/live/VPS. Versionar evidencia; V4R2 cerrada y 2026 visto.
+
 ## V4R2 fija cuatro exclusiones sin nuevas descargas — 2026-07-26
 
 Reseal V4R1 real PASS: 3.432/3.432 keys Greek/IV, unilaterales0 y retry

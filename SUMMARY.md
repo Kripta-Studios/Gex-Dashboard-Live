@@ -1,5 +1,14 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+## V4R2 falla outer 2026 — 2026-07-26
+
+El one-shot congelado y auditado no es promocionable. H1 PF QQQ/SPXW/SPY
+0,970/0,951/0,956, neto negativo y solo 2/6 meses positivos en cada ticker.
+Junio es positivo, pero QQQ/SPXW no alcanzan PF1,20. Julio MTD es fuerte solo
+en QQQ; SPXW y SPY son negativos. Auditor independiente reproduce modelo,
+predicciones, 394 fuentes y ledger exactamente. No se abre payoff ni live; 2026
+queda visto para futuras familias.
+
 ## V4R2 predeclara cuatro exclusiones outcome-free — 2026-07-26
 
 El reseal V4R1 recuperó las cinco parejas (3.432 keys compartidas, cero

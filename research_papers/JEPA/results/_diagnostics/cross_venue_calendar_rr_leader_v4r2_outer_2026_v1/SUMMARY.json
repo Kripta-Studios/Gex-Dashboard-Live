@@ -1,0 +1,37 @@
+{
+  "schema": "cross_venue_calendar_rr_leader_v4r2_outer_2026_v1",
+  "status": "FAILED_OUTER_2026_NOT_PROMOTABLE",
+  "created_at_utc": "2026-07-26T11:54:11.824422+00:00",
+  "execution_commit": "e826eb1e0adab1718b500636d57c1bf5e266420e",
+  "frozen_manifest_sha256": "f90dbcf6bb42610b32b9d05508a36b052f1c2730d7743ff48215ff2368b345e6",
+  "frozen_runner_commit": "7472f45d1211eaad66dd1b8ba56264574a1325e5",
+  "eligible_events": 394,
+  "executed_trades": 394,
+  "closed_h1_objective_gate_pass": false,
+  "july_mtd_all_tickers_net_positive": false,
+  "advance_to_physical_payoff": false,
+  "mapping": {
+    "QQQ": "QQQ",
+    "SPXW": "SPY",
+    "SPY": "SPY"
+  },
+  "outer_2026_opened": true,
+  "july_mtd_end": "2026-07-24",
+  "physical_option_payoff_opened": false,
+  "production_modified": false,
+  "live_or_systemd_modified": false,
+  "output_sha256": {
+    "source_audit.csv": "c7c4105be80a4b46d8e17a96d1e87494dc4a3afe79b0638be3efea221f5d0312",
+    "trades.csv": "3db6f767282c308c7c87f3d0d74e29890e9809cdbe3621edee66f2562780e19c",
+    "monthly_metrics.csv": "d1b57a6eb34235a4eee71643dd58c18250aff8868aa9c1a05d581a0c9f86fc73",
+    "ticker_summary_closed_h1.csv": "936726b04329425718c687d0073c2bbfcbf1025ac837458e3fbf34e6308a120d",
+    "july_mtd_summary.csv": "1075b616180bddba79d72e5101659c8aaf0dcff99ff4ef4f450b30efa724438e",
+    "cost_sensitivity.csv": "110517202a3804cb1acf34d7206000f0ffbf22a8c39dcf4880d4a4716cc17fe2",
+    "SUMMARY.md": "7dda531b04fd396b83d9b52320f40286d726fca6c336ac3819d502bbee20ec31"
+  },
+  "trades_recomputed_sha256": "3db6f767282c308c7c87f3d0d74e29890e9809cdbe3621edee66f2562780e19c",
+  "monthly_recomputed_sha256": "d1b57a6eb34235a4eee71643dd58c18250aff8868aa9c1a05d581a0c9f86fc73",
+  "ticker_summary_recomputed_sha256": "936726b04329425718c687d0073c2bbfcbf1025ac837458e3fbf34e6308a120d",
+  "july_mtd_recomputed_sha256": "1075b616180bddba79d72e5101659c8aaf0dcff99ff4ef4f450b30efa724438e",
+  "cost_sensitivity_recomputed_sha256": "110517202a3804cb1acf34d7206000f0ffbf22a8c39dcf4880d4a4716cc17fe2"
+}

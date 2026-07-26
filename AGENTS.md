@@ -1,5 +1,24 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-07-26 — V4R2 outer 2026 falla auditado
+
+Manifest frozen versionado en `e826eb1e`; one-shot 394 trades:
+`FAILED_OUTER_2026_NOT_PROMOTABLE`. H1 QQQ/SPXW/SPY a 1bp: PF
+`0,969729/0,950957/0,955718`, WR `52,542/50,420/49,580%`, neto
+`-86,880/-97,917/-87,839bps`, mínimo mensual `18/18/18` y meses positivos
+`2/2/2` de seis. Ningún ticker pasa PF/neto/todos-meses.
+
+Junio: PF `1,155180/1,102093/1,376810`, neto
+`+102,173/+41,479/+134,489bps`; QQQ/SPXW no llegan a PF1,20. Julio MTD24:
+QQQ 12/PF3,453/+341,973; SPXW13/0,807/-39,351; SPY13/0,496/-123,162.
+
+Auditor real `PASS_INDEPENDENT_V4R2_OUTER_2026_AUDIT`: sources394/mismatch0,
+model refit y prediction vector exactos; evaluation summary SHA
+`8de7e886...f12b`. `advance_to_physical_payoff=false`; no payoff, live, VPS,
+retraining ni systemd. Autoridad:
+`CROSS_VENUE_CALENDAR_RR_LEADER_V4R2_OUTER_2026_FAILURE.md`. Versionar
+resultado+audit+registro+hándoffs. V4R2 queda cerrada; 2026 es outcome visto.
+
 ### Checkpoint 2026-07-26 — V4R2 exclusiones fijas pre-outcome
 
 El reseal offline desde `46971a80` terminó

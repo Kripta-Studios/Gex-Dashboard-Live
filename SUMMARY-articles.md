@@ -1,5 +1,13 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+### El agregado development no transportó al outer — 2026-07-26
+
+V4 había superado PF1,20 agregado en development2025, pero el refit final
+congelado cae por debajo de PF1 en H1-2026 para los tres tickers y solo mantiene
+dos meses positivos. Junio aislado y julio QQQ no rescatan una regla que falla
+en todos los meses/tickers. La separación freeze→one-shot→auditor impide usar
+esas excepciones post-outcome para rediseñar o desplegar la policy.
+
 ### Exclusión de sesión completa antes del label — 2026-07-26
 
 Cuando una feature predeclarada no puede materializarse, la unidad causal de
