@@ -1,5 +1,14 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+### V5 falsada en materialización de fuente — 2026-07-26
+
+La paridad documental no basta: al materializar 1.504 sesiones predeclaradas,
+140 respuestas históricas violaron el contrato estructural de unicidad/validez
+y enero2024 quedó sin coverage en ambos sensores. El cierre ocurre antes del
+modelo y evita convertir deduplicación, exclusiones o recaptura en tuning
+post-dato. La lección transferible es exigir un source gate completo antes de
+interpretar una API historical/live como una feature realmente reproducible.
+
 ### Nueva hipótesis predeclarada — OPRA trade tape, 2026-07-25
 
 La implementación mantiene la separación causal: primero fija por metadatos

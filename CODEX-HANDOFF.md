@@ -1,5 +1,15 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+## V5 source gate FAILED — 2026-07-26, sin outcomes
+
+Desde `e6bdac64`, 1.504 requests completos: 1.364 captures válidos y 140
+fallos uniformes `invalid or duplicate V5 trade_quote response`; QQQ
+32/25/8 y SPY38/30/7 por 2023/2024/2025. Enero2024 falla21/21 por sensor.
+Stagers0, no seal, sin builder/features/opens/outcomes. No requery, dedup,
+exclusión ni evaluación parcial. Auditor de fallo y cross-venue115 PASS;
+commit/push antes de ejecutarlo. Tras audit+evidencia, V5 queda `BLOCKED_DATA`
+y la dependencia es una fuente externa histórica/live nueva.
+
 ## V5 OPRA trade_quote predeclarada — 2026-07-25, sin datos
 
 Implementación preejecución lista: capturador inmutable/resumible, builder y

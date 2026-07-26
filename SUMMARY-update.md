@@ -1,5 +1,12 @@
 # SUMMARY-update — ledger científico compacto
 
+2026-07-26, V5 `FAILED_OUTCOME_FREE_SOURCE_CAPTURE_GATE`: universo1.504,
+captures válidos1.364, fallos140 uniformes invalid/duplicate; QQQ32/25/8 y
+SPY38/30/7 por año, enero2024=0/21 completo en ambos. Stagers0/no seal; no
+features, opens ni outcomes. No requery/dedup/exclusión/evaluación parcial.
+Auditor de fallo listo, cross-venue115/Ruff/compile PASS; commit/push antes de run.
+Dependencia siguiente: fuente externa histórica/live nueva.
+
 2026-07-25, V5 predeclarada y aún sin datos. Inventario outcome-free: única
 fuente nueva materialmente compatible = prints OPRA 0DTE QQQ/SPY con NBBO
 estrictamente anterior, histórico `trade_quote` y Quote/Trade Stream Standard.

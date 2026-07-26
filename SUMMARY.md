@@ -1,5 +1,15 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+## V5 cerrada en source gate — 2026-07-26
+
+La captura outcome-free procesó 1.504 requests y conservó 1.364 completos; 140
+respuestas fallaron el validator como inválidas o duplicadas. Enero2024 queda
+sin una sola fuente válida en QQQ y SPY. No existe capture seal y no se abrió
+feature view, open económico ni outcome. V5 es `BLOCKED_DATA`; no se permite
+requery/dedup/exclusión ni evaluar el subconjunto. Auditor independiente de
+fallo listo y pendiente de ejecución tras commit. La continuidad depende de
+una fuente externa nueva con tape histórico y live realmente equivalentes.
+
 ## V5 predeclarada sin acceso a datos — 2026-07-25
 
 La fase preejecución ya tiene capturador atómico/resumible, builder del gate y

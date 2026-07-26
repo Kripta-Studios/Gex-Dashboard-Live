@@ -1,5 +1,24 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-07-26 — V5 falla source gate, sin outcomes
+
+La captura V5 desde `e6bdac64` procesó el universo frozen completo de 1.504
+requests QQQ/SPY 2023–2025: 1.364 directorios atómicos válidos y 140 fallos,
+todos `invalid or duplicate V5 trade_quote response`. QQQ falla32/25/8 por
+2023/2024/2025; SPY38/30/7. Enero2024 queda 0/21 en ambos sensores. Stagers0,
+procesos0 y no existe seal; builder/features/opens/outcomes no se abrieron.
+Hashes errors/universe/contract: `3f575746...bc3d3`/`cf6fe71f...02254`/
+`210ea579...05a6`.
+
+Autoridad:
+`CROSS_VENUE_OPRA_TRADE_QUOTE_FLOW_V5_SOURCE_CAPTURE_GATE_FAILURE.md`. No
+reconsultar, deduplicar, relajar validator, excluir fechas ni evaluar solo las
+1.364 completas. Auditor de fallo independiente implementado; cross-venue115,
+Ruff/compile PASS. Orden inmediato: commit/push código+autoridad+handoffs,
+ejecutar auditor una vez, versionar evidencia y cerrar V5 `BLOCKED_DATA`.
+2026, Greek/IV, outcomes, payoff físico y live/systemd permanecen intactos. La
+siguiente frontera es una fuente externa nueva con histórico/live auditables.
+
 ### Checkpoint 2026-07-25 — V5 OPRA trade_quote predeclarada, sin datos
 
 Capturador, builder del data gate y auditor independiente ya están
