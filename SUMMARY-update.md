@@ -9,7 +9,9 @@ V4R2 fija cuatro sensor-fecha pre-outcome; sensor262/targets394, counts QQQ
 PASS. Gate real desde `f60f6282` PASS, features29, fuentes1.446/mismatch0,
 10:36/13:36 false. Auditor real desde `09395b94` PASS, reparse10,
 rehash1.446/mismatch0, feature view exacta, summary SHA `16988ecc...1aa3`.
-Versionar evidencia antes de freeze.
+Evidencia versionada `15b76868`. Freezer/evaluator/auditor pre-outcome listos:
+fit2.217, predictions394, clocks exactos y auditor refit; tests16/Ruff/compile
+PASS. Commit/push código → freezer → commit/push manifest → outer one-shot.
 
 2026-07-26, retry V4R1 ejecutado una vez desde `aba363c3`: 10/10 respuestas
 normalizadas, raw inmutable, features/outcomes false. El seal usable0 fue un

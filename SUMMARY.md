@@ -12,8 +12,13 @@ V4R2 congela esta regla sin cambiar V4. El gate real PASS tiene 262
 sensor-fecha, 394 targets, 29 features y 1.446 fuentes sin mismatch; todos los
 meses cerrados conservan ≥13 y julio QQQ queda MTD12. Auditor independiente
 PASS: reparse10, rehash1.446/mismatch0 y feature view exacta; summary SHA
-`16988ecc...1aa3`. Falta versionar gate+audit antes del freezer. 10:36/13:36 y
+`16988ecc...1aa3`. La evidencia quedó versionada en `15b76868`. 10:36/13:36 y
 rentabilidad 2026 siguen cerrados.
+
+Freezer/evaluator/auditor outer están implementados antes de outcomes: modelo
+final fit2.217, predictions394 y fuentes congeladas. Tests16, Ruff y compile
+PASS. Falta commit/push del código y generar/versionar el manifest; no se ha
+leído todavía ningún open 10:36/13:36.
 
 ## V4R1: cinco retries recuperados, todavía sin outcomes — 2026-07-26
 

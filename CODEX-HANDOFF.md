@@ -11,7 +11,12 @@ V4R2 congela esas cuatro exclusiones antes de 10:36/13:36; mapping/modelo/clocks
 no cambian. Gate real desde `f60f6282` PASS: sensores262, targets394,
 fuentes1.446/mismatch0 y clocks outcome false. Auditor desde `09395b94` PASS:
 feature view exacta, reparse10 y rehash1.446/mismatch0; summary SHA
-`16988ecc...1aa3`. Versionar gate+audit+hándoffs antes de implementar freeze.
+`16988ecc...1aa3`. Gate+audit versionados en `15b76868`.
+
+Runner final pre-outcome listo: fit exacto2.217, events/predictions394,
+manifest+model serializado, evaluator 10:36→13:36 one-shot y auditor con refit
+independiente. V4R1+V4R2 tests16/Ruff/compile PASS. Primero commit/push del
+código; luego freezer una vez, commit/push manifest y solo entonces outer2026.
 
 ## V4R1 retry materializada; corrección dtype pre-feature — 2026-07-26
 

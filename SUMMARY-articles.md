@@ -13,6 +13,11 @@ debe corregirse sin reinterpretar datos económicos ni regenerar el gate.
 El rerun independiente reprodujo exactamente el feature view y todos los
 hashes, confirmando que el fix de representación no alteró la evidencia causal.
 
+El freeze separa además predicción de evaluación: el modelo final se refittea
+con las 2.217 filas development ya vistas y serializa las 394 decisiones antes
+de consultar los dos opens de cada trade. Así el outer no puede cambiar modelo,
+threshold, universo u orientación en respuesta a 2026.
+
 ### Dtype físico no equivale a missingness económica — 2026-07-26
 
 Un source gate debe distinguir un fallo de contenido de un fallo del lector. En

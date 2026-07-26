@@ -26,8 +26,17 @@ El primer auditor cerró sin output por `reason=""`→NaN. Fix auditor-only
 publicado en `09395b94`; el rerun terminó
 `PASS_INDEPENDENT_OUTCOME_FREE_DATA_GATE_AUDIT`: reparse10, fuentes1.446,
 mismatch0, sensor262, targets394 y feature view exacta. Evaluation summary SHA
-`16988ecc...1aa3`; rehash SHA `b62797e6...bfd8`. Siguiente: force-add/commit/
-push gate+audit+hándoffs; solo después implementar y versionar freezer V4.
+`16988ecc...1aa3`; rehash SHA `b62797e6...bfd8`. Gate+audit+hándoffs quedaron
+versionados en `15b76868`.
+
+Freezer, evaluator one-shot y auditor outer V4R2 están implementados
+preejecución. El freezer refittea el logistic exacto con 2.217 filas
+2023–2025, congela 394 probabilidades/orientaciones y los hashes de sus fuentes;
+no lee opens. El evaluator solo puede leer 10:36/13:36 tras validar manifest,
+modelo, código e inputs; el auditor refittea y reconstruye independientemente.
+Suite V4R1+V4R2 `16 passed`, Ruff/compile PASS. No se generó manifest ni se
+abrió outcome. Siguiente: commit/push de código/tests+hándoffs desde HEAD limpio;
+después ejecutar freezer una vez y versionar manifest antes del outer.
 
 ### Checkpoint 2026-07-26 — V4R1 retry completa; reseal dtype pendiente
 
