@@ -84,3 +84,7 @@ def test_systemd_and_deploy_assets_share_snapshot_contract() -> None:
     assert "EnvironmentFile=-/etc/kripta/king-node.env" in server_unit
     assert "systemctl restart king-node.service" in deploy
     assert "systemctl restart financial-server.service" in deploy
+    assert (
+        "check_king_node_health.py --snapshot "
+        "/var/lib/king-node/latest.json"
+    ) in deploy

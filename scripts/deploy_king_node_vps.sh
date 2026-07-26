@@ -71,4 +71,4 @@ done
 
 echo "KING NODE units installed and active."
 echo "Validate once live data has arrived:"
-echo "  sudo -u root /usr/bin/python3 ${APP_DIR}/scripts/check_king_node_health.py"
+echo "  sudo -u root /usr/bin/python3 ${APP_DIR}/scripts/check_king_node_health.py --snapshot /var/lib/king-node/latest.json"

@@ -159,7 +159,8 @@ sudo APP_DIR=/home/Option-Greeks-Plotting-Discord-Bot \
 ```bash
 systemctl is-active thetadata_feed.service gex_daemon.service \
   king-node.service financial-server.service
-sudo /usr/bin/python3 scripts/check_king_node_health.py
+sudo /usr/bin/python3 scripts/check_king_node_health.py \
+  --snapshot /var/lib/king-node/latest.json
 sudo journalctl -u king-node.service -f
 sudo journalctl -u financial-server.service -n 100 --no-pager
 sudo ls -l /var/lib/king-node/latest.json /var/lib/king-node/state.json
