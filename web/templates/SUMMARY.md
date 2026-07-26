@@ -58,26 +58,20 @@ por strike y mostraba GEX/DEX/VEX/Zomma/Vomma/Vega/Speed.
 
 ### RAW GAMMA implementado en el checkpoint inicial
 
-La versión de trabajo de `web/templates/js/king_node.js` ahora:
-
-1. lee `call_gamma`, `put_gamma`, `call_open_int` y `put_open_int`;
-2. multiplica gamma por OI **antes** de agregar filas repetidas;
-3. conserva `rawCallGamma`, `rawPutGamma` y `rawGamma` por strike;
-4. calcula la suma de raw gamma de la ventana;
-5. selecciona el strike de mayor raw gamma como `RAW GAMMA LEVEL`;
-6. añade el valor a la escalera y a las tarjetas de métricas.
-
-`web/templates/css/king_node.css` fue ampliado a cuatro tarjetas de niveles,
-ocho métricas y estilo de advertencia.
-
-`tests/test_king_node_web.py` contiene una regresión específica que prueba que:
+La primera versión calculó raw gamma en JavaScript para cerrar el contrato y
+probar el orden correcto de operaciones:
 
 ```text
 strike 6000:
   (1×10 + 2×20) + (3×5 + 4×7) = 93
 ```
 
-La última validación de este checkpoint dio:
+Después, el cálculo se trasladó íntegramente al motor backend. La versión final
+de `web/templates/js/king_node.js` **no** lee gamma/OI ni recalcula finanzas:
+solo valida y representa el snapshot autenticado `/api/king-node`. La regresión
+de 93 continúa en `tests/test_king_node_engine.py`.
+
+La validación del checkpoint inicial dio:
 
 - `node --check web/templates/js/king_node.js`: PASS;
 - `python -m pytest tests/test_king_node_web.py -q`: `3 passed`;
@@ -184,11 +178,11 @@ dos tablas. El motor portable debe:
 - aceptar después un `config/king_node_reference.json` generado desde Excel,
   sin cambiar el contrato del endpoint.
 
-## Arquitectura acordada y trabajo pendiente
+## Arquitectura implementada
 
 ### 1. Motor puro
 
-Crear `modules/king_node_engine.py` sin dependencia de Excel:
+`modules/king_node_engine.py` no depende de Excel:
 
 - validar el split JSON de Tastytrade;
 - agregar por strike;
@@ -203,7 +197,7 @@ Crear `modules/king_node_engine.py` sin dependencia de Excel:
 
 ### 2. Servicio en tiempo real
 
-Crear `services/king_node_service.py`:
+`services/king_node_service.py`:
 
 - localizar de forma segura el último `SPX_0dte_ExposureData_*.json`;
 - consultar VIX/VVIX/VIX1D en Theta Terminal;
@@ -217,15 +211,15 @@ Crear `services/king_node_service.py`:
 
 ### 3. Endpoint y web final
 
-Modificar `services/servidor.py` con un endpoint ADMIN:
+`services/servidor.py` incluye el endpoint ADMIN:
 
 ```text
 GET /api/king-node
 ```
 
-El endpoint debe leer solo el snapshot precomputado, comprobar estructura/edad
-y devolver errores JSON controlados. La interfaz debe dejar de recalcular el
-modelo financiero; JavaScript será un renderer del contrato backend, con:
+El endpoint lee solo el snapshot precomputado, comprueba estructura/edad y
+devuelve errores JSON controlados. JavaScript es un renderer del contrato
+backend, con:
 
 - status/edad/orígenes;
 - spot, régimen y vol tension;
@@ -237,9 +231,9 @@ modelo financiero; JavaScript será un renderer del contrato backend, con:
 - tabla de 47 strikes;
 - warnings visibles de cualquier degradación.
 
-### 4. Operación VPS
+### 4. Operación VPS — pendiente de este hand-off
 
-Añadir:
+Falta añadir:
 
 - `systemd/king-node.service`;
 - `.env.king-node.example` sin secretos;
@@ -277,11 +271,11 @@ el hash y el resultado.
 
 - `67fc4e16` — `feat(web): add King Node exposure tab` (preexistente).
 - `fc592de7` — `feat(king-node): add raw gamma level and handoff`.
-- Pendiente: checkpoint motor/servicio/API.
+- `85254f29` — `feat(king-node): add realtime engine service and API`.
 
 ## Checkpoint backend implementado después de `fc592de7`
 
-Se han creado y validado, todavía pendientes del siguiente hash:
+Se crearon, validaron y publicaron en `85254f29`:
 
 - `modules/king_node_engine.py`: motor puro, ventana 47, perfil A:I, raw gamma,
   régimen, keys, skew de-trended, walls, gamma flip, zero gamma, top-6 por lado,
@@ -302,3 +296,39 @@ Validación de este checkpoint:
 - `git diff --check`: PASS salvo aviso CRLF de Windows;
 - one-shot contra la carpeta real de junio: 47 strikes, raw gamma level 7500,
   raw gamma 81,3700 y snapshot `DEGRADED` esperado al deshabilitar Theta.
+
+## Checkpoint renderer final
+
+La versión actual pendiente de commit convierte
+`web/templates/js/king_node.js` en un renderer fail-closed de
+`king-node.v1`. Muestra:
+
+- calidad, frescura y procedencia de Tastytrade/ThetaData;
+- spot, régimen, dealer action, vol tension y raw gamma;
+- VIX, VVIX, VIX1D y ATM IV con dirección/edad;
+- raw gamma level, king gamma, max/min GEX, flip y zero gamma;
+- diez exposiciones agregadas;
+- seis resistencias, seis soportes, tres call walls y tres put walls;
+- 47 strikes con perfil A:I y raw gamma;
+- matrix key, box key, monitores, coberturas, degradaciones y errores.
+
+El renderer escapa todo texto originado en backend. La prueba de contrato
+inyecta deliberadamente `<script>alert('no')</script>` como warning y verifica
+que solo aparece escapado.
+
+Validación actual:
+
+- `node --check web/templates/js/king_node.js`: PASS;
+- `python -m pytest tests/test_king_node_web.py
+  tests/test_king_node_engine.py -q`: `9 passed`;
+- `git diff --check`: PASS salvo avisos CRLF de Windows;
+- inspección visual automatizada: no ejecutada porque el conector de navegador
+  de esta sesión respondió `No browser is available`; la validación DOM
+  determinista con Node sí pasó.
+
+Siguiente orden exacto:
+
+1. commit/push del renderer, CSS, pruebas y este hand-off;
+2. crear unidades/configuración/script/documento de VPS sin secretos;
+3. validar un one-shot con Tastytrade real y Theta Terminal disponible;
+4. commit/push del checkpoint operativo y registrar aquí los hashes finales.

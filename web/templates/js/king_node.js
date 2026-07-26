@@ -1,529 +1,334 @@
 /**
- * King Node Web
+ * KING NODE admin workspace.
  *
- * A deterministic web translation of the exposure table maintained by the
- * legacy King Node workbook. It consumes the same authenticated SPX/SPXW 0DTE
- * Tastytrade snapshot as the rest of this dashboard. It does not read, mutate,
- * or execute the Excel workbook.
+ * Financial calculations live in modules/king_node_engine.py.  This module is
+ * deliberately a renderer for the authenticated /api/king-node contract.
  */
-(function initializeKingNodeWeb(root) {
+(function attachKingNode(root) {
     "use strict";
 
-    if (root.KingNodeWeb) return;
-
     const TAB_ID = "__king_node__";
-    const STRIKES_EACH_SIDE = 23;
-    const WINDOW_SIZE = STRIKES_EACH_SIDE * 2 + 1;
-    const BILLION = 1e9;
-    const METRICS = [
-        ["gamma", "GEX"],
-        ["delta", "DEX"],
-        ["vanna", "VEX"],
-        ["zomma", "ZOMMA"],
-        ["vomma", "VOMMA"],
-        ["vega", "VEGA"],
-        ["speed", "SPEED"],
-    ];
-    const SOURCE_FIELDS = [
-        "total_gamma",
-        "total_delta",
-        "total_vanna",
-        "total_zomma",
-        "total_vomma",
-        "total_vega",
-        "total_speed",
-        "total_charm",
-        "total_dgex",
-        "call_gex",
-        "put_gex",
-    ];
-
+    const SCHEMA_VERSION = "king-node.v1";
     let renderSequence = 0;
-    let gexHistory = [];
 
-    function finiteNumber(value, fallback = 0) {
-        const number = Number(value);
-        return Number.isFinite(number) ? number : fallback;
-    }
-
-    function nullableNumber(value) {
-        if (value === null || value === undefined || value === "") return null;
-        const number = Number(value);
-        return Number.isFinite(number) ? number : null;
-    }
-
-    function rowsFromSplit(optionData) {
-        if (
-            !optionData ||
-            !Array.isArray(optionData.columns) ||
-            !Array.isArray(optionData.data)
-        ) {
-            return [];
-        }
-
-        return optionData.data.map((values) => {
-            const row = {};
-            optionData.columns.forEach((column, index) => {
-                row[column] = values[index];
-            });
-            return row;
-        });
-    }
-
-    function aggregateByStrike(rawRows) {
-        const grouped = new Map();
-
-        rawRows.forEach((row) => {
-            const strike = nullableNumber(row.strike_price);
-            if (strike === null || strike <= 0) return;
-
-            if (!grouped.has(strike)) {
-                const initial = {
-                    strike,
-                    callIvSum: 0,
-                    callIvCount: 0,
-                    putIvSum: 0,
-                    putIvCount: 0,
-                    rawCallGamma: 0,
-                    rawPutGamma: 0,
-                    rawGammaCount: 0,
-                };
-                SOURCE_FIELDS.forEach((field) => {
-                    initial[field] = 0;
-                    initial[`${field}Count`] = 0;
-                });
-                grouped.set(strike, initial);
-            }
-
-            const target = grouped.get(strike);
-            SOURCE_FIELDS.forEach((field) => {
-                const value = nullableNumber(row[field]);
-                if (value !== null) {
-                    target[field] += value;
-                    target[`${field}Count`] += 1;
-                }
-            });
-
-            const callGamma = nullableNumber(row.call_gamma);
-            const putGamma = nullableNumber(row.put_gamma);
-            const callOpenInterest = nullableNumber(row.call_open_int);
-            const putOpenInterest = nullableNumber(row.put_open_int);
-            if (
-                callGamma !== null &&
-                putGamma !== null &&
-                callOpenInterest !== null &&
-                putOpenInterest !== null
-            ) {
-                target.rawCallGamma += callGamma * callOpenInterest;
-                target.rawPutGamma += putGamma * putOpenInterest;
-                target.rawGammaCount += 1;
-            }
-
-            const callIv = nullableNumber(row.call_iv);
-            if (callIv !== null && callIv > 0) {
-                target.callIvSum += callIv;
-                target.callIvCount += 1;
-            }
-            const putIv = nullableNumber(row.put_iv);
-            if (putIv !== null && putIv > 0) {
-                target.putIvSum += putIv;
-                target.putIvCount += 1;
-            }
-        });
-
-        return [...grouped.values()]
-            .map((row) => {
-                const exposure = (field) =>
-                    row[`${field}Count`] > 0 ? row[field] : null;
-                const callGex = exposure("call_gex");
-                const putGex = exposure("put_gex");
-                const rawGamma =
-                    row.rawGammaCount > 0
-                        ? row.rawCallGamma + row.rawPutGamma
-                        : null;
-                return {
-                    strike: row.strike,
-                    rawGamma,
-                    rawCallGamma:
-                        row.rawGammaCount > 0 ? row.rawCallGamma : null,
-                    rawPutGamma:
-                        row.rawGammaCount > 0 ? row.rawPutGamma : null,
-                    gammaGross:
-                        callGex !== null && putGex !== null
-                            ? (Math.abs(callGex) + Math.abs(putGex)) / BILLION
-                            : null,
-                    gamma: exposure("total_gamma"),
-                    delta: exposure("total_delta"),
-                    vanna: exposure("total_vanna"),
-                    zomma: exposure("total_zomma"),
-                    vomma: exposure("total_vomma"),
-                    vega: exposure("total_vega"),
-                    speed: exposure("total_speed"),
-                    charm: exposure("total_charm"),
-                    dgex: exposure("total_dgex"),
-                    callIv:
-                        row.callIvCount > 0
-                            ? row.callIvSum / row.callIvCount
-                            : null,
-                    putIv:
-                        row.putIvCount > 0
-                            ? row.putIvSum / row.putIvCount
-                            : null,
-                };
-            })
-            .sort((left, right) => left.strike - right.strike);
-    }
-
-    function selectStrikeWindow(rows, spot) {
-        if (rows.length <= WINDOW_SIZE) return rows.slice();
-
-        let centerIndex = 0;
-        let centerDistance = Infinity;
-        rows.forEach((row, index) => {
-            const distance = Math.abs(row.strike - spot);
-            if (distance < centerDistance) {
-                centerDistance = distance;
-                centerIndex = index;
-            }
-        });
-
-        let start = Math.max(0, centerIndex - STRIKES_EACH_SIDE);
-        let end = start + WINDOW_SIZE;
-        if (end > rows.length) {
-            end = rows.length;
-            start = Math.max(0, end - WINDOW_SIZE);
-        }
-        return rows.slice(start, end);
-    }
-
-    function nearestRow(rows, target, predicate = () => true) {
-        let best = null;
-        let distance = Infinity;
-        rows.forEach((row) => {
-            if (!predicate(row)) return;
-            const candidateDistance = Math.abs(row.strike - target);
-            if (candidateDistance < distance) {
-                best = row;
-                distance = candidateDistance;
-            }
-        });
-        return best;
-    }
-
-    function strongestNode(
-        rows,
-        predicate = () => true,
-        metric = "gamma"
-    ) {
-        let best = null;
-        rows.forEach((row) => {
-            if (!predicate(row) || !Number.isFinite(row[metric])) return;
-            if (
-                !best ||
-                Math.abs(row[metric]) > Math.abs(best[metric])
-            ) {
-                best = row;
-            }
-        });
-        return best;
-    }
-
-    function average(values) {
-        const valid = values.filter((value) => Number.isFinite(value));
-        if (valid.length === 0) return null;
-        return valid.reduce((sum, value) => sum + value, 0) / valid.length;
-    }
-
-    function buildKingNodeModel(data, vixSpot = null) {
-        const spot = nullableNumber(data && data.spot_price);
-        if (spot === null || spot <= 0) {
-            throw new Error("SPX spot is missing from the Tastytrade snapshot.");
-        }
-
-        const aggregatedRows = aggregateByStrike(
-            rowsFromSplit(data && data.option_data)
-        );
-        if (aggregatedRows.length === 0) {
-            throw new Error("The SPX 0DTE option surface is empty.");
-        }
-
-        const rows = selectStrikeWindow(aggregatedRows, spot);
-        const gammaCoverage = rows.filter((row) =>
-            Number.isFinite(row.gamma)
-        ).length;
-        if (gammaCoverage < 5) {
-            throw new Error(
-                "Fewer than five strikes contain valid GEX values."
-            );
-        }
-        const rawGammaCoverage = rows.filter((row) =>
-            Number.isFinite(row.rawGamma)
-        ).length;
-        if (rawGammaCoverage < 5) {
-            throw new Error(
-                "Fewer than five strikes contain call/put gamma and open interest for raw gamma."
-            );
-        }
-
-        const totals = {};
-        METRICS.forEach(([key]) => {
-            totals[key] = rows.reduce(
-                (sum, row) => sum + finiteNumber(row[key]),
-                0
-            );
-        });
-        totals.gammaGross = rows.reduce(
-            (sum, row) => sum + finiteNumber(row.gammaGross),
-            0
-        );
-        totals.charm = rows.reduce(
-            (sum, row) => sum + finiteNumber(row.charm),
-            0
-        );
-        totals.dgex = rows.reduce(
-            (sum, row) => sum + finiteNumber(row.dgex),
-            0
-        );
-        totals.rawGamma = rows.reduce(
-            (sum, row) => sum + finiteNumber(row.rawGamma),
-            0
-        );
-
-        const atm = nearestRow(rows, spot);
-        const putWing = nearestRow(
-            rows,
-            spot * 0.98,
-            (row) => row.putIv !== null
-        );
-        const callWing = nearestRow(
-            rows,
-            spot * 1.02,
-            (row) => row.callIv !== null
-        );
-        const atmIv = atm
-            ? average([atm.callIv, atm.putIv])
-            : null;
-        const riskReversal =
-            putWing && callWing
-                ? (callWing.callIv - putWing.putIv) * 100
-                : null;
-
-        const requiredCells = rows.length * (METRICS.length + 1);
-        const presentCells = rows.reduce(
-            (count, row) =>
-                count +
-                METRICS.filter(([key]) => Number.isFinite(row[key])).length +
-                (Number.isFinite(row.rawGamma) ? 1 : 0),
-            0
-        );
-        const completeness =
-            requiredCells > 0 ? presentCells / requiredCells : 0;
-        const coverage = Math.min(rows.length / WINDOW_SIZE, 1);
-        const lowerNode = strongestNode(rows, (row) => row.strike < spot);
-        const upperNode = strongestNode(rows, (row) => row.strike > spot);
-        const gammaNode = strongestNode(rows);
-        const rawGammaNode = strongestNode(
-            rows,
-            () => true,
-            "rawGamma"
-        );
-        const zeroGammaRaw = nullableNumber(data.zerogamma);
-        const zeroGamma =
-            zeroGammaRaw !== null && zeroGammaRaw > 0 ? zeroGammaRaw : null;
-        const previousClose = nullableNumber(data.prev_close_price);
-
-        return {
-            ticker: "SPX",
-            expiration: "0DTE / SPXW",
-            spot,
-            previousClose,
-            spotChange:
-                previousClose && previousClose > 0
-                    ? ((spot - previousClose) / previousClose) * 100
-                    : null,
-            vixSpot: nullableNumber(vixSpot),
-            asOf: data.today_ddt_string || "Latest daemon snapshot",
-            rows,
-            totals,
-            atmIv,
-            riskReversal,
-            gammaNode,
-            rawGammaNode,
-            lowerNode,
-            upperNode,
-            zeroGamma,
-            coverage,
-            completeness,
-            quality:
-                coverage >= 0.95 && completeness >= 0.99
-                    ? "COMPLETE"
-                    : "PARTIAL",
-            regime:
-                totals.gamma >= 0
-                    ? "POSITIVE GAMMA"
-                    : "NEGATIVE GAMMA",
-            behavior:
-                totals.gamma >= 0
-                    ? "Stabilizing / mean-reverting dealer hedge pressure"
-                    : "Accelerating / trend-reinforcing dealer hedge pressure",
-            dealerBias:
-                totals.delta >= 0 ? "NET LONG DELTA" : "NET SHORT DELTA",
-        };
+    function finite(value) {
+        const parsed =
+            typeof value === "number"
+                ? value
+                : typeof value === "string" && value.trim() !== ""
+                  ? Number(value)
+                  : NaN;
+        return Number.isFinite(parsed) ? parsed : null;
     }
 
     function escapeHtml(value) {
-        return String(value)
-            .replaceAll("&", "&amp;")
-            .replaceAll("<", "&lt;")
-            .replaceAll(">", "&gt;")
-            .replaceAll('"', "&quot;")
-            .replaceAll("'", "&#039;");
+        return String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
     }
 
-    function formatSigned(value, decimals = 3) {
-        if (!Number.isFinite(value)) return "—";
-        const sign = value > 0 ? "+" : "";
-        return `${sign}${value.toFixed(decimals)}B`;
+    function text(value, fallback = "—") {
+        if (value === null || value === undefined || value === "") {
+            return fallback;
+        }
+        return escapeHtml(value);
     }
 
-    function formatRawGamma(value, decimals = 3) {
-        if (!Number.isFinite(value)) return "—";
-        return value.toLocaleString("en-US", {
+    function formatNumber(value, decimals = 2) {
+        const parsed = finite(value);
+        if (parsed === null) return "—";
+        return parsed.toLocaleString("en-US", {
             minimumFractionDigits: decimals,
             maximumFractionDigits: decimals,
         });
     }
 
     function formatPrice(value) {
-        if (!Number.isFinite(value)) return "—";
-        return value.toLocaleString("en-US", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
+        return formatNumber(value, 1);
+    }
+
+    function formatExposure(value) {
+        const parsed = finite(value);
+        if (parsed === null) return "—";
+        const absolute = Math.abs(parsed);
+        let divisor = 1;
+        let suffix = "";
+        if (absolute >= 1e9) {
+            divisor = 1e9;
+            suffix = "B";
+        } else if (absolute >= 1e6) {
+            divisor = 1e6;
+            suffix = "M";
+        } else if (absolute >= 1e3) {
+            divisor = 1e3;
+            suffix = "K";
+        }
+        const scaled = parsed / divisor;
+        const sign = scaled > 0 ? "+" : "";
+        return `${sign}${scaled.toLocaleString("en-US", {
+            minimumFractionDigits: absolute >= 1e6 ? 2 : 1,
+            maximumFractionDigits: absolute >= 1e6 ? 2 : 1,
+        })}${suffix}`;
+    }
+
+    function formatRawGamma(value) {
+        const parsed = finite(value);
+        if (parsed === null) return "—";
+        return parsed.toLocaleString("en-US", {
+            minimumFractionDigits: 3,
+            maximumFractionDigits: 3,
         });
     }
 
     function formatPercent(value, decimals = 2) {
-        if (!Number.isFinite(value)) return "—";
-        const sign = value > 0 ? "+" : "";
-        return `${sign}${value.toFixed(decimals)}%`;
+        const parsed = finite(value);
+        if (parsed === null) return "—";
+        return `${parsed > 0 ? "+" : ""}${parsed.toFixed(decimals)}%`;
     }
 
-    function toneFor(value) {
-        if (!Number.isFinite(value) || value === 0) return "neutral";
-        return value > 0 ? "positive" : "negative";
+    function tone(value) {
+        const parsed = finite(value);
+        if (parsed === null || parsed === 0) return "neutral";
+        return parsed > 0 ? "positive" : "negative";
     }
 
-    function updateGexHistory(model) {
-        const now = Date.now();
-        const last = gexHistory[gexHistory.length - 1];
-        if (!last || last.asOf !== model.asOf) {
-            gexHistory.push({
-                timestamp: now,
-                asOf: model.asOf,
-                value: model.totals.gamma,
-            });
-        }
-        const cutoff = now - 46 * 60 * 1000;
-        gexHistory = gexHistory.filter((point) => point.timestamp >= cutoff);
+    function directionTone(direction) {
+        if (direction === "Up") return "negative";
+        if (direction === "Down") return "positive";
+        return "neutral";
+    }
 
-        if (gexHistory.length < 2) {
-            return {
-                text: "GEX slope building from live web snapshots",
-                tone: "neutral",
-            };
-        }
+    function ageText(seconds) {
+        const parsed = finite(seconds);
+        if (parsed === null) return "age unknown";
+        if (parsed < 60) return `${Math.round(parsed)}s old`;
+        if (parsed < 3600) return `${Math.round(parsed / 60)}m old`;
+        return `${(parsed / 3600).toFixed(1)}h old`;
+    }
 
-        const first = gexHistory[0];
-        const lastPoint = gexHistory[gexHistory.length - 1];
-        const elapsedMinutes = Math.max(
-            (lastPoint.timestamp - first.timestamp) / 60000,
-            0.5
+    function timeText(value) {
+        if (!value) return "—";
+        const parsed = new Date(value);
+        if (Number.isNaN(parsed.getTime())) return text(value);
+        return escapeHtml(
+            parsed.toLocaleString("en-GB", {
+                timeZone: "America/New_York",
+                hour12: false,
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+            })
         );
-        const per15 =
-            ((lastPoint.value - first.value) / elapsedMinutes) * 15;
-        const arrow = per15 > 0 ? "▲" : per15 < 0 ? "▼" : "▬";
-        return {
-            text: `GEX slope ${arrow} ${formatSigned(per15)} / 15m`,
-            tone: toneFor(per15),
-        };
     }
 
-    function metricCard(label, value, hint, formatter = formatSigned) {
+    function normaliseSnapshot(data) {
+        if (!data || typeof data !== "object") {
+            throw new Error("KING NODE returned an empty response.");
+        }
+        if (data.schema_version !== SCHEMA_VERSION) {
+            throw new Error(
+                `Unsupported KING NODE schema: ${data.schema_version || "missing"}`
+            );
+        }
+        const errors = Array.isArray(data.quality?.errors)
+            ? data.quality.errors
+            : [];
+        if (
+            data.status === "error" ||
+            !Array.isArray(data.rows) ||
+            data.rows.length === 0
+        ) {
+            throw new Error(
+                errors.join(" · ") ||
+                    data.message ||
+                    "The backend failed closed without a valid strike surface."
+            );
+        }
+        return data;
+    }
+
+    function statusClass(model) {
+        if (model.status === "ok" && !model.delivery?.stale) return "positive";
+        if (model.status === "error") return "negative";
+        return "warning";
+    }
+
+    function statusLabel(model) {
+        if (model.delivery?.stale) return "STALE";
+        return String(model.quality?.grade || model.status || "UNKNOWN").toUpperCase();
+    }
+
+    function metricCard(label, value, hint, formatter = formatExposure) {
         return `
-            <article class="kn-metric ${toneFor(value)}">
-                <div class="kn-metric-label">${label}</div>
+            <article class="kn-metric ${tone(value)}">
+                <div class="kn-metric-label">${escapeHtml(label)}</div>
                 <div class="kn-metric-value">${formatter(value)}</div>
-                <div class="kn-metric-hint">${hint}</div>
+                <div class="kn-metric-hint">${escapeHtml(hint)}</div>
             </article>
         `;
     }
 
-    function levelCard(
-        label,
-        row,
-        spot,
-        metric = "gamma",
-        metricLabel = "GEX",
-        formatter = formatSigned
-    ) {
-        if (!row) {
+    function nodeCard(label, node, spot, formatter = formatExposure) {
+        const strike = finite(node?.strike);
+        const value = finite(node?.value);
+        if (strike === null) {
             return `
-                <article class="kn-level-card">
-                    <span>${label}</span>
+                <article class="kn-level-card neutral">
+                    <span>${escapeHtml(label)}</span>
                     <strong>—</strong>
-                    <small>No qualifying strike</small>
+                    <small>Not present in the validated window</small>
                 </article>
             `;
         }
-        const distance = row.strike - spot;
-        const value = row[metric];
+        const distance = strike - spot;
         return `
-            <article class="kn-level-card ${toneFor(value)}">
-                <span>${label}</span>
-                <strong>${formatPrice(row.strike)}</strong>
-                <small>${formatter(value)} ${metricLabel} · ${distance >= 0 ? "+" : ""}${distance.toFixed(1)} pts</small>
+            <article class="kn-level-card ${tone(value)}">
+                <span>${escapeHtml(label)}</span>
+                <strong>${formatPrice(strike)}</strong>
+                <small>${formatter(value)} · ${distance >= 0 ? "+" : ""}${distance.toFixed(1)} pts</small>
             </article>
         `;
     }
 
-    function exposureTable(model) {
-        const maxAbsGamma = Math.max(
-            ...model.rows.map((row) => Math.abs(row.gamma)),
-            0.000001
+    function indexCard(label, item, direction) {
+        const value = finite(item?.value);
+        const observed = item?.status === "observed";
+        return `
+            <article class="kn-index-card ${observed ? "" : "is-degraded"}">
+                <div>
+                    <span>${escapeHtml(label)}</span>
+                    <strong>${value === null ? "—" : formatNumber(value, 2)}</strong>
+                </div>
+                <div class="kn-index-meta">
+                    <b class="${directionTone(direction)}">${text(direction, "Flat")}</b>
+                    <small>${text(item?.status, "missing")} · ${ageText(item?.age_seconds)}</small>
+                </div>
+            </article>
+        `;
+    }
+
+    function namedLevelRows(items, side) {
+        const levels = Array.isArray(items) ? items : [];
+        if (!levels.length) {
+            return `<div class="kn-empty">No ${escapeHtml(side)} level passed the data gate.</div>`;
+        }
+        return levels
+            .map((item, index) => {
+                const score = finite(item.score);
+                const confluence = finite(item.confluence);
+                const backers = Array.isArray(item.backers)
+                    ? item.backers.join(" · ")
+                    : "";
+                return `
+                    <div class="kn-ranked-level">
+                        <b>${escapeHtml(side.slice(0, 1).toUpperCase())}${index + 1}</b>
+                        <strong>${formatPrice(item.strike)}</strong>
+                        <span>${item.distance >= 0 ? "+" : ""}${formatNumber(item.distance, 1)} pts</span>
+                        <small>${score === null ? "locked carry" : `score ${score.toFixed(2)}`} · confl ${confluence ?? "—"}${backers ? ` · ${escapeHtml(backers)}` : ""}</small>
+                    </div>
+                `;
+            })
+            .join("");
+    }
+
+    function wallRows(items, label) {
+        const walls = Array.isArray(items) ? items : [];
+        if (!walls.length) return '<div class="kn-empty">No qualifying wall.</div>';
+        return walls
+            .map(
+                (wall, index) => `
+                    <div class="kn-wall">
+                        <b>${escapeHtml(label)} ${index + 1}</b>
+                        <strong>${formatPrice(wall.strike)}</strong>
+                        <span>${formatExposure(wall.gamma_gross)} gross Γ · ${formatExposure(wall.gex)} GEX</span>
+                    </div>
+                `
+            )
+            .join("");
+    }
+
+    function warningPanel(model) {
+        const warnings = Array.isArray(model.quality?.warnings)
+            ? [...model.quality.warnings]
+            : [];
+        if (model.delivery?.stale) {
+            warnings.unshift(
+                `Web snapshot is ${ageText(model.delivery.age_seconds)}; limit ${ageText(model.delivery.max_age_seconds)}.`
+            );
+        }
+        if (!warnings.length) {
+            return `
+                <div class="kn-gate-ok">
+                    All configured source, coverage, freshness and reference gates passed.
+                </div>
+            `;
+        }
+        return `
+            <ul class="kn-warning-list">
+                ${warnings.map((warning) => `<li>${escapeHtml(warning)}</li>`).join("")}
+            </ul>
+        `;
+    }
+
+    function tableRows(model) {
+        const spot = finite(model.inputs?.spot) || 0;
+        const rawNode = finite(model.levels?.raw_gamma?.strike);
+        const kingNode = finite(model.levels?.king_gamma?.strike);
+        const maxGex = finite(model.levels?.max_gex?.strike);
+        const minGex = finite(model.levels?.min_gex?.strike);
+        const zeroGamma = finite(model.levels?.zero_gamma?.strike);
+        const gammaFlip = finite(model.levels?.gamma_flip);
+        const maxAbsoluteGex = Math.max(
+            1,
+            ...model.rows.map((row) => Math.abs(finite(row.gex) || 0))
         );
-        const nearest = nearestRow(model.rows, model.spot);
+        const nearestSpot = model.rows.reduce(
+            (best, row) =>
+                !best ||
+                Math.abs(row.strike - spot) < Math.abs(best.strike - spot)
+                    ? row
+                    : best,
+            null
+        )?.strike;
 
         return model.rows
-            .slice()
-            .reverse()
             .map((row) => {
-                const width = Math.max(
-                    2,
-                    (Math.abs(row.gamma) / maxAbsGamma) * 100
-                );
+                const strike = finite(row.strike);
+                const markers = [];
+                if (strike === rawNode) markers.push("RAW");
+                if (strike === kingNode) markers.push("KING");
+                if (strike === maxGex) markers.push("MAX");
+                if (strike === minGex) markers.push("MIN");
+                if (strike === zeroGamma) markers.push("ZG");
+                if (strike === gammaFlip) markers.push("FLIP");
                 const classes = [
-                    row === nearest ? "is-spot" : "",
-                    row === model.gammaNode ? "is-node" : "",
+                    strike === nearestSpot ? "is-spot" : "",
+                    strike === rawNode || strike === kingNode ? "is-node" : "",
                 ]
                     .filter(Boolean)
                     .join(" ");
+                const bar = ((Math.abs(finite(row.gex) || 0) / maxAbsoluteGex) * 100).toFixed(1);
                 return `
                     <tr class="${classes}">
-                        <td class="kn-strike">${formatPrice(row.strike)}</td>
-                        <td>${formatRawGamma(row.rawGamma)}</td>
-                        <td>${formatSigned(row.gammaGross)}</td>
-                        <td class="${toneFor(row.gamma)}">
-                            <div class="kn-gex-cell">
-                                <span>${formatSigned(row.gamma)}</span>
-                                <i class="${toneFor(row.gamma)}" style="--kn-bar:${width.toFixed(1)}%"></i>
+                        <td class="kn-strike">${formatPrice(strike)}${markers.length ? `<small>${markers.join("·")}</small>` : ""}</td>
+                        <td>${formatRawGamma(row.raw_gamma)}</td>
+                        <td>${formatExposure(row.gamma_gross)}</td>
+                        <td class="${tone(row.gex)}">
+                            <div class="kn-gex-cell" style="--kn-bar:${bar}%">
+                                <span>${formatExposure(row.gex)}</span><i></i>
                             </div>
                         </td>
-                        <td class="${toneFor(row.delta)}">${formatSigned(row.delta)}</td>
-                        <td class="${toneFor(row.vanna)}">${formatSigned(row.vanna)}</td>
-                        <td class="${toneFor(row.zomma)}">${formatSigned(row.zomma)}</td>
-                        <td class="${toneFor(row.vomma)}">${formatSigned(row.vomma)}</td>
-                        <td class="${toneFor(row.vega)}">${formatSigned(row.vega)}</td>
-                        <td class="${toneFor(row.speed)}">${formatSigned(row.speed)}</td>
+                        <td class="${tone(row.zomma)}">${formatExposure(row.zomma)}</td>
+                        <td class="${tone(row.dex)}">${formatExposure(row.dex)}</td>
+                        <td class="${tone(row.vex)}">${formatExposure(row.vex)}</td>
+                        <td class="${tone(row.vomma)}">${formatExposure(row.vomma)}</td>
+                        <td class="${tone(row.vega)}">${formatExposure(row.vega)}</td>
+                        <td class="${tone(row.speed)}">${formatExposure(row.speed)}</td>
                     </tr>
                 `;
             })
@@ -531,96 +336,148 @@
     }
 
     function renderModel(model) {
-        const slope = updateGexHistory(model);
-        const qualityTone =
-            model.quality === "COMPLETE" ? "positive" : "warning";
-        const regimeTone = toneFor(model.totals.gamma);
-        const skewText = Number.isFinite(model.riskReversal)
-            ? `${model.riskReversal.toFixed(2)} vol pts (2% call − 2% put)`
-            : "Insufficient wing IV coverage";
+        const spot = finite(model.inputs?.spot) || 0;
+        const regime = model.regime || {};
+        const signs = regime.signs || {};
+        const indexSource = model.source?.indices || {};
+        const gex = model.monitor?.gex || {};
+        const skew = model.monitor?.skew || {};
+        const vomma = model.monitor?.vomma || {};
+        const tension = model.monitor?.vol_tension || {};
+        const extremes = model.monitor?.vix1d_extremes || {};
+        const zeroGamma = model.levels?.zero_gamma;
+        const generatedAge =
+            model.delivery?.age_seconds ??
+            Math.max(0, (Date.now() - new Date(model.generated_at).getTime()) / 1000);
 
         return `
             <section class="king-node-shell">
                 <header class="kn-header">
                     <div>
-                        <div class="kn-eyebrow">KING NODE · WEB TRANSLATION</div>
-                        <h1>SPX / SPXW 0DTE Exposure Engine</h1>
-                        <p>Tastytrade option surface · 47-strike window · ${escapeHtml(model.asOf)}</p>
+                        <div class="kn-eyebrow">KING NODE · PORTABLE V5 ENGINE</div>
+                        <h1>Dealer structure, volatility state & locked levels</h1>
+                        <p>Snapshot ${timeText(model.generated_at)} ET · ${ageText(generatedAge)} · ${model.quality?.strike_count || model.rows.length}/${model.quality?.expected_strike_count || 47} strikes · smooth ${model.quality?.smooth_depth || 1}/3</p>
                     </div>
                     <div class="kn-header-actions">
-                        <span class="kn-status ${qualityTone}">${model.quality}</span>
+                        <span class="kn-status ${statusClass(model)}">${escapeHtml(statusLabel(model))}</span>
                         <button id="kn-refresh-btn" type="button">REFRESH</button>
                     </div>
                 </header>
 
                 <div class="kn-contract-note">
-                    <strong>Data contract:</strong> live Tastytrade SPX/SPXW chain and the dashboard daemon's
-                    exposure formulas. This is not a cell-for-cell execution of the Excel workbook.
-                    Raw gamma is calculated directly as (call gamma × call OI) + (put gamma × put OI)
-                    at every strike. VIX1D and VVIX are not synthesized from incomplete persisted inputs.
+                    <strong>Authoritative calculation:</strong>
+                    backend <code>${SCHEMA_VERSION}</code>, Tastytrade SPX/SPXW 0DTE chain and observed ThetaData indices.
+                    Raw gamma is <code>(Γcall × OIcall) + (Γput × OIput)</code> per strike.
+                    No VIX/VVIX/VIX1D proxy is substituted when an observed value is absent.
                 </div>
 
-                <div class="kn-hero-grid">
+                <div class="kn-hero-grid kn-hero-grid-wide">
                     <article class="kn-spot-card">
                         <span>SPX SPOT</span>
-                        <strong>${formatPrice(model.spot)}</strong>
-                        <small class="${toneFor(model.spotChange)}">${formatPercent(model.spotChange)} vs previous close</small>
+                        <strong>${formatPrice(spot)}</strong>
+                        <small class="${tone(model.inputs?.spot_change_pct)}">${formatPercent(model.inputs?.spot_change_pct)} vs previous close · DTE ${formatNumber(model.inputs?.dte_hours, 2)}h</small>
                     </article>
-                    <article class="kn-regime-card ${regimeTone}">
+                    <article class="kn-regime-card ${signs.gamma === "Pos" ? "positive" : "negative"}">
                         <span>DEALER REGIME</span>
-                        <strong>${model.regime}</strong>
-                        <small>${model.behavior}</small>
+                        <strong>${text(regime.regime)}</strong>
+                        <small>${text(regime.dealer_action)} · ${text(regime.tactical)}</small>
                     </article>
                     <article class="kn-spot-card">
-                        <span>ZERO GAMMA</span>
-                        <strong>${formatPrice(model.zeroGamma)}</strong>
-                        <small>${model.zeroGamma ? `${(model.spot - model.zeroGamma).toFixed(1)} pts from spot` : "No valid profile crossing"}</small>
+                        <span>VOL TENSION</span>
+                        <strong>${text(tension.label)}</strong>
+                        <small>${text(tension.expectation)}${finite(tension.ratio) === null ? "" : ` · V1D/VIX ${formatNumber(tension.ratio, 2)}`}</small>
                     </article>
                     <article class="kn-spot-card">
-                        <span>VIX / ATM IV</span>
-                        <strong>${model.vixSpot === null ? "—" : model.vixSpot.toFixed(2)} <em>/</em> ${model.atmIv === null ? "—" : (model.atmIv * 100).toFixed(2) + "%"}</strong>
-                        <small>VVIX — · VIX1D — · no proxy substitution</small>
+                        <span>RAW GAMMA LEVEL</span>
+                        <strong>${formatPrice(model.levels?.raw_gamma?.strike)}</strong>
+                        <small>${formatRawGamma(model.levels?.raw_gamma?.value)} Γ×OI · exact per-leg multiplication</small>
+                    </article>
+                    <article class="kn-spot-card">
+                        <span>ZERO GAMMA / FLIP</span>
+                        <strong>${formatPrice(zeroGamma?.strike)} <em>/</em> ${formatPrice(model.levels?.gamma_flip)}</strong>
+                        <small>ZG interpolated ${formatPrice(zeroGamma?.interpolated_strike)} · daemon ${formatPrice(model.levels?.daemon_zero_gamma)}</small>
                     </article>
                 </div>
 
-                <div class="kn-level-grid">
-                    ${levelCard("LOWER GAMMA NODE", model.lowerNode, model.spot)}
-                    ${levelCard("KING GAMMA NODE", model.gammaNode, model.spot)}
-                    ${levelCard("UPPER GAMMA NODE", model.upperNode, model.spot)}
-                    ${levelCard(
-                        "RAW GAMMA LEVEL",
-                        model.rawGammaNode,
-                        model.spot,
-                        "rawGamma",
-                        "Γ×OI",
-                        formatRawGamma
+                <div class="kn-index-grid">
+                    ${indexCard("VIX", indexSource.vix, model.directions?.vix)}
+                    ${indexCard("VVIX", indexSource.vvix, model.directions?.vvix)}
+                    ${indexCard("VIX1D", indexSource.vix1d, model.directions?.vix1d)}
+                    ${indexCard(
+                        "ATM CALL IV",
+                        {
+                            value:
+                                finite(model.inputs?.atm_iv) === null
+                                    ? null
+                                    : model.inputs.atm_iv * 100,
+                            status:
+                                finite(model.inputs?.atm_iv) === null
+                                    ? "missing"
+                                    : "observed chain",
+                            age_seconds:
+                                model.source?.tastytrade?.age_seconds,
+                        },
+                        model.directions?.atm_iv
                     )}
                 </div>
 
-                <div class="kn-metrics-grid">
-                    ${metricCard(
-                        "RAW GAMMA",
-                        model.totals.rawGamma,
-                        "Σ[(Γcall × OIcall) + (Γput × OIput)]",
-                        formatRawGamma
+                <div class="kn-level-grid kn-level-grid-six">
+                    ${nodeCard("RAW GAMMA", model.levels?.raw_gamma, spot, formatRawGamma)}
+                    ${nodeCard("KING GROSS GAMMA", model.levels?.king_gamma, spot)}
+                    ${nodeCard("MAX GEX", model.levels?.max_gex, spot)}
+                    ${nodeCard("MIN GEX", model.levels?.min_gex, spot)}
+                    ${nodeCard(
+                        "GAMMA FLIP",
+                        { strike: model.levels?.gamma_flip, value: null },
+                        spot
                     )}
-                    ${metricCard("GEX", model.totals.gamma, `Gross ${formatSigned(model.totals.gammaGross)}`)}
-                    ${metricCard("DEX", model.totals.delta, model.dealerBias)}
-                    ${metricCard("VEX", model.totals.vanna, "Vanna exposure")}
-                    ${metricCard("ZOMMA", model.totals.zomma, "Gamma / volatility convexity")}
-                    ${metricCard("VOMMA", model.totals.vomma, "Vega convexity")}
-                    ${metricCard("VEGA", model.totals.vega, "Volatility sensitivity")}
-                    ${metricCard("SPEED", model.totals.speed, "Gamma / spot convexity")}
+                    ${nodeCard(
+                        "ZERO GAMMA",
+                        { strike: zeroGamma?.strike, value: null },
+                        spot
+                    )}
+                </div>
+
+                <div class="kn-metrics-grid kn-metrics-grid-wide">
+                    ${metricCard("RAW Γ", model.totals?.raw_gamma, "Σ per-leg Γ×OI", formatRawGamma)}
+                    ${metricCard("GROSS Γ", model.totals?.gamma_gross, "Workbook column B")}
+                    ${metricCard("NET GEX", model.totals?.gex, `${text(gex.sign)} · ${formatExposure(gex.per_15_minutes)}/15m`)}
+                    ${metricCard("DEX", model.totals?.dex, `sign ${text(signs.dex)}`)}
+                    ${metricCard("VEX", model.totals?.vex, `sign ${text(signs.vex)}`)}
+                    ${metricCard("ZOMMA", model.totals?.zomma, `sign ${text(signs.zomma)}`)}
+                    ${metricCard("VOMMA", model.totals?.vomma, text(vomma.status))}
+                    ${metricCard("VEGA", model.totals?.vega, `sign ${text(signs.vega)}`)}
+                    ${metricCard("SPEED", model.totals?.speed, `sign ${text(signs.speed)}`)}
+                    ${metricCard("CHARM", model.totals?.charm, `sign ${text(signs.charm)}`)}
+                </div>
+
+                <div class="kn-structure-grid">
+                    <article class="kn-panel">
+                        <div class="kn-panel-header"><span>LOCKED RESISTANCES</span><small>3-cycle hysteresis · six slots</small></div>
+                        <div class="kn-ranked-list">${namedLevelRows(model.levels?.resistances, "resistance")}</div>
+                    </article>
+                    <article class="kn-panel">
+                        <div class="kn-panel-header"><span>LOCKED SUPPORTS</span><small>3-cycle hysteresis · six slots</small></div>
+                        <div class="kn-ranked-list">${namedLevelRows(model.levels?.supports, "support")}</div>
+                    </article>
+                    <article class="kn-panel">
+                        <div class="kn-panel-header"><span>CALL WALLS</span><small>top gross gamma where net GEX &gt; 0</small></div>
+                        <div class="kn-wall-list">${wallRows(model.levels?.call_walls, "CALL")}</div>
+                    </article>
+                    <article class="kn-panel">
+                        <div class="kn-panel-header"><span>PUT WALLS</span><small>top gross gamma where net GEX &lt; 0</small></div>
+                        <div class="kn-wall-list">${wallRows(model.levels?.put_walls, "PUT")}</div>
+                    </article>
                 </div>
 
                 <div class="kn-main-grid">
                     <article class="kn-panel kn-table-panel">
                         <div class="kn-panel-header">
                             <div>
-                                <span>EXPOSURE LADDER</span>
-                                <small>Workbook-equivalent columns · daemon values scaled by 10⁹</small>
+                                <span>47-STRIKE KING NODE PROFILE</span>
+                                <small>A:I workbook profile plus raw Γ×OI</small>
                             </div>
-                            <span>${model.rows.length}/${WINDOW_SIZE} strikes</span>
+                            <span>${model.rows.length} rows</span>
                         </div>
                         <div class="kn-table-scroll">
                             <table class="kn-table">
@@ -628,68 +485,53 @@
                                     <tr>
                                         <th>Strike</th>
                                         <th>Raw Γ×OI</th>
-                                        <th>Gamma gross</th>
+                                        <th>Gross Γ</th>
                                         <th>GEX</th>
+                                        <th>Zomma</th>
                                         <th>DEX</th>
                                         <th>VEX</th>
-                                        <th>Zomma</th>
                                         <th>Vomma</th>
                                         <th>Vega</th>
                                         <th>Speed</th>
                                     </tr>
                                 </thead>
-                                <tbody>${exposureTable(model)}</tbody>
+                                <tbody>${tableRows(model)}</tbody>
                             </table>
                         </div>
                     </article>
 
                     <aside class="kn-side-stack">
                         <article class="kn-panel kn-readout">
-                            <div class="kn-panel-header"><span>LIVE READOUT</span></div>
-                            <div class="kn-readout-row">
-                                <span>GEX trajectory</span>
-                                <strong class="${slope.tone}">${slope.text}</strong>
-                            </div>
-                            <div class="kn-readout-row">
-                                <span>Delta posture</span>
-                                <strong class="${toneFor(model.totals.delta)}">${model.dealerBias}</strong>
-                            </div>
-                            <div class="kn-readout-row">
-                                <span>Risk reversal</span>
-                                <strong>${skewText}</strong>
-                            </div>
-                            <div class="kn-readout-row">
-                                <span>Surface coverage</span>
-                                <strong>${(model.coverage * 100).toFixed(1)}% window · ${(model.completeness * 100).toFixed(1)}% metrics</strong>
-                            </div>
+                            <div class="kn-panel-header"><span>MATRIX & BOX CONTRACT</span><small>${text(regime.reference_mode)}</small></div>
+                            <div class="kn-readout-row"><span>Phenomenon</span><strong>${text(regime.phenomenon)}</strong></div>
+                            <div class="kn-readout-row"><span>Dealer is / action</span><strong>${text(regime.dealer_is)} · ${text(regime.dealer_action)}</strong></div>
+                            <div class="kn-readout-row"><span>Tactical / tilt</span><strong>${text(regime.tactical)} · ${text(regime.tilt)}</strong></div>
+                            <div class="kn-readout-row"><span>IV class / intensity / DTE boost</span><strong>${text(regime.iv_raw)} → ${text(regime.iv_box)} · ${formatNumber(regime.iv_intensity, 2)}× · ${formatNumber(regime.dte_boost, 2)}×</strong></div>
+                            <div class="kn-readout-row"><span>Matrix key</span><code>${text(regime.matrix_key)}</code></div>
+                            <div class="kn-readout-row"><span>Box key</span><code>${text(regime.box_key)}</code></div>
                         </article>
 
-                        <article class="kn-panel kn-method">
-                            <div class="kn-panel-header"><span>VOLATILITY INDEX DATA GATE</span></div>
-                            <div class="kn-readout-row">
-                                <span>VIX</span>
-                                <strong>${model.vixSpot === null ? "UNAVAILABLE — no observed index value" : "OBSERVED — index value, not reconstructed"}</strong>
-                            </div>
-                            <div class="kn-readout-row">
-                                <span>VIX1D</span>
-                                <strong class="warning">CURRENT FEED BLOCKED — ThetaData Standard can supply the missing 0DTE/next-term NBBO; capture and CMT engine are not wired</strong>
-                            </div>
-                            <div class="kn-readout-row">
-                                <span>VVIX</span>
-                                <strong class="warning">CURRENT FEED BLOCKED — ThetaData Standard can supply both eligible VIX monthly terms; capture and CMT engine are not wired</strong>
-                            </div>
+                        <article class="kn-panel kn-readout">
+                            <div class="kn-panel-header"><span>LIVE MONITORS</span></div>
+                            <div class="kn-readout-row"><span>Net GEX trajectory</span><strong>${formatExposure(gex.per_15_minutes)}/15m · ${text(gex.sign)} · ${finite(gex.flip_age_minutes) === null ? "no session flip" : `flipped ${formatNumber(gex.flip_age_minutes, 0)}m ago`}</strong></div>
+                            <div class="kn-readout-row"><span>Vomma near spot</span><strong>${text(vomma.status)} · ref ${formatExposure(vomma.reference)}</strong></div>
+                            <div class="kn-readout-row"><span>Put / call skew</span><strong>${formatNumber(skew.put_skew_vol_points, 2)}vp ${text(skew.put_direction)} · ${formatNumber(skew.call_skew_vol_points, 2)}vp ${text(skew.call_direction)} · RR ${formatNumber(skew.risk_reversal_vol_points, 2)}vp</strong></div>
+                            <div class="kn-readout-row"><span>VIX1D session</span><strong>Lo ${formatNumber(extremes.session_low, 2)} · Hi ${formatNumber(extremes.session_high, 2)} · ${extremes.vol_bottom ? "VOL BOTTOM" : extremes.vol_top ? "VOL TOP" : "no extreme flag"}</strong></div>
                         </article>
 
-                        <article class="kn-panel kn-method">
-                            <div class="kn-panel-header"><span>METHOD & LIMITS</span></div>
-                            <ul>
-                                <li>Uses the nearest 23 strikes on each side of SPX spot, matching the 47-strike King Node window.</li>
-                                <li>Aggregates the daemon's OI-derived SPX/SPXW exposure values by strike.</li>
-                                <li>Raw gamma uses each side's own streamed gamma and open interest; it is not dollar-scaled GEX.</li>
-                                <li>The strongest absolute GEX strike is labelled the King Gamma Node; this is descriptive, not a trade signal.</li>
-                                <li>ThetaData availability is a source capability, not a computed index value; the current web response remains fail-closed.</li>
-                                <li>Workbook lock/hysteresis state and IBKR-only prints remain outside this web data contract.</li>
-                            </ul>
+                        <article class="kn-panel kn-readout">
+                            <div class="kn-panel-header"><span>DATA & REFERENCE GATES</span></div>
+                            ${warningPanel(model)}
+                            <div class="kn-source-line">
+                                <span>Tastytrade</span>
+                                <strong>${text(model.source?.tastytrade?.filename)}</strong>
+                                <small>${ageText(model.source?.tastytrade?.age_seconds)} · ${text(model.source?.tastytrade?.provider)}</small>
+                            </div>
+                            <div class="kn-source-line">
+                                <span>Coverage</span>
+                                <strong>raw Γ ${formatPercent((model.quality?.raw_gamma_coverage || 0) * 100, 1)} · profile ${formatPercent((model.quality?.profile_coverage || 0) * 100, 1)}</strong>
+                                <small>Endpoint is ADMIN-only and Cache-Control: no-store.</small>
+                            </div>
                         </article>
                     </aside>
                 </div>
@@ -701,75 +543,55 @@
         return `
             <section class="king-node-shell">
                 <div class="kn-error">
-                    <span>KING NODE DATA UNAVAILABLE</span>
+                    <span>KING NODE FAILED CLOSED</span>
                     <strong>${escapeHtml(message)}</strong>
-                    <p>The tab failed closed; no stale or synthetic surface was substituted.</p>
+                    <p>No stale surface or synthetic volatility index was substituted.</p>
                     <button id="kn-refresh-btn" type="button">TRY AGAIN</button>
                 </div>
             </section>
         `;
     }
 
-    function readVixFromMonitor() {
-        const element =
-            typeof document !== "undefined"
-                ? document.getElementById("spot-vix")
-                : null;
-        if (!element) return null;
-        const cleaned = element.textContent.replace(/,/g, "").trim();
-        return nullableNumber(cleaned);
-    }
-
     function bindRefreshButton() {
         const button = document.getElementById("kn-refresh-btn");
         if (button) {
-            button.addEventListener("click", () => {
-                refreshKingNodeDashboard();
-            });
+            button.addEventListener("click", refreshKingNodeDashboard);
         }
     }
 
     async function fetchKingNodeSnapshot() {
-        const timestamp = Date.now();
-        const response = await authFetch(
-            `/get_latest?ticker=SPX&exp=0dte&_=${timestamp}`
-        );
-        if (!response.ok) return null;
-        return safeJsonParse(response);
+        const response = await authFetch(`/api/king-node?_=${Date.now()}`);
+        const data = await safeJsonParse(response);
+        if (!response.ok) {
+            throw new Error(
+                data?.message ||
+                    `KING NODE API returned HTTP ${response.status}.`
+            );
+        }
+        return normaliseSnapshot(data);
     }
 
     async function renderKingNodeDashboard() {
         const wrapper = document.getElementById("charts-wrapper");
         if (!wrapper) return;
-
         const sequence = ++renderSequence;
         wrapper.scrollLeft = 0;
         wrapper.innerHTML = `
             <section class="king-node-shell">
-                <div class="kn-loading">
-                    <span></span>
-                    Loading the latest SPX/SPXW 0DTE surface…
-                </div>
+                <div class="kn-loading"><span></span>Loading validated KING NODE snapshot…</div>
             </section>
         `;
-
         try {
-            const data = await fetchKingNodeSnapshot();
+            const model = await fetchKingNodeSnapshot();
             if (sequence !== renderSequence || !isKingNodeTabActive()) return;
-            if (!data) {
-                throw new Error("No authenticated SPX 0DTE snapshot is available.");
-            }
-
-            const model = buildKingNodeModel(data, readVixFromMonitor());
             wrapper.innerHTML = renderModel(model);
-            bindRefreshButton();
         } catch (error) {
             if (sequence !== renderSequence || !isKingNodeTabActive()) return;
             wrapper.innerHTML = renderError(
-                error && error.message ? error.message : String(error)
+                error?.message || String(error)
             );
-            bindRefreshButton();
         }
+        bindRefreshButton();
     }
 
     async function refreshKingNodeDashboard() {
@@ -798,7 +620,6 @@
 
     function mountKingNodeTab(container, addButton) {
         if (!isKingNodeAvailable()) return;
-
         const tab = document.createElement("div");
         tab.className = `tab king-node-tab ${
             isKingNodeTabActive() ? "active" : ""
@@ -813,13 +634,13 @@
 
     root.KingNodeWeb = Object.freeze({
         TAB_ID,
-        WINDOW_SIZE,
-        rowsFromSplit,
-        aggregateByStrike,
-        selectStrikeWindow,
-        buildKingNodeModel,
+        SCHEMA_VERSION,
+        escapeHtml,
+        formatExposure,
+        formatRawGamma,
+        normaliseSnapshot,
+        renderModel,
     });
-    root.buildKingNodeModel = buildKingNodeModel;
     root.isKingNodeAvailable = isKingNodeAvailable;
     root.isKingNodeTabActive = isKingNodeTabActive;
     root.setKingNodeViewActive = setKingNodeViewActive;

@@ -12,9 +12,9 @@ ROOT = Path(__file__).resolve().parents[1]
 KING_NODE_JS = ROOT / "web" / "templates" / "js" / "king_node.js"
 
 
-def test_king_node_admin_tab_is_wired_into_dashboard() -> None:
+def test_king_node_admin_tab_uses_precomputed_admin_api() -> None:
     assert KING_NODE_JS.is_file()
-
+    javascript = KING_NODE_JS.read_text(encoding="utf-8")
     auth = (ROOT / "web" / "templates" / "js" / "auth.js").read_text(
         encoding="utf-8"
     )
@@ -28,115 +28,200 @@ def test_king_node_admin_tab_is_wired_into_dashboard() -> None:
         encoding="utf-8"
     )
     server = (ROOT / "services" / "servidor.py").read_text(encoding="utf-8")
-    daemon = (ROOT / "services" / "gex_daemon.py").read_text(encoding="utf-8")
     styles = (ROOT / "web" / "templates" / "styles.css").read_text(
         encoding="utf-8"
     )
 
     assert '"js/king_node.js"' in auth
-    assert "/get_latest?ticker=SPX&exp=0dte" in KING_NODE_JS.read_text(
-        encoding="utf-8"
-    )
+    assert "/api/king-node" in javascript
+    assert "/get_latest?ticker=SPX&exp=0dte" not in javascript
+    assert "call_gamma" not in javascript
+    assert "call_open_int" not in javascript
     assert "mountKingNodeTab" in tabs
     assert "renderKingNodeDashboard" in dashboard
     assert "refreshKingNodeDashboard" in refresh
     assert '"js/king_node.js",' in server
+    assert 'path_only == "/api/king-node"' in server
+    assert 'auth_info.get("role") != "ADMIN"' in server
+    assert '"Cache-Control", "no-store"' in server
     assert "@import url('./css/king_node.css');" in styles
-    for field in (
-        "total_delta",
-        "total_gamma",
-        "total_vanna",
-        "total_zomma",
-        "total_vega",
-        "total_vomma",
-        "total_speed",
-    ):
-        assert f'option_data["{field}"]' in daemon
-    assert 'obj.to_dict(orient="split")' in daemon
+
+
+def web_snapshot_fixture() -> dict:
+    rows = []
+    for index in range(47):
+        strike = 5800 + index * 10
+        value = (index - 23) * 1_000_000
+        rows.append(
+            {
+                "strike": strike,
+                "raw_gamma": abs(value) / 1_000_000 + 1,
+                "gamma_gross": abs(value),
+                "gex": value,
+                "zomma": value * 0.2,
+                "dex": value * 2,
+                "vex": -value,
+                "vomma": value * 0.5,
+                "vega": abs(value) * 0.25,
+                "speed": value * 0.1,
+            }
+        )
+    return {
+        "schema_version": "king-node.v1",
+        "status": "degraded",
+        "generated_at": "2026-07-26T14:00:00Z",
+        "delivery": {
+            "age_seconds": 10,
+            "max_age_seconds": 900,
+            "stale": False,
+        },
+        "quality": {
+            "grade": "DEGRADED",
+            "warnings": ["<script>alert('no')</script>"],
+            "errors": [],
+            "strike_count": 47,
+            "expected_strike_count": 47,
+            "raw_gamma_coverage": 1,
+            "profile_coverage": 1,
+            "smooth_depth": 3,
+        },
+        "source": {
+            "tastytrade": {
+                "filename": "fixture.json",
+                "age_seconds": 10,
+                "provider": "Tastytrade",
+            },
+            "indices": {
+                "vix": {
+                    "value": 18,
+                    "status": "observed",
+                    "age_seconds": 1,
+                },
+                "vvix": {
+                    "value": 95,
+                    "status": "observed",
+                    "age_seconds": 1,
+                },
+                "vix1d": {
+                    "value": 15,
+                    "status": "observed",
+                    "age_seconds": 1,
+                },
+            },
+        },
+        "inputs": {
+            "spot": 6030,
+            "previous_close": 6020,
+            "spot_change_pct": 0.16,
+            "dte_hours": 4,
+            "atm_iv": 0.18,
+        },
+        "directions": {
+            "vix": "Down",
+            "vvix": "Flat",
+            "vix1d": "Up",
+            "atm_iv": "Flat",
+        },
+        "regime": {
+            "regime": "High IV · positive-gamma mean reversion",
+            "dealer_action": "Sell strength and buy weakness",
+            "tactical": "FADE EXTREMES",
+            "dealer_is": "Long gamma",
+            "phenomenon": "Gamma pin",
+            "tilt": "aligned",
+            "iv_raw": "HIGH",
+            "iv_box": "High",
+            "iv_intensity": 1.2,
+            "dte_boost": 1.2,
+            "matrix_key": "High|Pos|Pos|Pos|Pos|Pos|Pos|Pos",
+            "box_key": "Positive|Down|Flat|Up",
+            "reference_mode": "semantic_fallback",
+            "signs": {
+                "gamma": "Pos",
+                "dex": "Pos",
+                "vex": "Pos",
+                "zomma": "Pos",
+                "vomma": "Pos",
+                "vega": "Pos",
+                "speed": "Pos",
+                "charm": "Pos",
+            },
+        },
+        "totals": {
+            "raw_gamma": 123.456,
+            "gamma_gross": 10_000_000,
+            "gex": 5_000_000,
+            "dex": 3_000_000,
+            "vex": 2_000_000,
+            "zomma": 1_000_000,
+            "vomma": 900_000,
+            "vega": 800_000,
+            "speed": 700_000,
+            "charm": 600_000,
+        },
+        "levels": {
+            "raw_gamma": {"strike": 6030, "value": 55},
+            "king_gamma": {"strike": 6040, "value": 20_000_000},
+            "max_gex": {"strike": 6050, "value": 15_000_000},
+            "min_gex": {"strike": 6000, "value": -12_000_000},
+            "gamma_flip": 6020,
+            "zero_gamma": {
+                "strike": 6010,
+                "interpolated_strike": 6012.5,
+            },
+            "daemon_zero_gamma": 6013,
+            "call_walls": [],
+            "put_walls": [],
+            "resistances": [],
+            "supports": [],
+        },
+        "monitor": {
+            "gex": {
+                "sign": "POS",
+                "per_15_minutes": 1_000_000,
+                "flip_age_minutes": None,
+            },
+            "skew": {},
+            "vomma": {"status": "warming up"},
+            "vol_tension": {
+                "label": "SLOW POS GAMMA",
+                "expectation": "Levels hold",
+                "ratio": 0.83,
+            },
+            "vix1d_extremes": {},
+        },
+        "rows": rows,
+    }
 
 
 @pytest.mark.skipif(shutil.which("node") is None, reason="Node.js is not installed")
-def test_king_node_model_aggregates_tastytrade_split_surface() -> None:
-    columns = [
-        "strike_price",
-        "call_iv",
-        "put_iv",
-        "call_gamma",
-        "put_gamma",
-        "call_open_int",
-        "put_open_int",
-        "call_gex",
-        "put_gex",
-        "total_gamma",
-        "total_delta",
-        "total_vanna",
-        "total_zomma",
-        "total_vomma",
-        "total_vega",
-        "total_speed",
-        "total_charm",
-        "total_dgex",
-    ]
-    rows = []
-    for index in range(55):
-        strike = 5800 + index * 10
-        gamma = (index - 27) / 100
-        call_gamma = abs(gamma) + 0.01
-        put_gamma = abs(gamma) + 0.02
-        call_open_interest = 100 + index
-        put_open_interest = 50 + index
-        rows.append(
-            [
-                strike,
-                0.18 + index / 10000,
-                0.2 + index / 10000,
-                call_gamma,
-                put_gamma,
-                call_open_interest,
-                put_open_interest,
-                abs(gamma) * 1e9,
-                -abs(gamma) * 0.4e9,
-                gamma,
-                gamma * 2,
-                gamma * -0.5,
-                gamma * 0.25,
-                gamma * -0.1,
-                gamma * 0.75,
-                gamma * 0.05,
-                gamma * 0.15,
-                gamma * 0.8,
-            ]
-        )
-
-    fixture = {
-        "spot_price": 6070,
-        "prev_close_price": 6050,
-        "zerogamma": 6035,
-        "today_ddt_string": "fixture",
-        "option_data": {"columns": columns, "data": rows},
-    }
+def test_renderer_accepts_backend_contract_and_escapes_source_warnings() -> None:
     node_program = """
 const fs = require("fs");
 const vm = require("vm");
 vm.runInThisContext(fs.readFileSync(process.argv[1], "utf8"));
 const fixture = JSON.parse(process.argv[2]);
-const model = globalThis.KingNodeWeb.buildKingNodeModel(fixture, 16.25);
+const model = globalThis.KingNodeWeb.normaliseSnapshot(fixture);
+const html = globalThis.KingNodeWeb.renderModel(model);
 process.stdout.write(JSON.stringify({
-  windowSize: model.rows.length,
-  firstStrike: model.rows[0].strike,
-  lastStrike: model.rows[model.rows.length - 1].strike,
-  zeroGamma: model.zeroGamma,
-  vixSpot: model.vixSpot,
-  quality: model.quality,
-  gammaTotal: model.totals.gamma,
-  expectedGamma: model.rows.reduce((sum, row) => sum + row.gamma, 0),
-  kingNode: model.gammaNode.strike,
-  rawGammaTotal: model.totals.rawGamma,
-  rawGammaNode: model.rawGammaNode.strike
+  schema: globalThis.KingNodeWeb.SCHEMA_VERSION,
+  rowCount: model.rows.length,
+  hasApiModel: html.includes("PORTABLE V5 ENGINE"),
+  hasRawLevel: html.includes("RAW GAMMA LEVEL"),
+  hasRawFormula: html.includes("(Γcall × OIcall) + (Γput × OIput)"),
+  hasEscapedWarning: html.includes("&lt;script&gt;alert(&#039;no&#039;)&lt;/script&gt;"),
+  hasUnsafeWarning: html.includes("<script>alert('no')</script>"),
+  formatted: globalThis.KingNodeWeb.formatExposure(12500000)
 }));
 """
     result = subprocess.run(
-        ["node", "-e", node_program, str(KING_NODE_JS), json.dumps(fixture)],
+        [
+            "node",
+            "-e",
+            node_program,
+            str(KING_NODE_JS),
+            json.dumps(web_snapshot_fixture()),
+        ],
         cwd=ROOT,
         check=True,
         capture_output=True,
@@ -144,60 +229,43 @@ process.stdout.write(JSON.stringify({
     )
     parsed = json.loads(result.stdout)
 
-    assert parsed["windowSize"] == 47
-    assert parsed["firstStrike"] == 5840
-    assert parsed["lastStrike"] == 6300
-    assert parsed["zeroGamma"] == 6035
-    assert parsed["vixSpot"] == 16.25
-    assert parsed["quality"] == "COMPLETE"
-    assert parsed["gammaTotal"] == pytest.approx(parsed["expectedGamma"])
-    assert parsed["kingNode"] in {5840, 6300}
-    selected_rows = rows[4:51]
-    expected_raw_gamma = sum(
-        row[3] * row[5] + row[4] * row[6] for row in selected_rows
-    )
-    expected_raw_node = max(
-        selected_rows,
-        key=lambda row: row[3] * row[5] + row[4] * row[6],
-    )[0]
-    assert parsed["rawGammaTotal"] == pytest.approx(expected_raw_gamma)
-    assert parsed["rawGammaNode"] == expected_raw_node
+    assert parsed == {
+        "schema": "king-node.v1",
+        "rowCount": 47,
+        "hasApiModel": True,
+        "hasRawLevel": True,
+        "hasRawFormula": True,
+        "hasEscapedWarning": True,
+        "hasUnsafeWarning": False,
+        "formatted": "+12.50M",
+    }
 
 
 @pytest.mark.skipif(shutil.which("node") is None, reason="Node.js is not installed")
-def test_raw_gamma_multiplies_each_option_side_before_strike_aggregation() -> None:
-    fixture = {
-        "columns": [
-            "strike_price",
-            "call_gamma",
-            "put_gamma",
-            "call_open_int",
-            "put_open_int",
-        ],
-        "data": [
-            [6000, 1, 2, 10, 20],
-            [6000, 3, 4, 5, 7],
-        ],
-    }
+def test_renderer_rejects_error_or_empty_snapshot() -> None:
     node_program = """
 const fs = require("fs");
 const vm = require("vm");
 vm.runInThisContext(fs.readFileSync(process.argv[1], "utf8"));
-const fixture = JSON.parse(process.argv[2]);
-const rows = globalThis.KingNodeWeb.aggregateByStrike(
-  globalThis.KingNodeWeb.rowsFromSplit(fixture)
-);
-process.stdout.write(JSON.stringify(rows[0]));
+let message = "";
+try {
+  globalThis.KingNodeWeb.normaliseSnapshot({
+    schema_version: "king-node.v1",
+    status: "error",
+    quality: {errors: ["source unavailable"]},
+    rows: []
+  });
+} catch (error) {
+  message = error.message;
+}
+process.stdout.write(message);
 """
     result = subprocess.run(
-        ["node", "-e", node_program, str(KING_NODE_JS), json.dumps(fixture)],
+        ["node", "-e", node_program, str(KING_NODE_JS)],
         cwd=ROOT,
         check=True,
         capture_output=True,
         text=True,
     )
-    parsed = json.loads(result.stdout)
 
-    assert parsed["rawCallGamma"] == 25
-    assert parsed["rawPutGamma"] == 68
-    assert parsed["rawGamma"] == 93
+    assert result.stdout == "source unavailable"
