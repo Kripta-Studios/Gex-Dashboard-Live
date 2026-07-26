@@ -38,13 +38,18 @@ Estados permitidos: `QUEUED`, `ACTIVE`, `FAILED_CAUSALITY`,
 | CROSS_VENUE_CALENDAR_RR_LEADER_V4 | logistic pooled V2R1 fit 2023–2024 | `BLOCKED_DATA` | development2025 PF1,204/1,248/1,346, pero gate vintage2026 encuentra cinco nuevos IDs Greek/IV y falla cerrado antes de outcomes |
 | CROSS_VENUE post-V4 cash-only | summaries/spot/cross-cash/shallow trees/raw35x1m | `FAILED_ECONOMIC` | ningún candidato pasa los seis bloques ticker-año 2024–2025; no V5 ni acceso 2026 |
 | CROSS_VENUE_OPRA_TRADE_QUOTE_FLOW_V5 | desequilibrio de prints OPRA 0DTE ejecutados frente al NBBO estrictamente anterior | `BLOCKED_DATA` | source gate: 1.364/1.504, 140 invalid/duplicate, enero2024=0/21 ambos; auditor PASS rehash/reparse1.364, mismatch0; sin features/outcomes |
+| CROSS_VENUE_CALENDAR_RR_LEADER_V6 | continuación no lineal depth2 sobre las 29 features V4 selladas | `ACTIVE` | predeclarada sin descargas; pendiente evaluator+auditor versionados y development 2024→2025 completo |
 
-No queda familia activa. V5 cerró en source gate antes de features/outcomes.
+V6 es la única familia activa y usa exclusivamente artefactos sellados V4; no
+reabre V4 ni convierte 2024–2025 en OOS. V5 cerró en source gate antes de
+features/outcomes.
 Calendar-RR V4 aporta PF>1,20 en development2025 para los tres, pero
 es post-outcome y no puede materializar 2026 sin violar el gate Greek/IV; su
 sustituto cash-only no transporta entre 2024 y 2025. Los outcomes 2026 de ambas
-familias permanecen cerrados. V5 debe pasar data gate y auditor outcome-free
-versionados antes de evaluar conjuntamente 2024–2025; no se puede seleccionar
-ticker/año ni relajar retrospectivamente ningún contrato. La siguiente frontera
-depende de una fuente externa nueva con histórico y live auditables; autoridad
-`CAUSAL_SOURCE_EXTERNAL_DEPENDENCY_BLOCK_20260726.md`.
+familias permanecen cerrados. V6 debe tener evaluator y auditor versionados
+antes de evaluar conjuntamente 2024–2025; no se puede seleccionar ticker/año,
+mes ni relajar retrospectivamente ningún contrato. Incluso un PASS development
+necesita una fuente outcome-free materializable para congelar 2026. La
+autorización posterior permite solo el development V6; autoridades
+`CAUSAL_SOURCE_EXTERNAL_DEPENDENCY_BLOCK_20260726.md` y
+`CROSS_VENUE_CALENDAR_RR_LEADER_V6_SHALLOW_HISTGB_PREDECLARATION.md`.

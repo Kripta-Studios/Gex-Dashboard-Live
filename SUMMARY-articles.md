@@ -1,5 +1,15 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+### V6: falsificación no lineal de V4 — 2026-07-26
+
+La continuación autorizada no añade datos ni elige meses: comprueba si el edge
+agregado de V4 dependía de una frontera lineal demasiado rígida. Conserva el
+vector causal de 29 features y todos los trades, y fija antes de medir un
+HistGradientBoosting de profundidad2. Dos folds cronológicos separan 2024 y
+2025. Exigir los seis ticker-año y los doce meses evita declarar rentable una
+mejora limitada a junio/julio u otro régimen ya observado. 2026 solo puede ser
+un outer one-shot después de PASS y freeze versionado.
+
 ### V5 falsada en materialización de fuente — 2026-07-26
 
 La paridad documental no basta: al materializar 1.504 sesiones predeclaradas,

@@ -1,5 +1,14 @@
 # Bloqueo de fuente causal externa — 2026-07-26
 
+## Autorización posterior del usuario
+
+El usuario confirma que solo dispone de Options Standard básica y autoriza una
+única continuación interna V6 sobre los artefactos V4 ya sellados, sin nuevas
+descargas. Esta excepción permite desarrollo 2024–2025 conforme a
+`CROSS_VENUE_CALENDAR_RR_LEADER_V6_SHALLOW_HISTGB_PREDECLARATION.md`; no aporta
+una fuente 2026 ni relaja el fallo Greek/IV. Por tanto este bloqueo sigue siendo
+autoritativo para abrir outcomes 2026 o afirmar paridad histórico/live.
+
 ## Estado
 
 `BLOCKED_EXTERNAL_CAUSAL_SOURCE`.

@@ -1,5 +1,15 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+## V6 continúa V4 sin fuente nueva — 2026-07-26
+
+El usuario autoriza usar solo los artefactos V4 existentes bajo su licencia
+Options Standard básica. V6 queda predeclarada como una única prueba no lineal:
+mismas 29 features, mapping, eventos, clocks y costes; HistGB depth2 fijo en
+lugar del logistic. 2024 y 2025 siguen siendo development visto. Debe pasar
+PF>1,20, WR>45%, neto>0, mínimo13/mes y 12/12 meses positivos en QQQ/SPXW/SPY
+en ambos años antes de congelar y abrir 2026 una sola vez. No hay descarga,
+selección de junio/julio, reparación Greek/IV ni cambio live.
+
 ## V5 cerrada en source gate — 2026-07-26
 
 La captura outcome-free procesó 1.504 requests y conservó 1.364 completos; 140

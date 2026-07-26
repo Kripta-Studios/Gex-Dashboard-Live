@@ -1,5 +1,17 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+## V6 predeclarada sobre artefactos V4 — 2026-07-26
+
+La licencia es Options Standard básica: no volver a intentar endpoints sin
+entitlement. Por autorización expresa del usuario, una única V6 continúa V4
+sin descargar ni reconstruir datos. Mantiene mapping/features/clocks/eventos/
+costes y sustituye únicamente logistic por HistGB depth2 fijo. Development
+walk-forward: 2023→2024 y 2023+2024→2025, con gate estricta en los seis
+ticker-año y todos los meses. Primero commit/push del contrato; después
+evaluator+auditor committed antes de ejecutar. 2026 y live permanecen cerrados
+hasta PASS. Autoridad:
+`CROSS_VENUE_CALENDAR_RR_LEADER_V6_SHALLOW_HISTGB_PREDECLARATION.md`.
+
 ## V5 source gate FAILED — 2026-07-26, sin outcomes
 
 Desde `e6bdac64`, 1.504 requests completos: 1.364 captures válidos y 140

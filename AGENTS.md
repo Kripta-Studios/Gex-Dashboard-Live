@@ -1,5 +1,22 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-07-26 — V6 continúa V4 sin nuevas descargas
+
+El usuario confirma que la licencia disponible es Options Standard básica y
+autoriza continuar exclusivamente con los artefactos V4 ya sellados. Queda
+predeclarada una sola falsificación development:
+`CROSS_VENUE_CALENDAR_RR_LEADER_V6_SHALLOW_HISTGB_PREDECLARATION.md`. Conserva
+mapping, 29 features, clocks, todos los eventos y costes de V4; cambia solo el
+logistic por un HistGradientBoosting depth2 fijo. Folds: fit2023→dev2024 y
+fit2023+2024→dev2025. No descargar ThetaData, no reabrir V1–V5 y no leer 2026.
+
+Orden obligatorio: commit/push de predeclaración y handoffs; implementar y
+versionar evaluator+auditor antes de una única evaluación. Deben pasar los seis
+ticker-año PF>1,20, WR>45%, neto>0, mínimo13 cada mes y 12/12 meses positivos.
+Solo un PASS autoriza congelar un outer2026; hasta entonces outcomes 2026,
+payoff físico y live/VPS siguen cerrados. Los cinco IDs Greek/IV de junio2026
+no se reparan, intersectan, excluyen ni recapturan.
+
 ### Checkpoint 2026-07-26 — V5 falla source gate, sin outcomes
 
 La captura V5 desde `e6bdac64` procesó el universo frozen completo de 1.504

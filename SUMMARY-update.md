@@ -1,5 +1,12 @@
 # SUMMARY-update — ledger científico compacto
 
+2026-07-26, V6 predeclarada por autorización del usuario sobre los datasets V4
+ya sellados y sin nuevas descargas. Único cambio: logistic→HistGB depth2 fijo;
+mapping, 29 features, clocks, eventos y costes intactos. Folds dev 2023→2024 y
+2023+2024→2025; gate completa en seis ticker-año y 72 celdas mensuales. Primero
+versionar contrato, después evaluator+auditor preejecución. 2026/live cerrados
+hasta PASS; cinco IDs Greek/IV permanecen fail-closed.
+
 2026-07-26, V5 `FAILED_OUTCOME_FREE_SOURCE_CAPTURE_GATE`: universo1.504,
 captures válidos1.364, fallos140 uniformes invalid/duplicate; QQQ32/25/8 y
 SPY38/30/7 por año, enero2024=0/21 completo en ambos. Stagers0/no seal; no
