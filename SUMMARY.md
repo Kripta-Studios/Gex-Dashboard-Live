@@ -1,5 +1,16 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+## Full nested mensual falla — 2026-07-26
+
+La búsqueda exhaustiva causal solicitada no transporta. Sobre los meses test
+concatenados, QQQ obtiene PF0,585/WR35,6%/-23,41 y 1/6 meses positivos; SPXW
+0,844/38,6%/-6,34 y 3/6; SPY 1,084/47,7%/+2,62, pero solo2/6 y mínimo12.
+Auditor independiente refittea36 modelos, repite18 winners y reproduce370
+trades, ask→bid, hold30–180 y overlap0. La familia se cierra sin integración
+live. El edge retrospectivo de intersection_guarded no era una expectativa
+causal: se había seleccionado sobre los mismos meses y con labels/scheduler no
+equivalentes a ejecución.
+
 ## Implementación nested congelada antes del run — 2026-07-26
 
 Evaluator y auditor están listos sin haber evaluado un fold real. El runner

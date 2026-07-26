@@ -1,5 +1,20 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+## Full nested mensual FAIL auditado — 2026-07-26
+
+La secuencia pedida se ejecutó de verdad: train→select6m sobre 1.128.960
+overlays→freeze→test1m, seis veces por ticker, ledger solo test. Resultado:
+QQQ PF0,585/WR35,57%/-23,413/1 mes positivo; SPXW
+0,844/38,60%/-6,337/3; SPY 1,084/47,66%/+2,619/2 y min mensual12.
+Ningún ticker pasa.
+
+Auditor PASS: fuente/features reconstruidas, 36 modelos y 36 prediction hashes
+exactos, 18 winners y 370 trades reproducidos, hold válido y overlap0.
+Hashes summary/audit `01074ce9...97c8`/`aa496662...e42c`. Cierre:
+`EVENT_OPTION_EXECQUOTE_FULL_NESTED_MONTHLY_OVERLAY_V1_FAILURE.md`.
+Versionar evidencia completa y handoffs. No live/services/bots/systemd porque
+el condicional de rentabilidad falló; no retunear H1 ni reabrir GroupDRO.
+
 ## Runner y auditor nested listos preejecución — 2026-07-26
 
 Implementados evaluator y auditor `event_option_execquote_full_nested...`.

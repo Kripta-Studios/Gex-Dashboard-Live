@@ -1,0 +1,145 @@
+{
+  "all_tickers_pass": false,
+  "artifacts": {
+    "recomputed_fold_results": {
+      "path": "recomputed_fold_results.csv",
+      "rows": 18,
+      "sha256": "5aa6668c273dae4693da62b5170963cb3a688fdd8abe09ffcc818704727fd85a"
+    }
+  },
+  "auditor_sha256": "206e29f15c0aae32632f3273fc9f849eee303abe78d094b337ca026c8fabfaec",
+  "contract_sha256": "244250b9515963e3546d3c1a84eaecfdf674617d942e754f111c9924b8ea2860",
+  "economic_status": "FAILED_DEVELOPMENT_FULL_GATES",
+  "evaluator_sha256": "df903710f8200cc25e6b4f9b203ea4b2bbf8f5955864a6871fc8fe50f737fd06",
+  "family": "EVENT_OPTION_EXECQUOTE_FULL_NESTED_MONTHLY_OVERLAY_V1",
+  "features_rebuilt": true,
+  "folds_recomputed": 18,
+  "hold_30_180": true,
+  "live_modified": false,
+  "logical_configurations_recomputed": 20321280,
+  "model_hash_matches": 36,
+  "models_refit": 36,
+  "option_price_mode": "executable_quote",
+  "prediction_hash_matches": 36,
+  "promotable": false,
+  "recomputed_trade_rows": 370,
+  "reject_while_open_violations": 0,
+  "result_summary_sha256": "01074ce9c7244f57560b4867e783cbfe059a379fda5817e31b80fcf484f897c8",
+  "schema_version": 1,
+  "source_rehashed": true,
+  "source_sha256": "e6a19efba1edb055c733aab4967843f7a4b5f1d2c8238a7a243fc5bbc2251903",
+  "status": "PASS_INDEPENDENT_FULL_NESTED_AUDIT",
+  "stored_trade_rows": 370,
+  "test_only_ledger": true,
+  "ticker_metrics": {
+    "QQQ": {
+      "min_month_trades": 18,
+      "monthly": {
+        "202601": {
+          "pnl_return": -0.2761445809624561,
+          "trades": 24
+        },
+        "202602": {
+          "pnl_return": 0.3491953065742496,
+          "trades": 18
+        },
+        "202603": {
+          "pnl_return": -11.34876952055556,
+          "trades": 33
+        },
+        "202604": {
+          "pnl_return": -6.445185260597507,
+          "trades": 33
+        },
+        "202605": {
+          "pnl_return": -1.4015308510428284,
+          "trades": 20
+        },
+        "202606": {
+          "pnl_return": -4.2901193105484525,
+          "trades": 21
+        }
+      },
+      "pnl_return": -23.412554217132556,
+      "positive_months": 1,
+      "profit_factor": 0.5847057981764056,
+      "trades": 149,
+      "win_rate": 0.35570469798657717
+    },
+    "SPXW": {
+      "min_month_trades": 17,
+      "monthly": {
+        "202601": {
+          "pnl_return": -3.591270291470517,
+          "trades": 20
+        },
+        "202602": {
+          "pnl_return": -0.20946495959164857,
+          "trades": 19
+        },
+        "202603": {
+          "pnl_return": -4.575995223703597,
+          "trades": 19
+        },
+        "202604": {
+          "pnl_return": 0.6663239020701515,
+          "trades": 17
+        },
+        "202605": {
+          "pnl_return": 0.5648954840736742,
+          "trades": 20
+        },
+        "202606": {
+          "pnl_return": 0.8087223506701374,
+          "trades": 19
+        }
+      },
+      "pnl_return": -6.336788737951798,
+      "positive_months": 3,
+      "profit_factor": 0.8443750373610809,
+      "trades": 114,
+      "win_rate": 0.38596491228070173
+    },
+    "SPY": {
+      "min_month_trades": 12,
+      "monthly": {
+        "202601": {
+          "pnl_return": -0.060081681312680435,
+          "trades": 25
+        },
+        "202602": {
+          "pnl_return": 1.642636186973056,
+          "trades": 18
+        },
+        "202603": {
+          "pnl_return": -0.8502084547818556,
+          "trades": 12
+        },
+        "202604": {
+          "pnl_return": -1.2741183083303302,
+          "trades": 15
+        },
+        "202605": {
+          "pnl_return": -2.829728139360575,
+          "trades": 18
+        },
+        "202606": {
+          "pnl_return": 5.990671252594047,
+          "trades": 19
+        }
+      },
+      "pnl_return": 2.61917085578166,
+      "positive_months": 2,
+      "profit_factor": 1.0839210498172398,
+      "trades": 107,
+      "win_rate": 0.4766355140186916
+    }
+  },
+  "ticker_pass": {
+    "QQQ": false,
+    "SPXW": false,
+    "SPY": false
+  },
+  "trade_ledger_exact": true,
+  "winner_matches": 18
+}

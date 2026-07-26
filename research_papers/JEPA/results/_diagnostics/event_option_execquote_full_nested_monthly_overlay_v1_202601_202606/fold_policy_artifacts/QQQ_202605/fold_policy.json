@@ -1,0 +1,131 @@
+{
+  "artifacts": {
+    "call_model": {
+      "path": "call_model.txt",
+      "sha256": "eabd74b1b36bdaa26a53a98aa7008eca6801663371d1c76ffd01583c8e92bf38"
+    },
+    "features": {
+      "path": "feature_columns.json",
+      "sha256": "723cc08bdb19bfb32fce22bebf3848dd902b708e214dd7d7bccc556ef1cce9de"
+    },
+    "medians": {
+      "path": "medians.csv",
+      "sha256": "df724f477d651277b32111797d7e17cd873fb020fefd80044e4d6c4b9728d303"
+    },
+    "put_model": {
+      "path": "put_model.txt",
+      "sha256": "874d6357333f2a00adb3c558352600ce6363fdfa6499ea34a7cf50e84cb0e948"
+    }
+  },
+  "auditor_sha256": "206e29f15c0aae32632f3273fc9f849eee303abe78d094b337ca026c8fabfaec",
+  "contract_sha256": "244250b9515963e3546d3c1a84eaecfdf674617d942e754f111c9924b8ea2860",
+  "delta": 35,
+  "evaluator_sha256": "df903710f8200cc25e6b4f9b203ea4b2bbf8f5955864a6871fc8fe50f737fd06",
+  "family": "EVENT_OPTION_EXECQUOTE_FULL_NESTED_MONTHLY_OVERLAY_V1",
+  "feature_count": 289,
+  "features_sha256": "b4f038f75cb029c4ba2d1e4e4aab5266a45d86e9c2d86ac527a69be521c852ca",
+  "git_head": "5b0a44adf1ab87b44e84b108ab065adfc347ef0d",
+  "model_params": {
+    "clip_return": 5.0,
+    "colsample_bytree": 0.85,
+    "learning_rate": 0.035,
+    "min_child_samples": 60,
+    "n_estimators": 160,
+    "num_leaves": 31,
+    "objective": "regression_l1",
+    "reg_lambda": 5.0,
+    "seed": 20260617,
+    "subsample": 0.85
+  },
+  "policy_frozen_before_test_outcome_read": true,
+  "profile": "target_zero_dte_d35_return",
+  "scan": {
+    "base_configurations": 70560,
+    "evaluated_configurations": 1128960,
+    "frequency_eligible_base_winners": 7448,
+    "rank": {
+      "grid_index": 33312,
+      "min_month_trades": 14,
+      "pnl_return": 4.032935067402994,
+      "positive_months": 5,
+      "profit_factor": 1.1468806193125765,
+      "win_rate": 0.46938775510204084,
+      "worst_month_pnl": -0.3621024477684479
+    },
+    "status": "WINNER_FROZEN"
+  },
+  "schema_version": 1,
+  "selection_metrics": {
+    "min_month_trades": 14,
+    "monthly": {
+      "202511": {
+        "pnl_return": 1.9016525503005437,
+        "trades": 15
+      },
+      "202512": {
+        "pnl_return": 0.23106364957980485,
+        "trades": 16
+      },
+      "202601": {
+        "pnl_return": 0.3338589123661323,
+        "trades": 14
+      },
+      "202602": {
+        "pnl_return": 1.8003622121610379,
+        "trades": 15
+      },
+      "202603": {
+        "pnl_return": -0.3621024477684478,
+        "trades": 20
+      },
+      "202604": {
+        "pnl_return": 0.1281001907639232,
+        "trades": 18
+      }
+    },
+    "pnl_return": 4.0329350674029945,
+    "positive_months": 5,
+    "profit_factor": 1.1468806193125771,
+    "trades": 98,
+    "win_rate": 0.46938775510204084
+  },
+  "selection_months": [
+    "202511",
+    "202512",
+    "202601",
+    "202602",
+    "202603",
+    "202604"
+  ],
+  "selection_prediction_sha256": "b8183d71b41e458d1750f177ab40c09721992757432af6275de585fcb6740694",
+  "selection_rows": 4287,
+  "source_sha256": "e6a19efba1edb055c733aab4967843f7a4b5f1d2c8238a7a243fc5bbc2251903",
+  "test_month": "202605",
+  "ticker": "QQQ",
+  "train_rows": 7825,
+  "training_months": [
+    "202501",
+    "202502",
+    "202503",
+    "202504",
+    "202505",
+    "202506",
+    "202507",
+    "202508",
+    "202509",
+    "202510"
+  ],
+  "winner": {
+    "action": "BOTH",
+    "cooldown": 0,
+    "edge": 0.1,
+    "grid_index": 33312,
+    "max_day": 1,
+    "momentum": "SPX_COUNTER_5M",
+    "near_bps": 10.0,
+    "threshold": -0.1,
+    "time_max": 870,
+    "time_min": 660
+  },
+  "winner_name": "thr-0.1_edge0.1_BOTH_t660-870_near10_SPX_COUNTER_5M_cap1_cd0"
+}

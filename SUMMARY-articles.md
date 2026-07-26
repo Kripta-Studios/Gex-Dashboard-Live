@@ -1,5 +1,22 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+### Un sweep nested puede seguir sobreajustando su ventana de selección — 2026-07-26
+
+Separar correctamente select y test elimina leakage directo, pero no garantiza
+transporte. Con 1,13 millones de overlays, las policies mensuales mostraron PF
+de selección medianos cercanos a 1,13/1,30/1,40 y aun así cayeron en test a
+0,58/0,84/1,08. La multiplicidad encuentra reglas frágiles en seis meses aunque
+el ranking premie el peor mes. El siguiente mes intacto, no la belleza del
+in-sample seleccionado, decide si existe edge.
+
+### Física de ejecución puede falsificar una rentabilidad legacy — 2026-07-26
+
+Un resultado retrospectivo con labels no certificados y cooldown desde entry
+no equivale a ask→bid con una sola posición. Al imponer outcomes
+`executable_quote`, holds30–180 y esperar al exit real, el mismo concepto de
+overlay pierde en QQQ/SPXW y no cumple estabilidad en SPY. La diferencia no se
+debe reparar escogiendo los meses o tickers que sobrevivieron.
+
 ### La barrera de outcome puede materializarse dentro del fold — 2026-07-26
 
 Un walk-forward es más auditable si el runner carga primero features del mes

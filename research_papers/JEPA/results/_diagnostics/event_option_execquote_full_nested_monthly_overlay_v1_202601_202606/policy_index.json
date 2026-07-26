@@ -1,0 +1,110 @@
+[
+  {
+    "path": "fold_policy_artifacts/QQQ_202601/fold_policy.json",
+    "sha256": "3f47a176237424b0628a9226b66c588daa121a241c12e8f2557ff933d55335ac",
+    "test_month": "202601",
+    "ticker": "QQQ"
+  },
+  {
+    "path": "fold_policy_artifacts/SPXW_202601/fold_policy.json",
+    "sha256": "689db14d928573318cbe33a7454842eb5347bb47d1520d1cdf420f763407ae75",
+    "test_month": "202601",
+    "ticker": "SPXW"
+  },
+  {
+    "path": "fold_policy_artifacts/SPY_202601/fold_policy.json",
+    "sha256": "fb056ab072b34ecf12ef6ce1df6b530c0ff422fa98a5b644f167529f853119d4",
+    "test_month": "202601",
+    "ticker": "SPY"
+  },
+  {
+    "path": "fold_policy_artifacts/QQQ_202602/fold_policy.json",
+    "sha256": "897b5441a371c993cf718591ff4e15f377d0ce5f651b0635fc2883a3b21a0c54",
+    "test_month": "202602",
+    "ticker": "QQQ"
+  },
+  {
+    "path": "fold_policy_artifacts/SPXW_202602/fold_policy.json",
+    "sha256": "873ebbbf8629f5017a098161a40d77b32d9441fab00c705b92006b02db9c380a",
+    "test_month": "202602",
+    "ticker": "SPXW"
+  },
+  {
+    "path": "fold_policy_artifacts/SPY_202602/fold_policy.json",
+    "sha256": "b0b79d441d308fc8dd026b4012a7116a7c83c49f88b4c69899921d3cdf903b7c",
+    "test_month": "202602",
+    "ticker": "SPY"
+  },
+  {
+    "path": "fold_policy_artifacts/QQQ_202603/fold_policy.json",
+    "sha256": "ce5aac3d5e8375557692a50ac740a2019e13d2a5f9a3d0e191c1f7a5c206c03e",
+    "test_month": "202603",
+    "ticker": "QQQ"
+  },
+  {
+    "path": "fold_policy_artifacts/SPXW_202603/fold_policy.json",
+    "sha256": "7e2085a55ea15da9c310368c6c8774bfb9ee5309b121d865256a37f0bceb6ee2",
+    "test_month": "202603",
+    "ticker": "SPXW"
+  },
+  {
+    "path": "fold_policy_artifacts/SPY_202603/fold_policy.json",
+    "sha256": "2dfb5a9727522155766f7cb2c367d0d69fa4ed805549a66e494a78f064ed0eff",
+    "test_month": "202603",
+    "ticker": "SPY"
+  },
+  {
+    "path": "fold_policy_artifacts/QQQ_202604/fold_policy.json",
+    "sha256": "8090f938722d7cc63459e124d7315c2c8f64b1baa6a6db07b85539df9dca108a",
+    "test_month": "202604",
+    "ticker": "QQQ"
+  },
+  {
+    "path": "fold_policy_artifacts/SPXW_202604/fold_policy.json",
+    "sha256": "72d77f4a01a6de222178217d72dfbd0aa7d2d47d58dfa7d9c4200f1f8ac003db",
+    "test_month": "202604",
+    "ticker": "SPXW"
+  },
+  {
+    "path": "fold_policy_artifacts/SPY_202604/fold_policy.json",
+    "sha256": "2122980dc156e1d22fd5a8dced39e7ee38f1d94863016787befb3d182789f834",
+    "test_month": "202604",
+    "ticker": "SPY"
+  },
+  {
+    "path": "fold_policy_artifacts/QQQ_202605/fold_policy.json",
+    "sha256": "022074cb7ed87f6e3a43d2f53be15ad1b3b6e4eb148394db3e88120c6746243a",
+    "test_month": "202605",
+    "ticker": "QQQ"
+  },
+  {
+    "path": "fold_policy_artifacts/SPXW_202605/fold_policy.json",
+    "sha256": "b64bd76ceadc8b390a94c7ee459e8c778afe4271ba3756e840a6a18d49f4c940",
+    "test_month": "202605",
+    "ticker": "SPXW"
+  },
+  {
+    "path": "fold_policy_artifacts/SPY_202605/fold_policy.json",
+    "sha256": "b71a78f530d3ce28c10d019cbcc1cb11b2468cd55c3f13f2047baa3c8916b00a",
+    "test_month": "202605",
+    "ticker": "SPY"
+  },
+  {
+    "path": "fold_policy_artifacts/QQQ_202606/fold_policy.json",
+    "sha256": "09bea6f7ee8f1e46f2b326e97743cbd8e0881e7beed3937e5e59c30ee6fc7cf3",
+    "test_month": "202606",
+    "ticker": "QQQ"
+  },
+  {
+    "path": "fold_policy_artifacts/SPXW_202606/fold_policy.json",
+    "sha256": "4895030a5e7a0ad68f982461056061344487dce67d0e6c388c1ec9026c844b63",
+    "test_month": "202606",
+    "ticker": "SPXW"
+  },
+  {
+    "path": "fold_policy_artifacts/SPY_202606/fold_policy.json",
+    "sha256": "c6e6f5787e2638a4a996ee9c9631f49c66c77119f628f39cf3d581695e809467",
+    "test_month": "202606",
+    "ticker": "SPY"
+  }
+]

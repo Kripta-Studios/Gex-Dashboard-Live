@@ -279,6 +279,7 @@ el hash y el resultado.
 - `85254f29` — `feat(king-node): add realtime engine service and API`.
 - `3021fc66` — `feat(king-node): render precomputed realtime model`.
 - `94b2a60e` — `ops(king-node): add VPS runtime and health checks`.
+- `d75cb279` — `docs(king-node): version workbook formula references`.
 
 ## Checkpoint backend implementado después de `fc592de7`
 
@@ -306,8 +307,8 @@ Validación de este checkpoint:
 
 ## Checkpoint renderer final
 
-La versión actual pendiente de commit convierte
-`web/templates/js/king_node.js` en un renderer fail-closed de
+La versión publicada en `3021fc66` convierte `web/templates/js/king_node.js`
+en un renderer fail-closed de
 `king-node.v1`. Muestra:
 
 - calidad, frescura y procedencia de Tastytrade/ThetaData;
@@ -356,18 +357,40 @@ pero exige snapshot/Tasty frescos, 47 strikes y VIX/VVIX/VIX1D observados. La
 opción `--require-reference-export` hace que la paridad estática pendiente sea
 un gate estricto.
 
-Validación actual:
+Validación final local:
 
-- suite focal completa: `13 passed`;
+- suite focal completa, incluido lector del endpoint: `15 passed`;
 - Ruff de los archivos nuevos: PASS;
 - `compileall`: PASS;
 - `node --check`: PASS;
 - `bash -n scripts/deploy_king_node_vps.sh`: PASS;
 - `git diff --check`: PASS salvo avisos CRLF de Windows.
 
-Siguiente orden exacto:
+Los tres artefactos fuente se publicaron sin modificaciones en `d75cb279`.
+`tests/test_king_node_server.py` añade dos regresiones del lector de snapshot:
+entrega válida con metadatos de frescura y rechazo de schema incompatible.
 
-1. versionar los tres artefactos fuente y este hand-off;
-2. registrar el hash final en este documento;
-3. en el VPS, validar un one-shot con Tastytrade y Theta Terminal realmente
-   disponibles.
+## Qué falta fuera de esta máquina
+
+La implementación y el paquete de despliegue están completos. No se ejecutó
+ninguna mutación del VPS desde esta sesión. En el VPS todavía se debe:
+
+1. actualizar `main` y ejecutar `scripts/deploy_king_node_vps.sh`;
+2. confirmar que `gex_daemon.service` produce un SPX 0DTE de menos de 15 min;
+3. confirmar que Theta Terminal devuelve valores observados para VIX, VVIX y
+   VIX1D;
+4. ejecutar `services/king_node_service.py --once` y después
+   `scripts/check_king_node_health.py`;
+5. abrir la pestaña con un usuario ADMIN y comprobarla visualmente.
+
+La inspección visual automatizada local quedó bloqueada porque el conector de
+navegador respondió `No browser is available`; el contrato DOM/escape sí está
+probado con Node.
+
+Para paridad **literal** con todos los textos de Excel aún falta una exportación
+auditada de los valores estáticos de `Matrix!A1:S79` e
+`IV Regime Map!A1:K55`. No faltan fórmulas del catálogo para raw gamma ni para
+el perfil publicado: el runtime usa mientras tanto un fallback semántico
+explícito y marca el snapshot `DEGRADED`. Cuando se disponga de esa exportación,
+se rellena `config/king_node_reference.json` sin cambiar la API ni el frontend,
+y el gate `--require-reference-export` debe pasar.

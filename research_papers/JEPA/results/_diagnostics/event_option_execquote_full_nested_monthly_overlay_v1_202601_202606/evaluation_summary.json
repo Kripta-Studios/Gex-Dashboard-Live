@@ -1,0 +1,166 @@
+{
+  "all_tickers_pass": false,
+  "artifacts": {
+    "fold_results": {
+      "path": "fold_results.csv",
+      "rows": 18,
+      "sha256": "564f4440418f4a695442306240d77e353e4ee07c01478d308d56d367e6384eb6"
+    },
+    "policy_index": {
+      "path": "policy_index.json",
+      "rows": 18,
+      "sha256": "6505e6cd4f860861f7f1d6dc144853dc71850564cb20f34244cf6da0342aed03"
+    },
+    "test_only_trades": {
+      "path": "test_only_trades.parquet",
+      "rows": 370,
+      "sha256": "428fea8f5d56492ca3bbda250de852c5b0d0890c94d6689d225527592a57c56c"
+    }
+  },
+  "auditor_sha256": "206e29f15c0aae32632f3273fc9f849eee303abe78d094b337ca026c8fabfaec",
+  "configurations_per_ticker_fold": 1128960,
+  "contract_sha256": "244250b9515963e3546d3c1a84eaecfdf674617d942e754f111c9924b8ea2860",
+  "evaluator_sha256": "df903710f8200cc25e6b4f9b203ea4b2bbf8f5955864a6871fc8fe50f737fd06",
+  "family": "EVENT_OPTION_EXECQUOTE_FULL_NESTED_MONTHLY_OVERLAY_V1",
+  "feature_count": 289,
+  "features_sha256": "b4f038f75cb029c4ba2d1e4e4aab5266a45d86e9c2d86ac527a69be521c852ca",
+  "folds": 18,
+  "git_head": "5b0a44adf1ab87b44e84b108ab065adfc347ef0d",
+  "live_modified": false,
+  "outcome_access": {
+    "selection_outcomes_before_fold_freeze": true,
+    "test_outcomes_after_fold_freeze": true,
+    "test_outcomes_before_fold_freeze": false
+  },
+  "policy_frozen_before_test_outcome_read": true,
+  "promotable": false,
+  "reason_not_promotable": "2026 was already seen before this family was declared",
+  "schema_version": 1,
+  "source": {
+    "bytes": 74638331,
+    "option_price_mode": "executable_quote",
+    "path": "tmp/event_option_dataset_execquote_causal1030_202501_202606_v3_physics/event_option_dataset.parquet",
+    "rows": 44169,
+    "sha256": "e6a19efba1edb055c733aab4967843f7a4b5f1d2c8238a7a243fc5bbc2251903"
+  },
+  "status": "FAILED_DEVELOPMENT_FULL_GATES",
+  "test_months": [
+    "202601",
+    "202602",
+    "202603",
+    "202604",
+    "202605",
+    "202606"
+  ],
+  "test_only_ledger": true,
+  "ticker_metrics": {
+    "QQQ": {
+      "min_month_trades": 18,
+      "monthly": {
+        "202601": {
+          "pnl_return": -0.2761445809624561,
+          "trades": 24
+        },
+        "202602": {
+          "pnl_return": 0.3491953065742496,
+          "trades": 18
+        },
+        "202603": {
+          "pnl_return": -11.34876952055556,
+          "trades": 33
+        },
+        "202604": {
+          "pnl_return": -6.445185260597507,
+          "trades": 33
+        },
+        "202605": {
+          "pnl_return": -1.4015308510428284,
+          "trades": 20
+        },
+        "202606": {
+          "pnl_return": -4.2901193105484525,
+          "trades": 21
+        }
+      },
+      "pnl_return": -23.412554217132556,
+      "positive_months": 1,
+      "profit_factor": 0.5847057981764056,
+      "trades": 149,
+      "win_rate": 0.35570469798657717
+    },
+    "SPXW": {
+      "min_month_trades": 17,
+      "monthly": {
+        "202601": {
+          "pnl_return": -3.591270291470517,
+          "trades": 20
+        },
+        "202602": {
+          "pnl_return": -0.20946495959164857,
+          "trades": 19
+        },
+        "202603": {
+          "pnl_return": -4.575995223703597,
+          "trades": 19
+        },
+        "202604": {
+          "pnl_return": 0.6663239020701515,
+          "trades": 17
+        },
+        "202605": {
+          "pnl_return": 0.5648954840736742,
+          "trades": 20
+        },
+        "202606": {
+          "pnl_return": 0.8087223506701374,
+          "trades": 19
+        }
+      },
+      "pnl_return": -6.336788737951798,
+      "positive_months": 3,
+      "profit_factor": 0.8443750373610809,
+      "trades": 114,
+      "win_rate": 0.38596491228070173
+    },
+    "SPY": {
+      "min_month_trades": 12,
+      "monthly": {
+        "202601": {
+          "pnl_return": -0.060081681312680435,
+          "trades": 25
+        },
+        "202602": {
+          "pnl_return": 1.642636186973056,
+          "trades": 18
+        },
+        "202603": {
+          "pnl_return": -0.8502084547818556,
+          "trades": 12
+        },
+        "202604": {
+          "pnl_return": -1.2741183083303302,
+          "trades": 15
+        },
+        "202605": {
+          "pnl_return": -2.829728139360575,
+          "trades": 18
+        },
+        "202606": {
+          "pnl_return": 5.990671252594047,
+          "trades": 19
+        }
+      },
+      "pnl_return": 2.61917085578166,
+      "positive_months": 2,
+      "profit_factor": 1.0839210498172398,
+      "trades": 107,
+      "win_rate": 0.4766355140186916
+    }
+  },
+  "ticker_pass": {
+    "QQQ": false,
+    "SPXW": false,
+    "SPY": false
+  },
+  "total_logical_configurations": 20321280
+}

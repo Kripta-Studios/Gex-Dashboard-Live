@@ -1,0 +1,129 @@
+{
+  "artifacts": {
+    "call_model": {
+      "path": "call_model.txt",
+      "sha256": "71a42bac21e9b95ea021f1d3040ab77b807fb1f46900945a1eb1b958fbd6cab5"
+    },
+    "features": {
+      "path": "feature_columns.json",
+      "sha256": "723cc08bdb19bfb32fce22bebf3848dd902b708e214dd7d7bccc556ef1cce9de"
+    },
+    "medians": {
+      "path": "medians.csv",
+      "sha256": "66c82df2c1e1c7d08ef40f91d32c6b5c29078fcdadd515fe35012b7478dcad87"
+    },
+    "put_model": {
+      "path": "put_model.txt",
+      "sha256": "64baa2446da18a3864b51ff7c5da4b22b41ff9dfb4c7bd2d4e2f0844f4e36336"
+    }
+  },
+  "auditor_sha256": "206e29f15c0aae32632f3273fc9f849eee303abe78d094b337ca026c8fabfaec",
+  "contract_sha256": "244250b9515963e3546d3c1a84eaecfdf674617d942e754f111c9924b8ea2860",
+  "delta": 25,
+  "evaluator_sha256": "df903710f8200cc25e6b4f9b203ea4b2bbf8f5955864a6871fc8fe50f737fd06",
+  "family": "EVENT_OPTION_EXECQUOTE_FULL_NESTED_MONTHLY_OVERLAY_V1",
+  "feature_count": 289,
+  "features_sha256": "b4f038f75cb029c4ba2d1e4e4aab5266a45d86e9c2d86ac527a69be521c852ca",
+  "git_head": "5b0a44adf1ab87b44e84b108ab065adfc347ef0d",
+  "model_params": {
+    "clip_return": 5.0,
+    "colsample_bytree": 0.85,
+    "learning_rate": 0.035,
+    "min_child_samples": 60,
+    "n_estimators": 160,
+    "num_leaves": 31,
+    "objective": "regression_l1",
+    "reg_lambda": 5.0,
+    "seed": 20260617,
+    "subsample": 0.85
+  },
+  "policy_frozen_before_test_outcome_read": true,
+  "profile": "target_zero_dte_d25_return",
+  "scan": {
+    "base_configurations": 70560,
+    "evaluated_configurations": 1128960,
+    "frequency_eligible_base_winners": 10132,
+    "rank": {
+      "grid_index": 209707,
+      "min_month_trades": 17,
+      "pnl_return": 10.775977145613957,
+      "positive_months": 6,
+      "profit_factor": 1.239504991621625,
+      "win_rate": 0.463768115942029,
+      "worst_month_pnl": 0.41724324100826604
+    },
+    "status": "WINNER_FROZEN"
+  },
+  "schema_version": 1,
+  "selection_metrics": {
+    "min_month_trades": 17,
+    "monthly": {
+      "202509": {
+        "pnl_return": 3.8990802008185366,
+        "trades": 23
+      },
+      "202510": {
+        "pnl_return": 1.458345884188531,
+        "trades": 26
+      },
+      "202511": {
+        "pnl_return": 3.4697895974226194,
+        "trades": 17
+      },
+      "202512": {
+        "pnl_return": 0.8836197719885432,
+        "trades": 25
+      },
+      "202601": {
+        "pnl_return": 0.6478984501874581,
+        "trades": 26
+      },
+      "202602": {
+        "pnl_return": 0.41724324100826604,
+        "trades": 21
+      }
+    },
+    "pnl_return": 10.775977145613954,
+    "positive_months": 6,
+    "profit_factor": 1.2395049916216245,
+    "trades": 138,
+    "win_rate": 0.463768115942029
+  },
+  "selection_months": [
+    "202509",
+    "202510",
+    "202511",
+    "202512",
+    "202601",
+    "202602"
+  ],
+  "selection_prediction_sha256": "24a1b35574e96aa925abdb843d801c9b802c2350a847a2d3c527a1486703e8e7",
+  "selection_rows": 5175,
+  "source_sha256": "e6a19efba1edb055c733aab4967843f7a4b5f1d2c8238a7a243fc5bbc2251903",
+  "test_month": "202603",
+  "ticker": "SPXW",
+  "train_rows": 6719,
+  "training_months": [
+    "202501",
+    "202502",
+    "202503",
+    "202504",
+    "202505",
+    "202506",
+    "202507",
+    "202508"
+  ],
+  "winner": {
+    "action": "BOTH",
+    "cooldown": 45,
+    "edge": 0.4,
+    "grid_index": 209707,
+    "max_day": 3,
+    "momentum": "SELF_SAME_5M",
+    "near_bps": 10.0,
+    "threshold": 0.0,
+    "time_max": 870,
+    "time_min": 630
+  },
+  "winner_name": "thr0_edge0.4_BOTH_t630-870_near10_SELF_SAME_5M_cap3_cd45"
+}

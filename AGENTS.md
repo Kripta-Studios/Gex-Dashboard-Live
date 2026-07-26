@@ -1,5 +1,27 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-07-26 — full nested mensual FAIL auditado
+
+Única ejecución económica desde `5b0a44ad`; el intento previo como archivo
+abortó antes de importar/leer fuente/output. Se evaluaron 18 folds,
+20.321.280 configuraciones lógicas y se concatenaron solo 370 trades test.
+QQQ: 149 trades, WR35,570%, PF0,584706, PnL -23,412554, min18, 1/6 meses.
+SPXW: 114/38,596%/0,844375/-6,336789/min17/3. SPY:
+107/47,664%/1,083921/+2,619171/min12/2. Los tres fallan.
+
+Auditor `PASS_INDEPENDENT_FULL_NESTED_AUDIT`: refit36/hash36, prediction
+hashes36, winners18, ledger370 exacto, hold30–180 y overlap0. Evaluation/audit
+SHA `01074ce9...97c8`/`aa496662...e42c`. Autoridad terminal:
+`EVENT_OPTION_EXECQUOTE_FULL_NESTED_MONTHLY_OVERLAY_V1_FAILURE.md`.
+
+No relanzar, cambiar ranking, rescatar ticker/mes ni añadir guards. La fuerte
+rentabilidad intersection_guarded era hindsight sobre los mismos meses, labels
+legacy y scheduler sin no-overlap; no es expectativa live. GroupDRO sigue
+cerrado sin ejecución. No tocar services/bots/systemd/live: el condicional del
+usuario no se cumplió. Siguiente: versionar resultado+audit+cinco handoffs. No
+queda un outer intacto en este parquet; una promoción exige policy congelada
+antes de un mes futuro.
+
 ### Checkpoint 2026-07-26 — runner nested preejecución implementado
 
 Runner:

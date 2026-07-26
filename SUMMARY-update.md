@@ -1,5 +1,13 @@
 # SUMMARY-update — ledger científico compacto
 
+2026-07-26, full nested one-shot `FAILED_DEVELOPMENT_FULL_GATES` desde
+`5b0a44ad`: 18 folds×1.128.960 configs, ledger test-only370. QQQ
+149/PF0,584706/WR35,570%/-23,412554/min18/1 mes positivo; SPXW
+114/0,844375/38,596%/-6,336789/min17/3; SPY
+107/1,083921/47,664%/+2,619171/min12/2. Auditor PASS refit36,
+pred-hash36,winners18,ledger exacto, hold30–180/overlap0. Summary/audit SHA
+`01074ce9...97c8`/`aa496662...e42c`. Familia cerrada; no live, no retune H1.
+
 2026-07-26, implementación preejecución del full nested lista. Evaluator carga
 features sin outcomes futuros, ajusta cada fold con train, escanea select6m,
 serializa winner/modelos/medianas/hashes y solo después abre test1m. Auditor
