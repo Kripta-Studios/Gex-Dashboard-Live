@@ -1,5 +1,20 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+## Selector exhaustivo nested mensual — 2026-07-26
+
+Se predeclara la comprobación pedida por el usuario sobre el parquet
+executable_quote existente. Cada fold separa training del modelo, seis meses
+anteriores de selección y un mes test. En selección se barren exactamente
+1.128.960 overlays por ticker; la ganadora se congela y solo sus trades test
+entran al ledger enero–junio. Enero nunca participa en su propia búsqueda y sí
+puede participar en la de febrero. El scheduler usa fills ask→bid, hold30–180 y
+reject_while_open físico. GroupDRO se cierra sin ejecución.
+
+Los gates siguen siendo simultáneos para QQQ/SPXW/SPY: PF>1,20, WR>45%, neto
+positivo, mínimo13 y seis meses positivos. Aun pasando, 2026 es development ya
+visto; se necesita shadow futuro y paridad antes de integrar paper-only. Live,
+services, bots y systemd permanecen intactos durante esta evaluación.
+
 ## Contextual bandit sobre executable_quote — 2026-07-26
 
 Se abandona OPRA externo sin ejecutar nada. La nueva falsificación no genera

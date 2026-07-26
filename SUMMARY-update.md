@@ -1,5 +1,16 @@
 # SUMMARY-update — ledger científico compacto
 
+2026-07-26, predeclarado
+`EVENT_OPTION_EXECQUOTE_FULL_NESTED_MONTHLY_OVERLAY_V1`: fuente ask→bid
+inmutable 44.169 filas/SHA `e6a19ef...51903`; perfiles QQQ/SPY d35-return y
+SPXW d25-return. Por fold: fit antes de select6m, barrido exacto de 1.128.960
+overlays/ticker solo en selección, freeze y test1m; ledger final solo test
+202601–202606. Scheduler corrige el legacy con hold30–180 y
+next_allowed=max(exit, entry+cooldown); SPXW stop_pause1, sin guard SPY posthoc.
+Gates PF>1,20/WR>45%/neto>0/min13/6 meses positivos por ticker. GroupDRO
+cerrado sin implementación/métrica. Primero versionar doc, luego
+runner+auditor, único run y auditoría; live cerrado y 2026 development visto.
+
 2026-07-26, intake OPRA cerrado sin ejecución por orden del usuario: no key,
 endpoint, captura, seal, feature u outcome. Predeclarada una única falsificación
 con el parquet executable_quote existente SHA `e6a19ef...51903`, 44.169 filas

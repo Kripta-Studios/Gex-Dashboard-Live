@@ -1,5 +1,28 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-07-26 — selector exhaustivo nested predeclarado
+
+El usuario ordena la secuencia causal mensual exacta: para enero ajustar el
+modelo antes de julio2025, buscar solo en julio–diciembre, congelar y evaluar
+enero; para febrero desplazar un mes, incluyendo enero solo en selección; así
+hasta junio. El ledger final contiene exclusivamente los meses test.
+
+Autoridad:
+`EVENT_OPTION_EXECQUOTE_FULL_NESTED_MONTHLY_OVERLAY_V1_PREDECLARATION.md`.
+Reutiliza sin rebuild el parquet executable_quote de 44.169 filas SHA
+`e6a19ef...51903`. Perfiles fijos QQQ/SPY d35-return y SPXW d25-return; dos
+LightGBM ask→bid por fold. Busca las 1.128.960 configuraciones legacy por
+ticker/fold únicamente en seis meses previos, con ranking congelado, hold
+30–180 y `next_allowed=max(exit, entry+cooldown)`. SPXW conserva stop_pause1;
+no guard posthoc SPY.
+
+GroupDRO queda `CLOSED_NO_EXECUTION`: sin runner, fit, predicción ni métrica.
+Orden: commit/push documental → runner+auditor implementados y versionados →
+único run enero–junio → auditoría independiente. Gates por ticker: PF>1,20,
+WR>45%, neto>0, mínimo13 y PnL positivo en los seis meses. Todo 2026 es
+development visto; incluso un PASS necesita shadow futuro y paridad antes de
+paper-only. No tocar services/bots/systemd/live durante evaluación.
+
 ### Checkpoint 2026-07-26 — contextual bandit executable predeclarado
 
 Por orden del usuario se cierra sin ejecución la admisión Massive/OPRA: no hubo

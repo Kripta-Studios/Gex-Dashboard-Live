@@ -1,5 +1,24 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+## Selector exhaustivo nested mensual predeclarado — 2026-07-26
+
+Nueva autoridad:
+`EVENT_OPTION_EXECQUOTE_FULL_NESTED_MONTHLY_OVERLAY_V1_PREDECLARATION.md`.
+Para cada test enero–junio, LightGBM se ajusta antes de una ventana de selección
+de seis meses; se evalúan allí, y solo allí, las 1.128.960 configuraciones por
+ticker; se congela una ganadora y el ledger concatena solo el mes test. Enero
+usa train Ene–Jun2025/select Jul–Dic; febrero desplaza un mes e incluye enero
+solo como selección; así hasta junio. Fuente ask→bid inmutable SHA
+`e6a19ef...51903`, 44.169 filas; no descarga/rebuild.
+
+Scheduler nuevo obligatorio: hold30–180 y
+`next_allowed=max(entry+cooldown,entry+exit_minutes)`, por lo que no repite el
+bug no-overlap del scanner legacy. SPXW stop_pause1 fijo; no guard SPY posthoc.
+Gates finales PF>1,20/WR>45%/neto>0/min13 y 6/6 meses positivos por ticker.
+GroupDRO queda cerrado sin ejecución. Siguiente: commit/push documental;
+implementar/versionar runner+auditor; ejecutar una vez y auditar. 2026 es
+development visto y `services/`, `bots/`, `systemd/` siguen cerrados.
+
 ## Contextual bandit executable predeclarado — 2026-07-26
 
 El intake Massive/OPRA se cierra sin ejecución por orden del usuario: cero

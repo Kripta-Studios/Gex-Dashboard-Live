@@ -1,8 +1,17 @@
 # EXECUTABLE_CONTEXTUAL_BANDIT_GROUPDRO_V1 — predeclaración
 
 **Fecha:** 2026-07-26  
-**Estado:** `PREDECLARED_DEVELOPMENT_ONLY`  
+**Estado:** `CLOSED_NO_EXECUTION_SUPERSEDED_BY_USER_NESTED_SELECTOR`
 **Producción:** cerrada
+
+## Cierre anterior a ejecución — 2026-07-26
+
+El usuario prioriza la comprobación exhaustiva del selector mensual sobre el
+grid de 1.128.960 overlays. Esta familia se cierra antes de implementar runner,
+ajustar una red, generar una predicción o leer una métrica. La autoridad
+siguiente es
+`EVENT_OPTION_EXECQUOTE_FULL_NESTED_MONTHLY_OVERLAY_V1_PREDECLARATION.md`.
+No se permite volver a ejecutar GroupDRO para rescatar el resultado nested.
 
 ## Motivo y alcance
 

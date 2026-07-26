@@ -1,5 +1,24 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+### Nested walk-forward separa búsqueda y mes test — 2026-07-26
+
+Probar muchas configuraciones no invalida por sí solo un sistema si todo el
+barrido ocurre en datos anteriores y la ganadora queda congelada antes del mes
+test. La separación debe incluir también el modelo que genera los scores: un
+bloque ajusta el modelo, los seis meses siguientes seleccionan el overlay y el
+mes posterior evalúa. Concatenar solo esos meses test produce el ledger causal;
+elegir el overlay sobre los mismos meses reportados no lo hace. El número de
+configuraciones sigue aumentando el riesgo de selection overfit, por lo que el
+ranking, desempate y auditoría del winner deben congelarse antes del run.
+
+### Cooldown no equivale a reject_while_open — 2026-07-26
+
+Un cooldown desde la entrada permite solapamiento cuando la opción continúa
+abierta después de ese plazo. La regla live-equivalente es esperar hasta el
+máximo entre el cierre físico de la posición y el cooldown. El `exit_minutes`
+del trade aceptado puede gobernar decisiones posteriores porque se conoce al
+cerrarse; usarlo para decidir una entrada anterior sería leakage.
+
 ### Un evento con contrafactuales completos no necesita PPO — 2026-07-26
 
 Si cada fila contiene, después del cierre, el payoff ejecutable de todas las
