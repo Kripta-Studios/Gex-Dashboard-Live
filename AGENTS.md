@@ -1,5 +1,22 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-07-26 — admisión externa OPRA predeclarada
+
+La búsqueda documental oficial concreta la dependencia post-V7. Massive
+Options Advanced es el único candidato autoservicio encontrado con trades
+tick desde2014, quotes desde2022-03-07, REST histórico y WebSocket real-time.
+Databento `TCBBO/CMBP-1` empieza 28-mar-2023 y no mantiene el mismo contrato en
+enero/febrero; Cboe requiere confirmar por contrato la paridad live.
+
+Autoridad outcome-free:
+`EXTERNAL_OPRA_SOURCE_INTAKE_PREDECLARATION_20260726.md`. No es V8 ni autoriza
+compra/captura. Falta `MASSIVE_API_KEY` con Options Advanced y un shadow de
+cinco sesiones futuras QQQ/SPY comparado al día siguiente contra REST. El
+predecessor exige quote del mismo contrato con timestamp_ms estrictamente
+menor; empates ms, corrections o divergencia live↔historical fallan cerrado.
+2026 ya está visto: aun con PASS, el próximo outer promocional debe ser futuro.
+Features/modelo/payoff/live/VPS/systemd siguen cerrados.
+
 ### Checkpoint 2026-07-26 — inventario post-V7 confirma dependencia externa
 
 Censo read-only por nombres/schemas, sin red ni nuevos valores. QQQ/SPY tienen

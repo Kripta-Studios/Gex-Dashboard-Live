@@ -1,5 +1,12 @@
 # SUMMARY-update — ledger científico compacto
 
+2026-07-26, predeclaración de admisión externa: Massive Options Advanced es el
+candidato documental por trades desde2014, quotes desde2022-03-07 y
+REST+WebSocket. No está admitido: falta `MASSIVE_API_KEY`/plan y shadow
+live↔REST5 sesiones. Histórico ns se trunca a ms; quote predecessor debe ser
+estrictamente anterior y corrections/paridad exactas. Databento TCBBO empieza
+28-mar-2023. Sin endpoint/datos/V8; próximo outer futuro.
+
 2026-07-26, inventario post-V7 read-only: no fuente local nueva. QQQ/SPY
 Greeks/IV/OHLC/OI cubren 250/252/250 sesiones 2023–2025, pero están cerradas;
 quote size/ticks ya fallaron y V5 queda 1.364/1.504. Solo credenciales Theta,

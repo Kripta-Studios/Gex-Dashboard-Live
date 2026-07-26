@@ -1,5 +1,14 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+## Fuente externa: contrato de admisión, no V8 — 2026-07-26
+
+Massive Options Advanced queda seleccionado solo como candidato documental:
+cubre trades/quotes todo 2023 y ofrece REST+WebSocket. La precisión histórica
+ns frente a live ms y las corrections deben pasar un shadow outcome-free de
+cinco sesiones; cualquier divergencia cierra la fuente. Databento no tiene
+TCBBO/CMBP-1 uniforme hasta 28-mar-2023. Falta credencial/suscripción; no hubo
+endpoint, compra ni datos. 2026 está visto y el siguiente outer debe ser futuro.
+
 ## Post-V7: dependencia de fuente externa — 2026-07-26
 
 El inventario local por schemas no encuentra una medición causal nueva:

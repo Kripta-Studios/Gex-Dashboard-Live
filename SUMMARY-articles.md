@@ -1,5 +1,14 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+### La paridad histórica/live es una propiedad medible — 2026-07-26
+
+Que un proveedor publique REST histórico y WebSocket live no prueba que ambos
+transportes produzcan la misma feature. Distinta precisión temporal, fields de
+corrección o caps de suscripción pueden cambiar qué quote precede al trade. Un
+shadow live guardado y comparado después contra REST debe preceder a cualquier
+feature: los empates temporales quedan ambiguos y una divergencia material
+cierra la fuente, no se corrige retrospectivamente.
+
 ### Nuevo target no equivale a nueva fuente — 2026-07-26
 
 Descubrir que la magnitud domina a la accuracy no autoriza probar regresiones,

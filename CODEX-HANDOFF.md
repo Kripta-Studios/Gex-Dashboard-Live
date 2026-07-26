@@ -1,5 +1,15 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+## Admisión externa OPRA: candidato condicionado — 2026-07-26
+
+Massive Options Advanced es el candidato documental con cobertura completa de
+2023 y live, pero aún no es una fuente admitida. Contrato outcome-free
+`EXTERNAL_OPRA_SOURCE_INTAKE_PREDECLARATION_20260726.md`: requiere credencial y
+cinco sesiones shadow QQQ/SPY comparadas live↔REST, predecessor quote
+timestamp_ms estrictamente menor, corrections reproducibles y cero divergencia
+material. Databento no da TCBBO/CMBP-1 antes del 28-mar-2023. No endpoint,
+compra, dataset, V8 ni modelo; 2026 consumido y live cerrado.
+
 ## Inventario post-V7: sin fuente local nueva — 2026-07-26
 
 Read-only, sin endpoints/valores nuevos. Greeks/IV/OHLC/OI, quote size/ticks,

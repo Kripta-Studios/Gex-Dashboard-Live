@@ -4,6 +4,13 @@
 
 **Estado:** `BLOCKED_EXTERNAL_CAUSAL_SOURCE_POST_V7`.
 
+**Admisión externa condicionada:** la comparación documental posterior
+selecciona Massive Options Advanced como único candidato autoservicio con
+trades/quotes históricos que cubren todo 2023 y feeds live correspondientes.
+No se considera fuente viable todavía: primero debe superar el shadow
+live↔REST y la semántica de timestamps/correcciones fijados en
+`EXTERNAL_OPRA_SOURCE_INTAKE_PREDECLARATION_20260726.md`.
+
 ## Alcance
 
 Inventario read-only por nombres, conteos, schemas Parquet, contratos y
@@ -98,3 +105,21 @@ deberá ser un periodo futuro congelado antes de sus outcomes.
 
 No se predeclara V8 sin esa fuente. Payoff físico, live, VPS y systemd continúan
 cerrados.
+
+## Resultado de la búsqueda externa
+
+La documentación oficial permite convertir el bloqueo genérico en una
+dependencia concreta:
+
+- Massive Options Advanced es el candidato primario por trades tick desde 2014,
+  quotes desde 2022-03-07, REST histórico y WebSocket real-time;
+- Databento queda descartado para este contrato porque `TCBBO/CMBP-1` empieza
+  el 2023-03-28 y enero/febrero no tendría el mismo NBBO estricto;
+- Cboe DataShop queda condicionado a una confirmación contractual de paridad
+  live con su histórico Option Trades.
+
+No se llamó a ningún endpoint, no se compró un plan y no se leyó un valor. La
+dependencia mínima es una suscripción/credencial Massive Options Advanced y
+cinco sesiones futuras de shadow outcome-free. El contrato de admisión congela
+universo 0DTE QQQ/SPY, schema normalizado, predecessor estrictamente anterior,
+correcciones, raw, gates y auditor antes de cualquier captura.

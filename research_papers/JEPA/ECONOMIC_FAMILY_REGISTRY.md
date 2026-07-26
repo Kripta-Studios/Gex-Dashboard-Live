@@ -39,6 +39,7 @@ Estados permitidos: `QUEUED`, `ACTIVE`, `FAILED_CAUSALITY`,
 | CROSS_VENUE_CALENDAR_RR_LEADER_V4/V4R1/V4R2 | logistic pooled final fit 2023–2025 con retries y cuatro exclusiones outcome-free | `FAILED_ECONOMIC` | outer2026 H1 PF0,970/0,951/0,956, neto negativo y 2/6 meses positivos; julio MTD solo QQQ positivo; auditor independiente PASS |
 | CROSS_VENUE post-V4 cash-only | summaries/spot/cross-cash/shallow trees/raw35x1m | `FAILED_ECONOMIC` | ningún candidato pasa los seis bloques ticker-año 2024–2025; no V5 ni acceso 2026 |
 | CROSS_VENUE_OPRA_TRADE_QUOTE_FLOW_V5 | desequilibrio de prints OPRA 0DTE ejecutados frente al NBBO estrictamente anterior | `BLOCKED_DATA` | source gate: 1.364/1.504, 140 invalid/duplicate, enero2024=0/21 ambos; auditor PASS rehash/reparse1.364, mismatch0; sin features/outcomes |
+| EXTERNAL_OPRA_SOURCE_INTAKE | admisión de tape/NBBO OPRA histórico-live antes de cualquier familia económica | `BLOCKED_DATA` | Massive Advanced es candidato documental; falta credencial y shadow live↔REST de cinco sesiones; divergencia de timestamps/correcciones falla cerrado; no V8/modelo |
 | CROSS_VENUE_CALENDAR_RR_LEADER_V6 | continuación no lineal depth2 sobre las 29 features V4 selladas | `CLOSED` | cerrada sin implementación, predicción ni métrica al priorizar el V4 inmutable |
 | CROSS_VENUE_CALENDAR_RR_LEADER_V7 | logistic pooled rolling12 con refit al inicio de mes | `FAILED_ECONOMIC` | H1 PF0,812/1,080/1,032 y 1/2/3 meses positivos; junio falla SPXW/SPY y julio MTD falla SPXW/SPY; auditor PASS |
 
