@@ -281,8 +281,7 @@ el hash y el resultado.
 - `94b2a60e` — `ops(king-node): add VPS runtime and health checks`.
 - `d75cb279` — `docs(king-node): version workbook formula references`.
 - `45831b61` — `test(king-node): verify server snapshot delivery`.
-- Pendiente de hash: corrección final para que el health post-deploy apunte
-  explícitamente a `/var/lib/king-node/latest.json`.
+- `57b64ce3` — `fix(king-node): target deployed health snapshot`.
 
 Nota de concurrencia: al crear `45831b61`, otro proceso del mismo árbol ya
 había dejado staged 103 artefactos del overlay JEPA. Git los incluyó en ese
