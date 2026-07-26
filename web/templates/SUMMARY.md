@@ -276,5 +276,29 @@ el hash y el resultado.
 ## Registro de commits KING NODE
 
 - `67fc4e16` — `feat(web): add King Node exposure tab` (preexistente).
-- Pendiente: checkpoint raw gamma.
+- `fc592de7` — `feat(king-node): add raw gamma level and handoff`.
+- Pendiente: checkpoint motor/servicio/API.
 
+## Checkpoint backend implementado después de `fc592de7`
+
+Se han creado y validado, todavía pendientes del siguiente hash:
+
+- `modules/king_node_engine.py`: motor puro, ventana 47, perfil A:I, raw gamma,
+  régimen, keys, skew de-trended, walls, gamma flip, zero gamma, top-6 por lado,
+  suavizado, lock, pendiente GEX, Vomma, vol tension y estado de VIX1D;
+- `services/king_node_service.py`: selector de JSON Tastytrade, cliente oficial
+  `index/snapshot/price`, edades, estado, escritura atómica y CLI;
+- `config/king_node_reference.json`: contrato vacío/auditable para las dos
+  tablas estáticas, con fallback semántico explícito;
+- `services/servidor.py`: endpoint ADMIN `GET /api/king-node`;
+- `tests/test_king_node_engine.py`: seis regresiones de cálculo, estado,
+  histéresis, ThetaData y publicación.
+
+Validación de este checkpoint:
+
+- `python -m pytest tests/test_king_node_engine.py -q`: `6 passed`;
+- `python -m compileall`: PASS;
+- `python -m ruff check`: PASS;
+- `git diff --check`: PASS salvo aviso CRLF de Windows;
+- one-shot contra la carpeta real de junio: 47 strikes, raw gamma level 7500,
+  raw gamma 81,3700 y snapshot `DEGRADED` esperado al deshabilitar Theta.

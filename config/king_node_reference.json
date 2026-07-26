@@ -1,0 +1,11 @@
+{
+  "schema_version": "king-node-reference.v1",
+  "status": "semantic_fallback",
+  "authority": {
+    "workbook": "MASTER_KING_NODE_RECORD_V5.xlsx",
+    "catalog": "MASTER_KING_NODE_RECORD_V5_CATALOGO_COMPLETO_DE_FORMULAS.md",
+    "note": "Matrix and IV Regime Map are static workbook values, not formulas. Populate the maps with an audited Excel export to enable literal workbook lookup parity."
+  },
+  "matrix": {},
+  "iv_regime_map": {}
+}

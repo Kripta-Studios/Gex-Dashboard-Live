@@ -23,6 +23,13 @@ DATA_FOLDER = os.path.join(PROJECT_ROOT, "json_data")
 TEMPLATE_FOLDER = os.path.join(PROJECT_ROOT, "web", "templates")
 DOCS_PDF_FOLDER = os.path.join(PROJECT_ROOT, "docs", "pdfs")
 VIS_FOLDER = os.path.join(PROJECT_ROOT, "visualizar")
+KING_NODE_SNAPSHOT = os.environ.get(
+    "KING_NODE_SNAPSHOT",
+    os.path.join(PROJECT_ROOT, "runtime", "king_node", "latest.json"),
+)
+KING_NODE_MAX_AGE_SECONDS = int(
+    os.environ.get("KING_NODE_WEB_MAX_AGE_SECONDS", "900")
+)
 
 os.makedirs(DOCS_PDF_FOLDER, exist_ok=True)
 os.makedirs(VIS_FOLDER, exist_ok=True)
@@ -103,11 +110,57 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
 
     def _send_json(self, code, data):
         """Helper to send JSON response."""
-        body = json.dumps(data).encode("utf-8")
+        body = json.dumps(data, allow_nan=False).encode("utf-8")
         self.send_response(code)
         self.send_header("Content-type", "application/json")
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)
+
+    def _read_king_node_snapshot(self):
+        """Read and validate the precomputed KING NODE service snapshot."""
+        snapshot_path = os.path.abspath(KING_NODE_SNAPSHOT)
+        if not os.path.isfile(snapshot_path):
+            raise FileNotFoundError(
+                f"KING NODE snapshot not found: {snapshot_path}"
+            )
+        if os.path.getsize(snapshot_path) > 5 * 1024 * 1024:
+            raise ValueError("KING NODE snapshot exceeds the 5 MiB safety limit")
+        with open(snapshot_path, "r", encoding="utf-8") as handle:
+            payload = json.load(handle)
+        if not isinstance(payload, dict):
+            raise ValueError("KING NODE snapshot must be a JSON object")
+        if payload.get("schema_version") != "king-node.v1":
+            raise ValueError("Unsupported KING NODE snapshot schema")
+
+        generated_at = payload.get("generated_at")
+        try:
+            generated = datetime.fromisoformat(
+                str(generated_at).replace("Z", "+00:00")
+            )
+            if generated.tzinfo is None:
+                generated = generated.astimezone()
+            age_seconds = max(
+                0.0,
+                (
+                    datetime.now(generated.tzinfo) - generated
+                ).total_seconds(),
+            )
+        except (TypeError, ValueError):
+            age_seconds = None
+
+        response = dict(payload)
+        response["delivery"] = {
+            "snapshot_path": os.path.basename(snapshot_path),
+            "age_seconds": age_seconds,
+            "max_age_seconds": KING_NODE_MAX_AGE_SECONDS,
+            "stale": (
+                age_seconds is None
+                or age_seconds > KING_NODE_MAX_AGE_SECONDS
+            ),
+        }
+        return response
 
     def _require_auth(self):
         """Check auth and send error if unauthorized. Returns auth_info or None."""
@@ -524,6 +577,46 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
                     self.wfile.write(f.read())
             except Exception as e:
                 self.send_error(500, str(e))
+            return
+
+        # 2.5 API: KING NODE precomputed snapshot (ADMIN only)
+        if path_only == "/api/king-node":
+            auth_info = self._require_auth()
+            if not auth_info:
+                return
+            try:
+                if auth_info.get("role") != "ADMIN":
+                    self._send_json(
+                        403,
+                        {
+                            "status": "error",
+                            "message": "Admin access required",
+                        },
+                    )
+                    return
+                snapshot = self._read_king_node_snapshot()
+                self._send_json(200, snapshot)
+            except FileNotFoundError as exc:
+                self._send_json(
+                    503,
+                    {
+                        "schema_version": "king-node.v1",
+                        "status": "error",
+                        "message": str(exc),
+                    },
+                )
+            except (OSError, ValueError, json.JSONDecodeError) as exc:
+                logging.error(f"KING NODE snapshot error: {exc}")
+                self._send_json(
+                    503,
+                    {
+                        "schema_version": "king-node.v1",
+                        "status": "error",
+                        "message": f"KING NODE snapshot invalid: {exc}",
+                    },
+                )
+            finally:
+                self._release_api_key(auth_info)
             return
 
         # 3. API: GET LATEST (auth required)
