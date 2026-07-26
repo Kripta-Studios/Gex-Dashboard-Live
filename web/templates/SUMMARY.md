@@ -40,6 +40,11 @@ Los tres artefactos de referencia de KING NODE estaban sin rastrear al comenzar:
 - `MASTER_KING_NODE_RECORD_V5_CATALOGO_COMPLETO_DE_FORMULAS.md`;
 - `live_king_node.py`.
 
+Se auditaron por nombre/tamaño y se buscó material de credenciales en los dos
+artefactos de texto. No apareció ningún secreto; `live_king_node.py` conserva
+solo una ruta histórica local del workbook. Deben versionarse juntos, sin
+editar su contenido, en un commit documental separado.
+
 ## Trabajo ya realizado
 
 ### Pestaña web existente
@@ -273,6 +278,7 @@ el hash y el resultado.
 - `fc592de7` — `feat(king-node): add raw gamma level and handoff`.
 - `85254f29` — `feat(king-node): add realtime engine service and API`.
 - `3021fc66` — `feat(king-node): render precomputed realtime model`.
+- `94b2a60e` — `ops(king-node): add VPS runtime and health checks`.
 
 ## Checkpoint backend implementado después de `fc592de7`
 
@@ -329,7 +335,7 @@ Validación actual:
 
 ## Checkpoint operativo preparado después de `3021fc66`
 
-Archivos creados, todavía pendientes del siguiente hash:
+Archivos creados y publicados en `94b2a60e`:
 
 - `.env.king-node.example`: rutas, intervalos y edades sin secretos;
 - `systemd/king-node.service`: estado en `/var/lib/king-node`, dependencias
@@ -361,8 +367,7 @@ Validación actual:
 
 Siguiente orden exacto:
 
-1. commit/push del checkpoint operativo y este hand-off;
-2. registrar su hash final en este documento;
-3. decidir si versionar los tres artefactos fuente que siguen sin rastrear;
-4. en el VPS, validar un one-shot con Tastytrade y Theta Terminal realmente
+1. versionar los tres artefactos fuente y este hand-off;
+2. registrar el hash final en este documento;
+3. en el VPS, validar un one-shot con Tastytrade y Theta Terminal realmente
    disponibles.
