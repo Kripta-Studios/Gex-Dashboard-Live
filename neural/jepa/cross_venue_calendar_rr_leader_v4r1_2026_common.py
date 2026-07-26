@@ -9,6 +9,8 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
+import pyarrow as pa
+import pyarrow.parquet as pq
 
 from neural.jepa import build_cross_venue_calendar_rr_leader_v1 as v1_builder
 from neural.jepa.build_calendar_risk_reversal_pressure_v1 import canonical_date
@@ -18,6 +20,12 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 OPTIONS_ROOT = Path("D:/ThetaData/data_options")
 UNDERLYING_ROOT = Path("D:/ThetaData/data_underlying_derived")
 RETRY_ROOT = Path("D:/ThetaData/cross_venue_calendar_rr_v4r1_source_retry_2026")
+RETRY_RESEAL_ROOT = Path(
+    "D:/ThetaData/cross_venue_calendar_rr_v4r1_source_retry_2026_offline_reseal_v2"
+)
+ORIGINAL_RETRY_SEAL_SHA256 = (
+    "a18e086444598bae6e7d380bc82479b9818550932883835c083778d5c66758f0"
+)
 PREDECLARATION = PROJECT_ROOT / (
     "research_papers/JEPA/"
     "CROSS_VENUE_CALENDAR_RR_LEADER_V4R1_2026_SOURCE_RETRY_EXCLUSION_"
@@ -281,14 +289,14 @@ def normalize_response(
 def target_pair_gate(
     greeks_path: Path, iv_path: Path, spec: dict[str, Any]
 ) -> dict[str, Any]:
-    greeks = v1_builder._read_vintage_values(
+    greeks = read_vintage_values_compatible(
         greeks_path,
         kind="greeks",
         ticker=str(spec["ticker"]),
         trade_date=str(spec["trade_date"]),
         expiration=str(spec["expiration"]),
     )
-    iv = v1_builder._read_vintage_values(
+    iv = read_vintage_values_compatible(
         iv_path,
         kind="iv",
         ticker=str(spec["ticker"]),
@@ -336,3 +344,70 @@ def target_pair_gate(
         "iv_only_rows": 0,
         "reason": "",
     }
+
+
+def read_vintage_values_compatible(
+    path: str | Path,
+    *,
+    kind: str,
+    ticker: str,
+    trade_date: str,
+    expiration: str,
+) -> pd.DataFrame:
+    """Read vintage strings or retry timestamp columns under one exact contract."""
+    source = Path(path)
+    schema = pq.read_schema(source)
+    timestamp_type = schema.field("underlying_timestamp").type
+    if not pa.types.is_timestamp(timestamp_type):
+        return v1_builder._read_vintage_values(
+            source,
+            kind=kind,
+            ticker=ticker,
+            trade_date=trade_date,
+            expiration=expiration,
+        )
+    value_columns = (
+        v1_builder.GREEK_VALUE_COLUMNS
+        if kind == "greeks"
+        else v1_builder.IV_VALUE_COLUMNS
+    )
+    columns = [
+        "symbol",
+        "expiration",
+        "trade_date",
+        "underlying_timestamp",
+        "strike",
+        "right",
+        *value_columns,
+    ]
+    missing = sorted(set(columns).difference(schema.names))
+    if missing:
+        raise KeyError(f"V4R1 retry {kind} source lacks fields: {missing}")
+    output = pd.read_parquet(source, columns=columns).rename(
+        columns={"underlying_timestamp": "timestamp"}
+    )
+    output["symbol"] = output["symbol"].astype(str).str.upper().str.strip()
+    output["expiration"] = output["expiration"].map(canonical_date)
+    output["trade_date"] = output["trade_date"].map(canonical_date)
+    output["timestamp"] = pd.to_datetime(output["timestamp"], errors="coerce")
+    output["right"] = v1_builder.normalize_right(output["right"])
+    for column in ("strike", *value_columns):
+        output[column] = pd.to_numeric(output[column], errors="coerce")
+    expected_times = set(v1_builder.target_datetimes(trade_date))
+    output = output.loc[output["timestamp"].isin(expected_times)].copy()
+    numeric = output[["strike", *value_columns]].to_numpy(dtype=float)
+    if (
+        output.empty
+        or output[list(v1_builder.KEY_COLUMNS)].isna().any().any()
+        or not output["symbol"].eq(ticker).all()
+        or not output["trade_date"].eq(trade_date).all()
+        or not output["expiration"].eq(expiration).all()
+        or set(output["timestamp"].unique()) != expected_times
+        or not output["right"].isin(["CALL", "PUT"]).all()
+        or not np.isfinite(numeric).all()
+        or output.duplicated(list(v1_builder.KEY_COLUMNS)).any()
+    ):
+        raise AssertionError(f"invalid V4R1 retry {kind} target rows: {source}")
+    return output.sort_values(
+        list(v1_builder.KEY_COLUMNS), kind="stable"
+    ).reset_index(drop=True)

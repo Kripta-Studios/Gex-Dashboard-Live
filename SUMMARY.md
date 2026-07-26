@@ -1,5 +1,19 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+## V4R1: cinco retries recuperados, todavía sin outcomes — 2026-07-26
+
+La única llamada de red ya terminó con diez respuestas normalizadas. El seal
+inicial declaró incorrectamente 0/5 por una incompatibilidad técnica entre
+timestamps parquet y filtros string. La relectura offline exacta a 10:30/10:35
+demuestra Greek=IV en los cinco IDs (688/800/632/604/708 filas) y cero
+unilaterales, por lo que no se excluye ninguna fecha. No se reconsulta ni se
+modifica el raw original.
+
+Se fijó una aclaración antes de features/outcomes y se implementó un reseal
+offline separado. Focal8, Ruff y compile pasan. Falta commit/push y ejecutar ese
+reseal; después data gate y auditor outcome-free. Los opens 10:36/13:36 siguen
+sin leer y no existe todavía rentabilidad 2026 V4.
+
 ## V4R1 abre una vía causal a 2026 — 2026-07-26
 
 Por autorización nueva del usuario, los cinco fallos Greek/IV de junio pueden

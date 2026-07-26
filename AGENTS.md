@@ -1,5 +1,26 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-07-26 — V4R1 retry completa; reseal dtype pendiente
+
+La única captura autorizada se ejecutó desde `aba363c3`: diez respuestas
+Greek/IV normalizadas y raw preservados en
+`D:/ThetaData/cross_venue_calendar_rr_v4r1_source_retry_2026`, sin features ni
+outcomes. El primer seal mostró falsamente usable0/exclusiones5 porque el lector
+vintage aplicó límites string a `underlying_timestamp` físico `timestamp[ns]`;
+los cinco errores fueron `ArrowNotImplementedError`, no missingness económica.
+
+Relectura offline compatible, exacta a 10:30/10:35, da Greek=IV y unilaterales0:
+QQQ 20260624 688, QQQ 20260626 800, SPY 20260624 632, SPY 20260625 604 y
+SPY 20260626 708. No se omite ninguna fecha. Autoridad pre-feature:
+`CROSS_VENUE_CALENDAR_RR_LEADER_V4R1_RETRY_TIMESTAMP_DTYPE_CLARIFICATION.md`.
+El raw/seal original queda inmutable (seal SHA `a18e0864...58f0`); no requery.
+
+Lector compatible, resealer offline, builder y auditor pasan focal8/Ruff/
+compile, pero aún deben commit/push desde HEAD limpio. Después ejecutar una vez
+el reseal a `...source_retry_2026_offline_reseal_v2`, construir data gate
+outcome-free y auditarlo. Opens10:36/13:36, modelo outer, payoff y live siguen
+cerrados hasta versionar gate+auditor.
+
 ### Checkpoint 2026-07-26 — usuario autoriza V4R1 retry/exclusión 2026
 
 Este checkpoint sustituye el veto anterior únicamente para los cinco IDs

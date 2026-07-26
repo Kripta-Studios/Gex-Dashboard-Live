@@ -1,5 +1,15 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+### Dtype físico no equivale a missingness económica — 2026-07-26
+
+Un source gate debe distinguir un fallo de contenido de un fallo del lector. En
+V4R1 las diez respuestas fueron válidas, pero un filtro pyarrow string sobre
+una columna `timestamp[ns]` convirtió cinco pares completos en falsas
+exclusiones. La corrección científicamente segura preserva raw y seal, no
+reconsulta la fuente y crea un reseal separado que reparsea offline con igualdad
+exacta a los clocks predeclarados. Así se recuperan los cinco IDs con key-set
+Greek=IV y unilaterales0 sin abrir features ni outcomes.
+
 ### Missingness de fuente pre-outcome en V4R1 — 2026-07-26
 
 Una exclusión por fuente no es leakage económico si se decide sin outcomes,

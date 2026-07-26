@@ -1,5 +1,19 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+## V4R1 retry materializada; corrección dtype pre-feature — 2026-07-26
+
+La tanda única desde `aba363c3` produjo 10/10 raw+parquet válidos. El pair gate
+inicial 0/5 no es autoridad económica: falló al filtrar una columna parquet
+`timestamp[ns]` con strings. Sin red ni outcomes, la lectura exacta de 10:30 y
+10:35 obtiene las cinco parejas completas: 688, 800, 632, 604 y 708 filas por
+lado, sin Greek-only/IV-only; exclusiones0. Captura original inmutable, seal SHA
+`a18e0864...58f0`.
+
+La aclaración dtype, lector dual y resealer offline están implementados y pasan
+focal8/Ruff/compile. Orden inmediato: commit/push explícito → ejecutar una vez
+el reseal v2 → builder outcome-free → auditor independiente → versionar ambos.
+No abrir 10:36/13:36 ni congelar/evaluar V4 hasta terminar ese orden.
+
 ## V4R1 autorizada: retry/exclusión 2026 — 2026-07-26
 
 El usuario sustituye el veto a los cinco IDs junio2026: diez requests exactos

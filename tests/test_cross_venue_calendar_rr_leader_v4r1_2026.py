@@ -16,6 +16,9 @@ from neural.jepa import (
 )
 from neural.jepa import cross_venue_calendar_rr_leader_v4r1_2026_common as common
 from neural.jepa import evaluate_cross_venue_calendar_rr_leader_v2 as v2
+from neural.jepa import (
+    reseal_cross_venue_calendar_rr_leader_v4r1_2026_source_retry as reseal,
+)
 
 
 class _Response:
@@ -71,6 +74,64 @@ def test_known_vintage_mismatches_reproduce_without_outcomes() -> None:
         greek_only += int(gate["greek_only_rows"])
         iv_only += int(gate["iv_only_rows"])
     assert (greek_only, iv_only) == (92, 516)
+
+
+def test_timestamp_typed_retry_pair_is_read_exactly(tmp_path) -> None:
+    identity = {
+        "symbol": "QQQ",
+        "expiration": "20260624",
+        "trade_date": "20260624",
+        "strike": 600.0,
+        "right": "CALL",
+    }
+    clocks = pd.to_datetime(["2026-06-24 10:30:00", "2026-06-24 10:35:00"])
+    greeks = pd.DataFrame(
+        [
+            {
+                **identity,
+                "underlying_timestamp": clock,
+                "delta": 0.25,
+                "bid": 1.0,
+                "ask": 1.1,
+            }
+            for clock in clocks
+        ]
+    )
+    iv = pd.DataFrame(
+        [
+            {
+                **identity,
+                "underlying_timestamp": clock,
+                "bid": 1.0,
+                "ask": 1.1,
+                "bid_implied_vol": 0.2,
+                "ask_implied_vol": 0.21,
+            }
+            for clock in clocks
+        ]
+    )
+    greek_path = tmp_path / "greeks.parquet"
+    iv_path = tmp_path / "iv.parquet"
+    greeks.to_parquet(greek_path, index=False)
+    iv.to_parquet(iv_path, index=False)
+    gate = common.target_pair_gate(
+        greek_path,
+        iv_path,
+        {
+            "ticker": "QQQ",
+            "trade_date": "20260624",
+            "expiration": "20260624",
+        },
+    )
+    assert gate == {
+        "usable": True,
+        "greek_rows": 2,
+        "iv_rows": 2,
+        "shared_rows": 2,
+        "greek_only_rows": 0,
+        "iv_only_rows": 0,
+        "reason": "",
+    }
 
 
 def test_request_uses_frozen_first_interval_and_identity() -> None:
@@ -157,6 +218,11 @@ def test_auditor_comparison_detects_changed_feature() -> None:
 
 
 def test_clis_do_not_expose_scientific_overrides() -> None:
-    for args in (capture.parse_args([]), build.parse_args([]), audit.parse_args([])):
+    for args in (
+        capture.parse_args([]),
+        reseal.parse_args([]),
+        build.parse_args([]),
+        audit.parse_args([]),
+    ):
         for forbidden in ("ticker", "date", "exclude", "intersection", "model"):
             assert not hasattr(args, forbidden)

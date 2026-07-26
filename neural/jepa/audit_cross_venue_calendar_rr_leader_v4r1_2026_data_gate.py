@@ -35,7 +35,7 @@ from neural.jepa.build_calendar_risk_reversal_pressure_v1 import (  # noqa: E402
 
 
 PROJECT_ROOT = SCRIPT_REPO_ROOT
-DEFAULT_RETRY_ROOT = common.RETRY_ROOT
+DEFAULT_RETRY_ROOT = common.RETRY_RESEAL_ROOT
 DEFAULT_INPUT = builder.DEFAULT_OUTPUT
 DEFAULT_OUTPUT = PROJECT_ROOT / (
     "research_papers/JEPA/results/_diagnostics/"
@@ -74,6 +74,7 @@ def verify_tracked() -> None:
         Path(__file__).resolve(),
         Path(builder.__file__).resolve(),
         Path(capture.__file__).resolve(),
+        builder.RESEALER,
         Path(common.__file__).resolve(),
         common.PREDECLARATION,
     ):

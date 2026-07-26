@@ -1,5 +1,14 @@
 # SUMMARY-update — ledger científico compacto
 
+2026-07-26, retry V4R1 ejecutado una vez desde `aba363c3`: 10/10 respuestas
+normalizadas, raw inmutable, features/outcomes false. El seal usable0 fue un
+artefacto del lector (`timestamp[ns]` comparado con strings), no missingness.
+Reparse offline exacto 10:30/10:35: cinco parejas PASS con filas
+688/800/632/604/708, Greek-only0, IV-only0 y exclusiones0. Seal fuente SHA
+`a18e0864...58f0`; no requery. Aclaración+lector+resealer pasan focal8/Ruff/
+compile. Siguiente: commit/push, reseal v2 una vez, gate outcome-free y auditor;
+10:36/13:36 permanecen cerrados.
+
 2026-07-26, V4R1 predeclarada por orden posterior del usuario. Autoriza diez
 requests exactos Greek+IV para los cinco IDs junio2026; si no quedan key-exact,
 exclusión sensor-fecha antes de outcomes. No intersection/fill/overwrite.

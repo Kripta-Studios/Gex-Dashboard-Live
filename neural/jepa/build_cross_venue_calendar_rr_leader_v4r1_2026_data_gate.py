@@ -43,7 +43,11 @@ CAPTURER = PROJECT_ROOT / (
 AUDITOR = PROJECT_ROOT / (
     "neural/jepa/audit_cross_venue_calendar_rr_leader_v4r1_2026_data_gate.py"
 )
-DEFAULT_RETRY_ROOT = common.RETRY_ROOT
+RESEALER = PROJECT_ROOT / (
+    "neural/jepa/"
+    "reseal_cross_venue_calendar_rr_leader_v4r1_2026_source_retry.py"
+)
+DEFAULT_RETRY_ROOT = common.RETRY_RESEAL_ROOT
 DEFAULT_OUTPUT = PROJECT_ROOT / (
     "research_papers/JEPA/results/_diagnostics/"
     "cross_venue_calendar_rr_leader_v4r1_data_gate_202601_20260724_v1"
@@ -63,6 +67,7 @@ CODE_CLOSURE = (
     Path(__file__).resolve(),
     Path(common.__file__).resolve(),
     CAPTURER,
+    RESEALER,
     AUDITOR,
     common.PREDECLARATION,
 )
@@ -97,26 +102,39 @@ def verify_code() -> dict[str, str]:
 def load_retry_gate(retry_root: Path) -> tuple[pd.DataFrame, pd.DataFrame, dict[str, Any]]:
     paths = {
         name: retry_root / name
-        for name in ("seal.json", "pair_gate.csv", "exclusions.csv", "request_index.csv")
+        for name in (
+            "seal.json",
+            "pair_gate.csv",
+            "exclusions.csv",
+            "request_index.csv",
+            "source_rehash.csv",
+        )
     }
     if not all(path.is_file() for path in paths.values()):
         raise FileNotFoundError(f"incomplete V4R1 retry root: {retry_root}")
     seal = json.loads(paths["seal.json"].read_text(encoding="utf-8"))
     if (
         seal.get("schema")
-        != "cross_venue_calendar_rr_leader_v4r1_retry_seal_v1"
-        or seal.get("status") != "PASS_SOURCE_RETRY_GATE_WITH_FIXED_EXCLUSIONS"
+        != "cross_venue_calendar_rr_leader_v4r1_retry_offline_reseal_v2"
+        or seal.get("status") != "PASS_OFFLINE_REPARSE_RETRY_GATE"
         or seal.get("logical_requests") != 10
+        or seal.get("source_seal_sha256") != common.ORIGINAL_RETRY_SEAL_SHA256
         or seal.get("predeclaration_sha256") != common.PREDECLARATION_SHA256
         or seal.get("date_sha256") != common.DATE_SHA256
         or seal.get("capture_id_sha256") != common.CAPTURE_ID_SHA256
         or seal.get("outcome_free") is not True
         or seal.get("feature_2026_opened") is not False
         or seal.get("outcome_2026_accessed") is not False
+        or seal.get("network_accessed") is not False
+        or Path(str(seal.get("source_root"))) != common.RETRY_ROOT
+        or common.sha256_file(common.RETRY_ROOT / "seal.json")
+        != common.ORIGINAL_RETRY_SEAL_SHA256
         or common.sha256_file(paths["pair_gate.csv"]) != seal.get("pair_gate_sha256")
         or common.sha256_file(paths["exclusions.csv"]) != seal.get("exclusions_sha256")
         or common.sha256_file(paths["request_index.csv"])
         != seal.get("request_index_sha256")
+        or common.sha256_file(paths["source_rehash.csv"])
+        != seal.get("source_rehash_sha256")
     ):
         raise AssertionError("V4R1 retry seal changed")
     pair_gate = pd.read_csv(
@@ -190,14 +208,14 @@ def process_sensor_session(
     for role in ("front", "back"):
         expiration = str(record[f"{role}_expiration"])
         greeks_path, iv_path, generation = role_paths(record, role, pair_lookup)
-        greeks = v1_builder._read_vintage_values(
+        greeks = common.read_vintage_values_compatible(
             greeks_path,
             kind="greeks",
             ticker=ticker,
             trade_date=day,
             expiration=expiration,
         )
-        iv = v1_builder._read_vintage_values(
+        iv = common.read_vintage_values_compatible(
             iv_path,
             kind="iv",
             ticker=ticker,
