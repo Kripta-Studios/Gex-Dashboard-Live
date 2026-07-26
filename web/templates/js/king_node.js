@@ -84,6 +84,9 @@
                     callIvCount: 0,
                     putIvSum: 0,
                     putIvCount: 0,
+                    rawCallGamma: 0,
+                    rawPutGamma: 0,
+                    rawGammaCount: 0,
                 };
                 SOURCE_FIELDS.forEach((field) => {
                     initial[field] = 0;
@@ -100,6 +103,21 @@
                     target[`${field}Count`] += 1;
                 }
             });
+
+            const callGamma = nullableNumber(row.call_gamma);
+            const putGamma = nullableNumber(row.put_gamma);
+            const callOpenInterest = nullableNumber(row.call_open_int);
+            const putOpenInterest = nullableNumber(row.put_open_int);
+            if (
+                callGamma !== null &&
+                putGamma !== null &&
+                callOpenInterest !== null &&
+                putOpenInterest !== null
+            ) {
+                target.rawCallGamma += callGamma * callOpenInterest;
+                target.rawPutGamma += putGamma * putOpenInterest;
+                target.rawGammaCount += 1;
+            }
 
             const callIv = nullableNumber(row.call_iv);
             if (callIv !== null && callIv > 0) {
@@ -119,8 +137,17 @@
                     row[`${field}Count`] > 0 ? row[field] : null;
                 const callGex = exposure("call_gex");
                 const putGex = exposure("put_gex");
+                const rawGamma =
+                    row.rawGammaCount > 0
+                        ? row.rawCallGamma + row.rawPutGamma
+                        : null;
                 return {
                     strike: row.strike,
+                    rawGamma,
+                    rawCallGamma:
+                        row.rawGammaCount > 0 ? row.rawCallGamma : null,
+                    rawPutGamma:
+                        row.rawGammaCount > 0 ? row.rawPutGamma : null,
                     gammaGross:
                         callGex !== null && putGex !== null
                             ? (Math.abs(callGex) + Math.abs(putGex)) / BILLION
@@ -183,11 +210,20 @@
         return best;
     }
 
-    function strongestNode(rows, predicate = () => true) {
+    function strongestNode(
+        rows,
+        predicate = () => true,
+        metric = "gamma"
+    ) {
         let best = null;
         rows.forEach((row) => {
-            if (!predicate(row) || !Number.isFinite(row.gamma)) return;
-            if (!best || Math.abs(row.gamma) > Math.abs(best.gamma)) best = row;
+            if (!predicate(row) || !Number.isFinite(row[metric])) return;
+            if (
+                !best ||
+                Math.abs(row[metric]) > Math.abs(best[metric])
+            ) {
+                best = row;
+            }
         });
         return best;
     }
@@ -220,6 +256,14 @@
                 "Fewer than five strikes contain valid GEX values."
             );
         }
+        const rawGammaCoverage = rows.filter((row) =>
+            Number.isFinite(row.rawGamma)
+        ).length;
+        if (rawGammaCoverage < 5) {
+            throw new Error(
+                "Fewer than five strikes contain call/put gamma and open interest for raw gamma."
+            );
+        }
 
         const totals = {};
         METRICS.forEach(([key]) => {
@@ -238,6 +282,10 @@
         );
         totals.dgex = rows.reduce(
             (sum, row) => sum + finiteNumber(row.dgex),
+            0
+        );
+        totals.rawGamma = rows.reduce(
+            (sum, row) => sum + finiteNumber(row.rawGamma),
             0
         );
 
@@ -260,11 +308,12 @@
                 ? (callWing.callIv - putWing.putIv) * 100
                 : null;
 
-        const requiredCells = rows.length * METRICS.length;
+        const requiredCells = rows.length * (METRICS.length + 1);
         const presentCells = rows.reduce(
             (count, row) =>
                 count +
-                METRICS.filter(([key]) => Number.isFinite(row[key])).length,
+                METRICS.filter(([key]) => Number.isFinite(row[key])).length +
+                (Number.isFinite(row.rawGamma) ? 1 : 0),
             0
         );
         const completeness =
@@ -273,6 +322,11 @@
         const lowerNode = strongestNode(rows, (row) => row.strike < spot);
         const upperNode = strongestNode(rows, (row) => row.strike > spot);
         const gammaNode = strongestNode(rows);
+        const rawGammaNode = strongestNode(
+            rows,
+            () => true,
+            "rawGamma"
+        );
         const zeroGammaRaw = nullableNumber(data.zerogamma);
         const zeroGamma =
             zeroGammaRaw !== null && zeroGammaRaw > 0 ? zeroGammaRaw : null;
@@ -294,6 +348,7 @@
             atmIv,
             riskReversal,
             gammaNode,
+            rawGammaNode,
             lowerNode,
             upperNode,
             zeroGamma,
@@ -329,6 +384,14 @@
         if (!Number.isFinite(value)) return "—";
         const sign = value > 0 ? "+" : "";
         return `${sign}${value.toFixed(decimals)}B`;
+    }
+
+    function formatRawGamma(value, decimals = 3) {
+        if (!Number.isFinite(value)) return "—";
+        return value.toLocaleString("en-US", {
+            minimumFractionDigits: decimals,
+            maximumFractionDigits: decimals,
+        });
     }
 
     function formatPrice(value) {
@@ -385,17 +448,24 @@
         };
     }
 
-    function metricCard(label, value, hint) {
+    function metricCard(label, value, hint, formatter = formatSigned) {
         return `
             <article class="kn-metric ${toneFor(value)}">
                 <div class="kn-metric-label">${label}</div>
-                <div class="kn-metric-value">${formatSigned(value)}</div>
+                <div class="kn-metric-value">${formatter(value)}</div>
                 <div class="kn-metric-hint">${hint}</div>
             </article>
         `;
     }
 
-    function levelCard(label, row, spot) {
+    function levelCard(
+        label,
+        row,
+        spot,
+        metric = "gamma",
+        metricLabel = "GEX",
+        formatter = formatSigned
+    ) {
         if (!row) {
             return `
                 <article class="kn-level-card">
@@ -406,11 +476,12 @@
             `;
         }
         const distance = row.strike - spot;
+        const value = row[metric];
         return `
-            <article class="kn-level-card ${toneFor(row.gamma)}">
+            <article class="kn-level-card ${toneFor(value)}">
                 <span>${label}</span>
                 <strong>${formatPrice(row.strike)}</strong>
-                <small>${formatSigned(row.gamma)} GEX · ${distance >= 0 ? "+" : ""}${distance.toFixed(1)} pts</small>
+                <small>${formatter(value)} ${metricLabel} · ${distance >= 0 ? "+" : ""}${distance.toFixed(1)} pts</small>
             </article>
         `;
     }
@@ -439,6 +510,7 @@
                 return `
                     <tr class="${classes}">
                         <td class="kn-strike">${formatPrice(row.strike)}</td>
+                        <td>${formatRawGamma(row.rawGamma)}</td>
                         <td>${formatSigned(row.gammaGross)}</td>
                         <td class="${toneFor(row.gamma)}">
                             <div class="kn-gex-cell">
@@ -484,7 +556,8 @@
                 <div class="kn-contract-note">
                     <strong>Data contract:</strong> live Tastytrade SPX/SPXW chain and the dashboard daemon's
                     exposure formulas. This is not a cell-for-cell execution of the Excel workbook.
-                    VIX1D and VVIX are not present in the current feed and are not synthesized.
+                    Raw gamma is calculated directly as (call gamma × call OI) + (put gamma × put OI)
+                    at every strike. VIX1D and VVIX are not synthesized from incomplete persisted inputs.
                 </div>
 
                 <div class="kn-hero-grid">
@@ -514,9 +587,23 @@
                     ${levelCard("LOWER GAMMA NODE", model.lowerNode, model.spot)}
                     ${levelCard("KING GAMMA NODE", model.gammaNode, model.spot)}
                     ${levelCard("UPPER GAMMA NODE", model.upperNode, model.spot)}
+                    ${levelCard(
+                        "RAW GAMMA LEVEL",
+                        model.rawGammaNode,
+                        model.spot,
+                        "rawGamma",
+                        "Γ×OI",
+                        formatRawGamma
+                    )}
                 </div>
 
                 <div class="kn-metrics-grid">
+                    ${metricCard(
+                        "RAW GAMMA",
+                        model.totals.rawGamma,
+                        "Σ[(Γcall × OIcall) + (Γput × OIput)]",
+                        formatRawGamma
+                    )}
                     ${metricCard("GEX", model.totals.gamma, `Gross ${formatSigned(model.totals.gammaGross)}`)}
                     ${metricCard("DEX", model.totals.delta, model.dealerBias)}
                     ${metricCard("VEX", model.totals.vanna, "Vanna exposure")}
@@ -540,6 +627,7 @@
                                 <thead>
                                     <tr>
                                         <th>Strike</th>
+                                        <th>Raw Γ×OI</th>
                                         <th>Gamma gross</th>
                                         <th>GEX</th>
                                         <th>DEX</th>
@@ -577,12 +665,30 @@
                         </article>
 
                         <article class="kn-panel kn-method">
+                            <div class="kn-panel-header"><span>VOLATILITY INDEX DATA GATE</span></div>
+                            <div class="kn-readout-row">
+                                <span>VIX</span>
+                                <strong>${model.vixSpot === null ? "UNAVAILABLE — no observed index value" : "OBSERVED — index value, not reconstructed"}</strong>
+                            </div>
+                            <div class="kn-readout-row">
+                                <span>VIX1D</span>
+                                <strong class="warning">CURRENT FEED BLOCKED — ThetaData Standard can supply the missing 0DTE/next-term NBBO; capture and CMT engine are not wired</strong>
+                            </div>
+                            <div class="kn-readout-row">
+                                <span>VVIX</span>
+                                <strong class="warning">CURRENT FEED BLOCKED — ThetaData Standard can supply both eligible VIX monthly terms; capture and CMT engine are not wired</strong>
+                            </div>
+                        </article>
+
+                        <article class="kn-panel kn-method">
                             <div class="kn-panel-header"><span>METHOD & LIMITS</span></div>
                             <ul>
                                 <li>Uses the nearest 23 strikes on each side of SPX spot, matching the 47-strike King Node window.</li>
                                 <li>Aggregates the daemon's OI-derived SPX/SPXW exposure values by strike.</li>
+                                <li>Raw gamma uses each side's own streamed gamma and open interest; it is not dollar-scaled GEX.</li>
                                 <li>The strongest absolute GEX strike is labelled the King Gamma Node; this is descriptive, not a trade signal.</li>
-                                <li>Workbook formulas, lock/hysteresis state, IBKR prints, VVIX and VIX1D are outside this web contract.</li>
+                                <li>ThetaData availability is a source capability, not a computed index value; the current web response remains fail-closed.</li>
+                                <li>Workbook lock/hysteresis state and IBKR-only prints remain outside this web data contract.</li>
                             </ul>
                         </article>
                     </aside>

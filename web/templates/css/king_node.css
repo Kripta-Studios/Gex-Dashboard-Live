@@ -129,6 +129,10 @@ body.king-node-active #charts-wrapper {
     color: #f7be41;
 }
 
+.king-node-shell .warning {
+    color: #f7be41 !important;
+}
+
 .kn-contract-note {
     margin-top: 14px;
     border: 1px solid #222c3b;
@@ -158,11 +162,11 @@ body.king-node-active #charts-wrapper {
 }
 
 .kn-level-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .kn-metrics-grid {
-    grid-template-columns: repeat(7, minmax(110px, 1fr));
+    grid-template-columns: repeat(8, minmax(110px, 1fr));
 }
 
 .kn-spot-card,

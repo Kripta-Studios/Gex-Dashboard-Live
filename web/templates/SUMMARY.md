@@ -1,0 +1,280 @@
+# KING NODE web — hand-off de implementación
+
+Última actualización: 2026-07-26  
+Repositorio: `C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live`  
+Rama: `main`
+
+## Objetivo autorizado
+
+Portar a la pestaña web **KING NODE** el núcleo portable de
+`MASTER_KING_NODE_RECORD_V5.xlsx`, usando como autoridad:
+
+- `MASTER_KING_NODE_RECORD_V5_CATALOGO_COMPLETO_DE_FORMULAS.md`;
+- `live_king_node.py`;
+- los JSON en tiempo real que escribe `services/gex_daemon.py` desde Tastytrade;
+- ThetaData Standard para precios observados de VIX, VVIX y VIX1D;
+- un nivel adicional **RAW GAMMA LEVEL** definido, por strike, como:
+
+```text
+(call_gamma × call_open_interest) + (put_gamma × put_open_interest)
+```
+
+El resultado debe funcionar sin Excel en el VPS, conservar estado entre ciclos,
+exponer un endpoint autenticado para la web, incluir pruebas y dejar preparado
+el despliegue mediante systemd.
+
+## Estado del repositorio y aislamiento
+
+El trabajo partió de `c4204844` (`Predeclare executable contextual bandit
+development`). El árbol contenía muchos archivos modificados/no rastreados de
+investigación JEPA que pertenecen al usuario. No deben entrar en ningún commit
+de KING NODE.
+
+Usar siempre `git add` con rutas explícitas. En particular, no añadir los
+`SUMMARY.md` de la raíz, `AGENTS.md`, los resultados de `research_papers/JEPA`,
+artefactos `.parquet`, `.pt`, `.tar.gz`, scripts JEPA ni `tmp/`.
+
+Los tres artefactos de referencia de KING NODE estaban sin rastrear al comenzar:
+
+- `MASTER_KING_NODE_RECORD_V5.xlsx`;
+- `MASTER_KING_NODE_RECORD_V5_CATALOGO_COMPLETO_DE_FORMULAS.md`;
+- `live_king_node.py`.
+
+## Trabajo ya realizado
+
+### Pestaña web existente
+
+El commit anterior `67fc4e16` ya había conectado una pestaña KING NODE solo para
+ADMIN mediante:
+
+- `web/templates/js/king_node.js`;
+- `web/templates/css/king_node.css`;
+- integración existente en `auth.js`, `tabs.js`, `dashboard.js`, `refresh.js`,
+  `styles.css` y la lista protegida de `services/servidor.py`.
+
+La primera versión consumía `/get_latest?ticker=SPX&exp=0dte`, seleccionaba las
+23 strikes más cercanas a cada lado de spot (47 en total), agregaba duplicados
+por strike y mostraba GEX/DEX/VEX/Zomma/Vomma/Vega/Speed.
+
+### RAW GAMMA implementado en el checkpoint inicial
+
+La versión de trabajo de `web/templates/js/king_node.js` ahora:
+
+1. lee `call_gamma`, `put_gamma`, `call_open_int` y `put_open_int`;
+2. multiplica gamma por OI **antes** de agregar filas repetidas;
+3. conserva `rawCallGamma`, `rawPutGamma` y `rawGamma` por strike;
+4. calcula la suma de raw gamma de la ventana;
+5. selecciona el strike de mayor raw gamma como `RAW GAMMA LEVEL`;
+6. añade el valor a la escalera y a las tarjetas de métricas.
+
+`web/templates/css/king_node.css` fue ampliado a cuatro tarjetas de niveles,
+ocho métricas y estilo de advertencia.
+
+`tests/test_king_node_web.py` contiene una regresión específica que prueba que:
+
+```text
+strike 6000:
+  (1×10 + 2×20) + (3×5 + 4×7) = 93
+```
+
+La última validación de este checkpoint dio:
+
+- `node --check web/templates/js/king_node.js`: PASS;
+- `python -m pytest tests/test_king_node_web.py -q`: `3 passed`;
+- `git diff --check`: sin errores, solo avisos CRLF de Windows.
+
+También se ejecutó el cálculo contra un JSON Tastytrade real:
+
+`D:\TrainingDataBackUp\June\json_data\SPX_0dte_ExposureData_20260617_100003.json`
+
+Resultado observado en la ventana de 47 strikes:
+
+- calidad `COMPLETE`;
+- raw gamma total `469.20084337229827`;
+- raw gamma level `7495`;
+- raw gamma en ese strike `57.12861240565436`;
+- nodo GEX `7525`.
+
+### Auditoría del libro y de `live_king_node.py`
+
+El catálogo declara 11 hojas y 7.382 celdas con fórmula. Las áreas principales
+son:
+
+- King Node Model: 1.303 fórmulas;
+- GEX Depth: 954;
+- Level Engine: 4.042;
+- Master Dashboard / Dashboard: 511 / 472.
+
+Fórmulas relevantes identificadas:
+
+- boost DTE:
+  `1 + 0.6 × max(0, 1 - dte_hours/6.5)`;
+- régimen IV raw:
+  HIGH si `VIX1D/VIX >= 1.1`, `VVIX >= 110` o `VIX >= 22`;
+  LOW si `VIX1D/VIX <= 0.9` o (`VVIX <= 90` y `VIX <= 15`);
+  NEUTRAL en otro caso;
+- intensidad IV:
+  `clamp(0.6, 1.4, 0.6×VIX1D/VIX + 0.4×VVIX/100 + 0.4)`;
+- matrix key:
+  `IVclass|gammaSign|zommaSign|dexSign|vexSign|vegaSign|vommaSign|speedSign`;
+- box key:
+  `Positive/Negative|VIX direction|VVIX direction|VIX1D direction`;
+- columna A:I de la tabla:
+  strike, gamma gross, GEX, Zomma, DEX, VEX, Vomma, Vega y Speed;
+- max/min GEX en `T22/T23`;
+- gamma flip y zero gamma en `D26/D27`;
+- call/put walls: los tres mayores gamma gross condicionados por GEX positivo
+  o negativo;
+- GEX Depth:
+  `net_flow = flow_factor × (GEX×dSpot + dIV×VEX×spot
+  + accel×0.5×Speed×dSpot² + cross×Zomma×dSpot×dIV)`.
+
+De `live_king_node.py` se identificaron los contratos de runtime que se deben
+portar:
+
+- refresco 30 s;
+- suavizado de tres lecturas;
+- lock de niveles de tres ciclos;
+- 47 strikes;
+- dirección por media de dos mitades con ventana 50 y deadbands:
+  VIX 0,10; VVIX 0,25; VIX1D 0,10; ATM IV 0,001;
+- monitor de pendiente/sign flip de net GEX;
+- monitor de pico/roll de Vomma cerca de spot;
+- skew de puts/calls a ±25 puntos;
+- vol tension;
+- persistencia de niveles de soporte/resistencia.
+
+### Auditoría de fuentes en local
+
+Los JSON Tastytrade persistidos contienen las gammas, IV y OI por lado, además
+de todas las exposiciones necesarias. Son suficientes para raw gamma y para el
+perfil A:I.
+
+El feed ThetaData existente guarda SPXW/QQQ/SPY 0DTE y weekly, spot y opciones
+VIX, pero no persiste todavía precios directos de VVIX/VIX1D. La API v3 oficial
+de ThetaData Standard expone:
+
+```text
+GET /v3/index/snapshot/price?symbol=VIX
+GET /v3/index/snapshot/price?symbol=VVIX
+GET /v3/index/snapshot/price?symbol=VIX1D
+```
+
+El port debe leer esos valores observados y fallar cerrado para cada índice que
+Theta Terminal no entregue. No se deben fabricar proxies.
+
+Los archivos ThetaData históricos locales actuales no incluyen todos los
+vencimientos necesarios para reconstruir de forma oficial VVIX/VIX1D desde
+opciones. Existen históricos diarios Cboe locales, pero no deben sustituir un
+snapshot intradía real.
+
+### Limitación de referencia que no debe ocultarse
+
+Las hojas `Matrix` e `IV Regime Map` contienen tablas de valores estáticos. El
+catálogo registra sus fórmulas consumidoras pero no reproduce todas las celdas
+literales de esas tablas.
+
+El runtime de spreadsheets requerido para inspeccionar el `.xlsx` no estuvo
+disponible en esta sesión, por lo que no se debe afirmar paridad literal de esas
+dos tablas. El motor portable debe:
+
+- calcular y exponer las keys exactas;
+- usar reglas semánticas explícitamente marcadas como fallback si no existe un
+  JSON de referencia exportado;
+- aceptar después un `config/king_node_reference.json` generado desde Excel,
+  sin cambiar el contrato del endpoint.
+
+## Arquitectura acordada y trabajo pendiente
+
+### 1. Motor puro
+
+Crear `modules/king_node_engine.py` sin dependencia de Excel:
+
+- validar el split JSON de Tastytrade;
+- agregar por strike;
+- seleccionar la ventana 47;
+- producir el perfil A:I y raw gamma;
+- calcular totales, flags, keys, régimen IV, skew, walls, gamma flip, zero
+  gamma y niveles;
+- actualizar direcciones, pendiente GEX, Vomma y vol tension;
+- aplicar suavizado y lock/histéresis;
+- devolver snapshot JSON y estado serializable;
+- marcar origen, frescura, cobertura, warnings y degradaciones.
+
+### 2. Servicio en tiempo real
+
+Crear `services/king_node_service.py`:
+
+- localizar de forma segura el último `SPX_0dte_ExposureData_*.json`;
+- consultar VIX/VVIX/VIX1D en Theta Terminal;
+- no procesar archivos parciales;
+- persistir estado entre reinicios;
+- escribir atómicamente `runtime/king_node/latest.json`;
+- archivar snapshots compactos opcionalmente;
+- soportar `--once`, `--interval`, `--tasty-data-dir`, `--output-dir`,
+  `--state-file` y `--thetadata-url`;
+- configurar edad máxima por variables de entorno.
+
+### 3. Endpoint y web final
+
+Modificar `services/servidor.py` con un endpoint ADMIN:
+
+```text
+GET /api/king-node
+```
+
+El endpoint debe leer solo el snapshot precomputado, comprobar estructura/edad
+y devolver errores JSON controlados. La interfaz debe dejar de recalcular el
+modelo financiero; JavaScript será un renderer del contrato backend, con:
+
+- status/edad/orígenes;
+- spot, régimen y vol tension;
+- VIX/VVIX/VIX1D con dirección y edad;
+- raw gamma level;
+- max/min GEX, flip y zero gamma;
+- tres call walls y tres put walls;
+- seis resistencias y seis soportes bloqueados;
+- tabla de 47 strikes;
+- warnings visibles de cualquier degradación.
+
+### 4. Operación VPS
+
+Añadir:
+
+- `systemd/king-node.service`;
+- `.env.king-node.example` sin secretos;
+- script de instalación/actualización idempotente;
+- `docs/KING_NODE_VPS_DEPLOYMENT.md`;
+- comandos de health check, logs, rollback y diagnóstico de Tastytrade /
+  Theta Terminal.
+
+Orden de servicios previsto:
+
+```text
+thetadata_feed.service
+gex_daemon.service
+king-node.service
+financial-server.service
+```
+
+### 5. Verificación y commits
+
+Añadir pruebas unitarias del motor, cliente ThetaData, selección/frescura,
+estado e endpoint. Validar con el JSON real de junio, ejecutar suite focal,
+Ruff/compile, `node --check`, `git diff --check` y revisar que no haya secretos.
+
+Los commits deben ser parciales y con add selectivo:
+
+1. raw gamma + este hand-off;
+2. motor/servicio/API + pruebas;
+3. renderer final + CSS + pruebas;
+4. systemd/config/docs + validación final.
+
+Después de cada commit se debe ejecutar `git push origin main` y registrar aquí
+el hash y el resultado.
+
+## Registro de commits KING NODE
+
+- `67fc4e16` — `feat(web): add King Node exposure tab` (preexistente).
+- Pendiente: checkpoint raw gamma.
+

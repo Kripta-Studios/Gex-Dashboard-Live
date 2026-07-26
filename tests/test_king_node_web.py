@@ -61,6 +61,10 @@ def test_king_node_model_aggregates_tastytrade_split_surface() -> None:
         "strike_price",
         "call_iv",
         "put_iv",
+        "call_gamma",
+        "put_gamma",
+        "call_open_int",
+        "put_open_int",
         "call_gex",
         "put_gex",
         "total_gamma",
@@ -77,11 +81,19 @@ def test_king_node_model_aggregates_tastytrade_split_surface() -> None:
     for index in range(55):
         strike = 5800 + index * 10
         gamma = (index - 27) / 100
+        call_gamma = abs(gamma) + 0.01
+        put_gamma = abs(gamma) + 0.02
+        call_open_interest = 100 + index
+        put_open_interest = 50 + index
         rows.append(
             [
                 strike,
                 0.18 + index / 10000,
                 0.2 + index / 10000,
+                call_gamma,
+                put_gamma,
+                call_open_interest,
+                put_open_interest,
                 abs(gamma) * 1e9,
                 -abs(gamma) * 0.4e9,
                 gamma,
@@ -118,7 +130,9 @@ process.stdout.write(JSON.stringify({
   quality: model.quality,
   gammaTotal: model.totals.gamma,
   expectedGamma: model.rows.reduce((sum, row) => sum + row.gamma, 0),
-  kingNode: model.gammaNode.strike
+  kingNode: model.gammaNode.strike,
+  rawGammaTotal: model.totals.rawGamma,
+  rawGammaNode: model.rawGammaNode.strike
 }));
 """
     result = subprocess.run(
@@ -138,3 +152,52 @@ process.stdout.write(JSON.stringify({
     assert parsed["quality"] == "COMPLETE"
     assert parsed["gammaTotal"] == pytest.approx(parsed["expectedGamma"])
     assert parsed["kingNode"] in {5840, 6300}
+    selected_rows = rows[4:51]
+    expected_raw_gamma = sum(
+        row[3] * row[5] + row[4] * row[6] for row in selected_rows
+    )
+    expected_raw_node = max(
+        selected_rows,
+        key=lambda row: row[3] * row[5] + row[4] * row[6],
+    )[0]
+    assert parsed["rawGammaTotal"] == pytest.approx(expected_raw_gamma)
+    assert parsed["rawGammaNode"] == expected_raw_node
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="Node.js is not installed")
+def test_raw_gamma_multiplies_each_option_side_before_strike_aggregation() -> None:
+    fixture = {
+        "columns": [
+            "strike_price",
+            "call_gamma",
+            "put_gamma",
+            "call_open_int",
+            "put_open_int",
+        ],
+        "data": [
+            [6000, 1, 2, 10, 20],
+            [6000, 3, 4, 5, 7],
+        ],
+    }
+    node_program = """
+const fs = require("fs");
+const vm = require("vm");
+vm.runInThisContext(fs.readFileSync(process.argv[1], "utf8"));
+const fixture = JSON.parse(process.argv[2]);
+const rows = globalThis.KingNodeWeb.aggregateByStrike(
+  globalThis.KingNodeWeb.rowsFromSplit(fixture)
+);
+process.stdout.write(JSON.stringify(rows[0]));
+"""
+    result = subprocess.run(
+        ["node", "-e", node_program, str(KING_NODE_JS), json.dumps(fixture)],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    parsed = json.loads(result.stdout)
+
+    assert parsed["rawCallGamma"] == 25
+    assert parsed["rawPutGamma"] == 68
+    assert parsed["rawGamma"] == 93
