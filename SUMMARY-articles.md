@@ -7,6 +7,7 @@ regímenes. Es legítimo evaluar después un refit rolling donde cada mes usa so
 meses anteriores, pero toda la secuencia sigue siendo development porque la
 regla se eligió tras ver el outer completo. La causalidad dentro de cada fold
 evita leakage; no convierte el periodo ya visto en evidencia promocional.
+La auditoría debe refittear cada modelo mensual, no solo recontar el ledger.
 
 ### El agregado development no transportó al outer — 2026-07-26
 

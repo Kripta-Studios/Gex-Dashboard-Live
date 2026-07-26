@@ -10,6 +10,11 @@ Febrero–julio incorporan solo meses 2026 anteriores. Commit/push contrato ante
 de evaluator+auditor; versionar ambos antes del run. Es development visto,
 nunca promoción/payoff/live con 2026.
 
+Contrato publicado `6ee8fc2f`. Evaluator+auditor preejecución listos: siete
+fits, artifacts y prediction vectors por fold, ledger1/2/3bps, gates H1/julio y
+refit independiente. Tests combinados11/Ruff/compile PASS. Commit/push de estos
+archivos antes de ejecutar una sola vez.
+
 ## V4R2 outer 2026 FAIL auditado — 2026-07-26
 
 One-shot desde manifest `e826eb1e`, 394 trades: H1 PF QQQ/SPXW/SPY

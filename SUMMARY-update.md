@@ -6,6 +6,7 @@
 invertir74,60%. V7 conserva logistic29/C0,1, mapping, 394 eventos y clocks;
 refit mensual con 12 meses anteriores, por lo que Feb–Jul incorpora solo 2026
 previo. Sin sweep/descarga/filtro. 2026 development visto; physical/live cerrado.
+Contrato `6ee8fc2f`; evaluator+auditor listos pre-run, tests11/Ruff/compile PASS.
 
 2026-07-26, V4R2 outer one-shot FAIL auditado. H1 QQQ/SPXW/SPY:
 PF0,969729/0,950957/0,955718, WR52,542/50,420/49,580%, net

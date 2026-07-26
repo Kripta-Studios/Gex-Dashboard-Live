@@ -8,6 +8,8 @@ carencia de datos. V7 fija antes de predicciones un logistic mensual con los
 doce meses completos anteriores; desde febrero incorpora solo outcomes 2026 ya
 cerrados. Mantiene los 394 eventos, mapping, features, clocks y costes. No hay
 barrido ni filtros. Todo 2026 es development visto y no autoriza live/payoff.
+Contrato publicado en `6ee8fc2f`; evaluator y auditor están implementados y
+pasan 11 tests combinados, Ruff y compile, todavía sin predicciones V7.
 
 ## V4R2 falla outer 2026 — 2026-07-26
 

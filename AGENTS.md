@@ -22,6 +22,13 @@ evaluator+auditor, tests y commit/push antes de una ejecución única. Gate H1
 por los tres: PF>1,20, WR>45%, neto>0, min13/mes y 6/6 meses positivos; julio
 MTD reportado y sano solo si los tres PF>1,20/WR>45%/neto>0.
 
+Predeclaración publicada en `6ee8fc2f`. Evaluator y auditor V7 implementados
+con siete artefactos de modelo/fold, hashes de inputs/outputs, causalidad
+mensual estricta y refit independiente. Tests V7+V4R2 `11 passed`, Ruff y
+compile PASS; todavía no se calculó ninguna predicción V7. Siguiente: commit/
+push explícito de código/tests+hándoffs; desde HEAD limpio ejecutar evaluator
+una vez y luego auditor una vez.
+
 ### Checkpoint 2026-07-26 — V4R2 outer 2026 falla auditado
 
 Manifest frozen versionado en `e826eb1e`; one-shot 394 trades:
