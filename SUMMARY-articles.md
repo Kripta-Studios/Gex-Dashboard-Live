@@ -1,5 +1,13 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+### Refit causal no restaura la virginidad del periodo — 2026-07-26
+
+Un outer congelado puede revelar que los coeficientes cambian de signo entre
+regímenes. Es legítimo evaluar después un refit rolling donde cada mes usa solo
+meses anteriores, pero toda la secuencia sigue siendo development porque la
+regla se eligió tras ver el outer completo. La causalidad dentro de cada fold
+evita leakage; no convierte el periodo ya visto en evidencia promocional.
+
 ### El agregado development no transportó al outer — 2026-07-26
 
 V4 había superado PF1,20 agregado en development2025, pero el refit final

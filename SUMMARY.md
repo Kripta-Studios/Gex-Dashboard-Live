@@ -1,5 +1,14 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+## V7 rolling12 predeclarada — 2026-07-26
+
+El outer V4R2 no usó 2026 en training. El diagnóstico posterior encuentra
+relaciones feature→dirección inestables entre años y meses, no una simple
+carencia de datos. V7 fija antes de predicciones un logistic mensual con los
+doce meses completos anteriores; desde febrero incorpora solo outcomes 2026 ya
+cerrados. Mantiene los 394 eventos, mapping, features, clocks y costes. No hay
+barrido ni filtros. Todo 2026 es development visto y no autoriza live/payoff.
+
 ## V4R2 falla outer 2026 — 2026-07-26
 
 El one-shot congelado y auditado no es promocionable. H1 PF QQQ/SPXW/SPY

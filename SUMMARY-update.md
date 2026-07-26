@@ -1,5 +1,12 @@
 # SUMMARY-update — ledger científico compacto
 
+2026-07-26, V7 rolling12 predeclarada sin predicciones. V4R2 fue fit fijo
+2023–2025. Diagnóstico post-outcome: correlaciones coef anuales
+-0,143/0,095/0,146; marzo direct pooled +518,604bps pero model -273,230bps al
+invertir74,60%. V7 conserva logistic29/C0,1, mapping, 394 eventos y clocks;
+refit mensual con 12 meses anteriores, por lo que Feb–Jul incorpora solo 2026
+previo. Sin sweep/descarga/filtro. 2026 development visto; physical/live cerrado.
+
 2026-07-26, V4R2 outer one-shot FAIL auditado. H1 QQQ/SPXW/SPY:
 PF0,969729/0,950957/0,955718, WR52,542/50,420/49,580%, net
 -86,880/-97,917/-87,839bps, min18 y 2/6 meses positivos. Junio net positivo

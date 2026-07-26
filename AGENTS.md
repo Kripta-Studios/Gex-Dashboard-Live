@@ -1,5 +1,27 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-07-26 — V7 rolling12 predeclarada, sin predicciones
+
+V4R2 no se entrenó sobre 2026: fit único 2023–2025 y outer congelado. El
+diagnóstico post-outcome identifica drift de concepto: correlaciones de
+coeficientes entre fits anuales -0,143/0,095/0,146. En marzo la señal directa
+pooled dio +518,604bps, pero el modelo invirtió74,60% y produjo -273,230bps;
+en abril/junio invertir sí ayudó. No hay signo global estable ni simple falta
+de datos.
+
+Única falsificación autorizada:
+`CROSS_VENUE_CALENDAR_RR_LEADER_V7_ROLLING12_MONTHLY_LOGISTIC_PREDECLARATION.md`.
+Mismo mapping, 29 features, eventos, 10:36→13:36, coste1bp y logistic C0,1;
+cambia solo el refit pooled al inicio de cada mes con los 12 meses completos
+anteriores. Enero fit2025; febrero incorpora enero2026; ...; julio incorpora
+julio2025–junio2026. Sin sweep, filtro, abstención, descarga o nueva exclusión.
+
+2026 está visto: V7 es development y no puede promocionar ni abrir payoff/live
+aunque pase. Orden: commit/push diagnóstico+predeclaración+hándoffs; implementar
+evaluator+auditor, tests y commit/push antes de una ejecución única. Gate H1
+por los tres: PF>1,20, WR>45%, neto>0, min13/mes y 6/6 meses positivos; julio
+MTD reportado y sano solo si los tres PF>1,20/WR>45%/neto>0.
+
 ### Checkpoint 2026-07-26 — V4R2 outer 2026 falla auditado
 
 Manifest frozen versionado en `e826eb1e`; one-shot 394 trades:
@@ -16,8 +38,8 @@ Auditor real `PASS_INDEPENDENT_V4R2_OUTER_2026_AUDIT`: sources394/mismatch0,
 model refit y prediction vector exactos; evaluation summary SHA
 `8de7e886...f12b`. `advance_to_physical_payoff=false`; no payoff, live, VPS,
 retraining ni systemd. Autoridad:
-`CROSS_VENUE_CALENDAR_RR_LEADER_V4R2_OUTER_2026_FAILURE.md`. Versionar
-resultado+audit+registro+hándoffs. V4R2 queda cerrada; 2026 es outcome visto.
+`CROSS_VENUE_CALENDAR_RR_LEADER_V4R2_OUTER_2026_FAILURE.md`. Evidencia
+versionada en `8bd1d437`. V4R2 queda cerrada; 2026 es outcome visto.
 
 ### Checkpoint 2026-07-26 — V4R2 exclusiones fijas pre-outcome
 
