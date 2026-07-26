@@ -10,6 +10,11 @@ pareja desigual elimina la sesión correspondiente. No se usa la intersección
 porque produciría un vector distinto al entrenamiento. El modelo V4 y sus
 parámetros no cambian, por lo que 2026 conserva el papel de test one-shot.
 
+La implementación hace verificable esa regla en tres capas: raw HTTP atómico,
+pair gate Greek/IV exacto y reconstrucción independiente del vector de 29
+features. El auditor no confía en el parquet promovido: reparsea cada respuesta,
+rehash de fuentes y repite el feature view antes de autorizar el freeze.
+
 ### V6: falsificación no lineal de V4 — 2026-07-26
 
 La continuación autorizada no añade datos ni elige meses: comprueba si el edge

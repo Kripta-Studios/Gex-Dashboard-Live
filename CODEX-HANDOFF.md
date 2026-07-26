@@ -10,6 +10,12 @@ fill ni overwrite. Universo metadata actualizado: 133 fechas hasta 20260724,
 532 front/back captures y julio MTD13. Primero versionar contrato; después
 capturador/gate/auditor antes de red. V4 no cambia y V6 cerró sin evaluación.
 
+Código pre-red ya implementado: capturador atómico de diez requests, builder de
+29 features hasta10:35 y auditor que reparsea raw/rehashea/reconstruye. Focal7,
+Ruff y compile PASS; el test real de fuentes reproduce Greek-only92/IV-only516.
+No se llamó la API. Siguiente: commit/push de estos archivos; después un único
+run de captura al root V4R1.
+
 ## V6 predeclarada sobre artefactos V4 — 2026-07-26
 
 La licencia es Options Standard básica: no volver a intentar endpoints sin

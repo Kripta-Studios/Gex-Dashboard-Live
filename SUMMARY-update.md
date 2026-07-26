@@ -8,6 +8,11 @@ Universo metadata 133 fechas 20260102–20260724, meses20/19/22/18/20/21/13,
 predicción. Commit documental → código/gate/auditor committed → retry → seal →
 freeze → outer2026 one-shot.
 
+Implementación V4R1 pre-red lista: capturador10 lógico/atómico, builder exacto
+de 29 features hasta10:35 y auditor raw+source+feature. Focal7/Ruff/compile
+PASS; censo 92/516 reproducido. API y outcomes aún no abiertos; commit/push del
+código precede al run.
+
 2026-07-26, V6 predeclarada por autorización del usuario sobre los datasets V4
 ya sellados y sin nuevas descargas. Único cambio: logistic→HistGB depth2 fijo;
 mapping, 29 features, clocks, eventos y costes intactos. Folds dev 2023→2024 y

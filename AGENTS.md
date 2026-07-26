@@ -19,6 +19,13 @@ requests una vez → seal outcome-free → freeze V4 committed → un solo outer
 Enero–junio deben pasar todos los gates en QQQ/SPXW/SPY; julio es solo MTD.
 Payoff físico y live/VPS continúan cerrados hasta PASS auditado.
 
+Implementación pre-red lista en
+`capture_cross_venue_calendar_rr_leader_v4r1_2026_source_retry.py`,
+`build_cross_venue_calendar_rr_leader_v4r1_2026_data_gate.py` y
+`audit_cross_venue_calendar_rr_leader_v4r1_2026_data_gate.py`. Tests focales7,
+Ruff y compile PASS; reproducen outcome-free 92/516 y mapping exacto. Aún no se
+llamó la API. Commit/push explícito de código/tests/handoffs antes del run.
+
 ### Checkpoint 2026-07-26 — V6 continúa V4 sin nuevas descargas
 
 El usuario confirma que la licencia disponible es Options Standard básica y

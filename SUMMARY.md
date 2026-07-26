@@ -9,6 +9,10 @@ solo el sensor-fecha por una regla outcome-free sellada. El V4 entrenado
 2026-07-24; julio contiene 13 sesiones y será MTD. Capturador, gate y auditor se
 versionan antes de la API; freeze se versiona antes de opens10:36/13:36.
 
+Capturador, builder y auditor están implementados preejecución. Siete tests
+focales pasan y reproducen el censo 92/516 sin outcomes; Ruff/compile PASS.
+Ningún request V4R1 se ha enviado todavía.
+
 ## V6 continúa V4 sin fuente nueva — 2026-07-26
 
 El usuario autoriza usar solo los artefactos V4 existentes bajo su licencia
