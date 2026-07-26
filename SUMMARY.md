@@ -20,6 +20,11 @@ final fit2.217, predictions394 y fuentes congeladas. Tests16, Ruff y compile
 PASS. Falta commit/push del código y generar/versionar el manifest; no se ha
 leído todavía ningún open 10:36/13:36.
 
+Código publicado en `7472f45d` y freeze real `PREEXECUTION_FROZEN`: 2.217 filas
+de entrenamiento, 394 eventos, model SHA `e8caffde...202e` y manifest SHA
+`f90dbcf6...45e6`. Verificación exacta PASS; outcomes continúan cerrados. Falta
+versionar el frozen antes del one-shot.
+
 ## V4R1: cinco retries recuperados, todavía sin outcomes — 2026-07-26
 
 La única llamada de red ya terminó con diez respuestas normalizadas. El seal

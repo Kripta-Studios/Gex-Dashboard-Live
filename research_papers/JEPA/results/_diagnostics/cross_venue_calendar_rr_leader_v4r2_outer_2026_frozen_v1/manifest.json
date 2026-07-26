@@ -1,0 +1,188 @@
+{
+  "schema": "cross_venue_calendar_rr_leader_v4r2_outer_2026_frozen_v1",
+  "status": "PREEXECUTION_FROZEN",
+  "created_at_utc": "2026-07-26T11:52:54.477875+00:00",
+  "runner_commit": "7472f45d1211eaad66dd1b8ba56264574a1325e5",
+  "mapping": {
+    "QQQ": "QQQ",
+    "SPXW": "SPY",
+    "SPY": "SPY"
+  },
+  "model": {
+    "family": "pooled_logistic_l2",
+    "train_rows": 2217,
+    "train_period": "2023-01-01..2025-12-31",
+    "C": 0.1,
+    "threshold": 0.5,
+    "refit_during_2026": false
+  },
+  "economics": {
+    "entry": "open_10:36:00",
+    "exit": "open_13:36:00",
+    "hold_minutes": 180,
+    "primary_cost_bps": 1.0,
+    "sensitivity_costs_bps": [
+      1.0,
+      2.0,
+      3.0
+    ],
+    "positions_per_ticker_day": 1,
+    "overlap": false
+  },
+  "objective_gate": {
+    "closed_months": [
+      "202601",
+      "202602",
+      "202603",
+      "202604",
+      "202605",
+      "202606"
+    ],
+    "profit_factor_strictly_greater_than": 1.2,
+    "win_rate_strictly_greater_than": 0.45,
+    "net_bps_strictly_greater_than": 0.0,
+    "minimum_trades_per_closed_month": 13,
+    "all_closed_months_positive": true,
+    "july_mtd_net_positive": true,
+    "all_tickers_required": true
+  },
+  "input_hashes": {
+    "research_papers/JEPA/results/_diagnostics/cross_venue_calendar_rr_leader_v2_development_202301_202412_v1/development_dataset.parquet": "459979c11ad5b7ba1ed44ef3add42142d0eab40982882bc52031982e22778f0b",
+    "research_papers/JEPA/results/_diagnostics/cross_venue_calendar_rr_leader_v4_development_2025_v1/development_dataset.parquet": "87413fb1c605c221aa8f225ad9877ccbdb6d5eca45877f4fa97a5b60d321d04b",
+    "research_papers/JEPA/results/_diagnostics/cross_venue_calendar_rr_leader_v4_development_2025_v1/SUMMARY.json": "a2beced1f021e156b53deaed3932dafc0af18f18f582d0b9af5db1a0762bd21b",
+    "research_papers/JEPA/results/_diagnostics/cross_venue_calendar_rr_leader_v4r2_data_gate_202601_20260724_v1/SUMMARY.json": "16988ecc24dbbf882d74f387b3a926a649cd7c5a266126f894ea3e8b1bed1aa3",
+    "research_papers/JEPA/results/_diagnostics/cross_venue_calendar_rr_leader_v4r2_data_gate_202601_20260724_v1/feature_view.parquet": "904a28560cf5bc6c86afa28c833e9aaf7f84dbb417aac745a134fb65df8ecbff",
+    "research_papers/JEPA/results/_diagnostics/cross_venue_calendar_rr_leader_v4r2_data_gate_202601_20260724_v1/cash_source_audit.csv": "75218958663b1dfa200bdd5ad5ecbb3d8e19b1337441e6ec22509405459e3079",
+    "research_papers/JEPA/results/_diagnostics/cross_venue_calendar_rr_leader_v4r2_data_gate_202601_20260724_v1_audit/audit_summary.json": "e65d23deee5e4e084a09d27e863e34906b3971dc0d9a68254f70d13e93c84cda",
+    "research_papers/JEPA/CROSS_VENUE_CALENDAR_RR_LEADER_V4_FULL_HISTORY_LOGISTIC_PREDECLARATION.md": "0c1a18b745072fb5265e83209e9267a41aa0387024f988831835bdc7272e5062",
+    "research_papers/JEPA/CROSS_VENUE_CALENDAR_RR_LEADER_V4R1_2026_SOURCE_RETRY_EXCLUSION_PREDECLARATION.md": "7c4c500111774e3d7e72af840ff2660ec77518ab9c9eb0623f128ebc21bcee6b",
+    "research_papers/JEPA/CROSS_VENUE_CALENDAR_RR_LEADER_V4R2_2026_OUTCOME_FREE_FIXED_EXCLUSIONS_PREDECLARATION.md": "bf2fed43b1d58bd8e9bc0ba4bb4ab4a26b92ae66f4b3ec7c4845f34d27260fbf",
+    "neural/jepa/evaluate_cross_venue_calendar_rr_leader_v2.py": "1bdc768ca4a72d99be1394d18107750abb228024fc56555ebe4d7b13c5c89d2a"
+  },
+  "code_hashes": {
+    "neural/jepa/cross_venue_calendar_rr_leader_v4r2_2026_outer_common.py": "2ff0af0360b89ab6be5a67091c3be776b6cf618d47afc726a467ba5a1a4a0ad5",
+    "neural/jepa/freeze_cross_venue_calendar_rr_leader_v4r2_2026.py": "d7226be66894d3e0440b2604339fc2c17dea52004a840e5e444c058840fc3e5c",
+    "neural/jepa/evaluate_cross_venue_calendar_rr_leader_v4r2_2026.py": "99531ac27425e64c9f46c54b8e23829dbceb0a4324f03e805f4296d3625b72f7",
+    "neural/jepa/audit_cross_venue_calendar_rr_leader_v4r2_2026.py": "44114ae60bde0cbab7c20bb2718d3b355519a2505752ee02f09c8d231f667ca9"
+  },
+  "events": 394,
+  "event_id_sha256": "1df3753c823e781ac57b3e2a12ac42cbc9dda0d2d34379361de5adb9003005cf",
+  "events_recomputed_sha256": "df29bff8c9b61bb8d2d17a31e849bea40989cb7146fd45ee56323e57355dca70",
+  "monthly_counts": [
+    {
+      "ticker": "QQQ",
+      "month": "202601",
+      "events": 20
+    },
+    {
+      "ticker": "QQQ",
+      "month": "202602",
+      "events": 19
+    },
+    {
+      "ticker": "QQQ",
+      "month": "202603",
+      "events": 21
+    },
+    {
+      "ticker": "QQQ",
+      "month": "202604",
+      "events": 18
+    },
+    {
+      "ticker": "QQQ",
+      "month": "202605",
+      "events": 20
+    },
+    {
+      "ticker": "QQQ",
+      "month": "202606",
+      "events": 20
+    },
+    {
+      "ticker": "QQQ",
+      "month": "202607",
+      "events": 12
+    },
+    {
+      "ticker": "SPXW",
+      "month": "202601",
+      "events": 20
+    },
+    {
+      "ticker": "SPXW",
+      "month": "202602",
+      "events": 19
+    },
+    {
+      "ticker": "SPXW",
+      "month": "202603",
+      "events": 21
+    },
+    {
+      "ticker": "SPXW",
+      "month": "202604",
+      "events": 18
+    },
+    {
+      "ticker": "SPXW",
+      "month": "202605",
+      "events": 20
+    },
+    {
+      "ticker": "SPXW",
+      "month": "202606",
+      "events": 21
+    },
+    {
+      "ticker": "SPXW",
+      "month": "202607",
+      "events": 13
+    },
+    {
+      "ticker": "SPY",
+      "month": "202601",
+      "events": 20
+    },
+    {
+      "ticker": "SPY",
+      "month": "202602",
+      "events": 19
+    },
+    {
+      "ticker": "SPY",
+      "month": "202603",
+      "events": 21
+    },
+    {
+      "ticker": "SPY",
+      "month": "202604",
+      "events": 18
+    },
+    {
+      "ticker": "SPY",
+      "month": "202605",
+      "events": 20
+    },
+    {
+      "ticker": "SPY",
+      "month": "202606",
+      "events": 21
+    },
+    {
+      "ticker": "SPY",
+      "month": "202607",
+      "events": 13
+    }
+  ],
+  "events_sha256": "be87fc013f0ff678919210fb4e469ab0ab45ed1fbb18dc254a6aa80cf68862c1",
+  "model_sha256": "e8caffde3e3f0eb185ad663e32fd2fb822cb2ff2da63fd11952f2a81148e202e",
+  "feature_clock_last": "10:35:00",
+  "outcome_accessed": false,
+  "execution_started": false,
+  "open_1036_read": false,
+  "open_1336_read": false,
+  "outer_2026_opened": false,
+  "production_modified": false,
+  "live_or_systemd_modified": false
+}

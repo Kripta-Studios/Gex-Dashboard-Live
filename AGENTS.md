@@ -38,6 +38,13 @@ Suite V4R1+V4R2 `16 passed`, Ruff/compile PASS. No se generó manifest ni se
 abrió outcome. Siguiente: commit/push de código/tests+hándoffs desde HEAD limpio;
 después ejecutar freezer una vez y versionar manifest antes del outer.
 
+Código publicado en `7472f45d`; freezer ejecutado una vez desde ese HEAD:
+`PREEXECUTION_FROZEN`, train2.217, events394, event SHA `1df3753c...05cf`,
+model SHA `e8caffde...202e`, manifest SHA `f90dbcf6...45e6`. Verifier refittea y
+reproduce predictions394; outcome/open10:36/open13:36 siguen false. Siguiente:
+force-add/commit/push del directorio frozen+hándoffs; solo después ejecutar una
+vez outer2026 y su auditor. No tocar payoff/live.
+
 ### Checkpoint 2026-07-26 — V4R1 retry completa; reseal dtype pendiente
 
 La única captura autorizada se ejecutó desde `aba363c3`: diez respuestas

@@ -18,6 +18,11 @@ manifest+model serializado, evaluator 10:36→13:36 one-shot y auditor con refit
 independiente. V4R1+V4R2 tests16/Ruff/compile PASS. Primero commit/push del
 código; luego freezer una vez, commit/push manifest y solo entonces outer2026.
 
+Código publicado `7472f45d`; freeze real PASS: train2.217/events394, event
+`1df3753c...05cf`, model `e8caffde...202e`, manifest `f90dbcf6...45e6`.
+Verifier pre-outcome exacto y clocks outcome false. Versionar frozen+hándoffs;
+después único outer y auditor.
+
 ## V4R1 retry materializada; corrección dtype pre-feature — 2026-07-26
 
 La tanda única desde `aba363c3` produjo 10/10 raw+parquet válidos. El pair gate

@@ -12,6 +12,9 @@ rehash1.446/mismatch0, feature view exacta, summary SHA `16988ecc...1aa3`.
 Evidencia versionada `15b76868`. Freezer/evaluator/auditor pre-outcome listos:
 fit2.217, predictions394, clocks exactos y auditor refit; tests16/Ruff/compile
 PASS. Commit/push código → freezer → commit/push manifest → outer one-shot.
+Código `7472f45d`; freeze real train2.217/events394, event SHA
+`1df3753c...05cf`, model `e8caffde...202e`, manifest `f90dbcf6...45e6`;
+open10:36/13:36 false. Versionar frozen antes de outer.
 
 2026-07-26, retry V4R1 ejecutado una vez desde `aba363c3`: 10/10 respuestas
 normalizadas, raw inmutable, features/outcomes false. El seal usable0 fue un

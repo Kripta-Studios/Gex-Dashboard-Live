@@ -17,6 +17,9 @@ El freeze separa además predicción de evaluación: el modelo final se refittea
 con las 2.217 filas development ya vistas y serializa las 394 decisiones antes
 de consultar los dos opens de cada trade. Así el outer no puede cambiar modelo,
 threshold, universo u orientación en respuesta a 2026.
+El manifest materializado congela 394 decisiones y el modelo final completo;
+un verifier pre-outcome refittea y reproduce el vector antes de permitir el
+primer acceso a 10:36/13:36.
 
 ### Dtype físico no equivale a missingness económica — 2026-07-26
 
