@@ -1,5 +1,17 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+## V4R2 fija cuatro exclusiones sin nuevas descargas — 2026-07-26
+
+Reseal V4R1 real PASS: 3.432/3.432 keys Greek/IV, unilaterales0 y retry
+exclusions0. El builder posterior cerró sin output por cuatro fuentes/sesiones
+adicionales outcome-free: QQQ 20260310, SPY 20260319, QQQ 20260630 y QQQ
+20260722. El usuario ordena ignorarlas y no reconsultar.
+
+V4R2 congela esas cuatro exclusiones antes de 10:36/13:36; mapping/modelo/clocks
+no cambian. Quedan 262 sensores y 394 targets; enero–junio mantienen ≥13 por
+ticker, julio QQQ queda MTD12. Implementación y focal9/Ruff/compile PASS.
+Orden: commit/push → builder una vez → auditor → versionar gate+audit → freeze.
+
 ## V4R1 retry materializada; corrección dtype pre-feature — 2026-07-26
 
 La tanda única desde `aba363c3` produjo 10/10 raw+parquet válidos. El pair gate

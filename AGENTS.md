@@ -1,5 +1,27 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-07-26 — V4R2 exclusiones fijas pre-outcome
+
+El reseal offline desde `46971a80` terminó
+`PASS_OFFLINE_REPARSE_RETRY_GATE`: 10 requests, cinco parejas usables,
+Greek=IV=shared3.432, unilaterales0 y exclusiones retry0. No hubo red ni
+outcomes; pair/exclusions/source-rehash SHA `a7241a45...a792`/
+`5a280ef4...7587`/`9c1204ee...ca51`.
+
+El primer builder V4R1 se detuvo sin output antes de outcomes. Censo exhaustivo
+outcome-free: QQQ 20260310 sin CALL25 persistente, SPY 20260319 sin PUT25,
+QQQ 20260630 back con asks Greek/IV distintos y QQQ 20260722 front con
+Greek-only92. Por orden posterior del usuario, no hacer más descargas y excluir
+exactamente esos cuatro sensor-fecha.
+
+Autoridad nueva:
+`CROSS_VENUE_CALENDAR_RR_LEADER_V4R2_2026_OUTCOME_FREE_FIXED_EXCLUSIONS_PREDECLARATION.md`.
+Fija sensor rows262 y target rows394; counts QQQ
+20/19/21/18/20/20/12 y SPXW/SPY 20/19/21/18/20/21/13. Julio es MTD y QQQ12
+no se presenta como PASS mensual. Código gate+auditor V4R2 y focal9/Ruff/
+compile están listos pero sin ejecutar. Siguiente: commit/push explícito;
+después gate outcome-free una vez, auditor y versionado antes de 10:36/13:36.
+
 ### Checkpoint 2026-07-26 — V4R1 retry completa; reseal dtype pendiente
 
 La única captura autorizada se ejecutó desde `aba363c3`: diez respuestas

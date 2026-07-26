@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Independently audit V4R1 retry responses and the outcome-free 2026 gate."""
+"""Independently audit V4R2 retries, exclusions, and outcome-free 2026 gate."""
 
 from __future__ import annotations
 
@@ -39,7 +39,7 @@ DEFAULT_RETRY_ROOT = common.RETRY_RESEAL_ROOT
 DEFAULT_INPUT = builder.DEFAULT_OUTPUT
 DEFAULT_OUTPUT = PROJECT_ROOT / (
     "research_papers/JEPA/results/_diagnostics/"
-    "cross_venue_calendar_rr_leader_v4r1_data_gate_202601_20260724_v1_audit"
+    "cross_venue_calendar_rr_leader_v4r2_data_gate_202601_20260724_v1_audit"
 )
 AUDIT_OUTPUT_FILES = ("feature_counts_recomputed.csv", "source_rehash.csv")
 
@@ -77,6 +77,7 @@ def verify_tracked() -> None:
         builder.RESEALER,
         Path(common.__file__).resolve(),
         common.PREDECLARATION,
+        common.FIXED_EXCLUSION_CONTRACT,
     ):
         tracked_clean(path, f"V4R1 auditor closure {path.name}")
 
@@ -169,19 +170,22 @@ def run(
     workers: int,
 ) -> dict[str, Any]:
     if output_dir.exists():
-        raise FileExistsError(f"immutable V4R1 audit exists: {output_dir}")
+        raise FileExistsError(f"immutable V4R2 audit exists: {output_dir}")
     if not 1 <= workers <= 16:
         raise ValueError("workers must be in [1, 16]")
     verify_tracked()
-    pair_gate, exclusions, retry_seal = audit_retry_root(retry_root)
+    pair_gate, retry_exclusions, retry_seal = audit_retry_root(retry_root)
+    exclusions = builder.apply_fixed_exclusions(retry_exclusions)
     summary = json.loads((input_dir / "SUMMARY.json").read_text(encoding="utf-8"))
     if (
         summary.get("schema")
-        != "cross_venue_calendar_rr_leader_v4r1_2026_data_gate_v1"
+        != "cross_venue_calendar_rr_leader_v4r2_2026_data_gate_v1"
         or summary.get("status") != "PASS_OUTCOME_FREE_DATA_GATE"
         or summary.get("date_sha256") != common.DATE_SHA256
         or summary.get("capture_id_sha256") != common.CAPTURE_ID_SHA256
         or summary.get("predeclaration_sha256") != common.PREDECLARATION_SHA256
+        or summary.get("fixed_exclusion_contract_sha256")
+        != common.FIXED_EXCLUSION_CONTRACT_SHA256
         or summary.get("outcome_clock_read") is not False
         or summary.get("open_1036_read") is not False
         or summary.get("open_1336_read") is not False
@@ -299,7 +303,7 @@ def run(
             staging / AUDIT_OUTPUT_FILES[1], index=False, lineterminator="\n"
         )
         audit = {
-            "schema": "cross_venue_calendar_rr_leader_v4r1_2026_data_gate_audit_v1",
+            "schema": "cross_venue_calendar_rr_leader_v4r2_2026_data_gate_audit_v1",
             "status": "PASS_INDEPENDENT_OUTCOME_FREE_DATA_GATE_AUDIT",
             "created_at_utc": datetime.now(timezone.utc).isoformat(),
             "evaluation_commit": summary["execution_commit"],

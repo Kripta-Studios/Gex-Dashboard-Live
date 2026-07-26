@@ -1,5 +1,13 @@
 # SUMMARY-update — ledger científico compacto
 
+2026-07-26, reseal V4R1 PASS desde `46971a80`: Greek/IV/shared3.432,
+unilaterales0, exclusiones retry0, red/outcomes false. Builder posterior cerró
+sin output: QQQ 20260310 no CALL25, SPY 20260319 no PUT25, QQQ 20260630 asks
+distintos y QQQ 20260722 Greek-only92. Usuario ordena no descargar y omitir.
+V4R2 fija cuatro sensor-fecha pre-outcome; sensor262/targets394, counts QQQ
+20/19/21/18/20/20/12 y SPXW/SPY20/19/21/18/20/21/13. Focal9/Ruff/compile
+PASS. Commit/push antes de gate; 10:36/13:36 cerrados.
+
 2026-07-26, retry V4R1 ejecutado una vez desde `aba363c3`: 10/10 respuestas
 normalizadas, raw inmutable, features/outcomes false. El seal usable0 fue un
 artefacto del lector (`timestamp[ns]` comparado con strings), no missingness.

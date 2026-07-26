@@ -1,5 +1,13 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+### Exclusión de sesión completa antes del label — 2026-07-26
+
+Cuando una feature predeclarada no puede materializarse, la unidad causal de
+exclusión es el sensor-fecha completo, no la intersección de contratos. V4R2
+congela cuatro fallos descubiertos hasta 10:35 y propaga SPY→SPXW por mapping,
+sin mirar 10:36/13:36 ni reconsultar datos. Esto preserva el vector entrenado y
+hace explícita la reducción de frecuencia, incluida julio QQQ MTD12.
+
 ### Dtype físico no equivale a missingness económica — 2026-07-26
 
 Un source gate debe distinguir un fallo de contenido de un fallo del lector. En

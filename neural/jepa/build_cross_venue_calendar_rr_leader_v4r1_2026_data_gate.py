@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the outcome-free V4R1 2026 feature gate after the exact source retry."""
+"""Build the outcome-free V4R2 2026 feature gate with fixed exclusions."""
 
 from __future__ import annotations
 
@@ -50,7 +50,7 @@ RESEALER = PROJECT_ROOT / (
 DEFAULT_RETRY_ROOT = common.RETRY_RESEAL_ROOT
 DEFAULT_OUTPUT = PROJECT_ROOT / (
     "research_papers/JEPA/results/_diagnostics/"
-    "cross_venue_calendar_rr_leader_v4r1_data_gate_202601_20260724_v1"
+    "cross_venue_calendar_rr_leader_v4r2_data_gate_202601_20260724_v1"
 )
 OUTPUT_FILES = (
     "universe.csv",
@@ -70,6 +70,7 @@ CODE_CLOSURE = (
     RESEALER,
     AUDITOR,
     common.PREDECLARATION,
+    common.FIXED_EXCLUSION_CONTRACT,
 )
 
 
@@ -92,6 +93,11 @@ def dataframe_digest(frame: pd.DataFrame) -> str:
 def verify_code() -> dict[str, str]:
     if common.sha256_file(common.PREDECLARATION) != common.PREDECLARATION_SHA256:
         raise AssertionError("V4R1 predeclaration changed")
+    if (
+        common.sha256_file(common.FIXED_EXCLUSION_CONTRACT)
+        != common.FIXED_EXCLUSION_CONTRACT_SHA256
+    ):
+        raise AssertionError("V4R2 fixed-exclusion contract changed")
     hashes: dict[str, str] = {}
     for path in CODE_CLOSURE:
         tracked_clean(path, f"V4R1 data-gate closure {path.name}")
@@ -162,6 +168,27 @@ def load_retry_gate(retry_root: Path) -> tuple[pd.DataFrame, pd.DataFrame, dict[
     ):
         raise AssertionError("V4R1 retry pair/exclusion gate changed")
     return pair_gate, exclusions, seal
+
+
+def apply_fixed_exclusions(retry_exclusions: pd.DataFrame) -> pd.DataFrame:
+    if not retry_exclusions.empty:
+        raise AssertionError("V4R2 expected zero exclusions from recovered retries")
+    fixed = pd.DataFrame(common.FIXED_OUTCOME_FREE_EXCLUSIONS)
+    if (
+        len(fixed) != 4
+        or fixed.duplicated(["sensor_ticker", "trade_date"]).any()
+        or set(zip(fixed["sensor_ticker"], fixed["trade_date"], strict=True))
+        != {
+            ("QQQ", "20260310"),
+            ("SPY", "20260319"),
+            ("QQQ", "20260630"),
+            ("QQQ", "20260722"),
+        }
+    ):
+        raise AssertionError("V4R2 fixed exclusions changed")
+    return fixed.sort_values(
+        ["sensor_ticker", "trade_date"], kind="stable"
+    ).reset_index(drop=True)
 
 
 def underlying_path(ticker: str, day: str) -> Path:
@@ -430,14 +457,17 @@ def feature_counts(features: pd.DataFrame) -> pd.DataFrame:
                 }
             )
     output = pd.DataFrame(rows)
-    if len(output) != 21 or not output["frequency_pass"].all():
-        raise AssertionError("V4R1 target frequency gate failed")
+    if (
+        len(output) != 21
+        or not output.loc[output["month_complete"], "frequency_pass"].all()
+    ):
+        raise AssertionError("V4R2 completed-month target frequency gate failed")
     return output
 
 
 def render_summary(summary: dict[str, Any], counts: pd.DataFrame) -> str:
     lines = [
-        "# CROSS_VENUE_CALENDAR_RR_LEADER_V4R1 — outcome-free data gate 2026",
+        "# CROSS_VENUE_CALENDAR_RR_LEADER_V4R2 — outcome-free data gate 2026",
         "",
         f"Status: `{summary['status']}`.",
         "",
@@ -461,11 +491,12 @@ def run(
     retry_root: Path, output_dir: Path, workers: int
 ) -> dict[str, Any]:
     if output_dir.exists():
-        raise FileExistsError(f"immutable V4R1 data gate exists: {output_dir}")
+        raise FileExistsError(f"immutable V4R2 data gate exists: {output_dir}")
     if not 1 <= workers <= 16:
         raise ValueError("workers must be in [1, 16]")
     code_hashes = verify_code()
-    pair_gate, exclusions, retry_seal = load_retry_gate(retry_root)
+    pair_gate, retry_exclusions, retry_seal = load_retry_gate(retry_root)
+    exclusions = apply_fixed_exclusions(retry_exclusions)
     universe = common.discover_universe()
     sensor_features, sensor_audit, sensor_inventory = build_sensor_features(
         universe, pair_gate, exclusions, workers
@@ -522,7 +553,7 @@ def run(
             render_summary(provisional, counts), encoding="utf-8", newline="\n"
         )
         summary = {
-            "schema": "cross_venue_calendar_rr_leader_v4r1_2026_data_gate_v1",
+            "schema": "cross_venue_calendar_rr_leader_v4r2_2026_data_gate_v1",
             "status": "PASS_OUTCOME_FREE_DATA_GATE",
             "created_at_utc": datetime.now(timezone.utc).isoformat(),
             "execution_commit": current_git_commit(),
@@ -539,6 +570,9 @@ def run(
             "date_sha256": common.DATE_SHA256,
             "capture_id_sha256": common.CAPTURE_ID_SHA256,
             "predeclaration_sha256": common.PREDECLARATION_SHA256,
+            "fixed_exclusion_contract_sha256": (
+                common.FIXED_EXCLUSION_CONTRACT_SHA256
+            ),
             "code_hashes": code_hashes,
             "source_files_rehashed": int(len(inventory)),
             "source_hash_mismatches": 0,

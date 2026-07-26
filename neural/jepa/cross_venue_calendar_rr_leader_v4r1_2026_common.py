@@ -34,6 +34,14 @@ PREDECLARATION = PROJECT_ROOT / (
 PREDECLARATION_SHA256 = (
     "7c4c500111774e3d7e72af840ff2660ec77518ab9c9eb0623f128ebc21bcee6b"
 )
+FIXED_EXCLUSION_CONTRACT = PROJECT_ROOT / (
+    "research_papers/JEPA/"
+    "CROSS_VENUE_CALENDAR_RR_LEADER_V4R2_2026_OUTCOME_FREE_FIXED_"
+    "EXCLUSIONS_PREDECLARATION.md"
+)
+FIXED_EXCLUSION_CONTRACT_SHA256 = (
+    "bf2fed43b1d58bd8e9bc0ba4bb4ab4a26b92ae66f4b3ec7c4845f34d27260fbf"
+)
 REMOTE_BASE_URL = "http://91.99.90.39:25503/v3"
 INTERVALS = ("1m", "30s", "5m")
 ENDPOINTS = {
@@ -62,6 +70,32 @@ RETRY_IDS = (
     "SPY|20260624|front|20260624",
     "SPY|20260625|front|20260625",
     "SPY|20260626|front|20260626",
+)
+FIXED_OUTCOME_FREE_EXCLUSIONS = (
+    {
+        "sensor_ticker": "QQQ",
+        "trade_date": "20260310",
+        "capture_id": "QQQ|20260310|session|feature_contract",
+        "reason": "no persistent signable CALL 25-delta contract",
+    },
+    {
+        "sensor_ticker": "SPY",
+        "trade_date": "20260319",
+        "capture_id": "SPY|20260319|session|feature_contract",
+        "reason": "no persistent signable PUT 25-delta contract",
+    },
+    {
+        "sensor_ticker": "QQQ",
+        "trade_date": "20260630",
+        "capture_id": "QQQ|20260630|back|20260702",
+        "reason": "Greek/IV vintage ask values differ",
+    },
+    {
+        "sensor_ticker": "QQQ",
+        "trade_date": "20260722",
+        "capture_id": "QQQ|20260722|front|20260722",
+        "reason": "Greek/IV exact key sets differ: Greek-only 92",
+    },
 )
 KEY_COLUMNS = (
     "symbol",

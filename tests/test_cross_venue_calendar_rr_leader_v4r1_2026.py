@@ -206,8 +206,42 @@ def test_frequency_gate_requires_thirteen_each_cell() -> None:
     counts = build.feature_counts(pd.DataFrame(rows))
     assert len(counts) == 21
     assert counts["frequency_pass"].all()
+    deficient = pd.DataFrame(rows)
+    drop_index = deficient.index[
+        deficient["ticker"].eq("SPY") & deficient["month"].eq("202606")
+    ][0]
     with pytest.raises(AssertionError, match="frequency"):
-        build.feature_counts(pd.DataFrame(rows[:-1]))
+        build.feature_counts(deficient.drop(index=drop_index))
+
+
+def test_v4r2_fixed_exclusions_and_expected_counts() -> None:
+    exclusions = build.apply_fixed_exclusions(
+        pd.DataFrame(
+            columns=["sensor_ticker", "trade_date", "capture_id", "reason"]
+        )
+    )
+    assert list(zip(exclusions["sensor_ticker"], exclusions["trade_date"], strict=True)) == [
+        ("QQQ", "20260310"),
+        ("QQQ", "20260630"),
+        ("QQQ", "20260722"),
+        ("SPY", "20260319"),
+    ]
+    rows = []
+    expected = {
+        "QQQ": [20, 19, 21, 18, 20, 20, 12],
+        "SPXW": [20, 19, 21, 18, 20, 21, 13],
+        "SPY": [20, 19, 21, 18, 20, 21, 13],
+    }
+    for ticker, counts in expected.items():
+        for month, count in zip(common.EXPECTED_MONTH_COUNTS, counts, strict=True):
+            rows.extend({"ticker": ticker, "month": month} for _ in range(count))
+    counts = build.feature_counts(pd.DataFrame(rows))
+    assert counts.groupby("ticker", sort=False)["events"].apply(list).to_dict() == expected
+    july_qqq = counts.loc[
+        counts["ticker"].eq("QQQ") & counts["month"].eq("202607")
+    ].iloc[0]
+    assert bool(july_qqq["frequency_pass"]) is False
+    assert bool(july_qqq["month_complete"]) is False
 
 
 def test_auditor_comparison_detects_changed_feature() -> None:
