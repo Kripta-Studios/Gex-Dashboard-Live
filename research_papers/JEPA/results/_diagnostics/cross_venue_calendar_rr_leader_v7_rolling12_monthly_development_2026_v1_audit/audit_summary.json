@@ -1,0 +1,19 @@
+{
+  "schema": "cross_venue_calendar_rr_leader_v7_audit_v1",
+  "status": "PASS_INDEPENDENT_V7_DEVELOPMENT_AUDIT",
+  "created_utc": "2026-07-26T12:16:08.623006+00:00",
+  "evaluation_summary_sha256": "260e05df141fa4d891c697f51ffac3517a018bb0532f0d05a3e3deebdb1894fe",
+  "models_refit": 7,
+  "probability_vectors_exact": true,
+  "ledger_rows": 394,
+  "folds_recomputed": 7,
+  "input_hash_mismatches": 0,
+  "output_hash_mismatches": 0,
+  "h1_gate_pass": false,
+  "july_mtd_health_pass": false,
+  "outcome_2026_already_seen": true,
+  "development_only": true,
+  "promotable": false,
+  "physical_option_payoff_opened": false,
+  "production_modified": false
+}

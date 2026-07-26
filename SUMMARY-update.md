@@ -1,5 +1,12 @@
 # SUMMARY-update — ledger científico compacto
 
+2026-07-26, V7 rolling12 one-shot `FAILED_DEVELOPMENT_NOT_STABLE`. H1
+QQQ/SPXW/SPY PF0,812462/1,079783/1,031988, net
+-585,329/+149,347/+61,076bps, min18, meses+1/2/3. Junio QQQ pasa pero
+SPXW/SPY PF0,968/1,075; julio MTD solo QQQ positivo. Auditor PASS: refit7,
+probabilidades/ledger394 exactos, mismatch0, summary SHA `260e05df...94fe`.
+V7 `FAILED_ECONOMIC`; physical/live cerrado.
+
 2026-07-26, V7 rolling12 predeclarada sin predicciones. V4R2 fue fit fijo
 2023–2025. Diagnóstico post-outcome: correlaciones coef anuales
 -0,143/0,095/0,146; marzo direct pooled +518,604bps pero model -273,230bps al

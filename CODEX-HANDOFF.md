@@ -1,5 +1,13 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+## V7 rolling12 FAIL auditado — 2026-07-26
+
+Walk-forward real: desde febrero cada fit incorpora solo meses 2026 anteriores.
+H1 PF QQQ/SPXW/SPY 0,812/1,080/1,032; net -585,3/+149,3/+61,1bps y solo1/2/3
+meses positivos. Junio falla SPXW/SPY; julio MTD solo QQQ positivo. Auditor
+refittea7 modelos y reproduce probabilidades/ledger394 exactos. V7 cerrada; no
+physical/live y no nuevo sweep retrospectivo sobre 2026. Versionar evidencia.
+
 ## V7 rolling12 predeclarada — 2026-07-26
 
 V4R2 fue fit2023–2025 fijo, no walk-forward 2026. Diagnóstico post-outcome:

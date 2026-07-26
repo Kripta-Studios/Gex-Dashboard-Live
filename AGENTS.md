@@ -1,5 +1,22 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-07-26 — V7 rolling12 falla y auditoría PASS
+
+Contrato `6ee8fc2f`, evaluator+auditor `d462f4d7`, ejecución única:
+`FAILED_DEVELOPMENT_NOT_STABLE`. H1 QQQ/SPXW/SPY: PF
+`0,812462/1,079783/1,031988`, WR `50,847/51,261/49,580%`, neto
+`-585,329/+149,347/+61,076bps`, min18 y meses positivos `1/2/3` de seis.
+
+Junio: QQQ PF2,095/+500,526, SPXW0,968/-13,983, SPY1,075/+30,970.
+Julio MTD24: QQQ 12/PF1,825/+181,239; SPXW13/0,638/-80,915;
+SPY13/0,635/-80,860. No hay rentabilidad simultánea.
+
+Auditor `PASS_INDEPENDENT_V7_DEVELOPMENT_AUDIT`: models7, probability vectors
+exactos, ledger394, mismatch0; evaluation summary SHA `260e05df...94fe`.
+V7 queda `FAILED_ECONOMIC`; no barrer otras ventanas/targets/horas sobre 2026.
+Payoff físico/live/VPS siguen cerrados. Versionar resultados+audit+autoridad
+`CROSS_VENUE_CALENDAR_RR_LEADER_V7_ROLLING12_MONTHLY_LOGISTIC_FAILURE.md`.
+
 ### Checkpoint 2026-07-26 — V7 rolling12 predeclarada, sin predicciones
 
 V4R2 no se entrenó sobre 2026: fit único 2023–2025 y outer congelado. El

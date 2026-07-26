@@ -1,0 +1,53 @@
+{
+  "schema": "cross_venue_calendar_rr_leader_v7_development_v1",
+  "status": "FAILED_DEVELOPMENT_NOT_STABLE",
+  "created_utc": "2026-07-26T12:15:59.729461+00:00",
+  "runner_commit": "d462f4d7ab9bf37165603343801b2b434353e653",
+  "code_hashes": {
+    "neural/jepa/cross_venue_calendar_rr_leader_v7_common.py": "f9c1dfe81e625059d627ea11fcb8b2055386cca1d35923eb0b195667b77e9853",
+    "neural/jepa/evaluate_cross_venue_calendar_rr_leader_v7.py": "1833470814d34ed8f594b9692350bbf16be0dcdff91fb1316d3c69d88c6a6cb7",
+    "neural/jepa/audit_cross_venue_calendar_rr_leader_v7.py": "da450d4fba0a89e3873649340d13135adeb44a33a96849e641d8884cc051123b"
+  },
+  "input_hashes": {
+    "research_papers/JEPA/results/_diagnostics/cross_venue_calendar_rr_leader_v2_development_202301_202412_v1/development_dataset.parquet": "459979c11ad5b7ba1ed44ef3add42142d0eab40982882bc52031982e22778f0b",
+    "research_papers/JEPA/results/_diagnostics/cross_venue_calendar_rr_leader_v4_development_2025_v1/development_dataset.parquet": "87413fb1c605c221aa8f225ad9877ccbdb6d5eca45877f4fa97a5b60d321d04b",
+    "research_papers/JEPA/results/_diagnostics/cross_venue_calendar_rr_leader_v4r2_data_gate_202601_20260724_v1/feature_view.parquet": "904a28560cf5bc6c86afa28c833e9aaf7f84dbb417aac745a134fb65df8ecbff",
+    "research_papers/JEPA/results/_diagnostics/cross_venue_calendar_rr_leader_v4r2_outer_2026_v1/trades.csv": "3db6f767282c308c7c87f3d0d74e29890e9809cdbe3621edee66f2562780e19c",
+    "research_papers/JEPA/results/_diagnostics/cross_venue_calendar_rr_leader_v4r2_outer_2026_v1/SUMMARY.json": "8de7e8865b57d0ed36fd7a065bb8b87a9dac7e02d0a0db2d7c051e4f223f12b2",
+    "research_papers/JEPA/results/_diagnostics/cross_venue_calendar_rr_leader_v4r2_outer_2026_v1_audit/audit_summary.json": "30e0690f93386e16ce1662c367c8ba3aef2b7f8b5824f180a7d2f52d80195bcd",
+    "research_papers/JEPA/CROSS_VENUE_CALENDAR_RR_LEADER_V7_ROLLING12_MONTHLY_LOGISTIC_PREDECLARATION.md": "d89cda15d624588b7d2258332a656792587d682326587cf454ea45e70d4c4a7b"
+  },
+  "folds": 7,
+  "trades": 394,
+  "h1_gate_pass": false,
+  "july_mtd_health_pass": false,
+  "outcome_2026_already_seen": true,
+  "development_only": true,
+  "promotable": false,
+  "physical_option_payoff_opened": false,
+  "production_modified": false,
+  "output_sha256": {
+    "folds.csv": "b9e3dace4d577e644e43a7c53dc58c617de10d5452c601cbe82c7846e8249f46",
+    "predictions.csv": "06f9f751deda0ee0690c865315223ce2858bbe77de75e2058059c6c3b6e6bf54",
+    "trades.csv": "4ed60a0611ad2eee4f059c6baf0932d0ffec2419359c1affbca7faefe36e1e32",
+    "monthly_metrics.csv": "6351c1ddad27695f357308cb39af0ff266471f41a559306fa9d8cb21fdea7be7",
+    "ticker_summary_closed_h1.csv": "afa772baea57f5946b293f5d218d4466f45293d6e21c8bcba51b1c754418be90",
+    "july_mtd_summary.csv": "0ef4a70127252d79780a4aaec78fe295f3894af3c2522defb8c30a2c9f482328",
+    "cost_sensitivity.csv": "98e7e48d21e7728c5359623c18853c6ef55c4f4a35ec1ee9006509524ac08052",
+    "SUMMARY.md": "0931ed69dfb0bc84e1c7d2c5e00324485bd8f2868656be2c5ad18bd0849c3b4b",
+    "model_artifacts/model_202601.json": "716eb998c558d359a7fd70c4bfe2597cd9b1c59fe9fac4c4ea7eb42ee883507d",
+    "model_artifacts/model_202602.json": "aa746f6af215dc526abaf99f410fbe51aa3435bf7d1b9d368c2bc63a298eb146",
+    "model_artifacts/model_202603.json": "8eff81a8d187a1cc1b7dc59fdebb30de0c4a1fbfbaa2a0025518a388ce5172c1",
+    "model_artifacts/model_202604.json": "91bb869e5d75a6302c092a140f5a7b00ed7a78f575e36d147263f1cc8e13c8a4",
+    "model_artifacts/model_202605.json": "e4ae96c893aeaafd703089f361f56434590fe1c3e10e831827127e67e3c58ce9",
+    "model_artifacts/model_202606.json": "ddaad6cdbd8de6313058a10814d54b3e9a48a87731a91c27a2ce448dc28396d7",
+    "model_artifacts/model_202607.json": "073c599cf30c9e26a2671499229ca9c363595c75f68d49f66fc90694106530f4",
+    "fold_predictions/predictions_202601.csv": "8b653aefb9af94d3ca472b69e437a647347f35d8b9eaa8895d395f6df5735ada",
+    "fold_predictions/predictions_202602.csv": "4b5514e10697c85d0b55bcb703f82d033732b6cce253063fb28e170f7b095378",
+    "fold_predictions/predictions_202603.csv": "5d88b14bc82df00fe7bffb2a1b8fae75d7e16ab6e6ace18b7a5b7f48f1c4942c",
+    "fold_predictions/predictions_202604.csv": "76d1cdeec3fa43e1f6d12890d40a4adaa3a269fe32587c102a2427fda4764152",
+    "fold_predictions/predictions_202605.csv": "1a30bc5e42d27b983cb0756ec8fb9b1dec87c3924f4f2d3e92d155f3408219b0",
+    "fold_predictions/predictions_202606.csv": "f43469b8e2da288e59d7ae8a122e834e7b25d77c40bbcba1b2e81eb6d16e8c3d",
+    "fold_predictions/predictions_202607.csv": "edb0744f7eb4543e3fe496133a32ef5cc05e55700555f096189ea859de956f6a"
+  }
+}

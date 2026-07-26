@@ -1,5 +1,14 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+## V7 rolling12 falla — 2026-07-26
+
+Se ejecutó el walk-forward solicitado: desde febrero cada modelo entrena con
+los meses 2026 anteriores, nunca con el mes test. H1 PF0,812/1,080/1,032 y
+meses positivos1/2/3. SPXW/SPY mejoran el neto agregado, pero no PF ni
+estabilidad; QQQ empeora. Junio no pasa SPXW/SPY y julio MTD vuelve a perder en
+ambos. Auditor reproduce los siete fits y 394 trades exactamente. V7 cerrada,
+sin payoff/live.
+
 ## V7 rolling12 predeclarada — 2026-07-26
 
 El outer V4R2 no usó 2026 en training. El diagnóstico posterior encuentra

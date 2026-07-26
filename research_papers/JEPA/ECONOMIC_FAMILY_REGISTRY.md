@@ -40,9 +40,10 @@ Estados permitidos: `QUEUED`, `ACTIVE`, `FAILED_CAUSALITY`,
 | CROSS_VENUE post-V4 cash-only | summaries/spot/cross-cash/shallow trees/raw35x1m | `FAILED_ECONOMIC` | ningún candidato pasa los seis bloques ticker-año 2024–2025; no V5 ni acceso 2026 |
 | CROSS_VENUE_OPRA_TRADE_QUOTE_FLOW_V5 | desequilibrio de prints OPRA 0DTE ejecutados frente al NBBO estrictamente anterior | `BLOCKED_DATA` | source gate: 1.364/1.504, 140 invalid/duplicate, enero2024=0/21 ambos; auditor PASS rehash/reparse1.364, mismatch0; sin features/outcomes |
 | CROSS_VENUE_CALENDAR_RR_LEADER_V6 | continuación no lineal depth2 sobre las 29 features V4 selladas | `CLOSED` | cerrada sin implementación, predicción ni métrica al priorizar el V4 inmutable |
-| CROSS_VENUE_CALENDAR_RR_LEADER_V7 | logistic pooled rolling12 con refit al inicio de mes | `ACTIVE` | falsificación post-outcome predeclarada; evaluator+auditor versionables antes del único run; 2026 nunca outer |
+| CROSS_VENUE_CALENDAR_RR_LEADER_V7 | logistic pooled rolling12 con refit al inicio de mes | `FAILED_ECONOMIC` | H1 PF0,812/1,080/1,032 y 1/2/3 meses positivos; junio falla SPXW/SPY y julio MTD falla SPXW/SPY; auditor PASS |
 
-No hay una policy promocionable. V7 está `ACTIVE` como diagnóstico development
-rolling12 autorizado por el usuario; no reabre V4R2 ni restaura virginidad a
-2026. Payoff físico y producción/live/systemd permanecen cerrados. Autoridad
-terminal V4R2: `CROSS_VENUE_CALENDAR_RR_LEADER_V4R2_OUTER_2026_FAILURE.md`.
+No hay una policy promocionable ni familia cross-venue activa. V7 falla incluso
+al incorporar 2026 pasado en walk-forward mensual y no restaura virginidad a
+2026. Payoff físico y producción/live/systemd permanecen cerrados. Autoridades
+terminales: `CROSS_VENUE_CALENDAR_RR_LEADER_V4R2_OUTER_2026_FAILURE.md` y
+`CROSS_VENUE_CALENDAR_RR_LEADER_V7_ROLLING12_MONTHLY_LOGISTIC_FAILURE.md`.

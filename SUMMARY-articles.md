@@ -1,5 +1,12 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+### Recencia mejora accuracy sin garantizar PF — 2026-07-26
+
+Rolling12 cambió 42/43 orientaciones SPXW/SPY y elevó ligeramente su accuracy,
+pero dejó PF H1 en 1,080/1,032 y solo2/3 meses positivos. QQQ empeoró a PF0,812.
+Un target binario de win puede acertar más observaciones pequeñas y seguir
+perdiendo por errores grandes; la accuracy no sustituye PF/PnL mensual.
+
 ### Refit causal no restaura la virginidad del periodo — 2026-07-26
 
 Un outer congelado puede revelar que los coeficientes cambian de signo entre
