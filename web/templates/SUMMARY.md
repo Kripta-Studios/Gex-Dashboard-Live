@@ -272,6 +272,7 @@ el hash y el resultado.
 - `67fc4e16` — `feat(web): add King Node exposure tab` (preexistente).
 - `fc592de7` — `feat(king-node): add raw gamma level and handoff`.
 - `85254f29` — `feat(king-node): add realtime engine service and API`.
+- `3021fc66` — `feat(king-node): render precomputed realtime model`.
 
 ## Checkpoint backend implementado después de `fc592de7`
 
@@ -326,9 +327,42 @@ Validación actual:
   de esta sesión respondió `No browser is available`; la validación DOM
   determinista con Node sí pasó.
 
+## Checkpoint operativo preparado después de `3021fc66`
+
+Archivos creados, todavía pendientes del siguiente hash:
+
+- `.env.king-node.example`: rutas, intervalos y edades sin secretos;
+- `systemd/king-node.service`: estado en `/var/lib/king-node`, dependencias
+  blandas sobre Theta/Tasty, restart y hardening;
+- `systemd/financial-server.service`: ruta compartida del snapshot y orden
+  posterior a KING NODE;
+- `scripts/check_king_node_health.py`: contrato de health verificable y salida
+  JSON;
+- `scripts/deploy_king_node_vps.sh`: instalación idempotente y arranque
+  ordenado;
+- `docs/KING_NODE_VPS_DEPLOYMENT.md`: preflight, one-shot, instalación, logs,
+  diagnóstico y rollback;
+- `tests/test_king_node_deployment.py`: cuatro regresiones del contrato
+  operativo.
+
+El health de producción permite la advertencia explícita del fallback estático,
+pero exige snapshot/Tasty frescos, 47 strikes y VIX/VVIX/VIX1D observados. La
+opción `--require-reference-export` hace que la paridad estática pendiente sea
+un gate estricto.
+
+Validación actual:
+
+- suite focal completa: `13 passed`;
+- Ruff de los archivos nuevos: PASS;
+- `compileall`: PASS;
+- `node --check`: PASS;
+- `bash -n scripts/deploy_king_node_vps.sh`: PASS;
+- `git diff --check`: PASS salvo avisos CRLF de Windows.
+
 Siguiente orden exacto:
 
-1. commit/push del renderer, CSS, pruebas y este hand-off;
-2. crear unidades/configuración/script/documento de VPS sin secretos;
-3. validar un one-shot con Tastytrade real y Theta Terminal disponible;
-4. commit/push del checkpoint operativo y registrar aquí los hashes finales.
+1. commit/push del checkpoint operativo y este hand-off;
+2. registrar su hash final en este documento;
+3. decidir si versionar los tres artefactos fuente que siguen sin rastrear;
+4. en el VPS, validar un one-shot con Tastytrade y Theta Terminal realmente
+   disponibles.

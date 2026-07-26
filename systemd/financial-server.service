@@ -1,6 +1,7 @@
 [Unit]
 Description=Servidor de Datos Financieros (Puerto 8609)
-After=network.target
+After=network-online.target king-node.service
+Wants=network-online.target king-node.service
 
 [Service]
 MemoryMax=1G
@@ -18,6 +19,9 @@ RestartSec=5
 
 # Opcional: Para que los logs de Python se vean inmediatamente en journalctl
 Environment=PYTHONUNBUFFERED=1
+Environment=KING_NODE_SNAPSHOT=/var/lib/king-node/latest.json
+Environment=KING_NODE_WEB_MAX_AGE_SECONDS=900
+EnvironmentFile=-/etc/kripta/king-node.env
 
 [Install]
 WantedBy=multi-user.target

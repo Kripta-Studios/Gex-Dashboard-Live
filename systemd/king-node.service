@@ -1,0 +1,35 @@
+[Unit]
+Description=KING NODE realtime calculation service
+Documentation=file:/home/Option-Greeks-Plotting-Discord-Bot/docs/KING_NODE_VPS_DEPLOYMENT.md
+After=network-online.target thetadata_feed.service gex_daemon.service
+Wants=network-online.target thetadata_feed.service gex_daemon.service
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/home/Option-Greeks-Plotting-Discord-Bot
+StateDirectory=king-node
+StateDirectoryMode=0750
+
+Environment=PYTHONUNBUFFERED=1
+Environment=KING_NODE_OUTPUT=/var/lib/king-node/latest.json
+Environment=KING_NODE_STATE_FILE=/var/lib/king-node/state.json
+Environment=KING_NODE_SNAPSHOT=/var/lib/king-node/latest.json
+EnvironmentFile=-/etc/kripta/king-node.env
+
+ExecStart=/usr/bin/python3 /home/Option-Greeks-Plotting-Discord-Bot/services/king_node_service.py
+Restart=always
+RestartSec=5
+TimeoutStopSec=20
+
+MemoryMax=512M
+MemorySwapMax=0
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+ReadWritePaths=/var/lib/king-node
+
+[Install]
+WantedBy=multi-user.target
