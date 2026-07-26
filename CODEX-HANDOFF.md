@@ -1,5 +1,13 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+## Inventario post-V7: sin fuente local nueva — 2026-07-26
+
+Read-only, sin endpoints/valores nuevos. Greeks/IV/OHLC/OI, quote size/ticks,
+cash y futures Yahoo ya pertenecen a familias cerradas; V5 sigue incompleta.
+No hay credencial/seal alternativo de tape OPRA, depth, underlying firmado o
+futuros contract-level. No V8 ni nuevo retuning de 2026. Dependencia externa
+exacta en `CAUSAL_SOURCE_POST_V7_INVENTORY_20260726.md`; live cerrado.
+
 ## V7 rolling12 FAIL auditado — 2026-07-26
 
 Walk-forward real: desde febrero cada fit incorpora solo meses 2026 anteriores.

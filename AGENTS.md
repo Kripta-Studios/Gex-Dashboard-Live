@@ -1,5 +1,22 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-07-26 — inventario post-V7 confirma dependencia externa
+
+Censo read-only por nombres/schemas, sin red ni nuevos valores. QQQ/SPY tienen
+250/252/250 sesiones 2023/2024/2025 de Greeks, IV, OHLC y OI, y 133 sesiones
+2026 hasta 24-jul (OI140), pero todas corresponden a familias cerradas. Los
+NBBO snapshots/ticks locales son los ya fallidos H-QSIZE/H-QDYN/H-IBQDYN.
+`data_training_input` sigue rechazado por reloj/bfill/paridad y V5 permanece
+1.364/1.504 con enero2024=0.
+
+Solo existen nombres de credencial ThetaData; no hay tape/depth/futuros/
+underlying firmado externo con histórico y live equivalentes. Autoridad:
+`CAUSAL_SOURCE_POST_V7_INVENTORY_20260726.md`. No predeclarar V8 con otra
+ventana/target/modelo sobre 2026: ya está visto y no puede volver a ser outer.
+Se necesita una fuente externa nueva; physical/live/VPS/systemd cerrados.
+Cambios rastreados del usuario en `services/servidor.py` y `web/templates/*`
+se preservan y quedan fuera de alcance.
+
 ### Checkpoint 2026-07-26 — V7 rolling12 falla y auditoría PASS
 
 Contrato `6ee8fc2f`, evaluator+auditor `d462f4d7`, ejecución única:

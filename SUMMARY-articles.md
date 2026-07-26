@@ -1,5 +1,12 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+### Nuevo target no equivale a nueva fuente — 2026-07-26
+
+Descubrir que la magnitud domina a la accuracy no autoriza probar regresiones,
+weights y ventanas sobre el mismo outer consumido. Sin una medición nueva y un
+periodo futuro intacto, ese ciclo solo optimiza retrospectivamente. Un bloqueo
+de fuente debe documentarse en vez de convertirse en una versión numérica más.
+
 ### Recencia mejora accuracy sin garantizar PF — 2026-07-26
 
 Rolling12 cambió 42/43 orientaciones SPXW/SPY y elevó ligeramente su accuracy,

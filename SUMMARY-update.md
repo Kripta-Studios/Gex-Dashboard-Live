@@ -1,5 +1,10 @@
 # SUMMARY-update — ledger científico compacto
 
+2026-07-26, inventario post-V7 read-only: no fuente local nueva. QQQ/SPY
+Greeks/IV/OHLC/OI cubren 250/252/250 sesiones 2023–2025, pero están cerradas;
+quote size/ticks ya fallaron y V5 queda 1.364/1.504. Solo credenciales Theta,
+sin tape/depth/futuros alternativos. No V8/retuning 2026; dependencia externa.
+
 2026-07-26, V7 rolling12 one-shot `FAILED_DEVELOPMENT_NOT_STABLE`. H1
 QQQ/SPXW/SPY PF0,812462/1,079783/1,031988, net
 -585,329/+149,347/+61,076bps, min18, meses+1/2/3. Junio QQQ pasa pero

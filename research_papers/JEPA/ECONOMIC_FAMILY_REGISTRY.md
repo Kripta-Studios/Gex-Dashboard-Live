@@ -47,3 +47,5 @@ al incorporar 2026 pasado en walk-forward mensual y no restaura virginidad a
 2026. Payoff físico y producción/live/systemd permanecen cerrados. Autoridades
 terminales: `CROSS_VENUE_CALENDAR_RR_LEADER_V4R2_OUTER_2026_FAILURE.md` y
 `CROSS_VENUE_CALENDAR_RR_LEADER_V7_ROLLING12_MONTHLY_LOGISTIC_FAILURE.md`.
+El inventario post-V7 `CAUSAL_SOURCE_POST_V7_INVENTORY_20260726.md` confirma
+dependencia externa; no se crea V8 con fuentes/outcomes ya cerrados.

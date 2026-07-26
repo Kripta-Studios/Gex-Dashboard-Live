@@ -1,5 +1,11 @@
 # Bloqueo de fuente causal externa — 2026-07-26
 
+> **Actualización post-V7:** V4R2 consumió 2026 y V7 rolling12 también falló
+> como development. El nuevo censo read-only confirma que no apareció otra
+> fuente local/licencia. Autoridad complementaria:
+> `CAUSAL_SOURCE_POST_V7_INVENTORY_20260726.md`. Ya no es causalmente posible
+> reutilizar 2026 como outer para una familia posterior.
+
 ## Autorización posterior del usuario
 
 Una instrucción aún posterior autoriza V4R1: requery exacto de los cinco IDs

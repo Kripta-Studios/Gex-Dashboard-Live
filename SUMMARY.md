@@ -1,5 +1,13 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+## Post-V7: dependencia de fuente externa — 2026-07-26
+
+El inventario local por schemas no encuentra una medición causal nueva:
+Greeks/IV/OHLC/OI, NBBO size/ticks, cash y futures existentes están cerrados;
+V5 trade_quote está incompleta y solo hay credenciales ThetaData. No se fabrica
+V8 retuneando 2026. Hace falta tape/depth/flow/futuros externo con histórico y
+live equivalentes; el primer outer posible será futuro porque 2026 ya está visto.
+
 ## V7 rolling12 falla — 2026-07-26
 
 Se ejecutó el walk-forward solicitado: desde febrero cada modelo entrena con
