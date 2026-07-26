@@ -10,9 +10,10 @@ no se descargan de nuevo: se excluyen QQQ 10-mar, SPY 19-mar, QQQ 30-jun y QQQ
 
 V4R2 congela esta regla sin cambiar V4. El gate real PASS tiene 262
 sensor-fecha, 394 targets, 29 features y 1.446 fuentes sin mismatch; todos los
-meses cerrados conservan ≥13 y julio QQQ queda MTD12. El auditor se detuvo sin
-output únicamente por vacío CSV recargado como NaN; se corrige el parser y se
-versiona antes del rerun. 10:36/13:36 y rentabilidad 2026 siguen cerrados.
+meses cerrados conservan ≥13 y julio QQQ queda MTD12. Auditor independiente
+PASS: reparse10, rehash1.446/mismatch0 y feature view exacta; summary SHA
+`16988ecc...1aa3`. Falta versionar gate+audit antes del freezer. 10:36/13:36 y
+rentabilidad 2026 siguen cerrados.
 
 ## V4R1: cinco retries recuperados, todavía sin outcomes — 2026-07-26
 

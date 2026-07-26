@@ -22,10 +22,12 @@ no se presenta como PASS mensual. Desde `f60f6282`, el gate real terminó
 `PASS_OUTCOME_FREE_DATA_GATE`: features29, fuentes rehasheadas1.446,
 mismatch0, feature view SHA `904a2856...bff`; 10:36/13:36 false.
 
-El primer auditor cerró sin output: el string vacío `reason` del CSV se recargó
-como NaN; los pares económicos coincidían. Fix auditor-only normaliza solo el
-round-trip de columnas string y añade regresión. Siguiente: focal/Ruff/compile,
-commit/push del fix y único rerun del auditor. No abrir outcomes aún.
+El primer auditor cerró sin output por `reason=""`→NaN. Fix auditor-only
+publicado en `09395b94`; el rerun terminó
+`PASS_INDEPENDENT_OUTCOME_FREE_DATA_GATE_AUDIT`: reparse10, fuentes1.446,
+mismatch0, sensor262, targets394 y feature view exacta. Evaluation summary SHA
+`16988ecc...1aa3`; rehash SHA `b62797e6...bfd8`. Siguiente: force-add/commit/
+push gate+audit+hándoffs; solo después implementar y versionar freezer V4.
 
 ### Checkpoint 2026-07-26 — V4R1 retry completa; reseal dtype pendiente
 

@@ -1,0 +1,5 @@
+sensor_ticker,trade_date,capture_id,reason
+QQQ,20260310,QQQ|20260310|session|feature_contract,no persistent signable CALL 25-delta contract
+QQQ,20260630,QQQ|20260630|back|20260702,Greek/IV vintage ask values differ
+QQQ,20260722,QQQ|20260722|front|20260722,Greek/IV exact key sets differ: Greek-only 92
+SPY,20260319,SPY|20260319|session|feature_contract,no persistent signable PUT 25-delta contract

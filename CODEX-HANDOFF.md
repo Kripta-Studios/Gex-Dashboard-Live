@@ -9,9 +9,9 @@ adicionales outcome-free: QQQ 20260310, SPY 20260319, QQQ 20260630 y QQQ
 
 V4R2 congela esas cuatro exclusiones antes de 10:36/13:36; mapping/modelo/clocks
 no cambian. Gate real desde `f60f6282` PASS: sensores262, targets394,
-fuentes1.446/mismatch0 y clocks outcome false. El auditor cerró sin output por
-`reason=""`→NaN al recargar CSV, con contenido igual. Fix auditor-only pendiente
-de commit/push y rerun; después versionar gate+audit y freeze.
+fuentes1.446/mismatch0 y clocks outcome false. Auditor desde `09395b94` PASS:
+feature view exacta, reparse10 y rehash1.446/mismatch0; summary SHA
+`16988ecc...1aa3`. Versionar gate+audit+hándoffs antes de implementar freeze.
 
 ## V4R1 retry materializada; corrección dtype pre-feature — 2026-07-26
 

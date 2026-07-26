@@ -1,0 +1,255 @@
+{
+  "schema": "cross_venue_calendar_rr_leader_v4r2_2026_data_gate_v1",
+  "status": "PASS_OUTCOME_FREE_DATA_GATE",
+  "created_at_utc": "2026-07-26T11:37:37.499370+00:00",
+  "execution_commit": "f60f628286807c5033fa58d848b18e86857708e6",
+  "retry_seal_sha256": "99a33f565650af36b24ed36b73500c396a1b43bc0e1dc0354c2bc5f58b97c169",
+  "retry_usable_pairs": 5,
+  "excluded_sensor_dates": 4,
+  "universe_sensor_sessions": 266,
+  "sensor_feature_rows": 262,
+  "target_feature_rows": 394,
+  "feature_count": 29,
+  "feature_columns": [
+    "signal_pressure",
+    "abs_signal_pressure",
+    "calendar_rr_t0",
+    "front_rr_t0",
+    "back_rr_t0",
+    "front_rr_change",
+    "back_rr_change",
+    "option_spot_return_5m_bps",
+    "qqq_return_1000_1035_bps",
+    "qqq_return_1020_1035_bps",
+    "qqq_return_1030_1035_bps",
+    "qqq_open_return_std_bps",
+    "qqq_open_range_bps",
+    "qqq_positive_open_return_fraction",
+    "spy_return_1000_1035_bps",
+    "spy_return_1020_1035_bps",
+    "spy_return_1030_1035_bps",
+    "spy_open_return_std_bps",
+    "spy_open_range_bps",
+    "spy_positive_open_return_fraction",
+    "spxw_return_1000_1035_bps",
+    "spxw_return_1020_1035_bps",
+    "spxw_return_1030_1035_bps",
+    "spxw_open_return_std_bps",
+    "spxw_open_range_bps",
+    "spxw_positive_open_return_fraction",
+    "ticker_QQQ",
+    "ticker_SPXW",
+    "ticker_SPY"
+  ],
+  "mapping": {
+    "QQQ": "QQQ",
+    "SPXW": "SPY",
+    "SPY": "SPY"
+  },
+  "monthly_counts": [
+    {
+      "ticker": "QQQ",
+      "month": "202601",
+      "events": 20,
+      "frequency_pass": true,
+      "month_complete": true,
+      "july_mtd": false
+    },
+    {
+      "ticker": "QQQ",
+      "month": "202602",
+      "events": 19,
+      "frequency_pass": true,
+      "month_complete": true,
+      "july_mtd": false
+    },
+    {
+      "ticker": "QQQ",
+      "month": "202603",
+      "events": 21,
+      "frequency_pass": true,
+      "month_complete": true,
+      "july_mtd": false
+    },
+    {
+      "ticker": "QQQ",
+      "month": "202604",
+      "events": 18,
+      "frequency_pass": true,
+      "month_complete": true,
+      "july_mtd": false
+    },
+    {
+      "ticker": "QQQ",
+      "month": "202605",
+      "events": 20,
+      "frequency_pass": true,
+      "month_complete": true,
+      "july_mtd": false
+    },
+    {
+      "ticker": "QQQ",
+      "month": "202606",
+      "events": 20,
+      "frequency_pass": true,
+      "month_complete": true,
+      "july_mtd": false
+    },
+    {
+      "ticker": "QQQ",
+      "month": "202607",
+      "events": 12,
+      "frequency_pass": false,
+      "month_complete": false,
+      "july_mtd": true
+    },
+    {
+      "ticker": "SPXW",
+      "month": "202601",
+      "events": 20,
+      "frequency_pass": true,
+      "month_complete": true,
+      "july_mtd": false
+    },
+    {
+      "ticker": "SPXW",
+      "month": "202602",
+      "events": 19,
+      "frequency_pass": true,
+      "month_complete": true,
+      "july_mtd": false
+    },
+    {
+      "ticker": "SPXW",
+      "month": "202603",
+      "events": 21,
+      "frequency_pass": true,
+      "month_complete": true,
+      "july_mtd": false
+    },
+    {
+      "ticker": "SPXW",
+      "month": "202604",
+      "events": 18,
+      "frequency_pass": true,
+      "month_complete": true,
+      "july_mtd": false
+    },
+    {
+      "ticker": "SPXW",
+      "month": "202605",
+      "events": 20,
+      "frequency_pass": true,
+      "month_complete": true,
+      "july_mtd": false
+    },
+    {
+      "ticker": "SPXW",
+      "month": "202606",
+      "events": 21,
+      "frequency_pass": true,
+      "month_complete": true,
+      "july_mtd": false
+    },
+    {
+      "ticker": "SPXW",
+      "month": "202607",
+      "events": 13,
+      "frequency_pass": true,
+      "month_complete": false,
+      "july_mtd": true
+    },
+    {
+      "ticker": "SPY",
+      "month": "202601",
+      "events": 20,
+      "frequency_pass": true,
+      "month_complete": true,
+      "july_mtd": false
+    },
+    {
+      "ticker": "SPY",
+      "month": "202602",
+      "events": 19,
+      "frequency_pass": true,
+      "month_complete": true,
+      "july_mtd": false
+    },
+    {
+      "ticker": "SPY",
+      "month": "202603",
+      "events": 21,
+      "frequency_pass": true,
+      "month_complete": true,
+      "july_mtd": false
+    },
+    {
+      "ticker": "SPY",
+      "month": "202604",
+      "events": 18,
+      "frequency_pass": true,
+      "month_complete": true,
+      "july_mtd": false
+    },
+    {
+      "ticker": "SPY",
+      "month": "202605",
+      "events": 20,
+      "frequency_pass": true,
+      "month_complete": true,
+      "july_mtd": false
+    },
+    {
+      "ticker": "SPY",
+      "month": "202606",
+      "events": 21,
+      "frequency_pass": true,
+      "month_complete": true,
+      "july_mtd": false
+    },
+    {
+      "ticker": "SPY",
+      "month": "202607",
+      "events": 13,
+      "frequency_pass": true,
+      "month_complete": false,
+      "july_mtd": true
+    }
+  ],
+  "date_sha256": "7fb305c4d6905393d4ab23fcc3518550cd1be1bbd0cb1686dd2f75a82f2921c3",
+  "capture_id_sha256": "5b2fb9eede8a7c620419edc16cf4e2bfabb1a6a9a1a79be09db8662cb2b1f6b1",
+  "predeclaration_sha256": "7c4c500111774e3d7e72af840ff2660ec77518ab9c9eb0623f128ebc21bcee6b",
+  "fixed_exclusion_contract_sha256": "bf2fed43b1d58bd8e9bc0ba4bb4ab4a26b92ae66f4b3ec7c4845f34d27260fbf",
+  "code_hashes": {
+    "neural/jepa/build_cross_venue_calendar_rr_leader_v4r1_2026_data_gate.py": "55c94fcc53fdb1b3952d796c5a839e8395d91f93bc25641dc466fff72e126d60",
+    "neural/jepa/cross_venue_calendar_rr_leader_v4r1_2026_common.py": "8c3c69bf3ad3a06a44dda5a11100b75491defde437416cd77a228e77204a24d4",
+    "neural/jepa/capture_cross_venue_calendar_rr_leader_v4r1_2026_source_retry.py": "5a11e8ede2763325f461b98f3a44a4a7e7ba5bd3690cda6be838b16c37b0144a",
+    "neural/jepa/reseal_cross_venue_calendar_rr_leader_v4r1_2026_source_retry.py": "32203d211164fc31f89c611813eb6cc6b8c36896771c892a754f9ee82856f29e",
+    "neural/jepa/audit_cross_venue_calendar_rr_leader_v4r1_2026_data_gate.py": "51d949ab2035a4d50980a428d173e1df8f901d88003a3f558e5997b06e527ee1",
+    "research_papers/JEPA/CROSS_VENUE_CALENDAR_RR_LEADER_V4R1_2026_SOURCE_RETRY_EXCLUSION_PREDECLARATION.md": "7c4c500111774e3d7e72af840ff2660ec77518ab9c9eb0623f128ebc21bcee6b",
+    "research_papers/JEPA/CROSS_VENUE_CALENDAR_RR_LEADER_V4R2_2026_OUTCOME_FREE_FIXED_EXCLUSIONS_PREDECLARATION.md": "bf2fed43b1d58bd8e9bc0ba4bb4ab4a26b92ae66f4b3ec7c4845f34d27260fbf"
+  },
+  "source_files_rehashed": 1446,
+  "source_hash_mismatches": 0,
+  "outcome_clock_read": false,
+  "feature_clock_last": "10:35:00",
+  "open_1036_read": false,
+  "open_1336_read": false,
+  "outcome_2026_accessed": false,
+  "production_modified": false,
+  "live_or_systemd_modified": false,
+  "output_sha256": {
+    "universe.csv": "35da3d829503194a928010b8324338655b7c3917aabb97697a911977f69180f4",
+    "sensor_features.parquet": "3f8b3b9b118dd76ddad9810d53b10ac7c1b705756c31a66217f9a09968b471ba",
+    "feature_view.parquet": "904a28560cf5bc6c86afa28c833e9aaf7f84dbb417aac745a134fb65df8ecbff",
+    "feature_counts.csv": "92afe3b5668c530eb09fe7d26ada8e221fc9a627aaaa7f98b441b604e025417d",
+    "source_inventory.csv": "e230e57619d98a274cd113d7cee639671d9b603451220a5f2f30218d51282fb2",
+    "sensor_feature_audit.csv": "f6fa03cfaa954907828c6c3a29c1d4a51dc138dc1dfbefd22c39af75c2706e50",
+    "cash_source_audit.csv": "75218958663b1dfa200bdd5ad5ecbb3d8e19b1337441e6ec22509405459e3079",
+    "exclusions.csv": "7173c6c7255af1a16519c198da9c97e971bd7d1ba22da7126b9503d30ecd139e",
+    "SUMMARY.md": "24b3c8b96595c780c34ffa4e3e439838f8762f67746b96c3156dfb5ac0b349ad"
+  },
+  "feature_view_recomputed_sha256": "f6502b89575e3151bc9f29cf51713d3c044723d26e52a5626a2eb1721a25541e",
+  "feature_counts_recomputed_sha256": "92afe3b5668c530eb09fe7d26ada8e221fc9a627aaaa7f98b441b604e025417d",
+  "source_inventory_recomputed_sha256": "e230e57619d98a274cd113d7cee639671d9b603451220a5f2f30218d51282fb2"
+}

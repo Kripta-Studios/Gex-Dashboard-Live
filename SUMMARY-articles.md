@@ -10,6 +10,8 @@ hace explícita la reducción de frecuencia, incluida julio QQQ MTD12.
 El gate materializado conservó 394 targets y rehasheó 1.446 fuentes sin
 discrepancias; un fallo posterior vacío→NaN pertenece al parser del auditor y
 debe corregirse sin reinterpretar datos económicos ni regenerar el gate.
+El rerun independiente reprodujo exactamente el feature view y todos los
+hashes, confirmando que el fix de representación no alteró la evidencia causal.
 
 ### Dtype físico no equivale a missingness económica — 2026-07-26
 

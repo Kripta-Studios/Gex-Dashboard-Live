@@ -7,8 +7,9 @@ distintos y QQQ 20260722 Greek-only92. Usuario ordena no descargar y omitir.
 V4R2 fija cuatro sensor-fecha pre-outcome; sensor262/targets394, counts QQQ
 20/19/21/18/20/20/12 y SPXW/SPY20/19/21/18/20/21/13. Focal9/Ruff/compile
 PASS. Gate real desde `f60f6282` PASS, features29, fuentes1.446/mismatch0,
-10:36/13:36 false. Auditor sin output por `reason` vacío recargado NaN; fix
-string-only pendiente de commit/push y rerun.
+10:36/13:36 false. Auditor real desde `09395b94` PASS, reparse10,
+rehash1.446/mismatch0, feature view exacta, summary SHA `16988ecc...1aa3`.
+Versionar evidencia antes de freeze.
 
 2026-07-26, retry V4R1 ejecutado una vez desde `aba363c3`: 10/10 respuestas
 normalizadas, raw inmutable, features/outcomes false. El seal usable0 fue un

@@ -1,0 +1,31 @@
+{
+  "schema": "cross_venue_calendar_rr_leader_v4r2_2026_data_gate_audit_v1",
+  "status": "PASS_INDEPENDENT_OUTCOME_FREE_DATA_GATE_AUDIT",
+  "created_at_utc": "2026-07-26T11:40:39.841280+00:00",
+  "evaluation_commit": "f60f628286807c5033fa58d848b18e86857708e6",
+  "audit_commit": "09395b940fb05aa684cdbbd63dadc1d50f56490e",
+  "retry_requests_reparsed": 10,
+  "retry_usable_pairs": 5,
+  "excluded_sensor_dates": 4,
+  "source_files_rehashed": 1446,
+  "source_hash_mismatches": 0,
+  "sensor_feature_rows": 262,
+  "target_feature_rows": 394,
+  "monthly_cells": 21,
+  "feature_view_exact": true,
+  "feature_count": 29,
+  "outcome_clock_read": false,
+  "open_1036_read": false,
+  "open_1336_read": false,
+  "outcome_2026_accessed": false,
+  "production_modified": false,
+  "live_or_systemd_modified": false,
+  "evaluation_summary_sha256": "16988ecc24dbbf882d74f387b3a926a649cd7c5a266126f894ea3e8b1bed1aa3",
+  "feature_view_recomputed_sha256": "f6502b89575e3151bc9f29cf51713d3c044723d26e52a5626a2eb1721a25541e",
+  "feature_counts_recomputed_sha256": "92afe3b5668c530eb09fe7d26ada8e221fc9a627aaaa7f98b441b604e025417d",
+  "source_inventory_recomputed_sha256": "e230e57619d98a274cd113d7cee639671d9b603451220a5f2f30218d51282fb2",
+  "output_sha256": {
+    "feature_counts_recomputed.csv": "92afe3b5668c530eb09fe7d26ada8e221fc9a627aaaa7f98b441b604e025417d",
+    "source_rehash.csv": "b62797e6043197d0402e6adf5a62929ba9d5a5646910b75f18026e5bce3ebfd8"
+  }
+}
