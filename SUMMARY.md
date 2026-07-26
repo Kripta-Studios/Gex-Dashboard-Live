@@ -1,5 +1,15 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+## Implementación nested congelada antes del run — 2026-07-26
+
+Evaluator y auditor están listos sin haber evaluado un fold real. El runner
+mantiene los outcomes test cerrados hasta que la policy mensual, los dos
+LightGBM, medianas y hashes quedan serializados. El auditor refittea los 36
+modelos y repite los 18 barridos. La optimización Numba conserva el grid lógico
+de 1.128.960 y explota únicamente equivalencias demostrables de cooldown bajo
+hold≥30/reject_while_open. Focal6/Ruff/compile pasan. Falta versionar este código
+y ejecutar una sola vez evaluator y auditor.
+
 ## Selector exhaustivo nested mensual — 2026-07-26
 
 Se predeclara la comprobación pedida por el usuario sobre el parquet

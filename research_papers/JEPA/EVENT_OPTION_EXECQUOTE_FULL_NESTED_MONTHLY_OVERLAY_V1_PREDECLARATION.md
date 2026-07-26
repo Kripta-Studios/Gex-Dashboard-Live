@@ -57,8 +57,10 @@ Cada ticker ajusta dos regresores LightGBM independientes, CALL y PUT. Parámetr
 fijos: `objective=regression_l1`, `n_estimators=160`,
 `learning_rate=0.035`, `num_leaves=31`, `min_child_samples=60`,
 `subsample=0.85`, `colsample_bytree=0.85`, `reg_lambda=5`,
-`seed=20260617`; el modelo PUT suma 10.000 a la semilla. El target se recorta
-a `[-5,5]` únicamente para fit; el ledger usa el retorno físico original.
+`seed=20260617`. La semilla CALL de cada fold es `seed + MM` del mes test y la
+semilla PUT suma además 10.000. Se fijan `deterministic=true` y
+`force_col_wise=true`. El target se recorta a `[-5,5]` únicamente para fit; el
+ledger usa el retorno físico original.
 
 Las features son las 289 columnas live-observable devueltas por
 `walkforward_event_option_profile_selector.build_features`, con clocks desde

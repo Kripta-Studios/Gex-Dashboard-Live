@@ -1,5 +1,21 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+### La barrera de outcome puede materializarse dentro del fold — 2026-07-26
+
+Un walk-forward es más auditable si el runner carga primero features del mes
+test sin sus labels, ajusta y selecciona solo con el pasado, serializa policy y
+modelos, y abre después las columnas de payoff test. Así el freeze no es solo
+una convención de índices: existe un artefacto hasheado anterior al acceso al
+outcome. El auditor debe repetir el orden y comprobar el hash del artefacto.
+
+### Equivalencias de scheduler permiten acelerar sin reducir el grid — 2026-07-26
+
+Con `reject_while_open` y holds mínimos de 30 minutos, cooldowns 0, 15 y 30
+producen exactamente la misma próxima entrada: domina el cierre físico. Si el
+desempate favorece el menor índice, basta computar una vez esa clase y conservar
+cd0; cd45 sigue siendo distinto. Del mismo modo, caps diarios 1–4 son prefijos
+del replay cap4. Estas equivalencias reducen cómputo, no configuraciones lógicas.
+
 ### Nested walk-forward separa búsqueda y mes test — 2026-07-26
 
 Probar muchas configuraciones no invalida por sí solo un sistema si todo el

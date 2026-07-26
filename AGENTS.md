@@ -1,5 +1,25 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-07-26 — runner nested preejecución implementado
+
+Runner:
+`neural/jepa/evaluate_event_option_execquote_full_nested_overlay_v1.py`.
+Auditor:
+`neural/jepa/audit_event_option_execquote_full_nested_overlay_v1.py`.
+Ambos están implementados antes de evaluar esta familia. El runner lee primero
+solo features live-observable y outcomes pasados; serializa winner, dos modelos,
+medianas y hashes antes de abrir los outcomes del mes test. El auditor rehashea
+la fuente, reconstruye 289 features, refittea36 modelos, repite18 búsquedas y
+reproduce winners, scores, scheduler, ledger y gates.
+
+Optimización exacta: 70.560 filtros base; como todos los holds son ≥30m,
+cooldown0/15/30 es físicamente equivalente bajo reject_while_open y el menor
+grid_index cd0 gana cualquier empate. Se evalúan cd0/cd45 y caps1–4 sin reducir
+el espacio lógico de 1.128.960. Test sintético barre el grid completo y confirma
+winner index0; focal6/Ruff/compile PASS. Aún no se ejecutó ningún fold real ni
+se leyó su outcome test bajo esta familia. Siguiente: commit/push explícito de
+código/tests/handoffs; desde ese HEAD ejecutar una sola vez y después auditor.
+
 ### Checkpoint 2026-07-26 — selector exhaustivo nested predeclarado
 
 El usuario ordena la secuencia causal mensual exacta: para enero ajustar el

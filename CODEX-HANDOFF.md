@@ -1,5 +1,21 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+## Runner y auditor nested listos preejecución — 2026-07-26
+
+Implementados evaluator y auditor `event_option_execquote_full_nested...`.
+El evaluator separa físicamente cada fold: features sin labels futuros,
+outcomes training/selection, freeze serializado y solo entonces lectura del
+outcome test. Guarda 18 policies, 36 modelos, prediction hashes, fold results y
+ledger test-only. El auditor vuelve a cargar la fuente, refittea36 modelos,
+repite los 18 grids completos y valida fills executable_quote, hold30–180 y
+overlap0.
+
+Focal6, Ruff y compile PASS; el test exhaustivo sintético confirma cardinalidad
+1.128.960 y desempate index0. Ningún fold real de esta familia se ejecutó.
+Siguiente obligatorio: commit/push de código/tests y este checkpoint; después
+un solo evaluator default, espera proporcional a su duración, y auditor default.
+No tocar live/services/bots/systemd.
+
 ## Selector exhaustivo nested mensual predeclarado — 2026-07-26
 
 Nueva autoridad:

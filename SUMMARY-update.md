@@ -1,5 +1,13 @@
 # SUMMARY-update — ledger científico compacto
 
+2026-07-26, implementación preejecución del full nested lista. Evaluator carga
+features sin outcomes futuros, ajusta cada fold con train, escanea select6m,
+serializa winner/modelos/medianas/hashes y solo después abre test1m. Auditor
+rehashea fuente, reconstruye features, refittea36 modelos y repite18 grids,
+scheduler y ledger. Optimización exacta 70.560 bases×16 schedules=1.128.960;
+cd0/15/30 equivalen con holds≥30 y desempate conserva cd0. Focal6/Ruff/compile
+PASS; cero folds reales ejecutados. Commit/push código+hándoffs antes del run.
+
 2026-07-26, predeclarado
 `EVENT_OPTION_EXECQUOTE_FULL_NESTED_MONTHLY_OVERLAY_V1`: fuente ask→bid
 inmutable 44.169 filas/SHA `e6a19ef...51903`; perfiles QQQ/SPY d35-return y
