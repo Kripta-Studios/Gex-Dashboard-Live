@@ -1,5 +1,24 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-07-26 — usuario autoriza V4R1 retry/exclusión 2026
+
+Este checkpoint sustituye el veto anterior únicamente para los cinco IDs
+Greek/IV nuevos de junio2026. El usuario ordena reconsultar una vez sus diez
+fuentes Greek+IV mediante los endpoints/fallback de `D:/ThetaData/options_bulk.py`
+en un root nuevo; si una pareja sigue inválida, excluir solo el sensor-fecha
+antes de outcomes. No intersecar, fill, nearest/as-of ni sobrescribir raw.
+
+Autoridad:
+`CROSS_VENUE_CALENDAR_RR_LEADER_V4R1_2026_SOURCE_RETRY_EXCLUSION_PREDECLARATION.md`.
+Universo por nombres: 133 fechas comunes 20260102–20260724, 532 captures,
+meses20/19/22/18/20/21/13 y SHA fechas `7fb305c4...21c3`. V4 permanece
+inmutable; V6 cerró sin implementación/predicción/métrica.
+
+Orden: commit/push documental → capturador+gate+auditor committed → diez
+requests una vez → seal outcome-free → freeze V4 committed → un solo outer2026.
+Enero–junio deben pasar todos los gates en QQQ/SPXW/SPY; julio es solo MTD.
+Payoff físico y live/VPS continúan cerrados hasta PASS auditado.
+
 ### Checkpoint 2026-07-26 — V6 continúa V4 sin nuevas descargas
 
 El usuario confirma que la licencia disponible es Options Standard básica y

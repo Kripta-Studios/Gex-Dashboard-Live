@@ -1,5 +1,9 @@
 # CROSS_VENUE_CALENDAR_RR_LEADER_V6_SHALLOW_HISTGB — predeclaración
 
+> **Cerrada sin evaluación el 2026-07-26.** El usuario priorizó una recaptura
+> exacta y, en su defecto, exclusión outcome-free para evaluar el V4 inmutable
+> en 2026. No se implementó ni calculó ninguna predicción o métrica V6.
+
 **Congelada:** 2026-07-26 Europe/Madrid, después de observar y auditar V1–V5,
 antes de calcular una sola predicción o métrica V6.
 

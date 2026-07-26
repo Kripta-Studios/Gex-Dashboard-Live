@@ -1,5 +1,15 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+## V4R1 autorizada: retry/exclusión 2026 — 2026-07-26
+
+El usuario sustituye el veto a los cinco IDs junio2026: diez requests exactos
+Greek+IV, una sola tanda, root nuevo y mismos endpoints/fallback que
+`options_bulk.py`. Si una pareja no queda válida y key-exact, se excluye todo
+el sensor-fecha antes de outcomes; SPY arrastra SPXW por mapping. No intersection,
+fill ni overwrite. Universo metadata actualizado: 133 fechas hasta 20260724,
+532 front/back captures y julio MTD13. Primero versionar contrato; después
+capturador/gate/auditor antes de red. V4 no cambia y V6 cerró sin evaluación.
+
 ## V6 predeclarada sobre artefactos V4 — 2026-07-26
 
 La licencia es Options Standard básica: no volver a intentar endpoints sin

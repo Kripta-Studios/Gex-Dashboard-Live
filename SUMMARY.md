@@ -1,5 +1,14 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+## V4R1 abre una vía causal a 2026 — 2026-07-26
+
+Por autorización nueva del usuario, los cinco fallos Greek/IV de junio pueden
+reconsultarse una vez sin sobrescribir fuentes; si siguen inválidos, se excluye
+solo el sensor-fecha por una regla outcome-free sellada. El V4 entrenado
+2023–2024 no se retunea. El inventario actual alcanza 133 fechas comunes hasta
+2026-07-24; julio contiene 13 sesiones y será MTD. Capturador, gate y auditor se
+versionan antes de la API; freeze se versiona antes de opens10:36/13:36.
+
 ## V6 continúa V4 sin fuente nueva — 2026-07-26
 
 El usuario autoriza usar solo los artefactos V4 existentes bajo su licencia

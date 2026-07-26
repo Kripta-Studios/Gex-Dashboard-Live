@@ -1,5 +1,15 @@
 # SUMMARY-articles — conclusiones transferibles de JEPA/world models
 
+### Missingness de fuente pre-outcome en V4R1 — 2026-07-26
+
+Una exclusión por fuente no es leakage económico si se decide sin outcomes,
+afecta todo el sensor-fecha y queda congelada antes del runner. V4R1 convierte
+la autorización del usuario en una regla verificable: primero retry exacto de
+Greek e IV sin overwrite; solo una pareja completamente válida se usa, y toda
+pareja desigual elimina la sesión correspondiente. No se usa la intersección
+porque produciría un vector distinto al entrenamiento. El modelo V4 y sus
+parámetros no cambian, por lo que 2026 conserva el papel de test one-shot.
+
 ### V6: falsificación no lineal de V4 — 2026-07-26
 
 La continuación autorizada no añade datos ni elige meses: comprueba si el edge

@@ -2,6 +2,12 @@
 
 ## Autorización posterior del usuario
 
+Una instrucción aún posterior autoriza V4R1: requery exacto de los cinco IDs
+junio2026 y exclusión sensor-fecha outcome-free si siguen inválidos. Esta
+excepción está limitada por
+`CROSS_VENUE_CALENDAR_RR_LEADER_V4R1_2026_SOURCE_RETRY_EXCLUSION_PREDECLARATION.md`
+y no autoriza intersección, fill, overwrite ni selección por PnL.
+
 El usuario confirma que solo dispone de Options Standard básica y autoriza una
 única continuación interna V6 sobre los artefactos V4 ya sellados, sin nuevas
 descargas. Esta excepción permite desarrollo 2024–2025 conforme a

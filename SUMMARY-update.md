@@ -1,5 +1,13 @@
 # SUMMARY-update — ledger científico compacto
 
+2026-07-26, V4R1 predeclarada por orden posterior del usuario. Autoriza diez
+requests exactos Greek+IV para los cinco IDs junio2026; si no quedan key-exact,
+exclusión sensor-fecha antes de outcomes. No intersection/fill/overwrite.
+Universo metadata 133 fechas 20260102–20260724, meses20/19/22/18/20/21/13,
+532 captures, date SHA `7fb305c4...21c3`. V4 inmutable; V6 cerrada sin
+predicción. Commit documental → código/gate/auditor committed → retry → seal →
+freeze → outer2026 one-shot.
+
 2026-07-26, V6 predeclarada por autorización del usuario sobre los datasets V4
 ya sellados y sin nuevas descargas. Único cambio: logistic→HistGB depth2 fijo;
 mapping, 29 features, clocks, eventos y costes intactos. Folds dev 2023→2024 y
