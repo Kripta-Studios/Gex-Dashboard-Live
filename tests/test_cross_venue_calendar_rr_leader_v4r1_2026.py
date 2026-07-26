@@ -251,6 +251,12 @@ def test_auditor_comparison_detects_changed_feature() -> None:
         audit.compare_frames(expected, changed, ["ticker"], "feature")
 
 
+def test_auditor_normalizes_csv_empty_string_roundtrip() -> None:
+    recomputed = pd.DataFrame({"capture_id": ["x"], "reason": [""]})
+    stored = pd.DataFrame({"capture_id": ["x"], "reason": [float("nan")]})
+    audit.compare_frames(recomputed, stored, ["capture_id"], "empty reason")
+
+
 def test_clis_do_not_expose_scientific_overrides() -> None:
     for args in (
         capture.parse_args([]),

@@ -18,9 +18,14 @@ Autoridad nueva:
 `CROSS_VENUE_CALENDAR_RR_LEADER_V4R2_2026_OUTCOME_FREE_FIXED_EXCLUSIONS_PREDECLARATION.md`.
 Fija sensor rows262 y target rows394; counts QQQ
 20/19/21/18/20/20/12 y SPXW/SPY 20/19/21/18/20/21/13. Julio es MTD y QQQ12
-no se presenta como PASS mensual. Código gate+auditor V4R2 y focal9/Ruff/
-compile están listos pero sin ejecutar. Siguiente: commit/push explícito;
-después gate outcome-free una vez, auditor y versionado antes de 10:36/13:36.
+no se presenta como PASS mensual. Desde `f60f6282`, el gate real terminó
+`PASS_OUTCOME_FREE_DATA_GATE`: features29, fuentes rehasheadas1.446,
+mismatch0, feature view SHA `904a2856...bff`; 10:36/13:36 false.
+
+El primer auditor cerró sin output: el string vacío `reason` del CSV se recargó
+como NaN; los pares económicos coincidían. Fix auditor-only normaliza solo el
+round-trip de columnas string y añade regresión. Siguiente: focal/Ruff/compile,
+commit/push del fix y único rerun del auditor. No abrir outcomes aún.
 
 ### Checkpoint 2026-07-26 — V4R1 retry completa; reseal dtype pendiente
 

@@ -8,10 +8,11 @@ utilizables y terminó sin output antes de outcomes. Por instrucción del usuari
 no se descargan de nuevo: se excluyen QQQ 10-mar, SPY 19-mar, QQQ 30-jun y QQQ
 22-jul completos.
 
-V4R2 congela esta regla sin cambiar V4. Espera 262 sensor-fecha y 394
-target-fecha; todos los meses cerrados conservan ≥13. Julio QQQ queda MTD12.
-Código y tests están listos, pero todavía debe hacerse commit/push antes del
-único gate outcome-free. 10:36/13:36 y rentabilidad 2026 siguen cerrados.
+V4R2 congela esta regla sin cambiar V4. El gate real PASS tiene 262
+sensor-fecha, 394 targets, 29 features y 1.446 fuentes sin mismatch; todos los
+meses cerrados conservan ≥13 y julio QQQ queda MTD12. El auditor se detuvo sin
+output únicamente por vacío CSV recargado como NaN; se corrige el parser y se
+versiona antes del rerun. 10:36/13:36 y rentabilidad 2026 siguen cerrados.
 
 ## V4R1: cinco retries recuperados, todavía sin outcomes — 2026-07-26
 

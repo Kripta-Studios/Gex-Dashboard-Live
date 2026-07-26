@@ -7,6 +7,9 @@ exclusión es el sensor-fecha completo, no la intersección de contratos. V4R2
 congela cuatro fallos descubiertos hasta 10:35 y propaga SPY→SPXW por mapping,
 sin mirar 10:36/13:36 ni reconsultar datos. Esto preserva el vector entrenado y
 hace explícita la reducción de frecuencia, incluida julio QQQ MTD12.
+El gate materializado conservó 394 targets y rehasheó 1.446 fuentes sin
+discrepancias; un fallo posterior vacío→NaN pertenece al parser del auditor y
+debe corregirse sin reinterpretar datos económicos ni regenerar el gate.
 
 ### Dtype físico no equivale a missingness económica — 2026-07-26
 

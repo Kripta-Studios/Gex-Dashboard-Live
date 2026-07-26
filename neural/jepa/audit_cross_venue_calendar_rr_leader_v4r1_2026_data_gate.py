@@ -57,6 +57,8 @@ def compare_frames(
             right[column] = right[column].map(
                 lambda value: str(value).strip().lower() in {"true", "1"}
             )
+        elif column in right.columns and pd.api.types.is_string_dtype(left[column]):
+            right[column] = right[column].fillna("").astype(str)
     try:
         pd.testing.assert_frame_equal(
             left,
@@ -66,7 +68,7 @@ def compare_frames(
             atol=1e-12,
         )
     except AssertionError as error:
-        raise AssertionError(f"V4R1 stored {label} differs from audit") from error
+        raise AssertionError(f"V4R2 stored {label} differs from audit") from error
 
 
 def verify_tracked() -> None:

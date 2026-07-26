@@ -8,9 +8,10 @@ adicionales outcome-free: QQQ 20260310, SPY 20260319, QQQ 20260630 y QQQ
 20260722. El usuario ordena ignorarlas y no reconsultar.
 
 V4R2 congela esas cuatro exclusiones antes de 10:36/13:36; mapping/modelo/clocks
-no cambian. Quedan 262 sensores y 394 targets; enero–junio mantienen ≥13 por
-ticker, julio QQQ queda MTD12. Implementación y focal9/Ruff/compile PASS.
-Orden: commit/push → builder una vez → auditor → versionar gate+audit → freeze.
+no cambian. Gate real desde `f60f6282` PASS: sensores262, targets394,
+fuentes1.446/mismatch0 y clocks outcome false. El auditor cerró sin output por
+`reason=""`→NaN al recargar CSV, con contenido igual. Fix auditor-only pendiente
+de commit/push y rerun; después versionar gate+audit y freeze.
 
 ## V4R1 retry materializada; corrección dtype pre-feature — 2026-07-26
 
