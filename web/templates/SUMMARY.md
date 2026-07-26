@@ -280,6 +280,14 @@ el hash y el resultado.
 - `3021fc66` — `feat(king-node): render precomputed realtime model`.
 - `94b2a60e` — `ops(king-node): add VPS runtime and health checks`.
 - `d75cb279` — `docs(king-node): version workbook formula references`.
+- `45831b61` — `test(king-node): verify server snapshot delivery`.
+
+Nota de concurrencia: al crear `45831b61`, otro proceso del mismo árbol ya
+había dejado staged 103 artefactos del overlay JEPA. Git los incluyó en ese
+commit junto a `tests/test_king_node_server.py` y este hand-off. No forman parte
+de KING NODE y no se modificaron ni se revirtieron para evitar destruir trabajo
+concurrente ya publicado. Los cuatro commits KING NODE anteriores sí quedaron
+aislados por ruta.
 
 ## Checkpoint backend implementado después de `fc592de7`
 
