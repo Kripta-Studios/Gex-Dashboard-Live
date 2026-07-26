@@ -1,0 +1,8 @@
+# python_version=3.14.2
+# platform=Windows-10-10.0-19041
+# platform_machine=AMD64
+pandas==3.0.0
+pandas-market-calendars==5.3.0
+pyarrow==23.0.1
+requests==2.32.5
+websocket-client==1.9.0
