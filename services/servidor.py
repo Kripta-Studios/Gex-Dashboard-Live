@@ -397,7 +397,14 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
             file_path = os.path.join(TEMPLATE_FOLDER, filename)
 
             # Enforce ADMIN role for sensitive dashboard modules
-            if filename in ["js/ib.js", "js/market_structure.js", "js/charts.js", "js/fourier.js", "js/bot_status.js"]:
+            if filename in [
+                "js/ib.js",
+                "js/market_structure.js",
+                "js/charts.js",
+                "js/fourier.js",
+                "js/bot_status.js",
+                "js/king_node.js",
+            ]:
                 auth_info = self._check_auth()
                 if not auth_info or auth_info.get("role") != "ADMIN":
                     logging.warning(f"Unauthorized JS access attempt: {filename} from {self.client_address[0]}")

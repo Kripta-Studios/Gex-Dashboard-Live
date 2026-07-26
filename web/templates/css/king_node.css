@@ -1,0 +1,539 @@
+/* King Node — dedicated admin workspace */
+
+body.king-node-active .top-bar,
+body.king-node-active #time-machine-panel,
+body.king-node-active #market-structure-panel,
+body.king-node-active #bot-status-panel {
+    display: none !important;
+}
+
+body.king-node-active #charts-wrapper {
+    padding: 0 !important;
+    background:
+        radial-gradient(circle at 8% 0%, rgba(42, 214, 151, 0.08), transparent 30%),
+        radial-gradient(circle at 92% 0%, rgba(76, 139, 245, 0.09), transparent 30%),
+        #080b10;
+}
+
+.tab.king-node-tab {
+    gap: 7px;
+    border-color: rgba(42, 214, 151, 0.35);
+    color: #bfeeda;
+    cursor: pointer;
+    user-select: none;
+}
+
+.tab.king-node-tab b {
+    padding: 2px 5px;
+    border-radius: 999px;
+    background: rgba(42, 214, 151, 0.12);
+    color: #2ad697;
+    font-family: "Roboto Mono", monospace;
+    font-size: 7px;
+    letter-spacing: 0.08em;
+}
+
+.tab.king-node-tab.active {
+    border-color: #2ad697;
+    background: linear-gradient(180deg, rgba(42, 214, 151, 0.15), rgba(42, 214, 151, 0.04));
+    box-shadow: inset 0 -2px 0 #2ad697;
+    color: #f2fff9;
+}
+
+.king-node-shell {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 100%;
+    padding: 22px;
+    color: #e9eef7;
+    font-family: "Inter", sans-serif;
+}
+
+.kn-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 4px 2px 19px;
+    border-bottom: 1px solid #202836;
+}
+
+.kn-eyebrow {
+    margin-bottom: 7px;
+    color: #2ad697;
+    font-family: "Roboto Mono", monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+}
+
+.kn-header h1 {
+    margin: 0;
+    color: #f8fbff;
+    font-size: clamp(22px, 2.3vw, 34px);
+    letter-spacing: -0.04em;
+}
+
+.kn-header p {
+    margin: 7px 0 0;
+    color: #7f8a9b;
+    font-family: "Roboto Mono", monospace;
+    font-size: 10px;
+}
+
+.kn-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.kn-header-actions button,
+.kn-error button {
+    border: 1px solid #2ad697;
+    border-radius: 5px;
+    background: rgba(42, 214, 151, 0.08);
+    color: #a9f5d7;
+    cursor: pointer;
+    font-family: "Roboto Mono", monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 9px 12px;
+}
+
+.kn-header-actions button:hover,
+.kn-error button:hover {
+    background: rgba(42, 214, 151, 0.17);
+}
+
+.kn-status {
+    border: 1px solid #394255;
+    border-radius: 999px;
+    padding: 6px 9px;
+    color: #8d98aa;
+    font-family: "Roboto Mono", monospace;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.11em;
+}
+
+.kn-status.positive {
+    border-color: rgba(42, 214, 151, 0.35);
+    background: rgba(42, 214, 151, 0.08);
+    color: #2ad697;
+}
+
+.kn-status.warning {
+    border-color: rgba(247, 190, 65, 0.35);
+    background: rgba(247, 190, 65, 0.08);
+    color: #f7be41;
+}
+
+.kn-contract-note {
+    margin-top: 14px;
+    border: 1px solid #222c3b;
+    border-left: 3px solid #4c8bf5;
+    border-radius: 4px;
+    background: rgba(24, 31, 43, 0.72);
+    color: #8f9caf;
+    font-size: 10px;
+    line-height: 1.55;
+    padding: 10px 12px;
+}
+
+.kn-contract-note strong {
+    color: #c5d5ed;
+}
+
+.kn-hero-grid,
+.kn-level-grid,
+.kn-metrics-grid {
+    display: grid;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.kn-hero-grid {
+    grid-template-columns: 0.9fr 1.35fr 0.9fr 1fr;
+}
+
+.kn-level-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.kn-metrics-grid {
+    grid-template-columns: repeat(7, minmax(110px, 1fr));
+}
+
+.kn-spot-card,
+.kn-regime-card,
+.kn-level-card,
+.kn-metric,
+.kn-panel {
+    box-sizing: border-box;
+    border: 1px solid #202936;
+    border-radius: 6px;
+    background: linear-gradient(145deg, rgba(18, 24, 33, 0.96), rgba(12, 17, 24, 0.96));
+}
+
+.kn-spot-card,
+.kn-regime-card {
+    min-height: 104px;
+    padding: 15px;
+}
+
+.kn-spot-card > span,
+.kn-regime-card > span,
+.kn-level-card > span,
+.kn-metric-label {
+    color: #748094;
+    font-family: "Roboto Mono", monospace;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.11em;
+}
+
+.kn-spot-card strong {
+    display: block;
+    margin-top: 12px;
+    color: #f5f8fd;
+    font-family: "Roboto Mono", monospace;
+    font-size: 23px;
+}
+
+.kn-spot-card strong em {
+    color: #465166;
+    font-size: 15px;
+    font-style: normal;
+}
+
+.kn-spot-card small,
+.kn-regime-card small,
+.kn-level-card small {
+    display: block;
+    margin-top: 7px;
+    color: #7f8b9d;
+    font-size: 9px;
+    line-height: 1.35;
+}
+
+.kn-regime-card {
+    border-left-width: 3px;
+}
+
+.kn-regime-card.positive {
+    border-left-color: #2ad697;
+}
+
+.kn-regime-card.negative {
+    border-left-color: #ff5b72;
+}
+
+.kn-regime-card strong {
+    display: block;
+    margin-top: 12px;
+    font-family: "Roboto Mono", monospace;
+    font-size: 19px;
+}
+
+.kn-regime-card.positive strong,
+.king-node-shell .positive {
+    color: #2ad697 !important;
+}
+
+.kn-regime-card.negative strong,
+.king-node-shell .negative {
+    color: #ff5b72 !important;
+}
+
+.king-node-shell .neutral {
+    color: #a0aabd !important;
+}
+
+.kn-level-card {
+    min-height: 82px;
+    padding: 13px 15px;
+}
+
+.kn-level-card strong {
+    display: block;
+    margin-top: 7px;
+    color: #f3f7fd;
+    font-family: "Roboto Mono", monospace;
+    font-size: 17px;
+}
+
+.kn-metric {
+    min-height: 91px;
+    padding: 12px;
+}
+
+.kn-metric-value {
+    margin-top: 10px;
+    font-family: "Roboto Mono", monospace;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.kn-metric-hint {
+    margin-top: 7px;
+    color: #657185;
+    font-size: 8px;
+    line-height: 1.3;
+}
+
+.kn-main-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 2.35fr) minmax(270px, 0.85fr);
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.kn-panel {
+    min-width: 0;
+    overflow: hidden;
+}
+
+.kn-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 42px;
+    border-bottom: 1px solid #202936;
+    padding: 0 13px;
+    color: #bac5d5;
+    font-family: "Roboto Mono", monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}
+
+.kn-panel-header div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.kn-panel-header small {
+    color: #5e6a7e;
+    font-size: 7px;
+    font-weight: 400;
+    letter-spacing: 0;
+}
+
+.kn-table-scroll {
+    max-height: 535px;
+    overflow: auto;
+}
+
+.kn-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "Roboto Mono", monospace;
+    font-size: 9px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.kn-table th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #111722;
+    color: #68768a;
+    font-size: 7px;
+    letter-spacing: 0.07em;
+    padding: 9px 8px;
+    text-align: right;
+    text-transform: uppercase;
+}
+
+.kn-table th:first-child,
+.kn-table td:first-child {
+    padding-left: 13px;
+    text-align: left;
+}
+
+.kn-table td {
+    border-top: 1px solid rgba(37, 47, 63, 0.62);
+    color: #99a5b6;
+    padding: 7px 8px;
+    text-align: right;
+}
+
+.kn-table tr:hover td {
+    background: rgba(76, 139, 245, 0.055);
+}
+
+.kn-table tr.is-spot td {
+    background: rgba(247, 190, 65, 0.07);
+}
+
+.kn-table tr.is-spot .kn-strike::after {
+    content: " SPOT";
+    color: #f7be41;
+    font-size: 6px;
+}
+
+.kn-table tr.is-node .kn-strike {
+    color: #4c8bf5;
+    font-weight: 700;
+}
+
+.kn-table tr.is-node .kn-strike::before {
+    content: "◆ ";
+    font-size: 7px;
+}
+
+.kn-gex-cell {
+    position: relative;
+    min-width: 82px;
+}
+
+.kn-gex-cell span {
+    position: relative;
+    z-index: 1;
+}
+
+.kn-gex-cell i {
+    position: absolute;
+    right: 0;
+    bottom: -3px;
+    width: var(--kn-bar);
+    height: 2px;
+    border-radius: 999px;
+    background: currentColor;
+    opacity: 0.55;
+}
+
+.kn-side-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.kn-readout-row {
+    border-top: 1px solid rgba(37, 47, 63, 0.62);
+    padding: 13px;
+}
+
+.kn-readout-row:first-of-type {
+    border-top: 0;
+}
+
+.kn-readout-row span {
+    display: block;
+    margin-bottom: 6px;
+    color: #667286;
+    font-family: "Roboto Mono", monospace;
+    font-size: 7px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.kn-readout-row strong {
+    color: #c5cfde;
+    font-family: "Roboto Mono", monospace;
+    font-size: 9px;
+    line-height: 1.45;
+}
+
+.kn-method ul {
+    margin: 0;
+    padding: 13px 18px 15px 29px;
+    color: #7e899a;
+    font-size: 9px;
+    line-height: 1.55;
+}
+
+.kn-method li + li {
+    margin-top: 7px;
+}
+
+.kn-loading,
+.kn-error {
+    display: flex;
+    min-height: 420px;
+    align-items: center;
+    justify-content: center;
+    color: #8390a4;
+    font-family: "Roboto Mono", monospace;
+    font-size: 10px;
+}
+
+.kn-loading {
+    gap: 10px;
+}
+
+.kn-loading span {
+    width: 13px;
+    height: 13px;
+    border: 2px solid #263247;
+    border-top-color: #2ad697;
+    border-radius: 50%;
+    animation: kn-spin 0.8s linear infinite;
+}
+
+.kn-error {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+}
+
+.kn-error > span {
+    color: #ff5b72;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+}
+
+.kn-error strong {
+    max-width: 640px;
+    color: #dce3ed;
+    font-size: 13px;
+}
+
+.kn-error p {
+    margin: 0;
+    color: #677386;
+    font-size: 9px;
+}
+
+@keyframes kn-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 1180px) {
+    .kn-hero-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .kn-metrics-grid {
+        grid-template-columns: repeat(4, minmax(120px, 1fr));
+    }
+
+    .kn-main-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 720px) {
+    .king-node-shell {
+        padding: 12px;
+    }
+
+    .kn-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .kn-hero-grid,
+    .kn-level-grid,
+    .kn-metrics-grid {
+        grid-template-columns: 1fr;
+    }
+}

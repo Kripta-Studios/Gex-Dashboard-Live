@@ -197,7 +197,14 @@ async function loadAdminScripts() {
     const role = sessionStorage.getItem("gex_user_role");
     if (role !== "ADMIN") return;
 
-    const scripts = ["js/fourier.js", "js/ib.js", "js/charts.js", "js/market_structure.js", "js/bot_status.js"];
+    const scripts = [
+        "js/fourier.js",
+        "js/ib.js",
+        "js/charts.js",
+        "js/market_structure.js",
+        "js/bot_status.js",
+        "js/king_node.js"
+    ];
     const token = sessionStorage.getItem("gex_auth_token");
 
     console.log("[Auth] Loading specialized admin modules...");

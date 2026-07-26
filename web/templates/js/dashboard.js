@@ -9,6 +9,17 @@
 function renderAllCharts() {
     const wrapper = document.getElementById("charts-wrapper");
     if (!wrapper) return;
+
+    const kingNodeActive =
+        typeof isKingNodeTabActive === "function" && isKingNodeTabActive();
+    if (typeof setKingNodeViewActive === "function") {
+        setKingNodeViewActive(kingNodeActive);
+    }
+    if (kingNodeActive && typeof renderKingNodeDashboard === "function") {
+        renderKingNodeDashboard();
+        return;
+    }
+
     wrapper.scrollLeft = 0;
     const activeCharts = getCurrentCharts();
     wrapper.innerHTML = "";

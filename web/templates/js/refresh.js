@@ -10,6 +10,15 @@ async function refreshDashboard() {
     updateMarketSpots();
     updateNYTime();
 
+    if (
+        typeof isKingNodeTabActive === "function" &&
+        isKingNodeTabActive() &&
+        typeof refreshKingNodeDashboard === "function"
+    ) {
+        await refreshKingNodeDashboard();
+        return;
+    }
+
     const currentTab = tabs.find(t => t.id === currentTabId);
     if (!currentTab || !currentTab.charts || currentTab.charts.length === 0) return;
 

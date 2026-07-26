@@ -12,6 +12,10 @@ function renderTabs() {
     const existingTabs = container.querySelectorAll(".tab");
     existingTabs.forEach((t) => t.remove());
 
+    if (typeof mountKingNodeTab === "function") {
+        mountKingNodeTab(container, addBtn);
+    }
+
     tabs.forEach((tab, index) => {
         const tabEl = document.createElement("div");
         tabEl.className = `tab ${tab.id === currentTabId ? "active" : ""}`;
