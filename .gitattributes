@@ -1,0 +1,5 @@
+research_papers/JEPA/results/_diagnostics/event_option_execquote_full_nested_monthly_overlay_v1_202601_202606/**/*.txt -text
+research_papers/JEPA/results/_diagnostics/event_option_execquote_full_nested_monthly_overlay_v1_202601_202606/**/*.csv -text
+research_papers/JEPA/results/_diagnostics/event_option_execquote_full_nested_monthly_overlay_v1_202601_202606/**/*.json -text
+research_papers/JEPA/results/_diagnostics/event_option_execquote_full_nested_monthly_overlay_v1_202601_202606_audit/**/*.csv -text
+research_papers/JEPA/results/_diagnostics/event_option_execquote_full_nested_monthly_overlay_v1_202601_202606_audit/**/*.json -text
