@@ -510,7 +510,7 @@ def _plot_single_histogram_worker(args):
 
             # --- LÓGICA REGIME ANALYSIS ---
             if greek == "gamma" and ticker == "SPX" and exp == "0dte":
-                net_gamma_val = agg_by_strike.abs().sum()  # Ya está en la escala correcta
+                net_gamma_val = agg_by_strike.sum()  # Ya está en la escala correcta
                 current_spot = spot_price
                 flip_status = "ABOVE" if current_spot > zero_strike else "BELOW"
 
