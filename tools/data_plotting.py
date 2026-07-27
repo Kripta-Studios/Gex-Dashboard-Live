@@ -377,7 +377,7 @@ def _plot_single_table_worker(args):
                 label=f"Flip: {flip_val:.2f}",
             )
 
-        net_val = agg_by_strike.abs().sum() * 100
+        net_val = agg_by_strike.sum() * 100
         ax.plot([], [], " ", label=f"Net {name}: {net_val:,.2f}")
 
         # Leyenda: Fondo NEGRO, Texto BLANCO
@@ -596,7 +596,7 @@ def _plot_single_histogram_worker(args):
                     label=f"Flip: {zero_strike:.2f}",
                 )
 
-            net_val = agg_by_strike.abs().sum() * 100
+            net_val = agg_by_strike.sum() * 100
             ax.plot([], [], " ", label=f"Net {name}: {net_val:,.2f}")
 
         # ==========================================================
@@ -1373,7 +1373,7 @@ def calc_exposures(
         * put_open_interest
         * spot_price
         * spot_price
-        * -1
+        
     )
     option_data["call_vex"] = np.where(
         nonzero_call_cond,
