@@ -1373,7 +1373,7 @@ def calc_exposures(
         * put_open_interest
         * spot_price
         * spot_price
-        
+        * -1
     )
     option_data["call_vex"] = np.where(
         nonzero_call_cond,
