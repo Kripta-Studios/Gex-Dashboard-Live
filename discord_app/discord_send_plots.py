@@ -27,6 +27,11 @@ TICKERS = ["SPX", "Ticker"]  # Yahoo Finance format
 # EXPIRATIONS = ["0dte", "1dte", "weekly", "opex", "monthly", "all"]
 EXPIRATIONS = ["0dte", "1dte", "weekly"]
 GREEKS = ["delta", "gamma", "speed", "vanna", "charm", "dgex", "zomma", "vega", "vomma"]
+FAST_0DTE_CRON = "0-59/3 3-16 * * 0-4"
+SLOW_JOB_CRONS = {
+    "1dte": "1,16,31,46 3-16 * * 0-4",
+    "weekly": "8,38 3-16 * * 0-4",
+}
 VISUALIZATIONS = {
     "delta": ["Absolute Delta Exposure", "Delta Exposure By Calls/Puts"],
     "gamma": ["Absolute Gamma Exposure", "Gamma Exposure By Calls/Puts"],
@@ -416,6 +421,17 @@ async def request_plots(
         return False
 
 
+def submit_scheduler_coroutine(coroutine_factory):
+    """Submit only after Discord has published its running event loop."""
+
+    if discord_client is None:
+        log("[SCHEDULER] Discord todavía no está ready; ejecución omitida.")
+        return False
+    return asyncio.run_coroutine_threadsafe(
+        coroutine_factory(), discord_client.loop
+    ).result()
+
+
 def cleanup_plots_daily():
     """
     Borra la carpeta PLOT_DIR completa y la recrea vacía.
@@ -491,14 +507,14 @@ async def start_scheduler():
     sched = BackgroundScheduler(daemon=True)
 
     # --- TRABAJO RÁPIDO (0DTE) ---
-    # Se ejecuta cada 5 minutos. Solo procesa 0dte.
-    log("[SYSTEM] Programando 0DTE cada 5 minutos...")
+    # 0DTE owns the high-priority three-minute cadence.
+    log("[SYSTEM] Programando 0DTE cada 3 minutos...")
     sched.add_job(
-        lambda: asyncio.run_coroutine_threadsafe(
-            request_plots(specific_exp="0dte"), discord_client.loop  # Solo pedimos 0dte
-        ).result(),
+        lambda: submit_scheduler_coroutine(
+            lambda: request_plots(specific_exp="0dte")
+        ),
         CronTrigger.from_crontab(
-            "0-59/5 3-16 * * 0-4",
+            FAST_0DTE_CRON,
             timezone=ZoneInfo("America/New_York"),
         ),
         id="fast_0dte_job",
@@ -507,15 +523,16 @@ async def start_scheduler():
     )
 
     # --- TRABAJO LENTO (1DTE y Weekly) ---
-    # Se ejecuta cada 5 minutos con offset para reducir solapes con 0dte.
-    log("[SYSTEM] Programando 1DTE/Weekly cada 5 minutos...")
-    for slow_exp in ["1dte", "weekly"]:
+    # These jobs are deliberately delayed and staggered so they cannot create
+    # the old five-minute REST burst alongside each other.
+    log("[SYSTEM] Programando 1DTE cada 15m y Weekly cada 30m...")
+    for slow_exp, slow_cron in SLOW_JOB_CRONS.items():
         sched.add_job(
-            lambda e=slow_exp: asyncio.run_coroutine_threadsafe(
-                request_plots(specific_exp=e), discord_client.loop
-            ).result(),
+            lambda e=slow_exp: submit_scheduler_coroutine(
+                lambda: request_plots(specific_exp=e)
+            ),
             CronTrigger.from_crontab(
-                "2-59/5 3-16 * * 0-4",
+                slow_cron,
                 timezone=ZoneInfo("America/New_York"),
             ),
             id=f"slow_{slow_exp}_job",

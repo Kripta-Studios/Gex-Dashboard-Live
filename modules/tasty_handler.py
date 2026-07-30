@@ -34,6 +34,54 @@ from tastytrade.instruments import NestedOptionChain, NestedFutureOptionChain
 from tastytrade.market_data import get_market_data_by_type
 from tastytrade.dxfeed import Greeks, Summary
 from zoneinfo import ZoneInfo
+from modules.tasty_rest_control import (
+    is_rate_limit_error,
+    report_rest_rate_limit,
+    report_rest_success,
+    wait_for_rest_slot,
+)
+
+
+_CHAIN_CACHE_TTL_SECONDS = max(
+    30.0, float(os.getenv("TASTY_CHAIN_CACHE_TTL_SECONDS", "900"))
+)
+_CHAIN_CACHE_MAXSIZE = max(
+    16, int(os.getenv("TASTY_CHAIN_CACHE_MAXSIZE", "256"))
+)
+_CHAIN_CACHE = {}
+_CHAIN_CACHE_LOCK = threading.RLock()
+
+
+def clear_chain_cache():
+    """Clear process-local option-chain metadata (primarily for tests)."""
+
+    with _CHAIN_CACHE_LOCK:
+        _CHAIN_CACHE.clear()
+
+
+def _get_cached_chain(cache_key: str):
+    now = time.monotonic()
+    with _CHAIN_CACHE_LOCK:
+        cached = _CHAIN_CACHE.get(cache_key)
+        if cached is None:
+            return None
+        expires_at, chain = cached
+        if now >= expires_at:
+            _CHAIN_CACHE.pop(cache_key, None)
+            return None
+        return chain
+
+
+def _cache_chain(cache_key: str, chain) -> None:
+    if chain is None:
+        return
+    with _CHAIN_CACHE_LOCK:
+        if len(_CHAIN_CACHE) >= _CHAIN_CACHE_MAXSIZE:
+            _CHAIN_CACHE.pop(next(iter(_CHAIN_CACHE)), None)
+        _CHAIN_CACHE[cache_key] = (
+            time.monotonic() + _CHAIN_CACHE_TTL_SECONDS,
+            chain,
+        )
 
 
 class DXLinkAccessRevoked(RuntimeError):
@@ -155,10 +203,42 @@ def chunks(lst, n):
 async def get_chain_async(session, ticker: str):
     if '/' in ticker:
         base = extract_base_symbol(ticker) if any(c.isdigit() for c in ticker) else ticker
-        return await NestedFutureOptionChain.get(session, base)
+        cache_key = f"future:{base}"
     else:
-        chains = await NestedOptionChain.get(session, ticker)
-        return chains[0] if chains else None
+        base = ticker
+        cache_key = f"option:{ticker}"
+
+    cached = _get_cached_chain(cache_key)
+    if cached is not None:
+        return cached
+
+    waited = await wait_for_rest_slot()
+    if waited >= 1.0:
+        print(f"[TASTY REST GATE] waited {waited:.1f}s for {cache_key}")
+
+    # A concurrent request in this process may have populated the cache while
+    # this coroutine was waiting for the global REST slot.
+    cached = _get_cached_chain(cache_key)
+    if cached is not None:
+        return cached
+
+    try:
+        if '/' in ticker:
+            chain = await NestedFutureOptionChain.get(session, base)
+        else:
+            chains = await NestedOptionChain.get(session, ticker)
+            chain = chains[0] if chains else None
+    except Exception as exc:
+        if is_rate_limit_error(exc):
+            delay = report_rest_rate_limit()
+            print(
+                f"[TASTY REST 429] global cooldown {delay:.0f}s after {cache_key}"
+            )
+        raise
+
+    report_rest_success()
+    _cache_chain(cache_key, chain)
+    return chain
 
 
 async def get_market_data_async(session, equities=None, options=None):
