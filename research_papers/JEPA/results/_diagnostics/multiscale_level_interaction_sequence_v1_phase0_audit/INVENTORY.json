@@ -1,0 +1,503 @@
+{
+  "artifact": "MULTISCALE_LEVEL_INTERACTION_SEQUENCE_V1_PHASE0_AUDIT",
+  "status": "BLOCKED_PREDECLARATION",
+  "phase": "0",
+  "executable": false,
+  "head": "origin/main=c942bde8601015383f11f74a4fb116bf2d007c87",
+  "branch": "main",
+  "authority": {
+    "request": "Narrow user authorization for Phase-0 predeclaration work only; prior causal, parity, shadow, payoff and production closures remain in force.",
+    "tracked_or_staged_changes_before": 0,
+    "untracked_leaf_entries_before": 6795,
+    "untracked_nul_stream_sha256": "117a8bb73ad3c8e7372681b7f967257b81f13b8a6d2d06871fe766ed78e7e942",
+    "preserve_untracked": true
+  },
+  "audit_method": [
+    "Read-only review of AGENTS.md, CODEX-HANDOFF.md, SUMMARY.md, SUMMARY-update.md, SUMMARY-articles.md, README_PATCH.md, ECONOMIC_FAMILY_REGISTRY.md, referenced predeclarations, closures, failures, manifests and diagnostic summaries.",
+    "Read-only metadata enumeration and schema/name census; no full-content source hash was computed.",
+    "No evaluator, builder, trainer, API, network, model, label, payoff or outcome access."
+  ],
+  "limitations": [
+    "D:/ThetaData full-content hashing was not performed; only targeted hashes listed in this artifact are authoritative.",
+    "Stored timezone is not embedded; project documentation says ET, but historical/live timezone parity is not proven.",
+    "Dates after 2026-07-24 are future/uncaptured in the documented inventory, not a historical reserve that can be assumed available."
+  ],
+  "source_roots": {
+    "thetadata": {
+      "path": "D:/ThetaData",
+      "files": 360804,
+      "directories": 84618,
+      "bytes": 274598759093,
+      "gib": 255.740,
+      "full_content_hash": null,
+      "extension_counts": {
+        "parquet": {"files": 229349, "gib": 130.850},
+        "ndjson": {"files": 1364, "gib": 69.410},
+        "json": {"files": 105986, "gib": 55.090}
+      }
+    },
+    "data_options": {
+      "files": 152918,
+      "gib": 122.753,
+      "symbols": 22,
+      "coverage": "2022-01-03..2026-07-24",
+      "per_symbol": {
+        "QQQ": {"greeks_files": 2191, "greeks_dates": 1136, "iv_files": 2191, "iv_dates": 1136, "ohlc_files": 2191, "ohlc_dates": 1136, "oi_files": 2205, "oi_dates": 1143},
+        "SPXW": {"greeks_files": 2255, "greeks_dates": 1143, "iv_files": 2255, "iv_dates": 1143, "ohlc_files": 2255, "ohlc_dates": 1143, "oi_files": 2255, "oi_dates": 1143},
+        "SPY": {"greeks_files": 2191, "greeks_dates": 1136, "iv_files": 2191, "iv_dates": 1136, "ohlc_files": 2191, "ohlc_dates": 1136, "oi_files": 2205, "oi_dates": 1143}
+      }
+    },
+    "underlying": {
+      "symbols": ["QQQ", "SPXW", "SPY"],
+      "daily_parquet_files_each": 1143,
+      "schema": ["OHLC", "tick_count"],
+      "true_volume": false,
+      "vwap": false,
+      "coverage": "2022-01-03..2026-07-24"
+    }
+  },
+  "schema_contract": {
+    "greeks_first_order": ["delta", "theta", "vega", "rho", "epsilon", "lambda", "iv", "bid", "ask", "native_timestamp", "underlying_timestamp"],
+    "direct_gamma": false,
+    "iv": true,
+    "option_ohlc_volume_vwap": true,
+    "oi": "prior-close/daily; not 1m",
+    "underlying_volume_vwap": false,
+    "timezone_embedded": false,
+    "documented_timezone": "ET",
+    "timezone_parity_proven": false
+  },
+  "source_gates": {
+    "v5_trade_quote": {
+      "valid_captures": 1364,
+      "requested_captures": 1504,
+      "errors": 140,
+      "footer_rows": 167881230,
+      "contract_sha256_prefix": "210ea579...205a6",
+      "errors_sha256_prefix": "3f575746...fbc3d3",
+      "features_or_outcomes_opened": false,
+      "status": "BLOCKED_DATA"
+    },
+    "data_training_input": {"admissible": false},
+    "local_historical_live_parity": "BLOCKED"
+  },
+  "overlap": {
+    "qdyn_paths": {"v1": 1949, "v1r1": 518, "v1r1r1": 9833},
+    "qdyn_containment": ["v1r1 is contained in v1", "v1r1 is contained in v1r1r1", "v1 is contained in v1r1r1"],
+    "duplicate_ticks_payload_sha256_prefix": "2bd33561...be2d9",
+    "native_calendar_manifest_sha256_prefix": "e68ed58f...5b217",
+    "native_calendar_parity": "BLOCKED",
+    "h_ibqdyn_manifest_sha256_prefix": "05522061...7f0ec",
+    "h_ibqdyn_parity": "BLOCKED",
+    "v4_retry_original_seal_sha256_prefix": "a18e0864...758f",
+    "v4_retry_offline_reseal_sha256_prefix": "99a33f56...7c169",
+    "v4_retry_usable_pairs": 5,
+    "v4_retry_shared_rows": 3432,
+    "v4_retry_network_used": false
+  },
+  "period_policy": {
+    "seen_development": "All historical dates through 2026-07-24 are SEEN_DEVELOPMENT; no untouched historical outer remains.",
+    "future_dates": "Dates after documented coverage are future/uncaptured, not a historical reserve.",
+    "favorable_terminal": "DEVELOPMENT_PASS_REQUIRES_SHADOW",
+    "first_promotion": "Frozen policy before a future complete calendar month, followed by historical/live shadow and parity audit.",
+    "live_ready": false
+  },
+  "period_ledger": [
+    {"period": "2022-01..2023-12", "state": "opened outcomes", "families": ["CROSS_SESSION_RELATIVE_VALUE_V1", "OPENING_RELATIVE_MOMENTUM_V1", "OPTION_PARITY_PRESSURE_V1", "CALENDAR_RISK_REVERSAL_PRESSURE_V1", "H-TPOVALUE1", "KING-GEX-SLOPE1", "KING-GEX-EXIT1", "KING-GEX-MANAGE30-V1"]},
+    {"period": "2022-08..2025-12", "state": "source/physical and selected economic paths inspected", "families": ["Wall interaction executable V1/V1R1", "H-FLOW1", "H-IVSURF1", "H-QSIZE1R1", "H-QDYN1R1R1", "H-IBQDYN1"]},
+    {"period": "2024", "state": "outer opened for V1; cross-market failed before economic outcomes", "families": ["CROSS_VENUE_CALENDAR_RR_LEADER_V1/V3", "CROSS_MARKET_TRANSMISSION_V1", "CROSS_MARKET_TRANSMISSION_V1R1"]},
+    {"period": "2025", "state": "development/outer outcomes opened", "families": ["CROSS_VENUE_CALENDAR_RR_LEADER_V1/V3", "CROSS_VENUE_CALENDAR_RR_LEADER_V4/V4R1/V4R2", "DIRECTIONAL_GLOBEX_CROSS_ASSET_V1 y adaptaciones", "Payoffs alternativos long-vol/short-premium/IB"]},
+    {"period": "2024-01..2025-12", "state": "nested source/economic runs opened where executable", "families": ["EXISTING_DATA_EXECUTABLE_UTILITY_V1", "SHORT_PREMIUM_DEFINED_RISK_V1"]},
+    {"period": "2026-01..2026-05", "state": "outcomes opened", "families": ["Baseline executable nested y objetivos return/win", "Phys-TD sequence controls", "Portfolio Var-JEPA", "PatchCore", "AdaJEPA", "h1 vs h6", "Spot skip", "Early cadence/directional/regime"]},
+    {"period": "2026-01..2026-06", "state": "outcomes opened", "families": ["CROSS_VENUE_CALENDAR_RR_LEADER_V4/V4R1/V4R2", "CROSS_VENUE_CALENDAR_RR_LEADER_V7", "Directional Semantic JEPA and related directional families"]},
+    {"period": "2026-07-01..2026-07-24", "state": "MTD outcomes inspected; not a complete monthly validation", "families": ["CROSS_VENUE_CALENDAR_RR_LEADER_V4/V4R1/V4R2", "CROSS_VENUE_CALENDAR_RR_LEADER_V7", "DIRECTIONAL_GLOBEX_CROSS_ASSET_V1 y adaptaciones", "DIRECTIONAL_VOL_COMPLEX_V1"]},
+    {"period": "2026 OPRA", "state": "source gate only; no feature/label/payoff", "families": ["CROSS_VENUE_OPRA_TRADE_QUOTE_FLOW_V5", "EXTERNAL_OPRA_SOURCE_INTAKE"]},
+    {"period": "after 2026-07-24 and 2027+", "state": "future/uncaptured in documented inventory", "families": []}
+  ],
+  "leakage_findings": [
+    "Completed-bar primitives exist, but required new 12x5m and 8x15m builders are absent.",
+    "Current IB is 09:30–10:29 and must be unavailable before 10:30.",
+    "Old builder has six Fibonacci extensions only; full level set/contract must be frozen.",
+    "Moving walls require exact as-of identity per token; no floor, deduplication, nearest or inferred timestamp.",
+    "Existing executable-quote labels are 30m/stop/trailing and lack exact fixed 24 payoffs; they cannot be reused without a new frozen payoff contract.",
+    "Phase-1 event key must include ticker/date/decision/expiration/right/strike/delta/entry quote timestamp/exit quote timestamp.",
+    "Chronological reject_while_open exists and is required.",
+    "Monthly feature→freeze→outer barrier exists; independent audit must reimplement rather than import evaluator."
+  ],
+  "phase0_novelty": {
+    "ordered_sequence_alone_novel": false,
+    "required_novelty": "Joint multiscale tensor with explicit level identity over the full fixed level universe.",
+    "old_wall_level_minimum": {"total": 53, "greek_levels": 5, "d0_ib_fibonacci_levels": 8, "d1_to_d5_levels_each": 8},
+    "call_put_wall_union": "Must be frozen exactly in Phase 1; no subset selection in Phase 0.",
+    "state": "requirement/gap, not a final predeclaration"
+  },
+  "tcr_vis_assessment": {
+    "scientific_relevance": "Same-trajectory NCE can cancel session/level static shortcut and is distinct from VISReg-only/factorized JEPA.",
+    "causal_limit": "Market representation is actionless; CALL/PUT/delta/hold are payoff actions, not transition causes.",
+    "allowed_as_one_sensitivity_only_if": ["same-trajectory candidates frozen", "causal-prefix-only temporal mean", "temperature 0.12", "VIS weight 0.04", "24 projections", "RNG seed frozen", "no cross-fold trajectories", "same economic gates"],
+    "cannot_rescue_primary_tree": true,
+    "existing_batch_centered_visreg_equivalent": false,
+    "implementation_or_training_authorized_now": false
+  },
+  "families": {
+    "Baseline executable nested y objetivos return/win": {
+      "hypothesis": "Generic executable quote controls and return-versus-win objective.",
+      "features_source": "Existing executable_quote 0DTE; early causal and regime variants.",
+      "labels_payoff": "Ask entry, bid exit, 30–180m stop/trailing payoff.",
+      "validation": "Chronological inner selection; Jan–May 2026 tests for the sequence controls.",
+      "metrics": {"pf_qqq_spxw_spy": [0.984, 0.832, 0.919], "wr_pct_qqq_spxw_spy": [44.68, 42.99, 43.90], "frequency_min": null, "positive_months": null},
+      "failure": "Monthly PF/WR/stability gates fail.",
+      "terminal_status": "FAILED_ECONOMIC",
+      "evidence_paths": ["research_papers/JEPA/EXACT_OBJECTIVE_RETURN_VS_WIN_PREDECLARATION_V1.md", "research_papers/JEPA/EARLY_CAUSAL_NOIB_D25_WIN_PREDECLARATION_V1.md", "SUMMARY-update.md"]
+    },
+    "Early cadence/directional/regime": {
+      "hypothesis": "More early timestamps, backward spot direction, or regime abstention improves stability.",
+      "features_source": "1m early executable_quote; spot momentum; IV skew/spread/abs-return/IB range.",
+      "labels_payoff": "Ask→bid 30–180m; no future feature.",
+      "validation": "Nested Jan–May 2026, inner-only mechanism/gate selection.",
+      "metrics": {"pf_spxw_1m": 0.976, "wr_pct_spxw_1m": 36.67, "trades_spxw_1m": 60, "isolated_regime_pf": 1.452, "frequency_min": null, "positive_months": null},
+      "failure": "Isolated gains and drift; no stable all-ticker monthly pass.",
+      "terminal_status": "FAILED_ECONOMIC",
+      "evidence_paths": ["research_papers/JEPA/EARLY_CAUSAL_CADENCE_1M_PREDECLARATION_V2.md", "research_papers/JEPA/EARLY_CAUSAL_DIRECTIONAL_NESTED_1M_PREDECLARATION_V1.md", "research_papers/JEPA/REGIME_GATE_ABLATION_PREDECLARATION_V1.md"]
+    },
+    "Pairwise P1 y magnitude/physics variants": {
+      "hypothesis": "CALL/PUT side and opportunity differences contain stable option information.",
+      "features_source": "Sealed executable quote pairwise features, magnitude and physics controls.",
+      "labels_payoff": "Ask→bid executable options, nested grids and scheduler.",
+      "validation": "2022–2025 nested development/diagnostics.",
+      "metrics": {"pf": null, "wr_pct": null, "frequency_min": null, "grid_positive_cells": 57, "median_delta": 0.004},
+      "failure": "Side is near random; magnitude/physics payoff fails.",
+      "terminal_status": "FAILED_ECONOMIC",
+      "evidence_paths": ["research_papers/JEPA/PAIRWISE_OPPORTUNITY_AND_SIDE_SELECTION_PREDECLARATION_V1.md", "research_papers/JEPA/PAIRWISE_MAGNITUDE_WEIGHTED_SIDE_V1.md", "research_papers/JEPA/PAIRWISE_SIDE_PHYSICS_SKIP_V1.md"]
+    },
+    "Wall interaction executable V1/V1R1": {
+      "hypothesis": "Magnet/rejection/acceptance at Greek and IB/Fibonacci walls select CALL/PUT.",
+      "features_source": "Wall distances, level roles, event state machine, confluence.",
+      "labels_payoff": "Ask→bid 30–180m executable payoff; 2024–2025 replay.",
+      "validation": "Fixed M0/E1, V1 then one semantic pierce correction.",
+      "metrics": {"pf_qqq_spxw_spy_v1": [0.832, 0.865, 0.899], "pf_qqq_spxw_spy_v1r1": [0.845, 0.910, 1.008], "wr_pct_v1r1": [44.18, 42.32, 47.58], "frequency_min_v1r1": [30, 52, 17], "positive_months_pct_v1r1": [33.33, 29.17, 54.17]},
+      "failure": "Semantic correction insufficient; no common frequency/stability.",
+      "terminal_status": "FAILED_ECONOMIC",
+      "evidence_paths": ["research_papers/JEPA/WALL_INTERACTION_EXECQUOTE_PREDECLARATION_V1.md", "research_papers/JEPA/WALL_INTERACTION_EXECQUOTE_V1R1_REJECTION_SEMANTICS.md"]
+    },
+    "H-FLOW1": {
+      "hypothesis": "Signed flow near a wall separates defense/break.",
+      "features_source": "Volume/count/close-notional/full-surface flow near wall.",
+      "labels_payoff": "Physical future-path labels; no option payoff after physical gate.",
+      "validation": "24 physical ticker/fold cells, 2024–2025.",
+      "metrics": {"pf": null, "wr_pct": null, "frequency_min": null, "physical_wins": 4, "median_delta_auc": -0.029209, "wilcoxon_p": 0.984375},
+      "failure": "Physical mechanism gate negative.",
+      "terminal_status": "CLOSED",
+      "evidence_paths": ["research_papers/JEPA/WALL_SURFACE_FLOW_AT_TOUCH_V1R1_CAUSAL_AMENDMENT.md", "research_papers/JEPA/results/_diagnostics/wall_surface_flow_at_touch_physical_202208_202512_v1r2r1/"]
+    },
+    "H-IVSURF1": {
+      "hypothesis": "Local IV level/skew/curvature deformation near a wall predicts future interaction.",
+      "features_source": "Fixed-strike midpoint-IV changes at t,t−1,t−5,t−15.",
+      "labels_payoff": "Physical AUC/AP/log-loss labels; no option payoff.",
+      "validation": "LR primary and LightGBM sensitivity, 24 cells, 2024–2025.",
+      "metrics": {"pf": null, "wr_pct": null, "frequency_min": null, "lr_wins": 12, "lr_median_delta_auc": -0.001203, "lr_p": 0.890625, "lgbm_wins": 9, "lgbm_median_delta_auc": -0.005822, "lgbm_p": 0.921875},
+      "failure": "Physical mechanism gate negative.",
+      "terminal_status": "CLOSED",
+      "evidence_paths": ["research_papers/JEPA/WALL_IV_SURFACE_DEFORMATION_AT_TOUCH_V1_PREDECLARATION.md"]
+    },
+    "H-QSIZE1R1": {
+      "hypothesis": "NBBO size/imbalance/depth snapshot separates wall defense/break.",
+      "features_source": "32 pressure measurements after quality fields moved audit-only.",
+      "labels_payoff": "Physical F0/F1 labels; no option payoff.",
+      "validation": "LR and LightGBM, 24 cells, 2024–2025.",
+      "metrics": {"pf": null, "wr_pct": null, "frequency_min": null, "lr_wins": 6, "lr_median_delta_auc": -0.014823, "lr_p": 0.890625, "lgbm_wins": 5, "lgbm_median_delta_auc": -0.020959, "lgbm_p": 0.84375},
+      "failure": "Physical mechanism gate negative.",
+      "terminal_status": "CLOSED",
+      "evidence_paths": ["research_papers/JEPA/WALL_QUOTE_SIZE_PRESSURE_AT_TOUCH_V1_PREDECLARATION.md", "research_papers/JEPA/WALL_QUOTE_SIZE_PRESSURE_AT_TOUCH_V1R1_QUALITY_REPAIR_PREDECLARATION.md"]
+    },
+    "H-QDYN1R1R1": {
+      "hypothesis": "Tick replenishment/withdrawal at exact Greek walls is informative.",
+      "features_source": "Exact CALL/PUT NBBO ticks in t−32s,t−2s windows.",
+      "labels_payoff": "Source/data gate only; no labels/payoff.",
+      "validation": "Distinctness/coverage gate on 9,833 eligible events.",
+      "metrics": {"pf": null, "wr_pct": null, "frequency_min": null, "distinctness_failed_cells": 18},
+      "failure": "SPXW exchange/state fractions are constant in required alpha fields.",
+      "terminal_status": "FAILED_CAUSALITY",
+      "evidence_paths": ["research_papers/JEPA/WALL_QUOTE_TICK_DYNAMICS_AT_TOUCH_V1_PREDECLARATION.md", "research_papers/JEPA/WALL_QUOTE_TICK_DYNAMICS_AT_TOUCH_V1R1R1_DATA_GATE_CLOSURE.md"]
+    },
+    "H-IBQDYN1": {
+      "hypothesis": "Intraminute NBBO pressure on completed IB/Fibonacci levels predicts physical interaction.",
+      "features_source": "20 tick fields on eight fixed IB/Fib levels and exact executable contracts.",
+      "labels_payoff": "Physical F0/F1 labels; economic ask→bid replay not authorized after physical failure.",
+      "validation": "LR primary/LGBM confirmatory, 24 cells, 2024–2025.",
+      "metrics": {"pf": null, "wr_pct": null, "frequency_min": 45, "lr_wins": 7, "lr_median_delta_auc": -0.004032, "lr_p": 0.921875, "lgbm_wins": 8, "lgbm_median_delta_auc": -0.005847, "lgbm_p": 0.890625},
+      "failure": "Physical gate negative; no economic replay.",
+      "terminal_status": "CLOSED",
+      "evidence_paths": ["research_papers/JEPA/H_IBQDYN1_FEASIBILITY_PREDECLARATION.md", "research_papers/JEPA/H_IBQDYN1_ECONOMIC_TRANSLATION_PREDECLARATION.md"]
+    },
+    "H-GREEK2WALL direct": {
+      "hypothesis": "Native higher Greeks and direct OI reveal wall deformation/migration.",
+      "features_source": "ThetaData /greeks/all and direct OI; 12-session preflight.",
+      "labels_payoff": "None; entitlement/source gate only.",
+      "validation": "Frozen source inventory and one exact request attempt.",
+      "metrics": {"pf": null, "wr_pct": null, "frequency_min": null},
+      "failure": "HTTP 403: STANDARD subscription lacks Professional endpoint.",
+      "terminal_status": "BLOCKED_DATA",
+      "evidence_paths": ["research_papers/JEPA/H_GREEK2WALL_DIRECT_ALL_V1_FEASIBILITY_PREDECLARATION.md", "research_papers/JEPA/H_GREEK2WALL_DIRECT_ALL_V1_FEASIBILITY_CLOSURE.md"]
+    },
+    "EXISTING_DATA_EXECUTABLE_UTILITY_V1": {
+      "hypothesis": "Existing causal feature union plus hurdle/Huber utility can select executable options.",
+      "features_source": "E0 30 features; E1 527 features including walls/IB/Fib/synthetic Greeks.",
+      "labels_payoff": "Ask→bid executable quote; nested 2024–2025.",
+      "validation": "288 folds, 12,096 inner grids, chronological scheduler.",
+      "metrics": {"pf_pooled_e0_hurdle": 1.464809, "wr_pct_pooled_e0_hurdle": 54.41, "trades_pooled_e0_hurdle": 68, "frequency_min": 0, "positive_month_pct": 4.17},
+      "failure": "E1 144/144 abstain; E0 trades only 4/144 cells and fails capacity/stability.",
+      "terminal_status": "FAILED_ECONOMIC",
+      "evidence_paths": ["research_papers/JEPA/EXISTING_DATA_EXECUTABLE_UTILITY_V1_PREDECLARATION.md", "research_papers/JEPA/results/_diagnostics/existing_data_executable_utility_v1_202401_202512/"]
+    },
+    "CROSS_MARKET_TRANSMISSION_V1": {
+      "hypothesis": "Beta-neutral lead/lag and basis transmission predicts target direction.",
+      "features_source": "28 cross-market 1m fields over exact 30-bar prefix.",
+      "labels_payoff": "No labels/payoff; source gate aborted.",
+      "validation": "Outcome-free calendar/finite-statistics gate 2022–2025.",
+      "metrics": {"pf": null, "wr_pct": null, "frequency_min": null},
+      "failure": "Half-day paths cross true close; beta/correlation undefined without forbidden repair.",
+      "terminal_status": "FAILED_CAUSALITY",
+      "evidence_paths": ["research_papers/JEPA/CROSS_MARKET_TRANSMISSION_V1_PREDECLARATION.md", "research_papers/JEPA/CROSS_MARKET_TRANSMISSION_V1_DATA_GATE_CLOSURE.md"]
+    },
+    "CROSS_MARKET_TRANSMISSION_V1R1": {
+      "hypothesis": "Same cross-market transmission after calendar half-day exclusion.",
+      "features_source": "Same 28 fields, nine complete calendar exclusions.",
+      "labels_payoff": "No labels/payoff; source gate aborted.",
+      "validation": "Outcome-free full-source gate.",
+      "metrics": {"pf": null, "wr_pct": null, "frequency_min": null},
+      "failure": "Normal-session lead/lag undefined when post-first returns are constant; epsilon/removal forbidden.",
+      "terminal_status": "BLOCKED_DATA",
+      "evidence_paths": ["research_papers/JEPA/CROSS_MARKET_TRANSMISSION_V1R1_HALF_DAY_REPAIR.md", "research_papers/JEPA/CROSS_MARKET_TRANSMISSION_V1R1_DATA_GATE_CLOSURE.md"]
+    },
+    "H-TPOVALUE1": {
+      "hypothesis": "Developing TPO/POC/VAH/VAL migration and value location predict option payoff.",
+      "features_source": "36 exact TPO/value features from current-time bars.",
+      "labels_payoff": "Ask→bid economic replay; stopped at first required development cell.",
+      "validation": "42-grid inner gate, causal 2023 development.",
+      "metrics": {"near_miss_pf": 0.921718, "near_miss_net_r": -1.831, "frequency_min": null, "grids_passing_first_cell": 0},
+      "failure": "0/42 grids pass inner January–March for first SPXW 2023-04 cell; early stop.",
+      "terminal_status": "FAILED_ECONOMIC",
+      "evidence_paths": ["research_papers/JEPA/H_TPOVALUE1_EXECUTABLE_PREDECLARATION.md", "research_papers/JEPA/results/_diagnostics/h_tpovalue1_executable_development_early_stop_202304_v1/"]
+    },
+    "KING-GEX-SLOPE1": {
+      "hypothesis": "Net-GEX sign plus 45m slope selects momentum/reversion.",
+      "features_source": "King wall-state/GEX proxy, fixed K0/K1 rules.",
+      "labels_payoff": "Executable options, 2023 fixed-rule replay.",
+      "validation": "36 ticker-month cells; no rescue sweep.",
+      "metrics": {"pf_k1": 0.804, "wr_pct_k1": 42.22, "cells_pass": 2, "frequency_min": null},
+      "failure": "Direction loses; K0 also fails.",
+      "terminal_status": "FAILED_ECONOMIC",
+      "evidence_paths": ["research_papers/JEPA/KING_GEX_SLOPE1_EXECUTABLE_PREDECLARATION.md"]
+    },
+    "KING-GEX-EXIT1": {
+      "hypothesis": "Fixed stop/trail/horizon management can rescue King entries.",
+      "features_source": "Sealed King source checkpoints and 32 policies.",
+      "labels_payoff": "Executable stop/trail/horizon counterfactuals.",
+      "validation": "36 cells and 425,152 counterfactuals.",
+      "metrics": {"pf": null, "wr_pct": null, "frequency_min": null, "eligible_policies": 0},
+      "failure": "No policy reaches PF 1.0.",
+      "terminal_status": "FAILED_ECONOMIC",
+      "evidence_paths": ["research_papers/JEPA/KING_GEX_EXIT1_EXECUTABLE_PREDECLARATION.md"]
+    },
+    "KING-GEX-MANAGE30-V1": {
+      "hypothesis": "Observable state at +30m selects continuation/exit value.",
+      "features_source": "M0 path and M1 synthetic higher-Greek/migration state; 17 actions.",
+      "labels_payoff": "Advantage versus B00, ask→bid exits; 2023 expanding folds.",
+      "validation": "72 ticker/arm monthly folds; scheduler rerun after hold choice.",
+      "metrics": {"pf_m0": 0.905, "wr_pct_m0": 38.90, "cells_pass_m0": 3, "pf_m1": 0.901, "wr_pct_m1": 39.08, "cells_pass_m1": 5, "frequency_min": null},
+      "failure": "Both arms fail development gate; outer closed.",
+      "terminal_status": "FAILED_ECONOMIC",
+      "evidence_paths": ["research_papers/JEPA/KING_GEX_MANAGE30_V1_PREDECLARATION.md", "research_papers/JEPA/KING_GEX_MANAGE30_V1_DATA_GATE_CLARIFICATION_V1R2.md"]
+    },
+    "EVENT_OPTION_EXECQUOTE_NESTED_COMPACT_V1": {
+      "hypothesis": "Compact long-option selector can choose stable side/delta.",
+      "features_source": "Executable quote feature set, compact profile selection.",
+      "labels_payoff": "Ask→bid 30–180m; nested 2026 diagnostics.",
+      "validation": "Chronological folds and profile selection.",
+      "metrics": {"pf_range": [0.794, 0.804], "wr_pct_range": [35.5, 39.7], "frequency_min": null},
+      "failure": "PF/WR below gates by ticker.",
+      "terminal_status": "FAILED_ECONOMIC",
+      "evidence_paths": ["research_papers/JEPA/results/_diagnostics/event_option_execquote_nested_compact_v1_202601_202606/"]
+    },
+    "DIRECTIONAL_GLOBEX_CROSS_ASSET_V1 y adaptaciones": {
+      "hypothesis": "Seven continuous futures plus cash improve direction.",
+      "features_source": "Yahoo ES/NQ/YM/RTY/ZN/GC/CL 60m plus 15 cash tickers.",
+      "labels_payoff": "Cash directional 180m ask→bid proxy; 2025 development and 2026 MTD/outer.",
+      "validation": "Frozen 2025 selection then 2026 one-shot; V2/V3/V4 adaptations.",
+      "metrics": {"pf_2025_qqq_spx_spy": [1.200, 1.206, 1.210], "pf_2026_qqq_spx_spy": [0.873, 0.899, 0.888], "positive_months_2025": [9, 9, 9], "positive_months_2026": [2, 3, 3]},
+      "failure": "2025 near-miss reverses in 2026; adaptations do not restore stability; continuous futures lack broker parity.",
+      "terminal_status": "FAILED_ECONOMIC",
+      "evidence_paths": ["research_papers/JEPA/DIRECTIONAL_GLOBEX_CROSS_ASSET_V1_PREDECLARATION.md", "research_papers/JEPA/DIRECTIONAL_GLOBEX_ONLINE_LINEAR_V2_PREDECLARATION.md", "research_papers/JEPA/DIRECTIONAL_GLOBEX_ONLINE_EXPERT_V3_PREDECLARATION.md", "research_papers/JEPA/DIRECTIONAL_GLOBEX_META_HEDGE_V4_PREDECLARATION.md"]
+    },
+    "Payoffs alternativos long-vol/short-premium/IB": {
+      "hypothesis": "Non-directional long-vol, short-premium or fixed IB/Fib payoff avoids side-selection failure.",
+      "features_source": "Executable options/IB panel; exact legs required.",
+      "labels_payoff": "Dual-leg ask→bid 2025; short-premium execution gate; IB breakout/fade 2025.",
+      "validation": "One-shot fixed protocols; no post-hoc exclusion.",
+      "metrics": {"pf_dual_leg_qqq_spx_spy": [0.629, 0.661, 0.605], "wr_dual_leg_qqq_spx_spy": [35.07, 33.28, 36.22], "frequency_min_dual_leg": 40, "short_premium_pf": null, "ib_pf_qqq_spx_spy": [0.779, 0.785, 0.819]},
+      "failure": "Long-vol loses; short premium has non-executable legs; IB direction loses.",
+      "terminal_status": "CLOSED",
+      "evidence_paths": ["research_papers/JEPA/DUAL_LEG_EVENT_VOLATILITY_V1_PREDECLARATION.md", "research_papers/JEPA/SHORT_PREMIUM_DEFINED_RISK_V1_CLOSURE.md", "research_papers/JEPA/DIRECTIONAL_IB_BREAKOUT_FADE_V1_CLOSURE.md"]
+    },
+    "CROSS_SESSION_RELATIVE_VALUE_V1": {
+      "hypothesis": "QQQ-SPY divergence versus SPY/SPXW anchor reverts intraday.",
+      "features_source": "Underlying-only prior-close to 10:34 shock; no ML.",
+      "labels_payoff": "Equal-notional 10:36→13:36, 180m, 2bps; 2022–2023.",
+      "validation": "One fixed daily trade, 24 monthly cells.",
+      "metrics": {"trades": 496, "wr_pct": 41.532, "pf": 0.627276, "net_bps": -2349.329, "min_trades_month": 19, "positive_months": 5, "months_pass": 2},
+      "failure": "Relative-value direction loses; frequency alone is insufficient.",
+      "terminal_status": "FAILED_ECONOMIC",
+      "evidence_paths": ["research_papers/JEPA/CROSS_SESSION_RELATIVE_VALUE_V1_PREDECLARATION.md", "research_papers/JEPA/CROSS_SESSION_RELATIVE_VALUE_V1_CLOSURE.md"]
+    },
+    "OPENING_RELATIVE_MOMENTUM_V1": {
+      "hypothesis": "Cash-open QQQ-SPY impulse continues to 13:36.",
+      "features_source": "09:30→10:34 cash returns; no overnight/prior close.",
+      "labels_payoff": "Equal-notional 10:36→13:36, 180m, 2bps; 2022–2023.",
+      "validation": "One fixed daily trade, 24 monthly cells.",
+      "metrics": {"trades": 497, "wr_pct": 50.905, "pf": 0.831462, "net_bps": -927.689, "min_trades_month": 19, "positive_months": 7, "months_pass": 4},
+      "failure": "Magnitude of losses and monthly stability fail.",
+      "terminal_status": "FAILED_ECONOMIC",
+      "evidence_paths": ["research_papers/JEPA/OPENING_RELATIVE_MOMENTUM_V1_PREDECLARATION.md", "research_papers/JEPA/OPENING_RELATIVE_MOMENTUM_V1_CLOSURE.md"]
+    },
+    "OPTION_PARITY_PRESSURE_V1": {
+      "hypothesis": "Same-strike CALL/PUT synthetic-forward pressure predicts direction.",
+      "features_source": "0DTE exact CALL/PUT, 10:30→10:35 synthetic basis.",
+      "labels_payoff": "Sign rule, ask→bid 10:36→13:36, 180m, 1bp; 2023.",
+      "validation": "36 ticker-month cells, fixed deterministic sign.",
+      "metrics": {"trades": 730, "pf_qqq_spxw_spy": [0.946778, 0.842979, 0.819330], "wr_pct_qqq_spxw_spy": [49.167, 47.984, 48.760], "net_bps_qqq_spxw_spy": [-270.296, -665.608, -753.406], "min_trades_month_qqq_spxw_spy": [18, 19, 18], "months_pass": 10},
+      "failure": "Gross direction and stability fail before/after costs.",
+      "terminal_status": "FAILED_ECONOMIC",
+      "evidence_paths": ["research_papers/JEPA/OPTION_PARITY_PRESSURE_V1_PREDECLARATION.md", "research_papers/JEPA/OPTION_PARITY_PRESSURE_V1_CLOSURE.md"]
+    },
+    "EXACT_EXPIRY_OI_DELTA_V1": {
+      "hypothesis": "Same-contract OI change before expiry is causal.",
+      "features_source": "Filename/inventory census of exact 0DTE contracts 2023–2025.",
+      "labels_payoff": "None; no values/outcomes read.",
+      "validation": "Exact prior-session contract pair capacity.",
+      "metrics": {"pairs_each_ticker": 156, "months": 36, "min_events_month": 4, "pf": null, "wr_pct": null},
+      "failure": "Frequency below required >12/month.",
+      "terminal_status": "FAILED_FREQUENCY",
+      "evidence_paths": ["research_papers/JEPA/EXACT_EXPIRY_OI_DELTA_V1_FEASIBILITY_CLOSURE.md"]
+    },
+    "CALENDAR_RISK_REVERSAL_PRESSURE_V1": {
+      "hypothesis": "Front-minus-back 25d RR change predicts three-hour return.",
+      "features_source": "Exact front/back 0DTE/next-expiry Greeks/IV at 10:30/10:35.",
+      "labels_payoff": "Deterministic ask→bid 10:36→13:36, 180m, 1bp; 2023.",
+      "validation": "36 monthly cells; no model/threshold sweep.",
+      "metrics": {"trades": 739, "pf_pooled": 1.058294, "wr_pooled_pct": 50.068, "net_pooled_bps": 729.690, "months_pass": 12, "pf_qqq_spxw_spy": [1.173476, 0.912372, 1.072835], "min_trades_month": 19},
+      "failure": "Partial pooled edge; SPXW and monthly stability fail.",
+      "terminal_status": "FAILED_ECONOMIC",
+      "evidence_paths": ["research_papers/JEPA/CALENDAR_RISK_REVERSAL_PRESSURE_V1_PREDECLARATION.md", "research_papers/JEPA/CALENDAR_RISK_REVERSAL_PRESSURE_V1_CLOSURE.md"]
+    },
+    "CROSS_VENUE_CALENDAR_RR_LEADER_V1/V3": {
+      "hypothesis": "Fixed SPY sensor leads SPXW; sign fixed or monthly orientation transports.",
+      "features_source": "29 calendar-RR features; mapping QQQ←QQQ, SPY←SPY, SPXW←SPY.",
+      "labels_payoff": "Cash proxy ask→bid 10:36→13:36, 180m, 1bp; V1 outer 2024, V3 outer 2025.",
+      "validation": "Chronological development/outer with frozen mapping and scheduler.",
+      "metrics": {"v1_pf_qqq_spxw_spy": [0.866939, 0.698912, 0.693382], "v1_wr_pct": [48.594, 39.271, 40.081], "v1_min_month": [19, 18, 18], "v1_positive_months": [6, 5, 5], "v3_outer_pf_qqq_spxw_spy": [0.655469, 1.035567, 1.039777], "v3_outer_positive_months": [5, 6, 6]},
+      "failure": "Sign/régime does not transport; no 2026 promotion.",
+      "terminal_status": "FAILED_ECONOMIC",
+      "evidence_paths": ["research_papers/JEPA/CROSS_VENUE_CALENDAR_RR_LEADER_V1_PREDECLARATION.md", "research_papers/JEPA/CROSS_VENUE_CALENDAR_RR_LEADER_V3_MONTHLY_ORIENTATION_PREDECLARATION.md"]
+    },
+    "CROSS_VENUE_CALENDAR_RR_LEADER_V4/V4R1/V4R2": {
+      "hypothesis": "Pooled logistic over 29 features transports after full-history fit/retry/exclusions.",
+      "features_source": "Calendar-RR 29-feature view, fixed mapping, source retries and four outcome-free exclusions.",
+      "labels_payoff": "Cash proxy ask→bid; V4 dev 2025 and V4R2 outer 2026.",
+      "validation": "Frozen model, one-shot outer, independent audit.",
+      "metrics": {"v4_dev_pf_qqq_spxw_spy": [1.204351, 1.247945, 1.346342], "v4_dev_positive_months": [7, 8, 8], "v4r2_outer_pf_qqq_spxw_spy": [0.969729, 0.950957, 0.955718], "v4r2_outer_wr_pct": [52.542, 50.420, 49.580], "v4r2_outer_net_bps": [-86.880, -97.917, -87.839], "v4r2_positive_months": [2, 2, 2]},
+      "failure": "Outer 2026 loses aggregate and monthly stability; 2026 is seen development.",
+      "terminal_status": "FAILED_ECONOMIC",
+      "evidence_paths": ["research_papers/JEPA/CROSS_VENUE_CALENDAR_RR_LEADER_V4_FULL_HISTORY_LOGISTIC_PREDECLARATION.md", "research_papers/JEPA/CROSS_VENUE_CALENDAR_RR_LEADER_V4R2_OUTER_2026_FAILURE.md"]
+    },
+    "CROSS_VENUE post-V4 cash-only": {
+      "hypothesis": "Cash summaries/spot/cross-cash/shallow trees/raw 35×1m can replace blocked option surface.",
+      "features_source": "Existing cash-only views, no new source.",
+      "labels_payoff": "Development cash returns 2024–2025; no 2026.",
+      "validation": "Causal blocks and shallow model comparisons.",
+      "metrics": {"pf": null, "wr_pct": null, "frequency_min": null},
+      "failure": "No candidate passes both years and all six ticker-year blocks.",
+      "terminal_status": "FAILED_ECONOMIC",
+      "evidence_paths": ["research_papers/JEPA/CROSS_VENUE_CALENDAR_RR_POST_V4_CASH_ONLY_DIAGNOSTIC.md"]
+    },
+    "CROSS_VENUE_OPRA_TRADE_QUOTE_FLOW_V5": {
+      "hypothesis": "Executed OPRA prints versus strictly prior NBBO add causal flow information.",
+      "features_source": "Planned OPRA trade_quote and NBBO, 2023–2025.",
+      "labels_payoff": "None; source gate stopped before features/outcomes.",
+      "validation": "Atomic capture, validator and independent reparse.",
+      "metrics": {"valid_captures": 1364, "requested_captures": 1504, "errors": 140, "pf": null, "wr_pct": null, "frequency_min": null},
+      "failure": "Invalid/duplicate responses; January 2024 QQQ/SPY coverage zero.",
+      "terminal_status": "BLOCKED_DATA",
+      "evidence_paths": ["research_papers/JEPA/CROSS_VENUE_OPRA_TRADE_QUOTE_FLOW_V5_PREDECLARATION.md", "research_papers/JEPA/CROSS_VENUE_OPRA_TRADE_QUOTE_FLOW_V5_SOURCE_CAPTURE_GATE_FAILURE.md"]
+    },
+    "EXTERNAL_OPRA_SOURCE_INTAKE": {
+      "hypothesis": "Historical/live OPRA tape and NBBO source can precede a new family.",
+      "features_source": "Massive/OPRA candidate only; no credential or endpoint used.",
+      "labels_payoff": "None.",
+      "validation": "Outcome-free admission/shadow was not executed.",
+      "metrics": {"pf": null, "wr_pct": null, "frequency_min": null},
+      "failure": "No credential, endpoint, capture, seal, feature, model or outcome.",
+      "terminal_status": "CLOSED",
+      "evidence_paths": ["research_papers/JEPA/EXTERNAL_OPRA_SOURCE_INTAKE_PREDECLARATION_20260726.md", "research_papers/JEPA/EXTERNAL_OPRA_SOURCE_INTAKE_CLOSED_NO_EXECUTION_20260726.md"]
+    },
+    "EXECUTABLE_CONTEXTUAL_BANDIT_GROUPDRO_V1": {
+      "hypothesis": "Pooled Q-network over 12 CALL/PUT delta actions with GroupDRO improves executable selection.",
+      "features_source": "Existing executable_quote 289 features; no run authorized.",
+      "labels_payoff": "Full contrafactual ask→bid actions planned; no labels opened by this family.",
+      "validation": "Expanding Jan–Jun 2026 was predeclared but intentionally not executed.",
+      "metrics": {"pf": null, "wr_pct": null, "frequency_min": null},
+      "failure": "Closed before runner, fit, prediction or metric.",
+      "terminal_status": "CLOSED",
+      "evidence_paths": ["research_papers/JEPA/EXECUTABLE_CONTEXTUAL_BANDIT_GROUPDRO_V1_PREDECLARATION.md"]
+    },
+    "EVENT_OPTION_EXECQUOTE_FULL_NESTED_MONTHLY_OVERLAY_V1": {
+      "hypothesis": "Exhaustive monthly overlay search transports when selection precedes test.",
+      "features_source": "44,169-row executable_quote parquet; 289 features; two LightGBM heads; 1,128,960 logical configs/fold.",
+      "labels_payoff": "Ask→bid, 30–180m, reject_while_open; test ledger Jan–Jun 2026 only.",
+      "validation": "18 folds; model fit, six-month selection and policy freeze before test outcome access; independent refit audit.",
+      "metrics": {"trades_qqq_spxw_spy": [149, 114, 107], "pf_qqq_spxw_spy": [0.584706, 0.844375, 1.083921], "wr_pct_qqq_spxw_spy": [35.570, 38.596, 47.664], "min_trades_month_qqq_spxw_spy": [18, 17, 12], "positive_months_qqq_spxw_spy": [1, 3, 2]},
+      "failure": "All three fail PF/WR/monthly gates; exhaustive selection does not transport.",
+      "terminal_status": "FAILED_ECONOMIC",
+      "evidence_paths": ["research_papers/JEPA/EVENT_OPTION_EXECQUOTE_FULL_NESTED_MONTHLY_OVERLAY_V1_PREDECLARATION.md", "research_papers/JEPA/EVENT_OPTION_EXECQUOTE_FULL_NESTED_MONTHLY_OVERLAY_V1_FAILURE.md"]
+    },
+    "CROSS_VENUE_CALENDAR_RR_LEADER_V6": {
+      "hypothesis": "Depth-2 HistGradientBoosting over frozen V4 features fixes linear boundary.",
+      "features_source": "Same 29-feature V4 view; no implementation.",
+      "labels_payoff": "None; no prediction or outcome.",
+      "validation": "Predeclared only.",
+      "metrics": {"pf": null, "wr_pct": null, "frequency_min": null},
+      "failure": "Closed while prioritizing the immutable V4 path.",
+      "terminal_status": "CLOSED",
+      "evidence_paths": ["research_papers/JEPA/CROSS_VENUE_CALENDAR_RR_LEADER_V6_SHALLOW_HISTGB_PREDECLARATION.md"]
+    },
+    "CROSS_VENUE_CALENDAR_RR_LEADER_V7": {
+      "hypothesis": "Rolling-12 monthly pooled logistic adapts sign drift.",
+      "features_source": "Same 29 calendar-RR features and mapping.",
+      "labels_payoff": "Cash proxy ask→bid; monthly refit Jan–Jul 2026 development.",
+      "validation": "Each month fits only prior 12 complete months; independent audit.",
+      "metrics": {"pf_qqq_spxw_spy": [0.812462, 1.079783, 1.031988], "wr_pct_qqq_spxw_spy": [50.847, 51.261, 49.580], "net_bps_qqq_spxw_spy": [-585.329, 149.347, 61.076], "min_trades_month": 18, "positive_months_qqq_spxw_spy": [1, 2, 3]},
+      "failure": "Recency changes orientation but does not restore PF/month stability.",
+      "terminal_status": "FAILED_ECONOMIC",
+      "evidence_paths": ["research_papers/JEPA/CROSS_VENUE_CALENDAR_RR_LEADER_V7_ROLLING12_MONTHLY_LOGISTIC_PREDECLARATION.md", "research_papers/JEPA/CROSS_VENUE_CALENDAR_RR_LEADER_V7_ROLLING12_MONTHLY_LOGISTIC_FAILURE.md"]
+    }
+  },
+  "sequence_adjacent_model_families": {
+    "Phys-TD flat/modal/history": {"features_source": "Flat/modal Phys-TD sequence embeddings and 2022/2025 history controls.", "labels_payoff": "Executable ask→bid downstream payoff.", "validation": "Nested Jan–May 2026.", "metrics": {"flat_pf": 0.900, "modal_pf": 0.858, "history_2025_pf": 0.863, "history_2022_pf": 0.764}, "terminal_status": "CLOSED", "evidence_paths": ["research_papers/JEPA/PHYS_TD_H1_VS_H6_PREDECLARATION_V1.md", "research_papers/JEPA/results/_diagnostics/ptdj_ablation_flat_*", "research_papers/JEPA/results/_diagnostics/ptdj_ablation_modal_*"]},
+    "SMM/VISReg/prototype/Gram/factorized innovation": {"features_source": "Representation regularization and common/residual/innovation sequence variants.", "labels_payoff": "Same executable downstream; no new causal source.", "validation": "Development and 2026 directional tests.", "metrics": {"effective_rank_z_pct": 53.54, "effective_rank_dz_pct": 42.67, "pf": null, "wr_pct": null}, "terminal_status": "CLOSED", "evidence_paths": ["research_papers/JEPA/DIRECTIONAL_FACTORIZED_INNOVATION_JEPA_V1_PREDECLARATION.md", "research_papers/JEPA/results/_diagnostics/directional_factorized_innovation_jepa_v1_*"]},
+    "Portfolio Var-JEPA": {"features_source": "Frozen flat encoder plus deterministic versus variational payoff head.", "labels_payoff": "Executable ask→bid return; nested Jan–May 2026.", "validation": "Same folds/seeds/replay; uncertainty diagnostic only.", "metrics": {"economic_configs": 0, "uncertainty_error_median": -0.180, "pf": null, "wr_pct": null}, "terminal_status": "CLOSED", "evidence_paths": ["research_papers/JEPA/PORTFOLIO_VAR_JEPA_PREDECLARATION_V1.md", "research_papers/JEPA/results/_diagnostics/portfolio_var_jepa_*"]},
+    "PatchCore": {"features_source": "70 flat OOF features; train-only k-center coreset and distance cap.", "labels_payoff": "Same executable payoff; nested Jan–May 2026.", "validation": "Inner quantile cap selection; no direction change.", "metrics": {"economic_configs": 0, "distance_error_positive_horizons": [10, 15], "pf": null, "wr_pct": null}, "terminal_status": "CLOSED", "evidence_paths": ["research_papers/JEPA/PORTFOLIO_PATCHCORE_ABSTENTION_PREDECLARATION_V1.md", "research_papers/JEPA/results/_diagnostics/portfolio_patchcore_*"]},
+    "AdaJEPA shadow/downstream": {"features_source": "Coherent fold spaces; online diagonal adapter and frozen/adapted prediction.", "labels_payoff": "Latent transition metrics, then identical executable downstream payoff.", "validation": "2026-01..05, 15 shadow cells and 210 downstream configurations.", "metrics": {"shadow_cells_improved": 15, "shadow_days_improved": 277, "shadow_days_total": 281, "downstream_configs": 0, "downstream_abstains": 30, "pf": null, "wr_pct": null}, "terminal_status": "CLOSED", "evidence_paths": ["research_papers/JEPA/ADAJEPA_SHADOW_ADAPTER_PREDECLARATION_V1.md", "research_papers/JEPA/ADAJEPA_DOWNSTREAM_PREDECLARATION_V1.md", "research_papers/JEPA/ADAJEPA_PAYOFF_SEPARABILITY_PREDECLARATION_V1.md"]},
+    "h1 vs h6": {"features_source": "Frozen Phys-TD h1 versus h6 latent motion.", "labels_payoff": "Same executable ask→bid downstream.", "validation": "Nested Jan–May 2026, 210 configurations.", "metrics": {"economic_configs": 0, "h6_worse_mae_rmse_direction": true, "pf": null, "wr_pct": null}, "terminal_status": "CLOSED", "evidence_paths": ["research_papers/JEPA/PHYS_TD_H1_VS_H6_PREDECLARATION_V1.md"]},
+    "Spot momentum skip": {"features_source": "Frozen sequence plus backward spot 5/15/30m skip block.", "labels_payoff": "Same executable ask→bid payoff.", "validation": "Nested Jan–May 2026.", "metrics": {"economic_configs": 0, "pf": null, "wr_pct": null}, "terminal_status": "CLOSED", "evidence_paths": ["research_papers/JEPA/PHYS_TD_SPOT_SKIP_PREDECLARATION_V1.md"]},
+    "Directional Semantic JEPA": {"features_source": "Price-only semantic residual sequence.", "labels_payoff": "Open 10:36→13:36, 180m, 1bp; 2026 Jan–Jun.", "validation": "Frozen semantic residual and no-overlap replay.", "metrics": {"pf_qqq_spx_spy": [0.794, 0.906, 0.794], "wr_pct_qqq_spx_spy": [52.85, 50.41, 49.59], "positive_months": [2, 3, 2]}, "terminal_status": "CLOSED", "evidence_paths": ["research_papers/JEPA/DIRECTIONAL_SEMANTIC_JEPA_V1_PREDECLARATION.md", "research_papers/JEPA/DIRECTIONAL_SEMANTIC_JEPA_V1_COLLAPSE_DIAGNOSIS.md"]},
+    "Directional breadth/intraday pooled/option-surface/vol-complex": {"features_source": "15-ticker breadth, pooled windows, 289 option-surface fields, VIX/Cboe lagged curve.", "labels_payoff": "Directional ask→bid proxy; 2025 development and 2026 outcomes.", "validation": "Frozen profiles, chronological selection; no post-hoc rescue.", "metrics": {"breadth_pf_qqq_spx_spy": [0.956, 0.964, 1.049], "intraday_pf_qqq_spx_spy": [0.986, 0.954, 0.964], "option_surface_pf_qqq_spx_spy": [0.853, 0.816, 0.804], "vol_complex_pf_qqq_spx_spy": [1.039, 0.993, 0.898], "wr_pct": null}, "terminal_status": "CLOSED", "evidence_paths": ["research_papers/JEPA/DIRECTIONAL_BREADTH_TRANSMISSION_V1_PREDECLARATION.md", "research_papers/JEPA/DIRECTIONAL_INTRADAY_POOLED_V1_PREDECLARATION.md", "research_papers/JEPA/DIRECTIONAL_OPTION_SURFACE_SPOT_V1_PREDECLARATION.md", "research_papers/JEPA/DIRECTIONAL_VOL_COMPLEX_V1_PREDECLARATION.md"]}
+  },
+  "explicitly_untouched": ["services/", "bots/", "systemd/", "VPS", "web templates", "README_PATCH.md", "external API values", "new model training", "new labels/outcomes", "new payoff reads"],
+  "terminal_claim_policy": {
+    "new_family_status": "BLOCKED_PREDECLARATION",
+    "allowed_historical_positive_claim": "DEVELOPMENT_PASS_REQUIRES_SHADOW",
+    "promotion_requires": ["Phase-1 contract committed", "outcome-free source/data gate", "independent audit", "frozen policy before a future complete calendar month", "historical/live shadow", "parity audit"],
+    "production_live_ready": false,
+    "historical_oos_after_2026_07_24": false
+  }
+}
