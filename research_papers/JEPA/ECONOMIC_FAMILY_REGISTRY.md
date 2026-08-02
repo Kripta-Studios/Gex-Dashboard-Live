@@ -5,6 +5,10 @@ reabrirse, retunearse ni renombrarse sobre los mismos outcomes. El outer V4R2
 abrió 2026 una sola vez y ese periodo queda consumido; producción permanece
 intacta.
 
+La familia `MULTISCALE_LEVEL_INTERACTION_SEQUENCE_V1` queda en `QUEUED` por
+predeclaración y no reabre ninguna familia histórica cerrada ni habilita
+ejecución, payoff, live o producción.
+
 Estados permitidos: `QUEUED`, `ACTIVE`, `FAILED_CAUSALITY`,
 `FAILED_FREQUENCY`, `FAILED_ECONOMIC`, `BLOCKED_DATA`, `PROMOTABLE`, `CLOSED`.
 
@@ -44,6 +48,7 @@ Estados permitidos: `QUEUED`, `ACTIVE`, `FAILED_CAUSALITY`,
 | EVENT_OPTION_EXECQUOTE_FULL_NESTED_MONTHLY_OVERLAY_V1 | LightGBM CALL/PUT y búsqueda exhaustiva mensual de 1.128.960 overlays sobre ask→bid | `FAILED_ECONOMIC` | test-only H1 PF0,585/0,844/1,084, meses positivos1/3/2; auditor refit36/winners18/ledger370 exactos |
 | CROSS_VENUE_CALENDAR_RR_LEADER_V6 | continuación no lineal depth2 sobre las 29 features V4 selladas | `CLOSED` | cerrada sin implementación, predicción ni métrica al priorizar el V4 inmutable |
 | CROSS_VENUE_CALENDAR_RR_LEADER_V7 | logistic pooled rolling12 con refit al inicio de mes | `FAILED_ECONOMIC` | H1 PF0,812/1,080/1,032 y 1/2/3 meses positivos; junio falla SPXW/SPY y julio MTD falla SPXW/SPY; auditor PASS |
+| MULTISCALE_LEVEL_INTERACTION_SEQUENCE_V1 | joint multiscale explicit-level tensor/direct executable utility | `QUEUED` | Phase0 audit + predeclaración; sin métrica/outcome y requiere shadow prospectivo |
 
 No hay una policy promocionable. V7 falla incluso
 al incorporar 2026 pasado en walk-forward mensual y no restaura virginidad a

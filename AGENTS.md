@@ -1,5 +1,40 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-08-02 — Phase0 audit and queued multiscale sequence
+
+El audit de Phase0 quedó committed/pushed en `691e172a`, con
+`MULTISCALE_LEVEL_INTERACTION_SEQUENCE_V1_PHASE0_AUDIT_CONTRACT.md` y el
+inventario compacto en
+`research_papers/JEPA/results/_diagnostics/multiscale_level_interaction_sequence_v1_phase0_audit/INVENTORY.json`.
+El inventario localiza 360804 archivos / 255.740 GiB; no existe un outer
+histórico intacto. Todo hasta 2026-07-24 es `SEEN_DEVELOPMENT`, una afirmación
+histórica favorable como máximo es `DEVELOPMENT_PASS_REQUIRES_SHADOW` y la
+paridad histórica/live sigue bloqueada.
+
+La binding `MULTISCALE_LEVEL_INTERACTION_SEQUENCE_V1_PREDECLARATION.md` está
+escrita antes de abrir cualquier valor raw, outcome o modelo. La autorización
+estrecha actual del usuario supersede el cierre de familia activa únicamente
+para esta familia; las clausuras históricas, causalidad/paridad/shadow y
+producción siguen vigentes. El contrato usa solo fuentes locales existentes,
+sin descarga: un evento en 18 relojes fijos 11:30–12:55, tensor completo exacto
+12x5m+8x15m, 59 slots fijos (53 antiguos + 6 call/put/delta), selección primaria
+de árbol small2x2 y una ablación que elimina todos los canales de niveles. El sidecar separado de
+24 payoffs es CALL/PUT×d25/35/50×60/90/120/180, mismo contrato ask→bid, con
+slippage+commission base/adverse y `reject_while_open`. El test de desarrollo
+es enero2025–junio2026 con selección mensual de seis meses. Solo habrá una
+sensibilidad TCR-VIS actionless: NCE de misma trayectoria a temperatura 0.12 y
+residuo temporal causal del evento con sliced-Wasserstein VIS de peso 0.04; no
+puede rescatar el árbol. Aplican gates por ticker y auditor independiente.
+
+Estado vinculante: `QUEUED_IMPLEMENTATION_OUTCOME_CLOSED`. No se abrió valor raw,
+artefacto de feature/payoff, fit, predicción, métrica económica ni outer payoff.
+La siguiente secuencia autoritativa es commit/push de predeclaración+hándoffs+
+registro → implementar builder outcome-free, tests, evaluator y auditor y
+versionarlos → ejecutar entonces el source/data gate; los outcomes permanecen
+cerrados hasta gate, auditoría y freeze. Este checkpoint supersede solo
+instrucciones `Siguiente:` obsoletas y no borra ni reescribe la evidencia
+histórica.
+
 ### Checkpoint 2026-07-26 — full nested mensual FAIL auditado
 
 Única ejecución económica desde `5b0a44ad`; el intento previo como archivo
