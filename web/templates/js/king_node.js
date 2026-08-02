@@ -8,7 +8,7 @@
     "use strict";
 
     const TAB_ID = "__king_node__";
-    const SCHEMA_VERSION = "king-node.v1";
+    const SCHEMA_VERSION = "king-node.v2";
     let renderSequence = 0;
 
     function finite(value) {
@@ -126,41 +126,89 @@
         );
     }
 
+    function qualityErrorText(error) {
+        if (typeof error === "string") return error;
+
+        if (error && typeof error === "object") {
+            return [
+                error.code,
+                error.component ? `component=${error.component}` : null,
+                error.retryable === true ? "retryable" : null,
+            ]
+                .filter(Boolean)
+                .join(" · ");
+        }
+
+        return "Unknown KING NODE error";
+    }
+
     function normaliseSnapshot(data) {
         if (!data || typeof data !== "object") {
             throw new Error("KING NODE returned an empty response.");
         }
+
         if (data.schema_version !== SCHEMA_VERSION) {
             throw new Error(
                 `Unsupported KING NODE schema: ${data.schema_version || "missing"}`
             );
         }
+
         const errors = Array.isArray(data.quality?.errors)
-            ? data.quality.errors
+            ? data.quality.errors.map(qualityErrorText)
             : [];
+
+        const acceptedStatus = new Set(["live", "last_completed_session"]);
+
         if (
-            data.status === "error" ||
+            !acceptedStatus.has(data.status) ||
+            data.quality?.valid !== true ||
             !Array.isArray(data.rows) ||
             data.rows.length === 0
         ) {
             throw new Error(
                 errors.join(" · ") ||
+                    data.error?.code ||
                     data.message ||
                     "The backend failed closed without a valid strike surface."
             );
         }
+
         return data;
     }
 
     function statusClass(model) {
-        if (model.status === "ok" && !model.delivery?.stale) return "positive";
-        if (model.status === "error") return "negative";
+        if (
+            model.status === "live" &&
+            model.quality?.valid === true &&
+            !model.freshness?.stale
+        ) {
+            return "positive";
+        }
+
+        if (
+            model.status === "unavailable" ||
+            model.quality?.valid === false
+        ) {
+            return "negative";
+        }
+
         return "warning";
     }
 
     function statusLabel(model) {
-        if (model.delivery?.stale) return "STALE";
-        return String(model.quality?.grade || model.status || "UNKNOWN").toUpperCase();
+        if (model.status === "last_completed_session") {
+            return "LAST COMPLETED";
+        }
+
+        if (model.freshness?.stale) {
+            return "STALE";
+        }
+
+        return String(
+            model.quality?.grade ||
+                model.status ||
+                "UNKNOWN"
+        ).toUpperCase();
     }
 
     function metricCard(label, value, hint, formatter = formatExposure) {
@@ -195,18 +243,55 @@
         `;
     }
 
+    function indexItem(model, name) {
+        const full = model.provenance?.indices?.[name];
+        const compact = model.inputs?.indices?.[name];
+
+        return {
+            value: full?.value ?? compact?.value ?? null,
+            status:
+                full?.mode ??
+                full?.status ??
+                compact?.provenance ??
+                "unavailable",
+            age_seconds:
+                full?.inputs_age_seconds ??
+                full?.age_seconds ??
+                null,
+            provider:
+                full?.provider ??
+                full?.source ??
+                model.provenance?.provider ??
+                "unknown",
+            quality:
+                full?.quality ??
+                compact?.quality ??
+                null,
+        };
+    }
+
     function indexCard(label, item, direction) {
         const value = finite(item?.value);
-        const observed = item?.status === "observed";
+
+        const qualityValid =
+            item?.quality && typeof item.quality === "object"
+                ? item.quality.valid !== false
+                : item?.quality !== "unavailable";
+
+        const available =
+            value !== null &&
+            item?.status !== "unavailable" &&
+            qualityValid;
+
         return `
-            <article class="kn-index-card ${observed ? "" : "is-degraded"}">
+            <article class="kn-index-card ${available ? "" : "is-degraded"}">
                 <div>
                     <span>${escapeHtml(label)}</span>
                     <strong>${value === null ? "—" : formatNumber(value, 2)}</strong>
                 </div>
                 <div class="kn-index-meta">
                     <b class="${directionTone(direction)}">${text(direction, "Flat")}</b>
-                    <small>${text(item?.status, "missing")} · ${ageText(item?.age_seconds)}</small>
+                    <small>${text(item?.status, "missing")} · ${ageText(item?.age_seconds)} · ${text(item?.provider)}</small>
                 </div>
             </article>
         `;
@@ -256,11 +341,17 @@
         const warnings = Array.isArray(model.quality?.warnings)
             ? [...model.quality.warnings]
             : [];
-        if (model.delivery?.stale) {
+
+        if (model.freshness?.stale) {
             warnings.unshift(
-                `Web snapshot is ${ageText(model.delivery.age_seconds)}; limit ${ageText(model.delivery.max_age_seconds)}.`
+                `Oldest input is ${ageText(
+                    model.freshness.oldest_age_seconds
+                )}; limit ${ageText(
+                    model.freshness.max_age_seconds
+                )}.`
             );
         }
+
         if (!warnings.length) {
             return `
                 <div class="kn-gate-ok">
@@ -268,15 +359,21 @@
                 </div>
             `;
         }
+
         return `
             <ul class="kn-warning-list">
-                ${warnings.map((warning) => `<li>${escapeHtml(warning)}</li>`).join("")}
+                ${warnings
+                    .map(
+                        (warning) =>
+                            `<li>${escapeHtml(warning)}</li>`
+                    )
+                    .join("")}
             </ul>
         `;
     }
 
     function tableRows(model) {
-        const spot = finite(model.inputs?.spot) || 0;
+        const spot = finite(model.inputs?.underlying?.spot) || 0;
         const rawNode = finite(model.levels?.raw_gamma?.strike);
         const kingNode = finite(model.levels?.king_gamma?.strike);
         const maxGex = finite(model.levels?.max_gex?.strike);
@@ -336,19 +433,53 @@
     }
 
     function renderModel(model) {
-        const spot = finite(model.inputs?.spot) || 0;
+        const underlying = model.inputs?.underlying || {};
+        const expiration = model.inputs?.expiration || {};
+
+        const spot = finite(underlying.spot) || 0;
+        const previousClose = finite(underlying.previous_close);
+
+        const spotChangePct =
+            previousClose !== null && previousClose !== 0
+                ? ((spot - previousClose) / previousClose) * 100
+                : null;
+
+        const timeToExpiryYears =
+            finite(expiration.time_to_expiry_years);
+
+        const dteHours =
+            timeToExpiryYears === null
+                ? null
+                : timeToExpiryYears * 365 * 24;
+
         const regime = model.regime || {};
         const signs = regime.signs || {};
-        const indexSource = model.source?.indices || {};
+
+        const indexSource = {
+            vix: indexItem(model, "vix"),
+            vvix: indexItem(model, "vvix"),
+            vix1d: indexItem(model, "vix1d"),
+        };
+
         const gex = model.monitor?.gex || {};
         const skew = model.monitor?.skew || {};
+        const atmIv = finite(skew.atm_iv);
         const vomma = model.monitor?.vomma || {};
         const tension = model.monitor?.vol_tension || {};
         const extremes = model.monitor?.vix1d_extremes || {};
         const zeroGamma = model.levels?.zero_gamma;
+
+        const generatedTimestamp =
+            new Date(model.generated_at).getTime();
+
         const generatedAge =
-            model.delivery?.age_seconds ??
-            Math.max(0, (Date.now() - new Date(model.generated_at).getTime()) / 1000);
+            finite(model.freshness?.oldest_age_seconds) ??
+            (Number.isFinite(generatedTimestamp)
+                ? Math.max(
+                      0,
+                      (Date.now() - generatedTimestamp) / 1000
+                  )
+                : null);
 
         return `
             <section class="king-node-shell">
@@ -366,21 +497,22 @@
 
                 <div class="kn-contract-note">
                     <strong>Authoritative calculation:</strong>
-                    backend <code>${SCHEMA_VERSION}</code>, Tastytrade SPX/SPXW 0DTE chain and observed ThetaData indices.
+                    backend <code>${SCHEMA_VERSION}</code> using the validated ThetaData v3 SPXW option surface.
                     Raw gamma is <code>(Γcall × OIcall) + (Γput × OIput)</code> per strike.
-                    No VIX/VVIX/VIX1D proxy is substituted when an observed value is absent.
+                    VIX is derived from VIX-option underlying observations; VIX1D and VVIX are reconstructed from authorised option NBBO inputs.
+                    No stale or unavailable input is silently substituted.
                 </div>
 
                 <div class="kn-hero-grid kn-hero-grid-wide">
                     <article class="kn-spot-card">
                         <span>SPX SPOT</span>
                         <strong>${formatPrice(spot)}</strong>
-                        <small class="${tone(model.inputs?.spot_change_pct)}">${formatPercent(model.inputs?.spot_change_pct)} vs previous close · DTE ${formatNumber(model.inputs?.dte_hours, 2)}h</small>
+                        <small class="${tone(spotChangePct)}">${formatPercent(spotChangePct)} vs previous close · DTE ${formatNumber(dteHours, 2)}h</small>
                     </article>
                     <article class="kn-regime-card ${signs.gamma === "Pos" ? "positive" : "negative"}">
                         <span>DEALER REGIME</span>
                         <strong>${text(regime.regime)}</strong>
-                        <small>${text(regime.dealer_action)} · ${text(regime.tactical)}</small>
+                        <small>${text(regime.action)} · ${text(regime.tilt)}</small>
                     </article>
                     <article class="kn-spot-card">
                         <span>VOL TENSION</span>
@@ -407,15 +539,20 @@
                         "ATM CALL IV",
                         {
                             value:
-                                finite(model.inputs?.atm_iv) === null
+                                atmIv === null
                                     ? null
-                                    : model.inputs.atm_iv * 100,
+                                    : atmIv * 100,
                             status:
-                                finite(model.inputs?.atm_iv) === null
-                                    ? "missing"
-                                    : "observed chain",
+                                atmIv === null
+                                    ? "unavailable"
+                                    : "derived_from_option_surface",
                             age_seconds:
-                                model.source?.tastytrade?.age_seconds,
+                                model.freshness?.oldest_age_seconds,
+                            provider:
+                                model.provenance?.provider,
+                            quality: {
+                                valid: atmIv !== null,
+                            },
                         },
                         model.directions?.atm_iv
                     )}
@@ -504,8 +641,9 @@
                         <article class="kn-panel kn-readout">
                             <div class="kn-panel-header"><span>MATRIX & BOX CONTRACT</span><small>${text(regime.reference_mode)}</small></div>
                             <div class="kn-readout-row"><span>Phenomenon</span><strong>${text(regime.phenomenon)}</strong></div>
-                            <div class="kn-readout-row"><span>Dealer is / action</span><strong>${text(regime.dealer_is)} · ${text(regime.dealer_action)}</strong></div>
-                            <div class="kn-readout-row"><span>Tactical / tilt</span><strong>${text(regime.tactical)} · ${text(regime.tilt)}</strong></div>
+                            <div class="kn-readout-row"><span>Dealer is</span><strong>${text(regime.dealer_is)}</strong></div>
+                            <div class="kn-readout-row"><span>Dealer action</span><strong>${text(regime.dealers_action)}</strong></div>
+                            <div class="kn-readout-row"><span>Action / tilt</span><strong>${text(regime.action)} · ${text(regime.tilt)}</strong></div>
                             <div class="kn-readout-row"><span>IV class / intensity / DTE boost</span><strong>${text(regime.iv_raw)} → ${text(regime.iv_box)} · ${formatNumber(regime.iv_intensity, 2)}× · ${formatNumber(regime.dte_boost, 2)}×</strong></div>
                             <div class="kn-readout-row"><span>Matrix key</span><code>${text(regime.matrix_key)}</code></div>
                             <div class="kn-readout-row"><span>Box key</span><code>${text(regime.box_key)}</code></div>
@@ -523,9 +661,10 @@
                             <div class="kn-panel-header"><span>DATA & REFERENCE GATES</span></div>
                             ${warningPanel(model)}
                             <div class="kn-source-line">
-                                <span>Tastytrade</span>
-                                <strong>${text(model.source?.tastytrade?.filename)}</strong>
-                                <small>${ageText(model.source?.tastytrade?.age_seconds)} · ${text(model.source?.tastytrade?.provider)}</small>
+                                <span>Provider</span>
+                                <strong>${text(model.provenance?.provider)} ${text(model.provenance?.api_version)}</strong>
+                                <small>Options ${text(model.provenance?.entitlements?.options)} · Index ${text(model.provenance?.entitlements?.index)} · Rate ${text(model.provenance?.entitlements?.rate)}</small>
+                                <small>MDDS ${text(model.provenance?.readiness?.mdds)} · FPSS ${text(model.provenance?.readiness?.fpss)}</small>
                             </div>
                             <div class="kn-source-line">
                                 <span>Coverage</span>
@@ -539,13 +678,26 @@
         `;
     }
 
-    function renderError(message) {
+    function renderError(error) {
+        const retryable = error?.retryable === true;
+
+        const title = retryable
+            ? "KING NODE UNAVAILABLE"
+            : "KING NODE FAILED CLOSED";
+
+        const explanation = retryable
+            ? "No valid live snapshot is currently available. The service will retry automatically."
+            : "No stale surface or unauthorised volatility input was substituted.";
+
         return `
             <section class="king-node-shell">
                 <div class="kn-error">
-                    <span>KING NODE FAILED CLOSED</span>
-                    <strong>${escapeHtml(message)}</strong>
-                    <p>No stale surface or synthetic volatility index was substituted.</p>
+                    <span>${title}</span>
+                    <strong>${escapeHtml(
+                        error?.message ||
+                            String(error)
+                    )}</strong>
+                    <p>${explanation}</p>
                     <button id="kn-refresh-btn" type="button">TRY AGAIN</button>
                 </div>
             </section>
@@ -560,14 +712,41 @@
     }
 
     async function fetchKingNodeSnapshot() {
-        const response = await authFetch(`/api/king-node?_=${Date.now()}`);
+        const response = await authFetch(
+            `/api/king-node?_=${Date.now()}`
+        );
+
         const data = await safeJsonParse(response);
+
         if (!response.ok) {
-            throw new Error(
-                data?.message ||
-                    `KING NODE API returned HTTP ${response.status}.`
+            const apiError = data?.error;
+            const code = apiError?.code;
+
+            const error = new Error(
+                code
+                    ? [
+                          code,
+                          apiError.component
+                              ? `component=${apiError.component}`
+                              : null,
+                          apiError.retryable === true
+                              ? "retryable"
+                              : null,
+                      ]
+                          .filter(Boolean)
+                          .join(" · ")
+                    : data?.message ||
+                      `KING NODE API returned HTTP ${response.status}.`
             );
+
+            error.code = code;
+            error.retryable =
+                apiError?.retryable === true;
+            error.httpStatus = response.status;
+
+            throw error;
         }
+
         return normaliseSnapshot(data);
     }
 
@@ -587,9 +766,7 @@
             wrapper.innerHTML = renderModel(model);
         } catch (error) {
             if (sequence !== renderSequence || !isKingNodeTabActive()) return;
-            wrapper.innerHTML = renderError(
-                error?.message || String(error)
-            );
+            wrapper.innerHTML = renderError(error);
         }
         bindRefreshButton();
     }
