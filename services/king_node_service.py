@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 from dataclasses import dataclass
+from collections.abc import Mapping, Sequence
 from datetime import UTC, date, datetime, timedelta
 import hashlib
 import inspect
