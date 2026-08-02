@@ -12,13 +12,18 @@ No ThetaData direct index-price endpoint is used or required.
 from __future__ import annotations
 
 import argparse
+from dataclasses import dataclass
 from datetime import UTC, date, datetime, timedelta
+import hashlib
+import inspect
 import json
 import logging
+import math
 import os
 from pathlib import Path
 import re
 import signal
+from statistics import median
 import sys
 import tempfile
 import time
@@ -37,8 +42,32 @@ from modules.king_node_engine import (  # noqa: E402
     build_snapshot,
     initial_state,
 )
+from modules.king_node_contract import (  # noqa: E402
+    INPUT_SCHEMA_VERSION,
+    SCHEMA_VERSION as V2_SCHEMA_VERSION,
+    KingNodeContractError,
+    KingNodeInputError,
+    KingNodeReferenceError,
+    validate_normalized_input,
+    validate_reference,
+)
+from modules.thetadata_adapter import (  # noqa: E402
+    DEFAULT_MAX_AGE_SECONDS as V2_DEFAULT_MAX_AGE_SECONDS,
+    Entitlements,
+    ErrorCode,
+    IndexResult,
+    MarketCalendar,
+    NormalizedOptionInput,
+    SessionState,
+    ThetaDataError,
+    ThetaDataV3Client,
+    ThetaRoute,
+    content_hash,
+    safe_quality_error,
+)
 from modules.volatility_indices import (  # noqa: E402
     ET,
+    OptionQuote,
     VolatilityDataError,
     calculate_vix1d,
     calculate_vvix,
@@ -731,6 +760,667 @@ class KingNodeService:
         return payload
 
 
+@dataclass(frozen=True)
+class V2ArtifactPaths:
+    """Private artifact locations; never serialised into a snapshot."""
+
+    current_attempt: Path
+    live: Path
+    last_completed: Path
+    state: Path
+    health: Path
+
+
+def _v2_paths_from_environment() -> V2ArtifactPaths:
+    root = Path(os.getenv("KING_NODE_ARTIFACT_DIR", "/var/lib/king-node"))
+    live = Path(os.getenv("KING_NODE_LIVE_SNAPSHOT", os.getenv("KING_NODE_OUTPUT", root / "latest.json")))
+    return V2ArtifactPaths(
+        current_attempt=Path(os.getenv("KING_NODE_CURRENT_ATTEMPT", root / "current-attempt.json")),
+        live=live,
+        last_completed=Path(os.getenv("KING_NODE_LAST_COMPLETED_SNAPSHOT", root / "last-completed.json")),
+        state=Path(os.getenv("KING_NODE_STATE_FILE", root / "state.json")),
+        health=Path(os.getenv("KING_NODE_HEALTH_STATE", root / "health.json")),
+    )
+
+
+def _read_v2_state(path: Path) -> dict[str, Any]:
+    if not path.is_file():
+        return {"schema_version": "king-node.v2-state", "history": {}}
+    try:
+        payload = _load_json_object(path)
+    except (OSError, ValueError, json.JSONDecodeError):
+        return {"schema_version": "king-node.v2-state", "history": {}}
+    if payload.get("schema_version") != "king-node.v2-state":
+        return {"schema_version": "king-node.v2-state", "history": {}}
+    return payload
+
+
+def _safe_error_code(exc: Exception, *, component: str) -> dict[str, Any]:
+    if isinstance(exc, ThetaDataError):
+        return exc.safe_dict(component)
+    if isinstance(exc, (KingNodeContractError, VolatilityDataError)):
+        return {
+            "code": "INPUT_INCOHERENT",
+            "component": component,
+            "retryable": False,
+        }
+    return {"code": "PRODUCER_INTERNAL", "component": component, "retryable": False}
+
+
+def _no_path_payload(value: Any) -> Any:
+    """Reject host-path/error text before it can enter a sealed artifact."""
+    if isinstance(value, Mapping):
+        safe: dict[str, Any] = {}
+        for key, item in value.items():
+            name = str(key)
+            if name.lower() in {"path", "source_path", "snapshot_path", "exception", "traceback", "stack"}:
+                continue
+            safe[name] = _no_path_payload(item)
+        return safe
+    if isinstance(value, list):
+        return [_no_path_payload(item) for item in value]
+    if isinstance(value, str) and (
+        "file://" in value.lower()
+        or "/home/" in value.lower()
+        or "/etc/" in value.lower()
+        or "/var/" in value.lower()
+    ):
+        return "[redacted]"
+    return value
+
+
+class KingNodeV2Service:
+    """Theta-only v2 producer with atomic valid/live and completed-session paths.
+
+    The class writes an attempt artifact for every cycle.  It only replaces the
+    live artifact after provider, session, input, reference and engine validation
+    all succeed.  A failed retry cannot overwrite a previous valid live artifact.
+    """
+
+    def __init__(
+        self,
+        *,
+        thetadata_url: str,
+        reference_path: Path,
+        artifacts: V2ArtifactPaths | None = None,
+        max_age_seconds: float = V2_DEFAULT_MAX_AGE_SECONDS,
+        min_underlying_observations: int = DEFAULT_MIN_UNDERLYING_OBSERVATIONS,
+        max_underlying_dispersion_pct: float = DEFAULT_MAX_UNDERLYING_DISPERSION_PCT,
+        min_valid_strikes: int = DEFAULT_MIN_VALID_STRIKES,
+        contract_multiplier: float = 100.0,
+        theta_client: ThetaDataV3Client | None = None,
+        calendar: MarketCalendar | None = None,
+        entitlements: Entitlements | None = None,
+        engine_builder: Callable[..., tuple[dict[str, Any], dict[str, Any]]] | None = None,
+    ) -> None:
+        self.artifacts = artifacts or _v2_paths_from_environment()
+        self.reference_path = reference_path
+        self.max_age_seconds = float(max_age_seconds)
+        self.min_underlying_observations = int(min_underlying_observations)
+        self.max_underlying_dispersion_pct = float(max_underlying_dispersion_pct)
+        self.min_valid_strikes = int(min_valid_strikes)
+        self.contract_multiplier = float(contract_multiplier)
+        self.calendar = calendar or MarketCalendar()
+        self.theta = theta_client or ThetaDataV3Client(thetadata_url)
+        self._owns_theta = theta_client is None
+        self.entitlements = entitlements or Entitlements(
+            stock=os.getenv("KING_NODE_STOCK_TIER", "FREE"),
+            options=os.getenv("KING_NODE_OPTIONS_TIER", "STANDARD"),
+            index=os.getenv("KING_NODE_INDEX_TIER", "FREE"),
+            rate=os.getenv("KING_NODE_RATE_TIER", "FREE"),
+        )
+        self.engine_builder = engine_builder
+        if self.max_age_seconds <= 0 or self.contract_multiplier <= 0:
+            raise ValueError("v2 freshness and contract multiplier must be positive")
+
+    def close(self) -> None:
+        if self._owns_theta:
+            self.theta.close()
+
+    def _read_reference(self):
+        try:
+            reference = _load_json_object(self.reference_path)
+        except (OSError, ValueError, json.JSONDecodeError) as exc:
+            raise KingNodeReferenceError("verified v2 reference is unavailable") from exc
+        return validate_reference(reference)
+
+    def _write_health(
+        self,
+        *,
+        session: Any,
+        readiness: Mapping[str, Any] | None,
+        status: str,
+        error: Mapping[str, Any] | None = None,
+    ) -> None:
+        payload = {
+            "schema_version": V2_SCHEMA_VERSION,
+            "process": {"status": status},
+            "provider": readiness or {"status": "unknown"},
+            "entitlement": self.entitlements.to_dict(),
+            "refresh": {"status": status, "max_age_seconds": self.max_age_seconds},
+            "session": session.to_dict(),
+        }
+        if error:
+            payload["refresh"]["error"] = dict(error)
+        _atomic_write_json(self.artifacts.health, _no_path_payload(payload))
+
+    def _unavailable_snapshot(
+        self,
+        *,
+        now: datetime,
+        session: Any,
+        error: Mapping[str, Any],
+        readiness: Mapping[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        timestamp = iso_utc(now)
+        return _no_path_payload(
+            {
+                "schema_version": V2_SCHEMA_VERSION,
+                "status": "unavailable",
+                "generated_at": timestamp,
+                "calculation_at": timestamp,
+                "publication_at": timestamp,
+                "session": session.to_dict(),
+                "freshness": {
+                    "max_age_seconds": self.max_age_seconds,
+                    "stale": True,
+                    "oldest_observation_at": None,
+                },
+                "provenance": {
+                    "provider": "ThetaData",
+                    "api_version": "v3",
+                    "entitlements": self.entitlements.to_dict(),
+                    "readiness": readiness or {"status": "unknown"},
+                },
+                "reference": {"status": "unavailable"},
+                "formula_coverage": {"status": "unavailable"},
+                "quality": {"valid": False, "grade": "UNAVAILABLE", "errors": [dict(error)], "warnings": []},
+                "inputs": {},
+                "rows": [],
+                "totals": {},
+                "regime": {},
+                "levels": {},
+                "monitor": {},
+                "directions": {},
+                "presentation": {},
+            }
+        )
+
+    @staticmethod
+    def _rows_to_quotes(rows: Sequence[NormalizedOptionInput]) -> list[OptionQuote]:
+        result: list[OptionQuote] = []
+        for row in rows:
+            try:
+                timestamp = parse_timestamp(row.quote_timestamp)
+                expiry = parse_expiration(row.expiry)
+            except (TypeError, ValueError):
+                timestamp, expiry = None, None
+            if timestamp is not None and expiry is not None:
+                result.append(
+                    OptionQuote(
+                        row.strike,
+                        "C" if row.right == "CALL" else "P",
+                        row.bid,
+                        row.ask,
+                        timestamp,
+                        expiry,
+                    )
+                )
+        return result
+
+    def _validated_underlying(self, rows: Sequence[NormalizedOptionInput]) -> tuple[float, str]:
+        observations: list[tuple[float, datetime]] = []
+        for row in rows:
+            if row.underlying_price is None or row.underlying_timestamp is None:
+                continue
+            timestamp = parse_timestamp(row.underlying_timestamp)
+            if timestamp is not None:
+                observations.append((row.underlying_price, timestamp))
+        if len(observations) < self.min_underlying_observations:
+            raise KingNodeInputError("insufficient fresh option underlying observations")
+        values = [value for value, _ in observations]
+        center = median(values)
+        if center <= 0:
+            raise KingNodeInputError("option underlying proxy is invalid")
+        dispersion = (max(values) - min(values)) / center * 100.0
+        if dispersion > self.max_underlying_dispersion_pct:
+            raise KingNodeInputError("option underlying proxy dispersion is invalid")
+        newest = max(timestamp for _, timestamp in observations)
+        return float(center), iso_utc(newest)
+
+    def _index_unavailable(self, name: str, reason: str) -> IndexResult:
+        return IndexResult(
+            name=name,
+            value=None,
+            mode="unavailable",
+            provider="ThetaData",
+            as_of=None,
+            session_date=None,
+            inputs_age_seconds=None,
+            methodology_version="cboe-variance-v1",
+            diagnostics={"reason": reason},
+            quality={"valid": False, "reasons": [reason]},
+        )
+
+    def _reconstruct_indices(
+        self,
+        *,
+        now: datetime,
+        spxw_expirations: Sequence[date],
+        spxw_current: Sequence[NormalizedOptionInput],
+        rate: Mapping[str, Any],
+    ) -> tuple[dict[str, dict[str, Any]], dict[str, Any]]:
+        """Reconstruct all authorised volatility values or return explicit gaps."""
+        details: dict[str, Any] = {}
+        rate_decimal = float(rate["value_decimal"])
+        result: dict[str, IndexResult] = {}
+        try:
+            vix_expirations = self.theta.expirations("VIX")
+            eligible_vix = [expiry for expiry in vix_expirations if expiry > now.astimezone(ET).date()]
+            if not eligible_vix:
+                raise ThetaDataError(ErrorCode.PROVIDER_NO_DATA, route=ThetaRoute.OPTION_EXPIRATIONS)
+            vix_near = eligible_vix[0]
+            vix_rows = self.theta.option_chain(
+                symbol="VIX", expiration=vix_near, now=now, rate=rate_decimal,
+                calendar=self.calendar, max_age_seconds=self.max_age_seconds,
+            )
+            vix_value, vix_at = self._validated_underlying(vix_rows)
+            result["vix"] = IndexResult(
+                name="VIX", value=vix_value, mode="reconstructed", provider="ThetaData",
+                as_of=vix_at, session_date=now.astimezone(ET).date().isoformat(),
+                inputs_age_seconds=max(0.0, (now - parse_timestamp(vix_at)).total_seconds()),
+                methodology_version="thetadata_option_underlying_proxy_median_v1",
+                diagnostics={"expiration": vix_near.isoformat(), "quote_count": len(vix_rows)},
+                quality={"valid": True, "reasons": []},
+            )
+            details["vix_rows"] = vix_rows
+            details["vix_expirations"] = vix_expirations
+        except Exception as exc:
+            result["vix"] = self._index_unavailable("VIX", _safe_error_code(exc, component="vix")["code"])
+            details["vix_rows"] = []
+            details["vix_expirations"] = []
+
+        try:
+            near, next_expiry = choose_vix1d_expirations(spxw_expirations, now)
+            if near != now.astimezone(ET).date():
+                raise VolatilityDataError("VIX1D near expiration does not match current session")
+            current = spxw_current if near == parse_expiration(spxw_current[0].expiry) else self.theta.option_chain(
+                symbol="SPXW", expiration=near, now=now, rate=rate_decimal,
+                calendar=self.calendar, max_age_seconds=self.max_age_seconds,
+            )
+            next_rows = self.theta.option_chain(
+                symbol="SPXW", expiration=next_expiry, now=now, rate=rate_decimal,
+                calendar=self.calendar, max_age_seconds=self.max_age_seconds,
+            )
+            value, diagnostics, persisted = calculate_vix1d(
+                self._rows_to_quotes(current), self._rows_to_quotes(next_rows), now=now,
+                near_expiration=near, next_expiration=next_expiry, rate_decimal=rate_decimal,
+                min_valid_strikes=self.min_valid_strikes,
+                session_clock=lambda clock_now, expiry: self.calendar.option_session_minutes_until(clock_now, expiry),
+            )
+            quote_times = [parse_timestamp(item.quote_timestamp) for item in [*current, *next_rows]]
+            quote_times = [item for item in quote_times if item is not None]
+            newest = max(quote_times)
+            result["vix1d"] = IndexResult(
+                name="VIX1D", value=value, mode="reconstructed", provider="ThetaData",
+                as_of=iso_utc(newest), session_date=now.astimezone(ET).date().isoformat(),
+                inputs_age_seconds=max(0.0, (now - newest).total_seconds()),
+                methodology_version="cboe_vix1d_variance_replica_v1",
+                diagnostics=diagnostics,
+                quality={"valid": True, "reasons": []},
+            )
+            details["vix1d_persisted_term"] = persisted
+        except Exception as exc:
+            result["vix1d"] = self._index_unavailable("VIX1D", _safe_error_code(exc, component="vix1d")["code"])
+
+        try:
+            vix_expirations = details.get("vix_expirations", [])
+            near_vvix, next_vvix = choose_vvix_expirations(vix_expirations, now)
+            existing_vix = details.get("vix_rows", [])
+            near_rows = existing_vix if existing_vix and parse_expiration(existing_vix[0].expiry) == near_vvix else self.theta.option_chain(
+                symbol="VIX", expiration=near_vvix, now=now, rate=rate_decimal,
+                calendar=self.calendar, max_age_seconds=self.max_age_seconds,
+            )
+            next_rows = self.theta.option_chain(
+                symbol="VIX", expiration=next_vvix, now=now, rate=rate_decimal,
+                calendar=self.calendar, max_age_seconds=self.max_age_seconds,
+            )
+            value, diagnostics = calculate_vvix(
+                self._rows_to_quotes(near_rows), self._rows_to_quotes(next_rows), now=now,
+                near_expiration=near_vvix, next_expiration=next_vvix,
+                rate_decimal=rate_decimal, min_valid_strikes=self.min_valid_strikes,
+            )
+            quote_times = [parse_timestamp(item.quote_timestamp) for item in [*near_rows, *next_rows]]
+            quote_times = [item for item in quote_times if item is not None]
+            newest = max(quote_times)
+            result["vvix"] = IndexResult(
+                name="VVIX", value=value, mode="reconstructed", provider="ThetaData",
+                as_of=iso_utc(newest), session_date=now.astimezone(ET).date().isoformat(),
+                inputs_age_seconds=max(0.0, (now - newest).total_seconds()),
+                methodology_version="cboe_vvix_variance_replica_v1",
+                diagnostics=diagnostics,
+                quality={"valid": True, "reasons": []},
+            )
+        except Exception as exc:
+            result["vvix"] = self._index_unavailable("VVIX", _safe_error_code(exc, component="vvix")["code"])
+
+        contract = {
+            name: {
+                "value": item.value,
+                "provenance": item.mode,
+                "timestamp": item.as_of,
+                "methodology": item.methodology_version,
+                "quality": "valid" if item.quality.get("valid") else "unavailable",
+            }
+            for name, item in result.items()
+        }
+        details["full"] = {name: item.to_dict() for name, item in result.items()}
+        return contract, details
+
+    def _normalized_input(
+        self,
+        *,
+        now: datetime,
+        session: Any,
+        state: Mapping[str, Any],
+        readiness: Mapping[str, Any],
+    ) -> tuple[dict[str, Any], dict[str, Any]]:
+        if not session.live:
+            raise ThetaDataError(ErrorCode.CALENDAR_CLOSED, retryable=False)
+        if readiness.get("mdds") != "CONNECTED":
+            raise ThetaDataError(ErrorCode.PROVIDER_DISCONNECTED, retryable=True)
+        expirations = self.theta.expirations("SPXW")
+        session_date = now.astimezone(ET).date()
+        if session_date not in expirations:
+            raise ThetaDataError(ErrorCode.PROVIDER_NO_DATA, route=ThetaRoute.OPTION_EXPIRATIONS)
+        rate = self.theta.sofr(now=now)
+        spxw_rows = self.theta.option_chain(
+            symbol="SPXW", expiration=session_date, now=now,
+            rate=float(rate["value_decimal"]), calendar=self.calendar,
+            max_age_seconds=self.max_age_seconds,
+        )
+        if not spxw_rows:
+            raise ThetaDataError(ErrorCode.PROVIDER_NO_DATA, route=ThetaRoute.OPTION_QUOTE)
+        spot, spot_at = self._validated_underlying(spxw_rows)
+        previous_close = state.get("previous_close")
+        previous_date = state.get("previous_close_session_date")
+        if not isinstance(previous_close, (int, float)) or previous_close <= 0 or previous_date == session.trading_date:
+            raise KingNodeInputError("validated previous completed-session spot is unavailable")
+        expiry_minutes = self.calendar.calendar_minutes_until(now, session_date)
+        time_to_expiry_years = expiry_minutes / (365.0 * 24.0 * 60.0)
+        if time_to_expiry_years <= 0:
+            raise KingNodeInputError("0DTE contract has no positive time remaining")
+        indices, index_details = self._reconstruct_indices(
+            now=now, spxw_expirations=expirations, spxw_current=spxw_rows, rate=rate
+        )
+        missing = [name for name, item in indices.items() if item["provenance"] == "unavailable"]
+        if missing:
+            raise KingNodeInputError("required authorised volatility inputs are unavailable")
+        rows: list[dict[str, Any]] = []
+        for item in spxw_rows:
+            if (
+                item.underlying_price is None
+                or item.underlying_timestamp is None
+                or item.open_interest is None
+                or item.open_interest_source_date is None
+                or item.iv is None
+                or item.delta is None
+                or item.theta is None
+                or len(item.advanced_greeks) != 8
+            ):
+                continue
+            rows.append(
+                {
+                    "symbol": "SPXW",
+                    "root": "SPXW",
+                    "expiry": item.expiry,
+                    "strike": item.strike,
+                    "right": item.right,
+                    "bid": item.bid,
+                    "ask": item.ask,
+                    "provider_timestamp": item.quote_timestamp,
+                    "open_interest": item.open_interest,
+                    "oi_source_date": item.open_interest_source_date,
+                    "iv": item.iv,
+                    "delta": item.delta,
+                    "theta": item.theta,
+                    "underlying": item.underlying_price,
+                    "underlying_timestamp": item.underlying_timestamp,
+                    "rate": float(rate["value_decimal"]),
+                    "time_to_expiry_years": time_to_expiry_years,
+                    "greeks": {key: value.to_dict() for key, value in item.advanced_greeks.items()},
+                }
+            )
+        if not rows:
+            raise KingNodeInputError("no fully normalised eligible SPXW option rows")
+        source = {
+            "provider": "ThetaData",
+            "api_version": "v3",
+            "entitlements": self.entitlements.to_dict(),
+            "readiness": dict(readiness),
+            "underlying_provenance": "option_underlying_proxy",
+            "routes": [
+                ThetaRoute.OPTION_EXPIRATIONS.value,
+                ThetaRoute.OPTION_QUOTE.value,
+                ThetaRoute.OPTION_FIRST_ORDER.value,
+                ThetaRoute.OPTION_OPEN_INTEREST.value,
+                ThetaRoute.RATE_EOD.value,
+            ],
+            "input_hash": content_hash(rows),
+        }
+        raw = {
+            "schema_version": INPUT_SCHEMA_VERSION,
+            "as_of": iso_utc(now),
+            "session_date": session.trading_date,
+            "underlying": {
+                "symbol": "SPXW",
+                "root": "SPXW",
+                "spot": spot,
+                "previous_close": float(previous_close),
+                "timestamp": spot_at,
+            },
+            "expiration": {
+                "expiry": session_date.isoformat(),
+                "time_to_expiry_years": time_to_expiry_years,
+                "rate": float(rate["value_decimal"]),
+                "contract_multiplier": self.contract_multiplier,
+            },
+            "option_rows": rows,
+            "indices": indices,
+            "state": dict(state),
+            "source": source,
+        }
+        return validate_normalized_input(raw).as_dict(), index_details
+
+    @staticmethod
+    def _engine_v2_builder() -> Callable[..., tuple[dict[str, Any], dict[str, Any]]]:
+        from modules import king_node_engine
+
+        builder = getattr(king_node_engine, "build_snapshot", None)
+        if not callable(builder):
+            raise KingNodeContractError("v2 engine entrypoint is unavailable")
+        parameters = inspect.signature(builder).parameters
+        if "normalized_input" not in parameters:
+            raise KingNodeContractError("v2 engine entrypoint is not installed")
+        return builder
+
+    def _build_live_snapshot(
+        self,
+        *,
+        normalized_input: Mapping[str, Any],
+        reference: Any,
+        state: Mapping[str, Any],
+        index_details: Mapping[str, Any],
+        now: datetime,
+        session: Any,
+        readiness: Mapping[str, Any],
+    ) -> tuple[dict[str, Any], dict[str, Any]]:
+        builder = self.engine_builder or self._engine_v2_builder()
+        result = builder(
+            dict(normalized_input),
+            volatility=None,
+            state=dict(state),
+            source_meta={"provider": "ThetaData", "input_hash": normalized_input["source"]["input_hash"]},
+            reference=reference.raw,
+            generated_at=now,
+            session_date=session.trading_date,
+            market_minute=now.astimezone(ET).hour * 60 + now.astimezone(ET).minute,
+        )
+        if not isinstance(result, tuple) or len(result) != 2:
+            raise KingNodeContractError("v2 engine returned an invalid result")
+        engine_snapshot, next_state = result
+        if not isinstance(engine_snapshot, dict) or not isinstance(next_state, dict):
+            raise KingNodeContractError("v2 engine returned invalid snapshot/state")
+        quote_times = [parse_timestamp(row["provider_timestamp"]) for row in normalized_input["option_rows"]]
+        oldest = min(item for item in quote_times if item is not None)
+        age = max(0.0, (now - oldest).total_seconds())
+        if age > self.max_age_seconds:
+            raise ThetaDataError(ErrorCode.STALE_INPUT, retryable=True)
+        timestamp = iso_utc(now)
+        snapshot = dict(engine_snapshot)
+        snapshot.update(
+            {
+                "schema_version": V2_SCHEMA_VERSION,
+                "status": "live",
+                "generated_at": timestamp,
+                "calculation_at": timestamp,
+                "publication_at": timestamp,
+                "session": session.to_dict(),
+                "freshness": {
+                    "max_age_seconds": self.max_age_seconds,
+                    "oldest_observation_at": iso_utc(oldest),
+                    "oldest_age_seconds": age,
+                    "stale": False,
+                },
+                "provenance": {
+                    "provider": "ThetaData",
+                    "api_version": "v3",
+                    "entitlements": self.entitlements.to_dict(),
+                    "readiness": dict(readiness),
+                    "underlying": "option_underlying_proxy",
+                    "input_hash": normalized_input["source"]["input_hash"],
+                    "indices": index_details.get("full", {}),
+                },
+                "reference": {
+                    "status": "verified",
+                    "canonical_checksum": reference.checksum,
+                    "workbook_sha256": reference.authority.get("workbook_sha256"),
+                    "catalogue_sha256": reference.authority.get("catalogue_sha256"),
+                },
+                "formula_coverage": {
+                    "status": "verified",
+                    "checksum": reference.authority.get("formula_coverage_checksum"),
+                },
+                "inputs": {
+                    "underlying": normalized_input["underlying"],
+                    "expiration": normalized_input["expiration"],
+                    "indices": normalized_input["indices"],
+                },
+            }
+        )
+        existing_quality = snapshot.get("quality") if isinstance(snapshot.get("quality"), dict) else {}
+        engine_errors = existing_quality.get("errors", [])
+        if engine_errors:
+            raise KingNodeContractError("v2 engine reported invalid quality")
+        snapshot["quality"] = {
+            **existing_quality,
+            "valid": True,
+            "grade": "LIVE",
+            "errors": [],
+            "warnings": list(existing_quality.get("warnings", [])),
+        }
+        for required in ("rows", "totals", "regime", "levels", "monitor", "directions", "presentation"):
+            if required not in snapshot or not isinstance(snapshot[required], (dict, list)):
+                raise KingNodeContractError(f"v2 engine snapshot is missing {required}")
+        snapshot = _no_path_payload(snapshot)
+        snapshot["provenance"]["content_hash"] = content_hash(snapshot)
+        return snapshot, next_state
+
+    def _seal_completed_session(self, *, now: datetime, session: Any) -> dict[str, Any] | None:
+        if session.state is not SessionState.POST_CLOSE:
+            return None
+        try:
+            live = _load_json_object(self.artifacts.live)
+        except (OSError, ValueError, json.JSONDecodeError):
+            return None
+        if (
+            live.get("schema_version") != V2_SCHEMA_VERSION
+            or live.get("status") != "live"
+            or live.get("session", {}).get("trading_date") != session.trading_date
+            or live.get("quality", {}).get("valid") is not True
+        ):
+            return None
+        sealed = _no_path_payload(dict(live))
+        sealed["status"] = "last_completed_session"
+        sealed["publication_at"] = iso_utc(now)
+        sealed["session"] = {**dict(live.get("session", {})), "completed_session_date": session.trading_date}
+        sealed["freshness"] = {
+            **dict(live.get("freshness", {})),
+            "kind": "sealed_completed_session",
+            "stale": False,
+            "sealed_at": iso_utc(now),
+        }
+        sealed.setdefault("provenance", {})["content_hash"] = content_hash(sealed)
+        _atomic_write_json(self.artifacts.last_completed, sealed)
+        spot = live.get("inputs", {}).get("underlying", {}).get("spot")
+        if isinstance(spot, (int, float)) and not isinstance(spot, bool) and spot > 0:
+            state = _read_v2_state(self.artifacts.state)
+            state["previous_close"] = float(spot)
+            state["previous_close_session_date"] = session.trading_date
+            state["schema_version"] = "king-node.v2-state"
+            _atomic_write_json(self.artifacts.state, _no_path_payload(state))
+        return sealed
+
+    def run_once(self, now: datetime | None = None) -> dict[str, Any]:
+        now = (now or datetime.now(UTC)).astimezone(UTC)
+        session = self.calendar.session_at(now)
+        readiness: Mapping[str, Any] | None = None
+        if not session.live:
+            sealed = self._seal_completed_session(now=now, session=session)
+            error = {
+                "code": ErrorCode.CALENDAR_CLOSED.value,
+                "component": "session",
+                "retryable": False,
+            }
+            attempt = self._unavailable_snapshot(now=now, session=session, error=error)
+            _atomic_write_json(self.artifacts.current_attempt, attempt)
+            self._write_health(session=session, readiness=None, status="closed", error=error)
+            return sealed or attempt
+        try:
+            readiness = self.theta.readiness(now=now).to_dict()
+            state = _read_v2_state(self.artifacts.state)
+            normalized_input, index_details = self._normalized_input(
+                now=now, session=session, state=state, readiness=readiness
+            )
+            reference = self._read_reference()
+            snapshot, next_state = self._build_live_snapshot(
+                normalized_input=normalized_input,
+                reference=reference,
+                state=state,
+                index_details=index_details,
+                now=now,
+                session=session,
+                readiness=readiness,
+            )
+            next_state = dict(next_state)
+            next_state["schema_version"] = "king-node.v2-state"
+            next_state["last_live_session_date"] = session.trading_date
+            next_state["last_live_spot"] = normalized_input["underlying"]["spot"]
+            _atomic_write_json(self.artifacts.current_attempt, snapshot)
+            _atomic_write_json(self.artifacts.state, _no_path_payload(next_state))
+            _atomic_write_json(self.artifacts.live, snapshot)
+            self._write_health(session=session, readiness=readiness, status="ready")
+            return snapshot
+        except Exception as exc:
+            error = _safe_error_code(exc, component="refresh")
+            attempt = self._unavailable_snapshot(
+                now=now, session=session, error=error, readiness=readiness
+            )
+            _atomic_write_json(self.artifacts.current_attempt, attempt)
+            self._write_health(session=session, readiness=readiness, status="unavailable", error=error)
+            return attempt
+
+
 def _positive_int(value: str) -> int:
     parsed = int(value)
     if parsed <= 0:
@@ -744,18 +1434,13 @@ def _optional_float_env(name: str) -> float | None:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description="ThetaData-only KING NODE v2 producer")
     parser.add_argument(
         "--interval",
         type=_positive_int,
         default=int(os.getenv("KING_NODE_INTERVAL_SECONDS", DEFAULT_INTERVAL_SECONDS)),
     )
     parser.add_argument("--once", action="store_true")
-    parser.add_argument(
-        "--tasty-data-dir",
-        type=Path,
-        default=Path(os.getenv("KING_NODE_TASTY_DATA_DIR", PROJECT_ROOT / "json_data")),
-    )
     parser.add_argument(
         "--output",
         type=Path,
@@ -773,6 +1458,36 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
+        "--current-attempt",
+        type=Path,
+        default=Path(
+            os.getenv(
+                "KING_NODE_CURRENT_ATTEMPT",
+                Path(os.getenv("KING_NODE_OUTPUT", "/var/lib/king-node/latest.json")).with_name("current-attempt.json"),
+            )
+        ),
+    )
+    parser.add_argument(
+        "--last-completed",
+        type=Path,
+        default=Path(
+            os.getenv(
+                "KING_NODE_LAST_COMPLETED_SNAPSHOT",
+                Path(os.getenv("KING_NODE_OUTPUT", "/var/lib/king-node/latest.json")).with_name("last-completed.json"),
+            )
+        ),
+    )
+    parser.add_argument(
+        "--health-output",
+        type=Path,
+        default=Path(
+            os.getenv(
+                "KING_NODE_HEALTH_STATE",
+                Path(os.getenv("KING_NODE_OUTPUT", "/var/lib/king-node/latest.json")).with_name("health.json"),
+            )
+        ),
+    )
+    parser.add_argument(
         "--reference",
         type=Path,
         default=Path(
@@ -786,16 +1501,10 @@ def build_parser() -> argparse.ArgumentParser:
         default=os.getenv("THETADATA_URL", "http://127.0.0.1:25503/v3"),
     )
     parser.add_argument(
-        "--tasty-max-age",
-        type=_positive_int,
-        default=int(os.getenv("KING_NODE_TASTY_MAX_AGE_SECONDS", DEFAULT_TASTY_MAX_AGE_SECONDS)),
-    )
-    parser.add_argument(
         "--option-max-age",
         type=_positive_int,
-        default=int(os.getenv("KING_NODE_THETA_OPTION_MAX_AGE_SECONDS", DEFAULT_OPTION_MAX_AGE_SECONDS)),
+        default=int(os.getenv("KING_NODE_LIVE_MAX_AGE_SECONDS", V2_DEFAULT_MAX_AGE_SECONDS)),
     )
-    parser.add_argument("--no-theta", action="store_true")
     parser.add_argument(
         "--log-level",
         choices=("DEBUG", "INFO", "WARNING", "ERROR"),
@@ -811,17 +1520,17 @@ def main(argv: list[str] | None = None) -> int:
         level=getattr(logging, args.log_level),
         format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
     )
-    service = KingNodeService(
-        tasty_data_dir=args.tasty_data_dir,
-        output_path=args.output,
-        state_path=args.state_file,
+    service = KingNodeV2Service(
+        artifacts=V2ArtifactPaths(
+            current_attempt=args.current_attempt,
+            live=args.output,
+            last_completed=args.last_completed,
+            state=args.state_file,
+            health=args.health_output,
+        ),
         reference_path=args.reference,
         thetadata_url=args.thetadata_url,
-        tasty_max_age_seconds=args.tasty_max_age,
-        option_max_age_seconds=args.option_max_age,
-        expiration_cache_seconds=int(
-            os.getenv("KING_NODE_THETA_EXPIRATION_CACHE_SECONDS", DEFAULT_EXPIRATION_CACHE_SECONDS)
-        ),
+        max_age_seconds=args.option_max_age,
         min_underlying_observations=int(
             os.getenv(
                 "KING_NODE_THETA_MIN_UNDERLYING_OBSERVATIONS",
@@ -839,10 +1548,6 @@ def main(argv: list[str] | None = None) -> int:
                 "KING_NODE_THETA_MIN_VALID_STRIKES_PER_TERM", DEFAULT_MIN_VALID_STRIKES
             )
         ),
-        rate_symbol=os.getenv("KING_NODE_RATE_SYMBOL", "SOFR"),
-        rate_lookback_days=int(os.getenv("KING_NODE_RATE_LOOKBACK_DAYS", "10")),
-        risk_free_rate_percent=_optional_float_env("KING_NODE_RISK_FREE_RATE_PERCENT"),
-        theta_enabled=not args.no_theta,
     )
     running = True
 
@@ -856,29 +1561,14 @@ def main(argv: list[str] | None = None) -> int:
     try:
         while running:
             cycle_started = time.monotonic()
-            try:
-                snapshot = service.run_once()
-                LOGGER.info(
-                    "Published KING NODE status=%s quality=%s strikes=%s raw_gamma_level=%s",
-                    snapshot.get("status"),
-                    snapshot.get("quality", {}).get("grade"),
-                    snapshot.get("quality", {}).get("strike_count"),
-                    snapshot.get("levels", {}).get("raw_gamma", {}).get("strike"),
-                )
-            except (
-                KingNodeDataError,
-                VolatilityDataError,
-                FileNotFoundError,
-                OSError,
-                RuntimeError,
-                ValueError,
-            ) as exc:
-                service.publish_error(exc)
-                LOGGER.exception("KING NODE cycle failed closed")
-                if args.once:
-                    return 1
+            snapshot = service.run_once()
+            LOGGER.info(
+                "KING NODE v2 refresh status=%s quality=%s",
+                snapshot.get("status"),
+                snapshot.get("quality", {}).get("grade"),
+            )
             if args.once:
-                break
+                return 0 if snapshot.get("status") in {"live", "last_completed_session"} else 1
             deadline = max(0.0, args.interval - (time.monotonic() - cycle_started))
             while running and deadline > 0:
                 wait = min(deadline, 1.0)

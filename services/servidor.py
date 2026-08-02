@@ -1,19 +1,25 @@
-import uuid
+import base64
+from dataclasses import dataclass
+from datetime import UTC, datetime
+import hashlib
+import hmac
 import json
+import logging
+import os
+from pathlib import Path
+import glob
+import http.server
+import re
+import socketserver
 import threading
 import time
-import http.server
-import socketserver
-import os
-import glob
 import urllib.parse
-import re
-import logging
-from datetime import datetime
+import uuid
 from qiskit import QuantumCircuit
 from qiskit_aer import AerSimulator
 # --- CONFIGURATION ---
-PORT = 8609
+PORT = int(os.environ.get("FINANCIAL_SERVER_PORT", "8609"))
+SERVER_BIND = os.environ.get("FINANCIAL_SERVER_BIND", "127.0.0.1")
 IP = "91.99.90.39"
 # Get the project root directory (parent of services/)
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -27,9 +33,20 @@ KING_NODE_SNAPSHOT = os.environ.get(
     "KING_NODE_SNAPSHOT",
     os.path.join(PROJECT_ROOT, "runtime", "king_node", "latest.json"),
 )
+KING_NODE_LIVE_SNAPSHOT = os.environ.get("KING_NODE_LIVE_SNAPSHOT", KING_NODE_SNAPSHOT)
+KING_NODE_LAST_COMPLETED_SNAPSHOT = os.environ.get(
+    "KING_NODE_LAST_COMPLETED_SNAPSHOT",
+    os.path.join(os.path.dirname(KING_NODE_SNAPSHOT), "last_completed.json"),
+)
+KING_NODE_HEALTH_STATE = os.environ.get(
+    "KING_NODE_HEALTH_STATE",
+    os.path.join(os.path.dirname(KING_NODE_SNAPSHOT), "health.json"),
+)
 KING_NODE_MAX_AGE_SECONDS = int(
     os.environ.get("KING_NODE_WEB_MAX_AGE_SECONDS", "900")
 )
+KING_NODE_V2_SCHEMA = "king-node.v2"
+KING_NODE_FRONTEND_SCHEMA = os.environ.get("KING_NODE_FRONTEND_SCHEMA", KING_NODE_V2_SCHEMA)
 
 os.makedirs(DOCS_PDF_FOLDER, exist_ok=True)
 os.makedirs(VIS_FOLDER, exist_ok=True)
@@ -44,21 +61,172 @@ LATEST_DATA_CACHE = {}
 CACHE_LOCK = threading.Lock()
 QUANTUM_SIMULATOR = AerSimulator()
 
-# --- AUTHENTICATION ---
-USERS = {
-    "admin@flowgreeks.com": {"pass": "admin123", "role": "ADMIN"},
-    "user1@flowgreeks.com": {"pass": "FlowGreeksPlottingUser1", "role": "USER"},
-    "user2@flowgreeks.com": {"pass": "FlowGreeksPlottingUser2", "role": "USER"},
-    "user3@flowgreeks.com": {"pass": "FlowGreeksPlottingUser3", "role": "USER"},
-}
-SESSIONS = {}        # { token_uuid: {"email": str, "role": str} }
-EMAIL_TO_TOKEN = {}  # { email: token } — single-session enforcement
+AUTH_SCHEMA_VERSION = "dashboard-auth.v1"
+DASHBOARD_AUTH_FILE = Path(
+    os.environ.get("DASHBOARD_AUTH_FILE", "/etc/kripta/dashboard-auth.json")
+)
+DASHBOARD_AUTH_REQUIRED = os.environ.get("DASHBOARD_AUTH_REQUIRED", "0") == "1"
 
-# Static API keys for scripts/bots (add more as needed)
-API_KEYS = {
-    "gex_bot_2026_xyz": {"role": "BOT", "owner": "trading_bot"},
-}
-API_KEY_LOCKS = {k: threading.Lock() for k in API_KEYS}  # 1 req/key
+
+class DashboardAuthError(ValueError):
+    """A configuration error intentionally safe for API callers."""
+
+
+@dataclass(frozen=True)
+class PasswordRecord:
+    email: str
+    role: str
+    salt: bytes
+    digest: bytes
+    iterations: int
+
+
+@dataclass(frozen=True)
+class ApiKeyRecord:
+    key_id: str
+    role: str
+    owner: str
+    salt: bytes
+    digest: bytes
+    iterations: int
+
+
+def _decode_b64(value: object, field: str) -> bytes:
+    if not isinstance(value, str) or not value:
+        raise DashboardAuthError(f"invalid auth {field}")
+    try:
+        decoded = base64.b64decode(value.encode("ascii"), validate=True)
+    except (ValueError, UnicodeEncodeError) as exc:
+        raise DashboardAuthError(f"invalid auth {field}") from exc
+    if not decoded:
+        raise DashboardAuthError(f"invalid auth {field}")
+    return decoded
+
+
+def _parse_hash_record(raw: object) -> tuple[bytes, bytes, int]:
+    if not isinstance(raw, dict) or raw.get("algorithm") != "pbkdf2_sha256":
+        raise DashboardAuthError("unsupported auth hash")
+    iterations = raw.get("iterations")
+    if not isinstance(iterations, int) or not 100_000 <= iterations <= 2_000_000:
+        raise DashboardAuthError("invalid auth iterations")
+    return (
+        _decode_b64(raw.get("salt"), "salt"),
+        _decode_b64(raw.get("digest"), "digest"),
+        iterations,
+    )
+
+
+def _verify_secret(secret: str, *, salt: bytes, digest: bytes, iterations: int) -> bool:
+    if not isinstance(secret, str) or not secret:
+        return False
+    candidate = hashlib.pbkdf2_hmac(
+        "sha256", secret.encode("utf-8"), salt, iterations
+    )
+    return hmac.compare_digest(candidate, digest)
+
+
+class DashboardAuthStore:
+    """Root-owned credential artifact reader; no credential is retained in source."""
+
+    def __init__(
+        self,
+        users: dict[str, PasswordRecord] | None = None,
+        api_keys: tuple[ApiKeyRecord, ...] = (),
+    ) -> None:
+        self._users = users or {}
+        self._api_keys = api_keys
+
+    @classmethod
+    def from_file(cls, path: Path, *, required: bool) -> "DashboardAuthStore":
+        if not path.is_file():
+            if required:
+                raise DashboardAuthError("dashboard auth artifact is required")
+            return cls()
+        try:
+            mode = path.stat().st_mode & 0o777
+            if mode & 0o077:
+                raise DashboardAuthError("dashboard auth artifact permissions are unsafe")
+            raw = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+            raise DashboardAuthError("dashboard auth artifact is unreadable") from exc
+        if not isinstance(raw, dict) or raw.get("schema_version") != AUTH_SCHEMA_VERSION:
+            raise DashboardAuthError("dashboard auth schema is invalid")
+        users: dict[str, PasswordRecord] = {}
+        for item in raw.get("users", []):
+            if not isinstance(item, dict):
+                raise DashboardAuthError("dashboard user record is invalid")
+            email, role = item.get("email"), item.get("role")
+            if not isinstance(email, str) or not isinstance(role, str) or role not in {"ADMIN", "USER"}:
+                raise DashboardAuthError("dashboard user record is invalid")
+            salt, digest, iterations = _parse_hash_record(item.get("password_hash"))
+            if email in users:
+                raise DashboardAuthError("duplicate dashboard user")
+            users[email] = PasswordRecord(email, role, salt, digest, iterations)
+        keys: list[ApiKeyRecord] = []
+        seen_ids: set[str] = set()
+        for item in raw.get("api_keys", []):
+            if not isinstance(item, dict):
+                raise DashboardAuthError("dashboard api key record is invalid")
+            key_id, role, owner = item.get("id"), item.get("role"), item.get("owner")
+            if (
+                not isinstance(key_id, str)
+                or not isinstance(role, str)
+                or not isinstance(owner, str)
+                or key_id in seen_ids
+            ):
+                raise DashboardAuthError("dashboard api key record is invalid")
+            seen_ids.add(key_id)
+            salt, digest, iterations = _parse_hash_record(item.get("key_hash"))
+            keys.append(ApiKeyRecord(key_id, role, owner, salt, digest, iterations))
+        if required and not users:
+            raise DashboardAuthError("dashboard auth artifact has no users")
+        return cls(users, tuple(keys))
+
+    @property
+    def configured(self) -> bool:
+        return bool(self._users)
+
+    def verify_password(self, email: object, password: object) -> dict[str, str] | None:
+        if not isinstance(email, str) or not isinstance(password, str):
+            return None
+        record = self._users.get(email)
+        if record is None or not _verify_secret(
+            password,
+            salt=record.salt,
+            digest=record.digest,
+            iterations=record.iterations,
+        ):
+            return None
+        return {"email": record.email, "role": record.role}
+
+    def verify_api_key(self, key: object) -> dict[str, str] | None:
+        if not isinstance(key, str) or not key:
+            return None
+        for record in self._api_keys:
+            if _verify_secret(
+                key,
+                salt=record.salt,
+                digest=record.digest,
+                iterations=record.iterations,
+            ):
+                return {"email": f"apikey:{record.owner}", "role": record.role, "_api_key": record.key_id}
+        return None
+
+
+try:
+    AUTH_STORE = DashboardAuthStore.from_file(
+        DASHBOARD_AUTH_FILE, required=DASHBOARD_AUTH_REQUIRED
+    )
+except DashboardAuthError:
+    # Startup enforces this in production.  Importing without a secret artifact is
+    # intentionally possible for fixture-only tests and non-serving tooling.
+    if DASHBOARD_AUTH_REQUIRED:
+        raise
+    AUTH_STORE = DashboardAuthStore()
+
+SESSIONS: dict[str, dict[str, str]] = {}
+EMAIL_TO_TOKEN: dict[str, str] = {}
+API_KEY_LOCKS: dict[str, threading.Lock] = {}
 
 # Configure Logging
 logging.basicConfig(
@@ -74,27 +242,87 @@ class ThreadedReusableServer(socketserver.ThreadingMixIn, socketserver.TCPServer
     daemon_threads = True
 
 
+class KingNodeSnapshotError(ValueError):
+    def __init__(self, code: str, *, retryable: bool) -> None:
+        self.code = code
+        self.retryable = retryable
+        super().__init__(code)
+
+
+_UNSAFE_RESPONSE_KEYS = {
+    "path",
+    "snapshot_path",
+    "source_path",
+    "exception",
+    "traceback",
+    "stack",
+}
+_UNSAFE_PATH_MARKERS = ("file://", "/home/", "/etc/", "/var/", "\\\\")
+
+
+def _parse_utc_timestamp(value: object) -> datetime | None:
+    if not isinstance(value, str) or not value.strip():
+        return None
+    text = value.strip()
+    if text.endswith("Z"):
+        text = f"{text[:-1]}+00:00"
+    try:
+        parsed = datetime.fromisoformat(text)
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        return None
+    return parsed.astimezone(UTC)
+
+
+def _public_value(value):
+    """Defence in depth: snapshots must not reveal host paths or exceptions."""
+    if isinstance(value, dict):
+        return {
+            str(key): _public_value(item)
+            for key, item in value.items()
+            if str(key).lower() not in _UNSAFE_RESPONSE_KEYS
+        }
+    if isinstance(value, list):
+        return [_public_value(item) for item in value]
+    if isinstance(value, str) and any(marker in value.lower() for marker in _UNSAFE_PATH_MARKERS):
+        return "[redacted]"
+    return value
+
+
+def _safe_king_node_error(code: str, *, component: str, retryable: bool) -> dict:
+    return {
+        "schema_version": KING_NODE_V2_SCHEMA,
+        "status": "unavailable",
+        "error": {
+            "code": code,
+            "component": component,
+            "retryable": retryable,
+        },
+    }
+
+
 class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
 
     # --- AUTH MIDDLEWARE ---
     def _check_auth(self):
-        """Verify Bearer token or API key. Returns auth dict or None."""
-        # Option A: Bearer token (web users)
+        """Verify a session token or a hashed API key without logging either."""
         auth = self.headers.get("Authorization", "")
         if auth.startswith("Bearer "):
             token = auth[7:]
             with CACHE_LOCK:
                 session = SESSIONS.get(token)
-            return session  # {"email": ..., "role": ...} or None
+            return dict(session) if session else None
 
-        # Option B: API key (scripts)
         api_key = self.headers.get("X-API-Key", "")
-        if api_key and api_key in API_KEYS:
-            # Try to acquire lock (non-blocking)
-            lock = API_KEY_LOCKS.get(api_key)
+        record = AUTH_STORE.verify_api_key(api_key)
+        if record:
+            key_id = record["_api_key"]
+            with CACHE_LOCK:
+                lock = API_KEY_LOCKS.setdefault(key_id, threading.Lock())
             if lock and not lock.acquire(blocking=False):
-                return "RATE_LIMITED"  # Another request is active
-            return {"role": API_KEYS[api_key]["role"], "email": f"apikey:{API_KEYS[api_key]['owner']}", "_api_key": api_key}
+                return "RATE_LIMITED"
+            return record
 
         return None
 
@@ -118,49 +346,121 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
-    def _read_king_node_snapshot(self):
-        """Read and validate the precomputed KING NODE service snapshot."""
-        snapshot_path = os.path.abspath(KING_NODE_SNAPSHOT)
-        if not os.path.isfile(snapshot_path):
-            raise FileNotFoundError(
-                f"KING NODE snapshot not found: {snapshot_path}"
-            )
-        if os.path.getsize(snapshot_path) > 5 * 1024 * 1024:
-            raise ValueError("KING NODE snapshot exceeds the 5 MiB safety limit")
-        with open(snapshot_path, "r", encoding="utf-8") as handle:
-            payload = json.load(handle)
-        if not isinstance(payload, dict):
-            raise ValueError("KING NODE snapshot must be a JSON object")
-        if payload.get("schema_version") != "king-node.v1":
-            raise ValueError("Unsupported KING NODE snapshot schema")
-
-        generated_at = payload.get("generated_at")
+    @staticmethod
+    def _read_snapshot_file(path: str) -> dict:
+        """Read one private artifact without returning its location to callers."""
         try:
-            generated = datetime.fromisoformat(
-                str(generated_at).replace("Z", "+00:00")
-            )
-            if generated.tzinfo is None:
-                generated = generated.astimezone()
-            age_seconds = max(
-                0.0,
-                (
-                    datetime.now(generated.tzinfo) - generated
-                ).total_seconds(),
-            )
-        except (TypeError, ValueError):
-            age_seconds = None
+            candidate = Path(path)
+            if not candidate.is_file():
+                raise KingNodeSnapshotError("SNAPSHOT_UNAVAILABLE", retryable=True)
+            if candidate.stat().st_size > 5 * 1024 * 1024:
+                raise KingNodeSnapshotError("SNAPSHOT_INVALID", retryable=False)
+            with candidate.open("r", encoding="utf-8") as handle:
+                payload = json.load(handle)
+        except KingNodeSnapshotError:
+            raise
+        except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+            raise KingNodeSnapshotError("SNAPSHOT_INVALID", retryable=True) from exc
+        if not isinstance(payload, dict):
+            raise KingNodeSnapshotError("SNAPSHOT_INVALID", retryable=False)
+        return payload
 
-        response = dict(payload)
+    def _read_king_node_snapshot(self, session: str = "live"):
+        """Read a v2 artifact and fail closed on stale/invalid delivery.
+
+        The legacy v1 branch remains only for the old direct helper contract.  It
+        is never eligible for the v2 HTTP route, which requires an explicit v2
+        status/freshness/quality contract.
+        """
+        if session not in {"live", "last_completed"}:
+            raise KingNodeSnapshotError("INVALID_SESSION", retryable=False)
+        path = (
+            KING_NODE_LIVE_SNAPSHOT
+            if session == "live"
+            else KING_NODE_LAST_COMPLETED_SNAPSHOT
+        )
+        payload = self._read_snapshot_file(path)
+        if payload.get("schema_version") == "king-node.v1":
+            if session != "live":
+                raise KingNodeSnapshotError("SNAPSHOT_SCHEMA_UNSUPPORTED", retryable=False)
+            # Compatibility only for legacy server tests / direct consumers.  No
+            # local path is included in the returned delivery metadata.
+            generated = _parse_utc_timestamp(payload.get("generated_at"))
+            age_seconds = (
+                max(0.0, (datetime.now(UTC) - generated).total_seconds())
+                if generated is not None
+                else None
+            )
+            response = _public_value(dict(payload))
+            response["delivery"] = {
+                "age_seconds": age_seconds,
+                "max_age_seconds": KING_NODE_MAX_AGE_SECONDS,
+                "stale": age_seconds is None or age_seconds > KING_NODE_MAX_AGE_SECONDS,
+            }
+            return response
+        if payload.get("schema_version") != KING_NODE_V2_SCHEMA:
+            raise KingNodeSnapshotError("SNAPSHOT_SCHEMA_UNSUPPORTED", retryable=False)
+        expected_status = "live" if session == "live" else "last_completed_session"
+        if payload.get("status") != expected_status:
+            raise KingNodeSnapshotError("SNAPSHOT_STATUS_INVALID", retryable=True)
+        freshness = payload.get("freshness")
+        quality = payload.get("quality")
+        generated = _parse_utc_timestamp(payload.get("generated_at"))
+        if not isinstance(freshness, dict) or not isinstance(quality, dict) or generated is None:
+            raise KingNodeSnapshotError("SNAPSHOT_INVALID", retryable=False)
+        max_age = freshness.get("max_age_seconds", KING_NODE_MAX_AGE_SECONDS)
+        if not isinstance(max_age, (int, float)) or max_age <= 0:
+            raise KingNodeSnapshotError("SNAPSHOT_INVALID", retryable=False)
+        age_seconds = max(0.0, (datetime.now(UTC) - generated).total_seconds())
+        invalid_quality = quality.get("valid") is not True or bool(quality.get("errors"))
+        stale_live = (
+            session == "live"
+            and (freshness.get("stale") is True or age_seconds > float(max_age))
+        )
+        invalid_completed = (
+            session == "last_completed"
+            and freshness.get("kind") != "sealed_completed_session"
+        )
+        if invalid_quality or stale_live or invalid_completed:
+            raise KingNodeSnapshotError("SNAPSHOT_STALE_OR_INVALID", retryable=True)
+        response = _public_value(dict(payload))
         response["delivery"] = {
-            "snapshot_path": os.path.basename(snapshot_path),
             "age_seconds": age_seconds,
-            "max_age_seconds": KING_NODE_MAX_AGE_SECONDS,
-            "stale": (
-                age_seconds is None
-                or age_seconds > KING_NODE_MAX_AGE_SECONDS
-            ),
+            "max_age_seconds": float(max_age),
+            "stale": False,
         }
         return response
+
+    def _king_node_health(self) -> dict:
+        """Return a path-free health view for privileged operational callers."""
+        try:
+            payload = self._read_snapshot_file(KING_NODE_HEALTH_STATE)
+        except KingNodeSnapshotError:
+            payload = {}
+        snapshot: dict[str, object]
+        try:
+            live = self._read_king_node_snapshot("live")
+            snapshot = {
+                "status": "ready",
+                "schema_version": live.get("schema_version"),
+                "session": live.get("session"),
+                "freshness": live.get("freshness"),
+            }
+        except KingNodeSnapshotError as exc:
+            snapshot = {"status": "unavailable", "code": exc.code}
+        return _public_value(
+            {
+                "schema_version": KING_NODE_V2_SCHEMA,
+                "status": "ok" if snapshot.get("status") == "ready" else "degraded",
+                "process": payload.get("process", {"status": "unknown"}),
+                "provider": payload.get("provider", {"status": "unknown"}),
+                "entitlement": payload.get("entitlement", {"status": "unknown"}),
+                "refresh": payload.get("refresh", {"status": "unknown"}),
+                "snapshot": snapshot,
+                "api": {"schema_version": KING_NODE_V2_SCHEMA, "frontend_schema": KING_NODE_FRONTEND_SCHEMA},
+                "session": payload.get("session", snapshot.get("session")),
+            }
+        )
 
     def _require_auth(self):
         """Check auth and send error if unauthorized. Returns auth_info or None."""
@@ -172,6 +472,27 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
             self._send_json(429, {"status": "error", "message": "Too many requests for this API key"})
             return None
         return auth_info
+
+    def _require_admin(self):
+        auth_info = self._require_auth()
+        if not auth_info:
+            return None
+        if auth_info.get("role") != "ADMIN":
+            self._send_json(403, {"status": "error", "message": "Admin access required"})
+            self._release_api_key(auth_info)
+            return None
+        return auth_info
+
+    def _king_node_session_query(self) -> str:
+        parsed = urllib.parse.urlparse(self.path)
+        values = urllib.parse.parse_qs(parsed.query, keep_blank_values=True)
+        unknown = set(values).difference({"session", "_"})
+        if unknown or len(values.get("session", [])) > 1:
+            raise KingNodeSnapshotError("INVALID_QUERY", retryable=False)
+        requested = values.get("session", ["live"])[0]
+        if requested not in {"live", "last_completed"}:
+            raise KingNodeSnapshotError("INVALID_SESSION", retryable=False)
+        return requested
 
     def list_directory(self, path):
         """Sobrescribe el método por defecto para deshabilitar el listado de directorios"""
@@ -278,11 +599,12 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
                 email = creds.get("email")
                 password = creds.get("password")
 
-                user = USERS.get(email)
+                user = AUTH_STORE.verify_password(email, password)
 
-                if user and user["pass"] == password:
+                if user:
                     token = str(uuid.uuid4())
                     role = user["role"]
+                    assert isinstance(email, str)
 
                     with CACHE_LOCK:
                         # Single-session: kill old session (except ADMIN)
@@ -579,42 +901,48 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_error(500, str(e))
             return
 
-        # 2.5 API: KING NODE precomputed snapshot (ADMIN only)
-        if path_only == "/api/king-node":
-            auth_info = self._require_auth()
+        # 2.5 API: KING NODE v2 snapshot and operational health (ADMIN only).
+        # The cache-buster query key is intentionally ignored; it must not change
+        # endpoint selection or artifact identity.
+        if path_only in {"/api/king-node", "/api/king-node/health"}:
+            auth_info = self._require_admin()
             if not auth_info:
                 return
             try:
-                if auth_info.get("role") != "ADMIN":
+                if path_only == "/api/king-node/health":
+                    self._send_json(200, self._king_node_health())
+                    return
+                try:
+                    requested_session = self._king_node_session_query()
+                except KingNodeSnapshotError as exc:
                     self._send_json(
-                        403,
-                        {
-                            "status": "error",
-                            "message": "Admin access required",
-                        },
+                        400,
+                        _safe_king_node_error(
+                            exc.code, component="request", retryable=False
+                        ),
                     )
                     return
-                snapshot = self._read_king_node_snapshot()
+                try:
+                    snapshot = self._read_king_node_snapshot(requested_session)
+                except KingNodeSnapshotError as exc:
+                    self._send_json(
+                        503,
+                        _safe_king_node_error(
+                            exc.code, component="snapshot", retryable=exc.retryable
+                        ),
+                    )
+                    return
+                if snapshot.get("schema_version") != KING_NODE_V2_SCHEMA:
+                    self._send_json(
+                        503,
+                        _safe_king_node_error(
+                            "SNAPSHOT_SCHEMA_UNSUPPORTED",
+                            component="snapshot",
+                            retryable=False,
+                        ),
+                    )
+                    return
                 self._send_json(200, snapshot)
-            except FileNotFoundError as exc:
-                self._send_json(
-                    503,
-                    {
-                        "schema_version": "king-node.v1",
-                        "status": "error",
-                        "message": str(exc),
-                    },
-                )
-            except (OSError, ValueError, json.JSONDecodeError) as exc:
-                logging.error(f"KING NODE snapshot error: {exc}")
-                self._send_json(
-                    503,
-                    {
-                        "schema_version": "king-node.v1",
-                        "status": "error",
-                        "message": f"KING NODE snapshot invalid: {exc}",
-                    },
-                )
             finally:
                 self._release_api_key(auth_info)
             return
@@ -917,7 +1245,7 @@ def start_static_server(directory, port):
     def run():
         Handler = functools.partial(http.server.SimpleHTTPRequestHandler, directory=directory)
         try:
-            with ThreadedReusableServer(("0.0.0.0", port), Handler) as httpd:
+            with ThreadedReusableServer((SERVER_BIND, port), Handler) as httpd:
                 print(f"Subproyecto servidor corriendo en puerto {port} -> {directory}")
                 logging.info(f"Subproyecto servidor corriendo en puerto {port} -> {directory}")
                 httpd.serve_forever()
@@ -948,7 +1276,9 @@ if __name__ == "__main__":
     t.start()
     print("Background Cache Updater Started")
     print(f"Server running on port {PORT}. Logs in {LOG_FILE}")
-    with ThreadedReusableServer(("0.0.0.0", PORT), ExposureDataHandler) as httpd:
+    if DASHBOARD_AUTH_REQUIRED and not AUTH_STORE.configured:
+        raise SystemExit("dashboard auth artifact is required")
+    with ThreadedReusableServer((SERVER_BIND, PORT), ExposureDataHandler) as httpd:
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:

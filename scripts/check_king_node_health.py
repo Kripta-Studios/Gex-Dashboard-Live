@@ -13,7 +13,8 @@ import sys
 from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-EXPECTED_SCHEMA = "king-node.v1"
+EXPECTED_SCHEMA = "king-node.v1"  # legacy fixture compatibility
+V2_SCHEMA = "king-node.v2"
 EXPECTED_STRIKES = 47
 EXPECTED_INDEX_CONTRACT = {
     "vix": (
@@ -72,6 +73,107 @@ def _validate_term(name: str, term: Any, errors: list[str]) -> None:
         errors.append(f"{name} term has insufficient included strikes")
 
 
+def _contains_forbidden_public_value(value: Any) -> bool:
+    if isinstance(value, dict):
+        for key, item in value.items():
+            if str(key).lower() in {"path", "snapshot_path", "source_path", "exception", "traceback", "stack"}:
+                return True
+            if _contains_forbidden_public_value(item):
+                return True
+        return False
+    if isinstance(value, list):
+        return any(_contains_forbidden_public_value(item) for item in value)
+    if isinstance(value, str):
+        lowered = value.lower()
+        return "file://" in lowered or "/home/" in lowered or "/etc/" in lowered
+    return False
+
+
+def _inspect_v2_snapshot(
+    payload: dict[str, Any],
+    *,
+    max_age_seconds: int,
+    now: datetime,
+) -> dict[str, Any]:
+    """Validate only an API-safe, sealed/live v2 artifact."""
+    errors: list[str] = []
+    warnings: list[str] = []
+    status = payload.get("status")
+    if status not in {"live", "last_completed_session"}:
+        errors.append("v2 snapshot status is not deliverable")
+    generated = _parse_utc(payload.get("generated_at"))
+    age = None
+    if generated is None:
+        errors.append("generated_at is missing or invalid")
+    else:
+        age = max(0.0, (now - generated).total_seconds())
+    session = payload.get("session")
+    if not isinstance(session, dict) or not isinstance(session.get("trading_date"), str):
+        errors.append("session metadata is missing")
+    freshness = payload.get("freshness")
+    if not isinstance(freshness, dict):
+        errors.append("freshness metadata is missing")
+    else:
+        if freshness.get("stale") is True:
+            errors.append("v2 snapshot is marked stale")
+        if status == "live":
+            limit = freshness.get("max_age_seconds", max_age_seconds)
+            if not _finite(limit) or float(limit) <= 0:
+                errors.append("live freshness limit is invalid")
+            elif age is not None and age > min(float(limit), float(max_age_seconds)):
+                errors.append("live snapshot exceeds freshness limit")
+        elif freshness.get("kind") != "sealed_completed_session":
+            errors.append("completed session is not sealed")
+    quality = payload.get("quality")
+    if not isinstance(quality, dict) or quality.get("valid") is not True:
+        errors.append("quality.valid is not true")
+    elif quality.get("errors"):
+        errors.append("quality contains errors")
+    for key in (
+        "calculation_at",
+        "publication_at",
+        "provenance",
+        "reference",
+        "formula_coverage",
+        "inputs",
+        "rows",
+        "totals",
+        "regime",
+        "levels",
+        "monitor",
+        "directions",
+        "presentation",
+    ):
+        if key not in payload:
+            errors.append(f"v2 snapshot is missing {key}")
+    if not isinstance(payload.get("rows"), list) or not payload.get("rows"):
+        errors.append("v2 snapshot has no rows")
+    provenance = payload.get("provenance")
+    if not isinstance(provenance, dict) or provenance.get("provider") != "ThetaData":
+        errors.append("v2 provenance is not ThetaData")
+    if isinstance(provenance, dict) and provenance.get("underlying") != "option_underlying_proxy":
+        errors.append("v2 underlying provenance is not an option proxy")
+    reference = payload.get("reference")
+    if not isinstance(reference, dict) or reference.get("status") != "verified":
+        errors.append("v2 reference is not verified")
+    coverage = payload.get("formula_coverage")
+    if not isinstance(coverage, dict) or coverage.get("status") != "verified":
+        errors.append("v2 formula coverage is not verified")
+    if _contains_forbidden_public_value(payload):
+        errors.append("v2 snapshot contains forbidden path or exception metadata")
+    return {
+        "healthy": not errors,
+        "schema_version": payload.get("schema_version"),
+        "producer_status": status,
+        "quality": quality.get("grade") if isinstance(quality, dict) else None,
+        "generated_age_seconds": age,
+        "strike_count": len(payload.get("rows", [])) if isinstance(payload.get("rows"), list) else 0,
+        "reference_mode": "verified_v2",
+        "errors": errors,
+        "warnings": warnings,
+    }
+
+
 def inspect_snapshot(
     payload: Any,
     *,
@@ -81,9 +183,11 @@ def inspect_snapshot(
     now: datetime | None = None,
 ) -> dict[str, Any]:
     """Return an auditable health report for one parsed snapshot."""
+    now = now or datetime.now(UTC)
+    if isinstance(payload, dict) and payload.get("schema_version") == V2_SCHEMA:
+        return _inspect_v2_snapshot(payload, max_age_seconds=max_age_seconds, now=now)
     errors: list[str] = []
     warnings: list[str] = []
-    now = now or datetime.now(UTC)
     if not isinstance(payload, dict):
         return {
             "healthy": False,
@@ -292,8 +396,7 @@ def main(argv: list[str] | None = None) -> int:
     except (OSError, UnicodeError, json.JSONDecodeError) as exc:
         report = {
             "healthy": False,
-            "snapshot": str(args.snapshot),
-            "errors": [f"{type(exc).__name__}: {exc}"],
+            "errors": ["snapshot artifact is unreadable"],
             "warnings": [],
         }
     else:
@@ -303,7 +406,6 @@ def main(argv: list[str] | None = None) -> int:
             require_reference_export=args.require_reference_export,
             allow_missing_indices=args.allow_missing_indices,
         )
-        report["snapshot"] = str(args.snapshot)
     if args.json:
         print(json.dumps(report, indent=2, sort_keys=True, allow_nan=False))
     else:

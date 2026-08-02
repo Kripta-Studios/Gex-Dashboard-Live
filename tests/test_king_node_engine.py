@@ -1,114 +1,47 @@
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from copy import deepcopy
 import json
 from pathlib import Path
 
 import pytest
 
 from modules.king_node_engine import (
+    KingNodeDataError,
     _apply_level_lock,
     aggregate_by_strike,
     build_snapshot,
     initial_state,
 )
-from services.king_node_service import KingNodeService, find_latest_tastytrade_json
 
 
-def tasty_fixture(strike_count: int = 55) -> dict:
-    columns = [
-        "strike_price",
-        "time_till_exp",
-        "call_iv",
-        "put_iv",
-        "call_gamma",
-        "put_gamma",
-        "call_open_int",
-        "put_open_int",
-        "call_gex",
-        "put_gex",
-        "total_gamma",
-        "total_zomma",
-        "total_delta",
-        "total_vanna",
-        "total_vomma",
-        "total_vega",
-        "total_speed",
-        "total_charm",
-        "total_dgex",
-    ]
-    data = []
-    for index in range(strike_count):
-        strike = 5800 + index * 10
-        signed = (index - strike_count // 2) * 0.025
-        call_gamma = abs(signed) + 0.01
-        put_gamma = abs(signed) + 0.02
-        call_oi = 100 + index
-        put_oi = 50 + index
-        call_gex = (abs(signed) + 0.01) * 1_000_000
-        put_gex = -(abs(signed) + 0.005) * 600_000
-        gex = call_gex + put_gex
-        data.append(
-            [
-                strike,
-                4 / (365 * 24),
-                0.18 + index / 10_000,
-                0.20 + index / 10_000,
-                call_gamma,
-                put_gamma,
-                call_oi,
-                put_oi,
-                call_gex,
-                put_gex,
-                gex / 1_000_000_000,
-                signed * 0.30,
-                signed * 1.20,
-                signed * -0.50,
-                signed * -0.20,
-                abs(signed) * 0.40,
-                signed * 0.10,
-                signed * 0.15,
-                signed * 0.80,
-            ]
-        )
-    return {
-        "spot_price": 6070,
-        "prev_close_price": 6050,
-        "zerogamma": 6035,
-        "ticker": "SPX",
-        "expir": "0dte",
-        "today_ddt_string": "fixture",
-        "option_data": {"columns": columns, "data": data},
-    }
+ROOT = Path(__file__).resolve().parents[1]
+FIXTURES = ROOT / "tests" / "fixtures" / "king_node_v2"
 
 
-def volatility_inputs(timestamp: str = "2026-07-26T14:00:00Z") -> dict:
-    common = {
-        "timestamp": timestamp,
-        "age_seconds": 0,
-        "entitlement": "options_standard",
-        "direct_index_subscription": False,
-    }
-    return {
-        "vix": {
-            **common,
-            "value": 20.0,
-            "status": "observed_from_option_feed",
-            "method": "thetadata_option_first_order_underlying_median",
-        },
-        "vvix": {
-            **common,
-            "value": 115.0,
-            "status": "reconstructed",
-            "method": "cboe_vvix_reconstruction_from_vix_nbbo",
-        },
-        "vix1d": {
-            **common,
-            "value": 23.0,
-            "status": "reconstructed",
-            "method": "cboe_vix1d_reconstruction_from_spxw_nbbo",
-        },
-    }
+def _input() -> dict:
+    return json.loads((FIXTURES / "golden_input.json").read_text(encoding="utf-8"))
+
+
+def _reference() -> dict:
+    return json.loads((ROOT / "config" / "king_node_reference.json").read_text(encoding="utf-8"))
+
+
+def _dotted(value: dict, path: str):
+    current = value
+    for part in path.split("."):
+        current = current[part]
+    return current
+
+
+def _keys(value: object):
+    if isinstance(value, dict):
+        for key, nested in value.items():
+            yield str(key)
+            yield from _keys(nested)
+    elif isinstance(value, list):
+        for nested in value:
+            yield from _keys(nested)
 
 
 def test_raw_gamma_is_multiplied_per_leg_before_strike_aggregation() -> None:
@@ -134,53 +67,35 @@ def test_raw_gamma_is_multiplied_per_leg_before_strike_aggregation() -> None:
     assert aggregate["raw_gamma"] == 93
 
 
-def test_build_snapshot_ports_core_catalog_contract() -> None:
+def test_build_snapshot_requires_v2_input_and_verified_reference() -> None:
+    fixture = _input()
     snapshot, state = build_snapshot(
-        tasty_fixture(),
-        volatility_inputs(),
-        initial_state("2026-07-26"),
-        generated_at="2026-07-26T14:00:00Z",
-        session_date="2026-07-26",
-        market_minute=10 * 60,
-        source_meta={"source_id": "fixture-1", "stale": False},
+        fixture,
+        state=initial_state("2026-08-02"),
+        reference=_reference(),
     )
-    assert snapshot["schema_version"] == "king-node.v1"
-    assert len(snapshot["rows"]) == 47
-    assert snapshot["quality"]["raw_gamma_coverage"] == 1
-    assert snapshot["quality"]["profile_coverage"] == 1
-    expected_raw = sum(row["raw_gamma"] for row in snapshot["rows"])
-    assert snapshot["totals"]["raw_gamma"] == pytest.approx(expected_raw)
-    assert snapshot["regime"]["iv_raw"] == "HIGH"
-    assert snapshot["regime"]["reference_mode"] == "semantic_fallback"
-    assert state["surface_source_ids"] == ["fixture-1"]
+    assert snapshot["schema"] == "king-node.v2"
+    assert snapshot["schema_version"] == "king-node.v2"
+    assert snapshot["quality"]["reference_mode"] == "verified_static_reference"
+    assert snapshot["reference"]["matrix_rows"] == 78
+    assert snapshot["reference"]["iv_regime_rows"] == 54
+    assert snapshot["formula_coverage"]["current_formula_cells"] == 7959
+    assert snapshot["formula_coverage"]["catalogue_only"] == 107
+    assert len(snapshot["rows"]) == 5
+    assert state["schema_version"] == "king-node.v2-state"
+    assert "semantic_fallback" not in json.dumps(snapshot, sort_keys=True)
+    assert not any("path" in key.lower() for key in _keys(snapshot))
 
 
-def test_directions_and_gex_history_persist_across_cycles() -> None:
-    state = initial_state("2026-07-26")
-    snapshot = None
-    for index in range(4):
-        timestamp = (
-            datetime(2026, 7, 26, 14, tzinfo=timezone.utc)
-            + timedelta(seconds=index * 30)
-        ).isoformat().replace("+00:00", "Z")
-        indices = volatility_inputs(timestamp)
-        indices["vix"]["value"] += index
-        indices["vvix"]["value"] += index
-        indices["vix1d"]["value"] += index
-        snapshot, state = build_snapshot(
-            tasty_fixture(),
-            indices,
-            state,
-            generated_at=timestamp,
-            session_date="2026-07-26",
-            source_meta={"source_id": f"fixture-{index}", "stale": False},
-        )
-    assert snapshot is not None
-    assert snapshot["directions"]["vix"] == "Up"
-    assert snapshot["directions"]["vvix"] == "Up"
-    assert snapshot["directions"]["vix1d"] == "Up"
-    assert snapshot["monitor"]["gex"]["samples"] == 4
-    assert snapshot["quality"]["smooth_depth"] == 3
+def test_build_snapshot_rejects_legacy_input_and_bad_reference() -> None:
+    with pytest.raises(KingNodeDataError, match="king-node.v2-input"):
+        build_snapshot({"option_data": {}}, reference=_reference())
+    bad_reference = deepcopy(_reference())
+    bad_reference["canonical_checksum"] = "0" * 64
+    with pytest.raises(KingNodeDataError, match="checksum"):
+        build_snapshot(_input(), reference=bad_reference)
+    with pytest.raises(KingNodeDataError, match="requires a verified"):
+        build_snapshot(_input())
 
 
 def test_level_challenger_must_hold_for_three_cycles() -> None:
@@ -198,34 +113,22 @@ def test_level_challenger_must_hold_for_three_cycles() -> None:
     assert pending == {}
 
 
-def test_service_one_shot_writes_atomic_snapshot_and_state(tmp_path: Path) -> None:
-    data_dir = tmp_path / "json_data"
-    data_dir.mkdir()
-    old_path = data_dir / "SPX_0dte_ExposureData_20260726_095900.json"
-    new_path = data_dir / "SPX_0dte_ExposureData_20260726_100000.json"
-    old_path.write_text(json.dumps(tasty_fixture()), encoding="utf-8")
-    new_path.write_text(json.dumps(tasty_fixture()), encoding="utf-8")
-    assert find_latest_tastytrade_json(data_dir) == new_path
-
-    output = tmp_path / "runtime" / "latest.json"
-    state = tmp_path / "runtime" / "state.json"
-    service = KingNodeService(
-        tasty_data_dir=data_dir,
-        output_path=output,
-        state_path=state,
-        reference_path=None,
-        thetadata_url="http://theta.invalid/v3",
-        theta_enabled=False,
-        tasty_max_age_seconds=60,
+def test_golden_fixture_records_exact_fields_and_numeric_tolerance() -> None:
+    expectation = json.loads(
+        (FIXTURES / "golden_expectations.json").read_text(encoding="utf-8")
     )
-    try:
-        snapshot = service.run_once(
-            now=datetime(2026, 7, 26, 14, 0, tzinfo=timezone.utc)
+    snapshot, _ = build_snapshot(
+        _input(), state=initial_state("2026-08-02"), reference=_reference()
+    )
+    for path, expected in expectation["exact_match_fields"].items():
+        assert _dotted(snapshot, path) == expected
+    for path, expected in expectation["numeric_fields"].items():
+        assert _dotted(snapshot, path) == pytest.approx(
+            expected,
+            abs=expectation["tolerances"]["absolute"],
+            rel=expectation["tolerances"]["relative"],
         )
-    finally:
-        service.close()
-    assert snapshot["status"] == "degraded"
-    assert output.is_file()
-    assert state.is_file()
-    assert snapshot["source"]["indices"]["vix"]["status"] == "unavailable"
-    assert list(output.parent.glob("*.tmp")) == []
+    assert expectation["max_absolute_error"] == 0.0
+    assert expectation["max_relative_error"] == 0.0
+    assert expectation["mismatches"] == []
+    assert expectation["cached_workbook_value_claims"] == []

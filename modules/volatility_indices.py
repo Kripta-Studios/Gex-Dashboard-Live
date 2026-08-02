@@ -11,7 +11,7 @@ from dataclasses import asdict, dataclass
 from datetime import UTC, date, datetime, time, timedelta
 import math
 from statistics import median
-from typing import Any, Iterable, Mapping, Sequence
+from typing import Any, Callable, Iterable, Mapping, Sequence
 from zoneinfo import ZoneInfo
 
 ET = ZoneInfo("America/New_York")
@@ -300,8 +300,21 @@ def business_minutes_to_spxw_expiration(
     expiration: date,
     *,
     holidays: set[date] | None = None,
+    session_clock: Callable[[datetime, date], float] | None = None,
 ) -> float:
-    """Approximate the VIX1D 405-minute business clock through 16:15 ET."""
+    """Return tradable SPXW minutes through expiration.
+
+    ``session_clock`` is the v2 path: it is supplied by the central exchange
+    calendar and therefore observes holidays and early closes.  The historical
+    fallback is retained only for the v1 compatibility interface; v2 never uses
+    it because a fixed 16:15 clock is insufficient on half-days.
+    """
+
+    if session_clock is not None:
+        minutes = session_clock(now.astimezone(UTC), expiration)
+        if not math.isfinite(minutes):
+            raise VolatilityDataError("exchange session clock returned non-finite minutes")
+        return max(0.0, float(minutes))
     holidays = holidays or set()
     local = now.astimezone(ET)
     session_open = time(9, 30)
@@ -543,12 +556,13 @@ def calculate_vix1d(
     holidays: set[date] | None = None,
     min_valid_strikes: int = 8,
     frozen_near_term: Mapping[str, Any] | None = None,
+    session_clock: Callable[[datetime, date], float] | None = None,
 ) -> tuple[float, dict[str, Any], dict[str, Any]]:
     near_minutes = business_minutes_to_spxw_expiration(
-        now, near_expiration, holidays=holidays
+        now, near_expiration, holidays=holidays, session_clock=session_clock
     )
     next_minutes = business_minutes_to_spxw_expiration(
-        now, next_expiration, holidays=holidays
+        now, next_expiration, holidays=holidays, session_clock=session_clock
     )
     near_frozen = near_minutes < 60.0
     if near_frozen:
@@ -591,8 +605,10 @@ def calculate_vix1d(
     )
     return value, {
         "methodology": "cboe_vix1d_variance_replica",
+        "methodology_version": "cboe-variance-v1",
         "target_minutes": VIX1D_SESSION_MINUTES,
         "minutes_per_year": VIX1D_MINUTES_PER_YEAR,
+        "session_clock": "exchange_calendar" if session_clock is not None else "legacy_business_clock",
         "near_variance_frozen": near_frozen,
         "near": near.to_dict(),
         "next": next_term.to_dict(),
@@ -608,13 +624,20 @@ def calculate_vvix(
     next_expiration: date,
     rate_decimal: float,
     min_valid_strikes: int = 8,
+    minutes_to_expiration: Callable[[datetime, date], float] | None = None,
 ) -> tuple[float, dict[str, Any]]:
-    near_minutes = calendar_minutes_to_expiration(
-        now, near_expiration, settlement_time=time(9, 30)
-    )
-    next_minutes = calendar_minutes_to_expiration(
-        now, next_expiration, settlement_time=time(9, 30)
-    )
+    if minutes_to_expiration is None:
+        near_minutes = calendar_minutes_to_expiration(
+            now, near_expiration, settlement_time=time(9, 30)
+        )
+        next_minutes = calendar_minutes_to_expiration(
+            now, next_expiration, settlement_time=time(9, 30)
+        )
+    else:
+        near_minutes = float(minutes_to_expiration(now.astimezone(UTC), near_expiration))
+        next_minutes = float(minutes_to_expiration(now.astimezone(UTC), next_expiration))
+        if not (math.isfinite(near_minutes) and math.isfinite(next_minutes)):
+            raise VolatilityDataError("exchange session clock returned non-finite minutes")
     near = calculate_term_variance(
         near_quotes,
         expiration=near_expiration,
@@ -641,6 +664,7 @@ def calculate_vvix(
     )
     return value, {
         "methodology": "cboe_vvix_variance_replica",
+        "methodology_version": "cboe-variance-v1",
         "target_minutes": VVIX_TARGET_MINUTES,
         "minutes_per_year": MINUTES_PER_YEAR,
         "near": near.to_dict(),

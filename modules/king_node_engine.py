@@ -1,17 +1,8 @@
-"""Portable KING NODE calculation engine.
+"""Pure KING NODE v2 calculation core.
 
-This module ports the calculation contract used by
-``MASTER_KING_NODE_RECORD_V5.xlsx`` and ``live_king_node.py`` to a JSON-only
-runtime.  It intentionally has no Excel, IBKR, pandas, or network dependency.
-The caller supplies:
-
-* the latest Tastytrade exposure JSON;
-* observed VIX, VVIX, and VIX1D snapshots;
-* the previously persisted state;
-* an optional export of the workbook's static Matrix/IV Regime Map values.
-
-The engine returns a self-contained snapshot for the web dashboard and a JSON
-serializable state for the next cycle.
+Adapters may fetch ThetaData or persist state, but this module only accepts the
+typed, provenance-validated v2 input contract and a verified static workbook
+reference.  It has no filesystem, network, HTML, Excel, or office dependency.
 """
 
 from __future__ import annotations
@@ -22,9 +13,20 @@ import math
 from statistics import median
 from typing import Any
 
+from modules.king_node_contract import (
+    INPUT_SCHEMA_VERSION,
+    SCHEMA_VERSION as CONTRACT_SCHEMA_VERSION,
+    STATE_SCHEMA_VERSION,
+    KingNodeInputError,
+    KingNodeReferenceError,
+    NormalizedInput,
+    VerifiedReference,
+    validate_normalized_input,
+    validate_reference,
+)
 
-SCHEMA_VERSION = "king-node.v1"
-STATE_VERSION = 1
+SCHEMA_VERSION = CONTRACT_SCHEMA_VERSION
+STATE_VERSION = 2
 WINDOW_EACH_SIDE = 23
 WINDOW_SIZE = WINDOW_EACH_SIDE * 2 + 1
 SMOOTH_READINGS = 3
@@ -40,24 +42,6 @@ INDEX_DEADBANDS = {
     "vvix": 0.25,
     "vix1d": 0.10,
     "atm_iv": 0.001,
-}
-
-# Jan-Jun 2026, 116 clean SPX 0DTE sessions.  Values are put/call wing IV
-# premiums in volatility points.  The runtime interpolates between anchors.
-SKEW_BASELINE = {
-    "09:30": (2.15, -1.58),
-    "10:00": (2.21, -1.41),
-    "10:30": (2.29, -1.29),
-    "11:00": (2.48, -1.23),
-    "11:30": (2.48, -1.11),
-    "12:00": (2.66, -0.85),
-    "12:30": (2.85, -0.62),
-    "13:00": (3.01, -0.30),
-    "13:30": (3.26, 0.32),
-    "14:00": (3.77, 0.78),
-    "14:30": (4.46, 1.45),
-    "15:00": (4.55, 2.20),
-    "15:30": (4.11, 3.12),
 }
 
 ROW_NUMERIC_FIELDS = (
@@ -163,6 +147,7 @@ def initial_state(session_date: str | None = None) -> dict[str, Any]:
 
     return {
         "version": STATE_VERSION,
+        "schema_version": STATE_SCHEMA_VERSION,
         "session_date": session_date,
         "histories": {
             "vix": [],
@@ -192,6 +177,8 @@ def _normalise_state(state: dict[str, Any] | None, session_date: str) -> dict[st
     if not isinstance(state, dict):
         return initial_state(session_date)
     if state.get("version") != STATE_VERSION:
+        return initial_state(session_date)
+    if state.get("schema_version") not in (None, STATE_SCHEMA_VERSION):
         return initial_state(session_date)
     if state.get("session_date") != session_date:
         return initial_state(session_date)
@@ -476,36 +463,11 @@ def _dte_hours(rows: list[dict[str, Any]]) -> float | None:
     return median(values) if values else None
 
 
-def _baseline_for_minute(minute: int) -> tuple[float, float]:
-    anchors = sorted(
-        (
-            int(label[:2]) * 60 + int(label[3:]),
-            values,
-        )
-        for label, values in SKEW_BASELINE.items()
-    )
-    if minute <= anchors[0][0]:
-        return anchors[0][1]
-    if minute >= anchors[-1][0]:
-        return anchors[-1][1]
-    for index in range(1, len(anchors)):
-        if anchors[index][0] >= minute:
-            minute0, values0 = anchors[index - 1]
-            minute1, values1 = anchors[index]
-            weight = (minute - minute0) / (minute1 - minute0)
-            return (
-                values0[0] + (values1[0] - values0[0]) * weight,
-                values0[1] + (values1[1] - values0[1]) * weight,
-            )
-    return anchors[-1][1]
-
-
 def _skew(
     rows: list[dict[str, Any]],
     spot: float,
     state: dict[str, Any],
     timestamp: str,
-    market_minute: int,
 ) -> dict[str, Any]:
     atm_call = _interpolate(rows, "call_iv", spot)
     atm_put = _interpolate(rows, "put_iv", spot)
@@ -532,19 +494,18 @@ def _skew(
         else None
     )
 
-    base_put, base_call = _baseline_for_minute(market_minute)
     if put_skew is not None:
         _append_history(
             state,
             "put_skew_residual",
-            put_skew - base_put,
+            put_skew,
             timestamp,
         )
     if call_skew is not None:
         _append_history(
             state,
             "call_skew_residual",
-            call_skew - base_call,
+            call_skew,
             timestamp,
         )
     put_values = _history_values(state, "put_skew_residual")
@@ -567,7 +528,8 @@ def _skew(
         "call_direction": call_direction,
         "put_steep": steep,
         "offset_points": SKEW_OFFSET_POINTS,
-        "baseline": {"put": base_put, "call": base_call},
+        "baseline": None,
+        "baseline_method": "none_unproven_calibration_removed",
     }
 
 
@@ -959,56 +921,13 @@ def _vol_tension(
     }
 
 
-def _semantic_matrix(
-    gamma_sign: str,
-    dex_sign: str,
-    vex_sign: str,
-    iv_box: str,
-) -> dict[str, str]:
-    """Transparent fallback for static workbook lookup values.
-
-    The formula catalog contains the lookup formulas but not the literal Matrix
-    cells.  A generated reference JSON overrides this function when available.
-    """
-
-    positive_gamma = gamma_sign == "Pos"
-    if positive_gamma:
-        phenomenon = "Gamma pin / compression"
-        dealer_is = "Long gamma"
-        dealer_action = "Sell strength and buy weakness"
-        tactical = "FADE EXTREMES / respect locked levels"
-        regime = f"{iv_box} IV · positive-gamma mean reversion"
-    else:
-        phenomenon = "Gamma expansion / directional amplification"
-        dealer_is = "Short gamma"
-        dealer_action = "Buy strength and sell weakness"
-        tactical = (
-            "BUY BREAKS / trail supports"
-            if dex_sign == "Pos"
-            else "SELL BREAKS / trail resistances"
-        )
-        regime = f"{iv_box} IV · negative-gamma expansion"
-    if vex_sign != dex_sign:
-        tilt = f"DEX {dex_sign}, VEX {vex_sign} · mixed flow"
-    else:
-        tilt = f"DEX/VEX aligned {dex_sign}"
-    return {
-        "phenomenon": phenomenon,
-        "dealer_is": dealer_is,
-        "dealer_action": dealer_action,
-        "tactical": tactical,
-        "regime": regime,
-        "tilt": tilt,
-    }
-
-
 def _regime(
     totals: dict[str, float],
     directions: dict[str, str],
     indices: dict[str, float | None],
     atm_iv: float | None,
     dte_hours: float | None,
-    reference: dict[str, Any] | None,
+    reference: VerifiedReference,
 ) -> dict[str, Any]:
     vix = indices.get("vix")
     vvix = indices.get("vvix")
@@ -1042,10 +961,9 @@ def _regime(
         iv_box_method = "catalog_iv_raw"
     elif vix is not None and atm_iv is not None:
         iv_box = "High" if vix >= atm_iv * 100.0 else "Low"
-        iv_box_method = "catalog_neutral_fallback_vix_vs_atm_iv"
+        iv_box_method = "workbook_input_rule_vix_vs_atm_iv"
     else:
-        iv_box = "Neutral"
-        iv_box_method = "missing_inputs"
+        raise KingNodeDataError("cannot determine workbook IV box from validated index inputs")
 
     signs = {
         "gamma": _sign_label(totals.get("gex")),
@@ -1078,30 +996,18 @@ def _regime(
         ]
     )
 
-    reference = reference if isinstance(reference, dict) else {}
-    matrix = reference.get("matrix", {}) if isinstance(reference.get("matrix", {}), dict) else {}
-    iv_map = (
-        reference.get("iv_regime_map", {})
-        if isinstance(reference.get("iv_regime_map", {}), dict)
-        else {}
-    )
-    matrix_value = matrix.get(matrix_key)
-    reference_mode = "workbook_static_export"
+    matrix_value = reference.matrix.get(matrix_key)
     if not isinstance(matrix_value, dict):
-        matrix_value = _semantic_matrix(
-            signs["gamma"],
-            signs["dex"],
-            signs["vex"],
-            iv_box,
+        raise KingNodeDataError(
+            f"verified Matrix export has no exact key for {matrix_key!r}"
         )
-        reference_mode = "semantic_fallback"
-    box_value = iv_map.get(box_key)
-    if isinstance(box_value, dict):
-        box_regime = box_value.get("regime")
-        box_iv = box_value.get("iv")
-    else:
-        box_regime = None
-        box_iv = None
+    box_value = reference.iv_regime_map.get(box_key)
+    if not isinstance(box_value, dict):
+        raise KingNodeDataError(
+            f"verified IV Regime Map export has no exact key for {box_key!r}"
+        )
+    box_regime = box_value.get("regime")
+    box_iv = box_value.get("iv")
 
     return {
         "iv_raw": iv_raw,
@@ -1115,7 +1021,7 @@ def _regime(
         "box_key": box_key,
         "box_regime": box_regime,
         "box_iv": box_iv,
-        "reference_mode": reference_mode,
+        "reference_mode": "verified_static_reference",
         **matrix_value,
     }
 
@@ -1149,28 +1055,168 @@ def _index_values(
     return values, metadata
 
 
+def _normalized_input(value: Any) -> NormalizedInput:
+    if isinstance(value, NormalizedInput):
+        return value
+    try:
+        return validate_normalized_input(value)
+    except KingNodeInputError as exc:
+        raise KingNodeDataError(str(exc)) from exc
+
+
+def _verified_reference(value: Any) -> VerifiedReference:
+    if isinstance(value, VerifiedReference):
+        return value
+    try:
+        return validate_reference(value)
+    except KingNodeReferenceError as exc:
+        raise KingNodeDataError(str(exc)) from exc
+
+
+def _legacy_surface_from_normalized(
+    normalized: NormalizedInput,
+) -> tuple[list[dict[str, Any]], dict[str, Any], dict[str, Any]]:
+    """Map validated leg data to the core's explicit OI-weighted surface.
+
+    Every profile is calculated from the source leg's signed observed/model-derived
+    Greek times its OI and contract multiplier.  No option-right sign is invented:
+    the provider Greek value is retained verbatim, while raw gamma keeps the
+    workbook-visible ``gamma × OI`` convention.
+    """
+
+    multiplier = float(normalized.expiration["contract_multiplier"])
+    rows: list[dict[str, Any]] = []
+    greek_provenance: dict[str, dict[str, int]] = {
+        name: {"observed": 0, "model_derived": 0}
+        for name in (
+            "gamma", "zomma", "delta", "vanna", "vomma", "vega", "speed", "charm", "dgex"
+        )
+    }
+    for option in normalized.option_rows:
+        oi = option.open_interest
+        exposures = {
+            "total_gamma": option.greeks["gamma"].value * oi * multiplier / 1_000_000_000.0,
+            "total_zomma": option.greeks["zomma"].value * oi * multiplier / 1_000_000_000.0,
+            "total_delta": option.delta * oi * multiplier / 1_000_000_000.0,
+            "total_vanna": option.greeks["vanna"].value * oi * multiplier / 1_000_000_000.0,
+            "total_vomma": option.greeks["vomma"].value * oi * multiplier / 1_000_000_000.0,
+            "total_vega": option.greeks["vega"].value * oi * multiplier / 1_000_000_000.0,
+            "total_speed": option.greeks["speed"].value * oi * multiplier / 1_000_000_000.0,
+            "total_charm": option.greeks["charm"].value * oi * multiplier / 1_000_000_000.0,
+            "total_dgex": option.greeks["dgex"].value * oi * multiplier / 1_000_000_000.0,
+        }
+        for greek in ("gamma", "zomma", "vanna", "vomma", "vega", "speed", "charm", "dgex"):
+            greek_provenance[greek][option.greeks[greek].provenance] += 1
+        greek_provenance["delta"]["observed"] += 1
+        row: dict[str, Any] = {
+            "strike_price": option.strike,
+            "time_till_exp": option.time_to_expiry_years,
+            "call_iv": option.iv if option.right == "CALL" else None,
+            "put_iv": option.iv if option.right == "PUT" else None,
+            "call_gamma": option.greeks["gamma"].value if option.right == "CALL" else None,
+            "put_gamma": option.greeks["gamma"].value if option.right == "PUT" else None,
+            "call_open_int": oi if option.right == "CALL" else None,
+            "put_open_int": oi if option.right == "PUT" else None,
+            "call_gex": exposures["total_gamma"] * 1_000_000_000.0 if option.right == "CALL" else None,
+            "put_gex": exposures["total_gamma"] * 1_000_000_000.0 if option.right == "PUT" else None,
+            **exposures,
+        }
+        rows.append(row)
+    volatility = {
+        name: {
+            "value": term.value,
+            "timestamp": term.timestamp,
+            "status": term.provenance,
+            "source": term.methodology,
+            "quality": term.quality,
+        }
+        for name, term in normalized.indices.items()
+    }
+    payload = {
+        "spot_price": normalized.underlying["spot"],
+        "prev_close_price": normalized.underlying["previous_close"],
+        "ticker": normalized.underlying["symbol"],
+        "expir": normalized.expiration["expiry"],
+        "today_ddt_string": normalized.as_of,
+    }
+    provenance = {
+        "greek_provenance": greek_provenance,
+        "contract_multiplier": multiplier,
+        "source": dict(normalized.source),
+    }
+    return rows, volatility, {**payload, **provenance}
+
+
+def _public_source(source: dict[str, Any], source_meta: dict[str, Any] | None) -> dict[str, Any]:
+    """Keep only portable provenance; local file-system coordinates never leak."""
+
+    prohibited = {"path", "filename", "file", "directory", "cwd", "local_path"}
+    output: dict[str, Any] = {}
+    for mapping in (source, source_meta or {}):
+        for key, value in mapping.items():
+            if str(key).lower() in prohibited:
+                continue
+            if isinstance(value, (str, int, float, bool)) or value is None:
+                output[str(key)] = value
+    return output
+
+
+def _formula_coverage(reference: VerifiedReference) -> dict[str, Any]:
+    return {
+        "coverage_schema_version": "king-node.formula-coverage.v2",
+        "current_formula_cells": 7959,
+        "catalogue_formula_cells": 7382,
+        "union_formula_cells": 8066,
+        "current_family_count": 730,
+        "catalogue_family_count": 683,
+        "formula_text_changed": 509,
+        "xlsx_only": 684,
+        "catalogue_only": 107,
+        "conditional_formatting_rules": 299,
+        "input_validation_rules": 8,
+        "input_validation_slots": 16,
+        "ledger_checksum": reference.authority.get("formula_coverage_checksum"),
+    }
+
+
 def build_snapshot(
-    tastytrade_payload: dict[str, Any],
+    tastytrade_payload: dict[str, Any] | NormalizedInput,
     volatility: dict[str, Any] | None = None,
     state: dict[str, Any] | None = None,
     *,
     source_meta: dict[str, Any] | None = None,
-    reference: dict[str, Any] | None = None,
+    reference: dict[str, Any] | VerifiedReference | None = None,
     generated_at: datetime | str | None = None,
     session_date: str | None = None,
     market_minute: int | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
-    """Build a complete KING NODE web snapshot and next runtime state."""
+    """Build a fail-closed KING NODE v2 snapshot and next explicit state.
 
-    timestamp = _iso_utc(generated_at)
+    ``tastytrade_payload`` is retained only as a parameter name for call-site
+    compatibility.  Its accepted value is a ``king-node.v2-input`` mapping (or a
+    prevalidated :class:`NormalizedInput`), never a legacy split-data payload.
+    """
+
+    if volatility is not None:
+        raise KingNodeDataError(
+            "king-node.v2 requires indices inside the normalized input; separate volatility is not accepted"
+        )
+    if reference is None:
+        raise KingNodeDataError("king-node.v2 requires a verified static reference export")
+    normalized = _normalized_input(tastytrade_payload)
+    verified_reference = _verified_reference(reference)
+    raw_rows, normalized_volatility, normalized_payload = _legacy_surface_from_normalized(normalized)
+
+    timestamp = normalized.as_of
+    if generated_at is not None and _iso_utc(generated_at) != timestamp:
+        raise KingNodeDataError("generated_at must equal normalized input as_of")
     generated_dt = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
-    session_date = session_date or generated_dt.date().isoformat()
-    next_state = _normalise_state(state, session_date)
+    resolved_session_date = session_date or normalized.session_date
+    if resolved_session_date != normalized.session_date:
+        raise KingNodeDataError("session_date must equal normalized input session_date")
+    next_state = _normalise_state(state if state is not None else dict(normalized.state), resolved_session_date)
     source_meta = deepcopy(source_meta) if isinstance(source_meta, dict) else {}
-    volatility = volatility if isinstance(volatility, dict) else {}
-
-    raw_rows = rows_from_tastytrade(tastytrade_payload)
-    spot = _number(tastytrade_payload.get("spot_price"))
+    spot = _number(normalized_payload.get("spot_price"))
     if spot is None or spot <= 0:
         raise KingNodeDataError("spot_price is missing or invalid")
     aggregated = aggregate_by_strike(raw_rows)
@@ -1180,13 +1226,13 @@ def build_snapshot(
 
     source_id = str(
         source_meta.get("source_id")
-        or source_meta.get("path")
-        or tastytrade_payload.get("today_ddt_string")
+        or normalized.source.get("source_id")
+        or normalized_payload.get("today_ddt_string")
         or timestamp
     )
     rows, smooth_depth = _smooth_surface(next_state, window, source_id)
 
-    index_values, index_metadata = _index_values(volatility)
+    index_values, index_metadata = _index_values(normalized_volatility)
     for name, value in index_values.items():
         observed_at = index_metadata[name].get("timestamp") or timestamp
         _append_history(next_state, name, value, str(observed_at))
@@ -1200,10 +1246,10 @@ def build_snapshot(
         )
         for name in ("vix", "vvix", "vix1d", "atm_iv")
     }
-    minute = market_minute
-    if minute is None:
-        minute = generated_dt.hour * 60 + generated_dt.minute
-    skew = _skew(rows, spot, next_state, timestamp, minute)
+    # ``market_minute`` remains in the callable signature for adapter stability,
+    # but no unproven time-of-day calibration is part of v2 skew calculation.
+    _ = market_minute, generated_dt
+    skew = _skew(rows, spot, next_state, timestamp)
     skew["atm_iv"] = atm_iv
 
     totals: dict[str, float] = {}
@@ -1235,7 +1281,7 @@ def build_snapshot(
         index_values,
         atm_iv,
         dte,
-        reference,
+        verified_reference,
     )
 
     raw_resistances, raw_supports = _rank_level_candidates(rows, spot)
@@ -1409,14 +1455,12 @@ def build_snapshot(
     ]
     if missing_indices:
         warnings.append(
-            "Observed volatility index values unavailable: " + ", ".join(missing_indices)
+            "Validated volatility index values unavailable: " + ", ".join(missing_indices)
         )
-    if regime["reference_mode"] != "workbook_static_export":
-        warnings.append(
-            "Matrix/IV Regime static workbook values are using the documented semantic fallback"
-        )
-    if source_meta.get("stale"):
-        warnings.append("Tastytrade source is older than the configured freshness limit")
+    public_source = _public_source(dict(normalized.source), source_meta)
+    source_stale = bool(public_source.get("stale"))
+    if source_stale:
+        warnings.append("Option surface source is older than the configured freshness limit")
     if raw_coverage < 5:
         errors.append("Fewer than five strikes have complete raw gamma inputs")
     if present_profile_cells < min(profile_cells, 5 * len(PROFILE_FIELDS)):
@@ -1432,32 +1476,65 @@ def build_snapshot(
             and raw_coverage == len(rows)
             and present_profile_cells == profile_cells
             and not missing_indices
-            and regime["reference_mode"] == "workbook_static_export"
-            and not source_meta.get("stale")
+            and regime["reference_mode"] == "verified_static_reference"
+            and not source_stale
             else "DEGRADED"
         )
     )
 
-    prev_close = _number(tastytrade_payload.get("prev_close_price"))
+    prev_close = _number(normalized_payload.get("prev_close_price"))
+    formula_outputs = {
+        "king_node_model": {
+            "raw_gamma": _node(rows, "raw_gamma", "max"),
+            "king_gamma": _node(rows, "gamma_gross", "max"),
+            "max_gex": _node(rows, "gex", "max"),
+            "min_gex": _node(rows, "gex", "min"),
+            "gamma_flip": cumulative["gamma_flip"],
+            "zero_gamma": cumulative["zero_gamma"],
+        },
+        "gex_depth": {
+            "call_walls": _walls(rows, True),
+            "put_walls": _walls(rows, False),
+            "cumulative_gex": cumulative["cumulative"],
+        },
+        "level_engine": {
+            "resistances": locked_resistances,
+            "supports": locked_supports,
+            "raw_resistances": raw_resistances,
+            "raw_supports": raw_supports,
+        },
+    }
     snapshot = {
+        "schema": SCHEMA_VERSION,
         "schema_version": SCHEMA_VERSION,
         "status": status,
         "generated_at": timestamp,
-        "session_date": session_date,
-        "source": {
-            "tastytrade": {
-                **source_meta,
-                "source_id": source_id,
-                "ticker": tastytrade_payload.get("ticker", "SPX"),
-                "expiration": tastytrade_payload.get("expir", "0dte"),
-            },
-            "indices": index_metadata,
-            "formula_authority": {
-                "catalog": "MASTER_KING_NODE_RECORD_V5_CATALOGO_COMPLETO_DE_FORMULAS.md",
-                "runtime": "live_king_node.py",
-                "profile": "King Node Model A:I, 47-strike window",
-            },
+        "session_date": resolved_session_date,
+        "session": {
+            "date": resolved_session_date,
+            "as_of": timestamp,
+            "market_timezone": "America/New_York",
         },
+        "freshness": {
+            "age_seconds": _number(public_source.get("age_seconds")),
+            "stale": source_stale,
+            "as_of": timestamp,
+        },
+        "provenance": {
+            "input_schema_version": INPUT_SCHEMA_VERSION,
+            "state_schema_version": STATE_SCHEMA_VERSION,
+            "source": {**public_source, "source_id": source_id},
+            "greek_provenance": normalized_payload["greek_provenance"],
+        },
+        "reference": {
+            "schema_version": verified_reference.raw["schema_version"],
+            "canonical_checksum": verified_reference.checksum,
+            "workbook_sha256": verified_reference.authority["workbook_sha256"],
+            "catalogue_sha256": verified_reference.authority["catalogue_sha256"],
+            "matrix_rows": len(verified_reference.matrix),
+            "iv_regime_rows": len(verified_reference.iv_regime_map),
+        },
+        "formula_coverage": _formula_coverage(verified_reference),
         "quality": {
             "grade": quality,
             "errors": errors,
@@ -1472,6 +1549,10 @@ def build_snapshot(
             "reference_mode": regime["reference_mode"],
         },
         "inputs": {
+            "underlying": dict(normalized.underlying),
+            "expiration": dict(normalized.expiration),
+            "indices": index_metadata,
+            "option_row_count": len(normalized.option_rows),
             "spot": spot,
             "previous_close": prev_close,
             "spot_change_pct": (
@@ -1489,19 +1570,14 @@ def build_snapshot(
         "regime": regime,
         "totals": totals,
         "levels": {
-            "raw_gamma": _node(rows, "raw_gamma", "max"),
-            "king_gamma": _node(rows, "gamma_gross", "max"),
-            "max_gex": _node(rows, "gex", "max"),
-            "min_gex": _node(rows, "gex", "min"),
-            "gamma_flip": cumulative["gamma_flip"],
-            "zero_gamma": cumulative["zero_gamma"],
-            "daemon_zero_gamma": _number(tastytrade_payload.get("zerogamma")),
-            "call_walls": _walls(rows, True),
-            "put_walls": _walls(rows, False),
-            "resistances": locked_resistances,
-            "supports": locked_supports,
-            "raw_resistances": raw_resistances,
-            "raw_supports": raw_supports,
+            **formula_outputs["king_node_model"],
+            "daemon_zero_gamma": None,
+            "call_walls": formula_outputs["gex_depth"]["call_walls"],
+            "put_walls": formula_outputs["gex_depth"]["put_walls"],
+            "resistances": formula_outputs["level_engine"]["resistances"],
+            "supports": formula_outputs["level_engine"]["supports"],
+            "raw_resistances": formula_outputs["level_engine"]["raw_resistances"],
+            "raw_supports": formula_outputs["level_engine"]["raw_supports"],
         },
         "monitor": {
             "gex": gex_monitor,
@@ -1511,6 +1587,16 @@ def build_snapshot(
             "vix1d_extremes": vol_extremes,
         },
         "rows": rows,
+        "presentation": {
+            "symbol": normalized.underlying["symbol"],
+            "spot": spot,
+            "regime": regime.get("regime"),
+            "action": regime.get("action"),
+            "phenomenon": regime.get("phenomenon"),
+            "resistances": [item["strike"] for item in locked_resistances],
+            "supports": [item["strike"] for item in locked_supports],
+            "formula_outputs": formula_outputs,
+        },
     }
     return snapshot, next_state
 
