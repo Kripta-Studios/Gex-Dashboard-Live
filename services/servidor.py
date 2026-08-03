@@ -55,6 +55,7 @@ os.makedirs(VIS_FOLDER, exist_ok=True)
 LOG_FILE = os.path.join(PROJECT_ROOT, "servidor_logs.txt")
 MOVIE_DIRECTORY = "/home/kripta/Movies"
 MOVIE_FILENAME = "Rocky.mp4"
+MOVIE_SUBTITLE_FILENAME = "Rocky.vtt"
 
 # MEMORIA RAM GLOBAL
 LATEST_DATA_CACHE = {}
@@ -566,7 +567,7 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
 
             length = end - start + 1
             self.send_response(206)
-            self.send_header("Content-Type", "video/x-matroska")
+            self.send_header("Content-Type", "video/mp4")
             self.send_header("Accept-Ranges", "bytes")
             self.send_header("Content-Range", f"bytes {start}-{end}/{file_size}")
             self.send_header("Content-Length", str(length))
@@ -661,6 +662,98 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
             finally:
                 self._release_api_key(auth_info)
             return
+    def serve_rocky_player(self):
+        """Sirve una página HTML con vídeo y subtítulos WebVTT."""
+    
+        html = """<!doctype html>
+    <html lang="es">
+    <head>
+        <meta charset="utf-8">
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1"
+        >
+        <title>Rocky</title>
+    
+        <style>
+            html,
+            body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                background: #000;
+            }
+    
+            body {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+    
+            video {
+                width: 100%;
+                height: 100%;
+                max-width: 100vw;
+                max-height: 100vh;
+                background: #000;
+            }
+    
+            video::cue {
+                font-size: 1.2em;
+                color: white;
+                background: rgba(0, 0, 0, 0.75);
+            }
+        </style>
+    </head>
+    
+    <body>
+        <video controls preload="metadata">
+            <source
+                src="/Rocky/video"
+                type="video/mp4"
+            >
+    
+            <track
+                kind="subtitles"
+                src="/Rocky/subtitles.vtt"
+                srclang="es"
+                label="English"
+                default
+            >
+    
+            Tu navegador no admite vídeo HTML5.
+        </video>
+    </body>
+    </html>
+    """
+    
+        body = html.encode("utf-8")
+    
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "no-store")
+        self.end_headers()
+        self.wfile.write(body)
+    
+    
+    def serve_subtitles(self, full_path):
+        """Sirve un archivo WebVTT con el tipo MIME correcto."""
+    
+        try:
+            with open(full_path, "rb") as subtitle_file:
+                body = subtitle_file.read()
+    
+            self.send_response(200)
+            self.send_header("Content-Type", "text/vtt; charset=utf-8")
+            self.send_header("Content-Length", str(len(body)))
+            self.send_header("Cache-Control", "no-cache")
+            self.end_headers()
+            self.wfile.write(body)
+    
+        except OSError as exc:
+            logging.error("Subtitle Error: %s", exc)
+            self.send_error(500, "Unable to read subtitles")
 
     def do_GET(self):
         parsed_url = urllib.parse.urlparse(self.path)
@@ -1159,12 +1252,57 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_error(500, str(e))
                 return
         # OTROS (Video, Seguridad)
-        if self.path == "/Rocky":
-            full_movie_path = os.path.join(MOVIE_DIRECTORY, MOVIE_FILENAME)
-            if os.path.exists(full_movie_path):
+        # Página HTML con reproductor
+        if path_only in {"/Rocky", "/Rocky/"}:
+            full_movie_path = os.path.join(
+                MOVIE_DIRECTORY,
+                MOVIE_FILENAME,
+            )
+        
+            full_subtitle_path = os.path.join(
+                MOVIE_DIRECTORY,
+                MOVIE_SUBTITLE_FILENAME,
+            )
+        
+            if not os.path.isfile(full_movie_path):
+                self.send_error(404, "Movie not found")
+                return
+        
+            if not os.path.isfile(full_subtitle_path):
+                self.send_error(404, "Subtitles not found")
+                return
+        
+            self.serve_rocky_player()
+            return
+        
+        
+        # Archivo MP4 solicitado por el reproductor
+        if path_only == "/Rocky/video":
+            full_movie_path = os.path.join(
+                MOVIE_DIRECTORY,
+                MOVIE_FILENAME,
+            )
+        
+            if os.path.isfile(full_movie_path):
                 self.serve_video(full_movie_path)
             else:
                 self.send_error(404, "Movie not found")
+        
+            return
+        
+        
+        # Subtítulos WebVTT solicitados por el reproductor
+        if path_only == "/Rocky/subtitles.vtt":
+            full_subtitle_path = os.path.join(
+                MOVIE_DIRECTORY,
+                MOVIE_SUBTITLE_FILENAME,
+            )
+        
+            if os.path.isfile(full_subtitle_path):
+                self.serve_subtitles(full_subtitle_path)
+            else:
+                self.send_error(404, "Subtitles not found")
+        
             return
 
         allowed_dirs = ["/json_data/", "/fourier/", "/ib_charts/"]
