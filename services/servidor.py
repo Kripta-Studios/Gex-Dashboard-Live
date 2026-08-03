@@ -54,7 +54,7 @@ os.makedirs(VIS_FOLDER, exist_ok=True)
 # Cambio solicitado: nombre del archivo de logs
 LOG_FILE = os.path.join(PROJECT_ROOT, "servidor_logs.txt")
 MOVIE_DIRECTORY = "/home/kripta/Movies"
-MOVIE_FILENAME = "oppenheimer.mp4"
+MOVIE_FILENAME = "Rocky.mp4"
 
 # MEMORIA RAM GLOBAL
 LATEST_DATA_CACHE = {}
@@ -1159,7 +1159,7 @@ class ExposureDataHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_error(500, str(e))
                 return
         # OTROS (Video, Seguridad)
-        if self.path == "/Oppenheimer":
+        if self.path == "/Rocky":
             full_movie_path = os.path.join(MOVIE_DIRECTORY, MOVIE_FILENAME)
             if os.path.exists(full_movie_path):
                 self.serve_video(full_movie_path)
