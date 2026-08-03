@@ -33,6 +33,5 @@ research_papers/JEPA/results/jepa_full_pipeline_180m_continuation_exit/trade_sta
 research_papers/JEPA/results/jepa_full_pipeline_180m_continuation_exit_truncate_trail/trade_state_rows.parquet
 trades_jepa/event_option_candidate_audit_jepa.jsonl
 analysis_live_review_20260701_20260701T210327Z/log_exports/jepa_eod_20260701T210421Z.tar.gz
-
-# Generated runtime exports
+trades_jepa/
 log_exports/
