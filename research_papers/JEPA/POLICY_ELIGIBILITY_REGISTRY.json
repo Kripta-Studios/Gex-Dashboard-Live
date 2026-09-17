@@ -47,6 +47,23 @@
       "promotion_approved": false,
       "summary_sha256": "1891a996bdafbc3323aaa9031120958b5f6c0315163f822ac26c30778c070669",
       "audit_sha256": "4ea119dd0e7cbb0e3ef15e1cfcd14aec663a6ac2b7469a823afd4528d385032e"
+    },
+    {
+      "package_id": "GEX_REAL_BACKEND_SYNTHETIC_20260918",
+      "artifact_sha256": "d49c32944abfe21d0234966b7e02f90d5c00413421335f8c0f7a7b11424eb90b",
+      "artifact_kind": "synthetic_real_model_software_verification_not_policy",
+      "implementation": "PASS_REAL_BACKEND_SYNTHETIC_FOLD",
+      "verification_profile": "one_full_width_synthetic_fold_real_lightgbm",
+      "real_regressors": 72,
+      "independent_real_refits": 72,
+      "source_pilot": "REVIEWED_NOT_HISTORICALLY_ADMITTED",
+      "historical_admission": "UNVERIFIABLE_FOR_CAUSAL_REPLAY",
+      "economic_evidence_state": "NOT_EVALUATED",
+      "prospective_validation_state": "NOT_STARTED",
+      "technical_ready": false,
+      "promotion_approved": false,
+      "approval_ref": null,
+      "audit_sha256": "7533cf27c3fafc7755ed368e91607b98131aca355093b18716c3b2d901057611"
     }
   ]
 }

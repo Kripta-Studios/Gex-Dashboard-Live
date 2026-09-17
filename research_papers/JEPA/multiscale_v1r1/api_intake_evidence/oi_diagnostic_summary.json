@@ -1,0 +1,61 @@
+{
+  "status": "PASS_INDEPENDENT_OFFLINE_OI_DIAGNOSTIC",
+  "results": {
+    "SPXW": {
+      "oi_rows": 324,
+      "late_oi_rows": 16,
+      "late_oi_positive": 0,
+      "late_oi_zero": 16,
+      "late_oi_present_in_greeks": 16,
+      "late_oi_with_valid_greek": 16,
+      "late_positive_oi_with_valid_greek": 0,
+      "early_positive_oi_with_valid_greek": 179,
+      "greek_contracts": 326,
+      "greek_valid_contracts": 198,
+      "greek_valid_without_oi": 2
+    },
+    "SPY": {
+      "oi_rows": 306,
+      "late_oi_rows": 24,
+      "late_oi_positive": 0,
+      "late_oi_zero": 24,
+      "late_oi_present_in_greeks": 24,
+      "late_oi_with_valid_greek": 19,
+      "late_positive_oi_with_valid_greek": 0,
+      "early_positive_oi_with_valid_greek": 199,
+      "greek_contracts": 306,
+      "greek_valid_contracts": 253,
+      "greek_valid_without_oi": 0
+    },
+    "QQQ": {
+      "oi_rows": 236,
+      "late_oi_rows": 12,
+      "late_oi_positive": 0,
+      "late_oi_zero": 12,
+      "late_oi_present_in_greeks": 12,
+      "late_oi_with_valid_greek": 11,
+      "late_positive_oi_with_valid_greek": 0,
+      "early_positive_oi_with_valid_greek": 162,
+      "greek_contracts": 236,
+      "greek_valid_contracts": 194,
+      "greek_valid_without_oi": 0
+    }
+  },
+  "source_sha256": {
+    "SPXW": {
+      "greeks": "88f86565e4c378453570cd885802678ca3eb70b318b10c167dab98e55ede043c",
+      "oi": "30c17c41e29994a87a49124c37546ecb7fcce2cde51f3d4a1f15cf4e82068223"
+    },
+    "SPY": {
+      "greeks": "e5eaddbdaee565daaefc2e47e8ef86cb9d9cf48191dbe7f9bc1cb5cf45e664e0",
+      "oi": "c5b96bd974ec4899feee59d86fe2950762f896044b27a741e1e029d30134818f"
+    },
+    "QQQ": {
+      "greeks": "4aaad2b27607a21e9d1e73b157b47a07a71a15a028c472cd02df86bea9793dc5",
+      "oi": "8d9b6a3915a538a00dbbc50d460330960b1e7848102f0b6262751f8ad331c07e"
+    }
+  },
+  "historical_admission_granted": false,
+  "historical_economics": "NOT_EVALUATED",
+  "promotion_approved": false
+}

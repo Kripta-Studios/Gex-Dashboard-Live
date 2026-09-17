@@ -1,0 +1,39 @@
+{
+  "kind": "oi",
+  "ticker": "QQQ",
+  "endpoint": "/option/history/open_interest",
+  "params": {
+    "symbol": "QQQ",
+    "expiration": "20220801",
+    "date": "20220801",
+    "strike": "*",
+    "right": "both",
+    "format": "csv"
+  },
+  "specification_sha256": "ab4a51d26e66e01fe8f29e3e4c87779cc36c23f2c3a363b1b3517e6f03f681fc",
+  "started_at": "2026-09-17T22:53:57.545884+00:00",
+  "url": "http://91.99.90.39:25503/v3/option/history/open_interest?symbol=QQQ&expiration=20220801&date=20220801&strike=%2A&right=both&format=csv",
+  "http_status": 200,
+  "headers": {
+    "Content-Type": "text/csv",
+    "Date": "Thu, 17 Sep 2026 22:53:59 GMT",
+    "Content-Length": null
+  },
+  "received_at": "2026-09-17T22:53:59.283956+00:00",
+  "bytes": 14488,
+  "sha256": "8d9b6a3915a538a00dbbc50d460330960b1e7848102f0b6262751f8ad331c07e",
+  "complete": true,
+  "analysis": {
+    "rows": 236,
+    "contracts": 236,
+    "duplicate_rows": 0,
+    "invalid_identity_rows": 0,
+    "first_timestamp": "2022-08-01T06:30:00-04:00",
+    "last_timestamp": "2022-08-01T16:40:22-04:00",
+    "oi_not_premarket_rows": 12,
+    "invalid_oi_rows": 0,
+    "documented_as_of": "PREVIOUS_TRADING_SESSION_CLOSE",
+    "original_reception_observed": false,
+    "status": "FAILED_REPORTED_CLOCK_CHECKS"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "kind": "greeks",
+  "ticker": "SPY",
+  "endpoint": "/option/history/greeks/first_order",
+  "params": {
+    "symbol": "SPY",
+    "expiration": "20220801",
+    "date": "20220801",
+    "strike": "*",
+    "right": "both",
+    "format": "csv",
+    "interval": "1s",
+    "start_time": "09:30:00",
+    "end_time": "09:31:00",
+    "version": "1"
+  },
+  "specification_sha256": "ab4a51d26e66e01fe8f29e3e4c87779cc36c23f2c3a363b1b3517e6f03f681fc",
+  "started_at": "2026-09-17T22:51:54.853845+00:00",
+  "url": "http://91.99.90.39:25503/v3/option/history/greeks/first_order?symbol=SPY&expiration=20220801&date=20220801&strike=%2A&right=both&format=csv&interval=1s&start_time=09%3A30%3A00&end_time=09%3A31%3A00&version=1",
+  "http_status": 200,
+  "headers": {
+    "Content-Type": "text/csv",
+    "Date": "Thu, 17 Sep 2026 22:51:56 GMT",
+    "Content-Length": null
+  },
+  "received_at": "2026-09-17T22:52:52.556868+00:00",
+  "bytes": 2958637,
+  "sha256": "e5eaddbdaee565daaefc2e47e8ef86cb9d9cf48191dbe7f9bc1cb5cf45e664e0",
+  "complete": true,
+  "analysis": {
+    "rows": 18666,
+    "contracts": 306,
+    "duplicate_rows": 0,
+    "invalid_identity_rows": 0,
+    "first_timestamp": "2022-08-01T09:30:00-04:00",
+    "last_timestamp": "2022-08-01T09:31:00-04:00",
+    "outside_request_rows": 0,
+    "future_underlying_rows": 0,
+    "zero_or_invalid_underlying_rows": 0,
+    "first_positive_quote_timestamp": "2022-08-01T09:30:00-04:00",
+    "maximum_underlying_age_ms": 0.0,
+    "status": "PASS_REPORTED_CLOCK_CHECKS"
+  }
+}

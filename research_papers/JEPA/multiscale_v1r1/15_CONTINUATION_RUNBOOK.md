@@ -44,3 +44,35 @@ No es un benchmark del entrenamiento histórico completo. Su estado se publica
 separado del E2E rápido y del estado de admisión histórica. Los roots que fallen
 conservan sus archivos y no reciben summary PASS. Ningún comando admite proveedor,
 credencial, broker ni una ruta real para generar PnL histórico.
+
+## Continuación 2026-09-18: backend real y API
+
+La especificación 17 y el backend/auditor real se publicaron antes del run en
+`d86aac9a`. Comando ejecutado para el fold técnico con 72 regresores reales:
+
+```powershell
+python -m neural.jepa.multiscale_v1r1.real_backend_smoke --root D:/GexResearchArtifacts/multiscale_v1r1/real_backend_20260918_01 --specification research_papers/JEPA/multiscale_v1r1/17_REAL_BACKEND_SPEC.md
+```
+
+El mismo proceso refita los 72 modelos en el auditor y solo escribe summary PASS
+si concluye. No reejecutar sobre ese root ni presentar este fold de fixtures
+como una evaluación histórica. Para reproducir el software se necesita otro
+root y la revisión de código fijada por sus manifests; no cambia sus parámetros.
+
+Verificación ampliada, sin red ni lectura de mercado:
+
+```powershell
+python -m pytest tests/multiscale_v1r1 -q
+python -m ruff check neural/jepa/multiscale_v1r1 neural/jepa/multiscale_v1r1_audit neural/jepa/theta_source_pilot_v1.py neural/jepa/audit_theta_source_pilot_v1.py tests/multiscale_v1r1
+python -m compileall -q neural/jepa/multiscale_v1r1 neural/jepa/multiscale_v1r1_audit neural/jepa/theta_source_pilot_v1.py neural/jepa/audit_theta_source_pilot_v1.py
+```
+
+El piloto 19 ya consumió sus seis peticiones. Código publicado `bb57bd5c`, root
+`D:/GexResearchArtifacts/multiscale_v1r1/theta_source_pilot_20260918_01`.
+No repetir la captura ni ampliar su ventana por el resultado. Los cuerpos
+sellados y sus manifests permiten reproducir offline los diagnósticos; el
+auditor `audit_theta_source_pilot_v1.audit` no concede admisión histórica.
+El diagnóstico 20 usó esos mismos seis cuerpos después de publicar `19650635`;
+su fuente ejecutada está preservada en api_intake_evidence/oi_diagnostic_source.py.
+El informe 21 distingue los checks de reloj del piloto, sus fallos y la
+ausencia de evidencia económica. No ejecutar familias históricas cerradas.

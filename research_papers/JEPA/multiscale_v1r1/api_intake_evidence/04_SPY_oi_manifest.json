@@ -1,0 +1,39 @@
+{
+  "kind": "oi",
+  "ticker": "SPY",
+  "endpoint": "/option/history/open_interest",
+  "params": {
+    "symbol": "SPY",
+    "expiration": "20220801",
+    "date": "20220801",
+    "strike": "*",
+    "right": "both",
+    "format": "csv"
+  },
+  "specification_sha256": "ab4a51d26e66e01fe8f29e3e4c87779cc36c23f2c3a363b1b3517e6f03f681fc",
+  "started_at": "2026-09-17T22:53:55.271189+00:00",
+  "url": "http://91.99.90.39:25503/v3/option/history/open_interest?symbol=SPY&expiration=20220801&date=20220801&strike=%2A&right=both&format=csv",
+  "http_status": 200,
+  "headers": {
+    "Content-Type": "text/csv",
+    "Date": "Thu, 17 Sep 2026 22:53:57 GMT",
+    "Content-Length": null
+  },
+  "received_at": "2026-09-17T22:53:57.496921+00:00",
+  "bytes": 18755,
+  "sha256": "c5b96bd974ec4899feee59d86fe2950762f896044b27a741e1e029d30134818f",
+  "complete": true,
+  "analysis": {
+    "rows": 306,
+    "contracts": 306,
+    "duplicate_rows": 0,
+    "invalid_identity_rows": 0,
+    "first_timestamp": "2022-08-01T06:30:00.822000-04:00",
+    "last_timestamp": "2022-08-01T16:40:26.666000-04:00",
+    "oi_not_premarket_rows": 24,
+    "invalid_oi_rows": 0,
+    "documented_as_of": "PREVIOUS_TRADING_SESSION_CLOSE",
+    "original_reception_observed": false,
+    "status": "FAILED_REPORTED_CLOCK_CHECKS"
+  }
+}

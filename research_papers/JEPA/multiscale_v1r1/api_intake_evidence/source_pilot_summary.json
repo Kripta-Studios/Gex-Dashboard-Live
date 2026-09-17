@@ -1,0 +1,108 @@
+{
+  "status": "SOURCE_PILOT_REVIEWED",
+  "requests": [
+    {
+      "directory": "00_SPXW_greeks",
+      "rows": 19886,
+      "contracts": 326,
+      "duplicate_rows": 0,
+      "invalid_identity_rows": 0,
+      "first_timestamp": "2022-08-01T09:30:00-04:00",
+      "last_timestamp": "2022-08-01T09:31:00-04:00",
+      "outside_request_rows": 0,
+      "future_underlying_rows": 0,
+      "zero_or_invalid_underlying_rows": 326,
+      "first_positive_quote_timestamp": "2022-08-01T09:30:01-04:00",
+      "maximum_underlying_age_ms": 0.0,
+      "status": "PASS_REPORTED_CLOCK_CHECKS"
+    },
+    {
+      "directory": "01_SPY_greeks",
+      "rows": 18666,
+      "contracts": 306,
+      "duplicate_rows": 0,
+      "invalid_identity_rows": 0,
+      "first_timestamp": "2022-08-01T09:30:00-04:00",
+      "last_timestamp": "2022-08-01T09:31:00-04:00",
+      "outside_request_rows": 0,
+      "future_underlying_rows": 0,
+      "zero_or_invalid_underlying_rows": 0,
+      "first_positive_quote_timestamp": "2022-08-01T09:30:00-04:00",
+      "maximum_underlying_age_ms": 0.0,
+      "status": "PASS_REPORTED_CLOCK_CHECKS"
+    },
+    {
+      "directory": "02_QQQ_greeks",
+      "rows": 14396,
+      "contracts": 236,
+      "duplicate_rows": 0,
+      "invalid_identity_rows": 0,
+      "first_timestamp": "2022-08-01T09:30:00-04:00",
+      "last_timestamp": "2022-08-01T09:31:00-04:00",
+      "outside_request_rows": 0,
+      "future_underlying_rows": 0,
+      "zero_or_invalid_underlying_rows": 0,
+      "first_positive_quote_timestamp": "2022-08-01T09:30:00-04:00",
+      "maximum_underlying_age_ms": 0.0,
+      "status": "PASS_REPORTED_CLOCK_CHECKS"
+    },
+    {
+      "directory": "03_SPXW_oi",
+      "rows": 324,
+      "contracts": 324,
+      "duplicate_rows": 0,
+      "invalid_identity_rows": 0,
+      "first_timestamp": "2022-08-01T06:30:10.029000-04:00",
+      "last_timestamp": "2022-08-01T17:30:29-04:00",
+      "oi_not_premarket_rows": 16,
+      "invalid_oi_rows": 0,
+      "documented_as_of": "PREVIOUS_TRADING_SESSION_CLOSE",
+      "original_reception_observed": false,
+      "status": "FAILED_REPORTED_CLOCK_CHECKS"
+    },
+    {
+      "directory": "04_SPY_oi",
+      "rows": 306,
+      "contracts": 306,
+      "duplicate_rows": 0,
+      "invalid_identity_rows": 0,
+      "first_timestamp": "2022-08-01T06:30:00.822000-04:00",
+      "last_timestamp": "2022-08-01T16:40:26.666000-04:00",
+      "oi_not_premarket_rows": 24,
+      "invalid_oi_rows": 0,
+      "documented_as_of": "PREVIOUS_TRADING_SESSION_CLOSE",
+      "original_reception_observed": false,
+      "status": "FAILED_REPORTED_CLOCK_CHECKS"
+    },
+    {
+      "directory": "05_QQQ_oi",
+      "rows": 236,
+      "contracts": 236,
+      "duplicate_rows": 0,
+      "invalid_identity_rows": 0,
+      "first_timestamp": "2022-08-01T06:30:00-04:00",
+      "last_timestamp": "2022-08-01T16:40:22-04:00",
+      "oi_not_premarket_rows": 12,
+      "invalid_oi_rows": 0,
+      "documented_as_of": "PREVIOUS_TRADING_SESSION_CLOSE",
+      "original_reception_observed": false,
+      "status": "FAILED_REPORTED_CLOCK_CHECKS"
+    }
+  ],
+  "audit": {
+    "status": "PASS_INDEPENDENT_SOURCE_PILOT_AUDIT",
+    "sources_checked": 6,
+    "scope": "reproduce source diagnostics; not historical economic admission",
+    "promotion_approved": false
+  },
+  "source_values_opened": true,
+  "read_scope": "20220801 opening minute Greeks plus daily prior-close OI",
+  "historical_economics": "NOT_EVALUATED",
+  "historical_admission_granted": false,
+  "promotion_approved": false,
+  "specification_sha256": "ab4a51d26e66e01fe8f29e3e4c87779cc36c23f2c3a363b1b3517e6f03f681fc",
+  "code_sha256": {
+    "producer_source.py": "4184de7cd54ba330117edfaba5d02b20661f3e10f9f37115be6624b8546d9952",
+    "auditor_source.py": "e6eba1c3d6b3b127a27268271fe02fb19fdbd2cb984892678af81a8d61804af2"
+  }
+}

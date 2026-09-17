@@ -1,0 +1,39 @@
+{
+  "kind": "oi",
+  "ticker": "SPXW",
+  "endpoint": "/option/history/open_interest",
+  "params": {
+    "symbol": "SPXW",
+    "expiration": "20220801",
+    "date": "20220801",
+    "strike": "*",
+    "right": "both",
+    "format": "csv"
+  },
+  "specification_sha256": "ab4a51d26e66e01fe8f29e3e4c87779cc36c23f2c3a363b1b3517e6f03f681fc",
+  "started_at": "2026-09-17T22:53:53.433800+00:00",
+  "url": "http://91.99.90.39:25503/v3/option/history/open_interest?symbol=SPXW&expiration=20220801&date=20220801&strike=%2A&right=both&format=csv",
+  "http_status": 200,
+  "headers": {
+    "Content-Type": "text/csv",
+    "Date": "Thu, 17 Sep 2026 22:53:55 GMT",
+    "Content-Length": null
+  },
+  "received_at": "2026-09-17T22:53:55.225951+00:00",
+  "bytes": 20506,
+  "sha256": "30c17c41e29994a87a49124c37546ecb7fcce2cde51f3d4a1f15cf4e82068223",
+  "complete": true,
+  "analysis": {
+    "rows": 324,
+    "contracts": 324,
+    "duplicate_rows": 0,
+    "invalid_identity_rows": 0,
+    "first_timestamp": "2022-08-01T06:30:10.029000-04:00",
+    "last_timestamp": "2022-08-01T17:30:29-04:00",
+    "oi_not_premarket_rows": 16,
+    "invalid_oi_rows": 0,
+    "documented_as_of": "PREVIOUS_TRADING_SESSION_CLOSE",
+    "original_reception_observed": false,
+    "status": "FAILED_REPORTED_CLOCK_CHECKS"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "status": "PASS_SEMANTIC_FAULT_CHECKS_WITH_REPLAY_DOUBLES",
+  "mutations": {
+    "model_text": {
+      "rejected": true,
+      "reason": "AUDIT: real refit model bytes",
+      "replay_models_loaded": 1
+    },
+    "winner_threshold": {
+      "rejected": true,
+      "reason": "AUDIT: winner mismatch",
+      "replay_models_loaded": 72
+    }
+  },
+  "underlying_independent_real_refits": 72,
+  "additional_real_refits": 0,
+  "reused_verified_components": [
+    "tensor_reconstruction",
+    "payoff_reconstruction"
+  ],
+  "hash_checks_passed_on_unchanged_artifacts": true,
+  "mutations_in_memory_only": true,
+  "historical_economics": "NOT_EVALUATED",
+  "promotion_approved": false
+}

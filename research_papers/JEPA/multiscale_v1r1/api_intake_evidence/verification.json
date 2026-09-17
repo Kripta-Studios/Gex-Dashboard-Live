@@ -1,0 +1,91 @@
+{
+  "status": "PASS_CONTINUATION_CODE_AND_PRESERVATION_CHECKS",
+  "pytest": {
+    "command": "python -m pytest tests/multiscale_v1r1 -q",
+    "passed": 71,
+    "seconds": 80.62,
+    "evidence": "observed process exit 0; unified exec session 44898"
+  },
+  "ruff": "PASS",
+  "compileall": "PASS",
+  "python": "3.14.2",
+  "executable": "C:\\Program Files\\Python314\\python.exe",
+  "original_terminal_artifacts_checked": [
+    {
+      "path": "D:\\GexResearchArtifacts\\multiscale_v1r1\\run_20260917_01\\access_log.jsonl",
+      "sha256": "e15328a8a67b40e8e2fd3fa96c7f118a842c0a7b49749ccd44285eb4dea39514"
+    },
+    {
+      "path": "D:\\GexResearchArtifacts\\multiscale_v1r1\\run_20260917_01\\audit_attempt_01.json",
+      "sha256": "b60037a37f0e5eb0a867376d5da0feb994b27ead4b1c976845c52e8512ea7cb8"
+    },
+    {
+      "path": "D:\\GexResearchArtifacts\\multiscale_v1r1\\run_20260917_01\\audit_attempt_02.json",
+      "sha256": "3b6d8177ed317b2b5620d7cbe37b546e3a0ce54ca342988f3c7afc8846b45cc5"
+    },
+    {
+      "path": "D:\\GexResearchArtifacts\\multiscale_v1r1\\run_20260917_01\\audit_attempt_03.json",
+      "sha256": "614cb8004dcc912b95f1eb3a710cc9e9a909f73bfdcf2b94e14106064334599a"
+    },
+    {
+      "path": "D:\\GexResearchArtifacts\\multiscale_v1r1\\run_20260917_01\\audit_source_set_difference.json",
+      "sha256": "1b77e310a3854acef3f12d110455537782ce881feb83168eab4d38deb2c7474b"
+    },
+    {
+      "path": "D:\\GexResearchArtifacts\\multiscale_v1r1\\run_20260917_01\\closure\\audit_summary.json",
+      "sha256": "3d29fad2ee15d77d158bebcd075304880f1822cedfcc76045e56b0352fbb3b30"
+    },
+    {
+      "path": "D:\\GexResearchArtifacts\\multiscale_v1r1\\run_20260917_01\\closure\\evaluation_summary.json",
+      "sha256": "da233166dd7219fe53975734e828bffa5902c2ed4dd2d7e06f3c18dc2db413a5"
+    },
+    {
+      "path": "D:\\GexResearchArtifacts\\multiscale_v1r1\\run_20260917_01\\data_gate\\calendar.parquet",
+      "sha256": "5581951c3bd6380e3b512a9f972a5f2411c113305fb321a6b241a9d20fa448d1"
+    },
+    {
+      "path": "D:\\GexResearchArtifacts\\multiscale_v1r1\\run_20260917_01\\data_gate\\coverage.parquet",
+      "sha256": "adf1317e216bc83c22fb4c101b532ef5160752b03ed75e6e5f2fc628a7cc6546"
+    },
+    {
+      "path": "D:\\GexResearchArtifacts\\multiscale_v1r1\\run_20260917_01\\data_gate\\data_gate_summary.json",
+      "sha256": "31cc60895d1bb433068f6d2d3535e185d9fad38dd68dc8c777fb15096f4624be"
+    },
+    {
+      "path": "D:\\GexResearchArtifacts\\multiscale_v1r1\\run_20260917_01\\inventory\\inventory_summary.json",
+      "sha256": "7460b61691c4ea780dad4c0953c30e0d532adc2035b3e1d62e9a43824dada995"
+    },
+    {
+      "path": "D:\\GexResearchArtifacts\\multiscale_v1r1\\run_20260917_01\\inventory\\provenance.json",
+      "sha256": "5f38cbab9ab42e5a19882822b8af4d8f6329617547f094d30a433b230c95b8d6"
+    },
+    {
+      "path": "D:\\GexResearchArtifacts\\multiscale_v1r1\\run_20260917_01\\inventory\\source_manifest.parquet",
+      "sha256": "913fd744670bfe02223213622603988487ba8c0e6916282049f4cc971b67d839"
+    },
+    {
+      "path": "D:\\GexResearchArtifacts\\multiscale_v1r1\\run_20260917_01\\preflight\\feature_schema.json",
+      "sha256": "e4f726991d32420a5714a97272f17e1bba59948e6aacb89cb23f362bf9912515"
+    },
+    {
+      "path": "D:\\GexResearchArtifacts\\multiscale_v1r1\\run_20260917_01\\preflight\\lightgbm_effective_defaults.txt",
+      "sha256": "cc9fe58791af4fd570dd0cd9a065e59af0a0c9f4f3c7b8e3f7760d3b1cb7324e"
+    },
+    {
+      "path": "D:\\GexResearchArtifacts\\multiscale_v1r1\\run_20260917_01\\preflight\\preflight_summary.json",
+      "sha256": "6c888886fe1d320067eba5785478148645179f507805368b5b34cad7c964211e"
+    },
+    {
+      "path": "D:\\GexResearchArtifacts\\multiscale_v1r1\\run_20260917_01\\preflight\\runtime_manifest.json",
+      "sha256": "f3734481879516976bddec17a3c1b5a8cbaa9af412e558ed87c07a3b3c13029a"
+    },
+    {
+      "path": "D:\\GexResearchArtifacts\\multiscale_v1r1\\run_20260917_01\\provenance_footer_check.json",
+      "sha256": "58ebd025a636307fcae06c383239c2d81aa3c24e2fd2fd717b6e94b41437c1d2"
+    }
+  ],
+  "original_terminal_artifacts_unchanged": true,
+  "protected_tracked_paths_changed": [],
+  "historical_economics": "NOT_EVALUATED",
+  "promotion_approved": false
+}
