@@ -10,3 +10,8 @@ fold exclusivamente sintético. Los 18 folds anteriores siguen identificados com
 dobles. No se ha ejecutado todavía el nuevo perfil ni abierto valores históricos.
 Admisión histórica pendiente de evidencia; economía NOT_EVALUATED y promoción false.
 No modificar intentos anteriores, producción ni parámetros económicos.
+
+Backend real y auditor implementados; suite 60 tests PASS (84,53 s), Ruff/compile
+PASS. Próximo paso: ejecución única del perfil sintético real desde código publicado.
+El usuario confirma que no hay más backups y permite revisar ThetaData. Documento
+18 fija solo diez GET de estado/metadatos, sin precios, sin reinicios ni cambios VPS.
