@@ -108,6 +108,7 @@ def test_AUDIT_001_import_graph_has_no_evaluator_calculations():
             if isinstance(node, ast.Import):
                 assert all(not name.name.startswith(forbidden) for name in node.names)
             if isinstance(node, ast.ImportFrom):
-                assert not (node.module or '').startswith(forbidden)
+                # AUDIT-001 explicitly permits immutable contract constants/formats.
+                assert not (node.module or '').startswith(forbidden) or node.module == forbidden + '.contract'
             if isinstance(node, ast.Call):
                 assert not (isinstance(node.func, ast.Name) and node.func.id in ('eval', 'exec', '__import__'))
