@@ -104,6 +104,29 @@ def test_DATA_002_restricted_columns_and_native_cutoff(admission, tmp_path):
     assert frame.timestamp.max() < pd.Timestamp(end)
 
 
+@pytest.mark.parametrize('new_day,accepted', [('20260914', True), ('20250602', False), ('20220729', False)])
+def test_AUDIT_001_directory_growth_respects_fixed_period(admission, new_day, accepted):
+    source, _, inv, gate, contract = admission
+    original = source / 'data_underlying_derived/SPXW/SPXW_20250102.parquet'
+    # File content is intentionally invalid: post-period additions must not be read.
+    additional = original.with_name(f'SPXW_{new_day}.parquet')
+    additional.write_bytes(b'not a parquet; metadata name only')
+    if accepted:
+        report = audit(inv, gate, contract)
+        assert report['added_post_period_files_at_audit_start'] == [str(additional.resolve())]
+        assert report['sources_rehashed'] == 3
+    else:
+        with pytest.raises(ValueError, match='new source inside or before'):
+            audit(inv, gate, contract)
+
+
+def test_AUDIT_001_missing_sealed_source_still_fails(admission):
+    source, _, inv, gate, contract = admission
+    (source / 'data_underlying_derived/SPXW/SPXW_20250102.parquet').unlink()
+    with pytest.raises(ValueError, match='sealed inventory file disappeared'):
+        audit(inv, gate, contract)
+
+
 def test_TIME_002_XNYS_holiday_halfday_and_DST():
     schedule = xcals.get_calendar('XNYS', start='2025-01-01', end='2025-12-31').schedule
     assert pd.Timestamp('2025-01-01') not in schedule.index

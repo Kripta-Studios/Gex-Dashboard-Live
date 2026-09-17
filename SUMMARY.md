@@ -2515,3 +2515,18 @@ Possible blocker: historical underlying repair/availability provenance.
 Next after publication: metadata-only inventory and dependency audit, no labels.
 Economic state NOT_EVALUATED; technical_ready=false; shadow NOT_STARTED;
 promotion_approved=false. No historical fit/features/payoffs or production changes.
+
+
+### Checkpoint 2026-09-17 — V1R1 source blocker; auditor-only retry clarification
+
+Producer5dd5a519 sealed30,899 files/41,614,238,640 bytes; source admission
+BLOCKED_DATA:973 full sessions have unresolved underlying lineage,9 half days,
+32 sessions also miss named sources. No raw value columns/features/payoffs read.
+The first auditor stopped before source rehash:29 SPXW September files appeared
+outside the fixed experiment period; no sealed path disappeared. Failed attempt
+and exact name difference are preserved. TIME-002 already excludes those dates.
+Auditor-only fix records post-period additions and still rehashes all original
+inputs; historical additions/deletions/mutations fail.42 synthetic tests/Ruff/
+compile PASS. Publish this fix before independent retry; no economic access.
+The source BLOCKED_DATA conclusion is pending audit; technical_ready=false,
+shadow NOT_STARTED,promotion_approved=false. Full economic engine incomplete.

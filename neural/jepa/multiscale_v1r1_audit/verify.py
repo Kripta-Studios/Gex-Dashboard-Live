@@ -82,8 +82,19 @@ def audit(inventory_directory, gate_directory, contract, verify_sources=True):
                          else root / 'data_options' / ticker / kind)
             for path in directory.rglob('*.parquet'):
                 paths.add(str(path.resolve()))
-    require(paths == set(frame.absolute_path), 'inventory missing or additional files')
-    require(len(frame) == len(paths) == inventory['files'], 'inventory count/duplicate')
+    sealed_paths = set(frame.absolute_path)
+    require(sealed_paths <= paths, 'sealed inventory file disappeared')
+    # TIME-002 fixes the experiment end before outcomes. Directory growth after
+    # that date is not a mutation of a sealed input. Never admit these new files.
+    additions = sorted(paths - sealed_paths)
+    for added in additions:
+        parts = Path(added).stem.split('_')
+        require(len(parts) in (2, 4), 'unrecognized added source filename')
+        day_text = parts[1] if len(parts) == 2 else parts[2]
+        require(bool(re.fullmatch(r'\d{8}', day_text)), 'unrecognized added source date')
+        require(pd.Timestamp(day_text) > pd.Timestamp('2026-06-30'),
+                'new source inside or before the fixed experiment period')
+    require(len(frame) == len(sealed_paths) == inventory['files'], 'inventory count/duplicate')
     for index, record in enumerate(frame.to_dict('records')):
         path = Path(record['absolute_path'])
         parts = path.stem.split('_')
@@ -161,5 +172,8 @@ def audit(inventory_directory, gate_directory, contract, verify_sources=True):
             'sources_rehashed': len(frame) if verify_sources else 0,
             'source_values_read': False, 'outcomes_opened': False,
             'coverage_sessions_reconstructed': len(expected), 'mismatches': 0,
+            'added_post_period_files_at_audit_start': additions,
+            'added_post_period_file_values_read': False,
+            'audit_code_sha256': sha(__file__),
             'gate_summary_sha256': sha(gate / 'data_gate_summary.json'),
             'access_log_sha256': sha(log), 'promotion_approved': False}

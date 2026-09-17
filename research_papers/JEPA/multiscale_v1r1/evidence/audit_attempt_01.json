@@ -1,0 +1,12 @@
+{
+  "status": "FAILED_AUDIT",
+  "stage": "inventory_directory_set_before_source_rehash",
+  "producer_and_original_auditor_commit": "5dd5a519",
+  "original_audit_code_sha256": "29873be3c7c9b58a06454ddcd235369de5c49bc0de7627b444c5e004c8a6ee23",
+  "error": "FAILED_AUDIT: inventory missing or additional files",
+  "sources_rehashed": 0,
+  "outcomes_opened": false,
+  "source_set_difference_ref": "audit_source_set_difference.json",
+  "recorded_at": "2026-09-17T20:18:40.853933+00:00",
+  "scope": "parent record of observed CLI failure; not a successful independent audit"
+}
