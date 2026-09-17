@@ -1,17 +1,17 @@
-# Continuación — backend real pendiente
+# Piloto de fuente y backend real en curso
 
 
-### Checkpoint 2026-09-18 — continuación con backend real, previa a ejecución
+### Checkpoint 2026-09-18 — API revisada y piloto de fuente predeclarado
 
-Autoridad: research_papers/JEPA/multiscale_v1r1/17_REAL_BACKEND_SPEC.md.
-El usuario pide continuar. Siguiente: integrar 48 LightGBM A/B y 24 de ablación
-con matrices canónicas completas, selección/freeze y refit independiente en un
-fold exclusivamente sintético. Los 18 folds anteriores siguen identificados como
-dobles. No se ha ejecutado todavía el nuevo perfil ni abierto valores históricos.
-Admisión histórica pendiente de evidencia; economía NOT_EVALUATED y promoción false.
-No modificar intentos anteriores, producción ni parámetros económicos.
+Autoridades: multiscale_v1r1/18_THETADATA_API_REVIEW.md y 19_THETA_SOURCE_PILOT_SPEC.md.
+El usuario confirma D:/ThetaData como única evidencia y remite a options_bulk.py
+/script4_underlying_from_options.py para continuar con ThetaData. Terminal remoto
+CONNECTED, diez GET de metadatos completados sin precios: 29 expiraciones ausentes
+de 2022 no listadas; seis ticker-fechas de abril 2026 sí tienen fecha quote 0DTE.
+Eso no admite sus archivos ni modifica el intento cerrado.
 
-Backend real y auditor implementados; suite 60 tests PASS (84,53 s), Ruff/compile
-PASS. Próximo paso: ejecución única del perfil sintético real desde código publicado.
-El usuario confirma que no hay más backups y permite revisar ThetaData. Documento
-18 fija solo diez GET de estado/metadatos, sin precios, sin reinicios ni cambios VPS.
+Capturador limitado a seis respuestas, parser y auditor independiente implementados;
+11 tests focales/Ruff/compile PASS. Primero publicar código; luego piloto 20220801,
+primer minuto Greeks 1s y OI, sin PnL ni reparación. Los 72 regresores reales del
+fold sintético siguen ejecutándose; no declarar PASS antes del refit independiente.
+Economía NOT_EVALUATED; promoción false; producción y raw anteriores intactos.
