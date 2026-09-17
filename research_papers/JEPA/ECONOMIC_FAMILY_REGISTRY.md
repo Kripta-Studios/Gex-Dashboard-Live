@@ -1,5 +1,16 @@
 # Registro de familias económicas causales
 
+### Checkpoint 2026-09-18 — continuación con backend real, previa a ejecución
+
+Autoridad: research_papers/JEPA/multiscale_v1r1/17_REAL_BACKEND_SPEC.md.
+El usuario pide continuar. Siguiente: integrar 48 LightGBM A/B y 24 de ablación
+con matrices canónicas completas, selección/freeze y refit independiente en un
+fold exclusivamente sintético. Los 18 folds anteriores siguen identificados como
+dobles. No se ha ejecutado todavía el nuevo perfil ni abierto valores históricos.
+Admisión histórica pendiente de evidencia; economía NOT_EVALUATED y promoción false.
+No modificar intentos anteriores, producción ni parámetros económicos.
+
+
 ### Checkpoint 2026-09-18 — circuito sintético completo; histórico sin admitir
 
 Autoridad actual: research_papers/JEPA/multiscale_v1r1/16_CONTINUATION_REPORT.md.
