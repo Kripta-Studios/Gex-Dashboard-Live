@@ -1,0 +1,11 @@
+{
+  "pytest": {
+    "command": "python -m pytest tests/multiscale_v1r1 -q",
+    "passed": 38,
+    "seconds": 26.79
+  },
+  "ruff": "PASS",
+  "compileall": "PASS",
+  "scope": "synthetic admission/primitives only; not complete economic test matrix",
+  "outcomes_opened": false
+}

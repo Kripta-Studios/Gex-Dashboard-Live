@@ -77,3 +77,18 @@ Five handoffs and multiscale_v1r1/STATUS.md govern current state. No production
 consumer changed; promotion_approved=false; shadow NOT_STARTED.
 
 V1 status: SUPERSEDED_BEFORE_EXECUTION. V1R1 alone: QUEUED_IMPLEMENTATION_OUTCOME_CLOSED.
+
+
+### Checkpoint 2026-09-17 — V1R1 admission implementation and synthetic preflight
+
+V1R1 docs published cc5f8b30/3dfe3643 on research/multiscale-v1r1-net-usd.
+Main push rejected non-fast-forward; remote8355c816 recovered, not merged.
+38 synthetic tests/Ruff/compile PASS; 600x92048 A160 synthetic fit PASS,
+819.734s, peak1.561GiB; maximum process estimate22.276GiB below24GiB.
+Admission primitives and independent negative-source auditor implemented;
+complete feature/economic pipeline is NOT implemented or certified (see
+research_papers/JEPA/multiscale_v1r1/09_IMPLEMENTATION_COVERAGE.md).
+Possible blocker: historical underlying repair/availability provenance.
+Next after publication: metadata-only inventory and dependency audit, no labels.
+Economic state NOT_EVALUATED; technical_ready=false; shadow NOT_STARTED;
+promotion_approved=false. No historical fit/features/payoffs or production changes.
