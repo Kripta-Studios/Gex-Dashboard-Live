@@ -1,0 +1,1 @@
+{"account_restart":true,"broker_submission":false,"capital_rejection":true,"future_dependency_rejected":true,"historical_economics":"NOT_EVALUATED","indivisible_contracts":true,"offline_capture_revisions":2,"pending_intent_restart":true,"positive_fixture_admission":true,"quote_scenarios":["signal","flat","random","cost_flip","missing_exit"],"status":"PASS_SYNTHETIC_SCENARIOS"}

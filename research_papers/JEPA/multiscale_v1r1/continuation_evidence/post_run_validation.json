@@ -1,0 +1,9 @@
+{
+  "status": "PASS_POST_RUN_SYNTHETIC_VALIDATION",
+  "baseline_decisions_reconstructed": 1404,
+  "designed_signal_positive_trades": 702,
+  "early_access_after_rehash_rejected": true,
+  "copied_base_wr_detected": true,
+  "synthetic_only": true,
+  "original_artifacts_mutated": false
+}

@@ -42,3 +42,10 @@ Publication: initial main push was rejected non-fast-forward. Fetch recovered
 remote `8355c816` and four predecessor commits affecting production/frontend.
 They were not merged or overwritten. Research lives on
 `research/multiscale-v1r1-net-usd`, based on actual initial `29724f85`.
+
+
+## Subsequent software delivery
+
+The admission-first scope above is preserved as history. The current synthetic
+engine, exact verification profiles and remaining historical scope are documented
+in [16_CONTINUATION_REPORT.md](16_CONTINUATION_REPORT.md). No old run became PASS.

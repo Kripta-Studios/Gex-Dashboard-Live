@@ -26,5 +26,27 @@
       "approval_ref": null,
       "execution_state": "INVALIDATED"
     }
+  ],
+  "engine_packages": [
+    {
+      "package_id": "GEX_SYNTHETIC_ENGINE_CONTINUATION_20260917",
+      "artifact_sha256": "1891a996bdafbc3323aaa9031120958b5f6c0315163f822ac26c30778c070669",
+      "artifact_kind": "synthetic_software_verification_not_policy",
+      "implementation": "ENGINE_E2E_SYNTHETIC_PASS",
+      "verification_profile": "synthetic_fast plus component_real",
+      "old_attempt": "INVALIDATED/FAILED_AUDIT",
+      "original_evidence_recovery": "PARTIAL_7_OF_10",
+      "original_logs": "ORIGINAL_EVIDENCE_NOT_RECOVERED",
+      "snapshot": "NEW_DOCUMENTARY_SNAPSHOT_VERIFIED",
+      "snapshot_documents": 210,
+      "historical_admission": "UNVERIFIABLE_FOR_CAUSAL_REPLAY",
+      "economic_evidence_state": "NOT_EVALUATED",
+      "prospective_validation_state": "NOT_STARTED",
+      "offline_capture_fixture": true,
+      "technical_ready": false,
+      "promotion_approved": false,
+      "summary_sha256": "1891a996bdafbc3323aaa9031120958b5f6c0315163f822ac26c30778c070669",
+      "audit_sha256": "4ea119dd0e7cbb0e3ef15e1cfcd14aec663a6ac2b7469a823afd4528d385032e"
+    }
   ]
 }
