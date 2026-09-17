@@ -1,0 +1,16 @@
+{
+  "scope": "all admitted underlying parquet footer metadata; no row values",
+  "files": 3531,
+  "metadata_keys": {
+    "pandas": 3531
+  },
+  "pandas_metadata_keys": {
+    "index_columns": 3531,
+    "column_indexes": 3531,
+    "columns": 3531,
+    "attributes": 3531,
+    "creator": 3531,
+    "pandas_version": 3531
+  },
+  "files_with_possible_custom_lineage": []
+}

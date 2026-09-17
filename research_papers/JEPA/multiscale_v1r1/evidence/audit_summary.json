@@ -1,0 +1,28 @@
+{
+  "status": "FAILED_AUDIT",
+  "complete_source_audit_pass": false,
+  "reason": "source log semantic reconstruction",
+  "changed_provenance_sources": [
+    {
+      "path": "D:\\ThetaData\\data_underlying_derived\\descarga_QQQ.log",
+      "sealed_sha256": "83002789adda09180998d3e449870d20cc57578c151b7713051a9b3625a7f570",
+      "observed_sha256": "e3d5c744daa25ae553d57ed5bf840395b8e51efa3027028bde154106bef5340c"
+    },
+    {
+      "path": "D:\\ThetaData\\data_underlying_derived\\descarga_SPXW.log",
+      "sealed_sha256": "ef72cb2d68dd2ad2faf0474b0ac14a2c6c4ca1d55824e682157583c6686b4ad3",
+      "observed_sha256": "274f2b24c633b16b82a79e9b9b1d7a55c838c11e00c4cba726bb76ec3d2249ca"
+    },
+    {
+      "path": "D:\\ThetaData\\data_underlying_derived\\descarga_SPY.log",
+      "sealed_sha256": "0ceeb9676a67e09d8ecc218f9e2b0c9fba8899e39c7712ae0d44f669a209049f",
+      "observed_sha256": "934c788b872935b5af5f4b59f7462f1f1a6020847801b73d3f0fba3e024626ef"
+    }
+  ],
+  "attempt_1": "Failed before rehash: post-period directory additions; preserved and auditor-only fix published.",
+  "attempt_2": "Interrupted without final artifact; observed progress at least 4000 sources, not a completed audit.",
+  "attempt_3": "Failed before source rehash: sealed provenance log hashes changed.",
+  "scope": "Parent records the independent CLI failure; this is not a successful CLI audit artifact.",
+  "evidence_sha256": "614cb8004dcc912b95f1eb3a710cc9e9a909f73bfdcf2b94e14106064334599a",
+  "outcomes_opened": false
+}

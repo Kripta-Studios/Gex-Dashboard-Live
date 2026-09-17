@@ -1,0 +1,33 @@
+{
+  "status": "FAILED_AUDIT",
+  "reason": "source log semantic reconstruction",
+  "auditor_commit": "f771685c",
+  "attempt": 3,
+  "completed_source_rehashes": 0,
+  "outcomes_opened": false,
+  "changed_provenance_sources": [
+    {
+      "path": "D:\\ThetaData\\data_underlying_derived\\descarga_QQQ.log",
+      "sealed_sha256": "83002789adda09180998d3e449870d20cc57578c151b7713051a9b3625a7f570",
+      "observed_sha256": "e3d5c744daa25ae553d57ed5bf840395b8e51efa3027028bde154106bef5340c"
+    },
+    {
+      "path": "D:\\ThetaData\\data_underlying_derived\\descarga_SPXW.log",
+      "sealed_sha256": "ef72cb2d68dd2ad2faf0474b0ac14a2c6c4ca1d55824e682157583c6686b4ad3",
+      "observed_sha256": "274f2b24c633b16b82a79e9b9b1d7a55c838c11e00c4cba726bb76ec3d2249ca"
+    },
+    {
+      "path": "D:\\ThetaData\\data_underlying_derived\\descarga_SPY.log",
+      "sealed_sha256": "0ceeb9676a67e09d8ecc218f9e2b0c9fba8899e39c7712ae0d44f669a209049f",
+      "observed_sha256": "934c788b872935b5af5f4b59f7462f1f1a6020847801b73d3f0fba3e024626ef"
+    }
+  ],
+  "sealed_records": 204,
+  "observed_records": 204,
+  "removed_record_keys": [],
+  "added_record_keys": [],
+  "gate_summary_sha256": "31cc60895d1bb433068f6d2d3535e185d9fad38dd68dc8c777fb15096f4624be",
+  "provenance_manifest_sha256": "5f38cbab9ab42e5a19882822b8af4d8f6329617547f094d30a433b230c95b8d6",
+  "audit_code_sha256": "96e947c8f71de9f26e8828224c1faedf10e68dfc892f5ee4ec76660acf88f510",
+  "record_origin": "Parent preserves CLI exception and read-only diagnostic; not a successful audit CLI artifact"
+}

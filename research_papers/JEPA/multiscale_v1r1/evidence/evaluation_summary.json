@@ -1,0 +1,37 @@
+{
+  "execution_state": "INVALIDATED",
+  "economic_evidence_state": "FAILED_AUDIT",
+  "source_admission_state": "BLOCKED_DATA",
+  "reason": "SEALED_PROVENANCE_LOGS_CHANGED",
+  "created_at": "2026-09-17T20:46:55.545073+00:00",
+  "producer_commit": "5dd5a519",
+  "auditor_commit": "f771685c",
+  "contract_sha256": "9891a14a4c4b7e290860f2813448d8db373fe9152b549e97911c2c04a81217d5",
+  "gate_summary_sha256": "31cc60895d1bb433068f6d2d3535e185d9fad38dd68dc8c777fb15096f4624be",
+  "failed_audit_evidence_sha256": "614cb8004dcc912b95f1eb3a710cc9e9a909f73bfdcf2b94e14106064334599a",
+  "historical_outcomes_opened": false,
+  "historical_fits": 0,
+  "evaluated_folds": 0,
+  "technical_ready": false,
+  "prospective_validation_state": "NOT_STARTED",
+  "promotion_approved": false,
+  "approval_ref": null,
+  "results": {
+    "SPXW": {
+      "base": "NOT_EVALUATED",
+      "adverse": "NOT_EVALUATED",
+      "primary_vs_ablation": "NOT_EVALUATED"
+    },
+    "SPY": {
+      "base": "NOT_EVALUATED",
+      "adverse": "NOT_EVALUATED",
+      "primary_vs_ablation": "NOT_EVALUATED"
+    },
+    "QQQ": {
+      "base": "NOT_EVALUATED",
+      "adverse": "NOT_EVALUATED",
+      "primary_vs_ablation": "NOT_EVALUATED"
+    }
+  },
+  "implementation_scope": "admission and synthetic primitives; complete economic pipeline not implemented"
+}

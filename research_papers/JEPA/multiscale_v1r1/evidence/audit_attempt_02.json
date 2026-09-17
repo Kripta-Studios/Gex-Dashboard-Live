@@ -1,0 +1,8 @@
+{
+  "status": "INTERRUPTED_WITHOUT_FINAL_ARTIFACT",
+  "observed_sources_progress_lower_bound": 4000,
+  "auditor_commit": "f771685c",
+  "outcomes_opened": false,
+  "recorded_at": "2026-09-17T20:43:00.549396+00:00",
+  "evidence": "Tool session disappeared following user interruption; no matching OS process and no final audit artifact found."
+}

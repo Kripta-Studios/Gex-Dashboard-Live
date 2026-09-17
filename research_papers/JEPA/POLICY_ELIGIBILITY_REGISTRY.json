@@ -6,11 +6,25 @@
       "artifact_sha256": "9891a14a4c4b7e290860f2813448d8db373fe9152b549e97911c2c04a81217d5",
       "artifact_kind": "predeclaration_not_fitted_policy",
       "technical_ready": false,
-      "economic_evidence_state": "NOT_EVALUATED",
-      "economic_evidence_refs": [],
+      "economic_evidence_state": "FAILED_AUDIT",
+      "economic_evidence_refs": [
+        {
+          "path": "research_papers\\JEPA\\multiscale_v1r1\\evidence\\evaluation_summary.json",
+          "sha256": "da233166dd7219fe53975734e828bffa5902c2ed4dd2d7e06f3c18dc2db413a5"
+        },
+        {
+          "path": "research_papers\\JEPA\\multiscale_v1r1\\evidence\\audit_summary.json",
+          "sha256": "3d29fad2ee15d77d158bebcd075304880f1822cedfcc76045e56b0352fbb3b30"
+        },
+        {
+          "path": "research_papers\\JEPA\\multiscale_v1r1\\evidence\\data_gate_summary.json",
+          "sha256": "31cc60895d1bb433068f6d2d3535e185d9fad38dd68dc8c777fb15096f4624be"
+        }
+      ],
       "prospective_validation_state": "NOT_STARTED",
       "promotion_approved": false,
-      "approval_ref": null
+      "approval_ref": null,
+      "execution_state": "INVALIDATED"
     }
   ]
 }

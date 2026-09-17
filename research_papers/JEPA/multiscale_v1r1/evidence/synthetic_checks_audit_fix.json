@@ -1,0 +1,7 @@
+{
+  "pytest_passed": 42,
+  "pytest_seconds": 51.55,
+  "ruff": "PASS",
+  "compileall": "PASS",
+  "scope": "Synthetic primitives/admission/auditor; complete economic matrix not implemented"
+}
