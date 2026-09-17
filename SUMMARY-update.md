@@ -1389,3 +1389,18 @@ Primer full gate V1 detenido outcome-free con 104 errores de filtro: 103 QQQ y
 uno SPXW serializan timestamps con `.000`. Las filas exactas existen; no es un
 data gap. Aclaración congelada permite solo con/sin `.000`, conserva sidecar
 one-to-one y exige relaunch inmutable V1R1. No se abrió economía/2026.
+
+
+### Checkpoint 2026-09-17 — multiscale V1R1 predeclared, outcomes closed
+
+User-authorized V1R1 supersedes queued V1 before execution; V1 has no economic
+result and its contract remains immutable. Binding authority:
+`research_papers/JEPA/multiscale_v1r1/01_PREDECLARATION.md`.
+One-contract net USD, L2 trees, USD0/5 thresholds, zero+mask, adverse WR
+recomputed, SSL clock projection and provenance-gated initial SPXW repair.
+Initial HEAD `29724f857185a046a09680b8edf9708d89949619` (not unavailable8355c816).
+Execution PENDING; evidence NOT_EVALUATED; no raw/features/payoffs/fit/predictions.
+Sequence: publish docs → implement/test/preflight/publish → outcome-free gate
+and independent audit/publish → monthly freeze/publish BEFORE test payoff.
+Five handoffs and multiscale_v1r1/STATUS.md govern current state. No production
+consumer changed; promotion_approved=false; shadow NOT_STARTED.

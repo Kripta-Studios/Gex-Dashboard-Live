@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "policies": [
+    {
+      "policy_id": "MULTISCALE_LEVEL_INTERACTION_SEQUENCE_V1R1",
+      "artifact_sha256": "9891a14a4c4b7e290860f2813448d8db373fe9152b549e97911c2c04a81217d5",
+      "artifact_kind": "predeclaration_not_fitted_policy",
+      "technical_ready": false,
+      "economic_evidence_state": "NOT_EVALUATED",
+      "economic_evidence_refs": [],
+      "prospective_validation_state": "NOT_STARTED",
+      "promotion_approved": false,
+      "approval_ref": null
+    }
+  ]
+}

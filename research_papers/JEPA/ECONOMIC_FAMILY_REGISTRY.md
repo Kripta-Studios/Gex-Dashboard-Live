@@ -60,3 +60,20 @@ terminales: `CROSS_VENUE_CALENDAR_RR_LEADER_V4R2_OUTER_2026_FAILURE.md` y
 `CROSS_VENUE_CALENDAR_RR_LEADER_V7_ROLLING12_MONTHLY_LOGISTIC_FAILURE.md`.
 El intake OPRA externo queda `CLOSED_NO_EXECUTION_BY_USER`; no se ejecuta ni se
 usa como V8.
+
+
+### Checkpoint 2026-09-17 — multiscale V1R1 predeclared, outcomes closed
+
+User-authorized V1R1 supersedes queued V1 before execution; V1 has no economic
+result and its contract remains immutable. Binding authority:
+`research_papers/JEPA/multiscale_v1r1/01_PREDECLARATION.md`.
+One-contract net USD, L2 trees, USD0/5 thresholds, zero+mask, adverse WR
+recomputed, SSL clock projection and provenance-gated initial SPXW repair.
+Initial HEAD `29724f857185a046a09680b8edf9708d89949619` (not unavailable8355c816).
+Execution PENDING; evidence NOT_EVALUATED; no raw/features/payoffs/fit/predictions.
+Sequence: publish docs → implement/test/preflight/publish → outcome-free gate
+and independent audit/publish → monthly freeze/publish BEFORE test payoff.
+Five handoffs and multiscale_v1r1/STATUS.md govern current state. No production
+consumer changed; promotion_approved=false; shadow NOT_STARTED.
+
+V1 status: SUPERSEDED_BEFORE_EXECUTION. V1R1 alone: QUEUED_IMPLEMENTATION_OUTCOME_CLOSED.

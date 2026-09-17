@@ -2485,3 +2485,18 @@ por comparar strings sin `.000` contra timestamps con milisegundos. Una lectura
 datetime confirmó 10:30/10:35 exactos. V1 se preserva REJECTED; la aclaración
 permite solo ambas codificaciones equivalentes y ordena relaunch V1R1 tras
 commit. No cambia ninguna feature/gate ni abre outcomes.
+
+
+### Checkpoint 2026-09-17 — multiscale V1R1 predeclared, outcomes closed
+
+User-authorized V1R1 supersedes queued V1 before execution; V1 has no economic
+result and its contract remains immutable. Binding authority:
+`research_papers/JEPA/multiscale_v1r1/01_PREDECLARATION.md`.
+One-contract net USD, L2 trees, USD0/5 thresholds, zero+mask, adverse WR
+recomputed, SSL clock projection and provenance-gated initial SPXW repair.
+Initial HEAD `29724f857185a046a09680b8edf9708d89949619` (not unavailable8355c816).
+Execution PENDING; evidence NOT_EVALUATED; no raw/features/payoffs/fit/predictions.
+Sequence: publish docs → implement/test/preflight/publish → outcome-free gate
+and independent audit/publish → monthly freeze/publish BEFORE test payoff.
+Five handoffs and multiscale_v1r1/STATUS.md govern current state. No production
+consumer changed; promotion_approved=false; shadow NOT_STARTED.
