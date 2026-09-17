@@ -1,5 +1,19 @@
 # SUMMARY.md — Continuidad de la investigación de rentabilidad
 
+### Checkpoint 2026-09-17 — usuario autoriza continuar Fibonacci IB / walls
+
+Autoridad nueva: research_papers/JEPA/multiscale_v1r1/12_AUTHORIZED_CONTINUATION.md.
+El usuario ordena corregir problemas y continuar buscando rentabilidad. Se completa
+la implementación pendiente con los Fibonacci IB y walls ya predeclarados;
+no cambian modelos, ratios, costes, thresholds o gates por resultados.
+El intento run_20260917_01 conserva FAILED_AUDIT y todos sus artefactos.
+Un nuevo intento necesitará evidencia de procedencia copiada/sellada, fuente
+causal, auditoría y freeze publicados antes de labels. No hay economía evaluada.
+Trabajo activo: niveles/estados/tensor, procedencia estable y pruebas sintéticas;
+technical_ready=false, promotion_approved=false; producción intacta.
+Este checkpoint sustituye la orden de detener implementación del cierre anterior.
+
+
 ### Checkpoint 2026-09-17 — V1R1 FAILED_AUDIT, outcomes cerrados
 
 Autoridad: research_papers/JEPA/multiscale_v1r1/11_TERMINAL_REPORT.md.
