@@ -1,0 +1,16 @@
+{
+  "SPXW": [
+    {
+      "contract_key": "SPXW|2022-08-01|PUT|4230",
+      "reason": "MISSING_OI",
+      "eligible": false
+    },
+    {
+      "contract_key": "SPXW|2022-08-01|PUT|4240",
+      "reason": "MISSING_OI",
+      "eligible": false
+    }
+  ],
+  "SPY": [],
+  "QQQ": []
+}

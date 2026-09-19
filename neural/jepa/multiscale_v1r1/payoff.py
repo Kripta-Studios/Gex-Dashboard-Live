@@ -1,5 +1,5 @@
 """COST-001 and native-quote execution primitives. No file access."""
-from decimal import Decimal, localcontext
+from decimal import Decimal, InvalidOperation, localcontext
 
 import pandas as pd
 
@@ -30,7 +30,7 @@ def valid_quote(row, require_delta=False):
                  and row['right'] in ('CALL', 'PUT') and row['expiration'] == row['trade_date']
                  and pd.Timestamp(row['timestamp']).tzinfo is not None)
         return valid and (not require_delta or Decimal(str(row['delta'])).is_finite())
-    except (KeyError, ValueError, TypeError):
+    except (KeyError, ValueError, TypeError, InvalidOperation):
         return False
 
 
@@ -41,8 +41,10 @@ def simulate_action(quotes, ticker, day, decision, action_id):
     if decision.tzinfo is None:
         raise ContractError('TIME-005: decision must be timezone-aware')
     records = [dict(r) for r in quotes if r['ticker'] == ticker and r['trade_date'] == day]
-    keys = [(r['ticker'], r['trade_date'], r['expiration'], r['right'], str(r['strike']),
-             str(r['timestamp'])) for r in records]
+    # Strike formatting is not contract identity: 100, 100.0 and 1E+2
+    # designate the same native contract at the same instant.
+    keys = [(r['ticker'], r['trade_date'], r['expiration'], r['right'],
+             Decimal(str(r['strike'])), pd.Timestamp(r['timestamp'])) for r in records]
     if len(set(keys)) != len(keys):
         raise ContractError('TIME-005: duplicate native quote key')
     entries = [r for r in records if r['right'] == action.right and valid_quote(r, True)

@@ -1,0 +1,62 @@
+{
+  "SPXW_greeks": {
+    "source_sha256": "88f86565e4c378453570cd885802678ca3eb70b318b10c167dab98e55ede043c",
+    "received_at": "2026-09-17T22:51:53.862391+00:00",
+    "source_materialized_at": null,
+    "source_materialization_basis": "not separately logged; persisted after receipt",
+    "reconstruction_started_at": "2026-09-18T06:31:13.291864+00:00",
+    "original_reception_observed": false,
+    "reported_clock_basis": "provider response; original historical vintage unknown",
+    "as_of_basis": null
+  },
+  "SPXW_oi": {
+    "source_sha256": "30c17c41e29994a87a49124c37546ecb7fcce2cde51f3d4a1f15cf4e82068223",
+    "received_at": "2026-09-17T22:53:55.225951+00:00",
+    "source_materialized_at": null,
+    "source_materialization_basis": "not separately logged; persisted after receipt",
+    "reconstruction_started_at": "2026-09-18T06:31:13.291864+00:00",
+    "original_reception_observed": false,
+    "reported_clock_basis": "provider response; original historical vintage unknown",
+    "as_of_basis": "https://docs.thetadata.us/operations/option_history_open_interest.html"
+  },
+  "SPY_greeks": {
+    "source_sha256": "e5eaddbdaee565daaefc2e47e8ef86cb9d9cf48191dbe7f9bc1cb5cf45e664e0",
+    "received_at": "2026-09-17T22:52:52.556868+00:00",
+    "source_materialized_at": null,
+    "source_materialization_basis": "not separately logged; persisted after receipt",
+    "reconstruction_started_at": "2026-09-18T06:31:13.291864+00:00",
+    "original_reception_observed": false,
+    "reported_clock_basis": "provider response; original historical vintage unknown",
+    "as_of_basis": null
+  },
+  "SPY_oi": {
+    "source_sha256": "c5b96bd974ec4899feee59d86fe2950762f896044b27a741e1e029d30134818f",
+    "received_at": "2026-09-17T22:53:57.496921+00:00",
+    "source_materialized_at": null,
+    "source_materialization_basis": "not separately logged; persisted after receipt",
+    "reconstruction_started_at": "2026-09-18T06:31:13.291864+00:00",
+    "original_reception_observed": false,
+    "reported_clock_basis": "provider response; original historical vintage unknown",
+    "as_of_basis": "https://docs.thetadata.us/operations/option_history_open_interest.html"
+  },
+  "QQQ_greeks": {
+    "source_sha256": "4aaad2b27607a21e9d1e73b157b47a07a71a15a028c472cd02df86bea9793dc5",
+    "received_at": "2026-09-17T22:53:52.950887+00:00",
+    "source_materialized_at": null,
+    "source_materialization_basis": "not separately logged; persisted after receipt",
+    "reconstruction_started_at": "2026-09-18T06:31:13.291864+00:00",
+    "original_reception_observed": false,
+    "reported_clock_basis": "provider response; original historical vintage unknown",
+    "as_of_basis": null
+  },
+  "QQQ_oi": {
+    "source_sha256": "8d9b6a3915a538a00dbbc50d460330960b1e7848102f0b6262751f8ad331c07e",
+    "received_at": "2026-09-17T22:53:59.283956+00:00",
+    "source_materialized_at": null,
+    "source_materialization_basis": "not separately logged; persisted after receipt",
+    "reconstruction_started_at": "2026-09-18T06:31:13.291864+00:00",
+    "original_reception_observed": false,
+    "reported_clock_basis": "provider response; original historical vintage unknown",
+    "as_of_basis": "https://docs.thetadata.us/operations/option_history_open_interest.html"
+  }
+}

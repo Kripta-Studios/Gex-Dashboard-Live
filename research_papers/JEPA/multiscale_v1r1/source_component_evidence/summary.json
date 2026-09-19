@@ -1,0 +1,28 @@
+{
+  "status": "PASS_RECONSTRUCTED_SOURCE_COMPONENTS",
+  "audit": {
+    "status": "PASS_INDEPENDENT_RECONSTRUCTED_COMPONENT_AUDIT",
+    "bars": 3,
+    "oi_rows": 866,
+    "eligible_oi": {
+      "SPXW": 278,
+      "SPY": 217,
+      "QQQ": 193
+    },
+    "repairs": 1,
+    "mismatches": 0,
+    "missing_oi": {
+      "SPXW": 2,
+      "SPY": 0,
+      "QQQ": 0
+    },
+    "original_vintage_verified": false,
+    "historical_economic_admission": false,
+    "promotion_approved": false
+  },
+  "scope": "three first-minute bars and per-record OI only",
+  "original_vintage_verified": false,
+  "historical_economic_admission": false,
+  "economic_evidence_state": "NOT_EVALUATED",
+  "promotion_approved": false
+}

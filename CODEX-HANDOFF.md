@@ -1,5 +1,28 @@
 # CODEX-HANDOFF — estado autoritativo de investigación
 
+### Checkpoint 2026-09-19 — revisión paralela y cierre IB offline preejecución
+
+Cinco subagentes revisaron fuentes, motor, features/SSL, registro científico y
+ejecución desde 4eb44536. Suite inicial97 PASS. El componente22 tiene PASS
+limitado a tres barras/866 OI; catálogo23 artefactos rehasheado, mismatch0.
+Su evidencia compacta se incorpora sin modificar los archivos originales.
+
+El piloto23 quedó interrumpido: SPXW/SPY con respuestas y resultados sellados;
+QQQ tiene82.837.504 bytes sin manifest, completitud desconocida y sin summary
+global. No se observó proceso activo. Autoridad nueva24_IB_INTERRUPTED_OFFLINE_REVIEW_SPEC:
+verificar offline dos componentes, catalogar QQQ sin parsearlo y cerrar en root
+nuevo como INCOMPLETE_IB_PILOT. Publicar código/spec antes de ejecutar; no GET.
+
+La revisión25 identifica adaptación histórica/OI y entrenador SSL pendientes.
+NUM-001 ya fija el alcance de estados15m; se retira ese hallazgo inicial.
+Se corrigen con fixtures identidad contractual
+numérica y delta de entrada en productor/auditor. No cambia contrato económico.
+Contrato26 autorizado por el usuario: USER_QQQ_SINGLE_GET_20260919, una GET QQQ
+nueva con límites fijos, aún no ejecutada. Publicar antes de capturar; no retry.
+Sin entrenamiento/PnL históricos nuevos,
+economía NOT_EVALUATED, technical_ready=false, prospectivo NOT_STARTED,
+promotion_approved=false. Intentos antiguos y producción permanecen intactos.
+
 ### Checkpoint 2026-09-18 — 72 LightGBM reales auditados; piloto de fuentes cerrado
 
 Autoridad: research_papers/JEPA/multiscale_v1r1/21_REAL_BACKEND_AND_SOURCE_REPORT.md.

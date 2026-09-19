@@ -1,7 +1,7 @@
 """Independent synthetic fold reconstruction, with no evaluator imports."""
 import hashlib
 import json
-from decimal import Decimal, localcontext
+from decimal import Decimal, InvalidOperation, localcontext
 from pathlib import Path
 
 import numpy as np
@@ -36,14 +36,24 @@ def cash(ask, bid, adverse=False, missing=False):
 def expected_action(event, action_id, quote_rows):
     action = ACTIONS[action_id]
     decision = pd.Timestamp(event['decision_timestamp'])
-    rows = [q for q in quote_rows if q['ticker'] == event['ticker'] and q['trade_date'] == event['trade_date']
-            and q['expiration'] == event['trade_date']]
+    rows = [q for q in quote_rows if q['ticker'] == event['ticker'] and q['trade_date'] == event['trade_date']]
+    # Reconstruct native identity independently of the producer's string key.
+    identities = {(q['ticker'], q['trade_date'], q['expiration'], q['right'],
+                   Decimal(str(q['strike'])), pd.Timestamp(q['timestamp'])) for q in rows}
+    require(len(identities) == len(rows), 'duplicate native quote key')
 
-    def valid(q):
-        bid, ask = Decimal(str(q['bid'])), Decimal(str(q['ask']))
-        return bid.is_finite() and ask.is_finite() and ask > 0 and 0 <= bid <= ask and Decimal(str(q['strike'])) > 0
+    def valid(q, entry=False):
+        try:
+            bid, ask, strike = (Decimal(str(q[field])) for field in ('bid', 'ask', 'strike'))
+            return (bid.is_finite() and ask.is_finite() and strike.is_finite()
+                    and ask > 0 and 0 <= bid <= ask and strike > 0
+                    and q['expiration'] == q['trade_date']
+                    and pd.Timestamp(q['timestamp']).tzinfo is not None
+                    and (not entry or Decimal(str(q['delta'])).is_finite()))
+        except (KeyError, ValueError, TypeError, InvalidOperation):
+            return False
 
-    entries = [q for q in rows if q['right'] == action.right and valid(q)
+    entries = [q for q in rows if q['right'] == action.right and valid(q, entry=True)
                and decision <= pd.Timestamp(q['timestamp']) <= decision + pd.Timedelta(seconds=60)]
     if not entries:
         return dict(action_available=False, unavailable_reason='NO_ENTRY', action_id=action_id)
@@ -55,7 +65,8 @@ def expected_action(event, action_id, quote_rows):
         (q['ticker'], q['trade_date'], q['expiration'], q['right'], str(q['strike']))))
     scheduled = first + pd.Timedelta(minutes=action.hold_minutes)
     deadline = min(scheduled + pd.Timedelta(minutes=5), pd.Timestamp(event['trade_date'] + ' 16:00', tz='America/New_York'))
-    exits = [q for q in rows if q['right'] == chosen['right'] and Decimal(str(q['strike'])) == Decimal(str(chosen['strike']))
+    exits = [q for q in rows if q['expiration'] == chosen['expiration']
+             and q['right'] == chosen['right'] and Decimal(str(q['strike'])) == Decimal(str(chosen['strike']))
              and valid(q) and scheduled <= pd.Timestamp(q['timestamp']) <= deadline]
     exit_row = min(exits, key=lambda q: pd.Timestamp(q['timestamp'])) if exits else None
     exit_time = pd.Timestamp(exit_row['timestamp']) if exit_row else deadline

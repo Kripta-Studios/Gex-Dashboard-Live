@@ -4,8 +4,10 @@ import pandas as pd
 import pytest
 
 from neural.jepa.multiscale_v1r1.metrics import summarize_pnl, terminal_gate
+from neural.jepa.multiscale_v1r1.contract import ContractError
 from neural.jepa.multiscale_v1r1.payoff import accounting, simulate_action
 from neural.jepa.multiscale_v1r1.scheduler import replay
+from neural.jepa.multiscale_v1r1_audit.engine import expected_action
 
 
 DAY = '2025-01-02'
@@ -40,6 +42,58 @@ def test_ENTRY_tie_uses_spread_then_strike():
               quote('11:30:01', 101, .25, bid='1', ask='1.1'),
               quote('11:30:01', 102, .25, bid='1', ask='1.1')]
     assert simulate_action(quotes, 'QQQ', DAY, DECISION, 0)['contract_identity'][-1] == '101'
+
+
+@pytest.mark.parametrize('alternate_strike', ['100.0', '1E+2', 100.00])
+def test_ENTRY_rejects_duplicate_contract_with_equivalent_strike(alternate_strike):
+    rows = [quote('11:30:01', '100'), quote('11:30:01', alternate_strike)]
+    event = dict(ticker='QQQ', trade_date=DAY, decision_timestamp=DECISION.isoformat())
+    with pytest.raises(ContractError, match='duplicate native quote key'):
+        simulate_action(rows, 'QQQ', DAY, DECISION, 0)
+    with pytest.raises(ValueError, match='duplicate native quote key'):
+        expected_action(event, 0, rows)
+
+
+def test_ENTRY_distinct_contracts_at_same_timestamp_remain_valid():
+    rows = [quote('11:30:01', '100'), quote('11:30:01', '101')]
+    event = dict(ticker='QQQ', trade_date=DAY, decision_timestamp=DECISION.isoformat())
+    assert simulate_action(rows, 'QQQ', DAY, DECISION, 0) == expected_action(event, 0, rows)
+
+
+def test_ENTRY_rejects_same_instant_with_different_timezone_spelling():
+    rows = [quote('11:30:01', '100'), quote('11:30:01', '100.0')]
+    rows[1]['timestamp'] = DAY + 'T16:30:01+00:00'
+    event = dict(ticker='QQQ', trade_date=DAY, decision_timestamp=DECISION.isoformat())
+    with pytest.raises(ContractError, match='duplicate native quote key'):
+        simulate_action(rows, 'QQQ', DAY, DECISION, 0)
+    with pytest.raises(ValueError, match='duplicate native quote key'):
+        expected_action(event, 0, rows)
+
+
+@pytest.mark.parametrize('invalid_delta', ['NaN', 'Infinity', 'bad'])
+def test_ENTRY_independent_auditor_skips_nonfinite_delta_at_first_quote(invalid_delta):
+    rows = [quote('11:30:01', delta=invalid_delta), quote('11:30:02', delta='.25')]
+    event = dict(ticker='QQQ', trade_date=DAY, decision_timestamp=DECISION.isoformat())
+    actual = simulate_action(rows, 'QQQ', DAY, DECISION, 0)
+    assert actual['entry_quote_timestamp'].endswith('11:30:02-05:00')
+    assert expected_action(event, 0, rows) == actual
+
+
+def test_EXIT_delta_is_not_required_for_same_contract_quote():
+    rows = [quote('11:30:01'), quote('12:30:01', delta='bad', bid='1.06', ask='1.07')]
+    event = dict(ticker='QQQ', trade_date=DAY, decision_timestamp=DECISION.isoformat())
+    actual = simulate_action(rows, 'QQQ', DAY, DECISION, 0)
+    assert actual['exit_status'] == 'OBSERVED_QUOTE'
+    assert expected_action(event, 0, rows) == actual
+
+
+def test_ENTRY_auditor_skips_naive_quote_and_uses_next_aware_quote():
+    rows = [quote('11:30:01'), quote('11:30:02')]
+    rows[0]['timestamp'] = DAY + 'T11:30:01'
+    event = dict(ticker='QQQ', trade_date=DAY, decision_timestamp=DECISION.isoformat())
+    actual = simulate_action(rows, 'QQQ', DAY, DECISION, 0)
+    assert actual['entry_quote_timestamp'].endswith('11:30:02-05:00')
+    assert expected_action(event, 0, rows) == actual
 
 
 @pytest.mark.parametrize('exit_time,expected', [('12:35:01', 'OBSERVED_QUOTE'),
