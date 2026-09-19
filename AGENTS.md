@@ -1,5 +1,28 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-09-19 — piloto local auditado, economía aún cerrada
+
+Autoridad: research_papers/JEPA/local_snapshot_v1/02_SOURCE_PILOT_RESULT.md.
+Desde 2755d198, una ejecución sin API de seis parquets Greek/OI del20230103:
+LOCAL_SOURCE_DIAGNOSTIC_COMPLETE y PASS_LOCAL_SOURCE_DIAGNOSTIC_AUDIT,
+mismatch0. Muestras válidas SPXW/SPY/QQQ59/60/60; SPXW09:30 queda INVALID_PRICE
+enmascarado, sin imputación. OI positivos reportados preapertura269/168/126;
+OI cero19/74/60; faltan dos contratos OI en SPY y dos en QQQ, conservados.
+No se abrió bid/ask/delta/IV, PnL o entrenamiento de esta familia.
+
+Seis originales y seis copias rehasheados. Tests nuevos56 y suite completa185
+PASS; Ruff/compile/revisión PASS. La demora de1min es supuesto de investigación,
+no recepción observada; prior_close_semantics_verified=false. Este piloto no
+admite todas las sesiones ni prueba la paridad live. No repetirlo o rellenarlo.
+
+La API no está disponible por instrucción del usuario: solo D:/ThetaData local.
+Siguiente frontera: contrato de cobertura multisesión y significado OI, luego
+features muestreadas y contrato económico nuevo antes de modelos/outcomes.
+El runbook local01 contiene dependencias. V1R1 mantiene INVALIDATED/FAILED_AUDIT;
+economía nueva NOT_EVALUATED, technical_ready=false, prospectivo NOT_STARTED,
+promotion_approved=false. No hay modelo rentable operando acreditado; producción,
+bróker y VPS permanecen intactos. Los documentos de captura son historia cerrada.
+
 ### Checkpoint 2026-09-19 — revisión local nueva autorizada, antes de valores
 
 El usuario autoriza una revisión nueva de snapshots locales con reloj verificable:

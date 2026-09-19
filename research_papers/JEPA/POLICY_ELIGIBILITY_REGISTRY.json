@@ -25,6 +25,31 @@
       "promotion_approved": false,
       "approval_ref": null,
       "execution_state": "INVALIDATED"
+    },
+    {
+      "policy_id": "LOCAL_TIMESTAMPED_OPTION_SNAPSHOT_V1",
+      "artifact_sha256": "579e8585d61f8906be382758ab02acf5c3ec4dee2b766cefb6b98a6b51d58abd",
+      "artifact_kind": "source_contract_not_fitted_policy",
+      "technical_ready": false,
+      "economic_evidence_state": "NOT_EVALUATED",
+      "source_diagnostic_state": "LOCAL_SOURCE_DIAGNOSTIC_COMPLETE",
+      "source_audit_state": "PASS_LOCAL_SOURCE_DIAGNOSTIC_AUDIT",
+      "source_evidence_refs": [
+        {
+          "path": "research_papers/JEPA/local_snapshot_v1/pilot_evidence/summary.json",
+          "sha256": "ff3fde7dd0a2cfd0e08c1706a5ad355d4520684252f5d6efa0a158e7dae5662c"
+        },
+        {
+          "path": "research_papers/JEPA/local_snapshot_v1/pilot_evidence/audit.json",
+          "sha256": "d310dc1d8926fbb8c0abf0ae1965e0dd12292d5796936771136ba963eac681d0"
+        }
+      ],
+      "historical_economic_admission": false,
+      "original_vintage_verified": false,
+      "prospective_validation_state": "NOT_STARTED",
+      "promotion_approved": false,
+      "approval_ref": null,
+      "execution_state": "SOURCE_PILOT_ONLY_OUTCOMES_CLOSED"
     }
   ],
   "engine_packages": [

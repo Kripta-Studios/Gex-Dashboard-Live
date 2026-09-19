@@ -1,0 +1,13 @@
+{"event": "MANIFEST_SEALED_BEFORE_VALUES", "source_count": 6}
+{"columns": ["timestamp"], "event": "SOURCE_CLOCK_VALIDATION", "kind": "greeks", "ticker": "SPXW", "time_lower": null, "time_upper_exclusive": null}
+{"columns": ["symbol", "expiration", "trade_date", "right", "strike", "interval_used", "timestamp", "underlying_timestamp", "underlying_price"], "event": "PROJECTED_SOURCE_READ", "kind": "greeks", "ticker": "SPXW", "time_lower": "2023-01-03T09:30:00", "time_upper_exclusive": "2023-01-03T10:30:00"}
+{"columns": ["timestamp"], "event": "SOURCE_CLOCK_VALIDATION", "kind": "oi", "ticker": "SPXW", "time_lower": null, "time_upper_exclusive": null}
+{"columns": ["symbol", "expiration", "trade_date", "right", "strike", "interval_used", "timestamp", "open_interest"], "event": "PROJECTED_SOURCE_READ", "kind": "oi", "ticker": "SPXW", "time_lower": null, "time_upper_exclusive": null}
+{"columns": ["timestamp"], "event": "SOURCE_CLOCK_VALIDATION", "kind": "greeks", "ticker": "SPY", "time_lower": null, "time_upper_exclusive": null}
+{"columns": ["symbol", "expiration", "trade_date", "right", "strike", "interval_used", "timestamp", "underlying_timestamp", "underlying_price"], "event": "PROJECTED_SOURCE_READ", "kind": "greeks", "ticker": "SPY", "time_lower": "2023-01-03T09:30:00", "time_upper_exclusive": "2023-01-03T10:30:00"}
+{"columns": ["timestamp"], "event": "SOURCE_CLOCK_VALIDATION", "kind": "oi", "ticker": "SPY", "time_lower": null, "time_upper_exclusive": null}
+{"columns": ["symbol", "expiration", "trade_date", "right", "strike", "interval_used", "timestamp", "open_interest"], "event": "PROJECTED_SOURCE_READ", "kind": "oi", "ticker": "SPY", "time_lower": null, "time_upper_exclusive": null}
+{"columns": ["timestamp"], "event": "SOURCE_CLOCK_VALIDATION", "kind": "greeks", "ticker": "QQQ", "time_lower": null, "time_upper_exclusive": null}
+{"columns": ["symbol", "expiration", "trade_date", "right", "strike", "interval_used", "timestamp", "underlying_timestamp", "underlying_price"], "event": "PROJECTED_SOURCE_READ", "kind": "greeks", "ticker": "QQQ", "time_lower": "2023-01-03T09:30:00", "time_upper_exclusive": "2023-01-03T10:30:00"}
+{"columns": ["timestamp"], "event": "SOURCE_CLOCK_VALIDATION", "kind": "oi", "ticker": "QQQ", "time_lower": null, "time_upper_exclusive": null}
+{"columns": ["symbol", "expiration", "trade_date", "right", "strike", "interval_used", "timestamp", "open_interest"], "event": "PROJECTED_SOURCE_READ", "kind": "oi", "ticker": "QQQ", "time_lower": null, "time_upper_exclusive": null}

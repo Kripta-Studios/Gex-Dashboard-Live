@@ -1,0 +1,61 @@
+{
+  "files": [
+    {
+      "source_path": "D:\\GexResearchArtifacts\\local_snapshot_v1\\source_pilot_20260919_01\\access_log.jsonl",
+      "bytes": 2535,
+      "sha256": "aa240e50100923d4a7308911aee539fdc2d7a8912ee6bc07256a574d5d98ebb5"
+    },
+    {
+      "source_path": "D:\\GexResearchArtifacts\\local_snapshot_v1\\source_pilot_20260919_01\\audit.json",
+      "bytes": 84,
+      "sha256": "d310dc1d8926fbb8c0abf0ae1965e0dd12292d5796936771136ba963eac681d0"
+    },
+    {
+      "source_path": "D:\\GexResearchArtifacts\\local_snapshot_v1\\source_pilot_20260919_01\\manifest.json",
+      "bytes": 2818,
+      "sha256": "daf593409de3b2f821af134abf58d7e2928d91b056a0f30079556c9dd0a49258"
+    },
+    {
+      "source_path": "D:\\GexResearchArtifacts\\local_snapshot_v1\\source_pilot_20260919_01\\source_diagnostic.json",
+      "bytes": 170105,
+      "sha256": "669e3561f1f7aae05430b5931b5b5c03513bed6d2963ec0293f54882abfd3042"
+    },
+    {
+      "source_path": "D:\\GexResearchArtifacts\\local_snapshot_v1\\source_pilot_20260919_01\\summary.json",
+      "bytes": 450,
+      "sha256": "ff3fde7dd0a2cfd0e08c1706a5ad355d4520684252f5d6efa0a158e7dae5662c"
+    },
+    {
+      "source_path": "D:\\GexResearchArtifacts\\local_snapshot_v1\\source_pilot_20260919_01\\snapshot\\QQQ_greeks.parquet",
+      "bytes": 1329586,
+      "sha256": "884e2334b27f7903f0b89cfcb03dcdce6a6a5b8ff8e90dd24f41c0c835efb74c"
+    },
+    {
+      "source_path": "D:\\GexResearchArtifacts\\local_snapshot_v1\\source_pilot_20260919_01\\snapshot\\QQQ_oi.parquet",
+      "bytes": 6847,
+      "sha256": "0ccb40f2cde5571cc0cbf2dab89db1c90ca526e2c1a1ebf1f03bdfe62e35453f"
+    },
+    {
+      "source_path": "D:\\GexResearchArtifacts\\local_snapshot_v1\\source_pilot_20260919_01\\snapshot\\SPXW_greeks.parquet",
+      "bytes": 3321937,
+      "sha256": "8426d149a83099e8c5751bb13dd83c06eb11f59b6da0d31d1d8341ec76b829d0"
+    },
+    {
+      "source_path": "D:\\GexResearchArtifacts\\local_snapshot_v1\\source_pilot_20260919_01\\snapshot\\SPXW_oi.parquet",
+      "bytes": 9313,
+      "sha256": "eeb9fd6fcbe88b0f971553f7e652fc920eecfb84fe7a2fb0edf77ea8f06f2b19"
+    },
+    {
+      "source_path": "D:\\GexResearchArtifacts\\local_snapshot_v1\\source_pilot_20260919_01\\snapshot\\SPY_greeks.parquet",
+      "bytes": 1635083,
+      "sha256": "ceca9fd3384ebf1874b99632abcb15726b653e812d60d1b709300475fc7cf520"
+    },
+    {
+      "source_path": "D:\\GexResearchArtifacts\\local_snapshot_v1\\source_pilot_20260919_01\\snapshot\\SPY_oi.parquet",
+      "bytes": 8348,
+      "sha256": "86d4e8271b0969181b5e33f2c845cffdf2a9fc1138590fa28383882e88fba7b8"
+    }
+  ],
+  "source_and_snapshot_rehash_count": 12,
+  "source_diagnostic_published": false
+}

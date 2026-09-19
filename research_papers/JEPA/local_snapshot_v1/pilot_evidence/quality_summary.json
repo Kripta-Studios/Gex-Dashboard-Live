@@ -1,0 +1,68 @@
+[
+  {
+    "ticker": "SPXW",
+    "greek_rows": 17280,
+    "oi_rows": 288,
+    "valid_samples": 59,
+    "masked_samples": [
+      {
+        "quote_timestamp": "2023-01-03T09:30:00-05:00",
+        "reason": "INVALID_PRICE",
+        "source_rows": 288
+      }
+    ],
+    "oi_classes": [
+      {
+        "Name": "ELIGIBLE_REPORTED_PREOPEN",
+        "Count": 269
+      },
+      {
+        "Name": "ZERO_OI",
+        "Count": 19
+      }
+    ],
+    "missing_oi_contracts": 0,
+    "ineligible_oi_contracts": 19,
+    "prior_close_semantics_verified": false
+  },
+  {
+    "ticker": "SPY",
+    "greek_rows": 14640,
+    "oi_rows": 242,
+    "valid_samples": 60,
+    "masked_samples": [],
+    "oi_classes": [
+      {
+        "Name": "ELIGIBLE_REPORTED_PREOPEN",
+        "Count": 168
+      },
+      {
+        "Name": "ZERO_OI",
+        "Count": 74
+      }
+    ],
+    "missing_oi_contracts": 2,
+    "ineligible_oi_contracts": 74,
+    "prior_close_semantics_verified": false
+  },
+  {
+    "ticker": "QQQ",
+    "greek_rows": 11280,
+    "oi_rows": 186,
+    "valid_samples": 60,
+    "masked_samples": [],
+    "oi_classes": [
+      {
+        "Name": "ELIGIBLE_REPORTED_PREOPEN",
+        "Count": 126
+      },
+      {
+        "Name": "ZERO_OI",
+        "Count": 60
+      }
+    ],
+    "missing_oi_contracts": 2,
+    "ineligible_oi_contracts": 60,
+    "prior_close_semantics_verified": false
+  }
+]
