@@ -1,0 +1,22 @@
+{
+  "ticker": "QQQ",
+  "params": {
+    "symbol": "QQQ",
+    "expiration": "20220801",
+    "date": "20220801",
+    "strike": "*",
+    "right": "both",
+    "interval": "1s",
+    "start_time": "09:30:00",
+    "end_time": "10:30:00",
+    "version": "1",
+    "format": "csv"
+  },
+  "started_at": "2026-09-19T08:51:53.867252+00:00",
+  "url": "http://91.99.90.39:25503/v3/option/history/greeks/first_order?symbol=QQQ&expiration=20220801&date=20220801&strike=%2A&right=both&interval=1s&start_time=09%3A30%3A00&end_time=10%3A30%3A00&version=1&format=csv",
+  "complete": false,
+  "error": "URLError: <urlopen error [WinError 10060] Se produjo un error durante el intento de conexi\u00f3n ya que la parte conectada no respondi\u00f3 adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexi\u00f3n establecida ya que el host conectado no ha podido responder>",
+  "bytes": 0,
+  "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "elapsed_seconds": 21.210215900006006
+}

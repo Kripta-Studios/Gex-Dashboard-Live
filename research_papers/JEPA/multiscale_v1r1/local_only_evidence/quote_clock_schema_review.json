@@ -1,0 +1,94 @@
+{
+  "status": "DESCRIPTIVE_SCHEMA_CENSUS_NOT_SOURCE_ADMISSION",
+  "inspection_date": "2026-09-19",
+  "inspection_code_head": "16270c44468ef511c65220b385ac2a28d6d81e81",
+  "limitation": "Descriptive read-only inspection; this file is not a source-byte seal or a successful historical data gate. Recheck selected sources with hashes before admission.",
+  "scope": {
+    "roots": [
+      "D:/ThetaData/data_options/SPXW",
+      "D:/ThetaData/data_options/SPY",
+      "D:/ThetaData/data_options/QQQ"
+    ],
+    "source_kinds": ["greeks", "iv", "ohlc"],
+    "trade_date_years": [2024, 2025, 2026],
+    "selection": "Parquet filenames with expiration equal to trade_date; 2026 means files present at inspection, not a complete calendar year",
+    "inspection": "Parquet schema, pandas schema metadata, row-count footers and selected non-price column statistics only; no market values, features, payoffs, fits or outcomes read"
+  },
+  "total_files": 6066,
+  "files_per_kind": {
+    "greeks": 2022,
+    "iv": 2022,
+    "ohlc": 2022
+  },
+  "zero_dte_files_by_ticker_year_per_kind": {
+    "SPXW": {"2024": 252, "2025": 250, "2026": 178},
+    "SPY": {"2024": 252, "2025": 250, "2026": 169},
+    "QQQ": {"2024": 252, "2025": 250, "2026": 169}
+  },
+  "greeks_and_iv_each": {
+    "without_quote_timestamp_by_ticker_year": {
+      "SPXW": {"2024": 252, "2025": 250, "2026": 30},
+      "SPY": {"2024": 252, "2025": 250, "2026": 30},
+      "QQQ": {"2024": 232, "2025": 205, "2026": 15}
+    },
+    "without_quote_timestamp_total_per_kind": 1516,
+    "with_quote_timestamp_total_per_kind": 506,
+    "missing_timestamp_schema_clock_fields": ["trade_date", "underlying_timestamp"],
+    "missing_timestamp_pandas_index_columns": [],
+    "missing_timestamp_nested_clock_fields": 0,
+    "missing_timestamp_files_checked_for_index_and_nested_clock": 3032,
+    "other_native_quote_clock_found_in_missing_timestamp_files": false
+  },
+  "ohlc": {
+    "files_with_timestamp": 2022,
+    "files_with_bid_ask": 0,
+    "interpretation": "Option OHLC timestamps cannot supply contractual ask and bid quotes."
+  },
+  "selected_examples": [
+    {
+      "path": "D:/ThetaData/data_options/SPXW/greeks/2025/01/SPXW_20250102_20250102_greeks.parquet",
+      "rows": 165002,
+      "quote_timestamp_column": false,
+      "underlying_timestamp_column": true,
+      "pandas_index_columns": [],
+      "interval_used_footer_min_max": ["1m", "1m"]
+    },
+    {
+      "path": "D:/ThetaData/data_options/QQQ/greeks/2025/01/QQQ_20250102_20250102_greeks.parquet",
+      "rows": 108698,
+      "quote_timestamp_column": true,
+      "underlying_timestamp_column": true,
+      "interval_used_footer_min_max": ["1m", "1m"]
+    },
+    {
+      "path": "D:/ThetaData/data_options/SPXW/ohlc/2025/01/SPXW_20250102_20250102_ohlc.parquet",
+      "quote_timestamp_column": true,
+      "bid_ask_columns": false
+    }
+  ],
+  "candidate_2023_01_03_metadata_only": {
+    "selection_reason": "First proposed full 2023 session, chosen before any price or payoff inspection",
+    "greeks_0dte": {
+      "SPXW": {"exists": true, "rows": 112608, "timestamp_column": true, "timestamp_arrow_type": "large_string", "timestamp_footer_min_max": ["2023-01-03T09:30:00", "2023-01-03T16:00:00"], "underlying_timestamp_arrow_type": "large_string", "underlying_timestamp_footer_min_max": ["2023-01-03T09:30:00", "2023-01-03T16:00:00"], "bid_ask_delta_columns": true, "interval_used_footer_min_max": ["1m", "1m"]},
+      "SPY": {"exists": true, "rows": 95404, "timestamp_column": true, "timestamp_arrow_type": "large_string", "timestamp_footer_min_max": ["2023-01-03T09:30:00", "2023-01-03T16:00:00"], "underlying_timestamp_arrow_type": "large_string", "underlying_timestamp_footer_min_max": ["2023-01-03T09:30:00", "2023-01-03T16:00:00"], "bid_ask_delta_columns": true, "interval_used_footer_min_max": ["1m", "1m"]},
+      "QQQ": {"exists": true, "rows": 73508, "timestamp_column": true, "timestamp_arrow_type": "large_string", "timestamp_footer_min_max": ["2023-01-03T09:30:00", "2023-01-03T16:00:00"], "underlying_timestamp_arrow_type": "large_string", "underlying_timestamp_footer_min_max": ["2023-01-03T09:30:00", "2023-01-03T16:00:00"], "bid_ask_delta_columns": true, "interval_used_footer_min_max": ["1m", "1m"]}
+    },
+    "oi_0dte": {
+      "SPXW": {"exists": true, "rows": 288, "timestamp_column": true, "timestamp_arrow_type": "large_string", "interval_used_footer_min_max": ["daily", "daily"], "timestamp_footer_min_max": ["2023-01-03T06:30:09.693", "2023-01-03T06:32:18.409"]},
+      "SPY": {"exists": true, "rows": 242, "timestamp_column": true, "timestamp_arrow_type": "large_string", "interval_used_footer_min_max": ["daily", "daily"], "timestamp_footer_min_max": ["2023-01-03T06:30:00.634", "2023-01-03T06:30:05.841"]},
+      "QQQ": {"exists": true, "rows": 186, "timestamp_column": true, "timestamp_arrow_type": "large_string", "interval_used_footer_min_max": ["daily", "daily"], "timestamp_footer_min_max": ["2023-01-03T06:30:00", "2023-01-03T06:30:04"]}
+    },
+    "limitations": "Footers do not establish intraday completeness, quote freshness, source vintage or payoff validity."
+  },
+  "supplemental_2023_greeks_schema_census": {
+    "selection": "Existing 0DTE Greeks files whose trade_date filename begins 2023; schema only",
+    "files_by_ticker": {"SPXW": 250, "SPY": 250, "QQQ": 250},
+    "files_without_timestamp_by_ticker": {"SPXW": 0, "SPY": 0, "QQQ": 0},
+    "limitation": "A timestamp field does not establish quote freshness, first-minute coverage, option fill availability, original source vintage or profitability."
+  },
+  "interpretation": [
+    "The absence of timestamp in the Greek and IV schemas cannot be repaired from Parquet index metadata or another native quote-clock field in these files.",
+    "underlying_timestamp describes the underlying clock and must not be relabeled as an option quote timestamp without separate provenance evidence.",
+    "This census is a schema constraint, not a determination of quote validity, economic loss, or market profitability."
+  ]
+}

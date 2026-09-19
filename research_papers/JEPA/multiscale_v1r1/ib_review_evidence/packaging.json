@@ -1,0 +1,58 @@
+{
+  "status": "PASS_EVIDENCE_PACKAGING",
+  "checked_at_utc": "2026-09-19T08:55:18.0599141Z",
+  "copies": [
+    {
+      "source": "D:/GexResearchArtifacts/multiscale_v1r1/ib_offline_review_20260919_01.publication.json",
+      "repository_path": "research_papers\\JEPA\\multiscale_v1r1\\ib_review_evidence\\publication.json",
+      "source_sha256": "9e989d716391949b2ae38ccfbb874ec0c723ae4e38b3516f1ad88ae5a578b617",
+      "repository_sha256": "9e989d716391949b2ae38ccfbb874ec0c723ae4e38b3516f1ad88ae5a578b617",
+      "transformation": "BYTE_IDENTICAL"
+    },
+    {
+      "source": "D:/GexResearchArtifacts/multiscale_v1r1/ib_offline_review_20260919_01/catalog.json",
+      "repository_path": "research_papers\\JEPA\\multiscale_v1r1\\ib_review_evidence\\catalog.json",
+      "source_sha256": "d9cd1d53a5b3b664490b6e2c4ccb0e088eb7c1efed749ef11bd25a3c3a575b6f",
+      "repository_sha256": "d9cd1d53a5b3b664490b6e2c4ccb0e088eb7c1efed749ef11bd25a3c3a575b6f",
+      "transformation": "BYTE_IDENTICAL"
+    },
+    {
+      "source": "D:/GexResearchArtifacts/multiscale_v1r1/ib_offline_review_20260919_01/audit.json",
+      "repository_path": "research_papers\\JEPA\\multiscale_v1r1\\ib_review_evidence\\audit.json",
+      "source_sha256": "94c6fead82c58aa61b06c3e8ae2af6193fceb82381c3c1b7743f12810e131c3f",
+      "repository_sha256": "94c6fead82c58aa61b06c3e8ae2af6193fceb82381c3c1b7743f12810e131c3f",
+      "transformation": "BYTE_IDENTICAL"
+    },
+    {
+      "source": "D:/GexResearchArtifacts/multiscale_v1r1/ib_offline_review_20260919_01/summary.json",
+      "repository_path": "research_papers\\JEPA\\multiscale_v1r1\\ib_review_evidence\\summary.json",
+      "source_sha256": "a922c36b32cb28a0201179b89eb94c31700e7288cac6bc0ee281e94e96fabecd",
+      "repository_sha256": "a922c36b32cb28a0201179b89eb94c31700e7288cac6bc0ee281e94e96fabecd",
+      "transformation": "BYTE_IDENTICAL"
+    },
+    {
+      "source": "D:/GexResearchArtifacts/multiscale_v1r1/qqq_ib_recovery_20260919_01/run_manifest.json",
+      "repository_path": "research_papers\\JEPA\\multiscale_v1r1\\qqq_recovery_evidence\\run_manifest.json",
+      "source_sha256": "43af51bef4fb1ed3c0d13afcc6228ae0bc1adc3e88222a3b26be1ee7f78536ee",
+      "repository_sha256": "5d8f8656522c024ed4ab9d6f38e5602bcd3dcd91e3039c138d793258f90dbb6d",
+      "transformation": "CRLF_TO_LF_ONLY"
+    },
+    {
+      "source": "D:/GexResearchArtifacts/multiscale_v1r1/qqq_ib_recovery_20260919_01/QQQ/manifest.json",
+      "repository_path": "research_papers\\JEPA\\multiscale_v1r1\\qqq_recovery_evidence\\manifest.json",
+      "source_sha256": "6010a2f9c969ece8241e96c897cab8cad9350eed8c1f58cdbd39387b626e4be5",
+      "repository_sha256": "991f861c165ebeebbaafb0b1deb9e710142f8739f74217f4e66985435d452a61",
+      "transformation": "CRLF_TO_LF_ONLY"
+    },
+    {
+      "source": "D:/GexResearchArtifacts/multiscale_v1r1/qqq_ib_recovery_20260919_01/summary.json",
+      "repository_path": "research_papers\\JEPA\\multiscale_v1r1\\qqq_recovery_evidence\\summary.json",
+      "source_sha256": "c5e8680bbdc9c18c30e76fa75ff8e00c3232371bc35ef216f6d5747cadfa506e",
+      "repository_sha256": "140caff42d6e962757cef1a99cdf9db772aba782ed2ad888f5dcbd4ca45d73ec",
+      "transformation": "CRLF_TO_LF_ONLY"
+    }
+  ],
+  "originals_and_snapshots_verified": 13,
+  "old_qqq_manifest_exists": false,
+  "new_qqq_response_exists": false
+}

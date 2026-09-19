@@ -1,0 +1,33 @@
+{
+  "head": "16270c44468ef511c65220b385ac2a28d6d81e81",
+  "branch": "research/multiscale-v1r1-net-usd",
+  "authorization_reference": "USER_QQQ_SINGLE_GET_20260919",
+  "code_and_contract_sha256": {
+    "neural/jepa/theta_qqq_ib_recovery_v1.py": "fcfcba19dab06f9d11500a2521e528d11e7411a1bf6aae6e31e6c483b9b6235e",
+    "neural/jepa/theta_ib_source_v1.py": "2697ffe53271685ddf8650af0b0ed5148bbfd1eed031a64443481623be920313",
+    "neural/jepa/audit_theta_ib_source_v1.py": "38a3cce8abf01c54549cddb93372d8cfa500f91df6b311f8a043fc851d447a08",
+    "neural/jepa/multiscale_v1r1/provenance.py": "32f5afff8e8175e194181ac73a1ba3107dfe84423014bf7b1718161ffe6936c1",
+    "research_papers/JEPA/multiscale_v1r1/26_QQQ_CAPTURE_RECOVERY_PROPOSAL.md": "0bbd122a0c1cc8816d1c3df4cd13c407afbaa0c66c80c7dced0dd4db156f1075",
+    "research_papers/JEPA/multiscale_v1r1/23_INITIAL_BALANCE_SOURCE_PILOT.md": "c1239c93172abee7ca2a32d4b642a75ea2e6328a625cb779313a2abb61831ec5"
+  },
+  "captured_at": "2026-09-19T08:51:53.862726+00:00",
+  "request": {
+    "symbol": "QQQ",
+    "expiration": "20220801",
+    "date": "20220801",
+    "strike": "*",
+    "right": "both",
+    "interval": "1s",
+    "start_time": "09:30:00",
+    "end_time": "10:30:00",
+    "version": "1",
+    "format": "csv"
+  },
+  "request_limit_bytes": 536870912,
+  "request_deadline_seconds": 1200,
+  "inactivity_timeout_seconds": 120,
+  "original_vintage_verified": false,
+  "historical_economic_admission": false,
+  "economic_evidence_state": "NOT_EVALUATED",
+  "promotion_approved": false
+}

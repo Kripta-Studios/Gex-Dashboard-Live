@@ -1,5 +1,45 @@
 # Registro de familias económicas causales
 
+### Checkpoint 2026-09-19 — revisión local nueva autorizada, antes de valores
+
+El usuario autoriza una revisión nueva de snapshots locales con reloj verificable:
+USER_LOCAL_SNAPSHOT_RESEARCH_20260919. Contrato:
+research_papers/JEPA/local_snapshot_v1/00_SOURCE_PILOT_CONTRACT.md; runbook01.
+Seis archivos locales Greek/OI 0DTE del 20230103, SPXW/SPY/QQQ. Primera hora
+de underlying_price muestreado, sin leer bid/ask/delta ni payoffs. Productor y
+auditor separados, fixtures y publicación antes del único piloto. Aún sin valores
+reales de esta familia ni entrenamiento. No API, credenciales o descargadores.
+
+Censo descriptivo de 6.066 schemas 0DTE 2024–2026: 3.032 Greeks/IV sin reloj de
+quote ni índice/campo alternativo; OHLC no tiene bid/ask. En 2023, los 750 Greeks
+0DTE inspeccionados sí tienen timestamp. Eso permite estudiar una fuente local
+nueva, no admitir el histórico ni sustituir relojes. El censo no sella raw.
+V1R1 sigue cerrado; economía NOT_EVALUATED, technical_ready=false,
+prospectivo NOT_STARTED, promoción false. Solo el piloto del contrato00 está
+definido; cualquier evaluación económica requiere otro contrato previo.
+
+### Checkpoint 2026-09-19 — IB auditado por componente; continuación solo local
+
+Autoridad: multiscale_v1r1/27_OFFLINE_AUDIT_AND_QQQ_TRANSPORT_RESULT.md.
+Desde 16270c44: auditoría offline SPXW/SPY PASS, 60 barras cada uno; QQQ antiguo
+82.837.504 bytes sin sello, no parseado. Global INCOMPLETE_IB_PILOT, cero GET
+offline; 13 originales y sus copias rehasheados sin diferencias.
+
+La GET única QQQ autorizada se consumió: WinError10060, 21,210 s, cero bytes,
+sin HTTP ni response.bin. BLOCKED_QQQ_IB_CAPTURE, sin retry ni reconstrucción.
+El usuario comunica DESPUÉS que ya no dispone de API ThetaData: trabajar solo
+con descargas D:/ThetaData/data_options y data_underlying_derived. No llamadas,
+reintentos, status, nuevas descargas ni restauración del Terminal. Las fuentes
+anteriores se preservan; esta instrucción sustituye cualquier ruta API pendiente.
+
+Suite 129 tests PASS; Ruff/compile/diff-check PASS. Identidad contractual/delta
+corregidas con fixtures; hallazgo15m retirado porque NUM-001 ya fija la regla.
+Siguiente: evaluación LOCAL_ONLY de fuentes existentes; cualquier cambio de
+OHLC intraminuto a precios muestreados necesita contrato nuevo antes de outcomes.
+Histórico original INVALIDATED/FAILED_AUDIT; economía nueva NOT_EVALUATED;
+technical_ready=false, prospectivo NOT_STARTED, promotion_approved=false.
+No modelo de mercado rentable acreditado. Producción/VPS/órdenes intactos.
+
 ### Checkpoint 2026-09-19 — revisión paralela y cierre IB offline preejecución
 
 Cinco subagentes revisaron fuentes, motor, features/SSL, registro científico y

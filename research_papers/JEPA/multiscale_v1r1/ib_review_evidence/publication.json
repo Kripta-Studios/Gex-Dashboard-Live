@@ -1,0 +1,51 @@
+{
+  "status": "PASS_PREEXECUTION_PUBLICATION",
+  "checked_at_utc": "2026-09-19T08:50:57.6370079Z",
+  "head": "16270c44468ef511c65220b385ac2a28d6d81e81",
+  "remote_head": "16270c44468ef511c65220b385ac2a28d6d81e81",
+  "branch": "research/multiscale-v1r1-net-usd",
+  "canonicalization": "git hash-object with repository path attributes",
+  "authorization_reference": "USER_QQQ_SINGLE_GET_20260919",
+  "files": [
+    {
+      "path": "neural/jepa/review_theta_ib_interrupted_v1.py",
+      "local_sha256": "6a2a817a162c5be79da5c8dc8791726d948bdaa8871e459f5514c1a414642c0b",
+      "published_git_blob_match": true
+    },
+    {
+      "path": "neural/jepa/audit_theta_ib_source_v1.py",
+      "local_sha256": "38a3cce8abf01c54549cddb93372d8cfa500f91df6b311f8a043fc851d447a08",
+      "published_git_blob_match": true
+    },
+    {
+      "path": "neural/jepa/multiscale_v1r1/provenance.py",
+      "local_sha256": "32f5afff8e8175e194181ac73a1ba3107dfe84423014bf7b1718161ffe6936c1",
+      "published_git_blob_match": true
+    },
+    {
+      "path": "research_papers/JEPA/multiscale_v1r1/24_IB_INTERRUPTED_OFFLINE_REVIEW_SPEC.md",
+      "local_sha256": "e8906bcb2aa5394bab379eac0426d7462b391436ae46a77ca9f8a8fe41488e11",
+      "published_git_blob_match": true
+    },
+    {
+      "path": "neural/jepa/theta_qqq_ib_recovery_v1.py",
+      "local_sha256": "fcfcba19dab06f9d11500a2521e528d11e7411a1bf6aae6e31e6c483b9b6235e",
+      "published_git_blob_match": true
+    },
+    {
+      "path": "neural/jepa/theta_ib_source_v1.py",
+      "local_sha256": "2697ffe53271685ddf8650af0b0ed5148bbfd1eed031a64443481623be920313",
+      "published_git_blob_match": true
+    },
+    {
+      "path": "research_papers/JEPA/multiscale_v1r1/26_QQQ_CAPTURE_RECOVERY_PROPOSAL.md",
+      "local_sha256": "0bbd122a0c1cc8816d1c3df4cd13c407afbaa0c66c80c7dced0dd4db156f1075",
+      "published_git_blob_match": true
+    },
+    {
+      "path": "research_papers/JEPA/multiscale_v1r1/23_INITIAL_BALANCE_SOURCE_PILOT.md",
+      "local_sha256": "c1239c93172abee7ca2a32d4b642a75ea2e6328a625cb779313a2abb61831ec5",
+      "published_git_blob_match": true
+    }
+  ]
+}
