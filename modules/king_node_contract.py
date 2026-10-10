@@ -21,7 +21,7 @@ INPUT_SCHEMA_VERSION = "king-node.v2-input"
 REFERENCE_SCHEMA_VERSION = "king-node-reference.v2"
 STATE_SCHEMA_VERSION = "king-node.v2-state"
 
-WORKBOOK_SHA256 = "38fc80bddc0914e9b1ce6430a1ba822ca6f76693a4170ab407497109a02d4406"
+WORKBOOK_SHA256 = "ef8c5a0ddf5a93d9ca763c34146674ff5b6e775e1ee0f95320443deab30bdabb"
 CATALOGUE_SHA256 = "847a0a0675b6caf7296c45e9cafeb4ca8531de07471ee0a6a1bc6b1c19806d20"
 
 ADVANCED_GREEKS = (
@@ -380,7 +380,9 @@ def validate_normalized_input(value: Any) -> NormalizedInput:
         "symbol": symbol,
         "root": root,
         "spot": _finite_number(underlying_raw.get("spot"), "underlying.spot", KingNodeInputError, minimum=0.0000001),
-        "previous_close": _finite_number(underlying_raw.get("previous_close"), "underlying.previous_close", KingNodeInputError, minimum=0.0000001),
+        # Display-only; cold startup must not require a session produced by this
+        # same daemon. Never replace an unknown close with today's spot.
+        "previous_close": None if underlying_raw.get("previous_close") is None else _finite_number(underlying_raw["previous_close"], "underlying.previous_close", KingNodeInputError, minimum=0.0000001),
         "timestamp": _iso_timestamp(underlying_raw.get("timestamp"), "underlying.timestamp", KingNodeInputError),
     }
     expiration_raw = _mapping(item.get("expiration"), "expiration", KingNodeInputError)

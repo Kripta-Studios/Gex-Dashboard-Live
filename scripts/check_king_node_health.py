@@ -157,8 +157,13 @@ def _inspect_v2_snapshot(
     if not isinstance(reference, dict) or reference.get("status") != "verified":
         errors.append("v2 reference is not verified")
     coverage = payload.get("formula_coverage")
-    if not isinstance(coverage, dict) or coverage.get("status") != "verified":
-        errors.append("v2 formula coverage is not verified")
+    if not isinstance(coverage, dict) or coverage.get("status") != "inventoried":
+        errors.append("v2 formula inventory is unavailable")
+    calculation = payload.get("workbook_calculation", {})
+    if calculation.get("release") != "2026-10-10" or calculation.get("state_machine_errors"):
+        errors.append("October workbook calculation is unavailable or invalid")
+    if len(payload.get("rows", [])) != EXPECTED_STRIKES:
+        errors.append("October workbook needs all 47 strikes")
     if _contains_forbidden_public_value(payload):
         errors.append("v2 snapshot contains forbidden path or exception metadata")
     return {

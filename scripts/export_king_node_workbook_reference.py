@@ -141,7 +141,7 @@ def _export_matrix(cells: dict[str, tuple[Any, str, str | None]]) -> tuple[dict[
     headers, _, _ = _row(cells, 1, 19)
     if tuple(headers) != (
         "KEY", "IV", "Gamma", "Zomma", "Dex", "Vex", "Vega", "Vomma", "Speed",
-        "Phenomenon", "DealerIs", "DealersAction", "Action", "Regime", "Tilt", "CharmNeg",
+        "Phenomenon", "Dealers", "DealersAction", "Action", "Regime", "Tilt", "CharmNeg",
         "CharmPos", "SupportLvls", "ResistLvls",
     ):
         raise ValueError("Matrix A1:S1 labels do not match the frozen workbook contract")
@@ -226,6 +226,7 @@ def export_reference(workbook_path: Path, catalogue_path: Path) -> dict[str, Any
     if _sha256_file(catalogue_path) != CATALOGUE_SHA256:
         raise ValueError("catalogue SHA256 does not match frozen v2 authority")
     coverage = audit_workbook(workbook_path, catalogue_path)
+    from scripts.export_king_node_runtime import runtime_cells
     with ZipFile(workbook_path) as archive:
         matrix, matrix_metadata = _export_matrix(_sheet_cells(archive, "Matrix"))
         iv_map, iv_metadata = _export_iv_map(_sheet_cells(archive, "IV Regime Map"))
@@ -243,6 +244,9 @@ def export_reference(workbook_path: Path, catalogue_path: Path) -> dict[str, Any
             "workbook_member_sha256": coverage["authority"]["workbook_member_sha256"],
             "formula_coverage_checksum": coverage["canonical_checksum"],
         },
+        "formula_summary": coverage["summary"],
+        "workbook_cells": runtime_cells(workbook_path),
+        "formula_release": "2026-10-10",
         "ranges": {
             "matrix": matrix_metadata,
             "iv_regime_map": iv_metadata,

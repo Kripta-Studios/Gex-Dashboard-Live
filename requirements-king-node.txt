@@ -1,0 +1,4 @@
+# Additional dependencies of the workbook runtime. Core service dependencies are
+# inherited from the existing VPS Python through --system-site-packages.
+formulas==1.3.4
+schedula==1.6.15

@@ -24,6 +24,9 @@ def _term() -> dict:
 
 def healthy_fixture() -> dict:
     fixture = web_snapshot_fixture()
+    # This file retains coverage of the legacy, direct-reader health contract.
+    fixture["schema_version"] = "king-node.v1"
+    fixture["delivery"] = dict(fixture["freshness"])
     fixture["status"] = "ok"
     fixture["generated_at"] = datetime.now(UTC).isoformat()
     fixture["source"]["tastytrade"]["age_seconds"] = 5

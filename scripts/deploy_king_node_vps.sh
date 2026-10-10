@@ -56,7 +56,14 @@ ensure_env_key KING_NODE_RATE_SYMBOL SOFR
 ensure_env_key KING_NODE_RATE_LOOKBACK_DAYS 10
 ensure_env_key KING_NODE_RISK_FREE_RATE_PERCENT ""
 
-/usr/bin/python3 -m compileall -q \
+# Keep the Excel-compatible evaluator isolated from the shared feed environment.
+if [[ ! -x /opt/king-node-venv/bin/python ]]; then
+    /usr/bin/python3 -m venv --system-site-packages /opt/king-node-venv
+fi
+/opt/king-node-venv/bin/python -m pip install -r "${APP_DIR}/requirements-king-node.txt"
+/opt/king-node-venv/bin/python -c 'import sys; sys.path.insert(0, sys.argv[1]); import formulas; from modules.king_node_engine import build_snapshot' "${APP_DIR}"
+
+/opt/king-node-venv/bin/python -m compileall -q \
     "${APP_DIR}/modules/king_node_engine.py" \
     "${APP_DIR}/modules/volatility_indices.py" \
     "${APP_DIR}/services/king_node_service.py" \

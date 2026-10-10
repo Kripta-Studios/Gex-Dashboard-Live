@@ -1,224 +1,88 @@
 # Despliegue de KING NODE en el VPS
 
-Esta guía instala el motor portable sin Excel. El flujo de producción es:
+Actualizado para las fórmulas recibidas el 10 de octubre de 2026. El productor
+vigente usa ThetaData v3: SPXW para spot/cadena, VIX desde el subyacente de
+opciones VIX, y reconstrucciones de VIX1D/VVIX desde NBBO. Los otros gráficos
+pueden seguir usando sus feeds existentes.
 
 ```text
-Tastytrade -> gex_daemon.service -> json_data/SPX_0dte_ExposureData_*.json
-Theta Terminal -> VIX/VVIX/VIX1D observados
-ambas fuentes -> king-node.service -> /var/lib/king-node/latest.json
-snapshot -> financial-server.service -> GET /api/king-node -> pestaña web
+Theta Terminal → king-node.service → /var/lib/king-node/latest.json
+                                  → state.json / current-attempt.json / health.json
+snapshot válido → financial-server.service → /api/king-node
+                                         → KING NODE y Market Structure
 ```
 
-## 1. Requisitos
+La adaptación de fórmulas y sus límites están en
+[KING_NODE_FORMULAS_20261010.md](KING_NODE_FORMULAS_20261010.md).
 
-- checkout del repositorio en
-  `/home/Option-Greeks-Plotting-Discord-Bot`;
-- Python 3 con `requirements.txt` instalado;
-- Java y `services/ThetaTerminalv3.jar`;
-- Theta Terminal autenticado con una suscripción que permita los snapshots de
-  índices VIX, VVIX y VIX1D;
-- credenciales OAuth de Tastytrade ya configuradas para `gex_daemon.py`;
-- servicios `thetadata_feed.service`, `gex_daemon.service` y
-  `financial-server.service` existentes.
+## Dependencias y configuración
 
-El archivo KING NODE no contiene credenciales. Tastytrade continúa leyendo del
-`.env` privado existente del proyecto:
-
-```text
-TASTYTRADE_CLIENT_SECRET=...
-TASTYTRADE_REFRESH_TOKEN=...
-```
-
-No se deben copiar estos secretos al repositorio ni a
-`.env.king-node.example`.
-
-## 2. Actualizar el checkout
-
-Desde el VPS:
+El checkout está en `/home/Option-Greeks-Plotting-Discord-Bot`. El servicio usa
+`/opt/king-node-venv`, un entorno con acceso a las dependencias Python ya
+instaladas en el VPS. Sus dependencias adicionales están fijadas en
+`requirements-king-node.txt`.
 
 ```bash
 cd /home/Option-Greeks-Plotting-Discord-Bot
-git status --short
-git fetch origin
-git pull --ff-only origin main
+sudo /usr/bin/python3 -m venv --system-site-packages /opt/king-node-venv
+sudo /opt/king-node-venv/bin/python -m pip install -r requirements-king-node.txt
+/opt/king-node-venv/bin/python -c 'from services.king_node_service import KingNodeV2Service; KingNodeV2Service._engine_v2_builder()'
 ```
 
-Si `git status` muestra cambios locales, detenerse y preservarlos antes del
-pull. El instalador no ejecuta Git ni modifica el checkout.
+La configuración privada continúa en `/etc/kripta/king-node.env`. No reemplazar
+ese archivo por el ejemplo ni publicar credenciales. Las rutas de salida son:
 
-Instalar dependencias solo si el entorno aún no las contiene:
+- live: `/var/lib/king-node/latest.json`;
+- estado: `/var/lib/king-node/state.json`;
+- referencia: `config/king_node_reference.json`;
+- API autenticada ADMIN: `/api/king-node?session=live` y
+  `/api/king-node?session=last_completed`.
+
+El productor necesita Theta Terminal conectado, permisos de opciones, datos
+vigentes y 47 strikes consecutivos separados por 5 puntos, con CALL/PUT en
+cada strike. La ausencia de cierre previo deja vacía la variación diaria; no
+se usa el spot actual como cierre ficticio.
+
+## Actualización de fórmulas sobre un VPS existente
+
+Preservar cambios locales antes de actualizar Git; usar un avance fast-forward
+que solo modifique los archivos revisados. Verificar las pruebas descritas en
+el documento de fórmulas. Guardar una copia de la unidad systemd y del estado
+existente antes de instalar la unidad nueva.
 
 ```bash
-sudo /usr/bin/python3 -m pip install -r requirements.txt
-```
-
-## 3. Configuración
-
-El instalador crea una sola vez `/etc/kripta/king-node.env` a partir del
-ejemplo y conserva el archivo en despliegues posteriores:
-
-```bash
-sudo APP_DIR=/home/Option-Greeks-Plotting-Discord-Bot \
-  bash scripts/deploy_king_node_vps.sh
-sudo nano /etc/kripta/king-node.env
-sudo chmod 600 /etc/kripta/king-node.env
-```
-
-Valores esperados:
-
-```text
-KING_NODE_TASTY_DATA_DIR=/home/Option-Greeks-Plotting-Discord-Bot/json_data
-KING_NODE_OUTPUT=/var/lib/king-node/latest.json
-KING_NODE_STATE_FILE=/var/lib/king-node/state.json
-KING_NODE_REFERENCE=/home/Option-Greeks-Plotting-Discord-Bot/config/king_node_reference.json
-KING_NODE_INTERVAL_SECONDS=30
-KING_NODE_TASTY_MAX_AGE_SECONDS=900
-KING_NODE_INDEX_MAX_AGE_SECONDS=180
-KING_NODE_SNAPSHOT=/var/lib/king-node/latest.json
-KING_NODE_WEB_MAX_AGE_SECONDS=900
-THETADATA_URL=http://127.0.0.1:25503/v3
-```
-
-Tras editar la configuración:
-
-```bash
+sudo install -m 0644 systemd/king-node.service /etc/systemd/system/king-node.service
+sudo systemctl daemon-reload
 sudo systemctl restart king-node.service financial-server.service
+sudo systemctl is-active king-node.service financial-server.service
+sudo journalctl -u king-node.service -n 30 --no-pager
 ```
 
-## 4. Preflight de proveedores
+Esta actualización no necesita reiniciar Theta Terminal ni `gex_daemon`.
+El instalador general `scripts/deploy_king_node_vps.sh` conserva su alcance
+más amplio y reinicia también esos feeds; no es necesario ejecutarlo para
+una actualización de fórmulas aislada.
 
-Comprobar que Tastytrade está produciendo SPX 0DTE reciente:
+Durante una sesión abierta:
 
 ```bash
-find json_data -maxdepth 1 -type f \
-  -name 'SPX_0dte_ExposureData_*.json' -mmin -15 -print | tail
-sudo systemctl status gex_daemon.service --no-pager --full
-sudo journalctl -u gex_daemon.service -n 100 --no-pager
+/opt/king-node-venv/bin/python scripts/check_king_node_health.py \
+  --snapshot /var/lib/king-node/latest.json --json
 ```
 
-Comprobar Theta Terminal de forma directa:
+Comprobar `workbook_calculation.release=2026-10-10`, el hash del libro,
+`quality.valid=true`, frescura y 47 filas. `formula_coverage.status=inventoried`
+significa inventario de fórmulas, no paridad íntegra Excel/live.
+Fuera de sesión, `CALENDAR_CLOSED` es el resultado correcto; que el proceso
+esté activo no demuestra disponibilidad de datos de la siguiente apertura.
+No escribir fixtures ni precios sintéticos en `/var/lib/king-node`.
 
-```bash
-curl -fsS 'http://127.0.0.1:25503/v3/index/snapshot/price?symbol=VIX'
-curl -fsS 'http://127.0.0.1:25503/v3/index/snapshot/price?symbol=VVIX'
-curl -fsS 'http://127.0.0.1:25503/v3/index/snapshot/price?symbol=VIX1D'
-```
+## Reversión
 
-No avanzar si una respuesta es de autenticación, licencia o no contiene un
-precio observado. KING NODE no sustituye índices faltantes por proxies.
-
-## 5. One-shot antes del servicio continuo
-
-```bash
-cd /home/Option-Greeks-Plotting-Discord-Bot
-set -a
-. /etc/kripta/king-node.env
-set +a
-/usr/bin/python3 services/king_node_service.py --once
-/usr/bin/python3 scripts/check_king_node_health.py --json
-```
-
-El verificador de producción exige:
-
-- schema `king-node.v1`;
-- snapshot y JSON Tastytrade dentro de la edad máxima;
-- exactamente 47 strikes;
-- VIX, VVIX y VIX1D observados por ThetaData;
-- ausencia de errores del productor.
-
-La advertencia `semantic_fallback` es esperable mientras
-`config/king_node_reference.json` no contenga una exportación auditada de las
-tablas estáticas `Matrix` e `IV Regime Map`. Para convertirla en fallo:
-
-```bash
-/usr/bin/python3 scripts/check_king_node_health.py \
-  --require-reference-export
-```
-
-## 6. Instalación y orden de arranque
-
-El script es idempotente: preserva el environment privado, recompila los
-módulos, instala las dos unidades y reinicia en este orden:
-
-```text
-thetadata_feed.service
-gex_daemon.service
-king-node.service
-financial-server.service
-```
-
-Ejecutar:
-
-```bash
-sudo APP_DIR=/home/Option-Greeks-Plotting-Discord-Bot \
-  bash scripts/deploy_king_node_vps.sh
-```
-
-## 7. Health checks y logs
-
-```bash
-systemctl is-active thetadata_feed.service gex_daemon.service \
-  king-node.service financial-server.service
-sudo /usr/bin/python3 scripts/check_king_node_health.py \
-  --snapshot /var/lib/king-node/latest.json
-sudo journalctl -u king-node.service -f
-sudo journalctl -u financial-server.service -n 100 --no-pager
-sudo ls -l /var/lib/king-node/latest.json /var/lib/king-node/state.json
-```
-
-La API es ADMIN-only. Tras autenticarse en el dashboard:
-
-```bash
-curl -sS -H "Authorization: Bearer $GEX_ADMIN_TOKEN" \
-  http://127.0.0.1:8609/api/king-node
-```
-
-No pegar tokens reales en shell history compartido. También se puede validar
-abriendo la pestaña **KING NODE** en el navegador: debe mostrar edad, fuentes,
-47 strikes y los tres índices.
-
-## 8. Diagnóstico
-
-`KING NODE UNHEALTHY` por Tastytrade:
-
-- comprobar fecha/hora y mercado;
-- revisar `gex_daemon.service`;
-- confirmar que el fichero más reciente terminó de escribirse;
-- confirmar `KING_NODE_TASTY_DATA_DIR`.
-
-Índices no observados:
-
-- comprobar `thetadata_feed.service`;
-- repetir los tres `curl`;
-- revisar autenticación/suscripción de Theta Terminal;
-- confirmar que `THETADATA_URL` termina en `/v3`.
-
-API `503`:
-
-- ejecutar el health checker sobre `/var/lib/king-node/latest.json`;
-- revisar edad máxima del productor y del servidor;
-- confirmar que ambas unidades leen la misma ruta.
-
-Pestaña sin aparecer:
-
-- KING NODE solo se carga para rol `ADMIN`;
-- revisar la consola del navegador y el `journalctl` del servidor;
-- confirmar que `/js/king_node.js` y `/api/king-node` responden autenticados.
-
-## 9. Rollback
-
-No borrar el estado para volver atrás. Revertir en Git los commits KING NODE
-que se quieran deshacer, publicar el revert y ejecutar otra vez el instalador.
-Como medida inmediata:
-
-```bash
-sudo systemctl disable --now king-node.service
-sudo systemctl restart financial-server.service
-```
-
-El snapshot y estado quedan en `/var/lib/king-node` para diagnóstico. Se pueden
-reactivar después con:
-
-```bash
-sudo systemctl enable --now king-node.service
-```
+Conservar el commit anterior y las copias de la unidad y del estado. Para
+revertir en un checkout con cambios locales, aplicar la reversión del commit
+concreto conservando esos cambios; evitar `reset --hard`.
+Restaurar la unidad anterior, ejecutar `daemon-reload` y reiniciar únicamente
+`king-node` y `financial-server`. El nuevo entorno Python puede quedarse
+instalado sin afectar a los feeds. La versión anterior de estado se conserva
+en la copia, pues las confirmaciones nuevas usan estado versión 3.

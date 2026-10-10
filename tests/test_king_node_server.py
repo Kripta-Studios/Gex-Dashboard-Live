@@ -53,7 +53,7 @@ def test_server_reads_schema_and_adds_delivery_metadata(
 
     assert response["schema_version"] == "king-node.v1"
     assert response["rows"] == payload["rows"]
-    assert response["delivery"]["snapshot_path"] == "latest.json"
+    assert "snapshot_path" not in response["delivery"]
     assert response["delivery"]["stale"] is False
     assert 0 <= response["delivery"]["age_seconds"] < 30
 
@@ -70,5 +70,5 @@ def test_server_rejects_unsupported_snapshot_schema(
     server = load_server_module(monkeypatch, snapshot)
     handler = server.ExposureDataHandler.__new__(server.ExposureDataHandler)
 
-    with pytest.raises(ValueError, match="Unsupported KING NODE"):
+    with pytest.raises(ValueError, match="SNAPSHOT_SCHEMA_UNSUPPORTED"):
         handler._read_king_node_snapshot()

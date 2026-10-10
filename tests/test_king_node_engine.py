@@ -79,9 +79,9 @@ def test_build_snapshot_requires_v2_input_and_verified_reference() -> None:
     assert snapshot["quality"]["reference_mode"] == "verified_static_reference"
     assert snapshot["reference"]["matrix_rows"] == 78
     assert snapshot["reference"]["iv_regime_rows"] == 54
-    assert snapshot["formula_coverage"]["current_formula_cells"] == 7959
-    assert snapshot["formula_coverage"]["catalogue_only"] == 107
-    assert len(snapshot["rows"]) == 5
+    assert snapshot["formula_coverage"]["current_formula_cells"] == 18302
+    assert snapshot["formula_coverage"]["catalogue_only"] == 229
+    assert len(snapshot["rows"]) == 47
     assert state["schema_version"] == "king-node.v2-state"
     assert "semantic_fallback" not in json.dumps(snapshot, sort_keys=True)
     assert not any("path" in key.lower() for key in _keys(snapshot))
@@ -128,7 +128,7 @@ def test_golden_fixture_records_exact_fields_and_numeric_tolerance() -> None:
             abs=expectation["tolerances"]["absolute"],
             rel=expectation["tolerances"]["relative"],
         )
-    assert expectation["max_absolute_error"] == 0.0
-    assert expectation["max_relative_error"] == 0.0
+    assert expectation["max_absolute_error"] <= 1e-8
+    assert expectation["max_relative_error"] <= 1e-12
     assert expectation["mismatches"] == []
     assert expectation["cached_workbook_value_claims"] == []

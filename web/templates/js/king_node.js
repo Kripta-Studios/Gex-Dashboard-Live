@@ -160,6 +160,8 @@
         const acceptedStatus = new Set(["live", "last_completed_session"]);
 
         if (
+            data.workbook_calculation?.release !== "2026-10-10" ||
+            data.freshness?.stale === true ||
             !acceptedStatus.has(data.status) ||
             data.quality?.valid !== true ||
             !Array.isArray(data.rows) ||
@@ -315,6 +317,9 @@
                         <strong>${formatPrice(item.strike)}</strong>
                         <span>${item.distance >= 0 ? "+" : ""}${formatNumber(item.distance, 1)} pts</span>
                         <small>${score === null ? "locked carry" : `score ${score.toFixed(2)}`} · confl ${confluence ?? "—"}${backers ? ` · ${escapeHtml(backers)}` : ""}</small>
+                        <small class="${item.unsafe ? 'negative' : 'neutral'}">${item.unsafe ? 'UNSAFE · ' + text(item.unsafe_reasons) : item.reversal ? 'REVERSAL' : 'REACTION LEVEL'}${item.geometry ? ' · ' + text(item.geometry) : ''}</small>
+                        <small>Arrival vanna: ${text(item.vanna_arrival)}${item.take_profit ? ' · TAKE PROFIT' : ''}${item.breakout_risk ? ' · BREAKOUT / BREAKDOWN RISK' : ''}</small>
+                        ${item.zomma_now ? `<small>${text(item.zomma_now)}</small>` : ''}
                     </div>
                 `;
             })
@@ -447,10 +452,10 @@
         const timeToExpiryYears =
             finite(expiration.time_to_expiry_years);
 
-        const dteHours =
+        const dteHours = finite(model.inputs?.dte_hours) ?? (
             timeToExpiryYears === null
                 ? null
-                : timeToExpiryYears * 365 * 24;
+                : timeToExpiryYears * 365 * 24);
 
         const regime = model.regime || {};
         const signs = regime.signs || {};
@@ -513,6 +518,7 @@
                         <span>DEALER REGIME</span>
                         <strong>${text(regime.regime)}</strong>
                         <small>${text(regime.action)} · ${text(regime.tilt)}</small>
+                        ${regime.fragile_positive_gamma ? '<small class="warning">FRAGILE POSITIVE GAMMA</small>' : ""}
                     </article>
                     <article class="kn-spot-card">
                         <span>VOL TENSION</span>
@@ -578,7 +584,7 @@
                 <div class="kn-metrics-grid kn-metrics-grid-wide">
                     ${metricCard("RAW Γ", model.totals?.raw_gamma, "Σ per-leg Γ×OI", formatRawGamma)}
                     ${metricCard("GROSS Γ", model.totals?.gamma_gross, "Workbook column B")}
-                    ${metricCard("NET GEX", model.totals?.gex, `${text(gex.sign)} · ${formatExposure(gex.per_15_minutes)}/15m`)}
+                    ${metricCard("NET GEX", model.totals?.gex, `${gex.sign === 1 ? "POS" : gex.sign === -1 ? "NEG" : "FLAT"} · ${formatExposure(gex.per_15_minutes)}/15m`)}
                     ${metricCard("DEX", model.totals?.dex, `sign ${text(signs.dex)}`)}
                     ${metricCard("VEX", model.totals?.vex, `sign ${text(signs.vex)}`)}
                     ${metricCard("ZOMMA", model.totals?.zomma, `sign ${text(signs.zomma)}`)}
@@ -644,22 +650,25 @@
                             <div class="kn-readout-row"><span>Dealer is</span><strong>${text(regime.dealer_is)}</strong></div>
                             <div class="kn-readout-row"><span>Dealer action</span><strong>${text(regime.dealers_action)}</strong></div>
                             <div class="kn-readout-row"><span>Action / tilt</span><strong>${text(regime.action)} · ${text(regime.tilt)}</strong></div>
-                            <div class="kn-readout-row"><span>IV class / intensity / DTE boost</span><strong>${text(regime.iv_raw)} → ${text(regime.iv_box)} · ${formatNumber(regime.iv_intensity, 2)}× · ${formatNumber(regime.dte_boost, 2)}×</strong></div>
+                            <div class="kn-readout-row"><span>IV class / intensity</span><strong>${text(regime.iv_raw)} → ${text(regime.iv_box)} · ${formatNumber(regime.iv_intensity, 2)}×</strong></div>
                             <div class="kn-readout-row"><span>Matrix key</span><code>${text(regime.matrix_key)}</code></div>
                             <div class="kn-readout-row"><span>Box key</span><code>${text(regime.box_key)}</code></div>
                         </article>
 
                         <article class="kn-panel kn-readout">
                             <div class="kn-panel-header"><span>LIVE MONITORS</span></div>
-                            <div class="kn-readout-row"><span>Net GEX trajectory</span><strong>${formatExposure(gex.per_15_minutes)}/15m · ${text(gex.sign)} · ${finite(gex.flip_age_minutes) === null ? "no session flip" : `flipped ${formatNumber(gex.flip_age_minutes, 0)}m ago`}</strong></div>
+                            <div class="kn-readout-row"><span>Net GEX trajectory</span><strong>${text(gex.text)}</strong></div>
                             <div class="kn-readout-row"><span>Vomma near spot</span><strong>${text(vomma.status)} · ref ${formatExposure(vomma.reference)}</strong></div>
                             <div class="kn-readout-row"><span>Put / call skew</span><strong>${formatNumber(skew.put_skew_vol_points, 2)}vp ${text(skew.put_direction)} · ${formatNumber(skew.call_skew_vol_points, 2)}vp ${text(skew.call_direction)} · RR ${formatNumber(skew.risk_reversal_vol_points, 2)}vp</strong></div>
+                            <div class="kn-readout-row"><span>Skew state</span><strong>${text(skew.text)}</strong></div>
+                            <div class="kn-readout-row"><span>Spot / volatility</span><strong>${text(model.monitor?.spot_vol?.text)}</strong></div>
                             <div class="kn-readout-row"><span>VIX1D session</span><strong>Lo ${formatNumber(extremes.session_low, 2)} · Hi ${formatNumber(extremes.session_high, 2)} · ${extremes.vol_bottom ? "VOL BOTTOM" : extremes.vol_top ? "VOL TOP" : "no extreme flag"}</strong></div>
                         </article>
 
                         <article class="kn-panel kn-readout">
                             <div class="kn-panel-header"><span>DATA & REFERENCE GATES</span></div>
                             ${warningPanel(model)}
+                            <div class="kn-readout-row"><span>Unavailable inputs</span><strong>${text((model.workbook_calculation?.unavailable_inputs || []).join(" · "))}</strong></div>
                             <div class="kn-source-line">
                                 <span>Provider</span>
                                 <strong>${text(model.provenance?.provider)} ${text(model.provenance?.api_version)}</strong>

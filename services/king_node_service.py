@@ -1145,8 +1145,10 @@ class KingNodeV2Service:
         spot, spot_at = self._validated_underlying(spxw_rows)
         previous_close = state.get("previous_close")
         previous_date = state.get("previous_close_session_date")
-        if not isinstance(previous_close, (int, float)) or previous_close <= 0 or previous_date == session.trading_date:
-            raise KingNodeInputError("validated previous completed-session spot is unavailable")
+        if (isinstance(previous_close, bool) or not isinstance(previous_close, (int, float))
+                or previous_close <= 0 or not isinstance(previous_date, str)
+                or previous_date >= session.trading_date):
+            previous_close = None
         expiry_minutes = self.calendar.calendar_minutes_until(now, session_date)
         time_to_expiry_years = expiry_minutes / (365.0 * 24.0 * 60.0)
         if time_to_expiry_years <= 0:
@@ -1217,7 +1219,7 @@ class KingNodeV2Service:
                 "symbol": "SPXW",
                 "root": "SPXW",
                 "spot": spot,
-                "previous_close": float(previous_close),
+                "previous_close": float(previous_close) if previous_close is not None else None,
                 "timestamp": spot_at,
             },
             "expiration": {
@@ -1294,6 +1296,7 @@ class KingNodeV2Service:
                     "stale": False,
                 },
                 "provenance": {
+                    **engine_snapshot.get("provenance", {}),
                     "provider": "ThetaData",
                     "api_version": "v3",
                     "entitlements": self.entitlements.to_dict(),
@@ -1309,10 +1312,12 @@ class KingNodeV2Service:
                     "catalogue_sha256": reference.authority.get("catalogue_sha256"),
                 },
                 "formula_coverage": {
-                    "status": "verified",
+                    **engine_snapshot.get("formula_coverage", {}),
+                    "status": "inventoried",
                     "checksum": reference.authority.get("formula_coverage_checksum"),
                 },
                 "inputs": {
+                    **engine_snapshot.get("inputs", {}),
                     "underlying": normalized_input["underlying"],
                     "expiration": normalized_input["expiration"],
                     "indices": normalized_input["indices"],
@@ -1407,6 +1412,9 @@ class KingNodeV2Service:
             next_state["schema_version"] = "king-node.v2-state"
             next_state["last_live_session_date"] = session.trading_date
             next_state["last_live_spot"] = normalized_input["underlying"]["spot"]
+            for key in ("previous_close", "previous_close_session_date"):
+                if key in state:
+                    next_state[key] = state[key]
             _atomic_write_json(self.artifacts.current_attempt, snapshot)
             _atomic_write_json(self.artifacts.state, _no_path_payload(next_state))
             _atomic_write_json(self.artifacts.live, snapshot)

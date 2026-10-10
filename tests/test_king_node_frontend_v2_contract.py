@@ -45,7 +45,6 @@ def test_frontend_contains_no_v1_renderer_paths() -> None:
         "model.source?.indices",
         "model.source?.tastytrade",
         "model.inputs?.spot_change_pct",
-        "model.inputs?.dte_hours",
         "model.inputs?.atm_iv",
         "regime.dealer_action",
         "regime.tactical",

@@ -17,6 +17,7 @@ trades_live/
 *.json
 *.csv
 !requirements.txt
+!requirements-king-node.txt
 futures_plots/
 training_data/
 trading_data/

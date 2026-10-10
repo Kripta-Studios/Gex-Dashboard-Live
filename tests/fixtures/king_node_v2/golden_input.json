@@ -1,0 +1,5032 @@
+{
+  "as_of": "2026-10-09T14:00:00Z",
+  "expiration": {
+    "contract_multiplier": 100,
+    "expiry": "2026-10-09",
+    "rate": 0.04,
+    "time_to_expiry_years": 0.0005
+  },
+  "indices": {
+    "vix": {
+      "methodology": "documented-fixture",
+      "provenance": "observed",
+      "quality": "complete",
+      "timestamp": "2026-10-09T14:00:00Z",
+      "value": 23.0
+    },
+    "vix1d": {
+      "methodology": "documented-fixture",
+      "provenance": "observed",
+      "quality": "complete",
+      "timestamp": "2026-10-09T14:00:00Z",
+      "value": 25.0
+    },
+    "vvix": {
+      "methodology": "documented-fixture",
+      "provenance": "observed",
+      "quality": "complete",
+      "timestamp": "2026-10-09T14:00:00Z",
+      "value": 115.0
+    }
+  },
+  "option_rows": [
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 10,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 5885,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 8083,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 5885,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 10,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 5890,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 8167,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 5890,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 10,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 5895,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 8250,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 5895,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 10,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 5900,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 8333,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 5900,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 10,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 5905,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 8417,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 5905,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 400,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 5910,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 8500,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 5910,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 933,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 5915,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 8583,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 5915,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 1467,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 5920,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 8667,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 5920,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 2000,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 5925,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 8750,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 5925,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 2533,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 5930,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 8833,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 5930,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 3067,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 5935,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 8917,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 5935,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 3600,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 5940,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 9000,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 5940,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 4133,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 5945,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 9083,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 5945,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 4667,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 5950,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 9167,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 5950,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 5200,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 5955,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 9250,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 5955,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 5733,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 5960,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 9333,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 5960,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 6267,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 5965,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 9417,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 5965,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 6800,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 5970,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 9500,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 5970,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 7333,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 5975,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 9583,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 5975,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 7867,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 5980,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 9667,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 5980,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 8400,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 5985,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 9750,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 5985,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 8933,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 5990,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 9833,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 5990,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 9467,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 5995,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 9917,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 5995,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 10000,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 6000,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 10000,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 6000,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 9867,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 6005,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 9417,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 6005,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 9733,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 6010,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 8833,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 6010,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 9600,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 6015,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 8250,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 6015,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 9467,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 6020,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 7667,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 6020,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 9333,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 6025,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 7083,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 6025,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 9200,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 6030,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 6500,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 6030,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 9067,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 6035,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 5917,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 6035,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 8933,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 6040,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 5333,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 6040,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 8800,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 6045,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 4750,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 6045,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 8667,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 6050,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 4167,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 6050,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 8533,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 6055,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 3583,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 6055,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 8400,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 6060,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 3000,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 6060,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 8267,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 6065,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 2417,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 6065,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 8133,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 6070,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 1833,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 6070,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 8000,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 6075,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 1250,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 6075,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 7867,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 6080,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 667,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 6080,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 7733,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 6085,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 83,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 6085,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 7600,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 6090,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 10,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 6090,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 7467,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 6095,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 10,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 6095,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 7333,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 6100,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 10,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 6100,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 7200,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 6105,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 10,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 6105,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 7067,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 6110,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 10,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 6110,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": 0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.2,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 6933,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "CALL",
+      "root": "SPXW",
+      "strike": 6115,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    },
+    {
+      "ask": 1.1,
+      "bid": 1.0,
+      "delta": -0.5,
+      "expiry": "2026-10-09",
+      "greeks": {
+        "charm": {
+          "provenance": "observed",
+          "value": 0.007
+        },
+        "dgex": {
+          "provenance": "observed",
+          "value": 0.008
+        },
+        "gamma": {
+          "provenance": "observed",
+          "value": 0.02
+        },
+        "speed": {
+          "provenance": "observed",
+          "value": 0.006
+        },
+        "vanna": {
+          "provenance": "observed",
+          "value": 0.03
+        },
+        "vega": {
+          "provenance": "observed",
+          "value": 0.05
+        },
+        "vomma": {
+          "provenance": "observed",
+          "value": 0.04
+        },
+        "zomma": {
+          "provenance": "observed",
+          "value": 0.01
+        }
+      },
+      "iv": 0.21,
+      "oi_source_date": "2026-10-08",
+      "open_interest": 10,
+      "provider_timestamp": "2026-10-09T14:00:00Z",
+      "rate": 0.04,
+      "right": "PUT",
+      "root": "SPXW",
+      "strike": 6115,
+      "symbol": "SPX",
+      "theta": -0.1,
+      "time_to_expiry_years": 0.0005,
+      "underlying": 6000,
+      "underlying_timestamp": "2026-10-09T14:00:00Z"
+    }
+  ],
+  "schema_version": "king-node.v2-input",
+  "session_date": "2026-10-09",
+  "source": {
+    "age_seconds": 0,
+    "provider": "synthetic-formula-test",
+    "source_id": "synthetic-october-47",
+    "stale": false
+  },
+  "state": {},
+  "underlying": {
+    "previous_close": 5990,
+    "root": "SPXW",
+    "spot": 6000,
+    "symbol": "SPX",
+    "timestamp": "2026-10-09T14:00:00Z"
+  }
+}

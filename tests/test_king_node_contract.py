@@ -45,7 +45,7 @@ def test_normalized_theta_input_is_typed_and_json_round_trips() -> None:
     validated = validate_normalized_input(_input())
     serialized = validated.as_dict()
     assert serialized["schema_version"] == INPUT_SCHEMA_VERSION
-    assert len(serialized["option_rows"]) == 10
+    assert len(serialized["option_rows"]) == 94
     assert serialized["option_rows"][0]["right"] == "CALL"
     assert serialized["option_rows"][0]["greeks"]["gamma"]["provenance"] == "observed"
 

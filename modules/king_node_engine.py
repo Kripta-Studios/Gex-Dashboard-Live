@@ -8,13 +8,18 @@ reference.  It has no filesystem, network, HTML, Excel, or office dependency.
 from __future__ import annotations
 
 from copy import deepcopy
+from dataclasses import asdict
 from datetime import datetime, timezone
 import math
 from statistics import median
 from typing import Any
 
+from modules.king_node_workbook_adapter import surface_from_input, calculate_workbook
+from modules.king_node_live_math import _two_half_dir
+
 from modules.king_node_contract import (
     INPUT_SCHEMA_VERSION,
+    sha256_json,
     SCHEMA_VERSION as CONTRACT_SCHEMA_VERSION,
     STATE_SCHEMA_VERSION,
     KingNodeInputError,
@@ -26,7 +31,7 @@ from modules.king_node_contract import (
 )
 
 SCHEMA_VERSION = CONTRACT_SCHEMA_VERSION
-STATE_VERSION = 2
+STATE_VERSION = 3
 WINDOW_EACH_SIDE = 23
 WINDOW_SIZE = WINDOW_EACH_SIDE * 2 + 1
 SMOOTH_READINGS = 3
@@ -222,19 +227,7 @@ def _history_values(state: dict[str, Any], name: str) -> list[float]:
 def two_half_direction(values: list[float], deadband: float) -> str:
     """Port of live_king_node._two_half_dir."""
 
-    if len(values) < 4:
-        return "Flat"
-    half = len(values) // 2
-    older = values[:half]
-    recent = values[half:]
-    if not older or not recent:
-        return "Flat"
-    difference = sum(recent) / len(recent) - sum(older) / len(older)
-    if difference >= deadband:
-        return "Up"
-    if difference <= -deadband:
-        return "Down"
-    return "Flat"
+    return _two_half_dir(values, deadband)
 
 
 def rows_from_tastytrade(payload: dict[str, Any]) -> list[dict[str, Any]]:
@@ -1163,24 +1156,16 @@ def _public_source(source: dict[str, Any], source_meta: dict[str, Any] | None) -
 
 def _formula_coverage(reference: VerifiedReference) -> dict[str, Any]:
     return {
+        **reference.raw.get("formula_summary", {}),
         "coverage_schema_version": "king-node.formula-coverage.v2",
-        "current_formula_cells": 7959,
-        "catalogue_formula_cells": 7382,
-        "union_formula_cells": 8066,
-        "current_family_count": 730,
-        "catalogue_family_count": 683,
-        "formula_text_changed": 509,
-        "xlsx_only": 684,
-        "catalogue_only": 107,
-        "conditional_formatting_rules": 299,
-        "input_validation_rules": 8,
-        "input_validation_slots": 16,
         "ledger_checksum": reference.authority.get("formula_coverage_checksum"),
+        "release": reference.raw.get("formula_release"),
+        "coverage_kind": "formula_inventory_not_runtime_parity",
     }
 
 
 def build_snapshot(
-    tastytrade_payload: dict[str, Any] | NormalizedInput,
+    normalized_input: dict[str, Any] | NormalizedInput,
     volatility: dict[str, Any] | None = None,
     state: dict[str, Any] | None = None,
     *,
@@ -1192,9 +1177,7 @@ def build_snapshot(
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     """Build a fail-closed KING NODE v2 snapshot and next explicit state.
 
-    ``tastytrade_payload`` is retained only as a parameter name for call-site
-    compatibility.  Its accepted value is a ``king-node.v2-input`` mapping (or a
-    prevalidated :class:`NormalizedInput`), never a legacy split-data payload.
+    Accept a ``king-node.v2-input`` mapping or a prevalidated NormalizedInput.
     """
 
     if volatility is not None:
@@ -1203,7 +1186,7 @@ def build_snapshot(
         )
     if reference is None:
         raise KingNodeDataError("king-node.v2 requires a verified static reference export")
-    normalized = _normalized_input(tastytrade_payload)
+    normalized = _normalized_input(normalized_input)
     verified_reference = _verified_reference(reference)
     raw_rows, normalized_volatility, normalized_payload = _legacy_surface_from_normalized(normalized)
 
@@ -1216,13 +1199,21 @@ def build_snapshot(
         raise KingNodeDataError("session_date must equal normalized input session_date")
     next_state = _normalise_state(state if state is not None else dict(normalized.state), resolved_session_date)
     source_meta = deepcopy(source_meta) if isinstance(source_meta, dict) else {}
+    material = asdict(normalized)
+    material.pop('state', None)
+    input_key = sha256_json({'input': material, 'source_meta': source_meta, 'reference': verified_reference.raw['canonical_checksum']})
+    if next_state.get('last_input_key') == input_key and next_state.get('last_snapshot'):
+        return deepcopy(next_state['last_snapshot']), next_state
+    prior_time = next_state.get('workbook', {}).get('timestamp')
+    if prior_time and timestamp <= prior_time:
+        raise KingNodeDataError('Changed or out-of-order KING NODE observation must have a newer timestamp')
     spot = _number(normalized_payload.get("spot_price"))
     if spot is None or spot <= 0:
         raise KingNodeDataError("spot_price is missing or invalid")
-    aggregated = aggregate_by_strike(raw_rows)
+    aggregated, source_dte_hours = surface_from_input(normalized)
     window = select_strike_window(aggregated, spot)
-    if len(window) < 5:
-        raise KingNodeDataError("fewer than five strikes are available near spot")
+    if len(window) != WINDOW_SIZE or any(b['strike']-a['strike'] != 5 for a,b in zip(window, window[1:])):
+        raise KingNodeDataError('October workbook requires 47 contiguous strikes at 5-point spacing')
 
     source_id = str(
         source_meta.get("source_id")
@@ -1231,13 +1222,17 @@ def build_snapshot(
         or timestamp
     )
     rows, smooth_depth = _smooth_surface(next_state, window, source_id)
+    for row in rows:
+        for field in PROFILE_FIELDS:
+            row[field] = round(row[field])
+    next_state["current_atm_iv"] = _interpolate(window, "call_iv", spot)
 
     index_values, index_metadata = _index_values(normalized_volatility)
     for name, value in index_values.items():
         observed_at = index_metadata[name].get("timestamp") or timestamp
         _append_history(next_state, name, value, str(observed_at))
 
-    atm_iv = _interpolate(rows, "call_iv", spot)
+    atm_iv = _interpolate(window, "call_iv", spot)
     _append_history(next_state, "atm_iv", atm_iv, timestamp)
     directions = {
         name: two_half_direction(
@@ -1249,8 +1244,6 @@ def build_snapshot(
     # ``market_minute`` remains in the callable signature for adapter stability,
     # but no unproven time-of-day calibration is part of v2 skew calculation.
     _ = market_minute, generated_dt
-    skew = _skew(rows, spot, next_state, timestamp)
-    skew["atm_iv"] = atm_iv
 
     totals: dict[str, float] = {}
     for field in (
@@ -1274,125 +1267,7 @@ def build_snapshot(
             if (value := _number(row.get(field))) is not None
         )
 
-    dte = _dte_hours(raw_rows)
-    regime = _regime(
-        totals,
-        directions,
-        index_values,
-        atm_iv,
-        dte,
-        verified_reference,
-    )
-
-    raw_resistances, raw_supports = _rank_level_candidates(rows, spot)
-    for side_name, candidates in (
-        ("resistance", raw_resistances),
-        ("support", raw_supports),
-    ):
-        raw_levels = [item["strike"] for item in candidates]
-        locked, pending = _apply_level_lock(
-            list(next_state["locked"].get(side_name, [])),
-            dict(next_state["pending"].get(side_name, {})),
-            raw_levels,
-            spot,
-            side_name,
-        )
-        next_state["locked"][side_name] = locked
-        next_state["pending"][side_name] = pending
-
-    candidate_lookup = {
-        item["strike"]: item for item in raw_resistances + raw_supports
-    }
-    locked_resistances = [
-        candidate_lookup.get(
-            strike,
-            {
-                "strike": strike,
-                "score": None,
-                "confluence": None,
-                "backers": [],
-                "gex": next(
-                    (
-                        _number(row.get("gex"))
-                        for row in rows
-                        if row["strike"] == strike
-                    ),
-                    None,
-                ),
-                "raw_gamma": next(
-                    (
-                        _number(row.get("raw_gamma"))
-                        for row in rows
-                        if row["strike"] == strike
-                    ),
-                    None,
-                ),
-                "distance": strike - spot,
-            },
-        )
-        for strike in next_state["locked"]["resistance"]
-    ]
-    locked_supports = [
-        candidate_lookup.get(
-            strike,
-            {
-                "strike": strike,
-                "score": None,
-                "confluence": None,
-                "backers": [],
-                "gex": next(
-                    (
-                        _number(row.get("gex"))
-                        for row in rows
-                        if row["strike"] == strike
-                    ),
-                    None,
-                ),
-                "raw_gamma": next(
-                    (
-                        _number(row.get("raw_gamma"))
-                        for row in rows
-                        if row["strike"] == strike
-                    ),
-                    None,
-                ),
-                "distance": strike - spot,
-            },
-        )
-        for strike in next_state["locked"]["support"]
-    ]
-
-    cumulative = _cumulative_levels(rows, spot)
-    near_vomma = sum(
-        abs(value)
-        for row in rows
-        if abs(float(row["strike"]) - spot) <= 25.0
-        and (value := _number(row.get("vomma"))) is not None
-    )
-    _append_history(
-        next_state,
-        "near_vomma",
-        near_vomma,
-        timestamp,
-        max_length=VOMMA_HISTORY_LENGTH,
-    )
-    vomma = _vomma_status(_history_values(next_state, "near_vomma"))
-    gex_monitor = _gex_monitor(
-        next_state,
-        totals["gex"],
-        timestamp,
-        directions["vix1d"] == "Up",
-        directions["vvix"] == "Up",
-    )
-    vol_tension = _vol_tension(
-        totals["gex"],
-        gex_monitor,
-        index_values["vix"],
-        index_values["vix1d"],
-        directions["vix1d"],
-        skew,
-    )
-
+    dte = source_dte_hours
     vix1d = index_values["vix1d"]
     if vix1d is not None:
         if next_state.get("vix1d_low") is None or vix1d < next_state["vix1d_low"]:
@@ -1431,6 +1306,35 @@ def build_snapshot(
             and directions["vix1d"] == "Down"
         ),
     }
+
+    regime, workbook_levels, workbook_calculation = calculate_workbook(
+        verified_reference, rows, window, spot, index_values, directions,
+        next_state, timestamp,
+    )
+    raw_resistances = workbook_levels["raw_resistances"]
+    raw_supports = workbook_levels["raw_supports"]
+    locked_resistances = workbook_levels["resistances"]
+    locked_supports = workbook_levels["supports"]
+
+    cumulative = _cumulative_levels(rows, spot)
+    near_vomma = sum(
+        abs(value)
+        for row in rows
+        if abs(float(row["strike"]) - spot) <= 25.0
+        and (value := _number(row.get("vomma"))) is not None
+    )
+    _append_history(
+        next_state,
+        "near_vomma",
+        near_vomma,
+        timestamp,
+        max_length=VOMMA_HISTORY_LENGTH,
+    )
+    vomma = _vomma_status(_history_values(next_state, "near_vomma"))
+    source_monitors = workbook_calculation.pop("monitors")
+    gex_monitor = source_monitors["gex"]
+    skew = source_monitors["skew"]
+    vol_tension = source_monitors["vol_tension"]
 
     raw_coverage = sum(
         1 for row in rows if _number(row.get("raw_gamma")) is not None
@@ -1486,11 +1390,11 @@ def build_snapshot(
     formula_outputs = {
         "king_node_model": {
             "raw_gamma": _node(rows, "raw_gamma", "max"),
-            "king_gamma": _node(rows, "gamma_gross", "max"),
-            "max_gex": _node(rows, "gex", "max"),
-            "min_gex": _node(rows, "gex", "min"),
-            "gamma_flip": cumulative["gamma_flip"],
-            "zero_gamma": cumulative["zero_gamma"],
+            "king_gamma": workbook_levels["king_gamma"],
+            "max_gex": workbook_levels["max_gex"],
+            "min_gex": workbook_levels["min_gex"],
+            "gamma_flip": workbook_levels["gamma_flip"],
+            "zero_gamma": workbook_levels["zero_gamma"],
         },
         "gex_depth": {
             "call_walls": _walls(rows, True),
@@ -1525,6 +1429,9 @@ def build_snapshot(
             "state_schema_version": STATE_SCHEMA_VERSION,
             "source": {**public_source, "source_id": source_id},
             "greek_provenance": normalized_payload["greek_provenance"],
+            "calculation_method": "live_king_node_20261010_call_iv_black_scholes",
+            "exposure_scale": 0.001,
+            "model_parameters": {"rate": 0.043, "dividend_yield": 0.012, "contract_multiplier": 100},
         },
         "reference": {
             "schema_version": verified_reference.raw["schema_version"],
@@ -1535,6 +1442,7 @@ def build_snapshot(
             "iv_regime_rows": len(verified_reference.iv_regime_map),
         },
         "formula_coverage": _formula_coverage(verified_reference),
+        "workbook_calculation": workbook_calculation,
         "quality": {
             "grade": quality,
             "errors": errors,
@@ -1585,6 +1493,8 @@ def build_snapshot(
             "skew": skew,
             "vol_tension": vol_tension,
             "vix1d_extremes": vol_extremes,
+            "spot_vol": source_monitors["spot_vol"],
+            "squeeze": source_monitors["squeeze"],
         },
         "rows": rows,
         "presentation": {
@@ -1598,6 +1508,8 @@ def build_snapshot(
             "formula_outputs": formula_outputs,
         },
     }
+    next_state["last_input_key"] = input_key
+    next_state["last_snapshot"] = deepcopy(snapshot)
     return snapshot, next_state
 
 

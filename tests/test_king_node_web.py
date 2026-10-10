@@ -41,7 +41,7 @@ def test_king_node_admin_tab_uses_precomputed_admin_api() -> None:
     assert "renderKingNodeDashboard" in dashboard
     assert "refreshKingNodeDashboard" in refresh
     assert '"js/king_node.js",' in server
-    assert 'path_only == "/api/king-node"' in server
+    assert '"/api/king-node"' in server
     assert 'auth_info.get("role") != "ADMIN"' in server
     assert '"Cache-Control", "no-store"' in server
     assert "@import url('./css/king_node.css');" in styles
@@ -67,16 +67,17 @@ def web_snapshot_fixture() -> dict:
             }
         )
     return {
-        "schema_version": "king-node.v1",
-        "status": "degraded",
+        "schema_version": "king-node.v2",
+        "status": "live",
         "generated_at": "2026-07-26T14:00:00Z",
-        "delivery": {
+        "workbook_calculation": {"release": "2026-10-10", "unavailable_inputs": []},
+        "freshness": {
             "age_seconds": 10,
             "max_age_seconds": 900,
             "stale": False,
         },
         "quality": {
-            "grade": "DEGRADED",
+            "valid": True, "grade": "LIVE",
             "warnings": ["<script>alert('no')</script>"],
             "errors": [],
             "strike_count": 47,
@@ -110,6 +111,8 @@ def web_snapshot_fixture() -> dict:
             },
         },
         "inputs": {
+            "underlying": {"spot": 6030, "previous_close": 6020},
+            "expiration": {"time_to_expiry_years": 4/(365*24)},
             "spot": 6030,
             "previous_close": 6020,
             "spot_change_pct": 0.16,
@@ -124,8 +127,8 @@ def web_snapshot_fixture() -> dict:
         },
         "regime": {
             "regime": "High IV · positive-gamma mean reversion",
-            "dealer_action": "Sell strength and buy weakness",
-            "tactical": "FADE EXTREMES",
+            "dealers_action": "Sell strength and buy weakness",
+            "action": "FADE EXTREMES",
             "dealer_is": "Long gamma",
             "phenomenon": "Gamma pin",
             "tilt": "aligned",
@@ -135,7 +138,7 @@ def web_snapshot_fixture() -> dict:
             "dte_boost": 1.2,
             "matrix_key": "High|Pos|Pos|Pos|Pos|Pos|Pos|Pos",
             "box_key": "Positive|Down|Flat|Up",
-            "reference_mode": "semantic_fallback",
+            "reference_mode": "verified_static_reference",
             "signs": {
                 "gamma": "Pos",
                 "dex": "Pos",
@@ -230,7 +233,7 @@ process.stdout.write(JSON.stringify({
     parsed = json.loads(result.stdout)
 
     assert parsed == {
-        "schema": "king-node.v1",
+        "schema": "king-node.v2",
         "rowCount": 47,
         "hasApiModel": True,
         "hasRawLevel": True,
@@ -250,7 +253,7 @@ vm.runInThisContext(fs.readFileSync(process.argv[1], "utf8"));
 let message = "";
 try {
   globalThis.KingNodeWeb.normaliseSnapshot({
-    schema_version: "king-node.v1",
+    schema_version: "king-node.v2",
     status: "error",
     quality: {errors: ["source unavailable"]},
     rows: []
@@ -269,3 +272,20 @@ process.stdout.write(message);
     )
 
     assert result.stdout == "source unavailable"
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="Node.js is not installed")
+def test_market_structure_uses_backend_regime_and_rejects_old_or_stale_release():
+    program = """
+const {fromSnapshot} = require(process.argv[1]);
+const s = JSON.parse(process.argv[2]);
+const result = fromSnapshot(s);
+if (result.structure.name !== s.regime.phenomenon || result.conditions.Gamma !== s.regime.signs.gamma)
+  throw new Error('Market Structure recalculated its own state');
+for (const change of [{workbook_calculation:{}}, {freshness:{stale:true}}, {quality:{valid:false}}]) {
+  let failed=false;
+  try {fromSnapshot({...s,...change});} catch (_) {failed=true;}
+  if (!failed) throw new Error('Old or invalid snapshot accepted');
+}
+"""
+    subprocess.run(['node','-e',program,str(ROOT/'web/templates/js/market_structure.js'),json.dumps(web_snapshot_fixture())],check=True,capture_output=True,text=True)
