@@ -29,6 +29,7 @@ en [king_node_formula_coverage.md](king_node_formula_coverage.md).
 | Niveles | Fórmulas de selección, puntuación, confluencia, geometría, UNSAFE, vanna de llegada, zomma, toma de beneficio y riesgo de ruptura. Locks, quick reclaim, fragile gamma, IV fast/top, dEdge, PROX, drenaje y estados SAND/VEX persisten por sesión. |
 | Monitores | GEX slope/tape, skew con baseline intradía del script, vol tension, spot/vol y squeeze proceden de las funciones suministradas. |
 | Arranque | El servicio reconoce el argumento `normalized_input`. El cierre previo es opcional para la variación diaria; su ausencia no bloquea el cálculo de estructura. |
+| Ruta pública | Excepciones exactas Caddy para `/api/king-node` y `/api/king-node/health`, antes del catch-all que enviaba esas peticiones a Inventario y devolvía 404. |
 
 GEX por strike equivale a `gamma × (OIcall−OIput) × 0,1 × spot² × 0,01`.
 VEX equivale a `vanna × (OIcall−OIput) × 0,1 × spot`. Los Greeks observados

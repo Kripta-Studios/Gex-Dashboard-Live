@@ -77,6 +77,31 @@ Fuera de sesión, `CALENDAR_CLOSED` es el resultado correcto; que el proceso
 esté activo no demuestra disponibilidad de datos de la siguiente apertura.
 No escribir fixtures ni precios sintéticos en `/var/lib/king-node`.
 
+## Enrutamiento público de Caddy
+
+Este VPS comparte el dominio con otras aplicaciones. El catch-all `/api/*`
+apunta a Inventario (3003), por lo que las rutas KING NODE necesitan una
+excepción. Instalar `config/king_node.caddy` en `/etc/caddy/king_node.caddy`
+y añadir dentro del bloque `gex-dashboard.hopto.org`:
+
+```caddyfile
+import /etc/caddy/king_node.caddy
+```
+
+El fragmento envía únicamente `/api/king-node` y `/api/king-node/health` a
+`127.0.0.1:8609`; conserva las cabeceras de autenticación y no quita el prefijo.
+Tras modificarlo:
+
+```bash
+sudo caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
+sudo systemctl reload caddy
+```
+
+Sin sesión, ambas rutas deben responder **401**, como el backend local.
+Un 404 con «Ruta API no encontrada» procede de la otra aplicación y significa
+que el enrutamiento sigue incorrecto. La autenticación ADMIN permanece en el
+servidor financiero.
+
 ## Reversión
 
 Conservar el commit anterior y las copias de la unidad y del estado. Para

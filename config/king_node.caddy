@@ -1,0 +1,8 @@
+# Import inside the gex-dashboard.hopto.org site block. Exact paths keep the
+# financial API ahead of the shared /api/* catch-all for the inventory app.
+handle /api/king-node {
+    reverse_proxy 127.0.0.1:8609
+}
+handle /api/king-node/health {
+    reverse_proxy 127.0.0.1:8609
+}
