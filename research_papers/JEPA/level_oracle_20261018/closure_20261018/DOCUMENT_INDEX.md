@@ -163,3 +163,8 @@ El estado operativo vigente es PAUSADO. Los documentos antiguos conservan cronol
 | [03_MODELS_AND_RESULTS.md](03_MODELS_AND_RESULTS.md) | Modelos probados, resultados y trabajo incompleto |
 | [04_AUDITS_AND_LESSONS.md](04_AUDITS_AND_LESSONS.md) | Auditorías, problemas encontrados y límites de las conclusiones |
 | [05_REPRODUCTION_AND_PUBLICATION.md](05_REPRODUCTION_AND_PUBLICATION.md) | Conservación, reproducción y publicación |
+| [ARTIFACTS.md](ARTIFACTS.md) | Archivo de evidencia al detener |
+| [CODE_INDEX.md](CODE_INDEX.md) | Inventario de código conservado |
+| [DOCUMENT_INDEX.md](DOCUMENT_INDEX.md) | Índice documental completo |
+| [FIGURES.md](FIGURES.md) | Gráficas existentes archivadas |
+| [PUBLICATION_CHECKS.md](PUBLICATION_CHECKS.md) | Comprobaciones del cierre documental |

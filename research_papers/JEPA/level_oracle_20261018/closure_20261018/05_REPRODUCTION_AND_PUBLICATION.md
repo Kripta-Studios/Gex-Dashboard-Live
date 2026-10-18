@@ -21,6 +21,8 @@ Se publican las dos carpetas de esta investigación: Markdown, códigoPython, fi
 
 Los binarios publicados son artefactos de investigación, no modelos listos para operar. La disponibilidad del archivo no cambia el resultado económico de su familia. `archive_stopped_research.py` sólo lee/copia evidencia existente; no importa productores ni ejecuta modelos. Rechaza sobrescribir una copia cuyo contenido no coincida y rehashea origen/copia.
 
+Se añaden también quince PNG ya existentes, con [índice visual](FIGURES.md) y `figures_manifest.json` independiente. Son copias, no resultados nuevos ni una selección de trades para mejorar métricas.
+
 No se suben todos los parquets originales, caches, matrices de variosGB o cada predicción por acción aGit. Permanecen localmente en las rutas registradas por los contratos y manifests. Por tanto, **clonar GitHub no basta para repetir el experimento completo sin esos datos locales**. Tampoco se incorporan cambios ajenos previos en `live_king_node.py`, `MASTER_KING_NODE_RECORD_V5.xlsx`, archivos de otros experimentos o temporales de producción. No se destruye ni revierte ninguno.
 
 La regla local `.gitattributes` conserva bytes exactos sin conversiónLF/CRLF, porque los contratos de ejecución dependen deSHA256. Los archivosJSONde review que ignoraba la regla global se añaden explícitamente en estas carpetas. No se cambian los hashes documentados para adaptarlos a una serialización nueva.

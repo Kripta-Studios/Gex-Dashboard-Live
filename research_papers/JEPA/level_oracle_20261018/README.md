@@ -13,6 +13,8 @@ Esta carpeta incluye código, pruebas, especificaciones previas, resultados nega
 5. [Artefactos, reproducción y publicación](closure_20261018/05_REPRODUCTION_AND_PUBLICATION.md).
 6. [Índice de todos los documentos](closure_20261018/DOCUMENT_INDEX.md).
 7. [Evidencia archivada con hashes](closure_20261018/ARTIFACTS.md).
+8. [Gráficas existentes, con copias consultables en GitHub](closure_20261018/FIGURES.md).
+9. [Inventario de código y pruebas](closure_20261018/CODE_INDEX.md) y [comprobaciones de publicación](closure_20261018/PUBLICATION_CHECKS.md).
 
 Los documentos de cierre son la autoridad del **estado operativo final**. Los informes de cada experimento y sus artefactos sellados conservan la autoridad sobre sus resultados concretos. No se reescribieron los fallos anteriores para convertirlos en éxitos.
 
