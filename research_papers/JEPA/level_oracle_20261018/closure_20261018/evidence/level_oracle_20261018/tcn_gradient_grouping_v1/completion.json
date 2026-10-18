@@ -1,0 +1,10 @@
+{
+  "status": "PASS_GRADIENT_PARTITION_INVARIANCE",
+  "files": {
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_gradient_grouping_v1\\diagnose_tcn_gradient_grouping.executed.py": "ca65fef88e42fddd2f2b79e95a483f38c5d2b9223e5ac109c07b163af2025c3d",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_gradient_grouping_v1\\freeze_before_gradients.json": "077e2a92bd9038de2635ffccb000942e9ed05b8c04ceb76daa91a3cb406f985e",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_gradient_grouping_v1\\gradients_and_partitions.npz": "dfe97f768aebdeffb3aac1d0dfc15b9e6750c1529968e503170bb8a0f6e537b6",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_gradient_grouping_v1\\selected_train_rows.parquet": "6427372150c27665b0b347a767c57e654f9c070c09584097abe4c6a17e21b80f",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_gradient_grouping_v1\\summary.json": "9d452559d394e7273bbbaefc6538b3f1a9d56666a4ec33057891393c3242df05"
+  }
+}

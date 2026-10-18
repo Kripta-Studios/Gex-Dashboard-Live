@@ -1,0 +1,29 @@
+{
+  "status": "STATIC_REVIEW_CLEAR_INDEPENDENT_TEST_RERUN_DEFERRED_RESOURCE",
+  "reviewed_utc": "2026-10-18T21:34:36.808883+00:00",
+  "files": {
+    "evaluate_oof_calibrated_policy.py": "eeaad06f5b862a3153f29e7eab579b19a35e182ab506cf1f59e65631e187e716",
+    "monthly_oof_calibration_adapter.py": "7b80cff43e3887a92e0f89be6daa863a670ccd72d22a0f4aeabd032a39479364",
+    "oof_maximum_calibration.py": "19e922dd65855c4cd7e2ec9d482d477a328245bcf642eeeb7771985f247e20b5",
+    "test_evaluate_oof_calibrated_policy.py": "89516c51a5f467154549ce6d4b8b0a8dcec5482e58952dc89dbaa05a986c122b",
+    "test_monthly_oof_calibration_adapter.py": "32e04b1444c73ac1a0bf87b819b6542ba4d96775202acb82514a147085d3739a",
+    "OOF_CALIBRATED_POLICY_EVALUATION_SPEC.md": "7f88f18569d86ea936d0afdc4a485e461ccdf6c09d74feb835a026bee7caf3bc",
+    "MONTHLY_OOF_CALIBRATION_ADAPTER_SPEC.md": "6bd989a6332fd21f751dc48ef084c5eba0f83b1f86f957f2a71127ef869bcb4e",
+    "OOF_CALIBRATED_POLICY_INDEPENDENT_REVIEW.md": "4c9ac81da946414ee9d71f71a07798b214ca4862ce8319ca247bd9c9f08fdb61"
+  },
+  "reviewer": "wide_benchmark",
+  "market_reads": false,
+  "fits": 0,
+  "inferences": 0,
+  "independent_pytest_rerun": false,
+  "independent_ruff": "PASS",
+  "independent_compile": "PASS",
+  "pending_fixture_counts": {
+    "adapter": 7,
+    "evaluator": 16
+  },
+  "resolved_finding": "Reject existing evaluation outputs without run_contract before controls/labels.",
+  "open_code_findings": [],
+  "runtime_authorized": false,
+  "scope": "Static code/spec/fixture review only; exact calendar from monthly/source audit authority, no independent economics or future-profitability claim."
+}

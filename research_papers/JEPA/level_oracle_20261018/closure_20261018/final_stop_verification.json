@@ -1,0 +1,17 @@
+{
+  "checked_utc": "2026-10-18T21:45:21.6867525Z",
+  "active_research_processes": [],
+  "research_paused": true,
+  "subagents_interrupted": [
+    "data_inventory",
+    "oracle_design_audit",
+    "source_feasibility",
+    "wide_audit",
+    "zone_benchmark"
+  ],
+  "subagents_previously_completed": [
+    "monthly_performance_review",
+    "wide_benchmark"
+  ],
+  "subagent_previously_errored": "past_research"
+}

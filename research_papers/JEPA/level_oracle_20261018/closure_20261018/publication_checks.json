@@ -1,0 +1,34 @@
+{
+  "status": "PASS_PUBLICATION_STATIC_CHECKS_NOT_ECONOMIC_AUDIT",
+  "archive_copies_verified": 144,
+  "archive_bytes": 61052654,
+  "source_copy_mismatches": [],
+  "python_files_ast_checked": 188,
+  "test_execution": false,
+  "new_training": false,
+  "new_market_evaluation": false,
+  "new_document_links_broken": [],
+  "json_errors": [],
+  "secret_pattern_suspects": [],
+  "secret_scan_scope": "private key blocks and common high-specificity token patterns; not a universal guarantee",
+  "tcn_training_complete_verified": true,
+  "compact_aggregate_numbers_verified": true,
+  "git_diff_check": {
+    "exit_code": 2,
+    "warnings": [
+      "research_papers/JEPA/level_oracle_20261018/MARKET_CUE_COMPARISON_ECONOMIC_AUDIT_SPEC.md:43: new blank line at EOF.",
+      "research_papers/JEPA/level_oracle_20261018/ORACLE_QUOTE_ANOMALY_DIAGNOSTIC_SPEC.md:64: new blank line at EOF.",
+      "research_papers/JEPA/level_oracle_20261018/ORACLE_QUOTE_ANOMALY_PANEL_SPEC.md:35: new blank line at EOF.",
+      "research_papers/JEPA/level_oracle_20261018/ORACLE_QUOTE_QUALITY_REVIEW_SPEC.md:25: new blank line at EOF.",
+      "research_papers/JEPA/level_oracle_20261018/audit_common_greek_comparison.py:488: new blank line at EOF.",
+      "research_papers/JEPA/level_oracle_20261018/audit_market_cue_comparison.py:434: new blank line at EOF.",
+      "research_papers/JEPA/level_oracle_20261018/audit_oracle_quote_quality_controls.py:116: new blank line at EOF.",
+      "research_papers/JEPA/level_oracle_20261018/audit_tcn_flags_economics.py:589: new blank line at EOF.",
+      "research_papers/JEPA/level_oracle_20261018/diagnose_oracle_quote_anomalies.py:232: new blank line at EOF.",
+      "research_papers/JEPA/level_oracle_20261018/diagnose_oracle_quote_anomalies_panel.py:200: new blank line at EOF.",
+      "research_papers/JEPA/level_oracle_20261018/test_audit_common_greek_comparison.py:98: new blank line at EOF.",
+      "research_papers/JEPA/level_oracle_20261018/test_audit_monthly_walk_forward.py:193: new blank line at EOF."
+    ],
+    "disposition": "PRESERVE_12_PREEXISTING_TRAILING_EMPTY_LINES_IN_HASH_BOUND_RESEARCH_FILES; NO_SUBSTANTIVE_WHITESPACE_ERROR"
+  }
+}

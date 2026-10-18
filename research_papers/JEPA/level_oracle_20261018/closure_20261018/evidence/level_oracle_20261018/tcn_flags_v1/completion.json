@@ -1,0 +1,13 @@
+{
+  "status": "COMPLETE",
+  "files": {
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_flags_v1\\summary.json": "77cb300d9f5866316506cb8b13a284badaa99bbcea8f06f1d972eb53acf4a271",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_flags_v1\\freeze.json": "d71d500fa955609d2ca0ff75b08c5c2d608624c755870bf78326e6b1dd20e6e2",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_flags_v1\\training_complete.json": "bd17be758bdc9a5a430f48a162c6925dac5c89689ca506013b1548e53e76e18b",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_flags_v1\\validation\\summary.json": "096020c9d8cbff8c2efc5a157f48b3f5ecfb7ddb4d9bad274d4e24ca53667516",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_flags_v1\\validation\\prediction_manifest.json": "3fff1a47effe3f3bb20fbf83f69d2c1daed50fb62fbeeda28b9f762d105c7bf2",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_flags_v1\\test\\summary.json": "70a2e7c3fad9edab6c8be0cde21ca55c26c5e998b5fca9fac6d6ca09964520a0",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_flags_v1\\test\\prediction_manifest.json": "2ccaaebb725629e1d707268549c640e439e7b833ca656dbd625ec132d3cf2bcb"
+  },
+  "finished_at_utc": "2026-10-18T19:49:47.051434+00:00"
+}

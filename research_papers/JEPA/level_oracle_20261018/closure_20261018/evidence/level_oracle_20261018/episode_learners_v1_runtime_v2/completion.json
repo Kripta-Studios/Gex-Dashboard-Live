@@ -1,0 +1,46 @@
+{
+  "status": "COMPLETE",
+  "exit_code": 0,
+  "finished_utc": "2026-10-18T19:31:32.745683+00:00",
+  "wall_seconds": 4553.177956700034,
+  "peak_private_bytes": 1341026304,
+  "peak_rss_bytes": 933388288,
+  "stages": [
+    {
+      "stage": "IMPORT_AND_AUTHORITY",
+      "seconds": 144.9838757000398
+    },
+    {
+      "stage": "fit_start",
+      "seconds": 2.7371709999861196
+    },
+    {
+      "stage": "validation",
+      "seconds": 1891.0401843999862
+    },
+    {
+      "stage": "POLICY_FROZEN_BEFORE_EPISODE_TEST",
+      "seconds": 2.2371206000098027
+    },
+    {
+      "stage": "test",
+      "seconds": 2498.642740099982
+    },
+    {
+      "stage": "COMPLETE",
+      "seconds": 13.53676039999118
+    }
+  ],
+  "sources": {
+    "launch_episode_pathfix.py": "1be87a61f4c82f6fa8a93a6da6886edf440d4655bc76758e1fb7718411a9c9f5",
+    "resume_episode_pathfix.py": "60c1fca1f03676b8ddd90c22b6ef0050c263083e6236949d5354a307db208273",
+    "train_episode_model.py": "b0b0dcd54a59cfe39ac078b66570a394e7411c1d9b6e67f6e520a6640e3cddb8",
+    "episode_policy.py": "3080f5a2e495ca08dd8fc9df3eb62aaf432f2680c718504b6952ea20a2a3235c",
+    "EPISODE_LEARNER_PLAN.md": "970101954202a1d17326edb49aa107652fd133faabcafb0b8e9b450019f2f800"
+  },
+  "final_sources_match": true,
+  "technical_repair_files": {
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\episode_learners_v1\\technical_repairs\\source_path_v1\\repair.json": "df1cee6e21136380cc1d7edae8284c481e24bdeda560353caea0e81c4e224052",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\episode_learners_v1\\technical_repairs\\source_path_v1\\completion.json": "910d5ec9eefc360f7ade28d3c0462c5a852f21d605a41e4b1cea467e67a21a60"
+  }
+}

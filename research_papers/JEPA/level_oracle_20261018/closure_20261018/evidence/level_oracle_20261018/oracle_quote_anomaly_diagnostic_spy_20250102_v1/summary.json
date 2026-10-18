@@ -1,0 +1,711 @@
+{
+  "status": "COMPLETE_FIXED_ORACLE_QUOTE_ANOMALY_DIAGNOSTIC",
+  "ticker": "SPY",
+  "date": "20250102",
+  "control": "gbt_net__0",
+  "populations": {
+    "CONTROL_ENTRY": {
+      "observations": 10,
+      "rates": {
+        "quote_valid": {
+          "count": 10,
+          "rate": 1.0
+        },
+        "spot_valid": {
+          "count": 10,
+          "rate": 1.0
+        },
+        "ask_below_intrinsic": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "zero_bid": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "spread_over_ask_ge_025": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "spread_over_ask_ge_050": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "repeated_observed_ge_3": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "repeated_observed_ge_5": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "parity_pair_available": {
+          "count": 10,
+          "rate": 1.0
+        },
+        "approx_parity_abs_ge_010": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "approx_parity_abs_ge_025": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "approx_parity_abs_ge_050": {
+          "count": 0,
+          "rate": 0.0
+        }
+      },
+      "continuous": {
+        "ask_minus_intrinsic": {
+          "n": 10,
+          "min": 0.2999999999999772,
+          "p10": 0.5159999999999978,
+          "median": 0.9000000000000092,
+          "mean": 0.8370000000000024,
+          "p90": 1.0679999999999972,
+          "max": 1.1399999999999726
+        },
+        "bid_minus_intrinsic": {
+          "n": 10,
+          "min": 0.23999999999997734,
+          "p10": 0.5009999999999978,
+          "median": 0.8750000000000091,
+          "mean": 0.8130000000000024,
+          "p90": 1.0469999999999973,
+          "max": 1.1099999999999728
+        },
+        "spread": {
+          "n": 10,
+          "min": 0.010000000000000009,
+          "p10": 0.010000000000000009,
+          "median": 0.020000000000000018,
+          "mean": 0.023999999999999976,
+          "p90": 0.04200000000000001,
+          "max": 0.05999999999999983
+        },
+        "spread_over_ask": {
+          "n": 10,
+          "min": 0.009090909090909097,
+          "p10": 0.011021450459652717,
+          "median": 0.01330037664783424,
+          "mean": 0.016549559125937405,
+          "p90": 0.02126684636118598,
+          "max": 0.04285714285714274
+        },
+        "repeated_observed_run": {
+          "n": 10,
+          "min": 1.0,
+          "p10": 1.0,
+          "median": 1.0,
+          "mean": 1.1,
+          "p90": 1.0999999999999996,
+          "max": 2.0
+        },
+        "approx_parity_residual": {
+          "n": 10,
+          "min": -0.029999999999963722,
+          "p10": -0.007499999999975892,
+          "median": 0.007500000000050022,
+          "mean": 0.010000000000020982,
+          "p90": 0.034999999999982025,
+          "max": 0.03500000000002279
+        },
+        "approx_parity_abs": {
+          "n": 10,
+          "min": 2.7533531010703882e-14,
+          "p10": 0.004499999999982273,
+          "median": 0.012500000000036482,
+          "mean": 0.01700000000001468,
+          "p90": 0.034999999999982025,
+          "max": 0.03500000000002279
+        }
+      }
+    },
+    "CONTROL_EXIT": {
+      "observations": 10,
+      "rates": {
+        "quote_valid": {
+          "count": 10,
+          "rate": 1.0
+        },
+        "spot_valid": {
+          "count": 10,
+          "rate": 1.0
+        },
+        "ask_below_intrinsic": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "zero_bid": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "spread_over_ask_ge_025": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "spread_over_ask_ge_050": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "repeated_observed_ge_3": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "repeated_observed_ge_5": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "parity_pair_available": {
+          "count": 10,
+          "rate": 1.0
+        },
+        "approx_parity_abs_ge_010": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "approx_parity_abs_ge_025": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "approx_parity_abs_ge_050": {
+          "count": 0,
+          "rate": 0.0
+        }
+      },
+      "continuous": {
+        "ask_minus_intrinsic": {
+          "n": 10,
+          "min": 0.15,
+          "p10": 0.159,
+          "median": 0.625,
+          "mean": 0.70699999999999,
+          "p90": 1.3179999999999945,
+          "max": 1.3899999999999455
+        },
+        "bid_minus_intrinsic": {
+          "n": 10,
+          "min": 0.13000000000002276,
+          "p10": 0.1390000000000023,
+          "median": 0.61,
+          "mean": 0.68299999999999,
+          "p90": 1.2979999999999945,
+          "max": 1.3699999999999455
+        },
+        "spread": {
+          "n": 10,
+          "min": 0.009999999999999981,
+          "p10": 0.010000000000000005,
+          "median": 0.01999999999999985,
+          "mean": 0.024000000000000028,
+          "p90": 0.060000000000000095,
+          "max": 0.0600000000000005
+        },
+        "spread_over_ask": {
+          "n": 10,
+          "min": 0.006451612903225812,
+          "p10": 0.009299007444168741,
+          "median": 0.019538349691021466,
+          "mean": 0.02920963176885364,
+          "p90": 0.0629166666666667,
+          "max": 0.06666666666666654
+        },
+        "repeated_observed_run": {
+          "n": 10,
+          "min": 1.0,
+          "p10": 1.0,
+          "median": 1.0,
+          "mean": 1.0,
+          "p90": 1.0,
+          "max": 1.0
+        },
+        "approx_parity_residual": {
+          "n": 10,
+          "min": -0.02500000000004965,
+          "p10": -0.011500000000029553,
+          "median": -3.858025010572419e-14,
+          "mean": 0.0009999999999845354,
+          "p90": 0.016500000000016186,
+          "max": 0.030000000000040883
+        },
+        "approx_parity_abs": {
+          "n": 10,
+          "min": 2.275957200481571e-14,
+          "p10": 2.2859492077031974e-14,
+          "median": 0.00749999999999118,
+          "mean": 0.010000000000020026,
+          "p90": 0.025500000000048772,
+          "max": 0.030000000000040883
+        }
+      }
+    },
+    "OFFERED_ENTRY": {
+      "observations": 733,
+      "rates": {
+        "quote_valid": {
+          "count": 733,
+          "rate": 1.0
+        },
+        "spot_valid": {
+          "count": 733,
+          "rate": 1.0
+        },
+        "ask_below_intrinsic": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "zero_bid": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "spread_over_ask_ge_025": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "spread_over_ask_ge_050": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "repeated_observed_ge_3": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "repeated_observed_ge_5": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "parity_pair_available": {
+          "count": 733,
+          "rate": 1.0
+        },
+        "approx_parity_abs_ge_010": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "approx_parity_abs_ge_025": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "approx_parity_abs_ge_050": {
+          "count": 0,
+          "rate": 0.0
+        }
+      },
+      "continuous": {
+        "ask_minus_intrinsic": {
+          "n": 733,
+          "min": 0.12,
+          "p10": 0.50999999999996,
+          "median": 0.91,
+          "mean": 0.9186493860845838,
+          "p90": 1.35,
+          "max": 1.60999999999995
+        },
+        "bid_minus_intrinsic": {
+          "n": 733,
+          "min": 0.06999999999995454,
+          "p10": 0.48,
+          "median": 0.8899999999999455,
+          "mean": 0.8976944065484309,
+          "p90": 1.337999999999997,
+          "max": 1.5800000000000183
+        },
+        "spread": {
+          "n": 733,
+          "min": 0.0,
+          "p10": 0.010000000000000009,
+          "median": 0.020000000000000018,
+          "mean": 0.02095497953615279,
+          "p90": 0.040000000000000036,
+          "max": 0.09999999999999964
+        },
+        "spread_over_ask": {
+          "n": 733,
+          "min": 0.0,
+          "p10": 0.00797450199203174,
+          "median": 0.0142857142857143,
+          "mean": 0.01642909829698039,
+          "p90": 0.02730010036801609,
+          "max": 0.0833333333333333
+        },
+        "repeated_observed_run": {
+          "n": 733,
+          "min": 1.0,
+          "p10": 1.0,
+          "median": 1.0,
+          "mean": 1.0136425648021827,
+          "p90": 1.0,
+          "max": 2.0
+        },
+        "approx_parity_residual": {
+          "n": 733,
+          "min": -0.03000000000000913,
+          "p10": -0.014999999999949942,
+          "median": 0.0050000000000498535,
+          "mean": 0.0068281036834936994,
+          "p90": 0.029999999999961613,
+          "max": 0.04500000000002258
+        },
+        "approx_parity_abs": {
+          "n": 733,
+          "min": 0.0,
+          "p10": 5.007105841059456e-14,
+          "median": 0.010000000000022657,
+          "mean": 0.013226466575720365,
+          "p90": 0.029999999999997095,
+          "max": 0.04500000000002258
+        }
+      }
+    },
+    "ORACLE_ENTRY": {
+      "observations": 14,
+      "rates": {
+        "quote_valid": {
+          "count": 14,
+          "rate": 1.0
+        },
+        "spot_valid": {
+          "count": 14,
+          "rate": 1.0
+        },
+        "ask_below_intrinsic": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "zero_bid": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "spread_over_ask_ge_025": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "spread_over_ask_ge_050": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "repeated_observed_ge_3": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "repeated_observed_ge_5": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "parity_pair_available": {
+          "count": 14,
+          "rate": 1.0
+        },
+        "approx_parity_abs_ge_010": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "approx_parity_abs_ge_025": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "approx_parity_abs_ge_050": {
+          "count": 0,
+          "rate": 0.0
+        }
+      },
+      "continuous": {
+        "ask_minus_intrinsic": {
+          "n": 14,
+          "min": 0.4699999999999591,
+          "p10": 0.5729999999999643,
+          "median": 0.8900000000000069,
+          "mean": 0.8185714285714356,
+          "p90": 1.0319999999999523,
+          "max": 1.1700000000000501
+        },
+        "bid_minus_intrinsic": {
+          "n": 14,
+          "min": 0.4299999999999591,
+          "p10": 0.5259999999999645,
+          "median": 0.8600000000000069,
+          "mean": 0.7871428571428644,
+          "p90": 1.0089999999999701,
+          "max": 1.15000000000005
+        },
+        "spread": {
+          "n": 14,
+          "min": 0.019999999999999574,
+          "p10": 0.020000000000000018,
+          "median": 0.03499999999999981,
+          "mean": 0.031428571428571375,
+          "p90": 0.040000000000000036,
+          "max": 0.04999999999999982
+        },
+        "spread_over_ask": {
+          "n": 14,
+          "min": 0.007968127490039672,
+          "p10": 0.010278419122640237,
+          "median": 0.015096274353423735,
+          "mean": 0.015066648698865537,
+          "p90": 0.020749883558453554,
+          "max": 0.025806451612903247
+        },
+        "repeated_observed_run": {
+          "n": 14,
+          "min": 1.0,
+          "p10": 1.0,
+          "median": 1.0,
+          "mean": 1.0,
+          "p90": 1.0,
+          "max": 1.0
+        },
+        "approx_parity_residual": {
+          "n": 14,
+          "min": -0.024999999999950173,
+          "p10": -0.016999999999951776,
+          "median": -0.0025000000000181544,
+          "mean": 0.0007142857142915594,
+          "p90": 0.020000000000050512,
+          "max": 0.03499999999996817
+        },
+        "approx_parity_abs": {
+          "n": 14,
+          "min": 1.3766765505351941e-14,
+          "p10": 2.737809978725636e-14,
+          "median": 0.00749999999999984,
+          "mean": 0.01142857142858185,
+          "p90": 0.02349999999998152,
+          "max": 0.03499999999996817
+        }
+      }
+    },
+    "ORACLE_EXIT": {
+      "observations": 14,
+      "rates": {
+        "quote_valid": {
+          "count": 14,
+          "rate": 1.0
+        },
+        "spot_valid": {
+          "count": 14,
+          "rate": 1.0
+        },
+        "ask_below_intrinsic": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "zero_bid": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "spread_over_ask_ge_025": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "spread_over_ask_ge_050": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "repeated_observed_ge_3": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "repeated_observed_ge_5": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "parity_pair_available": {
+          "count": 14,
+          "rate": 1.0
+        },
+        "approx_parity_abs_ge_010": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "approx_parity_abs_ge_025": {
+          "count": 0,
+          "rate": 0.0
+        },
+        "approx_parity_abs_ge_050": {
+          "count": 0,
+          "rate": 0.0
+        }
+      },
+      "continuous": {
+        "ask_minus_intrinsic": {
+          "n": 14,
+          "min": 0.08999999999997232,
+          "p10": 0.13799999999995957,
+          "median": 0.49500000000003186,
+          "mean": 0.45142857142857007,
+          "p90": 0.6669999999999954,
+          "max": 0.7600000000000544
+        },
+        "bid_minus_intrinsic": {
+          "n": 14,
+          "min": -0.050000000000027356,
+          "p10": 0.02399999999995948,
+          "median": 0.46000000000003194,
+          "mean": 0.38357142857142723,
+          "p90": 0.6269999999999953,
+          "max": 0.7100000000000546
+        },
+        "spread": {
+          "n": 14,
+          "min": 0.029999999999999805,
+          "p10": 0.040000000000000036,
+          "median": 0.05500000000000016,
+          "mean": 0.06785714285714285,
+          "p90": 0.11400000000000013,
+          "max": 0.13999999999999968
+        },
+        "spread_over_ask": {
+          "n": 14,
+          "min": 0.010909090909090839,
+          "p10": 0.012751162024667851,
+          "median": 0.01874780470670881,
+          "mean": 0.020615373516402805,
+          "p90": 0.028108108108108137,
+          "max": 0.038961038961038995
+        },
+        "repeated_observed_run": {
+          "n": 14,
+          "min": 1.0,
+          "p10": 1.0,
+          "median": 1.0,
+          "mean": 1.0,
+          "p90": 1.0,
+          "max": 1.0
+        },
+        "approx_parity_residual": {
+          "n": 14,
+          "min": -0.02500000000004965,
+          "p10": -0.015500000000001268,
+          "median": 0.00749999999998141,
+          "mean": 0.005714285714275268,
+          "p90": 0.02200000000002752,
+          "max": 0.03500000000002679
+        },
+        "approx_parity_abs": {
+          "n": 14,
+          "min": 2.2648549702353193e-14,
+          "p10": 0.0015000000000343408,
+          "median": 0.014999999999959046,
+          "mean": 0.013571428571438797,
+          "p90": 0.025000000000044188,
+          "max": 0.03500000000002679
+        }
+      }
+    }
+  },
+  "comparisons": {
+    "oracle_entry_vs_offered_entry": {
+      "ask_below_intrinsic": {
+        "selected_rate": 0.0,
+        "reference_rate": 0.0,
+        "rate_difference": 0.0,
+        "rate_ratio": null
+      },
+      "zero_bid": {
+        "selected_rate": 0.0,
+        "reference_rate": 0.0,
+        "rate_difference": 0.0,
+        "rate_ratio": null
+      },
+      "spread_over_ask_ge_025": {
+        "selected_rate": 0.0,
+        "reference_rate": 0.0,
+        "rate_difference": 0.0,
+        "rate_ratio": null
+      },
+      "spread_over_ask_ge_050": {
+        "selected_rate": 0.0,
+        "reference_rate": 0.0,
+        "rate_difference": 0.0,
+        "rate_ratio": null
+      },
+      "repeated_observed_ge_3": {
+        "selected_rate": 0.0,
+        "reference_rate": 0.0,
+        "rate_difference": 0.0,
+        "rate_ratio": null
+      },
+      "repeated_observed_ge_5": {
+        "selected_rate": 0.0,
+        "reference_rate": 0.0,
+        "rate_difference": 0.0,
+        "rate_ratio": null
+      },
+      "approx_parity_abs_ge_025": {
+        "selected_rate": 0.0,
+        "reference_rate": 0.0,
+        "rate_difference": 0.0,
+        "rate_ratio": null
+      },
+      "approx_parity_abs_ge_050": {
+        "selected_rate": 0.0,
+        "reference_rate": 0.0,
+        "rate_difference": 0.0,
+        "rate_ratio": null
+      }
+    },
+    "oracle_entry_vs_control_entry": {
+      "ask_below_intrinsic": {
+        "selected_rate": 0.0,
+        "reference_rate": 0.0,
+        "rate_difference": 0.0,
+        "rate_ratio": null
+      },
+      "zero_bid": {
+        "selected_rate": 0.0,
+        "reference_rate": 0.0,
+        "rate_difference": 0.0,
+        "rate_ratio": null
+      },
+      "spread_over_ask_ge_025": {
+        "selected_rate": 0.0,
+        "reference_rate": 0.0,
+        "rate_difference": 0.0,
+        "rate_ratio": null
+      },
+      "spread_over_ask_ge_050": {
+        "selected_rate": 0.0,
+        "reference_rate": 0.0,
+        "rate_difference": 0.0,
+        "rate_ratio": null
+      },
+      "repeated_observed_ge_3": {
+        "selected_rate": 0.0,
+        "reference_rate": 0.0,
+        "rate_difference": 0.0,
+        "rate_ratio": null
+      },
+      "repeated_observed_ge_5": {
+        "selected_rate": 0.0,
+        "reference_rate": 0.0,
+        "rate_difference": 0.0,
+        "rate_ratio": null
+      },
+      "approx_parity_abs_ge_025": {
+        "selected_rate": 0.0,
+        "reference_rate": 0.0,
+        "rate_difference": 0.0,
+        "rate_ratio": null
+      },
+      "approx_parity_abs_ge_050": {
+        "selected_rate": 0.0,
+        "reference_rate": 0.0,
+        "rate_difference": 0.0,
+        "rate_ratio": null
+      }
+    }
+  },
+  "observations_sha256": "d14b37f18fe013b1a4138648735be8c367e81d5c5ad4d14f3e17df1cc3e3d197",
+  "sources_sha256": "b24fdef9c542fd13403f4d2a1196e046c18b5f2797a2728133823f1241a1b9f7",
+  "diagnostic_only_no_exclusions": true,
+  "original_trades_and_pnl_unchanged": true,
+  "option_quote_age_verified": false,
+  "parity_is_approximate_not_arbitrage_proof": true,
+  "new_raw_values_read": false,
+  "technical_ready": false,
+  "promotion_approved": false,
+  "script_sha256": "5022ec5a4053d79a4c943678c62d4720813f09a17269b8e9dda16dd7f6f90748",
+  "finished_at_utc": "2026-10-18T20:00:58.475051+00:00"
+}

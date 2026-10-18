@@ -1,0 +1,28 @@
+{
+  "status": "COMPLETE",
+  "binding": "66ef48eca5aadca70726b1c66997c93dd513ebf7a32283e07e26fc7e3c129a9d",
+  "files": {
+    "models\\teacher.txt": "e9af185ca8e1d6f963ef4c31b0e9e9aaa99ccb4136b835c9622c128e6b7e1be0",
+    "models\\teacher.fit_started.json": "c08cf1b1d8affc5054964b19074c7b7dd1ff585c2483808a5162675f07f60403"
+  },
+  "extra": {
+    "config": {
+      "objective": "regression",
+      "n_estimators": 200,
+      "num_leaves": 31,
+      "max_depth": 6,
+      "min_child_samples": 100,
+      "learning_rate": 0.04,
+      "reg_lambda": 10.0,
+      "max_bin": 63,
+      "random_state": 20261018,
+      "n_jobs": 4,
+      "deterministic": true,
+      "force_col_wise": true,
+      "verbosity": -1
+    },
+    "columns": 1954,
+    "rows": 47430
+  },
+  "completed_utc": "2026-10-18T19:34:43.746568+00:00"
+}

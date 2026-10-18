@@ -1,0 +1,11 @@
+{
+  "requested_by": "user",
+  "requested_action": "STOP_ALL_RESEARCH_AND_DOCUMENT",
+  "at_utc": "2026-10-18T21:35:29.9424445Z",
+  "process": {
+    "ProcessId": 38676,
+    "ParentProcessId": 47880,
+    "Name": "python.exe",
+    "CommandLine": "\"C:\\Program Files\\Python314\\python.exe\" -u \"C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\run_monthly_resource_overlay.py\" --runtime-root D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_resource_overlay_v1 --runtime-review \"C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\MONTHLY_RESOURCE_OVERLAY_REVIEW.json\" --previous-pid 7680"
+  }
+}

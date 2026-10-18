@@ -1,0 +1,7 @@
+{
+  "status": "CONTROLLED_RESOURCE_TRANSITION_NO_FIT_INTERRUPTED",
+  "utc": "2026-10-18T21:20:19.985163+00:00",
+  "previous_pid": 7680,
+  "before_stop_sha256": "7d24440ee38723a6cfe9f3163d7fd579d484e55afda5ec54c7644aca61ed3290",
+  "preserved_count": 6084
+}

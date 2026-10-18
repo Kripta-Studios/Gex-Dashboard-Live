@@ -1,0 +1,19 @@
+{
+  "pid": 38676,
+  "started_utc": "2026-10-18T21:20:20.034372+00:00",
+  "argv": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\run_monthly_resource_overlay.py",
+    "--runtime-root",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_resource_overlay_v1",
+    "--runtime-review",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\MONTHLY_RESOURCE_OVERLAY_REVIEW.json",
+    "--previous-pid",
+    "7680"
+  ],
+  "runtime_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_resource_overlay_v1",
+  "stdout": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_resource_transition_v1\\overlay.stdout.log",
+  "stderr": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_resource_transition_v1\\overlay.stderr.log",
+  "review_sha256": "b48f30431c9ddd40b57a2aa61e20f6786c1fda746ae41cc03ee2812ba034b1b9"
+}

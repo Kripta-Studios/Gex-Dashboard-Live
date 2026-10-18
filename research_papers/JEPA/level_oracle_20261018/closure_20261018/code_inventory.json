@@ -1,0 +1,1322 @@
+{
+  "scope": "STATIC_AST_PARSE_ONLY_NO_IMPORT_NO_TEST_EXECUTION",
+  "files": [
+    {
+      "path": "restart_20261018/audit_wide_zone_benchmark.py",
+      "bytes": 27012,
+      "sha256": "bb27852ac085afae59931a01932ea04feddd0fccd2fdae51cea8073d3fd2b7f9",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "restart_20261018/audit_zone_benchmark.py",
+      "bytes": 20497,
+      "sha256": "e9230ac084727de6cb086a15e499bbc2fc23af2f01e3453c5d58664f7bcfa128",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "restart_20261018/clock_equivalence.py",
+      "bytes": 5519,
+      "sha256": "9c52d6de6a717c4f0685d8475fed989c74a24e0555bdeca3ecdbb430ae992c20",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "restart_20261018/create_causal_chart.py",
+      "bytes": 10812,
+      "sha256": "01aaa99fb1ba6bf51bdb2980028be069d0b7d7a31ac3fbfaf28480503ec969c5",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "restart_20261018/inventory_local.py",
+      "bytes": 7967,
+      "sha256": "4a7043cae741134fb94cb1b4ad989bec53d58eaa36081499a23c0a449651c530",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "restart_20261018/plot_benchmark_results.py",
+      "bytes": 2892,
+      "sha256": "a13b0d5af5cec8dd32f86147745a30662eccc90893c9c4523565f81e6c87477c",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "restart_20261018/source_probe.py",
+      "bytes": 4580,
+      "sha256": "911d60692ff9bc9f913501b48ee3bcad9f81249da1998425866f127a4b0df4e8",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "restart_20261018/summarize_inventory.py",
+      "bytes": 4932,
+      "sha256": "9867e9a1209269de9b4c685cd943eb6f232623748bdcf47b642924d463a5cbbb",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "restart_20261018/test_wide_zone_benchmark.py",
+      "bytes": 13227,
+      "sha256": "36c2f21717bd59a3cc874bc9de67b5abb6d12113a2b29d8a27c9d4eeae220d40",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "restart_20261018/test_zone_benchmark.py",
+      "bytes": 5588,
+      "sha256": "51df236cfbdb4830ac17fc405d8a772a3c88050f5f1a7124e693f427af578ca8",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "restart_20261018/wide_zone_benchmark.py",
+      "bytes": 43857,
+      "sha256": "980e86205a4fb7464702d7f659a6a82fd36f5850a4f93e08c8c9d8094dc8865d",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "restart_20261018/zone_benchmark.py",
+      "bytes": 30251,
+      "sha256": "5ce55460051cccf3aa91160180e29474b61b717abc6c452cbf344db7e120ca51",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/analyze_learner_regret.py",
+      "bytes": 22550,
+      "sha256": "5ca3dfd0c6f5ac40e2f8c57ead7f5d0619a96c2ae3cc0ebf3feb22b48e83b356",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/analyze_oracle_behavior.py",
+      "bytes": 31673,
+      "sha256": "ff09ae8cdda7848c969416ea70a3d2bf8d42e09947bc54c3a20c995d39ff9ba3",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/audit_causal_rollout_economics.py",
+      "bytes": 46129,
+      "sha256": "3286a1bae8d2525129a608c0924b6124ad19af4d92974bd4b44f1d8c186ffd33",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/audit_causal_short_economics.py",
+      "bytes": 18429,
+      "sha256": "972e5fff972a0c51f1186cf49115b6cdc6f2dc783078405b0b4c8474e6c308fe",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/audit_common_greek_comparison.py",
+      "bytes": 27540,
+      "sha256": "3898ef3c8ae634a65a2a136c75f2e14a46d5ac6fcad4bcc28bdb77742f3dca70",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/audit_engine.py",
+      "bytes": 27810,
+      "sha256": "04443b619d145e630ee03094214c1920ca13bd46ecca2c57b20f03e35449b7b5",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/audit_engine_dataset.py",
+      "bytes": 14614,
+      "sha256": "73b2484e6671bc3c67f33745cff26e50cd2db04d9896956c96a8a488d15816d2",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/audit_engine_dataset_runtime.py",
+      "bytes": 2374,
+      "sha256": "634e292f62db0304e76780d7e09ea6f4fd920c6b4d2c7ea79b8b59817e181e17",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/audit_episode_learner_economics.py",
+      "bytes": 38939,
+      "sha256": "0e9295736b2a4b2869b5f47e16362ed00548499ee4a9d056533d2b1c215999ca",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/audit_ib_feature_exports.py",
+      "bytes": 8053,
+      "sha256": "7f21f479374602cf7b63e27a60e2399bdc5c4ab8ad1ac2ad494eb80bf2020b3b",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/audit_learner_economics.py",
+      "bytes": 20944,
+      "sha256": "6d59832a6b3f00e7cd78948ee74335e08b3949cca2899fd2209442e842444a40",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/audit_market_cue_comparison.py",
+      "bytes": 24332,
+      "sha256": "1809f6ebe860cb107eb158bc4e2f7efd118cf8cb25a5c68e7dfc8b0626fe7bb8",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/audit_monthly_walk_forward.py",
+      "bytes": 40511,
+      "sha256": "e4a3be1c19b7f0af1226e71255c81116bd71a6a300aef36f61c688deb908df1f",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/audit_oracle_quote_quality_controls.py",
+      "bytes": 5478,
+      "sha256": "ba3ff67505f3a317014637ba39759cbdae316f1eea2b9bc09bdd597e42228881",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/audit_session_clock_dataset.py",
+      "bytes": 19680,
+      "sha256": "a7cc66d79ff0b5eccd81c97ca2640996c6fb5f42e1ff9dab7dd5add34947b7e9",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/audit_tcn_flags_economics.py",
+      "bytes": 24977,
+      "sha256": "ccb9686b1968fd5328fbcf9ffa18dfd843d302f1fc13a3bd3381a02f35d16e91",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/build_action_features.py",
+      "bytes": 6497,
+      "sha256": "064fc69fc6f00369d5cae067151a4cffd4c4c5fccb617334bc680924e9bc3a63",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/build_cache.py",
+      "bytes": 18248,
+      "sha256": "985e87dcbd1e73289b58e4576445e47e73a6edea13e5ac73dde3ad629180d69f",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/build_common_greek_train.py",
+      "bytes": 17317,
+      "sha256": "8c4684281f397709cd1dd0c04f84255225b9e1045a66f5d8d584425c2024a024",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/build_episode_features.py",
+      "bytes": 13511,
+      "sha256": "2630b2011f8567fd08632d9e1c49099681b12008af95881718909f4545575ccd",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/build_session_dataset.py",
+      "bytes": 22405,
+      "sha256": "fda474dfa1300b5bea15dd4deac0884f131fd2d7bca8cae43ad37c9fab7e9c23",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/causal_rollout.py",
+      "bytes": 7004,
+      "sha256": "8df92119071442045a8434057e220bad567668d8ee314fddd263d052ebeea0d9",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/check_missing_source_candidates.py",
+      "bytes": 5737,
+      "sha256": "e39bc68f499a9c9b85dba9823de93a1b9ae6054f3629cae1336d39b0eabcc677",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/common_greek_dynamics.py",
+      "bytes": 7868,
+      "sha256": "818195ed80ae7ff1ff446e2fb612750714eb76b47f48164f15e19381be64c44d",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/daily_trade_feasibility.py",
+      "bytes": 10668,
+      "sha256": "d1bc967341d5def66bd75b86ffd4fa789a50e9844fc7b037ecd3dec27246babc",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/diagnose_gamma_common_contracts.py",
+      "bytes": 14784,
+      "sha256": "c2dc944df5b59335eeb1d9c05175b3d35da73c54f0e7d313dcba669dc858abb4",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/diagnose_max_score_calibration.py",
+      "bytes": 9444,
+      "sha256": "d28a77e4c1f53dd3977c244b8ed9b11eb1cbef3c26dafaeb95f831ed8d89a7f2",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/diagnose_oracle_model.py",
+      "bytes": 30017,
+      "sha256": "da5a07d6edae6e23b6278fc897d8bb969728fb0802f14e2a2181d0237b4359fb",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/diagnose_oracle_quote_anomalies.py",
+      "bytes": 11709,
+      "sha256": "5022ec5a4053d79a4c943678c62d4720813f09a17269b8e9dda16dd7f6f90748",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/diagnose_oracle_quote_anomalies_panel.py",
+      "bytes": 10723,
+      "sha256": "ad003995930e1c9a4493e61728c7b43c9570c44a61cc7fc9c46f974cfb604ac9",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/diagnose_tcn_gradient_grouping.py",
+      "bytes": 8201,
+      "sha256": "ca65fef88e42fddd2f2b79e95a483f38c5d2b9223e5ac109c07b163af2025c3d",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/diagnose_tcn_memorization.py",
+      "bytes": 10263,
+      "sha256": "f368d65db7db802a3a2175b9ad340f778e9a556da08a986726d1f1a07172b1f5",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/diagnose_tcn_optimization.py",
+      "bytes": 10445,
+      "sha256": "88ec659a8f78f99787088c7390a6c4a9e58e912d46fdd948fb9086e359562c44",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/episode_features.py",
+      "bytes": 9909,
+      "sha256": "437530a63c2ef412414101552120b8a04e74e63375c65c6b409293bb7fd4d5a4",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/episode_policy.py",
+      "bytes": 434,
+      "sha256": "3080f5a2e495ca08dd8fc9df3eb62aaf432f2680c718504b6952ea20a2a3235c",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/episode_policy_superseded_mandatory_first.py",
+      "bytes": 1434,
+      "sha256": "134118c9782072eb49c0b36cbd4a39c366bd33a29ff9b90732ac67e7225801d2",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/evaluate_causal_rollout_short_sessions.py",
+      "bytes": 24135,
+      "sha256": "c1e8e3921f0bd955498aeaf85d367a78f5f14ef3d055cdf2df5cb411cf2cf1bc",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/evaluate_common_greek_control.py",
+      "bytes": 30502,
+      "sha256": "1a9cd58050a5fb3f30aa47d12615bd183e24f38c551912b2822931f99ce98b6f",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/evaluate_market_cue_control.py",
+      "bytes": 29953,
+      "sha256": "7dc5149702cb9fe2b8cb5e602fd81aa2ea5fd160b64ab65d9423a50711d7be2a",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/evaluate_oof_calibrated_policy.py",
+      "bytes": 20452,
+      "sha256": "eeaad06f5b862a3153f29e7eab579b19a35e182ab506cf1f59e65631e187e716",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/evaluate_tcn_flags_compat.py",
+      "bytes": 7224,
+      "sha256": "97836bb5a9a0364cf24888f55db0c1784268ed64575b71c4c76e1c03141d9aaf",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/evaluate_tcn_row_mixed.py",
+      "bytes": 15646,
+      "sha256": "870a5815f343735f299fb63066899df29d56c62219c21fa7ad7197188732af30",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/evaluate_tcn_row_mixed_calendar.py",
+      "bytes": 23398,
+      "sha256": "819f1141dc2e9f394897cf57a9278c4a9190043abd4bde7e8005d2151c151023",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/features.py",
+      "bytes": 27601,
+      "sha256": "b5c63f918319f844793abb3346a34515526073374f5e71af2129a94f2369d4e0",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/finalize_tcn_memorization.py",
+      "bytes": 3152,
+      "sha256": "1fadeac327f5f8548f8c97b60f41d138385f1a5943b783788ba171a816c3c839",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/inspect_market_cue_training.py",
+      "bytes": 5620,
+      "sha256": "7d4f5a43a2226e9f70169006d02803cf1782a1d2b236a92f96406475a4b2cef7",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/inspect_short_session_sources.py",
+      "bytes": 14642,
+      "sha256": "b7f7240a5cb67509aa88d78b2dc248e6956a0ce73617676b0d6157fc9489cfe9",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/inspect_training_signal.py",
+      "bytes": 6309,
+      "sha256": "6fef4cb90c8bfb557552863748c960d822324e4b0bc8fdf35c7ecd615e05851a",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/inventory_near_expirations.py",
+      "bytes": 6218,
+      "sha256": "0f5060b2d9c1c16185ed051bed780dc8417aaaba4b879792641d19755ac55eac",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/inventory_volume_sources.py",
+      "bytes": 7491,
+      "sha256": "8c9ffa0ac7a9a4450ec35bfd76c2078ad1b77ecd25e8a7e179043fed39cc2e9e",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/launch_common_greek_comparison.py",
+      "bytes": 6821,
+      "sha256": "8a3ca18692698ea2ac4556335bc78a44c134d745b0af0e8acdcba151db3c600b",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/launch_common_greek_training.py",
+      "bytes": 4513,
+      "sha256": "9e6a13e139d196ccbe7d41776661202ec9bed6d732f0f232037118d75aee1e85",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/launch_episode_model.py",
+      "bytes": 5664,
+      "sha256": "5c9b3e06a9cf5c6dacff196d83c5c42f8655777727ad046bb1e9589f2a9d3f08",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/launch_episode_pathfix.py",
+      "bytes": 6138,
+      "sha256": "1be87a61f4c82f6fa8a93a6da6886edf440d4655bc76758e1fb7718411a9c9f5",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/launch_learners.py",
+      "bytes": 12811,
+      "sha256": "2bb8051fe3509e5873d6f0bb2aadb0d1a31d00796b9a098f715ff1994721a232",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/launch_tcn_row_mixed_train.py",
+      "bytes": 9071,
+      "sha256": "29b069e5606a6a022b2abce1698d5e50e0d2b5ed9397184143e15777d405b4e1",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/level_engine.py",
+      "bytes": 27435,
+      "sha256": "70cc5d20990d971d16299fd008ff8e05ac99f99a6a2917a202fcb9a5f413b7c6",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/market_cue_comparison.py",
+      "bytes": 8725,
+      "sha256": "03f5bcaeda8bb91e01540cd579df660e6543a87829d652a0cfe70d79d9f4a182",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/market_cue_vectors.py",
+      "bytes": 9228,
+      "sha256": "8e9660a44ce04c779c03a6296a182c414df38dc88a293f2d6c16d124cc3b01d9",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/market_cue_vectors_fast.py",
+      "bytes": 5307,
+      "sha256": "7d71c2bb87a93dc7a503ae783ebc4e227930bcab3aedc6f6bfd70b9250b99d5c",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/market_cues.py",
+      "bytes": 13906,
+      "sha256": "337b6a7951d51c6b64a93b14dabd1d832b20e1292ad825628b50586833472faf",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/monthly_oof_calibration_adapter.py",
+      "bytes": 23397,
+      "sha256": "7b80cff43e3887a92e0f89be6daa863a670ccd72d22a0f4aeabd032a39479364",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/monthly_policy_selection.py",
+      "bytes": 5164,
+      "sha256": "1fe43fa92fe0441be35bc67c9a2a60ce2829edaf9ea80f5fa0a5c8967a599da0",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/observe_oracle_diagnostic.py",
+      "bytes": 3333,
+      "sha256": "f81dddb33436f4034c6282d638fb79563edb3a0764222a6de93c45e03e41acbb",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/oof_maximum_calibration.py",
+      "bytes": 14896,
+      "sha256": "19e922dd65855c4cd7e2ec9d482d477a328245bcf642eeeb7771985f247e20b5",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/oracle_target_counterexample.py",
+      "bytes": 1943,
+      "sha256": "05114da84a87c6901b50b7fdfb0b8914d9e1ab8557825952fefb1f67fc8ed5e5",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/plot_fixed_session_comparison.py",
+      "bytes": 5775,
+      "sha256": "9a2b64f890504aaa783c07b96d066103cdad52700dd879695bb3a1b2b132bb2f",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/plot_oracle.py",
+      "bytes": 16148,
+      "sha256": "e79232e4a575ba11613ce198e79c40ac00840bd4f3992875fafde42102f19be8",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/plot_oracle_behavior.py",
+      "bytes": 4474,
+      "sha256": "85a9b1200c2e5dafbd781e15f6d30c7ce5a5a9c3ff5613b9efc971deb09bde54",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/recover_learners.py",
+      "bytes": 28464,
+      "sha256": "784ae7cd3fdf70b7e9c02340c0914d56f3ee437611e82adbb1abe6e19eae2c0c",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/report_episode_result.py",
+      "bytes": 8979,
+      "sha256": "7d4fb76d34e1582df1e14c0a2a94cc5e93bd615745f84078a13cd6beb9cab0e8",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/report_fixed_comparison_monthly.py",
+      "bytes": 8771,
+      "sha256": "9d7e1ea595b263731a638c061676537e23eb218de910a57bfde9605814273977",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/report_max_score_calibration.py",
+      "bytes": 5870,
+      "sha256": "2ea4d41e74da5a861242eefb4b193246d9fb8ab5bde72ab50caf426a311017e8",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/report_oracle_model_diagnostic.py",
+      "bytes": 14528,
+      "sha256": "bb8a7b046b57baba8bcde69c38869b27d3feda868aea6f2aa063adf4b22ef7c7",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/report_results.py",
+      "bytes": 9755,
+      "sha256": "632ce3d415fca91f72611ffb87aa871d0244e56ed01d81e8c2a04b846a695131",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/resume_episode_pathfix.py",
+      "bytes": 5440,
+      "sha256": "60c1fca1f03676b8ddd90c22b6ef0050c263083e6236949d5354a307db208273",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/resume_oracle_diagnostic_dtype.py",
+      "bytes": 3944,
+      "sha256": "cf5470bf2842b139142343141d3cfad1e2f40d8bbb7b2f4c4967e520ed9572e5",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/review_calendar_scope.py",
+      "bytes": 7002,
+      "sha256": "b8f3d35f12b18170cce14637ed7afca438ec09df7333986499106e74b1473cc7",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/rolling_monthly_schedule.py",
+      "bytes": 8614,
+      "sha256": "92df2e68734d24a61b4ddccec1f9451a5e25c862f5a1b581ae779c163fcf205a",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/rollout_sampling.py",
+      "bytes": 8566,
+      "sha256": "8bc8cee2b89cf70490793b88d74dff558bbd60077d383a852392fcc2383c748c",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/run_causal_rollout_resource_recovery.py",
+      "bytes": 7537,
+      "sha256": "5d19d632099f1094d95d6e0ba7c11ff1cbfae6b4e50dcb0cd057a925ec325e71",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/run_common_greek_resource.py",
+      "bytes": 7447,
+      "sha256": "7e91263325871a555af8d8a7575cdaac1b56fd191ba310ad56d2429b6f3e32b6",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/run_engine_dataset.py",
+      "bytes": 18187,
+      "sha256": "74bf04a02ac1d978bdbfc93cf8a93dcea890751b3596a99f75f456973206384e",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/run_engine_dataset_runtime.py",
+      "bytes": 4763,
+      "sha256": "8c59fbab21dad63ebf4f33fb0011f665c15a3945fa2e5a8ca1cc84d04633c104",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/run_engine_dataset_runtime_03.py",
+      "bytes": 6211,
+      "sha256": "5d49029adeab13f3ebf493c9515ce4019c4a4b20b3499630c146ad129bbd295c",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/run_features_parallel.py",
+      "bytes": 5495,
+      "sha256": "cd12a0f5ba35440b9541a2ba0b2884728c77da9aef2224fe0e4264cf26c10849",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/run_market_cue_diagnostic.py",
+      "bytes": 10636,
+      "sha256": "f491edad5bac43acca56dbdaf144d2f57ae3f78a90d6480f8c53b89c002d20a6",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/run_monthly_resource_overlay.py",
+      "bytes": 9603,
+      "sha256": "ae596a0958511c3459885a2d1e04c800da93dfd7d0e1a540208a1ebb10155e34",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/run_monthly_walk_forward.py",
+      "bytes": 49399,
+      "sha256": "47a4df8b019d9d297ca1ee9b89fff63406409659336dbd7b0e4d7af01ed348bb",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/run_policy.py",
+      "bytes": 3197,
+      "sha256": "4455d31fa2fd69db289b35b77aab62a344607fe3dc1b86918cbd3ec5c7cf98d9",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/run_tcn_flags.py",
+      "bytes": 44948,
+      "sha256": "a76a3ee78b74568a77ad06bc85c3092dee606648c6b6ed54ad38818496ae06e5",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/run_tcn_row_mixed.py",
+      "bytes": 25299,
+      "sha256": "5c4adfe01e2a51f3eb0f16c96479edb326e2f06ea1f66b3721313ccaa9ab7ab2",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/score_calibration.py",
+      "bytes": 16564,
+      "sha256": "67f7aa51b8cff2331153e69d5c1aa52808d653dc480930a4b0e2c85269b1f4f4",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/session_cache.py",
+      "bytes": 2371,
+      "sha256": "6300a7f8e5c6c99101d32d642081f4b8dec170d3c40f2751c27f1642d55466f1",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/session_clock.py",
+      "bytes": 1046,
+      "sha256": "1e63cf2d314caea14dd8b0b8f025f647d67bf8df58f246613975891a256f51e9",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/session_features.py",
+      "bytes": 16176,
+      "sha256": "595ef9a5327533e7c57190f8970ad76df428b5a62878a6004a961bf4249f2d74",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/session_level_engine.py",
+      "bytes": 21874,
+      "sha256": "f93d3be334a2326dbec5d742e217bce63449e1beaf46b35fa46be83f25548883",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/stage_recovery.py",
+      "bytes": 9862,
+      "sha256": "965ee79104169348b1dcf3a96649d311419955d26621ab81cf2414f469e56edf",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/summarize_market_cues.py",
+      "bytes": 9115,
+      "sha256": "cef1707f731dcabdb275f041512d3f8b9e88bfcd7f08e541d2329fc96d6e3905",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/test_analyze_learner_regret.py",
+      "bytes": 11431,
+      "sha256": "3a2c5fc35b4557147fe322be39d9b444b83b856b0f9de4b46746b16e1bd1a33e",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_audit_causal_rollout_economics.py",
+      "bytes": 17232,
+      "sha256": "d3442e5ee5a9912490c93cfdaff646426a323fd43d1583e9817917a649e0f1c3",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_audit_causal_short_economics.py",
+      "bytes": 5023,
+      "sha256": "ce25bb8dcaac1f3aa439e15982b3a370025b3464774222ab96d04ab371c28781",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_audit_common_greek_comparison.py",
+      "bytes": 4489,
+      "sha256": "a73b878ddf53fd017df21accc3cbf6f6209ae8a3731374eb26b8c9ac85da81b4",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_audit_engine.py",
+      "bytes": 9342,
+      "sha256": "3107d6f1027caed58f67c9cc2f6208785f07d98dd587a17071e43d0e9972138c",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_audit_episode_learner_economics.py",
+      "bytes": 4815,
+      "sha256": "0d100f6fa6642dfbe728fbcb669f5fa1cbbb1e011e0b2ac6e01beed9e50c0020",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_audit_learner_economics.py",
+      "bytes": 11063,
+      "sha256": "091c0287ccd691160c0d2b08d0bafd697f0145ff298312d5858c2b44e5d53b4c",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_audit_market_cue_comparison.py",
+      "bytes": 3570,
+      "sha256": "712ba1e6db46d55e251495ba41395135bf604124d78fbfade858a735143051d7",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_audit_monthly_walk_forward.py",
+      "bytes": 7269,
+      "sha256": "8c47e89951506553bfb1295c6e390501828b8fe6f77bcae5d566e98c2039ef87",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_audit_oracle_quote_quality_controls.py",
+      "bytes": 1656,
+      "sha256": "312b6aff02788682da8745a2c1b2ad159e1d57617f7c90bc77e5af417ed31afc",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_audit_session_clock_dataset.py",
+      "bytes": 2070,
+      "sha256": "4ebd5471428ed848e376db0ee5ed8b7e2ab9222159e484cab8f0662ab5eb00eb",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_audit_tcn_flags_economics.py",
+      "bytes": 4023,
+      "sha256": "d698e5c653bd5b3942c8fbd618edeff27dddc8ee10d40ce446abe8035abd38c5",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_build_action_features.py",
+      "bytes": 1734,
+      "sha256": "67a08715dc006bb740df430e7e6fa73256bad7887d5a9f3a9edf2e95592ce48a",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_build_cache.py",
+      "bytes": 4487,
+      "sha256": "2cb316e3f74269a747f5b435ec9cad8c23675b6083769823d27aae4cb1c07083",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_build_common_greek_train.py",
+      "bytes": 11079,
+      "sha256": "7f3386e52320f593deb2f3720602545892a91c04c6767a2d053b83a2d85b0fbf",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_build_episode_features.py",
+      "bytes": 3188,
+      "sha256": "a0adcb8ce143bba0bfc96a85922bd28e39f63417d95a4fd4c75ef3acec8ff51d",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_build_session_dataset.py",
+      "bytes": 3894,
+      "sha256": "645ad3f97fc40be833ae914f0f81d5fc95dbac2cbc19738f0dacbc4a777ed20d",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_causal_rollout.py",
+      "bytes": 7132,
+      "sha256": "90fc6487ce4345f5ebf5edb13ec604aa11cb34c6efcde5d2dfb087f967cfbb4a",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_causal_rollout_resource_recovery.py",
+      "bytes": 5338,
+      "sha256": "77531fabb70baf7d00aee1c05ae6b838d88a123fa2e97a2e28a3a0ddd8a7c6c7",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_common_greek_dynamics.py",
+      "bytes": 5976,
+      "sha256": "7a53e1b504fc83b733e3ad25f5a0eb5803a937f96ffae8e3251ea352e76fb4b8",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_diagnose_gamma_common_contracts.py",
+      "bytes": 4203,
+      "sha256": "687363795fcc8ba924379e647aacf5170df2c92d3ec1f24c9a6a99b3fad0f12e",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_diagnose_oracle_model.py",
+      "bytes": 6768,
+      "sha256": "ebdb15a57abb0b790afb62d4a0d7cfda64cb1e2047ab0b41c1139b9de1370369",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_diagnose_oracle_quote_anomalies.py",
+      "bytes": 2651,
+      "sha256": "593330066d142db968fe61dea714f7417c49ddabc8d96d81c29f2504a4be3ea6",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_diagnose_oracle_quote_anomalies_panel.py",
+      "bytes": 1335,
+      "sha256": "ab4a00ade8ee2c84aa81dfb2bba3f5b06642a2b40ee97f9aa72c06ccbde5babc",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_diagnose_tcn_gradient_grouping.py",
+      "bytes": 1849,
+      "sha256": "50f5779a3d4b6ffb064d624dfc9ea34bbb9502c99aea082eb7d9ab9ea4abbf5f",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_diagnose_tcn_memorization.py",
+      "bytes": 2292,
+      "sha256": "f54f883b2b546da61013627e982ca3e0978af58292ad27c6b0f84a771549d7cc",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_episode_features.py",
+      "bytes": 8372,
+      "sha256": "076c07c086908c7d9f00d39034a39e85b6f738841a4199c46f706a7438d0a4e6",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_episode_pathfix.py",
+      "bytes": 5557,
+      "sha256": "47ece2e910a913afc2ab0940f9bb892c8c6645df25629ec5aac145f6d692710d",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_evaluate_causal_rollout_short_sessions.py",
+      "bytes": 11196,
+      "sha256": "0f5298925a990059ca2c674dbce4545be8427d4cc9312ad6547c2bd9274e32c2",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_evaluate_common_greek_control.py",
+      "bytes": 20120,
+      "sha256": "e0f702c4a6ad479fede7b95b1f5c8aff1aaa1d9b4c3fb3d12df38fc5296e678b",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_evaluate_market_cue_control.py",
+      "bytes": 11304,
+      "sha256": "0f992791acac00cd835e6d77786117e249af3f2dfd0ea31164e8318222e12767",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_evaluate_oof_calibrated_policy.py",
+      "bytes": 13185,
+      "sha256": "89516c51a5f467154549ce6d4b8b0a8dcec5482e58952dc89dbaa05a986c122b",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_evaluate_tcn_flags_compat.py",
+      "bytes": 5964,
+      "sha256": "41a6814eca197d5ab93a63be2d6abe1d6f9d8b9e9d1303792b709c2c133ead10",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_evaluate_tcn_row_mixed.py",
+      "bytes": 10994,
+      "sha256": "27e1f3d041ae08127b5b937af969afd5df0381953c2b77f8bf9e1c0202388c86",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_evaluate_tcn_row_mixed_calendar.py",
+      "bytes": 12641,
+      "sha256": "73955e87ad28c97a71e75f611c57f359e2cc06bf0917f065bd1d67b5cf5c2a40",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_features.py",
+      "bytes": 10616,
+      "sha256": "c798a4f42012a526314f30d9f1e3552b84eaa0612b45cf49ad88b60b9b8509b5",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_finalize_tcn_memorization.py",
+      "bytes": 1345,
+      "sha256": "e555a096096d2068175b335768eae33fc7396c7e38c0ea4a1e70e1e40146a030",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_ib_feature_leakage_audit.py",
+      "bytes": 7385,
+      "sha256": "fd5e8e785cb73c197a0f28d0bf42df467ea07f78cda89af549cfe94b0a7d869a",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_inspect_short_session_sources.py",
+      "bytes": 5174,
+      "sha256": "83ba3685cfbadeb85883784ea99b148ed3b9564b9349a78372a639e47fc48d8d",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_launch_tcn_row_mixed_train.py",
+      "bytes": 794,
+      "sha256": "0097d996dda76017585e00f4aeac52aec1c18f5f0754c9b1d297dadc50d6e31f",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_level_engine.py",
+      "bytes": 13177,
+      "sha256": "864a4629abc8490399fbd109d86817891596ed2abbe8ba3e516469dbf623a69c",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_market_cue_comparison.py",
+      "bytes": 4429,
+      "sha256": "b4c15ccab3d40f9f8ae4199fca29447a81fa105ceefb9f2419ce46c12ef64fe6",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_market_cue_vectors.py",
+      "bytes": 4545,
+      "sha256": "bd51b340c67f14f54087a80fc1e0a27a75b2b44db3a8112ab78f2aa9b9f768b2",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_market_cue_vectors_fast.py",
+      "bytes": 3880,
+      "sha256": "97aa3857b6fe9cee8556d2eb36254ed865202fcc034c65851417cc96d9b27072",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_market_cues.py",
+      "bytes": 5607,
+      "sha256": "aaa15c970d2b2d7894d86d94a13e3c7e9f0783abb97d56cde4064f53248c4e27",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_max_score_calibration.py",
+      "bytes": 3323,
+      "sha256": "7c6208359c3d04ded2bda50daaf023fae1740cb57122fdbed645ddf7251187c0",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_monthly_oof_calibration_adapter.py",
+      "bytes": 13312,
+      "sha256": "32e04b1444c73ac1a0bf87b819b6542ba4d96775202acb82514a147085d3739a",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_monthly_policy_selection.py",
+      "bytes": 3507,
+      "sha256": "963f9d355f37320092043e242b6fa6069d10a29b3cf3e413907acd17b4aeffff",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_monthly_resource_overlay.py",
+      "bytes": 6757,
+      "sha256": "47d092a126afdd15f6a566564aad42c93d454937797d4066f4d7d2427ac8b6e3",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_oof_maximum_calibration.py",
+      "bytes": 10385,
+      "sha256": "98597f48f4651a0e480b94d45afafa002ce5c490665ae05b1330fcc642cd5b0a",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_oracle_diagnostic_dtype.py",
+      "bytes": 1505,
+      "sha256": "73a7fb087a0a8659679a05d700e3086fab23ea66fe66519c07d08cd19c9b3a76",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_oracle_target_counterexample.py",
+      "bytes": 545,
+      "sha256": "30b2133cfac2689dfc454d54ed850ade014b6405dbc5bee58b28da423b81d0d1",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_plot_oracle.py",
+      "bytes": 2479,
+      "sha256": "d27857a0cb8129f5bd5f92f93b183b42ef5778e2b8ec85423e1c92f71476efa5",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_report_fixed_comparison_monthly.py",
+      "bytes": 2047,
+      "sha256": "0d3a4fd8b9ae6208be06a10cc2301d96d060b7f5a76505fb14a3a24a934e2b05",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_rolling_monthly_schedule.py",
+      "bytes": 6614,
+      "sha256": "7ce32367bd93828fecd6a5099ceed41dba577c2c8ebca9b32d36adcc61ccaf72",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_rollout_sampling.py",
+      "bytes": 9102,
+      "sha256": "0da814cb1f21266a56f54738786140bc213151d795580ee08f75fa3777343417",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_run_common_greek_resource.py",
+      "bytes": 912,
+      "sha256": "d9a2c6ef1af3b1f0309b7f06d6960f57126376d6fd782b0f4daa53ccfeeed3da",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_run_market_cue_diagnostic.py",
+      "bytes": 6987,
+      "sha256": "0b0c4cd336280cbd55b9ec0ee92058edfbe98b45640c42422d47aad1ea0680e9",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_run_monthly_walk_forward.py",
+      "bytes": 22122,
+      "sha256": "4afd812151033a611bb2a73531deae33768d5ab142d81e594aa1dd7d3bb19829",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_run_tcn_flags.py",
+      "bytes": 19422,
+      "sha256": "115d6ddc90f5a3c4357b50bf277685807057cd35e7c192e37b4c36db7ee5490c",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_run_tcn_row_mixed.py",
+      "bytes": 9285,
+      "sha256": "e1ec873ec22c4c4bfc46f749416e058ef618b2f715e7f1bc66ecdbfe7f60ebf5",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_score_calibration.py",
+      "bytes": 4581,
+      "sha256": "ef11f2c1425e4f0c62a8bfacc0fa58bd8408610aad4b638e2458e1932e01666c",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_session_clock.py",
+      "bytes": 11530,
+      "sha256": "da3fc7abd56bb11b0d1f9de57e06588036777f483627833cc12d211e263a31f4",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_stage_recovery.py",
+      "bytes": 17168,
+      "sha256": "cd4290e7a488801a4f5ac0fcaf333234aa3be3dd7e2e1ae81b75976922e6c798",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_summarize_market_cues.py",
+      "bytes": 2212,
+      "sha256": "fc7f044a6ac1dce11a28d97e12093d06ebd0791d7e83216e425855be31bd29ab",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_train_causal_rollout.py",
+      "bytes": 16441,
+      "sha256": "7108da8b0cf476e8d8bb583b15016d1fe231c7b33b8d288030494c0a963c48ef",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_train_common_greek_control.py",
+      "bytes": 7529,
+      "sha256": "3021f700d1514ca37e1a11719539c7682c96058d4ce13bba53d993b1eb0b4747",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_train_episode_model.py",
+      "bytes": 9687,
+      "sha256": "b9fa01dbe5a7a862c945b4f289d692bf238ea4db08f4f0f7ba6fc0287f40b471",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_train_market_cue_control.py",
+      "bytes": 8348,
+      "sha256": "d39818213d41c6a5d52844f7306bc8523740a93519a278a1de3072d1685e02d0",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/test_train_models.py",
+      "bytes": 20748,
+      "sha256": "0778a02d4ffc47c97e5cc903c10706fcdaf9b43e1ad583da6f2f3409d4267445",
+      "syntax_valid": true,
+      "test_file": true
+    },
+    {
+      "path": "level_oracle_20261018/train_causal_rollout.py",
+      "bytes": 46041,
+      "sha256": "d031eca08c71ad89324619e096dcc9be3966ddea23d52061019018ff6ff58a43",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/train_common_greek_control.py",
+      "bytes": 15442,
+      "sha256": "bba356f55467048c5f115d8fd7c580afcaa4a5c6cb2c532220df511319f3ce44",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/train_episode_model.py",
+      "bytes": 38717,
+      "sha256": "b0b0dcd54a59cfe39ac078b66570a394e7411c1d9b6e67f6e520a6640e3cddb8",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/train_market_cue_control.py",
+      "bytes": 26955,
+      "sha256": "6343178fe49aecf68c30b76b0d6ec9a37eea8df4968f3ec1b47a7eba0c6c143d",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/train_models.py",
+      "bytes": 58076,
+      "sha256": "a5192737abd1c0b3e4a6a6cd391117d97a014c06b6cd528201ba1f5df0ef6808",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/verify_feature_coverage.py",
+      "bytes": 5206,
+      "sha256": "53b08210946c1d54f7a3692fa205aa00553a5af6bb54d274bff952cac1d15c11",
+      "syntax_valid": true,
+      "test_file": false
+    },
+    {
+      "path": "level_oracle_20261018/verify_monthly_prepare.py",
+      "bytes": 4997,
+      "sha256": "83dd9669cf47161a20a3eb377e5d1b12928c35d60c23ec8fd21b41e0d5be6aba",
+      "syntax_valid": true,
+      "test_file": false
+    }
+  ],
+  "syntax_errors": []
+}

@@ -1,0 +1,33 @@
+{
+  "status": "FAILED",
+  "exit_code": 1,
+  "finished_utc": "2026-10-18T18:08:39.497703+00:00",
+  "wall_seconds": 163.12655069999164,
+  "peak_private_bytes": 4818460672,
+  "peak_rss_bytes": 5277224960,
+  "stages": [
+    {
+      "stage": "IMPORT_AND_AUTHORITY",
+      "seconds": 9.085598100034986
+    },
+    {
+      "stage": "matrix",
+      "seconds": 58.03744290000759
+    },
+    {
+      "stage": "fit_start",
+      "seconds": 85.94464939995669
+    },
+    {
+      "stage": "model_complete",
+      "seconds": 10.05882830003975
+    }
+  ],
+  "sources": {
+    "launch_episode_model.py": "5c9b3e06a9cf5c6dacff196d83c5c42f8655777727ad046bb1e9589f2a9d3f08",
+    "train_episode_model.py": "b0b0dcd54a59cfe39ac078b66570a394e7411c1d9b6e67f6e520a6640e3cddb8",
+    "episode_policy.py": "3080f5a2e495ca08dd8fc9df3eb62aaf432f2680c718504b6952ea20a2a3235c",
+    "EPISODE_LEARNER_PLAN.md": "970101954202a1d17326edb49aa107652fd133faabcafb0b8e9b450019f2f800"
+  },
+  "final_sources_match": true
+}

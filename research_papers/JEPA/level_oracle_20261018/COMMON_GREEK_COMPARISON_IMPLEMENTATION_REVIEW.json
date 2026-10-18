@@ -1,0 +1,48 @@
+{
+  "authorities": {
+    "cue_comparison_audit_sha256": "c16a381bb9c3f88c2e28a92ff3da6549856d960fb3cdf96c847b85ba9009d6c2",
+    "cue_contract_sha256": "ea296e2de576b91594697579c3f642e251526224213a651fbf6fbb409addf534",
+    "cue_model_completion_sha256": "9d5e0bbc5744fbdbf909e4f43c11796b9aa42c418cfcf7c0e85018a82783f97a",
+    "greek_contract_sha256": "ca1f55b1fe78bcd7575d7ad6d7cb5b91a8b9d340e11935f377030e6ccc735018",
+    "greek_model_completion_sha256": "be3583366019869c4b061e93b044b9ee4001d94510e573f1b3b978a970cb2c33",
+    "session_audit_sha256": "678eb21bca80b38855979d8a7386cdadd6827a6dfdd5acbf3df6fde5a5a2f3b9"
+  },
+  "dependencies": {
+    "COMMON_GREEK_COMPARISON_SPEC.md": "7aa9b392249aab0e78a2c50ee21bd14ba3595f325a111d4f961aa85bbf5cde66",
+    "COMMON_GREEK_DYNAMICS_V1_DESIGN.md": "43a81984e609027358f160a0e97c3d3de09b0c9b23c8d9350b4d6e0f49a84ff8",
+    "COMMON_GREEK_DYNAMICS_V1_LEARNER_PLAN.md": "2054dd1b7cf01f78bfe63b8aa5b45b569feeee4cb7e46dd1b71b4192bcdad781",
+    "COMMON_GREEK_TRAINER_IMPLEMENTATION.md": "9124ffe66e10ed3b71154373544e0c2bf87955666159ee53e1b555bab0fa0f6f",
+    "MARKET_CUE_COMPARISON_PLAN.md": "49cc2d652e9f7c24ef57034a0a44aebcc7ac9993ddd768bc920b1e7b0a115457",
+    "MARKET_CUE_LEARNER_PLAN_DRAFT.md": "b4132ee90639c9d470ab0d29cacd6475cee37c1287fe8ead83ed0481b6540021",
+    "build_common_greek_train.py": "8c4684281f397709cd1dd0c04f84255225b9e1045a66f5d8d584425c2024a024",
+    "common_greek_dynamics.py": "818195ed80ae7ff1ff446e2fb612750714eb76b47f48164f15e19381be64c44d",
+    "evaluate_common_greek_control.py": "1a9cd58050a5fb3f30aa47d12615bd183e24f38c551912b2822931f99ce98b6f",
+    "evaluate_market_cue_control.py": "7dc5149702cb9fe2b8cb5e602fd81aa2ea5fd160b64ab65d9423a50711d7be2a",
+    "features.py": "b5c63f918319f844793abb3346a34515526073374f5e71af2129a94f2369d4e0",
+    "market_cue_comparison.py": "03f5bcaeda8bb91e01540cd579df660e6543a87829d652a0cfe70d79d9f4a182",
+    "market_cue_vectors.py": "8e9660a44ce04c779c03a6296a182c414df38dc88a293f2d6c16d124cc3b01d9",
+    "market_cue_vectors_fast.py": "7d71c2bb87a93dc7a503ae783ebc4e227930bcab3aedc6f6bfd70b9250b99d5c",
+    "market_cues.py": "337b6a7951d51c6b64a93b14dabd1d832b20e1292ad825628b50586833472faf",
+    "rolling_monthly_schedule.py": "92df2e68734d24a61b4ddccec1f9451a5e25c862f5a1b581ae779c163fcf205a",
+    "run_market_cue_diagnostic.py": "f491edad5bac43acca56dbdaf144d2f57ae3f78a90d6480f8c53b89c002d20a6",
+    "train_common_greek_control.py": "bba356f55467048c5f115d8fd7c580afcaa4a5c6cb2c532220df511319f3ce44",
+    "train_market_cue_control.py": "6343178fe49aecf68c30b76b0d6ec9a37eea8df4968f3ec1b47a7eba0c6c143d",
+    "train_models.py": "a5192737abd1c0b3e4a6a6cd391117d97a014c06b6cd528201ba1f5df0ef6808"
+  },
+  "execution_authorized": true,
+  "model_sha256": "10b1c409a575797a2827e64a272809006917c17342f41c09fedd2d737a54e82c",
+  "policies": [
+    "cue_net__0",
+    "common_greek_net__0"
+  ],
+  "roots": {
+    "cue": "D:\\GexResearchArtifacts\\level_oracle_20261018\\market_cue_control_v1",
+    "cue_comparison": "D:\\GexResearchArtifacts\\level_oracle_20261018\\market_cue_comparison_v1",
+    "greek": "D:\\GexResearchArtifacts\\level_oracle_20261018\\common_greek_control_resource_v1",
+    "session": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_clock_dataset_v1"
+  },
+  "status": "PASS_COMMON_GREEK_COMPARISON_IMPLEMENTATION_REVIEW",
+  "synthetic_validation": "13 fixtures PASS; Ruff PASS; compact baseline independently audited; no evaluation424",
+  "threshold": 0,
+  "winner_selected": null
+}

@@ -1,0 +1,22 @@
+{
+  "cache_sha256": "2671fda58cb1f26df2b6f440749e43b644de84196dd14c7bac526d1a91272c3d",
+  "files": {
+    "MARKET_CUE_LEARNER_PLAN_DRAFT.md": "b4132ee90639c9d470ab0d29cacd6475cee37c1287fe8ead83ed0481b6540021",
+    "TCN_ROW_MIXED_TRAIN_RUNTIME_SPEC.md": "a57ec9517b9644b11f9982b88c0a72e19bfe57e395a04310c61c74a35a7a7ca5",
+    "features.py": "b5c63f918319f844793abb3346a34515526073374f5e71af2129a94f2369d4e0",
+    "launch_tcn_row_mixed_train.py": "29b069e5606a6a022b2abce1698d5e50e0d2b5ed9397184143e15777d405b4e1",
+    "market_cue_vectors.py": "8e9660a44ce04c779c03a6296a182c414df38dc88a293f2d6c16d124cc3b01d9",
+    "market_cue_vectors_fast.py": "7d71c2bb87a93dc7a503ae783ebc4e227930bcab3aedc6f6bfd70b9250b99d5c",
+    "market_cues.py": "337b6a7951d51c6b64a93b14dabd1d832b20e1292ad825628b50586833472faf",
+    "run_market_cue_diagnostic.py": "f491edad5bac43acca56dbdaf144d2f57ae3f78a90d6480f8c53b89c002d20a6",
+    "train_market_cue_control.py": "6343178fe49aecf68c30b76b0d6ec9a37eea8df4968f3ec1b47a7eba0c6c143d"
+  },
+  "gate_bytes": 2000000000,
+  "reviewed_utc": "2026-10-18T21:19:02.933183+00:00",
+  "reviewer": "root",
+  "runner_sha256": "5c4adfe01e2a51f3eb0f16c96479edb326e2f06ea1f66b3721313ccaa9ab7ab2",
+  "scope": "Existing frozen row-mixed experiment, no rebuild, no retuning, no validation/test; user2GB resource threshold",
+  "status": "PASS_TCN_ROW_MIXED_TRAIN_RUNTIME_REVIEW",
+  "tests_sha256": "0097d996dda76017585e00f4aeac52aec1c18f5f0754c9b1d297dadc50d6e31f",
+  "validation": "Full launcher review, two focused fixtures PASS; frozen producer validates full cache and checkpoint optimizer/RNG; one CUDA train invocation only"
+}

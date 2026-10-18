@@ -1,0 +1,39 @@
+{
+  "status": "PASS_MONTHLY_RESOURCE_OVERLAY_REVIEW",
+  "files": {
+    "run_monthly_resource_overlay.py": "ae596a0958511c3459885a2d1e04c800da93dfd7d0e1a540208a1ebb10155e34",
+    "test_monthly_resource_overlay.py": "47d092a126afdd15f6a566564aad42c93d454937797d4066f4d7d2427ac8b6e3",
+    "MONTHLY_RESOURCE_OVERLAY_SPEC.md": "8f9caaf51b35322530ad8c53ce9842f5113852e64bebaab246d10ee4d9e35aeb"
+  },
+  "original_dependencies": {
+    "run_monthly_walk_forward.py": "47a4df8b019d9d297ca1ee9b89fff63406409659336dbd7b0e4d7af01ed348bb",
+    "rolling_monthly_schedule.py": "92df2e68734d24a61b4ddccec1f9451a5e25c862f5a1b581ae779c163fcf205a",
+    "monthly_policy_selection.py": "1fe43fa92fe0441be35bc67c9a2a60ce2829edaf9ea80f5fa0a5c8967a599da0",
+    "MONTHLY_WALK_FORWARD_PLAN.md": "71ccd29587be4012dad9fe3ada4ad29ff7b93b94ea08340343ebe39d287c97ae",
+    "rollout_sampling.py": "8bc8cee2b89cf70490793b88d74dff558bbd60077d383a852392fcc2383c748c",
+    "train_causal_rollout.py": "d031eca08c71ad89324619e096dcc9be3966ddea23d52061019018ff6ff58a43",
+    "train_models.py": "a5192737abd1c0b3e4a6a6cd391117d97a014c06b6cd528201ba1f5df0ef6808",
+    "features.py": "b5c63f918319f844793abb3346a34515526073374f5e71af2129a94f2369d4e0",
+    "level_engine.py": "70cc5d20990d971d16299fd008ff8e05ac99f99a6a2917a202fcb9a5f413b7c6",
+    "build_cache.py": "985e87dcbd1e73289b58e4576445e47e73a6edea13e5ac73dde3ad629180d69f",
+    "causal_rollout.py": "8df92119071442045a8434057e220bad567668d8ee314fddd263d052ebeea0d9"
+  },
+  "original_run_contract_sha256": "7250620ebe25da082c8d080faa54d006c15f36f2070f414405d14ca18a27158f",
+  "threshold_bytes": 2000000000,
+  "scope": "validation",
+  "scientific_inputs_changed": false,
+  "reviewed_utc": "2026-10-18T21:16:41.893110+00:00",
+  "reviewer": "independent wide_benchmark",
+  "synthetic_tests": 12,
+  "synthetic_test_seconds": 7.53,
+  "ruff": "PASS",
+  "compile": "PASS",
+  "market_execution_performed": false,
+  "previous_process_stopped_by_reviewer": false,
+  "completed_models_rehashed": 2,
+  "gate_before_fit_started": true,
+  "only_wait_resources_replaced": true,
+  "restore_on_exception": true,
+  "original_config_unchanged": true,
+  "review_scope": "Operational overlay only; static resume logic and synthetic main double. No actual continuation or inference. Root retains operational GO authority."
+}

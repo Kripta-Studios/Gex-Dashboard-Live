@@ -1,0 +1,16 @@
+{
+  "status": "CLOSED_DESCRIPTIVE_DIAGNOSTIC",
+  "utc": "2026-10-18T20:02:57.250841+00:00",
+  "exit_code": 0,
+  "tests": "4 PASS; Ruff/compile PASS",
+  "new_fits": 0,
+  "new_inference": 0,
+  "files": {
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\diagnose_max_score_calibration.py": "d28a77e4c1f53dd3977c244b8ed9b11eb1cbef3c26dafaeb95f831ed8d89a7f2",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\MAX_SCORE_CALIBRATION_SPEC.md": "92d9b674c27d09da9f13a5f4d9c273a49a28b134c639684a6282012f2049fe09",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\MAX_SCORE_CALIBRATION_RESULT.md": "999a3e6608a41d166268f61e0f70d8fecc3dccbdd01a3ab65037f026adae5614",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_max_score_calibration.py": "7c6208359c3d04ded2bda50daaf023fae1740cb57122fdbed645ddf7251187c0",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\report_max_score_calibration.py": "2ea4d41e74da5a861242eefb4b193246d9fb8ab5bde72ab50caf426a311017e8",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\max_score_calibration_diagnostic_v1\\summary.json": "5ec075276e48d493cc5f5133e6fda70edf8e91f6794ac6951b721bdc9820b832"
+  }
+}

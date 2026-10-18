@@ -1,0 +1,25 @@
+# Resource observation, 2026-10-18
+
+The frozen runner remains unchanged. PID38048, unified session12499, entered `WAITING_RESOURCES` at19:06:14UTC, inside `fit_once('teacher',...)` after completing the H1 chunks, risk scales and matrix, and before creating `models/teacher.fit_started.json` or constructing the regressor. The original admission thresholds remain12GiB available physical RAM and16GiB available Windows commit. No runtime override, restart, fit or altered scientific parameter was introduced for this observation.
+
+The prepared teacher has47,430×1,954 float32 values:370,712,880bytes. Its final learners share285,286×1,955 float32 values:2,230,936,520bytes. The two fits are sequential. At the observation, PID38048 used1,214,746,624private bytes and842,944,512working-set bytes. The runner reported11,986,980,864available RAM/12,889,829,376free commit at19:06:14UTC and12,733,378,560/15,662,985,216 at19:06:44UTC. These are contemporaneous measurements, not guaranteed future headroom.
+
+Local installed LightGBM source inspection: `sklearn.py` around949 validates the input and around978 passes it to `Dataset`; `basic.py`192–206 preserves float32/C order and ravels without copying when compatible; around2316 `DatasetCreateFromMat` consumes that pointer. A rough teacher allocation estimate includes a370.7MB input mapping, roughly92.7MB of one-byte dense bins at max_bin63, approximately61MB for31×1,954×63×16 histogram entries, additional per-thread workspaces and possible validation/native copies. Allowing two extra full input copies and allocator overhead suggests an increment below3GiB and total process private memory below roughly4.5GiB. This is **not a formal bound** on the native C++ allocator or all runtime copies.
+
+A teacher-specific8GiB RAM/10GiB commit gate could therefore be considered in a separately reviewed launcher; the2.23GB final matrix warrants retaining12/16until measured. This proposal was **not activated**. Restarting here would repeat approximately13minutes of identity reconstruction plus cached-chunk admission; the parent chose to keep the current process waiting while the other owned training process completes. No unrelated process is modified or terminated.
+
+Subsequent stage progress and resource measurements are authoritative in `D:/GexResearchArtifacts/level_oracle_20261018/causal_rollout_v1/progress.json` and completed checkpoint markers. Waiting is not a model failure or an economic result.
+
+## Original gate passed; contingency not activated
+
+The original PID38048 passed its unchanged12/16gate and started the teacher at19:32:49.904306UTC. Its complete marker was published at19:34:43.746568UTC:113.842262seconds including final serialization/checkpoint. Model SHA: `e9af185ca8e1d6f963ef4c31b0e9e9aaa99ccb4136b835c9622c128e6b7e1be0`. The23samples at5second spacing observed maximum private2,619,752,448bytes and RSS2,316,136,448bytes; this is an observed sampled peak, not a guaranteed instantaneous maximum. After matrix release the runner reported approximately1.22GBprivate/0.61GBRSS and continued the causal teacher rollouts.
+
+The resource-recovery wrapper and its synthetic fixtures were prepared as a contingency but **never launched**; no suspension, restart, reduced gate or sampling shortcut was applied to this execution. The transition was cancelled when the original fit started. The full1491action-file map totals87,588,893bytes by filesystem metadata; the larger raw-source/cache inventory is not the input to the deterministic action sampler. No claim of an instantaneous recovery hash scan is made.
+
+## Both final fits completed under the original gate
+
+The 1,119 fixed-teacher rollout days completed at 19:52:35 UTC, followed by all 1,119 common-matrix chunks at 19:54:59 UTC. The control fit ran from 19:55:20.713279 to 19:56:53.768490 UTC (93.055211 seconds). Its 19 monitor samples observed maximum private memory of 6,409,453,568 bytes and RSS of 7,230,742,528 bytes. Model SHA: `12b8d5a00d06bb482fc6de66263e8c270929d0d276e226a9889e283a801a09ef`.
+
+The residual fit then waited before creating its fit-start checkpoint while another owned, outcome-free cache preparation held memory mappings. No fit was interrupted and no memory gate changed. Once those mappings were released, the original process passed the same 12/16 GiB gate. The residual fit ran from 20:02:25.520664 to 20:04:04.731386 UTC (99.210722 seconds). Its 20 monitor samples observed maximum private memory of 6,573,084,672 bytes and RSS of 7,488,806,912 bytes. Model SHA: `9fe6a42d2a04459b5eff4b018518a224865b58f2af89ca5903b6e77651303117`.
+
+Both final model files and both fit-start files were independently rehashed against their completion markers: four matches. The common matrix was released before validation; the stage-close RSS was 306,810,880 bytes. These sampled peaks are not instantaneous maximum guarantees. The original process continued into the frozen 2025 validation and 2026 development evaluation, with no further fitting. Economic results and independent economic audit remain separate from these execution observations.

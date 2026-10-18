@@ -1,0 +1,12 @@
+{
+  "status": "COMPLETE",
+  "finished_utc": "2026-10-18T16:57:27.587200+00:00",
+  "index_sha256": "8d0c6e27bdaf7d47ef2a9888505294b8f3186da3a6927e780ce9e517e660e8e5",
+  "summary_sha256": "9e98ada34251813f0421f2d1f89e09737afb5e4956a24b455a95e88521284eec",
+  "dataset_contract_sha256": "c109338b2e5599d7f45b436ab43f06ee2537ee59702985d89f558edd7ea1774b",
+  "cache_full_summary_sha256": "9fb08cee58381cd77ef1f120903ecc1ec801f7dd2f9e324abff29e46263f1382",
+  "runtime_execution_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\engine_v1\\runtime_03\\runtime_execution.json",
+  "runtime_execution_sha256": "6b6496c622fba7e837beccf7c596c2aff38ac216ef2aa2a6e2bbc8ed132ae7f0",
+  "actual_workers": 8,
+  "historical_contract_workers": 4
+}

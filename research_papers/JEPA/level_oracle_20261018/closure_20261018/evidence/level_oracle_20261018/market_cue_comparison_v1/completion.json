@@ -1,0 +1,15 @@
+{
+  "development_seen": true,
+  "freeze_sha256": "5f1c923379b8d732cc7fd88444f50d497f36486af062ad61185b95a45ce14c59",
+  "periods": [
+    2025,
+    2026
+  ],
+  "policies": [
+    "original_net__0",
+    "cue_net__0"
+  ],
+  "promotion_approved": false,
+  "status": "COMPLETE_FIXED_CUE_COMPARISON",
+  "winner_selected": null
+}

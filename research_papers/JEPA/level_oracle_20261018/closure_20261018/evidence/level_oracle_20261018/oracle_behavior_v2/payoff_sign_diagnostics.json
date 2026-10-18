@@ -1,0 +1,158 @@
+{
+  "source_sha256": "b5a585b25decfe0230195dffb0222173c8f3becb2e3c87a1ebbed76d525c3c29",
+  "groups": [
+    {
+      "ticker": "QQQ",
+      "split": "test",
+      "trades": 1657,
+      "net_base": {
+        "positive": 1657,
+        "zero": 0,
+        "negative": 0,
+        "min": 0.39999999999998126
+      },
+      "net_adverse": {
+        "positive": 1646,
+        "zero": 0,
+        "negative": 11,
+        "min": -1.6000000000000196
+      }
+    },
+    {
+      "ticker": "QQQ",
+      "split": "train",
+      "trades": 6216,
+      "net_base": {
+        "positive": 6216,
+        "zero": 0,
+        "negative": 0,
+        "min": 0.39999999999998126
+      },
+      "net_adverse": {
+        "positive": 6089,
+        "zero": 0,
+        "negative": 127,
+        "min": -1.6000000000000196
+      }
+    },
+    {
+      "ticker": "QQQ",
+      "split": "validation",
+      "trades": 3143,
+      "net_base": {
+        "positive": 3143,
+        "zero": 0,
+        "negative": 0,
+        "min": 0.39999999999998126
+      },
+      "net_adverse": {
+        "positive": 3111,
+        "zero": 0,
+        "negative": 32,
+        "min": -1.6000000000000196
+      }
+    },
+    {
+      "ticker": "SPXW",
+      "split": "test",
+      "trades": 2000,
+      "net_base": {
+        "positive": 2000,
+        "zero": 0,
+        "negative": 0,
+        "min": 5.399999999999986
+      },
+      "net_adverse": {
+        "positive": 2000,
+        "zero": 0,
+        "negative": 0,
+        "min": 3.400000000000007
+      }
+    },
+    {
+      "ticker": "SPXW",
+      "split": "train",
+      "trades": 7586,
+      "net_base": {
+        "positive": 7586,
+        "zero": 0,
+        "negative": 0,
+        "min": 0.40000000000000346
+      },
+      "net_adverse": {
+        "positive": 7583,
+        "zero": 0,
+        "negative": 3,
+        "min": -1.6000000000000196
+      }
+    },
+    {
+      "ticker": "SPXW",
+      "split": "validation",
+      "trades": 3830,
+      "net_base": {
+        "positive": 3830,
+        "zero": 0,
+        "negative": 0,
+        "min": 5.399999999999986
+      },
+      "net_adverse": {
+        "positive": 3830,
+        "zero": 0,
+        "negative": 0,
+        "min": 3.400000000000007
+      }
+    },
+    {
+      "ticker": "SPY",
+      "split": "test",
+      "trades": 1682,
+      "net_base": {
+        "positive": 1682,
+        "zero": 0,
+        "negative": 0,
+        "min": 0.40000000000000346
+      },
+      "net_adverse": {
+        "positive": 1670,
+        "zero": 0,
+        "negative": 12,
+        "min": -1.6000000000000196
+      }
+    },
+    {
+      "ticker": "SPY",
+      "split": "train",
+      "trades": 6575,
+      "net_base": {
+        "positive": 6575,
+        "zero": 0,
+        "negative": 0,
+        "min": 0.39999999999998126
+      },
+      "net_adverse": {
+        "positive": 6426,
+        "zero": 0,
+        "negative": 149,
+        "min": -1.6000000000000196
+      }
+    },
+    {
+      "ticker": "SPY",
+      "split": "validation",
+      "trades": 3330,
+      "net_base": {
+        "positive": 3330,
+        "zero": 0,
+        "negative": 0,
+        "min": 0.39999999999998126
+      },
+      "net_adverse": {
+        "positive": 3293,
+        "zero": 0,
+        "negative": 37,
+        "min": -1.6000000000000196
+      }
+    }
+  ]
+}

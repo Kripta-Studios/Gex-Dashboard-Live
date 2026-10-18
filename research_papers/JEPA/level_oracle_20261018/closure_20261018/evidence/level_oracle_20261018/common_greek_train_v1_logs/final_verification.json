@@ -1,0 +1,184 @@
+{
+  "status": "PASS_PRODUCER_FINAL_MATRIX_VERIFICATION",
+  "scope": "Output hashes, finite424, exact152prefix and original row identities/IPW; not independent raw-feature audit",
+  "rows": 270377,
+  "width": 424,
+  "days": 1491,
+  "sources": 5994,
+  "new_fits": 0,
+  "outcomes_read": false,
+  "denominators": {
+    "actions": 270377.0,
+    "ipw": 270376.99999999994,
+    "unique_states": 155222.0
+  },
+  "hashes": {
+    "matrix.complete.json": "33a9664688697881b924e06a939e638fd24c7e0536b57e4e94acb8c067ecba54",
+    "run_contract.json": "5d91ae62a0498813b7435878edd7afac1e79106bf872986addd2142cbc1651ce",
+    "train_x.npy": "60b7e3c56ab011bf74144da1e861981846a90ec55fbe49e95523b092380c2214",
+    "row_keys.npz": "8488a79d1d14cb2cab46c0ba26a63459c04222f1d915b64beff8dec5a52f50a4",
+    "coverage.json": "bcf8e403169d87cca59d9bc467f93d5b75dca07715aa04728f6274422cb61081"
+  },
+  "ipw_coverage": [
+    {
+      "greek": "gamma_bs_proxy",
+      "side": "CALL",
+      "lag": 5,
+      "available": 0.9993637575773825,
+      "common_known_now_fraction": 0.530158516908068,
+      "observed_abs_mass_now_fraction": 0.995243211326672,
+      "observed_abs_mass_past_fraction": 0.9948307483513185,
+      "common_oi_relative_change": 0.0
+    },
+    {
+      "greek": "gamma_bs_proxy",
+      "side": "CALL",
+      "lag": 15,
+      "available": 0.9993676290711581,
+      "common_known_now_fraction": 0.525480108528884,
+      "observed_abs_mass_now_fraction": 0.9949907234510154,
+      "observed_abs_mass_past_fraction": 0.9933772774776083,
+      "common_oi_relative_change": 0.0
+    },
+    {
+      "greek": "gamma_bs_proxy",
+      "side": "PUT",
+      "lag": 5,
+      "available": 0.9993637575773825,
+      "common_known_now_fraction": 0.7335889146679642,
+      "observed_abs_mass_now_fraction": 0.9958823101525901,
+      "observed_abs_mass_past_fraction": 0.9952809508090542,
+      "common_oi_relative_change": 0.0
+    },
+    {
+      "greek": "gamma_bs_proxy",
+      "side": "PUT",
+      "lag": 15,
+      "available": 0.9993676290711581,
+      "common_known_now_fraction": 0.7319932144220989,
+      "observed_abs_mass_now_fraction": 0.9955553799754909,
+      "observed_abs_mass_past_fraction": 0.9935103417989652,
+      "common_oi_relative_change": 0.0
+    },
+    {
+      "greek": "delta_stored",
+      "side": "CALL",
+      "lag": 5,
+      "available": 0.9993637575773825,
+      "common_known_now_fraction": 0.9923593940504916,
+      "observed_abs_mass_now_fraction": 0.9993637575773825,
+      "observed_abs_mass_past_fraction": 0.9993637575773825,
+      "common_oi_relative_change": 0.0
+    },
+    {
+      "greek": "delta_stored",
+      "side": "CALL",
+      "lag": 15,
+      "available": 0.9993676290711581,
+      "common_known_now_fraction": 0.9923632655442671,
+      "observed_abs_mass_now_fraction": 0.9993676290711581,
+      "observed_abs_mass_past_fraction": 0.9993676290711581,
+      "common_oi_relative_change": 0.0
+    },
+    {
+      "greek": "delta_stored",
+      "side": "PUT",
+      "lag": 5,
+      "available": 0.9993637575773825,
+      "common_known_now_fraction": 0.992354946523034,
+      "observed_abs_mass_now_fraction": 0.9993637575773825,
+      "observed_abs_mass_past_fraction": 0.9993637575773825,
+      "common_oi_relative_change": 0.0
+    },
+    {
+      "greek": "delta_stored",
+      "side": "PUT",
+      "lag": 15,
+      "available": 0.9993676290711581,
+      "common_known_now_fraction": 0.9923588180168096,
+      "observed_abs_mass_now_fraction": 0.9993676290711581,
+      "observed_abs_mass_past_fraction": 0.9993676290711581,
+      "common_oi_relative_change": 0.0
+    },
+    {
+      "greek": "vega_per_vol_point",
+      "side": "CALL",
+      "lag": 5,
+      "available": 0.9993637575773825,
+      "common_known_now_fraction": 0.9923593940504916,
+      "observed_abs_mass_now_fraction": 0.9993637575773825,
+      "observed_abs_mass_past_fraction": 0.9993637575773825,
+      "common_oi_relative_change": 0.0
+    },
+    {
+      "greek": "vega_per_vol_point",
+      "side": "CALL",
+      "lag": 15,
+      "available": 0.9993676290711581,
+      "common_known_now_fraction": 0.9923632655442671,
+      "observed_abs_mass_now_fraction": 0.9993676290711581,
+      "observed_abs_mass_past_fraction": 0.9993676290711581,
+      "common_oi_relative_change": 0.0
+    },
+    {
+      "greek": "vega_per_vol_point",
+      "side": "PUT",
+      "lag": 5,
+      "available": 0.9993637575773825,
+      "common_known_now_fraction": 0.992354946523034,
+      "observed_abs_mass_now_fraction": 0.9993637575773825,
+      "observed_abs_mass_past_fraction": 0.9993637575773825,
+      "common_oi_relative_change": 0.0
+    },
+    {
+      "greek": "vega_per_vol_point",
+      "side": "PUT",
+      "lag": 15,
+      "available": 0.9993676290711581,
+      "common_known_now_fraction": 0.9923588180168096,
+      "observed_abs_mass_now_fraction": 0.9993676290711581,
+      "observed_abs_mass_past_fraction": 0.9993676290711581,
+      "common_oi_relative_change": 0.0
+    },
+    {
+      "greek": "theta_stored",
+      "side": "CALL",
+      "lag": 5,
+      "available": 0.9993637575773825,
+      "common_known_now_fraction": 0.9923593940504916,
+      "observed_abs_mass_now_fraction": 0.9993637575773825,
+      "observed_abs_mass_past_fraction": 0.9993637575773825,
+      "common_oi_relative_change": 0.0
+    },
+    {
+      "greek": "theta_stored",
+      "side": "CALL",
+      "lag": 15,
+      "available": 0.9993676290711581,
+      "common_known_now_fraction": 0.9923632655442671,
+      "observed_abs_mass_now_fraction": 0.9993676290711581,
+      "observed_abs_mass_past_fraction": 0.9993676290711581,
+      "common_oi_relative_change": 0.0
+    },
+    {
+      "greek": "theta_stored",
+      "side": "PUT",
+      "lag": 5,
+      "available": 0.9993637575773825,
+      "common_known_now_fraction": 0.992354946523034,
+      "observed_abs_mass_now_fraction": 0.9993637575773825,
+      "observed_abs_mass_past_fraction": 0.9993637575773825,
+      "common_oi_relative_change": 0.0
+    },
+    {
+      "greek": "theta_stored",
+      "side": "PUT",
+      "lag": 15,
+      "available": 0.9993676290711581,
+      "common_known_now_fraction": 0.9923588180168096,
+      "observed_abs_mass_now_fraction": 0.9993676290711581,
+      "observed_abs_mass_past_fraction": 0.9993676290711581,
+      "common_oi_relative_change": 0.0
+    }
+  ]
+}

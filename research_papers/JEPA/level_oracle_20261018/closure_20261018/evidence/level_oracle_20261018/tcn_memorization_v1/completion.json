@@ -1,0 +1,16 @@
+{
+  "status": "COMPLETE",
+  "files": {
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_memorization_v1\\diagnose_tcn_memorization.executed.py": "f368d65db7db802a3a2175b9ad340f778e9a556da08a986726d1f1a07172b1f5",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_memorization_v1\\finalize_tcn_memorization.executed.py": "1fadeac327f5f8548f8c97b60f41d138385f1a5943b783788ba171a816c3c839",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_memorization_v1\\final_model.pt": "7bdf64a995da43a451ff6fa5c7cfdbf8235943afea1b81dbf94d706c34cb138a",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_memorization_v1\\freeze_before_updates.json": "778b19371d843576bf43fdf48fc53a4a48c19fa9cb88d0aafaff19f6c88628b9",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_memorization_v1\\gradient_norms.npy": "da9dc8dc9baf350b4394df8ce41bd0faaf221c787830e8aaa4a9e17996d25a4c",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_memorization_v1\\initial_model.pt": "d586b834e25998e4f008cf458f6c5ff13002dca9a10ec78c22e4a56d09cb188f",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_memorization_v1\\metrics.parquet": "5840ed90ab923d3bbe4ecb35a404f1e63ed9b8acede7437d0dfc1dcbb3b214f0",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_memorization_v1\\publication_recovery.json": "d53a0e633c7239b1d38f24e7240b3294bb922f1fd1aa890f5a0718e00dbddd41",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_memorization_v1\\selected_train_rows.parquet": "e6f346ade9e02596479e8a00ab7535c16f67addd82ce1ec316046520f159d907",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_memorization_v1\\summary.json": "e04cbd249292dcab7ef1d9911dd148c20d1038a9b751c8f2698ea413ac9cd4b8",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_memorization_v1\\TCN_MEMORIZATION_DIAGNOSTIC_PLAN.md": "0c2d07eaada97a8ccf72bdbe5eba84c399ca6406e1dff8654dc028f3586e6699"
+  }
+}

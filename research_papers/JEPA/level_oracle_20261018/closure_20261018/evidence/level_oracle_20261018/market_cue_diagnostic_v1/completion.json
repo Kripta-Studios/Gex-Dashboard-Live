@@ -1,0 +1,46 @@
+{
+  "candidates": 5630,
+  "files": {
+    "all_candidate_cues.jsonl": "39b16eccd64c62c89240b8e77ffa5f4e8d8b9524fca59a577046045c036b323e",
+    "features_seal.json": "dca0d01acd05a070d496d727ebfabbee200bc3359afbf6513bcf41178c39453c",
+    "membership_overlay.json": "66fc984858aecb9977c4a245ba6638405539c8104680c5c3da93ccff83816388"
+  },
+  "input_binding_sha256": "33a2f27dcf98a00b45d67b67b0844cdf2c11c4caee43f4ddc3906f875ea8c2af",
+  "predictive_evidence": false,
+  "source_files": {
+    "action_features": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\features_v1\\SPY\\20250102\\actions.npz",
+      "sha256": "e7f5734ab690acbfd2fdd36866fd77b77acac60cd4ca0d4f85a753b87d7fe0f0"
+    },
+    "action_metadata": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\features_v1\\SPY\\20250102\\actions.json",
+      "sha256": "ee19181970ba23c9b932853cb8159a0a7b6ebde53fd7b16a6e5fe620572733db"
+    },
+    "actions": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\engine_v1\\SPY\\20250102\\actions.parquet",
+      "sha256": "5e8e084400aab2081364a6d563709e4012788c1cd63d3422a85f0d6a7ceeb422"
+    },
+    "feature_contract": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\features_v1\\feature_contract.json",
+      "sha256": "33c132b833a5bb71f8b420540e445453a40326bd73cf9969e1a1d2630a389738"
+    },
+    "features": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\features_v1\\SPY\\20250102\\features.npz",
+      "sha256": "e2f17f141f9f69ce727c95c7936b20137ed983bf27081942e394eb71994cf724"
+    },
+    "features_metadata": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\features_v1\\SPY\\20250102\\features.json",
+      "sha256": "35d0628d90908254b82b1d156bb799ea3ac1c713a5ac865a3b4fe7216c5d6600"
+    },
+    "model_ledger": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\learners_v1\\validation\\gbt_net__0_ledger.parquet",
+      "sha256": "a5cd74d789c61ba8d98ef794087a501121a87ac5a002ad6cf73790b7baed87df"
+    },
+    "oracle_ledger": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\engine_v1\\SPY\\20250102\\oracle_ledger.parquet",
+      "sha256": "d2fad2cb01892a8edc8fd3e805b5868af5b6f254c0050bb6f934a18fe26b534b"
+    }
+  },
+  "status": "COMPLETE_SINGLE_SESSION_DESCRIPTIVE_CUES",
+  "training_performed": false
+}

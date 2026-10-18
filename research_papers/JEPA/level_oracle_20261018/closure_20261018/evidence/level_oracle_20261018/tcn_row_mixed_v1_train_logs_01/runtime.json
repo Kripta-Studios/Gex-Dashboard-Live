@@ -1,0 +1,35 @@
+{
+  "blas_threads": 1,
+  "cache_sha256": "2671fda58cb1f26df2b6f440749e43b644de84196dd14c7bac526d1a91272c3d",
+  "code_dependencies": {
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\TCN_ROW_MIXED_DESIGN_DRAFT.md": "06616d6b4af5c03b9e1dd3e7ba929209c5ab4b47300b5fea30a946ae64aee9c9",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\diagnose_tcn_memorization.py": "f368d65db7db802a3a2175b9ad340f778e9a556da08a986726d1f1a07172b1f5",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\run_tcn_flags.py": "a76a3ee78b74568a77ad06bc85c3092dee606648c6b6ed54ad38818496ae06e5",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\run_tcn_row_mixed.py": "5c4adfe01e2a51f3eb0f16c96479edb326e2f06ea1f66b3721313ccaa9ab7ab2",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\learners_v1\\build_cache.py": "985e87dcbd1e73289b58e4576445e47e73a6edea13e5ac73dde3ad629180d69f",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\learners_v1\\features.py": "b5c63f918319f844793abb3346a34515526073374f5e71af2129a94f2369d4e0",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\learners_v1\\level_engine.py": "70cc5d20990d971d16299fd008ff8e05ac99f99a6a2917a202fcb9a5f413b7c6",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\learners_v1\\run_policy.py": "4455d31fa2fd69db289b35b77aab62a344607fe3dc1b86918cbd3ec5c7cf98d9",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\learners_v1\\train_models.py": "a5192737abd1c0b3e4a6a6cd391117d97a014c06b6cd528201ba1f5df0ef6808"
+  },
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\run_tcn_row_mixed.py",
+    "--stage",
+    "train",
+    "--flags-root",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_flags_v1",
+    "--output",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_v1",
+    "--device",
+    "cuda"
+  ],
+  "gate_bytes": 2000000000,
+  "launcher_sha256": "29b069e5606a6a022b2abce1698d5e50e0d2b5ed9397184143e15777d405b4e1",
+  "pid": 15156,
+  "review_sha256": "d3a4864bd5155f39dbb5f958f62f0795341a2e5f75e0449c97f3a2fdc0b154b1",
+  "runner_sha256": "5c4adfe01e2a51f3eb0f16c96479edb326e2f06ea1f66b3721313ccaa9ab7ab2",
+  "started_utc": "2026-10-18T21:19:23.640631+00:00",
+  "torch_threads": 4
+}

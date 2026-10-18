@@ -1,0 +1,42 @@
+{
+  "authorities": {
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\common_greek_train_v1\\matrix.complete.json": "33a9664688697881b924e06a939e638fd24c7e0536b57e4e94acb8c067ecba54",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\common_greek_train_v1\\run_contract.json": "5d91ae62a0498813b7435878edd7afac1e79106bf872986addd2142cbc1651ce",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\market_cue_control_v1\\matrix.complete.json": "dc12c6a194c535e5c12ac3319ea592c6de6f03608e13a08919c4bb4440ae31e2",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\market_cue_control_v1\\model.complete.json": "9d5e0bbc5744fbdbf909e4f43c11796b9aa42c418cfcf7c0e85018a82783f97a",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\market_cue_control_v1\\run_contract.json": "ea296e2de576b91594697579c3f642e251526224213a651fbf6fbb409addf534"
+  },
+  "authorization_limits": [
+    "one TRAIN fit in common_greek_control_v1",
+    "same original sample, targets, IPW, scales, config; no tuning",
+    "resource gate12GiB RAM/16GiB commit, LGB4/BLAS1",
+    "no VAL/TEST in trainer; completed export resume without refit"
+  ],
+  "execution_authorized": true,
+  "files": {
+    "COMMON_GREEK_DYNAMICS_V1_DESIGN.md": "43a81984e609027358f160a0e97c3d3de09b0c9b23c8d9350b4d6e0f49a84ff8",
+    "COMMON_GREEK_DYNAMICS_V1_LEARNER_PLAN.md": "2054dd1b7cf01f78bfe63b8aa5b45b569feeee4cb7e46dd1b71b4192bcdad781",
+    "COMMON_GREEK_TRAINER_IMPLEMENTATION.md": "9124ffe66e10ed3b71154373544e0c2bf87955666159ee53e1b555bab0fa0f6f",
+    "GREEK_UNITS_REVIEW.md": "74ea41a1897e5b318d5edd07a161d137f0c6e7747d324c843c85f5559ae819e7",
+    "MARKET_CUE_LEARNER_PLAN_DRAFT.md": "b4132ee90639c9d470ab0d29cacd6475cee37c1287fe8ead83ed0481b6540021",
+    "common_greek_dynamics.py": "818195ed80ae7ff1ff446e2fb612750714eb76b47f48164f15e19381be64c44d",
+    "features.py": "b5c63f918319f844793abb3346a34515526073374f5e71af2129a94f2369d4e0",
+    "level_engine.py": "70cc5d20990d971d16299fd008ff8e05ac99f99a6a2917a202fcb9a5f413b7c6",
+    "market_cue_vectors.py": "8e9660a44ce04c779c03a6296a182c414df38dc88a293f2d6c16d124cc3b01d9",
+    "market_cue_vectors_fast.py": "7d71c2bb87a93dc7a503ae783ebc4e227930bcab3aedc6f6bfd70b9250b99d5c",
+    "market_cues.py": "337b6a7951d51c6b64a93b14dabd1d832b20e1292ad825628b50586833472faf",
+    "run_market_cue_diagnostic.py": "f491edad5bac43acca56dbdaf144d2f57ae3f78a90d6480f8c53b89c002d20a6",
+    "train_common_greek_control.py": "bba356f55467048c5f115d8fd7c580afcaa4a5c6cb2c532220df511319f3ce44",
+    "train_market_cue_control.py": "6343178fe49aecf68c30b76b0d6ec9a37eea8df4968f3ec1b47a7eba0c6c143d"
+  },
+  "reviewed_utc": "2026-10-18T21:00:34.768474+00:00",
+  "reviewer": "root, with source_feasibility independent read-only review",
+  "scope": "One424 TRAIN fit; same exact original targets/IPW/scales/CONFIG, control no refit, export/readback exact, no VAL/TEST",
+  "status": "PASS_COMMON_GREEK_TRAINER_REVIEW",
+  "validation": {
+    "builder_completed": "1491 TRAIN days, 270377x424, seven row keys/IPW exact, bit-exact152 prefix; source final rehash and producer exit0",
+    "independent_read_only_review": "source_feasibility CLEAR exact bba356f5; root inspected full trainer, schema/consumed-member/source closure and all 14 code pins + 5 completed authorities",
+    "producer_tests": "9 PASS 15.80s; Ruff/compile PASS",
+    "tests_sha256": "3021f700d1514ca37e1a11719539c7682c96058d4ce13bba53d993b1eb0b4747"
+  }
+}

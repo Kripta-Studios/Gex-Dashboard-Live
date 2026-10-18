@@ -1,0 +1,29 @@
+{
+  "status": "PASS_IB_FEATURE_EXPORT_INVARIANTS",
+  "checked_days": 2595,
+  "passed_days": 2595,
+  "failed": [],
+  "states": 820020,
+  "by_ticker": {
+    "QQQ": 864,
+    "SPXW": 867,
+    "SPY": 864
+  },
+  "ib_observed_min": 58,
+  "ib_observed_max": 60,
+  "invalid_ib_days": 0,
+  "base_columns_checked": [
+    "spot_ib",
+    "ib_range_over_spot",
+    "ib_valid",
+    "ib_valid_fraction"
+  ],
+  "workers": 1,
+  "quotes_read": false,
+  "outcomes_read": false,
+  "full_npz_or_parquet_rehashed": false,
+  "full_feature_recomputation": false,
+  "code_sha256": "7f21f479374602cf7b63e27a60e2399bdc5c4ab8ad1ac2ad494eb80bf2020b3b",
+  "days_csv_sha256": "ae0e88913c9096c9aa62c969d31d84e6de9299959242135f106ee4fd8b7afb44",
+  "completed_utc": "2026-10-18T17:24:08.070365+00:00"
+}

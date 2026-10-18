@@ -1,0 +1,50 @@
+{
+  "status": "PASS_CAUSAL_ROLLOUT_IMPLEMENTATION_REVIEW",
+  "reviewer": "/root/oracle_design_audit",
+  "review_date": "2026-10-18",
+  "dependencies": {
+    "train_causal_rollout.py": "d031eca08c71ad89324619e096dcc9be3966ddea23d52061019018ff6ff58a43",
+    "causal_rollout.py": "8df92119071442045a8434057e220bad567668d8ee314fddd263d052ebeea0d9",
+    "rollout_sampling.py": "8bc8cee2b89cf70490793b88d74dff558bbd60077d383a852392fcc2383c748c",
+    "CAUSAL_ROLLOUT_LEARNER_PLAN.md": "c4516a94393f493daee52020e98b1953a3406598fc19d9c8d737c7e2b1fbf9a8",
+    "train_models.py": "a5192737abd1c0b3e4a6a6cd391117d97a014c06b6cd528201ba1f5df0ef6808",
+    "features.py": "b5c63f918319f844793abb3346a34515526073374f5e71af2129a94f2369d4e0",
+    "build_cache.py": "985e87dcbd1e73289b58e4576445e47e73a6edea13e5ac73dde3ad629180d69f",
+    "level_engine.py": "70cc5d20990d971d16299fd008ff8e05ac99f99a6a2917a202fcb9a5f413b7c6",
+    "run_engine_dataset.py": "74bf04a02ac1d978bdbfc93cf8a93dcea890751b3596a99f75f456973206384e"
+  },
+  "independent_verification": {
+    "test_file": "test_train_causal_rollout.py",
+    "test_sha256": "7108da8b0cf476e8d8bb583b15016d1fe231c7b33b8d288030494c0a963c48ef",
+    "tests_passed": 18,
+    "seconds": 47.10,
+    "process_exit_code": 0,
+    "ruff": "PASS",
+    "compile": "PASS",
+    "gpu_used": false,
+    "market_fit_executed": false
+  },
+  "review_scope": [
+    "Fixed H1-only teacher and scales; causal common-h choices sealed before rollout labels",
+    "Filled/no-fill/WAIT chronology and terminal penalty confined to targets",
+    "Paired final input matrix and weights, with only net versus residual targets changed",
+    "Actual observed has-filled state in repeated scheduling; no optimistic maximum over h",
+    "Six validation policies, hard daily fill requirement, null selection and pre-test freeze",
+    "Completed artifact hashes, H1 scale checks, immutable completed fits and technical interruption preservation",
+    "CPU integration fixtures for final paired fits, evaluation, no-fill, null freeze and resume"
+  ],
+  "findings": {
+    "open_material_findings": 0,
+    "resolved": [
+      "Windows fsync uses a writable descriptor",
+      "Final fit and evaluation verify completed H1 risk-scale artifact",
+      "Existing test evidence cannot recreate missing validation authority"
+    ]
+  },
+  "limits": [
+    "Integration tests use synthetic data and model doubles",
+    "No independent real-market inference or refit reproduction has been performed for this family",
+    "This technical review does not establish profitability, daily fill feasibility or live data parity",
+    "Resource checks and the independent economic audit remain part of the execution workflow"
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "status": "DAILY_TRADE_FEASIBILITY_DIAGNOSTIC_COMPLETE",
+  "expected_days_per_ticker": 867,
+  "expected_ticker_days": 2601,
+  "feasibility_counts": {
+    "OBSERVED_FILLED_ENTRY_AVAILABLE": 2595,
+    "NO_EVALUABLE_MISSING_SOURCE": 6
+  },
+  "filled_entry_actions": 15394541,
+  "no_filled_entry_available_days": [],
+  "by_ticker": {
+    "QQQ": {
+      "OBSERVED_FILLED_ENTRY_AVAILABLE": 864,
+      "NO_EVALUABLE_MISSING_SOURCE": 3
+    },
+    "SPXW": {
+      "OBSERVED_FILLED_ENTRY_AVAILABLE": 867
+    },
+    "SPY": {
+      "OBSERVED_FILLED_ENTRY_AVAILABLE": 864,
+      "NO_EVALUABLE_MISSING_SOURCE": 3
+    }
+  },
+  "original_policies": 9,
+  "policy_ticker_split_rows": 54,
+  "verified_ledger_hashes": {
+    "validation\\gbt_net__0_ledger.parquet": "a5cd74d789c61ba8d98ef794087a501121a87ac5a002ad6cf73790b7baed87df",
+    "validation\\gbt_net__5_ledger.parquet": "7b8b2f4d0471c03ed7cc23a05826e530eca4bf0cbd5df95c9366704985c2cae1",
+    "validation\\gbt_net__10_ledger.parquet": "df54791b739963e2f4749011bfacfc3094ca51947c6840416e88004ba9980c6b",
+    "validation\\gbt_advantage__0_ledger.parquet": "77533542eaeeeb07a16ae50732f92d3adbcdbfd909ac89749283ebd2b453c32c",
+    "validation\\gbt_advantage__5_ledger.parquet": "168d74cc49df01b82793fabfdbe704a6d7e9cbb24520fa3ee6ba267c68f93456",
+    "validation\\gbt_advantage__10_ledger.parquet": "6bfb895436eadf5dac62e3e688bf92e96bcfd559fb160fa7a57c27b4ec2ae7c7",
+    "validation\\tcn_teacher__0_ledger.parquet": "408641f690c9401b611a26ff2d9d08c53d09b7ef98594ff59a9b809a3b9ba876",
+    "validation\\tcn_teacher__5_ledger.parquet": "d0e4dc8bae5c5e768e09f3a202d5053b7ca32d6a0c3a5a29a199837bafca8be8",
+    "validation\\tcn_teacher__10_ledger.parquet": "b2036cf7b488bb6e95725d68cc048e888294d7cc7cffba31d42908d72d74d6a3",
+    "test\\gbt_net__0_ledger.parquet": "00b347cc8159ec1822161bd17b380999ddd7b8729fbe5027360bc2d715237571",
+    "test\\gbt_net__5_ledger.parquet": "51dda722c46e3a1c37f2c06213226db6345ed40d92c159172cae75657e90726e",
+    "test\\gbt_net__10_ledger.parquet": "b0c82ba962eac5626a9781a80ebd59826ed59df6743156aeeca3224ead617e73",
+    "test\\gbt_advantage__0_ledger.parquet": "7fbfc1a7e71f983269c5e2ac9ea9b38a791e3072f422419675dcfe256f0ae937",
+    "test\\gbt_advantage__5_ledger.parquet": "5a65c542c0b67d001dad43a0f1a3b91d13c32081022ad66e0caca2398b679174",
+    "test\\gbt_advantage__10_ledger.parquet": "994f3fb17294a7c72c37796ff86a0ea0f12de1bcbc4ea32dd630962b95ecd030",
+    "test\\tcn_teacher__0_ledger.parquet": "532349bdeb5a78a9c688642268df9fa7a82fb4de96376c372d38eb49fd5ab5c2",
+    "test\\tcn_teacher__5_ledger.parquet": "233d8782a2a9fa1b1bb5594dbe7bc047aa1a43704517a36b39609b12e0e08931",
+    "test\\tcn_teacher__10_ledger.parquet": "0e95357e534fa59799455154ff628578f477c409a0d8b4283dd020aed831a865"
+  },
+  "policies_passing_available_daily_gate_all_six_ticker_splits": [],
+  "index_sha256": "8d0c6e27bdaf7d47ef2a9888505294b8f3186da3a6927e780ce9e517e660e8e5",
+  "calendar_sha256": "5cd9c8ed0585bff64808d99036cd9a0ab22fce599cc155527501201104475e61",
+  "ledger_audit_sha256": "238e6f0974025edf076d4023f134878340141271547e45e618026042539945bd",
+  "code_sha256": "d1bc967341d5def66bd75b86ffd4fa789a50e9844fc7b037ecd3dec27246babc",
+  "source_artifact_hashes": "Reported by audited index; not rehashed in this diagnostic",
+  "columns": {
+    "index": [
+      "ticker",
+      "date",
+      "split",
+      "status",
+      "day_root",
+      "actions_count",
+      "no_fill_actions",
+      "states_sha256",
+      "actions_sha256",
+      "labels_sha256"
+    ],
+    "labels": [
+      "action_id",
+      "status",
+      "missing_exit"
+    ],
+    "actions": [
+      "action_id",
+      "state_i",
+      "entry_i"
+    ],
+    "states": [
+      "state_i",
+      "eligible"
+    ],
+    "ledgers": [
+      "ticker",
+      "date",
+      "status"
+    ]
+  },
+  "pnl_columns_read": false,
+  "policy_changed": false,
+  "post_result_new_gate": true,
+  "entry_existence_is_hindsight_feasibility_not_a_policy": true,
+  "completed_utc": "2026-10-18T18:00:20.802959+00:00",
+  "wall_seconds": 11.306091499980539
+}

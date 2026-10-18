@@ -1,0 +1,33 @@
+{
+  "status": "PASS_INDEPENDENT_SESSION_CLOCK_DATASET_AUDIT",
+  "binding": {
+    "engine_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_clock_dataset_v1",
+    "index_sha256": "7124d98155eae8ee5ae06457377570278d4059defe2cf02340e34c288fcb60b4",
+    "dataset_contract_sha256": "437f480794dc89b80ff0c4999c3053d19d936fab779b99cb75b923433d641a43",
+    "completion_sha256": "86e0c623ca47010434cb4c5d9b644cba0fc6457aacce2e680474dce6f1b932e5",
+    "feature_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_clock_dataset_v1",
+    "feature_contract_sha256": "777890230663b0f683d0007117c58b5818047699fe8b25d27b5b819bac7f83db",
+    "available_days": 2619,
+    "missing_days": 6
+  },
+  "engine_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_clock_dataset_v1",
+  "index_sha256": "7124d98155eae8ee5ae06457377570278d4059defe2cf02340e34c288fcb60b4",
+  "dataset_contract_sha256": "437f480794dc89b80ff0c4999c3053d19d936fab779b99cb75b923433d641a43",
+  "completion_sha256": "86e0c623ca47010434cb4c5d9b644cba0fc6457aacce2e680474dce6f1b932e5",
+  "feature_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_clock_dataset_v1",
+  "feature_contract_sha256": "777890230663b0f683d0007117c58b5818047699fe8b25d27b5b819bac7f83db",
+  "available_days": 2619,
+  "missing_days": 6,
+  "audited_short_days": 24,
+  "verified_full_references": 2595,
+  "missing_source_days": 6,
+  "short_actions": 49184,
+  "short_oracle_trades": 133,
+  "short_oracle_net_base": 16235.2,
+  "short_oracle_net_adverse_same_path": 15969.2,
+  "full_economics_recomputed": false,
+  "full_economics_authority": "D:\\GexResearchArtifacts\\level_oracle_20261018\\engine_v1_audit_v4\\audit.json",
+  "oracle_is_hindsight_upper_bound": true,
+  "promotion_approved": false,
+  "audit_script_sha256": "a7cc66d79ff0b5eccd81c97ca2640996c6fb5f42e1ff9dab7dd5add34947b7e9"
+}

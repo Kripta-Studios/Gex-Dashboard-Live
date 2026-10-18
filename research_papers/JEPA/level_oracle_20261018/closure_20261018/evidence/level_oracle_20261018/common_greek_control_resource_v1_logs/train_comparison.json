@@ -1,0 +1,14 @@
+{
+  "scope": "Descriptive same-TRAIN comparison only; no model selection",
+  "control_r2": 0.196961804206792,
+  "variant_r2": 0.20294059269327036,
+  "r2_delta": 0.00597878848647837,
+  "control_mse": 0.47639550903410793,
+  "variant_mse": 0.47284864414107536,
+  "mse_relative_reduction": 0.007445210598697405,
+  "sources": {
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\market_cue_train_diagnostic_v1\\summary.json": "a08e3be1e8d2e9d96c21a931a7223113d52714f7b7c0d4a27576ca06c2680a73",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\common_greek_control_resource_v1_logs\\train_fit_diagnostic.json": "5e072ea49ca26abf7398202ed8bd57195696047672d85f7b746537807db0c2c7"
+  },
+  "same_target_sha256": "40c16b9b882105592dba52058a786b68438fbb5d482ec33ada9906d6d79552c7"
+}

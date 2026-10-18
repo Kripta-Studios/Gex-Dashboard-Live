@@ -1,0 +1,14 @@
+{
+  "status": "COMPLETE_DESCRIPTIVE_SUMMARY",
+  "code_sha256": "cef1707f731dcabdb275f041512d3f8b9e88bfcd7f08e541d2329fc96d6e3905",
+  "source_hashes": {
+    "all_candidate_cues.jsonl": "39b16eccd64c62c89240b8e77ffa5f4e8d8b9524fca59a577046045c036b323e",
+    "features_seal.json": "dca0d01acd05a070d496d727ebfabbee200bc3359afbf6513bcf41178c39453c",
+    "membership_overlay.json": "66fc984858aecb9977c4a245ba6638405539c8104680c5c3da93ccff83816388",
+    "completion.json": "1582f65bde4489fe1bdb75ec515ceaa711be9cb1e6ec47bdd032a19debfa29b5"
+  },
+  "outputs": {
+    "summary.json": "6783f6a9967f843b58632c48740fd0f1b6922b88048b431db617cbfc040825c4",
+    "selected_action_evidence.csv": "87e746e4de857ed83def7724229c8ef61d2fad2d86e2b4f56fd4a32ba806053d"
+  }
+}

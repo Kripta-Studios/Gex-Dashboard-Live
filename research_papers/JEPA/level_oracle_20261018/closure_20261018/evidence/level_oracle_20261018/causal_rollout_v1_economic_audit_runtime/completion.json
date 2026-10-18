@@ -1,0 +1,8 @@
+{
+  "exit_code": 0,
+  "seconds": 2346.5998618000303,
+  "peak_private_bytes": 593711104,
+  "peak_rss_bytes": 2702786560,
+  "finished_utc": "2026-10-18T20:58:37.654359+00:00",
+  "audit_sha256": "6dd69574ed50a5d3d26587b488b347874c40908d55ff8d8b19d2a95d9c581cd3"
+}

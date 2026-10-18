@@ -1,0 +1,38 @@
+{
+  "status": "SELECTED",
+  "selected_policy": {
+    "policy": "causal_residual__5",
+    "score": -284.93047402148505,
+    "model": "causal_residual",
+    "threshold": 5.0
+  },
+  "eligible": [
+    {
+      "policy": "causal_residual__0",
+      "score": -331.10406580403827,
+      "model": "causal_residual",
+      "threshold": 0.0
+    },
+    {
+      "policy": "causal_residual__5",
+      "score": -284.93047402148505,
+      "model": "causal_residual",
+      "threshold": 5.0
+    }
+  ],
+  "frozen_candidates": [
+    "net_control__0",
+    "net_control__5",
+    "net_control__10",
+    "causal_residual__0",
+    "causal_residual__5",
+    "causal_residual__10"
+  ],
+  "cash": "REFERENCE_ONLY_FAILS_DAILY_REQUIREMENT",
+  "model_hashes": {
+    "net_control": "12b8d5a00d06bb482fc6de66263e8c270929d0d276e226a9889e283a801a09ef",
+    "causal_residual": "9fe6a42d2a04459b5eff4b018518a224865b58f2af89ca5903b6e77651303117"
+  },
+  "risk_scales_sha256": "a7cc1df1af6c5022e4eae1f58ae24515412872233f3ffb970e7c32a802db876a",
+  "validation_summary_sha256": "390c13f507ffbc4901dae7ca40cd2c81a5a59e3edd87d1f5e726e14a99c79283"
+}

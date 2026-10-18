@@ -1,0 +1,1226 @@
+{
+  "source": "D:/ThetaData",
+  "artifact_root": "D:\\GexResearchArtifacts\\restart_20261018\\inventory",
+  "summary": {
+    "root": "D:\\ThetaData",
+    "completed_utc": "2026-10-18T14:55:00.540952+00:00",
+    "elapsed_seconds": 1404.0016351999948,
+    "files": 366555,
+    "bytes": 279573867874,
+    "families": {
+      "__root__": {
+        "files": 52,
+        "bytes": 39983145,
+        "parquets": 0,
+        "rows": 0
+      },
+      "ThetaTerminalv3": {
+        "files": 23744,
+        "bytes": 145596151,
+        "parquets": 0,
+        "rows": 0
+      },
+      "__pycache__": {
+        "files": 6,
+        "bytes": 363070,
+        "parquets": 0,
+        "rows": 0
+      },
+      "cboe_vol_complex_directional_v1_20260716": {
+        "files": 8,
+        "bytes": 1537779,
+        "parquets": 0,
+        "rows": 0
+      },
+      "cross_venue_calendar_rr_native_clock_2024_2025_v1": {
+        "files": 9029,
+        "bytes": 1481543888,
+        "parquets": 3008,
+        "rows": 7237722
+      },
+      "cross_venue_calendar_rr_native_clock_2024_2025_v1r1_composite": {
+        "files": 5,
+        "bytes": 1714102,
+        "parquets": 0,
+        "rows": 0
+      },
+      "cross_venue_calendar_rr_native_clock_2024_2025_v1r1_repairs": {
+        "files": 22,
+        "bytes": 1763454,
+        "parquets": 4,
+        "rows": 8508
+      },
+      "cross_venue_calendar_rr_native_clock_preflight_2024_2025_v1": {
+        "files": 76,
+        "bytes": 13171449,
+        "parquets": 24,
+        "rows": 64632
+      },
+      "cross_venue_calendar_rr_v4r1_source_retry_2026": {
+        "files": 46,
+        "bytes": 375089109,
+        "parquets": 10,
+        "rows": 1341912
+      },
+      "cross_venue_calendar_rr_v4r1_source_retry_2026_offline_reseal_v2": {
+        "files": 5,
+        "bytes": 26797,
+        "parquets": 0,
+        "rows": 0
+      },
+      "cross_venue_opra_trade_quote_flow_v5_capture_2023_2025_v1": {
+        "files": 4097,
+        "bytes": 79442226807,
+        "parquets": 1364,
+        "rows": 167881230
+      },
+      "data_options": {
+        "files": 157950,
+        "bytes": 136770833405,
+        "parquets": 157650,
+        "rows": 9451114197
+      },
+      "data_training_input": {
+        "files": 1605,
+        "bytes": 100621801,
+        "parquets": 1605,
+        "rows": 626406
+      },
+      "data_underlying_derived": {
+        "files": 22211,
+        "bytes": 279153351,
+        "parquets": 22135,
+        "rows": 8654785
+      },
+      "futures_yahoo_60m_20240717_20260715_v1": {
+        "files": 8,
+        "bytes": 6810595,
+        "parquets": 0,
+        "rows": 0
+      },
+      "h_greek2wall_direct_all_preflight_v1_source_inventory": {
+        "files": 3,
+        "bytes": 16515,
+        "parquets": 0,
+        "rows": 0
+      },
+      "h_greek2wall_direct_all_preflight_v1r1_source_inventory": {
+        "files": 3,
+        "bytes": 17323,
+        "parquets": 0,
+        "rows": 0
+      },
+      "h_greek2wall_direct_all_preflight_v1r2_source_inventory": {
+        "files": 3,
+        "bytes": 17427,
+        "parquets": 0,
+        "rows": 0
+      },
+      "h_greek2wall_direct_all_preflight_v1r3_source_inventory": {
+        "files": 3,
+        "bytes": 17427,
+        "parquets": 0,
+        "rows": 0
+      },
+      "h_ibqdyn1_tick_preflight_202208_202501_v1_remote": {
+        "files": 76,
+        "bytes": 8380091,
+        "parquets": 24,
+        "rows": 43680
+      },
+      "h_ibqdyn1_ticks_202208_202512_v1": {
+        "files": 101117,
+        "bytes": 11203596045,
+        "parquets": 33704,
+        "rows": 58212529
+      },
+      "lib": {
+        "files": 5,
+        "bytes": 183395546,
+        "parquets": 0,
+        "rows": 0
+      },
+      "wall_exact_greek_repair_20221230_v1r2": {
+        "files": 2015,
+        "bytes": 4320474868,
+        "parquets": 671,
+        "rows": 32208
+      },
+      "wall_native_quote_sidecar_202208_202512_v1r1": {
+        "files": 4325,
+        "bytes": 22181151367,
+        "parquets": 1441,
+        "rows": 125557990
+      },
+      "wall_quote_size_native_complement_202208_202512_v1": {
+        "files": 3236,
+        "bytes": 14502396874,
+        "parquets": 1078,
+        "rows": 81824260
+      },
+      "wall_quote_tick_dynamics_at_touch_202208_202512_v1": {
+        "files": 5848,
+        "bytes": 1289227284,
+        "parquets": 1949,
+        "rows": 6987837
+      },
+      "wall_quote_tick_dynamics_at_touch_202208_202512_v1r1": {
+        "files": 1555,
+        "bytes": 268646344,
+        "parquets": 518,
+        "rows": 1437075
+      },
+      "wall_quote_tick_dynamics_at_touch_202208_202512_v1r1r1": {
+        "files": 29502,
+        "bytes": 6956095860,
+        "parquets": 9833,
+        "rows": 37846658
+      }
+    },
+    "unique_schemas": 37,
+    "footer_errors": [],
+    "traversal_errors": [],
+    "values_read": false,
+    "raw_content_hashed": false,
+    "script_sha256": "b27fd5eea28ea4be137a66a07552014d0e913b2b7b3eae7bd72c058e3af187cc"
+  },
+  "review_classification_corrections": {
+    "derivation": "Existing files.csv and schemas.json only; derived ticker from second path segment; non-option date from exact date directory or isolated filename token, never event hash fragments.",
+    "derived_ticker_labels_corrected": 2361,
+    "parquet_date_labels_corrected": 35
+  },
+  "core_greek_clocks": [
+    {
+      "ticker": "QQQ",
+      "kind": "greeks",
+      "year": "2022",
+      "timestamp": true,
+      "underlying_timestamp": true,
+      "bid_ask": true,
+      "gamma": false,
+      "files": 170,
+      "rows": 18202134
+    },
+    {
+      "ticker": "QQQ",
+      "kind": "greeks",
+      "year": "2023",
+      "timestamp": true,
+      "underlying_timestamp": true,
+      "bid_ask": true,
+      "gamma": false,
+      "files": 250,
+      "rows": 23975338
+    },
+    {
+      "ticker": "QQQ",
+      "kind": "greeks",
+      "year": "2024",
+      "timestamp": false,
+      "underlying_timestamp": true,
+      "bid_ask": true,
+      "gamma": false,
+      "files": 232,
+      "rows": 25624576
+    },
+    {
+      "ticker": "QQQ",
+      "kind": "greeks",
+      "year": "2024",
+      "timestamp": true,
+      "underlying_timestamp": true,
+      "bid_ask": true,
+      "gamma": false,
+      "files": 20,
+      "rows": 2238084
+    },
+    {
+      "ticker": "QQQ",
+      "kind": "greeks",
+      "year": "2025",
+      "timestamp": false,
+      "underlying_timestamp": true,
+      "bid_ask": true,
+      "gamma": false,
+      "files": 205,
+      "rows": 22581423
+    },
+    {
+      "ticker": "QQQ",
+      "kind": "greeks",
+      "year": "2025",
+      "timestamp": true,
+      "underlying_timestamp": true,
+      "bid_ask": true,
+      "gamma": false,
+      "files": 45,
+      "rows": 5477910
+    },
+    {
+      "ticker": "QQQ",
+      "kind": "greeks",
+      "year": "2026",
+      "timestamp": false,
+      "underlying_timestamp": true,
+      "bid_ask": true,
+      "gamma": false,
+      "files": 15,
+      "rows": 1352078
+    },
+    {
+      "ticker": "QQQ",
+      "kind": "greeks",
+      "year": "2026",
+      "timestamp": true,
+      "underlying_timestamp": true,
+      "bid_ask": true,
+      "gamma": false,
+      "files": 154,
+      "rows": 21331396
+    },
+    {
+      "ticker": "SPXW",
+      "kind": "greeks",
+      "year": "2022",
+      "timestamp": true,
+      "underlying_timestamp": true,
+      "bid_ask": true,
+      "gamma": false,
+      "files": 220,
+      "rows": 36149514
+    },
+    {
+      "ticker": "SPXW",
+      "kind": "greeks",
+      "year": "2023",
+      "timestamp": true,
+      "underlying_timestamp": true,
+      "bid_ask": true,
+      "gamma": false,
+      "files": 250,
+      "rows": 36011882
+    },
+    {
+      "ticker": "SPXW",
+      "kind": "greeks",
+      "year": "2024",
+      "timestamp": false,
+      "underlying_timestamp": true,
+      "bid_ask": true,
+      "gamma": false,
+      "files": 252,
+      "rows": 43820152
+    },
+    {
+      "ticker": "SPXW",
+      "kind": "greeks",
+      "year": "2025",
+      "timestamp": false,
+      "underlying_timestamp": true,
+      "bid_ask": true,
+      "gamma": false,
+      "files": 250,
+      "rows": 49053687
+    },
+    {
+      "ticker": "SPXW",
+      "kind": "greeks",
+      "year": "2026",
+      "timestamp": false,
+      "underlying_timestamp": true,
+      "bid_ask": true,
+      "gamma": false,
+      "files": 30,
+      "rows": 5763340
+    },
+    {
+      "ticker": "SPXW",
+      "kind": "greeks",
+      "year": "2026",
+      "timestamp": true,
+      "underlying_timestamp": true,
+      "bid_ask": true,
+      "gamma": false,
+      "files": 148,
+      "rows": 32903041
+    },
+    {
+      "ticker": "SPY",
+      "kind": "greeks",
+      "year": "2022",
+      "timestamp": true,
+      "underlying_timestamp": true,
+      "bid_ask": true,
+      "gamma": false,
+      "files": 170,
+      "rows": 21625428
+    },
+    {
+      "ticker": "SPY",
+      "kind": "greeks",
+      "year": "2023",
+      "timestamp": true,
+      "underlying_timestamp": true,
+      "bid_ask": true,
+      "gamma": false,
+      "files": 250,
+      "rows": 27394242
+    },
+    {
+      "ticker": "SPY",
+      "kind": "greeks",
+      "year": "2024",
+      "timestamp": false,
+      "underlying_timestamp": true,
+      "bid_ask": true,
+      "gamma": false,
+      "files": 252,
+      "rows": 26205602
+    },
+    {
+      "ticker": "SPY",
+      "kind": "greeks",
+      "year": "2025",
+      "timestamp": false,
+      "underlying_timestamp": true,
+      "bid_ask": true,
+      "gamma": false,
+      "files": 250,
+      "rows": 30105436
+    },
+    {
+      "ticker": "SPY",
+      "kind": "greeks",
+      "year": "2026",
+      "timestamp": false,
+      "underlying_timestamp": true,
+      "bid_ask": true,
+      "gamma": false,
+      "files": 30,
+      "rows": 3820070
+    },
+    {
+      "ticker": "SPY",
+      "kind": "greeks",
+      "year": "2026",
+      "timestamp": true,
+      "underlying_timestamp": true,
+      "bid_ask": true,
+      "gamma": false,
+      "files": 139,
+      "rows": 20070421
+    }
+  ],
+  "core_coverage": [
+    {
+      "family": "data_options",
+      "ticker": "QQQ",
+      "kind": "greeks",
+      "year": "2022",
+      "zero_dte": "True",
+      "files": 170,
+      "rows": 18202134,
+      "bytes": 327042066,
+      "distinct_dates": 170,
+      "first_date": "20220103",
+      "last_date": "20221230"
+    },
+    {
+      "family": "data_options",
+      "ticker": "QQQ",
+      "kind": "greeks",
+      "year": "2023",
+      "zero_dte": "True",
+      "files": 250,
+      "rows": 23975338,
+      "bytes": 370200306,
+      "distinct_dates": 250,
+      "first_date": "20230103",
+      "last_date": "20231229"
+    },
+    {
+      "family": "data_options",
+      "ticker": "QQQ",
+      "kind": "greeks",
+      "year": "2024",
+      "zero_dte": "True",
+      "files": 252,
+      "rows": 27862660,
+      "bytes": 439404011,
+      "distinct_dates": 252,
+      "first_date": "20240102",
+      "last_date": "20241231"
+    },
+    {
+      "family": "data_options",
+      "ticker": "QQQ",
+      "kind": "greeks",
+      "year": "2025",
+      "zero_dte": "True",
+      "files": 250,
+      "rows": 28059333,
+      "bytes": 529418946,
+      "distinct_dates": 250,
+      "first_date": "20250102",
+      "last_date": "20251231"
+    },
+    {
+      "family": "data_options",
+      "ticker": "QQQ",
+      "kind": "greeks",
+      "year": "2026",
+      "zero_dte": "True",
+      "files": 169,
+      "rows": 22683474,
+      "bytes": 453020854,
+      "distinct_dates": 169,
+      "first_date": "20260102",
+      "last_date": "20260917"
+    },
+    {
+      "family": "data_options",
+      "ticker": "SPXW",
+      "kind": "greeks",
+      "year": "2022",
+      "zero_dte": "True",
+      "files": 220,
+      "rows": 36149514,
+      "bytes": 1002451747,
+      "distinct_dates": 220,
+      "first_date": "20220103",
+      "last_date": "20221230"
+    },
+    {
+      "family": "data_options",
+      "ticker": "SPXW",
+      "kind": "greeks",
+      "year": "2023",
+      "zero_dte": "True",
+      "files": 250,
+      "rows": 36011882,
+      "bytes": 978701928,
+      "distinct_dates": 250,
+      "first_date": "20230103",
+      "last_date": "20231229"
+    },
+    {
+      "family": "data_options",
+      "ticker": "SPXW",
+      "kind": "greeks",
+      "year": "2024",
+      "zero_dte": "True",
+      "files": 252,
+      "rows": 43820152,
+      "bytes": 1179056793,
+      "distinct_dates": 252,
+      "first_date": "20240102",
+      "last_date": "20241231"
+    },
+    {
+      "family": "data_options",
+      "ticker": "SPXW",
+      "kind": "greeks",
+      "year": "2025",
+      "zero_dte": "True",
+      "files": 250,
+      "rows": 49053687,
+      "bytes": 1349846233,
+      "distinct_dates": 250,
+      "first_date": "20250102",
+      "last_date": "20251231"
+    },
+    {
+      "family": "data_options",
+      "ticker": "SPXW",
+      "kind": "greeks",
+      "year": "2026",
+      "zero_dte": "True",
+      "files": 178,
+      "rows": 38666381,
+      "bytes": 1056076073,
+      "distinct_dates": 178,
+      "first_date": "20260102",
+      "last_date": "20260917"
+    },
+    {
+      "family": "data_options",
+      "ticker": "SPY",
+      "kind": "greeks",
+      "year": "2022",
+      "zero_dte": "True",
+      "files": 170,
+      "rows": 21625428,
+      "bytes": 360649180,
+      "distinct_dates": 170,
+      "first_date": "20220103",
+      "last_date": "20221230"
+    },
+    {
+      "family": "data_options",
+      "ticker": "SPY",
+      "kind": "greeks",
+      "year": "2023",
+      "zero_dte": "True",
+      "files": 250,
+      "rows": 27394242,
+      "bytes": 393842795,
+      "distinct_dates": 250,
+      "first_date": "20230103",
+      "last_date": "20231229"
+    },
+    {
+      "family": "data_options",
+      "ticker": "SPY",
+      "kind": "greeks",
+      "year": "2024",
+      "zero_dte": "True",
+      "files": 252,
+      "rows": 26205602,
+      "bytes": 444040117,
+      "distinct_dates": 252,
+      "first_date": "20240102",
+      "last_date": "20241231"
+    },
+    {
+      "family": "data_options",
+      "ticker": "SPY",
+      "kind": "greeks",
+      "year": "2025",
+      "zero_dte": "True",
+      "files": 250,
+      "rows": 30105436,
+      "bytes": 562279488,
+      "distinct_dates": 250,
+      "first_date": "20250102",
+      "last_date": "20251231"
+    },
+    {
+      "family": "data_options",
+      "ticker": "SPY",
+      "kind": "greeks",
+      "year": "2026",
+      "zero_dte": "True",
+      "files": 169,
+      "rows": 23890491,
+      "bytes": 450264507,
+      "distinct_dates": 169,
+      "first_date": "20260102",
+      "last_date": "20260917"
+    },
+    {
+      "family": "data_underlying_derived",
+      "ticker": "QQQ",
+      "kind": "other",
+      "year": "2022",
+      "zero_dte": "False",
+      "files": 251,
+      "rows": 98141,
+      "bytes": 3385320,
+      "distinct_dates": 251,
+      "first_date": "20220103",
+      "last_date": "20221230"
+    },
+    {
+      "family": "data_underlying_derived",
+      "ticker": "QQQ",
+      "kind": "other",
+      "year": "2023",
+      "zero_dte": "False",
+      "files": 250,
+      "rows": 97750,
+      "bytes": 3198095,
+      "distinct_dates": 250,
+      "first_date": "20230103",
+      "last_date": "20231229"
+    },
+    {
+      "family": "data_underlying_derived",
+      "ticker": "QQQ",
+      "kind": "other",
+      "year": "2024",
+      "zero_dte": "False",
+      "files": 252,
+      "rows": 98532,
+      "bytes": 3274493,
+      "distinct_dates": 252,
+      "first_date": "20240102",
+      "last_date": "20241231"
+    },
+    {
+      "family": "data_underlying_derived",
+      "ticker": "QQQ",
+      "kind": "other",
+      "year": "2025",
+      "zero_dte": "False",
+      "files": 250,
+      "rows": 97750,
+      "bytes": 3311176,
+      "distinct_dates": 250,
+      "first_date": "20250102",
+      "last_date": "20251231"
+    },
+    {
+      "family": "data_underlying_derived",
+      "ticker": "QQQ",
+      "kind": "other",
+      "year": "2026",
+      "zero_dte": "False",
+      "files": 178,
+      "rows": 69598,
+      "bytes": 2427408,
+      "distinct_dates": 178,
+      "first_date": "20260102",
+      "last_date": "20260917"
+    },
+    {
+      "family": "data_underlying_derived",
+      "ticker": "SPXW",
+      "kind": "other",
+      "year": "2022",
+      "zero_dte": "False",
+      "files": 251,
+      "rows": 98141,
+      "bytes": 4069961,
+      "distinct_dates": 251,
+      "first_date": "20220103",
+      "last_date": "20221230"
+    },
+    {
+      "family": "data_underlying_derived",
+      "ticker": "SPXW",
+      "kind": "other",
+      "year": "2023",
+      "zero_dte": "False",
+      "files": 250,
+      "rows": 97750,
+      "bytes": 3992152,
+      "distinct_dates": 250,
+      "first_date": "20230103",
+      "last_date": "20231229"
+    },
+    {
+      "family": "data_underlying_derived",
+      "ticker": "SPXW",
+      "kind": "other",
+      "year": "2024",
+      "zero_dte": "False",
+      "files": 252,
+      "rows": 98532,
+      "bytes": 4037456,
+      "distinct_dates": 252,
+      "first_date": "20240102",
+      "last_date": "20241231"
+    },
+    {
+      "family": "data_underlying_derived",
+      "ticker": "SPXW",
+      "kind": "other",
+      "year": "2025",
+      "zero_dte": "False",
+      "files": 250,
+      "rows": 97750,
+      "bytes": 4053197,
+      "distinct_dates": 250,
+      "first_date": "20250102",
+      "last_date": "20251231"
+    },
+    {
+      "family": "data_underlying_derived",
+      "ticker": "SPXW",
+      "kind": "other",
+      "year": "2026",
+      "zero_dte": "False",
+      "files": 178,
+      "rows": 69598,
+      "bytes": 2903627,
+      "distinct_dates": 178,
+      "first_date": "20260102",
+      "last_date": "20260917"
+    },
+    {
+      "family": "data_underlying_derived",
+      "ticker": "SPY",
+      "kind": "other",
+      "year": "2022",
+      "zero_dte": "False",
+      "files": 251,
+      "rows": 98141,
+      "bytes": 3378859,
+      "distinct_dates": 251,
+      "first_date": "20220103",
+      "last_date": "20221230"
+    },
+    {
+      "family": "data_underlying_derived",
+      "ticker": "SPY",
+      "kind": "other",
+      "year": "2023",
+      "zero_dte": "False",
+      "files": 250,
+      "rows": 97750,
+      "bytes": 3155834,
+      "distinct_dates": 250,
+      "first_date": "20230103",
+      "last_date": "20231229"
+    },
+    {
+      "family": "data_underlying_derived",
+      "ticker": "SPY",
+      "kind": "other",
+      "year": "2024",
+      "zero_dte": "False",
+      "files": 252,
+      "rows": 98532,
+      "bytes": 3189718,
+      "distinct_dates": 252,
+      "first_date": "20240102",
+      "last_date": "20241231"
+    },
+    {
+      "family": "data_underlying_derived",
+      "ticker": "SPY",
+      "kind": "other",
+      "year": "2025",
+      "zero_dte": "False",
+      "files": 250,
+      "rows": 97750,
+      "bytes": 3274262,
+      "distinct_dates": 250,
+      "first_date": "20250102",
+      "last_date": "20251231"
+    },
+    {
+      "family": "data_underlying_derived",
+      "ticker": "SPY",
+      "kind": "other",
+      "year": "2026",
+      "zero_dte": "False",
+      "files": 178,
+      "rows": 69598,
+      "bytes": 2347283,
+      "distinct_dates": 178,
+      "first_date": "20260102",
+      "last_date": "20260917"
+    }
+  ],
+  "sidecar_counts": [
+    {
+      "family": "cross_venue_calendar_rr_native_clock_2024_2025_v1",
+      "ticker": "QQQ",
+      "files": 1002,
+      "rows": 1962504,
+      "bytes": 29911774,
+      "schemas": [
+        "9eb710b5456cce1131c9ab07055ae812eea50faaada2fe0a91197e55f808ce59"
+      ],
+      "distinct_dates": 502,
+      "first_date": "20240102",
+      "last_date": "20251231"
+    },
+    {
+      "family": "cross_venue_calendar_rr_native_clock_2024_2025_v1",
+      "ticker": "SPXW",
+      "files": 1002,
+      "rows": 3332886,
+      "bytes": 42539051,
+      "schemas": [
+        "9eb710b5456cce1131c9ab07055ae812eea50faaada2fe0a91197e55f808ce59"
+      ],
+      "distinct_dates": 502,
+      "first_date": "20240102",
+      "last_date": "20251231"
+    },
+    {
+      "family": "cross_venue_calendar_rr_native_clock_2024_2025_v1",
+      "ticker": "SPY",
+      "files": 1004,
+      "rows": 1942332,
+      "bytes": 29654782,
+      "schemas": [
+        "9eb710b5456cce1131c9ab07055ae812eea50faaada2fe0a91197e55f808ce59"
+      ],
+      "distinct_dates": 502,
+      "first_date": "20240102",
+      "last_date": "20251231"
+    },
+    {
+      "family": "cross_venue_calendar_rr_native_clock_2024_2025_v1r1_repairs",
+      "ticker": "QQQ",
+      "files": 2,
+      "rows": 3348,
+      "bytes": 54652,
+      "schemas": [
+        "9eb710b5456cce1131c9ab07055ae812eea50faaada2fe0a91197e55f808ce59"
+      ],
+      "distinct_dates": 2,
+      "first_date": "20250828",
+      "last_date": "20251121"
+    },
+    {
+      "family": "cross_venue_calendar_rr_native_clock_2024_2025_v1r1_repairs",
+      "ticker": "SPXW",
+      "files": 2,
+      "rows": 5160,
+      "bytes": 75993,
+      "schemas": [
+        "9eb710b5456cce1131c9ab07055ae812eea50faaada2fe0a91197e55f808ce59"
+      ],
+      "distinct_dates": 2,
+      "first_date": "20240122",
+      "last_date": "20250225"
+    },
+    {
+      "family": "cross_venue_calendar_rr_native_clock_preflight_2024_2025_v1",
+      "ticker": "QQQ",
+      "files": 8,
+      "rows": 18480,
+      "bytes": 263581,
+      "schemas": [
+        "9eb710b5456cce1131c9ab07055ae812eea50faaada2fe0a91197e55f808ce59"
+      ],
+      "distinct_dates": 4,
+      "first_date": "20240102",
+      "last_date": "20251231"
+    },
+    {
+      "family": "cross_venue_calendar_rr_native_clock_preflight_2024_2025_v1",
+      "ticker": "SPXW",
+      "files": 8,
+      "rows": 29700,
+      "bytes": 381333,
+      "schemas": [
+        "9eb710b5456cce1131c9ab07055ae812eea50faaada2fe0a91197e55f808ce59"
+      ],
+      "distinct_dates": 4,
+      "first_date": "20240102",
+      "last_date": "20251231"
+    },
+    {
+      "family": "cross_venue_calendar_rr_native_clock_preflight_2024_2025_v1",
+      "ticker": "SPY",
+      "files": 8,
+      "rows": 16452,
+      "bytes": 228136,
+      "schemas": [
+        "9eb710b5456cce1131c9ab07055ae812eea50faaada2fe0a91197e55f808ce59"
+      ],
+      "distinct_dates": 4,
+      "first_date": "20240102",
+      "last_date": "20251231"
+    },
+    {
+      "family": "cross_venue_calendar_rr_v4r1_source_retry_2026",
+      "ticker": "QQQ",
+      "files": 4,
+      "rows": 581808,
+      "bytes": 10079388,
+      "schemas": [
+        "2a8af1d20c17afddce972813530ad4b915c4d4408eacb8bdd4f57542c9fab5b2",
+        "e4342d6767f0f7696d617693eb165a955bef2054148a47537285326db8adf483"
+      ],
+      "distinct_dates": 2,
+      "first_date": "20260624",
+      "last_date": "20260626"
+    },
+    {
+      "family": "cross_venue_calendar_rr_v4r1_source_retry_2026",
+      "ticker": "SPY",
+      "files": 6,
+      "rows": 760104,
+      "bytes": 12419964,
+      "schemas": [
+        "2a8af1d20c17afddce972813530ad4b915c4d4408eacb8bdd4f57542c9fab5b2",
+        "e4342d6767f0f7696d617693eb165a955bef2054148a47537285326db8adf483"
+      ],
+      "distinct_dates": 3,
+      "first_date": "20260624",
+      "last_date": "20260626"
+    },
+    {
+      "family": "cross_venue_opra_trade_quote_flow_v5_capture_2023_2025_v1",
+      "ticker": "QQQ",
+      "files": 687,
+      "rows": 57410380,
+      "bytes": 1710446942,
+      "schemas": [
+        "0c3103b40c33bf7f24e4c0e62b01a9df01e998bd6b75f3c5c7519a73adacb8c6"
+      ],
+      "distinct_dates": 687,
+      "first_date": "20230103",
+      "last_date": "20251231"
+    },
+    {
+      "family": "cross_venue_opra_trade_quote_flow_v5_capture_2023_2025_v1",
+      "ticker": "SPY",
+      "files": 677,
+      "rows": 110470850,
+      "bytes": 3199830825,
+      "schemas": [
+        "0c3103b40c33bf7f24e4c0e62b01a9df01e998bd6b75f3c5c7519a73adacb8c6"
+      ],
+      "distinct_dates": 677,
+      "first_date": "20230103",
+      "last_date": "20251231"
+    },
+    {
+      "family": "h_ibqdyn1_tick_preflight_202208_202501_v1_remote",
+      "ticker": "QQQ",
+      "files": 8,
+      "rows": 15820,
+      "bytes": 311137,
+      "schemas": [
+        "edffbb97b8ccf8b9cfe41f583776271c9a1aee9c151e64c9ed31fd6fddca8a48"
+      ],
+      "distinct_dates": 4,
+      "first_date": "20220801",
+      "last_date": "20250102"
+    },
+    {
+      "family": "h_ibqdyn1_tick_preflight_202208_202501_v1_remote",
+      "ticker": "SPXW",
+      "files": 8,
+      "rows": 12820,
+      "bytes": 263158,
+      "schemas": [
+        "edffbb97b8ccf8b9cfe41f583776271c9a1aee9c151e64c9ed31fd6fddca8a48"
+      ],
+      "distinct_dates": 4,
+      "first_date": "20220801",
+      "last_date": "20250102"
+    },
+    {
+      "family": "h_ibqdyn1_tick_preflight_202208_202501_v1_remote",
+      "ticker": "SPY",
+      "files": 8,
+      "rows": 15040,
+      "bytes": 308915,
+      "schemas": [
+        "edffbb97b8ccf8b9cfe41f583776271c9a1aee9c151e64c9ed31fd6fddca8a48"
+      ],
+      "distinct_dates": 4,
+      "first_date": "20220801",
+      "last_date": "20250102"
+    },
+    {
+      "family": "h_ibqdyn1_ticks_202208_202512_v1",
+      "ticker": "QQQ",
+      "files": 10668,
+      "rows": 20708868,
+      "bytes": 399724826,
+      "schemas": [
+        "edffbb97b8ccf8b9cfe41f583776271c9a1aee9c151e64c9ed31fd6fddca8a48"
+      ],
+      "distinct_dates": 817,
+      "first_date": "20220801",
+      "last_date": "20251231"
+    },
+    {
+      "family": "h_ibqdyn1_ticks_202208_202512_v1",
+      "ticker": "SPXW",
+      "files": 11716,
+      "rows": 18234480,
+      "bytes": 375217367,
+      "schemas": [
+        "edffbb97b8ccf8b9cfe41f583776271c9a1aee9c151e64c9ed31fd6fddca8a48"
+      ],
+      "distinct_dates": 858,
+      "first_date": "20220801",
+      "last_date": "20251231"
+    },
+    {
+      "family": "h_ibqdyn1_ticks_202208_202512_v1",
+      "ticker": "SPY",
+      "files": 11320,
+      "rows": 19269181,
+      "bytes": 402960428,
+      "schemas": [
+        "edffbb97b8ccf8b9cfe41f583776271c9a1aee9c151e64c9ed31fd6fddca8a48"
+      ],
+      "distinct_dates": 827,
+      "first_date": "20220801",
+      "last_date": "20251231"
+    },
+    {
+      "family": "wall_exact_greek_repair_20221230_v1r2",
+      "ticker": "QQQ",
+      "files": 285,
+      "rows": 13680,
+      "bytes": 3560530,
+      "schemas": [
+        "18160e88fac8e190d4bba14e52e43ddf565fdd707dc5903bdf8c5827c5a408a2"
+      ],
+      "distinct_dates": 1,
+      "first_date": "20221230",
+      "last_date": "20221230"
+    },
+    {
+      "family": "wall_exact_greek_repair_20221230_v1r2",
+      "ticker": "SPY",
+      "files": 386,
+      "rows": 18528,
+      "bytes": 4803326,
+      "schemas": [
+        "18160e88fac8e190d4bba14e52e43ddf565fdd707dc5903bdf8c5827c5a408a2"
+      ],
+      "distinct_dates": 1,
+      "first_date": "20221230",
+      "last_date": "20221230"
+    },
+    {
+      "family": "wall_native_quote_sidecar_202208_202512_v1r1",
+      "ticker": "QQQ",
+      "files": 437,
+      "rows": 30687030,
+      "bytes": 221514323,
+      "schemas": [
+        "9eb710b5456cce1131c9ab07055ae812eea50faaada2fe0a91197e55f808ce59"
+      ],
+      "distinct_dates": 437,
+      "first_date": "20240102",
+      "last_date": "20251231"
+    },
+    {
+      "family": "wall_native_quote_sidecar_202208_202512_v1r1",
+      "ticker": "SPXW",
+      "files": 502,
+      "rows": 59051140,
+      "bytes": 371791347,
+      "schemas": [
+        "9eb710b5456cce1131c9ab07055ae812eea50faaada2fe0a91197e55f808ce59"
+      ],
+      "distinct_dates": 502,
+      "first_date": "20240102",
+      "last_date": "20251231"
+    },
+    {
+      "family": "wall_native_quote_sidecar_202208_202512_v1r1",
+      "ticker": "SPY",
+      "files": 502,
+      "rows": 35819820,
+      "bytes": 279459146,
+      "schemas": [
+        "9eb710b5456cce1131c9ab07055ae812eea50faaada2fe0a91197e55f808ce59"
+      ],
+      "distinct_dates": 502,
+      "first_date": "20240102",
+      "last_date": "20251231"
+    },
+    {
+      "family": "wall_quote_size_native_complement_202208_202512_v1",
+      "ticker": "QQQ",
+      "files": 393,
+      "rows": 24977590,
+      "bytes": 192479053,
+      "schemas": [
+        "9eb710b5456cce1131c9ab07055ae812eea50faaada2fe0a91197e55f808ce59"
+      ],
+      "distinct_dates": 393,
+      "first_date": "20220801",
+      "last_date": "20251217"
+    },
+    {
+      "family": "wall_quote_size_native_complement_202208_202512_v1",
+      "ticker": "SPXW",
+      "files": 357,
+      "rows": 33421360,
+      "bytes": 214621958,
+      "schemas": [
+        "9eb710b5456cce1131c9ab07055ae812eea50faaada2fe0a91197e55f808ce59"
+      ],
+      "distinct_dates": 357,
+      "first_date": "20220801",
+      "last_date": "20231229"
+    },
+    {
+      "family": "wall_quote_size_native_complement_202208_202512_v1",
+      "ticker": "SPY",
+      "files": 328,
+      "rows": 23425310,
+      "bytes": 172443707,
+      "schemas": [
+        "9eb710b5456cce1131c9ab07055ae812eea50faaada2fe0a91197e55f808ce59"
+      ],
+      "distinct_dates": 328,
+      "first_date": "20220801",
+      "last_date": "20231229"
+    },
+    {
+      "family": "wall_quote_tick_dynamics_at_touch_202208_202512_v1",
+      "ticker": "QQQ",
+      "files": 1949,
+      "rows": 6987837,
+      "bytes": 101458178,
+      "schemas": [
+        "03b8fa35e963fe06585696daf6a0534e2dc101f9239ddd36ee647e6021407fa3"
+      ],
+      "distinct_dates": 430,
+      "first_date": "20220803",
+      "last_date": "20241115"
+    },
+    {
+      "family": "wall_quote_tick_dynamics_at_touch_202208_202512_v1r1",
+      "ticker": "QQQ",
+      "files": 518,
+      "rows": 1437075,
+      "bytes": 22764333,
+      "schemas": [
+        "03b8fa35e963fe06585696daf6a0534e2dc101f9239ddd36ee647e6021407fa3"
+      ],
+      "distinct_dates": 128,
+      "first_date": "20220803",
+      "last_date": "20230606"
+    },
+    {
+      "family": "wall_quote_tick_dynamics_at_touch_202208_202512_v1r1r1",
+      "ticker": "QQQ",
+      "files": 2890,
+      "rows": 12774113,
+      "bytes": 172336763,
+      "schemas": [
+        "03b8fa35e963fe06585696daf6a0534e2dc101f9239ddd36ee647e6021407fa3"
+      ],
+      "distinct_dates": 643,
+      "first_date": "20220803",
+      "last_date": "20251231"
+    },
+    {
+      "family": "wall_quote_tick_dynamics_at_touch_202208_202512_v1r1r1",
+      "ticker": "SPXW",
+      "files": 3263,
+      "rows": 10536596,
+      "bytes": 148371915,
+      "schemas": [
+        "03b8fa35e963fe06585696daf6a0534e2dc101f9239ddd36ee647e6021407fa3"
+      ],
+      "distinct_dates": 655,
+      "first_date": "20220802",
+      "last_date": "20251230"
+    },
+    {
+      "family": "wall_quote_tick_dynamics_at_touch_202208_202512_v1r1r1",
+      "ticker": "SPY",
+      "files": 3680,
+      "rows": 14535949,
+      "bytes": 209301887,
+      "schemas": [
+        "03b8fa35e963fe06585696daf6a0534e2dc101f9239ddd36ee647e6021407fa3"
+      ],
+      "distinct_dates": 708,
+      "first_date": "20220801",
+      "last_date": "20251231"
+    }
+  ],
+  "artifact_hashes": {
+    "artifact_hashes.json": "1bcd3016c34fff3b4a70619dbcff548f047a408b17d66f1889c192f4773f815e",
+    "files.csv": "a9119b909e189e597ae995483dfc2ee2d1b05ebffb7ab23cb79afdeebea8c12d",
+    "groups.json": "c87de101b5191fb59a8d6b40063e9b5ffdb231fc6074d4ff586e587189f9497c",
+    "inventory_local.executed.py": "b27fd5eea28ea4be137a66a07552014d0e913b2b7b3eae7bd72c058e3af187cc",
+    "review_summary.json": "b076851c90f28d9db9b504e4ae8a99d234242459f25838fb4bff99bff6954d42",
+    "review_summary_before_date_correction.json": "ab44dc3a77f78a7cc57104f1412bfb9bb853202553763901661d94ec3ece59e8",
+    "schemas.json": "d728f4ea4ecd8a273a5f7f8304f0416a3dca2dfc5e6c4e6d444a1d5fbb4fd67d",
+    "summarize_inventory.executed.py": "9867e9a1209269de9b4c685cd943eb6f232623748bdcf47b642924d463a5cbbb",
+    "summary.json": "f62b0203cb7b595b57b563444c72c66b3f279c2951afa8a870f0ca67150350d4",
+    "zero_dte_dates.json": "5d9c95d809ca4c31c6eaec68a833c6299cd62038227274b149510dc0300feb85"
+  },
+  "validation": "PASS original artifact hashes, executed code identity, full CSV counts/bytes, parquet counts, family sums; Ruff and compile PASS"
+}

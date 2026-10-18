@@ -1,0 +1,1196 @@
+{
+  "status": "COMPLETED_EXPLORATORY_DEVELOPMENT",
+  "untouched_outer": false,
+  "live_parity_verified": false,
+  "dealer_exposure_verified": false,
+  "prior_close_semantics_verified": false,
+  "technical_ready": false,
+  "promotion_approved": false,
+  "results": {
+    "price": {
+      "validation": {
+        "pooled": {
+          "trades": 400,
+          "base_net_usd": -10241.999999999996,
+          "base_win_rate": 0.335,
+          "base_profit_factor": 0.678879810375424,
+          "adverse_net_usd": -11041.999999999993,
+          "adverse_win_rate": 0.325,
+          "adverse_profit_factor": 0.659523295612223
+        },
+        "tickers": {
+          "SPXW": {
+            "trades": 198,
+            "base_net_usd": -8115.799999999996,
+            "base_win_rate": 0.35353535353535354,
+            "base_profit_factor": 0.7036817969388951,
+            "adverse_net_usd": -8511.79999999999,
+            "adverse_win_rate": 0.35353535353535354,
+            "adverse_profit_factor": 0.6921012269938656
+          },
+          "SPY": {
+            "trades": 92,
+            "base_net_usd": -1001.2,
+            "base_win_rate": 0.31521739130434784,
+            "base_profit_factor": 0.47410442273348063,
+            "adverse_net_usd": -1185.1999999999998,
+            "adverse_win_rate": 0.2826086956521739,
+            "adverse_profit_factor": 0.4171911880409126
+          },
+          "QQQ": {
+            "trades": 110,
+            "base_net_usd": -1124.9999999999995,
+            "base_win_rate": 0.3181818181818182,
+            "base_profit_factor": 0.5676402767102232,
+            "adverse_net_usd": -1344.9999999999995,
+            "adverse_win_rate": 0.3090909090909091,
+            "adverse_profit_factor": 0.5113710673545011
+          }
+        },
+        "months": {
+          "SPXW": {
+            "202307": {
+              "trades": 62,
+              "base_net_usd": -2140.199999999998,
+              "base_win_rate": 0.3548387096774194,
+              "base_profit_factor": 0.6769021739130435,
+              "adverse_net_usd": -2264.199999999998,
+              "adverse_win_rate": 0.3548387096774194,
+              "adverse_profit_factor": 0.6622613365155132
+            },
+            "202308": {
+              "trades": 75,
+              "base_net_usd": -6175.0,
+              "base_win_rate": 0.32,
+              "base_profit_factor": 0.5200006218615425,
+              "adverse_net_usd": -6324.999999999997,
+              "adverse_win_rate": 0.32,
+              "adverse_profit_factor": 0.5122082889886325
+            },
+            "202309": {
+              "trades": 61,
+              "base_net_usd": 199.40000000000043,
+              "base_win_rate": 0.39344262295081966,
+              "base_profit_factor": 1.0252398673451302,
+              "adverse_net_usd": 77.40000000000202,
+              "adverse_win_rate": 0.39344262295081966,
+              "adverse_profit_factor": 1.009706302826616
+            }
+          },
+          "SPY": {
+            "202307": {
+              "trades": 21,
+              "base_net_usd": -263.6,
+              "base_win_rate": 0.23809523809523808,
+              "base_profit_factor": 0.3163900414937758,
+              "adverse_net_usd": -305.6000000000001,
+              "adverse_win_rate": 0.23809523809523808,
+              "adverse_profit_factor": 0.26819923371647497
+            },
+            "202308": {
+              "trades": 34,
+              "base_net_usd": -418.4000000000001,
+              "base_win_rate": 0.35294117647058826,
+              "base_profit_factor": 0.4657814096016342,
+              "adverse_net_usd": -486.4000000000002,
+              "adverse_win_rate": 0.2647058823529412,
+              "adverse_profit_factor": 0.41468110709987965
+            },
+            "202309": {
+              "trades": 37,
+              "base_net_usd": -319.20000000000005,
+              "base_win_rate": 0.32432432432432434,
+              "base_profit_factor": 0.5657142857142857,
+              "adverse_net_usd": -393.2000000000001,
+              "adverse_win_rate": 0.32432432432432434,
+              "adverse_profit_factor": 0.49910828025477694
+            }
+          },
+          "QQQ": {
+            "202307": {
+              "trades": 30,
+              "base_net_usd": -412.00000000000006,
+              "base_win_rate": 0.23333333333333334,
+              "base_profit_factor": 0.3765133171912831,
+              "adverse_net_usd": -472.00000000000006,
+              "adverse_win_rate": 0.2,
+              "adverse_profit_factor": 0.33276788238620286
+            },
+            "202308": {
+              "trades": 43,
+              "base_net_usd": -602.8000000000001,
+              "base_win_rate": 0.37209302325581395,
+              "base_profit_factor": 0.45654525784349087,
+              "adverse_net_usd": -688.8000000000001,
+              "adverse_win_rate": 0.37209302325581395,
+              "adverse_profit_factor": 0.40784044016506193
+            },
+            "202309": {
+              "trades": 37,
+              "base_net_usd": -110.19999999999993,
+              "base_win_rate": 0.32432432432432434,
+              "base_profit_factor": 0.8675480769230768,
+              "adverse_net_usd": -184.2000000000001,
+              "adverse_win_rate": 0.32432432432432434,
+              "adverse_profit_factor": 0.7911564625850339
+            }
+          }
+        }
+      },
+      "test": {
+        "pooled": {
+          "trades": 429,
+          "base_net_usd": -9963.399999999996,
+          "base_win_rate": 0.34032634032634035,
+          "base_profit_factor": 0.7126284942949109,
+          "adverse_net_usd": -10820.399999999996,
+          "adverse_win_rate": 0.32867132867132864,
+          "adverse_profit_factor": 0.6929581621302582
+        },
+        "tickers": {
+          "SPXW": {
+            "trades": 188,
+            "base_net_usd": -7524.799999999997,
+            "base_win_rate": 0.3776595744680851,
+            "base_profit_factor": 0.741221946337807,
+            "adverse_net_usd": -7900.799999999996,
+            "adverse_win_rate": 0.3776595744680851,
+            "adverse_profit_factor": 0.7304603543916875
+          },
+          "SPY": {
+            "trades": 119,
+            "base_net_usd": -662.4000000000003,
+            "base_win_rate": 0.36134453781512604,
+            "base_profit_factor": 0.7319954685224149,
+            "adverse_net_usd": -900.4000000000004,
+            "adverse_win_rate": 0.33613445378151263,
+            "adverse_profit_factor": 0.6571733170880293
+          },
+          "QQQ": {
+            "trades": 122,
+            "base_net_usd": -1776.2000000000003,
+            "base_win_rate": 0.26229508196721313,
+            "base_profit_factor": 0.430887536046139,
+            "adverse_net_usd": -2019.2000000000003,
+            "adverse_win_rate": 0.2459016393442623,
+            "adverse_profit_factor": 0.38852885954818006
+          }
+        },
+        "months": {
+          "SPXW": {
+            "202310": {
+              "trades": 73,
+              "base_net_usd": -4215.800000000001,
+              "base_win_rate": 0.3424657534246575,
+              "base_profit_factor": 0.7156443497146865,
+              "adverse_net_usd": -4361.799999999998,
+              "adverse_win_rate": 0.3424657534246575,
+              "adverse_profit_factor": 0.707689420847351
+            },
+            "202311": {
+              "trades": 57,
+              "base_net_usd": -1062.1999999999987,
+              "base_win_rate": 0.42105263157894735,
+              "base_profit_factor": 0.8170765309636979,
+              "adverse_net_usd": -1176.1999999999987,
+              "adverse_win_rate": 0.42105263157894735,
+              "adverse_profit_factor": 0.7997207464923036
+            },
+            "202312": {
+              "trades": 58,
+              "base_net_usd": -2246.799999999999,
+              "base_win_rate": 0.3793103448275862,
+              "base_profit_factor": 0.7339679833285967,
+              "adverse_net_usd": -2362.7999999999993,
+              "adverse_win_rate": 0.3793103448275862,
+              "adverse_profit_factor": 0.7225979149056072
+            }
+          },
+          "SPY": {
+            "202310": {
+              "trades": 53,
+              "base_net_usd": -78.79999999999984,
+              "base_win_rate": 0.39622641509433965,
+              "base_profit_factor": 0.9394405164463577,
+              "adverse_net_usd": -184.79999999999995,
+              "adverse_win_rate": 0.37735849056603776,
+              "adverse_profit_factor": 0.8646946844340319
+            },
+            "202311": {
+              "trades": 27,
+              "base_net_usd": -321.20000000000005,
+              "base_win_rate": 0.4074074074074074,
+              "base_profit_factor": 0.34261154318460907,
+              "adverse_net_usd": -375.20000000000016,
+              "adverse_win_rate": 0.3333333333333333,
+              "adverse_profit_factor": 0.28232593726090277
+            },
+            "202312": {
+              "trades": 39,
+              "base_net_usd": -262.4000000000001,
+              "base_win_rate": 0.28205128205128205,
+              "base_profit_factor": 0.6151364036374302,
+              "adverse_net_usd": -340.4000000000002,
+              "adverse_win_rate": 0.28205128205128205,
+              "adverse_profit_factor": 0.5386283545676334
+            }
+          },
+          "QQQ": {
+            "202310": {
+              "trades": 53,
+              "base_net_usd": -747.8000000000002,
+              "base_win_rate": 0.2830188679245283,
+              "base_profit_factor": 0.504374337221633,
+              "adverse_net_usd": -852.8000000000003,
+              "adverse_win_rate": 0.2641509433962264,
+              "adverse_profit_factor": 0.4617520828073719
+            },
+            "202311": {
+              "trades": 30,
+              "base_net_usd": -344.00000000000006,
+              "base_win_rate": 0.23333333333333334,
+              "base_profit_factor": 0.4833283268248722,
+              "adverse_net_usd": -404.00000000000017,
+              "adverse_win_rate": 0.23333333333333334,
+              "adverse_profit_factor": 0.4324248384377631
+            },
+            "202312": {
+              "trades": 39,
+              "base_net_usd": -684.4000000000002,
+              "base_win_rate": 0.2564102564102564,
+              "base_profit_factor": 0.27683854606931524,
+              "adverse_net_usd": -762.4000000000003,
+              "adverse_win_rate": 0.23076923076923078,
+              "adverse_profit_factor": 0.24214711729622257
+            }
+          }
+        }
+      }
+    },
+    "authentic": {
+      "validation": {
+        "pooled": {
+          "trades": 414,
+          "base_net_usd": -8505.399999999994,
+          "base_win_rate": 0.34541062801932365,
+          "base_profit_factor": 0.7468751488024383,
+          "adverse_net_usd": -9333.399999999992,
+          "adverse_win_rate": 0.3357487922705314,
+          "adverse_profit_factor": 0.7266779899262039
+        },
+        "tickers": {
+          "SPXW": {
+            "trades": 204,
+            "base_net_usd": -6423.399999999997,
+            "base_win_rate": 0.35294117647058826,
+            "base_profit_factor": 0.7790155226509607,
+            "adverse_net_usd": -6831.399999999992,
+            "adverse_win_rate": 0.35294117647058826,
+            "adverse_profit_factor": 0.7670944250490946
+          },
+          "SPY": {
+            "trades": 115,
+            "base_net_usd": -999.0000000000001,
+            "base_win_rate": 0.2956521739130435,
+            "base_profit_factor": 0.5623411898711997,
+            "adverse_net_usd": -1229.0,
+            "adverse_win_rate": 0.26956521739130435,
+            "adverse_profit_factor": 0.4980395360235257
+          },
+          "QQQ": {
+            "trades": 95,
+            "base_net_usd": -1082.9999999999998,
+            "base_win_rate": 0.3894736842105263,
+            "base_profit_factor": 0.5190514255262457,
+            "adverse_net_usd": -1272.9999999999993,
+            "adverse_win_rate": 0.37894736842105264,
+            "adverse_profit_factor": 0.4625063333896303
+          }
+        },
+        "months": {
+          "SPXW": {
+            "202307": {
+              "trades": 62,
+              "base_net_usd": -2475.199999999998,
+              "base_win_rate": 0.3064516129032258,
+              "base_profit_factor": 0.6465413834466214,
+              "adverse_net_usd": -2599.199999999998,
+              "adverse_win_rate": 0.3064516129032258,
+              "adverse_profit_factor": 0.6333370951359891
+            },
+            "202308": {
+              "trades": 78,
+              "base_net_usd": -5398.800000000003,
+              "base_win_rate": 0.3333333333333333,
+              "base_profit_factor": 0.6081920575940547,
+              "adverse_net_usd": -5554.799999999998,
+              "adverse_win_rate": 0.3333333333333333,
+              "adverse_profit_factor": 0.5998905151550076
+            },
+            "202309": {
+              "trades": 64,
+              "base_net_usd": 1450.600000000001,
+              "base_win_rate": 0.421875,
+              "base_profit_factor": 1.1750832810312362,
+              "adverse_net_usd": 1322.600000000002,
+              "adverse_win_rate": 0.421875,
+              "adverse_profit_factor": 1.1582208823810891
+            }
+          },
+          "SPY": {
+            "202307": {
+              "trades": 34,
+              "base_net_usd": -428.4000000000001,
+              "base_win_rate": 0.17647058823529413,
+              "base_profit_factor": 0.27118067369853677,
+              "adverse_net_usd": -496.4000000000001,
+              "adverse_win_rate": 0.14705882352941177,
+              "adverse_profit_factor": 0.22967101179391672
+            },
+            "202308": {
+              "trades": 41,
+              "base_net_usd": -312.59999999999997,
+              "base_win_rate": 0.4146341463414634,
+              "base_profit_factor": 0.6212745335594864,
+              "adverse_net_usd": -394.60000000000014,
+              "adverse_win_rate": 0.36585365853658536,
+              "adverse_profit_factor": 0.5498516997490301
+            },
+            "202309": {
+              "trades": 40,
+              "base_net_usd": -257.99999999999994,
+              "base_win_rate": 0.275,
+              "base_profit_factor": 0.7032436162870945,
+              "adverse_net_usd": -338.0,
+              "adverse_win_rate": 0.275,
+              "adverse_profit_factor": 0.6355402199698079
+            }
+          },
+          "QQQ": {
+            "202307": {
+              "trades": 26,
+              "base_net_usd": -111.60000000000001,
+              "base_win_rate": 0.4230769230769231,
+              "base_profit_factor": 0.7670146137787056,
+              "adverse_net_usd": -163.60000000000002,
+              "adverse_win_rate": 0.38461538461538464,
+              "adverse_profit_factor": 0.6789638932496076
+            },
+            "202308": {
+              "trades": 33,
+              "base_net_usd": -445.8,
+              "base_win_rate": 0.45454545454545453,
+              "base_profit_factor": 0.4223892200051827,
+              "adverse_net_usd": -511.80000000000007,
+              "adverse_win_rate": 0.45454545454545453,
+              "adverse_profit_factor": 0.36642733349839063
+            },
+            "202309": {
+              "trades": 36,
+              "base_net_usd": -525.6,
+              "base_win_rate": 0.3055555555555556,
+              "base_profit_factor": 0.47492507492507485,
+              "adverse_net_usd": -597.6000000000001,
+              "adverse_win_rate": 0.3055555555555556,
+              "adverse_profit_factor": 0.4313986679352997
+            }
+          }
+        }
+      },
+      "test": {
+        "pooled": {
+          "trades": 433,
+          "base_net_usd": -13123.799999999996,
+          "base_win_rate": 0.3348729792147806,
+          "base_profit_factor": 0.6238930698290241,
+          "adverse_net_usd": -13988.799999999994,
+          "adverse_win_rate": 0.3233256351039261,
+          "adverse_profit_factor": 0.6056582604626515
+        },
+        "tickers": {
+          "SPXW": {
+            "trades": 199,
+            "base_net_usd": -10635.399999999998,
+            "base_win_rate": 0.36180904522613067,
+            "base_profit_factor": 0.6391011632484089,
+            "adverse_net_usd": -11033.399999999998,
+            "adverse_win_rate": 0.36180904522613067,
+            "adverse_profit_factor": 0.6287950153415519
+          },
+          "SPY": {
+            "trades": 126,
+            "base_net_usd": -994.6000000000003,
+            "base_win_rate": 0.3412698412698413,
+            "base_profit_factor": 0.6239413188142773,
+            "adverse_net_usd": -1246.6,
+            "adverse_win_rate": 0.30952380952380953,
+            "adverse_profit_factor": 0.5571895424836604
+          },
+          "QQQ": {
+            "trades": 108,
+            "base_net_usd": -1493.7999999999997,
+            "base_win_rate": 0.2777777777777778,
+            "base_profit_factor": 0.4626232103028996,
+            "adverse_net_usd": -1708.8000000000002,
+            "adverse_win_rate": 0.26851851851851855,
+            "adverse_profit_factor": 0.4178646862437828
+          }
+        },
+        "months": {
+          "SPXW": {
+            "202310": {
+              "trades": 73,
+              "base_net_usd": 254.2000000000011,
+              "base_win_rate": 0.4794520547945205,
+              "base_profit_factor": 1.020127001219338,
+              "adverse_net_usd": 108.20000000000269,
+              "adverse_win_rate": 0.4794520547945205,
+              "adverse_profit_factor": 1.0085157959357143
+            },
+            "202311": {
+              "trades": 60,
+              "base_net_usd": -4631.0,
+              "base_win_rate": 0.31666666666666665,
+              "base_profit_factor": 0.4054130395706547,
+              "adverse_net_usd": -4751.0,
+              "adverse_win_rate": 0.31666666666666665,
+              "adverse_profit_factor": 0.3963611414631669
+            },
+            "202312": {
+              "trades": 66,
+              "base_net_usd": -6258.599999999999,
+              "base_win_rate": 0.2727272727272727,
+              "base_profit_factor": 0.30850311574667444,
+              "adverse_net_usd": -6390.5999999999985,
+              "adverse_win_rate": 0.2727272727272727,
+              "adverse_profit_factor": 0.30132942668474233
+            }
+          },
+          "SPY": {
+            "202310": {
+              "trades": 49,
+              "base_net_usd": -266.3999999999999,
+              "base_win_rate": 0.3877551020408163,
+              "base_profit_factor": 0.7856798069187452,
+              "adverse_net_usd": -364.4000000000001,
+              "adverse_win_rate": 0.3673469387755102,
+              "adverse_profit_factor": 0.7204664007364224
+            },
+            "202311": {
+              "trades": 35,
+              "base_net_usd": -486.0000000000002,
+              "base_win_rate": 0.34285714285714286,
+              "base_profit_factor": 0.22463305679642614,
+              "adverse_net_usd": -556.0000000000002,
+              "adverse_win_rate": 0.2857142857142857,
+              "adverse_profit_factor": 0.17751479289940822
+            },
+            "202312": {
+              "trades": 42,
+              "base_net_usd": -242.2,
+              "base_win_rate": 0.2857142857142857,
+              "base_profit_factor": 0.6874838709677417,
+              "adverse_net_usd": -326.20000000000005,
+              "adverse_win_rate": 0.2619047619047619,
+              "adverse_profit_factor": 0.6096218286261367
+            }
+          },
+          "QQQ": {
+            "202310": {
+              "trades": 52,
+              "base_net_usd": -900.2000000000003,
+              "base_win_rate": 0.25,
+              "base_profit_factor": 0.40518038852913973,
+              "adverse_net_usd": -1003.2000000000003,
+              "adverse_win_rate": 0.23076923076923078,
+              "adverse_profit_factor": 0.36945317410433687
+            },
+            "202311": {
+              "trades": 21,
+              "base_net_usd": -117.60000000000008,
+              "base_win_rate": 0.3333333333333333,
+              "base_profit_factor": 0.7400530503978775,
+              "adverse_net_usd": -159.60000000000008,
+              "adverse_win_rate": 0.3333333333333333,
+              "adverse_profit_factor": 0.6677768526228139
+            },
+            "202312": {
+              "trades": 35,
+              "base_net_usd": -476.0000000000001,
+              "base_win_rate": 0.2857142857142857,
+              "base_profit_factor": 0.41523341523341506,
+              "adverse_net_usd": -546.0000000000002,
+              "adverse_win_rate": 0.2857142857142857,
+              "adverse_profit_factor": 0.36805555555555536
+            }
+          }
+        }
+      }
+    },
+    "placebo": {
+      "validation": {
+        "pooled": {
+          "trades": 491,
+          "base_net_usd": -11174.599999999997,
+          "base_win_rate": 0.35030549898167007,
+          "base_profit_factor": 0.6878638227505839,
+          "adverse_net_usd": -12155.599999999995,
+          "adverse_win_rate": 0.34012219959266804,
+          "adverse_profit_factor": 0.6664526361426211
+        },
+        "tickers": {
+          "SPXW": {
+            "trades": 203,
+            "base_net_usd": -9028.799999999994,
+            "base_win_rate": 0.3645320197044335,
+            "base_profit_factor": 0.7000737458227313,
+            "adverse_net_usd": -9434.799999999992,
+            "adverse_win_rate": 0.3645320197044335,
+            "adverse_profit_factor": 0.6892501663296162
+          },
+          "SPY": {
+            "trades": 156,
+            "base_net_usd": -1089.6,
+            "base_win_rate": 0.3076923076923077,
+            "base_profit_factor": 0.6205863918100146,
+            "adverse_net_usd": -1400.6000000000004,
+            "adverse_win_rate": 0.28846153846153844,
+            "adverse_profit_factor": 0.5468193878211353
+          },
+          "QQQ": {
+            "trades": 132,
+            "base_net_usd": -1056.2000000000003,
+            "base_win_rate": 0.3787878787878788,
+            "base_profit_factor": 0.6261503610363869,
+            "adverse_net_usd": -1320.2000000000003,
+            "adverse_win_rate": 0.36363636363636365,
+            "adverse_profit_factor": 0.5586681821220832
+          }
+        },
+        "months": {
+          "SPXW": {
+            "202307": {
+              "trades": 57,
+              "base_net_usd": -1937.199999999998,
+              "base_win_rate": 0.3684210526315789,
+              "base_profit_factor": 0.7145130865361942,
+              "adverse_net_usd": -2051.199999999999,
+              "adverse_win_rate": 0.3684210526315789,
+              "adverse_profit_factor": 0.7008866075594959
+            },
+            "202308": {
+              "trades": 82,
+              "base_net_usd": -6397.200000000001,
+              "base_win_rate": 0.3170731707317073,
+              "base_profit_factor": 0.5757149678994005,
+              "adverse_net_usd": -6561.199999999997,
+              "adverse_win_rate": 0.3170731707317073,
+              "adverse_profit_factor": 0.5680465581713806
+            },
+            "202309": {
+              "trades": 64,
+              "base_net_usd": -694.3999999999994,
+              "base_win_rate": 0.421875,
+              "base_profit_factor": 0.9157302007232833,
+              "adverse_net_usd": -822.399999999998,
+              "adverse_win_rate": 0.421875,
+              "adverse_profit_factor": 0.9010848909095283
+            }
+          },
+          "SPY": {
+            "202307": {
+              "trades": 40,
+              "base_net_usd": -340.0000000000001,
+              "base_win_rate": 0.275,
+              "base_profit_factor": 0.4457124225627647,
+              "adverse_net_usd": -420.00000000000006,
+              "adverse_win_rate": 0.275,
+              "adverse_profit_factor": 0.3744414655942805
+            },
+            "202308": {
+              "trades": 57,
+              "base_net_usd": -232.19999999999996,
+              "base_win_rate": 0.40350877192982454,
+              "base_profit_factor": 0.7759552296410651,
+              "adverse_net_usd": -346.20000000000016,
+              "adverse_win_rate": 0.3508771929824561,
+              "adverse_profit_factor": 0.6876015159718464
+            },
+            "202309": {
+              "trades": 59,
+              "base_net_usd": -517.3999999999999,
+              "base_win_rate": 0.23728813559322035,
+              "base_profit_factor": 0.5765957446808513,
+              "adverse_net_usd": -634.4000000000001,
+              "adverse_win_rate": 0.23728813559322035,
+              "adverse_profit_factor": 0.5160945842868042
+            }
+          },
+          "QQQ": {
+            "202307": {
+              "trades": 32,
+              "base_net_usd": -52.200000000000074,
+              "base_win_rate": 0.4375,
+              "base_profit_factor": 0.8916562889165627,
+              "adverse_net_usd": -116.20000000000012,
+              "adverse_win_rate": 0.40625,
+              "adverse_profit_factor": 0.7758487654320987
+            },
+            "202308": {
+              "trades": 52,
+              "base_net_usd": -510.20000000000005,
+              "base_win_rate": 0.4230769230769231,
+              "base_profit_factor": 0.5628106255355615,
+              "adverse_net_usd": -614.2,
+              "adverse_win_rate": 0.4230769230769231,
+              "adverse_profit_factor": 0.4994295028524858
+            },
+            "202309": {
+              "trades": 48,
+              "base_net_usd": -493.8000000000001,
+              "base_win_rate": 0.2916666666666667,
+              "base_profit_factor": 0.5802448146888812,
+              "adverse_net_usd": -589.8000000000002,
+              "adverse_win_rate": 0.2708333333333333,
+              "adverse_profit_factor": 0.526645264847512
+            }
+          }
+        }
+      },
+      "test": {
+        "pooled": {
+          "trades": 509,
+          "base_net_usd": -10533.399999999998,
+          "base_win_rate": 0.35952848722986247,
+          "base_profit_factor": 0.696842190090256,
+          "adverse_net_usd": -11549.399999999994,
+          "adverse_win_rate": 0.3555992141453831,
+          "adverse_profit_factor": 0.6737162681372328
+        },
+        "tickers": {
+          "SPXW": {
+            "trades": 202,
+            "base_net_usd": -7929.199999999997,
+            "base_win_rate": 0.400990099009901,
+            "base_profit_factor": 0.7191871542607824,
+            "adverse_net_usd": -8333.199999999993,
+            "adverse_win_rate": 0.400990099009901,
+            "adverse_profit_factor": 0.7073873013420608
+          },
+          "SPY": {
+            "trades": 158,
+            "base_net_usd": -737.8000000000001,
+            "base_win_rate": 0.3860759493670886,
+            "base_profit_factor": 0.7502538758377904,
+            "adverse_net_usd": -1052.8000000000004,
+            "adverse_win_rate": 0.37341772151898733,
+            "adverse_profit_factor": 0.6656079278363615
+          },
+          "QQQ": {
+            "trades": 149,
+            "base_net_usd": -1866.4000000000003,
+            "base_win_rate": 0.2751677852348993,
+            "base_profit_factor": 0.4749634297288173,
+            "adverse_net_usd": -2163.4000000000005,
+            "adverse_win_rate": 0.2751677852348993,
+            "adverse_profit_factor": 0.4261234017719772
+          }
+        },
+        "months": {
+          "SPXW": {
+            "202310": {
+              "trades": 77,
+              "base_net_usd": -2469.2000000000003,
+              "base_win_rate": 0.37662337662337664,
+              "base_profit_factor": 0.8228796051876505,
+              "adverse_net_usd": -2623.1999999999966,
+              "adverse_win_rate": 0.37662337662337664,
+              "adverse_profit_factor": 0.8131197993844752
+            },
+            "202311": {
+              "trades": 69,
+              "base_net_usd": -2387.399999999998,
+              "base_win_rate": 0.391304347826087,
+              "base_profit_factor": 0.6755456497512978,
+              "adverse_net_usd": -2525.3999999999974,
+              "adverse_win_rate": 0.391304347826087,
+              "adverse_profit_factor": 0.6606648571658917
+            },
+            "202312": {
+              "trades": 56,
+              "base_net_usd": -3072.5999999999985,
+              "base_win_rate": 0.44642857142857145,
+              "base_profit_factor": 0.557109086715867,
+              "adverse_net_usd": -3184.5999999999985,
+              "adverse_win_rate": 0.44642857142857145,
+              "adverse_profit_factor": 0.5450311446368364
+            }
+          },
+          "SPY": {
+            "202310": {
+              "trades": 67,
+              "base_net_usd": -631.2,
+              "base_win_rate": 0.373134328358209,
+              "base_profit_factor": 0.63156665888396,
+              "adverse_net_usd": -764.2000000000002,
+              "adverse_win_rate": 0.3582089552238806,
+              "adverse_profit_factor": 0.5746883348174533
+            },
+            "202311": {
+              "trades": 41,
+              "base_net_usd": -148.6,
+              "base_win_rate": 0.4146341463414634,
+              "base_profit_factor": 0.7403913347309572,
+              "adverse_net_usd": -230.6000000000001,
+              "adverse_win_rate": 0.4146341463414634,
+              "adverse_profit_factor": 0.6283043197936813
+            },
+            "202312": {
+              "trades": 50,
+              "base_net_usd": 42.0,
+              "base_win_rate": 0.38,
+              "base_profit_factor": 1.0628178282979357,
+              "adverse_net_usd": -58.00000000000009,
+              "adverse_win_rate": 0.36,
+              "adverse_profit_factor": 0.9206783369803062
+            }
+          },
+          "QQQ": {
+            "202310": {
+              "trades": 63,
+              "base_net_usd": -865.8000000000002,
+              "base_win_rate": 0.31746031746031744,
+              "base_profit_factor": 0.5107921799073343,
+              "adverse_net_usd": -990.8000000000003,
+              "adverse_win_rate": 0.31746031746031744,
+              "adverse_profit_factor": 0.4658184170800086
+            },
+            "202311": {
+              "trades": 38,
+              "base_net_usd": -359.8000000000001,
+              "base_win_rate": 0.2631578947368421,
+              "base_profit_factor": 0.5616471734892786,
+              "adverse_net_usd": -435.8000000000002,
+              "adverse_win_rate": 0.2631578947368421,
+              "adverse_profit_factor": 0.502965328467153
+            },
+            "202312": {
+              "trades": 48,
+              "base_net_usd": -640.8,
+              "base_win_rate": 0.22916666666666666,
+              "base_profit_factor": 0.33540759178593643,
+              "adverse_net_usd": -736.8000000000002,
+              "adverse_win_rate": 0.22916666666666666,
+              "adverse_profit_factor": 0.29031015218647654
+            }
+          }
+        }
+      }
+    }
+  },
+  "paired_test_comparisons": {
+    "authentic_minus_price": {
+      "observed_net_difference": -3160.3999999999983,
+      "paired_circular_5session_block_bootstrap_95ci_total_usd": [
+        -12256.909999999998,
+        5434.815000000001
+      ],
+      "days": 62,
+      "block_sessions": 5,
+      "resamples": 2000
+    },
+    "authentic_minus_placebo": {
+      "observed_net_difference": -2590.4000000000005,
+      "paired_circular_5session_block_bootstrap_95ci_total_usd": [
+        -9997.554999999998,
+        5914.294999999989
+      ],
+      "days": 62,
+      "block_sessions": 5,
+      "resamples": 2000
+    }
+  },
+  "coverage": {
+    "greek_invalid_identity": 0,
+    "greek_duplicate_keys": 0,
+    "oi_invalid_identity": 0,
+    "oi_duplicate_keys": 0,
+    "invalid_spot_rows": 91808,
+    "inconsistent_spot_minutes": 0,
+    "invalid_oi_rows": 0,
+    "invalid_quote_rows": 133699,
+    "days_read_SPXW": 248,
+    "decision_candidates_SPXW": 2480,
+    "event_contracts_missing_oi": 15110,
+    "event_invalid_iv_rows": 671437,
+    "days_read_SPY": 248,
+    "decision_candidates_SPY": 2480,
+    "days_read_QQQ": 248,
+    "decision_candidates_QQQ": 2480,
+    "missing_exit_zero_liquidation": 3,
+    "missing_entry": 1
+  },
+  "thresholds": {
+    "price": {
+      "threshold": 10,
+      "validation_count_gate": true,
+      "validation_choices": [
+        {
+          "threshold": 0,
+          "net": -12442.999999999998,
+          "counts": {
+            "QQQ": 178,
+            "SPXW": 225,
+            "SPY": 162
+          },
+          "qualifies": true
+        },
+        {
+          "threshold": 5,
+          "net": -11133.999999999996,
+          "counts": {
+            "QQQ": 136,
+            "SPXW": 212,
+            "SPY": 122
+          },
+          "qualifies": true
+        },
+        {
+          "threshold": 10,
+          "net": -10241.999999999996,
+          "counts": {
+            "QQQ": 110,
+            "SPXW": 198,
+            "SPY": 92
+          },
+          "qualifies": true
+        }
+      ],
+      "features": [
+        "p_ticker",
+        "p_clock",
+        "p_ib_width_fraction",
+        "p_realized_vol",
+        "p_oi_missing_count",
+        "p_oi_missing_fraction",
+        "p_oi_total_CALL",
+        "p_delta_oi_mean_CALL",
+        "p_vega_oi_mean_CALL",
+        "p_theta_oi_mean_CALL",
+        "p_implied_vol_oi_mean_CALL",
+        "p_gamma_density_total_proxy_CALL",
+        "p_oi_total_PUT",
+        "p_delta_oi_mean_PUT",
+        "p_vega_oi_mean_PUT",
+        "p_theta_oi_mean_PUT",
+        "p_implied_vol_oi_mean_PUT",
+        "p_gamma_density_total_proxy_PUT",
+        "p_ib_observed_minutes",
+        "p_ret5_0",
+        "p_ret5_1",
+        "p_ret5_2",
+        "p_ret5_3",
+        "p_ret5_4",
+        "p_ret5_5",
+        "p_ret5_6",
+        "p_ret5_7",
+        "p_ret5_8",
+        "p_ret5_9",
+        "p_ret5_10",
+        "p_ret5_11",
+        "p_candle5_observed_fraction",
+        "p_candle5_range",
+        "p_candle5_body",
+        "p_candle5_upper",
+        "p_candle5_lower",
+        "p_ret15_0",
+        "p_ret15_1",
+        "p_ret15_2",
+        "p_ret15_3",
+        "p_ret15_4",
+        "p_ret15_5",
+        "p_ret15_6",
+        "p_ret15_7",
+        "p_candle15_observed_fraction",
+        "p_candle15_range",
+        "p_candle15_body",
+        "p_candle15_upper",
+        "p_candle15_lower"
+      ]
+    },
+    "authentic": {
+      "threshold": 10,
+      "validation_count_gate": true,
+      "validation_choices": [
+        {
+          "threshold": 0,
+          "net": -11998.799999999996,
+          "counts": {
+            "QQQ": 167,
+            "SPXW": 226,
+            "SPY": 185
+          },
+          "qualifies": true
+        },
+        {
+          "threshold": 5,
+          "net": -11432.800000000001,
+          "counts": {
+            "QQQ": 120,
+            "SPXW": 213,
+            "SPY": 140
+          },
+          "qualifies": true
+        },
+        {
+          "threshold": 10,
+          "net": -8505.399999999994,
+          "counts": {
+            "QQQ": 95,
+            "SPXW": 204,
+            "SPY": 115
+          },
+          "qualifies": true
+        }
+      ],
+      "features": [
+        "p_ticker",
+        "p_clock",
+        "p_ib_width_fraction",
+        "p_realized_vol",
+        "p_oi_missing_count",
+        "p_oi_missing_fraction",
+        "p_oi_total_CALL",
+        "p_delta_oi_mean_CALL",
+        "p_vega_oi_mean_CALL",
+        "p_theta_oi_mean_CALL",
+        "p_implied_vol_oi_mean_CALL",
+        "p_gamma_density_total_proxy_CALL",
+        "p_oi_total_PUT",
+        "p_delta_oi_mean_PUT",
+        "p_vega_oi_mean_PUT",
+        "p_theta_oi_mean_PUT",
+        "p_implied_vol_oi_mean_PUT",
+        "p_gamma_density_total_proxy_PUT",
+        "p_ib_observed_minutes",
+        "p_ret5_0",
+        "p_ret5_1",
+        "p_ret5_2",
+        "p_ret5_3",
+        "p_ret5_4",
+        "p_ret5_5",
+        "p_ret5_6",
+        "p_ret5_7",
+        "p_ret5_8",
+        "p_ret5_9",
+        "p_ret5_10",
+        "p_ret5_11",
+        "p_candle5_observed_fraction",
+        "p_candle5_range",
+        "p_candle5_body",
+        "p_candle5_upper",
+        "p_candle5_lower",
+        "p_ret15_0",
+        "p_ret15_1",
+        "p_ret15_2",
+        "p_ret15_3",
+        "p_ret15_4",
+        "p_ret15_5",
+        "p_ret15_6",
+        "p_ret15_7",
+        "p_candle15_observed_fraction",
+        "p_candle15_range",
+        "p_candle15_body",
+        "p_candle15_upper",
+        "p_candle15_lower",
+        "a_ib_position",
+        "a_fib_nearest",
+        "a_fib_approach",
+        "a_fib_rejection",
+        "a_fib_influence10",
+        "a_fib_influence25",
+        "a_fib_below10",
+        "a_fib_above10",
+        "a_fib_top_distance",
+        "a_fib_concentration",
+        "a_oi_CALL_nearest",
+        "a_oi_CALL_approach",
+        "a_oi_CALL_rejection",
+        "a_oi_CALL_influence10",
+        "a_oi_CALL_influence25",
+        "a_oi_CALL_below10",
+        "a_oi_CALL_above10",
+        "a_oi_CALL_top_distance",
+        "a_oi_CALL_concentration",
+        "a_oi_CALL_migration",
+        "a_gamma_proxy_CALL_nearest",
+        "a_gamma_proxy_CALL_approach",
+        "a_gamma_proxy_CALL_rejection",
+        "a_gamma_proxy_CALL_influence10",
+        "a_gamma_proxy_CALL_influence25",
+        "a_gamma_proxy_CALL_below10",
+        "a_gamma_proxy_CALL_above10",
+        "a_gamma_proxy_CALL_top_distance",
+        "a_gamma_proxy_CALL_concentration",
+        "a_gamma_proxy_CALL_migration",
+        "a_oi_PUT_nearest",
+        "a_oi_PUT_approach",
+        "a_oi_PUT_rejection",
+        "a_oi_PUT_influence10",
+        "a_oi_PUT_influence25",
+        "a_oi_PUT_below10",
+        "a_oi_PUT_above10",
+        "a_oi_PUT_top_distance",
+        "a_oi_PUT_concentration",
+        "a_oi_PUT_migration",
+        "a_gamma_proxy_PUT_nearest",
+        "a_gamma_proxy_PUT_approach",
+        "a_gamma_proxy_PUT_rejection",
+        "a_gamma_proxy_PUT_influence10",
+        "a_gamma_proxy_PUT_influence25",
+        "a_gamma_proxy_PUT_below10",
+        "a_gamma_proxy_PUT_above10",
+        "a_gamma_proxy_PUT_top_distance",
+        "a_gamma_proxy_PUT_concentration",
+        "a_gamma_proxy_PUT_migration"
+      ]
+    },
+    "placebo": {
+      "threshold": 5,
+      "validation_count_gate": true,
+      "validation_choices": [
+        {
+          "threshold": 0,
+          "net": -12597.199999999999,
+          "counts": {
+            "QQQ": 185,
+            "SPXW": 227,
+            "SPY": 185
+          },
+          "qualifies": true
+        },
+        {
+          "threshold": 5,
+          "net": -11174.599999999997,
+          "counts": {
+            "QQQ": 132,
+            "SPXW": 203,
+            "SPY": 156
+          },
+          "qualifies": true
+        },
+        {
+          "threshold": 10,
+          "net": -11877.399999999998,
+          "counts": {
+            "QQQ": 102,
+            "SPXW": 191,
+            "SPY": 126
+          },
+          "qualifies": true
+        }
+      ],
+      "features": [
+        "p_ticker",
+        "p_clock",
+        "p_ib_width_fraction",
+        "p_realized_vol",
+        "p_oi_missing_count",
+        "p_oi_missing_fraction",
+        "p_oi_total_CALL",
+        "p_delta_oi_mean_CALL",
+        "p_vega_oi_mean_CALL",
+        "p_theta_oi_mean_CALL",
+        "p_implied_vol_oi_mean_CALL",
+        "p_gamma_density_total_proxy_CALL",
+        "p_oi_total_PUT",
+        "p_delta_oi_mean_PUT",
+        "p_vega_oi_mean_PUT",
+        "p_theta_oi_mean_PUT",
+        "p_implied_vol_oi_mean_PUT",
+        "p_gamma_density_total_proxy_PUT",
+        "p_ib_observed_minutes",
+        "p_ret5_0",
+        "p_ret5_1",
+        "p_ret5_2",
+        "p_ret5_3",
+        "p_ret5_4",
+        "p_ret5_5",
+        "p_ret5_6",
+        "p_ret5_7",
+        "p_ret5_8",
+        "p_ret5_9",
+        "p_ret5_10",
+        "p_ret5_11",
+        "p_candle5_observed_fraction",
+        "p_candle5_range",
+        "p_candle5_body",
+        "p_candle5_upper",
+        "p_candle5_lower",
+        "p_ret15_0",
+        "p_ret15_1",
+        "p_ret15_2",
+        "p_ret15_3",
+        "p_ret15_4",
+        "p_ret15_5",
+        "p_ret15_6",
+        "p_ret15_7",
+        "p_candle15_observed_fraction",
+        "p_candle15_range",
+        "p_candle15_body",
+        "p_candle15_upper",
+        "p_candle15_lower",
+        "z_ib_position",
+        "z_fib_nearest",
+        "z_fib_approach",
+        "z_fib_rejection",
+        "z_fib_influence10",
+        "z_fib_influence25",
+        "z_fib_below10",
+        "z_fib_above10",
+        "z_fib_top_distance",
+        "z_fib_concentration",
+        "z_oi_CALL_nearest",
+        "z_oi_CALL_approach",
+        "z_oi_CALL_rejection",
+        "z_oi_CALL_influence10",
+        "z_oi_CALL_influence25",
+        "z_oi_CALL_below10",
+        "z_oi_CALL_above10",
+        "z_oi_CALL_top_distance",
+        "z_oi_CALL_concentration",
+        "z_oi_CALL_migration",
+        "z_gamma_proxy_CALL_nearest",
+        "z_gamma_proxy_CALL_approach",
+        "z_gamma_proxy_CALL_rejection",
+        "z_gamma_proxy_CALL_influence10",
+        "z_gamma_proxy_CALL_influence25",
+        "z_gamma_proxy_CALL_below10",
+        "z_gamma_proxy_CALL_above10",
+        "z_gamma_proxy_CALL_top_distance",
+        "z_gamma_proxy_CALL_concentration",
+        "z_gamma_proxy_CALL_migration",
+        "z_oi_PUT_nearest",
+        "z_oi_PUT_approach",
+        "z_oi_PUT_rejection",
+        "z_oi_PUT_influence10",
+        "z_oi_PUT_influence25",
+        "z_oi_PUT_below10",
+        "z_oi_PUT_above10",
+        "z_oi_PUT_top_distance",
+        "z_oi_PUT_concentration",
+        "z_oi_PUT_migration",
+        "z_gamma_proxy_PUT_nearest",
+        "z_gamma_proxy_PUT_approach",
+        "z_gamma_proxy_PUT_rejection",
+        "z_gamma_proxy_PUT_influence10",
+        "z_gamma_proxy_PUT_influence25",
+        "z_gamma_proxy_PUT_below10",
+        "z_gamma_proxy_PUT_above10",
+        "z_gamma_proxy_PUT_top_distance",
+        "z_gamma_proxy_PUT_concentration",
+        "z_gamma_proxy_PUT_migration"
+      ]
+    }
+  }
+}

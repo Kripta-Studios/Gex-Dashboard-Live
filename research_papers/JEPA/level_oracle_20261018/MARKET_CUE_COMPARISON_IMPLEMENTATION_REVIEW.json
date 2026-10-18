@@ -1,0 +1,38 @@
+{
+  "status": "PASS_MARKET_CUE_COMPARISON_IMPLEMENTATION_REVIEW",
+  "dependencies": {
+    "evaluate_market_cue_control.py": "7dc5149702cb9fe2b8cb5e602fd81aa2ea5fd160b64ab65d9423a50711d7be2a",
+    "market_cue_comparison.py": "03f5bcaeda8bb91e01540cd579df660e6543a87829d652a0cfe70d79d9f4a182",
+    "train_market_cue_control.py": "6343178fe49aecf68c30b76b0d6ec9a37eea8df4968f3ec1b47a7eba0c6c143d",
+    "market_cue_vectors.py": "8e9660a44ce04c779c03a6296a182c414df38dc88a293f2d6c16d124cc3b01d9",
+    "market_cue_vectors_fast.py": "7d71c2bb87a93dc7a503ae783ebc4e227930bcab3aedc6f6bfd70b9250b99d5c",
+    "market_cues.py": "337b6a7951d51c6b64a93b14dabd1d832b20e1292ad825628b50586833472faf",
+    "features.py": "b5c63f918319f844793abb3346a34515526073374f5e71af2129a94f2369d4e0",
+    "run_market_cue_diagnostic.py": "f491edad5bac43acca56dbdaf144d2f57ae3f78a90d6480f8c53b89c002d20a6",
+    "MARKET_CUE_LEARNER_PLAN_DRAFT.md": "b4132ee90639c9d470ab0d29cacd6475cee37c1287fe8ead83ed0481b6540021",
+    "rolling_monthly_schedule.py": "92df2e68734d24a61b4ddccec1f9451a5e25c862f5a1b581ae779c163fcf205a",
+    "MARKET_CUE_COMPARISON_PLAN.md": "49cc2d652e9f7c24ef57034a0a44aebcc7ac9993ddd768bc920b1e7b0a115457",
+    "train_models.py": "a5192737abd1c0b3e4a6a6cd391117d97a014c06b6cd528201ba1f5df0ef6808"
+  },
+  "authorities": {
+    "learner_audit_sha256": "238e6f0974025edf076d4023f134878340141271547e45e618026042539945bd",
+    "engine_audit_sha256": "cbbe61d0a3fa7619447b7301d4c4b2fd52c487e11450d4904efee381fc3bf22d",
+    "session_audit_sha256": "678eb21bca80b38855979d8a7386cdadd6827a6dfdd5acbf3df6fde5a5a2f3b9",
+    "cue_contract_sha256": "ea296e2de576b91594697579c3f642e251526224213a651fbf6fbb409addf534",
+    "cue_model_completion_sha256": "9d5e0bbc5744fbdbf909e4f43c11796b9aa42c418cfcf7c0e85018a82783f97a"
+  },
+  "reviewed_contract": {
+    "policies": ["original_net__0", "cue_net__0"],
+    "threshold_usd": 0,
+    "winner_selection": false,
+    "calendar_ticker_days_2025": 750,
+    "calendar_ticker_days_2026_h1": 369,
+    "missing_2026_h1": 6,
+    "legacy_full_session_score_references": 1104,
+    "short_sessions_without_legacy_reference": 9
+  },
+  "findings": [],
+  "economic_results_opened": false,
+  "model_fit_reproduced": false,
+  "promotion_approved": false
+}

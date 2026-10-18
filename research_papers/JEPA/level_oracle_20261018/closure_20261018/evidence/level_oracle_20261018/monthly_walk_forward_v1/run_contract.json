@@ -1,0 +1,64 @@
+{
+  "version": "MONTHLY_NET_WALK_FORWARD_V1",
+  "dependencies": {
+    "run_monthly_walk_forward.py": "47a4df8b019d9d297ca1ee9b89fff63406409659336dbd7b0e4d7af01ed348bb",
+    "rolling_monthly_schedule.py": "92df2e68734d24a61b4ddccec1f9451a5e25c862f5a1b581ae779c163fcf205a",
+    "monthly_policy_selection.py": "1fe43fa92fe0441be35bc67c9a2a60ce2829edaf9ea80f5fa0a5c8967a599da0",
+    "MONTHLY_WALK_FORWARD_PLAN.md": "71ccd29587be4012dad9fe3ada4ad29ff7b93b94ea08340343ebe39d287c97ae",
+    "rollout_sampling.py": "8bc8cee2b89cf70490793b88d74dff558bbd60077d383a852392fcc2383c748c",
+    "train_causal_rollout.py": "d031eca08c71ad89324619e096dcc9be3966ddea23d52061019018ff6ff58a43",
+    "train_models.py": "a5192737abd1c0b3e4a6a6cd391117d97a014c06b6cd528201ba1f5df0ef6808",
+    "features.py": "b5c63f918319f844793abb3346a34515526073374f5e71af2129a94f2369d4e0",
+    "level_engine.py": "70cc5d20990d971d16299fd008ff8e05ac99f99a6a2917a202fcb9a5f413b7c6",
+    "build_cache.py": "985e87dcbd1e73289b58e4576445e47e73a6edea13e5ac73dde3ad629180d69f",
+    "causal_rollout.py": "8df92119071442045a8434057e220bad567668d8ee314fddd263d052ebeea0d9"
+  },
+  "source_audit": {
+    "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_clock_dataset_v1_audit\\audit.json",
+    "sha256": "678eb21bca80b38855979d8a7386cdadd6827a6dfdd5acbf3df6fde5a5a2f3b9",
+    "binding": {
+      "engine_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_clock_dataset_v1",
+      "index_sha256": "7124d98155eae8ee5ae06457377570278d4059defe2cf02340e34c288fcb60b4",
+      "dataset_contract_sha256": "437f480794dc89b80ff0c4999c3053d19d936fab779b99cb75b923433d641a43",
+      "completion_sha256": "86e0c623ca47010434cb4c5d9b644cba0fc6457aacce2e680474dce6f1b932e5",
+      "feature_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_clock_dataset_v1",
+      "feature_contract_sha256": "777890230663b0f683d0007117c58b5818047699fe8b25d27b5b819bac7f83db",
+      "available_days": 2619,
+      "missing_days": 6
+    },
+    "coverage": {
+      "expected": 2625,
+      "available": 2619,
+      "missing_no_evaluable": 6,
+      "early_close_ticker_days": 24
+    },
+    "feature_contract_sha256": "777890230663b0f683d0007117c58b5818047699fe8b25d27b5b819bac7f83db"
+  },
+  "engine_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_clock_dataset_v1",
+  "feature_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_clock_dataset_v1",
+  "config": {
+    "objective": "regression",
+    "n_estimators": 200,
+    "num_leaves": 31,
+    "max_depth": 6,
+    "min_child_samples": 100,
+    "learning_rate": 0.04,
+    "reg_lambda": 10.0,
+    "max_bin": 63,
+    "random_state": 20261018,
+    "n_jobs": 4,
+    "deterministic": true,
+    "force_col_wise": true,
+    "verbosity": -1
+  },
+  "seed": 20261018,
+  "threshold_usd": 0.0,
+  "features": 1954,
+  "common_ranking_scale": "static_train_2023_2024",
+  "calendar_expected": 2625,
+  "software": {
+    "numpy": "2.3.5",
+    "pandas": "2.3.3",
+    "lightgbm": "4.6.0"
+  }
+}

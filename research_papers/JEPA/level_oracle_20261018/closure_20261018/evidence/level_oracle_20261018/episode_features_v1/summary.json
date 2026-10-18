@@ -1,0 +1,27 @@
+{
+  "status": "PASS_PREPARED_CAUSAL_EPISODE_BUILD",
+  "days": 2595,
+  "missing_days": 6,
+  "states": 820020,
+  "feature_dim": 35,
+  "mask_dim": 35,
+  "by_ticker": {
+    "QQQ": 864,
+    "SPXW": 867,
+    "SPY": 864
+  },
+  "compressed_bytes": 23162445,
+  "verified_output_hashes": 2595,
+  "verified_source_hashes": 5190,
+  "wall_seconds": 421.0413301999797,
+  "cpu_seconds": 365.59375,
+  "peak_rss_bytes": 131854336,
+  "peak_private_bytes": 103616512,
+  "workers": 1,
+  "index_sha256": "26709ec7cdfa3f4cab79dc411b2d1c679c6f00f7924040abfb7b1a624c676b52",
+  "contract_sha256": "898bc12bb9538c9b9ba109a1cbfe6e1e7e9cb5d27676439fd1a3fe4d898a0dbe",
+  "outcomes_read": false,
+  "trained": false,
+  "model_selection_started": false,
+  "completed_utc": "2026-10-18T17:46:20.067198+00:00"
+}

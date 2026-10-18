@@ -1,0 +1,19 @@
+{
+  "status": "COMPLETE_DESCRIPTIVE_ORACLE_MODEL_DIAGNOSTIC",
+  "new_fits": 0,
+  "identity": {
+    "code_sha256": "da5a07d6edae6e23b6278fc897d8bb969728fb0802f14e2a2181d0237b4359fb",
+    "plan_sha256": "06c71bb707d40c1aa632a628d3db3e40febcf89b9bb1326d9216c6920086a45d",
+    "training_selection_sha256": "f4164b52fc16aa286350ae53f6582fe5a4b1b48cb443c971b55505c48d7c85c4",
+    "learner_freeze_sha256": "70f87f1dacd4f2e025f8cbecff6890df1950215aa29c681cf0395e78daf19faf",
+    "learner_validation_stage_sha256": "4cd6cacd4e673e44bcdf7d48947ee10cfdc493af8cbc7c30377344579bcbabc6",
+    "threshold": 0,
+    "new_fits": 0,
+    "models": {
+      "gbt_net": "c26552353737180361daef85cd539b9f9cedf1e024884b096035503f434f425c",
+      "gbt_net_episode": "97a82c3f2146af85a924dc4b0de8aed717fc224216b87a339b8d684ddbcdfd46"
+    }
+  },
+  "sources": 5509,
+  "promotion_approved": false
+}

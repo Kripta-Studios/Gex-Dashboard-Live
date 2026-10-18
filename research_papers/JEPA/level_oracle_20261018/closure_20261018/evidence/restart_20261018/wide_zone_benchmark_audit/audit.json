@@ -1,0 +1,67 @@
+{
+  "status": "PASS_INDEPENDENT_WIDE_EXPLORATORY_BENCHMARK_AUDIT",
+  "source_files_rehashed": 5190,
+  "source_hash_mismatch": 0,
+  "accounting_rows": 66420,
+  "primary_ledger_rows": 6214,
+  "latency_ledger_rows": 4343,
+  "selected_raw_test_rows_checked": 3733,
+  "selected_oi_missing_masks_checked": 3733,
+  "selected_fallback_clock_days_checked": 62,
+  "model_refits": [
+    {
+      "arm": "price",
+      "side": "CALL",
+      "train_rows": 14909,
+      "prediction_rows": 25950,
+      "exact": true
+    },
+    {
+      "arm": "price",
+      "side": "PUT",
+      "train_rows": 14909,
+      "prediction_rows": 25950,
+      "exact": true
+    },
+    {
+      "arm": "authentic",
+      "side": "CALL",
+      "train_rows": 14909,
+      "prediction_rows": 25950,
+      "exact": true
+    },
+    {
+      "arm": "authentic",
+      "side": "PUT",
+      "train_rows": 14909,
+      "prediction_rows": 25950,
+      "exact": true
+    },
+    {
+      "arm": "placebo",
+      "side": "CALL",
+      "train_rows": 14909,
+      "prediction_rows": 25950,
+      "exact": true
+    },
+    {
+      "arm": "placebo",
+      "side": "PUT",
+      "train_rows": 14909,
+      "prediction_rows": 25950,
+      "exact": true
+    }
+  ],
+  "calendar_test_days": 123,
+  "bootstrap_comparisons_rebuilt": 2,
+  "summary_sha256": "e014cab7dca88c41fa0ff494d0736261ec9aa3c5eb6dbc47ba8d225ee780041f",
+  "audit_script_sha256": "bb27852ac085afae59931a01932ea04feddd0fccd2fdae51cea8073d3fd2b7f9",
+  "untouched_outer": false,
+  "live_parity_verified": false,
+  "original_receipt_times_verified": false,
+  "prior_close_receipt_verified": false,
+  "full_raw_feature_reconstruction": false,
+  "technical_ready": false,
+  "promotion_approved": false,
+  "audit_finished_utc": "2026-10-18T15:32:07.468800+00:00"
+}

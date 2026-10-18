@@ -1,0 +1,3447 @@
+{
+  "status": "COMPLETED_EXPLORATORY_DEVELOPMENT",
+  "untouched_outer": false,
+  "live_parity_verified": false,
+  "dealer_exposure_verified": false,
+  "prior_close_semantics_verified": false,
+  "technical_ready": false,
+  "promotion_approved": false,
+  "results": {
+    "price": {
+      "validation": {
+        "pooled": {
+          "trades": 1268,
+          "base_net_usd": -53118.8,
+          "base_win_rate": 0.38170347003154576,
+          "base_profit_factor": 0.7272733807261305,
+          "adverse_net_usd": -55654.799999999974,
+          "adverse_win_rate": 0.37381703470031546,
+          "adverse_profit_factor": 0.7165493406075154
+        },
+        "tickers": {
+          "SPXW": {
+            "trades": 648,
+            "base_net_usd": -46485.8,
+            "base_win_rate": 0.39197530864197533,
+            "base_profit_factor": 0.726388985352336,
+            "adverse_net_usd": -47781.799999999974,
+            "adverse_win_rate": 0.39197530864197533,
+            "adverse_profit_factor": 0.7200592434971007
+          },
+          "SPY": {
+            "trades": 278,
+            "base_net_usd": -4465.799999999998,
+            "base_win_rate": 0.3597122302158273,
+            "base_profit_factor": 0.6164654150706814,
+            "adverse_net_usd": -5021.8,
+            "adverse_win_rate": 0.35251798561151076,
+            "adverse_profit_factor": 0.5815515373718854
+          },
+          "QQQ": {
+            "trades": 342,
+            "base_net_usd": -2167.1999999999975,
+            "base_win_rate": 0.38011695906432746,
+            "base_profit_factor": 0.836168186147775,
+            "adverse_net_usd": -2851.2,
+            "adverse_win_rate": 0.3567251461988304,
+            "adverse_profit_factor": 0.7912890710782517
+          }
+        },
+        "months": {
+          "SPXW": {
+            "202501": {
+              "trades": 54,
+              "base_net_usd": -4798.400000000001,
+              "base_win_rate": 0.3333333333333333,
+              "base_profit_factor": 0.6610246121676225,
+              "adverse_net_usd": -4906.4,
+              "adverse_win_rate": 0.3333333333333333,
+              "adverse_profit_factor": 0.6551491467288931
+            },
+            "202502": {
+              "trades": 44,
+              "base_net_usd": 5592.6,
+              "base_win_rate": 0.5454545454545454,
+              "base_profit_factor": 1.6915543464820082,
+              "adverse_net_usd": 5504.600000000002,
+              "adverse_win_rate": 0.5454545454545454,
+              "adverse_profit_factor": 1.6773225052294825
+            },
+            "202503": {
+              "trades": 55,
+              "base_net_usd": -8513.000000000004,
+              "base_win_rate": 0.41818181818181815,
+              "base_profit_factor": 0.5170531905237359,
+              "adverse_net_usd": -8623.0,
+              "adverse_win_rate": 0.41818181818181815,
+              "adverse_profit_factor": 0.5125825269060325
+            },
+            "202504": {
+              "trades": 71,
+              "base_net_usd": -11686.60000000001,
+              "base_win_rate": 0.4084507042253521,
+              "base_profit_factor": 0.6847695909713756,
+              "adverse_net_usd": -11828.600000000002,
+              "adverse_win_rate": 0.4084507042253521,
+              "adverse_profit_factor": 0.6816606202835522
+            },
+            "202505": {
+              "trades": 51,
+              "base_net_usd": -159.5999999999995,
+              "base_win_rate": 0.43137254901960786,
+              "base_profit_factor": 0.9827616002765054,
+              "adverse_net_usd": -261.5999999999978,
+              "adverse_win_rate": 0.43137254901960786,
+              "adverse_profit_factor": 0.9719204843072429
+            },
+            "202506": {
+              "trades": 51,
+              "base_net_usd": -7654.6,
+              "base_win_rate": 0.3137254901960784,
+              "base_profit_factor": 0.4112299053918929,
+              "adverse_net_usd": -7756.5999999999985,
+              "adverse_win_rate": 0.3137254901960784,
+              "adverse_profit_factor": 0.4065794506923725
+            },
+            "202507": {
+              "trades": 63,
+              "base_net_usd": -4359.799999999997,
+              "base_win_rate": 0.38095238095238093,
+              "base_profit_factor": 0.599996330073215,
+              "adverse_net_usd": -4485.799999999998,
+              "adverse_win_rate": 0.38095238095238093,
+              "adverse_profit_factor": 0.5913604314318508
+            },
+            "202508": {
+              "trades": 45,
+              "base_net_usd": 1763.000000000001,
+              "base_win_rate": 0.4666666666666667,
+              "base_profit_factor": 1.2416591276694902,
+              "adverse_net_usd": 1673.0000000000018,
+              "adverse_win_rate": 0.4666666666666667,
+              "adverse_profit_factor": 1.2278236239344176
+            },
+            "202509": {
+              "trades": 60,
+              "base_net_usd": -2525.9999999999995,
+              "base_win_rate": 0.36666666666666664,
+              "base_profit_factor": 0.7787083435539821,
+              "adverse_net_usd": -2645.9999999999986,
+              "adverse_win_rate": 0.36666666666666664,
+              "adverse_profit_factor": 0.7697288265394922
+            },
+            "202510": {
+              "trades": 59,
+              "base_net_usd": 2793.5999999999995,
+              "base_win_rate": 0.4406779661016949,
+              "base_profit_factor": 1.2305559223557372,
+              "adverse_net_usd": 2675.6000000000035,
+              "adverse_win_rate": 0.4406779661016949,
+              "adverse_profit_factor": 1.2196211051646588
+            },
+            "202511": {
+              "trades": 49,
+              "base_net_usd": -11000.400000000001,
+              "base_win_rate": 0.2857142857142857,
+              "base_profit_factor": 0.3877101191138817,
+              "adverse_net_usd": -11098.4,
+              "adverse_win_rate": 0.2857142857142857,
+              "adverse_profit_factor": 0.38465291638944343
+            },
+            "202512": {
+              "trades": 46,
+              "base_net_usd": -5936.600000000002,
+              "base_win_rate": 0.32608695652173914,
+              "base_profit_factor": 0.4604366240706739,
+              "adverse_net_usd": -6028.6,
+              "adverse_win_rate": 0.32608695652173914,
+              "adverse_profit_factor": 0.4551452379661261
+            }
+          },
+          "SPY": {
+            "202501": {
+              "trades": 20,
+              "base_net_usd": -413.0,
+              "base_win_rate": 0.25,
+              "base_profit_factor": 0.39085545722713866,
+              "adverse_net_usd": -453.0000000000001,
+              "adverse_win_rate": 0.25,
+              "adverse_profit_factor": 0.36016949152542366
+            },
+            "202502": {
+              "trades": 15,
+              "base_net_usd": -89.9999999999999,
+              "base_win_rate": 0.3333333333333333,
+              "base_profit_factor": 0.8252427184466021,
+              "adverse_net_usd": -120.00000000000003,
+              "adverse_win_rate": 0.3333333333333333,
+              "adverse_profit_factor": 0.7757009345794393
+            },
+            "202503": {
+              "trades": 41,
+              "base_net_usd": -964.5999999999997,
+              "base_win_rate": 0.43902439024390244,
+              "base_profit_factor": 0.4751333115681796,
+              "adverse_net_usd": -1046.5999999999997,
+              "adverse_win_rate": 0.4146341463414634,
+              "adverse_profit_factor": 0.4445977499469327
+            },
+            "202504": {
+              "trades": 68,
+              "base_net_usd": -2232.7999999999984,
+              "base_win_rate": 0.3382352941176471,
+              "base_profit_factor": 0.4966636609558161,
+              "adverse_net_usd": -2368.7999999999993,
+              "adverse_win_rate": 0.3382352941176471,
+              "adverse_profit_factor": 0.4766239505081751
+            },
+            "202505": {
+              "trades": 21,
+              "base_net_usd": -364.59999999999985,
+              "base_win_rate": 0.23809523809523808,
+              "base_profit_factor": 0.3292862398822666,
+              "adverse_net_usd": -406.59999999999985,
+              "adverse_win_rate": 0.23809523809523808,
+              "adverse_profit_factor": 0.2936066712995136
+            },
+            "202506": {
+              "trades": 17,
+              "base_net_usd": -463.20000000000005,
+              "base_win_rate": 0.35294117647058826,
+              "base_profit_factor": 0.24140189977071733,
+              "adverse_net_usd": -497.20000000000005,
+              "adverse_win_rate": 0.35294117647058826,
+              "adverse_profit_factor": 0.21403730635472648
+            },
+            "202507": {
+              "trades": 10,
+              "base_net_usd": 61.000000000000014,
+              "base_win_rate": 0.3,
+              "base_profit_factor": 1.3329694323144106,
+              "adverse_net_usd": 40.99999999999992,
+              "adverse_win_rate": 0.3,
+              "adverse_profit_factor": 1.2079107505070992
+            },
+            "202508": {
+              "trades": 11,
+              "base_net_usd": 141.4,
+              "base_win_rate": 0.6363636363636364,
+              "base_profit_factor": 1.9464524765729585,
+              "adverse_net_usd": 119.39999999999996,
+              "adverse_win_rate": 0.6363636363636364,
+              "adverse_profit_factor": 1.758576874205845
+            },
+            "202509": {
+              "trades": 15,
+              "base_net_usd": -332.00000000000006,
+              "base_win_rate": 0.3333333333333333,
+              "base_profit_factor": 0.18226600985221675,
+              "adverse_net_usd": -362.0000000000001,
+              "adverse_win_rate": 0.26666666666666666,
+              "adverse_profit_factor": 0.15142991092358177
+            },
+            "202510": {
+              "trades": 21,
+              "base_net_usd": 355.4,
+              "base_win_rate": 0.42857142857142855,
+              "base_profit_factor": 1.5318766836276563,
+              "adverse_net_usd": 313.39999999999986,
+              "adverse_win_rate": 0.42857142857142855,
+              "adverse_profit_factor": 1.452759318116151
+            },
+            "202511": {
+              "trades": 24,
+              "base_net_usd": 6.600000000000193,
+              "base_win_rate": 0.375,
+              "base_profit_factor": 1.0062917063870356,
+              "adverse_net_usd": -41.400000000000034,
+              "adverse_win_rate": 0.375,
+              "adverse_profit_factor": 0.9616311399443931
+            },
+            "202512": {
+              "trades": 15,
+              "base_net_usd": -169.99999999999994,
+              "base_win_rate": 0.3333333333333333,
+              "base_profit_factor": 0.7001763668430335,
+              "adverse_net_usd": -200.00000000000009,
+              "adverse_win_rate": 0.3333333333333333,
+              "adverse_profit_factor": 0.6592844974446336
+            }
+          },
+          "QQQ": {
+            "202501": {
+              "trades": 30,
+              "base_net_usd": 23.000000000000153,
+              "base_win_rate": 0.43333333333333335,
+              "base_profit_factor": 1.0306176783812568,
+              "adverse_net_usd": -37.00000000000004,
+              "adverse_win_rate": 0.4,
+              "adverse_profit_factor": 0.9529740721911539
+            },
+            "202502": {
+              "trades": 24,
+              "base_net_usd": -63.399999999999906,
+              "base_win_rate": 0.4166666666666667,
+              "base_profit_factor": 0.8818046234153617,
+              "adverse_net_usd": -111.4000000000001,
+              "adverse_win_rate": 0.375,
+              "adverse_profit_factor": 0.8031802120141341
+            },
+            "202503": {
+              "trades": 51,
+              "base_net_usd": -642.5999999999993,
+              "base_win_rate": 0.37254901960784315,
+              "base_profit_factor": 0.7320490367775836,
+              "adverse_net_usd": -744.5999999999998,
+              "adverse_win_rate": 0.3333333333333333,
+              "adverse_profit_factor": 0.6978574906670998
+            },
+            "202504": {
+              "trades": 68,
+              "base_net_usd": -565.7999999999996,
+              "base_win_rate": 0.36764705882352944,
+              "base_profit_factor": 0.8514102631440729,
+              "adverse_net_usd": -701.8,
+              "adverse_win_rate": 0.36764705882352944,
+              "adverse_profit_factor": 0.819764754224665
+            },
+            "202505": {
+              "trades": 25,
+              "base_net_usd": -268.99999999999983,
+              "base_win_rate": 0.36,
+              "base_profit_factor": 0.5970641102456562,
+              "adverse_net_usd": -319.0,
+              "adverse_win_rate": 0.32,
+              "adverse_profit_factor": 0.5444158811768066
+            },
+            "202506": {
+              "trades": 18,
+              "base_net_usd": -281.79999999999995,
+              "base_win_rate": 0.2777777777777778,
+              "base_profit_factor": 0.5860752056404229,
+              "adverse_net_usd": -317.8,
+              "adverse_win_rate": 0.2222222222222222,
+              "adverse_profit_factor": 0.5507492225049476
+            },
+            "202507": {
+              "trades": 14,
+              "base_net_usd": -139.40000000000006,
+              "base_win_rate": 0.42857142857142855,
+              "base_profit_factor": 0.6270733012306046,
+              "adverse_net_usd": -167.4000000000001,
+              "adverse_win_rate": 0.42857142857142855,
+              "adverse_profit_factor": 0.5705489994869163
+            },
+            "202508": {
+              "trades": 11,
+              "base_net_usd": 158.39999999999998,
+              "base_win_rate": 0.6363636363636364,
+              "base_profit_factor": 1.9462365591397845,
+              "adverse_net_usd": 136.39999999999995,
+              "adverse_win_rate": 0.6363636363636364,
+              "adverse_profit_factor": 1.777651083238312
+            },
+            "202509": {
+              "trades": 11,
+              "base_net_usd": 24.40000000000009,
+              "base_win_rate": 0.36363636363636365,
+              "base_profit_factor": 1.0789133247089266,
+              "adverse_net_usd": 2.400000000000034,
+              "adverse_win_rate": 0.36363636363636365,
+              "adverse_profit_factor": 1.0074257425742574
+            },
+            "202510": {
+              "trades": 33,
+              "base_net_usd": 380.2000000000004,
+              "base_win_rate": 0.5151515151515151,
+              "base_profit_factor": 1.388117599020009,
+              "adverse_net_usd": 314.2000000000002,
+              "adverse_win_rate": 0.5151515151515151,
+              "adverse_profit_factor": 1.3105970739422694
+            },
+            "202511": {
+              "trades": 33,
+              "base_net_usd": -560.8,
+              "base_win_rate": 0.30303030303030304,
+              "base_profit_factor": 0.6720084220376656,
+              "adverse_net_usd": -626.8000000000001,
+              "adverse_win_rate": 0.2727272727272727,
+              "adverse_profit_factor": 0.6433367474678503
+            },
+            "202512": {
+              "trades": 24,
+              "base_net_usd": -230.3999999999998,
+              "base_win_rate": 0.20833333333333334,
+              "base_profit_factor": 0.7277882797731571,
+              "adverse_net_usd": -278.3999999999999,
+              "adverse_win_rate": 0.16666666666666666,
+              "adverse_profit_factor": 0.6854237288135595
+            }
+          }
+        }
+      },
+      "test": {
+        "pooled": {
+          "trades": 644,
+          "base_net_usd": -18796.400000000005,
+          "base_win_rate": 0.37732919254658387,
+          "base_profit_factor": 0.7989767238908448,
+          "adverse_net_usd": -20084.399999999987,
+          "adverse_win_rate": 0.37111801242236025,
+          "adverse_profit_factor": 0.787040748162993
+        },
+        "tickers": {
+          "SPXW": {
+            "trades": 309,
+            "base_net_usd": -16246.400000000005,
+            "base_win_rate": 0.36245954692556637,
+            "base_profit_factor": 0.7993062487029222,
+            "adverse_net_usd": -16864.399999999987,
+            "adverse_win_rate": 0.36245954692556637,
+            "adverse_profit_factor": 0.7926810678441999
+          },
+          "SPY": {
+            "trades": 133,
+            "base_net_usd": -623.7999999999993,
+            "base_win_rate": 0.38345864661654133,
+            "base_profit_factor": 0.8653920849337535,
+            "adverse_net_usd": -889.8000000000003,
+            "adverse_win_rate": 0.38345864661654133,
+            "adverse_profit_factor": 0.8145554582968613
+          },
+          "QQQ": {
+            "trades": 202,
+            "base_net_usd": -1926.1999999999975,
+            "base_win_rate": 0.39603960396039606,
+            "base_profit_factor": 0.7567376423934736,
+            "adverse_net_usd": -2330.1999999999994,
+            "adverse_win_rate": 0.37623762376237624,
+            "adverse_profit_factor": 0.7147019932415885
+          }
+        },
+        "months": {
+          "SPXW": {
+            "202601": {
+              "trades": 46,
+              "base_net_usd": -3741.600000000001,
+              "base_win_rate": 0.32608695652173914,
+              "base_profit_factor": 0.6709987162126512,
+              "adverse_net_usd": -3833.599999999998,
+              "adverse_win_rate": 0.32608695652173914,
+              "adverse_profit_factor": 0.6647368513109332
+            },
+            "202602": {
+              "trades": 47,
+              "base_net_usd": -5231.200000000003,
+              "base_win_rate": 0.3617021276595745,
+              "base_profit_factor": 0.6031859212622315,
+              "adverse_net_usd": -5325.199999999998,
+              "adverse_win_rate": 0.3617021276595745,
+              "adverse_profit_factor": 0.5978856754511817
+            },
+            "202603": {
+              "trades": 60,
+              "base_net_usd": -6271.000000000002,
+              "base_win_rate": 0.38333333333333336,
+              "base_profit_factor": 0.6812738879401481,
+              "adverse_net_usd": -6390.999999999998,
+              "adverse_win_rate": 0.38333333333333336,
+              "adverse_profit_factor": 0.6763919551171697
+            },
+            "202604": {
+              "trades": 52,
+              "base_net_usd": -3089.1999999999994,
+              "base_win_rate": 0.3269230769230769,
+              "base_profit_factor": 0.7638406849629233,
+              "adverse_net_usd": -3193.199999999998,
+              "adverse_win_rate": 0.3269230769230769,
+              "adverse_profit_factor": 0.7571895673332826
+            },
+            "202605": {
+              "trades": 46,
+              "base_net_usd": -2161.6000000000004,
+              "base_win_rate": 0.43478260869565216,
+              "base_profit_factor": 0.7595443623742991,
+              "adverse_net_usd": -2253.599999999998,
+              "adverse_win_rate": 0.43478260869565216,
+              "adverse_profit_factor": 0.750752079278004
+            },
+            "202606": {
+              "trades": 58,
+              "base_net_usd": 4248.199999999999,
+              "base_win_rate": 0.3448275862068966,
+              "base_profit_factor": 1.2899834810031539,
+              "adverse_net_usd": 4132.200000000003,
+              "adverse_win_rate": 0.3448275862068966,
+              "adverse_profit_factor": 1.2806095424357256
+            }
+          },
+          "SPY": {
+            "202601": {
+              "trades": 18,
+              "base_net_usd": 664.2,
+              "base_win_rate": 0.5555555555555556,
+              "base_profit_factor": 3.4988713318284432,
+              "adverse_net_usd": 628.2,
+              "adverse_win_rate": 0.5555555555555556,
+              "adverse_profit_factor": 3.229240596167494
+            },
+            "202602": {
+              "trades": 18,
+              "base_net_usd": -496.7999999999998,
+              "base_win_rate": 0.3333333333333333,
+              "base_profit_factor": 0.4001448925380345,
+              "adverse_net_usd": -532.8,
+              "adverse_win_rate": 0.3333333333333333,
+              "adverse_profit_factor": 0.3747946491433935
+            },
+            "202603": {
+              "trades": 33,
+              "base_net_usd": -875.7999999999998,
+              "base_win_rate": 0.30303030303030304,
+              "base_profit_factor": 0.4244973058220532,
+              "adverse_net_usd": -941.8000000000001,
+              "adverse_win_rate": 0.30303030303030304,
+              "adverse_profit_factor": 0.3992856231662203
+            },
+            "202604": {
+              "trades": 18,
+              "base_net_usd": 48.20000000000006,
+              "base_win_rate": 0.4444444444444444,
+              "base_profit_factor": 1.1184275184275185,
+              "adverse_net_usd": 12.199999999999953,
+              "adverse_win_rate": 0.4444444444444444,
+              "adverse_profit_factor": 1.0285714285714287
+            },
+            "202605": {
+              "trades": 15,
+              "base_net_usd": -351.0000000000001,
+              "base_win_rate": 0.3333333333333333,
+              "base_profit_factor": 0.19863013698630133,
+              "adverse_net_usd": -381.0000000000001,
+              "adverse_win_rate": 0.3333333333333333,
+              "adverse_profit_factor": 0.168122270742358
+            },
+            "202606": {
+              "trades": 31,
+              "base_net_usd": 387.4000000000002,
+              "base_win_rate": 0.3870967741935484,
+              "base_profit_factor": 1.3301516959263684,
+              "adverse_net_usd": 325.3999999999999,
+              "adverse_win_rate": 0.3870967741935484,
+              "adverse_profit_factor": 1.2686148258213643
+            }
+          },
+          "QQQ": {
+            "202601": {
+              "trades": 18,
+              "base_net_usd": 164.20000000000022,
+              "base_win_rate": 0.2222222222222222,
+              "base_profit_factor": 1.3719981875849572,
+              "adverse_net_usd": 128.2000000000001,
+              "adverse_win_rate": 0.2222222222222222,
+              "adverse_profit_factor": 1.2731146144013634
+            },
+            "202602": {
+              "trades": 35,
+              "base_net_usd": -241.9999999999996,
+              "base_win_rate": 0.45714285714285713,
+              "base_profit_factor": 0.8203948344960671,
+              "adverse_net_usd": -312.0,
+              "adverse_win_rate": 0.45714285714285713,
+              "adverse_profit_factor": 0.7747942832394978
+            },
+            "202603": {
+              "trades": 41,
+              "base_net_usd": -465.5999999999994,
+              "base_win_rate": 0.4146341463414634,
+              "base_profit_factor": 0.7806257067470791,
+              "adverse_net_usd": -547.5999999999998,
+              "adverse_win_rate": 0.3902439024390244,
+              "adverse_profit_factor": 0.7478821362799265
+            },
+            "202604": {
+              "trades": 25,
+              "base_net_usd": 2.078337502098293e-13,
+              "base_win_rate": 0.4,
+              "base_profit_factor": 1.0000000000000002,
+              "adverse_net_usd": -49.9999999999999,
+              "adverse_win_rate": 0.4,
+              "adverse_profit_factor": 0.9124343257443078
+            },
+            "202605": {
+              "trades": 31,
+              "base_net_usd": -388.59999999999974,
+              "base_win_rate": 0.3870967741935484,
+              "base_profit_factor": 0.5280544085499153,
+              "adverse_net_usd": -450.5999999999999,
+              "adverse_win_rate": 0.3225806451612903,
+              "adverse_profit_factor": 0.4782306623436776
+            },
+            "202606": {
+              "trades": 52,
+              "base_net_usd": -994.1999999999991,
+              "base_win_rate": 0.40384615384615385,
+              "base_profit_factor": 0.6237796109891779,
+              "adverse_net_usd": -1098.1999999999994,
+              "adverse_win_rate": 0.38461538461538464,
+              "adverse_profit_factor": 0.5941911166949969
+            }
+          }
+        }
+      }
+    },
+    "authentic": {
+      "validation": {
+        "pooled": {
+          "trades": 1262,
+          "base_net_usd": -33711.2,
+          "base_win_rate": 0.36608557844690964,
+          "base_profit_factor": 0.8248996234255291,
+          "adverse_net_usd": -36235.19999999997,
+          "adverse_win_rate": 0.35974643423137875,
+          "adverse_profit_factor": 0.8133493497783489
+        },
+        "tickers": {
+          "SPXW": {
+            "trades": 652,
+            "base_net_usd": -26594.20000000001,
+            "base_win_rate": 0.3834355828220859,
+            "base_profit_factor": 0.8419027644515146,
+            "adverse_net_usd": -27898.19999999998,
+            "adverse_win_rate": 0.3834355828220859,
+            "adverse_profit_factor": 0.8349396692190545
+          },
+          "SPY": {
+            "trades": 285,
+            "base_net_usd": -4152.999999999998,
+            "base_win_rate": 0.30526315789473685,
+            "base_profit_factor": 0.6489967714126336,
+            "adverse_net_usd": -4723.0,
+            "adverse_win_rate": 0.29473684210526313,
+            "adverse_profit_factor": 0.6138689950619705
+          },
+          "QQQ": {
+            "trades": 325,
+            "base_net_usd": -2963.9999999999986,
+            "base_win_rate": 0.38461538461538464,
+            "base_profit_factor": 0.7624809680262843,
+            "adverse_net_usd": -3614.000000000001,
+            "adverse_win_rate": 0.36923076923076925,
+            "adverse_profit_factor": 0.7194970506054018
+          }
+        },
+        "months": {
+          "SPXW": {
+            "202501": {
+              "trades": 54,
+              "base_net_usd": -2298.4000000000005,
+              "base_win_rate": 0.3888888888888889,
+              "base_profit_factor": 0.8279872472271698,
+              "adverse_net_usd": -2406.3999999999974,
+              "adverse_win_rate": 0.3888888888888889,
+              "adverse_profit_factor": 0.8207897049404965
+            },
+            "202502": {
+              "trades": 45,
+              "base_net_usd": 7697.999999999998,
+              "base_win_rate": 0.5555555555555556,
+              "base_profit_factor": 1.9962469263621068,
+              "adverse_net_usd": 7608.000000000002,
+              "adverse_win_rate": 0.5555555555555556,
+              "adverse_profit_factor": 1.9795287755890307
+            },
+            "202503": {
+              "trades": 64,
+              "base_net_usd": -6104.4,
+              "base_win_rate": 0.453125,
+              "base_profit_factor": 0.6691561432984663,
+              "adverse_net_usd": -6232.399999999994,
+              "adverse_win_rate": 0.453125,
+              "adverse_profit_factor": 0.6634954916041254
+            },
+            "202504": {
+              "trades": 70,
+              "base_net_usd": -3447.00000000001,
+              "base_win_rate": 0.4142857142857143,
+              "base_profit_factor": 0.9043392833355535,
+              "adverse_net_usd": -3587.0000000000005,
+              "adverse_win_rate": 0.4142857142857143,
+              "adverse_profit_factor": 0.9006800385429014
+            },
+            "202505": {
+              "trades": 58,
+              "base_net_usd": -9491.800000000001,
+              "base_win_rate": 0.29310344827586204,
+              "base_profit_factor": 0.39051985411208706,
+              "adverse_net_usd": -9607.8,
+              "adverse_win_rate": 0.29310344827586204,
+              "adverse_profit_factor": 0.38630266486113607
+            },
+            "202506": {
+              "trades": 37,
+              "base_net_usd": -1145.2000000000007,
+              "base_win_rate": 0.40540540540540543,
+              "base_profit_factor": 0.8457892327165974,
+              "adverse_net_usd": -1219.199999999999,
+              "adverse_win_rate": 0.40540540540540543,
+              "adverse_profit_factor": 0.8367915182993761
+            },
+            "202507": {
+              "trades": 51,
+              "base_net_usd": -4044.5999999999976,
+              "base_win_rate": 0.3137254901960784,
+              "base_profit_factor": 0.4951192110847585,
+              "adverse_net_usd": -4146.5999999999985,
+              "adverse_win_rate": 0.3137254901960784,
+              "adverse_profit_factor": 0.48687043682712544
+            },
+            "202508": {
+              "trades": 51,
+              "base_net_usd": -3004.599999999999,
+              "base_win_rate": 0.3137254901960784,
+              "base_profit_factor": 0.6674856131031428,
+              "adverse_net_usd": -3106.599999999998,
+              "adverse_win_rate": 0.3137254901960784,
+              "adverse_profit_factor": 0.6588403250603998
+            },
+            "202509": {
+              "trades": 49,
+              "base_net_usd": -4295.4,
+              "base_win_rate": 0.3469387755102041,
+              "base_profit_factor": 0.6025427492782588,
+              "adverse_net_usd": -4393.399999999998,
+              "adverse_win_rate": 0.3469387755102041,
+              "adverse_profit_factor": 0.595867981455589
+            },
+            "202510": {
+              "trades": 66,
+              "base_net_usd": 7256.399999999998,
+              "base_win_rate": 0.3939393939393939,
+              "base_profit_factor": 1.523398730525101,
+              "adverse_net_usd": 7124.4,
+              "adverse_win_rate": 0.3939393939393939,
+              "adverse_profit_factor": 1.5109294320137694
+            },
+            "202511": {
+              "trades": 48,
+              "base_net_usd": -265.7999999999988,
+              "base_win_rate": 0.3958333333333333,
+              "base_profit_factor": 0.9826596383184153,
+              "adverse_net_usd": -361.7999999999979,
+              "adverse_win_rate": 0.3958333333333333,
+              "adverse_profit_factor": 0.976485727655592
+            },
+            "202512": {
+              "trades": 59,
+              "base_net_usd": -7451.400000000001,
+              "base_win_rate": 0.3389830508474576,
+              "base_profit_factor": 0.40835609477227963,
+              "adverse_net_usd": -7569.399999999997,
+              "adverse_win_rate": 0.3389830508474576,
+              "adverse_profit_factor": 0.40268615258356744
+            }
+          },
+          "SPY": {
+            "202501": {
+              "trades": 13,
+              "base_net_usd": -445.8000000000001,
+              "base_win_rate": 0.15384615384615385,
+              "base_profit_factor": 0.24517439891635626,
+              "adverse_net_usd": -471.8000000000001,
+              "adverse_win_rate": 0.15384615384615385,
+              "adverse_profit_factor": 0.22984002611818474
+            },
+            "202502": {
+              "trades": 15,
+              "base_net_usd": 48.000000000000085,
+              "base_win_rate": 0.3333333333333333,
+              "base_profit_factor": 1.1212121212121213,
+              "adverse_net_usd": 17.99999999999997,
+              "adverse_win_rate": 0.26666666666666666,
+              "adverse_profit_factor": 1.043103448275862
+            },
+            "202503": {
+              "trades": 39,
+              "base_net_usd": 183.60000000000045,
+              "base_win_rate": 0.48717948717948717,
+              "base_profit_factor": 1.1322766570605196,
+              "adverse_net_usd": 105.60000000000015,
+              "adverse_win_rate": 0.46153846153846156,
+              "adverse_profit_factor": 1.073918521629568
+            },
+            "202504": {
+              "trades": 71,
+              "base_net_usd": -1769.599999999998,
+              "base_win_rate": 0.352112676056338,
+              "base_profit_factor": 0.5784257671050125,
+              "adverse_net_usd": -1911.599999999999,
+              "adverse_win_rate": 0.352112676056338,
+              "adverse_profit_factor": 0.5543640432674375
+            },
+            "202505": {
+              "trades": 25,
+              "base_net_usd": -322.99999999999994,
+              "base_win_rate": 0.28,
+              "base_profit_factor": 0.6006429277942631,
+              "adverse_net_usd": -373.00000000000006,
+              "adverse_win_rate": 0.28,
+              "adverse_profit_factor": 0.5584753787878788
+            },
+            "202506": {
+              "trades": 16,
+              "base_net_usd": -510.5999999999999,
+              "base_win_rate": 0.1875,
+              "base_profit_factor": 0.1101429069362147,
+              "adverse_net_usd": -542.5999999999999,
+              "adverse_win_rate": 0.1875,
+              "adverse_profit_factor": 0.0953651217072357
+            },
+            "202507": {
+              "trades": 13,
+              "base_net_usd": -116.80000000000004,
+              "base_win_rate": 0.23076923076923078,
+              "base_profit_factor": 0.6764542936288088,
+              "adverse_net_usd": -142.80000000000007,
+              "adverse_win_rate": 0.23076923076923078,
+              "adverse_profit_factor": 0.6251968503937007
+            },
+            "202508": {
+              "trades": 8,
+              "base_net_usd": -39.800000000000004,
+              "base_win_rate": 0.25,
+              "base_profit_factor": 0.775900900900901,
+              "adverse_net_usd": -55.800000000000004,
+              "adverse_win_rate": 0.25,
+              "adverse_profit_factor": 0.7056962025316456
+            },
+            "202509": {
+              "trades": 16,
+              "base_net_usd": -369.6,
+              "base_win_rate": 0.1875,
+              "base_profit_factor": 0.3817330210772833,
+              "adverse_net_usd": -401.59999999999997,
+              "adverse_win_rate": 0.1875,
+              "adverse_profit_factor": 0.35620391151009934
+            },
+            "202510": {
+              "trades": 27,
+              "base_net_usd": 13.800000000000036,
+              "base_win_rate": 0.2962962962962963,
+              "base_profit_factor": 1.0151415404871627,
+              "adverse_net_usd": -40.20000000000019,
+              "adverse_win_rate": 0.2962962962962963,
+              "adverse_profit_factor": 0.9576574678744467
+            },
+            "202511": {
+              "trades": 32,
+              "base_net_usd": -516.1999999999997,
+              "base_win_rate": 0.25,
+              "base_profit_factor": 0.6185902172306784,
+              "adverse_net_usd": -580.2,
+              "adverse_win_rate": 0.21875,
+              "adverse_profit_factor": 0.5864575908766928
+            },
+            "202512": {
+              "trades": 10,
+              "base_net_usd": -306.99999999999994,
+              "base_win_rate": 0.2,
+              "base_profit_factor": 0.35477091214796147,
+              "adverse_net_usd": -327.0,
+              "adverse_win_rate": 0.2,
+              "adverse_profit_factor": 0.33509556730378204
+            }
+          },
+          "QQQ": {
+            "202501": {
+              "trades": 28,
+              "base_net_usd": -158.79999999999993,
+              "base_win_rate": 0.42857142857142855,
+              "base_profit_factor": 0.8028798411122146,
+              "adverse_net_usd": -214.80000000000007,
+              "adverse_win_rate": 0.42857142857142855,
+              "adverse_profit_factor": 0.7435530085959886
+            },
+            "202502": {
+              "trades": 24,
+              "base_net_usd": -202.39999999999998,
+              "base_win_rate": 0.3333333333333333,
+              "base_profit_factor": 0.6269812016218208,
+              "adverse_net_usd": -250.40000000000006,
+              "adverse_win_rate": 0.2916666666666667,
+              "adverse_profit_factor": 0.5654286706004857
+            },
+            "202503": {
+              "trades": 47,
+              "base_net_usd": -870.1999999999995,
+              "base_win_rate": 0.3404255319148936,
+              "base_profit_factor": 0.6090043134435662,
+              "adverse_net_usd": -964.2000000000002,
+              "adverse_win_rate": 0.3191489361702128,
+              "adverse_profit_factor": 0.5786207499344465
+            },
+            "202504": {
+              "trades": 72,
+              "base_net_usd": -1771.1999999999994,
+              "base_win_rate": 0.375,
+              "base_profit_factor": 0.562666666666667,
+              "adverse_net_usd": -1915.2,
+              "adverse_win_rate": 0.3611111111111111,
+              "adverse_profit_factor": 0.5375700212478269
+            },
+            "202505": {
+              "trades": 27,
+              "base_net_usd": -299.1999999999999,
+              "base_win_rate": 0.2962962962962963,
+              "base_profit_factor": 0.5835189309576836,
+              "adverse_net_usd": -353.20000000000005,
+              "adverse_win_rate": 0.25925925925925924,
+              "adverse_profit_factor": 0.5334214002642006
+            },
+            "202506": {
+              "trades": 20,
+              "base_net_usd": -247.0,
+              "base_win_rate": 0.35,
+              "base_profit_factor": 0.6090534979423867,
+              "adverse_net_usd": -287.00000000000006,
+              "adverse_win_rate": 0.3,
+              "adverse_profit_factor": 0.5640947752126365
+            },
+            "202507": {
+              "trades": 9,
+              "base_net_usd": -82.40000000000006,
+              "base_win_rate": 0.3333333333333333,
+              "base_profit_factor": 0.6124176857949198,
+              "adverse_net_usd": -100.40000000000005,
+              "adverse_win_rate": 0.3333333333333333,
+              "adverse_profit_factor": 0.5529830810329472
+            },
+            "202508": {
+              "trades": 7,
+              "base_net_usd": 245.8,
+              "base_win_rate": 0.7142857142857143,
+              "base_profit_factor": 4.225721784776903,
+              "adverse_net_usd": 231.79999999999995,
+              "adverse_win_rate": 0.7142857142857143,
+              "adverse_profit_factor": 3.8902743142144636
+            },
+            "202509": {
+              "trades": 7,
+              "base_net_usd": 53.80000000000011,
+              "base_win_rate": 0.42857142857142855,
+              "base_profit_factor": 1.2632093933463804,
+              "adverse_net_usd": 39.800000000000026,
+              "adverse_win_rate": 0.42857142857142855,
+              "adverse_profit_factor": 1.1873822975517894
+            },
+            "202510": {
+              "trades": 36,
+              "base_net_usd": 441.40000000000015,
+              "base_win_rate": 0.4722222222222222,
+              "base_profit_factor": 1.3953780007165895,
+              "adverse_net_usd": 369.3999999999999,
+              "adverse_win_rate": 0.4722222222222222,
+              "adverse_profit_factor": 1.3199930699930706
+            },
+            "202511": {
+              "trades": 31,
+              "base_net_usd": -33.59999999999967,
+              "base_win_rate": 0.3870967741935484,
+              "base_profit_factor": 0.9756062146072314,
+              "adverse_net_usd": -95.59999999999982,
+              "adverse_win_rate": 0.3870967741935484,
+              "adverse_profit_factor": 0.9324572558993927
+            },
+            "202512": {
+              "trades": 17,
+              "base_net_usd": -40.19999999999989,
+              "base_win_rate": 0.4117647058823529,
+              "base_profit_factor": 0.9223938223938226,
+              "adverse_net_usd": -74.19999999999996,
+              "adverse_win_rate": 0.4117647058823529,
+              "adverse_profit_factor": 0.8620817843866171
+            }
+          }
+        }
+      },
+      "test": {
+        "pooled": {
+          "trades": 693,
+          "base_net_usd": -34135.79999999999,
+          "base_win_rate": 0.3838383838383838,
+          "base_profit_factor": 0.684873740124552,
+          "adverse_net_usd": -35521.79999999999,
+          "adverse_win_rate": 0.37806637806637805,
+          "adverse_profit_factor": 0.67465993061229
+        },
+        "tickers": {
+          "SPXW": {
+            "trades": 340,
+            "base_net_usd": -32309.0,
+            "base_win_rate": 0.3764705882352941,
+            "base_profit_factor": 0.6625698954153619,
+            "adverse_net_usd": -32988.999999999985,
+            "adverse_win_rate": 0.3764705882352941,
+            "adverse_profit_factor": 0.656987008989937
+          },
+          "SPY": {
+            "trades": 152,
+            "base_net_usd": -737.1999999999996,
+            "base_win_rate": 0.3684210526315789,
+            "base_profit_factor": 0.8477677280799572,
+            "adverse_net_usd": -1041.2,
+            "adverse_win_rate": 0.3618421052631579,
+            "adverse_profit_factor": 0.7932568206187205
+          },
+          "QQQ": {
+            "trades": 201,
+            "base_net_usd": -1089.5999999999976,
+            "base_win_rate": 0.4079601990049751,
+            "base_profit_factor": 0.8590682153296942,
+            "adverse_net_usd": -1491.5999999999995,
+            "adverse_win_rate": 0.39303482587064675,
+            "adverse_profit_factor": 0.8129232930316557
+          }
+        },
+        "months": {
+          "SPXW": {
+            "202601": {
+              "trades": 52,
+              "base_net_usd": -2624.2000000000003,
+              "base_win_rate": 0.4230769230769231,
+              "base_profit_factor": 0.7555017236560139,
+              "adverse_net_usd": -2728.199999999998,
+              "adverse_win_rate": 0.4230769230769231,
+              "adverse_profit_factor": 0.747225053275271
+            },
+            "202602": {
+              "trades": 49,
+              "base_net_usd": -5695.400000000001,
+              "base_win_rate": 0.3673469387755102,
+              "base_profit_factor": 0.675708608064865,
+              "adverse_net_usd": -5793.399999999998,
+              "adverse_win_rate": 0.3673469387755102,
+              "adverse_profit_factor": 0.6712889937927671
+            },
+            "202603": {
+              "trades": 67,
+              "base_net_usd": -843.200000000001,
+              "base_win_rate": 0.417910447761194,
+              "base_profit_factor": 0.9575948985134082,
+              "adverse_net_usd": -977.1999999999975,
+              "adverse_win_rate": 0.417910447761194,
+              "adverse_profit_factor": 0.9510479701839467
+            },
+            "202604": {
+              "trades": 61,
+              "base_net_usd": -8260.6,
+              "base_win_rate": 0.32786885245901637,
+              "base_profit_factor": 0.3991679152786464,
+              "adverse_net_usd": -8382.6,
+              "adverse_win_rate": 0.32786885245901637,
+              "adverse_profit_factor": 0.39390915795410164
+            },
+            "202605": {
+              "trades": 48,
+              "base_net_usd": -3610.8,
+              "base_win_rate": 0.3958333333333333,
+              "base_profit_factor": 0.6629641383687717,
+              "adverse_net_usd": -3706.799999999998,
+              "adverse_win_rate": 0.3958333333333333,
+              "adverse_profit_factor": 0.6558664611842471
+            },
+            "202606": {
+              "trades": 63,
+              "base_net_usd": -11274.800000000001,
+              "base_win_rate": 0.3333333333333333,
+              "base_profit_factor": 0.5120866186029202,
+              "adverse_net_usd": -11400.8,
+              "adverse_win_rate": 0.3333333333333333,
+              "adverse_profit_factor": 0.508420934624572
+            }
+          },
+          "SPY": {
+            "202601": {
+              "trades": 14,
+              "base_net_usd": 575.6000000000001,
+              "base_win_rate": 0.5714285714285714,
+              "base_profit_factor": 3.225831399845321,
+              "adverse_net_usd": 547.6,
+              "adverse_win_rate": 0.5714285714285714,
+              "adverse_profit_factor": 3.0236511456023654
+            },
+            "202602": {
+              "trades": 22,
+              "base_net_usd": -473.19999999999993,
+              "base_win_rate": 0.3181818181818182,
+              "base_profit_factor": 0.4278113663845225,
+              "adverse_net_usd": -517.1999999999999,
+              "adverse_win_rate": 0.3181818181818182,
+              "adverse_profit_factor": 0.3964994165694282
+            },
+            "202603": {
+              "trades": 36,
+              "base_net_usd": 247.40000000000035,
+              "base_win_rate": 0.4722222222222222,
+              "base_profit_factor": 1.2531205238387562,
+              "adverse_net_usd": 175.39999999999998,
+              "adverse_win_rate": 0.4444444444444444,
+              "adverse_profit_factor": 1.1724680432645034
+            },
+            "202604": {
+              "trades": 26,
+              "base_net_usd": -163.60000000000005,
+              "base_win_rate": 0.2692307692307692,
+              "base_profit_factor": 0.7457258315200497,
+              "adverse_net_usd": -215.60000000000005,
+              "adverse_win_rate": 0.2692307692307692,
+              "adverse_profit_factor": 0.6835926034634573
+            },
+            "202605": {
+              "trades": 19,
+              "base_net_usd": -273.40000000000003,
+              "base_win_rate": 0.3157894736842105,
+              "base_profit_factor": 0.41805023414218806,
+              "adverse_net_usd": -311.4000000000002,
+              "adverse_win_rate": 0.3157894736842105,
+              "adverse_profit_factor": 0.37192416296893893
+            },
+            "202606": {
+              "trades": 35,
+              "base_net_usd": -649.9999999999999,
+              "base_win_rate": 0.3142857142857143,
+              "base_profit_factor": 0.6099375900144023,
+              "adverse_net_usd": -720.0,
+              "adverse_win_rate": 0.3142857142857143,
+              "adverse_profit_factor": 0.5800279981334577
+            }
+          },
+          "QQQ": {
+            "202601": {
+              "trades": 18,
+              "base_net_usd": 22.200000000000074,
+              "base_win_rate": 0.3333333333333333,
+              "base_profit_factor": 1.077568134171908,
+              "adverse_net_usd": -13.800000000000082,
+              "adverse_win_rate": 0.3333333333333333,
+              "adverse_profit_factor": 0.9555125725338486
+            },
+            "202602": {
+              "trades": 32,
+              "base_net_usd": 513.8000000000002,
+              "base_win_rate": 0.53125,
+              "base_profit_factor": 1.581879954699887,
+              "adverse_net_usd": 449.79999999999995,
+              "adverse_win_rate": 0.53125,
+              "adverse_profit_factor": 1.4926615553121578
+            },
+            "202603": {
+              "trades": 42,
+              "base_net_usd": -500.19999999999976,
+              "base_win_rate": 0.42857142857142855,
+              "base_profit_factor": 0.7491977537103893,
+              "adverse_net_usd": -584.1999999999996,
+              "adverse_win_rate": 0.42857142857142855,
+              "adverse_profit_factor": 0.7139639639639642
+            },
+            "202604": {
+              "trades": 26,
+              "base_net_usd": -111.59999999999971,
+              "base_win_rate": 0.34615384615384615,
+              "base_profit_factor": 0.8134403209628891,
+              "adverse_net_usd": -163.59999999999988,
+              "adverse_win_rate": 0.34615384615384615,
+              "adverse_profit_factor": 0.7412211325529897
+            },
+            "202605": {
+              "trades": 39,
+              "base_net_usd": -277.3999999999995,
+              "base_win_rate": 0.41025641025641024,
+              "base_profit_factor": 0.6944260850407581,
+              "adverse_net_usd": -355.40000000000003,
+              "adverse_win_rate": 0.358974358974359,
+              "adverse_profit_factor": 0.6282426778242679
+            },
+            "202606": {
+              "trades": 44,
+              "base_net_usd": -736.3999999999996,
+              "base_win_rate": 0.36363636363636365,
+              "base_profit_factor": 0.7594878829446734,
+              "adverse_net_usd": -824.4000000000001,
+              "adverse_win_rate": 0.3409090909090909,
+              "adverse_profit_factor": 0.735718407386036
+            }
+          }
+        }
+      }
+    },
+    "placebo": {
+      "validation": {
+        "pooled": {
+          "trades": 1511,
+          "base_net_usd": -52389.6,
+          "base_win_rate": 0.3626737260092654,
+          "base_profit_factor": 0.754092312545002,
+          "adverse_net_usd": -55411.59999999997,
+          "adverse_win_rate": 0.3514228987425546,
+          "adverse_profit_factor": 0.7422584411295464
+        },
+        "tickers": {
+          "SPXW": {
+            "trades": 716,
+            "base_net_usd": -41343.60000000001,
+            "base_win_rate": 0.3715083798882682,
+            "base_profit_factor": 0.7719288374017373,
+            "adverse_net_usd": -42775.599999999984,
+            "adverse_win_rate": 0.3715083798882682,
+            "adverse_profit_factor": 0.7651950048030739
+          },
+          "SPY": {
+            "trades": 379,
+            "base_net_usd": -6899.399999999998,
+            "base_win_rate": 0.3324538258575198,
+            "base_profit_factor": 0.5617425108621085,
+            "adverse_net_usd": -7657.4,
+            "adverse_win_rate": 0.31926121372031663,
+            "adverse_profit_factor": 0.5288565662531994
+          },
+          "QQQ": {
+            "trades": 416,
+            "base_net_usd": -4146.599999999997,
+            "base_win_rate": 0.375,
+            "base_profit_factor": 0.7412902420763664,
+            "adverse_net_usd": -4978.599999999999,
+            "adverse_win_rate": 0.34615384615384615,
+            "adverse_profit_factor": 0.6993816873173442
+          }
+        },
+        "months": {
+          "SPXW": {
+            "202501": {
+              "trades": 64,
+              "base_net_usd": -4219.4,
+              "base_win_rate": 0.375,
+              "base_profit_factor": 0.6924411400247831,
+              "adverse_net_usd": -4347.399999999997,
+              "adverse_win_rate": 0.375,
+              "adverse_profit_factor": 0.6849481846510618
+            },
+            "202502": {
+              "trades": 46,
+              "base_net_usd": 8903.399999999998,
+              "base_win_rate": 0.5869565217391305,
+              "base_profit_factor": 2.475929978118161,
+              "adverse_net_usd": 8811.400000000003,
+              "adverse_win_rate": 0.5869565217391305,
+              "adverse_profit_factor": 2.451535318924618
+            },
+            "202503": {
+              "trades": 55,
+              "base_net_usd": -6383.000000000002,
+              "base_win_rate": 0.41818181818181815,
+              "base_profit_factor": 0.6482652971257272,
+              "adverse_net_usd": -6492.999999999999,
+              "adverse_win_rate": 0.41818181818181815,
+              "adverse_profit_factor": 0.6434611667545247
+            },
+            "202504": {
+              "trades": 74,
+              "base_net_usd": -2965.4000000000124,
+              "base_win_rate": 0.43243243243243246,
+              "base_profit_factor": 0.9198718121929734,
+              "adverse_net_usd": -3113.400000000001,
+              "adverse_win_rate": 0.43243243243243246,
+              "adverse_profit_factor": 0.9160632154469133
+            },
+            "202505": {
+              "trades": 60,
+              "base_net_usd": -7886.000000000001,
+              "base_win_rate": 0.3333333333333333,
+              "base_profit_factor": 0.4432363739056763,
+              "adverse_net_usd": -8005.999999999998,
+              "adverse_win_rate": 0.3333333333333333,
+              "adverse_profit_factor": 0.4379387812412244
+            },
+            "202506": {
+              "trades": 47,
+              "base_net_usd": -4736.200000000003,
+              "base_win_rate": 0.3404255319148936,
+              "base_profit_factor": 0.5553949270600604,
+              "adverse_net_usd": -4830.200000000001,
+              "adverse_win_rate": 0.3404255319148936,
+              "adverse_profit_factor": 0.5491945569596626
+            },
+            "202507": {
+              "trades": 59,
+              "base_net_usd": -4061.3999999999996,
+              "base_win_rate": 0.3898305084745763,
+              "base_profit_factor": 0.5644891481513251,
+              "adverse_net_usd": -4179.399999999999,
+              "adverse_win_rate": 0.3898305084745763,
+              "adverse_profit_factor": 0.5552694304928918
+            },
+            "202508": {
+              "trades": 56,
+              "base_net_usd": -1152.599999999999,
+              "base_win_rate": 0.3392857142857143,
+              "base_profit_factor": 0.8699126430554612,
+              "adverse_net_usd": -1264.5999999999974,
+              "adverse_win_rate": 0.3392857142857143,
+              "adverse_profit_factor": 0.8584540305791227
+            },
+            "202509": {
+              "trades": 61,
+              "base_net_usd": -4240.5999999999985,
+              "base_win_rate": 0.32786885245901637,
+              "base_profit_factor": 0.6196293705039196,
+              "adverse_net_usd": -4362.599999999997,
+              "adverse_win_rate": 0.32786885245901637,
+              "adverse_profit_factor": 0.6115434616138051
+            },
+            "202510": {
+              "trades": 67,
+              "base_net_usd": -58.19999999999999,
+              "base_win_rate": 0.29850746268656714,
+              "base_profit_factor": 0.9959879224055916,
+              "adverse_net_usd": -192.19999999999965,
+              "adverse_win_rate": 0.29850746268656714,
+              "adverse_profit_factor": 0.986835796769907
+            },
+            "202511": {
+              "trades": 65,
+              "base_net_usd": -9789.000000000002,
+              "base_win_rate": 0.3076923076923077,
+              "base_profit_factor": 0.6113471235160995,
+              "adverse_net_usd": -9919.0,
+              "adverse_win_rate": 0.3076923076923077,
+              "adverse_profit_factor": 0.6075879257823319
+            },
+            "202512": {
+              "trades": 62,
+              "base_net_usd": -4755.200000000003,
+              "base_win_rate": 0.3548387096774194,
+              "base_profit_factor": 0.6203129990418393,
+              "adverse_net_usd": -4879.200000000001,
+              "adverse_win_rate": 0.3548387096774194,
+              "adverse_profit_factor": 0.6128847984766741
+            }
+          },
+          "SPY": {
+            "202501": {
+              "trades": 25,
+              "base_net_usd": -166.99999999999994,
+              "base_win_rate": 0.4,
+              "base_profit_factor": 0.7525925925925926,
+              "adverse_net_usd": -217.00000000000006,
+              "adverse_win_rate": 0.4,
+              "adverse_profit_factor": 0.6921985815602835
+            },
+            "202502": {
+              "trades": 23,
+              "base_net_usd": -30.799999999999912,
+              "base_win_rate": 0.43478260869565216,
+              "base_profit_factor": 0.9461350122420428,
+              "adverse_net_usd": -76.79999999999998,
+              "adverse_win_rate": 0.391304347826087,
+              "adverse_profit_factor": 0.8718718718718718
+            },
+            "202503": {
+              "trades": 52,
+              "base_net_usd": -1329.1999999999994,
+              "base_win_rate": 0.36538461538461536,
+              "base_profit_factor": 0.4314312601591241,
+              "adverse_net_usd": -1433.1999999999998,
+              "adverse_win_rate": 0.3076923076923077,
+              "adverse_profit_factor": 0.40422347855005
+            },
+            "202504": {
+              "trades": 79,
+              "base_net_usd": -2469.399999999998,
+              "base_win_rate": 0.3291139240506329,
+              "base_profit_factor": 0.5221564302024074,
+              "adverse_net_usd": -2627.3999999999987,
+              "adverse_win_rate": 0.3291139240506329,
+              "adverse_profit_factor": 0.5018013576548218
+            },
+            "202505": {
+              "trades": 38,
+              "base_net_usd": -668.8,
+              "base_win_rate": 0.2894736842105263,
+              "base_profit_factor": 0.4002869440459111,
+              "adverse_net_usd": -744.8000000000003,
+              "adverse_win_rate": 0.2894736842105263,
+              "adverse_profit_factor": 0.362983236400958
+            },
+            "202506": {
+              "trades": 18,
+              "base_net_usd": -315.79999999999995,
+              "base_win_rate": 0.3888888888888889,
+              "base_profit_factor": 0.4336441893830704,
+              "adverse_net_usd": -351.8,
+              "adverse_win_rate": 0.3888888888888889,
+              "adverse_profit_factor": 0.39302967563837127
+            },
+            "202507": {
+              "trades": 19,
+              "base_net_usd": -558.4000000000001,
+              "base_win_rate": 0.21052631578947367,
+              "base_profit_factor": 0.20568990042674246,
+              "adverse_net_usd": -596.4000000000001,
+              "adverse_win_rate": 0.21052631578947367,
+              "adverse_profit_factor": 0.1863574351978171
+            },
+            "202508": {
+              "trades": 14,
+              "base_net_usd": -104.39999999999995,
+              "base_win_rate": 0.42857142857142855,
+              "base_profit_factor": 0.6834445118253489,
+              "adverse_net_usd": -132.39999999999998,
+              "adverse_win_rate": 0.42857142857142855,
+              "adverse_profit_factor": 0.6171197223828804
+            },
+            "202509": {
+              "trades": 21,
+              "base_net_usd": -561.6000000000001,
+              "base_win_rate": 0.23809523809523808,
+              "base_profit_factor": 0.2292066977765578,
+              "adverse_net_usd": -603.6,
+              "adverse_win_rate": 0.19047619047619047,
+              "adverse_profit_factor": 0.20704151339989496
+            },
+            "202510": {
+              "trades": 34,
+              "base_net_usd": -402.3999999999999,
+              "base_win_rate": 0.29411764705882354,
+              "base_profit_factor": 0.7059339374451914,
+              "adverse_net_usd": -470.4000000000001,
+              "adverse_win_rate": 0.29411764705882354,
+              "adverse_profit_factor": 0.6678904264332108
+            },
+            "202511": {
+              "trades": 36,
+              "base_net_usd": 135.40000000000057,
+              "base_win_rate": 0.3611111111111111,
+              "base_profit_factor": 1.0963152653293506,
+              "adverse_net_usd": 63.400000000000226,
+              "adverse_win_rate": 0.3611111111111111,
+              "adverse_profit_factor": 1.043669926987189
+            },
+            "202512": {
+              "trades": 20,
+              "base_net_usd": -427.00000000000006,
+              "base_win_rate": 0.25,
+              "base_profit_factor": 0.45396419437340146,
+              "adverse_net_usd": -467.00000000000017,
+              "adverse_win_rate": 0.25,
+              "adverse_profit_factor": 0.4248768472906403
+            }
+          },
+          "QQQ": {
+            "202501": {
+              "trades": 37,
+              "base_net_usd": 173.80000000000007,
+              "base_win_rate": 0.4594594594594595,
+              "base_profit_factor": 1.1907793633369923,
+              "adverse_net_usd": 99.79999999999997,
+              "adverse_win_rate": 0.4594594594594595,
+              "adverse_profit_factor": 1.1049421661409042
+            },
+            "202502": {
+              "trades": 38,
+              "base_net_usd": -251.79999999999987,
+              "base_win_rate": 0.3684210526315789,
+              "base_profit_factor": 0.7296542838737387,
+              "adverse_net_usd": -327.8000000000002,
+              "adverse_win_rate": 0.3157894736842105,
+              "adverse_profit_factor": 0.6660554197229013
+            },
+            "202503": {
+              "trades": 55,
+              "base_net_usd": -1965.999999999999,
+              "base_win_rate": 0.2909090909090909,
+              "base_profit_factor": 0.3169816564758201,
+              "adverse_net_usd": -2075.9999999999995,
+              "adverse_win_rate": 0.2727272727272727,
+              "adverse_profit_factor": 0.2979370984105512
+            },
+            "202504": {
+              "trades": 86,
+              "base_net_usd": -2374.5999999999985,
+              "base_win_rate": 0.3488372093023256,
+              "base_profit_factor": 0.544012596973654,
+              "adverse_net_usd": -2546.5999999999995,
+              "adverse_win_rate": 0.32558139534883723,
+              "adverse_profit_factor": 0.5215675960021042
+            },
+            "202505": {
+              "trades": 32,
+              "base_net_usd": -173.2,
+              "base_win_rate": 0.40625,
+              "base_profit_factor": 0.757897679619793,
+              "adverse_net_usd": -237.20000000000005,
+              "adverse_win_rate": 0.34375,
+              "adverse_profit_factor": 0.6860772895712014
+            },
+            "202506": {
+              "trades": 25,
+              "base_net_usd": -336.0,
+              "base_win_rate": 0.32,
+              "base_profit_factor": 0.5769327625283304,
+              "adverse_net_usd": -386.0000000000001,
+              "adverse_win_rate": 0.28,
+              "adverse_profit_factor": 0.5342664092664092
+            },
+            "202507": {
+              "trades": 13,
+              "base_net_usd": -202.80000000000004,
+              "base_win_rate": 0.38461538461538464,
+              "base_profit_factor": 0.37943696450428394,
+              "adverse_net_usd": -228.79999999999998,
+              "adverse_win_rate": 0.38461538461538464,
+              "adverse_profit_factor": 0.33255542590431736
+            },
+            "202508": {
+              "trades": 10,
+              "base_net_usd": 39.999999999999964,
+              "base_win_rate": 0.6,
+              "base_profit_factor": 1.1643385373870172,
+              "adverse_net_usd": 19.999999999999943,
+              "adverse_win_rate": 0.6,
+              "adverse_profit_factor": 1.0795544948289577
+            },
+            "202509": {
+              "trades": 10,
+              "base_net_usd": 97.00000000000009,
+              "base_win_rate": 0.4,
+              "base_profit_factor": 1.4065381391450134,
+              "adverse_net_usd": 77.0,
+              "adverse_win_rate": 0.4,
+              "adverse_profit_factor": 1.3072625698324023
+            },
+            "202510": {
+              "trades": 42,
+              "base_net_usd": 483.8000000000001,
+              "base_win_rate": 0.42857142857142855,
+              "base_profit_factor": 1.3993726267128945,
+              "adverse_net_usd": 399.79999999999984,
+              "adverse_win_rate": 0.40476190476190477,
+              "adverse_profit_factor": 1.3170499603489294
+            },
+            "202511": {
+              "trades": 39,
+              "base_net_usd": 625.6000000000005,
+              "base_win_rate": 0.4358974358974359,
+              "base_profit_factor": 1.3934096340083018,
+              "adverse_net_usd": 547.6000000000003,
+              "adverse_win_rate": 0.41025641025641024,
+              "adverse_profit_factor": 1.3347597505807562
+            },
+            "202512": {
+              "trades": 29,
+              "base_net_usd": -262.39999999999975,
+              "base_win_rate": 0.27586206896551724,
+              "base_profit_factor": 0.7321355655369541,
+              "adverse_net_usd": -320.4,
+              "adverse_win_rate": 0.20689655172413793,
+              "adverse_profit_factor": 0.6867422761048104
+            }
+          }
+        }
+      },
+      "test": {
+        "pooled": {
+          "trades": 836,
+          "base_net_usd": -36986.59999999999,
+          "base_win_rate": 0.3684210526315789,
+          "base_profit_factor": 0.7010695887328681,
+          "adverse_net_usd": -38658.59999999998,
+          "adverse_win_rate": 0.3588516746411483,
+          "adverse_profit_factor": 0.6902221730747967
+        },
+        "tickers": {
+          "SPXW": {
+            "trades": 374,
+            "base_net_usd": -33945.40000000001,
+            "base_win_rate": 0.33689839572192515,
+            "base_profit_factor": 0.684685822779636,
+            "adverse_net_usd": -34693.39999999999,
+            "adverse_win_rate": 0.33689839572192515,
+            "adverse_profit_factor": 0.6792156949768747
+          },
+          "SPY": {
+            "trades": 200,
+            "base_net_usd": -813.9999999999997,
+            "base_win_rate": 0.39,
+            "base_profit_factor": 0.8638841510317375,
+            "adverse_net_usd": -1214.000000000001,
+            "adverse_win_rate": 0.38,
+            "adverse_profit_factor": 0.8050237697545926
+          },
+          "QQQ": {
+            "trades": 262,
+            "base_net_usd": -2227.199999999999,
+            "base_win_rate": 0.3969465648854962,
+            "base_profit_factor": 0.7793496998157284,
+            "adverse_net_usd": -2751.2,
+            "adverse_win_rate": 0.37404580152671757,
+            "adverse_profit_factor": 0.7358780384777849
+          }
+        },
+        "months": {
+          "SPXW": {
+            "202601": {
+              "trades": 58,
+              "base_net_usd": -686.8000000000011,
+              "base_win_rate": 0.3793103448275862,
+              "base_profit_factor": 0.9433127538050117,
+              "adverse_net_usd": -802.7999999999988,
+              "adverse_win_rate": 0.3793103448275862,
+              "adverse_profit_factor": 0.9341297712429025
+            },
+            "202602": {
+              "trades": 54,
+              "base_net_usd": -9723.400000000001,
+              "base_win_rate": 0.2777777777777778,
+              "base_profit_factor": 0.47792143639526646,
+              "adverse_net_usd": -9831.4,
+              "adverse_win_rate": 0.2777777777777778,
+              "adverse_profit_factor": 0.4743241509111131
+            },
+            "202603": {
+              "trades": 73,
+              "base_net_usd": 1409.1999999999985,
+              "base_win_rate": 0.4520547945205479,
+              "base_profit_factor": 1.069559208253122,
+              "adverse_net_usd": 1263.2000000000057,
+              "adverse_win_rate": 0.4520547945205479,
+              "adverse_profit_factor": 1.0621072815772656
+            },
+            "202604": {
+              "trades": 60,
+              "base_net_usd": -8625.999999999998,
+              "base_win_rate": 0.21666666666666667,
+              "base_profit_factor": 0.504144583299801,
+              "adverse_net_usd": -8745.999999999998,
+              "adverse_win_rate": 0.21666666666666667,
+              "adverse_profit_factor": 0.49994854261243454
+            },
+            "202605": {
+              "trades": 55,
+              "base_net_usd": -5553.000000000001,
+              "base_win_rate": 0.34545454545454546,
+              "base_profit_factor": 0.5772557020615731,
+              "adverse_net_usd": -5662.999999999998,
+              "adverse_win_rate": 0.34545454545454546,
+              "adverse_profit_factor": 0.5712317150731397
+            },
+            "202606": {
+              "trades": 74,
+              "base_net_usd": -10765.400000000001,
+              "base_win_rate": 0.32432432432432434,
+              "base_profit_factor": 0.5879272727272727,
+              "adverse_net_usd": -10913.399999999996,
+              "adverse_win_rate": 0.32432432432432434,
+              "adverse_profit_factor": 0.583855100095329
+            }
+          },
+          "SPY": {
+            "202601": {
+              "trades": 22,
+              "base_net_usd": 405.80000000000007,
+              "base_win_rate": 0.4090909090909091,
+              "base_profit_factor": 1.8864132809086938,
+              "adverse_net_usd": 361.79999999999995,
+              "adverse_win_rate": 0.4090909090909091,
+              "adverse_profit_factor": 1.7478296816866474
+            },
+            "202602": {
+              "trades": 30,
+              "base_net_usd": -1007.0000000000001,
+              "base_win_rate": 0.3,
+              "base_profit_factor": 0.22275393640012356,
+              "adverse_net_usd": -1067.0,
+              "adverse_win_rate": 0.3,
+              "adverse_profit_factor": 0.20230263157894743
+            },
+            "202603": {
+              "trades": 51,
+              "base_net_usd": -244.5999999999997,
+              "base_win_rate": 0.47058823529411764,
+              "base_profit_factor": 0.8542485996901445,
+              "adverse_net_usd": -346.5999999999999,
+              "adverse_win_rate": 0.43137254901960786,
+              "adverse_profit_factor": 0.8001614391143913
+            },
+            "202604": {
+              "trades": 29,
+              "base_net_usd": -437.40000000000003,
+              "base_win_rate": 0.2413793103448276,
+              "base_profit_factor": 0.44009216589861744,
+              "adverse_net_usd": -495.40000000000015,
+              "adverse_win_rate": 0.2413793103448276,
+              "adverse_profit_factor": 0.39966068831798324
+            },
+            "202605": {
+              "trades": 25,
+              "base_net_usd": -245.0000000000001,
+              "base_win_rate": 0.4,
+              "base_profit_factor": 0.5577617328519853,
+              "adverse_net_usd": -295.00000000000017,
+              "adverse_win_rate": 0.4,
+              "adverse_profit_factor": 0.49486301369862973
+            },
+            "202606": {
+              "trades": 43,
+              "base_net_usd": 714.2000000000002,
+              "base_win_rate": 0.4418604651162791,
+              "base_profit_factor": 1.588594033294874,
+              "adverse_net_usd": 628.1999999999999,
+              "adverse_win_rate": 0.4418604651162791,
+              "adverse_profit_factor": 1.4980180751545902
+            }
+          },
+          "QQQ": {
+            "202601": {
+              "trades": 26,
+              "base_net_usd": 299.40000000000015,
+              "base_win_rate": 0.38461538461538464,
+              "base_profit_factor": 1.5968899521531101,
+              "adverse_net_usd": 247.40000000000003,
+              "adverse_win_rate": 0.3076923076923077,
+              "adverse_profit_factor": 1.4617394550205296
+            },
+            "202602": {
+              "trades": 40,
+              "base_net_usd": -1527.9999999999998,
+              "base_win_rate": 0.25,
+              "base_profit_factor": 0.29062209842154146,
+              "adverse_net_usd": -1608.0000000000002,
+              "adverse_win_rate": 0.25,
+              "adverse_profit_factor": 0.2737127371273713
+            },
+            "202603": {
+              "trades": 55,
+              "base_net_usd": 11.000000000000298,
+              "base_win_rate": 0.4727272727272727,
+              "base_profit_factor": 1.004976474846182,
+              "adverse_net_usd": -98.99999999999964,
+              "adverse_win_rate": 0.45454545454545453,
+              "adverse_profit_factor": 0.9563876651982385
+            },
+            "202604": {
+              "trades": 36,
+              "base_net_usd": 36.40000000000021,
+              "base_win_rate": 0.4166666666666667,
+              "base_profit_factor": 1.0401500110302229,
+              "adverse_net_usd": -35.59999999999998,
+              "adverse_win_rate": 0.4166666666666667,
+              "adverse_profit_factor": 0.9624710099093401
+            },
+            "202605": {
+              "trades": 42,
+              "base_net_usd": -312.19999999999965,
+              "base_win_rate": 0.40476190476190477,
+              "base_profit_factor": 0.7141025641025643,
+              "adverse_net_usd": -396.2,
+              "adverse_win_rate": 0.35714285714285715,
+              "adverse_profit_factor": 0.6537318650585563
+            },
+            "202606": {
+              "trades": 63,
+              "base_net_usd": -733.7999999999994,
+              "base_win_rate": 0.4126984126984127,
+              "base_profit_factor": 0.7727610553697514,
+              "adverse_net_usd": -859.8000000000001,
+              "adverse_win_rate": 0.3968253968253968,
+              "adverse_profit_factor": 0.7397542224105579
+            }
+          }
+        }
+      }
+    }
+  },
+  "entry_delay_sensitivity_minutes": {
+    "2": {
+      "price": {
+        "pooled": {
+          "trades": 644,
+          "base_net_usd": -18337.399999999994,
+          "base_win_rate": 0.38664596273291924,
+          "base_profit_factor": 0.8069889587083059,
+          "adverse_net_usd": -19625.399999999983,
+          "adverse_win_rate": 0.38198757763975155,
+          "adverse_profit_factor": 0.7951415347422441
+        },
+        "tickers": {
+          "SPXW": {
+            "trades": 309,
+            "base_net_usd": -15221.4,
+            "base_win_rate": 0.37540453074433655,
+            "base_profit_factor": 0.8144700083371116,
+            "adverse_net_usd": -15839.399999999987,
+            "adverse_win_rate": 0.37540453074433655,
+            "adverse_profit_factor": 0.8078414340618811
+          },
+          "SPY": {
+            "trades": 133,
+            "base_net_usd": -463.79999999999933,
+            "base_win_rate": 0.40601503759398494,
+            "base_profit_factor": 0.898587484147461,
+            "adverse_net_usd": -729.8,
+            "adverse_win_rate": 0.39097744360902253,
+            "adverse_profit_factor": 0.8458255872908569
+          },
+          "QQQ": {
+            "trades": 202,
+            "base_net_usd": -2652.199999999998,
+            "base_win_rate": 0.3910891089108911,
+            "base_profit_factor": 0.6839157172140914,
+            "adverse_net_usd": -3056.2,
+            "adverse_win_rate": 0.38613861386138615,
+            "adverse_profit_factor": 0.6461666705258522
+          }
+        },
+        "months": {
+          "SPXW": {
+            "202601": {
+              "trades": 46,
+              "base_net_usd": -2931.6,
+              "base_win_rate": 0.34782608695652173,
+              "base_profit_factor": 0.7215425531914891,
+              "adverse_net_usd": -3023.5999999999985,
+              "adverse_win_rate": 0.34782608695652173,
+              "adverse_profit_factor": 0.7144314318095958
+            },
+            "202602": {
+              "trades": 47,
+              "base_net_usd": -6496.200000000003,
+              "base_win_rate": 0.3191489361702128,
+              "base_profit_factor": 0.5358928928642871,
+              "adverse_net_usd": -6590.199999999997,
+              "adverse_win_rate": 0.3191489361702128,
+              "adverse_profit_factor": 0.5313202287144767
+            },
+            "202603": {
+              "trades": 60,
+              "base_net_usd": -3161.0000000000014,
+              "base_win_rate": 0.4166666666666667,
+              "base_profit_factor": 0.8243498555234499,
+              "adverse_net_usd": -3280.999999999995,
+              "adverse_win_rate": 0.4166666666666667,
+              "adverse_profit_factor": 0.81838813240341
+            },
+            "202604": {
+              "trades": 52,
+              "base_net_usd": -3219.1999999999985,
+              "base_win_rate": 0.34615384615384615,
+              "base_profit_factor": 0.7705717177188307,
+              "adverse_net_usd": -3323.1999999999975,
+              "adverse_win_rate": 0.34615384615384615,
+              "adverse_profit_factor": 0.7643020270366117
+            },
+            "202605": {
+              "trades": 46,
+              "base_net_usd": -3036.6000000000004,
+              "base_win_rate": 0.43478260869565216,
+              "base_profit_factor": 0.6788230067903451,
+              "adverse_net_usd": -3128.599999999997,
+              "adverse_win_rate": 0.43478260869565216,
+              "adverse_profit_factor": 0.670902320493131
+            },
+            "202606": {
+              "trades": 58,
+              "base_net_usd": 3623.1999999999994,
+              "base_win_rate": 0.3793103448275862,
+              "base_profit_factor": 1.225947267330191,
+              "adverse_net_usd": 3507.200000000001,
+              "adverse_win_rate": 0.3793103448275862,
+              "adverse_profit_factor": 1.2177357272343494
+            }
+          },
+          "SPY": {
+            "202601": {
+              "trades": 18,
+              "base_net_usd": 592.2,
+              "base_win_rate": 0.6111111111111112,
+              "base_profit_factor": 2.9467455621301775,
+              "adverse_net_usd": 556.2,
+              "adverse_win_rate": 0.5555555555555556,
+              "adverse_profit_factor": 2.73921200750469
+            },
+            "202602": {
+              "trades": 18,
+              "base_net_usd": -511.79999999999984,
+              "base_win_rate": 0.2777777777777778,
+              "base_profit_factor": 0.35848583604913514,
+              "adverse_net_usd": -547.8,
+              "adverse_win_rate": 0.2777777777777778,
+              "adverse_profit_factor": 0.3350327749453751
+            },
+            "202603": {
+              "trades": 33,
+              "base_net_usd": -737.7999999999998,
+              "base_win_rate": 0.36363636363636365,
+              "base_profit_factor": 0.4806419822610168,
+              "adverse_net_usd": -803.8000000000002,
+              "adverse_win_rate": 0.3333333333333333,
+              "adverse_profit_factor": 0.4506560962274468
+            },
+            "202604": {
+              "trades": 18,
+              "base_net_usd": 64.20000000000006,
+              "base_win_rate": 0.3888888888888889,
+              "base_profit_factor": 1.1298018600889606,
+              "adverse_net_usd": 28.200000000000088,
+              "adverse_win_rate": 0.3888888888888889,
+              "adverse_profit_factor": 1.0545876887340297
+            },
+            "202605": {
+              "trades": 15,
+              "base_net_usd": -271.0,
+              "base_win_rate": 0.4,
+              "base_profit_factor": 0.3444605708756651,
+              "adverse_net_usd": -301.0,
+              "adverse_win_rate": 0.4,
+              "adverse_profit_factor": 0.30227167362076945
+            },
+            "202606": {
+              "trades": 31,
+              "base_net_usd": 400.40000000000026,
+              "base_win_rate": 0.41935483870967744,
+              "base_profit_factor": 1.3503675183759196,
+              "adverse_net_usd": 338.40000000000003,
+              "adverse_win_rate": 0.41935483870967744,
+              "adverse_profit_factor": 1.287071598235494
+            }
+          },
+          "QQQ": {
+            "202601": {
+              "trades": 18,
+              "base_net_usd": 176.2000000000002,
+              "base_win_rate": 0.3888888888888889,
+              "base_profit_factor": 1.3576938692651241,
+              "adverse_net_usd": 140.2000000000001,
+              "adverse_win_rate": 0.3888888888888889,
+              "adverse_profit_factor": 1.272444617178391
+            },
+            "202602": {
+              "trades": 35,
+              "base_net_usd": -223.9999999999994,
+              "base_win_rate": 0.45714285714285713,
+              "base_profit_factor": 0.8393574297188761,
+              "adverse_net_usd": -294.0,
+              "adverse_win_rate": 0.45714285714285713,
+              "adverse_profit_factor": 0.7947500698129016
+            },
+            "202603": {
+              "trades": 41,
+              "base_net_usd": -544.5999999999998,
+              "base_win_rate": 0.4146341463414634,
+              "base_profit_factor": 0.7237496195597038,
+              "adverse_net_usd": -626.6,
+              "adverse_win_rate": 0.4146341463414634,
+              "adverse_profit_factor": 0.6897098147964743
+            },
+            "202604": {
+              "trades": 25,
+              "base_net_usd": -339.99999999999994,
+              "base_win_rate": 0.28,
+              "base_profit_factor": 0.5483528161530286,
+              "adverse_net_usd": -390.00000000000006,
+              "adverse_win_rate": 0.24,
+              "adverse_profit_factor": 0.5059538890296427
+            },
+            "202605": {
+              "trades": 31,
+              "base_net_usd": -491.5999999999998,
+              "base_win_rate": 0.41935483870967744,
+              "base_profit_factor": 0.5409039970115804,
+              "adverse_net_usd": -553.5999999999999,
+              "adverse_win_rate": 0.41935483870967744,
+              "adverse_profit_factor": 0.4998192988796531
+            },
+            "202606": {
+              "trades": 52,
+              "base_net_usd": -1228.199999999999,
+              "base_win_rate": 0.36538461538461536,
+              "base_profit_factor": 0.5465888954518608,
+              "adverse_net_usd": -1332.1999999999998,
+              "adverse_win_rate": 0.36538461538461536,
+              "adverse_profit_factor": 0.5198933256450916
+            }
+          }
+        }
+      },
+      "authentic": {
+        "pooled": {
+          "trades": 693,
+          "base_net_usd": -33419.79999999999,
+          "base_win_rate": 0.3953823953823954,
+          "base_profit_factor": 0.6938019724328505,
+          "adverse_net_usd": -34804.799999999974,
+          "adverse_win_rate": 0.38816738816738816,
+          "adverse_profit_factor": 0.6835536029909154
+        },
+        "tickers": {
+          "SPXW": {
+            "trades": 340,
+            "base_net_usd": -30588.999999999996,
+            "base_win_rate": 0.3911764705882353,
+            "base_profit_factor": 0.6808566134430636,
+            "adverse_net_usd": -31268.999999999985,
+            "adverse_win_rate": 0.3911764705882353,
+            "adverse_profit_factor": 0.6751650717007479
+          },
+          "SPY": {
+            "trades": 152,
+            "base_net_usd": -1267.1999999999996,
+            "base_win_rate": 0.34868421052631576,
+            "base_profit_factor": 0.7505217151632083,
+            "adverse_net_usd": -1571.2000000000007,
+            "adverse_win_rate": 0.3223684210526316,
+            "adverse_profit_factor": 0.7025256541330603
+          },
+          "QQQ": {
+            "trades": 201,
+            "base_net_usd": -1563.5999999999995,
+            "base_win_rate": 0.43781094527363185,
+            "base_profit_factor": 0.809730098079778,
+            "adverse_net_usd": -1964.6000000000001,
+            "adverse_win_rate": 0.43283582089552236,
+            "adverse_profit_factor": 0.767321221308951
+          }
+        },
+        "months": {
+          "SPXW": {
+            "202601": {
+              "trades": 52,
+              "base_net_usd": -2239.199999999999,
+              "base_win_rate": 0.4423076923076923,
+              "base_profit_factor": 0.7726331180699401,
+              "adverse_net_usd": -2343.199999999997,
+              "adverse_win_rate": 0.4423076923076923,
+              "adverse_profit_factor": 0.763466042154567
+            },
+            "202602": {
+              "trades": 49,
+              "base_net_usd": -4765.4,
+              "base_win_rate": 0.3673469387755102,
+              "base_profit_factor": 0.7210377811340193,
+              "adverse_net_usd": -4863.399999999997,
+              "adverse_win_rate": 0.3673469387755102,
+              "adverse_profit_factor": 0.7163305063985161
+            },
+            "202603": {
+              "trades": 67,
+              "base_net_usd": 471.8000000000003,
+              "base_win_rate": 0.43283582089552236,
+              "base_profit_factor": 1.0249962913514323,
+              "adverse_net_usd": 337.80000000000416,
+              "adverse_win_rate": 0.43283582089552236,
+              "adverse_profit_factor": 1.0178251050087606
+            },
+            "202604": {
+              "trades": 61,
+              "base_net_usd": -8985.6,
+              "base_win_rate": 0.32786885245901637,
+              "base_profit_factor": 0.4397515992667689,
+              "adverse_net_usd": -9107.6,
+              "adverse_win_rate": 0.32786885245901637,
+              "adverse_profit_factor": 0.4350334354800689
+            },
+            "202605": {
+              "trades": 48,
+              "base_net_usd": -2985.7999999999997,
+              "base_win_rate": 0.4375,
+              "base_profit_factor": 0.7126053979132173,
+              "adverse_net_usd": -3081.7999999999975,
+              "adverse_win_rate": 0.4375,
+              "adverse_profit_factor": 0.7048988815688678
+            },
+            "202606": {
+              "trades": 63,
+              "base_net_usd": -12084.800000000001,
+              "base_win_rate": 0.3492063492063492,
+              "base_profit_factor": 0.48822712335264423,
+              "adverse_net_usd": -12210.8,
+              "adverse_win_rate": 0.3492063492063492,
+              "adverse_profit_factor": 0.4846807002143858
+            }
+          },
+          "SPY": {
+            "202601": {
+              "trades": 14,
+              "base_net_usd": 589.6000000000001,
+              "base_win_rate": 0.6428571428571429,
+              "base_profit_factor": 3.498305084745763,
+              "adverse_net_usd": 561.5999999999999,
+              "adverse_win_rate": 0.5714285714285714,
+              "adverse_profit_factor": 3.268174474959612
+            },
+            "202602": {
+              "trades": 22,
+              "base_net_usd": -473.19999999999993,
+              "base_win_rate": 0.2727272727272727,
+              "base_profit_factor": 0.42753447858698296,
+              "adverse_net_usd": -517.2000000000002,
+              "adverse_win_rate": 0.2727272727272727,
+              "adverse_profit_factor": 0.39762403913347305
+            },
+            "202603": {
+              "trades": 36,
+              "base_net_usd": 248.40000000000038,
+              "base_win_rate": 0.4722222222222222,
+              "base_profit_factor": 1.2837559972583967,
+              "adverse_net_usd": 176.40000000000003,
+              "adverse_win_rate": 0.4444444444444444,
+              "adverse_profit_factor": 1.1929978118161926
+            },
+            "202604": {
+              "trades": 26,
+              "base_net_usd": -341.59999999999997,
+              "base_win_rate": 0.23076923076923078,
+              "base_profit_factor": 0.6122587968217933,
+              "adverse_net_usd": -393.6,
+              "adverse_win_rate": 0.23076923076923078,
+              "adverse_profit_factor": 0.5726384364820846
+            },
+            "202605": {
+              "trades": 19,
+              "base_net_usd": -332.4000000000001,
+              "base_win_rate": 0.3157894736842105,
+              "base_profit_factor": 0.3876197494473102,
+              "adverse_net_usd": -370.40000000000015,
+              "adverse_win_rate": 0.3157894736842105,
+              "adverse_profit_factor": 0.3488045007032348
+            },
+            "202606": {
+              "trades": 35,
+              "base_net_usd": -957.9999999999998,
+              "base_win_rate": 0.2571428571428571,
+              "base_profit_factor": 0.4422449930135075,
+              "adverse_net_usd": -1028.0,
+              "adverse_win_rate": 0.2,
+              "adverse_profit_factor": 0.4197990743876286
+            }
+          },
+          "QQQ": {
+            "202601": {
+              "trades": 18,
+              "base_net_usd": 169.20000000000007,
+              "base_win_rate": 0.5,
+              "base_profit_factor": 1.6677190213101818,
+              "adverse_net_usd": 133.19999999999993,
+              "adverse_win_rate": 0.5,
+              "adverse_profit_factor": 1.4907885040530573
+            },
+            "202602": {
+              "trades": 32,
+              "base_net_usd": 410.8000000000002,
+              "base_win_rate": 0.5625,
+              "base_profit_factor": 1.442005595007532,
+              "adverse_net_usd": 346.79999999999984,
+              "adverse_win_rate": 0.5625,
+              "adverse_profit_factor": 1.3622310424065178
+            },
+            "202603": {
+              "trades": 42,
+              "base_net_usd": -547.1999999999999,
+              "base_win_rate": 0.5,
+              "base_profit_factor": 0.7199017199017204,
+              "adverse_net_usd": -630.1999999999999,
+              "adverse_win_rate": 0.5,
+              "adverse_profit_factor": 0.684046926702096
+            },
+            "202604": {
+              "trades": 26,
+              "base_net_usd": -350.6,
+              "base_win_rate": 0.3076923076923077,
+              "base_profit_factor": 0.5665182987141444,
+              "adverse_net_usd": -402.60000000000014,
+              "adverse_win_rate": 0.2692307692307692,
+              "adverse_profit_factor": 0.523775727466288
+            },
+            "202605": {
+              "trades": 39,
+              "base_net_usd": -291.3999999999997,
+              "base_win_rate": 0.46153846153846156,
+              "base_profit_factor": 0.740655037379851,
+              "adverse_net_usd": -369.4000000000001,
+              "adverse_win_rate": 0.46153846153846156,
+              "adverse_profit_factor": 0.6830816746739881
+            },
+            "202606": {
+              "trades": 44,
+              "base_net_usd": -954.3999999999999,
+              "base_win_rate": 0.3181818181818182,
+              "base_profit_factor": 0.6969196570339794,
+              "adverse_net_usd": -1042.4,
+              "adverse_win_rate": 0.3181818181818182,
+              "adverse_profit_factor": 0.6751636023683394
+            }
+          }
+        }
+      },
+      "placebo": {
+        "pooled": {
+          "trades": 836,
+          "base_net_usd": -41098.59999999999,
+          "base_win_rate": 0.35287081339712917,
+          "base_profit_factor": 0.6764694768860663,
+          "adverse_net_usd": -42770.59999999998,
+          "adverse_win_rate": 0.3456937799043062,
+          "adverse_profit_factor": 0.6661681764468056
+        },
+        "tickers": {
+          "SPXW": {
+            "trades": 374,
+            "base_net_usd": -36080.4,
+            "base_win_rate": 0.32887700534759357,
+            "base_profit_factor": 0.671950436697501,
+            "adverse_net_usd": -36828.39999999998,
+            "adverse_win_rate": 0.32887700534759357,
+            "adverse_profit_factor": 0.6666708904066194
+          },
+          "SPY": {
+            "trades": 200,
+            "base_net_usd": -1392.9999999999995,
+            "base_win_rate": 0.36,
+            "base_profit_factor": 0.774515199585613,
+            "adverse_net_usd": -1793.0000000000007,
+            "adverse_win_rate": 0.34,
+            "adverse_profit_factor": 0.7215060109968622
+          },
+          "QQQ": {
+            "trades": 262,
+            "base_net_usd": -3625.1999999999985,
+            "base_win_rate": 0.3816793893129771,
+            "base_profit_factor": 0.6664703934052184,
+            "adverse_net_usd": -4149.2,
+            "adverse_win_rate": 0.37404580152671757,
+            "adverse_profit_factor": 0.6293834967933257
+          }
+        },
+        "months": {
+          "SPXW": {
+            "202601": {
+              "trades": 58,
+              "base_net_usd": 58.19999999999982,
+              "base_win_rate": 0.41379310344827586,
+              "base_profit_factor": 1.0051046362727383,
+              "adverse_net_usd": -57.799999999997,
+              "adverse_win_rate": 0.41379310344827586,
+              "adverse_profit_factor": 0.9949605036008862
+            },
+            "202602": {
+              "trades": 54,
+              "base_net_usd": -9903.400000000003,
+              "base_win_rate": 0.2777777777777778,
+              "base_profit_factor": 0.4659627704320443,
+              "adverse_net_usd": -10011.4,
+              "adverse_win_rate": 0.2777777777777778,
+              "adverse_profit_factor": 0.46240012028524813
+            },
+            "202603": {
+              "trades": 73,
+              "base_net_usd": 1459.2000000000003,
+              "base_win_rate": 0.410958904109589,
+              "base_profit_factor": 1.0762270932152043,
+              "adverse_net_usd": 1313.2000000000053,
+              "adverse_win_rate": 0.410958904109589,
+              "adverse_profit_factor": 1.068293393243469
+            },
+            "202604": {
+              "trades": 60,
+              "base_net_usd": -10816.0,
+              "base_win_rate": 0.21666666666666667,
+              "base_profit_factor": 0.4660400272509159,
+              "adverse_net_usd": -10936.0,
+              "adverse_win_rate": 0.21666666666666667,
+              "adverse_profit_factor": 0.46260970408153257
+            },
+            "202605": {
+              "trades": 55,
+              "base_net_usd": -5248.000000000002,
+              "base_win_rate": 0.32727272727272727,
+              "base_profit_factor": 0.5914427179024069,
+              "adverse_net_usd": -5357.999999999996,
+              "adverse_win_rate": 0.32727272727272727,
+              "adverse_profit_factor": 0.5852684376741594
+            },
+            "202606": {
+              "trades": 74,
+              "base_net_usd": -11630.4,
+              "base_win_rate": 0.3108108108108108,
+              "base_profit_factor": 0.5815590078648372,
+              "adverse_net_usd": -11778.399999999994,
+              "adverse_win_rate": 0.3108108108108108,
+              "adverse_profit_factor": 0.5777836725622478
+            }
+          },
+          "SPY": {
+            "202601": {
+              "trades": 22,
+              "base_net_usd": 458.80000000000007,
+              "base_win_rate": 0.45454545454545453,
+              "base_profit_factor": 2.132280355380059,
+              "adverse_net_usd": 414.79999999999995,
+              "adverse_win_rate": 0.4090909090909091,
+              "adverse_profit_factor": 1.9628597957288765
+            },
+            "202602": {
+              "trades": 30,
+              "base_net_usd": -971.0,
+              "base_win_rate": 0.23333333333333334,
+              "base_profit_factor": 0.21995501285347055,
+              "adverse_net_usd": -1031.0,
+              "adverse_win_rate": 0.23333333333333334,
+              "adverse_profit_factor": 0.20127052990393562
+            },
+            "202603": {
+              "trades": 51,
+              "base_net_usd": -401.5999999999996,
+              "base_win_rate": 0.4117647058823529,
+              "base_profit_factor": 0.7613784907902559,
+              "adverse_net_usd": -503.6,
+              "adverse_win_rate": 0.37254901960784315,
+              "adverse_profit_factor": 0.7112716431601881
+            },
+            "202604": {
+              "trades": 29,
+              "base_net_usd": -749.4000000000002,
+              "base_win_rate": 0.1724137931034483,
+              "base_profit_factor": 0.2720031086069554,
+              "adverse_net_usd": -807.4000000000002,
+              "adverse_win_rate": 0.1724137931034483,
+              "adverse_profit_factor": 0.2506033042509745
+            },
+            "202605": {
+              "trades": 25,
+              "base_net_usd": -164.00000000000006,
+              "base_win_rate": 0.44,
+              "base_profit_factor": 0.70203488372093,
+              "adverse_net_usd": -214.00000000000009,
+              "adverse_win_rate": 0.44,
+              "adverse_profit_factor": 0.6300138312586444
+            },
+            "202606": {
+              "trades": 43,
+              "base_net_usd": 434.2000000000003,
+              "base_win_rate": 0.4186046511627907,
+              "base_profit_factor": 1.343241106719368,
+              "adverse_net_usd": 348.20000000000005,
+              "adverse_win_rate": 0.3953488372093023,
+              "adverse_profit_factor": 1.264469087042382
+            }
+          },
+          "QQQ": {
+            "202601": {
+              "trades": 26,
+              "base_net_usd": 378.40000000000015,
+              "base_win_rate": 0.4230769230769231,
+              "base_profit_factor": 1.8,
+              "adverse_net_usd": 326.4,
+              "adverse_win_rate": 0.4230769230769231,
+              "adverse_profit_factor": 1.6489065606361824
+            },
+            "202602": {
+              "trades": 40,
+              "base_net_usd": -1535.9999999999995,
+              "base_win_rate": 0.25,
+              "base_profit_factor": 0.2720379146919433,
+              "adverse_net_usd": -1616.0,
+              "adverse_win_rate": 0.25,
+              "adverse_profit_factor": 0.25529953917050696
+            },
+            "202603": {
+              "trades": 55,
+              "base_net_usd": -313.9999999999999,
+              "base_win_rate": 0.4727272727272727,
+              "base_profit_factor": 0.8612706547671647,
+              "adverse_net_usd": -423.99999999999994,
+              "adverse_win_rate": 0.4727272727272727,
+              "adverse_profit_factor": 0.8173515981735163
+            },
+            "202604": {
+              "trades": 36,
+              "base_net_usd": -489.6,
+              "base_win_rate": 0.3611111111111111,
+              "base_profit_factor": 0.5999346298414773,
+              "adverse_net_usd": -561.6,
+              "adverse_win_rate": 0.3333333333333333,
+              "adverse_profit_factor": 0.5579345088161208
+            },
+            "202605": {
+              "trades": 42,
+              "base_net_usd": -499.19999999999965,
+              "base_win_rate": 0.40476190476190477,
+              "base_profit_factor": 0.6444444444444447,
+              "adverse_net_usd": -583.1999999999999,
+              "adverse_win_rate": 0.38095238095238093,
+              "adverse_profit_factor": 0.599340478153339
+            },
+            "202606": {
+              "trades": 63,
+              "base_net_usd": -1164.7999999999988,
+              "base_win_rate": 0.36507936507936506,
+              "base_profit_factor": 0.6569072164948456,
+              "adverse_net_usd": -1290.7999999999993,
+              "adverse_win_rate": 0.36507936507936506,
+              "adverse_profit_factor": 0.6285467625899283
+            }
+          }
+        }
+      }
+    },
+    "5": {
+      "price": {
+        "pooled": {
+          "trades": 643,
+          "base_net_usd": -4871.799999999999,
+          "base_win_rate": 0.38258164852255055,
+          "base_profit_factor": 0.9447348479692174,
+          "adverse_net_usd": -6156.799999999989,
+          "adverse_win_rate": 0.374805598755832,
+          "adverse_profit_factor": 0.9307852981713776
+        },
+        "tickers": {
+          "SPXW": {
+            "trades": 309,
+            "base_net_usd": -1336.4000000000037,
+            "base_win_rate": 0.36893203883495146,
+            "base_profit_factor": 0.982354727544001,
+            "adverse_net_usd": -1954.3999999999887,
+            "adverse_win_rate": 0.36893203883495146,
+            "adverse_profit_factor": 0.9743271112745807
+          },
+          "SPY": {
+            "trades": 133,
+            "base_net_usd": -580.7999999999989,
+            "base_win_rate": 0.39849624060150374,
+            "base_profit_factor": 0.8653373521910506,
+            "adverse_net_usd": -846.7999999999997,
+            "adverse_win_rate": 0.37593984962406013,
+            "adverse_profit_factor": 0.8108470335954251
+          },
+          "QQQ": {
+            "trades": 201,
+            "base_net_usd": -2954.5999999999985,
+            "base_win_rate": 0.39303482587064675,
+            "base_profit_factor": 0.6353786158554643,
+            "adverse_net_usd": -3355.5999999999995,
+            "adverse_win_rate": 0.38308457711442784,
+            "adverse_profit_factor": 0.5980547170715342
+          }
+        },
+        "months": {
+          "SPXW": {
+            "202601": {
+              "trades": 46,
+              "base_net_usd": -2831.6,
+              "base_win_rate": 0.34782608695652173,
+              "base_profit_factor": 0.7279400461183703,
+              "adverse_net_usd": -2923.599999999999,
+              "adverse_win_rate": 0.34782608695652173,
+              "adverse_profit_factor": 0.7207107374856707
+            },
+            "202602": {
+              "trades": 47,
+              "base_net_usd": -4096.200000000003,
+              "base_win_rate": 0.3191489361702128,
+              "base_profit_factor": 0.6636172519134118,
+              "adverse_net_usd": -4190.200000000001,
+              "adverse_win_rate": 0.3191489361702128,
+              "adverse_profit_factor": 0.6576969578145931
+            },
+            "202603": {
+              "trades": 60,
+              "base_net_usd": 3283.999999999999,
+              "base_win_rate": 0.43333333333333335,
+              "base_profit_factor": 1.2139915550226765,
+              "adverse_net_usd": 3164.0000000000027,
+              "adverse_win_rate": 0.43333333333333335,
+              "adverse_profit_factor": 1.2052626115839737
+            },
+            "202604": {
+              "trades": 52,
+              "base_net_usd": -4899.199999999999,
+              "base_win_rate": 0.28846153846153844,
+              "base_profit_factor": 0.631228735736007,
+              "adverse_net_usd": -5003.199999999996,
+              "adverse_win_rate": 0.28846153846153844,
+              "adverse_profit_factor": 0.6254865560812026
+            },
+            "202605": {
+              "trades": 46,
+              "base_net_usd": -476.5999999999997,
+              "base_win_rate": 0.45652173913043476,
+              "base_profit_factor": 0.9452183908045977,
+              "adverse_net_usd": -568.5999999999971,
+              "adverse_win_rate": 0.45652173913043476,
+              "adverse_profit_factor": 0.9350171428571432
+            },
+            "202606": {
+              "trades": 58,
+              "base_net_usd": 7683.199999999995,
+              "base_win_rate": 0.3620689655172414,
+              "base_profit_factor": 1.4856575770217828,
+              "adverse_net_usd": 7567.2,
+              "adverse_win_rate": 0.3620689655172414,
+              "adverse_profit_factor": 1.476098199343157
+            }
+          },
+          "SPY": {
+            "202601": {
+              "trades": 18,
+              "base_net_usd": 381.20000000000005,
+              "base_win_rate": 0.5,
+              "base_profit_factor": 2.3692528735632186,
+              "adverse_net_usd": 345.2,
+              "adverse_win_rate": 0.5,
+              "adverse_profit_factor": 2.164642375168691
+            },
+            "202602": {
+              "trades": 18,
+              "base_net_usd": -457.79999999999984,
+              "base_win_rate": 0.3888888888888889,
+              "base_profit_factor": 0.3273582133411697,
+              "adverse_net_usd": -493.79999999999995,
+              "adverse_win_rate": 0.3333333333333333,
+              "adverse_profit_factor": 0.2987787560352172
+            },
+            "202603": {
+              "trades": 33,
+              "base_net_usd": -559.7999999999997,
+              "base_win_rate": 0.2727272727272727,
+              "base_profit_factor": 0.5121143454767301,
+              "adverse_net_usd": -625.8,
+              "adverse_win_rate": 0.2727272727272727,
+              "adverse_profit_factor": 0.4764932240254308
+            },
+            "202604": {
+              "trades": 18,
+              "base_net_usd": -93.79999999999993,
+              "base_win_rate": 0.3888888888888889,
+              "base_profit_factor": 0.819476520400308,
+              "adverse_net_usd": -129.79999999999987,
+              "adverse_win_rate": 0.3333333333333333,
+              "adverse_profit_factor": 0.7610456553755522
+            },
+            "202605": {
+              "trades": 15,
+              "base_net_usd": -204.99999999999997,
+              "base_win_rate": 0.4,
+              "base_profit_factor": 0.5064997592681753,
+              "adverse_net_usd": -235.0,
+              "adverse_win_rate": 0.3333333333333333,
+              "adverse_profit_factor": 0.45852534562211966
+            },
+            "202606": {
+              "trades": 31,
+              "base_net_usd": 354.40000000000026,
+              "base_win_rate": 0.4838709677419355,
+              "base_profit_factor": 1.2787039949669712,
+              "adverse_net_usd": 292.40000000000003,
+              "adverse_win_rate": 0.4838709677419355,
+              "adverse_profit_factor": 1.2243019331083158
+            }
+          },
+          "QQQ": {
+            "202601": {
+              "trades": 18,
+              "base_net_usd": 120.20000000000016,
+              "base_win_rate": 0.3333333333333333,
+              "base_profit_factor": 1.2534795444959936,
+              "adverse_net_usd": 84.20000000000003,
+              "adverse_win_rate": 0.3333333333333333,
+              "adverse_profit_factor": 1.1690084303492574
+            },
+            "202602": {
+              "trades": 35,
+              "base_net_usd": -119.99999999999959,
+              "base_win_rate": 0.42857142857142855,
+              "base_profit_factor": 0.9059561128526653,
+              "adverse_net_usd": -190.00000000000003,
+              "adverse_win_rate": 0.4,
+              "adverse_profit_factor": 0.855798421372192
+            },
+            "202603": {
+              "trades": 40,
+              "base_net_usd": -53.99999999999993,
+              "base_win_rate": 0.4,
+              "base_profit_factor": 0.9537433613157444,
+              "adverse_net_usd": -134.00000000000009,
+              "adverse_win_rate": 0.4,
+              "adverse_profit_factor": 0.8897482310350502
+            },
+            "202604": {
+              "trades": 25,
+              "base_net_usd": -408.99999999999994,
+              "base_win_rate": 0.4,
+              "base_profit_factor": 0.48096446700507617,
+              "adverse_net_usd": -459.0,
+              "adverse_win_rate": 0.36,
+              "adverse_profit_factor": 0.4392865868556072
+            },
+            "202605": {
+              "trades": 31,
+              "base_net_usd": -637.5999999999999,
+              "base_win_rate": 0.3870967741935484,
+              "base_profit_factor": 0.4242369514177355,
+              "adverse_net_usd": -699.6000000000001,
+              "adverse_win_rate": 0.3870967741935484,
+              "adverse_profit_factor": 0.389209009952855
+            },
+            "202606": {
+              "trades": 52,
+              "base_net_usd": -1854.199999999999,
+              "base_win_rate": 0.38461538461538464,
+              "base_profit_factor": 0.4364476323627746,
+              "adverse_net_usd": -1957.1999999999998,
+              "adverse_win_rate": 0.38461538461538464,
+              "adverse_profit_factor": 0.41631874030776583
+            }
+          }
+        }
+      },
+      "authentic": {
+        "pooled": {
+          "trades": 692,
+          "base_net_usd": -36146.2,
+          "base_win_rate": 0.37283236994219654,
+          "base_profit_factor": 0.6608773644914878,
+          "adverse_net_usd": -37529.19999999998,
+          "adverse_win_rate": 0.3684971098265896,
+          "adverse_profit_factor": 0.6507553634808702
+        },
+        "tickers": {
+          "SPXW": {
+            "trades": 340,
+            "base_net_usd": -33654.0,
+            "base_win_rate": 0.37058823529411766,
+            "base_profit_factor": 0.6433045679145813,
+            "adverse_net_usd": -34333.999999999985,
+            "adverse_win_rate": 0.37058823529411766,
+            "adverse_profit_factor": 0.6377406428114721
+          },
+          "SPY": {
+            "trades": 152,
+            "base_net_usd": -1868.1999999999987,
+            "base_win_rate": 0.3223684210526316,
+            "base_profit_factor": 0.6372286302380673,
+            "adverse_net_usd": -2172.2,
+            "adverse_win_rate": 0.3157894736842105,
+            "adverse_profit_factor": 0.5945421286444917
+          },
+          "QQQ": {
+            "trades": 200,
+            "base_net_usd": -623.9999999999989,
+            "base_win_rate": 0.415,
+            "base_profit_factor": 0.9119663666375097,
+            "adverse_net_usd": -1023.0000000000005,
+            "adverse_win_rate": 0.405,
+            "adverse_profit_factor": 0.8603107846082416
+          }
+        },
+        "months": {
+          "SPXW": {
+            "202601": {
+              "trades": 52,
+              "base_net_usd": -2864.1999999999994,
+              "base_win_rate": 0.4230769230769231,
+              "base_profit_factor": 0.7125163103482883,
+              "adverse_net_usd": -2968.1999999999975,
+              "adverse_win_rate": 0.4230769230769231,
+              "adverse_profit_factor": 0.7038611194253217
+            },
+            "202602": {
+              "trades": 49,
+              "base_net_usd": -3145.4000000000024,
+              "base_win_rate": 0.32653061224489793,
+              "base_profit_factor": 0.7825028696289533,
+              "adverse_net_usd": -3243.4,
+              "adverse_win_rate": 0.32653061224489793,
+              "adverse_profit_factor": 0.7767452745770178
+            },
+            "202603": {
+              "trades": 67,
+              "base_net_usd": -4328.200000000002,
+              "base_win_rate": 0.40298507462686567,
+              "base_profit_factor": 0.7827645051194538,
+              "adverse_net_usd": -4462.199999999998,
+              "adverse_win_rate": 0.40298507462686567,
+              "adverse_profit_factor": 0.7769346130773844
+            },
+            "202604": {
+              "trades": 61,
+              "base_net_usd": -12700.6,
+              "base_win_rate": 0.2786885245901639,
+              "base_profit_factor": 0.32000171330056654,
+              "adverse_net_usd": -12822.6,
+              "adverse_win_rate": 0.2786885245901639,
+              "adverse_profit_factor": 0.31668922591578125
+            },
+            "202605": {
+              "trades": 48,
+              "base_net_usd": -915.8000000000009,
+              "base_win_rate": 0.4375,
+              "base_profit_factor": 0.9079523981827682,
+              "adverse_net_usd": -1011.7999999999978,
+              "adverse_win_rate": 0.4375,
+              "adverse_profit_factor": 0.8988523672424823
+            },
+            "202606": {
+              "trades": 63,
+              "base_net_usd": -9699.800000000001,
+              "base_win_rate": 0.36507936507936506,
+              "base_profit_factor": 0.5461869561149059,
+              "adverse_net_usd": -9825.8,
+              "adverse_win_rate": 0.36507936507936506,
+              "adverse_profit_factor": 0.5420061526987975
+            }
+          },
+          "SPY": {
+            "202601": {
+              "trades": 14,
+              "base_net_usd": 447.60000000000014,
+              "base_win_rate": 0.5714285714285714,
+              "base_profit_factor": 2.666418466120626,
+              "adverse_net_usd": 419.6,
+              "adverse_win_rate": 0.5714285714285714,
+              "adverse_profit_factor": 2.4953670705630793
+            },
+            "202602": {
+              "trades": 22,
+              "base_net_usd": -423.19999999999993,
+              "base_win_rate": 0.4090909090909091,
+              "base_profit_factor": 0.4136880022166807,
+              "adverse_net_usd": -467.20000000000005,
+              "adverse_win_rate": 0.4090909090909091,
+              "adverse_profit_factor": 0.375234019791388
+            },
+            "202603": {
+              "trades": 36,
+              "base_net_usd": -112.5999999999995,
+              "base_win_rate": 0.3333333333333333,
+              "base_profit_factor": 0.8608846058808998,
+              "adverse_net_usd": -184.59999999999985,
+              "adverse_win_rate": 0.3333333333333333,
+              "adverse_profit_factor": 0.7846979239561467
+            },
+            "202604": {
+              "trades": 26,
+              "base_net_usd": -522.5999999999999,
+              "base_win_rate": 0.23076923076923078,
+              "base_profit_factor": 0.4331887201735359,
+              "adverse_net_usd": -574.5999999999999,
+              "adverse_win_rate": 0.19230769230769232,
+              "adverse_profit_factor": 0.4036944790369449
+            },
+            "202605": {
+              "trades": 19,
+              "base_net_usd": -243.39999999999995,
+              "base_win_rate": 0.3157894736842105,
+              "base_profit_factor": 0.5652018578063593,
+              "adverse_net_usd": -281.40000000000003,
+              "adverse_win_rate": 0.3157894736842105,
+              "adverse_profit_factor": 0.5196312734721746
+            },
+            "202606": {
+              "trades": 35,
+              "base_net_usd": -1013.9999999999999,
+              "base_win_rate": 0.22857142857142856,
+              "base_profit_factor": 0.45723155979017255,
+              "adverse_net_usd": -1083.9999999999998,
+              "adverse_win_rate": 0.22857142857142856,
+              "adverse_profit_factor": 0.4360628446571637
+            }
+          },
+          "QQQ": {
+            "202601": {
+              "trades": 18,
+              "base_net_usd": 179.20000000000007,
+              "base_win_rate": 0.5,
+              "base_profit_factor": 1.5773195876288661,
+              "adverse_net_usd": 143.20000000000002,
+              "adverse_win_rate": 0.5,
+              "adverse_profit_factor": 1.43605359317905
+            },
+            "202602": {
+              "trades": 32,
+              "base_net_usd": 705.8000000000005,
+              "base_win_rate": 0.46875,
+              "base_profit_factor": 1.8647390345503565,
+              "adverse_net_usd": 641.8000000000002,
+              "adverse_win_rate": 0.4375,
+              "adverse_profit_factor": 1.753463254285044
+            },
+            "202603": {
+              "trades": 41,
+              "base_net_usd": -127.59999999999991,
+              "base_win_rate": 0.43902439024390244,
+              "base_profit_factor": 0.8839789052555013,
+              "adverse_net_usd": -209.60000000000008,
+              "adverse_win_rate": 0.4146341463414634,
+              "adverse_profit_factor": 0.8171667829727842
+            },
+            "202604": {
+              "trades": 26,
+              "base_net_usd": -381.5999999999999,
+              "base_win_rate": 0.38461538461538464,
+              "base_profit_factor": 0.5233574818885838,
+              "adverse_net_usd": -433.6,
+              "adverse_win_rate": 0.38461538461538464,
+              "adverse_profit_factor": 0.47922171510929623
+            },
+            "202605": {
+              "trades": 39,
+              "base_net_usd": -259.3999999999998,
+              "base_win_rate": 0.41025641025641024,
+              "base_profit_factor": 0.7795717199184231,
+              "adverse_net_usd": -337.40000000000015,
+              "adverse_win_rate": 0.41025641025641024,
+              "adverse_profit_factor": 0.7240758913967943
+            },
+            "202606": {
+              "trades": 44,
+              "base_net_usd": -740.3999999999997,
+              "base_win_rate": 0.3409090909090909,
+              "base_profit_factor": 0.7433088337262519,
+              "adverse_net_usd": -827.4000000000001,
+              "adverse_win_rate": 0.3409090909090909,
+              "adverse_profit_factor": 0.7187053783912425
+            }
+          }
+        }
+      },
+      "placebo": {
+        "pooled": {
+          "trades": 835,
+          "base_net_usd": -43713.999999999985,
+          "base_win_rate": 0.3532934131736527,
+          "base_profit_factor": 0.6465156146394323,
+          "adverse_net_usd": -45382.999999999985,
+          "adverse_win_rate": 0.34970059880239523,
+          "adverse_profit_factor": 0.6362020011575357
+        },
+        "tickers": {
+          "SPXW": {
+            "trades": 374,
+            "base_net_usd": -38175.4,
+            "base_win_rate": 0.3342245989304813,
+            "base_profit_factor": 0.6431885477575556,
+            "adverse_net_usd": -38923.399999999994,
+            "adverse_win_rate": 0.3342245989304813,
+            "adverse_profit_factor": 0.6378827854912714
+          },
+          "SPY": {
+            "trades": 200,
+            "base_net_usd": -1178.9999999999989,
+            "base_win_rate": 0.355,
+            "base_profit_factor": 0.7999796416938109,
+            "adverse_net_usd": -1578.9999999999998,
+            "adverse_win_rate": 0.35,
+            "adverse_profit_factor": 0.7433772143669753
+          },
+          "QQQ": {
+            "trades": 261,
+            "base_net_usd": -4359.5999999999985,
+            "base_win_rate": 0.3793103448275862,
+            "base_profit_factor": 0.5956294290060474,
+            "adverse_net_usd": -4880.6,
+            "adverse_win_rate": 0.3716475095785441,
+            "adverse_profit_factor": 0.5605596773031765
+          }
+        },
+        "months": {
+          "SPXW": {
+            "202601": {
+              "trades": 58,
+              "base_net_usd": -106.80000000000018,
+              "base_win_rate": 0.41379310344827586,
+              "base_profit_factor": 0.990645036964367,
+              "adverse_net_usd": -222.79999999999927,
+              "adverse_win_rate": 0.41379310344827586,
+              "adverse_profit_factor": 0.9805997701229496
+            },
+            "202602": {
+              "trades": 54,
+              "base_net_usd": -9328.400000000003,
+              "base_win_rate": 0.2777777777777778,
+              "base_profit_factor": 0.44272793529039245,
+              "adverse_net_usd": -9436.400000000001,
+              "adverse_win_rate": 0.2777777777777778,
+              "adverse_profit_factor": 0.43889067275559823
+            },
+            "202603": {
+              "trades": 73,
+              "base_net_usd": -4035.8000000000015,
+              "base_win_rate": 0.4246575342465753,
+              "base_profit_factor": 0.8015167312572541,
+              "adverse_net_usd": -4181.799999999997,
+              "adverse_win_rate": 0.4246575342465753,
+              "adverse_profit_factor": 0.7951824931920145
+            },
+            "202604": {
+              "trades": 60,
+              "base_net_usd": -12226.0,
+              "base_win_rate": 0.2,
+              "base_profit_factor": 0.38130035221246117,
+              "adverse_net_usd": -12345.999999999998,
+              "adverse_win_rate": 0.2,
+              "adverse_profit_factor": 0.37824825752387115
+            },
+            "202605": {
+              "trades": 55,
+              "base_net_usd": -3002.9999999999995,
+              "base_win_rate": 0.38181818181818183,
+              "base_profit_factor": 0.7498833955223878,
+              "adverse_net_usd": -3112.9999999999977,
+              "adverse_win_rate": 0.38181818181818183,
+              "adverse_profit_factor": 0.7421818061352945
+            },
+            "202606": {
+              "trades": 74,
+              "base_net_usd": -9475.4,
+              "base_win_rate": 0.2972972972972973,
+              "base_profit_factor": 0.6455700937376099,
+              "adverse_net_usd": -9623.399999999998,
+              "adverse_win_rate": 0.2972972972972973,
+              "adverse_profit_factor": 0.641429007906641
+            }
+          },
+          "SPY": {
+            "202601": {
+              "trades": 22,
+              "base_net_usd": 388.8,
+              "base_win_rate": 0.45454545454545453,
+              "base_profit_factor": 2.1633752244165168,
+              "adverse_net_usd": 344.79999999999995,
+              "adverse_win_rate": 0.45454545454545453,
+              "adverse_profit_factor": 1.9625907314349522
+            },
+            "202602": {
+              "trades": 30,
+              "base_net_usd": -599.9999999999999,
+              "base_win_rate": 0.4,
+              "base_profit_factor": 0.41280093951849683,
+              "adverse_net_usd": -660.0000000000001,
+              "adverse_win_rate": 0.4,
+              "adverse_profit_factor": 0.37606352807714116
+            },
+            "202603": {
+              "trades": 51,
+              "base_net_usd": -540.5999999999995,
+              "base_win_rate": 0.3137254901960784,
+              "base_profit_factor": 0.6263994471319977,
+              "adverse_net_usd": -642.5999999999999,
+              "adverse_win_rate": 0.3137254901960784,
+              "adverse_profit_factor": 0.5764007910349376
+            },
+            "202604": {
+              "trades": 29,
+              "base_net_usd": -882.3999999999999,
+              "base_win_rate": 0.13793103448275862,
+              "base_profit_factor": 0.2170363797692991,
+              "adverse_net_usd": -940.4000000000001,
+              "adverse_win_rate": 0.13793103448275862,
+              "adverse_profit_factor": 0.20101954120645718
+            },
+            "202605": {
+              "trades": 25,
+              "base_net_usd": -61.99999999999995,
+              "base_win_rate": 0.44,
+              "base_profit_factor": 0.8871496177648344,
+              "adverse_net_usd": -112.00000000000003,
+              "adverse_win_rate": 0.4,
+              "adverse_profit_factor": 0.806228373702422
+            },
+            "202606": {
+              "trades": 43,
+              "base_net_usd": 517.2000000000002,
+              "base_win_rate": 0.4186046511627907,
+              "base_profit_factor": 1.3655123674911667,
+              "adverse_net_usd": 431.20000000000016,
+              "adverse_win_rate": 0.4186046511627907,
+              "adverse_profit_factor": 1.2943344709897613
+            }
+          },
+          "QQQ": {
+            "202601": {
+              "trades": 26,
+              "base_net_usd": 358.4000000000002,
+              "base_win_rate": 0.5,
+              "base_profit_factor": 1.8149158708503867,
+              "adverse_net_usd": 306.4,
+              "adverse_win_rate": 0.5,
+              "adverse_profit_factor": 1.6577930442249886
+            },
+            "202602": {
+              "trades": 40,
+              "base_net_usd": -1324.9999999999995,
+              "base_win_rate": 0.25,
+              "base_profit_factor": 0.30373095112979526,
+              "adverse_net_usd": -1405.0,
+              "adverse_win_rate": 0.225,
+              "adverse_profit_factor": 0.2848416980555839
+            },
+            "202603": {
+              "trades": 54,
+              "base_net_usd": -342.39999999999986,
+              "base_win_rate": 0.3888888888888889,
+              "base_profit_factor": 0.8082652032702434,
+              "adverse_net_usd": -450.4000000000002,
+              "adverse_win_rate": 0.3888888888888889,
+              "adverse_profit_factor": 0.7567771897613135
+            },
+            "202604": {
+              "trades": 36,
+              "base_net_usd": -647.5999999999998,
+              "base_win_rate": 0.3888888888888889,
+              "base_profit_factor": 0.5007708911501697,
+              "adverse_net_usd": -719.6,
+              "adverse_win_rate": 0.3611111111111111,
+              "adverse_profit_factor": 0.4637054702638247
+            },
+            "202605": {
+              "trades": 42,
+              "base_net_usd": -518.1999999999997,
+              "base_win_rate": 0.42857142857142855,
+              "base_profit_factor": 0.6666237776634072,
+              "adverse_net_usd": -602.2000000000003,
+              "adverse_win_rate": 0.42857142857142855,
+              "adverse_profit_factor": 0.624188716924613
+            },
+            "202606": {
+              "trades": 63,
+              "base_net_usd": -1884.7999999999988,
+              "base_win_rate": 0.36507936507936506,
+              "base_profit_factor": 0.5041304919757961,
+              "adverse_net_usd": -2009.7999999999993,
+              "adverse_win_rate": 0.36507936507936506,
+              "adverse_profit_factor": 0.4820103092783507
+            }
+          }
+        }
+      }
+    }
+  },
+  "paired_test_comparisons": {
+    "authentic_minus_price": {
+      "observed_net_difference": -15339.4,
+      "paired_circular_5session_block_bootstrap_95ci_total_usd": [
+        -47934.744999999995,
+        14428.264999999921
+      ],
+      "days": 123,
+      "block_sessions": 5,
+      "resamples": 2000
+    },
+    "authentic_minus_placebo": {
+      "observed_net_difference": 2850.799999999998,
+      "paired_circular_5session_block_bootstrap_95ci_total_usd": [
+        -18561.585000000006,
+        23178.894999999993
+      ],
+      "days": 123,
+      "block_sessions": 5,
+      "resamples": 2000
+    }
+  },
+  "coverage": {
+    "missing_greek_file_SPY": 3,
+    "missing_greek_file_QQQ": 3,
+    "expected_full_sessions_per_ticker": 867,
+    "excluded_early_close_dates": 8,
+    "greek_clock_NATIVE_TIMESTAMP": 1096,
+    "oi_clock_NATIVE_TIMESTAMP": 1096,
+    "greek_invalid_identity": 0,
+    "greek_duplicate_keys": 0,
+    "oi_invalid_identity": 0,
+    "oi_duplicate_keys": 0,
+    "invalid_spot_rows": 394606,
+    "inconsistent_spot_minutes": 0,
+    "invalid_oi_rows": 0,
+    "invalid_quote_rows": 806027,
+    "days_read_SPXW": 867,
+    "decision_candidates_SPXW": 8670,
+    "event_contracts_missing_oi": 63850,
+    "event_invalid_iv_rows": 2505450,
+    "greek_clock_UNDERLYING_TIMESTAMP_PROXY": 1499,
+    "oi_clock_ASSUMED_PRIOR_CLOSE_UNVERIFIED_RECEIPT": 1499,
+    "days_read_SPY": 864,
+    "decision_candidates_SPY": 8640,
+    "missing_exit_zero_liquidation": 12,
+    "missing_entry": 7,
+    "days_read_QQQ": 864,
+    "decision_candidates_QQQ": 8640,
+    "delay5_missing_entry": 3,
+    "delay2_missing_exit_zero_liquidation": 4,
+    "delay2_missing_entry": 3
+  },
+  "thresholds": {
+    "price": {
+      "threshold": 10,
+      "validation_count_gate": true,
+      "validation_choices": [
+        {
+          "threshold": 0,
+          "net": -66081.19999999998,
+          "counts": {
+            "QQQ": 503,
+            "SPXW": 776,
+            "SPY": 428
+          },
+          "qualifies": true
+        },
+        {
+          "threshold": 5,
+          "net": -67851.0,
+          "counts": {
+            "QQQ": 417,
+            "SPXW": 704,
+            "SPY": 339
+          },
+          "qualifies": true
+        },
+        {
+          "threshold": 10,
+          "net": -53118.8,
+          "counts": {
+            "QQQ": 342,
+            "SPXW": 648,
+            "SPY": 278
+          },
+          "qualifies": true
+        }
+      ],
+      "features": [
+        "p_ticker",
+        "p_clock",
+        "p_ib_width_fraction",
+        "p_realized_vol",
+        "p_oi_missing_count",
+        "p_oi_missing_fraction",
+        "p_oi_total_CALL",
+        "p_delta_oi_mean_CALL",
+        "p_vega_oi_mean_CALL",
+        "p_theta_oi_mean_CALL",
+        "p_implied_vol_oi_mean_CALL",
+        "p_gamma_density_total_proxy_CALL",
+        "p_oi_total_PUT",
+        "p_delta_oi_mean_PUT",
+        "p_vega_oi_mean_PUT",
+        "p_theta_oi_mean_PUT",
+        "p_implied_vol_oi_mean_PUT",
+        "p_gamma_density_total_proxy_PUT",
+        "p_ib_observed_minutes",
+        "p_ret5_0",
+        "p_ret5_1",
+        "p_ret5_2",
+        "p_ret5_3",
+        "p_ret5_4",
+        "p_ret5_5",
+        "p_ret5_6",
+        "p_ret5_7",
+        "p_ret5_8",
+        "p_ret5_9",
+        "p_ret5_10",
+        "p_ret5_11",
+        "p_candle5_observed_fraction",
+        "p_candle5_range",
+        "p_candle5_body",
+        "p_candle5_upper",
+        "p_candle5_lower",
+        "p_ret15_0",
+        "p_ret15_1",
+        "p_ret15_2",
+        "p_ret15_3",
+        "p_ret15_4",
+        "p_ret15_5",
+        "p_ret15_6",
+        "p_ret15_7",
+        "p_candle15_observed_fraction",
+        "p_candle15_range",
+        "p_candle15_body",
+        "p_candle15_upper",
+        "p_candle15_lower"
+      ]
+    },
+    "authentic": {
+      "threshold": 10,
+      "validation_count_gate": true,
+      "validation_choices": [
+        {
+          "threshold": 0,
+          "net": -40087.19999999999,
+          "counts": {
+            "QQQ": 489,
+            "SPXW": 784,
+            "SPY": 449
+          },
+          "qualifies": true
+        },
+        {
+          "threshold": 5,
+          "net": -34307.2,
+          "counts": {
+            "QQQ": 387,
+            "SPXW": 716,
+            "SPY": 359
+          },
+          "qualifies": true
+        },
+        {
+          "threshold": 10,
+          "net": -33711.2,
+          "counts": {
+            "QQQ": 325,
+            "SPXW": 652,
+            "SPY": 285
+          },
+          "qualifies": true
+        }
+      ],
+      "features": [
+        "p_ticker",
+        "p_clock",
+        "p_ib_width_fraction",
+        "p_realized_vol",
+        "p_oi_missing_count",
+        "p_oi_missing_fraction",
+        "p_oi_total_CALL",
+        "p_delta_oi_mean_CALL",
+        "p_vega_oi_mean_CALL",
+        "p_theta_oi_mean_CALL",
+        "p_implied_vol_oi_mean_CALL",
+        "p_gamma_density_total_proxy_CALL",
+        "p_oi_total_PUT",
+        "p_delta_oi_mean_PUT",
+        "p_vega_oi_mean_PUT",
+        "p_theta_oi_mean_PUT",
+        "p_implied_vol_oi_mean_PUT",
+        "p_gamma_density_total_proxy_PUT",
+        "p_ib_observed_minutes",
+        "p_ret5_0",
+        "p_ret5_1",
+        "p_ret5_2",
+        "p_ret5_3",
+        "p_ret5_4",
+        "p_ret5_5",
+        "p_ret5_6",
+        "p_ret5_7",
+        "p_ret5_8",
+        "p_ret5_9",
+        "p_ret5_10",
+        "p_ret5_11",
+        "p_candle5_observed_fraction",
+        "p_candle5_range",
+        "p_candle5_body",
+        "p_candle5_upper",
+        "p_candle5_lower",
+        "p_ret15_0",
+        "p_ret15_1",
+        "p_ret15_2",
+        "p_ret15_3",
+        "p_ret15_4",
+        "p_ret15_5",
+        "p_ret15_6",
+        "p_ret15_7",
+        "p_candle15_observed_fraction",
+        "p_candle15_range",
+        "p_candle15_body",
+        "p_candle15_upper",
+        "p_candle15_lower",
+        "a_ib_position",
+        "a_fib_nearest",
+        "a_fib_approach",
+        "a_fib_rejection",
+        "a_fib_influence10",
+        "a_fib_influence25",
+        "a_fib_below10",
+        "a_fib_above10",
+        "a_fib_top_distance",
+        "a_fib_concentration",
+        "a_oi_CALL_nearest",
+        "a_oi_CALL_approach",
+        "a_oi_CALL_rejection",
+        "a_oi_CALL_influence10",
+        "a_oi_CALL_influence25",
+        "a_oi_CALL_below10",
+        "a_oi_CALL_above10",
+        "a_oi_CALL_top_distance",
+        "a_oi_CALL_concentration",
+        "a_oi_CALL_migration",
+        "a_gamma_proxy_CALL_nearest",
+        "a_gamma_proxy_CALL_approach",
+        "a_gamma_proxy_CALL_rejection",
+        "a_gamma_proxy_CALL_influence10",
+        "a_gamma_proxy_CALL_influence25",
+        "a_gamma_proxy_CALL_below10",
+        "a_gamma_proxy_CALL_above10",
+        "a_gamma_proxy_CALL_top_distance",
+        "a_gamma_proxy_CALL_concentration",
+        "a_gamma_proxy_CALL_migration",
+        "a_oi_PUT_nearest",
+        "a_oi_PUT_approach",
+        "a_oi_PUT_rejection",
+        "a_oi_PUT_influence10",
+        "a_oi_PUT_influence25",
+        "a_oi_PUT_below10",
+        "a_oi_PUT_above10",
+        "a_oi_PUT_top_distance",
+        "a_oi_PUT_concentration",
+        "a_oi_PUT_migration",
+        "a_gamma_proxy_PUT_nearest",
+        "a_gamma_proxy_PUT_approach",
+        "a_gamma_proxy_PUT_rejection",
+        "a_gamma_proxy_PUT_influence10",
+        "a_gamma_proxy_PUT_influence25",
+        "a_gamma_proxy_PUT_below10",
+        "a_gamma_proxy_PUT_above10",
+        "a_gamma_proxy_PUT_top_distance",
+        "a_gamma_proxy_PUT_concentration",
+        "a_gamma_proxy_PUT_migration"
+      ]
+    },
+    "placebo": {
+      "threshold": 5,
+      "validation_count_gate": true,
+      "validation_choices": [
+        {
+          "threshold": 0,
+          "net": -53955.999999999985,
+          "counts": {
+            "QQQ": 547,
+            "SPXW": 781,
+            "SPY": 492
+          },
+          "qualifies": true
+        },
+        {
+          "threshold": 5,
+          "net": -52389.6,
+          "counts": {
+            "QQQ": 416,
+            "SPXW": 716,
+            "SPY": 379
+          },
+          "qualifies": true
+        },
+        {
+          "threshold": 10,
+          "net": -59764.399999999994,
+          "counts": {
+            "QQQ": 336,
+            "SPXW": 650,
+            "SPY": 293
+          },
+          "qualifies": true
+        }
+      ],
+      "features": [
+        "p_ticker",
+        "p_clock",
+        "p_ib_width_fraction",
+        "p_realized_vol",
+        "p_oi_missing_count",
+        "p_oi_missing_fraction",
+        "p_oi_total_CALL",
+        "p_delta_oi_mean_CALL",
+        "p_vega_oi_mean_CALL",
+        "p_theta_oi_mean_CALL",
+        "p_implied_vol_oi_mean_CALL",
+        "p_gamma_density_total_proxy_CALL",
+        "p_oi_total_PUT",
+        "p_delta_oi_mean_PUT",
+        "p_vega_oi_mean_PUT",
+        "p_theta_oi_mean_PUT",
+        "p_implied_vol_oi_mean_PUT",
+        "p_gamma_density_total_proxy_PUT",
+        "p_ib_observed_minutes",
+        "p_ret5_0",
+        "p_ret5_1",
+        "p_ret5_2",
+        "p_ret5_3",
+        "p_ret5_4",
+        "p_ret5_5",
+        "p_ret5_6",
+        "p_ret5_7",
+        "p_ret5_8",
+        "p_ret5_9",
+        "p_ret5_10",
+        "p_ret5_11",
+        "p_candle5_observed_fraction",
+        "p_candle5_range",
+        "p_candle5_body",
+        "p_candle5_upper",
+        "p_candle5_lower",
+        "p_ret15_0",
+        "p_ret15_1",
+        "p_ret15_2",
+        "p_ret15_3",
+        "p_ret15_4",
+        "p_ret15_5",
+        "p_ret15_6",
+        "p_ret15_7",
+        "p_candle15_observed_fraction",
+        "p_candle15_range",
+        "p_candle15_body",
+        "p_candle15_upper",
+        "p_candle15_lower",
+        "z_ib_position",
+        "z_fib_nearest",
+        "z_fib_approach",
+        "z_fib_rejection",
+        "z_fib_influence10",
+        "z_fib_influence25",
+        "z_fib_below10",
+        "z_fib_above10",
+        "z_fib_top_distance",
+        "z_fib_concentration",
+        "z_oi_CALL_nearest",
+        "z_oi_CALL_approach",
+        "z_oi_CALL_rejection",
+        "z_oi_CALL_influence10",
+        "z_oi_CALL_influence25",
+        "z_oi_CALL_below10",
+        "z_oi_CALL_above10",
+        "z_oi_CALL_top_distance",
+        "z_oi_CALL_concentration",
+        "z_oi_CALL_migration",
+        "z_gamma_proxy_CALL_nearest",
+        "z_gamma_proxy_CALL_approach",
+        "z_gamma_proxy_CALL_rejection",
+        "z_gamma_proxy_CALL_influence10",
+        "z_gamma_proxy_CALL_influence25",
+        "z_gamma_proxy_CALL_below10",
+        "z_gamma_proxy_CALL_above10",
+        "z_gamma_proxy_CALL_top_distance",
+        "z_gamma_proxy_CALL_concentration",
+        "z_gamma_proxy_CALL_migration",
+        "z_oi_PUT_nearest",
+        "z_oi_PUT_approach",
+        "z_oi_PUT_rejection",
+        "z_oi_PUT_influence10",
+        "z_oi_PUT_influence25",
+        "z_oi_PUT_below10",
+        "z_oi_PUT_above10",
+        "z_oi_PUT_top_distance",
+        "z_oi_PUT_concentration",
+        "z_oi_PUT_migration",
+        "z_gamma_proxy_PUT_nearest",
+        "z_gamma_proxy_PUT_approach",
+        "z_gamma_proxy_PUT_rejection",
+        "z_gamma_proxy_PUT_influence10",
+        "z_gamma_proxy_PUT_influence25",
+        "z_gamma_proxy_PUT_below10",
+        "z_gamma_proxy_PUT_above10",
+        "z_gamma_proxy_PUT_top_distance",
+        "z_gamma_proxy_PUT_concentration",
+        "z_gamma_proxy_PUT_migration"
+      ]
+    }
+  },
+  "source_clock_policy": "NATIVE_OR_STORED_UNDERLYING_PROXY",
+  "missing_oi_clock_policy": "ASSUMED_PRIOR_CLOSE_UNVERIFIED_RECEIPT"
+}

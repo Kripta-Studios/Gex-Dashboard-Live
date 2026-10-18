@@ -1,0 +1,13 @@
+{
+  "status": "BOUND_TO_PASS_INDEPENDENT_FULL_LEVEL_ORACLE_AUDIT",
+  "audit_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\engine_v1_audit_v4\\audit.json",
+  "audit_sha256": "cbbe61d0a3fa7619447b7301d4c4b2fd52c487e11450d4904efee381fc3bf22d",
+  "audit_finished_utc": "2026-10-18T17:12:18.402068+00:00",
+  "analysis_summary_sha256": "b871ddaa9a92bf8b474399cb9a59604f689b501bac2e394d078bb8002c2e5738",
+  "analysis_input_index_sha256": "8d0c6e27bdaf7d47ef2a9888505294b8f3186da3a6927e780ce9e517e660e8e5",
+  "audit_index_sha256": "8d0c6e27bdaf7d47ef2a9888505294b8f3186da3a6927e780ce9e517e660e8e5",
+  "oracle_trades_match": 36019,
+  "net_base_match": 9190416.6,
+  "net_adverse_match": 9118378.600000001,
+  "original_summary_audit_status": "PENDING_INDEPENDENT_AUDIT retained from run launch; this later sidecar binds final audit without altering metrics"
+}

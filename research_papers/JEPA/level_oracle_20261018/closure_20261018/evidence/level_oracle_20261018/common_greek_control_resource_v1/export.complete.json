@@ -1,0 +1,13 @@
+{
+  "binding": "ca1f55b1fe78bcd7575d7ad6d7cb5b91a8b9d340e11935f377030e6ccc735018",
+  "extra": {
+    "fit_completed": true
+  },
+  "files": {
+    "common_greek_net.txt": "10b1c409a575797a2827e64a272809006917c17342f41c09fedd2d737a54e82c",
+    "fit_started.json": "b570c9d293265d01744c551da2dfa33813dcb8f3b1dd68e145b05dde3f8c7a19",
+    "run_contract.json": "ca1f55b1fe78bcd7575d7ad6d7cb5b91a8b9d340e11935f377030e6ccc735018",
+    "train_readback_predictions.npy": "ebe48ed61a097a1cc07b821d666f73163b0ebba7321f9e3350fce3f63594e343"
+  },
+  "status": "COMPLETE"
+}

@@ -1,0 +1,14 @@
+{
+  "authorization": "User explicitly requested only2GB free; one TRAIN fit with unchanged model/data/config",
+  "base_review_sha256": "79fc3d9ef28268083f014274b2371622b0003004c66b434daef1b439b515e61d",
+  "files": {
+    "COMMON_GREEK_RESOURCE_RUNTIME_SPEC.md": "2405a2d687e7345ef5cfd17c879702f7ea6dcd7ffbe8e52b0c8b59e4290fa0e7",
+    "run_common_greek_resource.py": "7e91263325871a555af8d8a7575cdaac1b56fd191ba310ad56d2429b6f3e32b6"
+  },
+  "gate_bytes": 2000000000,
+  "reviewed_utc": "2026-10-18T21:10:26.569219+00:00",
+  "reviewer": "root",
+  "status": "PASS_COMMON_GREEK_RESOURCE_RUNTIME_REVIEW",
+  "tests_sha256": "d9a2c6ef1af3b1f0309b7f06d6960f57126376d6fd782b0f4daa53ccfeeed3da",
+  "validation": "Root full source review, two focused fixtures PASS; explicit dependency injection without mutating frozen fit"
+}

@@ -1,0 +1,28 @@
+{
+  "status": "COMPLETE",
+  "binding": "66ef48eca5aadca70726b1c66997c93dd513ebf7a32283e07e26fc7e3c129a9d",
+  "files": {
+    "models\\net_control.txt": "12b8d5a00d06bb482fc6de66263e8c270929d0d276e226a9889e283a801a09ef",
+    "models\\net_control.fit_started.json": "224762b795022f04d16f01d115ef6bb5c4a0c2a2144c4d4310cc18a863ba8672"
+  },
+  "extra": {
+    "config": {
+      "objective": "regression",
+      "n_estimators": 200,
+      "num_leaves": 31,
+      "max_depth": 6,
+      "min_child_samples": 100,
+      "learning_rate": 0.04,
+      "reg_lambda": 10.0,
+      "max_bin": 63,
+      "random_state": 20261018,
+      "n_jobs": 4,
+      "deterministic": true,
+      "force_col_wise": true,
+      "verbosity": -1
+    },
+    "columns": 1955,
+    "rows": 285286
+  },
+  "completed_utc": "2026-10-18T19:56:53.768490+00:00"
+}

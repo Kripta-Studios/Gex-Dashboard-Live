@@ -1,0 +1,30 @@
+{
+  "status": "PASS_TCN_ROW_MIXED_EVALUATION_IMPLEMENTATION_REVIEW",
+  "scope": "PREEXECUTION_IMPLEMENTATION_AND_SYNTHETIC_FIXTURES_ONLY",
+  "files": {
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\evaluate_tcn_row_mixed.py": "870a5815f343735f299fb63066899df29d56c62219c21fa7ad7197188732af30",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\TCN_ROW_MIXED_EVALUATION_SPEC.md": "3c067f2f207ad969529ce0f40830781e939cc35ae58d181fb3fe397e834fb8d0",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_evaluate_tcn_row_mixed.py": "27e1f3d041ae08127b5b937af969afd5df0381953c2b77f8bf9e1c0202388c86",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\run_tcn_flags.py": "a76a3ee78b74568a77ad06bc85c3092dee606648c6b6ed54ad38818496ae06e5",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\evaluate_tcn_flags_compat.py": "97836bb5a9a0364cf24888f55db0c1784268ed64575b71c4c76e1c03141d9aaf"
+  },
+  "checks": {
+    "control": "audited FLAGS64 variant score copied bit-exact by action_id through explicit adapter",
+    "variant": "fixed fourth-epoch row-mixed model and frozen training/cache authority",
+    "policies": "control/variant x strict thresholds 0,5,10 with inherited scheduler and costs",
+    "chronology": "validation selection and freeze precede test adapter, inference, and economics",
+    "selection": "2025 daily gate, null if none eligible, stable control-first/lower-threshold ties",
+    "coverage": "741 validation; 369 expected test with 363 observable and six NO_EVALUABLE",
+    "recovery": "partial adapters/snapshots preserved; sealed completion and idempotent resume",
+    "binding_hardening": "adapter lineage carries original FLAGS NPZ/sidecar/manifest/feature/oracle hashes; freeze and completion rehash both controls"
+  },
+  "fixtures": {
+    "passed": 8,
+    "ruff": "PASS",
+    "compile": "PASS"
+  },
+  "market_outputs_read": false,
+  "evaluation_executed": false,
+  "technical_ready": false,
+  "promotion_approved": false
+}

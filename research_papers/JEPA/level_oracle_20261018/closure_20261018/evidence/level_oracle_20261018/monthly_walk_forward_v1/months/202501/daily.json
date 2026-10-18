@@ -1,0 +1,1448 @@
+{
+  "static": [
+    {
+      "ticker": "QQQ",
+      "date": "20250102",
+      "source_status": "COMPLETE",
+      "trades": 7,
+      "net_base": -349.20000000000005,
+      "net_adverse": -363.20000000000005
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250103",
+      "source_status": "COMPLETE",
+      "trades": 5,
+      "net_base": -94.99999999999997,
+      "net_adverse": -105.0
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250106",
+      "source_status": "COMPLETE",
+      "trades": 5,
+      "net_base": -112.0,
+      "net_adverse": -122.0
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250107",
+      "source_status": "COMPLETE",
+      "trades": 6,
+      "net_base": -390.6,
+      "net_adverse": -402.6
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250108",
+      "source_status": "COMPLETE",
+      "trades": 15,
+      "net_base": -67.99999999999994,
+      "net_adverse": -98.00000000000003
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250110",
+      "source_status": "COMPLETE",
+      "trades": 2,
+      "net_base": -131.2,
+      "net_adverse": -135.2
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250113",
+      "source_status": "COMPLETE",
+      "trades": 2,
+      "net_base": -136.2,
+      "net_adverse": -140.2
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250114",
+      "source_status": "COMPLETE",
+      "trades": 1,
+      "net_base": 18.400000000000016,
+      "net_adverse": 16.399999999999995
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250115",
+      "source_status": "COMPLETE",
+      "trades": 5,
+      "net_base": -38.999999999999915,
+      "net_adverse": -49.0
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250116",
+      "source_status": "COMPLETE",
+      "trades": 5,
+      "net_base": -179.0,
+      "net_adverse": -189.0
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250117",
+      "source_status": "COMPLETE",
+      "trades": 3,
+      "net_base": -130.79999999999998,
+      "net_adverse": -136.8
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250121",
+      "source_status": "COMPLETE",
+      "trades": 4,
+      "net_base": 77.60000000000004,
+      "net_adverse": 69.60000000000002
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250122",
+      "source_status": "COMPLETE",
+      "trades": 0,
+      "net_base": 0.0,
+      "net_adverse": 0.0
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250123",
+      "source_status": "COMPLETE",
+      "trades": 7,
+      "net_base": -95.2,
+      "net_adverse": -109.20000000000002
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250124",
+      "source_status": "COMPLETE",
+      "trades": 0,
+      "net_base": 0.0,
+      "net_adverse": 0.0
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250127",
+      "source_status": "COMPLETE",
+      "trades": 3,
+      "net_base": -189.80000000000004,
+      "net_adverse": -195.80000000000004
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250128",
+      "source_status": "COMPLETE",
+      "trades": 1,
+      "net_base": 127.40000000000003,
+      "net_adverse": 125.4
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250129",
+      "source_status": "COMPLETE",
+      "trades": 3,
+      "net_base": -161.79999999999993,
+      "net_adverse": -167.8
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250130",
+      "source_status": "COMPLETE",
+      "trades": 3,
+      "net_base": -136.80000000000004,
+      "net_adverse": -142.80000000000004
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250131",
+      "source_status": "COMPLETE",
+      "trades": 1,
+      "net_base": 345.40000000000003,
+      "net_adverse": 343.40000000000003
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250102",
+      "source_status": "COMPLETE",
+      "trades": 13,
+      "net_base": 2040.2000000000003,
+      "net_adverse": 2014.2
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250103",
+      "source_status": "COMPLETE",
+      "trades": 4,
+      "net_base": 2631.6000000000004,
+      "net_adverse": 2623.6
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250106",
+      "source_status": "COMPLETE",
+      "trades": 3,
+      "net_base": 1836.2000000000003,
+      "net_adverse": 1830.2
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250107",
+      "source_status": "COMPLETE",
+      "trades": 10,
+      "net_base": -2535.9999999999995,
+      "net_adverse": -2555.999999999999
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250108",
+      "source_status": "COMPLETE",
+      "trades": 23,
+      "net_base": -2015.800000000001,
+      "net_adverse": -2061.7999999999993
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250110",
+      "source_status": "COMPLETE",
+      "trades": 3,
+      "net_base": -483.80000000000007,
+      "net_adverse": -489.7999999999998
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250113",
+      "source_status": "COMPLETE",
+      "trades": 4,
+      "net_base": -1898.4,
+      "net_adverse": -1906.4
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250114",
+      "source_status": "COMPLETE",
+      "trades": 6,
+      "net_base": -2462.5999999999995,
+      "net_adverse": -2474.5999999999995
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250115",
+      "source_status": "COMPLETE",
+      "trades": 4,
+      "net_base": -888.4000000000007,
+      "net_adverse": -896.3999999999999
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250116",
+      "source_status": "COMPLETE",
+      "trades": 6,
+      "net_base": -662.5999999999997,
+      "net_adverse": -674.5999999999999
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250117",
+      "source_status": "COMPLETE",
+      "trades": 1,
+      "net_base": -514.6,
+      "net_adverse": -516.6
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250121",
+      "source_status": "COMPLETE",
+      "trades": 4,
+      "net_base": 836.6000000000001,
+      "net_adverse": 828.6000000000003
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250122",
+      "source_status": "COMPLETE",
+      "trades": 3,
+      "net_base": -493.79999999999995,
+      "net_adverse": -499.8
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250123",
+      "source_status": "COMPLETE",
+      "trades": 3,
+      "net_base": 1386.2,
+      "net_adverse": 1380.2000000000003
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250124",
+      "source_status": "COMPLETE",
+      "trades": 6,
+      "net_base": 1242.3999999999999,
+      "net_adverse": 1230.4000000000005
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250127",
+      "source_status": "COMPLETE",
+      "trades": 2,
+      "net_base": -974.1999999999999,
+      "net_adverse": -978.1999999999998
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250128",
+      "source_status": "COMPLETE",
+      "trades": 4,
+      "net_base": -1198.4000000000003,
+      "net_adverse": -1206.4
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250129",
+      "source_status": "COMPLETE",
+      "trades": 8,
+      "net_base": -106.80000000000041,
+      "net_adverse": -122.79999999999995
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250130",
+      "source_status": "COMPLETE",
+      "trades": 6,
+      "net_base": -1287.6,
+      "net_adverse": -1299.5999999999997
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250131",
+      "source_status": "COMPLETE",
+      "trades": 4,
+      "net_base": -738.3999999999999,
+      "net_adverse": -746.3999999999999
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250102",
+      "source_status": "COMPLETE",
+      "trades": 14,
+      "net_base": -546.3999999999999,
+      "net_adverse": -574.4000000000001
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250103",
+      "source_status": "COMPLETE",
+      "trades": 1,
+      "net_base": 113.40000000000002,
+      "net_adverse": 111.39999999999999
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250106",
+      "source_status": "COMPLETE",
+      "trades": 0,
+      "net_base": 0.0,
+      "net_adverse": 0.0
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250107",
+      "source_status": "COMPLETE",
+      "trades": 5,
+      "net_base": 39.000000000000064,
+      "net_adverse": 29.00000000000002
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250108",
+      "source_status": "COMPLETE",
+      "trades": 4,
+      "net_base": -221.4,
+      "net_adverse": -229.4
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250110",
+      "source_status": "COMPLETE",
+      "trades": 1,
+      "net_base": -3.6,
+      "net_adverse": -5.600000000000001
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250113",
+      "source_status": "COMPLETE",
+      "trades": 9,
+      "net_base": -321.4,
+      "net_adverse": -339.4000000000001
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250114",
+      "source_status": "COMPLETE",
+      "trades": 8,
+      "net_base": -163.79999999999998,
+      "net_adverse": -179.8
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250115",
+      "source_status": "COMPLETE",
+      "trades": 1,
+      "net_base": -51.6,
+      "net_adverse": -53.6
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250116",
+      "source_status": "COMPLETE",
+      "trades": 0,
+      "net_base": 0.0,
+      "net_adverse": 0.0
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250117",
+      "source_status": "COMPLETE",
+      "trades": 1,
+      "net_base": -27.6,
+      "net_adverse": -29.6
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250121",
+      "source_status": "COMPLETE",
+      "trades": 3,
+      "net_base": 115.20000000000003,
+      "net_adverse": 109.2
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250122",
+      "source_status": "COMPLETE",
+      "trades": 1,
+      "net_base": -22.6,
+      "net_adverse": -23.6
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250123",
+      "source_status": "COMPLETE",
+      "trades": 1,
+      "net_base": 31.4,
+      "net_adverse": 29.399999999999995
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250124",
+      "source_status": "COMPLETE",
+      "trades": 1,
+      "net_base": 8.399999999999995,
+      "net_adverse": 6.399999999999993
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250127",
+      "source_status": "COMPLETE",
+      "trades": 6,
+      "net_base": -100.60000000000002,
+      "net_adverse": -112.6
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250128",
+      "source_status": "COMPLETE",
+      "trades": 2,
+      "net_base": 252.8000000000001,
+      "net_adverse": 248.8000000000001
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250129",
+      "source_status": "COMPLETE",
+      "trades": 16,
+      "net_base": -125.59999999999991,
+      "net_adverse": -157.5999999999999
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250130",
+      "source_status": "COMPLETE",
+      "trades": 5,
+      "net_base": -189.99999999999997,
+      "net_adverse": -199.99999999999997
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250131",
+      "source_status": "COMPLETE",
+      "trades": 6,
+      "net_base": 294.4,
+      "net_adverse": 282.4
+    }
+  ],
+  "expanding": [
+    {
+      "ticker": "QQQ",
+      "date": "20250102",
+      "source_status": "COMPLETE",
+      "trades": 7,
+      "net_base": -349.20000000000005,
+      "net_adverse": -363.20000000000005
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250103",
+      "source_status": "COMPLETE",
+      "trades": 5,
+      "net_base": -94.99999999999997,
+      "net_adverse": -105.0
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250106",
+      "source_status": "COMPLETE",
+      "trades": 5,
+      "net_base": -112.0,
+      "net_adverse": -122.0
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250107",
+      "source_status": "COMPLETE",
+      "trades": 6,
+      "net_base": -390.6,
+      "net_adverse": -402.6
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250108",
+      "source_status": "COMPLETE",
+      "trades": 15,
+      "net_base": -67.99999999999994,
+      "net_adverse": -98.00000000000003
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250110",
+      "source_status": "COMPLETE",
+      "trades": 2,
+      "net_base": -131.2,
+      "net_adverse": -135.2
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250113",
+      "source_status": "COMPLETE",
+      "trades": 2,
+      "net_base": -136.2,
+      "net_adverse": -140.2
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250114",
+      "source_status": "COMPLETE",
+      "trades": 1,
+      "net_base": 18.400000000000016,
+      "net_adverse": 16.399999999999995
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250115",
+      "source_status": "COMPLETE",
+      "trades": 5,
+      "net_base": -38.999999999999915,
+      "net_adverse": -49.0
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250116",
+      "source_status": "COMPLETE",
+      "trades": 5,
+      "net_base": -179.0,
+      "net_adverse": -189.0
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250117",
+      "source_status": "COMPLETE",
+      "trades": 3,
+      "net_base": -130.79999999999998,
+      "net_adverse": -136.8
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250121",
+      "source_status": "COMPLETE",
+      "trades": 4,
+      "net_base": 77.60000000000004,
+      "net_adverse": 69.60000000000002
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250122",
+      "source_status": "COMPLETE",
+      "trades": 0,
+      "net_base": 0.0,
+      "net_adverse": 0.0
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250123",
+      "source_status": "COMPLETE",
+      "trades": 7,
+      "net_base": -95.2,
+      "net_adverse": -109.20000000000002
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250124",
+      "source_status": "COMPLETE",
+      "trades": 0,
+      "net_base": 0.0,
+      "net_adverse": 0.0
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250127",
+      "source_status": "COMPLETE",
+      "trades": 3,
+      "net_base": -189.80000000000004,
+      "net_adverse": -195.80000000000004
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250128",
+      "source_status": "COMPLETE",
+      "trades": 1,
+      "net_base": 127.40000000000003,
+      "net_adverse": 125.4
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250129",
+      "source_status": "COMPLETE",
+      "trades": 3,
+      "net_base": -161.79999999999993,
+      "net_adverse": -167.8
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250130",
+      "source_status": "COMPLETE",
+      "trades": 3,
+      "net_base": -136.80000000000004,
+      "net_adverse": -142.80000000000004
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250131",
+      "source_status": "COMPLETE",
+      "trades": 1,
+      "net_base": 345.40000000000003,
+      "net_adverse": 343.40000000000003
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250102",
+      "source_status": "COMPLETE",
+      "trades": 13,
+      "net_base": 2040.2000000000003,
+      "net_adverse": 2014.2
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250103",
+      "source_status": "COMPLETE",
+      "trades": 4,
+      "net_base": 2631.6000000000004,
+      "net_adverse": 2623.6
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250106",
+      "source_status": "COMPLETE",
+      "trades": 3,
+      "net_base": 1836.2000000000003,
+      "net_adverse": 1830.2
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250107",
+      "source_status": "COMPLETE",
+      "trades": 10,
+      "net_base": -2535.9999999999995,
+      "net_adverse": -2555.999999999999
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250108",
+      "source_status": "COMPLETE",
+      "trades": 23,
+      "net_base": -2015.800000000001,
+      "net_adverse": -2061.7999999999993
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250110",
+      "source_status": "COMPLETE",
+      "trades": 3,
+      "net_base": -483.80000000000007,
+      "net_adverse": -489.7999999999998
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250113",
+      "source_status": "COMPLETE",
+      "trades": 4,
+      "net_base": -1898.4,
+      "net_adverse": -1906.4
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250114",
+      "source_status": "COMPLETE",
+      "trades": 6,
+      "net_base": -2462.5999999999995,
+      "net_adverse": -2474.5999999999995
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250115",
+      "source_status": "COMPLETE",
+      "trades": 4,
+      "net_base": -888.4000000000007,
+      "net_adverse": -896.3999999999999
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250116",
+      "source_status": "COMPLETE",
+      "trades": 6,
+      "net_base": -662.5999999999997,
+      "net_adverse": -674.5999999999999
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250117",
+      "source_status": "COMPLETE",
+      "trades": 1,
+      "net_base": -514.6,
+      "net_adverse": -516.6
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250121",
+      "source_status": "COMPLETE",
+      "trades": 4,
+      "net_base": 836.6000000000001,
+      "net_adverse": 828.6000000000003
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250122",
+      "source_status": "COMPLETE",
+      "trades": 3,
+      "net_base": -493.79999999999995,
+      "net_adverse": -499.8
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250123",
+      "source_status": "COMPLETE",
+      "trades": 3,
+      "net_base": 1386.2,
+      "net_adverse": 1380.2000000000003
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250124",
+      "source_status": "COMPLETE",
+      "trades": 6,
+      "net_base": 1242.3999999999999,
+      "net_adverse": 1230.4000000000005
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250127",
+      "source_status": "COMPLETE",
+      "trades": 2,
+      "net_base": -974.1999999999999,
+      "net_adverse": -978.1999999999998
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250128",
+      "source_status": "COMPLETE",
+      "trades": 4,
+      "net_base": -1198.4000000000003,
+      "net_adverse": -1206.4
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250129",
+      "source_status": "COMPLETE",
+      "trades": 8,
+      "net_base": -106.80000000000041,
+      "net_adverse": -122.79999999999995
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250130",
+      "source_status": "COMPLETE",
+      "trades": 6,
+      "net_base": -1287.6,
+      "net_adverse": -1299.5999999999997
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250131",
+      "source_status": "COMPLETE",
+      "trades": 4,
+      "net_base": -738.3999999999999,
+      "net_adverse": -746.3999999999999
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250102",
+      "source_status": "COMPLETE",
+      "trades": 14,
+      "net_base": -546.3999999999999,
+      "net_adverse": -574.4000000000001
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250103",
+      "source_status": "COMPLETE",
+      "trades": 1,
+      "net_base": 113.40000000000002,
+      "net_adverse": 111.39999999999999
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250106",
+      "source_status": "COMPLETE",
+      "trades": 0,
+      "net_base": 0.0,
+      "net_adverse": 0.0
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250107",
+      "source_status": "COMPLETE",
+      "trades": 5,
+      "net_base": 39.000000000000064,
+      "net_adverse": 29.00000000000002
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250108",
+      "source_status": "COMPLETE",
+      "trades": 4,
+      "net_base": -221.4,
+      "net_adverse": -229.4
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250110",
+      "source_status": "COMPLETE",
+      "trades": 1,
+      "net_base": -3.6,
+      "net_adverse": -5.600000000000001
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250113",
+      "source_status": "COMPLETE",
+      "trades": 9,
+      "net_base": -321.4,
+      "net_adverse": -339.4000000000001
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250114",
+      "source_status": "COMPLETE",
+      "trades": 8,
+      "net_base": -163.79999999999998,
+      "net_adverse": -179.8
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250115",
+      "source_status": "COMPLETE",
+      "trades": 1,
+      "net_base": -51.6,
+      "net_adverse": -53.6
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250116",
+      "source_status": "COMPLETE",
+      "trades": 0,
+      "net_base": 0.0,
+      "net_adverse": 0.0
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250117",
+      "source_status": "COMPLETE",
+      "trades": 1,
+      "net_base": -27.6,
+      "net_adverse": -29.6
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250121",
+      "source_status": "COMPLETE",
+      "trades": 3,
+      "net_base": 115.20000000000003,
+      "net_adverse": 109.2
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250122",
+      "source_status": "COMPLETE",
+      "trades": 1,
+      "net_base": -22.6,
+      "net_adverse": -23.6
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250123",
+      "source_status": "COMPLETE",
+      "trades": 1,
+      "net_base": 31.4,
+      "net_adverse": 29.399999999999995
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250124",
+      "source_status": "COMPLETE",
+      "trades": 1,
+      "net_base": 8.399999999999995,
+      "net_adverse": 6.399999999999993
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250127",
+      "source_status": "COMPLETE",
+      "trades": 6,
+      "net_base": -100.60000000000002,
+      "net_adverse": -112.6
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250128",
+      "source_status": "COMPLETE",
+      "trades": 2,
+      "net_base": 252.8000000000001,
+      "net_adverse": 248.8000000000001
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250129",
+      "source_status": "COMPLETE",
+      "trades": 16,
+      "net_base": -125.59999999999991,
+      "net_adverse": -157.5999999999999
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250130",
+      "source_status": "COMPLETE",
+      "trades": 5,
+      "net_base": -189.99999999999997,
+      "net_adverse": -199.99999999999997
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250131",
+      "source_status": "COMPLETE",
+      "trades": 6,
+      "net_base": 294.4,
+      "net_adverse": 282.4
+    }
+  ],
+  "rolling12": [
+    {
+      "ticker": "QQQ",
+      "date": "20250102",
+      "source_status": "COMPLETE",
+      "trades": 6,
+      "net_base": -196.59999999999994,
+      "net_adverse": -208.6
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250103",
+      "source_status": "COMPLETE",
+      "trades": 5,
+      "net_base": -189.00000000000003,
+      "net_adverse": -199.00000000000003
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250106",
+      "source_status": "COMPLETE",
+      "trades": 2,
+      "net_base": 9.799999999999997,
+      "net_adverse": 5.7999999999999865
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250107",
+      "source_status": "COMPLETE",
+      "trades": 6,
+      "net_base": -279.6,
+      "net_adverse": -291.59999999999997
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250108",
+      "source_status": "COMPLETE",
+      "trades": 10,
+      "net_base": -227.99999999999994,
+      "net_adverse": -248.00000000000006
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250110",
+      "source_status": "COMPLETE",
+      "trades": 4,
+      "net_base": -155.39999999999998,
+      "net_adverse": -163.39999999999998
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250113",
+      "source_status": "COMPLETE",
+      "trades": 10,
+      "net_base": -359.0,
+      "net_adverse": -379.00000000000006
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250114",
+      "source_status": "COMPLETE",
+      "trades": 1,
+      "net_base": -34.60000000000001,
+      "net_adverse": -36.60000000000001
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250115",
+      "source_status": "COMPLETE",
+      "trades": 8,
+      "net_base": -53.79999999999997,
+      "net_adverse": -69.8
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250116",
+      "source_status": "COMPLETE",
+      "trades": 5,
+      "net_base": -194.99999999999997,
+      "net_adverse": -205.0
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250117",
+      "source_status": "COMPLETE",
+      "trades": 6,
+      "net_base": -228.6,
+      "net_adverse": -240.60000000000005
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250121",
+      "source_status": "COMPLETE",
+      "trades": 6,
+      "net_base": -104.60000000000001,
+      "net_adverse": -116.60000000000001
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250122",
+      "source_status": "COMPLETE",
+      "trades": 0,
+      "net_base": 0.0,
+      "net_adverse": 0.0
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250123",
+      "source_status": "COMPLETE",
+      "trades": 7,
+      "net_base": -132.20000000000002,
+      "net_adverse": -145.20000000000002
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250124",
+      "source_status": "COMPLETE",
+      "trades": 5,
+      "net_base": 27.999999999999982,
+      "net_adverse": 17.999999999999993
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250127",
+      "source_status": "COMPLETE",
+      "trades": 6,
+      "net_base": -152.60000000000002,
+      "net_adverse": -164.60000000000002
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250128",
+      "source_status": "COMPLETE",
+      "trades": 1,
+      "net_base": 263.40000000000003,
+      "net_adverse": 261.40000000000003
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250129",
+      "source_status": "COMPLETE",
+      "trades": 8,
+      "net_base": -269.79999999999995,
+      "net_adverse": -285.8
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250130",
+      "source_status": "COMPLETE",
+      "trades": 3,
+      "net_base": -124.79999999999998,
+      "net_adverse": -130.8
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250131",
+      "source_status": "COMPLETE",
+      "trades": 2,
+      "net_base": -63.20000000000001,
+      "net_adverse": -67.20000000000002
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250102",
+      "source_status": "COMPLETE",
+      "trades": 11,
+      "net_base": -970.6000000000003,
+      "net_adverse": -992.5999999999996
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250103",
+      "source_status": "COMPLETE",
+      "trades": 3,
+      "net_base": -733.8000000000002,
+      "net_adverse": -739.8000000000002
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250106",
+      "source_status": "COMPLETE",
+      "trades": 4,
+      "net_base": -538.4,
+      "net_adverse": -546.4
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250107",
+      "source_status": "COMPLETE",
+      "trades": 10,
+      "net_base": -3450.9999999999995,
+      "net_adverse": -3470.9999999999995
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250108",
+      "source_status": "COMPLETE",
+      "trades": 6,
+      "net_base": -972.5999999999999,
+      "net_adverse": -984.5999999999997
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250110",
+      "source_status": "COMPLETE",
+      "trades": 4,
+      "net_base": -1818.3999999999996,
+      "net_adverse": -1826.3999999999996
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250113",
+      "source_status": "COMPLETE",
+      "trades": 14,
+      "net_base": -3814.3999999999996,
+      "net_adverse": -3842.399999999999
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250114",
+      "source_status": "COMPLETE",
+      "trades": 3,
+      "net_base": -1203.7999999999997,
+      "net_adverse": -1209.7999999999997
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250115",
+      "source_status": "COMPLETE",
+      "trades": 0,
+      "net_base": 0.0,
+      "net_adverse": 0.0
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250116",
+      "source_status": "COMPLETE",
+      "trades": 4,
+      "net_base": -803.4000000000001,
+      "net_adverse": -811.4000000000001
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250117",
+      "source_status": "COMPLETE",
+      "trades": 1,
+      "net_base": -409.6,
+      "net_adverse": -411.6
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250121",
+      "source_status": "COMPLETE",
+      "trades": 0,
+      "net_base": 0.0,
+      "net_adverse": 0.0
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250122",
+      "source_status": "COMPLETE",
+      "trades": 2,
+      "net_base": -409.2,
+      "net_adverse": -413.2000000000001
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250123",
+      "source_status": "COMPLETE",
+      "trades": 4,
+      "net_base": 871.6000000000001,
+      "net_adverse": 863.6000000000004
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250124",
+      "source_status": "COMPLETE",
+      "trades": 7,
+      "net_base": -1412.1999999999996,
+      "net_adverse": -1426.1999999999996
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250127",
+      "source_status": "COMPLETE",
+      "trades": 1,
+      "net_base": -509.59999999999997,
+      "net_adverse": -511.6
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250128",
+      "source_status": "COMPLETE",
+      "trades": 3,
+      "net_base": 2341.2000000000007,
+      "net_adverse": 2335.2000000000003
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250129",
+      "source_status": "COMPLETE",
+      "trades": 13,
+      "net_base": -609.7999999999993,
+      "net_adverse": -635.7999999999994
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250130",
+      "source_status": "COMPLETE",
+      "trades": 10,
+      "net_base": -1151.0000000000005,
+      "net_adverse": -1171.0
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250131",
+      "source_status": "COMPLETE",
+      "trades": 4,
+      "net_base": 4381.6,
+      "net_adverse": 4373.6
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250102",
+      "source_status": "COMPLETE",
+      "trades": 7,
+      "net_base": 161.80000000000007,
+      "net_adverse": 147.80000000000007
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250103",
+      "source_status": "COMPLETE",
+      "trades": 5,
+      "net_base": -177.99999999999997,
+      "net_adverse": -188.0
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250106",
+      "source_status": "COMPLETE",
+      "trades": 2,
+      "net_base": -44.2,
+      "net_adverse": -48.2
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250107",
+      "source_status": "COMPLETE",
+      "trades": 6,
+      "net_base": -264.59999999999997,
+      "net_adverse": -276.6
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250108",
+      "source_status": "COMPLETE",
+      "trades": 9,
+      "net_base": -174.4,
+      "net_adverse": -192.40000000000003
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250110",
+      "source_status": "COMPLETE",
+      "trades": 6,
+      "net_base": 131.4,
+      "net_adverse": 119.4
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250113",
+      "source_status": "COMPLETE",
+      "trades": 1,
+      "net_base": 195.4,
+      "net_adverse": 193.39999999999998
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250114",
+      "source_status": "COMPLETE",
+      "trades": 8,
+      "net_base": -222.8,
+      "net_adverse": -238.8
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250115",
+      "source_status": "COMPLETE",
+      "trades": 0,
+      "net_base": 0.0,
+      "net_adverse": 0.0
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250116",
+      "source_status": "COMPLETE",
+      "trades": 0,
+      "net_base": 0.0,
+      "net_adverse": 0.0
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250117",
+      "source_status": "COMPLETE",
+      "trades": 2,
+      "net_base": -52.199999999999996,
+      "net_adverse": -56.2
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250121",
+      "source_status": "COMPLETE",
+      "trades": 4,
+      "net_base": -162.4,
+      "net_adverse": -170.4
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250122",
+      "source_status": "COMPLETE",
+      "trades": 0,
+      "net_base": 0.0,
+      "net_adverse": 0.0
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250123",
+      "source_status": "COMPLETE",
+      "trades": 1,
+      "net_base": 51.39999999999999,
+      "net_adverse": 49.39999999999999
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250124",
+      "source_status": "COMPLETE",
+      "trades": 5,
+      "net_base": -74.00000000000001,
+      "net_adverse": -84.00000000000001
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250127",
+      "source_status": "COMPLETE",
+      "trades": 7,
+      "net_base": -225.19999999999996,
+      "net_adverse": -239.20000000000002
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250128",
+      "source_status": "COMPLETE",
+      "trades": 6,
+      "net_base": -6.599999999999994,
+      "net_adverse": -18.600000000000016
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250129",
+      "source_status": "COMPLETE",
+      "trades": 24,
+      "net_base": -184.3999999999998,
+      "net_adverse": -232.39999999999992
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250130",
+      "source_status": "COMPLETE",
+      "trades": 6,
+      "net_base": -158.6,
+      "net_adverse": -170.6
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250131",
+      "source_status": "COMPLETE",
+      "trades": 12,
+      "net_base": 187.80000000000013,
+      "net_adverse": 163.8
+    }
+  ]
+}

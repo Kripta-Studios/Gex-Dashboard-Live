@@ -1,0 +1,41 @@
+{
+  "status": "PASS_INDEPENDENT_MARKET_CUE_COMPARISON_ECONOMIC_AUDIT",
+  "scope": "ECONOMIC_EXECUTION_GIVEN_SEALED_PREDICTIONS",
+  "binding": {
+    "comparison_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\market_cue_comparison_v1",
+    "freeze_sha256": "5f1c923379b8d732cc7fd88444f50d497f36486af062ad61185b95a45ce14c59",
+    "period2025_sha256": "e8c5f96b859917f4fe6560f67ff2163407bd7d506ec2f22259041eb5f27dc923",
+    "period2026_sha256": "0deefc1168184dd95f353b56cb5d4a42fbf79854ac8efe62a3922ec241a2b4c5",
+    "completion_sha256": "bc5849f8d29040452037511da4a97720b38135610ff60b1922670d1d5956846b",
+    "comparison_complete_sha256": "a2e500177c674926b7c06688eee203432e892d4a43d0666dffb9d2e22156c802",
+    "session_audit_sha256": "678eb21bca80b38855979d8a7386cdadd6827a6dfdd5acbf3df6fde5a5a2f3b9",
+    "learner_audit_sha256": "238e6f0974025edf076d4023f134878340141271547e45e618026042539945bd",
+    "engine_audit_sha256": "cbbe61d0a3fa7619447b7301d4c4b2fd52c487e11450d4904efee381fc3bf22d",
+    "review_sha256": "f370f9c85a4a18beb46ed047cdcd22b3bd5f1529ff17fbeaf6d13abc23203b93",
+    "cue_contract_sha256": "ea296e2de576b91594697579c3f642e251526224213a651fbf6fbb409addf534",
+    "cue_model_completion_sha256": "9d5e0bbc5744fbdbf909e4f43c11796b9aa42c418cfcf7c0e85018a82783f97a",
+    "audit_script_sha256": "1809f6ebe860cb107eb158bc4e2f7efd118cf8cb25a5c68e7dfc8b0626fe7bb8"
+  },
+  "coverage": {
+    "days_2025": 750,
+    "days_2026": 369,
+    "available_2026": 363,
+    "missing_2026": 6,
+    "full_original_scores_bitexact": 1104,
+    "short_sessions_without_original_reference": 9
+  },
+  "policies": [
+    "original_net__0",
+    "cue_net__0"
+  ],
+  "winner_selected": null,
+  "threshold": 0,
+  "scheduler_reconstructed_independently": true,
+  "calibration_reconstructed_independently": true,
+  "model_training_reproduced": false,
+  "prediction_inference_reproduced": false,
+  "development_seen": true,
+  "technical_ready": false,
+  "promotion_approved": false,
+  "finished_at_utc": "2026-10-18T21:32:51.266102+00:00"
+}

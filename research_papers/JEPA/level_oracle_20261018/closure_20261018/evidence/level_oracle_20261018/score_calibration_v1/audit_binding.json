@@ -1,0 +1,22 @@
+{
+  "status": "PASS_CALIBRATION_TO_INDEPENDENT_LEARNER_AUDIT_BINDING",
+  "created_utc": "2026-10-18T17:50:43.669996+00:00",
+  "calibration_summary_sha256": "7bd7ef4bc9c88ba0c9ec28d2f43cd9ff07acf0bd64c4c69c49c0a4c87fb4df6f",
+  "audit_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\learners_v1_economic_audit\\audit.json",
+  "audit_sha256": "238e6f0974025edf076d4023f134878340141271547e45e618026042539945bd",
+  "audit_status": "PASS_INDEPENDENT_LEARNER_ECONOMIC_EXECUTION_AUDIT",
+  "audit_scope": "ECONOMIC_EXECUTION_GIVEN_SEALED_PREDICTIONS",
+  "learner_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\learners_v1",
+  "verified_bindings": {
+    "summary.json": "e171408b2fd786c68949d1d32adfca6d25a7d38f4342ab2431a8bb32131c09e5",
+    "freeze.json": "9b11a08d6b29003389c6a5e9aa2fa3a7561ead153447b1ba285b39a12a1d4f86",
+    "normalizers.json": "868b7fe8fad28f0890fa78da7fe1027fd08d50c03240fd71669f18cd98615cb1",
+    "validation/prediction_hashes.json": "fd012d3620056d69e7807c8db87b913930aca2d0a9c9e3e1b81101de84900636",
+    "test/prediction_hashes.json": "4c8f31bc064c19536beb08e72fb644b6cea2ce75b69a54bdc3740393743ef692"
+  },
+  "engine_index_sha256": "8d0c6e27bdaf7d47ef2a9888505294b8f3186da3a6927e780ce9e517e660e8e5",
+  "metrics_recomputed": false,
+  "original_summary_status_preserved": "UNVERIFIED_AT_DIAGNOSTIC_RUN",
+  "prediction_inference_reproduced": false,
+  "model_training_reproduced": false
+}

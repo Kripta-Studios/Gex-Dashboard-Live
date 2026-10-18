@@ -1,0 +1,4754 @@
+{
+  "net_control__0": {
+    "trades": 1711,
+    "net_base": -36076.599999999984,
+    "net_base_pf": 0.8545385194754507,
+    "net_base_pf_infinite": false,
+    "net_base_win_rate": 0.25891291642314435,
+    "net_base_max_drawdown": 43445.79999999847,
+    "net_adverse": -39491.59999999996,
+    "net_adverse_pf": 0.8423816213799932,
+    "net_adverse_pf_infinite": false,
+    "net_adverse_win_rate": 0.2548217416715371,
+    "net_adverse_max_drawdown": 46024.799999998446,
+    "holding_minutes": {
+      "min": 1.0,
+      "median": 16.0,
+      "max": 324.0
+    },
+    "exit_reasons": {
+      "TARGET": {
+        "trades": 316,
+        "net_base": 135090.4,
+        "net_adverse": 134459.4
+      },
+      "STOP": {
+        "trades": 1135,
+        "net_base": -218783.0,
+        "net_adverse": -221049.99999999997
+      },
+      "EOD": {
+        "trades": 260,
+        "net_base": 47616.0,
+        "net_adverse": 47099.0
+      }
+    },
+    "attempts": 1711,
+    "no_fill_attempts": 0,
+    "expected_ticker_days": 369,
+    "observable_ticker_days": 363,
+    "zero_fill_expected_days": 16,
+    "zero_fill_observable_days": 10,
+    "missing_source_days": 6,
+    "tickers": {
+      "SPXW": {
+        "trades": 680,
+        "net_base": -30106.000000000004,
+        "net_base_pf": 0.8568040661442876,
+        "net_base_pf_infinite": false,
+        "net_base_win_rate": 0.2661764705882353,
+        "net_base_max_drawdown": 36923.19999999944,
+        "net_adverse": -31463.99999999997,
+        "net_adverse_pf": 0.8510505142506557,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_win_rate": 0.2661764705882353,
+        "net_adverse_max_drawdown": 37945.19999999941,
+        "holding_minutes": {
+          "min": 1.0,
+          "median": 14.0,
+          "max": 324.0
+        },
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 132,
+            "net_base": 116122.79999999999,
+            "net_adverse": 115858.8
+          },
+          "STOP": {
+            "trades": 460,
+            "net_base": -186015.0,
+            "net_adverse": -186934.0
+          },
+          "EOD": {
+            "trades": 88,
+            "net_base": 39786.2,
+            "net_adverse": 39611.2
+          }
+        },
+        "months": {
+          "202601": {
+            "trades": 113,
+            "net_base": -2244.799999999999,
+            "net_base_pf": 0.9102654301247206,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.24778761061946902,
+            "net_base_max_drawdown": 8331.20000000001,
+            "net_adverse": -2470.799999999998,
+            "net_adverse_pf": 0.9018978797744782,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.24778761061946902,
+            "net_adverse_max_drawdown": 8475.200000000006,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 13.0,
+              "max": 309.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 18,
+                "net_base": 10857.199999999999,
+                "net_adverse": 10821.199999999999
+              },
+              "STOP": {
+                "trades": 79,
+                "net_base": -23633.399999999987,
+                "net_adverse": -23791.399999999987
+              },
+              "EOD": {
+                "trades": 16,
+                "net_base": 10531.400000000001,
+                "net_adverse": 10499.400000000001
+              }
+            }
+          },
+          "202602": {
+            "trades": 71,
+            "net_base": -1236.6000000000006,
+            "net_base_pf": 0.9550565881386613,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.28169014084507044,
+            "net_base_max_drawdown": 11536.200000000003,
+            "net_adverse": -1378.5999999999967,
+            "net_adverse_pf": 0.9500807485353018,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.28169014084507044,
+            "net_adverse_max_drawdown": 11580.200000000003,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 26.0,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 7,
+                "net_base": 8087.799999999999,
+                "net_adverse": 8073.800000000001
+              },
+              "STOP": {
+                "trades": 47,
+                "net_base": -23476.19999999999,
+                "net_adverse": -23570.19999999999
+              },
+              "EOD": {
+                "trades": 17,
+                "net_base": 14151.800000000001,
+                "net_adverse": 14117.800000000001
+              }
+            }
+          },
+          "202603": {
+            "trades": 163,
+            "net_base": -19708.800000000003,
+            "net_base_pf": 0.6994400185440482,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.22699386503067484,
+            "net_base_max_drawdown": 24017.799999999967,
+            "net_adverse": -20033.799999999996,
+            "net_adverse_pf": 0.6956487392251531,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.22699386503067484,
+            "net_adverse_max_drawdown": 24322.79999999996,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 13.0,
+              "max": 304.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 25,
+                "net_base": 33815.0,
+                "net_adverse": 33765.0
+              },
+              "STOP": {
+                "trades": 121,
+                "net_base": -59856.60000000001,
+                "net_adverse": -60098.6
+              },
+              "EOD": {
+                "trades": 17,
+                "net_base": 6332.800000000001,
+                "net_adverse": 6299.800000000001
+              }
+            }
+          },
+          "202604": {
+            "trades": 105,
+            "net_base": -3296.999999999997,
+            "net_base_pf": 0.8792413853727152,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.24761904761904763,
+            "net_base_max_drawdown": 6790.6,
+            "net_adverse": -3505.999999999993,
+            "net_adverse_pf": 0.8723205896705688,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.24761904761904763,
+            "net_adverse_max_drawdown": 6812.6,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 13.0,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 24,
+                "net_base": 19814.600000000002,
+                "net_adverse": 19766.600000000006
+              },
+              "STOP": {
+                "trades": 70,
+                "net_base": -21285.999999999985,
+                "net_adverse": -21424.999999999985
+              },
+              "EOD": {
+                "trades": 11,
+                "net_base": -1825.5999999999995,
+                "net_adverse": -1847.5999999999995
+              }
+            }
+          },
+          "202605": {
+            "trades": 91,
+            "net_base": -7133.600000000002,
+            "net_base_pf": 0.710944527736132,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.2857142857142857,
+            "net_base_max_drawdown": 8610.600000000002,
+            "net_adverse": -7315.599999999999,
+            "net_adverse_pf": 0.7051231407956793,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.2857142857142857,
+            "net_adverse_max_drawdown": 8732.599999999999,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 17.0,
+              "max": 315.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 21,
+                "net_base": 11993.399999999996,
+                "net_adverse": 11951.399999999998
+              },
+              "STOP": {
+                "trades": 57,
+                "net_base": -21712.199999999997,
+                "net_adverse": -21826.199999999997
+              },
+              "EOD": {
+                "trades": 13,
+                "net_base": 2585.2000000000003,
+                "net_adverse": 2559.2
+              }
+            }
+          },
+          "202606": {
+            "trades": 137,
+            "net_base": 3514.800000000001,
+            "net_base_pf": 1.087524714999328,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.32116788321167883,
+            "net_base_max_drawdown": 8795.800000000003,
+            "net_adverse": 3240.800000000005,
+            "net_adverse_pf": 1.0803295673684683,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.32116788321167883,
+            "net_adverse_max_drawdown": 8991.8,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 11.0,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 37,
+                "net_base": 31554.800000000007,
+                "net_adverse": 31480.80000000001
+              },
+              "STOP": {
+                "trades": 86,
+                "net_base": -36050.59999999999,
+                "net_adverse": -36222.59999999999
+              },
+              "EOD": {
+                "trades": 14,
+                "net_base": 8010.5999999999985,
+                "net_adverse": 7982.5999999999985
+              }
+            }
+          }
+        },
+        "positive_months": 1,
+        "economic_gate": false
+      },
+      "SPY": {
+        "trades": 538,
+        "net_base": -2936.7999999999984,
+        "net_base_pf": 0.8290013042668156,
+        "net_base_pf_infinite": false,
+        "net_base_win_rate": 0.27695167286245354,
+        "net_base_max_drawdown": 4472.999999999976,
+        "net_adverse": -4012.800000000002,
+        "net_adverse_pf": 0.7765427836371936,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_win_rate": 0.2695167286245353,
+        "net_adverse_max_drawdown": 5142.999999999986,
+        "holding_minutes": {
+          "min": 1.0,
+          "median": 17.0,
+          "max": 324.0
+        },
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 112,
+            "net_base": 9304.800000000001,
+            "net_adverse": 9080.800000000001
+          },
+          "STOP": {
+            "trades": 342,
+            "net_base": -15199.200000000003,
+            "net_adverse": -15883.200000000004
+          },
+          "EOD": {
+            "trades": 84,
+            "net_base": 2957.6000000000004,
+            "net_adverse": 2789.6
+          }
+        },
+        "months": {
+          "202601": {
+            "trades": 71,
+            "net_base": -164.59999999999994,
+            "net_base_pf": 0.9165229739324479,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.2535211267605634,
+            "net_base_max_drawdown": 770.6,
+            "net_adverse": -306.6000000000001,
+            "net_adverse_pf": 0.8525536212368954,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.23943661971830985,
+            "net_adverse_max_drawdown": 822.6000000000001,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 23.0,
+              "max": 311.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 11,
+                "net_base": 810.4000000000002,
+                "net_adverse": 788.3999999999999
+              },
+              "STOP": {
+                "trades": 47,
+                "net_base": -1799.1999999999994,
+                "net_adverse": -1893.1999999999994
+              },
+              "EOD": {
+                "trades": 13,
+                "net_base": 824.2,
+                "net_adverse": 798.1999999999998
+              }
+            }
+          },
+          "202602": {
+            "trades": 79,
+            "net_base": 543.5999999999999,
+            "net_base_pf": 1.2314373297002728,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.3924050632911392,
+            "net_base_max_drawdown": 510.2000000000005,
+            "net_adverse": 385.59999999999957,
+            "net_adverse_pf": 1.1577225130890056,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.3924050632911392,
+            "net_adverse_max_drawdown": 554.2000000000005,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 23.0,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 22,
+                "net_base": 1940.8000000000009,
+                "net_adverse": 1896.8000000000006
+              },
+              "STOP": {
+                "trades": 42,
+                "net_base": -2000.1999999999998,
+                "net_adverse": -2084.2
+              },
+              "EOD": {
+                "trades": 15,
+                "net_base": 602.9999999999999,
+                "net_adverse": 572.9999999999999
+              }
+            }
+          },
+          "202603": {
+            "trades": 125,
+            "net_base": -1857.9999999999995,
+            "net_base_pf": 0.6607879650929273,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.208,
+            "net_base_max_drawdown": 2455.599999999995,
+            "net_adverse": -2107.9999999999995,
+            "net_adverse_pf": 0.6286771181962303,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.2,
+            "net_adverse_max_drawdown": 2617.599999999996,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 14.0,
+              "max": 307.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 17,
+                "net_base": 2075.8,
+                "net_adverse": 2041.7999999999997
+              },
+              "STOP": {
+                "trades": 89,
+                "net_base": -4971.4000000000015,
+                "net_adverse": -5149.4000000000015
+              },
+              "EOD": {
+                "trades": 19,
+                "net_base": 1037.6000000000004,
+                "net_adverse": 999.6000000000003
+              }
+            }
+          },
+          "202604": {
+            "trades": 66,
+            "net_base": -1027.5999999999995,
+            "net_base_pf": 0.428348909657321,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.22727272727272727,
+            "net_base_max_drawdown": 1027.6000000000008,
+            "net_adverse": -1159.5999999999997,
+            "net_adverse_pf": 0.3900694298337892,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.21212121212121213,
+            "net_adverse_max_drawdown": 1159.6000000000008,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 13.0,
+              "max": 323.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 13,
+                "net_base": 588.2,
+                "net_adverse": 562.1999999999999
+              },
+              "STOP": {
+                "trades": 46,
+                "net_base": -1507.5999999999995,
+                "net_adverse": -1599.5999999999995
+              },
+              "EOD": {
+                "trades": 7,
+                "net_base": -108.19999999999999,
+                "net_adverse": -122.20000000000002
+              }
+            }
+          },
+          "202605": {
+            "trades": 90,
+            "net_base": -786.0,
+            "net_base_pf": 0.6679060334629037,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.24444444444444444,
+            "net_base_max_drawdown": 786.0000000000009,
+            "net_adverse": -966.0000000000005,
+            "net_adverse_pf": 0.6140322838420968,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.24444444444444444,
+            "net_adverse_max_drawdown": 966.0000000000015,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 18.5,
+              "max": 318.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 17,
+                "net_base": 846.8,
+                "net_adverse": 812.8
+              },
+              "STOP": {
+                "trades": 60,
+                "net_base": -2139.0,
+                "net_adverse": -2259.0
+              },
+              "EOD": {
+                "trades": 13,
+                "net_base": 506.20000000000005,
+                "net_adverse": 480.19999999999993
+              }
+            }
+          },
+          "202606": {
+            "trades": 107,
+            "net_base": 355.8,
+            "net_base_pf": 1.1107721046077212,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.34579439252336447,
+            "net_base_max_drawdown": 1152.8000000000006,
+            "net_adverse": 141.79999999999927,
+            "net_adverse_pf": 1.0422955318260456,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.3364485981308411,
+            "net_adverse_max_drawdown": 1278.800000000001,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 17.0,
+              "max": 280.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 32,
+                "net_base": 3042.8000000000006,
+                "net_adverse": 2978.7999999999997
+              },
+              "STOP": {
+                "trades": 58,
+                "net_base": -2781.8,
+                "net_adverse": -2897.8
+              },
+              "EOD": {
+                "trades": 17,
+                "net_base": 94.8000000000001,
+                "net_adverse": 60.799999999999955
+              }
+            }
+          }
+        },
+        "positive_months": 2,
+        "economic_gate": false
+      },
+      "QQQ": {
+        "trades": 493,
+        "net_base": -3033.7999999999984,
+        "net_base_pf": 0.8527067048599312,
+        "net_base_pf_infinite": false,
+        "net_base_win_rate": 0.22920892494929007,
+        "net_base_max_drawdown": 4196.599999999979,
+        "net_adverse": -4014.8000000000006,
+        "net_adverse_pf": 0.8119954295989664,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_win_rate": 0.2231237322515213,
+        "net_adverse_max_drawdown": 4824.599999999979,
+        "holding_minutes": {
+          "min": 1.0,
+          "median": 17.0,
+          "max": 324.0
+        },
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 72,
+            "net_base": 9662.800000000003,
+            "net_adverse": 9519.800000000003
+          },
+          "STOP": {
+            "trades": 333,
+            "net_base": -17568.800000000003,
+            "net_adverse": -18232.800000000003
+          },
+          "EOD": {
+            "trades": 88,
+            "net_base": 4872.200000000001,
+            "net_adverse": 4698.2
+          }
+        },
+        "months": {
+          "202601": {
+            "trades": 78,
+            "net_base": 669.1999999999997,
+            "net_base_pf": 1.2935345205719802,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.2564102564102564,
+            "net_base_max_drawdown": 776.0000000000005,
+            "net_adverse": 513.1999999999998,
+            "net_adverse_pf": 1.2142081976792722,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.2564102564102564,
+            "net_adverse_max_drawdown": 856.0000000000006,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 14.5,
+              "max": 322.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 13,
+                "net_base": 1866.2000000000003,
+                "net_adverse": 1840.2000000000003
+              },
+              "STOP": {
+                "trades": 52,
+                "net_base": -2123.2,
+                "net_adverse": -2227.2
+              },
+              "EOD": {
+                "trades": 13,
+                "net_base": 926.2,
+                "net_adverse": 900.2
+              }
+            }
+          },
+          "202602": {
+            "trades": 57,
+            "net_base": -658.1999999999997,
+            "net_base_pf": 0.7646596109839817,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.15789473684210525,
+            "net_base_max_drawdown": 1029.2,
+            "net_adverse": -772.1999999999999,
+            "net_adverse_pf": 0.7330613938053098,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.15789473684210525,
+            "net_adverse_max_drawdown": 1073.1999999999998,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 42.0,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 5,
+                "net_base": 1532.0000000000002,
+                "net_adverse": 1522.0000000000005
+              },
+              "STOP": {
+                "trades": 35,
+                "net_base": -2059.9999999999995,
+                "net_adverse": -2129.9999999999995
+              },
+              "EOD": {
+                "trades": 17,
+                "net_base": -130.1999999999998,
+                "net_adverse": -164.19999999999993
+              }
+            }
+          },
+          "202603": {
+            "trades": 98,
+            "net_base": -913.7999999999997,
+            "net_base_pf": 0.7615717789490164,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.22448979591836735,
+            "net_base_max_drawdown": 2379.9999999999973,
+            "net_adverse": -1108.8,
+            "net_adverse_pf": 0.7216588010844464,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.22448979591836735,
+            "net_adverse_max_drawdown": 2518.9999999999977,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 11.0,
+              "max": 318.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 13,
+                "net_base": 2194.2000000000003,
+                "net_adverse": 2168.2000000000007
+              },
+              "STOP": {
+                "trades": 73,
+                "net_base": -3466.8,
+                "net_adverse": -3611.8000000000006
+              },
+              "EOD": {
+                "trades": 12,
+                "net_base": 358.80000000000024,
+                "net_adverse": 334.8000000000002
+              }
+            }
+          },
+          "202604": {
+            "trades": 83,
+            "net_base": -1095.7999999999997,
+            "net_base_pf": 0.6747402790145444,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.21686746987951808,
+            "net_base_max_drawdown": 1637.9999999999986,
+            "net_adverse": -1260.8000000000002,
+            "net_adverse_pf": 0.6395654659805603,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.21686746987951808,
+            "net_adverse_max_drawdown": 1736.9999999999984,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 18.0,
+              "max": 297.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 13,
+                "net_base": 1041.2000000000003,
+                "net_adverse": 1016.2
+              },
+              "STOP": {
+                "trades": 57,
+                "net_base": -2700.2000000000003,
+                "net_adverse": -2814.2000000000003
+              },
+              "EOD": {
+                "trades": 13,
+                "net_base": 563.1999999999998,
+                "net_adverse": 537.1999999999999
+              }
+            }
+          },
+          "202605": {
+            "trades": 89,
+            "net_base": -866.4000000000002,
+            "net_base_pf": 0.7425413051230242,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.24719101123595505,
+            "net_base_max_drawdown": 1291.8000000000002,
+            "net_adverse": -1042.4000000000003,
+            "net_adverse_pf": 0.702035216098788,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.2247191011235955,
+            "net_adverse_max_drawdown": 1435.8000000000006,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 17.0,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 14,
+                "net_base": 1440.6,
+                "net_adverse": 1412.6
+              },
+              "STOP": {
+                "trades": 60,
+                "net_base": -2962.0,
+                "net_adverse": -3081.0
+              },
+              "EOD": {
+                "trades": 15,
+                "net_base": 654.9999999999999,
+                "net_adverse": 625.9999999999998
+              }
+            }
+          },
+          "202606": {
+            "trades": 88,
+            "net_base": -168.79999999999944,
+            "net_base_pf": 0.9659237726098188,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.25,
+            "net_base_max_drawdown": 1257.6000000000001,
+            "net_adverse": -343.7999999999997,
+            "net_adverse_pf": 0.932405332075026,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.23863636363636365,
+            "net_adverse_max_drawdown": 1308.6000000000004,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 25.5,
+              "max": 303.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 14,
+                "net_base": 1588.6000000000006,
+                "net_adverse": 1560.6000000000004
+              },
+              "STOP": {
+                "trades": 56,
+                "net_base": -4256.6,
+                "net_adverse": -4368.6
+              },
+              "EOD": {
+                "trades": 18,
+                "net_base": 2499.2000000000003,
+                "net_adverse": 2464.2000000000007
+              }
+            }
+          }
+        },
+        "positive_months": 1,
+        "economic_gate": false
+      }
+    },
+    "economic_gate_all_tickers": false
+  },
+  "net_control__5": {
+    "trades": 1395,
+    "net_base": -32896.999999999985,
+    "net_base_pf": 0.8609265083874458,
+    "net_base_pf_infinite": false,
+    "net_base_win_rate": 0.2616487455197133,
+    "net_base_max_drawdown": 41988.199999999124,
+    "net_adverse": -35681.99999999997,
+    "net_adverse_pf": 0.8504523896938636,
+    "net_adverse_pf_infinite": false,
+    "net_adverse_win_rate": 0.26093189964157704,
+    "net_adverse_max_drawdown": 43668.199999999095,
+    "holding_minutes": {
+      "min": 1.0,
+      "median": 17.0,
+      "max": 324.0
+    },
+    "exit_reasons": {
+      "TARGET": {
+        "trades": 244,
+        "net_base": 127317.59999999996,
+        "net_adverse": 126829.59999999999
+      },
+      "STOP": {
+        "trades": 913,
+        "net_base": -205856.8,
+        "net_adverse": -207680.8
+      },
+      "EOD": {
+        "trades": 238,
+        "net_base": 45642.2,
+        "net_adverse": 45169.2
+      }
+    },
+    "attempts": 1395,
+    "no_fill_attempts": 0,
+    "expected_ticker_days": 369,
+    "observable_ticker_days": 363,
+    "zero_fill_expected_days": 34,
+    "zero_fill_observable_days": 28,
+    "missing_source_days": 6,
+    "tickers": {
+      "SPXW": {
+        "trades": 674,
+        "net_base": -29313.4,
+        "net_base_pf": 0.8587586464759767,
+        "net_base_pf_infinite": false,
+        "net_base_win_rate": 0.27002967359050445,
+        "net_base_max_drawdown": 36813.399999999536,
+        "net_adverse": -30659.39999999998,
+        "net_adverse_pf": 0.852968878283088,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_win_rate": 0.27002967359050445,
+        "net_adverse_max_drawdown": 37759.39999999951,
+        "holding_minutes": {
+          "min": 1.0,
+          "median": 14.0,
+          "max": 324.0
+        },
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 132,
+            "net_base": 112202.79999999999,
+            "net_adverse": 111938.80000000002
+          },
+          "STOP": {
+            "trades": 453,
+            "net_base": -181717.8,
+            "net_adverse": -182622.8
+          },
+          "EOD": {
+            "trades": 89,
+            "net_base": 40201.6,
+            "net_adverse": 40024.6
+          }
+        },
+        "months": {
+          "202601": {
+            "trades": 112,
+            "net_base": -1105.199999999998,
+            "net_base_pf": 0.9543905116417274,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.25892857142857145,
+            "net_base_max_drawdown": 8076.200000000008,
+            "net_adverse": -1329.199999999997,
+            "net_adverse_pf": 0.9455196780037547,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.25892857142857145,
+            "net_adverse_max_drawdown": 8220.200000000004,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 11.5,
+              "max": 309.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 18,
+                "net_base": 10977.199999999999,
+                "net_adverse": 10941.199999999999
+              },
+              "STOP": {
+                "trades": 78,
+                "net_base": -22603.79999999999,
+                "net_adverse": -22759.79999999999
+              },
+              "EOD": {
+                "trades": 16,
+                "net_base": 10521.400000000001,
+                "net_adverse": 10489.400000000001
+              }
+            }
+          },
+          "202602": {
+            "trades": 71,
+            "net_base": -686.6000000000006,
+            "net_base_pf": 0.9749000168161849,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.28169014084507044,
+            "net_base_max_drawdown": 11396.200000000003,
+            "net_adverse": -828.5999999999957,
+            "net_adverse_pf": 0.9698214636917906,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.28169014084507044,
+            "net_adverse_max_drawdown": 11440.200000000003,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 26.0,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 7,
+                "net_base": 8477.8,
+                "net_adverse": 8463.800000000001
+              },
+              "STOP": {
+                "trades": 47,
+                "net_base": -23316.19999999999,
+                "net_adverse": -23410.19999999999
+              },
+              "EOD": {
+                "trades": 17,
+                "net_base": 14151.800000000001,
+                "net_adverse": 14117.800000000001
+              }
+            }
+          },
+          "202603": {
+            "trades": 163,
+            "net_base": -20358.8,
+            "net_base_pf": 0.690800624510203,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.22699386503067484,
+            "net_base_max_drawdown": 24757.79999999996,
+            "net_adverse": -20683.799999999996,
+            "net_adverse_pf": 0.6870576416227651,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.22699386503067484,
+            "net_adverse_max_drawdown": 25062.799999999952,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 13.0,
+              "max": 304.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 25,
+                "net_base": 33435.0,
+                "net_adverse": 33385.0
+              },
+              "STOP": {
+                "trades": 121,
+                "net_base": -60126.60000000001,
+                "net_adverse": -60368.6
+              },
+              "EOD": {
+                "trades": 17,
+                "net_base": 6332.800000000001,
+                "net_adverse": 6299.800000000001
+              }
+            }
+          },
+          "202604": {
+            "trades": 106,
+            "net_base": -1436.5999999999945,
+            "net_base_pf": 0.9445503740128616,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.27358490566037735,
+            "net_base_max_drawdown": 6881.400000000001,
+            "net_adverse": -1647.5999999999922,
+            "net_adverse_pf": 0.9367795803723552,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.27358490566037735,
+            "net_adverse_max_drawdown": 6899.4,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 13.5,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 24,
+                "net_base": 19429.6,
+                "net_adverse": 19381.600000000002
+              },
+              "STOP": {
+                "trades": 70,
+                "net_base": -19785.99999999999,
+                "net_adverse": -19924.999999999985
+              },
+              "EOD": {
+                "trades": 12,
+                "net_base": -1080.1999999999998,
+                "net_adverse": -1104.1999999999998
+              }
+            }
+          },
+          "202605": {
+            "trades": 91,
+            "net_base": -9303.600000000004,
+            "net_base_pf": 0.6529672871050767,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.2857142857142857,
+            "net_base_max_drawdown": 9303.60000000001,
+            "net_adverse": -9485.599999999999,
+            "net_adverse_pf": 0.6478859645866589,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.2857142857142857,
+            "net_adverse_max_drawdown": 9485.600000000004,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 20.0,
+              "max": 293.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 21,
+                "net_base": 11203.399999999996,
+                "net_adverse": 11161.399999999998
+              },
+              "STOP": {
+                "trades": 57,
+                "net_base": -22772.199999999997,
+                "net_adverse": -22886.199999999997
+              },
+              "EOD": {
+                "trades": 13,
+                "net_base": 2265.2000000000003,
+                "net_adverse": 2239.2
+              }
+            }
+          },
+          "202606": {
+            "trades": 131,
+            "net_base": 3577.4000000000005,
+            "net_base_pf": 1.0956677541851634,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.31297709923664124,
+            "net_base_max_drawdown": 8060.600000000004,
+            "net_adverse": 3315.4000000000046,
+            "net_adverse_pf": 1.088236546548145,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.31297709923664124,
+            "net_adverse_max_drawdown": 8182.600000000001,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 11.0,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 37,
+                "net_base": 28679.800000000007,
+                "net_adverse": 28605.80000000001
+              },
+              "STOP": {
+                "trades": 80,
+                "net_base": -33113.0,
+                "net_adverse": -33273.0
+              },
+              "EOD": {
+                "trades": 14,
+                "net_base": 8010.5999999999985,
+                "net_adverse": 7982.5999999999985
+              }
+            }
+          }
+        },
+        "positive_months": 1,
+        "economic_gate": false
+      },
+      "SPY": {
+        "trades": 351,
+        "net_base": -1625.5999999999997,
+        "net_base_pf": 0.8714208877780238,
+        "net_base_pf_infinite": false,
+        "net_base_win_rate": 0.2792022792022792,
+        "net_base_max_drawdown": 3542.1999999999884,
+        "net_adverse": -2326.6000000000013,
+        "net_adverse_pf": 0.8230426383121129,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_win_rate": 0.2792022792022792,
+        "net_adverse_max_drawdown": 4025.199999999986,
+        "holding_minutes": {
+          "min": 1.0,
+          "median": 19.0,
+          "max": 324.0
+        },
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 63,
+            "net_base": 7177.199999999997,
+            "net_adverse": 7051.199999999997
+          },
+          "STOP": {
+            "trades": 216,
+            "net_base": -10450.600000000002,
+            "net_adverse": -10882.600000000002
+          },
+          "EOD": {
+            "trades": 72,
+            "net_base": 1647.8,
+            "net_adverse": 1504.7999999999997
+          }
+        },
+        "months": {
+          "202601": {
+            "trades": 40,
+            "net_base": -98.99999999999991,
+            "net_base_pf": 0.9185319289005929,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.325,
+            "net_base_max_drawdown": 555.2,
+            "net_adverse": -179.00000000000003,
+            "net_adverse_pf": 0.8589662779703752,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.325,
+            "net_adverse_max_drawdown": 599.2000000000002,
+            "holding_minutes": {
+              "min": 2.0,
+              "median": 25.5,
+              "max": 243.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 7,
+                "net_base": 428.79999999999995,
+                "net_adverse": 414.79999999999995
+              },
+              "STOP": {
+                "trades": 24,
+                "net_base": -1158.4,
+                "net_adverse": -1206.4
+              },
+              "EOD": {
+                "trades": 9,
+                "net_base": 630.6000000000001,
+                "net_adverse": 612.5999999999999
+              }
+            }
+          },
+          "202602": {
+            "trades": 46,
+            "net_base": 340.4000000000002,
+            "net_base_pf": 1.1897435897435904,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.34782608695652173,
+            "net_base_max_drawdown": 468.0000000000002,
+            "net_adverse": 249.39999999999995,
+            "net_adverse_pf": 1.134592552617378,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.34782608695652173,
+            "net_adverse_max_drawdown": 494.4000000000003,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 33.0,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 9,
+                "net_base": 1335.6000000000004,
+                "net_adverse": 1317.6000000000001
+              },
+              "STOP": {
+                "trades": 23,
+                "net_base": -1264.7999999999993,
+                "net_adverse": -1310.7999999999993
+              },
+              "EOD": {
+                "trades": 14,
+                "net_base": 269.60000000000014,
+                "net_adverse": 242.6000000000001
+              }
+            }
+          },
+          "202603": {
+            "trades": 109,
+            "net_base": -1197.3999999999996,
+            "net_base_pf": 0.7327709337618282,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.23853211009174313,
+            "net_base_max_drawdown": 1686.199999999999,
+            "net_adverse": -1415.3999999999999,
+            "net_adverse_pf": 0.6954032882844107,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.23853211009174313,
+            "net_adverse_max_drawdown": 1813.799999999997,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 17.0,
+              "max": 307.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 17,
+                "net_base": 2104.7999999999997,
+                "net_adverse": 2070.7999999999997
+              },
+              "STOP": {
+                "trades": 74,
+                "net_base": -3972.3999999999996,
+                "net_adverse": -4120.400000000001
+              },
+              "EOD": {
+                "trades": 18,
+                "net_base": 670.2,
+                "net_adverse": 634.1999999999999
+              }
+            }
+          },
+          "202604": {
+            "trades": 37,
+            "net_base": -1176.1999999999994,
+            "net_base_pf": 0.10527917237182421,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.16216216216216217,
+            "net_base_max_drawdown": 1247.6000000000001,
+            "net_adverse": -1250.1999999999994,
+            "net_adverse_pf": 0.09182042713932884,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.16216216216216217,
+            "net_adverse_max_drawdown": 1319.6000000000001,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 15.0,
+              "max": 323.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 3,
+                "net_base": 109.20000000000003,
+                "net_adverse": 103.2
+              },
+              "STOP": {
+                "trades": 28,
+                "net_base": -961.8000000000002,
+                "net_adverse": -1017.8000000000002
+              },
+              "EOD": {
+                "trades": 6,
+                "net_base": -323.59999999999997,
+                "net_adverse": -335.59999999999997
+              }
+            }
+          },
+          "202605": {
+            "trades": 49,
+            "net_base": -241.40000000000006,
+            "net_base_pf": 0.8072500798466944,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.30612244897959184,
+            "net_base_max_drawdown": 541.4000000000001,
+            "net_adverse": -339.40000000000015,
+            "net_adverse_pf": 0.7429566797940018,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.30612244897959184,
+            "net_adverse_max_drawdown": 579.4000000000001,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 18.0,
+              "max": 318.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 10,
+                "net_base": 528.0000000000001,
+                "net_adverse": 508.0
+              },
+              "STOP": {
+                "trades": 29,
+                "net_base": -1069.4,
+                "net_adverse": -1127.3999999999999
+              },
+              "EOD": {
+                "trades": 10,
+                "net_base": 300.00000000000006,
+                "net_adverse": 279.99999999999994
+              }
+            }
+          },
+          "202606": {
+            "trades": 70,
+            "net_base": 747.9999999999999,
+            "net_base_pf": 1.2892721788228019,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.3142857142857143,
+            "net_base_max_drawdown": 678.8000000000006,
+            "net_adverse": 607.9999999999995,
+            "net_adverse_pf": 1.2267134014467898,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.3142857142857143,
+            "net_adverse_max_drawdown": 734.8000000000008,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 21.5,
+              "max": 278.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 17,
+                "net_base": 2670.8000000000006,
+                "net_adverse": 2636.7999999999997
+              },
+              "STOP": {
+                "trades": 38,
+                "net_base": -2023.7999999999993,
+                "net_adverse": -2099.7999999999997
+              },
+              "EOD": {
+                "trades": 15,
+                "net_base": 101.00000000000006,
+                "net_adverse": 70.99999999999994
+              }
+            }
+          }
+        },
+        "positive_months": 2,
+        "economic_gate": false
+      },
+      "QQQ": {
+        "trades": 370,
+        "net_base": -1957.9999999999986,
+        "net_base_pf": 0.8803178484107579,
+        "net_base_pf_infinite": false,
+        "net_base_win_rate": 0.22972972972972974,
+        "net_base_max_drawdown": 2835.599999999994,
+        "net_adverse": -2695.9999999999995,
+        "net_adverse_pf": 0.8407428848221351,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_win_rate": 0.22702702702702704,
+        "net_adverse_max_drawdown": 3415.5999999999844,
+        "holding_minutes": {
+          "min": 1.0,
+          "median": 20.5,
+          "max": 324.0
+        },
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 49,
+            "net_base": 7937.6,
+            "net_adverse": 7839.6
+          },
+          "STOP": {
+            "trades": 244,
+            "net_base": -13688.400000000001,
+            "net_adverse": -14175.400000000003
+          },
+          "EOD": {
+            "trades": 77,
+            "net_base": 3792.800000000001,
+            "net_adverse": 3639.800000000001
+          }
+        },
+        "months": {
+          "202601": {
+            "trades": 58,
+            "net_base": 524.1999999999999,
+            "net_base_pf": 1.2801111467350652,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.2413793103448276,
+            "net_base_max_drawdown": 849.2000000000004,
+            "net_adverse": 408.19999999999993,
+            "net_adverse_pf": 1.2083290803307138,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.2413793103448276,
+            "net_adverse_max_drawdown": 903.2000000000004,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 18.0,
+              "max": 312.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 7,
+                "net_base": 1423.8000000000002,
+                "net_adverse": 1409.8
+              },
+              "STOP": {
+                "trades": 38,
+                "net_base": -1560.7999999999995,
+                "net_adverse": -1636.7999999999995
+              },
+              "EOD": {
+                "trades": 13,
+                "net_base": 661.2,
+                "net_adverse": 635.2
+              }
+            }
+          },
+          "202602": {
+            "trades": 51,
+            "net_base": -381.5999999999998,
+            "net_base_pf": 0.843414033647928,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.21568627450980393,
+            "net_base_max_drawdown": 871.4000000000001,
+            "net_adverse": -483.5999999999999,
+            "net_adverse_pf": 0.8078665077473185,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.21568627450980393,
+            "net_adverse_max_drawdown": 925.2,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 39.0,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 6,
+                "net_base": 1437.4,
+                "net_adverse": 1425.4000000000005
+              },
+              "STOP": {
+                "trades": 28,
+                "net_base": -1704.7999999999997,
+                "net_adverse": -1760.7999999999997
+              },
+              "EOD": {
+                "trades": 17,
+                "net_base": -114.19999999999979,
+                "net_adverse": -148.2
+              }
+            }
+          },
+          "202603": {
+            "trades": 78,
+            "net_base": -425.7999999999996,
+            "net_base_pf": 0.859193121693122,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.23076923076923078,
+            "net_base_max_drawdown": 1903.7999999999993,
+            "net_adverse": -580.8,
+            "net_adverse_pf": 0.8152083996181994,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.23076923076923078,
+            "net_adverse_max_drawdown": 1998.7999999999993,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 10.5,
+              "max": 318.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 12,
+                "net_base": 1982.8000000000002,
+                "net_adverse": 1958.8000000000002
+              },
+              "STOP": {
+                "trades": 55,
+                "net_base": -2719.9999999999995,
+                "net_adverse": -2828.9999999999995
+              },
+              "EOD": {
+                "trades": 11,
+                "net_base": 311.4000000000002,
+                "net_adverse": 289.40000000000015
+              }
+            }
+          },
+          "202604": {
+            "trades": 51,
+            "net_base": -564.6000000000001,
+            "net_base_pf": 0.761731937879811,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.19607843137254902,
+            "net_base_max_drawdown": 1072.6000000000001,
+            "net_adverse": -666.6000000000001,
+            "net_adverse_pf": 0.7281624663567409,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.17647058823529413,
+            "net_adverse_max_drawdown": 1104.6000000000001,
+            "holding_minutes": {
+              "min": 2.0,
+              "median": 18.0,
+              "max": 292.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 7,
+                "net_base": 820.8,
+                "net_adverse": 806.8000000000001
+              },
+              "STOP": {
+                "trades": 36,
+                "net_base": -2067.5999999999995,
+                "net_adverse": -2139.5999999999995
+              },
+              "EOD": {
+                "trades": 8,
+                "net_base": 682.1999999999998,
+                "net_adverse": 666.2
+              }
+            }
+          },
+          "202605": {
+            "trades": 63,
+            "net_base": -715.7999999999998,
+            "net_base_pf": 0.7217817164179107,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.23809523809523808,
+            "net_base_max_drawdown": 1296.2,
+            "net_adverse": -840.8000000000002,
+            "net_adverse_pf": 0.6848339455731316,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.23809523809523808,
+            "net_adverse_max_drawdown": 1409.2000000000003,
+            "holding_minutes": {
+              "min": 2.0,
+              "median": 22.0,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 9,
+                "net_base": 1033.6000000000001,
+                "net_adverse": 1015.5999999999999
+              },
+              "STOP": {
+                "trades": 42,
+                "net_base": -2170.2,
+                "net_adverse": -2254.2
+              },
+              "EOD": {
+                "trades": 12,
+                "net_base": 420.80000000000007,
+                "net_adverse": 397.79999999999995
+              }
+            }
+          },
+          "202606": {
+            "trades": 69,
+            "net_base": -394.3999999999993,
+            "net_base_pf": 0.9034563791246453,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.2463768115942029,
+            "net_base_max_drawdown": 1180.7999999999997,
+            "net_adverse": -532.3999999999993,
+            "net_adverse_pf": 0.8729112957127855,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.2463768115942029,
+            "net_adverse_max_drawdown": 1236.8000000000002,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 26.0,
+              "max": 322.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 8,
+                "net_base": 1239.2000000000003,
+                "net_adverse": 1223.2000000000003
+              },
+              "STOP": {
+                "trades": 45,
+                "net_base": -3464.9999999999995,
+                "net_adverse": -3554.9999999999995
+              },
+              "EOD": {
+                "trades": 16,
+                "net_base": 1831.4000000000003,
+                "net_adverse": 1799.4
+              }
+            }
+          }
+        },
+        "positive_months": 1,
+        "economic_gate": false
+      }
+    },
+    "economic_gate_all_tickers": false
+  },
+  "net_control__10": {
+    "trades": 1156,
+    "net_base": -31880.59999999999,
+    "net_base_pf": 0.8577517162726654,
+    "net_base_pf_infinite": false,
+    "net_base_win_rate": 0.2655709342560554,
+    "net_base_max_drawdown": 41654.799999999166,
+    "net_adverse": -34186.59999999997,
+    "net_adverse_pf": 0.8486065904088784,
+    "net_adverse_pf_infinite": false,
+    "net_adverse_win_rate": 0.2647058823529412,
+    "net_adverse_max_drawdown": 43305.79999999914,
+    "holding_minutes": {
+      "min": 1.0,
+      "median": 18.0,
+      "max": 324.0
+    },
+    "exit_reasons": {
+      "TARGET": {
+        "trades": 187,
+        "net_base": 115220.79999999999,
+        "net_adverse": 114846.79999999999
+      },
+      "STOP": {
+        "trades": 760,
+        "net_base": -194917.0,
+        "net_adverse": -196434.99999999994
+      },
+      "EOD": {
+        "trades": 209,
+        "net_base": 47815.600000000006,
+        "net_adverse": 47401.600000000006
+      }
+    },
+    "attempts": 1156,
+    "no_fill_attempts": 0,
+    "expected_ticker_days": 369,
+    "observable_ticker_days": 363,
+    "zero_fill_expected_days": 60,
+    "zero_fill_observable_days": 54,
+    "missing_source_days": 6,
+    "tickers": {
+      "SPXW": {
+        "trades": 654,
+        "net_base": -31906.399999999998,
+        "net_base_pf": 0.8423698082633031,
+        "net_base_pf_infinite": false,
+        "net_base_win_rate": 0.27370030581039756,
+        "net_base_max_drawdown": 40426.99999999952,
+        "net_adverse": -33212.39999999998,
+        "net_adverse_pf": 0.8366825497514272,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_win_rate": 0.27370030581039756,
+        "net_adverse_max_drawdown": 41354.9999999995,
+        "holding_minutes": {
+          "min": 1.0,
+          "median": 15.0,
+          "max": 324.0
+        },
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 129,
+            "net_base": 104446.59999999998,
+            "net_adverse": 104188.6
+          },
+          "STOP": {
+            "trades": 438,
+            "net_base": -176698.8,
+            "net_adverse": -177573.8
+          },
+          "EOD": {
+            "trades": 87,
+            "net_base": 40345.80000000001,
+            "net_adverse": 40172.80000000001
+          }
+        },
+        "months": {
+          "202601": {
+            "trades": 105,
+            "net_base": -197.99999999999966,
+            "net_base_pf": 0.991185818962064,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.2571428571428571,
+            "net_base_max_drawdown": 7978.599999999999,
+            "net_adverse": -407.9999999999982,
+            "net_adverse_pf": 0.981962705240542,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.2571428571428571,
+            "net_adverse_max_drawdown": 8110.599999999998,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 15.0,
+              "max": 309.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 18,
+                "net_base": 10977.199999999999,
+                "net_adverse": 10941.199999999999
+              },
+              "STOP": {
+                "trades": 72,
+                "net_base": -20896.199999999997,
+                "net_adverse": -21040.199999999997
+              },
+              "EOD": {
+                "trades": 15,
+                "net_base": 9720.999999999998,
+                "net_adverse": 9691.0
+              }
+            }
+          },
+          "202602": {
+            "trades": 69,
+            "net_base": -347.3999999999987,
+            "net_base_pf": 0.9864459946626717,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.30434782608695654,
+            "net_base_max_drawdown": 10586.200000000003,
+            "net_adverse": -485.3999999999967,
+            "net_adverse_pf": 0.9811325155091194,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.30434782608695654,
+            "net_adverse_max_drawdown": 10630.200000000003,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 25.0,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 8,
+                "net_base": 7093.200000000001,
+                "net_adverse": 7077.200000000001
+              },
+              "STOP": {
+                "trades": 44,
+                "net_base": -21592.399999999994,
+                "net_adverse": -21680.399999999994
+              },
+              "EOD": {
+                "trades": 17,
+                "net_base": 14151.800000000001,
+                "net_adverse": 14117.800000000001
+              }
+            }
+          },
+          "202603": {
+            "trades": 164,
+            "net_base": -23123.4,
+            "net_base_pf": 0.6508526579312136,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.22560975609756098,
+            "net_base_max_drawdown": 27326.999999999913,
+            "net_adverse": -23450.399999999998,
+            "net_adverse_pf": 0.6472626847890834,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.22560975609756098,
+            "net_adverse_max_drawdown": 27635.999999999913,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 13.0,
+              "max": 304.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 24,
+                "net_base": 30989.6,
+                "net_adverse": 30941.600000000002
+              },
+              "STOP": {
+                "trades": 123,
+                "net_base": -60445.80000000001,
+                "net_adverse": -60691.799999999996
+              },
+              "EOD": {
+                "trades": 17,
+                "net_base": 6332.800000000001,
+                "net_adverse": 6299.800000000001
+              }
+            }
+          },
+          "202604": {
+            "trades": 98,
+            "net_base": -684.7999999999944,
+            "net_base_pf": 0.9730351236415192,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.2857142857142857,
+            "net_base_max_drawdown": 6991.4000000000015,
+            "net_adverse": -879.7999999999929,
+            "net_adverse_pf": 0.9655453299392999,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.2857142857142857,
+            "net_adverse_max_drawdown": 7009.4,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 17.0,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 24,
+                "net_base": 19699.6,
+                "net_adverse": 19651.600000000002
+              },
+              "STOP": {
+                "trades": 63,
+                "net_base": -19438.79999999999,
+                "net_adverse": -19563.79999999999
+              },
+              "EOD": {
+                "trades": 11,
+                "net_base": -945.5999999999997,
+                "net_adverse": -967.5999999999996
+              }
+            }
+          },
+          "202605": {
+            "trades": 91,
+            "net_base": -7658.600000000003,
+            "net_base_pf": 0.70227802830042,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.2857142857142857,
+            "net_base_max_drawdown": 8823.200000000004,
+            "net_adverse": -7840.599999999998,
+            "net_adverse_pf": 0.6967355148139556,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.2857142857142857,
+            "net_adverse_max_drawdown": 8907.2,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 20.0,
+              "max": 293.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 20,
+                "net_base": 11047.999999999996,
+                "net_adverse": 11007.999999999998
+              },
+              "STOP": {
+                "trades": 58,
+                "net_base": -21961.799999999996,
+                "net_adverse": -22077.799999999996
+              },
+              "EOD": {
+                "trades": 13,
+                "net_base": 3255.2000000000003,
+                "net_adverse": 3229.2000000000003
+              }
+            }
+          },
+          "202606": {
+            "trades": 127,
+            "net_base": 105.79999999999933,
+            "net_base_pf": 1.002861764339928,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.31496062992125984,
+            "net_base_max_drawdown": 11356.000000000007,
+            "net_adverse": -148.19999999999698,
+            "net_adverse_pf": 0.9960101442486313,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.31496062992125984,
+            "net_adverse_max_drawdown": 11476.000000000004,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 11.0,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 35,
+                "net_base": 24639.000000000007,
+                "net_adverse": 24569.000000000007
+              },
+              "STOP": {
+                "trades": 78,
+                "net_base": -32363.799999999996,
+                "net_adverse": -32519.79999999999
+              },
+              "EOD": {
+                "trades": 14,
+                "net_base": 7830.5999999999985,
+                "net_adverse": 7802.5999999999985
+              }
+            }
+          }
+        },
+        "positive_months": 1,
+        "economic_gate": false
+      },
+      "SPY": {
+        "trades": 220,
+        "net_base": -547.9999999999995,
+        "net_base_pf": 0.9385498665590168,
+        "net_base_pf_infinite": false,
+        "net_base_win_rate": 0.2590909090909091,
+        "net_base_max_drawdown": 2303.5999999999985,
+        "net_adverse": -986.0000000000007,
+        "net_adverse_pf": 0.8933108268951934,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_win_rate": 0.2590909090909091,
+        "net_adverse_max_drawdown": 2573.599999999997,
+        "holding_minutes": {
+          "min": 1.0,
+          "median": 26.0,
+          "max": 324.0
+        },
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 26,
+            "net_base": 4680.4,
+            "net_adverse": 4628.4
+          },
+          "STOP": {
+            "trades": 144,
+            "net_base": -7577.4,
+            "net_adverse": -7865.4000000000015
+          },
+          "EOD": {
+            "trades": 50,
+            "net_base": 2349.000000000001,
+            "net_adverse": 2251.0
+          }
+        },
+        "months": {
+          "202601": {
+            "trades": 25,
+            "net_base": 398.0000000000001,
+            "net_base_pf": 1.5238220584364308,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.28,
+            "net_base_max_drawdown": 321.0,
+            "net_adverse": 348.0,
+            "net_adverse_pf": 1.4372958029655691,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.28,
+            "net_adverse_max_drawdown": 341.0,
+            "holding_minutes": {
+              "min": 4.0,
+              "median": 51.0,
+              "max": 223.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 3,
+                "net_base": 569.2,
+                "net_adverse": 563.2
+              },
+              "STOP": {
+                "trades": 16,
+                "net_base": -742.6,
+                "net_adverse": -774.6
+              },
+              "EOD": {
+                "trades": 6,
+                "net_base": 571.4000000000001,
+                "net_adverse": 559.4
+              }
+            }
+          },
+          "202602": {
+            "trades": 34,
+            "net_base": 64.6000000000002,
+            "net_base_pf": 1.045627913547112,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.3235294117647059,
+            "net_base_max_drawdown": 582.4,
+            "net_adverse": -1.3999999999998067,
+            "net_adverse_pf": 0.9990409645156879,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.3235294117647059,
+            "net_adverse_max_drawdown": 608.4,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 52.5,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 4,
+                "net_base": 647.6000000000001,
+                "net_adverse": 639.6
+              },
+              "STOP": {
+                "trades": 18,
+                "net_base": -1078.7999999999997,
+                "net_adverse": -1114.7999999999997
+              },
+              "EOD": {
+                "trades": 12,
+                "net_base": 495.80000000000007,
+                "net_adverse": 473.79999999999995
+              }
+            }
+          },
+          "202603": {
+            "trades": 76,
+            "net_base": -846.5999999999999,
+            "net_base_pf": 0.7568778358508989,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.25,
+            "net_base_max_drawdown": 1566.399999999998,
+            "net_adverse": -998.6000000000001,
+            "net_adverse_pf": 0.7223180023357988,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.25,
+            "net_adverse_max_drawdown": 1664.3999999999985,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 20.0,
+              "max": 296.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 6,
+                "net_base": 1345.4,
+                "net_adverse": 1333.3999999999999
+              },
+              "STOP": {
+                "trades": 55,
+                "net_base": -3220.999999999999,
+                "net_adverse": -3330.9999999999995
+              },
+              "EOD": {
+                "trades": 15,
+                "net_base": 1029.0,
+                "net_adverse": 999.0
+              }
+            }
+          },
+          "202604": {
+            "trades": 20,
+            "net_base": -888.0,
+            "net_base_pf": 0.002695417789757405,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.05,
+            "net_base_max_drawdown": 888.0000000000002,
+            "net_adverse": -928.0,
+            "net_adverse_pf": 0.0004308487720809923,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.05,
+            "net_adverse_max_drawdown": 928.0000000000003,
+            "holding_minutes": {
+              "min": 4.0,
+              "median": 25.5,
+              "max": 313.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 1,
+                "net_base": 2.3999999999999937,
+                "net_adverse": 0.39999999999999325
+              },
+              "STOP": {
+                "trades": 17,
+                "net_base": -651.1999999999999,
+                "net_adverse": -685.2
+              },
+              "EOD": {
+                "trades": 2,
+                "net_base": -239.19999999999996,
+                "net_adverse": -243.2
+              }
+            }
+          },
+          "202605": {
+            "trades": 21,
+            "net_base": 67.40000000000015,
+            "net_base_pf": 1.1106005907449952,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.3333333333333333,
+            "net_base_max_drawdown": 367.0,
+            "net_adverse": 25.3999999999999,
+            "net_adverse_pf": 1.0398493881393158,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.3333333333333333,
+            "net_adverse_max_drawdown": 387.0,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 16.0,
+              "max": 232.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 4,
+                "net_base": 284.6,
+                "net_adverse": 276.59999999999997
+              },
+              "STOP": {
+                "trades": 13,
+                "net_base": -513.8000000000001,
+                "net_adverse": -539.8000000000001
+              },
+              "EOD": {
+                "trades": 4,
+                "net_base": 296.60000000000014,
+                "net_adverse": 288.6
+              }
+            }
+          },
+          "202606": {
+            "trades": 44,
+            "net_base": 656.6000000000003,
+            "net_base_pf": 1.373025792523577,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.2727272727272727,
+            "net_base_max_drawdown": 756.4000000000002,
+            "net_adverse": 568.5999999999997,
+            "net_adverse_pf": 1.311698278697511,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.2727272727272727,
+            "net_adverse_max_drawdown": 814.4000000000005,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 17.0,
+              "max": 278.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 8,
+                "net_base": 1831.2000000000003,
+                "net_adverse": 1815.2
+              },
+              "STOP": {
+                "trades": 25,
+                "net_base": -1370.0,
+                "net_adverse": -1420.0
+              },
+              "EOD": {
+                "trades": 11,
+                "net_base": 195.40000000000006,
+                "net_adverse": 173.4
+              }
+            }
+          }
+        },
+        "positive_months": 4,
+        "economic_gate": false
+      },
+      "QQQ": {
+        "trades": 282,
+        "net_base": 573.8000000000015,
+        "net_base_pf": 1.0448680856387718,
+        "net_base_pf_infinite": false,
+        "net_base_win_rate": 0.25177304964539005,
+        "net_base_max_drawdown": 2053.3999999999874,
+        "net_adverse": 11.800000000002001,
+        "net_adverse_pf": 1.000893249155955,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_win_rate": 0.24822695035460993,
+        "net_adverse_max_drawdown": 2404.5999999999854,
+        "holding_minutes": {
+          "min": 1.0,
+          "median": 24.5,
+          "max": 324.0
+        },
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 32,
+            "net_base": 6093.800000000001,
+            "net_adverse": 6029.800000000001
+          },
+          "STOP": {
+            "trades": 178,
+            "net_base": -10640.800000000003,
+            "net_adverse": -10995.800000000003
+          },
+          "EOD": {
+            "trades": 72,
+            "net_base": 5120.8,
+            "net_adverse": 4977.800000000001
+          }
+        },
+        "months": {
+          "202601": {
+            "trades": 41,
+            "net_base": 2086.4,
+            "net_base_pf": 3.1870020964360584,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.3902439024390244,
+            "net_base_max_drawdown": 336.8000000000003,
+            "net_adverse": 2004.4,
+            "net_adverse_pf": 2.9932378679395386,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.36585365853658536,
+            "net_adverse_max_drawdown": 362.80000000000024,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 24.0,
+              "max": 311.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 6,
+                "net_base": 1557.4,
+                "net_adverse": 1545.4
+              },
+              "STOP": {
+                "trades": 23,
+                "net_base": -814.8000000000002,
+                "net_adverse": -860.8000000000003
+              },
+              "EOD": {
+                "trades": 12,
+                "net_base": 1343.8000000000002,
+                "net_adverse": 1319.8
+              }
+            }
+          },
+          "202602": {
+            "trades": 37,
+            "net_base": 135.80000000000058,
+            "net_base_pf": 1.0739007400957776,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.2972972972972973,
+            "net_base_max_drawdown": 782.8000000000002,
+            "net_adverse": 61.80000000000023,
+            "net_adverse_pf": 1.0327053344623205,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.2972972972972973,
+            "net_adverse_max_drawdown": 808.8000000000002,
+            "holding_minutes": {
+              "min": 3.0,
+              "median": 80.0,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 6,
+                "net_base": 1294.4000000000005,
+                "net_adverse": 1282.4000000000005
+              },
+              "STOP": {
+                "trades": 16,
+                "net_base": -1279.6,
+                "net_adverse": -1311.6
+              },
+              "EOD": {
+                "trades": 15,
+                "net_base": 121.00000000000007,
+                "net_adverse": 91.00000000000011
+              }
+            }
+          },
+          "202603": {
+            "trades": 60,
+            "net_base": 119.00000000000064,
+            "net_base_pf": 1.052464509302531,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.21666666666666667,
+            "net_base_max_drawdown": 1357.7999999999997,
+            "net_adverse": 3.268496584496461e-13,
+            "net_adverse_pf": 1.0000000000000004,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.21666666666666667,
+            "net_adverse_max_drawdown": 1442.7999999999997,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 10.0,
+              "max": 309.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 6,
+                "net_base": 1202.4,
+                "net_adverse": 1190.4
+              },
+              "STOP": {
+                "trades": 43,
+                "net_base": -1996.7999999999995,
+                "net_adverse": -2081.7999999999997
+              },
+              "EOD": {
+                "trades": 11,
+                "net_base": 913.4000000000002,
+                "net_adverse": 891.4000000000002
+              }
+            }
+          },
+          "202604": {
+            "trades": 33,
+            "net_base": -179.79999999999987,
+            "net_base_pf": 0.8971866422689847,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.15151515151515152,
+            "net_base_max_drawdown": 826.2,
+            "net_adverse": -245.7999999999997,
+            "net_adverse_pf": 0.8638076241134756,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.15151515151515152,
+            "net_adverse_max_drawdown": 850.2000000000002,
+            "holding_minutes": {
+              "min": 2.0,
+              "median": 27.0,
+              "max": 309.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 2,
+                "net_base": 484.8,
+                "net_adverse": 480.80000000000007
+              },
+              "STOP": {
+                "trades": 24,
+                "net_base": -1572.4,
+                "net_adverse": -1620.4
+              },
+              "EOD": {
+                "trades": 7,
+                "net_base": 907.8,
+                "net_adverse": 893.8000000000001
+              }
+            }
+          },
+          "202605": {
+            "trades": 51,
+            "net_base": -848.6,
+            "net_base_pf": 0.5917837213777183,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.2549019607843137,
+            "net_base_max_drawdown": 1174.4,
+            "net_adverse": -949.6000000000003,
+            "net_adverse_pf": 0.5591048379608138,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.2549019607843137,
+            "net_adverse_max_drawdown": 1261.4000000000003,
+            "holding_minutes": {
+              "min": 2.0,
+              "median": 22.0,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 7,
+                "net_base": 557.8000000000001,
+                "net_adverse": 543.8
+              },
+              "STOP": {
+                "trades": 32,
+                "net_base": -1719.1999999999998,
+                "net_adverse": -1783.2
+              },
+              "EOD": {
+                "trades": 12,
+                "net_base": 312.79999999999995,
+                "net_adverse": 289.79999999999995
+              }
+            }
+          },
+          "202606": {
+            "trades": 60,
+            "net_base": -738.9999999999999,
+            "net_base_pf": 0.810571106326259,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.21666666666666667,
+            "net_base_max_drawdown": 1696.9999999999995,
+            "net_adverse": -858.9999999999999,
+            "net_adverse_pf": 0.7849919903884665,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.21666666666666667,
+            "net_adverse_max_drawdown": 1787.0000000000002,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 25.5,
+              "max": 260.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 5,
+                "net_base": 997.0000000000002,
+                "net_adverse": 987.0000000000001
+              },
+              "STOP": {
+                "trades": 40,
+                "net_base": -3258.0,
+                "net_adverse": -3338.0
+              },
+              "EOD": {
+                "trades": 15,
+                "net_base": 1522.0000000000007,
+                "net_adverse": 1492.000000000001
+              }
+            }
+          }
+        },
+        "positive_months": 3,
+        "economic_gate": false
+      }
+    },
+    "economic_gate_all_tickers": false
+  },
+  "causal_residual__0": {
+    "trades": 1794,
+    "net_base": -47920.39999999998,
+    "net_base_pf": 0.8175992423884859,
+    "net_base_pf_infinite": false,
+    "net_base_win_rate": 0.2201783723522854,
+    "net_base_max_drawdown": 53996.799999998766,
+    "net_adverse": -51502.399999999965,
+    "net_adverse_pf": 0.8060314990166446,
+    "net_adverse_pf_infinite": false,
+    "net_adverse_win_rate": 0.21739130434782608,
+    "net_adverse_max_drawdown": 57016.799999998766,
+    "holding_minutes": {
+      "min": 1.0,
+      "median": 19.0,
+      "max": 324.0
+    },
+    "exit_reasons": {
+      "TARGET": {
+        "trades": 212,
+        "net_base": 131692.79999999996,
+        "net_adverse": 131268.8
+      },
+      "STOP": {
+        "trades": 1273,
+        "net_base": -228296.8,
+        "net_adverse": -230840.79999999996
+      },
+      "EOD": {
+        "trades": 309,
+        "net_base": 48683.600000000006,
+        "net_adverse": 48069.600000000006
+      }
+    },
+    "attempts": 1795,
+    "no_fill_attempts": 1,
+    "expected_ticker_days": 369,
+    "observable_ticker_days": 363,
+    "zero_fill_expected_days": 6,
+    "zero_fill_observable_days": 0,
+    "missing_source_days": 6,
+    "tickers": {
+      "SPXW": {
+        "trades": 645,
+        "net_base": -32207.0,
+        "net_base_pf": 0.8481959034999732,
+        "net_base_pf_infinite": false,
+        "net_base_win_rate": 0.2310077519379845,
+        "net_base_max_drawdown": 38869.999999999585,
+        "net_adverse": -33491.999999999985,
+        "net_adverse_pf": 0.8428701854011705,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_win_rate": 0.2310077519379845,
+        "net_adverse_max_drawdown": 39964.9999999996,
+        "holding_minutes": {
+          "min": 1.0,
+          "median": 17.0,
+          "max": 324.0
+        },
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 84,
+            "net_base": 112343.59999999998,
+            "net_adverse": 112175.59999999998
+          },
+          "STOP": {
+            "trades": 458,
+            "net_base": -183830.80000000002,
+            "net_adverse": -184745.8
+          },
+          "EOD": {
+            "trades": 103,
+            "net_base": 39280.200000000004,
+            "net_adverse": 39078.200000000004
+          }
+        },
+        "months": {
+          "202601": {
+            "trades": 111,
+            "net_base": -10240.600000000002,
+            "net_base_pf": 0.658174948095038,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.18018018018018017,
+            "net_base_max_drawdown": 13555.400000000021,
+            "net_adverse": -10462.599999999997,
+            "net_adverse_pf": 0.6528735327100328,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.18018018018018017,
+            "net_adverse_max_drawdown": 13753.400000000018,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 14.0,
+              "max": 309.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 7,
+                "net_base": 13567.799999999997,
+                "net_adverse": 13553.8
+              },
+              "STOP": {
+                "trades": 86,
+                "net_base": -26485.59999999999,
+                "net_adverse": -26657.599999999984
+              },
+              "EOD": {
+                "trades": 18,
+                "net_base": 2677.2000000000003,
+                "net_adverse": 2641.200000000001
+              }
+            }
+          },
+          "202602": {
+            "trades": 87,
+            "net_base": -1560.2000000000012,
+            "net_base_pf": 0.94966057508647,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.2413793103448276,
+            "net_base_max_drawdown": 9728.600000000004,
+            "net_adverse": -1734.2000000000005,
+            "net_adverse_pf": 0.9442838049708284,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.2413793103448276,
+            "net_adverse_max_drawdown": 9810.600000000006,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 26.0,
+              "max": 313.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 11,
+                "net_base": 16399.4,
+                "net_adverse": 16377.4
+              },
+              "STOP": {
+                "trades": 60,
+                "net_base": -26345.999999999993,
+                "net_adverse": -26465.999999999993
+              },
+              "EOD": {
+                "trades": 16,
+                "net_base": 8386.4,
+                "net_adverse": 8354.4
+              }
+            }
+          },
+          "202603": {
+            "trades": 125,
+            "net_base": -3400.000000000003,
+            "net_base_pf": 0.930877730837884,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.264,
+            "net_base_max_drawdown": 16048.400000000021,
+            "net_adverse": -3649.999999999996,
+            "net_adverse_pf": 0.926071756980649,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.264,
+            "net_adverse_max_drawdown": 16206.400000000023,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 13.0,
+              "max": 305.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 21,
+                "net_base": 27583.399999999998,
+                "net_adverse": 27541.399999999998
+              },
+              "STOP": {
+                "trades": 85,
+                "net_base": -44471.00000000001,
+                "net_adverse": -44640.99999999999
+              },
+              "EOD": {
+                "trades": 19,
+                "net_base": 13487.600000000002,
+                "net_adverse": 13449.6
+              }
+            }
+          },
+          "202604": {
+            "trades": 111,
+            "net_base": -13397.599999999997,
+            "net_base_pf": 0.5765532848284104,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.15315315315315314,
+            "net_base_max_drawdown": 16148.800000000027,
+            "net_adverse": -13616.6,
+            "net_adverse_pf": 0.5721333316574707,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.15315315315315314,
+            "net_adverse_max_drawdown": 16361.800000000025,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 17.0,
+              "max": 312.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 12,
+                "net_base": 9344.8,
+                "net_adverse": 9320.8
+              },
+              "STOP": {
+                "trades": 82,
+                "net_base": -24971.19999999999,
+                "net_adverse": -25134.19999999999
+              },
+              "EOD": {
+                "trades": 17,
+                "net_base": 2228.8,
+                "net_adverse": 2196.7999999999993
+              }
+            }
+          },
+          "202605": {
+            "trades": 95,
+            "net_base": -9265.0,
+            "net_base_pf": 0.67477991041968,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.22105263157894736,
+            "net_base_max_drawdown": 14143.800000000005,
+            "net_adverse": -9452.999999999998,
+            "net_adverse_pf": 0.669872600787864,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.22105263157894736,
+            "net_adverse_max_drawdown": 14287.800000000003,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 22.0,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 11,
+                "net_base": 7639.399999999999,
+                "net_adverse": 7617.4
+              },
+              "STOP": {
+                "trades": 67,
+                "net_base": -23168.199999999993,
+                "net_adverse": -23302.19999999999
+              },
+              "EOD": {
+                "trades": 17,
+                "net_base": 6263.799999999999,
+                "net_adverse": 6231.800000000001
+              }
+            }
+          },
+          "202606": {
+            "trades": 116,
+            "net_base": 5656.399999999993,
+            "net_base_pf": 1.135018881255759,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.31896551724137934,
+            "net_base_max_drawdown": 12150.800000000003,
+            "net_adverse": 5424.399999999994,
+            "net_adverse_pf": 1.128994516234894,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.31896551724137934,
+            "net_adverse_max_drawdown": 12196.800000000003,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 14.5,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 22,
+                "net_base": 37808.8,
+                "net_adverse": 37764.8
+              },
+              "STOP": {
+                "trades": 78,
+                "net_base": -38388.799999999996,
+                "net_adverse": -38544.79999999999
+              },
+              "EOD": {
+                "trades": 16,
+                "net_base": 6236.400000000001,
+                "net_adverse": 6204.4000000000015
+              }
+            }
+          }
+        },
+        "positive_months": 1,
+        "economic_gate": false
+      },
+      "SPY": {
+        "trades": 587,
+        "net_base": -7390.199999999999,
+        "net_base_pf": 0.6623598534343332,
+        "net_base_pf_infinite": false,
+        "net_base_win_rate": 0.20272572402044292,
+        "net_base_max_drawdown": 7566.80000000007,
+        "net_adverse": -8564.2,
+        "net_adverse_pf": 0.6248477786636061,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_win_rate": 0.19761499148211242,
+        "net_adverse_max_drawdown": 8712.800000000097,
+        "holding_minutes": {
+          "min": 1.0,
+          "median": 19.0,
+          "max": 324.0
+        },
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 52,
+            "net_base": 7918.799999999999,
+            "net_adverse": 7814.799999999999
+          },
+          "STOP": {
+            "trades": 435,
+            "net_base": -19068.000000000004,
+            "net_adverse": -19938.000000000007
+          },
+          "EOD": {
+            "trades": 100,
+            "net_base": 3759.0000000000005,
+            "net_adverse": 3558.9999999999995
+          }
+        },
+        "months": {
+          "202601": {
+            "trades": 100,
+            "net_base": -911.0000000000003,
+            "net_base_pf": 0.6865322414149063,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.23,
+            "net_base_max_drawdown": 1750.599999999999,
+            "net_adverse": -1111.0,
+            "net_adverse_pf": 0.6371415507217979,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.22,
+            "net_adverse_max_drawdown": 1892.5999999999983,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 21.0,
+              "max": 317.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 6,
+                "net_base": 927.4000000000001,
+                "net_adverse": 915.4
+              },
+              "STOP": {
+                "trades": 76,
+                "net_base": -2743.6,
+                "net_adverse": -2895.6
+              },
+              "EOD": {
+                "trades": 18,
+                "net_base": 905.2,
+                "net_adverse": 869.2
+              }
+            }
+          },
+          "202602": {
+            "trades": 82,
+            "net_base": -286.1999999999998,
+            "net_base_pf": 0.9082162786222824,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.24390243902439024,
+            "net_base_max_drawdown": 1216.2000000000005,
+            "net_adverse": -450.19999999999993,
+            "net_adverse_pf": 0.8611436678798349,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.24390243902439024,
+            "net_adverse_max_drawdown": 1310.2000000000005,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 24.5,
+              "max": 318.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 9,
+                "net_base": 1337.6000000000001,
+                "net_adverse": 1319.6000000000001
+              },
+              "STOP": {
+                "trades": 57,
+                "net_base": -2698.2000000000003,
+                "net_adverse": -2812.2000000000003
+              },
+              "EOD": {
+                "trades": 16,
+                "net_base": 1074.4000000000003,
+                "net_adverse": 1042.4
+              }
+            }
+          },
+          "202603": {
+            "trades": 108,
+            "net_base": -1538.7999999999993,
+            "net_base_pf": 0.6797235982183739,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.2037037037037037,
+            "net_base_max_drawdown": 2980.199999999997,
+            "net_adverse": -1754.8000000000002,
+            "net_adverse_pf": 0.6473897841900089,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.2037037037037037,
+            "net_adverse_max_drawdown": 3084.1999999999975,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 17.5,
+              "max": 319.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 9,
+                "net_base": 1770.6000000000004,
+                "net_adverse": 1752.6000000000004
+              },
+              "STOP": {
+                "trades": 79,
+                "net_base": -4113.4,
+                "net_adverse": -4271.4000000000015
+              },
+              "EOD": {
+                "trades": 20,
+                "net_base": 804.0000000000001,
+                "net_adverse": 763.9999999999998
+              }
+            }
+          },
+          "202604": {
+            "trades": 83,
+            "net_base": -2052.7999999999997,
+            "net_base_pf": 0.3199045852107077,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.1686746987951807,
+            "net_base_max_drawdown": 2052.799999999995,
+            "net_adverse": -2218.8,
+            "net_adverse_pf": 0.29704726904067924,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.1686746987951807,
+            "net_adverse_max_drawdown": 2218.799999999995,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 19.0,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 7,
+                "net_base": 602.8,
+                "net_adverse": 588.8
+              },
+              "STOP": {
+                "trades": 64,
+                "net_base": -2463.4,
+                "net_adverse": -2591.4
+              },
+              "EOD": {
+                "trades": 12,
+                "net_base": -192.19999999999987,
+                "net_adverse": -216.20000000000005
+              }
+            }
+          },
+          "202605": {
+            "trades": 100,
+            "net_base": -1135.9999999999995,
+            "net_base_pf": 0.6299192077143604,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.19,
+            "net_base_max_drawdown": 1514.0,
+            "net_adverse": -1335.9999999999998,
+            "net_adverse_pf": 0.5865824978338904,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.19,
+            "net_adverse_max_drawdown": 1703.999999999999,
+            "holding_minutes": {
+              "min": 2.0,
+              "median": 17.0,
+              "max": 315.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 9,
+                "net_base": 643.6,
+                "net_adverse": 625.6
+              },
+              "STOP": {
+                "trades": 76,
+                "net_base": -2893.5999999999995,
+                "net_adverse": -3045.6
+              },
+              "EOD": {
+                "trades": 15,
+                "net_base": 1114.0000000000005,
+                "net_adverse": 1084.0000000000005
+              }
+            }
+          },
+          "202606": {
+            "trades": 114,
+            "net_base": -1465.3999999999996,
+            "net_base_pf": 0.7051983584131324,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.18421052631578946,
+            "net_base_max_drawdown": 2447.199999999999,
+            "net_adverse": -1693.4,
+            "net_adverse_pf": 0.6718217054263562,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.16666666666666666,
+            "net_adverse_max_drawdown": 2591.1999999999985,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 15.5,
+              "max": 299.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 12,
+                "net_base": 2636.8000000000006,
+                "net_adverse": 2612.8000000000006
+              },
+              "STOP": {
+                "trades": 83,
+                "net_base": -4155.8,
+                "net_adverse": -4321.800000000002
+              },
+              "EOD": {
+                "trades": 19,
+                "net_base": 53.600000000000044,
+                "net_adverse": 15.600000000000012
+              }
+            }
+          }
+        },
+        "positive_months": 0,
+        "economic_gate": false
+      },
+      "QQQ": {
+        "trades": 562,
+        "net_base": -8323.199999999997,
+        "net_base_pf": 0.7096996965574978,
+        "net_base_pf_infinite": false,
+        "net_base_win_rate": 0.22597864768683273,
+        "net_base_max_drawdown": 8929.800000000087,
+        "net_adverse": -9446.199999999997,
+        "net_adverse_pf": 0.6802472395420792,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_win_rate": 0.22241992882562278,
+        "net_adverse_max_drawdown": 9831.40000000012,
+        "holding_minutes": {
+          "min": 1.0,
+          "median": 22.0,
+          "max": 324.0
+        },
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 76,
+            "net_base": 11430.399999999998,
+            "net_adverse": 11278.400000000001
+          },
+          "STOP": {
+            "trades": 380,
+            "net_base": -25398.0,
+            "net_adverse": -26157.000000000004
+          },
+          "EOD": {
+            "trades": 106,
+            "net_base": 5644.400000000001,
+            "net_adverse": 5432.4
+          }
+        },
+        "months": {
+          "202601": {
+            "trades": 88,
+            "net_base": -193.8000000000002,
+            "net_base_pf": 0.9327083333333336,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.20454545454545456,
+            "net_base_max_drawdown": 1056.6000000000001,
+            "net_adverse": -369.8000000000003,
+            "net_adverse_pf": 0.877614508869473,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.19318181818181818,
+            "net_adverse_max_drawdown": 1188.6000000000004,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 23.0,
+              "max": 322.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 9,
+                "net_base": 1252.6000000000001,
+                "net_adverse": 1234.6
+              },
+              "STOP": {
+                "trades": 60,
+                "net_base": -2567.0,
+                "net_adverse": -2687.0
+              },
+              "EOD": {
+                "trades": 19,
+                "net_base": 1120.6,
+                "net_adverse": 1082.6
+              }
+            }
+          },
+          "202602": {
+            "trades": 84,
+            "net_base": -2076.3999999999996,
+            "net_base_pf": 0.43090500465932163,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.15476190476190477,
+            "net_base_max_drawdown": 2160.799999999999,
+            "net_adverse": -2244.4,
+            "net_adverse_pf": 0.4079037619374244,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.15476190476190477,
+            "net_adverse_max_drawdown": 2326.799999999999,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 29.0,
+              "max": 323.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 10,
+                "net_base": 1274.0000000000002,
+                "net_adverse": 1254.0
+              },
+              "STOP": {
+                "trades": 57,
+                "net_base": -3139.2000000000003,
+                "net_adverse": -3253.2000000000003
+              },
+              "EOD": {
+                "trades": 17,
+                "net_base": -211.19999999999985,
+                "net_adverse": -245.20000000000002
+              }
+            }
+          },
+          "202603": {
+            "trades": 104,
+            "net_base": -3298.3999999999983,
+            "net_base_pf": 0.5652219761678794,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.28846153846153844,
+            "net_base_max_drawdown": 4571.000000000011,
+            "net_adverse": -3505.3999999999983,
+            "net_adverse_pf": 0.5467194248325447,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.28846153846153844,
+            "net_adverse_max_drawdown": 4710.000000000009,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 16.0,
+              "max": 304.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 16,
+                "net_base": 1847.4000000000005,
+                "net_adverse": 1815.4000000000003
+              },
+              "STOP": {
+                "trades": 69,
+                "net_base": -6892.400000000001,
+                "net_adverse": -7029.4000000000015
+              },
+              "EOD": {
+                "trades": 19,
+                "net_base": 1746.6000000000008,
+                "net_adverse": 1708.6000000000004
+              }
+            }
+          },
+          "202604": {
+            "trades": 86,
+            "net_base": -693.6000000000003,
+            "net_base_pf": 0.7781331968524088,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.22093023255813954,
+            "net_base_max_drawdown": 1089.2000000000003,
+            "net_adverse": -865.6000000000007,
+            "net_adverse_pf": 0.7345436702649656,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.20930232558139536,
+            "net_adverse_max_drawdown": 1243.2000000000005,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 16.5,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 10,
+                "net_base": 1076.0,
+                "net_adverse": 1055.9999999999998
+              },
+              "STOP": {
+                "trades": 59,
+                "net_base": -2671.4,
+                "net_adverse": -2789.4
+              },
+              "EOD": {
+                "trades": 17,
+                "net_base": 901.8000000000001,
+                "net_adverse": 867.7999999999998
+              }
+            }
+          },
+          "202605": {
+            "trades": 99,
+            "net_base": -2256.399999999999,
+            "net_base_pf": 0.5401108755910647,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.20202020202020202,
+            "net_base_max_drawdown": 2763.7999999999984,
+            "net_adverse": -2454.4,
+            "net_adverse_pf": 0.5153621356922832,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.20202020202020202,
+            "net_adverse_max_drawdown": 2919.799999999999,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 34.0,
+              "max": 296.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 13,
+                "net_base": 1324.2000000000007,
+                "net_adverse": 1298.2000000000003
+              },
+              "STOP": {
+                "trades": 71,
+                "net_base": -4567.600000000002,
+                "net_adverse": -4709.600000000002
+              },
+              "EOD": {
+                "trades": 15,
+                "net_base": 987.0000000000003,
+                "net_adverse": 957.0000000000006
+              }
+            }
+          },
+          "202606": {
+            "trades": 101,
+            "net_base": 195.40000000000157,
+            "net_base_pf": 1.0299537051230956,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.26732673267326734,
+            "net_base_max_drawdown": 2684.999999999996,
+            "net_adverse": -6.599999999999213,
+            "net_adverse_pf": 0.9990107024012951,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.26732673267326734,
+            "net_adverse_max_drawdown": 2845.1999999999975,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 22.0,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 18,
+                "net_base": 4656.2,
+                "net_adverse": 4620.2
+              },
+              "STOP": {
+                "trades": 64,
+                "net_base": -5560.4,
+                "net_adverse": -5688.4
+              },
+              "EOD": {
+                "trades": 19,
+                "net_base": 1099.6000000000006,
+                "net_adverse": 1061.6000000000004
+              }
+            }
+          }
+        },
+        "positive_months": 1,
+        "economic_gate": false
+      }
+    },
+    "economic_gate_all_tickers": false
+  },
+  "causal_residual__5": {
+    "trades": 1623,
+    "net_base": -46085.79999999999,
+    "net_base_pf": 0.8190347693808298,
+    "net_base_pf_infinite": false,
+    "net_base_win_rate": 0.2230437461491066,
+    "net_base_max_drawdown": 52661.399999998954,
+    "net_adverse": -49324.79999999998,
+    "net_adverse_pf": 0.8082106770997372,
+    "net_adverse_pf_infinite": false,
+    "net_adverse_win_rate": 0.2224276032039433,
+    "net_adverse_max_drawdown": 55382.399999998954,
+    "holding_minutes": {
+      "min": 1.0,
+      "median": 19.0,
+      "max": 324.0
+    },
+    "exit_reasons": {
+      "TARGET": {
+        "trades": 195,
+        "net_base": 130074.0,
+        "net_adverse": 129684.0
+      },
+      "STOP": {
+        "trades": 1136,
+        "net_base": -220848.59999999998,
+        "net_adverse": -223118.59999999998
+      },
+      "EOD": {
+        "trades": 292,
+        "net_base": 44688.8,
+        "net_adverse": 44109.8
+      }
+    },
+    "attempts": 1624,
+    "no_fill_attempts": 1,
+    "expected_ticker_days": 369,
+    "observable_ticker_days": 363,
+    "zero_fill_expected_days": 6,
+    "zero_fill_observable_days": 0,
+    "missing_source_days": 6,
+    "tickers": {
+      "SPXW": {
+        "trades": 641,
+        "net_base": -33938.6,
+        "net_base_pf": 0.8392655353853,
+        "net_base_pf_infinite": false,
+        "net_base_win_rate": 0.22776911076443057,
+        "net_base_max_drawdown": 40108.59999999961,
+        "net_adverse": -35215.59999999999,
+        "net_adverse_pf": 0.8339920426904003,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_win_rate": 0.22776911076443057,
+        "net_adverse_max_drawdown": 41185.59999999961,
+        "holding_minutes": {
+          "min": 1.0,
+          "median": 17.0,
+          "max": 324.0
+        },
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 82,
+            "net_base": 112822.79999999999,
+            "net_adverse": 112658.79999999999
+          },
+          "STOP": {
+            "trades": 457,
+            "net_base": -182811.2,
+            "net_adverse": -183724.19999999998
+          },
+          "EOD": {
+            "trades": 102,
+            "net_base": 36049.8,
+            "net_adverse": 35849.8
+          }
+        },
+        "months": {
+          "202601": {
+            "trades": 108,
+            "net_base": -9396.800000000005,
+            "net_base_pf": 0.6764722084503939,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.18518518518518517,
+            "net_base_max_drawdown": 12711.600000000019,
+            "net_adverse": -9612.8,
+            "net_adverse_pf": 0.6710288561572582,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.18518518518518517,
+            "net_adverse_max_drawdown": 12903.600000000013,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 15.5,
+              "max": 309.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 7,
+                "net_base": 13497.799999999997,
+                "net_adverse": 13483.8
+              },
+              "STOP": {
+                "trades": 83,
+                "net_base": -25571.799999999996,
+                "net_adverse": -25737.79999999999
+              },
+              "EOD": {
+                "trades": 18,
+                "net_base": 2677.2000000000003,
+                "net_adverse": 2641.200000000001
+              }
+            }
+          },
+          "202602": {
+            "trades": 87,
+            "net_base": -1560.2000000000012,
+            "net_base_pf": 0.94966057508647,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.2413793103448276,
+            "net_base_max_drawdown": 9728.600000000004,
+            "net_adverse": -1734.2000000000005,
+            "net_adverse_pf": 0.9442838049708284,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.2413793103448276,
+            "net_adverse_max_drawdown": 9810.600000000006,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 26.0,
+              "max": 313.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 11,
+                "net_base": 16399.4,
+                "net_adverse": 16377.4
+              },
+              "STOP": {
+                "trades": 60,
+                "net_base": -26345.999999999993,
+                "net_adverse": -26465.999999999993
+              },
+              "EOD": {
+                "trades": 16,
+                "net_base": 8386.4,
+                "net_adverse": 8354.4
+              }
+            }
+          },
+          "202603": {
+            "trades": 121,
+            "net_base": -1291.6000000000017,
+            "net_base_pf": 0.9724545636790944,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.2727272727272727,
+            "net_base_max_drawdown": 14150.600000000006,
+            "net_adverse": -1533.599999999998,
+            "net_adverse_pf": 0.9674158306031133,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.2727272727272727,
+            "net_adverse_max_drawdown": 14222.600000000006,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 13.0,
+              "max": 305.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 21,
+                "net_base": 27783.399999999998,
+                "net_adverse": 27741.399999999994
+              },
+              "STOP": {
+                "trades": 81,
+                "net_base": -42112.6,
+                "net_adverse": -42274.6
+              },
+              "EOD": {
+                "trades": 19,
+                "net_base": 13037.600000000002,
+                "net_adverse": 12999.6
+              }
+            }
+          },
+          "202604": {
+            "trades": 107,
+            "net_base": -13269.199999999995,
+            "net_base_pf": 0.5747078544368307,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.14018691588785046,
+            "net_base_max_drawdown": 15815.00000000003,
+            "net_adverse": -13480.199999999997,
+            "net_adverse_pf": 0.570437076976024,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.14018691588785046,
+            "net_adverse_max_drawdown": 16022.000000000025,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 17.0,
+              "max": 312.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 11,
+                "net_base": 9139.399999999998,
+                "net_adverse": 9117.4
+              },
+              "STOP": {
+                "trades": 80,
+                "net_base": -24671.999999999996,
+                "net_adverse": -24830.999999999993
+              },
+              "EOD": {
+                "trades": 16,
+                "net_base": 2263.4000000000005,
+                "net_adverse": 2233.3999999999996
+              }
+            }
+          },
+          "202605": {
+            "trades": 96,
+            "net_base": -13429.599999999997,
+            "net_base_pf": 0.5428625891835959,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.20833333333333334,
+            "net_base_max_drawdown": 15348.400000000012,
+            "net_adverse": -13619.599999999995,
+            "net_adverse_pf": 0.5387501862664086,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.20833333333333334,
+            "net_adverse_max_drawdown": 15494.400000000012,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 22.5,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 10,
+                "net_base": 7093.999999999999,
+                "net_adverse": 7074.0
+              },
+              "STOP": {
+                "trades": 69,
+                "net_base": -23312.399999999987,
+                "net_adverse": -23450.399999999987
+              },
+              "EOD": {
+                "trades": 17,
+                "net_base": 2788.8000000000015,
+                "net_adverse": 2756.8000000000015
+              }
+            }
+          },
+          "202606": {
+            "trades": 122,
+            "net_base": 5008.7999999999965,
+            "net_base_pf": 1.1147728053894277,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.30327868852459017,
+            "net_base_max_drawdown": 12700.000000000004,
+            "net_adverse": 4764.800000000003,
+            "net_adverse_pf": 1.1087580744561871,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.30327868852459017,
+            "net_adverse_max_drawdown": 12750.000000000004,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 14.0,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 22,
+                "net_base": 38908.8,
+                "net_adverse": 38864.799999999996
+              },
+              "STOP": {
+                "trades": 84,
+                "net_base": -40796.399999999994,
+                "net_adverse": -40964.399999999994
+              },
+              "EOD": {
+                "trades": 16,
+                "net_base": 6896.400000000001,
+                "net_adverse": 6864.400000000001
+              }
+            }
+          }
+        },
+        "positive_months": 1,
+        "economic_gate": false
+      },
+      "SPY": {
+        "trades": 471,
+        "net_base": -5196.599999999999,
+        "net_base_pf": 0.7022756439636996,
+        "net_base_pf_infinite": false,
+        "net_base_win_rate": 0.18471337579617833,
+        "net_base_max_drawdown": 5985.000000000029,
+        "net_adverse": -6138.6,
+        "net_adverse_pf": 0.6631399879273445,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_win_rate": 0.18259023354564755,
+        "net_adverse_max_drawdown": 6743.400000000052,
+        "holding_minutes": {
+          "min": 1.0,
+          "median": 20.0,
+          "max": 318.0
+        },
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 37,
+            "net_base": 6924.799999999999,
+            "net_adverse": 6850.799999999999
+          },
+          "STOP": {
+            "trades": 344,
+            "net_base": -15126.400000000001,
+            "net_adverse": -15814.400000000003
+          },
+          "EOD": {
+            "trades": 90,
+            "net_base": 3005.0000000000005,
+            "net_adverse": 2825.0
+          }
+        },
+        "months": {
+          "202601": {
+            "trades": 90,
+            "net_base": -523.9999999999999,
+            "net_base_pf": 0.7928690015020952,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.18888888888888888,
+            "net_base_max_drawdown": 997.2000000000008,
+            "net_adverse": -703.9999999999999,
+            "net_adverse_pf": 0.7369011136856268,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.18888888888888888,
+            "net_adverse_max_drawdown": 1121.2000000000007,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 20.0,
+              "max": 311.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 7,
+                "net_base": 1042.8000000000002,
+                "net_adverse": 1028.8
+              },
+              "STOP": {
+                "trades": 66,
+                "net_base": -2357.6000000000004,
+                "net_adverse": -2489.5999999999995
+              },
+              "EOD": {
+                "trades": 17,
+                "net_base": 790.8000000000001,
+                "net_adverse": 756.8
+              }
+            }
+          },
+          "202602": {
+            "trades": 80,
+            "net_base": -1376.0,
+            "net_base_pf": 0.5954606926559652,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.2,
+            "net_base_max_drawdown": 2108.2,
+            "net_adverse": -1536.0000000000002,
+            "net_adverse_pf": 0.5647985493284977,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.2,
+            "net_adverse_max_drawdown": 2222.1999999999994,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 25.0,
+              "max": 307.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 9,
+                "net_base": 1274.6000000000004,
+                "net_adverse": 1256.6000000000001
+              },
+              "STOP": {
+                "trades": 56,
+                "net_base": -2914.6000000000004,
+                "net_adverse": -3026.6000000000004
+              },
+              "EOD": {
+                "trades": 15,
+                "net_base": 264.0,
+                "net_adverse": 233.99999999999991
+              }
+            }
+          },
+          "202603": {
+            "trades": 91,
+            "net_base": -742.5999999999997,
+            "net_base_pf": 0.8109181646891075,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.18681318681318682,
+            "net_base_max_drawdown": 2518.3999999999983,
+            "net_adverse": -924.6,
+            "net_adverse_pf": 0.7731265642636306,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.18681318681318682,
+            "net_adverse_max_drawdown": 2596.3999999999987,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 16.0,
+              "max": 318.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 6,
+                "net_base": 1691.4,
+                "net_adverse": 1679.4
+              },
+              "STOP": {
+                "trades": 66,
+                "net_base": -3208.5999999999995,
+                "net_adverse": -3340.6000000000004
+              },
+              "EOD": {
+                "trades": 19,
+                "net_base": 774.6000000000003,
+                "net_adverse": 736.6
+              }
+            }
+          },
+          "202604": {
+            "trades": 62,
+            "net_base": -2118.2,
+            "net_base_pf": 0.09385694729637233,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.0967741935483871,
+            "net_base_max_drawdown": 2118.199999999997,
+            "net_adverse": -2242.2,
+            "net_adverse_pf": 0.084666884389288,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.0967741935483871,
+            "net_adverse_max_drawdown": 2242.199999999997,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 18.0,
+              "max": 292.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 1,
+                "net_base": 43.4,
+                "net_adverse": 41.39999999999999
+              },
+              "STOP": {
+                "trades": 50,
+                "net_base": -1942.0,
+                "net_adverse": -2042.0
+              },
+              "EOD": {
+                "trades": 11,
+                "net_base": -219.59999999999997,
+                "net_adverse": -241.60000000000002
+              }
+            }
+          },
+          "202605": {
+            "trades": 75,
+            "net_base": -807.0000000000001,
+            "net_base_pf": 0.6358303249097474,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.2,
+            "net_base_max_drawdown": 1094.2000000000003,
+            "net_adverse": -957.0000000000003,
+            "net_adverse_pf": 0.5904305401010015,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.18666666666666668,
+            "net_adverse_max_drawdown": 1215.0000000000007,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 19.0,
+              "max": 298.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 7,
+                "net_base": 525.8,
+                "net_adverse": 511.79999999999995
+              },
+              "STOP": {
+                "trades": 56,
+                "net_base": -2070.6000000000004,
+                "net_adverse": -2182.6000000000004
+              },
+              "EOD": {
+                "trades": 12,
+                "net_base": 737.8000000000001,
+                "net_adverse": 713.8
+              }
+            }
+          },
+          "202606": {
+            "trades": 73,
+            "net_base": 371.20000000000067,
+            "net_base_pf": 1.1220169614095064,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.2191780821917808,
+            "net_base_max_drawdown": 1882.3999999999994,
+            "net_adverse": 225.20000000000016,
+            "net_adverse_pf": 1.071351625372283,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.2191780821917808,
+            "net_adverse_max_drawdown": 1970.3999999999996,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 23.0,
+              "max": 299.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 7,
+                "net_base": 2346.8000000000006,
+                "net_adverse": 2332.8000000000006
+              },
+              "STOP": {
+                "trades": 50,
+                "net_base": -2633.0,
+                "net_adverse": -2733.0
+              },
+              "EOD": {
+                "trades": 16,
+                "net_base": 657.4000000000001,
+                "net_adverse": 625.4000000000001
+              }
+            }
+          }
+        },
+        "positive_months": 1,
+        "economic_gate": false
+      },
+      "QQQ": {
+        "trades": 511,
+        "net_base": -6950.599999999996,
+        "net_base_pf": 0.7333379371729358,
+        "net_base_pf_infinite": false,
+        "net_base_win_rate": 0.25244618395303325,
+        "net_base_max_drawdown": 7687.6000000001,
+        "net_adverse": -7970.599999999999,
+        "net_adverse_pf": 0.7028910956044614,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_win_rate": 0.25244618395303325,
+        "net_adverse_max_drawdown": 8538.800000000101,
+        "holding_minutes": {
+          "min": 1.0,
+          "median": 21.0,
+          "max": 324.0
+        },
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 76,
+            "net_base": 10326.400000000001,
+            "net_adverse": 10174.4
+          },
+          "STOP": {
+            "trades": 335,
+            "net_base": -22911.0,
+            "net_adverse": -23580.000000000004
+          },
+          "EOD": {
+            "trades": 100,
+            "net_base": 5633.999999999999,
+            "net_adverse": 5434.999999999999
+          }
+        },
+        "months": {
+          "202601": {
+            "trades": 91,
+            "net_base": 330.40000000000003,
+            "net_base_pf": 1.1378849845588854,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.26373626373626374,
+            "net_base_max_drawdown": 745.2000000000004,
+            "net_adverse": 148.39999999999958,
+            "net_adverse_pf": 1.0586514900007908,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.26373626373626374,
+            "net_adverse_max_drawdown": 800.4000000000003,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 20.0,
+              "max": 309.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 13,
+                "net_base": 1188.2000000000003,
+                "net_adverse": 1162.2
+              },
+              "STOP": {
+                "trades": 61,
+                "net_base": -2283.6,
+                "net_adverse": -2405.6
+              },
+              "EOD": {
+                "trades": 17,
+                "net_base": 1425.8000000000002,
+                "net_adverse": 1391.8000000000002
+              }
+            }
+          },
+          "202602": {
+            "trades": 64,
+            "net_base": -1375.3999999999996,
+            "net_base_pf": 0.5333197611292076,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.1875,
+            "net_base_max_drawdown": 1375.3999999999996,
+            "net_adverse": -1503.3999999999999,
+            "net_adverse_pf": 0.5072758259045623,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.1875,
+            "net_adverse_max_drawdown": 1503.3999999999999,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 38.5,
+              "max": 323.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 9,
+                "net_base": 1216.6000000000004,
+                "net_adverse": 1198.6
+              },
+              "STOP": {
+                "trades": 40,
+                "net_base": -2381.0,
+                "net_adverse": -2461.0
+              },
+              "EOD": {
+                "trades": 15,
+                "net_base": -210.99999999999983,
+                "net_adverse": -240.99999999999997
+              }
+            }
+          },
+          "202603": {
+            "trades": 93,
+            "net_base": -3096.799999999998,
+            "net_base_pf": 0.5674981145778052,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.27956989247311825,
+            "net_base_max_drawdown": 4470.000000000006,
+            "net_adverse": -3280.799999999999,
+            "net_adverse_pf": 0.5500946216505307,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.27956989247311825,
+            "net_adverse_max_drawdown": 4598.00000000001,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 14.0,
+              "max": 304.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 14,
+                "net_base": 1743.6000000000006,
+                "net_adverse": 1715.6000000000004
+              },
+              "STOP": {
+                "trades": 59,
+                "net_base": -6378.400000000001,
+                "net_adverse": -6495.400000000001
+              },
+              "EOD": {
+                "trades": 20,
+                "net_base": 1538.000000000001,
+                "net_adverse": 1499.0000000000005
+              }
+            }
+          },
+          "202604": {
+            "trades": 70,
+            "net_base": -736.0,
+            "net_base_pf": 0.722285110557694,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.2571428571428571,
+            "net_base_max_drawdown": 928.4000000000005,
+            "net_adverse": -876.0,
+            "net_adverse_pf": 0.6819403093457267,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.2571428571428571,
+            "net_adverse_max_drawdown": 1066.4000000000008,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 19.5,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 6,
+                "net_base": 526.4,
+                "net_adverse": 514.3999999999999
+              },
+              "STOP": {
+                "trades": 49,
+                "net_base": -2331.4,
+                "net_adverse": -2429.4
+              },
+              "EOD": {
+                "trades": 15,
+                "net_base": 1069.0,
+                "net_adverse": 1039.0
+              }
+            }
+          },
+          "202605": {
+            "trades": 90,
+            "net_base": -1733.0,
+            "net_base_pf": 0.5939169556659482,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.2111111111111111,
+            "net_base_max_drawdown": 2297.7999999999993,
+            "net_adverse": -1913.0,
+            "net_adverse_pf": 0.5661738026124817,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.2111111111111111,
+            "net_adverse_max_drawdown": 2443.7999999999993,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 25.0,
+              "max": 296.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 13,
+                "net_base": 1257.2000000000005,
+                "net_adverse": 1231.2000000000007
+              },
+              "STOP": {
+                "trades": 63,
+                "net_base": -3917.7999999999997,
+                "net_adverse": -4043.7999999999997
+              },
+              "EOD": {
+                "trades": 14,
+                "net_base": 927.6000000000004,
+                "net_adverse": 899.6000000000004
+              }
+            }
+          },
+          "202606": {
+            "trades": 103,
+            "net_base": -339.7999999999976,
+            "net_base_pf": 0.9488545711791444,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.2912621359223301,
+            "net_base_max_drawdown": 2642.5999999999985,
+            "net_adverse": -545.7999999999987,
+            "net_adverse_pf": 0.9196147161919348,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.2912621359223301,
+            "net_adverse_max_drawdown": 2754.599999999999,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 19.0,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 21,
+                "net_base": 4394.4,
+                "net_adverse": 4352.4
+              },
+              "STOP": {
+                "trades": 63,
+                "net_base": -5618.800000000003,
+                "net_adverse": -5744.800000000003
+              },
+              "EOD": {
+                "trades": 19,
+                "net_base": 884.6000000000005,
+                "net_adverse": 846.6000000000003
+              }
+            }
+          }
+        },
+        "positive_months": 1,
+        "economic_gate": false
+      }
+    },
+    "economic_gate_all_tickers": false
+  },
+  "causal_residual__10": {
+    "trades": 1461,
+    "net_base": -48305.59999999998,
+    "net_base_pf": 0.807536215253955,
+    "net_base_pf_infinite": false,
+    "net_base_win_rate": 0.2135523613963039,
+    "net_base_max_drawdown": 56625.59999999911,
+    "net_adverse": -51221.59999999998,
+    "net_adverse_pf": 0.7977691339482983,
+    "net_adverse_pf_infinite": false,
+    "net_adverse_win_rate": 0.2108145106091718,
+    "net_adverse_max_drawdown": 59071.5999999991,
+    "holding_minutes": {
+      "min": 1.0,
+      "median": 19.0,
+      "max": 324.0
+    },
+    "exit_reasons": {
+      "TARGET": {
+        "trades": 159,
+        "net_base": 128612.59999999995,
+        "net_adverse": 128294.59999999995
+      },
+      "STOP": {
+        "trades": 1026,
+        "net_base": -218020.59999999998,
+        "net_adverse": -220070.59999999998
+      },
+      "EOD": {
+        "trades": 276,
+        "net_base": 41102.40000000001,
+        "net_adverse": 40554.40000000001
+      }
+    },
+    "attempts": 1462,
+    "no_fill_attempts": 1,
+    "expected_ticker_days": 369,
+    "observable_ticker_days": 363,
+    "zero_fill_expected_days": 6,
+    "zero_fill_observable_days": 0,
+    "missing_source_days": 6,
+    "tickers": {
+      "SPXW": {
+        "trades": 653,
+        "net_base": -36028.79999999999,
+        "net_base_pf": 0.8311698170500263,
+        "net_base_pf_infinite": false,
+        "net_base_win_rate": 0.225114854517611,
+        "net_base_max_drawdown": 45047.799999999625,
+        "net_adverse": -37329.79999999998,
+        "net_adverse_pf": 0.8258949226154052,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_win_rate": 0.225114854517611,
+        "net_adverse_max_drawdown": 45828.79999999962,
+        "holding_minutes": {
+          "min": 1.0,
+          "median": 17.0,
+          "max": 324.0
+        },
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 82,
+            "net_base": 114662.79999999997,
+            "net_adverse": 114498.79999999996
+          },
+          "STOP": {
+            "trades": 469,
+            "net_base": -185421.4,
+            "net_adverse": -186358.39999999997
+          },
+          "EOD": {
+            "trades": 102,
+            "net_base": 34729.8,
+            "net_adverse": 34529.8
+          }
+        },
+        "months": {
+          "202601": {
+            "trades": 114,
+            "net_base": -8214.4,
+            "net_base_pf": 0.7298108044101784,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.17543859649122806,
+            "net_base_max_drawdown": 11548.400000000023,
+            "net_adverse": -8442.399999999998,
+            "net_adverse_pf": 0.7240179925728338,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.17543859649122806,
+            "net_adverse_max_drawdown": 11756.400000000021,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 14.0,
+              "max": 309.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 7,
+                "net_base": 14767.799999999997,
+                "net_adverse": 14753.799999999997
+              },
+              "STOP": {
+                "trades": 89,
+                "net_base": -27244.399999999998,
+                "net_adverse": -27422.399999999994
+              },
+              "EOD": {
+                "trades": 18,
+                "net_base": 4262.2,
+                "net_adverse": 4226.200000000001
+              }
+            }
+          },
+          "202602": {
+            "trades": 91,
+            "net_base": -698.6000000000026,
+            "net_base_pf": 0.9774553528208247,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.24175824175824176,
+            "net_base_max_drawdown": 10082.400000000005,
+            "net_adverse": -880.6000000000038,
+            "net_adverse_pf": 0.9717079941141323,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.24175824175824176,
+            "net_adverse_max_drawdown": 10170.400000000007,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 22.0,
+              "max": 313.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 11,
+                "net_base": 17219.4,
+                "net_adverse": 17197.4
+              },
+              "STOP": {
+                "trades": 64,
+                "net_base": -26304.399999999998,
+                "net_adverse": -26432.399999999994
+              },
+              "EOD": {
+                "trades": 16,
+                "net_base": 8386.4,
+                "net_adverse": 8354.4
+              }
+            }
+          },
+          "202603": {
+            "trades": 119,
+            "net_base": -767.4000000000005,
+            "net_base_pf": 0.9834382202885041,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.2773109243697479,
+            "net_base_max_drawdown": 13590.600000000006,
+            "net_adverse": -1005.3999999999961,
+            "net_adverse_pf": 0.9783820278836148,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.2773109243697479,
+            "net_adverse_max_drawdown": 13662.600000000006,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 14.0,
+              "max": 305.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 21,
+                "net_base": 28193.4,
+                "net_adverse": 28151.399999999994
+              },
+              "STOP": {
+                "trades": 79,
+                "net_base": -41738.39999999999,
+                "net_adverse": -41896.39999999999
+              },
+              "EOD": {
+                "trades": 19,
+                "net_base": 12777.600000000002,
+                "net_adverse": 12739.6
+              }
+            }
+          },
+          "202604": {
+            "trades": 111,
+            "net_base": -17867.599999999988,
+            "net_base_pf": 0.4467995516833547,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.13513513513513514,
+            "net_base_max_drawdown": 20413.400000000012,
+            "net_adverse": -18086.599999999988,
+            "net_adverse_pf": 0.4432768194634262,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.13513513513513514,
+            "net_adverse_max_drawdown": 20628.4,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 17.0,
+              "max": 312.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 12,
+                "net_base": 10344.8,
+                "net_adverse": 10320.8
+              },
+              "STOP": {
+                "trades": 84,
+                "net_base": -25770.399999999987,
+                "net_adverse": -25937.399999999987
+              },
+              "EOD": {
+                "trades": 15,
+                "net_base": -2441.999999999999,
+                "net_adverse": -2469.9999999999995
+              }
+            }
+          },
+          "202605": {
+            "trades": 96,
+            "net_base": -13544.599999999997,
+            "net_base_pf": 0.5428322622455043,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.19791666666666666,
+            "net_base_max_drawdown": 15683.400000000012,
+            "net_adverse": -13734.599999999995,
+            "net_adverse_pf": 0.538785460992908,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.19791666666666666,
+            "net_adverse_max_drawdown": 15829.400000000012,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 22.5,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 10,
+                "net_base": 7313.999999999999,
+                "net_adverse": 7294.0
+              },
+              "STOP": {
+                "trades": 69,
+                "net_base": -23472.399999999987,
+                "net_adverse": -23610.399999999987
+              },
+              "EOD": {
+                "trades": 17,
+                "net_base": 2613.8000000000006,
+                "net_adverse": 2581.8000000000015
+              }
+            }
+          },
+          "202606": {
+            "trades": 122,
+            "net_base": 5063.799999999992,
+            "net_base_pf": 1.1157402963105183,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.3114754098360656,
+            "net_base_max_drawdown": 12740.000000000004,
+            "net_adverse": 4819.799999999997,
+            "net_adverse_pf": 1.1097419363652512,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.3114754098360656,
+            "net_adverse_max_drawdown": 12790.000000000004,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 14.5,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 21,
+                "net_base": 36823.4,
+                "net_adverse": 36781.4
+              },
+              "STOP": {
+                "trades": 84,
+                "net_base": -40891.399999999994,
+                "net_adverse": -41059.399999999994
+              },
+              "EOD": {
+                "trades": 17,
+                "net_base": 9131.800000000001,
+                "net_adverse": 9097.800000000001
+              }
+            }
+          }
+        },
+        "positive_months": 1,
+        "economic_gate": false
+      },
+      "SPY": {
+        "trades": 359,
+        "net_base": -4828.4000000000015,
+        "net_base_pf": 0.6440650478423047,
+        "net_base_pf_infinite": false,
+        "net_base_win_rate": 0.181058495821727,
+        "net_base_max_drawdown": 4828.4,
+        "net_adverse": -5546.4000000000015,
+        "net_adverse_pf": 0.6082110111184886,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_win_rate": 0.17548746518105848,
+        "net_adverse_max_drawdown": 5546.400000000031,
+        "holding_minutes": {
+          "min": 1.0,
+          "median": 22.0,
+          "max": 311.0
+        },
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 23,
+            "net_base": 4676.200000000001,
+            "net_adverse": 4630.200000000001
+          },
+          "STOP": {
+            "trades": 256,
+            "net_base": -11543.600000000002,
+            "net_adverse": -12055.600000000002
+          },
+          "EOD": {
+            "trades": 80,
+            "net_base": 2039.0,
+            "net_adverse": 1878.9999999999998
+          }
+        },
+        "months": {
+          "202601": {
+            "trades": 62,
+            "net_base": -1040.1999999999998,
+            "net_base_pf": 0.46508279337652997,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.1774193548387097,
+            "net_base_max_drawdown": 1256.2000000000005,
+            "net_adverse": -1164.1999999999996,
+            "net_adverse_pf": 0.43115410925437314,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.1774193548387097,
+            "net_adverse_max_drawdown": 1370.1999999999994,
+            "holding_minutes": {
+              "min": 2.0,
+              "median": 31.5,
+              "max": 311.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 3,
+                "net_base": 227.20000000000005,
+                "net_adverse": 221.20000000000002
+              },
+              "STOP": {
+                "trades": 43,
+                "net_base": -1836.7999999999997,
+                "net_adverse": -1922.7999999999997
+              },
+              "EOD": {
+                "trades": 16,
+                "net_base": 569.4000000000001,
+                "net_adverse": 537.4000000000001
+              }
+            }
+          },
+          "202602": {
+            "trades": 72,
+            "net_base": -1125.1999999999998,
+            "net_base_pf": 0.6365398281542738,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.19444444444444445,
+            "net_base_max_drawdown": 1435.8000000000002,
+            "net_adverse": -1269.2000000000003,
+            "net_adverse_pf": 0.6050289413082718,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.18055555555555555,
+            "net_adverse_max_drawdown": 1521.7999999999997,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 23.5,
+              "max": 307.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 6,
+                "net_base": 1152.4000000000003,
+                "net_adverse": 1140.4000000000003
+              },
+              "STOP": {
+                "trades": 53,
+                "net_base": -2746.7999999999997,
+                "net_adverse": -2852.7999999999997
+              },
+              "EOD": {
+                "trades": 13,
+                "net_base": 469.19999999999993,
+                "net_adverse": 443.19999999999993
+              }
+            }
+          },
+          "202603": {
+            "trades": 73,
+            "net_base": -167.79999999999967,
+            "net_base_pf": 0.9355903577460466,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.2191780821917808,
+            "net_base_max_drawdown": 1854.5999999999979,
+            "net_adverse": -313.8000000000003,
+            "net_adverse_pf": 0.8846662746251104,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.2054794520547945,
+            "net_adverse_max_drawdown": 1946.5999999999983,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 16.0,
+              "max": 307.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 5,
+                "net_base": 1141.0000000000002,
+                "net_adverse": 1131.0
+              },
+              "STOP": {
+                "trades": 51,
+                "net_base": -1989.5999999999995,
+                "net_adverse": -2091.6
+              },
+              "EOD": {
+                "trades": 17,
+                "net_base": 680.8000000000002,
+                "net_adverse": 646.8000000000001
+              }
+            }
+          },
+          "202604": {
+            "trades": 41,
+            "net_base": -1472.6,
+            "net_base_pf": 0.08352003983071947,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.07317073170731707,
+            "net_base_max_drawdown": 1472.5999999999992,
+            "net_adverse": -1554.6,
+            "net_adverse_pf": 0.07618255288804374,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.07317073170731707,
+            "net_adverse_max_drawdown": 1554.5999999999988,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 23.0,
+              "max": 292.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 0,
+                "net_base": 0.0,
+                "net_adverse": 0.0
+              },
+              "STOP": {
+                "trades": 33,
+                "net_base": -1264.8,
+                "net_adverse": -1330.8000000000002
+              },
+              "EOD": {
+                "trades": 8,
+                "net_base": -207.79999999999998,
+                "net_adverse": -223.79999999999998
+              }
+            }
+          },
+          "202605": {
+            "trades": 55,
+            "net_base": -832.0000000000001,
+            "net_base_pf": 0.5069921782412895,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.16363636363636364,
+            "net_base_max_drawdown": 1015.2000000000004,
+            "net_adverse": -942.0000000000002,
+            "net_adverse_pf": 0.47066756574511137,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.16363636363636364,
+            "net_adverse_max_drawdown": 1090.6000000000006,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 14.0,
+              "max": 279.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 3,
+                "net_base": 210.20000000000002,
+                "net_adverse": 204.2
+              },
+              "STOP": {
+                "trades": 39,
+                "net_base": -1446.3999999999996,
+                "net_adverse": -1524.3999999999996
+              },
+              "EOD": {
+                "trades": 13,
+                "net_base": 404.19999999999993,
+                "net_adverse": 378.2
+              }
+            }
+          },
+          "202606": {
+            "trades": 56,
+            "net_base": -190.59999999999974,
+            "net_base_pf": 0.9274015388131336,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.21428571428571427,
+            "net_base_max_drawdown": 1415.4,
+            "net_adverse": -302.6,
+            "net_adverse_pf": 0.8884793985405766,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.21428571428571427,
+            "net_adverse_max_drawdown": 1503.4000000000003,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 29.0,
+              "max": 267.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 6,
+                "net_base": 1945.4000000000003,
+                "net_adverse": 1933.4
+              },
+              "STOP": {
+                "trades": 37,
+                "net_base": -2259.1999999999994,
+                "net_adverse": -2333.2
+              },
+              "EOD": {
+                "trades": 13,
+                "net_base": 123.20000000000013,
+                "net_adverse": 97.2
+              }
+            }
+          }
+        },
+        "positive_months": 0,
+        "economic_gate": false
+      },
+      "QQQ": {
+        "trades": 449,
+        "net_base": -7448.399999999998,
+        "net_base_pf": 0.6898748407404632,
+        "net_base_pf_infinite": false,
+        "net_base_win_rate": 0.22271714922049,
+        "net_base_max_drawdown": 8597.800000000068,
+        "net_adverse": -8345.4,
+        "net_adverse_pf": 0.6623564729776749,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_win_rate": 0.2182628062360802,
+        "net_adverse_max_drawdown": 9409.200000000086,
+        "holding_minutes": {
+          "min": 1.0,
+          "median": 21.0,
+          "max": 324.0
+        },
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 54,
+            "net_base": 9273.599999999999,
+            "net_adverse": 9165.599999999999
+          },
+          "STOP": {
+            "trades": 301,
+            "net_base": -21055.600000000002,
+            "net_adverse": -21656.600000000006
+          },
+          "EOD": {
+            "trades": 94,
+            "net_base": 4333.5999999999985,
+            "net_adverse": 4145.599999999999
+          }
+        },
+        "months": {
+          "202601": {
+            "trades": 74,
+            "net_base": 5.600000000000307,
+            "net_base_pf": 1.0025742392203738,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.20270270270270271,
+            "net_base_max_drawdown": 908.1999999999999,
+            "net_adverse": -142.39999999999992,
+            "net_adverse_pf": 0.9379087817214617,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.20270270270270271,
+            "net_adverse_max_drawdown": 1042.2000000000003,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 21.5,
+              "max": 309.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 6,
+                "net_base": 975.4000000000001,
+                "net_adverse": 963.4000000000001
+              },
+              "STOP": {
+                "trades": 51,
+                "net_base": -2050.6,
+                "net_adverse": -2152.6
+              },
+              "EOD": {
+                "trades": 17,
+                "net_base": 1080.8000000000002,
+                "net_adverse": 1046.8
+              }
+            }
+          },
+          "202602": {
+            "trades": 63,
+            "net_base": -1479.799999999999,
+            "net_base_pf": 0.4881710016602105,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.1746031746031746,
+            "net_base_max_drawdown": 1479.7999999999995,
+            "net_adverse": -1605.7999999999995,
+            "net_adverse_pf": 0.4638755341880344,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.1746031746031746,
+            "net_adverse_max_drawdown": 1605.799999999999,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 35.0,
+              "max": 323.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 9,
+                "net_base": 1118.6000000000004,
+                "net_adverse": 1100.6
+              },
+              "STOP": {
+                "trades": 39,
+                "net_base": -2326.399999999999,
+                "net_adverse": -2404.399999999999
+              },
+              "EOD": {
+                "trades": 15,
+                "net_base": -271.9999999999999,
+                "net_adverse": -301.99999999999994
+              }
+            }
+          },
+          "202603": {
+            "trades": 99,
+            "net_base": -3643.3999999999987,
+            "net_base_pf": 0.5137984413366072,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.23232323232323232,
+            "net_base_max_drawdown": 4603.600000000007,
+            "net_adverse": -3840.3999999999983,
+            "net_adverse_pf": 0.4976323156214844,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.23232323232323232,
+            "net_adverse_max_drawdown": 4726.000000000008,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 12.0,
+              "max": 304.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 11,
+                "net_base": 1794.4000000000005,
+                "net_adverse": 1772.4
+              },
+              "STOP": {
+                "trades": 69,
+                "net_base": -6801.4000000000015,
+                "net_adverse": -6938.4000000000015
+              },
+              "EOD": {
+                "trades": 19,
+                "net_base": 1363.6000000000004,
+                "net_adverse": 1325.6000000000004
+              }
+            }
+          },
+          "202604": {
+            "trades": 53,
+            "net_base": -1345.7999999999993,
+            "net_base_pf": 0.42081253227750043,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.22641509433962265,
+            "net_base_max_drawdown": 1538.199999999999,
+            "net_adverse": -1451.7999999999995,
+            "net_adverse_pf": 0.3964915197871633,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.22641509433962265,
+            "net_adverse_max_drawdown": 1642.1999999999987,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 24.0,
+              "max": 309.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 4,
+                "net_base": 291.6,
+                "net_adverse": 283.59999999999997
+              },
+              "STOP": {
+                "trades": 37,
+                "net_base": -2091.1999999999994,
+                "net_adverse": -2165.2
+              },
+              "EOD": {
+                "trades": 12,
+                "net_base": 453.8000000000001,
+                "net_adverse": 429.8
+              }
+            }
+          },
+          "202605": {
+            "trades": 75,
+            "net_base": -1579.9999999999995,
+            "net_base_pf": 0.5255825126110979,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.21333333333333335,
+            "net_base_max_drawdown": 1753.999999999999,
+            "net_adverse": -1730.0,
+            "net_adverse_pf": 0.4984053348796755,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.2,
+            "net_adverse_max_drawdown": 1873.999999999999,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 23.0,
+              "max": 315.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 10,
+                "net_base": 530.0000000000001,
+                "net_adverse": 509.99999999999994
+              },
+              "STOP": {
+                "trades": 52,
+                "net_base": -3048.2,
+                "net_adverse": -3152.2
+              },
+              "EOD": {
+                "trades": 13,
+                "net_base": 938.2000000000002,
+                "net_adverse": 912.2
+              }
+            }
+          },
+          "202606": {
+            "trades": 85,
+            "net_base": 595.0000000000011,
+            "net_base_pf": 1.1025296388199608,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.27058823529411763,
+            "net_base_max_drawdown": 2438.5999999999985,
+            "net_adverse": 425.0000000000005,
+            "net_adverse_pf": 1.0716839832681144,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.25882352941176473,
+            "net_adverse_max_drawdown": 2540.599999999999,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 25.0,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 14,
+                "net_base": 4563.600000000001,
+                "net_adverse": 4535.600000000001
+              },
+              "STOP": {
+                "trades": 53,
+                "net_base": -4737.800000000001,
+                "net_adverse": -4843.800000000001
+              },
+              "EOD": {
+                "trades": 18,
+                "net_base": 769.2000000000005,
+                "net_adverse": 733.2000000000005
+              }
+            }
+          }
+        },
+        "positive_months": 2,
+        "economic_gate": false
+      }
+    },
+    "economic_gate_all_tickers": false
+  }
+}

@@ -1,0 +1,1006 @@
+{
+  "status": "COMPLETED_CAUSAL_LEARNER_DEVELOPMENT",
+  "selected_policy": {
+    "policy": "gbt_advantage__10",
+    "model": "gbt_advantage",
+    "threshold": 10.0,
+    "selection_score": 0.06000000000000008
+  },
+  "selected_test": {
+    "pooled": {
+      "trades": 0,
+      "exit_diagnostics_available": true,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 0,
+          "base_net_usd": 0.0,
+          "adverse_net_usd": 0.0
+        },
+        "STOP": {
+          "trades": 0,
+          "base_net_usd": 0.0,
+          "adverse_net_usd": 0.0
+        },
+        "EOD": {
+          "trades": 0,
+          "base_net_usd": 0.0,
+          "adverse_net_usd": 0.0
+        }
+      },
+      "holding_minutes": {
+        "min": null,
+        "median": null,
+        "max": null
+      },
+      "base_net_usd": 0.0,
+      "base_pf": null,
+      "base_pf_infinite": false,
+      "base_win_rate": null,
+      "base_max_drawdown_usd": 0.0,
+      "adverse_net_usd": 0.0,
+      "adverse_pf": null,
+      "adverse_pf_infinite": false,
+      "adverse_win_rate": null,
+      "adverse_max_drawdown_usd": 0.0
+    },
+    "tickers": {
+      "SPXW": {
+        "trades": 0,
+        "exit_diagnostics_available": true,
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 0,
+            "base_net_usd": 0.0,
+            "adverse_net_usd": 0.0
+          },
+          "STOP": {
+            "trades": 0,
+            "base_net_usd": 0.0,
+            "adverse_net_usd": 0.0
+          },
+          "EOD": {
+            "trades": 0,
+            "base_net_usd": 0.0,
+            "adverse_net_usd": 0.0
+          }
+        },
+        "holding_minutes": {
+          "min": null,
+          "median": null,
+          "max": null
+        },
+        "base_net_usd": 0.0,
+        "base_pf": null,
+        "base_pf_infinite": false,
+        "base_win_rate": null,
+        "base_max_drawdown_usd": 0.0,
+        "adverse_net_usd": 0.0,
+        "adverse_pf": null,
+        "adverse_pf_infinite": false,
+        "adverse_win_rate": null,
+        "adverse_max_drawdown_usd": 0.0
+      },
+      "SPY": {
+        "trades": 0,
+        "exit_diagnostics_available": true,
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 0,
+            "base_net_usd": 0.0,
+            "adverse_net_usd": 0.0
+          },
+          "STOP": {
+            "trades": 0,
+            "base_net_usd": 0.0,
+            "adverse_net_usd": 0.0
+          },
+          "EOD": {
+            "trades": 0,
+            "base_net_usd": 0.0,
+            "adverse_net_usd": 0.0
+          }
+        },
+        "holding_minutes": {
+          "min": null,
+          "median": null,
+          "max": null
+        },
+        "base_net_usd": 0.0,
+        "base_pf": null,
+        "base_pf_infinite": false,
+        "base_win_rate": null,
+        "base_max_drawdown_usd": 0.0,
+        "adverse_net_usd": 0.0,
+        "adverse_pf": null,
+        "adverse_pf_infinite": false,
+        "adverse_win_rate": null,
+        "adverse_max_drawdown_usd": 0.0
+      },
+      "QQQ": {
+        "trades": 0,
+        "exit_diagnostics_available": true,
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 0,
+            "base_net_usd": 0.0,
+            "adverse_net_usd": 0.0
+          },
+          "STOP": {
+            "trades": 0,
+            "base_net_usd": 0.0,
+            "adverse_net_usd": 0.0
+          },
+          "EOD": {
+            "trades": 0,
+            "base_net_usd": 0.0,
+            "adverse_net_usd": 0.0
+          }
+        },
+        "holding_minutes": {
+          "min": null,
+          "median": null,
+          "max": null
+        },
+        "base_net_usd": 0.0,
+        "base_pf": null,
+        "base_pf_infinite": false,
+        "base_win_rate": null,
+        "base_max_drawdown_usd": 0.0,
+        "adverse_net_usd": 0.0,
+        "adverse_pf": null,
+        "adverse_pf_infinite": false,
+        "adverse_win_rate": null,
+        "adverse_max_drawdown_usd": 0.0
+      }
+    },
+    "months": {
+      "SPXW": {
+        "202601": {
+          "trades": 0,
+          "exit_diagnostics_available": true,
+          "exit_reasons": {
+            "TARGET": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "STOP": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "EOD": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            }
+          },
+          "holding_minutes": {
+            "min": null,
+            "median": null,
+            "max": null
+          },
+          "base_net_usd": 0.0,
+          "base_pf": null,
+          "base_pf_infinite": false,
+          "base_win_rate": null,
+          "base_max_drawdown_usd": 0.0,
+          "adverse_net_usd": 0.0,
+          "adverse_pf": null,
+          "adverse_pf_infinite": false,
+          "adverse_win_rate": null,
+          "adverse_max_drawdown_usd": 0.0
+        },
+        "202602": {
+          "trades": 0,
+          "exit_diagnostics_available": true,
+          "exit_reasons": {
+            "TARGET": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "STOP": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "EOD": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            }
+          },
+          "holding_minutes": {
+            "min": null,
+            "median": null,
+            "max": null
+          },
+          "base_net_usd": 0.0,
+          "base_pf": null,
+          "base_pf_infinite": false,
+          "base_win_rate": null,
+          "base_max_drawdown_usd": 0.0,
+          "adverse_net_usd": 0.0,
+          "adverse_pf": null,
+          "adverse_pf_infinite": false,
+          "adverse_win_rate": null,
+          "adverse_max_drawdown_usd": 0.0
+        },
+        "202603": {
+          "trades": 0,
+          "exit_diagnostics_available": true,
+          "exit_reasons": {
+            "TARGET": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "STOP": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "EOD": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            }
+          },
+          "holding_minutes": {
+            "min": null,
+            "median": null,
+            "max": null
+          },
+          "base_net_usd": 0.0,
+          "base_pf": null,
+          "base_pf_infinite": false,
+          "base_win_rate": null,
+          "base_max_drawdown_usd": 0.0,
+          "adverse_net_usd": 0.0,
+          "adverse_pf": null,
+          "adverse_pf_infinite": false,
+          "adverse_win_rate": null,
+          "adverse_max_drawdown_usd": 0.0
+        },
+        "202604": {
+          "trades": 0,
+          "exit_diagnostics_available": true,
+          "exit_reasons": {
+            "TARGET": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "STOP": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "EOD": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            }
+          },
+          "holding_minutes": {
+            "min": null,
+            "median": null,
+            "max": null
+          },
+          "base_net_usd": 0.0,
+          "base_pf": null,
+          "base_pf_infinite": false,
+          "base_win_rate": null,
+          "base_max_drawdown_usd": 0.0,
+          "adverse_net_usd": 0.0,
+          "adverse_pf": null,
+          "adverse_pf_infinite": false,
+          "adverse_win_rate": null,
+          "adverse_max_drawdown_usd": 0.0
+        },
+        "202605": {
+          "trades": 0,
+          "exit_diagnostics_available": true,
+          "exit_reasons": {
+            "TARGET": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "STOP": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "EOD": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            }
+          },
+          "holding_minutes": {
+            "min": null,
+            "median": null,
+            "max": null
+          },
+          "base_net_usd": 0.0,
+          "base_pf": null,
+          "base_pf_infinite": false,
+          "base_win_rate": null,
+          "base_max_drawdown_usd": 0.0,
+          "adverse_net_usd": 0.0,
+          "adverse_pf": null,
+          "adverse_pf_infinite": false,
+          "adverse_win_rate": null,
+          "adverse_max_drawdown_usd": 0.0
+        },
+        "202606": {
+          "trades": 0,
+          "exit_diagnostics_available": true,
+          "exit_reasons": {
+            "TARGET": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "STOP": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "EOD": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            }
+          },
+          "holding_minutes": {
+            "min": null,
+            "median": null,
+            "max": null
+          },
+          "base_net_usd": 0.0,
+          "base_pf": null,
+          "base_pf_infinite": false,
+          "base_win_rate": null,
+          "base_max_drawdown_usd": 0.0,
+          "adverse_net_usd": 0.0,
+          "adverse_pf": null,
+          "adverse_pf_infinite": false,
+          "adverse_win_rate": null,
+          "adverse_max_drawdown_usd": 0.0
+        }
+      },
+      "SPY": {
+        "202601": {
+          "trades": 0,
+          "exit_diagnostics_available": true,
+          "exit_reasons": {
+            "TARGET": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "STOP": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "EOD": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            }
+          },
+          "holding_minutes": {
+            "min": null,
+            "median": null,
+            "max": null
+          },
+          "base_net_usd": 0.0,
+          "base_pf": null,
+          "base_pf_infinite": false,
+          "base_win_rate": null,
+          "base_max_drawdown_usd": 0.0,
+          "adverse_net_usd": 0.0,
+          "adverse_pf": null,
+          "adverse_pf_infinite": false,
+          "adverse_win_rate": null,
+          "adverse_max_drawdown_usd": 0.0
+        },
+        "202602": {
+          "trades": 0,
+          "exit_diagnostics_available": true,
+          "exit_reasons": {
+            "TARGET": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "STOP": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "EOD": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            }
+          },
+          "holding_minutes": {
+            "min": null,
+            "median": null,
+            "max": null
+          },
+          "base_net_usd": 0.0,
+          "base_pf": null,
+          "base_pf_infinite": false,
+          "base_win_rate": null,
+          "base_max_drawdown_usd": 0.0,
+          "adverse_net_usd": 0.0,
+          "adverse_pf": null,
+          "adverse_pf_infinite": false,
+          "adverse_win_rate": null,
+          "adverse_max_drawdown_usd": 0.0
+        },
+        "202603": {
+          "trades": 0,
+          "exit_diagnostics_available": true,
+          "exit_reasons": {
+            "TARGET": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "STOP": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "EOD": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            }
+          },
+          "holding_minutes": {
+            "min": null,
+            "median": null,
+            "max": null
+          },
+          "base_net_usd": 0.0,
+          "base_pf": null,
+          "base_pf_infinite": false,
+          "base_win_rate": null,
+          "base_max_drawdown_usd": 0.0,
+          "adverse_net_usd": 0.0,
+          "adverse_pf": null,
+          "adverse_pf_infinite": false,
+          "adverse_win_rate": null,
+          "adverse_max_drawdown_usd": 0.0
+        },
+        "202604": {
+          "trades": 0,
+          "exit_diagnostics_available": true,
+          "exit_reasons": {
+            "TARGET": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "STOP": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "EOD": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            }
+          },
+          "holding_minutes": {
+            "min": null,
+            "median": null,
+            "max": null
+          },
+          "base_net_usd": 0.0,
+          "base_pf": null,
+          "base_pf_infinite": false,
+          "base_win_rate": null,
+          "base_max_drawdown_usd": 0.0,
+          "adverse_net_usd": 0.0,
+          "adverse_pf": null,
+          "adverse_pf_infinite": false,
+          "adverse_win_rate": null,
+          "adverse_max_drawdown_usd": 0.0
+        },
+        "202605": {
+          "trades": 0,
+          "exit_diagnostics_available": true,
+          "exit_reasons": {
+            "TARGET": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "STOP": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "EOD": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            }
+          },
+          "holding_minutes": {
+            "min": null,
+            "median": null,
+            "max": null
+          },
+          "base_net_usd": 0.0,
+          "base_pf": null,
+          "base_pf_infinite": false,
+          "base_win_rate": null,
+          "base_max_drawdown_usd": 0.0,
+          "adverse_net_usd": 0.0,
+          "adverse_pf": null,
+          "adverse_pf_infinite": false,
+          "adverse_win_rate": null,
+          "adverse_max_drawdown_usd": 0.0
+        },
+        "202606": {
+          "trades": 0,
+          "exit_diagnostics_available": true,
+          "exit_reasons": {
+            "TARGET": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "STOP": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "EOD": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            }
+          },
+          "holding_minutes": {
+            "min": null,
+            "median": null,
+            "max": null
+          },
+          "base_net_usd": 0.0,
+          "base_pf": null,
+          "base_pf_infinite": false,
+          "base_win_rate": null,
+          "base_max_drawdown_usd": 0.0,
+          "adverse_net_usd": 0.0,
+          "adverse_pf": null,
+          "adverse_pf_infinite": false,
+          "adverse_win_rate": null,
+          "adverse_max_drawdown_usd": 0.0
+        }
+      },
+      "QQQ": {
+        "202601": {
+          "trades": 0,
+          "exit_diagnostics_available": true,
+          "exit_reasons": {
+            "TARGET": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "STOP": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "EOD": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            }
+          },
+          "holding_minutes": {
+            "min": null,
+            "median": null,
+            "max": null
+          },
+          "base_net_usd": 0.0,
+          "base_pf": null,
+          "base_pf_infinite": false,
+          "base_win_rate": null,
+          "base_max_drawdown_usd": 0.0,
+          "adverse_net_usd": 0.0,
+          "adverse_pf": null,
+          "adverse_pf_infinite": false,
+          "adverse_win_rate": null,
+          "adverse_max_drawdown_usd": 0.0
+        },
+        "202602": {
+          "trades": 0,
+          "exit_diagnostics_available": true,
+          "exit_reasons": {
+            "TARGET": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "STOP": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "EOD": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            }
+          },
+          "holding_minutes": {
+            "min": null,
+            "median": null,
+            "max": null
+          },
+          "base_net_usd": 0.0,
+          "base_pf": null,
+          "base_pf_infinite": false,
+          "base_win_rate": null,
+          "base_max_drawdown_usd": 0.0,
+          "adverse_net_usd": 0.0,
+          "adverse_pf": null,
+          "adverse_pf_infinite": false,
+          "adverse_win_rate": null,
+          "adverse_max_drawdown_usd": 0.0
+        },
+        "202603": {
+          "trades": 0,
+          "exit_diagnostics_available": true,
+          "exit_reasons": {
+            "TARGET": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "STOP": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "EOD": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            }
+          },
+          "holding_minutes": {
+            "min": null,
+            "median": null,
+            "max": null
+          },
+          "base_net_usd": 0.0,
+          "base_pf": null,
+          "base_pf_infinite": false,
+          "base_win_rate": null,
+          "base_max_drawdown_usd": 0.0,
+          "adverse_net_usd": 0.0,
+          "adverse_pf": null,
+          "adverse_pf_infinite": false,
+          "adverse_win_rate": null,
+          "adverse_max_drawdown_usd": 0.0
+        },
+        "202604": {
+          "trades": 0,
+          "exit_diagnostics_available": true,
+          "exit_reasons": {
+            "TARGET": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "STOP": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "EOD": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            }
+          },
+          "holding_minutes": {
+            "min": null,
+            "median": null,
+            "max": null
+          },
+          "base_net_usd": 0.0,
+          "base_pf": null,
+          "base_pf_infinite": false,
+          "base_win_rate": null,
+          "base_max_drawdown_usd": 0.0,
+          "adverse_net_usd": 0.0,
+          "adverse_pf": null,
+          "adverse_pf_infinite": false,
+          "adverse_win_rate": null,
+          "adverse_max_drawdown_usd": 0.0
+        },
+        "202605": {
+          "trades": 0,
+          "exit_diagnostics_available": true,
+          "exit_reasons": {
+            "TARGET": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "STOP": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "EOD": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            }
+          },
+          "holding_minutes": {
+            "min": null,
+            "median": null,
+            "max": null
+          },
+          "base_net_usd": 0.0,
+          "base_pf": null,
+          "base_pf_infinite": false,
+          "base_win_rate": null,
+          "base_max_drawdown_usd": 0.0,
+          "adverse_net_usd": 0.0,
+          "adverse_pf": null,
+          "adverse_pf_infinite": false,
+          "adverse_win_rate": null,
+          "adverse_max_drawdown_usd": 0.0
+        },
+        "202606": {
+          "trades": 0,
+          "exit_diagnostics_available": true,
+          "exit_reasons": {
+            "TARGET": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "STOP": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            },
+            "EOD": {
+              "trades": 0,
+              "base_net_usd": 0.0,
+              "adverse_net_usd": 0.0
+            }
+          },
+          "holding_minutes": {
+            "min": null,
+            "median": null,
+            "max": null
+          },
+          "base_net_usd": 0.0,
+          "base_pf": null,
+          "base_pf_infinite": false,
+          "base_win_rate": null,
+          "base_max_drawdown_usd": 0.0,
+          "adverse_net_usd": 0.0,
+          "adverse_pf": null,
+          "adverse_pf_infinite": false,
+          "adverse_win_rate": null,
+          "adverse_max_drawdown_usd": 0.0
+        }
+      }
+    }
+  },
+  "selected_cash_net_usd": null,
+  "provisional_gate": {
+    "passes": false,
+    "tickers": {
+      "SPXW": {
+        "passes": false,
+        "positive_months": 0,
+        "trades": 0,
+        "exit_diagnostics_available": true,
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 0,
+            "base_net_usd": 0.0,
+            "adverse_net_usd": 0.0
+          },
+          "STOP": {
+            "trades": 0,
+            "base_net_usd": 0.0,
+            "adverse_net_usd": 0.0
+          },
+          "EOD": {
+            "trades": 0,
+            "base_net_usd": 0.0,
+            "adverse_net_usd": 0.0
+          }
+        },
+        "holding_minutes": {
+          "min": null,
+          "median": null,
+          "max": null
+        },
+        "base_net_usd": 0.0,
+        "base_pf": null,
+        "base_pf_infinite": false,
+        "base_win_rate": null,
+        "base_max_drawdown_usd": 0.0,
+        "adverse_net_usd": 0.0,
+        "adverse_pf": null,
+        "adverse_pf_infinite": false,
+        "adverse_win_rate": null,
+        "adverse_max_drawdown_usd": 0.0
+      },
+      "SPY": {
+        "passes": false,
+        "positive_months": 0,
+        "trades": 0,
+        "exit_diagnostics_available": true,
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 0,
+            "base_net_usd": 0.0,
+            "adverse_net_usd": 0.0
+          },
+          "STOP": {
+            "trades": 0,
+            "base_net_usd": 0.0,
+            "adverse_net_usd": 0.0
+          },
+          "EOD": {
+            "trades": 0,
+            "base_net_usd": 0.0,
+            "adverse_net_usd": 0.0
+          }
+        },
+        "holding_minutes": {
+          "min": null,
+          "median": null,
+          "max": null
+        },
+        "base_net_usd": 0.0,
+        "base_pf": null,
+        "base_pf_infinite": false,
+        "base_win_rate": null,
+        "base_max_drawdown_usd": 0.0,
+        "adverse_net_usd": 0.0,
+        "adverse_pf": null,
+        "adverse_pf_infinite": false,
+        "adverse_win_rate": null,
+        "adverse_max_drawdown_usd": 0.0
+      },
+      "QQQ": {
+        "passes": false,
+        "positive_months": 0,
+        "trades": 0,
+        "exit_diagnostics_available": true,
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 0,
+            "base_net_usd": 0.0,
+            "adverse_net_usd": 0.0
+          },
+          "STOP": {
+            "trades": 0,
+            "base_net_usd": 0.0,
+            "adverse_net_usd": 0.0
+          },
+          "EOD": {
+            "trades": 0,
+            "base_net_usd": 0.0,
+            "adverse_net_usd": 0.0
+          }
+        },
+        "holding_minutes": {
+          "min": null,
+          "median": null,
+          "max": null
+        },
+        "base_net_usd": 0.0,
+        "base_pf": null,
+        "base_pf_infinite": false,
+        "base_win_rate": null,
+        "base_max_drawdown_usd": 0.0,
+        "adverse_net_usd": 0.0,
+        "adverse_pf": null,
+        "adverse_pf_infinite": false,
+        "adverse_win_rate": null,
+        "adverse_max_drawdown_usd": 0.0
+      }
+    }
+  },
+  "validation_choices": [
+    {
+      "policy": "CASH",
+      "model": null,
+      "threshold": null,
+      "selection_score": 0.0
+    },
+    {
+      "policy": "gbt_net__0",
+      "model": "gbt_net",
+      "threshold": 0.0,
+      "selection_score": -255.38900970489195
+    },
+    {
+      "policy": "gbt_net__5",
+      "model": "gbt_net",
+      "threshold": 5.0,
+      "selection_score": -247.41803624480087
+    },
+    {
+      "policy": "gbt_net__10",
+      "model": "gbt_net",
+      "threshold": 10.0,
+      "selection_score": -204.2830402059813
+    },
+    {
+      "policy": "gbt_advantage__0",
+      "model": "gbt_advantage",
+      "threshold": 0.0,
+      "selection_score": -0.45383277216610574
+    },
+    {
+      "policy": "gbt_advantage__5",
+      "model": "gbt_advantage",
+      "threshold": 5.0,
+      "selection_score": -0.09454545454545446
+    },
+    {
+      "policy": "gbt_advantage__10",
+      "model": "gbt_advantage",
+      "threshold": 10.0,
+      "selection_score": 0.06000000000000008
+    },
+    {
+      "policy": "tcn_teacher__0",
+      "model": "tcn_teacher",
+      "threshold": 0.0,
+      "selection_score": -9.753366013071892
+    },
+    {
+      "policy": "tcn_teacher__5",
+      "model": "tcn_teacher",
+      "threshold": 5.0,
+      "selection_score": -5.964769921436589
+    },
+    {
+      "policy": "tcn_teacher__10",
+      "model": "tcn_teacher",
+      "threshold": 10.0,
+      "selection_score": -1.9173443586188685
+    }
+  ],
+  "risk_scales_usd": {
+    "SPXW": 680.0,
+    "SPY": 81.0,
+    "QQQ": 88.0
+  },
+  "seconds": 1941.6956866999972,
+  "test_candidate_results_are_diagnostic_not_selection": true,
+  "drawdown_convention": "realized trade net in exit-time order; not intratrade mark-to-market",
+  "untouched_outer": false,
+  "technical_ready": false,
+  "promotion_approved": false
+}

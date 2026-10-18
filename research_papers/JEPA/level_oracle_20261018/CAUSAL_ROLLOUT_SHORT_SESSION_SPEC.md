@@ -1,0 +1,31 @@
+# Inference-only completion of the 2025 session calendar
+
+Method fixed at 2026-10-18 20:20:55 UTC, after the original causal-rollout results were known. This is a calendar-completeness extension, not an unseen validation set or a new policy selection. Original run outputs remain immutable. Implementation and synthetic review precede evaluation of the nine short ticker-sessions. Execution additionally requires the original economic auditor to have passed.
+
+## Fixed population and policy
+
+Evaluate exactly SPXW, SPY and QQQ on 2025-07-03, 2025-11-28 and 2025-12-24. The audited XNYS calendar and SessionClock dataset must identify each as COMPLETE with close_i=210. The first decision remains60, last decision195 and final forced exit205. There is no default390 fallback. Only these nine new days are scored. The original741 full ticker-days are reused from their sealed ledgers and calendars to produce a separate750-day report.
+
+Reuse both original final models, original H1 risk scales, all six predeclared model/threshold combinations, and the already selected `causal_residual__5`. Model hashes are net-control `12b8d5a00d06bb482fc6de66263e8c270929d0d276e226a9889e283a801a09ef` and residual `9fe6a42d2a04459b5eff4b018518a224865b58f2af89ca5903b6e77651303117`; original run-contract SHA is `66ef48eca5aadca70726b1c66997c93dd513ebf7a32283e07e26fc7e3c129a9d`. Selection freeze SHA is `a5cda27adeade05f4e8f9577b8fd0e8483eb37690f812342a573b5cab849b6af`. No retraining, threshold search, selection refresh, new penalty or model correction is allowed. The15 short ticker-days in2023–2024 were not included in the existing fits and remain excluded from training.
+
+## Inputs and temporal behavior
+
+Use the independently audited `session_clock_dataset_v1` action, feature and label sidecars. Admission checks its index, contract, completion and feature contract against `PASS_INDEPENDENT_SESSION_CLOCK_DATASET_AUDIT`. The monthly runner's read-only Sources/Features adapters can be reused with their exact source hashes; no monthly fit or selection function is called. They verify the exact1954-column causal feature mapping and per-day cache provenance. Append only the observed daily has_filled_today bit, giving1955 inputs. Fixed time scaling by390 from the original feature definition is preserved; the short session's termination remains explicit.
+
+For each day, compute and seal both model score columns for all actions before reading its labels. Scores use the existing models and scales. Freeze choices from action identities, state clocks and scores only. Start h=0; after a FILLED outcome seth=1 even for zero or negative PnL, and advance to exit_i+1. NO_FILL keeps h and advances one minute; do not replace it with another action in the same minute. WAIT is implicit at score<=threshold. Stable ties use lower action_id. No action after195 and no filled exit after205 is accepted; NO_FILL has exit_i=state_i+1, filled exits require>=state_i+2. No terminal training penalty is added to economic ledgers.
+
+The original flag scheduler hardcodes375 and validates full-session exits385; therefore it must not be called unchanged for these days. The isolated extension implements the same scheduler with a required SessionClock argument, using the existing pure freeze_choices(first=60,last=195). A full-session synthetic parity fixture compares it against the original scheduler. Production training and evaluation files are not edited.
+
+## Output and evidence
+
+Output is a separate `causal_rollout_short_sessions_v1` directory. Retain model/scales/freeze/source-audit/dependency hashes in its run contract, with one OS process lock and durable atomic files. Per-day predictions must precede outcomes and have completion markers; resume verifies all identities, model hashes and source hashes without rescore of completed predictions. Incomplete artifacts fail closed and are preserved. Complete dependency/source rechecks precede the final marker.
+
+The final `completion.json` has status `CAUSAL_ROLLOUT_SHORT_SESSIONS_COMPLETE` and the run-contract binding. Its `completion.complete.json` binds the exact73 files: run contract; summary/source-hash JSONs and markers; two calendar parquets and markers; nine prediction NPZs and markers; nine daily attempts/ledger parquets and markers; nine feature-input manifests and markers; and completion.json itself. Every internal member and every external source manifest entry is rehashed before and after publication. Resume verifies this complete closure before skipping prediction work; a changed prediction NPZ, marker or external source fails closed.
+
+Report the nine new days independently and the union of741 full+9short=750 unique ticker-days, for all six fixed policies. For the union, reuse the original attempts/ledgers after verifying their completion markers and membership in the completed independent audit; do not recompute or replace original predictions. Recompute aggregate sums, PF, win rate, drawdown, monthly totals, zero-fill days and per-ticker economic gates from the concatenated chronological ledgers. Daily counts and old-day net totals must agree with the original sealed741-day calendar. No missing or zero-fill day is dropped. Report selected policy5 prominently; diagnostic policies never replace it. The combined report has `selection_recomputed=false` and retains the original selection hash.
+
+This extension cannot rescue the already negative original experiment. It quantifies compliance with the requested all-trading-days activity criterion in2025, without a guarantee about future fills or profitability. January–June2026 has no early-close session; its existing369expected/363observable ticker-day result and six missing sources remain unchanged.
+
+## Required synthetic checks and review
+
+Fixtures cover explicit short horizon, rejection of state196/exit206, filled state195 ending205, full-session parity, h transitions after loss and NO_FILL, no same-minute substitution, stable score ties, empty-action days, correct750-day union and duplicate/missing rejection, unchanged selection, original-model/freeze corruption rejection, predictions-before-labels, and completed-day resume without prediction. Independent implementation review must bind this spec, script, fixtures and all imported scientific dependency hashes before the new evaluator can execute.

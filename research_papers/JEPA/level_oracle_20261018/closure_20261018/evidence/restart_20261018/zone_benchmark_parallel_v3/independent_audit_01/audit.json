@@ -1,0 +1,61 @@
+{
+  "status": "PASS_INDEPENDENT_EXPLORATORY_BENCHMARK_AUDIT",
+  "source_files_rehashed": 1488,
+  "source_hash_mismatch": 0,
+  "accounting_rows": 14880,
+  "ledger_rows": 2676,
+  "unique_selected_test_contracts_raw_checked": 793,
+  "model_refits": [
+    {
+      "arm": "price",
+      "side": "CALL",
+      "train_rows": 3720,
+      "prediction_rows": 7440,
+      "exact": true
+    },
+    {
+      "arm": "price",
+      "side": "PUT",
+      "train_rows": 3720,
+      "prediction_rows": 7440,
+      "exact": true
+    },
+    {
+      "arm": "authentic",
+      "side": "CALL",
+      "train_rows": 3720,
+      "prediction_rows": 7440,
+      "exact": true
+    },
+    {
+      "arm": "authentic",
+      "side": "PUT",
+      "train_rows": 3720,
+      "prediction_rows": 7440,
+      "exact": true
+    },
+    {
+      "arm": "placebo",
+      "side": "CALL",
+      "train_rows": 3720,
+      "prediction_rows": 7440,
+      "exact": true
+    },
+    {
+      "arm": "placebo",
+      "side": "PUT",
+      "train_rows": 3720,
+      "prediction_rows": 7440,
+      "exact": true
+    }
+  ],
+  "calendar_days": 62,
+  "bootstrap_comparisons_rebuilt": 2,
+  "summary_sha256": "8131c315ebbcfbfde6e7853f7cfd1f174ff5c781c7ca581a147da4a9c8bcf863",
+  "audit_script_sha256": "e9230ac084727de6cb086a15e499bbc2fc23af2f01e3453c5d58664f7bcfa128",
+  "untouched_outer": false,
+  "live_parity_verified": false,
+  "original_receipt_times_verified": false,
+  "full_raw_feature_reconstruction": false,
+  "audit_finished_utc": "2026-10-18T15:24:43.309280+00:00"
+}

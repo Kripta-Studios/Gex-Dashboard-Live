@@ -1,0 +1,434 @@
+{
+  "static": {
+    "overall": {
+      "trades": 280,
+      "net_base": -8853.999999999998,
+      "net_base_pf": 0.7426087967673483,
+      "net_base_pf_infinite": false,
+      "net_base_win_rate": 0.21428571428571427,
+      "net_base_max_drawdown": 15437.600000000042,
+      "net_adverse": -9412.999999999993,
+      "net_adverse_pf": 0.7298313490924543,
+      "net_adverse_pf_infinite": false,
+      "net_adverse_win_rate": 0.20714285714285716,
+      "net_adverse_max_drawdown": 15868.600000000035,
+      "holding_minutes": {
+        "min": 1.0,
+        "median": 15.0,
+        "max": 323.0
+      },
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 46,
+          "net_base": 18528.40000000001,
+          "net_adverse": 18436.40000000001
+        },
+        "STOP": {
+          "trades": 204,
+          "net_base": -31937.4,
+          "net_adverse": -32344.399999999998
+        },
+        "EOD": {
+          "trades": 30,
+          "net_base": 4554.999999999997,
+          "net_adverse": 4495.0
+        }
+      }
+    },
+    "tickers": {
+      "SPXW": {
+        "trades": 117,
+        "net_base": -6288.200000000003,
+        "net_base_pf": 0.7834283903675544,
+        "net_base_pf_infinite": false,
+        "net_base_win_rate": 0.2564102564102564,
+        "net_base_max_drawdown": 13557.80000000001,
+        "net_adverse": -6522.199999999997,
+        "net_adverse_pf": 0.7767073387836715,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_win_rate": 0.2564102564102564,
+        "net_adverse_max_drawdown": 13743.800000000003,
+        "holding_minutes": {
+          "min": 1.0,
+          "median": 14.0,
+          "max": 311.0
+        },
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 23,
+            "net_base": 16354.199999999997,
+            "net_adverse": 16308.199999999997
+          },
+          "STOP": {
+            "trades": 83,
+            "net_base": -26946.799999999996,
+            "net_adverse": -27112.799999999992
+          },
+          "EOD": {
+            "trades": 11,
+            "net_base": 4304.4,
+            "net_adverse": 4282.4000000000015
+          }
+        }
+      },
+      "SPY": {
+        "trades": 85,
+        "net_base": -919.9999999999998,
+        "net_base_pf": 0.6402033633163867,
+        "net_base_pf_infinite": false,
+        "net_base_win_rate": 0.17647058823529413,
+        "net_base_max_drawdown": 1244.9999999999986,
+        "net_adverse": -1089.0,
+        "net_adverse_pf": 0.5960682492581605,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_win_rate": 0.17647058823529413,
+        "net_adverse_max_drawdown": 1403.9999999999975,
+        "holding_minutes": {
+          "min": 1.0,
+          "median": 15.0,
+          "max": 323.0
+        },
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 15,
+            "net_base": 1223.0000000000002,
+            "net_adverse": 1193.0
+          },
+          "STOP": {
+            "trades": 60,
+            "net_base": -2352.0,
+            "net_adverse": -2471.0
+          },
+          "EOD": {
+            "trades": 10,
+            "net_base": 209.00000000000003,
+            "net_adverse": 188.99999999999997
+          }
+        }
+      },
+      "QQQ": {
+        "trades": 78,
+        "net_base": -1645.7999999999993,
+        "net_base_pf": 0.4136383069687902,
+        "net_base_pf_infinite": false,
+        "net_base_win_rate": 0.19230769230769232,
+        "net_base_max_drawdown": 1991.5999999999972,
+        "net_adverse": -1801.7999999999997,
+        "net_adverse_pf": 0.3863079019073569,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_win_rate": 0.16666666666666666,
+        "net_adverse_max_drawdown": 2145.1999999999966,
+        "holding_minutes": {
+          "min": 1.0,
+          "median": 19.5,
+          "max": 321.0
+        },
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 8,
+            "net_base": 951.2000000000002,
+            "net_adverse": 935.2
+          },
+          "STOP": {
+            "trades": 61,
+            "net_base": -2638.6,
+            "net_adverse": -2760.6
+          },
+          "EOD": {
+            "trades": 9,
+            "net_base": 41.600000000000065,
+            "net_adverse": 23.60000000000001
+          }
+        }
+      }
+    }
+  },
+  "expanding": {
+    "overall": {
+      "trades": 280,
+      "net_base": -8853.999999999998,
+      "net_base_pf": 0.7426087967673483,
+      "net_base_pf_infinite": false,
+      "net_base_win_rate": 0.21428571428571427,
+      "net_base_max_drawdown": 15437.600000000042,
+      "net_adverse": -9412.999999999993,
+      "net_adverse_pf": 0.7298313490924543,
+      "net_adverse_pf_infinite": false,
+      "net_adverse_win_rate": 0.20714285714285716,
+      "net_adverse_max_drawdown": 15868.600000000035,
+      "holding_minutes": {
+        "min": 1.0,
+        "median": 15.0,
+        "max": 323.0
+      },
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 46,
+          "net_base": 18528.40000000001,
+          "net_adverse": 18436.40000000001
+        },
+        "STOP": {
+          "trades": 204,
+          "net_base": -31937.4,
+          "net_adverse": -32344.399999999998
+        },
+        "EOD": {
+          "trades": 30,
+          "net_base": 4554.999999999997,
+          "net_adverse": 4495.0
+        }
+      }
+    },
+    "tickers": {
+      "SPXW": {
+        "trades": 117,
+        "net_base": -6288.200000000003,
+        "net_base_pf": 0.7834283903675544,
+        "net_base_pf_infinite": false,
+        "net_base_win_rate": 0.2564102564102564,
+        "net_base_max_drawdown": 13557.80000000001,
+        "net_adverse": -6522.199999999997,
+        "net_adverse_pf": 0.7767073387836715,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_win_rate": 0.2564102564102564,
+        "net_adverse_max_drawdown": 13743.800000000003,
+        "holding_minutes": {
+          "min": 1.0,
+          "median": 14.0,
+          "max": 311.0
+        },
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 23,
+            "net_base": 16354.199999999997,
+            "net_adverse": 16308.199999999997
+          },
+          "STOP": {
+            "trades": 83,
+            "net_base": -26946.799999999996,
+            "net_adverse": -27112.799999999992
+          },
+          "EOD": {
+            "trades": 11,
+            "net_base": 4304.4,
+            "net_adverse": 4282.4000000000015
+          }
+        }
+      },
+      "SPY": {
+        "trades": 85,
+        "net_base": -919.9999999999998,
+        "net_base_pf": 0.6402033633163867,
+        "net_base_pf_infinite": false,
+        "net_base_win_rate": 0.17647058823529413,
+        "net_base_max_drawdown": 1244.9999999999986,
+        "net_adverse": -1089.0,
+        "net_adverse_pf": 0.5960682492581605,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_win_rate": 0.17647058823529413,
+        "net_adverse_max_drawdown": 1403.9999999999975,
+        "holding_minutes": {
+          "min": 1.0,
+          "median": 15.0,
+          "max": 323.0
+        },
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 15,
+            "net_base": 1223.0000000000002,
+            "net_adverse": 1193.0
+          },
+          "STOP": {
+            "trades": 60,
+            "net_base": -2352.0,
+            "net_adverse": -2471.0
+          },
+          "EOD": {
+            "trades": 10,
+            "net_base": 209.00000000000003,
+            "net_adverse": 188.99999999999997
+          }
+        }
+      },
+      "QQQ": {
+        "trades": 78,
+        "net_base": -1645.7999999999993,
+        "net_base_pf": 0.4136383069687902,
+        "net_base_pf_infinite": false,
+        "net_base_win_rate": 0.19230769230769232,
+        "net_base_max_drawdown": 1991.5999999999972,
+        "net_adverse": -1801.7999999999997,
+        "net_adverse_pf": 0.3863079019073569,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_win_rate": 0.16666666666666666,
+        "net_adverse_max_drawdown": 2145.1999999999966,
+        "holding_minutes": {
+          "min": 1.0,
+          "median": 19.5,
+          "max": 321.0
+        },
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 8,
+            "net_base": 951.2000000000002,
+            "net_adverse": 935.2
+          },
+          "STOP": {
+            "trades": 61,
+            "net_base": -2638.6,
+            "net_adverse": -2760.6
+          },
+          "EOD": {
+            "trades": 9,
+            "net_base": 41.600000000000065,
+            "net_adverse": 23.60000000000001
+          }
+        }
+      }
+    }
+  },
+  "rolling12": {
+    "overall": {
+      "trades": 316,
+      "net_base": -14698.6,
+      "net_base_pf": 0.5604249032543619,
+      "net_base_pf_infinite": false,
+      "net_base_win_rate": 0.17088607594936708,
+      "net_base_max_drawdown": 19758.399999999932,
+      "net_adverse": -15329.599999999999,
+      "net_adverse_pf": 0.5486355659721815,
+      "net_adverse_pf_infinite": false,
+      "net_adverse_win_rate": 0.16772151898734178,
+      "net_adverse_max_drawdown": 20215.39999999993,
+      "holding_minutes": {
+        "min": 1.0,
+        "median": 14.0,
+        "max": 324.0
+      },
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 45,
+          "net_base": 13159.0,
+          "net_adverse": 13068.999999999998
+        },
+        "STOP": {
+          "trades": 235,
+          "net_base": -30385.0,
+          "net_adverse": -30855.0
+        },
+        "EOD": {
+          "trades": 36,
+          "net_base": 2527.4000000000005,
+          "net_adverse": 2456.4000000000005
+        }
+      }
+    },
+    "tickers": {
+      "SPXW": {
+        "trades": 104,
+        "net_base": -11213.399999999996,
+        "net_base_pf": 0.5859249795056242,
+        "net_base_pf_infinite": false,
+        "net_base_win_rate": 0.17307692307692307,
+        "net_base_max_drawdown": 16569.600000000013,
+        "net_adverse": -11421.399999999996,
+        "net_adverse_pf": 0.580906041992324,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_win_rate": 0.17307692307692307,
+        "net_adverse_max_drawdown": 16721.60000000001,
+        "holding_minutes": {
+          "min": 1.0,
+          "median": 14.0,
+          "max": 320.0
+        },
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 16,
+            "net_base": 11576.399999999998,
+            "net_adverse": 11544.400000000001
+          },
+          "STOP": {
+            "trades": 79,
+            "net_base": -24803.399999999987,
+            "net_adverse": -24961.399999999987
+          },
+          "EOD": {
+            "trades": 9,
+            "net_base": 2013.6000000000008,
+            "net_adverse": 1995.6000000000004
+          }
+        }
+      },
+      "SPY": {
+        "trades": 111,
+        "net_base": -1019.5999999999995,
+        "net_base_pf": 0.6471239703744724,
+        "net_base_pf_infinite": false,
+        "net_base_win_rate": 0.1981981981981982,
+        "net_base_max_drawdown": 1527.599999999999,
+        "net_adverse": -1241.5999999999995,
+        "net_adverse_pf": 0.5952272282715004,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_win_rate": 0.1981981981981982,
+        "net_adverse_max_drawdown": 1729.5999999999985,
+        "holding_minutes": {
+          "min": 1.0,
+          "median": 11.0,
+          "max": 324.0
+        },
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 19,
+            "net_base": 1037.6000000000004,
+            "net_adverse": 999.6000000000001
+          },
+          "STOP": {
+            "trades": 79,
+            "net_base": -2451.399999999999,
+            "net_adverse": -2609.399999999999
+          },
+          "EOD": {
+            "trades": 13,
+            "net_base": 394.19999999999993,
+            "net_adverse": 368.19999999999993
+          }
+        }
+      },
+      "QQQ": {
+        "trades": 101,
+        "net_base": -2465.6,
+        "net_base_pf": 0.2890836745285739,
+        "net_base_pf_infinite": false,
+        "net_base_win_rate": 0.13861386138613863,
+        "net_base_max_drawdown": 2465.9999999999945,
+        "net_adverse": -2666.6,
+        "net_adverse_pf": 0.2679806742066541,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_win_rate": 0.12871287128712872,
+        "net_adverse_max_drawdown": 2666.5999999999945,
+        "holding_minutes": {
+          "min": 1.0,
+          "median": 19.0,
+          "max": 324.0
+        },
+        "exit_reasons": {
+          "TARGET": {
+            "trades": 10,
+            "net_base": 545.0,
+            "net_adverse": 525.0
+          },
+          "STOP": {
+            "trades": 77,
+            "net_base": -3130.2000000000003,
+            "net_adverse": -3284.2000000000003
+          },
+          "EOD": {
+            "trades": 14,
+            "net_base": 119.59999999999997,
+            "net_adverse": 92.59999999999995
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "status": "PASS_CAUSAL_ROLLOUT_SHORT_SESSION_REVIEW",
+  "dependencies": {
+    "CAUSAL_ROLLOUT_SHORT_SESSION_SPEC.md": "0e34f0b54139f248313e98c2969f1ef8a65f1f080ab252b1ace5ab263c445cba",
+    "MONTHLY_WALK_FORWARD_PLAN.md": "71ccd29587be4012dad9fe3ada4ad29ff7b93b94ea08340343ebe39d287c97ae",
+    "build_cache.py": "985e87dcbd1e73289b58e4576445e47e73a6edea13e5ac73dde3ad629180d69f",
+    "causal_rollout.py": "8df92119071442045a8434057e220bad567668d8ee314fddd263d052ebeea0d9",
+    "evaluate_causal_rollout_short_sessions.py": "c1e8e3921f0bd955498aeaf85d367a78f5f14ef3d055cdf2df5cb411cf2cf1bc",
+    "features.py": "b5c63f918319f844793abb3346a34515526073374f5e71af2129a94f2369d4e0",
+    "level_engine.py": "70cc5d20990d971d16299fd008ff8e05ac99f99a6a2917a202fcb9a5f413b7c6",
+    "monthly_policy_selection.py": "1fe43fa92fe0441be35bc67c9a2a60ce2829edaf9ea80f5fa0a5c8967a599da0",
+    "rolling_monthly_schedule.py": "92df2e68734d24a61b4ddccec1f9451a5e25c862f5a1b581ae779c163fcf205a",
+    "rollout_sampling.py": "8bc8cee2b89cf70490793b88d74dff558bbd60077d383a852392fcc2383c748c",
+    "run_monthly_walk_forward.py": "47a4df8b019d9d297ca1ee9b89fff63406409659336dbd7b0e4d7af01ed348bb",
+    "session_clock.py": "1e63cf2d314caea14dd8b0b8f025f647d67bf8df58f246613975891a256f51e9",
+    "test_evaluate_causal_rollout_short_sessions.py": "0f5298925a990059ca2c674dbce4545be8427d4cc9312ad6547c2bd9274e32c2",
+    "train_causal_rollout.py": "d031eca08c71ad89324619e096dcc9be3966ddea23d52061019018ff6ff58a43",
+    "train_models.py": "a5192737abd1c0b3e4a6a6cd391117d97a014c06b6cd528201ba1f5df0ef6808"
+  },
+  "reviewed_contract": {
+    "added_ticker_days": 9,
+    "combined_2025_ticker_days": 750,
+    "session_close_i": 210,
+    "last_state_i": 195,
+    "eod_i": 205,
+    "selected_policy_unchanged": "causal_residual__5",
+    "selection_recomputed": false,
+    "model_refit": false,
+    "global_closure_members": 73
+  },
+  "resolved_findings": [
+    "The initial implementation lacked a global completion checkpoint. The reviewed version binds and rehashes the run contract, every prediction, feature-input, daily and calendar checkpoint, summary, source manifest and all external sources; synthetic resume checks reject output, marker and source mutations."
+  ],
+  "economic_results_opened": false,
+  "promotion_approved": false
+}

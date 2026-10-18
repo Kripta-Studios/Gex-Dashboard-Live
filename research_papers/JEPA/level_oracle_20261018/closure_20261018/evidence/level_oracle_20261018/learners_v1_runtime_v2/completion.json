@@ -1,0 +1,73 @@
+{
+  "status": "COMPLETE",
+  "exit_code": 0,
+  "finished_utc": "2026-10-18T17:47:37.062033+00:00",
+  "wall_seconds": 1962.6986654000357,
+  "peak_private_bytes": 6441771008,
+  "peak_rss_bytes": 7861575680,
+  "stages": [
+    {
+      "stage": "IMPORT_AND_PREFLIGHT",
+      "wall_seconds": 11.414267799991649
+    },
+    {
+      "stage": "training_sample",
+      "wall_seconds": 119.58844000002136
+    },
+    {
+      "stage": "training_matrix_start",
+      "wall_seconds": 161.5381434999872
+    },
+    {
+      "stage": "gbt_fits_start",
+      "wall_seconds": 277.3625066000386
+    },
+    {
+      "stage": "model_fit:gbt_net",
+      "wall_seconds": 159.85596509999596
+    },
+    {
+      "stage": "model_fit:gbt_advantage",
+      "wall_seconds": 0.28467309998814017
+    },
+    {
+      "stage": "tcn_fit_start",
+      "wall_seconds": 163.89521769998828
+    },
+    {
+      "stage": "neural_epoch",
+      "wall_seconds": 576.2376737000304
+    },
+    {
+      "stage": "validation",
+      "wall_seconds": 285.8023281999631
+    },
+    {
+      "stage": "test",
+      "wall_seconds": 206.71940579998773
+    }
+  ],
+  "stage_peak_private_bytes": {
+    "IMPORT_AND_PREFLIGHT": 1003474944,
+    "training_sample": 1116844032,
+    "training_matrix_start": 1316012032,
+    "gbt_fits_start": 6254821376,
+    "model_fit:gbt_net": 6441771008,
+    "tcn_fit_start": 3179085824,
+    "neural_epoch": 3191484416,
+    "validation": 3365433344,
+    "test": 3402866688
+  },
+  "sources": {
+    "launch_learners.py": "2bb8051fe3509e5873d6f0bb2aadb0d1a31d00796b9a098f715ff1994721a232",
+    "train_models.py": "a5192737abd1c0b3e4a6a6cd391117d97a014c06b6cd528201ba1f5df0ef6808",
+    "run_policy.py": "4455d31fa2fd69db289b35b77aab62a344607fe3dc1b86918cbd3ec5c7cf98d9",
+    "LEARNER_PLAN.md": "237315e686c09bd9fa205e21e0f98e54f13abcdd24c53309db8662649aa52645",
+    "features.py": "b5c63f918319f844793abb3346a34515526073374f5e71af2129a94f2369d4e0",
+    "build_cache.py": "985e87dcbd1e73289b58e4576445e47e73a6edea13e5ac73dde3ad629180d69f",
+    "level_engine.py": "70cc5d20990d971d16299fd008ff8e05ac99f99a6a2917a202fcb9a5f413b7c6",
+    "run_engine_dataset.py": "74bf04a02ac1d978bdbfc93cf8a93dcea890751b3596a99f75f456973206384e",
+    "PROTOCOL.md": "c1b2551ec9ba84c2fe1fb20fe3ca86863ef7cca28e34bd36916991c7bf33d0ab"
+  },
+  "final_sources_match": true
+}

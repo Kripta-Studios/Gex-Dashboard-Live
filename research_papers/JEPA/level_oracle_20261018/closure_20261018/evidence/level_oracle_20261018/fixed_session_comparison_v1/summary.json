@@ -1,0 +1,17 @@
+{
+  "status": "COMPLETE_FIXED_SESSION_ILLUSTRATION",
+  "ticker": "SPY",
+  "date": "20250102",
+  "selection": "First validation session; SPY fixed before reading ledger",
+  "sources": {
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\cache_v1\\SPY\\20250102.npz": "7015deac7a5d988a90727f13db2b10bf367175c406f95c5cfc28f661411bcfeb",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\engine_v1\\SPY\\20250102\\levels.parquet": "1d75723b501c9e88fe7e44b7b89f8b2d736220b8cc5d7d7eee0e329d55676e12",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\engine_v1\\SPY\\20250102\\oracle_ledger.parquet": "d2fad2cb01892a8edc8fd3e805b5868af5b6f254c0050bb6f934a18fe26b534b",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\episode_learners_v1\\validation\\gbt_net__0_ledger.parquet": "a5cd74d789c61ba8d98ef794087a501121a87ac5a002ad6cf73790b7baed87df"
+  },
+  "oracle_trades": 14,
+  "oracle_net": 1638.6000000000008,
+  "model_trades": 10,
+  "model_net": -276.0,
+  "code_sha256": "9a2b64f890504aaa783c07b96d066103cdad52700dd879695bb3a1b2b132bb2f"
+}

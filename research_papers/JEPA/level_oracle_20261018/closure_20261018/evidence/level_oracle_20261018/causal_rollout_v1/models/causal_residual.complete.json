@@ -1,0 +1,28 @@
+{
+  "status": "COMPLETE",
+  "binding": "66ef48eca5aadca70726b1c66997c93dd513ebf7a32283e07e26fc7e3c129a9d",
+  "files": {
+    "models\\causal_residual.txt": "9fe6a42d2a04459b5eff4b018518a224865b58f2af89ca5903b6e77651303117",
+    "models\\causal_residual.fit_started.json": "612b169f2189c5198fefa1e8b296e11446d847fab31757de282986a0f76ec253"
+  },
+  "extra": {
+    "config": {
+      "objective": "regression",
+      "n_estimators": 200,
+      "num_leaves": 31,
+      "max_depth": 6,
+      "min_child_samples": 100,
+      "learning_rate": 0.04,
+      "reg_lambda": 10.0,
+      "max_bin": 63,
+      "random_state": 20261018,
+      "n_jobs": 4,
+      "deterministic": true,
+      "force_col_wise": true,
+      "verbosity": -1
+    },
+    "columns": 1955,
+    "rows": 285286
+  },
+  "completed_utc": "2026-10-18T20:04:04.731386+00:00"
+}

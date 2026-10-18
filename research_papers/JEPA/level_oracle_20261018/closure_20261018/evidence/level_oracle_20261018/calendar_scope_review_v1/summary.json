@@ -1,0 +1,3775 @@
+{
+  "status": "CALENDAR_SCOPE_METADATA_REVIEW_COMPLETE",
+  "calendar_sha256": "70caddcff8cde0e03c6819f03b7d2eebc8da4b30c9ace24d37a7738b856e4318",
+  "engine_index_sha256": "8d0c6e27bdaf7d47ef2a9888505294b8f3186da3a6927e780ce9e517e660e8e5",
+  "code_sha256": "b8f3d35f12b18170cce14637ed7afca438ec09df7333986499106e74b1473cc7",
+  "calendar_library": "4.12",
+  "installed_calendar_matches_frozen": true,
+  "all_sessions": 875,
+  "full_sessions": 867,
+  "short_sessions": 8,
+  "all_ticker_days": 2625,
+  "full_ticker_days": 2601,
+  "full_available": 2595,
+  "full_missing": 6,
+  "planned_short_excluded_ticker_days": 24,
+  "short_dates": [
+    "20230703",
+    "20231124",
+    "20240703",
+    "20241129",
+    "20241224",
+    "20250703",
+    "20251128",
+    "20251224"
+  ],
+  "by_year": [
+    {
+      "year": "2023",
+      "all_sessions": 250,
+      "full_sessions": 248,
+      "short_sessions": 2,
+      "expected_all_ticker_days": 750,
+      "planned_short_exclusions": 6
+    },
+    {
+      "year": "2024",
+      "all_sessions": 252,
+      "full_sessions": 249,
+      "short_sessions": 3,
+      "expected_all_ticker_days": 756,
+      "planned_short_exclusions": 9
+    },
+    {
+      "year": "2025",
+      "all_sessions": 250,
+      "full_sessions": 247,
+      "short_sessions": 3,
+      "expected_all_ticker_days": 750,
+      "planned_short_exclusions": 9
+    },
+    {
+      "year": "2026",
+      "all_sessions": 123,
+      "full_sessions": 123,
+      "short_sessions": 0,
+      "expected_all_ticker_days": 369,
+      "planned_short_exclusions": 0
+    }
+  ],
+  "source_files_expected": 48,
+  "source_files_present": 48,
+  "sources": [
+    {
+      "ticker": "QQQ",
+      "date": "20230703",
+      "family": "greeks",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2023\\07\\QQQ_20230703_20230703_greeks.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 1211408,
+      "mtime_ns": 1771874927197868300,
+      "rows": 89930,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "underlying_price",
+          "double"
+        ],
+        [
+          "delta",
+          "double"
+        ],
+        [
+          "implied_vol",
+          "double"
+        ],
+        [
+          "theta",
+          "double"
+        ],
+        [
+          "iv_error",
+          "double"
+        ],
+        [
+          "epsilon",
+          "double"
+        ],
+        [
+          "lambda",
+          "double"
+        ],
+        [
+          "ask",
+          "double"
+        ],
+        [
+          "rho",
+          "double"
+        ],
+        [
+          "bid",
+          "double"
+        ],
+        [
+          "underlying_timestamp",
+          "large_string"
+        ],
+        [
+          "vega",
+          "double"
+        ],
+        [
+          "timestamp",
+          "large_string"
+        ]
+      ],
+      "schema_sha256": "8f6e2cf200baaa25a6ed4daebb13e9a075905d712a1affcebd1dcada623c2477",
+      "has_quote_timestamp": true,
+      "has_underlying_timestamp": true,
+      "has_underlying_price": true,
+      "has_bid_ask": true,
+      "has_delta_iv": true,
+      "has_oi": false
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20230703",
+      "family": "oi",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\oi\\2023\\07\\QQQ_20230703_20230703_oi.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 6986,
+      "mtime_ns": 1771874930633964300,
+      "rows": 226,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "open_interest",
+          "int64"
+        ],
+        [
+          "timestamp",
+          "large_string"
+        ]
+      ],
+      "schema_sha256": "1f9370b89126251a6461f491e277519405ad10de0f6e284609dadf0894ae999e",
+      "has_quote_timestamp": true,
+      "has_underlying_timestamp": false,
+      "has_underlying_price": false,
+      "has_bid_ask": false,
+      "has_delta_iv": false,
+      "has_oi": true
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20231124",
+      "family": "greeks",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2023\\11\\QQQ_20231124_20231124_greeks.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 1401843,
+      "mtime_ns": 1771888586065185100,
+      "rows": 119646,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "underlying_price",
+          "double"
+        ],
+        [
+          "delta",
+          "double"
+        ],
+        [
+          "implied_vol",
+          "double"
+        ],
+        [
+          "theta",
+          "double"
+        ],
+        [
+          "iv_error",
+          "double"
+        ],
+        [
+          "epsilon",
+          "double"
+        ],
+        [
+          "lambda",
+          "double"
+        ],
+        [
+          "ask",
+          "double"
+        ],
+        [
+          "rho",
+          "double"
+        ],
+        [
+          "bid",
+          "double"
+        ],
+        [
+          "underlying_timestamp",
+          "large_string"
+        ],
+        [
+          "vega",
+          "double"
+        ],
+        [
+          "timestamp",
+          "large_string"
+        ]
+      ],
+      "schema_sha256": "bfed82d951cea45d3b236dd8c2a3f0ba80e465d9d3111964c8f010ba14d7cbad",
+      "has_quote_timestamp": true,
+      "has_underlying_timestamp": true,
+      "has_underlying_price": true,
+      "has_bid_ask": true,
+      "has_delta_iv": true,
+      "has_oi": false
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20231124",
+      "family": "oi",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\oi\\2023\\11\\QQQ_20231124_20231124_oi.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 7833,
+      "mtime_ns": 1771888587459885200,
+      "rows": 296,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "open_interest",
+          "int64"
+        ],
+        [
+          "timestamp",
+          "large_string"
+        ]
+      ],
+      "schema_sha256": "a68149f71bebeef51c2a67d66e8707a466386c759445b17f2785a2343069a320",
+      "has_quote_timestamp": true,
+      "has_underlying_timestamp": false,
+      "has_underlying_price": false,
+      "has_bid_ask": false,
+      "has_delta_iv": false,
+      "has_oi": true
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20240703",
+      "family": "greeks",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2024\\07\\QQQ_20240703_20240703_greeks.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 1169947,
+      "mtime_ns": 1771446347121420200,
+      "rows": 80546,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "underlying_price",
+          "double"
+        ],
+        [
+          "delta",
+          "double"
+        ],
+        [
+          "implied_vol",
+          "double"
+        ],
+        [
+          "theta",
+          "double"
+        ],
+        [
+          "iv_error",
+          "double"
+        ],
+        [
+          "epsilon",
+          "double"
+        ],
+        [
+          "lambda",
+          "double"
+        ],
+        [
+          "ask",
+          "double"
+        ],
+        [
+          "rho",
+          "double"
+        ],
+        [
+          "bid",
+          "double"
+        ],
+        [
+          "underlying_timestamp",
+          "large_string"
+        ],
+        [
+          "vega",
+          "double"
+        ]
+      ],
+      "schema_sha256": "f4895c443acec198858b3906ec3ecbf1c7e619d1cc55b68727fd777f425c7d8e",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": true,
+      "has_underlying_price": true,
+      "has_bid_ask": true,
+      "has_delta_iv": true,
+      "has_oi": false
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20240703",
+      "family": "oi",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\oi\\2024\\07\\QQQ_20240703_20240703_oi.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 6260,
+      "mtime_ns": 1771446348068146600,
+      "rows": 206,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "open_interest",
+          "int64"
+        ]
+      ],
+      "schema_sha256": "9c507ff3e96da90ef8ef3bb006f1762c0917fb1b2390314db7b16ccaf48cd2d2",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": false,
+      "has_underlying_price": false,
+      "has_bid_ask": false,
+      "has_delta_iv": false,
+      "has_oi": true
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20241129",
+      "family": "greeks",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2024\\11\\QQQ_20241129_20241129_greeks.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 1530698,
+      "mtime_ns": 1771462264675734500,
+      "rows": 118864,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "underlying_price",
+          "double"
+        ],
+        [
+          "delta",
+          "double"
+        ],
+        [
+          "implied_vol",
+          "double"
+        ],
+        [
+          "theta",
+          "double"
+        ],
+        [
+          "iv_error",
+          "double"
+        ],
+        [
+          "epsilon",
+          "double"
+        ],
+        [
+          "lambda",
+          "double"
+        ],
+        [
+          "ask",
+          "double"
+        ],
+        [
+          "rho",
+          "double"
+        ],
+        [
+          "bid",
+          "double"
+        ],
+        [
+          "underlying_timestamp",
+          "large_string"
+        ],
+        [
+          "vega",
+          "double"
+        ]
+      ],
+      "schema_sha256": "f4895c443acec198858b3906ec3ecbf1c7e619d1cc55b68727fd777f425c7d8e",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": true,
+      "has_underlying_price": true,
+      "has_bid_ask": true,
+      "has_delta_iv": true,
+      "has_oi": false
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20241129",
+      "family": "oi",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\oi\\2024\\11\\QQQ_20241129_20241129_oi.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 7111,
+      "mtime_ns": 1771462266250947200,
+      "rows": 304,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "open_interest",
+          "int64"
+        ]
+      ],
+      "schema_sha256": "9c507ff3e96da90ef8ef3bb006f1762c0917fb1b2390314db7b16ccaf48cd2d2",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": false,
+      "has_underlying_price": false,
+      "has_bid_ask": false,
+      "has_delta_iv": false,
+      "has_oi": true
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20241224",
+      "family": "greeks",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2024\\12\\QQQ_20241224_20241224_greeks.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 1521781,
+      "mtime_ns": 1772831914264700500,
+      "rows": 109480,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "underlying_price",
+          "double"
+        ],
+        [
+          "delta",
+          "double"
+        ],
+        [
+          "implied_vol",
+          "double"
+        ],
+        [
+          "theta",
+          "double"
+        ],
+        [
+          "iv_error",
+          "double"
+        ],
+        [
+          "epsilon",
+          "double"
+        ],
+        [
+          "lambda",
+          "double"
+        ],
+        [
+          "ask",
+          "double"
+        ],
+        [
+          "rho",
+          "double"
+        ],
+        [
+          "bid",
+          "double"
+        ],
+        [
+          "underlying_timestamp",
+          "large_string"
+        ],
+        [
+          "vega",
+          "double"
+        ],
+        [
+          "timestamp",
+          "large_string"
+        ]
+      ],
+      "schema_sha256": "8f6e2cf200baaa25a6ed4daebb13e9a075905d712a1affcebd1dcada623c2477",
+      "has_quote_timestamp": true,
+      "has_underlying_timestamp": true,
+      "has_underlying_price": true,
+      "has_bid_ask": true,
+      "has_delta_iv": true,
+      "has_oi": false
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20241224",
+      "family": "oi",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\oi\\2024\\12\\QQQ_20241224_20241224_oi.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 8027,
+      "mtime_ns": 1772831893627937800,
+      "rows": 280,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "open_interest",
+          "int64"
+        ],
+        [
+          "timestamp",
+          "large_string"
+        ]
+      ],
+      "schema_sha256": "1f9370b89126251a6461f491e277519405ad10de0f6e284609dadf0894ae999e",
+      "has_quote_timestamp": true,
+      "has_underlying_timestamp": false,
+      "has_underlying_price": false,
+      "has_bid_ask": false,
+      "has_delta_iv": false,
+      "has_oi": true
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250703",
+      "family": "greeks",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2025\\07\\QQQ_20250703_20250703_greeks.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 1943092,
+      "mtime_ns": 1771472069823293500,
+      "rows": 132158,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "underlying_price",
+          "double"
+        ],
+        [
+          "delta",
+          "double"
+        ],
+        [
+          "implied_vol",
+          "double"
+        ],
+        [
+          "theta",
+          "double"
+        ],
+        [
+          "iv_error",
+          "double"
+        ],
+        [
+          "epsilon",
+          "double"
+        ],
+        [
+          "lambda",
+          "double"
+        ],
+        [
+          "ask",
+          "double"
+        ],
+        [
+          "rho",
+          "double"
+        ],
+        [
+          "bid",
+          "double"
+        ],
+        [
+          "underlying_timestamp",
+          "large_string"
+        ],
+        [
+          "vega",
+          "double"
+        ]
+      ],
+      "schema_sha256": "f4895c443acec198858b3906ec3ecbf1c7e619d1cc55b68727fd777f425c7d8e",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": true,
+      "has_underlying_price": true,
+      "has_bid_ask": true,
+      "has_delta_iv": true,
+      "has_oi": false
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20250703",
+      "family": "oi",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\oi\\2025\\07\\QQQ_20250703_20250703_oi.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 7423,
+      "mtime_ns": 1771472071300758300,
+      "rows": 338,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "open_interest",
+          "int64"
+        ]
+      ],
+      "schema_sha256": "9c507ff3e96da90ef8ef3bb006f1762c0917fb1b2390314db7b16ccaf48cd2d2",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": false,
+      "has_underlying_price": false,
+      "has_bid_ask": false,
+      "has_delta_iv": false,
+      "has_oi": true
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20251128",
+      "family": "greeks",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2025\\11\\QQQ_20251128_20251128_greeks.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 2105418,
+      "mtime_ns": 1771476549409277500,
+      "rows": 138414,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "underlying_price",
+          "double"
+        ],
+        [
+          "delta",
+          "double"
+        ],
+        [
+          "implied_vol",
+          "double"
+        ],
+        [
+          "theta",
+          "double"
+        ],
+        [
+          "iv_error",
+          "double"
+        ],
+        [
+          "epsilon",
+          "double"
+        ],
+        [
+          "lambda",
+          "double"
+        ],
+        [
+          "ask",
+          "double"
+        ],
+        [
+          "rho",
+          "double"
+        ],
+        [
+          "bid",
+          "double"
+        ],
+        [
+          "underlying_timestamp",
+          "large_string"
+        ],
+        [
+          "vega",
+          "double"
+        ]
+      ],
+      "schema_sha256": "f4895c443acec198858b3906ec3ecbf1c7e619d1cc55b68727fd777f425c7d8e",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": true,
+      "has_underlying_price": true,
+      "has_bid_ask": true,
+      "has_delta_iv": true,
+      "has_oi": false
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20251128",
+      "family": "oi",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\oi\\2025\\11\\QQQ_20251128_20251128_oi.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 7613,
+      "mtime_ns": 1771476550783063500,
+      "rows": 354,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "open_interest",
+          "int64"
+        ]
+      ],
+      "schema_sha256": "9c507ff3e96da90ef8ef3bb006f1762c0917fb1b2390314db7b16ccaf48cd2d2",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": false,
+      "has_underlying_price": false,
+      "has_bid_ask": false,
+      "has_delta_iv": false,
+      "has_oi": true
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20251224",
+      "family": "greeks",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2025\\12\\QQQ_20251224_20251224_greeks.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 1444551,
+      "mtime_ns": 1771476982227062200,
+      "rows": 87584,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "underlying_price",
+          "double"
+        ],
+        [
+          "delta",
+          "double"
+        ],
+        [
+          "implied_vol",
+          "double"
+        ],
+        [
+          "theta",
+          "double"
+        ],
+        [
+          "iv_error",
+          "double"
+        ],
+        [
+          "epsilon",
+          "double"
+        ],
+        [
+          "lambda",
+          "double"
+        ],
+        [
+          "ask",
+          "double"
+        ],
+        [
+          "rho",
+          "double"
+        ],
+        [
+          "bid",
+          "double"
+        ],
+        [
+          "underlying_timestamp",
+          "large_string"
+        ],
+        [
+          "vega",
+          "double"
+        ]
+      ],
+      "schema_sha256": "f4895c443acec198858b3906ec3ecbf1c7e619d1cc55b68727fd777f425c7d8e",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": true,
+      "has_underlying_price": true,
+      "has_bid_ask": true,
+      "has_delta_iv": true,
+      "has_oi": false
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20251224",
+      "family": "oi",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\oi\\2025\\12\\QQQ_20251224_20251224_oi.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 6452,
+      "mtime_ns": 1771476983194900700,
+      "rows": 224,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "open_interest",
+          "int64"
+        ]
+      ],
+      "schema_sha256": "9c507ff3e96da90ef8ef3bb006f1762c0917fb1b2390314db7b16ccaf48cd2d2",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": false,
+      "has_underlying_price": false,
+      "has_bid_ask": false,
+      "has_delta_iv": false,
+      "has_oi": true
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20230703",
+      "family": "greeks",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2023\\07\\SPXW_20230703_20230703_greeks.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 2335156,
+      "mtime_ns": 1771820131029034300,
+      "rows": 136850,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "underlying_price",
+          "double"
+        ],
+        [
+          "delta",
+          "double"
+        ],
+        [
+          "implied_vol",
+          "double"
+        ],
+        [
+          "theta",
+          "double"
+        ],
+        [
+          "iv_error",
+          "double"
+        ],
+        [
+          "epsilon",
+          "double"
+        ],
+        [
+          "lambda",
+          "double"
+        ],
+        [
+          "ask",
+          "double"
+        ],
+        [
+          "rho",
+          "double"
+        ],
+        [
+          "bid",
+          "double"
+        ],
+        [
+          "underlying_timestamp",
+          "large_string"
+        ],
+        [
+          "vega",
+          "double"
+        ],
+        [
+          "timestamp",
+          "large_string"
+        ]
+      ],
+      "schema_sha256": "bfed82d951cea45d3b236dd8c2a3f0ba80e465d9d3111964c8f010ba14d7cbad",
+      "has_quote_timestamp": true,
+      "has_underlying_timestamp": true,
+      "has_underlying_price": true,
+      "has_bid_ask": true,
+      "has_delta_iv": true,
+      "has_oi": false
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20230703",
+      "family": "oi",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\oi\\2023\\07\\SPXW_20230703_20230703_oi.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 10170,
+      "mtime_ns": 1771820133920519000,
+      "rows": 338,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "open_interest",
+          "int64"
+        ],
+        [
+          "timestamp",
+          "large_string"
+        ]
+      ],
+      "schema_sha256": "a68149f71bebeef51c2a67d66e8707a466386c759445b17f2785a2343069a320",
+      "has_quote_timestamp": true,
+      "has_underlying_timestamp": false,
+      "has_underlying_price": false,
+      "has_bid_ask": false,
+      "has_delta_iv": false,
+      "has_oi": true
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20231124",
+      "family": "greeks",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2023\\11\\SPXW_20231124_20231124_greeks.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 3246655,
+      "mtime_ns": 1771858533900156600,
+      "rows": 190808,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "underlying_price",
+          "double"
+        ],
+        [
+          "delta",
+          "double"
+        ],
+        [
+          "implied_vol",
+          "double"
+        ],
+        [
+          "theta",
+          "double"
+        ],
+        [
+          "iv_error",
+          "double"
+        ],
+        [
+          "epsilon",
+          "double"
+        ],
+        [
+          "lambda",
+          "double"
+        ],
+        [
+          "ask",
+          "double"
+        ],
+        [
+          "rho",
+          "double"
+        ],
+        [
+          "bid",
+          "double"
+        ],
+        [
+          "underlying_timestamp",
+          "large_string"
+        ],
+        [
+          "vega",
+          "double"
+        ],
+        [
+          "timestamp",
+          "large_string"
+        ]
+      ],
+      "schema_sha256": "bfed82d951cea45d3b236dd8c2a3f0ba80e465d9d3111964c8f010ba14d7cbad",
+      "has_quote_timestamp": true,
+      "has_underlying_timestamp": true,
+      "has_underlying_price": true,
+      "has_bid_ask": true,
+      "has_delta_iv": true,
+      "has_oi": false
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20231124",
+      "family": "oi",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\oi\\2023\\11\\SPXW_20231124_20231124_oi.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 11851,
+      "mtime_ns": 1771858535917448400,
+      "rows": 484,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "open_interest",
+          "int64"
+        ],
+        [
+          "timestamp",
+          "large_string"
+        ]
+      ],
+      "schema_sha256": "a68149f71bebeef51c2a67d66e8707a466386c759445b17f2785a2343069a320",
+      "has_quote_timestamp": true,
+      "has_underlying_timestamp": false,
+      "has_underlying_price": false,
+      "has_bid_ask": false,
+      "has_delta_iv": false,
+      "has_oi": true
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20240703",
+      "family": "greeks",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2024\\07\\SPXW_20240703_20240703_greeks.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 2858826,
+      "mtime_ns": 1771441208814158000,
+      "rows": 142324,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "underlying_price",
+          "double"
+        ],
+        [
+          "delta",
+          "double"
+        ],
+        [
+          "implied_vol",
+          "double"
+        ],
+        [
+          "theta",
+          "double"
+        ],
+        [
+          "iv_error",
+          "double"
+        ],
+        [
+          "epsilon",
+          "double"
+        ],
+        [
+          "lambda",
+          "double"
+        ],
+        [
+          "ask",
+          "double"
+        ],
+        [
+          "rho",
+          "double"
+        ],
+        [
+          "bid",
+          "double"
+        ],
+        [
+          "underlying_timestamp",
+          "large_string"
+        ],
+        [
+          "vega",
+          "double"
+        ]
+      ],
+      "schema_sha256": "f4895c443acec198858b3906ec3ecbf1c7e619d1cc55b68727fd777f425c7d8e",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": true,
+      "has_underlying_price": true,
+      "has_bid_ask": true,
+      "has_delta_iv": true,
+      "has_oi": false
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20240703",
+      "family": "oi",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\oi\\2024\\07\\SPXW_20240703_20240703_oi.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 7400,
+      "mtime_ns": 1771441210223226700,
+      "rows": 354,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "open_interest",
+          "int64"
+        ]
+      ],
+      "schema_sha256": "9c507ff3e96da90ef8ef3bb006f1762c0917fb1b2390314db7b16ccaf48cd2d2",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": false,
+      "has_underlying_price": false,
+      "has_bid_ask": false,
+      "has_delta_iv": false,
+      "has_oi": true
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20241129",
+      "family": "greeks",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2024\\11\\SPXW_20241129_20241129_greeks.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 6343738,
+      "mtime_ns": 1771471869987867700,
+      "rows": 326094,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "underlying_price",
+          "double"
+        ],
+        [
+          "delta",
+          "double"
+        ],
+        [
+          "implied_vol",
+          "double"
+        ],
+        [
+          "theta",
+          "double"
+        ],
+        [
+          "iv_error",
+          "double"
+        ],
+        [
+          "epsilon",
+          "double"
+        ],
+        [
+          "lambda",
+          "double"
+        ],
+        [
+          "ask",
+          "double"
+        ],
+        [
+          "rho",
+          "double"
+        ],
+        [
+          "bid",
+          "double"
+        ],
+        [
+          "underlying_timestamp",
+          "large_string"
+        ],
+        [
+          "vega",
+          "double"
+        ]
+      ],
+      "schema_sha256": "f4895c443acec198858b3906ec3ecbf1c7e619d1cc55b68727fd777f425c7d8e",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": true,
+      "has_underlying_price": true,
+      "has_bid_ask": true,
+      "has_delta_iv": true,
+      "has_oi": false
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20241129",
+      "family": "oi",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\oi\\2024\\11\\SPXW_20241129_20241129_oi.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 10785,
+      "mtime_ns": 1771471872892156600,
+      "rows": 834,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "open_interest",
+          "int64"
+        ]
+      ],
+      "schema_sha256": "9c507ff3e96da90ef8ef3bb006f1762c0917fb1b2390314db7b16ccaf48cd2d2",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": false,
+      "has_underlying_price": false,
+      "has_bid_ask": false,
+      "has_delta_iv": false,
+      "has_oi": true
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20241224",
+      "family": "greeks",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2024\\12\\SPXW_20241224_20241224_greeks.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 3471403,
+      "mtime_ns": 1771476052895144000,
+      "rows": 168130,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "underlying_price",
+          "double"
+        ],
+        [
+          "delta",
+          "double"
+        ],
+        [
+          "implied_vol",
+          "double"
+        ],
+        [
+          "theta",
+          "double"
+        ],
+        [
+          "iv_error",
+          "double"
+        ],
+        [
+          "epsilon",
+          "double"
+        ],
+        [
+          "lambda",
+          "double"
+        ],
+        [
+          "ask",
+          "double"
+        ],
+        [
+          "rho",
+          "double"
+        ],
+        [
+          "bid",
+          "double"
+        ],
+        [
+          "underlying_timestamp",
+          "large_string"
+        ],
+        [
+          "vega",
+          "double"
+        ]
+      ],
+      "schema_sha256": "f4895c443acec198858b3906ec3ecbf1c7e619d1cc55b68727fd777f425c7d8e",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": true,
+      "has_underlying_price": true,
+      "has_bid_ask": true,
+      "has_delta_iv": true,
+      "has_oi": false
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20241224",
+      "family": "oi",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\oi\\2024\\12\\SPXW_20241224_20241224_oi.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 7915,
+      "mtime_ns": 1771476054614123500,
+      "rows": 430,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "open_interest",
+          "int64"
+        ]
+      ],
+      "schema_sha256": "9c507ff3e96da90ef8ef3bb006f1762c0917fb1b2390314db7b16ccaf48cd2d2",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": false,
+      "has_underlying_price": false,
+      "has_bid_ask": false,
+      "has_delta_iv": false,
+      "has_oi": true
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250703",
+      "family": "greeks",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2025\\07\\SPXW_20250703_20250703_greeks.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 4190150,
+      "mtime_ns": 1771492831581070500,
+      "rows": 199410,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "underlying_price",
+          "double"
+        ],
+        [
+          "delta",
+          "double"
+        ],
+        [
+          "implied_vol",
+          "double"
+        ],
+        [
+          "theta",
+          "double"
+        ],
+        [
+          "iv_error",
+          "double"
+        ],
+        [
+          "epsilon",
+          "double"
+        ],
+        [
+          "lambda",
+          "double"
+        ],
+        [
+          "ask",
+          "double"
+        ],
+        [
+          "rho",
+          "double"
+        ],
+        [
+          "bid",
+          "double"
+        ],
+        [
+          "underlying_timestamp",
+          "large_string"
+        ],
+        [
+          "vega",
+          "double"
+        ]
+      ],
+      "schema_sha256": "a218b935e7697be09e81f7b0fce4260f9c772832031dfc79b5994a8b57ab1609",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": true,
+      "has_underlying_price": true,
+      "has_bid_ask": true,
+      "has_delta_iv": true,
+      "has_oi": false
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20250703",
+      "family": "oi",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\oi\\2025\\07\\SPXW_20250703_20250703_oi.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 8481,
+      "mtime_ns": 1771492833264432600,
+      "rows": 510,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "open_interest",
+          "int64"
+        ]
+      ],
+      "schema_sha256": "2906867be4de37eb5c726e90b2f5d3a60c2d2e7a46ee07403eceaf24c553c544",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": false,
+      "has_underlying_price": false,
+      "has_bid_ask": false,
+      "has_delta_iv": false,
+      "has_oi": true
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20251128",
+      "family": "greeks",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2025\\11\\SPXW_20251128_20251128_greeks.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 6114262,
+      "mtime_ns": 1771493029597369500,
+      "rows": 344862,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "underlying_price",
+          "double"
+        ],
+        [
+          "delta",
+          "double"
+        ],
+        [
+          "implied_vol",
+          "double"
+        ],
+        [
+          "theta",
+          "double"
+        ],
+        [
+          "iv_error",
+          "double"
+        ],
+        [
+          "epsilon",
+          "double"
+        ],
+        [
+          "lambda",
+          "double"
+        ],
+        [
+          "ask",
+          "double"
+        ],
+        [
+          "rho",
+          "double"
+        ],
+        [
+          "bid",
+          "double"
+        ],
+        [
+          "underlying_timestamp",
+          "large_string"
+        ],
+        [
+          "vega",
+          "double"
+        ]
+      ],
+      "schema_sha256": "a218b935e7697be09e81f7b0fce4260f9c772832031dfc79b5994a8b57ab1609",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": true,
+      "has_underlying_price": true,
+      "has_bid_ask": true,
+      "has_delta_iv": true,
+      "has_oi": false
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20251128",
+      "family": "oi",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\oi\\2025\\11\\SPXW_20251128_20251128_oi.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 11144,
+      "mtime_ns": 1771493032358770500,
+      "rows": 882,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "open_interest",
+          "int64"
+        ]
+      ],
+      "schema_sha256": "2906867be4de37eb5c726e90b2f5d3a60c2d2e7a46ee07403eceaf24c553c544",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": false,
+      "has_underlying_price": false,
+      "has_bid_ask": false,
+      "has_delta_iv": false,
+      "has_oi": true
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20251224",
+      "family": "greeks",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2025\\12\\SPXW_20251224_20251224_greeks.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 3521609,
+      "mtime_ns": 1771494020736024600,
+      "rows": 182988,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "underlying_price",
+          "double"
+        ],
+        [
+          "delta",
+          "double"
+        ],
+        [
+          "implied_vol",
+          "double"
+        ],
+        [
+          "theta",
+          "double"
+        ],
+        [
+          "iv_error",
+          "double"
+        ],
+        [
+          "epsilon",
+          "double"
+        ],
+        [
+          "lambda",
+          "double"
+        ],
+        [
+          "ask",
+          "double"
+        ],
+        [
+          "rho",
+          "double"
+        ],
+        [
+          "bid",
+          "double"
+        ],
+        [
+          "underlying_timestamp",
+          "large_string"
+        ],
+        [
+          "vega",
+          "double"
+        ]
+      ],
+      "schema_sha256": "a218b935e7697be09e81f7b0fce4260f9c772832031dfc79b5994a8b57ab1609",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": true,
+      "has_underlying_price": true,
+      "has_bid_ask": true,
+      "has_delta_iv": true,
+      "has_oi": false
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20251224",
+      "family": "oi",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\oi\\2025\\12\\SPXW_20251224_20251224_oi.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 8130,
+      "mtime_ns": 1771494021664030800,
+      "rows": 468,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "open_interest",
+          "int64"
+        ]
+      ],
+      "schema_sha256": "2906867be4de37eb5c726e90b2f5d3a60c2d2e7a46ee07403eceaf24c553c544",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": false,
+      "has_underlying_price": false,
+      "has_bid_ask": false,
+      "has_delta_iv": false,
+      "has_oi": true
+    },
+    {
+      "ticker": "SPY",
+      "date": "20230703",
+      "family": "greeks",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2023\\07\\SPY_20230703_20230703_greeks.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 1286930,
+      "mtime_ns": 1771894924327264300,
+      "rows": 104006,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "underlying_price",
+          "double"
+        ],
+        [
+          "delta",
+          "double"
+        ],
+        [
+          "implied_vol",
+          "double"
+        ],
+        [
+          "theta",
+          "double"
+        ],
+        [
+          "iv_error",
+          "double"
+        ],
+        [
+          "epsilon",
+          "double"
+        ],
+        [
+          "lambda",
+          "double"
+        ],
+        [
+          "ask",
+          "double"
+        ],
+        [
+          "rho",
+          "double"
+        ],
+        [
+          "bid",
+          "double"
+        ],
+        [
+          "underlying_timestamp",
+          "large_string"
+        ],
+        [
+          "vega",
+          "double"
+        ],
+        [
+          "timestamp",
+          "large_string"
+        ]
+      ],
+      "schema_sha256": "bfed82d951cea45d3b236dd8c2a3f0ba80e465d9d3111964c8f010ba14d7cbad",
+      "has_quote_timestamp": true,
+      "has_underlying_timestamp": true,
+      "has_underlying_price": true,
+      "has_bid_ask": true,
+      "has_delta_iv": true,
+      "has_oi": false
+    },
+    {
+      "ticker": "SPY",
+      "date": "20230703",
+      "family": "oi",
+      "path": "D:\\ThetaData\\data_options\\SPY\\oi\\2023\\07\\SPY_20230703_20230703_oi.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 8563,
+      "mtime_ns": 1771894927360359100,
+      "rows": 264,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "open_interest",
+          "int64"
+        ],
+        [
+          "timestamp",
+          "large_string"
+        ]
+      ],
+      "schema_sha256": "a68149f71bebeef51c2a67d66e8707a466386c759445b17f2785a2343069a320",
+      "has_quote_timestamp": true,
+      "has_underlying_timestamp": false,
+      "has_underlying_price": false,
+      "has_bid_ask": false,
+      "has_delta_iv": false,
+      "has_oi": true
+    },
+    {
+      "ticker": "SPY",
+      "date": "20231124",
+      "family": "greeks",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2023\\11\\SPY_20231124_20231124_greeks.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 1673548,
+      "mtime_ns": 1771906922763711100,
+      "rows": 123556,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "underlying_price",
+          "double"
+        ],
+        [
+          "delta",
+          "double"
+        ],
+        [
+          "implied_vol",
+          "double"
+        ],
+        [
+          "theta",
+          "double"
+        ],
+        [
+          "iv_error",
+          "double"
+        ],
+        [
+          "epsilon",
+          "double"
+        ],
+        [
+          "lambda",
+          "double"
+        ],
+        [
+          "ask",
+          "double"
+        ],
+        [
+          "rho",
+          "double"
+        ],
+        [
+          "bid",
+          "double"
+        ],
+        [
+          "underlying_timestamp",
+          "large_string"
+        ],
+        [
+          "vega",
+          "double"
+        ],
+        [
+          "timestamp",
+          "large_string"
+        ]
+      ],
+      "schema_sha256": "bfed82d951cea45d3b236dd8c2a3f0ba80e465d9d3111964c8f010ba14d7cbad",
+      "has_quote_timestamp": true,
+      "has_underlying_timestamp": true,
+      "has_underlying_price": true,
+      "has_bid_ask": true,
+      "has_delta_iv": true,
+      "has_oi": false
+    },
+    {
+      "ticker": "SPY",
+      "date": "20231124",
+      "family": "oi",
+      "path": "D:\\ThetaData\\data_options\\SPY\\oi\\2023\\11\\SPY_20231124_20231124_oi.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 9294,
+      "mtime_ns": 1771906924314334500,
+      "rows": 316,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "open_interest",
+          "int64"
+        ],
+        [
+          "timestamp",
+          "large_string"
+        ]
+      ],
+      "schema_sha256": "a68149f71bebeef51c2a67d66e8707a466386c759445b17f2785a2343069a320",
+      "has_quote_timestamp": true,
+      "has_underlying_timestamp": false,
+      "has_underlying_price": false,
+      "has_bid_ask": false,
+      "has_delta_iv": false,
+      "has_oi": true
+    },
+    {
+      "ticker": "SPY",
+      "date": "20240703",
+      "family": "greeks",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2024\\07\\SPY_20240703_20240703_greeks.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 1409969,
+      "mtime_ns": 1771426780179298800,
+      "rows": 78982,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "underlying_price",
+          "double"
+        ],
+        [
+          "delta",
+          "double"
+        ],
+        [
+          "implied_vol",
+          "double"
+        ],
+        [
+          "theta",
+          "double"
+        ],
+        [
+          "iv_error",
+          "double"
+        ],
+        [
+          "epsilon",
+          "double"
+        ],
+        [
+          "lambda",
+          "double"
+        ],
+        [
+          "ask",
+          "double"
+        ],
+        [
+          "rho",
+          "double"
+        ],
+        [
+          "bid",
+          "double"
+        ],
+        [
+          "underlying_timestamp",
+          "large_string"
+        ],
+        [
+          "vega",
+          "double"
+        ]
+      ],
+      "schema_sha256": "f4895c443acec198858b3906ec3ecbf1c7e619d1cc55b68727fd777f425c7d8e",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": true,
+      "has_underlying_price": true,
+      "has_bid_ask": true,
+      "has_delta_iv": true,
+      "has_oi": false
+    },
+    {
+      "ticker": "SPY",
+      "date": "20240703",
+      "family": "oi",
+      "path": "D:\\ThetaData\\data_options\\SPY\\oi\\2024\\07\\SPY_20240703_20240703_oi.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 6244,
+      "mtime_ns": 1771426781082691700,
+      "rows": 202,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "open_interest",
+          "int64"
+        ]
+      ],
+      "schema_sha256": "9c507ff3e96da90ef8ef3bb006f1762c0917fb1b2390314db7b16ccaf48cd2d2",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": false,
+      "has_underlying_price": false,
+      "has_bid_ask": false,
+      "has_delta_iv": false,
+      "has_oi": true
+    },
+    {
+      "ticker": "SPY",
+      "date": "20241129",
+      "family": "greeks",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2024\\11\\SPY_20241129_20241129_greeks.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 1867684,
+      "mtime_ns": 1771440688723505300,
+      "rows": 166566,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "underlying_price",
+          "double"
+        ],
+        [
+          "delta",
+          "double"
+        ],
+        [
+          "implied_vol",
+          "double"
+        ],
+        [
+          "theta",
+          "double"
+        ],
+        [
+          "iv_error",
+          "double"
+        ],
+        [
+          "epsilon",
+          "double"
+        ],
+        [
+          "lambda",
+          "double"
+        ],
+        [
+          "ask",
+          "double"
+        ],
+        [
+          "rho",
+          "double"
+        ],
+        [
+          "bid",
+          "double"
+        ],
+        [
+          "underlying_timestamp",
+          "large_string"
+        ],
+        [
+          "vega",
+          "double"
+        ]
+      ],
+      "schema_sha256": "f4895c443acec198858b3906ec3ecbf1c7e619d1cc55b68727fd777f425c7d8e",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": true,
+      "has_underlying_price": true,
+      "has_bid_ask": true,
+      "has_delta_iv": true,
+      "has_oi": false
+    },
+    {
+      "ticker": "SPY",
+      "date": "20241129",
+      "family": "oi",
+      "path": "D:\\ThetaData\\data_options\\SPY\\oi\\2024\\11\\SPY_20241129_20241129_oi.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 8340,
+      "mtime_ns": 1771440690317875900,
+      "rows": 426,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "open_interest",
+          "int64"
+        ]
+      ],
+      "schema_sha256": "9c507ff3e96da90ef8ef3bb006f1762c0917fb1b2390314db7b16ccaf48cd2d2",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": false,
+      "has_underlying_price": false,
+      "has_bid_ask": false,
+      "has_delta_iv": false,
+      "has_oi": true
+    },
+    {
+      "ticker": "SPY",
+      "date": "20241224",
+      "family": "greeks",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2024\\12\\SPY_20241224_20241224_greeks.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 1313751,
+      "mtime_ns": 1771442184169448700,
+      "rows": 84456,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "underlying_price",
+          "double"
+        ],
+        [
+          "delta",
+          "double"
+        ],
+        [
+          "implied_vol",
+          "double"
+        ],
+        [
+          "theta",
+          "double"
+        ],
+        [
+          "iv_error",
+          "double"
+        ],
+        [
+          "epsilon",
+          "double"
+        ],
+        [
+          "lambda",
+          "double"
+        ],
+        [
+          "ask",
+          "double"
+        ],
+        [
+          "rho",
+          "double"
+        ],
+        [
+          "bid",
+          "double"
+        ],
+        [
+          "underlying_timestamp",
+          "large_string"
+        ],
+        [
+          "vega",
+          "double"
+        ]
+      ],
+      "schema_sha256": "f4895c443acec198858b3906ec3ecbf1c7e619d1cc55b68727fd777f425c7d8e",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": true,
+      "has_underlying_price": true,
+      "has_bid_ask": true,
+      "has_delta_iv": true,
+      "has_oi": false
+    },
+    {
+      "ticker": "SPY",
+      "date": "20241224",
+      "family": "oi",
+      "path": "D:\\ThetaData\\data_options\\SPY\\oi\\2024\\12\\SPY_20241224_20241224_oi.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 6456,
+      "mtime_ns": 1771442185063287000,
+      "rows": 216,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "open_interest",
+          "int64"
+        ]
+      ],
+      "schema_sha256": "9c507ff3e96da90ef8ef3bb006f1762c0917fb1b2390314db7b16ccaf48cd2d2",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": false,
+      "has_underlying_price": false,
+      "has_bid_ask": false,
+      "has_delta_iv": false,
+      "has_oi": true
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250703",
+      "family": "greeks",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2025\\07\\SPY_20250703_20250703_greeks.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 2056077,
+      "mtime_ns": 1771447930955367600,
+      "rows": 130594,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "underlying_price",
+          "double"
+        ],
+        [
+          "delta",
+          "double"
+        ],
+        [
+          "implied_vol",
+          "double"
+        ],
+        [
+          "theta",
+          "double"
+        ],
+        [
+          "iv_error",
+          "double"
+        ],
+        [
+          "epsilon",
+          "double"
+        ],
+        [
+          "lambda",
+          "double"
+        ],
+        [
+          "ask",
+          "double"
+        ],
+        [
+          "rho",
+          "double"
+        ],
+        [
+          "bid",
+          "double"
+        ],
+        [
+          "underlying_timestamp",
+          "large_string"
+        ],
+        [
+          "vega",
+          "double"
+        ]
+      ],
+      "schema_sha256": "f4895c443acec198858b3906ec3ecbf1c7e619d1cc55b68727fd777f425c7d8e",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": true,
+      "has_underlying_price": true,
+      "has_bid_ask": true,
+      "has_delta_iv": true,
+      "has_oi": false
+    },
+    {
+      "ticker": "SPY",
+      "date": "20250703",
+      "family": "oi",
+      "path": "D:\\ThetaData\\data_options\\SPY\\oi\\2025\\07\\SPY_20250703_20250703_oi.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 7382,
+      "mtime_ns": 1771447932886364100,
+      "rows": 334,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "open_interest",
+          "int64"
+        ]
+      ],
+      "schema_sha256": "9c507ff3e96da90ef8ef3bb006f1762c0917fb1b2390314db7b16ccaf48cd2d2",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": false,
+      "has_underlying_price": false,
+      "has_bid_ask": false,
+      "has_delta_iv": false,
+      "has_oi": true
+    },
+    {
+      "ticker": "SPY",
+      "date": "20251128",
+      "family": "greeks",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2025\\11\\SPY_20251128_20251128_greeks.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 2400093,
+      "mtime_ns": 1771451089703372400,
+      "rows": 193936,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "underlying_price",
+          "double"
+        ],
+        [
+          "delta",
+          "double"
+        ],
+        [
+          "implied_vol",
+          "double"
+        ],
+        [
+          "theta",
+          "double"
+        ],
+        [
+          "iv_error",
+          "double"
+        ],
+        [
+          "epsilon",
+          "double"
+        ],
+        [
+          "lambda",
+          "double"
+        ],
+        [
+          "ask",
+          "double"
+        ],
+        [
+          "rho",
+          "double"
+        ],
+        [
+          "bid",
+          "double"
+        ],
+        [
+          "underlying_timestamp",
+          "large_string"
+        ],
+        [
+          "vega",
+          "double"
+        ]
+      ],
+      "schema_sha256": "f4895c443acec198858b3906ec3ecbf1c7e619d1cc55b68727fd777f425c7d8e",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": true,
+      "has_underlying_price": true,
+      "has_bid_ask": true,
+      "has_delta_iv": true,
+      "has_oi": false
+    },
+    {
+      "ticker": "SPY",
+      "date": "20251128",
+      "family": "oi",
+      "path": "D:\\ThetaData\\data_options\\SPY\\oi\\2025\\11\\SPY_20251128_20251128_oi.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 8706,
+      "mtime_ns": 1771451092315100800,
+      "rows": 496,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "open_interest",
+          "int64"
+        ]
+      ],
+      "schema_sha256": "9c507ff3e96da90ef8ef3bb006f1762c0917fb1b2390314db7b16ccaf48cd2d2",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": false,
+      "has_underlying_price": false,
+      "has_bid_ask": false,
+      "has_delta_iv": false,
+      "has_oi": true
+    },
+    {
+      "ticker": "SPY",
+      "date": "20251224",
+      "family": "greeks",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2025\\12\\SPY_20251224_20251224_greeks.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 1535607,
+      "mtime_ns": 1771451653024117700,
+      "rows": 105570,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "underlying_price",
+          "double"
+        ],
+        [
+          "delta",
+          "double"
+        ],
+        [
+          "implied_vol",
+          "double"
+        ],
+        [
+          "theta",
+          "double"
+        ],
+        [
+          "iv_error",
+          "double"
+        ],
+        [
+          "epsilon",
+          "double"
+        ],
+        [
+          "lambda",
+          "double"
+        ],
+        [
+          "ask",
+          "double"
+        ],
+        [
+          "rho",
+          "double"
+        ],
+        [
+          "bid",
+          "double"
+        ],
+        [
+          "underlying_timestamp",
+          "large_string"
+        ],
+        [
+          "vega",
+          "double"
+        ]
+      ],
+      "schema_sha256": "f4895c443acec198858b3906ec3ecbf1c7e619d1cc55b68727fd777f425c7d8e",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": true,
+      "has_underlying_price": true,
+      "has_bid_ask": true,
+      "has_delta_iv": true,
+      "has_oi": false
+    },
+    {
+      "ticker": "SPY",
+      "date": "20251224",
+      "family": "oi",
+      "path": "D:\\ThetaData\\data_options\\SPY\\oi\\2025\\12\\SPY_20251224_20251224_oi.parquet",
+      "exists": true,
+      "source_values_read": false,
+      "full_source_bytes_hashed": false,
+      "bytes": 6793,
+      "mtime_ns": 1771451653868604300,
+      "rows": 270,
+      "row_groups": 1,
+      "fields": [
+        [
+          "symbol",
+          "large_string"
+        ],
+        [
+          "expiration",
+          "large_string"
+        ],
+        [
+          "trade_date",
+          "large_string"
+        ],
+        [
+          "data_type",
+          "large_string"
+        ],
+        [
+          "interval_used",
+          "large_string"
+        ],
+        [
+          "right",
+          "large_string"
+        ],
+        [
+          "strike",
+          "double"
+        ],
+        [
+          "open_interest",
+          "int64"
+        ]
+      ],
+      "schema_sha256": "9c507ff3e96da90ef8ef3bb006f1762c0917fb1b2390314db7b16ccaf48cd2d2",
+      "has_quote_timestamp": false,
+      "has_underlying_timestamp": false,
+      "has_underlying_price": false,
+      "has_bid_ask": false,
+      "has_delta_iv": false,
+      "has_oi": true
+    }
+  ],
+  "source_values_read": false,
+  "economics_read": false,
+  "cache_modified": false,
+  "network_used": false,
+  "note": "Filename/footer presence only; no intraday quote coverage, row-value validity or source admission established",
+  "completed_utc": "2026-10-18T18:44:31.944013+00:00",
+  "wall_seconds": 4.974577700020745
+}

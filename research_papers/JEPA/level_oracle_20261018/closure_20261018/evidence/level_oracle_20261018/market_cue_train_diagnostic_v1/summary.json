@@ -1,0 +1,321 @@
+{
+  "cue_scaled_pooled": {
+    "bias": -0.00011129697021554523,
+    "fraction_predicted_positive": 0.09904320096121705,
+    "fraction_target_positive": 0.2512812145346534,
+    "mse": 0.47639550903410793,
+    "prediction_mean": -0.07943218821751026,
+    "prediction_std": 0.20167541385374382,
+    "r2": 0.196961804206792,
+    "rows": 270377,
+    "target_mean": -0.07932089124729473,
+    "target_std": 0.7702216608608778
+  },
+  "feature_gain_interpretation": "Association in this fitted model, not a causal attribution or evidence of profitability",
+  "new_fits": 0,
+  "original_scaled_pooled": {
+    "bias": -0.00016733841091262319,
+    "fraction_predicted_positive": 0.10470585376872163,
+    "fraction_target_positive": 0.2512812145346534,
+    "mse": 0.44398902717559846,
+    "prediction_mean": -0.07948822965820736,
+    "prediction_std": 0.23348902368534533,
+    "r2": 0.25158793361012266,
+    "rows": 270377,
+    "target_mean": -0.07932089124729473,
+    "target_std": 0.7702216608608778
+  },
+  "prediction_sha256": "177797ef1a330eff84fbeca4fff7421f52b01cc5d347539674dc5b8068241a23",
+  "scope": "Exact exposed TRAIN sample; no policy PnL or generalization claim",
+  "sources": {
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\inspect_market_cue_training.py": "7d4f5a43a2226e9f70169006d02803cf1782a1d2b236a92f96406475a4b2cef7",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\inspect_training_signal.py": "6fef4cb90c8bfb557552863748c960d822324e4b0bc8fdf35c7ecd615e05851a",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\market_cue_vectors.py": "8e9660a44ce04c779c03a6296a182c414df38dc88a293f2d6c16d124cc3b01d9",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\learners_v1\\gbt_net.txt": "c26552353737180361daef85cd539b9f9cedf1e024884b096035503f434f425c",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\learners_v1\\training_sample.parquet": "015c282a964af476ee1cd910b04d86c17ec09a2847d5ee4f52b2eb96acd89d18",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\market_cue_control_v1\\cue_net.txt": "a457176f12df8ab44964f1b595c75439320c8ee27db9da7a740b95f29fa016c7",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\market_cue_control_v1\\matrix.complete.json": "dc12c6a194c535e5c12ac3319ea592c6de6f03608e13a08919c4bb4440ae31e2",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\market_cue_control_v1\\model.complete.json": "9d5e0bbc5744fbdbf909e4f43c11796b9aa42c418cfcf7c0e85018a82783f97a",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\market_cue_control_v1\\run_contract.json": "ea296e2de576b91594697579c3f642e251526224213a651fbf6fbb409addf534",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\market_cue_control_v1\\targets.npz": "40c16b9b882105592dba52058a786b68438fbb5d482ec33ada9906d6d79552c7",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\market_cue_control_v1\\train_x.npy": "4b8b3a59264856e138b6499ef1d1d5563a99a51ae2d41758d143f7f411d3f0d2",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\train_signal_diagnostic_v1\\summary.json": "ab329978209dd8408be01599548796da82bb116d648e9d951fa7602cbdc95b78"
+  },
+  "status": "COMPLETE_READ_ONLY_MARKET_CUE_TRAIN_DIAGNOSTIC",
+  "ticker_year": {
+    "QQQ_2023": {
+      "bias": -0.009308407771656448,
+      "fraction_predicted_positive": 0.0785417896118769,
+      "fraction_target_positive": 0.24468741869425747,
+      "mse": 0.40347406391045276,
+      "prediction_mean": -0.10399099860030062,
+      "prediction_std": 0.1250203601280512,
+      "r2": 0.1280702898326922,
+      "rows": 42796,
+      "target_mean": -0.09468259082864416,
+      "target_std": 0.6802476862814356
+    },
+    "QQQ_2024": {
+      "bias": 0.009370452381889677,
+      "fraction_predicted_positive": 0.06914579595595563,
+      "fraction_target_positive": 0.23927363734143156,
+      "mse": 0.5105058044086973,
+      "prediction_mean": -0.10704677253476391,
+      "prediction_std": 0.18856268936761567,
+      "r2": 0.18627225229476696,
+      "rows": 47945,
+      "target_mean": -0.1164172249166536,
+      "target_std": 0.7920649205812467
+    },
+    "SPXW_2023": {
+      "bias": -2.53500532407229e-05,
+      "fraction_predicted_positive": 0.15085334940117023,
+      "fraction_target_positive": 0.2670134013898044,
+      "mse": 0.4673363956269307,
+      "prediction_mean": -0.05334565547213882,
+      "prediction_std": 0.15620593272637423,
+      "r2": 0.14342432645157155,
+      "rows": 47854,
+      "target_mean": -0.05332030541889811,
+      "target_std": 0.7386384890045818
+    },
+    "SPXW_2024": {
+      "bias": -0.00491905989349908,
+      "fraction_predicted_positive": 0.18325365804691396,
+      "fraction_target_positive": 0.27325442933156374,
+      "mse": 0.6232139537364088,
+      "prediction_mean": -0.028198941456113204,
+      "prediction_std": 0.32133338578851833,
+      "r2": 0.29602424435679997,
+      "rows": 47778,
+      "target_mean": -0.023279881562614124,
+      "target_std": 0.9408919069536821
+    },
+    "SPY_2023": {
+      "bias": 0.005350082106245016,
+      "fraction_predicted_positive": 0.04159198355513918,
+      "fraction_target_positive": 0.23470241282320173,
+      "mse": 0.3432182472283301,
+      "prediction_mean": -0.10132249224285773,
+      "prediction_std": 0.0958393177266615,
+      "r2": 0.0941263526232542,
+      "rows": 40692,
+      "target_mean": -0.10667257434910275,
+      "target_std": 0.6155330429487583
+    },
+    "SPY_2024": {
+      "bias": -0.0014578519643907936,
+      "fraction_predicted_positive": 0.056935347089590096,
+      "fraction_target_positive": 0.2452755832855972,
+      "mse": 0.48411815375489775,
+      "prediction_mean": -0.08872584262178915,
+      "prediction_std": 0.21047712298071877,
+      "r2": 0.20689891454426157,
+      "rows": 43312,
+      "target_mean": -0.08726799065739835,
+      "target_std": 0.7812884643856502
+    }
+  },
+  "top_feature_gain": [
+    {
+      "gain": 49441.16688203812,
+      "name": "target_rel_spot_ib"
+    },
+    {
+      "gain": 47234.88718700409,
+      "name": "ib_range_over_spot"
+    },
+    {
+      "gain": 27639.35929131508,
+      "name": "stop_rel_spot_ib"
+    },
+    {
+      "gain": 19323.69189596176,
+      "name": "call_oi_positive_fraction"
+    },
+    {
+      "gain": 19159.875900268555,
+      "name": "put_unsigned_gamma_proxy"
+    },
+    {
+      "gain": 18695.806943893433,
+      "name": "call_oi_top3_observed_concentration"
+    },
+    {
+      "gain": 15407.900690078735,
+      "name": "put_share_observed_oi"
+    },
+    {
+      "gain": 15051.48488521576,
+      "name": "put_oi_top3_observed_concentration"
+    },
+    {
+      "gain": 14808.195519208908,
+      "name": "spot_ib"
+    },
+    {
+      "gain": 14668.089391231537,
+      "name": "call_observed_oi"
+    },
+    {
+      "gain": 13916.03744506836,
+      "name": "call_unsigned_gamma_proxy"
+    },
+    {
+      "gain": 12839.455853939056,
+      "name": "put_share_observed_gamma"
+    },
+    {
+      "gain": 12366.545667886734,
+      "name": "nearest_visible_level_ib"
+    },
+    {
+      "gain": 11741.554705619812,
+      "name": "iv"
+    },
+    {
+      "gain": 10737.070364117622,
+      "name": "call_gamma_top3_observed_concentration"
+    },
+    {
+      "gain": 10241.90556716919,
+      "name": "put_oi_positive_fraction"
+    },
+    {
+      "gain": 9870.474725723267,
+      "name": "put_gamma_top3_observed_concentration"
+    },
+    {
+      "gain": 9662.361198425293,
+      "name": "put_observed_oi"
+    },
+    {
+      "gain": 9162.27013874054,
+      "name": "stop_distance_ib"
+    },
+    {
+      "gain": 8275.130098342896,
+      "name": "theta_over_spot"
+    },
+    {
+      "gain": 8060.333924770355,
+      "name": "call_oi_known_fraction"
+    },
+    {
+      "gain": 7061.709858894348,
+      "name": "target_distance_ib"
+    },
+    {
+      "gain": 6150.451157569885,
+      "name": "last_closed_15m_range_ib"
+    },
+    {
+      "gain": 4757.314966678619,
+      "name": "minute_fraction"
+    },
+    {
+      "gain": 3769.2884187698364,
+      "name": "stop_source_put_gamma"
+    },
+    {
+      "gain": 3082.1606455892324,
+      "name": "delta"
+    },
+    {
+      "gain": 2258.8820209503174,
+      "name": "vega_over_spot"
+    },
+    {
+      "gain": 1935.7863664627075,
+      "name": "directional_change_15m_ib"
+    },
+    {
+      "gain": 1649.088381767273,
+      "name": "stop_source_fib"
+    },
+    {
+      "gain": 1310.2913517951965,
+      "name": "stop_source_call_gamma"
+    }
+  ],
+  "trees": 200,
+  "validation_test_read": false,
+  "weighted_valid_fraction": {
+    "ask_over_spot": 0.9999999999999677,
+    "band_ib": 0.9999999999999677,
+    "bid_over_spot": 0.9999999999999677,
+    "call_gamma_current_logmass_minus_closed_15m_meanlog": 0.0,
+    "call_gamma_current_logmass_minus_closed_5m_meanlog": 0.00016395938354065475,
+    "call_gamma_top3_observed_concentration": 0.9993717382075741,
+    "call_iv_valid_fraction": 0.9999999999999677,
+    "call_observed_oi": 0.9999999999999677,
+    "call_oi_current_logmass_minus_closed_15m_meanlog": 0.831885478989581,
+    "call_oi_current_logmass_minus_closed_5m_meanlog": 0.8318935784411374,
+    "call_oi_known_fraction": 0.9999999999999677,
+    "call_oi_positive_fraction": 0.9999999999999677,
+    "call_oi_top3_observed_concentration": 0.9999999999999677,
+    "call_present_fraction": 0.9999999999999677,
+    "call_quote_valid_fraction": 0.9999999999999677,
+    "call_unsigned_gamma_proxy": 0.9993717382075741,
+    "delta": 0.9999999999999677,
+    "directional_change_15m_ib": 0.9999958908635219,
+    "directional_change_1m_ib": 0.9999999999999677,
+    "directional_change_5m_ib": 0.9999920193697465,
+    "directional_previous_5m_close_change_ib": 0.9999919005484112,
+    "ib_range_over_spot": 0.9999999999999677,
+    "ib_valid_fraction": 0.9999999999999677,
+    "is_put": 0.9999999999999677,
+    "iv": 0.9999957720421868,
+    "last_closed_15m_body_ib": 0.9999718301515232,
+    "last_closed_15m_lower_wick_ib": 0.9999718301515232,
+    "last_closed_15m_range_ib": 0.9999718301515232,
+    "last_closed_15m_upper_wick_ib": 0.9999718301515232,
+    "last_closed_5m_body_ib": 0.9999799296030795,
+    "last_closed_5m_close_minus_current_anchor_ib": 0.9999799296030795,
+    "last_closed_5m_high_minus_current_anchor_ib": 0.9999799296030795,
+    "last_closed_5m_low_minus_current_anchor_ib": 0.9999799296030795,
+    "last_closed_5m_lower_wick_ib": 0.9999799296030795,
+    "last_closed_5m_range_ib": 0.9999799296030795,
+    "last_closed_5m_upper_wick_ib": 0.9999799296030795,
+    "minute_fraction": 0.9999999999999677,
+    "nearest_visible_level_distance_ib": 0.9999999999999677,
+    "nearest_visible_level_ib": 0.9999999999999677,
+    "put_gamma_current_logmass_minus_closed_15m_meanlog": 0.005070532301758164,
+    "put_gamma_current_logmass_minus_closed_5m_meanlog": 0.01234757043758456,
+    "put_gamma_top3_observed_concentration": 0.9993717382075741,
+    "put_iv_valid_fraction": 0.9999999999999677,
+    "put_observed_oi": 0.9999999999999677,
+    "put_oi_current_logmass_minus_closed_15m_meanlog": 0.8312094522371952,
+    "put_oi_current_logmass_minus_closed_5m_meanlog": 0.8312175516887516,
+    "put_oi_known_fraction": 0.9999999999999677,
+    "put_oi_positive_fraction": 0.9999999999999677,
+    "put_oi_top3_observed_concentration": 0.9999999999999677,
+    "put_present_fraction": 0.9999999999999677,
+    "put_quote_valid_fraction": 0.9999999999999677,
+    "put_share_observed_gamma": 0.9993717382075741,
+    "put_share_observed_oi": 0.9999999999999677,
+    "put_unsigned_gamma_proxy": 0.9993717382075741,
+    "remaining_fraction": 0.9999999999999677,
+    "spot_ib": 0.9999999999999677,
+    "spread_over_premium": 0.9999999999999677,
+    "stop_distance_ib": 0.9999999999999677,
+    "stop_rel_spot_ib": 0.9999999999999677,
+    "stop_source_call_gamma": 0.9999999999999677,
+    "stop_source_call_oi": 0.9999999999999677,
+    "stop_source_fib": 0.9999999999999677,
+    "stop_source_put_gamma": 0.9999999999999677,
+    "stop_source_put_oi": 0.9999999999999677,
+    "strike_rel_spot_ib": 0.9999999999999677,
+    "target_distance_ib": 0.9999999999999677,
+    "target_rel_spot_ib": 0.9999999999999677,
+    "target_source_call_gamma": 0.9999999999999677,
+    "target_source_call_oi": 0.9999999999999677,
+    "target_source_fib": 0.9999999999999677,
+    "target_source_put_gamma": 0.9999999999999677,
+    "target_source_put_oi": 0.9999999999999677,
+    "target_stop_ratio": 0.9999999999999677,
+    "theta_over_spot": 0.9999999999999677,
+    "vega_over_spot": 0.9999999999999677,
+    "visible_source_types_inside_band": 0.9999999999999677
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "status": "COMPLETE_DESCRIPTIVE_MAX_SCORE_CALIBRATION",
+  "new_fits": 0,
+  "new_inference": 0,
+  "days": 837,
+  "daily_rows": 5022,
+  "source_count": 5027,
+  "wall_seconds": 52.33428020001156,
+  "identity_sha256": "acefcbd53cb7708d14297d597428592cb58026e8252856f7f0e63d7c3b0fd21c",
+  "artifacts": {
+    "daily_moments.csv": "e51cf2fa684e081361dfcdb7e80e499843efe3f1c31c0883c6477a45ae7d4cfa",
+    "paired_differences.csv": "2d25ab43ca11cc62f9235f4beb4650ce20b63d61fecd31597395cd55f172c4e5",
+    "summary_metrics.csv": "90dcc7b8f8f5c63fbc8f1967c18b4a6960ed00b4fa3bf2e35593e9f3e89166b2"
+  },
+  "sources_sha256": "2cad313c3e50d4302bcbf853e3a152175d72420f9212ecc91961684ec1be7d3f",
+  "promotion_approved": false
+}

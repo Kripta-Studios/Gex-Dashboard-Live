@@ -1,0 +1,27 @@
+{
+  "status": "COMPLETED_TRAIN_ONLY_DIAGNOSTIC",
+  "rows": 270377,
+  "weighted_mse": 0.47284864414107536,
+  "constant_mse": 0.593241406859289,
+  "weighted_r2": 0.20294059269327036,
+  "prediction_mean": -0.07944492179394116,
+  "prediction_std": 0.20219778163953858,
+  "target_mean": -0.07932089124729473,
+  "observed_peak_private": 1130524672,
+  "observed_peak_rss": 1588076544,
+  "monitor_seconds": 1,
+  "elapsed_total_seconds": 109.031596,
+  "elapsed_from_fit_started_seconds": 66.952363,
+  "exit_code": 0,
+  "hashes": {
+    "model.complete.json": "be3583366019869c4b061e93b044b9ee4001d94510e573f1b3b978a970cb2c33",
+    "export.complete.json": "f28e7ef21971a76012eeb92210306998ab5873e5e5db569a190fc01750f7402b",
+    "run_contract.json": "ca1f55b1fe78bcd7575d7ad6d7cb5b91a8b9d340e11935f377030e6ccc735018",
+    "common_greek_net.txt": "10b1c409a575797a2827e64a272809006917c17342f41c09fedd2d737a54e82c",
+    "train_readback_predictions.npy": "ebe48ed61a097a1cc07b821d666f73163b0ebba7321f9e3350fce3f63594e343"
+  },
+  "target_source_sha256": "40c16b9b882105592dba52058a786b68438fbb5d482ec33ada9906d6d79552c7",
+  "runtime_review_sha256": "58ce4886b12f83ca3b5b4096e880649aaf8955981721ad8e7b3497c9b608fc31",
+  "new_selection": false,
+  "validation_test_evaluated": false
+}

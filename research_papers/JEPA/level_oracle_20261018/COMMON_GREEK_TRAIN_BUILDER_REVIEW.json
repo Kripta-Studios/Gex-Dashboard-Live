@@ -1,0 +1,24 @@
+{
+  "execution_authorized": "TRAIN feature-only build in isolated common_greek_train_v1; no fit, VAL or TEST",
+  "files": {
+    "COMMON_GREEK_DYNAMICS_V1_DESIGN.md": "43a81984e609027358f160a0e97c3d3de09b0c9b23c8d9350b4d6e0f49a84ff8",
+    "COMMON_GREEK_DYNAMICS_V1_LEARNER_PLAN.md": "2054dd1b7cf01f78bfe63b8aa5b45b569feeee4cb7e46dd1b71b4192bcdad781",
+    "COMMON_GREEK_TRAIN_BUILDER_SPEC.md": "0fbb171c75f4b78e1c33c17374146ddc468360d9048e3712c70c43c6e5070897",
+    "GREEK_UNITS_REVIEW.md": "74ea41a1897e5b318d5edd07a161d137f0c6e7747d324c843c85f5559ae819e7",
+    "build_common_greek_train.py": "8c4684281f397709cd1dd0c04f84255225b9e1045a66f5d8d584425c2024a024",
+    "common_greek_dynamics.py": "818195ed80ae7ff1ff446e2fb612750714eb76b47f48164f15e19381be64c44d",
+    "level_engine.py": "70cc5d20990d971d16299fd008ff8e05ac99f99a6a2917a202fcb9a5f413b7c6",
+    "run_market_cue_diagnostic.py": "f491edad5bac43acca56dbdaf144d2f57ae3f78a90d6480f8c53b89c002d20a6",
+    "train_market_cue_control.py": "6343178fe49aecf68c30b76b0d6ec9a37eea8df4968f3ec1b47a7eba0c6c143d"
+  },
+  "limitations": [
+    "Gamma is unsigned BS proxy with explicit time to session close.",
+    "Theta stored temporal units and historical provider version unverified.",
+    "Coverage of new row_flags4 requirement must be measured; prior diagnostic coverage does not transfer.",
+    "Features do not establish dealer inventories, predictive edge or profitability."
+  ],
+  "reviewer": "root; separate read-only review source_feasibility",
+  "scope": "Causal feature construction, per-Greek validity and units, exact 152 prefix and TRAIN identities/IPW, source authority bindings, atomic checkpoint/resume and output isolation",
+  "status": "PASS_COMMON_GREEK_TRAIN_BUILDER_REVIEW",
+  "validation": "13 producer fixtures PASS; Ruff/compile PASS reported by producer. Root and separate reviewer inspected code; no duplicate test execution claimed."
+}

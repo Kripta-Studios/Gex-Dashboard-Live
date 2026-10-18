@@ -1,0 +1,3909 @@
+{
+  "status": "COMPLETE",
+  "oracle_uses_future": true,
+  "predictive_profitability_demonstrated": false,
+  "unit": "USD per one option contract, multiplier100; not a funded account return",
+  "adverse_uses_same_base_oracle_path": true,
+  "seconds": 1893.2003141000168,
+  "finished_utc": "2026-10-18T16:54:33.656548+00:00",
+  "all": {
+    "calendar_rows": 2601,
+    "complete_days": 2595,
+    "missing_days": 6,
+    "pending_days": 0,
+    "failed_days": 0,
+    "actions": 15395840,
+    "trades": 36019,
+    "net_base": 9190416.6,
+    "net_adverse": 9118378.600000001,
+    "exit_reasons": {
+      "TARGET": {
+        "trades": 32651,
+        "net_base": 8619193.4,
+        "net_adverse": 8553891.4
+      },
+      "STOP": {
+        "trades": 1883,
+        "net_base": 123862.19999999998,
+        "net_adverse": 120096.20000000001
+      },
+      "EOD": {
+        "trades": 1485,
+        "net_base": 447361.0,
+        "net_adverse": 444391.00000000006
+      }
+    },
+    "eligible_state_fraction_mean": 0.48075534743055043,
+    "holding_minutes": {
+      "min": 1,
+      "median": 8.0,
+      "max": 321
+    }
+  },
+  "by_ticker": {
+    "QQQ": {
+      "calendar_rows": 867,
+      "complete_days": 864,
+      "missing_days": 3,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 5206801,
+      "trades": 11016,
+      "net_base": 792951.4000000001,
+      "net_adverse": 770919.4,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 10034,
+          "net_base": 744091.6000000001,
+          "net_adverse": 724023.6000000001
+        },
+        "STOP": {
+          "trades": 463,
+          "net_base": 6372.2000000000035,
+          "net_adverse": 5446.200000000001
+        },
+        "EOD": {
+          "trades": 519,
+          "net_base": 42487.6,
+          "net_adverse": 41449.6
+        }
+      },
+      "eligible_state_fraction_mean": 0.4931764240506329,
+      "holding_minutes": {
+        "min": 1,
+        "median": 9.0,
+        "max": 321
+      }
+    },
+    "SPXW": {
+      "calendar_rows": 867,
+      "complete_days": 867,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 5408435,
+      "trades": 13416,
+      "net_base": 7691331.4,
+      "net_adverse": 7664499.4,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 12064,
+          "net_base": 7215095.6,
+          "net_adverse": 7190967.6
+        },
+        "STOP": {
+          "trades": 877,
+          "net_base": 110860.79999999997,
+          "net_adverse": 109106.80000000002
+        },
+        "EOD": {
+          "trades": 475,
+          "net_base": 365375.0,
+          "net_adverse": 364425.0
+        }
+      },
+      "eligible_state_fraction_mean": 0.48299096258011764,
+      "holding_minutes": {
+        "min": 1,
+        "median": 7.0,
+        "max": 271
+      }
+    },
+    "SPY": {
+      "calendar_rows": 867,
+      "complete_days": 864,
+      "missing_days": 3,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 4780604,
+      "trades": 11587,
+      "net_base": 706133.8000000002,
+      "net_adverse": 682959.8,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 10553,
+          "net_base": 660006.2000000001,
+          "net_adverse": 638900.2
+        },
+        "STOP": {
+          "trades": 543,
+          "net_base": 6629.200000000003,
+          "net_adverse": 5543.199999999999
+        },
+        "EOD": {
+          "trades": 491,
+          "net_base": 39498.40000000001,
+          "net_adverse": 38516.4
+        }
+      },
+      "eligible_state_fraction_mean": 0.46609089310829815,
+      "holding_minutes": {
+        "min": 1,
+        "median": 9.0,
+        "max": 312
+      }
+    }
+  },
+  "by_split": {
+    "test": {
+      "calendar_rows": 369,
+      "complete_days": 363,
+      "missing_days": 6,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 2406690,
+      "trades": 5339,
+      "net_base": 1781547.6,
+      "net_adverse": 1770869.6,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 4859,
+          "net_base": 1670976.5999999999,
+          "net_adverse": 1661258.6
+        },
+        "STOP": {
+          "trades": 261,
+          "net_base": 24569.399999999994,
+          "net_adverse": 24047.4
+        },
+        "EOD": {
+          "trades": 219,
+          "net_base": 86001.6,
+          "net_adverse": 85563.6
+        }
+      },
+      "eligible_state_fraction_mean": 0.5099905847892039,
+      "holding_minutes": {
+        "min": 1,
+        "median": 8.0,
+        "max": 321
+      }
+    },
+    "train": {
+      "calendar_rows": 1491,
+      "complete_days": 1491,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 8415997,
+      "trades": 20377,
+      "net_base": 4217844.8,
+      "net_adverse": 4177090.8,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 18496,
+          "net_base": 3965968.3999999994,
+          "net_adverse": 3928976.4
+        },
+        "STOP": {
+          "trades": 1008,
+          "net_base": 46930.2,
+          "net_adverse": 44914.20000000001
+        },
+        "EOD": {
+          "trades": 873,
+          "net_base": 204946.2,
+          "net_adverse": 203200.2
+        }
+      },
+      "eligible_state_fraction_mean": 0.4696597305351094,
+      "holding_minutes": {
+        "min": 1,
+        "median": 8.0,
+        "max": 312
+      }
+    },
+    "validation": {
+      "calendar_rows": 741,
+      "complete_days": 741,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 4573153,
+      "trades": 10303,
+      "net_base": 3191024.1999999997,
+      "net_adverse": 3170418.1999999997,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 9296,
+          "net_base": 2982248.4000000004,
+          "net_adverse": 2963656.3999999994
+        },
+        "STOP": {
+          "trades": 614,
+          "net_base": 52362.59999999999,
+          "net_adverse": 51134.600000000006
+        },
+        "EOD": {
+          "trades": 393,
+          "net_base": 156413.19999999998,
+          "net_adverse": 155627.2
+        }
+      },
+      "eligible_state_fraction_mean": 0.4887596303319155,
+      "holding_minutes": {
+        "min": 1,
+        "median": 8.0,
+        "max": 250
+      }
+    }
+  },
+  "by_ticker_month": {
+    "QQQ_202301": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 112199,
+      "trades": 216,
+      "net_base": 12943.4,
+      "net_adverse": 12511.4,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 200,
+          "net_base": 11917.000000000002,
+          "net_adverse": 11517.0
+        },
+        "STOP": {
+          "trades": 4,
+          "net_base": 24.599999999999987,
+          "net_adverse": 16.599999999999987
+        },
+        "EOD": {
+          "trades": 12,
+          "net_base": 1001.8,
+          "net_adverse": 977.8
+        }
+      },
+      "eligible_state_fraction_mean": 0.504746835443038
+    },
+    "QQQ_202302": {
+      "calendar_rows": 19,
+      "complete_days": 19,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 109400,
+      "trades": 251,
+      "net_base": 14398.400000000003,
+      "net_adverse": 13896.4,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 227,
+          "net_base": 13379.800000000005,
+          "net_adverse": 12925.800000000001
+        },
+        "STOP": {
+          "trades": 10,
+          "net_base": 165.00000000000006,
+          "net_adverse": 145.0
+        },
+        "EOD": {
+          "trades": 14,
+          "net_base": 853.6000000000001,
+          "net_adverse": 825.5999999999999
+        }
+      },
+      "eligible_state_fraction_mean": 0.4721852098600932
+    },
+    "QQQ_202303": {
+      "calendar_rows": 23,
+      "complete_days": 23,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 124176,
+      "trades": 276,
+      "net_base": 16813.4,
+      "net_adverse": 16261.400000000001,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 253,
+          "net_base": 16042.200000000006,
+          "net_adverse": 15536.200000000003
+        },
+        "STOP": {
+          "trades": 11,
+          "net_base": 103.40000000000006,
+          "net_adverse": 81.4
+        },
+        "EOD": {
+          "trades": 12,
+          "net_base": 667.8000000000001,
+          "net_adverse": 643.8
+        }
+      },
+      "eligible_state_fraction_mean": 0.4456521739130434
+    },
+    "QQQ_202304": {
+      "calendar_rows": 19,
+      "complete_days": 19,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 90097,
+      "trades": 173,
+      "net_base": 8828.2,
+      "net_adverse": 8482.199999999999,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 158,
+          "net_base": 7870.200000000001,
+          "net_adverse": 7554.199999999999
+        },
+        "STOP": {
+          "trades": 4,
+          "net_base": 55.59999999999998,
+          "net_adverse": 47.59999999999998
+        },
+        "EOD": {
+          "trades": 11,
+          "net_base": 902.4000000000002,
+          "net_adverse": 880.3999999999999
+        }
+      },
+      "eligible_state_fraction_mean": 0.41522318454363755
+    },
+    "QQQ_202305": {
+      "calendar_rows": 22,
+      "complete_days": 22,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 106063,
+      "trades": 263,
+      "net_base": 12034.199999999999,
+      "net_adverse": 11508.199999999995,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 237,
+          "net_base": 10922.8,
+          "net_adverse": 10448.8
+        },
+        "STOP": {
+          "trades": 14,
+          "net_base": 78.60000000000004,
+          "net_adverse": 50.600000000000016
+        },
+        "EOD": {
+          "trades": 12,
+          "net_base": 1032.8,
+          "net_adverse": 1008.8
+        }
+      },
+      "eligible_state_fraction_mean": 0.4472094361334868
+    },
+    "QQQ_202306": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 107872,
+      "trades": 229,
+      "net_base": 14197.6,
+      "net_adverse": 13739.599999999999,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 204,
+          "net_base": 13305.600000000002,
+          "net_adverse": 12897.599999999999
+        },
+        "STOP": {
+          "trades": 12,
+          "net_base": 73.8,
+          "net_adverse": 49.79999999999998
+        },
+        "EOD": {
+          "trades": 13,
+          "net_base": 818.2000000000003,
+          "net_adverse": 792.2
+        }
+      },
+      "eligible_state_fraction_mean": 0.45720313441832433
+    },
+    "QQQ_202307": {
+      "calendar_rows": 19,
+      "complete_days": 19,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 113720,
+      "trades": 257,
+      "net_base": 12722.800000000001,
+      "net_adverse": 12208.8,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 238,
+          "net_base": 11971.2,
+          "net_adverse": 11495.199999999999
+        },
+        "STOP": {
+          "trades": 10,
+          "net_base": 50.00000000000006,
+          "net_adverse": 29.999999999999996
+        },
+        "EOD": {
+          "trades": 9,
+          "net_base": 701.6,
+          "net_adverse": 683.6
+        }
+      },
+      "eligible_state_fraction_mean": 0.5253164556962024
+    },
+    "QQQ_202308": {
+      "calendar_rows": 23,
+      "complete_days": 23,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 145341,
+      "trades": 268,
+      "net_base": 15368.200000000003,
+      "net_adverse": 14832.2,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 245,
+          "net_base": 13865.000000000004,
+          "net_adverse": 13375.0
+        },
+        "STOP": {
+          "trades": 8,
+          "net_base": 75.20000000000007,
+          "net_adverse": 59.20000000000006
+        },
+        "EOD": {
+          "trades": 15,
+          "net_base": 1428.0000000000002,
+          "net_adverse": 1398.0000000000005
+        }
+      },
+      "eligible_state_fraction_mean": 0.5127958172812328
+    },
+    "QQQ_202309": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 104641,
+      "trades": 235,
+      "net_base": 12688.000000000002,
+      "net_adverse": 12217.999999999998,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 217,
+          "net_base": 12209.800000000003,
+          "net_adverse": 11775.8
+        },
+        "STOP": {
+          "trades": 8,
+          "net_base": 65.20000000000005,
+          "net_adverse": 49.199999999999996
+        },
+        "EOD": {
+          "trades": 10,
+          "net_base": 413.0,
+          "net_adverse": 393.0
+        }
+      },
+      "eligible_state_fraction_mean": 0.457753164556962
+    },
+    "QQQ_202310": {
+      "calendar_rows": 22,
+      "complete_days": 22,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 118941,
+      "trades": 269,
+      "net_base": 17821.600000000002,
+      "net_adverse": 17283.600000000002,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 237,
+          "net_base": 16505.800000000003,
+          "net_adverse": 16031.800000000003
+        },
+        "STOP": {
+          "trades": 13,
+          "net_base": 115.20000000000006,
+          "net_adverse": 89.19999999999999
+        },
+        "EOD": {
+          "trades": 19,
+          "net_base": 1200.6000000000004,
+          "net_adverse": 1162.6000000000001
+        }
+      },
+      "eligible_state_fraction_mean": 0.4496547756041427
+    },
+    "QQQ_202311": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 109907,
+      "trades": 266,
+      "net_base": 10670.4,
+      "net_adverse": 10138.399999999998,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 241,
+          "net_base": 10142.4,
+          "net_adverse": 9660.399999999998
+        },
+        "STOP": {
+          "trades": 12,
+          "net_base": 104.79999999999993,
+          "net_adverse": 80.79999999999993
+        },
+        "EOD": {
+          "trades": 13,
+          "net_base": 423.19999999999993,
+          "net_adverse": 397.2
+        }
+      },
+      "eligible_state_fraction_mean": 0.5136075949367088
+    },
+    "QQQ_202312": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 97289,
+      "trades": 245,
+      "net_base": 10847.0,
+      "net_adverse": 10356.999999999998,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 225,
+          "net_base": 10211.000000000004,
+          "net_adverse": 9761.000000000002
+        },
+        "STOP": {
+          "trades": 7,
+          "net_base": 28.800000000000004,
+          "net_adverse": 14.799999999999976
+        },
+        "EOD": {
+          "trades": 13,
+          "net_base": 607.1999999999999,
+          "net_adverse": 581.1999999999999
+        }
+      },
+      "eligible_state_fraction_mean": 0.4776898734177216
+    },
+    "QQQ_202401": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 124248,
+      "trades": 284,
+      "net_base": 13694.600000000002,
+      "net_adverse": 13126.599999999999,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 250,
+          "net_base": 12635.000000000004,
+          "net_adverse": 12135.0
+        },
+        "STOP": {
+          "trades": 17,
+          "net_base": 99.79999999999994,
+          "net_adverse": 65.79999999999991
+        },
+        "EOD": {
+          "trades": 17,
+          "net_base": 959.8000000000002,
+          "net_adverse": 925.7999999999998
+        }
+      },
+      "eligible_state_fraction_mean": 0.48206751054852315
+    },
+    "QQQ_202402": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 108505,
+      "trades": 254,
+      "net_base": 13274.6,
+      "net_adverse": 12766.599999999999,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 226,
+          "net_base": 12620.4,
+          "net_adverse": 12168.4
+        },
+        "STOP": {
+          "trades": 14,
+          "net_base": 93.60000000000004,
+          "net_adverse": 65.59999999999998
+        },
+        "EOD": {
+          "trades": 14,
+          "net_base": 560.5999999999999,
+          "net_adverse": 532.6
+        }
+      },
+      "eligible_state_fraction_mean": 0.4944620253164557
+    },
+    "QQQ_202403": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 120565,
+      "trades": 294,
+      "net_base": 14063.600000000004,
+      "net_adverse": 13475.600000000002,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 276,
+          "net_base": 13232.400000000003,
+          "net_adverse": 12680.4
+        },
+        "STOP": {
+          "trades": 8,
+          "net_base": 82.20000000000002,
+          "net_adverse": 66.2
+        },
+        "EOD": {
+          "trades": 10,
+          "net_base": 749.0,
+          "net_adverse": 729.0
+        }
+      },
+      "eligible_state_fraction_mean": 0.4955696202531644
+    },
+    "QQQ_202404": {
+      "calendar_rows": 22,
+      "complete_days": 22,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 128185,
+      "trades": 281,
+      "net_base": 17733.4,
+      "net_adverse": 17171.399999999998,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 258,
+          "net_base": 16535.200000000004,
+          "net_adverse": 16019.199999999999
+        },
+        "STOP": {
+          "trades": 11,
+          "net_base": 127.40000000000012,
+          "net_adverse": 105.40000000000003
+        },
+        "EOD": {
+          "trades": 12,
+          "net_base": 1070.7999999999997,
+          "net_adverse": 1046.8
+        }
+      },
+      "eligible_state_fraction_mean": 0.463463751438435
+    },
+    "QQQ_202405": {
+      "calendar_rows": 22,
+      "complete_days": 22,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 133453,
+      "trades": 276,
+      "net_base": 12690.4,
+      "net_adverse": 12138.399999999998,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 252,
+          "net_base": 11847.800000000001,
+          "net_adverse": 11343.800000000001
+        },
+        "STOP": {
+          "trades": 14,
+          "net_base": 102.60000000000011,
+          "net_adverse": 74.60000000000001
+        },
+        "EOD": {
+          "trades": 10,
+          "net_base": 740.0,
+          "net_adverse": 719.9999999999999
+        }
+      },
+      "eligible_state_fraction_mean": 0.5353855005753739
+    },
+    "QQQ_202406": {
+      "calendar_rows": 19,
+      "complete_days": 19,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 112851,
+      "trades": 279,
+      "net_base": 14578.6,
+      "net_adverse": 14020.6,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 256,
+          "net_base": 13587.400000000001,
+          "net_adverse": 13075.399999999998
+        },
+        "STOP": {
+          "trades": 14,
+          "net_base": 86.60000000000012,
+          "net_adverse": 58.60000000000005
+        },
+        "EOD": {
+          "trades": 9,
+          "net_base": 904.5999999999999,
+          "net_adverse": 886.5999999999999
+        }
+      },
+      "eligible_state_fraction_mean": 0.4931712191872085
+    },
+    "QQQ_202407": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 118319,
+      "trades": 281,
+      "net_base": 20232.4,
+      "net_adverse": 19670.4,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 254,
+          "net_base": 18885.600000000006,
+          "net_adverse": 18377.600000000002
+        },
+        "STOP": {
+          "trades": 15,
+          "net_base": 230.0000000000001,
+          "net_adverse": 199.99999999999994
+        },
+        "EOD": {
+          "trades": 12,
+          "net_base": 1116.8000000000002,
+          "net_adverse": 1092.8000000000002
+        }
+      },
+      "eligible_state_fraction_mean": 0.44635322483423745
+    },
+    "QQQ_202408": {
+      "calendar_rows": 22,
+      "complete_days": 22,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 131980,
+      "trades": 254,
+      "net_base": 24393.600000000006,
+      "net_adverse": 23885.600000000006,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 234,
+          "net_base": 23161.600000000006,
+          "net_adverse": 22693.600000000002
+        },
+        "STOP": {
+          "trades": 6,
+          "net_base": 100.4000000000001,
+          "net_adverse": 88.39999999999998
+        },
+        "EOD": {
+          "trades": 14,
+          "net_base": 1131.6000000000004,
+          "net_adverse": 1103.6
+        }
+      },
+      "eligible_state_fraction_mean": 0.45353855005753735
+    },
+    "QQQ_202409": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 144594,
+      "trades": 304,
+      "net_base": 20640.60000000001,
+      "net_adverse": 20032.600000000002,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 280,
+          "net_base": 19805.0,
+          "net_adverse": 19245.0
+        },
+        "STOP": {
+          "trades": 14,
+          "net_base": 147.60000000000005,
+          "net_adverse": 119.60000000000004
+        },
+        "EOD": {
+          "trades": 10,
+          "net_base": 688.0,
+          "net_adverse": 667.9999999999999
+        }
+      },
+      "eligible_state_fraction_mean": 0.5481012658227848
+    },
+    "QQQ_202410": {
+      "calendar_rows": 23,
+      "complete_days": 23,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 151367,
+      "trades": 284,
+      "net_base": 16831.600000000002,
+      "net_adverse": 16263.599999999999,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 260,
+          "net_base": 15884.000000000004,
+          "net_adverse": 15363.999999999998
+        },
+        "STOP": {
+          "trades": 6,
+          "net_base": 71.4,
+          "net_adverse": 59.40000000000001
+        },
+        "EOD": {
+          "trades": 18,
+          "net_base": 876.1999999999999,
+          "net_adverse": 840.1999999999998
+        }
+      },
+      "eligible_state_fraction_mean": 0.523940561364887
+    },
+    "QQQ_202411": {
+      "calendar_rows": 19,
+      "complete_days": 19,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 112293,
+      "trades": 223,
+      "net_base": 13464.2,
+      "net_adverse": 13018.199999999999,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 201,
+          "net_base": 12680.399999999998,
+          "net_adverse": 12278.399999999998
+        },
+        "STOP": {
+          "trades": 10,
+          "net_base": 127.00000000000003,
+          "net_adverse": 106.99999999999997
+        },
+        "EOD": {
+          "trades": 12,
+          "net_base": 656.8,
+          "net_adverse": 632.8
+        }
+      },
+      "eligible_state_fraction_mean": 0.5036642238507661
+    },
+    "QQQ_202412": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 113673,
+      "trades": 254,
+      "net_base": 16246.600000000004,
+      "net_adverse": 15738.6,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 229,
+          "net_base": 15525.6,
+          "net_adverse": 15067.599999999999
+        },
+        "STOP": {
+          "trades": 13,
+          "net_base": 114.20000000000012,
+          "net_adverse": 88.20000000000002
+        },
+        "EOD": {
+          "trades": 12,
+          "net_base": 606.8000000000002,
+          "net_adverse": 582.8000000000001
+        }
+      },
+      "eligible_state_fraction_mean": 0.47990506329113913
+    },
+    "QQQ_202501": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 134357,
+      "trades": 264,
+      "net_base": 21447.600000000006,
+      "net_adverse": 20919.600000000002,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 240,
+          "net_base": 20789.000000000007,
+          "net_adverse": 20309.000000000007
+        },
+        "STOP": {
+          "trades": 16,
+          "net_base": 188.40000000000015,
+          "net_adverse": 156.39999999999998
+        },
+        "EOD": {
+          "trades": 8,
+          "net_base": 470.20000000000005,
+          "net_adverse": 454.20000000000005
+        }
+      },
+      "eligible_state_fraction_mean": 0.5155063291139241
+    },
+    "QQQ_202502": {
+      "calendar_rows": 19,
+      "complete_days": 19,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 124871,
+      "trades": 225,
+      "net_base": 17542.000000000004,
+      "net_adverse": 17092.0,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 207,
+          "net_base": 16949.800000000007,
+          "net_adverse": 16535.8
+        },
+        "STOP": {
+          "trades": 7,
+          "net_base": 78.80000000000007,
+          "net_adverse": 64.8
+        },
+        "EOD": {
+          "trades": 11,
+          "net_base": 513.4000000000001,
+          "net_adverse": 491.4
+        }
+      },
+      "eligible_state_fraction_mean": 0.5194870086608927
+    },
+    "QQQ_202503": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 144372,
+      "trades": 324,
+      "net_base": 34663.600000000006,
+      "net_adverse": 34015.600000000006,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 298,
+          "net_base": 33239.20000000001,
+          "net_adverse": 32643.200000000008
+        },
+        "STOP": {
+          "trades": 15,
+          "net_base": 393.00000000000006,
+          "net_adverse": 362.9999999999999
+        },
+        "EOD": {
+          "trades": 11,
+          "net_base": 1031.4000000000003,
+          "net_adverse": 1009.4
+        }
+      },
+      "eligible_state_fraction_mean": 0.49246534056660646
+    },
+    "QQQ_202504": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 130692,
+      "trades": 304,
+      "net_base": 48743.60000000001,
+      "net_adverse": 48135.60000000001,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 268,
+          "net_base": 44542.20000000002,
+          "net_adverse": 44006.20000000002
+        },
+        "STOP": {
+          "trades": 24,
+          "net_base": 621.6000000000007,
+          "net_adverse": 573.6000000000004
+        },
+        "EOD": {
+          "trades": 12,
+          "net_base": 3579.8,
+          "net_adverse": 3555.8
+        }
+      },
+      "eligible_state_fraction_mean": 0.4740807715491259
+    },
+    "QQQ_202505": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 143931,
+      "trades": 294,
+      "net_base": 21596.600000000006,
+      "net_adverse": 21008.600000000002,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 268,
+          "net_base": 20224.200000000008,
+          "net_adverse": 19688.2
+        },
+        "STOP": {
+          "trades": 15,
+          "net_base": 256.00000000000017,
+          "net_adverse": 226.0
+        },
+        "EOD": {
+          "trades": 11,
+          "net_base": 1116.4000000000003,
+          "net_adverse": 1094.4
+        }
+      },
+      "eligible_state_fraction_mean": 0.5159734779987944
+    },
+    "QQQ_202506": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 126159,
+      "trades": 253,
+      "net_base": 15743.200000000006,
+      "net_adverse": 15237.199999999999,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 238,
+          "net_base": 15312.200000000006,
+          "net_adverse": 14836.2
+        },
+        "STOP": {
+          "trades": 6,
+          "net_base": 140.40000000000003,
+          "net_adverse": 128.39999999999995
+        },
+        "EOD": {
+          "trades": 9,
+          "net_base": 290.6,
+          "net_adverse": 272.6
+        }
+      },
+      "eligible_state_fraction_mean": 0.4999999999999999
+    },
+    "QQQ_202507": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 118767,
+      "trades": 258,
+      "net_base": 12578.200000000003,
+      "net_adverse": 12062.2,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 233,
+          "net_base": 12091.200000000003,
+          "net_adverse": 11625.199999999997
+        },
+        "STOP": {
+          "trades": 12,
+          "net_base": 151.8,
+          "net_adverse": 127.79999999999998
+        },
+        "EOD": {
+          "trades": 13,
+          "net_base": 335.19999999999993,
+          "net_adverse": 309.19999999999993
+        }
+      },
+      "eligible_state_fraction_mean": 0.5195901145268232
+    },
+    "QQQ_202508": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 142671,
+      "trades": 237,
+      "net_base": 14761.800000000007,
+      "net_adverse": 14287.800000000003,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 212,
+          "net_base": 13954.800000000003,
+          "net_adverse": 13530.8
+        },
+        "STOP": {
+          "trades": 11,
+          "net_base": 165.40000000000003,
+          "net_adverse": 143.39999999999998
+        },
+        "EOD": {
+          "trades": 14,
+          "net_base": 641.6,
+          "net_adverse": 613.5999999999999
+        }
+      },
+      "eligible_state_fraction_mean": 0.5403857745629898
+    },
+    "QQQ_202509": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 118776,
+      "trades": 266,
+      "net_base": 14533.400000000003,
+      "net_adverse": 14001.400000000001,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 243,
+          "net_base": 13414.2,
+          "net_adverse": 12928.2
+        },
+        "STOP": {
+          "trades": 9,
+          "net_base": 85.60000000000001,
+          "net_adverse": 67.60000000000002
+        },
+        "EOD": {
+          "trades": 14,
+          "net_base": 1033.6,
+          "net_adverse": 1005.5999999999999
+        }
+      },
+      "eligible_state_fraction_mean": 0.4828209764918626
+    },
+    "QQQ_202510": {
+      "calendar_rows": 23,
+      "complete_days": 23,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 118669,
+      "trades": 266,
+      "net_base": 20579.400000000005,
+      "net_adverse": 20047.400000000005,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 243,
+          "net_base": 19520.2,
+          "net_adverse": 19034.2
+        },
+        "STOP": {
+          "trades": 10,
+          "net_base": 173.0,
+          "net_adverse": 152.9999999999999
+        },
+        "EOD": {
+          "trades": 13,
+          "net_base": 886.2,
+          "net_adverse": 860.1999999999999
+        }
+      },
+      "eligible_state_fraction_mean": 0.4259768849752338
+    },
+    "QQQ_202511": {
+      "calendar_rows": 18,
+      "complete_days": 18,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 119822,
+      "trades": 205,
+      "net_base": 25643.000000000007,
+      "net_adverse": 25233.000000000007,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 190,
+          "net_base": 23395.000000000007,
+          "net_adverse": 23015.0
+        },
+        "STOP": {
+          "trades": 3,
+          "net_base": 39.20000000000004,
+          "net_adverse": 33.199999999999996
+        },
+        "EOD": {
+          "trades": 12,
+          "net_base": 2208.8,
+          "net_adverse": 2184.8
+        }
+      },
+      "eligible_state_fraction_mean": 0.49472573839662437
+    },
+    "QQQ_202512": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 125493,
+      "trades": 247,
+      "net_base": 18851.800000000003,
+      "net_adverse": 18357.800000000003,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 223,
+          "net_base": 17710.2,
+          "net_adverse": 17264.2
+        },
+        "STOP": {
+          "trades": 10,
+          "net_base": 208.00000000000014,
+          "net_adverse": 188.0
+        },
+        "EOD": {
+          "trades": 14,
+          "net_base": 933.5999999999999,
+          "net_adverse": 905.5999999999999
+        }
+      },
+      "eligible_state_fraction_mean": 0.5262206148282098
+    },
+    "QQQ_202601": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 128895,
+      "trades": 265,
+      "net_base": 20301.000000000004,
+      "net_adverse": 19771.0,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 239,
+          "net_base": 19176.600000000002,
+          "net_adverse": 18698.6
+        },
+        "STOP": {
+          "trades": 12,
+          "net_base": 171.80000000000018,
+          "net_adverse": 147.80000000000007
+        },
+        "EOD": {
+          "trades": 14,
+          "net_base": 952.6000000000001,
+          "net_adverse": 924.5999999999999
+        }
+      },
+      "eligible_state_fraction_mean": 0.5226265822784811
+    },
+    "QQQ_202602": {
+      "calendar_rows": 19,
+      "complete_days": 19,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 137932,
+      "trades": 215,
+      "net_base": 23515.00000000001,
+      "net_adverse": 23085.000000000004,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 199,
+          "net_base": 22221.600000000006,
+          "net_adverse": 21823.600000000006
+        },
+        "STOP": {
+          "trades": 5,
+          "net_base": 194.00000000000006,
+          "net_adverse": 184.00000000000003
+        },
+        "EOD": {
+          "trades": 11,
+          "net_base": 1099.4000000000003,
+          "net_adverse": 1077.4
+        }
+      },
+      "eligible_state_fraction_mean": 0.5566289140572952
+    },
+    "QQQ_202603": {
+      "calendar_rows": 22,
+      "complete_days": 22,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 151042,
+      "trades": 363,
+      "net_base": 34708.20000000001,
+      "net_adverse": 33982.20000000001,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 337,
+          "net_base": 33204.80000000001,
+          "net_adverse": 32530.800000000007
+        },
+        "STOP": {
+          "trades": 15,
+          "net_base": 299.0000000000004,
+          "net_adverse": 269.0000000000001
+        },
+        "EOD": {
+          "trades": 11,
+          "net_base": 1204.4,
+          "net_adverse": 1182.4
+        }
+      },
+      "eligible_state_fraction_mean": 0.5061852704257768
+    },
+    "QQQ_202604": {
+      "calendar_rows": 21,
+      "complete_days": 18,
+      "missing_days": 3,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 113461,
+      "trades": 223,
+      "net_base": 19189.200000000004,
+      "net_adverse": 18743.200000000008,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 198,
+          "net_base": 17039.200000000004,
+          "net_adverse": 16643.2
+        },
+        "STOP": {
+          "trades": 11,
+          "net_base": 231.40000000000015,
+          "net_adverse": 209.40000000000012
+        },
+        "EOD": {
+          "trades": 14,
+          "net_base": 1918.6000000000004,
+          "net_adverse": 1890.6000000000004
+        }
+      },
+      "eligible_state_fraction_mean": 0.4887482419127988
+    },
+    "QQQ_202605": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 145380,
+      "trades": 292,
+      "net_base": 26322.80000000001,
+      "net_adverse": 25738.800000000003,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 265,
+          "net_base": 24460.00000000001,
+          "net_adverse": 23930.000000000007
+        },
+        "STOP": {
+          "trades": 14,
+          "net_base": 235.60000000000025,
+          "net_adverse": 207.6
+        },
+        "EOD": {
+          "trades": 13,
+          "net_base": 1627.2000000000005,
+          "net_adverse": 1601.2000000000003
+        }
+      },
+      "eligible_state_fraction_mean": 0.5463607594936708
+    },
+    "QQQ_202606": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 141832,
+      "trades": 299,
+      "net_base": 45053.60000000001,
+      "net_adverse": 44455.60000000001,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 275,
+          "net_base": 42104.00000000001,
+          "net_adverse": 41554.000000000015
+        },
+        "STOP": {
+          "trades": 13,
+          "net_base": 416.20000000000016,
+          "net_adverse": 390.2000000000003
+        },
+        "EOD": {
+          "trades": 11,
+          "net_base": 2533.4,
+          "net_adverse": 2511.4000000000005
+        }
+      },
+      "eligible_state_fraction_mean": 0.5073839662447257
+    },
+    "SPXW_202301": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 122151,
+      "trades": 273,
+      "net_base": 152804.19999999998,
+      "net_adverse": 152258.2,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 251,
+          "net_base": 138695.4,
+          "net_adverse": 138193.40000000002
+        },
+        "STOP": {
+          "trades": 10,
+          "net_base": 834.0,
+          "net_adverse": 814.0000000000006
+        },
+        "EOD": {
+          "trades": 12,
+          "net_base": 13274.8,
+          "net_adverse": 13250.800000000001
+        }
+      },
+      "eligible_state_fraction_mean": 0.4651898734177216
+    },
+    "SPXW_202302": {
+      "calendar_rows": 19,
+      "complete_days": 19,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 113556,
+      "trades": 299,
+      "net_base": 167744.59999999998,
+      "net_adverse": 167146.59999999998,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 274,
+          "net_base": 160449.59999999995,
+          "net_adverse": 159901.59999999995
+        },
+        "STOP": {
+          "trades": 16,
+          "net_base": 2376.400000000001,
+          "net_adverse": 2344.4000000000005
+        },
+        "EOD": {
+          "trades": 9,
+          "net_base": 4918.6,
+          "net_adverse": 4900.6
+        }
+      },
+      "eligible_state_fraction_mean": 0.4511992005329781
+    },
+    "SPXW_202303": {
+      "calendar_rows": 23,
+      "complete_days": 23,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 141552,
+      "trades": 397,
+      "net_base": 225363.79999999996,
+      "net_adverse": 224569.79999999996,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 370,
+          "net_base": 219277.9999999999,
+          "net_adverse": 218537.99999999994
+        },
+        "STOP": {
+          "trades": 21,
+          "net_base": 1793.399999999999,
+          "net_adverse": 1751.4000000000008
+        },
+        "EOD": {
+          "trades": 6,
+          "net_base": 4292.4,
+          "net_adverse": 4280.400000000001
+        }
+      },
+      "eligible_state_fraction_mean": 0.46119977985690697
+    },
+    "SPXW_202304": {
+      "calendar_rows": 19,
+      "complete_days": 19,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 108498,
+      "trades": 265,
+      "net_base": 104586.0,
+      "net_adverse": 104056.00000000001,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 239,
+          "net_base": 100360.59999999998,
+          "net_adverse": 99882.6
+        },
+        "STOP": {
+          "trades": 16,
+          "net_base": 1036.4000000000003,
+          "net_adverse": 1004.4000000000004
+        },
+        "EOD": {
+          "trades": 10,
+          "net_base": 3189.0000000000005,
+          "net_adverse": 3169.0000000000005
+        }
+      },
+      "eligible_state_fraction_mean": 0.4372085276482346
+    },
+    "SPXW_202305": {
+      "calendar_rows": 22,
+      "complete_days": 22,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 130005,
+      "trades": 336,
+      "net_base": 143394.4,
+      "net_adverse": 142722.40000000002,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 311,
+          "net_base": 135654.4,
+          "net_adverse": 135032.4
+        },
+        "STOP": {
+          "trades": 15,
+          "net_base": 1570.9999999999993,
+          "net_adverse": 1541.0000000000002
+        },
+        "EOD": {
+          "trades": 10,
+          "net_base": 6168.999999999998,
+          "net_adverse": 6149.0
+        }
+      },
+      "eligible_state_fraction_mean": 0.47295742232451093
+    },
+    "SPXW_202306": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 125616,
+      "trades": 320,
+      "net_base": 125767.99999999997,
+      "net_adverse": 125127.99999999997,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 286,
+          "net_base": 118864.39999999998,
+          "net_adverse": 118292.4
+        },
+        "STOP": {
+          "trades": 23,
+          "net_base": 1949.2000000000005,
+          "net_adverse": 1903.2000000000012
+        },
+        "EOD": {
+          "trades": 11,
+          "net_base": 4954.400000000001,
+          "net_adverse": 4932.4
+        }
+      },
+      "eligible_state_fraction_mean": 0.47332730560578656
+    },
+    "SPXW_202307": {
+      "calendar_rows": 19,
+      "complete_days": 19,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 110679,
+      "trades": 306,
+      "net_base": 97702.40000000001,
+      "net_adverse": 97090.40000000001,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 276,
+          "net_base": 91510.40000000001,
+          "net_adverse": 90958.40000000001
+        },
+        "STOP": {
+          "trades": 22,
+          "net_base": 1518.8000000000006,
+          "net_adverse": 1474.8000000000013
+        },
+        "EOD": {
+          "trades": 8,
+          "net_base": 4673.199999999999,
+          "net_adverse": 4657.200000000001
+        }
+      },
+      "eligible_state_fraction_mean": 0.47118587608261164
+    },
+    "SPXW_202308": {
+      "calendar_rows": 23,
+      "complete_days": 23,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 155544,
+      "trades": 350,
+      "net_base": 162220.0,
+      "net_adverse": 161520.00000000003,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 323,
+          "net_base": 155784.2,
+          "net_adverse": 155138.20000000004
+        },
+        "STOP": {
+          "trades": 14,
+          "net_base": 1295.6000000000006,
+          "net_adverse": 1267.6000000000008
+        },
+        "EOD": {
+          "trades": 13,
+          "net_base": 5140.2,
+          "net_adverse": 5114.2
+        }
+      },
+      "eligible_state_fraction_mean": 0.5119702806824437
+    },
+    "SPXW_202309": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 107455,
+      "trades": 276,
+      "net_base": 123025.39999999998,
+      "net_adverse": 122473.4,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 257,
+          "net_base": 118917.8,
+          "net_adverse": 118403.8
+        },
+        "STOP": {
+          "trades": 10,
+          "net_base": 1004.0000000000003,
+          "net_adverse": 984.0000000000009
+        },
+        "EOD": {
+          "trades": 9,
+          "net_base": 3103.6000000000004,
+          "net_adverse": 3085.600000000001
+        }
+      },
+      "eligible_state_fraction_mean": 0.43053797468354427
+    },
+    "SPXW_202310": {
+      "calendar_rows": 22,
+      "complete_days": 22,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 133319,
+      "trades": 338,
+      "net_base": 186550.19999999995,
+      "net_adverse": 185874.19999999998,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 289,
+          "net_base": 172590.59999999995,
+          "net_adverse": 172012.6
+        },
+        "STOP": {
+          "trades": 34,
+          "net_base": 3323.5999999999976,
+          "net_adverse": 3255.6000000000013
+        },
+        "EOD": {
+          "trades": 15,
+          "net_base": 10635.999999999998,
+          "net_adverse": 10605.999999999998
+        }
+      },
+      "eligible_state_fraction_mean": 0.45727848101265833
+    },
+    "SPXW_202311": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 121181,
+      "trades": 318,
+      "net_base": 109407.2,
+      "net_adverse": 108771.20000000001,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 280,
+          "net_base": 99662.0,
+          "net_adverse": 99102.0
+        },
+        "STOP": {
+          "trades": 22,
+          "net_base": 1873.8000000000002,
+          "net_adverse": 1829.8000000000009
+        },
+        "EOD": {
+          "trades": 16,
+          "net_base": 7871.4,
+          "net_adverse": 7839.400000000001
+        }
+      },
+      "eligible_state_fraction_mean": 0.48939873417721513
+    },
+    "SPXW_202312": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 114826,
+      "trades": 298,
+      "net_base": 97864.2,
+      "net_adverse": 97268.2,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 265,
+          "net_base": 92656.0,
+          "net_adverse": 92126.00000000004
+        },
+        "STOP": {
+          "trades": 21,
+          "net_base": 1313.3999999999992,
+          "net_adverse": 1271.4
+        },
+        "EOD": {
+          "trades": 12,
+          "net_base": 3894.8000000000006,
+          "net_adverse": 3870.8000000000006
+        }
+      },
+      "eligible_state_fraction_mean": 0.48085443037974684
+    },
+    "SPXW_202401": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 123199,
+      "trades": 359,
+      "net_base": 134683.59999999998,
+      "net_adverse": 133965.59999999998,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 325,
+          "net_base": 126089.99999999999,
+          "net_adverse": 125440.00000000001
+        },
+        "STOP": {
+          "trades": 22,
+          "net_base": 1778.8000000000004,
+          "net_adverse": 1734.8000000000009
+        },
+        "EOD": {
+          "trades": 12,
+          "net_base": 6814.799999999999,
+          "net_adverse": 6790.800000000001
+        }
+      },
+      "eligible_state_fraction_mean": 0.46850512356841484
+    },
+    "SPXW_202402": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 110839,
+      "trades": 299,
+      "net_base": 120269.59999999998,
+      "net_adverse": 119671.6,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 270,
+          "net_base": 111942.99999999999,
+          "net_adverse": 111403.00000000003
+        },
+        "STOP": {
+          "trades": 17,
+          "net_base": 1341.8000000000004,
+          "net_adverse": 1307.8000000000009
+        },
+        "EOD": {
+          "trades": 12,
+          "net_base": 6984.799999999999,
+          "net_adverse": 6960.800000000002
+        }
+      },
+      "eligible_state_fraction_mean": 0.4469936708860759
+    },
+    "SPXW_202403": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 127655,
+      "trades": 380,
+      "net_base": 126916.99999999999,
+      "net_adverse": 126157.0,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 347,
+          "net_base": 115543.79999999997,
+          "net_adverse": 114849.8
+        },
+        "STOP": {
+          "trades": 23,
+          "net_base": 1529.1999999999998,
+          "net_adverse": 1483.2000000000005
+        },
+        "EOD": {
+          "trades": 10,
+          "net_base": 9843.999999999998,
+          "net_adverse": 9824.0
+        }
+      },
+      "eligible_state_fraction_mean": 0.5034810126582279
+    },
+    "SPXW_202404": {
+      "calendar_rows": 22,
+      "complete_days": 22,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 123432,
+      "trades": 323,
+      "net_base": 181604.19999999998,
+      "net_adverse": 180958.2,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 286,
+          "net_base": 170804.39999999997,
+          "net_adverse": 170232.4
+        },
+        "STOP": {
+          "trades": 23,
+          "net_base": 2124.199999999999,
+          "net_adverse": 2078.2000000000003
+        },
+        "EOD": {
+          "trades": 14,
+          "net_base": 8675.599999999999,
+          "net_adverse": 8647.6
+        }
+      },
+      "eligible_state_fraction_mean": 0.4394418872266973
+    },
+    "SPXW_202405": {
+      "calendar_rows": 22,
+      "complete_days": 22,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 130577,
+      "trades": 343,
+      "net_base": 126877.19999999998,
+      "net_adverse": 126191.20000000001,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 301,
+          "net_base": 117825.39999999998,
+          "net_adverse": 117223.39999999998
+        },
+        "STOP": {
+          "trades": 30,
+          "net_base": 2467.0,
+          "net_adverse": 2407.000000000002
+        },
+        "EOD": {
+          "trades": 12,
+          "net_base": 6584.799999999999,
+          "net_adverse": 6560.799999999999
+        }
+      },
+      "eligible_state_fraction_mean": 0.48230724971231304
+    },
+    "SPXW_202406": {
+      "calendar_rows": 19,
+      "complete_days": 19,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 114526,
+      "trades": 317,
+      "net_base": 132491.8,
+      "net_adverse": 131857.80000000002,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 288,
+          "net_base": 126405.19999999998,
+          "net_adverse": 125829.20000000001
+        },
+        "STOP": {
+          "trades": 20,
+          "net_base": 1617.9999999999998,
+          "net_adverse": 1578.0000000000005
+        },
+        "EOD": {
+          "trades": 9,
+          "net_base": 4468.599999999999,
+          "net_adverse": 4450.600000000001
+        }
+      },
+      "eligible_state_fraction_mean": 0.4635243171219187
+    },
+    "SPXW_202407": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 131749,
+      "trades": 325,
+      "net_base": 176630.0,
+      "net_adverse": 175980.0,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 287,
+          "net_base": 162759.8,
+          "net_adverse": 162185.80000000002
+        },
+        "STOP": {
+          "trades": 25,
+          "net_base": 2590.0,
+          "net_adverse": 2540.000000000002
+        },
+        "EOD": {
+          "trades": 13,
+          "net_base": 11280.199999999999,
+          "net_adverse": 11254.199999999999
+        }
+      },
+      "eligible_state_fraction_mean": 0.4703134418324292
+    },
+    "SPXW_202408": {
+      "calendar_rows": 22,
+      "complete_days": 22,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 134993,
+      "trades": 290,
+      "net_base": 226106.0,
+      "net_adverse": 225526.0,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 261,
+          "net_base": 210449.39999999997,
+          "net_adverse": 209927.39999999997
+        },
+        "STOP": {
+          "trades": 14,
+          "net_base": 2085.6000000000004,
+          "net_adverse": 2057.6000000000004
+        },
+        "EOD": {
+          "trades": 15,
+          "net_base": 13570.999999999996,
+          "net_adverse": 13541.0
+        }
+      },
+      "eligible_state_fraction_mean": 0.4664844649021864
+    },
+    "SPXW_202409": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 128704,
+      "trades": 323,
+      "net_base": 179554.19999999998,
+      "net_adverse": 178908.19999999998,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 293,
+          "net_base": 171192.2,
+          "net_adverse": 170606.2
+        },
+        "STOP": {
+          "trades": 21,
+          "net_base": 2693.3999999999996,
+          "net_adverse": 2651.4000000000005
+        },
+        "EOD": {
+          "trades": 9,
+          "net_base": 5668.6,
+          "net_adverse": 5650.600000000001
+        }
+      },
+      "eligible_state_fraction_mean": 0.48544303797468363
+    },
+    "SPXW_202410": {
+      "calendar_rows": 23,
+      "complete_days": 23,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 140401,
+      "trades": 324,
+      "net_base": 152159.59999999998,
+      "net_adverse": 151511.6,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 295,
+          "net_base": 140572.99999999997,
+          "net_adverse": 139983.0
+        },
+        "STOP": {
+          "trades": 15,
+          "net_base": 1241.0000000000002,
+          "net_adverse": 1211.0000000000007
+        },
+        "EOD": {
+          "trades": 14,
+          "net_base": 10345.599999999999,
+          "net_adverse": 10317.599999999999
+        }
+      },
+      "eligible_state_fraction_mean": 0.4651898734177215
+    },
+    "SPXW_202411": {
+      "calendar_rows": 19,
+      "complete_days": 19,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 108213,
+      "trades": 250,
+      "net_base": 135540.0,
+      "net_adverse": 135040.00000000003,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 230,
+          "net_base": 130451.99999999997,
+          "net_adverse": 129992.00000000001
+        },
+        "STOP": {
+          "trades": 12,
+          "net_base": 1074.8,
+          "net_adverse": 1050.8000000000004
+        },
+        "EOD": {
+          "trades": 8,
+          "net_base": 4013.2000000000003,
+          "net_adverse": 3997.2000000000003
+        }
+      },
+      "eligible_state_fraction_mean": 0.45886075949367083
+    },
+    "SPXW_202412": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 114358,
+      "trades": 277,
+      "net_base": 149915.8,
+      "net_adverse": 149361.80000000002,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 251,
+          "net_base": 143595.40000000002,
+          "net_adverse": 143093.4
+        },
+        "STOP": {
+          "trades": 15,
+          "net_base": 1676.0,
+          "net_adverse": 1646.0000000000007
+        },
+        "EOD": {
+          "trades": 11,
+          "net_base": 4644.4,
+          "net_adverse": 4622.4000000000015
+        }
+      },
+      "eligible_state_fraction_mean": 0.46566455696202524
+    },
+    "SPXW_202501": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 126991,
+      "trades": 304,
+      "net_base": 208831.59999999995,
+      "net_adverse": 208223.59999999998,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 265,
+          "net_base": 199240.99999999994,
+          "net_adverse": 198711.0
+        },
+        "STOP": {
+          "trades": 28,
+          "net_base": 3671.1999999999975,
+          "net_adverse": 3615.200000000001
+        },
+        "EOD": {
+          "trades": 11,
+          "net_base": 5919.4,
+          "net_adverse": 5897.400000000001
+        }
+      },
+      "eligible_state_fraction_mean": 0.4743670886075949
+    },
+    "SPXW_202502": {
+      "calendar_rows": 19,
+      "complete_days": 19,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 131907,
+      "trades": 301,
+      "net_base": 186475.39999999997,
+      "net_adverse": 185873.4,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 266,
+          "net_base": 171756.39999999997,
+          "net_adverse": 171224.4
+        },
+        "STOP": {
+          "trades": 20,
+          "net_base": 3152.9999999999995,
+          "net_adverse": 3113.000000000001
+        },
+        "EOD": {
+          "trades": 15,
+          "net_base": 11566.0,
+          "net_adverse": 11536.0
+        }
+      },
+      "eligible_state_fraction_mean": 0.54163890739507
+    },
+    "SPXW_202503": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 142509,
+      "trades": 373,
+      "net_base": 337764.2,
+      "net_adverse": 337018.19999999995,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 332,
+          "net_base": 318522.79999999993,
+          "net_adverse": 317858.79999999993
+        },
+        "STOP": {
+          "trades": 31,
+          "net_base": 5697.399999999999,
+          "net_adverse": 5635.400000000001
+        },
+        "EOD": {
+          "trades": 10,
+          "net_base": 13544.0,
+          "net_adverse": 13524.0
+        }
+      },
+      "eligible_state_fraction_mean": 0.502411091018686
+    },
+    "SPXW_202504": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 138375,
+      "trades": 342,
+      "net_base": 523116.80000000005,
+      "net_adverse": 522432.80000000005,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 297,
+          "net_base": 473223.8,
+          "net_adverse": 472629.8
+        },
+        "STOP": {
+          "trades": 30,
+          "net_base": 9421.999999999996,
+          "net_adverse": 9361.999999999996
+        },
+        "EOD": {
+          "trades": 15,
+          "net_base": 40471.00000000001,
+          "net_adverse": 40441.0
+        }
+      },
+      "eligible_state_fraction_mean": 0.479957805907173
+    },
+    "SPXW_202505": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 133075,
+      "trades": 336,
+      "net_base": 218294.39999999994,
+      "net_adverse": 217622.39999999994,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 295,
+          "net_base": 203442.99999999994,
+          "net_adverse": 202852.99999999994
+        },
+        "STOP": {
+          "trades": 33,
+          "net_base": 4458.199999999995,
+          "net_adverse": 4392.199999999999
+        },
+        "EOD": {
+          "trades": 8,
+          "net_base": 10393.2,
+          "net_adverse": 10377.2
+        }
+      },
+      "eligible_state_fraction_mean": 0.4776974080771548
+    },
+    "SPXW_202506": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 137790,
+      "trades": 314,
+      "net_base": 163765.59999999995,
+      "net_adverse": 163137.6,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 278,
+          "net_base": 153181.2,
+          "net_adverse": 152625.20000000004
+        },
+        "STOP": {
+          "trades": 23,
+          "net_base": 3944.199999999999,
+          "net_adverse": 3898.200000000001
+        },
+        "EOD": {
+          "trades": 13,
+          "net_base": 6640.199999999999,
+          "net_adverse": 6614.200000000001
+        }
+      },
+      "eligible_state_fraction_mean": 0.5164556962025315
+    },
+    "SPXW_202507": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 114094,
+      "trades": 273,
+      "net_base": 122444.19999999997,
+      "net_adverse": 121898.19999999998,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 247,
+          "net_base": 116233.79999999996,
+          "net_adverse": 115739.8
+        },
+        "STOP": {
+          "trades": 17,
+          "net_base": 2111.7999999999997,
+          "net_adverse": 2077.8000000000006
+        },
+        "EOD": {
+          "trades": 9,
+          "net_base": 4098.6,
+          "net_adverse": 4080.6000000000013
+        }
+      },
+      "eligible_state_fraction_mean": 0.4355033152501507
+    },
+    "SPXW_202508": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 143603,
+      "trades": 304,
+      "net_base": 142486.59999999998,
+      "net_adverse": 141878.59999999998,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 271,
+          "net_base": 135398.39999999997,
+          "net_adverse": 134856.40000000002
+        },
+        "STOP": {
+          "trades": 21,
+          "net_base": 2003.3999999999994,
+          "net_adverse": 1961.4000000000005
+        },
+        "EOD": {
+          "trades": 12,
+          "net_base": 5084.8,
+          "net_adverse": 5060.8
+        }
+      },
+      "eligible_state_fraction_mean": 0.5510849909584087
+    },
+    "SPXW_202509": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 122925,
+      "trades": 318,
+      "net_base": 143647.19999999998,
+      "net_adverse": 143011.2,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 288,
+          "net_base": 134735.19999999998,
+          "net_adverse": 134159.2
+        },
+        "STOP": {
+          "trades": 22,
+          "net_base": 2198.8000000000006,
+          "net_adverse": 2154.8000000000015
+        },
+        "EOD": {
+          "trades": 8,
+          "net_base": 6713.199999999999,
+          "net_adverse": 6697.200000000001
+        }
+      },
+      "eligible_state_fraction_mean": 0.4767932489451476
+    },
+    "SPXW_202510": {
+      "calendar_rows": 23,
+      "complete_days": 23,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 130753,
+      "trades": 363,
+      "net_base": 213700.2,
+      "net_adverse": 212974.2,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 319,
+          "net_base": 199482.59999999995,
+          "net_adverse": 198844.59999999998
+        },
+        "STOP": {
+          "trades": 29,
+          "net_base": 4166.5999999999985,
+          "net_adverse": 4108.6
+        },
+        "EOD": {
+          "trades": 15,
+          "net_base": 10050.999999999998,
+          "net_adverse": 10020.999999999998
+        }
+      },
+      "eligible_state_fraction_mean": 0.44193725921849214
+    },
+    "SPXW_202511": {
+      "calendar_rows": 18,
+      "complete_days": 18,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 125013,
+      "trades": 297,
+      "net_base": 233053.79999999996,
+      "net_adverse": 232459.79999999996,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 260,
+          "net_base": 216044.0,
+          "net_adverse": 215523.99999999997
+        },
+        "STOP": {
+          "trades": 27,
+          "net_base": 4525.799999999999,
+          "net_adverse": 4471.800000000001
+        },
+        "EOD": {
+          "trades": 10,
+          "net_base": 12483.999999999998,
+          "net_adverse": 12464.000000000002
+        }
+      },
+      "eligible_state_fraction_mean": 0.5107243319268636
+    },
+    "SPXW_202512": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 134755,
+      "trades": 305,
+      "net_base": 178917.0,
+      "net_adverse": 178307.00000000003,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 283,
+          "net_base": 172908.2,
+          "net_adverse": 172342.19999999998
+        },
+        "STOP": {
+          "trades": 15,
+          "net_base": 1720.9999999999998,
+          "net_adverse": 1691.0000000000014
+        },
+        "EOD": {
+          "trades": 7,
+          "net_base": 4287.8,
+          "net_adverse": 4273.800000000001
+        }
+      },
+      "eligible_state_fraction_mean": 0.5271247739602171
+    },
+    "SPXW_202601": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 149418,
+      "trades": 319,
+      "net_base": 195182.59999999998,
+      "net_adverse": 194544.60000000003,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 294,
+          "net_base": 182827.59999999998,
+          "net_adverse": 182239.6
+        },
+        "STOP": {
+          "trades": 15,
+          "net_base": 3290.9999999999995,
+          "net_adverse": 3261.000000000001
+        },
+        "EOD": {
+          "trades": 10,
+          "net_base": 9064.0,
+          "net_adverse": 9044.0
+        }
+      },
+      "eligible_state_fraction_mean": 0.5642405063291139
+    },
+    "SPXW_202602": {
+      "calendar_rows": 19,
+      "complete_days": 19,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 152728,
+      "trades": 265,
+      "net_base": 227370.99999999997,
+      "net_adverse": 226840.99999999997,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 235,
+          "net_base": 210868.99999999997,
+          "net_adverse": 210398.99999999997
+        },
+        "STOP": {
+          "trades": 15,
+          "net_base": 2480.999999999998,
+          "net_adverse": 2451.0
+        },
+        "EOD": {
+          "trades": 15,
+          "net_base": 14020.999999999998,
+          "net_adverse": 13990.999999999998
+        }
+      },
+      "eligible_state_fraction_mean": 0.5867754830113259
+    },
+    "SPXW_202603": {
+      "calendar_rows": 22,
+      "complete_days": 22,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 152234,
+      "trades": 408,
+      "net_base": 354953.20000000007,
+      "net_adverse": 354137.2,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 367,
+          "net_base": 337531.8,
+          "net_adverse": 336797.79999999993
+        },
+        "STOP": {
+          "trades": 29,
+          "net_base": 5206.599999999996,
+          "net_adverse": 5148.6
+        },
+        "EOD": {
+          "trades": 12,
+          "net_base": 12214.8,
+          "net_adverse": 12190.8
+        }
+      },
+      "eligible_state_fraction_mean": 0.5304948216340621
+    },
+    "SPXW_202604": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 121112,
+      "trades": 347,
+      "net_base": 207458.79999999996,
+      "net_adverse": 206764.8,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 318,
+          "net_base": 195212.19999999998,
+          "net_adverse": 194576.19999999998
+        },
+        "STOP": {
+          "trades": 18,
+          "net_base": 3217.2,
+          "net_adverse": 3181.2000000000007
+        },
+        "EOD": {
+          "trades": 11,
+          "net_base": 9029.4,
+          "net_adverse": 9007.400000000001
+        }
+      },
+      "eligible_state_fraction_mean": 0.44861362266425564
+    },
+    "SPXW_202605": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 135347,
+      "trades": 311,
+      "net_base": 185429.39999999997,
+      "net_adverse": 184807.4,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 277,
+          "net_base": 173905.8,
+          "net_adverse": 173351.8
+        },
+        "STOP": {
+          "trades": 24,
+          "net_base": 2789.5999999999995,
+          "net_adverse": 2741.6000000000013
+        },
+        "EOD": {
+          "trades": 10,
+          "net_base": 8734.0,
+          "net_adverse": 8714.000000000002
+        }
+      },
+      "eligible_state_fraction_mean": 0.5118670886075949
+    },
+    "SPXW_202606": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 142778,
+      "trades": 350,
+      "net_base": 309260.0,
+      "net_adverse": 308560.00000000006,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 317,
+          "net_base": 288521.80000000005,
+          "net_adverse": 287887.80000000005
+        },
+        "STOP": {
+          "trades": 19,
+          "net_base": 4692.6,
+          "net_adverse": 4654.5999999999985
+        },
+        "EOD": {
+          "trades": 14,
+          "net_base": 16045.599999999999,
+          "net_adverse": 16017.6
+        }
+      },
+      "eligible_state_fraction_mean": 0.5052742616033756
+    },
+    "SPY_202301": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 121349,
+      "trades": 267,
+      "net_base": 14948.800000000003,
+      "net_adverse": 14414.8,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 243,
+          "net_base": 13744.2,
+          "net_adverse": 13258.199999999997
+        },
+        "STOP": {
+          "trades": 8,
+          "net_base": 76.2,
+          "net_adverse": 60.199999999999974
+        },
+        "EOD": {
+          "trades": 16,
+          "net_base": 1128.4,
+          "net_adverse": 1096.4
+        }
+      },
+      "eligible_state_fraction_mean": 0.4707278481012658
+    },
+    "SPY_202302": {
+      "calendar_rows": 19,
+      "complete_days": 19,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 101897,
+      "trades": 259,
+      "net_base": 15256.600000000004,
+      "net_adverse": 14738.6,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 235,
+          "net_base": 14239.000000000005,
+          "net_adverse": 13769.000000000002
+        },
+        "STOP": {
+          "trades": 12,
+          "net_base": 110.79999999999997,
+          "net_adverse": 86.79999999999993
+        },
+        "EOD": {
+          "trades": 12,
+          "net_base": 906.8000000000001,
+          "net_adverse": 882.8
+        }
+      },
+      "eligible_state_fraction_mean": 0.4153897401732179
+    },
+    "SPY_202303": {
+      "calendar_rows": 23,
+      "complete_days": 23,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 126330,
+      "trades": 348,
+      "net_base": 20215.200000000004,
+      "net_adverse": 19519.200000000004,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 326,
+          "net_base": 19352.400000000005,
+          "net_adverse": 18700.4
+        },
+        "STOP": {
+          "trades": 7,
+          "net_base": 138.80000000000007,
+          "net_adverse": 124.79999999999998
+        },
+        "EOD": {
+          "trades": 15,
+          "net_base": 724.0,
+          "net_adverse": 693.9999999999999
+        }
+      },
+      "eligible_state_fraction_mean": 0.43326912493120523
+    },
+    "SPY_202304": {
+      "calendar_rows": 19,
+      "complete_days": 19,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 83673,
+      "trades": 216,
+      "net_base": 9055.4,
+      "net_adverse": 8623.399999999998,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 194,
+          "net_base": 8486.6,
+          "net_adverse": 8098.6
+        },
+        "STOP": {
+          "trades": 12,
+          "net_base": 79.8,
+          "net_adverse": 55.79999999999998
+        },
+        "EOD": {
+          "trades": 10,
+          "net_base": 488.99999999999994,
+          "net_adverse": 468.99999999999994
+        }
+      },
+      "eligible_state_fraction_mean": 0.4098934043970687
+    },
+    "SPY_202305": {
+      "calendar_rows": 22,
+      "complete_days": 22,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 117561,
+      "trades": 300,
+      "net_base": 12519.999999999998,
+      "net_adverse": 11919.999999999998,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 274,
+          "net_base": 11622.6,
+          "net_adverse": 11074.599999999997
+        },
+        "STOP": {
+          "trades": 13,
+          "net_base": 91.19999999999999,
+          "net_adverse": 65.19999999999996
+        },
+        "EOD": {
+          "trades": 13,
+          "net_base": 806.1999999999999,
+          "net_adverse": 780.1999999999999
+        }
+      },
+      "eligible_state_fraction_mean": 0.4859033371691599
+    },
+    "SPY_202306": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 101117,
+      "trades": 285,
+      "net_base": 11323.000000000002,
+      "net_adverse": 10753.000000000002,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 264,
+          "net_base": 10692.599999999999,
+          "net_adverse": 10164.599999999997
+        },
+        "STOP": {
+          "trades": 9,
+          "net_base": 80.59999999999997,
+          "net_adverse": 62.59999999999998
+        },
+        "EOD": {
+          "trades": 12,
+          "net_base": 549.8,
+          "net_adverse": 525.8
+        }
+      },
+      "eligible_state_fraction_mean": 0.4680530440024111
+    },
+    "SPY_202307": {
+      "calendar_rows": 19,
+      "complete_days": 19,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 89096,
+      "trades": 242,
+      "net_base": 8491.800000000001,
+      "net_adverse": 8007.799999999998,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 222,
+          "net_base": 7743.8,
+          "net_adverse": 7299.799999999999
+        },
+        "STOP": {
+          "trades": 10,
+          "net_base": 55.000000000000014,
+          "net_adverse": 34.999999999999986
+        },
+        "EOD": {
+          "trades": 10,
+          "net_base": 693.0000000000001,
+          "net_adverse": 673.0000000000001
+        }
+      },
+      "eligible_state_fraction_mean": 0.45952698201199205
+    },
+    "SPY_202308": {
+      "calendar_rows": 23,
+      "complete_days": 23,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 116548,
+      "trades": 291,
+      "net_base": 13759.399999999998,
+      "net_adverse": 13177.399999999998,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 263,
+          "net_base": 12776.2,
+          "net_adverse": 12250.2
+        },
+        "STOP": {
+          "trades": 14,
+          "net_base": 85.59999999999998,
+          "net_adverse": 57.59999999999997
+        },
+        "EOD": {
+          "trades": 14,
+          "net_base": 897.6,
+          "net_adverse": 869.5999999999999
+        }
+      },
+      "eligible_state_fraction_mean": 0.4463401210787012
+    },
+    "SPY_202309": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 92522,
+      "trades": 260,
+      "net_base": 11519.000000000002,
+      "net_adverse": 10998.999999999996,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 240,
+          "net_base": 11035.0,
+          "net_adverse": 10554.999999999998
+        },
+        "STOP": {
+          "trades": 12,
+          "net_base": 88.80000000000017,
+          "net_adverse": 64.8000000000001
+        },
+        "EOD": {
+          "trades": 8,
+          "net_base": 395.20000000000005,
+          "net_adverse": 379.19999999999993
+        }
+      },
+      "eligible_state_fraction_mean": 0.4393987341772152
+    },
+    "SPY_202310": {
+      "calendar_rows": 22,
+      "complete_days": 22,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 122964,
+      "trades": 298,
+      "net_base": 17529.2,
+      "net_adverse": 16933.199999999997,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 265,
+          "net_base": 16112.000000000002,
+          "net_adverse": 15581.999999999998
+        },
+        "STOP": {
+          "trades": 17,
+          "net_base": 154.80000000000004,
+          "net_adverse": 120.8
+        },
+        "EOD": {
+          "trades": 16,
+          "net_base": 1262.4,
+          "net_adverse": 1230.4
+        }
+      },
+      "eligible_state_fraction_mean": 0.4426064441887227
+    },
+    "SPY_202311": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 94413,
+      "trades": 255,
+      "net_base": 9807.000000000002,
+      "net_adverse": 9297.0,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 229,
+          "net_base": 8722.6,
+          "net_adverse": 8264.599999999999
+        },
+        "STOP": {
+          "trades": 11,
+          "net_base": 128.40000000000003,
+          "net_adverse": 106.39999999999998
+        },
+        "EOD": {
+          "trades": 15,
+          "net_base": 956.0000000000002,
+          "net_adverse": 925.9999999999999
+        }
+      },
+      "eligible_state_fraction_mean": 0.4768987341772153
+    },
+    "SPY_202312": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 93388,
+      "trades": 251,
+      "net_base": 8369.4,
+      "net_adverse": 7867.4,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 226,
+          "net_base": 7894.4000000000015,
+          "net_adverse": 7442.4
+        },
+        "STOP": {
+          "trades": 13,
+          "net_base": 87.20000000000002,
+          "net_adverse": 61.19999999999997
+        },
+        "EOD": {
+          "trades": 12,
+          "net_base": 387.79999999999995,
+          "net_adverse": 363.79999999999995
+        }
+      },
+      "eligible_state_fraction_mean": 0.4906645569620253
+    },
+    "SPY_202401": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 105440,
+      "trades": 313,
+      "net_base": 11877.2,
+      "net_adverse": 11251.2,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 287,
+          "net_base": 10914.8,
+          "net_adverse": 10340.799999999996
+        },
+        "STOP": {
+          "trades": 11,
+          "net_base": 84.40000000000002,
+          "net_adverse": 62.4
+        },
+        "EOD": {
+          "trades": 15,
+          "net_base": 878.0,
+          "net_adverse": 848.0
+        }
+      },
+      "eligible_state_fraction_mean": 0.4688065099457505
+    },
+    "SPY_202402": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 96272,
+      "trades": 263,
+      "net_base": 10760.2,
+      "net_adverse": 10234.199999999999,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 236,
+          "net_base": 9852.400000000001,
+          "net_adverse": 9380.4
+        },
+        "STOP": {
+          "trades": 15,
+          "net_base": 64.00000000000006,
+          "net_adverse": 33.99999999999996
+        },
+        "EOD": {
+          "trades": 12,
+          "net_base": 843.8000000000001,
+          "net_adverse": 819.7999999999998
+        }
+      },
+      "eligible_state_fraction_mean": 0.45379746835443024
+    },
+    "SPY_202403": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 107502,
+      "trades": 293,
+      "net_base": 10899.2,
+      "net_adverse": 10313.199999999999,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 273,
+          "net_base": 9397.200000000003,
+          "net_adverse": 8851.2
+        },
+        "STOP": {
+          "trades": 8,
+          "net_base": 76.20000000000002,
+          "net_adverse": 60.199999999999996
+        },
+        "EOD": {
+          "trades": 12,
+          "net_base": 1425.8000000000004,
+          "net_adverse": 1401.8
+        }
+      },
+      "eligible_state_fraction_mean": 0.5096518987341772
+    },
+    "SPY_202404": {
+      "calendar_rows": 22,
+      "complete_days": 22,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 106013,
+      "trades": 253,
+      "net_base": 15859.200000000003,
+      "net_adverse": 15353.199999999999,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 225,
+          "net_base": 15193.000000000002,
+          "net_adverse": 14743.0
+        },
+        "STOP": {
+          "trades": 14,
+          "net_base": 125.6,
+          "net_adverse": 97.59999999999991
+        },
+        "EOD": {
+          "trades": 14,
+          "net_base": 540.5999999999999,
+          "net_adverse": 512.5999999999999
+        }
+      },
+      "eligible_state_fraction_mean": 0.3984464902186421
+    },
+    "SPY_202405": {
+      "calendar_rows": 22,
+      "complete_days": 22,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 120441,
+      "trades": 295,
+      "net_base": 11511.999999999998,
+      "net_adverse": 10921.999999999998,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 269,
+          "net_base": 10535.600000000002,
+          "net_adverse": 9997.6
+        },
+        "STOP": {
+          "trades": 15,
+          "net_base": 96.00000000000011,
+          "net_adverse": 65.99999999999997
+        },
+        "EOD": {
+          "trades": 11,
+          "net_base": 880.4000000000001,
+          "net_adverse": 858.4000000000001
+        }
+      },
+      "eligible_state_fraction_mean": 0.49870540851553513
+    },
+    "SPY_202406": {
+      "calendar_rows": 19,
+      "complete_days": 19,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 103604,
+      "trades": 282,
+      "net_base": 12066.800000000001,
+      "net_adverse": 11502.800000000001,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 260,
+          "net_base": 11198.000000000002,
+          "net_adverse": 10678.0
+        },
+        "STOP": {
+          "trades": 9,
+          "net_base": 69.6,
+          "net_adverse": 51.59999999999996
+        },
+        "EOD": {
+          "trades": 13,
+          "net_base": 799.1999999999999,
+          "net_adverse": 773.1999999999999
+        }
+      },
+      "eligible_state_fraction_mean": 0.46735509660226515
+    },
+    "SPY_202407": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 123027,
+      "trades": 290,
+      "net_base": 16255.0,
+      "net_adverse": 15675.0,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 265,
+          "net_base": 14959.000000000002,
+          "net_adverse": 14429.0
+        },
+        "STOP": {
+          "trades": 15,
+          "net_base": 128.00000000000003,
+          "net_adverse": 97.99999999999997
+        },
+        "EOD": {
+          "trades": 10,
+          "net_base": 1168.0000000000002,
+          "net_adverse": 1148.0000000000002
+        }
+      },
+      "eligible_state_fraction_mean": 0.4674502712477395
+    },
+    "SPY_202408": {
+      "calendar_rows": 22,
+      "complete_days": 22,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 128933,
+      "trades": 253,
+      "net_base": 20470.200000000008,
+      "net_adverse": 19964.200000000004,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 224,
+          "net_base": 19351.600000000006,
+          "net_adverse": 18903.600000000002
+        },
+        "STOP": {
+          "trades": 15,
+          "net_base": 106.00000000000011,
+          "net_adverse": 76.00000000000009
+        },
+        "EOD": {
+          "trades": 14,
+          "net_base": 1012.5999999999998,
+          "net_adverse": 984.5999999999998
+        }
+      },
+      "eligible_state_fraction_mean": 0.44519562715765254
+    },
+    "SPY_202409": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 124365,
+      "trades": 305,
+      "net_base": 17915.0,
+      "net_adverse": 17304.999999999996,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 275,
+          "net_base": 16860.000000000004,
+          "net_adverse": 16310.000000000004
+        },
+        "STOP": {
+          "trades": 20,
+          "net_base": 194.00000000000003,
+          "net_adverse": 153.99999999999997
+        },
+        "EOD": {
+          "trades": 10,
+          "net_base": 860.9999999999999,
+          "net_adverse": 840.9999999999999
+        }
+      },
+      "eligible_state_fraction_mean": 0.48987341772151893
+    },
+    "SPY_202410": {
+      "calendar_rows": 23,
+      "complete_days": 23,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 117580,
+      "trades": 249,
+      "net_base": 13371.6,
+      "net_adverse": 12873.6,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 222,
+          "net_base": 12518.800000000003,
+          "net_adverse": 12074.800000000001
+        },
+        "STOP": {
+          "trades": 13,
+          "net_base": 122.20000000000002,
+          "net_adverse": 96.2
+        },
+        "EOD": {
+          "trades": 14,
+          "net_base": 730.6,
+          "net_adverse": 702.5999999999998
+        }
+      },
+      "eligible_state_fraction_mean": 0.4222619702806824
+    },
+    "SPY_202411": {
+      "calendar_rows": 19,
+      "complete_days": 19,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 104391,
+      "trades": 240,
+      "net_base": 13004.000000000002,
+      "net_adverse": 12524.0,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 223,
+          "net_base": 12309.2,
+          "net_adverse": 11863.199999999999
+        },
+        "STOP": {
+          "trades": 8,
+          "net_base": 90.20000000000002,
+          "net_adverse": 74.2
+        },
+        "EOD": {
+          "trades": 9,
+          "net_base": 604.6,
+          "net_adverse": 586.6
+        }
+      },
+      "eligible_state_fraction_mean": 0.45786142571618926
+    },
+    "SPY_202412": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 104864,
+      "trades": 267,
+      "net_base": 14702.800000000001,
+      "net_adverse": 14168.800000000001,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 243,
+          "net_base": 13657.200000000003,
+          "net_adverse": 13171.2
+        },
+        "STOP": {
+          "trades": 11,
+          "net_base": 164.4000000000001,
+          "net_adverse": 142.39999999999998
+        },
+        "EOD": {
+          "trades": 13,
+          "net_base": 881.2,
+          "net_adverse": 855.2
+        }
+      },
+      "eligible_state_fraction_mean": 0.4856012658227849
+    },
+    "SPY_202501": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 126696,
+      "trades": 290,
+      "net_base": 19269.000000000007,
+      "net_adverse": 18689.000000000004,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 260,
+          "net_base": 18482.000000000004,
+          "net_adverse": 17962.000000000004
+        },
+        "STOP": {
+          "trades": 21,
+          "net_base": 238.40000000000026,
+          "net_adverse": 196.4
+        },
+        "EOD": {
+          "trades": 9,
+          "net_base": 548.6,
+          "net_adverse": 530.6
+        }
+      },
+      "eligible_state_fraction_mean": 0.47594936708860763
+    },
+    "SPY_202502": {
+      "calendar_rows": 19,
+      "complete_days": 19,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 118705,
+      "trades": 262,
+      "net_base": 17067.800000000007,
+      "net_adverse": 16543.8,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 244,
+          "net_base": 15638.600000000002,
+          "net_adverse": 15150.6
+        },
+        "STOP": {
+          "trades": 9,
+          "net_base": 97.6,
+          "net_adverse": 79.59999999999994
+        },
+        "EOD": {
+          "trades": 9,
+          "net_base": 1331.6000000000004,
+          "net_adverse": 1313.6000000000001
+        }
+      },
+      "eligible_state_fraction_mean": 0.5021652231845436
+    },
+    "SPY_202503": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 141563,
+      "trades": 329,
+      "net_base": 32915.60000000001,
+      "net_adverse": 32257.600000000013,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 300,
+          "net_base": 31863.000000000015,
+          "net_adverse": 31263.00000000001
+        },
+        "STOP": {
+          "trades": 23,
+          "net_base": 472.19999999999993,
+          "net_adverse": 426.1999999999998
+        },
+        "EOD": {
+          "trades": 6,
+          "net_base": 580.4,
+          "net_adverse": 568.4
+        }
+      },
+      "eligible_state_fraction_mean": 0.4947257383966245
+    },
+    "SPY_202504": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 132474,
+      "trades": 304,
+      "net_base": 49987.600000000006,
+      "net_adverse": 49379.600000000006,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 273,
+          "net_base": 45912.2,
+          "net_adverse": 45366.200000000004
+        },
+        "STOP": {
+          "trades": 17,
+          "net_base": 488.80000000000035,
+          "net_adverse": 454.80000000000007
+        },
+        "EOD": {
+          "trades": 14,
+          "net_base": 3586.6000000000004,
+          "net_adverse": 3558.6000000000004
+        }
+      },
+      "eligible_state_fraction_mean": 0.4654912597950573
+    },
+    "SPY_202505": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 122051,
+      "trades": 287,
+      "net_base": 20643.80000000001,
+      "net_adverse": 20069.800000000003,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 254,
+          "net_base": 19293.60000000001,
+          "net_adverse": 18785.600000000002
+        },
+        "STOP": {
+          "trades": 24,
+          "net_base": 280.6000000000002,
+          "net_adverse": 232.59999999999997
+        },
+        "EOD": {
+          "trades": 9,
+          "net_base": 1069.6000000000001,
+          "net_adverse": 1051.6
+        }
+      },
+      "eligible_state_fraction_mean": 0.4427365883062086
+    },
+    "SPY_202506": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 125143,
+      "trades": 271,
+      "net_base": 15323.400000000001,
+      "net_adverse": 14781.399999999998,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 243,
+          "net_base": 14635.200000000004,
+          "net_adverse": 14149.199999999999
+        },
+        "STOP": {
+          "trades": 18,
+          "net_base": 284.2000000000001,
+          "net_adverse": 248.2
+        },
+        "EOD": {
+          "trades": 10,
+          "net_base": 404.0,
+          "net_adverse": 384.0
+        }
+      },
+      "eligible_state_fraction_mean": 0.4960443037974683
+    },
+    "SPY_202507": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 98505,
+      "trades": 254,
+      "net_base": 11181.600000000002,
+      "net_adverse": 10673.599999999999,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 233,
+          "net_base": 10803.2,
+          "net_adverse": 10337.2
+        },
+        "STOP": {
+          "trades": 13,
+          "net_base": 156.19999999999996,
+          "net_adverse": 130.19999999999996
+        },
+        "EOD": {
+          "trades": 8,
+          "net_base": 222.20000000000002,
+          "net_adverse": 206.20000000000002
+        }
+      },
+      "eligible_state_fraction_mean": 0.42450271247739607
+    },
+    "SPY_202508": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 122164,
+      "trades": 258,
+      "net_base": 13233.2,
+      "net_adverse": 12717.199999999999,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 237,
+          "net_base": 12457.800000000003,
+          "net_adverse": 11983.800000000001
+        },
+        "STOP": {
+          "trades": 8,
+          "net_base": 64.20000000000007,
+          "net_adverse": 48.19999999999999
+        },
+        "EOD": {
+          "trades": 13,
+          "net_base": 711.1999999999999,
+          "net_adverse": 685.2
+        }
+      },
+      "eligible_state_fraction_mean": 0.5088908981314044
+    },
+    "SPY_202509": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 104649,
+      "trades": 287,
+      "net_base": 13890.800000000001,
+      "net_adverse": 13316.8,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 268,
+          "net_base": 12915.200000000004,
+          "net_adverse": 12379.2
+        },
+        "STOP": {
+          "trades": 11,
+          "net_base": 165.39999999999995,
+          "net_adverse": 143.39999999999995
+        },
+        "EOD": {
+          "trades": 8,
+          "net_base": 810.2000000000002,
+          "net_adverse": 794.1999999999999
+        }
+      },
+      "eligible_state_fraction_mean": 0.4555455093429778
+    },
+    "SPY_202510": {
+      "calendar_rows": 23,
+      "complete_days": 23,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 122870,
+      "trades": 298,
+      "net_base": 20136.200000000004,
+      "net_adverse": 19540.2,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 273,
+          "net_base": 19109.2,
+          "net_adverse": 18563.2
+        },
+        "STOP": {
+          "trades": 12,
+          "net_base": 160.80000000000007,
+          "net_adverse": 136.8
+        },
+        "EOD": {
+          "trades": 13,
+          "net_base": 866.2000000000002,
+          "net_adverse": 840.1999999999999
+        }
+      },
+      "eligible_state_fraction_mean": 0.45583379196477714
+    },
+    "SPY_202511": {
+      "calendar_rows": 18,
+      "complete_days": 18,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 105115,
+      "trades": 214,
+      "net_base": 21412.600000000002,
+      "net_adverse": 20984.600000000002,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 192,
+          "net_base": 19698.800000000007,
+          "net_adverse": 19314.800000000003
+        },
+        "STOP": {
+          "trades": 13,
+          "net_base": 251.2000000000001,
+          "net_adverse": 225.20000000000002
+        },
+        "EOD": {
+          "trades": 9,
+          "net_base": 1462.6000000000004,
+          "net_adverse": 1444.6000000000004
+        }
+      },
+      "eligible_state_fraction_mean": 0.4323136427566807
+    },
+    "SPY_202512": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 122848,
+      "trades": 276,
+      "net_base": 16781.400000000005,
+      "net_adverse": 16229.400000000001,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 255,
+          "net_base": 16127.000000000002,
+          "net_adverse": 15616.999999999998
+        },
+        "STOP": {
+          "trades": 11,
+          "net_base": 128.4,
+          "net_adverse": 106.39999999999996
+        },
+        "EOD": {
+          "trades": 10,
+          "net_base": 526.0,
+          "net_adverse": 505.99999999999994
+        }
+      },
+      "eligible_state_fraction_mean": 0.5191380349608199
+    },
+    "SPY_202601": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 109965,
+      "trades": 252,
+      "net_base": 17132.800000000003,
+      "net_adverse": 16628.8,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 229,
+          "net_base": 16089.600000000004,
+          "net_adverse": 15631.600000000002
+        },
+        "STOP": {
+          "trades": 13,
+          "net_base": 281.20000000000005,
+          "net_adverse": 255.19999999999996
+        },
+        "EOD": {
+          "trades": 10,
+          "net_base": 762.0,
+          "net_adverse": 741.9999999999999
+        }
+      },
+      "eligible_state_fraction_mean": 0.48781645569620247
+    },
+    "SPY_202602": {
+      "calendar_rows": 19,
+      "complete_days": 19,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 136983,
+      "trades": 236,
+      "net_base": 21104.40000000001,
+      "net_adverse": 20632.400000000005,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 217,
+          "net_base": 19272.800000000007,
+          "net_adverse": 18838.800000000003
+        },
+        "STOP": {
+          "trades": 8,
+          "net_base": 186.20000000000005,
+          "net_adverse": 170.19999999999996
+        },
+        "EOD": {
+          "trades": 11,
+          "net_base": 1645.4,
+          "net_adverse": 1623.4
+        }
+      },
+      "eligible_state_fraction_mean": 0.5419720186542305
+    },
+    "SPY_202603": {
+      "calendar_rows": 22,
+      "complete_days": 22,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 159549,
+      "trades": 367,
+      "net_base": 33119.8,
+      "net_adverse": 32385.800000000003,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 335,
+          "net_base": 30432.000000000015,
+          "net_adverse": 29762.0
+        },
+        "STOP": {
+          "trades": 15,
+          "net_base": 271.00000000000017,
+          "net_adverse": 240.99999999999994
+        },
+        "EOD": {
+          "trades": 17,
+          "net_base": 2416.8000000000006,
+          "net_adverse": 2382.8
+        }
+      },
+      "eligible_state_fraction_mean": 0.5198504027617952
+    },
+    "SPY_202604": {
+      "calendar_rows": 21,
+      "complete_days": 18,
+      "missing_days": 3,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 98400,
+      "trades": 252,
+      "net_base": 15383.800000000003,
+      "net_adverse": 14879.800000000001,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 234,
+          "net_base": 14257.600000000004,
+          "net_adverse": 13789.6
+        },
+        "STOP": {
+          "trades": 10,
+          "net_base": 106.00000000000006,
+          "net_adverse": 86.0
+        },
+        "EOD": {
+          "trades": 8,
+          "net_base": 1020.2,
+          "net_adverse": 1004.2
+        }
+      },
+      "eligible_state_fraction_mean": 0.4289732770745429
+    },
+    "SPY_202605": {
+      "calendar_rows": 20,
+      "complete_days": 20,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 105229,
+      "trades": 261,
+      "net_base": 16908.400000000005,
+      "net_adverse": 16386.4,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 234,
+          "net_base": 15730.600000000004,
+          "net_adverse": 15262.6
+        },
+        "STOP": {
+          "trades": 12,
+          "net_base": 114.80000000000013,
+          "net_adverse": 90.79999999999998
+        },
+        "EOD": {
+          "trades": 15,
+          "net_base": 1063.0,
+          "net_adverse": 1033.0
+        }
+      },
+      "eligible_state_fraction_mean": 0.45553797468354434
+    },
+    "SPY_202606": {
+      "calendar_rows": 21,
+      "complete_days": 21,
+      "missing_days": 0,
+      "pending_days": 0,
+      "failed_days": 0,
+      "actions": 124405,
+      "trades": 314,
+      "net_base": 29153.600000000002,
+      "net_adverse": 28525.600000000002,
+      "exit_reasons": {
+        "TARGET": {
+          "trades": 289,
+          "net_base": 28119.60000000001,
+          "net_adverse": 27541.600000000006
+        },
+        "STOP": {
+          "trades": 13,
+          "net_base": 384.2000000000002,
+          "net_adverse": 358.2000000000001
+        },
+        "EOD": {
+          "trades": 12,
+          "net_base": 649.8,
+          "net_adverse": 625.7999999999998
+        }
+      },
+      "eligible_state_fraction_mean": 0.47076552139843275
+    }
+  },
+  "cache_full_summary_sha256": "9fb08cee58381cd77ef1f120903ecc1ec801f7dd2f9e324abff29e46263f1382",
+  "expected_shape_matches": true
+}

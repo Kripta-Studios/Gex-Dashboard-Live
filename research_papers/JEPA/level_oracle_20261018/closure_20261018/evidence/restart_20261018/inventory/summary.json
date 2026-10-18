@@ -1,0 +1,183 @@
+{
+  "root": "D:\\ThetaData",
+  "completed_utc": "2026-10-18T14:55:00.540952+00:00",
+  "elapsed_seconds": 1404.0016351999948,
+  "files": 366555,
+  "bytes": 279573867874,
+  "families": {
+    "__root__": {
+      "files": 52,
+      "bytes": 39983145,
+      "parquets": 0,
+      "rows": 0
+    },
+    "ThetaTerminalv3": {
+      "files": 23744,
+      "bytes": 145596151,
+      "parquets": 0,
+      "rows": 0
+    },
+    "__pycache__": {
+      "files": 6,
+      "bytes": 363070,
+      "parquets": 0,
+      "rows": 0
+    },
+    "cboe_vol_complex_directional_v1_20260716": {
+      "files": 8,
+      "bytes": 1537779,
+      "parquets": 0,
+      "rows": 0
+    },
+    "cross_venue_calendar_rr_native_clock_2024_2025_v1": {
+      "files": 9029,
+      "bytes": 1481543888,
+      "parquets": 3008,
+      "rows": 7237722
+    },
+    "cross_venue_calendar_rr_native_clock_2024_2025_v1r1_composite": {
+      "files": 5,
+      "bytes": 1714102,
+      "parquets": 0,
+      "rows": 0
+    },
+    "cross_venue_calendar_rr_native_clock_2024_2025_v1r1_repairs": {
+      "files": 22,
+      "bytes": 1763454,
+      "parquets": 4,
+      "rows": 8508
+    },
+    "cross_venue_calendar_rr_native_clock_preflight_2024_2025_v1": {
+      "files": 76,
+      "bytes": 13171449,
+      "parquets": 24,
+      "rows": 64632
+    },
+    "cross_venue_calendar_rr_v4r1_source_retry_2026": {
+      "files": 46,
+      "bytes": 375089109,
+      "parquets": 10,
+      "rows": 1341912
+    },
+    "cross_venue_calendar_rr_v4r1_source_retry_2026_offline_reseal_v2": {
+      "files": 5,
+      "bytes": 26797,
+      "parquets": 0,
+      "rows": 0
+    },
+    "cross_venue_opra_trade_quote_flow_v5_capture_2023_2025_v1": {
+      "files": 4097,
+      "bytes": 79442226807,
+      "parquets": 1364,
+      "rows": 167881230
+    },
+    "data_options": {
+      "files": 157950,
+      "bytes": 136770833405,
+      "parquets": 157650,
+      "rows": 9451114197
+    },
+    "data_training_input": {
+      "files": 1605,
+      "bytes": 100621801,
+      "parquets": 1605,
+      "rows": 626406
+    },
+    "data_underlying_derived": {
+      "files": 22211,
+      "bytes": 279153351,
+      "parquets": 22135,
+      "rows": 8654785
+    },
+    "futures_yahoo_60m_20240717_20260715_v1": {
+      "files": 8,
+      "bytes": 6810595,
+      "parquets": 0,
+      "rows": 0
+    },
+    "h_greek2wall_direct_all_preflight_v1_source_inventory": {
+      "files": 3,
+      "bytes": 16515,
+      "parquets": 0,
+      "rows": 0
+    },
+    "h_greek2wall_direct_all_preflight_v1r1_source_inventory": {
+      "files": 3,
+      "bytes": 17323,
+      "parquets": 0,
+      "rows": 0
+    },
+    "h_greek2wall_direct_all_preflight_v1r2_source_inventory": {
+      "files": 3,
+      "bytes": 17427,
+      "parquets": 0,
+      "rows": 0
+    },
+    "h_greek2wall_direct_all_preflight_v1r3_source_inventory": {
+      "files": 3,
+      "bytes": 17427,
+      "parquets": 0,
+      "rows": 0
+    },
+    "h_ibqdyn1_tick_preflight_202208_202501_v1_remote": {
+      "files": 76,
+      "bytes": 8380091,
+      "parquets": 24,
+      "rows": 43680
+    },
+    "h_ibqdyn1_ticks_202208_202512_v1": {
+      "files": 101117,
+      "bytes": 11203596045,
+      "parquets": 33704,
+      "rows": 58212529
+    },
+    "lib": {
+      "files": 5,
+      "bytes": 183395546,
+      "parquets": 0,
+      "rows": 0
+    },
+    "wall_exact_greek_repair_20221230_v1r2": {
+      "files": 2015,
+      "bytes": 4320474868,
+      "parquets": 671,
+      "rows": 32208
+    },
+    "wall_native_quote_sidecar_202208_202512_v1r1": {
+      "files": 4325,
+      "bytes": 22181151367,
+      "parquets": 1441,
+      "rows": 125557990
+    },
+    "wall_quote_size_native_complement_202208_202512_v1": {
+      "files": 3236,
+      "bytes": 14502396874,
+      "parquets": 1078,
+      "rows": 81824260
+    },
+    "wall_quote_tick_dynamics_at_touch_202208_202512_v1": {
+      "files": 5848,
+      "bytes": 1289227284,
+      "parquets": 1949,
+      "rows": 6987837
+    },
+    "wall_quote_tick_dynamics_at_touch_202208_202512_v1r1": {
+      "files": 1555,
+      "bytes": 268646344,
+      "parquets": 518,
+      "rows": 1437075
+    },
+    "wall_quote_tick_dynamics_at_touch_202208_202512_v1r1r1": {
+      "files": 29502,
+      "bytes": 6956095860,
+      "parquets": 9833,
+      "rows": 37846658
+    }
+  },
+  "unique_schemas": 37,
+  "footer_errors": [],
+  "traversal_errors": [],
+  "values_read": false,
+  "raw_content_hashed": false,
+  "script_sha256": "b27fd5eea28ea4be137a66a07552014d0e913b2b7b3eae7bd72c058e3af187cc"
+}

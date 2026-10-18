@@ -1,0 +1,2 @@
+# Preserve the exact bytes used by SHA256 execution contracts.
+* -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
