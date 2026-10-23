@@ -1,0 +1,84 @@
+{
+  "status": "PASS_INDEPENDENT_COMMON_GREEK_CSV_RECONCILIATION",
+  "reviewer": "/root/tcn_completion",
+  "csv_sha256": {
+    "COMMON_GREEK_COMPARISON_MONTHLY_20261023.csv": "02db7542e228cd07e9ca206663524562b53067c5171b323a78da83fb4b9af7ef",
+    "COMMON_GREEK_COMPARISON_ANNUAL_20261023.csv": "a83163ffb5f80a10087543146d8fef11cb59affcac5a43d1cce67553012a05d4"
+  },
+  "monthly_rows": 108,
+  "annual_rows": 16,
+  "field_comparisons": 3596,
+  "gates_source": "PROTOCOL.md:114; LEARNER_PLAN.md:119; COMMON_GREEK_DYNAMICS_V1_LEARNER_PLAN.md:33; daily requirement COMMON_GREEK_COMPARISON_SPEC.md:15",
+  "h1_ticker_gates": [
+    {
+      "policy": "cue_net__0",
+      "ticker": "QQQ",
+      "gate_base_net_positive": false,
+      "gate_adverse_net_positive": false,
+      "gate_base_pf_at_least_1_20": false,
+      "gate_trades_at_least_60": true,
+      "gate_positive_base_months_at_least_3": false,
+      "economic_gate_status": "FAIL",
+      "joint_observable_status": "FAIL"
+    },
+    {
+      "policy": "cue_net__0",
+      "ticker": "SPXW",
+      "gate_base_net_positive": false,
+      "gate_adverse_net_positive": false,
+      "gate_base_pf_at_least_1_20": false,
+      "gate_trades_at_least_60": true,
+      "gate_positive_base_months_at_least_3": false,
+      "economic_gate_status": "FAIL",
+      "joint_observable_status": "FAIL"
+    },
+    {
+      "policy": "cue_net__0",
+      "ticker": "SPY",
+      "gate_base_net_positive": false,
+      "gate_adverse_net_positive": false,
+      "gate_base_pf_at_least_1_20": false,
+      "gate_trades_at_least_60": true,
+      "gate_positive_base_months_at_least_3": false,
+      "economic_gate_status": "FAIL",
+      "joint_observable_status": "FAIL"
+    },
+    {
+      "policy": "common_greek_net__0",
+      "ticker": "QQQ",
+      "gate_base_net_positive": false,
+      "gate_adverse_net_positive": false,
+      "gate_base_pf_at_least_1_20": false,
+      "gate_trades_at_least_60": true,
+      "gate_positive_base_months_at_least_3": false,
+      "economic_gate_status": "FAIL",
+      "joint_observable_status": "FAIL"
+    },
+    {
+      "policy": "common_greek_net__0",
+      "ticker": "SPXW",
+      "gate_base_net_positive": false,
+      "gate_adverse_net_positive": false,
+      "gate_base_pf_at_least_1_20": false,
+      "gate_trades_at_least_60": true,
+      "gate_positive_base_months_at_least_3": false,
+      "economic_gate_status": "FAIL",
+      "joint_observable_status": "FAIL"
+    },
+    {
+      "policy": "common_greek_net__0",
+      "ticker": "SPY",
+      "gate_base_net_positive": false,
+      "gate_adverse_net_positive": false,
+      "gate_base_pf_at_least_1_20": false,
+      "gate_trades_at_least_60": true,
+      "gate_positive_base_months_at_least_3": false,
+      "economic_gate_status": "FAIL",
+      "joint_observable_status": "FAIL"
+    }
+  ],
+  "inputs": {
+    "summary_sha256": "6086af9fba7d5a7423a36eda120c9873415a9c3f3f5b61d9fea0bfa3ab47183c",
+    "ledger_verification_sha256": "7539d35588d2885a61e381734f5acd9d6b4f4dc39038d431438cd1a9429f35c6"
+  }
+}

@@ -1,10 +1,10 @@
 # Continuación local: estado del 23 de octubre de 2026
 
-Actualización: 23 de octubre, después del lanzamiento de auditoría 02 a las 21:04 UTC. Investigación activa
+Actualización: 23 de octubre, después del cierre de auditoría 02 a las 21:15 UTC. Investigación activa
 por orden del usuario. Base publicada anterior: `acb2a726`; preparación y código
-nuevos publicados hasta `804636b6`, incluyendo los lanzadores revisados mensual y OOF,
+nuevos publicados hasta `78096314`, incluyendo los lanzadores revisados mensual y OOF,
 el resultado TCN completo y sus 55 copias de evidencia.
-Este registro incorpora el resultado TCN auditado; las otras líneas siguen abiertas.
+Este registro incorpora los resultados TCN y Greeks auditados; mensual y OOF siguen abiertos.
 
 ## Ejecuciones observadas
 
@@ -26,19 +26,33 @@ Este registro incorpora el resultado TCN auditado; las otras líneas siguen abie
   Auditoría 02 iniciada a las 21:04:52 UTC: PID 27336, creación por handle
   `1792789492.1680534`, wrapper 12948, sesión 37803. Salida nueva
   `common_greek_comparison_v1_economic_audit_02`; logs en el hermano `_logs`.
-  Está activa, sin PASS todavía. No relanzar. Una diferencia submicrosegundo entre
+  Terminó exit 0 a las 21:15:41 UTC, 649,400 s, con
+  `PASS_INDEPENDENT_COMMON_GREEK_COMPARISON_ECONOMIC_AUDIT`; audit SHA
+  `45caae6c11cdce9306284367e7742d9dbe17e03a8afeb52eff447b3408758a0d`.
+  Root recogió el exit real y verificó siete bindings de cierre/código, además
+  del reporter; el supervisor comprobó los 15 bindings del audit. Alcance:
+  reconstrucción económica sobre predicciones selladas, sin refit o reinferencia.
+  Control exacto en 1.113 días disponibles, incluidas nueve sesiones cortas;
+  750 días de 2025 y 369 esperados de H1 2026, seis ausencias conservadas.
+  Pico RSS muestreado 200.310.784 bytes; 649 muestras, cero errores del monitor.
+  No relanzar. Una diferencia submicrosegundo entre
   la creación por handle y psutil se compara con la tolerancia de 1e-5 s fijada
   en el launcher, junto con PID/comando, no como una nueva identidad.
   Logs y recibos del productor:
   `D:/GexResearchArtifacts/level_oracle_20261018/common_greek_comparison_v1_launch`.
   No se reentrena ninguno de los dos modelos ni se selecciona por resultados
-  parciales. El reporter completo sigue pendiente de una auditoría válida.
+  parciales. El reporte completo y su reconciliación independiente están en curso.
+  La variante 424 pierde 93.912,60 USD base / 98.915,60 adverso en 2025 y
+  35.329,40 / 38.102,40 en H1 2026. Los tres tickers pierden; 47 de los 363
+  días disponibles de H1 no tienen fill. El control 152 pierde 43.482,20 USD
+  base en H1. Ninguna de las dos políticas acredita el objetivo conjunto.
 - Validación mensual: wrapper PID 11852, iniciado a las 19:34:13 UTC desde
   `1e1f689e`, sólo `stage validation`. Ya publicó su nuevo `launch.json`;
-  tiene diez modelos completos de los 24 previstos para validación. Root rehasheó
-  esos modelos y sus recibos de inicio, sin diferencias. Los tres originales
+  tiene doce modelos completos de los 24 previstos para validación. Root y el
+  observador rehashearon sus modelos y recibos, sin diferencias. Los tres originales
   permanecen intactos; los nuevos cierres ocurrieron a las 19:59:06, 20:13:35 y
-  20:20:05 UTC, seguidos por los dos ajustes de abril y los dos de mayo. Todavía no hay cierre anual
+  20:20:05 UTC, seguidos por los dos ajustes de abril y los dos de mayo. El ajuste
+  expanding para junio cerró a las 21:14:36 UTC y rolling a las 21:17:37 UTC. Todavía no hay cierre anual
   ni evaluación mensual 2026.
   Runtime: `D:/GexResearchArtifacts/level_oracle_20261018/monthly_resource_overlay_resume_20261023_01`.
   Logs y recibo de proceso en el directorio hermano
@@ -88,13 +102,13 @@ causa. Antes de la auditoría nueva se volvió a comprobar el gate.
 
 - Productor y auditor griegas: 20 pruebas sintéticas PASS antes del lanzamiento.
 - Recuperación mensual: 6.084 checkpoints rehasheados, cero ausencias o cambios;
-  tres modelos anteriores conservados y siete nuevos completos. Quedan 14 fits
+  tres modelos anteriores conservados y nueve nuevos completos. Quedan 12 fits
   de validación; el cierre y auditoría anual siguen pendientes.
 - OOF: se completó el rerun pendiente de 23 pruebas, todas PASS. No hubo
   calibración real; el informe separado conserva las autoridades antiguas.
 - Evaluador TCN calendario 750 + 369: dos correcciones de trazabilidad y copia
   exacta, 15 pruebas PASS tanto en el productor como en revisión independiente.
-  La review exacta está versionada y la evaluación ha sido lanzada; sin resultados
+  La review exacta está versionada y la evaluación terminó con resultados
   auditados: ninguna política elegible diaria en 2025, selección nula. En H1 2026
   las variantes de umbral 0/5/10 producen -34.199,00/-40.962,60/-42.491,00 USD base
   y -36.608,00/-43.001,60/-44.328,00 adverso. Los tres controles no operan en H1.
@@ -132,8 +146,19 @@ causa. Antes de la auditoría nueva se volvió a comprobar el gate.
 Nota de publicación V2: `git diff --check` señaló el final con línea en blanco
 heredado byte por byte del auditor original. Se conservaron los bytes revisados;
 no se declara PASS de ese check. Ruff, compilación, fixtures y hashes sí pasaron.
-- Reporter mensual griegas: cuatro pruebas PASS; sólo puede consumir el cierre
-  auditado de esta comparación. Publicará los 108 grupos fijados, sin selección.
+- Reporter mensual griegas: cuatro pruebas PASS; ejecución única desde el audit
+  02 verificado, cierre SHA `6086af9fba7d5a7423a36eda120c9873415a9c3f3f5b61d9fea0bfa3ab47183c`.
+  Los 108 grupos mensuales y 16 anuales fueron reconciliados independientemente
+  con 2.238 parquets de intentos y 3.365 archivos rehasheados antes/después,
+  sin diferencias materiales. No hubo selección ni nuevos fits/predicciones.
+  [Resultado completo](COMMON_GREEK_COMPARISON_RESULT_20261023.md), con ambos
+  modelos, todos los periodos y figura de 108 barras; bruto y matrices siguen locales.
+  Root verificó 38 copias contra sus originales y cuatro derivados contra el
+  manifest; 47 archivos de evidencia/figuras conservan exactamente sus bytes en
+  el índice Git. La [verificación de publicación](COMMON_GREEK_PUBLICATION_VERIFICATION_20261023.json)
+  registra la excepción de whitespace del SVG generado por Matplotlib: se
+  preservan sus bytes y hashes revisados. El resto del diff preparado pasa el
+  check; no se declara PASS global de whitespace. Ruff de los tres scripts nuevos PASS.
 
 La siguiente frontera real sigue siendo cerrar y auditar estas evaluaciones.
 El oracle retrospectivo permanece terminado. Rentabilidad causal no demostrada,

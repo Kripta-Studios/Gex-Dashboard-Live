@@ -1,0 +1,22 @@
+{
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-u",
+    "research_papers\\JEPA\\level_oracle_20261018\\report_common_greek_comparison_monthly.py",
+    "--root",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\common_greek_comparison_v1",
+    "--audit",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\common_greek_comparison_v1_economic_audit_02\\audit.json",
+    "--audit-sha256",
+    "45caae6c11cdce9306284367e7742d9dbe17e03a8afeb52eff447b3408758a0d",
+    "--out",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\common_greek_comparison_v1_monthly_report_20261023_01"
+  ],
+  "reporter_sha256": "56be763eae74ae043c5a90b2d22f75b552ae34942af56e462d82297aac5a512f",
+  "audit_sha256_external": "45caae6c11cdce9306284367e7742d9dbe17e03a8afeb52eff447b3408758a0d",
+  "started_utc": "2026-10-23T21:17:23.875450+00:00",
+  "available_ram_bytes": 16156413952,
+  "free_commit_bytes": 21617823744,
+  "gate_bytes": 2000000000,
+  "retry": false
+}

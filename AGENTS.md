@@ -1,5 +1,24 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-10-23 — comparación Greeks cerrada, sin candidato rentable
+
+Autoridad: research_papers/JEPA/level_oracle_20261018/COMMON_GREEK_COMPARISON_RESULT_20261023.md.
+Productor fijo 152/424 y auditor02 terminan exit0; primer auditor conserva su fallo
+técnico por separadores Windows. V2 sólo corrige rutas, sin cambiar economía.
+Audit SHA45caae6c11cdce9306284367e7742d9dbe17e03a8afeb52eff447b3408758a0d:
+PASS de reconstrucción económica sobre scores sellados, no refit/reinferencia.
+750 días2025 y363 disponibles H12026; seis ausencias separadas NO_EVALUABLE.
+Greek424 pierde93912,60 USD base2025 y35329,40 H1; adverso98915,60/38102,40.
+Los tres tickers pierden; H1 tiene47 días disponibles sinfill y meses positivos
+QQQ/SPXW/SPY2/1/2. Control152 H1 -43482,20 USD. No ganador ni rescate por ticker.
+108 grupos mensuales y16 anuales reconciliados independientemente con2238
+parquets de intentos, sin diferencias materiales; ambos modelos fijos conservados.
+Mensual2025 sigue activo:12/24 modelos completos, hashes comprobados. Supervisor
+único espera exit0/cierre anual para auditor2025; test2026 y OOF aún no ejecutados.
+Actor sólo matemática sintética/factibilidad documental, sin familia económica nueva.
+Investigación local activa; SEEN_DEVELOPMENT, technical_ready=false,
+promotion_approved=false. Producción, API, bróker y cambios ajenos intactos.
+
 ### Checkpoint 2026-10-23 — TCN temporal cerrado con fallo económico auditado
 
 Autoridad: research_papers/JEPA/level_oracle_20261018/TCN_ROW_MIXED_CALENDAR_RESULT_20261023.md.

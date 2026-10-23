@@ -1,0 +1,15 @@
+{
+  "development_seen": true,
+  "freeze_sha256": "b2609c562a319004a3517575def64305f11dce9521daeec347e45901be37ec08",
+  "periods": [
+    2025,
+    2026
+  ],
+  "policies": [
+    "cue_net__0",
+    "common_greek_net__0"
+  ],
+  "promotion_approved": false,
+  "status": "COMPLETE_FIXED_COMMON_GREEK_COMPARISON",
+  "winner_selected": null
+}

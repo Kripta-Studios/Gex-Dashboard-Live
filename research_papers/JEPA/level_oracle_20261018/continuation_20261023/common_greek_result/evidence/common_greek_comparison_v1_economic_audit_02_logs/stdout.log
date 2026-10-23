@@ -1,0 +1,23 @@
+{"stage": "audit", "year": 2025, "days": 50, "total": 750}
+{"stage": "audit", "year": 2025, "days": 100, "total": 750}
+{"stage": "audit", "year": 2025, "days": 150, "total": 750}
+{"stage": "audit", "year": 2025, "days": 200, "total": 750}
+{"stage": "audit", "year": 2025, "days": 250, "total": 750}
+{"stage": "audit", "year": 2025, "days": 300, "total": 750}
+{"stage": "audit", "year": 2025, "days": 350, "total": 750}
+{"stage": "audit", "year": 2025, "days": 400, "total": 750}
+{"stage": "audit", "year": 2025, "days": 450, "total": 750}
+{"stage": "audit", "year": 2025, "days": 500, "total": 750}
+{"stage": "audit", "year": 2025, "days": 550, "total": 750}
+{"stage": "audit", "year": 2025, "days": 600, "total": 750}
+{"stage": "audit", "year": 2025, "days": 650, "total": 750}
+{"stage": "audit", "year": 2025, "days": 700, "total": 750}
+{"stage": "audit", "year": 2025, "days": 750, "total": 750}
+{"stage": "audit", "year": 2026, "days": 50, "total": 369}
+{"stage": "audit", "year": 2026, "days": 100, "total": 369}
+{"stage": "audit", "year": 2026, "days": 150, "total": 369}
+{"stage": "audit", "year": 2026, "days": 200, "total": 369}
+{"stage": "audit", "year": 2026, "days": 250, "total": 369}
+{"stage": "audit", "year": 2026, "days": 300, "total": 369}
+{"stage": "audit", "year": 2026, "days": 350, "total": 369}
+{"status": "PASS_INDEPENDENT_COMMON_GREEK_COMPARISON_ECONOMIC_AUDIT", "scope": "ECONOMIC_EXECUTION_GIVEN_SEALED_PREDICTIONS", "binding": {"comparison_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\common_greek_comparison_v1", "freeze_sha256": "b2609c562a319004a3517575def64305f11dce9521daeec347e45901be37ec08", "period2025_sha256": "b69569c62db5072e4bfb11b905b32d738c7f104159a57bb7c573ee38ef143de9", "period2026_sha256": "a3ed43d019a692e844e0ea45318c9c8d58c15787e313cc1a881a2f5a17776f80", "completion_sha256": "40cfdf576885eecd10785946687e5cf87cce228c1483e3ddd43cbd911207c824", "comparison_complete_sha256": "ad916c5695e165693c9843d206329732dde1d9149fc8ee0f9354818caf399d6d", "session_audit_sha256": "678eb21bca80b38855979d8a7386cdadd6827a6dfdd5acbf3df6fde5a5a2f3b9", "cue_comparison_audit_sha256": "c16a381bb9c3f88c2e28a92ff3da6549856d960fb3cdf96c847b85ba9009d6c2", "review_sha256": "6270e38baa5fded3fd0a12d5b16b7969347e3a43b6c1cc068b95783c7efbb540", "cue_contract_sha256": "ea296e2de576b91594697579c3f642e251526224213a651fbf6fbb409addf534", "cue_model_completion_sha256": "9d5e0bbc5744fbdbf909e4f43c11796b9aa42c418cfcf7c0e85018a82783f97a", "greek_contract_sha256": "ca1f55b1fe78bcd7575d7ad6d7cb5b91a8b9d340e11935f377030e6ccc735018", "greek_model_completion_sha256": "be3583366019869c4b061e93b044b9ee4001d94510e573f1b3b978a970cb2c33", "training_provenance_sha256": "dda20c927a44f758cebd2816bb4e2763c24f93024478e6bf4000c40117c8c814", "test_freeze_sha256": "bddcedb2c89b37608464c248caff2b5c6d1632f605aa350c11cca48f91c3d824", "audit_script_sha256": "2d4fc43456c4cd6fe45b378fae3580481a98e814c2eefa42b8eb1dec63f049d3"}, "coverage": {"days_2025": 750, "days_2026": 369, "available_2026": 363, "missing_2026": 6, "cue_control_scores_bitexact": 1113, "short_sessions_bitexact": 9}, "policies": ["cue_net__0", "common_greek_net__0"], "winner_selected": null, "threshold": 0, "scheduler_reconstructed_independently": true, "calibration_reconstructed_independently": true, "model_training_reproduced": false, "prediction_inference_reproduced": false, "development_seen": true, "technical_ready": false, "promotion_approved": false, "finished_at_utc": "2026-10-23T21:15:40.498854+00:00"}

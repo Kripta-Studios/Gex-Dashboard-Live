@@ -1,0 +1,16 @@
+{
+  "exit_code": 0,
+  "wall_seconds": 649.3995981001062,
+  "finished_utc": "2026-10-23T21:15:41.564777+00:00",
+  "peak_sampled_rss_bytes": 200310784,
+  "peak_sampled_private_bytes": 168714240,
+  "minimum_free_observed": {
+    "available_ram_bytes": 4323557376,
+    "free_commit_bytes": 2140606464
+  },
+  "sampling_seconds": 1,
+  "retry": false,
+  "sample_count": 649,
+  "system_sample_count_including_admission": 650,
+  "monitor_errors": []
+}

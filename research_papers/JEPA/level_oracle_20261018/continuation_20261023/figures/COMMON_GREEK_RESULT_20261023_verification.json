@@ -1,0 +1,45 @@
+{
+  "fields_compared": [
+    "policy",
+    "ticker",
+    "month",
+    "expected_days",
+    "available_days",
+    "missing_days",
+    "missing_dates",
+    "base.net_usd"
+  ],
+  "input_hashes_verified": {
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\common_greek_comparison_v1_economic_audit_02\\audit.json": "45caae6c11cdce9306284367e7742d9dbe17e03a8afeb52eff447b3408758a0d",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\common_greek_comparison_v1_monthly_report_20261023_01\\summary.json": "6086af9fba7d5a7423a36eda120c9873415a9c3f3f5b61d9fea0bfa3ab47183c"
+  },
+  "new_market_reads": false,
+  "new_tests": false,
+  "output_hashes_verified": {
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261023\\figures\\COMMON_GREEK_RESULT_20261023_monthly_net_base.png": "89301fabc84746e05ebe2e31315526ddfcc94ae0cf352dcd4613ce18cbb9269d",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261023\\figures\\COMMON_GREEK_RESULT_20261023_monthly_net_base.svg": "39f73125a8077f213f99a2e1fa49eb5dec2f4888957db2b7c7888792a475c843"
+  },
+  "provenance_sha256": "fcf8de3561f1c981ad6ece41810dc2de954bee7b0a8df2e44484c1dd24d19a69",
+  "rows_compared_exact": 108,
+  "scope": "Exact closed-report values and rendered SVG bar counts only",
+  "script_hashes_verified": {
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261023\\figures\\COMMON_GREEK_RESULT_20261023_plot.py": "4b8fee711e8113bf172c1640df028835b57bd56e28f1af6b4451c76145f50127"
+  },
+  "status": "PASS_FIGURE_DATA_RECONCILIATION",
+  "svg_policy_bar_counts_per_panel": {
+    "axes_1": {
+      "#0072b2": 18,
+      "#d55e00": 18
+    },
+    "axes_2": {
+      "#0072b2": 18,
+      "#d55e00": 18
+    },
+    "axes_3": {
+      "#0072b2": 18,
+      "#d55e00": 18
+    }
+  },
+  "total_rendered_policy_bars": 108,
+  "visual_inspection": "Author and root inspected PNG; legible labels, full monthly support, missing annotation and SEEN_DEVELOPMENT visible"
+}

@@ -1,0 +1,12 @@
+{
+  "exit_code": 0,
+  "stage_wall_seconds": 4715.295043706894,
+  "peak_rss_bytes": 296677376,
+  "peak_private_bytes": 277389312,
+  "minimum_free_observed": {
+    "available_ram_bytes": 2315599872,
+    "free_commit_bytes": 91951104
+  },
+  "no_fit": true,
+  "sampling_seconds": 1
+}

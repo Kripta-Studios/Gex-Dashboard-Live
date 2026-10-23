@@ -1,0 +1,33 @@
+{
+  "status": "PASS_INDEPENDENT_COMMON_GREEK_ARCHIVE_CONTENT_RECONCILIATION",
+  "reviewer": "/root/tcn_completion",
+  "scope": "ARCHIVED_ATTEMPTS_AND_DAILY_SCALARS_ONLY",
+  "manifest_sha256": "3794ebdb668f8cacdd6410bc9a22b032531ee63f262559e035f0fddd2411c92d",
+  "all_attempts_sha256": "6cdfec84d2f0ff30355e5bc5526268d90d84aedb49d94eba06318db122ae23ed",
+  "daily_csv_sha256": "45e084c8442b2a1aba410b8005ab24863de5bb2e8d2ff903e43779e5444e396d",
+  "resources": {
+    "available_ram_bytes": 10417782784,
+    "free_commit_bytes": 8469524480
+  },
+  "source_ledgers": 2238,
+  "nonempty_ledgers": 1774,
+  "empty_ledgers": 464,
+  "attempt_rows": 7908,
+  "filled_rows": 7906,
+  "no_fill_rows": 2,
+  "daily_rows": 2238,
+  "daily_scalar_fields_checked": 35808,
+  "missing_daily_policy_rows": 12,
+  "sources_rehashed_before_after": 3357,
+  "mismatch": 0,
+  "all_original_columns_preserved": true,
+  "nonempty_original_field_types_preserved": true,
+  "all_row_order_preserved_within_source_and_global_concatenation": true,
+  "float_columns_bitexact": true,
+  "daily_float_scalars_bitexact_after_csv_parse": true,
+  "missing_observed_net_is_null": true,
+  "empty_schema_note": "Empty source files have null fields; no invented rows, all column names preserved. Consolidated schema is typed by nonempty source rows.",
+  "prior_verifier_attempt": "Aborted with UnicodeDecodeError while opening UTF-8 manifest using Windows CP1252 default; before parquet reading or verification output. Final invocation specifies UTF-8. No source or archive changes.",
+  "new_fit": false,
+  "inference_or_scheduler_replayed": false
+}

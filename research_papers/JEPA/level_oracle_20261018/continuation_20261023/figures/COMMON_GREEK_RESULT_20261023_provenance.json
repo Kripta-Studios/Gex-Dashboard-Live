@@ -1,0 +1,1123 @@
+{
+  "bars": 108,
+  "inputs": {
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\common_greek_comparison_v1_economic_audit_02\\audit.json": "45caae6c11cdce9306284367e7742d9dbe17e03a8afeb52eff447b3408758a0d",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\common_greek_comparison_v1_monthly_report_20261023_01\\summary.json": "6086af9fba7d5a7423a36eda120c9873415a9c3f3f5b61d9fea0bfa3ab47183c"
+  },
+  "missing_days_imputed": false,
+  "new_models": 0,
+  "new_replays": 0,
+  "outputs": {
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261023\\figures\\COMMON_GREEK_RESULT_20261023_monthly_net_base.png": "89301fabc84746e05ebe2e31315526ddfcc94ae0cf352dcd4613ce18cbb9269d",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261023\\figures\\COMMON_GREEK_RESULT_20261023_monthly_net_base.svg": "39f73125a8077f213f99a2e1fa49eb5dec2f4888957db2b7c7888792a475c843"
+  },
+  "rows": [
+    {
+      "available_days": 20,
+      "expected_days": 20,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202501",
+      "net_base_usd": -260.5999999999996,
+      "policy": "common_greek_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 19,
+      "expected_days": 19,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202502",
+      "net_base_usd": -775.1999999999997,
+      "policy": "common_greek_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202503",
+      "net_base_usd": -2371.7999999999993,
+      "policy": "common_greek_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202504",
+      "net_base_usd": -2486.799999999998,
+      "policy": "common_greek_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202505",
+      "net_base_usd": 121.40000000000039,
+      "policy": "common_greek_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 20,
+      "expected_days": 20,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202506",
+      "net_base_usd": 173.00000000000006,
+      "policy": "common_greek_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 22,
+      "expected_days": 22,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202507",
+      "net_base_usd": -57.99999999999993,
+      "policy": "common_greek_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202508",
+      "net_base_usd": -375.5999999999999,
+      "policy": "common_greek_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202509",
+      "net_base_usd": -180.99999999999997,
+      "policy": "common_greek_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 23,
+      "expected_days": 23,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202510",
+      "net_base_usd": -1134.599999999999,
+      "policy": "common_greek_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 19,
+      "expected_days": 19,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202511",
+      "net_base_usd": 648.6000000000009,
+      "policy": "common_greek_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 22,
+      "expected_days": 22,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202512",
+      "net_base_usd": -763.3999999999999,
+      "policy": "common_greek_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 20,
+      "expected_days": 20,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202601",
+      "net_base_usd": 520.4000000000007,
+      "policy": "common_greek_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 19,
+      "expected_days": 19,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202602",
+      "net_base_usd": 309.60000000000025,
+      "policy": "common_greek_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 22,
+      "expected_days": 22,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202603",
+      "net_base_usd": -45.99999999999947,
+      "policy": "common_greek_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 18,
+      "expected_days": 21,
+      "missing_dates": [
+        "20260401",
+        "20260409",
+        "20260415"
+      ],
+      "missing_days": 3,
+      "month": "202604",
+      "net_base_usd": -44.19999999999982,
+      "policy": "common_greek_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 20,
+      "expected_days": 20,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202605",
+      "net_base_usd": -346.7999999999998,
+      "policy": "common_greek_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202606",
+      "net_base_usd": -1577.999999999999,
+      "policy": "common_greek_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 20,
+      "expected_days": 20,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202501",
+      "net_base_usd": -7548.5999999999985,
+      "policy": "common_greek_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 19,
+      "expected_days": 19,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202502",
+      "net_base_usd": -3251.199999999999,
+      "policy": "common_greek_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202503",
+      "net_base_usd": -10624.600000000008,
+      "policy": "common_greek_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202504",
+      "net_base_usd": -32377.000000000007,
+      "policy": "common_greek_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202505",
+      "net_base_usd": -5224.199999999997,
+      "policy": "common_greek_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 20,
+      "expected_days": 20,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202506",
+      "net_base_usd": 8014.400000000001,
+      "policy": "common_greek_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 22,
+      "expected_days": 22,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202507",
+      "net_base_usd": -5319.0,
+      "policy": "common_greek_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202508",
+      "net_base_usd": -13229.599999999999,
+      "policy": "common_greek_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202509",
+      "net_base_usd": -9632.999999999998,
+      "policy": "common_greek_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 23,
+      "expected_days": 23,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202510",
+      "net_base_usd": 9913.199999999997,
+      "policy": "common_greek_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 19,
+      "expected_days": 19,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202511",
+      "net_base_usd": -2441.8000000000006,
+      "policy": "common_greek_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 22,
+      "expected_days": 22,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202512",
+      "net_base_usd": -8794.2,
+      "policy": "common_greek_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 20,
+      "expected_days": 20,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202601",
+      "net_base_usd": -9867.0,
+      "policy": "common_greek_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 19,
+      "expected_days": 19,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202602",
+      "net_base_usd": 14106.800000000007,
+      "policy": "common_greek_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 22,
+      "expected_days": 22,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202603",
+      "net_base_usd": -12474.399999999998,
+      "policy": "common_greek_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202604",
+      "net_base_usd": -9288.799999999997,
+      "policy": "common_greek_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 20,
+      "expected_days": 20,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202605",
+      "net_base_usd": -2581.799999999998,
+      "policy": "common_greek_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202606",
+      "net_base_usd": -11260.0,
+      "policy": "common_greek_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 20,
+      "expected_days": 20,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202501",
+      "net_base_usd": -796.9999999999998,
+      "policy": "common_greek_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 19,
+      "expected_days": 19,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202502",
+      "net_base_usd": -347.7999999999997,
+      "policy": "common_greek_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202503",
+      "net_base_usd": -2670.799999999999,
+      "policy": "common_greek_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202504",
+      "net_base_usd": 1306.6000000000026,
+      "policy": "common_greek_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202505",
+      "net_base_usd": 357.60000000000014,
+      "policy": "common_greek_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 20,
+      "expected_days": 20,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202506",
+      "net_base_usd": -118.39999999999993,
+      "policy": "common_greek_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 22,
+      "expected_days": 22,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202507",
+      "net_base_usd": -746.8000000000002,
+      "policy": "common_greek_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202508",
+      "net_base_usd": -1316.1999999999994,
+      "policy": "common_greek_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202509",
+      "net_base_usd": -691.4000000000001,
+      "policy": "common_greek_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 23,
+      "expected_days": 23,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202510",
+      "net_base_usd": -218.19999999999982,
+      "policy": "common_greek_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 19,
+      "expected_days": 19,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202511",
+      "net_base_usd": 104.40000000000015,
+      "policy": "common_greek_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 22,
+      "expected_days": 22,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202512",
+      "net_base_usd": -795.0,
+      "policy": "common_greek_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 20,
+      "expected_days": 20,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202601",
+      "net_base_usd": -513.4000000000001,
+      "policy": "common_greek_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 19,
+      "expected_days": 19,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202602",
+      "net_base_usd": -1112.0,
+      "policy": "common_greek_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 22,
+      "expected_days": 22,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202603",
+      "net_base_usd": 775.2000000000006,
+      "policy": "common_greek_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 18,
+      "expected_days": 21,
+      "missing_dates": [
+        "20260401",
+        "20260409",
+        "20260415"
+      ],
+      "missing_days": 3,
+      "month": "202604",
+      "net_base_usd": -935.2,
+      "policy": "common_greek_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 20,
+      "expected_days": 20,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202605",
+      "net_base_usd": 185.4000000000001,
+      "policy": "common_greek_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202606",
+      "net_base_usd": -1179.1999999999994,
+      "policy": "common_greek_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 20,
+      "expected_days": 20,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202501",
+      "net_base_usd": -1350.5999999999995,
+      "policy": "cue_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 19,
+      "expected_days": 19,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202502",
+      "net_base_usd": -1926.7999999999993,
+      "policy": "cue_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202503",
+      "net_base_usd": -3031.7999999999993,
+      "policy": "cue_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202504",
+      "net_base_usd": -1381.199999999999,
+      "policy": "cue_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202505",
+      "net_base_usd": 412.6000000000005,
+      "policy": "cue_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 20,
+      "expected_days": 20,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202506",
+      "net_base_usd": -354.4,
+      "policy": "cue_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 22,
+      "expected_days": 22,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202507",
+      "net_base_usd": -194.20000000000002,
+      "policy": "cue_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202508",
+      "net_base_usd": -95.79999999999998,
+      "policy": "cue_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202509",
+      "net_base_usd": -497.00000000000017,
+      "policy": "cue_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 23,
+      "expected_days": 23,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202510",
+      "net_base_usd": -1096.399999999999,
+      "policy": "cue_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 19,
+      "expected_days": 19,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202511",
+      "net_base_usd": 1169.4000000000005,
+      "policy": "cue_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 22,
+      "expected_days": 22,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202512",
+      "net_base_usd": -567.6,
+      "policy": "cue_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 20,
+      "expected_days": 20,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202601",
+      "net_base_usd": -968.7999999999998,
+      "policy": "cue_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 19,
+      "expected_days": 19,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202602",
+      "net_base_usd": 581.6000000000005,
+      "policy": "cue_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 22,
+      "expected_days": 22,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202603",
+      "net_base_usd": -226.99999999999972,
+      "policy": "cue_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 18,
+      "expected_days": 21,
+      "missing_dates": [
+        "20260401",
+        "20260409",
+        "20260415"
+      ],
+      "missing_days": 3,
+      "month": "202604",
+      "net_base_usd": 134.4000000000002,
+      "policy": "cue_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 20,
+      "expected_days": 20,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202605",
+      "net_base_usd": -516.3999999999999,
+      "policy": "cue_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202606",
+      "net_base_usd": -1740.9999999999986,
+      "policy": "cue_net__0",
+      "ticker": "QQQ"
+    },
+    {
+      "available_days": 20,
+      "expected_days": 20,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202501",
+      "net_base_usd": -2964.800000000002,
+      "policy": "cue_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 19,
+      "expected_days": 19,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202502",
+      "net_base_usd": -3312.7999999999956,
+      "policy": "cue_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202503",
+      "net_base_usd": -10855.199999999993,
+      "policy": "cue_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202504",
+      "net_base_usd": -45406.8,
+      "policy": "cue_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202505",
+      "net_base_usd": -1871.7999999999993,
+      "policy": "cue_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 20,
+      "expected_days": 20,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202506",
+      "net_base_usd": 22830.2,
+      "policy": "cue_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 22,
+      "expected_days": 22,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202507",
+      "net_base_usd": -526.199999999998,
+      "policy": "cue_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202508",
+      "net_base_usd": -11675.4,
+      "policy": "cue_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202509",
+      "net_base_usd": -6601.999999999998,
+      "policy": "cue_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 23,
+      "expected_days": 23,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202510",
+      "net_base_usd": 1607.6000000000022,
+      "policy": "cue_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 19,
+      "expected_days": 19,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202511",
+      "net_base_usd": 2373.999999999999,
+      "policy": "cue_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 22,
+      "expected_days": 22,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202512",
+      "net_base_usd": -3312.2000000000003,
+      "policy": "cue_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 20,
+      "expected_days": 20,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202601",
+      "net_base_usd": -311.1999999999971,
+      "policy": "cue_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 19,
+      "expected_days": 19,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202602",
+      "net_base_usd": 2844.0000000000027,
+      "policy": "cue_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 22,
+      "expected_days": 22,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202603",
+      "net_base_usd": 3019.799999999996,
+      "policy": "cue_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202604",
+      "net_base_usd": -15055.800000000005,
+      "policy": "cue_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 20,
+      "expected_days": 20,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202605",
+      "net_base_usd": -12802.599999999999,
+      "policy": "cue_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202606",
+      "net_base_usd": -12142.800000000005,
+      "policy": "cue_net__0",
+      "ticker": "SPXW"
+    },
+    {
+      "available_days": 20,
+      "expected_days": 20,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202501",
+      "net_base_usd": -320.1999999999997,
+      "policy": "cue_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 19,
+      "expected_days": 19,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202502",
+      "net_base_usd": 181.00000000000017,
+      "policy": "cue_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202503",
+      "net_base_usd": -1221.8000000000002,
+      "policy": "cue_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202504",
+      "net_base_usd": -2659.7999999999984,
+      "policy": "cue_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202505",
+      "net_base_usd": -643.9999999999997,
+      "policy": "cue_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 20,
+      "expected_days": 20,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202506",
+      "net_base_usd": 222.79999999999998,
+      "policy": "cue_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 22,
+      "expected_days": 22,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202507",
+      "net_base_usd": -625.0,
+      "policy": "cue_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202508",
+      "net_base_usd": -1564.1999999999998,
+      "policy": "cue_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202509",
+      "net_base_usd": -514.5999999999996,
+      "policy": "cue_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 23,
+      "expected_days": 23,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202510",
+      "net_base_usd": -910.8000000000001,
+      "policy": "cue_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 19,
+      "expected_days": 19,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202511",
+      "net_base_usd": 277.4000000000003,
+      "policy": "cue_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 22,
+      "expected_days": 22,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202512",
+      "net_base_usd": -425.9999999999999,
+      "policy": "cue_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 20,
+      "expected_days": 20,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202601",
+      "net_base_usd": -636.9999999999999,
+      "policy": "cue_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 19,
+      "expected_days": 19,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202602",
+      "net_base_usd": -1324.399999999999,
+      "policy": "cue_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 22,
+      "expected_days": 22,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202603",
+      "net_base_usd": -367.79999999999825,
+      "policy": "cue_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 18,
+      "expected_days": 21,
+      "missing_dates": [
+        "20260401",
+        "20260409",
+        "20260415"
+      ],
+      "missing_days": 3,
+      "month": "202604",
+      "net_base_usd": -1138.3999999999996,
+      "policy": "cue_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 20,
+      "expected_days": 20,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202605",
+      "net_base_usd": -390.00000000000006,
+      "policy": "cue_net__0",
+      "ticker": "SPY"
+    },
+    {
+      "available_days": 21,
+      "expected_days": 21,
+      "missing_dates": [],
+      "missing_days": 0,
+      "month": "202606",
+      "net_base_usd": -2438.7999999999993,
+      "policy": "cue_net__0",
+      "ticker": "SPY"
+    }
+  ],
+  "scope": "DESCRIPTIVE_FIXED_POLICY_MONTHLY_BASE_NET_SEEN_DEVELOPMENT",
+  "script": {
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261023\\figures\\COMMON_GREEK_RESULT_20261023_plot.py": "4b8fee711e8113bf172c1640df028835b57bd56e28f1af6b4451c76145f50127"
+  },
+  "selection": false,
+  "versions": {
+    "matplotlib": "3.10.8",
+    "numpy": "2.3.5",
+    "python": "3.14.2"
+  },
+  "y_scales": "independent by ticker; common to both policies"
+}

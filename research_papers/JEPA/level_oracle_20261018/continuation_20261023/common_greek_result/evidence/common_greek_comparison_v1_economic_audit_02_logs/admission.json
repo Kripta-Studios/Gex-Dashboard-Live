@@ -1,0 +1,11 @@
+{
+  "utc": "2026-10-23T21:04:52.163756+00:00",
+  "available_ram_bytes": 8694087680,
+  "free_commit_bytes": 6490116096,
+  "minimum_free_bytes": 2000000000,
+  "threads": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  }
+}

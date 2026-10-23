@@ -1,0 +1,12 @@
+{
+  "status": "PASS_STAGED_EVIDENCE_BYTE_IDENTITY",
+  "staged_files": 58,
+  "exact_evidence_files_checked": 47,
+  "archive_manifest_sha256": "3794ebdb668f8cacdd6410bc9a22b032531ee63f262559e035f0fddd2411c92d",
+  "full_staged_diff_check": "NONPASS_GENERATED_SVG_PATH_WHITESPACE_ONLY",
+  "svg_whitespace_diagnostics": 1943,
+  "other_staged_diff_check": "PASS",
+  "svg_bytes_preserved": true,
+  "new_fits": false,
+  "new_predictions": false
+}
