@@ -1,0 +1,39 @@
+{
+  "status": "DESCRIPTIVE_REPORT_FROM_CLOSED_AUDITED_RESULTS",
+  "audit": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_economic_audit_01\\audit.json",
+  "audit_sha256": "09b416926fe1da455d8507f0b28e24a8ed8a2ae42845ecbb9326ebf442ca85e5",
+  "inputs": {
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\summary.json": "e8d6b1872381f575ce619bb440ffd149546b9536d3eba88a4a42567cc9c0047a",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\validation\\summary.json": "9efe83a20a9ad7a3639c52ecfcfe25c7ef7a94797ad357dcba8ed618cc0544f1",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\validation\\control__0_daily_coverage.parquet": "9477614b0f0830f3a6055fa6892260d9dbc9c7c719fbdab08043be58599754f5",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\validation\\control__5_daily_coverage.parquet": "7dd1e4b6390baded5c10442b89e6eed824b4756296a98bf6ddae7778a95e6ce1",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\validation\\control__10_daily_coverage.parquet": "7dd1e4b6390baded5c10442b89e6eed824b4756296a98bf6ddae7778a95e6ce1",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\validation\\variant__0_daily_coverage.parquet": "b2d08d8c0034e491a3105ec0110bc57766aace534412efb4f4cbe34be46a38df",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\validation\\variant__5_daily_coverage.parquet": "f18cc3342f8babe3409128b44a505d5d8f007debd3952dcb94dbbd8e5d1cf113",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\validation\\variant__10_daily_coverage.parquet": "191b0f2c707242f830d6a7c4462a4fe85b830d9c89a47ff91dd31fb76abf30fd",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\test\\summary.json": "f85fe0781b996404811b4d3d838e0bb4cd5f3caf25fdc4a74b774ed412b6ad52",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\test\\control__0_daily_coverage.parquet": "d836463c628fa652e8401b926010b48fe959a212a8689bf2bbbb361e7122beec",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\test\\control__5_daily_coverage.parquet": "d836463c628fa652e8401b926010b48fe959a212a8689bf2bbbb361e7122beec",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\test\\control__10_daily_coverage.parquet": "d836463c628fa652e8401b926010b48fe959a212a8689bf2bbbb361e7122beec",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\test\\variant__0_daily_coverage.parquet": "8a2fb6bd4eaa2d8b02ad662d261cc139964ecde7f16fdce1cf0d078b5901ca46",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\test\\variant__5_daily_coverage.parquet": "de8d4d0855c7365f9d4babe1cb0e4476c4af187a5076834a03a71a4e4a147e32",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\test\\variant__10_daily_coverage.parquet": "54973b173f1b6e8f41b5e1ed33056d4917923c8cad32d66483d34c0660230f24"
+  },
+  "outputs": {
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\TCN_ROW_MIXED_CALENDAR_RESULT_20261023_pooled.csv": "e72e1ba82355ece9f560e7d63353a04e4ec185385bf40a39ed77d15d6bfac400",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\TCN_ROW_MIXED_CALENDAR_RESULT_20261023_policy_ticker.csv": "0ad0f7c5a81111fb78ecc3e61e12ed442bed2b30cee2915b6c8ef540331fdbf4",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\TCN_ROW_MIXED_CALENDAR_RESULT_20261023_monthly.csv": "71302c95dc695522d125471f09431a1d96bfd5d2d7549c79ae2b887a41229659",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\TCN_ROW_MIXED_CALENDAR_RESULT_20261023.md": "4411bed5c696d3a7c36d79714118004f82d53a1a8d12bd80c5be12562e315b74"
+  },
+  "monthly_rows": 324,
+  "ticker_rows": 36,
+  "pooled_rows": 12,
+  "no_fit": true,
+  "no_policy_selection": true,
+  "reporter_sha256": "122a74af3095703b264c0f9338b95e26f3cb93c0c3750aa6841ca281502bd04d",
+  "editorial_review": {
+    "description": "Prose spacing clarified; no inference reproduction claim; link to preserved evidence; table and CSV numbers unchanged",
+    "reviewed_at_utc": "2026-10-23T20:28:21.3581833Z",
+    "preserves_numeric_csv": true
+  }
+}

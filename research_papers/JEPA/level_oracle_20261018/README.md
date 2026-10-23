@@ -7,6 +7,13 @@ la rentabilidad causal sigue sin demostrarse y no hay promoción autorizada.
 Las ejecuciones y pendientes actuales se registran en
 [continuación del 23 de octubre](CONTINUATION_PROGRESS_20261023.md).
 
+El [resultado TCN temporal del 23 de octubre](TCN_ROW_MIXED_CALENDAR_RESULT_20261023.md)
+ya está auditado: selección nula y pérdidas en las tres variantes, sin cumplir
+actividad diaria. Se conservan [55 artefactos con hashes](continuation_20261023/TCN_ARTIFACTS.md)
+y el desglose de todos los meses y tickers. La auditoría reproduce economía
+sobre scores sellados; no repite entrenamiento o inferencia. Las líneas Greeks,
+mensual y OOF siguen pendientes según el registro de continuación.
+
 ## Cierre documental conservado del18 de octubre de2026
 
 **Estado: PAUSADA POR ORDEN DEL USUARIO.** No iniciar entrenamientos, evaluaciones, auditores económicos ni subagentes por instrucciones antiguas de esta carpeta. Los planes y mensajes anteriores que dicen «siguiente», «GO» o «en ejecución» son historia; la orden de detener prevalece. Sólo se ha continuado con conservación, documentación y publicación en GitHub.

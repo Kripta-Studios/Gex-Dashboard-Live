@@ -1,5 +1,22 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-10-23 — TCN temporal cerrado con fallo económico auditado
+
+Autoridad: research_papers/JEPA/level_oracle_20261018/TCN_ROW_MIXED_CALENDAR_RESULT_20261023.md.
+Desde c1d92f26, evaluación única y auditoría independiente terminan exit 0.
+750 días de validación y 363 disponibles de H1 2026; seis ausencias conservadas.
+PASS de reproducción económica sobre scores sellados, no refit/inferencia/raw.
+Audit SHA 09b416926fe1da455d8507f0b28e24a8ed8a2ae42845ecbb9326ebf442ca85e5.
+Selección nula: ninguna política cumple actividad diaria en 2025. Variantes
+umbrales 0/5/10 pierden 34.199/40.962,60/42.491 USD base H1; controles sin trades.
+No rescatar QQQ/umbral/mes. Resultado FAILED_DEVELOPMENT_NO_DAILY_COMPLIANT_POLICY.
+55 artefactos copiados/rehasheados en continuation_20261023, sin diferencias;
+372 filas de informes reconciliadas con ledgers y cobertura por root.
+Greek424 continúa, mensual tiene seis modelos completos (tres conservados).
+Auditores mensual 2026 y OOF publicados; wrappers operativos en preparación,
+sin ejecución test mensual u OOF hasta sus dependencias y revisiones.
+Investigación activa; históricos vistos, promoción false y producción intacta.
+
 ### Checkpoint 2026-10-23 — reanudación local autorizada desde acb2a726
 
 Autoridad actual: research_papers/JEPA/level_oracle_20261018/RESUMPTION_20261023.md.

@@ -1,0 +1,15 @@
+{
+  "status": "PASS_REPORT_CSV_RECONCILIATION_TO_ARCHIVED_LEDGERS",
+  "rows": {
+    "monthly": 324,
+    "policy_ticker": 36,
+    "pooled": 12
+  },
+  "csv_sha256": {
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\TCN_ROW_MIXED_CALENDAR_RESULT_20261023_monthly.csv": "71302c95dc695522d125471f09431a1d96bfd5d2d7549c79ae2b887a41229659",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\TCN_ROW_MIXED_CALENDAR_RESULT_20261023_policy_ticker.csv": "0ad0f7c5a81111fb78ecc3e61e12ed442bed2b30cee2915b6c8ef540331fdbf4",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\TCN_ROW_MIXED_CALENDAR_RESULT_20261023_pooled.csv": "e72e1ba82355ece9f560e7d63353a04e4ec185385bf40a39ed77d15d6bfac400"
+  },
+  "archived_files_rehashed": 55,
+  "scope": "Report reconciliation only; no market replay or new inference"
+}

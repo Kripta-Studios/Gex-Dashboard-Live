@@ -1,0 +1,38 @@
+{
+  "source_commit": "c1d92f26",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\evaluate_tcn_row_mixed_calendar.py",
+    "--training-root",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_v1",
+    "--flags-root",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_flags_v1",
+    "--control-audit",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_flags_v1_economic_audit\\audit.json",
+    "--session-root",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_clock_dataset_v1",
+    "--session-audit",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_clock_dataset_v1_audit\\audit.json",
+    "--implementation-review",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\TCN_ROW_MIXED_CALENDAR_IMPLEMENTATION_REVIEW.json",
+    "--output",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation"
+  ],
+  "resources": {
+    "available_ram_bytes": 5110734848,
+    "free_commit_bytes": 6940225536,
+    "gpu_free_bytes": 8058306560
+  },
+  "minimum_free_bytes": 2000000000,
+  "pins": {
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\evaluate_tcn_row_mixed_calendar.py": "a6c68f4ef7486b538b8119b5dfdb035b3dc078bae274c6aa10cc922f6596b33c",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\TCN_ROW_MIXED_CALENDAR_IMPLEMENTATION_REVIEW.json": "cbd8efc6680144ae81afff8d5ac7bab4502bb7d35ef5ef5900fc8e6fd8fe7302",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\audit_tcn_row_mixed_calendar.py": "7a39395977568193764ae9c4b3e837d05e0d510ac45cc0e5649a77732c4e5b57",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_v1\\tcn_variant.pt": "2b55e783c8a7989fa6a579bc6b903f1eddd8b6d40e365aeada687aef630bc87e"
+  },
+  "started_unix": 1792784701.046336,
+  "no_fit": true,
+  "pid": 48688,
+  "creation_time": 1792784701.0497437
+}

@@ -1,0 +1,12 @@
+{
+  "status": "AUDIT_PROCESS_EXIT_OBSERVED",
+  "pid": 23816,
+  "exit_code": 0,
+  "elapsed_seconds": 1052.4844295978546,
+  "peak_rss_bytes": 384221184,
+  "peak_private_bytes": 346079232,
+  "memory_samples": 1052,
+  "sampling_seconds": 1,
+  "exit_source": "subprocess retained Windows process handle",
+  "observed_utc": "2026-10-23T20:24:37.316094+00:00"
+}

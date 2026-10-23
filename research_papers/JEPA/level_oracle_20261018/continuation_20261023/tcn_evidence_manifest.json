@@ -1,0 +1,392 @@
+{
+  "scope": "COMPLETED_TCN_EVIDENCE_COPY_ONLY",
+  "audit_sha256": "09b416926fe1da455d8507f0b28e24a8ed8a2ae42845ecbb9326ebf442ca85e5",
+  "files": [
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\summary.json",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/summary.json",
+      "bytes": 162066,
+      "sha256": "e8d6b1872381f575ce619bb440ffd149546b9536d3eba88a4a42567cc9c0047a",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\completion.json",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/completion.json",
+      "bytes": 4425657,
+      "sha256": "2ab4c8aab0c57b7c0237b746f68789d8fd271e9675578a0b56792a3e07cfa5a9",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\freeze.json",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/freeze.json",
+      "bytes": 3300209,
+      "sha256": "f1804c67e584dd51a1525932565105f9fa082d2e4f9ca7a79025bab68611ee2f",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\source_inputs.json",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/source_inputs.json",
+      "bytes": 1918716,
+      "sha256": "56b8cf0fe77977fd634c05aafa6495f5d2f05892ba753cd2673cff5d9fd0972f",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\identity.json",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/identity.json",
+      "bytes": 392518,
+      "sha256": "046c4802b6a29bf832ae4b7ea45650d6c507d213734666b80df395f5c47e5e56",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\session_calendar.json",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/session_calendar.json",
+      "bytes": 348597,
+      "sha256": "684d78e50cdc21e19cbef7e56b9036e55213df85fc86e0b0b1c0ed150b752594",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\expected_full_calendar.csv",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/expected_full_calendar.csv",
+      "bytes": 3362,
+      "sha256": "96ea051b86208753d8b0a3cb7fa3dd4e999a95bb225faf269171e36fda3a9a6a",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\feature_schema.json",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/feature_schema.json",
+      "bytes": 4854,
+      "sha256": "3a8fd6ae5d7d015c38549a81efb7db08019132faa357a7b9aae7e4063ede945d",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\normalizers.json",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/normalizers.json",
+      "bytes": 13019,
+      "sha256": "2bfac2fb7827f1618b07a9a8391fd41f085979ce349a0e6c063c5aed66227bae",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\training_complete.json",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/training_complete.json",
+      "bytes": 2036984,
+      "sha256": "2c7b350edcfbaa0d2bf769d1e3e808c50a152d8a4f2a46140f23928979520d95",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\tcn_control.pt",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/tcn_control.pt",
+      "bytes": 265621,
+      "sha256": "98b614b4c0c7aeb9fd9540231de7684be453f2759c0da58e716913db1cf25c79",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\tcn_variant.pt",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/tcn_variant.pt",
+      "bytes": 265621,
+      "sha256": "2b55e783c8a7989fa6a579bc6b903f1eddd8b6d40e365aeada687aef630bc87e",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\validation\\summary.json",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/validation/summary.json",
+      "bytes": 275384,
+      "sha256": "9efe83a20a9ad7a3639c52ecfcfe25c7ef7a94797ad357dcba8ed618cc0544f1",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\validation\\control__0_attempts.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/validation/control__0_attempts.parquet",
+      "bytes": 18136,
+      "sha256": "fc7ad80846ca457fd6a6e6f529ae58778d4a88b29c8819d893aa815911d7fe28",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\validation\\control__0_ledger.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/validation/control__0_ledger.parquet",
+      "bytes": 18136,
+      "sha256": "fc7ad80846ca457fd6a6e6f529ae58778d4a88b29c8819d893aa815911d7fe28",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\validation\\control__0_daily_coverage.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/validation/control__0_daily_coverage.parquet",
+      "bytes": 4595,
+      "sha256": "9477614b0f0830f3a6055fa6892260d9dbc9c7c719fbdab08043be58599754f5",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\validation\\control__5_attempts.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/validation/control__5_attempts.parquet",
+      "bytes": 13956,
+      "sha256": "994f3fb17294a7c72c37796ff86a0ea0f12de1bcbc4ea32dd630962b95ecd030",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\validation\\control__5_ledger.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/validation/control__5_ledger.parquet",
+      "bytes": 13956,
+      "sha256": "994f3fb17294a7c72c37796ff86a0ea0f12de1bcbc4ea32dd630962b95ecd030",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\validation\\control__5_daily_coverage.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/validation/control__5_daily_coverage.parquet",
+      "bytes": 4585,
+      "sha256": "7dd1e4b6390baded5c10442b89e6eed824b4756296a98bf6ddae7778a95e6ce1",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\validation\\control__10_attempts.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/validation/control__10_attempts.parquet",
+      "bytes": 13956,
+      "sha256": "994f3fb17294a7c72c37796ff86a0ea0f12de1bcbc4ea32dd630962b95ecd030",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\validation\\control__10_ledger.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/validation/control__10_ledger.parquet",
+      "bytes": 13956,
+      "sha256": "994f3fb17294a7c72c37796ff86a0ea0f12de1bcbc4ea32dd630962b95ecd030",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\validation\\control__10_daily_coverage.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/validation/control__10_daily_coverage.parquet",
+      "bytes": 4585,
+      "sha256": "7dd1e4b6390baded5c10442b89e6eed824b4756296a98bf6ddae7778a95e6ce1",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\validation\\variant__0_attempts.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/validation/variant__0_attempts.parquet",
+      "bytes": 169080,
+      "sha256": "2969b299cc28c263513e3a35c788961b500cb45d6d827c2a5844d2ec662c178c",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\validation\\variant__0_ledger.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/validation/variant__0_ledger.parquet",
+      "bytes": 169959,
+      "sha256": "6856e89f941ab5e83fb1c97d30bbf4f48eb878792851b9d9d9fad41464b84ab4",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\validation\\variant__0_daily_coverage.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/validation/variant__0_daily_coverage.parquet",
+      "bytes": 5130,
+      "sha256": "b2d08d8c0034e491a3105ec0110bc57766aace534412efb4f4cbe34be46a38df",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\validation\\variant__5_attempts.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/validation/variant__5_attempts.parquet",
+      "bytes": 152188,
+      "sha256": "994527a6082073edb99c63d95bb7435137b75b951a45cadb1498c89ae9f68abc",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\validation\\variant__5_ledger.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/validation/variant__5_ledger.parquet",
+      "bytes": 152776,
+      "sha256": "2e7e6ba8d3abee25f994fc125407cdd0ea94f39739c7c211c0bcbc01b23f1205",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\validation\\variant__5_daily_coverage.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/validation/variant__5_daily_coverage.parquet",
+      "bytes": 5130,
+      "sha256": "f18cc3342f8babe3409128b44a505d5d8f007debd3952dcb94dbbd8e5d1cf113",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\validation\\variant__10_attempts.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/validation/variant__10_attempts.parquet",
+      "bytes": 136648,
+      "sha256": "673105a52375fd37a6e1c9287383f6af7a9870b2c659d48a022f2b0498275073",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\validation\\variant__10_ledger.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/validation/variant__10_ledger.parquet",
+      "bytes": 137558,
+      "sha256": "bbe41f2b85c91b96fda9b05ded9413ae462b998458c525938fab24b9f48bb26a",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\validation\\variant__10_daily_coverage.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/validation/variant__10_daily_coverage.parquet",
+      "bytes": 5130,
+      "sha256": "191b0f2c707242f830d6a7c4462a4fe85b830d9c89a47ff91dd31fb76abf30fd",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\test\\summary.json",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/test/summary.json",
+      "bytes": 151116,
+      "sha256": "f85fe0781b996404811b4d3d838e0bb4cd5f3caf25fdc4a74b774ed412b6ad52",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\test\\control__0_attempts.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/test/control__0_attempts.parquet",
+      "bytes": 13956,
+      "sha256": "994f3fb17294a7c72c37796ff86a0ea0f12de1bcbc4ea32dd630962b95ecd030",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\test\\control__0_ledger.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/test/control__0_ledger.parquet",
+      "bytes": 13956,
+      "sha256": "994f3fb17294a7c72c37796ff86a0ea0f12de1bcbc4ea32dd630962b95ecd030",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\test\\control__0_daily_coverage.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/test/control__0_daily_coverage.parquet",
+      "bytes": 3638,
+      "sha256": "d836463c628fa652e8401b926010b48fe959a212a8689bf2bbbb361e7122beec",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\test\\control__5_attempts.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/test/control__5_attempts.parquet",
+      "bytes": 13956,
+      "sha256": "994f3fb17294a7c72c37796ff86a0ea0f12de1bcbc4ea32dd630962b95ecd030",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\test\\control__5_ledger.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/test/control__5_ledger.parquet",
+      "bytes": 13956,
+      "sha256": "994f3fb17294a7c72c37796ff86a0ea0f12de1bcbc4ea32dd630962b95ecd030",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\test\\control__5_daily_coverage.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/test/control__5_daily_coverage.parquet",
+      "bytes": 3638,
+      "sha256": "d836463c628fa652e8401b926010b48fe959a212a8689bf2bbbb361e7122beec",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\test\\control__10_attempts.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/test/control__10_attempts.parquet",
+      "bytes": 13956,
+      "sha256": "994f3fb17294a7c72c37796ff86a0ea0f12de1bcbc4ea32dd630962b95ecd030",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\test\\control__10_ledger.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/test/control__10_ledger.parquet",
+      "bytes": 13956,
+      "sha256": "994f3fb17294a7c72c37796ff86a0ea0f12de1bcbc4ea32dd630962b95ecd030",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\test\\control__10_daily_coverage.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/test/control__10_daily_coverage.parquet",
+      "bytes": 3638,
+      "sha256": "d836463c628fa652e8401b926010b48fe959a212a8689bf2bbbb361e7122beec",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\test\\variant__0_attempts.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/test/variant__0_attempts.parquet",
+      "bytes": 100286,
+      "sha256": "a3fba2eda8119ed9e5411e14d8fd77a7d955338b2182e7470181d88a4760762f",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\test\\variant__0_ledger.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/test/variant__0_ledger.parquet",
+      "bytes": 100322,
+      "sha256": "aec15178ec91b203be0be2baa0e7381681add1b59c57251815b39963c803f131",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\test\\variant__0_daily_coverage.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/test/variant__0_daily_coverage.parquet",
+      "bytes": 3881,
+      "sha256": "8a2fb6bd4eaa2d8b02ad662d261cc139964ecde7f16fdce1cf0d078b5901ca46",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\test\\variant__5_attempts.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/test/variant__5_attempts.parquet",
+      "bytes": 90156,
+      "sha256": "92260df63e41abc78cfdf81a1323605a05638c22adcc5390003d610cd91b231a",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\test\\variant__5_ledger.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/test/variant__5_ledger.parquet",
+      "bytes": 90042,
+      "sha256": "d38e7a9e45b86cf833bcf42cc2aed4aab2d79f22d74ec68e496ad47bd66e1ef3",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\test\\variant__5_daily_coverage.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/test/variant__5_daily_coverage.parquet",
+      "bytes": 3881,
+      "sha256": "de8d4d0855c7365f9d4babe1cb0e4476c4af187a5076834a03a71a4e4a147e32",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\test\\variant__10_attempts.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/test/variant__10_attempts.parquet",
+      "bytes": 84288,
+      "sha256": "22e64c895f4f786ce74d23585ac44feb9bc909b2ab94c4626e6b467e230646c3",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\test\\variant__10_ledger.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/test/variant__10_ledger.parquet",
+      "bytes": 84216,
+      "sha256": "7792adcaaa24b29969ec1bbd3ba6675da900eb67cb169f0914eff40106e41aec",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation\\test\\variant__10_daily_coverage.parquet",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation/test/variant__10_daily_coverage.parquet",
+      "bytes": 3881,
+      "sha256": "54973b173f1b6e8f41b5e1ed33056d4917923c8cad32d66483d34c0660230f24",
+      "audited_member": true
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_economic_audit_01\\audit.json",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_economic_audit_01/audit.json",
+      "bytes": 6697713,
+      "sha256": "09b416926fe1da455d8507f0b28e24a8ed8a2ae42845ecbb9326ebf442ca85e5",
+      "audited_member": false
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation_launch_20261023_01\\process.json",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation_launch_20261023_01/process.json",
+      "bytes": 2327,
+      "sha256": "8be2a91b24550ddfed26b9bfba7a8dda503ff04f9fa3bbb6f49227329160921c",
+      "audited_member": false
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_evaluation_launch_20261023_01\\monitored_exit.json",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_evaluation_launch_20261023_01/monitored_exit.json",
+      "bytes": 594,
+      "sha256": "fb0b14ae7640817db4f624e5a30d509fa756dab1715347136ac3658e95cd2782",
+      "audited_member": false
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_economic_audit_01_launch_20261023_01\\process.json",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_economic_audit_01_launch_20261023_01/process.json",
+      "bytes": 3082,
+      "sha256": "81156a6750c729398bdfd311474cbde6a45c27e2297b39d0ce869beafb9e1f3f",
+      "audited_member": false
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\tcn_row_mixed_calendar_v1_economic_audit_01_launch_20261023_01\\exit.json",
+      "copy": "evidence/tcn_row_mixed_calendar_v1_economic_audit_01_launch_20261023_01/exit.json",
+      "bytes": 365,
+      "sha256": "bda8c17b87b0722663eb01c46cd6091a58e813fb3cc43888eca0a21a486d7f30",
+      "audited_member": false
+    }
+  ],
+  "large_matrices_and_raw_remain_local": true
+}
