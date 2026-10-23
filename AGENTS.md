@@ -16,8 +16,12 @@ Intento01 y originales inmutables, archivados/publicados en30c27abf. AuditorV2
 nuevo f01a962f…721ed3:59 pruebas autor/20 focales independientes PASS, AST económica
 intacta y review f45d9dc6…09d389 CLEAR. Launcher02 a848a557…770c20,40 pruebas autor
 y40 root PASS; exige pin externo de review y conserva el fallo01. Publicar estos
-bytes antes de ejecutar una vez en raíz nueva20261024_02. Aún no hay PASS real V2.
-La extensión de auditoría2026 V2 está en prueba sintética/revisión separadas.
+bytes antes de ejecutar una vez en raíz nueva20261024_02. Publicación verificada
+9a2978ac; supervisor38960 desde23:31:58UTC y auditor52304 desde23:32:30UTC,
+identidad/comando/review exactos. Sigue activo sin resultado final en esta observación.
+Extensión auditor2026 V2 feea3954…483421:33 pruebas sintéticas PASS y revisión
+independiente32 focales+6 negativos PASS;13 dependencias/AST intactos, review
+493806fb…0ee2b3 CLEAR de implementación. Sin runtime2026 ni PASS real2025 todavía.
 No reentrenar modelos ni cambiar costes, políticas, selección o calendario.
 Test2026 y OOF siguen pendientes de auditoría2025 válida. Investigación activa,
 SEEN_DEVELOPMENT, technical_ready=false, promotion_approved=false; producción intacta.

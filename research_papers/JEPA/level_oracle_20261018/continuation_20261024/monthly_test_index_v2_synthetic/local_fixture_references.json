@@ -1,0 +1,177 @@
+{
+  "scope": "SYNTHETIC_FIXTURE_ONLY_NO_MARKET_DATA",
+  "fixture_root": "C:\\Users\\\u00c1lvaro Schwiedop\\AppData\\Local\\Temp\\pytest-of-\u00c1lvaro Schwiedop\\pytest-5748\\monthly_test_synthetic0",
+  "audit_path": "C:\\Users\\\u00c1lvaro Schwiedop\\AppData\\Local\\Temp\\pytest-of-\u00c1lvaro Schwiedop\\pytest-5748\\monthly_test_synthetic0\\audit_output\\audit.json",
+  "audit_sha256": "19a74f5bb4b1202d2e138da6849e2f911b633b91578bcb47ccba7d9c401f2d5b",
+  "audit_status": "PASS_INDEPENDENT_MONTHLY_WALK_FORWARD_AUDIT_GIVEN_SEALED_SCORES",
+  "audited": {
+    "new_months": 6,
+    "new_unique_fit_windows": 12,
+    "models_used_test": 13,
+    "total_unique_fit_windows": 36,
+    "modes": [
+      "static",
+      "expanding",
+      "rolling12"
+    ],
+    "calendar_ticker_days": 369,
+    "available_ticker_days": 363,
+    "missing_no_evaluable": 6,
+    "missing_identities": [
+      [
+        "QQQ",
+        "20260401"
+      ],
+      [
+        "QQQ",
+        "20260409"
+      ],
+      [
+        "QQQ",
+        "20260415"
+      ],
+      [
+        "SPY",
+        "20260401"
+      ],
+      [
+        "SPY",
+        "20260409"
+      ],
+      [
+        "SPY",
+        "20260415"
+      ]
+    ],
+    "selected_mode": null,
+    "selection_reused_without_test_reselection": true,
+    "new_fit_samples_targets_weights_matrices_reconstructed": true,
+    "scheduler_ledgers_economics_reconstructed": true,
+    "all_three_monthly_fit_scores_sealed_before_ledgers": true,
+    "test_period_report_reconstructed": true
+  },
+  "files": [
+    {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\AppData\\Local\\Temp\\pytest-of-\u00c1lvaro Schwiedop\\pytest-5748\\monthly_test_synthetic0\\monthly\\fits\\train_20230101_20260101_exclusive\\matrix.npy",
+      "bytes": 17633024,
+      "sha256": "1a5ce7185602309de591238b0f27433adcad967384fe288f431250f3118497bd"
+    },
+    {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\AppData\\Local\\Temp\\pytest-of-\u00c1lvaro Schwiedop\\pytest-5748\\monthly_test_synthetic0\\monthly\\fits\\train_20230101_20260101_exclusive\\targets.npz",
+      "bytes": 91232,
+      "sha256": "9bbd7c29553fc4ad127c4297dd402d89a632d7e5b0e45db576612807797cc990"
+    },
+    {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\AppData\\Local\\Temp\\pytest-of-\u00c1lvaro Schwiedop\\pytest-5748\\monthly_test_synthetic0\\monthly\\fits\\train_20230101_20260201_exclusive\\matrix.npy",
+      "bytes": 18101984,
+      "sha256": "08bdfaf7ca41fe137c75b0939a0268be18e6dd2747cf88d36470eafbfe74b4de"
+    },
+    {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\AppData\\Local\\Temp\\pytest-of-\u00c1lvaro Schwiedop\\pytest-5748\\monthly_test_synthetic0\\monthly\\fits\\train_20230101_20260201_exclusive\\targets.npz",
+      "bytes": 93632,
+      "sha256": "5464d1052ed0bcb703f986de2db23dab71f7ae835a915607bd120a711063b531"
+    },
+    {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\AppData\\Local\\Temp\\pytest-of-\u00c1lvaro Schwiedop\\pytest-5748\\monthly_test_synthetic0\\monthly\\fits\\train_20230101_20260301_exclusive\\matrix.npy",
+      "bytes": 18547496,
+      "sha256": "c9dc704b1f6a9fea07f05441e82ebe64608cbfc6bc6f71c37056564a695d3f04"
+    },
+    {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\AppData\\Local\\Temp\\pytest-of-\u00c1lvaro Schwiedop\\pytest-5748\\monthly_test_synthetic0\\monthly\\fits\\train_20230101_20260301_exclusive\\targets.npz",
+      "bytes": 95912,
+      "sha256": "192b7880cc76e1df6d92042df10c2188dfe3f34ec0183ef62ee7c830c00e46e4"
+    },
+    {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\AppData\\Local\\Temp\\pytest-of-\u00c1lvaro Schwiedop\\pytest-5748\\monthly_test_synthetic0\\monthly\\fits\\train_20230101_20260401_exclusive\\matrix.npy",
+      "bytes": 19063352,
+      "sha256": "a611aff4bec81ec96b86d378dbfb6f612bd46a99e4ff46809117736a9b93d46d"
+    },
+    {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\AppData\\Local\\Temp\\pytest-of-\u00c1lvaro Schwiedop\\pytest-5748\\monthly_test_synthetic0\\monthly\\fits\\train_20230101_20260401_exclusive\\targets.npz",
+      "bytes": 98552,
+      "sha256": "60952fcc3768861cd36a43da01e7d2393938e596e0d637aa38afdb75d8948ec3"
+    },
+    {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\AppData\\Local\\Temp\\pytest-of-\u00c1lvaro Schwiedop\\pytest-5748\\monthly_test_synthetic0\\monthly\\fits\\train_20230101_20260501_exclusive\\matrix.npy",
+      "bytes": 19508864,
+      "sha256": "e1c025136ef15914f9e921bb99809377d60c45837d16f17ce2a7ff8fcd1cdd30"
+    },
+    {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\AppData\\Local\\Temp\\pytest-of-\u00c1lvaro Schwiedop\\pytest-5748\\monthly_test_synthetic0\\monthly\\fits\\train_20230101_20260501_exclusive\\targets.npz",
+      "bytes": 100832,
+      "sha256": "68f7875c156355996d019e5e43c08dbe0171bafce562e9d0905b987282ca4f1b"
+    },
+    {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\AppData\\Local\\Temp\\pytest-of-\u00c1lvaro Schwiedop\\pytest-5748\\monthly_test_synthetic0\\monthly\\fits\\train_20230101_20260601_exclusive\\matrix.npy",
+      "bytes": 19977824,
+      "sha256": "28aa0de7b2d118b87fbe98e8c3947a4fac8253ce70ff0d5dd41a78114ebe20b5"
+    },
+    {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\AppData\\Local\\Temp\\pytest-of-\u00c1lvaro Schwiedop\\pytest-5748\\monthly_test_synthetic0\\monthly\\fits\\train_20230101_20260601_exclusive\\targets.npz",
+      "bytes": 103232,
+      "sha256": "148b0a74393312039251b892aafd46f41a2321bdca5151f73a280d5e32a82bdd"
+    },
+    {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\AppData\\Local\\Temp\\pytest-of-\u00c1lvaro Schwiedop\\pytest-5748\\monthly_test_synthetic0\\monthly\\fits\\train_20250101_20260101_exclusive\\matrix.npy",
+      "bytes": 5862128,
+      "sha256": "b9b476e141c88342d98d33674e7dbc6af1eae51c2ce0561b56421c3b09a2b1f3"
+    },
+    {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\AppData\\Local\\Temp\\pytest-of-\u00c1lvaro Schwiedop\\pytest-5748\\monthly_test_synthetic0\\monthly\\fits\\train_20250101_20260101_exclusive\\targets.npz",
+      "bytes": 30992,
+      "sha256": "e5fe5c560955fd1d2bb858bbfb6c2e3b17ffc0e54268fcc19b9873ae560f6fe9"
+    },
+    {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\AppData\\Local\\Temp\\pytest-of-\u00c1lvaro Schwiedop\\pytest-5748\\monthly_test_synthetic0\\monthly\\fits\\train_20250201_20260201_exclusive\\matrix.npy",
+      "bytes": 5862128,
+      "sha256": "b9b476e141c88342d98d33674e7dbc6af1eae51c2ce0561b56421c3b09a2b1f3"
+    },
+    {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\AppData\\Local\\Temp\\pytest-of-\u00c1lvaro Schwiedop\\pytest-5748\\monthly_test_synthetic0\\monthly\\fits\\train_20250201_20260201_exclusive\\targets.npz",
+      "bytes": 30992,
+      "sha256": "e5fe5c560955fd1d2bb858bbfb6c2e3b17ffc0e54268fcc19b9873ae560f6fe9"
+    },
+    {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\AppData\\Local\\Temp\\pytest-of-\u00c1lvaro Schwiedop\\pytest-5748\\monthly_test_synthetic0\\monthly\\fits\\train_20250301_20260301_exclusive\\matrix.npy",
+      "bytes": 5862128,
+      "sha256": "b9b476e141c88342d98d33674e7dbc6af1eae51c2ce0561b56421c3b09a2b1f3"
+    },
+    {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\AppData\\Local\\Temp\\pytest-of-\u00c1lvaro Schwiedop\\pytest-5748\\monthly_test_synthetic0\\monthly\\fits\\train_20250301_20260301_exclusive\\targets.npz",
+      "bytes": 30992,
+      "sha256": "e5fe5c560955fd1d2bb858bbfb6c2e3b17ffc0e54268fcc19b9873ae560f6fe9"
+    },
+    {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\AppData\\Local\\Temp\\pytest-of-\u00c1lvaro Schwiedop\\pytest-5748\\monthly_test_synthetic0\\monthly\\fits\\train_20250401_20260401_exclusive\\matrix.npy",
+      "bytes": 5885576,
+      "sha256": "3bfc41cd8aff4d058664d018d95f6ad3b4c7c2b1cac0de2d0cb64f39fef1d859"
+    },
+    {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\AppData\\Local\\Temp\\pytest-of-\u00c1lvaro Schwiedop\\pytest-5748\\monthly_test_synthetic0\\monthly\\fits\\train_20250401_20260401_exclusive\\targets.npz",
+      "bytes": 31112,
+      "sha256": "f7cb7c812a5a8a84ecb24f435beed4ddbb29eb3d6d4d33987f752674088d20bc"
+    },
+    {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\AppData\\Local\\Temp\\pytest-of-\u00c1lvaro Schwiedop\\pytest-5748\\monthly_test_synthetic0\\monthly\\fits\\train_20250501_20260501_exclusive\\matrix.npy",
+      "bytes": 5838680,
+      "sha256": "f05adc1ed9b1ad057bcb59d072649cab597f95990daf408f343a7da022d9f61f"
+    },
+    {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\AppData\\Local\\Temp\\pytest-of-\u00c1lvaro Schwiedop\\pytest-5748\\monthly_test_synthetic0\\monthly\\fits\\train_20250501_20260501_exclusive\\targets.npz",
+      "bytes": 30872,
+      "sha256": "7ede4725b179eac4d5d8e677f6cc46c7fdf368b76c7a493b4d360589f99ea640"
+    },
+    {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\AppData\\Local\\Temp\\pytest-of-\u00c1lvaro Schwiedop\\pytest-5748\\monthly_test_synthetic0\\monthly\\fits\\train_20250601_20260601_exclusive\\matrix.npy",
+      "bytes": 5815232,
+      "sha256": "14b2558f54e98437ad00316bc13407cd07dc214dea249b97371c62488028d598"
+    },
+    {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\AppData\\Local\\Temp\\pytest-of-\u00c1lvaro Schwiedop\\pytest-5748\\monthly_test_synthetic0\\monthly\\fits\\train_20250601_20260601_exclusive\\targets.npz",
+      "bytes": 30752,
+      "sha256": "9aa5faa4e423bd3a0f7943c77533cd9c17f4b3303d53ce58c2788ec7cf68e365"
+    }
+  ],
+  "local_only": true,
+  "retention_note": "Pytest temporary fixture directory; not a durable research-data archive. The compact execution receipts and references are preserved separately."
+}

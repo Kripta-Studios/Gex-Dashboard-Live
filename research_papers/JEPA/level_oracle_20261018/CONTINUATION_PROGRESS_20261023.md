@@ -1,6 +1,6 @@
 # Continuación local: estado del 23 de octubre de 2026
 
-Actualización: 24 de octubre, 01:21 Madrid (23 de octubre, 23:21 UTC). Investigación activa
+Actualización: 24 de octubre, 01:37 Madrid (23 de octubre, 23:37 UTC). Investigación activa
 por orden del usuario. Base publicada anterior: `acb2a726`; preparación y código
 nuevos publicados previamente hasta `fee235ee`, incluyendo los lanzadores revisados mensual y OOF,
 el resultado TCN completo y sus 55 copias de evidencia.
@@ -15,9 +15,18 @@ review `f45d9dc6e032f9bd5e646ec0fad8059a924e8fed1462f817737b26cfff09d389` CLEAR,
 sólo implementación. El lanzador02 pasó 40 pruebas del autor y 40 de root,
 y requiere ese pin externo, preservando el fallo01. Se publican código/revisiones
 antes del nuevo intento en raíces `monthly_validation_audit_launch_20261024_02`
-y `monthly_walk_forward_validation_audit_20261024_02`. No hay PASS real V2.
-La extensión auditora2026 V2 está en prueba sintética y revisión separadas;
-test 2026 y OOF todavía no han comenzado. Véase
+y `monthly_walk_forward_validation_audit_20261024_02`. Publicación verificada en
+`9a2978ac79870110be1394d50881e8f706d9310c`; supervisor PID38960, creación
+`1792798318.2093968`, inició a las 23:31:58 UTC. El auditor PID52304, creación
+por handle `1792798350.3967857`, inició a las 23:32:30.405019 UTC con comando y
+review exactos. Sigue activo, sin stderr ni salida final en esta observación.
+No hay PASS real V2. La extensión auditora2026 V2 completó 33 pruebas sintéticas
+en 296,19 s y revisión independiente con 32 focales en 6,74 s más seis negativos
+de autoridades. Review `493806fbc25a50a3333b4d2e65f3bd041bd30b30d5a10203d8c188c0520ee2b3`,
+CLEAR de implementación; conserva trece dependencias y núcleo AST. La fixture
+mantiene 369/363/6, ausencias nulas y PnL missing no evaluable. Sus recibos y
+referencias locales están en `MONTHLY_TEST_INDEX_AUDIT_V2_IMPLEMENTATION_RESULT_20261024.md`.
+Test 2026 y OOF todavía no han comenzado. Véase
 `MONTHLY_VALIDATION_AUDIT_01_TECHNICAL_FAILURE_20261024.md`.
 
 ## Ejecuciones observadas

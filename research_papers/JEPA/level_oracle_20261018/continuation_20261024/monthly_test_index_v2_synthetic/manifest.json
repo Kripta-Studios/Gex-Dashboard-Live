@@ -1,0 +1,29 @@
+{
+  "scope": "AUTHOR_SYNTHETIC_TESTS_ONLY",
+  "files": [
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_index_v2_synthetic_20261024_01\\attempt.json",
+      "copy": "attempt.json",
+      "bytes": 2154,
+      "sha256": "279fe53b0da76b2b9d500c25e4fa8c3b252468d9c54863c741c4418cfc66440c"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_index_v2_synthetic_20261024_01\\result.json",
+      "copy": "result.json",
+      "bytes": 2284,
+      "sha256": "6f4a9ff5419c3baae1fdcc93f94f2b13a41516e4b22b63eb85ac9c5b958ad5c0"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_index_v2_synthetic_20261024_01\\pytest.stdout.log",
+      "copy": "pytest.stdout.log",
+      "bytes": 113,
+      "sha256": "85ba9600426e34d0a06c88e0288821ecf7003cbc3f1f1d0e1eb48cb609269b65"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_index_v2_synthetic_20261024_01\\pytest.stderr.log",
+      "copy": "pytest.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}
