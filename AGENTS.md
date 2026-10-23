@@ -13,7 +13,9 @@ Los tres tickers pierden; H1 tiene47 días disponibles sinfill y meses positivos
 QQQ/SPXW/SPY2/1/2. Control152 H1 -43482,20 USD. No ganador ni rescate por ticker.
 108 grupos mensuales y16 anuales reconciliados independientemente con2238
 parquets de intentos, sin diferencias materiales; ambos modelos fijos conservados.
-Mensual2025 sigue activo:14/24 modelos completos, hashes comprobados. Supervisor
+Observación24-oct00:03Madrid: mensual2025 sigue activo,18/24 modelos completos,
+hashes comprobados y enero–septiembre con tres markers de cierre del productor.
+No se abrieron sus métricas parciales para seleccionar. Supervisor
 único espera exit0/cierre anual para auditor2025; test2026 y OOF aún no ejecutados.
 Launcher test2026 implementado:29 pruebas autor y16 focales independientes PASS;
 review6d9713b1…98d22, sólo implementación, runtime_authorized=false. Wrapper intacto.

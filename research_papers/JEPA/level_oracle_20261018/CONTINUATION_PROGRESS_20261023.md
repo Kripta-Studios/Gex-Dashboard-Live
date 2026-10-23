@@ -1,8 +1,8 @@
 # Continuación local: estado del 23 de octubre de 2026
 
-Actualización: 23 de octubre, después de revisar el lanzador mensual test a las 21:46 UTC. Investigación activa
+Actualización: 24 de octubre, 00:03 Madrid (23 de octubre, 22:03 UTC). Investigación activa
 por orden del usuario. Base publicada anterior: `acb2a726`; preparación y código
-nuevos publicados previamente hasta `606d60c8`, incluyendo los lanzadores revisados mensual y OOF,
+nuevos publicados previamente hasta `fee235ee`, incluyendo los lanzadores revisados mensual y OOF,
 el resultado TCN completo y sus 55 copias de evidencia.
 Este registro incorpora los resultados TCN y Greeks auditados; mensual y OOF siguen abiertos.
 
@@ -41,19 +41,24 @@ Este registro incorpora los resultados TCN y Greeks auditados; mensual y OOF sig
   Logs y recibos del productor:
   `D:/GexResearchArtifacts/level_oracle_20261018/common_greek_comparison_v1_launch`.
   No se reentrena ninguno de los dos modelos ni se selecciona por resultados
-  parciales. El reporte completo y su reconciliación independiente están en curso.
+  parciales. El reporte completo y su reconciliación independiente quedaron
+  publicados en `4d55a90a`; su interpretación de calibración, en `606d60c8`.
   La variante 424 pierde 93.912,60 USD base / 98.915,60 adverso en 2025 y
   35.329,40 / 38.102,40 en H1 2026. Los tres tickers pierden; 47 de los 363
   días disponibles de H1 no tienen fill. El control 152 pierde 43.482,20 USD
   base en H1. Ninguna de las dos políticas acredita el objetivo conjunto.
 - Validación mensual: wrapper PID 11852, iniciado a las 19:34:13 UTC desde
   `1e1f689e`, sólo `stage validation`. Ya publicó su nuevo `launch.json`;
-  tiene catorce modelos completos de los 24 previstos para validación. Root y el
+  tiene dieciocho modelos completos de los 24 previstos para validación. Root y el
   observador rehashearon sus modelos y recibos, sin diferencias. Los tres originales
   permanecen intactos; los nuevos cierres ocurrieron a las 19:59:06, 20:13:35 y
   20:20:05 UTC, seguidos por los dos ajustes de abril y los dos de mayo. El ajuste
   expanding para junio cerró a las 21:14:36 UTC y rolling a las 21:17:37 UTC;
-  los dos ajustes para julio cerraron a las 21:27:33 y 21:31:44 UTC. Todavía no hay cierre anual
+  los dos ajustes para julio cerraron a las 21:27:33 y 21:31:44 UTC. Agosto cerró
+  sus modelos a las 21:47:14 y 21:49:56 UTC; septiembre a las 21:59:08 y
+  22:01:45 UTC. El productor ya tiene los tres markers de cierre de enero a
+  septiembre: predicciones, economía y diario. Se comprobó el estado COMPLETE
+  de esos markers sin leer sus métricas parciales. Todavía no hay cierre anual
   ni evaluación mensual 2026.
   Runtime: `D:/GexResearchArtifacts/level_oracle_20261018/monthly_resource_overlay_resume_20261023_01`.
   Logs y recibo de proceso en el directorio hermano
@@ -68,13 +73,22 @@ Este registro incorpora los resultados TCN y Greeks auditados; mensual y OOF sig
   recibo `root_launch_review.json`. Mantiene locks operativo/científico, gate de
   recursos antes de Popen y recibo de exit del auditor por handle. Está esperando,
   no es una auditoría ya completada.
+  Un chequeo independiente de integración contrastó 20 campos/bindings ya
+  existentes con el wrapper test publicado: identidad, comando, fuentes de los
+  recibos, contrato y dependencias coinciden. La inspección del código que
+  escribirá completion/exit no detectó incompatibilidad de esquema. No equivale
+  a un cierre real: ambos recibos siguen pendientes. La futura request debe
+  incluir `source_launch=process.json` porque el binding fue normalizado, y usar
+  el SHA de monitor_open para el monitor retenido actual, no el campo histórico
+  source_monitor_sha256. Debe ejecutarse desde el repositorio por el comando
+  relativo histórico. Las fuentes y recibos originales no se modificaron.
 - Evaluación TCN: PID 48688 terminó con exit 0 observado por handle retenido
   a las 20:06:46 UTC, desde el código publicado en `c1d92f26`, sin fit.
   Salida nueva `tcn_row_mixed_calendar_v1_evaluation`; recibos y logs en
   `tcn_row_mixed_calendar_v1_evaluation_launch_20261023_01`, bajo la misma raíz.
   Gate observado al lanzar: RAM 5.110.734.848 bytes, commit 6.940.225.536 bytes
   y memoria GPU libre 8.058.306.560 bytes. El subagente
-  `tcn_economic_auditor` supervisa la auditoría independiente, PID 23816, salida
+  `tcn_economic_auditor` supervisó la auditoría independiente, PID 23816, salida
   nueva `tcn_row_mixed_calendar_v1_economic_audit_01`. Reconstruidos 750 días de
   validación y 363 disponibles de 2026, 36.157 miembros verificados. Auditoría PASS
   y exit 0 observados a las 20:24:37 UTC; SHA audit
@@ -103,7 +117,7 @@ causa. Antes de la auditoría nueva se volvió a comprobar el gate.
 
 - Productor y auditor griegas: 20 pruebas sintéticas PASS antes del lanzamiento.
 - Recuperación mensual: 6.084 checkpoints rehasheados, cero ausencias o cambios;
-  tres modelos anteriores conservados y once nuevos completos. Quedan diez fits
+  tres modelos anteriores conservados y quince nuevos completos. Quedan seis fits
   de validación; el cierre y auditoría anual siguen pendientes.
 - OOF: se completó el rerun pendiente de 23 pruebas, todas PASS. No hubo
   calibración real; el informe separado conserva las autoridades antiguas.
