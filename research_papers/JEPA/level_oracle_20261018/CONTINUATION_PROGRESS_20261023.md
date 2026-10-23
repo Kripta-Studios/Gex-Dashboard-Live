@@ -1,6 +1,6 @@
 # Continuación local: estado del 23 de octubre de 2026
 
-Actualización: 24 de octubre, 00:03 Madrid (23 de octubre, 22:03 UTC). Investigación activa
+Actualización: 24 de octubre, 01:08 Madrid (23 de octubre, 23:08 UTC). Investigación activa
 por orden del usuario. Base publicada anterior: `acb2a726`; preparación y código
 nuevos publicados previamente hasta `fee235ee`, incluyendo los lanzadores revisados mensual y OOF,
 el resultado TCN completo y sus 55 copias de evidencia.
@@ -49,17 +49,25 @@ Este registro incorpora los resultados TCN y Greeks auditados; mensual y OOF sig
   base en H1. Ninguna de las dos políticas acredita el objetivo conjunto.
 - Validación mensual: wrapper PID 11852, iniciado a las 19:34:13 UTC desde
   `1e1f689e`, sólo `stage validation`. Ya publicó su nuevo `launch.json`;
-  tiene dieciocho modelos completos de los 24 previstos para validación. Root y el
+  tiene los 24 modelos completos previstos para validación. Root y el
   observador rehashearon sus modelos y recibos, sin diferencias. Los tres originales
   permanecen intactos; los nuevos cierres ocurrieron a las 19:59:06, 20:13:35 y
   20:20:05 UTC, seguidos por los dos ajustes de abril y los dos de mayo. El ajuste
   expanding para junio cerró a las 21:14:36 UTC y rolling a las 21:17:37 UTC;
   los dos ajustes para julio cerraron a las 21:27:33 y 21:31:44 UTC. Agosto cerró
   sus modelos a las 21:47:14 y 21:49:56 UTC; septiembre a las 21:59:08 y
-  22:01:45 UTC. El productor ya tiene los tres markers de cierre de enero a
-  septiembre: predicciones, economía y diario. Se comprobó el estado COMPLETE
-  de esos markers sin leer sus métricas parciales. Todavía no hay cierre anual
-  ni evaluación mensual 2026.
+  22:01:45 UTC. Octubre cerró a las 22:11:03 y 22:14:57 UTC; noviembre a las
+  22:32:14 y 22:36:17 UTC; diciembre a las 22:54:29 y 22:58:39 UTC.
+  El productor ya tiene los tres markers de cierre de enero a diciembre:
+  predicciones, economía y diario. Se comprobó el estado COMPLETE de esos
+  markers sin leer sus métricas parciales. El mapa del observador
+  `monthly_validation_observer_20261023_01/checkpoint_map_2026-10-23T230059.406683_0000.json`
+  registra los 24 modelos y doce meses. Root verificó además los dos miembros
+  de cada último modelo de diciembre, sin diferencias. Se observó
+  `validation_freeze.complete.json` a las 23:05:34 UTC, sin abrir su contenido.
+  A las 23:07:51 UTC el productor seguía vivo con CPU acumulada de 16.203,204 s;
+  no había exit retenido, cierre de informe anual ni auditor hijo. Todavía no
+  hay evaluación mensual 2026 ni resultado anual auditado.
   Runtime: `D:/GexResearchArtifacts/level_oracle_20261018/monthly_resource_overlay_resume_20261023_01`.
   Logs y recibo de proceso en el directorio hermano
   `monthly_resume_20261023_01_logs`.
