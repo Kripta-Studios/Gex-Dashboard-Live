@@ -82,6 +82,15 @@ deben tomarse de los recibos de runtime al cerrar.
   independientes PASS. Revisión limitada a implementación sobre scores sellados;
   falta la auditoría mensual compuesta y la petición concreta de ejecución. No se
   ha calibrado ni evaluado OOF real.
+- Lanzador OOF: código, fixtures y revisión terminados; 22 pruebas finales del
+  autor y cuatro focales independientes PASS. Corregidos el cierre prematuro,
+  la falta de verificación de realized antes de los recibos y las métricas de
+  recursos. Root comprobó 18 bindings sin diferencias. La ejecución real espera
+  la auditoría mensual compuesta de los 18 meses y una request externa concreta.
+- Matemática del actor de sesión: especificación sintética revisada y publicada
+  en `c5043847`. Se preparan comparaciones de enumeración, DP y gradientes sobre
+  grafos artificiales; no hay arquitectura, entrenamiento o familia económica
+  nueva activada por ese trabajo.
 - Reporter mensual griegas: cuatro pruebas PASS; sólo puede consumir el cierre
   auditado de esta comparación. Publicará los 108 grupos fijados, sin selección.
 
