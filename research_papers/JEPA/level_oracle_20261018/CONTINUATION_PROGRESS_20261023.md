@@ -1,8 +1,8 @@
 # Continuación local: estado del 23 de octubre de 2026
 
-Actualización: 23 de octubre, 20:34 UTC. Investigación activa
+Actualización: 23 de octubre, 20:44 UTC. Investigación activa
 por orden del usuario. Base publicada anterior: `acb2a726`; preparación y código
-nuevos publicados hasta `7a2c5abd`, incluyendo los auditores mensual 2026 y OOF,
+nuevos publicados hasta `5ebc0d63`, incluyendo los lanzadores revisados mensual y OOF,
 el resultado TCN completo y sus 55 copias de evidencia.
 Este registro incorpora el resultado TCN auditado; las otras líneas siguen abiertas.
 
@@ -10,7 +10,7 @@ Este registro incorpora el resultado TCN auditado; las otras líneas siguen abie
 
 - Comparación fija griegas 424 frente a compacto 152: launcher PID 34788,
   productor PID 19696. Su contador llegó a 750/750 ticker-días de 2025;
-  después del freeze ya procesa 2026, con contador 200/369. Aún no se afirma
+  después del freeze ya procesa 2026, con contador 350/369. Aún no se afirma
   cierre global ni auditoría nueva. Logs y recibos:
   `D:/GexResearchArtifacts/level_oracle_20261018/common_greek_comparison_v1_launch`.
   No se reentrena ninguno de los dos modelos ni se selecciona por resultados
@@ -18,13 +18,24 @@ Este registro incorpora el resultado TCN auditado; las otras líneas siguen abie
   ejecutar la auditoría existente en una salida nueva.
 - Validación mensual: wrapper PID 11852, iniciado a las 19:34:13 UTC desde
   `1e1f689e`, sólo `stage validation`. Ya publicó su nuevo `launch.json`;
-  tiene seis modelos completos de los 24 previstos para validación. Root rehasheó
-  los seis modelos y sus recibos de inicio, sin diferencias. Los tres originales
+  tiene ocho modelos completos de los 24 previstos para validación. Root rehasheó
+  esos modelos y sus recibos de inicio, sin diferencias. Los tres originales
   permanecen intactos; los nuevos cierres ocurrieron a las 19:59:06, 20:13:35 y
-  20:20:05 UTC. Todavía no hay cierre anual ni evaluación mensual 2026.
+  20:20:05 UTC, seguidos por los dos ajustes de abril. Todavía no hay cierre anual
+  ni evaluación mensual 2026.
   Runtime: `D:/GexResearchArtifacts/level_oracle_20261018/monthly_resource_overlay_resume_20261023_01`.
   Logs y recibo de proceso en el directorio hermano
   `monthly_resume_20261023_01_logs`.
+  Supervisor de auditoría PID 43976, creación `1792788201.627878`, activo desde
+  20:43:21 UTC en `monthly_validation_audit_launch_20261023_01`. Espera el exit 0
+  retenido del productor y la clausura de los 24 modelos/freeze antes de un único
+  auditor 2025 en `monthly_walk_forward_validation_audit_20261023_01`. No repetir
+  el lanzamiento. Script local `launch_when_validation_complete.py`, SHA
+  `ccbecce5e10f03de302dbe19a448a1db138ed807b9c18bca266e43c377d10866`:
+  19 fixtures PASS del autor, revisión completa y check estático propios de root;
+  recibo `root_launch_review.json`. Mantiene locks operativo/científico, gate de
+  recursos antes de Popen y recibo de exit del auditor por handle. Está esperando,
+  no es una auditoría ya completada.
 - Evaluación TCN: PID 48688 terminó con exit 0 observado por handle retenido
   a las 20:06:46 UTC, desde el código publicado en `c1d92f26`, sin fit.
   Salida nueva `tcn_row_mixed_calendar_v1_evaluation`; recibos y logs en
@@ -55,7 +66,7 @@ deben tomarse de los recibos de runtime al cerrar.
 
 - Productor y auditor griegas: 20 pruebas sintéticas PASS antes del lanzamiento.
 - Recuperación mensual: 6.084 checkpoints rehasheados, cero ausencias o cambios;
-  tres modelos anteriores conservados y tres nuevos completos. Quedan 18 fits
+  tres modelos anteriores conservados y cinco nuevos completos. Quedan 16 fits
   de validación; el cierre y auditoría anual siguen pendientes.
 - OOF: se completó el rerun pendiente de 23 pruebas, todas PASS. No hubo
   calibración real; el informe separado conserva las autoridades antiguas.
