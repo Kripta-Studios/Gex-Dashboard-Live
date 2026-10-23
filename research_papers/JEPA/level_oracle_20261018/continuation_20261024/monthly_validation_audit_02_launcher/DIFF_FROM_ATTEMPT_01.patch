@@ -1,0 +1,471 @@
+--- attempt_01/launch_when_validation_complete.py
++++ attempt_02/launch_when_validation_complete.py
+@@ -1,7 +1,8 @@
+-"""One-shot, local-only 2025 audit supervisor. Importing this file does no work.
++"""One-shot, local-only 2025 audit correction attempt 02. Import does no work.
+ 
+ Only --watch starts waiting or launches a process. No training, retry, or 2026.
+ The existing scientific lock is held without writing its bytes during audit.
++The V2 implementation review needs an external SHA; no authority is inferred.
+ """
+ from __future__ import annotations
+ 
+@@ -28,21 +29,29 @@
+ SCIENCE = ROOT / "monthly_walk_forward_v1"
+ RUNTIME = ROOT / "monthly_resource_overlay_resume_20261023_01"
+ MONITOR = ROOT / "monthly_resume_20261023_01_logs"
+-OUTPUT = ROOT / "monthly_walk_forward_validation_audit_20261023_01"
++OUTPUT = ROOT / "monthly_walk_forward_validation_audit_20261024_02"
++PREVIOUS = ROOT / "monthly_validation_audit_launch_20261023_01"
++PREVIOUS_OUTPUT = ROOT / "monthly_walk_forward_validation_audit_20261023_01"
+ LAUNCH_ROOT = Path(__file__).resolve().parent
++CANONICAL_LAUNCH_ROOT = ROOT / "monthly_validation_audit_launch_20261024_02"
+ SOURCE_AUDIT = ROOT / "session_clock_dataset_v1_audit/audit.json"
+-AUDITOR = HERE / "audit_monthly_walk_forward.py"
+-REVIEW = HERE / "MONTHLY_WALK_FORWARD_SEALED_SCORE_AUDITOR_REVIEW.json"
++ORIGINAL_AUDITOR = HERE / "audit_monthly_walk_forward.py"
++ORIGINAL_REVIEW = HERE / "MONTHLY_WALK_FORWARD_SEALED_SCORE_AUDITOR_REVIEW.json"
++AUDITOR = HERE / "audit_monthly_walk_forward_index_v2.py"
++REVIEW = HERE / "MONTHLY_WALK_FORWARD_INDEX_AUDIT_V2_REVIEW_20261024.json"
++V2_TESTS = HERE / "test_audit_monthly_walk_forward_index_v2.py"
++V2_SPEC = HERE / "MONTHLY_WALK_FORWARD_INDEX_AUDIT_V2_SPEC_20261024.md"
++V2_REVIEW_STATUS = "PASS_MONTHLY_INDEX_V2_AUDITOR_IMPLEMENTATION_REVIEW"
+ PYTHON = Path(r"C:\Program Files\Python314\python.exe")
+ PID = 11852
+ CREATED = 1792784053.9282398
+ MIN_FREE = 2_000_000_000
+ CONTRACT_SHA = "7250620ebe25da082c8d080faa54d006c15f36f2070f414405d14ca18a27158f"
+-AUDITOR_SHA = "e4a3be1c19b7f0af1226e71255c81116bd71a6a300aef36f61c688deb908df1f"
++ORIGINAL_AUDITOR_SHA = "e4a3be1c19b7f0af1226e71255c81116bd71a6a300aef36f61c688deb908df1f"
+ AUDIT_STATUS = "PASS_INDEPENDENT_MONTHLY_WALK_FORWARD_AUDIT_GIVEN_SEALED_SCORES"
+ PINS = {
+-    AUDITOR: AUDITOR_SHA,
+-    REVIEW: "db323959e6a894d6d6fb51bde764af0c96db0cb0bba2f1711bbe0807425d10ca",
++    ORIGINAL_AUDITOR: ORIGINAL_AUDITOR_SHA,
++    ORIGINAL_REVIEW: "db323959e6a894d6d6fb51bde764af0c96db0cb0bba2f1711bbe0807425d10ca",
+     HERE / "test_audit_monthly_walk_forward.py": "8c47e89951506553bfb1295c6e390501828b8fe6f77bcae5d566e98c2039ef87",
+     HERE / "MONTHLY_WALK_FORWARD_SEALED_SCORE_AUDIT_CONTRACT.md": "cabdd117fc4dc713fbca085a48e38ac8c8f609555f42f10a05321c01623ff8e7",
+     HERE / "MONTHLY_RESOURCE_OVERLAY_REVIEW.json": "b48f30431c9ddd40b57a2aa61e20f6786c1fda746ae41cc03ee2812ba034b1b9",
+@@ -53,6 +62,16 @@
+     MONITOR / "monitor_open.json": "3ee627e3200e6488dadf6882d61f013021dbd270f90ac4a8613e4674d29faef5",
+     MONITOR / "monitor_existing_process_20261023.py": "96189a5f805113ab9d94ddc72b075a683048b79a13da8f680cbb80b4935b602b",
+     MONITOR / "process.json": "056a155c06153e6dce6c9686b27cd2ed47f59ad93e2e228c81bcd0a1ac8ca8c2",
++    MONITOR / "monitored_exit.json": "918964c6474df52067db5fb6eecb1c07339cb9bca262e8cab560f22ba3b00e93",
++    RUNTIME / "completion.json": "ccce687bfa850d894606ff29ef6014add9e39a142fd84c3dd0d76e2a2a5c185b",
++    PREVIOUS / "launch_when_validation_complete.py": "ccbecce5e10f03de302dbe19a448a1db138ed807b9c18bca266e43c377d10866",
++    PREVIOUS / "process.json": "1255df01d0984278459ab711d317ecc57c4cb6470b8277a0ebb0a5056d6e58df",
++    PREVIOUS / "exit.json": "d5e4fdf711e6965a56b8c60100788c2143aecbc7da450a93efe74736b9eadccb",
++    PREVIOUS / "failure.json": "51cba5dd88423cdd2a9fdb05fa3c705f1944f21e8308144e386d76c2faaac019",
++    PREVIOUS / "stderr.log": "f36e54b7e9bf94f8e4adc9b95068a013f5f9ea1b94db376a5b83d602be72b3c1",
++    PREVIOUS / "attempt.json": "4e8060644e1f4431e4faafefe440961aabb3b000e0ed26dff962e309d03aa98a",
++    PREVIOUS / "admission.json": "1fcdf8659eb5d6da26ddc485922b972cce8a4c2ca228187b22246becd5fea8e8",
++    PREVIOUS / "root_launch_review.json": "ef385d8e30935d699755b8c22ee3bebf90008010c36390960f55578517dda64c",
+ }
+ 
+ 
+@@ -92,6 +111,56 @@
+ 
+ def require_own_bytes(expected):
+     require(sha(__file__) == expected, "Launcher changed after watch start")
++
++
++def digest_string(value):
++    return isinstance(value, str) and len(value) == 64 and all(c in "0123456789abcdef" for c in value)
++
++
++def v2_authority(expected_review_sha):
++    require(digest_string(expected_review_sha), "An external lowercase SHA256 of the real V2 review is required")
++    verify({REVIEW: expected_review_sha})
++    review = read(REVIEW)
++    require(review.get("status") == V2_REVIEW_STATUS
++            and review.get("original_auditor_sha256") == ORIGINAL_AUDITOR_SHA
++            and review.get("original_review_sha256") == PINS[ORIGINAL_REVIEW]
++            and review.get("original_contract_sha256") == PINS[HERE / "MONTHLY_WALK_FORWARD_SEALED_SCORE_AUDIT_CONTRACT.md"],
++            "V2 review must bind the exact original implementation and contract")
++    files = {REVIEW: expected_review_sha}
++    for path, field in ((AUDITOR, "auditor_sha256"), (V2_TESTS, "tests_sha256"), (V2_SPEC, "contract_sha256")):
++        require(digest_string(review.get(field)), "Incomplete V2 review file binding: " + field)
++        files[path] = review[field]
++    verify(files)
++    return files
++
++
++def previous_failure():
++    require(not PREVIOUS_OUTPUT.exists(), "Failed attempt 01 output must remain absent")
++    process = read(PREVIOUS / "process.json")
++    exited = read(PREVIOUS / "exit.json")
++    failure = read(PREVIOUS / "failure.json")
++    attempt = read(PREVIOUS / "attempt.json")
++    require(process.get("status") == "AUDITOR_PROCESS_STARTED"
++            and process.get("pid") == 6840 and process.get("creation_time") == 1792797439.9007168
++            and process.get("identity_source") == "GetProcessTimes on retained Popen handle"
++            and process.get("command") == [str(PYTHON), "-u", str(ORIGINAL_AUDITOR),
++                "--monthly-root", str(SCIENCE), "--source-audit", str(SOURCE_AUDIT),
++                "--implementation-review", str(ORIGINAL_REVIEW), "--output", str(PREVIOUS_OUTPUT)],
++            "Failed attempt 01 process identity or command differs")
++    require(exited.get("status") == "AUDITOR_EXIT_OBSERVED_BY_POPEN_HANDLE"
++            and exited.get("pid") == process["pid"] and exited.get("creation_time") == process["creation_time"]
++            and type(exited.get("exit_code")) is int and exited["exit_code"] == 1
++            and exited.get("process_receipt_sha256") == PINS[PREVIOUS / "process.json"]
++            and failure.get("status") == "FAILED_PRESERVED_NO_RETRY"
++            and stamp(process["started_utc"]) < stamp(exited["observed_utc"]) <= stamp(failure["utc"]),
++            "Failed attempt 01 retained exit/failure chain differs")
++    require(attempt.get("command") == process["command"] and attempt.get("retry_allowed") is False
++            and attempt.get("admission_sha256") == PINS[PREVIOUS / "admission.json"]
++            and attempt.get("script_sha256") == PINS[PREVIOUS / "launch_when_validation_complete.py"],
++            "Failed attempt 01 admission or script binding differs")
++    return dict(process_sha256=PINS[PREVIOUS / "process.json"],
++                exit_sha256=PINS[PREVIOUS / "exit.json"], failure_sha256=PINS[PREVIOUS / "failure.json"],
++                stderr_sha256=PINS[PREVIOUS / "stderr.log"], audit_output_absent=True)
+ 
+ 
+ def stamp(value):
+@@ -122,9 +191,11 @@
+     return value["available_ram_bytes"] >= MIN_FREE and value["free_commit_bytes"] >= MIN_FREE
+ 
+ 
+-def static_checks():
++def static_checks(expected_review_sha):
+     require(os.name == "nt", "Windows handle and lock contract required")
+     verify(PINS)
++    v2_authority(expected_review_sha)
++    previous_failure()
+     contract, launch = read(SCIENCE / "run_contract.json"), read(RUNTIME / "launch.json")
+     authority = launch["authority"]
+     require(launch["pid"] == PID and authority["scope"] == "validation"
+@@ -139,9 +210,9 @@
+     for name, digest in authority["files"].items():
+         verify({HERE / name: digest})
+     verify(launch["snapshots"])
+-    review = read(REVIEW)
++    review = read(ORIGINAL_REVIEW)
+     require(review["status"] == "PASS_MONTHLY_SEALED_SCORE_AUDITOR_IMPLEMENTATION_REVIEW"
+-            and review["auditor_sha256"] == AUDITOR_SHA, "Auditor review differs")
++            and review["auditor_sha256"] == ORIGINAL_AUDITOR_SHA, "Original auditor review differs")
+     return launch
+ 
+ 
+@@ -254,8 +325,8 @@
+     return module
+ 
+ 
+-def admit(exited):
+-    launch = static_checks()
++def admit(exited, expected_review_sha):
++    launch = static_checks(expected_review_sha)
+     require(not (RUNTIME / "failure.json").exists(), "Validation has a failure receipt")
+     require(not OUTPUT.exists(), "Audit output already exists; no retry")
+     require(not list(SCIENCE.glob("completion*.json")), "Global test closure is outside validation scope")
+@@ -304,6 +375,7 @@
+         and freeze["outcomes_2026_used_for_mode_selection"] is False, "Freeze including null must be preserved")
+     verifier.recheck()
+     files = {str(p.resolve()): digest for p, digest in PINS.items()}
++    files.update({str(p.resolve()): digest for p, digest in v2_authority(expected_review_sha).items()})
+     files.update({str((RUNTIME / "completion.json").resolve()): sha(RUNTIME / "completion.json"),
+                   str((MONITOR / "monitored_exit.json").resolve()): sha(MONITOR / "monitored_exit.json"),
+                   str((SCIENCE / "validation_freeze.json").resolve()): sha(SCIENCE / "validation_freeze.json")})
+@@ -311,19 +383,23 @@
+     files.update(verifier._flat)
+     return dict(status="READY_FOR_ONE_INDEPENDENT_VALIDATION_AUDIT", utc=utc(),
+                 files=files, selected_mode=mode, model_count=24, month_count=12,
+-                validation_exit=exited, promotion_approved=False)
+-
+-
+-def audit_command():
++                validation_exit=exited, promotion_approved=False,
++                correction_attempt=2, prior_failure=previous_failure(),
++                implementation_review_sha256=expected_review_sha)
++
++
++def audit_command(expected_review_sha):
++    require(digest_string(expected_review_sha), "External V2 review SHA required in child command")
+     return [str(PYTHON), "-u", str(AUDITOR), "--monthly-root", str(SCIENCE),
+             "--source-audit", str(SOURCE_AUDIT), "--implementation-review", str(REVIEW),
++            "--implementation-review-sha256", expected_review_sha,
+             "--output", str(OUTPUT)]
+ 
+ 
+-def audit_result():
++def audit_result(expected_auditor_sha, expected_review_sha):
+     result = read(OUTPUT / "audit.json")
+     binding, audited = result["binding"], result["audited"]
+-    require(result["status"] == AUDIT_STATUS and result["audit_script_sha256"] == AUDITOR_SHA
++    require(result["status"] == AUDIT_STATUS and result["audit_script_sha256"] == expected_auditor_sha
+             and Path(binding["monthly_root"]).resolve() == SCIENCE.resolve()
+             and binding["run_contract_sha256"] == CONTRACT_SHA
+             and binding["session_audit_sha256"] == PINS[SOURCE_AUDIT]
+@@ -333,40 +409,60 @@
+             and audited["validation_selection_reconstructed"] is True
+             and audited["validation_period_report_reconstructed"] is True
+             and result["promotion_approved"] is False, "Independent audit closure differs")
++    roots = result.get("verified_files", {}).get("root", {})
++    lineage = {REVIEW: expected_review_sha, ORIGINAL_AUDITOR: ORIGINAL_AUDITOR_SHA,
++               ORIGINAL_REVIEW: PINS[ORIGINAL_REVIEW],
++               HERE / "MONTHLY_WALK_FORWARD_SEALED_SCORE_AUDIT_CONTRACT.md":
++                   PINS[HERE / "MONTHLY_WALK_FORWARD_SEALED_SCORE_AUDIT_CONTRACT.md"]}
++    require(all(roots.get(str(path.resolve())) == digest for path, digest in lineage.items()),
++            "Independent audit is missing reviewed V2/original lineage")
+     return result
+ 
+ 
+-def watch():
++def watch(expected_review_sha):
++    require(LAUNCH_ROOT.resolve() == CANONICAL_LAUNCH_ROOT.resolve(), "Execute only the canonical external attempt 02 copy")
+     script_digest = sha(__file__)
+-    static_checks()
++    own_files = {str(path.resolve()): sha(path) for path in
++                 (Path(__file__), LAUNCH_ROOT / "test_launcher.py", LAUNCH_ROOT / "SPEC.md")}
++    static_checks(expected_review_sha)
++    reviewed_files = v2_authority(expected_review_sha)
+     require(not OUTPUT.exists(), "Existing audit output cannot be reused")
+     write_new(LAUNCH_ROOT / "watch_started.json", dict(status="WATCH_STARTED", utc=utc(),
+               pid=os.getpid(), creation_time=psutil.Process().create_time(), script_sha256=script_digest,
+-              command=sys.argv, validation_pid=PID, validation_creation_time=CREATED))
++              command=sys.argv, validation_pid=PID, validation_creation_time=CREATED,
++              correction_attempt=2, implementation_review_sha256=expected_review_sha,
++              prior_failure=previous_failure(), own_files=own_files))
+     try:
+         exited = wait_validation()
+         with scientific_lock():
+             # An immutable observation log, separate from all scientific artifacts.
+             wait_resources()
+             require_own_bytes(script_digest)
+-            admission = admit(exited)
++            verify(own_files)
++            admission = admit(exited, expected_review_sha)
+             write_new(LAUNCH_ROOT / "admission.json", admission)
+             code = LAUNCH_ROOT / "executed_code"
+             code.mkdir(exist_ok=False)
+-            for source in (Path(__file__), AUDITOR, REVIEW, HERE / "test_audit_monthly_walk_forward.py",
++            for source in (Path(__file__), LAUNCH_ROOT / "test_launcher.py", LAUNCH_ROOT / "SPEC.md",
++                           AUDITOR, REVIEW, V2_TESTS, V2_SPEC, ORIGINAL_AUDITOR,
++                           ORIGINAL_REVIEW, HERE / "test_audit_monthly_walk_forward.py",
+                            HERE / "MONTHLY_WALK_FORWARD_SEALED_SCORE_AUDIT_CONTRACT.md"):
+                 destination = code / source.name
+                 shutil.copyfile(source, destination)
+                 require(sha(source) == sha(destination), "Snapshot changed during copy")
+             require_own_bytes(script_digest)
+-            command = audit_command()
++            command = audit_command(expected_review_sha)
+             write_new(LAUNCH_ROOT / "attempt.json", dict(status="ONE_AUDIT_ATTEMPT", utc=utc(), command=command,
+                       cwd=str(REPO), admission_sha256=sha(LAUNCH_ROOT / "admission.json"),
+-                      script_sha256=script_digest, retry_allowed=False))
++                      script_sha256=script_digest, retry_allowed=False,
++                      correction_attempt=2, prior_failure=previous_failure(),
++                      implementation_review_sha256=expected_review_sha))
+             env = os.environ.copy()
+             env.update(OMP_NUM_THREADS="1", OPENBLAS_NUM_THREADS="1", MKL_NUM_THREADS="1")
+             wait_resources()
+             verify(PINS)
++            verify(reviewed_files)
++            verify(own_files)
+             require_own_bytes(script_digest)
+             with (LAUNCH_ROOT / "stdout.log").open("xb") as stdout, (LAUNCH_ROOT / "stderr.log").open("xb") as stderr:
+                 started = time.monotonic()
+@@ -399,14 +495,17 @@
+                           peak_rss_sampled_bytes=peak_rss, sampling_seconds=1,
+                           memory_scope="Maximum observed RSS only; not an exact lifetime peak."))
+             require(code_value == 0, "Independent auditor exited nonzero; no retry")
+-            audit_result()
++            audit_result(reviewed_files[AUDITOR], expected_review_sha)
+             verify(admission["files"])
++            verify(own_files)
+             require_own_bytes(script_digest)
+             write_new(LAUNCH_ROOT / "completion.json", dict(status="COMPLETE_VALIDATION_AUDIT_EXIT_ZERO_AND_PASS",
+                       utc=utc(), audit_json=str(OUTPUT / "audit.json"), audit_sha256=sha(OUTPUT / "audit.json"),
+                       exit_receipt_sha256=sha(LAUNCH_ROOT / "exit.json"),
+                       admission_sha256=sha(LAUNCH_ROOT / "admission.json"),
+                       script_sha256=script_digest,
++                      correction_attempt=2, prior_failure=previous_failure(),
++                      implementation_review_sha256=expected_review_sha,
+                       selected_mode=admission["selected_mode"], promotion_approved=False,
+                       limitation="Conditional on sealed scores; no model refit or inference reproduction."))
+     except BaseException as exc:
+@@ -419,14 +518,19 @@
+     modes = parser.add_mutually_exclusive_group(required=True)
+     modes.add_argument("--check-static", action="store_true", help="Read-only pins; never wait or launch")
+     modes.add_argument("--watch", action="store_true", help="One attempt after retained exit and complete validation")
++    parser.add_argument("--v2-review-sha256", required=True,
++                        help="External SHA256 of the reviewed and published V2 authority; no default")
+     args = parser.parse_args()
+     if args.check_static:
+-        static_checks()
++        static_checks(args.v2_review_sha256)
+         process_binding()
+-        print(json.dumps(dict(status="STATIC_PINS_MATCH", pins=len(PINS), command=audit_command())))
++        print(json.dumps(dict(status="STATIC_PINS_MATCH", pins=len(PINS) + 4,
++                              command=audit_command(args.v2_review_sha256))))
+     else:
++        require(LAUNCH_ROOT.resolve() == CANONICAL_LAUNCH_ROOT.resolve(),
++                "Execute only the canonical external attempt 02 copy")
+         with operational_lock():
+-            watch()
++            watch(args.v2_review_sha256)
+ 
+ 
+ if __name__ == "__main__":
+--- attempt_01/test_launcher.py
++++ attempt_02/test_launcher.py
+@@ -109,7 +109,159 @@
+ 
+ 
+ def test_command_scope():
+-    command = M.audit_command()
+-    assert command[2].endswith("audit_monthly_walk_forward.py")
+-    assert command[3::2] == ["--monthly-root", "--source-audit", "--implementation-review", "--output"]
++    command = M.audit_command("a" * 64)
++    assert command[2].endswith("audit_monthly_walk_forward_index_v2.py")
++    assert command[3::2] == ["--monthly-root", "--source-audit", "--implementation-review",
++                           "--implementation-review-sha256", "--output"]
++    assert command[10] == "a" * 64
+     assert "--stage" not in command
++
++
++@pytest.mark.parametrize("value", [None, "", "a" * 63, "g" * 64, "A" * 64])
++def test_external_review_pin_required(value):
++    with pytest.raises(ValueError, match="External V2 review SHA"):
++        M.audit_command(value)
++
++
++def test_cli_has_no_default_review_authority(monkeypatch):
++    monkeypatch.setattr(M.sys, "argv", ["launcher", "--watch"])
++    with pytest.raises(SystemExit) as exited:
++        M.main()
++    assert exited.value.code == 2
++
++
++def synthetic_v2_review(tmp_path, monkeypatch):
++    files = {}
++    for name in ("AUDITOR", "V2_TESTS", "V2_SPEC"):
++        path = tmp_path / name
++        path.write_text("synthetic authority fixture " + name, encoding="utf-8")
++        monkeypatch.setattr(M, name, path)
++        files[name] = path
++    review_path = tmp_path / "synthetic_review.json"
++    monkeypatch.setattr(M, "REVIEW", review_path)
++    review = dict(status=M.V2_REVIEW_STATUS, auditor_sha256=M.sha(files["AUDITOR"]),
++                  tests_sha256=M.sha(files["V2_TESTS"]), contract_sha256=M.sha(files["V2_SPEC"]),
++                  original_auditor_sha256=M.ORIGINAL_AUDITOR_SHA,
++                  original_review_sha256=M.PINS[M.ORIGINAL_REVIEW],
++                  original_contract_sha256=M.PINS[M.HERE / "MONTHLY_WALK_FORWARD_SEALED_SCORE_AUDIT_CONTRACT.md"])
++    M.write_new(review_path, review)
++    return review_path, review
++
++
++def test_v2_review_exact_external_pin(tmp_path, monkeypatch):
++    path, _ = synthetic_v2_review(tmp_path, monkeypatch)
++    digest = M.sha(path)
++    assert M.v2_authority(digest)[M.AUDITOR] == M.sha(M.AUDITOR)
++    with pytest.raises(ValueError, match="Evidence hash differs"):
++        M.v2_authority("0" * 64)
++    M.AUDITOR.write_text("changed", encoding="utf-8")
++    with pytest.raises(ValueError, match="Evidence hash differs"):
++        M.v2_authority(digest)
++
++
++@pytest.mark.parametrize("field,value", [("status", "NOT_REVIEWED"),
++    ("original_auditor_sha256", "0" * 64), ("original_review_sha256", "0" * 64),
++    ("original_contract_sha256", "0" * 64), ("auditor_sha256", None)])
++def test_v2_review_wrong_contract_rejected(tmp_path, monkeypatch, field, value):
++    import json
++    path, review = synthetic_v2_review(tmp_path, monkeypatch)
++    review[field] = value
++    path.write_text(json.dumps(review), encoding="utf-8")
++    with pytest.raises(ValueError):
++        M.v2_authority(M.sha(path))
++
++
++def test_published_copy_cannot_watch(tmp_path, monkeypatch):
++    monkeypatch.setattr(M, "LAUNCH_ROOT", tmp_path)
++    with pytest.raises(ValueError, match="canonical external"):
++        M.watch("a" * 64)
++    assert not (tmp_path / "watch_started.json").exists()
++
++
++def test_published_cli_creates_no_operational_files(tmp_path, monkeypatch):
++    monkeypatch.setattr(M, "LAUNCH_ROOT", tmp_path)
++    monkeypatch.setattr(M.sys, "argv", ["launcher", "--watch", "--v2-review-sha256", "a" * 64])
++    with pytest.raises(ValueError, match="canonical external"):
++        M.main()
++    assert list(tmp_path.iterdir()) == []
++
++
++def synthetic_audit_result(tmp_path, monkeypatch):
++    monkeypatch.setattr(M, "OUTPUT", tmp_path)
++    spec = M.HERE / "MONTHLY_WALK_FORWARD_SEALED_SCORE_AUDIT_CONTRACT.md"
++    roots = {str(M.REVIEW.resolve()): "a" * 64,
++             str(M.ORIGINAL_AUDITOR.resolve()): M.ORIGINAL_AUDITOR_SHA,
++             str(M.ORIGINAL_REVIEW.resolve()): M.PINS[M.ORIGINAL_REVIEW],
++             str(spec.resolve()): M.PINS[spec]}
++    result = dict(status=M.AUDIT_STATUS, audit_script_sha256="b" * 64,
++        binding=dict(monthly_root=str(M.SCIENCE), run_contract_sha256=M.CONTRACT_SHA,
++                     session_audit_sha256=M.PINS[M.SOURCE_AUDIT],
++                     completed_months=[f"2025{m:02d}" for m in range(1, 13)]),
++        audited=dict(months=12, unique_fit_windows=24, calendar_ticker_days=750,
++                     modes=["static", "expanding", "rolling12"],
++                     validation_selection_reconstructed=True, validation_period_report_reconstructed=True),
++        promotion_approved=False, verified_files=dict(root=roots))
++    M.write_new(tmp_path / "audit.json", result)
++    return result
++
++
++def test_audit_closure_requires_v2_and_original_lineage(tmp_path, monkeypatch):
++    import json
++    result = synthetic_audit_result(tmp_path, monkeypatch)
++    assert M.audit_result("b" * 64, "a" * 64)["status"] == M.AUDIT_STATUS
++    result["verified_files"]["root"].pop(str(M.REVIEW.resolve()))
++    (tmp_path / "audit.json").write_text(json.dumps(result), encoding="utf-8")
++    with pytest.raises(ValueError, match="missing reviewed V2/original lineage"):
++        M.audit_result("b" * 64, "a" * 64)
++
++
++def previous_chain_fixture(tmp_path, monkeypatch):
++    previous = tmp_path / "failed01"
++    previous.mkdir()
++    monkeypatch.setattr(M, "PREVIOUS", previous)
++    monkeypatch.setattr(M, "PREVIOUS_OUTPUT", tmp_path / "absent_output01")
++    command = [str(M.PYTHON), "-u", str(M.ORIGINAL_AUDITOR), "--monthly-root", str(M.SCIENCE),
++               "--source-audit", str(M.SOURCE_AUDIT), "--implementation-review", str(M.ORIGINAL_REVIEW),
++               "--output", str(M.PREVIOUS_OUTPUT)]
++    process = dict(status="AUDITOR_PROCESS_STARTED", pid=6840, creation_time=1792797439.9007168,
++                   identity_source="GetProcessTimes on retained Popen handle", command=command,
++                   started_utc="2026-10-23T23:17:19+00:00")
++    M.write_new(previous / "process.json", process)
++    pins = dict(M.PINS)
++    pins[previous / "process.json"] = M.sha(previous / "process.json")
++    pins[previous / "admission.json"] = "a" * 64
++    pins[previous / "launch_when_validation_complete.py"] = "b" * 64
++    exited = dict(status="AUDITOR_EXIT_OBSERVED_BY_POPEN_HANDLE", pid=6840,
++                  creation_time=process["creation_time"], exit_code=1,
++                  process_receipt_sha256=pins[previous / "process.json"],
++                  observed_utc="2026-10-23T23:17:21+00:00")
++    M.write_new(previous / "exit.json", exited)
++    M.write_new(previous / "failure.json", dict(status="FAILED_PRESERVED_NO_RETRY", utc="2026-10-23T23:17:22+00:00"))
++    M.write_new(previous / "attempt.json", dict(command=command, retry_allowed=False,
++        admission_sha256=pins[previous / "admission.json"], script_sha256=pins[previous / "launch_when_validation_complete.py"]))
++    for name in ("exit.json", "failure.json"):
++        pins[previous / name] = M.sha(previous / name)
++    pins[previous / "stderr.log"] = "c" * 64
++    monkeypatch.setattr(M, "PINS", pins)
++    return previous
++
++
++def test_preserved_failure_chain(tmp_path, monkeypatch):
++    previous_chain_fixture(tmp_path, monkeypatch)
++    assert M.previous_failure()["audit_output_absent"] is True
++    M.PREVIOUS_OUTPUT.mkdir()
++    with pytest.raises(ValueError, match="must remain absent"):
++        M.previous_failure()
++
++
++@pytest.mark.parametrize("field,value", [("exit_code", 0), ("exit_code", True),
++    ("pid", 88), ("creation_time", 0), ("process_receipt_sha256", "0" * 64)])
++def test_previous_failure_cannot_be_reinterpreted(tmp_path, monkeypatch, field, value):
++    import json
++    previous = previous_chain_fixture(tmp_path, monkeypatch)
++    path = previous / "exit.json"
++    exited = M.read(path)
++    exited[field] = value
++    path.write_text(json.dumps(exited), encoding="utf-8")
++    with pytest.raises(ValueError, match="retained exit/failure chain"):
++        M.previous_failure()

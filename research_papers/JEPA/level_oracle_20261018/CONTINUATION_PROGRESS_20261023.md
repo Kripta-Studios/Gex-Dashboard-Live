@@ -9,7 +9,14 @@ Este registro incorpora los resultados TCN y Greeks auditados; mensual y OOF sig
 La validación mensual ya terminó con exit 0 real y los 24 modelos/doce meses.
 El primer auditor falló técnicamente al construir el catálogo con seis filas
 MISSING_SOURCE de 2026 cuyas rutas feature son nulas. No emitió audit.json ni PASS.
-Se preserva el intento y se prepara un auditor V2 nuevo con revisión independiente;
+El intento está preservado y publicado en `30c27abf`. El auditor V2 nuevo pasó
+59 pruebas del autor y 20 focales independientes, con AST económica intacta;
+review `f45d9dc6e032f9bd5e646ec0fad8059a924e8fed1462f817737b26cfff09d389` CLEAR,
+sólo implementación. El lanzador02 pasó 40 pruebas del autor y 40 de root,
+y requiere ese pin externo, preservando el fallo01. Se publican código/revisiones
+antes del nuevo intento en raíces `monthly_validation_audit_launch_20261024_02`
+y `monthly_walk_forward_validation_audit_20261024_02`. No hay PASS real V2.
+La extensión auditora2026 V2 está en prueba sintética y revisión separadas;
 test 2026 y OOF todavía no han comenzado. Véase
 `MONTHLY_VALIDATION_AUDIT_01_TECHNICAL_FAILURE_20261024.md`.
 

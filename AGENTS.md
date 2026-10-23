@@ -12,9 +12,12 @@ Auditor01 PID6840 terminó exit1 en1,873s a23:17:21UTC: Path(None) al construir
 SourceDay de las seis MISSING_SOURCE QQQ/SPY20260401/09/15. Son filas del índice
 completo, no nuevas exclusiones. Sus cuatro rutas feature son nulas; las COMPLETE
 no tienen ese nulo. Falló antes de reconstruir2025; no existe audit.json/PASS.
-Intento01 y originales inmutables. Corrección V2 nueva de metadata, fixtures con
-nulos reales y revisión independiente en preparación; publicar antes de un nuevo
-intento. La extensión de auditoría2026 también requiere versión compatible.
+Intento01 y originales inmutables, archivados/publicados en30c27abf. AuditorV2
+nuevo f01a962f…721ed3:59 pruebas autor/20 focales independientes PASS, AST económica
+intacta y review f45d9dc6…09d389 CLEAR. Launcher02 a848a557…770c20,40 pruebas autor
+y40 root PASS; exige pin externo de review y conserva el fallo01. Publicar estos
+bytes antes de ejecutar una vez en raíz nueva20261024_02. Aún no hay PASS real V2.
+La extensión de auditoría2026 V2 está en prueba sintética/revisión separadas.
 No reentrenar modelos ni cambiar costes, políticas, selección o calendario.
 Test2026 y OOF siguen pendientes de auditoría2025 válida. Investigación activa,
 SEEN_DEVELOPMENT, technical_ready=false, promotion_approved=false; producción intacta.
