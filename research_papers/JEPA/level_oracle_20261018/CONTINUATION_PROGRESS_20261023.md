@@ -1,8 +1,8 @@
 # Continuación local: estado del 23 de octubre de 2026
 
-Actualización: 23 de octubre, 20:48 UTC. Investigación activa
+Actualización: 23 de octubre, después del lanzamiento de auditoría 02 a las 21:04 UTC. Investigación activa
 por orden del usuario. Base publicada anterior: `acb2a726`; preparación y código
-nuevos publicados hasta `5ebc0d63`, incluyendo los lanzadores revisados mensual y OOF,
+nuevos publicados hasta `804636b6`, incluyendo los lanzadores revisados mensual y OOF,
 el resultado TCN completo y sus 55 copias de evidencia.
 Este registro incorpora el resultado TCN auditado; las otras líneas siguen abiertas.
 
@@ -18,19 +18,27 @@ Este registro incorpora el resultado TCN auditado; las otras líneas siguen abie
   `common_greek_comparison_v1_economic_audit_01`, logs en su hermano con sufijo
   `_logs`. Ese intento terminó exit 1 tras 49,034 s: `Baseline score absent`.
   Diagnóstico acotado: lookup con `/` frente a claves Windows con `\` en el
-  manifiesto. Se preserva el fallo, sin PASS ni reporte económico. Se prepara
-  un auditor V2 separado con fixtures y revisión; no se permite retry automático
-  ni alterar los resultados del productor para acomodar la auditoría.
+  manifiesto. Se preserva el fallo, sin PASS ni reporte económico. Auditor V2
+  separado publicado en `8b6de01f`, 49 pruebas del autor y 42 focales independientes
+  PASS; fórmulas económicas y reglas intactas. Launcher nuevo en `804636b6`,
+  12 pruebas tanto del autor como del revisor. Root verificó diez bindings V2 y
+  preflight real de 47 pins antes del nuevo intento.
+  Auditoría 02 iniciada a las 21:04:52 UTC: PID 27336, creación por handle
+  `1792789492.1680534`, wrapper 12948, sesión 37803. Salida nueva
+  `common_greek_comparison_v1_economic_audit_02`; logs en el hermano `_logs`.
+  Está activa, sin PASS todavía. No relanzar. Una diferencia submicrosegundo entre
+  la creación por handle y psutil se compara con la tolerancia de 1e-5 s fijada
+  en el launcher, junto con PID/comando, no como una nueva identidad.
   Logs y recibos del productor:
   `D:/GexResearchArtifacts/level_oracle_20261018/common_greek_comparison_v1_launch`.
   No se reentrena ninguno de los dos modelos ni se selecciona por resultados
   parciales. El reporter completo sigue pendiente de una auditoría válida.
 - Validación mensual: wrapper PID 11852, iniciado a las 19:34:13 UTC desde
   `1e1f689e`, sólo `stage validation`. Ya publicó su nuevo `launch.json`;
-  tiene ocho modelos completos de los 24 previstos para validación. Root rehasheó
+  tiene diez modelos completos de los 24 previstos para validación. Root rehasheó
   esos modelos y sus recibos de inicio, sin diferencias. Los tres originales
   permanecen intactos; los nuevos cierres ocurrieron a las 19:59:06, 20:13:35 y
-  20:20:05 UTC, seguidos por los dos ajustes de abril. Todavía no hay cierre anual
+  20:20:05 UTC, seguidos por los dos ajustes de abril y los dos de mayo. Todavía no hay cierre anual
   ni evaluación mensual 2026.
   Runtime: `D:/GexResearchArtifacts/level_oracle_20261018/monthly_resource_overlay_resume_20261023_01`.
   Logs y recibo de proceso en el directorio hermano
@@ -80,7 +88,7 @@ causa. Antes de la auditoría nueva se volvió a comprobar el gate.
 
 - Productor y auditor griegas: 20 pruebas sintéticas PASS antes del lanzamiento.
 - Recuperación mensual: 6.084 checkpoints rehasheados, cero ausencias o cambios;
-  tres modelos anteriores conservados y cinco nuevos completos. Quedan 16 fits
+  tres modelos anteriores conservados y siete nuevos completos. Quedan 14 fits
   de validación; el cierre y auditoría anual siguen pendientes.
 - OOF: se completó el rerun pendiente de 23 pruebas, todas PASS. No hubo
   calibración real; el informe separado conserva las autoridades antiguas.
@@ -117,6 +125,13 @@ causa. Antes de la auditoría nueva se volvió a comprobar el gate.
   204 comparaciones con tolerancias predeclaradas y 30 copias exactas de cuatro
   intentos. Root verificó las copias y hashes. Alcance exclusivamente matemático
   sintético; no hay arquitectura, entrenamiento o familia económica nueva activada.
+- Factibilidad documental del actor publicada en `59022dd0`: se distingue el
+  soporte completo de ofertas de la muestra mensual. Identifica diferencias
+  NO_FILL, máscaras y estimaciones de tamaño; no abre datos ni elige un modelo.
+
+Nota de publicación V2: `git diff --check` señaló el final con línea en blanco
+heredado byte por byte del auditor original. Se conservaron los bytes revisados;
+no se declara PASS de ese check. Ruff, compilación, fixtures y hashes sí pasaron.
 - Reporter mensual griegas: cuatro pruebas PASS; sólo puede consumir el cierre
   auditado de esta comparación. Publicará los 108 grupos fijados, sin selección.
 
