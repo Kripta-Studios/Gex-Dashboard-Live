@@ -1,0 +1,10 @@
+{
+  "pid": 43976,
+  "started_utc": "2026-10-23T20:43:21.6278781Z",
+  "command": [
+    "C:/Program Files/Python314/python.exe",
+    "-u",
+    "D:/GexResearchArtifacts/level_oracle_20261018/monthly_validation_audit_launch_20261023_01/launch_when_validation_complete.py",
+    "--watch"
+  ]
+}

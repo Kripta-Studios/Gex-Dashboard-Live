@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "D:\GexResearchArtifacts\level_oracle_20261018\monthly_validation_audit_launch_20261023_01\launch_when_validation_complete.py", line 433, in <module>
+    main()
+    ~~~~^^
+  File "D:\GexResearchArtifacts\level_oracle_20261018\monthly_validation_audit_launch_20261023_01\launch_when_validation_complete.py", line 429, in main
+    watch()
+    ~~~~~^^
+  File "D:\GexResearchArtifacts\level_oracle_20261018\monthly_validation_audit_launch_20261023_01\launch_when_validation_complete.py", line 401, in watch
+    require(code_value == 0, "Independent auditor exited nonzero; no retry")
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\GexResearchArtifacts\level_oracle_20261018\monthly_validation_audit_launch_20261023_01\launch_when_validation_complete.py", line 61, in require
+    raise ValueError(message)
+ValueError: Independent auditor exited nonzero; no retry

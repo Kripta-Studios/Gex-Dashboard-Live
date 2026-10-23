@@ -1,10 +1,17 @@
 # Continuación local: estado del 23 de octubre de 2026
 
-Actualización: 24 de octubre, 01:08 Madrid (23 de octubre, 23:08 UTC). Investigación activa
+Actualización: 24 de octubre, 01:21 Madrid (23 de octubre, 23:21 UTC). Investigación activa
 por orden del usuario. Base publicada anterior: `acb2a726`; preparación y código
 nuevos publicados previamente hasta `fee235ee`, incluyendo los lanzadores revisados mensual y OOF,
 el resultado TCN completo y sus 55 copias de evidencia.
 Este registro incorpora los resultados TCN y Greeks auditados; mensual y OOF siguen abiertos.
+
+La validación mensual ya terminó con exit 0 real y los 24 modelos/doce meses.
+El primer auditor falló técnicamente al construir el catálogo con seis filas
+MISSING_SOURCE de 2026 cuyas rutas feature son nulas. No emitió audit.json ni PASS.
+Se preserva el intento y se prepara un auditor V2 nuevo con revisión independiente;
+test 2026 y OOF todavía no han comenzado. Véase
+`MONTHLY_VALIDATION_AUDIT_01_TECHNICAL_FAILURE_20261024.md`.
 
 ## Ejecuciones observadas
 
@@ -66,8 +73,16 @@ Este registro incorpora los resultados TCN y Greeks auditados; mensual y OOF sig
   de cada último modelo de diciembre, sin diferencias. Se observó
   `validation_freeze.complete.json` a las 23:05:34 UTC, sin abrir su contenido.
   A las 23:07:51 UTC el productor seguía vivo con CPU acumulada de 16.203,204 s;
-  no había exit retenido, cierre de informe anual ni auditor hijo. Todavía no
-  hay evaluación mensual 2026 ni resultado anual auditado.
+  no había exit retenido, cierre de informe anual ni auditor hijo. Después se
+  produjeron ambos cierres: completion del wrapper a las 23:15:37.281501 UTC,
+  SHA `ccce687bfa850d894606ff29ef6014add9e39a142fd84c3dd0d76e2a2a5c185b`, y exit 0
+  observado por handle a las 23:15:39.501243 UTC, SHA
+  `918964c6474df52067db5fb6eecb1c07339cb9bca262e8cab560f22ba3b00e93`.
+  El mapa preservado tiene 6.084 miembros y el final 11.699. La revisión de
+  cadena operativa comprobó 31 condiciones y rehasheó 45 archivos, sin volver
+  a auditar bytes científicos ni economía. Sus límites y copia del recibo están
+  en `MONTHLY_VALIDATION_RUNTIME_CHAIN_VERIFICATION_20261024.md`.
+  Todavía no hay evaluación mensual 2026 ni resultado anual auditado.
   Runtime: `D:/GexResearchArtifacts/level_oracle_20261018/monthly_resource_overlay_resume_20261023_01`.
   Logs y recibo de proceso en el directorio hermano
   `monthly_resume_20261023_01_logs`.
@@ -79,13 +94,21 @@ Este registro incorpora los resultados TCN y Greeks auditados; mensual y OOF sig
   `ccbecce5e10f03de302dbe19a448a1db138ed807b9c18bca266e43c377d10866`:
   19 fixtures PASS del autor, revisión completa y check estático propios de root;
   recibo `root_launch_review.json`. Mantiene locks operativo/científico, gate de
-  recursos antes de Popen y recibo de exit del auditor por handle. Está esperando,
-  no es una auditoría ya completada.
+  recursos antes de Popen y recibo de exit del auditor por handle. Lanzó el único
+  intento como PID 6840, creación `1792797439.9007168`, a las 23:17:19.907414 UTC.
+  Terminó exit 1 a las 23:17:21.762803 UTC tras 1,873 s: `Path(None)` en el
+  constructor del auditor al convertir `features_path`. El índice conserva seis
+  MISSING_SOURCE de QQQ/SPY en 20260401/09/15 con cuatro rutas feature nulas.
+  No llegó a reconstruir la validación de 2025 ni produjo audit.json.
+  El supervisor cerró `FAILED_PRESERVED_NO_RETRY`; no queda ejecución activa
+  de este intento. Su evidencia se conserva y la corrección tendrá código,
+  revisión, publicación y raíz nuevos antes de ejecutarse.
   Un chequeo independiente de integración contrastó 20 campos/bindings ya
   existentes con el wrapper test publicado: identidad, comando, fuentes de los
   recibos, contrato y dependencias coinciden. La inspección del código que
   escribirá completion/exit no detectó incompatibilidad de esquema. No equivale
-  a un cierre real: ambos recibos siguen pendientes. La futura request debe
+  a una auditoría económica: los recibos finales ya existen y fueron comprobados
+  por separado; el PASS del auditor sigue pendiente. La futura request debe
   incluir `source_launch=process.json` porque el binding fue normalizado, y usar
   el SHA de monitor_open para el monitor retenido actual, no el campo histórico
   source_monitor_sha256. Debe ejecutarse desde el repositorio por el comando

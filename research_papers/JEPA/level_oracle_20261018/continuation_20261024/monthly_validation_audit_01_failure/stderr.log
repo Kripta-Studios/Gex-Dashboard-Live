@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\level_oracle_20261018\audit_monthly_walk_forward.py", line 845, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\level_oracle_20261018\audit_monthly_walk_forward.py", line 835, in main
+    result = MonthlyAudit(
+             ~~~~~~~~~~~~^
+        args.monthly_root, args.source_audit, args.implementation_review
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ).audit_validation()
+    ^
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\level_oracle_20261018\audit_monthly_walk_forward.py", line 401, in __init__
+    Path(row.features_path).resolve(),
+    ~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python314\Lib\pathlib\__init__.py", line 150, in __init__
+    raise TypeError(
+    ...<2 lines>...
+        f"not {type(path).__name__!r}")
+TypeError: argument should be a str or an os.PathLike object where __fspath__ returns a str, not 'NoneType'

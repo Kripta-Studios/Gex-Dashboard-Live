@@ -1,0 +1,22 @@
+{
+  "pid": 11852,
+  "observed_comparison_rss_bytes": 238000000,
+  "concurrent_comparison_pid": 19696,
+  "source_commit": "1e1f689e",
+  "started_utc": "2026-10-23T19:34:13.9410606Z",
+  "preserved_complete_models": 3,
+  "runtime_root": "D:/GexResearchArtifacts/level_oracle_20261018/monthly_resource_overlay_resume_20261023_01",
+  "previous_pid": 38676,
+  "arguments": [
+    "-u",
+    "research_papers/JEPA/level_oracle_20261018/run_monthly_resource_overlay.py",
+    "--runtime-root",
+    "D:/GexResearchArtifacts/level_oracle_20261018/monthly_resource_overlay_resume_20261023_01",
+    "--runtime-review",
+    "research_papers/JEPA/level_oracle_20261018/MONTHLY_RESOURCE_OVERLAY_REVIEW.json",
+    "--previous-pid",
+    "38676"
+  ],
+  "stage": "validation",
+  "rationale": "Low observed comparison memory; monthly fits remain serial with frozen 2GB admission gate"
+}

@@ -1,0 +1,5 @@
+{
+  "status": "FAILED_PRESERVED_NO_RETRY",
+  "utc": "2026-10-23T23:17:21.774524+00:00",
+  "error": "ValueError('Independent auditor exited nonzero; no retry')"
+}

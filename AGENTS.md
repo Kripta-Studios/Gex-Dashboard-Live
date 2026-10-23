@@ -1,5 +1,24 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-10-24 — validación mensual producida; auditoría 01 falla por metadata nula
+
+Autoridades: research_papers/JEPA/level_oracle_20261018/MONTHLY_VALIDATION_AUDIT_01_TECHNICAL_FAILURE_20261024.md
+y MONTHLY_VALIDATION_RUNTIME_CHAIN_VERIFICATION_20261024.md en el mismo directorio.
+Productor mensual11852 terminó exit0 retenido23-oct23:15:39UTC:24 modelos y12 meses2025,
+freeze e informe anual producidos. CompletionSHA ccce687b…5c185b; checkpoints
+preservados6084/finales11699. Verificación de recibos31 checks/45 archivos PASS,
+con alcance operativo explícito, sin auditoría económica ni refit.
+Auditor01 PID6840 terminó exit1 en1,873s a23:17:21UTC: Path(None) al construir
+SourceDay de las seis MISSING_SOURCE QQQ/SPY20260401/09/15. Son filas del índice
+completo, no nuevas exclusiones. Sus cuatro rutas feature son nulas; las COMPLETE
+no tienen ese nulo. Falló antes de reconstruir2025; no existe audit.json/PASS.
+Intento01 y originales inmutables. Corrección V2 nueva de metadata, fixtures con
+nulos reales y revisión independiente en preparación; publicar antes de un nuevo
+intento. La extensión de auditoría2026 también requiere versión compatible.
+No reentrenar modelos ni cambiar costes, políticas, selección o calendario.
+Test2026 y OOF siguen pendientes de auditoría2025 válida. Investigación activa,
+SEEN_DEVELOPMENT, technical_ready=false, promotion_approved=false; producción intacta.
+
 ### Checkpoint 2026-10-23 — comparación Greeks cerrada, sin candidato rentable
 
 Autoridad: research_papers/JEPA/level_oracle_20261018/COMMON_GREEK_COMPARISON_RESULT_20261023.md.

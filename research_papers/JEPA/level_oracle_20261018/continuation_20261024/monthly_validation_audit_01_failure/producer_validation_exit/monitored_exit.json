@@ -1,0 +1,15 @@
+{
+  "status": "PROCESS_EXIT_OBSERVED_BY_RETAINED_HANDLE",
+  "pid": 11852,
+  "creation_time": 1792784053.9282398,
+  "exit_code": 0,
+  "observed_utc": "2026-10-23T23:15:39.501243+00:00",
+  "wall_seconds_since_launch": 13285.573090553284,
+  "monitored_seconds": 12300.19700169994,
+  "memory_samples": 12294,
+  "sampling_seconds": 1,
+  "peak_rss_bytes": 7815368704,
+  "peak_private_bytes": 7075692544,
+  "peaks_scope": "RSS includes Windows peak_wset; private peak sampled after attach",
+  "process_receipt_sha256": "21588f13e2fac83e4522eb848753a2431c509fb5e6a1b0627221c6d60b1714eb"
+}

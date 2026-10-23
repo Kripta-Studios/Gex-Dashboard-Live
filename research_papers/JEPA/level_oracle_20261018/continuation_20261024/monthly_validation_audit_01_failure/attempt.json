@@ -1,0 +1,21 @@
+{
+  "status": "ONE_AUDIT_ATTEMPT",
+  "utc": "2026-10-23T23:17:19.876941+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\audit_monthly_walk_forward.py",
+    "--monthly-root",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1",
+    "--source-audit",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_clock_dataset_v1_audit\\audit.json",
+    "--implementation-review",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\MONTHLY_WALK_FORWARD_SEALED_SCORE_AUDITOR_REVIEW.json",
+    "--output",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_validation_audit_20261023_01"
+  ],
+  "cwd": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live",
+  "admission_sha256": "1fcdf8659eb5d6da26ddc485922b972cce8a4c2ca228187b22246becd5fea8e8",
+  "script_sha256": "ccbecce5e10f03de302dbe19a448a1db138ed807b9c18bca266e43c377d10866",
+  "retry_allowed": false
+}

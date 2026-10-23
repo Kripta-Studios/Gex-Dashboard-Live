@@ -1,0 +1,112 @@
+{
+  "status": "METADATA_ONLY_CAUSE_IDENTIFIED",
+  "observed_utc": "2026-10-23T23:20:41.120861+00:00",
+  "source_index_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_clock_dataset_v1\\index.parquet",
+  "source_index_sha256": "7124d98155eae8ee5ae06457377570278d4059defe2cf02340e34c288fcb60b4",
+  "source_audit_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_clock_dataset_v1_audit\\audit.json",
+  "source_audit_sha256": "678eb21bca80b38855979d8a7386cdadd6827a6dfdd5acbf3df6fde5a5a2f3b9",
+  "projected_columns": [
+    "ticker",
+    "date",
+    "status",
+    "close_i",
+    "day_root",
+    "features_path",
+    "features_meta_path",
+    "action_features_path",
+    "action_features_meta_path"
+  ],
+  "index_rows": 2625,
+  "complete_rows": 2619,
+  "null_feature_rows": [
+    {
+      "physical_row_0based": 2439,
+      "ticker": "QQQ",
+      "date": "20260401",
+      "status": "MISSING_SOURCE",
+      "close_i": 390,
+      "day_root_is_null": false,
+      "null_feature_fields": [
+        "features_path",
+        "features_meta_path",
+        "action_features_path",
+        "action_features_meta_path"
+      ]
+    },
+    {
+      "physical_row_0based": 2441,
+      "ticker": "SPY",
+      "date": "20260401",
+      "status": "MISSING_SOURCE",
+      "close_i": 390,
+      "day_root_is_null": false,
+      "null_feature_fields": [
+        "features_path",
+        "features_meta_path",
+        "action_features_path",
+        "action_features_meta_path"
+      ]
+    },
+    {
+      "physical_row_0based": 2454,
+      "ticker": "QQQ",
+      "date": "20260409",
+      "status": "MISSING_SOURCE",
+      "close_i": 390,
+      "day_root_is_null": false,
+      "null_feature_fields": [
+        "features_path",
+        "features_meta_path",
+        "action_features_path",
+        "action_features_meta_path"
+      ]
+    },
+    {
+      "physical_row_0based": 2456,
+      "ticker": "SPY",
+      "date": "20260409",
+      "status": "MISSING_SOURCE",
+      "close_i": 390,
+      "day_root_is_null": false,
+      "null_feature_fields": [
+        "features_path",
+        "features_meta_path",
+        "action_features_path",
+        "action_features_meta_path"
+      ]
+    },
+    {
+      "physical_row_0based": 2466,
+      "ticker": "QQQ",
+      "date": "20260415",
+      "status": "MISSING_SOURCE",
+      "close_i": 390,
+      "day_root_is_null": false,
+      "null_feature_fields": [
+        "features_path",
+        "features_meta_path",
+        "action_features_path",
+        "action_features_meta_path"
+      ]
+    },
+    {
+      "physical_row_0based": 2468,
+      "ticker": "SPY",
+      "date": "20260415",
+      "status": "MISSING_SOURCE",
+      "close_i": 390,
+      "day_root_is_null": false,
+      "null_feature_fields": [
+        "features_path",
+        "features_meta_path",
+        "action_features_path",
+        "action_features_meta_path"
+      ]
+    }
+  ],
+  "first_failure_expression": "Path(row.features_path).resolve()",
+  "first_failure_line": 401,
+  "auditor_sha256": "e4a3be1c19b7f0af1226e71255c81116bd71a6a300aef36f61c688deb908df1f",
+  "market_values_models_actions_labels_opened_by_diagnostic": false,
+  "audit_rerun": false
+}
