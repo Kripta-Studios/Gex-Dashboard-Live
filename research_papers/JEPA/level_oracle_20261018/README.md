@@ -4,6 +4,8 @@
 La [autoridad de reanudación](RESUMPTION_20261023.md) sustituye la pausa
 operativa indicada abajo. Se continúa con las líneas incompletas y auditorías;
 la rentabilidad causal sigue sin demostrarse y no hay promoción autorizada.
+Las ejecuciones y pendientes actuales se registran en
+[continuación del 23 de octubre](CONTINUATION_PROGRESS_20261023.md).
 
 ## Cierre documental conservado del18 de octubre de2026
 
