@@ -1,0 +1,75 @@
+{
+  "dependencies": {
+    "MONTHLY_TEST_AUDIT_EXTENSION_SPEC_20261023.md": "b895e0ee57ee8d911b4d732e1f46b07c2d9e13c296f09888ce47372815f5182d",
+    "MONTHLY_WALK_FORWARD_SEALED_SCORE_AUDIT_CONTRACT.md": "cabdd117fc4dc713fbca085a48e38ac8c8f609555f42f10a05321c01623ff8e7",
+    "audit_monthly_walk_forward.py": "e4a3be1c19b7f0af1226e71255c81116bd71a6a300aef36f61c688deb908df1f",
+    "audit_monthly_walk_forward_test.py": "ec0ddb99840d5bf380eb7f407de3e1a5bcbdfa352d79ad5d75e24a05750db57b",
+    "test_audit_monthly_walk_forward.py": "8c47e89951506553bfb1295c6e390501828b8fe6f77bcae5d566e98c2039ef87",
+    "test_audit_monthly_walk_forward_test.py": "b3cc6d8225812154da2e4d2c644e426a19f7177d520b9d564826e3a3e4790a00"
+  },
+  "independent_review": {
+    "areas": [
+      "Pinned prior 2025 audit and exact source/contract/freeze bindings.",
+      "Composition of 24 prior windows and 12 new fits; 13 models used in H1 including inherited static.",
+      "Exclusive TRAIN cutoffs, source clocks, samples, weights, targets and matrix/chunk reconstruction.",
+      "Frozen selection including null, all-mode score membership and model/NPZ/month/ledger seal order.",
+      "Complete 369/363/6 calendar, independent scheduler/economics and 2026 period report.",
+      "Composite verified_files authority compatible with real MonthlyInputs.",
+      "Bounded reads, exact prediction schema, failure preservation and no producer/model-stack imports."
+    ],
+    "closed_findings": [
+      "Feature manifest paths now pass the central BoundedVerifier allowlist.",
+      "Prediction admission now requires exact fields, identity dtypes, finite float64 scores and scalar model/scale."
+    ],
+    "remaining_blockers": [],
+    "status": "CLEAR"
+  },
+  "independently_executed_validation": {
+    "available_commit_bytes": 13506519040,
+    "available_ram_bytes": 9056296960,
+    "elapsed_seconds": 4.94,
+    "exit_code": 0,
+    "integral_fixture_repeated_by_reviewer": false,
+    "pytest_selection": "feature_manifest or prediction_schema or resigned_float32 or preflight or calendar_faults",
+    "reviewed_hashes_unchanged_before_after": true,
+    "tests_deselected": 10,
+    "tests_passed": 20
+  },
+  "limitations": [
+    "This is an implementation review with synthetic tests, not a market audit PASS.",
+    "The eventual economic audit is given sealed scores: no model refit or repeated inference.",
+    "Feature values are compared between day chunks and fit matrices; source files are authenticated by hash, not rebuilt from raw.",
+    "The prior 2025 reconstruction is inherited from its externally pinned audit and rehashed inventory.",
+    "Seen development only; no historical receipt, live parity or prospective profitability claim."
+  ],
+  "market_audit_executed": false,
+  "producer": "/root/monthly_resume",
+  "producer_validation_inspected": {
+    "compile": "PASS",
+    "elapsed_seconds": 343.09,
+    "exit_code": 0,
+    "includes_complete_synthetic_six_months_twelve_fits": true,
+    "includes_real_MonthlyInputs_compatibility": true,
+    "post_run_hashes_independently_rechecked": true,
+    "receipt_path": "MONTHLY_TEST_AUDIT_IMPLEMENTATION_RESULT_20261023.md",
+    "receipt_sha256": "22a8a03e97989ae0ab6fabe952e2d8a9b5158e5976dec0e9a6d0f72af643e094",
+    "ruff": "PASS",
+    "tests_passed": 30
+  },
+  "promotion_approved": false,
+  "remaining_runtime_dependencies": [
+    "Complete and independently audit all twelve 2025 validation months.",
+    "Prepare reviewed test runtime and complete the six 2026 monthly producer closures without changing the frozen selection.",
+    "Pin the prior validation audit SHA, source/code authorities and bounded roots in the separate runtime review."
+  ],
+  "reviewed_at_utc": "2026-10-23T20:06:15.519674+00:00",
+  "reviewer": "/root/tcn_completion",
+  "runtime_authorized": false,
+  "scope": "IMPLEMENTATION_ONLY_GIVEN_SEALED_SCORES",
+  "status": "PASS_MONTHLY_TEST_AUDITOR_IMPLEMENTATION_REVIEW",
+  "technical_ready": false,
+  "unchanged_prior_code": {
+    "audit_monthly_walk_forward.py": "e4a3be1c19b7f0af1226e71255c81116bd71a6a300aef36f61c688deb908df1f",
+    "run_monthly_walk_forward.py": "47a4df8b019d9d297ca1ee9b89fff63406409659336dbd7b0e4d7af01ed348bb"
+  }
+}
