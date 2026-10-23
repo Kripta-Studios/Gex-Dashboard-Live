@@ -20,6 +20,9 @@ la variante pierde 93.912,60 USD base en 2025 y 35.329,40 en H1 2026, y tampoco
 cumple el requisito diario. Se reconciliaron independientemente los 108 grupos
 mensuales y 16 anuales. La [gráfica de todos los meses](continuation_20261023/figures/COMMON_GREEK_RESULT_20261023_monthly_net_base.png)
 conserva ambas políticas y señala las seis ausencias. No hay candidato rentable.
+La [interpretación de su calibración](COMMON_GREEK_FAILURE_INTERPRETATION_20261023.md)
+separa error por acción y comportamiento de la política: los fills mantienen
+scores medios positivos y resultados negativos, sin identificar una causa demostrada.
 La [interpretación del fallo TCN](TCN_FAILURE_INTERPRETATION_20261023.md)
 distingue inactividad, pérdidas y mejora del ajuste TRAIN, y delimita las
 hipótesis pendientes sin atribuir una causa económica demostrada.
