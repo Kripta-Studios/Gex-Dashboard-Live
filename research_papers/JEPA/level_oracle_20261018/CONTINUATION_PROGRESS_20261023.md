@@ -1,6 +1,6 @@
 # Continuación local: estado del 23 de octubre de 2026
 
-Actualización: 23 de octubre, 20:44 UTC. Investigación activa
+Actualización: 23 de octubre, 20:48 UTC. Investigación activa
 por orden del usuario. Base publicada anterior: `acb2a726`; preparación y código
 nuevos publicados hasta `5ebc0d63`, incluyendo los lanzadores revisados mensual y OOF,
 el resultado TCN completo y sus 55 copias de evidencia.
@@ -8,14 +8,23 @@ Este registro incorpora el resultado TCN auditado; las otras líneas siguen abie
 
 ## Ejecuciones observadas
 
-- Comparación fija griegas 424 frente a compacto 152: launcher PID 34788,
-  productor PID 19696. Su contador llegó a 750/750 ticker-días de 2025;
-  después del freeze ya procesa 2026, con contador 350/369. Aún no se afirma
-  cierre global ni auditoría nueva. Logs y recibos:
+- Comparación fija griegas 424 frente a compacto 152: productor PID 19696 y
+  launcher terminaron exit 0, confirmado también al recoger la sesión original.
+  Tiempo 4.715,295 s; pico RSS 296.677.376 bytes. Cierre global
+  `COMPLETE_FIXED_COMMON_GREEK_COMPARISON`, SHA
+  `40cfdf576885eecd10785946687e5cf87cce228c1483e3ddd43cbd911207c824`.
+  Auditor independiente único iniciado a las 20:47:42 UTC: PID 43828, creación
+  `1792788462.056281`, wrapper PID 50536; sesión 18322. Salida nueva
+  `common_greek_comparison_v1_economic_audit_01`, logs en su hermano con sufijo
+  `_logs`. Ese intento terminó exit 1 tras 49,034 s: `Baseline score absent`.
+  Diagnóstico acotado: lookup con `/` frente a claves Windows con `\` en el
+  manifiesto. Se preserva el fallo, sin PASS ni reporte económico. Se prepara
+  un auditor V2 separado con fixtures y revisión; no se permite retry automático
+  ni alterar los resultados del productor para acomodar la auditoría.
+  Logs y recibos del productor:
   `D:/GexResearchArtifacts/level_oracle_20261018/common_greek_comparison_v1_launch`.
   No se reentrena ninguno de los dos modelos ni se selecciona por resultados
-  parciales. El supervisor `common_greek_resume` espera el cierre antes de
-  ejecutar la auditoría existente en una salida nueva.
+  parciales. El reporter completo sigue pendiente de una auditoría válida.
 - Validación mensual: wrapper PID 11852, iniciado a las 19:34:13 UTC desde
   `1e1f689e`, sólo `stage validation`. Ya publicó su nuevo `launch.json`;
   tiene ocho modelos completos de los 24 previstos para validación. Root rehasheó
@@ -61,6 +70,11 @@ al mensual; los fits mensuales siguen siendo seriales. Ambos mantienen el gate
 operativo de 2.000.000.000 bytes libres de RAM y commit. La cifra de 238 MB es
 aproximada, no una cota de consumo futuro. Las observaciones y picos efectivos
 deben tomarse de los recibos de runtime al cerrar.
+El productor griegas registró un mínimo global observado de commit libre de
+91.951.104 bytes y RAM de 2.315.599.872 bytes durante el run. El gate de admisión
+no reserva recursos ni garantiza que el margen permanezca por encima de 2 GB.
+No hubo fallo de proceso; no se infiere de esa observación ni corrupción ni su
+causa. Antes de la auditoría nueva se volvió a comprobar el gate.
 
 ## Trabajo verificado y pendientes
 
@@ -99,9 +113,10 @@ deben tomarse de los recibos de runtime al cerrar.
   recursos. Root comprobó 18 bindings sin diferencias. La ejecución real espera
   la auditoría mensual compuesta de los 18 meses y una request externa concreta.
 - Matemática del actor de sesión: especificación sintética revisada y publicada
-  en `c5043847`. Se preparan comparaciones de enumeración, DP y gradientes sobre
-  grafos artificiales; no hay arquitectura, entrenamiento o familia económica
-  nueva activada por ese trabajo.
+  en `c5043847`. Laboratorio terminado: 49 pruebas tanto del autor como del revisor,
+  204 comparaciones con tolerancias predeclaradas y 30 copias exactas de cuatro
+  intentos. Root verificó las copias y hashes. Alcance exclusivamente matemático
+  sintético; no hay arquitectura, entrenamiento o familia económica nueva activada.
 - Reporter mensual griegas: cuatro pruebas PASS; sólo puede consumir el cierre
   auditado de esta comparación. Publicará los 108 grupos fijados, sin selección.
 

@@ -1,0 +1,125 @@
+{
+  "status": "PASS_SESSION_ACTOR_MATH_VALIDATION_REVIEW",
+  "date": "2026-10-23",
+  "reviewer": "/root/tcn_completion",
+  "author": "/root/tcn_economic_auditor",
+  "scope": "MATHEMATICAL_SYNTHETIC_ONLY",
+  "runtime_market_authorized": false,
+  "dependencies": {
+    "session_actor_math_validation.py": "4d48460d3a6a39b4fbe95d368de7789f58c6ffdad984607a81a1539fcd7b3946",
+    "test_session_actor_math_validation.py": "15baeaf22231ef1e639d565923b89a58d94928e0aecb2203330c28ac93e7b5b3",
+    "EXACT_SESSION_ACTOR_MATH_VALIDATION_SPEC_20261023.md": "fd44fa77e9e623ac498b2c5cf5f5ed3680b7eda0f3b82f907a33a822f59aa808",
+    "EXACT_SESSION_ACTOR_MATH_VALIDATION_RESULT_20261023.md": "0e7be260d1d5a8fd5c4e3a2b5e258f527c9a2dc29a71ef0ce02a9f4b3f466971",
+    "continuation_20261023/session_actor_math_validation/attempt_04/validation/result.json": "86b9f28141c1e0e6389311c94c255ed2a60c1b52b249724e877d52657a7582b0",
+    "continuation_20261023/session_actor_math_validation/manifest.json": "45befae849d954adcda103c3f05ed9a764e87c14b0f2a80cdd71a7614e2db02b"
+  },
+  "independent_review": {
+    "static_review": "Enumeration, DP, occupancy, adjoints, independent/shared variables, blocked recomputation, clocks, termination, NO_FILL, full support, penalty separation and fail-closed input checks inspected.",
+    "pytest": {
+      "passed": 49,
+      "failed": 0,
+      "exit_code": 0,
+      "reported_seconds": 0.69,
+      "evidence_origin": "Reviewer tool execution in this session; not the author log.",
+      "pre_import_gate": {
+        "available_ram_bytes": 8364912640,
+        "available_commit_bytes": 11845582848
+      },
+      "resource_gate": {
+        "available_ram_bytes": 7905492992,
+        "available_commit_bytes": 10968424448,
+        "cpu_affinity": [
+          0
+        ],
+        "torch_threads": 1,
+        "torch_interop_threads": 1,
+        "dtype": "float64",
+        "device": "cpu",
+        "passed": true
+      }
+    },
+    "hashes_before_after_tests_identical": true,
+    "serialized_evidence_verification": {
+      "checks_recomputed_from_actual_expected": 204,
+      "exact_predeclared_tolerances_verified": true,
+      "three_central_steps_per_gradient_verified": true,
+      "all_passed": true,
+      "copied_files_compared_to_originals": 30,
+      "bytes_compared": 519529,
+      "hash_mismatches": 0
+    },
+    "cli_rerun_by_reviewer": false
+  },
+  "author_evidence_inspected": {
+    "attempt": "continuation_20261023/session_actor_math_validation/attempt_04",
+    "ruff_exit_code": 0,
+    "pytest_exit_code": 0,
+    "pytest_passed": 49,
+    "pytest_reported_seconds": 2.75,
+    "cli_exit_code": 0,
+    "mathematical_checks": 204,
+    "max_absolute_error": 2.7018631776343227e-09,
+    "prior_attempts_preserved": [
+      1,
+      2,
+      3
+    ],
+    "final_result_identical_to_attempt_03": true
+  },
+  "closed_findings": [
+    {
+      "finding": "Policy probabilities must be scalar tensors.",
+      "resolution": "Scalar shape enforced and vector negative fixture added."
+    },
+    {
+      "finding": "Dataclass annotations alone admit fractional or boolean clock values.",
+      "resolution": "Integer, non-boolean clocks and valid bounds enforced with negative fixtures."
+    },
+    {
+      "finding": "Stack promotion can conceal mixed float32 and float64 policy elements.",
+      "resolution": "Each probability is checked for float64 CPU dtype/device before aggregation; mixed-dtype negative fixture added."
+    }
+  ],
+  "mathematical_review": {
+    "enumeration_independent_of_transition_dp_occupancy": true,
+    "enumeration_no_monte_carlo_or_action_subsampling": true,
+    "finite_difference_steps": [
+      0.0001,
+      1e-05,
+      1e-06
+    ],
+    "identity_tolerance": {
+      "atol": 1e-10,
+      "rtol": 1e-09
+    },
+    "finite_difference_tolerance": {
+      "atol": 1e-07,
+      "rtol": 1e-05
+    },
+    "tolerances_relaxed": false,
+    "terminal_penalty_separate_from_pnl": true,
+    "trade_cardinality_counts_attempts_including_no_fill": true,
+    "note_example": {
+      "last_decision": 2,
+      "last_liquidation": 4,
+      "objective": -0.7,
+      "expected_pnl": 0.65,
+      "probability_no_fill": 0.45,
+      "logit_gradients": [
+        1.08,
+        0.225
+      ]
+    },
+    "activity_counterexample": {
+      "expected_fills": 1.5,
+      "probability_no_fill": 0.5
+    }
+  },
+  "limitations": [
+    "Finite artificial exogenous graphs only; no market data, outcomes, models, optimizer or market execution used by this review.",
+    "Does not establish source quality, observed fills, live parity, sufficient causal state, out-of-sample profitability or operability.",
+    "Stochastic expected objective does not establish profitable greedy extraction or a daily fill guarantee.",
+    "Architecture, deterministic extractor and any new market experiment remain undecided and unauthorized by this review."
+  ],
+  "open_findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "started": "2026-10-23T20:43:56.347980+00:00",
+  "pid": 40476,
+  "source_sha256": "51016fcd9a9d1bb7b9516c2ecc5ea7358d19173295a7b07e8cc90bef6a8e67e7",
+  "status": "PASS_ARTIFICIAL_MATH_IDENTITIES",
+  "resources": {
+    "available_ram_bytes": 7711334400,
+    "available_commit_bytes": 10225090560,
+    "cpu_affinity": [
+      0
+    ],
+    "torch_threads": 1,
+    "dtype": "float64",
+    "device": "cpu",
+    "torch_interop_threads": 1,
+    "passed": true
+  },
+  "result_sha256": "86b9f28141c1e0e6389311c94c255ed2a60c1b52b249724e877d52657a7582b0",
+  "elapsed_seconds": 0.7033854000037536,
+  "finished": "2026-10-23T20:43:57.051589+00:00"
+}

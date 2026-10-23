@@ -1,0 +1,12 @@
+E402 Module level import not at top of file
+  --> research_papers\JEPA\level_oracle_20261018\session_actor_math_validation.py:17:1
+   |
+15 |     os.environ[_name] = "1"
+16 |
+17 | import torch
+   | ^^^^^^^^^^^^
+18 |
+19 | torch.set_num_threads(1)
+   |
+
+Found 1 error.

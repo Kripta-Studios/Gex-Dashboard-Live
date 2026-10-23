@@ -1,0 +1,35 @@
+{
+  "started": "2026-10-23T20:42:17.935840+00:00",
+  "status": "FAILED",
+  "commands": [
+    {
+      "name": "ruff",
+      "command": [
+        "ruff",
+        "check",
+        "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\session_actor_math_validation.py",
+        "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_session_actor_math_validation.py"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 0.038469000020995736
+    }
+  ],
+  "sources": {
+    "session_actor_math_validation.py": "96555f46db3b2b8df8bfa1c3ca08fc6a1af06dd4e3ce418f75c9ff1cb41b1eed",
+    "test_session_actor_math_validation.py": "7be7af2e75c9690a2c54bf7c47908a8f4d1e24ae0bc98b7d80b76e774860c4b6",
+    "EXACT_SESSION_ACTOR_MATH_VALIDATION_SPEC_20261023.md": "fd44fa77e9e623ac498b2c5cf5f5ed3680b7eda0f3b82f907a33a822f59aa808"
+  },
+  "resources": {
+    "available_ram_bytes": 8304250880,
+    "available_commit_bytes": 11388502016,
+    "cpu_affinity": [
+      0
+    ],
+    "torch_threads": 1,
+    "dtype": "float64",
+    "device": "cpu",
+    "passed": true
+  },
+  "error": "RuntimeError('ruff failed; no automatic continuation')",
+  "finished": "2026-10-23T20:42:20.025344+00:00"
+}

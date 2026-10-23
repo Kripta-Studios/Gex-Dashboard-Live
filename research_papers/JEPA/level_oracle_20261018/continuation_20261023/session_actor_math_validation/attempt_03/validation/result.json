@@ -1,0 +1,6289 @@
+{
+  "status": "PASS_ARTIFICIAL_MATH_IDENTITIES",
+  "cases": [
+    {
+      "graph": {
+        "name": "wait_only",
+        "last_decision": 2,
+        "last_liquidation": 4,
+        "offers": {},
+        "penalty": 3.0,
+        "start": 0
+      },
+      "policy": {
+        "(0, 0)": {
+          "WAIT": 1.0
+        },
+        "(0, 1)": {
+          "WAIT": 1.0
+        },
+        "(1, 0)": {
+          "WAIT": 1.0
+        },
+        "(1, 1)": {
+          "WAIT": 1.0
+        },
+        "(2, 0)": {
+          "WAIT": 1.0
+        },
+        "(2, 1)": {
+          "WAIT": 1.0
+        }
+      },
+      "paths": 1,
+      "checks": [
+        {
+          "check": "DP objective",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": -3.0,
+          "expected": -3.0
+        },
+        {
+          "check": "occupancy objective",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": -3.0,
+          "expected": -3.0
+        },
+        {
+          "check": "occupancy pnl",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 0.0,
+          "expected": 0.0
+        },
+        {
+          "check": "occupancy no_fill",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 1.0,
+          "expected": 1.0
+        },
+        {
+          "check": "occupancy fills",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 0.0,
+          "expected": 0.0
+        },
+        {
+          "check": "visits",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": [
+            1.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          "expected": [
+            1.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "check": "branches",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": [
+            1.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          "expected": [
+            1.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "check": "terminals",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": [
+            1.0,
+            0.0
+          ],
+          "expected": [
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "check": "terminal mass",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 1.0,
+          "expected": 1.0
+        },
+        {
+          "check": "penalty separate",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": -3.0,
+          "expected": -3.0
+        }
+      ],
+      "gradients": [
+        {
+          "mode": "independent_logits",
+          "checks": [
+            {
+              "check": "autograd DP vs enumeration",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "expected": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "check": "adjoint chain vs enumeration",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "expected": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "check": "block 0 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4
+              ]
+            },
+            {
+              "check": "block 3 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4
+              ]
+            },
+            {
+              "check": "block gradient",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "expected": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "check": "unchanged variables",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4
+              ]
+            },
+            {
+              "check": "central step 0.0001",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-07,
+              "rtol": 1e-05,
+              "actual": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "expected": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "check": "central step 1e-05",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-07,
+              "rtol": 1e-05,
+              "actual": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "expected": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "check": "central step 1e-06",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-07,
+              "rtol": 1e-05,
+              "actual": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "expected": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          ],
+          "parameters": [
+            -0.6,
+            -0.4,
+            -0.2,
+            0.0,
+            0.2,
+            0.4
+          ],
+          "logits": [
+            -0.6,
+            -0.4,
+            -0.2,
+            0.0,
+            0.2,
+            0.4
+          ]
+        },
+        {
+          "mode": "shared_algebraic",
+          "checks": [
+            {
+              "check": "autograd DP vs enumeration",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "expected": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "check": "adjoint chain vs enumeration",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "expected": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "check": "block 0 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001
+              ],
+              "expected": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001
+              ]
+            },
+            {
+              "check": "block 3 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001
+              ],
+              "expected": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001
+              ]
+            },
+            {
+              "check": "block gradient",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "expected": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "check": "unchanged variables",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.2,
+                -0.3,
+                0.4
+              ],
+              "expected": [
+                0.2,
+                -0.3,
+                0.4
+              ]
+            },
+            {
+              "check": "central step 0.0001",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-07,
+              "rtol": 1e-05,
+              "actual": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "expected": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "check": "central step 1e-05",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-07,
+              "rtol": 1e-05,
+              "actual": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "expected": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "check": "central step 1e-06",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-07,
+              "rtol": 1e-05,
+              "actual": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "expected": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          ],
+          "parameters": [
+            0.2,
+            -0.3,
+            0.4
+          ],
+          "logits": [
+            0.20900000000000002,
+            -0.359,
+            0.6040000000000001,
+            0.20900000000000002,
+            -0.359,
+            0.6040000000000001
+          ]
+        }
+      ],
+      "special": []
+    },
+    {
+      "graph": {
+        "name": "all_no_fill",
+        "last_decision": 2,
+        "last_liquidation": 4,
+        "offers": {
+          "0": [
+            {
+              "name": "N",
+              "status": "NO_FILL",
+              "entry": 1,
+              "exit": null,
+              "reward": 0.0
+            }
+          ],
+          "2": [
+            {
+              "name": "M",
+              "status": "NO_FILL",
+              "entry": 3,
+              "exit": null,
+              "reward": 0.0
+            }
+          ]
+        },
+        "penalty": 3.0,
+        "start": 0
+      },
+      "policy": {
+        "(0, 0)": {
+          "WAIT": 0.45016600268752205,
+          "N": 0.5498339973124778
+        },
+        "(0, 1)": {
+          "WAIT": 0.4501660026875221,
+          "N": 0.549833997312478
+        },
+        "(1, 0)": {
+          "WAIT": 1.0
+        },
+        "(1, 1)": {
+          "WAIT": 1.0
+        },
+        "(2, 0)": {
+          "WAIT": 0.7685247834990175,
+          "M": 0.23147521650098235
+        },
+        "(2, 1)": {
+          "WAIT": 0.4501660026875221,
+          "M": 0.549833997312478
+        }
+      },
+      "paths": 4,
+      "checks": [
+        {
+          "check": "DP objective",
+          "passed": true,
+          "max_absolute_error": 4.440892098500626e-16,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": -2.9999999999999996,
+          "expected": -2.999999999999999
+        },
+        {
+          "check": "occupancy objective",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": -2.999999999999999,
+          "expected": -2.999999999999999
+        },
+        {
+          "check": "occupancy pnl",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 0.0,
+          "expected": 0.0
+        },
+        {
+          "check": "occupancy no_fill",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 0.9999999999999998,
+          "expected": 0.9999999999999998
+        },
+        {
+          "check": "occupancy fills",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 0.0,
+          "expected": 0.0
+        },
+        {
+          "check": "visits",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": [
+            1.0,
+            0.0,
+            0.9999999999999999,
+            0.0,
+            0.9999999999999999,
+            0.0
+          ],
+          "expected": [
+            1.0,
+            0.0,
+            0.9999999999999999,
+            0.0,
+            0.9999999999999999,
+            0.0
+          ]
+        },
+        {
+          "check": "branches",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": [
+            0.5498339973124778,
+            0.45016600268752205,
+            0.0,
+            0.0,
+            0.9999999999999999,
+            0.0,
+            0.23147521650098232,
+            0.7685247834990174,
+            0.0,
+            0.0
+          ],
+          "expected": [
+            0.5498339973124778,
+            0.45016600268752205,
+            0.0,
+            0.0,
+            0.9999999999999999,
+            0.0,
+            0.23147521650098232,
+            0.7685247834990174,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "check": "terminals",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": [
+            0.9999999999999998,
+            0.0
+          ],
+          "expected": [
+            0.9999999999999998,
+            0.0
+          ]
+        },
+        {
+          "check": "terminal mass",
+          "passed": true,
+          "max_absolute_error": 2.220446049250313e-16,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 0.9999999999999998,
+          "expected": 1.0
+        },
+        {
+          "check": "penalty separate",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": -2.999999999999999,
+          "expected": -2.999999999999999
+        }
+      ],
+      "gradients": [
+        {
+          "mode": "independent_logits",
+          "checks": [
+            {
+              "check": "autograd DP vs enumeration",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -1.9991386443486283e-16,
+                -2.4417534541519974e-16,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -3.4129356385426914e-16,
+                -1.0279564599579343e-16,
+                0.0,
+                0.0
+              ],
+              "expected": [
+                -1.9991386443486283e-16,
+                -2.4417534541519974e-16,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -3.4129356385426914e-16,
+                -1.0279564599579343e-16,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "check": "adjoint chain vs enumeration",
+              "passed": true,
+              "max_absolute_error": 3.4129356385426914e-16,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -1.9991386443486283e-16,
+                -2.4417534541519974e-16,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "expected": [
+                -1.9991386443486283e-16,
+                -2.4417534541519974e-16,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -3.4129356385426914e-16,
+                -1.0279564599579343e-16,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "check": "block 0 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2
+              ]
+            },
+            {
+              "check": "block 3 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2
+              ]
+            },
+            {
+              "check": "block 6 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2
+              ]
+            },
+            {
+              "check": "block 9 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2
+              ]
+            },
+            {
+              "check": "block gradient",
+              "passed": true,
+              "max_absolute_error": 3.4129356385426914e-16,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -1.9991386443486283e-16,
+                -2.4417534541519974e-16,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "expected": [
+                -1.9991386443486283e-16,
+                -2.4417534541519974e-16,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -3.4129356385426914e-16,
+                -1.0279564599579343e-16,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "check": "unchanged variables",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2
+              ]
+            },
+            {
+              "check": "central step 0.0001",
+              "passed": true,
+              "max_absolute_error": 2.220548844896309e-12,
+              "atol": 1e-07,
+              "rtol": 1e-05,
+              "actual": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -2.220446049250313e-12,
+                2.220446049250313e-12,
+                0.0,
+                0.0
+              ],
+              "expected": [
+                -1.9991386443486283e-16,
+                -2.4417534541519974e-16,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -3.4129356385426914e-16,
+                -1.0279564599579343e-16,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "check": "central step 1e-05",
+              "passed": true,
+              "max_absolute_error": 4.440902378065225e-11,
+              "atol": 1e-07,
+              "rtol": 1e-05,
+              "actual": [
+                -4.4408920985006255e-11,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -4.4408920985006255e-11,
+                4.4408920985006255e-11,
+                0.0,
+                0.0
+              ],
+              "expected": [
+                -1.9991386443486283e-16,
+                -2.4417534541519974e-16,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -3.4129356385426914e-16,
+                -1.0279564599579343e-16,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "check": "central step 1e-06",
+              "passed": true,
+              "max_absolute_error": 2.2204494621859516e-10,
+              "atol": 1e-07,
+              "rtol": 1e-05,
+              "actual": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                2.220446049250313e-10,
+                -2.220446049250313e-10,
+                0.0,
+                0.0
+              ],
+              "expected": [
+                -1.9991386443486283e-16,
+                -2.4417534541519974e-16,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -3.4129356385426914e-16,
+                -1.0279564599579343e-16,
+                0.0,
+                0.0
+              ]
+            }
+          ],
+          "parameters": [
+            -0.6,
+            -0.4,
+            -0.2,
+            0.0,
+            0.2,
+            0.4,
+            0.6,
+            -0.6,
+            -0.4,
+            -0.2
+          ],
+          "logits": [
+            -0.6,
+            -0.4,
+            -0.2,
+            0.0,
+            0.2,
+            0.4,
+            0.6,
+            -0.6,
+            -0.4,
+            -0.2
+          ]
+        },
+        {
+          "mode": "shared_algebraic",
+          "checks": [
+            {
+              "check": "autograd DP vs enumeration",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "expected": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "check": "adjoint chain vs enumeration",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "expected": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "check": "block 0 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002
+              ],
+              "expected": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002
+              ]
+            },
+            {
+              "check": "block 3 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002
+              ],
+              "expected": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002
+              ]
+            },
+            {
+              "check": "block 6 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002
+              ],
+              "expected": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002
+              ]
+            },
+            {
+              "check": "block 9 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002
+              ],
+              "expected": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002
+              ]
+            },
+            {
+              "check": "block gradient",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "expected": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "check": "unchanged variables",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.2,
+                -0.3,
+                0.4
+              ],
+              "expected": [
+                0.2,
+                -0.3,
+                0.4
+              ]
+            },
+            {
+              "check": "central step 0.0001",
+              "passed": true,
+              "max_absolute_error": 6.661338147750939e-12,
+              "atol": 1e-07,
+              "rtol": 1e-05,
+              "actual": [
+                2.220446049250313e-12,
+                -6.661338147750939e-12,
+                0.0
+              ],
+              "expected": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "check": "central step 1e-05",
+              "passed": true,
+              "max_absolute_error": 2.2204460492503128e-11,
+              "atol": 1e-07,
+              "rtol": 1e-05,
+              "actual": [
+                -2.2204460492503128e-11,
+                0.0,
+                -2.2204460492503128e-11
+              ],
+              "expected": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "check": "central step 1e-06",
+              "passed": true,
+              "max_absolute_error": 2.220446049250313e-10,
+              "atol": 1e-07,
+              "rtol": 1e-05,
+              "actual": [
+                -2.220446049250313e-10,
+                0.0,
+                0.0
+              ],
+              "expected": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          ],
+          "parameters": [
+            0.2,
+            -0.3,
+            0.4
+          ],
+          "logits": [
+            0.20900000000000002,
+            -0.359,
+            0.6040000000000001,
+            0.20900000000000002,
+            -0.359,
+            0.6040000000000001,
+            0.20900000000000002,
+            -0.359,
+            0.6040000000000001,
+            0.20900000000000002
+          ]
+        }
+      ],
+      "special": []
+    },
+    {
+      "graph": {
+        "name": "note",
+        "last_decision": 2,
+        "last_liquidation": 4,
+        "offers": {
+          "0": [
+            {
+              "name": "A",
+              "status": "FILLED",
+              "entry": 1,
+              "exit": 4,
+              "reward": 2
+            }
+          ],
+          "2": [
+            {
+              "name": "B",
+              "status": "FILLED",
+              "entry": 3,
+              "exit": 4,
+              "reward": -1
+            }
+          ]
+        },
+        "penalty": 3.0,
+        "start": 0
+      },
+      "policy": {
+        "(0, 0)": {
+          "WAIT": 0.45016600268752205,
+          "A": 0.5498339973124778
+        },
+        "(0, 1)": {
+          "WAIT": 0.4501660026875221,
+          "A": 0.549833997312478
+        },
+        "(1, 0)": {
+          "WAIT": 1.0
+        },
+        "(1, 1)": {
+          "WAIT": 1.0
+        },
+        "(2, 0)": {
+          "WAIT": 0.7685247834990175,
+          "B": 0.23147521650098235
+        },
+        "(2, 1)": {
+          "WAIT": 0.4501660026875221,
+          "B": 0.549833997312478
+        }
+      },
+      "paths": 3,
+      "checks": [
+        {
+          "check": "DP objective",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": -0.04242546757065835,
+          "expected": -0.04242546757065835
+        },
+        {
+          "check": "occupancy objective",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": -0.04242546757065835,
+          "expected": -0.04242546757065835
+        },
+        {
+          "check": "occupancy pnl",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 0.9954657216914797,
+          "expected": 0.9954657216914797
+        },
+        {
+          "check": "occupancy no_fill",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 0.34596372975404605,
+          "expected": 0.34596372975404605
+        },
+        {
+          "check": "occupancy fills",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 0.6540362702459538,
+          "expected": 0.6540362702459538
+        },
+        {
+          "check": "visits",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": [
+            1.0,
+            0.0,
+            0.45016600268752205,
+            0.0,
+            0.45016600268752205,
+            0.0
+          ],
+          "expected": [
+            1.0,
+            0.0,
+            0.45016600268752205,
+            0.0,
+            0.45016600268752205,
+            0.0
+          ]
+        },
+        {
+          "check": "branches",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": [
+            0.5498339973124778,
+            0.45016600268752205,
+            0.0,
+            0.0,
+            0.45016600268752205,
+            0.0,
+            0.10420227293347598,
+            0.34596372975404605,
+            0.0,
+            0.0
+          ],
+          "expected": [
+            0.5498339973124778,
+            0.45016600268752205,
+            0.0,
+            0.0,
+            0.45016600268752205,
+            0.0,
+            0.10420227293347598,
+            0.34596372975404605,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "check": "terminals",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": [
+            0.34596372975404605,
+            0.0,
+            0.6540362702459538
+          ],
+          "expected": [
+            0.34596372975404605,
+            0.0,
+            0.6540362702459538
+          ]
+        },
+        {
+          "check": "terminal mass",
+          "passed": true,
+          "max_absolute_error": 2.220446049250313e-16,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 0.9999999999999998,
+          "expected": 1.0
+        },
+        {
+          "check": "penalty separate",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": -0.04242546757065835,
+          "expected": -0.04242546757065835
+        }
+      ],
+      "gradients": [
+        {
+          "mode": "independent_logits",
+          "checks": [
+            {
+              "check": "autograd DP vs enumeration",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -1.1229949590471817,
+                1.1229949590471817,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.16016405849261045,
+                0.16016405849261028,
+                0.0,
+                0.0
+              ],
+              "expected": [
+                -1.1229949590471817,
+                1.1229949590471817,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.16016405849261045,
+                0.16016405849261028,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "check": "adjoint chain vs enumeration",
+              "passed": true,
+              "max_absolute_error": 2.7755575615628914e-17,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -1.1229949590471817,
+                1.1229949590471817,
+                -0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.16016405849261048,
+                0.16016405849261028,
+                0.0,
+                -0.0
+              ],
+              "expected": [
+                -1.1229949590471817,
+                1.1229949590471817,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.16016405849261045,
+                0.16016405849261028,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "check": "block 0 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2
+              ]
+            },
+            {
+              "check": "block 3 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2
+              ]
+            },
+            {
+              "check": "block 6 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2
+              ]
+            },
+            {
+              "check": "block 9 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2
+              ]
+            },
+            {
+              "check": "block gradient",
+              "passed": true,
+              "max_absolute_error": 2.7755575615628914e-17,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -1.1229949590471817,
+                1.1229949590471817,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.16016405849261048,
+                0.16016405849261028,
+                0.0,
+                0.0
+              ],
+              "expected": [
+                -1.1229949590471817,
+                1.1229949590471817,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.16016405849261045,
+                0.16016405849261028,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "check": "unchanged variables",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2
+              ]
+            },
+            {
+              "check": "central step 0.0001",
+              "passed": true,
+              "max_absolute_error": 9.07348196577118e-10,
+              "atol": 1e-07,
+              "rtol": 1e-05,
+              "actual": [
+                -1.1229949581398335,
+                1.1229949581398335,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.16016405847418813,
+                0.16016405847418813,
+                0.0,
+                0.0
+              ],
+              "expected": [
+                -1.1229949590471817,
+                1.1229949590471817,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.16016405849261045,
+                0.16016405849261028,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "check": "central step 1e-05",
+              "passed": true,
+              "max_absolute_error": 1.195332721692921e-11,
+              "atol": 1e-07,
+              "rtol": 1e-05,
+              "actual": [
+                -1.1229949590352284,
+                1.1229949590463306,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.16016405849916815,
+                0.16016405849916815,
+                0.0,
+                0.0
+              ],
+              "expected": [
+                -1.1229949590471817,
+                1.1229949590471817,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.16016405849261045,
+                0.16016405849261028,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "check": "central step 1e-06",
+              "passed": true,
+              "max_absolute_error": 8.796674499933488e-11,
+              "atol": 1e-07,
+              "rtol": 1e-05,
+              "actual": [
+                -1.1229949591351485,
+                1.1229949591351485,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.16016405846031034,
+                0.16016405846031034,
+                0.0,
+                0.0
+              ],
+              "expected": [
+                -1.1229949590471817,
+                1.1229949590471817,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.16016405849261045,
+                0.16016405849261028,
+                0.0,
+                0.0
+              ]
+            }
+          ],
+          "parameters": [
+            -0.6,
+            -0.4,
+            -0.2,
+            0.0,
+            0.2,
+            0.4,
+            0.6,
+            -0.6,
+            -0.4,
+            -0.2
+          ],
+          "logits": [
+            -0.6,
+            -0.4,
+            -0.2,
+            0.0,
+            0.2,
+            0.4,
+            0.6,
+            -0.6,
+            -0.4,
+            -0.2
+          ]
+        },
+        {
+          "mode": "shared_algebraic",
+          "checks": [
+            {
+              "check": "autograd DP vs enumeration",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -1.2820836003526037,
+                1.6795295164619106,
+                0.10256668802820831
+              ],
+              "expected": [
+                -1.2820836003526037,
+                1.6795295164619106,
+                0.10256668802820831
+              ]
+            },
+            {
+              "check": "adjoint chain vs enumeration",
+              "passed": true,
+              "max_absolute_error": 1.3877787807814457e-17,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -1.2820836003526037,
+                1.6795295164619106,
+                0.1025666880282083
+              ],
+              "expected": [
+                -1.2820836003526037,
+                1.6795295164619106,
+                0.10256668802820831
+              ]
+            },
+            {
+              "check": "block 0 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002
+              ],
+              "expected": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002
+              ]
+            },
+            {
+              "check": "block 3 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002
+              ],
+              "expected": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002
+              ]
+            },
+            {
+              "check": "block 6 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002
+              ],
+              "expected": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002
+              ]
+            },
+            {
+              "check": "block 9 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002
+              ],
+              "expected": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002
+              ]
+            },
+            {
+              "check": "block gradient",
+              "passed": true,
+              "max_absolute_error": 1.3877787807814457e-17,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -1.2820836003526037,
+                1.6795295164619106,
+                0.1025666880282083
+              ],
+              "expected": [
+                -1.2820836003526037,
+                1.6795295164619106,
+                0.10256668802820831
+              ]
+            },
+            {
+              "check": "unchanged variables",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.2,
+                -0.3,
+                0.4
+              ],
+              "expected": [
+                0.2,
+                -0.3,
+                0.4
+              ]
+            },
+            {
+              "check": "central step 0.0001",
+              "passed": true,
+              "max_absolute_error": 2.7018631776343227e-09,
+              "atol": 1e-07,
+              "rtol": 1e-05,
+              "actual": [
+                -1.282083599233319,
+                1.6795295137600474,
+                0.10256668803998448
+              ],
+              "expected": [
+                -1.2820836003526037,
+                1.6795295164619106,
+                0.10256668802820831
+              ]
+            },
+            {
+              "check": "central step 1e-05",
+              "passed": true,
+              "max_absolute_error": 2.678102184461295e-11,
+              "atol": 1e-07,
+              "rtol": 1e-05,
+              "actual": [
+                -1.2820836003513136,
+                1.6795295164351296,
+                0.10256668801500445
+              ],
+              "expected": [
+                -1.2820836003526037,
+                1.6795295164619106,
+                0.10256668802820831
+              ]
+            },
+            {
+              "check": "central step 1e-06",
+              "passed": true,
+              "max_absolute_error": 1.1199707827813654e-10,
+              "atol": 1e-07,
+              "rtol": 1e-05,
+              "actual": [
+                -1.2820836003957226,
+                1.6795295165739077,
+                0.10256668797614665
+              ],
+              "expected": [
+                -1.2820836003526037,
+                1.6795295164619106,
+                0.10256668802820831
+              ]
+            }
+          ],
+          "parameters": [
+            0.2,
+            -0.3,
+            0.4
+          ],
+          "logits": [
+            0.20900000000000002,
+            -0.359,
+            0.6040000000000001,
+            0.20900000000000002,
+            -0.359,
+            0.6040000000000001,
+            0.20900000000000002,
+            -0.359,
+            0.6040000000000001,
+            0.20900000000000002
+          ]
+        }
+      ],
+      "special": [
+        {
+          "check": "DP objective",
+          "passed": true,
+          "max_absolute_error": 1.1102230246251565e-16,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": -0.7,
+          "expected": -0.6999999999999998
+        },
+        {
+          "check": "occupancy objective",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": -0.6999999999999998,
+          "expected": -0.6999999999999998
+        },
+        {
+          "check": "occupancy pnl",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 0.65,
+          "expected": 0.65
+        },
+        {
+          "check": "occupancy no_fill",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 0.44999999999999996,
+          "expected": 0.44999999999999996
+        },
+        {
+          "check": "occupancy fills",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 0.55,
+          "expected": 0.55
+        },
+        {
+          "check": "visits",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": [
+            1.0,
+            0.0,
+            0.6,
+            0.0,
+            0.6,
+            0.0
+          ],
+          "expected": [
+            1.0,
+            0.0,
+            0.6,
+            0.0,
+            0.6,
+            0.0
+          ]
+        },
+        {
+          "check": "branches",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": [
+            0.4,
+            0.6,
+            0.0,
+            0.0,
+            0.6,
+            0.0,
+            0.15,
+            0.44999999999999996,
+            0.0,
+            0.0
+          ],
+          "expected": [
+            0.4,
+            0.6,
+            0.0,
+            0.0,
+            0.6,
+            0.0,
+            0.15,
+            0.44999999999999996,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "check": "terminals",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": [
+            0.44999999999999996,
+            0.0,
+            0.55
+          ],
+          "expected": [
+            0.44999999999999996,
+            0.0,
+            0.55
+          ]
+        },
+        {
+          "check": "terminal mass",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 1.0,
+          "expected": 1.0
+        },
+        {
+          "check": "penalty separate",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": -0.6999999999999998,
+          "expected": -0.6999999999999998
+        },
+        {
+          "check": "note objective",
+          "passed": true,
+          "max_absolute_error": 1.1102230246251565e-16,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": -0.6999999999999998,
+          "expected": -0.7
+        },
+        {
+          "check": "note pnl",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 0.65,
+          "expected": 0.65
+        },
+        {
+          "check": "note no_fill",
+          "passed": true,
+          "max_absolute_error": 5.551115123125783e-17,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 0.44999999999999996,
+          "expected": 0.45
+        },
+        {
+          "check": "note log odds gradients",
+          "passed": true,
+          "max_absolute_error": 2.220446049250313e-16,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": [
+            1.0799999999999998,
+            0.22499999999999995
+          ],
+          "expected": [
+            1.08,
+            0.225
+          ]
+        }
+      ]
+    },
+    {
+      "graph": {
+        "name": "durations_confluence",
+        "last_decision": 6,
+        "last_liquidation": 8,
+        "offers": {
+          "0": [
+            {
+              "name": "short",
+              "status": "FILLED",
+              "entry": 1,
+              "exit": 2,
+              "reward": 2
+            },
+            {
+              "name": "long",
+              "status": "FILLED",
+              "entry": 1,
+              "exit": 3,
+              "reward": -1
+            },
+            {
+              "name": "miss",
+              "status": "NO_FILL",
+              "entry": 1,
+              "exit": null,
+              "reward": 0.0
+            }
+          ],
+          "3": [
+            {
+              "name": "C",
+              "status": "FILLED",
+              "entry": 4,
+              "exit": 5,
+              "reward": -2
+            }
+          ],
+          "4": [
+            {
+              "name": "D",
+              "status": "FILLED",
+              "entry": 5,
+              "exit": 6,
+              "reward": 3
+            }
+          ],
+          "6": [
+            {
+              "name": "E",
+              "status": "FILLED",
+              "entry": 7,
+              "exit": 8,
+              "reward": 1
+            }
+          ]
+        },
+        "penalty": 3.0,
+        "start": 0
+      },
+      "policy": {
+        "(0, 0)": {
+          "WAIT": 0.18065717187635377,
+          "short": 0.22065516801119428,
+          "long": 0.2695088308111684,
+          "miss": 0.32917882930128367
+        },
+        "(0, 1)": {
+          "WAIT": 0.24023698398772464,
+          "short": 0.29342611485468745,
+          "long": 0.358391465999738,
+          "miss": 0.10794543515784986
+        },
+        "(1, 0)": {
+          "WAIT": 1.0
+        },
+        "(1, 1)": {
+          "WAIT": 1.0
+        },
+        "(2, 0)": {
+          "WAIT": 1.0
+        },
+        "(2, 1)": {
+          "WAIT": 1.0
+        },
+        "(3, 0)": {
+          "WAIT": 0.45016600268752205,
+          "C": 0.5498339973124778
+        },
+        "(3, 1)": {
+          "WAIT": 0.45016600268752205,
+          "C": 0.5498339973124778
+        },
+        "(4, 0)": {
+          "WAIT": 0.4501660026875221,
+          "D": 0.549833997312478
+        },
+        "(4, 1)": {
+          "WAIT": 0.4501660026875221,
+          "D": 0.549833997312478
+        },
+        "(5, 0)": {
+          "WAIT": 1.0
+        },
+        "(5, 1)": {
+          "WAIT": 1.0
+        },
+        "(6, 0)": {
+          "WAIT": 0.4501660026875221,
+          "E": 0.549833997312478
+        },
+        "(6, 1)": {
+          "WAIT": 0.4501660026875221,
+          "E": 0.549833997312478
+        }
+      },
+      "paths": 18,
+      "checks": [
+        {
+          "check": "DP objective",
+          "passed": true,
+          "max_absolute_error": 1.1102230246251565e-16,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 0.584896419259481,
+          "expected": 0.5848964192594809
+        },
+        {
+          "check": "occupancy objective",
+          "passed": true,
+          "max_absolute_error": 1.1102230246251565e-16,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 0.584896419259481,
+          "expected": 0.5848964192594809
+        },
+        {
+          "check": "occupancy pnl",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 0.7244271387206698,
+          "expected": 0.7244271387206698
+        },
+        {
+          "check": "occupancy no_fill",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 0.046510239820396274,
+          "expected": 0.046510239820396274
+        },
+        {
+          "check": "occupancy fills",
+          "passed": true,
+          "max_absolute_error": 4.440892098500626e-16,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 1.5897486943018633,
+          "expected": 1.5897486943018628
+        },
+        {
+          "check": "visits",
+          "passed": true,
+          "max_absolute_error": 2.7755575615628914e-17,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": [
+            1.0,
+            0.0,
+            0.5098360011776375,
+            0.0,
+            0.5098360011776375,
+            0.0,
+            0.5098360011776375,
+            0.22065516801119428,
+            0.22951083467632785,
+            0.3688402857671113,
+            0.10331797501971925,
+            0.16603935707390385,
+            0.10331797501971925,
+            0.5676882366304647
+          ],
+          "expected": [
+            1.0,
+            0.0,
+            0.5098360011776375,
+            0.0,
+            0.5098360011776375,
+            0.0,
+            0.5098360011776375,
+            0.22065516801119428,
+            0.22951083467632782,
+            0.3688402857671113,
+            0.10331797501971923,
+            0.16603935707390385,
+            0.10331797501971923,
+            0.5676882366304647
+          ]
+        },
+        {
+          "check": "branches",
+          "passed": true,
+          "max_absolute_error": 5.551115123125783e-17,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": [
+            0.18065717187635377,
+            0.2695088308111684,
+            0.32917882930128367,
+            0.22065516801119428,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.5098360011776375,
+            0.0,
+            0.5098360011776375,
+            0.0,
+            0.28032516650130956,
+            0.22951083467632785,
+            0.12132371305525134,
+            0.09933145495594291,
+            0.12619285965660862,
+            0.10331797501971925,
+            0.20280092869320748,
+            0.16603935707390385,
+            0.10331797501971925,
+            0.16603935707390385,
+            0.05680773519932297,
+            0.046510239820396274,
+            0.3121342923738003,
+            0.2555539442566645
+          ],
+          "expected": [
+            0.18065717187635377,
+            0.2695088308111684,
+            0.32917882930128367,
+            0.22065516801119428,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.5098360011776375,
+            0.0,
+            0.5098360011776375,
+            0.0,
+            0.28032516650130956,
+            0.22951083467632782,
+            0.12132371305525134,
+            0.09933145495594291,
+            0.12619285965660862,
+            0.10331797501971923,
+            0.20280092869320748,
+            0.16603935707390385,
+            0.10331797501971923,
+            0.16603935707390385,
+            0.05680773519932297,
+            0.046510239820396274,
+            0.3121342923738003,
+            0.25555394425666444
+          ]
+        },
+        {
+          "check": "terminals",
+          "passed": true,
+          "max_absolute_error": 1.1102230246251565e-16,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": [
+            0.046510239820396274,
+            0.5845477326064805,
+            0.3689420275731233
+          ],
+          "expected": [
+            0.046510239820396274,
+            0.5845477326064806,
+            0.3689420275731233
+          ]
+        },
+        {
+          "check": "terminal mass",
+          "passed": true,
+          "max_absolute_error": 2.220446049250313e-16,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 1.0000000000000002,
+          "expected": 1.0
+        },
+        {
+          "check": "penalty separate",
+          "passed": true,
+          "max_absolute_error": 1.1102230246251565e-16,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 0.5848964192594809,
+          "expected": 0.584896419259481
+        }
+      ],
+      "gradients": [
+        {
+          "mode": "independent_logits",
+          "checks": [
+            {
+              "check": "autograd DP vs enumeration",
+              "passed": true,
+              "max_absolute_error": 1.1102230246251565e-16,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.14487826766603681,
+                0.32474400847404894,
+                0.08411967447428198,
+                -0.263985415282294,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.3456720591214696,
+                -0.34567205912146964,
+                0.18280919950188382,
+                -0.18280919950188382,
+                -0.21590711470428786,
+                0.2159071147042878,
+                -0.2236856594204902,
+                0.22368565942049018,
+                0.0,
+                0.0,
+                -0.10229164430564187,
+                0.10229164430564187,
+                -0.140512246699612,
+                0.140512246699612
+              ],
+              "expected": [
+                -0.14487826766603681,
+                0.32474400847404883,
+                0.08411967447428198,
+                -0.263985415282294,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.34567205912146953,
+                -0.3456720591214696,
+                0.18280919950188382,
+                -0.1828091995018838,
+                -0.21590711470428783,
+                0.2159071147042878,
+                -0.2236856594204902,
+                0.22368565942049018,
+                0.0,
+                0.0,
+                -0.10229164430564186,
+                0.10229164430564186,
+                -0.140512246699612,
+                0.14051224669961204
+              ]
+            },
+            {
+              "check": "adjoint chain vs enumeration",
+              "passed": true,
+              "max_absolute_error": 1.1102230246251565e-16,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.14487826766603681,
+                0.32474400847404894,
+                0.08411967447428198,
+                -0.263985415282294,
+                -0.0,
+                0.0,
+                -0.0,
+                -0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.3456720591214696,
+                -0.3456720591214696,
+                0.18280919950188382,
+                -0.18280919950188385,
+                -0.21590711470428786,
+                0.2159071147042878,
+                -0.22368565942049023,
+                0.2236856594204902,
+                0.0,
+                0.0,
+                -0.10229164430564187,
+                0.10229164430564187,
+                -0.14051224669961201,
+                0.140512246699612
+              ],
+              "expected": [
+                -0.14487826766603681,
+                0.32474400847404883,
+                0.08411967447428198,
+                -0.263985415282294,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.34567205912146953,
+                -0.3456720591214696,
+                0.18280919950188382,
+                -0.1828091995018838,
+                -0.21590711470428783,
+                0.2159071147042878,
+                -0.2236856594204902,
+                0.22368565942049018,
+                0.0,
+                0.0,
+                -0.10229164430564186,
+                0.10229164430564186,
+                -0.140512246699612,
+                0.14051224669961204
+              ]
+            },
+            {
+              "check": "block 0 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2
+              ]
+            },
+            {
+              "check": "block 3 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2
+              ]
+            },
+            {
+              "check": "block 6 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2
+              ]
+            },
+            {
+              "check": "block 9 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2
+              ]
+            },
+            {
+              "check": "block 12 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2
+              ]
+            },
+            {
+              "check": "block 15 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2
+              ]
+            },
+            {
+              "check": "block 18 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2
+              ]
+            },
+            {
+              "check": "block 21 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2
+              ]
+            },
+            {
+              "check": "block 24 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2
+              ]
+            },
+            {
+              "check": "block gradient",
+              "passed": true,
+              "max_absolute_error": 1.1102230246251565e-16,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.14487826766603681,
+                0.32474400847404894,
+                0.08411967447428198,
+                -0.263985415282294,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.3456720591214696,
+                -0.3456720591214696,
+                0.18280919950188382,
+                -0.18280919950188385,
+                -0.21590711470428786,
+                0.2159071147042878,
+                -0.22368565942049023,
+                0.2236856594204902,
+                0.0,
+                0.0,
+                -0.10229164430564187,
+                0.10229164430564187,
+                -0.14051224669961201,
+                0.140512246699612
+              ],
+              "expected": [
+                -0.14487826766603681,
+                0.32474400847404883,
+                0.08411967447428198,
+                -0.263985415282294,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.34567205912146953,
+                -0.3456720591214696,
+                0.18280919950188382,
+                -0.1828091995018838,
+                -0.21590711470428783,
+                0.2159071147042878,
+                -0.2236856594204902,
+                0.22368565942049018,
+                0.0,
+                0.0,
+                -0.10229164430564186,
+                0.10229164430564186,
+                -0.140512246699612,
+                0.14051224669961204
+              ]
+            },
+            {
+              "check": "unchanged variables",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2
+              ]
+            },
+            {
+              "check": "central step 0.0001",
+              "passed": true,
+              "max_absolute_error": 2.7963020787780124e-10,
+              "atol": 1e-07,
+              "rtol": 1e-05,
+              "actual": [
+                -0.14487826769271628,
+                0.3247440084580555,
+                0.08411967444887924,
+                -0.26398541513983353,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.3456720588418394,
+                -0.3456720588418394,
+                0.1828091993560932,
+                -0.1828091993560932,
+                -0.2159071145296787,
+                0.2159071145296787,
+                -0.22368565923858164,
+                0.22368565923858164,
+                0.0,
+                0.0,
+                -0.10229164422226322,
+                0.10229164422226322,
+                -0.14051224658584438,
+                0.14051224658584438
+              ],
+              "expected": [
+                -0.14487826766603681,
+                0.32474400847404883,
+                0.08411967447428198,
+                -0.263985415282294,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.34567205912146953,
+                -0.3456720591214696,
+                0.18280919950188382,
+                -0.1828091995018838,
+                -0.21590711470428783,
+                0.2159071147042878,
+                -0.2236856594204902,
+                0.22368565942049018,
+                0.0,
+                0.0,
+                -0.10229164430564186,
+                0.10229164430564186,
+                -0.140512246699612,
+                0.14051224669961204
+              ]
+            },
+            {
+              "check": "central step 1e-05",
+              "passed": true,
+              "max_absolute_error": 1.0577372311360023e-11,
+              "atol": 1e-07,
+              "rtol": 1e-05,
+              "actual": [
+                -0.1448782676605198,
+                0.3247440084674924,
+                0.0841196744705286,
+                -0.2639854152830523,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.34567205912661153,
+                -0.34567205912661153,
+                0.18280919951152438,
+                -0.18280919951152438,
+                -0.21590711470342858,
+                0.21590711470342858,
+                -0.22368565941732751,
+                0.22368565941732751,
+                0.0,
+                0.0,
+                -0.10229164429942371,
+                0.10229164429942371,
+                -0.14051224671018936,
+                0.14051224671018936
+              ],
+              "expected": [
+                -0.14487826766603681,
+                0.32474400847404883,
+                0.08411967447428198,
+                -0.263985415282294,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.34567205912146953,
+                -0.3456720591214696,
+                0.18280919950188382,
+                -0.1828091995018838,
+                -0.21590711470428783,
+                0.2159071147042878,
+                -0.2236856594204902,
+                0.22368565942049018,
+                0.0,
+                0.0,
+                -0.10229164430564186,
+                0.10229164430564186,
+                -0.140512246699612,
+                0.14051224669961204
+              ]
+            },
+            {
+              "check": "central step 1e-06",
+              "passed": true,
+              "max_absolute_error": 1.990818621067092e-10,
+              "atol": 1e-07,
+              "rtol": 1e-05,
+              "actual": [
+                -0.1448782677715421,
+                0.3247440084619413,
+                0.08411967439281298,
+                -0.26398541508321216,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.3456720591987761,
+                -0.3456720591987761,
+                0.18280919955593333,
+                -0.18280919955593333,
+                -0.2159071147422864,
+                0.2159071147422864,
+                -0.223685659439532,
+                0.223685659439532,
+                0.0,
+                0.0,
+                -0.10229164437713933,
+                0.10229164437713933,
+                -0.1405122467268427,
+                0.1405122467268427
+              ],
+              "expected": [
+                -0.14487826766603681,
+                0.32474400847404883,
+                0.08411967447428198,
+                -0.263985415282294,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.34567205912146953,
+                -0.3456720591214696,
+                0.18280919950188382,
+                -0.1828091995018838,
+                -0.21590711470428783,
+                0.2159071147042878,
+                -0.2236856594204902,
+                0.22368565942049018,
+                0.0,
+                0.0,
+                -0.10229164430564186,
+                0.10229164430564186,
+                -0.140512246699612,
+                0.14051224669961204
+              ]
+            }
+          ],
+          "parameters": [
+            -0.6,
+            -0.4,
+            -0.2,
+            0.0,
+            0.2,
+            0.4,
+            0.6,
+            -0.6,
+            -0.4,
+            -0.2,
+            0.0,
+            0.2,
+            0.4,
+            0.6,
+            -0.6,
+            -0.4,
+            -0.2,
+            0.0,
+            0.2,
+            0.4,
+            0.6,
+            -0.6,
+            -0.4,
+            -0.2,
+            0.0,
+            0.2
+          ],
+          "logits": [
+            -0.6,
+            -0.4,
+            -0.2,
+            0.0,
+            0.2,
+            0.4,
+            0.6,
+            -0.6,
+            -0.4,
+            -0.2,
+            0.0,
+            0.2,
+            0.4,
+            0.6,
+            -0.6,
+            -0.4,
+            -0.2,
+            0.0,
+            0.2,
+            0.4,
+            0.6,
+            -0.6,
+            -0.4,
+            -0.2,
+            0.0,
+            0.2
+          ]
+        },
+        {
+          "mode": "shared_algebraic",
+          "checks": [
+            {
+              "check": "autograd DP vs enumeration",
+              "passed": true,
+              "max_absolute_error": 1.1102230246251565e-16,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.06594504195219304,
+                -0.13978830375866447,
+                0.2740582708283395
+              ],
+              "expected": [
+                -0.06594504195219299,
+                -0.13978830375866438,
+                0.2740582708283396
+              ]
+            },
+            {
+              "check": "adjoint chain vs enumeration",
+              "passed": true,
+              "max_absolute_error": 1.3877787807814457e-16,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.06594504195219304,
+                -0.13978830375866425,
+                0.2740582708283397
+              ],
+              "expected": [
+                -0.06594504195219299,
+                -0.13978830375866438,
+                0.2740582708283396
+              ]
+            },
+            {
+              "check": "block 0 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ],
+              "expected": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ]
+            },
+            {
+              "check": "block 3 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ],
+              "expected": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ]
+            },
+            {
+              "check": "block 6 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ],
+              "expected": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ]
+            },
+            {
+              "check": "block 9 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ],
+              "expected": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ]
+            },
+            {
+              "check": "block 12 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ],
+              "expected": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ]
+            },
+            {
+              "check": "block 15 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ],
+              "expected": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ]
+            },
+            {
+              "check": "block 18 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ],
+              "expected": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ]
+            },
+            {
+              "check": "block 21 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ],
+              "expected": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ]
+            },
+            {
+              "check": "block 24 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ],
+              "expected": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ]
+            },
+            {
+              "check": "block gradient",
+              "passed": true,
+              "max_absolute_error": 1.3877787807814457e-16,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.06594504195219301,
+                -0.13978830375866425,
+                0.2740582708283397
+              ],
+              "expected": [
+                -0.06594504195219299,
+                -0.13978830375866438,
+                0.2740582708283396
+              ]
+            },
+            {
+              "check": "unchanged variables",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.2,
+                -0.3,
+                0.4
+              ],
+              "expected": [
+                0.2,
+                -0.3,
+                0.4
+              ]
+            },
+            {
+              "check": "central step 0.0001",
+              "passed": true,
+              "max_absolute_error": 2.2775530905683183e-09,
+              "atol": 1e-07,
+              "rtol": 1e-05,
+              "actual": [
+                -0.06594504217027897,
+                -0.13978830272654008,
+                0.2740582731058927
+              ],
+              "expected": [
+                -0.06594504195219299,
+                -0.13978830375866438,
+                0.2740582708283396
+              ]
+            },
+            {
+              "check": "central step 1e-05",
+              "passed": true,
+              "max_absolute_error": 3.767813838706502e-11,
+              "atol": 1e-07,
+              "rtol": 1e-05,
+              "actual": [
+                -0.06594504194934458,
+                -0.13978830374350437,
+                0.27405827086601775
+              ],
+              "expected": [
+                -0.06594504195219299,
+                -0.13978830375866438,
+                0.2740582708283396
+              ]
+            },
+            {
+              "check": "central step 1e-06",
+              "passed": true,
+              "max_absolute_error": 1.7357790205174695e-10,
+              "atol": 1e-07,
+              "rtol": 1e-05,
+              "actual": [
+                -0.06594504181611782,
+                -0.13978830393224229,
+                0.2740582708549155
+              ],
+              "expected": [
+                -0.06594504195219299,
+                -0.13978830375866438,
+                0.2740582708283396
+              ]
+            }
+          ],
+          "parameters": [
+            0.2,
+            -0.3,
+            0.4
+          ],
+          "logits": [
+            0.20900000000000002,
+            -0.359,
+            0.6040000000000001,
+            0.20900000000000002,
+            -0.359,
+            0.6040000000000001,
+            0.20900000000000002,
+            -0.359,
+            0.6040000000000001,
+            0.20900000000000002,
+            -0.359,
+            0.6040000000000001,
+            0.20900000000000002,
+            -0.359,
+            0.6040000000000001,
+            0.20900000000000002,
+            -0.359,
+            0.6040000000000001,
+            0.20900000000000002,
+            -0.359,
+            0.6040000000000001,
+            0.20900000000000002,
+            -0.359,
+            0.6040000000000001,
+            0.20900000000000002,
+            -0.359
+          ]
+        }
+      ],
+      "special": []
+    },
+    {
+      "graph": {
+        "name": "three_fills_or_none",
+        "last_decision": 6,
+        "last_liquidation": 8,
+        "offers": {
+          "0": [
+            {
+              "name": "F",
+              "status": "FILLED",
+              "entry": 1,
+              "exit": 2,
+              "reward": 1
+            }
+          ],
+          "3": [
+            {
+              "name": "F",
+              "status": "FILLED",
+              "entry": 4,
+              "exit": 5,
+              "reward": 1
+            }
+          ],
+          "6": [
+            {
+              "name": "F",
+              "status": "FILLED",
+              "entry": 7,
+              "exit": 8,
+              "reward": 1
+            }
+          ]
+        },
+        "penalty": 3.0,
+        "start": 0
+      },
+      "policy": {
+        "(0, 0)": {
+          "WAIT": 0.45016600268752205,
+          "F": 0.5498339973124778
+        },
+        "(0, 1)": {
+          "WAIT": 0.4501660026875221,
+          "F": 0.549833997312478
+        },
+        "(1, 0)": {
+          "WAIT": 1.0
+        },
+        "(1, 1)": {
+          "WAIT": 1.0
+        },
+        "(2, 0)": {
+          "WAIT": 1.0
+        },
+        "(2, 1)": {
+          "WAIT": 1.0
+        },
+        "(3, 0)": {
+          "WAIT": 0.4501660026875221,
+          "F": 0.549833997312478
+        },
+        "(3, 1)": {
+          "WAIT": 0.4501660026875221,
+          "F": 0.549833997312478
+        },
+        "(4, 0)": {
+          "WAIT": 1.0
+        },
+        "(4, 1)": {
+          "WAIT": 1.0
+        },
+        "(5, 0)": {
+          "WAIT": 1.0
+        },
+        "(5, 1)": {
+          "WAIT": 1.0
+        },
+        "(6, 0)": {
+          "WAIT": 0.4501660026875221,
+          "F": 0.549833997312478
+        },
+        "(6, 1)": {
+          "WAIT": 0.4501660026875221,
+          "F": 0.549833997312478
+        }
+      },
+      "paths": 8,
+      "checks": [
+        {
+          "check": "DP objective",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 1.3758243404202875,
+          "expected": 1.3758243404202875
+        },
+        {
+          "check": "occupancy objective",
+          "passed": true,
+          "max_absolute_error": 2.220446049250313e-16,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 1.3758243404202872,
+          "expected": 1.3758243404202875
+        },
+        {
+          "check": "occupancy pnl",
+          "passed": true,
+          "max_absolute_error": 2.220446049250313e-16,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 1.6495019919374334,
+          "expected": 1.6495019919374336
+        },
+        {
+          "check": "occupancy no_fill",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 0.09122588383904874,
+          "expected": 0.09122588383904874
+        },
+        {
+          "check": "occupancy fills",
+          "passed": true,
+          "max_absolute_error": 2.220446049250313e-16,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 1.6495019919374334,
+          "expected": 1.6495019919374336
+        },
+        {
+          "check": "visits",
+          "passed": true,
+          "max_absolute_error": 1.1102230246251565e-16,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": [
+            1.0,
+            0.0,
+            0.45016600268752205,
+            0.0,
+            0.45016600268752205,
+            0.0,
+            0.45016600268752205,
+            0.5498339973124778,
+            0.20264942997566213,
+            0.24751657271185992,
+            0.20264942997566213,
+            0.24751657271185992,
+            0.20264942997566213,
+            0.7973505700243378
+          ],
+          "expected": [
+            1.0,
+            0.0,
+            0.45016600268752205,
+            0.0,
+            0.45016600268752205,
+            0.0,
+            0.45016600268752205,
+            0.5498339973124778,
+            0.20264942997566213,
+            0.24751657271185992,
+            0.20264942997566213,
+            0.24751657271185992,
+            0.20264942997566213,
+            0.7973505700243377
+          ]
+        },
+        {
+          "check": "branches",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": [
+            0.5498339973124778,
+            0.45016600268752205,
+            0.0,
+            0.0,
+            0.45016600268752205,
+            0.0,
+            0.45016600268752205,
+            0.0,
+            0.24751657271185995,
+            0.20264942997566213,
+            0.30231742460061795,
+            0.24751657271185992,
+            0.20264942997566213,
+            0.24751657271185992,
+            0.20264942997566213,
+            0.24751657271185992,
+            0.1114235461366134,
+            0.09122588383904874,
+            0.4384104511758645,
+            0.3589401188484734
+          ],
+          "expected": [
+            0.5498339973124778,
+            0.45016600268752205,
+            0.0,
+            0.0,
+            0.45016600268752205,
+            0.0,
+            0.45016600268752205,
+            0.0,
+            0.24751657271185995,
+            0.20264942997566213,
+            0.30231742460061795,
+            0.24751657271185992,
+            0.20264942997566213,
+            0.24751657271185992,
+            0.20264942997566213,
+            0.24751657271185992,
+            0.1114235461366134,
+            0.09122588383904874,
+            0.4384104511758645,
+            0.3589401188484734
+          ]
+        },
+        {
+          "check": "terminals",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": [
+            0.09122588383904874,
+            0.3589401188484734,
+            0.549833997312478
+          ],
+          "expected": [
+            0.09122588383904874,
+            0.3589401188484734,
+            0.549833997312478
+          ]
+        },
+        {
+          "check": "terminal mass",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 1.0,
+          "expected": 1.0
+        },
+        {
+          "check": "penalty separate",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 1.3758243404202875,
+          "expected": 1.3758243404202875
+        }
+      ],
+      "gradients": [
+        {
+          "mode": "independent_logits",
+          "checks": [
+            {
+              "check": "autograd DP vs enumeration",
+              "passed": true,
+              "max_absolute_error": 1.1102230246251565e-16,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.39799384982062364,
+                0.3979938498206238,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.2619008232453773,
+                0.2619008232453772,
+                -0.13609302657524655,
+                0.13609302657524652,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.2006363694783518,
+                0.20063636947835178,
+                -0.19735748034227202,
+                0.197357480342272
+              ],
+              "expected": [
+                -0.39799384982062364,
+                0.3979938498206238,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.2619008232453773,
+                0.2619008232453772,
+                -0.13609302657524658,
+                0.13609302657524647,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.2006363694783518,
+                0.20063636947835178,
+                -0.19735748034227205,
+                0.19735748034227188
+              ]
+            },
+            {
+              "check": "adjoint chain vs enumeration",
+              "passed": true,
+              "max_absolute_error": 1.1102230246251565e-16,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.39799384982062364,
+                0.3979938498206238,
+                -0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.2619008232453773,
+                0.2619008232453772,
+                -0.13609302657524655,
+                0.13609302657524652,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.2006363694783518,
+                0.2006363694783518,
+                -0.19735748034227202,
+                0.197357480342272
+              ],
+              "expected": [
+                -0.39799384982062364,
+                0.3979938498206238,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.2619008232453773,
+                0.2619008232453772,
+                -0.13609302657524658,
+                0.13609302657524647,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.2006363694783518,
+                0.20063636947835178,
+                -0.19735748034227205,
+                0.19735748034227188
+              ]
+            },
+            {
+              "check": "block 0 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4
+              ]
+            },
+            {
+              "check": "block 3 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4
+              ]
+            },
+            {
+              "check": "block 6 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4
+              ]
+            },
+            {
+              "check": "block 9 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4
+              ]
+            },
+            {
+              "check": "block 12 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4
+              ]
+            },
+            {
+              "check": "block 15 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4
+              ]
+            },
+            {
+              "check": "block 18 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4
+              ]
+            },
+            {
+              "check": "block gradient",
+              "passed": true,
+              "max_absolute_error": 1.1102230246251565e-16,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.39799384982062364,
+                0.3979938498206238,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.2619008232453773,
+                0.2619008232453772,
+                -0.13609302657524655,
+                0.13609302657524652,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.2006363694783518,
+                0.2006363694783518,
+                -0.19735748034227202,
+                0.197357480342272
+              ],
+              "expected": [
+                -0.39799384982062364,
+                0.3979938498206238,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.2619008232453773,
+                0.2619008232453772,
+                -0.13609302657524658,
+                0.13609302657524647,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.2006363694783518,
+                0.20063636947835178,
+                -0.19735748034227205,
+                0.19735748034227188
+              ]
+            },
+            {
+              "check": "unchanged variables",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4
+              ],
+              "expected": [
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4,
+                0.6,
+                -0.6,
+                -0.4,
+                -0.2,
+                0.0,
+                0.2,
+                0.4
+              ]
+            },
+            {
+              "check": "central step 0.0001",
+              "passed": true,
+              "max_absolute_error": 3.203904919146794e-10,
+              "atol": 1e-07,
+              "rtol": 1e-05,
+              "actual": [
+                -0.3979938495002333,
+                0.3979938495002333,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.26190082303312323,
+                0.26190082303312323,
+                -0.1360930264637794,
+                0.1360930264637794,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.20063636931522133,
+                0.20063636931522133,
+                -0.19735748017946086,
+                0.19735748017946086
+              ],
+              "expected": [
+                -0.39799384982062364,
+                0.3979938498206238,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.2619008232453773,
+                0.2619008232453772,
+                -0.13609302657524658,
+                0.13609302657524647,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.2006363694783518,
+                0.20063636947835178,
+                -0.19735748034227205,
+                0.19735748034227188
+              ]
+            },
+            {
+              "check": "central step 1e-05",
+              "passed": true,
+              "max_absolute_error": 1.0638323555411944e-11,
+              "atol": 1e-07,
+              "rtol": 1e-05,
+              "actual": [
+                -0.3979938498099855,
+                0.3979938498099855,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.26190082325072694,
+                0.26190082325072694,
+                -0.13609302657036082,
+                0.13609302657036082,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.20063636948508543,
+                0.20063636948508543,
+                -0.19735748033600228,
+                0.19735748033600228
+              ],
+              "expected": [
+                -0.39799384982062364,
+                0.3979938498206238,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.2619008232453773,
+                0.2619008232453772,
+                -0.13609302657524658,
+                0.13609302657524647,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.2006363694783518,
+                0.20063636947835178,
+                -0.19735748034227205,
+                0.19735748034227188
+              ]
+            },
+            {
+              "check": "central step 1e-06",
+              "passed": true,
+              "max_absolute_error": 1.6699758242921803e-10,
+              "atol": 1e-07,
+              "rtol": 1e-05,
+              "actual": [
+                -0.3979938499876212,
+                0.3979938499876212,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.26190082336174925,
+                0.26190082336174925,
+                -0.13609302651484967,
+                0.13609302651484967,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.20063636951839214,
+                0.20063636951839214,
+                -0.19735748024718447,
+                0.19735748024718447
+              ],
+              "expected": [
+                -0.39799384982062364,
+                0.3979938498206238,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.2619008232453773,
+                0.2619008232453772,
+                -0.13609302657524658,
+                0.13609302657524647,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                -0.2006363694783518,
+                0.20063636947835178,
+                -0.19735748034227205,
+                0.19735748034227188
+              ]
+            }
+          ],
+          "parameters": [
+            -0.6,
+            -0.4,
+            -0.2,
+            0.0,
+            0.2,
+            0.4,
+            0.6,
+            -0.6,
+            -0.4,
+            -0.2,
+            0.0,
+            0.2,
+            0.4,
+            0.6,
+            -0.6,
+            -0.4,
+            -0.2,
+            0.0,
+            0.2,
+            0.4
+          ],
+          "logits": [
+            -0.6,
+            -0.4,
+            -0.2,
+            0.0,
+            0.2,
+            0.4,
+            0.6,
+            -0.6,
+            -0.4,
+            -0.2,
+            0.0,
+            0.2,
+            0.4,
+            0.6,
+            -0.6,
+            -0.4,
+            -0.2,
+            0.0,
+            0.2,
+            0.4
+          ]
+        },
+        {
+          "mode": "shared_algebraic",
+          "checks": [
+            {
+              "check": "autograd DP vs enumeration",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.28099142444102615,
+                0.18585489104224917,
+                0.23905369844519875
+              ],
+              "expected": [
+                -0.28099142444102615,
+                0.18585489104224917,
+                0.23905369844519875
+              ]
+            },
+            {
+              "check": "adjoint chain vs enumeration",
+              "passed": true,
+              "max_absolute_error": 5.551115123125783e-17,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.2809914244410261,
+                0.18585489104224912,
+                0.23905369844519875
+              ],
+              "expected": [
+                -0.28099142444102615,
+                0.18585489104224917,
+                0.23905369844519875
+              ]
+            },
+            {
+              "check": "block 0 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ],
+              "expected": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ]
+            },
+            {
+              "check": "block 3 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ],
+              "expected": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ]
+            },
+            {
+              "check": "block 6 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ],
+              "expected": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ]
+            },
+            {
+              "check": "block 9 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ],
+              "expected": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ]
+            },
+            {
+              "check": "block 12 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ],
+              "expected": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ]
+            },
+            {
+              "check": "block 15 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ],
+              "expected": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ]
+            },
+            {
+              "check": "block 18 logits",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ],
+              "expected": [
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359,
+                0.6040000000000001,
+                0.20900000000000002,
+                -0.359
+              ]
+            },
+            {
+              "check": "block gradient",
+              "passed": true,
+              "max_absolute_error": 5.551115123125783e-17,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                -0.2809914244410261,
+                0.18585489104224917,
+                0.23905369844519872
+              ],
+              "expected": [
+                -0.28099142444102615,
+                0.18585489104224917,
+                0.23905369844519875
+              ]
+            },
+            {
+              "check": "unchanged variables",
+              "passed": true,
+              "max_absolute_error": 0.0,
+              "atol": 1e-10,
+              "rtol": 1e-09,
+              "actual": [
+                0.2,
+                -0.3,
+                0.4
+              ],
+              "expected": [
+                0.2,
+                -0.3,
+                0.4
+              ]
+            },
+            {
+              "check": "central step 0.0001",
+              "passed": true,
+              "max_absolute_error": 1.0145964068897229e-09,
+              "atol": 1e-07,
+              "rtol": 1e-05,
+              "actual": [
+                -0.2809914246593159,
+                0.185854891008308,
+                0.23905369743060234
+              ],
+              "expected": [
+                -0.28099142444102615,
+                0.18585489104224917,
+                0.23905369844519875
+              ]
+            },
+            {
+              "check": "central step 1e-05",
+              "passed": true,
+              "max_absolute_error": 1.3470086157596484e-11,
+              "atol": 1e-07,
+              "rtol": 1e-05,
+              "actual": [
+                -0.28099142442838954,
+                0.1858548910438351,
+                0.23905369845866883
+              ],
+              "expected": [
+                -0.28099142444102615,
+                0.18585489104224917,
+                0.23905369844519875
+              ]
+            },
+            {
+              "check": "central step 1e-06",
+              "passed": true,
+              "max_absolute_error": 9.035222570119572e-11,
+              "atol": 1e-07,
+              "rtol": 1e-05,
+              "actual": [
+                -0.2809914243506739,
+                0.1858548910327329,
+                0.23905369850307778
+              ],
+              "expected": [
+                -0.28099142444102615,
+                0.18585489104224917,
+                0.23905369844519875
+              ]
+            }
+          ],
+          "parameters": [
+            0.2,
+            -0.3,
+            0.4
+          ],
+          "logits": [
+            0.20900000000000002,
+            -0.359,
+            0.6040000000000001,
+            0.20900000000000002,
+            -0.359,
+            0.6040000000000001,
+            0.20900000000000002,
+            -0.359,
+            0.6040000000000001,
+            0.20900000000000002,
+            -0.359,
+            0.6040000000000001,
+            0.20900000000000002,
+            -0.359,
+            0.6040000000000001,
+            0.20900000000000002,
+            -0.359,
+            0.6040000000000001,
+            0.20900000000000002,
+            -0.359
+          ]
+        }
+      ],
+      "special": [
+        {
+          "check": "DP objective",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 0.0,
+          "expected": 0.0
+        },
+        {
+          "check": "occupancy objective",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 0.0,
+          "expected": 0.0
+        },
+        {
+          "check": "occupancy pnl",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 1.5,
+          "expected": 1.5
+        },
+        {
+          "check": "occupancy no_fill",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 0.5,
+          "expected": 0.5
+        },
+        {
+          "check": "occupancy fills",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 1.5,
+          "expected": 1.5
+        },
+        {
+          "check": "visits",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": [
+            1.0,
+            0.0,
+            0.5,
+            0.0,
+            0.5,
+            0.0,
+            0.5,
+            0.5,
+            0.5,
+            0.0,
+            0.5,
+            0.0,
+            0.5,
+            0.5
+          ],
+          "expected": [
+            1.0,
+            0.0,
+            0.5,
+            0.0,
+            0.5,
+            0.0,
+            0.5,
+            0.5,
+            0.5,
+            0.0,
+            0.5,
+            0.0,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "check": "branches",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": [
+            0.5,
+            0.5,
+            0.0,
+            0.0,
+            0.5,
+            0.0,
+            0.5,
+            0.0,
+            0.0,
+            0.5,
+            0.5,
+            0.0,
+            0.5,
+            0.0,
+            0.5,
+            0.0,
+            0.0,
+            0.5,
+            0.5,
+            0.0
+          ],
+          "expected": [
+            0.5,
+            0.5,
+            0.0,
+            0.0,
+            0.5,
+            0.0,
+            0.5,
+            0.0,
+            0.0,
+            0.5,
+            0.5,
+            0.0,
+            0.5,
+            0.0,
+            0.5,
+            0.0,
+            0.0,
+            0.5,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "check": "terminals",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": [
+            0.5,
+            0.0,
+            0.5
+          ],
+          "expected": [
+            0.5,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "check": "terminal mass",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 1.0,
+          "expected": 1.0
+        },
+        {
+          "check": "penalty separate",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 0.0,
+          "expected": 0.0
+        },
+        {
+          "check": "expected fills",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 1.5,
+          "expected": 1.5
+        },
+        {
+          "check": "positive no fill",
+          "passed": true,
+          "max_absolute_error": 0.0,
+          "atol": 1e-10,
+          "rtol": 1e-09,
+          "actual": 0.5,
+          "expected": 0.5
+        }
+      ]
+    }
+  ],
+  "cardinality": [
+    {
+      "check": "N=1 attempt",
+      "passed": true,
+      "max_absolute_error": 0.0,
+      "atol": 1e-10,
+      "rtol": 1e-09,
+      "actual": 0.5,
+      "expected": 0.5
+    },
+    {
+      "check": "N=1 no fill",
+      "passed": true,
+      "max_absolute_error": 0.0,
+      "atol": 1e-10,
+      "rtol": 1e-09,
+      "actual": 1.0,
+      "expected": 1.0
+    },
+    {
+      "check": "N=2 attempt",
+      "passed": true,
+      "max_absolute_error": 1.1102230246251565e-16,
+      "atol": 1e-10,
+      "rtol": 1e-09,
+      "actual": 0.6666666666666667,
+      "expected": 0.6666666666666666
+    },
+    {
+      "check": "N=2 no fill",
+      "passed": true,
+      "max_absolute_error": 0.0,
+      "atol": 1e-10,
+      "rtol": 1e-09,
+      "actual": 1.0,
+      "expected": 1.0
+    },
+    {
+      "check": "N=3 attempt",
+      "passed": true,
+      "max_absolute_error": 0.0,
+      "atol": 1e-10,
+      "rtol": 1e-09,
+      "actual": 0.75,
+      "expected": 0.75
+    },
+    {
+      "check": "N=3 no fill",
+      "passed": true,
+      "max_absolute_error": 0.0,
+      "atol": 1e-10,
+      "rtol": 1e-09,
+      "actual": 1.0,
+      "expected": 1.0
+    }
+  ],
+  "checks": 204,
+  "failed": [],
+  "max_absolute_error": 2.7018631776343227e-09,
+  "scope": "Artificial exogenous graphs only; no market or profitability evidence"
+}

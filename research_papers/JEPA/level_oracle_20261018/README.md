@@ -16,6 +16,10 @@ mensual y OOF siguen pendientes según el registro de continuación.
 La [interpretación del fallo TCN](TCN_FAILURE_INTERPRETATION_20261023.md)
 distingue inactividad, pérdidas y mejora del ajuste TRAIN, y delimita las
 hipótesis pendientes sin atribuir una causa económica demostrada.
+El [laboratorio matemático del actor de sesión](EXACT_SESSION_ACTOR_MATH_VALIDATION_RESULT_20261023.md)
+y su [revisión independiente](SESSION_ACTOR_MATH_VALIDATION_REVIEW_20261023.md)
+comprueban identidades en grafos artificiales. No constituyen entrenamiento
+ni evidencia económica de una estrategia nueva.
 
 ## Cierre documental conservado del18 de octubre de2026
 

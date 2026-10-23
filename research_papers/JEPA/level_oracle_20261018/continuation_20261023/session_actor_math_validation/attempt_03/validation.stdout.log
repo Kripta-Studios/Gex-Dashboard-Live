@@ -1,0 +1,1 @@
+{"status": "PASS_ARTIFICIAL_MATH_IDENTITIES", "checks": 204, "failed": [], "max_absolute_error": 2.7018631776343227e-09, "scope": "Artificial exogenous graphs only; no market or profitability evidence"}

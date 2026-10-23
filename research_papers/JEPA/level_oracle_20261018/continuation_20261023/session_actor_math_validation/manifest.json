@@ -1,0 +1,185 @@
+{
+  "scope": "Artificial math only; exact copies of all four author attempts",
+  "files": [
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_math_validation_20261023_01\\attempt.json",
+      "copy": "attempt_01/attempt.json",
+      "bytes": 1347,
+      "sha256": "29f5c57d807a56df40554c5a5439b8f5e0329fabd3d78fd48987dc719cf52546"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_math_validation_20261023_01\\ruff.stderr.log",
+      "copy": "attempt_01/ruff.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_math_validation_20261023_01\\ruff.stdout.log",
+      "copy": "attempt_01/ruff.stdout.log",
+      "bytes": 266,
+      "sha256": "b6601f5cf310f0302cb712403d8337a0a3f74fb6cf092172b3dcb7079775096c"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_math_validation_20261023_02\\attempt.json",
+      "copy": "attempt_02/attempt.json",
+      "bytes": 2219,
+      "sha256": "c22158d3e43336b70662e8b025fd12d5eb1e8743de75010639460489867311b1"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_math_validation_20261023_02\\pytest.stderr.log",
+      "copy": "attempt_02/pytest.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_math_validation_20261023_02\\pytest.stdout.log",
+      "copy": "attempt_02/pytest.stdout.log",
+      "bytes": 101,
+      "sha256": "c8f973a32abfa2b30bc42669286006df15abe2f1f9f2b23d051b0848d9c0e489"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_math_validation_20261023_02\\ruff.stderr.log",
+      "copy": "attempt_02/ruff.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_math_validation_20261023_02\\ruff.stdout.log",
+      "copy": "attempt_02/ruff.stdout.log",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_math_validation_20261023_02\\validation\\receipt.json",
+      "copy": "attempt_02/validation/receipt.json",
+      "bytes": 660,
+      "sha256": "538a5a574c0506c6c907d3622c0dddf2c2da62a4c390145048c9e868c4692ec7"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_math_validation_20261023_02\\validation\\result.json",
+      "copy": "attempt_02/validation/result.json",
+      "bytes": 169436,
+      "sha256": "86b9f28141c1e0e6389311c94c255ed2a60c1b52b249724e877d52657a7582b0"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_math_validation_20261023_02\\validation.stderr.log",
+      "copy": "attempt_02/validation.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_math_validation_20261023_02\\validation.stdout.log",
+      "copy": "attempt_02/validation.stdout.log",
+      "bytes": 204,
+      "sha256": "6a8f9438253f30a006250db5cdf4f02eb6ecd639a0bfd84a918721e7edd66080"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_math_validation_20261023_03\\attempt.json",
+      "copy": "attempt_03/attempt.json",
+      "bytes": 2219,
+      "sha256": "68635320d5de293cb75846500ea09764ae4d363f3f2a5d7d49e7adab1c01083f"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_math_validation_20261023_03\\pytest.stderr.log",
+      "copy": "attempt_03/pytest.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_math_validation_20261023_03\\pytest.stdout.log",
+      "copy": "attempt_03/pytest.stdout.log",
+      "bytes": 101,
+      "sha256": "302771c4547d88ea164462f4431db0855d7c01f95cf634f522a3030799db80bc"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_math_validation_20261023_03\\ruff.stderr.log",
+      "copy": "attempt_03/ruff.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_math_validation_20261023_03\\ruff.stdout.log",
+      "copy": "attempt_03/ruff.stdout.log",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_math_validation_20261023_03\\validation\\receipt.json",
+      "copy": "attempt_03/validation/receipt.json",
+      "bytes": 660,
+      "sha256": "eccdb64a1eb51bb83493c4d04e36553987758a29bc351986937e3d0d09f22ca6"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_math_validation_20261023_03\\validation\\result.json",
+      "copy": "attempt_03/validation/result.json",
+      "bytes": 169436,
+      "sha256": "86b9f28141c1e0e6389311c94c255ed2a60c1b52b249724e877d52657a7582b0"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_math_validation_20261023_03\\validation.stderr.log",
+      "copy": "attempt_03/validation.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_math_validation_20261023_03\\validation.stdout.log",
+      "copy": "attempt_03/validation.stdout.log",
+      "bytes": 204,
+      "sha256": "6a8f9438253f30a006250db5cdf4f02eb6ecd639a0bfd84a918721e7edd66080"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_math_validation_20261023_04\\attempt.json",
+      "copy": "attempt_04/attempt.json",
+      "bytes": 2218,
+      "sha256": "25baad3dcbfccf80492e632d99ea1798ac6aae2c7ba008bce3fe4325d9ddb619"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_math_validation_20261023_04\\pytest.stderr.log",
+      "copy": "attempt_04/pytest.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_math_validation_20261023_04\\pytest.stdout.log",
+      "copy": "attempt_04/pytest.stdout.log",
+      "bytes": 101,
+      "sha256": "4c1ae46051196b6f07a6235c1ec085b4285843c4465cc946d87aa37b0c716137"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_math_validation_20261023_04\\ruff.stderr.log",
+      "copy": "attempt_04/ruff.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_math_validation_20261023_04\\ruff.stdout.log",
+      "copy": "attempt_04/ruff.stdout.log",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_math_validation_20261023_04\\validation\\receipt.json",
+      "copy": "attempt_04/validation/receipt.json",
+      "bytes": 660,
+      "sha256": "47a5a169a87d68eac4663eb99dce5a752095b5c771b6a2abf6975e2bd45f8038"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_math_validation_20261023_04\\validation\\result.json",
+      "copy": "attempt_04/validation/result.json",
+      "bytes": 169436,
+      "sha256": "86b9f28141c1e0e6389311c94c255ed2a60c1b52b249724e877d52657a7582b0"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_math_validation_20261023_04\\validation.stderr.log",
+      "copy": "attempt_04/validation.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_math_validation_20261023_04\\validation.stdout.log",
+      "copy": "attempt_04/validation.stdout.log",
+      "bytes": 204,
+      "sha256": "6a8f9438253f30a006250db5cdf4f02eb6ecd639a0bfd84a918721e7edd66080"
+    }
+  ]
+}
