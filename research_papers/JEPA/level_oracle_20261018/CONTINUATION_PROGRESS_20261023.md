@@ -1,15 +1,17 @@
 # Continuación local: estado del 23 de octubre de 2026
 
-Actualización: 23 de octubre, después del cierre TCN de las 20:24 UTC. Investigación activa
+Actualización: 23 de octubre, 20:34 UTC. Investigación activa
 por orden del usuario. Base publicada anterior: `acb2a726`; preparación y código
-nuevos publicados hasta `2f5d6fc8`, incluyendo los auditores mensual 2026 y OOF.
+nuevos publicados hasta `7a2c5abd`, incluyendo los auditores mensual 2026 y OOF,
+el resultado TCN completo y sus 55 copias de evidencia.
 Este registro incorpora el resultado TCN auditado; las otras líneas siguen abiertas.
 
 ## Ejecuciones observadas
 
 - Comparación fija griegas 424 frente a compacto 152: launcher PID 34788,
   productor PID 19696. Su contador llegó a 750/750 ticker-días de 2025;
-  aún no se afirma cierre global ni auditoría nueva. Logs y recibos:
+  después del freeze ya procesa 2026, con contador 200/369. Aún no se afirma
+  cierre global ni auditoría nueva. Logs y recibos:
   `D:/GexResearchArtifacts/level_oracle_20261018/common_greek_comparison_v1_launch`.
   No se reentrena ninguno de los dos modelos ni se selecciona por resultados
   parciales. El supervisor `common_greek_resume` espera el cierre antes de
@@ -72,8 +74,10 @@ deben tomarse de los recibos de runtime al cerrar.
 - Auditor mensual 2026: implementación y revisión independiente publicadas en
   `35dcb714`. Autor: 30 pruebas PASS; revisión: 20 pruebas focales PASS, sin repetir
   la integración completa. Sólo implementación; runtime todavía no autorizado por
-  su review. Se prepara por separado el wrapper operativo de test, dependiente del
-  cierre auditado de 2025 y freeze. Productor y auditor 2025 intactos.
+  su review. El wrapper operativo de test tiene 34 pruebas sintéticas PASS del
+  autor y 11 focales independientes PASS; revisión de implementación conforme,
+  17 hashes comprobados por root sin diferencias. Su runtime depende del cierre
+  auditado de 2025, freeze y exit 0 observado. Productor y auditor 2025 intactos.
 - Auditor económico OOF: publicado en `2f5d6fc8`, 35 pruebas del autor y 14 focales
   independientes PASS. Revisión limitada a implementación sobre scores sellados;
   falta la auditoría mensual compuesta y la petición concreta de ejecución. No se
