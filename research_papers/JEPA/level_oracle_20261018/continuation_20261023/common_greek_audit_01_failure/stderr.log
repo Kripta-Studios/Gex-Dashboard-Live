@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\level_oracle_20261018\audit_common_greek_comparison.py", line 487, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\level_oracle_20261018\audit_common_greek_comparison.py", line 361, in main
+    require(baseline_rel in baseline_manifest["files"], "Baseline score absent")
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\level_oracle_20261018\audit_common_greek_comparison.py", line 27, in require
+    raise AssertionError(message)
+AssertionError: Baseline score absent

@@ -1,0 +1,41 @@
+{
+  "status": "PRESERVED_FAILED_AUDIT_ATTEMPT_01",
+  "created_utc": "2026-10-23T20:50:49.374641+00:00",
+  "source_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\common_greek_comparison_v1_economic_audit_01_logs",
+  "scope": "Exact byte copies of the failed technical audit receipts/logs only; no market reevaluation or retry",
+  "files": [
+    {
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\common_greek_comparison_v1_economic_audit_01_logs\\admission.json",
+      "archived": "admission.json",
+      "size_bytes": 1183,
+      "sha256": "4c4c28e7d304a076f095ce9d34acec32ffa8bbafe7d310e1a3a91b0d4c8decf3"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\common_greek_comparison_v1_economic_audit_01_logs\\process.json",
+      "archived": "process.json",
+      "size_bytes": 1483,
+      "sha256": "cdc103a175ed4f2c68b22ae7101b36eff214a12fea338e039e927b12d579ebd4"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\common_greek_comparison_v1_economic_audit_01_logs\\exit.json",
+      "archived": "exit.json",
+      "size_bytes": 359,
+      "sha256": "75cc7aceaf19475ee6c8701f21391651f31e8ec13ca61d791e597c6422770233"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\common_greek_comparison_v1_economic_audit_01_logs\\stderr.log",
+      "archived": "stderr.log",
+      "size_bytes": 820,
+      "sha256": "7beab18b4505afdf6eb605d7f6d5ca1d8e59ba2f3573eeddacd07b8247d907b0"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\common_greek_comparison_v1_economic_audit_01_logs\\stdout.log",
+      "archived": "stdout.log",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "source_and_copy_rehash": "PASS",
+  "economic_audit_pass": false,
+  "retry_executed": false
+}

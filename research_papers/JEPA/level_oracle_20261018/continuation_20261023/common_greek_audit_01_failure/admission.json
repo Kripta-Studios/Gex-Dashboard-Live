@@ -1,0 +1,19 @@
+{
+  "utc": "2026-10-23T20:47:42.054668+00:00",
+  "gate_bytes": 2000000000,
+  "available_ram_bytes": 10750095360,
+  "free_commit_bytes": 13964713984,
+  "pins": {
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\audit_common_greek_comparison.py": "3898ef3c8ae634a65a2a136c75f2e14a46d5ac6fcad4bcc28bdb77742f3dca70",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\COMMON_GREEK_COMPARISON_IMPLEMENTATION_REVIEW.json": "6270e38baa5fded3fd0a12d5b16b7969347e3a43b6c1cc068b95783c7efbb540",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\common_greek_comparison_v1\\completion.json": "40cfdf576885eecd10785946687e5cf87cce228c1483e3ddd43cbd911207c824",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\common_greek_comparison_v1\\comparison.complete.json": "ad916c5695e165693c9843d206329732dde1d9149fc8ee0f9354818caf399d6d"
+  },
+  "environment_threads": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "no_fit": true,
+  "no_prediction_inference": true
+}

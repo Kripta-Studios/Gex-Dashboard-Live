@@ -13,6 +13,8 @@ actividad diaria. Se conservan [55 artefactos con hashes](continuation_20261023/
 y el desglose de todos los meses y tickers. La auditoría reproduce economía
 sobre scores sellados; no repite entrenamiento o inferencia. Las líneas Greeks,
 mensual y OOF siguen pendientes según el registro de continuación.
+El [primer auditor Greeks se detuvo por el formato de rutas Windows](COMMON_GREEK_AUDIT_01_TECHNICAL_FAILURE_20261023.md).
+Su fallo y recibos se preservan; no acredita todavía los resultados del productor.
 La [interpretación del fallo TCN](TCN_FAILURE_INTERPRETATION_20261023.md)
 distingue inactividad, pérdidas y mejora del ajuste TRAIN, y delimita las
 hipótesis pendientes sin atribuir una causa económica demostrada.

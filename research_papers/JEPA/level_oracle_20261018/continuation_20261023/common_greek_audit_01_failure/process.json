@@ -1,0 +1,29 @@
+{
+  "pid": 43828,
+  "creation_time": 1792788462.056281,
+  "wrapper_pid": 50536,
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\audit_common_greek_comparison.py",
+    "--root",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\common_greek_comparison_v1",
+    "--session-root",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_clock_dataset_v1",
+    "--session-audit",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_clock_dataset_v1_audit\\audit.json",
+    "--baseline-root",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\market_cue_comparison_v1",
+    "--baseline-audit",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\market_cue_comparison_v1_economic_audit_v3\\audit.json",
+    "--cue-root",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\market_cue_control_v1",
+    "--greek-root",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\common_greek_control_resource_v1",
+    "--review",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\COMMON_GREEK_COMPARISON_IMPLEMENTATION_REVIEW.json",
+    "--output",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\common_greek_comparison_v1_economic_audit_01"
+  ],
+  "started_utc": "2026-10-23T20:47:42.061087+00:00"
+}
