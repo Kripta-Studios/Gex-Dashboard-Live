@@ -1,8 +1,8 @@
 # Continuación local: estado del 23 de octubre de 2026
 
-Actualización: 23 de octubre, después del cierre de auditoría 02 a las 21:15 UTC. Investigación activa
+Actualización: 23 de octubre, después de revisar el lanzador mensual test a las 21:46 UTC. Investigación activa
 por orden del usuario. Base publicada anterior: `acb2a726`; preparación y código
-nuevos publicados hasta `78096314`, incluyendo los lanzadores revisados mensual y OOF,
+nuevos publicados previamente hasta `606d60c8`, incluyendo los lanzadores revisados mensual y OOF,
 el resultado TCN completo y sus 55 copias de evidencia.
 Este registro incorpora los resultados TCN y Greeks auditados; mensual y OOF siguen abiertos.
 
@@ -48,11 +48,12 @@ Este registro incorpora los resultados TCN y Greeks auditados; mensual y OOF sig
   base en H1. Ninguna de las dos políticas acredita el objetivo conjunto.
 - Validación mensual: wrapper PID 11852, iniciado a las 19:34:13 UTC desde
   `1e1f689e`, sólo `stage validation`. Ya publicó su nuevo `launch.json`;
-  tiene doce modelos completos de los 24 previstos para validación. Root y el
+  tiene catorce modelos completos de los 24 previstos para validación. Root y el
   observador rehashearon sus modelos y recibos, sin diferencias. Los tres originales
   permanecen intactos; los nuevos cierres ocurrieron a las 19:59:06, 20:13:35 y
   20:20:05 UTC, seguidos por los dos ajustes de abril y los dos de mayo. El ajuste
-  expanding para junio cerró a las 21:14:36 UTC y rolling a las 21:17:37 UTC. Todavía no hay cierre anual
+  expanding para junio cerró a las 21:14:36 UTC y rolling a las 21:17:37 UTC;
+  los dos ajustes para julio cerraron a las 21:27:33 y 21:31:44 UTC. Todavía no hay cierre anual
   ni evaluación mensual 2026.
   Runtime: `D:/GexResearchArtifacts/level_oracle_20261018/monthly_resource_overlay_resume_20261023_01`.
   Logs y recibo de proceso en el directorio hermano
@@ -102,7 +103,7 @@ causa. Antes de la auditoría nueva se volvió a comprobar el gate.
 
 - Productor y auditor griegas: 20 pruebas sintéticas PASS antes del lanzamiento.
 - Recuperación mensual: 6.084 checkpoints rehasheados, cero ausencias o cambios;
-  tres modelos anteriores conservados y nueve nuevos completos. Quedan 12 fits
+  tres modelos anteriores conservados y once nuevos completos. Quedan diez fits
   de validación; el cierre y auditoría anual siguen pendientes.
 - OOF: se completó el rerun pendiente de 23 pruebas, todas PASS. No hubo
   calibración real; el informe separado conserva las autoridades antiguas.
@@ -125,6 +126,17 @@ causa. Antes de la auditoría nueva se volvió a comprobar el gate.
   autor y 11 focales independientes PASS; revisión de implementación conforme,
   17 hashes comprobados por root sin diferencias. Su runtime depende del cierre
   auditado de 2025, freeze y exit 0 observado. Productor y auditor 2025 intactos.
+- Lanzador mensual test: [implementación](MONTHLY_TEST_LAUNCH_IMPLEMENTATION_RESULT_20261023.md)
+  y [revisión independiente](MONTHLY_TEST_LAUNCH_IMPLEMENTATION_REVIEW_20261023.md)
+  terminadas, 29 pruebas del autor y 16 focales independientes PASS. Root leyó
+  el código final y verificó 20 bindings sin diferencias. Review JSON SHA
+  `6d9713b14adf9941980696bdd6ab1aae110a787f1a61ff4ba36b3ba88e998d22`.
+  Corrige rutas equivalentes, conservación del proceso ante fallos del monitor,
+  referencia a la revisión del propio lanzador y hash del código de observación.
+  Por defecto sólo comprueba; exige binding real publicado, audit 2025 y SHA
+  externos, commit exacto, roots nuevos y gate de recursos antes de un único hijo.
+  El wrapper científico permanece intacto. No se ha creado el binding real ni
+  iniciado test 2026: faltan el cierre/exit 0 y la auditoría de validación 2025.
 - Auditor económico OOF: publicado en `2f5d6fc8`, 35 pruebas del autor y 14 focales
   independientes PASS. Revisión limitada a implementación sobre scores sellados;
   falta la auditoría mensual compuesta y la petición concreta de ejecución. No se
