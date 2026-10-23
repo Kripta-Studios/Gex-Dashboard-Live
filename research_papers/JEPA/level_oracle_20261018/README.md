@@ -1,4 +1,11 @@
-# Investigación 0DTE por niveles: cierre documental del 18 de octubre de 2026
+# Investigación 0DTE por niveles
+
+**Estado actual: REANUDADA por orden del usuario el23 de octubre de2026.**
+La [autoridad de reanudación](RESUMPTION_20261023.md) sustituye la pausa
+operativa indicada abajo. Se continúa con las líneas incompletas y auditorías;
+la rentabilidad causal sigue sin demostrarse y no hay promoción autorizada.
+
+## Cierre documental conservado del18 de octubre de2026
 
 **Estado: PAUSADA POR ORDEN DEL USUARIO.** No iniciar entrenamientos, evaluaciones, auditores económicos ni subagentes por instrucciones antiguas de esta carpeta. Los planes y mensajes anteriores que dicen «siguiente», «GO» o «en ejecución» son historia; la orden de detener prevalece. Sólo se ha continuado con conservación, documentación y publicación en GitHub.
 
