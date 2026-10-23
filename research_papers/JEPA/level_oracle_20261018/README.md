@@ -22,6 +22,9 @@ El [laboratorio matemático del actor de sesión](EXACT_SESSION_ACTOR_MATH_VALID
 y su [revisión independiente](SESSION_ACTOR_MATH_VALIDATION_REVIEW_20261023.md)
 comprueban identidades en grafos artificiales. No constituyen entrenamiento
 ni evidencia económica de una estrategia nueva.
+La [factibilidad de sus datos](SESSION_ACTOR_DATA_FEASIBILITY_20261023.md)
+identifica el soporte completo necesario, las diferencias de reloj y los costes
+estimados; todavía no configura ni activa ese experimento.
 
 ## Cierre documental conservado del18 de octubre de2026
 
