@@ -1,0 +1,65 @@
+{
+  "authorized_scope": "IMPLEMENTATION_ONLY",
+  "dependencies": {
+    "MONTHLY_WALK_FORWARD_PLAN.md": "71ccd29587be4012dad9fe3ada4ad29ff7b93b94ea08340343ebe39d287c97ae",
+    "TCN_ROW_MIXED_CALENDAR_SPEC.md": "c868cb093281de0c31eb2e0d63a11d78c762ab57b41a5688393ae145445cb80f",
+    "build_cache.py": "985e87dcbd1e73289b58e4576445e47e73a6edea13e5ac73dde3ad629180d69f",
+    "causal_rollout.py": "8df92119071442045a8434057e220bad567668d8ee314fddd263d052ebeea0d9",
+    "evaluate_tcn_flags_compat.py": "97836bb5a9a0364cf24888f55db0c1784268ed64575b71c4c76e1c03141d9aaf",
+    "evaluate_tcn_row_mixed.py": "870a5815f343735f299fb63066899df29d56c62219c21fa7ad7197188732af30",
+    "evaluate_tcn_row_mixed_calendar.py": "a6c68f4ef7486b538b8119b5dfdb035b3dc078bae274c6aa10cc922f6596b33c",
+    "features.py": "b5c63f918319f844793abb3346a34515526073374f5e71af2129a94f2369d4e0",
+    "level_engine.py": "70cc5d20990d971d16299fd008ff8e05ac99f99a6a2917a202fcb9a5f413b7c6",
+    "monthly_policy_selection.py": "1fe43fa92fe0441be35bc67c9a2a60ce2829edaf9ea80f5fa0a5c8967a599da0",
+    "rolling_monthly_schedule.py": "92df2e68734d24a61b4ddccec1f9451a5e25c862f5a1b581ae779c163fcf205a",
+    "rollout_sampling.py": "8bc8cee2b89cf70490793b88d74dff558bbd60077d383a852392fcc2383c748c",
+    "run_monthly_walk_forward.py": "47a4df8b019d9d297ca1ee9b89fff63406409659336dbd7b0e4d7af01ed348bb",
+    "run_policy.py": "4455d31fa2fd69db289b35b77aab62a344607fe3dc1b86918cbd3ec5c7cf98d9",
+    "run_tcn_flags.py": "a76a3ee78b74568a77ad06bc85c3092dee606648c6b6ed54ad38818496ae06e5",
+    "session_clock.py": "1e63cf2d314caea14dd8b0b8f025f647d67bf8df58f246613975891a256f51e9",
+    "test_evaluate_tcn_row_mixed_calendar.py": "e77988a576b8de20c424482a2d591f0ed7b8281e9f78b954ba209af61abd005d",
+    "train_causal_rollout.py": "d031eca08c71ad89324619e096dcc9be3966ddea23d52061019018ff6ff58a43",
+    "train_models.py": "a5192737abd1c0b3e4a6a6cd391117d97a014c06b6cd528201ba1f5df0ef6808"
+  },
+  "economic_audit_state": "NOT_EXECUTED",
+  "emission_authorized_by": "/root",
+  "emitted_by": "/root/tcn_completion",
+  "execution_authorized": false,
+  "fixes": [
+    "Reject full control copies with different dtype, shape or numeric bytes, including signed zero.",
+    "Seal all external source inputs and verify them on completed resume, including short-session features."
+  ],
+  "frozen_helpers_modified": false,
+  "independent_validation": {
+    "available_commit_bytes": 7943077888,
+    "available_ram_bytes": 4224733184,
+    "elapsed_seconds": 17.26,
+    "reviewer": "/root/scientific_review",
+    "scope": "Diff, Sources/Features, frozen control adapter, selector, scheduler and finish.",
+    "status": "CLEAR",
+    "synthetic_tests_passed": 15
+  },
+  "market_evaluation_executed": false,
+  "producer_validation": {
+    "available_commit_bytes": 7221628928,
+    "available_ram_bytes": 3936198656,
+    "compile": "PASS",
+    "diff_check": "PASS",
+    "elapsed_seconds": 9.91,
+    "ruff": "PASS",
+    "synthetic_tests_passed": 15
+  },
+  "promotion_approved": false,
+  "remaining_before_execution": [
+    "Complete and independently review the new economic auditor.",
+    "Root coordinates launch and verifies resources and absence of a duplicate process."
+  ],
+  "reviewed_at_utc": "2026-10-23T19:30:51.850687+00:00",
+  "reviewer": "/root/scientific_review",
+  "status": "PASS_TCN_ROW_MIXED_CALENDAR_IMPLEMENTATION_REVIEW",
+  "technical_ready": false,
+  "test_available_ticker_days": 363,
+  "test_expected_ticker_days": 369,
+  "training_modified": false,
+  "validation_expected_ticker_days": 750
+}

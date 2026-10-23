@@ -44,6 +44,33 @@ def test_exact_score_dtype_bits_and_mutation(tmp_path):
         module.save_scores(path, ids, scores.astype(np.float32))
 
 
+@pytest.mark.parametrize("mutation", ["dtype", "signed_zero", "ids_dtype"])
+def test_full_control_byte_contract_rejects_numerically_equal_copy(tmp_path, mutation):
+    source, copied = tmp_path / "original.npz", tmp_path / "copied.npz"
+    ids, scores = np.array([1, 2], np.int64), np.array([-0.0, 1.0], np.float64)
+    np.savez_compressed(source, action_ids=ids, variant=scores)
+    module.save_scores(copied, ids, scores)
+    module.verify_full_copy(source, copied)
+    if mutation == "dtype":
+        scores = scores.astype(np.float32)
+    elif mutation == "signed_zero":
+        scores[0] = 0.0
+    else:
+        ids = ids.astype(np.int32)
+    np.savez_compressed(copied, action_ids=ids, tcn_teacher=scores)
+    with pytest.raises(ValueError, match="byte-exact"):
+        module.verify_full_copy(source, copied)
+
+
+def test_test_control_rejected_before_freeze(tmp_path):
+    control, out, _, _, _ = make_control(tmp_path, "test")
+    with pytest.raises(ValueError, match="before validation freeze"):
+        module.calendar_control(
+            SimpleNamespace(flags_root=control), out, "test", [],
+            None, None, None, {}, {}, "cpu",
+        )
+
+
 def make_short(tmp_path):
     directory = tmp_path / "SPY" / "20250703"
     directory.mkdir(parents=True)
@@ -212,7 +239,8 @@ def test_inference_patch_restored_on_error():
     assert module.flags.inference is original
 
 
-def test_synthetic_e2e_short_full_freeze_null_and_resume(tmp_path, monkeypatch):
+@pytest.mark.parametrize("mutation", ["prediction", "external_short_feature"])
+def test_synthetic_e2e_short_full_freeze_null_and_resume(tmp_path, monkeypatch, mutation):
     import run_policy
 
     control, out, _, _, _ = make_control(tmp_path)
@@ -275,7 +303,11 @@ def test_synthetic_e2e_short_full_freeze_null_and_resume(tmp_path, monkeypatch):
         check=check,
         recheck=lambda: None,
     )
-    store = SimpleNamespace(seal=seal, hashes={})
+    external = tmp_path / "short_feature.npz"
+    external.write_bytes(b"synthetic external short feature")
+    store = SimpleNamespace(
+        seal=seal, hashes={str(external): module.flags.sha(external)}
+    )
     identity = {"files": {}, "learner_root": str(tmp_path / "learner")}
     monkeypatch.setattr(
         module, "bind", lambda args: (identity, {"binding": {"device": "cpu"}}, seal)
@@ -322,6 +354,10 @@ def test_synthetic_e2e_short_full_freeze_null_and_resume(tmp_path, monkeypatch):
     )
     module.evaluate(args)
     assert module.flags.sha(out / "completion.json") == completion_hash
-    (out / "validation/SPY_20250703.npz").write_bytes(b"changed")
+    assert str(external) in module.flags.read_json(out / "source_inputs.json")["files"]
+    changed = external if mutation == "external_short_feature" else (
+        out / "validation/SPY_20250703.npz"
+    )
+    changed.write_bytes(b"changed")
     with pytest.raises(ValueError, match="Changed bound source"):
         module.evaluate(args)

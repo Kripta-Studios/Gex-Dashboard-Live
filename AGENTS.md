@@ -1,5 +1,18 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-10-23 — reanudación local autorizada desde acb2a726
+
+Autoridad actual: research_papers/JEPA/level_oracle_20261018/RESUMPTION_20261023.md.
+El usuario revoca la pausa del18 de octubre, reitera el objetivo0DTE por zonas
+Fibonacci IB/walls y autoriza subagentes. El cierre18 permanece histórico.
+Oracle retrospectivo terminado/auditado; rentabilidad causal no demostrada.
+Continuación: comparación424 sin refit, evaluadorTCN750+369 y auditor, validación
+mensual2025 preservando tresfits/enero, luego OOF sólo tras sus dependencias.
+No reabrir pilotos/familias cerrados por instrucciones antiguas de septiembre.
+Sólo D:/ThetaData local; resultados voluminosos D:/GexResearchArtifacts.
+2025/2026 son SEEN_DEVELOPMENT. technical_ready=false, promotion_approved=false.
+Producción y cambios ajenos intactos; gate operativo2GB RAM/commit conservado.
+
 ### Checkpoint 2026-09-19 — piloto local auditado, economía aún cerrada
 
 Autoridad: research_papers/JEPA/local_snapshot_v1/02_SOURCE_PILOT_RESULT.md.

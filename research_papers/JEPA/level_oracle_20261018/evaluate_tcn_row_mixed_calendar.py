@@ -165,6 +165,35 @@ def save_scores(path, ids, scores):
         readers.shared.durable_replace(temporary, path)
 
 
+def verify_full_copy(source, adapted):
+    """The frozen adapter's numerical equality is weaker than this byte contract."""
+    with np.load(source, allow_pickle=False) as original, np.load(
+        adapted, allow_pickle=False
+    ) as copied:
+        if set(copied.files) != {"action_ids", "tcn_teacher"}:
+            raise ValueError("Unexpected calendar control schema")
+        for source_key, target_key in (
+            ("action_ids", "action_ids"), ("variant", "tcn_teacher")
+        ):
+            left, right = original[source_key], copied[target_key]
+            if (
+                left.shape != right.shape
+                or left.dtype != right.dtype
+                or left.tobytes() != right.tobytes()
+            ):
+                raise ValueError("Full control copy is not byte-exact")
+
+
+def seal_source_inputs(out, identity, store, source):
+    """Bind external inputs too: output hashes alone cannot validate a resume."""
+    files = {**identity["files"], **store.hashes, **source.hashes}
+    for period in ("validation", "test"):
+        lineage = out / "control_adapter" / period / "adapter_lineage.json"
+        files.update(flags.read_json(lineage)["source_files"])
+    flags.verify_files(files)
+    legacy.stable_json(out / "source_inputs.json", {"files": files})
+
+
 def require_epoch_four(training_root):
     record = flags.read_json(training_root / "training_complete.json")
     if record["binding"].get("epochs") != 4 or [
@@ -370,6 +399,7 @@ def calendar_control(
         destination = target / name
         if day.close_i == 390:
             source = full_root / period / name
+            verify_full_copy(args.flags_root / period / name, source)
             copy_exact(source, destination)
             lineage[name] = dict(
                 kind="AUDITED_FULL_COPY",
@@ -466,6 +496,7 @@ def evaluate(args):
     identity, training, source = bind(args)
     if (out / "completion.json").exists():
         flags.verify_files(flags.read_json(out / "completion.json")["files"])
+        flags.verify_files(flags.read_json(out / "source_inputs.json")["files"])
         return
     flags.require_prior_freeze(out)
     if (
@@ -544,6 +575,7 @@ def evaluate(args):
                         ),
                     )
             else:
+                seal_source_inputs(out, identity, store, source)
                 legacy.finish(
                     out, identity, selection, summary, original, store, source
                 )
