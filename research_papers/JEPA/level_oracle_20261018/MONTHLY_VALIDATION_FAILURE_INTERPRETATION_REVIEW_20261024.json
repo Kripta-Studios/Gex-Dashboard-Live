@@ -1,0 +1,15 @@
+{
+  "status": "PASS_ROOT_DESCRIPTIVE_INTERPRETATION_REVIEW",
+  "utc": "2026-10-24T00:16:56.428173+00:00",
+  "files": {
+    "MONTHLY_VALIDATION_2025_FAILURE_INTERPRETATION_20261024.md": "fe4752a3f5c0264d90638d68666938a8b4838cd4d2a7dd58412ab5ca06a2e178",
+    "describe_monthly_validation_2025_failure.py": "6d2cc347c54608bb3857278c26ab33b581800f0657e00b63710da7160811f111",
+    "continuation_20261024\\monthly_validation_2025_interpretation\\descriptive_reconciliation.json": "dccdb3fcf17be44cf9e70b9896b12b2fd925b305218a478e59ebdeade37006a5"
+  },
+  "source_pins_verified": 6,
+  "annual_groups_verified": 12,
+  "monthly_groups_verified": 144,
+  "code_text_review": "Sampling maximum128/day, IPW, perTRAIN ticker premium scales, strictpositive max, NO_FILL+1 and FILLEDexit+1 checked against original plan/runner. No new policy.",
+  "editorial_review": "Activity vs execution rejection separated; nominal ticker sums not risk-equal portfolio; concentration is monthly net not trade gross; causal explanations explicitly unproven; no 2026 claims.",
+  "new_economic_run": false
+}

@@ -36,6 +36,15 @@ Supervisor auditor2026 nuevo en preparación por subagentes; no runtime futuro
 inventado. OOF sigue pendiente. Esta actualización sustituye el estado previo
 que decía preflight no iniciado, conservando la secuencia histórica.
 
+La interpretación descriptiva2025 quedó revisada por root: doce grupos anuales,
+144mensuales y seis pins de fuentes compactas. Static/expanding/rolling12 pierden
+en8/11/11meses agregados; rolling12 opera más pero pierde más por trade. Sólo
+hay2/1/0 intentos NO_FILL, frente a72/99/45días disponibles sinfill. No se
+atribuyen causas ni se prueban filtros. Véase
+MONTHLY_VALIDATION_2025_FAILURE_INTERPRETATION_20261024.md y su review JSON.
+Observación00:17:03UTC: launcher56000 sigue vivo, sesión21747activa, sin hijo ni
+stderr; continúa preflight. No hay evidencia test nueva ni reejecución.
+
 ## Ejecuciones observadas
 
 - Comparación fija griegas 424 frente a compacto 152: productor PID 19696 y

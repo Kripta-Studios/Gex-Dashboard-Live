@@ -1,0 +1,1395 @@
+{
+  "concentration_definition": "Sums and top-three shares of positive/negative monthly NET buckets, not gross winning/losing trades. Same calculation for all twelve groups.",
+  "development_seen": true,
+  "groups": [
+    {
+      "adverse_increment_usd": 2579.99999999996,
+      "attempts": 1291,
+      "available_ticker_days": 250,
+      "base_pf": 0.9171246722986337,
+      "base_win_rate": 0.2804027885360186,
+      "best_month": "202503",
+      "best_month_net": 7033.799999999996,
+      "mode": "static",
+      "months": [
+        {
+          "month": "202501",
+          "net_adverse": -6522.199999999997,
+          "net_base": -6288.200000000003,
+          "trades": 117,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202502",
+          "net_adverse": -11371.599999999999,
+          "net_base": -11169.599999999999,
+          "trades": 101,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202503",
+          "net_adverse": 6789.799999999999,
+          "net_base": 7033.799999999996,
+          "trades": 122,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202504",
+          "net_adverse": 2775.99999999999,
+          "net_base": 2994.9999999999836,
+          "trades": 110,
+          "zero_fill_days": 1
+        },
+        {
+          "month": "202505",
+          "net_adverse": -2689.1999999999935,
+          "net_base": -2465.199999999997,
+          "trades": 112,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202506",
+          "net_adverse": -5798.399999999998,
+          "net_base": -5600.399999999998,
+          "trades": 99,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202507",
+          "net_adverse": 4013.6000000000054,
+          "net_base": 4221.600000000005,
+          "trades": 104,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202508",
+          "net_adverse": -5067.999999999998,
+          "net_base": -4907.999999999998,
+          "trades": 80,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202509",
+          "net_adverse": -8093.999999999996,
+          "net_base": -7913.999999999999,
+          "trades": 90,
+          "zero_fill_days": 1
+        },
+        {
+          "month": "202510",
+          "net_adverse": -1339.5999999999954,
+          "net_base": -1038.5999999999967,
+          "trades": 151,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202511",
+          "net_adverse": 5525.2000000000035,
+          "net_base": 5731.2,
+          "trades": 103,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202512",
+          "net_adverse": -8203.199999999993,
+          "net_base": -7999.199999999999,
+          "trades": 102,
+          "zero_fill_days": 0
+        }
+      ],
+      "negative_month_net_magnitude": 47383.19999999999,
+      "negative_months": 8,
+      "net_adverse": -29981.59999999996,
+      "net_base": -27401.6,
+      "net_base_per_trade": -21.225096824167313,
+      "no_fill_attempt_fraction": 0.0,
+      "no_fill_attempts": 0,
+      "positive_month_net_sum": 19981.599999999984,
+      "positive_months": 4,
+      "ticker": "SPXW",
+      "top3_negative_month_share": 0.571569670262878,
+      "top3_positive_month_share": 0.8501121031348847,
+      "trades": 1291,
+      "worst_month": "202502",
+      "worst_month_net": -11169.599999999999,
+      "zero_fill_day_fraction": 0.008,
+      "zero_fill_days": 2,
+      "zero_months": 0
+    },
+    {
+      "adverse_increment_usd": 1709.0000000000036,
+      "attempts": 858,
+      "available_ticker_days": 250,
+      "base_pf": 0.6492654628418798,
+      "base_win_rate": 0.23130841121495327,
+      "best_month": "202507",
+      "best_month_net": 377.0,
+      "mode": "static",
+      "months": [
+        {
+          "month": "202501",
+          "net_adverse": -1089.0,
+          "net_base": -919.9999999999998,
+          "trades": 85,
+          "zero_fill_days": 2
+        },
+        {
+          "month": "202502",
+          "net_adverse": -1546.7999999999995,
+          "net_base": -1390.7999999999993,
+          "trades": 78,
+          "zero_fill_days": 1
+        },
+        {
+          "month": "202503",
+          "net_adverse": -327.2000000000004,
+          "net_base": -143.19999999999968,
+          "trades": 92,
+          "zero_fill_days": 2
+        },
+        {
+          "month": "202504",
+          "net_adverse": -1760.3999999999996,
+          "net_base": -1612.3999999999992,
+          "trades": 74,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202505",
+          "net_adverse": -1158.3999999999999,
+          "net_base": -1020.3999999999997,
+          "trades": 69,
+          "zero_fill_days": 3
+        },
+        {
+          "month": "202506",
+          "net_adverse": -676.8000000000003,
+          "net_base": -510.79999999999995,
+          "trades": 83,
+          "zero_fill_days": 1
+        },
+        {
+          "month": "202507",
+          "net_adverse": 287.9999999999998,
+          "net_base": 377.0,
+          "trades": 45,
+          "zero_fill_days": 7
+        },
+        {
+          "month": "202508",
+          "net_adverse": -570.8000000000001,
+          "net_base": -484.8,
+          "trades": 43,
+          "zero_fill_days": 6
+        },
+        {
+          "month": "202509",
+          "net_adverse": -154.60000000000014,
+          "net_base": -72.60000000000001,
+          "trades": 41,
+          "zero_fill_days": 4
+        },
+        {
+          "month": "202510",
+          "net_adverse": -1784.4,
+          "net_base": -1606.3999999999996,
+          "trades": 89,
+          "zero_fill_days": 6
+        },
+        {
+          "month": "202511",
+          "net_adverse": -1839.3999999999994,
+          "net_base": -1681.399999999999,
+          "trades": 79,
+          "zero_fill_days": 2
+        },
+        {
+          "month": "202512",
+          "net_adverse": -1173.7999999999997,
+          "net_base": -1018.8,
+          "trades": 78,
+          "zero_fill_days": 3
+        }
+      ],
+      "negative_month_net_magnitude": 10461.599999999997,
+      "negative_months": 11,
+      "net_adverse": -11793.600000000002,
+      "net_base": -10084.599999999999,
+      "net_base_per_trade": -11.781074766355138,
+      "no_fill_attempt_fraction": 0.002331002331002331,
+      "no_fill_attempts": 2,
+      "positive_month_net_sum": 377.0,
+      "positive_months": 1,
+      "ticker": "SPY",
+      "top3_negative_month_share": 0.46839871530167465,
+      "top3_positive_month_share": 1.0,
+      "trades": 856,
+      "worst_month": "202511",
+      "worst_month_net": -1681.399999999999,
+      "zero_fill_day_fraction": 0.148,
+      "zero_fill_days": 37,
+      "zero_months": 0
+    },
+    {
+      "adverse_increment_usd": 1686.0000000000036,
+      "attempts": 847,
+      "available_ticker_days": 250,
+      "base_pf": 0.6389671158095405,
+      "base_win_rate": 0.24557260920897284,
+      "best_month": "202508",
+      "best_month_net": 432.60000000000025,
+      "mode": "static",
+      "months": [
+        {
+          "month": "202501",
+          "net_adverse": -1801.7999999999997,
+          "net_base": -1645.7999999999993,
+          "trades": 78,
+          "zero_fill_days": 2
+        },
+        {
+          "month": "202502",
+          "net_adverse": -1599.8,
+          "net_base": -1483.7999999999997,
+          "trades": 58,
+          "zero_fill_days": 4
+        },
+        {
+          "month": "202503",
+          "net_adverse": -2732.0,
+          "net_base": -2531.9999999999995,
+          "trades": 100,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202504",
+          "net_adverse": -1159.8000000000002,
+          "net_base": -954.7999999999996,
+          "trades": 103,
+          "zero_fill_days": 1
+        },
+        {
+          "month": "202505",
+          "net_adverse": -1426.3999999999999,
+          "net_base": -1278.3999999999996,
+          "trades": 74,
+          "zero_fill_days": 2
+        },
+        {
+          "month": "202506",
+          "net_adverse": 28.199999999999847,
+          "net_base": 104.19999999999996,
+          "trades": 38,
+          "zero_fill_days": 7
+        },
+        {
+          "month": "202507",
+          "net_adverse": -357.80000000000007,
+          "net_base": -302.79999999999995,
+          "trades": 28,
+          "zero_fill_days": 9
+        },
+        {
+          "month": "202508",
+          "net_adverse": 354.6,
+          "net_base": 432.60000000000025,
+          "trades": 39,
+          "zero_fill_days": 4
+        },
+        {
+          "month": "202509",
+          "net_adverse": -289.2000000000003,
+          "net_base": -205.2,
+          "trades": 42,
+          "zero_fill_days": 2
+        },
+        {
+          "month": "202510",
+          "net_adverse": -2444.4000000000005,
+          "net_base": -2218.4,
+          "trades": 114,
+          "zero_fill_days": 1
+        },
+        {
+          "month": "202511",
+          "net_adverse": 176.40000000000012,
+          "net_base": 336.4000000000006,
+          "trades": 81,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202512",
+          "net_adverse": -2100.2000000000003,
+          "net_base": -1918.1999999999998,
+          "trades": 92,
+          "zero_fill_days": 1
+        }
+      ],
+      "negative_month_net_magnitude": 12539.399999999998,
+      "negative_months": 9,
+      "net_adverse": -13352.2,
+      "net_base": -11666.199999999997,
+      "net_base_per_trade": -13.77355371900826,
+      "no_fill_attempt_fraction": 0.0,
+      "no_fill_attempts": 0,
+      "positive_month_net_sum": 873.2000000000008,
+      "positive_months": 3,
+      "ticker": "QQQ",
+      "top3_negative_month_share": 0.5318117294288404,
+      "top3_positive_month_share": 1.0,
+      "trades": 847,
+      "worst_month": "202503",
+      "worst_month_net": -2531.9999999999995,
+      "zero_fill_day_fraction": 0.132,
+      "zero_fill_days": 33,
+      "zero_months": 0
+    },
+    {
+      "adverse_increment_usd": 5974.999999999985,
+      "attempts": 2996,
+      "available_ticker_days": 750,
+      "base_pf": 0.8745160231257081,
+      "base_win_rate": 0.2565130260521042,
+      "best_month": "202511",
+      "best_month_net": 4386.200000000003,
+      "mode": "static",
+      "months": [
+        {
+          "month": "202501",
+          "net_adverse": -9412.999999999993,
+          "net_base": -8853.999999999998,
+          "trades": 280,
+          "zero_fill_days": 4
+        },
+        {
+          "month": "202502",
+          "net_adverse": -14518.199999999997,
+          "net_base": -14044.199999999997,
+          "trades": 237,
+          "zero_fill_days": 5
+        },
+        {
+          "month": "202503",
+          "net_adverse": 3730.600000000006,
+          "net_base": 4358.600000000002,
+          "trades": 314,
+          "zero_fill_days": 2
+        },
+        {
+          "month": "202504",
+          "net_adverse": -144.20000000000073,
+          "net_base": 427.79999999998836,
+          "trades": 287,
+          "zero_fill_days": 2
+        },
+        {
+          "month": "202505",
+          "net_adverse": -5273.999999999993,
+          "net_base": -4763.999999999993,
+          "trades": 255,
+          "zero_fill_days": 5
+        },
+        {
+          "month": "202506",
+          "net_adverse": -6446.9999999999945,
+          "net_base": -6006.999999999995,
+          "trades": 220,
+          "zero_fill_days": 8
+        },
+        {
+          "month": "202507",
+          "net_adverse": 3943.800000000004,
+          "net_base": 4295.800000000004,
+          "trades": 177,
+          "zero_fill_days": 16
+        },
+        {
+          "month": "202508",
+          "net_adverse": -5284.199999999997,
+          "net_base": -4960.199999999997,
+          "trades": 162,
+          "zero_fill_days": 10
+        },
+        {
+          "month": "202509",
+          "net_adverse": -8537.799999999997,
+          "net_base": -8191.799999999997,
+          "trades": 173,
+          "zero_fill_days": 7
+        },
+        {
+          "month": "202510",
+          "net_adverse": -5568.399999999995,
+          "net_base": -4863.399999999997,
+          "trades": 354,
+          "zero_fill_days": 7
+        },
+        {
+          "month": "202511",
+          "net_adverse": 3862.200000000007,
+          "net_base": 4386.200000000003,
+          "trades": 263,
+          "zero_fill_days": 2
+        },
+        {
+          "month": "202512",
+          "net_adverse": -11477.199999999995,
+          "net_base": -10936.199999999997,
+          "trades": 272,
+          "zero_fill_days": 4
+        }
+      ],
+      "negative_month_net_magnitude": 62620.799999999974,
+      "negative_months": 8,
+      "net_adverse": -55127.39999999995,
+      "net_base": -49152.399999999965,
+      "net_base_per_trade": -16.416967267869058,
+      "no_fill_attempt_fraction": 0.0006675567423230974,
+      "no_fill_attempts": 2,
+      "positive_month_net_sum": 13468.399999999998,
+      "positive_months": 4,
+      "ticker": "ALL",
+      "top3_negative_month_share": 0.5403060963769228,
+      "top3_positive_month_share": 0.9682367616049428,
+      "trades": 2994,
+      "worst_month": "202502",
+      "worst_month_net": -14044.199999999997,
+      "zero_fill_day_fraction": 0.096,
+      "zero_fill_days": 72,
+      "zero_months": 0
+    },
+    {
+      "adverse_increment_usd": 2718.9999999999636,
+      "attempts": 1361,
+      "available_ticker_days": 250,
+      "base_pf": 0.8539685297682076,
+      "base_win_rate": 0.3071271124173402,
+      "best_month": "202510",
+      "best_month_net": 5613.999999999999,
+      "mode": "expanding",
+      "months": [
+        {
+          "month": "202501",
+          "net_adverse": -6522.199999999997,
+          "net_base": -6288.200000000003,
+          "trades": 117,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202502",
+          "net_adverse": -1427.1999999999948,
+          "net_base": -1193.1999999999957,
+          "trades": 117,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202503",
+          "net_adverse": -5622.999999999996,
+          "net_base": -5363.0,
+          "trades": 130,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202504",
+          "net_adverse": -2681.6000000000095,
+          "net_base": -2340.6000000000113,
+          "trades": 171,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202505",
+          "net_adverse": -10743.199999999992,
+          "net_base": -10439.199999999997,
+          "trades": 152,
+          "zero_fill_days": 1
+        },
+        {
+          "month": "202506",
+          "net_adverse": -11593.199999999999,
+          "net_base": -11339.199999999999,
+          "trades": 127,
+          "zero_fill_days": 2
+        },
+        {
+          "month": "202507",
+          "net_adverse": -4096.799999999996,
+          "net_base": -3911.7999999999997,
+          "trades": 93,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202508",
+          "net_adverse": -5856.799999999995,
+          "net_base": -5660.799999999996,
+          "trades": 98,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202509",
+          "net_adverse": -2427.999999999998,
+          "net_base": -2317.999999999998,
+          "trades": 55,
+          "zero_fill_days": 4
+        },
+        {
+          "month": "202510",
+          "net_adverse": 5444.000000000001,
+          "net_base": 5613.999999999999,
+          "trades": 85,
+          "zero_fill_days": 2
+        },
+        {
+          "month": "202511",
+          "net_adverse": -1135.3999999999999,
+          "net_base": -908.4000000000003,
+          "trades": 114,
+          "zero_fill_days": 1
+        },
+        {
+          "month": "202512",
+          "net_adverse": -9508.199999999999,
+          "net_base": -9304.2,
+          "trades": 102,
+          "zero_fill_days": 0
+        }
+      ],
+      "negative_month_net_magnitude": 59066.6,
+      "negative_months": 11,
+      "net_adverse": -56171.59999999997,
+      "net_base": -53452.600000000006,
+      "net_base_per_trade": -39.27450404114622,
+      "no_fill_attempt_fraction": 0.0,
+      "no_fill_attempts": 0,
+      "positive_month_net_sum": 5613.999999999999,
+      "positive_months": 1,
+      "ticker": "SPXW",
+      "top3_negative_month_share": 0.5262297135775548,
+      "top3_positive_month_share": 1.0,
+      "trades": 1361,
+      "worst_month": "202506",
+      "worst_month_net": -11339.199999999999,
+      "zero_fill_day_fraction": 0.04,
+      "zero_fill_days": 10,
+      "zero_months": 0
+    },
+    {
+      "adverse_increment_usd": 1445.0000000000036,
+      "attempts": 725,
+      "available_ticker_days": 250,
+      "base_pf": 0.6822988573274975,
+      "base_win_rate": 0.26243093922651933,
+      "best_month": "202503",
+      "best_month_net": 409.00000000000057,
+      "mode": "expanding",
+      "months": [
+        {
+          "month": "202501",
+          "net_adverse": -1089.0,
+          "net_base": -919.9999999999998,
+          "trades": 85,
+          "zero_fill_days": 2
+        },
+        {
+          "month": "202502",
+          "net_adverse": -1828.3999999999999,
+          "net_base": -1650.3999999999996,
+          "trades": 89,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202503",
+          "net_adverse": 199.0,
+          "net_base": 409.00000000000057,
+          "trades": 105,
+          "zero_fill_days": 2
+        },
+        {
+          "month": "202504",
+          "net_adverse": -3595.599999999998,
+          "net_base": -3383.599999999998,
+          "trades": 106,
+          "zero_fill_days": 3
+        },
+        {
+          "month": "202505",
+          "net_adverse": -783.8000000000002,
+          "net_base": -687.7999999999998,
+          "trades": 48,
+          "zero_fill_days": 4
+        },
+        {
+          "month": "202506",
+          "net_adverse": -440.0000000000002,
+          "net_base": -380.00000000000017,
+          "trades": 30,
+          "zero_fill_days": 6
+        },
+        {
+          "month": "202507",
+          "net_adverse": -215.80000000000007,
+          "net_base": -159.79999999999993,
+          "trades": 28,
+          "zero_fill_days": 11
+        },
+        {
+          "month": "202508",
+          "net_adverse": -494.6,
+          "net_base": -412.6,
+          "trades": 41,
+          "zero_fill_days": 5
+        },
+        {
+          "month": "202509",
+          "net_adverse": -832.0,
+          "net_base": -781.9999999999999,
+          "trades": 25,
+          "zero_fill_days": 10
+        },
+        {
+          "month": "202510",
+          "net_adverse": 221.39999999999978,
+          "net_base": 293.4000000000001,
+          "trades": 36,
+          "zero_fill_days": 9
+        },
+        {
+          "month": "202511",
+          "net_adverse": -394.80000000000007,
+          "net_base": -270.79999999999967,
+          "trades": 63,
+          "zero_fill_days": 1
+        },
+        {
+          "month": "202512",
+          "net_adverse": -843.8000000000002,
+          "net_base": -707.8,
+          "trades": 68,
+          "zero_fill_days": 6
+        }
+      ],
+      "negative_month_net_magnitude": 9354.799999999997,
+      "negative_months": 10,
+      "net_adverse": -10097.4,
+      "net_base": -8652.399999999996,
+      "net_base_per_trade": -11.950828729281762,
+      "no_fill_attempt_fraction": 0.001379310344827586,
+      "no_fill_attempts": 1,
+      "positive_month_net_sum": 702.4000000000007,
+      "positive_months": 2,
+      "ticker": "SPY",
+      "top3_negative_month_share": 0.6364647026125624,
+      "top3_positive_month_share": 1.0,
+      "trades": 724,
+      "worst_month": "202504",
+      "worst_month_net": -3383.599999999998,
+      "zero_fill_day_fraction": 0.236,
+      "zero_fill_days": 59,
+      "zero_months": 0
+    },
+    {
+      "adverse_increment_usd": 1912.0000000000036,
+      "attempts": 958,
+      "available_ticker_days": 250,
+      "base_pf": 0.6466715789360457,
+      "base_win_rate": 0.255741127348643,
+      "best_month": "202511",
+      "best_month_net": 1047.4000000000005,
+      "mode": "expanding",
+      "months": [
+        {
+          "month": "202501",
+          "net_adverse": -1801.7999999999997,
+          "net_base": -1645.7999999999993,
+          "trades": 78,
+          "zero_fill_days": 2
+        },
+        {
+          "month": "202502",
+          "net_adverse": -1757.4,
+          "net_base": -1629.3999999999996,
+          "trades": 64,
+          "zero_fill_days": 4
+        },
+        {
+          "month": "202503",
+          "net_adverse": -1920.8000000000004,
+          "net_base": -1684.7999999999997,
+          "trades": 118,
+          "zero_fill_days": 1
+        },
+        {
+          "month": "202504",
+          "net_adverse": -4313.999999999998,
+          "net_base": -4024.9999999999986,
+          "trades": 145,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202505",
+          "net_adverse": -2547.2000000000003,
+          "net_base": -2293.1999999999994,
+          "trades": 127,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202506",
+          "net_adverse": -450.0,
+          "net_base": -369.9999999999999,
+          "trades": 40,
+          "zero_fill_days": 3
+        },
+        {
+          "month": "202507",
+          "net_adverse": -615.4000000000002,
+          "net_base": -537.4000000000002,
+          "trades": 39,
+          "zero_fill_days": 4
+        },
+        {
+          "month": "202508",
+          "net_adverse": -231.80000000000018,
+          "net_base": -125.79999999999976,
+          "trades": 53,
+          "zero_fill_days": 4
+        },
+        {
+          "month": "202509",
+          "net_adverse": -1004.4000000000002,
+          "net_base": -916.4000000000001,
+          "trades": 44,
+          "zero_fill_days": 7
+        },
+        {
+          "month": "202510",
+          "net_adverse": -65.80000000000008,
+          "net_base": 69.20000000000019,
+          "trades": 68,
+          "zero_fill_days": 3
+        },
+        {
+          "month": "202511",
+          "net_adverse": 837.4000000000005,
+          "net_base": 1047.4000000000005,
+          "trades": 106,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202512",
+          "net_adverse": -1179.6,
+          "net_base": -1027.5999999999992,
+          "trades": 76,
+          "zero_fill_days": 2
+        }
+      ],
+      "negative_month_net_magnitude": 14255.399999999996,
+      "negative_months": 10,
+      "net_adverse": -15050.8,
+      "net_base": -13138.799999999996,
+      "net_base_per_trade": -13.714822546972856,
+      "no_fill_attempt_fraction": 0.0,
+      "no_fill_attempts": 0,
+      "positive_month_net_sum": 1116.6000000000008,
+      "positive_months": 2,
+      "ticker": "QQQ",
+      "top3_negative_month_share": 0.5614012935449023,
+      "top3_positive_month_share": 1.0,
+      "trades": 958,
+      "worst_month": "202504",
+      "worst_month_net": -4024.9999999999986,
+      "zero_fill_day_fraction": 0.12,
+      "zero_fill_days": 30,
+      "zero_months": 0
+    },
+    {
+      "adverse_increment_usd": 6075.999999999971,
+      "attempts": 3044,
+      "available_ticker_days": 750,
+      "base_pf": 0.8251993820492268,
+      "base_win_rate": 0.2803154781465659,
+      "best_month": "202510",
+      "best_month_net": 5976.600000000003,
+      "mode": "expanding",
+      "months": [
+        {
+          "month": "202501",
+          "net_adverse": -9412.999999999993,
+          "net_base": -8853.999999999998,
+          "trades": 280,
+          "zero_fill_days": 4
+        },
+        {
+          "month": "202502",
+          "net_adverse": -5012.999999999994,
+          "net_base": -4472.999999999995,
+          "trades": 270,
+          "zero_fill_days": 4
+        },
+        {
+          "month": "202503",
+          "net_adverse": -7344.799999999994,
+          "net_base": -6638.799999999994,
+          "trades": 353,
+          "zero_fill_days": 3
+        },
+        {
+          "month": "202504",
+          "net_adverse": -10591.200000000004,
+          "net_base": -9749.200000000008,
+          "trades": 422,
+          "zero_fill_days": 3
+        },
+        {
+          "month": "202505",
+          "net_adverse": -14074.199999999992,
+          "net_base": -13420.199999999997,
+          "trades": 327,
+          "zero_fill_days": 5
+        },
+        {
+          "month": "202506",
+          "net_adverse": -12483.199999999993,
+          "net_base": -12089.199999999997,
+          "trades": 197,
+          "zero_fill_days": 11
+        },
+        {
+          "month": "202507",
+          "net_adverse": -4927.999999999998,
+          "net_base": -4609.0,
+          "trades": 160,
+          "zero_fill_days": 15
+        },
+        {
+          "month": "202508",
+          "net_adverse": -6583.199999999993,
+          "net_base": -6199.199999999995,
+          "trades": 192,
+          "zero_fill_days": 9
+        },
+        {
+          "month": "202509",
+          "net_adverse": -4264.4,
+          "net_base": -4016.399999999999,
+          "trades": 124,
+          "zero_fill_days": 21
+        },
+        {
+          "month": "202510",
+          "net_adverse": 5599.600000000004,
+          "net_base": 5976.600000000003,
+          "trades": 189,
+          "zero_fill_days": 14
+        },
+        {
+          "month": "202511",
+          "net_adverse": -692.8000000000002,
+          "net_base": -131.80000000000018,
+          "trades": 283,
+          "zero_fill_days": 2
+        },
+        {
+          "month": "202512",
+          "net_adverse": -11531.599999999995,
+          "net_base": -11039.599999999995,
+          "trades": 246,
+          "zero_fill_days": 8
+        }
+      ],
+      "negative_month_net_magnitude": 81220.39999999998,
+      "negative_months": 11,
+      "net_adverse": -81319.79999999996,
+      "net_base": -75243.79999999999,
+      "net_base_per_trade": -24.72684850476503,
+      "no_fill_attempt_fraction": 0.000328515111695138,
+      "no_fill_attempts": 1,
+      "positive_month_net_sum": 5976.600000000003,
+      "positive_months": 1,
+      "ticker": "ALL",
+      "top3_negative_month_share": 0.44999778380800876,
+      "top3_positive_month_share": 1.0,
+      "trades": 3043,
+      "worst_month": "202505",
+      "worst_month_net": -13420.199999999997,
+      "zero_fill_day_fraction": 0.132,
+      "zero_fill_days": 99,
+      "zero_months": 0
+    },
+    {
+      "adverse_increment_usd": 2925.999999999971,
+      "attempts": 1465,
+      "available_ticker_days": 250,
+      "base_pf": 0.7548153186162817,
+      "base_win_rate": 0.26825938566552904,
+      "best_month": "202511",
+      "best_month_net": 11020.399999999994,
+      "mode": "rolling12",
+      "months": [
+        {
+          "month": "202501",
+          "net_adverse": -11421.399999999996,
+          "net_base": -11213.399999999996,
+          "trades": 104,
+          "zero_fill_days": 2
+        },
+        {
+          "month": "202502",
+          "net_adverse": -9573.999999999996,
+          "net_base": -9343.999999999998,
+          "trades": 115,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202503",
+          "net_adverse": -12482.8,
+          "net_base": -12177.800000000003,
+          "trades": 153,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202504",
+          "net_adverse": -17343.8,
+          "net_base": -17057.800000000007,
+          "trades": 143,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202505",
+          "net_adverse": -14018.399999999998,
+          "net_base": -13770.4,
+          "trades": 124,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202506",
+          "net_adverse": -12820.999999999995,
+          "net_base": -12550.999999999998,
+          "trades": 135,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202507",
+          "net_adverse": -1451.7999999999952,
+          "net_base": -1216.799999999999,
+          "trades": 118,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202508",
+          "net_adverse": -10767.8,
+          "net_base": -10562.799999999997,
+          "trades": 103,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202509",
+          "net_adverse": -13406.599999999997,
+          "net_base": -13215.599999999999,
+          "trades": 96,
+          "zero_fill_days": 1
+        },
+        {
+          "month": "202510",
+          "net_adverse": -1129.3999999999974,
+          "net_base": -861.3999999999987,
+          "trades": 134,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202511",
+          "net_adverse": 10768.400000000003,
+          "net_base": 11020.399999999994,
+          "trades": 126,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202512",
+          "net_adverse": -2357.3999999999965,
+          "net_base": -2129.3999999999955,
+          "trades": 114,
+          "zero_fill_days": 0
+        }
+      ],
+      "negative_month_net_magnitude": 104100.4,
+      "negative_months": 11,
+      "net_adverse": -96005.99999999996,
+      "net_base": -93079.99999999999,
+      "net_base_per_trade": -63.535836177474394,
+      "no_fill_attempt_fraction": 0.0,
+      "no_fill_attempts": 0,
+      "positive_month_net_sum": 11020.399999999994,
+      "positive_months": 1,
+      "ticker": "SPXW",
+      "top3_negative_month_share": 0.42308963270073896,
+      "top3_positive_month_share": 1.0,
+      "trades": 1465,
+      "worst_month": "202504",
+      "worst_month_net": -17057.800000000007,
+      "zero_fill_day_fraction": 0.012,
+      "zero_fill_days": 3,
+      "zero_months": 0
+    },
+    {
+      "adverse_increment_usd": 2050.0000000000073,
+      "attempts": 1027,
+      "available_ticker_days": 250,
+      "base_pf": 0.5576668113714494,
+      "base_win_rate": 0.22200584225900682,
+      "best_month": "202507",
+      "best_month_net": 156.4000000000001,
+      "mode": "rolling12",
+      "months": [
+        {
+          "month": "202501",
+          "net_adverse": -1241.5999999999995,
+          "net_base": -1019.5999999999995,
+          "trades": 111,
+          "zero_fill_days": 3
+        },
+        {
+          "month": "202502",
+          "net_adverse": -1201.9999999999995,
+          "net_base": -1061.9999999999998,
+          "trades": 70,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202503",
+          "net_adverse": -1869.4,
+          "net_base": -1611.3999999999987,
+          "trades": 129,
+          "zero_fill_days": 1
+        },
+        {
+          "month": "202504",
+          "net_adverse": -4334.200000000001,
+          "net_base": -4120.199999999998,
+          "trades": 107,
+          "zero_fill_days": 2
+        },
+        {
+          "month": "202505",
+          "net_adverse": -1675.6000000000004,
+          "net_base": -1483.6000000000004,
+          "trades": 96,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202506",
+          "net_adverse": -1442.3999999999996,
+          "net_base": -1254.3999999999992,
+          "trades": 94,
+          "zero_fill_days": 2
+        },
+        {
+          "month": "202507",
+          "net_adverse": 4.399999999999807,
+          "net_base": 156.4000000000001,
+          "trades": 76,
+          "zero_fill_days": 2
+        },
+        {
+          "month": "202508",
+          "net_adverse": -1200.4,
+          "net_base": -1072.4,
+          "trades": 64,
+          "zero_fill_days": 1
+        },
+        {
+          "month": "202509",
+          "net_adverse": -1112.1999999999998,
+          "net_base": -998.1999999999999,
+          "trades": 57,
+          "zero_fill_days": 4
+        },
+        {
+          "month": "202510",
+          "net_adverse": -799.8000000000003,
+          "net_base": -694.8,
+          "trades": 53,
+          "zero_fill_days": 7
+        },
+        {
+          "month": "202511",
+          "net_adverse": -1230.3999999999996,
+          "net_base": -1014.4,
+          "trades": 109,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202512",
+          "net_adverse": -1026.6000000000001,
+          "net_base": -905.5999999999999,
+          "trades": 61,
+          "zero_fill_days": 4
+        }
+      ],
+      "negative_month_net_magnitude": 15236.599999999995,
+      "negative_months": 11,
+      "net_adverse": -17130.200000000004,
+      "net_base": -15080.199999999997,
+      "net_base_per_trade": -14.683739045764359,
+      "no_fill_attempt_fraction": 0.0,
+      "no_fill_attempts": 0,
+      "positive_month_net_sum": 156.4000000000001,
+      "positive_months": 1,
+      "ticker": "SPY",
+      "top3_negative_month_share": 0.47354396650171293,
+      "top3_positive_month_share": 1.0,
+      "trades": 1027,
+      "worst_month": "202504",
+      "worst_month_net": -4120.199999999998,
+      "zero_fill_day_fraction": 0.104,
+      "zero_fill_days": 26,
+      "zero_months": 0
+    },
+    {
+      "adverse_increment_usd": 2067.0000000000036,
+      "attempts": 1037,
+      "available_ticker_days": 250,
+      "base_pf": 0.6333419371151345,
+      "base_win_rate": 0.2111861137897782,
+      "best_month": "202511",
+      "best_month_net": 203.39999999999955,
+      "mode": "rolling12",
+      "months": [
+        {
+          "month": "202501",
+          "net_adverse": -2666.6,
+          "net_base": -2465.6,
+          "trades": 101,
+          "zero_fill_days": 1
+        },
+        {
+          "month": "202502",
+          "net_adverse": -1518.4,
+          "net_base": -1402.3999999999996,
+          "trades": 59,
+          "zero_fill_days": 2
+        },
+        {
+          "month": "202503",
+          "net_adverse": -1783.8000000000002,
+          "net_base": -1538.7999999999997,
+          "trades": 123,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202504",
+          "net_adverse": -3865.999999999999,
+          "net_base": -3526.999999999999,
+          "trades": 170,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202505",
+          "net_adverse": -2625.2000000000003,
+          "net_base": -2391.1999999999994,
+          "trades": 117,
+          "zero_fill_days": 1
+        },
+        {
+          "month": "202506",
+          "net_adverse": -1029.4000000000003,
+          "net_base": -871.4000000000003,
+          "trades": 79,
+          "zero_fill_days": 1
+        },
+        {
+          "month": "202507",
+          "net_adverse": -286.4000000000003,
+          "net_base": -168.4000000000002,
+          "trades": 59,
+          "zero_fill_days": 2
+        },
+        {
+          "month": "202508",
+          "net_adverse": -749.8000000000002,
+          "net_base": -653.8000000000001,
+          "trades": 48,
+          "zero_fill_days": 3
+        },
+        {
+          "month": "202509",
+          "net_adverse": -209.60000000000014,
+          "net_base": -117.6,
+          "trades": 46,
+          "zero_fill_days": 4
+        },
+        {
+          "month": "202510",
+          "net_adverse": -225.99999999999986,
+          "net_base": -86.99999999999952,
+          "trades": 70,
+          "zero_fill_days": 1
+        },
+        {
+          "month": "202511",
+          "net_adverse": 32.39999999999989,
+          "net_base": 203.39999999999955,
+          "trades": 86,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202512",
+          "net_adverse": -1059.4000000000003,
+          "net_base": -901.4000000000002,
+          "trades": 79,
+          "zero_fill_days": 1
+        }
+      ],
+      "negative_month_net_magnitude": 14124.599999999999,
+      "negative_months": 11,
+      "net_adverse": -15988.200000000004,
+      "net_base": -13921.2,
+      "net_base_per_trade": -13.424493731918998,
+      "no_fill_attempt_fraction": 0.0,
+      "no_fill_attempts": 0,
+      "positive_month_net_sum": 203.39999999999955,
+      "positive_months": 1,
+      "ticker": "QQQ",
+      "top3_negative_month_share": 0.5935601716154794,
+      "top3_positive_month_share": 1.0,
+      "trades": 1037,
+      "worst_month": "202504",
+      "worst_month_net": -3526.999999999999,
+      "zero_fill_day_fraction": 0.064,
+      "zero_fill_days": 16,
+      "zero_months": 0
+    },
+    {
+      "adverse_increment_usd": 7042.999999999985,
+      "attempts": 3529,
+      "available_ticker_days": 750,
+      "base_pf": 0.7297244762143441,
+      "base_win_rate": 0.23802776990648908,
+      "best_month": "202511",
+      "best_month_net": 10209.400000000001,
+      "mode": "rolling12",
+      "months": [
+        {
+          "month": "202501",
+          "net_adverse": -15329.599999999999,
+          "net_base": -14698.6,
+          "trades": 316,
+          "zero_fill_days": 6
+        },
+        {
+          "month": "202502",
+          "net_adverse": -12294.399999999996,
+          "net_base": -11808.399999999996,
+          "trades": 244,
+          "zero_fill_days": 2
+        },
+        {
+          "month": "202503",
+          "net_adverse": -16135.999999999995,
+          "net_base": -15327.999999999995,
+          "trades": 405,
+          "zero_fill_days": 1
+        },
+        {
+          "month": "202504",
+          "net_adverse": -25543.999999999996,
+          "net_base": -24705.000000000007,
+          "trades": 420,
+          "zero_fill_days": 2
+        },
+        {
+          "month": "202505",
+          "net_adverse": -18319.19999999999,
+          "net_base": -17645.199999999997,
+          "trades": 337,
+          "zero_fill_days": 1
+        },
+        {
+          "month": "202506",
+          "net_adverse": -15292.799999999996,
+          "net_base": -14676.799999999996,
+          "trades": 308,
+          "zero_fill_days": 3
+        },
+        {
+          "month": "202507",
+          "net_adverse": -1733.7999999999984,
+          "net_base": -1228.7999999999993,
+          "trades": 253,
+          "zero_fill_days": 4
+        },
+        {
+          "month": "202508",
+          "net_adverse": -12717.999999999995,
+          "net_base": -12288.999999999996,
+          "trades": 215,
+          "zero_fill_days": 4
+        },
+        {
+          "month": "202509",
+          "net_adverse": -14728.4,
+          "net_base": -14331.4,
+          "trades": 199,
+          "zero_fill_days": 9
+        },
+        {
+          "month": "202510",
+          "net_adverse": -2155.1999999999935,
+          "net_base": -1643.199999999995,
+          "trades": 257,
+          "zero_fill_days": 8
+        },
+        {
+          "month": "202511",
+          "net_adverse": 9570.400000000009,
+          "net_base": 10209.400000000001,
+          "trades": 321,
+          "zero_fill_days": 0
+        },
+        {
+          "month": "202512",
+          "net_adverse": -4443.399999999992,
+          "net_base": -3936.399999999993,
+          "trades": 254,
+          "zero_fill_days": 5
+        }
+      ],
+      "negative_month_net_magnitude": 132290.8,
+      "negative_months": 11,
+      "net_adverse": -129124.39999999994,
+      "net_base": -122081.39999999995,
+      "net_base_per_trade": -34.59376593935958,
+      "no_fill_attempt_fraction": 0.0,
+      "no_fill_attempts": 0,
+      "positive_month_net_sum": 10209.400000000001,
+      "positive_months": 1,
+      "ticker": "ALL",
+      "top3_negative_month_share": 0.4359955491991885,
+      "top3_positive_month_share": 1.0,
+      "trades": 3529,
+      "worst_month": "202504",
+      "worst_month_net": -24705.000000000007,
+      "zero_fill_day_fraction": 0.06,
+      "zero_fill_days": 45,
+      "zero_months": 0
+    }
+  ],
+  "inputs": {
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01\\daily.csv": "31bcdb462e60e26ecc5be61f3079bbd7d17534e00b5f5e6ced2f30ecb0b6e502",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01\\monthly.csv": "4fed4ef713f56baec4dbaddd97588011612bdd6039c6f780f2885fad09473743",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01\\output_manifest.json": "66108b5eb4e678569dcc82a46ebaa92f569a3601e160a2ab1ac781725313db0f",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01\\periods.csv": "edc0cbeb996bf874ab41b04167278fefe8ea9ccbfd03ceb1e2b9f2ae13977868",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01\\summary.json": "9279db9d98e1bc11d438b8c9d7eff63ce23a1fbe658eafd7f869e2455f224abd",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01_logs\\exit.json": "4f4987abc7ca1c4a10d08bbba3af6dcbec92fc5033411049bc33d441930852ef"
+  },
+  "not_read": [
+    "raw",
+    "arrays",
+    "models",
+    "scores",
+    "2026 outcomes",
+    "ledger parquet"
+  ],
+  "promotion_approved": false,
+  "scope": "Arithmetic on closed reporter; not an economic audit or a new policy",
+  "script_sha256": "6d2cc347c54608bb3857278c26ab33b581800f0657e00b63710da7160811f111",
+  "selected_mode_cited": null,
+  "status": "PASS_DESCRIPTIVE_RECONCILIATION_2025_ONLY"
+}

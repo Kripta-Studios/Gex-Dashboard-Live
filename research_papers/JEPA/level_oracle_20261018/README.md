@@ -17,6 +17,10 @@ Las [tablas consolidadas](MONTHLY_VALIDATION_2025_REPORT_RESULT_20261024.md) y l
 [gráfica completa](MONTHLY_VALIDATION_2025_INDEPENDENT_FIGURE_RESULT_20261024.md)
 ya pasan reconciliación independiente: 108 grupos por ticker/mes/modo y todos
 los meses representados, con costes base y adversos.
+La [interpretación del fallo mensual](MONTHLY_VALIDATION_2025_FAILURE_INTERPRETATION_20261024.md)
+separa actividad, pérdidas por operación, costes y concentración temporal.
+Los modos pierden en ocho, once y once meses agregados; no se atribuye una
+causa demostrada ni se eligen meses o tickers para rescatar los resultados.
 
 El [resultado TCN temporal del 23 de octubre](TCN_ROW_MIXED_CALENDAR_RESULT_20261023.md)
 ya está auditado: selección nula y pérdidas en las tres variantes, sin cumplir
