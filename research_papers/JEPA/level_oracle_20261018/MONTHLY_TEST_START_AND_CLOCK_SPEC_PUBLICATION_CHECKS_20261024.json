@@ -1,0 +1,15 @@
+{
+  "status": "PASS_ROOT_START_RECEIPTS_AND_SPEC_CHECKS",
+  "utc": "2026-10-24T00:39:06.598299+00:00",
+  "start_archive_source_copy_checks": 8,
+  "process_chain_identity_checked": true,
+  "child_observed_live_pid": 34680,
+  "child_observed_creation": 1792802016.462489,
+  "child_role": "Internal admission still in progress; no completed 2026 fits or economic result claimed",
+  "spec_sha256": "5e96cd5a69d853c8a1686511278cd5553b60856b3d7f4cf0c4321a8a6263f899",
+  "spec_review_sha256": "be4468d04fe3ed94275c9fd66dc41ba3addc635c3373006ebe1e2a7b2f870250",
+  "production_source_text_pins_verified": 4,
+  "spec_root_read_complete": true,
+  "new_mathematical_comparisons_run": false,
+  "new_economic_family_authorized": false
+}

@@ -56,6 +56,20 @@ S1–S4cerrados; fallo primerfixture preservado y reconstrucciónposthoc identif
 Sólo implementación: aún necesita productor cerrado/exit0/bindingreal/publicación.
 Checklist y notaI/O son documentales; no cambian el proceso actual ni arrancanOOF.
 
+Hito test00:33:36.480821UTC: child34680 creado una vez,creation1792802016.462489,
+padre56000/handle retenido, sesiónroot21747. GateRAM7.254.020.096/commit5.455.089.664.
+Cuatrorecibos inmutables archivados/rehasheados en monthly_test_start_01,
+manifest a2afcb37…8d2a5; véase MONTHLY_TEST_START_RECEIPT_20261024.md.
+A00:38:01UTC sigue vivo en admisión interna, runtimeausente ystderr0. No afirmar
+fit/resultado2026 ni cierre. Supervisor auditor publicado/revisado52b53f8f.
+
+En paralelo se predeclara extensión matemática exclusivamente artificial,
+SESSION_ACTOR_CLOCK_SEMANTICS_SYNTHETIC_SPEC_20261024.md, SHA5e96cd5a…3f899:
+seisgrafos y derivadas fijados, NO_FILLrealserializado exit=t+1→retryt+1,
+FILLEDexit+1, estadosinvalidWAIT y límitesfull/short. Autor prepara código;
+no comparaciones/tests hasta publicación spec revisada y GOroot. No datos,
+modelo/entrenamiento ni familiaeconómica nueva; laboratorio anterior intacto.
+
 ## Ejecuciones observadas
 
 - Comparación fija griegas 424 frente a compacto 152: productor PID 19696 y

@@ -1,0 +1,46 @@
+{
+  "status": "COMPACT_PROCESS_START_RECEIPTS_ONLY",
+  "files": [
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_launch_20261024_01\\preflight.json",
+      "archive_path": "preflight.json",
+      "bytes": 7391018,
+      "sha256": "ffb37736d6ed7228ae2cd81f554e7bb9568ae820e6e36511267e150fa76bdf31",
+      "original_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_launch_20261024_01\\process_binding.json",
+      "archive_path": "process_binding.json",
+      "bytes": 1212,
+      "sha256": "34f7855199e4a5900941dbe838159829b1e1d2a9ca154a9f32b5d29fb271809e",
+      "original_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_launch_20261024_01\\monitor_open.json",
+      "archive_path": "monitor_open.json",
+      "bytes": 1266,
+      "sha256": "639117c6f828db726161f39e6b900f72743ea7c8c2897d3df653f5ab0fab8d13",
+      "original_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_launch_20261024_01\\admission.json",
+      "archive_path": "admission.json",
+      "bytes": 216,
+      "sha256": "0de9eb96b55868e5106f7960c50887246d00cad800acd570124bdc89843c84ba",
+      "original_and_copy_rehashed": true
+    }
+  ],
+  "copied_files": 4,
+  "copied_bytes": 7393712,
+  "observation": {
+    "observed_utc": "2026-10-24T00:35:50.304005+00:00",
+    "runtime_overlay_exists": false,
+    "models_complete": 24,
+    "test_fit_started_names": [],
+    "test_month_directories": [],
+    "test_report_files": []
+  },
+  "mutable_stdout_stderr_copied": false,
+  "exit_or_completion_inferred": false,
+  "scientific_outcomes_opened": false
+}
