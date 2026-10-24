@@ -1,0 +1,203 @@
+{
+  "author_integral": {
+    "evidence": {
+      "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_index_v2_synthetic_20261024_01\\attempt.json": "279fe53b0da76b2b9d500c25e4fa8c3b252468d9c54863c741c4418cfc66440c",
+      "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_index_v2_synthetic_20261024_01\\pytest.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_index_v2_synthetic_20261024_01\\pytest.stdout.log": "85ba9600426e34d0a06c88e0288821ecf7003cbc3f1f1d0e1eb48cb609269b65",
+      "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_index_v2_synthetic_20261024_01\\result.json": "6f4a9ff5419c3baae1fdcc93f94f2b13a41516e4b22b63eb85ac9c5b958ad5c0"
+    },
+    "process_exit_code": 0,
+    "process_wall_seconds": 297.24260909995064,
+    "pytest_seconds": 296.19,
+    "resources": {
+      "available_ram_bytes": 8016904192,
+      "free_commit_bytes": 5663301632
+    },
+    "tests_passed": 33
+  },
+  "core_ast": {
+    "allowed_differences": [
+      "independent auditor import",
+      "REVIEW_STATUS",
+      "RUNTIME_STATUS",
+      "SPEC",
+      "dependencies()"
+    ],
+    "original_core_preserved": true,
+    "unchanged_nodes": [
+      "BoundedVerifier",
+      "TestAudit",
+      "absolute_path",
+      "check_prediction",
+      "exclusive_output",
+      "flatten_verified",
+      "main",
+      "merge_verifiers",
+      "run",
+      "verify_authorities",
+      "within"
+    ]
+  },
+  "decision": "CLEAR",
+  "dependencies": {
+    "MONTHLY_TEST_AUDIT_EXTENSION_SPEC_20261023.md": "b895e0ee57ee8d911b4d732e1f46b07c2d9e13c296f09888ce47372815f5182d",
+    "MONTHLY_TEST_INDEX_AUDIT_V2_SPEC_20261024.md": "5513996a6284c175dd26496ccee645d23f721d097896123280309cc0be327e29",
+    "MONTHLY_WALK_FORWARD_INDEX_AUDIT_V2_SPEC_20261024.md": "06f0fcd6ac5d60a8e503d5f9df86102683e441d7b00d0a5968142384f4a821f4",
+    "MONTHLY_WALK_FORWARD_SEALED_SCORE_AUDITOR_REVIEW.json": "db323959e6a894d6d6fb51bde764af0c96db0cb0bba2f1711bbe0807425d10ca",
+    "MONTHLY_WALK_FORWARD_SEALED_SCORE_AUDIT_CONTRACT.md": "cabdd117fc4dc713fbca085a48e38ac8c8f609555f42f10a05321c01623ff8e7",
+    "audit_monthly_walk_forward.py": "e4a3be1c19b7f0af1226e71255c81116bd71a6a300aef36f61c688deb908df1f",
+    "audit_monthly_walk_forward_index_v2.py": "f01a962fcf50a2cc2bb49fd4d3eb597eb07cda47f8d2697b8046ccb9b5721ed3",
+    "audit_monthly_walk_forward_test.py": "ec0ddb99840d5bf380eb7f407de3e1a5bcbdfa352d79ad5d75e24a05750db57b",
+    "audit_monthly_walk_forward_test_index_v2.py": "feea3954b231b18f18384696959d7cdbbcaf4d513dbf3fc4fee8596136483421",
+    "test_audit_monthly_walk_forward.py": "8c47e89951506553bfb1295c6e390501828b8fe6f77bcae5d566e98c2039ef87",
+    "test_audit_monthly_walk_forward_index_v2.py": "f986885706e78a9ecdac5f126502906d7f7637b513fb2f3a8ee16f765ea1c88d",
+    "test_audit_monthly_walk_forward_test.py": "b3cc6d8225812154da2e4d2c644e426a19f7177d520b9d564826e3a3e4790a00",
+    "test_audit_monthly_walk_forward_test_index_v2.py": "54a5ab7133705d528774c1ee458989a8acff60dfdef94a69aefd3b6662587194"
+  },
+  "findings_open": [],
+  "independent_focal": {
+    "authority_negatives": [
+      {
+        "case": "old_review_status",
+        "message": "Exact independent test auditor review required",
+        "prior_payload_read": false,
+        "rejected": true
+      },
+      {
+        "case": "review_dependency_mutation",
+        "message": "Exact independent test auditor review required",
+        "prior_payload_read": false,
+        "rejected": true
+      },
+      {
+        "case": "old_runtime_status",
+        "message": "Runtime review required",
+        "prior_payload_read": false,
+        "rejected": true
+      },
+      {
+        "case": "runtime_dependency_mutation",
+        "message": "Runtime authority binding differs",
+        "prior_payload_read": false,
+        "rejected": true
+      },
+      {
+        "case": "implementation_pin_mutation",
+        "message": "Runtime authority binding differs",
+        "prior_payload_read": false,
+        "rejected": true
+      },
+      {
+        "case": "external_validation_pin_mutation",
+        "message": "Runtime authority binding differs",
+        "prior_payload_read": false,
+        "rejected": true
+      }
+    ],
+    "evidence": {
+      "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_index_v2_independent_review_20261024_01\\attempt.json": "6fce6a761c2afb5621b70ea055323848a0241c1853874377e782a91dd85e5754",
+      "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_index_v2_independent_review_20261024_01\\pytest.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_index_v2_independent_review_20261024_01\\pytest.stdout.log": "b92c1af24d01b12b78142d406ac8564b284b4c4212a463b631dbe862f4890fa3"
+    },
+    "full_integral_repeated": false,
+    "process_exit_code": 0,
+    "process_wall_seconds": 7.989884500042535,
+    "pytest_seconds": 6.74,
+    "resources": {
+      "commit_bytes": 6128623616,
+      "cpu_affinity": [
+        0
+      ],
+      "ram_bytes": 7936016384
+    },
+    "tests_passed": 32
+  },
+  "limitations": [
+    "Implementation review only; no economic runtime or PASS historical output.",
+    "Author integral reconstructs artificial six-month evidence and trusts an explicitly synthetic 2025 authority.",
+    "Independent reviewer ran focal tests and metadata projection, not a second full integral.",
+    "Runtime needs a separate reviewed binding and pinned completed validation 2025 audit; this document is not that authority.",
+    "No refit, inference, market replay, source-feature or quote reconstruction; 2026 remains seen development."
+  ],
+  "preserved_consumers": {
+    "audit_oof_calibrated_policy.py": "e7481fbe944a9ffadcf637e7a4b69cd8d636cdf50ae295426191db9d76b5d44b",
+    "evaluate_oof_calibrated_policy.py": "eeaad06f5b862a3153f29e7eab579b19a35e182ab506cf1f59e65631e187e716",
+    "launch_monthly_test_20261023.py": "3e77bda56dabd8287b04ae9a47b4dcd45d5967a01a31514e933cbb44b6f4c08d",
+    "monthly_oof_calibration_adapter.py": "7b80cff43e3887a92e0f89be6daa863a670ccd72d22a0f4aeabd032a39479364",
+    "run_monthly_test_resource_overlay.py": "f2b0490cdec916f98c09fc77a6533d0eab8c4f2711331753f7d5c998d81253c1"
+  },
+  "real_metadata_projection": {
+    "all_identities": 2625,
+    "columns": [
+      "ticker",
+      "date",
+      "status",
+      "close_i",
+      "evaluation_status",
+      "day_root",
+      "features_path",
+      "features_meta_path",
+      "action_features_path",
+      "action_features_meta_path",
+      "actions_sha256",
+      "labels_sha256",
+      "features_sha256",
+      "features_meta_sha256",
+      "action_features_sha256",
+      "action_features_meta_sha256"
+    ],
+    "complete": 2619,
+    "complete_evaluation_status_null": true,
+    "complete_paths_hashes_present": true,
+    "h1_available": 363,
+    "h1_expected": 369,
+    "h1_missing": 6,
+    "index_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_clock_dataset_v1\\index.parquet",
+    "index_sha256": "7124d98155eae8ee5ae06457377570278d4059defe2cf02340e34c288fcb60b4",
+    "market_payloads_read": false,
+    "missing": 6,
+    "missing_evaluation_status": "NO_EVALUABLE",
+    "missing_four_paths_six_hashes_null": true,
+    "missing_identities": [
+      [
+        "QQQ",
+        "20260401"
+      ],
+      [
+        "SPY",
+        "20260401"
+      ],
+      [
+        "QQQ",
+        "20260409"
+      ],
+      [
+        "SPY",
+        "20260409"
+      ],
+      [
+        "QQQ",
+        "20260415"
+      ],
+      [
+        "SPY",
+        "20260415"
+      ]
+    ],
+    "source_hash_before_after_equal": true
+  },
+  "reviewed_utc": "2026-10-23T23:35:20.622547+00:00",
+  "reviewer": "/root/tcn_economic_auditor",
+  "runtime_authorized": false,
+  "scope": "IMPLEMENTATION_ONLY",
+  "status": "PASS_MONTHLY_TEST_INDEX_V2_AUDITOR_IMPLEMENTATION_REVIEW",
+  "synthetic_coverage_inspected": {
+    "full_calendar_daily_status": "NO_EVALUABLE_MISSING_SOURCE",
+    "full_fixture_uses_real_monthly_adapter": true,
+    "missing_daily_zeros_are_structural": true,
+    "missing_day_economics": null,
+    "missing_ledgers_absent": true,
+    "real_nulls_in_full_fixture": true,
+    "selection_null_preserved": true
+  }
+}

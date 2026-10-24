@@ -1,0 +1,34 @@
+{
+  "status": "PASS_EXACT_COMPACT_COPIES_AND_RUNTIME_PINS",
+  "checks": [
+    {
+      "manifest": "research_papers\\JEPA\\level_oracle_20261018\\continuation_20261024\\monthly_test_2026_audit\\MANIFEST.json",
+      "sha256": "1584ab1dd71f25f695b503fa2a46b194ccb9f9f48ca6a39e5993b4046db9170e",
+      "copies_verified": 62
+    },
+    {
+      "manifest": "research_papers\\JEPA\\level_oracle_20261018\\continuation_20261024\\oof_pipeline_runtime_preparation\\manifest.json",
+      "sha256": "f8839eb250a0e7402f8a61e75e77234294e6106a625bb49af094397adf2f0e2e",
+      "copies_verified": 4
+    },
+    {
+      "manifest": "research_papers\\JEPA\\level_oracle_20261018\\continuation_20261024\\oof_pipeline_runtime_independent\\manifest.json",
+      "sha256": "7e455447ef02f5b552057a92b77ccae655da535cd70388768a48c5c269e0aa71",
+      "copies_verified": 2
+    },
+    {
+      "file": "OOF_PIPELINE_RUNTIME_INDEPENDENT_REVIEW_20261024_01.json",
+      "sha256": "8911cdfc630bcdb52b175361d6489facf98bf784b389521fa6b8675ca6d3761e"
+    },
+    {
+      "file": "OOF_PIPELINE_RUNTIME_REQUEST_20261024_01.json",
+      "sha256": "9399f791e0dc34d62c272ba4bd2fc150fdd4c1c2608ca036718c8adb0c82cd71"
+    },
+    {
+      "file": "OOF_PIPELINE_LAUNCH_RUNTIME_BINDING_20261024_01.json",
+      "sha256": "b4f6eb47ffa841ce4510d18b34e560b6d66d22c4cfe34364a838596f4c769326"
+    }
+  ],
+  "copied_files_verified": 68,
+  "full_scientific_payload_rehash": false
+}

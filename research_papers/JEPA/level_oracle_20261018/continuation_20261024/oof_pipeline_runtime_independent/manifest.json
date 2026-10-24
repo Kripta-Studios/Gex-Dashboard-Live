@@ -1,0 +1,22 @@
+{
+  "scope": "RUNTIME_METADATA_INDEPENDENT_REVIEW_ONLY",
+  "copies": 2,
+  "total_bytes": 38141,
+  "files": [
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_independent_20261024_01\\review_metadata.py",
+      "copy": "review_metadata.py",
+      "sha256": "a9d0bfcb4f592bd5b187afae4683cb52fc9d711e2ee556944230f3c1f303516e",
+      "bytes": 14566
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_independent_20261024_01\\checks.json",
+      "copy": "checks.json",
+      "sha256": "f0d3de0208564f73e95c6d2d1a7293499d1c1f94079e4bb2e217d9b153f26f71",
+      "bytes": 23575
+    }
+  ],
+  "preflight_executed": false,
+  "market_arrays_parsed": false,
+  "economic_metrics_opened": false
+}

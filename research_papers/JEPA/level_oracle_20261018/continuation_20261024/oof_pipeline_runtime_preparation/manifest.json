@@ -1,0 +1,32 @@
+{
+  "status": "PREPARATION_EVIDENCE_PENDING_EXTERNAL_RUNTIME_REVIEW",
+  "runtime_execution_authorized": false,
+  "copies": 4,
+  "total_bytes": 43701,
+  "files": [
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_preparation_20261024_01\\draft_audit_pass_pending_supervisor_01.json",
+      "copy": "draft_audit_pass_pending_supervisor_01.json",
+      "sha256": "2cfd8024438b30cd98784ad7a054a8b949f9381d4ddc941e9c8061db912f1e57",
+      "bytes": 21797
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_preparation_20261024_01\\final_candidates_preparation_receipt.json",
+      "copy": "final_candidates_preparation_receipt.json",
+      "sha256": "4981e32d06fc22e1d52b67964ecca505f37013ec28b55d83944d58d5d53adc5c",
+      "bytes": 2027
+    },
+    {
+      "source": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_PIPELINE_RUNTIME_REQUEST_20261024_01.json",
+      "copy": "OOF_PIPELINE_RUNTIME_REQUEST_20261024_01.json",
+      "sha256": "9399f791e0dc34d62c272ba4bd2fc150fdd4c1c2608ca036718c8adb0c82cd71",
+      "bytes": 3820
+    },
+    {
+      "source": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_PIPELINE_LAUNCH_RUNTIME_BINDING_20261024_01.json",
+      "copy": "OOF_PIPELINE_LAUNCH_RUNTIME_BINDING_20261024_01.json",
+      "sha256": "b4f6eb47ffa841ce4510d18b34e560b6d66d22c4cfe34364a838596f4c769326",
+      "bytes": 16057
+    }
+  ]
+}

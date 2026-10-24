@@ -1,5 +1,36 @@
 # Continuación local: estado del 23 de octubre de 2026
 
+Actualización vigente después del cierre del 24 de octubre a las 04:00:41 UTC:
+la [auditoría compuesta](MONTHLY_TEST_2026_COMPOSITE_AUDIT_RESULT_20261024.md)
+y su supervisor terminaron con exit 0. El PASS reproduce resultados sobre
+scores sellados; no acredita rentabilidad ni refit/inferencia independientes.
+Root verificó las 62 copias del archivo y seis copias de preparación/revisión
+OOF, además de los 81 pins compactos del revisor. La primera lectura textual
+adicional del JSON falló por encoding cp1252 después de verificar hashes/copias;
+la lectura UTF-8 posterior completó la inspección sin modificar autoridades.
+
+Root abrió el reporte H1 sellado tras el cierre completo. Static, expanding y
+rolling12 pierden 8.746,00/20.616,00/47.347,60 USD base y
+11.921,00/23.358,00/50.763,60 USD adversos. Sólo QQQ static tiene neto base
+positivo (+548,40), pero pierde con costes adversos y PF1,030 no pasa el gate.
+Los nueve grupos fallan; selected_mode=null. Se mantienen seis ausencias
+NO_EVALUABLE sobre 369 días esperados; 363 disponibles. Todo es desarrollo visto.
+
+El [runtime OOF concreto](OOF_PIPELINE_RUNTIME_PREPARATION_20261024_01.md)
+pasó [revisión independiente](OOF_PIPELINE_RUNTIME_INDEPENDENT_REVIEW_20261024_01.md),
+CLEAR47checks. Request9399f791…2cd71/bindingb4f6eb47…69326 inmutables;
+publicación y admisión preceden al único lanzamiento, aún no realizado.
+Reporter18meses y figura H1 están pendientes. No cambian parámetros por resultados.
+
+La [interpretación H1](MONTHLY_H1_2026_INITIAL_INTERPRETATION_20261024.md)
+fue contrastada independientemente con los cuatro pins de reporte/audit/cierre.
+Diff-check del nuevo archivo detecta únicamente líneas vacías finales heredadas
+en las dos copias de test_audit_monthly_walk_forward.py (audit/executed_code y
+code), línea193. Se preservan los bytes sellados; el resto pasa diff-check.
+
+Los registros siguientes conservan los cortes anteriores y quedan sustituidos
+operativamente por esta actualización; no representan procesos aún activos.
+
 La implementación OOF y el recibo de inicio del auditor se publicaron y
 verificaron en `dd18764dc1537092bde947060f704c2b97651989`.
 La [adaptación descriptiva H1](MONTHLY_H1_2026_FIGURE_PREPARATION_20261024.md)

@@ -7,22 +7,22 @@ la rentabilidad causal sigue sin demostrarse y no hay promoción autorizada.
 Las ejecuciones y pendientes actuales se registran en
 [continuación del 23 de octubre](CONTINUATION_PROGRESS_20261023.md).
 
-El productor mensual terminó el 24 de octubre a las 03:00 UTC: 36 modelos y
-18 meses completos, incluidos enero–junio de 2026. El monitor registró exit 0
-mediante el handle retenido, después del cierre del wrapper y sus verificaciones.
-La selección sigue en null. La auditoría independiente de 2026 está en ejecución;
-el cierre del productor todavía no acredita sus resultados económicos.
-El [archivo del cierre](MONTHLY_TEST_2026_PRODUCER_CLOSURE_20261024.md) conserva
-136 copias y los doce modelos nuevos; las matrices e inputs grandes siguen locales.
-El [contrato concreto de auditoría pasó revisión independiente](MONTHLY_TEST_INDEX_V2_AUDIT_RUNTIME_REVIEW_20261024_01_INDEPENDENT.md)
-y fue publicado antes del [inicio verificado del auditor](MONTHLY_TEST_AUDIT_START_RECEIPT_20261024.md).
-El [supervisor de OOF](OOF_PIPELINE_LAUNCH_IMPLEMENTATION_RESULT_20261024.md)
-ya pasó pruebas sintéticas y revisión independiente. Su ejecución real requiere
-primero el cierre auditado mensual y un contrato concreto revisado y publicado.
-La [reconciliación y gráfica H1 están preparadas](MONTHLY_H1_2026_FIGURE_PREPARATION_20261024.md)
-con pruebas artificiales; todavía no se ha generado la gráfica real de 2026.
-El [recibo del primer modelo](MONTHLY_TEST_FIRST_FIT_RECEIPT_20261024.md)
-conserva el hito intermedio y sus límites.
+La [auditoría mensual compuesta ya cerró](MONTHLY_TEST_2026_COMPOSITE_AUDIT_RESULT_20261024.md):
+18 meses y 36 ventanas, con exit 0 observado y 62 copias de evidencia verificadas.
+El PASS acredita reconstrucción sobre scores sellados, sin repetir fit o inferencia.
+La [lectura completa de H1](MONTHLY_H1_2026_INITIAL_INTERPRETATION_20261024.md)
+recoge que static, expanding y rolling12 pierden 8.746,00, 20.616,00 y
+47.347,60 USD base; con costes adversos pierden 11.921,00, 23.358,00 y
+50.763,60 USD. Los nueve grupos modo/ticker fallan los requisitos conjuntos.
+La selección permanece null y los seis ticker-días ausentes siguen NO_EVALUABLE.
+
+El [runtime OOF está preparado](OOF_PIPELINE_RUNTIME_PREPARATION_20261024_01.md)
+y [revisado independientemente](OOF_PIPELINE_RUNTIME_INDEPENDENT_REVIEW_20261024_01.md).
+Su publicación precede al lanzamiento único con los parámetros predeclarados.
+El reporte descriptivo de 18 meses y la
+[gráfica H1](MONTHLY_H1_2026_FIGURE_PREPARATION_20261024.md) están pendientes.
+El [cierre del productor](MONTHLY_TEST_2026_PRODUCER_CLOSURE_20261024.md)
+conserva los doce modelos nuevos; matrices y datos brutos permanecen locales.
 
 La [validación mensual 2025 ya está auditada](MONTHLY_VALIDATION_2025_AUDIT_RESULT_20261024.md):
 static, expanding y rolling12 pierden 49.152,40, 75.243,80 y 122.081,40 USD base.

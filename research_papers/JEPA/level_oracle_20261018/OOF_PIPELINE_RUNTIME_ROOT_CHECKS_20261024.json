@@ -1,0 +1,17 @@
+{
+  "status": "PASS_ROOT_COMPACT_RUNTIME_CHECKS_PENDING_INDEPENDENT_REVIEW_AND_PUBLICATION",
+  "utc": "2026-10-24T04:04:33.884801+00:00",
+  "request_sha256": "9399f791e0dc34d62c272ba4bd2fc150fdd4c1c2608ca036718c8adb0c82cd71",
+  "binding_sha256": "b4f6eb47ffa841ce4510d18b34e560b6d66d22c4cfe34364a838596f4c769326",
+  "implementation_files_rehashed": 48,
+  "request_dependencies": 17,
+  "published_file_pins_local": 55,
+  "existing_git_objects_checked": 54,
+  "upstream_closure_members_exact": 5,
+  "upstream_documents_rehashed": 6,
+  "fresh_disjoint_outputs_and_logs": 9,
+  "bounded_allowed_roots": 7,
+  "scientific_parameters_changed": false,
+  "pipeline_preflight_or_execution_performed": false,
+  "large_payloads_rehashed_by_root": false
+}

@@ -1,0 +1,67 @@
+{
+  "status": "PASS_COMPACT_AUDIT_AND_CHILD_EXIT_PENDING_SUPERVISOR_CLOSURE",
+  "utc": "2026-10-24T03:59:44.756620+00:00",
+  "audit_sha256": "87bfea586be13e02fd7fd0fe59c819195c62a430f34c867f9ec661812569fd4e",
+  "retained_exit_sha256": "f7fadc58144d9934f38e2f3af81355b322ac45b36430742fbd42230d704cc259",
+  "snapshot_files_rehashed": 15,
+  "unique_inventory_references": 48081,
+  "prior_inventory_inherited_exact": true,
+  "process_chain_compact_links_verified": true,
+  "audited": {
+    "new_months": 6,
+    "new_unique_fit_windows": 12,
+    "models_used_test": 13,
+    "total_unique_fit_windows": 36,
+    "modes": [
+      "static",
+      "expanding",
+      "rolling12"
+    ],
+    "calendar_ticker_days": 369,
+    "available_ticker_days": 363,
+    "missing_no_evaluable": 6,
+    "missing_identities": [
+      [
+        "QQQ",
+        "20260401"
+      ],
+      [
+        "QQQ",
+        "20260409"
+      ],
+      [
+        "QQQ",
+        "20260415"
+      ],
+      [
+        "SPY",
+        "20260401"
+      ],
+      [
+        "SPY",
+        "20260409"
+      ],
+      [
+        "SPY",
+        "20260415"
+      ]
+    ],
+    "selected_mode": null,
+    "selection_reused_without_test_reselection": true,
+    "new_fit_samples_targets_weights_matrices_reconstructed": true,
+    "scheduler_ledgers_economics_reconstructed": true,
+    "all_three_monthly_fit_scores_sealed_before_ledgers": true,
+    "test_period_report_reconstructed": true
+  },
+  "limitations": [
+    "Given sealed scores only: no model refit or repeated inference.",
+    "Validation 2025 reconstruction is inherited from the pinned prior audit; its inventory was rehashed.",
+    "Training feature chunks and matrices are compared; features and quotes are not rebuilt from raw.",
+    "Artifact seal order is not historical receipt or historical publication evidence.",
+    "Missing daily zeros are structural serialization, not observed zero-return trades.",
+    "Seen development only; no prospective or live profitability claim."
+  ],
+  "all_inventory_payloads_rehashed_by_root": false,
+  "economic_report_metrics_opened": false,
+  "supervisor_complete_at_check": false
+}

@@ -1,0 +1,18 @@
+{
+  "audit_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_test_audit_20261024_01\\audit.json",
+  "audit_sha256": "87bfea586be13e02fd7fd0fe59c819195c62a430f34c867f9ec661812569fd4e",
+  "closure_files": {
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_index_v2_audit_launch_20261024_01\\exit.json": "f7fadc58144d9934f38e2f3af81355b322ac45b36430742fbd42230d704cc259",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_index_v2_audit_launch_20261024_01\\preflight.json": "45a42b4c81d1ba1b87476983218018f8b8ab8df9b378f20e11d2d70cfef598f4",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_index_v2_audit_launch_20261024_01\\process.json": "984222d328a64ce0c092d1290cf96c70d7ee813fc02e408af6d693cea0e93a64",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_test_audit_20261024_01\\audit.json": "87bfea586be13e02fd7fd0fe59c819195c62a430f34c867f9ec661812569fd4e",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_test_audit_20261024_01\\launch.json": "2d5ee3888af207021bde1fbb120eaa842627f36084730a46ee795b508c01176c"
+  },
+  "completed_utc": "2026-10-24T04:00:41.848786+00:00",
+  "exit_code": 0,
+  "publication_commit": "03f8a4876f59e5913f2caacf456795bca44b3402",
+  "retry": false,
+  "runtime_review_sha256": "055d2734469a77dc607585d000f594ed3088580400c46f513c209119a793eab1",
+  "status": "COMPLETE_MONTHLY_TEST_INDEX_V2_AUDIT_SUPERVISION",
+  "supervisor_review_sha256": "e38ae0fb7ebfc3d5841fe87052d00605f58cba21a8ba987341d0f307ede9e432"
+}

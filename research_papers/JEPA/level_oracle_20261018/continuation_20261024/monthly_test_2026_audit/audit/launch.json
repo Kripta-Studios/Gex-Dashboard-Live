@@ -1,0 +1,37 @@
+{
+  "scope": "VALIDATION_2025_PLUS_DEVELOPMENT_TEST_2026H1",
+  "dependencies": {
+    "audit_monthly_walk_forward_test_index_v2.py": "feea3954b231b18f18384696959d7cdbbcaf4d513dbf3fc4fee8596136483421",
+    "test_audit_monthly_walk_forward_test_index_v2.py": "54a5ab7133705d528774c1ee458989a8acff60dfdef94a69aefd3b6662587194",
+    "MONTHLY_TEST_INDEX_AUDIT_V2_SPEC_20261024.md": "5513996a6284c175dd26496ccee645d23f721d097896123280309cc0be327e29",
+    "audit_monthly_walk_forward_index_v2.py": "f01a962fcf50a2cc2bb49fd4d3eb597eb07cda47f8d2697b8046ccb9b5721ed3",
+    "test_audit_monthly_walk_forward_index_v2.py": "f986885706e78a9ecdac5f126502906d7f7637b513fb2f3a8ee16f765ea1c88d",
+    "MONTHLY_WALK_FORWARD_INDEX_AUDIT_V2_SPEC_20261024.md": "06f0fcd6ac5d60a8e503d5f9df86102683e441d7b00d0a5968142384f4a821f4",
+    "audit_monthly_walk_forward.py": "e4a3be1c19b7f0af1226e71255c81116bd71a6a300aef36f61c688deb908df1f",
+    "test_audit_monthly_walk_forward.py": "8c47e89951506553bfb1295c6e390501828b8fe6f77bcae5d566e98c2039ef87",
+    "MONTHLY_WALK_FORWARD_SEALED_SCORE_AUDIT_CONTRACT.md": "cabdd117fc4dc713fbca085a48e38ac8c8f609555f42f10a05321c01623ff8e7",
+    "MONTHLY_WALK_FORWARD_SEALED_SCORE_AUDITOR_REVIEW.json": "db323959e6a894d6d6fb51bde764af0c96db0cb0bba2f1711bbe0807425d10ca",
+    "audit_monthly_walk_forward_test.py": "ec0ddb99840d5bf380eb7f407de3e1a5bcbdfa352d79ad5d75e24a05750db57b",
+    "test_audit_monthly_walk_forward_test.py": "b3cc6d8225812154da2e4d2c644e426a19f7177d520b9d564826e3a3e4790a00",
+    "MONTHLY_TEST_AUDIT_EXTENSION_SPEC_20261023.md": "b895e0ee57ee8d911b4d732e1f46b07c2d9e13c296f09888ce47372815f5182d"
+  },
+  "snapshots": {
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_test_audit_20261024_01\\executed_code\\audit_monthly_walk_forward_test_index_v2.py": "feea3954b231b18f18384696959d7cdbbcaf4d513dbf3fc4fee8596136483421",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_test_audit_20261024_01\\executed_code\\test_audit_monthly_walk_forward_test_index_v2.py": "54a5ab7133705d528774c1ee458989a8acff60dfdef94a69aefd3b6662587194",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_test_audit_20261024_01\\executed_code\\MONTHLY_TEST_INDEX_AUDIT_V2_SPEC_20261024.md": "5513996a6284c175dd26496ccee645d23f721d097896123280309cc0be327e29",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_test_audit_20261024_01\\executed_code\\audit_monthly_walk_forward_index_v2.py": "f01a962fcf50a2cc2bb49fd4d3eb597eb07cda47f8d2697b8046ccb9b5721ed3",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_test_audit_20261024_01\\executed_code\\test_audit_monthly_walk_forward_index_v2.py": "f986885706e78a9ecdac5f126502906d7f7637b513fb2f3a8ee16f765ea1c88d",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_test_audit_20261024_01\\executed_code\\MONTHLY_WALK_FORWARD_INDEX_AUDIT_V2_SPEC_20261024.md": "06f0fcd6ac5d60a8e503d5f9df86102683e441d7b00d0a5968142384f4a821f4",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_test_audit_20261024_01\\executed_code\\audit_monthly_walk_forward.py": "e4a3be1c19b7f0af1226e71255c81116bd71a6a300aef36f61c688deb908df1f",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_test_audit_20261024_01\\executed_code\\test_audit_monthly_walk_forward.py": "8c47e89951506553bfb1295c6e390501828b8fe6f77bcae5d566e98c2039ef87",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_test_audit_20261024_01\\executed_code\\MONTHLY_WALK_FORWARD_SEALED_SCORE_AUDIT_CONTRACT.md": "cabdd117fc4dc713fbca085a48e38ac8c8f609555f42f10a05321c01623ff8e7",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_test_audit_20261024_01\\executed_code\\MONTHLY_WALK_FORWARD_SEALED_SCORE_AUDITOR_REVIEW.json": "db323959e6a894d6d6fb51bde764af0c96db0cb0bba2f1711bbe0807425d10ca",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_test_audit_20261024_01\\executed_code\\audit_monthly_walk_forward_test.py": "ec0ddb99840d5bf380eb7f407de3e1a5bcbdfa352d79ad5d75e24a05750db57b",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_test_audit_20261024_01\\executed_code\\test_audit_monthly_walk_forward_test.py": "b3cc6d8225812154da2e4d2c644e426a19f7177d520b9d564826e3a3e4790a00",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_test_audit_20261024_01\\executed_code\\MONTHLY_TEST_AUDIT_EXTENSION_SPEC_20261023.md": "b895e0ee57ee8d911b4d732e1f46b07c2d9e13c296f09888ce47372815f5182d",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_test_audit_20261024_01\\authorities\\implementation_review.json": "493806fbc25a50a3333b4d2e65f3bd041bd30b30d5a10203d8c188c0520ee2b3",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_test_audit_20261024_01\\authorities\\runtime_review.json": "055d2734469a77dc607585d000f594ed3088580400c46f513c209119a793eab1"
+  },
+  "runtime_review_sha256": "055d2734469a77dc607585d000f594ed3088580400c46f513c209119a793eab1",
+  "validation_audit_sha256": "ba9fbd9edf849eb823f098461906feede9782b1e513f4d1954e6d58f52549cbc"
+}

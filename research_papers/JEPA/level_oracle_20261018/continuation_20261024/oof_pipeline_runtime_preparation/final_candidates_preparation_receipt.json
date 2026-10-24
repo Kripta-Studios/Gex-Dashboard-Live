@@ -1,0 +1,29 @@
+{
+  "status": "FINAL_CANDIDATES_PENDING_INDEPENDENT_REVIEW_AND_ROOT_PUBLICATION",
+  "runtime_execution_authorized_by_this_receipt": false,
+  "captured_utc": "2026-10-24T04:02:21.247455+00:00",
+  "source_draft": {
+    "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_preparation_20261024_01\\draft_audit_pass_pending_supervisor_01.json",
+    "sha256": "2cfd8024438b30cd98784ad7a054a8b949f9381d4ddc941e9c8061db912f1e57"
+  },
+  "upstream_supervisor_completion": {
+    "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_index_v2_audit_launch_20261024_01\\completion.json",
+    "sha256": "1045866ea9fdf7d926a51a221e9e5f453ead5146d835197ec99fabe3466b0165"
+  },
+  "request": {
+    "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_PIPELINE_RUNTIME_REQUEST_20261024_01.json",
+    "sha256": "9399f791e0dc34d62c272ba4bd2fc150fdd4c1c2608ca036718c8adb0c82cd71"
+  },
+  "runtime_binding": {
+    "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_PIPELINE_LAUNCH_RUNTIME_BINDING_20261024_01.json",
+    "sha256": "b4f6eb47ffa841ce4510d18b34e560b6d66d22c4cfe34364a838596f4c769326"
+  },
+  "finalized_changes": [
+    "Real externally supplied upstream completion pin inserted after closure verification.",
+    "Contractual request status/runtime_authorized and operational binding status materialized for exact-byte review.",
+    "Request SHA bound in request member and55publication members; binding SHA remains external."
+  ],
+  "note": "The request schema requires runtime_authorized=true; these are reviewable candidate bytes under root preparation authorization. No process is authorized or executed by this materialization. Independent review, publication and root launch decision remain mandatory.",
+  "no_imports_or_admission_or_pipeline_execution": true,
+  "no_metrics_opened": true
+}
