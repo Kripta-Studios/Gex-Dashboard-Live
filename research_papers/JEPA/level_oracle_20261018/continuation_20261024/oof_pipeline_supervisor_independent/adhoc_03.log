@@ -1,0 +1,12 @@
+{
+  "status": "PASS_INDEPENDENT_POST_IMPORT_MUTATION_NEGATIVE",
+  "request_mutated_during_late_import": true,
+  "popen_called": false,
+  "claim_created": false,
+  "real_market_execution": false,
+  "pins": {
+    "launch_oof_pipeline_20261024.py": "e93ff7db48c86a6d569e70d18f845ec48575ba2cb226bbed981c28a58245e9a8",
+    "test_launch_oof_pipeline_20261024.py": "8e5a9df15149b4afa3c2bab8293624da5a2bd9a27ef75301c0f8dcf0a1c65890",
+    "OOF_PIPELINE_LAUNCH_SPEC_20261024.md": "eeb0dad0d0400bc273d5396c5ec6e6ca936bed8b2145e8a68af0b4e4f9df4770"
+  }
+}

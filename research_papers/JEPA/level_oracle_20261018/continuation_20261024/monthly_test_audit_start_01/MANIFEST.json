@@ -1,0 +1,51 @@
+{
+  "status": "PASS_COMPACT_AUDITOR_START_RECEIPT_COPY_VERIFICATION",
+  "observed_utc": "2026-10-24T03:37:29.193293+00:00",
+  "files": [
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_audit_supervisor_observer_20261024_01\\initial_observation.json",
+      "copy": "initial_observation.json",
+      "sha256": "c3e331b208e1cf807ff04747f8337073bcdb67cf7aa6598ca98f25aefba165d8",
+      "size_bytes": 1305
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_index_v2_audit_launch_20261024_01\\preflight.json",
+      "copy": "preflight.json",
+      "sha256": "45a42b4c81d1ba1b87476983218018f8b8ab8df9b378f20e11d2d70cfef598f4",
+      "size_bytes": 8803720
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_index_v2_audit_launch_20261024_01\\process.json",
+      "copy": "process.json",
+      "sha256": "984222d328a64ce0c092d1290cf96c70d7ee813fc02e408af6d693cea0e93a64",
+      "size_bytes": 1972
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_index_v2_audit_launch_20261024_01\\admission.json",
+      "copy": "admission.json",
+      "sha256": "1a9b47eaf85b40ebaedf746412e1af3139e5d7fc781cea6ce698a46ad5ceb8cd",
+      "size_bytes": 160
+    }
+  ],
+  "total_bytes": 8807157,
+  "observed_state": {
+    "supervisor_pid": 23196,
+    "auditor_pid": 49820,
+    "auditor_creation_time_receipt": 1792812892.486885,
+    "auditor_creation_time_psutil": 1792812892.4868853,
+    "command_exact": true,
+    "parent_exact": true,
+    "auditor_alive": true,
+    "exit_receipt_present": false,
+    "supervisor_completion_present": false,
+    "audit_json_present": false,
+    "stderr_bytes": 0
+  },
+  "limits": {
+    "audit_pass_claimed": false,
+    "economic_metrics_read": false,
+    "large_payloads_copied_or_rehashed": false,
+    "mutable_logs_copied": false,
+    "initial_observation_unchanged": true
+  }
+}

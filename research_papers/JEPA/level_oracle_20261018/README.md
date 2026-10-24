@@ -10,12 +10,15 @@ Las ejecuciones y pendientes actuales se registran en
 El productor mensual terminó el 24 de octubre a las 03:00 UTC: 36 modelos y
 18 meses completos, incluidos enero–junio de 2026. El monitor registró exit 0
 mediante el handle retenido, después del cierre del wrapper y sus verificaciones.
-La selección sigue en null. La auditoría independiente de 2026 está pendiente;
+La selección sigue en null. La auditoría independiente de 2026 está en ejecución;
 el cierre del productor todavía no acredita sus resultados económicos.
 El [archivo del cierre](MONTHLY_TEST_2026_PRODUCER_CLOSURE_20261024.md) conserva
 136 copias y los doce modelos nuevos; las matrices e inputs grandes siguen locales.
 El [contrato concreto de auditoría pasó revisión independiente](MONTHLY_TEST_INDEX_V2_AUDIT_RUNTIME_REVIEW_20261024_01_INDEPENDENT.md)
-y queda preparado para publicación y admisión completa antes de ejecutarlo.
+y fue publicado antes del [inicio verificado del auditor](MONTHLY_TEST_AUDIT_START_RECEIPT_20261024.md).
+El [supervisor de OOF](OOF_PIPELINE_LAUNCH_IMPLEMENTATION_RESULT_20261024.md)
+ya pasó pruebas sintéticas y revisión independiente. Su ejecución real requiere
+primero el cierre auditado mensual y un contrato concreto revisado y publicado.
 El [recibo del primer modelo](MONTHLY_TEST_FIRST_FIT_RECEIPT_20261024.md)
 conserva el hito intermedio y sus límites.
 

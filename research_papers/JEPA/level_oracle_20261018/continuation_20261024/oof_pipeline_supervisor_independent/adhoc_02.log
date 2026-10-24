@@ -1,0 +1,60 @@
+Traceback (most recent call last):
+  File "D:\GexResearchArtifacts\level_oracle_20261018\oof_pipeline_supervisor_independent_20261024_01\adhoc_02.py", line 30, in <module>
+    supervisor.launch(receipt)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\�lvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\level_oracle_20261018\launch_oof_pipeline_20261024.py", line 456, in launch
+    helper = importlib.import_module(HELPER_NAME.removesuffix(".py"))
+  File "D:\GexResearchArtifacts\level_oracle_20261018\oof_pipeline_supervisor_independent_20261024_01\adhoc_02.py", line 20, in imported
+    result=original(name, *args, **kwargs)
+  File "C:\Program Files\Python314\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1398, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1371, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1342, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 938, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 759, in exec_module
+  File "<frozen importlib._bootstrap>", line 491, in _call_with_frames_removed
+  File "C:\Users\�lvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\level_oracle_20261018\launch_monthly_test_20261023.py", line 19, in <module>
+    import run_monthly_test_resource_overlay as overlay
+  File "C:\Users\�lvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\level_oracle_20261018\run_monthly_test_resource_overlay.py", line 18, in <module>
+    import run_monthly_walk_forward as monthly
+  File "C:\Users\�lvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\level_oracle_20261018\run_monthly_walk_forward.py", line 24, in <module>
+    import train_causal_rollout as shared
+  File "C:\Users\�lvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\level_oracle_20261018\train_causal_rollout.py", line 24, in <module>
+    import lightgbm as lgb  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\�lvaro Schwiedop\AppData\Roaming\Python\Python314\site-packages\lightgbm\__init__.py", line 11, in <module>
+    from .basic import Booster, Dataset, Sequence, register_logger
+  File "C:\Users\�lvaro Schwiedop\AppData\Roaming\Python\Python314\site-packages\lightgbm\basic.py", line 29, in <module>
+    from .compat import (
+    ...<17 lines>...
+    )
+  File "C:\Users\�lvaro Schwiedop\AppData\Roaming\Python\Python314\site-packages\lightgbm\compat.py", line 10, in <module>
+    from sklearn import __version__ as _sklearn_version
+  File "C:\Users\�lvaro Schwiedop\AppData\Roaming\Python\Python314\site-packages\sklearn\__init__.py", line 70, in <module>
+    from sklearn.base import clone  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\�lvaro Schwiedop\AppData\Roaming\Python\Python314\site-packages\sklearn\base.py", line 19, in <module>
+    from sklearn.utils._metadata_requests import _MetadataRequester, _routing_enabled
+  File "C:\Users\�lvaro Schwiedop\AppData\Roaming\Python\Python314\site-packages\sklearn\utils\__init__.py", line 9, in <module>
+    from sklearn.utils._chunking import gen_batches, gen_even_slices
+  File "C:\Users\�lvaro Schwiedop\AppData\Roaming\Python\Python314\site-packages\sklearn\utils\_chunking.py", line 11, in <module>
+    from sklearn.utils._param_validation import Interval, validate_params
+  File "C:\Users\�lvaro Schwiedop\AppData\Roaming\Python\Python314\site-packages\sklearn\utils\_param_validation.py", line 17, in <module>
+    from sklearn.utils.validation import _is_arraylike_not_scalar
+  File "C:\Users\�lvaro Schwiedop\AppData\Roaming\Python\Python314\site-packages\sklearn\utils\validation.py", line 14, in <module>
+    import joblib
+  File "C:\Users\�lvaro Schwiedop\AppData\Roaming\Python\Python314\site-packages\joblib\__init__.py", line 120, in <module>
+    from .memory import MemorizedResult, Memory, expires_after, register_store_backend
+  File "C:\Users\�lvaro Schwiedop\AppData\Roaming\Python\Python314\site-packages\joblib\memory.py", line 11, in <module>
+    import asyncio
+  File "C:\Program Files\Python314\Lib\asyncio\__init__.py", line 45, in <module>
+    from .windows_events import *
+  File "C:\Program Files\Python314\Lib\asyncio\windows_events.py", line 26, in <module>
+    from . import windows_utils
+  File "C:\Program Files\Python314\Lib\asyncio\windows_utils.py", line 125, in <module>
+    class Popen(subprocess.Popen):
+    ...<47 lines>...
+                    os.close(stderr_wfd)
+TypeError: function() argument 'code' must be code, not str

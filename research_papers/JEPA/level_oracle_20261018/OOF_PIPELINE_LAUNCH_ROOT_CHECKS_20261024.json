@@ -1,0 +1,27 @@
+{
+  "status": "PASS_ROOT_READ_ONLY_IMPLEMENTATION_AND_COMPACT_EVIDENCE_CHECKS",
+  "utc": "2026-10-24T03:39:16.206722+00:00",
+  "review_sha256": "a78c2ef9019111a1ca98fa6e2517a4db8ce1ef9877596e5807734ce4c843ec95",
+  "implementation_files_rehashed": 48,
+  "script_and_final_tests_read": true,
+  "author_initial_test_version_and_final_diff_read": true,
+  "additional_tests_run_by_root": false,
+  "archives_verified": [
+    {
+      "manifest": "research_papers\\JEPA\\level_oracle_20261018\\continuation_20261024\\oof_pipeline_supervisor_synthetic\\manifest.json",
+      "sha256": "d22aa864b60e3b91c5aab22eabcb1f8703f2a344f043bd6a0210bb5774e0a5be",
+      "copies": 48
+    },
+    {
+      "manifest": "research_papers\\JEPA\\level_oracle_20261018\\continuation_20261024\\monthly_test_audit_start_01\\MANIFEST.json",
+      "sha256": "bb44a8ab436d08c35fa85b97ceb9d899ec19f58424f4c54721a7c5f8d5b6242b",
+      "copies": 4
+    }
+  ],
+  "future_audit_archiver_script_sha256": "c684eb2c6ad6c08811fe39415288d3127f17f0f965416efae6e569882bbbd1cd",
+  "future_audit_archiver_plan_sha256": "1d73e437fa38f53c5dcd17957a986379546c47ae88245e083c1c43d376b95ff5",
+  "future_audit_archiver_read_and_not_executed": true,
+  "economic_metrics_opened": false,
+  "oof_runtime_authorized": false,
+  "monthly_audit_running": true
+}

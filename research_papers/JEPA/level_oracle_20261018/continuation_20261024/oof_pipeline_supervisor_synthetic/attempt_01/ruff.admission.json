@@ -1,0 +1,15 @@
+{
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-m",
+    "ruff",
+    "check",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_oof_pipeline_20261024.py",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_launch_oof_pipeline_20261024.py"
+  ],
+  "resources": {
+    "available_ram_bytes": 6986440704,
+    "free_commit_bytes": 4914003968
+  },
+  "utc": "2026-10-24T03:28:59.537907+00:00"
+}

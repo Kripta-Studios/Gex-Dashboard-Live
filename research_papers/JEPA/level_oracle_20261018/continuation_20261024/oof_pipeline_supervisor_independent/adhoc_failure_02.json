@@ -1,0 +1,1 @@
+{"status":"HARNESS_SETUP_FAILURE","exit_code":1,"script":"adhoc_02.py","error":"TypeError: function() argument code must be code, not str","cause":"Reviewer replaced subprocess.Popen before asyncio imported its Windows Popen subclass.","candidate_code_changed":false,"target_assertion_reached":false,"log":"adhoc_02.log"}

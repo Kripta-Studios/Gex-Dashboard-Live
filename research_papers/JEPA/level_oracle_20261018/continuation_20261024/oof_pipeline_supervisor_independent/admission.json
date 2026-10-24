@@ -1,0 +1,22 @@
+{
+  "utc": "2026-10-24T03:33:25.265951+00:00",
+  "resources": {
+    "available_ram_bytes": 7232446464,
+    "free_commit_bytes": 4966936576
+  },
+  "minimum_free_bytes": 2000000000,
+  "pins": {
+    "launch_oof_pipeline_20261024.py": "e93ff7db48c86a6d569e70d18f845ec48575ba2cb226bbed981c28a58245e9a8",
+    "test_launch_oof_pipeline_20261024.py": "8e5a9df15149b4afa3c2bab8293624da5a2bd9a27ef75301c0f8dcf0a1c65890",
+    "OOF_PIPELINE_LAUNCH_SPEC_20261024.md": "eeb0dad0d0400bc273d5396c5ec6e6ca936bed8b2145e8a68af0b4e4f9df4770"
+  },
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-m",
+    "pytest",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_launch_oof_pipeline_20261024.py",
+    "-q",
+    "-k",
+    "complete_metadata_admission or complete_twelve_phase or actual_contract_or_index or extra_local_digest or correction_other_root or simulated_junction_after or destinations_revalidated or preflight or post_popen_junction or post_popen_publication or monitor_init or exit_false or naive or low_commit"
+  ]
+}

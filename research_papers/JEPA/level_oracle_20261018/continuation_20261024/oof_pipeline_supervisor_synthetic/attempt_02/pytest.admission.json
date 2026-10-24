@@ -1,0 +1,16 @@
+{
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_launch_oof_pipeline_20261024.py",
+    "-k",
+    "post_popen_publication or default_cli"
+  ],
+  "resources": {
+    "available_ram_bytes": 6938689536,
+    "free_commit_bytes": 4852670464
+  },
+  "utc": "2026-10-24T03:31:18.516242+00:00"
+}

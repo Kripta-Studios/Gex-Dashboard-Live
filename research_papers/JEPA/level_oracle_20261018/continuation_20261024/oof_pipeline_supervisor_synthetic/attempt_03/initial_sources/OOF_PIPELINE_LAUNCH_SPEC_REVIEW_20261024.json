@@ -1,0 +1,46 @@
+{
+  "status": "PASS_OOF_PIPELINE_LAUNCH_SPEC_REVIEW",
+  "decision": "CLEAR",
+  "scope": "SPEC_ONLY",
+  "runtime_authorized": false,
+  "reviewer": "/root/oof_reviewer",
+  "reviewed_utc": "2026-10-24T03:15:16.877061+00:00",
+  "spec": {
+    "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_PIPELINE_LAUNCH_SPEC_20261024.md",
+    "sha256": "eeb0dad0d0400bc273d5396c5ec6e6ca936bed8b2145e8a68af0b4e4f9df4770"
+  },
+  "inspected_sources": {
+    "run_oof_calibrated_pipeline.py": "26967e10c6b81cd5b84d7939bf6d0c81037934165daa91847d7ffd25de16ff57",
+    "monthly_oof_calibration_adapter.py": "7b80cff43e3887a92e0f89be6daa863a670ccd72d22a0f4aeabd032a39479364",
+    "evaluate_oof_calibrated_policy.py": "eeaad06f5b862a3153f29e7eab579b19a35e182ab506cf1f59e65631e187e716",
+    "OOF_PIPELINE_RUNTIME_SPEC_20261023.md": "9b8d40296d515c28953b6b994c552560f159f6b8be57f0177487dbff05987909",
+    "OOF_PIPELINE_RUNTIME_IMPLEMENTATION_REVIEW_20261023.json": "c35541a487c87512cb678cc511006a8729fbf233a00b639e4dcc60a3fdee68d6",
+    "launch_monthly_test_20261023.py": "3e77bda56dabd8287b04ae9a47b4dcd45d5967a01a31514e933cbb44b6f4c08d"
+  },
+  "findings_open": [],
+  "checks": [
+    "External request/runtime/review SHA and exact publication; code17 distinct from supervisor import closure.",
+    "No Request, MonthlyInputs, pipeline or reconstruction calls during metadata admission; no future audit/exit/request SHA invented.",
+    "Upstream monthly composite audit and retained exit0 with exact supervised closure required before real use.",
+    "Eight scientific outputs and separate logs fresh/disjoint/bounded; durable one-claim and no automatic retry or resume.",
+    "Separate fixed parent lock avoids holding pipeline GLOBAL_LOCK across child.",
+    "RAM and commit each >=2000000000 bytes measured immediately before Popen; original handle retained and drained on post-launch failure.",
+    "Process/exit/completion chain pins request/runtime/review/code/commit and original pre-Popen preflight SHA.",
+    "Exit0 plus exact twelve starts/receipts, six correction/replay closures, cumulative inventory and pending-independent-audit completion required.",
+    "One final streaming hash pass over OOF output inventory is permitted, with only root-level .lock exclusions; no economic payload parse or repeated source-payload rehash.",
+    "No automatic economic audit, winner selection, refit, science changes or promotion."
+  ],
+  "publication_sequence": [
+    "Publish this unchanged spec, non-authorizing draft and this SPEC_ONLY review before new fixtures run.",
+    "Implement only new supervisor/tests; preserve scientific frozen bytes.",
+    "Use synthetic fixtures and harmless Python child processes; obtain independent implementation review before real use.",
+    "Only after actual monthly closure, prepare/review/publish exact request/runtime externally; root retains launch decision."
+  ],
+  "limitations": [
+    "No implementation exists in the reviewed scope; this does not certify future supervisor bytes.",
+    "No fixtures or economic runtime were executed for this spec review.",
+    "No 2026 metrics, source arrays or process state were changed/read by this spec review."
+  ],
+  "technical_ready": false,
+  "promotion_approved": false
+}

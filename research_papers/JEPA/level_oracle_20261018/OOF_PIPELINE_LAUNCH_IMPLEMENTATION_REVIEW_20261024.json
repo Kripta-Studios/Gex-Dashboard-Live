@@ -1,0 +1,322 @@
+{
+  "status": "PASS_OOF_PIPELINE_LAUNCH_IMPLEMENTATION_REVIEW",
+  "decision": "CLEAR",
+  "scope": "IMPLEMENTATION_ONLY",
+  "runtime_authorized": false,
+  "reviewer": "/root/oof_reviewer",
+  "reviewed_utc": "2026-10-24T03:37:35.324844+00:00",
+  "files": {
+    "MONTHLY_OOF_CALIBRATION_ADAPTER_SPEC.md": "6bd989a6332fd21f751dc48ef084c5eba0f83b1f86f957f2a71127ef869bcb4e",
+    "MONTHLY_TEST_AUDIT_EXTENSION_SPEC_20261023.md": "b895e0ee57ee8d911b4d732e1f46b07c2d9e13c296f09888ce47372815f5182d",
+    "MONTHLY_TEST_INDEX_AUDIT_V2_SPEC_20261024.md": "5513996a6284c175dd26496ccee645d23f721d097896123280309cc0be327e29",
+    "MONTHLY_WALK_FORWARD_INDEX_AUDIT_V2_SPEC_20261024.md": "06f0fcd6ac5d60a8e503d5f9df86102683e441d7b00d0a5968142384f4a821f4",
+    "MONTHLY_WALK_FORWARD_PLAN.md": "71ccd29587be4012dad9fe3ada4ad29ff7b93b94ea08340343ebe39d287c97ae",
+    "MONTHLY_WALK_FORWARD_SEALED_SCORE_AUDITOR_REVIEW.json": "db323959e6a894d6d6fb51bde764af0c96db0cb0bba2f1711bbe0807425d10ca",
+    "MONTHLY_WALK_FORWARD_SEALED_SCORE_AUDIT_CONTRACT.md": "cabdd117fc4dc713fbca085a48e38ac8c8f609555f42f10a05321c01623ff8e7",
+    "OOF_CALIBRATED_POLICY_EVALUATION_SPEC.md": "7f88f18569d86ea936d0afdc4a485e461ccdf6c09d74feb835a026bee7caf3bc",
+    "OOF_ECONOMIC_AUDITOR_DESIGN_20261023.md": "b9c2ac397945a04365289b9af0f202f04082c844badfc724ae937972be253154",
+    "OOF_ECONOMIC_AUDITOR_IMPLEMENTATION_REVIEW_20261023.md": "8faf2a64f07df648f2d90e184a4a1a43e80a24b7f474d47604c3c0d352dfacb6",
+    "OOF_ECONOMIC_AUDITOR_SPEC_20261023.md": "cfa6868435a772b336605e3b0613e8fa6c1e377a53cbbef376d3973e64901f37",
+    "OOF_MAXIMUM_CALIBRATION_INTEGRATION.md": "79f8c69b13c3585aa26cbb15fa52f246675baaabd8b8e8d6661a5ffe150ce7bd",
+    "OOF_PIPELINE_LAUNCH_SPEC_20261024.md": "eeb0dad0d0400bc273d5396c5ec6e6ca936bed8b2145e8a68af0b4e4f9df4770",
+    "OOF_PIPELINE_RUNTIME_SPEC_20261023.md": "9b8d40296d515c28953b6b994c552560f159f6b8be57f0177487dbff05987909",
+    "OOF_RUNTIME_SEQUENCE_DESIGN_20261023.md": "e5c6350a492221632b9c87fa61ee7b644b507812c4d11ab3a1e3eb26f936762a",
+    "PREQUENTIAL_MAX_CALIBRATION_DESIGN.md": "e8264e398b31f22198a024a3c6d9dfa9fc4530402278693caac1caa2d6f7a619",
+    "audit_monthly_walk_forward.py": "e4a3be1c19b7f0af1226e71255c81116bd71a6a300aef36f61c688deb908df1f",
+    "audit_monthly_walk_forward_index_v2.py": "f01a962fcf50a2cc2bb49fd4d3eb597eb07cda47f8d2697b8046ccb9b5721ed3",
+    "audit_monthly_walk_forward_test.py": "ec0ddb99840d5bf380eb7f407de3e1a5bcbdfa352d79ad5d75e24a05750db57b",
+    "audit_monthly_walk_forward_test_index_v2.py": "feea3954b231b18f18384696959d7cdbbcaf4d513dbf3fc4fee8596136483421",
+    "audit_oof_calibrated_policy.py": "e7481fbe944a9ffadcf637e7a4b69cd8d636cdf50ae295426191db9d76b5d44b",
+    "build_cache.py": "985e87dcbd1e73289b58e4576445e47e73a6edea13e5ac73dde3ad629180d69f",
+    "causal_rollout.py": "8df92119071442045a8434057e220bad567668d8ee314fddd263d052ebeea0d9",
+    "evaluate_oof_calibrated_policy.py": "eeaad06f5b862a3153f29e7eab579b19a35e182ab506cf1f59e65631e187e716",
+    "features.py": "b5c63f918319f844793abb3346a34515526073374f5e71af2129a94f2369d4e0",
+    "launch_monthly_test_20261023.py": "3e77bda56dabd8287b04ae9a47b4dcd45d5967a01a31514e933cbb44b6f4c08d",
+    "launch_monthly_test_index_v2_audit_20261024.py": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046",
+    "launch_oof_pipeline_20261024.py": "e93ff7db48c86a6d569e70d18f845ec48575ba2cb226bbed981c28a58245e9a8",
+    "level_engine.py": "70cc5d20990d971d16299fd008ff8e05ac99f99a6a2917a202fcb9a5f413b7c6",
+    "monthly_oof_calibration_adapter.py": "7b80cff43e3887a92e0f89be6daa863a670ccd72d22a0f4aeabd032a39479364",
+    "monthly_policy_selection.py": "1fe43fa92fe0441be35bc67c9a2a60ce2829edaf9ea80f5fa0a5c8967a599da0",
+    "oof_maximum_calibration.py": "19e922dd65855c4cd7e2ec9d482d477a328245bcf642eeeb7771985f247e20b5",
+    "rolling_monthly_schedule.py": "92df2e68734d24a61b4ddccec1f9451a5e25c862f5a1b581ae779c163fcf205a",
+    "rollout_sampling.py": "8bc8cee2b89cf70490793b88d74dff558bbd60077d383a852392fcc2383c748c",
+    "run_monthly_test_resource_overlay.py": "f2b0490cdec916f98c09fc77a6533d0eab8c4f2711331753f7d5c998d81253c1",
+    "run_monthly_walk_forward.py": "47a4df8b019d9d297ca1ee9b89fff63406409659336dbd7b0e4d7af01ed348bb",
+    "run_oof_calibrated_pipeline.py": "26967e10c6b81cd5b84d7939bf6d0c81037934165daa91847d7ffd25de16ff57",
+    "test_audit_monthly_walk_forward.py": "8c47e89951506553bfb1295c6e390501828b8fe6f77bcae5d566e98c2039ef87",
+    "test_audit_monthly_walk_forward_index_v2.py": "f986885706e78a9ecdac5f126502906d7f7637b513fb2f3a8ee16f765ea1c88d",
+    "test_audit_monthly_walk_forward_test.py": "b3cc6d8225812154da2e4d2c644e426a19f7177d520b9d564826e3a3e4790a00",
+    "test_audit_monthly_walk_forward_test_index_v2.py": "54a5ab7133705d528774c1ee458989a8acff60dfdef94a69aefd3b6662587194",
+    "test_audit_oof_calibrated_policy.py": "c98954a9bef3b70bef8c889255cb187a57d88c4f43235ade255a70560438f232",
+    "test_launch_monthly_test_index_v2_audit_20261024.py": "54a98599ed91fe3317ad298f918f4ccb8703ce7720cee501c8a8a7b9e1b131bd",
+    "test_launch_oof_pipeline_20261024.py": "8e5a9df15149b4afa3c2bab8293624da5a2bd9a27ef75301c0f8dcf0a1c65890",
+    "test_monthly_oof_calibration_adapter.py": "32e04b1444c73ac1a0bf87b819b6542ba4d96775202acb82514a147085d3739a",
+    "test_run_oof_calibrated_pipeline.py": "4daf9d662a63b125f2d451ea463558a00b35ebbd7a7c85d1c1b9145dfe6bf33e",
+    "train_causal_rollout.py": "d031eca08c71ad89324619e096dcc9be3966ddea23d52061019018ff6ff58a43",
+    "train_models.py": "a5192737abd1c0b3e4a6a6cd391117d97a014c06b6cd528201ba1f5df0ef6808"
+  },
+  "new_files": {
+    "launch_oof_pipeline_20261024.py": "e93ff7db48c86a6d569e70d18f845ec48575ba2cb226bbed981c28a58245e9a8",
+    "test_launch_oof_pipeline_20261024.py": "8e5a9df15149b4afa3c2bab8293624da5a2bd9a27ef75301c0f8dcf0a1c65890",
+    "OOF_PIPELINE_LAUNCH_SPEC_20261024.md": "eeb0dad0d0400bc273d5396c5ec6e6ca936bed8b2145e8a68af0b4e4f9df4770"
+  },
+  "authorities": {
+    "OOF_PIPELINE_RUNTIME_IMPLEMENTATION_REVIEW_20261023.json": "c35541a487c87512cb678cc511006a8729fbf233a00b639e4dcc60a3fdee68d6",
+    "MONTHLY_TEST_INDEX_AUDIT_V2_REVIEW_20261024.json": "493806fbc25a50a3333b4d2e65f3bd041bd30b30d5a10203d8c188c0520ee2b3",
+    "MONTHLY_TEST_RESOURCE_OVERLAY_REVIEW_20261023.json": "49a3590504c74c06dc5a9b830bcf71b7472dbecae2ab267218aaa22aa2dd0280",
+    "MONTHLY_TEST_INDEX_V2_AUDIT_LAUNCH_REVIEW_20261024.json": "e38ae0fb7ebfc3d5841fe87052d00605f58cba21a8ba987341d0f307ede9e432",
+    "MONTHLY_TEST_INDEX_V2_AUDIT_RUNTIME_REVIEW_20261024_01.json": "055d2734469a77dc607585d000f594ed3088580400c46f513c209119a793eab1",
+    "OOF_PIPELINE_LAUNCH_SPEC_REVIEW_20261024.json": "c81c7dfb57ebf22a7d5ca56f29cf6c853cdb78e56558fbd4d6141a4d4416b307",
+    "OOF_PIPELINE_LAUNCH_SPEC_REVIEW_20261024.md": "8058699041a1666d0533b18b042444fc84eb22d3f855e8ea4792999db76aa2ad"
+  },
+  "dependency_sets": {
+    "oof_request": {
+      "MONTHLY_OOF_CALIBRATION_ADAPTER_SPEC.md": "6bd989a6332fd21f751dc48ef084c5eba0f83b1f86f957f2a71127ef869bcb4e",
+      "OOF_CALIBRATED_POLICY_EVALUATION_SPEC.md": "7f88f18569d86ea936d0afdc4a485e461ccdf6c09d74feb835a026bee7caf3bc",
+      "OOF_ECONOMIC_AUDITOR_DESIGN_20261023.md": "b9c2ac397945a04365289b9af0f202f04082c844badfc724ae937972be253154",
+      "OOF_ECONOMIC_AUDITOR_IMPLEMENTATION_REVIEW_20261023.md": "8faf2a64f07df648f2d90e184a4a1a43e80a24b7f474d47604c3c0d352dfacb6",
+      "OOF_ECONOMIC_AUDITOR_SPEC_20261023.md": "cfa6868435a772b336605e3b0613e8fa6c1e377a53cbbef376d3973e64901f37",
+      "OOF_MAXIMUM_CALIBRATION_INTEGRATION.md": "79f8c69b13c3585aa26cbb15fa52f246675baaabd8b8e8d6661a5ffe150ce7bd",
+      "OOF_PIPELINE_RUNTIME_SPEC_20261023.md": "9b8d40296d515c28953b6b994c552560f159f6b8be57f0177487dbff05987909",
+      "OOF_RUNTIME_SEQUENCE_DESIGN_20261023.md": "e5c6350a492221632b9c87fa61ee7b644b507812c4d11ab3a1e3eb26f936762a",
+      "PREQUENTIAL_MAX_CALIBRATION_DESIGN.md": "e8264e398b31f22198a024a3c6d9dfa9fc4530402278693caac1caa2d6f7a619",
+      "audit_oof_calibrated_policy.py": "e7481fbe944a9ffadcf637e7a4b69cd8d636cdf50ae295426191db9d76b5d44b",
+      "evaluate_oof_calibrated_policy.py": "eeaad06f5b862a3153f29e7eab579b19a35e182ab506cf1f59e65631e187e716",
+      "monthly_oof_calibration_adapter.py": "7b80cff43e3887a92e0f89be6daa863a670ccd72d22a0f4aeabd032a39479364",
+      "oof_maximum_calibration.py": "19e922dd65855c4cd7e2ec9d482d477a328245bcf642eeeb7771985f247e20b5",
+      "rolling_monthly_schedule.py": "92df2e68734d24a61b4ddccec1f9451a5e25c862f5a1b581ae779c163fcf205a",
+      "run_oof_calibrated_pipeline.py": "26967e10c6b81cd5b84d7939bf6d0c81037934165daa91847d7ffd25de16ff57",
+      "test_audit_oof_calibrated_policy.py": "c98954a9bef3b70bef8c889255cb187a57d88c4f43235ade255a70560438f232",
+      "test_run_oof_calibrated_pipeline.py": "4daf9d662a63b125f2d451ea463558a00b35ebbd7a7c85d1c1b9145dfe6bf33e"
+    },
+    "monthly_auditor": {
+      "MONTHLY_TEST_AUDIT_EXTENSION_SPEC_20261023.md": "b895e0ee57ee8d911b4d732e1f46b07c2d9e13c296f09888ce47372815f5182d",
+      "MONTHLY_TEST_INDEX_AUDIT_V2_SPEC_20261024.md": "5513996a6284c175dd26496ccee645d23f721d097896123280309cc0be327e29",
+      "MONTHLY_WALK_FORWARD_INDEX_AUDIT_V2_SPEC_20261024.md": "06f0fcd6ac5d60a8e503d5f9df86102683e441d7b00d0a5968142384f4a821f4",
+      "MONTHLY_WALK_FORWARD_SEALED_SCORE_AUDITOR_REVIEW.json": "db323959e6a894d6d6fb51bde764af0c96db0cb0bba2f1711bbe0807425d10ca",
+      "MONTHLY_WALK_FORWARD_SEALED_SCORE_AUDIT_CONTRACT.md": "cabdd117fc4dc713fbca085a48e38ac8c8f609555f42f10a05321c01623ff8e7",
+      "audit_monthly_walk_forward.py": "e4a3be1c19b7f0af1226e71255c81116bd71a6a300aef36f61c688deb908df1f",
+      "audit_monthly_walk_forward_index_v2.py": "f01a962fcf50a2cc2bb49fd4d3eb597eb07cda47f8d2697b8046ccb9b5721ed3",
+      "audit_monthly_walk_forward_test.py": "ec0ddb99840d5bf380eb7f407de3e1a5bcbdfa352d79ad5d75e24a05750db57b",
+      "audit_monthly_walk_forward_test_index_v2.py": "feea3954b231b18f18384696959d7cdbbcaf4d513dbf3fc4fee8596136483421",
+      "test_audit_monthly_walk_forward.py": "8c47e89951506553bfb1295c6e390501828b8fe6f77bcae5d566e98c2039ef87",
+      "test_audit_monthly_walk_forward_index_v2.py": "f986885706e78a9ecdac5f126502906d7f7637b513fb2f3a8ee16f765ea1c88d",
+      "test_audit_monthly_walk_forward_test.py": "b3cc6d8225812154da2e4d2c644e426a19f7177d520b9d564826e3a3e4790a00",
+      "test_audit_monthly_walk_forward_test_index_v2.py": "54a5ab7133705d528774c1ee458989a8acff60dfdef94a69aefd3b6662587194"
+    },
+    "original_scientific": {
+      "MONTHLY_WALK_FORWARD_PLAN.md": "71ccd29587be4012dad9fe3ada4ad29ff7b93b94ea08340343ebe39d287c97ae",
+      "build_cache.py": "985e87dcbd1e73289b58e4576445e47e73a6edea13e5ac73dde3ad629180d69f",
+      "causal_rollout.py": "8df92119071442045a8434057e220bad567668d8ee314fddd263d052ebeea0d9",
+      "features.py": "b5c63f918319f844793abb3346a34515526073374f5e71af2129a94f2369d4e0",
+      "level_engine.py": "70cc5d20990d971d16299fd008ff8e05ac99f99a6a2917a202fcb9a5f413b7c6",
+      "monthly_policy_selection.py": "1fe43fa92fe0441be35bc67c9a2a60ce2829edaf9ea80f5fa0a5c8967a599da0",
+      "rolling_monthly_schedule.py": "92df2e68734d24a61b4ddccec1f9451a5e25c862f5a1b581ae779c163fcf205a",
+      "rollout_sampling.py": "8bc8cee2b89cf70490793b88d74dff558bbd60077d383a852392fcc2383c748c",
+      "run_monthly_walk_forward.py": "47a4df8b019d9d297ca1ee9b89fff63406409659336dbd7b0e4d7af01ed348bb",
+      "train_causal_rollout.py": "d031eca08c71ad89324619e096dcc9be3966ddea23d52061019018ff6ff58a43",
+      "train_models.py": "a5192737abd1c0b3e4a6a6cd391117d97a014c06b6cd528201ba1f5df0ef6808"
+    }
+  },
+  "pretest_publication_commit": "c91639993fe1458f45f887dceef6184d7c54e296",
+  "findings_open": [],
+  "findings_resolved": [
+    {
+      "id": "O1",
+      "issue": "Boolean/numeric equality and timestamps without zone could admit malformed upstream identity.",
+      "fix": "Exact integer exit/PID, finite positive numeric creation, aware UTC chronology.",
+      "fixtures": [
+        "test_resigned_upstream_metadata_faults[exit_false]",
+        "test_resigned_upstream_metadata_faults[naive]"
+      ],
+      "status": "RESOLVED"
+    },
+    {
+      "id": "O2",
+      "issue": "Resolved path comparison alone did not exclude ancestor links or bind all output roots.",
+      "fix": "Reject symlink/junction ancestors and pin nine normalized output roots across launch.",
+      "fixtures": [
+        "test_destinations_revalidated_between_preflight_and_launch",
+        "test_launch_retained_exit_claim_gate_and_distinct_lock[post_popen_junction]"
+      ],
+      "status": "RESOLVED"
+    },
+    {
+      "id": "O3",
+      "issue": "Replay closure comparison originally covered only three local files.",
+      "fix": "Check every local closed.files member, exact replay delta and correction-only delta.",
+      "fixtures": [
+        "test_resigned_phase_inventory_partition[extra_local_digest]",
+        "test_resigned_phase_inventory_partition[correction_other_root]"
+      ],
+      "status": "RESOLVED"
+    },
+    {
+      "id": "O4",
+      "issue": "Output containment was not repeated immediately at final hash consumption.",
+      "fix": "Repeat link/ancestor/containment checks per output before streaming hash.",
+      "fixtures": [
+        "test_simulated_junction_after_inventory_before_hash"
+      ],
+      "status": "RESOLVED"
+    },
+    {
+      "id": "O5",
+      "issue": "Contract/index SHA references were cross-compared without hashing their current bytes.",
+      "fix": "Hash current monthly contract and session index against composed audit pins.",
+      "fixtures": [
+        "test_actual_contract_or_index_mutation_rejected"
+      ],
+      "status": "RESOLVED"
+    },
+    {
+      "id": "IMPORT_CLOSURE",
+      "issue": "Transitive original scientific dependencies needed an explicit frozen authority in addition to new review closure.",
+      "fix": "Require frozen monthly producer review 49a35905 and its eleven original dependencies.",
+      "fixtures": [
+        "test_complete_metadata_admission_no_output_or_scientific_import"
+      ],
+      "status": "RESOLVED"
+    }
+  ],
+  "checks": [
+    "Exact external request, runtime-binding and implementation-review SHA plus exact local Git publication objects; binding is added externally to avoid a circular pin.",
+    "48-file reviewed closure is distinct from the 17 OOF request dependencies; thirteen auditor dependencies and eleven original scientific dependencies are separately pinned to frozen reviews.",
+    "Late imports are preceded and followed by pinned-byte checks; default admission has no output/claim/lock side effects and calls no Request, MonthlyInputs, fit, correction, replay or economic auditor.",
+    "Upstream authority requires exact six metadata members, retained-handle exit0, linked process/exit/completion SHA and code/runtime/review/commit identities, strict numeric types and aware UTC chronology.",
+    "Compact upstream audit validation retains 18 months/36 windows, 369/363/6, fifteen snapshots and prior 2025 inheritance; contract and index actual bytes are hashed without source-payload reconstruction.",
+    "Nine resolved fresh destinations remain disjoint and immutable across preflight/launch; symlink/junction ancestors and aliases are rejected, including at output consumption.",
+    "Distinct parent operational lock does not hold the child GLOBAL_LOCK; durable fresh log claim, fixed command and immediate RAM/free-commit 2000000000-byte gate prevent automatic retries.",
+    "Popen original handle supplies creation and real exit; finally drains on monitor initialization or post-Popen publication failure without inventing retained-exit evidence.",
+    "Original pre-Popen preflight SHA remains pinned in process/exit and is rechecked after the child; mutation preserves observed exit and emits failure without completion.",
+    "Exact twelve ordered starts/receipts, all correction/replay closures, replay local output pins, phase output partition and cumulative inventories are validated before final completion.",
+    "Final output tree and streaming hashes are checked without parsing economic payloads; only root-level .lock files are excluded, with no broad scientific-source rehash.",
+    "Completion remains pending independent economic audit, with no winner, technical readiness, promotion, automatic audit, retry or resume."
+  ],
+  "independent_validation": {
+    "pytest": {
+      "passed": 17,
+      "deselected": 20,
+      "elapsed_seconds": 17.38,
+      "exit_code": 0,
+      "admission": {
+        "utc": "2026-10-24T03:33:25.265951+00:00",
+        "resources": {
+          "available_ram_bytes": 7232446464,
+          "free_commit_bytes": 4966936576
+        },
+        "minimum_free_bytes": 2000000000,
+        "pins": {
+          "launch_oof_pipeline_20261024.py": "e93ff7db48c86a6d569e70d18f845ec48575ba2cb226bbed981c28a58245e9a8",
+          "test_launch_oof_pipeline_20261024.py": "8e5a9df15149b4afa3c2bab8293624da5a2bd9a27ef75301c0f8dcf0a1c65890",
+          "OOF_PIPELINE_LAUNCH_SPEC_20261024.md": "eeb0dad0d0400bc273d5396c5ec6e6ca936bed8b2145e8a68af0b4e4f9df4770"
+        },
+        "command": [
+          "C:\\Program Files\\Python314\\python.exe",
+          "-m",
+          "pytest",
+          "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_launch_oof_pipeline_20261024.py",
+          "-q",
+          "-k",
+          "complete_metadata_admission or complete_twelve_phase or actual_contract_or_index or extra_local_digest or correction_other_root or simulated_junction_after or destinations_revalidated or preflight or post_popen_junction or post_popen_publication or monitor_init or exit_false or naive or low_commit"
+        ]
+      },
+      "log_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\pytest.log",
+      "log_sha256": "a9ed7b4c1d13f3b59b1b492eab4a679814c3a4d51f435735dc1f642af73c4024"
+    },
+    "adhoc": {
+      "status": "PASS_INDEPENDENT_POST_IMPORT_MUTATION_NEGATIVE",
+      "successful_attempt": 3,
+      "claim_created": false,
+      "popen_called": false,
+      "resources": {
+        "available_ram_bytes": 7092862976,
+        "free_commit_bytes": 4857212928
+      },
+      "prior_attempts": [
+        {
+          "attempt": 1,
+          "status": "REVIEWER_HARNESS_SETUP_FAILURE",
+          "reason": "import_module interceptor omitted package argument",
+          "full_traceback_persisted": false,
+          "evidence": "tool output plus adhoc_failure_01.json"
+        },
+        {
+          "attempt": 2,
+          "status": "REVIEWER_HARNESS_SETUP_FAILURE",
+          "reason": "global subprocess.Popen replaced before asyncio imported its Popen subclass",
+          "full_traceback_persisted": true,
+          "log": "adhoc_02.log"
+        }
+      ],
+      "fix": "Preserve scripts; accept *args/**kwargs and preload frozen helper before applying the Popen interception. Candidate code unchanged.",
+      "limits": "Late import call returns an already imported frozen helper in the successful ad hoc; this tests post-import rehash, not a cold-import mutation race."
+    },
+    "evidence_files": {
+      "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\adhoc.py": "c2d7ba892a5e0d38d5b1439ef5ff1acc293889dd2642db3a7e9a45b0bdba363c",
+      "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\adhoc_02.log": "97803501e97cfee5cd9fbc56db09483e2daa9a8423633b0ec01f341fde2d21b6",
+      "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\adhoc_02.py": "5b80519b2a18c879b51d8924a6ab007e569146cc80a04ef7fd47dabe979d089d",
+      "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\adhoc_03.log": "284852e2836a86b9e572fc3926ec48a52a6523fbf1da14f3697ecef00e1e1789",
+      "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\adhoc_03.py": "2d3ae9457226bc2eb424054b0cbc25948ba0914836e59ed993e670d80b0982f7",
+      "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\adhoc_admission.json": "d4fdaf6512c4ba3c3fdc0502ad54025393761ff6504edff8447a69e7077ccd74",
+      "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\adhoc_admission_02.json": "8da473655ad79bbafa1e732fbc3f841ecd874db0abe6c3c817058387f90234ef",
+      "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\adhoc_admission_03.json": "ad0b80823c47e28e078cad7d8f7a8579837306d6d096760971a038c60be3b569",
+      "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\adhoc_failure_01.json": "50d6d3ac445e8dcbb4466cf1ce20ecd12423fae4f3eafe1f24ac94eb492a1765",
+      "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\adhoc_failure_02.json": "eb770304d3eeb78e892fe6687995207d77264b5b4dcb0ad761800ccb77e95096",
+      "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\adhoc_result_03.json": "3c37b2714f23ba6538ef467edf86970acacbc63499f20b01ef700df49623d9ad",
+      "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\admission.json": "91f8b89cde8484deaede2556bd19eccf0990d9708158b1d34e5437fa370bb765",
+      "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\expected_pins.json": "3d6796b87577c9d6f86994a004f221c9b479c7503ff4de03f93ee5c356042729",
+      "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\pytest.log": "a9ed7b4c1d13f3b59b1b492eab4a679814c3a4d51f435735dc1f642af73c4024",
+      "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\result.json": "0c8f86f3a96879393f9da0c3a0106ecf63d279cd93605319ebb9e25312084192",
+      "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\run_review.py": "d8406695c98ad093dfb3702e03bd6cec99b198000b48d2608f0ed4f72ddb83ac"
+    }
+  },
+  "author_validation": {
+    "receipt": {
+      "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_PIPELINE_LAUNCH_IMPLEMENTATION_RESULT_20261024.md",
+      "sha256": "20b9f1e89056fa2b4b4ecf0ce0e31a2ebf6a810b2a0f356d1d02ed35923cdef5"
+    },
+    "manifest": {
+      "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261024\\oof_pipeline_supervisor_synthetic\\manifest.json",
+      "sha256": "d22aa864b60e3b91c5aab22eabcb1f8703f2a344f043bd6a0210bb5774e0a5be",
+      "copies_verified": 48,
+      "source_and_copy_bytes_verified": true
+    },
+    "attempts": [
+      {
+        "attempt": 1,
+        "passed": 34,
+        "elapsed_seconds": 30.72,
+        "scope": "Initial synthetic suite"
+      },
+      {
+        "attempt": 2,
+        "passed": 2,
+        "deselected": 34,
+        "elapsed_seconds": 6.07,
+        "scope": "Added post-Popen publication failure and default CLI fixtures"
+      },
+      {
+        "attempt": 3,
+        "passed": 1,
+        "deselected": 36,
+        "elapsed_seconds": 6.88,
+        "scope": "Added post-Popen simulated junction fixture"
+      }
+    ],
+    "all_author_attempts_exit_zero": true,
+    "full_final_suite_rerun": false,
+    "ruff_compile": "PASS per author preserved receipts"
+  },
+  "limitations": [
+    "Implementation review only. No real OOF request/runtime binding, market preflight, fit, replay or auditor was executed by reviewer.",
+    "Synthetic JSON/text fixture authorities are distinct from actual monthly composed audit and process closure; real authorities require separate review before root publication/launch.",
+    "Junction coverage simulates Path.is_junction; no real Windows junction creation is claimed.",
+    "Harmless Python subprocesses verify operational retention/drain; tests do not measure scientific pipeline runtime, memory or I/O.",
+    "The reviewer ran 17 focused tests and one successful ad hoc; author suites are separately attributed. Two reviewer harness setup failures are preserved, not counted as candidate failures or successful checks.",
+    "Local Git-object publication validation is implemented; root must separately verify remote publication before a real launch.",
+    "Path checks cover the simulated redirection points and repeat before hashing; no filesystem-level atomicity against every concurrent namespace change is claimed."
+  ],
+  "technical_ready": false,
+  "promotion_approved": false
+}

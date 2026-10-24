@@ -1,0 +1,119 @@
+{
+  "scope": "INDEPENDENT_OPERATIONAL_IMPLEMENTATION_SYNTHETIC_EVIDENCE_ONLY",
+  "created_utc": "2026-10-24T03:39:01.558734+00:00",
+  "market_execution": false,
+  "new_tests_executed_for_archive": false,
+  "review": {
+    "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_PIPELINE_LAUNCH_IMPLEMENTATION_REVIEW_20261024.json",
+    "sha256": "a78c2ef9019111a1ca98fa6e2517a4db8ce1ef9877596e5807734ce4c843ec95"
+  },
+  "review_markdown": {
+    "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_PIPELINE_LAUNCH_IMPLEMENTATION_REVIEW_20261024.md",
+    "sha256": "9743a99e8a06266d1114f7b5632a0ab9be37e832610cb42e724e2a467ac21b5e"
+  },
+  "copies": 16,
+  "total_bytes": 18691,
+  "files": [
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\adhoc.py",
+      "copy": "adhoc.py",
+      "sha256": "c2d7ba892a5e0d38d5b1439ef5ff1acc293889dd2642db3a7e9a45b0bdba363c",
+      "bytes": 2175
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\adhoc_02.log",
+      "copy": "adhoc_02.log",
+      "sha256": "97803501e97cfee5cd9fbc56db09483e2daa9a8423633b0ec01f341fde2d21b6",
+      "bytes": 4847
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\adhoc_02.py",
+      "copy": "adhoc_02.py",
+      "sha256": "5b80519b2a18c879b51d8924a6ab007e569146cc80a04ef7fd47dabe979d089d",
+      "bytes": 2217
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\adhoc_03.log",
+      "copy": "adhoc_03.log",
+      "sha256": "284852e2836a86b9e572fc3926ec48a52a6523fbf1da14f3697ecef00e1e1789",
+      "bytes": 555
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\adhoc_03.py",
+      "copy": "adhoc_03.py",
+      "sha256": "2d3ae9457226bc2eb424054b0cbc25948ba0914836e59ed993e670d80b0982f7",
+      "bytes": 2302
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\adhoc_admission.json",
+      "copy": "adhoc_admission.json",
+      "sha256": "d4fdaf6512c4ba3c3fdc0502ad54025393761ff6504edff8447a69e7077ccd74",
+      "bytes": 502
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\adhoc_admission_02.json",
+      "copy": "adhoc_admission_02.json",
+      "sha256": "8da473655ad79bbafa1e732fbc3f841ecd874db0abe6c3c817058387f90234ef",
+      "bytes": 502
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\adhoc_admission_03.json",
+      "copy": "adhoc_admission_03.json",
+      "sha256": "ad0b80823c47e28e078cad7d8f7a8579837306d6d096760971a038c60be3b569",
+      "bytes": 502
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\adhoc_failure_01.json",
+      "copy": "adhoc_failure_01.json",
+      "sha256": "50d6d3ac445e8dcbb4466cf1ce20ecd12423fae4f3eafe1f24ac94eb492a1765",
+      "bytes": 446
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\adhoc_failure_02.json",
+      "copy": "adhoc_failure_02.json",
+      "sha256": "eb770304d3eeb78e892fe6687995207d77264b5b4dcb0ad761800ccb77e95096",
+      "bytes": 323
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\adhoc_result_03.json",
+      "copy": "adhoc_result_03.json",
+      "sha256": "3c37b2714f23ba6538ef467edf86970acacbc63499f20b01ef700df49623d9ad",
+      "bytes": 553
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\admission.json",
+      "copy": "admission.json",
+      "sha256": "91f8b89cde8484deaede2556bd19eccf0990d9708158b1d34e5437fa370bb765",
+      "bytes": 1133
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\expected_pins.json",
+      "copy": "expected_pins.json",
+      "sha256": "3d6796b87577c9d6f86994a004f221c9b479c7503ff4de03f93ee5c356042729",
+      "bytes": 316
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\pytest.log",
+      "copy": "pytest.log",
+      "sha256": "a9ed7b4c1d13f3b59b1b492eab4a679814c3a4d51f435735dc1f642af73c4024",
+      "bytes": 117
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\result.json",
+      "copy": "result.json",
+      "sha256": "0c8f86f3a96879393f9da0c3a0106ecf63d279cd93605319ebb9e25312084192",
+      "bytes": 459
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_independent_20261024_01\\run_review.py",
+      "copy": "run_review.py",
+      "sha256": "d8406695c98ad093dfb3702e03bd6cec99b198000b48d2608f0ed4f72ddb83ac",
+      "bytes": 1742
+    }
+  ],
+  "limitations": [
+    "First ad hoc traceback was observed in tool output, not persisted as a complete local log. adhoc_failure_01.json preserves the exact error and limitation; no retrospective traceback is fabricated.",
+    "Both harness setup failures and the final successful third script are preserved. Candidate code did not change.",
+    "emit_review.py is a document-generation helper, not executed test evidence; excluded to match the exact 16-member evidence_files map already pinned in the review."
+  ]
+}
