@@ -5,8 +5,16 @@ ya tiene revisión independiente CLEAR: 40 pruebas sintéticas, una prueba poste
 adicional y 17 controles independientes. El primer intento sintético conserva su
 fallo de aserción. La [revisión científica](OOF_TRANSITIVE_SOURCE_V2_SCIENTIFIC_INVARIANCE_REVIEW_20261024.md)
 confirma las doce fases y los productores congelados. Son pruebas con fuentes
-artificiales; el lanzador V2 y la admisión de una ejecución nueva siguen pendientes.
+artificiales. El [lanzador V2](OOF_TRANSITIVE_SOURCE_V2_LAUNCH_IMPLEMENTATION_RESULT_20261024.md)
+completa 41 pruebas y 14 controles independientes; la admisión de una ejecución
+nueva sigue pendiente.
 No se reutilizan los resultados parciales del intento OOF01.
+
+El wrapper y sus archivos compactos se publicaron y verificaron en remoto en
+`54a2b40cd12fd281392fcab1a364f02ebfdf3124`. El
+[contrato de adaptación del auditor V2](OOF_ECONOMIC_AUDIT_V2_LAUNCH_CONTRACT_20261024.md)
+y su revisión documental se publicaron en `67fcbefdf40f613824bb334b398a26dbc0b223c8`
+antes de autorizar su implementación. Conserva intacto el auditor científico.
 
 El supervisor económico original quedó publicado en3342e27de4f8c327b707f7bb82fd907e88c6e9aa:
 [código, pruebas y alcance](OOF_ECONOMIC_AUDIT_LAUNCH_IMPLEMENTATION_RESULT_20261024.md)

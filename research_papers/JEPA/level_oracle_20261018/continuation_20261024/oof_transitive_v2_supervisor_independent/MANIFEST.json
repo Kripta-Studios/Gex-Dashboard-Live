@@ -1,0 +1,117 @@
+{
+  "status": "COMPACT_INDEPENDENT_SUPERVISOR_V2_FIXTURE_EVIDENCE",
+  "archived_utc": "2026-10-24T05:06:01.3754095Z",
+  "source_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_supervisor_independent_20261024_01",
+  "external_result_receipt_sha256": "ca116667d77ee04ad0aea48c6cde036e3438e766512741ed6846ad9b60142f91",
+  "copied_files": 14,
+  "copied_bytes": 174663,
+  "files": [
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_supervisor_independent_20261024_01\\admission.json",
+      "archive_path": "admission.json",
+      "sha256": "d58a6cf1fe6f6e3ed7afdf6d7ba82609d81b4a83131c8d6f1a493459c991f83e",
+      "bytes": 4099,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_supervisor_independent_20261024_01\\process.json",
+      "archive_path": "process.json",
+      "sha256": "bed2e7e6dcfd745e1a4744fd6fd837ef7b9adf0c88220a31eb6d613f1e71d39b",
+      "bytes": 679,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_supervisor_independent_20261024_01\\result.json",
+      "archive_path": "result.json",
+      "sha256": "ca116667d77ee04ad0aea48c6cde036e3438e766512741ed6846ad9b60142f91",
+      "bytes": 422,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_supervisor_independent_20261024_01\\stdout.txt",
+      "archive_path": "stdout.txt",
+      "sha256": "ddce8e48dff2655936bb0cbea336fa45bc154022026259efe25ba6ba73e50877",
+      "bytes": 117,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_supervisor_independent_20261024_01\\stderr.txt",
+      "archive_path": "stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_supervisor_independent_20261024_01\\source_snapshot\\launch_oof_pipeline_v2_20261024.py",
+      "archive_path": "source_snapshot/launch_oof_pipeline_v2_20261024.py",
+      "sha256": "26de981666975ffc3a6c75aa30d7279a133361786a0a6df475ed57017ebae411",
+      "bytes": 40517,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_supervisor_independent_20261024_01\\source_snapshot\\OOF_TRANSITIVE_SOURCE_FAILURE_DIAGNOSIS_20261024.md",
+      "archive_path": "source_snapshot/OOF_TRANSITIVE_SOURCE_FAILURE_DIAGNOSIS_20261024.md",
+      "sha256": "bd8bd3a8992c27203f0d67dd8ca0726a72615f30714096e0ffd177458b60cf23",
+      "bytes": 7532,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_supervisor_independent_20261024_01\\source_snapshot\\OOF_TRANSITIVE_SOURCE_V2_DESIGN_20261024.md",
+      "archive_path": "source_snapshot/OOF_TRANSITIVE_SOURCE_V2_DESIGN_20261024.md",
+      "sha256": "485f557e4ea2d2eb94bfecfd383d59d02ec29381f0eac06a12178fdef9882cc3",
+      "bytes": 11611,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_supervisor_independent_20261024_01\\source_snapshot\\OOF_TRANSITIVE_SOURCE_V2_IMPLEMENTATION_CONTRACT_20261024.md",
+      "archive_path": "source_snapshot/OOF_TRANSITIVE_SOURCE_V2_IMPLEMENTATION_CONTRACT_20261024.md",
+      "sha256": "85c8bd20107e6a2ee6cf0d6e00bb8d16a7d6b5d1c6bce5839f542266e4c17a8c",
+      "bytes": 7112,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_supervisor_independent_20261024_01\\source_snapshot\\OOF_TRANSITIVE_SOURCE_V2_RUNTIME_IMPLEMENTATION_REVIEW_20261024.json",
+      "archive_path": "source_snapshot/OOF_TRANSITIVE_SOURCE_V2_RUNTIME_IMPLEMENTATION_REVIEW_20261024.json",
+      "sha256": "ca8f11ef9781a1f6996132032b8c7a09bf6f559970c66e0067bffab9507848f5",
+      "bytes": 9778,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_supervisor_independent_20261024_01\\source_snapshot\\OOF_TRANSITIVE_SOURCE_V2_RUNTIME_IMPLEMENTATION_REVIEW_20261024.md",
+      "archive_path": "source_snapshot/OOF_TRANSITIVE_SOURCE_V2_RUNTIME_IMPLEMENTATION_REVIEW_20261024.md",
+      "sha256": "8f5db6da62b169f44c37af301a96a3f6ae0d1a0d5e9880cc929edf9f25beb611",
+      "bytes": 2718,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_supervisor_independent_20261024_01\\source_snapshot\\run_oof_calibrated_pipeline_v2.py",
+      "archive_path": "source_snapshot/run_oof_calibrated_pipeline_v2.py",
+      "sha256": "213eb744b8e295688622955187227df66a56f9121252bd765b7054324e4cceae",
+      "bytes": 36413,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_supervisor_independent_20261024_01\\source_snapshot\\test_launch_oof_pipeline_v2_20261024.py",
+      "archive_path": "source_snapshot/test_launch_oof_pipeline_v2_20261024.py",
+      "sha256": "5eb34bef30fc51d44d30dff27bfa918e960d9080be91a9b32487ee5aa6643a2f",
+      "bytes": 28339,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_supervisor_independent_20261024_01\\source_snapshot\\test_run_oof_calibrated_pipeline_v2.py",
+      "archive_path": "source_snapshot/test_run_oof_calibrated_pipeline_v2.py",
+      "sha256": "ac1a1e43f7bcc553c7f06af67f0efe6203f515eb0fdc9d2db7c2c0bbf7c5f2d3",
+      "bytes": 25326,
+      "source_and_copy_rehashed": true
+    }
+  ],
+  "excluded": [
+    "pytest_tmp: synthetic payloads not read, hashed or copied"
+  ],
+  "limits": [
+    "Archival verification only; no repeated tests, market payloads or runtime execution.",
+    "Independent test launcher ran Python via stdin; no separate physical launcher was retained.",
+    "Original sources remain intact."
+  ],
+  "runtime_market_authorized": false
+}

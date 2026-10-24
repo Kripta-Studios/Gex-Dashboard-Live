@@ -1,0 +1,58 @@
+F........................................                                [100%]
+================================== FAILURES ===================================
+_______ test_complete_metadata_admission_no_output_or_scientific_import _______
+
+authorities = namespace(request={'version': 'OOF_PIPELINE_RUNTIME_REQUEST_V2', 'status': 'REVIEWED_OOF_PIPELINE_RUNTIME_REQUEST', 'r...le_20261018/oof_transitive_v2_supervisor_synthetic_20261024_01/pytest_tmp/test_complete_metadata_admissi0/transitive'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002C0E112F360>
+
+    def test_complete_metadata_admission_no_output_or_scientific_import(authorities, monkeypatch):
+        a = authorities
+        original = supervisor.importlib.import_module
+        imports = []
+        def imported(name):
+            imports.append(name)
+            assert name == supervisor.OPS_NAME.removesuffix(".py")
+            return original(name)
+        monkeypatch.setattr(supervisor.importlib, "import_module", imported)
+        before = {str(p) for p in a.data.parent.rglob("*")}
+>       receipt = admit(a)
+                  ^^^^^^^^
+
+test_launch_oof_pipeline_v2_20261024.py:124: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+test_launch_oof_pipeline_v2_20261024.py:110: in admit
+    return supervisor.preflight(a.request_pin["path"], a.request_pin["sha256"], a.binding_pin["path"],
+launch_oof_pipeline_v2_20261024.py:434: in preflight
+    admission = request_admission(request)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+launch_oof_pipeline_v2_20261024.py:364: in request_admission
+    result = transitive_admission(monthly, absolute(request["session_root"]) / "index.parquet",
+launch_oof_pipeline_v2_20261024.py:152: in transitive_admission
+    index = pd.read_parquet(index_path, columns=[
+..\..\..\..\..\..\AppData\Roaming\Python\Python314\site-packages\pandas\io\parquet.py:653: in read_parquet
+    impl = get_engine(engine)
+           ^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\..\AppData\Roaming\Python\Python314\site-packages\pandas\io\parquet.py:64: in get_engine
+    return engine_class()
+           ^^^^^^^^^^^^^^
+..\..\..\..\..\..\AppData\Roaming\Python\Python314\site-packages\pandas\io\parquet.py:164: in __init__
+    import_optional_dependency(
+..\..\..\..\..\..\AppData\Roaming\Python\Python314\site-packages\pandas\compat\_optional.py:135: in import_optional_dependency
+    module = importlib.import_module(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'pyarrow'
+
+    def imported(name):
+        imports.append(name)
+>       assert name == supervisor.OPS_NAME.removesuffix(".py")
+E       AssertionError: assert 'pyarrow' == 'launch_month...udit_20261024'
+E         
+E         - launch_monthly_test_index_v2_audit_20261024
+E         + pyarrow
+
+test_launch_oof_pipeline_v2_20261024.py:120: AssertionError
+=========================== short test summary info ===========================
+FAILED test_launch_oof_pipeline_v2_20261024.py::test_complete_metadata_admission_no_output_or_scientific_import
+1 failed, 40 passed in 62.28s (0:01:02)

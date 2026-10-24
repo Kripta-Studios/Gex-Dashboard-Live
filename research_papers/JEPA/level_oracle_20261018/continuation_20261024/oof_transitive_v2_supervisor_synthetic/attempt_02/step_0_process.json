@@ -1,0 +1,12 @@
+{
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-m",
+    "ruff",
+    "check",
+    "launch_oof_pipeline_v2_20261024.py",
+    "test_launch_oof_pipeline_v2_20261024.py"
+  ],
+  "creation_time": 1792818012.9495227,
+  "pid": 49084
+}

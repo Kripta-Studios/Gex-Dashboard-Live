@@ -26,7 +26,9 @@ ya tiene revisión independiente CLEAR: 40 pruebas sintéticas, una prueba poste
 adicional y 17 controles independientes. El primer intento sintético conserva su
 fallo de aserción. La [revisión científica](OOF_TRANSITIVE_SOURCE_V2_SCIENTIFIC_INVARIANCE_REVIEW_20261024.md)
 confirma las doce fases y los productores congelados. Son pruebas con fuentes
-artificiales; el lanzador V2 y la admisión de una ejecución nueva siguen pendientes.
+artificiales. El [lanzador V2](OOF_TRANSITIVE_SOURCE_V2_LAUNCH_IMPLEMENTATION_RESULT_20261024.md)
+completa 41 pruebas y 14 controles independientes; la admisión de una ejecución
+nueva sigue pendiente.
 No se reutilizan los resultados parciales del intento OOF01.
 
 Los [18 meses consolidados](MONTHLY_18MONTH_REPORT_RESULT_20261024.md) y la
