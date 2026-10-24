@@ -1,0 +1,23 @@
+{
+  "status": "PASS_ROOT_COMPACT_IMPLEMENTATION_AND_START_VERIFICATION",
+  "utc": "2026-10-24T05:39:12.204301+00:00",
+  "review_sha256": "fbbeebd2f0f7bbd1a7dd697df5cd6bd9acc6e7da5bf9ebb9b55b1e76aeee059f",
+  "pins_verified": 59,
+  "archives": {
+    "oof_economic_audit_v2r1_launcher_synthetic": "dfe278cd4e70003340441ae6eec8a79df2e2dd05c0d5f0b2911de8640032cd03",
+    "oof_economic_audit_v2r1_launcher_independent": "02bb710311f0199d6323745aabacf2586721d2113c5b638e30e5c98031600c19",
+    "oof_v2r1_metadata_admission_01": "22dfe8eba44b0efddb912a925a54f1fe3ae09c1cc63200e732aa73e1bd6f3175",
+    "oof_v2r1_pipeline_start_01": "da7081fdeb37345d6d8bc45a6b15edd58fb91e55018a151264c24d0c29401af8"
+  },
+  "source_copy_pairs": {
+    "oof_economic_audit_v2r1_launcher_synthetic": 20,
+    "oof_economic_audit_v2r1_launcher_independent": 13,
+    "oof_v2r1_metadata_admission_01": 6,
+    "oof_v2r1_pipeline_start_01": 4
+  },
+  "total_pairs": 43,
+  "economic_runtime_authorized": false,
+  "pipeline_state": "RUNNING_NOT_COMPLETE",
+  "scope": "Compact metadata/code and closed start receipts only; no economic values read.",
+  "helper_note": "Initial read-only helper failed under default CP1252 decoding before verification or writes; explicit UTF-8 used. No research retry."
+}

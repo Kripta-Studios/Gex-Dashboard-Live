@@ -1,0 +1,41 @@
+{
+  "status": "COMPACT_OOF_V2R1_PIPELINE_START_ONLY",
+  "archived_utc": "2026-10-24T05:30:45.987637+00:00",
+  "copied_files": 4,
+  "copied_bytes": 41377,
+  "files": [
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_v2r1_01\\preflight.json",
+      "archive_path": "preflight.json",
+      "sha256": "b73115c97c6540d8d0885aa6238c924b1fb503917fbe23bee100e467ad720cf0",
+      "bytes": 37202,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_v2r1_01\\process.json",
+      "archive_path": "process.json",
+      "sha256": "bf9c1db78627b7918bbc9d5e2bb505832f9d8e63c1280f6956028d8141ec79a2",
+      "bytes": 1320,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_v2r1_01\\admission.json",
+      "archive_path": "admission.json",
+      "sha256": "5c660b4bde4cf3fbd03931a7b69aac215bbd9c3b5d3804928bd3c344a5983cb7",
+      "bytes": 160,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_v2r1_observer_20261024_01\\initial.json",
+      "archive_path": "observer_initial.json",
+      "sha256": "42abc4562b603880a1c5f15810304aeec41fed7e45cfb497c49abac4b5b8e13b",
+      "bytes": 2695,
+      "source_and_copy_rehashed": true
+    }
+  ],
+  "limits": [
+    "Historical start receipt only; no completion or economic PASS inference.",
+    "No stdout, stderr, exit, phase values or scientific payloads read or copied.",
+    "Root retains ownership of active exec session 45379; archiver does not poll or relaunch it."
+  ]
+}

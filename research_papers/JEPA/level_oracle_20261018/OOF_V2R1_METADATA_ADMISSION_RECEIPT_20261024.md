@@ -1,0 +1,9 @@
+# OOF V2R1: admisión de metadatos y autorización de inicio
+
+El CLI por defecto cerró con `PASS_OOF_LAUNCH_PREFLIGHT_NOT_EXECUTED`, `executed=false` y `retry=false`, desde la publicación `98dde07684716512310c15aeb8f48b4a7bf5a7d3`. El exit 0 procede del handle retenido de PID 4256, creación `1792819675.666892`, observado a `2026-10-24T05:28:10.186105+00:00`; duración `14.521800599992275` s y stderr vacío.
+
+El recibo declara 2.226 sidecars indexados, 126 admitidos sólo por índice (los 126 de junio), seis días ausentes por autoridad y 1.542 sidecars externos esperados de enero admitidos. `historical_reconciliation_only=true` y `partial_attempt_read=false`. El SHA de admisión de fuentes registrado es `ec2f728baf2ab28adaaf3855847d74bf6354ac587d440afb83b50278e5ca3234`; los conteos se citan del recibo cerrado y no se recalcularon leyendo el índice o payloads.
+
+Root emitió `ROOT_GO_ONE_SHOT_OOF_V2R1_PIPELINE` a `2026-10-24T05:28:55.075753+00:00`: una ejecución nueva desde enero, sin resume ni adopción de intentos previos. Según la comunicación de root, el CLI real se inició una vez en la sesión 45379. Esta nota conserva ese corte histórico; no comprueba ni afirma su estado actual, avance o cierre. El observador y el recibo de inicio reales son evidencia separada. La auditoría económica independiente sigue siendo un paso distinto; `technical_ready=false` y `promotion_approved=false`.
+
+[Manifest de las seis copias exactas](continuation_20261024/oof_v2r1_metadata_admission_01/MANIFEST.json): 42283 bytes, SHA256 `22dfe8eba44b0efddb912a925a54f1fe3ae09c1cc63200e732aa73e1bd6f3175`. Incluye invocation, process, exit, stdout, stderr y root_go con sus rutas de origen, tamaños y hashes. Se verificaron originales/copias, los pins externos de stdout y root_go, y el pin del exit referenciado por root_go. No se modificaron bytes originales ni se accedió a outputs del pipeline, índice o payloads; no se repitieron pruebas ni se relanzó proceso alguno.

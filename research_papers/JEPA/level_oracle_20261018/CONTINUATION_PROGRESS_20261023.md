@@ -1,12 +1,17 @@
 # Continuación local: estado del 23 de octubre de 2026
 
-La [reparación R1 está implementada y revisada](OOF_TRANSITIVE_SOURCE_V2R1_IMPLEMENTATION_RESULT_20261024.md).
-Wrapper: cinco focales del autor y cinco independientes; lanzador: 46 pruebas
-tecnicas del autor y siete focales independientes. Los cuatro archivos V2
-permanecen intactos. La [solicitud R1](OOF_PIPELINE_V2R1_RUNTIME_PREPARATION_20261024_01.md)
-fija nueve destinos nuevos y tiene revisión de metadata CLEAR. Root verificó
-50 copias compactas y los 63 pins de la solicitud. Falta la comprobación real
-de admisión antes de iniciar el pipeline.
+La [admisión real R1 pasó](OOF_V2R1_METADATA_ADMISSION_RECEIPT_20261024.md)
+desde el commit publicado `98dde076`: 2.226 referencias del índice, 126 exclusivas
+de junio y seis sesiones ausentes conservadas. Tras el GO de root, el
+[pipeline único R1 empezó a las 05:29:43 UTC](OOF_V2R1_PIPELINE_START_RECEIPT_20261024.md).
+Sigue RUNNING: supervisor PID 44916, hijo 28256; todavía sin cierre ni resultado
+OOF auditado. Enero empieza desde cero, sin adoptar los intentos fallidos.
+
+El [supervisor económico R1 está revisado](OOF_ECONOMIC_AUDIT_V2R1_LAUNCH_IMPLEMENTATION_REVIEW_20261024.md):
+13 pruebas focales del autor y ocho independientes PASS, 59 pins exactos.
+Root verificó 43 parejas de copias compactas, incluidas admisión y arranque.
+La auditoría económica requiere primero los doce cierres y exit 0 del pipeline,
+y después una solicitud concreta revisada y publicada. No se ejecuta aún.
 
 El [preflight V2 terminó con un fallo de metadata](OOF_V2_METADATA_PREFLIGHT_FAILURE_01_20261024.md)
 antes de iniciar el pipeline. Las seis sesiones ausentes tienen una ruta nominal

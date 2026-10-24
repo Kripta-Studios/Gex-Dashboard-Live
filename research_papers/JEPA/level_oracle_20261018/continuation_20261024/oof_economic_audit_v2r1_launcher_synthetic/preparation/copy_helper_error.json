@@ -1,0 +1,7 @@
+{
+  "status": "PREPARATION_HELPER_ERROR_PRESERVED",
+  "error": "AssertionError: test_run_oof_calibrated_pipeline_v2.py",
+  "cause": "Generic run filename replacement already changed its test-prefixed occurrence before a redundant assertion",
+  "state": "New supervisor candidate written; new test file not yet written; no test/import/runtime execution",
+  "candidate_or_scientific_failure": false
+}

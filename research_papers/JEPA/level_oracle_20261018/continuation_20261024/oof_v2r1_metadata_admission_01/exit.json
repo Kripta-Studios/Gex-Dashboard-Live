@@ -1,0 +1,26 @@
+{
+  "exit_code": 0,
+  "retained_handle": true,
+  "pid": 4256,
+  "creation_time": 1792819675.666892,
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_oof_pipeline_v2r1_20261024.py",
+    "--request",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_PIPELINE_V2R1_RUNTIME_REQUEST_20261024_01.json",
+    "--request-sha256",
+    "37f2018c7145d3b82cba2e34fbff9ae3008e33f32b004c5580e433157f38ef15",
+    "--runtime-binding",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_PIPELINE_V2R1_LAUNCH_RUNTIME_BINDING_20261024_01.json",
+    "--runtime-binding-sha256",
+    "9e4949227dfd8b0aa3e72a35271b081413dbd9dee482b79c98911ea25478813c",
+    "--implementation-review-sha256",
+    "2782b686947c9ddd5f723ad2b279802d21f3adbbee79aa76a6cd6e8bce551a78",
+    "--publication-commit",
+    "98dde07684716512310c15aeb8f48b4a7bf5a7d3"
+  ],
+  "utc": "2026-10-24T05:27:55.672119+00:00",
+  "completed_utc": "2026-10-24T05:28:10.186105+00:00",
+  "wall_seconds": 14.521800599992275
+}

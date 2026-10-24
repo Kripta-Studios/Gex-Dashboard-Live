@@ -1,5 +1,18 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-10-24 — pipeline R1 activo; auditor preparado
+
+Desde98dde076, preflight metadata R1 exit0 05:28:10UTC; rootGO fc5b88c5.
+Admisión ec2f728b:2226I,126 index-only junio,6missing; sin adoptar parciales.
+Pipeline único inició05:29:43UTC, supervisor44916/hijo28256, sesión root45379.
+Estado RUNNING, sin cierre ni economía OOF auditada. No relanzar ni autoauditar.
+Recibos OOF_V2R1_METADATA_ADMISSION_RECEIPT y OOF_V2R1_PIPELINE_START_RECEIPT.
+Supervisor económico R1 93ad3efc/reviewfbbeebd2:13autor y8independientes PASS,
+59pins; root verificó43parejas compactas. Auditor científico e748 intacto.
+Primero12cierres+exit0 upstream; después request/binding reales revisados y
+publicados antes de una auditoría separada. Informe futuro sólo audit FULL_H1.
+Producción/API/bróker/VPS intactos; technical_ready y promotion_approved false.
+
 ### Checkpoint 2026-10-24 — R1 revisado; pendiente admisión real
 
 R1 sólo retira day_root de la nulidad exigida para missing y conserva ambosSHA

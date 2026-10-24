@@ -1,0 +1,23 @@
+{
+  "status": "ROOT_GO_ONE_SHOT_OOF_V2R1_PIPELINE",
+  "utc": "2026-10-24T05:28:55.075753+00:00",
+  "publication_commit": "98dde07684716512310c15aeb8f48b4a7bf5a7d3",
+  "default_preflight_sha256": "d775a4c934c5b2a09aaa736f42ec67737c5f9fc02dcbca3bd9e6d71d7ba333bf",
+  "default_exit_sha256": "069fe5fe0a333e1433f820f08087695f35460ed95c594c1981d314cb50657901",
+  "source_admission_sha256": "ec2f728baf2ab28adaaf3855847d74bf6354ac587d440afb83b50278e5ca3234",
+  "request_sha256": "37f2018c7145d3b82cba2e34fbff9ae3008e33f32b004c5580e433157f38ef15",
+  "runtime_binding_sha256": "9e4949227dfd8b0aa3e72a35271b081413dbd9dee482b79c98911ea25478813c",
+  "source_admission_summary": {
+    "indexed_sidecars": 2226,
+    "index_only_sidecars": 126,
+    "june_index_only_sidecars": 126,
+    "missing_days_authority": 6,
+    "expected_january_external_sidecars_admitted": 1542,
+    "expected_january_external_sidecars_sha256": "ba333e143dcd8da0abbef88dbf3827e50c6866645086b6a7bec889e511506a27",
+    "historical_reconciliation_only": true,
+    "partial_attempt_read": false
+  },
+  "authorization_scope": "One new pipeline from January, no resume/adoption of prior attempts; independent economic audit remains separate",
+  "technical_ready": false,
+  "promotion_approved": false
+}

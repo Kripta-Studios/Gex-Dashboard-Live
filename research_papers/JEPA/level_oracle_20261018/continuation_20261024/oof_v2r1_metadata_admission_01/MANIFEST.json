@@ -1,0 +1,60 @@
+{
+  "status": "COMPACT_OOF_V2R1_DEFAULT_METADATA_ADMISSION_EVIDENCE",
+  "archived_utc": "2026-10-24T05:30:10.362834+00:00",
+  "files": [
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_v2r1_metadata_preflight_20261024_01\\invocation.json",
+      "archive_path": "invocation.json",
+      "sha256": "9ebf274828dadfff173cad4bce5a1ee4bc167380103c4dac9e3c42ca57e39201",
+      "bytes": 1321,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_v2r1_metadata_preflight_20261024_01\\process.json",
+      "archive_path": "process.json",
+      "sha256": "e01944e815fba4b3acfa8336f99aaf5f265f3fdd1a3ccefc3e3d5b467722f95c",
+      "bytes": 1167,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_v2r1_metadata_preflight_20261024_01\\exit.json",
+      "archive_path": "exit.json",
+      "sha256": "069fe5fe0a333e1433f820f08087695f35460ed95c594c1981d314cb50657901",
+      "bytes": 1309,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_v2r1_metadata_preflight_20261024_01\\stdout.json",
+      "archive_path": "stdout.json",
+      "sha256": "d775a4c934c5b2a09aaa736f42ec67737c5f9fc02dcbca3bd9e6d71d7ba333bf",
+      "bytes": 37204,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_v2r1_metadata_preflight_20261024_01\\stderr.txt",
+      "archive_path": "stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_v2r1_metadata_preflight_20261024_01\\root_go.json",
+      "archive_path": "root_go.json",
+      "sha256": "fc5b88c5d0755e40d2ede95947bc3f3211ad43b5e82f0020c4d4118a5a967b62",
+      "bytes": 1282,
+      "source_and_copy_rehashed": true
+    }
+  ],
+  "copied_files": 6,
+  "copied_bytes": 42283,
+  "external_pins": {
+    "stdout.json": "d775a4c934c5b2a09aaa736f42ec67737c5f9fc02dcbca3bd9e6d71d7ba333bf",
+    "root_go.json": "fc5b88c5d0755e40d2ede95947bc3f3211ad43b5e82f0020c4d4118a5a967b62"
+  },
+  "source_admission_sha256": "ec2f728baf2ab28adaaf3855847d74bf6354ac587d440afb83b50278e5ca3234",
+  "limits": [
+    "Closed metadata preflight and root authorization only.",
+    "No active pipeline polling, output reads, index rereads, tests or relaunch.",
+    "Admission receipt is not economic audit or pipeline completion."
+  ]
+}
