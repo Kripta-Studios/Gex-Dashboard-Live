@@ -1,5 +1,13 @@
 # Investigación 0DTE por niveles
 
+La [reparación R1 está implementada y revisada](OOF_TRANSITIVE_SOURCE_V2R1_IMPLEMENTATION_RESULT_20261024.md).
+Wrapper: cinco focales del autor y cinco independientes; lanzador: 46 pruebas
+tecnicas del autor y siete focales independientes. Los cuatro archivos V2
+permanecen intactos. La [solicitud R1](OOF_PIPELINE_V2R1_RUNTIME_PREPARATION_20261024_01.md)
+fija nueve destinos nuevos y tiene revisión de metadata CLEAR. Root verificó
+50 copias compactas y los 63 pins de la solicitud. Falta la comprobación real
+de admisión antes de iniciar el pipeline.
+
 **Estado actual: REANUDADA por orden del usuario el23 de octubre de2026.**
 La [autoridad de reanudación](RESUMPTION_20261023.md) sustituye la pausa
 operativa indicada abajo. Se continúa con las líneas incompletas y auditorías;

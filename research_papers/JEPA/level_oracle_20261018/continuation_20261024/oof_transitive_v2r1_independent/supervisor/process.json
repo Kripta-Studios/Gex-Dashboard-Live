@@ -1,0 +1,19 @@
+{
+  "pid": 4312,
+  "creation_time": 1792819452.1968791,
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-m",
+    "pytest",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_launch_oof_pipeline_v2r1_20261024.py::test_r1_preflight_six_missing_are_metadata_only",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_launch_oof_pipeline_v2r1_20261024.py::test_r1_supervisor_only_guard_and_operational_replacements",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_launch_oof_pipeline_v2r1_20261024.py::test_metadata_admission_helpers_match_reviewed_wrapper_ast",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_launch_oof_pipeline_v2r1_20261024.py::test_june_index_only_admission_is_bound_in_preflight",
+    "-q",
+    "--basetemp",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_supervisor_independent_20261024_01\\pytest_tmp"
+  ],
+  "cpu_affinity": [
+    0
+  ]
+}

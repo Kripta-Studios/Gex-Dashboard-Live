@@ -1,0 +1,94 @@
+{
+  "bytes": 104271,
+  "copies": 14,
+  "files": [
+    {
+      "bytes": 4027,
+      "copy": "attempt_01/admission.json",
+      "sha256": "aa16716a0e78ccc14f99e40f62991e19a1a6962263767d5a90938f2fc56e1cbe",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_wrapper_synthetic_20261024_01\\admission.json"
+    },
+    {
+      "bytes": 1276,
+      "copy": "attempt_01/result.json",
+      "sha256": "84d52aa9357a6e53b9b217fbd8047092efa326dd5b8db4940f3fc29233eabc42",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_wrapper_synthetic_20261024_01\\result.json"
+    },
+    {
+      "bytes": 263,
+      "copy": "attempt_01/step_0_process.json",
+      "sha256": "52a14d164ea61e07014d3fc63af8dbd8da1c4f103425c61c6e8a09fda16c5a8b",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_wrapper_synthetic_20261024_01\\step_0_process.json"
+    },
+    {
+      "bytes": 0,
+      "copy": "attempt_01/step_0_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_wrapper_synthetic_20261024_01\\step_0_stderr.txt"
+    },
+    {
+      "bytes": 19,
+      "copy": "attempt_01/step_0_stdout.txt",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_wrapper_synthetic_20261024_01\\step_0_stdout.txt"
+    },
+    {
+      "bytes": 379,
+      "copy": "attempt_01/step_1_process.json",
+      "sha256": "bd9a15b45c88b8101d41c2809125a5233c0af252b28ea7be249d7424dc09826e",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_wrapper_synthetic_20261024_01\\step_1_process.json"
+    },
+    {
+      "bytes": 0,
+      "copy": "attempt_01/step_1_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_wrapper_synthetic_20261024_01\\step_1_stderr.txt"
+    },
+    {
+      "bytes": 115,
+      "copy": "attempt_01/step_1_stdout.txt",
+      "sha256": "5dddcb8bea7752c11d46758c0e2c0cc47ed37f2b7bc794b7a1029b79c1fd9ec4",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_wrapper_synthetic_20261024_01\\step_1_stdout.txt"
+    },
+    {
+      "bytes": 7532,
+      "copy": "attempt_01/source_snapshot/OOF_TRANSITIVE_SOURCE_FAILURE_DIAGNOSIS_20261024.md",
+      "sha256": "bd8bd3a8992c27203f0d67dd8ca0726a72615f30714096e0ffd177458b60cf23",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_wrapper_synthetic_20261024_01\\source_snapshot\\OOF_TRANSITIVE_SOURCE_FAILURE_DIAGNOSIS_20261024.md"
+    },
+    {
+      "bytes": 6325,
+      "copy": "attempt_01/source_snapshot/OOF_TRANSITIVE_SOURCE_V2R1_IMPLEMENTATION_CONTRACT_20261024.md",
+      "sha256": "063f7cc7cf26506dc8a8d9691e841a89c2a55f87ce7b72b79e8743f40db3dc43",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_wrapper_synthetic_20261024_01\\source_snapshot\\OOF_TRANSITIVE_SOURCE_V2R1_IMPLEMENTATION_CONTRACT_20261024.md"
+    },
+    {
+      "bytes": 11611,
+      "copy": "attempt_01/source_snapshot/OOF_TRANSITIVE_SOURCE_V2_DESIGN_20261024.md",
+      "sha256": "485f557e4ea2d2eb94bfecfd383d59d02ec29381f0eac06a12178fdef9882cc3",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_wrapper_synthetic_20261024_01\\source_snapshot\\OOF_TRANSITIVE_SOURCE_V2_DESIGN_20261024.md"
+    },
+    {
+      "bytes": 36413,
+      "copy": "attempt_01/source_snapshot/run_oof_calibrated_pipeline_v2r1.py",
+      "sha256": "87512b315d69c75c948c68a671939a9423f53abaa6cf2649d5faee7acd22b15a",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_wrapper_synthetic_20261024_01\\source_snapshot\\run_oof_calibrated_pipeline_v2r1.py"
+    },
+    {
+      "bytes": 30759,
+      "copy": "attempt_01/source_snapshot/test_run_oof_calibrated_pipeline_v2r1.py",
+      "sha256": "7ca60f506540f4753b373d9230273c8d77936393604e909a87a9995f867c2400",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_wrapper_synthetic_20261024_01\\source_snapshot\\test_run_oof_calibrated_pipeline_v2r1.py"
+    },
+    {
+      "bytes": 5552,
+      "copy": "launcher/run_synthetic.py",
+      "sha256": "9cddc4aff73bd89838a8d54fa54d734e197ad3958ccd95e7c3bb0d1b3b6f1b6d",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_wrapper_preparation_20261024\\run_synthetic.py"
+    }
+  ],
+  "fixture_payloads_copied": false,
+  "local_fixture_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_wrapper_synthetic_20261024_01\\pytest_tmp",
+  "runtime_market_authorized": false,
+  "scope": "SYNTHETIC_METADATA_ONLY"
+}

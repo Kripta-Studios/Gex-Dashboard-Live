@@ -1,0 +1,15 @@
+{
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-m",
+    "pytest",
+    "test_launch_oof_pipeline_v2r1_20261024.py",
+    "-q",
+    "--basetemp",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_supervisor_synthetic_20261024_01\\pytest_tmp",
+    "-k",
+    "r1_ or june_index_only or metadata_admission_helpers"
+  ],
+  "creation_time": 1792819282.0881705,
+  "pid": 31932
+}

@@ -1,5 +1,13 @@
 # Continuación local: estado del 23 de octubre de 2026
 
+La [reparación R1 está implementada y revisada](OOF_TRANSITIVE_SOURCE_V2R1_IMPLEMENTATION_RESULT_20261024.md).
+Wrapper: cinco focales del autor y cinco independientes; lanzador: 46 pruebas
+tecnicas del autor y siete focales independientes. Los cuatro archivos V2
+permanecen intactos. La [solicitud R1](OOF_PIPELINE_V2R1_RUNTIME_PREPARATION_20261024_01.md)
+fija nueve destinos nuevos y tiene revisión de metadata CLEAR. Root verificó
+50 copias compactas y los 63 pins de la solicitud. Falta la comprobación real
+de admisión antes de iniciar el pipeline.
+
 El [preflight V2 terminó con un fallo de metadata](OOF_V2_METADATA_PREFLIGHT_FAILURE_01_20261024.md)
 antes de iniciar el pipeline. Las seis sesiones ausentes tienen una ruta nominal
 y ambos hashes de sidecar nulos; la validación exigía también una ruta nula.

@@ -1,0 +1,161 @@
+{
+  "status": "COMPACT_INDEPENDENT_OOF_V2R1_FIXTURE_EVIDENCE",
+  "archived_utc": "2026-10-24T05:25:35.266884+00:00",
+  "external_result_receipts": {
+    "wrapper": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_wrapper_independent_20261024_01\\result.json",
+      "sha256": "13b2ab06948c03c22561aad8362c4e343a7a7d7f7059da723f68d63c3ac0269c"
+    },
+    "supervisor": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_supervisor_independent_20261024_01\\result.json",
+      "sha256": "061ab5264ca2f3ddaf9da7fb8b8f656a14e1268c6f9982a5fb0e42e0cc48041d"
+    }
+  },
+  "copied_files": 19,
+  "copied_bytes": 253362,
+  "files": [
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_wrapper_independent_20261024_01\\admission.json",
+      "archive_path": "wrapper/admission.json",
+      "sha256": "846c7ce1d837e85d72229ca5d107452ff2b3e504ee93e3959ea84ddec2775e23",
+      "bytes": 2814,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_wrapper_independent_20261024_01\\process.json",
+      "archive_path": "wrapper/process.json",
+      "sha256": "715e042ee34d0e42d51f5ffef8ca7d6689c91d5ce678292b86eafde142d58d41",
+      "bytes": 501,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_wrapper_independent_20261024_01\\result.json",
+      "archive_path": "wrapper/result.json",
+      "sha256": "13b2ab06948c03c22561aad8362c4e343a7a7d7f7059da723f68d63c3ac0269c",
+      "bytes": 4546,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_wrapper_independent_20261024_01\\stdout.log",
+      "archive_path": "wrapper/stdout.log",
+      "sha256": "5d84ff3745501a824af58d4d330f84d885f01b5362b447c2035d8b4ea7966063",
+      "bytes": 115,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_wrapper_independent_20261024_01\\stderr.log",
+      "archive_path": "wrapper/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_wrapper_independent_20261024_01\\source_snapshot\\OOF_TRANSITIVE_SOURCE_V2R1_IMPLEMENTATION_CONTRACT_20261024.md",
+      "archive_path": "wrapper/source_snapshot/OOF_TRANSITIVE_SOURCE_V2R1_IMPLEMENTATION_CONTRACT_20261024.md",
+      "sha256": "063f7cc7cf26506dc8a8d9691e841a89c2a55f87ce7b72b79e8743f40db3dc43",
+      "bytes": 6325,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_wrapper_independent_20261024_01\\source_snapshot\\run_oof_calibrated_pipeline_v2r1.py",
+      "archive_path": "wrapper/source_snapshot/run_oof_calibrated_pipeline_v2r1.py",
+      "sha256": "87512b315d69c75c948c68a671939a9423f53abaa6cf2649d5faee7acd22b15a",
+      "bytes": 36413,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_wrapper_independent_20261024_01\\source_snapshot\\test_run_oof_calibrated_pipeline_v2r1.py",
+      "archive_path": "wrapper/source_snapshot/test_run_oof_calibrated_pipeline_v2r1.py",
+      "sha256": "7ca60f506540f4753b373d9230273c8d77936393604e909a87a9995f867c2400",
+      "bytes": 30759,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_supervisor_independent_20261024_01\\admission.json",
+      "archive_path": "supervisor/admission.json",
+      "sha256": "85640c223008d7287de75191e37ec1dc6e4dc631ec4dfcc8e7beb2463d3da974",
+      "bytes": 7088,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_supervisor_independent_20261024_01\\process.json",
+      "archive_path": "supervisor/process.json",
+      "sha256": "2a16b159427cd5b73e084ac24f9f355c03169ca7f54760eb093f01df2d35e4fe",
+      "bytes": 1248,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_supervisor_independent_20261024_01\\result.json",
+      "archive_path": "supervisor/result.json",
+      "sha256": "061ab5264ca2f3ddaf9da7fb8b8f656a14e1268c6f9982a5fb0e42e0cc48041d",
+      "bytes": 11224,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_supervisor_independent_20261024_01\\stdout.log",
+      "archive_path": "supervisor/stdout.log",
+      "sha256": "923fd2046fcfbdf075d46654d2f4e85637ec848d4a63e5e0c06818f198e230c0",
+      "bytes": 101,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_supervisor_independent_20261024_01\\stderr.log",
+      "archive_path": "supervisor/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_supervisor_independent_20261024_01\\source_snapshot\\launch_oof_pipeline_v2r1_20261024.py",
+      "archive_path": "supervisor/source_snapshot/launch_oof_pipeline_v2r1_20261024.py",
+      "sha256": "e53084c70f99e4410814066a757e8f455dbb91bece8838fcd73417ce4614dce2",
+      "bytes": 40525,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_supervisor_independent_20261024_01\\source_snapshot\\OOF_TRANSITIVE_SOURCE_V2R1_IMPLEMENTATION_CONTRACT_20261024.md",
+      "archive_path": "supervisor/source_snapshot/OOF_TRANSITIVE_SOURCE_V2R1_IMPLEMENTATION_CONTRACT_20261024.md",
+      "sha256": "063f7cc7cf26506dc8a8d9691e841a89c2a55f87ce7b72b79e8743f40db3dc43",
+      "bytes": 6325,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_supervisor_independent_20261024_01\\source_snapshot\\OOF_TRANSITIVE_SOURCE_V2R1_RUNTIME_IMPLEMENTATION_REVIEW_20261024.json",
+      "archive_path": "supervisor/source_snapshot/OOF_TRANSITIVE_SOURCE_V2R1_RUNTIME_IMPLEMENTATION_REVIEW_20261024.json",
+      "sha256": "7431a6df11966c46ce5aa66bac5d707b7dfe9e131f59366df24f0f2f66c222c9",
+      "bytes": 6540,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_supervisor_independent_20261024_01\\source_snapshot\\run_oof_calibrated_pipeline_v2r1.py",
+      "archive_path": "supervisor/source_snapshot/run_oof_calibrated_pipeline_v2r1.py",
+      "sha256": "87512b315d69c75c948c68a671939a9423f53abaa6cf2649d5faee7acd22b15a",
+      "bytes": 36413,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_supervisor_independent_20261024_01\\source_snapshot\\test_launch_oof_pipeline_v2r1_20261024.py",
+      "archive_path": "supervisor/source_snapshot/test_launch_oof_pipeline_v2r1_20261024.py",
+      "sha256": "f78ee419e122800b14165902fa21ecc38dfd118191f4b61aa436f2fb912cb70a",
+      "bytes": 31666,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_supervisor_independent_20261024_01\\source_snapshot\\test_run_oof_calibrated_pipeline_v2r1.py",
+      "archive_path": "supervisor/source_snapshot/test_run_oof_calibrated_pipeline_v2r1.py",
+      "sha256": "7ca60f506540f4753b373d9230273c8d77936393604e909a87a9995f867c2400",
+      "bytes": 30759,
+      "source_and_copy_rehashed": true
+    }
+  ],
+  "excluded": [
+    "Both pytest_tmp trees: no payload read, hash or copy."
+  ],
+  "limits": [
+    "Archival verification only; no repeated tests or market execution.",
+    "Both independent launchers ran Python via stdin; no additional physical launcher retained.",
+    "Supervisor admission preserves the initial auxiliary basename-path error, which preceded its output root and child; no evidence rewritten.",
+    "Author test runs are archived separately and are not duplicated here."
+  ],
+  "runtime_market_authorized": false
+}

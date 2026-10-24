@@ -1,5 +1,19 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-10-24 — R1 revisado; pendiente admisión real
+
+R1 sólo retira day_root de la nulidad exigida para missing y conserva ambosSHA
+nulos/continue, sin permisos I ni acceso a esas rutas. Wrapper87512b31 y
+supervisore53084c7: reviews7431a6df/2782b686 CLEAR; mapas18/48 exactos.
+Autor5wrapper/46supervisor PASS, independientes5/7 PASS. El selector del autor
+incluyó toda la suite técnica del supervisor una vez; no fases científicas.
+50copias compactas verificadas; código/reviews V2 conservan sus hashes.
+Request37f2018c/binding9e494922/reviewmetadatae3ee941c:55miembrospublicación,
+63pins verificados,9destinosv2r1_01 ausentes. Publicar paquete antespreflight
+DEFAULT sólometadata. GOreal requiere inspeccionar admisión, enero desdecero.
+No pipelineR1 ni resultadoeconómico; fallo V2 y parcialOOF01 permanecen.
+Producción/API/bróker/VPS intactos; promoción false.
+
 ### Checkpoint 2026-10-24 — preflight V2 falla antes del pipeline
 
 Autoridad: level_oracle_20261018/OOF_V2_METADATA_PREFLIGHT_FAILURE_01_20261024.md.

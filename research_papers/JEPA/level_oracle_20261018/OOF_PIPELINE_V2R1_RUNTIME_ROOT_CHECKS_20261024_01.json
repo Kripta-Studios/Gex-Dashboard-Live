@@ -1,0 +1,29 @@
+{
+  "status": "PASS_ROOT_RUNTIME_METADATA_AND_PINS",
+  "utc": "2026-10-24T05:27:12.707892+00:00",
+  "review_sha256": "e3ee941c47f12d4ec813310458a853d56efb21468254f9d389963183dbed8816",
+  "request": {
+    "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_PIPELINE_V2R1_RUNTIME_REQUEST_20261024_01.json",
+    "sha256": "37f2018c7145d3b82cba2e34fbff9ae3008e33f32b004c5580e433157f38ef15"
+  },
+  "binding": {
+    "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_PIPELINE_V2R1_LAUNCH_RUNTIME_BINDING_20261024_01.json",
+    "sha256": "9e4949227dfd8b0aa3e72a35271b081413dbd9dee482b79c98911ea25478813c"
+  },
+  "compact_pins_verified": 63,
+  "roots_absent": [
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_v2r1_01",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_oof_correction_20261024_v2r1_01",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202601_20261024_v2r1_01",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202602_20261024_v2r1_01",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202603_20261024_v2r1_01",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202604_20261024_v2r1_01",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202605_20261024_v2r1_01",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202606_20261024_v2r1_01",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_v2r1_01"
+  ],
+  "permitted_next_action": "Publish and remote verify complete package, then default metadata-only CLI. Inspect real admission before one-shot pipeline decision.",
+  "pipeline_launch_authorized_yet": false,
+  "technical_ready": false,
+  "promotion_approved": false
+}

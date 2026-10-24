@@ -1,0 +1,15 @@
+{
+  "pid": 18312,
+  "creation_time": 1792819216.9221232,
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-m",
+    "pytest",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_run_oof_calibrated_pipeline_v2r1.py",
+    "-q",
+    "-k",
+    "r1_",
+    "--basetemp",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2r1_wrapper_independent_20261024_01\\pytest_tmp"
+  ]
+}
