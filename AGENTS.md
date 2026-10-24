@@ -1,5 +1,25 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-10-24 — validación 2025 auditada; tres modos fallan
+
+Autoridad: research_papers/JEPA/level_oracle_20261018/MONTHLY_VALIDATION_2025_AUDIT_RESULT_20261024.md.
+Auditor V2 PID52304 terminó exit0 retenido a23-oct23:50:32UTC; supervisor cerró
+a23:51:21UTC. Audit ba9fbd9e…49cbc PASS dado scores sellados:12 meses,24 ventanas,
+750 ticker-días, tres modos. No refit/reinferencia. Intento01 fallido preservado.
+Netos base2025 static/expanding/rolling12: -49152,40/-75243,80/-122081,40 USD;
+los nueve grupos modo×ticker pierden y fallan actividad diaria. Freeze null,
+FAIL_NO_DAILY_COMPLIANT_MODE, approved=false; no seleccionar el menos negativo.
+Archivo compacto242 copias/38632476 bytes incluye24 modelos. Matrices/targets
+30906728203 bytes siguen locales, con hashes atribuidos al audit y referencias.
+Binding test2026 1c6072a8…0b557b: revisión independiente43checks CLEAR,96 archivos
+compactos,11 raíces acotadas y20 pins. Publicación y preflight completo pendientes
+antes de única ejecución inicial con launcher congelado. Aún no test2026.
+Reporter descriptivo1968aefc…41146:48 pruebas autor y5 focales independientes PASS,
+CLEAR de implementación; no ejecución real todavía. Extensión auditor2026 V2
+publicada b7385f6d; requerirá cierre/exit real del productor2026 antes de auditoría.
+OOF pendiente de autoridad compuesta18meses. Investigación activa local,
+SEEN_DEVELOPMENT, technical_ready=false, promotion_approved=false; producción intacta.
+
 ### Checkpoint 2026-10-24 — validación mensual producida; auditoría 01 falla por metadata nula
 
 Autoridades: research_papers/JEPA/level_oracle_20261018/MONTHLY_VALIDATION_AUDIT_01_TECHNICAL_FAILURE_20261024.md

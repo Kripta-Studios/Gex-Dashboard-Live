@@ -1,0 +1,26 @@
+{
+  "version": "SESSION_CLOCK_DATASET_V1",
+  "builder_sha256": "fda474dfa1300b5bea15dd4deac0884f131fd2d7bca8cae43ad37c9fab7e9c23",
+  "dependencies": {
+    "session_clock.py": "1e63cf2d314caea14dd8b0b8f025f647d67bf8df58f246613975891a256f51e9",
+    "session_cache.py": "6300a7f8e5c6c99101d32d642081f4b8dec170d3c40f2751c27f1642d55466f1",
+    "session_level_engine.py": "f93d3be334a2326dbec5d742e217bce63449e1beaf46b35fa46be83f25548883",
+    "session_features.py": "595ef9a5327533e7c57190f8970ad76df428b5a62878a6004a961bf4249f2d74",
+    "build_cache.py": "985e87dcbd1e73289b58e4576445e47e73a6edea13e5ac73dde3ad629180d69f",
+    "level_engine.py": "70cc5d20990d971d16299fd008ff8e05ac99f99a6a2917a202fcb9a5f413b7c6",
+    "features.py": "b5c63f918319f844793abb3346a34515526073374f5e71af2129a94f2369d4e0"
+  },
+  "calendar_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\cache_v1\\expected_calendar.csv",
+  "calendar_sha256": "70caddcff8cde0e03c6819f03b7d2eebc8da4b30c9ace24d37a7738b856e4318",
+  "original_index_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\engine_v1\\index.parquet",
+  "original_index_sha256": "8d0c6e27bdaf7d47ef2a9888505294b8f3186da3a6927e780ce9e517e660e8e5",
+  "original_audit_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\engine_v1_audit_v4\\audit.json",
+  "original_audit_sha256": "cbbe61d0a3fa7619447b7301d4c4b2fd52c487e11450d4904efee381fc3bf22d",
+  "feature_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_clock_dataset_v1",
+  "expected_days": 2625,
+  "expected_available_days": 2619,
+  "expected_missing_days": 6,
+  "short_days": 24,
+  "native_threads": 1,
+  "workers": 1
+}

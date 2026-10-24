@@ -1,0 +1,19 @@
+{
+  "pid": 11852,
+  "creation_time": 1792784053.9282398,
+  "started_unix": 1792784053.9282398,
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-u",
+    "research_papers/JEPA/level_oracle_20261018/run_monthly_resource_overlay.py",
+    "--runtime-root",
+    "D:/GexResearchArtifacts/level_oracle_20261018/monthly_resource_overlay_resume_20261023_01",
+    "--runtime-review",
+    "research_papers/JEPA/level_oracle_20261018/MONTHLY_RESOURCE_OVERLAY_REVIEW.json",
+    "--previous-pid",
+    "38676"
+  ],
+  "source_launch_receipt_sha256": "056a155c06153e6dce6c9686b27cd2ed47f59ad93e2e228c81bcd0a1ac8ca8c2",
+  "source_monitor_sha256": "d1beaf7abca3a17bbbef5cbe7f3bbde91fd18a745262a44d59ac0f68a06e5df4",
+  "normalized_from_existing_receipt_with_live_command_and_creation_check": true
+}

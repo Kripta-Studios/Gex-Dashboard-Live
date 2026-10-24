@@ -1,0 +1,586 @@
+{
+  "year": 2025,
+  "modes": {
+    "static": {
+      "overall": {
+        "expected_ticker_days": 750,
+        "available_ticker_days": 750,
+        "missing_no_evaluable": 0,
+        "available_days_with_fill": 678,
+        "available_days_without_fill": 72,
+        "observable_daily_pass": false,
+        "full_calendar_daily_status": "FAIL_OBSERVED_ZERO",
+        "daily_requirement_satisfied": false,
+        "available_economics": {
+          "trades": 2994,
+          "net_base": -49152.399999999965,
+          "net_base_pf": 0.8745160231257081,
+          "net_base_pf_infinite": false,
+          "net_base_win_rate": 0.2565130260521042,
+          "net_base_max_drawdown": 55625.5999999969,
+          "net_adverse": -55127.39999999995,
+          "net_adverse_pf": 0.8608458286866487,
+          "net_adverse_pf_infinite": false,
+          "net_adverse_win_rate": 0.251503006012024,
+          "net_adverse_max_drawdown": 61484.59999999672,
+          "holding_minutes": {
+            "min": 1.0,
+            "median": 17.0,
+            "max": 324.0
+          },
+          "exit_reasons": {
+            "TARGET": {
+              "trades": 558,
+              "net_base": 237962.2,
+              "net_adverse": 236846.2
+            },
+            "STOP": {
+              "trades": 2016,
+              "net_base": -336039.6,
+              "net_adverse": -340065.6
+            },
+            "EOD": {
+              "trades": 420,
+              "net_base": 48925.0,
+              "net_adverse": 48092.00000000001
+            }
+          }
+        },
+        "net_base_per_available_day": -65.53653333333328,
+        "missing_day_economics": null
+      },
+      "tickers": {
+        "SPXW": {
+          "expected_ticker_days": 250,
+          "available_ticker_days": 250,
+          "missing_no_evaluable": 0,
+          "available_days_with_fill": 248,
+          "available_days_without_fill": 2,
+          "observable_daily_pass": false,
+          "full_calendar_daily_status": "FAIL_OBSERVED_ZERO",
+          "daily_requirement_satisfied": false,
+          "available_economics": {
+            "trades": 1291,
+            "net_base": -27401.6,
+            "net_base_pf": 0.9171246722986337,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.2804027885360186,
+            "net_base_max_drawdown": 35097.99999999947,
+            "net_adverse": -29981.59999999996,
+            "net_adverse_pf": 0.9098285811902473,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.278853601859024,
+            "net_adverse_max_drawdown": 37446.59999999931,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 16.0,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 267,
+                "net_base": 213816.80000000002,
+                "net_adverse": 213282.80000000002
+              },
+              "STOP": {
+                "trades": 861,
+                "net_base": -282984.6,
+                "net_adverse": -284705.6
+              },
+              "EOD": {
+                "trades": 163,
+                "net_base": 41766.2,
+                "net_adverse": 41441.200000000004
+              }
+            }
+          },
+          "net_base_per_available_day": -109.6064,
+          "missing_day_economics": null
+        },
+        "SPY": {
+          "expected_ticker_days": 250,
+          "available_ticker_days": 250,
+          "missing_no_evaluable": 0,
+          "available_days_with_fill": 213,
+          "available_days_without_fill": 37,
+          "observable_daily_pass": false,
+          "full_calendar_daily_status": "FAIL_OBSERVED_ZERO",
+          "daily_requirement_satisfied": false,
+          "available_economics": {
+            "trades": 856,
+            "net_base": -10084.599999999999,
+            "net_base_pf": 0.6492654628418798,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.23130841121495327,
+            "net_base_max_drawdown": 10092.200000000164,
+            "net_adverse": -11793.600000000002,
+            "net_adverse_pf": 0.6078420940625664,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.2219626168224299,
+            "net_adverse_max_drawdown": 11793.600000000184,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 19.0,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 143,
+                "net_base": 10771.2,
+                "net_adverse": 10485.199999999997
+              },
+              "STOP": {
+                "trades": 595,
+                "net_base": -25461.0,
+                "net_adverse": -26649.000000000004
+              },
+              "EOD": {
+                "trades": 118,
+                "net_base": 4605.199999999998,
+                "net_adverse": 4370.199999999998
+              }
+            }
+          },
+          "net_base_per_available_day": -40.33839999999999,
+          "missing_day_economics": null
+        },
+        "QQQ": {
+          "expected_ticker_days": 250,
+          "available_ticker_days": 250,
+          "missing_no_evaluable": 0,
+          "available_days_with_fill": 217,
+          "available_days_without_fill": 33,
+          "observable_daily_pass": false,
+          "full_calendar_daily_status": "FAIL_OBSERVED_ZERO",
+          "daily_requirement_satisfied": false,
+          "available_economics": {
+            "trades": 847,
+            "net_base": -11666.199999999997,
+            "net_base_pf": 0.6389671158095405,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.24557260920897284,
+            "net_base_max_drawdown": 11666.600000000235,
+            "net_adverse": -13352.2,
+            "net_adverse_pf": 0.6025113570735368,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.2396694214876033,
+            "net_adverse_max_drawdown": 13352.20000000024,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 18.0,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 148,
+                "net_base": 13374.2,
+                "net_adverse": 13078.2
+              },
+              "STOP": {
+                "trades": 560,
+                "net_base": -27594.000000000004,
+                "net_adverse": -28711.000000000007
+              },
+              "EOD": {
+                "trades": 139,
+                "net_base": 2553.6000000000013,
+                "net_adverse": 2280.6000000000004
+              }
+            }
+          },
+          "net_base_per_available_day": -46.664799999999985,
+          "missing_day_economics": null
+        }
+      }
+    },
+    "expanding": {
+      "overall": {
+        "expected_ticker_days": 750,
+        "available_ticker_days": 750,
+        "missing_no_evaluable": 0,
+        "available_days_with_fill": 651,
+        "available_days_without_fill": 99,
+        "observable_daily_pass": false,
+        "full_calendar_daily_status": "FAIL_OBSERVED_ZERO",
+        "daily_requirement_satisfied": false,
+        "available_economics": {
+          "trades": 3043,
+          "net_base": -75243.79999999999,
+          "net_base_pf": 0.8251993820492268,
+          "net_base_pf_infinite": false,
+          "net_base_win_rate": 0.2803154781465659,
+          "net_base_max_drawdown": 81471.60000000108,
+          "net_adverse": -81319.79999999996,
+          "net_adverse_pf": 0.8129897475263395,
+          "net_adverse_pf_infinite": false,
+          "net_adverse_win_rate": 0.27571475517581334,
+          "net_adverse_max_drawdown": 87433.60000000427,
+          "holding_minutes": {
+            "min": 1.0,
+            "median": 14.0,
+            "max": 324.0
+          },
+          "exit_reasons": {
+            "TARGET": {
+              "trades": 691,
+              "net_base": 269138.4,
+              "net_adverse": 267756.4
+            },
+            "STOP": {
+              "trades": 1994,
+              "net_base": -378449.3999999999,
+              "net_adverse": -382434.3999999999
+            },
+            "EOD": {
+              "trades": 358,
+              "net_base": 34067.19999999999,
+              "net_adverse": 33358.2
+            }
+          }
+        },
+        "net_base_per_available_day": -100.32506666666666,
+        "missing_day_economics": null
+      },
+      "tickers": {
+        "SPXW": {
+          "expected_ticker_days": 250,
+          "available_ticker_days": 250,
+          "missing_no_evaluable": 0,
+          "available_days_with_fill": 240,
+          "available_days_without_fill": 10,
+          "observable_daily_pass": false,
+          "full_calendar_daily_status": "FAIL_OBSERVED_ZERO",
+          "daily_requirement_satisfied": false,
+          "available_economics": {
+            "trades": 1361,
+            "net_base": -53452.600000000006,
+            "net_base_pf": 0.8539685297682076,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.3071271124173402,
+            "net_base_max_drawdown": 60722.19999999885,
+            "net_adverse": -56171.59999999997,
+            "net_adverse_pf": 0.8473256798121753,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.3071271124173402,
+            "net_adverse_max_drawdown": 63393.19999999879,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 13.0,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 338,
+                "net_base": 239015.19999999998,
+                "net_adverse": 238339.19999999998
+              },
+              "STOP": {
+                "trades": 894,
+                "net_base": -322692.39999999997,
+                "net_adverse": -324480.39999999997
+              },
+              "EOD": {
+                "trades": 129,
+                "net_base": 30224.6,
+                "net_adverse": 29969.6
+              }
+            }
+          },
+          "net_base_per_available_day": -213.81040000000002,
+          "missing_day_economics": null
+        },
+        "SPY": {
+          "expected_ticker_days": 250,
+          "available_ticker_days": 250,
+          "missing_no_evaluable": 0,
+          "available_days_with_fill": 191,
+          "available_days_without_fill": 59,
+          "observable_daily_pass": false,
+          "full_calendar_daily_status": "FAIL_OBSERVED_ZERO",
+          "daily_requirement_satisfied": false,
+          "available_economics": {
+            "trades": 724,
+            "net_base": -8652.399999999996,
+            "net_base_pf": 0.6822988573274975,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.26243093922651933,
+            "net_base_max_drawdown": 8896.20000000012,
+            "net_adverse": -10097.4,
+            "net_adverse_pf": 0.6432770437363103,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.2541436464088398,
+            "net_adverse_max_drawdown": 10307.20000000012,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 16.0,
+              "max": 323.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 160,
+                "net_base": 13394.0,
+                "net_adverse": 13074.0
+              },
+              "STOP": {
+                "trades": 473,
+                "net_base": -24028.800000000003,
+                "net_adverse": -24973.800000000003
+              },
+              "EOD": {
+                "trades": 91,
+                "net_base": 1982.4000000000003,
+                "net_adverse": 1802.4
+              }
+            }
+          },
+          "net_base_per_available_day": -34.609599999999986,
+          "missing_day_economics": null
+        },
+        "QQQ": {
+          "expected_ticker_days": 250,
+          "available_ticker_days": 250,
+          "missing_no_evaluable": 0,
+          "available_days_with_fill": 220,
+          "available_days_without_fill": 30,
+          "observable_daily_pass": false,
+          "full_calendar_daily_status": "FAIL_OBSERVED_ZERO",
+          "daily_requirement_satisfied": false,
+          "available_economics": {
+            "trades": 958,
+            "net_base": -13138.799999999996,
+            "net_base_pf": 0.6466715789360457,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.255741127348643,
+            "net_base_max_drawdown": 13918.600000000175,
+            "net_adverse": -15050.8,
+            "net_adverse_pf": 0.6102606065628107,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.24739039665970772,
+            "net_adverse_max_drawdown": 15391.200000000177,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 15.0,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 193,
+                "net_base": 16729.200000000004,
+                "net_adverse": 16343.200000000004
+              },
+              "STOP": {
+                "trades": 627,
+                "net_base": -31728.2,
+                "net_adverse": -32980.2
+              },
+              "EOD": {
+                "trades": 138,
+                "net_base": 1860.2000000000005,
+                "net_adverse": 1586.2
+              }
+            }
+          },
+          "net_base_per_available_day": -52.555199999999985,
+          "missing_day_economics": null
+        }
+      }
+    },
+    "rolling12": {
+      "overall": {
+        "expected_ticker_days": 750,
+        "available_ticker_days": 750,
+        "missing_no_evaluable": 0,
+        "available_days_with_fill": 705,
+        "available_days_without_fill": 45,
+        "observable_daily_pass": false,
+        "full_calendar_daily_status": "FAIL_OBSERVED_ZERO",
+        "daily_requirement_satisfied": false,
+        "available_economics": {
+          "trades": 3529,
+          "net_base": -122081.39999999995,
+          "net_base_pf": 0.7297244762143441,
+          "net_base_pf_infinite": false,
+          "net_base_win_rate": 0.23802776990648908,
+          "net_base_max_drawdown": 130183.00000000866,
+          "net_adverse": -129124.39999999994,
+          "net_adverse_pf": 0.7174993064616769,
+          "net_adverse_pf_infinite": false,
+          "net_adverse_win_rate": 0.2323604420515727,
+          "net_adverse_max_drawdown": 136033.0000000092,
+          "holding_minutes": {
+            "min": 1.0,
+            "median": 15.0,
+            "max": 324.0
+          },
+          "exit_reasons": {
+            "TARGET": {
+              "trades": 652,
+              "net_base": 256023.8,
+              "net_adverse": 254719.8
+            },
+            "STOP": {
+              "trades": 2458,
+              "net_base": -401248.79999999993,
+              "net_adverse": -406161.79999999993
+            },
+            "EOD": {
+              "trades": 419,
+              "net_base": 23143.6,
+              "net_adverse": 22317.600000000002
+            }
+          }
+        },
+        "net_base_per_available_day": -162.77519999999993,
+        "missing_day_economics": null
+      },
+      "tickers": {
+        "SPXW": {
+          "expected_ticker_days": 250,
+          "available_ticker_days": 250,
+          "missing_no_evaluable": 0,
+          "available_days_with_fill": 247,
+          "available_days_without_fill": 3,
+          "observable_daily_pass": false,
+          "full_calendar_daily_status": "FAIL_OBSERVED_ZERO",
+          "daily_requirement_satisfied": false,
+          "available_economics": {
+            "trades": 1465,
+            "net_base": -93079.99999999999,
+            "net_base_pf": 0.7548153186162817,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.26825938566552904,
+            "net_base_max_drawdown": 103503.4000000028,
+            "net_adverse": -96005.99999999996,
+            "net_adverse_pf": 0.7485275373950232,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.2668941979522184,
+            "net_adverse_max_drawdown": 105937.40000000299,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 15.0,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 307,
+                "net_base": 227267.8,
+                "net_adverse": 226653.8
+              },
+              "STOP": {
+                "trades": 1008,
+                "net_base": -338310.80000000005,
+                "net_adverse": -340325.80000000005
+              },
+              "EOD": {
+                "trades": 150,
+                "net_base": 17962.999999999996,
+                "net_adverse": 17666.0
+              }
+            }
+          },
+          "net_base_per_available_day": -372.31999999999994,
+          "missing_day_economics": null
+        },
+        "SPY": {
+          "expected_ticker_days": 250,
+          "available_ticker_days": 250,
+          "missing_no_evaluable": 0,
+          "available_days_with_fill": 224,
+          "available_days_without_fill": 26,
+          "observable_daily_pass": false,
+          "full_calendar_daily_status": "FAIL_OBSERVED_ZERO",
+          "daily_requirement_satisfied": false,
+          "available_economics": {
+            "trades": 1027,
+            "net_base": -15080.199999999997,
+            "net_base_pf": 0.5576668113714494,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.22200584225900682,
+            "net_base_max_drawdown": 15254.80000000023,
+            "net_adverse": -17130.200000000004,
+            "net_adverse_pf": 0.5201490237821789,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.2112950340798442,
+            "net_adverse_max_drawdown": 17278.00000000018,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 15.0,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 180,
+                "net_base": 14238.000000000002,
+                "net_adverse": 13877.999999999998
+              },
+              "STOP": {
+                "trades": 735,
+                "net_base": -29720.0,
+                "net_adverse": -31190.000000000004
+              },
+              "EOD": {
+                "trades": 112,
+                "net_base": 401.8000000000005,
+                "net_adverse": 181.80000000000018
+              }
+            }
+          },
+          "net_base_per_available_day": -60.32079999999999,
+          "missing_day_economics": null
+        },
+        "QQQ": {
+          "expected_ticker_days": 250,
+          "available_ticker_days": 250,
+          "missing_no_evaluable": 0,
+          "available_days_with_fill": 234,
+          "available_days_without_fill": 16,
+          "observable_daily_pass": false,
+          "full_calendar_daily_status": "FAIL_OBSERVED_ZERO",
+          "daily_requirement_satisfied": false,
+          "available_economics": {
+            "trades": 1037,
+            "net_base": -13921.2,
+            "net_base_pf": 0.6333419371151345,
+            "net_base_pf_infinite": false,
+            "net_base_win_rate": 0.2111861137897782,
+            "net_base_max_drawdown": 14104.800000000238,
+            "net_adverse": -15988.200000000004,
+            "net_adverse_pf": 0.596277965759305,
+            "net_adverse_pf_infinite": false,
+            "net_adverse_win_rate": 0.20443587270973965,
+            "net_adverse_max_drawdown": 15988.20000000029,
+            "holding_minutes": {
+              "min": 1.0,
+              "median": 17.0,
+              "max": 324.0
+            },
+            "exit_reasons": {
+              "TARGET": {
+                "trades": 165,
+                "net_base": 14518.0,
+                "net_adverse": 14188.0
+              },
+              "STOP": {
+                "trades": 715,
+                "net_base": -33218.00000000001,
+                "net_adverse": -34646.00000000001
+              },
+              "EOD": {
+                "trades": 157,
+                "net_base": 4778.800000000001,
+                "net_adverse": 4469.8
+              }
+            }
+          },
+          "net_base_per_available_day": -55.6848,
+          "missing_day_economics": null
+        }
+      }
+    }
+  },
+  "selected_mode": null,
+  "selection_period": 2025,
+  "development_seen": true,
+  "promotion_approved": false,
+  "missing_sources_are_not_observed_losses": true
+}

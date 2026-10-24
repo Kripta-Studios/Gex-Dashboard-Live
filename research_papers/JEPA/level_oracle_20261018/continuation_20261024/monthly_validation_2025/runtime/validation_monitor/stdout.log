@@ -1,0 +1,43 @@
+{'stage': 'RESOURCE_OVERLAY_READY', 'threshold_bytes': 2000000000, 'scientific_root': 'D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1', 'available_ram_bytes': 8702599168, 'free_commit_bytes': 13144764416, 'utc': '2026-10-23T19:58:05.382114+00:00'}
+{"stage": "FIT_STARTED", "model": "train_20240201_20250201_exclusive", "rows": 95442, "columns": 1954}
+{'stage': 'RESOURCE_OVERLAY_READY', 'threshold_bytes': 2000000000, 'scientific_root': 'D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1', 'available_ram_bytes': 10109304832, 'free_commit_bytes': 15136399360, 'utc': '2026-10-23T20:11:56.672186+00:00'}
+{"stage": "FIT_STARTED", "model": "train_20230101_20250301_exclusive", "rows": 206001, "columns": 1954}
+{'stage': 'RESOURCE_OVERLAY_READY', 'threshold_bytes': 2000000000, 'scientific_root': 'D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1', 'available_ram_bytes': 9758285824, 'free_commit_bytes': 14382989312, 'utc': '2026-10-23T20:19:17.657781+00:00'}
+{"stage": "FIT_STARTED", "model": "train_20240301_20250301_exclusive", "rows": 95050, "columns": 1954}
+{'stage': 'RESOURCE_OVERLAY_READY', 'threshold_bytes': 2000000000, 'scientific_root': 'D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1', 'available_ram_bytes': 9028251648, 'free_commit_bytes': 11406233600, 'utc': '2026-10-23T20:36:22.121979+00:00'}
+{"stage": "FIT_STARTED", "model": "train_20230101_20250401_exclusive", "rows": 214065, "columns": 1954}
+{'stage': 'RESOURCE_OVERLAY_READY', 'threshold_bytes': 2000000000, 'scientific_root': 'D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1', 'available_ram_bytes': 8891092992, 'free_commit_bytes': 12433985536, 'utc': '2026-10-23T20:41:23.983365+00:00'}
+{"stage": "FIT_STARTED", "model": "train_20240401_20250401_exclusive", "rows": 95466, "columns": 1954}
+{'stage': 'RESOURCE_OVERLAY_READY', 'threshold_bytes': 2000000000, 'scientific_root': 'D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1', 'available_ram_bytes': 16574324736, 'free_commit_bytes': 21490491392, 'utc': '2026-10-23T20:51:45.963984+00:00'}
+{"stage": "FIT_STARTED", "model": "train_20230101_20250501_exclusive", "rows": 222129, "columns": 1954}
+{'stage': 'RESOURCE_OVERLAY_READY', 'threshold_bytes': 2000000000, 'scientific_root': 'D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1', 'available_ram_bytes': 8149135360, 'free_commit_bytes': 6404497408, 'utc': '2026-10-23T20:56:46.764521+00:00'}
+{"stage": "FIT_STARTED", "model": "train_20240501_20250501_exclusive", "rows": 95082, "columns": 1954}
+{'stage': 'RESOURCE_OVERLAY_READY', 'threshold_bytes': 2000000000, 'scientific_root': 'D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1', 'available_ram_bytes': 8462774272, 'free_commit_bytes': 6237786112, 'utc': '2026-10-23T21:13:14.897111+00:00'}
+{"stage": "FIT_STARTED", "model": "train_20230101_20250601_exclusive", "rows": 230193, "columns": 1954}
+{'stage': 'RESOURCE_OVERLAY_READY', 'threshold_bytes': 2000000000, 'scientific_root': 'D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1', 'available_ram_bytes': 16912834560, 'free_commit_bytes': 21635989504, 'utc': '2026-10-23T21:17:06.222993+00:00'}
+{"stage": "FIT_STARTED", "model": "train_20240601_20250601_exclusive", "rows": 94712, "columns": 1954}
+{'stage': 'RESOURCE_OVERLAY_READY', 'threshold_bytes': 2000000000, 'scientific_root': 'D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1', 'available_ram_bytes': 8110628864, 'free_commit_bytes': 6284087296, 'utc': '2026-10-23T21:26:05.235614+00:00'}
+{"stage": "FIT_STARTED", "model": "train_20230101_20250701_exclusive", "rows": 237835, "columns": 1954}
+{'stage': 'RESOURCE_OVERLAY_READY', 'threshold_bytes': 2000000000, 'scientific_root': 'D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1', 'available_ram_bytes': 8254717952, 'free_commit_bytes': 6163009536, 'utc': '2026-10-23T21:31:03.002007+00:00'}
+{"stage": "FIT_STARTED", "model": "train_20240701_20250701_exclusive", "rows": 95122, "columns": 1954}
+{'stage': 'RESOURCE_OVERLAY_READY', 'threshold_bytes': 2000000000, 'scientific_root': 'D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1', 'available_ram_bytes': 8204447744, 'free_commit_bytes': 6344617984, 'utc': '2026-10-23T21:45:55.371431+00:00'}
+{"stage": "FIT_STARTED", "model": "train_20230101_20250801_exclusive", "rows": 245955, "columns": 1954}
+{'stage': 'RESOURCE_OVERLAY_READY', 'threshold_bytes': 2000000000, 'scientific_root': 'D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1', 'available_ram_bytes': 16734306304, 'free_commit_bytes': 21559959552, 'utc': '2026-10-23T21:49:24.907298+00:00'}
+{"stage": "FIT_STARTED", "model": "train_20240801_20250801_exclusive", "rows": 95018, "columns": 1954}
+{'stage': 'RESOURCE_OVERLAY_READY', 'threshold_bytes': 2000000000, 'scientific_root': 'D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1', 'available_ram_bytes': 7892295680, 'free_commit_bytes': 5966999552, 'utc': '2026-10-23T21:57:51.745172+00:00'}
+{"stage": "FIT_STARTED", "model": "train_20230101_20250901_exclusive", "rows": 254019, "columns": 1954}
+{'stage': 'RESOURCE_OVERLAY_READY', 'threshold_bytes': 2000000000, 'scientific_root': 'D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1', 'available_ram_bytes': 16738013184, 'free_commit_bytes': 21574189056, 'utc': '2026-10-23T22:01:15.941062+00:00'}
+{"stage": "FIT_STARTED", "model": "train_20240901_20250901_exclusive", "rows": 94762, "columns": 1954}
+{'stage': 'RESOURCE_OVERLAY_READY', 'threshold_bytes': 2000000000, 'scientific_root': 'D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1', 'available_ram_bytes': 8212381696, 'free_commit_bytes': 6210449408, 'utc': '2026-10-23T22:09:35.247672+00:00'}
+{"stage": "FIT_STARTED", "model": "train_20230101_20251001_exclusive", "rows": 262069, "columns": 1954}
+{'stage': 'RESOURCE_OVERLAY_READY', 'threshold_bytes': 2000000000, 'scientific_root': 'D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1', 'available_ram_bytes': 8551858176, 'free_commit_bytes': 6496595968, 'utc': '2026-10-23T22:14:18.372504+00:00'}
+{"stage": "FIT_STARTED", "model": "train_20241001_20251001_exclusive", "rows": 95132, "columns": 1954}
+{'stage': 'RESOURCE_OVERLAY_READY', 'threshold_bytes': 2000000000, 'scientific_root': 'D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1', 'available_ram_bytes': 8028700672, 'free_commit_bytes': 6002569216, 'utc': '2026-10-23T22:30:31.566193+00:00'}
+{"stage": "FIT_STARTED", "model": "train_20230101_20251101_exclusive", "rows": 270781, "columns": 1954}
+{'stage': 'RESOURCE_OVERLAY_READY', 'threshold_bytes': 2000000000, 'scientific_root': 'D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1', 'available_ram_bytes': 8325705728, 'free_commit_bytes': 6328033280, 'utc': '2026-10-23T22:35:38.019486+00:00'}
+{"stage": "FIT_STARTED", "model": "train_20241101_20251101_exclusive", "rows": 95108, "columns": 1954}
+{'stage': 'RESOURCE_OVERLAY_READY', 'threshold_bytes': 2000000000, 'scientific_root': 'D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1', 'available_ram_bytes': 7776976896, 'free_commit_bytes': 6139432960, 'utc': '2026-10-23T22:52:43.009975+00:00'}
+{"stage": "FIT_STARTED", "model": "train_20230101_20251201_exclusive", "rows": 277816, "columns": 1954}
+{'stage': 'RESOURCE_OVERLAY_READY', 'threshold_bytes': 2000000000, 'scientific_root': 'D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1', 'available_ram_bytes': 8160768000, 'free_commit_bytes': 6370193408, 'utc': '2026-10-23T22:57:58.720429+00:00'}
+{"stage": "FIT_STARTED", "model": "train_20241201_20251201_exclusive", "rows": 94655, "columns": 1954}
+{"stage": "validation", "status": "COMPLETE", "seconds": 13075.390013900003}

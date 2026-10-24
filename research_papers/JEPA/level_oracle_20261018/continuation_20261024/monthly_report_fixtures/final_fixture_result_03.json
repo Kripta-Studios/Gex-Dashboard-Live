@@ -1,0 +1,25 @@
+{
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "research_papers\\JEPA\\level_oracle_20261018\\test_report_monthly_walk_forward_audited.py"
+  ],
+  "exit_code": 0,
+  "gate_bytes": 2000000000,
+  "no_market_inputs": true,
+  "pins": {
+    "MONTHLY_WALK_FORWARD_AUDITED_REPORT_SPEC_20261024.md": "9cf8ad4f8b77dd5086fa3b5d9becfdd49b5d3c39d51bbb59bfeffc92d384fc40",
+    "report_monthly_walk_forward_audited.py": "1968aefcba4abf650d5e13cd16435ac74067cfee78ce5752fde6427e5a941146",
+    "test_report_monthly_walk_forward_audited.py": "6b5463a4dbad2872cf1c4eea902dbacfaeefdb66b39b62c3a48a871aa00fa244"
+  },
+  "pins_unchanged": true,
+  "resource_gate_before_pytest": {
+    "available_ram_bytes": 8573263872,
+    "free_commit_bytes": 7502204928
+  },
+  "started_utc": "2026-10-23T23:55:12.595903+00:00",
+  "status": "PASS",
+  "wall_seconds": 161.83203679998405
+}

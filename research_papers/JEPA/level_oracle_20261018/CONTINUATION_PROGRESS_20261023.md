@@ -1,33 +1,26 @@
 # Continuación local: estado del 23 de octubre de 2026
 
-Actualización: 24 de octubre, 01:37 Madrid (23 de octubre, 23:37 UTC). Investigación activa
-por orden del usuario. Base publicada anterior: `acb2a726`; preparación y código
-nuevos publicados previamente hasta `fee235ee`, incluyendo los lanzadores revisados mensual y OOF,
-el resultado TCN completo y sus 55 copias de evidencia.
-Este registro incorpora los resultados TCN y Greeks auditados; mensual y OOF siguen abiertos.
+Actualización: 24 de octubre, 02:01 Madrid (00:01 UTC). Investigación activa.
+La validación mensual 2025 y su auditoría V2 terminaron con exit 0 real.
+El audit `ba9fbd9edf849eb823f098461906feede9782b1e513f4d1954e6d58f52549cbc`
+reconstruye doce meses, 24 ventanas, 750 ticker-días y tres modos sobre scores
+sellados, sin refit/reinferencia. El intento 01 técnico permanece preservado.
+Véase [resultado completo](MONTHLY_VALIDATION_2025_AUDIT_RESULT_20261024.md).
 
-La validación mensual ya terminó con exit 0 real y los 24 modelos/doce meses.
-El primer auditor falló técnicamente al construir el catálogo con seis filas
-MISSING_SOURCE de 2026 cuyas rutas feature son nulas. No emitió audit.json ni PASS.
-El intento está preservado y publicado en `30c27abf`. El auditor V2 nuevo pasó
-59 pruebas del autor y 20 focales independientes, con AST económica intacta;
-review `f45d9dc6e032f9bd5e646ec0fad8059a924e8fed1462f817737b26cfff09d389` CLEAR,
-sólo implementación. El lanzador02 pasó 40 pruebas del autor y 40 de root,
-y requiere ese pin externo, preservando el fallo01. Se publican código/revisiones
-antes del nuevo intento en raíces `monthly_validation_audit_launch_20261024_02`
-y `monthly_walk_forward_validation_audit_20261024_02`. Publicación verificada en
-`9a2978ac79870110be1394d50881e8f706d9310c`; supervisor PID38960, creación
-`1792798318.2093968`, inició a las 23:31:58 UTC. El auditor PID52304, creación
-por handle `1792798350.3967857`, inició a las 23:32:30.405019 UTC con comando y
-review exactos. Sigue activo, sin stderr ni salida final en esta observación.
-No hay PASS real V2. La extensión auditora2026 V2 completó 33 pruebas sintéticas
-en 296,19 s y revisión independiente con 32 focales en 6,74 s más seis negativos
-de autoridades. Review `493806fbc25a50a3333b4d2e65f3bd041bd30b30d5a10203d8c188c0520ee2b3`,
-CLEAR de implementación; conserva trece dependencias y núcleo AST. La fixture
-mantiene 369/363/6, ausencias nulas y PnL missing no evaluable. Sus recibos y
-referencias locales están en `MONTHLY_TEST_INDEX_AUDIT_V2_IMPLEMENTATION_RESULT_20261024.md`.
-Test 2026 y OOF todavía no han comenzado. Véase
-`MONTHLY_VALIDATION_AUDIT_01_TECHNICAL_FAILURE_20261024.md`.
+Los netos base 2025 son static −49.152,40 USD, expanding −75.243,80 y rolling12
+−122.081,40. Los nueve grupos modo×ticker pierden y fallan actividad diaria.
+El freeze sigue null: FAIL_NO_DAILY_COMPLIANT_MODE. No se cambia selección,
+calendario, costes ni política. Archivo compacto: 242 copias, 38.632.476 bytes,
+incluidos 24 modelos; 30.906.728.203 bytes de matrices/targets siguen locales.
+
+El binding real test2026 `1c6072a8…0b557b` pasó 43 checks independientes:
+96 archivos compactos, veinte pins, once raíces y cadena real de cierre.
+Todavía no se ejecutó preflight/test. Se publicarán binding y evidencia2025
+antes de la admisión completa y la única ejecución inicial del launcher congelado.
+El reporter descriptivo pasó 48 pruebas y revisión independiente; aún sin uso real.
+La extensión auditora2026 V2 está publicada en `b7385f6d`, con fixtures369/363/6.
+OOF espera cierre y auditoría compuesta de los dieciocho meses. No hay candidato
+rentable acreditado ni promoción; producción y fuentes originales intactas.
 
 ## Ejecuciones observadas
 

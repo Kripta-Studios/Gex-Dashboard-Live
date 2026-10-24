@@ -1,0 +1,11 @@
+{
+  "status": "PASS_PUBLICATION_BYTES_WITH_PRESERVED_SOURCE_WHITESPACE",
+  "utc": "2026-10-24T00:03:26.687110+00:00",
+  "staged_files_verified": 269,
+  "research_bytes_exact": true,
+  "AGENTS_git_lf_normalized": true,
+  "diff_check_exit": 2,
+  "diff_check_only_finding": "research_papers/JEPA/level_oracle_20261018/continuation_20261024/monthly_validation_2025/code/auditor_runtime/test_audit_monthly_walk_forward.py:193: new blank line at EOF.",
+  "finding_disposition": "Preserve exact audited original test bytes; do not trim archived copy. All other staged files pass whitespace check.",
+  "scientific_claim": "2025 audit PASS given sealed scores; all three modes fail economic/daily requirements; test2026 not started."
+}

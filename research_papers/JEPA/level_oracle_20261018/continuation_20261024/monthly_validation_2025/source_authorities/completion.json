@@ -1,0 +1,15 @@
+{
+  "status": "COMPLETE",
+  "available_days": 2619,
+  "missing_days": 6,
+  "short_days": 24,
+  "full_days_reused": 2595,
+  "index_sha256": "7124d98155eae8ee5ae06457377570278d4059defe2cf02340e34c288fcb60b4",
+  "dataset_contract_sha256": "437f480794dc89b80ff0c4999c3053d19d936fab779b99cb75b923433d641a43",
+  "feature_contract_sha256": "777890230663b0f683d0007117c58b5818047699fe8b25d27b5b819bac7f83db",
+  "elapsed_seconds": 2087.918804899964,
+  "finished_utc": "2026-10-18T19:47:08.935606+00:00",
+  "economic_scope": "24 short-session labels only; no new fits or policy selection",
+  "expected_calendar_sha256": "70caddcff8cde0e03c6819f03b7d2eebc8da4b30c9ace24d37a7738b856e4318",
+  "feature_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_clock_dataset_v1"
+}

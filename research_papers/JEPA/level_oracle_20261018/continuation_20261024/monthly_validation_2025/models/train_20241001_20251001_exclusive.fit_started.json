@@ -1,0 +1,26 @@
+{
+  "binding": "7250620ebe25da082c8d080faa54d006c15f36f2070f414405d14ca18a27158f",
+  "config": {
+    "objective": "regression",
+    "n_estimators": 200,
+    "num_leaves": 31,
+    "max_depth": 6,
+    "min_child_samples": 100,
+    "learning_rate": 0.04,
+    "reg_lambda": 10.0,
+    "max_bin": 63,
+    "random_state": 20261018,
+    "n_jobs": 4,
+    "deterministic": true,
+    "force_col_wise": true,
+    "verbosity": -1
+  },
+  "shape": [
+    95132,
+    1954
+  ],
+  "matrix_sha256": "471b82f25f07f9655337da7a636349b54ea4b625388a70752838f55eb5772589",
+  "target_sha256": "6c3efbb7bacf247bcf085763c861e410570dd8aae2caabc56c0389d524ee85df",
+  "weight_sha256": "06194d967d4c225560666858f8b218902ce0789bcda229f352bd00a282124c70",
+  "started_utc": "2026-10-23T22:14:18.386553+00:00"
+}

@@ -1,0 +1,42 @@
+{
+  "files": {
+    "delta_fixture_result_02.json": {
+      "bytes": 761,
+      "sha256": "18e5407286cafb1f5cae2df6f72d9ecb892ee128a62801e90f4d69b02f55789f"
+    },
+    "delta_stderr_02.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "delta_stdout_02.txt": {
+      "bytes": 115,
+      "sha256": "5556a34a242190ae0417295113a1f679d56cf217508e35ae3f373be9856e18a8"
+    },
+    "final_fixture_admission_03.json": {
+      "bytes": 823,
+      "sha256": "ecfdecd3659a2b3fff8b132005be168d7f437ac497fd8026486246165799adce"
+    },
+    "final_fixture_result_03.json": {
+      "bytes": 929,
+      "sha256": "a786483824e68b0ee6f4a39c91b13b8a722f7b0945199fdde90112ee3d9e0b12"
+    },
+    "final_stderr_03.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final_stdout_03.txt": {
+      "bytes": 113,
+      "sha256": "d21cc688bb001206388d60a28efcfdadf67a79f2192e8c0ac5af0f0a55128136"
+    },
+    "initial_fixture_result_01.json": {
+      "bytes": 699,
+      "sha256": "9a803534288c4662bbc55cb10a5fcd902a9c66c85c29b14733a4ad99aa5b77a8"
+    },
+    "resource_measurement_correction_01.json": {
+      "bytes": 1080,
+      "sha256": "972ea0678e78f300e2b19d3ddf6dd925df06f25addb3be7867d60d45ffe0f694"
+    }
+  },
+  "no_market_inputs": true,
+  "status": "SYNTHETIC_FIXTURE_EVIDENCE"
+}

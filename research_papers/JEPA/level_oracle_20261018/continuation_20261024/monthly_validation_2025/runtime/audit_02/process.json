@@ -1,0 +1,22 @@
+{
+  "status": "AUDITOR_PROCESS_STARTED",
+  "pid": 52304,
+  "creation_time": 1792798350.3967857,
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\audit_monthly_walk_forward_index_v2.py",
+    "--monthly-root",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1",
+    "--source-audit",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_clock_dataset_v1_audit\\audit.json",
+    "--implementation-review",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\MONTHLY_WALK_FORWARD_INDEX_AUDIT_V2_REVIEW_20261024.json",
+    "--implementation-review-sha256",
+    "f45d9dc6e032f9bd5e646ec0fad8059a924e8fed1462f817737b26cfff09d389",
+    "--output",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_validation_audit_20261024_02"
+  ],
+  "identity_source": "GetProcessTimes on retained Popen handle",
+  "started_utc": "2026-10-23T23:32:30.405019+00:00"
+}

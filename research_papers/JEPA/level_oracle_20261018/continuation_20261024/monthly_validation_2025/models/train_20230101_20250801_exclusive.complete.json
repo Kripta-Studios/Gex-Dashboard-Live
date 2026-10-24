@@ -1,0 +1,28 @@
+{
+  "status": "COMPLETE",
+  "binding": "7250620ebe25da082c8d080faa54d006c15f36f2070f414405d14ca18a27158f",
+  "files": {
+    "models\\train_20230101_20250801_exclusive.txt": "3447a43624ba453fa39f920b7385ddcd2200b164d1afa1faaf7d790bf6f79fea",
+    "models\\train_20230101_20250801_exclusive.fit_started.json": "6f12aa566a70df08d653ba553c08dccd6060970588beb908113e18e5f56cf431"
+  },
+  "extra": {
+    "config": {
+      "objective": "regression",
+      "n_estimators": 200,
+      "num_leaves": 31,
+      "max_depth": 6,
+      "min_child_samples": 100,
+      "learning_rate": 0.04,
+      "reg_lambda": 10.0,
+      "max_bin": 63,
+      "random_state": 20261018,
+      "n_jobs": 4,
+      "deterministic": true,
+      "force_col_wise": true,
+      "verbosity": -1
+    },
+    "columns": 1954,
+    "rows": 245955
+  },
+  "completed_utc": "2026-10-23T21:47:14.124998+00:00"
+}

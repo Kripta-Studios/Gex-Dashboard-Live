@@ -1,0 +1,13 @@
+{
+  "status": "AUDITOR_EXIT_OBSERVED_BY_POPEN_HANDLE",
+  "pid": 52304,
+  "creation_time": 1792798350.3967857,
+  "exit_code": 0,
+  "observed_utc": "2026-10-23T23:50:32.495581+00:00",
+  "process_receipt_sha256": "5ba38a789e035e25cf67984f2db94c4eaf2f09158eab24df8ec532a5316bc763",
+  "wall_seconds_since_launch": 1082.1007101000287,
+  "memory_samples": 1075,
+  "peak_rss_sampled_bytes": 4762075136,
+  "sampling_seconds": 1,
+  "memory_scope": "Maximum observed RSS only; not an exact lifetime peak."
+}

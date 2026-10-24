@@ -1,0 +1,29 @@
+{
+  "status": "WATCH_STARTED",
+  "utc": "2026-10-23T23:31:58.452746+00:00",
+  "pid": 38960,
+  "creation_time": 1792798318.2093968,
+  "script_sha256": "a848a55788b7b4644db879421d0c733623a54761f9c4c7b6e7d53ac584770c20",
+  "command": [
+    "D:/GexResearchArtifacts/level_oracle_20261018/monthly_validation_audit_launch_20261024_02/launch_when_validation_complete.py",
+    "--watch",
+    "--v2-review-sha256",
+    "f45d9dc6e032f9bd5e646ec0fad8059a924e8fed1462f817737b26cfff09d389"
+  ],
+  "validation_pid": 11852,
+  "validation_creation_time": 1792784053.9282398,
+  "correction_attempt": 2,
+  "implementation_review_sha256": "f45d9dc6e032f9bd5e646ec0fad8059a924e8fed1462f817737b26cfff09d389",
+  "prior_failure": {
+    "process_sha256": "1255df01d0984278459ab711d317ecc57c4cb6470b8277a0ebb0a5056d6e58df",
+    "exit_sha256": "d5e4fdf711e6965a56b8c60100788c2143aecbc7da450a93efe74736b9eadccb",
+    "failure_sha256": "51cba5dd88423cdd2a9fdb05fa3c705f1944f21e8308144e386d76c2faaac019",
+    "stderr_sha256": "f36e54b7e9bf94f8e4adc9b95068a013f5f9ea1b94db376a5b83d602be72b3c1",
+    "audit_output_absent": true
+  },
+  "own_files": {
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_audit_launch_20261024_02\\launch_when_validation_complete.py": "a848a55788b7b4644db879421d0c733623a54761f9c4c7b6e7d53ac584770c20",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_audit_launch_20261024_02\\test_launcher.py": "c6e8cb5c38a97e79d961964110cc9f4286439529d983e10e6618f3a8bb1b0da1",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_audit_launch_20261024_02\\SPEC.md": "85e3ab25bc4b5b4f7a5100e1d33bc21c1c33ae4d68c23cf141ef84ee318c5bb1"
+  }
+}

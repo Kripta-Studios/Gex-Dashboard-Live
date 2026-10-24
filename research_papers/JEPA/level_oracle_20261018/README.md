@@ -7,6 +7,13 @@ la rentabilidad causal sigue sin demostrarse y no hay promoción autorizada.
 Las ejecuciones y pendientes actuales se registran en
 [continuación del 23 de octubre](CONTINUATION_PROGRESS_20261023.md).
 
+La [validación mensual 2025 ya está auditada](MONTHLY_VALIDATION_2025_AUDIT_RESULT_20261024.md):
+static, expanding y rolling12 pierden 49.152,40, 75.243,80 y 122.081,40 USD base.
+Los tres tickers pierden en cada modo y la selección permanece nula. Se conservan
+24 modelos y sus recibos. El [binding de test 2026](MONTHLY_TEST_RESOURCE_RUNTIME_REVIEW_20261024_01.md)
+pasó revisión independiente; su publicación y admisión completa preceden a la
+ejecución. Los años 2025 y 2026 siguen siendo desarrollo visto.
+
 El [resultado TCN temporal del 23 de octubre](TCN_ROW_MIXED_CALENDAR_RESULT_20261023.md)
 ya está auditado: selección nula y pérdidas en las tres variantes, sin cumplir
 actividad diaria. Se conservan [55 artefactos con hashes](continuation_20261023/TCN_ARTIFACTS.md)

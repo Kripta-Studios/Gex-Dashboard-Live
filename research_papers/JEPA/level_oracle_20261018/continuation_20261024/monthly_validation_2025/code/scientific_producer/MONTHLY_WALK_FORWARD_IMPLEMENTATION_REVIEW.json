@@ -1,0 +1,33 @@
+{
+  "status": "PASS_MONTHLY_WALK_FORWARD_IMPLEMENTATION_REVIEW",
+  "dependencies": {
+    "run_monthly_walk_forward.py": "47a4df8b019d9d297ca1ee9b89fff63406409659336dbd7b0e4d7af01ed348bb",
+    "rolling_monthly_schedule.py": "92df2e68734d24a61b4ddccec1f9451a5e25c862f5a1b581ae779c163fcf205a",
+    "monthly_policy_selection.py": "1fe43fa92fe0441be35bc67c9a2a60ce2829edaf9ea80f5fa0a5c8967a599da0",
+    "MONTHLY_WALK_FORWARD_PLAN.md": "71ccd29587be4012dad9fe3ada4ad29ff7b93b94ea08340343ebe39d287c97ae",
+    "rollout_sampling.py": "8bc8cee2b89cf70490793b88d74dff558bbd60077d383a852392fcc2383c748c",
+    "train_causal_rollout.py": "d031eca08c71ad89324619e096dcc9be3966ddea23d52061019018ff6ff58a43",
+    "train_models.py": "a5192737abd1c0b3e4a6a6cd391117d97a014c06b6cd528201ba1f5df0ef6808",
+    "features.py": "b5c63f918319f844793abb3346a34515526073374f5e71af2129a94f2369d4e0",
+    "level_engine.py": "70cc5d20990d971d16299fd008ff8e05ac99f99a6a2917a202fcb9a5f413b7c6",
+    "build_cache.py": "985e87dcbd1e73289b58e4576445e47e73a6edea13e5ac73dde3ad629180d69f",
+    "causal_rollout.py": "8df92119071442045a8434057e220bad567668d8ee314fddd263d052ebeea0d9"
+  },
+  "review_scope": {
+    "real_market_outputs_opened": false,
+    "models_fit": false,
+    "economic_metrics_read": false,
+    "fixture_tests_reported_pass": 15,
+    "feature_hashes_checked_before_first_load": true,
+    "external_feature_manifests_propagated_to_month_checkpoints": true,
+    "all_mode_predictions_sealed_before_month_labels": true,
+    "validation_selection_uses_only_2025": true,
+    "test_reselection_forbidden": true
+  },
+  "findings": [],
+  "limitations": [
+    "This is a pre-execution implementation review; it does not audit any realized monthly result.",
+    "A later independent economic audit remains required for fits, predictions, scheduler ledgers and reported metrics.",
+    "Missing source days remain NO_EVALUABLE and prevent a universal daily-trade claim."
+  ]
+}

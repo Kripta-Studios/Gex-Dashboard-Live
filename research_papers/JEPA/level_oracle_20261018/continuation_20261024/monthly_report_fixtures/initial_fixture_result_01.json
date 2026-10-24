@@ -1,0 +1,19 @@
+{
+  "child_creation_time": 1792799262.7527506,
+  "child_pid": 15152,
+  "code_sha256": "b993ff09a93f80dcbc149b0f568dc0c33c6b6a65e39678af438c636099c2880f",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "research_papers/JEPA/level_oracle_20261018/test_report_monthly_walk_forward_audited.py"
+  ],
+  "exit_code": 0,
+  "no_market_inputs": true,
+  "pytest_report": "21 passed in 188.51s (0:03:08)",
+  "resource_correction_receipt": "resource_measurement_correction_01.json",
+  "session_id": 54001,
+  "status": "PASS_SYNTHETIC_FIXTURES_INITIAL",
+  "test_sha256": "e736355bb040d3df61ecf5455b72e313f5f3508741ee80d21a6a8a9fc95e8b0d"
+}

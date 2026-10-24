@@ -1,0 +1,21 @@
+{
+  "status": "COMPLETE_VALIDATION_AUDIT_EXIT_ZERO_AND_PASS",
+  "utc": "2026-10-23T23:51:21.257880+00:00",
+  "audit_json": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_validation_audit_20261024_02\\audit.json",
+  "audit_sha256": "ba9fbd9edf849eb823f098461906feede9782b1e513f4d1954e6d58f52549cbc",
+  "exit_receipt_sha256": "7c7f24743f961707dbfe330b2a0f61b92ad849fe75862ca94c991f802ef21e21",
+  "admission_sha256": "b23e9bb57d476da79eaceda7a3552dd80a02a525a1eacc93964360a80309cdec",
+  "script_sha256": "a848a55788b7b4644db879421d0c733623a54761f9c4c7b6e7d53ac584770c20",
+  "correction_attempt": 2,
+  "prior_failure": {
+    "process_sha256": "1255df01d0984278459ab711d317ecc57c4cb6470b8277a0ebb0a5056d6e58df",
+    "exit_sha256": "d5e4fdf711e6965a56b8c60100788c2143aecbc7da450a93efe74736b9eadccb",
+    "failure_sha256": "51cba5dd88423cdd2a9fdb05fa3c705f1944f21e8308144e386d76c2faaac019",
+    "stderr_sha256": "f36e54b7e9bf94f8e4adc9b95068a013f5f9ea1b94db376a5b83d602be72b3c1",
+    "audit_output_absent": true
+  },
+  "implementation_review_sha256": "f45d9dc6e032f9bd5e646ec0fad8059a924e8fed1462f817737b26cfff09d389",
+  "selected_mode": null,
+  "promotion_approved": false,
+  "limitation": "Conditional on sealed scores; no model refit or inference reproduction."
+}

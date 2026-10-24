@@ -1,0 +1,13 @@
+{
+  "artifact_kind": "DERIVED_DOCUMENTATION_BINDING",
+  "note_path": "../../MONTHLY_VALIDATION_2025_AUDIT_RESULT_20261024.md",
+  "note_sha256": "c280f9c3b4650e0bc0ec024a8f26d19202bce61aa65fa2c593765079e7596b0f",
+  "manifest_sha256": "a9aa4419042349a47aff0c1b7d40af088b1b51ee530906b4b45a9baacf05f6e0",
+  "local_references_sha256": "47c6e608a86c24304b664d7eadb0e5361db244f403429f2cd8dca6c1768c6a23",
+  "audit_sha256": "ba9fbd9edf849eb823f098461906feede9782b1e513f4d1954e6d58f52549cbc",
+  "metrics_source": "reports/2025.json",
+  "metrics_table_rows_verified": 12,
+  "relative_links_verified": 15,
+  "copied_files_rehashed": 242,
+  "new_economic_evaluation": false
+}

@@ -1,0 +1,28 @@
+{
+  "correction": {
+    "available_ram_bytes": 5669715968,
+    "free_commit_bytes": 3675742208,
+    "method": "GlobalMemoryStatusEx via published launch_common_greek_audit_02.resources",
+    "timing": "After pytest had started, during synthetic fixture generation; not a pre-launch commit gate",
+    "tool_chunk_id": "96864a"
+  },
+  "first_observation": {
+    "actual_measurements": {
+      "available_ram_bytes": "psutil.virtual_memory().available",
+      "mislabelled_available_commit_bytes": "psutil.swap_memory().free"
+    },
+    "reported": {
+      "available_commit_bytes": 31067901952,
+      "available_ram_bytes": 5764419584,
+      "gate_bytes": 2000000000
+    },
+    "timing": "Before pytest start; did not measure Windows free commit",
+    "tool_chunk_id": "9bc682"
+  },
+  "no_market_inputs": true,
+  "pytest_child_pid_observed": 15152,
+  "recorded_utc": "2026-10-23T23:49:08.697333+00:00",
+  "run_session_id": 54001,
+  "scope": "Synthetic fixtures only; no market data or economic run",
+  "status": "RESOURCE_OBSERVATION_LABEL_CORRECTION"
+}

@@ -1,0 +1,23 @@
+{
+  "code_sha256": "a0ba043043135dc0be5d5eeebcf48b34f1a20317b97752d2f7480b752590ef50",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "research_papers/JEPA/level_oracle_20261018/test_report_monthly_walk_forward_audited.py",
+    "-k",
+    "late_failure or json_rejects or csv_json_deterministic"
+  ],
+  "exit_code": 0,
+  "gate_bytes": 2000000000,
+  "no_market_inputs": true,
+  "resource_gate_before_pytest": {
+    "available_ram_bytes": 8627990528,
+    "free_commit_bytes": 7322591232
+  },
+  "started_utc": "2026-10-23T23:51:46.621403+00:00",
+  "status": "PASS",
+  "test_sha256": "e327908dd34bb542a5083464dc48e7c9fbd54e285a3aac3b6e194523541e58e4",
+  "wall_seconds": 6.37637640000321
+}

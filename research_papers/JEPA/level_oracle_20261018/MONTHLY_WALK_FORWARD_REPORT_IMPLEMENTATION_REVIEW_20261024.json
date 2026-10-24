@@ -1,0 +1,151 @@
+{
+  "author_validation": {
+    "attribution": "Author run; reviewer read and rehashed persisted receipts, did not repeat full fixture generation.",
+    "exit_code": 0,
+    "initial_resource_mislabel_preserved": true,
+    "passed": 48,
+    "pytest_seconds": 161.07,
+    "receipt_manifest": {
+      "path": "continuation_20261024\\monthly_report_fixtures\\manifest.json",
+      "sha256": "00f47c0d61977b29f0e7feb86671e496e847de6adcad8f2dc742ef6d521a168a"
+    },
+    "result_document": {
+      "path": "MONTHLY_WALK_FORWARD_REPORT_IMPLEMENTATION_RESULT_20261024.md",
+      "sha256": "99cecd59c7315f9e106677b5b5419819bee7708b34211299f8c48bf15cff7be8"
+    },
+    "verified_receipt_files": {
+      "delta_fixture_result_02.json": {
+        "bytes": 761,
+        "sha256": "18e5407286cafb1f5cae2df6f72d9ecb892ee128a62801e90f4d69b02f55789f"
+      },
+      "delta_stderr_02.txt": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "delta_stdout_02.txt": {
+        "bytes": 115,
+        "sha256": "5556a34a242190ae0417295113a1f679d56cf217508e35ae3f373be9856e18a8"
+      },
+      "final_fixture_admission_03.json": {
+        "bytes": 823,
+        "sha256": "ecfdecd3659a2b3fff8b132005be168d7f437ac497fd8026486246165799adce"
+      },
+      "final_fixture_result_03.json": {
+        "bytes": 929,
+        "sha256": "a786483824e68b0ee6f4a39c91b13b8a722f7b0945199fdde90112ee3d9e0b12"
+      },
+      "final_stderr_03.txt": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "final_stdout_03.txt": {
+        "bytes": 113,
+        "sha256": "d21cc688bb001206388d60a28efcfdadf67a79f2192e8c0ac5af0f0a55128136"
+      },
+      "initial_fixture_result_01.json": {
+        "bytes": 699,
+        "sha256": "9a803534288c4662bbc55cb10a5fcd902a9c66c85c29b14733a4ad99aa5b77a8"
+      },
+      "resource_measurement_correction_01.json": {
+        "bytes": 1080,
+        "sha256": "972ea0678e78f300e2b19d3ddf6dd925df06f25addb3be7867d60d45ffe0f694"
+      }
+    }
+  },
+  "decision": "CLEAR",
+  "files": {
+    "MONTHLY_WALK_FORWARD_AUDITED_REPORT_SPEC_20261024.md": "9cf8ad4f8b77dd5086fa3b5d9becfdd49b5d3c39d51bbb59bfeffc92d384fc40",
+    "report_monthly_walk_forward_audited.py": "1968aefcba4abf650d5e13cd16435ac74067cfee78ce5752fde6427e5a941146",
+    "test_report_monthly_walk_forward_audited.py": "6b5463a4dbad2872cf1c4eea902dbacfaeefdb66b39b62c3a48a871aa00fa244"
+  },
+  "findings": [
+    {
+      "finding": "Authority admitted missing or inconsistent fit/calendar counts.",
+      "id": "RPT-01",
+      "resolution": "Exact integer counts and composite missing identities are required; absent/wrong/bool reject.",
+      "status": "RESOLVED"
+    },
+    {
+      "finding": "Output could be created inside feature_root.",
+      "id": "RPT-02",
+      "resolution": "Monthly/session/engine/feature roots are bound and protected before output mkdir.",
+      "status": "RESOLVED"
+    }
+  ],
+  "independent_validation": {
+    "analytic_reference": {
+      "coverage": {
+        "available": 2,
+        "expected": 3,
+        "missing": 1,
+        "missing_day_economics": null,
+        "net_base_per_available_day": 3,
+        "with_fill": 1,
+        "without_fill": 1
+      },
+      "execution_code_sha256": "a0ba043043135dc0be5d5eeebcf48b34f1a20317b97752d2f7480b752590ef50",
+      "expected_adverse": {
+        "max_drawdown": 13,
+        "net": -5,
+        "pf": 0.6666666666666666,
+        "win_rate": 0.5
+      },
+      "expected_base": {
+        "max_drawdown": 8,
+        "net": 6,
+        "pf": 1.6,
+        "win_rate": 0.5
+      },
+      "final_core_unchanged_by_reviewed_admission_fixes": true,
+      "input_adverse": [
+        3,
+        -10,
+        2,
+        -1,
+        -4,
+        5
+      ],
+      "input_base": [
+        5,
+        -8,
+        4,
+        0,
+        -2,
+        7
+      ],
+      "status": "PASS"
+    },
+    "evidence_location": "Independent checks observed through tool outputs; no separate persistent raw test log was created.",
+    "gate_before_final_checks": {
+      "available_ram_bytes": 8135098368,
+      "free_commit_bytes": 7173169152,
+      "method": "Windows GlobalMemoryStatusEx",
+      "minimum_bytes": 2000000000
+    },
+    "minimal_real_admission": "PASS: real Reporter with synthetic 2625-row index, pinned source/contract/freeze/audit; 750 validation keys; session/feature output rejected before creation; nine absent/wrong/bool count negatives.",
+    "pytest": {
+      "code_sha256": "1968aefcba4abf650d5e13cd16435ac74067cfee78ce5752fde6427e5a941146",
+      "deselected": 43,
+      "passed": 5,
+      "seconds": 0.11,
+      "selection": "hash_mutation_after_read or pf_and_drawdown_contract or late_failure_has_no_success_manifest or json_rejects_nonfinite or csv_json_deterministic"
+    }
+  },
+  "limitations": [
+    "No market inputs, report runtime, model fit or inference were executed in this review.",
+    "Full 48-test synthetic run is author evidence; reviewer ran five focused tests and separate analytical/minimal-admission checks.",
+    "Reporter is descriptive and conditional on the pinned completed audit and sealed scores; it does not repeat the economic auditor.",
+    "Root must verify closed audit exit/SHA and publication before any real report. Seen development is not prospective or promotion evidence."
+  ],
+  "reviewed_scope": [
+    "Exact completed 12/18-month authority with external audit SHA and inherited inventory binding",
+    "All three modes, all tickers and all months; no new selection or gate",
+    "Index metadata and exact daily keys; missing-source economics null, available no-fill zero",
+    "Sealed attempts/FILLED ledgers and monthly/period reconciliation; pooled ALL explicitly descriptive",
+    "Fresh output, no partial success manifest, consumed sources and reporter code rechecked"
+  ],
+  "reviewer": "scientific_review",
+  "runtime_authorized": false,
+  "scope": "IMPLEMENTATION_ONLY",
+  "status": "PASS_MONTHLY_WALK_FORWARD_AUDITED_REPORT_IMPLEMENTATION_REVIEW"
+}
