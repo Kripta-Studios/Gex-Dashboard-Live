@@ -1,0 +1,98 @@
+{
+  "files": {
+    "MONTHLY_TEST_RESOURCE_OVERLAY_SPEC_20261023.md": "690a8389f53e6b0fc1599b806097edefe88afc67b74505ab89367dccc74f86a7",
+    "run_monthly_test_resource_overlay.py": "f2b0490cdec916f98c09fc77a6533d0eab8c4f2711331753f7d5c998d81253c1",
+    "test_monthly_test_resource_overlay.py": "3f8002125bfc35619d742fd039c48cc1c5a985613ab886b29b004f9cd7fc850b"
+  },
+  "independent_review": {
+    "areas": [
+      "Decimal 2 GB gates for both available RAM and commit, and restoration of wait_resources/sys.argv.",
+      "Pinned original contract and eleven scientific dependencies; stage=test only and exact original source CLI.",
+      "External 2025 economic audit, frozen selection including null, and preserved twenty-four validation models.",
+      "Retained-handle process receipt chain, creation time/PID/command binding and required normalized source launch.",
+      "Initial and resume admission, exact prior test inventory, incomplete-fit rejection and preservation.",
+      "Outcome-free 2026 calendar/day_samples/feature_inputs distinguished from economic test artifacts.",
+      "Operating-system exclusion locks, unmodified scientific lock bytes and final thirty-six-model closure."
+    ],
+    "closed_findings": [
+      "A normalized process binding must include source_launch with its bound hash in validation and prior test attempts."
+    ],
+    "remaining_blockers": [],
+    "status": "CLEAR"
+  },
+  "independently_executed_validation": {
+    "available_commit_bytes": 11643269120,
+    "available_ram_bytes": 8831217664,
+    "elapsed_seconds": 61.27,
+    "exit_code": 0,
+    "full_34_test_suite_repeated_by_reviewer": false,
+    "pytest_selection": "resource_boundaries or restores_only or scientific_probe or normalized or source_launch_without or resume_cannot_change or run_with_double",
+    "reviewed_hashes_unchanged_before_after": true,
+    "tests_deselected": 23,
+    "tests_passed": 11
+  },
+  "limitations": [
+    "Synthetic authority/model text and a main double were used in tests; no real fit or inference occurred.",
+    "This review is not a market economic audit, process exit receipt, or runtime authorization.",
+    "2026 remains seen development; prospective performance and live parity are not established."
+  ],
+  "market_execution_performed": false,
+  "original_dependencies": {
+    "MONTHLY_WALK_FORWARD_PLAN.md": "71ccd29587be4012dad9fe3ada4ad29ff7b93b94ea08340343ebe39d287c97ae",
+    "build_cache.py": "985e87dcbd1e73289b58e4576445e47e73a6edea13e5ac73dde3ad629180d69f",
+    "causal_rollout.py": "8df92119071442045a8434057e220bad567668d8ee314fddd263d052ebeea0d9",
+    "features.py": "b5c63f918319f844793abb3346a34515526073374f5e71af2129a94f2369d4e0",
+    "level_engine.py": "70cc5d20990d971d16299fd008ff8e05ac99f99a6a2917a202fcb9a5f413b7c6",
+    "monthly_policy_selection.py": "1fe43fa92fe0441be35bc67c9a2a60ce2829edaf9ea80f5fa0a5c8967a599da0",
+    "rolling_monthly_schedule.py": "92df2e68734d24a61b4ddccec1f9451a5e25c862f5a1b581ae779c163fcf205a",
+    "rollout_sampling.py": "8bc8cee2b89cf70490793b88d74dff558bbd60077d383a852392fcc2383c748c",
+    "run_monthly_walk_forward.py": "47a4df8b019d9d297ca1ee9b89fff63406409659336dbd7b0e4d7af01ed348bb",
+    "train_causal_rollout.py": "d031eca08c71ad89324619e096dcc9be3966ddea23d52061019018ff6ff58a43",
+    "train_models.py": "a5192737abd1c0b3e4a6a6cd391117d97a014c06b6cd528201ba1f5df0ef6808"
+  },
+  "original_run_contract_sha256": "7250620ebe25da082c8d080faa54d006c15f36f2070f414405d14ca18a27158f",
+  "producer": "/root/monthly_resume",
+  "producer_validation_inspected": {
+    "compile": "PASS",
+    "elapsed_seconds": 219.68,
+    "exit_code": 0,
+    "post_run_code_tests_spec_hashes_independently_rechecked": true,
+    "prior_fixture_failure_documented": "1 failed / 13 passed in 97.37 seconds; synthetic helper lacked replace=True for deliberate JSON mutation.",
+    "receipt_path": "MONTHLY_TEST_RESOURCE_OVERLAY_IMPLEMENTATION_RESULT_20261023.md",
+    "receipt_sha256": "f82d3e9cda076994f05f401fe613f7b78733b1884c12778e4cf5cd2d36c58af9",
+    "ruff": "PASS",
+    "tests_passed": 34
+  },
+  "promotion_approved": false,
+  "real_monitor_inspection": {
+    "api_chain": [
+      "OpenProcess",
+      "GetProcessTimes",
+      "WaitForSingleObject",
+      "GetExitCodeProcess",
+      "CloseHandle"
+    ],
+    "scope": "Read-only monitor source and existing process_binding/monitor_open; no real exit certification.",
+    "validation_exit_zero_certified_by_this_review": false
+  },
+  "remaining_runtime_dependencies": [
+    "Complete and independently audit validation 2025, preserving its frozen selection including null.",
+    "Observe and pin the real validation process exit zero through the retained-handle receipt chain.",
+    "Publish a separate exact runtime review binding all actual authority hashes, read roots and initial/resume inventory.",
+    "Root coordinates launch resources and process exclusivity; implementation review does not autoexecute test."
+  ],
+  "review_scope": "IMPLEMENTATION_ONLY",
+  "reviewed_at_utc": "2026-10-23T20:34:21.194370+00:00",
+  "reviewer": "/root/tcn_completion",
+  "runtime_authorized": false,
+  "scientific_inputs_changed": false,
+  "scope": "test",
+  "status": "PASS_MONTHLY_TEST_RESOURCE_OVERLAY_REVIEW",
+  "technical_ready": false,
+  "threshold_bytes": 2000000000,
+  "unchanged_prior_files": {
+    "audit_monthly_walk_forward.py": "e4a3be1c19b7f0af1226e71255c81116bd71a6a300aef36f61c688deb908df1f",
+    "run_monthly_resource_overlay.py": "ae596a0958511c3459885a2d1e04c800da93dfd7d0e1a540208a1ebb10155e34",
+    "run_monthly_walk_forward.py": "47a4df8b019d9d297ca1ee9b89fff63406409659336dbd7b0e4d7af01ed348bb"
+  }
+}

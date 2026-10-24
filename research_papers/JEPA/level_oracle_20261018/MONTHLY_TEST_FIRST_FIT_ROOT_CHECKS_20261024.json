@@ -1,0 +1,94 @@
+{
+  "status": "PASS_FIRST_TEST_MODEL_COMPACT_ARCHIVE_REVIEW_ONLY",
+  "checked_utc": "2026-10-24T01:19:38.497530+00:00",
+  "manifest_sha256": "9494d50c8b932b0c828d9ebcce05670f1017d8a409cfccb9d8ec89149e77ada5",
+  "copies": [
+    {
+      "archive_path": "runtime/launch.json",
+      "bytes": 2375413,
+      "source_copy_sha_match": true
+    },
+    {
+      "archive_path": "runtime/executed_code/run_monthly_test_resource_overlay.py",
+      "bytes": 27743,
+      "source_copy_sha_match": true
+    },
+    {
+      "archive_path": "runtime/executed_code/test_monthly_test_resource_overlay.py",
+      "bytes": 22532,
+      "source_copy_sha_match": true
+    },
+    {
+      "archive_path": "runtime/executed_code/MONTHLY_TEST_RESOURCE_OVERLAY_SPEC_20261023.md",
+      "bytes": 9126,
+      "source_copy_sha_match": true
+    },
+    {
+      "archive_path": "runtime/executed_code/implementation_review.json",
+      "bytes": 5643,
+      "source_copy_sha_match": true
+    },
+    {
+      "archive_path": "runtime/executed_code/runtime_review.json",
+      "bytes": 10858,
+      "source_copy_sha_match": true
+    },
+    {
+      "archive_path": "fit_seals/matrix.complete.json",
+      "bytes": 329,
+      "source_copy_sha_match": true
+    },
+    {
+      "archive_path": "fit_seals/targets.complete.json",
+      "bytes": 330,
+      "source_copy_sha_match": true
+    },
+    {
+      "archive_path": "fit_seals/inputs.complete.json",
+      "bytes": 330,
+      "source_copy_sha_match": true
+    },
+    {
+      "archive_path": "models/train_20230101_20260101_exclusive.fit_started.json",
+      "bytes": 800,
+      "source_copy_sha_match": true
+    },
+    {
+      "archive_path": "resource_gate.json",
+      "bytes": 293,
+      "source_copy_sha_match": true
+    },
+    {
+      "archive_path": "models/train_20230101_20260101_exclusive.txt",
+      "bytes": 800857,
+      "source_copy_sha_match": true
+    },
+    {
+      "archive_path": "models/train_20230101_20260101_exclusive.complete.json",
+      "bytes": 888,
+      "source_copy_sha_match": true
+    }
+  ],
+  "copy_count": 13,
+  "copy_bytes": 3255142,
+  "runtime_preserved_checkpoint_map_equals_prior_completion": 11699,
+  "runtime_snapshot_hashes_verified": 5,
+  "first_model_members_rehashed": true,
+  "inputs_json_sha256": "7f67b4dbcd429f30d20c57f335eeca24e6dea5b8e265e8aac6319153d70eea07",
+  "training_start": "2023-01-01",
+  "training_stop_exclusive": "2026-01-01",
+  "rows": 286008,
+  "columns": 1954,
+  "ticker_days": 2256,
+  "input_hashes_count": 27076,
+  "input_hashes_payloads_rehashed": false,
+  "matrix_targets_payloads_rehashed": false,
+  "config_contract_shape_consistent": true,
+  "start_before_complete": true,
+  "note_links_verified": 9,
+  "note_sha256": "6dfecdeab30ad3c79bce2b3130cf837039c0119cbf046b775c155bf10ecd62ef",
+  "start_archive_unchanged": true,
+  "economic_audit_2026_complete": false,
+  "refit_or_reinference_performed": false,
+  "scope_note": "Archive LOCAL_REFERENCES describes the archivist pass; root additionally rehashed inputs.json only."
+}

@@ -1,5 +1,17 @@
 # Continuación local: estado del 23 de octubre de 2026
 
+Actualización vigente del 24 de octubre, hito01:16:24UTC: el primer modelo mensual
+nuevo para2026 está COMPLETE. Véase [recibo técnico](MONTHLY_TEST_FIRST_FIT_RECEIPT_20261024.md)
+y [verificación de root](MONTHLY_TEST_FIRST_FIT_ROOT_CHECKS_20261024.json).
+Entrenamiento2023-01-01→2026-01-01 exclusivo,286.008filas×1.954variables,2.256ticker-días;
+inició01:14:49 y terminó01:16:16UTC. Modelo147e4c91…fe494 y sus recibos exactos.
+Archivo13copias/3.255.142bytes; matrices/targets locales. Root verificó copias e inputs.json,
+sin rehash adicional de27.076entradas ni auditoría económica. Hay25modelos totales y
+cero meses test cerrados en ese corte. Runtime iniciado00:52:52;11.699checkpoints
+previos preservados. Productor34680 y supervisor56000 continúan, sesión21747.
+No relanzar; esperar cierre global y exit real antes del nuevo auditor y OOF.
+Las observaciones anteriores que siguen se conservan como historia fechada.
+
 Actualización: 24 de octubre, 02:01 Madrid (00:01 UTC). Investigación activa.
 La validación mensual 2025 y su auditoría V2 terminaron con exit 0 real.
 El audit `ba9fbd9edf849eb823f098461906feede9782b1e513f4d1954e6d58f52549cbc`

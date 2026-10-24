@@ -1,0 +1,39 @@
+{
+  "fit_key": "train_20230101_20260101_exclusive",
+  "files": [
+    {
+      "kind": "matrix",
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20230101_20260101_exclusive\\matrix.npy",
+      "bytes_observed": 2235438656,
+      "sha256_from_producer_marker": "f60e3204b570184b7bccfb83197491df734e578161602247cf0d6d113444e7e0",
+      "marker_path": "fit_seals/matrix.complete.json",
+      "sealed_utc": "2026-10-24T01:11:02.570253+00:00",
+      "payload_rehashed": false,
+      "payload_copied": false,
+      "independently_audited_for_2026": false
+    },
+    {
+      "kind": "targets",
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20230101_20260101_exclusive\\targets.npz",
+      "bytes_observed": 1302239,
+      "sha256_from_producer_marker": "795a9ce51b900466f217d4856713ccb457a6707bf04594e298f91d16cf315b2d",
+      "marker_path": "fit_seals/targets.complete.json",
+      "sealed_utc": "2026-10-24T01:10:17.537698+00:00",
+      "payload_rehashed": false,
+      "payload_copied": false,
+      "independently_audited_for_2026": false
+    },
+    {
+      "kind": "inputs",
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20230101_20260101_exclusive\\inputs.json",
+      "bytes_observed": 4903648,
+      "sha256_from_producer_marker": "7f67b4dbcd429f30d20c57f335eeca24e6dea5b8e265e8aac6319153d70eea07",
+      "marker_path": "fit_seals/inputs.complete.json",
+      "sealed_utc": "2026-10-24T01:14:47.704773+00:00",
+      "payload_rehashed": false,
+      "payload_copied": false,
+      "independently_audited_for_2026": false
+    }
+  ],
+  "scope": "Producer-sealed hash references, current existence/size only; no payload rehash or 2026 independent audit"
+}

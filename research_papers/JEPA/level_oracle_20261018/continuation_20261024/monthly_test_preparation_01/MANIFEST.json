@@ -1,0 +1,120 @@
+{
+  "status": "RUNTIME_PREPARATION_AND_FIRST_MODEL_COMPLETE_TECHNICAL_RECEIPT",
+  "copies": [
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\launch.json",
+      "archive_path": "runtime/launch.json",
+      "bytes": 2375413,
+      "sha256": "dce4a9ab8ab3edd1da90ef82feb59e83a74a5a4f4f8fd230258abad274bc49f3",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\executed_code\\run_monthly_test_resource_overlay.py",
+      "archive_path": "runtime/executed_code/run_monthly_test_resource_overlay.py",
+      "bytes": 27743,
+      "sha256": "f2b0490cdec916f98c09fc77a6533d0eab8c4f2711331753f7d5c998d81253c1",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\executed_code\\test_monthly_test_resource_overlay.py",
+      "archive_path": "runtime/executed_code/test_monthly_test_resource_overlay.py",
+      "bytes": 22532,
+      "sha256": "3f8002125bfc35619d742fd039c48cc1c5a985613ab886b29b004f9cd7fc850b",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\executed_code\\MONTHLY_TEST_RESOURCE_OVERLAY_SPEC_20261023.md",
+      "archive_path": "runtime/executed_code/MONTHLY_TEST_RESOURCE_OVERLAY_SPEC_20261023.md",
+      "bytes": 9126,
+      "sha256": "690a8389f53e6b0fc1599b806097edefe88afc67b74505ab89367dccc74f86a7",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\authorities\\implementation_review.json",
+      "archive_path": "runtime/executed_code/implementation_review.json",
+      "bytes": 5643,
+      "sha256": "49a3590504c74c06dc5a9b830bcf71b7472dbecae2ab267218aaa22aa2dd0280",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\authorities\\runtime_review.json",
+      "archive_path": "runtime/executed_code/runtime_review.json",
+      "bytes": 10858,
+      "sha256": "1c6072a871d7d4cbcabc7e82dbbbbdb28d5767ff083571638f956d92250b557b",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20230101_20260101_exclusive\\matrix.complete.json",
+      "archive_path": "fit_seals/matrix.complete.json",
+      "bytes": 329,
+      "sha256": "4a58f281ff7804962769135b1d2060b0013de08daab1eb09d3df099c02e14ee4",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20230101_20260101_exclusive\\targets.complete.json",
+      "archive_path": "fit_seals/targets.complete.json",
+      "bytes": 330,
+      "sha256": "bad961cb388a64768d0da07a231a1e53c5d061b86003d49aaf931111924c5e6e",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20230101_20260101_exclusive\\inputs.complete.json",
+      "archive_path": "fit_seals/inputs.complete.json",
+      "bytes": 330,
+      "sha256": "e331d1e4d64c49ded7e2369c2ae107af267e9f54e4c075d2b1d7049a57acd34d",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20230101_20260101_exclusive.fit_started.json",
+      "archive_path": "models/train_20230101_20260101_exclusive.fit_started.json",
+      "bytes": 800,
+      "sha256": "e765493b82c94be41d6edb2a4fe6543aab61cf3a1501ab99baee1d6561166425",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\observations\\1792804489965098500.json",
+      "archive_path": "resource_gate.json",
+      "bytes": 293,
+      "sha256": "311c08c68b6f580bc384e13bce929367ee94d0e9b27378ecae430c1c0b074a9c",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20230101_20260101_exclusive.txt",
+      "archive_path": "models/train_20230101_20260101_exclusive.txt",
+      "bytes": 800857,
+      "sha256": "147e4c912d48fdd9e0d0206193b536eb28dd4c8354e5b7ced5ecbdbf36dfe494",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20230101_20260101_exclusive.complete.json",
+      "archive_path": "models/train_20230101_20260101_exclusive.complete.json",
+      "bytes": 888,
+      "sha256": "814e41120550dae406c34203d26327cf875baad0093989091b3b63dc1daf82c4",
+      "source_and_copy_rehashed": true
+    }
+  ],
+  "copied_files": 13,
+  "copied_bytes": 3255142,
+  "local_references_sha256": "edfae157f2ee74e04eca5af114e4436182ef71746d705ae909a14062dc9f2124",
+  "observation": {
+    "observed_utc": "2026-10-24T01:16:24.909590+00:00",
+    "fit_started_exists": true,
+    "fit_started_utc": "2026-10-24T01:14:49.983321+00:00",
+    "shape": [
+      286008,
+      1954
+    ],
+    "model_complete_exists": true,
+    "models_complete": 25,
+    "test_month_directories": []
+  },
+  "metrics_opened": false,
+  "exit_or_economic_completion_inferred": false,
+  "prior_start_archive_untouched": "../monthly_test_start_01",
+  "first_model_close": {
+    "completed_utc": "2026-10-24T01:16:16.624000+00:00",
+    "marker_sha256": "814e41120550dae406c34203d26327cf875baad0093989091b3b63dc1daf82c4",
+    "members_rehashed": true,
+    "no_economic_inference": true
+  }
+}

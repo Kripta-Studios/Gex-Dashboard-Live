@@ -7,6 +7,11 @@ la rentabilidad causal sigue sin demostrarse y no hay promoción autorizada.
 Las ejecuciones y pendientes actuales se registran en
 [continuación del 23 de octubre](CONTINUATION_PROGRESS_20261023.md).
 
+El [primer modelo mensual nuevo de 2026 ya está cerrado](MONTHLY_TEST_FIRST_FIT_RECEIPT_20261024.md):
+286.008 filas × 1.954 variables, entrenado hasta el 31 de diciembre de 2025.
+Sus recibos y modelo están archivados y verificados. La ejecución continúa;
+todavía no hay evaluación mensual de 2026 cerrada ni auditoría económica nueva.
+
 La [validación mensual 2025 ya está auditada](MONTHLY_VALIDATION_2025_AUDIT_RESULT_20261024.md):
 static, expanding y rolling12 pierden 49.152,40, 75.243,80 y 122.081,40 USD base.
 Los tres tickers pierden en cada modo y la selección permanece nula. Se conservan
