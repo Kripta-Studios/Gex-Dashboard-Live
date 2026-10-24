@@ -1,0 +1,87 @@
+{
+  "scope": "OPERATIONAL_IMPLEMENTATION_SYNTHETIC_ONLY",
+  "market_execution": false,
+  "attempts": [
+    {
+      "attempt": 1,
+      "exit_code": 1,
+      "passed": 31,
+      "setup_errors": 7,
+      "seconds": 24.64,
+      "explanation": "Artificial contract hash changed in supervisor fixture but not frozen helper RUN_CONTRACT_SHA; fixed fixture only."
+    },
+    {
+      "attempt": 2,
+      "exit_code": 0,
+      "passed": 40,
+      "seconds": 33.22
+    }
+  ],
+  "ruff": "PASS",
+  "compile": "PASS",
+  "files": {
+    "launch_monthly_test_index_v2_audit_20261024.py": "bb952c8d9e071af39ffcbb8b8cf17883d6eb9d6b80463a94cd8ac5124ac80bde",
+    "test_launch_monthly_test_index_v2_audit_20261024.py": "7037e08ad6a3d57c03b2cb6e5d7a94c4cf54c5fe199f8f31418b1cb873853fdf",
+    "MONTHLY_TEST_INDEX_V2_AUDIT_LAUNCH_SPEC_20261024.md": "eb5f4eec4775a9ece3ec00e98396b93994b77b7be52e58d3efbdb3ae9bdf2336"
+  },
+  "resources_observed_during_second_test": {
+    "available_ram_bytes": 7286804480,
+    "free_commit_bytes": 3394621440
+  },
+  "resource_limits": {
+    "available_ram_bytes": 2000000000,
+    "free_commit_bytes": 2000000000
+  },
+  "resources_note": "Module fixture independently gates actual Windows RAM and commit. The listed observation was taken during the second suite, not its initial sample.",
+  "preservation_note": "Original pytest logs preserved. Version copies made after tests; attempt01 tests reconstructed from known delta and explicitly not represented as an original pre-execution seal.",
+  "records": [
+    {
+      "attempt": 1,
+      "name": "launch_monthly_test_index_v2_audit_20261024.py",
+      "sha256": "bb952c8d9e071af39ffcbb8b8cf17883d6eb9d6b80463a94cd8ac5124ac80bde",
+      "provenance": "postrun_copy_of_unchanged_bytes"
+    },
+    {
+      "attempt": 1,
+      "name": "test_launch_monthly_test_index_v2_audit_20261024.py",
+      "sha256": "d57df685ac446ba0749526b271fc36ac16f410b0a8fdb7d1b83885b77cab6542",
+      "provenance": "reconstructed_from_exact_known_fixture_delta_after_failure_not_presealed"
+    },
+    {
+      "attempt": 1,
+      "name": "MONTHLY_TEST_INDEX_V2_AUDIT_LAUNCH_SPEC_20261024.md",
+      "sha256": "eb5f4eec4775a9ece3ec00e98396b93994b77b7be52e58d3efbdb3ae9bdf2336",
+      "provenance": "postrun_copy_of_unchanged_bytes"
+    },
+    {
+      "attempt": 1,
+      "name": "pytest.log",
+      "sha256": "7b478936936c036a8c2fae9ff58cf764846992f224d39966a81ca5a3b79535fa",
+      "provenance": "exact_original_log_copy"
+    },
+    {
+      "attempt": 2,
+      "name": "launch_monthly_test_index_v2_audit_20261024.py",
+      "sha256": "bb952c8d9e071af39ffcbb8b8cf17883d6eb9d6b80463a94cd8ac5124ac80bde",
+      "provenance": "postrun_copy_of_unchanged_bytes"
+    },
+    {
+      "attempt": 2,
+      "name": "test_launch_monthly_test_index_v2_audit_20261024.py",
+      "sha256": "7037e08ad6a3d57c03b2cb6e5d7a94c4cf54c5fe199f8f31418b1cb873853fdf",
+      "provenance": "postrun_copy_of_unchanged_bytes"
+    },
+    {
+      "attempt": 2,
+      "name": "MONTHLY_TEST_INDEX_V2_AUDIT_LAUNCH_SPEC_20261024.md",
+      "sha256": "eb5f4eec4775a9ece3ec00e98396b93994b77b7be52e58d3efbdb3ae9bdf2336",
+      "provenance": "postrun_copy_of_unchanged_bytes"
+    },
+    {
+      "attempt": 2,
+      "name": "pytest.log",
+      "sha256": "9694a37e6feda1b9659c0aa17494a00f0f16298464218e804f9181b7d0e7c3b1",
+      "provenance": "exact_original_log_copy"
+    }
+  ]
+}

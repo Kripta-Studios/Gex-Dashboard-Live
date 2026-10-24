@@ -45,6 +45,17 @@ MONTHLY_VALIDATION_2025_FAILURE_INTERPRETATION_20261024.md y su review JSON.
 Observación00:17:03UTC: launcher56000 sigue vivo, sesión21747activa, sin hijo ni
 stderr; continúa preflight. No hay evidencia test nueva ni reejecución.
 
+Hito00:30:39UTC: preflight real test PASS,38589pins, recibo
+`ffb37736d6ed7228ae2cd81f554e7bb9568ae820e6e36511267e150fa76bdf31`.
+Checked_utc00:26:39.468566, persistido/observado00:30:09 tras verificaciones
+adicionales. Padre56000 sigue vivo sin hijo/errores, logs creados; no hay fit2026.
+Supervisor auditor2026 nuevo3cfe55a6…ed046 revisado CLEAR e38ae0fb…9e432:
+40pruebas integrales autor antesS4+6focalesfinales; revisor15focales+2ad hoc.
+Root leyó código completo, comparó schemas y rehasheó31dependencias/12copias.
+S1–S4cerrados; fallo primerfixture preservado y reconstrucciónposthoc identificada.
+Sólo implementación: aún necesita productor cerrado/exit0/bindingreal/publicación.
+Checklist y notaI/O son documentales; no cambian el proceso actual ni arrancanOOF.
+
 ## Ejecuciones observadas
 
 - Comparación fija griegas 424 frente a compacto 152: productor PID 19696 y

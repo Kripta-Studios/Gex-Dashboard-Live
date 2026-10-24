@@ -1,0 +1,529 @@
+..............................EEEEEEE.                                   [100%]
+=================================== ERRORS ====================================
+_ ERROR at setup of test_complete_preflight_is_metadata_only_and_preserves_files _
+
+science = namespace(root=WindowsPath('C:/Users/�lvaro Schwiedop/AppData/Local/Temp/pytest-of-�lvaro Schwiedop/pytest-5754/test_c...0c3d3764a7a5423473cd8635448d7f6d8cc6574', '2026': 'f1a8594e8976c89f1e5c028870c3d3764a7a5423473cd8635448d7f6d8cc6574'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000217D44F1590>
+
+    @pytest.fixture
+    def admitted(science, monkeypatch):
+        """Complete artificial authority chain; only Git object access is substituted."""
+        data, root = science.data, science.root
+        deps = supervisor.read(supervisor.AUDITOR_REVIEW)["dependencies"]
+        # Use the actual eleven published scientific dependencies without loading an auditor.
+        contract_deps = supervisor.read(supervisor.CODE / "MONTHLY_TEST_RESOURCE_OVERLAY_REVIEW_20261023.json")["original_dependencies"]
+        contract = write(root / "run_contract.json", {"dependencies": contract_deps})
+        monkeypatch.setattr(supervisor, "CONTRACT_SHA", contract["sha256"])
+        session = data / "session"
+        index = write(session / "index.parquet", {"synthetic_index_metadata": True})
+        source = write(data / "source_audit.json", {"synthetic": True})
+        prior = write(data / "prior.json", dict(status=supervisor.AUDIT_STATUS,
+            binding={"completed_months": supervisor.MONTHS[:12]}, verified_files={"source": {source["path"]: source["sha256"]}}))
+        freeze = write(root / "validation_freeze.json", dict(selected_mode=None, approved=False, status="FAIL_NO_DAILY_COMPLIANT_MODE"))
+        for name, value in dict(SESSION=session, INDEX_SHA=index["sha256"], SOURCE_AUDIT=Path(source["path"]),
+            SOURCE_SHA=source["sha256"], VALIDATION_AUDIT=Path(prior["path"]), VALIDATION_SHA=prior["sha256"], FREEZE_SHA=freeze["sha256"]).items():
+            monkeypatch.setattr(supervisor, name, value)
+        for path in root.rglob("*.complete.json"):
+            value = supervisor.read(path)
+            value["binding"] = contract["sha256"]
+            value["files"] = {n: supervisor.sha(root / n) for n in value["files"]}
+            write(path, value)
+        (root / "run.lock").write_bytes(b"SYNTHETIC LOCK PRESERVED")
+        assembled = producer.__wrapped__(science, monkeypatch)
+        code = supervisor.import_closure(set(supervisor.NEW_FILES) | set(supervisor.HELPER_PINS) | set(contract_deps) | set(deps))
+        review_path = data / "supervisor_review.json"
+        review = write(review_path, dict(status=supervisor.REVIEW_STATUS, decision="CLEAR", scope="IMPLEMENTATION_ONLY",
+            runtime_authorized=False, files=code))
+        monkeypatch.setattr(supervisor, "SUPERVISOR_REVIEW", review_path)
+        published = {str(supervisor.CODE / n): h for n, h in code.items()}
+        published.update({review["path"]: review["sha256"], str(supervisor.AUDITOR_REVIEW): supervisor.AUDITOR_REVIEW_SHA,
+            str(supervisor.PRODUCER_REVIEW): supervisor.PRODUCER_REVIEW_SHA,
+            assembled.runtime["producer"]["runtime_review"]["path"]: supervisor.PRODUCER_RUNTIME_SHA})
+        runtime = dict(status=supervisor.RUNTIME_STATUS, scope=supervisor.SCOPE, dependencies=deps,
+            binding=dict(monthly_root=str(root), source_audit=str(supervisor.SOURCE_AUDIT),
+                validation_audit=str(supervisor.VALIDATION_AUDIT), validation_audit_sha256=supervisor.VALIDATION_SHA,
+                implementation_review_sha256=supervisor.AUDITOR_REVIEW_SHA, run_contract_sha256=supervisor.CONTRACT_SHA,
+                source_audit_sha256=supervisor.SOURCE_SHA, index_sha256=supervisor.INDEX_SHA, session_root=str(session),
+                validation_freeze_sha256=supervisor.FREEZE_SHA),
+            producer=assembled.runtime["producer"], allowed_read_roots=[str(data), str(supervisor.CODE)],
+            launch_binding=dict(status="REVIEWED_MONTHLY_TEST_INDEX_V2_AUDIT_ONE_SHOT", supervisor_review=review,
+                published_files=published, output_root=str(data.parent / "audit"), logs_root=str(data.parent / "logs")))
+        runtime_pin = write(data / "runtime_review.json", runtime)
+        seen = []
+        monkeypatch.setattr(supervisor, "publication", lambda commit, files: seen.append((commit, files)))
+        before = {str(p) for p in data.parent.rglob("*")}
+>       receipt = supervisor.preflight(runtime_pin["path"], runtime_pin["sha256"], review["sha256"], "a" * 40)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+research_papers\JEPA\level_oracle_20261018\test_launch_monthly_test_index_v2_audit_20261024.py:402: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+research_papers\JEPA\level_oracle_20261018\launch_monthly_test_index_v2_audit_20261024.py:363: in preflight
+    producer_closure(runtime, evidence, helper)
+research_papers\JEPA\level_oracle_20261018\launch_monthly_test_index_v2_audit_20261024.py:237: in producer_closure
+    launch, exited = helper.overlay.verify_process_chain(members, evidence, root, validation=False)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+research_papers\JEPA\level_oracle_20261018\run_monthly_test_resource_overlay.py:241: in verify_process_chain
+    require(launch.get("status") == "MONTHLY_TEST_RESOURCE_OVERLAY_STARTED"
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ok = False, message = 'Previous test attempt stage/contract differs'
+
+    def require(ok, message):
+        if not ok:
+>           raise ValueError(message)
+E           ValueError: Previous test attempt stage/contract differs
+
+research_papers\JEPA\level_oracle_20261018\run_monthly_test_resource_overlay.py:38: ValueError
+____ ERROR at setup of test_complete_audit_result_and_launch_close_exactly ____
+
+science = namespace(root=WindowsPath('C:/Users/�lvaro Schwiedop/AppData/Local/Temp/pytest-of-�lvaro Schwiedop/pytest-5754/test_c...0c3d3764a7a5423473cd8635448d7f6d8cc6574', '2026': 'f1a8594e8976c89f1e5c028870c3d3764a7a5423473cd8635448d7f6d8cc6574'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000217D44F3ED0>
+
+    @pytest.fixture
+    def admitted(science, monkeypatch):
+        """Complete artificial authority chain; only Git object access is substituted."""
+        data, root = science.data, science.root
+        deps = supervisor.read(supervisor.AUDITOR_REVIEW)["dependencies"]
+        # Use the actual eleven published scientific dependencies without loading an auditor.
+        contract_deps = supervisor.read(supervisor.CODE / "MONTHLY_TEST_RESOURCE_OVERLAY_REVIEW_20261023.json")["original_dependencies"]
+        contract = write(root / "run_contract.json", {"dependencies": contract_deps})
+        monkeypatch.setattr(supervisor, "CONTRACT_SHA", contract["sha256"])
+        session = data / "session"
+        index = write(session / "index.parquet", {"synthetic_index_metadata": True})
+        source = write(data / "source_audit.json", {"synthetic": True})
+        prior = write(data / "prior.json", dict(status=supervisor.AUDIT_STATUS,
+            binding={"completed_months": supervisor.MONTHS[:12]}, verified_files={"source": {source["path"]: source["sha256"]}}))
+        freeze = write(root / "validation_freeze.json", dict(selected_mode=None, approved=False, status="FAIL_NO_DAILY_COMPLIANT_MODE"))
+        for name, value in dict(SESSION=session, INDEX_SHA=index["sha256"], SOURCE_AUDIT=Path(source["path"]),
+            SOURCE_SHA=source["sha256"], VALIDATION_AUDIT=Path(prior["path"]), VALIDATION_SHA=prior["sha256"], FREEZE_SHA=freeze["sha256"]).items():
+            monkeypatch.setattr(supervisor, name, value)
+        for path in root.rglob("*.complete.json"):
+            value = supervisor.read(path)
+            value["binding"] = contract["sha256"]
+            value["files"] = {n: supervisor.sha(root / n) for n in value["files"]}
+            write(path, value)
+        (root / "run.lock").write_bytes(b"SYNTHETIC LOCK PRESERVED")
+        assembled = producer.__wrapped__(science, monkeypatch)
+        code = supervisor.import_closure(set(supervisor.NEW_FILES) | set(supervisor.HELPER_PINS) | set(contract_deps) | set(deps))
+        review_path = data / "supervisor_review.json"
+        review = write(review_path, dict(status=supervisor.REVIEW_STATUS, decision="CLEAR", scope="IMPLEMENTATION_ONLY",
+            runtime_authorized=False, files=code))
+        monkeypatch.setattr(supervisor, "SUPERVISOR_REVIEW", review_path)
+        published = {str(supervisor.CODE / n): h for n, h in code.items()}
+        published.update({review["path"]: review["sha256"], str(supervisor.AUDITOR_REVIEW): supervisor.AUDITOR_REVIEW_SHA,
+            str(supervisor.PRODUCER_REVIEW): supervisor.PRODUCER_REVIEW_SHA,
+            assembled.runtime["producer"]["runtime_review"]["path"]: supervisor.PRODUCER_RUNTIME_SHA})
+        runtime = dict(status=supervisor.RUNTIME_STATUS, scope=supervisor.SCOPE, dependencies=deps,
+            binding=dict(monthly_root=str(root), source_audit=str(supervisor.SOURCE_AUDIT),
+                validation_audit=str(supervisor.VALIDATION_AUDIT), validation_audit_sha256=supervisor.VALIDATION_SHA,
+                implementation_review_sha256=supervisor.AUDITOR_REVIEW_SHA, run_contract_sha256=supervisor.CONTRACT_SHA,
+                source_audit_sha256=supervisor.SOURCE_SHA, index_sha256=supervisor.INDEX_SHA, session_root=str(session),
+                validation_freeze_sha256=supervisor.FREEZE_SHA),
+            producer=assembled.runtime["producer"], allowed_read_roots=[str(data), str(supervisor.CODE)],
+            launch_binding=dict(status="REVIEWED_MONTHLY_TEST_INDEX_V2_AUDIT_ONE_SHOT", supervisor_review=review,
+                published_files=published, output_root=str(data.parent / "audit"), logs_root=str(data.parent / "logs")))
+        runtime_pin = write(data / "runtime_review.json", runtime)
+        seen = []
+        monkeypatch.setattr(supervisor, "publication", lambda commit, files: seen.append((commit, files)))
+        before = {str(p) for p in data.parent.rglob("*")}
+>       receipt = supervisor.preflight(runtime_pin["path"], runtime_pin["sha256"], review["sha256"], "a" * 40)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+research_papers\JEPA\level_oracle_20261018\test_launch_monthly_test_index_v2_audit_20261024.py:402: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+research_papers\JEPA\level_oracle_20261018\launch_monthly_test_index_v2_audit_20261024.py:363: in preflight
+    producer_closure(runtime, evidence, helper)
+research_papers\JEPA\level_oracle_20261018\launch_monthly_test_index_v2_audit_20261024.py:237: in producer_closure
+    launch, exited = helper.overlay.verify_process_chain(members, evidence, root, validation=False)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+research_papers\JEPA\level_oracle_20261018\run_monthly_test_resource_overlay.py:241: in verify_process_chain
+    require(launch.get("status") == "MONTHLY_TEST_RESOURCE_OVERLAY_STARTED"
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ok = False, message = 'Previous test attempt stage/contract differs'
+
+    def require(ok, message):
+        if not ok:
+>           raise ValueError(message)
+E           ValueError: Previous test attempt stage/contract differs
+
+research_papers\JEPA\level_oracle_20261018\run_monthly_test_resource_overlay.py:38: ValueError
+_ ERROR at setup of test_audit_closure_rejects_resigned_metadata_faults[launch] _
+
+science = namespace(root=WindowsPath('C:/Users/�lvaro Schwiedop/AppData/Local/Temp/pytest-of-�lvaro Schwiedop/pytest-5754/test_a...0c3d3764a7a5423473cd8635448d7f6d8cc6574', '2026': 'f1a8594e8976c89f1e5c028870c3d3764a7a5423473cd8635448d7f6d8cc6574'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000021792FD1AC0>
+
+    @pytest.fixture
+    def admitted(science, monkeypatch):
+        """Complete artificial authority chain; only Git object access is substituted."""
+        data, root = science.data, science.root
+        deps = supervisor.read(supervisor.AUDITOR_REVIEW)["dependencies"]
+        # Use the actual eleven published scientific dependencies without loading an auditor.
+        contract_deps = supervisor.read(supervisor.CODE / "MONTHLY_TEST_RESOURCE_OVERLAY_REVIEW_20261023.json")["original_dependencies"]
+        contract = write(root / "run_contract.json", {"dependencies": contract_deps})
+        monkeypatch.setattr(supervisor, "CONTRACT_SHA", contract["sha256"])
+        session = data / "session"
+        index = write(session / "index.parquet", {"synthetic_index_metadata": True})
+        source = write(data / "source_audit.json", {"synthetic": True})
+        prior = write(data / "prior.json", dict(status=supervisor.AUDIT_STATUS,
+            binding={"completed_months": supervisor.MONTHS[:12]}, verified_files={"source": {source["path"]: source["sha256"]}}))
+        freeze = write(root / "validation_freeze.json", dict(selected_mode=None, approved=False, status="FAIL_NO_DAILY_COMPLIANT_MODE"))
+        for name, value in dict(SESSION=session, INDEX_SHA=index["sha256"], SOURCE_AUDIT=Path(source["path"]),
+            SOURCE_SHA=source["sha256"], VALIDATION_AUDIT=Path(prior["path"]), VALIDATION_SHA=prior["sha256"], FREEZE_SHA=freeze["sha256"]).items():
+            monkeypatch.setattr(supervisor, name, value)
+        for path in root.rglob("*.complete.json"):
+            value = supervisor.read(path)
+            value["binding"] = contract["sha256"]
+            value["files"] = {n: supervisor.sha(root / n) for n in value["files"]}
+            write(path, value)
+        (root / "run.lock").write_bytes(b"SYNTHETIC LOCK PRESERVED")
+        assembled = producer.__wrapped__(science, monkeypatch)
+        code = supervisor.import_closure(set(supervisor.NEW_FILES) | set(supervisor.HELPER_PINS) | set(contract_deps) | set(deps))
+        review_path = data / "supervisor_review.json"
+        review = write(review_path, dict(status=supervisor.REVIEW_STATUS, decision="CLEAR", scope="IMPLEMENTATION_ONLY",
+            runtime_authorized=False, files=code))
+        monkeypatch.setattr(supervisor, "SUPERVISOR_REVIEW", review_path)
+        published = {str(supervisor.CODE / n): h for n, h in code.items()}
+        published.update({review["path"]: review["sha256"], str(supervisor.AUDITOR_REVIEW): supervisor.AUDITOR_REVIEW_SHA,
+            str(supervisor.PRODUCER_REVIEW): supervisor.PRODUCER_REVIEW_SHA,
+            assembled.runtime["producer"]["runtime_review"]["path"]: supervisor.PRODUCER_RUNTIME_SHA})
+        runtime = dict(status=supervisor.RUNTIME_STATUS, scope=supervisor.SCOPE, dependencies=deps,
+            binding=dict(monthly_root=str(root), source_audit=str(supervisor.SOURCE_AUDIT),
+                validation_audit=str(supervisor.VALIDATION_AUDIT), validation_audit_sha256=supervisor.VALIDATION_SHA,
+                implementation_review_sha256=supervisor.AUDITOR_REVIEW_SHA, run_contract_sha256=supervisor.CONTRACT_SHA,
+                source_audit_sha256=supervisor.SOURCE_SHA, index_sha256=supervisor.INDEX_SHA, session_root=str(session),
+                validation_freeze_sha256=supervisor.FREEZE_SHA),
+            producer=assembled.runtime["producer"], allowed_read_roots=[str(data), str(supervisor.CODE)],
+            launch_binding=dict(status="REVIEWED_MONTHLY_TEST_INDEX_V2_AUDIT_ONE_SHOT", supervisor_review=review,
+                published_files=published, output_root=str(data.parent / "audit"), logs_root=str(data.parent / "logs")))
+        runtime_pin = write(data / "runtime_review.json", runtime)
+        seen = []
+        monkeypatch.setattr(supervisor, "publication", lambda commit, files: seen.append((commit, files)))
+        before = {str(p) for p in data.parent.rglob("*")}
+>       receipt = supervisor.preflight(runtime_pin["path"], runtime_pin["sha256"], review["sha256"], "a" * 40)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+research_papers\JEPA\level_oracle_20261018\test_launch_monthly_test_index_v2_audit_20261024.py:402: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+research_papers\JEPA\level_oracle_20261018\launch_monthly_test_index_v2_audit_20261024.py:363: in preflight
+    producer_closure(runtime, evidence, helper)
+research_papers\JEPA\level_oracle_20261018\launch_monthly_test_index_v2_audit_20261024.py:237: in producer_closure
+    launch, exited = helper.overlay.verify_process_chain(members, evidence, root, validation=False)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+research_papers\JEPA\level_oracle_20261018\run_monthly_test_resource_overlay.py:241: in verify_process_chain
+    require(launch.get("status") == "MONTHLY_TEST_RESOURCE_OVERLAY_STARTED"
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ok = False, message = 'Previous test attempt stage/contract differs'
+
+    def require(ok, message):
+        if not ok:
+>           raise ValueError(message)
+E           ValueError: Previous test attempt stage/contract differs
+
+research_papers\JEPA\level_oracle_20261018\run_monthly_test_resource_overlay.py:38: ValueError
+_ ERROR at setup of test_audit_closure_rejects_resigned_metadata_faults[failure] _
+
+science = namespace(root=WindowsPath('C:/Users/�lvaro Schwiedop/AppData/Local/Temp/pytest-of-�lvaro Schwiedop/pytest-5754/test_a...0c3d3764a7a5423473cd8635448d7f6d8cc6574', '2026': 'f1a8594e8976c89f1e5c028870c3d3764a7a5423473cd8635448d7f6d8cc6574'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000217D463E650>
+
+    @pytest.fixture
+    def admitted(science, monkeypatch):
+        """Complete artificial authority chain; only Git object access is substituted."""
+        data, root = science.data, science.root
+        deps = supervisor.read(supervisor.AUDITOR_REVIEW)["dependencies"]
+        # Use the actual eleven published scientific dependencies without loading an auditor.
+        contract_deps = supervisor.read(supervisor.CODE / "MONTHLY_TEST_RESOURCE_OVERLAY_REVIEW_20261023.json")["original_dependencies"]
+        contract = write(root / "run_contract.json", {"dependencies": contract_deps})
+        monkeypatch.setattr(supervisor, "CONTRACT_SHA", contract["sha256"])
+        session = data / "session"
+        index = write(session / "index.parquet", {"synthetic_index_metadata": True})
+        source = write(data / "source_audit.json", {"synthetic": True})
+        prior = write(data / "prior.json", dict(status=supervisor.AUDIT_STATUS,
+            binding={"completed_months": supervisor.MONTHS[:12]}, verified_files={"source": {source["path"]: source["sha256"]}}))
+        freeze = write(root / "validation_freeze.json", dict(selected_mode=None, approved=False, status="FAIL_NO_DAILY_COMPLIANT_MODE"))
+        for name, value in dict(SESSION=session, INDEX_SHA=index["sha256"], SOURCE_AUDIT=Path(source["path"]),
+            SOURCE_SHA=source["sha256"], VALIDATION_AUDIT=Path(prior["path"]), VALIDATION_SHA=prior["sha256"], FREEZE_SHA=freeze["sha256"]).items():
+            monkeypatch.setattr(supervisor, name, value)
+        for path in root.rglob("*.complete.json"):
+            value = supervisor.read(path)
+            value["binding"] = contract["sha256"]
+            value["files"] = {n: supervisor.sha(root / n) for n in value["files"]}
+            write(path, value)
+        (root / "run.lock").write_bytes(b"SYNTHETIC LOCK PRESERVED")
+        assembled = producer.__wrapped__(science, monkeypatch)
+        code = supervisor.import_closure(set(supervisor.NEW_FILES) | set(supervisor.HELPER_PINS) | set(contract_deps) | set(deps))
+        review_path = data / "supervisor_review.json"
+        review = write(review_path, dict(status=supervisor.REVIEW_STATUS, decision="CLEAR", scope="IMPLEMENTATION_ONLY",
+            runtime_authorized=False, files=code))
+        monkeypatch.setattr(supervisor, "SUPERVISOR_REVIEW", review_path)
+        published = {str(supervisor.CODE / n): h for n, h in code.items()}
+        published.update({review["path"]: review["sha256"], str(supervisor.AUDITOR_REVIEW): supervisor.AUDITOR_REVIEW_SHA,
+            str(supervisor.PRODUCER_REVIEW): supervisor.PRODUCER_REVIEW_SHA,
+            assembled.runtime["producer"]["runtime_review"]["path"]: supervisor.PRODUCER_RUNTIME_SHA})
+        runtime = dict(status=supervisor.RUNTIME_STATUS, scope=supervisor.SCOPE, dependencies=deps,
+            binding=dict(monthly_root=str(root), source_audit=str(supervisor.SOURCE_AUDIT),
+                validation_audit=str(supervisor.VALIDATION_AUDIT), validation_audit_sha256=supervisor.VALIDATION_SHA,
+                implementation_review_sha256=supervisor.AUDITOR_REVIEW_SHA, run_contract_sha256=supervisor.CONTRACT_SHA,
+                source_audit_sha256=supervisor.SOURCE_SHA, index_sha256=supervisor.INDEX_SHA, session_root=str(session),
+                validation_freeze_sha256=supervisor.FREEZE_SHA),
+            producer=assembled.runtime["producer"], allowed_read_roots=[str(data), str(supervisor.CODE)],
+            launch_binding=dict(status="REVIEWED_MONTHLY_TEST_INDEX_V2_AUDIT_ONE_SHOT", supervisor_review=review,
+                published_files=published, output_root=str(data.parent / "audit"), logs_root=str(data.parent / "logs")))
+        runtime_pin = write(data / "runtime_review.json", runtime)
+        seen = []
+        monkeypatch.setattr(supervisor, "publication", lambda commit, files: seen.append((commit, files)))
+        before = {str(p) for p in data.parent.rglob("*")}
+>       receipt = supervisor.preflight(runtime_pin["path"], runtime_pin["sha256"], review["sha256"], "a" * 40)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+research_papers\JEPA\level_oracle_20261018\test_launch_monthly_test_index_v2_audit_20261024.py:402: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+research_papers\JEPA\level_oracle_20261018\launch_monthly_test_index_v2_audit_20261024.py:363: in preflight
+    producer_closure(runtime, evidence, helper)
+research_papers\JEPA\level_oracle_20261018\launch_monthly_test_index_v2_audit_20261024.py:237: in producer_closure
+    launch, exited = helper.overlay.verify_process_chain(members, evidence, root, validation=False)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+research_papers\JEPA\level_oracle_20261018\run_monthly_test_resource_overlay.py:241: in verify_process_chain
+    require(launch.get("status") == "MONTHLY_TEST_RESOURCE_OVERLAY_STARTED"
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ok = False, message = 'Previous test attempt stage/contract differs'
+
+    def require(ok, message):
+        if not ok:
+>           raise ValueError(message)
+E           ValueError: Previous test attempt stage/contract differs
+
+research_papers\JEPA\level_oracle_20261018\run_monthly_test_resource_overlay.py:38: ValueError
+_ ERROR at setup of test_audit_closure_rejects_resigned_metadata_faults[inherited] _
+
+science = namespace(root=WindowsPath('C:/Users/�lvaro Schwiedop/AppData/Local/Temp/pytest-of-�lvaro Schwiedop/pytest-5754/test_a...0c3d3764a7a5423473cd8635448d7f6d8cc6574', '2026': 'f1a8594e8976c89f1e5c028870c3d3764a7a5423473cd8635448d7f6d8cc6574'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000217D443F5D0>
+
+    @pytest.fixture
+    def admitted(science, monkeypatch):
+        """Complete artificial authority chain; only Git object access is substituted."""
+        data, root = science.data, science.root
+        deps = supervisor.read(supervisor.AUDITOR_REVIEW)["dependencies"]
+        # Use the actual eleven published scientific dependencies without loading an auditor.
+        contract_deps = supervisor.read(supervisor.CODE / "MONTHLY_TEST_RESOURCE_OVERLAY_REVIEW_20261023.json")["original_dependencies"]
+        contract = write(root / "run_contract.json", {"dependencies": contract_deps})
+        monkeypatch.setattr(supervisor, "CONTRACT_SHA", contract["sha256"])
+        session = data / "session"
+        index = write(session / "index.parquet", {"synthetic_index_metadata": True})
+        source = write(data / "source_audit.json", {"synthetic": True})
+        prior = write(data / "prior.json", dict(status=supervisor.AUDIT_STATUS,
+            binding={"completed_months": supervisor.MONTHS[:12]}, verified_files={"source": {source["path"]: source["sha256"]}}))
+        freeze = write(root / "validation_freeze.json", dict(selected_mode=None, approved=False, status="FAIL_NO_DAILY_COMPLIANT_MODE"))
+        for name, value in dict(SESSION=session, INDEX_SHA=index["sha256"], SOURCE_AUDIT=Path(source["path"]),
+            SOURCE_SHA=source["sha256"], VALIDATION_AUDIT=Path(prior["path"]), VALIDATION_SHA=prior["sha256"], FREEZE_SHA=freeze["sha256"]).items():
+            monkeypatch.setattr(supervisor, name, value)
+        for path in root.rglob("*.complete.json"):
+            value = supervisor.read(path)
+            value["binding"] = contract["sha256"]
+            value["files"] = {n: supervisor.sha(root / n) for n in value["files"]}
+            write(path, value)
+        (root / "run.lock").write_bytes(b"SYNTHETIC LOCK PRESERVED")
+        assembled = producer.__wrapped__(science, monkeypatch)
+        code = supervisor.import_closure(set(supervisor.NEW_FILES) | set(supervisor.HELPER_PINS) | set(contract_deps) | set(deps))
+        review_path = data / "supervisor_review.json"
+        review = write(review_path, dict(status=supervisor.REVIEW_STATUS, decision="CLEAR", scope="IMPLEMENTATION_ONLY",
+            runtime_authorized=False, files=code))
+        monkeypatch.setattr(supervisor, "SUPERVISOR_REVIEW", review_path)
+        published = {str(supervisor.CODE / n): h for n, h in code.items()}
+        published.update({review["path"]: review["sha256"], str(supervisor.AUDITOR_REVIEW): supervisor.AUDITOR_REVIEW_SHA,
+            str(supervisor.PRODUCER_REVIEW): supervisor.PRODUCER_REVIEW_SHA,
+            assembled.runtime["producer"]["runtime_review"]["path"]: supervisor.PRODUCER_RUNTIME_SHA})
+        runtime = dict(status=supervisor.RUNTIME_STATUS, scope=supervisor.SCOPE, dependencies=deps,
+            binding=dict(monthly_root=str(root), source_audit=str(supervisor.SOURCE_AUDIT),
+                validation_audit=str(supervisor.VALIDATION_AUDIT), validation_audit_sha256=supervisor.VALIDATION_SHA,
+                implementation_review_sha256=supervisor.AUDITOR_REVIEW_SHA, run_contract_sha256=supervisor.CONTRACT_SHA,
+                source_audit_sha256=supervisor.SOURCE_SHA, index_sha256=supervisor.INDEX_SHA, session_root=str(session),
+                validation_freeze_sha256=supervisor.FREEZE_SHA),
+            producer=assembled.runtime["producer"], allowed_read_roots=[str(data), str(supervisor.CODE)],
+            launch_binding=dict(status="REVIEWED_MONTHLY_TEST_INDEX_V2_AUDIT_ONE_SHOT", supervisor_review=review,
+                published_files=published, output_root=str(data.parent / "audit"), logs_root=str(data.parent / "logs")))
+        runtime_pin = write(data / "runtime_review.json", runtime)
+        seen = []
+        monkeypatch.setattr(supervisor, "publication", lambda commit, files: seen.append((commit, files)))
+        before = {str(p) for p in data.parent.rglob("*")}
+>       receipt = supervisor.preflight(runtime_pin["path"], runtime_pin["sha256"], review["sha256"], "a" * 40)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+research_papers\JEPA\level_oracle_20261018\test_launch_monthly_test_index_v2_audit_20261024.py:402: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+research_papers\JEPA\level_oracle_20261018\launch_monthly_test_index_v2_audit_20261024.py:363: in preflight
+    producer_closure(runtime, evidence, helper)
+research_papers\JEPA\level_oracle_20261018\launch_monthly_test_index_v2_audit_20261024.py:237: in producer_closure
+    launch, exited = helper.overlay.verify_process_chain(members, evidence, root, validation=False)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+research_papers\JEPA\level_oracle_20261018\run_monthly_test_resource_overlay.py:241: in verify_process_chain
+    require(launch.get("status") == "MONTHLY_TEST_RESOURCE_OVERLAY_STARTED"
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ok = False, message = 'Previous test attempt stage/contract differs'
+
+    def require(ok, message):
+        if not ok:
+>           raise ValueError(message)
+E           ValueError: Previous test attempt stage/contract differs
+
+research_papers\JEPA\level_oracle_20261018\run_monthly_test_resource_overlay.py:38: ValueError
+_ ERROR at setup of test_audit_closure_rejects_resigned_metadata_faults[snapshot] _
+
+science = namespace(root=WindowsPath('C:/Users/�lvaro Schwiedop/AppData/Local/Temp/pytest-of-�lvaro Schwiedop/pytest-5754/test_a...0c3d3764a7a5423473cd8635448d7f6d8cc6574', '2026': 'f1a8594e8976c89f1e5c028870c3d3764a7a5423473cd8635448d7f6d8cc6574'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000217D449AF90>
+
+    @pytest.fixture
+    def admitted(science, monkeypatch):
+        """Complete artificial authority chain; only Git object access is substituted."""
+        data, root = science.data, science.root
+        deps = supervisor.read(supervisor.AUDITOR_REVIEW)["dependencies"]
+        # Use the actual eleven published scientific dependencies without loading an auditor.
+        contract_deps = supervisor.read(supervisor.CODE / "MONTHLY_TEST_RESOURCE_OVERLAY_REVIEW_20261023.json")["original_dependencies"]
+        contract = write(root / "run_contract.json", {"dependencies": contract_deps})
+        monkeypatch.setattr(supervisor, "CONTRACT_SHA", contract["sha256"])
+        session = data / "session"
+        index = write(session / "index.parquet", {"synthetic_index_metadata": True})
+        source = write(data / "source_audit.json", {"synthetic": True})
+        prior = write(data / "prior.json", dict(status=supervisor.AUDIT_STATUS,
+            binding={"completed_months": supervisor.MONTHS[:12]}, verified_files={"source": {source["path"]: source["sha256"]}}))
+        freeze = write(root / "validation_freeze.json", dict(selected_mode=None, approved=False, status="FAIL_NO_DAILY_COMPLIANT_MODE"))
+        for name, value in dict(SESSION=session, INDEX_SHA=index["sha256"], SOURCE_AUDIT=Path(source["path"]),
+            SOURCE_SHA=source["sha256"], VALIDATION_AUDIT=Path(prior["path"]), VALIDATION_SHA=prior["sha256"], FREEZE_SHA=freeze["sha256"]).items():
+            monkeypatch.setattr(supervisor, name, value)
+        for path in root.rglob("*.complete.json"):
+            value = supervisor.read(path)
+            value["binding"] = contract["sha256"]
+            value["files"] = {n: supervisor.sha(root / n) for n in value["files"]}
+            write(path, value)
+        (root / "run.lock").write_bytes(b"SYNTHETIC LOCK PRESERVED")
+        assembled = producer.__wrapped__(science, monkeypatch)
+        code = supervisor.import_closure(set(supervisor.NEW_FILES) | set(supervisor.HELPER_PINS) | set(contract_deps) | set(deps))
+        review_path = data / "supervisor_review.json"
+        review = write(review_path, dict(status=supervisor.REVIEW_STATUS, decision="CLEAR", scope="IMPLEMENTATION_ONLY",
+            runtime_authorized=False, files=code))
+        monkeypatch.setattr(supervisor, "SUPERVISOR_REVIEW", review_path)
+        published = {str(supervisor.CODE / n): h for n, h in code.items()}
+        published.update({review["path"]: review["sha256"], str(supervisor.AUDITOR_REVIEW): supervisor.AUDITOR_REVIEW_SHA,
+            str(supervisor.PRODUCER_REVIEW): supervisor.PRODUCER_REVIEW_SHA,
+            assembled.runtime["producer"]["runtime_review"]["path"]: supervisor.PRODUCER_RUNTIME_SHA})
+        runtime = dict(status=supervisor.RUNTIME_STATUS, scope=supervisor.SCOPE, dependencies=deps,
+            binding=dict(monthly_root=str(root), source_audit=str(supervisor.SOURCE_AUDIT),
+                validation_audit=str(supervisor.VALIDATION_AUDIT), validation_audit_sha256=supervisor.VALIDATION_SHA,
+                implementation_review_sha256=supervisor.AUDITOR_REVIEW_SHA, run_contract_sha256=supervisor.CONTRACT_SHA,
+                source_audit_sha256=supervisor.SOURCE_SHA, index_sha256=supervisor.INDEX_SHA, session_root=str(session),
+                validation_freeze_sha256=supervisor.FREEZE_SHA),
+            producer=assembled.runtime["producer"], allowed_read_roots=[str(data), str(supervisor.CODE)],
+            launch_binding=dict(status="REVIEWED_MONTHLY_TEST_INDEX_V2_AUDIT_ONE_SHOT", supervisor_review=review,
+                published_files=published, output_root=str(data.parent / "audit"), logs_root=str(data.parent / "logs")))
+        runtime_pin = write(data / "runtime_review.json", runtime)
+        seen = []
+        monkeypatch.setattr(supervisor, "publication", lambda commit, files: seen.append((commit, files)))
+        before = {str(p) for p in data.parent.rglob("*")}
+>       receipt = supervisor.preflight(runtime_pin["path"], runtime_pin["sha256"], review["sha256"], "a" * 40)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+research_papers\JEPA\level_oracle_20261018\test_launch_monthly_test_index_v2_audit_20261024.py:402: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+research_papers\JEPA\level_oracle_20261018\launch_monthly_test_index_v2_audit_20261024.py:363: in preflight
+    producer_closure(runtime, evidence, helper)
+research_papers\JEPA\level_oracle_20261018\launch_monthly_test_index_v2_audit_20261024.py:237: in producer_closure
+    launch, exited = helper.overlay.verify_process_chain(members, evidence, root, validation=False)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+research_papers\JEPA\level_oracle_20261018\run_monthly_test_resource_overlay.py:241: in verify_process_chain
+    require(launch.get("status") == "MONTHLY_TEST_RESOURCE_OVERLAY_STARTED"
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ok = False, message = 'Previous test attempt stage/contract differs'
+
+    def require(ok, message):
+        if not ok:
+>           raise ValueError(message)
+E           ValueError: Previous test attempt stage/contract differs
+
+research_papers\JEPA\level_oracle_20261018\run_monthly_test_resource_overlay.py:38: ValueError
+_ ERROR at setup of test_audit_closure_rejects_resigned_metadata_faults[binding] _
+
+science = namespace(root=WindowsPath('C:/Users/�lvaro Schwiedop/AppData/Local/Temp/pytest-of-�lvaro Schwiedop/pytest-5754/test_a...0c3d3764a7a5423473cd8635448d7f6d8cc6574', '2026': 'f1a8594e8976c89f1e5c028870c3d3764a7a5423473cd8635448d7f6d8cc6574'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000217D4499BE0>
+
+    @pytest.fixture
+    def admitted(science, monkeypatch):
+        """Complete artificial authority chain; only Git object access is substituted."""
+        data, root = science.data, science.root
+        deps = supervisor.read(supervisor.AUDITOR_REVIEW)["dependencies"]
+        # Use the actual eleven published scientific dependencies without loading an auditor.
+        contract_deps = supervisor.read(supervisor.CODE / "MONTHLY_TEST_RESOURCE_OVERLAY_REVIEW_20261023.json")["original_dependencies"]
+        contract = write(root / "run_contract.json", {"dependencies": contract_deps})
+        monkeypatch.setattr(supervisor, "CONTRACT_SHA", contract["sha256"])
+        session = data / "session"
+        index = write(session / "index.parquet", {"synthetic_index_metadata": True})
+        source = write(data / "source_audit.json", {"synthetic": True})
+        prior = write(data / "prior.json", dict(status=supervisor.AUDIT_STATUS,
+            binding={"completed_months": supervisor.MONTHS[:12]}, verified_files={"source": {source["path"]: source["sha256"]}}))
+        freeze = write(root / "validation_freeze.json", dict(selected_mode=None, approved=False, status="FAIL_NO_DAILY_COMPLIANT_MODE"))
+        for name, value in dict(SESSION=session, INDEX_SHA=index["sha256"], SOURCE_AUDIT=Path(source["path"]),
+            SOURCE_SHA=source["sha256"], VALIDATION_AUDIT=Path(prior["path"]), VALIDATION_SHA=prior["sha256"], FREEZE_SHA=freeze["sha256"]).items():
+            monkeypatch.setattr(supervisor, name, value)
+        for path in root.rglob("*.complete.json"):
+            value = supervisor.read(path)
+            value["binding"] = contract["sha256"]
+            value["files"] = {n: supervisor.sha(root / n) for n in value["files"]}
+            write(path, value)
+        (root / "run.lock").write_bytes(b"SYNTHETIC LOCK PRESERVED")
+        assembled = producer.__wrapped__(science, monkeypatch)
+        code = supervisor.import_closure(set(supervisor.NEW_FILES) | set(supervisor.HELPER_PINS) | set(contract_deps) | set(deps))
+        review_path = data / "supervisor_review.json"
+        review = write(review_path, dict(status=supervisor.REVIEW_STATUS, decision="CLEAR", scope="IMPLEMENTATION_ONLY",
+            runtime_authorized=False, files=code))
+        monkeypatch.setattr(supervisor, "SUPERVISOR_REVIEW", review_path)
+        published = {str(supervisor.CODE / n): h for n, h in code.items()}
+        published.update({review["path"]: review["sha256"], str(supervisor.AUDITOR_REVIEW): supervisor.AUDITOR_REVIEW_SHA,
+            str(supervisor.PRODUCER_REVIEW): supervisor.PRODUCER_REVIEW_SHA,
+            assembled.runtime["producer"]["runtime_review"]["path"]: supervisor.PRODUCER_RUNTIME_SHA})
+        runtime = dict(status=supervisor.RUNTIME_STATUS, scope=supervisor.SCOPE, dependencies=deps,
+            binding=dict(monthly_root=str(root), source_audit=str(supervisor.SOURCE_AUDIT),
+                validation_audit=str(supervisor.VALIDATION_AUDIT), validation_audit_sha256=supervisor.VALIDATION_SHA,
+                implementation_review_sha256=supervisor.AUDITOR_REVIEW_SHA, run_contract_sha256=supervisor.CONTRACT_SHA,
+                source_audit_sha256=supervisor.SOURCE_SHA, index_sha256=supervisor.INDEX_SHA, session_root=str(session),
+                validation_freeze_sha256=supervisor.FREEZE_SHA),
+            producer=assembled.runtime["producer"], allowed_read_roots=[str(data), str(supervisor.CODE)],
+            launch_binding=dict(status="REVIEWED_MONTHLY_TEST_INDEX_V2_AUDIT_ONE_SHOT", supervisor_review=review,
+                published_files=published, output_root=str(data.parent / "audit"), logs_root=str(data.parent / "logs")))
+        runtime_pin = write(data / "runtime_review.json", runtime)
+        seen = []
+        monkeypatch.setattr(supervisor, "publication", lambda commit, files: seen.append((commit, files)))
+        before = {str(p) for p in data.parent.rglob("*")}
+>       receipt = supervisor.preflight(runtime_pin["path"], runtime_pin["sha256"], review["sha256"], "a" * 40)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+research_papers\JEPA\level_oracle_20261018\test_launch_monthly_test_index_v2_audit_20261024.py:402: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+research_papers\JEPA\level_oracle_20261018\launch_monthly_test_index_v2_audit_20261024.py:363: in preflight
+    producer_closure(runtime, evidence, helper)
+research_papers\JEPA\level_oracle_20261018\launch_monthly_test_index_v2_audit_20261024.py:237: in producer_closure
+    launch, exited = helper.overlay.verify_process_chain(members, evidence, root, validation=False)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+research_papers\JEPA\level_oracle_20261018\run_monthly_test_resource_overlay.py:241: in verify_process_chain
+    require(launch.get("status") == "MONTHLY_TEST_RESOURCE_OVERLAY_STARTED"
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ok = False, message = 'Previous test attempt stage/contract differs'
+
+    def require(ok, message):
+        if not ok:
+>           raise ValueError(message)
+E           ValueError: Previous test attempt stage/contract differs
+
+research_papers\JEPA\level_oracle_20261018\run_monthly_test_resource_overlay.py:38: ValueError
+=========================== short test summary info ===========================
+ERROR research_papers/JEPA/level_oracle_20261018/test_launch_monthly_test_index_v2_audit_20261024.py::test_complete_preflight_is_metadata_only_and_preserves_files
+ERROR research_papers/JEPA/level_oracle_20261018/test_launch_monthly_test_index_v2_audit_20261024.py::test_complete_audit_result_and_launch_close_exactly
+ERROR research_papers/JEPA/level_oracle_20261018/test_launch_monthly_test_index_v2_audit_20261024.py::test_audit_closure_rejects_resigned_metadata_faults[launch]
+ERROR research_papers/JEPA/level_oracle_20261018/test_launch_monthly_test_index_v2_audit_20261024.py::test_audit_closure_rejects_resigned_metadata_faults[failure]
+ERROR research_papers/JEPA/level_oracle_20261018/test_launch_monthly_test_index_v2_audit_20261024.py::test_audit_closure_rejects_resigned_metadata_faults[inherited]
+ERROR research_papers/JEPA/level_oracle_20261018/test_launch_monthly_test_index_v2_audit_20261024.py::test_audit_closure_rejects_resigned_metadata_faults[snapshot]
+ERROR research_papers/JEPA/level_oracle_20261018/test_launch_monthly_test_index_v2_audit_20261024.py::test_audit_closure_rejects_resigned_metadata_faults[binding]
+31 passed, 7 errors in 24.64s
