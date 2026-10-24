@@ -1,0 +1,72 @@
+{
+  "status": "PASS_OOF_TRANSITIVE_SOURCE_V2_DESIGN_REVIEW",
+  "decision": "CLEAR",
+  "scope": "DESIGN_ONLY",
+  "reviewer_lane": "monthly_resume",
+  "reviewed_utc": "2026-10-24T04:35:23.595950+00:00",
+  "runtime_authorized": false,
+  "implementation_reviewed": false,
+  "tests_executed": false,
+  "design_sha256": "485f557e4ea2d2eb94bfecfd383d59d02ec29381f0eac06a12178fdef9882cc3",
+  "reviewed_files": {
+    "OOF_TRANSITIVE_SOURCE_V2_DESIGN_20261024.md": "485f557e4ea2d2eb94bfecfd383d59d02ec29381f0eac06a12178fdef9882cc3",
+    "OOF_TRANSITIVE_SOURCE_FAILURE_DIAGNOSIS_20261024.md": "12f397e5ab225731ae70f86a88211a13743e0c29410b869969bf619cf87207fe",
+    "continuation_20261024/oof_transitive_source_diagnosis/census_from_observed_metadata.json": "543864abec76619991e7ca5471315712bebd61a8698dea09359c835b4c05600a",
+    "run_oof_calibrated_pipeline.py": "26967e10c6b81cd5b84d7939bf6d0c81037934165daa91847d7ffd25de16ff57",
+    "monthly_oof_calibration_adapter.py": "7b80cff43e3887a92e0f89be6daa863a670ccd72d22a0f4aeabd032a39479364"
+  },
+  "checks": {
+    "cause_matches_original_allowed_file_and_source_table_code": true,
+    "1542_rejected_references_supported_by_compact_diagnostic_receipt": true,
+    "partial_january_inputs_are_diagnostic_not_authority": true,
+    "monthly_audit_alone_insufficient_for_126_june_sidecars": true,
+    "I_exact_calendar_202501_through_202606_and_2226_sidecars": true,
+    "six_missing_rows_preserved_without_Path_None_or_zero_imputation": true,
+    "A_construction_is_JSON_metadata_only_without_stat_or_rehash_approximately_48000_payloads": true,
+    "I_projects_only_seven_named_metadata_columns_with_index_pins_before_after": true,
+    "union_retains_provenance_and_requires_identical_SHA_on_intersection": true,
+    "external_sidecar_expansion_is_exact_I_membership_not_BASE_engine_or_ThetaData_prefix": true,
+    "consumed_declared_SHA_must_match_authority_before_existing_rehash": true,
+    "identity_hardlink_and_reparse_guards_bounded_to_I_and_consumed_members": true,
+    "textual_duplicates_with_identical_SHA_distinguished_from_aliases": true,
+    "outputs_and_logs_disjoint_from_transitive_sources_and_parents_without_scanning_all_A": true,
+    "missing_files_fail_at_consumption_without_historical_corruption_claim": true,
+    "membership_does_not_authorize_TARGET_label_reads_during_correction": true,
+    "TRAIN_cutoff_and_target_labels_read_false_preserved": true,
+    "four_scientific_pins_and_economic_helpers_unchanged_in_proposal": true,
+    "june_index_only_and_TARGET_read_boundary_end_to_end_fixtures_required": true,
+    "all_twelve_synthetic_phases_and_single_retained_child_failure_cases_required": true,
+    "new_wrapper_and_supervisor_files_with_new_reviews_and_dependencies_required": true,
+    "new_roots_january_from_zero_no_resume_copy_reseal_or_partial_reuse": true,
+    "serial_2GB_gates_locks_no_retries_and_separate_final_audit_preserved": true,
+    "publication_review_and_concrete_runtime_binding_remain_future_requirements": true
+  },
+  "open_findings": [],
+  "evidence_method": "Read final design, diagnosis, compact previously observed census receipt and original wrapper/adapter source as text. Rehashed these five compact files. Did not rerun census, read index, import scientific code or inspect arrays/values.",
+  "count_basis": {
+    "rejected_members": 1542,
+    "rejected_decomposition": {
+      "actions_2025": 741,
+      "labels_2025": 741,
+      "actions_202601": 60,
+      "labels_202601": 0
+    },
+    "index_complete_ticker_days": 1113,
+    "index_sidecars": 2226,
+    "june_index_only_sidecars": 126,
+    "monthly_index_intersection_conflicts_reported": 0,
+    "independent_census_repeated_by_this_reviewer": false
+  },
+  "implementation_acceptance_conditions": [
+    "Implement only in new V2 files; compare original scientific helper/phase logic and literal economic pins.",
+    "Run the declared synthetic full-chain and negative fixtures, including June index-only authority and instrumented TARGET-label boundary.",
+    "Verify actual Windows path/identity/reparse/hardlink guards and output protection without broad physical traversal of A.",
+    "Publish implementation, tests and independent review before any new concrete runtime request/binding is admitted."
+  ],
+  "limitations": [
+    "CLEAR applies to the design, not to correctness of unimplemented code or passing tests.",
+    "Diagnostic counts are attributed to the pinned compact census evidence; the reviewer did not independently reread the index or sidecars.",
+    "No profitability, live parity, promotion, economic-result or partial-output adoption claim.",
+    "A new attempt must preserve attempt01 and begin January correction from zero under new roots; no automatic retry/resume."
+  ]
+}

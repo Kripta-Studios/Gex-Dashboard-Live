@@ -1,0 +1,86 @@
+{
+  "status": "METADATA_DIAGNOSIS_ONLY",
+  "scope": "Existing request, path/hash maps and seven projected index metadata columns; no sidecar values or new economic computation",
+  "materialization": "Recorded from previously observed tool results; no source reread or census rerun to write this receipt",
+  "observed_tool_chunks": ["eb5ee8", "caee56", "13a262"],
+  "runtime_authorized": false,
+  "code_changes": false,
+  "rerun_or_resume": false,
+  "authorities_verified_in_diagnostic_reads": {
+    "request": {
+      "path": "research_papers/JEPA/level_oracle_20261018/OOF_PIPELINE_RUNTIME_REQUEST_20261024_01.json",
+      "sha256": "9399f791e0dc34d62c272ba4bd2fc150fdd4c1c2608ca036718c8adb0c82cd71"
+    },
+    "inputs": {
+      "path": "D:/GexResearchArtifacts/level_oracle_20261018/monthly_oof_correction_20261024_01/202601.inputs.json",
+      "sha256": "0fa3225d89ab8b15a59e851a3e387561b59f246b6ccb5bfdfe8eb5f5cb40c36d"
+    },
+    "monthly_audit": {
+      "path": "D:/GexResearchArtifacts/level_oracle_20261018/monthly_walk_forward_test_audit_20261024_01/audit.json",
+      "sha256": "87bfea586be13e02fd7fd0fe59c819195c62a430f34c867f9ec661812569fd4e"
+    },
+    "index": {
+      "path": "D:/GexResearchArtifacts/level_oracle_20261018/session_clock_dataset_v1/index.parquet",
+      "sha256_before_and_after": "7124d98155eae8ee5ae06457377570278d4059defe2cf02340e34c288fcb60b4"
+    }
+  },
+  "completion_pin_reported_by_root_not_rehashed_in_this_diagnostic": "3202375ba50fc0bcb8a621ae753a7b4861c15e4708a6c86c784c9315c242a602",
+  "metadata_columns": ["ticker", "date", "status", "close_i", "day_root", "actions_sha256", "labels_sha256"],
+  "metadata_gate_before_pyarrow_import": {
+    "available_ram_bytes": 8522563584,
+    "free_commit_bytes": 6451486720,
+    "minimum_bytes": 2000000000
+  },
+  "current_inputs": {
+    "files_count": 6473,
+    "run_authorities_count": 2,
+    "run_authorities_rejected": 0,
+    "outside_wrapper_roots": 1542,
+    "outside_root": "D:/GexResearchArtifacts/level_oracle_20261018/engine_v1",
+    "outside_by_period_and_type": {
+      "2025/actions.parquet": 741,
+      "2025/labels.parquet": 741,
+      "202601/actions.parquet": 60,
+      "202601/labels.parquet": 0
+    },
+    "outside_per_ticker": {
+      "QQQ": {"actions": 267, "labels": 247, "total": 514},
+      "SPXW": {"actions": 267, "labels": 247, "total": 514},
+      "SPY": {"actions": 267, "labels": 247, "total": 514}
+    },
+    "outside_same_hash_in_monthly_audit": 1542,
+    "audit_category_membership_nonadditive": {"fit_inputs": 1542, "inherited_validation": 1356},
+    "first_rejected": {
+      "path": "D:/GexResearchArtifacts/level_oracle_20261018/engine_v1/QQQ/20250102/actions.parquet",
+      "sha256_from_input_and_audit_maps": "0808dccf59748aa5c79d875804cc6bd680ab7d6bb63436a12e28c708eaa0d09a"
+    },
+    "short_2025_ticker_days_inside_session_root": 9,
+    "short_2025_actions_inside_session_root": 9,
+    "short_2025_labels_inside_session_root": 9,
+    "short_dates": ["20250703", "20251128", "20251224"],
+    "short_tickers": ["QQQ", "SPXW", "SPY"],
+    "target_2026_source_label_paths_present": 0
+  },
+  "index_metadata_scope_202501_through_202606": {
+    "global_rows": 2625,
+    "global_complete_rows": 2619,
+    "complete_full_ticker_days": 1104,
+    "complete_short_ticker_days": 9,
+    "sidecar_paths": 2226,
+    "index_hash_conflicts_with_monthly_map": 0,
+    "sidecars_absent_from_monthly_verified_files": 126,
+    "absent_by_month_and_type": {"202606/actions.parquet": 63, "202606/labels.parquet": 63},
+    "example_index_only": {
+      "path": "D:/GexResearchArtifacts/level_oracle_20261018/engine_v1/QQQ/20260601/actions.parquet",
+      "sha256_from_index_metadata": "6faa1e8877a399d7639d7100e8fed60956023631dd9b47475d10024462e7c823"
+    }
+  },
+  "lineage_notes": [
+    "The monthly and session audits bind the same index SHA.",
+    "MonthlyInputs.source_table derives sidecar path and hash from the audited index; it does not call MonthlyInputs.verify for that sidecar.",
+    "The session audit has no verified_files map; its binding points to the index.",
+    "Monthly run_contract engine_root and feature_root both equal session_root; adding only those roots would not admit engine_v1.",
+    "The partial correction map is diagnostic evidence, not an authorization source.",
+    "No actions/labels parquet contents, score arrays, calibration values or model files were opened by this diagnostic."
+  ]
+}

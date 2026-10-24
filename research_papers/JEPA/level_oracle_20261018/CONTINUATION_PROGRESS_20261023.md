@@ -1,5 +1,45 @@
 # Continuación local: estado del 23 de octubre de 2026
 
+Actualización vigente del 24 de octubre, después de04:24:25 UTC: OOF01 falló.
+[Archivo del fallo](OOF_PIPELINE_FAILURE_01_RECEIPT_20261024.md): exit1retenido
+PID29704/creation1792815151.326416, exitSHA dfea9d0c…8c303a;
+supervisor/session8704 tambiénexit1. No hay procesos OOF activos observados;
+no se deduce salida por ausenciaPID.16copias1.875.522B conservadas, manifest
+ab19ddd5…67c24. Marker correctionenero COMPLETE no equivale a pipelinePASS:
+no hay receipt de fase ni replay.4.863 JSON de valores quedan locales sin
+lectura/rehash por el archivo; hubo selección/realized/calibración/scores del
+adaptador, no es un fallo anterior a todo valor. No retry ni resume.
+
+Causa reproducida sólo con metadata: Request.allowed_file excluye1.542referencias
+engine_v1 (741actions+741labels2025 y60actionsenero); todas coinciden conSHA del
+mapa mensual. Las9sesionescortas usan18sidecars dentroSessionClock. El censo del
+índice pineado identifica además126sidecarsjunio(63actions+63labels) ausentes del
+mapa mensual y respaldados por el índice. No basta ampliar sólo ese mapa.
+La reparación técnica propuesta usa path→SHA exactos de ambas autoridades,
+conflictos/aliases/rutas protegidos y fixtures de fuente externa. Sin cambiar
+modelos/calibración/políticas/costes ni reutilizar artefactos fallidos. Nueva
+versión y ejecución requieren contrato/código/revisión/publicación previos.
+
+El supervisor económico genérico continúa sólo como implementación sintética:
+39tests autor PASS24,09s,Ruff/compilePASS; root leyó código/tests y verificó
+16copias sintéticas más16del fallo. Revisión independiente pendiente; su contrato
+original17pins no admite automáticamente una futura V2 ni el upstream fallido.
+
+El [diagnóstico transitivo](OOF_TRANSITIVE_SOURCE_FAILURE_DIAGNOSIS_20261024.md)
+y el [diseño V2](OOF_TRANSITIVE_SOURCE_V2_DESIGN_20261024.md) quedan documentados.
+Review documental24checks y suplemento final5c909…5b063 fijan diagnóstico bd8bd3a;
+la review iniciala1928 se conserva. El diagnóstico intermedio12f397e5 no tiene
+snapshot archivado; sólo hash/lectura de herramientas. Un enlace documental
+posterior motivó el suplemento antes de uso V2; no hubo ejecución dependiente.
+[Contrato V2](OOF_TRANSITIVE_SOURCE_V2_IMPLEMENTATION_CONTRACT_20261024.md)
+85c8bd20…17a8c y review documental separadaeffef593…1b6b6 CLEAR7checks.
+Root leyó diagnóstico/diseño/contrato. Publicar ahora habilita preparación y
+fixtures sintéticas de cuatro archivos nuevos; no runtime ni nuevo intento real.
+El supervisor económico genérico tiene además1focal PASS por A6 tras39anteriores;
+su código/review final se publicará por separado, sin admitir el pipeline fallido.
+
+Los cortes anteriores se conservan como historia, no como procesos activos.
+
 Actualización vigente del 24 de octubre: reporte18meses y figura H1 cerrados.
 El [reporter](MONTHLY_18MONTH_REPORT_RESULT_20261024.md) terminó exit0 a04:14:04UTC,
 manifest6c104c86…7932d/exit eafcea8e…abfec. Siete outputs exactos,216 grupos

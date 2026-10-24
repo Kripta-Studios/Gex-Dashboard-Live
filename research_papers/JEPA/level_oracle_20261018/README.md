@@ -16,13 +16,17 @@ recoge que static, expanding y rolling12 pierden 8.746,00, 20.616,00 y
 50.763,60 USD. Los nueve grupos modo/ticker fallan los requisitos conjuntos.
 La selección permanece null y los seis ticker-días ausentes siguen NO_EVALUABLE.
 
-El [pipeline OOF está ejecutándose](OOF_PIPELINE_START_RECEIPT_20261024.md)
-desde el runtime publicado y verificado en `3cca1167`, sin cambiar parámetros.
+El [intento OOF01 terminó con un fallo técnico](OOF_PIPELINE_FAILURE_01_RECEIPT_20261024.md)
+al verificar referencias externas de la primera corrección. Exit 1 observado,
+sin replay ni resultado económico OOF; no se reanuda este intento. Se prepara
+una [reparación técnica V2](OOF_TRANSITIVE_SOURCE_V2_IMPLEMENTATION_CONTRACT_20261024.md)
+con referencias exactas a las autoridades ya selladas, revisada documentalmente.
 Los [18 meses consolidados](MONTHLY_18MONTH_REPORT_RESULT_20261024.md) y la
 [gráfica H1](MONTHLY_H1_2026_INDEPENDENT_FIGURE_RESULT_20261024.md) ya están
 cerrados y reconciliados; root comprobó también la legibilidad de la figura.
 El [diseño de supervisión de la auditoría OOF](OOF_ECONOMIC_AUDIT_LAUNCH_DESIGN_20261024.md)
-está revisado; su ejecución requiere primero el cierre real de las doce fases.
+está revisado; su ejecución requiere el cierre real de las doce fases, todavía
+pendiente. La implementación sintética conserva el contrato original.
 El [cierre del productor](MONTHLY_TEST_2026_PRODUCER_CLOSURE_20261024.md)
 conserva los doce modelos nuevos; matrices y datos brutos permanecen locales.
 

@@ -1,5 +1,25 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-10-24 — OOF01 falló en procedencia transitiva; sin replay
+
+Autoridad: level_oracle_20261018/OOF_PIPELINE_FAILURE_01_RECEIPT_20261024.md.
+Hijo29704 exit1retenido04:24:25.474349UTC, exitdfea9d0c…8c303a; supervisor/session8704
+exit1. Cero OOF activos observados. Fallo Input outside declared roots despuéscorrection
+enero, antesreceipt/replay; marcadorcorrectionCOMPLETE noes PASSauditado.16copias
+1.875.522B/manifestab19ddd5…67c24 preservadas;4.863JSONdevalores locales sinrehash.
+No retry/resume. Metadata:1.542referencias engine_v1 excluidas(741actions+741labels2025,
+60actionsenero);9shortdays usan18sidecarsinternos. Censoíndice:126sidecarsjunio sólo
+ligadosporíndice, no mapa mensual. Propuesta V2exactpath→SHA deambasautoridades,
+conconflictos/aliases/links protegidos; no ampliarBASE, no cambiarciencia/políticas.
+Diseño485f557e/contrato85c8bd20 revisados documentalmente: suplemento5c909 y review
+contratoeffef593. Publicar antesfixtures V2; runtime exige código/tests/review y binding
+nuevos publicados, intento limpio sinreusarparciales. Diagnóstico finalbd8bd3a;
+intermedio12f397e5 sin snapshot archivado, declarado en suplemento.
+Supervisoraudit genérico:39testsautorPASS,Ruff/compile;rootleyócódigo/tests yverificó
+32copias fallo/sintético. Reviewindependiente pendiente,contrato17pinsoriginal intacto.
+Mensual18meses cerradoeconómicamenteFAIL,selectednull;sinrentabilidadcausalacreditada.
+Producción/API/bróker/VPSintactos;goalcontinuaciónactiva,sóloD:/ThetaData local.
+
 ### Checkpoint 2026-10-24 — mensual documentado; OOF activo y auditor preparado
 
 Autoridades nuevas en level_oracle_20261018: MONTHLY_18MONTH_REPORT_RESULT_20261024.md,

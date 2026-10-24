@@ -1,0 +1,25 @@
+Traceback (most recent call last):
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\level_oracle_20261018\run_oof_calibrated_pipeline.py", line 784, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\level_oracle_20261018\run_oof_calibrated_pipeline.py", line 779, in main
+    result = pipeline(args.request, args.request_sha256, resume=args.resume)
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\level_oracle_20261018\run_oof_calibrated_pipeline.py", line 691, in pipeline
+    generated = correction_closure(request, month, closed)
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\level_oracle_20261018\run_oof_calibrated_pipeline.py", line 348, in correction_closure
+    verify_map(request, inputs["files"])
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\level_oracle_20261018\run_oof_calibrated_pipeline.py", line 296, in verify_map
+    path = request.allowed_file(name)
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\level_oracle_20261018\run_oof_calibrated_pipeline.py", line 285, in allowed_file
+    require(
+    ~~~~~~~^
+        p in exact or any(p.is_relative_to(root) for root in roots),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        "Input outside declared roots",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\level_oracle_20261018\run_oof_calibrated_pipeline.py", line 47, in require
+    raise ValueError(message)
+ValueError: Input outside declared roots

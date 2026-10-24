@@ -1,0 +1,104 @@
+{
+  "status": "CONFIRMED_FAILED_OOF_PIPELINE_ATTEMPT_PRESERVED",
+  "observed_utc": "2026-10-24T04:25:40.000136+00:00",
+  "scope": "READ_ONLY_PROCESS_AND_RECEIPT_VERIFICATION",
+  "publication_commit": "3cca1167a5c48c4f5bef4aa685e20a561dbf229c",
+  "exit": {
+    "pid": 29704,
+    "creation_time": 1792815151.326416,
+    "exit_code": 1,
+    "source": "GetExitCodeProcess_retained_Popen_handle",
+    "observed_utc": "2026-10-24T04:24:25.474349+00:00",
+    "monitor_seconds": 714.127493100008,
+    "peak_sampled_rss_bytes": 210382848,
+    "peak_sampled_private_bytes": 179113984,
+    "sample_count": 709,
+    "monitor_errors": []
+  },
+  "supervisor_failure": {
+    "error": "ValueError('OOF child must exit zero')",
+    "retry": false,
+    "status": "FAILED_OR_INTERRUPTED_PRESERVED",
+    "utc": "2026-10-24T04:24:25.490530+00:00"
+  },
+  "pipeline_failure": {
+    "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_01\\failures\\1792815865339767200.json",
+    "status": "FAILED_OR_INTERRUPTED_PRESERVED",
+    "error": "ValueError('Input outside declared roots')",
+    "success": false
+  },
+  "diagnostic": "First January correction phase failed in correction_closure -> verify_map -> allowed_file with Input outside declared roots. This observer did not identify the specific rejected path or inspect its payload.",
+  "checks": {
+    "retained_exit_receipt_identity_exact": true,
+    "process_hash_exact": true,
+    "exit_one": true,
+    "supervisor_and_pipeline_completion_absent": true,
+    "single_pipeline_failure": true,
+    "no_monitor_errors": true
+  },
+  "process_observation": {
+    "supervisor_3448_exists": false,
+    "child_29704_exists": false,
+    "active_matching_pipeline_processes": [],
+    "absence_is_not_exit_evidence": true
+  },
+  "files": {
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_observer_20261024_01\\initial_observation.json": {
+      "sha256": "c5ff71c90e54ee2d363717d5b9150bd137d43c12c1e66791becb874c67718d9d",
+      "size_bytes": 4960
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_01\\preflight.json": {
+      "sha256": "14b37d4daeb950b178dc6632dd77cd716f24044f8d609093417f9afeaed5b83d",
+      "size_bytes": 36232
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_01\\process.json": {
+      "sha256": "c499b0949f4c2f2a197968cff47451836cb60c0865572a96eb08bc24b57cf1c2",
+      "size_bytes": 1310
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_01\\admission.json": {
+      "sha256": "1e3f3712c8dd0b21ee61d2ce83c378e99d1b65f144526a684089eb1cf133a33c",
+      "size_bytes": 160
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_01\\exit.json": {
+      "sha256": "dfea9d0c8baa1fc606465f8342dd18b9c421d374d3c7b8b4154ebf76ff8c303a",
+      "size_bytes": 1202
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_01\\failure.json": {
+      "sha256": "7820bb5cee8e42c525315350f45ce4338dc73e31e56c88a0e1603885fe130373",
+      "size_bytes": 170
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_01\\stderr.log": {
+      "sha256": "d302c142059590eb29f947b14411ba1baa71dbe7fcbfaab8ce9c8e6387d0bee2",
+      "size_bytes": 1886
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_01\\stdout.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_01\\contract.json": {
+      "sha256": "ff1c8de539c281089f6ef985850883852e1fa13f872296ae4510a6d53abdb270",
+      "size_bytes": 1962
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_01\\request.json": {
+      "sha256": "9399f791e0dc34d62c272ba4bd2fc150fdd4c1c2608ca036718c8adb0c82cd71",
+      "size_bytes": 3820
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_01\\starts\\00.json": {
+      "sha256": "829681c9fbf86d272f294dd08d8e60ba50294aeac88f1cdf6b220dee9d08e46d",
+      "size_bytes": 305
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_01\\failures\\1792815865339767200.json": {
+      "sha256": "07d87d84a63ae919e872c8fa711cac04573a5e7b43ca7636c7e9bd0513657b86",
+      "size_bytes": 1824
+    }
+  },
+  "limits": {
+    "retry_or_resume": false,
+    "pipeline_imported_or_executed_by_observer": false,
+    "metrics_read": false,
+    "matrices_or_feature_payloads_read": false,
+    "root_session_polled": false,
+    "other_processes_modified": false,
+    "helper_observation_read_errors": "Initial observer JSON needed explicit UTF-8. Terminal stderr is cp1252; first UTF-8 text decode failed before corrected read. Neither helper failure changed scientific files or reran pipeline."
+  }
+}

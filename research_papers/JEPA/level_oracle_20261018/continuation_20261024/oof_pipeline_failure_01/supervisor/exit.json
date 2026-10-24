@@ -1,0 +1,25 @@
+{
+  "creation_time": 1792815151.326416,
+  "exit_code": 1,
+  "exit_code_source": "GetExitCodeProcess_retained_Popen_handle",
+  "implementation_review_sha256": "a78c2ef9019111a1ca98fa6e2517a4db8ce1ef9877596e5807734ce4c843ec95",
+  "minimum_free_observed": {
+    "available_ram_bytes": 7349084160,
+    "free_commit_bytes": 3631439872
+  },
+  "monitor_code_sha256": "e93ff7db48c86a6d569e70d18f845ec48575ba2cb226bbed981c28a58245e9a8",
+  "monitor_errors": [],
+  "monitor_seconds": 714.127493100008,
+  "observed_utc": "2026-10-24T04:24:25.474349+00:00",
+  "peak_sampled_private_bytes": 179113984,
+  "peak_sampled_rss_bytes": 210382848,
+  "pid": 29704,
+  "preflight_sha256": "14b37d4daeb950b178dc6632dd77cd716f24044f8d609093417f9afeaed5b83d",
+  "process_receipt_sha256": "c499b0949f4c2f2a197968cff47451836cb60c0865572a96eb08bc24b57cf1c2",
+  "publication_commit": "3cca1167a5c48c4f5bef4aa685e20a561dbf229c",
+  "request_sha256": "9399f791e0dc34d62c272ba4bd2fc150fdd4c1c2608ca036718c8adb0c82cd71",
+  "retry": false,
+  "runtime_binding_sha256": "b4f6eb47ffa841ce4510d18b34e560b6d66d22c4cfe34364a838596f4c769326",
+  "sample_count": 709,
+  "status": "PROCESS_EXIT_OBSERVED_BY_RETAINED_HANDLE"
+}

@@ -1,0 +1,154 @@
+{
+  "status": "COMPACT_TECHNICAL_FAILURE_OOF_PIPELINE_ATTEMPT_01",
+  "archived_utc": "2026-10-24T04:27:49.5338413Z",
+  "files": [
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_01\\preflight.json",
+      "archive_path": "supervisor/preflight.json",
+      "sha256": "14b37d4daeb950b178dc6632dd77cd716f24044f8d609093417f9afeaed5b83d",
+      "bytes": 36232,
+      "external_pin": null,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_01\\process.json",
+      "archive_path": "supervisor/process.json",
+      "sha256": "c499b0949f4c2f2a197968cff47451836cb60c0865572a96eb08bc24b57cf1c2",
+      "bytes": 1310,
+      "external_pin": null,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_01\\admission.json",
+      "archive_path": "supervisor/admission.json",
+      "sha256": "1e3f3712c8dd0b21ee61d2ce83c378e99d1b65f144526a684089eb1cf133a33c",
+      "bytes": 160,
+      "external_pin": null,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_01\\exit.json",
+      "archive_path": "supervisor/exit.json",
+      "sha256": "dfea9d0c8baa1fc606465f8342dd18b9c421d374d3c7b8b4154ebf76ff8c303a",
+      "bytes": 1202,
+      "external_pin": "dfea9d0c8baa1fc606465f8342dd18b9c421d374d3c7b8b4154ebf76ff8c303a",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_01\\failure.json",
+      "archive_path": "supervisor/failure.json",
+      "sha256": "7820bb5cee8e42c525315350f45ce4338dc73e31e56c88a0e1603885fe130373",
+      "bytes": 170,
+      "external_pin": "7820bb5cee8e42c525315350f45ce4338dc73e31e56c88a0e1603885fe130373",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_01\\stdout.log",
+      "archive_path": "supervisor/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "external_pin": null,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_01\\stderr.log",
+      "archive_path": "supervisor/stderr.log",
+      "sha256": "d302c142059590eb29f947b14411ba1baa71dbe7fcbfaab8ce9c8e6387d0bee2",
+      "bytes": 1886,
+      "external_pin": "d302c142059590eb29f947b14411ba1baa71dbe7fcbfaab8ce9c8e6387d0bee2",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_01\\request.json",
+      "archive_path": "pipeline/request.json",
+      "sha256": "9399f791e0dc34d62c272ba4bd2fc150fdd4c1c2608ca036718c8adb0c82cd71",
+      "bytes": 3820,
+      "external_pin": null,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_01\\contract.json",
+      "archive_path": "pipeline/contract.json",
+      "sha256": "ff1c8de539c281089f6ef985850883852e1fa13f872296ae4510a6d53abdb270",
+      "bytes": 1962,
+      "external_pin": null,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_01\\starts\\00.json",
+      "archive_path": "pipeline/starts/00.json",
+      "sha256": "829681c9fbf86d272f294dd08d8e60ba50294aeac88f1cdf6b220dee9d08e46d",
+      "bytes": 305,
+      "external_pin": null,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_01\\failures\\1792815865339767200.json",
+      "archive_path": "pipeline/failures/1792815865339767200.json",
+      "sha256": "07d87d84a63ae919e872c8fa711cac04573a5e7b43ca7636c7e9bd0513657b86",
+      "bytes": 1824,
+      "external_pin": "07d87d84a63ae919e872c8fa711cac04573a5e7b43ca7636c7e9bd0513657b86",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_oof_correction_20261024_01\\implementation.json",
+      "archive_path": "correction_metadata/implementation.json",
+      "sha256": "f35793d113f590204de7b30a47014b66a4bf0c9ee9e7a94953120c4b8d3e1c0d",
+      "bytes": 943,
+      "external_pin": null,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_oof_correction_20261024_01\\202601.run_contract.json",
+      "archive_path": "correction_metadata/202601.run_contract.json",
+      "sha256": "3309b8bd5010002f4419e4aac1e0468ee001fa22cd5279a617b8d79abb8d449d",
+      "bytes": 206,
+      "external_pin": null,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_oof_correction_20261024_01\\202601.inputs.json",
+      "archive_path": "correction_metadata/202601.inputs.json",
+      "sha256": "0fa3225d89ab8b15a59e851a3e387561b59f246b6ccb5bfdfe8eb5f5cb40c36d",
+      "bytes": 1338100,
+      "external_pin": null,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_oof_correction_20261024_01\\202601.complete.json",
+      "archive_path": "correction_metadata/202601.complete.json",
+      "sha256": "3202375ba50fc0bcb8a621ae753a7b4861c15e4708a6c86c784c9315c242a602",
+      "bytes": 482429,
+      "external_pin": null,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_observer_20261024_01\\terminal_observation.json",
+      "archive_path": "observer/terminal_observation.json",
+      "sha256": "0b14f696eda05ae918092fe917801083769a9bf5a54216707f82bee8cd15ba9e",
+      "bytes": 4973,
+      "external_pin": "0b14f696eda05ae918092fe917801083769a9bf5a54216707f82bee8cd15ba9e",
+      "source_and_copy_rehashed": true
+    }
+  ],
+  "copied_files": 16,
+  "copied_bytes": 1875522,
+  "correction_inventory_metadata_only": {
+    "root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_oof_correction_20261024_01",
+    "observed_files": 4868,
+    "copied_top_level_metadata_files": 4,
+    "excluded_value_json_files": 4863,
+    "excluded_lock_files": 1,
+    "excluded_payloads_read_or_rehashed": false
+  },
+  "limitations": [
+    "January correction completion is not successful pipeline closure or a scientific calibration audit.",
+    "Only listed compact metadata and closed logs copied; no calibration/realized/scores/selections payload contents inspected.",
+    "No PID-absence inference; root supplied observed retained-handle exit and terminal observer pin.",
+    "No retry, resume, replay or new preflight executed by this archival task."
+  ],
+  "retry": false,
+  "resume": false,
+  "replay_executed_by_archive": false,
+  "handoffs_modified": false
+}
