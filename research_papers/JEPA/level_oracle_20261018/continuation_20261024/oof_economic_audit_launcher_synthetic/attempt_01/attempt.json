@@ -1,0 +1,46 @@
+{
+  "utc": "2026-10-24T04:26:24.351212+00:00",
+  "pins": {
+    "launch_oof_economic_audit_20261024.py": "cb43e3c8eadd111e8de1ecf4c1a2e4b4e51df019c07519145d1d4483731e77f9",
+    "test_launch_oof_economic_audit_20261024.py": "dcf2c2bdd9298dc82f324fd2464e784c5ebaecd302737cb9b5be68d8d6b49d2a",
+    "OOF_ECONOMIC_AUDIT_LAUNCH_DESIGN_20261024.md": "3c37ef5f4f36c3120dad8fda26f87b32d2c705780093f5c08d8d5bd67714e132",
+    "OOF_ECONOMIC_AUDIT_RUNTIME_DRAFT_20261024_01.json": "905fc75346f502d29a2ca25ddb29c97ab656f530d5afd225b6a14f94e42a416c",
+    "OOF_ECONOMIC_AUDIT_LAUNCH_DESIGN_REVIEW_20261024.json": "6e97dd0d7ab6c54bd9df20c5de63b2a7e3f49a293fb6e76db77df61c33cb807c"
+  },
+  "commands": [
+    [
+      "C:\\Program Files\\Python314\\python.exe",
+      "-m",
+      "ruff",
+      "check",
+      "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_oof_economic_audit_20261024.py",
+      "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_launch_oof_economic_audit_20261024.py"
+    ],
+    [
+      "C:\\Program Files\\Python314\\python.exe",
+      "-m",
+      "py_compile",
+      "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_oof_economic_audit_20261024.py",
+      "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_launch_oof_economic_audit_20261024.py"
+    ],
+    [
+      "C:\\Program Files\\Python314\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_launch_oof_economic_audit_20261024.py"
+    ]
+  ],
+  "initial_resources": {
+    "available_ram_bytes": 8524148736,
+    "free_commit_bytes": 6733819904,
+    "minimum_each": 2000000000
+  },
+  "affinity": [
+    0
+  ],
+  "scope": "SYNTHETIC_ONLY",
+  "market_execution": false
+}

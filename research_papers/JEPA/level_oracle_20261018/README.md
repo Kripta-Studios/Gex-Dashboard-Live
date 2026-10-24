@@ -26,7 +26,9 @@ Los [18 meses consolidados](MONTHLY_18MONTH_REPORT_RESULT_20261024.md) y la
 cerrados y reconciliados; root comprobó también la legibilidad de la figura.
 El [diseño de supervisión de la auditoría OOF](OOF_ECONOMIC_AUDIT_LAUNCH_DESIGN_20261024.md)
 está revisado; su ejecución requiere el cierre real de las doce fases, todavía
-pendiente. La implementación sintética conserva el contrato original.
+pendiente. El [supervisor ya pasó revisión independiente](OOF_ECONOMIC_AUDIT_LAUNCH_IMPLEMENTATION_REVIEW_20261024.md)
+con pruebas sintéticas; conserva el contrato original y necesita una adaptación
+explícita para admitir la futura V2.
 El [cierre del productor](MONTHLY_TEST_2026_PRODUCER_CLOSURE_20261024.md)
 conserva los doce modelos nuevos; matrices y datos brutos permanecen locales.
 

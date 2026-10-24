@@ -1,0 +1,61 @@
+{
+  "results": [
+    {
+      "command": [
+        "-m",
+        "ruff",
+        "check",
+        "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_oof_economic_audit_20261024.py",
+        "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_launch_oof_economic_audit_20261024.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.1086976999649778,
+      "resources": {
+        "available_ram_bytes": 8287813632,
+        "free_commit_bytes": 6731247616,
+        "minimum_each": 2000000000
+      }
+    },
+    {
+      "command": [
+        "-m",
+        "py_compile",
+        "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_oof_economic_audit_20261024.py",
+        "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_launch_oof_economic_audit_20261024.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.38327159988693893,
+      "resources": {
+        "available_ram_bytes": 8285708288,
+        "free_commit_bytes": 6728609792,
+        "minimum_each": 2000000000
+      }
+    },
+    {
+      "command": [
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_launch_oof_economic_audit_20261024.py",
+        "-k",
+        "late_snapshot"
+      ],
+      "exit_code": 0,
+      "seconds": 2.84545669995714,
+      "resources": {
+        "available_ram_bytes": 8289181696,
+        "free_commit_bytes": 6726344704,
+        "minimum_each": 2000000000
+      }
+    }
+  ],
+  "pins_final": {
+    "launch_oof_economic_audit_20261024.py": "17c1604419d0008be94f6922eb87f397143f8c04c87d01c3546ae66b5a643e1e",
+    "test_launch_oof_economic_audit_20261024.py": "2f6f00c06d000ce39305336fae1b6f993fd9ecaf98bf69be15a9a48a43cd992a",
+    "OOF_ECONOMIC_AUDIT_LAUNCH_DESIGN_20261024.md": "3c37ef5f4f36c3120dad8fda26f87b32d2c705780093f5c08d8d5bd67714e132"
+  },
+  "pins_unchanged": true,
+  "finished_utc": "2026-10-24T04:34:58.152448+00:00"
+}

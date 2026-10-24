@@ -1,0 +1,8 @@
+{
+  "scope": "DOCUMENT_ASSEMBLY_ONLY",
+  "first_attempt_error": "KeyError: files; author manifest uses copies instead",
+  "tests_repeated": false,
+  "candidate_code_changed": false,
+  "review_written_on_failed_attempt": false,
+  "resolution": "Read actual manifest schema and verify all30 source/copy pairs. This was not a test harness failure."
+}

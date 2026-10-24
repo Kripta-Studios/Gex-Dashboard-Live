@@ -1,0 +1,46 @@
+{
+  "utc": "2026-10-24T04:34:54.812959+00:00",
+  "pins": {
+    "launch_oof_economic_audit_20261024.py": "17c1604419d0008be94f6922eb87f397143f8c04c87d01c3546ae66b5a643e1e",
+    "test_launch_oof_economic_audit_20261024.py": "2f6f00c06d000ce39305336fae1b6f993fd9ecaf98bf69be15a9a48a43cd992a",
+    "OOF_ECONOMIC_AUDIT_LAUNCH_DESIGN_20261024.md": "3c37ef5f4f36c3120dad8fda26f87b32d2c705780093f5c08d8d5bd67714e132"
+  },
+  "commands": [
+    [
+      "C:\\Program Files\\Python314\\python.exe",
+      "-m",
+      "ruff",
+      "check",
+      "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_oof_economic_audit_20261024.py",
+      "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_launch_oof_economic_audit_20261024.py"
+    ],
+    [
+      "C:\\Program Files\\Python314\\python.exe",
+      "-m",
+      "py_compile",
+      "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_oof_economic_audit_20261024.py",
+      "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_launch_oof_economic_audit_20261024.py"
+    ],
+    [
+      "C:\\Program Files\\Python314\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_launch_oof_economic_audit_20261024.py",
+      "-k",
+      "late_snapshot"
+    ]
+  ],
+  "initial_resources": {
+    "available_ram_bytes": 8287813632,
+    "free_commit_bytes": 6731247616,
+    "minimum_each": 2000000000
+  },
+  "affinity": [
+    0
+  ],
+  "scope": "SYNTHETIC_ONLY_A6_DELTA",
+  "market_execution": false
+}

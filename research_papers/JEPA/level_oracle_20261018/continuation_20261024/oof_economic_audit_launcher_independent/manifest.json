@@ -1,0 +1,81 @@
+{
+  "scope": "INDEPENDENT_OPERATIONAL_SYNTHETIC_EVIDENCE_ONLY",
+  "copies": 12,
+  "total_bytes": 82880,
+  "files": [
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_launcher_independent_20261024_01\\adhoc.log",
+      "copy": "adhoc.log",
+      "sha256": "00005c495ceebe492b4a24ebe3e92ed072cf324eeac87aa26faba2ae46cf3e77",
+      "bytes": 698
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_launcher_independent_20261024_01\\adhoc.py",
+      "copy": "adhoc.py",
+      "sha256": "0ebdc7a9e1defeadbed80c351a73a2ff783feea6e409127ca874962c22e9670b",
+      "bytes": 3082
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_launcher_independent_20261024_01\\adhoc_admission.json",
+      "copy": "adhoc_admission.json",
+      "sha256": "b74018dcb3da2fb1652ca826d1d4b4163047a48c91b11647a8ed04b48d026d88",
+      "bytes": 524
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_launcher_independent_20261024_01\\adhoc_result.json",
+      "copy": "adhoc_result.json",
+      "sha256": "00005c495ceebe492b4a24ebe3e92ed072cf324eeac87aa26faba2ae46cf3e77",
+      "bytes": 698
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_launcher_independent_20261024_01\\admission.json",
+      "copy": "admission.json",
+      "sha256": "d51a80533e6cec79079098c3d641b62043ff144e8ccb5d25c2cd3b1633eccea4",
+      "bytes": 1030
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_launcher_independent_20261024_01\\documentation_assembly_note.json",
+      "copy": "documentation_assembly_note.json",
+      "sha256": "bcaf58c3c8f60198e199b9f67a72ad08d8f7ecdc69df3ff273557e5e4e448f02",
+      "bytes": 356
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_launcher_independent_20261024_01\\initial_sources\\launch_oof_economic_audit_20261024.py",
+      "copy": "initial_sources/launch_oof_economic_audit_20261024.py",
+      "sha256": "17c1604419d0008be94f6922eb87f397143f8c04c87d01c3546ae66b5a643e1e",
+      "bytes": 40235
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_launcher_independent_20261024_01\\initial_sources\\OOF_ECONOMIC_AUDIT_LAUNCH_DESIGN_20261024.md",
+      "copy": "initial_sources/OOF_ECONOMIC_AUDIT_LAUNCH_DESIGN_20261024.md",
+      "sha256": "3c37ef5f4f36c3120dad8fda26f87b32d2c705780093f5c08d8d5bd67714e132",
+      "bytes": 10579
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_launcher_independent_20261024_01\\initial_sources\\test_launch_oof_economic_audit_20261024.py",
+      "copy": "initial_sources/test_launch_oof_economic_audit_20261024.py",
+      "sha256": "2f6f00c06d000ce39305336fae1b6f993fd9ecaf98bf69be15a9a48a43cd992a",
+      "bytes": 23214
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_launcher_independent_20261024_01\\pytest.log",
+      "copy": "pytest.log",
+      "sha256": "af7b356baf0d7ecf2ee6a737a69e3962336a5363757f993d44f6224e379424f9",
+      "bytes": 117
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_launcher_independent_20261024_01\\result.json",
+      "copy": "result.json",
+      "sha256": "8d0ec3899ce25d7df9a7924ba48240a2c76334e2a617f08ae8a7036c1c3506fd",
+      "bytes": 481
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_launcher_independent_20261024_01\\run_review.py",
+      "copy": "run_review.py",
+      "sha256": "d5a7e7490ccba5c79669c286427f92a4baa8b3d7356306a95f2705dc4ee4af19",
+      "bytes": 1866
+    }
+  ],
+  "market_execution": false,
+  "scientific_modules_imported": false
+}

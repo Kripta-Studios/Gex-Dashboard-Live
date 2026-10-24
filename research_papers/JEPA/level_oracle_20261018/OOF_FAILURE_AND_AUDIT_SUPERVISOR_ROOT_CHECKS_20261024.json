@@ -1,0 +1,28 @@
+{
+  "status": "PASS_ROOT_FINAL_OPERATIONAL_IMPLEMENTATION_CHECKS_NO_RUNTIME",
+  "checks": [
+    {
+      "manifest": "research_papers\\JEPA\\level_oracle_20261018\\continuation_20261024\\oof_pipeline_failure_01\\MANIFEST.json",
+      "sha256": "ab19ddd5432722e63df1411a36bdc6b60d8b17b7d398fc71d480084d1b867c24",
+      "copies_verified": 16
+    },
+    {
+      "manifest": "research_papers\\JEPA\\level_oracle_20261018\\continuation_20261024\\oof_economic_audit_launcher_synthetic\\manifest.json",
+      "sha256": "5174fc8da17c83586cf0074831e1cc4c7a1c8cc2c59ce754f9652d870a1720d7",
+      "copies_verified": 16
+    }
+  ],
+  "root_read_complete_code_and_tests": true,
+  "real_auditor_executed": false,
+  "failed_pipeline_retried_or_resumed": false,
+  "excluded_scientific_payload_rehash": false,
+  "initial_source_inspection_sha256": "cb43e3c8eadd111e8de1ecf4c1a2e4b4e51df019c07519145d1d4483731e77f9",
+  "initial_tests_inspection_sha256": "dcf2c2bdd9298dc82f324fd2464e784c5ebaecd302737cb9b5be68d8d6b49d2a",
+  "final_code_sha256": "17c1604419d0008be94f6922eb87f397143f8c04c87d01c3546ae66b5a643e1e",
+  "final_tests_sha256": "2f6f00c06d000ce39305336fae1b6f993fd9ecaf98bf69be15a9a48a43cd992a",
+  "independent_review_sha256": "765b3a0f448ebe808281e491ad8710753ec0d1ac9b8cf942b0128c4c48c8e019",
+  "final_author_copies_verified": 30,
+  "independent_copies_verified": 12,
+  "final_implementation_members_verified": 53,
+  "A6_delta_read_and_verified": true
+}
