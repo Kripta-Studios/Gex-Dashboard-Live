@@ -1,10 +1,25 @@
 # Continuación local: estado del 23 de octubre de 2026
 
+El [preflight V2 terminó con un fallo de metadata](OOF_V2_METADATA_PREFLIGHT_FAILURE_01_20261024.md)
+antes de iniciar el pipeline. Las seis sesiones ausentes tienen una ruta nominal
+y ambos hashes de sidecar nulos; la validación exigía también una ruta nula.
+Exit 1 retenido y seis archivos preservados. Los nueve destinos siguen ausentes.
+El [contrato V2R1](OOF_TRANSITIVE_SOURCE_V2R1_IMPLEMENTATION_CONTRACT_20261024.md)
+fija una reparación limitada y pruebas focales, con revisión documental CLEAR.
+No hubo corrección, replay ni resultado económico V2. Código, solicitud y revisión
+V2 quedan intactos.
+
+El supervisor económico V2 completó 51 pruebas y 15 focales independientes,
+con 59 pins exactos y revisión211b64f7 CLEAR de implementación. Root leyó los
+deltas de código/tests y verificó38 parejas de evidencia (19 autor,13 revisor,
+6 fallo preflight). No puede admitir el upstream fallido ni una reparación
+posterior sin adaptación explícita. Su auditor científico permanece intacto.
+
 La [solicitud V2 y sus raíces nuevas](OOF_PIPELINE_V2_RUNTIME_PREPARATION_20261024_01.md)
 ya tienen [revisión independiente de metadata](OOF_PIPELINE_V2_RUNTIME_INDEPENDENT_REVIEW_20261024_01.json).
 Son 18 dependencias, 55 miembros de publicación y nueve destinos ausentes.
-El siguiente paso es comprobar la admisión real de fuentes sólo por metadata;
-aún no se ha lanzado el pipeline V2.
+La comprobación posterior de metadata falló como se documenta arriba;
+el pipeline V2 no llegó a iniciarse.
 
 La [implementación del wrapper V2](OOF_TRANSITIVE_SOURCE_V2_RUNTIME_IMPLEMENTATION_RESULT_20261024.md)
 ya tiene revisión independiente CLEAR: 40 pruebas sintéticas, una prueba posterior

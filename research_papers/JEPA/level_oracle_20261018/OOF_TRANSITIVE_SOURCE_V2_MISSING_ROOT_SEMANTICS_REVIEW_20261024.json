@@ -1,0 +1,60 @@
+{
+  "status": "CONFIRMED_METADATA_ADMISSION_INCOMPATIBILITY",
+  "scope": "STATIC_SOURCE_AND_ROOT_METADATA_RECEIPT_ONLY",
+  "utc": "2026-10-24T05:15:13.444119+00:00",
+  "runtime_authorized": false,
+  "source_files": {
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\run_engine_dataset.py": "74bf04a02ac1d978bdbfc93cf8a93dcea890751b3596a99f75f456973206384e",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\build_session_dataset.py": "fda474dfa1300b5bea15dd4deac0884f131fd2d7bca8cae43ad37c9fab7e9c23",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\audit_session_clock_dataset.py": "a7cc66d79ff0b5eccd81c97ca2640996c6fb5f42e1ff9dab7dd5add34947b7e9",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\run_oof_calibrated_pipeline_v2.py": "213eb744b8e295688622955187227df66a56f9121252bd765b7054324e4cceae",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_oof_pipeline_v2_20261024.py": "26de981666975ffc3a6c75aa30d7279a133361786a0a6df475ed57017ebae411",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_run_oof_calibrated_pipeline_v2.py": "ac1a1e43f7bcc553c7f06af67f0efe6203f515eb0fdc9d2db7c2c0bbf7c5f2d3"
+  },
+  "metadata_evidence": {
+    "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_v2_metadata_preflight_20261024_01\\missing_source_metadata_diagnosis.json",
+    "sha256": "4edb23c994bcdcd00d7c7c549f6f5cb5f2cb489c416dd9b7df57532b45ee672e",
+    "index_sha256_reported_before_after": "7124d98155eae8ee5ae06457377570278d4059defe2cf02340e34c288fcb60b4",
+    "independent_index_reread": false,
+    "rows": 6
+  },
+  "findings": [
+    {
+      "source": "run_engine_dataset.py:58-80,390-392",
+      "finding": "initial_row declares day_root for every row; missing branch changes status and continues without erasing that nominal directory."
+    },
+    {
+      "source": "build_session_dataset.py:499-511",
+      "finding": "Session index preserves oldrow including nominal day_root, then sets MISSING_SOURCE and NO_EVALUABLE."
+    },
+    {
+      "source": "audit_session_clock_dataset.py:312-314",
+      "finding": "Auditor requires NO_EVALUABLE for missing rows and skips sidecar verification; it does not require day_root null."
+    },
+    {
+      "source": "run_oof_calibrated_pipeline_v2.py:167-171; launch_oof_pipeline_v2_20261024.py:174-178",
+      "finding": "V2 incorrectly joins nominal directory and payload hash fields in one all-null requirement. Root receipt shows six declared day_root strings with both payload hashes null."
+    },
+    {
+      "source": "test_run_oof_calibrated_pipeline_v2.py:428-429",
+      "finding": "Synthetic metadata fixture used day_root=None and therefore did not cover the actual declared-directory missing-row structure."
+    }
+  ],
+  "bounded_correction_requirements": [
+    "Treat a missing row directory as descriptive metadata, never as a sidecar capability.",
+    "Both actions_sha256 and labels_sha256 must remain null; missing rows contribute zero I members and no payload reads or stats.",
+    "Add exact-structure fixture with declared nominal directory and null hashes, plus each non-null hash negative.",
+    "Preserve six missing identities, calendar NO_EVALUABLE semantics, COMPLETE admission and all scientific rules.",
+    "Preserve published failed V2 code, reviews and failure evidence; any correction requires the new R1 contract/publication sequence."
+  ],
+  "limits": {
+    "science_imported": false,
+    "tests_run": false,
+    "index_read": false,
+    "value_arrays_read": false,
+    "preflight_rerun": false,
+    "code_modified": false,
+    "original_reviews_modified": false,
+    "economic_result_inferred": false
+  }
+}

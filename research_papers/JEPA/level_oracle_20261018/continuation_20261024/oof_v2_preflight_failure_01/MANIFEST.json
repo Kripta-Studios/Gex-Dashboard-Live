@@ -1,0 +1,98 @@
+{
+  "status": "COMPACT_OOF_V2_METADATA_PREFLIGHT_FAILURE_EVIDENCE",
+  "archived_utc": "2026-10-24T05:12:23.072484+00:00",
+  "source_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_v2_metadata_preflight_20261024_01",
+  "files": [
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_v2_metadata_preflight_20261024_01\\invocation.json",
+      "archive_path": "invocation.json",
+      "sha256": "b8881132faa97ae9bc0c4776adca19f18f30ea7a4537bc7bef83b2c66ed6f8de",
+      "bytes": 1251,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_v2_metadata_preflight_20261024_01\\process.json",
+      "archive_path": "process.json",
+      "sha256": "1f8f5a2771adc6c85fcf1adb43d64dd14da177e6df484c8ebd98392e4b5903ce",
+      "bytes": 1163,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_v2_metadata_preflight_20261024_01\\exit.json",
+      "archive_path": "exit.json",
+      "sha256": "96635f46ac06d7337290f498f52e2a99afd55847a940a05a0d8e238e6d1ef4a1",
+      "bytes": 1305,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_v2_metadata_preflight_20261024_01\\stdout.json",
+      "archive_path": "stdout.json",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_v2_metadata_preflight_20261024_01\\stderr.txt",
+      "archive_path": "stderr.txt",
+      "sha256": "327e280cbf032bdae851a60b6da8fd2d2685263e147a0f0629f6d371e968b37e",
+      "bytes": 2001,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_v2_metadata_preflight_20261024_01\\missing_source_metadata_diagnosis.json",
+      "archive_path": "missing_source_metadata_diagnosis.json",
+      "sha256": "4edb23c994bcdcd00d7c7c549f6f5cb5f2cb489c416dd9b7df57532b45ee672e",
+      "bytes": 2094,
+      "source_and_copy_rehashed": true
+    }
+  ],
+  "copied_files": 6,
+  "copied_bytes": 7814,
+  "external_pins": {
+    "stderr.txt": "327e280cbf032bdae851a60b6da8fd2d2685263e147a0f0629f6d371e968b37e",
+    "missing_source_metadata_diagnosis.json": "4edb23c994bcdcd00d7c7c549f6f5cb5f2cb489c416dd9b7df57532b45ee672e"
+  },
+  "outputs_existence_only": [
+    {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_v2_01",
+      "exists": false
+    },
+    {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_oof_correction_20261024_v2_01",
+      "exists": false
+    },
+    {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202601_20261024_v2_01",
+      "exists": false
+    },
+    {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202602_20261024_v2_01",
+      "exists": false
+    },
+    {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202603_20261024_v2_01",
+      "exists": false
+    },
+    {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202604_20261024_v2_01",
+      "exists": false
+    },
+    {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202605_20261024_v2_01",
+      "exists": false
+    },
+    {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202606_20261024_v2_01",
+      "exists": false
+    },
+    {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_v2_01",
+      "exists": false
+    }
+  ],
+  "limits": [
+    "No source index reread or source payload access; diagnosis receipt preserved as supplied.",
+    "No pipeline, correction, replay, tests, retry or cleanup executed by this archival task.",
+    "stderr preserved byte-for-byte in CP1252; no transcoding of archived source."
+  ]
+}

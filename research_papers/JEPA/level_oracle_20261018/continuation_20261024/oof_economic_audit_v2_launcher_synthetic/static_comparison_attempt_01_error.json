@@ -1,0 +1,9 @@
+{
+  "scope": "POST_TEST_PACKAGING_METADATA_ONLY",
+  "status": "FAILED_HELPER_PRESERVED",
+  "error": "ValueError: malformed node or string on line 33: Name(id='WRAPPER_REVIEW', ctx=Load())",
+  "cause": "ast.literal_eval of ADDITIONAL_AUTHORITIES without resolving its two named string constants",
+  "candidate_or_fixture_failure": false,
+  "market_execution": false,
+  "manifest_and_19_copies_already_written": true
+}

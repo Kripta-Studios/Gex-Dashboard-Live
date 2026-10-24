@@ -1,0 +1,72 @@
+{
+  "status": "READ_ONLY_METADATA_DIAGNOSIS",
+  "utc": "2026-10-24T05:11:02.518963+00:00",
+  "index_sha256_before_after": "7124d98155eae8ee5ae06457377570278d4059defe2cf02340e34c288fcb60b4",
+  "columns": [
+    "ticker",
+    "date",
+    "status",
+    "close_i",
+    "day_root",
+    "actions_sha256",
+    "labels_sha256"
+  ],
+  "rows": [
+    {
+      "ticker": "QQQ",
+      "date": "20260401",
+      "status": "MISSING_SOURCE",
+      "close_i": 390,
+      "day_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\engine_v1\\QQQ\\20260401",
+      "actions_sha256": null,
+      "labels_sha256": null
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260401",
+      "status": "MISSING_SOURCE",
+      "close_i": 390,
+      "day_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\engine_v1\\SPY\\20260401",
+      "actions_sha256": null,
+      "labels_sha256": null
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260409",
+      "status": "MISSING_SOURCE",
+      "close_i": 390,
+      "day_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\engine_v1\\QQQ\\20260409",
+      "actions_sha256": null,
+      "labels_sha256": null
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260409",
+      "status": "MISSING_SOURCE",
+      "close_i": 390,
+      "day_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\engine_v1\\SPY\\20260409",
+      "actions_sha256": null,
+      "labels_sha256": null
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260415",
+      "status": "MISSING_SOURCE",
+      "close_i": 390,
+      "day_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\engine_v1\\QQQ\\20260415",
+      "actions_sha256": null,
+      "labels_sha256": null
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260415",
+      "status": "MISSING_SOURCE",
+      "close_i": 390,
+      "day_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\engine_v1\\SPY\\20260415",
+      "actions_sha256": null,
+      "labels_sha256": null
+    }
+  ],
+  "source_payloads_opened": false,
+  "missing_rows": 6
+}

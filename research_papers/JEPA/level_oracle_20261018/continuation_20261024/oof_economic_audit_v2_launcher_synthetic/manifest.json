@@ -1,0 +1,122 @@
+{
+  "scope": "SYNTHETIC_ONLY_V2_ADAPTATION",
+  "market_execution": false,
+  "copies": [
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_v2_launcher_synthetic_20261024_01\\attempt.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261024\\oof_economic_audit_v2_launcher_synthetic\\attempt_01\\attempt.json",
+      "sha256": "40a9882855cba6dcd09501c65e9f55be2942ee48b20be53de829d86cae202f85",
+      "bytes": 2722
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_v2_launcher_synthetic_20261024_01\\command_0_admission.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261024\\oof_economic_audit_v2_launcher_synthetic\\attempt_01\\command_0_admission.json",
+      "sha256": "1f90bef6e7c8af0c5fa80013fffcb18d008db83b7cd348240e096daff8d5bd68",
+      "bytes": 108
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_v2_launcher_synthetic_20261024_01\\command_0_stderr.log",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261024\\oof_economic_audit_v2_launcher_synthetic\\attempt_01\\command_0_stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_v2_launcher_synthetic_20261024_01\\command_0_stdout.log",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261024\\oof_economic_audit_v2_launcher_synthetic\\attempt_01\\command_0_stdout.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_v2_launcher_synthetic_20261024_01\\command_1_admission.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261024\\oof_economic_audit_v2_launcher_synthetic\\attempt_01\\command_1_admission.json",
+      "sha256": "2a41aa52c48229abb52c4bba82c00bc18cd58258125e8ea5ec9dd6adeae64e3f",
+      "bytes": 108
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_v2_launcher_synthetic_20261024_01\\command_1_stderr.log",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261024\\oof_economic_audit_v2_launcher_synthetic\\attempt_01\\command_1_stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_v2_launcher_synthetic_20261024_01\\command_1_stdout.log",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261024\\oof_economic_audit_v2_launcher_synthetic\\attempt_01\\command_1_stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_v2_launcher_synthetic_20261024_01\\command_2_admission.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261024\\oof_economic_audit_v2_launcher_synthetic\\attempt_01\\command_2_admission.json",
+      "sha256": "5ce4e4724984317f4e31615439ca6aa772d66412498161c7262ee1fb3dd6d7e7",
+      "bytes": 108
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_v2_launcher_synthetic_20261024_01\\command_2_stderr.log",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261024\\oof_economic_audit_v2_launcher_synthetic\\attempt_01\\command_2_stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_v2_launcher_synthetic_20261024_01\\command_2_stdout.log",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261024\\oof_economic_audit_v2_launcher_synthetic\\attempt_01\\command_2_stdout.log",
+      "sha256": "175993901adb398227d388ebd2b113a45480bf4e9814e541e2f8fa6efbf49a99",
+      "bytes": 102
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_v2_launcher_synthetic_20261024_01\\initial_sources\\launch_oof_economic_audit_v2_20261024.py",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261024\\oof_economic_audit_v2_launcher_synthetic\\attempt_01\\initial_sources\\launch_oof_economic_audit_v2_20261024.py",
+      "sha256": "71decd9f97e40029dd4311fb5db3e59e7a68b569bca0fe5a80346bd8ccff69b6",
+      "bytes": 43650
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_v2_launcher_synthetic_20261024_01\\initial_sources\\OOF_ECONOMIC_AUDIT_LAUNCH_IMPLEMENTATION_REVIEW_20261024.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261024\\oof_economic_audit_v2_launcher_synthetic\\attempt_01\\initial_sources\\OOF_ECONOMIC_AUDIT_LAUNCH_IMPLEMENTATION_REVIEW_20261024.json",
+      "sha256": "765b3a0f448ebe808281e491ad8710753ec0d1ac9b8cf942b0128c4c48c8e019",
+      "bytes": 21035
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_v2_launcher_synthetic_20261024_01\\initial_sources\\OOF_ECONOMIC_AUDIT_V2_LAUNCH_CONTRACT_20261024.md",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261024\\oof_economic_audit_v2_launcher_synthetic\\attempt_01\\initial_sources\\OOF_ECONOMIC_AUDIT_V2_LAUNCH_CONTRACT_20261024.md",
+      "sha256": "ce60993785b5d551827ecf5ad256e8ecb91567a3e8907fb08d1633b6c68acf11",
+      "bytes": 9359
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_v2_launcher_synthetic_20261024_01\\initial_sources\\OOF_ECONOMIC_AUDIT_V2_LAUNCH_DESIGN_REVIEW_20261024.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261024\\oof_economic_audit_v2_launcher_synthetic\\attempt_01\\initial_sources\\OOF_ECONOMIC_AUDIT_V2_LAUNCH_DESIGN_REVIEW_20261024.json",
+      "sha256": "49c9b81046a6b628f00be2635059a071400e3f2b6db955839a47375adf9f0daa",
+      "bytes": 10951
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_v2_launcher_synthetic_20261024_01\\initial_sources\\OOF_TRANSITIVE_SOURCE_V2_LAUNCH_IMPLEMENTATION_REVIEW_20261024.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261024\\oof_economic_audit_v2_launcher_synthetic\\attempt_01\\initial_sources\\OOF_TRANSITIVE_SOURCE_V2_LAUNCH_IMPLEMENTATION_REVIEW_20261024.json",
+      "sha256": "8c6e4b570df7a12d27da6ed19c9f142382fa4bb054fcfacdd5dd5334ac7fbfd2",
+      "bytes": 13675
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_v2_launcher_synthetic_20261024_01\\initial_sources\\OOF_TRANSITIVE_SOURCE_V2_RUNTIME_IMPLEMENTATION_REVIEW_20261024.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261024\\oof_economic_audit_v2_launcher_synthetic\\attempt_01\\initial_sources\\OOF_TRANSITIVE_SOURCE_V2_RUNTIME_IMPLEMENTATION_REVIEW_20261024.json",
+      "sha256": "ca8f11ef9781a1f6996132032b8c7a09bf6f559970c66e0067bffab9507848f5",
+      "bytes": 9778
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_v2_launcher_synthetic_20261024_01\\initial_sources\\OOF_TRANSITIVE_SOURCE_V2_SCIENTIFIC_INVARIANCE_REVIEW_20261024.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261024\\oof_economic_audit_v2_launcher_synthetic\\attempt_01\\initial_sources\\OOF_TRANSITIVE_SOURCE_V2_SCIENTIFIC_INVARIANCE_REVIEW_20261024.json",
+      "sha256": "47dc8ecaf527a94fc227dd5e42c99c6ea4e7fa7cb5e354c32bc417ae0aab0fe5",
+      "bytes": 7697
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_v2_launcher_synthetic_20261024_01\\initial_sources\\test_launch_oof_economic_audit_v2_20261024.py",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261024\\oof_economic_audit_v2_launcher_synthetic\\attempt_01\\initial_sources\\test_launch_oof_economic_audit_v2_20261024.py",
+      "sha256": "c43bc15886b2d9f1ab2ed46e5600fb97de8ecf27f0bdd61d957ba7e8e41be90d",
+      "bytes": 28373
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_v2_launcher_synthetic_20261024_01\\receipt.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261024\\oof_economic_audit_v2_launcher_synthetic\\attempt_01\\receipt.json",
+      "sha256": "98b112268cda2dda7f687df11939d79d8c233da48a7102debb06e9094b3a0a31",
+      "bytes": 3054
+    }
+  ],
+  "file_count": 19,
+  "total_bytes": 150739
+}

@@ -1,5 +1,23 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-10-24 — preflight V2 falla antes del pipeline
+
+Autoridad: level_oracle_20261018/OOF_V2_METADATA_PREFLIGHT_FAILURE_01_20261024.md.
+CLI DEFAULT desde6bb1a040: PID41640/creation1792818598.6811204, exit1 retenido
+05:10:11.650467UTC en12,970s. Guard exige day_root null en MISSING_SOURCE;
+metadata real de6 filas mantiene ruta nominal y ambosSHA null. Índice7124d981
+rehasheado antes/después de siete columnas; no sidecars abiertos. Recibo4edb23c9.
+No pipeline/correction/replayV2, nueve destinos ausentes. Seis copias7814B,
+manifest10246383. Error posterior helperUTF8 leyendo stderrCP1252 conservado,
+separado del fallo. No retry/resume. Contrato R1 063f7cc7/review0cc2213e CLEAR:
+ignorar day_root en missing, exigir ambosSHA null y continue, focales Request/
+preflight antes de cualquier runtime. También cubre adaptación operativa auditor.
+Semántica confirmada por código original y reviewaf5f4b80; no censo repetido.
+Supervisor económicoV2:51autor+15independientes PASS,review211b64f7 CLEAR sólo
+implementación,59pins; no admite fallo ni reparación futura automáticamente.
+Root deltas/reviews leídos,38copias/59pins verificados. Fuentes/ciencia/producción
+intactas; rentabilidad causal no acreditada y promoción false.
+
 ### Checkpoint 2026-10-24 — wrapper OOF V2 revisado con fuentes sintéticas
 
 Autoridad: level_oracle_20261018/OOF_TRANSITIVE_SOURCE_V2_RUNTIME_IMPLEMENTATION_RESULT_20261024.md.

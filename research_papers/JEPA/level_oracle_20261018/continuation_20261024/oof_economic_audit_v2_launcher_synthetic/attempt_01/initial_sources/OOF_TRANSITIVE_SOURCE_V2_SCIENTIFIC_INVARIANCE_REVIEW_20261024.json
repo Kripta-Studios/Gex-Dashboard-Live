@@ -1,0 +1,138 @@
+{
+  "status": "PASS_OOF_V2_SCIENTIFIC_INVARIANCE_STATIC_REVIEW",
+  "decision": "CLEAR",
+  "scope": "READ_ONLY_SCIENTIFIC_DIFF_AND_AST_ONLY",
+  "runtime_authorized": false,
+  "reviewer": "/root/tcn_completion",
+  "reviewed_utc": "2026-10-24T04:52:03.304189+00:00",
+  "binding": {
+    "original_wrapper_sha256": "26967e10c6b81cd5b84d7939bf6d0c81037934165daa91847d7ffd25de16ff57",
+    "v2_wrapper_sha256": "213eb744b8e295688622955187227df66a56f9121252bd765b7054324e4cceae",
+    "v2_tests_sha256": "ac1a1e43f7bcc553c7f06af67f0efe6203f515eb0fdc9d2db7c2c0bbf7c5f2d3",
+    "original_launch_implementation_review_sha256": "a78c2ef9019111a1ca98fa6e2517a4db8ce1ef9877596e5807734ce4c843ec95"
+  },
+  "ast": {
+    "unchanged_top_level_nodes": [
+      "canonical",
+      "completed_prefix",
+      "correction_closure",
+      "dependencies",
+      "digest",
+      "disjoint",
+      "inventory",
+      "load",
+      "main",
+      "member",
+      "phases",
+      "pipeline_result",
+      "publish",
+      "receipt_path",
+      "replay_closure",
+      "require",
+      "resource_gate",
+      "rss_bytes",
+      "sequence_lock",
+      "sha",
+      "start_path",
+      "validate_control_tree"
+    ],
+    "changed_top_level_nodes": [
+      "Request",
+      "absolute",
+      "pipeline",
+      "verify_map"
+    ],
+    "added_top_level_nodes": [
+      "declared_path",
+      "inspect_consumed_identity",
+      "path_key",
+      "protect_transitive_outputs",
+      "transitive_admission"
+    ],
+    "pipeline_equal_after_only_declared_metadata_normalization": true,
+    "normalized_version_occurrences": 2,
+    "normalized_source_admission_fields": 2,
+    "request_source_method_identical": true,
+    "constants_identical": {
+      "PINS": true,
+      "MONTHS": true,
+      "HISTORY": true,
+      "MODES": true,
+      "GLOBAL_LOCK": true,
+      "MIN_FREE": true
+    },
+    "scientific_adapter_evaluator_calls_identical": [
+      "adapter.MonthlyInputs(self.monthly, self.authorities['monthly_audit'][0], self.authorities['monthly_audit'][1], self.session, self.authorities['session_audit'][0])",
+      "adapter.dependency_hashes()",
+      "adapter.prepare_correction(source, month, request.correction)",
+      "evaluator.dependencies()",
+      "evaluator.dependencies()",
+      "evaluator.dependencies()",
+      "evaluator.evaluate_month(source, request.correction, month, request.evaluations[month], correction_completion_sha256=correction_sha)"
+    ]
+  },
+  "scientific_pins": {
+    "monthly_oof_calibration_adapter.py": "7b80cff43e3887a92e0f89be6daa863a670ccd72d22a0f4aeabd032a39479364",
+    "oof_maximum_calibration.py": "19e922dd65855c4cd7e2ec9d482d477a328245bcf642eeeb7771985f247e20b5",
+    "evaluate_oof_calibrated_policy.py": "eeaad06f5b862a3153f29e7eab579b19a35e182ab506cf1f59e65631e187e716",
+    "audit_oof_calibrated_policy.py": "e7481fbe944a9ffadcf637e7a4b69cd8d636cdf50ae295426191db9d76b5d44b"
+  },
+  "adapter_dependencies_6": {
+    "monthly_oof_calibration_adapter.py": "7b80cff43e3887a92e0f89be6daa863a670ccd72d22a0f4aeabd032a39479364",
+    "oof_maximum_calibration.py": "19e922dd65855c4cd7e2ec9d482d477a328245bcf642eeeb7771985f247e20b5",
+    "rolling_monthly_schedule.py": "92df2e68734d24a61b4ddccec1f9451a5e25c862f5a1b581ae779c163fcf205a",
+    "MONTHLY_OOF_CALIBRATION_ADAPTER_SPEC.md": "6bd989a6332fd21f751dc48ef084c5eba0f83b1f86f957f2a71127ef869bcb4e",
+    "PREQUENTIAL_MAX_CALIBRATION_DESIGN.md": "e8264e398b31f22198a024a3c6d9dfa9fc4530402278693caac1caa2d6f7a619",
+    "OOF_MAXIMUM_CALIBRATION_INTEGRATION.md": "79f8c69b13c3585aa26cbb15fa52f246675baaabd8b8e8d6661a5ffe150ce7bd"
+  },
+  "replay_dependencies_8": {
+    "monthly_oof_calibration_adapter.py": "7b80cff43e3887a92e0f89be6daa863a670ccd72d22a0f4aeabd032a39479364",
+    "oof_maximum_calibration.py": "19e922dd65855c4cd7e2ec9d482d477a328245bcf642eeeb7771985f247e20b5",
+    "rolling_monthly_schedule.py": "92df2e68734d24a61b4ddccec1f9451a5e25c862f5a1b581ae779c163fcf205a",
+    "MONTHLY_OOF_CALIBRATION_ADAPTER_SPEC.md": "6bd989a6332fd21f751dc48ef084c5eba0f83b1f86f957f2a71127ef869bcb4e",
+    "PREQUENTIAL_MAX_CALIBRATION_DESIGN.md": "e8264e398b31f22198a024a3c6d9dfa9fc4530402278693caac1caa2d6f7a619",
+    "OOF_MAXIMUM_CALIBRATION_INTEGRATION.md": "79f8c69b13c3585aa26cbb15fa52f246675baaabd8b8e8d6661a5ffe150ce7bd",
+    "evaluate_oof_calibrated_policy.py": "eeaad06f5b862a3153f29e7eab579b19a35e182ab506cf1f59e65631e187e716",
+    "OOF_CALIBRATED_POLICY_EVALUATION_SPEC.md": "7f88f18569d86ea936d0afdc4a485e461ccdf6c09d74feb835a026bee7caf3bc"
+  },
+  "v2_runtime_dependencies_18": {
+    "MONTHLY_OOF_CALIBRATION_ADAPTER_SPEC.md": "6bd989a6332fd21f751dc48ef084c5eba0f83b1f86f957f2a71127ef869bcb4e",
+    "OOF_CALIBRATED_POLICY_EVALUATION_SPEC.md": "7f88f18569d86ea936d0afdc4a485e461ccdf6c09d74feb835a026bee7caf3bc",
+    "OOF_ECONOMIC_AUDITOR_DESIGN_20261023.md": "b9c2ac397945a04365289b9af0f202f04082c844badfc724ae937972be253154",
+    "OOF_ECONOMIC_AUDITOR_IMPLEMENTATION_REVIEW_20261023.md": "8faf2a64f07df648f2d90e184a4a1a43e80a24b7f474d47604c3c0d352dfacb6",
+    "OOF_ECONOMIC_AUDITOR_SPEC_20261023.md": "cfa6868435a772b336605e3b0613e8fa6c1e377a53cbbef376d3973e64901f37",
+    "OOF_MAXIMUM_CALIBRATION_INTEGRATION.md": "79f8c69b13c3585aa26cbb15fa52f246675baaabd8b8e8d6661a5ffe150ce7bd",
+    "OOF_TRANSITIVE_SOURCE_FAILURE_DIAGNOSIS_20261024.md": "bd8bd3a8992c27203f0d67dd8ca0726a72615f30714096e0ffd177458b60cf23",
+    "OOF_TRANSITIVE_SOURCE_V2_DESIGN_20261024.md": "485f557e4ea2d2eb94bfecfd383d59d02ec29381f0eac06a12178fdef9882cc3",
+    "OOF_TRANSITIVE_SOURCE_V2_IMPLEMENTATION_CONTRACT_20261024.md": "85c8bd20107e6a2ee6cf0d6e00bb8d16a7d6b5d1c6bce5839f542266e4c17a8c",
+    "PREQUENTIAL_MAX_CALIBRATION_DESIGN.md": "e8264e398b31f22198a024a3c6d9dfa9fc4530402278693caac1caa2d6f7a619",
+    "audit_oof_calibrated_policy.py": "e7481fbe944a9ffadcf637e7a4b69cd8d636cdf50ae295426191db9d76b5d44b",
+    "evaluate_oof_calibrated_policy.py": "eeaad06f5b862a3153f29e7eab579b19a35e182ab506cf1f59e65631e187e716",
+    "monthly_oof_calibration_adapter.py": "7b80cff43e3887a92e0f89be6daa863a670ccd72d22a0f4aeabd032a39479364",
+    "oof_maximum_calibration.py": "19e922dd65855c4cd7e2ec9d482d477a328245bcf642eeeb7771985f247e20b5",
+    "rolling_monthly_schedule.py": "92df2e68734d24a61b4ddccec1f9451a5e25c862f5a1b581ae779c163fcf205a",
+    "run_oof_calibrated_pipeline_v2.py": "213eb744b8e295688622955187227df66a56f9121252bd765b7054324e4cceae",
+    "test_audit_oof_calibrated_policy.py": "c98954a9bef3b70bef8c889255cb187a57d88c4f43235ade255a70560438f232",
+    "test_run_oof_calibrated_pipeline_v2.py": "ac1a1e43f7bcc553c7f06af67f0efe6203f515eb0fdc9d2db7c2c0bbf7c5f2d3"
+  },
+  "checks": {
+    "twelve_month_stage_phases_unchanged": true,
+    "correction_and_replay_closures_ast_identical": true,
+    "prefix_resume_and_control_tree_ast_identical": true,
+    "phase_receipts_and_final_result_unchanged_except_request_and_contract_bindings": true,
+    "threshold_cutoffs_scheduler_costs_in_frozen_dependencies": true,
+    "no_new_scientific_call": true
+  },
+  "limits": {
+    "admission_implementation_review_owner": "/root/monthly_resume",
+    "not_a_full_admission_or_runtime_review": true,
+    "tests_executed_by_this_reviewer": false,
+    "scientific_modules_imported": false,
+    "market_values_read": false,
+    "runtime_or_preflight_executed": false,
+    "author_reported_tests_not_rerun": "40 tests plus one focal, reported by author; outside this static evidence",
+    "future_runtime_requires_separate_review_and_publication": true,
+    "original_oof01_failure_remains_preserved": true
+  },
+  "unresolved_scientific_findings": []
+}

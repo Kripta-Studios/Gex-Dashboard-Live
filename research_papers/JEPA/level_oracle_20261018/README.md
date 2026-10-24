@@ -16,6 +16,15 @@ recoge que static, expanding y rolling12 pierden 8.746,00, 20.616,00 y
 50.763,60 USD. Los nueve grupos modo/ticker fallan los requisitos conjuntos.
 La selección permanece null y los seis ticker-días ausentes siguen NO_EVALUABLE.
 
+El [preflight V2 terminó con un fallo de metadata](OOF_V2_METADATA_PREFLIGHT_FAILURE_01_20261024.md)
+antes de iniciar el pipeline. Las seis sesiones ausentes tienen una ruta nominal
+y ambos hashes de sidecar nulos; la validación exigía también una ruta nula.
+Exit 1 retenido y seis archivos preservados. Los nueve destinos siguen ausentes.
+El [contrato V2R1](OOF_TRANSITIVE_SOURCE_V2R1_IMPLEMENTATION_CONTRACT_20261024.md)
+fija una reparación limitada y pruebas focales, con revisión documental CLEAR.
+No hubo corrección, replay ni resultado económico V2. Código, solicitud y revisión
+V2 quedan intactos.
+
 El [intento OOF01 terminó con un fallo técnico](OOF_PIPELINE_FAILURE_01_RECEIPT_20261024.md)
 al verificar referencias externas de la primera corrección. Exit 1 observado,
 sin replay ni resultado económico OOF; no se reanuda este intento. Se prepara
@@ -27,8 +36,8 @@ adicional y 17 controles independientes. El primer intento sintético conserva s
 fallo de aserción. La [revisión científica](OOF_TRANSITIVE_SOURCE_V2_SCIENTIFIC_INVARIANCE_REVIEW_20261024.md)
 confirma las doce fases y los productores congelados. Son pruebas con fuentes
 artificiales. El [lanzador V2](OOF_TRANSITIVE_SOURCE_V2_LAUNCH_IMPLEMENTATION_RESULT_20261024.md)
-completa 41 pruebas y 14 controles independientes; la admisión de una ejecución
-nueva sigue pendiente.
+completa 41 pruebas y 14 controles independientes; el fallo posterior de
+admisión real se documenta arriba.
 No se reutilizan los resultados parciales del intento OOF01.
 
 Los [18 meses consolidados](MONTHLY_18MONTH_REPORT_RESULT_20261024.md) y la
