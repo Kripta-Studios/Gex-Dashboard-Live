@@ -13,7 +13,8 @@ Root leyó deltas completos wrapper/tests y reviews;20pins/4recibos verificados.
 Supervisor V2 26de9816/tests5eb34bef: 41 pruebas y14 focales independientes PASS.
 Primero conservó40PASS/1fallo del probe pyarrow; corrección sólo de test.
 Review final8c6e4b57 CLEAR fija48miembros; root verificó50copias y48pins.
-Runtime requiere request/binding nuevos publicados. Wrapper publicado
+Request V2 d92bec82/binding29e7eb54/review8a0607bd preparados:55miembros,9rootsnuevos.
+Siguiente: publicar y preflight sólo metadata; todavía no pipelineV2. Wrapper publicado
 54a2b40c; contrato auditor V2 ce609937/review49c9b810 publicados67fcbefd.
 OOF01 permanece fallido e inmutable, sin resume. Auditor económico original
 publicado3342e27d admite sóloV1; adaptación explícitaV2 en preparación documental.

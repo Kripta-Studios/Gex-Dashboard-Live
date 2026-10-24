@@ -1,0 +1,30 @@
+{
+  "status": "PASS_ROOT_RUNTIME_BINDING_REVIEW",
+  "checked_utc": "2026-10-24T05:09:17.972507+00:00",
+  "files": {
+    "OOF_PIPELINE_V2_RUNTIME_REQUEST_20261024_01.json": "d92bec82c03dfdf62b0bd0a5a4c5a134a16155ab18af2b82dace2ddc7d859e88",
+    "OOF_PIPELINE_V2_LAUNCH_RUNTIME_BINDING_20261024_01.json": "29e7eb540bf42fc358a0a4e82111e7d2be59c18c92992fb1b24013a0eceb98b1",
+    "OOF_PIPELINE_V2_RUNTIME_INDEPENDENT_REVIEW_20261024_01.json": "8a0607bdbe00f418ad50cf71d2fca2bc68c6fe103e075e714266164b90b2880f",
+    "OOF_PIPELINE_V2_RUNTIME_PREPARATION_20261024_01.md": "435f8e4270fd8fd1b358096a9891cb1fed783af2180cee5f5d85e79caacedbd1"
+  },
+  "verified_compact_files_count": 62,
+  "fresh_roots": [
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_v2_01",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_oof_correction_20261024_v2_01",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202601_20261024_v2_01",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202602_20261024_v2_01",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202603_20261024_v2_01",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202604_20261024_v2_01",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202605_20261024_v2_01",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202606_20261024_v2_01",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_v2_01"
+  ],
+  "scientific_request_fields_unchanged_from_V1": true,
+  "runtime_dependencies": 18,
+  "published_members": 55,
+  "next_authorized_action": "Publish and verify remote, then one metadata-only default CLI; inspect admission summary before separate one-shot pipeline decision",
+  "pipeline_execution_yet_authorized": false,
+  "real_preflight_executed": false,
+  "technical_ready": false,
+  "promotion_approved": false
+}

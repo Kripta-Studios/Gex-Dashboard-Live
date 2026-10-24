@@ -1,5 +1,11 @@
 # Continuación local: estado del 23 de octubre de 2026
 
+La [solicitud V2 y sus raíces nuevas](OOF_PIPELINE_V2_RUNTIME_PREPARATION_20261024_01.md)
+ya tienen [revisión independiente de metadata](OOF_PIPELINE_V2_RUNTIME_INDEPENDENT_REVIEW_20261024_01.json).
+Son 18 dependencias, 55 miembros de publicación y nueve destinos ausentes.
+El siguiente paso es comprobar la admisión real de fuentes sólo por metadata;
+aún no se ha lanzado el pipeline V2.
+
 La [implementación del wrapper V2](OOF_TRANSITIVE_SOURCE_V2_RUNTIME_IMPLEMENTATION_RESULT_20261024.md)
 ya tiene revisión independiente CLEAR: 40 pruebas sintéticas, una prueba posterior
 adicional y 17 controles independientes. El primer intento sintético conserva su
