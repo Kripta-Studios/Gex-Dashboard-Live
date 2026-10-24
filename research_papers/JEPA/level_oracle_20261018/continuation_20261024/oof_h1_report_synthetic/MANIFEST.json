@@ -1,0 +1,174 @@
+{
+  "status": "COMPLETE_SYNTHETIC_OOF_REPORT_FIXTURE_ARCHIVE",
+  "utc": "2026-10-24T05:38:50.674233+00:00",
+  "files": [
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_report_synthetic_20261024_01\\admission.json",
+      "archive_path": "attempt_01/admission.json",
+      "sha256": "a872cecf261801b88c23c6397f5952c45cbdd4501abc048edab5ccdabfef47d5",
+      "bytes": 939
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_report_synthetic_20261024_01\\process.json",
+      "archive_path": "attempt_01/process.json",
+      "sha256": "6e07a88845987402c49494680ba9b134c87e50a6eef9cd51ac62269fe7361bd9",
+      "bytes": 422
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_report_synthetic_20261024_01\\result.json",
+      "archive_path": "attempt_01/result.json",
+      "sha256": "672ed8ba6035a2eea7ae7fa146fb093b2bce71215fd1138b5657ed14ad0d32aa",
+      "bytes": 363
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_report_synthetic_20261024_01\\stdout.txt",
+      "archive_path": "attempt_01/stdout.txt",
+      "sha256": "cc1373df7c6df6e8166a839a4a351821b4ffe92d51f604352df52bf35426c98d",
+      "bytes": 101
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_report_synthetic_20261024_01\\stderr.txt",
+      "archive_path": "attempt_01/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_report_synthetic_20261024_02\\admission.json",
+      "archive_path": "attempt_02/admission.json",
+      "sha256": "3a319fe06dfa6f27b83ce03c44d72442cf0fe72ef24fb15270bd212e5238b258",
+      "bytes": 939
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_report_synthetic_20261024_02\\process.json",
+      "archive_path": "attempt_02/process.json",
+      "sha256": "240dfd7df1b45ea94727d12aca667da2f4ff9acbb8307638a39a1bafdc2503ff",
+      "bytes": 422
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_report_synthetic_20261024_02\\result.json",
+      "archive_path": "attempt_02/result.json",
+      "sha256": "72fa5b378b5d640513a43a961fa771b2d66e7508d645227c83d546c4b1074ca2",
+      "bytes": 362
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_report_synthetic_20261024_02\\stdout.txt",
+      "archive_path": "attempt_02/stdout.txt",
+      "sha256": "68ee046f9a7702d0728f7f6dbe32b2058072e31fccabe4d8e64d6dafffb77f9d",
+      "bytes": 101
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_report_synthetic_20261024_02\\stderr.txt",
+      "archive_path": "attempt_02/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_report_synthetic_20261024_02\\source_snapshot\\OOF_H1_AUDIT_REPORT_DESIGN_20261024.md",
+      "archive_path": "attempt_02/source_snapshot/OOF_H1_AUDIT_REPORT_DESIGN_20261024.md",
+      "sha256": "b47d93cfa3f87c869c711cc8ac527112e65717c58b0a59e09f45645edb0b95ef",
+      "bytes": 2438
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_report_synthetic_20261024_02\\source_snapshot\\report_oof_h1_audit_20261024.py",
+      "archive_path": "attempt_02/source_snapshot/report_oof_h1_audit_20261024.py",
+      "sha256": "48fa2159979bbc9efd6fca16f08154f44eda1cdf82dff86836ffeaa50eaf6faf",
+      "bytes": 14100
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_report_synthetic_20261024_02\\source_snapshot\\test_report_oof_h1_audit_20261024.py",
+      "archive_path": "attempt_02/source_snapshot/test_report_oof_h1_audit_20261024.py",
+      "sha256": "46107040a5422ed05dcf9bd178fafd99d33bff2a26380a1292c8e6f11b9f9245",
+      "bytes": 8868
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_report_synthetic_20261024_03\\admission.json",
+      "archive_path": "attempt_03/admission.json",
+      "sha256": "ed6f66782b1d93d6fa44fb63a9fa480c270416f1b0c03340a0fbaad3c6d1e9d3",
+      "bytes": 939
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_report_synthetic_20261024_03\\process.json",
+      "archive_path": "attempt_03/process.json",
+      "sha256": "100571469d6bb55375d54c9254eed3a349123dec4cb2fe5602b4b554d2b00be5",
+      "bytes": 422
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_report_synthetic_20261024_03\\result.json",
+      "archive_path": "attempt_03/result.json",
+      "sha256": "6552ea6d99451e7166992aebea008cab523db8a51a395db801d34e31a054f531",
+      "bytes": 363
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_report_synthetic_20261024_03\\stdout.txt",
+      "archive_path": "attempt_03/stdout.txt",
+      "sha256": "8a019b7a88f95627be18dd85fdd95c2ed869d6c7bbe062e3be870d5a3ae18cab",
+      "bytes": 101
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_report_synthetic_20261024_03\\stderr.txt",
+      "archive_path": "attempt_03/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_report_synthetic_20261024_03\\source_snapshot\\OOF_H1_AUDIT_REPORT_DESIGN_20261024.md",
+      "archive_path": "attempt_03/source_snapshot/OOF_H1_AUDIT_REPORT_DESIGN_20261024.md",
+      "sha256": "bc4affd24fbf6b43ed87c0a081bcf029d7274843ec6a44052c0d0d1ebeaa3ac4",
+      "bytes": 2802
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_report_synthetic_20261024_03\\source_snapshot\\report_oof_h1_audit_20261024.py",
+      "archive_path": "attempt_03/source_snapshot/report_oof_h1_audit_20261024.py",
+      "sha256": "a52191e2154cec9e6abf12920352a07dbe92c88468c613cd49ec7a21c5cace33",
+      "bytes": 14203
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_report_synthetic_20261024_03\\source_snapshot\\test_report_oof_h1_audit_20261024.py",
+      "archive_path": "attempt_03/source_snapshot/test_report_oof_h1_audit_20261024.py",
+      "sha256": "c591894b9530842f0bc2b11589953dca37ec9683aaa516cc2795fb24fee542e8",
+      "bytes": 9656
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_report_synthetic_20261024_03\\pytest_tmp\\test_export_and_source_guards0\\report\\monthly_net_usd.png",
+      "archive_path": "SYNTHETIC_monthly_net_usd.png",
+      "sha256": "1e3acdc4a83a623d08b03fe1f3fa644faab0e5d664930f96f31a542eb315f45e",
+      "bytes": 203939
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_report_synthetic_20261024_03\\pytest_tmp\\test_export_and_source_guards0\\report\\monthly_net_usd.svg",
+      "archive_path": "SYNTHETIC_monthly_net_usd.svg",
+      "sha256": "2605aeba8e002bc5525d7fb26a17f96f81f1eaaaa86dc46215482676e2d7590b",
+      "bytes": 236265
+    }
+  ],
+  "copied_files": 23,
+  "copied_bytes": 497745,
+  "test_history": [
+    {
+      "attempt": 1,
+      "passed": 24,
+      "pytest_seconds": 2.45,
+      "note": "Before Ruff formatting and unused-import cleanup; all original receipts retained."
+    },
+    {
+      "attempt": 2,
+      "passed": 24,
+      "pytest_seconds": 2.12,
+      "note": "After formatting; before reviewer code-pin finding."
+    },
+    {
+      "attempt": 3,
+      "passed": 25,
+      "pytest_seconds": 2.12,
+      "note": "Final code-pin safeguard and mutation fixture; reviewed candidate."
+    }
+  ],
+  "limits": [
+    "All fixture inputs artificial; no market audit opened.",
+    "Initial attempt has pins only; no retrospective code snapshot invented.",
+    "Synthetic figure is a visual fixture, not a scientific outcome.",
+    "pytest_tmp inputs are not archived; fixture generation is in test source."
+  ],
+  "ast_parse": "PASS",
+  "ruff": "PASS"
+}

@@ -1,0 +1,21 @@
+{
+  "utc": "2026-10-24T05:38:14.619294+00:00",
+  "ram_available": 7362494464,
+  "commit_available": 5339840512,
+  "minimum_bytes": 2000000000,
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-m",
+    "pytest",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_report_oof_h1_audit_20261024.py",
+    "-q",
+    "--basetemp",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_report_synthetic_20261024_03\\pytest_tmp"
+  ],
+  "pins": {
+    "report_oof_h1_audit_20261024.py": "a52191e2154cec9e6abf12920352a07dbe92c88468c613cd49ec7a21c5cace33",
+    "test_report_oof_h1_audit_20261024.py": "c591894b9530842f0bc2b11589953dca37ec9683aaa516cc2795fb24fee542e8",
+    "OOF_H1_AUDIT_REPORT_DESIGN_20261024.md": "bc4affd24fbf6b43ed87c0a081bcf029d7274843ec6a44052c0d0d1ebeaa3ac4"
+  },
+  "scope": "SYNTHETIC_JSON_ONLY"
+}

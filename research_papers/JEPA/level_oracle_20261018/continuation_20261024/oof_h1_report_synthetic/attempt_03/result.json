@@ -1,0 +1,9 @@
+{
+  "exit_code": 0,
+  "exit_source": "retained_Popen_wait",
+  "wall_seconds": 3.0779249999905005,
+  "pins_unchanged": true,
+  "stdout_sha256": "8a019b7a88f95627be18dd85fdd95c2ed869d6c7bbe062e3be870d5a3ae18cab",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "completed_utc": "2026-10-24T05:38:17.709875+00:00"
+}

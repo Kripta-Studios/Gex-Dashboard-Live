@@ -1,0 +1,24 @@
+{
+  "status": "PASS_ROOT_DESCRIPTIVE_REPORT_IMPLEMENTATION_CHECK",
+  "utc": "2026-10-24T05:41:43.399074+00:00",
+  "review_sha256": "ec8d484e8d3be8a64d1157733ff59874f6cb7316182058a2938aab8ab8db0ad7",
+  "code_design_test_pins_verified": {
+    "report_oof_h1_audit_20261024.py": "a52191e2154cec9e6abf12920352a07dbe92c88468c613cd49ec7a21c5cace33",
+    "test_report_oof_h1_audit_20261024.py": "c591894b9530842f0bc2b11589953dca37ec9683aaa516cc2795fb24fee542e8",
+    "OOF_H1_AUDIT_REPORT_DESIGN_20261024.md": "bc4affd24fbf6b43ed87c0a081bcf029d7274843ec6a44052c0d0d1ebeaa3ac4"
+  },
+  "source_copy_pairs_verified": 23,
+  "archive_manifest_sha256": "90e1f0a0622ec5f1ae70876b4684479b7226c533ab9657ede2c7dd7f43d200dc",
+  "code_tests_design_and_review_read": true,
+  "auditor_schema_read_as_text": true,
+  "synthetic_png_visually_inspected": true,
+  "visual_result": "Nine legible panels, six months and four bars; explicit missing and cost distinctions. Artificial values only.",
+  "market_outputs_read": false,
+  "runtime_authorized": false,
+  "reviewer_evidence_limit": "24 focal results are tool observations materialized in review, no separate reviewer stdout artifact claimed.",
+  "publication_diff_check": {
+    "other_files": "PASS",
+    "preserved_generated_svg_trailing_whitespace_lines": 2191,
+    "reason": "Exact generated SVG evidence preserved byte-for-byte; no whitespace rewrite of sealed fixture."
+  }
+}

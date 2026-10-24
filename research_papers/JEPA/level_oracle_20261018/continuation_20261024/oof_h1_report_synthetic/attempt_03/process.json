@@ -1,0 +1,12 @@
+{
+  "pid": 44956,
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-m",
+    "pytest",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_report_oof_h1_audit_20261024.py",
+    "-q",
+    "--basetemp",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_report_synthetic_20261024_03\\pytest_tmp"
+  ]
+}

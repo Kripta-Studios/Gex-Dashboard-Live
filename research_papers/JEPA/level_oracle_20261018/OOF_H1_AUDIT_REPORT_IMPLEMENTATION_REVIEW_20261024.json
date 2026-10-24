@@ -1,0 +1,62 @@
+{
+  "status": "PASS_INDEPENDENT_OOF_H1_REPORT_IMPLEMENTATION_REVIEW",
+  "decision": "CLEAR",
+  "scope": "DESCRIPTIVE_REPORT_IMPLEMENTATION_ONLY",
+  "reviewer": "scientific_review",
+  "runtime_authorized": false,
+  "market_outputs_read": false,
+  "files": {
+    "report_oof_h1_audit_20261024.py": "a52191e2154cec9e6abf12920352a07dbe92c88468c613cd49ec7a21c5cace33",
+    "test_report_oof_h1_audit_20261024.py": "c591894b9530842f0bc2b11589953dca37ec9683aaa516cc2795fb24fee542e8",
+    "OOF_H1_AUDIT_REPORT_DESIGN_20261024.md": "bc4affd24fbf6b43ed87c0a081bcf029d7274843ec6a44052c0d0d1ebeaa3ac4"
+  },
+  "independent_evidence": {
+    "storage": "Tool observations, materialized here; no separate stdout log was saved by reviewer",
+    "tool_chunk_id": "8d7695",
+    "gate_utc": "2026-10-24T05:39:13.252358+00:00",
+    "ram_available_bytes": 7287181312,
+    "commit_free_bytes": 5089472512,
+    "minimum_each_bytes": 2000000000,
+    "interpreter": "C:/Program Files/Python314/python.exe",
+    "pytest_command": "python -m pytest research_papers/JEPA/level_oracle_20261018/test_report_oof_h1_audit_20261024.py -q -k \"not export_and_source_guards\"",
+    "passed": 24,
+    "deselected": 1,
+    "pytest_seconds": 0.61,
+    "pins_checked_before_after": true,
+    "literal_reference": {
+      "monthly_trades": 2,
+      "monthly_base_gains_losses_net": [10, 4, 6],
+      "monthly_adverse_gains_losses_net": [8, 6, 2],
+      "months": 6,
+      "h1_trades": 12,
+      "h1_base_net": 36,
+      "h1_adverse_net": 12,
+      "h1_base_pf": 2.5,
+      "h1_adverse_pf": "4/3",
+      "coherent_but_wrong_h1_sum_rejected": true
+    },
+    "synthetic_png_visually_inspected": "D:/GexResearchArtifacts/level_oracle_20261018/oof_h1_report_synthetic_20261024_01/pytest_tmp/test_export_and_source_guards0/report/monthly_net_usd.png",
+    "visual_result": "Legible nine panels, six months, four bars, common scale per ticker, missing annotation and limitations"
+  },
+  "author_evidence_separate": {
+    "passed": 25,
+    "pytest_seconds": 2.12,
+    "result_path": "continuation_20261024/oof_h1_report_synthetic/attempt_03/result.json",
+    "result_sha256": "6552ea6d99451e7166992aebea008cab523db8a51a395db801d34e31a054f531",
+    "stdout_sha256": "8a019b7a88f95627be18dd85fdd95c2ed869d6c7bbe062e3be870d5a3ae18cab",
+    "result_and_stdout_read_and_rehashed": true
+  },
+  "findings": [{
+    "id": "RPT-OOF-01",
+    "status": "RESOLVED",
+    "description": "Capture code hash before processing and verify it before success manifest; mutation fixture rejects false closure"
+  }],
+  "limits": [
+    "Only the completed externally pinned FULL_H1 audit JSON is an input",
+    "Calendar consistency and 369 ticker-days are checked; exchange calendar is not independently reconstructed",
+    "Audited economic gate labels are copied, not recomputed as a new selection",
+    "No raw source, ledger, model, inference, fit or market audit was executed",
+    "No WR, drawdown, portfolio, winner or promotion claim is created",
+    "Real execution and final real-figure visual inspection remain separate"
+  ]
+}

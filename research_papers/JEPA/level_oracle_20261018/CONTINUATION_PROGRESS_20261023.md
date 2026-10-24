@@ -13,6 +13,12 @@ Root verificó 43 parejas de copias compactas, incluidas admisión y arranque.
 La auditoría económica requiere primero los doce cierres y exit 0 del pipeline,
 y después una solicitud concreta revisada y publicada. No se ejecuta aún.
 
+El [informe descriptivo OOF está preparado](OOF_H1_AUDIT_REPORT_IMPLEMENTATION_RESULT_20261024.md):
+25 pruebas artificiales del autor y 24 focales independientes PASS. Root leyó
+código, tests, diseño y revisión; verificó 23 parejas de evidencia e inspeccionó
+la figura artificial. Exportará los 108 grupos mensuales y 18 H1 únicamente
+desde un audit FULL_H1 cerrado y pineado. La ejecución real sigue pendiente.
+
 El [preflight V2 terminó con un fallo de metadata](OOF_V2_METADATA_PREFLIGHT_FAILURE_01_20261024.md)
 antes de iniciar el pipeline. Las seis sesiones ausentes tienen una ruta nominal
 y ambos hashes de sidecar nulos; la validación exigía también una ruta nula.
