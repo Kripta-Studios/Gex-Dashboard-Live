@@ -1,5 +1,23 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-10-24 — consolidación 2025 cerrada; preflight test activo
+
+Publicación remota02cb4f7404abab0564c567d17eeaccd887b22a24 verificada antes de uso.
+Reporter2025 PID20216 terminó exit0 retenido00:07:24UTC,109,074s, manifest66108b5e…13db0f.
+144 grupos mensuales(108ticker+36ALL),12periodos,2250diarios,9569intentos/9566fills
+entre tres políticas distintas. Reconciliación independiente completa PASS;
+PNG/SVG nueve paneles inspeccionados. Todos9netos anuales negativos en amboscostes.
+Autoridad: MONTHLY_VALIDATION_2025_REPORT_RESULT_20261024.md y
+MONTHLY_VALIDATION_2025_INDEPENDENT_FIGURE_RESULT_20261024.md en level_oracle_20261018.
+Launcher test2026 PID56000 creation1792800312.1211853 inició00:05:12UTC,
+sesiónexec21747, comando único --execute-reviewed-monthly-test con preflight interno.
+Observación00:12:21UTC: sigue preflight sin hijo/errores; runtime/logs nuevos aún
+ausentes,24modelos previos, ningún resultado2026. Observer local
+D:/GexResearchArtifacts/level_oracle_20261018/monthly_test_launcher_observer_20261024_01.
+No relanzar ni confundir preflight con evaluación iniciada. El hijo futuro requiere
+admisión completa y gate contemporáneo2e9RAM/commit. Investigación activa;
+auditor2026/OOF siguen pendientes. Selecciónnull, promociónfalse y producciónintacta.
+
 ### Checkpoint 2026-10-24 — validación 2025 auditada; tres modos fallan
 
 Autoridad: research_papers/JEPA/level_oracle_20261018/MONTHLY_VALIDATION_2025_AUDIT_RESULT_20261024.md.

@@ -1,0 +1,50 @@
+{
+  "development_seen": true,
+  "figure": "monthly_net_usd_all_modes_2025",
+  "limitations": [
+    "Only completed reporter outputs were consumed; source audit is inherited by its external pin.",
+    "No source features, scores, labels, models, fit, inference or scheduler replay.",
+    "Observed 2025 development only; this figure is not prospective evidence."
+  ],
+  "metrics_checked": [
+    "trades",
+    "base/adverse net",
+    "PF and infinity flag",
+    "win rate",
+    "drawdown",
+    "holding",
+    "exit reasons",
+    "coverage",
+    "attempts",
+    "daily net"
+  ],
+  "promotion_approved": false,
+  "reconciled": {
+    "attempt_rows": 9569,
+    "daily_rows": 2250,
+    "ledger_rows": 9566,
+    "period_groups": 12,
+    "pooled_month_groups": 36,
+    "ticker_month_mode_groups": 108
+  },
+  "resource_gate_before": {
+    "available_ram_bytes": 7554551808,
+    "free_commit_bytes": 5294100480,
+    "minimum_bytes": 2000000000
+  },
+  "scientific_reaudit_performed": false,
+  "scope": "CLOSED_REPORTER_OUTPUTS_ONLY",
+  "selected_mode": null,
+  "source_outputs": {
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01\\attempts.parquet": "7ba50b0bde8052fa091f8e0d8243b413318ee8cb6a519f84b1e4f1128ef9534f",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01\\daily.csv": "31bcdb462e60e26ecc5be61f3079bbd7d17534e00b5f5e6ced2f30ecb0b6e502",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01\\ledger.parquet": "be395e165bb2cd36de8c5e0f7637226025ef1d7ac30c2ea4fa27379c57a86c99",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01\\monthly.csv": "4fed4ef713f56baec4dbaddd97588011612bdd6039c6f780f2885fad09473743",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01\\output_manifest.json": "66108b5eb4e678569dcc82a46ebaa92f569a3601e160a2ab1ac781725313db0f",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01\\periods.csv": "edc0cbeb996bf874ab41b04167278fefe8ea9ccbfd03ceb1e2b9f2ae13977868",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01\\source_inventory.json": "4039173033e6cd81552565e4b40b9174ed599f2b6367a97ea16d00cd0cea66b9",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01\\summary.json": "9279db9d98e1bc11d438b8c9d7eff63ce23a1fbe658eafd7f869e2455f224abd",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01_logs\\exit.json": "4f4987abc7ca1c4a10d08bbba3af6dcbec92fc5033411049bc33d441930852ef"
+  },
+  "status": "PASS_INDEPENDENT_DESCRIPTIVE_RECONCILIATION"
+}

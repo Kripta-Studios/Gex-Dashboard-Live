@@ -13,6 +13,10 @@ Los tres tickers pierden en cada modo y la selección permanece nula. Se conserv
 24 modelos y sus recibos. El [binding de test 2026](MONTHLY_TEST_RESOURCE_RUNTIME_REVIEW_20261024_01.md)
 pasó revisión independiente; su publicación y admisión completa preceden a la
 ejecución. Los años 2025 y 2026 siguen siendo desarrollo visto.
+Las [tablas consolidadas](MONTHLY_VALIDATION_2025_REPORT_RESULT_20261024.md) y la
+[gráfica completa](MONTHLY_VALIDATION_2025_INDEPENDENT_FIGURE_RESULT_20261024.md)
+ya pasan reconciliación independiente: 108 grupos por ticker/mes/modo y todos
+los meses representados, con costes base y adversos.
 
 El [resultado TCN temporal del 23 de octubre](TCN_ROW_MIXED_CALENDAR_RESULT_20261023.md)
 ya está auditado: selección nula y pérdidas en las tres variantes, sin cumplir

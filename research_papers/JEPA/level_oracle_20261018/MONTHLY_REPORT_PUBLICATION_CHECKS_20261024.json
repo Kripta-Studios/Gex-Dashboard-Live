@@ -1,0 +1,15 @@
+{
+  "status": "PASS_BYTES_PRESERVING_GENERATED_SVG_WHITESPACE",
+  "utc": "2026-10-24T00:13:28.615595+00:00",
+  "staged_files_verified": 26,
+  "research_bytes_exact": true,
+  "AGENTS_git_LF_normalized": true,
+  "report_copies_hash_size_pass": 14,
+  "figure_members_hash_size_pass": 4,
+  "figure_source_pins_pass": 9,
+  "root_visual_inspection": "Nine panels readable, complete twelve months, both costs, frozen null/development labels visible",
+  "diff_check_exit": 2,
+  "diff_check_findings": 2686,
+  "only_affected_file": "research_papers/JEPA/level_oracle_20261018/continuation_20261024/monthly_validation_2025_independent_figure/monthly_net_usd_all_modes_2025.svg",
+  "disposition": "Preserve exact generated SVG bytes pinned in manifest; all other staged files passed whitespace check."
+}

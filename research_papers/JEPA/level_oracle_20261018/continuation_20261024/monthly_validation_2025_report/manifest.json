@@ -1,0 +1,97 @@
+{
+  "audit_sha256": "ba9fbd9edf849eb823f098461906feede9782b1e513f4d1954e6d58f52549cbc",
+  "copied_bytes": 10152599,
+  "files": [
+    {
+      "bytes": 488249,
+      "copy": "outputs/attempts.parquet",
+      "sha256": "7ba50b0bde8052fa091f8e0d8243b413318ee8cb6a519f84b1e4f1128ef9534f",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01\\attempts.parquet"
+    },
+    {
+      "bytes": 171953,
+      "copy": "outputs/daily.csv",
+      "sha256": "31bcdb462e60e26ecc5be61f3079bbd7d17534e00b5f5e6ced2f30ecb0b6e502",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01\\daily.csv"
+    },
+    {
+      "bytes": 498122,
+      "copy": "outputs/ledger.parquet",
+      "sha256": "be395e165bb2cd36de8c5e0f7637226025ef1d7ac30c2ea4fa27379c57a86c99",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01\\ledger.parquet"
+    },
+    {
+      "bytes": 53967,
+      "copy": "outputs/monthly.csv",
+      "sha256": "4fed4ef713f56baec4dbaddd97588011612bdd6039c6f780f2885fad09473743",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01\\monthly.csv"
+    },
+    {
+      "bytes": 5674,
+      "copy": "outputs/periods.csv",
+      "sha256": "edc0cbeb996bf874ab41b04167278fefe8ea9ccbfd03ceb1e2b9f2ae13977868",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01\\periods.csv"
+    },
+    {
+      "bytes": 8651249,
+      "copy": "outputs/source_inventory.json",
+      "sha256": "4039173033e6cd81552565e4b40b9174ed599f2b6367a97ea16d00cd0cea66b9",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01\\source_inventory.json"
+    },
+    {
+      "bytes": 258519,
+      "copy": "outputs/summary.json",
+      "sha256": "9279db9d98e1bc11d438b8c9d7eff63ce23a1fbe658eafd7f869e2455f224abd",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01\\summary.json"
+    },
+    {
+      "bytes": 1285,
+      "copy": "outputs/output_manifest.json",
+      "sha256": "66108b5eb4e678569dcc82a46ebaa92f569a3601e160a2ab1ac781725313db0f",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01\\output_manifest.json"
+    },
+    {
+      "bytes": 2444,
+      "copy": "logs/admission.json",
+      "sha256": "eef98cd486aacdd3fd61228a53a32d11db678b8e5489c2f9034765533b0449df",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01_logs\\admission.json"
+    },
+    {
+      "bytes": 909,
+      "copy": "logs/process.json",
+      "sha256": "b1dd495c30bd3fbdd0e6ca84e2be61bb11cc677f9eeed7f56200ec2d825a512b",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01_logs\\process.json"
+    },
+    {
+      "bytes": 19367,
+      "copy": "logs/resources.json",
+      "sha256": "1887908f49060861ccd8aee86b6b99c90c4d4ebe5284524669c3cd715576955e",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01_logs\\resources.json"
+    },
+    {
+      "bytes": 662,
+      "copy": "logs/exit.json",
+      "sha256": "4f4987abc7ca1c4a10d08bbba3af6dcbec92fc5033411049bc33d441930852ef",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01_logs\\exit.json"
+    },
+    {
+      "bytes": 199,
+      "copy": "logs/stdout.txt",
+      "sha256": "c7272934908a6da2ec6e5d3158ebabd7c47eb332f4dc0f14a812496e24afec43",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01_logs\\stdout.txt"
+    },
+    {
+      "bytes": 0,
+      "copy": "logs/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01_logs\\stderr.txt"
+    }
+  ],
+  "graphs": "Separate descriptive figures will reference the closed monthly.csv/summary.json; no graph generation in this archive step.",
+  "large_source_inventory_included": true,
+  "local_only_references": "The copied outputs/source_inventory.json preserves the complete audited reference map; models, matrices, features, scores and raw inputs are not copied. Only the reporter consumed subset was rehashed by that run.",
+  "reporter_sha256": "1968aefcba4abf650d5e13cd16435ac74067cfee78ce5752fde6427e5a941146",
+  "source_logs_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01_logs",
+  "source_output_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01",
+  "status": "EXACT_COMPACT_REPORT_ARCHIVE"
+}

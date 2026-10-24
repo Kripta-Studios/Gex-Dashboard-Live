@@ -1,0 +1,35 @@
+{
+  "authorized_by": "root GO after completed audit and remote publication",
+  "available_resources_before_child": {
+    "available_ram_bytes": 7583686656,
+    "free_commit_bytes": 5485998080
+  },
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\report_monthly_walk_forward_audited.py",
+    "--monthly-root",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1",
+    "--audit",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_validation_audit_20261024_02\\audit.json",
+    "--audit-sha256",
+    "ba9fbd9edf849eb823f098461906feede9782b1e513f4d1954e6d58f52549cbc",
+    "--out",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01"
+  ],
+  "external_audit_sha256": "ba9fbd9edf849eb823f098461906feede9782b1e513f4d1954e6d58f52549cbc",
+  "gate_bytes": 2000000000,
+  "local_git_objects_verified": true,
+  "no_retry": true,
+  "out": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_2025_consolidated_report_20261024_01",
+  "pins": {
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\MONTHLY_WALK_FORWARD_AUDITED_REPORT_SPEC_20261024.md": "9cf8ad4f8b77dd5086fa3b5d9becfdd49b5d3c39d51bbb59bfeffc92d384fc40",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\MONTHLY_WALK_FORWARD_REPORT_IMPLEMENTATION_REVIEW_20261024.json": "d7fa9f3be717d913c1e1dc3f622ad30d323e3690706b7714395ca5df68479c75",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\report_monthly_walk_forward_audited.py": "1968aefcba4abf650d5e13cd16435ac74067cfee78ce5752fde6427e5a941146",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_report_monthly_walk_forward_audited.py": "6b5463a4dbad2872cf1c4eea902dbacfaeefdb66b39b62c3a48a871aa00fa244"
+  },
+  "publication_commit_root_remote_verified": "02cb4f7404abab0564c567d17eeaccd887b22a24",
+  "status": "ADMITTED_SINGLE_REPORTER_EXECUTION",
+  "threads": 1,
+  "utc": "2026-10-24T00:05:35.802854+00:00"
+}
