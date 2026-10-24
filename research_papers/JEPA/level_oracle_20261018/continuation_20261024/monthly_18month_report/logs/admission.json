@@ -1,0 +1,40 @@
+{
+  "authorized_by": "root GO after review of exact launcher",
+  "available_resources_before_child": {
+    "available_ram_bytes": 8637067264,
+    "free_commit_bytes": 6823354368
+  },
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\report_monthly_walk_forward_audited.py",
+    "--monthly-root",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1",
+    "--audit",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_test_audit_20261024_01\\audit.json",
+    "--audit-sha256",
+    "87bfea586be13e02fd7fd0fe59c819195c62a430f34c867f9ec661812569fd4e",
+    "--out",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_18month_consolidated_report_20261024_01"
+  ],
+  "cpu_affinity": [
+    0
+  ],
+  "external_audit_sha256": "87bfea586be13e02fd7fd0fe59c819195c62a430f34c867f9ec661812569fd4e",
+  "gate_bytes": 2000000000,
+  "launcher_sha256": "c9f83564e7ff154ff274e168a42a193fcd5d0dc6f0f26e56e0b24f1063827e45",
+  "local_git_objects_verified": true,
+  "no_retry": true,
+  "out": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_18month_consolidated_report_20261024_01",
+  "pins": {
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\MONTHLY_WALK_FORWARD_AUDITED_REPORT_SPEC_20261024.md": "9cf8ad4f8b77dd5086fa3b5d9becfdd49b5d3c39d51bbb59bfeffc92d384fc40",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\MONTHLY_WALK_FORWARD_REPORT_IMPLEMENTATION_REVIEW_20261024.json": "d7fa9f3be717d913c1e1dc3f622ad30d323e3690706b7714395ca5df68479c75",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\report_monthly_walk_forward_audited.py": "1968aefcba4abf650d5e13cd16435ac74067cfee78ce5752fde6427e5a941146",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_report_monthly_walk_forward_audited.py": "6b5463a4dbad2872cf1c4eea902dbacfaeefdb66b39b62c3a48a871aa00fa244"
+  },
+  "publication_commit": "02cb4f7404abab0564c567d17eeaccd887b22a24",
+  "status": "ADMITTED_SINGLE_REPORTER_EXECUTION",
+  "supervisor_completion_sha256": "1045866ea9fdf7d926a51a221e9e5f453ead5146d835197ec99fabe3466b0165",
+  "threads": 1,
+  "utc": "2026-10-24T04:11:21.973717+00:00"
+}

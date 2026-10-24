@@ -1,0 +1,20 @@
+{
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\report_monthly_walk_forward_audited.py",
+    "--monthly-root",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1",
+    "--audit",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_test_audit_20261024_01\\audit.json",
+    "--audit-sha256",
+    "87bfea586be13e02fd7fd0fe59c819195c62a430f34c867f9ec661812569fd4e",
+    "--out",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_18month_consolidated_report_20261024_01"
+  ],
+  "creation_source": "GetProcessTimes retained Popen handle",
+  "creation_time": 1792815081.9765415,
+  "pid": 2468,
+  "utc": "2026-10-24T04:11:21.980289+00:00",
+  "wrapper_pid": 12796
+}

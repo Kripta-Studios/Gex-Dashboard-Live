@@ -1,0 +1,1 @@
+{"status": "PASS_INDEPENDENT_DESCRIPTIVE_RECONCILIATION", "output": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_h1_2026_independent_figure_20261024_01", "groups": {"ticker_month_mode_groups": 162, "pooled_month_groups": 54, "period_groups": 24, "daily_rows": 3357, "missing_ticker_days": 6, "missing_mode_daily_rows": 18, "ledger_rows": 14242, "attempt_rows": 14246}}

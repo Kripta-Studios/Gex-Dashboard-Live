@@ -1,0 +1,101 @@
+{
+  "status": "OOF_PIPELINE_SUPERVISOR_AND_CHILD_OBSERVED_RUNNING",
+  "observed_utc": "2026-10-24T04:13:37.966707+00:00",
+  "session_id_owned_by_root": 8704,
+  "publication_commit": "3cca1167a5c48c4f5bef4aa685e20a561dbf229c",
+  "supervisor": {
+    "pid": 3448,
+    "ppid": 53824,
+    "create_time": 1792815138.5951445,
+    "cmdline": [
+      "C:\\Program Files\\Python314\\python.exe",
+      "-u",
+      "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018/launch_oof_pipeline_20261024.py",
+      "--request",
+      "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018/OOF_PIPELINE_RUNTIME_REQUEST_20261024_01.json",
+      "--request-sha256",
+      "9399f791e0dc34d62c272ba4bd2fc150fdd4c1c2608ca036718c8adb0c82cd71",
+      "--runtime-binding",
+      "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018/OOF_PIPELINE_LAUNCH_RUNTIME_BINDING_20261024_01.json",
+      "--runtime-binding-sha256",
+      "b4f6eb47ffa841ce4510d18b34e560b6d66d22c4cfe34364a838596f4c769326",
+      "--implementation-review-sha256",
+      "a78c2ef9019111a1ca98fa6e2517a4db8ce1ef9877596e5807734ce4c843ec95",
+      "--publication-commit",
+      "3cca1167a5c48c4f5bef4aa685e20a561dbf229c",
+      "--execute-reviewed-pipeline"
+    ],
+    "cpu_seconds": 6.90625,
+    "io": {
+      "read_count": 8622,
+      "write_count": 5,
+      "read_bytes": 531984706,
+      "write_bytes": 37707,
+      "other_count": 84856,
+      "other_bytes": 4987596
+    },
+    "rss": 656142336
+  },
+  "child": {
+    "pid": 29704,
+    "ppid": 3448,
+    "create_time": 1792815151.326416,
+    "cmdline": [
+      "C:\\Program Files\\Python314\\python.exe",
+      "-u",
+      "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\run_oof_calibrated_pipeline.py",
+      "--request",
+      "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_PIPELINE_RUNTIME_REQUEST_20261024_01.json",
+      "--request-sha256",
+      "9399f791e0dc34d62c272ba4bd2fc150fdd4c1c2608ca036718c8adb0c82cd71"
+    ],
+    "cpu_seconds": 57.109375,
+    "io": {
+      "read_count": 16976,
+      "write_count": 337,
+      "read_bytes": 495402824,
+      "write_bytes": 11011090,
+      "other_count": 5901543,
+      "other_bytes": 506823016
+    },
+    "rss": 145993728
+  },
+  "child_creation_time_receipt": 1792815151.326416,
+  "verified_pins": {
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_PIPELINE_RUNTIME_REQUEST_20261024_01.json": "9399f791e0dc34d62c272ba4bd2fc150fdd4c1c2608ca036718c8adb0c82cd71",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_PIPELINE_LAUNCH_RUNTIME_BINDING_20261024_01.json": "b4f6eb47ffa841ce4510d18b34e560b6d66d22c4cfe34364a838596f4c769326",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_PIPELINE_LAUNCH_IMPLEMENTATION_REVIEW_20261024.json": "a78c2ef9019111a1ca98fa6e2517a4db8ce1ef9877596e5807734ce4c843ec95",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_oof_pipeline_20261024.py": "e93ff7db48c86a6d569e70d18f845ec48575ba2cb226bbed981c28a58245e9a8",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_01\\preflight.json": "14b37d4daeb950b178dc6632dd77cd716f24044f8d609093417f9afeaed5b83d",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_01\\process.json": "c499b0949f4c2f2a197968cff47451836cb60c0865572a96eb08bc24b57cf1c2",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_01\\admission.json": "1e3f3712c8dd0b21ee61d2ce83c378e99d1b65f144526a684089eb1cf133a33c",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\run_oof_calibrated_pipeline.py": "26967e10c6b81cd5b84d7939bf6d0c81037934165daa91847d7ffd25de16ff57"
+  },
+  "runtime_files": [
+    "contract.json",
+    "request.json",
+    "starts\\00.json"
+  ],
+  "logs_files": [
+    "admission.json",
+    "preflight.json",
+    "process.json",
+    "stderr.log",
+    "stdout.log"
+  ],
+  "admission": {
+    "available_ram_bytes": 7754047488,
+    "free_commit_bytes": 4709642240,
+    "minimum_free_bytes": 2000000000,
+    "utc": "2026-10-24T04:12:31.334858+00:00"
+  },
+  "stderr_bytes": 0,
+  "limits": {
+    "pipeline_imported_or_executed_by_observer": false,
+    "preflight_repeated": false,
+    "metrics_read": false,
+    "large_payloads_rehashed": false,
+    "success_claimed": false,
+    "reporter_process_touched": false
+  }
+}

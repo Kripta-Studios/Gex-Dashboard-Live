@@ -1,0 +1,50 @@
+{
+  "status": "EXACT_COPY_ARCHIVE",
+  "files": {
+    "manifest.json": {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_h1_2026_independent_figure_20261024_01\\manifest.json",
+      "sha256": "473a836e3ac7ed76c1fb148cdac40d76328e47fe55b789a041cb817d3e5c8328",
+      "bytes": 689
+    },
+    "monthly_net_usd_all_modes_2026_h1.png": {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_h1_2026_independent_figure_20261024_01\\monthly_net_usd_all_modes_2026_h1.png",
+      "sha256": "b6e62b94cbb0ee591959bdc5225f502740a0d85be600c8fa11a5f82fcd92a08e",
+      "bytes": 319360
+    },
+    "monthly_net_usd_all_modes_2026_h1.svg": {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_h1_2026_independent_figure_20261024_01\\monthly_net_usd_all_modes_2026_h1.svg",
+      "sha256": "2eed8c2a4fc04ab348f43e6a5192d8b9208749373ce738af8c587c51b0fa1c4b",
+      "bytes": 218187
+    },
+    "reconcile_plot_monthly_h1_2026_20261024.py": {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_h1_2026_independent_figure_20261024_01\\reconcile_plot_monthly_h1_2026_20261024.py",
+      "sha256": "658e0f9d23a83c1c7400b684525c87fd50f706b34023beb33cce42401e66e3e4",
+      "bytes": 18192
+    },
+    "reconciliation.json": {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_h1_2026_independent_figure_20261024_01\\reconciliation.json",
+      "sha256": "a44a929ada34091dc6787e5b227c784a73e9786a8e0090aa990f3154ad153f8a",
+      "bytes": 3143
+    },
+    "execution_logs/admission.json": {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_h1_2026_independent_figure_20261024_01_logs\\admission.json",
+      "sha256": "316f0dc22a5c2f251c57c1bfcc09d333a63d6b374a46d8840ee0e3e239ab5bdf",
+      "bytes": 1366
+    },
+    "execution_logs/exit.json": {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_h1_2026_independent_figure_20261024_01_logs\\exit.json",
+      "sha256": "90a9f3d0441594536900351b811620b0f671091ee132a6d9693977233996f608",
+      "bytes": 1700
+    },
+    "execution_logs/stderr.txt": {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_h1_2026_independent_figure_20261024_01_logs\\stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "execution_logs/stdout.txt": {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_h1_2026_independent_figure_20261024_01_logs\\stdout.txt",
+      "sha256": "3442f9812dbc249e2a96b7e66779b557768a2e0066579b5d5ae1dc4be6e5a7a9",
+      "bytes": 383
+    }
+  }
+}

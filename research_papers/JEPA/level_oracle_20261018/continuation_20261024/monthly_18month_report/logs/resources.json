@@ -1,0 +1,972 @@
+{
+  "monitor_error": null,
+  "sample_count": 161,
+  "samples": [
+    {
+      "available_ram_bytes": 8636039168,
+      "free_commit_bytes": 6821568512,
+      "rss_bytes": 2650112,
+      "utc": "2026-10-24T04:11:21.980598+00:00"
+    },
+    {
+      "available_ram_bytes": 8542064640,
+      "free_commit_bytes": 6723923968,
+      "rss_bytes": 109494272,
+      "utc": "2026-10-24T04:11:22.984284+00:00"
+    },
+    {
+      "available_ram_bytes": 8584605696,
+      "free_commit_bytes": 6751637504,
+      "rss_bytes": 110587904,
+      "utc": "2026-10-24T04:11:23.987816+00:00"
+    },
+    {
+      "available_ram_bytes": 8580321280,
+      "free_commit_bytes": 6731194368,
+      "rss_bytes": 111554560,
+      "utc": "2026-10-24T04:11:24.990055+00:00"
+    },
+    {
+      "available_ram_bytes": 8585801728,
+      "free_commit_bytes": 6729519104,
+      "rss_bytes": 112132096,
+      "utc": "2026-10-24T04:11:25.992432+00:00"
+    },
+    {
+      "available_ram_bytes": 8518176768,
+      "free_commit_bytes": 6652067840,
+      "rss_bytes": 113704960,
+      "utc": "2026-10-24T04:11:26.999861+00:00"
+    },
+    {
+      "available_ram_bytes": 8324853760,
+      "free_commit_bytes": 6352023552,
+      "rss_bytes": 114503680,
+      "utc": "2026-10-24T04:11:28.005453+00:00"
+    },
+    {
+      "available_ram_bytes": 8341950464,
+      "free_commit_bytes": 6475296768,
+      "rss_bytes": 115392512,
+      "utc": "2026-10-24T04:11:29.013766+00:00"
+    },
+    {
+      "available_ram_bytes": 8485027840,
+      "free_commit_bytes": 6624129024,
+      "rss_bytes": 116408320,
+      "utc": "2026-10-24T04:11:30.022929+00:00"
+    },
+    {
+      "available_ram_bytes": 8478355456,
+      "free_commit_bytes": 6592741376,
+      "rss_bytes": 117223424,
+      "utc": "2026-10-24T04:11:31.028034+00:00"
+    },
+    {
+      "available_ram_bytes": 8574406656,
+      "free_commit_bytes": 6706745344,
+      "rss_bytes": 117301248,
+      "utc": "2026-10-24T04:11:32.037134+00:00"
+    },
+    {
+      "available_ram_bytes": 8551075840,
+      "free_commit_bytes": 6699982848,
+      "rss_bytes": 117317632,
+      "utc": "2026-10-24T04:11:33.038341+00:00"
+    },
+    {
+      "available_ram_bytes": 8534388736,
+      "free_commit_bytes": 6687322112,
+      "rss_bytes": 117342208,
+      "utc": "2026-10-24T04:11:34.048763+00:00"
+    },
+    {
+      "available_ram_bytes": 8392400896,
+      "free_commit_bytes": 6364983296,
+      "rss_bytes": 119312384,
+      "utc": "2026-10-24T04:11:35.049244+00:00"
+    },
+    {
+      "available_ram_bytes": 8474132480,
+      "free_commit_bytes": 6638465024,
+      "rss_bytes": 119984128,
+      "utc": "2026-10-24T04:11:36.101876+00:00"
+    },
+    {
+      "available_ram_bytes": 8482603008,
+      "free_commit_bytes": 6647349248,
+      "rss_bytes": 119992320,
+      "utc": "2026-10-24T04:11:37.111452+00:00"
+    },
+    {
+      "available_ram_bytes": 8427368448,
+      "free_commit_bytes": 6563155968,
+      "rss_bytes": 132526080,
+      "utc": "2026-10-24T04:11:38.113686+00:00"
+    },
+    {
+      "available_ram_bytes": 8513511424,
+      "free_commit_bytes": 6656536576,
+      "rss_bytes": 133459968,
+      "utc": "2026-10-24T04:11:39.117074+00:00"
+    },
+    {
+      "available_ram_bytes": 8445644800,
+      "free_commit_bytes": 6582517760,
+      "rss_bytes": 134676480,
+      "utc": "2026-10-24T04:11:40.121310+00:00"
+    },
+    {
+      "available_ram_bytes": 8501714944,
+      "free_commit_bytes": 6649528320,
+      "rss_bytes": 135720960,
+      "utc": "2026-10-24T04:11:41.124533+00:00"
+    },
+    {
+      "available_ram_bytes": 8531017728,
+      "free_commit_bytes": 6645862400,
+      "rss_bytes": 136908800,
+      "utc": "2026-10-24T04:11:42.145741+00:00"
+    },
+    {
+      "available_ram_bytes": 8400338944,
+      "free_commit_bytes": 6477225984,
+      "rss_bytes": 133775360,
+      "utc": "2026-10-24T04:11:43.148695+00:00"
+    },
+    {
+      "available_ram_bytes": 8342458368,
+      "free_commit_bytes": 6456573952,
+      "rss_bytes": 134688768,
+      "utc": "2026-10-24T04:11:44.152882+00:00"
+    },
+    {
+      "available_ram_bytes": 8535187456,
+      "free_commit_bytes": 6603735040,
+      "rss_bytes": 135008256,
+      "utc": "2026-10-24T04:11:45.153148+00:00"
+    },
+    {
+      "available_ram_bytes": 8586256384,
+      "free_commit_bytes": 6714277888,
+      "rss_bytes": 135737344,
+      "utc": "2026-10-24T04:11:46.156311+00:00"
+    },
+    {
+      "available_ram_bytes": 8585469952,
+      "free_commit_bytes": 6714380288,
+      "rss_bytes": 136224768,
+      "utc": "2026-10-24T04:11:47.156808+00:00"
+    },
+    {
+      "available_ram_bytes": 8584265728,
+      "free_commit_bytes": 6707388416,
+      "rss_bytes": 136695808,
+      "utc": "2026-10-24T04:11:48.171033+00:00"
+    },
+    {
+      "available_ram_bytes": 8570314752,
+      "free_commit_bytes": 6696734720,
+      "rss_bytes": 138784768,
+      "utc": "2026-10-24T04:11:49.172061+00:00"
+    },
+    {
+      "available_ram_bytes": 8383479808,
+      "free_commit_bytes": 6472658944,
+      "rss_bytes": 139386880,
+      "utc": "2026-10-24T04:11:50.174011+00:00"
+    },
+    {
+      "available_ram_bytes": 8403488768,
+      "free_commit_bytes": 6480084992,
+      "rss_bytes": 141824000,
+      "utc": "2026-10-24T04:11:51.189174+00:00"
+    },
+    {
+      "available_ram_bytes": 8493477888,
+      "free_commit_bytes": 6558879744,
+      "rss_bytes": 141856768,
+      "utc": "2026-10-24T04:11:52.197205+00:00"
+    },
+    {
+      "available_ram_bytes": 8557006848,
+      "free_commit_bytes": 6688141312,
+      "rss_bytes": 142442496,
+      "utc": "2026-10-24T04:11:53.213718+00:00"
+    },
+    {
+      "available_ram_bytes": 8580767744,
+      "free_commit_bytes": 6704640000,
+      "rss_bytes": 144551936,
+      "utc": "2026-10-24T04:11:54.240496+00:00"
+    },
+    {
+      "available_ram_bytes": 8536510464,
+      "free_commit_bytes": 6652616704,
+      "rss_bytes": 144994304,
+      "utc": "2026-10-24T04:11:55.244046+00:00"
+    },
+    {
+      "available_ram_bytes": 8486719488,
+      "free_commit_bytes": 6567280640,
+      "rss_bytes": 145661952,
+      "utc": "2026-10-24T04:11:56.246088+00:00"
+    },
+    {
+      "available_ram_bytes": 8476950528,
+      "free_commit_bytes": 6574432256,
+      "rss_bytes": 147750912,
+      "utc": "2026-10-24T04:11:57.249471+00:00"
+    },
+    {
+      "available_ram_bytes": 8429350912,
+      "free_commit_bytes": 6498791424,
+      "rss_bytes": 148148224,
+      "utc": "2026-10-24T04:11:58.249666+00:00"
+    },
+    {
+      "available_ram_bytes": 8469753856,
+      "free_commit_bytes": 6567358464,
+      "rss_bytes": 149213184,
+      "utc": "2026-10-24T04:11:59.250420+00:00"
+    },
+    {
+      "available_ram_bytes": 8478302208,
+      "free_commit_bytes": 6554992640,
+      "rss_bytes": 150867968,
+      "utc": "2026-10-24T04:12:00.250849+00:00"
+    },
+    {
+      "available_ram_bytes": 8419598336,
+      "free_commit_bytes": 6484467712,
+      "rss_bytes": 151298048,
+      "utc": "2026-10-24T04:12:01.259268+00:00"
+    },
+    {
+      "available_ram_bytes": 8468955136,
+      "free_commit_bytes": 6558867456,
+      "rss_bytes": 152322048,
+      "utc": "2026-10-24T04:12:02.261192+00:00"
+    },
+    {
+      "available_ram_bytes": 8534859776,
+      "free_commit_bytes": 6667321344,
+      "rss_bytes": 154402816,
+      "utc": "2026-10-24T04:12:03.276994+00:00"
+    },
+    {
+      "available_ram_bytes": 8510672896,
+      "free_commit_bytes": 6657970176,
+      "rss_bytes": 155312128,
+      "utc": "2026-10-24T04:12:04.278182+00:00"
+    },
+    {
+      "available_ram_bytes": 8411242496,
+      "free_commit_bytes": 6524645376,
+      "rss_bytes": 156389376,
+      "utc": "2026-10-24T04:12:05.284562+00:00"
+    },
+    {
+      "available_ram_bytes": 8557666304,
+      "free_commit_bytes": 6687965184,
+      "rss_bytes": 158023680,
+      "utc": "2026-10-24T04:12:06.285177+00:00"
+    },
+    {
+      "available_ram_bytes": 8502419456,
+      "free_commit_bytes": 6628925440,
+      "rss_bytes": 158597120,
+      "utc": "2026-10-24T04:12:07.285738+00:00"
+    },
+    {
+      "available_ram_bytes": 8486424576,
+      "free_commit_bytes": 6579429376,
+      "rss_bytes": 159494144,
+      "utc": "2026-10-24T04:12:08.287965+00:00"
+    },
+    {
+      "available_ram_bytes": 8519938048,
+      "free_commit_bytes": 6660845568,
+      "rss_bytes": 161443840,
+      "utc": "2026-10-24T04:12:09.289023+00:00"
+    },
+    {
+      "available_ram_bytes": 8528367616,
+      "free_commit_bytes": 6663004160,
+      "rss_bytes": 161873920,
+      "utc": "2026-10-24T04:12:10.290954+00:00"
+    },
+    {
+      "available_ram_bytes": 8355618816,
+      "free_commit_bytes": 6440075264,
+      "rss_bytes": 162684928,
+      "utc": "2026-10-24T04:12:11.291625+00:00"
+    },
+    {
+      "available_ram_bytes": 8317628416,
+      "free_commit_bytes": 6446452736,
+      "rss_bytes": 164687872,
+      "utc": "2026-10-24T04:12:12.297943+00:00"
+    },
+    {
+      "available_ram_bytes": 8511533056,
+      "free_commit_bytes": 6658215936,
+      "rss_bytes": 165412864,
+      "utc": "2026-10-24T04:12:13.338710+00:00"
+    },
+    {
+      "available_ram_bytes": 8514703360,
+      "free_commit_bytes": 6651990016,
+      "rss_bytes": 166199296,
+      "utc": "2026-10-24T04:12:14.340405+00:00"
+    },
+    {
+      "available_ram_bytes": 8541663232,
+      "free_commit_bytes": 6675668992,
+      "rss_bytes": 168071168,
+      "utc": "2026-10-24T04:12:15.340737+00:00"
+    },
+    {
+      "available_ram_bytes": 8534212608,
+      "free_commit_bytes": 6672400384,
+      "rss_bytes": 168800256,
+      "utc": "2026-10-24T04:12:16.345032+00:00"
+    },
+    {
+      "available_ram_bytes": 8529190912,
+      "free_commit_bytes": 6657732608,
+      "rss_bytes": 169742336,
+      "utc": "2026-10-24T04:12:17.345402+00:00"
+    },
+    {
+      "available_ram_bytes": 8480374784,
+      "free_commit_bytes": 6602149888,
+      "rss_bytes": 171683840,
+      "utc": "2026-10-24T04:12:18.348063+00:00"
+    },
+    {
+      "available_ram_bytes": 8361037824,
+      "free_commit_bytes": 6237286400,
+      "rss_bytes": 172089344,
+      "utc": "2026-10-24T04:12:19.353189+00:00"
+    },
+    {
+      "available_ram_bytes": 8399728640,
+      "free_commit_bytes": 6532911104,
+      "rss_bytes": 173895680,
+      "utc": "2026-10-24T04:12:20.421511+00:00"
+    },
+    {
+      "available_ram_bytes": 8378298368,
+      "free_commit_bytes": 6511738880,
+      "rss_bytes": 175009792,
+      "utc": "2026-10-24T04:12:21.425078+00:00"
+    },
+    {
+      "available_ram_bytes": 8310165504,
+      "free_commit_bytes": 5671305216,
+      "rss_bytes": 175124480,
+      "utc": "2026-10-24T04:12:22.431415+00:00"
+    },
+    {
+      "available_ram_bytes": 8344719360,
+      "free_commit_bytes": 5696045056,
+      "rss_bytes": 176111616,
+      "utc": "2026-10-24T04:12:23.432373+00:00"
+    },
+    {
+      "available_ram_bytes": 8294060032,
+      "free_commit_bytes": 5412093952,
+      "rss_bytes": 178102272,
+      "utc": "2026-10-24T04:12:24.439513+00:00"
+    },
+    {
+      "available_ram_bytes": 8110837760,
+      "free_commit_bytes": 5045805056,
+      "rss_bytes": 178290688,
+      "utc": "2026-10-24T04:12:25.449108+00:00"
+    },
+    {
+      "available_ram_bytes": 7900635136,
+      "free_commit_bytes": 4831731712,
+      "rss_bytes": 179023872,
+      "utc": "2026-10-24T04:12:26.485321+00:00"
+    },
+    {
+      "available_ram_bytes": 7858216960,
+      "free_commit_bytes": 4802936832,
+      "rss_bytes": 181092352,
+      "utc": "2026-10-24T04:12:27.494691+00:00"
+    },
+    {
+      "available_ram_bytes": 7834849280,
+      "free_commit_bytes": 4768182272,
+      "rss_bytes": 181219328,
+      "utc": "2026-10-24T04:12:28.502466+00:00"
+    },
+    {
+      "available_ram_bytes": 7628173312,
+      "free_commit_bytes": 4489482240,
+      "rss_bytes": 182345728,
+      "utc": "2026-10-24T04:12:29.504485+00:00"
+    },
+    {
+      "available_ram_bytes": 7784153088,
+      "free_commit_bytes": 4728958976,
+      "rss_bytes": 184422400,
+      "utc": "2026-10-24T04:12:30.504963+00:00"
+    },
+    {
+      "available_ram_bytes": 7781179392,
+      "free_commit_bytes": 4719288320,
+      "rss_bytes": 184467456,
+      "utc": "2026-10-24T04:12:31.520049+00:00"
+    },
+    {
+      "available_ram_bytes": 7694770176,
+      "free_commit_bytes": 4639440896,
+      "rss_bytes": 185102336,
+      "utc": "2026-10-24T04:12:32.610551+00:00"
+    },
+    {
+      "available_ram_bytes": 7680929792,
+      "free_commit_bytes": 4637347840,
+      "rss_bytes": 187219968,
+      "utc": "2026-10-24T04:12:33.618411+00:00"
+    },
+    {
+      "available_ram_bytes": 7639597056,
+      "free_commit_bytes": 4608872448,
+      "rss_bytes": 187379712,
+      "utc": "2026-10-24T04:12:34.618834+00:00"
+    },
+    {
+      "available_ram_bytes": 7621271552,
+      "free_commit_bytes": 4597239808,
+      "rss_bytes": 188686336,
+      "utc": "2026-10-24T04:12:35.622507+00:00"
+    },
+    {
+      "available_ram_bytes": 7599947776,
+      "free_commit_bytes": 4284080128,
+      "rss_bytes": 190566400,
+      "utc": "2026-10-24T04:12:36.631359+00:00"
+    },
+    {
+      "available_ram_bytes": 7622348800,
+      "free_commit_bytes": 4578775040,
+      "rss_bytes": 190922752,
+      "utc": "2026-10-24T04:12:37.632139+00:00"
+    },
+    {
+      "available_ram_bytes": 7640313856,
+      "free_commit_bytes": 4587036672,
+      "rss_bytes": 191725568,
+      "utc": "2026-10-24T04:12:38.634145+00:00"
+    },
+    {
+      "available_ram_bytes": 7639142400,
+      "free_commit_bytes": 4585025536,
+      "rss_bytes": 194121728,
+      "utc": "2026-10-24T04:12:39.634536+00:00"
+    },
+    {
+      "available_ram_bytes": 7612563456,
+      "free_commit_bytes": 4583571456,
+      "rss_bytes": 194232320,
+      "utc": "2026-10-24T04:12:40.634968+00:00"
+    },
+    {
+      "available_ram_bytes": 7606190080,
+      "free_commit_bytes": 4574281728,
+      "rss_bytes": 194957312,
+      "utc": "2026-10-24T04:12:41.644084+00:00"
+    },
+    {
+      "available_ram_bytes": 7643361280,
+      "free_commit_bytes": 4602232832,
+      "rss_bytes": 197558272,
+      "utc": "2026-10-24T04:12:42.644627+00:00"
+    },
+    {
+      "available_ram_bytes": 7642701824,
+      "free_commit_bytes": 4595802112,
+      "rss_bytes": 197681152,
+      "utc": "2026-10-24T04:12:43.650622+00:00"
+    },
+    {
+      "available_ram_bytes": 7463559168,
+      "free_commit_bytes": 4298412032,
+      "rss_bytes": 198664192,
+      "utc": "2026-10-24T04:12:44.655435+00:00"
+    },
+    {
+      "available_ram_bytes": 7663734784,
+      "free_commit_bytes": 4622233600,
+      "rss_bytes": 200892416,
+      "utc": "2026-10-24T04:12:45.664690+00:00"
+    },
+    {
+      "available_ram_bytes": 7692492800,
+      "free_commit_bytes": 4647018496,
+      "rss_bytes": 200974336,
+      "utc": "2026-10-24T04:12:46.666163+00:00"
+    },
+    {
+      "available_ram_bytes": 7718494208,
+      "free_commit_bytes": 4662448128,
+      "rss_bytes": 201912320,
+      "utc": "2026-10-24T04:12:47.666725+00:00"
+    },
+    {
+      "available_ram_bytes": 7659855872,
+      "free_commit_bytes": 4552646656,
+      "rss_bytes": 204046336,
+      "utc": "2026-10-24T04:12:48.668113+00:00"
+    },
+    {
+      "available_ram_bytes": 7679938560,
+      "free_commit_bytes": 4627140608,
+      "rss_bytes": 204353536,
+      "utc": "2026-10-24T04:12:49.681778+00:00"
+    },
+    {
+      "available_ram_bytes": 7686012928,
+      "free_commit_bytes": 4638007296,
+      "rss_bytes": 204881920,
+      "utc": "2026-10-24T04:12:50.682453+00:00"
+    },
+    {
+      "available_ram_bytes": 7681757184,
+      "free_commit_bytes": 4627947520,
+      "rss_bytes": 205344768,
+      "utc": "2026-10-24T04:12:51.683105+00:00"
+    },
+    {
+      "available_ram_bytes": 7600480256,
+      "free_commit_bytes": 4314087424,
+      "rss_bytes": 207282176,
+      "utc": "2026-10-24T04:12:52.684946+00:00"
+    },
+    {
+      "available_ram_bytes": 7589801984,
+      "free_commit_bytes": 4556623872,
+      "rss_bytes": 208134144,
+      "utc": "2026-10-24T04:12:53.688683+00:00"
+    },
+    {
+      "available_ram_bytes": 7626100736,
+      "free_commit_bytes": 4592504832,
+      "rss_bytes": 208961536,
+      "utc": "2026-10-24T04:12:54.690097+00:00"
+    },
+    {
+      "available_ram_bytes": 7570194432,
+      "free_commit_bytes": 4514205696,
+      "rss_bytes": 210690048,
+      "utc": "2026-10-24T04:12:55.693605+00:00"
+    },
+    {
+      "available_ram_bytes": 7548350464,
+      "free_commit_bytes": 4500324352,
+      "rss_bytes": 210849792,
+      "utc": "2026-10-24T04:12:56.696936+00:00"
+    },
+    {
+      "available_ram_bytes": 7539331072,
+      "free_commit_bytes": 4472541184,
+      "rss_bytes": 211390464,
+      "utc": "2026-10-24T04:12:57.712062+00:00"
+    },
+    {
+      "available_ram_bytes": 7553527808,
+      "free_commit_bytes": 4489965568,
+      "rss_bytes": 213487616,
+      "utc": "2026-10-24T04:12:58.715663+00:00"
+    },
+    {
+      "available_ram_bytes": 7511650304,
+      "free_commit_bytes": 4442517504,
+      "rss_bytes": 213708800,
+      "utc": "2026-10-24T04:12:59.766864+00:00"
+    },
+    {
+      "available_ram_bytes": 7543365632,
+      "free_commit_bytes": 4496531456,
+      "rss_bytes": 213868544,
+      "utc": "2026-10-24T04:13:00.839961+00:00"
+    },
+    {
+      "available_ram_bytes": 7497916416,
+      "free_commit_bytes": 4340871168,
+      "rss_bytes": 214794240,
+      "utc": "2026-10-24T04:13:01.844947+00:00"
+    },
+    {
+      "available_ram_bytes": 7555379200,
+      "free_commit_bytes": 4508827648,
+      "rss_bytes": 217206784,
+      "utc": "2026-10-24T04:13:02.845201+00:00"
+    },
+    {
+      "available_ram_bytes": 7582482432,
+      "free_commit_bytes": 4514947072,
+      "rss_bytes": 217546752,
+      "utc": "2026-10-24T04:13:03.873467+00:00"
+    },
+    {
+      "available_ram_bytes": 7564054528,
+      "free_commit_bytes": 4512292864,
+      "rss_bytes": 218292224,
+      "utc": "2026-10-24T04:13:04.882586+00:00"
+    },
+    {
+      "available_ram_bytes": 7625089024,
+      "free_commit_bytes": 4588802048,
+      "rss_bytes": 219865088,
+      "utc": "2026-10-24T04:13:05.884340+00:00"
+    },
+    {
+      "available_ram_bytes": 7627513856,
+      "free_commit_bytes": 4561403904,
+      "rss_bytes": 220418048,
+      "utc": "2026-10-24T04:13:06.902113+00:00"
+    },
+    {
+      "available_ram_bytes": 7567216640,
+      "free_commit_bytes": 4504903680,
+      "rss_bytes": 220721152,
+      "utc": "2026-10-24T04:13:07.947494+00:00"
+    },
+    {
+      "available_ram_bytes": 7615102976,
+      "free_commit_bytes": 4571348992,
+      "rss_bytes": 221757440,
+      "utc": "2026-10-24T04:13:08.954189+00:00"
+    },
+    {
+      "available_ram_bytes": 7538790400,
+      "free_commit_bytes": 4285894656,
+      "rss_bytes": 224350208,
+      "utc": "2026-10-24T04:13:09.954764+00:00"
+    },
+    {
+      "available_ram_bytes": 7631523840,
+      "free_commit_bytes": 4589871104,
+      "rss_bytes": 224813056,
+      "utc": "2026-10-24T04:13:10.955503+00:00"
+    },
+    {
+      "available_ram_bytes": 7570223104,
+      "free_commit_bytes": 4524826624,
+      "rss_bytes": 225173504,
+      "utc": "2026-10-24T04:13:11.960509+00:00"
+    },
+    {
+      "available_ram_bytes": 7508852736,
+      "free_commit_bytes": 4420239360,
+      "rss_bytes": 226283520,
+      "utc": "2026-10-24T04:13:12.965423+00:00"
+    },
+    {
+      "available_ram_bytes": 7583084544,
+      "free_commit_bytes": 4491538432,
+      "rss_bytes": 228155392,
+      "utc": "2026-10-24T04:13:13.967439+00:00"
+    },
+    {
+      "available_ram_bytes": 7603032064,
+      "free_commit_bytes": 4527906816,
+      "rss_bytes": 228671488,
+      "utc": "2026-10-24T04:13:14.967916+00:00"
+    },
+    {
+      "available_ram_bytes": 7594946560,
+      "free_commit_bytes": 4532674560,
+      "rss_bytes": 229306368,
+      "utc": "2026-10-24T04:13:15.969053+00:00"
+    },
+    {
+      "available_ram_bytes": 7625486336,
+      "free_commit_bytes": 4568383488,
+      "rss_bytes": 231383040,
+      "utc": "2026-10-24T04:13:16.969364+00:00"
+    },
+    {
+      "available_ram_bytes": 7576043520,
+      "free_commit_bytes": 4523278336,
+      "rss_bytes": 231620608,
+      "utc": "2026-10-24T04:13:17.972032+00:00"
+    },
+    {
+      "available_ram_bytes": 7502409728,
+      "free_commit_bytes": 4260581376,
+      "rss_bytes": 232210432,
+      "utc": "2026-10-24T04:13:18.975804+00:00"
+    },
+    {
+      "available_ram_bytes": 7633895424,
+      "free_commit_bytes": 4583391232,
+      "rss_bytes": 234549248,
+      "utc": "2026-10-24T04:13:20.003025+00:00"
+    },
+    {
+      "available_ram_bytes": 7617933312,
+      "free_commit_bytes": 4580564992,
+      "rss_bytes": 235061248,
+      "utc": "2026-10-24T04:13:21.114196+00:00"
+    },
+    {
+      "available_ram_bytes": 7626059776,
+      "free_commit_bytes": 4568338432,
+      "rss_bytes": 235663360,
+      "utc": "2026-10-24T04:13:22.129153+00:00"
+    },
+    {
+      "available_ram_bytes": 7624781824,
+      "free_commit_bytes": 4569300992,
+      "rss_bytes": 237678592,
+      "utc": "2026-10-24T04:13:23.133596+00:00"
+    },
+    {
+      "available_ram_bytes": 7620820992,
+      "free_commit_bytes": 4572184576,
+      "rss_bytes": 238080000,
+      "utc": "2026-10-24T04:13:24.143211+00:00"
+    },
+    {
+      "available_ram_bytes": 7633403904,
+      "free_commit_bytes": 4590239744,
+      "rss_bytes": 240103424,
+      "utc": "2026-10-24T04:13:25.154079+00:00"
+    },
+    {
+      "available_ram_bytes": 7436001280,
+      "free_commit_bytes": 4284899328,
+      "rss_bytes": 240873472,
+      "utc": "2026-10-24T04:13:26.155544+00:00"
+    },
+    {
+      "available_ram_bytes": 7608958976,
+      "free_commit_bytes": 4573609984,
+      "rss_bytes": 244625408,
+      "utc": "2026-10-24T04:13:27.163970+00:00"
+    },
+    {
+      "available_ram_bytes": 7582453760,
+      "free_commit_bytes": 4540178432,
+      "rss_bytes": 247496704,
+      "utc": "2026-10-24T04:13:28.166227+00:00"
+    },
+    {
+      "available_ram_bytes": 7605219328,
+      "free_commit_bytes": 4566159360,
+      "rss_bytes": 249098240,
+      "utc": "2026-10-24T04:13:29.168417+00:00"
+    },
+    {
+      "available_ram_bytes": 7629594624,
+      "free_commit_bytes": 4577017856,
+      "rss_bytes": 251977728,
+      "utc": "2026-10-24T04:13:30.189161+00:00"
+    },
+    {
+      "available_ram_bytes": 7627948032,
+      "free_commit_bytes": 4580360192,
+      "rss_bytes": 254152704,
+      "utc": "2026-10-24T04:13:31.195299+00:00"
+    },
+    {
+      "available_ram_bytes": 7621947392,
+      "free_commit_bytes": 4567920640,
+      "rss_bytes": 257196032,
+      "utc": "2026-10-24T04:13:32.201824+00:00"
+    },
+    {
+      "available_ram_bytes": 7563436032,
+      "free_commit_bytes": 4519006208,
+      "rss_bytes": 260055040,
+      "utc": "2026-10-24T04:13:33.203943+00:00"
+    },
+    {
+      "available_ram_bytes": 7449726976,
+      "free_commit_bytes": 4256772096,
+      "rss_bytes": 261177344,
+      "utc": "2026-10-24T04:13:34.205651+00:00"
+    },
+    {
+      "available_ram_bytes": 7578554368,
+      "free_commit_bytes": 4540170240,
+      "rss_bytes": 263442432,
+      "utc": "2026-10-24T04:13:35.223684+00:00"
+    },
+    {
+      "available_ram_bytes": 7580581888,
+      "free_commit_bytes": 4547346432,
+      "rss_bytes": 266215424,
+      "utc": "2026-10-24T04:13:36.256807+00:00"
+    },
+    {
+      "available_ram_bytes": 7605825536,
+      "free_commit_bytes": 4552073216,
+      "rss_bytes": 269287424,
+      "utc": "2026-10-24T04:13:37.322219+00:00"
+    },
+    {
+      "available_ram_bytes": 7593205760,
+      "free_commit_bytes": 4537946112,
+      "rss_bytes": 271118336,
+      "utc": "2026-10-24T04:13:38.413946+00:00"
+    },
+    {
+      "available_ram_bytes": 7550140416,
+      "free_commit_bytes": 4493434880,
+      "rss_bytes": 273952768,
+      "utc": "2026-10-24T04:13:39.419040+00:00"
+    },
+    {
+      "available_ram_bytes": 7558922240,
+      "free_commit_bytes": 4518014976,
+      "rss_bytes": 277004288,
+      "utc": "2026-10-24T04:13:40.424287+00:00"
+    },
+    {
+      "available_ram_bytes": 7570444288,
+      "free_commit_bytes": 4524367872,
+      "rss_bytes": 278052864,
+      "utc": "2026-10-24T04:13:41.434705+00:00"
+    },
+    {
+      "available_ram_bytes": 7443873792,
+      "free_commit_bytes": 4235153408,
+      "rss_bytes": 280707072,
+      "utc": "2026-10-24T04:13:42.438167+00:00"
+    },
+    {
+      "available_ram_bytes": 7534108672,
+      "free_commit_bytes": 4479565824,
+      "rss_bytes": 283623424,
+      "utc": "2026-10-24T04:13:43.439452+00:00"
+    },
+    {
+      "available_ram_bytes": 7537958912,
+      "free_commit_bytes": 4506607616,
+      "rss_bytes": 286715904,
+      "utc": "2026-10-24T04:13:44.447754+00:00"
+    },
+    {
+      "available_ram_bytes": 7596392448,
+      "free_commit_bytes": 4527800320,
+      "rss_bytes": 289640448,
+      "utc": "2026-10-24T04:13:45.452705+00:00"
+    },
+    {
+      "available_ram_bytes": 7573516288,
+      "free_commit_bytes": 4529352704,
+      "rss_bytes": 292528128,
+      "utc": "2026-10-24T04:13:46.455218+00:00"
+    },
+    {
+      "available_ram_bytes": 7539884032,
+      "free_commit_bytes": 4481921024,
+      "rss_bytes": 295493632,
+      "utc": "2026-10-24T04:13:47.457981+00:00"
+    },
+    {
+      "available_ram_bytes": 7544627200,
+      "free_commit_bytes": 4491788288,
+      "rss_bytes": 296914944,
+      "utc": "2026-10-24T04:13:48.473801+00:00"
+    },
+    {
+      "available_ram_bytes": 7553576960,
+      "free_commit_bytes": 4500254720,
+      "rss_bytes": 299085824,
+      "utc": "2026-10-24T04:13:49.523853+00:00"
+    },
+    {
+      "available_ram_bytes": 7402258432,
+      "free_commit_bytes": 4281729024,
+      "rss_bytes": 302260224,
+      "utc": "2026-10-24T04:13:50.534238+00:00"
+    },
+    {
+      "available_ram_bytes": 7537127424,
+      "free_commit_bytes": 4504580096,
+      "rss_bytes": 305139712,
+      "utc": "2026-10-24T04:13:51.540280+00:00"
+    },
+    {
+      "available_ram_bytes": 7477542912,
+      "free_commit_bytes": 4412686336,
+      "rss_bytes": 330002432,
+      "utc": "2026-10-24T04:13:52.558289+00:00"
+    },
+    {
+      "available_ram_bytes": 7471017984,
+      "free_commit_bytes": 4428697600,
+      "rss_bytes": 358866944,
+      "utc": "2026-10-24T04:13:53.564708+00:00"
+    },
+    {
+      "available_ram_bytes": 7475871744,
+      "free_commit_bytes": 4424331264,
+      "rss_bytes": 394596352,
+      "utc": "2026-10-24T04:13:54.565161+00:00"
+    },
+    {
+      "available_ram_bytes": 7463559168,
+      "free_commit_bytes": 4416122880,
+      "rss_bytes": 394596352,
+      "utc": "2026-10-24T04:13:55.584685+00:00"
+    },
+    {
+      "available_ram_bytes": 7394136064,
+      "free_commit_bytes": 4386496512,
+      "rss_bytes": 394596352,
+      "utc": "2026-10-24T04:13:56.599406+00:00"
+    },
+    {
+      "available_ram_bytes": 7434551296,
+      "free_commit_bytes": 4414558208,
+      "rss_bytes": 371236864,
+      "utc": "2026-10-24T04:13:57.600565+00:00"
+    },
+    {
+      "available_ram_bytes": 7485407232,
+      "free_commit_bytes": 4460568576,
+      "rss_bytes": 335253504,
+      "utc": "2026-10-24T04:13:58.613487+00:00"
+    },
+    {
+      "available_ram_bytes": 7471071232,
+      "free_commit_bytes": 4460527616,
+      "rss_bytes": 335519744,
+      "utc": "2026-10-24T04:13:59.618546+00:00"
+    },
+    {
+      "available_ram_bytes": 7387213824,
+      "free_commit_bytes": 4382359552,
+      "rss_bytes": 336072704,
+      "utc": "2026-10-24T04:14:00.673674+00:00"
+    },
+    {
+      "available_ram_bytes": 7496196096,
+      "free_commit_bytes": 4439969792,
+      "rss_bytes": 335323136,
+      "utc": "2026-10-24T04:14:01.740513+00:00"
+    },
+    {
+      "available_ram_bytes": 7365488640,
+      "free_commit_bytes": 4179394560,
+      "rss_bytes": 335323136,
+      "utc": "2026-10-24T04:14:02.751382+00:00"
+    },
+    {
+      "available_ram_bytes": 7401852928,
+      "free_commit_bytes": 4304216064,
+      "rss_bytes": 335323136,
+      "utc": "2026-10-24T04:14:03.752158+00:00"
+    }
+  ]
+}

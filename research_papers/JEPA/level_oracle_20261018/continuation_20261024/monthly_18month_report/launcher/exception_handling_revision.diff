@@ -1,0 +1,63 @@
+--- launch_report.py@95f9fe3d
++++ launch_report.py@c9f83564
+@@ -89,6 +89,7 @@
+     require(not OUT.exists() and not LOGS.exists(), "Output/log root already exists")
+     LOGS.mkdir()
+     child = None
++    created = None
+     try:
+         wrapper_sha = sha(__file__)
+         require(sha(AUDIT) == AUDIT_SHA and sha(COMPLETION) == COMPLETION_SHA,
+@@ -132,7 +133,8 @@
+             env[key] = "1"
+         started = time.monotonic()
+         with (LOGS / "stdout.txt").open("xb") as stdout, (LOGS / "stderr.txt").open("xb") as stderr:
+-            child = subprocess.Popen(command, cwd=HERE, env=env, stdout=stdout, stderr=stderr,
++            child = subprocess.Popen(command, cwd=HERE, env=env, stdin=subprocess.DEVNULL,
++                                     stdout=stdout, stderr=stderr,
+                                      creationflags=subprocess.CREATE_NO_WINDOW)
+             created = creation_time(child)
+             write("process.json", dict(command=command, pid=child.pid, creation_time=created,
+@@ -170,8 +172,40 @@
+         require(manifest["status"] == "COMPLETE" and manifest["audit_sha256"] == AUDIT_SHA,
+                 "Reporter manifest incomplete")
+     except BaseException as exc:
+-        write("failure.json", dict(status="FAILED_SINGLE_ATTEMPT_NO_RETRY", utc=utc(), error=repr(exc),
+-              child_pid=child.pid if child else None, child_returncode=child.returncode if child else None))
++        original_error = repr(exc)
++        child_exit = None
++        closure_errors = []
++        if child is not None:
++            # The child's inherited stdout/stderr handles remain open even if
++            # the parent's with-block closed its copies during exception unwind.
++            # Do not abandon, kill or restart the already launched reporter.
++            while True:
++                try:
++                    waited_code = child.wait()
++                    break
++                except KeyboardInterrupt as wait_error:
++                    closure_errors.append(repr(wait_error))
++            code = wintypes.DWORD()
++            exit_api_ok = bool(KERNEL.GetExitCodeProcess(int(child._handle), ctypes.byref(code)))
++            child_exit = dict(
++                status="PROCESS_EXIT_OBSERVED_AFTER_LAUNCHER_EXCEPTION",
++                utc=utc(), pid=child.pid, creation_time=created,
++                exit_code=code.value if exit_api_ok else waited_code,
++                exit_code_source=("GetExitCodeProcess retained Popen handle" if exit_api_ok
++                                  else "Popen.wait retained process handle"),
++                get_exit_code_process_succeeded=exit_api_ok,
++                popen_wait_exit_code=waited_code, original_error=original_error,
++                monitor_error=original_error, closure_errors=closure_errors,
++            )
++            if not exit_api_ok:
++                child_exit["get_exit_code_process_error"] = ctypes.get_last_error()
++            if exit_api_ok and code.value != waited_code:
++                closure_errors.append("Retained exit differs from Popen.wait")
++            write("exception_child_exit.json", child_exit)
++        write("failure.json", dict(status="FAILED_SINGLE_ATTEMPT_NO_RETRY", utc=utc(),
++              error=original_error, child_pid=child.pid if child else None,
++              child_returncode=child.returncode if child else None,
++              child_exit=child_exit, closure_errors=closure_errors))
+         raise
+ 
+ 

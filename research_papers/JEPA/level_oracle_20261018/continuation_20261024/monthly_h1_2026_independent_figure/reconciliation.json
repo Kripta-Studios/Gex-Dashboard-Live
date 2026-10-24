@@ -1,0 +1,54 @@
+{
+  "development_seen": true,
+  "figure": "monthly_net_usd_all_modes_2026_h1",
+  "limitations": [
+    "Only completed reporter outputs were consumed; source audit is inherited by its external pin.",
+    "No source features, scores, labels, models, fit, inference or scheduler replay.",
+    "Observed 2025-2026H1 development only; this figure is not prospective evidence.",
+    "Six absent ticker-days retain null economics and are not plotted as observed zero returns."
+  ],
+  "metrics_checked": [
+    "trades",
+    "base/adverse net",
+    "PF and infinity flag",
+    "win rate",
+    "drawdown",
+    "holding",
+    "exit reasons",
+    "coverage",
+    "attempts",
+    "daily net"
+  ],
+  "promotion_approved": false,
+  "reconciled": {
+    "attempt_rows": 14246,
+    "daily_rows": 3357,
+    "ledger_rows": 14242,
+    "missing_mode_daily_rows": 18,
+    "missing_ticker_days": 6,
+    "period_groups": 24,
+    "pooled_month_groups": 54,
+    "ticker_month_mode_groups": 162
+  },
+  "resource_gate_before": {
+    "available_ram_bytes": 7699922944,
+    "free_commit_bytes": 4641120256,
+    "minimum_bytes": 2000000000
+  },
+  "scientific_reaudit_performed": false,
+  "scope": "CLOSED_REPORTER_OUTPUTS_ONLY",
+  "script_sha256": "658e0f9d23a83c1c7400b684525c87fd50f706b34023beb33cce42401e66e3e4",
+  "selected_mode": null,
+  "source_outputs": {
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_18month_consolidated_report_20261024_01\\attempts.parquet": "d80f1abef68a5f07c669f4a2887091182d9f7c559f0953d49de36244ed258071",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_18month_consolidated_report_20261024_01\\daily.csv": "1e27506098d780d6f72204c3ea8de8ced75e469276523a87fef08593f6e41c3f",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_18month_consolidated_report_20261024_01\\ledger.parquet": "4a8025cbe67af177c04eb40eead210c8c52ec202c18447d3b06fffdd88f4e80a",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_18month_consolidated_report_20261024_01\\monthly.csv": "8b50f15e52296b3198e0ab88d7dacf2ebe0f2194e34815103dfb640cfcf73e7c",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_18month_consolidated_report_20261024_01\\output_manifest.json": "6c104c866c320beea811b7ee295a4b625d56d44a905a352e1d6f34d9cee7932d",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_18month_consolidated_report_20261024_01\\periods.csv": "1c9825a559dcdd9cbaa3d5a2f5a85c5d5dc4d7aa259a56b81f1e98463488f24c",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_18month_consolidated_report_20261024_01\\source_inventory.json": "9e81f827cc2fbb095a840adf60d9251f405c15a29ffdb19f77f2e741d3b5e514",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_18month_consolidated_report_20261024_01\\summary.json": "e39fe25e7f7947362993595351fd71e804b0fbfcf8985761a400e2c27a07b914",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_18month_consolidated_report_20261024_01_logs\\exit.json": "eafcea8ed68506731d72ed0890dc84b96169bfde73caf65154328cfa27fabfec"
+  },
+  "status": "PASS_INDEPENDENT_DESCRIPTIVE_RECONCILIATION"
+}

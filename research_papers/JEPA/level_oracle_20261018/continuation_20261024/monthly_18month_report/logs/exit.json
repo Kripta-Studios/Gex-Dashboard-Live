@@ -1,0 +1,18 @@
+{
+  "audit_unchanged": true,
+  "creation_time": 1792815081.9765415,
+  "exit_code": 0,
+  "exit_code_source": "GetExitCodeProcess retained Popen handle",
+  "min_available_ram_bytes": 7365488640,
+  "min_free_commit_bytes": 4179394560,
+  "monitor_error": null,
+  "peak_rss_bytes": 394596352,
+  "pid": 2468,
+  "pins_unchanged": true,
+  "sample_count": 161,
+  "status": "PROCESS_EXIT_OBSERVED",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_sha256": "af9b9c2b841f0b493d48ef79a0995fa9adc36c6040d202adf544b742308a8ea7",
+  "utc": "2026-10-24T04:14:04.770637+00:00",
+  "wall_seconds": 162.79633409995586
+}

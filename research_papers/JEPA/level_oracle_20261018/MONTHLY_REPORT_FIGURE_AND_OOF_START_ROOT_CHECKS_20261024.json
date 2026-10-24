@@ -1,0 +1,13 @@
+{
+  "status": "PASS_COMPACT_REPORT_ARCHIVES_AND_H1_VISUAL_REVIEW",
+  "copies_verified": 29,
+  "reporter_manifest_sha256": "6c104c866c320beea811b7ee295a4b625d56d44a905a352e1d6f34d9cee7932d",
+  "reporter_exit_sha256": "eafcea8ed68506731d72ed0890dc84b96169bfde73caf65154328cfa27fabfec",
+  "figure_sha256": "b6e62b94cbb0ee591959bdc5225f502740a0d85be600c8fa11a5f82fcd92a08e",
+  "visual_review": "Root viewed PNG: all 9 panels, 6 months, paired costs, shared ticker scales, April absences and seen-development limits legible.",
+  "reporter_outputs_rehashed": 7,
+  "figure_copies_verified": 9,
+  "reporter_copies_verified": 16,
+  "oof_start_copies_verified": 4,
+  "economic_fits_or_replays_repeated": false
+}

@@ -1,0 +1,21 @@
+{
+  "files": {
+    "monthly_net_usd_all_modes_2026_h1.png": {
+      "bytes": 319360,
+      "sha256": "b6e62b94cbb0ee591959bdc5225f502740a0d85be600c8fa11a5f82fcd92a08e"
+    },
+    "monthly_net_usd_all_modes_2026_h1.svg": {
+      "bytes": 218187,
+      "sha256": "2eed8c2a4fc04ab348f43e6a5192d8b9208749373ce738af8c587c51b0fa1c4b"
+    },
+    "reconcile_plot_monthly_h1_2026_20261024.py": {
+      "bytes": 18192,
+      "sha256": "658e0f9d23a83c1c7400b684525c87fd50f706b34023beb33cce42401e66e3e4"
+    },
+    "reconciliation.json": {
+      "bytes": 3143,
+      "sha256": "a44a929ada34091dc6787e5b227c784a73e9786a8e0090aa990f3154ad153f8a"
+    }
+  },
+  "status": "COMPLETE"
+}

@@ -1,0 +1,49 @@
+{
+  "status": "INITIAL_OOF_PIPELINE_RECEIPTS_ONLY_NO_CLOSURE",
+  "archived_utc": "2026-10-24T04:14:46.7343393Z",
+  "publication_commit_root_verified": "3cca1167a5c48c4f5bef4aa685e20a561dbf229c",
+  "root_exec_session": 8704,
+  "files": [
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_01\\preflight.json",
+      "archive_path": "preflight.json",
+      "sha256": "14b37d4daeb950b178dc6632dd77cd716f24044f8d609093417f9afeaed5b83d",
+      "bytes": 36232,
+      "source_and_copy_rehashed": true,
+      "external_pin": null
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_01\\process.json",
+      "archive_path": "process.json",
+      "sha256": "c499b0949f4c2f2a197968cff47451836cb60c0865572a96eb08bc24b57cf1c2",
+      "bytes": 1310,
+      "source_and_copy_rehashed": true,
+      "external_pin": null
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_01\\admission.json",
+      "archive_path": "admission.json",
+      "sha256": "1e3f3712c8dd0b21ee61d2ce83c378e99d1b65f144526a684089eb1cf133a33c",
+      "bytes": 160,
+      "source_and_copy_rehashed": true,
+      "external_pin": null
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_supervisor_observer_20261024_01\\initial_observation.json",
+      "archive_path": "initial_observation.json",
+      "sha256": "c5ff71c90e54ee2d363717d5b9150bd137d43c12c1e66791becb874c67718d9d",
+      "bytes": 4960,
+      "source_and_copy_rehashed": true,
+      "external_pin": "c5ff71c90e54ee2d363717d5b9150bd137d43c12c1e66791becb874c67718d9d"
+    }
+  ],
+  "copied_files": 4,
+  "copied_bytes": 42662,
+  "scope": "Only four immutable initial receipts copied as bytes; contents not parsed. Active process at recorded start, no completion/result claim.",
+  "growing_logs_copied": false,
+  "market_arrays_opened": false,
+  "scientific_modules_imported": false,
+  "preflight_executed": false,
+  "pipeline_relaunched": false,
+  "retained_handle_owner": "root"
+}

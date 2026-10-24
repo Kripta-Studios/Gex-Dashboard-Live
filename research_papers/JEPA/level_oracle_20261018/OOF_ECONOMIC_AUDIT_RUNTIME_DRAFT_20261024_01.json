@@ -1,0 +1,76 @@
+{
+  "status": "DRAFT_NOT_RUNTIME_AUTHORITY",
+  "scope": "DESIGN_ONLY",
+  "runtime_authorized": false,
+  "source_pipeline_request": {
+    "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_PIPELINE_RUNTIME_REQUEST_20261024_01.json",
+    "sha256": "9399f791e0dc34d62c272ba4bd2fc150fdd4c1c2608ca036718c8adb0c82cd71"
+  },
+  "proposed_request": {
+    "version": "OOF_ECONOMIC_AUDIT_REQUEST_V1",
+    "scope": "FULL_H1",
+    "monthly_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1",
+    "monthly_audit": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_test_audit_20261024_01\\audit.json",
+    "monthly_audit_sha256": "87bfea586be13e02fd7fd0fe59c819195c62a430f34c867f9ec661812569fd4e",
+    "session_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_clock_dataset_v1",
+    "session_audit": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_clock_dataset_v1_audit\\audit.json",
+    "correction_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_oof_correction_20261024_01",
+    "months": [
+      {
+        "month": "202601",
+        "correction_completion_sha256": null,
+        "evaluation_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202601_20261024_01",
+        "evaluation_completion_sha256": null
+      },
+      {
+        "month": "202602",
+        "correction_completion_sha256": null,
+        "evaluation_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202602_20261024_01",
+        "evaluation_completion_sha256": null
+      },
+      {
+        "month": "202603",
+        "correction_completion_sha256": null,
+        "evaluation_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202603_20261024_01",
+        "evaluation_completion_sha256": null
+      },
+      {
+        "month": "202604",
+        "correction_completion_sha256": null,
+        "evaluation_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202604_20261024_01",
+        "evaluation_completion_sha256": null
+      },
+      {
+        "month": "202605",
+        "correction_completion_sha256": null,
+        "evaluation_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202605_20261024_01",
+        "evaluation_completion_sha256": null
+      },
+      {
+        "month": "202606",
+        "correction_completion_sha256": null,
+        "evaluation_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202606_20261024_01",
+        "evaluation_completion_sha256": null
+      }
+    ]
+  },
+  "proposed_output_root": "D:/GexResearchArtifacts/level_oracle_20261018/oof_economic_audit_full_h1_20261024_01",
+  "proposed_logs_root": "D:/GexResearchArtifacts/level_oracle_20261018/oof_economic_audit_launch_20261024_01",
+  "pending_pipeline_evidence": {
+    "preflight_sha256": null,
+    "process_sha256": null,
+    "exit_sha256": null,
+    "supervisor_completion_sha256": null,
+    "pipeline_completion_sha256": null,
+    "last_receipt_sha256": null
+  },
+  "pending_new_authorities": {
+    "supervisor_code_sha256": null,
+    "supervisor_implementation_review_sha256": null,
+    "final_audit_request_sha256": null,
+    "final_runtime_binding_sha256": null,
+    "publication_commit": null
+  },
+  "execution_performed": false,
+  "note": "Nested proposal only. Missing closure hashes are intentional. Final request and external runtime binding require actual pipeline completion, retained exit0, independent review and publication."
+}

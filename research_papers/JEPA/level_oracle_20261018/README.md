@@ -16,11 +16,13 @@ recoge que static, expanding y rolling12 pierden 8.746,00, 20.616,00 y
 50.763,60 USD. Los nueve grupos modo/ticker fallan los requisitos conjuntos.
 La selección permanece null y los seis ticker-días ausentes siguen NO_EVALUABLE.
 
-El [runtime OOF está preparado](OOF_PIPELINE_RUNTIME_PREPARATION_20261024_01.md)
-y [revisado independientemente](OOF_PIPELINE_RUNTIME_INDEPENDENT_REVIEW_20261024_01.md).
-Su publicación precede al lanzamiento único con los parámetros predeclarados.
-El reporte descriptivo de 18 meses y la
-[gráfica H1](MONTHLY_H1_2026_FIGURE_PREPARATION_20261024.md) están pendientes.
+El [pipeline OOF está ejecutándose](OOF_PIPELINE_START_RECEIPT_20261024.md)
+desde el runtime publicado y verificado en `3cca1167`, sin cambiar parámetros.
+Los [18 meses consolidados](MONTHLY_18MONTH_REPORT_RESULT_20261024.md) y la
+[gráfica H1](MONTHLY_H1_2026_INDEPENDENT_FIGURE_RESULT_20261024.md) ya están
+cerrados y reconciliados; root comprobó también la legibilidad de la figura.
+El [diseño de supervisión de la auditoría OOF](OOF_ECONOMIC_AUDIT_LAUNCH_DESIGN_20261024.md)
+está revisado; su ejecución requiere primero el cierre real de las doce fases.
 El [cierre del productor](MONTHLY_TEST_2026_PRODUCER_CLOSURE_20261024.md)
 conserva los doce modelos nuevos; matrices y datos brutos permanecen locales.
 

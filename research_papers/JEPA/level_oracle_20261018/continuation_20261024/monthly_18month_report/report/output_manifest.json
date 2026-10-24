@@ -1,0 +1,40 @@
+{
+  "attempt_rows": 14246,
+  "audit_sha256": "87bfea586be13e02fd7fd0fe59c819195c62a430f34c867f9ec661812569fd4e",
+  "daily_rows": 3357,
+  "files": {
+    "attempts.parquet": {
+      "bytes": 703098,
+      "sha256": "d80f1abef68a5f07c669f4a2887091182d9f7c559f0953d49de36244ed258071"
+    },
+    "daily.csv": {
+      "bytes": 255757,
+      "sha256": "1e27506098d780d6f72204c3ea8de8ced75e469276523a87fef08593f6e41c3f"
+    },
+    "ledger.parquet": {
+      "bytes": 715209,
+      "sha256": "4a8025cbe67af177c04eb40eead210c8c52ec202c18447d3b06fffdd88f4e80a"
+    },
+    "monthly.csv": {
+      "bytes": 80112,
+      "sha256": "8b50f15e52296b3198e0ab88d7dacf2ebe0f2194e34815103dfb640cfcf73e7c"
+    },
+    "periods.csv": {
+      "bytes": 10306,
+      "sha256": "1c9825a559dcdd9cbaa3d5a2f5a85c5d5dc4d7aa259a56b81f1e98463488f24c"
+    },
+    "source_inventory.json": {
+      "bytes": 11316274,
+      "sha256": "9e81f827cc2fbb095a840adf60d9251f405c15a29ffdb19f77f2e741d3b5e514"
+    },
+    "summary.json": {
+      "bytes": 396695,
+      "sha256": "e39fe25e7f7947362993595351fd71e804b0fbfcf8985761a400e2c27a07b914"
+    }
+  },
+  "ledger_rows": 14242,
+  "monthly_rows": 216,
+  "period_rows": 24,
+  "reporter_sha256": "1968aefcba4abf650d5e13cd16435ac74067cfee78ce5752fde6427e5a941146",
+  "status": "COMPLETE"
+}

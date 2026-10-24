@@ -1,0 +1,27 @@
+{
+  "utc": "2026-10-24T04:16:05.082485+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\reconcile_plot_monthly_h1_2026_20261024.py",
+    "--report",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_18month_consolidated_report_20261024_01",
+    "--manifest-sha256",
+    "6c104c866c320beea811b7ee295a4b625d56d44a905a352e1d6f34d9cee7932d",
+    "--exit-receipt",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_18month_consolidated_report_20261024_01_logs\\exit.json",
+    "--exit-sha256",
+    "eafcea8ed68506731d72ed0890dc84b96169bfde73caf65154328cfa27fabfec",
+    "--out",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_h1_2026_independent_figure_20261024_01"
+  ],
+  "script_sha256": "658e0f9d23a83c1c7400b684525c87fd50f706b34023beb33cce42401e66e3e4",
+  "report_manifest_sha256": "6c104c866c320beea811b7ee295a4b625d56d44a905a352e1d6f34d9cee7932d",
+  "report_exit_sha256": "eafcea8ed68506731d72ed0890dc84b96169bfde73caf65154328cfa27fabfec",
+  "resources_before": {
+    "available_ram_bytes": 7722704896,
+    "free_commit_bytes": 4670259200,
+    "minimum_bytes": 2000000000
+  },
+  "scope": "CLOSED_REPORTER_OUTPUTS_ONLY",
+  "fit_or_inference": false
+}
