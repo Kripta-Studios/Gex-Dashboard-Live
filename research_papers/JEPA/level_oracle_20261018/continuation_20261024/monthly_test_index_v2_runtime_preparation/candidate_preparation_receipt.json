@@ -1,0 +1,20 @@
+{
+  "status": "FINAL_CANDIDATE_PENDING_INDEPENDENT_REVIEW_AND_ROOT_PUBLICATION",
+  "runtime_authorized": false,
+  "captured_utc": "2026-10-24T03:01:55.927950+00:00",
+  "source_draft": {
+    "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_index_v2_runtime_preparation_20261024_01\\draft_closed_02.json",
+    "sha256": "c2762e4c9d90f729c208637242a8ec284180407c6e217203849a0c9cdf850078"
+  },
+  "final_candidate": {
+    "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\MONTHLY_TEST_INDEX_V2_AUDIT_RUNTIME_REVIEW_20261024_01.json",
+    "sha256": "055d2734469a77dc607585d000f594ed3088580400c46f513c209119a793eab1"
+  },
+  "permitted_transformations": [
+    "proposed_runtime extracted",
+    "contractual runtime status set",
+    "contractual launch_binding status set"
+  ],
+  "note": "The final JSON contains contractual recognition statuses, not a self-authorized process launch. Authorization is external: independent exact-byte review, root publication and launch decision. runtime_authorized is intentionally absent from immutable candidate.",
+  "no_auditor_or_preflight_executed": true
+}

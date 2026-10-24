@@ -1,0 +1,27 @@
+{
+  "independent_audit_pending": true,
+  "members": {
+    "monitor_code": {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_monthly_test_20261023.py",
+      "sha256": "3e77bda56dabd8287b04ae9a47b4dcd45d5967a01a31514e933cbb44b6f4c08d"
+    },
+    "monitor_open": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_launch_20261024_01\\monitor_open.json",
+      "sha256": "639117c6f828db726161f39e6b900f72743ea7c8c2897d3df653f5ab0fab8d13"
+    },
+    "monitored_exit": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_launch_20261024_01\\monitored_exit.json",
+      "sha256": "31851168f5837e1ff837faa815b3e02090f4a3b783d55cd990b6795ca6e0c7b4"
+    },
+    "process_binding": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_launch_20261024_01\\process_binding.json",
+      "sha256": "34f7855199e4a5900941dbe838159829b1e1d2a9ca154a9f32b5d29fb271809e"
+    },
+    "runtime_launch": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\launch.json",
+      "sha256": "dce4a9ab8ab3edd1da90ef82feb59e83a74a5a4f4f8fd230258abad274bc49f3"
+    }
+  },
+  "runtime_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01",
+  "status": "PROCESS_CHAIN_RECORDED"
+}

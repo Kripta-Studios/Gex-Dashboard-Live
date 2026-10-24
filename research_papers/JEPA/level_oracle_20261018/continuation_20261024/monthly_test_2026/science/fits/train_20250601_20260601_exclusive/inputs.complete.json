@@ -1,0 +1,9 @@
+{
+  "status": "COMPLETE",
+  "binding": "7250620ebe25da082c8d080faa54d006c15f36f2070f414405d14ca18a27158f",
+  "files": {
+    "fits\\train_20250601_20260601_exclusive\\inputs.json": "314c96c2a570956215fda00c0e591b981f85f945b647b2f2849788e084c1f7d1"
+  },
+  "extra": {},
+  "completed_utc": "2026-10-24T02:38:40.199270+00:00"
+}

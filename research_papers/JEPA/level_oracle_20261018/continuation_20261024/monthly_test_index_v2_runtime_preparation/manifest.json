@@ -1,0 +1,32 @@
+{
+  "status": "PREPARATION_EVIDENCE_NOT_RUNTIME_AUTHORIZATION",
+  "runtime_authorized": false,
+  "copies": 4,
+  "total_bytes": 69887,
+  "files": [
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_index_v2_runtime_preparation_20261024_01\\prepare_draft.py",
+      "copy": "prepare_draft.py",
+      "sha256": "7438bc24a4433ea5a48ff7719b9ab001e3e256659c677549c20542197414a1e2",
+      "bytes": 12348
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_index_v2_runtime_preparation_20261024_01\\draft_pending_01.json",
+      "copy": "draft_pending_01.json",
+      "sha256": "691d833ec29f6944c23517679ab0605db756bdd20b371a3dc60231c1d1c54c99",
+      "bytes": 26224
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_index_v2_runtime_preparation_20261024_01\\draft_closed_02.json",
+      "copy": "draft_closed_02.json",
+      "sha256": "c2762e4c9d90f729c208637242a8ec284180407c6e217203849a0c9cdf850078",
+      "bytes": 30102
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_index_v2_runtime_preparation_20261024_01\\candidate_preparation_receipt.json",
+      "copy": "candidate_preparation_receipt.json",
+      "sha256": "3e4253cf3c46b6da592b4712d5efa970173a2e1a2097f1ef715f15937c03eefd",
+      "bytes": 1213
+    }
+  ]
+}

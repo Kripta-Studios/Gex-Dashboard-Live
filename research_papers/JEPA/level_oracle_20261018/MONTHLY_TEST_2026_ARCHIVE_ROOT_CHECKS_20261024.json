@@ -1,0 +1,13 @@
+{
+  "status": "PASS_ROOT_COMPACT_ARCHIVE_VERIFICATION",
+  "utc": "2026-10-24T03:03:50.069282+00:00",
+  "manifest_sha256": "75a8ad57bb4fc58c3e649f7fa53e6efaa3d9f1b3b773188095e886de2b8aaa2f",
+  "source_and_copy_files_rehashed": 136,
+  "copied_bytes": 26039485,
+  "local_references_sha256": "92fa946ef48f1d981dca0236be3db1a7eba6b21505312579cdc4bcf7e2a83942",
+  "note_sha256": "3d2dbd2e4763433181e51e456a50a969bf7ef8f55e323c0651770b1e1aa4ed46",
+  "note_links_checked": 7,
+  "large_payload_rehash": false,
+  "economic_metrics_parsed": false,
+  "independent_economic_audit_pending": true
+}

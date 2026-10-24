@@ -1,0 +1,9 @@
+{
+  "status": "COMPLETE",
+  "binding": "7250620ebe25da082c8d080faa54d006c15f36f2070f414405d14ca18a27158f",
+  "files": {
+    "fits\\train_20230101_20260101_exclusive\\targets.npz": "795a9ce51b900466f217d4856713ccb457a6707bf04594e298f91d16cf315b2d"
+  },
+  "extra": {},
+  "completed_utc": "2026-10-24T01:10:17.537698+00:00"
+}

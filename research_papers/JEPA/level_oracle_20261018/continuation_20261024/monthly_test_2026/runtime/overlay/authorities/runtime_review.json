@@ -1,0 +1,167 @@
+{
+  "status": "PASS_MONTHLY_TEST_RESOURCE_RUNTIME_REVIEW",
+  "scope": "test",
+  "mode": "initial",
+  "implementation_review_sha256": "49a3590504c74c06dc5a9b830bcf71b7472dbecae2ab267218aaa22aa2dd0280",
+  "review_expectations": {
+    "files": {
+      "run_monthly_test_resource_overlay.py": "f2b0490cdec916f98c09fc77a6533d0eab8c4f2711331753f7d5c998d81253c1",
+      "test_monthly_test_resource_overlay.py": "3f8002125bfc35619d742fd039c48cc1c5a985613ab886b29b004f9cd7fc850b",
+      "MONTHLY_TEST_RESOURCE_OVERLAY_SPEC_20261023.md": "690a8389f53e6b0fc1599b806097edefe88afc67b74505ab89367dccc74f86a7"
+    },
+    "original_dependencies": {
+      "run_monthly_walk_forward.py": "47a4df8b019d9d297ca1ee9b89fff63406409659336dbd7b0e4d7af01ed348bb",
+      "rolling_monthly_schedule.py": "92df2e68734d24a61b4ddccec1f9451a5e25c862f5a1b581ae779c163fcf205a",
+      "monthly_policy_selection.py": "1fe43fa92fe0441be35bc67c9a2a60ce2829edaf9ea80f5fa0a5c8967a599da0",
+      "MONTHLY_WALK_FORWARD_PLAN.md": "71ccd29587be4012dad9fe3ada4ad29ff7b93b94ea08340343ebe39d287c97ae",
+      "rollout_sampling.py": "8bc8cee2b89cf70490793b88d74dff558bbd60077d383a852392fcc2383c748c",
+      "train_causal_rollout.py": "d031eca08c71ad89324619e096dcc9be3966ddea23d52061019018ff6ff58a43",
+      "train_models.py": "a5192737abd1c0b3e4a6a6cd391117d97a014c06b6cd528201ba1f5df0ef6808",
+      "features.py": "b5c63f918319f844793abb3346a34515526073374f5e71af2129a94f2369d4e0",
+      "level_engine.py": "70cc5d20990d971d16299fd008ff8e05ac99f99a6a2917a202fcb9a5f413b7c6",
+      "build_cache.py": "985e87dcbd1e73289b58e4576445e47e73a6edea13e5ac73dde3ad629180d69f",
+      "causal_rollout.py": "8df92119071442045a8434057e220bad567668d8ee314fddd263d052ebeea0d9"
+    },
+    "original_run_contract_sha256": "7250620ebe25da082c8d080faa54d006c15f36f2070f414405d14ca18a27158f",
+    "threshold_bytes": 2000000000,
+    "scope": "test",
+    "scientific_inputs_changed": false
+  },
+  "original_run_contract_sha256": "7250620ebe25da082c8d080faa54d006c15f36f2070f414405d14ca18a27158f",
+  "scientific_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1",
+  "allowed_read_roots": [
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_clock_dataset_v1",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_clock_dataset_v1_audit",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\engine_v1",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\features_v1",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_resource_overlay_resume_20261023_01",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_resume_20261023_01_logs",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_validation_audit_20261024_02",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_audit_launch_20261024_02",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_runtime_chain_verification_20261024_01"
+  ],
+  "validation": {
+    "audit": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_validation_audit_20261024_02\\audit.json",
+      "sha256": "ba9fbd9edf849eb823f098461906feede9782b1e513f4d1954e6d58f52549cbc"
+    },
+    "freeze": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\validation_freeze.json",
+      "sha256": "df9a490d310d86a040e0ca9e6ad5b07c64d3474b9c71ce83e445309511fa9237"
+    },
+    "runtime_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_resource_overlay_resume_20261023_01",
+    "process_binding": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_resume_20261023_01_logs\\process_monitor_binding.json",
+      "sha256": "21588f13e2fac83e4522eb848753a2431c509fb5e6a1b0627221c6d60b1714eb"
+    },
+    "monitor_open": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_resume_20261023_01_logs\\monitor_open.json",
+      "sha256": "3ee627e3200e6488dadf6882d61f013021dbd270f90ac4a8613e4674d29faef5"
+    },
+    "monitored_exit": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_resume_20261023_01_logs\\monitored_exit.json",
+      "sha256": "918964c6474df52067db5fb6eecb1c07339cb9bca262e8cab560f22ba3b00e93"
+    },
+    "monitor_code": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_resume_20261023_01_logs\\monitor_existing_process_20261023.py",
+      "sha256": "96189a5f805113ab9d94ddc72b075a683048b79a13da8f680cbb80b4935b602b"
+    },
+    "runtime_launch": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_resource_overlay_resume_20261023_01\\launch.json",
+      "sha256": "22b1119e08f814a2b76c016d119bc8db9abe6aaa1eb13edb9af54dfd0c5fa69b"
+    },
+    "runtime_completion": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_resource_overlay_resume_20261023_01\\completion.json",
+      "sha256": "ccce687bfa850d894606ff29ef6014add9e39a142fd84c3dd0d76e2a2a5c185b"
+    },
+    "source_launch": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_resume_20261023_01_logs\\process.json",
+      "sha256": "056a155c06153e6dce6c9686b27cd2ed47f59ad93e2e228c81bcd0a1ac8ca8c2"
+    }
+  },
+  "expected_completed_test_fit_keys": [],
+  "prior_test_attempts": [],
+  "expected_test_evidence": {},
+  "launch_binding": {
+    "status": "REVIEWED_MONTHLY_TEST_ONE_SHOT_LAUNCH",
+    "runtime_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01",
+    "logs_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_launch_20261024_01",
+    "launcher_review": {
+      "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\MONTHLY_TEST_LAUNCH_IMPLEMENTATION_REVIEW_20261023.json",
+      "sha256": "6d9713b14adf9941980696bdd6ab1aae110a787f1a61ff4ba36b3ba88e998d22"
+    },
+    "published_files": {
+      "MONTHLY_TEST_LAUNCH_IMPLEMENTATION_REVIEW_20261023.json": "6d9713b14adf9941980696bdd6ab1aae110a787f1a61ff4ba36b3ba88e998d22",
+      "MONTHLY_TEST_LAUNCH_SPEC_20261023.md": "1507f27de2445abbd63e8f088bb1f6eb52b8ae3e7178023cf720a67695e9b18f",
+      "MONTHLY_TEST_RESOURCE_OVERLAY_REVIEW_20261023.json": "49a3590504c74c06dc5a9b830bcf71b7472dbecae2ab267218aaa22aa2dd0280",
+      "MONTHLY_TEST_RESOURCE_OVERLAY_SPEC_20261023.md": "690a8389f53e6b0fc1599b806097edefe88afc67b74505ab89367dccc74f86a7",
+      "MONTHLY_WALK_FORWARD_IMPLEMENTATION_REVIEW.json": "0af3b22302c4eea2da0671bf7fa7f1f8dc3a775ccc7a372e23f0de082a32cdc7",
+      "MONTHLY_WALK_FORWARD_PLAN.md": "71ccd29587be4012dad9fe3ada4ad29ff7b93b94ea08340343ebe39d287c97ae",
+      "build_cache.py": "985e87dcbd1e73289b58e4576445e47e73a6edea13e5ac73dde3ad629180d69f",
+      "causal_rollout.py": "8df92119071442045a8434057e220bad567668d8ee314fddd263d052ebeea0d9",
+      "features.py": "b5c63f918319f844793abb3346a34515526073374f5e71af2129a94f2369d4e0",
+      "launch_monthly_test_20261023.py": "3e77bda56dabd8287b04ae9a47b4dcd45d5967a01a31514e933cbb44b6f4c08d",
+      "level_engine.py": "70cc5d20990d971d16299fd008ff8e05ac99f99a6a2917a202fcb9a5f413b7c6",
+      "monthly_policy_selection.py": "1fe43fa92fe0441be35bc67c9a2a60ce2829edaf9ea80f5fa0a5c8967a599da0",
+      "rolling_monthly_schedule.py": "92df2e68734d24a61b4ddccec1f9451a5e25c862f5a1b581ae779c163fcf205a",
+      "rollout_sampling.py": "8bc8cee2b89cf70490793b88d74dff558bbd60077d383a852392fcc2383c748c",
+      "run_monthly_test_resource_overlay.py": "f2b0490cdec916f98c09fc77a6533d0eab8c4f2711331753f7d5c998d81253c1",
+      "run_monthly_walk_forward.py": "47a4df8b019d9d297ca1ee9b89fff63406409659336dbd7b0e4d7af01ed348bb",
+      "test_launch_monthly_test_20261023.py": "684c495989d62f9feea40791d34c3cd2f9e12349a82de34189785ff13e64eed8",
+      "test_monthly_test_resource_overlay.py": "3f8002125bfc35619d742fd039c48cc1c5a985613ab886b29b004f9cd7fc850b",
+      "train_causal_rollout.py": "d031eca08c71ad89324619e096dcc9be3966ddea23d52061019018ff6ff58a43",
+      "train_models.py": "a5192737abd1c0b3e4a6a6cd391117d97a014c06b6cd528201ba1f5df0ef6808"
+    }
+  },
+  "supporting_evidence": {
+    "audit_process": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_audit_launch_20261024_02\\process.json",
+      "sha256": "5ba38a789e035e25cf67984f2db94c4eaf2f09158eab24df8ec532a5316bc763"
+    },
+    "audit_exit": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_audit_launch_20261024_02\\exit.json",
+      "sha256": "7c7f24743f961707dbfe330b2a0f61b92ad849fe75862ca94c991f802ef21e21"
+    },
+    "audit_supervisor_completion": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_audit_launch_20261024_02\\completion.json",
+      "sha256": "07839f7f7437b87d0a8c011fe4ba6032eec16a21637f2c5b84f233d4d77c663b"
+    },
+    "validation_chain_verification": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_validation_runtime_chain_verification_20261024_01\\verification.json",
+      "sha256": "b7b64e2a3d8dd1751287f0530151a09100e2949aa4295b1f52a246855a5d3730"
+    }
+  },
+  "construction_evidence": {
+    "created_utc": "2026-10-23T23:55:02.224633+00:00",
+    "source": "Real audit2025 V2 and observed producer/auditor exit zero; no synthetic closures",
+    "validation_calendar_ticker_days": 750,
+    "validation_unique_fit_windows": 24,
+    "validation_months": 12,
+    "selected_mode": null,
+    "freeze_status": "FAIL_NO_DAILY_COMPLIANT_MODE",
+    "names_only_initial_state": {
+      "model_files": 24,
+      "completed_test_fit_keys": [],
+      "test_evidence_files": 0,
+      "new_runtime_root_absent": true,
+      "new_logs_root_absent": true
+    },
+    "audited_inventory_and_completion_paths_bounded": 38561,
+    "payload_rehash_performed": false,
+    "admit_or_preflight_called": false,
+    "market_execution_started": false
+  },
+  "execution_conditions": [
+    "Independent review of these exact bytes and explicit publication precede use.",
+    "Root supplies this JSON SHA, audit2025 SHA and full published commit externally to the frozen launcher.",
+    "The launcher verifies exact Git objects; root independently verifies remote publication.",
+    "Full real admission/rehash and current RAM plus commit >= 2000000000 bytes remain mandatory before the one-shot launch.",
+    "Historical validation command contains a relative script; invoke the launcher from the repository working directory.",
+    "No automatic retry or refit of partial models; any failed attempt is preserved."
+  ],
+  "promotion_approved": false,
+  "technical_ready": false,
+  "development_seen": true
+}

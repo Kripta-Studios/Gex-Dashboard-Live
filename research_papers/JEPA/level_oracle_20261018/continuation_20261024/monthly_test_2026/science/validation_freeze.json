@@ -1,0 +1,74 @@
+{
+  "status": "FAIL_NO_DAILY_COMPLIANT_MODE",
+  "selected_mode": null,
+  "approved": false,
+  "common_scales": {
+    "SPXW": 680.0,
+    "SPY": 79.0,
+    "QQQ": 85.0
+  },
+  "choices": [
+    {
+      "mode": "static",
+      "expected_ticker_days": 750,
+      "missing_no_evaluable": 0,
+      "available_days_without_fill": 72,
+      "active_ticker_days": 678,
+      "daily_viable": false,
+      "trades": 2994,
+      "net_base": -49152.39999999998,
+      "net_adverse": -55127.399999999965,
+      "common_scale_mean_daily_score": -0.4069320625465375,
+      "mean_active_day_net_base": -72.49616519174039
+    },
+    {
+      "mode": "expanding",
+      "expected_ticker_days": 750,
+      "missing_no_evaluable": 0,
+      "available_days_without_fill": 99,
+      "active_ticker_days": 651,
+      "daily_viable": false,
+      "trades": 3043,
+      "net_base": -75243.79999999999,
+      "net_adverse": -81319.79999999997,
+      "common_scale_mean_daily_score": -0.45693991064780326,
+      "mean_active_day_net_base": -115.58187403993854
+    },
+    {
+      "mode": "rolling12",
+      "expected_ticker_days": 750,
+      "missing_no_evaluable": 0,
+      "available_days_without_fill": 45,
+      "active_ticker_days": 705,
+      "daily_viable": false,
+      "trades": 3529,
+      "net_base": -122081.39999999998,
+      "net_adverse": -129124.39999999997,
+      "common_scale_mean_daily_score": -0.6553997120873665,
+      "mean_active_day_net_base": -173.1651063829787
+    }
+  ],
+  "selection_period": "2025",
+  "tie_break": [
+    "static",
+    "expanding",
+    "rolling12"
+  ],
+  "common_scale_fit": "train_20230101_20250101_exclusive",
+  "validation_input_hashes": {
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\months\\202501\\daily.json": "cb311e55bdad7196778bffb71f9b4d624580698485923527214f8f27174d3085",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\months\\202502\\daily.json": "a5fd3029e4b05d725241c44976c0dc67fe03310953642fcb7eae699ff6c8c294",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\months\\202503\\daily.json": "db7f4c7fd602011f3192c0c6e6f650291af49cf2034ddb9f242eb0910b72f06f",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\months\\202504\\daily.json": "f4e664d7ce64634d3ad968baf072b86fcb21b7aa5051e4b394a7f29cfcbbad5e",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\months\\202505\\daily.json": "7d89152b171d26274d5196724b7a3a4e190efa4082d435d3255191bd8a061012",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\months\\202506\\daily.json": "5911d7a454756ff7147ef2dffac21eede3402e0136fb15062f2630beabf07cab",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\months\\202507\\daily.json": "a253e859b017261ce854ff775870deca064c4a5a352758d23887d379da4770a2",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\months\\202508\\daily.json": "e6add7d406a074160c67edb33be0c06a5c35757640505a97cb52bb7d0145ebe2",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\months\\202509\\daily.json": "3ab172b95063d2be3f0ea5243b80be235139fb09bc52ad2d6ad40e52c617edcd",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\months\\202510\\daily.json": "545cbc4cab1ab8f8f34a2724ed035c7f9587c9d5a60daed8f7fd70aeded64a3e",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\months\\202511\\daily.json": "d55802098319b82362807271ed6be4fa5e77587c15c35e8a409e218545ebbb64",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\months\\202512\\daily.json": "235f15da22959dc6527da5ed7b6be0acc9b62bcd495957c91aab9a08f2e7cdb1"
+  },
+  "update_rule": "FROZEN_CALENDAR_STATIC_EXPANDING_ROLLING12",
+  "outcomes_2026_used_for_mode_selection": false
+}

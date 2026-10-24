@@ -1,0 +1,17 @@
+{
+  "status": "COMPLETE",
+  "modes": [
+    "static",
+    "expanding",
+    "rolling12"
+  ],
+  "evaluated_months": 18,
+  "unique_fit_windows": 36,
+  "selected_mode": null,
+  "development_seen": true,
+  "promotion_approved": false,
+  "report_hashes": {
+    "2025": "d7e5215889a796af5bc46e52f9754f60d36c82d4556c9085695ad3dcf1171d4e",
+    "2026": "76b8b1f72a569fc5327c009b6b554b7c8193797cc380be70b3d94be0e6248071"
+  }
+}

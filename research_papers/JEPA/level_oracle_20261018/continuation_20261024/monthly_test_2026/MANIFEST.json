@@ -1,0 +1,977 @@
+{
+  "actual_exit_code": 0,
+  "archived_utc": "2026-10-24T03:01:42.561639+00:00",
+  "copied_bytes": 26039485,
+  "copied_files": 136,
+  "copies": [
+    {
+      "archive_path": "science/run_contract.json",
+      "bytes": 3072,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\run_contract.json",
+      "sha256": "7250620ebe25da082c8d080faa54d006c15f36f2070f414405d14ca18a27158f",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20230101_20260101_exclusive.complete.json",
+      "bytes": 888,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20230101_20260101_exclusive.complete.json",
+      "sha256": "814e41120550dae406c34203d26327cf875baad0093989091b3b63dc1daf82c4",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20230101_20260101_exclusive.txt",
+      "bytes": 800857,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20230101_20260101_exclusive.txt",
+      "sha256": "147e4c912d48fdd9e0d0206193b536eb28dd4c8354e5b7ced5ecbdbf36dfe494",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20230101_20260101_exclusive.fit_started.json",
+      "bytes": 800,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20230101_20260101_exclusive.fit_started.json",
+      "sha256": "e765493b82c94be41d6edb2a4fe6543aab61cf3a1501ab99baee1d6561166425",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20230101_20260101_exclusive/inputs.complete.json",
+      "bytes": 330,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20230101_20260101_exclusive\\inputs.complete.json",
+      "sha256": "e331d1e4d64c49ded7e2369c2ae107af267e9f54e4c075d2b1d7049a57acd34d",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20230101_20260101_exclusive/matrix.complete.json",
+      "bytes": 329,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20230101_20260101_exclusive\\matrix.complete.json",
+      "sha256": "4a58f281ff7804962769135b1d2060b0013de08daab1eb09d3df099c02e14ee4",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20230101_20260101_exclusive/targets.complete.json",
+      "bytes": 330,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20230101_20260101_exclusive\\targets.complete.json",
+      "sha256": "bad961cb388a64768d0da07a231a1e53c5d061b86003d49aaf931111924c5e6e",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20230101_20260201_exclusive.complete.json",
+      "bytes": 888,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20230101_20260201_exclusive.complete.json",
+      "sha256": "da31c2f44de9cd0409a96cba76b70ab5498b81207ad9ca189192386771fa3937",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20230101_20260201_exclusive.txt",
+      "bytes": 801516,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20230101_20260201_exclusive.txt",
+      "sha256": "785ff96250f5f3b638303224d7f28e8f2b7565e34b10ee28d4ee9e9ca245b653",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20230101_20260201_exclusive.fit_started.json",
+      "bytes": 800,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20230101_20260201_exclusive.fit_started.json",
+      "sha256": "2c52c61e284ecb999bbe8ac02d5787cca201e06413f958d23f40f801dd5bc347",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20230101_20260201_exclusive/inputs.complete.json",
+      "bytes": 330,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20230101_20260201_exclusive\\inputs.complete.json",
+      "sha256": "0488ca8304ab46bd1d38d362826a1cf53b7875b6fd3097855ab5b7fcb153187a",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20230101_20260201_exclusive/matrix.complete.json",
+      "bytes": 329,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20230101_20260201_exclusive\\matrix.complete.json",
+      "sha256": "b6133760ee6342e3857feef3d8ad45f5ad32b580d8289108b2c08a83ab0dbe3b",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20230101_20260201_exclusive/targets.complete.json",
+      "bytes": 330,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20230101_20260201_exclusive\\targets.complete.json",
+      "sha256": "ae22591a6db55565ae484c780ab6f02d7050540690eb39a39c70cd8bbd494c2b",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20230101_20260301_exclusive.complete.json",
+      "bytes": 888,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20230101_20260301_exclusive.complete.json",
+      "sha256": "37104d97d5507f0d67654b7eca00a35373ffee431d24b9c85622e1325a51f047",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20230101_20260301_exclusive.txt",
+      "bytes": 800806,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20230101_20260301_exclusive.txt",
+      "sha256": "29f57a62f48b7739dbeb0b00a229fb083f16beab7f2c9732854de2cc9123d5e1",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20230101_20260301_exclusive.fit_started.json",
+      "bytes": 800,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20230101_20260301_exclusive.fit_started.json",
+      "sha256": "a6819504c393d593e9ffd56ba5f61bc462a15538ec64a9804851a424bfb3545b",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20230101_20260301_exclusive/inputs.complete.json",
+      "bytes": 330,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20230101_20260301_exclusive\\inputs.complete.json",
+      "sha256": "1b6c78b5e68f8c8d11f589f284efd50f68326a592074320b9df46bd7318c3b44",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20230101_20260301_exclusive/matrix.complete.json",
+      "bytes": 329,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20230101_20260301_exclusive\\matrix.complete.json",
+      "sha256": "1faa84b6f56c21b6c5baef6eab1cbba30e13166a6c37e1856f82ac141d34af3c",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20230101_20260301_exclusive/targets.complete.json",
+      "bytes": 330,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20230101_20260301_exclusive\\targets.complete.json",
+      "sha256": "ca13d499a8112a217d5f1e18b774cc507255dff936e069c9d02756fa2e6d7f77",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20230101_20260401_exclusive.complete.json",
+      "bytes": 888,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20230101_20260401_exclusive.complete.json",
+      "sha256": "0ebef3089338ee22e0fec37a4e4645a598bbd8086567b8685c6900ee8739a0be",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20230101_20260401_exclusive.txt",
+      "bytes": 785224,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20230101_20260401_exclusive.txt",
+      "sha256": "cc7fa0cbb976e2afbebc04a4bc7fc3e0c18b742a80fdc31bd9dd8ef8563f6240",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20230101_20260401_exclusive.fit_started.json",
+      "bytes": 800,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20230101_20260401_exclusive.fit_started.json",
+      "sha256": "c37b159cea40944e9cc01f5eee74d4dd3f3b0c709ee272dbcc5c8bcd3c36730a",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20230101_20260401_exclusive/inputs.complete.json",
+      "bytes": 330,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20230101_20260401_exclusive\\inputs.complete.json",
+      "sha256": "d3f3c8a8e9dd095389afb41d9c0872858fc2f6888f52794c43227f61b0ca4ae0",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20230101_20260401_exclusive/matrix.complete.json",
+      "bytes": 329,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20230101_20260401_exclusive\\matrix.complete.json",
+      "sha256": "32e5935f197e4c8da480153aa66225c940b2b593f6cc67b70507c20aaf566f5f",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20230101_20260401_exclusive/targets.complete.json",
+      "bytes": 330,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20230101_20260401_exclusive\\targets.complete.json",
+      "sha256": "1e11cfab622064aba5e1f28456806fb23e2a579ec8ea3647fa8012f12eaf1c02",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20230101_20260501_exclusive.complete.json",
+      "bytes": 888,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20230101_20260501_exclusive.complete.json",
+      "sha256": "7995ebfdd6d7170f13e96c721d4da82677fa3308939fda88cb013e5ae7324d48",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20230101_20260501_exclusive.txt",
+      "bytes": 789128,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20230101_20260501_exclusive.txt",
+      "sha256": "926a8af72fd6d95c2f4a7486797c92b56b4aab61d03cbb10bef7ff39e69b5dab",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20230101_20260501_exclusive.fit_started.json",
+      "bytes": 800,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20230101_20260501_exclusive.fit_started.json",
+      "sha256": "670616f9b6104d1695812789901637a62e3e5429a05bd55588441774eaa3b6e6",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20230101_20260501_exclusive/inputs.complete.json",
+      "bytes": 330,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20230101_20260501_exclusive\\inputs.complete.json",
+      "sha256": "9186b430e31e6994823ae0dfa45086a3d0ead766a54951cbde181dc6ba5242c5",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20230101_20260501_exclusive/matrix.complete.json",
+      "bytes": 329,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20230101_20260501_exclusive\\matrix.complete.json",
+      "sha256": "79da7892976ff2ac207939f980655e3beac47917287f41bfec57f9e40065e823",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20230101_20260501_exclusive/targets.complete.json",
+      "bytes": 330,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20230101_20260501_exclusive\\targets.complete.json",
+      "sha256": "e252aa626fa91ba4ed9b4e09c9731c43e53afcfdd49eb33bb7a6f4b3a815152a",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20230101_20260601_exclusive.complete.json",
+      "bytes": 888,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20230101_20260601_exclusive.complete.json",
+      "sha256": "685240b984c7082e444fbcb201b3db8f601aa2019cf66129255b312ad2d9c974",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20230101_20260601_exclusive.txt",
+      "bytes": 780902,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20230101_20260601_exclusive.txt",
+      "sha256": "be9f4f50cdbcc789addfaf56c7351281ceb00d4b7879d1dfe9e155b8efd081ed",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20230101_20260601_exclusive.fit_started.json",
+      "bytes": 800,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20230101_20260601_exclusive.fit_started.json",
+      "sha256": "03356e957d6495c9b5fc33f15729c70797a9bab9082331ab4fad9be43880e2a8",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20230101_20260601_exclusive/inputs.complete.json",
+      "bytes": 330,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20230101_20260601_exclusive\\inputs.complete.json",
+      "sha256": "a695226ba2cf146554b0b094304267bbe29201e0a38ff3772e79df217e0a7ab2",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20230101_20260601_exclusive/matrix.complete.json",
+      "bytes": 329,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20230101_20260601_exclusive\\matrix.complete.json",
+      "sha256": "ba8b31a9f0bd56478160dc5526920e17957fe547b245880915fde4aaa373de30",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20230101_20260601_exclusive/targets.complete.json",
+      "bytes": 330,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20230101_20260601_exclusive\\targets.complete.json",
+      "sha256": "b07e95221aa533d36e99ebbb1957e910cf1bbc16733f1749adce2e73a46035aa",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20250101_20260101_exclusive.complete.json",
+      "bytes": 887,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20250101_20260101_exclusive.complete.json",
+      "sha256": "847ead648ca98acf9d8a34642e8bf52c74145bfa002c8000e9d9765b4f26a2c4",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20250101_20260101_exclusive.txt",
+      "bytes": 784246,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20250101_20260101_exclusive.txt",
+      "sha256": "afc3cc29c2e68c8b0da4fe6481bb94b83266a9da93732204cc889a70325a39f8",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20250101_20260101_exclusive.fit_started.json",
+      "bytes": 799,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20250101_20260101_exclusive.fit_started.json",
+      "sha256": "202997e25fc37299125f61f80981354557a8681861bcf52359e2b60b3e5f22c9",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20250101_20260101_exclusive/inputs.complete.json",
+      "bytes": 330,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20250101_20260101_exclusive\\inputs.complete.json",
+      "sha256": "f8a8d2cca416941b55941e147b0e29d368b222f5d7dbcf29f2b1cb4a91bbd46f",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20250101_20260101_exclusive/matrix.complete.json",
+      "bytes": 329,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20250101_20260101_exclusive\\matrix.complete.json",
+      "sha256": "07dfff00cc6afcf9af57bffe7482696b58aa0dd371a322ac2bba45d748c3f657",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20250101_20260101_exclusive/targets.complete.json",
+      "bytes": 330,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20250101_20260101_exclusive\\targets.complete.json",
+      "sha256": "36a0521d542ba5b070dae8c5e23deab477ad527726b9b2581c457f957418c6c3",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20250201_20260201_exclusive.complete.json",
+      "bytes": 887,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20250201_20260201_exclusive.complete.json",
+      "sha256": "6ad864bc085aac51960927098ef1e26be93f0c041c4d4218d62606fa0ce618d5",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20250201_20260201_exclusive.txt",
+      "bytes": 790415,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20250201_20260201_exclusive.txt",
+      "sha256": "c86749ea8cddfdb8cfc1e5914dd2056e9192c405fe181a2348d12ae040962abd",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20250201_20260201_exclusive.fit_started.json",
+      "bytes": 799,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20250201_20260201_exclusive.fit_started.json",
+      "sha256": "d6231c8c880cc20dac69b0917f7d39dbf69dc2d8774ae0611ca4f231dbebe6b1",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20250201_20260201_exclusive/inputs.complete.json",
+      "bytes": 330,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20250201_20260201_exclusive\\inputs.complete.json",
+      "sha256": "c70aba76d8e2e5622b4b0349390f6b3ed014fba1e7630ecd6675df3e86809968",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20250201_20260201_exclusive/matrix.complete.json",
+      "bytes": 329,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20250201_20260201_exclusive\\matrix.complete.json",
+      "sha256": "9fae567c7409fcf5d07e0dae93dcd697109365dc8ab9302642dcf936f62c92a1",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20250201_20260201_exclusive/targets.complete.json",
+      "bytes": 330,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20250201_20260201_exclusive\\targets.complete.json",
+      "sha256": "ac27d59d1f3460e8c9f7be71be75a404998f1a8ded37ea6d21a4776b15293e7b",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20250301_20260301_exclusive.complete.json",
+      "bytes": 887,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20250301_20260301_exclusive.complete.json",
+      "sha256": "cf1c74b09a741d3ba4990bf48e986b10c3a0221a7a2cc085b43ea6edcd814d53",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20250301_20260301_exclusive.txt",
+      "bytes": 793871,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20250301_20260301_exclusive.txt",
+      "sha256": "647f5c396cf07c7480bf18c6526bc850719c7b7416d985b7201e83cb84d2a8c1",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20250301_20260301_exclusive.fit_started.json",
+      "bytes": 799,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20250301_20260301_exclusive.fit_started.json",
+      "sha256": "43c4588096ea5fdb4f20ec45248caff770e1a09cd8b461691dec40907477b4cc",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20250301_20260301_exclusive/inputs.complete.json",
+      "bytes": 330,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20250301_20260301_exclusive\\inputs.complete.json",
+      "sha256": "4999e64d8dc6fb62b8c57f234e502d8d5c8689c0eae94864be31c21e148d15a9",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20250301_20260301_exclusive/matrix.complete.json",
+      "bytes": 329,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20250301_20260301_exclusive\\matrix.complete.json",
+      "sha256": "0aea58d0726e3592621815d02b83fae136a077ff1441e3abafb655193d941b58",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20250301_20260301_exclusive/targets.complete.json",
+      "bytes": 330,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20250301_20260301_exclusive\\targets.complete.json",
+      "sha256": "035487d8033e464fb5a82502c2a94fc189505381e1e3eafe77b601587b369b66",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20250401_20260401_exclusive.complete.json",
+      "bytes": 887,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20250401_20260401_exclusive.complete.json",
+      "sha256": "6c2ad0fdea998a3edaa2bccbe1b56a35255ddfb05cfff49158f14855da14cd7f",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20250401_20260401_exclusive.txt",
+      "bytes": 774528,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20250401_20260401_exclusive.txt",
+      "sha256": "e2ed1b1cac9b819de29f1859932df8c4550e4fb173097f09b9938bedf30c24a7",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20250401_20260401_exclusive.fit_started.json",
+      "bytes": 799,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20250401_20260401_exclusive.fit_started.json",
+      "sha256": "f746f1c7279b243f0b940c7e53cbcc450937064ea678a1f64818028f95e9a072",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20250401_20260401_exclusive/inputs.complete.json",
+      "bytes": 330,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20250401_20260401_exclusive\\inputs.complete.json",
+      "sha256": "2db8aa679a0a7e7b96a839d7eb5d319c3c25c38a93c7b6005817d8bd2fabce6b",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20250401_20260401_exclusive/matrix.complete.json",
+      "bytes": 329,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20250401_20260401_exclusive\\matrix.complete.json",
+      "sha256": "e3d9bc6d8857d3a188367c5eae5d12d68e1e5dab28dd997fdb1b170c5b3f9784",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20250401_20260401_exclusive/targets.complete.json",
+      "bytes": 330,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20250401_20260401_exclusive\\targets.complete.json",
+      "sha256": "ea248186d9f2f308f0c17b854867e1304ef3af92af76fc40d4b64c01b932c2c4",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20250501_20260501_exclusive.complete.json",
+      "bytes": 887,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20250501_20260501_exclusive.complete.json",
+      "sha256": "eb350de996afbfca4900730ff20fe376607bf4f96979ed1be52fcea226aeae3e",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20250501_20260501_exclusive.txt",
+      "bytes": 786658,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20250501_20260501_exclusive.txt",
+      "sha256": "0271d362b9903f735ce1d4aca68d6752225348f1ac736804ead71728c5f391d3",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20250501_20260501_exclusive.fit_started.json",
+      "bytes": 799,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20250501_20260501_exclusive.fit_started.json",
+      "sha256": "5d775573abaeccf4e4387191e41e318040cb5dbf02ad6e85199b97a19220b6b2",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20250501_20260501_exclusive/inputs.complete.json",
+      "bytes": 330,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20250501_20260501_exclusive\\inputs.complete.json",
+      "sha256": "71fe464c92741b1735335d204f13934b9958e5b0fa47fbc63ae1f4d552f991b0",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20250501_20260501_exclusive/matrix.complete.json",
+      "bytes": 329,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20250501_20260501_exclusive\\matrix.complete.json",
+      "sha256": "4f59367d78415f8b370238ba0e57fcce424dd1753ef6494fee0d7f9ef2a33696",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20250501_20260501_exclusive/targets.complete.json",
+      "bytes": 330,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20250501_20260501_exclusive\\targets.complete.json",
+      "sha256": "1f83a74d3c2b3b242849d6d2a0fefc95756ff13f8bf37b031ee27e1ac9b559b9",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20250601_20260601_exclusive.complete.json",
+      "bytes": 887,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20250601_20260601_exclusive.complete.json",
+      "sha256": "db88d4050024876fb60a86f14537f7be6a42dbe7d30c22b26a7b5e1e5c217e7f",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20250601_20260601_exclusive.txt",
+      "bytes": 787507,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20250601_20260601_exclusive.txt",
+      "sha256": "6f94a972bf86014ed0de5b94cecdd575f1e276ad1cb3f3f30ab24ee23311ac56",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/models/train_20250601_20260601_exclusive.fit_started.json",
+      "bytes": 799,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\models\\train_20250601_20260601_exclusive.fit_started.json",
+      "sha256": "a284bb06da536d06277c71c1295cfa0b876d7f17267e5204e35de7c676b194c1",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20250601_20260601_exclusive/inputs.complete.json",
+      "bytes": 330,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20250601_20260601_exclusive\\inputs.complete.json",
+      "sha256": "ee617fac3ba326acdaf24f51eb3d0eec20c1cc1da21919fcfc35bed21d2e7181",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20250601_20260601_exclusive/matrix.complete.json",
+      "bytes": 329,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20250601_20260601_exclusive\\matrix.complete.json",
+      "sha256": "a428ca78b8cdc3c9f50369b68843d56c9adf7b081ab25791e8dfe5d722ba0de2",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/fits/train_20250601_20260601_exclusive/targets.complete.json",
+      "bytes": 330,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\fits\\train_20250601_20260601_exclusive\\targets.complete.json",
+      "sha256": "002437a8c7b6da1981b38f01ba87d11a7edacb7feb6e8032a16ae340536c320b",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/months/202601/predictions.complete.json",
+      "bytes": 45546,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\months\\202601\\predictions.complete.json",
+      "sha256": "ff2bce574d67ca0ae6db516dbf8338a823d7192096e5663755255d7f6a6154ce",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/months/202601/daily.complete.json",
+      "bytes": 117445,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\months\\202601\\daily.complete.json",
+      "sha256": "1cdd3a0a5906cf90118a3a131ff1e09d72186261ec4987e7cc3cf6e3462dbc34",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/months/202601/economics.complete.json",
+      "bytes": 308,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\months\\202601\\economics.complete.json",
+      "sha256": "9af85835a2dd226f778186532bfce244b1c0d7ae4b671db559726b4a0a9600e0",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/months/202602/predictions.complete.json",
+      "bytes": 43368,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\months\\202602\\predictions.complete.json",
+      "sha256": "1f5a0c3852652d789854b840487e069c1bca30a5652931a3f2d717af18f3ce69",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/months/202602/daily.complete.json",
+      "bytes": 111685,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\months\\202602\\daily.complete.json",
+      "sha256": "8dd512f7818b5cf7f4cb0b254c39d45614c9403631f3b93f9e7d656229011399",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/months/202602/economics.complete.json",
+      "bytes": 308,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\months\\202602\\economics.complete.json",
+      "sha256": "0c909997f870c210cdd9fc4e8a305f919c9c1ec950a26d078a1302452d8c53d0",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/months/202603/predictions.complete.json",
+      "bytes": 49902,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\months\\202603\\predictions.complete.json",
+      "sha256": "0f610e51d4b0ab14fa24a045269ac7e6a99838469256624404621249c2fea7fc",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/months/202603/daily.complete.json",
+      "bytes": 128965,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\months\\202603\\daily.complete.json",
+      "sha256": "08f2a75a748d521ecad1998a8746a6401d1bb1ccf3470f582f1e748e759874b0",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/months/202603/economics.complete.json",
+      "bytes": 308,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\months\\202603\\economics.complete.json",
+      "sha256": "9ce00102046c21fda78c18daa5bd7257a4585d752a4f5a4081efa0c2c548a757",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/months/202604/predictions.complete.json",
+      "bytes": 43380,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\months\\202604\\predictions.complete.json",
+      "sha256": "e78de98aae6cd8eca5ba52cfe1919ae4f167d6b022b22bff9abd7feb6f00e8a2",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/months/202604/daily.complete.json",
+      "bytes": 111715,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\months\\202604\\daily.complete.json",
+      "sha256": "7301908da42f71f8447eb1590d148f255cceb672fd0cb23d521767ccc74fb4f7",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/months/202604/economics.complete.json",
+      "bytes": 308,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\months\\202604\\economics.complete.json",
+      "sha256": "fa52caa5bb7d6ad802f6046a57d93d7241ea52e82fc22bdad7781cecec4ef359",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/months/202605/predictions.complete.json",
+      "bytes": 45546,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\months\\202605\\predictions.complete.json",
+      "sha256": "515d41955ea4d085dfb951fa4b45c2a1711203857eb65d7581ec88eac4ba1db9",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/months/202605/daily.complete.json",
+      "bytes": 117445,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\months\\202605\\daily.complete.json",
+      "sha256": "ee50fbb0631d4fed911f14939ca6a964261bbab760bccc56b81b1270d19647b5",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/months/202605/economics.complete.json",
+      "bytes": 308,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\months\\202605\\economics.complete.json",
+      "sha256": "f396e462e19530c854d8cc6047a4c0f316d7972f0b974dbf0ab06f63d5aa88d5",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/months/202606/predictions.complete.json",
+      "bytes": 47724,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\months\\202606\\predictions.complete.json",
+      "sha256": "bf5eb02b723a4e244353c7c69209d9940278a65cb5e5645928f18a517269e457",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/months/202606/daily.complete.json",
+      "bytes": 123205,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\months\\202606\\daily.complete.json",
+      "sha256": "25bc461f911fbd83d649622b0e291a863590809b9d520c2d6c85e4e0f0178c8d",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/months/202606/economics.complete.json",
+      "bytes": 308,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\months\\202606\\economics.complete.json",
+      "sha256": "e7f149d331375a022002082f705a80052e80258c5ac570da0a22cceba323e0b2",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/reports/2026.complete.json",
+      "bytes": 296,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\reports\\2026.complete.json",
+      "sha256": "7930234f1c7a10d4cff52e0fa322eaaa1aa5f49a9d36a316c6d44d5ee0ba77fd",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/reports/2026.json",
+      "bytes": 21423,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\reports\\2026.json",
+      "sha256": "76b8b1f72a569fc5327c009b6b554b7c8193797cc380be70b3d94be0e6248071",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/completion.complete.json",
+      "bytes": 293,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\completion.complete.json",
+      "sha256": "e58c56b292709f0dd9e77d8d8be9d2d6f22c1842d31d4174f0945b1cec4e8f2f",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/completion.json",
+      "bytes": 430,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\completion.json",
+      "sha256": "04a66e0a2d871b7471c2f18edb834a871b8f47c1147eee3221f08fbf9f2db144",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/validation_freeze.complete.json",
+      "bytes": 300,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\validation_freeze.complete.json",
+      "sha256": "31d1d412d396d257c923f3a2db79b0cde91d64fa114c76904368a3a043de167b",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "science/validation_freeze.json",
+      "bytes": 3957,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\validation_freeze.json",
+      "sha256": "df9a490d310d86a040e0ca9e6ad5b07c64d3474b9c71ce83e445309511fa9237",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "code/scientific_producer/run_monthly_walk_forward.py",
+      "bytes": 49399,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\executed_code\\run_monthly_walk_forward.py",
+      "sha256": "47a4df8b019d9d297ca1ee9b89fff63406409659336dbd7b0e4d7af01ed348bb",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "code/scientific_producer/rolling_monthly_schedule.py",
+      "bytes": 8614,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\executed_code\\rolling_monthly_schedule.py",
+      "sha256": "92df2e68734d24a61b4ddccec1f9451a5e25c862f5a1b581ae779c163fcf205a",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "code/scientific_producer/monthly_policy_selection.py",
+      "bytes": 5164,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\executed_code\\monthly_policy_selection.py",
+      "sha256": "1fe43fa92fe0441be35bc67c9a2a60ce2829edaf9ea80f5fa0a5c8967a599da0",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "code/scientific_producer/MONTHLY_WALK_FORWARD_PLAN.md",
+      "bytes": 6809,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\executed_code\\MONTHLY_WALK_FORWARD_PLAN.md",
+      "sha256": "71ccd29587be4012dad9fe3ada4ad29ff7b93b94ea08340343ebe39d287c97ae",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "code/scientific_producer/rollout_sampling.py",
+      "bytes": 8566,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\executed_code\\rollout_sampling.py",
+      "sha256": "8bc8cee2b89cf70490793b88d74dff558bbd60077d383a852392fcc2383c748c",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "code/scientific_producer/train_causal_rollout.py",
+      "bytes": 46041,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\executed_code\\train_causal_rollout.py",
+      "sha256": "d031eca08c71ad89324619e096dcc9be3966ddea23d52061019018ff6ff58a43",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "code/scientific_producer/train_models.py",
+      "bytes": 58076,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\executed_code\\train_models.py",
+      "sha256": "a5192737abd1c0b3e4a6a6cd391117d97a014c06b6cd528201ba1f5df0ef6808",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "code/scientific_producer/features.py",
+      "bytes": 27601,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\executed_code\\features.py",
+      "sha256": "b5c63f918319f844793abb3346a34515526073374f5e71af2129a94f2369d4e0",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "code/scientific_producer/level_engine.py",
+      "bytes": 27435,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\executed_code\\level_engine.py",
+      "sha256": "70cc5d20990d971d16299fd008ff8e05ac99f99a6a2917a202fcb9a5f413b7c6",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "code/scientific_producer/build_cache.py",
+      "bytes": 18248,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\executed_code\\build_cache.py",
+      "sha256": "985e87dcbd1e73289b58e4576445e47e73a6edea13e5ac73dde3ad629180d69f",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "code/scientific_producer/causal_rollout.py",
+      "bytes": 7004,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1\\executed_code\\causal_rollout.py",
+      "sha256": "8df92119071442045a8434057e220bad567668d8ee314fddd263d052ebeea0d9",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "runtime/overlay/authorities/implementation_review.json",
+      "bytes": 5643,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\authorities\\implementation_review.json",
+      "sha256": "49a3590504c74c06dc5a9b830bcf71b7472dbecae2ab267218aaa22aa2dd0280",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "runtime/overlay/authorities/runtime_review.json",
+      "bytes": 10858,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\authorities\\runtime_review.json",
+      "sha256": "1c6072a871d7d4cbcabc7e82dbbbbdb28d5767ff083571638f956d92250b557b",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "runtime/overlay/completion.json",
+      "bytes": 5383874,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\completion.json",
+      "sha256": "1c4bbf6fe6671b962d1404e145025d06ea8d4d196bd2166c7eb6f836d73e402e",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "runtime/overlay/executed_code/MONTHLY_TEST_RESOURCE_OVERLAY_SPEC_20261023.md",
+      "bytes": 9126,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\executed_code\\MONTHLY_TEST_RESOURCE_OVERLAY_SPEC_20261023.md",
+      "sha256": "690a8389f53e6b0fc1599b806097edefe88afc67b74505ab89367dccc74f86a7",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "runtime/overlay/executed_code/run_monthly_test_resource_overlay.py",
+      "bytes": 27743,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\executed_code\\run_monthly_test_resource_overlay.py",
+      "sha256": "f2b0490cdec916f98c09fc77a6533d0eab8c4f2711331753f7d5c998d81253c1",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "runtime/overlay/executed_code/test_monthly_test_resource_overlay.py",
+      "bytes": 22532,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\executed_code\\test_monthly_test_resource_overlay.py",
+      "sha256": "3f8002125bfc35619d742fd039c48cc1c5a985613ab886b29b004f9cd7fc850b",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "runtime/overlay/launch.json",
+      "bytes": 2375413,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\launch.json",
+      "sha256": "dce4a9ab8ab3edd1da90ef82feb59e83a74a5a4f4f8fd230258abad274bc49f3",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "runtime/overlay/observations/1792804489965098500.json",
+      "bytes": 293,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\observations\\1792804489965098500.json",
+      "sha256": "311c08c68b6f580bc384e13bce929367ee94d0e9b27378ecae430c1c0b074a9c",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "runtime/overlay/observations/1792804704673991500.json",
+      "bytes": 295,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\observations\\1792804704673991500.json",
+      "sha256": "98b7e2bbe48f6e0411c64bff8561522d7d15062ad8f7306c02e9176aa7cb3f97",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "runtime/overlay/observations/1792805377693395800.json",
+      "bytes": 293,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\observations\\1792805377693395800.json",
+      "sha256": "52e5effbe2784ba2f660cc5384b1e6da2711c960b51a1ce2e83dbfae4b3a6936",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "runtime/overlay/observations/1792805591896864900.json",
+      "bytes": 295,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\observations\\1792805591896864900.json",
+      "sha256": "bd9e971096443105e3d8a8fc451933daa1ce67b0796c7b521812f230c64bcab5",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "runtime/overlay/observations/1792806280195158800.json",
+      "bytes": 293,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\observations\\1792806280195158800.json",
+      "sha256": "f5626dda4269a03b36d6ac8a0b3447323c203294f98fe74a578e5953e0205792",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "runtime/overlay/observations/1792806500956386100.json",
+      "bytes": 295,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\observations\\1792806500956386100.json",
+      "sha256": "3349e7f76d3777b3fec267a3339c9442721d245650577b6bd4059ef783292956",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "runtime/overlay/observations/1792807272032557100.json",
+      "bytes": 293,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\observations\\1792807272032557100.json",
+      "sha256": "2cc55fcf8dd6373f056fc21b5625b24e145005f7916105c23a1656ece20b78e5",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "runtime/overlay/observations/1792807494824761800.json",
+      "bytes": 295,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\observations\\1792807494824761800.json",
+      "sha256": "ab6e04e45ca7737b01113174c479f0748854a78f3f83e275f349060746aa5f98",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "runtime/overlay/observations/1792808271432193800.json",
+      "bytes": 293,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\observations\\1792808271432193800.json",
+      "sha256": "e138dad26c010e76be592e30ed5e6139bb9d657a8fb8a6987551b0f53d6ea0f1",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "runtime/overlay/observations/1792808493680937000.json",
+      "bytes": 295,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\observations\\1792808493680937000.json",
+      "sha256": "fe3a864722698eca378e8280495ce8172348c66dbdd69a135410c2e096a652fe",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "runtime/overlay/observations/1792809296931169600.json",
+      "bytes": 293,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\observations\\1792809296931169600.json",
+      "sha256": "d3b1371dd20abdaff87c6dbb82ba73e3f38d12ac29b8d3b4ad972f8a69051c9b",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "runtime/overlay/observations/1792809520670927400.json",
+      "bytes": 295,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\observations\\1792809520670927400.json",
+      "sha256": "888f5134272ef128f8749cd905ac9c5b93adab9347348969bbe4d51668adec56",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "runtime/launcher/admission.json",
+      "bytes": 216,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_launch_20261024_01\\admission.json",
+      "sha256": "0de9eb96b55868e5106f7960c50887246d00cad800acd570124bdc89843c84ba",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "runtime/launcher/monitor_open.json",
+      "bytes": 1266,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_launch_20261024_01\\monitor_open.json",
+      "sha256": "639117c6f828db726161f39e6b900f72743ea7c8c2897d3df653f5ab0fab8d13",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "runtime/launcher/monitored_exit.json",
+      "bytes": 418,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_launch_20261024_01\\monitored_exit.json",
+      "sha256": "31851168f5837e1ff837faa815b3e02090f4a3b783d55cd990b6795ca6e0c7b4",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "runtime/launcher/preflight.json",
+      "bytes": 7391018,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_launch_20261024_01\\preflight.json",
+      "sha256": "ffb37736d6ed7228ae2cd81f554e7bb9568ae820e6e36511267e150fa76bdf31",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "runtime/launcher/process_binding.json",
+      "bytes": 1212,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_launch_20261024_01\\process_binding.json",
+      "sha256": "34f7855199e4a5900941dbe838159829b1e1d2a9ca154a9f32b5d29fb271809e",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "runtime/launcher/process_chain.json",
+      "bytes": 1451,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_launch_20261024_01\\process_chain.json",
+      "sha256": "8a1898ae2c3e64025ec6c6611f7989e8b747ef0ded6a679dad324fb115c23ebc",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "runtime/launcher/stderr.log",
+      "bytes": 0,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_launch_20261024_01\\stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "runtime/launcher/stdout.log",
+      "bytes": 4625,
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_launch_20261024_01\\stdout.log",
+      "sha256": "19667323b61adddd86d92ab2070decd03f061d918a311afa037d937220abe40b",
+      "source_and_copy_rehashed": true
+    },
+    {
+      "archive_path": "archive_monthly_test_producer_20261024.py",
+      "bytes": 12290,
+      "original_path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\archive_monthly_test_producer_20261024.py",
+      "sha256": "9920ca73655a271d85251186d5b3e9468cb13cfbfbcf57923fd31bc79f619fac",
+      "source_and_copy_rehashed": true
+    }
+  ],
+  "economic_report_copied_without_parsing": true,
+  "exit_receipt_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_launch_20261024_01\\monitored_exit.json",
+  "exit_receipt_sha256": "31851168f5837e1ff837faa815b3e02090f4a3b783d55cd990b6795ca6e0c7b4",
+  "independently_audited_2026": false,
+  "limitation": "Producer runtime completion is not independent H1 economic/causal audit PASS. No metrics interpreted.",
+  "local_references_sha256": "92fa946ef48f1d981dca0236be3db1a7eba6b21505312579cdc4bcf7e2a83942",
+  "metrics_parsed_by_archive": false,
+  "model_payload_bytes": 9475658,
+  "new_fit_or_evaluation": false,
+  "new_models": 12,
+  "original_run_contract_sha256": "7250620ebe25da082c8d080faa54d006c15f36f2070f414405d14ca18a27158f",
+  "prior_validation_audit_sha256": "ba9fbd9edf849eb823f098461906feede9782b1e513f4d1954e6d58f52549cbc",
+  "process_pid": 34680,
+  "promotion_approved": false,
+  "runtime_completion_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\completion.json",
+  "runtime_completion_sha256": "1c4bbf6fe6671b962d1404e145025d06ea8d4d196bd2166c7eb6f836d73e402e",
+  "status": "COMPACT_PRODUCER_2026_CLOSURE_NOT_INDEPENDENTLY_AUDITED"
+}

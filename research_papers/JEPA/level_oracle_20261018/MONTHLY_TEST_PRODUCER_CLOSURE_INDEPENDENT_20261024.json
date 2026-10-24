@@ -1,0 +1,190 @@
+{
+  "status": "PASS_INDEPENDENT_COMPACT_MONTHLY_TEST_PRODUCER_CLOSURE_VERIFICATION",
+  "verified_utc": "2026-10-24T03:01:57.329139+00:00",
+  "scope": "PRODUCER_OPERATIONAL_CLOSURE_ONLY",
+  "checks": {
+    "identity_exact": true,
+    "command_exact": true,
+    "binding_hash_exact": true,
+    "retained_handle_open": true,
+    "retained_handle_exit_zero": true,
+    "runtime_complete": true,
+    "completion_before_exit": true,
+    "preserved_map_equals_launch": true,
+    "preserved_count_11699": true,
+    "final_count_14698": true,
+    "run_contract_exact": true,
+    "validation_audit_exact": true,
+    "runtime_review_exact": true,
+    "null_preserved": true,
+    "scientific_inputs_unchanged_declared": true,
+    "failure_receipts_absent": true,
+    "stderr_empty": true,
+    "chain_pending_independent_audit": true,
+    "chain_five_members_exact": true,
+    "runtime_eighteen_members_exact": true
+  },
+  "exact_fields": {
+    "pid": 34680,
+    "creation_time": 1792802016.462489,
+    "command": [
+      "C:\\Program Files\\Python314\\python.exe",
+      "-u",
+      "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\run_monthly_test_resource_overlay.py",
+      "--runtime-root",
+      "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01",
+      "--implementation-review",
+      "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\MONTHLY_TEST_RESOURCE_OVERLAY_REVIEW_20261023.json",
+      "--runtime-review",
+      "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\MONTHLY_TEST_RESOURCE_RUNTIME_REVIEW_20261024_01.json",
+      "--expected-validation-audit-sha256",
+      "ba9fbd9edf849eb823f098461906feede9782b1e513f4d1954e6d58f52549cbc"
+    ],
+    "exit_code": 0,
+    "exit_code_source": "GetExitCodeProcess_retained_Popen_handle",
+    "exit_observed_utc": "2026-10-24T03:00:02.352144+00:00",
+    "runtime_completed_utc": "2026-10-24T03:00:01.169447+00:00",
+    "runtime_seconds": 7629.0823471000185,
+    "selected_mode": null,
+    "preserved_checkpoint_count": 11699,
+    "final_checkpoint_count": 14698,
+    "independent_audit_pending": true
+  },
+  "receipts": {
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_launch_20261024_01\\process_binding.json": {
+      "sha256": "34f7855199e4a5900941dbe838159829b1e1d2a9ca154a9f32b5d29fb271809e",
+      "size_bytes": 1212
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_launch_20261024_01\\monitor_open.json": {
+      "sha256": "639117c6f828db726161f39e6b900f72743ea7c8c2897d3df653f5ab0fab8d13",
+      "size_bytes": 1266
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_launch_20261024_01\\monitored_exit.json": {
+      "sha256": "31851168f5837e1ff837faa815b3e02090f4a3b783d55cd990b6795ca6e0c7b4",
+      "size_bytes": 418
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_launch_20261024_01\\process_chain.json": {
+      "sha256": "8a1898ae2c3e64025ec6c6611f7989e8b747ef0ded6a679dad324fb115c23ebc",
+      "size_bytes": 1451
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\launch.json": {
+      "sha256": "dce4a9ab8ab3edd1da90ef82feb59e83a74a5a4f4f8fd230258abad274bc49f3",
+      "size_bytes": 2375413
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\completion.json": {
+      "sha256": "1c4bbf6fe6671b962d1404e145025d06ea8d4d196bd2166c7eb6f836d73e402e",
+      "size_bytes": 5383874
+    }
+  },
+  "chain_members_rehashed": {
+    "monitor_code": {
+      "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_monthly_test_20261023.py",
+      "sha256": "3e77bda56dabd8287b04ae9a47b4dcd45d5967a01a31514e933cbb44b6f4c08d",
+      "size_bytes": 19009
+    },
+    "monitor_open": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_launch_20261024_01\\monitor_open.json",
+      "sha256": "639117c6f828db726161f39e6b900f72743ea7c8c2897d3df653f5ab0fab8d13",
+      "size_bytes": 1266
+    },
+    "monitored_exit": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_launch_20261024_01\\monitored_exit.json",
+      "sha256": "31851168f5837e1ff837faa815b3e02090f4a3b783d55cd990b6795ca6e0c7b4",
+      "size_bytes": 418
+    },
+    "process_binding": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_launch_20261024_01\\process_binding.json",
+      "sha256": "34f7855199e4a5900941dbe838159829b1e1d2a9ca154a9f32b5d29fb271809e",
+      "size_bytes": 1212
+    },
+    "runtime_launch": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\launch.json",
+      "sha256": "dce4a9ab8ab3edd1da90ef82feb59e83a74a5a4f4f8fd230258abad274bc49f3",
+      "size_bytes": 2375413
+    }
+  },
+  "runtime_members_rehashed": {
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\launch.json": {
+      "sha256": "dce4a9ab8ab3edd1da90ef82feb59e83a74a5a4f4f8fd230258abad274bc49f3",
+      "size_bytes": 2375413
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\authorities\\implementation_review.json": {
+      "sha256": "49a3590504c74c06dc5a9b830bcf71b7472dbecae2ab267218aaa22aa2dd0280",
+      "size_bytes": 5643
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\authorities\\runtime_review.json": {
+      "sha256": "1c6072a871d7d4cbcabc7e82dbbbbdb28d5767ff083571638f956d92250b557b",
+      "size_bytes": 10858
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\executed_code\\MONTHLY_TEST_RESOURCE_OVERLAY_SPEC_20261023.md": {
+      "sha256": "690a8389f53e6b0fc1599b806097edefe88afc67b74505ab89367dccc74f86a7",
+      "size_bytes": 9126
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\executed_code\\run_monthly_test_resource_overlay.py": {
+      "sha256": "f2b0490cdec916f98c09fc77a6533d0eab8c4f2711331753f7d5c998d81253c1",
+      "size_bytes": 27743
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\executed_code\\test_monthly_test_resource_overlay.py": {
+      "sha256": "3f8002125bfc35619d742fd039c48cc1c5a985613ab886b29b004f9cd7fc850b",
+      "size_bytes": 22532
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\observations\\1792804489965098500.json": {
+      "sha256": "311c08c68b6f580bc384e13bce929367ee94d0e9b27378ecae430c1c0b074a9c",
+      "size_bytes": 293
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\observations\\1792804704673991500.json": {
+      "sha256": "98b7e2bbe48f6e0411c64bff8561522d7d15062ad8f7306c02e9176aa7cb3f97",
+      "size_bytes": 295
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\observations\\1792805377693395800.json": {
+      "sha256": "52e5effbe2784ba2f660cc5384b1e6da2711c960b51a1ce2e83dbfae4b3a6936",
+      "size_bytes": 293
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\observations\\1792805591896864900.json": {
+      "sha256": "bd9e971096443105e3d8a8fc451933daa1ce67b0796c7b521812f230c64bcab5",
+      "size_bytes": 295
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\observations\\1792806280195158800.json": {
+      "sha256": "f5626dda4269a03b36d6ac8a0b3447323c203294f98fe74a578e5953e0205792",
+      "size_bytes": 293
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\observations\\1792806500956386100.json": {
+      "sha256": "3349e7f76d3777b3fec267a3339c9442721d245650577b6bd4059ef783292956",
+      "size_bytes": 295
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\observations\\1792807272032557100.json": {
+      "sha256": "2cc55fcf8dd6373f056fc21b5625b24e145005f7916105c23a1656ece20b78e5",
+      "size_bytes": 293
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\observations\\1792807494824761800.json": {
+      "sha256": "ab6e04e45ca7737b01113174c479f0748854a78f3f83e275f349060746aa5f98",
+      "size_bytes": 295
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\observations\\1792808271432193800.json": {
+      "sha256": "e138dad26c010e76be592e30ed5e6139bb9d657a8fb8a6987551b0f53d6ea0f1",
+      "size_bytes": 293
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\observations\\1792808493680937000.json": {
+      "sha256": "fe3a864722698eca378e8280495ce8172348c66dbdd69a135410c2e096a652fe",
+      "size_bytes": 295
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\observations\\1792809296931169600.json": {
+      "sha256": "d3b1371dd20abdaff87c6dbb82ba73e3f38d12ac29b8d3b4ad972f8a69051c9b",
+      "size_bytes": 293
+    },
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01\\observations\\1792809520670927400.json": {
+      "sha256": "888f5134272ef128f8749cd905ac9c5b93adab9347348969bbe4d51668adec56",
+      "size_bytes": 295
+    }
+  },
+  "limits": {
+    "economic_metrics_read": false,
+    "economic_audit_certified": false,
+    "payload_matrices_features_targets_rehashed": false,
+    "checkpoint_map_payloads_rehashed_in_this_receipt": false,
+    "preservation_scope": "Compared complete preserved-checkpoint maps in launch and completion; no new rehash of all mapped payloads. Runtime/code/authority/observation and process receipts listed above were independently rehashed.",
+    "process_identity_basis": "Exact identity in binding, retained-handle open and exit receipts; prior live samples matched command and creation time. Exit is certified by retained-handle receipt, not PID absence.",
+    "model_scope": "All twelve new model files and their fit_started members were independently rehashed against completion seals as they appeared during monitoring; this receipt does not repeat or replace the scientific audit.",
+    "research_interpretation": "Technical completion only. No inference/refit reproduction, profitability claim, promotion or new selection."
+  }
+}

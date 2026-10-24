@@ -7,10 +7,17 @@ la rentabilidad causal sigue sin demostrarse y no hay promoción autorizada.
 Las ejecuciones y pendientes actuales se registran en
 [continuación del 23 de octubre](CONTINUATION_PROGRESS_20261023.md).
 
-El [primer modelo mensual nuevo de 2026 ya está cerrado](MONTHLY_TEST_FIRST_FIT_RECEIPT_20261024.md):
-286.008 filas × 1.954 variables, entrenado hasta el 31 de diciembre de 2025.
-Sus recibos y modelo están archivados y verificados. La ejecución continúa;
-todavía no hay evaluación mensual de 2026 cerrada ni auditoría económica nueva.
+El productor mensual terminó el 24 de octubre a las 03:00 UTC: 36 modelos y
+18 meses completos, incluidos enero–junio de 2026. El monitor registró exit 0
+mediante el handle retenido, después del cierre del wrapper y sus verificaciones.
+La selección sigue en null. La auditoría independiente de 2026 está pendiente;
+el cierre del productor todavía no acredita sus resultados económicos.
+El [archivo del cierre](MONTHLY_TEST_2026_PRODUCER_CLOSURE_20261024.md) conserva
+136 copias y los doce modelos nuevos; las matrices e inputs grandes siguen locales.
+El [contrato concreto de auditoría pasó revisión independiente](MONTHLY_TEST_INDEX_V2_AUDIT_RUNTIME_REVIEW_20261024_01_INDEPENDENT.md)
+y queda preparado para publicación y admisión completa antes de ejecutarlo.
+El [recibo del primer modelo](MONTHLY_TEST_FIRST_FIT_RECEIPT_20261024.md)
+conserva el hito intermedio y sus límites.
 
 La [validación mensual 2025 ya está auditada](MONTHLY_VALIDATION_2025_AUDIT_RESULT_20261024.md):
 static, expanding y rolling12 pierden 49.152,40, 75.243,80 y 122.081,40 USD base.

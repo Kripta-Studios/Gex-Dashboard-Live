@@ -1,0 +1,21 @@
+{
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\run_monthly_test_resource_overlay.py",
+    "--runtime-root",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_resource_overlay_20261024_01",
+    "--implementation-review",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\MONTHLY_TEST_RESOURCE_OVERLAY_REVIEW_20261023.json",
+    "--runtime-review",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\MONTHLY_TEST_RESOURCE_RUNTIME_REVIEW_20261024_01.json",
+    "--expected-validation-audit-sha256",
+    "ba9fbd9edf849eb823f098461906feede9782b1e513f4d1954e6d58f52549cbc"
+  ],
+  "creation_time": 1792802016.462489,
+  "creation_time_source": "GetProcessTimes_retained_Popen_handle",
+  "launcher_pid": 56000,
+  "pid": 34680,
+  "preflight_sha256": "ffb37736d6ed7228ae2cd81f554e7bb9568ae820e6e36511267e150fa76bdf31",
+  "started_utc": "2026-10-24T00:33:36.480821+00:00"
+}

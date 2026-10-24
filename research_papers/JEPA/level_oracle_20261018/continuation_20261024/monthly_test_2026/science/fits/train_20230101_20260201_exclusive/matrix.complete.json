@@ -1,0 +1,9 @@
+{
+  "status": "COMPLETE",
+  "binding": "7250620ebe25da082c8d080faa54d006c15f36f2070f414405d14ca18a27158f",
+  "files": {
+    "fits\\train_20230101_20260201_exclusive\\matrix.npy": "9c9ea8c8d464645e43da3727ef2d94955e6c4cd80508c01ae51a71970bc54203"
+  },
+  "extra": {},
+  "completed_utc": "2026-10-24T01:26:20.870700+00:00"
+}

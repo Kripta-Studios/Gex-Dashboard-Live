@@ -1,0 +1,11 @@
+{
+  "creation_time": 1792802016.462489,
+  "exit_code": 0,
+  "exit_code_source": "GetExitCodeProcess_retained_Popen_handle",
+  "observed_utc": "2026-10-24T03:00:02.352144+00:00",
+  "pid": 34680,
+  "process_receipt_sha256": "34f7855199e4a5900941dbe838159829b1e1d2a9ca154a9f32b5d29fb271809e",
+  "retry": false,
+  "scientific_completion_certified": false,
+  "status": "PROCESS_EXIT_OBSERVED_BY_RETAINED_HANDLE"
+}

@@ -1,0 +1,8 @@
+{
+  "stage": "RESOURCE_OVERLAY_READY",
+  "threshold_bytes": 2000000000,
+  "scientific_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1",
+  "available_ram_bytes": 15128289280,
+  "free_commit_bytes": 18924642304,
+  "utc": "2026-10-24T02:38:40.670724+00:00"
+}
