@@ -1,0 +1,29 @@
+{
+  "status": "SUPERVISOR_OBSERVED_PREFLIGHT_IN_PROGRESS",
+  "observed_utc": "2026-10-24T03:07:26.156644+00:00",
+  "session_id": 92241,
+  "process": {
+    "pid": 23196,
+    "cmdline": [
+      "C:\\Program Files\\Python314\\python.exe",
+      "-u",
+      "research_papers/JEPA/level_oracle_20261018/launch_monthly_test_index_v2_audit_20261024.py",
+      "--runtime-review",
+      "C:/Users/\u00c1lvaro Schwiedop/Desktop/KriptaStudios/Gex-Dashboard-Live/research_papers/JEPA/level_oracle_20261018/MONTHLY_TEST_INDEX_V2_AUDIT_RUNTIME_REVIEW_20261024_01.json",
+      "--runtime-review-sha256",
+      "055d2734469a77dc607585d000f594ed3088580400c46f513c209119a793eab1",
+      "--supervisor-review-sha256",
+      "e38ae0fb7ebfc3d5841fe87052d00605f58cba21a8ba987341d0f307ede9e432",
+      "--publication-commit",
+      "03f8a4876f59e5913f2caacf456795bca44b3402",
+      "--execute-reviewed-audit"
+    ],
+    "create_time": 1792811214.5180905,
+    "ppid": 42480
+  },
+  "publication_commit": "03f8a4876f59e5913f2caacf456795bca44b3402",
+  "runtime_review_sha256": "055d2734469a77dc607585d000f594ed3088580400c46f513c209119a793eab1",
+  "independent_runtime_review_sha256": "71e715755f875b0176f39adc92713969d3395bc73b4eebf7d4eaa1f25fcf390e",
+  "audit_pass_claimed": false,
+  "retry": false
+}

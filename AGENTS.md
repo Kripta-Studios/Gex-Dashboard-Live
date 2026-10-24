@@ -1,5 +1,19 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-10-24 — supervisor auditor H1 iniciado una vez
+
+Publicación03f8a4876f59e5913f2caacf456795bca44b3402 verificada en origin.
+Supervisor launch_monthly_test_index_v2_audit_20261024.py iniciado una sola vez
+con --execute-reviewed-audit, runtime055d2734…3eab1 y reviewe38ae0fb…9e432.
+Sesiónroot92241; PID23196, creation1792811214.5180905, parent42480.
+Observación03:09:47UTC: mismo proceso vivo, CPU28,4375s/lectura10,43GB,
+sin hijo/logs/audit aún; admisión previa en curso. No relanzar por esa ausencia.
+Observer local: monthly_test_audit_supervisor_observer_20261024_01 bajo
+D:/GexResearchArtifacts/level_oracle_20261018, initial_observation.json
+SHAc3e331b2…165d8. El monitor monthly_resume sólo observa; root retiene sesión.
+OOF sigue sin ejecución/request autorizado. Se prepara supervisor externo
+con pruebas sintéticas y revisión, manteniendo congelado el pipeline científico.
+
 ### Checkpoint 2026-10-24 — productor mensual completo; auditoría 2026 pendiente
 
 Autoridad operativa: D:/GexResearchArtifacts/level_oracle_20261018/

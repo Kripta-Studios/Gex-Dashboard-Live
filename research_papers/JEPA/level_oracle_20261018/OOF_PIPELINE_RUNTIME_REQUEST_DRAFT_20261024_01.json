@@ -1,0 +1,166 @@
+{
+  "status": "DRAFT_NOT_RUNTIME_AUTHORITY",
+  "runtime_authorized": false,
+  "prepared_utc": "2026-10-24T03:10:17.048682+00:00",
+  "existing_request_or_preparer_found": false,
+  "preparation_method": "Source text and AST literals only; no OOF module imports, constructors or preflight.",
+  "implementation_review": {
+    "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_PIPELINE_RUNTIME_IMPLEMENTATION_REVIEW_20261023.json",
+    "sha256": "c35541a487c87512cb678cc511006a8729fbf233a00b639e4dcc60a3fdee68d6"
+  },
+  "proposed_request": {
+    "version": "OOF_PIPELINE_RUNTIME_REQUEST_V1",
+    "status": "PENDING_COMPOSITE_AUDIT_EXIT_AND_INDEPENDENT_REVIEW",
+    "runtime_authorized": false,
+    "months": [
+      "202601",
+      "202602",
+      "202603",
+      "202604",
+      "202605",
+      "202606"
+    ],
+    "coordination_lock": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime.lock",
+    "code": {
+      "MONTHLY_OOF_CALIBRATION_ADAPTER_SPEC.md": "6bd989a6332fd21f751dc48ef084c5eba0f83b1f86f957f2a71127ef869bcb4e",
+      "OOF_CALIBRATED_POLICY_EVALUATION_SPEC.md": "7f88f18569d86ea936d0afdc4a485e461ccdf6c09d74feb835a026bee7caf3bc",
+      "OOF_ECONOMIC_AUDITOR_DESIGN_20261023.md": "b9c2ac397945a04365289b9af0f202f04082c844badfc724ae937972be253154",
+      "OOF_ECONOMIC_AUDITOR_IMPLEMENTATION_REVIEW_20261023.md": "8faf2a64f07df648f2d90e184a4a1a43e80a24b7f474d47604c3c0d352dfacb6",
+      "OOF_ECONOMIC_AUDITOR_SPEC_20261023.md": "cfa6868435a772b336605e3b0613e8fa6c1e377a53cbbef376d3973e64901f37",
+      "OOF_MAXIMUM_CALIBRATION_INTEGRATION.md": "79f8c69b13c3585aa26cbb15fa52f246675baaabd8b8e8d6661a5ffe150ce7bd",
+      "OOF_PIPELINE_RUNTIME_SPEC_20261023.md": "9b8d40296d515c28953b6b994c552560f159f6b8be57f0177487dbff05987909",
+      "OOF_RUNTIME_SEQUENCE_DESIGN_20261023.md": "e5c6350a492221632b9c87fa61ee7b644b507812c4d11ab3a1e3eb26f936762a",
+      "PREQUENTIAL_MAX_CALIBRATION_DESIGN.md": "e8264e398b31f22198a024a3c6d9dfa9fc4530402278693caac1caa2d6f7a619",
+      "audit_oof_calibrated_policy.py": "e7481fbe944a9ffadcf637e7a4b69cd8d636cdf50ae295426191db9d76b5d44b",
+      "evaluate_oof_calibrated_policy.py": "eeaad06f5b862a3153f29e7eab579b19a35e182ab506cf1f59e65631e187e716",
+      "monthly_oof_calibration_adapter.py": "7b80cff43e3887a92e0f89be6daa863a670ccd72d22a0f4aeabd032a39479364",
+      "oof_maximum_calibration.py": "19e922dd65855c4cd7e2ec9d482d477a328245bcf642eeeb7771985f247e20b5",
+      "rolling_monthly_schedule.py": "92df2e68734d24a61b4ddccec1f9451a5e25c862f5a1b581ae779c163fcf205a",
+      "run_oof_calibrated_pipeline.py": "26967e10c6b81cd5b84d7939bf6d0c81037934165daa91847d7ffd25de16ff57",
+      "test_audit_oof_calibrated_policy.py": "c98954a9bef3b70bef8c889255cb187a57d88c4f43235ade255a70560438f232",
+      "test_run_oof_calibrated_pipeline.py": "4daf9d662a63b125f2d451ea463558a00b35ebbd7a7c85d1c1b9145dfe6bf33e"
+    },
+    "monthly_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1",
+    "session_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_clock_dataset_v1",
+    "monthly_audit": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_test_audit_20261024_01\\audit.json",
+      "sha256": null
+    },
+    "session_audit": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_clock_dataset_v1_audit\\audit.json",
+      "sha256": "678eb21bca80b38855979d8a7386cdadd6827a6dfdd5acbf3df6fde5a5a2f3b9"
+    },
+    "pipeline_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_01",
+    "correction_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_oof_correction_20261024_01",
+    "evaluation_roots": {
+      "202601": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202601_20261024_01",
+      "202602": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202602_20261024_01",
+      "202603": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202603_20261024_01",
+      "202604": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202604_20261024_01",
+      "202605": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202605_20261024_01",
+      "202606": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202606_20261024_01"
+    }
+  },
+  "phases": [
+    {
+      "index": 0,
+      "month": "202601",
+      "stage": "correction",
+      "completion_sha256": null
+    },
+    {
+      "index": 1,
+      "month": "202601",
+      "stage": "replay",
+      "completion_sha256": null
+    },
+    {
+      "index": 2,
+      "month": "202602",
+      "stage": "correction",
+      "completion_sha256": null
+    },
+    {
+      "index": 3,
+      "month": "202602",
+      "stage": "replay",
+      "completion_sha256": null
+    },
+    {
+      "index": 4,
+      "month": "202603",
+      "stage": "correction",
+      "completion_sha256": null
+    },
+    {
+      "index": 5,
+      "month": "202603",
+      "stage": "replay",
+      "completion_sha256": null
+    },
+    {
+      "index": 6,
+      "month": "202604",
+      "stage": "correction",
+      "completion_sha256": null
+    },
+    {
+      "index": 7,
+      "month": "202604",
+      "stage": "replay",
+      "completion_sha256": null
+    },
+    {
+      "index": 8,
+      "month": "202605",
+      "stage": "correction",
+      "completion_sha256": null
+    },
+    {
+      "index": 9,
+      "month": "202605",
+      "stage": "replay",
+      "completion_sha256": null
+    },
+    {
+      "index": 10,
+      "month": "202606",
+      "stage": "correction",
+      "completion_sha256": null
+    },
+    {
+      "index": 11,
+      "month": "202606",
+      "stage": "replay",
+      "completion_sha256": null
+    }
+  ],
+  "pending_authorities": {
+    "composite_monthly_audit": "PASS status/scope/18 months/36 fits/369-363-6 plus exact source bindings and fifteen snapshots after real closure",
+    "upstream_process": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_index_v2_audit_launch_20261024_01\\process.json",
+      "sha256": null
+    },
+    "upstream_exit": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_index_v2_audit_launch_20261024_01\\exit.json",
+      "sha256": null,
+      "required_exit_code": 0
+    },
+    "upstream_supervisor_completion": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_test_index_v2_audit_launch_20261024_01\\completion.json",
+      "sha256": null
+    },
+    "reviewed_request_sha256": null,
+    "publication_commit": null,
+    "oof_supervisor_implementation_review_sha256": null,
+    "oof_supervisor_runtime_binding_sha256": null
+  },
+  "proposed_monitor_logs": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_01",
+  "limitations": [
+    "No final request or authorization emitted.",
+    "No MonthlyInputs, preflight, correction or replay called.",
+    "All dependent future hashes are null; current upstream audit files were not opened.",
+    "Runtime success ends PIPELINE_COMPLETE_PENDING_INDEPENDENT_AUDIT, not economic PASS.",
+    "Root authorized preparation of a separate reviewed OOF retained-handle supervisor; current monthly launchers are fixed to other commands."
+  ]
+}
