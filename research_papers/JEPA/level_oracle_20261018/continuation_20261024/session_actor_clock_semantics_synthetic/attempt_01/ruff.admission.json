@@ -1,0 +1,15 @@
+{
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-m",
+    "ruff",
+    "check",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\session_actor_clock_semantics_validation.py",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_session_actor_clock_semantics_validation.py"
+  ],
+  "resources": {
+    "available_ram_bytes": 6762475520,
+    "free_commit_bytes": 4030586880
+  },
+  "utc": "2026-10-24T00:40:09.147691+00:00"
+}

@@ -1,0 +1,38 @@
+{
+  "status": "COMPLETE_INDEPENDENT_SYNTHETIC_REVIEW_EVIDENCE",
+  "source_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_clock_synthetic_review_20261024_01",
+  "files": {
+    "admission.json": {
+      "sha256": "d5bbeb8b96b041b1fc4789b7ad6cce7508e8b1f15531551458e6c023e84d98a1",
+      "bytes": 1040
+    },
+    "executed_code/SESSION_ACTOR_CLOCK_SEMANTICS_SYNTHETIC_SPEC_20261024.md": {
+      "sha256": "5e96cd5a69d853c8a1686511278cd5553b60856b3d7f4cf0c4321a8a6263f899",
+      "bytes": 7880
+    },
+    "executed_code/session_actor_clock_semantics_validation.py": {
+      "sha256": "3bab23910c566020b2fc5e831c6c9ceacc03c51c71d46ce6d1258d5cd7c67358",
+      "bytes": 16508
+    },
+    "executed_code/test_session_actor_clock_semantics_validation.py": {
+      "sha256": "40e159af9e7a3459207ccbecf5be940429c36d8c4cfb64c88f8f6f79eed94429",
+      "bytes": 6616
+    },
+    "independent_checks.py": {
+      "sha256": "5815c4115687ff26aef13170880ae0d697379ed1a30fdcba326bd30befcf415b",
+      "bytes": 1430
+    },
+    "receipt.json": {
+      "sha256": "df877ca3855b854c2382c1d6018915ce66999c90fd1e6edaddcfae1cb006f0ca",
+      "bytes": 1304
+    },
+    "stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "stdout.txt": {
+      "sha256": "b0aab7c0cf1b506c814a360731013b26ff025571235b2d0f100959a31366a82b",
+      "bytes": 171
+    }
+  }
+}

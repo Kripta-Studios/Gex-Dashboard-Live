@@ -1,0 +1,15 @@
+{
+  "status": "PASS_ROOT_SYNTHETIC_EVIDENCE_CHECKS",
+  "utc": "2026-10-24T00:45:17.955826+00:00",
+  "scope": "SYNTHETIC_ONLY",
+  "author_source_copy_pairs_checked": 19,
+  "reviewer_source_copy_pairs_checked": 8,
+  "stored_comparison_values_rechecked": 188,
+  "comparison_recheck_scope": "Re-evaluated persisted actual/expected finite values against recorded tolerances, without rerunning DP/CLI/tests",
+  "root_code_and_tests_read_complete": true,
+  "independent_literal_algebra_reviewed": true,
+  "review_sha256": "08f71a6bed8195b089237988527edf507cac37898017aeb00dc97f825763dee7",
+  "spec_preexecution_commit": "8466082a634851b65c4a1042dbb3dec3333b0941",
+  "market_execution": false,
+  "production_bug_found_or_fixed": false
+}

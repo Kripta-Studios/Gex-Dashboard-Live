@@ -1,0 +1,14 @@
+{
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_session_actor_clock_semantics_validation.py"
+  ],
+  "resources": {
+    "available_ram_bytes": 6757437440,
+    "free_commit_bytes": 3986399232
+  },
+  "utc": "2026-10-24T00:40:09.522362+00:00"
+}

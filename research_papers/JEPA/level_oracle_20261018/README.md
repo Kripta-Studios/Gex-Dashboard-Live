@@ -48,6 +48,10 @@ ni evidencia económica de una estrategia nueva.
 La [factibilidad de sus datos](SESSION_ACTOR_DATA_FEASIBILITY_20261023.md)
 identifica el soporte completo necesario, las diferencias de reloj y los costes
 estimados; todavía no configura ni activa ese experimento.
+La [extensión sintética del reloj](SESSION_ACTOR_CLOCK_SEMANTICS_RESULT_20261024.md)
+verifica WAIT, NO_FILL y FILLED con sesiones completas/cortas artificiales y
+conservación de máscaras. Pasan 188 comparaciones y una revisión matemática
+independiente; no se abrió una familia económica ni se modificó el scheduler.
 
 ## Cierre documental conservado del18 de octubre de2026
 

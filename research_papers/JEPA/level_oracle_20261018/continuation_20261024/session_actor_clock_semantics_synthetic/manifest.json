@@ -1,0 +1,123 @@
+{
+  "scope": "MATHEMATICAL_SYNTHETIC_ONLY",
+  "runtime_market_authorized": false,
+  "source_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_clock_semantics_synthetic_20261024_01",
+  "copy_count": 19,
+  "total_bytes": 563507,
+  "members": [
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_clock_semantics_synthetic_20261024_01\\attempt.json",
+      "copy": "attempt_01\\attempt.json",
+      "sha256": "00bc3488caf9ee97d8d8c8dc13e80cbd89323593c867755f1d31eae03edcad7b",
+      "bytes": 2928
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_clock_semantics_synthetic_20261024_01\\cli.admission.json",
+      "copy": "attempt_01\\cli.admission.json",
+      "sha256": "c48a231fe762a99c072e0bb7be1df59cd145ba706bead1ad0242bcf60fd848be",
+      "bytes": 549
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_clock_semantics_synthetic_20261024_01\\cli.stderr.log",
+      "copy": "attempt_01\\cli.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_clock_semantics_synthetic_20261024_01\\cli.stdout.log",
+      "copy": "attempt_01\\cli.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_clock_semantics_synthetic_20261024_01\\compile.admission.json",
+      "copy": "attempt_01\\compile.admission.json",
+      "sha256": "02921b7f14aac2a252ca4c5f757f0a5bd06b70bc7fb107e739245bf558978639",
+      "bytes": 609
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_clock_semantics_synthetic_20261024_01\\compile.stderr.log",
+      "copy": "attempt_01\\compile.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_clock_semantics_synthetic_20261024_01\\compile.stdout.log",
+      "copy": "attempt_01\\compile.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_clock_semantics_synthetic_20261024_01\\pytest.admission.json",
+      "copy": "attempt_01\\pytest.admission.json",
+      "sha256": "7c6c8ffae5296acc1c1977eb19eab89b6da43473de7db8a9b732f2ad2f1aa32d",
+      "bytes": 440
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_clock_semantics_synthetic_20261024_01\\pytest.stderr.log",
+      "copy": "attempt_01\\pytest.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_clock_semantics_synthetic_20261024_01\\pytest.stdout.log",
+      "copy": "attempt_01\\pytest.stdout.log",
+      "sha256": "8865960d6672aa64c96f03f20bb7a7514650ce2516bfcbb9750347235ce518f3",
+      "bytes": 101
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_clock_semantics_synthetic_20261024_01\\receipt.json",
+      "copy": "attempt_01\\receipt.json",
+      "sha256": "d47b187a27971ca2def60288bfa3837da18f3388cefe69b05496cf2eca6032c7",
+      "bytes": 2478
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_clock_semantics_synthetic_20261024_01\\ruff.admission.json",
+      "copy": "attempt_01\\ruff.admission.json",
+      "sha256": "1af2f3041dac550c274d7172a4c0735224828e6c878edb842f0a147bbbcd948c",
+      "bytes": 617
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_clock_semantics_synthetic_20261024_01\\ruff.stderr.log",
+      "copy": "attempt_01\\ruff.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_clock_semantics_synthetic_20261024_01\\ruff.stdout.log",
+      "copy": "attempt_01\\ruff.stdout.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_clock_semantics_synthetic_20261024_01\\initial_sources\\SESSION_ACTOR_CLOCK_SEMANTICS_SPEC_REVIEW_20261024.md",
+      "copy": "attempt_01\\initial_sources\\SESSION_ACTOR_CLOCK_SEMANTICS_SPEC_REVIEW_20261024.md",
+      "sha256": "be4468d04fe3ed94275c9fd66dc41ba3addc635c3373006ebe1e2a7b2f870250",
+      "bytes": 3678
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_clock_semantics_synthetic_20261024_01\\initial_sources\\SESSION_ACTOR_CLOCK_SEMANTICS_SYNTHETIC_SPEC_20261024.md",
+      "copy": "attempt_01\\initial_sources\\SESSION_ACTOR_CLOCK_SEMANTICS_SYNTHETIC_SPEC_20261024.md",
+      "sha256": "5e96cd5a69d853c8a1686511278cd5553b60856b3d7f4cf0c4321a8a6263f899",
+      "bytes": 7880
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_clock_semantics_synthetic_20261024_01\\initial_sources\\session_actor_clock_semantics_validation.py",
+      "copy": "attempt_01\\initial_sources\\session_actor_clock_semantics_validation.py",
+      "sha256": "3bab23910c566020b2fc5e831c6c9ceacc03c51c71d46ce6d1258d5cd7c67358",
+      "bytes": 16508
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_clock_semantics_synthetic_20261024_01\\initial_sources\\test_session_actor_clock_semantics_validation.py",
+      "copy": "attempt_01\\initial_sources\\test_session_actor_clock_semantics_validation.py",
+      "sha256": "40e159af9e7a3459207ccbecf5be940429c36d8c4cfb64c88f8f6f79eed94429",
+      "bytes": 6616
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_actor_clock_semantics_synthetic_20261024_01\\validation\\result.json",
+      "copy": "attempt_01\\validation\\result.json",
+      "sha256": "c58ed939559e0aeac05a8eb40dea6f996e4100f1b55215bc87141f7e72c77837",
+      "bytes": 521084
+    }
+  ]
+}

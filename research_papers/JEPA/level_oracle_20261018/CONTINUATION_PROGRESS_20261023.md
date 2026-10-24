@@ -70,6 +70,15 @@ FILLEDexit+1, estadosinvalidWAIT y límitesfull/short. Autor prepara código;
 no comparaciones/tests hasta publicación spec revisada y GOroot. No datos,
 modelo/entrenamiento ni familiaeconómica nueva; laboratorio anterior intacto.
 
+Extensión sintética del reloj cerrada:38tests autor y188comparaciones PASS,
+revisor9focales+referencia algebraica explícita PASS; review08f71a6b…63dee7.
+Specpublicada8466082a precede intentoúnico00:40:09UTC; todoslos pasos/tolerancias
+se conservan. Rootverificó19copiasautor/8revisor y188comparacionesguardadas.
+Código/tests nuevos, laboratoriooriginal intacto, ningún bugproductivo corregido
+ni familiaeconómica activada. Véase SESSION_ACTOR_CLOCK_SEMANTICS_RESULT_20261024.md.
+A00:44:20UTC child34680/parent56000 siguen vivos en admisióninterna; runtime
+no creado ystderr0. No modelo/resultado2026 nuevo acreditado; no relanzar.
+
 ## Ejecuciones observadas
 
 - Comparación fija griegas 424 frente a compacto 152: productor PID 19696 y

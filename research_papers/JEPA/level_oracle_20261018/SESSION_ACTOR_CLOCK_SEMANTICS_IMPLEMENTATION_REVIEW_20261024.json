@@ -1,0 +1,89 @@
+{
+  "author_validation": {
+    "all_comparisons_passed": true,
+    "attribution": "Author run; reviewer read/rehashed persisted receipts and inspected all comparison flags, without rerunning the full suite/CLI.",
+    "central_max_errors": {
+      "1e-4": 6.341579927848784e-09,
+      "1e-5": 1.3202905435605317e-10,
+      "1e-6": 4.440893208723651e-10
+    },
+    "comparison_count": 188,
+    "max_analytic_absolute_error": 8.881784197001252e-16,
+    "pytest_passed": 38,
+    "pytest_seconds": 0.7,
+    "receipt_sha256": "d47b187a27971ca2def60288bfa3837da18f3388cefe69b05496cf2eca6032c7",
+    "result_document_sha256": "49ccad414fb3a21152648801ac3805563b4cc47443c40065ed8f76860e3bbc4c",
+    "result_sha256": "c58ed939559e0aeac05a8eb40dea6f996e4100f1b55215bc87141f7e72c77837"
+  },
+  "decision": "CLEAR",
+  "files": {
+    "SESSION_ACTOR_CLOCK_SEMANTICS_SYNTHETIC_SPEC_20261024.md": "5e96cd5a69d853c8a1686511278cd5553b60856b3d7f4cf0c4321a8a6263f899",
+    "session_actor_clock_semantics_validation.py": "3bab23910c566020b2fc5e831c6c9ceacc03c51c71d46ce6d1258d5cd7c67358",
+    "test_session_actor_clock_semantics_validation.py": "40e159af9e7a3459207ccbecf5be940429c36d8c4cfb64c88f8f6f79eed94429"
+  },
+  "findings": [],
+  "independent_validation": {
+    "analytic_reference": {
+      "expected_attempts": 0.65,
+      "independent_logit_gradient": [
+        0,
+        0,
+        0,
+        0,
+        -1.875,
+        1.875,
+        0,
+        0
+      ],
+      "no_fill": 0.75,
+      "objective": -0.5,
+      "p_fill_at_t1": 0.25,
+      "p_no_fill_at_t0": 0.4,
+      "pnl": 1.75,
+      "shared_formula": "q=sigmoid(0.1*theta0-1.25*theta1+1.4*theta2); J=10*q-3; dJ=10*q*(1-q)*(0.1,-1.25,1.4)",
+      "shared_theta": [
+        0.2,
+        -0.3,
+        0.4
+      ]
+    },
+    "evidence_manifest": {
+      "path": "continuation_20261024/session_actor_clock_semantics_review/manifest.json",
+      "sha256": "33b9fab0613c1c9b347920312244e850b658808f938fc4dcfe9677ab4f8565a7"
+    },
+    "exit_code": 0,
+    "gate_before": {
+      "available_ram_bytes": 6934179840,
+      "free_commit_bytes": 4306513920,
+      "minimum_bytes": 2000000000
+    },
+    "pins_unchanged": true,
+    "process_seconds": 0.9419266999466345,
+    "pytest_deselected": 29,
+    "pytest_passed": 9,
+    "pytest_seconds": 0.11
+  },
+  "limitations": [
+    "No production bug was discovered or changed; the wrong-clock counterexample is deliberately artificial.",
+    "Toy masks do not validate market pack shapes, joins, dtype or source integrity.",
+    "No prior laboratory import/rerun, real market inputs, model fit, inference, architecture or optimizer.",
+    "This review does not authorize a new economic family or replace monthly/OOF closure."
+  ],
+  "mathematical_review": [
+    "WAIT and NO_FILL advance to t+1 with h unchanged; NO_FILL exit marker is t+1, not an extra blocked minute.",
+    "FILLED jumps to exit+1 and sets h=1; full and short final liquidation horizons remain separate from last decisions.",
+    "All consecutive slots, invalid masks, mandatory WAIT and unreachable states remain present; outcome status does not remove offers.",
+    "Direct path enumeration uses its own transition branches; its score derivative does not use Q or occupancy.",
+    "Adjoint multiplied by dlogpi equals chain through logits because the centered coefficients sum to zero at each state.",
+    "Shared-variable analytic reference and three finite-difference steps cover the common policy Jacobian."
+  ],
+  "preexecution_spec_commit": "8466082a634851b65c4a1042dbb3dec3333b0941",
+  "prior_lab_unchanged": {
+    "session_actor_math_validation.py": "4d48460d3a6a39b4fbe95d368de7789f58c6ffdad984607a81a1539fcd7b3946",
+    "test_session_actor_math_validation.py": "15baeaf22231ef1e639d565923b89a58d94928e0aecb2203330c28ac93e7b5b3"
+  },
+  "reviewer": "scientific_review",
+  "runtime_market_authorized": false,
+  "scope": "MATHEMATICAL_SYNTHETIC_ONLY",
+  "status": "PASS_SESSION_ACTOR_CLOCK_SEMANTICS_IMPLEMENTATION_REVIEW"
+}
