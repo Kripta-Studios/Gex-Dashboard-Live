@@ -1,5 +1,19 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-10-24 — supervisor OOF publicado; gráfica H1 preparada
+
+Implementación OOF y evidencia de inicio del auditor publicadas/verificadas
+en dd18764dc1537092bde947060f704c2b97651989. Auditor49820/supervisor23196,
+sesión92241 continúan; no hay cierre auditado aún y no se debe relanzar.
+Preparación nueva: MONTHLY_H1_2026_FIGURE_PREPARATION_20261024.md en
+level_oracle_20261018. Script658e0f9d…e66e3e4/tests576bd20f…cbdf26,
+15fixtures artificiales PASS1,14s; root leyó código/tests y verificó recibos/pins.
+Reconciliará216grupos mensuales/24periodos/3357diarios, seis ausencias y18filas
+null entre los tres modos. Figura futura9paneles/6meses, sin selección. Original2025 y
+reporter congelado intactos. No se abrió reporte real ni se renderizó H1.
+Requiere auditcompuesto+exit real, reporter cerrado y pins externos antesuso.
+OOF sigue sin request autorizado/ejecución. Producción/API intactas.
+
 ### Checkpoint 2026-10-24 — auditor H1 ejecutándose; supervisor OOF revisado
 
 Autoridad: level_oracle_20261018/MONTHLY_TEST_AUDIT_START_RECEIPT_20261024.md.

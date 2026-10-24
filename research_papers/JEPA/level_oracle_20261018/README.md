@@ -19,6 +19,8 @@ y fue publicado antes del [inicio verificado del auditor](MONTHLY_TEST_AUDIT_STA
 El [supervisor de OOF](OOF_PIPELINE_LAUNCH_IMPLEMENTATION_RESULT_20261024.md)
 ya pasó pruebas sintéticas y revisión independiente. Su ejecución real requiere
 primero el cierre auditado mensual y un contrato concreto revisado y publicado.
+La [reconciliación y gráfica H1 están preparadas](MONTHLY_H1_2026_FIGURE_PREPARATION_20261024.md)
+con pruebas artificiales; todavía no se ha generado la gráfica real de 2026.
 El [recibo del primer modelo](MONTHLY_TEST_FIRST_FIT_RECEIPT_20261024.md)
 conserva el hito intermedio y sus límites.
 

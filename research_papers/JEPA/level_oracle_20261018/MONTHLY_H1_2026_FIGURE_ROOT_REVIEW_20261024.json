@@ -1,0 +1,18 @@
+{
+  "status": "CLEAR_CODE_AND_SYNTHETIC_EVIDENCE_ONLY",
+  "reviewed_utc": "2026-10-24T03:48:53.904297+00:00",
+  "files": {
+    "reconcile_plot_monthly_h1_2026_20261024.py": "658e0f9d23a83c1c7400b684525c87fd50f706b34023beb33cce42401e66e3e4",
+    "test_reconcile_plot_monthly_h1_2026_20261024.py": "576bd20f0bdf34f1ff4823ad6f302d44fa46d98653a889b9613d3f134ecbdf26"
+  },
+  "source_and_tests_fully_read": true,
+  "reporter_schema_and_unique_action_identity_checked_in_source": true,
+  "synthetic_pass_count": 15,
+  "test_receipts_and_output_hashes_verified": true,
+  "original_2025_sha256": "5b5cf477eaf9fdef7aa7d9db8fc638dcb2aeefec1b9db06208955e6f26a61c0f",
+  "reporter_unchanged": true,
+  "real_report_opened": false,
+  "real_chart_rendered": false,
+  "real_execution_requires_closed_report_and_external_manifest_exit_pins": true,
+  "additional_tests_run_by_root": false
+}

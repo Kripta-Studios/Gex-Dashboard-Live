@@ -1,0 +1,22 @@
+{
+  "utc": "2026-10-24T03:46:08.884495+00:00",
+  "pins": {
+    "reconcile_plot_monthly_h1_2026_20261024.py": "658e0f9d23a83c1c7400b684525c87fd50f706b34023beb33cce42401e66e3e4",
+    "test_reconcile_plot_monthly_h1_2026_20261024.py": "576bd20f0bdf34f1ff4823ad6f302d44fa46d98653a889b9613d3f134ecbdf26"
+  },
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_reconcile_plot_monthly_h1_2026_20261024.py"
+  ],
+  "resources_before": {
+    "available_ram_bytes": 4381196288,
+    "free_commit_bytes": 3409231872,
+    "minimum_bytes": 2000000000
+  },
+  "synthetic_only": true
+}
