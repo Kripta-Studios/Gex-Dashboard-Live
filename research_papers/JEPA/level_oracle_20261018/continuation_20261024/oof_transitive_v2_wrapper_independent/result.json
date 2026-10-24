@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "exit_code": 0,
+  "exit_source": "retained_subprocess_Popen_wait",
+  "wall_seconds": 5.963529099943116,
+  "observed_utc": "2026-10-24T04:51:22.293451+00:00",
+  "pins_unchanged": true,
+  "stdout_sha256": "d7a68fa80a1f3edf674b4bd18e33ad53629c8279e056dbe5a4bc55b15c39cc23",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "runtime_market_authorized": false
+}

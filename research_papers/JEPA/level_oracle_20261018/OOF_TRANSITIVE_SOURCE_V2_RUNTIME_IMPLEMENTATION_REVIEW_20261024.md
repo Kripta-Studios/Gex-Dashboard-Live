@@ -1,0 +1,13 @@
+# Revisión independiente del wrapper OOF V2
+
+**CLEAR — IMPLEMENTATION_ONLY.** Código `213eb744b8e295688622955187227df66a56f9121252bd765b7054324e4cceae` y tests `ac1a1e43f7bcc553c7f06af67f0efe6203f515eb0fdc9d2db7c2c0bbf7c5f2d3` revisados. El [recibo vinculante](OOF_TRANSITIVE_SOURCE_V2_RUNTIME_IMPLEMENTATION_REVIEW_20261024.json) fija las 18 dependencias y los cuatro pins científicos; SHA del recibo: `ca8f11ef9781a1f6996132032b8c7a09bf6f559970c66e0067bffab9507848f5`. No autoriza ejecución de mercado.
+
+La admisión usa metadata de A y las siete columnas de I, conserva procedencia y exige path/SHA exactos. Los negativos cubren referencias desconocidas, conflicto de hashes, índice alterado, aliases de declaración y consumo, enlaces, identidad física, reemplazo de un archivo indexado y solapamiento de outputs. No recorre físicamente todos los payloads de A.
+
+Ejecuté independientemente **17 pruebas focales PASS en 4,28 s**, con 24 deseleccionadas, CPU 1 y gate previo de 8.295.112.704 bytes RAM / 6.721.183.744 bytes commit. Los 22 pins del recibo de ejecución permanecieron iguales antes y después. El autor obtuvo 40 PASS en 96,29 s y después añadió una prueba de reemplazo de identidad que pasó en 2,16 s; la incluí también en mis focales. El intento anterior conserva 38 PASS y un fallo de aserción sobre el nombre del mapa de replay, corregido tras guardar su evidencia. No se presenta como una única ejecución final de 41 pruebas.
+
+Las doce fases del autor usan los productores reales sin cambios sobre FullSource/TinySource artificial, con MonthlyInputs sustituido. Request V2, índice sintético, correction_closure/verify_map y replay_closure sí se recorren: engine sibling y junio index-only entran por la autoridad exacta. La frontera table registra lecturas antes de pd.read_parquet; cada instancia de correction carece de labels TARGET y replay sí consume los labels de junio. Esto no verifica el constructor real completo ni resultados de mercado.
+
+La [revisión estática científica de tcn_completion](OOF_TRANSITIVE_SOURCE_V2_SCIENTIFIC_INVARIANCE_REVIEW_20261024.md) documenta 22 nodos AST idénticos, Request.source idéntico y pipeline equivalente salvo metadata V2/digest de admisión. Los cuatro pins y los conjuntos de seis y ocho dependencias científicas siguen exactos. Leí su recibo final y rehasheé las 18 dependencias.
+
+El futuro intento requiere raíces nuevas, enero desde cero y admisión runtime separada. El soporte genérico heredado de resume sellado se prueba sólo sintéticamente; no permite adoptar el intento fallido. No se ejecutaron mercado, fits, inferencia base ni auditoría económica final. No hay hallazgos abiertos sobre estos bytes.

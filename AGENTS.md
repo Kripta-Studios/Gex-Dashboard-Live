@@ -1,5 +1,20 @@
 # AI Agent Hand-off: Current Production Reality
 
+### Checkpoint 2026-10-24 — wrapper OOF V2 revisado con fuentes sintéticas
+
+Autoridad: level_oracle_20261018/OOF_TRANSITIVE_SOURCE_V2_RUNTIME_IMPLEMENTATION_RESULT_20261024.md.
+Wrapper213eb744…cceae/testsac1a1e43…f5f2d3; reviewca8f11ef…848f5 CLEAR,
+IMPLEMENTATION_ONLY. Autor: intento01 conserva38PASS/1fallo de aserción; intento02
+40PASS; añadido posterior1focalPASS. Independiente17PASS; no suite única41.
+AST47dc8eca…ab0fe5 confirma22nodos idénticos y ciencia4pins/6+8deps intacta.
+V2admite referencias exactas de metadata mensual e índice, sin ampliar raíces.
+Fixtures usan MonthlyInputs artificial: no equivalen a constructor real o mercado.
+Root leyó deltas completos wrapper/tests y reviews;20pins/4recibos verificados.
+Supervisor V2 aún en revisión; runtime requiere request/binding nuevos publicados.
+OOF01 permanece fallido e inmutable, sin resume. Auditor económico original
+publicado3342e27d admite sóloV1; adaptación explícitaV2 en preparación documental.
+No rentabilidad causal acreditada; API/producción/bróker/VPS intactos.
+
 ### Checkpoint 2026-10-24 — supervisor auditor original revisado; V2 en implementación
 
 Fallo y contratoV2 publicados/remotoverificados4b2ab2a1931684f7127ad0728498d4ac60157e81.

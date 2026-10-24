@@ -1,6 +1,14 @@
 # Continuación local: estado del 23 de octubre de 2026
 
-El supervisor económico original quedó revisado y listo para publicación:
+La [implementación del wrapper V2](OOF_TRANSITIVE_SOURCE_V2_RUNTIME_IMPLEMENTATION_RESULT_20261024.md)
+ya tiene revisión independiente CLEAR: 40 pruebas sintéticas, una prueba posterior
+adicional y 17 controles independientes. El primer intento sintético conserva su
+fallo de aserción. La [revisión científica](OOF_TRANSITIVE_SOURCE_V2_SCIENTIFIC_INVARIANCE_REVIEW_20261024.md)
+confirma las doce fases y los productores congelados. Son pruebas con fuentes
+artificiales; el lanzador V2 y la admisión de una ejecución nueva siguen pendientes.
+No se reutilizan los resultados parciales del intento OOF01.
+
+El supervisor económico original quedó publicado en3342e27de4f8c327b707f7bb82fd907e88c6e9aa:
 [código, pruebas y alcance](OOF_ECONOMIC_AUDIT_LAUNCH_IMPLEMENTATION_RESULT_20261024.md)
 y [review independiente](OOF_ECONOMIC_AUDIT_LAUNCH_IMPLEMENTATION_REVIEW_20261024.md).
 Código17c16044…43e1e/tests2f6f00c0…d992a/review765b3a0f…8e019,53miembros exactos.

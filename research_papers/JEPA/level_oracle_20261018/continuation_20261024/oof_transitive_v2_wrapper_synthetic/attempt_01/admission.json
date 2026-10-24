@@ -1,0 +1,60 @@
+{
+  "commands": [
+    [
+      "C:\\Program Files\\Python314\\python.exe",
+      "-m",
+      "ruff",
+      "check",
+      "run_oof_calibrated_pipeline_v2.py",
+      "test_run_oof_calibrated_pipeline_v2.py"
+    ],
+    [
+      "C:\\Program Files\\Python314\\python.exe",
+      "-m",
+      "pytest",
+      "test_run_oof_calibrated_pipeline_v2.py",
+      "-q",
+      "--basetemp",
+      "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_wrapper_synthetic_20261024_01\\pytest_tmp"
+    ]
+  ],
+  "cpu_affinity": [
+    0
+  ],
+  "launcher_sha256": "a2ff19507d6058ac305528d6c95a2afb426f8666dfbd2b58b5b35248932bf06c",
+  "original_dependencies": {
+    "MONTHLY_OOF_CALIBRATION_ADAPTER_SPEC.md": "6bd989a6332fd21f751dc48ef084c5eba0f83b1f86f957f2a71127ef869bcb4e",
+    "OOF_CALIBRATED_POLICY_EVALUATION_SPEC.md": "7f88f18569d86ea936d0afdc4a485e461ccdf6c09d74feb835a026bee7caf3bc",
+    "OOF_ECONOMIC_AUDITOR_DESIGN_20261023.md": "b9c2ac397945a04365289b9af0f202f04082c844badfc724ae937972be253154",
+    "OOF_ECONOMIC_AUDITOR_IMPLEMENTATION_REVIEW_20261023.md": "8faf2a64f07df648f2d90e184a4a1a43e80a24b7f474d47604c3c0d352dfacb6",
+    "OOF_ECONOMIC_AUDITOR_SPEC_20261023.md": "cfa6868435a772b336605e3b0613e8fa6c1e377a53cbbef376d3973e64901f37",
+    "OOF_MAXIMUM_CALIBRATION_INTEGRATION.md": "79f8c69b13c3585aa26cbb15fa52f246675baaabd8b8e8d6661a5ffe150ce7bd",
+    "OOF_PIPELINE_RUNTIME_SPEC_20261023.md": "9b8d40296d515c28953b6b994c552560f159f6b8be57f0177487dbff05987909",
+    "OOF_RUNTIME_SEQUENCE_DESIGN_20261023.md": "e5c6350a492221632b9c87fa61ee7b644b507812c4d11ab3a1e3eb26f936762a",
+    "PREQUENTIAL_MAX_CALIBRATION_DESIGN.md": "e8264e398b31f22198a024a3c6d9dfa9fc4530402278693caac1caa2d6f7a619",
+    "audit_oof_calibrated_policy.py": "e7481fbe944a9ffadcf637e7a4b69cd8d636cdf50ae295426191db9d76b5d44b",
+    "evaluate_oof_calibrated_policy.py": "eeaad06f5b862a3153f29e7eab579b19a35e182ab506cf1f59e65631e187e716",
+    "monthly_oof_calibration_adapter.py": "7b80cff43e3887a92e0f89be6daa863a670ccd72d22a0f4aeabd032a39479364",
+    "oof_maximum_calibration.py": "19e922dd65855c4cd7e2ec9d482d477a328245bcf642eeeb7771985f247e20b5",
+    "rolling_monthly_schedule.py": "92df2e68734d24a61b4ddccec1f9451a5e25c862f5a1b581ae779c163fcf205a",
+    "run_oof_calibrated_pipeline.py": "26967e10c6b81cd5b84d7939bf6d0c81037934165daa91847d7ffd25de16ff57",
+    "test_audit_oof_calibrated_policy.py": "c98954a9bef3b70bef8c889255cb187a57d88c4f43235ade255a70560438f232",
+    "test_run_oof_calibrated_pipeline.py": "4daf9d662a63b125f2d451ea463558a00b35ebbd7a7c85d1c1b9145dfe6bf33e"
+  },
+  "pins": {
+    "OOF_TRANSITIVE_SOURCE_FAILURE_DIAGNOSIS_20261024.md": "bd8bd3a8992c27203f0d67dd8ca0726a72615f30714096e0ffd177458b60cf23",
+    "OOF_TRANSITIVE_SOURCE_V2_DESIGN_20261024.md": "485f557e4ea2d2eb94bfecfd383d59d02ec29381f0eac06a12178fdef9882cc3",
+    "OOF_TRANSITIVE_SOURCE_V2_IMPLEMENTATION_CONTRACT_20261024.md": "85c8bd20107e6a2ee6cf0d6e00bb8d16a7d6b5d1c6bce5839f542266e4c17a8c",
+    "run_oof_calibrated_pipeline_v2.py": "6d3dddc4c6f4f10769fb27dceccffd93d4877f58a2bd06fbb5dbaf7e94775fb3",
+    "test_run_oof_calibrated_pipeline_v2.py": "35b5e90be5ab69084ba150f803d6908b0f539870bfa98253e005e777a9087cba"
+  },
+  "publication_commit": "4b2ab2a1931684f7127ad0728498d4ac60157e81",
+  "resources": {
+    "available_ram_bytes": 8419205120,
+    "free_commit_bytes": 6740135936
+  },
+  "runtime_market_authorized": false,
+  "scope": "SYNTHETIC_ONLY",
+  "threads": 1,
+  "utc": "2026-10-24T04:44:40.967676+00:00"
+}

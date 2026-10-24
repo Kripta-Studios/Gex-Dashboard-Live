@@ -1,0 +1,100 @@
+{
+  "status": "COMPACT_INDEPENDENT_WRAPPER_V2_FIXTURE_EVIDENCE",
+  "archived_utc": "2026-10-24T04:57:02.7487327Z",
+  "source_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_wrapper_independent_20261024_01",
+  "external_result_receipt_sha256": "74b9727c2737da1380feb99c4392a4ac8e93f09a16def171204bfd3af39956f4",
+  "copied_files": 10,
+  "copied_bytes": 92671,
+  "files": [
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_wrapper_independent_20261024_01\\admission.json",
+      "archive_path": "admission.json",
+      "sha256": "a9bf30e77f06b3201488a95dacafdfef0d2be15dad810bfd29302a03da091a6d",
+      "bytes": 3524,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_wrapper_independent_20261024_01\\process.json",
+      "archive_path": "process.json",
+      "sha256": "0525fede97daba01eed903ce5143811a03ba743aee05305cc59ac9fff458d866",
+      "bytes": 616,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_wrapper_independent_20261024_01\\result.json",
+      "archive_path": "result.json",
+      "sha256": "74b9727c2737da1380feb99c4392a4ac8e93f09a16def171204bfd3af39956f4",
+      "bytes": 421,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_wrapper_independent_20261024_01\\stdout.txt",
+      "archive_path": "stdout.txt",
+      "sha256": "d7a68fa80a1f3edf674b4bd18e33ad53629c8279e056dbe5a4bc55b15c39cc23",
+      "bytes": 116,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_wrapper_independent_20261024_01\\stderr.txt",
+      "archive_path": "stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_wrapper_independent_20261024_01\\source_snapshot\\OOF_TRANSITIVE_SOURCE_FAILURE_DIAGNOSIS_20261024.md",
+      "archive_path": "source_snapshot/OOF_TRANSITIVE_SOURCE_FAILURE_DIAGNOSIS_20261024.md",
+      "sha256": "bd8bd3a8992c27203f0d67dd8ca0726a72615f30714096e0ffd177458b60cf23",
+      "bytes": 7532,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_wrapper_independent_20261024_01\\source_snapshot\\OOF_TRANSITIVE_SOURCE_V2_DESIGN_20261024.md",
+      "archive_path": "source_snapshot/OOF_TRANSITIVE_SOURCE_V2_DESIGN_20261024.md",
+      "sha256": "485f557e4ea2d2eb94bfecfd383d59d02ec29381f0eac06a12178fdef9882cc3",
+      "bytes": 11611,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_wrapper_independent_20261024_01\\source_snapshot\\OOF_TRANSITIVE_SOURCE_V2_IMPLEMENTATION_CONTRACT_20261024.md",
+      "archive_path": "source_snapshot/OOF_TRANSITIVE_SOURCE_V2_IMPLEMENTATION_CONTRACT_20261024.md",
+      "sha256": "85c8bd20107e6a2ee6cf0d6e00bb8d16a7d6b5d1c6bce5839f542266e4c17a8c",
+      "bytes": 7112,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_wrapper_independent_20261024_01\\source_snapshot\\run_oof_calibrated_pipeline_v2.py",
+      "archive_path": "source_snapshot/run_oof_calibrated_pipeline_v2.py",
+      "sha256": "213eb744b8e295688622955187227df66a56f9121252bd765b7054324e4cceae",
+      "bytes": 36413,
+      "source_and_copy_rehashed": true
+    },
+    {
+      "original_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_wrapper_independent_20261024_01\\source_snapshot\\test_run_oof_calibrated_pipeline_v2.py",
+      "archive_path": "source_snapshot/test_run_oof_calibrated_pipeline_v2.py",
+      "sha256": "ac1a1e43f7bcc553c7f06af67f0efe6203f515eb0fdc9d2db7c2c0bbf7c5f2d3",
+      "bytes": 25326,
+      "source_and_copy_rehashed": true
+    }
+  ],
+  "launcher": {
+    "physical_file_retained": false,
+    "reconstructed": false,
+    "evidence": "Reviewer confirms Python stdin invocation; admission.json records the exact pytest command, gate and pins. No separate physical launcher exists for this independent run."
+  },
+  "author_attempts_archive": {
+    "relative_path": "../oof_transitive_v2_wrapper_synthetic/MANIFEST.json",
+    "sha256": "25f5c570abec28b63ba2842c9ad5879297e302626c0a20d5a4b7fc9c39c07c64",
+    "owner": "/root/tcn_economic_auditor",
+    "modified_or_duplicated": false
+  },
+  "independent_owner": "/root/monthly_resume",
+  "excluded": {
+    "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_wrapper_independent_20261024_01\\pytest_tmp",
+    "reason": "Synthetic fixture payload tree is not needed for compact receipts; no contents read, hashed or copied."
+  },
+  "tests_repeated": false,
+  "scientific_or_market_payloads_read_or_copied": false,
+  "runtime_market_authorized": false,
+  "shared_documents_modified": false
+}

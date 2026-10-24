@@ -1,0 +1,12 @@
+{
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-m",
+    "ruff",
+    "check",
+    "run_oof_calibrated_pipeline_v2.py",
+    "test_run_oof_calibrated_pipeline_v2.py"
+  ],
+  "creation_time": 1792817081.0040767,
+  "pid": 8896
+}

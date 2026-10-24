@@ -21,6 +21,14 @@ al verificar referencias externas de la primera corrección. Exit 1 observado,
 sin replay ni resultado económico OOF; no se reanuda este intento. Se prepara
 una [reparación técnica V2](OOF_TRANSITIVE_SOURCE_V2_IMPLEMENTATION_CONTRACT_20261024.md)
 con referencias exactas a las autoridades ya selladas, revisada documentalmente.
+La [implementación del wrapper V2](OOF_TRANSITIVE_SOURCE_V2_RUNTIME_IMPLEMENTATION_RESULT_20261024.md)
+ya tiene revisión independiente CLEAR: 40 pruebas sintéticas, una prueba posterior
+adicional y 17 controles independientes. El primer intento sintético conserva su
+fallo de aserción. La [revisión científica](OOF_TRANSITIVE_SOURCE_V2_SCIENTIFIC_INVARIANCE_REVIEW_20261024.md)
+confirma las doce fases y los productores congelados. Son pruebas con fuentes
+artificiales; el lanzador V2 y la admisión de una ejecución nueva siguen pendientes.
+No se reutilizan los resultados parciales del intento OOF01.
+
 Los [18 meses consolidados](MONTHLY_18MONTH_REPORT_RESULT_20261024.md) y la
 [gráfica H1](MONTHLY_H1_2026_INDEPENDENT_FIGURE_RESULT_20261024.md) ya están
 cerrados y reconciliados; root comprobó también la legibilidad de la figura.

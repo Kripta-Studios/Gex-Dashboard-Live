@@ -1,0 +1,17 @@
+{
+  "pid": 25472,
+  "creation_time": 1792817476.3315272,
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-m",
+    "pytest",
+    "test_run_oof_calibrated_pipeline_v2.py",
+    "-q",
+    "-k",
+    "metadata_only_A or transitive_consumption or authority_union or omitted_index_only or missing_payload or hardlink_and_physical or linked_ancestor or indexed_identity_replacement",
+    "--basetemp",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_wrapper_independent_20261024_01\\pytest_tmp"
+  ],
+  "handle_retained": true,
+  "started_utc": "2026-10-24T04:51:16.337032+00:00"
+}

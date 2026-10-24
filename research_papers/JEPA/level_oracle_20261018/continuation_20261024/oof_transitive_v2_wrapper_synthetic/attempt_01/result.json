@@ -1,0 +1,37 @@
+{
+  "original_dependencies_unchanged": true,
+  "pins_unchanged": true,
+  "runtime_market_authorized": false,
+  "status": "FAILED_PRESERVED",
+  "steps": [
+    {
+      "command": [
+        "C:\\Program Files\\Python314\\python.exe",
+        "-m",
+        "ruff",
+        "check",
+        "run_oof_calibrated_pipeline_v2.py",
+        "test_run_oof_calibrated_pipeline_v2.py"
+      ],
+      "exit_code": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "wall_seconds": 0.32954929990228266
+    },
+    {
+      "command": [
+        "C:\\Program Files\\Python314\\python.exe",
+        "-m",
+        "pytest",
+        "test_run_oof_calibrated_pipeline_v2.py",
+        "-q",
+        "--basetemp",
+        "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_wrapper_synthetic_20261024_01\\pytest_tmp"
+      ],
+      "exit_code": 1,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "d4b675aca95514970d8b45137d819bf447696eebc942cab3c50d745bf8deb076",
+      "wall_seconds": 105.50670779997017
+    }
+  ]
+}

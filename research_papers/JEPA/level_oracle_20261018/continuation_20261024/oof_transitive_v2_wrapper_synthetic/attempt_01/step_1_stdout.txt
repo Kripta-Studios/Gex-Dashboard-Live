@@ -1,0 +1,26 @@
+......................F................                                  [100%]
+================================== FAILURES ===================================
+________ test_external_sibling_and_index_only_june_cross_real_closures ________
+
+completed_pipeline = (WindowsPath('D:/GexResearchArtifacts/level_oracle_20261018/oof_transitive_v2_wrapper_synthetic_20261024_01/pytest_tmp......}, 'promotion_approved': False, ...}, <test_run_oof_calibrated_pipeline_v2.FullSource object at 0x000001BADDF6C440>)
+
+    def test_external_sibling_and_index_only_june_cross_real_closures(completed_pipeline):
+        _, request, result, source = completed_pipeline
+        june = source.external / "SPY/20260602"
+        for kind in ("actions", "labels"):
+            path = june / (kind + ".parquet")
+            assert str(path) not in source.external_audited
+            member = request.admission["members"][runner.path_key(path)]
+            assert member["origins"] == [f"index:SPY:20260602:{kind}"]
+        correction = json.loads((request.correction / "202606.inputs.json").read_text())
+        assert str(june / "actions.parquet") in correction["files"]
+        assert str(june / "labels.parquet") not in correction["files"]
+        replay = json.loads((request.evaluations["202606"] / "completion.json").read_text())
+>       assert str(june / "labels.parquet") in replay["files"]
+E       AssertionError: assert 'D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_wrapper_synthetic_20261024_01\\pytest_tmp\\oof_pipeline_complete0\\evidence\\engine_v1\\SPY\\20260602\\labels.parquet' in {'D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_wrapper_synthetic_20261024_01\\pytest_tmp\\oof_pi...rection\\expanding\\202606\\calibration.json': '33742c1b319997117a365bde31a74afc33fb3fe867f4ac5f303ef203edbb478f', ...}
+E        +  where 'D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_transitive_v2_wrapper_synthetic_20261024_01\\pytest_tmp\\oof_pipeline_complete0\\evidence\\engine_v1\\SPY\\20260602\\labels.parquet' = str((WindowsPath('D:/GexResearchArtifacts/level_oracle_20261018/oof_transitive_v2_wrapper_synthetic_20261024_01/pytest_tmp/oof_pipeline_complete0/evidence/engine_v1/SPY/20260602') / 'labels.parquet'))
+
+test_run_oof_calibrated_pipeline_v2.py:406: AssertionError
+=========================== short test summary info ===========================
+FAILED test_run_oof_calibrated_pipeline_v2.py::test_external_sibling_and_index_only_june_cross_real_closures
+1 failed, 38 passed in 104.06s (0:01:44)
