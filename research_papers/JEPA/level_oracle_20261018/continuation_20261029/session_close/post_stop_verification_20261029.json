@@ -1,0 +1,25 @@
+{
+  "status": "PASS_POST_PAUSE_VERIFICATION_NO_ACTIVE_RESEARCH",
+  "utc": "2026-10-29T17:20:14.890207+00:00",
+  "user_stop": {
+    "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_user_stop_continuation_observer_20261029_01\\user_stop_20261029.json",
+    "sha256": "8a38a2936758f9698533e639f66d8fae9143fa9b07dfa4a0bc82c8e04ca8d864"
+  },
+  "research_python_processes": [],
+  "uninspectable_python_pids": [],
+  "documentation_subagents_completed": true,
+  "scientific_continuation_launched": false,
+  "economic_audit_executed": false,
+  "phase_receipt_count": 8,
+  "pipeline_completion_exists": false,
+  "five_required_destinations_absent": true,
+  "old_stop_and_failure_preserved": true,
+  "foreign_tracked_pins": {
+    "MASTER_KING_NODE_RECORD_V5.xlsx": "ef8c5a0ddf5a93d9ca763c34146674ff5b6e775e1ee0f95320443deab30bdabb",
+    "live_king_node.py": "29a3264ebe7d6592aac63fb68a614cfef3fa328a5c92266f6113ef4b841d521e"
+  },
+  "markdown_relative_links_checked": 23,
+  "goal_status_observed": "paused",
+  "goal_pause_tool_updated_epoch": 1793293980,
+  "no_automatic_resume": true
+}

@@ -1,0 +1,44 @@
+{
+  "status": "ROOT_DEFAULT_METADATA_INVOCATION_ADMITTED",
+  "utc": "2026-10-29T16:39:03.882329+00:00",
+  "available_ram_bytes": 9993216000,
+  "free_commit_bytes": 12324700160,
+  "minimum_free_bytes": 2000000000,
+  "root_pid": 23524,
+  "parent_cpu_affinity": [
+    0
+  ],
+  "threads": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_oof_pipeline_user_stop_continuation_20261029.py",
+    "--request",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_USER_STOP_CONTINUATION_REQUEST_20261029_01.json",
+    "--request-sha256",
+    "f32e35e965722631e2f685db3c3a38aefc6021f5edd35db18f55984061982fef",
+    "--runtime-binding",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_USER_STOP_CONTINUATION_RUNTIME_BINDING_20261029_01.json",
+    "--runtime-binding-sha256",
+    "4197cd14d7110211164238c3863df8c88c7eca9d26db248aa4c1e11a3bdb9510",
+    "--implementation-review-sha256",
+    "6a06521fc74fd9b8afd4efeab0209066f9138749e7e1acde562ce6c50ede16bf",
+    "--publication-commit",
+    "8bf198a501719775029f375776552d193f99ab76"
+  ],
+  "pins": {
+    "launch_oof_pipeline_user_stop_continuation_20261029.py": "599f6d5c347ebdc3801bbe8cc21de55603a80a46858a8bad1d20729d307eee11",
+    "OOF_USER_STOP_CONTINUATION_REQUEST_20261029_01.json": "f32e35e965722631e2f685db3c3a38aefc6021f5edd35db18f55984061982fef",
+    "OOF_USER_STOP_CONTINUATION_RUNTIME_BINDING_20261029_01.json": "4197cd14d7110211164238c3863df8c88c7eca9d26db248aa4c1e11a3bdb9510",
+    "OOF_USER_STOP_CONTINUATION_IMPLEMENTATION_REVIEW_20261029.json": "6a06521fc74fd9b8afd4efeab0209066f9138749e7e1acde562ce6c50ede16bf",
+    "OOF_USER_STOP_CONTINUATION_RUNTIME_BINDING_REVIEW_20261029.json": "4276eb7e23ad0bc43a39cdba2af173b4a87f647df982b25ecbbd98e2dea0d79d"
+  },
+  "publication_commit": "8bf198a501719775029f375776552d193f99ab76",
+  "execute_flag_present": false
+}

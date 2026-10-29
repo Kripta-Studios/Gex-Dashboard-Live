@@ -1,0 +1,43 @@
+{
+  "status": "PASS_ROOT_DEFAULT_ADMISSION_INSPECTION",
+  "utc": "2026-10-29T17:06:25.571271+00:00",
+  "preflight": {
+    "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_user_stop_continuation_observer_20261029_01\\preflight_01\\stdout.json",
+    "sha256": "e75ab2366c7b5eed56181e6d199829ed79a68a8ea4fdbb8aabdf307dd0d7a646"
+  },
+  "retained_exit": {
+    "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_user_stop_continuation_observer_20261029_01\\preflight_01\\exit.json",
+    "sha256": "646778e2976017c1b654f21ee5ef0249557336e0dff2608862c9bee08d248be0"
+  },
+  "preflight_verified_file_count": 19143,
+  "root_compact_pins_rehashed": 177,
+  "baseline_counts": {
+    "phases": 8,
+    "controls": 18,
+    "compact": 39,
+    "sources": 13125,
+    "outputs": 8726,
+    "locks": 5
+  },
+  "source_admission": {
+    "indexed_sidecars": 2226,
+    "index_only_sidecars": 126,
+    "june_index_only_sidecars": 126,
+    "missing_days_authority": 6,
+    "expected_january_external_sidecars_admitted": 1542,
+    "expected_january_external_sidecars_sha256": "ba333e143dcd8da0abbef88dbf3827e50c6866645086b6a7bec889e511506a27",
+    "historical_reconciliation_only": true,
+    "partial_attempt_read": false
+  },
+  "required_absent_destinations": [
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202605_20261024_v2r1_01",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202606_20261024_v2r1_01",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_user_stop_continuation_launch_20261029_01",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_20261029_01",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_launch_20261029_01"
+  ],
+  "economics_interpreted": false,
+  "runtime_launched": false,
+  "technical_ready": false,
+  "promotion_approved": false
+}

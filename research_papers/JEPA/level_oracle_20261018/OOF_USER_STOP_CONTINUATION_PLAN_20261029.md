@@ -1,5 +1,8 @@
 # OOF user-stop continuation implementation plan
 
+**PAUSED by explicit user instruction on29 October2026.** This plan is historical
+preparation. The goal is paused; no automatic runtime. See `SESSION_CLOSE_20261029.md`.
+
 **Goal:** complete only the four pending OOF phases with an externally reviewed
 eight-phase baseline and explicit provenance for both process lifetimes.
 
@@ -45,18 +48,18 @@ test results; do not rerun old full suites. Record every test attempt separately
      `monitor` and `launch` as specified. DEFAULT never launches a child.
    - [x] Run only new/focal tests with resource gate, record stdout/stderr/exit
      and code hashes; preserve failures. Verify CPU inheritance with artificial child.
-   - [ ] Independent reviewer inspects code/tests and meaningful negative cases;
+   - [x] Independent reviewer inspects code/tests and meaningful negative cases;
      root reads implementation/review and publishes exact verified bytes.
 3. **Concrete runtime admission and producer continuation.**
-   - [ ] Archive the compact baseline at the spec's new snapshot roots; pin it
+   - [x] Archive the compact baseline at the spec's new snapshot roots; pin it
      in `OOF_USER_STOP_CONTINUATION_REQUEST_20261029_01.json` and
      `OOF_USER_STOP_CONTINUATION_RUNTIME_BINDING_20261029_01.json`.
-   - [ ] Independently review and publish those exact files. Run DEFAULT once,
+   - [x] Independently review and publish those exact files. Run DEFAULT once,
      retain its real exit and inspect adoption result before launch.
    - [ ] Launch once with `--execute-reviewed-continuation`; retain new handle,
      observe four new closures and exit0; preserve all baseline hashes.
 4. **Separate economic audit and reporting.**
-   - [ ] Implement/test/review/publish the spec's new economic supervisor with
+   - [x] Implement/test/review/publish the spec's new economic supervisor with
      the explicit two-launch chain; frozen scientific auditor unchanged.
    - [ ] After actual producer completion, prepare/review/publish FULL_H1 request
      and binding; execute independent audit once and verify closed scope.
@@ -111,3 +114,23 @@ test results; do not rerun old full suites. Record every test attempt separately
 - Concrete binding independent review `4276eb7e…d79d` CLEAR: exact126 map,
  129 verified pins; root read and rehashed129. Package prepared for publication,
  DEFAULT metadata admission still not executed.
+
+- Package published and remote verified `8bf198a501719775029f375776552d193f99ab76`:206
+ exact staged byte members, only two foreign tracked changes remain. DEFAULT
+ metadata CLI started once, PID25956/creation1793291943.9450238, root session86530,
+ new observer/preflight_01. No phase execution yet; current receipt pending.
+
+- Real DEFAULT closed `PASS_OOF_USER_STOP_CONTINUATION_PREFLIGHT_NOT_EXECUTED`,
+ exit0 retained17:04:40UTC; preflight `e75ab236…a646`, exit `646778e2…be0`.
+ 19,143 pins /127publication,8closedphases/18controls/39compact/8,726outputs;
+ sourceadmissionec2f unchanged. Root177compactpins and6copies8,795,601B checked.
+ Actual continuation still not launched; rootGO receipt prepared for publication.
+
+- User requested pause after any active work completed. DEFAULT had already
+ closedexit0; no continuation/audit launched. Stop receipt17:11:20UTC SHA
+ `8a38a2936758f9698533e639f66d8fae9143fa9b07dfa4a0bc82c8e04ca8d864`, zero
+ active research Python. Goal status paused. Only documentation/publication
+ requested by user continued. Prepared rootGO is suspended.
+- Actual DEFAULT independent inspection `a2385997…2d7`:183compactpins and127
+ Gitblobs checked, no payload pass repeated. Closing documents include actor
+ prerequisites and exact future economic binding checklist; no new experiment.

@@ -1,0 +1,30 @@
+{
+  "status": "ROOT_PREFLIGHT_CLI_HANDLE_RETAINED",
+  "pid": 25956,
+  "creation_time": 1793291943.9450238,
+  "creation_time_source": "psutil.Process.create_time",
+  "observed_utc": "2026-10-29T16:39:03.994900+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_oof_pipeline_user_stop_continuation_20261029.py",
+    "--request",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_USER_STOP_CONTINUATION_REQUEST_20261029_01.json",
+    "--request-sha256",
+    "f32e35e965722631e2f685db3c3a38aefc6021f5edd35db18f55984061982fef",
+    "--runtime-binding",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_USER_STOP_CONTINUATION_RUNTIME_BINDING_20261029_01.json",
+    "--runtime-binding-sha256",
+    "4197cd14d7110211164238c3863df8c88c7eca9d26db248aa4c1e11a3bdb9510",
+    "--implementation-review-sha256",
+    "6a06521fc74fd9b8afd4efeab0209066f9138749e7e1acde562ce6c50ede16bf",
+    "--publication-commit",
+    "8bf198a501719775029f375776552d193f99ab76"
+  ],
+  "cpu_affinity": [
+    0
+  ],
+  "scientific_pipeline_started": false
+}
