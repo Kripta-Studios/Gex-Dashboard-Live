@@ -1,5 +1,20 @@
 # AI Agent Hand-off: Current Production Reality
 
+REANUDADA por autorización expresa del usuario el 29 de octubre de 2026.
+Autoridad vigente: [RESUMPTION_20261029.md](research_papers/JEPA/level_oracle_20261018/RESUMPTION_20261029.md).
+Revisión de interrupción OOF en curso; sin adopción ni ejecución nueva todavía.
+La pausa del 24 y los checkpoints inferiores se conservan como historia.
+
+## Estado histórico al detener el 24 de octubre
+
+PAUSADA por orden explicita del usuario el 24 de octubre de 2026 a las 06:37 UTC.
+Pipeline R1 y supervisor detenidos; seis subagentes ya completados. Verificacion
+posterior: cero procesos Python de esta investigacion activos. Artefactos locales
+preservados en D:/GexResearchArtifacts/level_oracle_20261018; recibos user_stop.json
+y post_stop_verification.json en oof_pipeline_v2r1_observer_20261024_01.
+No reanudar automaticamente, no repetir ni adoptar parciales sin revisar su estado.
+Los estados RUNNING inferiores son cortes historicos anteriores a esta pausa.
+
 ### Checkpoint 2026-10-24 — pipeline R1 activo; auditor preparado
 
 Desde98dde076, preflight metadata R1 exit0 05:28:10UTC; rootGO fc5b88c5.
