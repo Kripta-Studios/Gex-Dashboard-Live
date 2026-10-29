@@ -32,9 +32,9 @@ test results; do not rerun old full suites. Record every test attempt separately
 
 1. **Prefix evidence and contract publication.**
    - [x] Verify environment and original 81 preflight pins; publish resumption.
-   - [ ] Independently verify eight starts/receipts, all closure source/output maps,
+   - [x] Independently verify eight starts/receipts, all closure source/output maps,
      exact trees, stop chain and compact original/copy hashes.
-   - [ ] Read independent design review and publish design, plan and review.
+   - [x] Read independent design review and publish design, plan and review.
 2. **New producer supervisor and focused synthetic verification.**
    - [ ] Create `test_launch_oof_pipeline_user_stop_continuation_20261029.py`
      with the design's rejection and four-phase-only integration cases; record
@@ -76,3 +76,9 @@ test results; do not rerun old full suites. Record every test attempt separately
 - This file is the plan and progress ledger. Checked items require retained
   evidence, not agent assertions. Contracts and implementation reviews remain
   separate immutable authorities once published.
+
+- Design/review publication: `2f70f4e0e4de7a5b43638eb56706754224e10327`.
+- Prefix independent review: 19,006 unique pins, zero mismatches; root verified
+  54 compact pairs and built snapshot59/118 with manifest `573255394352b98f73bd2f9b1878b9a4b16e644b5424efbefeebc42437a9e2ff`.
+- Task2 author `implement_continuation`; reviewer `review_continuation_contract`.
+  New tests/implementation only; runtime still inadmissible until reviewed.

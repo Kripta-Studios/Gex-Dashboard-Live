@@ -1,0 +1,44 @@
+{
+  "status": "STOPPED_BY_EXPLICIT_USER_REQUEST",
+  "utc": "2026-10-24T06:37:31.238348+00:00",
+  "identities_before_stop": [
+    {
+      "pid": 28256,
+      "creation": 1792819783.1543567,
+      "command": [
+        "C:\\Program Files\\Python314\\python.exe",
+        "-u",
+        "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\run_oof_calibrated_pipeline_v2r1.py",
+        "--request",
+        "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_PIPELINE_V2R1_RUNTIME_REQUEST_20261024_01.json",
+        "--request-sha256",
+        "37f2018c7145d3b82cba2e34fbff9ae3008e33f32b004c5580e433157f38ef15"
+      ]
+    },
+    {
+      "pid": 44916,
+      "creation": 1792819745.6139894,
+      "command": [
+        "C:\\Program Files\\Python314\\python.exe",
+        "-u",
+        "research_papers/JEPA/level_oracle_20261018/launch_oof_pipeline_v2r1_20261024.py",
+        "--request",
+        "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_PIPELINE_V2R1_RUNTIME_REQUEST_20261024_01.json",
+        "--request-sha256",
+        "37f2018c7145d3b82cba2e34fbff9ae3008e33f32b004c5580e433157f38ef15",
+        "--runtime-binding",
+        "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_PIPELINE_V2R1_LAUNCH_RUNTIME_BINDING_20261024_01.json",
+        "--runtime-binding-sha256",
+        "9e4949227dfd8b0aa3e72a35271b081413dbd9dee482b79c98911ea25478813c",
+        "--implementation-review-sha256",
+        "2782b686947c9ddd5f723ad2b279802d21f3adbbee79aa76a6cd6e8bce551a78",
+        "--publication-commit",
+        "98dde07684716512310c15aeb8f48b4a7bf5a7d3",
+        "--execute-reviewed-pipeline"
+      ]
+    }
+  ],
+  "remaining_known_research_processes": [],
+  "artifacts_preserved": true,
+  "automatic_resume": false
+}

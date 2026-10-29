@@ -1,0 +1,60 @@
+{
+  "status": "INITIAL_PROCESS_IDENTITY_OBSERVATION_ONLY",
+  "utc": "2026-10-24T05:30:05.019915+00:00",
+  "root_session_id": 45379,
+  "processes": [
+    {
+      "pid": 44916,
+      "parent_pid": 12392,
+      "creation_time": 1792819745.6139894,
+      "command": [
+        "C:\\Program Files\\Python314\\python.exe",
+        "-u",
+        "research_papers/JEPA/level_oracle_20261018/launch_oof_pipeline_v2r1_20261024.py",
+        "--request",
+        "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_PIPELINE_V2R1_RUNTIME_REQUEST_20261024_01.json",
+        "--request-sha256",
+        "37f2018c7145d3b82cba2e34fbff9ae3008e33f32b004c5580e433157f38ef15",
+        "--runtime-binding",
+        "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_PIPELINE_V2R1_LAUNCH_RUNTIME_BINDING_20261024_01.json",
+        "--runtime-binding-sha256",
+        "9e4949227dfd8b0aa3e72a35271b081413dbd9dee482b79c98911ea25478813c",
+        "--implementation-review-sha256",
+        "2782b686947c9ddd5f723ad2b279802d21f3adbbee79aa76a6cd6e8bce551a78",
+        "--publication-commit",
+        "98dde07684716512310c15aeb8f48b4a7bf5a7d3",
+        "--execute-reviewed-pipeline"
+      ],
+      "status": "running",
+      "rss_bytes": 722632704,
+      "cpu_affinity": [
+        0
+      ]
+    },
+    {
+      "pid": 28256,
+      "parent_pid": 44916,
+      "creation_time": 1792819783.1543567,
+      "command": [
+        "C:\\Program Files\\Python314\\python.exe",
+        "-u",
+        "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\run_oof_calibrated_pipeline_v2r1.py",
+        "--request",
+        "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_PIPELINE_V2R1_RUNTIME_REQUEST_20261024_01.json",
+        "--request-sha256",
+        "37f2018c7145d3b82cba2e34fbff9ae3008e33f32b004c5580e433157f38ef15"
+      ],
+      "status": "running",
+      "rss_bytes": 225300480,
+      "cpu_affinity": [
+        0
+      ]
+    }
+  ],
+  "process_receipt_sha256": "bf9c1db78627b7918bbc9d5e2bb505832f9d8e63c1280f6956028d8141ec79a2",
+  "preflight_sha256": "b73115c97c6540d8d0885aa6238c924b1fb503917fbe23bee100e467ad720cf0",
+  "admission_sha256": "5c660b4bde4cf3fbd03931a7b69aac215bbd9c3b5d3804928bd3c344a5983cb7",
+  "source_admission_sha256": "ec2f728baf2ab28adaaf3855847d74bf6354ac587d440afb83b50278e5ca3234",
+  "exit_observed": false,
+  "economic_values_read": false
+}

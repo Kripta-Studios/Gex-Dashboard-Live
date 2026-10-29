@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "checks": {
+    "process_command_matches_preflight": true,
+    "publication_commit_consistent": true,
+    "implementation_review_consistent": true,
+    "implementation_review_hash": true,
+    "monitor_hash_process": true,
+    "monitor_hash_exit": true,
+    "no_resume_in_original_command": true,
+    "no_original_monitor_errors": true
+  },
+  "scope": "SUPPLEMENTAL_SUPERVISOR_IDENTITY_METADATA_ONLY"
+}

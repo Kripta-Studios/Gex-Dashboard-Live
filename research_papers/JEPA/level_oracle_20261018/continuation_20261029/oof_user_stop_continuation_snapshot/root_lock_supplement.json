@@ -1,0 +1,45 @@
+{
+  "active_lock_ownership_not_inferred": true,
+  "excluded_from_phase_output_inventory": true,
+  "lock_files": [
+    {
+      "bytes": 1,
+      "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\lock_snapshot\\00.lock",
+      "repository_copy": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_snapshot\\lock_00.bin",
+      "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_oof_correction_20261024_v2r1_01\\.lock"
+    },
+    {
+      "bytes": 1,
+      "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\lock_snapshot\\01.lock",
+      "repository_copy": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_snapshot\\lock_01.bin",
+      "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202601_20261024_v2r1_01\\.lock"
+    },
+    {
+      "bytes": 1,
+      "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\lock_snapshot\\02.lock",
+      "repository_copy": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_snapshot\\lock_02.bin",
+      "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202602_20261024_v2r1_01\\.lock"
+    },
+    {
+      "bytes": 1,
+      "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\lock_snapshot\\03.lock",
+      "repository_copy": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_snapshot\\lock_03.bin",
+      "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202603_20261024_v2r1_01\\.lock"
+    },
+    {
+      "bytes": 1,
+      "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\lock_snapshot\\04.lock",
+      "repository_copy": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_snapshot\\lock_04.bin",
+      "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202604_20261024_v2r1_01\\.lock"
+    }
+  ],
+  "observed_utc": "2026-10-29T15:44:55.208706+00:00",
+  "original_compact_manifest_unchanged_sha256": "a2c561d9a817e33fef63ae72372bc962d6b68897a392dd7e0833ae7a7709ea2e",
+  "original_review_result_unchanged_sha256": "446704f526ebb7aac4f69795cbf675b1fcd201e9831b03c3598463785be3e00b",
+  "status": "PASS_FIVE_SANCTIONED_ROOT_LOCK_BYTE_SNAPSHOTS"
+}

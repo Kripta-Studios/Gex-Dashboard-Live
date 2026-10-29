@@ -1,0 +1,23 @@
+{
+  "command": "python -X utf8 'D:/GexResearchArtifacts/level_oracle_20261018/resumption_review_20261029_independent_01/review_interruption.py'",
+  "cwd": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live",
+  "exec_session_id": 53197,
+  "final_tool_chunk_id": "68c634",
+  "initial_tool_chunk_id": "f69835",
+  "observed_tool_exit_code": 0,
+  "original_retained_handle_receipt_exists": false,
+  "original_stdout_file_existed": false,
+  "reconstructed_utc": "2026-10-29T15:44:55.209204+00:00",
+  "retained_handle_semantics_not_claimed": true,
+  "review_result_sha256": "446704f526ebb7aac4f69795cbf675b1fcd201e9831b03c3598463785be3e00b",
+  "script_sha256": "40fe4fcf54127e06be0c68a910cddaff58b4e63bacabefefc72d487d4140360a",
+  "source": "Conversation tool outputs from exec_command and write_stdin; copied after completion.",
+  "status": "POSTHOC_TOOL_OBSERVATION_RECONSTRUCTION",
+  "stdout_fragments_in_order": [
+    "{\"verified_files\": 4000, \"total_files\": 19006}",
+    "{\"verified_files\": 8000, \"total_files\": 19006}",
+    "{\"verified_files\": 12000, \"total_files\": 19006}",
+    "{\"verified_files\": 16000, \"total_files\": 19006}",
+    "{\n  \"status\": \"PASS_STOPPED_PREFIX_METADATA_AND_HASHES_ONLY\",\n  \"output_files\": 8726,\n  \"output_bytes\": 262686724,\n  \"unique_pinned_files\": 19006,\n  \"unique_pinned_bytes\": 718003461,\n  \"checks_count\": 249987,\n  \"next_phase\": [\n    \"202605\",\n    \"correction\"\n  ]\n}"
+  ]
+}

@@ -1,0 +1,326 @@
+[
+  {
+    "bytes": 15856,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\repository\\OOF_PIPELINE_V2R1_LAUNCH_RUNTIME_BINDING_20261024_01.json",
+    "sha256": "9e4949227dfd8b0aa3e72a35271b081413dbd9dee482b79c98911ea25478813c",
+    "source": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_PIPELINE_V2R1_LAUNCH_RUNTIME_BINDING_20261024_01.json"
+  },
+  {
+    "bytes": 3975,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\repository\\OOF_PIPELINE_V2R1_RUNTIME_REQUEST_20261024_01.json",
+    "sha256": "37f2018c7145d3b82cba2e34fbff9ae3008e33f32b004c5580e433157f38ef15",
+    "source": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_PIPELINE_V2R1_RUNTIME_REQUEST_20261024_01.json"
+  },
+  {
+    "bytes": 484229,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\monthly_oof_correction_20261024_v2r1_01\\202601.complete.json",
+    "sha256": "b3537f2dd473cb56491009aeaf1d7272fbe1ea6245e01cd9d2c06913f7b66014",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_oof_correction_20261024_v2r1_01\\202601.complete.json"
+  },
+  {
+    "bytes": 1338110,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\monthly_oof_correction_20261024_v2r1_01\\202601.inputs.json",
+    "sha256": "25da0ece61d3711ac92482d7cd1889eeb16d9e848f277b323beec073ed41cae2",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_oof_correction_20261024_v2r1_01\\202601.inputs.json"
+  },
+  {
+    "bytes": 206,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\monthly_oof_correction_20261024_v2r1_01\\202601.run_contract.json",
+    "sha256": "3309b8bd5010002f4419e4aac1e0468ee001fa22cd5279a617b8d79abb8d449d",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_oof_correction_20261024_v2r1_01\\202601.run_contract.json"
+  },
+  {
+    "bytes": 509912,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\monthly_oof_correction_20261024_v2r1_01\\202602.complete.json",
+    "sha256": "6b5a48e59b31bdfab3979eee699406934914068f61ae2a8915ba0c20e40b9ef0",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_oof_correction_20261024_v2r1_01\\202602.complete.json"
+  },
+  {
+    "bytes": 1435363,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\monthly_oof_correction_20261024_v2r1_01\\202602.inputs.json",
+    "sha256": "1e134b79873ff13096193515d98d6828c98b869fcb6bc61639024fdd349b368d",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_oof_correction_20261024_v2r1_01\\202602.inputs.json"
+  },
+  {
+    "bytes": 206,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\monthly_oof_correction_20261024_v2r1_01\\202602.run_contract.json",
+    "sha256": "a949dd74e1e3a519002848638c12fb932620c97e623bb3d6ace504ab43e59ab6",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_oof_correction_20261024_v2r1_01\\202602.run_contract.json"
+  },
+  {
+    "bytes": 553970,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\monthly_oof_correction_20261024_v2r1_01\\202603.complete.json",
+    "sha256": "04587b7f18c68bcec83ac33470d946a613dc95f1067a009d2f1a0c75de986802",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_oof_correction_20261024_v2r1_01\\202603.complete.json"
+  },
+  {
+    "bytes": 1545587,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\monthly_oof_correction_20261024_v2r1_01\\202603.inputs.json",
+    "sha256": "aa2892035dce0ad53c09e9a84ab3c9195c307a47cc476874597a0f68c5b7d2db",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_oof_correction_20261024_v2r1_01\\202603.inputs.json"
+  },
+  {
+    "bytes": 206,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\monthly_oof_correction_20261024_v2r1_01\\202603.run_contract.json",
+    "sha256": "bda9065e69402a4cf677abbfd5aa0e9339776c214bd15e442bb73aa99a3852a9",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_oof_correction_20261024_v2r1_01\\202603.run_contract.json"
+  },
+  {
+    "bytes": 574799,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\monthly_oof_correction_20261024_v2r1_01\\202604.complete.json",
+    "sha256": "11d51238bbbe882ffff2ba2b2d57b20691880400ff26207d7cbb28ddcaee6c67",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_oof_correction_20261024_v2r1_01\\202604.complete.json"
+  },
+  {
+    "bytes": 1643810,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\monthly_oof_correction_20261024_v2r1_01\\202604.inputs.json",
+    "sha256": "2136f254a84fa588ffb0f2125b73bc3d2d667468543145ff62031dcef51225cd",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_oof_correction_20261024_v2r1_01\\202604.inputs.json"
+  },
+  {
+    "bytes": 206,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\monthly_oof_correction_20261024_v2r1_01\\202604.run_contract.json",
+    "sha256": "5278c85cfae7f2dce6e40c7f357d7c0c7748397cec33e5bcd11ebad547e79c15",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_oof_correction_20261024_v2r1_01\\202604.run_contract.json"
+  },
+  {
+    "bytes": 943,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\monthly_oof_correction_20261024_v2r1_01\\implementation.json",
+    "sha256": "f35793d113f590204de7b30a47014b66a4bf0c9ee9e7a94953120c4b8d3e1c0d",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_oof_correction_20261024_v2r1_01\\implementation.json"
+  },
+  {
+    "bytes": 1702457,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_calibrated_policy_202601_20261024_v2r1_01\\completion.json",
+    "sha256": "96d76580f468691fcf74cf97eb81cb2547435eda7bd52458aa78f157f1b04c38",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202601_20261024_v2r1_01\\completion.json"
+  },
+  {
+    "bytes": 1134,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_calibrated_policy_202601_20261024_v2r1_01\\run_contract.json",
+    "sha256": "6211018eb0364ab86114ac8a5b6bf4fdde4e62872bedba8c71b3ea0ae8ed40eb",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202601_20261024_v2r1_01\\run_contract.json"
+  },
+  {
+    "bytes": 1781786,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_calibrated_policy_202602_20261024_v2r1_01\\completion.json",
+    "sha256": "73cf5b01575931c6069aa6c6696604c4c79129c8293fe72449aefea79324c188",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202602_20261024_v2r1_01\\completion.json"
+  },
+  {
+    "bytes": 1134,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_calibrated_policy_202602_20261024_v2r1_01\\run_contract.json",
+    "sha256": "675c8776a31e079521b2040de88475548c766f9ab084e50a84269bc330b57b46",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202602_20261024_v2r1_01\\run_contract.json"
+  },
+  {
+    "bytes": 1945782,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_calibrated_policy_202603_20261024_v2r1_01\\completion.json",
+    "sha256": "148a19fa0cd2bef093205e844e0ba86b9e4f91ec94288ec882ae2c6d1fd05155",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202603_20261024_v2r1_01\\completion.json"
+  },
+  {
+    "bytes": 1134,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_calibrated_policy_202603_20261024_v2r1_01\\run_contract.json",
+    "sha256": "9d8b1384c3620ced8a60dac6a9307600395979f46d14c142f7e0664355041aea",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202603_20261024_v2r1_01\\run_contract.json"
+  },
+  {
+    "bytes": 1997851,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_calibrated_policy_202604_20261024_v2r1_01\\completion.json",
+    "sha256": "21bcf9a0728269bfff31b235e511ad61b575cfb651697c50fe0b5ee2a48343eb",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202604_20261024_v2r1_01\\completion.json"
+  },
+  {
+    "bytes": 1134,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_calibrated_policy_202604_20261024_v2r1_01\\run_contract.json",
+    "sha256": "b9f73d68c61f8b10e41e319f819351e045f29639829cefccb86b1b8c859a2749",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202604_20261024_v2r1_01\\run_contract.json"
+  },
+  {
+    "bytes": 160,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_launch_20261024_v2r1_01\\admission.json",
+    "sha256": "5c660b4bde4cf3fbd03931a7b69aac215bbd9c3b5d3804928bd3c344a5983cb7",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_v2r1_01\\admission.json"
+  },
+  {
+    "bytes": 1205,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_launch_20261024_v2r1_01\\exit.json",
+    "sha256": "8ae7bc62a48f50df58907659a5b50ba6a15ac141603b01e73d02b22c3cfe2ff0",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_v2r1_01\\exit.json"
+  },
+  {
+    "bytes": 170,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_launch_20261024_v2r1_01\\failure.json",
+    "sha256": "798543125e9917d468a225018ad02c639309f63bf16bda0d5ffc2ad96d8427c6",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_v2r1_01\\failure.json"
+  },
+  {
+    "bytes": 37202,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_launch_20261024_v2r1_01\\preflight.json",
+    "sha256": "b73115c97c6540d8d0885aa6238c924b1fb503917fbe23bee100e467ad720cf0",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_v2r1_01\\preflight.json"
+  },
+  {
+    "bytes": 1320,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_launch_20261024_v2r1_01\\process.json",
+    "sha256": "bf9c1db78627b7918bbc9d5e2bb505832f9d8e63c1280f6956028d8141ec79a2",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_v2r1_01\\process.json"
+  },
+  {
+    "bytes": 0,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_launch_20261024_v2r1_01\\stderr.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_v2r1_01\\stderr.log"
+  },
+  {
+    "bytes": 608,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_launch_20261024_v2r1_01\\stdout.log",
+    "sha256": "a12caede69ef63ba208182ae2260ebfc2c82e5050a5e24814291da9eaa26d652",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_launch_20261024_v2r1_01\\stdout.log"
+  },
+  {
+    "bytes": 2217,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_runtime_20261024_v2r1_01\\contract.json",
+    "sha256": "40d91572f53e928d6d09b8032a278366291e46017beeb0bfee3631bbcd5f7c1d",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_v2r1_01\\contract.json"
+  },
+  {
+    "bytes": 971757,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_runtime_20261024_v2r1_01\\receipts\\00.json",
+    "sha256": "77b587839b479c4f739cde5d0042adf050df615200a276d7980c22cb5dfca411",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_v2r1_01\\receipts\\00.json"
+  },
+  {
+    "bytes": 1087211,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_runtime_20261024_v2r1_01\\receipts\\01.json",
+    "sha256": "6c2387e4d2e496aa7b5348c4b380cdf411ae7d85188b0623f35ea2963a39005f",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_v2r1_01\\receipts\\01.json"
+  },
+  {
+    "bytes": 1193236,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_runtime_20261024_v2r1_01\\receipts\\02.json",
+    "sha256": "c05ee6babd177cdd9eb2e71d642d73dd38ca4d9e7c6c41ad7f0312ba282a2db9",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_v2r1_01\\receipts\\02.json"
+  },
+  {
+    "bytes": 1302895,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_runtime_20261024_v2r1_01\\receipts\\03.json",
+    "sha256": "68eb7615df48ef2f6bf4c7fa2c4f1938f0d11bfa7f757a64b3fd031ac9caa1d9",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_v2r1_01\\receipts\\03.json"
+  },
+  {
+    "bytes": 1418062,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_runtime_20261024_v2r1_01\\receipts\\04.json",
+    "sha256": "735b99816ff6176eeb63a791607c4ce30d5ccc9d385075fd705b08d08d52e393",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_v2r1_01\\receipts\\04.json"
+  },
+  {
+    "bytes": 1544921,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_runtime_20261024_v2r1_01\\receipts\\05.json",
+    "sha256": "ee85647a5fd3215ec972b0e8fdc2f49e5b2648f511d34f43fae9ae69e62b88c7",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_v2r1_01\\receipts\\05.json"
+  },
+  {
+    "bytes": 1654527,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_runtime_20261024_v2r1_01\\receipts\\06.json",
+    "sha256": "e322c542b0c8d4648f1bc8a4fd05dd34b64715acb20f8bf0316d43b555fd9181",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_v2r1_01\\receipts\\06.json"
+  },
+  {
+    "bytes": 1771766,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_runtime_20261024_v2r1_01\\receipts\\07.json",
+    "sha256": "e5dfb3505d3e8e621d91e6ef46dcffd89380a3aa62f13cbc1a37b3816747110e",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_v2r1_01\\receipts\\07.json"
+  },
+  {
+    "bytes": 3975,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_runtime_20261024_v2r1_01\\request.json",
+    "sha256": "37f2018c7145d3b82cba2e34fbff9ae3008e33f32b004c5580e433157f38ef15",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_v2r1_01\\request.json"
+  },
+  {
+    "bytes": 306,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_runtime_20261024_v2r1_01\\starts\\00.json",
+    "sha256": "7258d3591feafa773c2c1722caf3c0a91b603abcc78f3f114301502e5662b157",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_v2r1_01\\starts\\00.json"
+  },
+  {
+    "bytes": 364,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_runtime_20261024_v2r1_01\\starts\\01.json",
+    "sha256": "a3ac4087b9c0c5e901dcb46a11dab8d35eb886f4615686897aa0b7ac171b5267",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_v2r1_01\\starts\\01.json"
+  },
+  {
+    "bytes": 368,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_runtime_20261024_v2r1_01\\starts\\02.json",
+    "sha256": "7379bb8464444bca1ba1291e025c15e0a69cb7c7d4976da4e298906be1233adb",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_v2r1_01\\starts\\02.json"
+  },
+  {
+    "bytes": 364,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_runtime_20261024_v2r1_01\\starts\\03.json",
+    "sha256": "2716e2f53e854b35a334cd506eaf0fb8b939a08cfda67c17450ed74dde3bdb4d",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_v2r1_01\\starts\\03.json"
+  },
+  {
+    "bytes": 368,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_runtime_20261024_v2r1_01\\starts\\04.json",
+    "sha256": "3feff8dc5b8c679c835db63bb661a525e71822e187d11dd3a41f212f54de9cec",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_v2r1_01\\starts\\04.json"
+  },
+  {
+    "bytes": 364,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_runtime_20261024_v2r1_01\\starts\\05.json",
+    "sha256": "19c7eb3a9dafd958eaea1df6b4f0a3bc3b2d0a8e075e1cfa1b9998ea1f4bd070",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_v2r1_01\\starts\\05.json"
+  },
+  {
+    "bytes": 368,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_runtime_20261024_v2r1_01\\starts\\06.json",
+    "sha256": "da5695de7a460a2325562dbf6c6ad3ee59654df35f459c27d70a92aed9ce55f5",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_v2r1_01\\starts\\06.json"
+  },
+  {
+    "bytes": 364,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_runtime_20261024_v2r1_01\\starts\\07.json",
+    "sha256": "5186591813bf4ee41d7d92e26afc770104144cb310f79c2826ca5651b8051bb8",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_v2r1_01\\starts\\07.json"
+  },
+  {
+    "bytes": 1924,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_v2r1_observer_20261024_01\\february_closed.json",
+    "sha256": "93a5b939aba675520de352cafb650fab4da7470cd0aca08e14b0c5f1dc43a506",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_v2r1_observer_20261024_01\\february_closed.json"
+  },
+  {
+    "bytes": 2695,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_v2r1_observer_20261024_01\\initial.json",
+    "sha256": "42abc4562b603880a1c5f15810304aeec41fed7e45cfb497c49abac4b5b8e13b",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_v2r1_observer_20261024_01\\initial.json"
+  },
+  {
+    "bytes": 1343,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_v2r1_observer_20261024_01\\january_closed.json",
+    "sha256": "70285ee781cb82ac895dff168b47359119704cbf501ab246cd9b0ac2ff5579d6",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_v2r1_observer_20261024_01\\january_closed.json"
+  },
+  {
+    "bytes": 2974,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_v2r1_observer_20261024_01\\march_closed.json",
+    "sha256": "3774f7bd4e933df814221e3b6cc160d06aade421f0773ef5adad0d9111c771a7",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_v2r1_observer_20261024_01\\march_closed.json"
+  },
+  {
+    "bytes": 552,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_v2r1_observer_20261024_01\\post_stop_verification.json",
+    "sha256": "021be4945dbee80dac1caf08f073e097c33595353c22e7e83fb4dad433644032",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_v2r1_observer_20261024_01\\post_stop_verification.json"
+  },
+  {
+    "bytes": 2019,
+    "copy": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\compact_snapshot\\artifacts\\oof_pipeline_v2r1_observer_20261024_01\\user_stop.json",
+    "sha256": "fa8690ceee3f55f06107cf8802db8abab27171707246d6a57bed3d2f1c5b287a",
+    "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_v2r1_observer_20261024_01\\user_stop.json"
+  }
+]

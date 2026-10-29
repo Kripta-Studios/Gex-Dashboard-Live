@@ -2,7 +2,9 @@
 
 REANUDADA por autorización expresa del usuario el 29 de octubre de 2026.
 Autoridad vigente: [RESUMPTION_20261029.md](RESUMPTION_20261029.md).
-Revisión de interrupción OOF en curso; sin adopción ni ejecución nueva todavía.
+Prefijo OOF revisado: 19.006 pins sin diferencias; ocho fases enero–abril.
+Snapshot59 originales/118 copias preparado; supervisor nuevo en implementación.
+Sin adopción runtime, continuación o auditoría económica nuevas todavía.
 La pausa del 24 y los checkpoints inferiores se conservan como historia.
 
 ## Estado histórico al detener el 24 de octubre

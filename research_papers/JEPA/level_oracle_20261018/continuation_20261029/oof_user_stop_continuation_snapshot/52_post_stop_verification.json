@@ -1,0 +1,28 @@
+{
+  "utc": "2026-10-24T06:37:59.664667+00:00",
+  "remaining_research_python_pids": [],
+  "phase_receipts": [
+    "00.json",
+    "01.json",
+    "02.json",
+    "03.json",
+    "04.json",
+    "05.json",
+    "06.json",
+    "07.json"
+  ],
+  "phase_starts": [
+    "00.json",
+    "01.json",
+    "02.json",
+    "03.json",
+    "04.json",
+    "05.json",
+    "06.json",
+    "07.json"
+  ],
+  "pipeline_completion_exists": false,
+  "supervisor_exit_exists": true,
+  "supervisor_failure_exists": true,
+  "subagents": "all six completed per collaboration inventory"
+}

@@ -1,0 +1,39 @@
+{
+  "status": "OBSERVED_JANUARY_TWO_PHASES_CLOSED_AUDIT_PENDING",
+  "utc": "2026-10-24T05:48:20.631340+00:00",
+  "pid": 28256,
+  "creation": 1792819783.1543567,
+  "cpu_seconds": 741.265625,
+  "session_id": 45379,
+  "process_live_observed": true,
+  "receipts": [
+    {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_v2r1_01\\receipts\\00.json",
+      "sha256": "77b587839b479c4f739cde5d0042adf050df615200a276d7980c22cb5dfca411",
+      "phase": [
+        "202601",
+        "correction"
+      ],
+      "completion_sha256": "b3537f2dd473cb56491009aeaf1d7272fbe1ea6245e01cd9d2c06913f7b66014",
+      "previous_receipt_sha256": null
+    },
+    {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_v2r1_01\\receipts\\01.json",
+      "sha256": "6c2387e4d2e496aa7b5348c4b380cdf411ae7d85188b0623f35ea2963a39005f",
+      "phase": [
+        "202601",
+        "replay"
+      ],
+      "completion_sha256": "96d76580f468691fcf74cf97eb81cb2547435eda7bd52458aa78f157f1b04c38",
+      "previous_receipt_sha256": "77b587839b479c4f739cde5d0042adf050df615200a276d7980c22cb5dfca411"
+    }
+  ],
+  "starts_observed": [
+    "00.json",
+    "01.json",
+    "02.json"
+  ],
+  "pipeline_completion_observed": false,
+  "economic_payloads_read": false,
+  "economic_audit_pending": true
+}

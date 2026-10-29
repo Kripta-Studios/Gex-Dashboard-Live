@@ -1,0 +1,325 @@
+{
+  "adoption_authorized_by_this_review": false,
+  "audit_full_h1_performed": false,
+  "checks_count": 249987,
+  "closures": {
+    "202601": {
+      "correction_completion_sha256": "b3537f2dd473cb56491009aeaf1d7272fbe1ea6245e01cd9d2c06913f7b66014",
+      "evaluation_completion_sha256": "96d76580f468691fcf74cf97eb81cb2547435eda7bd52458aa78f157f1b04c38"
+    },
+    "202602": {
+      "correction_completion_sha256": "6b5a48e59b31bdfab3979eee699406934914068f61ae2a8915ba0c20e40b9ef0",
+      "evaluation_completion_sha256": "73cf5b01575931c6069aa6c6696604c4c79129c8293fe72449aefea79324c188"
+    },
+    "202603": {
+      "correction_completion_sha256": "04587b7f18c68bcec83ac33470d946a613dc95f1067a009d2f1a0c75de986802",
+      "evaluation_completion_sha256": "148a19fa0cd2bef093205e844e0ba86b9e4f91ec94288ec882ae2c6d1fd05155"
+    },
+    "202604": {
+      "correction_completion_sha256": "11d51238bbbe882ffff2ba2b2d57b20691880400ff26207d7cbb28ddcaee6c67",
+      "evaluation_completion_sha256": "21bcf9a0728269bfff31b235e511ad61b575cfb651697c50fe0b5ee2a48343eb"
+    }
+  },
+  "code_imported_or_executed": false,
+  "compact_metadata_files": 48,
+  "compact_snapshot_bytes": 26545395,
+  "compact_snapshot_count": 54,
+  "current_process_inventory_not_performed": true,
+  "economics_interpreted": false,
+  "ended_at_utc": "2026-10-29T15:40:10.619845+00:00",
+  "evidence_files": {
+    "checks.json": "68b00ed10552e296be9e53d6f8c402e89adc3415d46deccb45b709abb930da4e",
+    "compact_snapshot_manifest.json": "a2c561d9a817e33fef63ae72372bc962d6b68897a392dd7e0833ae7a7709ea2e",
+    "review_interruption.py": "40fe4fcf54127e06be0c68a910cddaff58b4e63bacabefefc72d487d4140360a",
+    "verified_files.json": "b76e2432cbee27daaa9440bac74355bd420d88ac870d6c57f0c3e83f2f89f0f1"
+  },
+  "failed_checks": 0,
+  "final_inventory_sha256": "68a0ba9fbb6db22bc26d25fb605f67912cf74c42885019205654014fb3dc14bd",
+  "final_receipt_sha256": "e5dfb3505d3e8e621d91e6ef46dcffd89380a3aa62f13cbc1a37b3816747110e",
+  "historical_stop_has_no_live_processes": true,
+  "invocation_observation": {
+    "observed_tool_exit_code": 0,
+    "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\invocation_observation_reconstructed.json",
+    "retained_handle_receipt_exists": false,
+    "sha256": "31cccbb4b5846d8a24161196dc427e16d9332d954f15cda668d151e273ca7eab",
+    "source": "POSTHOC_TOOL_OBSERVATION_RECONSTRUCTION"
+  },
+  "limitations": [
+    "No scientific reconstruction or independent inference; metadata and byte integrity only.",
+    "Calibration, score, selection, realized, summary and controls payloads hashed only during this review script; their values were not interpreted.",
+    "Existing source admission digest was cross-bound, not rebuilt.",
+    "Historical process receipts do not establish current process absence.",
+    "Original retained exit 15 and failure cannot satisfy upstream exit-zero requirements."
+  ],
+  "missing_source_metadata": {
+    "202601/expanding": [],
+    "202601/rolling12": [],
+    "202601/static": [],
+    "202602/expanding": [],
+    "202602/rolling12": [],
+    "202602/static": [],
+    "202603/expanding": [],
+    "202603/rolling12": [],
+    "202603/static": [],
+    "202604/expanding": [
+      [
+        "QQQ",
+        "20260401"
+      ],
+      [
+        "QQQ",
+        "20260409"
+      ],
+      [
+        "QQQ",
+        "20260415"
+      ],
+      [
+        "SPY",
+        "20260401"
+      ],
+      [
+        "SPY",
+        "20260409"
+      ],
+      [
+        "SPY",
+        "20260415"
+      ]
+    ],
+    "202604/rolling12": [
+      [
+        "QQQ",
+        "20260401"
+      ],
+      [
+        "QQQ",
+        "20260409"
+      ],
+      [
+        "QQQ",
+        "20260415"
+      ],
+      [
+        "SPY",
+        "20260401"
+      ],
+      [
+        "SPY",
+        "20260409"
+      ],
+      [
+        "SPY",
+        "20260415"
+      ]
+    ],
+    "202604/static": [
+      [
+        "QQQ",
+        "20260401"
+      ],
+      [
+        "QQQ",
+        "20260409"
+      ],
+      [
+        "QQQ",
+        "20260415"
+      ],
+      [
+        "SPY",
+        "20260401"
+      ],
+      [
+        "SPY",
+        "20260409"
+      ],
+      [
+        "SPY",
+        "20260415"
+      ]
+    ]
+  },
+  "next_phase": [
+    "202605",
+    "correction"
+  ],
+  "original_exit_code": 15,
+  "original_exit_observed_utc": "2026-10-24T06:37:30.477940+00:00",
+  "original_failure_preserved": true,
+  "original_runtime_binding_sha256": "9e4949227dfd8b0aa3e72a35271b081413dbd9dee482b79c98911ea25478813c",
+  "output_bytes": 262686724,
+  "output_files": 8726,
+  "promotion_approved": false,
+  "remaining_adoption_requirements": [
+    "Root independently inspect and pin this review; explicitly adopt only phase prefix 00..07 under new documented resumption authority.",
+    "Keep original request, code, phase receipts, source admission, outputs, exit 15 and failure immutable.",
+    "Use reviewed, published resumption supervisor/binding with fresh logs; original launcher requires fresh output roots and is inapplicable.",
+    "Recheck exact current prefix, code pins, source authorities, absent May/June roots, process absence, locks and current RAM/commit gate immediately before launch.",
+    "Authorize frozen pipeline resume from phase 08 only; do not rerun January-April or auto-retry.",
+    "Require all twelve closures and new retained exit zero before separately reviewed/published FULL_H1 economic audit binding."
+  ],
+  "report_created_utc": "2026-10-29T15:44:55.278786+00:00",
+  "repository_mirror": {
+    "compact_bytes": 26545395,
+    "compact_files": 54,
+    "manifest_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_snapshot\\repository_mirror_manifest.json",
+    "manifest_sha256": "1cafb3eff2e295311f397c7a7073d3e44adfd5b5a2ff5e37869943d55b29eb6d"
+  },
+  "request_sha256": "37f2018c7145d3b82cba2e34fbff9ae3008e33f32b004c5580e433157f38ef15",
+  "review_result_source": {
+    "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\review_result.json",
+    "sha256": "446704f526ebb7aac4f69795cbf675b1fcd201e9831b03c3598463785be3e00b"
+  },
+  "reviewed_phases": [
+    {
+      "completion_sha256": "b3537f2dd473cb56491009aeaf1d7272fbe1ea6245e01cd9d2c06913f7b66014",
+      "cumulative_output_bytes": 155745930,
+      "elapsed_seconds": 871.2142395999981,
+      "index": 0,
+      "inventory_files": 4867,
+      "month": "202601",
+      "new_output_bytes": 155745930,
+      "new_output_files": 4867,
+      "receipt_sha256": "77b587839b479c4f739cde5d0042adf050df615200a276d7980c22cb5dfca411",
+      "stage": "correction",
+      "start_sha256": "7258d3591feafa773c2c1722caf3c0a91b603abcc78f3f114301502e5662b157",
+      "started_at_utc": "2026-10-24T05:30:09.303267+00:00"
+    },
+    {
+      "completion_sha256": "96d76580f468691fcf74cf97eb81cb2547435eda7bd52458aa78f157f1b04c38",
+      "cumulative_output_bytes": 167259240,
+      "elapsed_seconds": 110.88872759998776,
+      "index": 1,
+      "inventory_files": 5411,
+      "month": "202601",
+      "new_output_bytes": 11513310,
+      "new_output_files": 544,
+      "receipt_sha256": "6c2387e4d2e496aa7b5348c4b380cdf411ae7d85188b0623f35ea2963a39005f",
+      "stage": "replay",
+      "start_sha256": "a3ac4087b9c0c5e901dcb46a11dab8d35eb886f4615686897aa0b7ac171b5267",
+      "started_at_utc": "2026-10-24T05:44:51.396099+00:00"
+    },
+    {
+      "completion_sha256": "6b5a48e59b31bdfab3979eee699406934914068f61ae2a8915ba0c20e40b9ef0",
+      "cumulative_output_bytes": 187977142,
+      "elapsed_seconds": 781.6902244999073,
+      "index": 2,
+      "inventory_files": 5939,
+      "month": "202602",
+      "new_output_bytes": 20717902,
+      "new_output_files": 528,
+      "receipt_sha256": "c05ee6babd177cdd9eb2e71d642d73dd38ca4d9e7c6c41ad7f0312ba282a2db9",
+      "stage": "correction",
+      "start_sha256": "7379bb8464444bca1ba1291e025c15e0a69cb7c7d4976da4e298906be1233adb",
+      "started_at_utc": "2026-10-24T05:46:53.618183+00:00"
+    },
+    {
+      "completion_sha256": "73cf5b01575931c6069aa6c6696604c4c79129c8293fe72449aefea79324c188",
+      "cumulative_output_bytes": 197896391,
+      "elapsed_seconds": 110.32774290000089,
+      "index": 3,
+      "inventory_files": 6456,
+      "month": "202602",
+      "new_output_bytes": 9919249,
+      "new_output_files": 517,
+      "receipt_sha256": "68eb7615df48ef2f6bf4c7fa2c4f1938f0d11bfa7f757a64b3fd031ac9caa1d9",
+      "stage": "replay",
+      "start_sha256": "2716e2f53e854b35a334cd506eaf0fb8b939a08cfda67c17450ed74dde3bdb4d",
+      "started_at_utc": "2026-10-24T06:00:07.363802+00:00"
+    },
+    {
+      "completion_sha256": "04587b7f18c68bcec83ac33470d946a613dc95f1067a009d2f1a0c75de986802",
+      "cumulative_output_bytes": 219601831,
+      "elapsed_seconds": 878.5919222000521,
+      "index": 4,
+      "inventory_files": 7029,
+      "month": "202603",
+      "new_output_bytes": 21705440,
+      "new_output_files": 573,
+      "receipt_sha256": "735b99816ff6176eeb63a791607c4ce30d5ccc9d385075fd705b08d08d52e393",
+      "stage": "correction",
+      "start_sha256": "3feff8dc5b8c679c835db63bb661a525e71822e187d11dd3a41f212f54de9cec",
+      "started_at_utc": "2026-10-24T06:02:09.243299+00:00"
+    },
+    {
+      "completion_sha256": "148a19fa0cd2bef093205e844e0ba86b9e4f91ec94288ec882ae2c6d1fd05155",
+      "cumulative_output_bytes": 231004273,
+      "elapsed_seconds": 127.78006200003438,
+      "index": 5,
+      "inventory_files": 7627,
+      "month": "202603",
+      "new_output_bytes": 11402442,
+      "new_output_files": 598,
+      "receipt_sha256": "ee85647a5fd3215ec972b0e8fdc2f49e5b2648f511d34f43fae9ae69e62b88c7",
+      "stage": "replay",
+      "start_sha256": "19c7eb3a9dafd958eaea1df6b4f0a3bc3b2d0a8e075e1cfa1b9998ea1f4bd070",
+      "started_at_utc": "2026-10-24T06:16:59.553164+00:00"
+    },
+    {
+      "completion_sha256": "11d51238bbbe882ffff2ba2b2d57b20691880400ff26207d7cbb28ddcaee6c67",
+      "cumulative_output_bytes": 251311143,
+      "elapsed_seconds": 963.144772300031,
+      "index": 6,
+      "inventory_files": 8173,
+      "month": "202604",
+      "new_output_bytes": 20306870,
+      "new_output_files": 546,
+      "receipt_sha256": "e322c542b0c8d4648f1bc8a4fd05dd34b64715acb20f8bf0316d43b555fd9181",
+      "stage": "correction",
+      "start_sha256": "da5695de7a460a2325562dbf6c6ad3ee59654df35f459c27d70a92aed9ce55f5",
+      "started_at_utc": "2026-10-24T06:19:19.736450+00:00"
+    },
+    {
+      "completion_sha256": "21bcf9a0728269bfff31b235e511ad61b575cfb651697c50fe0b5ee2a48343eb",
+      "cumulative_output_bytes": 262686724,
+      "elapsed_seconds": 110.51644709997345,
+      "index": 7,
+      "inventory_files": 8726,
+      "month": "202604",
+      "new_output_bytes": 11375581,
+      "new_output_files": 553,
+      "receipt_sha256": "e5dfb3505d3e8e621d91e6ef46dcffd89380a3aa62f13cbc1a37b3816747110e",
+      "stage": "replay",
+      "start_sha256": "5186591813bf4ee41d7d92e26afc770104144cb310f79c2826ca5651b8051bb8",
+      "started_at_utc": "2026-10-24T06:35:35.225110+00:00"
+    }
+  ],
+  "reviewer_script_sha256": "40fe4fcf54127e06be0c68a910cddaff58b4e63bacabefefc72d487d4140360a",
+  "root_lock_supplement": {
+    "lock_bytes": 5,
+    "lock_files": 5,
+    "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\root_lock_supplement.json",
+    "sha256": "8dc08909b063ae3cfc1791d1269dba4fd33c8b23de61e317fa0a1e01c44f7c5c"
+  },
+  "schema": "INDEPENDENT_METADATA_HASH_REVIEW_V1",
+  "source_admission_rebuilt": false,
+  "source_admission_sha256": "ec2f728baf2ab28adaaf3855847d74bf6354ac587d440afb83b50278e5ca3234",
+  "started_at_utc": "2026-10-29T15:32:06.388824+00:00",
+  "status": "PASS_STOPPED_PREFIX_METADATA_AND_HASHES_ONLY",
+  "superseded_initial_report_artifacts": {
+    "OOF_INTERRUPTION_INDEPENDENT_REVIEW_20261029.json": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\report_artifacts_initial\\OOF_INTERRUPTION_INDEPENDENT_REVIEW_20261029.json",
+      "sha256": "a9c0bc47f8a845a625bc51e3b783b36e0b534a461048b7dbde9fce2dbef31ebd"
+    },
+    "OOF_INTERRUPTION_INDEPENDENT_REVIEW_20261029.md": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\report_artifacts_initial\\OOF_INTERRUPTION_INDEPENDENT_REVIEW_20261029.md",
+      "sha256": "898923443be974cb1ccf528b4855269cf666eba6aa1273659b07ffdcbc0c517b"
+    },
+    "repository_mirror_manifest.json": {
+      "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\report_artifacts_initial\\repository_mirror_manifest.json",
+      "sha256": "ce2acb4941dcba1b80d5ce56d7efd1b1e40124d929fa1738a920ce4d926b781f"
+    }
+  },
+  "supervisor_identity_supplement": {
+    "all_passed": true,
+    "checks": 8,
+    "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_review_20261029_independent_01\\supervisor_identity_supplement.json",
+    "sha256": "e195f012441736b2ef3017c734babb863497e0a3b2e99541cdf6426fde42fe58"
+  },
+  "technical_ready": false,
+  "unique_pinned_bytes": 718003461,
+  "unique_pinned_files": 19006,
+  "verdict": "EIGHT_CLOSURES_INTEGRITY_VERIFIED_NOT_YET_ADOPTED",
+  "winner_selected": null
+}
