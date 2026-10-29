@@ -1,0 +1,23 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+______________ test_command_has_only_original_request_and_resume ______________
+
+    def test_command_has_only_original_request_and_resume():
+>       s = module()
+            ^^^^^^^^
+
+research_papers\JEPA\level_oracle_20261018\test_launch_oof_pipeline_user_stop_continuation_20261029.py:138: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def module():
+>       assert importlib.util.find_spec(NAME) is not None, "Continuation supervisor has not been implemented"
+E       AssertionError: Continuation supervisor has not been implemented
+E       assert None is not None
+E        +  where None = <function find_spec at 0x00000227E9270A90>('launch_oof_pipeline_user_stop_continuation_20261029')
+E        +    where <function find_spec at 0x00000227E9270A90> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+research_papers\JEPA\level_oracle_20261018\test_launch_oof_pipeline_user_stop_continuation_20261029.py:18: AssertionError
+=========================== short test summary info ===========================
+FAILED research_papers/JEPA/level_oracle_20261018/test_launch_oof_pipeline_user_stop_continuation_20261029.py::test_command_has_only_original_request_and_resume
+1 failed, 25 deselected in 0.18s

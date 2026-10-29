@@ -1,0 +1,32 @@
+...........................................F.                            [100%]
+================================== FAILURES ===================================
+______ test_snapshot_requires_both_exact_copies_and_baseline[output_map] ______
+
+artificial = namespace(old=<module 'launch_oof_pipeline_v2r1_20261024' from 'C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\G...tation_review': {'path': 'review.json', 'sha256': 'cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001864BB6B750>
+fault = 'output_map'
+
+    @pytest.mark.parametrize("fault",[None,"copy","local_manifest","missing_original","missing_copy","output_map"])
+    def test_snapshot_requires_both_exact_copies_and_baseline(artificial,monkeypatch,fault):
+        a,s = artificial,module()
+        binding,baseline,stopped_value,manifest = snapshot(a,monkeypatch)
+        if fault=="copy": Path(manifest["copies"][0]["copy"]).write_bytes(b"changed")
+        elif fault=="local_manifest": (Path(binding["snapshot_root"])/"snapshot_manifest.json").write_bytes(b"changed")
+        elif fault is not None:
+            if fault=="missing_original": manifest["original_files"].pop(next(iter(manifest["original_files"])))
+            elif fault=="missing_copy": manifest["copies"].pop()
+            else: manifest["output_inventory"].pop(next(iter(manifest["output_inventory"])))
+            a.operational["snapshot_manifest"] = write(Path(a.operational["snapshot_manifest"]["path"]),manifest)
+            write(Path(binding["snapshot_root"])/"snapshot_manifest.json",manifest)
+        if fault is None:
+            result=s.validate_snapshot(a.operational,binding,baseline,stopped_value)
+            assert all(p["copy"] in result for p in manifest["copies"])
+        else:
+>           with pytest.raises(ValueError): s.validate_snapshot(a.operational,binding,baseline,stopped_value)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE <class 'ValueError'>
+
+research_papers\JEPA\level_oracle_20261018\test_launch_oof_pipeline_user_stop_continuation_20261029.py:364: Failed
+=========================== short test summary info ===========================
+FAILED research_papers/JEPA/level_oracle_20261018/test_launch_oof_pipeline_user_stop_continuation_20261029.py::test_snapshot_requires_both_exact_copies_and_baseline[output_map]
+1 failed, 44 passed in 71.27s (0:01:11)

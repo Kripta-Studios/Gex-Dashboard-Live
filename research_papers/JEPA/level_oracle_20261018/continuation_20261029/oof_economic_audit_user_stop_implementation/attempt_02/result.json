@@ -1,0 +1,26 @@
+{
+  "exit_code": 0,
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-m",
+    "pytest",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_launch_oof_economic_audit_user_stop_continuation_20261029.py",
+    "-q"
+  ],
+  "files": {
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_oof_economic_audit_user_stop_continuation_20261029.py": "4516085aeadd33b4343f6f1f67e09b2b590c9ba7ef16a8988346facb215ac020",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_launch_oof_economic_audit_user_stop_continuation_20261029.py": "ac7a8931d44e6f4193205113891537bcc31cbf6401f68e93482a0ded38b1a7d0"
+  },
+  "started_epoch": 1793289407.7648442,
+  "finished_epoch": 1793289437.5029624,
+  "available_ram_bytes": 13728579584,
+  "free_commit_bytes": 22680666112,
+  "cpu_affinity": [
+    0
+  ],
+  "threads": 1,
+  "logs": {
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_implementation_20261029_01\\attempt_02\\stdout.log": "07d063ff43d8eaefcb365f365a8a38b3f34a54910a7b515e0af1b43f34553e42",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_implementation_20261029_01\\attempt_02\\stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

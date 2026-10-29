@@ -1,0 +1,24 @@
+{
+  "status": "PASS_ROOT_IMPLEMENTATION_REVIEW_EVIDENCE_AND_BINDING_BUILD",
+  "utc": "2026-10-29T16:30:39.514347+00:00",
+  "review": {
+    "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_USER_STOP_CONTINUATION_IMPLEMENTATION_REVIEW_20261029.json",
+    "sha256": "6a06521fc74fd9b8afd4efeab0209066f9138749e7e1acde562ce6c50ede16bf"
+  },
+  "implementation_pins": 60,
+  "independent_copy_pairs": 41,
+  "independent_copy_bytes": 575853,
+  "cpu_evidence": {
+    "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation_independent\\attempt_01\\cpu0_independent_evidence.json",
+    "sha256": "29536ceb50c7b96e341551f2498937a7d8bead35b4e930f08edcfc42ead006e4"
+  },
+  "binding": {
+    "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_USER_STOP_CONTINUATION_RUNTIME_BINDING_20261029_01.json",
+    "sha256": "4197cd14d7110211164238c3863df8c88c7eca9d26db248aa4c1e11a3bdb9510"
+  },
+  "published_files_count": 126,
+  "read_roots_count": 9,
+  "binding_independent_review_pending": true,
+  "real_preflight_executed": false,
+  "inspection_helper_note": "First helper expected original key but independent manifest uses source; KeyError before binding creation; read actual schema and verified exact source/copy pairs; evidence unchanged."
+}

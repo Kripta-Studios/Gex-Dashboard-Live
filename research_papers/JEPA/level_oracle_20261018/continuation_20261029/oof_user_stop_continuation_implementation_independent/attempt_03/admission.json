@@ -1,0 +1,37 @@
+{
+  "status": "ARTIFICIAL_FOCAL_REVIEW_ADMISSION",
+  "utc": "2026-10-29T16:22:38.638811+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-m",
+    "pytest",
+    "--rootdir",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_review_20261029_01\\attempt_03\\tmp",
+    "--junitxml",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_review_20261029_01\\attempt_03\\junit.xml",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_review_20261029_01\\test_independent_preflight.py",
+    "-k",
+    "None or prefix_schema or publication_omits_cpu or publication_extra"
+  ],
+  "files": {
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_oof_pipeline_user_stop_continuation_20261029.py": "599f6d5c347ebdc3801bbe8cc21de55603a80a46858a8bad1d20729d307eee11",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_launch_oof_pipeline_user_stop_continuation_20261029.py": "e1dc93402ee08eb53e1aaae850efc9b789f0d68fc2ddf05639a285a199471b2b",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_review_20261029_01\\test_independent_boundaries.py": "ee8d162790c746a154b6d06b1484fb6dad417e4a54bddc52a5bddcf425a72e8b",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_review_20261029_01\\run_focal_review.py": "18960b7b686b9f572d9afcedbb3beb0f7e0ef20163e3278fdacec59244f81b6c",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_review_20261029_01\\test_independent_preflight.py": "794d1d9b629cdfb8ce7362bcd72d85a783ccc527156168a5177040c3dbb7147e"
+  },
+  "available_ram_bytes": 6983356416,
+  "free_commit_bytes": 10547654656,
+  "minimum_free_bytes": 2000000000,
+  "parent_cpu_affinity": [
+    0
+  ],
+  "threads1": true,
+  "runtime_authorized": false,
+  "real_producers": false
+}

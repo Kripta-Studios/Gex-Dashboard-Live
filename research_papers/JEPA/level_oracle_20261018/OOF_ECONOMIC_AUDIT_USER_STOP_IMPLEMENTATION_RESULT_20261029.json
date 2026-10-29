@@ -1,0 +1,138 @@
+{
+  "status": "PASS_IMPLEMENTATION_SYNTHETIC_ONLY_PENDING_INDEPENDENT_REVIEW",
+  "scope": "IMPLEMENTATION_ONLY",
+  "runtime_authorized": false,
+  "utc": "2026-10-29T16:10:06.095067+00:00",
+  "files": {
+    "launch_oof_economic_audit_user_stop_continuation_20261029.py": "48169acfe736a55855f742a26af53cc262a0450b57cc7bea3ce43a623ac7bfa7",
+    "test_launch_oof_economic_audit_user_stop_continuation_20261029.py": "5a2cdbe7d1a8fb376da0d01ef9aeeb5073115921cf1b06ec7939e59a4fd35304"
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "passed": 0,
+      "failed": 1,
+      "deselected": 0,
+      "exit_code": 1,
+      "notes": "Expected missing separate implementation assertion.",
+      "receipt": {
+        "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_economic_audit_user_stop_implementation\\attempt_01\\result.json",
+        "sha256": "0d3567156fcb88a6d8659bea38b2f6529fd4481880fd914ef06c960fea57a371"
+      }
+    },
+    {
+      "attempt": 2,
+      "passed": 32,
+      "failed": 0,
+      "deselected": 0,
+      "exit_code": 0,
+      "notes": "Initial complete synthetic suite.",
+      "receipt": {
+        "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_economic_audit_user_stop_implementation\\attempt_02\\result.json",
+        "sha256": "17842ba0cd9ff819de3510816fb5f54788ee72c1c71df2731945d517b8dbb31d"
+      }
+    },
+    {
+      "attempt": 3,
+      "passed": 8,
+      "failed": 2,
+      "deselected": 32,
+      "exit_code": 1,
+      "notes": "Targeted red regressions: missing retained exit after psutil failure and accepted hardlink.",
+      "receipt": {
+        "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_economic_audit_user_stop_implementation\\attempt_03\\result.json",
+        "sha256": "378204312d2f3c5c8823563bcb3e8142c227289453bfe671399341eed8d1c565"
+      }
+    },
+    {
+      "attempt": 4,
+      "passed": 10,
+      "failed": 0,
+      "deselected": 32,
+      "exit_code": 0,
+      "notes": "Same ten focal cases after fixes.",
+      "receipt": {
+        "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_economic_audit_user_stop_implementation\\attempt_04\\result.json",
+        "sha256": "6c4fdd7035da381adb39b271088f228ab5613884d19fb82b88859e37f0a99301"
+      }
+    },
+    {
+      "attempt": 5,
+      "passed": 0,
+      "failed": 5,
+      "deselected": 42,
+      "exit_code": 1,
+      "notes": "Five snapshot omissions accepted before strict schema/membership fix.",
+      "receipt": {
+        "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_economic_audit_user_stop_implementation\\attempt_05\\result.json",
+        "sha256": "b8ff6f66127e8ba2f5d695bd7adb7fab1ac2b40ccaaea9021f969d4150d26659"
+      }
+    },
+    {
+      "attempt": 6,
+      "passed": 6,
+      "failed": 0,
+      "deselected": 41,
+      "exit_code": 0,
+      "notes": "Five snapshot negatives plus full positive after fix.",
+      "receipt": {
+        "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_economic_audit_user_stop_implementation\\attempt_06\\result.json",
+        "sha256": "26efb4e50c2e282c1e37bb4314b0f4339c3eda01e638f6ac7a00361d6edd4fe8"
+      }
+    },
+    {
+      "attempt": 7,
+      "passed": 0,
+      "failed": 6,
+      "deselected": 47,
+      "exit_code": 1,
+      "notes": "Six CPU-evidence cases fail because new validator not yet implemented (AttributeError).",
+      "receipt": {
+        "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_economic_audit_user_stop_implementation\\attempt_07\\result.json",
+        "sha256": "59ef1962c9c2c03fc93ca12d44f8efec4d2a6fa7edcf04ec07771502b14c9921"
+      }
+    },
+    {
+      "attempt": 8,
+      "passed": 53,
+      "failed": 0,
+      "deselected": 0,
+      "exit_code": 0,
+      "notes": "Final complete new suite after CPU-evidence validator, strict snapshot, actual prefix-review schema and formatting.",
+      "receipt": {
+        "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_economic_audit_user_stop_implementation\\attempt_08\\result.json",
+        "sha256": "764d8f510f639aca6a09df2976765135cf03ef65e6a5352a375bbe30edd07a70"
+      }
+    }
+  ],
+  "final_suite": {
+    "passed": 53,
+    "failed": 0,
+    "seconds": 31.19,
+    "attempt": 8
+  },
+  "archive_manifest": {
+    "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_economic_audit_user_stop_implementation\\archive_manifest.json",
+    "sha256": "93d16dc2e6b1b7e4ad62dda6222d96868bc331b7c406f4b813fa31405f43e0e3"
+  },
+  "invariance": {
+    "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_economic_audit_user_stop_implementation\\invariance_01.json",
+    "sha256": "04505f9d85ac65989633ca4d84bbb22497779d9bc692c00c74dd4c4650fddad2"
+  },
+  "cpu0_inheritance_test": {
+    "status": "PASS_FIRST_INSTRUCTION_CPU0_THREADS1",
+    "evidence": {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_economic_audit_user_stop_implementation\\cpu_inheritance_01.json",
+      "sha256": "6133e8cefbddc2c87338ceb0d825bf096cfe36e0c51e640c894fe2ef57cfd8f5"
+    }
+  },
+  "static_checks": {
+    "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_economic_audit_user_stop_implementation\\static_checks_01.json",
+    "sha256": "48f7702dde2f19fd12fc6508040e9cf11dfe0bbeeb16a098ff4d3a10b4597cfd"
+  },
+  "scientific_execution": false,
+  "economics_interpreted": false,
+  "original_exit_rewritten": false,
+  "technical_ready": false,
+  "promotion_approved": false
+}

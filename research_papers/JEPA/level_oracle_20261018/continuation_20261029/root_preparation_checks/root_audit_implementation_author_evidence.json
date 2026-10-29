@@ -1,0 +1,17 @@
+{
+  "status": "PASS_ROOT_COMPACT_AUTHOR_EVIDENCE_HASH_CHECK",
+  "utc": "2026-10-29T16:19:40.127298+00:00",
+  "result": {
+    "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_ECONOMIC_AUDIT_USER_STOP_IMPLEMENTATION_RESULT_20261029.json",
+    "sha256": "cf7125741db798b98964731086d11b65327e2feafb7b06f9cc69a7683e63102c"
+  },
+  "copies": 50,
+  "copy_bytes": 668246,
+  "references": 12,
+  "files": {
+    "launch_oof_economic_audit_user_stop_continuation_20261029.py": "48169acfe736a55855f742a26af53cc262a0450b57cc7bea3ce43a623ac7bfa7",
+    "test_launch_oof_economic_audit_user_stop_continuation_20261029.py": "5a2cdbe7d1a8fb376da0d01ef9aeeb5073115921cf1b06ec7939e59a4fd35304"
+  },
+  "review_scope": "Root read delta and new provenance blocks; hash/copy verification, no tests rerun or real admission",
+  "inspection_helper_note": "First metadata inspection used nonexistent package_manifest.json name and failed before checks; actual archive_manifest path read from author result; no evidence changed."
+}

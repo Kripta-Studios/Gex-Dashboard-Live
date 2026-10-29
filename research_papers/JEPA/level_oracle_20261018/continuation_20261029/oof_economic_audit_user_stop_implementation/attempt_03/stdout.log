@@ -1,0 +1,93 @@
+........FF                                                               [100%]
+================================== FAILURES ===================================
+____ test_harmless_child_lifecycle_and_durable_retry_block[monitor_psutil] ____
+
+case = namespace(request={'version': 'OOF_ECONOMIC_AUDIT_REQUEST_V1', 'scope': 'FULL_H1', 'monthly_root': 'C:\\Users\\Álvaro ...'}, 'output_count': 18, 'output_inventory_sha256': '53448eabb4aaa7d02d2b6fbccbdb11d5e22979cc4885594ae1f387f1aa858620'})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000026DFF536C60>
+fault = 'monitor_psutil'
+
+    @pytest.mark.parametrize("fault",[None,"exit7","affinity_before","gate","monitor_psutil"])
+    def test_harmless_child_lifecycle_and_durable_retry_block(case,monkeypatch,fault):
+        import psutil
+        s=case.s;receipt=admit(case)
+        actual_popen=s.subprocess.Popen;actual_establish=s.establish_cpu0
+        children=[];events=[]
+        def establish():
+            events.append("affinity")
+            if fault=="affinity_before": raise ValueError("synthetic parent affinity unavailable")
+            return actual_establish()
+        def gate(value):
+            events.append("gate")
+            if fault=="gate": raise ValueError("synthetic resource gate")
+            assert value["available_ram_bytes"]>=s.MIN_FREE and value["free_commit_bytes"]>=s.MIN_FREE
+        def popen(command,**kwargs):
+            assert events==["affinity","gate"] and command==receipt["command"]
+            assert psutil.Process().cpu_affinity()==[0]
+            events.append("popen")
+            probe="import psutil,os,json,time; print(json.dumps([psutil.Process().cpu_affinity(),[os.environ[k] for k in ('OMP_NUM_THREADS','OPENBLAS_NUM_THREADS','MKL_NUM_THREADS')]]),flush=True); time.sleep(0.3); raise SystemExit("+str(7 if fault=="exit7" else 0)+")"
+            child=actual_popen([sys.executable,"-c",probe],**kwargs);children.append(child)
+            legacy.audit_output(receipt)
+            if fault=="monitor_psutil":
+                original_process=psutil.Process
+                def process(pid=None):
+                    if pid==child.pid: raise psutil.NoSuchProcess(child.pid)
+                    return original_process(pid)
+                monkeypatch.setattr(psutil,"Process",process)
+            return child
+        monkeypatch.setattr(s,"establish_cpu0",establish);monkeypatch.setattr(s,"gate",gate);monkeypatch.setattr(s.subprocess,"Popen",popen)
+        if fault:
+            with pytest.raises((ValueError,psutil.Error)): s.launch(receipt)
+        else: assert s.launch(receipt)==0
+        logs=Path(receipt["logs_root"])
+        assert (logs/"completion.json").exists()==(fault is None)
+        if fault in ("affinity_before","gate"):
+            assert not children and (logs/"failure.json").is_file()
+        else:
+            assert len(children)==1 and children[0].poll() is not None
+>           assert s.read(logs/"exit.json")["exit_code"]==(7 if fault=="exit7" else 0)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_launch_oof_economic_audit_user_stop_continuation_20261029.py:277: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+launch_oof_economic_audit_user_stop_continuation_20261029.py:137: in read
+    return json.loads(Path(p).read_text(encoding="utf-8"))
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python314\Lib\pathlib\__init__.py:787: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-6580/test_harmless_child_lifecycle_4/artifacts/oof_economic_audit_user_stop_continuation_launch_20261029_01/exit.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Álvaro Schwiedop\\AppData\\Local\\Temp\\pytest-of-Álvaro Schwiedop\\pytest-6580\\test_harmless_child_lifecycle_4\\artifacts\\oof_economic_audit_user_stop_continuation_launch_20261029_01\\exit.json'
+
+C:\Program Files\Python314\Lib\pathlib\__init__.py:771: FileNotFoundError
+__________________ test_compact_authority_hardlink_rejected ___________________
+
+case = namespace(request={'version': 'OOF_ECONOMIC_AUDIT_REQUEST_V1', 'scope': 'FULL_H1', 'monthly_root': 'C:\\Users\\Álvaro ...'}, 'output_count': 18, 'output_inventory_sha256': 'd545b38bf84347d599cfcc82097edc334b5a52b600954a4e78844fa3be0ce895'})
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-6580/test_compact_authority_hardlin0')
+
+    def test_compact_authority_hardlink_rejected(case,tmp_path):
+        import os
+        target=tmp_path/"aliased_request.json"
+        os.link(case.request_ref["path"],target)
+>       with pytest.raises(ValueError,match="Hardlink"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+test_launch_oof_economic_audit_user_stop_continuation_20261029.py:287: Failed
+=========================== short test summary info ===========================
+FAILED test_launch_oof_economic_audit_user_stop_continuation_20261029.py::test_harmless_child_lifecycle_and_durable_retry_block[monitor_psutil]
+FAILED test_launch_oof_economic_audit_user_stop_continuation_20261029.py::test_compact_authority_hardlink_rejected
+2 failed, 8 passed, 32 deselected in 15.71s

@@ -1,0 +1,193 @@
+.FFF                                                                     [100%]
+================================== FAILURES ===================================
+______ test_monitor_preserves_retained_exit_on_sampling_race[quick_exit] ______
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-6573/test_monitor_preserves_retaine0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000021018040180>
+fault = 'quick_exit'
+
+    @pytest.mark.parametrize("fault",["quick_exit","sampling_error","affinity_drift"])
+    def test_monitor_preserves_retained_exit_on_sampling_race(tmp_path,monkeypatch,fault):
+        s = module()
+        _,ops,helper = s.operational_modules()
+        import psutil
+        receipt = dict(logs_root=str(tmp_path),files={str(Path(s.__file__).resolve()):s.sha(s.__file__)},
+            request_sha256="a"*64,runtime_binding_sha256="b"*64,implementation_review_sha256="c"*64,
+            publication_commit="d"*40,command=[sys.executable,"-c","pass"])
+        before = psutil.Process().cpu_affinity()
+        try:
+            s.establish_cpu0()
+            child = subprocess.Popen([sys.executable,"-c","import time;time.sleep(1.2)"],creationflags=subprocess.CREATE_NO_WINDOW)
+            if fault=="quick_exit":
+                child.wait()
+            if fault=="sampling_error":
+                monkeypatch.setattr(ops,"observation",lambda:(_ for _ in ()).throw(OSError("synthetic sample failure")))
+            if fault=="affinity_drift":
+                real = psutil.Process
+                class Changed:
+                    def __init__(self,pid): self.p = real(pid)
+                    def create_time(self): return self.p.create_time()
+                    def cpu_affinity(self): return [1]
+                monkeypatch.setattr(psutil,"Process",Changed)
+>           result = s.monitor(child,receipt,helper,ops,"e"*64)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+research_papers\JEPA\level_oracle_20261018\test_launch_oof_pipeline_user_stop_continuation_20261029.py:257: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+research_papers\JEPA\level_oracle_20261018\launch_oof_pipeline_user_stop_continuation_20261029.py:507: in monitor
+    child_process = psutil.Process(child.pid)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Roaming\Python\Python314\site-packages\psutil\__init__.py:314: in __init__
+    self._init(pid)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = psutil.Process(pid=42768, status='terminated'), pid = 42768
+_ignore_nsp = False
+
+    def _init(self, pid, _ignore_nsp=False):
+        if pid is None:
+            pid = os.getpid()
+        else:
+            if pid < 0:
+                msg = f"pid must be a positive integer (got {pid})"
+                raise ValueError(msg)
+            try:
+                _psplatform.cext.check_pid_range(pid)
+            except OverflowError as err:
+                msg = "process PID out of range"
+                raise NoSuchProcess(pid, msg=msg) from err
+    
+        self._pid = pid
+        self._name = None
+        self._exe = None
+        self._create_time = None
+        self._gone = False
+        self._pid_reused = False
+        self._hash = None
+        self._lock = threading.RLock()
+        # used for caching on Windows only (on POSIX ppid may change)
+        self._ppid = None
+        # platform-specific modules define an _psplatform.Process
+        # implementation class
+        self._proc = _psplatform.Process(pid)
+        self._last_sys_cpu_times = None
+        self._last_proc_cpu_times = None
+        self._exitcode = _SENTINEL
+        self._ident = (self.pid, None)
+        try:
+            self._ident = self._get_ident()
+        except AccessDenied:
+            # This should happen on Windows only, since we use the fast
+            # create time method. AFAIK, on all other platforms we are
+            # able to get create time for all PIDs.
+            pass
+        except ZombieProcess:
+            # Zombies can still be queried by this class (although
+            # not always) and pids() return them so just go on.
+            pass
+        except NoSuchProcess:
+            if not _ignore_nsp:
+                msg = "process PID not found"
+>               raise NoSuchProcess(pid, msg=msg) from None
+E               psutil.NoSuchProcess: process PID not found (pid=42768)
+
+..\..\..\AppData\Roaming\Python\Python314\site-packages\psutil\__init__.py:360: NoSuchProcess
+____ test_monitor_preserves_retained_exit_on_sampling_race[sampling_error] ____
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-6573/test_monitor_preserves_retaine1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000021017EB3100>
+fault = 'sampling_error'
+
+    @pytest.mark.parametrize("fault",["quick_exit","sampling_error","affinity_drift"])
+    def test_monitor_preserves_retained_exit_on_sampling_race(tmp_path,monkeypatch,fault):
+        s = module()
+        _,ops,helper = s.operational_modules()
+        import psutil
+        receipt = dict(logs_root=str(tmp_path),files={str(Path(s.__file__).resolve()):s.sha(s.__file__)},
+            request_sha256="a"*64,runtime_binding_sha256="b"*64,implementation_review_sha256="c"*64,
+            publication_commit="d"*40,command=[sys.executable,"-c","pass"])
+        before = psutil.Process().cpu_affinity()
+        try:
+            s.establish_cpu0()
+            child = subprocess.Popen([sys.executable,"-c","import time;time.sleep(1.2)"],creationflags=subprocess.CREATE_NO_WINDOW)
+            if fault=="quick_exit":
+                child.wait()
+            if fault=="sampling_error":
+                monkeypatch.setattr(ops,"observation",lambda:(_ for _ in ()).throw(OSError("synthetic sample failure")))
+            if fault=="affinity_drift":
+                real = psutil.Process
+                class Changed:
+                    def __init__(self,pid): self.p = real(pid)
+                    def create_time(self): return self.p.create_time()
+                    def cpu_affinity(self): return [1]
+                monkeypatch.setattr(psutil,"Process",Changed)
+>           result = s.monitor(child,receipt,helper,ops,"e"*64)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+research_papers\JEPA\level_oracle_20261018\test_launch_oof_pipeline_user_stop_continuation_20261029.py:257: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+research_papers\JEPA\level_oracle_20261018\launch_oof_pipeline_user_stop_continuation_20261029.py:525: in monitor
+    resources = ops.observation()
+                ^^^^^^^^^^^^^^^^^
+research_papers\JEPA\level_oracle_20261018\test_launch_oof_pipeline_user_stop_continuation_20261029.py:249: in <lambda>
+    monkeypatch.setattr(ops,"observation",lambda:(_ for _ in ()).throw(OSError("synthetic sample failure")))
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+.0 = <tuple_iterator object at 0x0000021017FCD060>
+
+>   monkeypatch.setattr(ops,"observation",lambda:(_ for _ in ()).throw(OSError("synthetic sample failure")))
+E   OSError: synthetic sample failure
+
+research_papers\JEPA\level_oracle_20261018\test_launch_oof_pipeline_user_stop_continuation_20261029.py:249: OSError
+____ test_monitor_preserves_retained_exit_on_sampling_race[affinity_drift] ____
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-6573/test_monitor_preserves_retaine2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000021058F6AD50>
+fault = 'affinity_drift'
+
+    @pytest.mark.parametrize("fault",["quick_exit","sampling_error","affinity_drift"])
+    def test_monitor_preserves_retained_exit_on_sampling_race(tmp_path,monkeypatch,fault):
+        s = module()
+        _,ops,helper = s.operational_modules()
+        import psutil
+        receipt = dict(logs_root=str(tmp_path),files={str(Path(s.__file__).resolve()):s.sha(s.__file__)},
+            request_sha256="a"*64,runtime_binding_sha256="b"*64,implementation_review_sha256="c"*64,
+            publication_commit="d"*40,command=[sys.executable,"-c","pass"])
+        before = psutil.Process().cpu_affinity()
+        try:
+            s.establish_cpu0()
+            child = subprocess.Popen([sys.executable,"-c","import time;time.sleep(1.2)"],creationflags=subprocess.CREATE_NO_WINDOW)
+            if fault=="quick_exit":
+                child.wait()
+            if fault=="sampling_error":
+                monkeypatch.setattr(ops,"observation",lambda:(_ for _ in ()).throw(OSError("synthetic sample failure")))
+            if fault=="affinity_drift":
+                real = psutil.Process
+                class Changed:
+                    def __init__(self,pid): self.p = real(pid)
+                    def create_time(self): return self.p.create_time()
+                    def cpu_affinity(self): return [1]
+                monkeypatch.setattr(psutil,"Process",Changed)
+>           result = s.monitor(child,receipt,helper,ops,"e"*64)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+research_papers\JEPA\level_oracle_20261018\test_launch_oof_pipeline_user_stop_continuation_20261029.py:257: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+research_papers\JEPA\level_oracle_20261018\launch_oof_pipeline_user_stop_continuation_20261029.py:509: in monitor
+    require(child_process.cpu_affinity()==[0],"Child did not inherit CPU0")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ok = False, message = 'Child did not inherit CPU0'
+
+    def require(ok, message):
+        if not ok:
+>           raise ValueError(message)
+E           ValueError: Child did not inherit CPU0
+
+research_papers\JEPA\level_oracle_20261018\launch_oof_pipeline_user_stop_continuation_20261029.py:53: ValueError
+=========================== short test summary info ===========================
+FAILED research_papers/JEPA/level_oracle_20261018/test_launch_oof_pipeline_user_stop_continuation_20261029.py::test_monitor_preserves_retained_exit_on_sampling_race[quick_exit]
+FAILED research_papers/JEPA/level_oracle_20261018/test_launch_oof_pipeline_user_stop_continuation_20261029.py::test_monitor_preserves_retained_exit_on_sampling_race[sampling_error]
+FAILED research_papers/JEPA/level_oracle_20261018/test_launch_oof_pipeline_user_stop_continuation_20261029.py::test_monitor_preserves_retained_exit_on_sampling_race[affinity_drift]
+3 failed, 1 passed, 25 deselected in 7.55s

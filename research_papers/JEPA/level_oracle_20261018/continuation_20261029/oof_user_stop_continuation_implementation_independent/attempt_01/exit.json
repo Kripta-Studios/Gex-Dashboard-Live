@@ -1,0 +1,18 @@
+{
+  "status": "ARTIFICIAL_FOCAL_REVIEW_EXIT_OBSERVED",
+  "exit_code": 0,
+  "exit_code_source": "subprocess.Popen.wait_retained_handle",
+  "pid": 54680,
+  "observed_utc": "2026-10-29T16:07:44.786171+00:00",
+  "elapsed_seconds": 9.35368549998384,
+  "source_drift": [],
+  "files": {
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_review_20261029_01\\attempt_01\\admission.json": "cdebf5ef0a15a15462b12f0865d2d61656e4cc4df7d69543d2297d307684004d",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_review_20261029_01\\attempt_01\\cpu0_independent_evidence.json": "29536ceb50c7b96e341551f2498937a7d8bead35b4e930f08edcfc42ead006e4",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_review_20261029_01\\attempt_01\\junit.xml": "9a20c7b534f2aad79157b2c94899a8290b016f66e8e4c7378db15f9b23388c8b",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_review_20261029_01\\attempt_01\\process.json": "c3a725573292ddc4a5166d43c8b0dc0488a93240fe08631ee3e70d988ac6ec8b",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_review_20261029_01\\attempt_01\\stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_review_20261029_01\\attempt_01\\stdout.log": "8ad9323e56afe011407d899968f3c88e8003abe2d8be593f8230b9b1c89506a4"
+  },
+  "runtime_authorized": false
+}

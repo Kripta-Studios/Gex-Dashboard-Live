@@ -1,0 +1,113 @@
+{
+  "status": "PASS_INDEPENDENT_STATIC_AND_COMPACT_EVIDENCE_REVIEW",
+  "source_files": {
+    "launch_oof_economic_audit_v2r1_20261024.py": "93ad3efcc124099ea2a8e4f8c64995671e1922e5ce1974c9f07b3fa02cd3ce1a",
+    "launch_oof_economic_audit_user_stop_continuation_20261029.py": "48169acfe736a55855f742a26af53cc262a0450b57cc7bea3ce43a623ac7bfa7",
+    "test_launch_oof_economic_audit_user_stop_continuation_20261029.py": "5a2cdbe7d1a8fb376da0d01ef9aeeb5073115921cf1b06ec7939e59a4fd35304"
+  },
+  "unchanged_ast_nodes": [
+    "Evidence",
+    "RetainedProcess",
+    "command",
+    "destinations",
+    "digest",
+    "disjoint",
+    "drain",
+    "gate",
+    "lock",
+    "main",
+    "observation",
+    "publication",
+    "publish",
+    "read",
+    "require",
+    "sha",
+    "stamp",
+    "utc",
+    "validate_audit",
+    "verify"
+  ],
+  "scientific_validation_tail_identical": true,
+  "normalized_tail_ast_sha256": "31ed13147f057221fa28e2d2b0492bb12133ae83c09ce156ce8f57a17cc1fd28",
+  "normalization": "finished.pipeline_closure renamed closure; leading source_sha assignment and one new lifetime-validator call excluded.",
+  "frozen_pins": {
+    "launch_oof_economic_audit_v2r1_20261024.py": "93ad3efcc124099ea2a8e4f8c64995671e1922e5ce1974c9f07b3fa02cd3ce1a",
+    "run_oof_calibrated_pipeline_v2r1.py": "87512b315d69c75c948c68a671939a9423f53abaa6cf2649d5faee7acd22b15a",
+    "audit_oof_calibrated_policy.py": "e7481fbe944a9ffadcf637e7a4b69cd8d636cdf50ae295426191db9d76b5d44b",
+    "test_audit_oof_calibrated_policy.py": "c98954a9bef3b70bef8c889255cb187a57d88c4f43235ade255a70560438f232",
+    "OOF_ECONOMIC_AUDITOR_SPEC_20261023.md": "cfa6868435a772b336605e3b0613e8fa6c1e377a53cbbef376d3973e64901f37",
+    "monthly_oof_calibration_adapter.py": "7b80cff43e3887a92e0f89be6daa863a670ccd72d22a0f4aeabd032a39479364",
+    "evaluate_oof_calibrated_policy.py": "eeaad06f5b862a3153f29e7eab579b19a35e182ab506cf1f59e65631e187e716",
+    "oof_maximum_calibration.py": "19e922dd65855c4cd7e2ec9d482d477a328245bcf642eeeb7771985f247e20b5",
+    "OOF_ECONOMIC_AUDITOR_DESIGN_20261023.md": "b9c2ac397945a04365289b9af0f202f04082c844badfc724ae937972be253154",
+    "PREQUENTIAL_MAX_CALIBRATION_DESIGN.md": "e8264e398b31f22198a024a3c6d9dfa9fc4530402278693caac1caa2d6f7a619",
+    "OOF_MAXIMUM_CALIBRATION_INTEGRATION.md": "79f8c69b13c3585aa26cbb15fa52f246675baaabd8b8e8d6661a5ffe150ce7bd",
+    "MONTHLY_OOF_CALIBRATION_ADAPTER_SPEC.md": "6bd989a6332fd21f751dc48ef084c5eba0f83b1f86f957f2a71127ef869bcb4e",
+    "OOF_CALIBRATED_POLICY_EVALUATION_SPEC.md": "7f88f18569d86ea936d0afdc4a485e461ccdf6c09d74feb835a026bee7caf3bc",
+    "PROTOCOL.md": "c1b2551ec9ba84c2fe1fb20fe3ca86863ef7cca28e34bd36916991c7bf33d0ab",
+    "RESUMPTION_20261023.md": "3f1c10e3a03470de2691aff21799d17550185251c3a63e4719f8efb2d35652b0"
+  },
+  "author_archive_pairs_verified": 50,
+  "author_archive_bytes_verified": 668246,
+  "author_attempts": [
+    {
+      "attempt": 1,
+      "exit_code": 1,
+      "passed": 0,
+      "failed": 1
+    },
+    {
+      "attempt": 2,
+      "exit_code": 0,
+      "passed": 32,
+      "failed": 0
+    },
+    {
+      "attempt": 3,
+      "exit_code": 1,
+      "passed": 8,
+      "failed": 2
+    },
+    {
+      "attempt": 4,
+      "exit_code": 0,
+      "passed": 10,
+      "failed": 0
+    },
+    {
+      "attempt": 5,
+      "exit_code": 1,
+      "passed": 0,
+      "failed": 5
+    },
+    {
+      "attempt": 6,
+      "exit_code": 0,
+      "passed": 6,
+      "failed": 0
+    },
+    {
+      "attempt": 7,
+      "exit_code": 1,
+      "passed": 0,
+      "failed": 6
+    },
+    {
+      "attempt": 8,
+      "exit_code": 0,
+      "passed": 53,
+      "failed": 0
+    }
+  ],
+  "cpu_evidence_externally_verified": {
+    "status": "PASS_FIRST_INSTRUCTION_CPU0_THREADS1",
+    "evidence": {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_economic_audit_user_stop_implementation\\cpu_inheritance_01.json",
+      "sha256": "6133e8cefbddc2c87338ceb0d825bf096cfe36e0c51e640c894fe2ef57cfd8f5"
+    }
+  },
+  "actual_prefix_review_schema_compatible": true,
+  "prefix_admission_executed": false,
+  "real_payloads_rehashed": false,
+  "scientific_execution": false
+}

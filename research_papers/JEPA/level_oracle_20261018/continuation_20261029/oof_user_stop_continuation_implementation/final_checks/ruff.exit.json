@@ -1,0 +1,14 @@
+{
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-m",
+    "ruff",
+    "check",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_oof_pipeline_user_stop_continuation_20261029.py",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_launch_oof_pipeline_user_stop_continuation_20261029.py",
+    "--select",
+    "F,E9"
+  ],
+  "exit_code": 0,
+  "utc": "2026-10-29T16:09:43.211410+00:00"
+}

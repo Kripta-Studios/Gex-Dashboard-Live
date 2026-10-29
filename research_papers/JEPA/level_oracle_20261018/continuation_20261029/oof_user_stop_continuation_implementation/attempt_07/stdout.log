@@ -1,0 +1,20 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+______________ test_current_economic_supervisor_is_a_competitor _______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000021590FE4640>
+
+    def test_current_economic_supervisor_is_a_competitor(monkeypatch):
+        s = module()
+        import psutil
+        active = SimpleNamespace(pid=os.getpid()+100000,info=dict(pid=os.getpid()+100000,
+            cmdline=[sys.executable,"-u","launch_oof_economic_audit_user_stop_continuation_20261029.py"],create_time=123.0))
+        monkeypatch.setattr(psutil,"process_iter",lambda attrs:[active])
+>       with pytest.raises(ValueError,match="Competing"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+research_papers\JEPA\level_oracle_20261018\test_launch_oof_pipeline_user_stop_continuation_20261029.py:519: Failed
+=========================== short test summary info ===========================
+FAILED research_papers/JEPA/level_oracle_20261018/test_launch_oof_pipeline_user_stop_continuation_20261029.py::test_current_economic_supervisor_is_a_competitor
+1 failed, 54 deselected in 0.15s

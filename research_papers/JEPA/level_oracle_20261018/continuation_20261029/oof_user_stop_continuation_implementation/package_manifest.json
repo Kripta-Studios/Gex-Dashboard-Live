@@ -1,0 +1,290 @@
+{
+  "bytes": 575048,
+  "copies": [
+    {
+      "bytes": 163,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_01\\exit.json",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_01\\exit.json",
+      "sha256": "e43cf07aeed57316e81b44356315d041a937283c110602ee1e63c97d84ac0ac8"
+    },
+    {
+      "bytes": 0,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_01\\stderr.log",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_01\\stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 1495,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_01\\stdout.log",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_01\\stdout.log",
+      "sha256": "97ffdabbf66357d136fbc0e34a24cb907365fda9000d8b50ed267b02523f8b41"
+    },
+    {
+      "bytes": 13583,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_01\\test_snapshot.py",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_01\\test_snapshot.py",
+      "sha256": "9c8c7c9f6dd31465b677f56b35e8a0ff6fe174226e85638530f956bc5424c2d8"
+    },
+    {
+      "bytes": 66,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_02\\exit.json",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_02\\exit.json",
+      "sha256": "3fc8610f20578628fb9b31689e72b86fd6ad20a7d79720b81f8b8aad7b73942c"
+    },
+    {
+      "bytes": 42967,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_02\\launch_oof_pipeline_user_stop_continuation_20261029.py",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_02\\launch_oof_pipeline_user_stop_continuation_20261029.py",
+      "sha256": "81206277bc027be9545012b5492fe4b57ea83b9dac04c0fc925d637e3bb2f285"
+    },
+    {
+      "bytes": 0,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_02\\stderr.log",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_02\\stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 2013,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_02\\stdout.log",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_02\\stdout.log",
+      "sha256": "9182e3226b37664b770eca9d43e3b3f4b2acd817f42e86b8ada548ee83d1c7c4"
+    },
+    {
+      "bytes": 13583,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_02\\test_launch_oof_pipeline_user_stop_continuation_20261029.py",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_02\\test_launch_oof_pipeline_user_stop_continuation_20261029.py",
+      "sha256": "9c8c7c9f6dd31465b677f56b35e8a0ff6fe174226e85638530f956bc5424c2d8"
+    },
+    {
+      "bytes": 66,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_03\\exit.json",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_03\\exit.json",
+      "sha256": "bc2fc115340786bb0ad2654329fc45164a1c5091a5bac73fc8885962af9922a0"
+    },
+    {
+      "bytes": 42967,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_03\\launch_oof_pipeline_user_stop_continuation_20261029.py",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_03\\launch_oof_pipeline_user_stop_continuation_20261029.py",
+      "sha256": "81206277bc027be9545012b5492fe4b57ea83b9dac04c0fc925d637e3bb2f285"
+    },
+    {
+      "bytes": 0,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_03\\stderr.log",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_03\\stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 10919,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_03\\stdout.log",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_03\\stdout.log",
+      "sha256": "574b1636a80eb3cda516e077080337504b449148b8fe802d386c2b150e4af2dc"
+    },
+    {
+      "bytes": 15353,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_03\\test_launch_oof_pipeline_user_stop_continuation_20261029.py",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_03\\test_launch_oof_pipeline_user_stop_continuation_20261029.py",
+      "sha256": "75ea1cd4a92c23ac25ab6b420f6683dbd4f999b1eae26f0471e584b121471d1a"
+    },
+    {
+      "bytes": 66,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_04\\exit.json",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_04\\exit.json",
+      "sha256": "8ee06e67b31a83cef8d78bccf1bf94e25e001f23acd92dde7afcbfc69997b7fe"
+    },
+    {
+      "bytes": 47147,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_04\\launch_oof_pipeline_user_stop_continuation_20261029.py",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_04\\launch_oof_pipeline_user_stop_continuation_20261029.py",
+      "sha256": "e40f91745a4896ba385afb12e4ea7a880e897cf2fcce3985ede04d19b16073ee"
+    },
+    {
+      "bytes": 0,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_04\\stderr.log",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_04\\stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 2469,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_04\\stdout.log",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_04\\stdout.log",
+      "sha256": "ce0955efaa57b22aacf5358e1fe9d062e73b505be1abf4d48027b7adac4b97d3"
+    },
+    {
+      "bytes": 24299,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_04\\test_launch_oof_pipeline_user_stop_continuation_20261029.py",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_04\\test_launch_oof_pipeline_user_stop_continuation_20261029.py",
+      "sha256": "137d53cf8dc2544e8da2de35781d8921dfe2f6263c844affe234599360212314"
+    },
+    {
+      "bytes": 66,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_05\\exit.json",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_05\\exit.json",
+      "sha256": "22b9a60e1fd6a2976b42b65daa43b12b5ab3084d7089d19e25f1d2c4029e12bf"
+    },
+    {
+      "bytes": 47147,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_05\\launch_oof_pipeline_user_stop_continuation_20261029.py",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_05\\launch_oof_pipeline_user_stop_continuation_20261029.py",
+      "sha256": "e40f91745a4896ba385afb12e4ea7a880e897cf2fcce3985ede04d19b16073ee"
+    },
+    {
+      "bytes": 0,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_05\\stderr.log",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_05\\stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 12664,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_05\\stdout.log",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_05\\stdout.log",
+      "sha256": "994d2dbab737f7296f86f32e18b4f1fe45d528ef1944be010e4898c1ed4ec9e4"
+    },
+    {
+      "bytes": 31506,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_05\\test_launch_oof_pipeline_user_stop_continuation_20261029.py",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_05\\test_launch_oof_pipeline_user_stop_continuation_20261029.py",
+      "sha256": "f90fd8a8374e6f786931764de60ad13608ae4dd58b552dcd80272ab66791925c"
+    },
+    {
+      "bytes": 602,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_06\\cpu0_inheritance.json",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_06\\cpu0_inheritance.json",
+      "sha256": "1717c9c03c1d8e189baac00b4cd0ef27b382aae842a1b5d52eed13690ae61688"
+    },
+    {
+      "bytes": 66,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_06\\exit.json",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_06\\exit.json",
+      "sha256": "2424e5337f618fcc7b8d072716bb41e89c70659788a9fb3a81d8567464bbedc3"
+    },
+    {
+      "bytes": 50310,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_06\\launch_oof_pipeline_user_stop_continuation_20261029.py",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_06\\launch_oof_pipeline_user_stop_continuation_20261029.py",
+      "sha256": "bf781067ecfc59ee2d5927d5505c4b4a3301fbc3e5c8fb28a46d0a2c1056d897"
+    },
+    {
+      "bytes": 0,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_06\\stderr.log",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_06\\stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 113,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_06\\stdout.log",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_06\\stdout.log",
+      "sha256": "22584c2d4e8d2ed73f5f61d76a65f65520c473c781e40d7615e718aacd49ddf3"
+    },
+    {
+      "bytes": 31523,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_06\\test_launch_oof_pipeline_user_stop_continuation_20261029.py",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_06\\test_launch_oof_pipeline_user_stop_continuation_20261029.py",
+      "sha256": "c4197f4f834f663604d8298dc2674c8a49885e615b8b3bbdc6c2103bb7c992f2"
+    },
+    {
+      "bytes": 66,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_07\\exit.json",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_07\\exit.json",
+      "sha256": "835cba58288a7d8b271f6e6b3fe6f17b3b66c10f7210e5f17158b0a4aa455946"
+    },
+    {
+      "bytes": 50310,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_07\\launch_oof_pipeline_user_stop_continuation_20261029.py",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_07\\launch_oof_pipeline_user_stop_continuation_20261029.py",
+      "sha256": "bf781067ecfc59ee2d5927d5505c4b4a3301fbc3e5c8fb28a46d0a2c1056d897"
+    },
+    {
+      "bytes": 0,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_07\\stderr.log",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_07\\stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 1296,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_07\\stdout.log",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_07\\stdout.log",
+      "sha256": "5d8e60959444837e5b4ece53d2a898a941448feeb0a5efd30ee69e65c1c4300c"
+    },
+    {
+      "bytes": 31984,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_07\\test_launch_oof_pipeline_user_stop_continuation_20261029.py",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_07\\test_launch_oof_pipeline_user_stop_continuation_20261029.py",
+      "sha256": "e1dc93402ee08eb53e1aaae850efc9b789f0d68fc2ddf05639a285a199471b2b"
+    },
+    {
+      "bytes": 602,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_08\\cpu0_inheritance.json",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_08\\cpu0_inheritance.json",
+      "sha256": "0c67f501b2750986e7f0c519e4139e26d0e57d8ef6ca977b7f97eaaf15558da8"
+    },
+    {
+      "bytes": 66,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_08\\exit.json",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_08\\exit.json",
+      "sha256": "e40bbcd226f9c61e4665a99e5a88b72a410a1355752995bb2ad57afa1dcf4cad"
+    },
+    {
+      "bytes": 50382,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_08\\launch_oof_pipeline_user_stop_continuation_20261029.py",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_08\\launch_oof_pipeline_user_stop_continuation_20261029.py",
+      "sha256": "599f6d5c347ebdc3801bbe8cc21de55603a80a46858a8bad1d20729d307eee11"
+    },
+    {
+      "bytes": 0,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_08\\stderr.log",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_08\\stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 115,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_08\\stdout.log",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_08\\stdout.log",
+      "sha256": "399337b83c0af5edaeb29abfe0b9e1fb9dfde8c49763479ad478ef5a6b464c1d"
+    },
+    {
+      "bytes": 31984,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_08\\test_launch_oof_pipeline_user_stop_continuation_20261029.py",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\attempt_08\\test_launch_oof_pipeline_user_stop_continuation_20261029.py",
+      "sha256": "e1dc93402ee08eb53e1aaae850efc9b789f0d68fc2ddf05639a285a199471b2b"
+    },
+    {
+      "bytes": 573,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\final_checks\\compile.json",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\final_checks\\compile.json",
+      "sha256": "6754b48479492cc86e4756afa6f0b42596c0bd7a7dbd377fd5ebd7fc19c61e94"
+    },
+    {
+      "bytes": 9224,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\final_checks\\implementation_files.json",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\final_checks\\implementation_files.json",
+      "sha256": "dce058c368fe024ab114fc356b4b3215bc1b7030d74c0fea3040b25952516314"
+    },
+    {
+      "bytes": 585,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\final_checks\\ruff.exit.json",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\final_checks\\ruff.exit.json",
+      "sha256": "7b501f0d47ca8b2f62221b106969c0305dfbb4a99ef3b30a64778d899085b4dd"
+    },
+    {
+      "bytes": 0,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\final_checks\\ruff.stderr.log",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\final_checks\\ruff.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 19,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\final_checks\\ruff.stdout.log",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\final_checks\\ruff.stdout.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "bytes": 6689,
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\finalize_evidence.py",
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_20261029_01\\finalize_evidence.py",
+      "sha256": "0ec6890b128674cf21e987067c289ec994f39e47887136499f8e30e51b00d366"
+    }
+  ],
+  "files": 47,
+  "status": "EXACT_SYNTHETIC_EVIDENCE_COPIES",
+  "utc": "2026-10-29T16:09:48.209192+00:00"
+}

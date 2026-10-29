@@ -1,0 +1,22 @@
+{
+  "status": "ARTIFICIAL_TEST_PROCESS_STARTED",
+  "pid": 40588,
+  "utc": "2026-10-29T16:14:02.243484+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-m",
+    "pytest",
+    "--rootdir",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_review_20261029_01\\attempt_02\\tmp",
+    "--junitxml",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_review_20261029_01\\attempt_02\\junit.xml",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_review_20261029_01\\test_independent_preflight.py"
+  ],
+  "parent_pid": 48416,
+  "handle_retained": true
+}

@@ -1,0 +1,15 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ test_operational_adapter_exists_separately_from_frozen_supervisor ______
+
+    def test_operational_adapter_exists_separately_from_frozen_supervisor():
+        name = "launch_oof_economic_audit_user_stop_continuation_20261029"
+        spec = importlib.util.find_spec(name)
+>       assert spec is not None, "A separate continuation audit supervisor is required"
+E       AssertionError: A separate continuation audit supervisor is required
+E       assert None is not None
+
+test_launch_oof_economic_audit_user_stop_continuation_20261029.py:10: AssertionError
+=========================== short test summary info ===========================
+FAILED test_launch_oof_economic_audit_user_stop_continuation_20261029.py::test_operational_adapter_exists_separately_from_frozen_supervisor
+1 failed in 0.08s

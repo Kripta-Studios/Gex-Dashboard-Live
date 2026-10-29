@@ -1,0 +1,29 @@
+{
+  "status": "EXACT_ROOT_CHECK_COPIES",
+  "copies": [
+    {
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_environment_20261029_01\\root_implementation_author_evidence.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\root_preparation_checks\\root_implementation_author_evidence.json",
+      "sha256": "9da66b1d0ac0bf96af4bf20457775c07243681debc3cf0cb0e5cc3fe6d75468e",
+      "size": 474
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_environment_20261029_01\\root_audit_implementation_author_evidence.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\root_preparation_checks\\root_audit_implementation_author_evidence.json",
+      "sha256": "4370acae0880e69a433a2c5f8d1be73da8b3dd2f21916297ff77b221e4273633",
+      "size": 1089
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_environment_20261029_01\\root_implementation_review_and_binding_build.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\root_preparation_checks\\root_implementation_review_and_binding_build.json",
+      "sha256": "81920a258c5708f7d840e0ce9b77d6c68fa39a58afebed44d80fe7ec5d063a9a",
+      "size": 1541
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\level_oracle_20261018\\resumption_environment_20261029_01\\root_audit_implementation_review_evidence.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\root_preparation_checks\\root_audit_implementation_review_evidence.json",
+      "sha256": "91ca0dfdc1529ac87f06bce9efb03e7d1400d31281e918cdcf07c66348c6d7e3",
+      "size": 645
+    }
+  ]
+}

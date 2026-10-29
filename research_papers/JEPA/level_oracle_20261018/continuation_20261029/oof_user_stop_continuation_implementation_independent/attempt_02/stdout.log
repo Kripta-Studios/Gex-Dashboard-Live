@@ -1,0 +1,653 @@
+FF.FF..                                                                  [100%]
+================================== FAILURES ===================================
+________ test_actual_preflight_authority_schema_and_publication[None] _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001EBB858CB00>
+tmp_path = WindowsPath('D:/GexResearchArtifacts/level_oracle_20261018/oof_user_stop_continuation_implementation_review_20261029_01/attempt_02/tmp/test_actual_preflight_authorit0')
+fault = None
+
+    @pytest.mark.parametrize("fault", [None, "prefix_schema", "cpu_mapping", "publication_omits_cpu", "publication_extra", "broad_read_root", "review_map"])
+    def test_actual_preflight_authority_schema_and_publication(monkeypatch, tmp_path, fault):
+        s = importlib.import_module("launch_oof_pipeline_user_stop_continuation_20261029")
+        real_here = s.HERE
+        old, ops, helper = s.operational_modules()
+        _, scientific_dependencies = s.implementation_files()
+        repository = tmp_path / "repository"
+        here = repository / "research"
+        here.mkdir(parents=True)
+        local = tmp_path / "local"
+        monthly, session = local / "monthly", local / "session"
+        local_snapshot, repo_snapshot = local / "snapshot", here / "snapshot"
+        old_logs, old_observer = local / "old_logs", local / "old_observer"
+        for root in (monthly, session, local_snapshot, repo_snapshot, old_logs, old_observer):
+            root.mkdir(parents=True)
+        source_sha, tail_sha = "1" * 64, "2" * 64
+        global_lock = local / "runtime.lock"
+        scientific = dict(code=scientific_dependencies, months=s.MONTHS, monthly_root=str(monthly),
+            session_root=str(session), coordination_lock=str(global_lock))
+        original_request = write(here / "original_request.json", scientific)
+        original_binding_value = dict(allowed_read_roots=[str(here), str(monthly), str(session)])
+        original_binding = write(here / "original_binding.json", original_binding_value)
+        files = {}
+        for name in (Path(s.__file__).name, "test_launch_oof_pipeline_user_stop_continuation_20261029.py"):
+            shutil.copyfile(real_here / name, here / name)
+            files[name] = s.sha(here / name)
+        files.update({Path(original_request["path"]).name: original_request["sha256"],
+            Path(original_binding["path"]).name: original_binding["sha256"]})
+        cpu = dict(status="PASS_FIRST_INSTRUCTION_CPU0_THREADS1", parent={"parent_cpu_affinity": [0]},
+            child_observation={"mask": 1, "threads": ["1", "1", "1"]},
+            code_sha256=files[Path(s.__file__).name], tests_sha256=files["test_launch_oof_pipeline_user_stop_continuation_20261029.py"])
+        if fault == "cpu_mapping":
+            cpu["code_sha256"] = "0" * 64
+        cpu_ref = write(here / "cpu_evidence.json", cpu)
+        review_value = dict(status="PASS_OOF_USER_STOP_CONTINUATION_IMPLEMENTATION_REVIEW", decision="CLEAR",
+            scope="IMPLEMENTATION_ONLY", runtime_authorized=False, files=copy.deepcopy(files),
+            cpu0_inheritance_test={"status": "PASS_FIRST_INSTRUCTION_CPU0_THREADS1", "evidence": cpu_ref})
+        if fault == "review_map":
+            review_value["files"]["foreign.py"] = "a" * 64
+        review_ref = write(here / "implementation_review.json", review_value)
+        authorization = write(here / "RESUMPTION_20261029.md", {"synthetic_authorization": True})
+        manifest_ref = write(repo_snapshot / "snapshot_manifest.json", {"synthetic_snapshot_boundary": True})
+        local_manifest = write(local_snapshot / "snapshot_manifest.json", {"synthetic_snapshot_boundary": True})
+        local_result = write(local / "review_result.json", {"synthetic_independent_result": True})
+        adopted = []
+        phases = []
+        for index, (month, stage) in enumerate((m, t) for m in s.MONTHS[:4] for t in ("correction", "replay")):
+            row = dict(phase=[month, stage], start={"path": str(local / f"s{index}.json"), "sha256": "3" * 64},
+                receipt={"path": str(local / f"r{index}.json"), "sha256": "4" * 64},
+                closure={"path": str(local / f"c{index}.json"), "sha256": "5" * 64})
+            adopted.append(row)
+            phases.append(dict(index=index, month=month, stage=stage, start_sha256="3" * 64,
+                receipt_sha256="4" * 64, completion_sha256="5" * 64))
+        independent = dict(status="PASS_STOPPED_PREFIX_METADATA_AND_HASHES_ONLY", schema="INDEPENDENT_METADATA_HASH_REVIEW_V1",
+            verdict="EIGHT_CLOSURES_INTEGRITY_VERIFIED_NOT_YET_ADOPTED", adoption_authorized_by_this_review=False,
+            economics_interpreted=False, audit_full_h1_performed=False, failed_checks=0,
+            request_sha256=original_request["sha256"], original_runtime_binding_sha256=original_binding["sha256"],
+            final_receipt_sha256=tail_sha, source_admission_sha256=source_sha, original_exit_code=15,
+            original_failure_preserved=True, closures={}, reviewed_phases=phases, review_result_source=local_result)
+        if fault == "prefix_schema":
+            independent["status"] = "CLEAR"
+        independent_ref = write(here / "OOF_INTERRUPTION_INDEPENDENT_REVIEW_20261029.json", independent)
+        # The implementation deliberately fixes this already published report hash.
+        report = here / "OOF_INTERRUPTION_INDEPENDENT_REVIEW_20261029.md"
+        shutil.copyfile(real_here / report.name, report)
+        request_value = dict(version="OOF_USER_STOP_CONTINUATION_REQUEST_V1", status="REVIEWED_OOF_USER_STOP_CONTINUATION_REQUEST",
+            runtime_authorized=True, original_request=original_request, original_binding=original_binding,
+            authorization=authorization, snapshot_manifest=manifest_ref, independent_prefix_review=independent_ref,
+            stopped_launch={}, expected_completed_phases=8, adopted_phases=adopted, tail_receipt_sha256=tail_sha,
+            source_admission_sha256=source_sha, remaining_phases=s.REMAINING, preserved_root_locks={})
+        request_ref = write(here / "request.json", request_value)
+        binding_value = dict(version="OOF_USER_STOP_CONTINUATION_BINDING_V1", status="PASS_OOF_USER_STOP_CONTINUATION_RUNTIME_BINDING",
+            request=request_ref, implementation_review=review_ref,
+            allowed_read_roots=original_binding_value["allowed_read_roots"] + [str(local_snapshot), str(repo_snapshot)],
+            logs_root=str(local / "new_logs"), observer_root=str(local / "new_observer"), snapshot_root=str(local_snapshot),
+            repository_snapshot_root=str(repo_snapshot), future_audit_root=str(local / "future_audit"),
+            future_audit_logs_root=str(local / "future_audit_logs"))
+        published = {str(here / name): pin for name, pin in files.items()}
+        for item in (request_ref, review_ref, cpu_ref, authorization, manifest_ref, independent_ref):
+            published[item["path"]] = item["sha256"]
+        published[str(report)] = s.sha(report)
+        binding_value["published_files"] = copy.deepcopy(published)
+        if fault == "publication_omits_cpu":
+            binding_value["published_files"].pop(cpu_ref["path"])
+        elif fault == "publication_extra":
+            extra = write(here / "extra.json", {"unconsumed": True})
+            binding_value["published_files"][extra["path"]] = extra["sha256"]
+        elif fault == "broad_read_root":
+            binding_value["allowed_read_roots"].append(str(local))
+        binding_ref = write(here / "binding.json", binding_value)
+        publication_calls = []
+    
+        def publication(commit, declared):
+            assert commit == "6" * 40
+            assert declared == {**published, binding_ref["path"]: binding_ref["sha256"]}
+            assert all(Path(name).is_relative_to(repository) for name in declared)
+            s.verify(declared)
+            publication_calls.append(copy.deepcopy(declared))
+    
+        proxy = SimpleNamespace(absolute=old.absolute, inspect_consumed_identity=old.inspect_consumed_identity,
+            MONTHLY_ROOT=monthly, SESSION_ROOT=session, upstream=lambda *args: None,
+            request_admission=lambda *args: {"map_sha256": source_sha, "summary": {"synthetic": True}},
+            protect_transitive_outputs=lambda *args: None, publication=publication, tree_files=old.tree_files)
+        monkeypatch.setattr(s, "operational_modules", lambda: (proxy, ops, helper))
+        monkeypatch.setattr(s, "implementation_files", lambda: (copy.deepcopy(files), copy.deepcopy(scientific_dependencies)))
+        for name, value in dict(HERE=here, REPO=repository, REVIEW=Path(review_ref["path"]),
+            ORIGINAL_REQUEST=Path(original_request["path"]), ORIGINAL_REQUEST_SHA=original_request["sha256"],
+            ORIGINAL_BINDING=Path(original_binding["path"]), ORIGINAL_BINDING_SHA=original_binding["sha256"],
+            SOURCE_SHA=source_sha, TAIL_SHA=tail_sha, GLOBAL_LOCK=global_lock).items():
+            monkeypatch.setattr(s, name, value)
+        roots = dict(roots=[], logs_root=binding_value["logs_root"])
+        baseline = dict(sources={}, outputs={}, locks={}, compact={}, controls={}, closures={}, completed_phases=8)
+        stopped = dict(files={}, logs_root=str(old_logs), observer_root=str(old_observer))
+        monkeypatch.setattr(s, "destinations", lambda *args: copy.deepcopy(roots))
+        monkeypatch.setattr(s, "validate_stopped_launch", lambda *args: copy.deepcopy(stopped))
+        monkeypatch.setattr(s, "validate_adopted_prefix", lambda *args: copy.deepcopy(baseline))
+        monkeypatch.setattr(s, "validate_snapshot", lambda *args: {manifest_ref["path"]: manifest_ref["sha256"], local_manifest["path"]: local_manifest["sha256"]})
+        monkeypatch.setattr(s, "no_competitors", lambda: {"synthetic": True, "competing_processes": []})
+        monkeypatch.setattr(s.subprocess, "Popen", lambda *args, **kwargs: pytest.fail("Admission launched a child"))
+        before = {str(p) for p in tmp_path.rglob("*")}
+        args = (request_ref["path"], request_ref["sha256"], binding_ref["path"], binding_ref["sha256"], review_ref["sha256"], "6" * 40)
+        if fault is None:
+>           result = s.preflight(*args)
+                     ^^^^^^^^^^^^^^^^^^
+
+D:\GexResearchArtifacts\level_oracle_20261018\oof_user_stop_continuation_implementation_review_20261029_01\test_independent_preflight.py:141: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+request_path = 'D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_review_20261029_01\\attempt_02\\tmp\\test_actual_preflight_authorit0\\repository\\research\\request.json'
+request_sha = '58152c91839d21241769460c6a11e5cc3d73160d8e4fff8b4f4f46115c224e61'
+binding_path = 'D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_review_20261029_01\\attempt_02\\tmp\\test_actual_preflight_authorit0\\repository\\research\\binding.json'
+binding_sha = '11180a7f00bdcb3cf82ab1460a8fd31fb0bdc0b47393f8f640443271bf43bb2c'
+review_sha = '0aab98b6a38695c1daed8eb4fc42a41d21fd4b2b885695ee913dc461aa1a7d92'
+commit = '6666666666666666666666666666666666666666'
+
+    def preflight(request_path,request_sha,binding_path,binding_sha,review_sha,commit):
+        require(os.name=="nt" and sys.flags.optimize==0 and not os.environ.get("PYTHONOPTIMIZE"),"Unoptimized Windows required")
+        old,ops,_,request,binding,review,scientific,original_binding,pins,implementation = validate_authority(
+            request_path,request_sha,binding_path,binding_sha,review_sha,commit)
+        roots = destinations(scientific,binding)
+        ops.gate(ops.observation())
+        evidence = ops.Evidence(binding["allowed_read_roots"])
+        old.upstream(scientific,original_binding,evidence,ops)
+        admission = old.request_admission(scientific)
+        require(admission["map_sha256"]==SOURCE_SHA,"Original source map differs")
+>       old.protect_transitive_outputs([Path(p) for p in roots["roots"]]+[Path(roots["logs_root"]),Path(roots["observer_root"])],admission)
+                                                                                                        ^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'observer_root'
+
+research_papers\JEPA\level_oracle_20261018\launch_oof_pipeline_user_stop_continuation_20261029.py:486: KeyError
+____ test_actual_preflight_authority_schema_and_publication[prefix_schema] ____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001EBB858ED70>
+tmp_path = WindowsPath('D:/GexResearchArtifacts/level_oracle_20261018/oof_user_stop_continuation_implementation_review_20261029_01/attempt_02/tmp/test_actual_preflight_authorit1')
+fault = 'prefix_schema'
+
+    @pytest.mark.parametrize("fault", [None, "prefix_schema", "cpu_mapping", "publication_omits_cpu", "publication_extra", "broad_read_root", "review_map"])
+    def test_actual_preflight_authority_schema_and_publication(monkeypatch, tmp_path, fault):
+        s = importlib.import_module("launch_oof_pipeline_user_stop_continuation_20261029")
+        real_here = s.HERE
+        old, ops, helper = s.operational_modules()
+        _, scientific_dependencies = s.implementation_files()
+        repository = tmp_path / "repository"
+        here = repository / "research"
+        here.mkdir(parents=True)
+        local = tmp_path / "local"
+        monthly, session = local / "monthly", local / "session"
+        local_snapshot, repo_snapshot = local / "snapshot", here / "snapshot"
+        old_logs, old_observer = local / "old_logs", local / "old_observer"
+        for root in (monthly, session, local_snapshot, repo_snapshot, old_logs, old_observer):
+            root.mkdir(parents=True)
+        source_sha, tail_sha = "1" * 64, "2" * 64
+        global_lock = local / "runtime.lock"
+        scientific = dict(code=scientific_dependencies, months=s.MONTHS, monthly_root=str(monthly),
+            session_root=str(session), coordination_lock=str(global_lock))
+        original_request = write(here / "original_request.json", scientific)
+        original_binding_value = dict(allowed_read_roots=[str(here), str(monthly), str(session)])
+        original_binding = write(here / "original_binding.json", original_binding_value)
+        files = {}
+        for name in (Path(s.__file__).name, "test_launch_oof_pipeline_user_stop_continuation_20261029.py"):
+            shutil.copyfile(real_here / name, here / name)
+            files[name] = s.sha(here / name)
+        files.update({Path(original_request["path"]).name: original_request["sha256"],
+            Path(original_binding["path"]).name: original_binding["sha256"]})
+        cpu = dict(status="PASS_FIRST_INSTRUCTION_CPU0_THREADS1", parent={"parent_cpu_affinity": [0]},
+            child_observation={"mask": 1, "threads": ["1", "1", "1"]},
+            code_sha256=files[Path(s.__file__).name], tests_sha256=files["test_launch_oof_pipeline_user_stop_continuation_20261029.py"])
+        if fault == "cpu_mapping":
+            cpu["code_sha256"] = "0" * 64
+        cpu_ref = write(here / "cpu_evidence.json", cpu)
+        review_value = dict(status="PASS_OOF_USER_STOP_CONTINUATION_IMPLEMENTATION_REVIEW", decision="CLEAR",
+            scope="IMPLEMENTATION_ONLY", runtime_authorized=False, files=copy.deepcopy(files),
+            cpu0_inheritance_test={"status": "PASS_FIRST_INSTRUCTION_CPU0_THREADS1", "evidence": cpu_ref})
+        if fault == "review_map":
+            review_value["files"]["foreign.py"] = "a" * 64
+        review_ref = write(here / "implementation_review.json", review_value)
+        authorization = write(here / "RESUMPTION_20261029.md", {"synthetic_authorization": True})
+        manifest_ref = write(repo_snapshot / "snapshot_manifest.json", {"synthetic_snapshot_boundary": True})
+        local_manifest = write(local_snapshot / "snapshot_manifest.json", {"synthetic_snapshot_boundary": True})
+        local_result = write(local / "review_result.json", {"synthetic_independent_result": True})
+        adopted = []
+        phases = []
+        for index, (month, stage) in enumerate((m, t) for m in s.MONTHS[:4] for t in ("correction", "replay")):
+            row = dict(phase=[month, stage], start={"path": str(local / f"s{index}.json"), "sha256": "3" * 64},
+                receipt={"path": str(local / f"r{index}.json"), "sha256": "4" * 64},
+                closure={"path": str(local / f"c{index}.json"), "sha256": "5" * 64})
+            adopted.append(row)
+            phases.append(dict(index=index, month=month, stage=stage, start_sha256="3" * 64,
+                receipt_sha256="4" * 64, completion_sha256="5" * 64))
+        independent = dict(status="PASS_STOPPED_PREFIX_METADATA_AND_HASHES_ONLY", schema="INDEPENDENT_METADATA_HASH_REVIEW_V1",
+            verdict="EIGHT_CLOSURES_INTEGRITY_VERIFIED_NOT_YET_ADOPTED", adoption_authorized_by_this_review=False,
+            economics_interpreted=False, audit_full_h1_performed=False, failed_checks=0,
+            request_sha256=original_request["sha256"], original_runtime_binding_sha256=original_binding["sha256"],
+            final_receipt_sha256=tail_sha, source_admission_sha256=source_sha, original_exit_code=15,
+            original_failure_preserved=True, closures={}, reviewed_phases=phases, review_result_source=local_result)
+        if fault == "prefix_schema":
+            independent["status"] = "CLEAR"
+        independent_ref = write(here / "OOF_INTERRUPTION_INDEPENDENT_REVIEW_20261029.json", independent)
+        # The implementation deliberately fixes this already published report hash.
+        report = here / "OOF_INTERRUPTION_INDEPENDENT_REVIEW_20261029.md"
+        shutil.copyfile(real_here / report.name, report)
+        request_value = dict(version="OOF_USER_STOP_CONTINUATION_REQUEST_V1", status="REVIEWED_OOF_USER_STOP_CONTINUATION_REQUEST",
+            runtime_authorized=True, original_request=original_request, original_binding=original_binding,
+            authorization=authorization, snapshot_manifest=manifest_ref, independent_prefix_review=independent_ref,
+            stopped_launch={}, expected_completed_phases=8, adopted_phases=adopted, tail_receipt_sha256=tail_sha,
+            source_admission_sha256=source_sha, remaining_phases=s.REMAINING, preserved_root_locks={})
+        request_ref = write(here / "request.json", request_value)
+        binding_value = dict(version="OOF_USER_STOP_CONTINUATION_BINDING_V1", status="PASS_OOF_USER_STOP_CONTINUATION_RUNTIME_BINDING",
+            request=request_ref, implementation_review=review_ref,
+            allowed_read_roots=original_binding_value["allowed_read_roots"] + [str(local_snapshot), str(repo_snapshot)],
+            logs_root=str(local / "new_logs"), observer_root=str(local / "new_observer"), snapshot_root=str(local_snapshot),
+            repository_snapshot_root=str(repo_snapshot), future_audit_root=str(local / "future_audit"),
+            future_audit_logs_root=str(local / "future_audit_logs"))
+        published = {str(here / name): pin for name, pin in files.items()}
+        for item in (request_ref, review_ref, cpu_ref, authorization, manifest_ref, independent_ref):
+            published[item["path"]] = item["sha256"]
+        published[str(report)] = s.sha(report)
+        binding_value["published_files"] = copy.deepcopy(published)
+        if fault == "publication_omits_cpu":
+            binding_value["published_files"].pop(cpu_ref["path"])
+        elif fault == "publication_extra":
+            extra = write(here / "extra.json", {"unconsumed": True})
+            binding_value["published_files"][extra["path"]] = extra["sha256"]
+        elif fault == "broad_read_root":
+            binding_value["allowed_read_roots"].append(str(local))
+        binding_ref = write(here / "binding.json", binding_value)
+        publication_calls = []
+    
+        def publication(commit, declared):
+            assert commit == "6" * 40
+            assert declared == {**published, binding_ref["path"]: binding_ref["sha256"]}
+            assert all(Path(name).is_relative_to(repository) for name in declared)
+            s.verify(declared)
+            publication_calls.append(copy.deepcopy(declared))
+    
+        proxy = SimpleNamespace(absolute=old.absolute, inspect_consumed_identity=old.inspect_consumed_identity,
+            MONTHLY_ROOT=monthly, SESSION_ROOT=session, upstream=lambda *args: None,
+            request_admission=lambda *args: {"map_sha256": source_sha, "summary": {"synthetic": True}},
+            protect_transitive_outputs=lambda *args: None, publication=publication, tree_files=old.tree_files)
+        monkeypatch.setattr(s, "operational_modules", lambda: (proxy, ops, helper))
+        monkeypatch.setattr(s, "implementation_files", lambda: (copy.deepcopy(files), copy.deepcopy(scientific_dependencies)))
+        for name, value in dict(HERE=here, REPO=repository, REVIEW=Path(review_ref["path"]),
+            ORIGINAL_REQUEST=Path(original_request["path"]), ORIGINAL_REQUEST_SHA=original_request["sha256"],
+            ORIGINAL_BINDING=Path(original_binding["path"]), ORIGINAL_BINDING_SHA=original_binding["sha256"],
+            SOURCE_SHA=source_sha, TAIL_SHA=tail_sha, GLOBAL_LOCK=global_lock).items():
+            monkeypatch.setattr(s, name, value)
+        roots = dict(roots=[], logs_root=binding_value["logs_root"])
+        baseline = dict(sources={}, outputs={}, locks={}, compact={}, controls={}, closures={}, completed_phases=8)
+        stopped = dict(files={}, logs_root=str(old_logs), observer_root=str(old_observer))
+        monkeypatch.setattr(s, "destinations", lambda *args: copy.deepcopy(roots))
+        monkeypatch.setattr(s, "validate_stopped_launch", lambda *args: copy.deepcopy(stopped))
+        monkeypatch.setattr(s, "validate_adopted_prefix", lambda *args: copy.deepcopy(baseline))
+        monkeypatch.setattr(s, "validate_snapshot", lambda *args: {manifest_ref["path"]: manifest_ref["sha256"], local_manifest["path"]: local_manifest["sha256"]})
+        monkeypatch.setattr(s, "no_competitors", lambda: {"synthetic": True, "competing_processes": []})
+        monkeypatch.setattr(s.subprocess, "Popen", lambda *args, **kwargs: pytest.fail("Admission launched a child"))
+        before = {str(p) for p in tmp_path.rglob("*")}
+        args = (request_ref["path"], request_ref["sha256"], binding_ref["path"], binding_ref["sha256"], review_ref["sha256"], "6" * 40)
+        if fault is None:
+            result = s.preflight(*args)
+            assert result["status"] == "PASS_OOF_USER_STOP_CONTINUATION_PREFLIGHT_NOT_EXECUTED" and result["executed"] is False
+            assert publication_calls == [{**published, binding_ref["path"]: binding_ref["sha256"]}]
+            assert local_result["path"] in result["files"] and local_result["path"] not in result["publication_files"]
+            assert cpu_ref["path"] in result["publication_files"]
+            assert result["command"][-1] == "--resume"
+        else:
+            with pytest.raises(ValueError):
+>               s.preflight(*args)
+
+D:\GexResearchArtifacts\level_oracle_20261018\oof_user_stop_continuation_implementation_review_20261029_01\test_independent_preflight.py:149: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+request_path = 'D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_review_20261029_01\\attempt_02\\tmp\\test_actual_preflight_authorit1\\repository\\research\\request.json'
+request_sha = '3bd63b31e2c7c20496c14230f93ccbe99997ee83f6a5bad0e2aa7c3f197884ef'
+binding_path = 'D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_review_20261029_01\\attempt_02\\tmp\\test_actual_preflight_authorit1\\repository\\research\\binding.json'
+binding_sha = 'f1bdcda5fb9f1cc7aac84c94312eaf9821ee0eec4b91778308b6ed76f7012af1'
+review_sha = '718c05c07e6ba164bef4eb25e17935a2e8a42c4b0bffd3eda15cc65c4c578c42'
+commit = '6666666666666666666666666666666666666666'
+
+    def preflight(request_path,request_sha,binding_path,binding_sha,review_sha,commit):
+        require(os.name=="nt" and sys.flags.optimize==0 and not os.environ.get("PYTHONOPTIMIZE"),"Unoptimized Windows required")
+        old,ops,_,request,binding,review,scientific,original_binding,pins,implementation = validate_authority(
+            request_path,request_sha,binding_path,binding_sha,review_sha,commit)
+        roots = destinations(scientific,binding)
+        ops.gate(ops.observation())
+        evidence = ops.Evidence(binding["allowed_read_roots"])
+        old.upstream(scientific,original_binding,evidence,ops)
+        admission = old.request_admission(scientific)
+        require(admission["map_sha256"]==SOURCE_SHA,"Original source map differs")
+>       old.protect_transitive_outputs([Path(p) for p in roots["roots"]]+[Path(roots["logs_root"]),Path(roots["observer_root"])],admission)
+                                                                                                        ^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'observer_root'
+
+research_papers\JEPA\level_oracle_20261018\launch_oof_pipeline_user_stop_continuation_20261029.py:486: KeyError
+_ test_actual_preflight_authority_schema_and_publication[publication_omits_cpu] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001EBB8786250>
+tmp_path = WindowsPath('D:/GexResearchArtifacts/level_oracle_20261018/oof_user_stop_continuation_implementation_review_20261029_01/attempt_02/tmp/test_actual_preflight_authorit3')
+fault = 'publication_omits_cpu'
+
+    @pytest.mark.parametrize("fault", [None, "prefix_schema", "cpu_mapping", "publication_omits_cpu", "publication_extra", "broad_read_root", "review_map"])
+    def test_actual_preflight_authority_schema_and_publication(monkeypatch, tmp_path, fault):
+        s = importlib.import_module("launch_oof_pipeline_user_stop_continuation_20261029")
+        real_here = s.HERE
+        old, ops, helper = s.operational_modules()
+        _, scientific_dependencies = s.implementation_files()
+        repository = tmp_path / "repository"
+        here = repository / "research"
+        here.mkdir(parents=True)
+        local = tmp_path / "local"
+        monthly, session = local / "monthly", local / "session"
+        local_snapshot, repo_snapshot = local / "snapshot", here / "snapshot"
+        old_logs, old_observer = local / "old_logs", local / "old_observer"
+        for root in (monthly, session, local_snapshot, repo_snapshot, old_logs, old_observer):
+            root.mkdir(parents=True)
+        source_sha, tail_sha = "1" * 64, "2" * 64
+        global_lock = local / "runtime.lock"
+        scientific = dict(code=scientific_dependencies, months=s.MONTHS, monthly_root=str(monthly),
+            session_root=str(session), coordination_lock=str(global_lock))
+        original_request = write(here / "original_request.json", scientific)
+        original_binding_value = dict(allowed_read_roots=[str(here), str(monthly), str(session)])
+        original_binding = write(here / "original_binding.json", original_binding_value)
+        files = {}
+        for name in (Path(s.__file__).name, "test_launch_oof_pipeline_user_stop_continuation_20261029.py"):
+            shutil.copyfile(real_here / name, here / name)
+            files[name] = s.sha(here / name)
+        files.update({Path(original_request["path"]).name: original_request["sha256"],
+            Path(original_binding["path"]).name: original_binding["sha256"]})
+        cpu = dict(status="PASS_FIRST_INSTRUCTION_CPU0_THREADS1", parent={"parent_cpu_affinity": [0]},
+            child_observation={"mask": 1, "threads": ["1", "1", "1"]},
+            code_sha256=files[Path(s.__file__).name], tests_sha256=files["test_launch_oof_pipeline_user_stop_continuation_20261029.py"])
+        if fault == "cpu_mapping":
+            cpu["code_sha256"] = "0" * 64
+        cpu_ref = write(here / "cpu_evidence.json", cpu)
+        review_value = dict(status="PASS_OOF_USER_STOP_CONTINUATION_IMPLEMENTATION_REVIEW", decision="CLEAR",
+            scope="IMPLEMENTATION_ONLY", runtime_authorized=False, files=copy.deepcopy(files),
+            cpu0_inheritance_test={"status": "PASS_FIRST_INSTRUCTION_CPU0_THREADS1", "evidence": cpu_ref})
+        if fault == "review_map":
+            review_value["files"]["foreign.py"] = "a" * 64
+        review_ref = write(here / "implementation_review.json", review_value)
+        authorization = write(here / "RESUMPTION_20261029.md", {"synthetic_authorization": True})
+        manifest_ref = write(repo_snapshot / "snapshot_manifest.json", {"synthetic_snapshot_boundary": True})
+        local_manifest = write(local_snapshot / "snapshot_manifest.json", {"synthetic_snapshot_boundary": True})
+        local_result = write(local / "review_result.json", {"synthetic_independent_result": True})
+        adopted = []
+        phases = []
+        for index, (month, stage) in enumerate((m, t) for m in s.MONTHS[:4] for t in ("correction", "replay")):
+            row = dict(phase=[month, stage], start={"path": str(local / f"s{index}.json"), "sha256": "3" * 64},
+                receipt={"path": str(local / f"r{index}.json"), "sha256": "4" * 64},
+                closure={"path": str(local / f"c{index}.json"), "sha256": "5" * 64})
+            adopted.append(row)
+            phases.append(dict(index=index, month=month, stage=stage, start_sha256="3" * 64,
+                receipt_sha256="4" * 64, completion_sha256="5" * 64))
+        independent = dict(status="PASS_STOPPED_PREFIX_METADATA_AND_HASHES_ONLY", schema="INDEPENDENT_METADATA_HASH_REVIEW_V1",
+            verdict="EIGHT_CLOSURES_INTEGRITY_VERIFIED_NOT_YET_ADOPTED", adoption_authorized_by_this_review=False,
+            economics_interpreted=False, audit_full_h1_performed=False, failed_checks=0,
+            request_sha256=original_request["sha256"], original_runtime_binding_sha256=original_binding["sha256"],
+            final_receipt_sha256=tail_sha, source_admission_sha256=source_sha, original_exit_code=15,
+            original_failure_preserved=True, closures={}, reviewed_phases=phases, review_result_source=local_result)
+        if fault == "prefix_schema":
+            independent["status"] = "CLEAR"
+        independent_ref = write(here / "OOF_INTERRUPTION_INDEPENDENT_REVIEW_20261029.json", independent)
+        # The implementation deliberately fixes this already published report hash.
+        report = here / "OOF_INTERRUPTION_INDEPENDENT_REVIEW_20261029.md"
+        shutil.copyfile(real_here / report.name, report)
+        request_value = dict(version="OOF_USER_STOP_CONTINUATION_REQUEST_V1", status="REVIEWED_OOF_USER_STOP_CONTINUATION_REQUEST",
+            runtime_authorized=True, original_request=original_request, original_binding=original_binding,
+            authorization=authorization, snapshot_manifest=manifest_ref, independent_prefix_review=independent_ref,
+            stopped_launch={}, expected_completed_phases=8, adopted_phases=adopted, tail_receipt_sha256=tail_sha,
+            source_admission_sha256=source_sha, remaining_phases=s.REMAINING, preserved_root_locks={})
+        request_ref = write(here / "request.json", request_value)
+        binding_value = dict(version="OOF_USER_STOP_CONTINUATION_BINDING_V1", status="PASS_OOF_USER_STOP_CONTINUATION_RUNTIME_BINDING",
+            request=request_ref, implementation_review=review_ref,
+            allowed_read_roots=original_binding_value["allowed_read_roots"] + [str(local_snapshot), str(repo_snapshot)],
+            logs_root=str(local / "new_logs"), observer_root=str(local / "new_observer"), snapshot_root=str(local_snapshot),
+            repository_snapshot_root=str(repo_snapshot), future_audit_root=str(local / "future_audit"),
+            future_audit_logs_root=str(local / "future_audit_logs"))
+        published = {str(here / name): pin for name, pin in files.items()}
+        for item in (request_ref, review_ref, cpu_ref, authorization, manifest_ref, independent_ref):
+            published[item["path"]] = item["sha256"]
+        published[str(report)] = s.sha(report)
+        binding_value["published_files"] = copy.deepcopy(published)
+        if fault == "publication_omits_cpu":
+            binding_value["published_files"].pop(cpu_ref["path"])
+        elif fault == "publication_extra":
+            extra = write(here / "extra.json", {"unconsumed": True})
+            binding_value["published_files"][extra["path"]] = extra["sha256"]
+        elif fault == "broad_read_root":
+            binding_value["allowed_read_roots"].append(str(local))
+        binding_ref = write(here / "binding.json", binding_value)
+        publication_calls = []
+    
+        def publication(commit, declared):
+            assert commit == "6" * 40
+            assert declared == {**published, binding_ref["path"]: binding_ref["sha256"]}
+            assert all(Path(name).is_relative_to(repository) for name in declared)
+            s.verify(declared)
+            publication_calls.append(copy.deepcopy(declared))
+    
+        proxy = SimpleNamespace(absolute=old.absolute, inspect_consumed_identity=old.inspect_consumed_identity,
+            MONTHLY_ROOT=monthly, SESSION_ROOT=session, upstream=lambda *args: None,
+            request_admission=lambda *args: {"map_sha256": source_sha, "summary": {"synthetic": True}},
+            protect_transitive_outputs=lambda *args: None, publication=publication, tree_files=old.tree_files)
+        monkeypatch.setattr(s, "operational_modules", lambda: (proxy, ops, helper))
+        monkeypatch.setattr(s, "implementation_files", lambda: (copy.deepcopy(files), copy.deepcopy(scientific_dependencies)))
+        for name, value in dict(HERE=here, REPO=repository, REVIEW=Path(review_ref["path"]),
+            ORIGINAL_REQUEST=Path(original_request["path"]), ORIGINAL_REQUEST_SHA=original_request["sha256"],
+            ORIGINAL_BINDING=Path(original_binding["path"]), ORIGINAL_BINDING_SHA=original_binding["sha256"],
+            SOURCE_SHA=source_sha, TAIL_SHA=tail_sha, GLOBAL_LOCK=global_lock).items():
+            monkeypatch.setattr(s, name, value)
+        roots = dict(roots=[], logs_root=binding_value["logs_root"])
+        baseline = dict(sources={}, outputs={}, locks={}, compact={}, controls={}, closures={}, completed_phases=8)
+        stopped = dict(files={}, logs_root=str(old_logs), observer_root=str(old_observer))
+        monkeypatch.setattr(s, "destinations", lambda *args: copy.deepcopy(roots))
+        monkeypatch.setattr(s, "validate_stopped_launch", lambda *args: copy.deepcopy(stopped))
+        monkeypatch.setattr(s, "validate_adopted_prefix", lambda *args: copy.deepcopy(baseline))
+        monkeypatch.setattr(s, "validate_snapshot", lambda *args: {manifest_ref["path"]: manifest_ref["sha256"], local_manifest["path"]: local_manifest["sha256"]})
+        monkeypatch.setattr(s, "no_competitors", lambda: {"synthetic": True, "competing_processes": []})
+        monkeypatch.setattr(s.subprocess, "Popen", lambda *args, **kwargs: pytest.fail("Admission launched a child"))
+        before = {str(p) for p in tmp_path.rglob("*")}
+        args = (request_ref["path"], request_ref["sha256"], binding_ref["path"], binding_ref["sha256"], review_ref["sha256"], "6" * 40)
+        if fault is None:
+            result = s.preflight(*args)
+            assert result["status"] == "PASS_OOF_USER_STOP_CONTINUATION_PREFLIGHT_NOT_EXECUTED" and result["executed"] is False
+            assert publication_calls == [{**published, binding_ref["path"]: binding_ref["sha256"]}]
+            assert local_result["path"] in result["files"] and local_result["path"] not in result["publication_files"]
+            assert cpu_ref["path"] in result["publication_files"]
+            assert result["command"][-1] == "--resume"
+        else:
+            with pytest.raises(ValueError):
+>               s.preflight(*args)
+
+D:\GexResearchArtifacts\level_oracle_20261018\oof_user_stop_continuation_implementation_review_20261029_01\test_independent_preflight.py:149: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+request_path = 'D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_review_20261029_01\\attempt_02\\tmp\\test_actual_preflight_authorit3\\repository\\research\\request.json'
+request_sha = '9a257edf11e7d084b5a1ad18322260a7c97a41b67c0f96a9b6252ed89770996d'
+binding_path = 'D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_review_20261029_01\\attempt_02\\tmp\\test_actual_preflight_authorit3\\repository\\research\\binding.json'
+binding_sha = '2c4f63220159a89a0d42c6814f6ea874fe2933b9afe23988c03d90f26749dd66'
+review_sha = '76512aa5614f6fd2324083d3892c14a9409ee055199edb1dd43ef0ac1095f8b7'
+commit = '6666666666666666666666666666666666666666'
+
+    def preflight(request_path,request_sha,binding_path,binding_sha,review_sha,commit):
+        require(os.name=="nt" and sys.flags.optimize==0 and not os.environ.get("PYTHONOPTIMIZE"),"Unoptimized Windows required")
+        old,ops,_,request,binding,review,scientific,original_binding,pins,implementation = validate_authority(
+            request_path,request_sha,binding_path,binding_sha,review_sha,commit)
+        roots = destinations(scientific,binding)
+        ops.gate(ops.observation())
+        evidence = ops.Evidence(binding["allowed_read_roots"])
+        old.upstream(scientific,original_binding,evidence,ops)
+        admission = old.request_admission(scientific)
+        require(admission["map_sha256"]==SOURCE_SHA,"Original source map differs")
+>       old.protect_transitive_outputs([Path(p) for p in roots["roots"]]+[Path(roots["logs_root"]),Path(roots["observer_root"])],admission)
+                                                                                                        ^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'observer_root'
+
+research_papers\JEPA\level_oracle_20261018\launch_oof_pipeline_user_stop_continuation_20261029.py:486: KeyError
+__ test_actual_preflight_authority_schema_and_publication[publication_extra] __
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001EBBF505260>
+tmp_path = WindowsPath('D:/GexResearchArtifacts/level_oracle_20261018/oof_user_stop_continuation_implementation_review_20261029_01/attempt_02/tmp/test_actual_preflight_authorit4')
+fault = 'publication_extra'
+
+    @pytest.mark.parametrize("fault", [None, "prefix_schema", "cpu_mapping", "publication_omits_cpu", "publication_extra", "broad_read_root", "review_map"])
+    def test_actual_preflight_authority_schema_and_publication(monkeypatch, tmp_path, fault):
+        s = importlib.import_module("launch_oof_pipeline_user_stop_continuation_20261029")
+        real_here = s.HERE
+        old, ops, helper = s.operational_modules()
+        _, scientific_dependencies = s.implementation_files()
+        repository = tmp_path / "repository"
+        here = repository / "research"
+        here.mkdir(parents=True)
+        local = tmp_path / "local"
+        monthly, session = local / "monthly", local / "session"
+        local_snapshot, repo_snapshot = local / "snapshot", here / "snapshot"
+        old_logs, old_observer = local / "old_logs", local / "old_observer"
+        for root in (monthly, session, local_snapshot, repo_snapshot, old_logs, old_observer):
+            root.mkdir(parents=True)
+        source_sha, tail_sha = "1" * 64, "2" * 64
+        global_lock = local / "runtime.lock"
+        scientific = dict(code=scientific_dependencies, months=s.MONTHS, monthly_root=str(monthly),
+            session_root=str(session), coordination_lock=str(global_lock))
+        original_request = write(here / "original_request.json", scientific)
+        original_binding_value = dict(allowed_read_roots=[str(here), str(monthly), str(session)])
+        original_binding = write(here / "original_binding.json", original_binding_value)
+        files = {}
+        for name in (Path(s.__file__).name, "test_launch_oof_pipeline_user_stop_continuation_20261029.py"):
+            shutil.copyfile(real_here / name, here / name)
+            files[name] = s.sha(here / name)
+        files.update({Path(original_request["path"]).name: original_request["sha256"],
+            Path(original_binding["path"]).name: original_binding["sha256"]})
+        cpu = dict(status="PASS_FIRST_INSTRUCTION_CPU0_THREADS1", parent={"parent_cpu_affinity": [0]},
+            child_observation={"mask": 1, "threads": ["1", "1", "1"]},
+            code_sha256=files[Path(s.__file__).name], tests_sha256=files["test_launch_oof_pipeline_user_stop_continuation_20261029.py"])
+        if fault == "cpu_mapping":
+            cpu["code_sha256"] = "0" * 64
+        cpu_ref = write(here / "cpu_evidence.json", cpu)
+        review_value = dict(status="PASS_OOF_USER_STOP_CONTINUATION_IMPLEMENTATION_REVIEW", decision="CLEAR",
+            scope="IMPLEMENTATION_ONLY", runtime_authorized=False, files=copy.deepcopy(files),
+            cpu0_inheritance_test={"status": "PASS_FIRST_INSTRUCTION_CPU0_THREADS1", "evidence": cpu_ref})
+        if fault == "review_map":
+            review_value["files"]["foreign.py"] = "a" * 64
+        review_ref = write(here / "implementation_review.json", review_value)
+        authorization = write(here / "RESUMPTION_20261029.md", {"synthetic_authorization": True})
+        manifest_ref = write(repo_snapshot / "snapshot_manifest.json", {"synthetic_snapshot_boundary": True})
+        local_manifest = write(local_snapshot / "snapshot_manifest.json", {"synthetic_snapshot_boundary": True})
+        local_result = write(local / "review_result.json", {"synthetic_independent_result": True})
+        adopted = []
+        phases = []
+        for index, (month, stage) in enumerate((m, t) for m in s.MONTHS[:4] for t in ("correction", "replay")):
+            row = dict(phase=[month, stage], start={"path": str(local / f"s{index}.json"), "sha256": "3" * 64},
+                receipt={"path": str(local / f"r{index}.json"), "sha256": "4" * 64},
+                closure={"path": str(local / f"c{index}.json"), "sha256": "5" * 64})
+            adopted.append(row)
+            phases.append(dict(index=index, month=month, stage=stage, start_sha256="3" * 64,
+                receipt_sha256="4" * 64, completion_sha256="5" * 64))
+        independent = dict(status="PASS_STOPPED_PREFIX_METADATA_AND_HASHES_ONLY", schema="INDEPENDENT_METADATA_HASH_REVIEW_V1",
+            verdict="EIGHT_CLOSURES_INTEGRITY_VERIFIED_NOT_YET_ADOPTED", adoption_authorized_by_this_review=False,
+            economics_interpreted=False, audit_full_h1_performed=False, failed_checks=0,
+            request_sha256=original_request["sha256"], original_runtime_binding_sha256=original_binding["sha256"],
+            final_receipt_sha256=tail_sha, source_admission_sha256=source_sha, original_exit_code=15,
+            original_failure_preserved=True, closures={}, reviewed_phases=phases, review_result_source=local_result)
+        if fault == "prefix_schema":
+            independent["status"] = "CLEAR"
+        independent_ref = write(here / "OOF_INTERRUPTION_INDEPENDENT_REVIEW_20261029.json", independent)
+        # The implementation deliberately fixes this already published report hash.
+        report = here / "OOF_INTERRUPTION_INDEPENDENT_REVIEW_20261029.md"
+        shutil.copyfile(real_here / report.name, report)
+        request_value = dict(version="OOF_USER_STOP_CONTINUATION_REQUEST_V1", status="REVIEWED_OOF_USER_STOP_CONTINUATION_REQUEST",
+            runtime_authorized=True, original_request=original_request, original_binding=original_binding,
+            authorization=authorization, snapshot_manifest=manifest_ref, independent_prefix_review=independent_ref,
+            stopped_launch={}, expected_completed_phases=8, adopted_phases=adopted, tail_receipt_sha256=tail_sha,
+            source_admission_sha256=source_sha, remaining_phases=s.REMAINING, preserved_root_locks={})
+        request_ref = write(here / "request.json", request_value)
+        binding_value = dict(version="OOF_USER_STOP_CONTINUATION_BINDING_V1", status="PASS_OOF_USER_STOP_CONTINUATION_RUNTIME_BINDING",
+            request=request_ref, implementation_review=review_ref,
+            allowed_read_roots=original_binding_value["allowed_read_roots"] + [str(local_snapshot), str(repo_snapshot)],
+            logs_root=str(local / "new_logs"), observer_root=str(local / "new_observer"), snapshot_root=str(local_snapshot),
+            repository_snapshot_root=str(repo_snapshot), future_audit_root=str(local / "future_audit"),
+            future_audit_logs_root=str(local / "future_audit_logs"))
+        published = {str(here / name): pin for name, pin in files.items()}
+        for item in (request_ref, review_ref, cpu_ref, authorization, manifest_ref, independent_ref):
+            published[item["path"]] = item["sha256"]
+        published[str(report)] = s.sha(report)
+        binding_value["published_files"] = copy.deepcopy(published)
+        if fault == "publication_omits_cpu":
+            binding_value["published_files"].pop(cpu_ref["path"])
+        elif fault == "publication_extra":
+            extra = write(here / "extra.json", {"unconsumed": True})
+            binding_value["published_files"][extra["path"]] = extra["sha256"]
+        elif fault == "broad_read_root":
+            binding_value["allowed_read_roots"].append(str(local))
+        binding_ref = write(here / "binding.json", binding_value)
+        publication_calls = []
+    
+        def publication(commit, declared):
+            assert commit == "6" * 40
+            assert declared == {**published, binding_ref["path"]: binding_ref["sha256"]}
+            assert all(Path(name).is_relative_to(repository) for name in declared)
+            s.verify(declared)
+            publication_calls.append(copy.deepcopy(declared))
+    
+        proxy = SimpleNamespace(absolute=old.absolute, inspect_consumed_identity=old.inspect_consumed_identity,
+            MONTHLY_ROOT=monthly, SESSION_ROOT=session, upstream=lambda *args: None,
+            request_admission=lambda *args: {"map_sha256": source_sha, "summary": {"synthetic": True}},
+            protect_transitive_outputs=lambda *args: None, publication=publication, tree_files=old.tree_files)
+        monkeypatch.setattr(s, "operational_modules", lambda: (proxy, ops, helper))
+        monkeypatch.setattr(s, "implementation_files", lambda: (copy.deepcopy(files), copy.deepcopy(scientific_dependencies)))
+        for name, value in dict(HERE=here, REPO=repository, REVIEW=Path(review_ref["path"]),
+            ORIGINAL_REQUEST=Path(original_request["path"]), ORIGINAL_REQUEST_SHA=original_request["sha256"],
+            ORIGINAL_BINDING=Path(original_binding["path"]), ORIGINAL_BINDING_SHA=original_binding["sha256"],
+            SOURCE_SHA=source_sha, TAIL_SHA=tail_sha, GLOBAL_LOCK=global_lock).items():
+            monkeypatch.setattr(s, name, value)
+        roots = dict(roots=[], logs_root=binding_value["logs_root"])
+        baseline = dict(sources={}, outputs={}, locks={}, compact={}, controls={}, closures={}, completed_phases=8)
+        stopped = dict(files={}, logs_root=str(old_logs), observer_root=str(old_observer))
+        monkeypatch.setattr(s, "destinations", lambda *args: copy.deepcopy(roots))
+        monkeypatch.setattr(s, "validate_stopped_launch", lambda *args: copy.deepcopy(stopped))
+        monkeypatch.setattr(s, "validate_adopted_prefix", lambda *args: copy.deepcopy(baseline))
+        monkeypatch.setattr(s, "validate_snapshot", lambda *args: {manifest_ref["path"]: manifest_ref["sha256"], local_manifest["path"]: local_manifest["sha256"]})
+        monkeypatch.setattr(s, "no_competitors", lambda: {"synthetic": True, "competing_processes": []})
+        monkeypatch.setattr(s.subprocess, "Popen", lambda *args, **kwargs: pytest.fail("Admission launched a child"))
+        before = {str(p) for p in tmp_path.rglob("*")}
+        args = (request_ref["path"], request_ref["sha256"], binding_ref["path"], binding_ref["sha256"], review_ref["sha256"], "6" * 40)
+        if fault is None:
+            result = s.preflight(*args)
+            assert result["status"] == "PASS_OOF_USER_STOP_CONTINUATION_PREFLIGHT_NOT_EXECUTED" and result["executed"] is False
+            assert publication_calls == [{**published, binding_ref["path"]: binding_ref["sha256"]}]
+            assert local_result["path"] in result["files"] and local_result["path"] not in result["publication_files"]
+            assert cpu_ref["path"] in result["publication_files"]
+            assert result["command"][-1] == "--resume"
+        else:
+            with pytest.raises(ValueError):
+>               s.preflight(*args)
+
+D:\GexResearchArtifacts\level_oracle_20261018\oof_user_stop_continuation_implementation_review_20261029_01\test_independent_preflight.py:149: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+request_path = 'D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_review_20261029_01\\attempt_02\\tmp\\test_actual_preflight_authorit4\\repository\\research\\request.json'
+request_sha = 'c7033d67193f1b48d225a0470cae69f811a552e3219161ea29e694d180312d4c'
+binding_path = 'D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_review_20261029_01\\attempt_02\\tmp\\test_actual_preflight_authorit4\\repository\\research\\binding.json'
+binding_sha = 'a831b84100fbc162bdc4226d1bbc9e292d2cbe7787d5814231ecdb5858149a76'
+review_sha = 'a5518a1a8094a4de08c3e9517e31a7318d718612920684e2ef276d5db5941433'
+commit = '6666666666666666666666666666666666666666'
+
+    def preflight(request_path,request_sha,binding_path,binding_sha,review_sha,commit):
+        require(os.name=="nt" and sys.flags.optimize==0 and not os.environ.get("PYTHONOPTIMIZE"),"Unoptimized Windows required")
+        old,ops,_,request,binding,review,scientific,original_binding,pins,implementation = validate_authority(
+            request_path,request_sha,binding_path,binding_sha,review_sha,commit)
+        roots = destinations(scientific,binding)
+        ops.gate(ops.observation())
+        evidence = ops.Evidence(binding["allowed_read_roots"])
+        old.upstream(scientific,original_binding,evidence,ops)
+        admission = old.request_admission(scientific)
+        require(admission["map_sha256"]==SOURCE_SHA,"Original source map differs")
+>       old.protect_transitive_outputs([Path(p) for p in roots["roots"]]+[Path(roots["logs_root"]),Path(roots["observer_root"])],admission)
+                                                                                                        ^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'observer_root'
+
+research_papers\JEPA\level_oracle_20261018\launch_oof_pipeline_user_stop_continuation_20261029.py:486: KeyError
+=========================== short test summary info ===========================
+FAILED research_papers\JEPA\level_oracle_20261018::test_actual_preflight_authority_schema_and_publication[None]
+FAILED research_papers\JEPA\level_oracle_20261018::test_actual_preflight_authority_schema_and_publication[prefix_schema]
+FAILED research_papers\JEPA\level_oracle_20261018::test_actual_preflight_authority_schema_and_publication[publication_omits_cpu]
+FAILED research_papers\JEPA\level_oracle_20261018::test_actual_preflight_authority_schema_and_publication[publication_extra]
+4 failed, 3 passed in 262.83s (0:04:22)

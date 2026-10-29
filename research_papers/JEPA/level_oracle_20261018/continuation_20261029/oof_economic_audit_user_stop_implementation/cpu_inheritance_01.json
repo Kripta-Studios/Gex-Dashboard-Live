@@ -1,0 +1,61 @@
+{
+  "status": "PASS_FIRST_INSTRUCTION_CPU0_THREADS1",
+  "utc": "2026-10-29T16:08:30.568477+00:00",
+  "parent": {
+    "parent_pid": 60860,
+    "parent_cpu_affinity": [
+      0
+    ],
+    "previous_parent_cpu_affinity": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31
+    ],
+    "mechanism": "Windows_child_inherits_parent_affinity_at_CreateProcess",
+    "verified_utc": "2026-10-29T16:08:30.498883+00:00"
+  },
+  "child_observation": {
+    "mask": 1,
+    "threads": [
+      "1",
+      "1",
+      "1"
+    ]
+  },
+  "exit_code": 0,
+  "code_sha256": "48169acfe736a55855f742a26af53cc262a0450b57cc7bea3ce43a623ac7bfa7",
+  "tests_sha256": "5a2cdbe7d1a8fb376da0d01ef9aeeb5073115921cf1b06ec7939e59a4fd35304",
+  "probe_sha256": "7ac535ae0cbc1c0de80937b0508fd22f29c57317287b0093d0ae30b6548d0cf6",
+  "stdout_sha256": "03467ec2f17de09c7633e7dae496a9fb219cee589c32c798c7296f37573c24fe",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "scope": "ARTIFICIAL_CHILD_ONLY"
+}

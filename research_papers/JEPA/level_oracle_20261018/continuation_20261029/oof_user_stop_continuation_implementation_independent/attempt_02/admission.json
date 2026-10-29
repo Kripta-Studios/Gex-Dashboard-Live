@@ -1,0 +1,35 @@
+{
+  "status": "ARTIFICIAL_FOCAL_REVIEW_ADMISSION",
+  "utc": "2026-10-29T16:14:02.190470+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-m",
+    "pytest",
+    "--rootdir",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_review_20261029_01\\attempt_02\\tmp",
+    "--junitxml",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_review_20261029_01\\attempt_02\\junit.xml",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_review_20261029_01\\test_independent_preflight.py"
+  ],
+  "files": {
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_oof_pipeline_user_stop_continuation_20261029.py": "599f6d5c347ebdc3801bbe8cc21de55603a80a46858a8bad1d20729d307eee11",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_launch_oof_pipeline_user_stop_continuation_20261029.py": "e1dc93402ee08eb53e1aaae850efc9b789f0d68fc2ddf05639a285a199471b2b",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_review_20261029_01\\test_independent_boundaries.py": "ee8d162790c746a154b6d06b1484fb6dad417e4a54bddc52a5bddcf425a72e8b",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_review_20261029_01\\run_focal_review.py": "2625840694639a0bd5c9989e2d53cef63ed7c06c6c164b925694b0b1b4289056",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_user_stop_continuation_implementation_review_20261029_01\\test_independent_preflight.py": "f302e11c1343c0330b073f2d963440e50a191701afc68c2f3f02c4346d86dedb"
+  },
+  "available_ram_bytes": 8062881792,
+  "free_commit_bytes": 10147430400,
+  "minimum_free_bytes": 2000000000,
+  "parent_cpu_affinity": [
+    0
+  ],
+  "threads1": true,
+  "runtime_authorized": false,
+  "real_producers": false
+}

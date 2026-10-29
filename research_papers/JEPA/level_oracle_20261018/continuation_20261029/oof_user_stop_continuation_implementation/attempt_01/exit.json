@@ -1,0 +1,5 @@
+{
+  "utc": "2026-10-29T15:44:58.3794786Z",
+  "exit_code": 1,
+  "reason": "Initial RED: supervisor absent; focused behavior assertion before implementation"
+}

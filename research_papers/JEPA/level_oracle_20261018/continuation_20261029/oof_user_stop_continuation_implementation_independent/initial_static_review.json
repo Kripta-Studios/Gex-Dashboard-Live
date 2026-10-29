@@ -1,0 +1,16 @@
+{
+  "status": "INITIAL_STATIC_REVIEW_SNAPSHOT_NOT_TESTED",
+  "utc": "2026-10-29T15:53:27.093962+00:00",
+  "files": {
+    "launch_oof_pipeline_user_stop_continuation_20261029.py": "81206277bc027be9545012b5492fe4b57ea83b9dac04c0fc925d637e3bb2f285",
+    "test_launch_oof_pipeline_user_stop_continuation_20261029.py": "75ea1cd4a92c23ac25ab6b420f6683dbd4f999b1eae26f0471e584b121471d1a"
+  },
+  "findings_sent_to_author": [
+    "R1 repository publication map versus local snapshot-manifest path",
+    "R2 monitor sampling race and retained exit preservation",
+    "R3 transitive operational helper review equality required before import",
+    "R4 bounded exact read-root membership"
+  ],
+  "runtime_authorized": false,
+  "real_producer_executed": false
+}

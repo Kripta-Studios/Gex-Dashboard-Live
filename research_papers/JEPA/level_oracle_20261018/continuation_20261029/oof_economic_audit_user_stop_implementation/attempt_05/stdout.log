@@ -1,0 +1,134 @@
+FFFFF                                                                    [100%]
+================================== FAILURES ===================================
+________ test_snapshot_strict_membership_and_sealed_state[bad_status] _________
+
+case = namespace(request={'version': 'OOF_ECONOMIC_AUDIT_REQUEST_V1', 'scope': 'FULL_H1', 'monthly_root': 'C:\\Users\\Álvaro ...'}, 'output_count': 18, 'output_inventory_sha256': '6111fcabc9aa8177cb5636e051c5755945f183a7f4b4c90d7711fc785cc26064'})
+fault = 'bad_status'
+
+    @pytest.mark.parametrize("fault",["bad_status","missing_old_stdout","missing_old_observation","missing_correction_input","local_manifest_drift"])
+    def test_snapshot_strict_membership_and_sealed_state(case,fault):
+        s=case.s;refs=case.binding["upstream"]
+        operational=dict(case.operational)
+        snapshot=s.read(operational["snapshot_manifest"]["path"])
+        runtime=s.read(refs["continuation_binding"]["path"])
+        if fault=="bad_status": snapshot["status"]="DRAFT"
+        elif fault=="local_manifest_drift": Path(runtime["snapshot_root"],"snapshot_manifest.json").write_bytes(b"{}")
+        else:
+            target=case.logs/"stdout.log" if fault=="missing_old_stdout" else case.base/"oof_pipeline_v2r1_observer_20261024_01/historical_observation.json" if fault=="missing_old_observation" else Path(case.source["correction_root"])/"202601.inputs.json"
+            snapshot["original_files"].pop(str(target))
+            snapshot["copies"]=[row for row in snapshot["copies"] if row["original"]!=str(target)]
+        if fault!="local_manifest_drift":
+            rewrite(operational["snapshot_manifest"],snapshot)
+            shutil.copyfile(operational["snapshot_manifest"]["path"],Path(runtime["snapshot_root"])/"snapshot_manifest.json")
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+test_launch_oof_economic_audit_user_stop_continuation_20261029.py:321: Failed
+____ test_snapshot_strict_membership_and_sealed_state[missing_old_stdout] _____
+
+case = namespace(request={'version': 'OOF_ECONOMIC_AUDIT_REQUEST_V1', 'scope': 'FULL_H1', 'monthly_root': 'C:\\Users\\Álvaro ...'}, 'output_count': 18, 'output_inventory_sha256': 'efa0c3e17fe2eb65f7c7d0cac3842e326fa37d9eda4cfa04122c187dde91e176'})
+fault = 'missing_old_stdout'
+
+    @pytest.mark.parametrize("fault",["bad_status","missing_old_stdout","missing_old_observation","missing_correction_input","local_manifest_drift"])
+    def test_snapshot_strict_membership_and_sealed_state(case,fault):
+        s=case.s;refs=case.binding["upstream"]
+        operational=dict(case.operational)
+        snapshot=s.read(operational["snapshot_manifest"]["path"])
+        runtime=s.read(refs["continuation_binding"]["path"])
+        if fault=="bad_status": snapshot["status"]="DRAFT"
+        elif fault=="local_manifest_drift": Path(runtime["snapshot_root"],"snapshot_manifest.json").write_bytes(b"{}")
+        else:
+            target=case.logs/"stdout.log" if fault=="missing_old_stdout" else case.base/"oof_pipeline_v2r1_observer_20261024_01/historical_observation.json" if fault=="missing_old_observation" else Path(case.source["correction_root"])/"202601.inputs.json"
+            snapshot["original_files"].pop(str(target))
+            snapshot["copies"]=[row for row in snapshot["copies"] if row["original"]!=str(target)]
+        if fault!="local_manifest_drift":
+            rewrite(operational["snapshot_manifest"],snapshot)
+            shutil.copyfile(operational["snapshot_manifest"]["path"],Path(runtime["snapshot_root"])/"snapshot_manifest.json")
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+test_launch_oof_economic_audit_user_stop_continuation_20261029.py:321: Failed
+__ test_snapshot_strict_membership_and_sealed_state[missing_old_observation] __
+
+case = namespace(request={'version': 'OOF_ECONOMIC_AUDIT_REQUEST_V1', 'scope': 'FULL_H1', 'monthly_root': 'C:\\Users\\Álvaro ...'}, 'output_count': 18, 'output_inventory_sha256': '6d3d12fe7cbf8e90e9281df8926c675f4afd20b4b998a632b0aad0725c4f66fe'})
+fault = 'missing_old_observation'
+
+    @pytest.mark.parametrize("fault",["bad_status","missing_old_stdout","missing_old_observation","missing_correction_input","local_manifest_drift"])
+    def test_snapshot_strict_membership_and_sealed_state(case,fault):
+        s=case.s;refs=case.binding["upstream"]
+        operational=dict(case.operational)
+        snapshot=s.read(operational["snapshot_manifest"]["path"])
+        runtime=s.read(refs["continuation_binding"]["path"])
+        if fault=="bad_status": snapshot["status"]="DRAFT"
+        elif fault=="local_manifest_drift": Path(runtime["snapshot_root"],"snapshot_manifest.json").write_bytes(b"{}")
+        else:
+            target=case.logs/"stdout.log" if fault=="missing_old_stdout" else case.base/"oof_pipeline_v2r1_observer_20261024_01/historical_observation.json" if fault=="missing_old_observation" else Path(case.source["correction_root"])/"202601.inputs.json"
+            snapshot["original_files"].pop(str(target))
+            snapshot["copies"]=[row for row in snapshot["copies"] if row["original"]!=str(target)]
+        if fault!="local_manifest_drift":
+            rewrite(operational["snapshot_manifest"],snapshot)
+            shutil.copyfile(operational["snapshot_manifest"]["path"],Path(runtime["snapshot_root"])/"snapshot_manifest.json")
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+test_launch_oof_economic_audit_user_stop_continuation_20261029.py:321: Failed
+_ test_snapshot_strict_membership_and_sealed_state[missing_correction_input] __
+
+case = namespace(request={'version': 'OOF_ECONOMIC_AUDIT_REQUEST_V1', 'scope': 'FULL_H1', 'monthly_root': 'C:\\Users\\Álvaro ...'}, 'output_count': 18, 'output_inventory_sha256': '3c498e0da874ce549032d456bc699fc38abf506372932d0da870de5d03901738'})
+fault = 'missing_correction_input'
+
+    @pytest.mark.parametrize("fault",["bad_status","missing_old_stdout","missing_old_observation","missing_correction_input","local_manifest_drift"])
+    def test_snapshot_strict_membership_and_sealed_state(case,fault):
+        s=case.s;refs=case.binding["upstream"]
+        operational=dict(case.operational)
+        snapshot=s.read(operational["snapshot_manifest"]["path"])
+        runtime=s.read(refs["continuation_binding"]["path"])
+        if fault=="bad_status": snapshot["status"]="DRAFT"
+        elif fault=="local_manifest_drift": Path(runtime["snapshot_root"],"snapshot_manifest.json").write_bytes(b"{}")
+        else:
+            target=case.logs/"stdout.log" if fault=="missing_old_stdout" else case.base/"oof_pipeline_v2r1_observer_20261024_01/historical_observation.json" if fault=="missing_old_observation" else Path(case.source["correction_root"])/"202601.inputs.json"
+            snapshot["original_files"].pop(str(target))
+            snapshot["copies"]=[row for row in snapshot["copies"] if row["original"]!=str(target)]
+        if fault!="local_manifest_drift":
+            rewrite(operational["snapshot_manifest"],snapshot)
+            shutil.copyfile(operational["snapshot_manifest"]["path"],Path(runtime["snapshot_root"])/"snapshot_manifest.json")
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+test_launch_oof_economic_audit_user_stop_continuation_20261029.py:321: Failed
+___ test_snapshot_strict_membership_and_sealed_state[local_manifest_drift] ____
+
+case = namespace(request={'version': 'OOF_ECONOMIC_AUDIT_REQUEST_V1', 'scope': 'FULL_H1', 'monthly_root': 'C:\\Users\\Álvaro ...'}, 'output_count': 18, 'output_inventory_sha256': '4e9d2c3b7dae45f632a5269522afd722023871ccfd0e981563663a3efdf32c42'})
+fault = 'local_manifest_drift'
+
+    @pytest.mark.parametrize("fault",["bad_status","missing_old_stdout","missing_old_observation","missing_correction_input","local_manifest_drift"])
+    def test_snapshot_strict_membership_and_sealed_state(case,fault):
+        s=case.s;refs=case.binding["upstream"]
+        operational=dict(case.operational)
+        snapshot=s.read(operational["snapshot_manifest"]["path"])
+        runtime=s.read(refs["continuation_binding"]["path"])
+        if fault=="bad_status": snapshot["status"]="DRAFT"
+        elif fault=="local_manifest_drift": Path(runtime["snapshot_root"],"snapshot_manifest.json").write_bytes(b"{}")
+        else:
+            target=case.logs/"stdout.log" if fault=="missing_old_stdout" else case.base/"oof_pipeline_v2r1_observer_20261024_01/historical_observation.json" if fault=="missing_old_observation" else Path(case.source["correction_root"])/"202601.inputs.json"
+            snapshot["original_files"].pop(str(target))
+            snapshot["copies"]=[row for row in snapshot["copies"] if row["original"]!=str(target)]
+        if fault!="local_manifest_drift":
+            rewrite(operational["snapshot_manifest"],snapshot)
+            shutil.copyfile(operational["snapshot_manifest"]["path"],Path(runtime["snapshot_root"])/"snapshot_manifest.json")
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+test_launch_oof_economic_audit_user_stop_continuation_20261029.py:321: Failed
+=========================== short test summary info ===========================
+FAILED test_launch_oof_economic_audit_user_stop_continuation_20261029.py::test_snapshot_strict_membership_and_sealed_state[bad_status]
+FAILED test_launch_oof_economic_audit_user_stop_continuation_20261029.py::test_snapshot_strict_membership_and_sealed_state[missing_old_stdout]
+FAILED test_launch_oof_economic_audit_user_stop_continuation_20261029.py::test_snapshot_strict_membership_and_sealed_state[missing_old_observation]
+FAILED test_launch_oof_economic_audit_user_stop_continuation_20261029.py::test_snapshot_strict_membership_and_sealed_state[missing_correction_input]
+FAILED test_launch_oof_economic_audit_user_stop_continuation_20261029.py::test_snapshot_strict_membership_and_sealed_state[local_manifest_drift]
+5 failed, 42 deselected in 2.28s

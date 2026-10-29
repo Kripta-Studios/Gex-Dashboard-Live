@@ -1,0 +1,28 @@
+.......................F..                                               [100%]
+================================== FAILURES ===================================
+______________ test_cpu0_is_inherited_at_first_child_instruction ______________
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-6568/test_cpu0_is_inherited_at_firs0')
+
+    def test_cpu0_is_inherited_at_first_child_instruction(tmp_path):
+        s = module()
+        import psutil
+        before = psutil.Process().cpu_affinity()
+        try:
+            record = s.establish_cpu0()
+            # ctypes GetProcessAffinityMask is the first executed statement after imports.
+            script = "import ctypes,os,json; p=ctypes.c_size_t(); q=ctypes.c_size_t(); k=ctypes.WinDLL('kernel32'); k.GetProcessAffinityMask(k.GetCurrentProcess(),ctypes.byref(p),ctypes.byref(q)); print(json.dumps({'mask':p.value,'threads':[os.environ[x] for x in ('OMP_NUM_THREADS','OPENBLAS_NUM_THREADS','MKL_NUM_THREADS')]}))"
+            result = subprocess.run([sys.executable,"-c",script],env=s.child_environment(),capture_output=True,text=True,check=True,
+                creationflags=subprocess.CREATE_NO_WINDOW)
+>           assert json.loads(result.stdout) == dict(mask=1,threads=["1","1","1"])
+E           AssertionError: assert {'mask': 0, '...1', '1', '1']} == {'mask': 1, '...1', '1', '1']}
+E             
+E             Omitting 1 identical items, use -vv to show
+E             Differing items:
+E             {'mask': 0} != {'mask': 1}
+E             Use -v to get more diff
+
+research_papers\JEPA\level_oracle_20261018\test_launch_oof_pipeline_user_stop_continuation_20261029.py:209: AssertionError
+=========================== short test summary info ===========================
+FAILED research_papers/JEPA/level_oracle_20261018/test_launch_oof_pipeline_user_stop_continuation_20261029.py::test_cpu0_is_inherited_at_first_child_instruction
+1 failed, 25 passed in 111.83s (0:01:51)

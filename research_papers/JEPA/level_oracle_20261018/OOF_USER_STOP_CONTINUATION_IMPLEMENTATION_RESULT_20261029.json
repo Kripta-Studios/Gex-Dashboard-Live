@@ -1,0 +1,182 @@
+{
+  "attempt_counts_must_not_be_summed_as_one_suite": true,
+  "author_attempts": [
+    {
+      "attempt": 1,
+      "deselected": 25,
+      "failed": 1,
+      "passed": 0,
+      "reason": "Initial RED: implementation absent; assertion failed before production code existed."
+    },
+    {
+      "attempt": 2,
+      "deselected": 0,
+      "failed": 1,
+      "passed": 25,
+      "reason": "CPU fixture Win32 ABI error: missing pointer argtypes/restype; actual unchecked API returned mask0. Full attempt preserved."
+    },
+    {
+      "attempt": 3,
+      "deselected": 25,
+      "failed": 3,
+      "passed": 1,
+      "reason": "Corrected CPU fixture passed; three new monitor RED cases exposed exit-race/sampling/affinity exception handling."
+    },
+    {
+      "attempt": 4,
+      "deselected": 0,
+      "failed": 1,
+      "passed": 44,
+      "reason": "Snapshot test aliased expected and mutated dict; fixture corrected with independent copies. Frozen wrapper four-phase integration passed."
+    },
+    {
+      "attempt": 5,
+      "deselected": 45,
+      "failed": 2,
+      "passed": 7,
+      "reason": "Foreign failure uncovered missing exact new-log guard, fixed. Busy OS lock correctly raised RuntimeError; fixture exception tuple corrected."
+    },
+    {
+      "attempt": 6,
+      "code_sha256": "bf781067ecfc59ee2d5927d5505c4b4a3301fbc3e5c8fb28a46d0a2c1056d897",
+      "deselected": 0,
+      "failed": 0,
+      "passed": 54,
+      "reason": "Complete new suite under CPU0, threads1 and checked RAM/commit gate.",
+      "seconds": 106.97,
+      "tests_sha256": "c4197f4f834f663604d8298dc2674c8a49885e615b8b3bbdc6c2103bb7c992f2"
+    },
+    {
+      "attempt": 7,
+      "deselected": 54,
+      "failed": 1,
+      "passed": 0,
+      "reason": "RED for final current economic supervisor process name requested by root/reviewer."
+    },
+    {
+      "attempt": 8,
+      "code_sha256": "599f6d5c347ebdc3801bbe8cc21de55603a80a46858a8bad1d20729d307eee11",
+      "deselected": 53,
+      "failed": 0,
+      "passed": 2,
+      "reason": "Final changed competitor rejection plus first-observation CPU0/thread1 child. No old suite repeated.",
+      "seconds": 0.16,
+      "tests_sha256": "e1dc93402ee08eb53e1aaae850efc9b789f0d68fc2ddf05639a285a199471b2b"
+    }
+  ],
+  "code": {
+    "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_oof_pipeline_user_stop_continuation_20261029.py",
+    "sha256": "599f6d5c347ebdc3801bbe8cc21de55603a80a46858a8bad1d20729d307eee11"
+  },
+  "cpu0_inheritance_test": {
+    "evidence": {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\attempt_08\\cpu0_inheritance.json",
+      "sha256": "0c67f501b2750986e7f0c519e4139e26d0e57d8ef6ca977b7f97eaaf15558da8"
+    },
+    "status": "PASS_FIRST_INSTRUCTION_CPU0_THREADS1"
+  },
+  "dependencies": {
+    "MONTHLY_OOF_CALIBRATION_ADAPTER_SPEC.md": "6bd989a6332fd21f751dc48ef084c5eba0f83b1f86f957f2a71127ef869bcb4e",
+    "OOF_CALIBRATED_POLICY_EVALUATION_SPEC.md": "7f88f18569d86ea936d0afdc4a485e461ccdf6c09d74feb835a026bee7caf3bc",
+    "OOF_ECONOMIC_AUDITOR_DESIGN_20261023.md": "b9c2ac397945a04365289b9af0f202f04082c844badfc724ae937972be253154",
+    "OOF_ECONOMIC_AUDITOR_IMPLEMENTATION_REVIEW_20261023.md": "8faf2a64f07df648f2d90e184a4a1a43e80a24b7f474d47604c3c0d352dfacb6",
+    "OOF_ECONOMIC_AUDITOR_SPEC_20261023.md": "cfa6868435a772b336605e3b0613e8fa6c1e377a53cbbef376d3973e64901f37",
+    "OOF_MAXIMUM_CALIBRATION_INTEGRATION.md": "79f8c69b13c3585aa26cbb15fa52f246675baaabd8b8e8d6661a5ffe150ce7bd",
+    "OOF_TRANSITIVE_SOURCE_FAILURE_DIAGNOSIS_20261024.md": "bd8bd3a8992c27203f0d67dd8ca0726a72615f30714096e0ffd177458b60cf23",
+    "OOF_TRANSITIVE_SOURCE_V2R1_IMPLEMENTATION_CONTRACT_20261024.md": "063f7cc7cf26506dc8a8d9691e841a89c2a55f87ce7b72b79e8743f40db3dc43",
+    "OOF_TRANSITIVE_SOURCE_V2_DESIGN_20261024.md": "485f557e4ea2d2eb94bfecfd383d59d02ec29381f0eac06a12178fdef9882cc3",
+    "PREQUENTIAL_MAX_CALIBRATION_DESIGN.md": "e8264e398b31f22198a024a3c6d9dfa9fc4530402278693caac1caa2d6f7a619",
+    "audit_oof_calibrated_policy.py": "e7481fbe944a9ffadcf637e7a4b69cd8d636cdf50ae295426191db9d76b5d44b",
+    "evaluate_oof_calibrated_policy.py": "eeaad06f5b862a3153f29e7eab579b19a35e182ab506cf1f59e65631e187e716",
+    "monthly_oof_calibration_adapter.py": "7b80cff43e3887a92e0f89be6daa863a670ccd72d22a0f4aeabd032a39479364",
+    "oof_maximum_calibration.py": "19e922dd65855c4cd7e2ec9d482d477a328245bcf642eeeb7771985f247e20b5",
+    "rolling_monthly_schedule.py": "92df2e68734d24a61b4ddccec1f9451a5e25c862f5a1b581ae779c163fcf205a",
+    "run_oof_calibrated_pipeline_v2r1.py": "87512b315d69c75c948c68a671939a9423f53abaa6cf2649d5faee7acd22b15a",
+    "test_audit_oof_calibrated_policy.py": "c98954a9bef3b70bef8c889255cb187a57d88c4f43235ade255a70560438f232",
+    "test_run_oof_calibrated_pipeline_v2r1.py": "7ca60f506540f4753b373d9230273c8d77936393604e909a87a9995f867c2400"
+  },
+  "economic_auditor_executed": false,
+  "economic_payloads_interpreted": false,
+  "evidence_manifest": {
+    "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_user_stop_continuation_implementation\\package_manifest.json",
+    "sha256": "7523b55f54d898e85cab99de6511c4f1e031efde8658cce85fa125858122f860"
+  },
+  "implementation_files": {
+    "MONTHLY_OOF_CALIBRATION_ADAPTER_SPEC.md": "6bd989a6332fd21f751dc48ef084c5eba0f83b1f86f957f2a71127ef869bcb4e",
+    "MONTHLY_TEST_AUDIT_EXTENSION_SPEC_20261023.md": "b895e0ee57ee8d911b4d732e1f46b07c2d9e13c296f09888ce47372815f5182d",
+    "MONTHLY_TEST_INDEX_AUDIT_V2_REVIEW_20261024.json": "493806fbc25a50a3333b4d2e65f3bd041bd30b30d5a10203d8c188c0520ee2b3",
+    "MONTHLY_TEST_INDEX_AUDIT_V2_SPEC_20261024.md": "5513996a6284c175dd26496ccee645d23f721d097896123280309cc0be327e29",
+    "MONTHLY_TEST_INDEX_V2_AUDIT_LAUNCH_REVIEW_20261024.json": "e38ae0fb7ebfc3d5841fe87052d00605f58cba21a8ba987341d0f307ede9e432",
+    "MONTHLY_TEST_INDEX_V2_AUDIT_RUNTIME_REVIEW_20261024_01.json": "055d2734469a77dc607585d000f594ed3088580400c46f513c209119a793eab1",
+    "MONTHLY_TEST_RESOURCE_OVERLAY_REVIEW_20261023.json": "49a3590504c74c06dc5a9b830bcf71b7472dbecae2ab267218aaa22aa2dd0280",
+    "MONTHLY_WALK_FORWARD_INDEX_AUDIT_V2_SPEC_20261024.md": "06f0fcd6ac5d60a8e503d5f9df86102683e441d7b00d0a5968142384f4a821f4",
+    "MONTHLY_WALK_FORWARD_PLAN.md": "71ccd29587be4012dad9fe3ada4ad29ff7b93b94ea08340343ebe39d287c97ae",
+    "MONTHLY_WALK_FORWARD_SEALED_SCORE_AUDITOR_REVIEW.json": "db323959e6a894d6d6fb51bde764af0c96db0cb0bba2f1711bbe0807425d10ca",
+    "MONTHLY_WALK_FORWARD_SEALED_SCORE_AUDIT_CONTRACT.md": "cabdd117fc4dc713fbca085a48e38ac8c8f609555f42f10a05321c01623ff8e7",
+    "OOF_CALIBRATED_POLICY_EVALUATION_SPEC.md": "7f88f18569d86ea936d0afdc4a485e461ccdf6c09d74feb835a026bee7caf3bc",
+    "OOF_ECONOMIC_AUDITOR_DESIGN_20261023.md": "b9c2ac397945a04365289b9af0f202f04082c844badfc724ae937972be253154",
+    "OOF_ECONOMIC_AUDITOR_IMPLEMENTATION_REVIEW_20261023.md": "8faf2a64f07df648f2d90e184a4a1a43e80a24b7f474d47604c3c0d352dfacb6",
+    "OOF_ECONOMIC_AUDITOR_SPEC_20261023.md": "cfa6868435a772b336605e3b0613e8fa6c1e377a53cbbef376d3973e64901f37",
+    "OOF_MAXIMUM_CALIBRATION_INTEGRATION.md": "79f8c69b13c3585aa26cbb15fa52f246675baaabd8b8e8d6661a5ffe150ce7bd",
+    "OOF_PIPELINE_V2R1_LAUNCH_RUNTIME_BINDING_20261024_01.json": "9e4949227dfd8b0aa3e72a35271b081413dbd9dee482b79c98911ea25478813c",
+    "OOF_PIPELINE_V2R1_RUNTIME_REQUEST_20261024_01.json": "37f2018c7145d3b82cba2e34fbff9ae3008e33f32b004c5580e433157f38ef15",
+    "OOF_TRANSITIVE_SOURCE_FAILURE_DIAGNOSIS_20261024.md": "bd8bd3a8992c27203f0d67dd8ca0726a72615f30714096e0ffd177458b60cf23",
+    "OOF_TRANSITIVE_SOURCE_V2R1_IMPLEMENTATION_CONTRACT_20261024.md": "063f7cc7cf26506dc8a8d9691e841a89c2a55f87ce7b72b79e8743f40db3dc43",
+    "OOF_TRANSITIVE_SOURCE_V2R1_LAUNCH_IMPLEMENTATION_REVIEW_20261024.json": "2782b686947c9ddd5f723ad2b279802d21f3adbbee79aa76a6cd6e8bce551a78",
+    "OOF_TRANSITIVE_SOURCE_V2R1_RUNTIME_IMPLEMENTATION_REVIEW_20261024.json": "7431a6df11966c46ce5aa66bac5d707b7dfe9e131f59366df24f0f2f66c222c9",
+    "OOF_TRANSITIVE_SOURCE_V2_DESIGN_20261024.md": "485f557e4ea2d2eb94bfecfd383d59d02ec29381f0eac06a12178fdef9882cc3",
+    "OOF_USER_STOP_CONTINUATION_DESIGN_20261029.md": "ae9d7466aa09f2c43e694fca86a5216d3222e0cff0042b035d7c8d057f54d109",
+    "OOF_USER_STOP_CONTINUATION_DESIGN_REVIEW_20261029.json": "ad2ab016a45c769c3fb849a25e63173c0510f6577f7c5cd20beac867ebd414f6",
+    "PREQUENTIAL_MAX_CALIBRATION_DESIGN.md": "e8264e398b31f22198a024a3c6d9dfa9fc4530402278693caac1caa2d6f7a619",
+    "audit_monthly_walk_forward.py": "e4a3be1c19b7f0af1226e71255c81116bd71a6a300aef36f61c688deb908df1f",
+    "audit_monthly_walk_forward_index_v2.py": "f01a962fcf50a2cc2bb49fd4d3eb597eb07cda47f8d2697b8046ccb9b5721ed3",
+    "audit_monthly_walk_forward_test.py": "ec0ddb99840d5bf380eb7f407de3e1a5bcbdfa352d79ad5d75e24a05750db57b",
+    "audit_monthly_walk_forward_test_index_v2.py": "feea3954b231b18f18384696959d7cdbbcaf4d513dbf3fc4fee8596136483421",
+    "audit_oof_calibrated_policy.py": "e7481fbe944a9ffadcf637e7a4b69cd8d636cdf50ae295426191db9d76b5d44b",
+    "build_cache.py": "985e87dcbd1e73289b58e4576445e47e73a6edea13e5ac73dde3ad629180d69f",
+    "causal_rollout.py": "8df92119071442045a8434057e220bad567668d8ee314fddd263d052ebeea0d9",
+    "evaluate_oof_calibrated_policy.py": "eeaad06f5b862a3153f29e7eab579b19a35e182ab506cf1f59e65631e187e716",
+    "features.py": "b5c63f918319f844793abb3346a34515526073374f5e71af2129a94f2369d4e0",
+    "launch_monthly_test_20261023.py": "3e77bda56dabd8287b04ae9a47b4dcd45d5967a01a31514e933cbb44b6f4c08d",
+    "launch_monthly_test_index_v2_audit_20261024.py": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046",
+    "launch_oof_pipeline_user_stop_continuation_20261029.py": "599f6d5c347ebdc3801bbe8cc21de55603a80a46858a8bad1d20729d307eee11",
+    "launch_oof_pipeline_v2r1_20261024.py": "e53084c70f99e4410814066a757e8f455dbb91bece8838fcd73417ce4614dce2",
+    "level_engine.py": "70cc5d20990d971d16299fd008ff8e05ac99f99a6a2917a202fcb9a5f413b7c6",
+    "monthly_oof_calibration_adapter.py": "7b80cff43e3887a92e0f89be6daa863a670ccd72d22a0f4aeabd032a39479364",
+    "monthly_policy_selection.py": "1fe43fa92fe0441be35bc67c9a2a60ce2829edaf9ea80f5fa0a5c8967a599da0",
+    "oof_maximum_calibration.py": "19e922dd65855c4cd7e2ec9d482d477a328245bcf642eeeb7771985f247e20b5",
+    "rolling_monthly_schedule.py": "92df2e68734d24a61b4ddccec1f9451a5e25c862f5a1b581ae779c163fcf205a",
+    "rollout_sampling.py": "8bc8cee2b89cf70490793b88d74dff558bbd60077d383a852392fcc2383c748c",
+    "run_monthly_test_resource_overlay.py": "f2b0490cdec916f98c09fc77a6533d0eab8c4f2711331753f7d5c998d81253c1",
+    "run_monthly_walk_forward.py": "47a4df8b019d9d297ca1ee9b89fff63406409659336dbd7b0e4d7af01ed348bb",
+    "run_oof_calibrated_pipeline_v2r1.py": "87512b315d69c75c948c68a671939a9423f53abaa6cf2649d5faee7acd22b15a",
+    "test_audit_monthly_walk_forward.py": "8c47e89951506553bfb1295c6e390501828b8fe6f77bcae5d566e98c2039ef87",
+    "test_audit_monthly_walk_forward_index_v2.py": "f986885706e78a9ecdac5f126502906d7f7637b513fb2f3a8ee16f765ea1c88d",
+    "test_audit_monthly_walk_forward_test.py": "b3cc6d8225812154da2e4d2c644e426a19f7177d520b9d564826e3a3e4790a00",
+    "test_audit_monthly_walk_forward_test_index_v2.py": "54a5ab7133705d528774c1ee458989a8acff60dfdef94a69aefd3b6662587194",
+    "test_audit_oof_calibrated_policy.py": "c98954a9bef3b70bef8c889255cb187a57d88c4f43235ade255a70560438f232",
+    "test_launch_monthly_test_index_v2_audit_20261024.py": "54a98599ed91fe3317ad298f918f4ccb8703ce7720cee501c8a8a7b9e1b131bd",
+    "test_launch_oof_pipeline_user_stop_continuation_20261029.py": "e1dc93402ee08eb53e1aaae850efc9b789f0d68fc2ddf05639a285a199471b2b",
+    "test_launch_oof_pipeline_v2r1_20261024.py": "f78ee419e122800b14165902fa21ecc38dfd118191f4b61aa436f2fb912cb70a",
+    "test_monthly_oof_calibration_adapter.py": "32e04b1444c73ac1a0bf87b819b6542ba4d96775202acb82514a147085d3739a",
+    "test_run_oof_calibrated_pipeline_v2r1.py": "7ca60f506540f4753b373d9230273c8d77936393604e909a87a9995f867c2400",
+    "train_causal_rollout.py": "d031eca08c71ad89324619e096dcc9be3966ddea23d52061019018ff6ff58a43",
+    "train_models.py": "a5192737abd1c0b3e4a6a6cd391117d97a014c06b6cd528201ba1f5df0ef6808"
+  },
+  "independent_review": "SEPARATE_AUTHORITY_PENDING_AT_AUTHOR_RESULT_CREATION",
+  "integration_scope": "Frozen wrapper resume, artificial empty-calendar correction/replay callbacks only; exact four phases08-11 and final12/27 checked. No real producer, fit or economic values.",
+  "promotion_approved": false,
+  "real_pipeline_executed": false,
+  "real_preflight_executed": false,
+  "resource_evidence_scope": "Attempts04/05/06/08 explicitly gated and CPU0-pinned before pytest. Earlier RED/focal attempts and attempt02 were not recorded as satisfying this launch-resource protocol.",
+  "runtime_authorized": false,
+  "scope": "IMPLEMENTATION_ONLY",
+  "status": "IMPLEMENTED_SYNTHETICALLY_VERIFIED_NOT_RUNTIME_AUTHORITY",
+  "technical_ready": false,
+  "tests": {
+    "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\test_launch_oof_pipeline_user_stop_continuation_20261029.py",
+    "sha256": "e1dc93402ee08eb53e1aaae850efc9b789f0d68fc2ddf05639a285a199471b2b"
+  },
+  "utc": "2026-10-29T16:09:48.220343+00:00",
+  "winner_selected": null
+}

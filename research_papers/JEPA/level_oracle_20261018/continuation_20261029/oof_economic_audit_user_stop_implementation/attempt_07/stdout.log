@@ -1,0 +1,172 @@
+FFFFFF                                                                   [100%]
+================================== FAILURES ===================================
+__________ test_cpu_evidence_rejects_wrong_observation_or_pins[mask] __________
+
+case = namespace(request={'version': 'OOF_ECONOMIC_AUDIT_REQUEST_V1', 'scope': 'FULL_H1', 'monthly_root': 'C:\\Users\\Álvaro ...'}, 'output_count': 18, 'output_inventory_sha256': '80830bb0607676185d14f38f7d8b14dfe26bc7da8cc934c125f63458adee5295'})
+fault = 'mask'
+
+    @pytest.mark.parametrize("fault",["mask","threads","code_pin","test_pin","artifact_bytes","not_in_repository"])
+    def test_cpu_evidence_rejects_wrong_observation_or_pins(case,fault):
+        s=case.s;review=s.read(case.review["path"])
+        ref=review["cpu0_inheritance_test"]["evidence"]
+        value=s.read(ref["path"])
+        if fault=="mask": value["child_observation"]["mask"]=2
+        if fault=="threads": value["child_observation"]["threads"]=["2","1","1"]
+        if fault=="code_pin": value["code_sha256"]="f"*64
+        if fault=="test_pin": value["tests_sha256"]="f"*64
+        if fault=="not_in_repository":
+            ref=write(case.base/"metadata/cpu_fake.json",value)
+            review["cpu0_inheritance_test"]["evidence"]=ref
+        elif fault=="artifact_bytes": Path(ref["path"]).write_bytes(b"changed")
+        else: rewrite(ref,value)
+        if fault=="not_in_repository":
+            case.s.REPO=case.code
+        with pytest.raises(ValueError):
+>           s.validate_cpu_evidence(review,s.NAME,s.NEW_FILES[1],prepared_upstream(case))
+            ^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'launch_oof_economic_audit_user_stop_continuation_20261029' has no attribute 'validate_cpu_evidence'
+
+test_launch_oof_economic_audit_user_stop_continuation_20261029.py:346: AttributeError
+________ test_cpu_evidence_rejects_wrong_observation_or_pins[threads] _________
+
+case = namespace(request={'version': 'OOF_ECONOMIC_AUDIT_REQUEST_V1', 'scope': 'FULL_H1', 'monthly_root': 'C:\\Users\\Álvaro ...'}, 'output_count': 18, 'output_inventory_sha256': 'a6906d8ebb1365b3d651996c55e24169d3b8f297048e89a8f66b5666a8421931'})
+fault = 'threads'
+
+    @pytest.mark.parametrize("fault",["mask","threads","code_pin","test_pin","artifact_bytes","not_in_repository"])
+    def test_cpu_evidence_rejects_wrong_observation_or_pins(case,fault):
+        s=case.s;review=s.read(case.review["path"])
+        ref=review["cpu0_inheritance_test"]["evidence"]
+        value=s.read(ref["path"])
+        if fault=="mask": value["child_observation"]["mask"]=2
+        if fault=="threads": value["child_observation"]["threads"]=["2","1","1"]
+        if fault=="code_pin": value["code_sha256"]="f"*64
+        if fault=="test_pin": value["tests_sha256"]="f"*64
+        if fault=="not_in_repository":
+            ref=write(case.base/"metadata/cpu_fake.json",value)
+            review["cpu0_inheritance_test"]["evidence"]=ref
+        elif fault=="artifact_bytes": Path(ref["path"]).write_bytes(b"changed")
+        else: rewrite(ref,value)
+        if fault=="not_in_repository":
+            case.s.REPO=case.code
+        with pytest.raises(ValueError):
+>           s.validate_cpu_evidence(review,s.NAME,s.NEW_FILES[1],prepared_upstream(case))
+            ^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'launch_oof_economic_audit_user_stop_continuation_20261029' has no attribute 'validate_cpu_evidence'
+
+test_launch_oof_economic_audit_user_stop_continuation_20261029.py:346: AttributeError
+________ test_cpu_evidence_rejects_wrong_observation_or_pins[code_pin] ________
+
+case = namespace(request={'version': 'OOF_ECONOMIC_AUDIT_REQUEST_V1', 'scope': 'FULL_H1', 'monthly_root': 'C:\\Users\\Álvaro ...'}, 'output_count': 18, 'output_inventory_sha256': 'c47f24dca2bcb60bf7c44a5038ad9ba9d889fd5d9fdb8096d420d9e3ca7c29d4'})
+fault = 'code_pin'
+
+    @pytest.mark.parametrize("fault",["mask","threads","code_pin","test_pin","artifact_bytes","not_in_repository"])
+    def test_cpu_evidence_rejects_wrong_observation_or_pins(case,fault):
+        s=case.s;review=s.read(case.review["path"])
+        ref=review["cpu0_inheritance_test"]["evidence"]
+        value=s.read(ref["path"])
+        if fault=="mask": value["child_observation"]["mask"]=2
+        if fault=="threads": value["child_observation"]["threads"]=["2","1","1"]
+        if fault=="code_pin": value["code_sha256"]="f"*64
+        if fault=="test_pin": value["tests_sha256"]="f"*64
+        if fault=="not_in_repository":
+            ref=write(case.base/"metadata/cpu_fake.json",value)
+            review["cpu0_inheritance_test"]["evidence"]=ref
+        elif fault=="artifact_bytes": Path(ref["path"]).write_bytes(b"changed")
+        else: rewrite(ref,value)
+        if fault=="not_in_repository":
+            case.s.REPO=case.code
+        with pytest.raises(ValueError):
+>           s.validate_cpu_evidence(review,s.NAME,s.NEW_FILES[1],prepared_upstream(case))
+            ^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'launch_oof_economic_audit_user_stop_continuation_20261029' has no attribute 'validate_cpu_evidence'
+
+test_launch_oof_economic_audit_user_stop_continuation_20261029.py:346: AttributeError
+________ test_cpu_evidence_rejects_wrong_observation_or_pins[test_pin] ________
+
+case = namespace(request={'version': 'OOF_ECONOMIC_AUDIT_REQUEST_V1', 'scope': 'FULL_H1', 'monthly_root': 'C:\\Users\\Álvaro ...'}, 'output_count': 18, 'output_inventory_sha256': '688939b8976aab39df87e4b0f6d8cc88590026f80301706210802afec58305c4'})
+fault = 'test_pin'
+
+    @pytest.mark.parametrize("fault",["mask","threads","code_pin","test_pin","artifact_bytes","not_in_repository"])
+    def test_cpu_evidence_rejects_wrong_observation_or_pins(case,fault):
+        s=case.s;review=s.read(case.review["path"])
+        ref=review["cpu0_inheritance_test"]["evidence"]
+        value=s.read(ref["path"])
+        if fault=="mask": value["child_observation"]["mask"]=2
+        if fault=="threads": value["child_observation"]["threads"]=["2","1","1"]
+        if fault=="code_pin": value["code_sha256"]="f"*64
+        if fault=="test_pin": value["tests_sha256"]="f"*64
+        if fault=="not_in_repository":
+            ref=write(case.base/"metadata/cpu_fake.json",value)
+            review["cpu0_inheritance_test"]["evidence"]=ref
+        elif fault=="artifact_bytes": Path(ref["path"]).write_bytes(b"changed")
+        else: rewrite(ref,value)
+        if fault=="not_in_repository":
+            case.s.REPO=case.code
+        with pytest.raises(ValueError):
+>           s.validate_cpu_evidence(review,s.NAME,s.NEW_FILES[1],prepared_upstream(case))
+            ^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'launch_oof_economic_audit_user_stop_continuation_20261029' has no attribute 'validate_cpu_evidence'
+
+test_launch_oof_economic_audit_user_stop_continuation_20261029.py:346: AttributeError
+_____ test_cpu_evidence_rejects_wrong_observation_or_pins[artifact_bytes] _____
+
+case = namespace(request={'version': 'OOF_ECONOMIC_AUDIT_REQUEST_V1', 'scope': 'FULL_H1', 'monthly_root': 'C:\\Users\\Álvaro ...'}, 'output_count': 18, 'output_inventory_sha256': '7b1e6ef1049338d8848fd452875edeecf7acef837327cf704702133c17871ae0'})
+fault = 'artifact_bytes'
+
+    @pytest.mark.parametrize("fault",["mask","threads","code_pin","test_pin","artifact_bytes","not_in_repository"])
+    def test_cpu_evidence_rejects_wrong_observation_or_pins(case,fault):
+        s=case.s;review=s.read(case.review["path"])
+        ref=review["cpu0_inheritance_test"]["evidence"]
+        value=s.read(ref["path"])
+        if fault=="mask": value["child_observation"]["mask"]=2
+        if fault=="threads": value["child_observation"]["threads"]=["2","1","1"]
+        if fault=="code_pin": value["code_sha256"]="f"*64
+        if fault=="test_pin": value["tests_sha256"]="f"*64
+        if fault=="not_in_repository":
+            ref=write(case.base/"metadata/cpu_fake.json",value)
+            review["cpu0_inheritance_test"]["evidence"]=ref
+        elif fault=="artifact_bytes": Path(ref["path"]).write_bytes(b"changed")
+        else: rewrite(ref,value)
+        if fault=="not_in_repository":
+            case.s.REPO=case.code
+        with pytest.raises(ValueError):
+>           s.validate_cpu_evidence(review,s.NAME,s.NEW_FILES[1],prepared_upstream(case))
+            ^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'launch_oof_economic_audit_user_stop_continuation_20261029' has no attribute 'validate_cpu_evidence'
+
+test_launch_oof_economic_audit_user_stop_continuation_20261029.py:346: AttributeError
+___ test_cpu_evidence_rejects_wrong_observation_or_pins[not_in_repository] ____
+
+case = namespace(request={'version': 'OOF_ECONOMIC_AUDIT_REQUEST_V1', 'scope': 'FULL_H1', 'monthly_root': 'C:\\Users\\Álvaro ...'}, 'output_count': 18, 'output_inventory_sha256': '870190e7794f1e991ac93b8113ce5a9484920963e6d2a7d3f575168f030f5282'})
+fault = 'not_in_repository'
+
+    @pytest.mark.parametrize("fault",["mask","threads","code_pin","test_pin","artifact_bytes","not_in_repository"])
+    def test_cpu_evidence_rejects_wrong_observation_or_pins(case,fault):
+        s=case.s;review=s.read(case.review["path"])
+        ref=review["cpu0_inheritance_test"]["evidence"]
+        value=s.read(ref["path"])
+        if fault=="mask": value["child_observation"]["mask"]=2
+        if fault=="threads": value["child_observation"]["threads"]=["2","1","1"]
+        if fault=="code_pin": value["code_sha256"]="f"*64
+        if fault=="test_pin": value["tests_sha256"]="f"*64
+        if fault=="not_in_repository":
+            ref=write(case.base/"metadata/cpu_fake.json",value)
+            review["cpu0_inheritance_test"]["evidence"]=ref
+        elif fault=="artifact_bytes": Path(ref["path"]).write_bytes(b"changed")
+        else: rewrite(ref,value)
+        if fault=="not_in_repository":
+            case.s.REPO=case.code
+        with pytest.raises(ValueError):
+>           s.validate_cpu_evidence(review,s.NAME,s.NEW_FILES[1],prepared_upstream(case))
+            ^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'launch_oof_economic_audit_user_stop_continuation_20261029' has no attribute 'validate_cpu_evidence'
+
+test_launch_oof_economic_audit_user_stop_continuation_20261029.py:346: AttributeError
+=========================== short test summary info ===========================
+FAILED test_launch_oof_economic_audit_user_stop_continuation_20261029.py::test_cpu_evidence_rejects_wrong_observation_or_pins[mask]
+FAILED test_launch_oof_economic_audit_user_stop_continuation_20261029.py::test_cpu_evidence_rejects_wrong_observation_or_pins[threads]
+FAILED test_launch_oof_economic_audit_user_stop_continuation_20261029.py::test_cpu_evidence_rejects_wrong_observation_or_pins[code_pin]
+FAILED test_launch_oof_economic_audit_user_stop_continuation_20261029.py::test_cpu_evidence_rejects_wrong_observation_or_pins[test_pin]
+FAILED test_launch_oof_economic_audit_user_stop_continuation_20261029.py::test_cpu_evidence_rejects_wrong_observation_or_pins[artifact_bytes]
+FAILED test_launch_oof_economic_audit_user_stop_continuation_20261029.py::test_cpu_evidence_rejects_wrong_observation_or_pins[not_in_repository]
+6 failed, 47 deselected in 1.73s

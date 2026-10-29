@@ -1,0 +1,13 @@
+{
+  "status": "PASS_ROOT_AUDIT_IMPLEMENTATION_REVIEW_HASH_CHECK",
+  "utc": "2026-10-29T16:31:45.915594+00:00",
+  "review_sha256": "0c4edfd7c74b74f1573f8ce7133c79d7339cf4da06c243edc36699164622403b",
+  "implementation_pins": 74,
+  "copy_pairs": 36,
+  "copy_bytes": 677967,
+  "cpu_evidence": {
+    "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_economic_audit_user_stop_implementation\\cpu_inheritance_01.json",
+    "sha256": "6133e8cefbddc2c87338ceb0d825bf096cfe36e0c51e640c894fe2ef57cfd8f5"
+  },
+  "real_admission_executed": false
+}

@@ -1,0 +1,195 @@
+.......FF                                                                [100%]
+================================== FAILURES ===================================
+__________ test_launch_single_child_or_fail_closed[foreign_failure] ___________
+
+artificial = namespace(old=<module 'launch_oof_pipeline_v2r1_20261024' from 'C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\G...tation_review': {'path': 'review.json', 'sha256': 'cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000267D35A68A0>
+fault = 'foreign_failure'
+
+    @pytest.mark.parametrize("fault",[None,"gate","exit7","preflight_drift","affinity","publication","post_drift","foreign_failure","occupied_lock"])
+    def test_launch_single_child_or_fail_closed(artificial,monkeypatch,fault):
+        a,s = artificial,module()
+        receipt,old,ops,helper = launch_fixture(a,monkeypatch)
+        logs=Path(receipt["logs_root"])
+        import psutil
+        before=psutil.Process().cpu_affinity()
+        driver=logs.parent/"artificial_driver.py"
+        # The injected subprocess substitutes artificial producers, never the command recorded for real use.
+        driver.write_text("\n".join([
+            "import sys,json,time,psutil",
+            "assert psutil.Process().cpu_affinity()==[0]",
+            "sys.path.insert(0,"+repr(str(Path(__file__).parent))+")",
+            "from pathlib import Path",
+            "from types import SimpleNamespace",
+            "import test_launch_oof_pipeline_user_stop_continuation_20261029 as fixture",
+            "import run_oof_calibrated_pipeline_v2r1 as frozen",
+            "import launch_oof_pipeline_user_stop_continuation_20261029 as supervisor",
+            "request=Path("+repr(a.request_pin["path"])+")",
+            "a=SimpleNamespace(old=supervisor.operational_modules()[0],scientific=fixture.module().read(request),request_pin=fixture.pin(request),source_map="+repr(a.source_map)+")",
+            "frozen.GLOBAL_LOCK=Path(a.scientific['coordination_lock'])",
+            "frozen.Request.source=lambda self:SimpleNamespace(recheck=lambda:None)",
+            "events=[]",
+            "def correction(source,month,root):",
+            "    events.append([month,'correction']);fixture.correction(a,month)",
+            "def replay(source,correction_root,month,root,*,correction_completion_sha256):",
+            "    events.append([month,'replay']);fixture.replay(a,month)",
+            "frozen.adapter.prepare_correction=correction",
+            "frozen.evaluator.evaluate_month=replay",
+            "frozen.pipeline(request,a.request_pin['sha256'],resume=True)",
+            "assert events==[['202605','correction'],['202605','replay'],['202606','correction'],['202606','replay']]",
+        ]),encoding="utf-8")
+        original_popen=s.subprocess.Popen
+        children=[]
+        def spawn(argv,**kwargs):
+            assert argv==receipt["command"] and psutil.Process().cpu_affinity()==[0]
+            value=original_popen([sys.executable,str(driver)] if fault!="exit7" else [sys.executable,"-c","import time;time.sleep(.2);raise SystemExit(7)"],**kwargs)
+            children.append(value)
+            return value
+        monkeypatch.setattr(s.subprocess,"Popen",spawn)
+        if fault=="gate": monkeypatch.setattr(ops,"observation",lambda:dict(available_ram_bytes=3_000_000_000,free_commit_bytes=1_999_999_999))
+        elif fault=="preflight_drift": Path(next(iter(receipt["baseline"]["outputs"]))).write_bytes(b"drift")
+        elif fault=="affinity": monkeypatch.setattr(s,"establish_cpu0",lambda:(_ for _ in ()).throw(OSError("affinity unavailable")))
+        elif fault=="publication":
+            original_publish=helper.publish
+            def publish(root,name,value):
+                if name=="process.json": raise OSError("process publication failure")
+                return original_publish(root,name,value)
+            monkeypatch.setattr(helper,"publish",publish)
+        elif fault in ("post_drift","foreign_failure"):
+            original_monitor=s.monitor
+            def monitored(*args):
+                result=original_monitor(*args)
+                target=Path(next(iter(receipt["baseline"]["locks"]))) if fault=="post_drift" else logs/"failure.json"
+                target.write_bytes(b"foreign mutation")
+                return result
+            monkeypatch.setattr(s,"monitor",monitored)
+        try:
+            if fault=="occupied_lock":
+                with helper.overlay.os_lock(s.OPERATIONAL_LOCK,create=True):
+                    with pytest.raises((ValueError,OSError)): s.launch(receipt)
+            elif fault is None:
+                assert s.launch(receipt)==0
+                complete=s.read(logs/"completion.json")
+                assert complete["auditor_executed"] is False and complete["pipeline_closure"]["baseline_preserved"] is True
+                assert len(complete["pipeline_closure"]["new_phases"])==4
+            else:
+>               with pytest.raises((ValueError,OSError)): s.launch(receipt)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               Failed: DID NOT RAISE any of (<class 'ValueError'>, <class 'OSError'>)
+
+research_papers\JEPA\level_oracle_20261018\test_launch_oof_pipeline_user_stop_continuation_20261029.py:502: Failed
+___________ test_launch_single_child_or_fail_closed[occupied_lock] ____________
+
+artificial = namespace(old=<module 'launch_oof_pipeline_v2r1_20261024' from 'C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\G...tation_review': {'path': 'review.json', 'sha256': 'cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000267CEAEB4D0>
+fault = 'occupied_lock'
+
+    @pytest.mark.parametrize("fault",[None,"gate","exit7","preflight_drift","affinity","publication","post_drift","foreign_failure","occupied_lock"])
+    def test_launch_single_child_or_fail_closed(artificial,monkeypatch,fault):
+        a,s = artificial,module()
+        receipt,old,ops,helper = launch_fixture(a,monkeypatch)
+        logs=Path(receipt["logs_root"])
+        import psutil
+        before=psutil.Process().cpu_affinity()
+        driver=logs.parent/"artificial_driver.py"
+        # The injected subprocess substitutes artificial producers, never the command recorded for real use.
+        driver.write_text("\n".join([
+            "import sys,json,time,psutil",
+            "assert psutil.Process().cpu_affinity()==[0]",
+            "sys.path.insert(0,"+repr(str(Path(__file__).parent))+")",
+            "from pathlib import Path",
+            "from types import SimpleNamespace",
+            "import test_launch_oof_pipeline_user_stop_continuation_20261029 as fixture",
+            "import run_oof_calibrated_pipeline_v2r1 as frozen",
+            "import launch_oof_pipeline_user_stop_continuation_20261029 as supervisor",
+            "request=Path("+repr(a.request_pin["path"])+")",
+            "a=SimpleNamespace(old=supervisor.operational_modules()[0],scientific=fixture.module().read(request),request_pin=fixture.pin(request),source_map="+repr(a.source_map)+")",
+            "frozen.GLOBAL_LOCK=Path(a.scientific['coordination_lock'])",
+            "frozen.Request.source=lambda self:SimpleNamespace(recheck=lambda:None)",
+            "events=[]",
+            "def correction(source,month,root):",
+            "    events.append([month,'correction']);fixture.correction(a,month)",
+            "def replay(source,correction_root,month,root,*,correction_completion_sha256):",
+            "    events.append([month,'replay']);fixture.replay(a,month)",
+            "frozen.adapter.prepare_correction=correction",
+            "frozen.evaluator.evaluate_month=replay",
+            "frozen.pipeline(request,a.request_pin['sha256'],resume=True)",
+            "assert events==[['202605','correction'],['202605','replay'],['202606','correction'],['202606','replay']]",
+        ]),encoding="utf-8")
+        original_popen=s.subprocess.Popen
+        children=[]
+        def spawn(argv,**kwargs):
+            assert argv==receipt["command"] and psutil.Process().cpu_affinity()==[0]
+            value=original_popen([sys.executable,str(driver)] if fault!="exit7" else [sys.executable,"-c","import time;time.sleep(.2);raise SystemExit(7)"],**kwargs)
+            children.append(value)
+            return value
+        monkeypatch.setattr(s.subprocess,"Popen",spawn)
+        if fault=="gate": monkeypatch.setattr(ops,"observation",lambda:dict(available_ram_bytes=3_000_000_000,free_commit_bytes=1_999_999_999))
+        elif fault=="preflight_drift": Path(next(iter(receipt["baseline"]["outputs"]))).write_bytes(b"drift")
+        elif fault=="affinity": monkeypatch.setattr(s,"establish_cpu0",lambda:(_ for _ in ()).throw(OSError("affinity unavailable")))
+        elif fault=="publication":
+            original_publish=helper.publish
+            def publish(root,name,value):
+                if name=="process.json": raise OSError("process publication failure")
+                return original_publish(root,name,value)
+            monkeypatch.setattr(helper,"publish",publish)
+        elif fault in ("post_drift","foreign_failure"):
+            original_monitor=s.monitor
+            def monitored(*args):
+                result=original_monitor(*args)
+                target=Path(next(iter(receipt["baseline"]["locks"]))) if fault=="post_drift" else logs/"failure.json"
+                target.write_bytes(b"foreign mutation")
+                return result
+            monkeypatch.setattr(s,"monitor",monitored)
+        try:
+            if fault=="occupied_lock":
+                with helper.overlay.os_lock(s.OPERATIONAL_LOCK,create=True):
+>                   with pytest.raises((ValueError,OSError)): s.launch(receipt)
+                                                              ^^^^^^^^^^^^^^^^^
+
+research_papers\JEPA\level_oracle_20261018\test_launch_oof_pipeline_user_stop_continuation_20261029.py:495: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+research_papers\JEPA\level_oracle_20261018\launch_oof_pipeline_user_stop_continuation_20261029.py:622: in launch
+    with helper.overlay.os_lock(OPERATIONAL_LOCK,create=True):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python314\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-6588/test_launch_single_child_or_fa8/launch.lock')
+
+    @contextmanager
+    def os_lock(path, *, create):
+        """The scientific lock is opened without changing any of its bytes."""
+        path = Path(path)
+        if create:
+            path.parent.mkdir(parents=True, exist_ok=True)
+        else:
+            require(path.is_file() and path.stat().st_size > 0, "Existing nonempty scientific lock required")
+        try:
+            before = None if create else shared.sha(path)
+        except OSError:
+            raise RuntimeError("Another producer or test launcher holds the lock") from None
+        with path.open("a+b" if create else "r+b") as handle:
+            if create and path.stat().st_size == 0:
+                handle.write(b"0")
+                handle.flush()
+                os.fsync(handle.fileno())
+            handle.seek(0)
+            try:
+                if os.name == "nt":
+                    import msvcrt
+                    msvcrt.locking(handle.fileno(), msvcrt.LK_NBLCK, 1)
+                else:
+                    import fcntl
+                    fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except OSError:
+>               raise RuntimeError("Another producer or test launcher holds the lock") from None
+E               RuntimeError: Another producer or test launcher holds the lock
+
+research_papers\JEPA\level_oracle_20261018\run_monthly_test_resource_overlay.py:113: RuntimeError
+=========================== short test summary info ===========================
+FAILED research_papers/JEPA/level_oracle_20261018/test_launch_oof_pipeline_user_stop_continuation_20261029.py::test_launch_single_child_or_fail_closed[foreign_failure]
+FAILED research_papers/JEPA/level_oracle_20261018/test_launch_oof_pipeline_user_stop_continuation_20261029.py::test_launch_single_child_or_fail_closed[occupied_lock]
+2 failed, 7 passed, 45 deselected in 52.09s
