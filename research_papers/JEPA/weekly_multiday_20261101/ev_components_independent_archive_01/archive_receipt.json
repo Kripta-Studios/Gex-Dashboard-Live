@@ -1,0 +1,137 @@
+{
+  "schema": "root_compact_archive_v1",
+  "files": [
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\ev_components_independent_review_01\\aggregates_recomputed.jsonl",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\ev_components_independent_archive_01\\ev_components_independent_review_01\\aggregates_recomputed.jsonl",
+      "bytes": 869886,
+      "sha256": "d8a526fc2b73f5a8ff995d1e02a3e8abd01cf3c00e878d5ceda793bb4141b2f0"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\ev_components_independent_review_01\\attempt01\\exit.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\ev_components_independent_archive_01\\ev_components_independent_review_01\\attempt01\\exit.json",
+      "bytes": 311,
+      "sha256": "f146ba668c69b10da126f2578be9f8ce1bc75c2364b954c88609658a34ed25cd"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\ev_components_independent_review_01\\attempt01\\reconstruct_independent.py",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\ev_components_independent_archive_01\\ev_components_independent_review_01\\attempt01\\reconstruct_independent.py",
+      "bytes": 24239,
+      "sha256": "54e9816581cae0bb17676acac0348b49f2d7bc31e23738e764ebff103eb75d59"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\ev_components_independent_review_01\\attempt02\\exit.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\ev_components_independent_archive_01\\ev_components_independent_review_01\\attempt02\\exit.json",
+      "bytes": 460,
+      "sha256": "737d1291938eac396de89526b373f27f5821f531ed7879500c6148ca31d24934"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\ev_components_independent_review_01\\attempt02\\reconstruct_independent.py",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\ev_components_independent_archive_01\\ev_components_independent_review_01\\attempt02\\reconstruct_independent.py",
+      "bytes": 24253,
+      "sha256": "74b712b82127ac4f22dae84bc3f8384d7616831ece9e4e91542b189e6adca5ee"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\ev_components_independent_review_01\\attempt03\\exit.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\ev_components_independent_archive_01\\ev_components_independent_review_01\\attempt03\\exit.json",
+      "bytes": 365,
+      "sha256": "162d2e14be089e59c3aee5ea30a29085355047375e9a0afb81b1d10458aa8f0e"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\ev_components_independent_review_01\\attempt03\\reconstruct_independent.py",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\ev_components_independent_archive_01\\ev_components_independent_review_01\\attempt03\\reconstruct_independent.py",
+      "bytes": 24265,
+      "sha256": "5489fa1ec16f7432b799001cbf619afa5a278e1cfd209c0fdddb6e91804b9d1d"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\ev_components_independent_review_01\\comparison.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\ev_components_independent_archive_01\\ev_components_independent_review_01\\comparison.json",
+      "bytes": 1354,
+      "sha256": "42d740ba925f9831510f89ccb3441e70715077f455f7c00d1e23a823efdf349e"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\ev_components_independent_review_01\\components_recomputed.jsonl",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\ev_components_independent_archive_01\\ev_components_independent_review_01\\components_recomputed.jsonl",
+      "bytes": 4068640,
+      "sha256": "7400676bed2c662096ebb306c1cda43a300eab40934cefed99c8618a4c1de5bb"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\ev_components_independent_review_01\\findings.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\ev_components_independent_archive_01\\ev_components_independent_review_01\\findings.json",
+      "bytes": 14090,
+      "sha256": "775b36d88cdf8ac686844b3c9fa8c4677809f64eb37fa39415f1cc30e45c1d96"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\ev_components_independent_review_01\\process_exit.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\ev_components_independent_archive_01\\ev_components_independent_review_01\\process_exit.json",
+      "bytes": 154,
+      "sha256": "778cd9b72642bd1dc388641073187796638be34482be6e3586dc0a341a34ae1e"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\ev_components_independent_review_01\\receipt.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\ev_components_independent_archive_01\\ev_components_independent_review_01\\receipt.json",
+      "bytes": 17862,
+      "sha256": "27ffd7c897968d9bd7f71ef85c85f9c7dafb8e939d6434c101075845ca70b908"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\ev_components_independent_review_01\\reconstruct_independent.py",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\ev_components_independent_archive_01\\ev_components_independent_review_01\\reconstruct_independent.py",
+      "bytes": 24386,
+      "sha256": "4886026d39c2e0588dadf9701c046eb1a33dc7b058f2d776fd425560190cb0ab"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\ev_components_independent_review_02\\aggregates_recomputed.jsonl",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\ev_components_independent_archive_01\\ev_components_independent_review_02\\aggregates_recomputed.jsonl",
+      "bytes": 869886,
+      "sha256": "d8a526fc2b73f5a8ff995d1e02a3e8abd01cf3c00e878d5ceda793bb4141b2f0"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\ev_components_independent_review_02\\comparison.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\ev_components_independent_archive_01\\ev_components_independent_review_02\\comparison.json",
+      "bytes": 1354,
+      "sha256": "42d740ba925f9831510f89ccb3441e70715077f455f7c00d1e23a823efdf349e"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\ev_components_independent_review_02\\components_recomputed.jsonl",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\ev_components_independent_archive_01\\ev_components_independent_review_02\\components_recomputed.jsonl",
+      "bytes": 4068640,
+      "sha256": "7400676bed2c662096ebb306c1cda43a300eab40934cefed99c8618a4c1de5bb"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\ev_components_independent_review_02\\findings.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\ev_components_independent_archive_01\\ev_components_independent_review_02\\findings.json",
+      "bytes": 14090,
+      "sha256": "775b36d88cdf8ac686844b3c9fa8c4677809f64eb37fa39415f1cc30e45c1d96"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\ev_components_independent_review_02\\process_exit.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\ev_components_independent_archive_01\\ev_components_independent_review_02\\process_exit.json",
+      "bytes": 582,
+      "sha256": "6e3e5536a7b712e166f3f18e89cb8dffe50a333b4f268b7ffceb31713c3bde4f"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\ev_components_independent_review_02\\receipt.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\ev_components_independent_archive_01\\ev_components_independent_review_02\\receipt.json",
+      "bytes": 19276,
+      "sha256": "6fd257205e8e2d68ad4621eac399ac7baf646296ba9d65bfce326f595a467d73"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\ev_components_independent_review_02\\reconstruct_independent.py",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\ev_components_independent_archive_01\\ev_components_independent_review_02\\reconstruct_independent.py",
+      "bytes": 24539,
+      "sha256": "1b0ebecf028b95ea0ae3b528513efab63e46ab56b637d121973339b9aaf51ddf"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\ev_components_independent_review_02\\stderr.log",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\ev_components_independent_archive_01\\ev_components_independent_review_02\\stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\ev_components_independent_review_02\\stdout.log",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\ev_components_independent_archive_01\\ev_components_independent_review_02\\stdout.log",
+      "bytes": 249,
+      "sha256": "ff6a6eecc1aee9ad5041d680684ac31edfe55d49b67494689fc79733f0144c4a"
+    }
+  ]
+}

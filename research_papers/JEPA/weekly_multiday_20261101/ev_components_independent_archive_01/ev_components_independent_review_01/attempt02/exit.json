@@ -1,0 +1,9 @@
+{
+  "exit_code": 1,
+  "failure_type": "REVIEW_HARNESS_EMPTY_CELL_REPRESENTATION_MISMATCH",
+  "message": "Producer comparison failed after full independent reconstruction; producer encodes empty cell_n_min/cell_n_mean as five nulls, checker encoded the whole vector as null.",
+  "producer_relaunched": false,
+  "scientific_outputs_written": false,
+  "script_bytes": 24253,
+  "script_sha256": "74b712b82127ac4f22dae84bc3f8384d7616831ece9e4e91542b189e6adca5ee"
+}

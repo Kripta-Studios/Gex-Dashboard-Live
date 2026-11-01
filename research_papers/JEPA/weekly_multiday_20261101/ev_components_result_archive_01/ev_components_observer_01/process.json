@@ -1,0 +1,19 @@
+{
+  "pid": 11068,
+  "creation_time": 1793560519.2460976,
+  "utc": "2026-11-01T19:15:19.257116+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\diagnose_weekly_ev_components.py",
+    "--execute-reviewed-diagnostic",
+    "--output",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\ev_components_diagnostic_01",
+    "--contract-sha256",
+    "4ff230ecb566225184077eef2632e00976588e8357e419b523667528894cb4a5",
+    "--implementation-sha256",
+    "f83b42fc8b6dd8afb51ede64a5fbdd054ccdde86d0d605a638cd95eff1a49d23"
+  ]
+}

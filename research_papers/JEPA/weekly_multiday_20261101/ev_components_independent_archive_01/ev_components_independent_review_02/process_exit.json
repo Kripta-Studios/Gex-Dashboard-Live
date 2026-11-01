@@ -1,0 +1,13 @@
+{
+  "creation_utc": "2026-11-01T19:21:11.9447038Z",
+  "ended_utc": "2026-11-01T19:21:13.6708577Z",
+  "exit_code": 0,
+  "pid": 46400,
+  "precheck": "PASS_19_INPUT_PINS_MANIFEST_AND_4_OUTPUTS",
+  "producer_relaunched": false,
+  "retained_by_process_handle": true,
+  "source_manifest_sha256": "420d9b4215c5a69140cca812ceb95f04b01080c3d8d0151e2af74d687aa2fab8",
+  "started_utc": "2026-11-01T19:21:11.9128726Z",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_sha256": "ff6a6eecc1aee9ad5041d680684ac31edfe55d49b67494689fc79733f0144c4a"
+}

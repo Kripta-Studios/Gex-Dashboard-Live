@@ -1,0 +1,9 @@
+{
+  "exit_code": 1,
+  "failure_type": "REVIEW_HARNESS_MODEL_DISPATCH_KEYERROR",
+  "message": "KeyError: FROZEN_CONTEXT182_H1",
+  "producer_relaunched": false,
+  "scientific_outputs_written": false,
+  "script_bytes": 24239,
+  "script_sha256": "54e9816581cae0bb17676acac0348b49f2d7bc31e23738e764ebff103eb75d59"
+}

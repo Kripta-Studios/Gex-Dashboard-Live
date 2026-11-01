@@ -1,5 +1,22 @@
 # AI Agent Hand-off: Current Production Reality
 
+Checkpoint 1-nov19:21UTC: diagnóstico EV CERRADO yreconstruido independientemente.
+Productor11068 exit0/19:15:21UTC,manifest420d9b42,exitb605ff62;checker02
+46400 exit0/19:21:13UTC,receipt6fd25720/exit6e3e5536,CPU0/gateoficial/8vars1.
+3060filas/810grupos,19inputsproductor/20checker exactos;maxdiff0,residual3,64e-12.
+No fit/replay/inferencia nueva,ledgers previos inmutables. SemanalRAW Q3:
+24fills,EVporcantidades+4818,22 frente a−33458,40USDnetos, sincotasausentes.
+Errorporcontrato+890,56=probabilidades+996,08 ypayoff−105,52;descomposición
+retrospectiva,no causalidad identificada. SesgoALL+3,50 ocultaSELECTED+148,59.
+Cinco políticas muestran deterioroQ3;ningún candidato satisface8/8meses.
+Pruebasautor01 inválidasporquoting preservadas;02=22PASS/Ruff0. Checker01
+fallos1–3 yPASSnumérico4 no conformeCPU0 preservados;02conforme, sin relanzar
+productor. Archivosresultado10copias4877243B/c40618e1 e independiente22copias
+10068881B/eeec9bf2. Siguientehipótesis: calibraciónEV tras selección con OOF
+causal y abstención, requierecontratoprevio;sin nuevo modelo seleccionado.
+SEEN_DEVELOPMENT,technical_ready/promotionfalse,goal generalactivo.
+[Diagnóstico completo](research_papers/JEPA/weekly_multiday_20261101/EV_COMPONENT_DIAGNOSTIC_RESULT_20261101.md).
+
 Checkpoint 1-nov18:54UTC: adaptación mensual/semanal CERRADA Y AUDITADA.
 Productor42fits inmutable; auditor04 PID40872 exit0retenido18:54:51.566895UTC,
 audit9a487fba/manifest770dbddb/exit5d59d1a3 desde0c4a3bed remotoverificado.

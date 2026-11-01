@@ -1,0 +1,15 @@
+{
+  "schema": "descriptive_report_from_audited_groups_v1",
+  "inputs": {
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\ev_components_diagnostic_01\\manifest.json": "420d9b4215c5a69140cca812ceb95f04b01080c3d8d0151e2af74d687aa2fab8",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\ev_components_diagnostic_01\\aggregates.jsonl": "d8a526fc2b73f5a8ff995d1e02a3e8abd01cf3c00e878d5ceda793bb4141b2f0",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\ev_components_independent_review_02\\receipt.json": "6fd257205e8e2d68ad4621eac399ac7baf646296ba9d65bfce326f595a467d73",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\ev_components_independent_review_02\\process_exit.json": "6e3e5536a7b712e166f3f18e89cb8dffe50a333b4f268b7ffceb31713c3bde4f"
+  },
+  "output": {
+    "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\EV_COMPONENT_DIAGNOSTIC_RESULT_20261101.md",
+    "bytes": 15468,
+    "sha256": "980611e26c3badf945d95d9669b53b5f9e99ac11d462629e88a3259969d0832c"
+  },
+  "selection": null
+}

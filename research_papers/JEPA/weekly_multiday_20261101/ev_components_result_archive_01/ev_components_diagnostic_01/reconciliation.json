@@ -1,0 +1,101 @@
+{
+  "FROZEN_CONTEXT182": {
+    "adverse_exit_net_usd": -20204.199999999983,
+    "event_counts": {
+      "ENTRY": 124,
+      "EXIT": 124,
+      "NO_FILL": 29,
+      "NO_OPPORTUNITY": 185,
+      "WAIT": 190
+    },
+    "filled": 124,
+    "reason_counts": {
+      "ENTRY_QUOTE": 14,
+      "ENTRY_RISK_BUDGET": 15,
+      "EV_NOT_POSITIVE": 66,
+      "NO_1_TO_8_DTE_SERIES_ALLOWING_H2": 185,
+      "OPEN_POSITION": 124
+    },
+    "selected": 153
+  },
+  "MONTHLY_GUARDED": {
+    "adverse_exit_net_usd": -37042.79999999999,
+    "event_counts": {
+      "ENTRY": 100,
+      "EXIT": 100,
+      "NO_FILL": 22,
+      "NO_OPPORTUNITY": 194,
+      "WAIT": 212
+    },
+    "filled": 100,
+    "reason_counts": {
+      "ENTRY_QUOTE": 8,
+      "ENTRY_RISK_BUDGET": 14,
+      "EV_NOT_POSITIVE": 113,
+      "NO_1_TO_8_DTE_SERIES_ALLOWING_H2": 194,
+      "OPEN_POSITION": 99
+    },
+    "selected": 122
+  },
+  "MONTHLY_RAW": {
+    "adverse_exit_net_usd": -12625.399999999985,
+    "event_counts": {
+      "ENTRY": 89,
+      "EXIT": 89,
+      "NO_FILL": 21,
+      "NO_OPPORTUNITY": 192,
+      "WAIT": 226
+    },
+    "filled": 89,
+    "reason_counts": {
+      "ENTRY_QUOTE": 10,
+      "ENTRY_RISK_BUDGET": 11,
+      "EV_NOT_POSITIVE": 137,
+      "NO_1_TO_8_DTE_SERIES_ALLOWING_H2": 192,
+      "OPEN_POSITION": 89
+    },
+    "selected": 110
+  },
+  "WEEKLY_GUARDED": {
+    "adverse_exit_net_usd": -30601.199999999986,
+    "event_counts": {
+      "ENTRY": 100,
+      "EXIT": 100,
+      "NO_FILL": 23,
+      "NO_OPPORTUNITY": 193,
+      "WAIT": 212
+    },
+    "filled": 100,
+    "reason_counts": {
+      "ENTRY_QUOTE": 7,
+      "ENTRY_RISK_BUDGET": 16,
+      "EV_NOT_POSITIVE": 112,
+      "NO_1_TO_8_DTE_SERIES_ALLOWING_H2": 193,
+      "OPEN_POSITION": 100
+    },
+    "selected": 123
+  },
+  "WEEKLY_RAW": {
+    "adverse_exit_net_usd": 2693.800000000014,
+    "event_counts": {
+      "ENTRY": 83,
+      "EXIT": 83,
+      "NO_FILL": 22,
+      "NO_OPPORTUNITY": 196,
+      "WAIT": 227
+    },
+    "filled": 83,
+    "reason_counts": {
+      "ENTRY_QUOTE": 10,
+      "ENTRY_RISK_BUDGET": 12,
+      "EV_NOT_POSITIVE": 144,
+      "NO_1_TO_8_DTE_SERIES_ALLOWING_H2": 196,
+      "OPEN_POSITION": 83
+    },
+    "selected": 105
+  },
+  "partitions": {
+    "exhaustive_disjoint_by_construction": true,
+    "families_checked": 150
+  }
+}

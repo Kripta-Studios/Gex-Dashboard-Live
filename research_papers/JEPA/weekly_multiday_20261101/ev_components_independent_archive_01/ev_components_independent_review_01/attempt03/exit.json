@@ -1,0 +1,9 @@
+{
+  "exit_code": 1,
+  "failure_type": "REVIEW_HARNESS_NULL_VECTOR_COMPARATOR_TYPEERROR",
+  "message": "TypeError while numerically comparing five-null empty-cell support vectors.",
+  "producer_relaunched": false,
+  "scientific_outputs_written": false,
+  "script_bytes": 24265,
+  "script_sha256": "5489fa1ec16f7432b799001cbf619afa5a278e1cfd209c0fdddb6e91804b9d1d"
+}
