@@ -1,0 +1,19 @@
+{
+  "schema": "root_compact_archive_v1",
+  "copies": 2,
+  "total_bytes": 2541,
+  "files": [
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_audit_observer_01\\admission.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/q3_context_audit_start_evidence_01/admission.json",
+      "bytes": 1396,
+      "sha256": "dd0f02dc5ac73e46cbeb604c0af59bd13bb7c735523907635a901d32b717fe9a"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_audit_observer_01\\process.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/q3_context_audit_start_evidence_01/process.json",
+      "bytes": 1145,
+      "sha256": "39aa68d1d8fea9d7ae14ffab9fbe8f215c4a67ce439330c5573f792693a11716"
+    }
+  ]
+}
