@@ -1,5 +1,16 @@
 # Continuación local: estado del 23 de octubre de 2026
 
+REANUDADA por orden expresa del usuario el 1 de noviembre de 2026.
+Autoridad actual: [RESUMPTION_20261101.md](RESUMPTION_20261101.md).
+Goal activo restablecido; cierre del29 conservado como historia. Root verificó
+127 pins compactos; revisión independiente confirma prefijo8 y destinos nuevos
+ausentes. Se autoriza único CLI de continuación con admisión contemporánea,
+CPU0/threads1/gate2GB. Aún sin nueva ejecución al emitir este checkpoint.
+Sólo mayo/junio pendientes; FULL_H1 y reporter después del cierre real.
+Producción/API/bróker/VPS intactos, selección null, promoción false.
+
+## Pausa histórica del 29 de octubre de 2026
+
 PAUSADA por nueva orden expresa del usuario el 29 de octubre de 2026.
 Recibo de pausa: 17:11:20 UTC; cero procesos Python de esta investigación
 activos. Goal persistente pausado. No reanudar automáticamente ni ejecutar
