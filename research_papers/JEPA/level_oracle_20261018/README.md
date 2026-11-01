@@ -13,27 +13,22 @@ Selecciónnull, technical_ready/promotion_approved false; 2025/2026 SEEN_DEVELOP
 23copias6465008B en economic_final_01, recibo756811eb; fuentes/producción intactas.
 [Resultado completo](OOF_FULL_H1_RESULT_20261101.md).
 
-AMPLIACIÓN expresa1nov: siguiente familia weekly con posiciones de varios días,
-probabilidades/EV y días sin operar. [Dirección](WEEKLY_MULTIDAY_DIRECTION_20261101.md).
-Piloto de continuidad publicado22224ee6 cerrado exit0 a13:40:55UTC413,97s;
-PID43236/sesión29475 terminados, no relanzar. Inventario6bbcb667/diagnósticob9ddb5f4/
-manifest7d41eed7:69admitidos/0ausentes,16085740filas;17clocksnativos/52proxy.
-12gruposH2 a10:35 conservan todas las identidades yquotesválidas enambosextremos.
-Revisión independienteCLEAR,14copias1016192B recibo4c46fe81. SinPnL/fitweekly.
-Comparación H2: contrato245a6df1, selección10:30/ask10:35→bidH210:35 pre-expiry,
-modeloP+EV/WAIT y controlesCALL/PUT/ABSTAIN. Primer builder falló por clocks :30;
-fallo36c95171 preservado, ningún dataset/modelo real producido en ese intento.
-V2 ec19e2c9 filtra instantes exactos sin redondear; amendment9210c6e5 revisado.
-Inventario099dcf06 cerrado exit0: mismos2625planes/2619fuentes que el original.
-Builder V2 único PID40784/sesión84269 inició desde c58834d7; NO RELANZAR.
-Salida h2_dataset_v2_01; observer h2_dataset_v2_observer_01/builder conserva handle.
-EvaluadorV2 8a9e7585/tests e479c2f6:23sintéticosPASS/Ruff/CLEAR;13componentes
-AST económicos idénticos. Espera dataset cerrado y binding real antes de fit.
-Una comprobación previa bloqueó archivos JSON no publicados por gitignore;
-se archivó el bloqueo sin hijo y se publicaron bytes exactos antes del lanzamiento.
-Sólo D:/ThetaData, artefactos D:/GexResearchArtifacts/weekly_multiday_20261101.
-El oracle weekly histórico permanece cerrado; nueva investigación separada.
-API/bróker/VPS/producción y cambios ajenos intactos.
+AMPLIACIÓN expresa1nov: weekly multi-day,probabilidades/EV y días sin operar.
+H2 cerrado: builderV2ec19 exit0, evaluador8a9e exit0, auditor d876 exit0
+14:31:56UTC/PID26012. Auditd9f1602c PASS:3054scores/11calibraciones/24libros;
+transformTRAIN e inferencia de pesos guardados, sin refitcoef ni replayrawíntegro.
+EVALH12026 EV +11633base/+11486adversoUSD,75fills,PF1,2625,DDrealizado16666,3;
+3/6meses positivos. CALL+3049,8/PUT−25011,2/WAIT0 adverso. QQQ−1557,4 y
+SPY−2561,6;SPXW+15605. Mayortrade+11993,4: sinél−507,4; fuente puntual comprobada.
+Resultado positivo de desarrollo frágil,no rentabilidadrobusta,no rescateSPXW.
+SEEN_DEVELOPMENT,technical_ready/promotionfalse. PruebaH2completa:NO RELANZAR.
+Datasetbfc7370f/evaluación54dc2d6c;artículos ycopiasen weekly_multiday_20261101;
+22copiasfinales1000927Breceipt6619ad3b;PNGfinal678c693cinspeccionado.
+[Resultado y límites](../weekly_multiday_20261101/H2_WEEKLY_RESULT_20261101.md).
+Fallo01clocks:30 preservado;V2 usa10:30/10:35exactos,contrato245a/amendment9210.
+Goal general activo; siguiente etapa requiere robustez fuera de este semestre
+visto, reglas previas y riesgo comparable, no repetir/seleccionar sobreH12026.
+Sólo D:/ThetaData local; sinAPI/bróker/VPS/producción ni cambios ajenos.
 
 Orientación nueva: probabilidades de escenarios y valor esperado neto.
 Usuario permite días sin operar en la siguiente etapa; WAIT sin mínimo diario.

@@ -1,0 +1,38 @@
+{
+  "schema": "weekly_h2_largest_trade_source_check_closure_v1",
+  "closed_utc": "2026-11-01T14:30:14.3033128Z",
+  "status": "PASS",
+  "candidate_id": "SPXW:20260413:20260417:CALL",
+  "source_snapshots": {
+    "decision_20260413_1030": {"bid": 45.9, "ask": 46.2, "spot": 6819.03, "delta": 0.493},
+    "entry_20260413_1035": {"bid": 46.7, "ask": 47.0, "spot": 6821.5, "delta": 0.5012},
+    "exit_20260415_1035": {"bid": 167.0, "ask": 171.6, "spot": 6989.09, "delta": 0.9283}
+  },
+  "identity": {"ticker": "SPXW", "expiration": "20260417", "strike": 6825.0, "right": "CALL", "quantity": 1, "multiplier": 100},
+  "net_adverse": {
+    "formula": "(max(167.0-0.02,0)-47.0-0.02)*100-2.60",
+    "recomputed": 11993.4,
+    "candidate": 11993.4,
+    "ledger": 11993.4
+  },
+  "source_hashes": {
+    "entry": "e16ce0f67f56a734f3eb186429ca8a4b0d181b19c27776c09c972b26942027b4",
+    "exit": "37cb32826993e09a8cf949953d80e5031c2555016ea605c8112c3eee21148fc8"
+  },
+  "artifact_hashes": {
+    "ledger": "0ce6b266891e269faac3cc8ce721e81d17519efd8b5374f5983f96f05c36569c",
+    "candidates": "c98f232a97a8a6f9221b5d3452424d71bec3684a6b037b258c8a5b0f8fb9d5ad",
+    "inventory": "099dcf065a62705cbd88f2c1b90b2e4a9b99ff4d994ad703634101920c934b12",
+    "result": "0fdd28726852556491949ee117460588c1e5cbe3d6137974c7d2234429cf713e",
+    "manifest": "95b66bdc89b1ee118f63f2c224c027a7efe2f0f25bb9bd66d8ce011c5509a4f9"
+  },
+  "checks_all_true": true,
+  "clock_basis_entry_exit": "NATIVE_STORED_TIMESTAMP",
+  "limitations": [
+    "Stored snapshot timestamps do not prove observed live receipt.",
+    "Quantity one and multiplier 100 are contractual assumptions.",
+    "This is not an independent tick-level audit outside the stored exact-minute rows."
+  ],
+  "refit_or_parameter_change": false,
+  "api_used": false
+}

@@ -1,0 +1,22 @@
+{
+  "pid": 26012,
+  "creation_time": 1793543515.4625907,
+  "utc": "2026-11-01T14:31:55.466905+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_h2_ev_v2_independent.py",
+    "--dataset-root",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_audit_inputs_v2_01\\dataset",
+    "--evaluation-root",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_audit_inputs_v2_01\\evaluation",
+    "--dataset-manifest-sha256",
+    "bfc7370f38e32e1209bc41fe72f01563dcdaa17ddf86fe7b625814beedcbe1d8",
+    "--evaluation-manifest-sha256",
+    "54dc2d6ced2bb625a71fdae39b8ab2e417a576482ea6a99047df4ce8b6b1ad96",
+    "--output",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_independent_audit_v2_01"
+  ]
+}

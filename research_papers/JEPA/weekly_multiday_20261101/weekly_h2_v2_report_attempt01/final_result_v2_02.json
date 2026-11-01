@@ -1,0 +1,43 @@
+{
+  "schema": "weekly_h2_v2_descriptive_report_result_v1",
+  "status": "COMPLETE_DESCRIPTIVE_REPORT_NOT_INDEPENDENTLY_AUDITED",
+  "final_attempt": "retry04",
+  "change_scope": [
+    "concentration note uses USD instead of dollar delimiters to avoid MathText",
+    "subtitle is timeless and states seen development, assumed costs, and no promotion"
+  ],
+  "script": {
+    "path": "research_papers/JEPA/weekly_multiday_20261101/report_weekly_h2_v2.py",
+    "sha256": "1f20a834cc1cd9f3f8bdbee5f40a430d12d23c9e39d0c406a93e00e2bea5eeab"
+  },
+  "input_manifest_sha256": {
+    "dataset": "bfc7370f38e32e1209bc41fe72f01563dcdaa17ddf86fe7b625814beedcbe1d8",
+    "evaluation": "54dc2d6ced2bb625a71fdae39b8ab2e417a576482ea6a99047df4ce8b6b1ad96"
+  },
+  "output_root": "D:/GexResearchArtifacts/weekly_multiday_20261101/h2_descriptive_report_v2_02",
+  "outputs": {
+    "manifest.json": "594c6c895e48ada26e74b687cafb3193009a3e16b3df183dbbc6a62ea7fd99bd",
+    "report_table.json": "d7cf47dbab060fe812ec622c102aa14d29604eb58fda44e682d156894f1b1cc2",
+    "weekly_h2_v2_descriptive.png": "678c693cb6039cb17a798dbe36a51ec16395adea40f45a0f50d5b059237a7d87",
+    "weekly_h2_v2_descriptive.svg": "1ac6bc1ae6f7fb0ab4c7c32712b61fabe14594710349ee582b70e816e789b24f"
+  },
+  "checks": {
+    "exit_code": 0,
+    "ruff_exit_code": 0,
+    "cpu_affinity": [0],
+    "threads": 1,
+    "resource_gate_2gb": true,
+    "manifest_output_pins": true,
+    "visual_inspection": "LEGIBLE_NO_MATHTEXT_IN_CONCENTRATION_NOTE",
+    "economic_values_unchanged": true,
+    "report_table_sha256_unchanged_from_v2_01": true
+  },
+  "flags": {
+    "descriptive_only": true,
+    "development_seen": true,
+    "selection_performed": false,
+    "refit_performed": false,
+    "theta_data_accessed": false,
+    "promotion_approved": false
+  }
+}

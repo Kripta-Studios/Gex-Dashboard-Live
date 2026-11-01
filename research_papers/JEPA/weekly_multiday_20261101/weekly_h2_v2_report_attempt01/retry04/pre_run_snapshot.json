@@ -1,0 +1,17 @@
+{
+  "status": "PRE_RUN_SNAPSHOT",
+  "created_at_utc": "2026-11-01T14:31:53.4213180Z",
+  "prior_script_sha256": "ed22b5d25da06b0d1b79efadd6137ef7c03f587d94196ee4b350c5fb0790fd68",
+  "prior_output01": {
+    "manifest": "3ec5fcb131b372ebbe05f35b8bc1b39c7a73ed65ac908164257db593018746e7",
+    "png": "2735900f9847804fefccad985f1664c3c5882c45f965a196134aea27ccd3a4f0",
+    "svg": "74d77e89e00853b73f9f54dfb3c5a3ca2948a67042be33284ec678c519fc5cca",
+    "table": "d7cf47dbab060fe812ec622c102aa14d29604eb58fda44e682d156894f1b1cc2"
+  },
+  "current_script": {
+    "bytes": 17036,
+    "sha256": "1f20a834cc1cd9f3f8bdbee5f40a430d12d23c9e39d0c406a93e00e2bea5eeab"
+  },
+  "dataset_manifest_sha256": "bfc7370f38e32e1209bc41fe72f01563dcdaa17ddf86fe7b625814beedcbe1d8",
+  "evaluation_manifest_sha256": "54dc2d6ced2bb625a71fdae39b8ab2e417a576482ea6a99047df4ce8b6b1ad96"
+}

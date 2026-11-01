@@ -1,0 +1,66 @@
+{
+  "flags": {
+    "descriptive_only": true,
+    "development_seen": true,
+    "independently_audited": false,
+    "promotion_approved": false
+  },
+  "implementation": {
+    "report_weekly_h2_v2.py": "ed22b5d25da06b0d1b79efadd6137ef7c03f587d94196ee4b350c5fb0790fd68"
+  },
+  "inputs": {
+    "dataset_manifest": {
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_01\\manifest.json",
+      "sha256": "bfc7370f38e32e1209bc41fe72f01563dcdaa17ddf86fe7b625814beedcbe1d8"
+    },
+    "dataset_status": "COMPLETE_WEEKLY_H2_DATASET_NOT_EVALUATED",
+    "eval_adverse_ledgers": {
+      "ALWAYS_ABSTAIN": {
+        "bytes": 46803,
+        "sha256": "db93e484f86d90c4eb4d09a202bf370a6f1b99dfb763a88f40a255c3d294a4bc"
+      },
+      "ALWAYS_CALL_H2": {
+        "bytes": 135049,
+        "sha256": "44201af7a82c215ffa7b91e4274c265ea68f1977723cf123c5d052efab6c56b8"
+      },
+      "ALWAYS_PUT_H2": {
+        "bytes": 138101,
+        "sha256": "5a03da21d4497fcb08ea22e73e868ba12bbd8d3740b5610003fd38d8bed9bd87"
+      },
+      "EV_TOP1_H2": {
+        "bytes": 100101,
+        "sha256": "0ce6b266891e269faac3cc8ce721e81d17519efd8b5374f5983f96f05c36569c"
+      }
+    },
+    "evaluation_manifest": {
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_ev_v2_01\\manifest.json",
+      "sha256": "54dc2d6ced2bb625a71fdae39b8ab2e417a576482ea6a99047df4ce8b6b1ad96"
+    },
+    "summary.json": {
+      "bytes": 137893,
+      "sha256": "2aeb17692677cf7bc32a5d71c9c104a379ac522d2942572bdebb00fcde262f2b"
+    }
+  },
+  "outputs": {
+    "report_table.json": {
+      "bytes": 39352,
+      "sha256": "d7cf47dbab060fe812ec622c102aa14d29604eb58fda44e682d156894f1b1cc2"
+    },
+    "weekly_h2_v2_descriptive.png": {
+      "bytes": 268631,
+      "sha256": "2735900f9847804fefccad985f1664c3c5882c45f965a196134aea27ccd3a4f0"
+    },
+    "weekly_h2_v2_descriptive.svg": {
+      "bytes": 183742,
+      "sha256": "74d77e89e00853b73f9f54dfb3c5a3ca2948a67042be33284ec678c519fc5cca"
+    }
+  },
+  "reconciliations": {
+    "cash_basis": "realized_only_starting_100000",
+    "ledger_vs_summary": true,
+    "monthly_sum_vs_net": true,
+    "ticker_sum_vs_net": true
+  },
+  "schema": "weekly_h2_v2_descriptive_report_manifest_v1",
+  "status": "COMPLETE_DESCRIPTIVE_REPORT_NOT_INDEPENDENTLY_AUDITED"
+}

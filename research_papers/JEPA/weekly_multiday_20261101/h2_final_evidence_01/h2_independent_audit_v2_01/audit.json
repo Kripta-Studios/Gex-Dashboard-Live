@@ -1,0 +1,17 @@
+{
+  "calibration_scores_reconstructed": 11,
+  "candidate_rows": 3054,
+  "dataset_manifest_sha256": "bfc7370f38e32e1209bc41fe72f01563dcdaa17ddf86fe7b625814beedcbe1d8",
+  "development_seen": true,
+  "dtheta_accessed": false,
+  "economics_reconciled": true,
+  "evaluation_manifest_sha256": "54dc2d6ced2bb625a71fdae39b8ab2e417a576482ea6a99047df4ce8b6b1ad96",
+  "fit_performed": false,
+  "ledgers_reconstructed": 24,
+  "promotion_approved": false,
+  "scores_reconstructed": 3054,
+  "selected_alpha": 0.3,
+  "source_scope": "compact dataset/evaluation roots only; no source parquet replay",
+  "status": "PASS_INDEPENDENT_WEEKLY_H2_V2_ECONOMIC_AUDIT",
+  "technical_ready": false
+}

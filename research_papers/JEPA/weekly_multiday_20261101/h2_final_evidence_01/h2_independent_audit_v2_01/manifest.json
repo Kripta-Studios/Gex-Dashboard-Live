@@ -1,0 +1,21 @@
+{
+  "files": {
+    "audit.json": {
+      "bytes": 691,
+      "sha256": "d9f1602c35040d11010bba2f0998d6c15130d511234f1448eabb985b910ce806"
+    }
+  },
+  "flags": {
+    "dtheta_accessed": false,
+    "fit_performed": false,
+    "promotion_approved": false
+  },
+  "implementation": {
+    "audit_weekly_h2_ev_v2_independent.py": "d87678f661f8fbb369b2bd595b0cbefeb69b0782a63393c3aa64a84acc631ed0"
+  },
+  "inputs": {
+    "dataset_manifest_sha256": "bfc7370f38e32e1209bc41fe72f01563dcdaa17ddf86fe7b625814beedcbe1d8",
+    "evaluation_manifest_sha256": "54dc2d6ced2bb625a71fdae39b8ab2e417a576482ea6a99047df4ce8b6b1ad96"
+  },
+  "schema": "weekly_h2_independent_audit_manifest_v1"
+}

@@ -1,0 +1,11 @@
+{
+  "status": "PRE_RUN_SNAPSHOT",
+  "created_at_utc": "2026-11-01T14:28:30.0138569Z",
+  "file": {
+    "path": "research_papers\\JEPA\\weekly_multiday_20261101\\report_weekly_h2_v2.py",
+    "bytes": 15468,
+    "sha256": "5064d9c70a41a5a04bc740131fd7aa74cfe6a69fcbd21b918396e6bff9e52920"
+  },
+  "dataset_manifest_sha256": "bfc7370f38e32e1209bc41fe72f01563dcdaa17ddf86fe7b625814beedcbe1d8",
+  "evaluation_manifest_sha256": "54dc2d6ced2bb625a71fdae39b8ab2e417a576482ea6a99047df4ce8b6b1ad96"
+}

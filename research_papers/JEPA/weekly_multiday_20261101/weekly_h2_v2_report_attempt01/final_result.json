@@ -1,0 +1,55 @@
+{
+  "schema": "weekly_h2_v2_descriptive_report_result_v1",
+  "status": "COMPLETE_DESCRIPTIVE_REPORT_NOT_INDEPENDENTLY_AUDITED",
+  "final_attempt": "retry03",
+  "script": {
+    "path": "research_papers/JEPA/weekly_multiday_20261101/report_weekly_h2_v2.py",
+    "sha256": "ed22b5d25da06b0d1b79efadd6137ef7c03f587d94196ee4b350c5fb0790fd68"
+  },
+  "inputs": {
+    "dataset_manifest_sha256": "bfc7370f38e32e1209bc41fe72f01563dcdaa17ddf86fe7b625814beedcbe1d8",
+    "evaluation_manifest_sha256": "54dc2d6ced2bb625a71fdae39b8ab2e417a576482ea6a99047df4ce8b6b1ad96"
+  },
+  "output_root": "D:/GexResearchArtifacts/weekly_multiday_20261101/h2_descriptive_report_v2_01",
+  "outputs": {
+    "manifest.json": "3ec5fcb131b372ebbe05f35b8bc1b39c7a73ed65ac908164257db593018746e7",
+    "report_table.json": "d7cf47dbab060fe812ec622c102aa14d29604eb58fda44e682d156894f1b1cc2",
+    "weekly_h2_v2_descriptive.png": "2735900f9847804fefccad985f1664c3c5882c45f965a196134aea27ccd3a4f0",
+    "weekly_h2_v2_descriptive.svg": "74d77e89e00853b73f9f54dfb3c5a3ca2948a67042be33284ec678c519fc5cca"
+  },
+  "reconciliations": {
+    "ledger_vs_summary": true,
+    "monthly_sum_vs_net": true,
+    "ticker_sum_vs_net": true,
+    "manifest_output_pins": true,
+    "visual_inspection": "LEGIBLE"
+  },
+  "ev_adverse_eval": {
+    "net_usd": 11486.0,
+    "trades": 75,
+    "realized_max_drawdown_usd": 16666.3,
+    "positive_months": 3,
+    "entry_dates": 41,
+    "wait_open_position": 75,
+    "wait_ev_not_positive": 67,
+    "ticker_net_usd": {"SPY": -2561.6, "QQQ": -1557.4, "SPXW": 15605.0},
+    "largest_gain_usd": 11993.4,
+    "net_without_largest_gain_usd": -507.4
+  },
+  "history": {
+    "attempt01": "pre-run snapshot only; superseded after concentration requirement",
+    "retry02": "exit 0; first render preserved after visual inspection found clipped table labels",
+    "visual_precheck_root": "D:/GexResearchArtifacts/weekly_multiday_20261101/h2_descriptive_report_v2_01_visual_precheck",
+    "visual_precheck_manifest_sha256": "69520215e863268e69c93aa32fd27bd8b8c87543723eb43bcbc1121aadd7bfcd",
+    "retry03": "exit 0; final legible render"
+  },
+  "flags": {
+    "descriptive_only": true,
+    "development_seen": true,
+    "independently_audited": false,
+    "selection_performed": false,
+    "theta_data_accessed": false,
+    "refit_performed": false,
+    "promotion_approved": false
+  }
+}

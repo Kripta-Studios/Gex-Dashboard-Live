@@ -1,0 +1,14 @@
+{
+  "schema": "weekly_h2_largest_trade_source_check_preflight_v1",
+  "observed_utc": "2026-11-01T14:29:48.5474286Z",
+  "candidate_id": "SPXW:20260413:20260417:CALL",
+  "code_sha256": "99bbf756370ec4a0ad9ae1ab53242004a53c59d12abeff15b58bc33707e95160",
+  "available_ram_bytes": 13150412800,
+  "free_commit_bytes": 20035977216,
+  "minimum_each_bytes": 2000000000,
+  "cpu_affinity_mask_inherited_before_python_start": 1,
+  "threads": 1,
+  "projection": ["identity", "clock", "bid", "ask", "underlying_price", "delta"],
+  "refit_or_parameter_change_authorized": false,
+  "api_used": false
+}
