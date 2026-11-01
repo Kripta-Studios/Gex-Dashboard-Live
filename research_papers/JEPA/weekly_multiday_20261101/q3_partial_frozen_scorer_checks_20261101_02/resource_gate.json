@@ -1,0 +1,23 @@
+{
+  "available_ram_bytes": 11878195200,
+  "cpu_affinity": [
+    0
+  ],
+  "free_commit_bytes": 19152076800,
+  "minimum_each_bytes": 2000000000,
+  "real_q3_dataset_or_outcomes_opened": false,
+  "source_snapshot": {
+    "build_weekly_h2_q3_partial_extension.py": "1da8bc3f09577bad24be9bc088f184a66ee2205144d7f15e98a5eb6909483391",
+    "run_q3_partial_frozen_scorer_checks_20261101.py": "d8197fbbd666610f1efa9c2e1a15ec6ef9efb4da4c9f9fb54755edcd8827623c",
+    "score_weekly_h2_q3_partial_frozen.py": "4e1033e9fcfe1cd8f148bb9769511967d96644b9ee58794b6236cf389a27a12d",
+    "test_build_weekly_h2_dataset_v2.py": "6972a8a3a3d07988538f9c6b4f639a4240fd5815bb46dfa40e0fa6c657351694",
+    "test_score_weekly_h2_q3_partial_frozen.py": "c9fde94d4700c90a5e53126f41ddb8327d474b41a92c5da6468f437984d87f53"
+  },
+  "threads": {
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1"
+  },
+  "utc": "2026-11-01T14:54:05.647833+00:00"
+}

@@ -1,0 +1,51 @@
+{
+  "all_exit_zero": true,
+  "outputs_before_manifest": {
+    "commands.json": {
+      "bytes": 2528,
+      "sha256": "6101a5b60d9ee720a8aa558cf627e988b49579ada225ba8d7b4ba74e0640e943"
+    },
+    "compile_stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "compile_stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "pytest_stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "pytest_stdout.log": {
+      "bytes": 100,
+      "sha256": "499cf559149b1782cb454ebd021e501fbd07843eca0cda0f6c48386cb1f59ba8"
+    },
+    "resource_gate.json": {
+      "bytes": 776,
+      "sha256": "2da0686c48f52774989a8aefe6631132ab183dda2e623d710d15a4d64b6455a8"
+    },
+    "ruff_stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "ruff_stdout.log": {
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "run_q3_partial_frozen_scorer_checks_20261101.py": {
+      "bytes": 5501,
+      "sha256": "e6bfae08091c7cbf5781e087c2b893478627119741560ec60b8e687e58cd8899"
+    },
+    "score_weekly_h2_q3_partial_frozen.py": {
+      "bytes": 37248,
+      "sha256": "fcc1a41b4716d5562987d5c8bcab88d5420abb3739d92688eea3caf70f0aaa97"
+    },
+    "test_score_weekly_h2_q3_partial_frozen.py": {
+      "bytes": 8720,
+      "sha256": "ec622c1ea8a6a4f12b397ea7ebc6bfaf902a9d2ab7d71c055541ea6bb852eb6f"
+    }
+  },
+  "real_q3_dataset_or_outcomes_opened": false,
+  "schema": "weekly_h2_q3_partial_frozen_scorer_checks_v1"
+}

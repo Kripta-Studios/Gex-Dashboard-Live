@@ -1,0 +1,21 @@
+{
+  "available_ram_bytes": 11967832064,
+  "cpu_affinity": [
+    0
+  ],
+  "free_commit_bytes": 19131723776,
+  "minimum_each_bytes": 2000000000,
+  "real_q3_dataset_or_outcomes_opened": false,
+  "source_snapshot": {
+    "run_q3_partial_frozen_scorer_checks_20261101.py": "e6bfae08091c7cbf5781e087c2b893478627119741560ec60b8e687e58cd8899",
+    "score_weekly_h2_q3_partial_frozen.py": "fcc1a41b4716d5562987d5c8bcab88d5420abb3739d92688eea3caf70f0aaa97",
+    "test_score_weekly_h2_q3_partial_frozen.py": "ec622c1ea8a6a4f12b397ea7ebc6bfaf902a9d2ab7d71c055541ea6bb852eb6f"
+  },
+  "threads": {
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1"
+  },
+  "utc": "2026-11-01T14:47:47.454489+00:00"
+}

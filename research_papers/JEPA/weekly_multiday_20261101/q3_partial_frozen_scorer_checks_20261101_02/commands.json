@@ -1,0 +1,67 @@
+[
+  {
+    "command": [
+      "C:\\Program Files\\Python314\\python.exe",
+      "-m",
+      "py_compile",
+      "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\score_weekly_h2_q3_partial_frozen.py",
+      "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_score_weekly_h2_q3_partial_frozen.py",
+      "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\build_weekly_h2_q3_partial_extension.py"
+    ],
+    "exit_code": 0,
+    "finished_at_utc": "2026-11-01T14:54:05.731854+00:00",
+    "name": "compile",
+    "started_at_utc": "2026-11-01T14:54:05.648535+00:00",
+    "stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  {
+    "command": [
+      "C:\\Program Files\\Python314\\python.exe",
+      "-m",
+      "ruff",
+      "check",
+      "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\score_weekly_h2_q3_partial_frozen.py",
+      "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_score_weekly_h2_q3_partial_frozen.py"
+    ],
+    "exit_code": 0,
+    "finished_at_utc": "2026-11-01T14:54:05.799278+00:00",
+    "name": "ruff",
+    "started_at_utc": "2026-11-01T14:54:05.732288+00:00",
+    "stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stdout": {
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    }
+  },
+  {
+    "command": [
+      "C:\\Program Files\\Python314\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_score_weekly_h2_q3_partial_frozen.py"
+    ],
+    "exit_code": 0,
+    "finished_at_utc": "2026-11-01T14:54:06.975301+00:00",
+    "name": "pytest",
+    "started_at_utc": "2026-11-01T14:54:05.801044+00:00",
+    "stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stdout": {
+      "bytes": 100,
+      "sha256": "5884ea10fa51869be01487c2b30d651afcc86c4e87db054481b35213133eb691"
+    }
+  }
+]

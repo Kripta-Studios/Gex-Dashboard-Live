@@ -1,0 +1,59 @@
+{
+  "all_exit_zero": true,
+  "outputs_before_manifest": {
+    "build_weekly_h2_q3_partial_extension.py": {
+      "bytes": 23456,
+      "sha256": "1da8bc3f09577bad24be9bc088f184a66ee2205144d7f15e98a5eb6909483391"
+    },
+    "commands.json": {
+      "bytes": 2705,
+      "sha256": "9ab13bf071d49dbfa195fa9135020028fd4f4d3fe16a34023fe62d0750b481a6"
+    },
+    "compile_stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "compile_stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "pytest_stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "pytest_stdout.log": {
+      "bytes": 100,
+      "sha256": "5884ea10fa51869be01487c2b30d651afcc86c4e87db054481b35213133eb691"
+    },
+    "resource_gate.json": {
+      "bytes": 1003,
+      "sha256": "58504ab019767d9b5023c4b3e8f86685540e08e3da01421ad16c43625ed7b222"
+    },
+    "ruff_stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "ruff_stdout.log": {
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "run_q3_partial_frozen_scorer_checks_20261101.py": {
+      "bytes": 6221,
+      "sha256": "d8197fbbd666610f1efa9c2e1a15ec6ef9efb4da4c9f9fb54755edcd8827623c"
+    },
+    "score_weekly_h2_q3_partial_frozen.py": {
+      "bytes": 39748,
+      "sha256": "4e1033e9fcfe1cd8f148bb9769511967d96644b9ee58794b6236cf389a27a12d"
+    },
+    "test_build_weekly_h2_dataset_v2.py": {
+      "bytes": 16623,
+      "sha256": "6972a8a3a3d07988538f9c6b4f639a4240fd5815bb46dfa40e0fa6c657351694"
+    },
+    "test_score_weekly_h2_q3_partial_frozen.py": {
+      "bytes": 11192,
+      "sha256": "c9fde94d4700c90a5e53126f41ddb8327d474b41a92c5da6468f437984d87f53"
+    }
+  },
+  "real_q3_dataset_or_outcomes_opened": false,
+  "schema": "weekly_h2_q3_partial_frozen_scorer_checks_v2"
+}
