@@ -1,0 +1,56 @@
+{
+  "schema": "daily_adaptation_preparation_archive_v1",
+  "scope": "attempt01 resource-gate rejection; no compile, Ruff, pytest or scientific fits",
+  "files": [
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\daily_adaptation_preparation_01\\attempt01\\actual_affinity_mask.txt",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_preparation_archive_01\\actual_affinity_mask.txt",
+      "bytes": 3,
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\daily_adaptation_preparation_01\\attempt01\\evaluate_weekly_daily_adaptation.py.before_test",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_preparation_archive_01\\evaluate_weekly_daily_adaptation.py.before_test",
+      "bytes": 38763,
+      "sha256": "536a581d8295362b3374dd8c5db2224095f8afe66c5b0e9ae895cf08b18d4f2e"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\daily_adaptation_preparation_01\\attempt01\\failure_receipt.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_preparation_archive_01\\failure_receipt.json",
+      "bytes": 1414,
+      "sha256": "6621c6814d77d1e2ff69518f8c5fbbabcfaa56cd859424e8aea8d7e4984a4b98"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\daily_adaptation_preparation_01\\attempt01\\preflight_exit_code.txt",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_preparation_archive_01\\preflight_exit_code.txt",
+      "bytes": 3,
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\daily_adaptation_preparation_01\\attempt01\\preflight_metadata.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_preparation_archive_01\\preflight_metadata.json",
+      "bytes": 1468,
+      "sha256": "536dfb733daa3e52c0f5fc543dbdcd53a1e5cbcc239aecfa8beb53a3edd88fe1"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\daily_adaptation_preparation_01\\attempt01\\preflight_stderr.txt",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_preparation_archive_01\\preflight_stderr.txt",
+      "bytes": 1645,
+      "sha256": "ebf3e682c42c81a6f4c9d984ae06a4639f454dd543225b468336ec71e2e9ac50"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\daily_adaptation_preparation_01\\attempt01\\preflight_stdout.txt",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_preparation_archive_01\\preflight_stdout.txt",
+      "bytes": 70,
+      "sha256": "ffee280446bfbfeeed3452774e57c228cf7d1f31a74fafcaffd049e2c465c195"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\daily_adaptation_preparation_01\\attempt01\\test_evaluate_weekly_daily_adaptation.py.before_test",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_preparation_archive_01\\test_evaluate_weekly_daily_adaptation.py.before_test",
+      "bytes": 14142,
+      "sha256": "fa199a2a6339cf73911cc6f818c73f655cce1931e222733c041bff82b23e661e"
+    }
+  ],
+  "count": 8,
+  "bytes": 57508
+}

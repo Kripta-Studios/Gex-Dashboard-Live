@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import importlib.util,json; p=r'''C:\Users\�lvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\level_oracle_20261018\launch_monthly_test_index_v2_audit_20261024.py'''; s=importlib.util.spec_from_file_location('official_gate',p); m=importlib.util.module_from_spec(s); s.loader.exec_module(m); v=m.observation(); print(json.dumps(v,sort_keys=True)); m.gate(v)
+                                                                                                                                                                                                                                                                                                                                                                                           ~~~~~~^^^
+  File "C:\Users\�lvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\level_oracle_20261018\launch_monthly_test_index_v2_audit_20261024.py", line 97, in gate
+    require(all(type(value.get(k)) is int and value[k] >= MIN_FREE
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                for k in ("available_ram_bytes", "free_commit_bytes")), "2GB RAM/commit gate unmet")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\�lvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\level_oracle_20261018\launch_monthly_test_index_v2_audit_20261024.py", line 54, in require
+    raise ValueError(message)
+ValueError: 2GB RAM/commit gate unmet
