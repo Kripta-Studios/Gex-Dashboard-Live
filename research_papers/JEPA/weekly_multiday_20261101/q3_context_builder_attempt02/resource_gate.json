@@ -1,0 +1,10 @@
+{
+  "observed_utc": "2026-11-01T16:16:25.5961923Z",
+  "available_physical_bytes": 7293927424,
+  "commit_limit_bytes": 64407187456,
+  "committed_bytes": 59703300096,
+  "available_commit_bytes": 4703887360,
+  "required_available_bytes": 2147483648,
+  "cpu_affinity_mask": 1,
+  "thread_limit": 1
+}

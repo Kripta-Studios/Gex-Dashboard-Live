@@ -1,0 +1,68 @@
+{
+  "schema": "weekly_context_q3_builder_implementation_evidence_v1",
+  "status": "SYNTHETIC_IMPLEMENTATION_ONLY_FIX_FIRST_RESOLVED",
+  "observed_utc": "2026-11-01T16:23:03.0069732Z",
+  "sources": {
+    "build_weekly_context_q3.py": "caa049caccd79a1c344bee03cce70df7e6a4446fa1ab087c31de64692f78845a",
+    "test_build_weekly_context_q3.py": "5b1303eea2a700059c67e34b374ff6e9ea35818e5ac13f32d673b963048fada8",
+    "Q3_CONTEXT_EXTENSION_CONTRACT_20261101.md": "8775399421be05d7cee9ce4d08190fe374906ecb989f6e93c5d3469db29bc4ed"
+  },
+  "checks": {
+    "pytest_exit": 0,
+    "pytest": "12 passed",
+    "ruff_exit": 0,
+    "inventory_and_receipt_link_guards": true,
+    "module_unresolved_path_hash_pre_post_guard": true,
+    "generated_children_link_and_pin_guard": true,
+    "real_output_absent": true,
+    "real_runtime_executed": false,
+    "attempt01_02_preserved": true
+  },
+  "limitations": [
+    "Symlink rejection focales use deterministic mocks because Windows link creation may require privileges.",
+    "Only artificial pandas/Parquet frames were processed.",
+    "No real raw/context/economic artifact was opened and no real inventory/extraction ran."
+  ],
+  "evidence": {
+    "resource_gate.json": {
+      "bytes": 305,
+      "sha256": "902ae45efbfc8a1bf135a3f9a15df1626c7e91a05f85a1a8cdc17480a858223c"
+    },
+    "pytest.stdout.txt": {
+      "bytes": 102,
+      "sha256": "8ceead273f52c3456e958ef3dedba4dcba5dc97886cc12321c537966bfdf6389"
+    },
+    "pytest.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "pytest.exit.txt": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "ruff.stdout.txt": {
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "ruff.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "ruff.exit.txt": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "build_weekly_context_q3.py.pretest": {
+      "bytes": 28711,
+      "sha256": "caa049caccd79a1c344bee03cce70df7e6a4446fa1ab087c31de64692f78845a"
+    },
+    "test_build_weekly_context_q3.py.pretest": {
+      "bytes": 10721,
+      "sha256": "5b1303eea2a700059c67e34b374ff6e9ea35818e5ac13f32d673b963048fada8"
+    },
+    "Q3_CONTEXT_EXTENSION_CONTRACT_20261101.md.pretest": {
+      "bytes": 7421,
+      "sha256": "8775399421be05d7cee9ce4d08190fe374906ecb989f6e93c5d3469db29bc4ed"
+    }
+  }
+}

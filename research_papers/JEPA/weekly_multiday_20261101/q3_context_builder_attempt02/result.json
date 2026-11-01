@@ -1,0 +1,68 @@
+{
+  "schema": "weekly_context_q3_builder_implementation_evidence_v1",
+  "status": "SYNTHETIC_IMPLEMENTATION_ONLY",
+  "observed_utc": "2026-11-01T16:17:30.1110440Z",
+  "sources": {
+    "build_weekly_context_q3.py": "ccb3829f53b2a779831501b94f0935a44a17f2eba1a0023512fc253b31838b11",
+    "test_build_weekly_context_q3.py": "fe9a49b923ccffa51019887eaaa33280c52cd63558970df3deab07b9a48b44c7",
+    "Q3_CONTEXT_EXTENSION_CONTRACT_20261101.md": "8775399421be05d7cee9ce4d08190fe374906ecb989f6e93c5d3469db29bc4ed"
+  },
+  "checks": {
+    "pytest_exit": 0,
+    "pytest": "10 passed",
+    "ruff_exit": 0,
+    "future_values_contracts_oi_causal": true,
+    "native_clocks_missing_toctou_masks": true,
+    "generated_files_closing_rehash": true,
+    "real_output_absent": true,
+    "real_runtime_executed": false,
+    "attempt01_preserved": true
+  },
+  "limitations": [
+    "Only artificial pandas/Parquet frames were processed.",
+    "No real raw source, cache, context value, candidate, model, score, outcome, or economic artifact was opened.",
+    "Inventory and extraction remain unexecuted pending independent review and runtime binding."
+  ],
+  "evidence": {
+    "resource_gate.json": {
+      "bytes": 305,
+      "sha256": "8a6e2824cc4e2fe023213a5653c13d406c1be42aa40f0443e336b792780a8071"
+    },
+    "pytest.stdout.txt": {
+      "bytes": 102,
+      "sha256": "5f34cf3ce6e943deca2f2d1da326f1620ec5f4f45a3ad1f7be4b9cd4162bb69e"
+    },
+    "pytest.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "pytest.exit.txt": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "ruff.stdout.txt": {
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "ruff.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "ruff.exit.txt": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "build_weekly_context_q3.py.pretest": {
+      "bytes": 27829,
+      "sha256": "ccb3829f53b2a779831501b94f0935a44a17f2eba1a0023512fc253b31838b11"
+    },
+    "test_build_weekly_context_q3.py.pretest": {
+      "bytes": 9375,
+      "sha256": "fe9a49b923ccffa51019887eaaa33280c52cd63558970df3deab07b9a48b44c7"
+    },
+    "Q3_CONTEXT_EXTENSION_CONTRACT_20261101.md.pretest": {
+      "bytes": 7421,
+      "sha256": "8775399421be05d7cee9ce4d08190fe374906ecb989f6e93c5d3469db29bc4ed"
+    }
+  }
+}
