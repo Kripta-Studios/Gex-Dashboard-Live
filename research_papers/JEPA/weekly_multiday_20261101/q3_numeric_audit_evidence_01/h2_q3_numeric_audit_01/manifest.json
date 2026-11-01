@@ -1,0 +1,22 @@
+{
+  "flags": {
+    "promotion_approved": false,
+    "refit_performed": false,
+    "selection_changed": false
+  },
+  "implementation": {
+    "audit_weekly_h2_q3_given_parameters.py": "40facb6d615875fd6f4b1fc41c3b14e9b417ced6779720f15276056e7af12898"
+  },
+  "inputs": {
+    "dataset_manifest_sha256": "b45b017c63fea42036ab73418cc07faa8e377047fec1f8d60c908e98eea5400b",
+    "frozen_manifest_sha256": "54dc2d6ced2bb625a71fdae39b8ab2e417a576482ea6a99047df4ce8b6b1ad96",
+    "scorer_manifest_sha256": "7bd50a5a1fe5214df2c4281e785313f0fb016ca73d725d682788dcb78b283d8e"
+  },
+  "outputs": {
+    "audit.json": {
+      "bytes": 542,
+      "sha256": "ff62f16ea768d8116b48a99de4f5c6431a0c56acda86647044c001ed895302fd"
+    }
+  },
+  "schema": "weekly_h2_q3_given_parameters_numeric_audit_manifest_v1"
+}

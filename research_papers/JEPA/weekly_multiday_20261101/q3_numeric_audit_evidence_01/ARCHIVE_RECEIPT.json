@@ -1,0 +1,49 @@
+{
+  "count": 7,
+  "files": [
+    {
+      "bytes": 542,
+      "sha256": "ff62f16ea768d8116b48a99de4f5c6431a0c56acda86647044c001ed895302fd",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_numeric_audit_evidence_01\\h2_q3_numeric_audit_01\\audit.json",
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_q3_numeric_audit_01\\audit.json"
+    },
+    {
+      "bytes": 810,
+      "sha256": "1b337b375d7ec4cd13099a9b550ad6c13a306c88e9aa31f6a40a60a7dea6b236",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_numeric_audit_evidence_01\\h2_q3_numeric_audit_01\\manifest.json",
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_q3_numeric_audit_01\\manifest.json"
+    },
+    {
+      "bytes": 1690,
+      "sha256": "0ea571d106b5819a187bbc6e5693e19fc0c3835e34f7efd0bedb8fa86ddd5ed6",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_numeric_audit_evidence_01\\h2_q3_partial_observer_01\\audit\\admission.json",
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_q3_partial_observer_01\\audit\\admission.json"
+    },
+    {
+      "bytes": 883,
+      "sha256": "7028809246b01fdb16f70c832100082194b7eae0d15912b75deed366f259d1b6",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_numeric_audit_evidence_01\\h2_q3_partial_observer_01\\audit\\exit.json",
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_q3_partial_observer_01\\audit\\exit.json"
+    },
+    {
+      "bytes": 1181,
+      "sha256": "2d7864064b409a347052a2a04c26484fac82cefbeba0eea39ea5f7a83c627065",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_numeric_audit_evidence_01\\h2_q3_partial_observer_01\\audit\\process.json",
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_q3_partial_observer_01\\audit\\process.json"
+    },
+    {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_numeric_audit_evidence_01\\h2_q3_partial_observer_01\\audit\\stderr.log",
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_q3_partial_observer_01\\audit\\stderr.log"
+    },
+    {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_numeric_audit_evidence_01\\h2_q3_partial_observer_01\\audit\\stdout.log",
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_q3_partial_observer_01\\audit\\stdout.log"
+    }
+  ],
+  "utc": "2026-11-01T15:11:44.6517511Z",
+  "bytes": 5106.0
+}

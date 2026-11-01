@@ -1,0 +1,25 @@
+{
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "research_papers/JEPA/weekly_multiday_20261101/check_h2_largest_trade_source.py",
+    "--candidate-id",
+    "SPXW:20260803:20260807:CALL",
+    "--ledger",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_ev_frozen_extension_2026q3_partial_01\\ledger_ev_top1_h2_q3_partial_2026_seen_development_adverse.jsonl",
+    "--candidates",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_extension_2026q3_partial_01\\candidates.jsonl",
+    "--inventory",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_extension_2026q3_partial_01\\inventory.json",
+    "--output-dir",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_q3_largest_trade_source_check_01"
+  ],
+  "creation_utc": "2026-11-01T15:11:20.565681+00:00",
+  "handle_retained": true,
+  "launch_utc": "2026-11-01T15:11:20.565111+00:00",
+  "parent_pid": 42264,
+  "pid": 39828,
+  "schema": "weekly_h2_q3_largest_trade_source_start_v1"
+}

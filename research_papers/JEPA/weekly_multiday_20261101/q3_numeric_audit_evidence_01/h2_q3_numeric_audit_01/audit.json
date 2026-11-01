@@ -1,0 +1,19 @@
+{
+  "books": 8,
+  "checks": {
+    "calibration_and_ev": true,
+    "ledger_sequence_and_cash": true,
+    "manual_transform": true,
+    "monthly_and_summary_reconciliation": true,
+    "predict_proba": true,
+    "sklearn_parameters_restored_without_fit": true
+  },
+  "flags": {
+    "promotion_approved": false,
+    "refit_performed": false,
+    "selection_changed": false
+  },
+  "schema": "weekly_h2_q3_given_parameters_numeric_audit_v1",
+  "score_rows": 180,
+  "status": "PASS_NUMERIC_REPRODUCTION_GIVEN_FROZEN_PARAMETERS"
+}

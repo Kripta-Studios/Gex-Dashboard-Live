@@ -37,11 +37,22 @@ con igual peso por ticker−4,7278% (diagnóstico, NO cartera). Sinabril−12883
 Bootstrap exploratorio123sesiones/82ceros,10k,bloques5:percentiles−29589,40/
 +57260,90USD, sin significancia. Rootreconstrucción numérica d6cbaaca y review
 operativa CLEAR; sin fit/selección. [Diagnóstico](../weekly_multiday_20261101/H2_ROBUSTNESS_RESULT_20261101.md).
-Extensión temporal en preparación: julio1–sept17,55sesiones/165filas,última
-entradaH2sept15. Calendario nuevoac9bd256/e16ef041;Q3tambiénSEEN_DEVELOPMENT,
-no holdout limpio. Misma política/modelo/alpha/prior/medias, cero refit/carryH1.
-Wrappers/scorer en revisión sintética; aún no inventario/quotes/outcomesQ3.
-No reanudar ni relanzar H1. Objetivo general y requisitos por IB/walls siguen abiertos.
+Extensión temporal Q3 parcial CERRADA: julio1–sept17,55sesiones/165filas;
+últimaentradaH2sept15. Datasetb45b017c/scorer7bd50a5a,180candidatos/180scores.
+Modelo/alpha/prior/medias congelados, sin refit/recalibración/carryH1.
+EV+7018,20base/+6966,20adversoUSD,28fills,todosCALL,PF1,5205;
+DDrealizado6902,40,1/3mesespositivo. CALL−5851,20/PUT−9758 adversos.
+SPXW+9160,40;QQQ−1577,60;SPY−616,60. Cuatrosalidasmissing como cotas.
+Mayortrade+16383,40;sinél−9417,20. Fuente puntual PASS04424cf8, dosparquets.
+Auditor40facb6d únicoPID45992 exit0retenido15:11:06UTC, auditff62f16e PASS:
+180scores/8libros desde pesos congelados, sinfit ni replayrawíntegro.
+Review final CLEAR de implementación y cierre. Scorer/auditor/sourcecheck
+cerrados, cero procesos de investigación al cierre. NO RELANZAR.
+Q3_PARTIAL_2026_SEEN_DEVELOPMENT, no holdout limpio, no selección/promoción.
+Resultado H2_Q3_PARTIAL_RESULT_20261101.md en weekly_multiday_20261101;
+17copiasscoring/7audit/9source. Snapshots .000 intactos; errata sólo presentación.
+Goal general activo: rentabilidadrobusta, riesgo comparable e IB/walls abiertos.
+Producción/API/bróker/VPS y cambios ajenos intactos.
 
 Orientación nueva: probabilidades de escenarios y valor esperado neto.
 Usuario permite días sin operar en la siguiente etapa; WAIT sin mínimo diario.

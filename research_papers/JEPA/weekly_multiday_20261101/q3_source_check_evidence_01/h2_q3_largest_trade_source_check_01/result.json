@@ -1,0 +1,152 @@
+{
+  "candidate": {
+    "candidate_id": "SPXW:20260803:20260807:CALL",
+    "decision_ask": 34.0,
+    "entry_ask": 34.1,
+    "entry_date": "20260803",
+    "entry_debit_adverse": 3413.3000000000006,
+    "entry_debit_base": 3412.3,
+    "exit_bid": 198.0,
+    "exit_date": "20260805",
+    "expiration": "20260807",
+    "features": {
+      "ask": 34.0,
+      "bid": 33.7,
+      "delta": 0.4939,
+      "dte": 4,
+      "gamma": null,
+      "implied_vol": 0.1068,
+      "moneyness": 0.0006631457414683073,
+      "rho": 42.9349,
+      "right_call": 1,
+      "spot": 7569.98,
+      "spread_relative": 0.008823529411764622,
+      "strike": 7575.0,
+      "theta": -4.478,
+      "ticker_QQQ": 0,
+      "ticker_SPXW": 1,
+      "ticker_SPY": 0,
+      "vega": 325.0395,
+      "weekday": 0
+    },
+    "label_available_at": "2026-08-05T10:35:00-04:00",
+    "net_adverse": 16383.4,
+    "net_base": 16385.400000000005,
+    "payoff_is_lower_bound": false,
+    "right": "CALL",
+    "scenario": 4,
+    "source_pins": {
+      "calendar_sha256": "e16ef041efadc0f6914585540e19e9c04fcb05f1597952137e4f5bcf06de8c78",
+      "clock_basis_entry": "NATIVE_STORED_TIMESTAMP",
+      "clock_basis_exit": "NATIVE_STORED_TIMESTAMP",
+      "entry_path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2026\\08\\SPXW_20260807_20260803_greeks.parquet",
+      "entry_sha256": "a1986af28828eaf89196f25c5a52215c8e7f347f78e20c2bbae4e88f86d1f7ea",
+      "exit_path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2026\\08\\SPXW_20260807_20260805_greeks.parquet",
+      "exit_sha256": "8f7df9373dc75a5db05018e02fed96c6b0463a0af7346816dd0fddf7f6d635a5"
+    },
+    "status": "OBSERVED_EXIT",
+    "strike": 7575.0,
+    "ticker": "SPXW"
+  },
+  "candidate_id": "SPXW:20260803:20260807:CALL",
+  "checks": {
+    "candidate_net_adverse_matches_formula": true,
+    "decision_matches_candidate": true,
+    "entry_ask_matches_candidate": true,
+    "exit_bid_matches_candidate": true,
+    "ledger_net_adverse_matches_formula": true,
+    "source_hashes_stable": true
+  },
+  "clock_basis": {
+    "entry": "NATIVE_STORED_TIMESTAMP",
+    "exit": "NATIVE_STORED_TIMESTAMP"
+  },
+  "formula": "(max(exit_bid-0.02,0)-entry_ask-0.02)*100-2.60",
+  "ledger": {
+    "entry": {
+      "candidate_id": "SPXW:20260803:20260807:CALL",
+      "cash": 89172.49999999993,
+      "cost": "adverse",
+      "date": "20260803",
+      "equity": 93665.49999999993,
+      "ev_adverse": 20.81725693143767,
+      "ev_base": 25.64814045653342,
+      "event": "ENTRY",
+      "exit_date": "20260805",
+      "principal": 3412.0000000000005,
+      "realized_delta": -1.3,
+      "reserved": 4493.0,
+      "right": "CALL",
+      "selection_reason": "EV_TOP1",
+      "split": "Q3_PARTIAL_2026_SEEN_DEVELOPMENT",
+      "ticker": "SPXW"
+    },
+    "exit": {
+      "candidate_id": "SPXW:20260803:20260807:CALL",
+      "cash": 113868.59999999992,
+      "cost": "adverse",
+      "date": "20260805",
+      "duration_calendar_days": 2,
+      "entry_date": "20260803",
+      "equity": 113868.59999999992,
+      "event": "EXIT",
+      "net_usd": 16383.4,
+      "principal": 3412.0000000000005,
+      "realized_delta": 16384.7,
+      "reserved": -4.547473508864641e-13,
+      "right": "CALL",
+      "split": "Q3_PARTIAL_2026_SEEN_DEVELOPMENT",
+      "status": "OBSERVED_EXIT",
+      "ticker": "SPXW"
+    }
+  },
+  "limitations": [
+    "stored snapshot clocks do not prove observed live receipt",
+    "one contract and multiplier 100 are contractual assumptions",
+    "no independent tick-level audit beyond the stored exact-minute rows"
+  ],
+  "recomputed_net_adverse": 16383.4,
+  "schema": "weekly_h2_largest_trade_source_check_v1",
+  "source_snapshots": {
+    "decision_10_30": {
+      "ask": 34.0,
+      "bid": 33.7,
+      "clock": "10:30",
+      "clock_raw": "2026-08-03T10:30:00.000",
+      "delta": 0.4939,
+      "expiration": "20260807",
+      "right": "CALL",
+      "spot": 7569.98,
+      "strike": 7575.0,
+      "ticker": "SPXW",
+      "trade_date": "20260803"
+    },
+    "entry_10_35": {
+      "ask": 34.1,
+      "bid": 33.9,
+      "clock": "10:35",
+      "clock_raw": "2026-08-03T10:35:00.000",
+      "delta": 0.4947,
+      "expiration": "20260807",
+      "right": "CALL",
+      "spot": 7570.15,
+      "strike": 7575.0,
+      "ticker": "SPXW",
+      "trade_date": "20260803"
+    },
+    "exit_10_35": {
+      "ask": 202.8,
+      "bid": 198.0,
+      "clock": "10:35",
+      "clock_raw": "2026-08-05T10:35:00.000",
+      "delta": 0.9362,
+      "expiration": "20260807",
+      "right": "CALL",
+      "spot": 7770.05,
+      "strike": 7575.0,
+      "ticker": "SPXW",
+      "trade_date": "20260805"
+    }
+  },
+  "status": "PASS"
+}

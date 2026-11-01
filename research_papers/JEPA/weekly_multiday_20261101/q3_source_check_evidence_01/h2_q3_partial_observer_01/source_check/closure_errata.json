@@ -1,0 +1,40 @@
+{
+  "affected_document": {
+    "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_q3_partial_observer_01\\source_check\\closure.json",
+    "sha256": "10db6508af1a5aa01518ef61ad4c8e8c1e9104919f1d4f49326069ebf3a1b039"
+  },
+  "authoritative_literal_snapshot_source": {
+    "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_q3_largest_trade_source_check_01\\result.json",
+    "sha256": "04424cf8aeddc02b809ac7b3be3bc1212739c6ae2305d4f4c67530108f2bf70e"
+  },
+  "clarification": "The retained result.json and closure.json both serialize all three clock_raw values with .000 and their snapshot objects are otherwise byte-semantically equal after JSON parsing. Any displayed form without .000 was an equivalent external presentation, not a retained JSON difference. result.json remains authoritative for literal snapshot text.",
+  "clock_raw_literal_comparison": {
+    "decision_10_30": {
+      "closure_clock_raw": "2026-08-03T10:30:00.000",
+      "result_clock_raw": "2026-08-03T10:30:00.000"
+    },
+    "entry_10_35": {
+      "closure_clock_raw": "2026-08-03T10:35:00.000",
+      "result_clock_raw": "2026-08-03T10:35:00.000"
+    },
+    "exit_10_35": {
+      "closure_clock_raw": "2026-08-05T10:35:00.000",
+      "result_clock_raw": "2026-08-05T10:35:00.000"
+    }
+  },
+  "created_utc": "2026-11-01T15:12:50.921491+00:00",
+  "process_rerun": false,
+  "raw_files_read": 0,
+  "retained_snapshot_difference_count": 0,
+  "retained_snapshot_differences": [],
+  "schema": "weekly_h2_q3_largest_trade_source_closure_errata_v1",
+  "semantic_effect": {
+    "clock_basis_changed": false,
+    "exact_minute_changed": false,
+    "identity_changed": false,
+    "pass_status_changed": false,
+    "quotes_changed": false,
+    "source_hash_check_changed": false
+  },
+  "status": "DOCUMENTATION_ONLY_NO_RAW_READ_NO_RERUN"
+}

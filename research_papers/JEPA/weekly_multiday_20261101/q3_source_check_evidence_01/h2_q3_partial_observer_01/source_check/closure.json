@@ -1,0 +1,123 @@
+{
+  "candidate_id": "SPXW:20260803:20260807:CALL",
+  "checks": {
+    "candidate_net_adverse_matches_formula": true,
+    "decision_matches_candidate": true,
+    "entry_ask_matches_candidate": true,
+    "exit_bid_matches_candidate": true,
+    "ledger_net_adverse_matches_formula": true,
+    "source_hashes_stable": true
+  },
+  "clock_basis": {
+    "entry": "NATIVE_STORED_TIMESTAMP",
+    "exit": "NATIVE_STORED_TIMESTAMP"
+  },
+  "closed_utc": "2026-11-01T15:11:39.671770+00:00",
+  "limitations": [
+    "stored snapshot clocks do not prove observed live receipt",
+    "one contract and multiplier 100 are contractual assumptions",
+    "no independent tick-level audit beyond the stored exact-minute rows"
+  ],
+  "net_adverse": {
+    "candidate": 16383.4,
+    "ledger": 16383.4,
+    "recomputed": 16383.4
+  },
+  "no_global_replay": true,
+  "no_live_fill_claim": true,
+  "no_refit": true,
+  "outputs": {
+    "manifest.json": {
+      "bytes": 219,
+      "sha256": "ec5238e8211a25b2eb464493fd145f8f03128222db8a9b4e497dd2d5f504eee0"
+    },
+    "result.json": {
+      "bytes": 4773,
+      "sha256": "04424cf8aeddc02b809ac7b3be3bc1212739c6ae2305d4f4c67530108f2bf70e"
+    }
+  },
+  "post_compact_inputs": {
+    "candidates": {
+      "bytes": 236850,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_extension_2026q3_partial_01\\candidates.jsonl",
+      "sha256": "c1aae6b9d45240fe712aabceb296b8d42506b12523465eb8755a8c6939045864"
+    },
+    "dataset_manifest": {
+      "bytes": 6184,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_extension_2026q3_partial_01\\manifest.json",
+      "sha256": "b45b017c63fea42036ab73418cc07faa8e377047fec1f8d60c908e98eea5400b"
+    },
+    "inventory": {
+      "bytes": 327384,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_extension_2026q3_partial_01\\inventory.json",
+      "sha256": "f633d0ee192f28650698a4033ee7f6d2dc00dad07aa38239c40e9e2b5092ea5c"
+    },
+    "ledger": {
+      "bytes": 45471,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_ev_frozen_extension_2026q3_partial_01\\ledger_ev_top1_h2_q3_partial_2026_seen_development_adverse.jsonl",
+      "sha256": "07ead617cb0aa9ee55d1aa3700656572938c9269325800e850286b6e12a89c35"
+    },
+    "scoring_manifest": {
+      "bytes": 3545,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_ev_frozen_extension_2026q3_partial_01\\manifest.json",
+      "sha256": "7bd50a5a1fe5214df2c4281e785313f0fb016ca73d725d682788dcb78b283d8e"
+    }
+  },
+  "process": {
+    "creation_utc": "2026-11-01T15:11:20.565681+00:00",
+    "exit_code": 0,
+    "exit_utc": "2026-11-01T15:11:21.176614+00:00",
+    "handle_retained": true,
+    "pid": 39828,
+    "process_absent_after_exit": true
+  },
+  "raw_files_opened": 2,
+  "schema": "weekly_h2_q3_largest_trade_source_closure_v1",
+  "snapshots": {
+    "decision_10_30": {
+      "ask": 34.0,
+      "bid": 33.7,
+      "clock": "10:30",
+      "clock_raw": "2026-08-03T10:30:00.000",
+      "delta": 0.4939,
+      "expiration": "20260807",
+      "right": "CALL",
+      "spot": 7569.98,
+      "strike": 7575.0,
+      "ticker": "SPXW",
+      "trade_date": "20260803"
+    },
+    "entry_10_35": {
+      "ask": 34.1,
+      "bid": 33.9,
+      "clock": "10:35",
+      "clock_raw": "2026-08-03T10:35:00.000",
+      "delta": 0.4947,
+      "expiration": "20260807",
+      "right": "CALL",
+      "spot": 7570.15,
+      "strike": 7575.0,
+      "ticker": "SPXW",
+      "trade_date": "20260803"
+    },
+    "exit_10_35": {
+      "ask": 202.8,
+      "bid": 198.0,
+      "clock": "10:35",
+      "clock_raw": "2026-08-05T10:35:00.000",
+      "delta": 0.9362,
+      "expiration": "20260807",
+      "right": "CALL",
+      "spot": 7770.05,
+      "strike": 7575.0,
+      "ticker": "SPXW",
+      "trade_date": "20260805"
+    }
+  },
+  "source_hashes": {
+    "entry": "a1986af28828eaf89196f25c5a52215c8e7f347f78e20c2bbae4e88f86d1f7ea",
+    "exit": "8f7df9373dc75a5db05018e02fed96c6b0463a0af7346816dd0fddf7f6d635a5",
+    "stable_before_after": true
+  },
+  "status": "PASS"
+}

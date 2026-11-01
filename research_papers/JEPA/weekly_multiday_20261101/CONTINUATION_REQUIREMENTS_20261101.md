@@ -42,3 +42,19 @@ cada opción. No se descargan datos de mercado ni se usa una API de mercado.
 No hay procesos anteriores que reanudar ni replay de H1. Las nuevas ejecuciones
 usan raíces independientes y sus bindings antes de valores. Producción/bróker/
 VPS y cambios ajenos intactos. technical_ready/promotion_approved=false.
+
+## Cierre de esta etapa, 1 de noviembre a las 15:15 UTC aproximadamente
+
+Las dos acciones anteriores están completas. Diagnóstico H1 publicado y
+reconciliado; extensión Q3 cerrada con +6966,20USD adversos/28operaciones.
+Auditor independiente ff62f16e reproduce180scores y8libros sinfit, sobre pesos
+congelados. Comprobación puntual de la mayor operación PASS04424cf8 desde
+dosparquets. Los75tradesH1 y28Q3 son todosCALL; el positivoQ3 depende otra vez
+de una ganancia mayor que el neto total. No hay robustez acreditada ni selección.
+
+Siguiente frontera científica: fijar un protocolo de riesgo monetario comparable
+y variables causales de escenarios que permita contrastar la concentración,
+incluyendo IB/Fibonacci/walls donde haya snapshots con reloj admisible.
+Es una dirección pendiente de contrato, no una familia ya ejecutada ni una
+promoción de SPXW. No alterar los experimentos cerrados ni reutilizar2026 como
+holdout limpio. El objetivo general permanece activo y no se marca completo.
