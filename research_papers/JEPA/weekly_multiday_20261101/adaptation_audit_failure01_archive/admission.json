@@ -1,0 +1,50 @@
+{
+  "utc": "2026-11-01T18:19:27.293680+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_context_adaptation.py",
+    "--execute-reviewed-audit",
+    "--producer-manifest-sha256",
+    "e8cf5cd4a001cd98cdf29e54cf47bbdf3c34d6652abf34ef7c71fffa0bd97f23",
+    "--producer-sha256",
+    "d03494bf68e281bc7c9e68f385aa111567eac4206cf5b44133e17bb480ed5df8",
+    "--producer-tests-sha256",
+    "2f44f17d459cd7cb43c5c3842fb4b2d72c689278f797426a75ac006f0d5db43f",
+    "--bridge-manifest-sha256",
+    "9d1455c601ac38224c4f56365f20c3fb31978e997f8652454dbc69807e0abb86",
+    "--bridge-audit-sha256",
+    "83c9ade0b6b7205484dd275df8593107238f94468d8564f7351e9481a475033c",
+    "--auditor-sha256",
+    "c6a116d3c39e054031b594547d36c54fd0a5eeed0aa6524c10ca89ba0f7198a5"
+  ],
+  "publication_commit": "a2b62e2105259edb3296ee6f412655f2defb73e3",
+  "pins": {
+    "audit_weekly_context_adaptation.py": "c6a116d3c39e054031b594547d36c54fd0a5eeed0aa6524c10ca89ba0f7198a5",
+    "test_audit_weekly_context_adaptation.py": "fd835bbefba283e4d746205941924ceebd3e3937f853591dbf69688d9b83fefd",
+    "evaluate_weekly_context_adaptation.py": "d03494bf68e281bc7c9e68f385aa111567eac4206cf5b44133e17bb480ed5df8",
+    "test_evaluate_weekly_context_adaptation.py": "2f44f17d459cd7cb43c5c3842fb4b2d72c689278f797426a75ac006f0d5db43f",
+    "ADAPTATION_AND_BRIDGE_IMPLEMENTATION_REVIEW_20261101.md": "f4fe3591c0244236573618f52ec167cc490b53698e838915608b6209dc69b674",
+    "ADAPTATION_PRODUCER_CLOSURE_AND_AUDIT_BINDING_20261101.md": "ce98ea909d72077f0e5e43f5f7a37b30143cac2e279aca1f6c47bb7d87bbd890",
+    "adaptation_producer_archive_01/archive_receipt.json": "cd9f341eadf54680cf99f8c7f68f16062dc64e2b2a2729c0b0942fe9de407361"
+  },
+  "resources": {
+    "available_ram_bytes": 7113138176,
+    "free_commit_bytes": 4409675776
+  },
+  "cpu_affinity": [
+    0
+  ],
+  "thread_variables": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+    "BLIS_NUM_THREADS": "1",
+    "ARROW_NUM_THREADS": "1",
+    "POLARS_MAX_THREADS": "1"
+  }
+}
