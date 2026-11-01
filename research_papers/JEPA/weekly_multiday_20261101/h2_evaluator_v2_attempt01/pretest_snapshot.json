@@ -1,0 +1,22 @@
+{
+  "status": "FINAL_PRETEST_SNAPSHOT",
+  "created_at_utc": "2026-11-01T14:10:02.8068908Z",
+  "files": {
+    "evaluate_weekly_h2_ev_v2.py": {
+      "bytes": 48861,
+      "sha256": "8a9e75855d542a12662e5c812583f2ef86042f5c3ae1bbbad73c16042e063476"
+    },
+    "test_evaluate_weekly_h2_ev_v2.py": {
+      "bytes": 23019,
+      "sha256": "a968f8a67defe8de912f5ec822417a3542080e8696e90440b486c4ad70d3dc64"
+    },
+    "ECONOMIC_H2_CONTRACT.md": {
+      "bytes": 10737,
+      "sha256": "245a6df1530fbabf29e6a2e5e86662972ebdc680e011987253f35eb61257d5d5"
+    },
+    "H2_CLOCK_FILTER_V2_AMENDMENT.md": {
+      "bytes": 2692,
+      "sha256": "9210c6e50094e5745f80c5e03f577f6bd673263f84d3c3ef764ad76b22ca56eb"
+    }
+  }
+}

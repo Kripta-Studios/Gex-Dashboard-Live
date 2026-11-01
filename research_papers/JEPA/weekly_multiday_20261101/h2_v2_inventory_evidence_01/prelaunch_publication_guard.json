@@ -1,0 +1,8 @@
+{
+  "utc": "2026-11-01T14:18:29.344562+00:00",
+  "status": "PRELAUNCH_GUARD_BLOCKED_NO_CHILD",
+  "cause": "Git global *.json ignore excluded archive receipt and inventory from commit243b1e9d; published-byte check rejected missing HEAD path before observer creation, resource gate or Popen",
+  "scientific_child_started": false,
+  "market_values_read": false,
+  "action": "Explicitly publish exact existing evidence paths with git add -f; no source or scientific change"
+}

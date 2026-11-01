@@ -1,0 +1,74 @@
+CPU_AFFINITY=[0] THREADS=1
+.F.....................                                                  [100%]
+================================== FAILURES ===================================
+_______________ test_builder_v2_to_evaluator_v2_artificial_api ________________
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7410/test_builder_v2_to_evaluator_v0')
+
+    def test_builder_v2_to_evaluator_v2_artificial_api(tmp_path: Path) -> None:
+        source, calendar = tmp_path / "source", tmp_path / "calendar.parquet"
+        specs = [
+            (["20230103", "20230104", "20230105"], "20230110", 0.5),
+            (["20230403", "20230404", "20230405"], "20230410", 0.8),
+            (["20240103", "20240104", "20240105"], "20240110", 1.1),
+            (["20240403", "20240404", "20240405"], "20240410", 1.4),
+            (["20250106", "20250107", "20250108"], "20250110", 0.8),
+            (["20260105", "20260106", "20260107"], "20260112", 1.4),
+        ]
+        dates = [day for triplet, _, _ in specs for day in triplet]
+        calendar_rows = [
+            {"ticker": ticker, "date": day, "close_i": 390, "status": "COMPLETE"}
+            for ticker in builder_v2.TICKERS for day in dates
+        ]
+        calendar.parent.mkdir(parents=True, exist_ok=True)
+        pq.write_table(pa.Table.from_pylist(calendar_rows), calendar)
+        calendar_sha = sha(calendar)
+    
+        def source_path(expiration: str, day: str) -> Path:
+            return source / "data_options" / "SPY" / "greeks" / day[:4] / day[4:6] / f"SPY_{expiration}_{day}_greeks.parquet"
+    
+        def quote(expiration: str, day: str, clock: str, right: str, bid: float, ask: float) -> dict:
+            return {
+                "symbol": "SPY", "expiration": expiration, "trade_date": day,
+                "timestamp": f"{day[:4]}-{day[4:6]}-{day[6:]}T{clock}:00",
+                "interval_used": "1m", "underlying_price": 500.0, "strike": 500.0,
+                "right": right, "bid": bid, "ask": ask,
+                "delta": 0.5 if right == "CALL" else -0.5, "implied_vol": 0.2,
+                "gamma": 0.01, "theta": -0.02, "vega": 0.1, "rho": 0.03,
+            }
+    
+        for triplet, expiration, exit_bid in specs:
+            entry, exit_day = triplet[0], triplet[2]
+            entry_rows = [
+                quote(expiration, entry, clock, right, 0.9, 1.0)
+                for clock in ("10:30", "10:35") for right in ("CALL", "PUT")
+            ]
+            exit_rows = [quote(expiration, exit_day, "10:35", right, exit_bid, exit_bid + 0.1) for right in ("CALL", "PUT")]
+            for path, payload in ((source_path(expiration, entry), entry_rows), (source_path(expiration, exit_day), exit_rows)):
+                path.parent.mkdir(parents=True, exist_ok=True)
+                pq.write_table(pa.Table.from_pylist(payload), path)
+    
+        dataset = tmp_path / "dataset"
+        builder_v2.build_dataset(source, calendar, calendar_sha, dataset)
+        manifest_path = dataset / "manifest.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        coverage = json.loads((dataset / "coverage.json").read_text(encoding="utf-8"))
+        assert manifest["schema"] == "weekly_h2_dataset_manifest_v2"
+        assert coverage["schema"] == "weekly_h2_coverage_v2" and coverage["clock_files"]
+        old_calendar_sha = ev.CALENDAR_SHA256
+        ev.CALENDAR_SHA256 = calendar_sha
+        try:
+            summary = ev.run(
+                dataset / "candidates.jsonl", dataset / "coverage.json", manifest_path,
+                sha(manifest_path), tmp_path / "evaluation",
+            )
+        finally:
+            ev.CALENDAR_SHA256 = old_calendar_sha
+>       assert summary["label_support"]["TRAIN"]["total"] == 8
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'total'
+
+research_papers\JEPA\weekly_multiday_20261101\test_evaluate_weekly_h2_ev_v2.py:106: KeyError
+=========================== short test summary info ===========================
+FAILED research_papers/JEPA/weekly_multiday_20261101/test_evaluate_weekly_h2_ev_v2.py::test_builder_v2_to_evaluator_v2_artificial_api
+1 failed, 22 passed in 1.73s

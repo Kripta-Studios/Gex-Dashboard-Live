@@ -1,0 +1,23 @@
+{
+  "schema": "weekly_h2_evaluator_v2_final_manifest_v1",
+  "created_at_utc": "2026-11-01T14:11:42.5754555Z",
+  "scope": "retry05 direct process evidence and frozen pretest sources only",
+  "files": [
+    {"path":"retry05/ECONOMIC_H2_CONTRACT.md","bytes":10737,"sha256":"245a6df1530fbabf29e6a2e5e86662972ebdc680e011987253f35eb61257d5d5"},
+    {"path":"retry05/evaluate_weekly_h2_ev_v2.py","bytes":48861,"sha256":"8a9e75855d542a12662e5c812583f2ef86042f5c3ae1bbbad73c16042e063476"},
+    {"path":"retry05/H2_CLOCK_FILTER_V2_AMENDMENT.md","bytes":2692,"sha256":"9210c6e50094e5745f80c5e03f577f6bd673263f84d3c3ef764ad76b22ca56eb"},
+    {"path":"retry05/pretest_snapshot.json","bytes":824,"sha256":"ad41a562c51b5c70c6f6eeb96554e0f5933f9f04e89cfc71b6e6e97d8dbdd1c3"},
+    {"path":"retry05/pytest_exit.txt","bytes":3,"sha256":"13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"},
+    {"path":"retry05/pytest_stderr.log","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    {"path":"retry05/pytest_stdout.log","bytes":129,"sha256":"c23d3dbb8d2316a193d54693df3e8934e6e4d22dd31ea490e83f61ffd9f2a64b"},
+    {"path":"retry05/resource_gate.json","bytes":282,"sha256":"5fa01f08fd4f63fb9696db9d2a8d8b98dd40a8b1ae293bc93020854b88b8702e"},
+    {"path":"retry05/ruff_exit.txt","bytes":3,"sha256":"13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"},
+    {"path":"retry05/ruff_stderr.log","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    {"path":"retry05/ruff_stdout.log","bytes":19,"sha256":"82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"},
+    {"path":"retry05/test_evaluate_weekly_h2_ev_v2.py","bytes":26449,"sha256":"e479c2f649e4b274565dccddc3bbc0c6638f50dbdb45f4182fffe962e2857d5e"}
+  ],
+  "file_count": 12,
+  "total_bytes": 89999,
+  "real_dataset_evaluated": false,
+  "theta_data_accessed": false
+}
