@@ -1,0 +1,12 @@
+{
+  "exit_code": 0,
+  "observed_utc": "2026-11-01T12:19:11.713523+00:00",
+  "exit_source": "subprocess.Popen.wait_retained_handle",
+  "elapsed_seconds": 2612.838146299997,
+  "files": {
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_user_stop_continuation_observer_20261029_01\\execute_20261101_01\\admission.json": "10639e7a3c47adabdf7f6575ea9b7c34eefd8d5a7d84bf1288552dceddc4c438",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_user_stop_continuation_observer_20261029_01\\execute_20261101_01\\process.json": "64cb28a471db3ee71cdbae9ec0d2ebb1e8449db8a8765e804fd1a072c9e01269",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_user_stop_continuation_observer_20261029_01\\execute_20261101_01\\stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_user_stop_continuation_observer_20261029_01\\execute_20261101_01\\stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

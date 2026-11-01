@@ -1,28 +1,25 @@
 # Investigación 0DTE por niveles
 
 REANUDADA por orden expresa del usuario el 1 de noviembre de 2026.
-Autoridad actual: [RESUMPTION_20261101.md](RESUMPTION_20261101.md).
-Goal activo restablecido; cierre del29 conservado como historia. Root verificó
-127 pins compactos; revisión independiente confirma prefijo8 y destinos nuevos
-ausentes. Se autoriza único CLI de continuación con admisión contemporánea,
-CPU0/threads1/gate2GB. Supervisor10596 creó child38568 a11:58:30UTC,
-sesiónroot16020/invocador36848. Preflight efectivoee42d98d PASS19143pins;
-root166pins compactos y4copias8832402B verificados. Inicio independienteCLEAR.
-Corte12:10:06UTC vivo: mayo08/09 cerrados, junio10 iniciado12:08:13UTC.
-Recibos a465e101/067d30f7; root39compactos originales intactos,9copias6596830B.
-Sin exit/cierre global ni economía auditada. No relanzar.
-Detalle OOF_MAY_CLOSURE_CHECKPOINT_20261101.md; borrador admisión escenarios/EV
-SCENARIO_EV_DATA_ADMISSION_DRAFT_20261101.md no ejecutable.
-Recibo OOF_CONTINUATION_SCIENTIFIC_START_20261101.md.
-Sólo mayo/junio pendientes; FULL_H1 y reporter después del cierre real.
-Producción/API/bróker/VPS intactos, selección null, promoción false.
+Autoridad: [RESUMPTION_20261101.md](RESUMPTION_20261101.md).
+Goal activo. Productor OOF completo: doce fases enero–junio; hijo38568 exit0
+retenido12:18:18UTC, supervisor completó12:19:11UTC, CLI/sesión16020 exit0.
+Cierres científico2a472a0e/supervisor17544b12/pipeline5ca25706. Prefijo enero–abril,
+exit15 y failure originales preservados; 45compactos finales verificados.
+Root20copias7246383B, manifest59d3f133; revisión independiente técnicaCLEAR.
+Paquete económico real request69d45a14/binding87f0e49f: revisiónCLEAR148pins,
+141archivos únicos,81publicables,16raíces,12cierres; destinos aún ausentes.
+Invocador dbc74439 revisado. Publicar antes de DEFAULT; inspeccionar DEFAULT
+real antes del único EXECUTE. Auditor FULL_H1 y reporte todavía pendientes.
+Detalle [OOF_PRODUCER_CLOSURE_AND_AUDIT_ADMISSION_20261101.md](OOF_PRODUCER_CLOSURE_AND_AUDIT_ADMISSION_20261101.md).
+No relanzar productor. Selección null, technical_ready/promotion_approved false.
+Producción/API/bróker/VPS intactos.
 
-Orientación nueva1nov: probabilidades de escenarios y valor esperado neto.
-Usuario permite días sin operar en la siguiente etapa; WAIT legítima sin gate
-mínimo diario. OOF actual conserva criterios anteriores. Dirección para contrato futuro:
-[EXPECTED_VALUE_SCENARIO_DIRECTION_20261101.md](EXPECTED_VALUE_SCENARIO_DIRECTION_20261101.md).
-Helper documental auditor preparado/revisado,18tests finalesPASS; aún sin paquete
-real ni auditoría. Ver OOF_AUDIT_PACKAGE_PREPARATION_RESULT_20261101.md.
+Orientación nueva: probabilidades de escenarios y valor esperado neto.
+Usuario permite días sin operar en la siguiente etapa; WAIT sin mínimo diario.
+OOF actual conserva sus reglas. [Dirección](EXPECTED_VALUE_SCENARIO_DIRECTION_20261101.md)
+y [borrador de admisión](SCENARIO_EV_DATA_ADMISSION_DRAFT_20261101.md)
+no abren arquitectura, fit o nueva evaluación económica todavía.
 
 ## Pausa histórica del 29 de octubre de 2026
 

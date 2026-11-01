@@ -1,0 +1,10 @@
+{
+  "exit_code": 0,
+  "observed_utc": "2026-11-01T12:21:02.936177+00:00",
+  "exit_source": "subprocess.Popen.wait_retained_handle",
+  "files": {
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_audit_package_assembly_20261101_01\\admission.json": "0c163e3538cfe2d869475e12244a4a2858de8ea890cd9ed8bd6ac2b24607f482",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_audit_package_assembly_20261101_01\\stdout.json": "54d38c11d53949708d592ed957085a9f179c9d619ce069538593a2a9bd696014",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_audit_package_assembly_20261101_01\\stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "version": "OOF_ECONOMIC_AUDIT_REQUEST_V1",
+  "scope": "FULL_H1",
+  "monthly_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_v1",
+  "monthly_audit": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_walk_forward_test_audit_20261024_01\\audit.json",
+  "monthly_audit_sha256": "87bfea586be13e02fd7fd0fe59c819195c62a430f34c867f9ec661812569fd4e",
+  "session_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_clock_dataset_v1",
+  "session_audit": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_clock_dataset_v1_audit\\audit.json",
+  "correction_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_oof_correction_20261024_v2r1_01",
+  "months": [
+    {
+      "month": "202601",
+      "evaluation_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202601_20261024_v2r1_01",
+      "correction_completion_sha256": "b3537f2dd473cb56491009aeaf1d7272fbe1ea6245e01cd9d2c06913f7b66014",
+      "evaluation_completion_sha256": "96d76580f468691fcf74cf97eb81cb2547435eda7bd52458aa78f157f1b04c38"
+    },
+    {
+      "month": "202602",
+      "evaluation_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202602_20261024_v2r1_01",
+      "correction_completion_sha256": "6b5a48e59b31bdfab3979eee699406934914068f61ae2a8915ba0c20e40b9ef0",
+      "evaluation_completion_sha256": "73cf5b01575931c6069aa6c6696604c4c79129c8293fe72449aefea79324c188"
+    },
+    {
+      "month": "202603",
+      "evaluation_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202603_20261024_v2r1_01",
+      "correction_completion_sha256": "04587b7f18c68bcec83ac33470d946a613dc95f1067a009d2f1a0c75de986802",
+      "evaluation_completion_sha256": "148a19fa0cd2bef093205e844e0ba86b9e4f91ec94288ec882ae2c6d1fd05155"
+    },
+    {
+      "month": "202604",
+      "evaluation_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202604_20261024_v2r1_01",
+      "correction_completion_sha256": "11d51238bbbe882ffff2ba2b2d57b20691880400ff26207d7cbb28ddcaee6c67",
+      "evaluation_completion_sha256": "21bcf9a0728269bfff31b235e511ad61b575cfb651697c50fe0b5ee2a48343eb"
+    },
+    {
+      "month": "202605",
+      "evaluation_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202605_20261024_v2r1_01",
+      "correction_completion_sha256": "fefb194b26b60135418ce2b21b634814c9d114878af70899e0e41fe61ff3cd9a",
+      "evaluation_completion_sha256": "c2c62879a7bfa6e06761aa9f0e30f45f478394fd544085d70263c525eccb7fdd"
+    },
+    {
+      "month": "202606",
+      "evaluation_root": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202606_20261024_v2r1_01",
+      "correction_completion_sha256": "29518c70ef5c9f577917ace240dce202eb3bc68ca12f2250ca693d5500f77753",
+      "evaluation_completion_sha256": "b01b015dae41a7d50329e396a5390e0eaa612b118b23f60fd330a9a64f0afc79"
+    }
+  ]
+}

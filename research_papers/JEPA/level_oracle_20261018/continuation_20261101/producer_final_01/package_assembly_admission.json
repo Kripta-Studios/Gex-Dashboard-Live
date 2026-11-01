@@ -1,0 +1,20 @@
+{
+  "utc": "2026-11-01T12:21:02.431347+00:00",
+  "resources": {
+    "available_ram_bytes": 17939656704,
+    "free_commit_bytes": 31755137024
+  },
+  "cpu_affinity": [
+    0
+  ],
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\prepare_oof_continuation_audit_package_20261101.py",
+    "--prepare"
+  ],
+  "code_sha256": "0ef5f0a3ab7a275943741d81e5214cdfee20172e2f934bc2b283cda528a95d2b",
+  "git_head": "44257f65740ae51d0c1e792a19c2ab9c13c479db"
+}

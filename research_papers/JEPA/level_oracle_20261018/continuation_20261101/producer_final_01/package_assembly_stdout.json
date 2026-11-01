@@ -1,0 +1,14 @@
+{
+  "status": "PREPARED_FOR_INDEPENDENT_METADATA_REVIEW_NOT_RUNTIME_AUTHORIZED",
+  "request": {
+    "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_ECONOMIC_AUDIT_USER_STOP_REQUEST_20261101_01.json",
+    "sha256": "69d45a141bdb23e5f0a2723e6e85b4b6457746a0c4782c1176b930fed16d3415"
+  },
+  "binding": {
+    "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_ECONOMIC_AUDIT_USER_STOP_BINDING_20261101_01.json",
+    "sha256": "87f0e49fc0dd6e0837fe1e920d10214573482ad0f2b15a78fa43601e63e60f63"
+  },
+  "phases": 12,
+  "controls": 27,
+  "published_files": 81
+}

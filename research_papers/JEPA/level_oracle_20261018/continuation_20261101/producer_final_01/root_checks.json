@@ -1,0 +1,40 @@
+{
+  "utc": "2026-11-01T12:22:55.419589+00:00",
+  "status": "ROOT_COMPLETE_TECHNICAL_OOF_NOT_ECONOMIC_AUDIT",
+  "scientific_exit": {
+    "creation_time": 1793534310.550339,
+    "exit_code": 0,
+    "exit_code_source": "GetExitCodeProcess_retained_Popen_handle",
+    "implementation_review_sha256": "6a06521fc74fd9b8afd4efeab0209066f9138749e7e1acde562ce6c50ede16bf",
+    "minimum_free_observed": {
+      "available_ram_bytes": 13731352576,
+      "free_commit_bytes": 26104442880
+    },
+    "monitor_code_sha256": "599f6d5c347ebdc3801bbe8cc21de55603a80a46858a8bad1d20729d307eee11",
+    "monitor_errors": [],
+    "monitor_seconds": 1187.732065199998,
+    "monitor_valid": true,
+    "observed_utc": "2026-11-01T12:18:18.295169+00:00",
+    "pid": 38568,
+    "preflight_sha256": "ee42d98d047f8aec38cc4abb4631859a9530dc3ec13eb347652f39ffc6bfa5d6",
+    "process_receipt_sha256": "36ecc09921073eb40c054d80a45343c0efd188344d9906673ca8c826ff772450",
+    "publication_commit": "8bf198a501719775029f375776552d193f99ab76",
+    "request_sha256": "f32e35e965722631e2f685db3c3a38aefc6021f5edd35db18f55984061982fef",
+    "retry": false,
+    "runtime_binding_sha256": "4197cd14d7110211164238c3863df8c88c7eca9d26db248aa4c1e11a3bdb9510",
+    "sample_count": 1169,
+    "status": "PROCESS_EXIT_OBSERVED_BY_RETAINED_HANDLE"
+  },
+  "supervisor_completion_sha256": "17544b128b4634ee75af50bf8d4a874b6cdc51752ad5b8c47ff9c16234aa17b6",
+  "pipeline_completion_sha256": "5ca257063cb8a0c7e9e3d1a367dcd50f9c0e98663fead6b361e1c680b836705b",
+  "cli_exit_sha256": "a4b26daac66d12a4f827ffe736aadf3b6a0000162d0803338a654e11f95e0ad1",
+  "final_control_count": 27,
+  "final_compact_pins": 45,
+  "baseline_compact_pins": 39,
+  "baseline_output_pins_subset": 8726,
+  "final_output_count": 10942,
+  "payloads_rehashed_by_root": false,
+  "original_exit15_preserved": true,
+  "economics_interpreted": false,
+  "root_tool_session_completed": 16020
+}
