@@ -1,0 +1,58 @@
+{
+  "utc": "2026-11-01T18:40:10.779886+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_context_adaptation_v3.py",
+    "--execute-reviewed-audit",
+    "--producer-manifest-sha256",
+    "e8cf5cd4a001cd98cdf29e54cf47bbdf3c34d6652abf34ef7c71fffa0bd97f23",
+    "--producer-sha256",
+    "d03494bf68e281bc7c9e68f385aa111567eac4206cf5b44133e17bb480ed5df8",
+    "--producer-tests-sha256",
+    "2f44f17d459cd7cb43c5c3842fb4b2d72c689278f797426a75ac006f0d5db43f",
+    "--bridge-manifest-sha256",
+    "9d1455c601ac38224c4f56365f20c3fb31978e997f8652454dbc69807e0abb86",
+    "--bridge-audit-sha256",
+    "83c9ade0b6b7205484dd275df8593107238f94468d8564f7351e9481a475033c",
+    "--auditor-sha256",
+    "1eff2409c73562e1b30eee4dedda7d3bd6bc2afffab86c1bccabd2f007822523"
+  ],
+  "publication_commit": "d517dd7b6d84bc96de997f9a18ba34dbfe39b7a1",
+  "pins": {
+    "audit_weekly_context_adaptation_v3.py": "1eff2409c73562e1b30eee4dedda7d3bd6bc2afffab86c1bccabd2f007822523",
+    "test_audit_weekly_context_adaptation_v3.py": "17e79b6ad920e06a23a0d4ef9213e369c6604d2fd3eb99fb0040684825e88272",
+    "evaluate_weekly_context_adaptation.py": "d03494bf68e281bc7c9e68f385aa111567eac4206cf5b44133e17bb480ed5df8",
+    "test_evaluate_weekly_context_adaptation.py": "2f44f17d459cd7cb43c5c3842fb4b2d72c689278f797426a75ac006f0d5db43f",
+    "ADAPTATION_AND_BRIDGE_IMPLEMENTATION_REVIEW_20261101.md": "f4fe3591c0244236573618f52ec167cc490b53698e838915608b6209dc69b674",
+    "ADAPTATION_AUDIT_V3_IMPLEMENTATION_AND_RUNTIME_BINDING_20261101.md": "4444aa1e8f27dfb7d70563be517daeba121369c03391b890060c0eecc63fa435",
+    "adaptation_producer_archive_01/archive_receipt.json": "cd9f341eadf54680cf99f8c7f68f16062dc64e2b2a2729c0b0942fe9de407361",
+    "ADAPTATION_AUDIT_V2_SCHEMA_ADDENDUM_20261101.md": "159c7b0e563534bbc328c87113e4d5f516e1fcaa0b95b61aa6bfaede546be5f1",
+    "adaptation_audit_v2_implementation_archive_01/archive_receipt.json": "e995b64a6f75a3b4f097d7cd591ff576719df7c08421c026165fb36ebb600158",
+    "audit_weekly_context_adaptation.py": "c6a116d3c39e054031b594547d36c54fd0a5eeed0aa6524c10ca89ba0f7198a5",
+    "test_audit_weekly_context_adaptation.py": "fd835bbefba283e4d746205941924ceebd3e3937f853591dbf69688d9b83fefd",
+    "ADAPTATION_AUDIT_FAILURE02_AND_V3_SCOPE_20261101.md": "4934585651fe9262e4e40428b8c8bc04f6ec97fc2c89fdb0ef19204254ec8d82",
+    "adaptation_audit_v3_implementation_archive_01/archive_receipt.json": "8500efec8e23b0e07e15cc7b6cdb617c1b691cd933bf9cb20075352ec91e1ebe",
+    "audit_weekly_context_adaptation_v2.py": "b165dfe0432623c7720f4c63842e473158a8f1132615cd31f09d251c22d9fc2d",
+    "test_audit_weekly_context_adaptation_v2.py": "3df0bff2f1e8bc5c5b7942b3831bcd3c88952cc1954fe530d6ba0745721fbe79"
+  },
+  "resources": {
+    "available_ram_bytes": 6658924544,
+    "free_commit_bytes": 5831106560
+  },
+  "cpu_affinity": [
+    0
+  ],
+  "thread_variables": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+    "BLIS_NUM_THREADS": "1",
+    "ARROW_NUM_THREADS": "1",
+    "POLARS_MAX_THREADS": "1"
+  }
+}

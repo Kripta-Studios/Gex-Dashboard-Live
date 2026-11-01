@@ -1,0 +1,37 @@
+{
+  "schema": "root_compact_archive_v1",
+  "copies": 5,
+  "total_bytes": 6662,
+  "files": [
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_adaptation_audit_observer_03\\admission.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/adaptation_audit_failure03_archive/admission.json",
+      "bytes": 3354,
+      "sha256": "7edfde6452c4b47d3d4319226eb164525c1e1322451b83e4464f404f8af92f75"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_adaptation_audit_observer_03\\process.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/adaptation_audit_failure03_archive/process.json",
+      "bytes": 1038,
+      "sha256": "ca86cca5091378231595153dbc7816ee1e604b907af437974a2249a10aced223"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_adaptation_audit_observer_03\\exit.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/adaptation_audit_failure03_archive/exit.json",
+      "bytes": 911,
+      "sha256": "e92485e70bf5e3e41607ef6cf13250633c2fd2071907da1191c80fd9f5c1e897"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_adaptation_audit_observer_03\\stdout.log",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/adaptation_audit_failure03_archive/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_adaptation_audit_observer_03\\stderr.log",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/adaptation_audit_failure03_archive/stderr.log",
+      "bytes": 1359,
+      "sha256": "13346a7100975b8b7a9b096239a278e81e1b19b7ec5a9057a2d5216def2c7e52"
+    }
+  ]
+}
