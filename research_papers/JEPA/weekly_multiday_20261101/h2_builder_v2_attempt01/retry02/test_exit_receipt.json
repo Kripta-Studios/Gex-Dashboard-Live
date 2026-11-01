@@ -1,0 +1,19 @@
+{
+  "schema": "weekly_h2_builder_v2_attempt01_retry02_exit_v1",
+  "closed_utc": "2026-11-01T14:09:27.6584390Z",
+  "pytest": {
+    "exit_code": 0,
+    "result": "2 passed in 0.47s",
+    "scope": "minute-only ISO end-to-end and fractional-minute rejection",
+    "stdout_sha256": "74c0928aaa15d477ae81ca832fb06545242bd17568e252090a9fb07ca14c8862",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "ruff": {
+    "exit_code": 0,
+    "result": "All checks passed!",
+    "stdout_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "real_theta_values_read": false,
+  "real_v2_runtime_invoked": false
+}

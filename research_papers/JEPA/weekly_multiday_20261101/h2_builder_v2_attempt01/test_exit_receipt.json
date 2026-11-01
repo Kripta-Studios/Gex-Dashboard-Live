@@ -1,0 +1,19 @@
+{
+  "schema": "weekly_h2_builder_v2_attempt01_exit_v1",
+  "closed_utc": "2026-11-01T14:06:06.2240105Z",
+  "pytest": {
+    "exit_code": 0,
+    "result": "16 passed in 1.02s",
+    "stdout_sha256": "3782e57067e136c835f81424846b99745a4f3a1d6fb8cbfed58a7df14923e879",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "ruff": {
+    "exit_code": 0,
+    "result": "All checks passed!",
+    "stdout_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "economic_ast_functions_equal_v1": ["_decision_candidate", "_scenario", "_net", "_debit"],
+  "real_theta_values_read": false,
+  "real_v2_runtime_invoked": false
+}
