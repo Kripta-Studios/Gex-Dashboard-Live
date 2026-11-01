@@ -1,0 +1,127 @@
+{
+  "utc": "2026-11-01T15:50:07.1335049Z",
+  "count": 20,
+  "files": [
+    {
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\context_model_result_evidence_01\\h2_context_model_comparison_01\\candidate_scores_context_comparison.jsonl",
+      "bytes": 2491004,
+      "sha256": "d9ac98a67f80728c9365163333ed8a90db99d5378b7726481ac635a454c38aee",
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_model_comparison_01\\candidate_scores_context_comparison.jsonl"
+    },
+    {
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\context_model_result_evidence_01\\h2_context_model_comparison_01\\category30_calibration.json",
+      "bytes": 916,
+      "sha256": "1201fbd5dbbc6d6e4aae6149ee5349e2773a7bb659cb45a51cea44e7d9fd9ba1",
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_model_comparison_01\\category30_calibration.json"
+    },
+    {
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\context_model_result_evidence_01\\h2_context_model_comparison_01\\category30_model.json",
+      "bytes": 4371,
+      "sha256": "e927fe4e2e9b796c2f41f0cdb36a713fd72101b5bbbb8c8131c2be7f84224b5c",
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_model_comparison_01\\category30_model.json"
+    },
+    {
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\context_model_result_evidence_01\\h2_context_model_comparison_01\\category30_transform.json",
+      "bytes": 2757,
+      "sha256": "dbbab2c4a774e43e69269a5b0b9c7ed06f61b105b8cc96196464f83ba740584d",
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_model_comparison_01\\category30_transform.json"
+    },
+    {
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\context_model_result_evidence_01\\h2_context_model_comparison_01\\context182_calibration.json",
+      "bytes": 915,
+      "sha256": "5a9dc85fba737b0e2921968c711ce14780da2b3aa7a27f87bd025cf0954bc14c",
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_model_comparison_01\\context182_calibration.json"
+    },
+    {
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\context_model_result_evidence_01\\h2_context_model_comparison_01\\context182_model.json",
+      "bytes": 24002,
+      "sha256": "7a9dafc2a8c30c83ef2177057ceeb6fa33636f2943821cee83172b703cc17037",
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_model_comparison_01\\context182_model.json"
+    },
+    {
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\context_model_result_evidence_01\\h2_context_model_comparison_01\\context182_transform.json",
+      "bytes": 17000,
+      "sha256": "82b31bc61ad94f462b724a49d1cfd6793aebfc361afd3111e5c27dc1d16539c0",
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_model_comparison_01\\context182_transform.json"
+    },
+    {
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\context_model_result_evidence_01\\h2_context_model_comparison_01\\ledger_base18_frozen_eval_adverse.jsonl",
+      "bytes": 115161,
+      "sha256": "4d6f11bf673ea4f642bc186f32404c29f04f0804bf0bb01f9dbb96b0b9111790",
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_model_comparison_01\\ledger_base18_frozen_eval_adverse.jsonl"
+    },
+    {
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\context_model_result_evidence_01\\h2_context_model_comparison_01\\ledger_base18_frozen_eval_base.jsonl",
+      "bytes": 113509,
+      "sha256": "9687b6df2e4e540e787c1b90e26d5fa448ebbcdf40b2ba2ebbdea71ddb79a004",
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_model_comparison_01\\ledger_base18_frozen_eval_base.jsonl"
+    },
+    {
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\context_model_result_evidence_01\\h2_context_model_comparison_01\\ledger_category30_eval_adverse.jsonl",
+      "bytes": 120044,
+      "sha256": "15800871876e469651314c57c14cf0d50edd2ad7ee563aefc8a83eaffe43112b",
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_model_comparison_01\\ledger_category30_eval_adverse.jsonl"
+    },
+    {
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\context_model_result_evidence_01\\h2_context_model_comparison_01\\ledger_category30_eval_base.jsonl",
+      "bytes": 118313,
+      "sha256": "ca807d3976ee1021776ff0c6b0647676d9aa249b82329151c6db7351cc2b3de7",
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_model_comparison_01\\ledger_category30_eval_base.jsonl"
+    },
+    {
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\context_model_result_evidence_01\\h2_context_model_comparison_01\\ledger_context182_eval_adverse.jsonl",
+      "bytes": 126007,
+      "sha256": "07d093b285aed067845e07a1e24d3d45a4d90837b9b234ce4f280b9dc48add89",
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_model_comparison_01\\ledger_context182_eval_adverse.jsonl"
+    },
+    {
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\context_model_result_evidence_01\\h2_context_model_comparison_01\\ledger_context182_eval_base.jsonl",
+      "bytes": 125679,
+      "sha256": "b95c390fd90b6a6aa436a458bcab9255a7826e434ff03b6f34add371e6dc9e66",
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_model_comparison_01\\ledger_context182_eval_base.jsonl"
+    },
+    {
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\context_model_result_evidence_01\\h2_context_model_comparison_01\\manifest.json",
+      "bytes": 6382,
+      "sha256": "662ac63eaa2895beff4363b9e94a97cd7adc91aac3558139bdd919d8fbf2861a",
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_model_comparison_01\\manifest.json"
+    },
+    {
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\context_model_result_evidence_01\\h2_context_model_comparison_01\\summary.json",
+      "bytes": 182593,
+      "sha256": "0c98e712d4a6f5f8a06a16b494a819fc70dafbe6c43e413518dc6f5412103e09",
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_model_comparison_01\\summary.json"
+    },
+    {
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\context_model_result_evidence_01\\h2_context_model_observer_01\\admission.json",
+      "bytes": 777,
+      "sha256": "beffe887663f28a7924ee8582255b8481d3cbecb4522534e6ae09e81dc4552b9",
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_model_observer_01\\admission.json"
+    },
+    {
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\context_model_result_evidence_01\\h2_context_model_observer_01\\exit.json",
+      "bytes": 866,
+      "sha256": "5d74c4f38ec1f8f50c0d83ed15b7af6e7e8824cdae9c91d719ae112dee406477",
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_model_observer_01\\exit.json"
+    },
+    {
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\context_model_result_evidence_01\\h2_context_model_observer_01\\process.json",
+      "bytes": 527,
+      "sha256": "5adfe70f15da6be2a86d4003ff5b146eb7c510a0cfc5063c6683ed5e03f41d3c",
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_model_observer_01\\process.json"
+    },
+    {
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\context_model_result_evidence_01\\h2_context_model_observer_01\\stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_model_observer_01\\stderr.log"
+    },
+    {
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\context_model_result_evidence_01\\h2_context_model_observer_01\\stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_model_observer_01\\stdout.log"
+    }
+  ],
+  "bytes": 3450823.0
+}

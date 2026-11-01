@@ -1,0 +1,23 @@
+{
+  "utc": "2026-11-01T15:45:56.875506+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\evaluate_weekly_context_models.py",
+    "--execute-reviewed-comparison",
+    "--context-manifest-sha256",
+    "77aaf00d60accc071ff1f58ec099cee72bc3a4150f89e4ad41a601821a74a38a"
+  ],
+  "publication_commit": "e3a988fec28b7b6919806a6889af591496361838",
+  "code_sha256": "bdc6534f059ade7acc58f23952a88ed2068c7a712518b04f438945a583a07a2f",
+  "resources": {
+    "available_ram_bytes": 8284164096,
+    "free_commit_bytes": 4207882240
+  },
+  "cpu_affinity": [
+    0
+  ],
+  "threads": 1
+}
