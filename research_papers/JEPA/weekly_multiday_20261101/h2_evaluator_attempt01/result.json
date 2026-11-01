@@ -1,0 +1,78 @@
+{
+  "schema": "weekly_h2_evaluator_implementation_evidence_v1",
+  "status": "PASS_SYNTHETIC_IMPLEMENTATION_ONLY",
+  "real_dataset_evaluated": false,
+  "theta_data_accessed": false,
+  "fit_real_performed": false,
+  "promotion_approved": false,
+  "technical_ready": false,
+  "final_attempt": "retry04",
+  "final_tests": {
+    "passed": 8,
+    "failed": 0,
+    "pytest_exit": 0,
+    "ruff_exit": 0,
+    "cpu_affinity": [
+      0
+    ],
+    "threads": 1,
+    "pytest_stdout": "retry04/pytest_stdout.log",
+    "pytest_stderr": "retry04/pytest_stderr.log",
+    "ruff_stdout": "retry04/ruff_stdout.log",
+    "ruff_stderr": "retry04/ruff_stderr.log",
+    "resource_gate": "retry04/resource_gate.json",
+    "pretest_snapshot": "retry04/pretest_snapshot.json"
+  },
+  "history": [
+    {
+      "attempt": "initial",
+      "pytest": "7 passed",
+      "pytest_exit": 0,
+      "ruff_exit": 1,
+      "finding": "two unused test imports",
+      "logs": [
+        "pytest_stdout.log",
+        "pytest_stderr.log",
+        "ruff_stdout.log",
+        "ruff_stderr.log"
+      ]
+    },
+    {
+      "attempt": "retry02",
+      "pytest": "7 passed",
+      "pytest_exit": 0,
+      "ruff_exit": 0,
+      "change": "remove unused imports only"
+    },
+    {
+      "attempt": "retry03",
+      "pytest": "7 passed",
+      "pytest_exit": 0,
+      "ruff_exit": 0,
+      "change": "adopt exact SimpleImputer TRAIN-only semantics and amended accounting"
+    },
+    {
+      "attempt": "retry04",
+      "pytest": "8 passed",
+      "pytest_exit": 0,
+      "ruff_exit": 0,
+      "change": "add CAPITAL_BLOCKED focal test"
+    }
+  ],
+  "implementation": {
+    "code_sha256": "0566bebf02badf372d539f72bdd25dfa08a9584bc36fa21e4b07f2dc35fd4d92",
+    "tests_sha256": "ef187182a7841aa979284c86db98f3a01fa7e90d5f91bc38bc8929b9e892e938",
+    "contract_sha256": "9459feaed8a819a53c2e430d8e223884c82d35dbb2ec00bc9a59246599d39ae5",
+    "sklearn_version": "1.8.0"
+  },
+  "scope": [
+    "pinned candidates/coverage/manifest validation",
+    "TRAIN-only imputer/scaler and fixed multinomial logistic regression",
+    "fixed CAL prior-mixture grid",
+    "conditional means shrinkage20",
+    "top1 adverse EV with WAIT ties",
+    "H2 capital scheduler and controls",
+    "conservative missing-exit labels and separate observed-only metrics",
+    "complete ledgers/transforms/model/calibration/pins output"
+  ]
+}

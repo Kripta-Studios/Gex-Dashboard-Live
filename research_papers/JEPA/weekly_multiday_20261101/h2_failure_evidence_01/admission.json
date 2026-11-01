@@ -1,0 +1,33 @@
+{
+  "utc": "2026-11-01T13:56:38.552268+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\build_weekly_h2_dataset.py",
+    "--execute-reviewed-builder",
+    "--inventory",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_01\\inventory.json",
+    "--inventory-sha256",
+    "cb762957bc463873f7f4d42a806d3a6fc09fb144eebacdc0eae2358971d2212d"
+  ],
+  "publication_commit": "11fbd0666cb54268905c05b8b2d355dbd5a146f2",
+  "published_weekly_files_byte_verified": 123,
+  "pins": {
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\build_weekly_h2_dataset.py": "eb0cba11d9e865909ee518efe825527e127d90c52b47339fa8e0b3fa699a1e67",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\ECONOMIC_H2_CONTRACT.md": "245a6df1530fbabf29e6a2e5e86662972ebdc680e011987253f35eb61257d5d5",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_multiday_source_pilot.py": "ad5b3ffba4e125ca7fcb4d5b0789eec601ace55be3740813d46374827766c878",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_01\\inventory.json": "cb762957bc463873f7f4d42a806d3a6fc09fb144eebacdc0eae2358971d2212d"
+  },
+  "resources": {
+    "available_ram_bytes": 13848920064,
+    "free_commit_bytes": 20982079488
+  },
+  "cpu_affinity": [
+    0
+  ],
+  "threads": 1,
+  "fit_performed": false,
+  "mode": "FIXED_H2_DATASET_EXTRACTION"
+}

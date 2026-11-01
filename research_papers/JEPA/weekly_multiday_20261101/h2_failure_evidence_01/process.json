@@ -1,0 +1,17 @@
+{
+  "pid": 38428,
+  "creation_time": 1793541398.553182,
+  "utc": "2026-11-01T13:56:38.556975+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\build_weekly_h2_dataset.py",
+    "--execute-reviewed-builder",
+    "--inventory",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_01\\inventory.json",
+    "--inventory-sha256",
+    "cb762957bc463873f7f4d42a806d3a6fc09fb144eebacdc0eae2358971d2212d"
+  ]
+}

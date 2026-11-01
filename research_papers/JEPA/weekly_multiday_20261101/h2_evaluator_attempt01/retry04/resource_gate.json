@@ -1,0 +1,11 @@
+{
+  "status": "PASS_2GB_RAM_COMMIT",
+  "available_ram_bytes": 13880463360,
+  "available_commit_bytes": 23131430912,
+  "required_min_bytes": 2000000000,
+  "cpu_affinity_required": [
+    0
+  ],
+  "threads_required": 1,
+  "observed_at_utc": "2026-11-01T13:47:05.9997857Z"
+}

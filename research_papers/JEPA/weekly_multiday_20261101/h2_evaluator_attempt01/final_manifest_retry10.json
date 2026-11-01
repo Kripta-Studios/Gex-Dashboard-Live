@@ -1,0 +1,22 @@
+{
+  "schema": "weekly_h2_evaluator_final_manifest_v3",
+  "created_at_utc": "2026-11-01T13:59:25.4527197Z",
+  "scope": "retry10 direct process evidence and frozen pretest sources only",
+  "files": [
+    {"path":"retry10/ECONOMIC_H2_CONTRACT.md","bytes":10737,"sha256":"245a6df1530fbabf29e6a2e5e86662972ebdc680e011987253f35eb61257d5d5"},
+    {"path":"retry10/evaluate_weekly_h2_ev.py","bytes":46320,"sha256":"a89753151ee8ec958784f288e78301bc132278a3170480d9ac2c8398971614c2"},
+    {"path":"retry10/pretest_snapshot.json","bytes":570,"sha256":"f70fb9ae8148b81bc2483b48b75a27bdd5ee2b309742afb8afaea08e9d90cb24"},
+    {"path":"retry10/pytest_exit.txt","bytes":3,"sha256":"13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"},
+    {"path":"retry10/pytest_stderr.log","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    {"path":"retry10/pytest_stdout.log","bytes":129,"sha256":"8861b74997055fc5951bf18672e9f23786f2bea5c6edf41a5924d2e1a383ed1b"},
+    {"path":"retry10/resource_gate.json","bytes":282,"sha256":"82e621a6d5586c0690001ddee8fba1bff119d8d55fa5e44631ff34f780a8d8c4"},
+    {"path":"retry10/ruff_exit.txt","bytes":3,"sha256":"13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"},
+    {"path":"retry10/ruff_stderr.log","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    {"path":"retry10/ruff_stdout.log","bytes":47,"sha256":"86f1b843a735c6afc4867bc09fc32c103f7d285195fc930b1b0d4329a71f46b4"},
+    {"path":"retry10/test_evaluate_weekly_h2_ev.py","bytes":19370,"sha256":"8322064ac4b1e8166636070225d3c4a04e98eabb1769b639b84cc0a2ffc79b20"}
+  ],
+  "file_count": 11,
+  "total_bytes": 77461,
+  "real_dataset_evaluated": false,
+  "theta_data_accessed": false
+}

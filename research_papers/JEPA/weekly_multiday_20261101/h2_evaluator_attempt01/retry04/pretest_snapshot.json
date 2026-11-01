@@ -1,0 +1,18 @@
+{
+  "status": "FINAL_PRETEST_SNAPSHOT",
+  "created_at_utc": "2026-11-01T13:47:05.9569157Z",
+  "files": {
+    "evaluate_weekly_h2_ev.py": {
+      "bytes": 35327,
+      "sha256": "0566bebf02badf372d539f72bdd25dfa08a9584bc36fa21e4b07f2dc35fd4d92"
+    },
+    "ECONOMIC_H2_CONTRACT.md": {
+      "bytes": 10102,
+      "sha256": "9459feaed8a819a53c2e430d8e223884c82d35dbb2ec00bc9a59246599d39ae5"
+    },
+    "test_evaluate_weekly_h2_ev.py": {
+      "bytes": 11628,
+      "sha256": "ef187182a7841aa979284c86db98f3a01fa7e90d5f91bc38bc8929b9e892e938"
+    }
+  }
+}

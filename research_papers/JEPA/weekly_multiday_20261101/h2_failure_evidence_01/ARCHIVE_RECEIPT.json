@@ -1,0 +1,39 @@
+{
+  "status": "FAILED_BUILDER_PRESERVED_NO_RETRY",
+  "files": [
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_observer_01\\builder\\admission.json",
+      "copy": "admission.json",
+      "bytes": 1771,
+      "sha256": "0cd88e80cc1037167734160fdfda6a652d0a0087e86d11dfc3080e43730e7e54"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_observer_01\\builder\\exit.json",
+      "copy": "exit.json",
+      "bytes": 878,
+      "sha256": "36c95171b31144e5bdba9701f5d917c956d36e2b6bc972be4a43753b0760ae17"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_observer_01\\builder\\process.json",
+      "copy": "process.json",
+      "bytes": 619,
+      "sha256": "eb9ec7f0749923f702650998a8cfd6117be6c125005fcad69ccd2c728c84d9dd"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_observer_01\\builder\\stderr.log",
+      "copy": "stderr.log",
+      "bytes": 2299,
+      "sha256": "6b2b0f8f9b178b028f79469cb0fb0cb050b5e7ddb7e2a2d16fd2b9f4a3f708b6"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_observer_01\\builder\\stdout.log",
+      "copy": "stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "count": 5,
+  "bytes": 5567,
+  "inventory_unchanged": true,
+  "candidates_or_manifest_published": false
+}

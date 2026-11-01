@@ -1,0 +1,51 @@
+{
+  "schema": "weekly_h2_clock_failure_diagnostic_closure_v1",
+  "closed_utc": "2026-11-01T14:01:51.3420712Z",
+  "status": "FIRST_INVALID_CLOCK_LOCATED",
+  "inventory_sha256": "cb762957bc463873f7f4d42a806d3a6fc09fb144eebacdc0eae2358971d2212d",
+  "diagnostic_sha256": "96d3c76582522fae7277ef2aee18b2cd597a7da39abf3f4ba487094e2554956d",
+  "manifest_sha256": "fe47d18581f5c74e50cafbf88f21836df1d083973bb6e56452a6c67e09fe51e4",
+  "first_offending_source": {
+    "sequence_index": 1310,
+    "coverage_role": "exit",
+    "ticker": "QQQ",
+    "trade_date": "20241003",
+    "expiration": "20241004",
+    "path": "D:/ThetaData/data_options/QQQ/greeks/2024/10/QQQ_20241004_20241003_greeks.parquet",
+    "sha256": "5d2463296c590b702a73dcc2f4e499673d5f7fc43c2df2249b1af9d465dd591c",
+    "clock_column": "underlying_timestamp",
+    "raw_type": "str",
+    "first_invalid_raw": "2024-10-03T09:30:30",
+    "first_error": "sub-minute snapshot clocks are outside the contract"
+  },
+  "clock_distribution": {
+    "range": ["09:30:00", "16:00:00"],
+    "unique_total": 781,
+    "unique_second_00": 391,
+    "unique_second_30": 390,
+    "rows_total": 192126,
+    "rows_second_00": 96186,
+    "rows_second_30": 95940,
+    "deduplicated_invalid_unique": 390,
+    "exact_10_30_00_rows": 246,
+    "subminute_10_30_30_rows": 246,
+    "exact_10_35_00_rows": 246,
+    "subminute_10_35_30_rows": 246
+  },
+  "interpretation": "The file contains two interleaved one-minute grids, at second 00 and second 30. Exact 10:30:00 and 10:35:00 snapshots exist. The rejected second-30 rows are not the exact decision/execution clocks, including separate 10:30:30 and 10:35:30 rows.",
+  "launches": {
+    "attempt01": {
+      "exit_code": 2,
+      "scope": "argparse path quoting failure before inventory or source read",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "ef631c7e75b07bcc0a0973a189238820471fdf29bc366e39e31616ca5ee60432"
+    },
+    "retry02": {
+      "exit_code": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "quotes_greeks_pnl_outcomes_read": false,
+  "builder_modified_or_retried": false
+}

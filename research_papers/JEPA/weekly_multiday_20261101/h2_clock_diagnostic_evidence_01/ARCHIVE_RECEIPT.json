@@ -1,0 +1,63 @@
+{
+  "status": "CLOCK_ONLY_DIAGNOSTIC_ARCHIVE_VERIFIED",
+  "files": [
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_clock_failure_diagnostic_01\\closure_receipt.json",
+      "copy": "closure_receipt.json",
+      "bytes": 2285,
+      "sha256": "b769eb4315eb2e4265c0a8dac52a868799acd60cff023a641470ef1156ec0326"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_clock_failure_diagnostic_01\\diagnose_h2_clock_failure.py",
+      "copy": "diagnose_h2_clock_failure.py",
+      "bytes": 6608,
+      "sha256": "929a393fd55a708bde6ba0b4e0b1678a37ab810c2543d8bc975679e0ef383ada"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_clock_failure_diagnostic_01\\diagnostic.json",
+      "copy": "diagnostic.json",
+      "bytes": 309549,
+      "sha256": "96d3c76582522fae7277ef2aee18b2cd597a7da39abf3f4ba487094e2554956d"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_clock_failure_diagnostic_01\\manifest.json",
+      "copy": "manifest.json",
+      "bytes": 225,
+      "sha256": "fe47d18581f5c74e50cafbf88f21836df1d083973bb6e56452a6c67e09fe51e4"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_clock_failure_diagnostic_01\\preflight_receipt.json",
+      "copy": "preflight_receipt.json",
+      "bytes": 660,
+      "sha256": "a8819e17c4805a51711a0fed4dc42b0b791c9213bf55844dc724c31768f39dc3"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_clock_failure_diagnostic_01\\stderr.log",
+      "copy": "stderr.log",
+      "bytes": 468,
+      "sha256": "ef631c7e75b07bcc0a0973a189238820471fdf29bc366e39e31616ca5ee60432"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_clock_failure_diagnostic_01\\stderr_retry02.log",
+      "copy": "stderr_retry02.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_clock_failure_diagnostic_01\\stdout.log",
+      "copy": "stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_clock_failure_diagnostic_01\\stdout_retry02.log",
+      "copy": "stdout_retry02.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "count": 9,
+  "bytes": 319795,
+  "independent_metadata_review": "review_weekly_source_pilot CLEAR",
+  "raw_quotes_replayed": false
+}

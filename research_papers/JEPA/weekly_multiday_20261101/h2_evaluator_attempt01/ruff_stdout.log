@@ -1,0 +1,27 @@
+F401 [*] `datetime.datetime` imported but unused
+ --> research_papers\JEPA\weekly_multiday_20261101\test_evaluate_weekly_h2_ev.py:3:22
+  |
+1 | from __future__ import annotations
+2 |
+3 | from datetime import datetime, timedelta
+  |                      ^^^^^^^^
+4 | import hashlib
+5 | import importlib.util
+  |
+help: Remove unused import
+
+F401 [*] `datetime.timedelta` imported but unused
+ --> research_papers\JEPA\weekly_multiday_20261101\test_evaluate_weekly_h2_ev.py:3:32
+  |
+1 | from __future__ import annotations
+2 |
+3 | from datetime import datetime, timedelta
+  |                                ^^^^^^^^^
+4 | import hashlib
+5 | import importlib.util
+  |
+help: Remove unused import
+
+Found 2 errors.
+[*] 2 fixable with the `--fix` option.
+CPU_AFFINITY=[0] THREADS=1

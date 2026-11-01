@@ -1,0 +1,8 @@
+{
+  "schema": "weekly_h2_evaluator_evidence_manifest_supplement_v1",
+  "reason": "Original manifest total_bytes serialization was null; entries and original bytes remain unchanged.",
+  "original_manifest_sha256": "4865cd2acfaa925e26cf0f5ef56e1c790211cb2fa85e3ab401292865cb447d92",
+  "original_file_count": 45,
+  "recomputed_total_bytes": 233329,
+  "created_at_utc": "2026-11-01T13:47:35.7599058Z"
+}

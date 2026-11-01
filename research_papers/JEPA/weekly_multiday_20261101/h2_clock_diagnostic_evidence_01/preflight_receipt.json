@@ -1,0 +1,14 @@
+{
+  "schema": "weekly_h2_clock_failure_diagnostic_preflight_v1",
+  "observed_utc": "2026-11-01T14:00:40.8119849Z",
+  "code_sha256": "929a393fd55a708bde6ba0b4e0b1678a37ab810c2543d8bc975679e0ef383ada",
+  "inventory_sha256": "cb762957bc463873f7f4d42a806d3a6fc09fb144eebacdc0eae2358971d2212d",
+  "pilot_sha256": "ad5b3ffba4e125ca7fcb4d5b0789eec601ace55be3740813d46374827766c878",
+  "available_ram_bytes": 13898788864,
+  "free_commit_bytes": 20897300480,
+  "minimum_each_bytes": 2000000000,
+  "cpu_affinity_mask_inherited_before_python_start": 1,
+  "threads": 1,
+  "projection": ["timestamp OR underlying_timestamp"],
+  "quotes_greeks_outcomes_authorized": false
+}

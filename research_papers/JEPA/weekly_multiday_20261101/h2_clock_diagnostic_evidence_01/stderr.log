@@ -1,0 +1,5 @@
+usage: diagnose_h2_clock_failure.py [-h] --inventory INVENTORY
+                                    --inventory-sha256 INVENTORY_SHA256
+                                    --pilot PILOT --pilot-sha256 PILOT_SHA256
+                                    --output-dir OUTPUT_DIR
+diagnose_h2_clock_failure.py: error: unrecognized arguments: Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\weekly_multiday_20261101\weekly_multiday_source_pilot.py
