@@ -1,0 +1,7 @@
+{
+  "pid": 5912,
+  "reason": "invalid pre-publication orphaned synthetic pytest; wrapper timed out before retained exit/log capture",
+  "utc": "2026-11-01T18:22:38.1938979Z",
+  "recoverable": false,
+  "command_line": "\"python\" -m pytest -q research_papers/JEPA/weekly_multiday_20261101/test_audit_weekly_context_adaptation_v2.py"
+}
