@@ -1,0 +1,32 @@
+.......F.                                                                [100%]
+================================== FAILURES ===================================
+__________ test_closed_projection_and_output_exclude_economic_fields __________
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7381/test_closed_projection_and_out0')
+
+    def test_closed_projection_and_output_exclude_economic_fields(tmp_path: Path) -> None:
+        row = nominal(tmp_path)
+        write_rows(row, [{"clock": "10:35"}], extra={"delta": 0.5, "pnl": 999.0, "label": "future"})
+        result, _, _ = inspect_one(tmp_path, row)
+        assert not ({"delta", "pnl", "label"} & set(result["projected_columns"]))
+        diagnostic = pilot.build_diagnostic(tmp_path)
+        text = json.dumps(diagnostic).lower()
+>       assert '"pnl"' not in text and '"delta"' not in text and '"label"' not in text
+E       assert ('"pnl"' not in '{"schema": ...count": 0}]}'
+E         
+E         '"pnl"' is contained here:
+E         ?           ^^^^^ ^^^
+E            {"name": "pnl", "type": "double"}, {"name": "label", "type": "string"}], "projected_columns": ["symbol", "expiration", "trade_date", "strike", "right", "timestamp", "interval_used", "bid", "ask"], "row_count_footer": 1, "row_count_read": 1, "clock_basis": "native_stored_timestamp", "clock_basis_scope": "stored_native_snapshot_clock_not_observed_reception", "interval_counts": {"1m": 1}, "observed_clock_counts": {"10:35": 1}, "contract_count_day": 1, "contract_counts_exact_clock": {"09:30": 0, "10:30": 0, "10:35": 1, "15:55": 0}, "quote_valid_...
+E         
+E         ...Full output truncated (2 lines hidden), use '-vv' to show)
+
+test_weekly_multiday_source_pilot.py:153: AssertionError
+============================== warnings summary ===============================
+test_weekly_multiday_source_pilot.py:111
+  C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\weekly_multiday_20261101\test_weekly_multiday_source_pilot.py:111: SyntaxWarning: "\+" is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\+"? A raw string is also an option.
+    with pytest.raises(pilot.AdmissionError, match="duplicate contract\+snapshot"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED test_weekly_multiday_source_pilot.py::test_closed_projection_and_output_exclude_economic_fields
+1 failed, 8 passed, 1 warning in 154.19s (0:02:34)

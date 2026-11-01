@@ -1,0 +1,17 @@
+{
+  "schema": "weekly_multiday_source_pilot_pretest_snapshot_v1",
+  "created_before_any_test_execution": true,
+  "runtime_policy": {
+    "cpu_affinity_mask": 1,
+    "threads": 1,
+    "minimum_free_physical_memory_bytes": 2147483648,
+    "observed_free_physical_memory_bytes": 17059057664
+  },
+  "files": {
+    "SOURCE_PILOT_CONTRACT.md": "d0f84aee0410933241c058990979cb787ea950354f79afe8661209ae74d6f8f9",
+    "weekly_multiday_source_pilot.py": "ee95aa3ccda26e6ff07d9e1f7334bb3753c384b7db405d592435e1ad17cf60ae",
+    "test_weekly_multiday_source_pilot.py": "b9a755f07d135fdb9953f938249b79534f87cc89ec0849ecf78d7350d183a2e1"
+  },
+  "real_sources_read": false,
+  "real_output_created": false
+}

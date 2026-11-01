@@ -1,0 +1,14 @@
+{
+  "schema": "weekly_multiday_source_pilot_pretest_snapshot_v1",
+  "attempt": 4,
+  "reason": "removed one Ruff-only unused test variable; runtime code unchanged",
+  "created_before_final_test_execution": true,
+  "runtime_policy": {"cpu_affinity_mask": 1, "threads": 1, "minimum_free_physical_memory_bytes": 2147483648},
+  "files": {
+    "SOURCE_PILOT_CONTRACT.md": "539cd95b270e2f1e819f004dab4acb6dcfdeb0c7c2f21014f345356ad8afc66c",
+    "weekly_multiday_source_pilot.py": "0a307d0a6619ad38a3dd4bc59644296bb80dde040e70a3acc4547f6065d938c4",
+    "test_weekly_multiday_source_pilot.py": "f95e616cac6c982b5b819cc28889819806c116e02577ec931d9924b2139b67a8"
+  },
+  "real_sources_read": false,
+  "real_output_created": false
+}

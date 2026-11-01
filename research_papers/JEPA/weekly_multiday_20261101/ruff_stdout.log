@@ -1,0 +1,14 @@
+F841 Local variable `linked_row` is assigned to but never used
+   --> test_weekly_multiday_source_pilot.py:141:5
+    |
+139 |     except OSError:
+140 |         pytest.skip("symlink creation unavailable")
+141 |     linked_row = pilot.NominalFile(row.ticker, row.entry_date, row.expiration, row.trade_date, row.session_index, link)
+    |     ^^^^^^^^^^
+142 |     with pytest.raises(pilot.AdmissionError, match="link/reparse"):
+143 |         pilot.validate_source_path(link, tmp_path, {Path(os.path.abspath(link))})
+    |
+help: Remove assignment to unused variable `linked_row`
+
+Found 1 error.
+No fixes available (1 hidden fix can be enabled with the `--unsafe-fixes` option).

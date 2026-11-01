@@ -46,6 +46,12 @@ trades y decidir con información disponible al entrar. El capital comprometido
 y la exposición durante varias sesiones deben acompañar al PnL; sumar netos de
 operaciones incompatibles no representa una cartera ejecutable.
 
+El corte temporal de TRAIN/calibración se aplicará a la disponibilidad real
+del resultado: entrar antes del corte no basta si la operación cierra después.
+Ningún resultado abierto o todavía futuro puede alimentar un fit/offset anterior
+a su cierre. Las ventanas y purgas deben fijarse según el horizonte máximo y
+los clocks de disponibilidad antes de cualquier ajuste semanal nuevo.
+
 Fuentes de mercado sólo locales D:/ThetaData; resultados voluminosos en
 D:/GexResearchArtifacts. Sin API, producción, bróker ni VPS. Goal sigue activo;
 su descripción inicial0DTE se interpreta junto con esta ampliación del usuario.

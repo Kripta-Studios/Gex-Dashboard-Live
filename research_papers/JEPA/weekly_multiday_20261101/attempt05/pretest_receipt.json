@@ -1,0 +1,29 @@
+{
+  "schema": "weekly_multiday_source_pilot_attempt05_pretest_v1",
+  "observed_utc": "2026-11-01T13:25:05.7800724Z",
+  "physical_copies_created_before_test": true,
+  "copies": {
+    "SOURCE_PILOT_CONTRACT.md": "b5ce2cb180676344cab807185bb5b9fc607da93d136a7e16eb44dd9cfb4047f5",
+    "weekly_multiday_source_pilot.py": "101402f154efa4d5ab81d1882b1c5b5064fdef5e430daf1a99330c33f7d8c241",
+    "test_weekly_multiday_source_pilot.py": "3ddeb5c7b685e46c26e98d6eb294863fa8d7596779fdd08d00545653f9e41ba0"
+  },
+  "gate_helper": {
+    "path": "research_papers/JEPA/level_oracle_20261018/launch_monthly_test_index_v2_audit_20261024.py",
+    "sha256": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046",
+    "main_invoked": false,
+    "functions_used": ["observation", "gate"]
+  },
+  "resources": {
+    "available_ram_bytes": 11201101824,
+    "free_commit_bytes": 21207638016,
+    "minimum_each_bytes": 2000000000,
+    "gate_pass": true,
+    "cpu_affinity_mask_inherited_before_python_start": 1,
+    "threads": 1
+  },
+  "scope": {
+    "real_sources_read": false,
+    "real_runtime_invoked": false,
+    "prior_pretest_code_snapshot_json_files_are_hash_pin_records_not_physical_snapshots": true
+  }
+}

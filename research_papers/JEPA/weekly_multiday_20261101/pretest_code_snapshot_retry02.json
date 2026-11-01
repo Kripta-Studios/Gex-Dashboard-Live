@@ -1,0 +1,14 @@
+{
+  "schema": "weekly_multiday_source_pilot_pretest_snapshot_v1",
+  "attempt": 2,
+  "prior_attempt_preserved": "pytest_stdout.log: 8 passed, 1 failed",
+  "created_before_retry_execution": true,
+  "runtime_policy": {"cpu_affinity_mask": 1, "threads": 1, "minimum_free_physical_memory_bytes": 2147483648},
+  "files": {
+    "SOURCE_PILOT_CONTRACT.md": "539cd95b270e2f1e819f004dab4acb6dcfdeb0c7c2f21014f345356ad8afc66c",
+    "weekly_multiday_source_pilot.py": "513e04e62a70af9c19f01069036cef7214fb4df6ef3525ccae9568b5a8c840f7",
+    "test_weekly_multiday_source_pilot.py": "d7d23d492a1ca22578a8046f0f806f5e7371a4176c1ade7943a9bdd9130b2b31"
+  },
+  "real_sources_read": false,
+  "real_output_created": false
+}

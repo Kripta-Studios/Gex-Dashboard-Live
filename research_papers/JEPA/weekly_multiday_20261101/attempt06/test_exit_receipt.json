@@ -1,0 +1,18 @@
+{
+  "schema": "weekly_multiday_source_pilot_attempt06_test_exit_v1",
+  "closed_utc": "2026-11-01T13:26:33.0609877Z",
+  "pytest": {
+    "exit_code": 0,
+    "result": "16 passed in 1.22s",
+    "stdout_sha256": "7f3cc555ffeb66f52a89d9bf2f8e7281eeae599ae1ae8b64d68a052f49e4b88d",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "ruff": {
+    "exit_code": 0,
+    "result": "All checks passed!",
+    "stdout_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "real_sources_read": false,
+  "real_runtime_invoked": false
+}
