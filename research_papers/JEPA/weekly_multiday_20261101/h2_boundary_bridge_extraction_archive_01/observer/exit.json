@@ -1,0 +1,12 @@
+{
+  "exit_code": 0,
+  "utc": "2026-11-01T18:00:32.146549+00:00",
+  "source": "subprocess.Popen.wait_retained_handle",
+  "elapsed_seconds": 12.673147800000152,
+  "files": {
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_extraction_observer_01\\admission.json": "9a81cf58e508f44e5977d0dc1c0990c73ea7ec8ddb0cd98b46f9c54a47f5789f",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_extraction_observer_01\\process.json": "8fef91313b2ef2639f095ac1cf53051a49f58396725f2d6be2fd814b874d5643",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_extraction_observer_01\\stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_extraction_observer_01\\stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

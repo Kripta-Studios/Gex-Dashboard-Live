@@ -1,0 +1,157 @@
+{
+  "clock_files": [
+    {
+      "clock_basis": "NATIVE_STORED_TIMESTAMP",
+      "clock_column": "timestamp",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2026\\06\\QQQ_20260702_20260629_greeks.parquet",
+      "rows_ignored_subminute": 0,
+      "rows_ignored_valid": 136150,
+      "rows_selected_10_30": 350,
+      "rows_selected_10_35": 350,
+      "rows_total": 136850,
+      "trade_date": "20260629",
+      "unique_raw_clock_count": 391
+    },
+    {
+      "clock_basis": "NATIVE_STORED_TIMESTAMP",
+      "clock_column": "timestamp",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2026\\06\\SPXW_20260702_20260629_greeks.parquet",
+      "rows_ignored_subminute": 0,
+      "rows_ignored_valid": 235734,
+      "rows_selected_10_30": 606,
+      "rows_selected_10_35": 606,
+      "rows_total": 236946,
+      "trade_date": "20260629",
+      "unique_raw_clock_count": 391
+    },
+    {
+      "clock_basis": "NATIVE_STORED_TIMESTAMP",
+      "clock_column": "timestamp",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2026\\07\\SPXW_20260702_20260701_greeks.parquet",
+      "rows_ignored_subminute": 0,
+      "rows_ignored_valid": 238846,
+      "rows_selected_10_30": 614,
+      "rows_selected_10_35": 614,
+      "rows_total": 240074,
+      "trade_date": "20260701",
+      "unique_raw_clock_count": 391
+    },
+    {
+      "clock_basis": "NATIVE_STORED_TIMESTAMP",
+      "clock_column": "timestamp",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2026\\06\\SPY_20260702_20260629_greeks.parquet",
+      "rows_ignored_subminute": 0,
+      "rows_ignored_valid": 159490,
+      "rows_selected_10_30": 410,
+      "rows_selected_10_35": 410,
+      "rows_total": 160310,
+      "trade_date": "20260629",
+      "unique_raw_clock_count": 391
+    }
+  ],
+  "replacement_keys": [
+    {
+      "entry_date": "20260629",
+      "ticker": "SPY"
+    },
+    {
+      "entry_date": "20260630",
+      "ticker": "SPY"
+    },
+    {
+      "entry_date": "20260629",
+      "ticker": "QQQ"
+    },
+    {
+      "entry_date": "20260630",
+      "ticker": "QQQ"
+    },
+    {
+      "entry_date": "20260629",
+      "ticker": "SPXW"
+    },
+    {
+      "entry_date": "20260630",
+      "ticker": "SPXW"
+    }
+  ],
+  "rows": [
+    {
+      "candidate_ids": [
+        "SPY:20260629:20260702:CALL",
+        "SPY:20260629:20260702:PUT"
+      ],
+      "entry_date": "20260629",
+      "entry_path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2026\\06\\SPY_20260702_20260629_greeks.parquet",
+      "exit_date": "20260701",
+      "exit_path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2026\\07\\SPY_20260702_20260701_greeks.parquet",
+      "expiration": "20260702",
+      "reason": null,
+      "status": "CANDIDATES_BUILT",
+      "ticker": "SPY"
+    },
+    {
+      "candidate_ids": [],
+      "entry_date": "20260630",
+      "entry_path": null,
+      "exit_date": "20260702",
+      "exit_path": null,
+      "expiration": null,
+      "reason": "NO_1_TO_8_DTE_SERIES_ALLOWING_H2",
+      "status": "NO_SERIES",
+      "ticker": "SPY"
+    },
+    {
+      "candidate_ids": [
+        "QQQ:20260629:20260702:CALL",
+        "QQQ:20260629:20260702:PUT"
+      ],
+      "entry_date": "20260629",
+      "entry_path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2026\\06\\QQQ_20260702_20260629_greeks.parquet",
+      "exit_date": "20260701",
+      "exit_path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2026\\07\\QQQ_20260702_20260701_greeks.parquet",
+      "expiration": "20260702",
+      "reason": null,
+      "status": "CANDIDATES_BUILT",
+      "ticker": "QQQ"
+    },
+    {
+      "candidate_ids": [],
+      "entry_date": "20260630",
+      "entry_path": null,
+      "exit_date": "20260702",
+      "exit_path": null,
+      "expiration": null,
+      "reason": "NO_1_TO_8_DTE_SERIES_ALLOWING_H2",
+      "status": "NO_SERIES",
+      "ticker": "QQQ"
+    },
+    {
+      "candidate_ids": [
+        "SPXW:20260629:20260702:CALL",
+        "SPXW:20260629:20260702:PUT"
+      ],
+      "entry_date": "20260629",
+      "entry_path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2026\\06\\SPXW_20260702_20260629_greeks.parquet",
+      "exit_date": "20260701",
+      "exit_path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2026\\07\\SPXW_20260702_20260701_greeks.parquet",
+      "expiration": "20260702",
+      "reason": null,
+      "status": "CANDIDATES_BUILT",
+      "ticker": "SPXW"
+    },
+    {
+      "candidate_ids": [],
+      "entry_date": "20260630",
+      "entry_path": null,
+      "exit_date": "20260702",
+      "exit_path": null,
+      "expiration": null,
+      "reason": "NO_1_TO_8_DTE_SERIES_ALLOWING_H2",
+      "status": "NO_SERIES",
+      "ticker": "SPXW"
+    }
+  ],
+  "schema": "weekly_h2_boundary_bridge_coverage_overlay_v1",
+  "unified_calendar_sha256": "be622bb24aca35448594743dfeb5236e6b2d08a4410109b20302891f8c1fa7d6"
+}

@@ -1,0 +1,46 @@
+{
+  "utc": "2026-11-01T18:00:19.470822+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\build_weekly_h2_boundary_bridge.py",
+    "--execute-reviewed-bridge",
+    "--inventory",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_01\\inventory.json",
+    "--inventory-sha256",
+    "599ca400fecae12ce4098187a45af3ee0cf8c1b070e060d8c84e422ce92c6161",
+    "--wrapper-sha256",
+    "29d8e7906f0f594ed469b07bb8134a500d26cc01434a77928a09b8a8c90bedb2"
+  ],
+  "publication_commit": "11279c14c628efb9334d03b98338f3647719d6c3",
+  "pins": {
+    "build_weekly_h2_boundary_bridge.py": "29d8e7906f0f594ed469b07bb8134a500d26cc01434a77928a09b8a8c90bedb2",
+    "test_build_weekly_h2_boundary_bridge.py": "a3655cda635544cd87d2cb8d1535e2369e10470a4a2651a5c67ba9635c57cc30",
+    "H2_JUNE_JULY_BRIDGE_CONTRACT_20261101.md": "fe506ec96812ea582f11d0bc23497c34e51e878ae912ccc76fcc8924c30cda55",
+    "H2_BOUNDARY_BRIDGE_BUILDER_REVIEW_20261101.md": "eda3723d54252429539a3046a88e888302b02142e952eea84de4be1514f41753",
+    "H2_BOUNDARY_BRIDGE_METADATA_BINDING_20261101.md": "bf250bf5ae5beb6ac91332f0136cb470ccf860880d63ab315104ee16e6e7079d",
+    "H2_BOUNDARY_BRIDGE_INVENTORY_CLOSURE_AND_EXTRACTION_BINDING_20261101.md": "069c98f5bc2b0a8077e8bb86c3ca0693ba84abd319204b3eef87bd98b209d141",
+    "H2_BOUNDARY_BRIDGE_INVENTORY_REVIEW_20261101.md": "84af8d27b3b1db01005b2137f7c07c1363e243d081371a43d225c9300408f33e",
+    "h2_boundary_bridge_inventory_archive_01/archive_receipt.json": "2f0e9d38d7050c9da9fd9b53677075ad5bffa36e7b09e6eb86364c62700479ff",
+    "h2_boundary_bridge_builder_evidence_01/archive_receipt.json": "8395304998df6a1362982ad53c0f4e9e3a2830558c7c913f73be77b4499eecf3"
+  },
+  "resources": {
+    "available_ram_bytes": 6281965568,
+    "free_commit_bytes": 2221654016
+  },
+  "cpu_affinity": [
+    0
+  ],
+  "thread_variables": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+    "BLIS_NUM_THREADS": "1",
+    "ARROW_NUM_THREADS": "1",
+    "POLARS_MAX_THREADS": "1"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "schema": "root_compact_archive_v1",
+  "copies": 8,
+  "total_bytes": 21081,
+  "files": [
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_01\\manifest.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_extraction_archive_01/payload/manifest.json",
+      "bytes": 4748,
+      "sha256": "9d1455c601ac38224c4f56365f20c3fb31978e997f8652454dbc69807e0abb86"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_01\\coverage_overlay.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_extraction_archive_01/payload/coverage_overlay.json",
+      "bytes": 4798,
+      "sha256": "9d5ce1f71918b31938645fdfc5116ec481684c406bbde79f544612430338a0b8"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_01\\candidates.jsonl",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_extraction_archive_01/payload/candidates.jsonl",
+      "bytes": 7567,
+      "sha256": "68aa06e7395d933a3e72e594455057305e1619557f0fe26de49a00ed96c15755"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_extraction_observer_01\\admission.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_extraction_archive_01/observer/admission.json",
+      "bytes": 2317,
+      "sha256": "9a81cf58e508f44e5977d0dc1c0990c73ea7ec8ddb0cd98b46f9c54a47f5789f"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_extraction_observer_01\\process.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_extraction_archive_01/observer/process.json",
+      "bytes": 732,
+      "sha256": "8fef91313b2ef2639f095ac1cf53051a49f58396725f2d6be2fd814b874d5643"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_extraction_observer_01\\exit.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_extraction_archive_01/observer/exit.json",
+      "bytes": 919,
+      "sha256": "abdd5914c8649a79da70a562db681a7d384ee01ccb6c0a40e3c4549bb31d53af"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_extraction_observer_01\\stdout.log",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_extraction_archive_01/observer/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_extraction_observer_01\\stderr.log",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_extraction_archive_01/observer/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

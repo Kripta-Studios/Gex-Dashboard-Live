@@ -1,5 +1,16 @@
 # AI Agent Hand-off: Current Production Reality
 
+Checkpoint1nov18:00UTC: motor adaptación d03494bf/tests2f44f17d y auditor
+c6a116d3/testsfd835bbe revisados CLEAR,16/14PASS; publicados11279c14.
+Puente metadata14324 y extracción43140 exit0retenidos. Manifest9d1455c6,
+inventory599ca400,6candidatos nuevosJun29 y3NO_SERIESJun30; auditor69cb5c8b
+preparado14PASS, aún sinrunreal. No relanzar productorpuente.
+Usuario exige beneficio neto cada mes completo: reporteenero–agosto8/8>0,
+septiembreparcial separado; no cambiar gates21/fits para forzarresultado.
+Implementación y criteriosenweekly_multiday_20261101. No42fitsadaptativos
+todavía; faltan auditpuente+bindingreal. Goalactivo,SEEN_DEVELOPMENT,
+promociónfalse,producciónintacta. Cortes inferiores son historia.
+
 Nueva orden1nov: investigar reentrenamiento mensual/semanal yevitar regresión.
 Contrato ADAPTATION_WALKFORWARD_CONTRACT_20261101.md608dae37 revisado CLEAR:
 42fitsfresh únicos,TRAINexpansivo/CAL63maduras,5políticas/10libroscontinuos;
