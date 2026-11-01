@@ -1,0 +1,21 @@
+CPU_AFFINITY=[0] THREADS=1
+........F.....                                                           [100%]
+================================== FAILURES ===================================
+____ test_trade_entry_outside_calendar_omits_bootstrap_instead_of_aborting ____
+
+    def test_trade_entry_outside_calendar_omits_bootstrap_instead_of_aborting() -> None:
+        candidates, ledger = fixed_fixture()
+        trades, _ = diag.fixed_trades(candidates, ledger)
+        coverage = coverage_calendar()
+        for row in coverage["calendar"]:
+            if row["date"] == "20260106":
+                row["date"] = "20260113"
+        omitted = diag.bootstrap_or_omitted(trades, coverage)
+        assert omitted["status"] == "OMITTED_FAIL_CLOSED"
+>       assert "entry outside bootstrap calendar" in omitted["reason"]
+E       AssertionError: assert 'entry outside bootstrap calendar' in 'unordered EVAL calendar SPY'
+
+research_papers\JEPA\weekly_multiday_20261101\test_diagnose_weekly_h2_ev_robustness.py:150: AssertionError
+=========================== short test summary info ===========================
+FAILED research_papers/JEPA/weekly_multiday_20261101/test_diagnose_weekly_h2_ev_robustness.py::test_trade_entry_outside_calendar_omits_bootstrap_instead_of_aborting
+1 failed, 13 passed in 0.11s

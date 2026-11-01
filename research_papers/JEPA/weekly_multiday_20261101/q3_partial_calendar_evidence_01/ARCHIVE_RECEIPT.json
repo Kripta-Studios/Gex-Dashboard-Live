@@ -1,0 +1,24 @@
+{
+  "files": [
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_q3_partial_calendar_01\\calendar.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_partial_calendar_evidence_01\\calendar.json",
+      "bytes": 15604,
+      "sha256": "ac9bd2569d91e9bd9b0475d6f5e2d5400b2816cc1d1d0d9ec98c69e4dbe2e72b"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_q3_partial_calendar_01\\calendar.parquet",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_partial_calendar_evidence_01\\calendar.parquet",
+      "bytes": 1381,
+      "sha256": "e16ef041efadc0f6914585540e19e9c04fcb05f1597952137e4f5bcf06de8c78"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_q3_partial_calendar_01\\manifest.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_partial_calendar_evidence_01\\manifest.json",
+      "bytes": 1131,
+      "sha256": "5a530747f2c97704869d87c04d09bba3cc00125f38a8a78454c2d459a2ea502c"
+    }
+  ],
+  "utc": "2026-11-01T14:45:34.002631+00:00",
+  "market_values_read": false
+}

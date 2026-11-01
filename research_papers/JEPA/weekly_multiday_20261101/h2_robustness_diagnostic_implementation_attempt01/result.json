@@ -1,0 +1,37 @@
+{
+  "schema": "weekly_h2_robustness_diagnostic_implementation_result_v1",
+  "status": "PASS_SYNTHETIC_IMPLEMENTATION_ONLY_NOT_REAL_RUNTIME",
+  "files": {
+    "WEEKLY_H2_EV_ROBUSTNESS_DIAGNOSTIC_CONTRACT_20261101.md": "a9488cda35b1d50303113b041d7be80452d47b8d4d7fdbe6097a98d762aaf85c",
+    "WEEKLY_H2_EV_ROBUSTNESS_DIAGNOSTIC_SPEC_20261101.md": "dcc1d1fdb22dbe3974da765f8b29b3dc9cd5d5e184c1b5ed5209578f9470ce28",
+    "diagnose_weekly_h2_ev_robustness.py": "64263a71d800281a075442420add763520390e17fef858387c73e5b3ea402302",
+    "test_diagnose_weekly_h2_ev_robustness.py": "c80761cd7b6ab5695e93df10cf3f73d3a29420e131074b7bab67c0b1dc79edf5"
+  },
+  "verification": {
+    "pytest": "7 passed in 0.07s",
+    "pytest_exit": 0,
+    "ruff_exit": 0,
+    "cpu_affinity": [0],
+    "threads": 1,
+    "resource_gate_2gb": true,
+    "fixtures": "synthetic_only"
+  },
+  "implemented": [
+    "fixed immutable ENTRY/EXIT universe and baseline reconciliation",
+    "six predeclared premium-point slippage values with 100 cash multiplier",
+    "adverse-debit equal-risk diagnostic without executable portfolio claim",
+    "top 1/3/5 and six leave-one-exit-month-out concentration sensitivities",
+    "deterministic circular five-session block bootstrap with empirical type-7 interval",
+    "external and transitive input pins plus closing rehash and exclusive output"
+  ],
+  "flags": {
+    "real_inputs_read": false,
+    "real_runtime_executed": false,
+    "output_root_created": false,
+    "theta_data_accessed": false,
+    "refit_performed": false,
+    "selection_performed": false,
+    "promotion_approved": false
+  },
+  "next_condition": "independent review and publication required before real runtime"
+}

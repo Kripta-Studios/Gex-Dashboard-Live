@@ -1,0 +1,41 @@
+{
+  "schema": "weekly_h2_q3_partial_calendar_manifest_v1",
+  "utc": "2026-11-01T14:44:18.708131+00:00",
+  "period": [
+    "20260701",
+    "20260917"
+  ],
+  "session_count": 55,
+  "ticker_count": 3,
+  "row_count": 165,
+  "excluded_holidays": [
+    "20260703",
+    "20260907"
+  ],
+  "early_closes": [],
+  "close_i_semantics": "underlying SessionClock reference 09:30 to16:00; not an options trading-hours claim",
+  "sources": [
+    "https://www.cboe.com/about/hours/us-options",
+    "https://nasdaqtrader.com/Trader.aspx?id=Calendar"
+  ],
+  "source_observation": "2026-11-01 root web official pages; no market data",
+  "resources": {
+    "available_ram_bytes": 12463792128,
+    "free_commit_bytes": 19263668224
+  },
+  "cpu_affinity": [
+    0
+  ],
+  "threads": 1,
+  "json_parquet_reconciliation": true,
+  "files": {
+    "calendar.json": {
+      "sha256": "ac9bd2569d91e9bd9b0475d6f5e2d5400b2816cc1d1d0d9ec98c69e4dbe2e72b",
+      "bytes": 15604
+    },
+    "calendar.parquet": {
+      "sha256": "e16ef041efadc0f6914585540e19e9c04fcb05f1597952137e4f5bcf06de8c78",
+      "bytes": 1381
+    }
+  }
+}

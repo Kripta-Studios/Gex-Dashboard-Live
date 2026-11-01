@@ -1,0 +1,887 @@
+{
+  "schema": "weekly_h2_q3_partial_calendar_v1",
+  "sessions": [
+    "20260701",
+    "20260702",
+    "20260706",
+    "20260707",
+    "20260708",
+    "20260709",
+    "20260710",
+    "20260713",
+    "20260714",
+    "20260715",
+    "20260716",
+    "20260717",
+    "20260720",
+    "20260721",
+    "20260722",
+    "20260723",
+    "20260724",
+    "20260727",
+    "20260728",
+    "20260729",
+    "20260730",
+    "20260731",
+    "20260803",
+    "20260804",
+    "20260805",
+    "20260806",
+    "20260807",
+    "20260810",
+    "20260811",
+    "20260812",
+    "20260813",
+    "20260814",
+    "20260817",
+    "20260818",
+    "20260819",
+    "20260820",
+    "20260821",
+    "20260824",
+    "20260825",
+    "20260826",
+    "20260827",
+    "20260828",
+    "20260831",
+    "20260901",
+    "20260902",
+    "20260903",
+    "20260904",
+    "20260908",
+    "20260909",
+    "20260910",
+    "20260911",
+    "20260914",
+    "20260915",
+    "20260916",
+    "20260917"
+  ],
+  "rows": [
+    {
+      "ticker": "SPY",
+      "date": "20260701",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260702",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260706",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260707",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260708",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260709",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260710",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260713",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260714",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260715",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260716",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260717",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260720",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260721",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260722",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260723",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260724",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260727",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260728",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260729",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260730",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260731",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260803",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260804",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260805",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260806",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260807",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260810",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260811",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260812",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260813",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260814",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260817",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260818",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260819",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260820",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260821",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260824",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260825",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260826",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260827",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260828",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260831",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260901",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260902",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260903",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260904",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260908",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260909",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260910",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260911",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260914",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260915",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260916",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPY",
+      "date": "20260917",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260701",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260702",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260706",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260707",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260708",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260709",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260710",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260713",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260714",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260715",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260716",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260717",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260720",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260721",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260722",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260723",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260724",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260727",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260728",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260729",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260730",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260731",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260803",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260804",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260805",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260806",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260807",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260810",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260811",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260812",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260813",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260814",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260817",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260818",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260819",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260820",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260821",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260824",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260825",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260826",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260827",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260828",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260831",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260901",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260902",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260903",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260904",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260908",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260909",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260910",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260911",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260914",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260915",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260916",
+      "close_i": 390
+    },
+    {
+      "ticker": "QQQ",
+      "date": "20260917",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260701",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260702",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260706",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260707",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260708",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260709",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260710",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260713",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260714",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260715",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260716",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260717",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260720",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260721",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260722",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260723",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260724",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260727",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260728",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260729",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260730",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260731",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260803",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260804",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260805",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260806",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260807",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260810",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260811",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260812",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260813",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260814",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260817",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260818",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260819",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260820",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260821",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260824",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260825",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260826",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260827",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260828",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260831",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260901",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260902",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260903",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260904",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260908",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260909",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260910",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260911",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260914",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260915",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260916",
+      "close_i": 390
+    },
+    {
+      "ticker": "SPXW",
+      "date": "20260917",
+      "close_i": 390
+    }
+  ]
+}

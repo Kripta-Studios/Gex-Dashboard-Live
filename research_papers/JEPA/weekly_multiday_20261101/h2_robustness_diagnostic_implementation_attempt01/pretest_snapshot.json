@@ -1,0 +1,24 @@
+{
+  "status": "PRETEST_SNAPSHOT",
+  "created_at_utc": "2026-11-01T14:41:18.8775820Z",
+  "files": {
+    "diagnose_weekly_h2_ev_robustness.py": {
+      "bytes": 21382,
+      "sha256": "64263a71d800281a075442420add763520390e17fef858387c73e5b3ea402302"
+    },
+    "test_diagnose_weekly_h2_ev_robustness.py": {
+      "bytes": 5207,
+      "sha256": "c80761cd7b6ab5695e93df10cf3f73d3a29420e131074b7bab67c0b1dc79edf5"
+    },
+    "WEEKLY_H2_EV_ROBUSTNESS_DIAGNOSTIC_CONTRACT_20261101.md": {
+      "bytes": 5580,
+      "sha256": "a9488cda35b1d50303113b041d7be80452d47b8d4d7fdbe6097a98d762aaf85c"
+    },
+    "WEEKLY_H2_EV_ROBUSTNESS_DIAGNOSTIC_SPEC_20261101.md": {
+      "bytes": 3708,
+      "sha256": "dcc1d1fdb22dbe3974da765f8b29b3dc9cd5d5e184c1b5ed5209578f9470ce28"
+    }
+  },
+  "real_runtime_executed": false,
+  "output_root_absent": true
+}

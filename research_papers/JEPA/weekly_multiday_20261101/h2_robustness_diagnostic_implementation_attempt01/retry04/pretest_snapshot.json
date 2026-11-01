@@ -1,0 +1,25 @@
+{
+  "status": "PRETEST_SNAPSHOT",
+  "created_at_utc": "2026-11-01T14:45:28.4179095Z",
+  "files": {
+    "diagnose_weekly_h2_ev_robustness.py": {
+      "bytes": 23872,
+      "sha256": "bdaa9afce5017f9a7925dc5d9d221c033a4c1c75f8d025d49ee6e6a2c38bfb9c"
+    },
+    "test_diagnose_weekly_h2_ev_robustness.py": {
+      "bytes": 9341,
+      "sha256": "27d1b21fb04c43f41cb58ec4095f7e637eb9e1a540a7466db6186b7922707d0d"
+    },
+    "WEEKLY_H2_EV_ROBUSTNESS_DIAGNOSTIC_CONTRACT_20261101.md": {
+      "bytes": 5580,
+      "sha256": "a9488cda35b1d50303113b041d7be80452d47b8d4d7fdbe6097a98d762aaf85c"
+    },
+    "WEEKLY_H2_EV_ROBUSTNESS_DIAGNOSTIC_SPEC_20261101.md": {
+      "bytes": 3708,
+      "sha256": "dcc1d1fdb22dbe3974da765f8b29b3dc9cd5d5e184c1b5ed5209578f9470ce28"
+    }
+  },
+  "retry03_failure_preserved": true,
+  "real_runtime_executed": false,
+  "output_root_absent": true
+}

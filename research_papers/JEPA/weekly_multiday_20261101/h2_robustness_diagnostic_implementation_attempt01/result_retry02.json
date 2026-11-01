@@ -1,0 +1,37 @@
+{
+  "schema": "weekly_h2_robustness_diagnostic_implementation_result_v2",
+  "status": "PASS_SYNTHETIC_IMPLEMENTATION_ONLY_NOT_REAL_RUNTIME",
+  "final_attempt": "retry02",
+  "files": {
+    "diagnose_weekly_h2_ev_robustness.py": "74d99031b898e8638ce9fb456096f67b704c00c357f2d74475bd90f636ebd40f",
+    "test_diagnose_weekly_h2_ev_robustness.py": "f70cde166d882c952c5eb294813f6e0706ee19cff9e642c68d9009e10cd64a1c",
+    "contract": "a9488cda35b1d50303113b041d7be80452d47b8d4d7fdbe6097a98d762aaf85c",
+    "spec": "dcc1d1fdb22dbe3974da765f8b29b3dc9cd5d5e184c1b5ed5209578f9470ce28"
+  },
+  "verification": {
+    "pytest": "13 passed in 0.07s",
+    "pytest_exit": 0,
+    "ruff_exit": 0,
+    "cpu_affinity": [0],
+    "threads": 1,
+    "resource_gate_2gb": true
+  },
+  "review_fixes": [
+    "baseline ticker, missing-exit, months-observed, and positive-month reconciliation",
+    "calendar identities remain ordered lists and duplicates fail closed",
+    "ambiguous calendar omits bootstrap while preserving the rest of the diagnostic",
+    "leave-one-month sensitivities retain removed candidate IDs",
+    "stdlib ancestor link/reparse guard and immutable output reuse rejection"
+  ],
+  "history": "initial snapshot and result preserved without overwrite",
+  "flags": {
+    "real_inputs_read": false,
+    "real_runtime_executed": false,
+    "output_root_created": false,
+    "theta_data_accessed": false,
+    "refit_performed": false,
+    "selection_performed": false,
+    "promotion_approved": false
+  },
+  "next_condition": "fresh review and publication required before real runtime"
+}
