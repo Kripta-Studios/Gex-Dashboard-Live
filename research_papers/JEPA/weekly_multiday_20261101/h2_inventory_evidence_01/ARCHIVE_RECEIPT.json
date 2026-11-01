@@ -1,0 +1,52 @@
+{
+  "status": "COMPACT_H2_INVENTORY_ARCHIVE_VERIFIED",
+  "files": [
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_01\\inventory.json",
+      "copy": "h2_dataset_01\\inventory.json",
+      "bytes": 5589731,
+      "sha256": "cb762957bc463873f7f4d42a806d3a6fc09fb144eebacdc0eae2358971d2212d"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_01\\inventory_manifest.json",
+      "copy": "h2_dataset_01\\inventory_manifest.json",
+      "bytes": 187,
+      "sha256": "0c67c6943b6670e5d2ed33c28630087991c548521429ca59eaeb9e19cdb61403"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_observer_01\\inventory\\admission.json",
+      "copy": "h2_dataset_observer_01\\inventory\\admission.json",
+      "bytes": 1585,
+      "sha256": "cebe0e65d2abcf4f17782c5c7f532acdc383c7cdf54d3c9a1e0bc0b0f5057b0a"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_observer_01\\inventory\\exit.json",
+      "copy": "h2_dataset_observer_01\\inventory\\exit.json",
+      "bytes": 886,
+      "sha256": "9db85868d13b0aed969a465cc4a13dd853fcb878720e7498699cde27726787bd"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_observer_01\\inventory\\process.json",
+      "copy": "h2_dataset_observer_01\\inventory\\process.json",
+      "bytes": 409,
+      "sha256": "e26bec740e5e893a39962a79949d471b7fa5383e404265809bc025406435048d"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_observer_01\\inventory\\stderr.log",
+      "copy": "h2_dataset_observer_01\\inventory\\stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_observer_01\\inventory\\stdout.log",
+      "copy": "h2_dataset_observer_01\\inventory\\stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "count": 7,
+  "bytes": 5592798,
+  "market_values_read": false,
+  "raw_source_hashes_attributed_to_inventory_builder": true,
+  "independent_review": "review_producer_exit CLEAR"
+}
