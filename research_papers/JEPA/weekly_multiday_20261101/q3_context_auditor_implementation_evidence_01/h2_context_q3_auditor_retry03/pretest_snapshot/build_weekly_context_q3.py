@@ -1,0 +1,517 @@
+"""Build sealed 10:30 causal context for the frozen partial-Q3 calendar.
+
+Two phases are mandatory: metadata-only inventory, then an extraction bound to
+the externally published inventory SHA-256. Importing this module performs no IO.
+"""
+
+from __future__ import annotations
+
+import argparse
+from datetime import datetime, timezone
+import hashlib
+import importlib.metadata
+import importlib.util
+import json
+import os
+from pathlib import Path
+import stat
+import sys
+import tempfile
+import types
+from typing import Any
+
+import numpy as np
+import pyarrow.parquet as pq
+
+
+WEEK = Path(__file__).resolve().parent
+LEVEL = WEEK.parent / "level_oracle_20261018"
+ARTIFACTS = Path(r"D:\GexResearchArtifacts\weekly_multiday_20261101")
+SOURCE_ROOT = Path(r"D:\ThetaData\data_options")
+CALENDAR_ROOT = ARTIFACTS / "h2_q3_partial_calendar_01"
+OUTPUT = ARTIFACTS / "h2_context_q3_1030_01"
+CONTRACT = WEEK / "Q3_CONTEXT_EXTENSION_CONTRACT_20261101.md"
+FEATURE_CONTRACT = ARTIFACTS.parent / "level_oracle_20261018" / "session_clock_dataset_v1" / "feature_contract.json"
+BUILD_CACHE = LEVEL / "build_cache.py"
+FEATURES = LEVEL / "features.py"
+LEVEL_ENGINE = LEVEL / "level_engine.py"
+PINS = {
+    "contract": (CONTRACT, "8775399421be05d7cee9ce4d08190fe374906ecb989f6e93c5d3469db29bc4ed"),
+    "calendar.json": (CALENDAR_ROOT / "calendar.json", "ac9bd2569d91e9bd9b0475d6f5e2d5400b2816cc1d1d0d9ec98c69e4dbe2e72b"),
+    "calendar.parquet": (CALENDAR_ROOT / "calendar.parquet", "e16ef041efadc0f6914585540e19e9c04fcb05f1597952137e4f5bcf06de8c78"),
+    "calendar_manifest": (CALENDAR_ROOT / "manifest.json", "5a530747f2c97704869d87c04d09bba3cc00125f38a8a78454c2d459a2ea502c"),
+    "feature_contract": (FEATURE_CONTRACT, "777890230663b0f683d0007117c58b5818047699fe8b25d27b5b819bac7f83db"),
+    "build_cache.py": (BUILD_CACHE, "985e87dcbd1e73289b58e4576445e47e73a6edea13e5ac73dde3ad629180d69f"),
+    "features.py": (FEATURES, "b5c63f918319f844793abb3346a34515526073374f5e71af2129a94f2369d4e0"),
+    "level_engine.py": (LEVEL_ENGINE, "70cc5d20990d971d16299fd008ff8e05ac99f99a6a2917a202fcb9a5f413b7c6"),
+}
+TICKERS = ("SPY", "QQQ", "SPXW")
+KINDS = ("greeks", "oi")
+DATES = (
+    "20260701", "20260702", "20260706", "20260707", "20260708", "20260709", "20260710",
+    "20260713", "20260714", "20260715", "20260716", "20260717", "20260720", "20260721",
+    "20260722", "20260723", "20260724", "20260727", "20260728", "20260729", "20260730",
+    "20260731", "20260803", "20260804", "20260805", "20260806", "20260807", "20260810",
+    "20260811", "20260812", "20260813", "20260814", "20260817", "20260818", "20260819",
+    "20260820", "20260821", "20260824", "20260825", "20260826", "20260827", "20260828",
+    "20260831", "20260901", "20260902", "20260903", "20260904", "20260908", "20260909",
+    "20260910", "20260911", "20260914", "20260915", "20260916", "20260917",
+)
+MISSING_GREEKS = {
+    (ticker, day) for ticker in ("SPY", "QQQ")
+    for day in ("20260701", "20260707", "20260710", "20260716", "20260826", "20260901")
+}
+STATE_I = 60
+SPLIT = "Q3_PARTIAL_2026_SEEN_DEVELOPMENT"
+STATUS = "COMPLETE_CAUSAL_CONTEXT_Q3_1030_NOT_JOINED_NOT_EVALUATED"
+ARRAY_SCHEMA = {
+    "state_i": ((1,), "int16"), "base": ((1, 81), "float32"),
+    "tokens": ((1, 20, 45), "float32"), "maps": ((1, 20, 5, 64), "float32"),
+    "token_mask": ((1, 20), "bool"), "bar_mask": ((1, 20), "bool"),
+    "map_mask": ((1, 20, 5), "float32"), "bar_end_i": ((1, 20), "int16"),
+    "state_valid": ((1,), "bool"),
+}
+
+
+class Q3ContextError(RuntimeError):
+    pass
+
+
+def require(condition: bool, message: str) -> None:
+    if not condition:
+        raise Q3ContextError(message)
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def is_link_or_reparse(path: Path) -> bool:
+    current = Path(os.path.abspath(path))
+    while True:
+        try:
+            info = os.lstat(current)
+        except FileNotFoundError:
+            info = None
+        if info is not None:
+            attributes = getattr(info, "st_file_attributes", 0)
+            if stat.S_ISLNK(info.st_mode) or attributes & getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400):
+                return True
+        if current.parent == current:
+            return False
+        current = current.parent
+
+
+def plain(path: Path, root: Path | None, label: str, *, exists: bool = True) -> Path:
+    path = Path(os.path.abspath(path))
+    if root is not None:
+        root = Path(os.path.abspath(root))
+        require(os.path.commonpath((str(root), str(path))) == str(root), f"outside root {label}")
+    require(not is_link_or_reparse(path), f"link/reparse {label}")
+    if exists:
+        require(path.exists(), f"missing {label}")
+    return path
+
+
+def write_json(path: Path, value: Any, *, exclusive: bool = True) -> None:
+    mode = "x" if exclusive else "w"
+    with path.open(mode, encoding="utf-8", newline="\n") as handle:
+        handle.write(json.dumps(value, indent=2, sort_keys=True, allow_nan=False) + "\n")
+
+
+def read_json(path: Path) -> dict[str, Any]:
+    value = json.loads(path.read_text(encoding="utf-8"))
+    require(isinstance(value, dict), f"object required {path}")
+    return value
+
+
+def pin(path: Path) -> dict[str, Any]:
+    return {"bytes": path.stat().st_size, "sha256": sha256_file(path)}
+
+
+def validate_authorities(builder_sha256: str) -> dict[str, Any]:
+    authorities: dict[str, Any] = {}
+    for name, (path, expected) in PINS.items():
+        path = plain(path, None, name)
+        require(path.is_file() and sha256_file(path) == expected, f"authority {name}")
+        authorities[name] = {"path": str(path), **pin(path)}
+    builder = plain(Path(__file__), WEEK, "builder")
+    require(sha256_file(builder) == builder_sha256, "builder external SHA")
+    authorities[builder.name] = {"path": str(builder), **pin(builder)}
+    return authorities
+
+
+def calendar_rows() -> list[dict[str, Any]]:
+    json_path, parquet_path = PINS["calendar.json"][0], PINS["calendar.parquet"][0]
+    payload = read_json(json_path)
+    require(set(payload) == {"schema", "sessions", "rows"} and payload["schema"] == "weekly_h2_q3_partial_calendar_v1", "calendar JSON schema")
+    require(payload["sessions"] == list(DATES), "calendar sessions")
+    normalized: list[dict[str, Any]] = []
+    seen: set[tuple[str, str]] = set()
+    for raw in payload["rows"]:
+        require(set(raw) == {"ticker", "date", "close_i"}, "calendar row keys")
+        ticker, day = str(raw["ticker"]), str(raw["date"]).replace("-", "")
+        require(ticker in TICKERS and day in DATES and int(raw["close_i"]) == 390 and (ticker, day) not in seen, "calendar identity")
+        seen.add((ticker, day))
+        normalized.append({"ticker": ticker, "date": day, "close_i": 390})
+    expected = {(ticker, day) for ticker in TICKERS for day in DATES}
+    require(seen == expected and len(normalized) == 165, "calendar closure")
+    parquet = pq.ParquetFile(parquet_path)
+    require(parquet.schema_arrow.names == ["ticker", "date", "close_i"] and parquet.metadata.num_rows == 165, "calendar parquet schema/count")
+    parquet_rows: list[dict[str, Any]] = []
+    for batch in parquet.iter_batches(columns=["ticker", "date", "close_i"], use_threads=False, batch_size=256):
+        parquet_rows.extend(batch.to_pylist())
+    normalized.sort(key=lambda row: (TICKERS.index(row["ticker"]), row["date"]))
+    parquet_rows.sort(key=lambda row: (TICKERS.index(row["ticker"]), str(row["date"]).replace("-", "")))
+    require(normalized == [{"ticker": row["ticker"], "date": str(row["date"]).replace("-", ""), "close_i": int(row["close_i"])} for row in parquet_rows], "calendar pair mismatch")
+    require(sha256_file(json_path) == PINS["calendar.json"][1] and sha256_file(parquet_path) == PINS["calendar.parquet"][1], "calendar changed")
+    return normalized
+
+
+def source_path(ticker: str, day: str, kind: str, source_root: Path = SOURCE_ROOT) -> Path:
+    require(ticker in TICKERS and day in DATES and kind in KINDS, "source identity")
+    return source_root / ticker / kind / day[:4] / day[4:6] / f"{ticker}_{day}_{day}_{kind}.parquet"
+
+
+def schema_record(schema: Any) -> list[dict[str, Any]]:
+    return [{"name": field.name, "type": str(field.type), "nullable": bool(field.nullable)} for field in schema]
+
+
+def inspect_source(
+    path: Path, required_columns: tuple[str, ...], label: str,
+    source_root: Path = SOURCE_ROOT,
+) -> dict[str, Any]:
+    path = plain(path, source_root, label, exists=False)
+    if not path.exists():
+        return {"path": str(path), "exists": False, "bytes": None, "mtime_ns": None, "sha256": None, "rows": None, "schema": None, "clock_basis": None, "physical_id": None}
+    require(path.is_file(), f"non-file source {label}")
+    before = path.stat()
+    digest = sha256_file(path)
+    parquet = pq.ParquetFile(path)
+    names = parquet.schema_arrow.names
+    require(not set(required_columns) - set(names), f"source schema {label}")
+    require("timestamp" in names, f"native timestamp required {label}")
+    after = path.stat()
+    require((before.st_size, before.st_mtime_ns, before.st_ino) == (after.st_size, after.st_mtime_ns, after.st_ino), f"source changed during inventory {label}")
+    return {
+        "path": str(path), "exists": True, "bytes": after.st_size, "mtime_ns": after.st_mtime_ns,
+        "sha256": digest, "rows": parquet.metadata.num_rows, "schema": schema_record(parquet.schema_arrow),
+        "clock_basis": "NATIVE_STORED_TIMESTAMP", "physical_id": [int(after.st_dev), int(after.st_ino)],
+    }
+
+
+def frozen_feature_schema() -> dict[str, Any]:
+    contract = read_json(FEATURE_CONTRACT)
+    schema = contract.get("schema")
+    require(contract.get("outcomes_read") is False and isinstance(schema, dict), "feature contract")
+    require(schema.get("base_dim") == 81 and len(schema.get("base_names", [])) == 81 and len(set(schema["base_names"])) == 81, "feature schema B81")
+    require(schema.get("token_dim") == 45 and schema.get("map_names") == ["fib", "call_oi", "put_oi", "call_gamma", "put_gamma"], "feature schema token/maps")
+    return schema
+
+
+def version_record() -> dict[str, str]:
+    return {
+        "python": sys.version,
+        **{name: importlib.metadata.version(name) for name in ("numpy", "pandas", "pyarrow", "exchange-calendars")},
+    }
+
+
+def prepare_inventory_payload(builder_sha256: str, source_root: Path = SOURCE_ROOT) -> dict[str, Any]:
+    require(Path(os.path.abspath(source_root)) == Path(os.path.abspath(SOURCE_ROOT)), "source root frozen")
+    authorities = validate_authorities(builder_sha256)
+    rows = calendar_rows()
+    schema = frozen_feature_schema()
+    required = {
+        "greeks": ("symbol", "expiration", "trade_date", "strike", "right", "timestamp", "underlying_timestamp", "underlying_price", "bid", "ask", "delta", "implied_vol", "vega", "theta"),
+        "oi": ("symbol", "expiration", "trade_date", "strike", "right", "timestamp", "open_interest"),
+    }
+    sources, identities, physical = [], [], set()
+    present = missing = 0
+    by_key: dict[tuple[str, str, str], dict[str, Any]] = {}
+    for row in rows:
+        for kind in KINDS:
+            record = {"ticker": row["ticker"], "date": row["date"], "kind": kind, **inspect_source(source_path(row["ticker"], row["date"], kind), required[kind], f"{row['ticker']}:{row['date']}:{kind}")}
+            expected_missing = kind == "greeks" and (row["ticker"], row["date"]) in MISSING_GREEKS
+            require(record["exists"] != expected_missing, "source coverage discrepancy")
+            if record["exists"]:
+                identity = tuple(record["physical_id"])
+                require(identity not in physical, "source alias/hardlink")
+                physical.add(identity)
+                present += 1
+            else:
+                missing += 1
+            sources.append(record)
+            by_key[(row["ticker"], row["date"], kind)] = record
+        greek, oi = by_key[(row["ticker"], row["date"], "greeks")], by_key[(row["ticker"], row["date"], "oi")]
+        identities.append({"ticker": row["ticker"], "date": row["date"], "close_i": 390, "status": "COMPLETE" if greek["exists"] and oi["exists"] else "MISSING_SOURCE", "sources": {"greeks": greek, "oi": oi}})
+    require((len(sources), present, missing) == (330, 318, 12), "source counts")
+    require(sum(row["status"] == "COMPLETE" for row in identities) == 153 and sum(row["status"] == "MISSING_SOURCE" for row in identities) == 12, "identity counts")
+    return {
+        "schema": "weekly_context_q3_1030_inventory_v1", "state_i": STATE_I,
+        "calendar": {"rows": rows, "pins": {name: authorities[name] for name in ("calendar.json", "calendar.parquet", "calendar_manifest")}},
+        "counts": {"identities": 165, "available": 153, "missing": 12, "sources": 330, "sources_present": 318, "sources_missing": 12},
+        "feature_schema": schema, "authorities": authorities, "versions": version_record(),
+        "sources": sources, "identities": identities,
+        "flags": {"values_read": False, "raw_read": False, "outcomes_read": False, "actions_read": False, "labels_read": False, "oracle_read": False, "models_fit": False},
+    }
+
+
+def build_reviewed_inventory(builder_sha256: str, output: Path = OUTPUT) -> dict[str, Any]:
+    output = plain(output, None, "output", exists=False)
+    require(not output.exists(), "output root already exists")
+    payload = prepare_inventory_payload(builder_sha256)
+    staging = Path(tempfile.mkdtemp(prefix=f".{output.name}.", dir=output.parent))
+    try:
+        write_json(staging / "inventory.json", payload)
+        inventory_pin = pin(staging / "inventory.json")
+        receipt = {"schema": "weekly_context_q3_1030_inventory_manifest_v1", "inventory.json": inventory_pin}
+        write_json(staging / "inventory_manifest.json", receipt)
+        staging.rename(output)
+        return receipt
+    except BaseException:
+        failure = staging / "failure.json"
+        if not failure.exists():
+            write_json(failure, {"status": "FAILED_PRESERVED", "utc": datetime.now(timezone.utc).isoformat()}, exclusive=True)
+        raise
+
+
+def validate_inventory_binding(output: Path, inventory_sha256: str) -> tuple[dict[str, Any], dict[Path, dict[str, Any]]]:
+    inventory_path = plain(output / "inventory.json", output, "inventory binding")
+    receipt_path = plain(output / "inventory_manifest.json", output, "inventory receipt")
+    require(inventory_path.is_file() and receipt_path.is_file(), "inventory binding files required")
+    inventory_pin, receipt_pin = pin(inventory_path), pin(receipt_path)
+    require(inventory_pin["sha256"] == inventory_sha256, "inventory external SHA")
+    receipt = read_json(receipt_path)
+    require(receipt == {"schema": "weekly_context_q3_1030_inventory_manifest_v1", "inventory.json": inventory_pin}, "inventory receipt binding")
+    return read_json(inventory_path), {inventory_path: inventory_pin, receipt_path: receipt_pin}
+
+
+def guarded_module_file(path: Path, expected_sha256: str, label: str) -> tuple[Path, dict[str, Any]]:
+    path = plain(path, LEVEL, f"frozen module {label}")
+    require(path.is_file(), f"frozen module file {label}")
+    before = pin(path)
+    require(before["sha256"] == expected_sha256, f"frozen module hash {label}")
+    return path, before
+
+
+def load_frozen_modules() -> tuple[Any, Any, Any, dict[str, str]]:
+    package_name = "_weekly_q3_frozen_level_modules"
+    require(package_name not in sys.modules, "frozen package already loaded")
+    package = types.ModuleType(package_name)
+    package.__path__ = [str(LEVEL)]
+    sys.modules[package_name] = package
+    loaded = {}
+    try:
+        for short, path in (("build_cache", BUILD_CACHE), ("level_engine", LEVEL_ENGINE), ("features", FEATURES)):
+            path, before = guarded_module_file(path, PINS[f"{short}.py"][1], short)
+            name = f"{package_name}.{short}"
+            spec = importlib.util.spec_from_file_location(name, path)
+            require(spec is not None and spec.loader is not None, f"module spec {short}")
+            module = importlib.util.module_from_spec(spec)
+            sys.modules[name] = module
+            spec.loader.exec_module(module)
+            imported = Path(os.path.abspath(module.__file__))
+            require(
+                os.path.normcase(str(imported)) == os.path.normcase(str(path))
+                and not is_link_or_reparse(imported)
+                and pin(path) == before,
+                f"module import changed {short}",
+            )
+            loaded[short] = module
+        require(loaded["features"].build_cache is loaded["build_cache"] and loaded["features"].level_engine is loaded["level_engine"], "frozen import binding")
+        imports = {name: str(Path(module.__file__).resolve()) for name, module in loaded.items()}
+        return loaded["build_cache"], loaded["features"], loaded["level_engine"], imports
+    except BaseException:
+        for name in list(sys.modules):
+            if name == package_name or name.startswith(package_name + "."):
+                sys.modules.pop(name, None)
+        raise
+
+
+def verify_source(
+    record: dict[str, Any], required_columns: tuple[str, ...],
+    source_root: Path = SOURCE_ROOT,
+) -> None:
+    current = inspect_source(
+        Path(record["path"]), required_columns,
+        f"closing:{record['ticker']}:{record['date']}:{record['kind']}",
+        source_root,
+    )
+    for key in ("path", "exists", "bytes", "mtime_ns", "sha256", "rows", "schema", "clock_basis", "physical_id"):
+        require(current[key] == record[key], f"source changed {record['ticker']}:{record['date']}:{record['kind']}:{key}")
+
+
+def validate_state(arrays: dict[str, np.ndarray]) -> None:
+    require(set(arrays) == set(ARRAY_SCHEMA), "state array names")
+    for name, (shape, dtype) in ARRAY_SCHEMA.items():
+        value = np.asarray(arrays[name])
+        require(value.shape == shape and str(value.dtype) == dtype, f"state schema {name}")
+    require(np.array_equal(arrays["state_i"], np.asarray([60], dtype=np.int16)), "state_i value")
+    for name in ("base", "tokens", "maps", "map_mask"):
+        require(np.isfinite(arrays[name]).all(), f"finite {name}")
+    require(np.all((arrays["map_mask"] >= 0) & (arrays["map_mask"] <= 1)), "map mask range")
+    bars, ends = arrays["bar_mask"][0], arrays["bar_end_i"][0]
+    require(np.all(ends[bars] >= 0) and np.all(ends[bars] < 60) and np.all(ends[~bars] == -1), "causal bar_end")
+
+
+def verify_generated_file_map(records: dict[str, dict[str, Any]], output: Path, label: str) -> None:
+    for relative, record in records.items():
+        path = plain(output / relative, output, f"{label}:{relative}")
+        require(
+            record == {"path": str(path), **pin(path)},
+            f"generated file changed {label}:{relative}",
+        )
+
+
+def state_metadata(
+    path: Path, arrays: dict[str, np.ndarray], cache_path: Path,
+    cache_metadata_path: Path, ticker: str, day: str,
+    dependencies: dict[str, str],
+) -> dict[str, Any]:
+    return {
+        "version": "weekly_context_q3_state60_v1",
+        "identity": {"ticker": ticker, "date": day, "state_i": 60},
+        "sha256": sha256_file(path), "bytes": path.stat().st_size,
+        "raw_cache": {"path": str(cache_path), **pin(cache_path)},
+        "raw_metadata": {"path": str(cache_metadata_path), **pin(cache_metadata_path)},
+        "dependencies": dependencies,
+        "array_schema": {name: {"shape": list(value.shape), "dtype": str(value.dtype)} for name, value in arrays.items()},
+        "state_valid": bool(arrays["state_valid"][0]), "outcomes_read": False,
+    }
+
+
+def context_row(identity: dict[str, Any], arrays: dict[str, np.ndarray] | None, sources: dict[str, Any]) -> dict[str, Any]:
+    common = {"ticker": identity["ticker"], "date": identity["date"], "source_status": identity["status"], "close_i": 390, "state_i": 60}
+    if arrays is None:
+        return {**common, "status": "CONTEXT_MISSING_SOURCE", "state_valid": None, "context_81": None, "token_mask_20": None, "bar_mask_20": None, "map_mask_20x5": None, "bar_end_i_20": None, "sources": sources}
+    return {
+        **common, "status": "CONTEXT_AVAILABLE", "state_valid": bool(arrays["state_valid"][0]),
+        "context_81": arrays["base"][0].astype(float).tolist(),
+        "token_mask_20": arrays["token_mask"][0].astype(bool).tolist(),
+        "bar_mask_20": arrays["bar_mask"][0].astype(bool).tolist(),
+        "map_mask_20x5": arrays["map_mask"][0].astype(float).tolist(),
+        "bar_end_i_20": arrays["bar_end_i"][0].astype(int).tolist(), "sources": sources,
+    }
+
+
+def execute_reviewed_extraction(builder_sha256: str, inventory_sha256: str, output: Path = OUTPUT) -> dict[str, Any]:
+    output = plain(output, None, "output")
+    require(set(path.name for path in output.iterdir()) == {"inventory.json", "inventory_manifest.json"}, "output root contains partial/unexpected files")
+    frozen, binding_pins = validate_inventory_binding(output, inventory_sha256)
+    require(prepare_inventory_payload(builder_sha256) == frozen, "inventory differs before values")
+    build_cache, features, _level_engine, imports = load_frozen_modules()
+    require(
+        list(features.BASE_NAMES) == frozen["feature_schema"]["base_names"]
+        and features.feature_schema()["base_names"] == frozen["feature_schema"]["base_names"],
+        "frozen feature names/order",
+    )
+    raw_root, state_root = output / "raw_cache", output / "state60"
+    require(not raw_root.exists() and not state_root.exists(), "cache/state roots already exist")
+    raw_root.mkdir()
+    state_root.mkdir()
+    required = {"greeks": tuple(build_cache.GREEK_COLUMNS), "oi": tuple(build_cache.OI_COLUMNS)}
+    contexts, coverage_rows = [], []
+    raw_files: dict[str, Any] = {}
+    state_files: dict[str, Any] = {}
+    dependencies = {name: PINS[f"{name}.py"][1] for name in ("build_cache", "features", "level_engine")}
+    for identity in frozen["identities"]:
+        for kind in KINDS:
+            verify_source(identity["sources"][kind], required[kind])
+        raw_sources = {kind: identity["sources"][kind] for kind in KINDS}
+        if identity["status"] == "MISSING_SOURCE":
+            row = context_row(identity, None, {"greeks": raw_sources["greeks"], "oi": raw_sources["oi"], "cache": None, "cache_metadata": None, "state": None, "state_metadata": None})
+            contexts.append(row)
+            coverage_rows.append({key: row[key] for key in ("ticker", "date", "source_status", "status", "state_valid")})
+            continue
+        task = {"source_root": str(SOURCE_ROOT), "out": str(raw_root), "ticker": identity["ticker"], "date": identity["date"], "producer_sha256": PINS["build_cache.py"][1], "calendar": {"close_i": 390, "full_session": True}}
+        result = build_cache.build_day(task)
+        require(result.get("status") == "BUILT", "raw cache was not newly built")
+        cache_path = raw_root / identity["ticker"] / f"{identity['date']}.npz"
+        cache_meta_path = cache_path.with_suffix(".json")
+        require(cache_path.is_file() and cache_meta_path.is_file(), "raw cache pair missing")
+        cache_metadata = read_json(cache_meta_path)
+        require(
+            cache_metadata.get("clock_basis") == "NATIVE_STORED_TIMESTAMP"
+            and cache_metadata.get("oi_clock_basis") == "NATIVE_STORED_TIMESTAMP",
+            "raw cache clocks must both be native",
+        )
+        raw = build_cache.load_day_cache(cache_path)
+        arrays = features.encode_states(features.build_day_feature_cache(raw), indices=[60])
+        validate_state(arrays)
+        state_dir = state_root / identity["ticker"]
+        state_dir.mkdir(exist_ok=True)
+        state_path = state_dir / f"{identity['date']}.npz"
+        with state_path.open("xb") as handle:
+            np.savez_compressed(handle, **arrays)
+        metadata = state_metadata(
+            state_path, arrays, cache_path, cache_meta_path,
+            identity["ticker"], identity["date"], dependencies,
+        )
+        state_meta_path = state_path.with_suffix(".json")
+        write_json(state_meta_path, metadata)
+        sources = {
+            "greeks": raw_sources["greeks"], "oi": raw_sources["oi"],
+            "cache": {"path": str(cache_path), **pin(cache_path)}, "cache_metadata": {"path": str(cache_meta_path), **pin(cache_meta_path)},
+            "state": {"path": str(state_path), **pin(state_path)}, "state_metadata": {"path": str(state_meta_path), **pin(state_meta_path)},
+        }
+        row = context_row(identity, arrays, sources)
+        contexts.append(row)
+        coverage_rows.append({key: row[key] for key in ("ticker", "date", "source_status", "status", "state_valid")})
+        raw_files[str(cache_path.relative_to(output))] = sources["cache"]
+        raw_files[str(cache_meta_path.relative_to(output))] = sources["cache_metadata"]
+        state_files[str(state_path.relative_to(output))] = sources["state"]
+        state_files[str(state_meta_path.relative_to(output))] = sources["state_metadata"]
+        del raw, arrays
+    require(len(contexts) == 165 and len(raw_files) == 306 and len(state_files) == 306, "extraction output counts")
+    closing = prepare_inventory_payload(builder_sha256)
+    require(closing == frozen, "inventory/sources changed during extraction")
+    for path, expected in binding_pins.items():
+        guarded = plain(path, output, f"closing inventory {path.name}")
+        require(guarded.is_file() and pin(guarded) == expected, f"inventory binding changed {path.name}")
+    context_path, coverage_path, manifest_path = output / "context.jsonl", output / "coverage.json", output / "manifest.json"
+    require(not context_path.exists() and not coverage_path.exists() and not manifest_path.exists(), "final output already exists")
+    with context_path.open("x", encoding="utf-8", newline="\n") as handle:
+        for row in contexts:
+            handle.write(json.dumps(row, sort_keys=True, allow_nan=False) + "\n")
+    counts = {"identities": 165, "available": 153, "missing": 12, "state_valid_true": sum(row["state_valid"] is True for row in contexts), "state_valid_false": sum(row["state_valid"] is False for row in contexts)}
+    flags = {"outcomes_read": False, "actions_read": False, "labels_read": False, "oracle_read": False, "models_fit": False, "development_seen": True, "promotion_approved": False}
+    coverage = {"schema": "weekly_context_q3_1030_coverage_v1", "state_i": 60, "feature_names": frozen["feature_schema"]["base_names"], "counts": counts, "rows": coverage_rows, "flags": flags}
+    write_json(coverage_path, coverage)
+    verify_generated_file_map(raw_files, output, "raw_cache")
+    verify_generated_file_map(state_files, output, "state60")
+    files = {"context.jsonl": pin(context_path), "coverage.json": pin(coverage_path), "inventory.json": binding_pins[output / "inventory.json"], "inventory_manifest.json": binding_pins[output / "inventory_manifest.json"]}
+    manifest = {
+        "schema": "weekly_context_q3_1030_manifest_v1", "status": STATUS, "split": SPLIT, "state_i": 60,
+        "counts": counts, "feature_names": frozen["feature_schema"]["base_names"], "files": files,
+        "authorities": frozen["authorities"], "versions": frozen["versions"], "imports": imports,
+        "raw_cache_files": raw_files, "state_files": state_files, "flags": flags,
+        "limitations": ["Q3 2026 is SEEN_DEVELOPMENT, not a clean holdout", "0DTE context is distinct from weekly option expiry", "gamma is an unsigned proxy, not dealer inventory", "stored native timestamps do not prove live receipt"],
+    }
+    write_json(manifest_path, manifest)
+    return manifest
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Frozen Q3 state60 context extension")
+    mode = parser.add_mutually_exclusive_group(required=True)
+    mode.add_argument("--build-reviewed-inventory", action="store_true")
+    mode.add_argument("--execute-reviewed-extraction", action="store_true")
+    parser.add_argument("--builder-sha256", required=True)
+    parser.add_argument("--inventory-sha256")
+    args = parser.parse_args()
+    require(len(args.builder_sha256) == 64, "builder SHA argument")
+    if args.build_reviewed_inventory:
+        require(args.inventory_sha256 is None, "inventory SHA only belongs to extraction")
+        build_reviewed_inventory(args.builder_sha256.lower())
+    else:
+        require(args.inventory_sha256 is not None and len(args.inventory_sha256) == 64, "extraction requires inventory SHA")
+        execute_reviewed_extraction(args.builder_sha256.lower(), args.inventory_sha256.lower())
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

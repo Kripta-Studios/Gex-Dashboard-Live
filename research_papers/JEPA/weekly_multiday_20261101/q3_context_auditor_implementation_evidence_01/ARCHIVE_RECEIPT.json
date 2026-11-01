@@ -1,0 +1,223 @@
+{
+  "utc": "2026-11-01T16:32:01.3346776Z",
+  "count": 36,
+  "bytes": 293554,
+  "files": [
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_attempt01\\gate_stderr.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_attempt01\\gate_stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_attempt01\\gate_stdout.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_attempt01\\gate_stdout.log",
+      "bytes": 70,
+      "sha256": "75b71ede545016ee2460b4e60d5e74b1bdadb02e8244ec2366c5c11bce8f3163"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_attempt01\\pretest_pins.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_attempt01\\pretest_pins.json",
+      "bytes": 1144,
+      "sha256": "71b64adf58f99f8f8447165a46f5b34940d6c999e426e74051c28f3144f64bad"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_attempt01\\receipt.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_attempt01\\receipt.json",
+      "bytes": 1046,
+      "sha256": "0480634ae300d4ac05e046e1d0e51646e27cd822b75456d39a0251a648161e7e"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_attempt01\\ruff_stderr.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_attempt01\\ruff_stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_attempt01\\ruff_stdout.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_attempt01\\ruff_stdout.log",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_attempt01\\stderr.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_attempt01\\stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_attempt01\\stdout.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_attempt01\\stdout.log",
+      "bytes": 101,
+      "sha256": "340db51f34013ec68b5dbfd5b3e2a0512b016c33216dc5e231430a817d5de69e"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_attempt01\\pretest_snapshot\\audit_weekly_context_q3.py",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_attempt01\\pretest_snapshot\\audit_weekly_context_q3.py",
+      "bytes": 43223,
+      "sha256": "c2f878bdaf19aecfb8420f5f13afd00777632bf0b2ed61e50567d16343bb8caf"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_attempt01\\pretest_snapshot\\build_weekly_context_q3.py",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_attempt01\\pretest_snapshot\\build_weekly_context_q3.py",
+      "bytes": 28711,
+      "sha256": "caa049caccd79a1c344bee03cce70df7e6a4446fa1ab087c31de64692f78845a"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_attempt01\\pretest_snapshot\\Q3_CONTEXT_EXTENSION_CONTRACT_20261101.md",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_attempt01\\pretest_snapshot\\Q3_CONTEXT_EXTENSION_CONTRACT_20261101.md",
+      "bytes": 7421,
+      "sha256": "8775399421be05d7cee9ce4d08190fe374906ecb989f6e93c5d3469db29bc4ed"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_attempt01\\pretest_snapshot\\test_audit_weekly_context_q3.py",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_attempt01\\pretest_snapshot\\test_audit_weekly_context_q3.py",
+      "bytes": 13964,
+      "sha256": "2d24bb0db1b47b7024d0218ca9cad65b062f2c392fc5b6e106d577d3d932a83e"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_retry02\\gate_stderr.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_retry02\\gate_stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_retry02\\gate_stdout.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_retry02\\gate_stdout.log",
+      "bytes": 70,
+      "sha256": "897ee667a12b16134bac0d5d8746ab75a705fddf48d79e0a652815a3e3d8e0d1"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_retry02\\pretest_pins.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_retry02\\pretest_pins.json",
+      "bytes": 1144,
+      "sha256": "a5ed55d76fc1d8ed6a1e078f6f61953e63d449f0759466fb7c9444c88927a28e"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_retry02\\receipt.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_retry02\\receipt.json",
+      "bytes": 958,
+      "sha256": "2c5432fb04273aec2220a1d05c1139a320e014de964e8ae25557ca151a4b8ae3"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_retry02\\ruff_stderr.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_retry02\\ruff_stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_retry02\\ruff_stdout.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_retry02\\ruff_stdout.log",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_retry02\\stderr.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_retry02\\stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_retry02\\stdout.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_retry02\\stdout.log",
+      "bytes": 101,
+      "sha256": "6c031655f80626adedade6ab49a18a2a889319e725cb18ea5a1f56d664a74947"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_retry02\\pretest_snapshot\\audit_weekly_context_q3.py",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_retry02\\pretest_snapshot\\audit_weekly_context_q3.py",
+      "bytes": 43726,
+      "sha256": "f50ff870b2270406b7b4b7c7d1284bf9e96d39cd33c102838ec4e720bd46077d"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_retry02\\pretest_snapshot\\build_weekly_context_q3.py",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_retry02\\pretest_snapshot\\build_weekly_context_q3.py",
+      "bytes": 28711,
+      "sha256": "caa049caccd79a1c344bee03cce70df7e6a4446fa1ab087c31de64692f78845a"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_retry02\\pretest_snapshot\\Q3_CONTEXT_EXTENSION_CONTRACT_20261101.md",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_retry02\\pretest_snapshot\\Q3_CONTEXT_EXTENSION_CONTRACT_20261101.md",
+      "bytes": 7421,
+      "sha256": "8775399421be05d7cee9ce4d08190fe374906ecb989f6e93c5d3469db29bc4ed"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_retry02\\pretest_snapshot\\test_audit_weekly_context_q3.py",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_retry02\\pretest_snapshot\\test_audit_weekly_context_q3.py",
+      "bytes": 14502,
+      "sha256": "f52d20169781fcebe371cf48f9c4bc0ef5b90558a174f84a3811af8a8e7525cc"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_retry03\\gate_stderr.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_retry03\\gate_stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_retry03\\gate_stdout.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_retry03\\gate_stdout.log",
+      "bytes": 70,
+      "sha256": "9e886629d087097c872c66c8ed317504c06e6ec8d9363b159765db09943e1877"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_retry03\\pretest_pins.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_retry03\\pretest_pins.json",
+      "bytes": 1144,
+      "sha256": "d94482f93a9a282a238b242ae142b24b822e0bbf8a8b7a15a54c467f372238a7"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_retry03\\receipt.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_retry03\\receipt.json",
+      "bytes": 958,
+      "sha256": "2c7ce229ad97d1fea0b8630734ce00fd1bbbdb696c6e86efd84eab2927abdbf7"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_retry03\\ruff_stderr.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_retry03\\ruff_stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_retry03\\ruff_stdout.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_retry03\\ruff_stdout.log",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_retry03\\stderr.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_retry03\\stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_retry03\\stdout.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_retry03\\stdout.log",
+      "bytes": 102,
+      "sha256": "6ba6897a8ebecaf5789ff0820ae05eda748e0630af6ab96553dfc821c785b7b1"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_retry03\\pretest_snapshot\\audit_weekly_context_q3.py",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_retry03\\pretest_snapshot\\audit_weekly_context_q3.py",
+      "bytes": 45772,
+      "sha256": "6c1a664772543c8972f61e3e910c561fa4b79f55e2bec9aa29190495aeebcbc6"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_retry03\\pretest_snapshot\\build_weekly_context_q3.py",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_retry03\\pretest_snapshot\\build_weekly_context_q3.py",
+      "bytes": 28711,
+      "sha256": "caa049caccd79a1c344bee03cce70df7e6a4446fa1ab087c31de64692f78845a"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_retry03\\pretest_snapshot\\Q3_CONTEXT_EXTENSION_CONTRACT_20261101.md",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_retry03\\pretest_snapshot\\Q3_CONTEXT_EXTENSION_CONTRACT_20261101.md",
+      "bytes": 7421,
+      "sha256": "8775399421be05d7cee9ce4d08190fe374906ecb989f6e93c5d3469db29bc4ed"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_auditor_retry03\\pretest_snapshot\\test_audit_weekly_context_q3.py",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_auditor_implementation_evidence_01\\h2_context_q3_auditor_retry03\\pretest_snapshot\\test_audit_weekly_context_q3.py",
+      "bytes": 17006,
+      "sha256": "02c8f5cba43a25037c1ec7c5ae817de73d3b6d90a6faa2bf750358dcdbff2b8e"
+    }
+  ]
+}

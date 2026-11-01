@@ -1,0 +1,22 @@
+[
+  {
+    "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_context_q3.py",
+    "bytes": 43726,
+    "sha256": "f50ff870b2270406b7b4b7c7d1284bf9e96d39cd33c102838ec4e720bd46077d"
+  },
+  {
+    "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_audit_weekly_context_q3.py",
+    "bytes": 14502,
+    "sha256": "f52d20169781fcebe371cf48f9c4bc0ef5b90558a174f84a3811af8a8e7525cc"
+  },
+  {
+    "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\Q3_CONTEXT_EXTENSION_CONTRACT_20261101.md",
+    "bytes": 7421,
+    "sha256": "8775399421be05d7cee9ce4d08190fe374906ecb989f6e93c5d3469db29bc4ed"
+  },
+  {
+    "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\build_weekly_context_q3.py",
+    "bytes": 28711,
+    "sha256": "caa049caccd79a1c344bee03cce70df7e6a4446fa1ab087c31de64692f78845a"
+  }
+]

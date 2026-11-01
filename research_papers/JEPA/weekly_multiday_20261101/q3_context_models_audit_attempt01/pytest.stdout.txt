@@ -1,0 +1,15 @@
+...F....                                                                 [100%]
+================================== FAILURES ===================================
+________________________ test_ledger_drift_is_detected ________________________
+
+    def test_ledger_drift_is_detected() -> None:
+        bundle = make_bundle()
+        ledger = bundle["producer_ledgers"]["CONTEXT182"]["adverse"]
+>       exit_row = next(row for row in ledger if row["event"] == "EXIT")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+research_papers\JEPA\weekly_multiday_20261101\test_audit_weekly_context_q3_models.py:160: StopIteration
+=========================== short test summary info ===========================
+FAILED research_papers/JEPA/weekly_multiday_20261101/test_audit_weekly_context_q3_models.py::test_ledger_drift_is_detected
+1 failed, 7 passed in 2.52s

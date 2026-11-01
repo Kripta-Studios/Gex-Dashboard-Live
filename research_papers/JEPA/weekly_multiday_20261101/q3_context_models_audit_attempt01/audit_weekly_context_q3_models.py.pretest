@@ -1,0 +1,449 @@
+"""Independent numeric audit of the frozen Q3 context-model comparison.
+
+No scorer code is imported and no estimator is fitted.  Stored transforms and
+logistic parameters are applied directly, followed by an independently pinned
+replay implementation from the H1 auditor.
+"""
+
+from __future__ import annotations
+
+import argparse
+import copy
+import hashlib
+import importlib.util
+import json
+import math
+import os
+from pathlib import Path
+import stat
+from typing import Any
+
+import numpy as np
+
+
+WEEK = Path(__file__).resolve().parent
+BASE = Path(r"D:\GexResearchArtifacts\weekly_multiday_20261101")
+PRODUCER_ROOT = BASE / "h2_context_model_comparison_q3_01"
+OUTPUT = BASE / "h2_context_model_comparison_q3_audit_01"
+SCORER = WEEK / "score_weekly_context_q3_frozen.py"
+CONTRACT = WEEK / "Q3_FROZEN_CONTEXT_COMPARISON_CONTRACT_20261101.md"
+HELPER = WEEK / "audit_weekly_context_models.py"
+HELPER_SHA256 = "3eb6b9795ad260971435259858f86d3c00111bcc141973faf986411d4a68ad99"
+CONTRACT_SHA256 = "e9867bfc5acc5922288e81542e250de7707cfd20f472087b24700ef69764802a"
+ROOTS = {
+    "dataset": BASE / "h2_dataset_v2_extension_2026q3_partial_01",
+    "base18": BASE / "h2_ev_frozen_extension_2026q3_partial_01",
+    "models": BASE / "h2_context_model_comparison_01",
+    "frozen": BASE / "h2_ev_v2_01",
+    "risk": BASE / "h2_equal_risk_frozen_01",
+    "context": BASE / "h2_context_q3_1030_01",
+    "context_audit": BASE / "h2_context_q3_1030_audit_01",
+    "h1_context_audit": BASE / "h2_context_model_comparison_audit_01",
+}
+FIXED_MANIFESTS = {
+    "dataset": "b45b017c63fea42036ab73418cc07faa8e377047fec1f8d60c908e98eea5400b",
+    "base18": "7bd50a5a1fe5214df2c4281e785313f0fb016ca73d725d682788dcb78b283d8e",
+    "models": "662ac63eaa2895beff4363b9e94a97cd7adc91aac3558139bdd919d8fbf2861a",
+    "frozen": "54dc2d6ced2bb625a71fdae39b8ab2e417a576482ea6a99047df4ce8b6b1ad96",
+    "risk": "50fa6b7a02aad9d122dc0bfdd84f8c01f9a5f468bafc7f175eed39aa3ea9418d",
+    "h1_context_audit": "bb661fe916f65ed6ee40dd3cf684650a8d318447005a7f224edec6a4b814b3eb",
+}
+ARTIFACT_SHA256 = {
+    "category30_model.json": "e927fe4e2e9b796c2f41f0cdb36a713fd72101b5bbbb8c8131c2be7f84224b5c",
+    "category30_transform.json": "dbbab2c4a774e43e69269a5b0b9c7ed06f61b105b8cc96196464f83ba740584d",
+    "category30_calibration.json": "1201fbd5dbbc6d6e4aae6149ee5349e2773a7bb659cb45a51cea44e7d9fd9ba1",
+    "context182_model.json": "7a9dafc2a8c30c83ef2177057ceeb6fa33636f2943821cee83172b703cc17037",
+    "context182_transform.json": "82b31bc61ad94f462b724a49d1cfd6793aebfc361afd3111e5c27dc1d16539c0",
+    "context182_calibration.json": "5a9dc85fba737b0e2921968c711ce14780da2b3aa7a27f87bd025cf0954bc14c",
+}
+BASE18_SCORES_SHA256 = "9458c8dfa75983784af0e7514feec1ded43a42adadecfb07c0406aee3f284ca6"
+MODEL_SHA256 = "68712c7c326d2337a34f8401579ddc52a4dab0e3f505c8c4ff2f1b1d51c03fb4"
+MEANS_SHA256 = "a8dc329233ce431b282c500e27cf91ac91d845cbb6a1fc752cee36026aef3f90"
+MODELS = ("BASE18_FROZEN", "CATEGORY30", "CONTEXT182")
+COSTS = ("base", "adverse")
+RIGHTS = ("CALL", "PUT")
+SPLIT = "Q3_PARTIAL_2026_SEEN_DEVELOPMENT"
+FIRST, LAST, LAST_ENTRY = "20260701", "20260917", "20260915"
+
+
+class Q3ModelAuditError(RuntimeError):
+    pass
+
+
+def require(condition: bool, message: str) -> None:
+    if not condition:
+        raise Q3ModelAuditError(message)
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def is_link_or_reparse(path: Path) -> bool:
+    current = Path(os.path.abspath(path))
+    while True:
+        try:
+            info = os.lstat(current)
+        except FileNotFoundError:
+            info = None
+        if info is not None:
+            attributes = getattr(info, "st_file_attributes", 0)
+            if stat.S_ISLNK(info.st_mode) or attributes & getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400):
+                return True
+        if current.parent == current:
+            return False
+        current = current.parent
+
+
+def plain(path: Path, label: str, *, exists: bool = True) -> Path:
+    path = Path(os.path.abspath(path))
+    require(not is_link_or_reparse(path), f"link/reparse {label}")
+    if exists:
+        require(path.exists(), f"missing {label}")
+    return path
+
+
+def pin(path: Path) -> dict[str, Any]:
+    return {"bytes": path.stat().st_size, "sha256": sha256_file(path)}
+
+
+def verify(path: Path, expected: dict[str, Any], label: str) -> None:
+    path = plain(path, label)
+    require(path.is_file() and pin(path) == {"bytes": expected["bytes"], "sha256": expected["sha256"]}, f"pin {label}")
+
+
+def read_json(path: Path) -> dict[str, Any]:
+    value = json.loads(path.read_text(encoding="utf-8"))
+    require(isinstance(value, dict), f"object required {path}")
+    return value
+
+
+def read_jsonl(path: Path) -> list[dict[str, Any]]:
+    rows = []
+    with path.open("r", encoding="utf-8") as handle:
+        for number, line in enumerate(handle, 1):
+            require(bool(line.strip()), f"blank JSONL {path}:{number}")
+            row = json.loads(line)
+            require(isinstance(row, dict), f"object required {path}:{number}")
+            rows.append(row)
+    return rows
+
+
+def write_json(path: Path, value: Any) -> None:
+    with path.open("x", encoding="utf-8", newline="\n") as handle:
+        handle.write(json.dumps(value, indent=2, sort_keys=True, allow_nan=False) + "\n")
+
+
+def import_helper() -> Any:
+    path = plain(HELPER, "H1 independent helper")
+    before = pin(path)
+    require(before["sha256"] == HELPER_SHA256, "H1 helper authority")
+    spec = importlib.util.spec_from_file_location("_q3_independent_h1_audit_helper", path)
+    require(spec is not None and spec.loader is not None, "H1 helper module spec")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    require(Path(os.path.abspath(module.__file__)) == path and not is_link_or_reparse(path) and pin(path) == before, "H1 helper changed during import")
+    return module
+
+
+def snapshot_file(path: Path, expected_sha256: str, label: str) -> dict[str, Any]:
+    path = plain(path, label)
+    require(path.is_file(), f"file required {label}")
+    value = {"path": str(path), **pin(path)}
+    require(value["sha256"] == expected_sha256, f"authority {label}")
+    return value
+
+
+def snapshot_manifests(
+    producer_manifest_sha256: str, context_manifest_sha256: str,
+    context_audit_sha256: str,
+) -> dict[str, dict[str, Any]]:
+    expected = {**FIXED_MANIFESTS, "context": context_manifest_sha256, "context_audit": context_audit_sha256, "producer": producer_manifest_sha256}
+    paths = {
+        **{name: (root / ("audit.json" if name in {"context_audit", "h1_context_audit"} else "manifest.json")) for name, root in ROOTS.items()},
+        "producer": PRODUCER_ROOT / "manifest.json",
+    }
+    require(set(paths) == set(expected), "manifest authority set")
+    return {name: snapshot_file(paths[name], expected[name], f"manifest {name}") for name in paths}
+
+
+def revalidate(snapshots: dict[str, dict[str, Any]], payloads: dict[Path, dict[str, Any]]) -> None:
+    for name, value in snapshots.items():
+        verify(Path(value["path"]), value, f"closing manifest {name}")
+    for path, value in payloads.items():
+        verify(path, value, f"closing payload {path}")
+
+
+def output_pin(manifest: dict[str, Any], name: str) -> dict[str, Any]:
+    value = manifest.get("outputs", {}).get(name)
+    require(isinstance(value, dict) and set(value) >= {"bytes", "sha256"}, f"output pin {name}")
+    return {"bytes": value["bytes"], "sha256": value["sha256"]}
+
+
+def load_saved_probabilities(
+    helper: Any, rows: list[dict[str, Any]], model_name: str, matrix_key: str,
+    names: list[str], artifacts: dict[str, Any], prior: np.ndarray,
+    means: dict[str, Any], expected_alpha: float,
+) -> None:
+    transform, model, calibration = artifacts["transform"], artifacts["model"], artifacts["calibration"]
+    require(transform.get("feature_order") == names and transform.get("fit_scope") == "TRAIN_ONLY", f"transform names {model_name}")
+    values = np.asarray([row[matrix_key] for row in rows], dtype=float)
+    transformed = helper.apply_saved_transform(values, transform)
+    raw = helper.restored_probabilities(transformed, model)
+    alpha = calibration.get("selected_alpha")
+    require(alpha == expected_alpha and calibration.get("formula") == "(1-alpha)*p_model+alpha*p_train_prior", f"calibration {model_name}")
+    calibrated = (1 - expected_alpha) * raw + expected_alpha * prior
+    require(np.all(np.isfinite(calibrated)) and np.allclose(calibrated.sum(axis=1), 1.0, atol=1e-12), f"probabilities {model_name}")
+    for row, probability in zip(rows, calibrated, strict=True):
+        row[f"_p_{model_name}"] = probability.tolist()
+    for cost in COSTS:
+        values = helper.ev_values(rows, calibrated, means, cost)
+        for row, value in zip(rows, values, strict=True):
+            row[f"_ev_{model_name}_{cost}"] = float(value)
+
+
+def compare_score_rows(rows: list[dict[str, Any]], producer: list[dict[str, Any]]) -> None:
+    index = {row.get("candidate_id"): row for row in producer}
+    require(len(index) == len(producer) == len(rows), "producer score IDs")
+    expected_keys = {
+        "candidate_id", "split", "scenario", "payoff_is_lower_bound", "context_status", "context_state_valid",
+        *{f"p_{model.lower()}" for model in MODELS},
+        *{f"ev_{model.lower()}_{cost}" for model in MODELS for cost in COSTS},
+    }
+    for row in rows:
+        actual = index.get(row["candidate_id"])
+        require(actual is not None and set(actual) == expected_keys, "producer score schema")
+        require(actual["split"] == SPLIT and actual["scenario"] == row["scenario"] and actual["payoff_is_lower_bound"] == row["payoff_is_lower_bound"], "producer score identity")
+        require(actual["context_status"] == row["_context_status"] and actual["context_state_valid"] == row["_context_state_valid"], "producer context flags")
+        for model in MODELS:
+            require(np.allclose(np.asarray(actual[f"p_{model.lower()}"]), np.asarray(row[f"_p_{model}"]), atol=1e-12, rtol=1e-12), f"score drift probability {model}")
+            for cost in COSTS:
+                require(math.isclose(float(actual[f"ev_{model.lower()}_{cost}"]), float(row[f"_ev_{model}_{cost}"]), abs_tol=1e-10, rel_tol=1e-12), f"score drift EV {model}:{cost}")
+
+
+def prepare_replay_rows(rows: list[dict[str, Any]], model: str) -> list[dict[str, Any]]:
+    output = []
+    for row in rows:
+        value = dict(row)
+        value["_ev_base"], value["_ev_adverse"] = row[f"_ev_{model}_base"], row[f"_ev_{model}_adverse"]
+        output.append(value)
+    return output
+
+
+def extended_book_metrics(helper: Any, ledger: list[dict[str, Any]]) -> dict[str, Any]:
+    metrics = helper.book_metrics(ledger)
+    exits = [row for row in ledger if row["event"] == "EXIT"]
+    metrics["right_net_usd"] = {right: math.fsum(float(row["net_usd"]) for row in exits if row["right"] == right) for right in RIGHTS}
+    largest = max(exits, key=lambda row: float(row["net_usd"]), default=None)
+    metrics["largest_trade_by_net_usd"] = None if largest is None else {
+        "candidate_id": largest["candidate_id"], "ticker": largest["ticker"], "right": largest["right"],
+        "net_usd": float(largest["net_usd"]), "net_without_trade_usd": metrics["net_usd"] - float(largest["net_usd"]),
+        "interpretation": "mechanical concentration subtraction; not an alternative policy",
+    }
+    monthly = metrics["monthly_net_usd"]
+    largest_month = max(monthly, key=monthly.get, default=None)
+    metrics["largest_month_by_net_usd"] = None if largest_month is None else {
+        "month": largest_month, "net_usd": monthly[largest_month], "net_without_month_usd": metrics["net_usd"] - monthly[largest_month],
+        "interpretation": "mechanical concentration subtraction; not an alternative policy",
+    }
+    return metrics
+
+
+def q3_calendar(coverage: dict[str, Any]) -> tuple[list[dict[str, Any]], list[str]]:
+    calendar = [row for row in coverage["calendar"] if FIRST <= row["date"] <= LAST]
+    rows = [row for row in coverage["rows"] if FIRST <= row["entry_date"] <= LAST]
+    dates = {ticker: [row["date"] for row in calendar if row["ticker"] == ticker] for ticker in ("SPY", "QQQ", "SPXW")}
+    require(dates["SPY"] == sorted(set(dates["SPY"])) and len(dates["SPY"]) == 55 and all(dates[ticker] == dates["SPY"] for ticker in dates), "Q3 calendar")
+    require(len(rows) == 165, "Q3 coverage rows")
+    return rows, dates["SPY"]
+
+
+def rebuild_summary(
+    helper: Any, rows: list[dict[str, Any]], books: dict[str, dict[str, list[dict[str, Any]]]],
+    sessions: list[str], controls: dict[str, Any], bootstrap_resamples: int,
+) -> dict[str, Any]:
+    selected = {model: helper.selected_ids(books[model]["adverse"]) for model in MODELS}
+    require(all(selected[model] == helper.selected_ids(books[model]["base"]) for model in MODELS), "shared decisions")
+    metrics = {}
+    for model in MODELS:
+        own = selected[model]
+        metrics[model] = {
+            "probability_all": helper.probability_metrics(rows, model),
+            "probability_observed_only": helper.probability_metrics(rows, model, observed_only=True),
+            "probability_selected": helper.probability_metrics(rows, model, selected_ids=own),
+            "probability_selected_observed_only": helper.probability_metrics(rows, model, selected_ids=own, observed_only=True),
+            "ev_all": helper.ev_metrics(rows, model), "ev_observed_only": helper.ev_metrics(rows, model, observed_only=True),
+            "ev_selected": helper.ev_metrics(rows, model, selected_ids=own),
+            "ev_selected_observed_only": helper.ev_metrics(rows, model, selected_ids=own, observed_only=True),
+            "lower_bound": {"all": sum(row["payoff_is_lower_bound"] for row in rows), "selected": sum(row["candidate_id"] in own and row["payoff_is_lower_bound"] for row in rows)},
+            "economics": {cost: extended_book_metrics(helper, books[model][cost]) for cost in COSTS},
+        }
+    return {
+        "schema": "weekly_h2_context_model_comparison_q3_v1", "status": "COMPLETE_Q3_PARTIAL_2026_SEEN_DEVELOPMENT",
+        "candidate_count": len(rows), "session_count": len(sessions), "models": metrics,
+        "context_counts": {
+            "available": sum(row["_context_status"] == "CONTEXT_AVAILABLE" for row in rows),
+            "missing": sum(row["_context_status"] == "CONTEXT_MISSING_SOURCE" for row in rows),
+            "state_valid_true": sum(row["_context_state_valid"] is True for row in rows),
+            "state_valid_false": sum(row["_context_state_valid"] is False for row in rows),
+        },
+        "paired_logloss_base_minus_context": helper.paired_bootstrap(rows, sessions, resamples=bootstrap_resamples, expected_eligible=len(rows)),
+        "fit_count": 0, "refit": False, "recalibration": False, "controls": controls,
+        "flags": {"development_seen": True, "fit_performed": False, "promotion_approved": False, "q3_used": True, "raw_or_api_used": False, "recalibration_performed": False, "technical_ready": False},
+    }
+
+
+def audit_numeric_bundle(
+    helper: Any, *, candidates: list[dict[str, Any]], context_rows: list[dict[str, Any]],
+    context_coverage_rows: list[dict[str, Any]], feature_names: list[str],
+    base_scores: list[dict[str, Any]], prior: np.ndarray, means: dict[str, Any],
+    artifacts: dict[str, dict[str, Any]], producer_scores: list[dict[str, Any]],
+    producer_ledgers: dict[str, dict[str, list[dict[str, Any]]]],
+    baseline_ledgers: dict[str, list[dict[str, Any]]], coverage_rows: list[dict[str, Any]],
+    sessions: list[str], producer_summary: dict[str, Any], controls: dict[str, Any],
+    expected_count: int = 180, bootstrap_resamples: int = 10_000,
+) -> dict[str, Any]:
+    rows = copy.deepcopy(candidates)
+    require(len(rows) == expected_count and len({row["candidate_id"] for row in rows}) == len(rows), "candidate universe")
+    helper.join_context(rows, context_rows, context_coverage_rows)
+    for row in rows:
+        row["_model_label_eligible"], row["_split"] = True, SPLIT
+    base_index = {row["candidate_id"]: row for row in base_scores}
+    require(len(base_index) == len(base_scores) == len(rows), "BASE18 score IDs")
+    for row in rows:
+        score = base_index.get(row["candidate_id"])
+        require(score is not None and score["split"] == SPLIT and score["scenario"] == row["scenario"] and score["payoff_is_lower_bound"] == row["payoff_is_lower_bound"], "BASE18 identity")
+        row["_p_BASE18_FROZEN"] = [float(value) for value in score["p_cal"]]
+        for cost in COSTS:
+            row[f"_ev_BASE18_FROZEN_{cost}"] = float(score[f"ev_{cost}"])
+    require(prior.shape == (5,) and np.all(prior >= 0) and math.isclose(float(prior.sum()), 1.0, abs_tol=1e-12), "prior")
+    for row in rows:
+        row["_x_category"] = helper.category30(row)
+    load_saved_probabilities(helper, rows, "CATEGORY30", "_x_category", helper.category_names(), artifacts["CATEGORY30"], prior, means, 0.3)
+    load_saved_probabilities(helper, rows, "CONTEXT182", "_x_context", helper.context_names(feature_names), artifacts["CONTEXT182"], prior, means, 0.6)
+    compare_score_rows(rows, producer_scores)
+    books = {model: helper.replay_risk(prepare_replay_rows(rows, model), coverage_rows, sessions, LAST_ENTRY) for model in MODELS}
+    for model in MODELS:
+        for cost in COSTS:
+            helper.assert_equivalent(books[model][cost], producer_ledgers[model][cost], f"ledger {model}:{cost}")
+    for cost in COSTS:
+        helper.assert_equivalent(books["BASE18_FROZEN"][cost], baseline_ledgers[cost], f"BASE18 baseline {cost}")
+    rebuilt = rebuild_summary(helper, rows, books, sessions, controls, bootstrap_resamples)
+    helper.assert_equivalent(rebuilt, producer_summary, "producer summary")
+    return {"status": "PASS_INDEPENDENT_Q3_CONTEXT_MODEL_NUMERIC_AUDIT", "summary": rebuilt, "fit_performed": False}
+
+
+def validate_producer_manifest(
+    manifest: dict[str, Any], snapshots: dict[str, dict[str, Any]],
+    scorer_sha256: str, payloads: dict[Path, dict[str, Any]],
+) -> None:
+    require(manifest.get("schema") == "weekly_h2_context_model_comparison_q3_manifest_v1" and manifest.get("status") == "COMPLETE_Q3_PARTIAL_2026_SEEN_DEVELOPMENT", "producer manifest schema/status")
+    expected_authorities = {name: {"bytes": value["bytes"], "sha256": value["sha256"]} for name, value in snapshots.items() if name not in {"producer"}}
+    require(manifest.get("external_authorities") == expected_authorities, "producer external authorities")
+    require(manifest.get("consumed_payloads") == {str(path): value for path, value in payloads.items()}, "producer consumed payload authority")
+    implementation = manifest.get("implementation", {})
+    require(implementation.get(SCORER.name) == scorer_sha256 and implementation.get(CONTRACT.name) == CONTRACT_SHA256, "producer implementation pins")
+
+
+def execute_reviewed_audit(
+    scorer_sha256: str, producer_manifest_sha256: str, context_manifest_sha256: str,
+    context_audit_sha256: str, auditor_sha256: str, output: Path = OUTPUT,
+) -> dict[str, Any]:
+    output = plain(output, "audit output", exists=False)
+    require(not output.exists(), "immutable audit output exists")
+    authorities = {
+        "scorer": snapshot_file(SCORER, scorer_sha256, "scorer source"),
+        "contract": snapshot_file(CONTRACT, CONTRACT_SHA256, "contract"),
+        "helper": snapshot_file(HELPER, HELPER_SHA256, "H1 helper"),
+        "auditor": snapshot_file(Path(__file__), auditor_sha256, "auditor self"),
+    }
+    helper = import_helper()
+    snapshots = snapshot_manifests(producer_manifest_sha256, context_manifest_sha256, context_audit_sha256)
+    manifests = {name: read_json(Path(value["path"])) for name, value in snapshots.items() if name not in {"context_audit", "h1_context_audit"}}
+    dataset, base18, models, frozen, risk, context, producer = (manifests[name] for name in ("dataset", "base18", "models", "frozen", "risk", "context", "producer"))
+    require(context.get("schema") == "weekly_context_q3_1030_manifest_v1" and context.get("status") == "COMPLETE_CAUSAL_CONTEXT_Q3_1030_NOT_JOINED_NOT_EVALUATED", "context authority")
+    paths = {
+        ROOTS["dataset"] / "candidates.jsonl": dataset["files"]["candidates.jsonl"],
+        ROOTS["dataset"] / "coverage.json": dataset["files"]["coverage.json"],
+        ROOTS["base18"] / "candidate_scores_extension.jsonl": base18["outputs"]["candidate_scores_extension.jsonl"],
+        ROOTS["context"] / "context.jsonl": context["files"]["context.jsonl"],
+        ROOTS["context"] / "coverage.json": context["files"]["coverage.json"],
+        ROOTS["frozen"] / "model.json": {"bytes": (ROOTS["frozen"] / "model.json").stat().st_size, "sha256": MODEL_SHA256},
+        ROOTS["frozen"] / "conditional_means.json": {"bytes": (ROOTS["frozen"] / "conditional_means.json").stat().st_size, "sha256": MEANS_SHA256},
+        ROOTS["risk"] / "summary.json": output_pin(risk, "summary.json"),
+    }
+    for name, digest in ARTIFACT_SHA256.items():
+        path = ROOTS["models"] / name
+        paths[path] = {"bytes": path.stat().st_size, "sha256": digest}
+    baseline_paths = {cost: ROOTS["risk"] / f"ledger_equal_risk_q3_partial_ev_top1_h2_{cost}.jsonl" for cost in COSTS}
+    paths.update({path: output_pin(risk, path.name) for path in baseline_paths.values()})
+    producer_paths = {"scores": PRODUCER_ROOT / "candidate_scores_context_q3.jsonl", "summary": PRODUCER_ROOT / "summary.json"}
+    for model in MODELS:
+        for cost in COSTS:
+            producer_paths[f"{model}:{cost}"] = PRODUCER_ROOT / f"ledger_{model.lower()}_q3_{cost}.jsonl"
+    producer_payloads = {path: output_pin(producer, path.name) for path in producer_paths.values()}
+    for path, expected in {**paths, **producer_payloads}.items():
+        verify(path, expected, f"admit {path.name}")
+    validate_producer_manifest(producer, snapshots, scorer_sha256, paths)
+    candidates = read_jsonl(ROOTS["dataset"] / "candidates.jsonl")
+    coverage = read_json(ROOTS["dataset"] / "coverage.json")
+    coverage_rows, sessions = q3_calendar(coverage)
+    context_coverage = read_json(ROOTS["context"] / "coverage.json")
+    require(context_coverage.get("schema") == "weekly_context_q3_1030_coverage_v1" and context_coverage.get("feature_names") == context.get("feature_names"), "context coverage")
+    base_scores = read_jsonl(ROOTS["base18"] / "candidate_scores_extension.jsonl")
+    require(sha256_file(ROOTS["base18"] / "candidate_scores_extension.jsonl") == BASE18_SCORES_SHA256, "BASE18 score authority")
+    frozen_model = read_json(ROOTS["frozen"] / "model.json")
+    means = read_json(ROOTS["frozen"] / "conditional_means.json")
+    artifacts = {model: {kind: read_json(ROOTS["models"] / f"{model.lower()}_{kind}.json") for kind in ("transform", "model", "calibration")} for model in ("CATEGORY30", "CONTEXT182")}
+    producer_ledgers = {model: {cost: read_jsonl(PRODUCER_ROOT / f"ledger_{model.lower()}_q3_{cost}.jsonl") for cost in COSTS} for model in MODELS}
+    baseline = {cost: read_jsonl(path) for cost, path in baseline_paths.items()}
+    risk_summary = read_json(ROOTS["risk"] / "summary.json")
+    controls = {"source": "frozen equal-risk replay", "books": {policy: risk_summary["blocks"]["Q3_PARTIAL"][policy] for policy in ("ALWAYS_CALL_H2", "ALWAYS_PUT_H2", "ALWAYS_ABSTAIN")}}
+    result = audit_numeric_bundle(
+        helper, candidates=candidates, context_rows=read_jsonl(ROOTS["context"] / "context.jsonl"),
+        context_coverage_rows=context_coverage["rows"], feature_names=context["feature_names"],
+        base_scores=base_scores, prior=np.asarray(frozen_model["train_prior"], dtype=float), means=means,
+        artifacts=artifacts, producer_scores=read_jsonl(producer_paths["scores"]), producer_ledgers=producer_ledgers,
+        baseline_ledgers=baseline, coverage_rows=coverage_rows, sessions=sessions,
+        producer_summary=read_json(producer_paths["summary"]), controls=controls,
+    )
+    revalidate(snapshots, {**paths, **producer_payloads})
+    for name, value in authorities.items():
+        verify(Path(value["path"]), value, f"closing code authority {name}")
+    output.mkdir(parents=True, exist_ok=False)
+    audit = {
+        "schema": "weekly_h2_context_model_comparison_q3_independent_audit_v1",
+        "status": "PASS_INDEPENDENT_Q3_CONTEXT_MODEL_NUMERIC_AUDIT",
+        "inputs": {name: {"path": value["path"], "bytes": value["bytes"], "sha256": value["sha256"]} for name, value in snapshots.items()},
+        "implementation": authorities, "numeric": result,
+        "flags": {"fit_performed": False, "scorer_imported": False, "raw_or_api_used": False, "promotion_approved": False, "development_seen": True},
+    }
+    write_json(output / "audit.json", audit)
+    revalidate(snapshots, {**paths, **producer_payloads})
+    write_json(output / "manifest.json", {"schema": "weekly_h2_context_model_comparison_q3_audit_manifest_v1", "audit.json": pin(output / "audit.json")})
+    return audit
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Independent frozen Q3 context-model audit")
+    parser.add_argument("--execute-reviewed-audit", action="store_true")
+    parser.add_argument("--scorer-sha256", required=True)
+    parser.add_argument("--producer-manifest-sha256", required=True)
+    parser.add_argument("--context-manifest-sha256", required=True)
+    parser.add_argument("--context-audit-sha256", required=True)
+    parser.add_argument("--auditor-sha256", required=True)
+    args = parser.parse_args()
+    if not args.execute_reviewed_audit:
+        parser.error("execution requires --execute-reviewed-audit")
+    for name in ("scorer_sha256", "producer_manifest_sha256", "context_manifest_sha256", "context_audit_sha256", "auditor_sha256"):
+        require(len(getattr(args, name)) == 64, f"SHA argument {name}")
+    execute_reviewed_audit(args.scorer_sha256.lower(), args.producer_manifest_sha256.lower(), args.context_manifest_sha256.lower(), args.context_audit_sha256.lower(), args.auditor_sha256.lower())
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

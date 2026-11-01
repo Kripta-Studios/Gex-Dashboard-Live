@@ -1,0 +1,71 @@
+{
+  "schema": "weekly_h2_context_model_comparison_q3_auditor_implementation_evidence_v1",
+  "status": "SYNTHETIC_IMPLEMENTATION_ONLY",
+  "observed_utc": "2026-11-01T16:30:38.1112441Z",
+  "sources": {
+    "audit_weekly_context_q3_models.py": "80b0b3cfbaff80e5f06d685851cf080174f85270b1ab8ddcca2b03119e972e27",
+    "test_audit_weekly_context_q3_models.py": "e3a9d2f5267b6f32a5aa12de52f0e1ab1ab38fe9832db1875c7d5acf683542a0",
+    "Q3_FROZEN_CONTEXT_COMPARISON_CONTRACT_20261101.md": "e9867bfc5acc5922288e81542e250de7707cfd20f472087b24700ef69764802a"
+  },
+  "checks": {
+    "pytest_exit": 0,
+    "pytest": "8 passed",
+    "ruff_exit": 0,
+    "negative_saved_parameters": true,
+    "score_drift": true,
+    "ledger_drift": true,
+    "source_mutation": true,
+    "bootstrap_55x11": true,
+    "fit_performed": false,
+    "scorer_imported": false,
+    "real_output_absent": true,
+    "attempt01_02_preserved": true
+  },
+  "limitations": [
+    "Only artificial candidates, context, stored parameters, scores, and ledgers were audited.",
+    "No Q3 raw/context values or real model/scorer outputs were opened.",
+    "Real audit remains gated on published scorer, producer manifest, context manifest/audit, and auditor bindings."
+  ],
+  "evidence": {
+    "resource_gate.json": {
+      "bytes": 305,
+      "sha256": "36a31357a636a1f0b5240cba472654501a7a2957813fdf6fe2cc02bdb4326ed9"
+    },
+    "pytest.stdout.txt": {
+      "bytes": 100,
+      "sha256": "e7f85f66dc6d38ba39c1c592ddd1cbfab78ab334741a2433e227d812d8083f4e"
+    },
+    "pytest.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "pytest.exit.txt": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "ruff.stdout.txt": {
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "ruff.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "ruff.exit.txt": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "audit_weekly_context_q3_models.py.pretest": {
+      "bytes": 28317,
+      "sha256": "80b0b3cfbaff80e5f06d685851cf080174f85270b1ab8ddcca2b03119e972e27"
+    },
+    "test_audit_weekly_context_q3_models.py.pretest": {
+      "bytes": 10889,
+      "sha256": "e3a9d2f5267b6f32a5aa12de52f0e1ab1ab38fe9832db1875c7d5acf683542a0"
+    },
+    "Q3_FROZEN_CONTEXT_COMPARISON_CONTRACT_20261101.md.pretest": {
+      "bytes": 6687,
+      "sha256": "e9867bfc5acc5922288e81542e250de7707cfd20f472087b24700ef69764802a"
+    }
+  }
+}
