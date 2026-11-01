@@ -1,5 +1,16 @@
 # AI Agent Hand-off: Current Production Reality
 
+Checkpoint 1-nov: filtro EV prequential predeclarado, aún sin resultado nuevo.
+Contrato 0b81b77b / review d108aa68 CLEAR documental: tres padres frozen/mensual/
+semanal, CONTROL/FILTER y doce libros. Corrección normalizada desde intenciones
+raw top1 positivas, historial2026 expansivo con label<D00NY; n20/shrink20 y
+buffer heurístico1.645, sin rerank ni rescate de EV negativo. Sin seed2025:
+sus p_cal no son OOF limpios. Sólo scores2026 ya auditados, ningún refit nuevo.
+Criterio8/8 EXIT enero–agosto intacto; septiembre parcial separado. Código y
+fixtures en preparación; no replay real ni nueva rentabilidad acreditada.
+Los42fits, diagnóstico y libros anteriores permanecen cerrados e inmutables.
+Goal activo, SEEN_DEVELOPMENT, technical_ready/promotionfalse.
+
 Checkpoint 1-nov19:21UTC: diagnóstico EV CERRADO yreconstruido independientemente.
 Productor11068 exit0/19:15:21UTC,manifest420d9b42,exitb605ff62;checker02
 46400 exit0/19:21:13UTC,receipt6fd25720/exit6e3e5536,CPU0/gateoficial/8vars1.
