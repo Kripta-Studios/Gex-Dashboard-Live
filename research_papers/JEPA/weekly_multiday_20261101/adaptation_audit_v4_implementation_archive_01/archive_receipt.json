@@ -1,0 +1,83 @@
+{
+  "schema": "root_compact_archive_v1",
+  "files": [
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_adaptation_audit_v4_preparation_01\\attempt01\\actual_affinity.txt",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\adaptation_audit_v4_implementation_archive_01\\attempt01\\actual_affinity.txt",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_adaptation_audit_v4_preparation_01\\attempt01\\audit_weekly_context_adaptation_v4.py.before_test",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\adaptation_audit_v4_implementation_archive_01\\attempt01\\audit_weekly_context_adaptation_v4.py.before_test",
+      "bytes": 82700,
+      "sha256": "0723696ae01dcc86af7c2af8e8fdc2e3b281ba913987a65d95bd4703c959aa9c"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_adaptation_audit_v4_preparation_01\\attempt01\\exit_code.txt",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\adaptation_audit_v4_implementation_archive_01\\attempt01\\exit_code.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_adaptation_audit_v4_preparation_01\\attempt01\\preflight_exit_code.txt",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\adaptation_audit_v4_implementation_archive_01\\attempt01\\preflight_exit_code.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_adaptation_audit_v4_preparation_01\\attempt01\\preflight_metadata.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\adaptation_audit_v4_implementation_archive_01\\attempt01\\preflight_metadata.json",
+      "bytes": 761,
+      "sha256": "2879014ea730cf9c0825290b16c7771c089fc23cae8f4fc430087f04b1b17eed"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_adaptation_audit_v4_preparation_01\\attempt01\\preflight_stderr.txt",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\adaptation_audit_v4_implementation_archive_01\\attempt01\\preflight_stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_adaptation_audit_v4_preparation_01\\attempt01\\preflight_stdout.txt",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\adaptation_audit_v4_implementation_archive_01\\attempt01\\preflight_stdout.txt",
+      "bytes": 70,
+      "sha256": "e05312d15c27e0b8529ff9a24b015948456a179d0367c41a894e18c0a070aeb2"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_adaptation_audit_v4_preparation_01\\attempt01\\ruff_exit_code.txt",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\adaptation_audit_v4_implementation_archive_01\\attempt01\\ruff_exit_code.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_adaptation_audit_v4_preparation_01\\attempt01\\ruff_stderr.txt",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\adaptation_audit_v4_implementation_archive_01\\attempt01\\ruff_stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_adaptation_audit_v4_preparation_01\\attempt01\\ruff_stdout.txt",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\adaptation_audit_v4_implementation_archive_01\\attempt01\\ruff_stdout.txt",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_adaptation_audit_v4_preparation_01\\attempt01\\stderr.txt",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\adaptation_audit_v4_implementation_archive_01\\attempt01\\stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_adaptation_audit_v4_preparation_01\\attempt01\\stdout.txt",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\adaptation_audit_v4_implementation_archive_01\\attempt01\\stdout.txt",
+      "bytes": 101,
+      "sha256": "4f9f0a99917e5a51403b7449cd93e45b2750147c2a62e22ad72eff2dae2026ed"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_adaptation_audit_v4_preparation_01\\attempt01\\test_audit_weekly_context_adaptation_v4.py.before_test",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\adaptation_audit_v4_implementation_archive_01\\attempt01\\test_audit_weekly_context_adaptation_v4.py.before_test",
+      "bytes": 34596,
+      "sha256": "6d2f7e9635f610efcdc0932e452e055a26fe2e3418059a24e8c7567783016adc"
+    }
+  ]
+}
