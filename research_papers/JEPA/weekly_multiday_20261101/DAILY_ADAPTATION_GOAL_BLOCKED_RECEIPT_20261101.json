@@ -1,0 +1,13 @@
+{
+  "goal": {
+    "threadId": "01a196df-6b62-73d0-857c-04305c046012",
+    "objective": "Investigar con datos locales D:/ThetaData una estrategia 0DTE SPY/QQQ/SPXW con entradas y salidas por zonas Fibonacci IB y put/call walls: construir y auditar un oracle retrospectivo rentable bajo reglas y costes explícitos, luego investigar modelos causales que lo imiten sin futuro, buscando rentabilidad temporal fuera de ajuste y documentando todos los intentos sin confundir oracle con evidencia operable. Retomar desde el cierre 20261029: completar OOF mayo/junio preservando enero–abril, auditoría independiente FULL_H1 y reporte antes de decidir la siguiente hipótesis causal. Sin API ni producción.",
+    "status": "blocked",
+    "tokensUsed": 12828136,
+    "timeUsedSeconds": 32526,
+    "createdAt": 1793532647,
+    "updatedAt": 1793565175
+  },
+  "remainingTokens": null,
+  "completionBudgetReport": null
+}

@@ -1,0 +1,18 @@
+{
+  "files": [
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\daily_adaptation_resource_block_20261101_01\\observation.json",
+      "copy": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_resource_block_archive_01\\observation.json",
+      "bytes": 933,
+      "sha256": "5b1369add28188a483c936d8cd228ffaf79d6ce2f31cec0e109f89aeb81b8df6"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\daily_adaptation_resource_block_20261101_01\\blocked_audit_evidence.json",
+      "copy": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_resource_block_archive_01\\blocked_audit_evidence.json",
+      "bytes": 989,
+      "sha256": "d03103fdab60866bf4dcb3203fa3a526944b47326bcc0483dcec9520a9accd65"
+    }
+  ],
+  "count": 2,
+  "bytes": 1922
+}
