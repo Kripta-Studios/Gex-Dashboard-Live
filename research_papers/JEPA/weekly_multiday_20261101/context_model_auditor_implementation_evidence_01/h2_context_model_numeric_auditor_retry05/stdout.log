@@ -1,0 +1,24 @@
+...F.....                                                                [100%]
+================================== FAILURES ===================================
+______ test_scaler_uses_float64_variance_error_bound_for_near_constants _______
+
+    def test_scaler_uses_float64_variance_error_bound_for_near_constants() -> None:
+        count = 1752
+        constant_decimal = np.full(count, 0.1, dtype=np.float64)
+        near_constant = np.full(count, 1e12, dtype=np.float64)
+        near_constant[::2] -= 0.1
+        near_constant[1::2] += 0.1
+        distinguishable = np.full(count, 1e12, dtype=np.float64)
+        distinguishable[::2] -= 1.0
+        distinguishable[1::2] += 1.0
+        train = np.column_stack([constant_decimal, near_constant, distinguishable])
+        rebuilt = auditor.independently_recompute_transform(train)
+        assert rebuilt["scale"][0] == 1.0
+        assert rebuilt["scale"][1] == 1.0
+>       assert 0.0 < rebuilt["scale"][2] < 1.0
+E       assert np.float64(1.0) < 1.0
+
+research_papers\JEPA\weekly_multiday_20261101\test_audit_weekly_context_models.py:161: AssertionError
+=========================== short test summary info ===========================
+FAILED research_papers/JEPA/weekly_multiday_20261101/test_audit_weekly_context_models.py::test_scaler_uses_float64_variance_error_bound_for_near_constants
+1 failed, 8 passed in 20.01s

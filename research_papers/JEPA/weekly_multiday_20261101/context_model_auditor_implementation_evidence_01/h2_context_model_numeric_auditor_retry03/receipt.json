@@ -1,0 +1,6 @@
+{
+  "gate_start_utc": "2026-11-01T15:51:41.4288238Z",
+  "gate_end_utc": "2026-11-01T15:51:42.7867014Z",
+  "gate_exit_code": 1,
+  "status": "GATE_FAILED_NO_TEST"
+}

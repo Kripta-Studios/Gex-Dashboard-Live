@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import hashlib,importlib.util,json; p=r'research_papers/JEPA/level_oracle_20261018/launch_monthly_test_index_v2_audit_20261024.py'; assert hashlib.sha256(open(p,'rb').read()).hexdigest()=='3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046'; s=importlib.util.spec_from_file_location('gate_helper',p); m=importlib.util.module_from_spec(s); s.loader.exec_module(m); o=m.observation(); m.gate(o); print(json.dumps(o))
+                                                                                                                                                                                                                                                                                                                                                                                                                 ~~~~~~^^^
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers/JEPA/level_oracle_20261018/launch_monthly_test_index_v2_audit_20261024.py", line 97, in gate
+    require(all(type(value.get(k)) is int and value[k] >= MIN_FREE
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                for k in ("available_ram_bytes", "free_commit_bytes")), "2GB RAM/commit gate unmet")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers/JEPA/level_oracle_20261018/launch_monthly_test_index_v2_audit_20261024.py", line 54, in require
+    raise ValueError(message)
+ValueError: 2GB RAM/commit gate unmet

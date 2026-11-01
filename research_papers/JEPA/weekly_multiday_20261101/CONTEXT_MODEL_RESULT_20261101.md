@@ -58,6 +58,21 @@ exploratorio por bloques de cinco sesiones es [−0,0848794227; −0,0021061808]
 con 10.000 remuestras, semilla 20261101 y los 123 días incluidos. Es un
 diagnóstico postdesarrollo, no un p-value ni un holdout independiente.
 
+El EV adverso tampoco mejora globalmente: el MAE por candidato es 1.043,78 USD
+en BASE18 y 1.063,49 en CONTEXT182; el sesgo (predicho menos realizado) pasa de
++13,97 a +55,17 USD. En sus respectivos candidatos seleccionados, el MAE baja
+de 1.142,60 a 979,65 USD, pero son conjuntos distintos y elegidos por cada
+modelo (92 frente a 106 candidatos, incluidos rechazos de ejecución). No se
+interpreta esa comparación como mejora pareada de la predicción de EV.
+
+La brecha logloss TRAIN–CAL es 0,0724 en BASE18 y 0,1505 en CONTEXT182.
+El contexto ajusta mejor TRAIN, pero peor CAL y EVAL; CAL además favorece una
+mezcla mayor con el prior. Son señales descriptivas de generalización limitada,
+sin identificar por sí solas una causa. Una política con ganancias convexas
+puede tener peor puntuación probabilística y aun así capturar mejores payoffs
+en este semestre. Probabilidad, magnitud condicional y selección se deben
+contrastar por separado, manteniendo filas comunes y parámetros congelados.
+
 CONTEXT182 cierra 67 CALL y 15 PUT, 485 contratos en total. Su neto adverso por
 ticker es SPY +29.454,40, SPXW +19.971,60 y QQQ −7.555 USD. Por mes: enero
 −11.721,20; febrero +8.324,80; marzo −3.644,80; abril +44.379,20; mayo
