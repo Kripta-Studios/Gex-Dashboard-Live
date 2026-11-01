@@ -1,0 +1,11 @@
+{
+  "pid": 33680,
+  "utc": "2026-11-01T18:57:56.827401+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "research_papers/JEPA/weekly_multiday_20261101/report_context_adaptation_20261101.py"
+  ]
+}

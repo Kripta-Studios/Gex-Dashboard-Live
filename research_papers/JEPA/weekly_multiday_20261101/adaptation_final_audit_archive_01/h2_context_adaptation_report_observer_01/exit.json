@@ -1,0 +1,11 @@
+{
+  "exit_code": 0,
+  "utc": "2026-11-01T18:58:00.911105+00:00",
+  "elapsed_seconds": 4.093904000008479,
+  "source": "subprocess.Popen.wait_retained_handle",
+  "files": {
+    "process.json": "ca9814e8085a7728cc391f679a45df6abfdfe29a52246fa5c99c515900798932",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.log": "d64f459149cd5156235dc6d6fb4e8c2bf7208ed7349ad36ba6aca0d31281e5be"
+  }
+}

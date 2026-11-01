@@ -1,0 +1,25 @@
+{
+  "pid": 40872,
+  "creation_time": 1793559285.717379,
+  "utc": "2026-11-01T18:54:45.726687+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_context_adaptation_v4.py",
+    "--execute-reviewed-audit",
+    "--producer-manifest-sha256",
+    "e8cf5cd4a001cd98cdf29e54cf47bbdf3c34d6652abf34ef7c71fffa0bd97f23",
+    "--producer-sha256",
+    "d03494bf68e281bc7c9e68f385aa111567eac4206cf5b44133e17bb480ed5df8",
+    "--producer-tests-sha256",
+    "2f44f17d459cd7cb43c5c3842fb4b2d72c689278f797426a75ac006f0d5db43f",
+    "--bridge-manifest-sha256",
+    "9d1455c601ac38224c4f56365f20c3fb31978e997f8652454dbc69807e0abb86",
+    "--bridge-audit-sha256",
+    "83c9ade0b6b7205484dd275df8593107238f94468d8564f7351e9481a475033c",
+    "--auditor-sha256",
+    "0723696ae01dcc86af7c2af8e8fdc2e3b281ba913987a65d95bd4703c959aa9c"
+  ]
+}

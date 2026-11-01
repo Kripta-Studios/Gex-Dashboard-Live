@@ -1,0 +1,47 @@
+{
+  "status": "DESCRIPTIVE_REPORT_COMPLETE",
+  "utc": "2026-11-01T18:58:00.616421+00:00",
+  "resources": {
+    "available_ram_bytes": 8057294848,
+    "free_commit_bytes": 5524254720
+  },
+  "cpu_affinity": [
+    0
+  ],
+  "thread_variables": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+    "BLIS_NUM_THREADS": "1",
+    "ARROW_NUM_THREADS": "1",
+    "POLARS_MAX_THREADS": "1"
+  },
+  "source_sha256": "335f11758915785024785856116c2f9f876d5e40be3382eeb559d666f4e5289b",
+  "inputs": {
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_adaptation_audit_04\\audit.json": "9a487fba18504ae4faff2c1dba17d1c000eb237436a09a7fe22747e328cb307a",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_adaptation_audit_observer_04\\exit.json": "5d59d1a3978d8d9aa31c7c3fab567d1ae7e901494aa8efb12377ca65f91de420",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_adaptation_01\\summary.json": "1ad1dbca873d255b431a2e097be169b0ad91913b728fbe2a2478f2d30212049f",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\USER_MONTHLY_PROFITABILITY_ACCEPTANCE_20261101.md": "806f7728a2ad434bc08929d3715f307455bd37862ae4c19a2cd2cc1d64a5ee5b",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_adaptation_01\\ledger_frozen_context182_adverse.jsonl": "17ba6ce12c9b531ab88693ebea70987b9a46d8a35aa7d73cc2344ae7ed6ffce2",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_adaptation_01\\ledger_monthly_raw_adverse.jsonl": "87024b9b3cf7274fe25d3639858132cd9b76f4dc64c9b3c21198abb98410995f",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_adaptation_01\\ledger_weekly_raw_adverse.jsonl": "3029a1e7fdcfd1de435dcfc91210df25fa2a32d437ab77d1dfebb0be6f20fa58",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_adaptation_01\\ledger_monthly_guarded_adverse.jsonl": "aac19bac80931d0593b8b9cdfcbff2647f1067a47a57290089740deab6fb555c",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_adaptation_01\\ledger_weekly_guarded_adverse.jsonl": "c6ee292e50fb947398bd50516d6f07ddfe44c37c695edc9b3e3aef9ea18ecc33"
+  },
+  "outputs": {
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\ADAPTATION_MONTHLY_WEEKLY_RESULT_20261101.md": {
+      "bytes": 9436,
+      "sha256": "b35e64cc5d6c65a6f5ffdb0202c37636a9ebe8550a7001366a12dc72e7855106"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\adaptation_result_01\\report_data.json": {
+      "bytes": 52848,
+      "sha256": "851ab191c85abfebd5385bb3c7994c884bba7aa63882c2a000f75a115e53280d"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\adaptation_result_01\\monthly_adaptation.png": {
+      "bytes": 232073,
+      "sha256": "b8784775484b8929661e5078c8b0e24ebecc3ff396a23d841b42562777287f64"
+    }
+  }
+}

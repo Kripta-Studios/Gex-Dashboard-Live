@@ -1,0 +1,1540 @@
+{
+  "status": "DESCRIPTIVE_ALL_FIVE_FAIL_MONTHLY_CRITERION",
+  "policies": {
+    "FROZEN_CONTEXT182": {
+      "label": "Congelado",
+      "monthly": {
+        "202601": -11721.2,
+        "202602": 8324.800000000005,
+        "202603": -3644.7999999999965,
+        "202604": 44379.200000000004,
+        "202605": 16881.40000000001,
+        "202606": -12348.399999999998,
+        "202607": -23007.2,
+        "202608": -25602.999999999996,
+        "202609": -13465.000000000002
+      },
+      "full_months_positive": 3,
+      "monthly_acceptance": false,
+      "economics": {
+        "adverse": {
+          "capacity_assumption": "full fill at stored quote; no volume or partial-fill simulation",
+          "capital_blocked": 0,
+          "details": {
+            "block_net_by_entry_cohort": {
+              "H1_2026": 37924.40000000004,
+              "Q3_PARTIAL_2026": -58128.599999999984
+            },
+            "block_net_by_exit_realization": {
+              "H1_2026": 41871.00000000004,
+              "Q3_PARTIAL_2026": -62075.19999999999
+            },
+            "event_counts": {
+              "ENTRY": 124,
+              "EXIT": 124,
+              "NO_FILL": 29,
+              "NO_OPPORTUNITY": 185,
+              "WAIT": 190
+            },
+            "largest_month_by_absolute_net": "202604",
+            "largest_trade": {
+              "candidate_id": "QQQ:20260414:20260417:CALL",
+              "date": "20260416",
+              "model_id": "FROZEN_CONTEXT182_H1",
+              "net_usd": 12232.800000000003,
+              "right": "CALL",
+              "ticker": "QQQ"
+            },
+            "monthly_convention": "exit_date_realization",
+            "monthly_net_by_entry_cohort_including_zeros": {
+              "202601": -16129.4,
+              "202602": 9243.400000000001,
+              "202603": 9528.2,
+              "202604": 34695.80000000001,
+              "202605": 16494.80000000001,
+              "202606": -15908.399999999996,
+              "202607": -10562.999999999998,
+              "202608": -38238.2,
+              "202609": -9327.4
+            },
+            "monthly_net_including_zeros": {
+              "202601": -11721.2,
+              "202602": 8324.800000000005,
+              "202603": -3644.7999999999965,
+              "202604": 44379.200000000004,
+              "202605": 16881.40000000001,
+              "202606": -12348.399999999998,
+              "202607": -23007.2,
+              "202608": -25602.999999999996,
+              "202609": -13465.000000000002
+            },
+            "net_without_largest_month": -64583.39999999999,
+            "net_without_largest_trade": -32436.999999999985,
+            "selected_missing_or_lower_bound": 4,
+            "side_net": {
+              "CALL": -12003.39999999996,
+              "PUT": -8200.799999999996
+            }
+          },
+          "max_decision_budget_used_cents": 499920,
+          "max_entry_budget_used_cents": 498080,
+          "max_premium_reserved": 14546.0,
+          "missing_exit": 4,
+          "monthly_net_usd": {
+            "202601": -11721.2,
+            "202602": 8324.800000000005,
+            "202603": -3644.7999999999965,
+            "202604": 44379.200000000004,
+            "202605": 16881.40000000001,
+            "202606": -12348.399999999998,
+            "202607": -23007.2,
+            "202608": -25602.999999999996,
+            "202609": -13465.000000000002
+          },
+          "months_observed": 9,
+          "net_usd": -20204.199999999983,
+          "no_fill_by_reason": {
+            "DECISION_RISK_BUDGET": 0,
+            "ENTRY_QUOTE": 14,
+            "ENTRY_RISK_BUDGET": 15
+          },
+          "no_opportunity": 185,
+          "positive_months": 3,
+          "profit_factor": 0.8874041462327241,
+          "quantity_max": 14,
+          "quantity_median": 6.5,
+          "quantity_total": 742,
+          "realized_max_drawdown_usd": 77701.5999999999,
+          "ticker_net_usd": {
+            "QQQ": -16870.599999999988,
+            "SPXW": -6190.799999999989,
+            "SPY": 2857.200000000014
+          },
+          "trades": 124,
+          "wait": 190
+        },
+        "base": {
+          "capacity_assumption": "full fill at stored quote; no volume or partial-fill simulation",
+          "capital_blocked": 0,
+          "details": {
+            "block_net_by_entry_cohort": {
+              "H1_2026": 38884.40000000004,
+              "Q3_PARTIAL_2026": -57631.6
+            },
+            "block_net_by_exit_realization": {
+              "H1_2026": 42829.00000000004,
+              "Q3_PARTIAL_2026": -61576.19999999999
+            },
+            "event_counts": {
+              "ENTRY": 124,
+              "EXIT": 124,
+              "NO_FILL": 29,
+              "NO_OPPORTUNITY": 185,
+              "WAIT": 190
+            },
+            "largest_month_by_absolute_net": "202604",
+            "largest_trade": {
+              "candidate_id": "QQQ:20260414:20260417:CALL",
+              "date": "20260416",
+              "model_id": "FROZEN_CONTEXT182_H1",
+              "net_usd": 12256.8,
+              "right": "CALL",
+              "ticker": "QQQ"
+            },
+            "monthly_convention": "exit_date_realization",
+            "monthly_net_by_entry_cohort_including_zeros": {
+              "202601": -15951.399999999996,
+              "202602": 9405.399999999998,
+              "202603": 9669.2,
+              "202604": 34872.8,
+              "202605": 16648.800000000007,
+              "202606": -15760.399999999998,
+              "202607": -10428.000000000007,
+              "202608": -37954.2,
+              "202609": -9249.400000000001
+            },
+            "monthly_net_including_zeros": {
+              "202601": -11557.199999999997,
+              "202602": 8488.800000000001,
+              "202603": -3493.7999999999984,
+              "202604": 44558.2,
+              "202605": 17033.400000000005,
+              "202606": -12200.399999999996,
+              "202607": -22878.199999999997,
+              "202608": -25353.0,
+              "202609": -13345.0
+            },
+            "net_without_largest_month": -63305.39999999998,
+            "net_without_largest_trade": -31003.999999999985,
+            "selected_missing_or_lower_bound": 4,
+            "side_net": {
+              "CALL": -10892.399999999969,
+              "PUT": -7854.799999999995
+            }
+          },
+          "max_decision_budget_used_cents": 499920,
+          "max_entry_budget_used_cents": 498080,
+          "max_premium_reserved": 14524.999999999996,
+          "missing_exit": 4,
+          "monthly_net_usd": {
+            "202601": -11557.199999999997,
+            "202602": 8488.800000000001,
+            "202603": -3493.7999999999984,
+            "202604": 44558.2,
+            "202605": 17033.400000000005,
+            "202606": -12200.399999999996,
+            "202607": -22878.199999999997,
+            "202608": -25353.0,
+            "202609": -13345.0
+          },
+          "months_observed": 9,
+          "net_usd": -18747.199999999986,
+          "no_fill_by_reason": {
+            "DECISION_RISK_BUDGET": 0,
+            "ENTRY_QUOTE": 14,
+            "ENTRY_RISK_BUDGET": 15
+          },
+          "no_opportunity": 185,
+          "positive_months": 3,
+          "profit_factor": 0.8949483629109533,
+          "quantity_max": 14,
+          "quantity_median": 6.5,
+          "quantity_total": 742,
+          "realized_max_drawdown_usd": 76997.49999999996,
+          "ticker_net_usd": {
+            "QQQ": -16325.599999999995,
+            "SPXW": -6114.799999999997,
+            "SPY": 3693.2000000000066
+          },
+          "trades": 124,
+          "wait": 190
+        }
+      },
+      "probability_ev": {
+        "all": {
+          "brier": 0.6518293915161446,
+          "ev": {
+            "adverse": {
+              "bias": 63.78504058201023,
+              "mae": 1084.70578175375
+            },
+            "base": {
+              "bias": 66.03667836669474,
+              "mae": 1085.3936488115978
+            }
+          },
+          "logloss": 1.2374466472451786,
+          "n": 612
+        },
+        "all_observed_only": {
+          "brier": 0.6679982848249517,
+          "ev": {
+            "adverse": {
+              "bias": 30.438275502393044,
+              "mae": 1111.4131779195293
+            },
+            "base": {
+              "bias": 32.6760217841951,
+              "mae": 1111.9951669611514
+            }
+          },
+          "logloss": 1.2683518165980259,
+          "n": 578
+        },
+        "selected": {
+          "brier": 0.7268514978290698,
+          "ev": {
+            "adverse": {
+              "bias": 217.29235600669134,
+              "mae": 971.6620077659468
+            },
+            "base": {
+              "bias": 219.73284890457847,
+              "mae": 973.0960612548843
+            }
+          },
+          "logloss": 1.4122018136799117,
+          "n": 153
+        },
+        "selected_observed_only": {
+          "brier": 0.7416125984021992,
+          "ev": {
+            "adverse": {
+              "bias": 190.89611307730058,
+              "mae": 986.886159416377
+            },
+            "base": {
+              "bias": 193.33324055384287,
+              "mae": 988.2613197924412
+            }
+          },
+          "logloss": 1.4433797387442762,
+          "n": 145
+        }
+      }
+    },
+    "MONTHLY_RAW": {
+      "label": "Mensual inmediato",
+      "monthly": {
+        "202601": -9641.4,
+        "202602": 0.0,
+        "202603": -1630.1999999999944,
+        "202604": 37076.00000000001,
+        "202605": 24568.800000000007,
+        "202606": -14277.999999999996,
+        "202607": -16639.8,
+        "202608": -30619.0,
+        "202609": -1461.7999999999997
+      },
+      "full_months_positive": 2,
+      "monthly_acceptance": false,
+      "economics": {
+        "adverse": {
+          "capacity_assumption": "full fill at stored quote; no volume or partial-fill simulation",
+          "capital_blocked": 0,
+          "details": {
+            "block_net_by_entry_cohort": {
+              "H1_2026": 36095.20000000003,
+              "Q3_PARTIAL_2026": -48720.59999999999
+            },
+            "block_net_by_exit_realization": {
+              "H1_2026": 36095.20000000003,
+              "Q3_PARTIAL_2026": -48720.59999999999
+            },
+            "event_counts": {
+              "ENTRY": 89,
+              "EXIT": 89,
+              "NO_FILL": 21,
+              "NO_OPPORTUNITY": 192,
+              "WAIT": 226
+            },
+            "largest_month_by_absolute_net": "202604",
+            "largest_trade": {
+              "candidate_id": "QQQ:20260414:20260417:CALL",
+              "date": "20260416",
+              "model_id": "CONTEXT182_20260401",
+              "net_usd": 12232.800000000003,
+              "right": "CALL",
+              "ticker": "QQQ"
+            },
+            "monthly_convention": "exit_date_realization",
+            "monthly_net_by_entry_cohort_including_zeros": {
+              "202601": -9641.4,
+              "202602": 0.0,
+              "202603": 8053.2000000000035,
+              "202604": 27392.600000000006,
+              "202605": 24182.200000000008,
+              "202606": -13891.399999999998,
+              "202607": -16639.8,
+              "202608": -31574.599999999995,
+              "202609": -506.20000000000016
+            },
+            "monthly_net_including_zeros": {
+              "202601": -9641.4,
+              "202602": 0.0,
+              "202603": -1630.1999999999944,
+              "202604": 37076.00000000001,
+              "202605": 24568.800000000007,
+              "202606": -14277.999999999996,
+              "202607": -16639.8,
+              "202608": -30619.0,
+              "202609": -1461.7999999999997
+            },
+            "net_without_largest_month": -49701.399999999994,
+            "net_without_largest_trade": -24858.19999999999,
+            "selected_missing_or_lower_bound": 2,
+            "side_net": {
+              "CALL": -12261.799999999981,
+              "PUT": -363.5999999999965
+            }
+          },
+          "max_decision_budget_used_cents": 499920,
+          "max_entry_budget_used_cents": 497800,
+          "max_premium_reserved": 14494.0,
+          "missing_exit": 2,
+          "monthly_net_usd": {
+            "202601": -9641.4,
+            "202603": -1630.1999999999944,
+            "202604": 37076.00000000001,
+            "202605": 24568.800000000007,
+            "202606": -14277.999999999996,
+            "202607": -16639.8,
+            "202608": -30619.0,
+            "202609": -1461.7999999999997
+          },
+          "months_observed": 8,
+          "net_usd": -12625.399999999985,
+          "no_fill_by_reason": {
+            "DECISION_RISK_BUDGET": 0,
+            "ENTRY_QUOTE": 10,
+            "ENTRY_RISK_BUDGET": 11
+          },
+          "no_opportunity": 192,
+          "positive_months": 2,
+          "profit_factor": 0.8964195527435439,
+          "quantity_max": 15,
+          "quantity_median": 6,
+          "quantity_total": 539,
+          "realized_max_drawdown_usd": 68767.89999999995,
+          "ticker_net_usd": {
+            "QQQ": 1428.6000000000126,
+            "SPXW": 2581.8000000000025,
+            "SPY": -16635.799999999996
+          },
+          "trades": 89,
+          "wait": 226
+        },
+        "base": {
+          "capacity_assumption": "full fill at stored quote; no volume or partial-fill simulation",
+          "capital_blocked": 0,
+          "details": {
+            "block_net_by_entry_cohort": {
+              "H1_2026": 36779.20000000002,
+              "Q3_PARTIAL_2026": -48338.59999999999
+            },
+            "block_net_by_exit_realization": {
+              "H1_2026": 36779.20000000002,
+              "Q3_PARTIAL_2026": -48338.59999999999
+            },
+            "event_counts": {
+              "ENTRY": 89,
+              "EXIT": 89,
+              "NO_FILL": 21,
+              "NO_OPPORTUNITY": 192,
+              "WAIT": 226
+            },
+            "largest_month_by_absolute_net": "202604",
+            "largest_trade": {
+              "candidate_id": "QQQ:20260414:20260417:CALL",
+              "date": "20260416",
+              "model_id": "CONTEXT182_20260401",
+              "net_usd": 12256.8,
+              "right": "CALL",
+              "ticker": "QQQ"
+            },
+            "monthly_convention": "exit_date_realization",
+            "monthly_net_by_entry_cohort_including_zeros": {
+              "202601": -9523.399999999998,
+              "202602": 0.0,
+              "202603": 8194.200000000003,
+              "202604": 27573.6,
+              "202605": 24288.2,
+              "202606": -13753.399999999998,
+              "202607": -16483.800000000003,
+              "202608": -31382.599999999995,
+              "202609": -472.19999999999993
+            },
+            "monthly_net_including_zeros": {
+              "202601": -9523.399999999998,
+              "202602": 0.0,
+              "202603": -1491.1999999999964,
+              "202604": 37259.0,
+              "202605": 24672.8,
+              "202606": -14137.999999999998,
+              "202607": -16483.800000000003,
+              "202608": -30469.0,
+              "202609": -1385.7999999999993
+            },
+            "net_without_largest_month": -48818.399999999994,
+            "net_without_largest_trade": -23816.19999999999,
+            "selected_missing_or_lower_bound": 2,
+            "side_net": {
+              "CALL": -11367.79999999998,
+              "PUT": -191.59999999999638
+            }
+          },
+          "max_decision_budget_used_cents": 499920,
+          "max_entry_budget_used_cents": 497800,
+          "max_premium_reserved": 14479.0,
+          "missing_exit": 2,
+          "monthly_net_usd": {
+            "202601": -9523.399999999998,
+            "202603": -1491.1999999999964,
+            "202604": 37259.0,
+            "202605": 24672.8,
+            "202606": -14137.999999999998,
+            "202607": -16483.800000000003,
+            "202608": -30469.0,
+            "202609": -1385.7999999999993
+          },
+          "months_observed": 8,
+          "net_usd": -11559.399999999992,
+          "no_fill_by_reason": {
+            "DECISION_RISK_BUDGET": 0,
+            "ENTRY_QUOTE": 10,
+            "ENTRY_RISK_BUDGET": 11
+          },
+          "no_opportunity": 192,
+          "positive_months": 2,
+          "profit_factor": 0.9045669873800628,
+          "quantity_max": 15,
+          "quantity_median": 6,
+          "quantity_total": 539,
+          "realized_max_drawdown_usd": 68201.89999999994,
+          "ticker_net_usd": {
+            "QQQ": 1834.6000000000022,
+            "SPXW": 2635.8000000000056,
+            "SPY": -16029.79999999999
+          },
+          "trades": 89,
+          "wait": 226
+        }
+      },
+      "probability_ev": {
+        "all": {
+          "brier": 0.661948679477677,
+          "ev": {
+            "adverse": {
+              "bias": 9.14761171386839,
+              "mae": 1081.1087831546743
+            },
+            "base": {
+              "bias": 10.889354788672561,
+              "mae": 1081.4886591730472
+            }
+          },
+          "logloss": 1.2696574730282149,
+          "n": 612
+        },
+        "all_observed_only": {
+          "brier": 0.680293754833571,
+          "ev": {
+            "adverse": {
+              "bias": -25.641545524351706,
+              "mae": 1109.3761654129721
+            },
+            "base": {
+              "bias": -23.924233130861314,
+              "mae": 1109.6515009231825
+            }
+          },
+          "logloss": 1.3039035849481309,
+          "n": 578
+        },
+        "selected": {
+          "brier": 0.772029370153393,
+          "ev": {
+            "adverse": {
+              "bias": 169.29932762684888,
+              "mae": 1002.2618912419154
+            },
+            "base": {
+              "bias": 171.16350671643647,
+              "mae": 1003.4297137594475
+            }
+          },
+          "logloss": 1.5316528626139951,
+          "n": 110
+        },
+        "selected_observed_only": {
+          "brier": 0.7767755655596588,
+          "ev": {
+            "adverse": {
+              "bias": 155.81897762445183,
+              "mae": 1004.2067738990564
+            },
+            "base": {
+              "bias": 157.664651178615,
+              "mae": 1005.3431953890891
+            }
+          },
+          "logloss": 1.5427187286382644,
+          "n": 108
+        }
+      }
+    },
+    "WEEKLY_RAW": {
+      "label": "Semanal inmediato",
+      "monthly": {
+        "202601": -3792.7999999999993,
+        "202602": 2517.000000000001,
+        "202603": -14878.799999999997,
+        "202604": 37076.00000000001,
+        "202605": 25355.200000000008,
+        "202606": -10124.399999999994,
+        "202607": -10258.800000000001,
+        "202608": -20442.4,
+        "202609": -2757.2
+      },
+      "full_months_positive": 3,
+      "monthly_acceptance": false,
+      "economics": {
+        "adverse": {
+          "capacity_assumption": "full fill at stored quote; no volume or partial-fill simulation",
+          "capital_blocked": 0,
+          "details": {
+            "block_net_by_entry_cohort": {
+              "H1_2026": 36152.20000000002,
+              "Q3_PARTIAL_2026": -33458.399999999994
+            },
+            "block_net_by_exit_realization": {
+              "H1_2026": 36152.20000000002,
+              "Q3_PARTIAL_2026": -33458.399999999994
+            },
+            "event_counts": {
+              "ENTRY": 83,
+              "EXIT": 83,
+              "NO_FILL": 22,
+              "NO_OPPORTUNITY": 196,
+              "WAIT": 227
+            },
+            "largest_month_by_absolute_net": "202604",
+            "largest_trade": {
+              "candidate_id": "QQQ:20260414:20260417:CALL",
+              "date": "20260416",
+              "model_id": "CONTEXT182_20260413",
+              "net_usd": 12232.800000000003,
+              "right": "CALL",
+              "ticker": "QQQ"
+            },
+            "monthly_convention": "exit_date_realization",
+            "monthly_net_by_entry_cohort_including_zeros": {
+              "202601": -3792.7999999999993,
+              "202602": -972.5999999999985,
+              "202603": -1705.7999999999993,
+              "202604": 27392.600000000006,
+              "202605": 24968.60000000001,
+              "202606": -9737.799999999996,
+              "202607": -10258.800000000001,
+              "202608": -22193.6,
+              "202609": -1006.0
+            },
+            "monthly_net_including_zeros": {
+              "202601": -3792.7999999999993,
+              "202602": 2517.000000000001,
+              "202603": -14878.799999999997,
+              "202604": 37076.00000000001,
+              "202605": 25355.200000000008,
+              "202606": -10124.399999999994,
+              "202607": -10258.800000000001,
+              "202608": -20442.4,
+              "202609": -2757.2
+            },
+            "net_without_largest_month": -34382.2,
+            "net_without_largest_trade": -9538.999999999989,
+            "selected_missing_or_lower_bound": 2,
+            "side_net": {
+              "CALL": 16733.200000000026,
+              "PUT": -14039.4
+            }
+          },
+          "max_decision_budget_used_cents": 499240,
+          "max_entry_budget_used_cents": 497800,
+          "max_premium_reserved": 14494.0,
+          "missing_exit": 2,
+          "monthly_net_usd": {
+            "202601": -3792.7999999999993,
+            "202602": 2517.000000000001,
+            "202603": -14878.799999999997,
+            "202604": 37076.00000000001,
+            "202605": 25355.200000000008,
+            "202606": -10124.399999999994,
+            "202607": -10258.800000000001,
+            "202608": -20442.4,
+            "202609": -2757.2
+          },
+          "months_observed": 9,
+          "net_usd": 2693.800000000014,
+          "no_fill_by_reason": {
+            "DECISION_RISK_BUDGET": 0,
+            "ENTRY_QUOTE": 10,
+            "ENTRY_RISK_BUDGET": 12
+          },
+          "no_opportunity": 196,
+          "positive_months": 3,
+          "profit_factor": 1.0258641713345331,
+          "quantity_max": 14,
+          "quantity_median": 6,
+          "quantity_total": 482,
+          "realized_max_drawdown_usd": 46860.799999999945,
+          "ticker_net_usd": {
+            "QQQ": 15411.600000000006,
+            "SPXW": 1658.4000000000065,
+            "SPY": -14376.199999999995
+          },
+          "trades": 83,
+          "wait": 227
+        },
+        "base": {
+          "capacity_assumption": "full fill at stored quote; no volume or partial-fill simulation",
+          "capital_blocked": 0,
+          "details": {
+            "block_net_by_entry_cohort": {
+              "H1_2026": 36836.200000000026,
+              "Q3_PARTIAL_2026": -33190.399999999994
+            },
+            "block_net_by_exit_realization": {
+              "H1_2026": 36836.200000000026,
+              "Q3_PARTIAL_2026": -33190.399999999994
+            },
+            "event_counts": {
+              "ENTRY": 83,
+              "EXIT": 83,
+              "NO_FILL": 22,
+              "NO_OPPORTUNITY": 196,
+              "WAIT": 227
+            },
+            "largest_month_by_absolute_net": "202604",
+            "largest_trade": {
+              "candidate_id": "QQQ:20260414:20260417:CALL",
+              "date": "20260416",
+              "model_id": "CONTEXT182_20260413",
+              "net_usd": 12256.8,
+              "right": "CALL",
+              "ticker": "QQQ"
+            },
+            "monthly_convention": "exit_date_realization",
+            "monthly_net_by_entry_cohort_including_zeros": {
+              "202601": -3726.799999999999,
+              "202602": -930.5999999999999,
+              "202603": -1594.800000000001,
+              "202604": 27573.6,
+              "202605": 25106.600000000002,
+              "202606": -9591.799999999997,
+              "202607": -10122.800000000001,
+              "202608": -22081.6,
+              "202609": -985.9999999999997
+            },
+            "monthly_net_including_zeros": {
+              "202601": -3726.799999999999,
+              "202602": 2547.0000000000005,
+              "202603": -14757.8,
+              "202604": 37259.0,
+              "202605": 25491.2,
+              "202606": -9976.399999999998,
+              "202607": -10122.800000000001,
+              "202608": -20354.4,
+              "202609": -2713.1999999999994
+            },
+            "net_without_largest_month": -33613.2,
+            "net_without_largest_trade": -8610.999999999993,
+            "selected_missing_or_lower_bound": 2,
+            "side_net": {
+              "CALL": 17527.200000000033,
+              "PUT": -13881.399999999996
+            }
+          },
+          "max_decision_budget_used_cents": 499240,
+          "max_entry_budget_used_cents": 497800,
+          "max_premium_reserved": 14479.0,
+          "missing_exit": 2,
+          "monthly_net_usd": {
+            "202601": -3726.799999999999,
+            "202602": 2547.0000000000005,
+            "202603": -14757.8,
+            "202604": 37259.0,
+            "202605": 25491.2,
+            "202606": -9976.399999999998,
+            "202607": -10122.800000000001,
+            "202608": -20354.4,
+            "202609": -2713.1999999999994
+          },
+          "months_observed": 9,
+          "net_usd": 3645.8000000000065,
+          "no_fill_by_reason": {
+            "DECISION_RISK_BUDGET": 0,
+            "ENTRY_QUOTE": 10,
+            "ENTRY_RISK_BUDGET": 12
+          },
+          "no_opportunity": 196,
+          "positive_months": 3,
+          "profit_factor": 1.0352360831099143,
+          "quantity_max": 14,
+          "quantity_median": 6,
+          "quantity_total": 482,
+          "realized_max_drawdown_usd": 46387.69999999998,
+          "ticker_net_usd": {
+            "QQQ": 15737.599999999995,
+            "SPXW": 1710.4000000000044,
+            "SPY": -13802.199999999992
+          },
+          "trades": 83,
+          "wait": 227
+        }
+      },
+      "probability_ev": {
+        "all": {
+          "brier": 0.6602799602550216,
+          "ev": {
+            "adverse": {
+              "bias": 3.50436744706519,
+              "mae": 1079.722149851703
+            },
+            "base": {
+              "bias": 5.234559556394118,
+              "mae": 1080.095321333896
+            }
+          },
+          "logloss": 1.2638480597253348,
+          "n": 612
+        },
+        "all_observed_only": {
+          "brier": 0.6790319166996008,
+          "ev": {
+            "adverse": {
+              "bias": -31.378702004325238,
+              "mae": 1108.146008777056
+            },
+            "base": {
+              "bias": -29.672608091663882,
+              "mae": 1108.4152573198087
+            }
+          },
+          "logloss": 1.2982800675352117,
+          "n": 578
+        },
+        "selected": {
+          "brier": 0.7720093080522702,
+          "ev": {
+            "adverse": {
+              "bias": 148.59125108723552,
+              "mae": 1024.5812388775933
+            },
+            "base": {
+              "bias": 150.48926946637553,
+              "mae": 1025.7637512156714
+            }
+          },
+          "logloss": 1.5143665764317746,
+          "n": 105
+        },
+        "selected_observed_only": {
+          "brier": 0.77698551173843,
+          "ev": {
+            "adverse": {
+              "bias": 134.05441658880736,
+              "mae": 1027.0539187051913
+            },
+            "base": {
+              "bias": 135.93368817914404,
+              "mae": 1028.2037909332807
+            }
+          },
+          "logloss": 1.5256339643760137,
+          "n": 103
+        }
+      }
+    },
+    "MONTHLY_GUARDED": {
+      "label": "Mensual con filtro",
+      "monthly": {
+        "202601": -11721.2,
+        "202602": 2183.2000000000007,
+        "202603": -6961.399999999998,
+        "202604": 32499.80000000001,
+        "202605": 24568.800000000007,
+        "202606": -13387.999999999998,
+        "202607": -22772.999999999996,
+        "202608": -26593.199999999997,
+        "202609": -14857.800000000001
+      },
+      "full_months_positive": 3,
+      "monthly_acceptance": false,
+      "economics": {
+        "adverse": {
+          "capacity_assumption": "full fill at stored quote; no volume or partial-fill simulation",
+          "capital_blocked": 0,
+          "details": {
+            "block_net_by_entry_cohort": {
+              "H1_2026": 27181.200000000026,
+              "Q3_PARTIAL_2026": -64223.99999999997
+            },
+            "block_net_by_exit_realization": {
+              "H1_2026": 27181.200000000026,
+              "Q3_PARTIAL_2026": -64223.99999999997
+            },
+            "event_counts": {
+              "ENTRY": 100,
+              "EXIT": 100,
+              "NO_FILL": 22,
+              "NO_OPPORTUNITY": 194,
+              "WAIT": 212
+            },
+            "largest_month_by_absolute_net": "202604",
+            "largest_trade": {
+              "candidate_id": "QQQ:20260414:20260417:CALL",
+              "date": "20260416",
+              "model_id": "CONTEXT182_20260302",
+              "net_usd": 12232.800000000003,
+              "right": "CALL",
+              "ticker": "QQQ"
+            },
+            "monthly_convention": "exit_date_realization",
+            "monthly_net_by_entry_cohort_including_zeros": {
+              "202601": -16129.4,
+              "202602": 6591.400000000001,
+              "202603": 2722.0,
+              "202604": 22816.40000000001,
+              "202605": 24182.200000000008,
+              "202606": -13001.4,
+              "202607": -22772.999999999996,
+              "202608": -30755.399999999998,
+              "202609": -10695.6
+            },
+            "monthly_net_including_zeros": {
+              "202601": -11721.2,
+              "202602": 2183.2000000000007,
+              "202603": -6961.399999999998,
+              "202604": 32499.80000000001,
+              "202605": 24568.800000000007,
+              "202606": -13387.999999999998,
+              "202607": -22772.999999999996,
+              "202608": -26593.199999999997,
+              "202609": -14857.800000000001
+            },
+            "net_without_largest_month": -69542.6,
+            "net_without_largest_trade": -49275.59999999999,
+            "selected_missing_or_lower_bound": 3,
+            "side_net": {
+              "CALL": -27295.999999999975,
+              "PUT": -9746.8
+            }
+          },
+          "max_decision_budget_used_cents": 499920,
+          "max_entry_budget_used_cents": 497800,
+          "max_premium_reserved": 14494.0,
+          "missing_exit": 3,
+          "monthly_net_usd": {
+            "202601": -11721.2,
+            "202602": 2183.2000000000007,
+            "202603": -6961.399999999998,
+            "202604": 32499.80000000001,
+            "202605": 24568.800000000007,
+            "202606": -13387.999999999998,
+            "202607": -22772.999999999996,
+            "202608": -26593.199999999997,
+            "202609": -14857.800000000001
+          },
+          "months_observed": 9,
+          "net_usd": -37042.79999999999,
+          "no_fill_by_reason": {
+            "DECISION_RISK_BUDGET": 0,
+            "ENTRY_QUOTE": 8,
+            "ENTRY_RISK_BUDGET": 14
+          },
+          "no_opportunity": 194,
+          "positive_months": 3,
+          "profit_factor": 0.7539554124389254,
+          "quantity_max": 15,
+          "quantity_median": 6.0,
+          "quantity_total": 593,
+          "realized_max_drawdown_usd": 82935.1,
+          "ticker_net_usd": {
+            "QQQ": -22102.599999999984,
+            "SPXW": 6538.800000000004,
+            "SPY": -21478.999999999993
+          },
+          "trades": 100,
+          "wait": 212
+        },
+        "base": {
+          "capacity_assumption": "full fill at stored quote; no volume or partial-fill simulation",
+          "capital_blocked": 0,
+          "details": {
+            "block_net_by_entry_cohort": {
+              "H1_2026": 27935.20000000002,
+              "Q3_PARTIAL_2026": -63810.99999999998
+            },
+            "block_net_by_exit_realization": {
+              "H1_2026": 27935.20000000002,
+              "Q3_PARTIAL_2026": -63810.99999999998
+            },
+            "event_counts": {
+              "ENTRY": 100,
+              "EXIT": 100,
+              "NO_FILL": 22,
+              "NO_OPPORTUNITY": 194,
+              "WAIT": 212
+            },
+            "largest_month_by_absolute_net": "202604",
+            "largest_trade": {
+              "candidate_id": "QQQ:20260414:20260417:CALL",
+              "date": "20260416",
+              "model_id": "CONTEXT182_20260302",
+              "net_usd": 12256.8,
+              "right": "CALL",
+              "ticker": "QQQ"
+            },
+            "monthly_convention": "exit_date_realization",
+            "monthly_net_by_entry_cohort_including_zeros": {
+              "202601": -15951.399999999996,
+              "202602": 6643.4,
+              "202603": 2847.000000000002,
+              "202604": 22971.4,
+              "202605": 24288.2,
+              "202606": -12863.4,
+              "202607": -22613.0,
+              "202608": -30604.399999999998,
+              "202609": -10593.6
+            },
+            "monthly_net_including_zeros": {
+              "202601": -11557.199999999997,
+              "202602": 2249.200000000001,
+              "202603": -6838.399999999998,
+              "202604": 32656.799999999992,
+              "202605": 24672.8,
+              "202606": -13248.0,
+              "202607": -22613.0,
+              "202608": -26449.199999999997,
+              "202609": -14748.8
+            },
+            "net_without_largest_month": -68532.59999999998,
+            "net_without_largest_trade": -48132.59999999999,
+            "selected_missing_or_lower_bound": 3,
+            "side_net": {
+              "CALL": -26397.99999999997,
+              "PUT": -9477.799999999996
+            }
+          },
+          "max_decision_budget_used_cents": 499920,
+          "max_entry_budget_used_cents": 497800,
+          "max_premium_reserved": 14479.0,
+          "missing_exit": 3,
+          "monthly_net_usd": {
+            "202601": -11557.199999999997,
+            "202602": 2249.200000000001,
+            "202603": -6838.399999999998,
+            "202604": 32656.799999999992,
+            "202605": 24672.8,
+            "202606": -13248.0,
+            "202607": -22613.0,
+            "202608": -26449.199999999997,
+            "202609": -14748.8
+          },
+          "months_observed": 9,
+          "net_usd": -35875.79999999999,
+          "no_fill_by_reason": {
+            "DECISION_RISK_BUDGET": 0,
+            "ENTRY_QUOTE": 8,
+            "ENTRY_RISK_BUDGET": 14
+          },
+          "no_opportunity": 194,
+          "positive_months": 3,
+          "profit_factor": 0.7603458157813522,
+          "quantity_max": 15,
+          "quantity_median": 6.0,
+          "quantity_total": 593,
+          "realized_max_drawdown_usd": 82346.1,
+          "ticker_net_usd": {
+            "QQQ": -21689.6,
+            "SPXW": 6602.800000000008,
+            "SPY": -20788.99999999999
+          },
+          "trades": 100,
+          "wait": 212
+        }
+      },
+      "probability_ev": {
+        "all": {
+          "brier": 0.6622692438992347,
+          "ev": {
+            "adverse": {
+              "bias": -1.222366713530436,
+              "mae": 1074.8937779651371
+            },
+            "base": {
+              "bias": 0.660236024123989,
+              "mae": 1075.290077185212
+            }
+          },
+          "logloss": 1.2684709234625506,
+          "n": 612
+        },
+        "all_observed_only": {
+          "brier": 0.6800001597473478,
+          "ev": {
+            "adverse": {
+              "bias": -37.00421301049146,
+              "mae": 1102.4128813551567
+            },
+            "base": {
+              "bias": -35.14054515693094,
+              "mae": 1102.7028160724562
+            }
+          },
+          "logloss": 1.3016107387436813,
+          "n": 578
+        },
+        "selected": {
+          "brier": 0.7299479746434926,
+          "ev": {
+            "adverse": {
+              "bias": 106.20673671025538,
+              "mae": 976.7111336988396
+            },
+            "base": {
+              "bias": 108.08078609372863,
+              "mae": 977.7153265109262
+            }
+          },
+          "logloss": 1.419793026243964,
+          "n": 122
+        },
+        "selected_observed_only": {
+          "brier": 0.737125954994808,
+          "ev": {
+            "adverse": {
+              "bias": 89.36658148830085,
+              "mae": 981.8164674765974
+            },
+            "base": {
+              "bias": 91.22244742420432,
+              "mae": 982.780547683852
+            }
+          },
+          "logloss": 1.4347177810765548,
+          "n": 119
+        }
+      }
+    },
+    "WEEKLY_GUARDED": {
+      "label": "Semanal con filtro",
+      "monthly": {
+        "202601": -11721.2,
+        "202602": 2183.2000000000007,
+        "202603": -6961.399999999998,
+        "202604": 32499.80000000001,
+        "202605": 26551.200000000008,
+        "202606": -17429.999999999996,
+        "202607": -18306.399999999998,
+        "202608": -31279.799999999996,
+        "202609": -6136.599999999999
+      },
+      "full_months_positive": 3,
+      "monthly_acceptance": false,
+      "economics": {
+        "adverse": {
+          "capacity_assumption": "full fill at stored quote; no volume or partial-fill simulation",
+          "capital_blocked": 0,
+          "details": {
+            "block_net_by_entry_cohort": {
+              "H1_2026": 25121.60000000003,
+              "Q3_PARTIAL_2026": -55722.79999999998
+            },
+            "block_net_by_exit_realization": {
+              "H1_2026": 25121.60000000003,
+              "Q3_PARTIAL_2026": -55722.79999999998
+            },
+            "event_counts": {
+              "ENTRY": 100,
+              "EXIT": 100,
+              "NO_FILL": 23,
+              "NO_OPPORTUNITY": 193,
+              "WAIT": 212
+            },
+            "largest_month_by_absolute_net": "202604",
+            "largest_trade": {
+              "candidate_id": "QQQ:20260414:20260417:CALL",
+              "date": "20260416",
+              "model_id": "CONTEXT182_20260302",
+              "net_usd": 12232.800000000003,
+              "right": "CALL",
+              "ticker": "QQQ"
+            },
+            "monthly_convention": "exit_date_realization",
+            "monthly_net_by_entry_cohort_including_zeros": {
+              "202601": -16129.4,
+              "202602": 6591.400000000001,
+              "202603": 2722.0,
+              "202604": 22816.40000000001,
+              "202605": 26164.60000000001,
+              "202606": -17043.399999999998,
+              "202607": -22993.0,
+              "202608": -27548.799999999992,
+              "202609": -5181.0
+            },
+            "monthly_net_including_zeros": {
+              "202601": -11721.2,
+              "202602": 2183.2000000000007,
+              "202603": -6961.399999999998,
+              "202604": 32499.80000000001,
+              "202605": 26551.200000000008,
+              "202606": -17429.999999999996,
+              "202607": -18306.399999999998,
+              "202608": -31279.799999999996,
+              "202609": -6136.599999999999
+            },
+            "net_without_largest_month": -63101.0,
+            "net_without_largest_trade": -42833.999999999985,
+            "selected_missing_or_lower_bound": 2,
+            "side_net": {
+              "CALL": -22992.599999999977,
+              "PUT": -7608.599999999998
+            }
+          },
+          "max_decision_budget_used_cents": 499920,
+          "max_entry_budget_used_cents": 497280,
+          "max_premium_reserved": 14503.0,
+          "missing_exit": 2,
+          "monthly_net_usd": {
+            "202601": -11721.2,
+            "202602": 2183.2000000000007,
+            "202603": -6961.399999999998,
+            "202604": 32499.80000000001,
+            "202605": 26551.200000000008,
+            "202606": -17429.999999999996,
+            "202607": -18306.399999999998,
+            "202608": -31279.799999999996,
+            "202609": -6136.599999999999
+          },
+          "months_observed": 9,
+          "net_usd": -30601.199999999986,
+          "no_fill_by_reason": {
+            "DECISION_RISK_BUDGET": 0,
+            "ENTRY_QUOTE": 7,
+            "ENTRY_RISK_BUDGET": 16
+          },
+          "no_opportunity": 193,
+          "positive_months": 3,
+          "profit_factor": 0.7878570240141978,
+          "quantity_max": 15,
+          "quantity_median": 6.0,
+          "quantity_total": 597,
+          "realized_max_drawdown_usd": 78093.29999999996,
+          "ticker_net_usd": {
+            "QQQ": -8307.999999999985,
+            "SPXW": -2531.1999999999903,
+            "SPY": -19761.999999999993
+          },
+          "trades": 100,
+          "wait": 212
+        },
+        "base": {
+          "capacity_assumption": "full fill at stored quote; no volume or partial-fill simulation",
+          "capital_blocked": 0,
+          "details": {
+            "block_net_by_entry_cohort": {
+              "H1_2026": 25877.60000000002,
+              "Q3_PARTIAL_2026": -55296.79999999998
+            },
+            "block_net_by_exit_realization": {
+              "H1_2026": 25877.60000000002,
+              "Q3_PARTIAL_2026": -55296.79999999998
+            },
+            "event_counts": {
+              "ENTRY": 100,
+              "EXIT": 100,
+              "NO_FILL": 23,
+              "NO_OPPORTUNITY": 193,
+              "WAIT": 212
+            },
+            "largest_month_by_absolute_net": "202604",
+            "largest_trade": {
+              "candidate_id": "QQQ:20260414:20260417:CALL",
+              "date": "20260416",
+              "model_id": "CONTEXT182_20260302",
+              "net_usd": 12256.8,
+              "right": "CALL",
+              "ticker": "QQQ"
+            },
+            "monthly_convention": "exit_date_realization",
+            "monthly_net_by_entry_cohort_including_zeros": {
+              "202601": -15951.399999999996,
+              "202602": 6643.4,
+              "202603": 2847.000000000002,
+              "202604": 22971.4,
+              "202605": 26282.600000000002,
+              "202606": -16915.399999999998,
+              "202607": -22833.0,
+              "202608": -27362.799999999992,
+              "202609": -5101.000000000002
+            },
+            "monthly_net_including_zeros": {
+              "202601": -11557.199999999997,
+              "202602": 2249.200000000001,
+              "202603": -6838.399999999998,
+              "202604": 32656.799999999992,
+              "202605": 26667.2,
+              "202606": -17300.0,
+              "202607": -18148.4,
+              "202608": -31133.799999999996,
+              "202609": -6014.6
+            },
+            "net_without_largest_month": -62075.999999999985,
+            "net_without_largest_trade": -41675.999999999985,
+            "selected_missing_or_lower_bound": 2,
+            "side_net": {
+              "CALL": -22112.599999999988,
+              "PUT": -7306.599999999994
+            }
+          },
+          "max_decision_budget_used_cents": 499920,
+          "max_entry_budget_used_cents": 497280,
+          "max_premium_reserved": 14485.0,
+          "missing_exit": 2,
+          "monthly_net_usd": {
+            "202601": -11557.199999999997,
+            "202602": 2249.200000000001,
+            "202603": -6838.399999999998,
+            "202604": 32656.799999999992,
+            "202605": 26667.2,
+            "202606": -17300.0,
+            "202607": -18148.4,
+            "202608": -31133.799999999996,
+            "202609": -6014.6
+          },
+          "months_observed": 9,
+          "net_usd": -29419.19999999999,
+          "no_fill_by_reason": {
+            "DECISION_RISK_BUDGET": 0,
+            "ENTRY_QUOTE": 7,
+            "ENTRY_RISK_BUDGET": 16
+          },
+          "no_opportunity": 193,
+          "positive_months": 3,
+          "profit_factor": 0.7948451882845189,
+          "quantity_max": 15,
+          "quantity_median": 6.0,
+          "quantity_total": 597,
+          "realized_max_drawdown_usd": 77534.20000000001,
+          "ticker_net_usd": {
+            "QQQ": -7880.0,
+            "SPXW": -2467.1999999999953,
+            "SPY": -19071.99999999999
+          },
+          "trades": 100,
+          "wait": 212
+        }
+      },
+      "probability_ev": {
+        "all": {
+          "brier": 0.667082170609609,
+          "ev": {
+            "adverse": {
+              "bias": 4.138856980313707,
+              "mae": 1085.2462595212521
+            },
+            "base": {
+              "bias": 5.989942063580478,
+              "mae": 1085.6183557718532
+            }
+          },
+          "logloss": 1.2795466447516577,
+          "n": 612
+        },
+        "all_observed_only": {
+          "brier": 0.6852666940028309,
+          "ev": {
+            "adverse": {
+              "bias": -31.235629915487745,
+              "mae": 1113.466325716094
+            },
+            "base": {
+              "bias": -29.404513875777475,
+              "mae": 1113.7314535800406
+            }
+          },
+          "logloss": 1.3135344165476766,
+          "n": 578
+        },
+        "selected": {
+          "brier": 0.7412152467874454,
+          "ev": {
+            "adverse": {
+              "bias": 205.45898200702402,
+              "mae": 987.9665214448173
+            },
+            "base": {
+              "bias": 207.26425626148125,
+              "mae": 989.013857164268
+            }
+          },
+          "logloss": 1.4314121611612585,
+          "n": 123
+        },
+        "selected_observed_only": {
+          "brier": 0.7485026769853926,
+          "ev": {
+            "adverse": {
+              "bias": 190.8483445359146,
+              "mae": 992.9185724596529
+            },
+            "base": {
+              "bias": 192.6326374468138,
+              "mae": 993.9259783721702
+            }
+          },
+          "logloss": 1.4460493847912592,
+          "n": 120
+        }
+      }
+    }
+  },
+  "monthly_convention": "closed_trade_net_at_exit_date_not_mark_to_market",
+  "proposal_status_counts": {
+    "PENDING_BEYOND_DECISION_CUTOFF": 6,
+    "PROMOTED": 8,
+    "REJECTED": 11,
+    "STALE_CHALLENGER_REJECTED": 22
+  },
+  "guard_diagnostics": {
+    "MONTHLY": {
+      "active_model_age_sessions": 73,
+      "final_active_model": "CONTEXT182_20260501",
+      "pending": 1,
+      "promotions": 3,
+      "rejections": 2,
+      "sessions_since_last_acceptance": 72,
+      "stale": 3
+    },
+    "WEEKLY": {
+      "active_model_age_sessions": 15,
+      "final_active_model": "CONTEXT182_20260727",
+      "pending": 5,
+      "promotions": 5,
+      "rejections": 9,
+      "sessions_since_last_acceptance": 14,
+      "stale": 19
+    }
+  },
+  "post_activation_transfer": {
+    "MONTHLY": [
+      {
+        "block_net_by_entry_cohort": {
+          "H1_2026": 5239.000000000002,
+          "Q3_PARTIAL_2026": 0.0
+        },
+        "candidates": 132,
+        "effective_at": "20260205",
+        "main_book_adverse_exit_net": 5239.000000000002,
+        "model_id": "CONTEXT182_20260102",
+        "monthly_net_by_entry_cohort_including_zeros": {
+          "202602": 2517.000000000001,
+          "202603": 2722.0000000000005,
+          "202604": 0.0
+        },
+        "period_end_inclusive": "20260401",
+        "sessions": 39,
+        "trades": 14
+      },
+      {
+        "block_net_by_entry_cohort": {
+          "H1_2026": 42849.40000000001,
+          "Q3_PARTIAL_2026": 0.0
+        },
+        "candidates": 156,
+        "effective_at": "20260402",
+        "main_book_adverse_exit_net": 42849.40000000001,
+        "model_id": "CONTEXT182_20260302",
+        "monthly_net_by_entry_cohort_including_zeros": {
+          "202604": 22816.400000000005,
+          "202605": 24182.200000000004,
+          "202606": -4149.2
+        },
+        "period_end_inclusive": "20260603",
+        "sessions": 43,
+        "trades": 26
+      },
+      {
+        "block_net_by_entry_cohort": {
+          "H1_2026": -8852.199999999997,
+          "Q3_PARTIAL_2026": -64224.0
+        },
+        "candidates": 240,
+        "effective_at": "20260604",
+        "main_book_adverse_exit_net": -73076.2,
+        "model_id": "CONTEXT182_20260501",
+        "monthly_net_by_entry_cohort_including_zeros": {
+          "202606": -8852.199999999997,
+          "202607": -22773.0,
+          "202608": -30755.4,
+          "202609": -10695.6
+        },
+        "period_end_inclusive": "20260917",
+        "sessions": 73,
+        "trades": 46
+      }
+    ],
+    "WEEKLY": [
+      {
+        "block_net_by_entry_cohort": {
+          "H1_2026": 5239.000000000002,
+          "Q3_PARTIAL_2026": 0.0
+        },
+        "candidates": 132,
+        "effective_at": "20260205",
+        "main_book_adverse_exit_net": 5239.000000000002,
+        "model_id": "CONTEXT182_20260102",
+        "monthly_net_by_entry_cohort_including_zeros": {
+          "202602": 2517.000000000001,
+          "202603": 2722.0000000000005,
+          "202604": 0.0
+        },
+        "period_end_inclusive": "20260401",
+        "sessions": 39,
+        "trades": 14
+      },
+      {
+        "block_net_by_entry_cohort": {
+          "H1_2026": 39361.40000000001,
+          "Q3_PARTIAL_2026": 0.0
+        },
+        "candidates": 90,
+        "effective_at": "20260402",
+        "main_book_adverse_exit_net": 39361.40000000001,
+        "model_id": "CONTEXT182_20260302",
+        "monthly_net_by_entry_cohort_including_zeros": {
+          "202604": 22816.400000000005,
+          "202605": 16545.000000000004
+        },
+        "period_end_inclusive": "20260506",
+        "sessions": 24,
+        "trades": 16
+      },
+      {
+        "block_net_by_entry_cohort": {
+          "H1_2026": -7423.799999999994,
+          "Q3_PARTIAL_2026": -12101.8
+        },
+        "candidates": 172,
+        "effective_at": "20260507",
+        "main_book_adverse_exit_net": -19525.599999999995,
+        "model_id": "CONTEXT182_20260406",
+        "monthly_net_by_entry_cohort_including_zeros": {
+          "202605": 9619.600000000002,
+          "202606": -17043.399999999998,
+          "202607": -12101.8
+        },
+        "period_end_inclusive": "20260723",
+        "sessions": 53,
+        "trades": 29
+      },
+      {
+        "block_net_by_entry_cohort": {
+          "H1_2026": 0.0,
+          "Q3_PARTIAL_2026": -37484.4
+        },
+        "candidates": 90,
+        "effective_at": "20260724",
+        "main_book_adverse_exit_net": -37484.4,
+        "model_id": "CONTEXT182_20260622",
+        "monthly_net_by_entry_cohort_including_zeros": {
+          "202607": -10891.2,
+          "202608": -26593.2
+        },
+        "period_end_inclusive": "20260826",
+        "sessions": 24,
+        "trades": 18
+      },
+      {
+        "block_net_by_entry_cohort": {
+          "H1_2026": 0.0,
+          "Q3_PARTIAL_2026": -6136.6
+        },
+        "candidates": 44,
+        "effective_at": "20260827",
+        "main_book_adverse_exit_net": -6136.6,
+        "model_id": "CONTEXT182_20260727",
+        "monthly_net_by_entry_cohort_including_zeros": {
+          "202608": -955.5999999999995,
+          "202609": -5181.000000000001
+        },
+        "period_end_inclusive": "20260917",
+        "sessions": 15,
+        "trades": 9
+      }
+    ]
+  },
+  "selection": null,
+  "promotion_approved": false
+}
