@@ -1,0 +1,67 @@
+{
+  "utc": "2026-11-01T15:01:38.706855+00:00",
+  "files": [
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_extension_2026q3_partial_01\\candidates.jsonl",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_partial_dataset_evidence_01\\h2_dataset_v2_extension_2026q3_partial_01\\candidates.jsonl",
+      "bytes": 236850,
+      "sha256": "c1aae6b9d45240fe712aabceb296b8d42506b12523465eb8755a8c6939045864"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_extension_2026q3_partial_01\\coverage.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_partial_dataset_evidence_01\\h2_dataset_v2_extension_2026q3_partial_01\\coverage.json",
+      "bytes": 151653,
+      "sha256": "5ce9ac8fef25057fe867b46d4ff9ebf224391ae0b538527d402d3afa8607a5c5"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_extension_2026q3_partial_01\\inventory.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_partial_dataset_evidence_01\\h2_dataset_v2_extension_2026q3_partial_01\\inventory.json",
+      "bytes": 327384,
+      "sha256": "f633d0ee192f28650698a4033ee7f6d2dc00dad07aa38239c40e9e2b5092ea5c"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_extension_2026q3_partial_01\\inventory_manifest.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_partial_dataset_evidence_01\\h2_dataset_v2_extension_2026q3_partial_01\\inventory_manifest.json",
+      "bytes": 197,
+      "sha256": "5b39e0796599fa72b5d74d029885a24fd57fada207f12989576737aa46d75b2f"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_extension_2026q3_partial_01\\manifest.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_partial_dataset_evidence_01\\h2_dataset_v2_extension_2026q3_partial_01\\manifest.json",
+      "bytes": 6184,
+      "sha256": "b45b017c63fea42036ab73418cc07faa8e377047fec1f8d60c908e98eea5400b"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_q3_partial_observer_01\\builder\\admission.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_partial_dataset_evidence_01\\h2_q3_partial_observer_01\\builder\\admission.json",
+      "bytes": 1107,
+      "sha256": "7e4180d87701fae213b8a985f985c49a90e47224f1dad0ef59fdf1bf421f4b09"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_q3_partial_observer_01\\builder\\exit.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_partial_dataset_evidence_01\\h2_q3_partial_observer_01\\builder\\exit.json",
+      "bytes": 890,
+      "sha256": "30703aa7c1660f4eee02e66f2ce2b5e358f8904559668bffb771802861292cc8"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_q3_partial_observer_01\\builder\\process.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_partial_dataset_evidence_01\\h2_q3_partial_observer_01\\builder\\process.json",
+      "bytes": 759,
+      "sha256": "0e987fb9490b8e345eb3b1b77b17dde19cf57a2895eda7687f107ee438121780"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_q3_partial_observer_01\\builder\\stderr.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_partial_dataset_evidence_01\\h2_q3_partial_observer_01\\builder\\stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_q3_partial_observer_01\\builder\\stdout.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_partial_dataset_evidence_01\\h2_q3_partial_observer_01\\builder\\stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "file_count": 10,
+  "total_bytes": 725024
+}
