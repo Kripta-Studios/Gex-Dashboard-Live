@@ -1,0 +1,17 @@
+{
+  "pid": 34688,
+  "creation_time": 1793550586.882508,
+  "utc": "2026-11-01T16:29:46.916215+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\build_weekly_context_q3.py",
+    "--execute-reviewed-extraction",
+    "--builder-sha256",
+    "caa049caccd79a1c344bee03cce70df7e6a4446fa1ab087c31de64692f78845a",
+    "--inventory-sha256",
+    "25da3398984c633a044eef4f20c5525c6224a1b076a5941d0311fae93eab68cf"
+  ]
+}

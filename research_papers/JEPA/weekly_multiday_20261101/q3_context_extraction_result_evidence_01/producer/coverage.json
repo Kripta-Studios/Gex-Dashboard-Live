@@ -1,0 +1,1260 @@
+{
+  "counts": {
+    "available": 153,
+    "identities": 165,
+    "missing": 12,
+    "state_valid_false": 0,
+    "state_valid_true": 153
+  },
+  "feature_names": [
+    "minute_fraction",
+    "remaining_fraction",
+    "spot_valid",
+    "ib_valid",
+    "ib_valid_fraction",
+    "spot_ib",
+    "ib_range_over_spot",
+    "change_1m_ib",
+    "change_5m_ib",
+    "change_15m_ib",
+    "change_1m_valid",
+    "change_5m_valid",
+    "change_15m_valid",
+    "current_call_iv_mean",
+    "current_call_abs_delta_mean",
+    "current_call_vega_over_spot_mean",
+    "current_call_theta_over_spot_mean",
+    "current_call_oi_logsum",
+    "current_call_gamma_logsum",
+    "current_call_quote_valid_fraction",
+    "current_call_iv_valid_fraction",
+    "current_call_oi_known_fraction",
+    "current_call_oi_positive_fraction",
+    "current_call_present_fraction",
+    "current_call_delta_valid_fraction",
+    "current_call_vega_valid_fraction",
+    "current_call_theta_valid_fraction",
+    "current_put_iv_mean",
+    "current_put_abs_delta_mean",
+    "current_put_vega_over_spot_mean",
+    "current_put_theta_over_spot_mean",
+    "current_put_oi_logsum",
+    "current_put_gamma_logsum",
+    "current_put_quote_valid_fraction",
+    "current_put_iv_valid_fraction",
+    "current_put_oi_known_fraction",
+    "current_put_oi_positive_fraction",
+    "current_put_present_fraction",
+    "current_put_delta_valid_fraction",
+    "current_put_vega_valid_fraction",
+    "current_put_theta_valid_fraction",
+    "current_call_oi_outside_fraction",
+    "current_put_oi_outside_fraction",
+    "current_call_gamma_outside_fraction",
+    "current_put_gamma_outside_fraction",
+    "call_oi_top1_strike_ib",
+    "call_oi_top1_log_mass",
+    "call_oi_top1_valid",
+    "call_oi_top2_strike_ib",
+    "call_oi_top2_log_mass",
+    "call_oi_top2_valid",
+    "call_oi_top3_strike_ib",
+    "call_oi_top3_log_mass",
+    "call_oi_top3_valid",
+    "put_oi_top1_strike_ib",
+    "put_oi_top1_log_mass",
+    "put_oi_top1_valid",
+    "put_oi_top2_strike_ib",
+    "put_oi_top2_log_mass",
+    "put_oi_top2_valid",
+    "put_oi_top3_strike_ib",
+    "put_oi_top3_log_mass",
+    "put_oi_top3_valid",
+    "call_gamma_top1_strike_ib",
+    "call_gamma_top1_log_mass",
+    "call_gamma_top1_valid",
+    "call_gamma_top2_strike_ib",
+    "call_gamma_top2_log_mass",
+    "call_gamma_top2_valid",
+    "call_gamma_top3_strike_ib",
+    "call_gamma_top3_log_mass",
+    "call_gamma_top3_valid",
+    "put_gamma_top1_strike_ib",
+    "put_gamma_top1_log_mass",
+    "put_gamma_top1_valid",
+    "put_gamma_top2_strike_ib",
+    "put_gamma_top2_log_mass",
+    "put_gamma_top2_valid",
+    "put_gamma_top3_strike_ib",
+    "put_gamma_top3_log_mass",
+    "put_gamma_top3_valid"
+  ],
+  "flags": {
+    "actions_read": false,
+    "development_seen": true,
+    "labels_read": false,
+    "models_fit": false,
+    "oracle_read": false,
+    "outcomes_read": false,
+    "promotion_approved": false
+  },
+  "rows": [
+    {
+      "date": "20260701",
+      "source_status": "MISSING_SOURCE",
+      "state_valid": null,
+      "status": "CONTEXT_MISSING_SOURCE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260702",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260706",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260707",
+      "source_status": "MISSING_SOURCE",
+      "state_valid": null,
+      "status": "CONTEXT_MISSING_SOURCE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260708",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260709",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260710",
+      "source_status": "MISSING_SOURCE",
+      "state_valid": null,
+      "status": "CONTEXT_MISSING_SOURCE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260713",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260714",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260715",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260716",
+      "source_status": "MISSING_SOURCE",
+      "state_valid": null,
+      "status": "CONTEXT_MISSING_SOURCE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260717",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260720",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260721",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260722",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260723",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260724",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260727",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260728",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260729",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260730",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260731",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260803",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260804",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260805",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260806",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260807",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260810",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260811",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260812",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260813",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260814",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260817",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260818",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260819",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260820",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260821",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260824",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260825",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260826",
+      "source_status": "MISSING_SOURCE",
+      "state_valid": null,
+      "status": "CONTEXT_MISSING_SOURCE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260827",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260828",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260831",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260901",
+      "source_status": "MISSING_SOURCE",
+      "state_valid": null,
+      "status": "CONTEXT_MISSING_SOURCE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260902",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260903",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260904",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260908",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260909",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260910",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260911",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260914",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260915",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260916",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260917",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPY"
+    },
+    {
+      "date": "20260701",
+      "source_status": "MISSING_SOURCE",
+      "state_valid": null,
+      "status": "CONTEXT_MISSING_SOURCE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260702",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260706",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260707",
+      "source_status": "MISSING_SOURCE",
+      "state_valid": null,
+      "status": "CONTEXT_MISSING_SOURCE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260708",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260709",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260710",
+      "source_status": "MISSING_SOURCE",
+      "state_valid": null,
+      "status": "CONTEXT_MISSING_SOURCE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260713",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260714",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260715",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260716",
+      "source_status": "MISSING_SOURCE",
+      "state_valid": null,
+      "status": "CONTEXT_MISSING_SOURCE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260717",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260720",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260721",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260722",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260723",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260724",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260727",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260728",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260729",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260730",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260731",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260803",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260804",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260805",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260806",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260807",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260810",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260811",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260812",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260813",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260814",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260817",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260818",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260819",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260820",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260821",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260824",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260825",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260826",
+      "source_status": "MISSING_SOURCE",
+      "state_valid": null,
+      "status": "CONTEXT_MISSING_SOURCE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260827",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260828",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260831",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260901",
+      "source_status": "MISSING_SOURCE",
+      "state_valid": null,
+      "status": "CONTEXT_MISSING_SOURCE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260902",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260903",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260904",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260908",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260909",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260910",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260911",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260914",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260915",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260916",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260917",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "QQQ"
+    },
+    {
+      "date": "20260701",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260702",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260706",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260707",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260708",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260709",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260710",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260713",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260714",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260715",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260716",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260717",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260720",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260721",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260722",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260723",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260724",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260727",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260728",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260729",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260730",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260731",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260803",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260804",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260805",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260806",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260807",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260810",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260811",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260812",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260813",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260814",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260817",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260818",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260819",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260820",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260821",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260824",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260825",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260826",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260827",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260828",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260831",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260901",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260902",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260903",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260904",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260908",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260909",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260910",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260911",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260914",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260915",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260916",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    },
+    {
+      "date": "20260917",
+      "source_status": "COMPLETE",
+      "state_valid": true,
+      "status": "CONTEXT_AVAILABLE",
+      "ticker": "SPXW"
+    }
+  ],
+  "schema": "weekly_context_q3_1030_coverage_v1",
+  "state_i": 60
+}

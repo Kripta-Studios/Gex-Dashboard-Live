@@ -1,0 +1,12 @@
+{
+  "exit_code": 0,
+  "utc": "2026-11-01T16:48:20.526953+00:00",
+  "source": "subprocess.Popen.wait_retained_handle",
+  "elapsed_seconds": 1113.6507214000012,
+  "files": {
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_extraction_observer_01\\admission.json": "ffb7c69bd371d97ce41cceed98c14f6dea40a93454b2c79af838b8b0337a1db9",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_extraction_observer_01\\process.json": "e3f33a72aab324d7caa8e6253bb036dc44e887b3e79c12f2981c5ee3e4de71e1",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_extraction_observer_01\\stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_extraction_observer_01\\stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}
