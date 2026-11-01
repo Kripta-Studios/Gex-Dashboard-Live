@@ -1,5 +1,11 @@
 # Continuación local: estado del 23 de octubre de 2026
 
+AMPLIACIÓN expresa1nov: usuario pide evaluar opciones weekly con trades de varios
+días frente a sólo intradía. Prioridad próxima familia weekly/multiday; auditor
+OOF0DTE ya iniciado continúa hasta cierre. Metadatos/historia/supuestos en revisión,
+sin nuevo backtest todavía. [Autoridad y alcance](WEEKLY_MULTIDAY_DIRECTION_20261101.md).
+Probabilidades/EV y días sin operar siguen vigentes; sólo datos locales.
+
 REANUDADA por orden expresa del usuario el 1 de noviembre de 2026.
 Autoridad: [RESUMPTION_20261101.md](RESUMPTION_20261101.md).
 Goal activo. Productor OOF completo: doce fases enero–junio; hijo38568 exit0
