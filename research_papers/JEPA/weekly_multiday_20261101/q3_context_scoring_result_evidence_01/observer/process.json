@@ -1,0 +1,21 @@
+{
+  "pid": 49748,
+  "creation_time": 1793552546.498421,
+  "utc": "2026-11-01T17:02:26.527388+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\score_weekly_context_q3_frozen.py",
+    "--execute-reviewed-scoring",
+    "--context-manifest-sha256",
+    "1429bb4dc227843cbb988d552d3b463443b6ae1046e2a53e11118dee4d9fda66",
+    "--context-audit-sha256",
+    "ae90d005b6fa9a3a1a708fdfafd3361bdef9146312ddda324d103a139cd18633",
+    "--scorer-sha256",
+    "e7638731fbba44ca45ff0f69418428083226b0f44110819f0ab52e13d3ff1e75",
+    "--output-dir",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_model_comparison_q3_01"
+  ]
+}

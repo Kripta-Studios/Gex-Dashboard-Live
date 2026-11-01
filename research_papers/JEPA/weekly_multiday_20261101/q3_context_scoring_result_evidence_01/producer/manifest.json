@@ -1,0 +1,152 @@
+{
+  "consumed_payloads": {
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_model_comparison_01\\category30_calibration.json": {
+      "bytes": 916,
+      "sha256": "1201fbd5dbbc6d6e4aae6149ee5349e2773a7bb659cb45a51cea44e7d9fd9ba1"
+    },
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_model_comparison_01\\category30_model.json": {
+      "bytes": 4371,
+      "sha256": "e927fe4e2e9b796c2f41f0cdb36a713fd72101b5bbbb8c8131c2be7f84224b5c"
+    },
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_model_comparison_01\\category30_transform.json": {
+      "bytes": 2757,
+      "sha256": "dbbab2c4a774e43e69269a5b0b9c7ed06f61b105b8cc96196464f83ba740584d"
+    },
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_model_comparison_01\\context182_calibration.json": {
+      "bytes": 915,
+      "sha256": "5a9dc85fba737b0e2921968c711ce14780da2b3aa7a27f87bd025cf0954bc14c"
+    },
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_model_comparison_01\\context182_model.json": {
+      "bytes": 24002,
+      "sha256": "7a9dafc2a8c30c83ef2177057ceeb6fa33636f2943821cee83172b703cc17037"
+    },
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_model_comparison_01\\context182_transform.json": {
+      "bytes": 17000,
+      "sha256": "82b31bc61ad94f462b724a49d1cfd6793aebfc361afd3111e5c27dc1d16539c0"
+    },
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_1030_01\\context.jsonl": {
+      "bytes": 906511,
+      "sha256": "d78ef5d53d75faf5f3e5774cf83788bf15aff690bf578ba6b2d1bbc1963990cd"
+    },
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_1030_01\\coverage.json": {
+      "bytes": 29583,
+      "sha256": "3d5de818983c30da660f41b2d2b66e6633deb60ce4ac20bf636dcbe2ee6880d7"
+    },
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_extension_2026q3_partial_01\\candidates.jsonl": {
+      "bytes": 236850,
+      "sha256": "c1aae6b9d45240fe712aabceb296b8d42506b12523465eb8755a8c6939045864"
+    },
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_extension_2026q3_partial_01\\coverage.json": {
+      "bytes": 151653,
+      "sha256": "5ce9ac8fef25057fe867b46d4ff9ebf224391ae0b538527d402d3afa8607a5c5"
+    },
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_equal_risk_frozen_01\\ledger_equal_risk_q3_partial_ev_top1_h2_adverse.jsonl": {
+      "bytes": 46065,
+      "sha256": "6210436ce034c9fe0babdbe5155d8af2153586d692256acae5b6c4c2516a94ea"
+    },
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_equal_risk_frozen_01\\ledger_equal_risk_q3_partial_ev_top1_h2_base.jsonl": {
+      "bytes": 45429,
+      "sha256": "a1b565ab80a20edc0c735663c0bcc8dbf2ea2c6200722287e0295027b3e27187"
+    },
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_equal_risk_frozen_01\\summary.json": {
+      "bytes": 20107,
+      "sha256": "b3cd3144107768bc4c64505da1e44aefc559875ec857128d79b9bdb653b69aad"
+    },
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_ev_frozen_extension_2026q3_partial_01\\candidate_scores_extension.jsonl": {
+      "bytes": 83573,
+      "sha256": "9458c8dfa75983784af0e7514feec1ded43a42adadecfb07c0406aee3f284ca6"
+    },
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_ev_v2_01\\conditional_means.json": {
+      "bytes": 5959,
+      "sha256": "a8dc329233ce431b282c500e27cf91ac91d845cbb6a1fc752cee36026aef3f90"
+    },
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_ev_v2_01\\model.json": {
+      "bytes": 3236,
+      "sha256": "68712c7c326d2337a34f8401579ddc52a4dab0e3f505c8c4ff2f1b1d51c03fb4"
+    }
+  },
+  "external_authorities": {
+    "base18": {
+      "bytes": 3545,
+      "sha256": "7bd50a5a1fe5214df2c4281e785313f0fb016ca73d725d682788dcb78b283d8e"
+    },
+    "context": {
+      "bytes": 172889,
+      "sha256": "1429bb4dc227843cbb988d552d3b463443b6ae1046e2a53e11118dee4d9fda66"
+    },
+    "context_audit": {
+      "bytes": 1662,
+      "sha256": "ae90d005b6fa9a3a1a708fdfafd3361bdef9146312ddda324d103a139cd18633"
+    },
+    "dataset": {
+      "bytes": 6184,
+      "sha256": "b45b017c63fea42036ab73418cc07faa8e377047fec1f8d60c908e98eea5400b"
+    },
+    "frozen": {
+      "bytes": 6249,
+      "sha256": "54dc2d6ced2bb625a71fdae39b8ab2e417a576482ea6a99047df4ce8b6b1ad96"
+    },
+    "h1_context_audit": {
+      "bytes": 170344,
+      "sha256": "bb661fe916f65ed6ee40dd3cf684650a8d318447005a7f224edec6a4b814b3eb"
+    },
+    "models": {
+      "bytes": 6382,
+      "sha256": "662ac63eaa2895beff4363b9e94a97cd7adc91aac3558139bdd919d8fbf2861a"
+    },
+    "risk": {
+      "bytes": 3973,
+      "sha256": "50fa6b7a02aad9d122dc0bfdd84f8c01f9a5f468bafc7f175eed39aa3ea9418d"
+    }
+  },
+  "flags": {
+    "development_seen": true,
+    "fit_performed": false,
+    "promotion_approved": false,
+    "q3_used": true,
+    "raw_or_api_used": false,
+    "recalibration_performed": false,
+    "technical_ready": false
+  },
+  "implementation": {
+    "Q3_FROZEN_CONTEXT_COMPARISON_CONTRACT_20261101.md": "e9867bfc5acc5922288e81542e250de7707cfd20f472087b24700ef69764802a",
+    "replay_equal_risk_frozen.py": "e4f42a9fa65120939cf5e131911c8f2990a9cd33d21ae036fa98d9eb816d5b9d",
+    "score_weekly_context_q3_frozen.py": "e7638731fbba44ca45ff0f69418428083226b0f44110819f0ab52e13d3ff1e75"
+  },
+  "outputs": {
+    "candidate_scores_context_q3.jsonl": {
+      "bytes": 151703,
+      "sha256": "03e89f00000603933269d80e799549d8302390d107b3c0582b9c60f4f97915a1"
+    },
+    "ledger_base18_frozen_q3_adverse.jsonl": {
+      "bytes": 46065,
+      "sha256": "6210436ce034c9fe0babdbe5155d8af2153586d692256acae5b6c4c2516a94ea"
+    },
+    "ledger_base18_frozen_q3_base.jsonl": {
+      "bytes": 45429,
+      "sha256": "a1b565ab80a20edc0c735663c0bcc8dbf2ea2c6200722287e0295027b3e27187"
+    },
+    "ledger_category30_q3_adverse.jsonl": {
+      "bytes": 50694,
+      "sha256": "eb2d6047a946665a6f6120ebe0322fb56b4c2c8986362c902110f62b2a001499"
+    },
+    "ledger_category30_q3_base.jsonl": {
+      "bytes": 50218,
+      "sha256": "d1301eef45afce6b9c6e16bf0f83fc7beda366e2e5c8f253d8c5b69daecce07d"
+    },
+    "ledger_context182_q3_adverse.jsonl": {
+      "bytes": 59399,
+      "sha256": "dd965a179b66eb244c7fcda96a2bcf1ff29029095afcfab05104b6ba1e2f7add"
+    },
+    "ledger_context182_q3_base.jsonl": {
+      "bytes": 58843,
+      "sha256": "fd4523848fa41d5eb0bdd0324a8d7815fccca8a65f23f81ba7179d63cd839198"
+    },
+    "summary.json": {
+      "bytes": 68695,
+      "sha256": "01de55e3369b39d1ede3aee65c12c8e99ee15c4fdb9d39f9efd4dc1a7b900650"
+    }
+  },
+  "schema": "weekly_h2_context_model_comparison_q3_manifest_v1",
+  "status": "COMPLETE_Q3_PARTIAL_2026_SEEN_DEVELOPMENT"
+}
