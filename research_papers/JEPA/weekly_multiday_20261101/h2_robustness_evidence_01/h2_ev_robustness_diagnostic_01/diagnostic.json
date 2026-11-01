@@ -1,0 +1,432 @@
+{
+  "baseline_reconciliation": {
+    "exit_month_net_usd": {
+      "202601": 53.19999999999726,
+      "202602": -3739.2000000000016,
+      "202603": -10803.200000000004,
+      "202604": 24369.000000000004,
+      "202605": 3719.0000000000023,
+      "202606": -2112.7999999999993
+    },
+    "gross_gains_usd": 55241.8,
+    "gross_losses_usd": 43755.80000000001,
+    "missing_exit_lower_bounds": 3,
+    "months_observed": 6,
+    "net_usd": 11485.999999999996,
+    "positive_months": 3,
+    "premium_cash_multiplier": 100,
+    "profit_factor": 1.2625023425465878,
+    "realized_max_drawdown_usd": 16666.300000000207,
+    "slippage_points_per_option_per_side": 0.02,
+    "ticker_net_usd": {
+      "QQQ": -1557.3999999999974,
+      "SPXW": 15604.999999999985,
+      "SPY": -2561.5999999999976
+    },
+    "trades": 75
+  },
+  "block_bootstrap": {
+    "assumptions": [
+      "approximate stationarity",
+      "relevant temporal dependence bounded by five sessions"
+    ],
+    "block_length_sessions": 5,
+    "block_method": "circular_moving_blocks",
+    "bootstrap_mean_usd": 11307.134139999998,
+    "bootstrap_median_usd": 10125.899999999994,
+    "economic_zero_reference_usd": 0.0,
+    "empirical_percentile_interval_type7_usd": {
+      "high_97_5": 57260.89499999997,
+      "low_2_5": -29589.394999999997
+    },
+    "interpretation": "exploratory empirical interval; not a null distribution or statistical test",
+    "observed_total_usd": 11485.999999999998,
+    "p_value": null,
+    "resamples": 10000,
+    "seed": 20261101,
+    "sessions": 123,
+    "statistic": "total_h1_pnl_usd",
+    "status": "COMPLETE_EXPLORATORY_EMPIRICAL_BOOTSTRAP",
+    "unit": "official_entry_session_all_tickers_aggregated",
+    "zero_pnl_sessions": 82,
+    "zero_pnl_sessions_included": true
+  },
+  "concentration": {
+    "drop_top_gains": [
+      {
+        "drop_count": 1,
+        "remaining_net_usd": -507.4000000000025,
+        "remaining_trades": 74,
+        "removed_candidate_ids": [
+          "SPXW:20260413:20260417:CALL"
+        ],
+        "removed_net_usd": 11993.4
+      },
+      {
+        "drop_count": 3,
+        "remaining_net_usd": -18674.2,
+        "remaining_trades": 72,
+        "removed_candidate_ids": [
+          "SPXW:20260413:20260417:CALL",
+          "SPXW:20260330:20260402:CALL",
+          "SPXW:20260406:20260410:CALL"
+        ],
+        "removed_net_usd": 30160.199999999997
+      },
+      {
+        "drop_count": 5,
+        "remaining_net_usd": -28881.0,
+        "remaining_trades": 70,
+        "removed_candidate_ids": [
+          "SPXW:20260413:20260417:CALL",
+          "SPXW:20260330:20260402:CALL",
+          "SPXW:20260406:20260410:CALL",
+          "SPXW:20260504:20260508:CALL",
+          "SPXW:20260612:20260618:CALL"
+        ],
+        "removed_net_usd": 40367.0
+      }
+    ],
+    "interpretation": "mechanical sensitivity only; no reselection or alternative policy",
+    "leave_one_exit_month_out": [
+      {
+        "excluded_exit_month": "202601",
+        "remaining_net_usd": 11432.799999999997,
+        "remaining_trades": 62,
+        "removed_candidate_ids": [
+          "QQQ:20260105:20260109:CALL",
+          "QQQ:20260112:20260116:CALL",
+          "QQQ:20260120:20260123:CALL",
+          "QQQ:20260123:20260130:CALL",
+          "QQQ:20260127:20260130:CALL",
+          "SPXW:20260105:20260109:CALL",
+          "SPXW:20260112:20260116:CALL",
+          "SPXW:20260126:20260130:CALL",
+          "SPY:20260105:20260109:CALL",
+          "SPY:20260109:20260116:CALL",
+          "SPY:20260113:20260116:CALL",
+          "SPY:20260120:20260123:CALL",
+          "SPY:20260126:20260130:CALL"
+        ],
+        "removed_net_usd": 53.19999999999931,
+        "removed_trades": 13
+      },
+      {
+        "excluded_exit_month": "202602",
+        "remaining_net_usd": 15225.199999999997,
+        "remaining_trades": 63,
+        "removed_candidate_ids": [
+          "QQQ:20260202:20260206:CALL",
+          "QQQ:20260209:20260213:CALL",
+          "QQQ:20260217:20260220:CALL",
+          "QQQ:20260223:20260227:CALL",
+          "SPXW:20260202:20260206:CALL",
+          "SPXW:20260217:20260220:CALL",
+          "SPXW:20260220:20260227:CALL",
+          "SPXW:20260224:20260227:CALL",
+          "SPY:20260202:20260206:CALL",
+          "SPY:20260209:20260213:CALL",
+          "SPY:20260217:20260220:CALL",
+          "SPY:20260223:20260227:CALL"
+        ],
+        "removed_net_usd": -3739.1999999999994,
+        "removed_trades": 12
+      },
+      {
+        "excluded_exit_month": "202603",
+        "remaining_net_usd": 22289.199999999997,
+        "remaining_trades": 63,
+        "removed_candidate_ids": [
+          "QQQ:20260302:20260306:CALL",
+          "QQQ:20260309:20260313:CALL",
+          "QQQ:20260316:20260320:CALL",
+          "QQQ:20260323:20260327:CALL",
+          "SPXW:20260227:20260306:CALL",
+          "SPXW:20260306:20260313:CALL",
+          "SPXW:20260316:20260320:CALL",
+          "SPXW:20260323:20260327:CALL",
+          "SPY:20260302:20260306:CALL",
+          "SPY:20260309:20260313:CALL",
+          "SPY:20260316:20260320:CALL",
+          "SPY:20260323:20260327:CALL"
+        ],
+        "removed_net_usd": -10803.199999999999,
+        "removed_trades": 12
+      },
+      {
+        "excluded_exit_month": "202604",
+        "remaining_net_usd": -12883.0,
+        "remaining_trades": 60,
+        "removed_candidate_ids": [
+          "QQQ:20260402:20260410:CALL",
+          "QQQ:20260413:20260417:CALL",
+          "QQQ:20260420:20260424:CALL",
+          "QQQ:20260427:20260501:CALL",
+          "SPXW:20260330:20260402:CALL",
+          "SPXW:20260406:20260410:CALL",
+          "SPXW:20260413:20260417:CALL",
+          "SPXW:20260420:20260424:CALL",
+          "SPXW:20260424:20260501:CALL",
+          "SPXW:20260428:20260501:CALL",
+          "SPY:20260330:20260402:CALL",
+          "SPY:20260402:20260410:CALL",
+          "SPY:20260413:20260417:CALL",
+          "SPY:20260420:20260424:CALL",
+          "SPY:20260427:20260501:CALL"
+        ],
+        "removed_net_usd": 24368.999999999996,
+        "removed_trades": 15
+      },
+      {
+        "excluded_exit_month": "202605",
+        "remaining_net_usd": 7766.999999999996,
+        "remaining_trades": 65,
+        "removed_candidate_ids": [
+          "QQQ:20260501:20260508:CALL",
+          "QQQ:20260511:20260515:CALL",
+          "QQQ:20260518:20260522:CALL",
+          "SPXW:20260504:20260508:CALL",
+          "SPXW:20260511:20260515:CALL",
+          "SPXW:20260518:20260522:CALL",
+          "SPY:20260504:20260508:CALL",
+          "SPY:20260511:20260515:CALL",
+          "SPY:20260518:20260522:CALL",
+          "SPY:20260526:20260529:CALL"
+        ],
+        "removed_net_usd": 3719.000000000001,
+        "removed_trades": 10
+      },
+      {
+        "excluded_exit_month": "202606",
+        "remaining_net_usd": 13598.799999999997,
+        "remaining_trades": 62,
+        "removed_candidate_ids": [
+          "QQQ:20260601:20260605:CALL",
+          "QQQ:20260608:20260612:CALL",
+          "QQQ:20260615:20260618:CALL",
+          "QQQ:20260618:20260626:CALL",
+          "SPXW:20260601:20260605:CALL",
+          "SPXW:20260609:20260612:CALL",
+          "SPXW:20260612:20260618:CALL",
+          "SPXW:20260622:20260626:CALL",
+          "SPXW:20260626:20260702:CALL",
+          "SPY:20260601:20260605:CALL",
+          "SPY:20260608:20260612:CALL",
+          "SPY:20260615:20260618:CALL",
+          "SPY:20260618:20260626:CALL"
+        ],
+        "removed_net_usd": -2112.8000000000006,
+        "removed_trades": 13
+      }
+    ]
+  },
+  "equal_risk_diagnostic": {
+    "denominator": "sealed_entry_debit_adverse_per_trade_s_0.02",
+    "equal_weight_ticker_average": -0.047277685679220284,
+    "executable_portfolio": false,
+    "limitation": "fractional sizing diagnostic; capital path ignored; no profitability claim",
+    "tickers": {
+      "QQQ": {
+        "aggregate_debit_compensated_return": -0.09646808141623614,
+        "mean_return_on_adverse_debit": -0.10836990868036284,
+        "median_return_on_adverse_debit": -0.14719758806789301,
+        "n": 24,
+        "total_adverse_debit_usd": 16144.199999999997,
+        "total_net_usd": -1557.3999999999992
+      },
+      "SPXW": {
+        "aggregate_debit_compensated_return": 0.13758293107628553,
+        "mean_return_on_adverse_debit": 0.12326606615487522,
+        "median_return_on_adverse_debit": -0.21536160222716236,
+        "n": 25,
+        "total_adverse_debit_usd": 113422.50000000001,
+        "total_net_usd": 15604.999999999996
+      },
+      "SPY": {
+        "aggregate_debit_compensated_return": -0.18294790669771024,
+        "mean_return_on_adverse_debit": -0.17840620788081585,
+        "median_return_on_adverse_debit": -0.2487793501144283,
+        "n": 26,
+        "total_adverse_debit_usd": 14001.799999999997,
+        "total_net_usd": -2561.599999999999
+      }
+    }
+  },
+  "fixed_candidate_ids_sha256": "bdf576aefcb6ec0e4d71fd1ced472121328605c3e6308f3d1574299ccb584a4a",
+  "fixed_trade_count": 75,
+  "flags": {
+    "descriptive_only": true,
+    "development_seen": true,
+    "independently_audited": false,
+    "promotion_approved": false,
+    "refit_performed": false,
+    "selection_performed": false
+  },
+  "limitations": [
+    "fixed decisions; no reselection, refit, replay, ticker rescue, or threshold search",
+    "equal-risk section is not an executable portfolio",
+    "bootstrap interval is exploratory and assumes stationarity/dependence bounded by five sessions",
+    "2026 H1 is seen development; missing exits remain total-loss lower bounds"
+  ],
+  "schema": "weekly_h2_ev_robustness_diagnostic_v1",
+  "scope": "EV_TOP1_H2_EVAL_2026H1_FIXED_DECISIONS",
+  "slippage_sweep": [
+    {
+      "exit_month_net_usd": {
+        "202601": 53.19999999999726,
+        "202602": -3739.2000000000016,
+        "202603": -10803.200000000004,
+        "202604": 24369.000000000004,
+        "202605": 3719.0000000000023,
+        "202606": -2112.7999999999993
+      },
+      "gross_gains_usd": 55241.8,
+      "gross_losses_usd": 43755.80000000001,
+      "missing_exit_lower_bounds": 3,
+      "months_observed": 6,
+      "net_usd": 11485.999999999996,
+      "positive_months": 3,
+      "premium_cash_multiplier": 100,
+      "profit_factor": 1.2625023425465878,
+      "realized_max_drawdown_usd": 16666.300000000207,
+      "slippage_points_per_option_per_side": 0.02,
+      "ticker_net_usd": {
+        "QQQ": -1557.3999999999974,
+        "SPXW": 15604.999999999985,
+        "SPY": -2561.5999999999976
+      },
+      "trades": 75
+    },
+    {
+      "exit_month_net_usd": {
+        "202601": -24.800000000000466,
+        "202602": -3811.2000000000007,
+        "202603": -10875.200000000003,
+        "202604": 24288.000000000015,
+        "202605": 3659.0000000000014,
+        "202606": -2190.7999999999975
+      },
+      "gross_gains_usd": 55079.8,
+      "gross_losses_usd": 44034.8,
+      "missing_exit_lower_bounds": 3,
+      "months_observed": 6,
+      "net_usd": 11045.000000000005,
+      "positive_months": 2,
+      "premium_cash_multiplier": 100,
+      "profit_factor": 1.2508243480156602,
+      "realized_max_drawdown_usd": 16873.300000000207,
+      "slippage_points_per_option_per_side": 0.05,
+      "ticker_net_usd": {
+        "QQQ": -1698.399999999999,
+        "SPXW": 15455.0,
+        "SPY": -2711.599999999998
+      },
+      "trades": 75
+    },
+    {
+      "exit_month_net_usd": {
+        "202601": -154.80000000000098,
+        "202602": -3931.200000000001,
+        "202603": -10995.200000000003,
+        "202604": 24153.000000000004,
+        "202605": 3559.0000000000014,
+        "202606": -2320.7999999999993
+      },
+      "gross_gains_usd": 54809.80000000001,
+      "gross_losses_usd": 44499.8,
+      "missing_exit_lower_bounds": 3,
+      "months_observed": 6,
+      "net_usd": 10310.000000000004,
+      "positive_months": 2,
+      "premium_cash_multiplier": 100,
+      "profit_factor": 1.2316864345457734,
+      "realized_max_drawdown_usd": 17218.300000000207,
+      "slippage_points_per_option_per_side": 0.1,
+      "ticker_net_usd": {
+        "QQQ": -1933.3999999999971,
+        "SPXW": 15205.0,
+        "SPY": -2961.5999999999976
+      },
+      "trades": 75
+    },
+    {
+      "exit_month_net_usd": {
+        "202601": -544.8000000000009,
+        "202602": -4291.200000000003,
+        "202603": -11355.200000000003,
+        "202604": 23748.000000000007,
+        "202605": 3259.0000000000005,
+        "202606": -2710.7999999999993
+      },
+      "gross_gains_usd": 54022.40000000001,
+      "gross_losses_usd": 45917.4,
+      "missing_exit_lower_bounds": 3,
+      "months_observed": 6,
+      "net_usd": 8105.000000000002,
+      "positive_months": 2,
+      "premium_cash_multiplier": 100,
+      "profit_factor": 1.176512607421152,
+      "realized_max_drawdown_usd": 18253.300000000207,
+      "slippage_points_per_option_per_side": 0.25,
+      "ticker_net_usd": {
+        "QQQ": -2638.3999999999983,
+        "SPXW": 14455.0,
+        "SPY": -3711.599999999998
+      },
+      "trades": 75
+    },
+    {
+      "exit_month_net_usd": {
+        "202601": -1194.8000000000004,
+        "202602": -4891.200000000003,
+        "202603": -11955.200000000003,
+        "202604": 23073.000000000007,
+        "202605": 2759.0000000000005,
+        "202606": -3360.7999999999993
+      },
+      "gross_gains_usd": 52729.00000000001,
+      "gross_losses_usd": 48299.00000000001,
+      "missing_exit_lower_bounds": 3,
+      "months_observed": 6,
+      "net_usd": 4430.000000000002,
+      "positive_months": 2,
+      "premium_cash_multiplier": 100,
+      "profit_factor": 1.0917203254725771,
+      "realized_max_drawdown_usd": 19978.300000000207,
+      "slippage_points_per_option_per_side": 0.5,
+      "ticker_net_usd": {
+        "QQQ": -3813.399999999998,
+        "SPXW": 13205.0,
+        "SPY": -4961.5999999999985
+      },
+      "trades": 75
+    },
+    {
+      "exit_month_net_usd": {
+        "202601": -2464.8,
+        "202602": -6049.200000000003,
+        "202603": -13155.200000000003,
+        "202604": 21723.000000000007,
+        "202605": 1759.0,
+        "202606": -4660.799999999999
+      },
+      "gross_gains_usd": 50534.600000000006,
+      "gross_losses_usd": 53382.600000000006,
+      "missing_exit_lower_bounds": 3,
+      "months_observed": 6,
+      "net_usd": -2847.9999999999973,
+      "positive_months": 2,
+      "premium_cash_multiplier": 100,
+      "profit_factor": 0.9466492827250828,
+      "realized_max_drawdown_usd": 23356.300000000207,
+      "slippage_points_per_option_per_side": 1.0,
+      "ticker_net_usd": {
+        "QQQ": -6091.399999999998,
+        "SPXW": 10704.999999999996,
+        "SPY": -7461.600000000002
+      },
+      "trades": 75
+    }
+  ],
+  "status": "COMPLETE_EXPLORATORY_DIAGNOSTIC_NOT_INDEPENDENTLY_AUDITED"
+}

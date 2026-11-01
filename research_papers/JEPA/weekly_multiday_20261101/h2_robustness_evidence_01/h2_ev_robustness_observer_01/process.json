@@ -1,0 +1,13 @@
+{
+  "pid": 24468,
+  "creation_time": 1793544434.970301,
+  "utc": "2026-11-01T14:47:14.973777+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\diagnose_weekly_h2_ev_robustness.py",
+    "--execute-reviewed-diagnostic"
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "status": "PASS_ROOT_INDEPENDENT_NUMERIC_RECONCILIATION_DESCRIPTIVE_ONLY",
+  "utc": "2026-11-01T14:51:16.055828+00:00",
+  "resources": {
+    "available_ram_bytes": 11782660096,
+    "free_commit_bytes": 19139538944
+  },
+  "cpu_affinity": [
+    0
+  ],
+  "file_pins": {
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_01\\candidates.jsonl": "c98f232a97a8a6f9221b5d3452424d71bec3684a6b037b258c8a5b0f8fb9d5ad",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_ev_v2_01\\ledger_ev_top1_h2_eval_adverse.jsonl": "0ce6b266891e269faac3cc8ce721e81d17519efd8b5374f5983f96f05c36569c",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_ev_robustness_diagnostic_01\\diagnostic.json": "026faf1b879db3564451c0e70c8907924354c93c1827f6e04700dc2860185bff",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_01\\coverage.json": "83ebf5704cb4f1c9ca7c2aff4cca749592f2e30b55978172ec1413a85cec6209"
+  },
+  "trades": 75,
+  "calls": 75,
+  "puts": 0,
+  "slippage_net_checks": {
+    "slip_0.02": 11485.999999999996,
+    "slip_0.05": 11044.999999999998,
+    "slip_0.1": 10310.0,
+    "slip_0.25": 8104.999999999998,
+    "slip_0.5": 4429.999999999998,
+    "slip_1.0": -2848.0000000000023
+  },
+  "normalized_ratios": {
+    "SPY": -0.18294790669771024,
+    "QQQ": -0.09646808141623614,
+    "SPXW": 0.13758293107628553
+  },
+  "concentration_checks": 9,
+  "bootstrap_low": -29589.395,
+  "bootstrap_high": 57260.89499999997,
+  "no_fit": true,
+  "no_selection": true,
+  "statistical_significance_claimed": false
+}

@@ -1,0 +1,45 @@
+{
+  "flags": {
+    "descriptive_only": true,
+    "development_seen": true,
+    "independently_audited": false,
+    "promotion_approved": false,
+    "refit_performed": false,
+    "selection_performed": false
+  },
+  "implementation_pins": {
+    "WEEKLY_H2_EV_ROBUSTNESS_DIAGNOSTIC_CONTRACT_20261101.md": "a9488cda35b1d50303113b041d7be80452d47b8d4d7fdbe6097a98d762aaf85c",
+    "WEEKLY_H2_EV_ROBUSTNESS_DIAGNOSTIC_SPEC_20261101.md": "dcc1d1fdb22dbe3974da765f8b29b3dc9cd5d5e184c1b5ed5209578f9470ce28",
+    "diagnose_weekly_h2_ev_robustness.py": "bdaa9afce5017f9a7925dc5d9d221c033a4c1c75f8d025d49ee6e6a2c38bfb9c"
+  },
+  "inputs": {
+    "candidates.jsonl": {
+      "bytes": 4047694,
+      "rows": 3054,
+      "sha256": "c98f232a97a8a6f9221b5d3452424d71bec3684a6b037b258c8a5b0f8fb9d5ad"
+    },
+    "coverage.json": {
+      "bytes": 2640341,
+      "rows": 2625,
+      "sha256": "83ebf5704cb4f1c9ca7c2aff4cca749592f2e30b55978172ec1413a85cec6209"
+    },
+    "dataset_manifest_sha256": "bfc7370f38e32e1209bc41fe72f01563dcdaa17ddf86fe7b625814beedcbe1d8",
+    "evaluation_manifest_sha256": "54dc2d6ced2bb625a71fdae39b8ab2e417a576482ea6a99047df4ce8b6b1ad96",
+    "ledger_ev_top1_h2_eval_adverse.jsonl": {
+      "bytes": 100101,
+      "sha256": "0ce6b266891e269faac3cc8ce721e81d17519efd8b5374f5983f96f05c36569c"
+    },
+    "summary.json": {
+      "bytes": 137893,
+      "sha256": "2aeb17692677cf7bc32a5d71c9c104a379ac522d2942572bdebb00fcde262f2b"
+    }
+  },
+  "outputs": {
+    "diagnostic.json": {
+      "bytes": 15111,
+      "sha256": "026faf1b879db3564451c0e70c8907924354c93c1827f6e04700dc2860185bff"
+    }
+  },
+  "schema": "weekly_h2_ev_robustness_manifest_v1",
+  "status": "COMPLETE_EXPLORATORY_DIAGNOSTIC_NOT_INDEPENDENTLY_AUDITED"
+}

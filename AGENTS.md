@@ -30,6 +30,19 @@ Goal general activo; siguiente etapa requiere robustez fuera de este semestre
 visto, reglas previas y riesgo comparable, no repetir/seleccionar sobreH12026.
 Sólo D:/ThetaData local; sinAPI/bróker/VPS/producción ni cambios ajenos.
 
+Continuación 1-nov: diagnóstico de robustez cerrado, único PID24468 exit0
+14:47:15UTC. Diagnostic026faf1b/manifest4e00c615, mismos75trades (todosCALL).
+Slippage0,50puntos/lado deja+4430USD;1punto deja−2848. Normalización por débito
+con igual peso por ticker−4,7278% (diagnóstico, NO cartera). Sinabril−12883USD.
+Bootstrap exploratorio123sesiones/82ceros,10k,bloques5:percentiles−29589,40/
++57260,90USD, sin significancia. Rootreconstrucción numérica d6cbaaca y review
+operativa CLEAR; sin fit/selección. [Diagnóstico](research_papers/JEPA/weekly_multiday_20261101/H2_ROBUSTNESS_RESULT_20261101.md).
+Extensión temporal en preparación: julio1–sept17,55sesiones/165filas,última
+entradaH2sept15. Calendario nuevoac9bd256/e16ef041;Q3tambiénSEEN_DEVELOPMENT,
+no holdout limpio. Misma política/modelo/alpha/prior/medias, cero refit/carryH1.
+Wrappers/scorer en revisión sintética; aún no inventario/quotes/outcomesQ3.
+No reanudar ni relanzar H1. Objetivo general y requisitos por IB/walls siguen abiertos.
+
 Orientación nueva: probabilidades de escenarios y valor esperado neto.
 Usuario permite días sin operar en la siguiente etapa; WAIT sin mínimo diario.
 OOF actual conserva sus reglas. [Dirección](research_papers/JEPA/level_oracle_20261018/EXPECTED_VALUE_SCENARIO_DIRECTION_20261101.md)

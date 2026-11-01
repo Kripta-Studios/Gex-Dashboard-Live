@@ -1,0 +1,55 @@
+{
+  "utc": "2026-11-01T14:51:56.834179+00:00",
+  "files": [
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_ev_robustness_diagnostic_01\\diagnostic.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\h2_robustness_evidence_01\\h2_ev_robustness_diagnostic_01\\diagnostic.json",
+      "bytes": 15111,
+      "sha256": "026faf1b879db3564451c0e70c8907924354c93c1827f6e04700dc2860185bff"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_ev_robustness_diagnostic_01\\manifest.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\h2_robustness_evidence_01\\h2_ev_robustness_diagnostic_01\\manifest.json",
+      "bytes": 1768,
+      "sha256": "4e00c615a2d5690d7819b3eead8636861cdae9049573b9643554f6c30f81c8ed"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_ev_robustness_observer_01\\admission.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\h2_robustness_evidence_01\\h2_ev_robustness_observer_01\\admission.json",
+      "bytes": 978,
+      "sha256": "690744404b4ca9e80595c3c59a886769642d19ecdd9d10a93458a7572ecc01ed"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_ev_robustness_observer_01\\exit.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\h2_robustness_evidence_01\\h2_ev_robustness_observer_01\\exit.json",
+      "bytes": 867,
+      "sha256": "1b641ce8e157ab217b6578131f4e9d9a7c5ad54784342f65a65bdc7b9c355694"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_ev_robustness_observer_01\\process.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\h2_robustness_evidence_01\\h2_ev_robustness_observer_01\\process.json",
+      "bytes": 421,
+      "sha256": "bfd9439ee4c52fef0bb1a11dbeba842531dc854e635a8ef361fc94571055a1a0"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_ev_robustness_observer_01\\stderr.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\h2_robustness_evidence_01\\h2_ev_robustness_observer_01\\stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_ev_robustness_observer_01\\stdout.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\h2_robustness_evidence_01\\h2_ev_robustness_observer_01\\stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_robustness_root_reconciliation_01\\reconciliation.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\h2_robustness_evidence_01\\h2_robustness_root_reconciliation_01\\reconciliation.json",
+      "bytes": 1584,
+      "sha256": "d6cbaaca6a52570888bfac4c57f1fd66f522f478dcb28ba7fa09f3e539cd6e82"
+    }
+  ],
+  "file_count": 8,
+  "total_bytes": 20729
+}
