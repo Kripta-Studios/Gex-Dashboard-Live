@@ -1,0 +1,36 @@
+{
+  "files": [
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\daily_adaptation_readiness_20261101_01\\observation.json",
+      "copy": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_readiness_archive_01\\observation.json",
+      "bytes": 1675,
+      "sha256": "3493efbd03891d3faad5dd18d1de89d66531ff6ce3e18a42ea43ddbd05b683b4"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\daily_adaptation_readiness_20261101_01\\gate_result.json",
+      "copy": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_readiness_archive_01\\gate_result.json",
+      "bytes": 482,
+      "sha256": "29f339d00617f612a6d320491da46144d8328b8abfae96f49f9979206a63522c"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\daily_adaptation_preparation_01\\launch_attempt02.attempt02_draft.ps1",
+      "copy": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_readiness_archive_01\\launch_attempt02.attempt02_draft.ps1",
+      "bytes": 7245,
+      "sha256": "2cf625559ec35501a40c6514ce3cc3b268907f91a7886521fd86e38764e57915"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\daily_adaptation_preparation_01\\launch_attempt02_v2.a41a25_snapshot.ps1",
+      "copy": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_readiness_archive_01\\launch_attempt02_v2.a41a25_snapshot.ps1",
+      "bytes": 11662,
+      "sha256": "a41a25a1e5d23bb0c7ccb6638586386f18ab910843bcb329c875949975404af0"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\daily_adaptation_preparation_01\\launch_attempt02_v2.ps1",
+      "copy": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_readiness_archive_01\\launch_attempt02_v2.ps1",
+      "bytes": 13100,
+      "sha256": "ae1a05853afe4c4e6b01e642e8e4338af872f99e8ad9dcdb391363ed0be93e96"
+    }
+  ],
+  "count": 5,
+  "bytes": 34164
+}

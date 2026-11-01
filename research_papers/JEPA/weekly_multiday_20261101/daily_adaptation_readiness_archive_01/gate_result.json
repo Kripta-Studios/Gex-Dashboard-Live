@@ -1,0 +1,8 @@
+{
+  "status": "RESOURCE_GATE_REJECTED_NO_EXECUTION",
+  "observation_sha256": "3493efbd03891d3faad5dd18d1de89d66531ff6ce3e18a42ea43ddbd05b683b4",
+  "error": "2GB RAM/commit gate unmet",
+  "prior_goal_turn": "PROGRESS:producer/static-review/attempt01-gate-evidence published fb1785f1",
+  "current_goal_turn": "PROGRESS:auditor compatibility and independent control reconstruction fixed; renderer completed statically",
+  "resource_blocker_occurrence_in_current_sequence": 2
+}
